@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Olympus</title>
+    <link rel="stylesheet" href="css/index.css"/>
+    <link rel="stylesheet" href="css/map.css"/>
+    <link rel="stylesheet" href="css/UnitMarker.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css"
+    integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14="
+    crossorigin=""/>
+     <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js"
+    integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg="
+    crossorigin=""></script>
+    <script src="js/Utils.js"></script>
+    <script src="js/LeftPanel.js"></script>
+    <script src="js/Map.js"></script>
+    <script src="js/MissionData.js"></script>
+    <script src="js/Unit.js"></script>
+    <script src="js/UnitMarker.js"></script>
+    <script src="js/UnitsHandler.js"></script>
+    <script src="js/index.js"></script>
+  </head>
+  <body>
+    <table id="content-table">
+      <tr id="top-panel">
+        <td colspan>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div id="map"></div>
+          <div id="log"></div>
+          <div id="left-panel"></div>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

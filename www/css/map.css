@@ -1,0 +1,8 @@
+#map { 
+    
+}
+
+.leaflet-container.move-cursor-enabled {
+    cursor: crosshair;	
+}
+

@@ -1,0 +1,8 @@
+bin
+/scripts/old
+.vs
+x64
+core.user
+core.vcxproj.user
+.vscode
+*.user

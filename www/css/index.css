@@ -1,0 +1,84 @@
+body{
+    margin-top: 0px; 
+    margin-bottom: 0px; 
+    margin-left: 0px; 
+    margin-right: 0px;
+    background-color: #2d3e50;
+    font-family: "Lucida Console", "Courier New", monospace;
+}
+
+#content-table { 
+    height: 100%; 
+    width: 100%;
+}
+
+#top-panel { 
+    height: 40px;
+}
+
+#bottom-panel {
+    height: 100px
+}
+
+#log {
+    background-color: #202831AA;
+    height: 100px;
+    width: 400px;
+    border: solid white 1px;
+    font-size: 12px;
+    overflow-y: scroll;
+    position: fixed;
+    z-index: 1000;
+    top: 50px;
+    right: 10px;
+}
+
+.log-message {
+    margin: 2px;
+    color: white;
+    text-shadow: 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
+}
+
+.error-message{
+    margin: 2px;
+    color: rgb(255, 154, 154);
+    text-shadow: 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
+}
+
+#left-panel {
+    background-color: #202831;
+    height: 100px;
+    width: 400px;
+    border: solid white 1px;
+    font-size: 12px;
+    position: fixed;
+    z-index: 1000;
+    left: 10px;
+    bottom: -80px;
+    transition: bottom 0.2s;
+}
+
+.panel-table 
+{
+    text-shadow: 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
+}
+
+.panel-title 
+{
+    font-size: 14px;
+    color: #d3e9ff;
+}
+
+.panel-label 
+{
+    font-size: 12px;
+    color: #d3e9ff;
+}
+
+.panel-content 
+{
+    font-size: 12px;
+    color: white;
+}
+
+
