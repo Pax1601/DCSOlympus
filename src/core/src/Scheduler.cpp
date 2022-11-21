@@ -5,7 +5,7 @@
 #include "Utils.h"
 #include "Unit.h"
 
-extern UnitsHandler* unitsHandler;
+extern UnitsFactory* unitsHandler;
 
 Scheduler::Scheduler(lua_State* L)
 {

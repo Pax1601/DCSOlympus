@@ -2,6 +2,7 @@
 
 #include "DCSUtils.h"
 #include "Logger.h"
+#include "Utils.h"
 
 #define DllExport   __declspec( dllexport )
 
@@ -35,13 +36,25 @@ f_coreMissionData coreMissionData = nullptr;
 static int onSimulationStart(lua_State* L)
 {
     LOGGER->Log("onSimulationStart callback called successfully");
-#ifdef _DEBUG
-    LOGGER->Log("Loading Debug core.dll");
-    hGetProcIDDLL = LoadLibrary(L"C:\\Users\\dpass\\Documents\\Olympus\\bin\\x64\\Debug\\core.dll");
-#else
-    LOGGER->Log("Loading Release core.dll");
-    hGetProcIDDLL = LoadLibrary(L"C:\\Users\\dpass\\Documents\\Olympus\\bin\\x64\\Release\\core.dll");
-#endif
+
+    string modLocation;
+    string dllLocation;
+    char* buf = nullptr;
+    size_t sz = 0;
+    if (_dupenv_s(&buf, &sz, "OLYMPUS") == 0 && buf != nullptr)
+    {
+        modLocation = buf;
+        free(buf);
+    }
+    else
+    {
+        LOGGER->Log("OLYMPUS environment variable is missing");
+        goto error;
+    }
+    dllLocation = modLocation + "\\bin\\core.dll";
+    
+    LOGGER->Log("Loading core.dll");
+    hGetProcIDDLL = LoadLibrary(Utils::to_wstring(dllLocation).c_str());
 
     if (!hGetProcIDDLL) {
         DCSUtils::LogError(L, "Error loading core DLL");

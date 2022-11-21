@@ -14,10 +14,18 @@ Source: "..\scripts\OlympusExport.lua"; DestDir: "{app}\Scripts"; Flags: ignorev
 Source: "..\scripts\OlympusHook.lua"; DestDir: "{app}\Scripts\Hooks"; Flags: ignoreversion 
 Source: "..\scripts\OlympusCommand.lua"; DestDir: "{app}\Mods\Services\Olympus\Scripts"; Flags: ignoreversion 
 Source: "..\scripts\OlympusMission.lua"; DestDir: "{app}\Mods\Services\Olympus\Scripts"; Flags: ignoreversion 
-Source: "..\bin\x64\Release\*.dll"; DestDir: "{app}\Mods\Services\Olympus\bin"; Flags: ignoreversion;
+Source: "..\scripts\mist_4_4_90.lua"; DestDir: "{app}\Mods\Services\Olympus\Scripts"; Flags: ignoreversion 
+Source: "..\bin\*.dll"; DestDir: "{app}\Mods\Services\Olympus\bin"; Flags: ignoreversion;
 
 [Code]
 procedure AppendExportString();
 begin
   SaveStringToFile(ExpandConstant('{app}\Scripts\Export.lua'), #13#10 + 'local Olympuslfs=require(''lfs'');dofile(Olympuslfs.writedir()..''Scripts/OlympusExport.lua'')' + #13#10, True);
 end;
+
+[Registry]
+Root: HKCU; Subkey: "Environment"; ValueType:string; ValueName: "OLYMPUS"; ValueData: "{app}\Mods\Services\Olympus"; Flags: preservestringtype
+	
+[Setup]
+; Tell Windows Explorer to reload the environment
+ChangesEnvironment=yes

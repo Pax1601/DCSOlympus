@@ -2,26 +2,16 @@ Olympus = {}
 Olympus.OlympusDLL = nil
 Olympus.cppRESTDLL = nil
 Olympus.DLLsloaded = false
-Olympus.debug = true
-if Olympus.debug then
-	Olympus.OlympusModPath = "C:\\Users\\dpass\\Documents\\Olympus\\bin\\x64\\Debug\\"
-else
-	Olympus.OlympusModPath = "C:\\Users\\dpass\\Doczuments\\Olympus\\bin\\x64\\Release\\"
-end
+Olympus.OlympusModPath = os.getenv('OLYMPUS')..'\\bin\\' 
 
-log.write('Olympus.EXPORT.LUA', log.INFO,'Executing OlympusExport.lua')
+log.write('Olympus.EXPORT.LUA', log.INFO, 'Executing OlympusExport.lua')
 
 function Olympus.loadDLLs()
 	-- Add the .dll paths
 	package.cpath = package.cpath..';'..Olympus.OlympusModPath..'?.dll;'
 	
-	if Olympus.debug then
-		log.write('Olympus.EXPORT.LUA', log.INFO, 'Loading cpprest_2_10d.dll from ['..Olympus.OlympusModPath..']')
-		pcall(require, 'cpprest_2_10d')
-	else
-		log.write('Olympus.EXPORT.LUA', log.INFO, 'Loading cpprest_2_10.dll from ['..Olympus.OlympusModPath..']')
-		pcall(require, 'cpprest_2_10')
-	end
+	log.write('Olympus.EXPORT.LUA', log.INFO, 'Loading cpprest_2_10.dll from ['..Olympus.OlympusModPath..']')
+	pcall(require, 'cpprest_2_10')
 
 	log.write('Olympus.EXPORT.LUA', log.INFO, 'Loading Olympus.dll from ['..Olympus.OlympusModPath..']')
 	local status

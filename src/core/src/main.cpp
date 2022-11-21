@@ -7,13 +7,13 @@
 #include "Scheduler.h"
 #include "LUAFunctions.h"
 
-
 auto before = std::chrono::system_clock::now();
-UnitsHandler* unitsHandler = nullptr;
+UnitsFactory* unitsHandler = nullptr;
 RESTServer* restserver = nullptr;
 Scheduler* scheduler = nullptr;
 json::value missionData;
 
+/* Standard DllMain entry point */
 BOOL APIENTRY DllMain( HMODULE hModule,
                        DWORD  ul_reason_for_call,
                        LPVOID lpReserved
@@ -32,6 +32,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 
 #define DllExport   __declspec( dllexport )
 
+/* Called when DCS simulation stops. All singleton instances are deleted. */
 extern "C" DllExport int coreDeinit(lua_State* L)
 {
     LOGGER->Log("Olympus coreDeinit called successfully");
@@ -45,9 +46,10 @@ extern "C" DllExport int coreDeinit(lua_State* L)
     return(0);
 }
 
+/* Called when DCS simulation starts. All singletons are instantiated, and the custom Lua functions are registered in the Lua state. */
 extern "C" DllExport int coreInit(lua_State* L)
 {
-    unitsHandler = new UnitsHandler(L);
+    unitsHandler = new UnitsFactory(L);
     restserver = new RESTServer(L);
     scheduler = new Scheduler(L);
 

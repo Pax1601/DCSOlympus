@@ -5,7 +5,7 @@
 #include "Scheduler.h"
 #include "LUAUtils.h"
 
-extern UnitsHandler* unitsHandler; 
+extern UnitsFactory* unitsHandler; 
 extern Scheduler* scheduler;
 extern json::value missionData;
 

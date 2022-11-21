@@ -4,17 +4,17 @@
 #include "framework.h"
 #include "Utils.h"
 
-UnitsHandler::UnitsHandler(lua_State* L)
+UnitsFactory::UnitsFactory(lua_State* L)
 {
 	DCSUtils::LogInfo(L, "Units Factory constructor called successfully");
 }
 
-UnitsHandler::~UnitsHandler()
+UnitsFactory::~UnitsFactory()
 {
 
 }
 
-Unit* UnitsHandler::getUnit(int ID)
+Unit* UnitsFactory::getUnit(int ID)
 {
 	if (units.find(ID) == units.end()) {
 		return nullptr;
@@ -24,7 +24,7 @@ Unit* UnitsHandler::getUnit(int ID)
 	}
 }
 
-void UnitsHandler::update(lua_State* L)
+void UnitsFactory::update(lua_State* L)
 {
 	//lua_getglobal(L, "net");
 	//lua_getfield(L, -1, "dostring_in");
@@ -45,7 +45,7 @@ void UnitsHandler::update(lua_State* L)
 	}
 }
 
-void UnitsHandler::updateAnswer(json::value& answer)
+void UnitsFactory::updateAnswer(json::value& answer)
 {
 	// TODO THREAT SAFEY!
 	auto unitsJson = json::value::object();
