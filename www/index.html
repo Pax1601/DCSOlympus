@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/index.css"/>
     <link rel="stylesheet" href="css/map.css"/>
     <link rel="stylesheet" href="css/UnitMarker.css"/>
+    <link rel="stylesheet" href="css/SelectionWheel.css"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css"
     integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14="
     crossorigin=""/>
@@ -20,7 +21,8 @@
     <script src="js/MissionData.js"></script>
     <script src="js/Unit.js"></script>
     <script src="js/UnitMarker.js"></script>
-    <script src="js/UnitsHandler.js"></script>
+    <script src="js/UnitsFactory.js"></script>
+    <script src="js/SelectionWheel.js"></script>
     <script src="js/index.js"></script>
   </head>
   <body>
@@ -30,7 +32,7 @@
         </td>
       </tr>
       <tr>
-        <td>
+        <td id="map-container">
           <div id="map"></div>
           <div id="log"></div>
           <div id="left-panel"></div>

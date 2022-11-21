@@ -3,7 +3,7 @@ class Unit
     constructor(ID) {
         this.ID = ID;
         this.marker = new L.Marker.UnitMarker([0, 0], {riseOnHover: true});
-        this.marker.addTo(map.getMap()).on('click', () => this.onClick());
+        this.marker.addTo(map.getMap()).on('click', (e) => this.onClick(e));
 
         this._selected = false;
 
@@ -19,6 +19,14 @@ class Unit
         this.activePath = undefined;
 
         this._pathMarkers = [];
+
+        this._pathPolyline = new L.Polyline([], {
+            color: '#2d3e50',
+            weight: 3,
+            opacity: 0.5,
+            smoothFactor: 1
+        });
+        this._pathPolyline.addTo(map.getMap());
     }
 
     update(response)
@@ -31,18 +39,28 @@ class Unit
         this.altitude = response["altitude"];
         this.heading = response["heading"];
         this.coalitionID = response["coalitionID"]
+
+        /* Only present if an active path is available */
         if ("activePath" in response)
             this.activePath = response["activePath"]
 
         this.drawMarker();
-        this.drawPath();
+
+        if (this._selected && this.activePath != undefined)
+        {
+            this.drawPath();
+        }
+        else
+        { 
+            this.clearPath();
+        }
     }
     
     setSelected(selected)
     {
         this._selected = selected;
         this.marker.setSelected(selected);
-        unitsHandler.onUnitSelection();
+        unitsFactory.onUnitSelection();
     }
 
     getSelected()
@@ -52,8 +70,6 @@ class Unit
 
     addDestination(latlng)
     {
-        var xy = latlng2xy(latlng.lat, latlng.lng)
-        
         var xhr = new XMLHttpRequest();
         xhr.open("PUT", RESTaddress);
 
@@ -90,7 +106,10 @@ class Unit
     onClick(e) 
     {
         // TODO if ctrl is pressed, don't deselect the other units
-        unitsHandler.deselectAllUnits();
+        if (!e.originalEvent.ctrlKey)
+        {
+            unitsFactory.deselectAllUnits();
+        }
         this.setSelected(true);
     }
 
@@ -106,16 +125,40 @@ class Unit
 
     drawPath()
     {
+        var _points = [];
+        _points.push(new L.LatLng(this.latitude, this.longitude));
+
+        /* Add markers if missing */
+        while (this._pathMarkers.length < Object.keys(this.activePath).length)
+        {
+            var marker = L.marker([0, 0]).addTo(map.getMap());
+            this._pathMarkers.push(marker);
+        }
+
+        /* Remove markers if too many */
+        while (this._pathMarkers.length > Object.keys(this.activePath).length)
+        {
+            map.getMap().removeLayer(this._pathMarkers[this._pathMarkers.length - 1]);
+            this._pathMarkers.splice(this._pathMarkers.length - 1, 1)
+        }
+
+        /* Update the position of the existing markers (to avoid creating markers uselessly) */
         for (let WP in this.activePath)
         {
             var destination = this.activePath[WP];
-            if (parseInt(WP) - 1 >= this._pathMarkers.length)
-            {
-                var marker = L.marker([destination.lat, destination.lng]).addTo(map.getMap());
-                this._pathMarkers.push(marker);
-            }
             this._pathMarkers[parseInt(WP) - 1].setLatLng([destination.lat, destination.lng]);
+            _points.push(new L.LatLng(destination.lat, destination.lng));
+            this._pathPolyline.setLatLngs(_points);
         }
-        this._pathMarkers
+    }
+
+    clearPath()
+    {
+        for (let WP in this._pathMarkers)
+        {
+            map.getMap().removeLayer(this._pathMarkers[WP]);
+        }
+        this._pathMarkers = [];
+        this._pathPolyline.setLatLngs([]);
     }
 }

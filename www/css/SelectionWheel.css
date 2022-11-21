@@ -1,0 +1,29 @@
+:root {
+    --blue: #2d3e50AA;
+    --white: #FFFFFFAA;
+    --start_angle: 0deg;
+    --gradient_start: 0deg;
+    --gradient_stop: 0deg;
+    --animation_duration: 0.1s;
+  }
+
+#selection-wheel {
+    border-radius: 50%;
+    background: conic-gradient(from var(--start_angle), var(--white) 0deg, var(--white) calc(var(--gradient_start) - 1deg), var(--blue) var(--gradient_start), var(--blue) var(--gradient_stop), var(--white) calc(var(--gradient_stop) + 1deg), var(--white) 360deg);
+    -webkit-mask: radial-gradient(transparent 30%,#000 31%);
+            mask: radial-gradient(transparent 30%,#000 31%);
+}
+#selection-wheel:before {
+    content: "";
+    display: block;
+    padding-top: 100%;
+}
+
+#selection-wheel-container {
+    margin: 0 auto;
+    position: fixed;
+    z-index: 1000;
+    width: 0px;
+    height: 0px;
+    transition: width var(--animation_duration), height var(--animation_duration), left var(--animation_duration), top var(--animation_duration);
+}

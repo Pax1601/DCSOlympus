@@ -4,7 +4,7 @@ class Map
     {
         this._state = "IDLE";
 
-        this._map = L.map('map').setView([37.23, -115.8], 12);
+        this._map = L.map('map', {doubleClickZoom: false}).setView([37.23, -115.8], 12);
 
         L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
             attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
@@ -16,13 +16,16 @@ class Map
         // Register event handles
         this._map.on('contextmenu', (e) => this.onContextMenu(e));
         this._map.on('click', (e) => this.onClick(e));
+        this._map.on('dblclick', (e) => this.onDoubleClick(e));
 
         this.setState("IDLE");
+
+        this._selectionWheel = undefined;
     }
 
     getMap()
     {
-        return this._map
+        return this._map;
     }
 
     // GET new data from the server
@@ -36,8 +39,8 @@ class Map
             var data = JSON.parse(xmlHttp.responseText);
             
             missionData.update(data);
-            unitsHandler.update(data);
-            leftPanel.update(unitsHandler.getSelectedUnits());
+            unitsFactory.update(data);
+            leftPanel.update(unitsFactory.getSelectedUnits());
         };
 
         xmlHttp.onerror = function () {
@@ -63,11 +66,13 @@ class Map
     // Event handlers
     onContextMenu(e)
     {
-        unitsHandler.deselectAllUnits();
+        unitsFactory.deselectAllUnits();
+        this._removeSelectionWheel();
     }
 
     onClick(e)
     {
+        this._removeSelectionWheel();
         if (this._state === "IDLE")
         {
             
@@ -76,9 +81,23 @@ class Map
         {
             if (!e.originalEvent.ctrlKey)
             {
-                unitsHandler.clearDestinations();
+                unitsFactory.clearDestinations();
             }
-            unitsHandler.addDestination(e.latlng)
+            unitsFactory.addDestination(e.latlng)
+        }
+    }
+
+    onDoubleClick(e)
+    {
+        this._selectionWheel = new SelectionWheel(e.originalEvent.x, e.originalEvent.y, ['1', '2', '3']);
+    }
+
+    _removeSelectionWheel()
+    {
+        if (this._selectionWheel !== undefined)
+        {
+            this._selectionWheel.remove();
+            this._selectionWheel = undefined;
         }
     }
 }

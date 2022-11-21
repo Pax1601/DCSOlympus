@@ -1,5 +1,5 @@
 var missionData;
-var unitsHandler;
+var unitsFactory;
 var leftPanel;
 var map;
 var RESTaddress = "http://localhost:30000/restdemo";
@@ -9,7 +9,7 @@ function setup()
     resize();
     missionData = new MissionData();
     leftPanel = new LeftPanel();
-    unitsHandler = new UnitsHandler();
+    unitsFactory = new UnitsFactory();
     map = new Map();  
 }
 
