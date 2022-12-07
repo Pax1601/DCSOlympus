@@ -2,7 +2,7 @@ Olympus = {}
 Olympus.OlympusDLL = nil
 Olympus.cppRESTDLL = nil
 Olympus.DLLsloaded = false
-Olympus.OlympusModPath = os.getenv('OLYMPUS')..'\\bin\\' 
+Olympus.OlympusModPath = os.getenv('DCSOLYMPUS_PATH')..'\\bin\\' 
 
 log.write('Olympus.EXPORT.LUA', log.INFO, 'Executing OlympusExport.lua')
 
@@ -13,9 +13,12 @@ function Olympus.loadDLLs()
 	log.write('Olympus.EXPORT.LUA', log.INFO, 'Loading cpprest_2_10.dll from ['..Olympus.OlympusModPath..']')
 	pcall(require, 'cpprest_2_10')
 
-	log.write('Olympus.EXPORT.LUA', log.INFO, 'Loading Olympus.dll from ['..Olympus.OlympusModPath..']')
+	log.write('Olympus.EXPORT.LUA', log.INFO, 'Loading hook.dll from ['..Olympus.OlympusModPath..']')
 	local status
-	status, Olympus.OlympusDLL = pcall(require, 'Olympus')
+	pcall(require, 'logger')
+	pcall(require, 'luatools')
+	pcall(require, 'dcstools')
+	status, Olympus.OlympusDLL = pcall(require, 'hook')
 	if not status then
 		return false
 	end	
@@ -29,6 +32,6 @@ do
 		Olympus.loadDLLs()
 		log.write('Olympus.EXPORT.LUA', log.INFO, OlympusName..' successfully loaded.')
 	else
-		log.write('Olympus.EXPORT.LUA', log.INFO, 'Olympus.dll already initialized')
+		log.write('Olympus.EXPORT.LUA', log.INFO, 'hook.dll already initialized')
 	end
 end

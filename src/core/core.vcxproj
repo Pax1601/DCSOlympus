@@ -19,27 +19,34 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Commands.h" />
-    <ClInclude Include="include\LUAFunctions.h" />
-    <ClInclude Include="include\RESTServer.h" />
-    <ClInclude Include="include\Scheduler.h" />
-    <ClInclude Include="include\Unit.h" />
-    <ClInclude Include="include\UnitsHandler.h" />
+    <ClInclude Include="include\commands.h" />
+    <ClInclude Include="include\scriptLoader.h" />
+    <ClInclude Include="include\server.h" />
+    <ClInclude Include="include\scheduler.h" />
+    <ClInclude Include="include\unit.h" />
+    <ClInclude Include="include\unitsFactory.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Commands.cpp" />
-    <ClCompile Include="src\LUAFunctions.cpp" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\RESTServer.cpp" />
-    <ClCompile Include="src\Scheduler.cpp" />
-    <ClCompile Include="src\Unit.cpp" />
-    <ClCompile Include="src\UnitsHandler.cpp" />
+    <ClCompile Include="src\commands.cpp" />
+    <ClCompile Include="src\scriptLoader.cpp" />
+    <ClCompile Include="src\core.cpp" />
+    <ClCompile Include="src\server.cpp" />
+    <ClCompile Include="src\scheduler.cpp" />
+    <ClCompile Include="src\unit.cpp" />
+    <ClCompile Include="src\unitsFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\dcstools\dcstools.vcxproj">
+      <Project>{2b255368-39a0-431a-a6de-cc739ac70dc1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\logger\logger.vcxproj">
+      <Project>{873ecabe-fcfe-4217-ac15-91959c3cf1c6}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\luatools\luatools.vcxproj">
+      <Project>{de139ec1-4f88-47d5-be73-f41915fe14a3}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\utils\utils.vcxproj">
       <Project>{b85009ce-4a5c-4a5a-b85d-001b3a2651b2}</Project>
-      <LinkLibraryDependencies>true</LinkLibraryDependencies>
-      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -162,9 +169,10 @@
       <PreprocessorDefinitions>NDEBUG;CORE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>include; ..\..\third-party\lua\include; ..\utils\include; ..\shared\include</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>include;..\..\third-party\lua\include;..\utils\include;..\shared\include;..\dcstools\include;..\logger\include;..\luatools\include</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

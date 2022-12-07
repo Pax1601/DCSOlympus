@@ -14,13 +14,36 @@ class Map
         setInterval(() => this.update(), 250);
 
         // Register event handles
-        this._map.on('contextmenu', (e) => this.onContextMenu(e));
-        this._map.on('click', (e) => this.onClick(e));
-        this._map.on('dblclick', (e) => this.onDoubleClick(e));
-
+        this._map.on('contextmenu', (e) => this._onContextMenu(e));
+        this._map.on('click', (e) => this._onClick(e));
+        this._map.on('dblclick', (e) => this._onDoubleClick(e));
+        this._map.on('movestart', () => {this.removeSelectionWheel(); this.removeSelectionScroll();});
+        this._map.on('zoomstart', () => {this.removeSelectionWheel(); this.removeSelectionScroll();});
+        this._map.on('selectionend', (e) => unitsFactory.selectFromBounds(e.selectionBounds));
+        
         this.setState("IDLE");
 
         this._selectionWheel = undefined;
+        this._selectionScroll = undefined;
+
+        /* Edit the default zoom box effect to use it as a multiple units selection */
+        L.Map.BoxZoom.prototype._onMouseUp = function (e) {
+            if ((e.which !== 1) && (e.button !== 1)) { return; }
+        
+            this._finish();
+        
+            if (!this._moved) { return; }
+            // Postpone to next JS tick so internal click event handling
+            // still see it as "moved".
+            setTimeout(L.bind(this._resetState, this), 0);
+            var bounds = new L.LatLngBounds(
+                this._map.containerPointToLatLng(this._startPoint),
+                this._map.containerPointToLatLng(this._point));
+        
+            this._map.fire('selectionend', {selectionBounds: bounds});
+        }
+
+        this._activeCoalition = "blue";
     }
 
     getMap()
@@ -28,7 +51,7 @@ class Map
         return this._map;
     }
 
-    // GET new data from the server
+    /* GET new data from the server */
     update()
     {
         // Request the updated unit data from the server 
@@ -49,7 +72,7 @@ class Map
         xmlHttp.send( null );
     }
 
-    // State machine 
+    /* State machine */
     setState(newState)
     {
         this._state = newState;
@@ -63,16 +86,30 @@ class Map
         }
     }
 
-    // Event handlers
-    onContextMenu(e)
+    /* Set the active coalition (for persistency) */
+    setActiveCoalition(coalition)
     {
-        unitsFactory.deselectAllUnits();
-        this._removeSelectionWheel();
+        this._activeCoalition = coalition;
     }
 
-    onClick(e)
+    getActiveCoalition()
     {
-        this._removeSelectionWheel();
+        return this._activeCoalition;
+    }
+
+    /* Event handlers */
+    // Right click
+    _onContextMenu(e)   
+    {
+        unitsFactory.deselectAllUnits();
+        this.removeSelectionWheel();
+        this.removeSelectionScroll();
+    }
+
+    _onClick(e)
+    {
+        this.removeSelectionWheel();
+        this.removeSelectionScroll();
         if (this._state === "IDLE")
         {
             
@@ -87,17 +124,115 @@ class Map
         }
     }
 
-    onDoubleClick(e)
+    _onDoubleClick(e)
     {
-        this._selectionWheel = new SelectionWheel(e.originalEvent.x, e.originalEvent.y, ['1', '2', '3']);
+        var options = [
+            {'tooltip': 'Air unit',       'src': 'spawnAir.png',          'callback': () => this._unitSelectAir(e)},
+            {'tooltip': 'Ground unit',    'src': 'spawnGround.png',       'callback': () => this._groundSpawnMenu(e)},
+            {'tooltip': 'Smoke',          'src': 'spawnSmoke.png',        'callback': () => this._smokeSpawnMenu(e)},
+            {'tooltip': 'Explosion',      'src': 'spawnExplosion.png',    'callback': () => this._explosionSpawnMenu(e)}
+        ]
+        this._selectionWheel = new SelectionWheel(e.originalEvent.x, e.originalEvent.y, options);
     }
 
-    _removeSelectionWheel()
+    /* Selection wheel and selection scroll functions */
+    removeSelectionWheel()
     {
         if (this._selectionWheel !== undefined)
         {
             this._selectionWheel.remove();
             this._selectionWheel = undefined;
         }
+    }
+
+    removeSelectionScroll()
+    {
+        if (this._selectionScroll !== undefined)
+        {
+            this._selectionScroll.remove();
+            this._selectionScroll = undefined;
+        }
+    }
+
+    /* Spawn a new air unit selection wheel (TODO, divide units by type, like bomber, fighter, tanker etc)*/
+    _airSpawnMenu(e)
+    {
+        this.removeSelectionWheel();
+        this.removeSelectionScroll();
+        var options = [
+            
+        ]
+        this._selectionWheel = new SelectionWheel(e.originalEvent.x, e.originalEvent.y, options);
+    }
+
+    /* Spawn a new ground unit selection wheel */
+    _groundSpawnMenu(e)
+    {
+        this.removeSelectionWheel();
+        this.removeSelectionScroll();
+        var options = [
+            {'coalition': true, 'tooltip': 'Howitzer',   'src': 'spawnHowitzer.png', 'callback': () => this._unitSelectGround(e, "Howitzers")},
+            {'coalition': true, 'tooltip': 'SAM',        'src': 'spawnSAM.png',      'callback': () => this._unitSelectGround(e, "SAM")},
+            {'coalition': true, 'tooltip': 'IFV',        'src': 'spawnIFV.png',      'callback': () => this._unitSelectGround(e, "IFV")},
+            {'coalition': true, 'tooltip': 'Tank',       'src': 'spawnTank.png',     'callback': () => this._unitSelectGround(e, "Tanks")},
+            {'coalition': true, 'tooltip': 'MLRS',       'src': 'spawnMLRS.png',     'callback': () => this._unitSelectGround(e, "MLRS")},
+            {'coalition': true, 'tooltip': 'Radar',      'src': 'spawnRadar.png',    'callback': () => this._unitSelectGround(e, "Radar")},
+            {'coalition': true, 'tooltip': 'Unarmed',    'src': 'spawnUnarmed.png',  'callback': () => this._unitSelectGround(e, "Unarmed")}
+        ]
+        this._selectionWheel = new SelectionWheel(e.originalEvent.x, e.originalEvent.y, options);
+    }
+
+    /* Spawn smoke selection wheel */
+    _smokeSpawnMenu(e)
+    {
+        this.removeSelectionWheel();
+        this.removeSelectionScroll();
+        var options = [
+            {'tooltip': 'Red smoke',      'src': 'spawnSmoke.png',  'callback': () => {this.removeSelectionWheel(); this.removeSelectionScroll(); unitsFactory.spawnSmoke('red', e.latlng)}, 'tint': 'red'},
+            {'tooltip': 'White smoke',    'src': 'spawnSmoke.png',  'callback': () => {this.removeSelectionWheel(); this.removeSelectionScroll(); unitsFactory.spawnSmoke('white', e.latlng)}, 'tint': 'white'},
+            {'tooltip': 'Blue smoke',     'src': 'spawnSmoke.png',  'callback': () => {this.removeSelectionWheel(); this.removeSelectionScroll(); unitsFactory.spawnSmoke('blue', e.latlng)}, 'tint': 'blue'},
+            {'tooltip': 'Green smoke',    'src': 'spawnSmoke.png',  'callback': () => {this.removeSelectionWheel(); this.removeSelectionScroll(); unitsFactory.spawnSmoke('green', e.latlng)}, 'tint': 'green'},
+            {'tooltip': 'Orange smoke',   'src': 'spawnSmoke.png',  'callback': () => {this.removeSelectionWheel(); this.removeSelectionScroll(); unitsFactory.spawnSmoke('orange', e.latlng)}, 'tint': 'orange'},
+        ]
+        this._selectionWheel = new SelectionWheel(e.originalEvent.x, e.originalEvent.y, options);
+    }
+
+    /* Spawn an explosion selection wheel (TODO) */
+    _explosionSpawnMenu(e)
+    {
+        this.removeSelectionWheel();
+        this.removeSelectionScroll();
+        var options = [
+            
+        ]
+        this._selectionWheel = new SelectionWheel(e.originalEvent.x, e.originalEvent.y, options);
+    }
+
+    /* Show unit selection for ground units */
+    _unitSelectAir(e)
+    {
+        this.removeSelectionWheel();
+        this.removeSelectionScroll();
+        var options = unitTypes.air;
+        options.sort();
+        this._selectionScroll = new SelectionScroll(e.originalEvent.x, e.originalEvent.y, options, (type) => {
+            this.removeSelectionWheel(); 
+            this.removeSelectionScroll(); 
+            unitsFactory.spawnAirUnit(type, e.latlng, this._activeCoalition)
+        });
+    }
+
+    /* Show unit selection for ground units */
+    _unitSelectGround(e, group)
+    {
+        this.removeSelectionWheel();
+        this.removeSelectionScroll();
+        var options = unitTypes.vehicles[group];
+        options.sort();
+        this._selectionScroll = new SelectionScroll(e.originalEvent.x, e.originalEvent.y, options, (type) => {
+            this.removeSelectionWheel(); 
+            this.removeSelectionScroll(); 
+            unitsFactory.spawnGroundUnit(type, e.latlng, this._activeCoalition)
+        });
     }
 }

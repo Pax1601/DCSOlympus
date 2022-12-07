@@ -1,7 +1,7 @@
 #pragma once
-#include "LUAUtils.h"
 #include "framework.h"
-#include "Commands.h"
+#include "luatools.h"
+#include "commands.h"
 
 class Scheduler
 {

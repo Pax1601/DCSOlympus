@@ -1,6 +1,7 @@
 class SelectionWheel
 {
-    constructor(x, y, options) {
+    constructor(x, y, options) 
+    {
         if (options.length > 1)
         {
             this._x = x;
@@ -8,20 +9,53 @@ class SelectionWheel
             this._options = options;
             this._angularSize = 360 / this._options.length;
             
+            /* Create the container of the wheel */
             this._container = document.createElement("div");
             this._container.id = 'selection-wheel-container';
             this._container.style.left = this._x + "px";
             this._container.style.top = this._y + "px";
             document.getElementById("map-container").appendChild(this._container);
             
+            /* Create the wheel itself */
             this._wheel = document.createElement("div");
             this._wheel.id = 'selection-wheel';
             this._container.appendChild(this._wheel);
-            this._wheel.addEventListener('mousemove', (e) => this._onMouseMove(e));
 
-            this._wheel.style.setProperty('--gradient_start', this._angularSize / 2 + 'deg');
-            this._wheel.style.setProperty('--gradient_stop', (360 - this._angularSize / 2) + 'deg');
+            /* Create the buttons */
+            this._buttons = [];
+            for (let id in this._options)
+            {
+                var button = document.createElement("div");
+                button.classList.add("selection-wheel-button");
+                button.style.left = this._x - 25 + "px";
+                button.style.top = this._y - 25 + "px";
+                button.addEventListener('click', (e) => this._options[id].callback(e));
+                this._container.appendChild(button);
+                this._buttons.push(button);
 
+                var image = document.createElement("img");
+                image.classList.add("selection-wheel-image");
+                image.src = `img/buttons/${this._options[id].src}`
+                if ('tint' in this._options[id])
+                {
+                    button.style.setProperty('background-color', this._options[id].tint);
+                    image.style.opacity = 0;
+                }
+                button.appendChild(image);
+            }
+
+            /* Show the coalition switch if requested */
+            this._switchLabel = document.createElement("label");
+            this._switchLabel.classList.add("switch");
+            this._switchLabel.innerHTML = `<input type="checkbox" id="coalition-switch"> <span class="slider round"></span>`
+            this._container.appendChild(this._switchLabel);
+            document.getElementById("coalition-switch").addEventListener('change', (e) => this._onSwitch(e))
+
+            if (map.getActiveCoalition() == "red")
+            {
+                document.getElementById("coalition-switch").checked = true;
+            }
+            
             window.setTimeout(() => this._show(), 100);
         }
     }
@@ -34,17 +68,32 @@ class SelectionWheel
 
     _show()
     {
-        this._container.style.width = "200px";
-        this._container.style.height = "200px";
-        this._container.style.left = this._x - 100 + "px";
-        this._container.style.top = this._y - 100 + "px";
+        this._container.style.width = 220 + "px";
+        this._container.style.height = 220 + "px";
+        this._container.style.left = this._x - 110 + "px";
+        this._container.style.top = this._y - 110 + "px";
+
+        var r = 80;
+        for (let id in this._buttons)
+        {
+            var angle = parseInt(id) * this._angularSize;
+            this._buttons[id].style.opacity = 1;
+            this._buttons[id].style.left = this._x + r * Math.sin(deg2rad(angle)) - 25 + "px";
+            this._buttons[id].style.top = this._y - r * Math.cos(deg2rad(angle)) - 25 + "px";
+        }
+
+        this._switchLabel.style.opacity = 1;        
     }
 
-    _onMouseMove(e)
+    _onSwitch(e)
     {
-        var angle = -rad2deg(Math.atan2(e.x - this._x, e.y - this._y)) + 180 + this._angularSize / 2;
-        var index = Math.floor(angle / this._angularSize)
-        this._wheel.style.transform = 'rotate('+ (index * this._angularSize) + 'deg)';
+        if (e.currentTarget.checked) {
+            document.documentElement.style.setProperty('--normal', getComputedStyle(this._container).getPropertyValue("--red"));
+            map.setActiveCoalition("red");
+        } else {
+            document.documentElement.style.setProperty('--normal', getComputedStyle(this._container).getPropertyValue("--blue"));
+            map.setActiveCoalition("blue");
+        }
     }
 }
 

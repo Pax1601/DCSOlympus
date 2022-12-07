@@ -2,7 +2,7 @@ Olympus = {}
 Olympus.OlympusDLL = nil
 Olympus.cppRESTDLL = nil
 Olympus.DLLsloaded = false
-Olympus.OlympusModPath = os.getenv('OLYMPUS')..'\\bin\\' 
+Olympus.OlympusModPath = os.getenv('DCSOLYMPUS_PATH')..'\\bin\\' 
 
 log.write('Olympus.HOOKS.LUA', log.INFO,'Executing OlympusHook.lua')
 
@@ -13,9 +13,13 @@ function loadDLLs()
 	log.write('Olympus.HOOKS.LUA', log.INFO, 'Loading cpprest_2_10.dll from ['..Olympus.OlympusModPath..']')
 	pcall(require, 'cpprest_2_10')
 
-	log.write('Olympus.HOOKS.LUA', log.INFO, 'Loading Olympus.dll from ['..Olympus.OlympusModPath..']')
+	log.write('Olympus.HOOKS.LUA', log.INFO, 'Loading hook.dll from ['..Olympus.OlympusModPath..']')
 	local status
-	status, Olympus.OlympusDLL = pcall(require, 'Olympus')
+	
+	pcall(require, 'logger')
+	pcall(require, 'luatools')
+	pcall(require, 'dcstools')
+	status, Olympus.OlympusDLL = pcall(require, 'hook')
 	if not status then
 		return false
 	end	

@@ -9,45 +9,45 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Commands.h">
+    <ClInclude Include="include\commands.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\RESTServer.h">
+    <ClInclude Include="include\server.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Scheduler.h">
+    <ClInclude Include="include\scheduler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Unit.h">
+    <ClInclude Include="include\unit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\UnitsHandler.h">
+    <ClInclude Include="include\unitsFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\LUAFunctions.h">
+    <ClInclude Include="include\scriptLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Commands.cpp">
+    <ClCompile Include="src\commands.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\main.cpp">
+    <ClCompile Include="src\core.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\RESTServer.cpp">
+    <ClCompile Include="src\server.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scheduler.cpp">
+    <ClCompile Include="src\scheduler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Unit.cpp">
+    <ClCompile Include="src\unit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\UnitsHandler.cpp">
+    <ClCompile Include="src\unitsFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\LUAFunctions.cpp">
+    <ClCompile Include="src\scriptLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

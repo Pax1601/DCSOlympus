@@ -14,9 +14,6 @@ L.Marker.UnitMarker = L.Marker.extend(
                 {
                     if (unitName in unitIcons) img.src = unitIcons[unitName];  
                     else img.src = "img/units/undefined.png";  
-
-                    // Set image class, TODO: make fuction to change coalition
-                    img.classList.add("unitmarker-icon-img-blue");
                 }
                 
                 // Set the unit name in the marker
@@ -26,7 +23,39 @@ L.Marker.UnitMarker = L.Marker.extend(
             this.unitName = unitName;
         },
 
-        // Rotates the marker to show heading
+        setCoalitionID: function(coalitionID)
+        {
+            var img = this._icon.querySelector("#icon-img");
+            if (img!== undefined) 
+            {
+                if (coalitionID == 2)
+                {
+                    img.classList.add("unitmarker-icon-img-blue");
+                }
+                else
+                {
+                    img.classList.add("unitmarker-icon-img-red");
+                }
+            }
+        },
+
+        setAlive: function(alive)
+        {
+            var table = this._icon.querySelector("#container-table");
+            if (table!== undefined) 
+            {
+                if (alive)
+                {
+                    table.classList.remove("unitmarker-container-table-dead");
+                }
+                else
+                {
+                    table.classList.add("unitmarker-container-table-dead");
+                }
+            }
+            this.alive = alive;
+        },
+        
         setAngle: function(angle)
         {
             if (this._angle !== angle){
@@ -90,7 +119,10 @@ L.Marker.UnitMarker.addInitHook(function()
     this.setIcon(icon);
     
     this.on('mouseover',function(e) {
-        e.target.setHovered(true);
+        if (e.target.alive)
+        {
+            e.target.setHovered(true);
+        }
     });
 
     this.on('mouseout',function(e) {
@@ -103,7 +135,7 @@ var unitIcons =
     "A-4E-C": "img/units/a-4.png"
 }
 
-var iconHtml = `<table class="unitmarker-container-table">
+var iconHtml = `<table class="unitmarker-container-table" id="container-table">
                     <tr>
                         <td>
                             <img class="unitmarker-selection-img" id="selection-img" src="img/selection.png">

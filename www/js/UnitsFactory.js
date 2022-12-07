@@ -63,7 +63,7 @@ class UnitsFactory
         }
     }
 
-    clearDestinations(latlng)
+    clearDestinations()
     {
         for (let ID in this._units)
         {
@@ -72,5 +72,69 @@ class UnitsFactory
                 this._units[ID].clearDestinations();
             }
         }
+    }
+
+    selectFromBounds(bounds)
+    {
+        this.deselectAllUnits();
+        for (let ID in this._units)
+        {
+            var latlng = new L.LatLng(this._units[ID].latitude, this._units[ID].longitude);
+            if (bounds.contains(latlng))
+            {
+                this._units[ID].setSelected(true);
+            }
+        }
+    }
+
+    spawnSmoke(color, latlng)
+    {
+        var xhr = new XMLHttpRequest();
+        xhr.open("PUT", RESTaddress);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                console.log("Added " + color + " smoke at " + ConvertDDToDMS(latlng.lat, false) + " " + ConvertDDToDMS(latlng.lng, true));
+            }
+        };
+
+        var command = {"color": color, "location": latlng};
+        var data = {"smoke": command}
+
+        xhr.send(JSON.stringify(data));
+    }
+
+    spawnGroundUnit(type, coalition, latlng)
+    {        
+        var xhr = new XMLHttpRequest();
+        xhr.open("PUT", RESTaddress);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                console.log("Added " + coalition + " " + type + " at " + ConvertDDToDMS(latlng.lat, false) + " " + ConvertDDToDMS(latlng.lng, true));
+            }
+        };
+
+        var command = {"type": type, "location": latlng, "coalition": coalition};
+        var data = {"spawnGround": command}
+
+        xhr.send(JSON.stringify(data));
+    }
+
+    spawnAirUnit(type, latlng, coalition)
+    {        
+        var xhr = new XMLHttpRequest();
+        xhr.open("PUT", RESTaddress);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                console.log("Added " + coalition + " " + type + " at " + ConvertDDToDMS(latlng.lat, false) + " " + ConvertDDToDMS(latlng.lng, true));
+            }
+        };
+
+        var command = {"type": type, "location": latlng, "coalition": coalition};
+        var data = {"spawnAir": command}
+
+        xhr.send(JSON.stringify(data));
     }
 }

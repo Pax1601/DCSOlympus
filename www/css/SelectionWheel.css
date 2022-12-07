@@ -1,17 +1,23 @@
 :root {
-    --blue: #2d3e50AA;
-    --white: #FFFFFFAA;
+    --blue: #2196F3aa;
+    --red: #f32121aa;
+    --normal: #2196F3aa;
+    --highlight: #FFFFFFAA;
     --start_angle: 0deg;
     --gradient_start: 0deg;
     --gradient_stop: 0deg;
     --animation_duration: 0.1s;
+    --color_transition: 0.4s;
   }
 
 #selection-wheel {
+    width: 100%;
     border-radius: 50%;
-    background: conic-gradient(from var(--start_angle), var(--white) 0deg, var(--white) calc(var(--gradient_start) - 1deg), var(--blue) var(--gradient_start), var(--blue) var(--gradient_stop), var(--white) calc(var(--gradient_stop) + 1deg), var(--white) 360deg);
+    /*background: conic-gradient(from var(--start_angle), var(--highlight) 0deg, var(--highlight) calc(var(--gradient_start) - 1deg), var(--normal) var(--gradient_start), var(--normal) var(--gradient_stop), var(--highlight) calc(var(--gradient_stop) + 1deg), var(--highlight) 360deg);*/
+    background: var(--normal);
     -webkit-mask: radial-gradient(transparent 30%,#000 31%);
             mask: radial-gradient(transparent 30%,#000 31%);
+    transition: background-color var(--color_transition);    
 }
 #selection-wheel:before {
     content: "";
@@ -26,4 +32,108 @@
     width: 0px;
     height: 0px;
     transition: width var(--animation_duration), height var(--animation_duration), left var(--animation_duration), top var(--animation_duration);
+    overflow: visible;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
+.selection-wheel-button {
+    position: fixed;
+    z-index: 1000;
+    width: 50px;
+    height: 50px;
+    opacity: 0;
+    transition: opacity var(--animation_duration), left var(--animation_duration), top var(--animation_duration);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.selection-wheel-image {
+    width: 45px;
+    height: 45px;
+    /*filter: invert(100%);*/
+    transition: width var(--animation_duration), height var(--animation_duration);
+    filter: drop-shadow(1px 1px 0px var(--highlight)) drop-shadow(1px -1px 0px var(--highlight)) drop-shadow(-1px 1px 0px var(--highlight)) drop-shadow(-1px -1px 0px var(--highlight));
+
+}
+
+.selection-wheel-button:hover {
+    filter: drop-shadow(1px 1px 2px var(--highlight)) drop-shadow(1px -1px 2px var(--highlight)) drop-shadow(-1px 1px 2px var(--highlight)) drop-shadow(-1px -1px 2px var(--highlight));
+}
+
+.selection-wheel-button:hover .selection-wheel-image {
+    width: 50px;
+    height: 50px;
+    /*filter: invert(21%) sepia(23%) saturate(775%) hue-rotate(170deg) brightness(92%) contrast(90%);*/
+}
+
+/* The switch - the box around the slider */
+.switch {
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+    margin-top: -17px;
+    transition: opacity var(--animation_duration);
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--blue);
+    -webkit-transition: var(--color_transition);
+    transition: var(--color_transition);
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: var(--color_transition);
+    transition: var(--color_transition);
+}
+
+input:checked + .slider {
+    background-color: var(--red);
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px var(--red);
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+} 

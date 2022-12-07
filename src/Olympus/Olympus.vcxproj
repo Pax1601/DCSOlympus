@@ -11,12 +11,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\olympus.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\dcstools\dcstools.vcxproj">
+      <Project>{2b255368-39a0-431a-a6de-cc739ac70dc1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\logger\logger.vcxproj">
+      <Project>{873ecabe-fcfe-4217-ac15-91959c3cf1c6}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\utils\utils.vcxproj">
       <Project>{b85009ce-4a5c-4a5a-b85d-001b3a2651b2}</Project>
-      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -25,7 +30,7 @@
     <ProjectGuid>{5f3fc91e-1fbc-4223-8011-9708de913474}</ProjectGuid>
     <RootNamespace>Olympus</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>Olympus</ProjectName>
+    <ProjectName>olympus</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -93,9 +98,10 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS; NDEBUG;OLYMPUS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>include; ..\..\third-party\lua\include; ..\utils\include;  ..\shared\include</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>include;..\..\third-party\lua\include;..\utils\include;..\shared\include;..\dcstools\include;..\logger\include;..\luatools\include</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <AssemblerOutput>NoListing</AssemblerOutput>
     </ClCompile>
     <Link>

@@ -1,8 +1,8 @@
 #include "framework.h"
-#include "Utils.h"
+#include "utils.h"
 
 // Get current date/time, format is YYYY-MM-DD.HH:mm:ss
-const std::string Utils::CurrentDateTime()
+const std::string CurrentDateTime()
 {
     time_t     now = time(NULL);
     struct tm  tstruct;
@@ -12,7 +12,7 @@ const std::string Utils::CurrentDateTime()
     return buf;
 }
 
-std::wstring Utils::to_wstring(const std::string& str)
+std::wstring to_wstring(const std::string& str)
 {
     int size_needed = MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), NULL, 0);
     std::wstring wstrTo(size_needed, 0);
@@ -20,7 +20,7 @@ std::wstring Utils::to_wstring(const std::string& str)
     return wstrTo;
 }
 
-std::string Utils::to_string(const std::wstring& wstr)
+std::string to_string(const std::wstring& wstr)
 {
     if (wstr.empty())
     {

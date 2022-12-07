@@ -7,15 +7,12 @@ struct Coords {
     double alt = 0;
 };
 
-bool operator== (const Coords& a, const Coords& b);
-bool operator!= (const Coords& a, const Coords& b);
-bool operator== (const Coords& a, const int& b);
-bool operator!= (const Coords& a, const int& b);
+// Get current date/time, format is YYYY-MM-DD.HH:mm:ss
+const DllExport std::string CurrentDateTime();
+std::wstring DllExport to_wstring(const std::string& str);
+std::string DllExport to_string(const std::wstring& wstr);
 
-namespace Utils
-{
-    // Get current date/time, format is YYYY-MM-DD.HH:mm:ss
-    const std::string CurrentDateTime();
-    std::wstring to_wstring(const std::string& str);
-    std::string to_string(const std::wstring& wstr);
-}
+bool DllExport operator== (const Coords& a, const Coords& b);
+bool DllExport operator!= (const Coords& a, const Coords& b);
+bool DllExport operator== (const Coords& a, const int& b);
+bool DllExport operator!= (const Coords& a, const int& b);
