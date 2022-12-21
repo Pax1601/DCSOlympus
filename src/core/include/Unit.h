@@ -4,6 +4,9 @@
 #include "dcstools.h"
 #include "luatools.h"
 
+#define GROUND_DEST_DIST_THR 100
+#define AIR_DEST_DIST_THR 2000
+
 namespace UnitCategory {
 	enum UnitCategories { NO_CATEGORY, AIR, GROUND, NAVY };	// Do not edit, this codes are tied to values in DCS
 };
@@ -30,12 +33,15 @@ public:
 	double getLongitude() { return longitude; }
 	double getAltitude() { return altitude; }
 	double getHeading() { return heading; }
+	json::value getFlags() { return flags; }
 	int getCategory();
+	Coords getActiveDestination() { return activeDestination; }
 
 	json::value json();
 
 protected:
 	int ID;
+	bool AI				= false;
 	bool alive			= true;
 	wstring name		= L"undefined";
 	wstring unitName	= L"undefined";
@@ -47,11 +53,15 @@ protected:
 	double longitude	= 0;
 	double altitude		= 0;
 	double heading		= 0;
+	json::value flags	= json::value::null();
 
 	list<Coords> activePath;
-	Coords activeDestination;
+	Coords activeDestination = Coords(0);
 
 private:
 	virtual void AIloop();
+
+	double oldDist = 0;
+	mutex mutexLock;
 };
 

@@ -4,21 +4,9 @@ class Unit
         this.ID = ID;
         this.marker = new L.Marker.UnitMarker([0, 0], {riseOnHover: true});
         this.marker.addTo(map.getMap()).on('click', (e) => this.onClick(e));
+        this.marker.addTo(map.getMap()).on('contextmenu', (e) => this.onRightClick(e));
 
         this._selected = false;
-
-        this.unitName = undefined;
-        this.groupName = undefined;
-        this.name = undefined;
-        this.latitude = undefined;
-        this.longitude = undefined;
-        this.altitude = undefined;
-        this.heading = undefined;
-        this.coalitionID = undefined;
-        this.country = undefined;
-        this.activePath = undefined;
-        this.alive = undefined;
-        this.type = undefined;
 
         this._pathMarkers = [];
 
@@ -38,10 +26,13 @@ class Unit
         this.coalitionID = response["coalitionID"];
         this.alive = response["alive"];
         this.type = response["type"];
+        this.flags = response["flags"];
 
         /* Only present if an active path is available */
         if ("activePath" in response)
+        {
             this.activePath = response["activePath"]
+        }
 
         this.drawMarker();
 
@@ -59,6 +50,26 @@ class Unit
             this.clearPath();
         }
     }
+
+    getCategory()
+    {
+        if (this.type.level1 == 1)
+        {
+            return 'air';
+        }
+        else if (this.type.level1 == 2)
+        {
+            return 'ground';
+        }
+        else if (this.type.level1 == 3)
+        {
+            return 'navy';
+        }
+        else
+        {
+            return undefined;
+        }
+    }
     
     setSelected(selected)
     {
@@ -67,7 +78,7 @@ class Unit
         {
             this._selected = selected;
             this.marker.setSelected(selected);
-            unitsFactory.onUnitSelection();
+            unitsManager.onUnitSelection();
         }
     }
 
@@ -113,21 +124,38 @@ class Unit
     {
         if (!e.originalEvent.ctrlKey)
         {
-            unitsFactory.deselectAllUnits();
+            unitsManager.deselectAllUnits();
         }
         this.setSelected(true);
+    }
+
+    onRightClick(e) 
+    {
+        unitsManager.onUnitRightClick(this.ID);
     }
 
     drawMarker()
     {
         var zIndex = this.marker.getZIndex();
         var newLatLng = new L.LatLng(this.latitude, this.longitude);
-        this.marker.setCoalitionID(this.coalitionID);
         this.marker.setLatLng(newLatLng); 
-        this.marker.setUnitName(this.unitName);
         this.marker.setAngle(this.heading);
         this.marker.setZIndex(zIndex);
         this.marker.setAlive(this.alive);
+        this.marker.setAltitude(this.altitude);
+        this.marker.setHuman(this.flags.Human);
+        this.marker.setCoalitionID(this.coalitionID);
+        this.marker.setUnitName(this.unitName);
+        this.marker.setName(this.name);
+
+        if (this.getCategory() == "air")
+        {
+            this.marker.setImage("img/units/air.png");
+        }
+        else if (this.getCategory() == "ground")
+        {
+            this.marker.setImage("img/units/ground.png")
+        }
     }
 
     drawPath()
@@ -167,5 +195,10 @@ class Unit
         }
         this._pathMarkers = [];
         this._pathPolyline.setLatLngs([]);
+    }
+
+    attackUnit(targetID)
+    {
+        attackUnit(this.ID, targetID);
     }
 }

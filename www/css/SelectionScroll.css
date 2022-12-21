@@ -1,0 +1,23 @@
+#selection-scroll-container {
+    margin: 0 auto;
+    position: fixed;
+    z-index: 1000;
+    width: 0px;
+    height: 0px;
+    transition: width var(--animation_duration), height var(--animation_duration), left var(--animation_duration), top var(--animation_duration);
+    overflow: visible;
+    overflow-y: scroll;
+    background-color: #202831AA;
+}
+
+.selection-scroll-element {
+    margin: 2px;
+    color: white;
+    text-shadow: 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.selection-scroll-element:hover {
+    background-color: #FFFFFFAA;
+}

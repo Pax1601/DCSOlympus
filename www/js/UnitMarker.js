@@ -7,20 +7,39 @@ L.Marker.UnitMarker = L.Marker.extend(
             this._icon.style.outline = "transparent"; // Removes the rectangular outline
 
             if (this.unitName !== unitName)
-            {
-                // Set the unit icon
-                var img = this._icon.querySelector("#icon-img");
-                if (img!== undefined) 
-                {
-                    if (unitName in unitIcons) img.src = unitIcons[unitName];  
-                    else img.src = "img/units/undefined.png";  
-                }
-                
+            {                
                 // Set the unit name in the marker
-                var nameDiv = this._icon.querySelector("#name");
-                if (nameDiv!== undefined) nameDiv.innerHTML = unitName;
+                var unitNameDiv = this._icon.querySelector("#unitName");
+                if (unitNameDiv!== undefined)
+                {
+                    if (this._human)
+                    {
+                        unitNameDiv.innerHTML = `<i class="fas fa-user"></i> ${unitName}`;
+                    }
+                    else
+                    {
+                        unitNameDiv.innerHTML = `${unitName}`;
+                    }
+                } 
             }
             this.unitName = unitName;
+        },
+
+        setName: function(name)
+        {
+            // TODO: move in constructor and call only once (does not work in addInitHook for some reason)
+            this._icon.style.outline = "transparent"; // Removes the rectangular outline
+
+            if (this.name !== name)
+            {                
+                // Set the unit name in the marker
+                var nameDiv = this._icon.querySelector("#name");
+                if (nameDiv!== undefined)
+                {
+                    nameDiv.innerHTML = name;
+                } 
+            }
+            this.name = name;
         },
 
         setCoalitionID: function(coalitionID)
@@ -36,6 +55,16 @@ L.Marker.UnitMarker = L.Marker.extend(
                 {
                     img.classList.add("unitmarker-icon-img-red");
                 }
+            }
+        },
+
+        setImage: function(icon)
+        {
+            // Set the unit icon
+            var img = this._icon.querySelector("#icon-img");
+            if (img !== undefined) 
+            {
+                img.src = icon;
             }
         },
 
@@ -60,9 +89,29 @@ L.Marker.UnitMarker = L.Marker.extend(
         {
             if (this._angle !== angle){
                 var img = this._icon.querySelector("#icon-img");
-                if (img !== undefined) img.style.transform = "rotate(" + angle + "rad)";
+                if (img !== undefined) 
+                {
+                    img.style.transform = "rotate(" + angle + "rad)";
+                }
             }
             this._angle = angle;
+        },
+
+        setAltitude: function(altitude)
+        {
+            if (this._altitude !== altitude){
+                var div = this._icon.querySelector("#altitude-div");
+                if (div !== undefined) 
+                {
+                    div.innerHTML = Math.round(altitude / 0.3048 / 100) / 10;
+                }
+            }
+            this._altitude = altitude;
+        },
+
+        setSpeed: function(speed)
+        {
+
         },
 
         setHovered: function(hovered)
@@ -70,7 +119,10 @@ L.Marker.UnitMarker = L.Marker.extend(
             var img = this._icon.querySelector("#icon-img");
             if (img!== undefined) 
             {
-                if (hovered) img.classList.add("unitmarker-icon-img-hovered");
+                if (hovered) 
+                {
+                    img.classList.add("unitmarker-icon-img-hovered");
+                }
                 else
                 {
                     if (img.classList.contains("unitmarker-icon-img-hovered")) img.classList.remove("unitmarker-icon-img-hovered");
@@ -83,8 +135,14 @@ L.Marker.UnitMarker = L.Marker.extend(
             var selectedImg = this._icon.querySelector("#selection-img");
             if (selectedImg!== undefined) 
             {
-                if (selected) selectedImg.style.opacity = "1";
-                else selectedImg.style.opacity = "0";
+                if (selected) 
+                {
+                    selectedImg.style.opacity = "1";
+                }
+                else 
+                {
+                    selectedImg.style.opacity = "0";
+                }
             }
 
             var img = this._icon.querySelector("#icon-img");
@@ -101,15 +159,20 @@ L.Marker.UnitMarker = L.Marker.extend(
             }
         },
 
-        getZIndex: function()
+        setHuman: function(human)
         {
-            return this._icon.style.zIndex;
+            this._human = human;
         },
 
         setZIndex: function(zIndex)
         {
             this._icon.style.zIndex = zIndex;
-        }
+        },
+
+        getZIndex: function()
+        {
+            return this._icon.style.zIndex;
+        } 
     }
 )
 
@@ -130,16 +193,13 @@ L.Marker.UnitMarker.addInitHook(function()
     });
 });
 
-var unitIcons =
-{
-    "A-4E-C": "img/units/a-4.png"
-}
-
 var iconHtml = `<table class="unitmarker-container-table" id="container-table">
                     <tr>
                         <td>
                             <img class="unitmarker-selection-img" id="selection-img" src="img/selection.png">
                             <img class="unitmarker-icon-img" id="icon-img">
+                            <div class="unitmarker-unitName-div" id="unitName"></div>
+                            <div class="unitmarker-altitude-div" id="altitude-div"></div>
                             <div class="unitmarker-name-div" id="name"></div>
                         </td>
                     </tr>

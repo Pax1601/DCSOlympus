@@ -12,12 +12,8 @@ body{
     width: 100%;
 }
 
-#top-panel { 
+#header { 
     height: 40px;
-}
-
-#bottom-panel {
-    height: 100px
 }
 
 #log {
@@ -44,41 +40,3 @@ body{
     color: rgb(255, 154, 154);
     text-shadow: 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
 }
-
-#left-panel {
-    background-color: #202831;
-    height: 100px;
-    width: 400px;
-    border: solid white 1px;
-    font-size: 12px;
-    position: fixed;
-    z-index: 1000;
-    left: 10px;
-    bottom: -80px;
-    transition: bottom 0.2s;
-}
-
-.panel-table 
-{
-    text-shadow: 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
-}
-
-.panel-title 
-{
-    font-size: 14px;
-    color: #d3e9ff;
-}
-
-.panel-label 
-{
-    font-size: 12px;
-    color: #d3e9ff;
-}
-
-.panel-content 
-{
-    font-size: 12px;
-    color: white;
-}
-
-

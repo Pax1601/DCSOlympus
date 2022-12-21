@@ -14,12 +14,20 @@ function Olympus.setMissionData(arg, time)
 							"y = " .. bullseyeVec3.z .. "," ..
 							"lat = " .. bullseyeLatitude .. "," ..
 							"lng = " .. bullseyeLongitude .. "," ..	 								
-						"}" .. 
+						"}," ..
 					"}\n" ..
 					"Olympus.OlympusDLL.setMissionData()"
+
+	for groupName, group in pairs(mist.DBs.groupsByName) do
+		if groupName and group then
+			local hasTask = Group.getByName(groupName):getController():hasTask()
+			Olympus.notify(groupName .. ": " .. tostring(hasTask), 2)
+		end
+	end
+					  
 	net.dostring_in("export", command)
 	return time + 5
 end
 
-timer.scheduleFunction(Olympus.setMissionData, {}, timer.getTime() + 5)
+timer.scheduleFunction(Olympus.setMissionData, {}, timer.getTime() + 1)
 Olympus.notify("OlympusMission script loaded correctly", 10)

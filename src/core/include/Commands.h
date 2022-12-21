@@ -8,7 +8,7 @@ namespace CommandPriority {
 };
 
 namespace CommandType {
-	enum CommandTypes { NO_TYPE, MOVE, SMOKE, LASE, EXPLODE, SPAWN_AIR, SPAWN_GROUND };
+	enum CommandTypes { NO_TYPE, MOVE, SMOKE, LASE, EXPLODE, SPAWN_AIR, SPAWN_GROUND, ATTACK_UNIT };
 };
 
 /* Base command class */
@@ -101,5 +101,25 @@ public:
 private:
 	const wstring coalition;
 	const wstring unitType;
+	const Coords location;
+};
+
+/* Attack unit command */
+class AttackUnitCommand : public Command
+{
+public:
+	AttackUnitCommand(wstring unitName, wstring targetName, Coords location) :
+		unitName(unitName),
+		targetName(targetName),
+		location(location)
+	{
+		priority = CommandPriority::MEDIUM;
+		type = CommandType::ATTACK_UNIT;
+	};
+	virtual void execute(lua_State* L);
+
+private:
+	const wstring unitName;
+	const wstring targetName;
 	const Coords location;
 };

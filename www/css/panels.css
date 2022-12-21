@@ -1,0 +1,80 @@
+
+.unit-info-panel {
+    background-color: #202831;
+    height: 100px;
+    width: 400px;
+    border: solid white 1px;
+    font-size: 12px;
+    position: fixed;
+    z-index: 1000;
+    left: 10px;
+    bottom: -80px;
+    transition: bottom 0.2s;
+}
+
+.unit-control-panel {
+    background-color: #202831;
+    height: 40px;
+    width: 400px;
+    border: solid white 1px;
+    font-size: 12px;
+    position: fixed;
+    z-index: 1000;
+    left: 10px;
+    top: 50px;
+    transition: height 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.panel-table {
+    text-shadow: 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
+}
+
+.panel-title {
+    font-size: 14px;
+    color: #d3e9ff;
+}
+
+.panel-label {
+    font-size: 12px;
+    color: #d3e9ff;
+}
+
+.panel-content {
+    font-size: 12px;
+    color: white;
+}
+
+.panel-button {
+    height: 30px;
+    width: 30px;
+    color: #d3e9ff;
+    font-size: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    transition: font-size 0.05s;
+    text-shadow: 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
+}
+
+.panel-button:hover {
+    cursor: pointer;
+}
+
+.panel-button:active {
+    color: white;
+}
+
+.panel-button-disabled {
+    opacity: 0.5;
+}
+
+.panel-button-disabled:hover {
+    cursor: default;
+}
+
+.panel-button-disabled:active {
+    color: #e1f0ff;
+}

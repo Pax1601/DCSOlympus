@@ -5,32 +5,37 @@
     <meta charset="utf-8">
     <title>Olympus</title>
     <link rel="stylesheet" href="css/index.css"/>
-    <link rel="stylesheet" href="css/map.css"/>
+    <link rel="stylesheet" href="css/panels.css"/>
+    <link rel="stylesheet" href="css/Map.css"/>
     <link rel="stylesheet" href="css/UnitMarker.css"/>
     <link rel="stylesheet" href="css/SelectionWheel.css"/>
     <link rel="stylesheet" href="css/SelectionScroll.css"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css"
     integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14="
     crossorigin=""/>
+    <link href="fontawesome/css/all.css" rel="stylesheet">
      <!-- Make sure you put this AFTER Leaflet's CSS -->
     <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js"
     integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg="
     crossorigin=""></script>
+    <script src="js/DCSCommands.js"></script>
     <script src="js/Utils.js"></script>
     <script src="js/unitTypes.js"></script>
+    <script src="js/PanelButton.js"></script>
     <script src="js/LeftPanel.js"></script>
+    <script src="js/TopPanel.js"></script>
     <script src="js/Map.js"></script>
     <script src="js/MissionData.js"></script>
     <script src="js/Unit.js"></script>
     <script src="js/UnitMarker.js"></script>
-    <script src="js/UnitsFactory.js"></script>
+    <script src="js/UnitsManager.js"></script>
     <script src="js/SelectionWheel.js"></script>
     <script src="js/SelectionScroll.js"></script>
     <script src="js/index.js"></script>
   </head>
   <body>
     <table id="content-table">
-      <tr id="top-panel">
+      <tr id="header">
         <td colspan>
         </td>
       </tr>
@@ -38,7 +43,8 @@
         <td id="map-container">
           <div id="map"></div>
           <div id="log"></div>
-          <div id="left-panel"></div>
+          <div class="unit-info-panel" id="left-panel"></div>
+          <div class="unit-control-panel" id="top-panel"></div>
         </td>
       </tr>
     </table>

@@ -15,6 +15,6 @@ public:
 
 private:
 	list<Command*> commands;
-	mutex lock;
+	mutex mutexLock;
 };
 

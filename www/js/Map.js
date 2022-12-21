@@ -10,16 +10,13 @@ class Map
             attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
         }).addTo(this._map);
 
-        // Main update rate. 250ms is minimum time, equal to server update time.
-        setInterval(() => this.update(), 250);
-
         // Register event handles
         this._map.on('contextmenu', (e) => this._onContextMenu(e));
         this._map.on('click', (e) => this._onClick(e));
         this._map.on('dblclick', (e) => this._onDoubleClick(e));
         this._map.on('movestart', () => {this.removeSelectionWheel(); this.removeSelectionScroll();});
         this._map.on('zoomstart', () => {this.removeSelectionWheel(); this.removeSelectionScroll();});
-        this._map.on('selectionend', (e) => unitsFactory.selectFromBounds(e.selectionBounds));
+        this._map.on('selectionend', (e) => unitsManager.selectFromBounds(e.selectionBounds));
         
         this.setState("IDLE");
 
@@ -51,27 +48,6 @@ class Map
         return this._map;
     }
 
-    /* GET new data from the server */
-    update()
-    {
-        // Request the updated unit data from the server 
-        var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open( "GET", RESTaddress, true); 
-
-        xmlHttp.onload = function(e) {
-            var data = JSON.parse(xmlHttp.responseText);
-            
-            missionData.update(data);
-            unitsFactory.update(data);
-            leftPanel.update(unitsFactory.getSelectedUnits());
-        };
-
-        xmlHttp.onerror = function () {
-            console.error("An error occurred during the XMLHttpRequest");
-        };
-        xmlHttp.send( null );
-    }
-
     /* State machine */
     setState(newState)
     {
@@ -101,7 +77,7 @@ class Map
     // Right click
     _onContextMenu(e)   
     {
-        unitsFactory.deselectAllUnits();
+        unitsManager.deselectAllUnits();
         this.removeSelectionWheel();
         this.removeSelectionScroll();
     }
@@ -118,9 +94,9 @@ class Map
         {
             if (!e.originalEvent.ctrlKey)
             {
-                unitsFactory.clearDestinations();
+                unitsManager.clearDestinations();
             }
-            unitsFactory.addDestination(e.latlng)
+            unitsManager.addDestination(e.latlng)
         }
     }
 
@@ -188,11 +164,11 @@ class Map
         this.removeSelectionWheel();
         this.removeSelectionScroll();
         var options = [
-            {'tooltip': 'Red smoke',      'src': 'spawnSmoke.png',  'callback': () => {this.removeSelectionWheel(); this.removeSelectionScroll(); unitsFactory.spawnSmoke('red', e.latlng)}, 'tint': 'red'},
-            {'tooltip': 'White smoke',    'src': 'spawnSmoke.png',  'callback': () => {this.removeSelectionWheel(); this.removeSelectionScroll(); unitsFactory.spawnSmoke('white', e.latlng)}, 'tint': 'white'},
-            {'tooltip': 'Blue smoke',     'src': 'spawnSmoke.png',  'callback': () => {this.removeSelectionWheel(); this.removeSelectionScroll(); unitsFactory.spawnSmoke('blue', e.latlng)}, 'tint': 'blue'},
-            {'tooltip': 'Green smoke',    'src': 'spawnSmoke.png',  'callback': () => {this.removeSelectionWheel(); this.removeSelectionScroll(); unitsFactory.spawnSmoke('green', e.latlng)}, 'tint': 'green'},
-            {'tooltip': 'Orange smoke',   'src': 'spawnSmoke.png',  'callback': () => {this.removeSelectionWheel(); this.removeSelectionScroll(); unitsFactory.spawnSmoke('orange', e.latlng)}, 'tint': 'orange'},
+            {'tooltip': 'Red smoke',      'src': 'spawnSmoke.png',  'callback': () => {this.removeSelectionWheel(); this.removeSelectionScroll(); spawnSmoke('red', e.latlng)}, 'tint': 'red'},
+            {'tooltip': 'White smoke',    'src': 'spawnSmoke.png',  'callback': () => {this.removeSelectionWheel(); this.removeSelectionScroll(); spawnSmoke('white', e.latlng)}, 'tint': 'white'},
+            {'tooltip': 'Blue smoke',     'src': 'spawnSmoke.png',  'callback': () => {this.removeSelectionWheel(); this.removeSelectionScroll(); spawnSmoke('blue', e.latlng)}, 'tint': 'blue'},
+            {'tooltip': 'Green smoke',    'src': 'spawnSmoke.png',  'callback': () => {this.removeSelectionWheel(); this.removeSelectionScroll(); spawnSmoke('green', e.latlng)}, 'tint': 'green'},
+            {'tooltip': 'Orange smoke',   'src': 'spawnSmoke.png',  'callback': () => {this.removeSelectionWheel(); this.removeSelectionScroll(); spawnSmoke('orange', e.latlng)}, 'tint': 'orange'},
         ]
         this._selectionWheel = new SelectionWheel(e.originalEvent.x, e.originalEvent.y, options);
     }
@@ -218,7 +194,7 @@ class Map
         this._selectionScroll = new SelectionScroll(e.originalEvent.x, e.originalEvent.y, options, (type) => {
             this.removeSelectionWheel(); 
             this.removeSelectionScroll(); 
-            unitsFactory.spawnAirUnit(type, e.latlng, this._activeCoalition)
+            spawnAirUnit(type, e.latlng, this._activeCoalition);
         });
     }
 
@@ -232,7 +208,7 @@ class Map
         this._selectionScroll = new SelectionScroll(e.originalEvent.x, e.originalEvent.y, options, (type) => {
             this.removeSelectionWheel(); 
             this.removeSelectionScroll(); 
-            unitsFactory.spawnGroundUnit(type, e.latlng, this._activeCoalition)
+            spawnGroundUnit(type, e.latlng, this._activeCoalition);
         });
     }
 }

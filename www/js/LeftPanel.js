@@ -1,8 +1,8 @@
 class LeftPanel
 {
-    constructor()
+    constructor(id)
     {
-        this._panel = document.getElementById("left-panel"); 
+        this._panel = document.getElementById(id); 
     }
 
     update(selectedUnits)
@@ -56,13 +56,13 @@ class LeftPanel
                         Heading:
                     </td>
                     <td class="panel-content">
-                        ${Math.floor(rad2deg(selectedUnit.heading))+"°"}
+                        ${Math.floor(rad2deg(selectedUnit.heading)) + "°"}
                     </td>
                     <td class="panel-label">
-                        Speed:
+                        Altitude:
                     </td>
                     <td class="panel-content">
-                        kts
+                        ${Math.floor(selectedUnit.altitude / 0.3048) + "ft"}
                     </td>
                 </tr>
                 <tr>

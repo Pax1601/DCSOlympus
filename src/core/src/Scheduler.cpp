@@ -24,7 +24,8 @@ void Scheduler::appendCommand(Command* command)
 
 void Scheduler::execute(lua_State* L)
 {
-	lock.lock();
+	/* Lock for thread safety */
+	lock_guard<mutex> guard(mutexLock);
 	int priority = CommandPriority::HIGH;
 	while (priority >= CommandPriority::LOW)
 	{
@@ -63,26 +64,29 @@ void Scheduler::execute(lua_State* L)
 						commands.remove(command);
 						break;
 					}
+					case CommandType::ATTACK_UNIT:
+					{
+						AttackUnitCommand* attackCommand = dynamic_cast<AttackUnitCommand*>(command);
+						attackCommand->execute(L);
+						commands.remove(command);
+						break;
+					}
 					default:
 						log("Unknown command of type " + to_string(command->getType()));
 						commands.remove(command);
 						break;
 				}
-				goto exit;
+				return;
 			}
 		}
 		priority--;
 	}
-
-exit:
-	lock.unlock();
-	return;
 }
-
 
 void Scheduler::handleRequest(wstring key, json::value value)
 {
-	lock.lock();
+	/* Lock for thread safety */
+	lock_guard<mutex> guard(mutexLock);
 	Command* command = nullptr;
 
 	log(L"Received request with ID: " + key);
@@ -141,6 +145,44 @@ void Scheduler::handleRequest(wstring key, json::value value)
 		Coords loc; loc.lat = lat; loc.lng = lng;
 		command = dynamic_cast<Command*>(new SpawnAirCommand(coalition, type, loc));
 	}
+	else if (key.compare(L"attackUnit") == 0)
+	{
+		int unitID = value[L"unitID"].as_integer();
+		int targetID = value[L"targetID"].as_integer();
+
+		Unit* unit = unitsFactory->getUnit(unitID);
+		Unit* target = unitsFactory->getUnit(targetID);
+
+		wstring unitName;
+		wstring targetName;
+		Coords loc;
+		
+		if (unit != nullptr)
+		{
+			unitName = unit->getUnitName();
+			loc = unit->getActiveDestination();
+		}
+		else
+		{
+			return;
+		}
+
+		if (target != nullptr)
+		{
+			targetName = target->getUnitName();
+			if (loc == NULL)
+			{
+				loc = Coords(target->getLatitude(), target->getLongitude(), target->getAltitude());
+			}
+		}
+		else
+		{
+			return;
+		}
+
+		log(L"Unit " + unitName + L" attacking unit " + targetName);
+		command = dynamic_cast<Command*>(new AttackUnitCommand(unitName, targetName, loc));
+	}
 	else
 	{
 		log(L"Unknown command: " + key);
@@ -150,6 +192,5 @@ void Scheduler::handleRequest(wstring key, json::value value)
 	{
 		appendCommand(command);
 	}
-	lock.unlock();
 }
 
