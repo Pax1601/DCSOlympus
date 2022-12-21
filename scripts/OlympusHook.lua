@@ -6,41 +6,38 @@ Olympus.OlympusModPath = os.getenv('DCSOLYMPUS_PATH')..'\\bin\\'
 
 log.write('Olympus.HOOKS.LUA', log.INFO,'Executing OlympusHook.lua')
 
-function loadDLLs()
+function Olympus.loadDLLs()
 	-- Add the .dll paths
 	package.cpath = package.cpath..';'..Olympus.OlympusModPath..'?.dll;'
 	
-	log.write('Olympus.HOOKS.LUA', log.INFO, 'Loading cpprest_2_10.dll from ['..Olympus.OlympusModPath..']')
-	pcall(require, 'cpprest_2_10')
-
-	log.write('Olympus.HOOKS.LUA', log.INFO, 'Loading hook.dll from ['..Olympus.OlympusModPath..']')
 	local status
-	
-	pcall(require, 'logger')
-	pcall(require, 'luatools')
-	pcall(require, 'dcstools')
-	status, Olympus.OlympusDLL = pcall(require, 'hook')
-	if not status then
+	log.write('Olympus.HOOKS.LUA', log.INFO, 'Loading olympus.dll from ['..Olympus.OlympusModPath..']')
+	status, Olympus.OlympusDLL = pcall(require, 'olympus')
+		if status then
+		log.write('Olympus.HOOKS.LUA', log.INFO, 'olympus.dll loaded successfully')
+		return true
+	else
+		log.write('Olympus.HOOKS.LUA', log.ERROR, 'Error loading olympus.dll: '..Olympus.OlympusDLL)
 		return false
 	end	
-	return true
 end
 
 do
 	if isOlympusModuleInitialized~=true then
 		local OlympusName = 'Olympus 0.0.1 C++ module';
+		Olympus.loadDLLs();
 	
 		-- Register callbacks
 		local OlympusCallbacks = {}
 		function OlympusCallbacks.onSimulationStart()
 			log.write('Olympus.HOOKS.LUA', log.INFO,OlympusName..' onSimulationStart')
 			if DCS.isServer() then
-				Olympus.DLLsloaded = loadDLLs()
+				Olympus.DLLsloaded = Olympus.loadDLLs()
 				if Olympus.DLLsloaded then
 					Olympus.OlympusDLL.onSimulationStart()
 					log.write('Olympus.HOOKS.LUA', log.INFO, OlympusName..' successfully loaded.')
 				else
-					log.write('Olympus.HOOKS.LUA', log.ERROR, 'Failed to load '..OlympusName..'.')
+					log.write('Olympus.HOOKS.LUA', log.ERROR, 'Failed to load '..OlympusName)
 				end
 			end
 		end
