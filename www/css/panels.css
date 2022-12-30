@@ -2,7 +2,7 @@
 .unit-info-panel {
     background-color: #202831;
     height: 100px;
-    width: 400px;
+    width: 800px;
     border: solid white 1px;
     font-size: 12px;
     position: fixed;
@@ -28,8 +28,19 @@
     justify-content: space-evenly;
 }
 
+.control-panel {
+    background-color: #202831;
+    height: 40px;
+    width: 100%;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+}
+
 .panel-table {
     text-shadow: 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
+    height: 100%;
 }
 
 .panel-title {
@@ -40,16 +51,20 @@
 .panel-label {
     font-size: 12px;
     color: #d3e9ff;
+    margin: 5px;
+    width: 100px;
 }
 
 .panel-content {
     font-size: 12px;
     color: white;
+    margin: 5px;
 }
 
 .panel-button {
     height: 30px;
     width: 30px;
+    margin: 5px;
     color: #d3e9ff;
     font-size: 25px;
     display: flex;
@@ -77,4 +92,32 @@
 
 .panel-button-disabled:active {
     color: #e1f0ff;
+}
+
+.panel-select {
+    -webkit-padding-start: 2px;
+    margin: 10px;
+    height: 25px;
+    color: black;
+    font-family: "Lucida Console", "Courier New", monospace;
+    vertical-align: middle;
+}
+
+.panel-select option {
+    margin: 40px;
+    color: black;
+    font-family: "Lucida Console", "Courier New", monospace;
+    height: 25px;
+    margin: 5px;
+    vertical-align: middle;
+}
+
+#unit-info-table
+{
+    width: 400px;
+}
+
+#tactical-info-table
+{
+    width: 400px;
 }

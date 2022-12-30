@@ -24,7 +24,8 @@ begin
 end;
 
 [Registry]
-Root: HKCU; Subkey: "Environment"; ValueType:string; ValueName: "OLYMPUS"; ValueData: "{app}\Mods\Services\Olympus"; Flags: preservestringtype
+Root: HKCU; Subkey: "Environment"; ValueType:string; ValueName: "DCSOLYMPUS_PATH"; ValueData: "{app}\Mods\Services\Olympus"; Flags: preservestringtype
+; Root: HKCU; Subkey: "Environment"; ValueType: expandsz; ValueName: "Path"; ValueData: "{olddata};DCSOLYMPUS_PATH\bin"
 	
 [Setup]
 ; Tell Windows Explorer to reload the environment

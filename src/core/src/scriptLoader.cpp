@@ -81,5 +81,36 @@ void registerLuaFunctions(lua_State* L)
             log("OlympusCommand.lua registered successfully");
         }
     }
+
+    {
+        ifstream f(modLocation + "\\Scripts\\unitPayloads.lua");
+        string str;
+        log("Reading unitPayloads.lua from " + modLocation + "\\Scripts\\unitPayloads.lua");
+        if (f) {
+            ostringstream ss;
+            ss << f.rdbuf();
+            str = ss.str();
+            log("unitPayloads.lua read succesfully");
+        }
+        else
+        {
+            log("Error reading unitPayloads.lua");
+            return;
+        }
+
+        lua_getglobal(L, "net");
+        lua_getfield(L, -1, "dostring_in");
+        lua_pushstring(L, "server");
+        lua_pushstring(L, str.c_str());
+
+        if (lua_pcall(L, 2, 0, 0) != 0)
+        {
+            log("Error registering unitPayloads.lua");
+        }
+        else
+        {
+            log("unitPayloads.lua registered successfully");
+        }
+    }
     
 }

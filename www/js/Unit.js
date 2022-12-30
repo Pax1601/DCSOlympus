@@ -1,10 +1,14 @@
 class Unit 
 {
-    constructor(ID) {
+    constructor(ID, marker) 
+    {
         this.ID = ID;
-        this.marker = new L.Marker.UnitMarker([0, 0], {riseOnHover: true});
-        this.marker.addTo(map.getMap()).on('click', (e) => this.onClick(e));
-        this.marker.addTo(map.getMap()).on('contextmenu', (e) => this.onRightClick(e));
+        this.selectable = true;
+
+        // The marker is set by the inherited class
+        this.marker = marker;
+        this.marker.on('click', (e) => this.onClick(e));
+        this.marker.on('contextmenu', (e) => this.onRightClick(e));
 
         this._selected = false;
 
@@ -12,6 +16,8 @@ class Unit
 
         this._pathPolyline = new L.Polyline([], {color: '#2d3e50', weight: 3, opacity: 0.5, smoothFactor: 1});
         this._pathPolyline.addTo(map.getMap());
+
+        this._targetsPolylines = [];
     }
 
     update(response)
@@ -27,21 +33,15 @@ class Unit
         this.alive = response["alive"];
         this.type = response["type"];
         this.flags = response["flags"];
+        this.activePath = response["activePath"]
+        this.speed = response["speed"];
+        this.currentTask = response["currentTask"];
 
-        /* Only present if an active path is available */
-        if ("activePath" in response)
-        {
-            this.activePath = response["activePath"]
-        }
+        this.missionData = missionData.getUnitData(this.ID)
 
+        this.setSelected(this.getSelected() & this.alive)
         this.drawMarker();
-
-        if (!this.alive)
-        {
-            this.setSelected(false);
-        }
-
-        if (this._selected && this.activePath != undefined)
+        if (this.getSelected() && this.activePath != undefined)
         {
             this.drawPath();
         }
@@ -49,32 +49,22 @@ class Unit
         { 
             this.clearPath();
         }
-    }
 
-    getCategory()
-    {
-        if (this.type.level1 == 1)
+        this.clearTargets();
+        this.missionData = missionData.getUnitData(this.ID);
+        if (this.missionData != undefined)
         {
-            return 'air';
-        }
-        else if (this.type.level1 == 2)
-        {
-            return 'ground';
-        }
-        else if (this.type.level1 == 3)
-        {
-            return 'navy';
-        }
-        else
-        {
-            return undefined;
+            if (this.getSelected())
+            {
+                this.drawTargets();
+            }
         }
     }
     
     setSelected(selected)
     {
-        /* Only alive units can be selected */
-        if (this.alive || !selected)
+        // Only alive units can be selected. Some units are not selectable (weapons)
+        if ((this.alive || !selected) && this.selectable && this._selected != selected)
         {
             this._selected = selected;
             this.marker.setSelected(selected);
@@ -89,6 +79,7 @@ class Unit
 
     addDestination(latlng)
     {
+        // TODO move in dedicated file
         var xhr = new XMLHttpRequest();
         xhr.open("PUT", RESTaddress);
         xhr.setRequestHeader("Content-Type", "application/json");
@@ -103,11 +94,11 @@ class Unit
         {
             var newPath = this.activePath;
             newPath[(Object.keys(newPath).length + 1).toString()] = latlng;
-            command = {"ID": this.ID, "unitName": this.unitName, "path": newPath}
+            command = {"ID": this.ID, "path": newPath}
         }
         else
         {
-            command = {"ID": this.ID, "unitName": this.unitName, "path": {"1": latlng}}
+            command = {"ID": this.ID, "path": {"1": latlng}}
         }
         
         var data = {"setPath": command}
@@ -134,27 +125,36 @@ class Unit
         unitsManager.onUnitRightClick(this.ID);
     }
 
-    drawMarker()
+    drawMarker(settings)
     {
-        var zIndex = this.marker.getZIndex();
-        var newLatLng = new L.LatLng(this.latitude, this.longitude);
-        this.marker.setLatLng(newLatLng); 
-        this.marker.setAngle(this.heading);
-        this.marker.setZIndex(zIndex);
-        this.marker.setAlive(this.alive);
-        this.marker.setAltitude(this.altitude);
-        this.marker.setHuman(this.flags.Human);
-        this.marker.setCoalitionID(this.coalitionID);
-        this.marker.setUnitName(this.unitName);
-        this.marker.setName(this.name);
-
-        if (this.getCategory() == "air")
+        // Hide the marker if disabled
+        if ((settings === 'none' || (controlPanel.getSettings().deadAlive === "alive" && !this.alive)))
         {
-            this.marker.setImage("img/units/air.png");
+            // Remove the marker if present
+            if (map.getMap().hasLayer(this.marker))
+            {
+                map.getMap().removeLayer(this.marker);
+            }
         }
-        else if (this.getCategory() == "ground")
-        {
-            this.marker.setImage("img/units/ground.png")
+        else {
+            // Add the marker if not present
+            if (!map.getMap().hasLayer(this.marker))
+            {
+                this.marker.addTo(map.getMap());
+            }
+
+            // Set the marker vibility
+            this.marker.setLabelsVisibility((settings === 'labels' || this.getSelected()) && this.alive);
+
+            // Draw the marker
+            var zIndex = this.marker.getZIndex();
+            var newLatLng = new L.LatLng(this.latitude, this.longitude);
+            this.marker.setLatLng(newLatLng); 
+            this.marker.setAngle(this.heading);
+            this.marker.setZIndex(zIndex);
+            this.marker.setAlive(this.alive);
+            this.marker.setAltitude(this.altitude);
+            this.marker.setSpeed(this.speed);
         }
     }
 
@@ -163,21 +163,21 @@ class Unit
         var _points = [];
         _points.push(new L.LatLng(this.latitude, this.longitude));
 
-        /* Add markers if missing */
+        // Add markers if missing
         while (this._pathMarkers.length < Object.keys(this.activePath).length)
         {
             var marker = L.marker([0, 0]).addTo(map.getMap());
             this._pathMarkers.push(marker);
         }
 
-        /* Remove markers if too many */
+        // Remove markers if too many 
         while (this._pathMarkers.length > Object.keys(this.activePath).length)
         {
             map.getMap().removeLayer(this._pathMarkers[this._pathMarkers.length - 1]);
             this._pathMarkers.splice(this._pathMarkers.length - 1, 1)
         }
 
-        /* Update the position of the existing markers (to avoid creating markers uselessly) */
+        // Update the position of the existing markers (to avoid creating markers uselessly) 
         for (let WP in this.activePath)
         {
             var destination = this.activePath[WP];
@@ -197,8 +197,228 @@ class Unit
         this._pathPolyline.setLatLngs([]);
     }
 
+    drawTargets()
+    {
+        for (let typeIndex in this.missionData.targets)
+        {
+            for (let index in this.missionData.targets[typeIndex])
+            {
+                var targetData = this.missionData.targets[typeIndex][index];
+                var target = unitsManager.getUnit(targetData.object["id_"])
+                var startLatLng = new L.LatLng(this.latitude, this.longitude)
+                var endLatLng = new L.LatLng(target.latitude, target.longitude)
+                
+                var color;
+                if (typeIndex === "radar")
+                {
+                    color = "#FFFF00";
+                }
+                else if (typeIndex === "visual")
+                {
+                    color = "#FF00FF";
+                }
+                else if (typeIndex === "rwr")
+                {
+                    color = "#00FF00";
+                }
+                else
+                {
+                    color = "#FFFFFF";
+                }
+                var targetPolyline = new L.Polyline([startLatLng, endLatLng], {color: color, weight: 3, opacity: 1, smoothFactor: 1});
+                targetPolyline.addTo(map.getMap());
+                this._targetsPolylines.push(targetPolyline)
+            }
+        }
+    }
+
+    clearTargets()
+    {
+        for (let index in this._targetsPolylines)
+        {
+            map.getMap().removeLayer(this._targetsPolylines[index])
+        }
+    }
+
     attackUnit(targetID)
     {
+        // Call DCS attackUnit function
         attackUnit(this.ID, targetID);
+    }
+
+    changeSpeed(speedChange)
+    {
+        // TODO move in dedicated file
+        var xhr = new XMLHttpRequest();
+        xhr.open("PUT", RESTaddress);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                console.log(this.unitName + " speed change request: " + speedChange);
+            }
+        };
+
+        var command = {"ID": this.ID, "change": speedChange}
+        var data = {"changeSpeed": command}
+
+        xhr.send(JSON.stringify(data));
+    }
+
+    changeAltitude(altitudeChange)
+    {
+        // TODO move in dedicated file
+        var xhr = new XMLHttpRequest();
+        xhr.open("PUT", RESTaddress);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                console.log(this.unitName + " altitude change request: " + speedChange);
+            }
+        };
+
+        var command = {"ID": this.ID, "change": altitudeChange}
+        var data = {"changeAltitude": command}
+
+        xhr.send(JSON.stringify(data));
+    }
+}
+
+class AirUnit extends Unit
+{
+    drawMarker()
+    {
+        if (this.flags.human)
+        {
+            super.drawMarker(controlPanel.getSettings().human);
+        }
+        else
+        {
+            super.drawMarker(controlPanel.getSettings().AI);
+        }
+    }
+}
+
+class Aircraft extends AirUnit
+{
+    constructor(ID, data)
+    {
+        var marker = new L.Marker.UnitMarker.AirUnitMarker.AircraftMarker({
+            riseOnHover: true, 
+            unitName: data.unitName,
+            name: data.name,
+            human: data.flags.Human,
+            coalitionID: data.coalitionID
+        });
+        super(ID, marker);
+    }
+}
+
+class Helicopter extends AirUnit
+{
+    constructor(ID, data)
+    {
+        var marker = new L.Marker.UnitMarker.AirUnitMarker.HelicopterMarker({
+            riseOnHover: true, 
+            unitName: data.unitName,
+            name: data.name,
+            human: data.flags.Human,
+            coalitionID: data.coalitionID
+        });
+        super(ID, marker);
+    }
+}
+
+class GroundUnit extends Unit
+{
+    constructor(ID, data)
+    {
+        var marker = new L.Marker.UnitMarker.GroundMarker({
+            riseOnHover: true, 
+            unitName: data.unitName,
+            name: data.name,
+            human: data.flags.Human,
+            coalitionID: data.coalitionID
+        });
+        super(ID, marker);
+    }
+
+    drawMarker()
+    {
+        super.drawMarker(controlPanel.getSettings().AI);
+    }
+}
+
+class NavyUnit extends Unit
+{
+    constructor(ID, data)
+    {
+        var marker = new L.Marker.UnitMarker.NavyMarker({
+            riseOnHover: true, 
+            unitName: data.unitName,
+            name: data.name,
+            human: data.flags.Human,
+            coalitionID: data.coalitionID
+        });
+        super(ID, marker);
+    }
+
+    drawMarker()
+    {
+        super.drawMarker(controlPanel.getSettings().AI);
+    }
+}
+
+class Weapon extends Unit
+{
+    constructor(ID, data)
+    {
+        // Weapons can not be selected
+        self.selectable = false;
+        super(ID, data);
+    }
+
+    drawMarker()
+    {
+        super.drawMarker(controlPanel.getSettings().weapons);
+    }
+
+    onClick(e) 
+    {
+        // Weapons can not be clicked
+    }
+
+    onRightClick(e) 
+    {
+        // Weapons can not be clicked
+    }
+}
+
+class Missile extends Weapon
+{
+    constructor(ID, data)
+    {
+        var marker = new L.Marker.UnitMarker.WeaponMarker.MissileMarker({
+            riseOnHover: true, 
+            unitName: "",
+            name: data.name,
+            human: data.flags.Human,
+            coalitionID: data.coalitionID
+        });
+        super(ID, marker);
+    }
+}
+
+class Bomb extends Weapon
+{
+    constructor(ID, data)
+    {
+        var marker = new L.Marker.UnitMarker.WeaponMarker.BombMarker({
+            riseOnHover: true, 
+            unitName: "",
+            name: data.name,
+            human: data.flags.Human,
+            coalitionID: data.coalitionID
+        });
+        super(ID, marker);
     }
 }

@@ -18,12 +18,14 @@
     <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js"
     integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg="
     crossorigin=""></script>
+    <script src="js/payloadNames.js"></script>
+    <script src="js/ControlPanel.js"></script>
     <script src="js/DCSCommands.js"></script>
     <script src="js/Utils.js"></script>
     <script src="js/unitTypes.js"></script>
     <script src="js/PanelButton.js"></script>
-    <script src="js/LeftPanel.js"></script>
-    <script src="js/TopPanel.js"></script>
+    <script src="js/UnitInfoPanel.js"></script>
+    <script src="js/UnitControlPanel.js"></script>
     <script src="js/Map.js"></script>
     <script src="js/MissionData.js"></script>
     <script src="js/Unit.js"></script>
@@ -36,7 +38,8 @@
   <body>
     <table id="content-table">
       <tr id="header">
-        <td colspan>
+        <td>
+          <div class="control-panel" id="top-control-panel"></div>
         </td>
       </tr>
       <tr>

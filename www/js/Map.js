@@ -184,17 +184,32 @@ class Map
         this._selectionWheel = new SelectionWheel(e.originalEvent.x, e.originalEvent.y, options);
     }
 
-    /* Show unit selection for ground units */
+    /* Show unit selection for air units */
     _unitSelectAir(e)
     {
         this.removeSelectionWheel();
         this.removeSelectionScroll();
         var options = unitTypes.air;
         options.sort();
-        this._selectionScroll = new SelectionScroll(e.originalEvent.x, e.originalEvent.y, options, (type) => {
+        this._selectionScroll = new SelectionScroll(e.originalEvent.x, e.originalEvent.y, options, (unitType) => {
             this.removeSelectionWheel(); 
             this.removeSelectionScroll(); 
-            spawnAirUnit(type, e.latlng, this._activeCoalition);
+            this._unitSelectPayload(unitType, e);
+        });
+    }
+
+    /* Show weapon selection for air units */
+    _unitSelectPayload(unitType, e)
+    {
+        this.removeSelectionWheel();
+        this.removeSelectionScroll();
+        var options = [];
+        options = payloadNames[unitType]
+        options.sort();
+        this._selectionScroll = new SelectionScroll(e.originalEvent.x, e.originalEvent.y, options, (payloadName) => {
+            this.removeSelectionWheel(); 
+            this.removeSelectionScroll(); 
+            spawnAirUnit(unitType, e.latlng, this._activeCoalition, payloadName);
         });
     }
 

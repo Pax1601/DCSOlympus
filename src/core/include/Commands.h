@@ -8,7 +8,7 @@ namespace CommandPriority {
 };
 
 namespace CommandType {
-	enum CommandTypes { NO_TYPE, MOVE, SMOKE, LASE, EXPLODE, SPAWN_AIR, SPAWN_GROUND, ATTACK_UNIT };
+	enum CommandTypes { NO_TYPE, MOVE, SMOKE, LASE, EXPLODE, SPAWN_AIR, SPAWN_GROUND };
 };
 
 /* Base command class */
@@ -17,7 +17,7 @@ class Command
 public:
 	int getPriority() { return priority; }
 	int getType() { return type; }
-	virtual void execute(lua_State* L) {};
+	virtual void execute(lua_State* L) = 0;
 
 protected:
 	int priority = CommandPriority::LOW;
@@ -28,11 +28,14 @@ protected:
 class MoveCommand : public Command
 {
 public:
-	MoveCommand(int ID, wstring unitName, Coords destination, int unitCategory) : 
+	MoveCommand(int ID, wstring unitName, Coords destination, double speed, double altitude, wstring unitCategory, wstring targetName):
 		ID(ID), 
 		unitName(unitName), 
 		destination(destination),
-		unitCategory(unitCategory)
+		speed(speed),
+		altitude(altitude),
+		unitCategory(unitCategory),
+		targetName(targetName)
 	{ 
 		priority = CommandPriority::LOW; 
 		type = CommandType::MOVE; 
@@ -43,7 +46,10 @@ private:
 	const int ID;
 	const wstring unitName;
 	const Coords destination;
-	const int unitCategory;
+	const wstring unitCategory;
+	const double speed;
+	const double altitude;
+	const wstring targetName;
 };
 
 /* Smoke command */
@@ -88,10 +94,11 @@ private:
 class SpawnAirCommand : public Command
 {
 public:
-	SpawnAirCommand(wstring coalition, wstring unitType, Coords location) : 
+	SpawnAirCommand(wstring coalition, wstring unitType, Coords location, wstring payloadName) : 
 		coalition(coalition), 
 		unitType(unitType), 
-		location(location) 
+		location(location),
+		payloadName(payloadName)
 	{ 
 		priority = CommandPriority::LOW; 
 		type = CommandType::SPAWN_AIR; 
@@ -102,24 +109,5 @@ private:
 	const wstring coalition;
 	const wstring unitType;
 	const Coords location;
-};
-
-/* Attack unit command */
-class AttackUnitCommand : public Command
-{
-public:
-	AttackUnitCommand(wstring unitName, wstring targetName, Coords location) :
-		unitName(unitName),
-		targetName(targetName),
-		location(location)
-	{
-		priority = CommandPriority::MEDIUM;
-		type = CommandType::ATTACK_UNIT;
-	};
-	virtual void execute(lua_State* L);
-
-private:
-	const wstring unitName;
-	const wstring targetName;
-	const Coords location;
+	const wstring payloadName;
 };

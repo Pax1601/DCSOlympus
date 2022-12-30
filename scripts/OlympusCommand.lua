@@ -5,34 +5,63 @@ function Olympus.notify(message, displayFor)
     trigger.action.outText(message, displayFor)
 end
 
-function Olympus.move(unitName, lat, lng, v, category)
-    Olympus.notify("Olympus.move " .. unitName .. " (" .. lat .. ", " .. lng ..")", 10)
+function Olympus.move(unitName, lat, lng, altitude, speed, category, targetName)
+    Olympus.notify("Olympus.move " .. unitName .. " (" .. lat .. ", " .. lng ..") " .. altitude .. "m " .. speed .. "m/s " .. category .. " target " .. targetName, 10)
     local unit = Unit.getByName(unitName)
 	if unit ~= nil then
-		if category == 1 then
-			local startPoint =  mist.getLeadPos(unit:getGroup())
+		if category == "Aircraft" then
+			local startPoint = mist.getLeadPos(unit:getGroup())
 			local endPoint = coord.LLtoLO(lat, lng, 0)
 
+			local task = nil
+			if targetName ~= "" then
+				targetID = Unit.getByName(targetName):getID()
+				task = { 
+					id = 'EngageUnit', 
+					params = { 
+						unitId = targetID,
+					} 
+				}
+			end
+
 			local path = {} 
-			path[#path + 1] = mist.fixedWing.buildWP(startPoint, flyOverPoint, v, startPoint.y, 'BARO')
-			path[#path + 1] = mist.fixedWing.buildWP(endPoint, turningPoint, v, startPoint.y, 'BARO') 
+			path[#path + 1] = mist.fixedWing.buildWP(startPoint, flyOverPoint, speed, altitude, 'BARO')
+			if task ~= nil then
+				path[#path].task = task
+			end
+			path[#path + 1] = mist.fixedWing.buildWP(endPoint, turningPoint, speed, altitude, 'BARO') 
+			if task ~= nil then
+				path[#path].task = task
+			end
 			
-			mist.goRoute(unit:getGroup(), path)
+			local missionTask = {
+				id = 'Mission',
+				params = {
+					route = {
+						points = mist.utils.deepCopy(path),
+					},
+				},
+			}
+			group = unit:getGroup()
+			local groupCon = group:getController()
+			if groupCon then
+				groupCon:setTask(missionTask)
+			end
 			Olympus.notify("Olympus.move executed succesfully on a air unit", 10)
-		elseif category == 2 then
+		elseif category == "GroundUnit" then
 			vars = 
 				{
 					group = unit:getGroup(), 
 					point = coord.LLtoLO(lat, lng, 0),
 					form = "Off Road",
 					heading = 0,
-					speed = v,
+					speed = speed,
 					disableRoads = true
 				}
 			mist.groupToRandomPoint(vars)
 			Olympus.notify("Olympus.move executed succesfully on a ground unit", 10)
 		else
-			Olympus.notify("Olympus.move not implemented yet for navy units", 10)
+			Olympus.notify("Olympus.move not implemented yet for " .. category, 10)
 		end
 	else
         Olympus.notify("Error in Olympus.move " .. unitName, 10)
@@ -90,23 +119,26 @@ function Olympus.spawnGround(coalition, type, lat, lng, ID)
 	Olympus.notify("Olympus.spawnGround completed succesfully", 10)
 end  
 
-function Olympus.spawnAir(coalition, type, lat, lng, alt)
-	Olympus.notify("Olympus.spawnAir " .. coalition .. " " .. type .. " (" .. lat .. ", " .. lng ..")", 10)
+function Olympus.spawnAir(coalition, unitType, lat, lng, payloadName)
+	local alt = 5000
+	Olympus.notify("Olympus.spawnAir " .. coalition .. " " .. unitType .. " (" .. lat .. ", " .. lng ..") " .. payloadName, 10)
 	local spawnLocation = mist.utils.makeVec3GL(coord.LLtoLO(lat, lng, 0))
+	local payload = {}
+	if Olympus.unitPayloads[unitType][payloadName] ~= nil then
+		payload = Olympus.unitPayloads[unitType][payloadName]
+	end
 	local unitTable = 
 	{	
 		[1] = 
 		{
-			["type"] = type,
+			["type"] = unitType,
 			["x"] = spawnLocation.x,
 			["y"] = spawnLocation.z,
 			["alt"] = alt,
 			["skill"] = "Excellent",
 			["payload"] = 
 			{
-				["pylons"] = 
-				{
-				}, 
+				["pylons"] = payload, 
 				["fuel"] = 4900,
 				["flare"] = 60,
 				["ammo_type"] = 1,
@@ -144,55 +176,6 @@ function Olympus.spawnAir(coalition, type, lat, lng, alt)
 	mist.dynAdd(vars)
 	Olympus.unitCounter = Olympus.unitCounter + 1
 	Olympus.notify("Olympus.spawnAir completed succesfully", 10)
-end
-
-function Olympus.attackUnit(unitName, targetName, lat, lng) 
-	Olympus.notify("Olympus.attackUnit " .. unitName .. " " .. targetName, 10)
-	local targetID = Unit.getByName(targetName):getID()
-	local unit = Unit.getByName(unitName)
-
-
-	local category = 1
-
-
-	if unit ~= nil then
-		if category == 1 then
-			local startPoint = mist.getLeadPos(unit:getGroup())
-			local endPoint = coord.LLtoLO(lat, lng, 0)
-
-			local attackTask = { 
-				id = 'EngageUnit', 
-				params = { 
-					unitId = targetID,
-				} 
-			}
-
-			local path = {} 
-			path[#path + 1] = mist.fixedWing.buildWP(startPoint, flyOverPoint, v, startPoint.y, 'BARO')
-			path[#path].task = attackTask
-			path[#path + 1] = mist.fixedWing.buildWP(endPoint, turningPoint, v, startPoint.y, 'BARO') 
-			path[#path].task = attackTask
-			
-			local missionTask = {
-				id = 'Mission',
-				params = {
-					route = {
-						points = mist.utils.deepCopy(path),
-					},
-				},
-			}
-			group = unit:getGroup()
-			local groupCon = group:getController()
-			if groupCon then
-				groupCon:setTask(missionTask)
-			end
-			Olympus.notify("Olympus.attackUnit completed succesfully", 10)
-		elseif category == 2 then
-			Olympus.notify("Olympus.attackUnit not implemented yet for ground units", 10)
-		else
-			Olympus.notify("Olympus.attackUnit not implemented yet for navy units", 10)
-		end
-	end
 end
 
 Olympus.notify("OlympusCommand script loaded correctly", 10)

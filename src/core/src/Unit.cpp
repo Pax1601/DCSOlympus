@@ -3,11 +3,14 @@
 #include "logger.h"
 #include "commands.h"
 #include "scheduler.h"
+#include "defines.h"
+#include "unitsFactory.h"
 
 #include <GeographicLib/Geodesic.hpp>
 using namespace GeographicLib;
 
 extern Scheduler* scheduler;
+extern UnitsFactory* unitsFactory;
 
 const Geodesic& geod = Geodesic::WGS84();
 
@@ -15,7 +18,6 @@ Unit::Unit(json::value json, int ID) :
 	ID(ID)
 {
 	log("Creating unit with ID: " + to_string(ID));
-	update(json);
 }
 
 Unit::~Unit()
@@ -23,23 +25,21 @@ Unit::~Unit()
 
 }
 
-int Unit::getCategory()
-{
-	if (type.has_number_field(L"level1"))
-	{
-		return type[L"level1"].as_number().to_int32();
-	}
-	else
-	{
-		return UnitCategory::NO_CATEGORY;
-	}
-}
-
 void Unit::update(json::value json)
 {
 	/* Lock for thread safety */
 	lock_guard<mutex> guard(mutexLock);
 
+	/* Compute speed (loGetWorldObjects does not provide speed, we compute it for better performance instead of relying on many lua calls) */
+	if (oldPosition != NULL)
+	{
+		double dist = 0;
+		geod.Inverse(latitude, longitude, oldPosition.lat, oldPosition.lng, dist);
+		speed = speed * 0.95 + (dist / UPDATE_TIME_INTERVAL) * 0.05;
+	}
+	oldPosition = Coords(latitude, longitude, altitude);
+
+	/* Update all the internal fields from the input json file */
 	if (json.has_string_field(L"Name"))
 		name = json[L"Name"].as_string();
 	if (json.has_string_field(L"UnitName"))
@@ -80,17 +80,81 @@ void Unit::update(json::value json)
 void Unit::setPath(list<Coords> path)
 {
 	activePath = path;
+	holding = false;
+}
+
+void Unit::setTarget(int newTargetID)
+{
+	targetID = newTargetID;
+	resetActiveDestination();
+}
+
+wstring Unit::getTarget()
+{
+	if (targetID == NULL)
+	{
+		return L"";
+	}
+
+	Unit* target = unitsFactory->getUnit(targetID);
+	if (target != nullptr)
+	{
+		if (target->alive)
+		{
+			return target->getUnitName();
+		}
+		else
+		{
+			targetID = NULL;
+			return L"";
+		}
+	}
+	else
+	{
+		targetID = NULL;
+		return L"";
+	}
+}
+
+wstring Unit::getCurrentTask()
+{
+	if (activePath.size() == 0)
+	{
+		return L"Idle";
+	}
+	else
+	{
+		if (getTarget().empty())
+		{
+			if (looping)
+			{
+				return L"Looping";
+			}
+			else if (holding)
+			{
+				return L"Holding";
+			}
+			else
+			{
+				return L"Reaching destination";
+			}
+		}
+		else
+		{
+			return L"Attacking " + getTarget();
+		}
+	}
 }
 
 void Unit::AIloop()
 {
-	/* Set the active destination to be always equal to the first point of the active path */
+	/* Set the active destination to be always equal to the first point of the active path. This is in common with all AI units */
 	if (activePath.size() > 0)
 	{
 		if (activeDestination != activePath.front())
 		{
 			activeDestination = activePath.front();
-			Command* command = dynamic_cast<Command*>(new MoveCommand(ID, unitName, activeDestination, getCategory()));
+			Command* command = dynamic_cast<Command*>(new MoveCommand(ID, unitName, activeDestination, getTargetSpeed(), getTargetAltitude(), getCategory(), getTarget()));
 			scheduler->appendCommand(command);
 		}
 	}
@@ -102,52 +166,13 @@ void Unit::AIloop()
 			activeDestination = Coords(0); // Set the active path to NULL
 		}
 	}
+}
 
-	/* Ground unit AI Loop */
-	if (getCategory() == UnitCategory::GROUND)
-	{
-		if (activeDestination != NULL)
-		{
-			double newDist = 0;
-			geod.Inverse(latitude, longitude, activeDestination.lat, activeDestination.lng, newDist);
-			if (newDist < GROUND_DEST_DIST_THR)
-			{
-				/* Destination reached */
-				activePath.pop_front();
-				log(unitName + L" destination reached");
-			}
-		}
-	}
-
-	/* Air unit AI Loop */
-	if (getCategory() == UnitCategory::AIR)
-	{
-		if (activeDestination != NULL)
-		{
-			double newDist = 0;
-			geod.Inverse(latitude, longitude, activeDestination.lat, activeDestination.lng, newDist);
-			if (newDist < AIR_DEST_DIST_THR)
-			{
-				/* Destination reached */
-				activePath.pop_front();
-				log(name + L" destination reached");
-			}
-		}
-		else
-		{
-			/* Air units must ALWAYS have a destination or they will RTB and may become uncontrollable */
-			Coords point1;
-			Coords point2;
-			Coords point3;
-			geod.Direct(latitude, longitude, 45, 18520, point1.lat, point1.lng);
-			geod.Direct(point1.lat, point1.lng, 135, 18520, point2.lat, point2.lng);
-			geod.Direct(point2.lat, point2.lng, 225, 18520, point3.lat, point3.lng);
-			activePath.push_back(point1);
-			activePath.push_back(point2);
-			activePath.push_back(point3);
-			activePath.push_back(Coords(latitude, longitude));
-		}
-	}
+/* This function calls again the MoveCommand to reach the active destination. This is useful to change speed and altitude, for example */
+void Unit::resetActiveDestination()
+{
+	log(unitName + L" resetting active destination");
+	activeDestination = Coords(0);
 }
 
 json::value Unit::json()
@@ -167,8 +192,11 @@ json::value Unit::json()
 	json[L"latitude"] = latitude;
 	json[L"longitude"] = longitude;
 	json[L"altitude"] = altitude;
+	json[L"speed"] = speed; 
 	json[L"heading"] = heading;
 	json[L"flags"] = flags;
+	json[L"category"] = json::value::string(getCategory());
+	json[L"currentTask"] = json::value::string(getCurrentTask());
 
 	/* Send the active path as a json object */
 	if (activePath.size() > 0) {
@@ -188,4 +216,223 @@ json::value Unit::json()
 	return json;
 }
 
+/* Air unit */
+AirUnit::AirUnit(json::value json, int ID) : Unit(json, ID)
+{
 
+};
+
+void AirUnit::AIloop()
+{
+	/* Call the common AI loop */
+	Unit::AIloop();
+
+	/* Air unit AI Loop */
+	if (activeDestination != NULL)
+	{
+		double newDist = 0;
+		geod.Inverse(latitude, longitude, activeDestination.lat, activeDestination.lng, newDist);
+		if (newDist < AIR_DEST_DIST_THR)
+		{
+			/* Destination reached */
+			if (holding || looping)
+			{
+				activePath.push_back(activePath.front());
+			}
+			activePath.pop_front();
+			log(name + L" destination reached");
+		}
+	}
+	else
+	{
+		/* Air units must ALWAYS have a destination or they will RTB and may become uncontrollable */
+		Coords point1;
+		Coords point2;
+		Coords point3;
+		geod.Direct(latitude, longitude, 45, 10000, point1.lat, point1.lng);
+		geod.Direct(point1.lat, point1.lng, 135, 10000, point2.lat, point2.lng);
+		geod.Direct(point2.lat, point2.lng, 225, 10000, point3.lat, point3.lng);
+		activePath.push_back(point1);
+		activePath.push_back(point2);
+		activePath.push_back(point3);
+		activePath.push_back(Coords(latitude, longitude));
+		holding = true;
+	}
+}
+
+/* Aircraft */
+Aircraft::Aircraft(json::value json, int ID) : AirUnit(json, ID)
+{
+	log("New Aircraft created with ID: " + to_string(ID));
+};
+
+void Aircraft::changeSpeed(wstring change)
+{
+	if (change.compare(L"stop") == 0)
+	{
+		/* Air units can't hold a position, so we can only set them to hold. At the moment, this will erase any other command. TODO: helicopters should be able to hover in place */
+		activePath.clear();
+	}
+	else if (change.compare(L"slow") == 0)
+	{
+		targetSpeed *= 0.9;
+		resetActiveDestination();
+	}
+	else if (change.compare(L"fast") == 0)
+	{
+		targetSpeed *= 1.1;
+		resetActiveDestination();
+	}
+}
+
+void Aircraft::changeAltitude(wstring change)
+{
+	if (change.compare(L"descend") == 0)
+	{
+		targetAltitude *= 0.9;
+	}
+	else if (change.compare(L"climb") == 0)
+	{
+		targetAltitude *= 1.1;
+	}
+	resetActiveDestination();
+}
+
+/* Helicopter */
+Helicopter::Helicopter(json::value json, int ID) : AirUnit(json, ID)
+{
+	log("New Helicopter created with ID: " + to_string(ID));
+};
+
+void Helicopter::changeSpeed(wstring change)
+{
+	if (change.compare(L"stop") == 0)
+	{
+		/* Air units can't hold a position, so we can only set them to hold. At the moment, this will erase any other command. TODO: helicopters should be able to hover in place */
+		activePath.clear();
+	}
+	else if (change.compare(L"slow") == 0)
+	{
+		targetSpeed *= 0.9;
+		resetActiveDestination();
+	}
+	else if (change.compare(L"fast") == 0)
+	{
+		targetSpeed *= 1.1;
+		resetActiveDestination();
+	}
+}
+
+void Helicopter::changeAltitude(wstring change)
+{
+	if (change.compare(L"descend") == 0)
+	{
+		targetAltitude *= 0.9;
+	}
+	else if (change.compare(L"climb") == 0)
+	{
+		targetAltitude *= 1.1;
+	}
+	resetActiveDestination();
+}
+
+
+/* Ground unit */
+GroundUnit::GroundUnit(json::value json, int ID) : Unit(json, ID)
+{
+	log("New Ground Unit created with ID: " + to_string(ID));
+};
+
+void GroundUnit::AIloop()
+{
+	/* Call the common AI loop */
+	Unit::AIloop();
+
+	/* Ground unit AI Loop */
+	if (activeDestination != NULL)
+	{
+		double newDist = 0;
+		geod.Inverse(latitude, longitude, activeDestination.lat, activeDestination.lng, newDist);
+		if (newDist < GROUND_DEST_DIST_THR)
+		{
+			/* Destination reached */
+			activePath.pop_front();
+			log(unitName + L" destination reached");
+		}
+	}
+}
+
+void GroundUnit::changeSpeed(wstring change)
+{
+	if (change.compare(L"stop") == 0)
+	{
+
+	}
+	else if (change.compare(L"slow") == 0)
+	{
+
+	}
+	else if (change.compare(L"fast") == 0)
+	{
+
+	}
+}
+
+/* Navy Unit */
+NavyUnit::NavyUnit(json::value json, int ID) : Unit(json, ID)
+{
+	log("New Navy Unit created with ID: " + to_string(ID));
+};
+
+void NavyUnit::AIloop()
+{
+	/* Call the common AI loop */
+	Unit::AIloop();
+
+	/* Navy unit AI Loop */
+	if (activeDestination != NULL)
+	{
+		double newDist = 0;
+		geod.Inverse(latitude, longitude, activeDestination.lat, activeDestination.lng, newDist);
+		if (newDist < GROUND_DEST_DIST_THR)
+		{
+			/* Destination reached */
+			activePath.pop_front();
+			log(unitName + L" destination reached");
+		}
+	}
+}
+
+void NavyUnit::changeSpeed(wstring change)
+{
+	if (change.compare(L"stop") == 0)
+	{
+
+	}
+	else if (change.compare(L"slow") == 0)
+	{
+
+	}
+	else if (change.compare(L"fast") == 0)
+	{
+
+	}
+}
+
+/* Weapon */
+Weapon::Weapon(json::value json, int ID) : Unit(json, ID)
+{
+
+};
+
+/* Missile */
+Missile::Missile(json::value json, int ID) : Weapon(json, ID)
+{
+	log("New Missile created with ID: " + to_string(ID));
+};
+
+/* Bomb */
+Bomb::Bomb(json::value json, int ID) : Weapon(json, ID)
+{
+	log("New Bomb created with ID: " + to_string(ID));
+};

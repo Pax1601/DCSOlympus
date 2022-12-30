@@ -1,119 +1,108 @@
 L.Marker.UnitMarker = L.Marker.extend(
     {
-        // Set the unit name and unit icon
-        setUnitName: function(unitName)
+        options: {
+            unitName: "No name",
+            name: "N/A",
+            human: false,
+            coalitionID: 2,
+            iconSrc: "img/units/undefined.png"
+        },
+
+        // Marker constructor
+        initialize: function(options) {
+            this._latlng = new L.LatLng(0, 0);
+            L.setOptions(this, options);
+            var icon = new L.DivIcon({
+                html: `<table class="unitmarker-container-table" id="container-table">
+                        <tr>
+                            <td>
+                                <img class="unitmarker-selection-img" id="selection-img" src="img/selection.png">
+                                <img class="unitmarker-icon-img" id="icon-img">
+                                <div class="unitmarker-unitName-div" id="unitName"></div>
+                                <div class="unitmarker-altitude-div" id="altitude-div"></div>
+                                <div class="unitmarker-speed-div" id="speed-div"></div>
+                                <div class="unitmarker-name-div" id="name"></div>
+                            </td>
+                        </tr>
+                    </table>`, 
+                className: 'unit-marker-icon'});   // Set the unit marker, className must be set to avoid white square
+            this.setIcon(icon);
+        },
+
+        // When the marker is added to the map, the source image and the style are set. This can not be done before.
+        onAdd: function (map) 
         {
-            // TODO: move in constructor and call only once (does not work in addInitHook for some reason)
+            L.Marker.prototype.onAdd.call(this, map);
+            
+            this._icon.querySelector("#icon-img").src = this.options.iconSrc;
+
             this._icon.style.outline = "transparent"; // Removes the rectangular outline
 
-            if (this.unitName !== unitName)
-            {                
-                // Set the unit name in the marker
-                var unitNameDiv = this._icon.querySelector("#unitName");
-                if (unitNameDiv!== undefined)
-                {
-                    if (this._human)
-                    {
-                        unitNameDiv.innerHTML = `<i class="fas fa-user"></i> ${unitName}`;
-                    }
-                    else
-                    {
-                        unitNameDiv.innerHTML = `${unitName}`;
-                    }
-                } 
-            }
-            this.unitName = unitName;
-        },
-
-        setName: function(name)
-        {
-            // TODO: move in constructor and call only once (does not work in addInitHook for some reason)
-            this._icon.style.outline = "transparent"; // Removes the rectangular outline
-
-            if (this.name !== name)
-            {                
-                // Set the unit name in the marker
-                var nameDiv = this._icon.querySelector("#name");
-                if (nameDiv!== undefined)
-                {
-                    nameDiv.innerHTML = name;
-                } 
-            }
-            this.name = name;
-        },
-
-        setCoalitionID: function(coalitionID)
-        {
-            var img = this._icon.querySelector("#icon-img");
-            if (img!== undefined) 
+            // Set the unit name in the marker
+            var unitNameDiv = this._icon.querySelector("#unitName");
+            if (this.options.human)
             {
-                if (coalitionID == 2)
-                {
-                    img.classList.add("unitmarker-icon-img-blue");
-                }
-                else
-                {
-                    img.classList.add("unitmarker-icon-img-red");
-                }
+                unitNameDiv.innerHTML = `<i class="fas fa-user"></i> ${this.options.unitName}`;
             }
-        },
-
-        setImage: function(icon)
-        {
-            // Set the unit icon
-            var img = this._icon.querySelector("#icon-img");
-            if (img !== undefined) 
+            else
             {
-                img.src = icon;
+                unitNameDiv.innerHTML = `${this.options.unitName}`;
+            }       
+            unitNameDiv.style.left = (-(unitNameDiv.offsetWidth - this._icon.querySelector("#icon-img").height) / 2) + "px";
+
+            // Set the unit name in the marker
+            var nameDiv = this._icon.querySelector("#name");
+            nameDiv.innerHTML = this.options.name;
+            nameDiv.style.left = (-(nameDiv.offsetWidth - this._icon.querySelector("#icon-img").height) / 2) + "px";
+
+            // Set the coalitionID
+            var img = this._icon.querySelector("#icon-img");
+            if (this.options.coalitionID == 2)
+            {
+                img.classList.add("unitmarker-icon-img-blue");
+            }
+            else
+            {
+                img.classList.add("unitmarker-icon-img-red");
             }
         },
 
+        // If the unit is not alive it is drawn with darker colours
         setAlive: function(alive)
         {
             var table = this._icon.querySelector("#container-table");
-            if (table!== undefined) 
+            if (alive)
             {
-                if (alive)
-                {
-                    table.classList.remove("unitmarker-container-table-dead");
-                }
-                else
-                {
-                    table.classList.add("unitmarker-container-table-dead");
-                }
+                table.classList.remove("unitmarker-container-table-dead");
             }
-            this.alive = alive;
+            else
+            {
+                table.classList.add("unitmarker-container-table-dead");
+            }
         },
         
+        // Set heading
         setAngle: function(angle)
         {
-            if (this._angle !== angle){
-                var img = this._icon.querySelector("#icon-img");
-                if (img !== undefined) 
-                {
-                    img.style.transform = "rotate(" + angle + "rad)";
-                }
-            }
-            this._angle = angle;
+            var img = this._icon.querySelector("#icon-img");
+            img.style.transform = "rotate(" + angle + "rad)";
         },
 
+        // Set altitude
         setAltitude: function(altitude)
         {
-            if (this._altitude !== altitude){
-                var div = this._icon.querySelector("#altitude-div");
-                if (div !== undefined) 
-                {
-                    div.innerHTML = Math.round(altitude / 0.3048 / 100) / 10;
-                }
-            }
-            this._altitude = altitude;
+            var div = this._icon.querySelector("#altitude-div");
+            div.innerHTML = Math.round(altitude / 0.3048 / 100) / 10;
         },
 
+        // Set speed
         setSpeed: function(speed)
         {
-
+            var div = this._icon.querySelector("#speed-div");
+            div.innerHTML = Math.round(speed * 1.94384);
         },
 
+        // Set hovered (mouse cursor is over the marker)
         setHovered: function(hovered)
         {
             var img = this._icon.querySelector("#icon-img");
@@ -130,10 +119,11 @@ L.Marker.UnitMarker = L.Marker.extend(
             }
         },
 
+        // Set selected
         setSelected: function(selected)
         {
             var selectedImg = this._icon.querySelector("#selection-img");
-            if (selectedImg!== undefined) 
+            if (selectedImg !== undefined) 
             {
                 if (selected) 
                 {
@@ -159,16 +149,23 @@ L.Marker.UnitMarker = L.Marker.extend(
             }
         },
 
-        setHuman: function(human)
+        setLabelsVisibility(visibility)
         {
-            this._human = human;
+            this._icon.querySelector("#unitName").style.opacity = visibility ? "1": "0";
+            this._icon.querySelector("#unitName").innerHTML = visibility ? this.options.unitName : "";
+            //this._icon.querySelector("#name").style.opacity = visibility ? "1": "0";
+            //this._icon.querySelector("#name").innerHTML = visibility ? this.options.name : "";
+            this._icon.querySelector("#altitude-div").style.opacity = visibility ? "1": "0";
+            this._icon.querySelector("#speed-div").style.opacity = visibility ? "1": "0";
         },
 
+        // Set the icon zIndex
         setZIndex: function(zIndex)
         {
             this._icon.style.zIndex = zIndex;
         },
 
+        // Get the icon zIndex 
         getZIndex: function()
         {
             return this._icon.style.zIndex;
@@ -176,31 +173,72 @@ L.Marker.UnitMarker = L.Marker.extend(
     }
 )
 
+// By default markers can be hovered and clicked
 L.Marker.UnitMarker.addInitHook(function()
 {
-    var icon = new L.DivIcon({html: iconHtml, className: 'DCSUnit-marker-icon'});   // Set the unit marker, className must be set to avoid white square
-    this.setIcon(icon);
-    
-    this.on('mouseover',function(e) {
+    this.on('mouseover', function(e) {
         if (e.target.alive)
         {
             e.target.setHovered(true);
         }
     });
 
-    this.on('mouseout',function(e) {
+    this.on('mouseout', function(e) {
         e.target.setHovered(false);
     });
 });
 
-var iconHtml = `<table class="unitmarker-container-table" id="container-table">
-                    <tr>
-                        <td>
-                            <img class="unitmarker-selection-img" id="selection-img" src="img/selection.png">
-                            <img class="unitmarker-icon-img" id="icon-img">
-                            <div class="unitmarker-unitName-div" id="unitName"></div>
-                            <div class="unitmarker-altitude-div" id="altitude-div"></div>
-                            <div class="unitmarker-name-div" id="name"></div>
-                        </td>
-                    </tr>
-                </table>`
+/* Air Units ***********************************/
+L.Marker.UnitMarker.AirUnitMarker = L.Marker.UnitMarker.extend({})
+L.Marker.UnitMarker.AirUnitMarker.addInitHook(function(){});
+
+// Aircraft
+L.Marker.UnitMarker.AirUnitMarker.AircraftMarker = L.Marker.UnitMarker.AirUnitMarker.extend({});
+L.Marker.UnitMarker.AirUnitMarker.AircraftMarker.addInitHook(function()
+{
+    this.options.iconSrc = "img/units/aircraft.png";
+});
+    
+// Helicopter
+L.Marker.UnitMarker.AirUnitMarker.HelicopterMarker = L.Marker.UnitMarker.AirUnitMarker.extend({}) 
+L.Marker.UnitMarker.AirUnitMarker.HelicopterMarker.addInitHook(function()
+{
+    this.options.iconSrc = "img/units/helicopter.png";
+});
+
+/* Ground Units ***********************************/
+L.Marker.UnitMarker.GroundMarker = L.Marker.UnitMarker.extend({});
+L.Marker.UnitMarker.GroundMarker.addInitHook(function()
+{
+    this.options.iconSrc = "img/units/ground.png";
+});
+
+/* Navy Units ***********************************/
+L.Marker.UnitMarker.NavyMarker = L.Marker.UnitMarker.extend({}) 
+L.Marker.UnitMarker.NavyMarker.addInitHook(function()
+{
+    this.options.iconSrc = "img/units/navy.png";
+});
+
+/* Weapon Units ***********************************/
+L.Marker.UnitMarker.WeaponMarker = L.Marker.UnitMarker.extend({}) 
+L.Marker.UnitMarker.WeaponMarker.addInitHook(function()
+{
+    // Weapons are not selectable
+    this.on('mouseover', function(e) {});
+    this.on('mouseout', function(e) {});
+});
+
+// Missile
+L.Marker.UnitMarker.WeaponMarker.MissileMarker = L.Marker.UnitMarker.WeaponMarker.extend({}) 
+L.Marker.UnitMarker.WeaponMarker.MissileMarker.addInitHook(function()
+{
+    this.options.iconSrc = "img/units/missile.png";
+});
+
+// Bomb
+L.Marker.UnitMarker.WeaponMarker.BombMarker = L.Marker.UnitMarker.WeaponMarker.extend({}) 
+L.Marker.UnitMarker.WeaponMarker.BombMarker.addInitHook(function()
+{
+    this.options.iconSrc = "img/units/bomb.png";
+});

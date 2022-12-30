@@ -1,4 +1,4 @@
-class LeftPanel
+class UnitInfoPanel
 {
     constructor(id)
     {
@@ -16,7 +16,8 @@ class LeftPanel
             }
             else
             {
-
+                this._showUnitData();
+                this._panel.style.bottom = "-80px";
             }
         }
         else
@@ -30,8 +31,25 @@ class LeftPanel
     {
         if (selectedUnit !== undefined)
         {
+            var loadout = "";
+            for (let index in selectedUnit.missionData.ammo)
+            {
+                if (selectedUnit.missionData != undefined)
+                {
+                    var ammo = selectedUnit.missionData.ammo[index];
+                    var displayName = ammo.desc.displayName;
+                    var amount = ammo.count;
+                    loadout += amount + "x" + displayName;
+                    if (parseInt(index) < Object.keys(selectedUnit.missionData.ammo).length - 1)
+                    {
+                        loadout += ", ";
+                    }
+                }
+            }
+            
             this._panel.innerHTML = `
-            <table class="panel-table">
+            <div style="display: flex">
+            <table class="panel-table" id="unit-info-table">
                 <tr>
                     <td colspan="4" class="panel-title">
                         UNIT INFO
@@ -66,6 +84,20 @@ class LeftPanel
                     </td>
                 </tr>
                 <tr>
+                    <td class="panel-label">
+                        Ground speed:
+                    </td>
+                    <td class="panel-content">
+                        ${Math.floor(selectedUnit.speed * 1.94384) + "kts"}
+                    </td>
+                    <td class="panel-label">
+                        Fuel:
+                    </td>
+                    <td class="panel-content">
+                        ${Math.floor(selectedUnit.missionData.fuel * 100) + "%"}
+                    </td>
+                </tr>
+                <tr>
                 <td class="panel-label">
                     Position:
                 </td>
@@ -76,6 +108,37 @@ class LeftPanel
                 </td>
             </tr>
             </table>
+            <table class="panel-table" id="tactical-info-table">
+                <tr>
+                    <td colspan="4" class="panel-title">
+                        TACTICAL INFO
+                    </td>
+                </tr>
+                <tr>
+                <td class="panel-label">
+                    Current task:
+                </td>
+                <td class="panel-content" colspan="3">
+                    ${selectedUnit.currentTask}
+                </td>
+                </tr>
+                <tr>
+                <td class="panel-label">
+                    Weapons:
+                </td>
+                <td class="panel-content" colspan="3">
+                    ${loadout}
+                </td>
+                </tr>
+                <tr>
+                    
+                </tr>
+                <tr>
+                
+                </td>
+            </tr>
+            </table>
+            </div>
             `;     
         }
         else

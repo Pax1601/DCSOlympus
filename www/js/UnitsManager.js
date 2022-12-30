@@ -5,14 +5,19 @@ class UnitsManager
         this._units = {};
     }
 
-    units()
+    addUnit(ID, data)
     {
-        return this._units;
+        // The name of the unit category is exactly the same as the constructor name
+        var constructor = eval(data.category);        
+        if (constructor != undefined)
+        {
+            this._units[ID] = new constructor(ID, data);
+        }
     }
 
-    addUnit(ID)
+    getUnit(ID)
     {
-        this._units[ID] = new Unit(ID)
+        return this._units[ID];
     }
 
     removeUnit(ID)
@@ -35,7 +40,7 @@ class UnitsManager
             // Create the unit if missing from the local array, then update the data. Drawing is handled by leaflet.
             if (!(ID in this._units)) 
             {
-                this.addUnit(parseInt(ID));
+                this.addUnit(parseInt(ID), data["units"][ID]);
             }
             this._units[ID].update(data["units"][ID]);
         }
@@ -46,12 +51,12 @@ class UnitsManager
         if (this.getSelectedUnits().length > 0) 
         {
             map.setState("UNIT_SELECTED");
-            topPanel.enableButtons(true);
+            unitControlPanel.enableButtons(true);
         }
         else 
         {
             map.setState("IDLE");
-            topPanel.disableButtons();
+            unitControlPanel.disableButtons();
         }
     }
 
@@ -92,38 +97,42 @@ class UnitsManager
 
     addDestination(latlng)
     {
-        for (let ID in this._units)
+        var selectedUnits = this.getSelectedUnits();
+        for (let idx in selectedUnits)
         {
-            if (this._units[ID].getSelected()) 
-            {
-                this._units[ID].addDestination(latlng);
-            }
+            selectedUnits[idx].addDestination(latlng);
         }
     }
 
     clearDestinations()
     {
-        for (let ID in this._units)
+        var selectedUnits = this.getSelectedUnits();
+        for (let idx in selectedUnits)
         {
-            if (this._units[ID].getSelected()) 
-            {
-                this._units[ID].clearDestinations();
-            }
+            selectedUnits[idx].clearDestinations();
         }
     }
 
     selectedUnitsMove()
     {
-        var asd = 1;
+        
     }
 
     selectedUnitsChangeSpeed(speedChange)
     {
-
+        var selectedUnits = this.getSelectedUnits();
+        for (let idx in selectedUnits)
+        {
+            selectedUnits[idx].changeSpeed(speedChange);
+        }
     }
 
     selectedUnitsChangeAltitude(altitudeChange)
     {
-
+        var selectedUnits = this.getSelectedUnits();
+        for (let idx in selectedUnits)
+        {
+            selectedUnits[idx].changeAltitude(altitudeChange);
+        }
     }
 }

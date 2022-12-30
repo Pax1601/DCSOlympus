@@ -4,6 +4,8 @@
 #include "unit.h"
 #include "utils.h"
 
+
+
 UnitsFactory::UnitsFactory(lua_State* L)
 {
 	LogInfo(L, "Units Factory constructor called successfully");
@@ -34,9 +36,46 @@ void UnitsFactory::update(lua_State* L)
 		int ID = p.first;
 		if (units.count(ID) == 0)
 		{
-			units[ID] = new Unit(p.second, ID);
+			json::value type = static_cast<json::value>(p.second)[L"Type"];
+			if (type.has_number_field(L"level1"))
+			{
+				if (type[L"level1"].as_number().to_int32() == 1)
+				{
+					if (type[L"level2"].as_number().to_int32() == 1)
+					{
+						units[ID] = dynamic_cast<Unit*>(new Aircraft(p.second, ID));
+					}
+					else if (type[L"level2"].as_number().to_int32() == 2)
+					{
+						units[ID] = dynamic_cast<Unit*>(new Helicopter(p.second, ID));
+					}
+				}
+				else if (type[L"level1"].as_number().to_int32() == 2)
+				{
+					units[ID] = dynamic_cast<Unit*>(new GroundUnit(p.second, ID));
+				}
+				else if (type[L"level1"].as_number().to_int32() == 3)
+				{
+					units[ID] = dynamic_cast<Unit*>(new NavyUnit(p.second, ID));
+				}
+				else if (type[L"level1"].as_number().to_int32() == 4)
+				{
+					if (type[L"level2"].as_number().to_int32() == 4)
+					{
+						units[ID] = dynamic_cast<Unit*>(new Missile(p.second, ID));
+					}
+					else if (type[L"level2"].as_number().to_int32() == 5)
+					{
+						units[ID] = dynamic_cast<Unit*>(new Bomb(p.second, ID));
+					}
+				}
+			}
 		}
-		units[ID]->update(p.second);
+		/* Update the unit if present*/
+		if (units.count(ID) != 0)
+		{
+			units[ID]->update(p.second);
+		}
 	}
 
 	/* Set the units that are not present in the JSON as dead (probably have been destroyed) */

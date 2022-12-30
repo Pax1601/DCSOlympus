@@ -32,7 +32,7 @@ function spawnGroundUnit(type, latlng, coalition)
     xhr.send(JSON.stringify(data));
 }
 
-function spawnAirUnit(type, latlng, coalition)
+function spawnAirUnit(type, latlng, coalition, payloadName)
 {        
     var xhr = new XMLHttpRequest();
     xhr.open("PUT", RESTaddress);
@@ -43,7 +43,7 @@ function spawnAirUnit(type, latlng, coalition)
         }
     };
 
-    var command = {"type": type, "location": latlng, "coalition": coalition};
+    var command = {"type": type, "location": latlng, "coalition": coalition, "payloadName": payloadName};
     var data = {"spawnAir": command}
 
     xhr.send(JSON.stringify(data));
@@ -56,7 +56,7 @@ function attackUnit(unitID, targetID)
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.onreadystatechange = () => {
         if (xhr.readyState === 4) {
-            console.log("Unit " + unitsManager.units[unitID] + " attack ID " + unitsManager.units[targetID] );
+            console.log("Unit " + unitsManager.getUnit(unitID).unitName + " attack " + unitsManager.getUnit(targetID).unitName );
         }
     };
 

@@ -1,7 +1,8 @@
 var missionData;
+var controlPanel;
 var unitsManager;
-var leftPanel;
-var topPanel;
+var unitInfoPanel;
+var unitControlPanel;
 var map;
 var RESTaddress = "http://localhost:30000/restdemo";
 
@@ -11,8 +12,9 @@ function setup()
     missionData = new MissionData();
     unitsManager = new UnitsManager();
 
-    leftPanel = new LeftPanel("left-panel");
-    topPanel = new TopPanel("top-panel");
+    unitInfoPanel = new UnitInfoPanel("left-panel");
+    unitControlPanel = new UnitControlPanel("top-panel");
+    controlPanel = new ControlPanel("top-control-panel");
 
     map = new Map();  
 
@@ -22,8 +24,8 @@ function setup()
 
 function resize()
 {
-  var topPanelHeight = document.getElementById("header").offsetHeight;
-  document.getElementById("map").style.height = `${window.innerHeight - topPanelHeight - 10}px`;
+  var unitControlPanelHeight = document.getElementById("header").offsetHeight;
+  document.getElementById("map").style.height = `${window.innerHeight - unitControlPanelHeight - 10}px`;
   document.getElementById("top-panel").style.left = `${window.innerWidth / 2 - document.getElementById("top-panel").offsetWidth / 2}px`
 }
 
@@ -39,7 +41,7 @@ function update()
         
         missionData.update(data);
         unitsManager.update(data);
-        leftPanel.update(unitsManager.getSelectedUnits());
+        unitInfoPanel.update(unitsManager.getSelectedUnits());
     };
 
     xmlHttp.onerror = function () {

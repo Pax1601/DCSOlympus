@@ -56,8 +56,6 @@
 }
 
 .unitmarker-unitName-div {
-    width: 200px; 
-    left: -70px; 
     top: -20px; 
     position: absolute; 
     text-align: center; 
@@ -68,8 +66,6 @@
 }
 
 .unitmarker-name-div {
-    width: 200px; 
-    left: -70px; 
     bottom: -20px; 
     position: absolute; 
     text-align: center; 
@@ -85,6 +81,18 @@
     top: 0px; 
     position: absolute; 
     text-align: right; 
+    font: 800 12px Arial; 
+    white-space: nowrap;
+    -webkit-text-fill-color: white; 
+    -webkit-text-stroke: 1px;
+}
+
+.unitmarker-speed-div {
+    width: 100%; 
+    left: 0px; 
+    top: 0px; 
+    position: absolute; 
+    text-align: left; 
     font: 800 12px Arial; 
     white-space: nowrap;
     -webkit-text-fill-color: white; 

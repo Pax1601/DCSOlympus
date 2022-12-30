@@ -6,7 +6,7 @@ void MoveCommand::execute(lua_State* L)
 {
     std::ostringstream command;
     command.precision(10);
-    command << "Olympus.move(\"" << to_string(unitName) << "\", " << destination.lat << ", " << destination.lng << ", " << 10 << ", " << unitCategory << ")";
+    command << "Olympus.move(\"" << to_string(unitName) << "\", " << destination.lat << ", " << destination.lng << ", " << altitude << ", " << speed << ", \"" << to_string(unitCategory) << "\", \"" << to_string(targetName) << "\")";
 
     lua_getglobal(L, "net");
     lua_getfield(L, -1, "dostring_in");
@@ -69,7 +69,7 @@ void SpawnAirCommand::execute(lua_State* L)
 {
     std::ostringstream command;
     command.precision(10);
-    command << "Olympus.spawnAir(\"" << to_string(coalition) << "\", \"" << to_string(unitType) << "\", " << location.lat << ", " << location.lng << ")";
+    command << "Olympus.spawnAir(\"" << to_string(coalition) << "\", \"" << to_string(unitType) << "\", " << location.lat << ", " << location.lng << "," << "\"" << to_string(payloadName) << "\")";
 
     lua_getglobal(L, "net");
     lua_getfield(L, -1, "dostring_in");
@@ -82,26 +82,5 @@ void SpawnAirCommand::execute(lua_State* L)
     else
     {
         log("SpawnAirCommand executed successfully");
-    }
-}
-
-/* Attack unit command */
-void AttackUnitCommand::execute(lua_State* L)
-{
-    std::ostringstream command;
-    command.precision(10);
-    command << "Olympus.attackUnit(\"" << to_string(unitName) << "\", \"" << to_string(targetName) << "\", " << location.lat << ", " << location.lng << ")";
-
-    lua_getglobal(L, "net");
-    lua_getfield(L, -1, "dostring_in");
-    lua_pushstring(L, "server");
-    lua_pushstring(L, command.str().c_str());
-    if (lua_pcall(L, 2, 0, 0) != 0)
-    {
-        log("Error executing AttackUnitCommand");
-    }
-    else
-    {
-        log("AttackUnitCommand executed successfully");
     }
 }

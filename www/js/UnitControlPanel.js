@@ -1,4 +1,4 @@
-class TopPanel
+class UnitControlPanel
 {
     constructor(id)
     {
@@ -44,5 +44,4 @@ class TopPanel
         this._descendButton.setEnabled(false);
         this._climbButton.setEnabled(false);
     }
-
 }
