@@ -36,6 +36,7 @@ class SelectionWheel
                 var image = document.createElement("img");
                 image.classList.add("selection-wheel-image");
                 image.src = `img/buttons/${this._options[id].src}`
+                image.title = this._options[id].tooltip;
                 if ('tint' in this._options[id])
                 {
                     button.style.setProperty('background-color', this._options[id].tint);

@@ -17,7 +17,10 @@ class Map
         this._map.on('movestart', () => {this.removeSelectionWheel(); this.removeSelectionScroll();});
         this._map.on('zoomstart', () => {this.removeSelectionWheel(); this.removeSelectionScroll();});
         this._map.on('selectionend', (e) => unitsManager.selectFromBounds(e.selectionBounds));
-        
+        this._map.on('keyup', (e) => unitsManager.handleKeyEvent(e));
+
+        this._map._container.classList.add("action-cursor");
+
         this.setState("IDLE");
 
         this._selectionWheel = undefined;
@@ -52,14 +55,42 @@ class Map
     setState(newState)
     {
         this._state = newState;
+        
+        var cursorElements = document.getElementsByClassName("action-cursor");
+        for (let item of cursorElements)
+        {
+            item.classList.remove("move-cursor-enabled", "attack-cursor-enabled", "formation-cursor-enabled");
+        }
         if (this._state === "IDLE")
         {
-            L.DomUtil.removeClass(this._map._container, 'move-cursor-enabled');
+            
         }
-        else if (this._state === "UNIT_SELECTED")
+        else if (this._state === "MOVE_UNIT")
         {
-            L.DomUtil.addClass(this._map._container, 'move-cursor-enabled');
+            for (let item of cursorElements)
+            {
+                item.classList.add("move-cursor-enabled");
+            }
         }
+        else if (this._state === "ATTACK")
+        {
+            for (let item of cursorElements)
+            {
+                item.classList.add("attack-cursor-enabled");
+            }
+        }
+        else if (this._state === "FORMATION")
+        {
+            for (let item of cursorElements)
+            {
+                item.classList.add("formation-cursor-enabled");
+            }
+        }
+    }
+
+    getState()
+    {
+        return this._state;
     }
 
     /* Set the active coalition (for persistency) */
@@ -77,6 +108,7 @@ class Map
     // Right click
     _onContextMenu(e)   
     {
+        this.setState("IDLE");
         unitsManager.deselectAllUnits();
         this.removeSelectionWheel();
         this.removeSelectionScroll();
@@ -90,7 +122,7 @@ class Map
         {
             
         }
-        else if (this._state === "UNIT_SELECTED")
+        else if (this._state === "MOVE_UNIT")
         {
             if (!e.originalEvent.ctrlKey)
             {
@@ -102,13 +134,16 @@ class Map
 
     _onDoubleClick(e)
     {
-        var options = [
-            {'tooltip': 'Air unit',       'src': 'spawnAir.png',          'callback': () => this._unitSelectAir(e)},
-            {'tooltip': 'Ground unit',    'src': 'spawnGround.png',       'callback': () => this._groundSpawnMenu(e)},
-            {'tooltip': 'Smoke',          'src': 'spawnSmoke.png',        'callback': () => this._smokeSpawnMenu(e)},
-            {'tooltip': 'Explosion',      'src': 'spawnExplosion.png',    'callback': () => this._explosionSpawnMenu(e)}
-        ]
-        this._selectionWheel = new SelectionWheel(e.originalEvent.x, e.originalEvent.y, options);
+        if (this._state == 'IDLE')
+        {
+            var options = [
+                {'tooltip': 'Air unit',       'src': 'spawnAir.png',          'callback': () => this._aircraftSpawnMenu(e)},
+                {'tooltip': 'Ground unit',    'src': 'spawnGround.png',       'callback': () => this._groundUnitSpawnMenu(e)},
+                {'tooltip': 'Smoke',          'src': 'spawnSmoke.png',        'callback': () => this._smokeSpawnMenu(e)},
+                {'tooltip': 'Explosion',      'src': 'spawnExplosion.png',    'callback': () => this._explosionSpawnMenu(e)}
+            ]
+            this._selectionWheel = new SelectionWheel(e.originalEvent.x, e.originalEvent.y, options);
+        }
     }
 
     /* Selection wheel and selection scroll functions */
@@ -130,30 +165,42 @@ class Map
         }
     }
 
-    /* Spawn a new air unit selection wheel (TODO, divide units by type, like bomber, fighter, tanker etc)*/
-    _airSpawnMenu(e)
+    /* Show unit selection for air units */
+    spawnFromAirbase(e)
+    {
+        this._selectAircraft(e);
+    }
+
+    /* Spawn a new ground unit selection wheel */
+    _aircraftSpawnMenu(e)
     {
         this.removeSelectionWheel();
         this.removeSelectionScroll();
         var options = [
-            
+            {'coalition': true, 'tooltip': 'CAP',       'src': 'spawnCAP.png',      'callback': () => this._selectAircraft(e, "CAP")},
+            {'coalition': true, 'tooltip': 'CAS',       'src': 'spawnCAS.png',      'callback': () => this._selectAircraft(e, "CAS")},
+            {'coalition': true, 'tooltip': 'Tanker',    'src': 'spawnTanker.png',   'callback': () => this._selectAircraft(e, "tanker")},
+            {'coalition': true, 'tooltip': 'AWACS',     'src': 'spawnAWACS.png',    'callback': () => this._selectAircraft(e, "awacs")},
+            {'coalition': true, 'tooltip': 'Strike',    'src': 'spawnStrike.png',   'callback': () => this._selectAircraft(e, "strike")},
+            {'coalition': true, 'tooltip': 'Drone',     'src': 'spawnDrone.png',    'callback': () => this._selectAircraft(e, "drone")},
+            {'coalition': true, 'tooltip': 'Transport', 'src': 'spawnTransport.png','callback': () => this._selectAircraft(e, "transport")},
         ]
         this._selectionWheel = new SelectionWheel(e.originalEvent.x, e.originalEvent.y, options);
     }
 
     /* Spawn a new ground unit selection wheel */
-    _groundSpawnMenu(e)
+    _groundUnitSpawnMenu(e)
     {
         this.removeSelectionWheel();
         this.removeSelectionScroll();
         var options = [
-            {'coalition': true, 'tooltip': 'Howitzer',   'src': 'spawnHowitzer.png', 'callback': () => this._unitSelectGround(e, "Howitzers")},
-            {'coalition': true, 'tooltip': 'SAM',        'src': 'spawnSAM.png',      'callback': () => this._unitSelectGround(e, "SAM")},
-            {'coalition': true, 'tooltip': 'IFV',        'src': 'spawnIFV.png',      'callback': () => this._unitSelectGround(e, "IFV")},
-            {'coalition': true, 'tooltip': 'Tank',       'src': 'spawnTank.png',     'callback': () => this._unitSelectGround(e, "Tanks")},
-            {'coalition': true, 'tooltip': 'MLRS',       'src': 'spawnMLRS.png',     'callback': () => this._unitSelectGround(e, "MLRS")},
-            {'coalition': true, 'tooltip': 'Radar',      'src': 'spawnRadar.png',    'callback': () => this._unitSelectGround(e, "Radar")},
-            {'coalition': true, 'tooltip': 'Unarmed',    'src': 'spawnUnarmed.png',  'callback': () => this._unitSelectGround(e, "Unarmed")}
+            {'coalition': true, 'tooltip': 'Howitzer',   'src': 'spawnHowitzer.png', 'callback': () => this._selectGroundUnit(e, "Howitzers")},
+            {'coalition': true, 'tooltip': 'SAM',        'src': 'spawnSAM.png',      'callback': () => this._selectGroundUnit(e, "SAM")},
+            {'coalition': true, 'tooltip': 'IFV',        'src': 'spawnIFV.png',      'callback': () => this._selectGroundUnit(e, "IFV")},
+            {'coalition': true, 'tooltip': 'Tank',       'src': 'spawnTank.png',     'callback': () => this._selectGroundUnit(e, "Tanks")},
+            {'coalition': true, 'tooltip': 'MLRS',       'src': 'spawnMLRS.png',     'callback': () => this._selectGroundUnit(e, "MLRS")},
+            {'coalition': true, 'tooltip': 'Radar',      'src': 'spawnRadar.png',    'callback': () => this._selectGroundUnit(e, "Radar")},
+            {'coalition': true, 'tooltip': 'Unarmed',    'src': 'spawnUnarmed.png',  'callback': () => this._selectGroundUnit(e, "Unarmed")}
         ]
         this._selectionWheel = new SelectionWheel(e.originalEvent.x, e.originalEvent.y, options);
     }
@@ -185,11 +232,11 @@ class Map
     }
 
     /* Show unit selection for air units */
-    _unitSelectAir(e)
+    _selectAircraft(e, group)
     {
         this.removeSelectionWheel();
         this.removeSelectionScroll();
-        var options = unitTypes.air;
+        var options = unitTypes.air[group];
         options.sort();
         this._selectionScroll = new SelectionScroll(e.originalEvent.x, e.originalEvent.y, options, (unitType) => {
             this.removeSelectionWheel(); 
@@ -205,16 +252,23 @@ class Map
         this.removeSelectionScroll();
         var options = [];
         options = payloadNames[unitType]
-        options.sort();
-        this._selectionScroll = new SelectionScroll(e.originalEvent.x, e.originalEvent.y, options, (payloadName) => {
-            this.removeSelectionWheel(); 
-            this.removeSelectionScroll(); 
-            spawnAirUnit(unitType, e.latlng, this._activeCoalition, payloadName);
-        });
+        if (options != undefined && options.length > 0)
+        {
+            options.sort();
+            this._selectionScroll = new SelectionScroll(e.originalEvent.x, e.originalEvent.y, options, (payloadName) => {
+                this.removeSelectionWheel(); 
+                this.removeSelectionScroll(); 
+                spawnAircraft(unitType, e.latlng, this._activeCoalition, payloadName, e.airbaseName);
+            });
+        } 
+        else
+        {
+            spawnAircraft(unitType, e.latlng, this._activeCoalition);
+        }
     }
 
     /* Show unit selection for ground units */
-    _unitSelectGround(e, group)
+    _selectGroundUnit(e, group)
     {
         this.removeSelectionWheel();
         this.removeSelectionScroll();

@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/index.css"/>
     <link rel="stylesheet" href="css/panels.css"/>
     <link rel="stylesheet" href="css/Map.css"/>
+    <link rel="stylesheet" href="css/AirbaseMarker.css"/>
     <link rel="stylesheet" href="css/UnitMarker.css"/>
     <link rel="stylesheet" href="css/SelectionWheel.css"/>
     <link rel="stylesheet" href="css/SelectionScroll.css"/>
@@ -18,36 +19,48 @@
     <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js"
     integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg="
     crossorigin=""></script>
-    <script src="js/payloadNames.js"></script>
-    <script src="js/ControlPanel.js"></script>
-    <script src="js/DCSCommands.js"></script>
-    <script src="js/Utils.js"></script>
-    <script src="js/unitTypes.js"></script>
-    <script src="js/PanelButton.js"></script>
-    <script src="js/UnitInfoPanel.js"></script>
-    <script src="js/UnitControlPanel.js"></script>
-    <script src="js/Map.js"></script>
-    <script src="js/MissionData.js"></script>
-    <script src="js/Unit.js"></script>
-    <script src="js/UnitMarker.js"></script>
-    <script src="js/UnitsManager.js"></script>
-    <script src="js/SelectionWheel.js"></script>
-    <script src="js/SelectionScroll.js"></script>
+
+    <script src="js/DCS/payloadNames.js"></script>
+    <script src="js/DCS/DCSCommands.js"></script>
+
+    <script src="js/Panels/PanelButton.js"></script>
+    <script src="js/Panels/SettingsPanel.js"></script>
+    <script src="js/Panels/UnitInfoPanel.js"></script>
+    <script src="js/Panels/UnitControlPanel.js"></script>
+    <script src="js/Panels/FormationControlPanel.js"></script>
+    <script src="js/Panels/ActionPanel.js"></script>
+    
+    <script src="js/Units/unitTypes.js"></script>
+    <script src="js/Units/Unit.js"></script>
+    <script src="js/Units/UnitMarker.js"></script>
+    <script src="js/Units/UnitsManager.js"></script>
+    
+    <script src="js/Other/Utils.js"></script>
+    <script src="js/Other/AirbaseMarker.js"></script>
+    <script src="js/Other/MissionData.js"></script>
+    
+    <script src="js/Map/Map.js"></script>
+    <script src="js/Map/SelectionWheel.js"></script>
+    <script src="js/Map/SelectionScroll.js"></script>
+    
     <script src="js/index.js"></script>
   </head>
   <body>
     <table id="content-table">
       <tr id="header">
         <td>
-          <div class="control-panel" id="top-control-panel"></div>
+          <div class="settings-panel" id="settings-panel"></div>
         </td>
       </tr>
       <tr>
         <td id="map-container">
           <div id="map"></div>
           <div id="log"></div>
-          <div class="unit-info-panel" id="left-panel"></div>
-          <div class="unit-control-panel" id="top-panel"></div>
+          <div class="action-panel" id="action-panel"></div>
+          <div class="unit-info-panel" id="unit-info-panel"></div>
+          <div class="unit-control-panel" id="unit-control-panel"></div>
+          <div class="formation-control-panel" id="formation-control-panel"></div>
+          <div id="snackbar">ASD</div>
         </td>
       </tr>
     </table>

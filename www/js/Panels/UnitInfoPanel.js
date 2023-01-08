@@ -7,23 +7,15 @@ class UnitInfoPanel
 
     update(selectedUnits)
     {
-        if (selectedUnits.length > 0)
+        if (selectedUnits.length == 1)
         {
             this._panel.style.bottom = "15px";
-            if (selectedUnits.length == 1)
-            {
-                this._showUnitData(selectedUnits[0]);
-            }
-            else
-            {
-                this._showUnitData();
-                this._panel.style.bottom = "-80px";
-            }
+            this._showUnitData(selectedUnits[0]);
         }
         else
         {
-            this._showUnitData();
-            this._panel.style.bottom = "-80px";
+            this._panel.style.bottom = (-this._panel.offsetHeight - 2) + "px";
+            this._showUnitData(); // Empty, cleans the panel
         }
     }
 
@@ -40,7 +32,7 @@ class UnitInfoPanel
                     var displayName = ammo.desc.displayName;
                     var amount = ammo.count;
                     loadout += amount + "x" + displayName;
-                    if (parseInt(index) < Object.keys(selectedUnit.missionData.ammo).length - 1)
+                    if (parseInt(index) < Object.keys(selectedUnit.missionData.ammo).length)
                     {
                         loadout += ", ";
                     }
@@ -143,15 +135,7 @@ class UnitInfoPanel
         }
         else
         {
-            this._panel.innerHTML = `
-            <table class="panel-table">
-                <tr>
-                    <td class="panel-title">
-                        UNIT INFO
-                    </td>
-                </tr>
-            </table>
-            `;
+            this._panel.innerHTML = ``;
         }
     }
 }

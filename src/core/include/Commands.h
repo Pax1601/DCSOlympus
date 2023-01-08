@@ -8,7 +8,7 @@ namespace CommandPriority {
 };
 
 namespace CommandType {
-	enum CommandTypes { NO_TYPE, MOVE, SMOKE, LASE, EXPLODE, SPAWN_AIR, SPAWN_GROUND };
+	enum CommandTypes { NO_TYPE, MOVE, SMOKE, LASE, EXPLODE, SPAWN_AIR, SPAWN_GROUND, CLONE, LAND, REFUEL, FOLLOW };
 };
 
 /* Base command class */
@@ -17,7 +17,7 @@ class Command
 public:
 	int getPriority() { return priority; }
 	int getType() { return type; }
-	virtual void execute(lua_State* L) = 0;
+	virtual wstring getString(lua_State* L) = 0;
 
 protected:
 	int priority = CommandPriority::LOW;
@@ -28,28 +28,26 @@ protected:
 class MoveCommand : public Command
 {
 public:
-	MoveCommand(int ID, wstring unitName, Coords destination, double speed, double altitude, wstring unitCategory, wstring targetName):
-		ID(ID), 
-		unitName(unitName), 
+	MoveCommand(int ID, Coords destination, double speed, double altitude, wstring unitCategory, wstring taskOptions):
+		ID(ID),
 		destination(destination),
 		speed(speed),
 		altitude(altitude),
 		unitCategory(unitCategory),
-		targetName(targetName)
+		taskOptions(taskOptions)
 	{ 
-		priority = CommandPriority::LOW; 
+		priority = CommandPriority::HIGH; 
 		type = CommandType::MOVE; 
 	};
-	virtual void execute(lua_State* L);
+	virtual wstring getString(lua_State* L);
 
 private:
 	const int ID;
-	const wstring unitName;
 	const Coords destination;
 	const wstring unitCategory;
 	const double speed;
 	const double altitude;
-	const wstring targetName;
+	const wstring taskOptions;
 };
 
 /* Smoke command */
@@ -63,7 +61,7 @@ public:
 		priority = CommandPriority::LOW; 
 		type = CommandType::SMOKE; 
 	};
-	virtual void execute(lua_State* L);
+	virtual wstring getString(lua_State* L);
 
 private:
 	const wstring color;
@@ -71,10 +69,10 @@ private:
 };
 
 /* Spawn ground unit command */
-class SpawnGroundCommand : public Command
+class SpawnGroundUnitCommand : public Command
 {
 public:
-	SpawnGroundCommand(wstring coalition, wstring unitType, Coords location) :  
+	SpawnGroundUnitCommand(wstring coalition, wstring unitType, Coords location) :  
 		coalition(coalition), 
 		unitType(unitType), 
 		location(location) 
@@ -82,7 +80,7 @@ public:
 		priority = CommandPriority::LOW; 
 		type = CommandType::SPAWN_GROUND; 
 	};
-	virtual void execute(lua_State* L);
+	virtual wstring getString(lua_State* L);
 
 private:
 	const wstring coalition;
@@ -91,23 +89,60 @@ private:
 };
 
 /* Spawn air unit command */
-class SpawnAirCommand : public Command
+class SpawnAircraftCommand : public Command
 {
 public:
-	SpawnAirCommand(wstring coalition, wstring unitType, Coords location, wstring payloadName) : 
+	SpawnAircraftCommand(wstring coalition, wstring unitType, Coords location, wstring payloadName, wstring airbaseName) :
 		coalition(coalition), 
 		unitType(unitType), 
 		location(location),
-		payloadName(payloadName)
+		payloadName(payloadName),
+		airbaseName(airbaseName)
 	{ 
 		priority = CommandPriority::LOW; 
 		type = CommandType::SPAWN_AIR; 
 	};
-	virtual void execute(lua_State* L);
+
+	virtual wstring getString(lua_State* L);
 
 private:
 	const wstring coalition;
 	const wstring unitType;
 	const Coords location;
 	const wstring payloadName;
+	const wstring airbaseName;
+};
+
+/* Clone unit command */
+class CloneCommand : public Command
+{
+public:
+	CloneCommand(int ID) :
+		ID(ID)
+	{
+		priority = CommandPriority::LOW;
+		type = CommandType::CLONE;
+	};
+	virtual wstring getString(lua_State* L);
+
+private:
+	const int ID;
+};
+
+/* Follow command */
+class FollowCommand : public Command
+{
+public:
+	FollowCommand(int leaderID, int ID) :
+		leaderID(leaderID),
+		ID(ID)
+	{
+		priority = CommandPriority::LOW;
+		type = CommandType::FOLLOW;
+	};
+	virtual wstring getString(lua_State* L);
+
+private:
+	const int leaderID;
+	const int ID;
 };

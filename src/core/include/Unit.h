@@ -14,26 +14,27 @@ public:
 	~Unit();
 
 	void update(json::value json);
+	json::value json();
 
 	void setPath(list<Coords> path);
+	void setActiveDestination(Coords newActiveDestination) { activeDestination = newActiveDestination; }
 	void setAlive(bool newAlive) { alive = newAlive; }
 	void setTarget(int targetID);
-	wstring getTarget();
-	wstring getCurrentTask();
-
-	void resetActiveDestination();
+	void setLeader(bool newLeader) { leader = newLeader; }
+	void setWingman(bool newWingman) { wingman = newWingman; }
+	void setWingmen(vector<Unit*> newWingmen) { wingmen = newWingmen; }
+	void setFormation(wstring newFormation) { formation = newFormation; }
 
 	virtual void changeSpeed(wstring change) {};
 	virtual void changeAltitude(wstring change) {};
 
-	virtual double getTargetSpeed() { return targetSpeed; };
-	virtual double getTargetAltitude() { return targetAltitude; };
+	void resetActiveDestination();
 
 	int getID() { return ID; }
 	wstring getName() { return name; }
 	wstring getUnitName() { return unitName; }
 	wstring getGroupName() { return groupName; }
-	json::value getType() { return type; }			// This functions returns the complete type of the object (Level1, Level2, Level3, Level4)
+	json::value getType() { return type; }			// This function returns the complete type of the object (Level1, Level2, Level3, Level4)
 	int getCountry() { return country; }
 	int getCoalitionID() { return coalitionID; }
 	double getLatitude() { return latitude; }
@@ -42,34 +43,40 @@ public:
 	double getHeading() { return heading; }
 	json::value getFlags() { return flags; }
 	Coords getActiveDestination() { return activeDestination; }
-
 	virtual wstring getCategory() { return L"No category"; };
-
-	json::value json();
+	wstring getTarget();
+	wstring getCurrentTask() { return currentTask; }
+	virtual double getTargetSpeed() { return targetSpeed; };
+	virtual double getTargetAltitude() { return targetAltitude; };
 
 protected:
 	int ID;
-	bool AI				= false;
-	bool alive			= true;
-	wstring name		= L"undefined";
-	wstring unitName	= L"undefined";
-	wstring groupName	= L"undefined";
-	json::value type	= json::value::null();
-	int country			= NULL;
-	int coalitionID		= NULL;
-	double latitude		= NULL;
-	double longitude	= NULL;
-	double altitude		= NULL;
-	double heading		= NULL;
-	double speed		= NULL;
-	json::value flags	= json::value::null();
-	Coords oldPosition  = Coords(0); // Used to approximate speed
-	int targetID		= NULL;
-	bool holding		= false;
-	bool looping		= false;
-
-	double targetSpeed = 0;
-	double targetAltitude = 0;
+	bool AI					= false;
+	bool alive				= true;
+	wstring name			= L"undefined";
+	wstring unitName		= L"undefined";
+	wstring groupName		= L"undefined";
+	json::value type		= json::value::null();
+	int country				= NULL;
+	int coalitionID			= NULL;
+	double latitude			= NULL;
+	double longitude		= NULL;
+	double altitude			= NULL;
+	double heading			= NULL;
+	double speed			= NULL;
+	json::value flags		= json::value::null();
+	Coords oldPosition		= Coords(0); // Used to approximate speed
+	int targetID			= NULL;
+	bool holding			= false;
+	bool looping			= false;
+	wstring taskOptions		= L"{}";
+	wstring currentTask		= L"";
+	bool leader				= false;
+	bool wingman			= false;
+	wstring formation		= L"";
+	vector<Unit*> wingmen;
+	double targetSpeed		= 0;
+	double targetAltitude	= 0;
 
 	list<Coords> activePath;
 	Coords activeDestination = Coords(0);

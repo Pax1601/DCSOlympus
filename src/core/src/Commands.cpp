@@ -1,86 +1,87 @@
 #include "commands.h"
 #include "logger.h"
+#include "dcstools.h"
 
 /* Move command */
-void MoveCommand::execute(lua_State* L)
+wstring MoveCommand::getString(lua_State* L)
 {
-    std::ostringstream command;
-    command.precision(10);
-    command << "Olympus.move(\"" << to_string(unitName) << "\", " << destination.lat << ", " << destination.lng << ", " << altitude << ", " << speed << ", \"" << to_string(unitCategory) << "\", \"" << to_string(targetName) << "\")";
-
-    lua_getglobal(L, "net");
-    lua_getfield(L, -1, "dostring_in");
-    lua_pushstring(L, "server");
-    lua_pushstring(L, command.str().c_str());
-    if (lua_pcall(L, 2, 0, 0) != 0)
-    {
-        log("Error executing MoveCommand");
-    }
-    else
-    {
-        log("MoveCommand executed successfully");
-    }
+    std::wostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.move, " 
+        << ID << ", "
+        << destination.lat << ", " 
+        << destination.lng << ", " 
+        << altitude << ", " 
+        << speed << ", " 
+        << "\"" << unitCategory << "\"" << ", "
+        << taskOptions;
+    return commandSS.str();
 }
 
 /* Smoke command */
-void SmokeCommand::execute(lua_State* L)
+wstring SmokeCommand::getString(lua_State* L)
 {
-    std::ostringstream command;
-    command.precision(10);
-    command << "Olympus.smoke(\"" << to_string(color) << "\", " << location.lat << ", " << location.lng << ")";
-
-    lua_getglobal(L, "net");
-    lua_getfield(L, -1, "dostring_in");
-    lua_pushstring(L, "server");
-    lua_pushstring(L, command.str().c_str());
-    if (lua_pcall(L, 2, 0, 0) != 0)
-    {
-        log("Error executing SmokeCommand");
-    }
-    else
-    {
-        log("SmokeCommand executed successfully");
-    }
+    std::wostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.smoke, " 
+        << "\"" << color << "\"" << ", "
+        << location.lat << ", "
+        << location.lng;
+    return commandSS.str();
 }
 
 /* Spawn ground command */
-void SpawnGroundCommand::execute(lua_State* L)
+wstring SpawnGroundUnitCommand::getString(lua_State* L)
 {
-    std::ostringstream command;
-    command.precision(10);
-    command << "Olympus.spawnGround(\"" << to_string(coalition) << "\", \"" << to_string(unitType) << "\", " << location.lat << ", " << location.lng << ")";
-
-    lua_getglobal(L, "net");
-    lua_getfield(L, -1, "dostring_in");
-    lua_pushstring(L, "server");
-    lua_pushstring(L, command.str().c_str());
-    if (lua_pcall(L, 2, 0, 0) != 0)
-    {
-        log("Error executing SpawnGroundCommand");
-    }
-    else
-    {
-        log("SpawnGroundCommand executed successfully");
-    }
+    std::wostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.spawnGroundUnit, " 
+        << "\"" << coalition << "\"" << ", "
+        << "\"" << unitType << "\"" << ", "
+        << location.lat << ", " 
+        << location.lng;
+    return commandSS.str();
 }
 
 /* Spawn air command */
-void SpawnAirCommand::execute(lua_State* L)
+wstring SpawnAircraftCommand::getString(lua_State* L)
 {
-    std::ostringstream command;
-    command.precision(10);
-    command << "Olympus.spawnAir(\"" << to_string(coalition) << "\", \"" << to_string(unitType) << "\", " << location.lat << ", " << location.lng << "," << "\"" << to_string(payloadName) << "\")";
+    std::wostringstream optionsSS;
+    optionsSS.precision(10);
+    optionsSS << "{" 
+        << "payloadName = \"" << payloadName << "\", "
+        << "airbaseName = \"" << airbaseName << "\","
+        << "}";
 
-    lua_getglobal(L, "net");
-    lua_getfield(L, -1, "dostring_in");
-    lua_pushstring(L, "server");
-    lua_pushstring(L, command.str().c_str());
-    if (lua_pcall(L, 2, 0, 0) != 0)
-    {
-        log("Error executing SpawnAirCommand");
-    }
-    else
-    {
-        log("SpawnAirCommand executed successfully");
-    }
+    std::wostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.spawnAircraft, " 
+        << "\"" << coalition << "\"" << ", "
+        << "\"" << unitType << "\"" << ", "
+        << location.lat << ", " 
+        << location.lng << "," 
+        << optionsSS.str();
+    return commandSS.str();
+}
+
+/* Clone unit command */
+wstring CloneCommand::getString(lua_State* L)
+{
+    std::wostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.clone, " 
+        << ID;
+    return commandSS.str();
+}
+
+/* Follow unit command */
+wstring FollowCommand::getString(lua_State* L)
+{
+    std::wostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.follow, "
+        << leaderID << ","
+        << ID;
+
+    return commandSS.str();
 }

@@ -116,59 +116,46 @@ wstring Unit::getTarget()
 	}
 }
 
-wstring Unit::getCurrentTask()
+void Unit::AIloop()
 {
-	if (activePath.size() == 0)
+	// For wingman units, the leader decides the active destination
+	if (!wingman)
 	{
-		return L"Idle";
-	}
-	else
-	{
-		if (getTarget().empty())
+		/* Set the active destination to be always equal to the first point of the active path. This is in common with all AI units */
+		if (activePath.size() > 0)
 		{
-			if (looping)
+			if (activeDestination != activePath.front())
 			{
-				return L"Looping";
-			}
-			else if (holding)
-			{
-				return L"Holding";
-			}
-			else
-			{
-				return L"Reaching destination";
+				activeDestination = activePath.front();
+				Command* command = dynamic_cast<Command*>(new MoveCommand(ID, activeDestination, getTargetSpeed(), getTargetAltitude(), getCategory(), taskOptions));
+				scheduler->appendCommand(command);
+
+				if (leader)
+				{
+					for (auto itr = wingmen.begin(); itr != wingmen.end(); itr++)
+					{
+						// Manually set the path and the active destination of the wingmen
+						(*itr)->setPath(activePath);
+						(*itr)->setActiveDestination(activeDestination);
+						Command* command = dynamic_cast<Command*>(new FollowCommand(ID, (*itr)->getID()));
+						scheduler->appendCommand(command);
+					}
+				}
 			}
 		}
 		else
 		{
-			return L"Attacking " + getTarget();
+			if (activeDestination != NULL)
+			{
+				log(unitName + L" no more points in active path");
+				activeDestination = Coords(0); // Set the active path to NULL
+				currentTask = L"Idle";
+			}
 		}
 	}
 }
 
-void Unit::AIloop()
-{
-	/* Set the active destination to be always equal to the first point of the active path. This is in common with all AI units */
-	if (activePath.size() > 0)
-	{
-		if (activeDestination != activePath.front())
-		{
-			activeDestination = activePath.front();
-			Command* command = dynamic_cast<Command*>(new MoveCommand(ID, unitName, activeDestination, getTargetSpeed(), getTargetAltitude(), getCategory(), getTarget()));
-			scheduler->appendCommand(command);
-		}
-	}
-	else
-	{
-		if (activeDestination != NULL)
-		{
-			log(unitName + L" no more points in active path");
-			activeDestination = Coords(0); // Set the active path to NULL
-		}
-	}
-}
-
-/* This function calls again the MoveCommand to reach the active destination. This is useful to change speed and altitude, for example */
+/* This function reset the activation so that the AI lopp will call again the MoveCommand. This is useful to change speed and altitude, for example */
 void Unit::resetActiveDestination()
 {
 	log(unitName + L" resetting active destination");
@@ -197,6 +184,15 @@ json::value Unit::json()
 	json[L"flags"] = flags;
 	json[L"category"] = json::value::string(getCategory());
 	json[L"currentTask"] = json::value::string(getCurrentTask());
+	json[L"leader"] = leader;
+	json[L"wingman"] = wingman;
+	json[L"formation"] = json::value::string(formation);
+
+	int i = 0;
+	for (auto itr = wingmen.begin(); itr != wingmen.end(); itr++)
+	{
+		json[L"wingmenIDs"][i++] = (*itr)->getID();
+	}
 
 	/* Send the active path as a json object */
 	if (activePath.size() > 0) {
@@ -224,6 +220,21 @@ AirUnit::AirUnit(json::value json, int ID) : Unit(json, ID)
 
 void AirUnit::AIloop()
 {
+	if (targetID != 0)
+	{
+		std::wostringstream taskOptionsSS;
+		taskOptionsSS << "{"
+			<< "id = 'EngageUnit'" << ","
+			<< "targetID = " << targetID << ","
+			<< "}";
+		taskOptions = taskOptionsSS.str();
+		currentTask = L"Attacking " + getTarget();
+	}
+	else
+	{
+		currentTask = L"Reaching destination";
+	}
+
 	/* Call the common AI loop */
 	Unit::AIloop();
 
@@ -257,6 +268,7 @@ void AirUnit::AIloop()
 		activePath.push_back(point3);
 		activePath.push_back(Coords(latitude, longitude));
 		holding = true;
+		currentTask = L"Holding";
 	}
 }
 

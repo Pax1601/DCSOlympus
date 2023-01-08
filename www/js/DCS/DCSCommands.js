@@ -32,7 +32,7 @@ function spawnGroundUnit(type, latlng, coalition)
     xhr.send(JSON.stringify(data));
 }
 
-function spawnAirUnit(type, latlng, coalition, payloadName)
+function spawnAircraft(type, latlng, coalition, payloadName = "", airbaseName = "")
 {        
     var xhr = new XMLHttpRequest();
     xhr.open("PUT", RESTaddress);
@@ -43,25 +43,42 @@ function spawnAirUnit(type, latlng, coalition, payloadName)
         }
     };
 
-    var command = {"type": type, "location": latlng, "coalition": coalition, "payloadName": payloadName};
+    var command = {"type": type, "location": latlng, "coalition": coalition, "payloadName": payloadName, "airbaseName": airbaseName};
     var data = {"spawnAir": command}
 
     xhr.send(JSON.stringify(data));
 }
 
-function attackUnit(unitID, targetID)
+function attackUnit(ID, targetID)
 {        
     var xhr = new XMLHttpRequest();
     xhr.open("PUT", RESTaddress);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.onreadystatechange = () => {
         if (xhr.readyState === 4) {
-            console.log("Unit " + unitsManager.getUnit(unitID).unitName + " attack " + unitsManager.getUnit(targetID).unitName );
+            console.log("Unit " + unitsManager.getUnitByID(ID).unitName + " attack " + unitsManager.getUnitByID(targetID).unitName );
         }
     };
 
-    var command = {"unitID": unitID, "targetID": targetID};
+    var command = {"ID": ID, "targetID": targetID};
     var data = {"attackUnit": command}
+
+    xhr.send(JSON.stringify(data));
+}
+
+function cloneUnit(ID)
+{        
+    var xhr = new XMLHttpRequest();
+    xhr.open("PUT", RESTaddress);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4) {
+            console.log("Unit " + unitsManager.getUnitByID(ID).unitName + " cloned");
+        }
+    };
+
+    var command = {"ID": ID};
+    var data = {"cloneUnit": command}
 
     xhr.send(JSON.stringify(data));
 }

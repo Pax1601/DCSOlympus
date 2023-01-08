@@ -8,7 +8,6 @@ class Unit
         // The marker is set by the inherited class
         this.marker = marker;
         this.marker.on('click', (e) => this.onClick(e));
-        this.marker.on('contextmenu', (e) => this.onRightClick(e));
 
         this._selected = false;
 
@@ -18,6 +17,10 @@ class Unit
         this._pathPolyline.addTo(map.getMap());
 
         this._targetsPolylines = [];
+
+        this.leader = true;
+        this.wingmen = [];
+        this.formation = undefined;
     }
 
     update(response)
@@ -36,6 +39,19 @@ class Unit
         this.activePath = response["activePath"]
         this.speed = response["speed"];
         this.currentTask = response["currentTask"];
+
+        this.leader = response["leader"];
+        this.wingman = response["wingman"];
+
+        this.wingmen = [];
+        if (response["wingmenIDs"] != undefined)
+        {
+            for (let ID of response["wingmenIDs"])
+            {
+                this.wingmen.push(unitsManager.getUnitByID(ID));
+            }
+        }
+        this.formation = response["formation"];
 
         this.missionData = missionData.getUnitData(this.ID)
 
@@ -113,22 +129,28 @@ class Unit
 
     onClick(e) 
     {
-        if (!e.originalEvent.ctrlKey)
+        if (map.getState() === 'IDLE' || map.getState() === 'MOVE_UNIT' || e.originalEvent.ctrlKey)
         {
-            unitsManager.deselectAllUnits();
+            if (!e.originalEvent.ctrlKey)
+            {
+                unitsManager.deselectAllUnits();
+            }
+            this.setSelected(true);
         }
-        this.setSelected(true);
-    }
-
-    onRightClick(e) 
-    {
-        unitsManager.onUnitRightClick(this.ID);
+        else if (map.getState() === 'ATTACK')
+        {
+            unitsManager.attackUnit(this.ID);
+        }
+        else if (map.getState() === 'FORMATION')
+        {
+            unitsManager.createFormation(this.ID);
+        }
     }
 
     drawMarker(settings)
     {
         // Hide the marker if disabled
-        if ((settings === 'none' || (controlPanel.getSettings().deadAlive === "alive" && !this.alive)))
+        if ((settings === 'none' || (settingsPanel.getSettings().deadAlive === "alive" && !this.alive)))
         {
             // Remove the marker if present
             if (map.getMap().hasLayer(this.marker))
@@ -204,30 +226,32 @@ class Unit
             for (let index in this.missionData.targets[typeIndex])
             {
                 var targetData = this.missionData.targets[typeIndex][index];
-                var target = unitsManager.getUnit(targetData.object["id_"])
-                var startLatLng = new L.LatLng(this.latitude, this.longitude)
-                var endLatLng = new L.LatLng(target.latitude, target.longitude)
-                
-                var color;
-                if (typeIndex === "radar")
-                {
-                    color = "#FFFF00";
+                var target = unitsManager.getUnitByID(targetData.object["id_"])
+                if (target != undefined){
+                    var startLatLng = new L.LatLng(this.latitude, this.longitude)
+                    var endLatLng = new L.LatLng(target.latitude, target.longitude)
+                    
+                    var color;
+                    if (typeIndex === "radar")
+                    {
+                        color = "#FFFF00";
+                    }
+                    else if (typeIndex === "visual")
+                    {
+                        color = "#FF00FF";
+                    }
+                    else if (typeIndex === "rwr")
+                    {
+                        color = "#00FF00";
+                    }
+                    else
+                    {
+                        color = "#FFFFFF";
+                    }
+                    var targetPolyline = new L.Polyline([startLatLng, endLatLng], {color: color, weight: 3, opacity: 1, smoothFactor: 1});
+                    targetPolyline.addTo(map.getMap());
+                    this._targetsPolylines.push(targetPolyline)
                 }
-                else if (typeIndex === "visual")
-                {
-                    color = "#FF00FF";
-                }
-                else if (typeIndex === "rwr")
-                {
-                    color = "#00FF00";
-                }
-                else
-                {
-                    color = "#FFFFFF";
-                }
-                var targetPolyline = new L.Polyline([startLatLng, endLatLng], {color: color, weight: 3, opacity: 1, smoothFactor: 1});
-                targetPolyline.addTo(map.getMap());
-                this._targetsPolylines.push(targetPolyline)
             }
         }
     }
@@ -243,7 +267,14 @@ class Unit
     attackUnit(targetID)
     {
         // Call DCS attackUnit function
-        attackUnit(this.ID, targetID);
+        if (this.ID != targetID)
+        {        
+            attackUnit(this.ID, targetID);
+        }
+        else
+        {
+            // TODO: show a message
+        }
     }
 
     changeSpeed(speedChange)
@@ -281,19 +312,55 @@ class Unit
 
         xhr.send(JSON.stringify(data));
     }
+
+    setformation(formation)
+    {
+        // TODO move in dedicated file
+        var xhr = new XMLHttpRequest();
+        xhr.open("PUT", RESTaddress);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                console.log(this.unitName + " formation change: " + formation);
+            }
+        };
+
+        var command = {"ID": this.ID, "formation": formation}
+        var data = {"setFormation": command}
+
+        xhr.send(JSON.stringify(data));
+    }
+
+    setLeader(wingmenIDs)
+    {
+        // TODO move in dedicated file
+        var xhr = new XMLHttpRequest();
+        xhr.open("PUT", RESTaddress);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                console.log(this.unitName + " created formation with: " + wingmenIDs);
+            }
+        };
+
+        var command = {"ID": this.ID, "wingmenIDs": wingmenIDs}
+        var data = {"setLeader": command}
+
+        xhr.send(JSON.stringify(data));
+    }
 }
 
 class AirUnit extends Unit
 {
     drawMarker()
     {
-        if (this.flags.human)
+        if (this.flags.Human)
         {
-            super.drawMarker(controlPanel.getSettings().human);
+            super.drawMarker(settingsPanel.getSettings().human);
         }
         else
         {
-            super.drawMarker(controlPanel.getSettings().AI);
+            super.drawMarker(settingsPanel.getSettings().AI);
         }
     }
 }
@@ -344,7 +411,7 @@ class GroundUnit extends Unit
 
     drawMarker()
     {
-        super.drawMarker(controlPanel.getSettings().AI);
+        super.drawMarker(settingsPanel.getSettings().AI);
     }
 }
 
@@ -364,7 +431,7 @@ class NavyUnit extends Unit
 
     drawMarker()
     {
-        super.drawMarker(controlPanel.getSettings().AI);
+        super.drawMarker(settingsPanel.getSettings().AI);
     }
 }
 
@@ -372,22 +439,17 @@ class Weapon extends Unit
 {
     constructor(ID, data)
     {
-        // Weapons can not be selected
-        self.selectable = false;
         super(ID, data);
+        // Weapons can not be selected
+        this.selectable = false;
     }
 
     drawMarker()
     {
-        super.drawMarker(controlPanel.getSettings().weapons);
+        super.drawMarker(settingsPanel.getSettings().weapons);
     }
 
     onClick(e) 
-    {
-        // Weapons can not be clicked
-    }
-
-    onRightClick(e) 
     {
         // Weapons can not be clicked
     }

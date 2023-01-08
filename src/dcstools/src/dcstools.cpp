@@ -93,3 +93,13 @@ exit:
     STACK_CLEAN;
     return units;
 }
+
+
+int dostring_in(lua_State* L, string target, string command)
+{
+    lua_getglobal(L, "net");
+    lua_getfield(L, -1, "dostring_in");
+    lua_pushstring(L, target.c_str());
+    lua_pushstring(L, command.c_str());
+    return lua_pcall(L, 2, 0, 0);
+}

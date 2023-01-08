@@ -8,14 +8,14 @@
     position: fixed;
     z-index: 1000;
     left: 10px;
-    bottom: -80px;
+    bottom: -102px;
     transition: bottom 0.2s;
 }
 
 .unit-control-panel {
     background-color: #202831;
     height: 40px;
-    width: 400px;
+    width: 200px;
     border: solid white 1px;
     font-size: 12px;
     position: fixed;
@@ -28,7 +28,23 @@
     justify-content: space-evenly;
 }
 
-.control-panel {
+.action-panel {
+    background-color: #202831;
+    height: 400px;
+    width: 40px;
+    border: solid white 1px;
+    font-size: 12px;
+    position: fixed;
+    z-index: 1000;
+    left: 10px;
+    top: 50px;
+    transition: height 0.2s;
+    display: flex;
+    align-content: flex-start;
+    flex-direction: column;
+}
+
+.settings-panel {
     background-color: #202831;
     height: 40px;
     width: 100%;
@@ -36,6 +52,19 @@
     display: flex;
     align-items: center;
     justify-content: left;
+}
+
+.formation-control-panel {
+    background-color: #202831;
+    height: 100px;
+    width: 300px;
+    border: solid white 1px;
+    font-size: 12px;
+    position: fixed;
+    z-index: 1000;
+    left: 830px;
+    bottom: -102px;
+    transition: bottom 0.2s;
 }
 
 .panel-table {
@@ -70,8 +99,6 @@
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-    transition: font-size 0.05s;
-    text-shadow: 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
 }
 
 .panel-button:hover {
@@ -80,6 +107,7 @@
 
 .panel-button:active {
     color: white;
+    filter: brightness(110%);
 }
 
 .panel-button-disabled {

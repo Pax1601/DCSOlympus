@@ -11,8 +11,6 @@ function Olympus.setMissionData(arg, time)
 	local bullseyeVec3 = coalition.getMainRefPoint(0)
 	local bullseyeLatitude, bullseyeLongitude, bullseyeAltitude = coord.LOtoLL(bullseyeVec3)
 	local bullseye = {}
-	bullseye["x"] =  bullseyeVec3.x
-	bullseye["y"] =  bullseyeVec3.z
 	bullseye["lat"] =  bullseyeLatitude
 	bullseye["lng"] =  bullseyeLongitude
 
@@ -41,9 +39,26 @@ function Olympus.setMissionData(arg, time)
 		end
 	end
 
+	-- Airbases data
+	local base = world.getAirbases()
+	local basesData = {}
+	for i = 1, #base do
+		local info = {}
+		local latitude, longitude, altitude = coord.LOtoLL(Airbase.getPoint(base[i]))
+		info["callsign"] = Airbase.getCallsign(base[i])
+		info["coalition"] = Airbase.getCoalition(base[i])
+		info["lat"] =  latitude
+		info["lng"] =  longitude
+		if Airbase.getUnit(base[i]) then
+			info["unitId"] = Airbase.getUnit(base[i]):getID()
+		end
+		basesData[i] = info
+	end
+
 	-- Assemble missionData table
 	missionData["bullseye"] = bullseye
 	missionData["unitsData"] = unitsData 
+	missionData["airbases"] = basesData
 
 	local command = "Olympus.missionData = " .. Olympus.serializeTable(missionData) .. "\n" .. "Olympus.OlympusDLL.setMissionData()"
 	net.dostring_in("export", command)
@@ -55,8 +70,6 @@ function Olympus.serializeTable(val, name, skipnewlines, depth)
     depth = depth or 0
 
     local tmp = string.rep(" ", depth)
-
-
     if name then 
 		if type(name) == "number" then
 			tmp = tmp .. "[" .. name .. "]" .. " = " 
@@ -67,11 +80,9 @@ function Olympus.serializeTable(val, name, skipnewlines, depth)
 
     if type(val) == "table" then
         tmp = tmp .. "{" .. (not skipnewlines and "\n" or "")
-
         for k, v in pairs(val) do
             tmp =  tmp .. Olympus.serializeTable(v, k, skipnewlines, depth + 1) .. "," .. (not skipnewlines and "\n" or "")
         end
-
         tmp = tmp .. string.rep(" ", depth) .. "}"
     elseif type(val) == "number" then
         tmp = tmp .. tostring(val)

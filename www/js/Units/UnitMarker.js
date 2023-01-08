@@ -25,7 +25,7 @@ L.Marker.UnitMarker = L.Marker.extend(
                             </td>
                         </tr>
                     </table>`, 
-                className: 'unit-marker-icon'});   // Set the unit marker, className must be set to avoid white square
+                className: 'action-cursor'});   // Set the unit marker, className must be set to avoid white square
             this.setIcon(icon);
         },
 
@@ -37,18 +37,6 @@ L.Marker.UnitMarker = L.Marker.extend(
             this._icon.querySelector("#icon-img").src = this.options.iconSrc;
 
             this._icon.style.outline = "transparent"; // Removes the rectangular outline
-
-            // Set the unit name in the marker
-            var unitNameDiv = this._icon.querySelector("#unitName");
-            if (this.options.human)
-            {
-                unitNameDiv.innerHTML = `<i class="fas fa-user"></i> ${this.options.unitName}`;
-            }
-            else
-            {
-                unitNameDiv.innerHTML = `${this.options.unitName}`;
-            }       
-            unitNameDiv.style.left = (-(unitNameDiv.offsetWidth - this._icon.querySelector("#icon-img").height) / 2) + "px";
 
             // Set the unit name in the marker
             var nameDiv = this._icon.querySelector("#name");
@@ -70,6 +58,7 @@ L.Marker.UnitMarker = L.Marker.extend(
         // If the unit is not alive it is drawn with darker colours
         setAlive: function(alive)
         {
+            this.alive = alive
             var table = this._icon.querySelector("#container-table");
             if (alive)
             {
@@ -114,7 +103,7 @@ L.Marker.UnitMarker = L.Marker.extend(
                 }
                 else
                 {
-                    if (img.classList.contains("unitmarker-icon-img-hovered")) img.classList.remove("unitmarker-icon-img-hovered");
+                    img.classList.remove("unitmarker-icon-img-hovered");
                 }
             }
         },
@@ -151,8 +140,11 @@ L.Marker.UnitMarker = L.Marker.extend(
 
         setLabelsVisibility(visibility)
         {
-            this._icon.querySelector("#unitName").style.opacity = visibility ? "1": "0";
-            this._icon.querySelector("#unitName").innerHTML = visibility ? this.options.unitName : "";
+            var unitNameDiv = this._icon.querySelector("#unitName");
+            unitNameDiv.style.opacity = visibility ? "1": "0";
+            var unitName = this.options.human ? `<i class="fas fa-user"></i> ${this.options.unitName}` : `${this.options.unitName}`;
+            unitNameDiv.innerHTML = visibility ? unitName : "";
+            unitNameDiv.style.left = (-(unitNameDiv.offsetWidth - this._icon.querySelector("#icon-img").height) / 2) + "px";
             //this._icon.querySelector("#name").style.opacity = visibility ? "1": "0";
             //this._icon.querySelector("#name").innerHTML = visibility ? this.options.name : "";
             this._icon.querySelector("#altitude-div").style.opacity = visibility ? "1": "0";
@@ -225,8 +217,9 @@ L.Marker.UnitMarker.WeaponMarker = L.Marker.UnitMarker.extend({})
 L.Marker.UnitMarker.WeaponMarker.addInitHook(function()
 {
     // Weapons are not selectable
-    this.on('mouseover', function(e) {});
-    this.on('mouseout', function(e) {});
+    this.on('mouseover', function(e) {
+        e.target.setHovered(false);
+    });
 });
 
 // Missile

@@ -6,3 +6,23 @@
     cursor: crosshair;	
 }
 
+.leaflet-container.move-cursor-enabled {
+    cursor: crosshair;	
+}
+
+.leaflet-container.attack-cursor-enabled {
+    cursor: url("../img/buttons/attack.png") 25 15,auto;
+}
+
+.leaflet-marker-icon.attack-cursor-enabled {
+    cursor: url("../img/buttons/attack.png") 25 15,auto;
+}
+
+.leaflet-container.formation-cursor-enabled {
+    cursor: url("../img/buttons/formation.png") 25 15,auto;
+}
+
+.leaflet-marker-icon.formation-cursor-enabled {
+    cursor: url("../img/buttons/formation.png") 25 15,auto;
+}
+

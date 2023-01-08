@@ -33,42 +33,15 @@ void Scheduler::execute(lua_State* L)
 		{
 			if (command->getPriority() == priority)
 			{
-				log("Executing command");
-				switch (command->getType())
+				wstring commandString = L"Olympus.protectedCall(" + command->getString(L) + L")";
+				if (dostring_in(L, "server", to_string(commandString)))
 				{
-					case CommandType::MOVE:
-					{
-						MoveCommand* moveCommand = dynamic_cast<MoveCommand*>(command);
-						moveCommand->execute(L);
-						commands.remove(command);
-						break;
-					}
-					case CommandType::SMOKE:
-					{
-						SmokeCommand* smokeCommand = dynamic_cast<SmokeCommand*>(command);
-						smokeCommand->execute(L);
-						commands.remove(command);
-						break;
-					}
-					case CommandType::SPAWN_GROUND:
-					{
-						SpawnGroundCommand* spawnCommand = dynamic_cast<SpawnGroundCommand*>(command);
-						spawnCommand->execute(L);
-						commands.remove(command);
-						break;
-					}
-					case CommandType::SPAWN_AIR:
-					{
-						SpawnAirCommand* spawnCommand = dynamic_cast<SpawnAirCommand*>(command);
-						spawnCommand->execute(L);
-						commands.remove(command);
-						break;
-					}
-					default:
-						log("Unknown command of type " + to_string(command->getType()));
-						commands.remove(command);
-						break;
+					log(L"Error executing command " + commandString);
 				}
+				{
+					log(L"Command " + commandString + L" executed succesfully");
+				}
+				commands.remove(command);
 				return;
 			}
 		}
@@ -130,7 +103,7 @@ void Scheduler::handleRequest(wstring key, json::value value)
 		double lng = value[L"location"][L"lng"].as_double();
 		log(L"Spawning " + coalition + L" ground unit of type " + type + L" at (" + to_wstring(lat) + L", " + to_wstring(lng) + L")");
 		Coords loc; loc.lat = lat; loc.lng = lng;
-		command = dynamic_cast<Command*>(new SpawnGroundCommand(coalition, type, loc));
+		command = dynamic_cast<Command*>(new SpawnGroundUnitCommand(coalition, type, loc));
 	}
 	else if (key.compare(L"spawnAir") == 0)
 	{
@@ -140,15 +113,16 @@ void Scheduler::handleRequest(wstring key, json::value value)
 		double lng = value[L"location"][L"lng"].as_double();
 		Coords loc; loc.lat = lat; loc.lng = lng;
 		wstring payloadName = value[L"payloadName"].as_string();
-		log(L"Spawning " + coalition + L" air unit of type " + type + L" with payload " + payloadName + L" at (" + to_wstring(lat) + L", " + to_wstring(lng) + L")");
-		command = dynamic_cast<Command*>(new SpawnAirCommand(coalition, type, loc, payloadName));
+		wstring airbaseName = value[L"airbaseName"].as_string();
+		log(L"Spawning " + coalition + L" air unit of type " + type + L" with payload " + payloadName + L" at (" + to_wstring(lat) + L", " + to_wstring(lng) + L" " + airbaseName + L")");
+		command = dynamic_cast<Command*>(new SpawnAircraftCommand(coalition, type, loc, payloadName, airbaseName));
 	}
 	else if (key.compare(L"attackUnit") == 0)
 	{
-		int unitID = value[L"unitID"].as_integer();
+		int ID = value[L"ID"].as_integer();
 		int targetID = value[L"targetID"].as_integer();
 
-		Unit* unit = unitsFactory->getUnit(unitID);
+		Unit* unit = unitsFactory->getUnit(ID);
 		Unit* target = unitsFactory->getUnit(targetID);
 
 		wstring unitName;
@@ -192,6 +166,43 @@ void Scheduler::handleRequest(wstring key, json::value value)
 		{
 			unit->changeAltitude(value[L"change"].as_string());
 		}
+	}
+	else if (key.compare(L"cloneUnit") == 0)
+	{
+		int ID = value[L"ID"].as_integer();
+		command = dynamic_cast<Command*>(new CloneCommand(ID));
+		log(L"Cloning unit " + to_wstring(ID));
+	}
+	else if (key.compare(L"setLeader") == 0)
+	{
+		int ID = value[L"ID"].as_integer();
+		Unit* unit = unitsFactory->getUnit(ID);
+		json::value wingmenIDs = value[L"wingmenIDs"];
+		vector<Unit*> wingmen;
+		if (unit != nullptr)
+		{
+			for (auto itr = wingmenIDs.as_array().begin(); itr != wingmenIDs.as_array().end(); itr++)
+			{
+				Unit* wingman = unitsFactory->getUnit(itr->as_integer());
+				if (wingman != nullptr)
+				{
+					wingman->setWingman(true);
+					wingmen.push_back(wingman);
+					log(L"Setting " + wingman->getName() + L" as wingman leader");
+				}
+			}
+			unit->setWingmen(wingmen);
+			unit->setLeader(true);
+			unit->resetActiveDestination();
+			log(L"Setting " + unit->getName() + L" as formation leader");
+		}
+	}
+	else if (key.compare(L"setFormation") == 0)
+	{
+		int ID = value[L"ID"].as_integer();
+		Unit* unit = unitsFactory->getUnit(ID);
+		wstring formation = value[L"formation"].as_string();
+		unit->setFormation(formation);
 	}
 	else
 	{

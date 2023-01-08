@@ -206,68 +206,70 @@ unitTypes.vehicles.Unarmed = [
 ]
 
 /* AIRPLANES */
-unitTypes.air = [
-    "Tornado GR4",
-    "Tornado IDS",
-    "F/A-18A",
+unitTypes.air = {}
+
+unitTypes.air.CAP = [
+    "F-4E",
     "F/A-18C",
     "MiG-29S",
-    "MiG-29A",
     "F-14A",
-    "Tu-22M3",
-    "F-4E",
-    "B-52H",
-    "MiG-27K",
-    "F-111F",
-    "A-10A",
     "Su-27",
-    "MiG-29G",
     "MiG-23MLD",
-    "Su-25",
-    "Su-25TM",
-    "Su-25T",
     "Su-33",
-    "MiG-25PD",
     "MiG-25RBT",
     "Su-30",
+    "MiG-31",
+    "Mirage 2000-5",
+    "F-15C",
+    "F-5E",
+    "F-16C bl.52d",
+]
+
+unitTypes.air.CAS = [
+    "Tornado IDS",
+    "F-4E",
+    "F/A-18C",
+    "MiG-27K",
+    "A-10C",
+    "Su-25",
     "Su-34",
     "Su-17M4",
-    "MiG-31",
+    "F-15E",
+]
+
+unitTypes.air.strike = [
+    "Tu-22M3",
+    "B-52H",
+    "F-111F",
     "Tu-95MS",
     "Su-24M",
     "Tu-160",
     "F-117A",
     "B-1B",
-    "S-3B",
-    "S-3B Tanker",
-    "Mirage 2000-5",
-    "F-15C",
-    "F-15E",
-    "F-5E",
-    "MiG-29K",
     "Tu-142",
+]
+
+unitTypes.air.tank = [
+    "S-3B Tanker",
+    "KC-135",
+    "IL-78M",
+]
+
+unitTypes.air.awacs = [
+    "A-50",
+    "E-3A",
+    "E-2D",
+]
+
+unitTypes.air.drone = [
+    "MQ-1A Predator",
+    "MQ-9 Reaper",
+]
+
+unitTypes.air.transport = [
     "C-130",
     "An-26B",
     "An-30M",
     "C-17A",
-    "A-50",
-    "E-3A",
-    "IL-78M",
-    "E-2D",
     "IL-76MD",
-    "F-16C bl.50",
-    "F-16C bl.52d",
-    "Su-24MR",
-    "F-16A",
-    "F-16A MLU",
-    "MQ-1A Predator",
-    "Yak-40",
-    "A-10C",
-    "KC-135",
-    "L-39ZA",
-    "P-51D",
-    "MQ-9 Reaper",
-    "FW-190D9",
-    "TF-51D"
 ]
-

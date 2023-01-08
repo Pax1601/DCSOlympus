@@ -1,0 +1,37 @@
+.airbasemarker-container-table {
+    height: 60px; 
+    width: 60px; 
+    left: -30px; 
+    top: -30px; 
+    border: 1px transparent solid; 
+    position: absolute;
+}
+
+.airbasemarker-icon-img {
+    height: 60px; 
+    width: 60px; 
+    left: 0px; 
+    top: 0px; 
+    display: block; 
+    opacity: 0.8;
+    position: absolute;
+    filter: drop-shadow(1px 1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px 1px 0 white) drop-shadow(-1px -1px 0 white);
+}
+
+.airbasemarker-icon-img-blue {
+    filter: invert(37%) sepia(21%) saturate(7402%) hue-rotate(193deg) brightness(103%) contrast(104%) drop-shadow(1px 1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px 1px 0 white) drop-shadow(-1px -1px 0 white);
+}
+
+.airbasemarker-icon-img-red {
+    filter: invert(21%) sepia(96%) saturate(4897%) hue-rotate(353deg) brightness(108%) contrast(90%) drop-shadow(1px 1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px 1px 0 white) drop-shadow(-1px -1px 0 white);
+}
+
+.airbasemarker-name-div {
+    bottom: -20px; 
+    position: absolute; 
+    text-align: center; 
+    font: 800 14px Arial; 
+    white-space: nowrap;
+    -webkit-text-fill-color: white; 
+    -webkit-text-stroke: 1px;
+}

@@ -1,9 +1,9 @@
 class PanelButton
 {
-    constructor(parent, icon)
+    constructor(parent, icon, tooltip)
     {
         this._div = document.createElement("div");
-        this.setIcon(icon);
+        this.setIcon(icon, tooltip);
         this.setSlashed(false);
         
         this._div.classList.add("panel-button");
@@ -38,9 +38,16 @@ class PanelButton
         this._callbacks = [];
     }
 
-    setIcon(icon)
+    setIcon(icon, tooltip)
     {
-        this._baseIcon = `<i class="fa ${icon}"></i>`;
+        if (icon.includes("png"))
+        {
+            this._baseIcon = `<img src="${icon}" title="${tooltip}">`;
+        }
+        else
+        {
+            this._baseIcon = `<i class="fa ${icon}" title="${tooltip}"></i>`;
+        }
         this._div.innerHTML = this._baseIcon;    
     }
 
