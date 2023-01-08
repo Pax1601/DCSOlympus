@@ -1,11 +1,22 @@
 {
     "compilerOptions": {
-        "outDir": "./dist",
-        "allowJs": true,
-        "target": "es5"
+      "typeRoots": ["node_modules/@types"],
+      "outDir": "./js",
+      "target": "es2018",
+      "lib": [
+        "es2018",
+        "dom"
+      ],
+      "types": [
+        "leaflet",
+        "geojson"
+      ]
     },
-        "include": [
-            "./js/*",
-            "./js/**/*"
+    "include": [
+      "src/**/*",
+      "src/*"
+    ],
+    "exclude": [
+      "node_modules"
     ]
-}
+  }

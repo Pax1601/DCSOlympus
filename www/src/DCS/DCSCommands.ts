@@ -1,4 +1,6 @@
-function spawnSmoke(color, latlng)
+import { ConvertDDToDMS } from 'Other/Utils.js'
+
+export function spawnSmoke(color, latlng)
 {
     var xhr = new XMLHttpRequest();
     xhr.open("PUT", RESTaddress);
@@ -15,7 +17,7 @@ function spawnSmoke(color, latlng)
     xhr.send(JSON.stringify(data));
 }
 
-function spawnGroundUnit(type, latlng, coalition)
+export function spawnGroundUnit(type, latlng, coalition)
 {        
     var xhr = new XMLHttpRequest();
     xhr.open("PUT", RESTaddress);
@@ -32,7 +34,7 @@ function spawnGroundUnit(type, latlng, coalition)
     xhr.send(JSON.stringify(data));
 }
 
-function spawnAircraft(type, latlng, coalition, payloadName = "", airbaseName = "")
+export function spawnAircraft(type, latlng, coalition, payloadName = "", airbaseName = "")
 {        
     var xhr = new XMLHttpRequest();
     xhr.open("PUT", RESTaddress);
@@ -49,7 +51,7 @@ function spawnAircraft(type, latlng, coalition, payloadName = "", airbaseName = 
     xhr.send(JSON.stringify(data));
 }
 
-function attackUnit(ID, targetID)
+export function attackUnit(ID, targetID)
 {        
     var xhr = new XMLHttpRequest();
     xhr.open("PUT", RESTaddress);
@@ -66,7 +68,7 @@ function attackUnit(ID, targetID)
     xhr.send(JSON.stringify(data));
 }
 
-function cloneUnit(ID)
+export function cloneUnit(ID)
 {        
     var xhr = new XMLHttpRequest();
     xhr.open("PUT", RESTaddress);

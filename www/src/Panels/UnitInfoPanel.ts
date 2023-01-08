@@ -1,25 +1,29 @@
-class UnitInfoPanel
+import { ConvertDDToDMS, rad2deg } from 'Other/Utils.js'
+
+export class UnitInfoPanel
 {
+    #panel: HTMLElement;
+    
     constructor(id)
     {
-        this._panel = document.getElementById(id); 
+        this.#panel = document.getElementById(id); 
     }
 
     update(selectedUnits)
     {
         if (selectedUnits.length == 1)
         {
-            this._panel.style.bottom = "15px";
-            this._showUnitData(selectedUnits[0]);
+            this.#panel.style.bottom = "15px";
+            this.#showUnitData(selectedUnits[0]);
         }
         else
         {
-            this._panel.style.bottom = (-this._panel.offsetHeight - 2) + "px";
-            this._showUnitData(); // Empty, cleans the panel
+            this.#panel.style.bottom = (-this.#panel.offsetHeight - 2) + "px";
+            this.#showUnitData(undefined); // Empty, cleans the panel
         }
     }
 
-    _showUnitData(selectedUnit)
+    #showUnitData(selectedUnit)
     {
         if (selectedUnit !== undefined)
         {
@@ -39,7 +43,7 @@ class UnitInfoPanel
                 }
             }
             
-            this._panel.innerHTML = `
+            this.#panel.innerHTML = `
             <div style="display: flex">
             <table class="panel-table" id="unit-info-table">
                 <tr>
@@ -135,7 +139,7 @@ class UnitInfoPanel
         }
         else
         {
-            this._panel.innerHTML = ``;
+            this.#panel.innerHTML = ``;
         }
     }
 }

@@ -1,9 +1,17 @@
-class UnitsManager
+import { Unit } from 'Unit.js'
+import { LatLng } from 'leaflet';
+import { cloneUnit } from 'DCS/DCSCommands.js'
+import { showMessage } from 'index.js';
+
+export class UnitsManager
 {
+    #units: { [ID: number]: Unit};
+    #copiedUnits: Unit[];
+
     constructor()
     {
-        this._units = {};
-        this._copiedUnits = [];
+        this.#units = {};
+        this.#copiedUnits = [];
     }
 
     addUnit(ID, data)
@@ -12,13 +20,13 @@ class UnitsManager
         var constructor = eval(data.category);        
         if (constructor != undefined)
         {
-            this._units[ID] = new constructor(ID, data);
+            this.#units[ID] = new constructor(ID, data);
         }
     }
 
     getUnitByID(ID)
     {
-        return this._units[ID];
+        return this.#units[ID];
     }
 
     removeUnit(ID)
@@ -28,9 +36,9 @@ class UnitsManager
 
     deselectAllUnits()
     {
-        for (let ID in this._units)
+        for (let ID in this.#units)
         {
-            this._units[ID].setSelected(false);
+            this.#units[ID].setSelected(false);
         }
     }
 
@@ -39,11 +47,11 @@ class UnitsManager
         for (let ID in data["units"])
         {
             // Create the unit if missing from the local array, then update the data. Drawing is handled by leaflet.
-            if (!(ID in this._units)) 
+            if (!(ID in this.#units)) 
             {
                 this.addUnit(parseInt(ID), data["units"][ID]);
             }
-            this._units[ID].update(data["units"][ID]);
+            this.#units[ID].update(data["units"][ID]);
         }
     }
 
@@ -53,25 +61,23 @@ class UnitsManager
         {
             map.setState("MOVE_UNIT");
             unitControlPanel.setEnabled(true);
-            actionPanel.setEnabled(true);
         }
         else 
         {
             map.setState("IDLE");
             unitControlPanel.setEnabled(false);
-            actionPanel.setEnabled(false);
         }
     }
 
     selectFromBounds(bounds)
     {
         this.deselectAllUnits();
-        for (let ID in this._units)
+        for (let ID in this.#units)
         {
-            var latlng = new L.LatLng(this._units[ID].latitude, this._units[ID].longitude);
+            var latlng = new LatLng(this.#units[ID].latitude, this.#units[ID].longitude);
             if (bounds.contains(latlng))
             {
-                this._units[ID].setSelected(true);
+                this.#units[ID].setSelected(true);
             }
         }
     }
@@ -79,11 +85,11 @@ class UnitsManager
     getSelectedUnits()
     {
         var selectedUnits = [];
-        for (let ID in this._units)
+        for (let ID in this.#units)
         {
-            if (this._units[ID].getSelected()) 
+            if (this.#units[ID].getSelected()) 
             {
-                selectedUnits.push(this._units[ID]);
+                selectedUnits.push(this.#units[ID]);
             }
         }
         return selectedUnits;
@@ -94,7 +100,12 @@ class UnitsManager
         var selectedUnits = this.getSelectedUnits();
         for (let idx in selectedUnits)
         {
-            selectedUnits[idx].addDestination(latlng);
+            var commandedUnit = selectedUnits[idx];
+            if (selectedUnits[idx].wingman)
+            {
+                commandedUnit = this.getLeader(selectedUnits[idx].ID);
+            }
+            commandedUnit.addDestination(latlng);
         }
     }
 
@@ -103,7 +114,12 @@ class UnitsManager
         var selectedUnits = this.getSelectedUnits();
         for (let idx in selectedUnits)
         {
-            selectedUnits[idx].clearDestinations();
+            var commandedUnit = selectedUnits[idx];
+            if (selectedUnits[idx].wingman)
+            {
+                commandedUnit = this.getLeader(selectedUnits[idx].ID);
+            }
+            commandedUnit.clearDestinations();
         }
     }
 
@@ -144,14 +160,14 @@ class UnitsManager
 
     copyUnits()
     {
-        this._copiedUnits = this.getSelectedUnits();
+        this.#copiedUnits = this.getSelectedUnits();
     }
 
     pasteUnits()
     {
-        for (let idx in this._copiedUnits)
+        for (let idx in this.#copiedUnits)
         {
-            var unit = this._copiedUnits[idx];
+            var unit = this.#copiedUnits[idx];
             cloneUnit(unit.ID);
         }
     }
@@ -161,7 +177,13 @@ class UnitsManager
         var selectedUnits = this.getSelectedUnits();
         for (let idx in selectedUnits)
         {
-            selectedUnits[idx].attackUnit(ID);
+            // If a unit is a wingman, send the command to its leader
+            var commandedUnit = selectedUnits[idx];
+            if (selectedUnits[idx].wingman)
+            {
+                commandedUnit = this.getLeader(selectedUnits[idx].ID);
+            }
+            commandedUnit.attackUnit(ID);
         }
     }
 
@@ -183,10 +205,12 @@ class UnitsManager
             }
             else
             {
+                /* TODO
                 if (selectedUnits[idx].category !== this.getUnitByID(ID).category)
                 {
                     showMessage("All units must be of the same category to create a formation.");
                 }
+                */
                 if (selectedUnits[idx].ID != ID)
                 {
                     wingmenIDs.push(selectedUnits[idx].ID);
@@ -203,28 +227,19 @@ class UnitsManager
         }
     }
 
-    getUnitsByFormationID(formationID)
+    getLeader(ID)
     {
-        var formationUnits = [];
-        for (let ID in this._units)
+        for (let idx in this.#units)
         {
-            if (this._units[ID].formationID == formationID)
-            {
-                formationUnits.push(this._units[ID]);
-            }
-        }
-        return formationUnits;
-    }
-
-    getLeaderByFormationID(formationID)
-    {
-        var formationUnits = this.getUnitsByFormationID(formationID);
-        for (let unit of formationUnits)
-        {
+            var unit = this.#units[idx];
             if (unit.leader)
             {
-                return unit;
+                if (unit.wingmen.includes(this.getUnitByID(ID)))
+                {
+                    return unit;
+                }
             }
         }
+        showMessage("Error: no leader found for this unit")
     }
 }

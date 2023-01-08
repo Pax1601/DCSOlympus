@@ -20,30 +20,9 @@
     integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg="
     crossorigin=""></script>
 
-    <script src="js/DCS/payloadNames.js"></script>
-    <script src="js/DCS/DCSCommands.js"></script>
-
-    <script src="js/Panels/PanelButton.js"></script>
-    <script src="js/Panels/SettingsPanel.js"></script>
-    <script src="js/Panels/UnitInfoPanel.js"></script>
-    <script src="js/Panels/UnitControlPanel.js"></script>
-    <script src="js/Panels/FormationControlPanel.js"></script>
-    <script src="js/Panels/ActionPanel.js"></script>
+    <script type = "module" src="js/Units/UnitMarker.js"></script>
+    <script type = "module" src="js/index.js"></script>
     
-    <script src="js/Units/unitTypes.js"></script>
-    <script src="js/Units/Unit.js"></script>
-    <script src="js/Units/UnitMarker.js"></script>
-    <script src="js/Units/UnitsManager.js"></script>
-    
-    <script src="js/Other/Utils.js"></script>
-    <script src="js/Other/AirbaseMarker.js"></script>
-    <script src="js/Other/MissionData.js"></script>
-    
-    <script src="js/Map/Map.js"></script>
-    <script src="js/Map/SelectionWheel.js"></script>
-    <script src="js/Map/SelectionScroll.js"></script>
-    
-    <script src="js/index.js"></script>
   </head>
   <body>
     <table id="content-table">
@@ -56,11 +35,10 @@
         <td id="map-container">
           <div id="map"></div>
           <div id="log"></div>
-          <div class="action-panel" id="action-panel"></div>
           <div class="unit-info-panel" id="unit-info-panel"></div>
           <div class="unit-control-panel" id="unit-control-panel"></div>
           <div class="formation-control-panel" id="formation-control-panel"></div>
-          <div id="snackbar">ASD</div>
+          <div id="snackbar"></div>
         </td>
       </tr>
     </table>

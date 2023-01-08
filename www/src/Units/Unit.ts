@@ -1,26 +1,59 @@
-class Unit 
+import { Marker, LatLng, Polyline } from 'leaflet';
+import { ConvertDDToDMS } from 'Other/Utils.js'
+import { showMessage } from 'index.js'
+import { attackUnit } from 'DCS/DCSCommands.js'
+
+export class Unit 
 {
+    ID                  : number;
+    selectable          : boolean;
+    // @ts-ignore TODO: find a good way to extend markers in typescript
+    marker              : L.Marker.UnitMarker;
+    leader              : boolean;
+    wingman             : boolean;
+    wingmen             : Unit[];
+    formation           : string;
+    name                : string;
+    unitName            : string;
+    groupName           : string;
+    latitude            : number;
+    longitude           : number;
+    altitude            : number;
+    heading             : number;
+    coalitionID         : number;
+    alive               : boolean;
+    speed               : number;
+    currentTask         : string;
+    type                : JSON;
+    flags               : JSON;
+    activePath          : JSON;
+    missionData         : JSON;
+
+    #selected           : boolean;
+    #preventClick       : boolean;
+    #pathMarkers        : Marker[];
+    #pathPolyline       : Polyline;
+    #targetsPolylines   : Polyline[];
+    #timer              : number;
+
     constructor(ID, marker) 
     {
         this.ID = ID;
         this.selectable = true;
-
         // The marker is set by the inherited class
         this.marker = marker;
-        this.marker.on('click', (e) => this.onClick(e));
-
-        this._selected = false;
-
-        this._pathMarkers = [];
-
-        this._pathPolyline = new L.Polyline([], {color: '#2d3e50', weight: 3, opacity: 0.5, smoothFactor: 1});
-        this._pathPolyline.addTo(map.getMap());
-
-        this._targetsPolylines = [];
-
+        this.marker.on('click', (e) => this.#onClick(e));
+        this.marker.on('dblclick', (e) => this.#onDoubleClick(e));
         this.leader = true;
         this.wingmen = [];
         this.formation = undefined;
+
+        this.#selected = false;
+        this.#preventClick = false;
+        this.#pathMarkers = [];
+        this.#pathPolyline = new Polyline([], {color: '#2d3e50', weight: 3, opacity: 0.5, smoothFactor: 1});
+        this.#pathPolyline.addTo(map.getMap());
+        this.#targetsPolylines = [];
     }
 
     update(response)
@@ -55,8 +88,8 @@ class Unit
 
         this.missionData = missionData.getUnitData(this.ID)
 
-        this.setSelected(this.getSelected() & this.alive)
-        this.drawMarker();
+        this.setSelected(this.getSelected() && this.alive)
+        this.drawMarker({});
         if (this.getSelected() && this.activePath != undefined)
         {
             this.drawPath();
@@ -80,9 +113,9 @@ class Unit
     setSelected(selected)
     {
         // Only alive units can be selected. Some units are not selectable (weapons)
-        if ((this.alive || !selected) && this.selectable && this._selected != selected)
+        if ((this.alive || !selected) && this.selectable && this.#selected != selected)
         {
-            this._selected = selected;
+            this.#selected = selected;
             this.marker.setSelected(selected);
             unitsManager.onUnitSelection();
         }
@@ -90,7 +123,7 @@ class Unit
 
     getSelected()
     {
-        return this._selected;
+        return this.#selected;
     }
 
     addDestination(latlng)
@@ -127,24 +160,40 @@ class Unit
         this.activePath = undefined;
     }
 
-    onClick(e) 
+    #onClick(e) 
     {
-        if (map.getState() === 'IDLE' || map.getState() === 'MOVE_UNIT' || e.originalEvent.ctrlKey)
-        {
-            if (!e.originalEvent.ctrlKey)
-            {
-                unitsManager.deselectAllUnits();
+        this.#timer = setTimeout(() => {
+            if (!this.#preventClick) {
+                if (map.getState() === 'IDLE' || map.getState() === 'MOVE_UNIT' || e.originalEvent.ctrlKey)
+                {
+                    if (!e.originalEvent.ctrlKey)
+                    {
+                        unitsManager.deselectAllUnits();
+                    }
+                    this.setSelected(true);
+                }
             }
-            this.setSelected(true);
-        }
-        else if (map.getState() === 'ATTACK')
+            this.#preventClick = false;
+          }, 200);
+    }
+
+    #onDoubleClick(e) 
+    {
+        clearTimeout(this.#timer);
+        this.#preventClick = true;
+
+        var options = [
+            {'tooltip': 'Attack',           'src': 'attack.png',    'callback': () => {map.removeSelectionWheel(); unitsManager.attackUnit(this.ID);}},
+            {'tooltip': 'Go to tanker',     'src': 'tanker.png',    'callback': () => {map.removeSelectionWheel(); showMessage("Function not implemented yet");}},
+            {'tooltip': 'RTB',              'src': 'rtb.png',       'callback': () => {map.removeSelectionWheel(); showMessage("Function not implemented yet");}}
+        ]
+
+        if (!this.leader && !this.wingman)
         {
-            unitsManager.attackUnit(this.ID);
+            options.push({'tooltip': 'Create formation', 'src': 'formation.png', 'callback': () => {map.removeSelectionWheel(); unitsManager.createFormation(this.ID);}});
         }
-        else if (map.getState() === 'FORMATION')
-        {
-            unitsManager.createFormation(this.ID);
-        }
+
+        map.showSelectionWheel(e, options, false);
     }
 
     drawMarker(settings)
@@ -170,7 +219,7 @@ class Unit
 
             // Draw the marker
             var zIndex = this.marker.getZIndex();
-            var newLatLng = new L.LatLng(this.latitude, this.longitude);
+            var newLatLng = new LatLng(this.latitude, this.longitude);
             this.marker.setLatLng(newLatLng); 
             this.marker.setAngle(this.heading);
             this.marker.setZIndex(zIndex);
@@ -183,53 +232,53 @@ class Unit
     drawPath()
     {
         var _points = [];
-        _points.push(new L.LatLng(this.latitude, this.longitude));
+        _points.push(new LatLng(this.latitude, this.longitude));
 
         // Add markers if missing
-        while (this._pathMarkers.length < Object.keys(this.activePath).length)
+        while (this.#pathMarkers.length < Object.keys(this.activePath).length)
         {
-            var marker = L.marker([0, 0]).addTo(map.getMap());
-            this._pathMarkers.push(marker);
+            var marker = new Marker([0, 0]).addTo(map.getMap());
+            this.#pathMarkers.push(marker);
         }
 
         // Remove markers if too many 
-        while (this._pathMarkers.length > Object.keys(this.activePath).length)
+        while (this.#pathMarkers.length > Object.keys(this.activePath).length)
         {
-            map.getMap().removeLayer(this._pathMarkers[this._pathMarkers.length - 1]);
-            this._pathMarkers.splice(this._pathMarkers.length - 1, 1)
+            map.getMap().removeLayer(this.#pathMarkers[this.#pathMarkers.length - 1]);
+            this.#pathMarkers.splice(this.#pathMarkers.length - 1, 1)
         }
 
         // Update the position of the existing markers (to avoid creating markers uselessly) 
         for (let WP in this.activePath)
         {
             var destination = this.activePath[WP];
-            this._pathMarkers[parseInt(WP) - 1].setLatLng([destination.lat, destination.lng]);
-            _points.push(new L.LatLng(destination.lat, destination.lng));
-            this._pathPolyline.setLatLngs(_points);
+            this.#pathMarkers[parseInt(WP) - 1].setLatLng([destination.lat, destination.lng]);
+            _points.push(new LatLng(destination.lat, destination.lng));
+            this.#pathPolyline.setLatLngs(_points);
         }
     }
 
     clearPath()
     {
-        for (let WP in this._pathMarkers)
+        for (let WP in this.#pathMarkers)
         {
-            map.getMap().removeLayer(this._pathMarkers[WP]);
+            map.getMap().removeLayer(this.#pathMarkers[WP]);
         }
-        this._pathMarkers = [];
-        this._pathPolyline.setLatLngs([]);
+        this.#pathMarkers = [];
+        this.#pathPolyline.setLatLngs([]);
     }
 
     drawTargets()
     {
-        for (let typeIndex in this.missionData.targets)
+        for (let typeIndex in this.missionData['targets'])
         {
-            for (let index in this.missionData.targets[typeIndex])
+            for (let index in this.missionData['targets'][typeIndex])
             {
-                var targetData = this.missionData.targets[typeIndex][index];
+                var targetData = this.missionData['targets'][typeIndex][index];
                 var target = unitsManager.getUnitByID(targetData.object["id_"])
                 if (target != undefined){
-                    var startLatLng = new L.LatLng(this.latitude, this.longitude)
-                    var endLatLng = new L.LatLng(target.latitude, target.longitude)
+                    var startLatLng = new LatLng(this.latitude, this.longitude)
+                    var endLatLng = new LatLng(target.latitude, target.longitude)
                     
                     var color;
                     if (typeIndex === "radar")
@@ -248,9 +297,9 @@ class Unit
                     {
                         color = "#FFFFFF";
                     }
-                    var targetPolyline = new L.Polyline([startLatLng, endLatLng], {color: color, weight: 3, opacity: 1, smoothFactor: 1});
+                    var targetPolyline = new Polyline([startLatLng, endLatLng], {color: color, weight: 3, opacity: 1, smoothFactor: 1});
                     targetPolyline.addTo(map.getMap());
-                    this._targetsPolylines.push(targetPolyline)
+                    this.#targetsPolylines.push(targetPolyline)
                 }
             }
         }
@@ -258,9 +307,9 @@ class Unit
 
     clearTargets()
     {
-        for (let index in this._targetsPolylines)
+        for (let index in this.#targetsPolylines)
         {
-            map.getMap().removeLayer(this._targetsPolylines[index])
+            map.getMap().removeLayer(this.#targetsPolylines[index])
         }
     }
 
@@ -303,7 +352,7 @@ class Unit
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.onreadystatechange = () => {
             if (xhr.readyState === 4) {
-                console.log(this.unitName + " altitude change request: " + speedChange);
+                console.log(this.unitName + " altitude change request: " + altitudeChange);
             }
         };
 
@@ -350,11 +399,11 @@ class Unit
     }
 }
 
-class AirUnit extends Unit
+export class AirUnit extends Unit
 {
     drawMarker()
     {
-        if (this.flags.Human)
+        if (this.flags['Human'])
         {
             super.drawMarker(settingsPanel.getSettings().human);
         }
@@ -365,10 +414,11 @@ class AirUnit extends Unit
     }
 }
 
-class Aircraft extends AirUnit
+export class Aircraft extends AirUnit
 {
     constructor(ID, data)
     {
+        // @ts-ignore TODO: find a good way to extend markers in typescript
         var marker = new L.Marker.UnitMarker.AirUnitMarker.AircraftMarker({
             riseOnHover: true, 
             unitName: data.unitName,
@@ -380,10 +430,11 @@ class Aircraft extends AirUnit
     }
 }
 
-class Helicopter extends AirUnit
+export class Helicopter extends AirUnit
 {
     constructor(ID, data)
     {
+        // @ts-ignore TODO: find a good way to extend markers in typescript
         var marker = new L.Marker.UnitMarker.AirUnitMarker.HelicopterMarker({
             riseOnHover: true, 
             unitName: data.unitName,
@@ -395,10 +446,11 @@ class Helicopter extends AirUnit
     }
 }
 
-class GroundUnit extends Unit
+export class GroundUnit extends Unit
 {
     constructor(ID, data)
     {
+        // @ts-ignore TODO: find a good way to extend markers in typescript
         var marker = new L.Marker.UnitMarker.GroundMarker({
             riseOnHover: true, 
             unitName: data.unitName,
@@ -415,10 +467,11 @@ class GroundUnit extends Unit
     }
 }
 
-class NavyUnit extends Unit
+export class NavyUnit extends Unit
 {
     constructor(ID, data)
     {
+        // @ts-ignore TODO: find a good way to extend markers in typescript
         var marker = new L.Marker.UnitMarker.NavyMarker({
             riseOnHover: true, 
             unitName: data.unitName,
@@ -435,7 +488,7 @@ class NavyUnit extends Unit
     }
 }
 
-class Weapon extends Unit
+export class Weapon extends Unit
 {
     constructor(ID, data)
     {
@@ -449,16 +502,17 @@ class Weapon extends Unit
         super.drawMarker(settingsPanel.getSettings().weapons);
     }
 
-    onClick(e) 
+    #onClick(e) 
     {
         // Weapons can not be clicked
     }
 }
 
-class Missile extends Weapon
+export class Missile extends Weapon
 {
     constructor(ID, data)
     {
+        // @ts-ignore TODO: find a good way to extend markers in typescript
         var marker = new L.Marker.UnitMarker.WeaponMarker.MissileMarker({
             riseOnHover: true, 
             unitName: "",
@@ -470,10 +524,11 @@ class Missile extends Weapon
     }
 }
 
-class Bomb extends Weapon
+export class Bomb extends Weapon
 {
     constructor(ID, data)
     {
+        // @ts-ignore TODO: find a good way to extend markers in typescript
         var marker = new L.Marker.UnitMarker.WeaponMarker.BombMarker({
             riseOnHover: true, 
             unitName: "",

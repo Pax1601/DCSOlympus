@@ -7,3 +7,6 @@ core.vcxproj.user
 .vscode
 *.user
 Output
+server
+/www/js
+/www/node_modules

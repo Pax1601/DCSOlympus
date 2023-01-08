@@ -1,5 +1,6 @@
 
-var unitTypes = {};
+
+var unitTypes: any = {};
 /* NAVY */
 unitTypes.navy = {};
 unitTypes.navy.blue = [
