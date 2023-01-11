@@ -4,9 +4,7 @@ bin
 x64
 core.user
 core.vcxproj.user
-.vscode
 *.user
 Output
 server
-/www/js
-/www/node_modules
+node_modules
