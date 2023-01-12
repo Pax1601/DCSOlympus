@@ -1,41 +1,33 @@
 {
 	"version": "2.0.0",
 	"tasks": [
-	  {
-		"type": "npm",
-		"script": "start",
-		"isBackground": true,
-		"presentation": {
-		  "focus": true,
-		  "panel": "dedicated"
-		},
-		"group": {
-		  "kind": "build",
-		  "isDefault": true
-		},
-		"problemMatcher": {
-		  "owner": "typescript",
-		  "source": "ts",
-		  "applyTo": "closedDocuments",
-		  "fileLocation": [
-			"relative",
-			"${cwd}"
-		  ],
-		  "pattern": "$tsc",
-		  "background": {
-			"activeOnStart": true,
-			"beginsPattern": {
-			  "regexp": "(.*?)"
-			},
-			"endsPattern": {
-			  "regexp": "Compiled |Failed to compile."
+		{
+			"type": "npm",
+			"script": "start",
+			"problemMatcher": [
+				{
+				  "pattern": [
+					{
+					  "regexp": ".",
+					  "file": 1,
+					  "location": 2,
+					  "message": 3
+					}
+				  ],
+				  "background": {
+					"activeOnStart": true,
+					"beginsPattern": ".",
+					"endsPattern": ".",
+				  }
+				}
+			  ],
+			"isBackground": true,
+			"label": "npm: start",
+			"detail": "node ./bin/www",
+			"group": {
+				"kind": "build",
+				"isDefault": true
 			}
-		  }
-		},
-		"options": {
-		  "cwd": "${workspaceFolder}"
 		}
-	  }
 	]
-  }
-  
+}
