@@ -1,8 +1,15 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+	padding: 0;
+	margin: 0;
 }
 
-a {
-  color: #00B7FF;
+html, body {
+	height: 100%;
+	width: 100%;
+}
+
+#olympus-map-container
+{
+  height: 100%;
+	width: 100%;
 }
