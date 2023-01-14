@@ -12,7 +12,8 @@
             "webRoot": "${workspaceFolder}/public/",
             "sourceMapPathOverrides": {
                 "src/*": "${workspaceFolder}/src/*"
-            }
+            },
+            "preLaunchTask": "server"
         }
     ]
 }
