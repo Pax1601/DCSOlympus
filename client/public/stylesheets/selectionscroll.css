@@ -1,0 +1,25 @@
+.olympus-selection-scroll-container {
+    margin: 0 auto;
+    position: fixed;
+    z-index: 1000;
+    width: 220px;
+    height: 220px;
+    overflow: visible;
+    overflow-y: scroll;
+    background-color: var(--background-color);
+    opacity: 0.8;
+}
+
+.olympus-selection-scroll-element {
+    margin: 2px;
+    color: white;
+    text-shadow: 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
+    cursor: pointer;
+    font-size: 12px;
+    opacity: 1;
+    font-family: "Lucida Console", "Courier New", monospace !important;
+}
+
+.olympus-selection-scroll-element:hover {
+    background-color: var(--highlight-color);
+}
