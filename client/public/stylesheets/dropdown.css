@@ -1,0 +1,83 @@
+.olympus-dropdown {
+    height: 30px;
+    background-color: #FFFD;
+    z-index: 1000;
+    border-radius: 2px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: var(--background-color);
+    padding-left: 5px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.olympus-dropdown::before {
+    content: "";
+    position: absolute;
+    height: 30px;
+    width: 30px;
+    top: 0px;
+    right: 0px;
+    background-color: var(--background-color);
+    z-index: 1000;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+}
+
+.olympus-dropdown-open {
+    border-bottom-left-radius: 0px;
+}
+
+.olympus-dropdown-open::after {
+    content: "";
+    position: absolute;
+    top: 11px;
+    right: 9px;
+    height: 3px;
+    width: 3px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    padding: 3px;
+    z-index: 1000;
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+}
+
+.olympus-dropdown-closed::after {
+    content: "";
+    position: absolute;
+    top: 7px;
+    right: 9px;
+    height: 3px;
+    width: 3px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    padding: 3px;
+    z-index: 1000;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}
+
+.olympus-dropdown-content {
+    position: fixed;
+    overflow: visible;
+    overflow-y: scroll;
+    background-color: #FFFD;
+    z-index: 2000;
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+}
+
+.olympus-dropdown-element {
+    margin: 2px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: var(--background-color);
+    cursor: pointer;
+    opacity: 1;
+    font-size: 15px;
+}
+
+.olympus-dropdown-element:hover {
+    background-color: var(--highlight-color);
+}

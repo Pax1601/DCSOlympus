@@ -11,7 +11,7 @@
 	font-family: "Lucida Console", "Courier New", monospace !important;
 }
 
-.olympus-panel table{
+.olympus-panel table {
 	margin: 5px;
 	width: 100%;
 }
@@ -32,14 +32,4 @@
     font-size: 12px;
     color: var(--text-color);
     margin: 5px;
-}
-
-/* Panels position */
-#olympus-unit-info-panel {
-	height: 100px;
-    width: 800px;
-    left: 10px;
-    bottom: 10px;
-	z-index: 1000;
-	display: flex;
 }

@@ -7,15 +7,15 @@ import { unitTypes } from "../units/unitTypes";
 export class Map extends L.Map 
 {
     #state: string;
+    #layer?: L.TileLayer;
 
-    constructor(containerId: string)
+    constructor(ID: string)
     {
         /* Init the leaflet map */
-        super(containerId, {doubleClickZoom: false});
+        super(ID, {doubleClickZoom: false, zoomControl: false});
         this.setView([37.23, -115.8], 12);
-        L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
-            attribution: "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
-        }).addTo(this);
+        
+        this.setLayer("ArcGIS Satellite");
 
         /* Init the state machine */
         this.#state = "IDLE";
@@ -24,6 +24,63 @@ export class Map extends L.Map
         this.on("contextmenu", (e) => this.#onContextMenu(e));
         this.on("click", (e) => this.#onClick(e));
         this.on("dblclick", (e) => this.#onDoubleClick(e));
+    }
+
+    setLayer(layerName: string)
+    {
+        if (this.#layer != null)
+        {   
+            this.removeLayer(this.#layer)
+        }
+        
+        if (layerName == "ArcGIS Satellite")
+        {
+            this.#layer = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+                attribution: "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
+            });
+        }
+        else if (layerName == "USGS Topo")
+        {
+            this.#layer = L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}', {
+                maxZoom: 20,
+                attribution: 'Tiles courtesy of the <a href="https://usgs.gov/">U.S. Geological Survey</a>'
+            });
+        }
+        else if (layerName == "OpenStreetMap Mapnik")
+        {
+            this.#layer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            });
+        }
+        else if (layerName == "OPENVKarte")
+        {
+            this.#layer = L.tileLayer('https://tileserver.memomaps.de/tilegen/{z}/{x}/{y}.png', {
+                maxZoom: 18,
+                attribution: 'Map <a href="https://memomaps.de/">memomaps.de</a> <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            });
+        }
+        else if (layerName == "Esri.DeLorme")
+        {
+            this.#layer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Specialty/DeLorme_World_Base_Map/MapServer/tile/{z}/{y}/{x}', {
+                attribution: 'Tiles &copy; Esri &mdash; Copyright: &copy;2012 DeLorme',
+                minZoom: 1,
+                maxZoom: 11
+            });
+        }
+        else if (layerName == "CyclOSM")
+        {
+            this.#layer = L.tileLayer('https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png', {
+                maxZoom: 20,
+                attribution: '<a href="https://github.com/cyclosm/cyclosm-cartocss-style/releases" title="CyclOSM - Open Bicycle render">CyclOSM</a> | Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            });
+        }
+        this.#layer?.addTo(this);
+    }
+
+    getLayers()
+    {
+        return ["ArcGIS Satellite", "USGS Topo", "OpenStreetMap Mapnik", "OPENVKarte", "Esri.DeLorme", "CyclOSM"]
     }
 
     /* State machine */

@@ -4,22 +4,27 @@ import { SelectionWheel } from "./controls/selectionwheel";
 import { UnitsManager } from "./units/unitsmanager";
 import { UnitInfoPanel } from "./panels/unitinfopanel";
 import { SelectionScroll } from "./controls/selectionscroll";
+import { Dropdown } from "./controls/dropdown";
 
 var map: Map;
 var selectionWheel: SelectionWheel;
 var selectionScroll: SelectionScroll;
 var unitsManager: UnitsManager;
 var unitInfoPanel: UnitInfoPanel;
-var activeCoalition: string
+var activeCoalition: string;
+var scenarioDropdown: Dropdown;
+var mapSourceDropdown: Dropdown;
 
 function setup()
 {
     /* Initialize */
-    map = new Map('olympus-map-container');
+    map = new Map('map-container');
     selectionWheel = new SelectionWheel("selection-wheel");
     selectionScroll = new SelectionScroll("selection-scroll");
     unitsManager = new UnitsManager();
-    unitInfoPanel = new UnitInfoPanel("olympus-unit-info-panel");
+    unitInfoPanel = new UnitInfoPanel("unit-info-panel");
+    scenarioDropdown = new Dropdown("scenario-dropdown", ["Caucasus", "Syria", "Nevada", "Marianas", "South Atlantic", "The channel"], () => {});
+    mapSourceDropdown = new Dropdown("map-source-dropdown", map.getLayers(), (option: string) => map.setLayer(option));
 
     /* Main update rate = 250ms is minimum time, equal to server update time. */
     setInterval(() => getDataFromDCS(update), 250);

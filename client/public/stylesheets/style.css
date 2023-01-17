@@ -1,4 +1,5 @@
 @import url("panels.css");
+@import url("dropdown.css");
 @import url("selectionwheel.css");
 @import url("selectionscroll.css");
 @import url("unitmarker.css");
@@ -25,9 +26,31 @@ html, body {
 	width: 100%;
 }
 
-#olympus-map-container
+#map-container
 {
   	height: 100%;
 	width: 100%;
 }
 
+#unit-info-panel {
+	height: 100px;
+    width: 800px;
+    left: 10px;
+    bottom: 10px;
+	z-index: 1000;
+	display: flex;
+}
+
+#scenario-dropdown {
+	position: fixed;
+	top: 10px;
+	left: 10px;
+	width: 250px;
+}
+
+#map-source-dropdown {
+	position: fixed;
+	top: 10px;
+	left: 280px;
+	width: 250px;
+}
