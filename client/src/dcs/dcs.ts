@@ -1,4 +1,5 @@
 import * as L from 'leaflet'
+import { getUnitsManager } from '..';
 import { ConvertDDToDMS } from '../other/utils';
 
 /* Edit here to change server address */
@@ -24,7 +25,6 @@ export function getDataFromDCS(callback: CallableFunction)
 
 export function addDestination(ID: number, path: any)
 {
-    // TODO move in dedicated file
     var xhr = new XMLHttpRequest();
     xhr.open("PUT", RESTaddress);
     xhr.setRequestHeader("Content-Type", "application/json");
@@ -89,34 +89,34 @@ export function spawnAircraft(type: string, latlng: L.LatLng, coalition: string,
 
 export function attackUnit(ID: number, targetID: number)
 {        
-    //var xhr = new XMLHttpRequest();
-    //xhr.open("PUT", RESTaddress);
-    //xhr.setRequestHeader("Content-Type", "application/json");
-    //xhr.onreadystatechange = () => {
-    //    if (xhr.readyState === 4) {
-    //        console.log("Unit " + unitsManager.getUnitByID(ID).unitName + " attack " + unitsManager.getUnitByID(targetID).unitName );
-    //    }
-    //};
-//
-    //var command = {"ID": ID, "targetID": targetID};
-    //var data = {"attackUnit": command}
-//
-    //xhr.send(JSON.stringify(data));
+    var xhr = new XMLHttpRequest();
+    xhr.open("PUT", RESTaddress);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = () => {
+       if (xhr.readyState === 4) {
+           console.log("Unit " + getUnitsManager().getUnitByID(ID).unitName + " attack " + getUnitsManager().getUnitByID(targetID).unitName );
+       }
+    };
+
+    var command = {"ID": ID, "targetID": targetID};
+    var data = {"attackUnit": command}
+
+    xhr.send(JSON.stringify(data));
 }
 
 export function cloneUnit(ID: number)
 {        
-    //var xhr = new XMLHttpRequest();
-    //xhr.open("PUT", RESTaddress);
-    //xhr.setRequestHeader("Content-Type", "application/json");
-    //xhr.onreadystatechange = () => {
-    //    if (xhr.readyState === 4) {
-    //        console.log("Unit " + unitsManager.getUnitByID(ID).unitName + " cloned");
-    //    }
-    //};
-//
-    //var command = {"ID": ID};
-    //var data = {"cloneUnit": command}
-//
-    //xhr.send(JSON.stringify(data));
+    var xhr = new XMLHttpRequest();
+    xhr.open("PUT", RESTaddress);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = () => {
+       if (xhr.readyState === 4) {
+           console.log("Unit " + getUnitsManager().getUnitByID(ID).unitName + " cloned");
+       }
+    };
+
+    var command = {"ID": ID};
+    var data = {"cloneUnit": command}
+
+    xhr.send(JSON.stringify(data));
 }

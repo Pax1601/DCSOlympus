@@ -26,11 +26,11 @@ Unit* UnitsFactory::getUnit(int ID)
 	}
 }
 
-void UnitsFactory::update(lua_State* L)
+void UnitsFactory::updateExportData(lua_State* L)
 {
 	map<int, json::value> unitJSONs = getAllUnits(L);
 
-	/* Update all units, create them if needed */
+	/* Update all units, create them if needed TODO: move code to get constructor in dedicated function */
 	for (auto const& p : unitJSONs)
 	{
 		int ID = p.first;
@@ -74,7 +74,7 @@ void UnitsFactory::update(lua_State* L)
 		/* Update the unit if present*/
 		if (units.count(ID) != 0)
 		{
-			units[ID]->update(p.second);
+			units[ID]->updateExportData(p.second);
 		}
 	}
 
@@ -84,6 +84,21 @@ void UnitsFactory::update(lua_State* L)
 		if (unitJSONs.find(unit.first) == unitJSONs.end())
 		{
 			unit.second->setAlive(false);
+		}
+	}
+}
+
+void UnitsFactory::updateMissionData(json::value missionData)
+{
+	/* Update all units */
+	for (auto const& p : units)
+	{
+		int ID = p.first;
+		log(to_string(ID));
+		if (missionData.has_field(to_wstring(ID)))
+		{
+			log("mix");
+			p.second->updateMissionData(missionData[to_wstring(ID)]);
 		}
 	}
 }
@@ -100,3 +115,4 @@ void UnitsFactory::updateAnswer(json::value& answer)
 
 	answer[L"units"] = unitsJson;
 }
+

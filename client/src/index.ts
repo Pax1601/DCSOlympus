@@ -26,6 +26,8 @@ function setup()
     scenarioDropdown = new Dropdown("scenario-dropdown", ["Caucasus", "Syria", "Nevada", "Marianas", "South Atlantic", "The channel"], () => {});
     mapSourceDropdown = new Dropdown("map-source-dropdown", map.getLayers(), (option: string) => map.setLayer(option));
 
+    activeCoalition = "blue";
+
     /* Main update rate = 250ms is minimum time, equal to server update time. */
     setInterval(() => getDataFromDCS(update), 250);
 }

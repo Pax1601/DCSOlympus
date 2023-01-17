@@ -25,7 +25,7 @@ Unit::~Unit()
 
 }
 
-void Unit::update(json::value json)
+void Unit::updateExportData(json::value json)
 {
 	/* Lock for thread safety */
 	lock_guard<mutex> guard(mutexLock);
@@ -75,6 +75,16 @@ void Unit::update(json::value json)
 	{
 		AIloop();
 	}
+}
+
+void Unit::updateMissionData(json::value json)
+{
+	if (json.has_number_field(L"fuel"))
+		fuel = json[L"fuel"].as_number().to_int32();
+	if (json.has_object_field(L"ammo"))
+		ammo = json[L"ammo"];
+	if (json.has_object_field(L"targets"))
+		targets = json[L"targets"];
 }
 
 void Unit::setPath(list<Coords> path)
@@ -187,6 +197,9 @@ json::value Unit::json()
 	json[L"leader"] = leader;
 	json[L"wingman"] = wingman;
 	json[L"formation"] = json::value::string(formation);
+	json[L"fuel"] = fuel;
+	json[L"ammo"] = ammo;
+	json[L"targets"] = targets;
 
 	int i = 0;
 	for (auto itr = wingmen.begin(); itr != wingmen.end(); itr++)

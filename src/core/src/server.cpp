@@ -9,7 +9,6 @@
 
 extern UnitsFactory* unitsFactory; 
 extern Scheduler* scheduler;
-extern json::value missionData;
 
 void handle_eptr(std::exception_ptr eptr)
 {
@@ -58,7 +57,6 @@ void Server::handle_get(http_request request)
     std::exception_ptr eptr;
     try {
         unitsFactory->updateAnswer(answer);
-        answer[L"missionData"] = missionData;
         response.set_body(answer);
     }
     catch (...) {

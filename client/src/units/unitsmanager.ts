@@ -1,4 +1,4 @@
-import { getUnitInfoPanel } from "..";
+import { getMap, getUnitInfoPanel } from "..";
 import { Unit, GroundUnit } from "./unit";
 
 export class UnitsManager
@@ -14,7 +14,7 @@ export class UnitsManager
 
     addUnit(ID: number, data: any)
     {
-        // The name of the unit category is exactly the same as the constructor name
+        /* The name of the unit category is exactly the same as the constructor name */
         var constructor = Unit.getConstructor(data.category);        
         if (constructor != undefined)
         {
@@ -51,7 +51,7 @@ export class UnitsManager
     {
         for (let ID in data["units"])
         {
-            // Create the unit if missing from the local array, then update the data. Drawing is handled by leaflet.
+            /* Create the unit if missing from the local array, then update the data. Drawing is handled by leaflet. */
             if (!(ID in this.#units)) 
             {
                 this.addUnit(parseInt(ID), data["units"][ID]);
@@ -72,16 +72,16 @@ export class UnitsManager
     
     onUnitSelection()
     {
-        //if (this.getSelectedUnits().length > 0) 
-        //{
-        //    map.setState("MOVE_UNIT");
-        //    unitControlPanel.setEnabled(true);
-        //}
-        //else 
-        //{
-        //    map.setState("IDLE");
-        //    unitControlPanel.setEnabled(false);
-        //}
+        if (this.getSelectedUnits().length > 0) 
+        {
+            getMap().setState("MOVE_UNIT");
+            //unitControlPanel.setEnabled(true);
+        }
+        else 
+        {
+            getMap().setState("IDLE");
+            //unitControlPanel.setEnabled(false);
+        }
     }
 
     // selectFromBounds(bounds)
@@ -110,33 +110,33 @@ export class UnitsManager
         return selectedUnits;
     }
 
-    // addDestination(latlng)
-    // {
-    //     var selectedUnits = this.getSelectedUnits();
-    //     for (let idx in selectedUnits)
-    //     {
-    //         var commandedUnit = selectedUnits[idx];
-    //         if (selectedUnits[idx].wingman)
-    //         {
-    //             commandedUnit = this.getLeader(selectedUnits[idx].ID);
-    //         }
-    //         commandedUnit.addDestination(latlng);
-    //     }
-    // }
+    addDestination(latlng: L.LatLng)
+    {
+        var selectedUnits = this.getSelectedUnits();
+        for (let idx in selectedUnits)
+        {
+            var commandedUnit = selectedUnits[idx];
+            //if (selectedUnits[idx].wingman)
+            //{
+            //    commandedUnit = this.getLeader(selectedUnits[idx].ID);
+            //}
+            commandedUnit.addDestination(latlng);
+        }
+    }
 
-    // clearDestinations()
-    // {
-    //     var selectedUnits = this.getSelectedUnits();
-    //     for (let idx in selectedUnits)
-    //     {
-    //         var commandedUnit = selectedUnits[idx];
-    //         if (selectedUnits[idx].wingman)
-    //         {
-    //             commandedUnit = this.getLeader(selectedUnits[idx].ID);
-    //         }
-    //         commandedUnit.clearDestinations();
-    //     }
-    // }
+    clearDestinations()
+    {
+        var selectedUnits = this.getSelectedUnits();
+        for (let idx in selectedUnits)
+        {
+            var commandedUnit = selectedUnits[idx];
+            //if (selectedUnits[idx].wingman)
+            //{
+            //    commandedUnit = this.getLeader(selectedUnits[idx].ID);
+            //}
+            commandedUnit.clearDestinations();
+        }
+    }
 
     // selectedUnitsMove()
     // {
@@ -187,20 +187,20 @@ export class UnitsManager
     //     }
     // }
 
-    // attackUnit(ID)
-    // {
-    //     var selectedUnits = this.getSelectedUnits();
-    //     for (let idx in selectedUnits)
-    //     {
-    //         // If a unit is a wingman, send the command to its leader
-    //         var commandedUnit = selectedUnits[idx];
-    //         if (selectedUnits[idx].wingman)
-    //         {
-    //             commandedUnit = this.getLeader(selectedUnits[idx].ID);
-    //         }
-    //         commandedUnit.attackUnit(ID);
-    //     }
-    // }
+    attackUnit(ID: number)
+    {
+        var selectedUnits = this.getSelectedUnits();
+        for (let idx in selectedUnits)
+        {
+            /* If a unit is a wingman, send the command to its leader */
+            var commandedUnit = selectedUnits[idx];
+            //if (selectedUnits[idx].wingman)
+            //{
+            //    commandedUnit = this.getLeader(selectedUnits[idx].ID);
+            //}
+            commandedUnit.attackUnit(ID);
+        }
+    }
 
     // createFormation(ID)
     // {

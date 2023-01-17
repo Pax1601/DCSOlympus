@@ -2,8 +2,7 @@ import { Marker, LatLng, Polyline } from 'leaflet';
 import { ConvertDDToDMS } from '../other/utils';
 import { getMap, getUnitsManager } from '..';
 import { UnitMarker, MarkerOptions } from './unitmarker';
-import { addDestination } from '../dcs/dcs';
-//import { attackUnit } from 'DCS/DCSCommands.js'
+import { addDestination, attackUnit } from '../dcs/dcs';
 
 export class Unit 
 {
@@ -86,7 +85,7 @@ export class Unit
         /* The marker is set by the inherited class */
         this.#marker = marker;
         this.#marker.on('click', (e) => this.#onClick(e));
-        //this.#marker.on('dblclick', (e) => this.#onDoubleClick(e));
+        this.#marker.on('dblclick', (e) => this.#onDoubleClick(e));
         
         this.#selected = false;
         this.#preventClick = false;
@@ -142,7 +141,7 @@ export class Unit
 
     setSelected(selected: boolean)
     {
-        // Only alive units can be selected. Some units are not selectable (weapons)
+        /* Only alive units can be selected. Some units are not selectable (weapons) */
         if ((this.alive || !selected) && this.#selectable && this.#selected != selected)
         {
             this.#selected = selected;
@@ -168,7 +167,7 @@ export class Unit
         {
             path = {"1": latlng};
         }
-        addDestination
+        addDestination(this.ID, path);
     }
 
     clearDestinations()
@@ -191,6 +190,25 @@ export class Unit
             }
             this.#preventClick = false;
           }, 200);
+    }
+
+    #onDoubleClick(e: any) 
+    {
+        clearTimeout(this.#timer);
+        this.#preventClick = true;
+
+        var options = [
+            {'tooltip': 'Attack',           'src': 'attack.png',    'callback': () => {getMap().hideSelectionWheel(); getUnitsManager().attackUnit(this.ID);}},
+            {'tooltip': 'Go to tanker',     'src': 'tanker.png',    'callback': () => {getMap().hideSelectionWheel(); /*showMessage("Function not implemented yet");*/}},
+            {'tooltip': 'RTB',              'src': 'rtb.png',       'callback': () => {getMap().hideSelectionWheel(); /*showMessage("Function not implemented yet");*/}}
+        ]
+
+        if (!this.leader && !this.wingman)
+        {
+            options.push({'tooltip': 'Create formation', 'src': 'formation.png', 'callback': () => {getMap().hideSelectionWheel(); /*unitsManager.createFormation(this.ID);*/}});
+        }
+
+        getMap().showSelectionWheel(e.originalEvent, options, false);
     }
 
     #updateMarker()
@@ -217,21 +235,21 @@ export class Unit
             var _points = [];
             _points.push(new LatLng(this.latitude, this.longitude));
 
-            // Add markers if missing
+            /* Add markers if missing */
             while (this.#pathMarkers.length < Object.keys(this.activePath).length)
             {
                 var marker = new Marker([0, 0]).addTo(getMap());
                 this.#pathMarkers.push(marker);
             }
 
-            // Remove markers if too many 
+            /* Remove markers if too many */
             while (this.#pathMarkers.length > Object.keys(this.activePath).length)
             {
                 getMap().removeLayer(this.#pathMarkers[this.#pathMarkers.length - 1]);
                 this.#pathMarkers.splice(this.#pathMarkers.length - 1, 1)
             }
 
-            // Update the position of the existing markers (to avoid creating markers uselessly) 
+            /* Update the position of the existing markers (to avoid creating markers uselessly) */
             for (let WP in this.activePath)
             {
                 var destination = this.activePath[WP];
@@ -252,69 +270,7 @@ export class Unit
         this.#pathPolyline.setLatLngs([]);
     }
 
-
     /*
-
-    #onDoubleClick(e) 
-    {
-        clearTimeout(this.#timer);
-        this.#preventClick = true;
-
-        var options = [
-            {'tooltip': 'Attack',           'src': 'attack.png',    'callback': () => {map.removeSelectionWheel(); unitsManager.attackUnit(this.ID);}},
-            {'tooltip': 'Go to tanker',     'src': 'tanker.png',    'callback': () => {map.removeSelectionWheel(); showMessage("Function not implemented yet");}},
-            {'tooltip': 'RTB',              'src': 'rtb.png',       'callback': () => {map.removeSelectionWheel(); showMessage("Function not implemented yet");}}
-        ]
-
-        if (!this.leader && !this.wingman)
-        {
-            options.push({'tooltip': 'Create formation', 'src': 'formation.png', 'callback': () => {map.removeSelectionWheel(); unitsManager.createFormation(this.ID);}});
-        }
-
-        map.showSelectionWheel(e, options, false);
-    }
-
-    
-
-    drawPath()
-    {
-        var _points = [];
-        _points.push(new LatLng(this.latitude, this.longitude));
-
-        // Add markers if missing
-        while (this.#pathMarkers.length < Object.keys(this.activePath).length)
-        {
-            var marker = new Marker([0, 0]).addTo(map.getMap());
-            this.#pathMarkers.push(marker);
-        }
-
-        // Remove markers if too many 
-        while (this.#pathMarkers.length > Object.keys(this.activePath).length)
-        {
-            map.getMap().removeLayer(this.#pathMarkers[this.#pathMarkers.length - 1]);
-            this.#pathMarkers.splice(this.#pathMarkers.length - 1, 1)
-        }
-
-        // Update the position of the existing markers (to avoid creating markers uselessly) 
-        for (let WP in this.activePath)
-        {
-            var destination = this.activePath[WP];
-            this.#pathMarkers[parseInt(WP) - 1].setLatLng([destination.lat, destination.lng]);
-            _points.push(new LatLng(destination.lat, destination.lng));
-            this.#pathPolyline.setLatLngs(_points);
-        }
-    }
-
-    clearPath()
-    {
-        for (let WP in this.#pathMarkers)
-        {
-            map.getMap().removeLayer(this.#pathMarkers[WP]);
-        }
-        this.#pathMarkers = [];
-        this.#pathPolyline.setLatLngs([]);
-    }
-
     drawTargets()
     {
         for (let typeIndex in this.missionData['targets'])
@@ -359,8 +315,9 @@ export class Unit
             map.getMap().removeLayer(this.#targetsPolylines[index])
         }
     }
+    */
 
-    attackUnit(targetID)
+    attackUnit(targetID: number)
     {
         // Call DCS attackUnit function
         if (this.ID != targetID)
@@ -373,6 +330,7 @@ export class Unit
         }
     }
 
+    /*
     changeSpeed(speedChange)
     {
         // TODO move in dedicated file

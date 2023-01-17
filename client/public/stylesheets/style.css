@@ -11,6 +11,7 @@
 	--text-color:white;
     --blue-coalition-color: #2196F3;
     --red-coalition-color: #f32121;
+	--neutral-coalition-color: #AAAAAA;
     --active-coalition-color: var(--blue-coalition-color);
     --highlight-color: #FFFFFFAA;
 }

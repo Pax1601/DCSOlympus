@@ -11,8 +11,8 @@ public:
 	~UnitsFactory();
 
 	Unit* getUnit(int ID);
-	void getMissionDB(lua_State* L);
-	void update(lua_State* L);
+	void updateExportData(lua_State* L);
+	void updateMissionData(json::value missionData);
 	void updateAnswer(json::value& answer);
 	
 private:

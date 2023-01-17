@@ -1,4 +1,4 @@
-import { setActiveCoalition } from "..";
+import { getActiveCoalition, setActiveCoalition } from "..";
 import { deg2rad } from "../other/utils";
 
 export class SelectionWheel
@@ -56,6 +56,22 @@ export class SelectionWheel
                     image.style.opacity = "0";
                 }
                 button.appendChild(image);
+            }
+
+            /* Hide the coalition switch if required */
+            var switchContainer = <HTMLElement> this.#container.querySelector("#coalition-switch-container");
+            if (showCoalition == false)
+            {
+                switchContainer.style.display = "none";
+                document.documentElement.style.setProperty('--active-coalition-color', getComputedStyle(this.#container).getPropertyValue("--neutral-coalition-color"));
+            }
+            else 
+            {
+                switchContainer.style.display = "block";
+                if (getActiveCoalition() == "blue")
+                    document.documentElement.style.setProperty('--active-coalition-color', getComputedStyle(this.#container).getPropertyValue("--blue-coalition-color"));
+                else
+                    document.documentElement.style.setProperty('--active-coalition-color', getComputedStyle(this.#container).getPropertyValue("--red-coalition-color"));
             }
         }
     }

@@ -158,9 +158,9 @@ export class Map extends L.Map
         {
             if (!e.originalEvent.ctrlKey)
             {
-                //unitsManager.clearDestinations();
+                getUnitsManager().clearDestinations();
             }
-            //unitsManager.addDestination(e.latlng)
+            getUnitsManager().addDestination(e.latlng)
         }
     }
 

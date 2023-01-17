@@ -18,7 +18,7 @@ void stackClean(lua_State* L, int stackDepth)
     lua_pop(L, stackDepth);
 }
 
-json::value luaTableToJSON(lua_State* L, int index)
+json::value luaTableToJSON(lua_State* L, int index, bool logKeys)
 {
     auto json = json::value::object();
 
@@ -32,9 +32,13 @@ json::value luaTableToJSON(lua_State* L, int index)
         {
             lua_pushvalue(L, -2);
             const char* key = lua_tostring(L, -1);
+            if (logKeys)
+            {
+                log(key);
+            }
             if (lua_istable(L, -2))
             {
-                json[to_wstring(key)] = luaTableToJSON(L, -2);
+                json[to_wstring(key)] = luaTableToJSON(L, -2, logKeys);
             }
             else if (lua_isnumber(L, -2))
             {
@@ -44,7 +48,7 @@ json::value luaTableToJSON(lua_State* L, int index)
             {
                 json[to_wstring(key)] = json::value::boolean(lua_toboolean(L, -2));
             }
-            else if (lua_isstring(L, -2))   // Keep last, only checks if it can be stringified (not if it actually IS a string)
+            else if (lua_isstring(L, -2))   // Keep last, lua_isstring only checks if it can be stringified (not if it actually IS a string)
             {
                 json[to_wstring(key)] = json::value::string(to_wstring(lua_tostring(L, -2)));
             }
