@@ -14,6 +14,7 @@
     font-size: 13px;
     display: flex;
     text-shadow: none;
+    box-shadow: 0px 2px 5px #000A;
 }
 
 .olympus-dropdown::before {
@@ -36,10 +37,10 @@
 .olympus-dropdown-open::after {
     content: "";
     position: absolute;
-    top: 11px;
-    right: 9px;
-    height: 3px;
-    width: 3px;
+    top: 13px;
+    right: 11px;
+    height: 1px;
+    width: 1px;
     border: solid white;
     border-width: 0 3px 3px 0;
     padding: 3px;
@@ -51,10 +52,10 @@
 .olympus-dropdown-closed::after {
     content: "";
     position: absolute;
-    top: 7px;
-    right: 9px;
-    height: 3px;
-    width: 3px;
+    top: 9px;
+    right: 11px;
+    height: 1px;
+    width: 1px;
     border: solid white;
     border-width: 0 3px 3px 0;
     padding: 3px;

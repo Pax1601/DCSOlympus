@@ -5,6 +5,7 @@
 @import url("unitmarker.css");
 @import url("connectionstatuspanel.css");
 @import url("button.css");
+@import url("unitcontrolpanel.css");
 
 /* Variables definitions */
 :root {
@@ -66,16 +67,16 @@ html, body {
 #unit-control-panel {
 	position: absolute;
 	left: 50%;
-	margin-left: -55px;
+	margin-left: -60px;
 	height: 30px;
-    width: 110px;
+    width: 120px;
     top: 10px;
 	z-index: 1000;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	padding-left: 4px;
-	padding-right: 4px;
+	padding-left: 10px;
+	padding-right: 10px;
 }
 
 #visibility-control-panel {

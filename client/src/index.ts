@@ -6,6 +6,7 @@ import { UnitInfoPanel } from "./panels/unitinfopanel";
 import { SelectionScroll } from "./controls/selectionscroll";
 import { Dropdown } from "./controls/dropdown";
 import { ConnectionStatusPanel } from "./panels/connectionstatuspanel";
+import { Button } from "./controls/button";
 
 /* TODO: should this be a class? */
 var map: Map;
@@ -18,6 +19,10 @@ var scenarioDropdown: Dropdown;
 var mapSourceDropdown: Dropdown;
 var connected: boolean;
 var connectionStatusPanel: ConnectionStatusPanel;
+var slowButton: Button;
+var fastButton: Button;
+var climbButton: Button;
+var descendButton: Button;
 
 function setup()
 {
@@ -30,6 +35,10 @@ function setup()
     scenarioDropdown = new Dropdown("scenario-dropdown", ["Caucasus", "Syria", "Nevada", "Marianas", "South Atlantic", "The channel"], () => {});
     mapSourceDropdown = new Dropdown("map-source-dropdown", map.getLayers(), (option: string) => map.setLayer(option));
     connectionStatusPanel = new ConnectionStatusPanel("connection-status-panel");
+    slowButton = new Button("slow-button", ["images/buttons/slow.svg"], () => {});
+    fastButton = new Button("fast-button", ["images/buttons/fast.svg"], () => {});
+    climbButton = new Button("climb-button", ["images/buttons/climb.svg"], () => {});
+    descendButton = new Button("descend-button", ["images/buttons/descend.svg"], () => {});
 
     /* Default values */
     activeCoalition = "blue";

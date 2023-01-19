@@ -2,14 +2,21 @@
     width: 24px;
     height: 24px;
     background-color: transparent;
-    border-radius: 50%;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.olympus-button img{
+    width: 24px;
+    height: 24px;
 }
 
 .olympus-button:hover{
-
+    
 }
 
 .olympus-button:active{
-
+    
 }
+
