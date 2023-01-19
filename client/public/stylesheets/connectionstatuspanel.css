@@ -1,0 +1,7 @@
+.olympus-status-disconnected{
+    color: red;
+}
+
+.olympus-status-connected{
+    color: #00FF00;
+}

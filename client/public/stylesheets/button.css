@@ -1,0 +1,15 @@
+.olympus-button{
+    width: 24px;
+    height: 24px;
+    background-color: transparent;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.olympus-button:hover{
+
+}
+
+.olympus-button:active{
+
+}

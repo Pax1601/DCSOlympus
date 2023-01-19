@@ -13,7 +13,7 @@ export class UnitInfoPanel
         if (this.#element != null)
         {
             this.#display = this.#element.style.display;
-            this.hide();
+            this.show();
         }
     }
 

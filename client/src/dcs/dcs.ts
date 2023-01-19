@@ -1,5 +1,5 @@
 import * as L from 'leaflet'
-import { getUnitsManager } from '..';
+import { getUnitsManager, setConnected } from '..';
 import { ConvertDDToDMS } from '../other/utils';
 
 /* Edit here to change server address */
@@ -15,10 +15,12 @@ export function getDataFromDCS(callback: CallableFunction)
     {
         var data = JSON.parse(xmlHttp.responseText);
         callback(data);
+        setConnected(true);
     };
 
     xmlHttp.onerror = function () {
         console.error("An error occurred during the XMLHttpRequest");
+        setConnected(false);
     };
     xmlHttp.send( null );
 }

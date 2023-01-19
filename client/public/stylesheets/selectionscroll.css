@@ -6,7 +6,7 @@
     height: 220px;
     overflow: visible;
     overflow-y: scroll;
-    background-color: var(--background-color);
+    background-color: var(--background-color-dark);
     opacity: 0.8;
 }
 

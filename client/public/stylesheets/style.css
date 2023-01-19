@@ -3,10 +3,13 @@
 @import url("selectionwheel.css");
 @import url("selectionscroll.css");
 @import url("unitmarker.css");
+@import url("connectionstatuspanel.css");
+@import url("button.css");
 
 /* Variables definitions */
 :root {
-    --background-color:#202831;
+    --background-color-dark:#202831;
+	--background-color-light:#aaaaaa;
 	--title-color:#d3e9ff;
 	--text-color:white;
     --blue-coalition-color: #2196F3;
@@ -20,20 +23,24 @@
 body {
 	padding: 0;
 	margin: 0;
+	
 }
 
 html, body {
 	height: 100%;
 	width: 100%;
+	
 }
 
 #map-container
 {
   	height: 100%;
 	width: 100%;
+	min-width: 820px;
 }
 
 #unit-info-panel {
+    position: fixed;
 	height: 100px;
     width: 800px;
     left: 10px;
@@ -42,16 +49,66 @@ html, body {
 	display: flex;
 }
 
-#scenario-dropdown {
-	position: fixed;
-	top: 10px;
+#map-source-dropdown{
+	position: absolute;
 	left: 10px;
-	width: 250px;
+	top: 10px;
+	width: 150px;
 }
 
-#map-source-dropdown {
-	position: fixed;
+#scenario-dropdown{
+	position: absolute;
+	left: 170px;
 	top: 10px;
-	left: 280px;
-	width: 250px;
+	width: 150px;
 }
+
+#unit-control-panel {
+	position: absolute;
+	left: 50%;
+	margin-left: -55px;
+	height: 30px;
+    width: 110px;
+    top: 10px;
+	z-index: 1000;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+
+#visibility-control-panel {
+	position: absolute;
+	left: 340;
+	height: 30px;
+    width: 110;
+    top: 10px;
+	z-index: 1000;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+
+
+#connection-status-panel {
+	position: absolute;
+	height: 30px;
+    width: 150px;
+    top: 10px;
+	right: 10px;
+	z-index: 1000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+@media only screen and (max-width: 1440px) {
+	#unit-control-panel {
+		top: 50px;
+	}
+}
+
+

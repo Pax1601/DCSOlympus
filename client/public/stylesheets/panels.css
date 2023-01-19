@@ -1,11 +1,10 @@
 /* Panels style */
 .olympus-panel {
-    background-color: var(--background-color);
-    border: solid white 1px;
+    background-color: var(--background-color-dark);
+    
     font-size: 12px;
-    position: fixed;
     transition: bottom 0.2s;
-	border-radius: 2px;
+	border-radius: 15px;
 	text-shadow: 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
 	font-family: "Lucida Console", "Courier New", monospace !important;
 }
@@ -17,7 +16,8 @@
 
 .olympus-panel-title {
     font-size: 14px;
-    color: #d3e9ff;
+    color: white;
+    margin: 5px;
 }
 
 .olympus-panel-label {

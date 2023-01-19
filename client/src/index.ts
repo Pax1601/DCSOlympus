@@ -5,7 +5,9 @@ import { UnitsManager } from "./units/unitsmanager";
 import { UnitInfoPanel } from "./panels/unitinfopanel";
 import { SelectionScroll } from "./controls/selectionscroll";
 import { Dropdown } from "./controls/dropdown";
+import { ConnectionStatusPanel } from "./panels/connectionstatuspanel";
 
+/* TODO: should this be a class? */
 var map: Map;
 var selectionWheel: SelectionWheel;
 var selectionScroll: SelectionScroll;
@@ -14,6 +16,8 @@ var unitInfoPanel: UnitInfoPanel;
 var activeCoalition: string;
 var scenarioDropdown: Dropdown;
 var mapSourceDropdown: Dropdown;
+var connected: boolean;
+var connectionStatusPanel: ConnectionStatusPanel;
 
 function setup()
 {
@@ -25,14 +29,24 @@ function setup()
     unitInfoPanel = new UnitInfoPanel("unit-info-panel");
     scenarioDropdown = new Dropdown("scenario-dropdown", ["Caucasus", "Syria", "Nevada", "Marianas", "South Atlantic", "The channel"], () => {});
     mapSourceDropdown = new Dropdown("map-source-dropdown", map.getLayers(), (option: string) => map.setLayer(option));
+    connectionStatusPanel = new ConnectionStatusPanel("connection-status-panel");
 
+    /* Default values */
     activeCoalition = "blue";
+    connected = false;
 
-    /* Main update rate = 250ms is minimum time, equal to server update time. */
-    setInterval(() => getDataFromDCS(update), 250);
+    requestUpdate();
 }
 
-function update(data: JSON)
+function requestUpdate()
+{
+    getDataFromDCS(update);
+    /* Main update rate = 250ms is minimum time, equal to server update time. */
+    setTimeout(() => requestUpdate(), getConnected() ? 250: 1000);
+    connectionStatusPanel.update(getConnected() );
+}
+
+export function update(data: JSON)
 {
     unitsManager.update(data);
 }
@@ -62,14 +76,24 @@ export function getUnitInfoPanel()
     return unitInfoPanel;
 }
 
-export function setActiveCoalition(coalition: string)
+export function setActiveCoalition(newActiveCoalition: string)
 {
-    activeCoalition = coalition;
+    activeCoalition = newActiveCoalition;
 }
 
 export function getActiveCoalition()
 {
     return activeCoalition;
+}
+
+export function setConnected(newConnected: boolean)
+{
+    connected = newConnected
+}
+
+export function getConnected()
+{
+    return connected;
 }
 
 window.onload = setup;
