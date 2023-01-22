@@ -94,10 +94,8 @@ void UnitsFactory::updateMissionData(json::value missionData)
 	for (auto const& p : units)
 	{
 		int ID = p.first;
-		log(to_string(ID));
 		if (missionData.has_field(to_wstring(ID)))
 		{
-			log("mix");
 			p.second->updateMissionData(missionData[to_wstring(ID)]);
 		}
 	}

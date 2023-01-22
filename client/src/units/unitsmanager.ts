@@ -1,23 +1,20 @@
+import { LatLng, LatLngBounds } from "leaflet";
 import { getMap, getUnitInfoPanel } from "..";
 import { Unit, GroundUnit } from "./unit";
 
-export class UnitsManager
-{
-    #units: { [ID: number]: Unit};
+export class UnitsManager {
+    #units: { [ID: number]: Unit };
     #copiedUnits: Unit[];
 
-    constructor()
-    {
+    constructor() {
         this.#units = {};
         this.#copiedUnits = [];
     }
 
-    addUnit(ID: number, data: any)
-    {
+    addUnit(ID: number, data: any) {
         /* The name of the unit category is exactly the same as the constructor name */
-        var constructor = Unit.getConstructor(data.category);        
-        if (constructor != undefined)
-        {
+        var constructor = Unit.getConstructor(data.category);
+        if (constructor != undefined) {
             var options = {
                 unitName: data.unitName,
                 name: data.name,
@@ -29,92 +26,75 @@ export class UnitsManager
         }
     }
 
-    getUnitByID(ID: number)
-    {
+    getUnitByID(ID: number) {
         return this.#units[ID];
     }
 
-    removeUnit(ID: number)
-    {
+    removeUnit(ID: number) {
 
     }
 
-    deselectAllUnits()
-    {
-        for (let ID in this.#units)
-        {
+    deselectAllUnits() {
+        for (let ID in this.#units) {
             this.#units[ID].setSelected(false);
         }
     }
 
-    update(data: any)
-    {
-        for (let ID in data["units"])
-        {
+    update(data: any) {
+        for (let ID in data["units"]) {
             /* Create the unit if missing from the local array, then update the data. Drawing is handled by leaflet. */
-            if (!(ID in this.#units)) 
-            {
+            if (!(ID in this.#units)) {
                 this.addUnit(parseInt(ID), data["units"][ID]);
             }
             this.#units[parseInt(ID)].update(data["units"][ID]);
         }
 
-        if (this.getSelectedUnits().length == 1)
-        {
+        if (this.getSelectedUnits().length == 1) {
             getUnitInfoPanel().show();
             getUnitInfoPanel().update(this.getSelectedUnits()[0]);
         }
-        else
-        {
+        else {
             getUnitInfoPanel().hide();
         }
     }
-    
-    onUnitSelection()
-    {
-        if (this.getSelectedUnits().length > 0) 
-        {
+
+    onUnitSelection() {
+        if (this.getSelectedUnits().length > 0) {
             getMap().setState("MOVE_UNIT");
             //unitControlPanel.setEnabled(true);
         }
-        else 
-        {
+        else {
             getMap().setState("IDLE");
             //unitControlPanel.setEnabled(false);
         }
     }
 
-    // selectFromBounds(bounds)
-    // {
-    //     this.deselectAllUnits();
-    //     for (let ID in this.#units)
-    //     {
-    //         var latlng = new LatLng(this.#units[ID].latitude, this.#units[ID].longitude);
-    //         if (bounds.contains(latlng))
-    //         {
-    //             this.#units[ID].setSelected(true);
-    //         }
-    //     }
-    // }
-
-    getSelectedUnits()
+    selectFromBounds(bounds: LatLngBounds)
     {
-        var selectedUnits = [];
+        this.deselectAllUnits();
         for (let ID in this.#units)
         {
-            if (this.#units[ID].getSelected()) 
+            var latlng = new LatLng(this.#units[ID].latitude, this.#units[ID].longitude);
+            if (bounds.contains(latlng))
             {
+                this.#units[ID].setSelected(true);
+            }
+        }
+    }
+
+    getSelectedUnits() {
+        var selectedUnits = [];
+        for (let ID in this.#units) {
+            if (this.#units[ID].getSelected()) {
                 selectedUnits.push(this.#units[ID]);
             }
         }
         return selectedUnits;
     }
 
-    addDestination(latlng: L.LatLng)
-    {
+    addDestination(latlng: L.LatLng) {
         var selectedUnits = this.getSelectedUnits();
-        for (let idx in selectedUnits)
-        {
+        for (let idx in selectedUnits) {
             var commandedUnit = selectedUnits[idx];
             //if (selectedUnits[idx].wingman)
             //{
@@ -124,11 +104,9 @@ export class UnitsManager
         }
     }
 
-    clearDestinations()
-    {
+    clearDestinations() {
         var selectedUnits = this.getSelectedUnits();
-        for (let idx in selectedUnits)
-        {
+        for (let idx in selectedUnits) {
             var commandedUnit = selectedUnits[idx];
             //if (selectedUnits[idx].wingman)
             //{
@@ -138,28 +116,23 @@ export class UnitsManager
         }
     }
 
-    // selectedUnitsMove()
-    // {
-        
-    // }
+    selectedUnitsChangeSpeed(speedChange: string)
+    {
+        var selectedUnits = this.getSelectedUnits();
+        for (let idx in selectedUnits)
+        {
+            selectedUnits[idx].changeSpeed(speedChange);
+        }
+    }
 
-    // selectedUnitsChangeSpeed(speedChange)
-    // {
-    //     var selectedUnits = this.getSelectedUnits();
-    //     for (let idx in selectedUnits)
-    //     {
-    //         selectedUnits[idx].changeSpeed(speedChange);
-    //     }
-    // }
-
-    // selectedUnitsChangeAltitude(altitudeChange)
-    // {
-    //     var selectedUnits = this.getSelectedUnits();
-    //     for (let idx in selectedUnits)
-    //     {
-    //         selectedUnits[idx].changeAltitude(altitudeChange);
-    //     }
-    // }
+    selectedUnitsChangeAltitude(altitudeChange: string)
+    {
+        var selectedUnits = this.getSelectedUnits();
+        for (let idx in selectedUnits)
+        {
+            selectedUnits[idx].changeAltitude(altitudeChange);
+        }
+    }
 
     // handleKeyEvent(e)
     // {
@@ -187,11 +160,9 @@ export class UnitsManager
     //     }
     // }
 
-    attackUnit(ID: number)
-    {
+    attackUnit(ID: number) {
         var selectedUnits = this.getSelectedUnits();
-        for (let idx in selectedUnits)
-        {
+        for (let idx in selectedUnits) {
             /* If a unit is a wingman, send the command to its leader */
             var commandedUnit = selectedUnits[idx];
             //if (selectedUnits[idx].wingman)

@@ -1,29 +1,27 @@
 .unit-marker-container {
-    height: 60px; 
-    width: 60px; 
-    left: -30px; 
-    top: -30px; 
-    border: 0px black solid; 
+    height: 60px;
+    width: 60px;
+    left: -30px;
+    top: -30px;
+    border: 0px black solid;
     position: absolute;
     padding: 0;
-	margin: 0;
+    margin: 0;
     border-collapse: collapse;
 }
 
 .unit-marker-icon {
     height: 60px;
-    width: 60px; 
-    left: 0px; 
-    top: 0px; 
-    display: flex; 
+    width: 60px;
+    left: 0px;
+    top: 0px;
+    display: flex;
     position: absolute;
     justify-content: center;
     align-items: center;
 }
 
-.unit-marker-icon img {
-    height: 30px;
-}
+
 
 .unit-marker-selected {
     animation-name: flash;
@@ -34,62 +32,67 @@
 }
 
 @keyframes flash {
-      from {filter: brightness(100%); }
-      to {filter: brightness(130%);}
+    from {
+        filter: brightness(100%);
     }
+
+    to {
+        filter: brightness(130%);
+    }
+}
 
 .unit-marker-hovered {
     filter: brightness(130%);
 }
 
-.unit-marker-container-table-dead {
-    filter: brightness(50%);   
+.unit-marker-dead {
+    filter: brightness(50%);
 }
 
 .unit-marker-unitName {
-    top: -20px; 
-    position: absolute; 
-    text-align: center; 
-    font: 800 16px Arial; 
+    top: -20px;
+    position: absolute;
+    text-align: center;
+    font: 800 16px Arial;
     white-space: nowrap;
-    -webkit-text-fill-color: white; 
+    -webkit-text-fill-color: white;
     -webkit-text-stroke: 1px;
 }
 
 .unit-marker-name {
-    bottom: -20px; 
-    position: absolute; 
-    text-align: center; 
-    font: 800 14px Arial; 
+    bottom: -20px;
+    position: absolute;
+    text-align: center;
+    font: 800 14px Arial;
     white-space: nowrap;
-    -webkit-text-fill-color: white; 
+    -webkit-text-fill-color: white;
     -webkit-text-stroke: 1px;
 }
 
 .unit-marker-altitude {
-    width: 100%; 
-    left: 0px; 
-    top: 0px; 
-    position: absolute; 
-    text-align: right; 
-    font: 800 12px Arial; 
+    width: 100%;
+    left: 0px;
+    top: 0px;
+    position: absolute;
+    text-align: right;
+    font: 800 12px Arial;
     white-space: nowrap;
-    -webkit-text-fill-color: white; 
+    -webkit-text-fill-color: white;
     -webkit-text-stroke: 1px;
 }
 
 .unit-marker-speed {
-    width: 100%; 
-    left: 0px; 
-    top: 0px; 
-    position: absolute; 
-    text-align: left; 
-    font: 800 12px Arial; 
+    width: 100%;
+    left: 0px;
+    top: 0px;
+    position: absolute;
+    text-align: left;
+    font: 800 12px Arial;
     white-space: nowrap;
-    -webkit-text-fill-color: white; 
+    -webkit-text-fill-color: white;
     -webkit-text-stroke: 1px;
 }
 
-.unit-marker-container-table-dead .unit-marker-name{
+.unit-marker-container-table-dead .unit-marker-name {
     opacity: 0;
 }

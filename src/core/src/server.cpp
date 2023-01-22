@@ -9,6 +9,7 @@
 
 extern UnitsFactory* unitsFactory; 
 extern Scheduler* scheduler;
+extern json::value airbasesData;
 
 void handle_eptr(std::exception_ptr eptr)
 {
@@ -57,6 +58,7 @@ void Server::handle_get(http_request request)
     std::exception_ptr eptr;
     try {
         unitsFactory->updateAnswer(answer);
+        answer[L"airbases"] = airbasesData;
         response.set_body(answer);
     }
     catch (...) {

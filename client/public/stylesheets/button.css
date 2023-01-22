@@ -1,4 +1,4 @@
-.olympus-button{
+.olympus-button {
     width: 24px;
     height: 24px;
     background-color: transparent;
@@ -7,16 +7,11 @@
     align-items: center;
 }
 
-.olympus-button img{
+.olympus-button img {
     width: 24px;
     height: 24px;
 }
 
-.olympus-button:hover{
-    
-}
+.olympus-button:hover {}
 
-.olympus-button:active{
-    
-}
-
+.olympus-button:active {}

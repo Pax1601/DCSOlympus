@@ -11,6 +11,7 @@ auto before = std::chrono::system_clock::now();
 UnitsFactory* unitsFactory = nullptr;
 Server* server = nullptr;
 Scheduler* scheduler = nullptr;
+json::value airbasesData;
 
 /* Called when DCS simulation stops. All singleton instances are deleted. */
 extern "C" DllExport int coreDeinit(lua_State* L)
@@ -68,6 +69,8 @@ extern "C" DllExport int coreMissionData(lua_State * L)
 
     if (missionData.has_object_field(L"unitsData"))
         unitsFactory->updateMissionData(missionData[L"unitsData"]);
+    if (missionData.has_object_field(L"airbases"))
+        airbasesData = missionData[L"airbases"];
 
     return(0);
 }

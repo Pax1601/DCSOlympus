@@ -6,58 +6,58 @@
 @import url("connectionstatuspanel.css");
 @import url("button.css");
 @import url("unitcontrolpanel.css");
+@import url("visibilitycontrolpanel.css");
+@import url("airbasemarker.css");
 
 /* Variables definitions */
 :root {
-    --background-color-dark:#202831;
-	--background-color-light:#aaaaaa;
-	--title-color:#d3e9ff;
-	--text-color:white;
-    --blue-coalition-color: #2196F3;
-    --red-coalition-color: #f32121;
+	--background-color-dark: #202831;
+	--background-color-light: #aaaaaa;
+	--title-color: #d3e9ff;
+	--text-color: white;
+	--blue-coalition-color: #2196F3;
+	--red-coalition-color: #f32121;
 	--neutral-coalition-color: #AAAAAA;
-    --active-coalition-color: var(--blue-coalition-color);
-    --highlight-color: #FFFFFFAA;
+	--active-coalition-color: var(--blue-coalition-color);
+	--highlight-color: #FFFFFFAA;
 }
 
 /* Page style */
 body {
 	padding: 0;
 	margin: 0;
-	
 }
 
-html, body {
+html,
+body {
 	height: 100%;
 	width: 100%;
-	
 }
 
-#map-container
-{
-  	height: 100%;
+#map-container {
+	height: 100%;
 	width: 100%;
 	min-width: 820px;
 }
 
 #unit-info-panel {
-    position: fixed;
+	position: fixed;
 	height: 100px;
-    width: 800px;
-    left: 10px;
-    bottom: 10px;
+	width: 800px;
+	left: 10px;
+	bottom: 10px;
 	z-index: 1000;
 	display: flex;
 }
 
-#map-source-dropdown{
+#map-source-dropdown {
 	position: absolute;
 	left: 10px;
 	top: 10px;
 	width: 150px;
 }
 
-#scenario-dropdown{
+#scenario-dropdown {
 	position: absolute;
 	left: 170px;
 	top: 10px;
@@ -69,8 +69,8 @@ html, body {
 	left: 50%;
 	margin-left: -60px;
 	height: 30px;
-    width: 120px;
-    top: 10px;
+	width: 120px;
+	top: 10px;
 	z-index: 1000;
 	display: flex;
 	justify-content: space-between;
@@ -83,27 +83,27 @@ html, body {
 	position: absolute;
 	left: 340;
 	height: 30px;
-    width: 110;
-    top: 10px;
+	width: 110;
+	top: 10px;
 	z-index: 1000;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	padding-left: 4px;
-	padding-right: 4px;
+	padding-left: 10px;
+	padding-right: 10px;
 }
-
 
 #connection-status-panel {
 	position: absolute;
 	height: 30px;
-    width: 150px;
-    top: 10px;
+	width: 140px;
+	top: 10px;
 	right: 10px;
 	z-index: 1000;
 	display: flex;
 	align-items: center;
-	justify-content: center;
+	padding-left: 4px;
+	padding-right: 4px;
 }
 
 @media only screen and (max-width: 1440px) {
@@ -111,5 +111,3 @@ html, body {
 		top: 50px;
 	}
 }
-
-
