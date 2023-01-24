@@ -13,6 +13,8 @@ export class Dropdown {
         this.#container?.addEventListener("click", () => {
             this.#open ? this.close() : this.open();
         })
+        if (this.#container != null && this.#options.length > 0)
+            this.#container.innerHTML = this.#options[0];
     }
 
     open() {

@@ -15,6 +15,7 @@
     display: flex;
     text-shadow: none;
     box-shadow: 0px 2px 5px #000A;
+    padding-left: 15px;
 }
 
 .olympus-dropdown::before {
@@ -81,6 +82,7 @@
     cursor: pointer;
     opacity: 1;
     font-size: 13px;
+    padding-left: 5px;
 }
 
 .olympus-dropdown-element:hover {

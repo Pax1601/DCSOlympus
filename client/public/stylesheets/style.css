@@ -1,13 +1,20 @@
-@import url("panels.css");
+@import url("button.css");
 @import url("dropdown.css");
+
 @import url("selectionwheel.css");
 @import url("selectionscroll.css");
+
 @import url("unitmarker.css");
+@import url("airbasemarker.css");
+
+@import url("panels.css");
 @import url("connectionstatuspanel.css");
-@import url("button.css");
 @import url("unitcontrolpanel.css");
 @import url("visibilitycontrolpanel.css");
-@import url("airbasemarker.css");
+@import url("unitinfopanel.css");
+
+@import url("layout.css");
+
 
 /* Variables definitions */
 :root {
@@ -22,92 +29,55 @@
 	--highlight-color: #FFFFFFAA;
 }
 
-/* Page style */
-body {
-	padding: 0;
-	margin: 0;
+* { 
+    -moz-box-sizing: border-box; 
+    -webkit-box-sizing: border-box; 
+     box-sizing: border-box; 
 }
 
-html,
-body {
-	height: 100%;
-	width: 100%;
+html {
+	font-family: 'Open Sans', sans-serif;
 }
 
-#map-container {
-	height: 100%;
-	width: 100%;
-	min-width: 820px;
+.rectangular-container {
+	padding: 0.5em;
+	background-color: gray;
+	border-radius: 5px;
+	width: fit-content;
+	height: fit-content;
+	text-align: center;
+	color: white;
+    font-size: 12px;
 }
 
-#unit-info-panel {
-	position: fixed;
-	height: 100px;
-	width: 800px;
-	left: 10px;
-	bottom: 10px;
-	z-index: 1000;
-	display: flex;
+.rectangular-container-dark {
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	padding-top: 0.2em;
+	padding-bottom: 0.2em;
+	background-color: #151b20;
+	border-radius: 5px;
+	width: fit-content;
+	height: fit-content;
+	text-align: center;
+	color: white;
+    font-size: 12px;
 }
 
-#map-source-dropdown {
-	position: absolute;
-	left: 10px;
-	top: 10px;
-	width: 150px;
+.rounded-container {
+	padding: 0.5em;
+	background-color: #247be2;
+	border-radius: 10px;
+	width: fit-content;
+	height: fit-content;
+	text-align: center;
+	color: white;
+    font-size: 12px;
+	border-radius: 9999px;
 }
 
-#scenario-dropdown {
-	position: absolute;
-	left: 170px;
-	top: 10px;
-	width: 150px;
-}
-
-#unit-control-panel {
-	position: absolute;
-	left: 50%;
-	margin-left: -60px;
-	height: 30px;
-	width: 120px;
-	top: 10px;
-	z-index: 1000;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding-left: 10px;
-	padding-right: 10px;
-}
-
-#visibility-control-panel {
-	position: absolute;
-	left: 340;
-	height: 30px;
-	width: 110;
-	top: 10px;
-	z-index: 1000;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding-left: 10px;
-	padding-right: 10px;
-}
-
-#connection-status-panel {
-	position: absolute;
-	height: 30px;
-	width: 140px;
-	top: 10px;
-	right: 10px;
-	z-index: 1000;
-	display: flex;
-	align-items: center;
-	padding-left: 4px;
-	padding-right: 4px;
-}
-
-@media only screen and (max-width: 1440px) {
-	#unit-control-panel {
-		top: 50px;
-	}
+.vl {
+	border-left: 1px solid #555;
+	width: 1px !important;
+	display: inline-block; 
 }

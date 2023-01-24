@@ -4,30 +4,5 @@
     font-size: 12px;
     transition: bottom 0.2s;
     border-radius: 15px;
-    font-family: "Lucida Console", "Courier New", monospace !important;
     box-shadow: 0px 2px 5px #000A;
-}
-
-.olympus-panel table {
-    margin: 5px;
-    width: 100%;
-}
-
-.olympus-panel-title {
-    font-size: 14px;
-    color: white;
-    margin: 5px;
-}
-
-.olympus-panel-label {
-    font-size: 12px;
-    color: var(--title-color);
-    margin: 5px;
-    width: 100px;
-}
-
-.olympus-panel-content {
-    font-size: 12px;
-    color: var(--text-color);
-    margin: 5px;
 }

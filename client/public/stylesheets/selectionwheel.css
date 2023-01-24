@@ -13,8 +13,7 @@
 .olympus-wheel {
     width: 100%;
     border-radius: 50%;
-    background-color: var(--active-coalition-color);
-    opacity: 0.8;
+    background-color: var(--background-color-dark);
     -webkit-mask: radial-gradient(transparent 30%, #000 31%);
     mask: radial-gradient(transparent 30%, #000 31%);
     transition: background-color 0.2s;
@@ -45,11 +44,11 @@
     height: 45px;
     /*filter: invert(100%);*/
     transition: width var(--animation_duration), height var(--animation_duration);
-    filter: drop-shadow(1px 1px 0px var(--highlight-color)) drop-shadow(1px -1px 0px var(--highlight-color)) drop-shadow(-1px 1px 0px var(--highlight-color)) drop-shadow(-1px -1px 0px var(--highlight-color));
+    filter: invert(100%);
 }
 
 .selection-wheel-button:hover {
-    filter: drop-shadow(1px 1px 2px var(--highlight-color)) drop-shadow(1px -1px 2px var(--highlight-color)) drop-shadow(-1px 1px 2px var(--highlight-color)) drop-shadow(-1px -1px 2px var(--highlight-color));
+
 }
 
 .selection-wheel-button:hover .selection-wheel-image {
@@ -75,8 +74,7 @@
     display: inline-block;
     width: 60px;
     height: 34px;
-    background-color: #fffa;
-    border: 1px solid var(--active-coalition-color);
+    background-color: var(--active-coalition-color);
     border-radius: 17px;
     margin-left: -30px;
     margin-top: -17px;
@@ -90,7 +88,7 @@
     width: 26px;
     left: 4px;
     bottom: 4px;
-    background-color: var(--active-coalition-color);
+    background-color: white;
     -webkit-transition: 0.2s;
     transition: 0.2s;
     border-radius: 50%;

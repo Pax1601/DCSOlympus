@@ -10,7 +10,7 @@ export class UnitInfoPanel {
         this.#display = '';
         if (this.#element != null) {
             this.#display = this.#element.style.display;
-            this.hide();
+            this.show();
         }
     }
 

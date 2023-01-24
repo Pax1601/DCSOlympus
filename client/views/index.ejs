@@ -4,18 +4,21 @@
   <title>Olympus client</title>
   <link rel="stylesheet" href="/stylesheets/style.css">
   <link rel="stylesheet" href="stylesheets/leaflet.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;600&display=swap" rel="stylesheet"> 
 </head>
 
 <body>
   <div id="map-container"></div>
-  <%- include('unitinfo.ejs') %>
   <%- include('selectionwheel.ejs') %>
   <%- include('selectionscroll.ejs') %>
-  <div class="olympus-dropdown" id="map-source-dropdown">Satellite</div>
-  <div class="olympus-dropdown" id="scenario-dropdown">Nevada</div>
-  <%- include('unitcontrol.ejs') %>
-  <%- include('visibilitycontrol.ejs') %>
-  <%- include('connectionstatus.ejs') %> 
+  <div class="olympus-dropdown" id="map-source-dropdown"></div>
+  <div class="olympus-dropdown" id="scenario-dropdown"></div>
+  <%- include('unitinfopanel.ejs') %>
+  <%- include('unitcontrolpanel.ejs') %>
+  <%- include('visibilitycontrolpanel.ejs') %>
+  <%- include('connectionstatuspanel.ejs') %> 
   <script src="javascripts/bundle.js"></script>
 </body>
 

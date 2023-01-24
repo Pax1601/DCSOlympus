@@ -1,5 +1,13 @@
+#connection-status-panel {
+	display: flex;
+	align-items: center;
+	padding-left: 15px;
+	padding-right: 4px;
+}
+
 #status-string {
     font-size: 14px;
+    color: white;
 }
 
 .olympus-status-disconnected::after {
