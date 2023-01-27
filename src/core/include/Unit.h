@@ -13,7 +13,8 @@ public:
 	Unit(json::value json, int ID);
 	~Unit();
 
-	void update(json::value json);
+	void updateExportData(json::value json);
+	void updateMissionData(json::value json);
 	json::value json();
 
 	void setPath(list<Coords> path);
@@ -65,7 +66,6 @@ protected:
 	double heading			= NULL;
 	double speed			= NULL;
 	json::value flags		= json::value::null();
-	Coords oldPosition		= Coords(0); // Used to approximate speed
 	int targetID			= NULL;
 	bool holding			= false;
 	bool looping			= false;
@@ -77,9 +77,13 @@ protected:
 	vector<Unit*> wingmen;
 	double targetSpeed		= 0;
 	double targetAltitude	= 0;
+	double fuel				= 0;
+	json::value ammo;
+	json::value targets;
 
 	list<Coords> activePath;
 	Coords activeDestination = Coords(0);
+	Coords oldPosition = Coords(0); // Used to approximate speed
 
 	virtual void AIloop();
 

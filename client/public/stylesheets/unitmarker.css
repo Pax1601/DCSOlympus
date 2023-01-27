@@ -1,0 +1,108 @@
+.unit-marker-container {
+    height: 60px;
+    width: 60px;
+    left: -30px;
+    top: -30px;
+    border: 0px black solid;
+    position: absolute;
+    padding: 0;
+    margin: 0;
+    border-collapse: collapse;
+}
+
+.unit-marker-icon {
+    height: 60px;
+    width: 60px;
+    left: 0px;
+    top: 0px;
+    display: flex;
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+}
+
+.unit-marker-selected {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+#ring {
+    top: 0px;
+    position: absolute;
+    display: inline-block;
+    -webkit-mask: radial-gradient(transparent 60%, #000 61%);
+    mask: radial-gradient(transparent 60%, #000 61%);
+}
+
+#background {
+    top: 0px;
+    position: absolute;
+    display: inline-block;
+    opacity: 0.2;
+}
+
+.blue.unit-marker-selected {
+    background-color: var(--blue-coalition-color);
+}
+
+.red.unit-marker-selected {
+    background-color: var(--red-coalition-color);
+}
+
+
+.unit-marker-hovered {
+    filter: brightness(130%);
+}
+
+.unit-marker-dead {
+    filter: brightness(50%);
+}
+
+.unit-marker-unitName {
+    top: -20px;
+    position: absolute;
+    text-align: center;
+    font: 800 16px Arial;
+    white-space: nowrap;
+    -webkit-text-fill-color: white;
+    -webkit-text-stroke: 1px;
+}
+
+.unit-marker-name {
+    bottom: -20px;
+    position: absolute;
+    text-align: center;
+    font: 800 14px Arial;
+    white-space: nowrap;
+    -webkit-text-fill-color: white;
+    -webkit-text-stroke: 1px;
+}
+
+.unit-marker-altitude {
+    width: 100%;
+    left: 0px;
+    top: 0px;
+    position: absolute;
+    text-align: right;
+    font: 800 12px Arial;
+    white-space: nowrap;
+    -webkit-text-fill-color: white;
+    -webkit-text-stroke: 1px;
+}
+
+.unit-marker-speed {
+    width: 100%;
+    left: 0px;
+    top: 0px;
+    position: absolute;
+    text-align: left;
+    font: 800 12px Arial;
+    white-space: nowrap;
+    -webkit-text-fill-color: white;
+    -webkit-text-stroke: 1px;
+}
+
+.unit-marker-container-table-dead .unit-marker-name {
+    opacity: 0;
+}

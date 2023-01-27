@@ -9,7 +9,11 @@
             "request": "launch",
             "name": "Launch Chrome against localhost",
             "url": "http://localhost:3000",
-            "webRoot": "${workspaceFolder}\\.."
+            "webRoot": "${workspaceFolder}/public/",
+            "sourceMapPathOverrides": {
+                "src/*": "${workspaceFolder}/src/*"
+            },
+            "preLaunchTask": "server"
         }
     ]
 }

@@ -1,8 +1,87 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+@import url("button.css");
+@import url("dropdown.css");
+
+@import url("selectionwheel.css");
+@import url("selectionscroll.css");
+
+@import url("unitmarker.css");
+@import url("airbasemarker.css");
+
+@import url("panels.css");
+@import url("connectionstatuspanel.css");
+@import url("unitcontrolpanel.css");
+@import url("visibilitycontrolpanel.css");
+@import url("unitinfopanel.css");
+
+@import url("layout.css");
+
+
+/* Variables definitions */
+:root {
+	--background-color-dark: #202831;
+	--background-color-light: #aaaaaa;
+	--title-color: #d3e9ff;
+	--text-color: white;
+	--blue-coalition-color: #2196F3;
+	--red-coalition-color: #f32121;
+	--neutral-coalition-color: #AAAAAA;
+	--active-coalition-color: var(--blue-coalition-color);
+	--highlight-color: #FFFFFFAA;
 }
 
-a {
-  color: #00B7FF;
+* { 
+    -moz-box-sizing: border-box; 
+    -webkit-box-sizing: border-box; 
+     box-sizing: border-box; 
+}
+
+html {
+	font-family: 'Open Sans', sans-serif;
+}
+
+.leaflet-container.crosshair-cursor-enabled {
+    cursor:crosshair;
+}
+
+.rectangular-container {
+	padding: 0.5em;
+	background-color: gray;
+	border-radius: 5px;
+	width: fit-content;
+	height: fit-content;
+	text-align: center;
+	color: white;
+    font-size: 12px;
+}
+
+.rectangular-container-dark {
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	padding-top: 0.2em;
+	padding-bottom: 0.2em;
+	background-color: #151b20;
+	border-radius: 5px;
+	width: fit-content;
+	height: fit-content;
+	text-align: center;
+	color: white;
+    font-size: 12px;
+}
+
+.rounded-container {
+	padding: 0.5em;
+	background-color: #247be2;
+	border-radius: 10px;
+	width: fit-content;
+	height: fit-content;
+	text-align: center;
+	color: white;
+    font-size: 12px;
+	border-radius: 9999px;
+}
+
+.vl {
+	border-left: 1px solid #555;
+	width: 1px !important;
+	display: inline-block; 
 }
