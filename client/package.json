@@ -1,5 +1,7 @@
 {
-  "name": "client",
+  "name": "DCS Olympus",
+  "node-main": "./bin/www",
+  "main": "http://localhost:3000",
   "version": "0.0.0",
   "private": true,
   "scripts": {

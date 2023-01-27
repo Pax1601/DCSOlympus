@@ -33,10 +33,20 @@ export class UnitMarker extends L.Marker {
         var symbol = new Symbol(this.#computeMarkerCode(options), { size: 25 });
         var img = symbol.asCanvas().toDataURL('image/png');
 
+        var coalition = "";
+        if (options.coalitionID == 1)
+            coalition = "red"
+        else if (options.coalitionID == 2)
+            coalition = "blue"
+        else
+            coalition = "neutral"
+
         var icon = new L.DivIcon({
             html: `<table class="unit-marker-container" id="container">
                     <tr>
                         <td>
+                            <div class="${coalition}" id="background"></div>
+                            <div class="${coalition}" id="ring"></div>
                             <div class="unit-marker-icon" id="icon"><img src="${img}"></div>
                             <div class="unit-marker-unitName" id="unitName">${this.#unitName}</div>
                             <div class="unit-marker-altitude" id="altitude"></div>
@@ -101,7 +111,8 @@ export class UnitMarker extends L.Marker {
     setSelected(selected: boolean) {
         this.#selected = selected;
         this.getElement()?.querySelector("#icon")?.classList.remove("unit-marker-hovered");
-        this.getElement()?.querySelector("#icon")?.classList.toggle("unit-marker-selected", selected);
+        this.getElement()?.querySelector("#ring")?.classList.toggle("unit-marker-selected", selected);
+        this.getElement()?.querySelector("#background")?.classList.toggle("unit-marker-selected", selected);
     }
 
     getSelected() {

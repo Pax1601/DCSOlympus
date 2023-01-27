@@ -39,6 +39,10 @@ html {
 	font-family: 'Open Sans', sans-serif;
 }
 
+.leaflet-container.crosshair-cursor-enabled {
+    cursor:crosshair;
+}
+
 .rectangular-container {
 	padding: 0.5em;
 	background-color: gray;

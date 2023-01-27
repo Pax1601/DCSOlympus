@@ -55,31 +55,39 @@ body {
 	padding-right: 10px;
 }
 
-#unit-control-panel {
+#unit-control-buttons {
 	position: absolute;
-	left: 50%;
-	margin-left: -60px;
-	height: 30px;
-	width: 120px;
 	top: 10px;
+	height: fit-content;
+	width: fit-content;
+	right: 10px;
 	z-index: 1000;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding-left: 10px;
-	padding-right: 10px;
+}
+
+#unit-control-panel {
+	display: none;
+	position: absolute;
+	top: 10px;
+	height: fit-content;
+	width: 250px;
+	right: 10px;
+	z-index: 1000;
 }
 
 #connection-status-panel {
 	position: absolute;
 	height: 30px;
 	width: 140px;
-	top: 10px;
+	bottom: 10px;
 	right: 10px;
 	z-index: 1000;
 }
 
-@media only screen and (max-width: 1440px) {
+@media only screen and (max-width: 1000px) {
+	#unit-control-buttons {
+		top: 50px;
+	}
+
 	#unit-control-panel {
 		top: 50px;
 	}

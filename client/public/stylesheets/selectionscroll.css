@@ -1,25 +1,91 @@
 .olympus-selection-scroll-container {
-    margin: 0 auto;
     position: fixed;
-    z-index: 1000;
-    width: 220px;
-    height: 220px;
-    overflow: visible;
-    overflow-y: scroll;
     background-color: var(--background-color-dark);
-    opacity: 0.8;
+    font-size: 12px;
+    transition: bottom 0.2s;
+    border-radius: 15px;
+    box-shadow: 0px 2px 5px #000A;
+    width: 180px;
+    height: fit-content;
+    z-index: 1000;
+    max-height: 400px;
+    padding: 10px;
 }
 
+.olympus-selection-scroll {
+    overflow-y: auto;
+    max-height: calc(400px - 60px);
+}
+
+.olympus-selection-scroll::-webkit-scrollbar {
+    width: 10px;
+}
+  
+.olympus-selection-scroll::-webkit-scrollbar-track {
+    background-color: transparent;
+    border-radius: 100px;
+}
+
+.olympus-selection-scroll::-webkit-scrollbar-thumb {
+    background-color: white;
+    border-radius: 100px;
+    opacity: 0.8;
+    margin-top: 10px;
+}
+  
 .olympus-selection-scroll-element {
     margin: 2px;
     color: white;
-    text-shadow: 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 14px;
     opacity: 1;
-    font-family: "Lucida Console", "Courier New", monospace !important;
+    border-radius: 5px;
+    margin: 5px;
+    padding: 5px;
+    padding-left: 15px;
 }
 
 .olympus-selection-scroll-element:hover {
     background-color: var(--highlight-color);
+}
+
+.olympus-selection-scroll-container label {
+    width: 0;
+    height: 0;
+}
+
+.olympus-selection-scroll-container input {
+    width: 0;
+    height: 0;
+}
+
+.olympus-selection-scroll-switch {
+    position: relative;
+    display: inline-block;
+    left: calc(50% - 10px); 
+    width: 60px;
+    height: 34px;
+    background-color: var(--active-coalition-color);
+    border-radius: 999px;
+    cursor: pointer;
+    margin-left: -30px;
+}
+
+.olympus-selection-scroll-switch:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: 0.2s;
+    transition: 0.2s;
+    border-radius: 999px;
+}
+
+input:checked+.olympus-selection-scroll-switch:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
 }

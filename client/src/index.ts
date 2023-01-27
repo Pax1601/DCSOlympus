@@ -38,7 +38,7 @@ function setup() {
     selectionScroll = new SelectionScroll("selection-scroll");
     unitsManager = new UnitsManager();
     unitInfoPanel = new UnitInfoPanel("unit-info-panel");
-    scenarioDropdown = new Dropdown("scenario-dropdown", ["Caucasus", "Syria", "Nevada", "Marianas", "South Atlantic", "The channel"], () => { });
+    scenarioDropdown = new Dropdown("scenario-dropdown", ["Caucasus", "Syria", "Marianas", "Nevada", "South Atlantic", "The channel"], () => { });
     mapSourceDropdown = new Dropdown("map-source-dropdown", map.getLayers(), (option: string) => map.setLayer(option));
     connectionStatusPanel = new ConnectionStatusPanel("connection-status-panel");
     missionData = new MissionData();

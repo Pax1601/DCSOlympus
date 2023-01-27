@@ -250,7 +250,7 @@ unitTypes.air.strike = [
     "Tu-142",
 ]
 
-unitTypes.air.tank = [
+unitTypes.air.tanker = [
     "S-3B Tanker",
     "KC-135",
     "IL-78M",

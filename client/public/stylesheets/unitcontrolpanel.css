@@ -1,4 +1,41 @@
-#unit-control-panel .olympus-button {
+#unit-control-buttons {
+    display: flex;
+    flex-direction: column;
+    row-gap: 5px;
+    padding: 10px;
+    border-radius: 999px;
+}
+
+#unit-control-buttons>div {
     filter: invert(100%);
     opacity: 0.8;
+}
+
+#unit-control-panel {
+	display: flex;
+    flex-wrap: wrap;
+	justify-content: space-between;
+	align-content: flex-start;
+    row-gap: 5px;
+	padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+/* Common */
+#unit-info-panel>div {
+    height: 100%;
+    width: 100%;
+}
+
+#unit-control-panel .rounded-container {
+    width: 100%; 
+}
+
+#unit-control-panel #title-label {
+    color: white;
+    font-size: 14px;
+    width: 100%;
+    font-weight: 600;
 }

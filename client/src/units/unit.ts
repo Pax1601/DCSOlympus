@@ -73,6 +73,9 @@ export class Unit {
             this[entry] = response[entry];
         }
 
+        /* Dead units can't be selected */
+        this.setSelected(this.getSelected() && this.alive)
+
         this.#updateMarker();
 
         this.#clearTargets();
@@ -93,11 +96,6 @@ export class Unit {
                 this.wingmen.push(unitsManager.getUnitByID(ID));
             }
         }
-        this.formation = response["formation"];
-
-        this.missionData = missionData.getUnitData(this.ID)
-
-        this.setSelected(this.getSelected() && this.alive)
         */
     }
 
@@ -112,6 +110,14 @@ export class Unit {
 
     getSelected() {
         return this.#selected;
+    }
+
+    setSelectable(selectable: boolean) {
+        this.#selectable = selectable;
+    }
+
+    getSelectable() {
+        return this.#selectable;
     }
 
     addDestination(latlng: L.LatLng) {
@@ -153,16 +159,20 @@ export class Unit {
         this.#preventClick = true;
 
         var options = [
-            { 'tooltip': 'Attack', 'src': 'attack.png', 'callback': () => { getMap().hideSelectionWheel(); getUnitsManager().attackUnit(this.ID); } },
-            { 'tooltip': 'Go to tanker', 'src': 'tanker.png', 'callback': () => { getMap().hideSelectionWheel(); /*showMessage("Function not implemented yet");*/ } },
-            { 'tooltip': 'RTB', 'src': 'rtb.png', 'callback': () => { getMap().hideSelectionWheel(); /*showMessage("Function not implemented yet");*/ } }
+            'Attack',
         ]
 
-        if (!this.leader && !this.wingman) {
-            options.push({ 'tooltip': 'Create formation', 'src': 'formation.png', 'callback': () => { getMap().hideSelectionWheel(); /*unitsManager.createFormation(this.ID);*/ } });
-        }
+        //if (!this.leader && !this.wingman) {
+        //    options.push({ 'tooltip': 'Create formation', 'src': 'formation.png', 'callback': () => { getMap().hideSelectionWheel(); /*unitsManager.createFormation(this.ID);*/ } });
+        //}
 
-        getMap().showSelectionWheel(e.originalEvent, options, false);
+        getMap().showSelectionScroll(e.originalEvent, options, (action: string) => this.#executeAction(action));
+    }
+
+    #executeAction(action: string) {
+        getMap().hideSelectionScroll();
+        if (action === "Attack")
+            getUnitsManager().attackUnit(this.ID);
     }
 
     #updateMarker() {
@@ -399,6 +409,12 @@ export class NavyUnit extends Unit {
 }
 
 export class Weapon extends Unit {
+    constructor(ID: number, marker: UnitMarker)
+    {
+        super(ID, marker);
+        this.setSelectable(false);
+    }
+
     getHidden() {
         if (this.alive)
         {

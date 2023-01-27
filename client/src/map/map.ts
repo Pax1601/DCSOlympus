@@ -95,10 +95,10 @@ export class Map extends L.Map {
         this.#state = state;
 
         if (this.#state === "IDLE") {
-
+            L.DomUtil.removeClass(this.getContainer(),'crosshair-cursor-enabled');
         }
         else if (this.#state === "MOVE_UNIT") {
-
+            L.DomUtil.addClass(this.getContainer(),'crosshair-cursor-enabled');
         }
         else if (this.#state === "ATTACK") {
 
@@ -124,10 +124,10 @@ export class Map extends L.Map {
     }
 
     /* Selection scroll */
-    showSelectionScroll(e: ClickEvent | SpawnEvent, options: any, callback: CallableFunction) {
+    showSelectionScroll(e: ClickEvent | SpawnEvent, options: any, callback: CallableFunction, showCoalition: boolean = false) {
         var x = e.x;
         var y = e.y;
-        getSelectionScroll().show(x, y, options, callback);
+        getSelectionScroll().show(x, y, options, callback, showCoalition);
     }
 
     hideSelectionScroll() {
@@ -158,7 +158,7 @@ export class Map extends L.Map {
                 { "tooltip": "Smoke", "src": "spawnSmoke.png", "callback": () => this.#smokeSpawnMenu(spawnEvent) },
                 //{ "tooltip": "Explosion", "src": "spawnExplosion.png", "callback": () => this.#explosionSpawnMenu(e) }
             ]
-            this.showSelectionWheel(spawnEvent, options, true);
+            this.showSelectionScroll(spawnEvent, options, () => {}, true);
         }
     }
 
@@ -198,7 +198,7 @@ export class Map extends L.Map {
             {'coalition': true, 'tooltip': 'Radar',      'src': 'spawnRadar.png',    'callback': () => this.#selectGroundUnit(e, "Radar")},
             {'coalition': true, 'tooltip': 'Unarmed',    'src': 'spawnUnarmed.png',  'callback': () => this.#selectGroundUnit(e, "Unarmed")}
         ]
-        this.showSelectionWheel(e, options, true);
+        this.showSelectionScroll(e, options, () => {}, true);
     }
 
     #smokeSpawnMenu(e: SpawnEvent) {
@@ -211,7 +211,7 @@ export class Map extends L.Map {
             {'tooltip': 'Green smoke',    'src': 'spawnSmoke.png',  'callback': () => {this.hideSelectionWheel(); this.hideSelectionScroll(); spawnSmoke('green', e.latlng)}, 'tint': 'green'},
             {'tooltip': 'Orange smoke',   'src': 'spawnSmoke.png',  'callback': () => {this.hideSelectionWheel(); this.hideSelectionScroll(); spawnSmoke('orange', e.latlng)}, 'tint': 'orange'},
         ]
-        this.showSelectionWheel(e, options, true);
+        this.showSelectionScroll(e, options, () => {}, true);
     }
 
     #explosionSpawnMenu(e: SpawnEvent) {
@@ -228,7 +228,7 @@ export class Map extends L.Map {
             { 'coalition': true, 'tooltip': 'Drone', 'src': 'spawnDrone.png', 'callback': () => this.#selectAircraft(e, "drone") },
             { 'coalition': true, 'tooltip': 'Transport', 'src': 'spawnTransport.png', 'callback': () => this.#selectAircraft(e, "transport") },
         ]
-        this.showSelectionWheel(e, options, true);
+        this.showSelectionScroll(e, options, () => {}, true);
     }
 
     /* Show unit selection for air units */
@@ -236,7 +236,10 @@ export class Map extends L.Map {
         this.hideSelectionWheel();
         this.hideSelectionScroll();
         var options = unitTypes.air[group];
-        options.sort();
+        if (options != undefined)
+            options.sort();
+        else
+            options = [];
         this.showSelectionScroll(e, options, (unitType: string) => {
             this.hideSelectionWheel();
             this.hideSelectionScroll();

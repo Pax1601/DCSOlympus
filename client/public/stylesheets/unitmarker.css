@@ -21,25 +21,35 @@
     align-items: center;
 }
 
-
-
 .unit-marker-selected {
-    animation-name: flash;
-    animation-duration: 0.3s;
-    animation-iteration-count: infinite;
-    animation-direction: alternate;
-    animation-timing-function: linear;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
 }
 
-@keyframes flash {
-    from {
-        filter: brightness(100%);
-    }
-
-    to {
-        filter: brightness(130%);
-    }
+#ring {
+    top: 0px;
+    position: absolute;
+    display: inline-block;
+    -webkit-mask: radial-gradient(transparent 60%, #000 61%);
+    mask: radial-gradient(transparent 60%, #000 61%);
 }
+
+#background {
+    top: 0px;
+    position: absolute;
+    display: inline-block;
+    opacity: 0.2;
+}
+
+.blue.unit-marker-selected {
+    background-color: var(--blue-coalition-color);
+}
+
+.red.unit-marker-selected {
+    background-color: var(--red-coalition-color);
+}
+
 
 .unit-marker-hovered {
     filter: brightness(130%);
