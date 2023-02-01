@@ -1,11 +1,8 @@
-Change cursor when in moving mode
-Show airfields and enable airfield spawn 
 RTB
 tanker
 scenario dropdown
 explosion
 wrong name for ground units
-ground units don't move 
 improve map zIndex
 fuel is wrong (either 0 or 1, its is casting it to int somewhere)
-weapons should not be selected
+weapons should not be selectable

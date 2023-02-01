@@ -3,7 +3,7 @@
 #include "dcstools.h"
 
 /* Move command */
-wstring MoveCommand::getString(lua_State* L)
+wstring Move::getString(lua_State* L)
 {
     std::wostringstream commandSS;
     commandSS.precision(10);
@@ -19,7 +19,7 @@ wstring MoveCommand::getString(lua_State* L)
 }
 
 /* Smoke command */
-wstring SmokeCommand::getString(lua_State* L)
+wstring Smoke::getString(lua_State* L)
 {
     std::wostringstream commandSS;
     commandSS.precision(10);
@@ -31,7 +31,7 @@ wstring SmokeCommand::getString(lua_State* L)
 }
 
 /* Spawn ground command */
-wstring SpawnGroundUnitCommand::getString(lua_State* L)
+wstring SpawnGroundUnit::getString(lua_State* L)
 {
     std::wostringstream commandSS;
     commandSS.precision(10);
@@ -44,7 +44,7 @@ wstring SpawnGroundUnitCommand::getString(lua_State* L)
 }
 
 /* Spawn air command */
-wstring SpawnAircraftCommand::getString(lua_State* L)
+wstring SpawnAircraft::getString(lua_State* L)
 {
     std::wostringstream optionsSS;
     optionsSS.precision(10);
@@ -65,7 +65,7 @@ wstring SpawnAircraftCommand::getString(lua_State* L)
 }
 
 /* Clone unit command */
-wstring CloneCommand::getString(lua_State* L)
+wstring Clone::getString(lua_State* L)
 {
     std::wostringstream commandSS;
     commandSS.precision(10);
@@ -74,14 +74,50 @@ wstring CloneCommand::getString(lua_State* L)
     return commandSS.str();
 }
 
-/* Follow unit command */
-wstring FollowCommand::getString(lua_State* L)
+/* Set task command */
+wstring SetTask::getString(lua_State* L)
 {
     std::wostringstream commandSS;
     commandSS.precision(10);
-    commandSS << "Olympus.follow, "
-        << leaderID << ","
+    commandSS << "Olympus.setTask, "
+        << ID << ","
+        << task;
+
+    return commandSS.str();
+}
+
+/* Reset task command */
+wstring ResetTask::getString(lua_State* L)
+{
+    std::wostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.resetTask, "
         << ID;
+
+    return commandSS.str();
+}
+
+/* Set command command */
+wstring SetCommand::getString(lua_State* L)
+{
+    std::wostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.setCommand, "
+        << ID << ","
+        << command;
+
+    return commandSS.str();
+}
+
+/* Set option command */
+wstring SetOption::getString(lua_State* L)
+{
+    std::wostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.setOption, "
+        << ID << ","
+        << optionID << ","
+        << optionValue;
 
     return commandSS.str();
 }

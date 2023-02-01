@@ -8,19 +8,24 @@ import { Dropdown } from "./controls/dropdown";
 import { ConnectionStatusPanel } from "./panels/connectionstatuspanel";
 import { Button } from "./controls/button";
 import { MissionData } from "./missiondata/missiondata";
+import { UnitControlPanel } from "./panels/unitcontrolpanel";
+import { MouseInfoPanel } from "./panels/mouseInfoPanel";
 
 /* TODO: should this be a class? */
 var map: Map;
 var selectionWheel: SelectionWheel;
 var selectionScroll: SelectionScroll;
+
 var unitsManager: UnitsManager;
+var missionData: MissionData;
+
 var unitInfoPanel: UnitInfoPanel;
-var activeCoalition: string;
+var connectionStatusPanel: ConnectionStatusPanel;
+var unitControlPanel: UnitControlPanel;
+var mouseInfoPanel: MouseInfoPanel;
+
 var scenarioDropdown: Dropdown;
 var mapSourceDropdown: Dropdown;
-var connected: boolean;
-var connectionStatusPanel: ConnectionStatusPanel;
-var missionData: MissionData;
 
 var slowButton: Button;
 var fastButton: Button;
@@ -31,6 +36,9 @@ var aiVisibilityButton: Button;
 var weaponVisibilityButton: Button;
 var deadVisibilityButton: Button;
 
+var connected: boolean;
+var activeCoalition: string;
+
 function setup() {
     /* Initialize */
     map = new Map('map-container');
@@ -38,9 +46,11 @@ function setup() {
     selectionScroll = new SelectionScroll("selection-scroll");
     unitsManager = new UnitsManager();
     unitInfoPanel = new UnitInfoPanel("unit-info-panel");
+    unitControlPanel = new UnitControlPanel("unit-control-panel");
     scenarioDropdown = new Dropdown("scenario-dropdown", ["Caucasus", "Syria", "Marianas", "Nevada", "South Atlantic", "The channel"], () => { });
     mapSourceDropdown = new Dropdown("map-source-dropdown", map.getLayers(), (option: string) => map.setLayer(option));
     connectionStatusPanel = new ConnectionStatusPanel("connection-status-panel");
+    mouseInfoPanel = new MouseInfoPanel("mouse-info-panel");
     missionData = new MissionData();
 
     /* Unit control buttons */
@@ -82,6 +92,10 @@ export function getMap() {
     return map;
 }
 
+export function getMissionData() {
+    return missionData;
+}
+
 export function getSelectionWheel() {
     return selectionWheel;
 }
@@ -96,6 +110,14 @@ export function getUnitsManager() {
 
 export function getUnitInfoPanel() {
     return unitInfoPanel;
+}
+
+export function getUnitControlPanel() {
+    return unitControlPanel;
+}
+
+export function getMouseInfoPanel() {
+    return mouseInfoPanel;
 }
 
 export function setActiveCoalition(newActiveCoalition: string) {

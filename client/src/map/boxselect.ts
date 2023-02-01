@@ -45,7 +45,7 @@ export var BoxSelect = Handler.extend({
 	},
 
 	_onMouseDown: function (e: any) {
-		if (((e.which !== 3) && (e.button !== 2))) { return false; }
+		if (((e.which !== 1) && (e.button !== 0))) { return false; }
 
 		// Clear the deferred resetState if it hasn't executed yet, otherwise it
 		// will interrupt the interaction and orphan a box element in the container.
@@ -107,7 +107,7 @@ export var BoxSelect = Handler.extend({
 	},
 
 	_onMouseUp: function (e: any) {
-		if ((e.which !== 3) && (e.button !== 2)) { return; }
+		if ((e.which !== 1) && (e.button !== 0)) { return; }
 
 		this._finish();
         

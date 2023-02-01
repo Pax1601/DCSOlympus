@@ -26,10 +26,18 @@ export function bearing(lat1: number, lon1: number, lat2: number, lon2: number) 
     return brng;
 }
 
-const zeroPad = function (num: number, places: number) {
+export const zeroPad = function (num: number, places: number) {
     var string = String(num);
     while (string.length < places) {
         string += "0";
+    }
+    return string;
+}
+
+export const zeroAppend = function (num: number, places: number) {
+    var string = String(num);
+    while (string.length < places) {
+        string = "0" + string;
     }
     return string;
 }

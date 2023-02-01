@@ -2,9 +2,11 @@
 #include "unitsFactory.h"
 #include "logger.h"
 #include "unit.h"
-#include "utils.h"
-
-
+#include "aircraft.h"
+#include "helicopter.h"
+#include "groundunit.h"
+#include "navyunit.h"
+#include "weapon.h"
 
 UnitsFactory::UnitsFactory(lua_State* L)
 {

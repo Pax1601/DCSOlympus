@@ -19,23 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\commands.h" />
-    <ClInclude Include="include\scriptLoader.h" />
-    <ClInclude Include="include\server.h" />
-    <ClInclude Include="include\scheduler.h" />
-    <ClInclude Include="include\unit.h" />
-    <ClInclude Include="include\unitsFactory.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\commands.cpp" />
-    <ClCompile Include="src\scriptLoader.cpp" />
-    <ClCompile Include="src\core.cpp" />
-    <ClCompile Include="src\server.cpp" />
-    <ClCompile Include="src\scheduler.cpp" />
-    <ClCompile Include="src\unit.cpp" />
-    <ClCompile Include="src\unitsFactory.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\dcstools\dcstools.vcxproj">
       <Project>{2b255368-39a0-431a-a6de-cc739ac70dc1}</Project>
     </ProjectReference>
@@ -48,6 +31,35 @@
     <ProjectReference Include="..\utils\utils.vcxproj">
       <Project>{b85009ce-4a5c-4a5a-b85d-001b3a2651b2}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\aircraft.h" />
+    <ClInclude Include="include\airunit.h" />
+    <ClInclude Include="include\commands.h" />
+    <ClInclude Include="include\groundunit.h" />
+    <ClInclude Include="include\helicopter.h" />
+    <ClInclude Include="include\navyunit.h" />
+    <ClInclude Include="include\scheduler.h" />
+    <ClInclude Include="include\scriptloader.h" />
+    <ClInclude Include="include\server.h" />
+    <ClInclude Include="include\unit.h" />
+    <ClInclude Include="include\unitsfactory.h" />
+    <ClInclude Include="include\weapon.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\aircraft.cpp" />
+    <ClCompile Include="src\airunit.cpp" />
+    <ClCompile Include="src\commands.cpp" />
+    <ClCompile Include="src\core.cpp" />
+    <ClCompile Include="src\groundunit.cpp" />
+    <ClCompile Include="src\helicopter.cpp" />
+    <ClCompile Include="src\navyunit.cpp" />
+    <ClCompile Include="src\scheduler.cpp" />
+    <ClCompile Include="src\scriptloader.cpp" />
+    <ClCompile Include="src\server.cpp" />
+    <ClCompile Include="src\unit.cpp" />
+    <ClCompile Include="src\unitsfactory.cpp" />
+    <ClCompile Include="src\weapon.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

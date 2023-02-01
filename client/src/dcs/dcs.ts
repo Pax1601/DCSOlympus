@@ -89,7 +89,7 @@ export function attackUnit(ID: number, targetID: number) {
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.onreadystatechange = () => {
         if (xhr.readyState === 4) {
-            console.log("Unit " + getUnitsManager().getUnitByID(ID).unitName + " attack " + getUnitsManager().getUnitByID(targetID).unitName);
+            //console.log("Unit " + getUnitsManager().getUnitByID(ID).unitName + " attack " + getUnitsManager().getUnitByID(targetID).unitName);
         }
     };
 
@@ -105,7 +105,7 @@ export function cloneUnit(ID: number) {
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.onreadystatechange = () => {
         if (xhr.readyState === 4) {
-            console.log("Unit " + getUnitsManager().getUnitByID(ID).unitName + " cloned");
+            //console.log("Unit " + getUnitsManager().getUnitByID(ID).unitName + " cloned");
         }
     };
 
@@ -121,7 +121,7 @@ export function changeSpeed(ID: number, speedChange: string) {
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.onreadystatechange = () => {
         if (xhr.readyState === 4) {
-            console.log(getUnitsManager().getUnitByID(ID).unitName + " speed change request: " + speedChange);
+            //console.log(getUnitsManager().getUnitByID(ID).unitName + " speed change request: " + speedChange);
         }
     };
    
@@ -137,12 +137,28 @@ export function changeAltitude(ID: number, altitudeChange: string) {
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.onreadystatechange = () => {
         if (xhr.readyState === 4) {
-            console.log(getUnitsManager().getUnitByID(ID).unitName + " altitude change request: " + altitudeChange);
+            //console.log(getUnitsManager().getUnitByID(ID).unitName + " altitude change request: " + altitudeChange);
         }
     };
 
     var command = {"ID": ID, "change": altitudeChange}
     var data = {"changeAltitude": command}
+
+    xhr.send(JSON.stringify(data));
+}
+
+export function createFormation(ID: number, isLeader: boolean, wingmenIDs: number[]) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("PUT", RESTaddress);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4) {
+            //console.log(getUnitsManager().getUnitByID(ID).unitName  + " created formation with: " + wingmenIDs);
+        }
+    };
+
+    var command = {"ID": ID, "wingmenIDs": wingmenIDs, "isLeader": isLeader}
+    var data = {"setLeader": command}
 
     xhr.send(JSON.stringify(data));
 }

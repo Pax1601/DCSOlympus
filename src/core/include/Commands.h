@@ -8,7 +8,7 @@ namespace CommandPriority {
 };
 
 namespace CommandType {
-	enum CommandTypes { NO_TYPE, MOVE, SMOKE, LASE, EXPLODE, SPAWN_AIR, SPAWN_GROUND, CLONE, LAND, REFUEL, FOLLOW };
+	enum CommandTypes { NO_TYPE, MOVE, SMOKE, SPAWN_AIR, SPAWN_GROUND, CLONE, FOLLOW, RESET_TASK, SET_OPTION, SET_COMMAND, SET_TASK };
 };
 
 /* Base command class */
@@ -25,10 +25,10 @@ protected:
 };
 
 /* Simple low priority move command (from user click) */
-class MoveCommand : public Command
+class Move : public Command
 {
 public:
-	MoveCommand(int ID, Coords destination, double speed, double altitude, wstring unitCategory, wstring taskOptions):
+	Move(int ID, Coords destination, double speed, double altitude, wstring unitCategory, wstring taskOptions):
 		ID(ID),
 		destination(destination),
 		speed(speed),
@@ -51,10 +51,10 @@ private:
 };
 
 /* Smoke command */
-class SmokeCommand : public Command
+class Smoke : public Command
 {
 public:
-	SmokeCommand(wstring color, Coords location) : 
+	Smoke(wstring color, Coords location) : 
 		color(color), 
 		location(location) 
 	{ 
@@ -69,10 +69,10 @@ private:
 };
 
 /* Spawn ground unit command */
-class SpawnGroundUnitCommand : public Command
+class SpawnGroundUnit : public Command
 {
 public:
-	SpawnGroundUnitCommand(wstring coalition, wstring unitType, Coords location) :  
+	SpawnGroundUnit(wstring coalition, wstring unitType, Coords location) :  
 		coalition(coalition), 
 		unitType(unitType), 
 		location(location) 
@@ -89,10 +89,10 @@ private:
 };
 
 /* Spawn air unit command */
-class SpawnAircraftCommand : public Command
+class SpawnAircraft : public Command
 {
 public:
-	SpawnAircraftCommand(wstring coalition, wstring unitType, Coords location, wstring payloadName, wstring airbaseName) :
+	SpawnAircraft(wstring coalition, wstring unitType, Coords location, wstring payloadName, wstring airbaseName) :
 		coalition(coalition), 
 		unitType(unitType), 
 		location(location),
@@ -114,10 +114,10 @@ private:
 };
 
 /* Clone unit command */
-class CloneCommand : public Command
+class Clone : public Command
 {
 public:
-	CloneCommand(int ID) :
+	Clone(int ID) :
 		ID(ID)
 	{
 		priority = CommandPriority::LOW;
@@ -130,19 +130,73 @@ private:
 };
 
 /* Follow command */
-class FollowCommand : public Command
+class SetTask : public Command
 {
 public:
-	FollowCommand(int leaderID, int ID) :
-		leaderID(leaderID),
-		ID(ID)
+	SetTask(int ID, wstring task) :
+		ID(ID),
+		task(task)
 	{
-		priority = CommandPriority::LOW;
+		priority = CommandPriority::MEDIUM;
 		type = CommandType::FOLLOW;
 	};
 	virtual wstring getString(lua_State* L);
 
 private:
-	const int leaderID;
 	const int ID;
+	const wstring task;
+};
+
+/* Reset task command */
+class ResetTask : public Command
+{
+public:
+	ResetTask(int ID) :
+		ID(ID)
+	{
+		priority = CommandPriority::HIGH;
+		type = CommandType::RESET_TASK;
+	};
+	virtual wstring getString(lua_State* L);
+
+private:
+	const int ID;
+};
+
+/* Set command */
+class SetCommand : public Command
+{
+public:
+	SetCommand(int ID, wstring command) :
+		ID(ID),
+		command(command)
+	{
+		priority = CommandPriority::HIGH;
+		type = CommandType::RESET_TASK;
+	};
+	virtual wstring getString(lua_State* L);
+
+private:
+	const int ID;
+	const wstring command;
+};
+
+/* Set option command */
+class SetOption : public Command
+{
+public:
+	SetOption(int ID, int optionID, int optionValue) :
+		ID(ID),
+		optionID(optionID),
+		optionValue(optionValue)
+	{
+		priority = CommandPriority::HIGH;
+		type = CommandType::RESET_TASK;
+	};
+	virtual wstring getString(lua_State* L);
+
+private:
+	const int ID;
+	const int optionID;
+	const int optionValue;
 };

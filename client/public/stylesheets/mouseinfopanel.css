@@ -1,0 +1,31 @@
+#mouse-info-panel {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    row-gap: 5px;
+}
+
+#mouse-info-panel .rectangular-container{
+    width: 100%;
+    font-weight: 600;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 10px;
+    background-color: #FFF3;
+}
+
+#mouse-info-panel img {
+    height: 24px;
+}
+
+#measure-position-container{
+    display: none;
+}
+
+#unit-position-container{
+    display: none;
+}

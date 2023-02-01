@@ -9,45 +9,81 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\aircraft.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\airunit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\commands.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\server.h">
+    <ClInclude Include="include\groundunit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\helicopter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\navyunit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\scheduler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\scriptloader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\server.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\unit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\unitsFactory.h">
+    <ClInclude Include="include\unitsfactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\scriptLoader.h">
+    <ClInclude Include="include\weapon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\aircraft.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\airunit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\commands.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\core.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\server.cpp">
+    <ClCompile Include="src\groundunit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\helicopter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\navyunit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\scheduler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\scriptloader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\server.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\unit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\unitsFactory.cpp">
+    <ClCompile Include="src\unitsfactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\scriptLoader.cpp">
+    <ClCompile Include="src\weapon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
