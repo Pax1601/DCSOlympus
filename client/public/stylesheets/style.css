@@ -168,3 +168,19 @@ html {
 	display: inline-block; 
 }
 
+.measure-box {
+	position: absolute;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	padding-top: 0.2em;
+	padding-bottom: 0.2em;
+	background-color: #151b20;
+	border-radius: 5px;
+	width: fit-content;
+	height: fit-content;
+	text-align: center;
+	color: white;
+    font-size: 12px;
+	z-index: 2000;
+	font-weight: 600;
+}

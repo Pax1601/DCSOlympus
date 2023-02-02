@@ -218,8 +218,8 @@ export class Unit {
 
     #drawPath() {
         if (this.activePath != null) {
-            var _points = [];
-            _points.push(new LatLng(this.latitude, this.longitude));
+            var points = [];
+            points.push(new LatLng(this.latitude, this.longitude));
 
             /* Add markers if missing */
             while (this.#pathMarkers.length < Object.keys(this.activePath).length) {
@@ -237,8 +237,8 @@ export class Unit {
             for (let WP in this.activePath) {
                 var destination = this.activePath[WP];
                 this.#pathMarkers[parseInt(WP) - 1].setLatLng([destination.lat, destination.lng]);
-                _points.push(new LatLng(destination.lat, destination.lng));
-                this.#pathPolyline.setLatLngs(_points);
+                points.push(new LatLng(destination.lat, destination.lng));
+                this.#pathPolyline.setLatLngs(points);
             }
         }
     }
@@ -251,7 +251,6 @@ export class Unit {
         this.#pathPolyline.setLatLngs([]);
     }
 
-    
     #drawTargets()
     {
         for (let typeIndex in this.targets)
