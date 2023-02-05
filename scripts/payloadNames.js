@@ -15,11 +15,12 @@ payloadNames = {
                   "quantity": 1
                },
                {
-                  "name": "AIM-9",
+                  "name": "AIM-9M",
                   "quantity": 2
                }
             ],
-            "roles": ["cas"]
+            "roles": ["cas"],
+            "loadout_name": "Heavy / Mk-84 / Short Range"
          },
       ]
    },
@@ -29,7 +30,7 @@ payloadNames = {
       "label": "F-5E",
       "loadouts": [
          {
-            "fuel": 0.9,
+            "fuel": 1,
             "items": [
                {
                   "name": "Fuel 275",
@@ -40,7 +41,8 @@ payloadNames = {
                   "quantity": 2
                }
             ],
-            "roles": ["cap"]
+            "roles": ["cap"],
+            "loadout_name": "Light / Fox 2 / Long Range"
          },
       ]
    },
@@ -52,7 +54,8 @@ payloadNames = {
          {
             "fuel": 1,
             "items": [],
-            "roles": ["awacs"]
+            "roles": ["awacs"],
+            "loadout_name": "Light / Fox 2 / Long Range"
          }
       ]
    },
@@ -64,7 +67,8 @@ payloadNames = {
          {
             "fuel": 1,
             "items": [],
-            "roles": ["transport"]
+            "roles": ["transport"],
+            "loadout_name": "Default Transport"
          }
       ]
    },
@@ -76,7 +80,8 @@ payloadNames = {
          {
             "fuel": 1,
             "items": [],
-            "roles": ["reconnaissance"]
+            "roles": ["reconnaissance"],
+            "loadout_name": "Default Reconnaissance"
          }
       ]
    },
@@ -93,7 +98,8 @@ payloadNames = {
                   "quantity": 24
                }
             ],
-            "roles": ["strike"]
+            "roles": ["strike"],
+            "loadout_name": "Heavy / Mk-84 / Long Range"
          },
       ]
    },
@@ -110,7 +116,8 @@ payloadNames = {
                   "quantity": 18
                }
             ],
-            "roles": ["strike"]
+            "roles": ["strike"],
+            "loadout_name": "Heavy / Mk-84 / Long Range"
          },
       ]
    },
@@ -122,7 +129,8 @@ payloadNames = {
          {
             "fuel": 1,
             "items": [],
-            "roles": ["transport"]
+            "roles": ["transport"],
+            "loadout_name": "Default Transport"
          },
       ]
    },
@@ -134,7 +142,8 @@ payloadNames = {
          {
             "fuel": 1,
             "items": [],
-            "roles": ["transport"]
+            "roles": ["transport"],
+            "loadout_name": "Default Transport"
          },
       ]
    },
@@ -146,7 +155,8 @@ payloadNames = {
          {
             "fuel": 1,
             "items": [],
-            "roles": ["awacs"]
+            "roles": ["awacs"],
+            "loadout_name": "Default AWACS"
          }
       ]
    },
@@ -163,7 +173,8 @@ payloadNames = {
                   "quantity": 2
                }
             ],
-            "roles": ["strike"]
+            "roles": ["strike"],
+            "loadout_name": "Heavy / GBU-10 / Long Range"
          },
       ]
    },
@@ -188,11 +199,12 @@ payloadNames = {
                   "quantity": 4
                },
                {
-                  "name": "AIM-9",
+                  "name": "AIM-9M",
                   "quantity": 2
                }
             ],
-            "roles": ["cap"]
+            "roles": ["cap"],
+            "loadout_name": "Heavy / FOX 3 / Long Range"
          },
       ]
    },
@@ -209,15 +221,16 @@ payloadNames = {
                   "quantity": 3
                },
                {
-                  "name": "AIM-120",
+                  "name": "AIM-120B",
                   "quantity": 6
                },
                {
-                  "name": "AIM-9",
+                  "name": "AIM-9M",
                   "quantity": 2
                }
             ],
-            "roles": ["cap"]
+            "roles": ["cap"],
+            "loadout_name": "Heavy / Fox 3 / Long Range"
          },
       ]
    },
@@ -238,7 +251,7 @@ payloadNames = {
                   "quantity": 2
                },
                {
-                  "name": "AIM-9",
+                  "name": "AIM-9M",
                   "quantity": 2
                },
                {
@@ -246,7 +259,8 @@ payloadNames = {
                   "quantity": 8
                }
             ],
-            "roles": ["cas"]
+            "roles": ["cas"],
+            "loadout_name": "Heavy / Fox 3, Mk-84 / Long Range"
          },
       ]
    },
@@ -267,7 +281,7 @@ payloadNames = {
                   "quantity": 4
                },
                {
-                  "name": "AIM-9",
+                  "name": "AIM-9M",
                   "quantity": 2
                },
                {
@@ -275,7 +289,8 @@ payloadNames = {
                   "quantity": 1
                }
             ],
-            "roles": ["cap"]
+            "roles": ["cap"],
+            "loadout_name": "Heavy / Fox 3 / Long Range"
          },
          {
             "fuel": 1,
@@ -289,7 +304,7 @@ payloadNames = {
                   "quantity": 2
                },
                {
-                  "name": "AIM-9",
+                  "name": "AIM-9M",
                   "quantity": 2
                },
                {
@@ -297,7 +312,8 @@ payloadNames = {
                   "quantity": 4
                }
             ],
-            "roles": ["strike"]
+            "roles": ["strike"],
+            "loadout_name": "Heavy / Fox 3, Mk-84 / Long Range"
          },
       ]
    },
@@ -314,15 +330,16 @@ payloadNames = {
                   "quantity": 2
                },
                {
-                  "name": "AIM-7",
+                  "name": "AIM-7M",
                   "quantity": 4
                },
                {
-                  "name": "AIM-9",
+                  "name": "AIM-9M",
                   "quantity": 4
                },
             ],
-            "roles": ["cap"]
+            "roles": ["cap"],
+            "loadout_name": "Heavy / Fox 1 / Long Range"
          },
          {
             "fuel": 1,
@@ -340,7 +357,8 @@ payloadNames = {
                   "quantity": 4
                }
             ],
-            "roles": ["cas"]
+            "roles": ["cas"],
+            "loadout_name": "Heavy / Fox 1, Mk-84 / Long Range"
          },
       ]
    },
@@ -361,11 +379,12 @@ payloadNames = {
                   "quantity": 4
                },
                {
-                  "name": "AIM-9",
+                  "name": "AIM-9M",
                   "quantity": 2
                },
             ],
-            "roles": ["cap"]
+            "roles": ["cap"],
+            "loadout_name": "Heavy / Fox 3 / Long Range"
          },
          {
             "fuel": 1,
@@ -379,7 +398,7 @@ payloadNames = {
                   "quantity": 2
                },
                {
-                  "name": "AIM-9",
+                  "name": "AIM-9M",
                   "quantity": 2
                },
                {
@@ -387,7 +406,8 @@ payloadNames = {
                   "quantity": 4
                }
             ],
-            "roles": ["strike"]
+            "roles": ["strike"],
+            "loadout_name": "Heavy / Fox 3, Mk-84 / Long Range"
          },
       ]
    },
@@ -399,7 +419,8 @@ payloadNames = {
          {
             "fuel": 1,
             "items": [],
-            "roles": ["transport"]
+            "roles": ["transport"],
+            "loadout_name": "Default Transport"
          }
       ]
    },
@@ -411,7 +432,8 @@ payloadNames = {
          {
             "fuel": 1,
             "items": [],
-            "roles": ["tanker"]
+            "roles": ["tanker"],
+            "loadout_name": "Default Tanker"
          }
       ]
    },
@@ -423,7 +445,8 @@ payloadNames = {
          {
             "fuel": 1,
             "items": [],
-            "roles": ["tanker"]
+            "roles": ["tanker"],
+            "loadout_name": "Default Tanker"
          }
       ]
    },
@@ -448,7 +471,8 @@ payloadNames = {
                   "quantity": 2
                },
             ],
-            "roles": ["cap"]
+            "roles": ["cap"],
+            "loadout_name": "Heavy / Fox 1 / Long Range"
          },
          {
             "fuel": 1,
@@ -462,7 +486,8 @@ payloadNames = {
                   "quantity": 4
                },
             ],
-            "roles": ["strike"]
+            "roles": ["strike"],
+            "loadout_name": "Heavy / FAB-500 / Long Range"
          }
       ]
    },
@@ -479,7 +504,8 @@ payloadNames = {
                   "quantity": 2
                },
             ],
-            "roles": ["cap"]
+            "roles": ["cap"],
+            "loadout_name": "Heavy / Fox 2 / Long Range"
          },
          {
             "fuel": 1,
@@ -489,7 +515,8 @@ payloadNames = {
                   "quantity": 4
                },
             ],
-            "roles": ["strike"]
+            "roles": ["strike"],
+            "loadout_name": "Heavy / FAB-500 / Long Range"
          }
       ]
    },
@@ -510,7 +537,8 @@ payloadNames = {
                   "quantity": 4
                },
             ],
-            "roles": ["cas"]
+            "roles": ["cas"],
+            "loadout_name": "Heavy / B-8 / Short Range"
          },
       ]
    },
@@ -535,13 +563,14 @@ payloadNames = {
                   "quantity": 1
                },
             ],
-            "roles": ["cap"]
+            "roles": ["cap"],
+            "loadout_name": "Heavy / Fox 3 / Long Range"
          },
       ]
    },
 
    "MiG-31": { 
-      "name": "MiG-3",
+      "name": "MiG-31",
       "label": "MiG-31", 
       "loadouts": [
          {
@@ -556,7 +585,8 @@ payloadNames = {
                   "quantity": 2 
                }
             ], 
-            "roles": ["cap"] 
+            "roles": ["cap"],
+            "loadout_name": "Heavy / Fox 3 / Short Range" 
          }
       ] 
    },
@@ -589,7 +619,8 @@ payloadNames = {
                   "quantity": 1     
                }
             ],
-            "roles": ["cap"]
+            "roles": ["cap"],
+            "loadout_name": "Heavy / Fox 1 / Long Range"
          }
       ]
    },
@@ -606,7 +637,8 @@ payloadNames = {
                   "quantity": 12
                }
             ],
-            "roles": ["drone"]
+            "roles": ["drone"],
+            "loadout_name": "Default Drone"
          }
       ]
    }, 
@@ -631,7 +663,8 @@ payloadNames = {
                   "quantity": 2
                }
             ],
-            "roles": ["cas"]
+            "roles": ["cas"],
+            "loadout_name": "Heavy / B-8 / Long Range"
          }
       ]
    },
@@ -656,7 +689,8 @@ payloadNames = {
                   "quantity": 2
                }
             ],
-            "roles": ["strike"]
+            "roles": ["strike"],
+            "loadout_name": "Heavy / FAB-500 / Short Range"
          }
       ]
    },
@@ -685,7 +719,8 @@ payloadNames = {
                   "quantity": 2
                }
             ],
-            "roles": ["cas"]
+            "roles": ["cas"],
+            "loadout_name": "Heavy / Rockets / Short Range"
          }
       ]
    },
@@ -706,7 +741,8 @@ payloadNames = {
                   "quantity": 6
                }
             ],
-            "roles": ["cap"]
+            "roles": ["cap"],
+            "loadout_name": "Heavy / Fox 3 / Short Range"
          }
       ]
    },
@@ -731,7 +767,8 @@ payloadNames = {
                   "quantity": 2
                }
             ],
-            "roles": ["cap"]
+            "roles": ["cap"],
+            "loadout_name": "Heavy / Fox 3 / Short Range"
          }
       ]
    },
@@ -752,7 +789,8 @@ payloadNames = {
                   "quantity": 8
                }
             ],
-            "roles": ["cap"]
+            "roles": ["cap"],
+            "loadout_name": "Heavy / Fox 3 / Short Range"
          }
       ]
    },
@@ -785,7 +823,8 @@ payloadNames = {
                   "quantity": 2
                }
             ],
-            "roles": ["cas"]
+            "roles": ["cas"],
+            "loadout_name": "Heavy / Mixed Ground Ordinance / Short Range"
          }
       ]
    },
@@ -798,7 +837,7 @@ payloadNames = {
             "fuel": 1,
             "items": [
                {
-                  "name": "AIM-9",
+                  "name": "AIM-9M",
                   "quantity": 2
                },
                {
@@ -810,7 +849,8 @@ payloadNames = {
                   "quantity": 4
                }
             ],
-            "roles": ["cas"]
+            "roles": ["cas"],
+            "loadout_name": "Heavy / Mk-84 / Long Range"
          }
       ]
    },
@@ -827,7 +867,8 @@ payloadNames = {
                   "quantity": 12
                }
             ],
-            "roles": ["strike"]
+            "roles": ["strike"],
+            "loadout_name": "Heavy / Kh-65 / Long Range"
          }
       ]
    },
@@ -844,7 +885,8 @@ payloadNames = {
                   "quantity": 12
                }
             ],
-            "roles": ["strike"]
+            "roles": ["strike"],
+            "loadout_name": "Heavy / Kh-65 / Long Range"
          }
       ]
    },
@@ -865,7 +907,8 @@ payloadNames = {
                   "quantity": 18
                }
             ],
-            "roles": ["strike"]
+            "roles": ["strike"],
+            "loadout_name": "Heavy / Kh-22n, FAB-250 / Long Range"
          }
       ]
    },
@@ -882,7 +925,8 @@ payloadNames = {
                   "quantity": 6
                },
             ],
-            "roles": ["strike"]
+            "roles": ["strike"],
+            "loadout_name": "Heavy / Kh-65 / Long Range"
          }
       ]
    },
