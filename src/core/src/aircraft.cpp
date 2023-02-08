@@ -48,11 +48,21 @@ void Aircraft::changeAltitude(wstring change)
 	{
 		if (targetAltitude > 5000)
 			targetAltitude += 2500 / 3.28084;
-		else if (targetAltitude > 0)
+		else if (targetAltitude >= 0)
 			targetAltitude += 500 / 3.28084;
 	}
 	if (targetAltitude < 0)
 		targetAltitude = 0;
 
 	goToDestination();		/* Send the command to reach the destination */
+}
+
+void Aircraft::setTargetSpeed(double newTargetSpeed) {
+	targetSpeed = newTargetSpeed;
+	goToDestination();
+}
+
+void Aircraft::setTargetAltitude(double newTargetAltitude) {
+	targetAltitude = newTargetAltitude;
+	goToDestination();
 }

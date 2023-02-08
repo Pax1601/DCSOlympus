@@ -14,6 +14,7 @@ public:
 	void updateExportData(lua_State* L);
 	void updateMissionData(json::value missionData);
 	void updateAnswer(json::value& answer);
+	void deleteUnit(int ID);
 	
 private:
 	map<int, Unit*> units;

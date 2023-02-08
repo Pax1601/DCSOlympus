@@ -2,7 +2,7 @@ import { Marker, LatLng, Polyline, Icon } from 'leaflet';
 import { ConvertDDToDMS } from '../other/utils';
 import { getMap, getUnitsManager, getVisibilitySettings } from '..';
 import { UnitMarker, MarkerOptions, AircraftMarker, HelicopterMarker, GroundUnitMarker, NavyUnitMarker, WeaponMarker } from './unitmarker';
-import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader } from '../dcs/dcs';
+import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, landAt, setAltitude, setReactionToThreat, setROE, setSpeed } from '../dcs/dcs';
 
 var pathIcon = new Icon({
     iconUrl: 'images/marker-icon.png',
@@ -36,6 +36,10 @@ export class Unit {
     leaderID: number = 0;
     wingmen: Unit[] = [];
     wingmenIDs: number[] = [];
+    targetSpeed: number = 0;
+    targetAltitude: number = 0;
+    ROE: string = "";
+    reactionToThreat: string = "";
     
     #selectable: boolean;
     #selected: boolean = false;
@@ -296,7 +300,6 @@ export class Unit {
         }
     }
     
-
     attackUnit(targetID: number) {
         /* Call DCS attackUnit function */
         if (this.ID != targetID) {
@@ -307,7 +310,11 @@ export class Unit {
         }
     }
 
-    
+    landAt(latlng: LatLng)
+    {
+        landAt(this.ID, latlng);
+    }
+
     changeSpeed(speedChange: string)
     {
        changeSpeed(this.ID, speedChange);
@@ -316,6 +323,26 @@ export class Unit {
     changeAltitude(altitudeChange: string)
     {
         changeAltitude(this.ID, altitudeChange);
+    }
+
+    setSpeed(speed: number)
+    {
+       setSpeed(this.ID, speed);
+    }
+
+    setAltitude(altitude: number)
+    {
+        setAltitude(this.ID, altitude);
+    }
+
+    setROE(ROE: string)
+    {
+        setROE(this.ID, ROE);
+    }
+
+    setReactionToThreat(reactionToThreat: string)
+    {
+        setReactionToThreat(this.ID, reactionToThreat);
     }
 
     /*

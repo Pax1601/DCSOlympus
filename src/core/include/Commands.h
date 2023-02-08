@@ -11,6 +11,54 @@ namespace CommandType {
 	enum CommandTypes { NO_TYPE, MOVE, SMOKE, SPAWN_AIR, SPAWN_GROUND, CLONE, FOLLOW, RESET_TASK, SET_OPTION, SET_COMMAND, SET_TASK };
 };
 
+namespace SetCommandType {
+	enum SetCommandTypes {
+		ROE = 0,
+		REACTION_ON_THREAT = 1,
+		RADAR_USING = 3,
+		FLARE_USING = 4,
+		Formation = 5,
+		RTB_ON_BINGO = 6,
+		SILENCE = 7,
+		RTB_ON_OUT_OF_AMMO = 10,
+		ECM_USING = 13,
+		PROHIBIT_AA = 14,
+		PROHIBIT_JETT = 15,
+		PROHIBIT_AB = 16,
+		PROHIBIT_AG = 17,
+		MISSILE_ATTACK = 18,
+		PROHIBIT_WP_PASS_REPORT = 19,
+		OPTION_RADIO_USAGE_CONTACT = 21,
+		OPTION_RADIO_USAGE_ENGAGE = 22,
+		OPTION_RADIO_USAGE_KILL = 23,
+		JETT_TANKS_IF_EMPTY = 25,
+		FORCED_ATTACK = 26
+	};
+}
+
+namespace ROE {
+	enum ROEs {
+		WEAPON_FREE = 0,
+		OPEN_FIRE_WEAPON_FREE = 1,
+		OPEN_FIRE = 2,
+		RETURN_FIRE = 3,
+		WEAPON_HOLD = 4,
+	};
+}
+
+namespace ReactionToThreat {
+	enum ReactionToThreats {
+		NO_REACTION = 0,
+		PASSIVE_DEFENCE = 1,
+		EVADE_FIRE = 2,
+		BYPASS_AND_ESCAPE = 3,
+		ALLOW_ABORT_MISSION = 4
+	};
+}
+
+
+
+
 /* Base command class */
 class Command
 {
@@ -117,10 +165,28 @@ private:
 class Clone : public Command
 {
 public:
-	Clone(int ID) :
-		ID(ID)
+	Clone(int ID, Coords location) :
+		ID(ID),
+		location(location)
 	{
 		priority = CommandPriority::LOW;
+		type = CommandType::CLONE;
+	};
+	virtual wstring getString(lua_State* L);
+
+private:
+	const int ID;
+	const Coords location;
+};
+
+/* Delete unit command */
+class Delete : public Command
+{
+public:
+	Delete(int ID) :
+		ID(ID)
+	{
+		priority = CommandPriority::HIGH;
 		type = CommandType::CLONE;
 	};
 	virtual wstring getString(lua_State* L);

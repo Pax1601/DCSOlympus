@@ -82,12 +82,20 @@ function Olympus.move(ID, lat, lng, altitude, speed, category, taskOptions)
 	if unit then
 		if category == "Aircraft" then
 			local startPoint = mist.getLeadPos(unit:getGroup())
-			local endPoint = coord.LLtoLO(lat, lng, 0)
+			local endPoint = coord.LLtoLO(lat, lng, 0) 
 
-			local path = {
-				[1] = mist.fixedWing.buildWP(startPoint, flyOverPoint, speed, altitude, 'BARO'),
-				[2] = mist.fixedWing.buildWP(endPoint, turningPoint, speed, altitude, 'BARO')
-			} 
+			local path = {}
+			if taskOptions and taskOptions['id'] == 'Land' then
+				path = {
+					[1] = mist.fixedWing.buildWP(startPoint, flyOverPoint, speed, altitude, 'BARO'),
+					[2] = mist.fixedWing.buildWP(endPoint, landing, speed, 0, 'AGL')
+				} 
+			else
+				path = {
+					[1] = mist.fixedWing.buildWP(startPoint, flyOverPoint, speed, altitude, 'BARO'),
+					[2] = mist.fixedWing.buildWP(endPoint, turningPoint, speed, altitude, 'BARO')
+				}
+			end
 
 			-- If a task exists assign it to the controller
 			if taskOptions then
@@ -273,7 +281,7 @@ function Olympus.spawnAircraft(coalition, unitType, lat, lng, spawnOptions)
 		task = 'CAP',
 	}
 
-	mist.dynAdd(vars)
+	local newGroup = mist.dynAdd(vars)
 
 	-- Save the payload to be reused in case the unit is cloned. TODO: save by ID not by name (it works but I like consistency)
 	Olympus.payloadRegistry[vars.name] = payload
@@ -282,20 +290,28 @@ function Olympus.spawnAircraft(coalition, unitType, lat, lng, spawnOptions)
 end
 
 -- Clones a unit by ID. Will clone the unit with the same original payload as the source unit. TODO: only works on Olympus unit not ME units.
-function Olympus.clone(ID)
+function Olympus.clone(ID, lat, lng)
 	Olympus.notify("Olympus.clone " .. ID, 2)
 	local unit = Olympus.getUnitByID(ID)
 	if unit then
 		local coalition = Olympus.getCoalitionByCoalitionID(unit:getCoalition())
-		local lat, lng, alt = coord.LOtoLL(unit:getPoint())
 		
 		-- TODO: only works on Aircraft
 		local spawnOptions = {
-			payload = Olympus.payloadRegistry[unitName]
+			payload = Olympus.payloadRegistry[unit:getName()]
 		}
-		Olympus.spawnAircraft(coalition, unit:getTypeName(), lat + 0.001, lng + 0.001, spawnOptions)
+		Olympus.spawnAircraft(coalition, unit:getTypeName(), lat, lng, spawnOptions)
 	end
 	Olympus.notify("Olympus.clone completed successfully", 2)
+end
+
+function Olympus.delete(ID, lat, lng)
+	Olympus.notify("Olympus.delete " .. ID, 2)
+	local unit = Olympus.getUnitByID(ID)
+	if unit then
+		unit:destroy();
+		Olympus.notify("Olympus.delete completed successfully", 2)
+	end
 end
 
 function Olympus.setTask(ID, taskOptions)
@@ -337,7 +353,6 @@ function Olympus.setOption(ID, optionID, optionValue)
 	end
 end
 
-
 function Olympus.serializeTable(val, name, skipnewlines, depth)
     skipnewlines = skipnewlines or false
     depth = depth or 0
@@ -369,6 +384,5 @@ function Olympus.serializeTable(val, name, skipnewlines, depth)
 
     return tmp
 end
-
 
 Olympus.notify("OlympusCommand script loaded successfully", 2)

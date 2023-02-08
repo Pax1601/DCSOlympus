@@ -52,7 +52,7 @@
     height: 100%;
 }
 
-#threat-reaction-buttons-container {
+#reaction-to-threat-buttons-container {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -106,4 +106,25 @@
     color: white;
     font-size: 13px;
     width: 100%;
+}
+
+.flight-control-slider {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.flight-control-title {
+    font-size: 13px;
+    color: white;
+}
+
+.flight-control-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: gray;
+}
+
+.active .flight-control-value {
+    color: #5ca7ff;
 }

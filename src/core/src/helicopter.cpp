@@ -48,11 +48,22 @@ void Helicopter::changeAltitude(wstring change)
 	{
 		if (targetAltitude > 100)
 			targetAltitude += 100 / 3.28084;
-		else if (targetAltitude > 0)
+		else if (targetAltitude >= 0)
 			targetAltitude += 10 / 3.28084;
 	}
 	if (targetAltitude < 0)
 		targetAltitude = 0;
 
 	goToDestination();		/* Send the command to reach the destination */
+}
+
+
+void Helicopter::setTargetSpeed(double newTargetSpeed) {
+	targetSpeed = newTargetSpeed;
+	goToDestination();
+}
+
+void Helicopter::setTargetAltitude(double newTargetAltitude) {
+	targetAltitude = newTargetAltitude;
+	goToDestination();
 }

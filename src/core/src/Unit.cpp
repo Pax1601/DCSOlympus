@@ -118,9 +118,11 @@ json::value Unit::json()
 	json[L"fuel"] = fuel;
 	json[L"ammo"] = ammo;
 	json[L"targets"] = targets;
-	json[L"targetSpeed"] = targetSpeed;
-	json[L"targetAltitude"] = targetAltitude;
+	json[L"targetSpeed"] = getTargetSpeed();
+	json[L"targetAltitude"] = getTargetAltitude();
 	json[L"hasTask"] = hasTask;
+	json[L"ROE"] = json::value::string(ROE);
+	json[L"reactionToThreat"] = json::value::string(reactionToThreat);
 
 	int i = 0;
 	for (auto itr = wingmen.begin(); itr != wingmen.end(); itr++)
@@ -221,4 +223,48 @@ void Unit::setFormationOffset(Offset newFormationOffset)
 {
 	formationOffset = newFormationOffset;
 	resetTask();
+}
+
+void Unit::setROE(wstring newROE) {
+	ROE = newROE;
+	int ROEEnum;
+	if (newROE.compare(L"Free") == 0)
+		ROEEnum = ROE::WEAPON_FREE;
+	else if (newROE.compare(L"Designated free") == 0)
+		ROEEnum = ROE::OPEN_FIRE_WEAPON_FREE;
+	else if (newROE.compare(L"Designated") == 0)
+		ROEEnum = ROE::OPEN_FIRE;
+	else if (newROE.compare(L"Return") == 0)
+		ROEEnum = ROE::RETURN_FIRE;
+	else if (newROE.compare(L"Hold") == 0)
+		ROEEnum = ROE::WEAPON_HOLD;
+	else
+		return;
+	Command* command = dynamic_cast<Command*>(new SetOption(ID, SetCommandType::ROE, ROEEnum));
+	scheduler->appendCommand(command);
+}
+
+void Unit::setReactionToThreat(wstring newReactionToThreat) {
+	reactionToThreat = newReactionToThreat;
+	int reactionToThreatEnum;
+	if (newReactionToThreat.compare(L"None") == 0)
+		reactionToThreatEnum = ReactionToThreat::NO_REACTION;
+	else if (newReactionToThreat.compare(L"Passive") == 0)
+		reactionToThreatEnum = ReactionToThreat::PASSIVE_DEFENCE;
+	else if (newReactionToThreat.compare(L"Evade") == 0)
+		reactionToThreatEnum = ReactionToThreat::EVADE_FIRE;
+	else if (newReactionToThreat.compare(L"Escape") == 0)
+		reactionToThreatEnum = ReactionToThreat::BYPASS_AND_ESCAPE;
+	else if (newReactionToThreat.compare(L"Abort") == 0)
+		reactionToThreatEnum = ReactionToThreat::ALLOW_ABORT_MISSION;
+	else
+		return;
+	Command* command = dynamic_cast<Command*>(new SetOption(ID, SetCommandType::REACTION_ON_THREAT, reactionToThreatEnum));
+	scheduler->appendCommand(command);
+}
+
+void Unit::landAt(Coords loc) {
+	activePath.clear();
+	activePath.push_back(loc);
+	setState(State::LAND);
 }

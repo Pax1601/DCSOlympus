@@ -18,7 +18,20 @@
     </div>
     <div class="hl"></div>
 
-    <!--
+    <div id="section-label">Controls</div>
+    <div id="flight-controls-buttons-container">
+        <div class="slider-container flight-control-slider" id="altitude-slider">
+            <div class="flight-control-title">Altitude</div>
+            <div class="flight-control-value" id="value"></div>
+            <input type="range" min="1" max="100" value="50" class="slider">
+        </div>
+        <div class="slider-container flight-control-slider" id="airspeed-slider">
+            <div class="flight-control-title">Speed</div>
+            <div class="flight-control-value" id="value"></div>
+            <input type="range" min="1" max="100" value="50" class="slider">
+        </div>
+    </div>
+
     <div id="section-label">Formation</div>
     <div id="formation-buttons-container">
         <div class="rectangular-button">Echelon</div>
@@ -31,22 +44,22 @@
 
     <div id="section-label">Rules of engagement</div>
     <div id="roe-buttons-container">
-        <div class="rectangular-button">Free</div>
-        <div class="rectangular-button">Designated free</div>
-        <div class="rectangular-button">Designated</div>
-        <div class="rectangular-button">Return</div>
-        <div class="rectangular-button">Hold</div>
+        <div class="rectangular-button" id="free">Free</div>
+        <div class="rectangular-button" id="designated-free">Designated free</div>
+        <div class="rectangular-button" id="designated">Designated</div>
+        <div class="rectangular-button" id="return">Return</div>
+        <div class="rectangular-button" id="hold">Hold</div>
     </div>
 
     <div class="hl"></div>
 
     <div id="section-label">Reaction to threat</div>
-    <div id="threat-reaction-buttons-container">
-        <div class="rectangular-button">None</div>
-        <div class="rectangular-button">Passive</div>
-        <div class="rectangular-button">Evade</div>
-        <div class="rectangular-button">Escape</div>
-        <div class="rectangular-button">Abort</div>
+    <div id="reaction-to-threat-buttons-container">
+        <div class="rectangular-button" id="none">None</div>
+        <div class="rectangular-button" id="passive">Passive</div>
+        <div class="rectangular-button" id="evade">Evade</div>
+        <div class="rectangular-button" id="escape">Escape</div>
+        <div class="rectangular-button" id="abort">Abort</div>
     </div>
--->
+
 </div>
