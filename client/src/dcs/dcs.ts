@@ -89,7 +89,7 @@ export function attackUnit(ID: number, targetID: number) {
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.onreadystatechange = () => {
         if (xhr.readyState === 4) {
-            console.log("Unit " + getUnitsManager().getUnitByID(ID).unitName + " attack " + getUnitsManager().getUnitByID(targetID).unitName);
+            //console.log("Unit " + getUnitsManager().getUnitByID(ID).unitName + " attack " + getUnitsManager().getUnitByID(targetID).unitName);
         }
     };
 
@@ -99,18 +99,34 @@ export function attackUnit(ID: number, targetID: number) {
     xhr.send(JSON.stringify(data));
 }
 
-export function cloneUnit(ID: number) {
+export function cloneUnit(ID: number, latlng: L.LatLng) {
     var xhr = new XMLHttpRequest();
     xhr.open("PUT", RESTaddress);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.onreadystatechange = () => {
         if (xhr.readyState === 4) {
-            console.log("Unit " + getUnitsManager().getUnitByID(ID).unitName + " cloned");
+            //console.log("Unit " + getUnitsManager().getUnitByID(ID).unitName + " cloned");
         }
     };
 
-    var command = { "ID": ID };
+    var command = { "ID": ID, "location": latlng };
     var data = { "cloneUnit": command }
+
+    xhr.send(JSON.stringify(data));
+}
+
+export function landAt(ID: number, latlng: L.LatLng) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("PUT", RESTaddress);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4) {
+            //console.log("Unit " + getUnitsManager().getUnitByID(ID).unitName + " cloned");
+        }
+    };
+
+    var command = { "ID": ID, "location": latlng };
+    var data = { "landAt": command }
 
     xhr.send(JSON.stringify(data));
 }
@@ -121,12 +137,28 @@ export function changeSpeed(ID: number, speedChange: string) {
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.onreadystatechange = () => {
         if (xhr.readyState === 4) {
-            console.log(getUnitsManager().getUnitByID(ID).unitName + " speed change request: " + speedChange);
+            //console.log(getUnitsManager().getUnitByID(ID).unitName + " speed change request: " + speedChange);
         }
     };
    
     var command = {"ID": ID, "change": speedChange}
     var data = {"changeSpeed": command}
+   
+    xhr.send(JSON.stringify(data));
+}
+
+export function setSpeed(ID: number, speed: number) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("PUT", RESTaddress);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4) {
+            //console.log(getUnitsManager().getUnitByID(ID).unitName + " speed change request: " + speedChange);
+        }
+    };
+   
+    var command = {"ID": ID, "speed": speed}
+    var data = {"setSpeed": command}
    
     xhr.send(JSON.stringify(data));
 }
@@ -137,12 +169,76 @@ export function changeAltitude(ID: number, altitudeChange: string) {
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.onreadystatechange = () => {
         if (xhr.readyState === 4) {
-            console.log(getUnitsManager().getUnitByID(ID).unitName + " altitude change request: " + altitudeChange);
+            //console.log(getUnitsManager().getUnitByID(ID).unitName + " altitude change request: " + altitudeChange);
         }
     };
 
     var command = {"ID": ID, "change": altitudeChange}
     var data = {"changeAltitude": command}
 
+    xhr.send(JSON.stringify(data));
+}
+
+export function setAltitude(ID: number, altitude: number) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("PUT", RESTaddress);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4) {
+            //console.log(getUnitsManager().getUnitByID(ID).unitName + " speed change request: " + speedChange);
+        }
+    };
+   
+    var command = {"ID": ID, "altitude": altitude}
+    var data = {"setAltitude": command}
+   
+    xhr.send(JSON.stringify(data));
+}
+
+export function createFormation(ID: number, isLeader: boolean, wingmenIDs: number[]) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("PUT", RESTaddress);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4) {
+            //console.log(getUnitsManager().getUnitByID(ID).unitName  + " created formation with: " + wingmenIDs);
+        }
+    };
+
+    var command = {"ID": ID, "wingmenIDs": wingmenIDs, "isLeader": isLeader}
+    var data = {"setLeader": command}
+
+    xhr.send(JSON.stringify(data));
+}
+
+export function setROE(ID: number, ROE: string) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("PUT", RESTaddress);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4) {
+            //console.log(getUnitsManager().getUnitByID(ID).unitName + " speed change request: " + speedChange);
+        }
+    };
+   
+    var command = {"ID": ID, "ROE": ROE}
+    var data = {"setROE": command}
+   
+    xhr.send(JSON.stringify(data));
+}
+
+export function setReactionToThreat(ID: number, reactionToThreat: string) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("PUT", RESTaddress);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4) {
+            //console.log(getUnitsManager().getUnitByID(ID).unitName + " speed change request: " + speedChange);
+        }
+    };
+   
+    var command = {"ID": ID, "reactionToThreat": reactionToThreat}
+    var data = {"setReactionToThreat": command}
+   
     xhr.send(JSON.stringify(data));
 }

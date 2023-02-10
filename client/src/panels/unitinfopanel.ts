@@ -48,6 +48,15 @@ export class UnitInfoPanel {
             this.#element.querySelector("#latitude")!.innerHTML = ConvertDDToDMS(unit.latitude, false);
             this.#element.querySelector("#longitude")!.innerHTML = ConvertDDToDMS(unit.longitude, true);
             this.#element.querySelector("#task")!.innerHTML = unit.currentTask !== ""? unit.currentTask: "Not controlled";
+
+            this.#element.querySelector("#task")!.classList.remove("red", "blue", "neutral");
+            if (unit.coalitionID == 1)
+                this.#element.querySelector("#task")!.classList.add("red");
+            else if (unit.coalitionID == 2)
+                this.#element.querySelector("#task")!.classList.add("blue");
+            else
+                this.#element.querySelector("#task")!.classList.add("neutral");
+            
         }
     }
 }

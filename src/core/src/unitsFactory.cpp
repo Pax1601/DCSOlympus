@@ -2,9 +2,15 @@
 #include "unitsFactory.h"
 #include "logger.h"
 #include "unit.h"
-#include "utils.h"
+#include "aircraft.h"
+#include "helicopter.h"
+#include "groundunit.h"
+#include "navyunit.h"
+#include "weapon.h"
+#include "commands.h"
+#include "scheduler.h"
 
-
+extern Scheduler* scheduler;
 
 UnitsFactory::UnitsFactory(lua_State* L)
 {
@@ -112,5 +118,14 @@ void UnitsFactory::updateAnswer(json::value& answer)
 	}
 
 	answer[L"units"] = unitsJson;
+}
+
+void UnitsFactory::deleteUnit(int ID)
+{
+	if (getUnit(ID) != nullptr)
+	{
+		Command* command = dynamic_cast<Command*>(new Delete(ID));
+		scheduler->appendCommand(command);
+	}
 }
 

@@ -12,6 +12,8 @@ UnitsFactory* unitsFactory = nullptr;
 Server* server = nullptr;
 Scheduler* scheduler = nullptr;
 json::value airbasesData;
+json::value bullseyeData;
+
 
 /* Called when DCS simulation stops. All singleton instances are deleted. */
 extern "C" DllExport int coreDeinit(lua_State* L)
@@ -71,40 +73,8 @@ extern "C" DllExport int coreMissionData(lua_State * L)
         unitsFactory->updateMissionData(missionData[L"unitsData"]);
     if (missionData.has_object_field(L"airbases"))
         airbasesData = missionData[L"airbases"];
+    if (missionData.has_object_field(L"bullseye"))
+        bullseyeData = missionData[L"bullseye"];
 
     return(0);
-}
-
-BOOL WINAPI DllMain(
-    HINSTANCE hinstDLL,  // handle to DLL module
-    DWORD fdwReason,     // reason for calling function
-    LPVOID lpvReserved)  // reserved
-{
-    // Perform actions based on the reason for calling.
-    switch (fdwReason)
-    {
-    case DLL_PROCESS_ATTACH:
-        // Initialize once for each new process.
-        // Return FALSE to fail DLL load.
-        break;
-
-    case DLL_THREAD_ATTACH:
-        // Do thread-specific initialization.
-        break;
-
-    case DLL_THREAD_DETACH:
-        // Do thread-specific cleanup.
-        break;
-
-    case DLL_PROCESS_DETACH:
-
-        if (lpvReserved != nullptr)
-        {
-            break; // do not do cleanup if process termination scenario
-        }
-
-        // Perform any necessary cleanup.
-        break;
-    }
-    return TRUE;  // Successful DLL_PROCESS_ATTACH.
 }

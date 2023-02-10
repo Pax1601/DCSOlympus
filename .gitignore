@@ -10,3 +10,4 @@ server
 node_modules
 /client/TODO.txt
 /client/public/javascripts/bundle.js
+!client/bin

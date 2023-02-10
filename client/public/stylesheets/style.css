@@ -1,4 +1,5 @@
 @import url("button.css");
+@import url("slider.css");
 @import url("dropdown.css");
 
 @import url("selectionwheel.css");
@@ -12,6 +13,7 @@
 @import url("unitcontrolpanel.css");
 @import url("visibilitycontrolpanel.css");
 @import url("unitinfopanel.css");
+@import url("mouseinfopanel.css");
 
 @import url("layout.css");
 
@@ -19,14 +21,14 @@
 /* Variables definitions */
 :root {
 	--background-color-dark: #202831;
-	--background-color-light: #aaaaaa;
+	--background-color-light: #AAA;
 	--title-color: #d3e9ff;
 	--text-color: white;
-	--blue-coalition-color: #2196F3;
+	--blue-coalition-color: #247be2;
 	--red-coalition-color: #f32121;
-	--neutral-coalition-color: #AAAAAA;
+	--neutral-coalition-color: #202831;
 	--active-coalition-color: var(--blue-coalition-color);
-	--highlight-color: #FFFFFFAA;
+	--highlight-color: #FFF5;
 }
 
 * { 
@@ -69,19 +71,117 @@ html {
 }
 
 .rounded-container {
+	position: relative;
 	padding: 0.5em;
-	background-color: #247be2;
-	border-radius: 10px;
 	width: fit-content;
 	height: fit-content;
 	text-align: center;
 	color: white;
     font-size: 12px;
 	border-radius: 9999px;
+	background-color: gray;
+}
+
+.rounded-container.blue {
+    background-color: var(--blue-coalition-color);
+	border: 1px solid var(--blue-coalition-color);
+}
+
+.rounded-container.red {
+    background-color: var(--red-coalition-color);
+	border: 1px solid var(--red-coalition-color);
+}
+
+.rounded-container.neutral {
+    background-color: var(--neutral-coalition-color);
+}
+
+.rounded-container-small {
+	padding: 0.2em;
+	width: fit-content;
+	height: fit-content;
+	text-align: center;
+	color: black;
+	font-weight: 600;
+	background-color: #FFFA;
+    font-size: 11px;
+	border-radius: 9999px;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.rectangular-button {
+	position: relative;
+	padding: 0.5em;
+	width: fit-content;
+	height: fit-content;
+	text-align: center;
+	color: var(--highlight-color);
+    font-size: 12px;
+	border-radius: 5px;
+	background-color: transparent;
+	border: 1px solid var(--highlight-color);
+	cursor: pointer;
+	font-weight: 600;
+	display: flex;
+	align-items: center;
+	column-gap: 5px;
+}
+
+.rectangular-button.blue {
+    border: 1px solid var(--blue-coalition-color);
+	color: var(--blue-coalition-color);
+}
+
+.rectangular-button.red {
+    border: 1px solid var(--red-coalition-color);
+	color: var(--red-coalition-color);
+}
+
+.rectangular-button.white {
+    border: 1px solid white;
+	color: white;
+}
+
+.rectangular-button.white>img {
+    filter: invert(100%);
+}
+
+.rectangular-button>img {
+	display: inline-block;
+	height: 18px;
+	width: 18px;
+}
+
+.rectangular-button.red {
+    border: 1px solid var(--red-coalition-color);
 }
 
 .vl {
 	border-left: 1px solid #555;
 	width: 1px !important;
 	display: inline-block; 
+}
+
+.hl {
+	border-top: 1px solid #555;
+	height: 1px !important;
+	display: inline-block; 
+}
+
+.measure-box {
+	position: absolute;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	padding-top: 0.2em;
+	padding-bottom: 0.2em;
+	background-color: #151b20;
+	border-radius: 5px;
+	width: fit-content;
+	height: fit-content;
+	text-align: center;
+	color: white;
+    font-size: 12px;
+	z-index: 2000;
+	font-weight: 600;
 }

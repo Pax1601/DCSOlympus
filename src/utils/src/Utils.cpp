@@ -42,3 +42,8 @@ bool operator== (const Coords& a, const Coords& b) { return a.lat == b.lat && a.
 bool operator!= (const Coords& a, const Coords& b) { return !(a == b); }
 bool operator== (const Coords& a, const int& b) { return a.lat == b && a.lng == b && a.alt == b; }
 bool operator!= (const Coords& a, const int& b) { return !(a == b); }
+
+bool operator== (const Offset& a, const Offset& b) { return a.x == b.x && a.y == b.y && a.z == b.z; }
+bool operator!= (const Offset& a, const Offset& b) { return !(a == b); }
+bool operator== (const Offset& a, const int& b) { return a.x == b && a.y == b && a.z == b; }
+bool operator!= (const Offset& a, const int& b) { return !(a == b); }

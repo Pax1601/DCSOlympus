@@ -56,16 +56,15 @@ body {
 }
 
 #unit-control-buttons {
-	position: absolute;
+	position: fixed;
 	top: 10px;
 	height: fit-content;
 	width: fit-content;
-	right: 10px;
+	right: 270px;
 	z-index: 1000;
 }
 
 #unit-control-panel {
-	display: none;
 	position: absolute;
 	top: 10px;
 	height: fit-content;
@@ -77,8 +76,17 @@ body {
 #connection-status-panel {
 	position: absolute;
 	height: 30px;
-	width: 140px;
+	width: 160px;
 	bottom: 10px;
+	right: 10px;
+	z-index: 1000;
+}
+
+#mouse-info-panel {
+	position: absolute;
+	height: fit-content;
+	width: 160px;
+	bottom: 50px;
 	right: 10px;
 	z-index: 1000;
 }

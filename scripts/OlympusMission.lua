@@ -8,11 +8,14 @@ function Olympus.setMissionData(arg, time)
 	local missionData = {}
 
 	-- Bullseye data
-	local bullseyeVec3 = coalition.getMainRefPoint(0)
-	local bullseyeLatitude, bullseyeLongitude, bullseyeAltitude = coord.LOtoLL(bullseyeVec3)
 	local bullseye = {}
-	bullseye["lat"] =  bullseyeLatitude
-	bullseye["lng"] =  bullseyeLongitude
+	for i = 0, 2 do
+		local bullseyeVec3 = coalition.getMainRefPoint(i)
+		local bullseyeLatitude, bullseyeLongitude, bullseyeAltitude = coord.LOtoLL(bullseyeVec3)
+		bullseye[i] = {}
+		bullseye[i]["lat"] =  bullseyeLatitude
+		bullseye[i]["lng"] =  bullseyeLongitude
+	end
 
 	-- Units tactical data
 	-- TODO find some way to spread the load of getting this data (split)
@@ -29,6 +32,8 @@ function Olympus.setMissionData(arg, time)
 					table["targets"]["radar"] = controller:getDetectedTargets(4)
 					table["targets"]["rwr"] = controller:getDetectedTargets(16)
 					table["targets"]["other"] = controller:getDetectedTargets(2, 8, 32)
+
+					table["hasTask"] = controller:hasTask()
 					
 					table["ammo"] = unit:getAmmo()
 					table["fuel"] = unit:getFuel()

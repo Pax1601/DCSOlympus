@@ -8,19 +8,25 @@ import { Dropdown } from "./controls/dropdown";
 import { ConnectionStatusPanel } from "./panels/connectionstatuspanel";
 import { Button } from "./controls/button";
 import { MissionData } from "./missiondata/missiondata";
+import { UnitControlPanel } from "./panels/unitcontrolpanel";
+import { MouseInfoPanel } from "./panels/mouseInfoPanel";
+import { Slider } from "./controls/slider";
 
 /* TODO: should this be a class? */
 var map: Map;
 var selectionWheel: SelectionWheel;
 var selectionScroll: SelectionScroll;
+
 var unitsManager: UnitsManager;
+var missionData: MissionData;
+
 var unitInfoPanel: UnitInfoPanel;
-var activeCoalition: string;
+var connectionStatusPanel: ConnectionStatusPanel;
+var unitControlPanel: UnitControlPanel;
+var mouseInfoPanel: MouseInfoPanel;
+
 var scenarioDropdown: Dropdown;
 var mapSourceDropdown: Dropdown;
-var connected: boolean;
-var connectionStatusPanel: ConnectionStatusPanel;
-var missionData: MissionData;
 
 var slowButton: Button;
 var fastButton: Button;
@@ -31,6 +37,12 @@ var aiVisibilityButton: Button;
 var weaponVisibilityButton: Button;
 var deadVisibilityButton: Button;
 
+var altitudeSlider: Slider;
+var airspeedSlider: Slider;
+
+var connected: boolean;
+var activeCoalition: string;
+
 function setup() {
     /* Initialize */
     map = new Map('map-container');
@@ -38,9 +50,11 @@ function setup() {
     selectionScroll = new SelectionScroll("selection-scroll");
     unitsManager = new UnitsManager();
     unitInfoPanel = new UnitInfoPanel("unit-info-panel");
+    unitControlPanel = new UnitControlPanel("unit-control-panel");
     scenarioDropdown = new Dropdown("scenario-dropdown", ["Caucasus", "Marianas", "Nevada", "South Atlantic", "Syria", "The Channel"], () => { });
     mapSourceDropdown = new Dropdown("map-source-dropdown", map.getLayers(), (option: string) => map.setLayer(option));
     connectionStatusPanel = new ConnectionStatusPanel("connection-status-panel");
+    mouseInfoPanel = new MouseInfoPanel("mouse-info-panel");
     missionData = new MissionData();
 
     /* Unit control buttons */
@@ -48,6 +62,10 @@ function setup() {
     fastButton = new Button("fast-button", ["images/buttons/fast.svg"], () => { getUnitsManager().selectedUnitsChangeSpeed("fast"); });
     climbButton = new Button("climb-button", ["images/buttons/climb.svg"], () => { getUnitsManager().selectedUnitsChangeAltitude("climb"); });
     descendButton = new Button("descend-button", ["images/buttons/descend.svg"], () => { getUnitsManager().selectedUnitsChangeAltitude("descend"); });
+
+    /* Unit control sliders */
+    altitudeSlider = new Slider("altitude-slider", 0, 100, "ft", (value: number) => getUnitsManager().selectedUnitsSetAltitude(value * 0.3048));
+    airspeedSlider = new Slider("airspeed-slider", 0, 100, "kts", (value: number) => getUnitsManager().selectedUnitsSetSpeed(value / 1.94384));
 
     /* Visibility buttons */
     userVisibilityButton = new Button("user-visibility-button", ["images/buttons/user-full.svg", "images/buttons/user-partial.svg", "images/buttons/user-none.svg", "images/buttons/user-hidden.svg"], () => { });
@@ -93,6 +111,10 @@ export function getMap() {
     return map;
 }
 
+export function getMissionData() {
+    return missionData;
+}
+
 export function getSelectionWheel() {
     return selectionWheel;
 }
@@ -107,6 +129,14 @@ export function getUnitsManager() {
 
 export function getUnitInfoPanel() {
     return unitInfoPanel;
+}
+
+export function getUnitControlPanel() {
+    return unitControlPanel;
+}
+
+export function getMouseInfoPanel() {
+    return mouseInfoPanel;
 }
 
 export function setActiveCoalition(newActiveCoalition: string) {
@@ -171,6 +201,14 @@ export function getVisibilitySettings() {
             visibility.dead = "hidden"; break;
     }
     return visibility;
+}
+
+export function getVisibilityButtons() {
+    return {user: userVisibilityButton, ai: aiVisibilityButton, weapon: weaponVisibilityButton, dead: deadVisibilityButton}
+}
+
+export function getUnitControlSliders() {
+    return {altitude: altitudeSlider, airspeed: airspeedSlider}
 }
 
 window.onload = setup;

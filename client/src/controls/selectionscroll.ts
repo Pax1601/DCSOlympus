@@ -1,5 +1,5 @@
 import { LatLng } from "leaflet";
-import { setActiveCoalition } from "..";
+import { getActiveCoalition, setActiveCoalition } from "..";
 
 export class SelectionScroll {
     #container: HTMLElement | null;
@@ -15,14 +15,17 @@ export class SelectionScroll {
         }
     }
 
-    show(x: number, y: number, options: any, callback: CallableFunction, showCoalition: boolean) {
+    show(x: number, y: number, title: string, options: any, callback: CallableFunction, showCoalition: boolean) {
         /* Hide to remove buttons, if present */
         this.hide();
 
         if (this.#container != null && options.length >= 1) {
+            var titleDiv = this.#container.querySelector("#olympus-selection-scroll-top-bar")?.querySelector(".olympus-selection-scroll-title");
+            if (titleDiv)
+                titleDiv.innerHTML = title;
             this.#container.style.display = this.#display;
-            this.#container.style.left = x - 110 + "px";
-            this.#container.style.top = y - 110 + "px";
+            this.#container.style.left = x - this.#container.offsetWidth / 2 + "px";
+            this.#container.style.top = y - 20 + "px";
             var scroll = this.#container.querySelector(".olympus-selection-scroll");
             if (scroll != null)
             {
@@ -39,6 +42,20 @@ export class SelectionScroll {
                     }
                     scroll.appendChild(node);
                 }
+            }
+
+            /* Hide the coalition switch if required */
+            var switchContainer = <HTMLElement>this.#container.querySelector("#olympus-selection-scroll-top-bar")?.querySelector("#coalition-switch-container");
+            if (showCoalition == false) {
+                switchContainer.style.display = "none";
+                document.documentElement.style.setProperty('--active-coalition-color', getComputedStyle(this.#container).getPropertyValue("--neutral-coalition-color"));
+            }
+            else {
+                switchContainer.style.display = "block";
+                if (getActiveCoalition() == "blue")
+                    document.documentElement.style.setProperty('--active-coalition-color', getComputedStyle(this.#container).getPropertyValue("--blue-coalition-color"));
+                else
+                    document.documentElement.style.setProperty('--active-coalition-color', getComputedStyle(this.#container).getPropertyValue("--red-coalition-color"));
             }
         }
     }

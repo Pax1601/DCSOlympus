@@ -37,10 +37,10 @@ function Olympus.getCoalitionByCoalitionID(coalitionID)
 end
 
 -- Builds a valid task depending on the provided options
-function Olympus.buildTask(options)
+function Olympus.buildEnrouteTask(options)
 	local task = nil
 	-- Engage specific target by ID. Checks if target exists.
-	if options['id'] == 'EngageUnit' and options['targetID'] ~= nil then
+	if options['id'] == 'EngageUnit' and options['targetID'] then
 		local target = Olympus.getUnitByID(options['targetID'])
 		if target and target:isExist() then
 			task = { 
@@ -54,25 +54,56 @@ function Olympus.buildTask(options)
 	return task
 end
 
--- Move a unit. Since most tasks in DCS are Enroute tasks, this function is the main way to control the unit AI
+-- Builds a valid task depending on the provided options
+function Olympus.buildTask(options)
+	local task = nil
+	-- Engage specific target by ID. Checks if target exists.
+	if options['id'] == 'FollowUnit' and options['leaderID'] and options['offset'] then
+		local leader = Olympus.getUnitByID(options['leaderID'])
+		if leader and leader:isExist() then
+			task = {
+				id = 'Follow',
+				params = {
+					groupId = leader:getGroup():getID(),
+					pos = options['offset'],
+					lastWptIndexFlag = false,
+					lastWptIndex = 1
+				}    
+			}
+		end
+	end
+	return task
+end
+
+-- Move a unit. Since many tasks in DCS are Enroute tasks, this function is an important way to control the unit AI
 function Olympus.move(ID, lat, lng, altitude, speed, category, taskOptions)
     Olympus.notify("Olympus.move " .. ID .. " (" .. lat .. ", " .. lng ..") " .. altitude .. "m " .. speed .. "m/s " .. category, 2)
     local unit = Olympus.getUnitByID(ID)
 	if unit then
 		if category == "Aircraft" then
 			local startPoint = mist.getLeadPos(unit:getGroup())
-			local endPoint = coord.LLtoLO(lat, lng, 0)
+			local endPoint = coord.LLtoLO(lat, lng, 0) 
 
-			local path = {
-				[1] = mist.fixedWing.buildWP(startPoint, flyOverPoint, speed, altitude, 'BARO'),
-				[2] = mist.fixedWing.buildWP(endPoint, turningPoint, speed, altitude, 'BARO')
-			} 
+			local path = {}
+			if taskOptions and taskOptions['id'] == 'Land' then
+				path = {
+					[1] = mist.fixedWing.buildWP(startPoint, flyOverPoint, speed, altitude, 'BARO'),
+					[2] = mist.fixedWing.buildWP(endPoint, landing, speed, 0, 'AGL')
+				} 
+			else
+				path = {
+					[1] = mist.fixedWing.buildWP(startPoint, flyOverPoint, speed, altitude, 'BARO'),
+					[2] = mist.fixedWing.buildWP(endPoint, turningPoint, speed, altitude, 'BARO')
+				}
+			end
 
 			-- If a task exists assign it to the controller
-			local task = Olympus.buildTask(taskOptions)
-			if task then 
-				path[1].task = task
-				path[2].task = task
+			if taskOptions then
+				local task = Olympus.buildEnrouteTask(taskOptions)
+				if task then 
+					path[1].task = task
+					path[2].task = task
+				end
 			end
 			
 			-- Assign the mission task to the controller
@@ -171,7 +202,7 @@ function Olympus.spawnAircraft(coalition, unitType, lat, lng, spawnOptions)
 	local spawnLocation = mist.utils.makeVec3GL(coord.LLtoLO(lat, lng, 0))
 
 	if payload == nil then
-		if payloadName and payloadName ~= "" and Olympus.unitPayloads[unitType][payloadName] ~= nil then
+		if payloadName and payloadName ~= "" and Olympus.unitPayloads[unitType][payloadName] then
 			payload = Olympus.unitPayloads[unitType][payloadName]
 		else
 			payload = {}
@@ -250,7 +281,7 @@ function Olympus.spawnAircraft(coalition, unitType, lat, lng, spawnOptions)
 		task = 'CAP',
 	}
 
-	mist.dynAdd(vars)
+	local newGroup = mist.dynAdd(vars)
 
 	-- Save the payload to be reused in case the unit is cloned. TODO: save by ID not by name (it works but I like consistency)
 	Olympus.payloadRegistry[vars.name] = payload
@@ -259,40 +290,99 @@ function Olympus.spawnAircraft(coalition, unitType, lat, lng, spawnOptions)
 end
 
 -- Clones a unit by ID. Will clone the unit with the same original payload as the source unit. TODO: only works on Olympus unit not ME units.
-function Olympus.clone(ID)
+function Olympus.clone(ID, lat, lng)
 	Olympus.notify("Olympus.clone " .. ID, 2)
 	local unit = Olympus.getUnitByID(ID)
 	if unit then
 		local coalition = Olympus.getCoalitionByCoalitionID(unit:getCoalition())
-		local lat, lng, alt = coord.LOtoLL(unit:getPoint())
 		
 		-- TODO: only works on Aircraft
 		local spawnOptions = {
-			payload = Olympus.payloadRegistry[unitName]
+			payload = Olympus.payloadRegistry[unit:getName()]
 		}
-		Olympus.spawnAircraft(coalition, unit:getTypeName(), lat + 0.001, lng + 0.001, spawnOptions)
+		Olympus.spawnAircraft(coalition, unit:getTypeName(), lat, lng, spawnOptions)
 	end
 	Olympus.notify("Olympus.clone completed successfully", 2)
 end
 
-function Olympus.follow(leaderID, ID)
-	Olympus.notify("Olympus.follow " .. ID .. " " .. leaderID, 2)
-	local leader = Olympus.getUnitByID(leaderID)
+function Olympus.delete(ID, lat, lng)
+	Olympus.notify("Olympus.delete " .. ID, 2)
 	local unit = Olympus.getUnitByID(ID)
-	local followTask = {
-		id = 'Follow',
-		params = {
-		  	groupId = leader:getGroup():getID(),
-		  	pos = {x = 0 , y = 0, z = 20} ,
-		  	lastWptIndexFlag = false,
-			lastWptIndex = 1
-		}    
-	}
-	Olympus.notify("Olympus.follow group ID" .. unit:getGroup():getID(), 2)
-	unit:getGroup():getController():pushTask(followTask)
-	Olympus.notify("Olympus.follow completed successfully", 2)
+	if unit then
+		unit:destroy();
+		Olympus.notify("Olympus.delete completed successfully", 2)
+	end
 end
 
+function Olympus.setTask(ID, taskOptions)
+	Olympus.notify("Olympus.setTask " .. ID .. " " .. Olympus.serializeTable(taskOptions), 2)
+	local unit = Olympus.getUnitByID(ID)
+	if unit then
+		local task = Olympus.buildTask(taskOptions);
+		if task then
+			unit:getGroup():getController():setTask(task)
+			Olympus.notify("Olympus.setTask completed successfully", 2)
+		end
+	end
+end
 
+function Olympus.resetTask(ID)
+	Olympus.notify("Olympus.resetTask " .. ID, 2)
+	local unit = Olympus.getUnitByID(ID)
+	if unit then
+		unit:getGroup():getController():resetTask()
+		Olympus.notify("Olympus.resetTask completed successfully", 2)
+	end
+end
+
+function Olympus.setCommand(ID, command)
+	Olympus.notify("Olympus.setCommand " .. ID .. " " .. Olympus.serializeTable(command), 2)
+	local unit = Olympus.getUnitByID(ID)
+	if unit then
+		unit:getGroup():getController():setCommand(command)
+		Olympus.notify("Olympus.setCommand completed successfully", 2)
+	end
+end
+
+function Olympus.setOption(ID, optionID, optionValue)
+	Olympus.notify("Olympus.setCommand " .. ID .. " " .. optionID .. " " .. optionValue, 2)
+	local unit = Olympus.getUnitByID(ID)
+	if unit then
+		unit:getGroup():getController():setOption(optionID, optionValue)
+		Olympus.notify("Olympus.setOption completed successfully", 2)
+	end
+end
+
+function Olympus.serializeTable(val, name, skipnewlines, depth)
+    skipnewlines = skipnewlines or false
+    depth = depth or 0
+
+    local tmp = string.rep(" ", depth)
+    if name then 
+		if type(name) == "number" then
+			tmp = tmp .. "[" .. name .. "]" .. " = " 
+		else
+			tmp = tmp .. name  .. " = " 
+		end
+	end
+
+    if type(val) == "table" then
+        tmp = tmp .. "{" .. (not skipnewlines and "\n" or "")
+        for k, v in pairs(val) do
+            tmp =  tmp .. Olympus.serializeTable(v, k, skipnewlines, depth + 1) .. "," .. (not skipnewlines and "\n" or "")
+        end
+        tmp = tmp .. string.rep(" ", depth) .. "}"
+    elseif type(val) == "number" then
+        tmp = tmp .. tostring(val)
+    elseif type(val) == "string" then
+        tmp = tmp .. string.format("%q", val)
+    elseif type(val) == "boolean" then
+        tmp = tmp .. (val and "true" or "false")
+    else
+        tmp = tmp .. "\"[inserializeable datatype:" .. type(val) .. "]\""
+    end
+
+    return tmp
+end
 
 Olympus.notify("OlympusCommand script loaded successfully", 2)

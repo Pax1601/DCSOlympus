@@ -2,7 +2,7 @@ import { Marker, LatLng, Polyline, Icon } from 'leaflet';
 import { ConvertDDToDMS } from '../other/utils';
 import { getMap, getUnitsManager, getVisibilitySettings } from '..';
 import { UnitMarker, MarkerOptions, AircraftMarker, HelicopterMarker, GroundUnitMarker, NavyUnitMarker, WeaponMarker } from './unitmarker';
-import { addDestination, attackUnit, changeAltitude, changeSpeed } from '../dcs/dcs';
+import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, landAt, setAltitude, setReactionToThreat, setROE, setSpeed } from '../dcs/dcs';
 
 var pathIcon = new Icon({
     iconUrl: 'images/marker-icon.png',
@@ -12,9 +12,6 @@ var pathIcon = new Icon({
 
 export class Unit {
     ID: number = -1;
-    leader: boolean = false;
-    wingman: boolean = false;
-    wingmen: Unit[] = [];
     formation: string = "";
     name: string = "";
     unitName: string = "";
@@ -33,7 +30,17 @@ export class Unit {
     activePath: any = null;
     ammo: any = null;
     targets: any = null;
-
+    hasTask: boolean = false;
+    isLeader: boolean = false;
+    isWingman: boolean = false;
+    leaderID: number = 0;
+    wingmen: Unit[] = [];
+    wingmenIDs: number[] = [];
+    targetSpeed: number = 0;
+    targetAltitude: number = 0;
+    ROE: string = "";
+    reactionToThreat: string = "";
+    
     #selectable: boolean;
     #selected: boolean = false;
     #preventClick: boolean = false;
@@ -61,17 +68,22 @@ export class Unit {
         this.#marker = marker;
         this.#marker.on('click', (e) => this.#onClick(e));
         this.#marker.on('dblclick', (e) => this.#onDoubleClick(e));
+        this.#marker.on('contextmenu', (e) => this.#onContextMenu(e));
 
         this.#pathPolyline = new Polyline([], { color: '#2d3e50', weight: 3, opacity: 0.5, smoothFactor: 1 });
         this.#pathPolyline.addTo(getMap());
         this.#targetsPolylines = [];
     }
 
-    update(response: JSON) {
+    update(response: any) {
         for (let entry in response) {
-            // @ts-ignore
+            // @ts-ignore TODO handle better
             this[entry] = response[entry];
         }
+
+        // TODO handle better
+        if (response['activePath'] == undefined)
+            this.activePath = null
 
         /* Dead units can't be selected */
         this.setSelected(this.getSelected() && this.alive)
@@ -79,24 +91,13 @@ export class Unit {
         this.#updateMarker();
 
         this.#clearTargets();
-        if (this.getSelected())
+        if (this.getSelected() && this.activePath != null)
         {
             this.#drawPath();
             this.#drawTargets();
         }
         else
-            this.#clearPath();
-
-        /*
-        this.wingmen = [];
-        if (response["wingmenIDs"] != null)
-        {
-            for (let ID of response["wingmenIDs"])
-            {
-                this.wingmen.push(unitsManager.getUnitByID(ID));
-            }
-        }
-        */
+            this.#clearPath();        
     }
 
     setSelected(selected: boolean) {
@@ -105,6 +106,7 @@ export class Unit {
             this.#selected = selected;
             this.#marker.setSelected(selected);
             getUnitsManager().onUnitSelection();
+
         }
     }
 
@@ -140,6 +142,28 @@ export class Unit {
         return false;
     }
 
+    getLeader() {
+        return getUnitsManager().getUnitByID(this.leaderID);
+    }
+
+    getFormation() {
+        return [<Unit>this].concat(this.getWingmen())
+    }
+
+    getWingmen() {
+        var wingmen: Unit[] = [];
+        if (this.wingmenIDs != null)
+        {
+            for (let ID of this.wingmenIDs)
+            {
+                var unit = getUnitsManager().getUnitByID(ID)
+                if (unit)
+                    wingmen.push(unit);
+            }
+        }
+        return wingmen;
+    }
+
     #onClick(e: any) {
         this.#timer = setTimeout(() => {
             if (!this.#preventClick) {
@@ -157,22 +181,21 @@ export class Unit {
     #onDoubleClick(e: any) {
         clearTimeout(this.#timer);
         this.#preventClick = true;
+    }
 
+    #onContextMenu(e: any) {
         var options = [
             'Attack',
+            'Follow'
         ]
 
-        //if (!this.leader && !this.wingman) {
-        //    options.push({ 'tooltip': 'Create formation', 'src': 'formation.png', 'callback': () => { getMap().hideSelectionWheel(); /*unitsManager.createFormation(this.ID);*/ } });
-        //}
-
-        getMap().showSelectionScroll(e.originalEvent, options, (action: string) => this.#executeAction(action));
+        getMap().showSelectionScroll(e.originalEvent, "Action: " + this.unitName, options, (action: string) => this.#executeAction(action));
     }
 
     #executeAction(action: string) {
         getMap().hideSelectionScroll();
         if (action === "Attack")
-            getUnitsManager().attackUnit(this.ID);
+            getUnitsManager().selectedUnitsAttackUnit(this.ID);
     }
 
     #updateMarker() {
@@ -199,8 +222,8 @@ export class Unit {
 
     #drawPath() {
         if (this.activePath != null) {
-            var _points = [];
-            _points.push(new LatLng(this.latitude, this.longitude));
+            var points = [];
+            points.push(new LatLng(this.latitude, this.longitude));
 
             /* Add markers if missing */
             while (this.#pathMarkers.length < Object.keys(this.activePath).length) {
@@ -218,8 +241,8 @@ export class Unit {
             for (let WP in this.activePath) {
                 var destination = this.activePath[WP];
                 this.#pathMarkers[parseInt(WP) - 1].setLatLng([destination.lat, destination.lng]);
-                _points.push(new LatLng(destination.lat, destination.lng));
-                this.#pathPolyline.setLatLngs(_points);
+                points.push(new LatLng(destination.lat, destination.lng));
+                this.#pathPolyline.setLatLngs(points);
             }
         }
     }
@@ -232,7 +255,6 @@ export class Unit {
         this.#pathPolyline.setLatLngs([]);
     }
 
-    
     #drawTargets()
     {
         for (let typeIndex in this.targets)
@@ -278,7 +300,6 @@ export class Unit {
         }
     }
     
-
     attackUnit(targetID: number) {
         /* Call DCS attackUnit function */
         if (this.ID != targetID) {
@@ -289,7 +310,11 @@ export class Unit {
         }
     }
 
-    
+    landAt(latlng: LatLng)
+    {
+        landAt(this.ID, latlng);
+    }
+
     changeSpeed(speedChange: string)
     {
        changeSpeed(this.ID, speedChange);
@@ -298,6 +323,26 @@ export class Unit {
     changeAltitude(altitudeChange: string)
     {
         changeAltitude(this.ID, altitudeChange);
+    }
+
+    setSpeed(speed: number)
+    {
+       setSpeed(this.ID, speed);
+    }
+
+    setAltitude(altitude: number)
+    {
+        setAltitude(this.ID, altitude);
+    }
+
+    setROE(ROE: string)
+    {
+        setROE(this.ID, ROE);
+    }
+
+    setReactionToThreat(reactionToThreat: string)
+    {
+        setReactionToThreat(this.ID, reactionToThreat);
     }
 
     /*
@@ -318,25 +363,13 @@ export class Unit {
 
         xhr.send(JSON.stringify(data));
     }
-
-    setLeader(wingmenIDs)
-    {
-        // TODO move in dedicated file
-        var xhr = new XMLHttpRequest();
-        xhr.open("PUT", RESTaddress);
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.onreadystatechange = () => {
-            if (xhr.readyState === 4) {
-                console.log(this.unitName + " created formation with: " + wingmenIDs);
-            }
-        };
-
-        var command = {"ID": this.ID, "wingmenIDs": wingmenIDs}
-        var data = {"setLeader": command}
-
-        xhr.send(JSON.stringify(data));
-    }
     */
+
+    setLeader(isLeader: boolean, wingmenIDs: number[] = [])
+    {
+        setLeader(this.ID, isLeader, wingmenIDs);
+    }
+    
 }
 
 export class AirUnit extends Unit {

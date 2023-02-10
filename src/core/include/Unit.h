@@ -4,8 +4,9 @@
 #include "dcstools.h"
 #include "luatools.h"
 
-#define GROUND_DEST_DIST_THR 100
-#define AIR_DEST_DIST_THR 2000
+namespace State {
+	enum States { IDLE, REACH_DESTINATION, ATTACK, WINGMAN, FOLLOW, LAND, REFUEL, AWACS, EWR, TANKER, RUN_AWAY };
+};
 
 class Unit
 {
@@ -17,19 +18,22 @@ public:
 	void updateMissionData(json::value json);
 	json::value json();
 
+	virtual void setState(int newState) { state = newState; };
+	void resetTask();
+
 	void setPath(list<Coords> path);
 	void setActiveDestination(Coords newActiveDestination) { activeDestination = newActiveDestination; }
 	void setAlive(bool newAlive) { alive = newAlive; }
 	void setTarget(int targetID);
-	void setLeader(bool newLeader) { leader = newLeader; }
-	void setWingman(bool newWingman) { wingman = newWingman; }
+	void setIsLeader(bool newIsLeader);
+	void setIsWingman(bool newIsWingman);
+	void setLeader(Unit* newLeader) { leader = newLeader; }
 	void setWingmen(vector<Unit*> newWingmen) { wingmen = newWingmen; }
 	void setFormation(wstring newFormation) { formation = newFormation; }
-
-	virtual void changeSpeed(wstring change) {};
-	virtual void changeAltitude(wstring change) {};
-
-	void resetActiveDestination();
+	void setFormationOffset(Offset formationOffset);
+	void setROE(wstring newROE);
+	void setReactionToThreat(wstring newReactionToThreat);
+	void landAt(Coords loc);
 
 	int getID() { return ID; }
 	wstring getName() { return name; }
@@ -46,38 +50,53 @@ public:
 	Coords getActiveDestination() { return activeDestination; }
 	virtual wstring getCategory() { return L"No category"; };
 	wstring getTarget();
+	bool isTargetAlive();
 	wstring getCurrentTask() { return currentTask; }
+	bool getAlive() { return alive; }
+	bool getIsLeader() { return isLeader; }
+	bool getIsWingman() { return isWingman; }
+	wstring getFormation() { return formation; }
+
 	virtual double getTargetSpeed() { return targetSpeed; };
 	virtual double getTargetAltitude() { return targetAltitude; };
+	virtual void setTargetSpeed(double newSpeed) { targetSpeed = newSpeed; }
+	virtual void setTargetAltitude(double newAltitude) { targetAltitude = newAltitude; }
+	virtual void changeSpeed(wstring change) {};
+	virtual void changeAltitude(wstring change) {};
+
+	void resetActiveDestination();
 
 protected:
 	int ID;
-	bool AI					= false;
-	bool alive				= true;
-	wstring name			= L"undefined";
-	wstring unitName		= L"undefined";
-	wstring groupName		= L"undefined";
-	json::value type		= json::value::null();
-	int country				= NULL;
-	int coalitionID			= NULL;
-	double latitude			= NULL;
-	double longitude		= NULL;
-	double altitude			= NULL;
-	double heading			= NULL;
-	double speed			= NULL;
-	json::value flags		= json::value::null();
-	int targetID			= NULL;
-	bool holding			= false;
-	bool looping			= false;
-	wstring taskOptions		= L"{}";
-	wstring currentTask		= L"";
-	bool leader				= false;
-	bool wingman			= false;
-	wstring formation		= L"";
+	int state					= State::IDLE;
+	bool hasTask				= false;
+	bool AI						= false;
+	bool alive					= true;
+	wstring name				= L"undefined";
+	wstring unitName			= L"undefined";
+	wstring groupName			= L"undefined";
+	json::value type			= json::value::null();
+	int country					= NULL;
+	int coalitionID				= NULL;
+	double latitude				= NULL;
+	double longitude			= NULL;
+	double altitude				= NULL;
+	double heading				= NULL;
+	double speed				= NULL;
+	json::value flags			= json::value::null();
+	int targetID				= NULL;
+	wstring currentTask			= L"";
+	bool isLeader				= false;
+	bool isWingman				= false;
+	Offset formationOffset		= Offset(NULL);
+	wstring formation			= L"";
+	Unit* leader				= nullptr;
+	wstring ROE					= L"";
+	wstring reactionToThreat	= L"";
 	vector<Unit*> wingmen;
-	double targetSpeed		= 0;
-	double targetAltitude	= 0;
-	double fuel				= 0;
+	double targetSpeed			= 0;
+	double targetAltitude		= 0;
+	double fuel					= 0;
 	json::value ammo;
 	json::value targets;
 
@@ -85,112 +104,16 @@ protected:
 	Coords activeDestination = Coords(0);
 	Coords oldPosition = Coords(0); // Used to approximate speed
 
-	virtual void AIloop();
+	virtual void AIloop() = 0;
 
 private:
 	mutex mutexLock;
 };
 
-class AirUnit : public Unit
-{
-public:
-	AirUnit(json::value json, int ID);
 
-	virtual wstring getCategory() = 0;
 
-protected:
-	virtual void AIloop();
-};
 
-class Aircraft : public AirUnit
-{
-public:
-	Aircraft(json::value json, int ID);
 
-	virtual wstring getCategory() { return L"Aircraft"; };
 
-	virtual void changeSpeed(wstring change);
-	virtual void changeAltitude(wstring change);
-	virtual double getTargetSpeed() { return targetSpeed; };
-	virtual double getTargetAltitude() { return targetAltitude; };
 
-protected:
-	double targetSpeed = 150; 
-	double targetAltitude = 5000;
-};
-
-class Helicopter : public AirUnit
-{
-public:
-	Helicopter(json::value json, int ID);
-
-	virtual wstring getCategory() { return L"Helicopter"; };
-
-	virtual void changeSpeed(wstring change);
-	virtual void changeAltitude(wstring change);
-	virtual double getTargetSpeed() { return targetSpeed; };
-	virtual double getTargetAltitude() { return targetAltitude; };
-
-protected:
-	double targetSpeed = 50;
-	double targetAltitude = 1000;
-};
-
-class GroundUnit : public Unit
-{
-public:
-	GroundUnit(json::value json, int ID);
-	virtual void AIloop();
-
-	virtual wstring getCategory() { return L"GroundUnit"; };
-	virtual void changeSpeed(wstring change);
-	virtual void changeAltitude(wstring change) {};
-	virtual double getTargetSpeed() { return targetSpeed; };
-
-protected:
-	double targetSpeed = 10;
-};
-
-class NavyUnit : public Unit
-{
-public:
-	NavyUnit(json::value json, int ID);
-	virtual void AIloop();
-
-	virtual wstring getCategory() { return L"NavyUnit"; };
-	virtual void changeSpeed(wstring change);
-	virtual void changeAltitude(wstring change) {};
-	virtual double getTargetSpeed() { return targetSpeed; };
-
-protected:
-	double targetSpeed = 10;
-};
-
-class Weapon : public Unit
-{
-public:
-	Weapon(json::value json, int ID);
-
-	virtual wstring getCategory() = 0;
-
-protected:
-	/* Weapons are not controllable and have no AIloop */
-	virtual void AIloop() {};
-};
-
-class Missile : public Weapon
-{
-public:
-	Missile(json::value json, int ID);
-
-	virtual wstring getCategory() { return L"Missile"; };
-};
-
-class Bomb : public Weapon
-{
-public:
-	Bomb(json::value json, int ID);
-
-	virtual wstring getCategory() { return L"Bomb"; };
-};
 

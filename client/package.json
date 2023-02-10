@@ -1,5 +1,5 @@
 {
-  "name": "DCS Olympus",
+  "name": "DCSOlympus",
   "node-main": "./bin/www",
   "main": "http://localhost:3000",
   "version": "0.0.0",
@@ -25,6 +25,7 @@
     "@types/gtag.js": "^0.0.12",
     "browserify": "^17.0.0",
     "concurrently": "^7.6.0",
+    "nodemon": "^2.0.20",
     "tsify": "^5.0.4",
     "typescript": "^4.9.4",
     "watchify": "^4.0.0"
