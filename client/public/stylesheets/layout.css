@@ -1,8 +1,9 @@
 
 /* Page style */
 body {
-	padding: 0;
+	display: flex;
 	margin: 0;
+	padding: 0;
 }
 
 html,
@@ -41,19 +42,81 @@ body {
 	width: 200px;
 }
 
-#visibility-control-panel {
+
+/**************************************/
+
+.control-panel {
 	position: absolute;
-	left: 430px;
-	height: 30px;
-	width: 110;
-	top: 10px;
 	z-index: 1000;
 	display: flex;
-	justify-content: space-between;
 	align-items: center;
+}
+
+.control-panel-top {
+	height: 30px;
+	justify-content: space-between;
+	top: 10px;
 	padding-left: 10px;
 	padding-right: 10px;
 }
+
+#visibility-control-panel {
+	left: 430px;
+	width: 110;
+}
+
+
+/*****  AIC  *****/
+
+#aic-control-panel {
+	color:white;
+	left: 550px;
+}
+
+.aic-enabled #aic-control-panel .olympus-button {
+	filter:invert(100%);
+}
+
+
+#aic-formation-panel {
+	align-self: center;
+	background:#eaeaea;
+	border-bottom-right-radius: 10px;
+	border-top-right-radius: 10px;
+	display:none;
+	justify-self: left;
+	padding:10px;
+	position:absolute;
+}
+
+.aic-enabled #aic-formation-panel {
+	display:flex;
+	flex-direction: column;
+}
+
+#aic-formation-list {
+	display:flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+#aic-formation-list > div {
+	align-items: center;
+	display:flex;
+	flex-direction: column;
+	justify-content: center;
+	margin-top:1em;
+}
+
+#aic-formation-list .aic-formation-image img {
+	border: 1px solid #ccc;
+	border-radius: 10px;
+	max-width: 75px;
+}
+
+
+/**************************************/
+
 
 #unit-control-buttons {
 	position: fixed;

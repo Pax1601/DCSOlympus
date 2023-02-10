@@ -12,6 +12,8 @@ import { UnitControlPanel } from "./panels/unitcontrolpanel";
 import { MouseInfoPanel } from "./panels/mouseInfoPanel";
 import { Slider } from "./controls/slider";
 
+import { AIC } from "./aic/aic";
+
 /* TODO: should this be a class? */
 var map: Map;
 var selectionWheel: SelectionWheel;
@@ -36,6 +38,9 @@ var userVisibilityButton: Button;
 var aiVisibilityButton: Button;
 var weaponVisibilityButton: Button;
 var deadVisibilityButton: Button;
+
+var aic: AIC;
+var aicToggleButton: Button;
 
 var altitudeSlider: Slider;
 var airspeedSlider: Slider;
@@ -76,6 +81,15 @@ function setup() {
     aiVisibilityButton.setState(1);
     weaponVisibilityButton.setState(1);
     deadVisibilityButton.setState(1);
+
+    /* AIC */
+    aic = new AIC();
+
+   setupAICFormations( aic );
+    
+    aicToggleButton = new Button( "toggle-aic-button", ["images/buttons/ai-full.svg"], () => {
+        aic.toggleStatus();
+    });
 
     /* Default values */
     activeCoalition = "blue";
@@ -209,6 +223,58 @@ export function getVisibilityButtons() {
 
 export function getUnitControlSliders() {
     return {altitude: altitudeSlider, airspeed: airspeedSlider}
+}
+
+
+function setupAICFormations( aic:AIC ) {
+    let $aicFormationList = document.getElementById( "aic-formation-list" );
+
+    if ( $aicFormationList ) {
+
+        /* //  Example display
+        <div>
+            <div class="aic-formation-image">
+                <img src="images/formations/azimuth.png" />
+            </div>
+            <div class="aic-formation-name">Azimuth</div>
+            <div class="aic-formation-descriptor">(instructions)</div>
+        </div>
+        //*/
+
+        aic.getFormations().forEach( formation => {
+
+            //  Image
+            let imageDiv = document.createElement( "div" );
+            imageDiv.classList.add( "aic-formation-image" );
+
+            let img = document.createElement( "img" );
+            img.src = "images/formations/" + formation.icon;
+
+            imageDiv.appendChild( img );
+            
+            //  Name
+            let nameDiv  = document.createElement( "div" );
+            nameDiv.classList.add( "aic-formation-name" );
+            nameDiv.innerText = formation.label;
+            
+            //  Descriptor
+            let descriptorDiv = document.createElement( "div" );
+            descriptorDiv.classList.add( "aic-formation-descriptor" );
+            descriptorDiv.innerText = formation.descriptor;
+
+            // Wrapper
+            let wrapperDiv = document.createElement( "div" );
+            wrapperDiv.dataset.formationName = formation.name;
+            wrapperDiv.appendChild( imageDiv )
+            wrapperDiv.appendChild( nameDiv );
+            wrapperDiv.appendChild( descriptorDiv );
+
+            //  Add to DOM
+            $aicFormationList?.appendChild( wrapperDiv );
+
+        });
+
+    }
 }
 
 window.onload = setup;
