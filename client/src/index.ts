@@ -38,7 +38,7 @@ function setup() {
     selectionScroll = new SelectionScroll("selection-scroll");
     unitsManager = new UnitsManager();
     unitInfoPanel = new UnitInfoPanel("unit-info-panel");
-    scenarioDropdown = new Dropdown("scenario-dropdown", ["Caucasus", "Syria", "Marianas", "Nevada", "South Atlantic", "The channel"], () => { });
+    scenarioDropdown = new Dropdown("scenario-dropdown", ["Caucasus", "Marianas", "Nevada", "South Atlantic", "Syria", "The Channel"], () => { });
     mapSourceDropdown = new Dropdown("map-source-dropdown", map.getLayers(), (option: string) => map.setLayer(option));
     connectionStatusPanel = new ConnectionStatusPanel("connection-status-panel");
     missionData = new MissionData();
@@ -68,12 +68,23 @@ function setup() {
 
 function requestUpdate() {
     getDataFromDCS(update);
+    
     /* Main update rate = 250ms is minimum time, equal to server update time. */
     setTimeout(() => requestUpdate(), getConnected() ? 250 : 1000);
+
+    setInterval( () => {
+        /*
+        gtag( "event", "heartbeat", {
+
+        });
+        //*/
+    }, 60000);
+
     connectionStatusPanel.update(getConnected());
 }
 
 export function update(data: JSON) {
+    console.log( data );
     unitsManager.update(data);
     missionData.update(data);
 }

@@ -22,6 +22,7 @@
     "save": "^2.9.0"
   },
   "devDependencies": {
+    "@types/gtag.js": "^0.0.12",
     "browserify": "^17.0.0",
     "concurrently": "^7.6.0",
     "tsify": "^5.0.4",
