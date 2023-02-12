@@ -68,10 +68,10 @@ function setup() {
     airspeedSlider = new Slider("airspeed-slider", 0, 100, "kts", (value: number) => getUnitsManager().selectedUnitsSetSpeed(value / 1.94384));
 
     /* Visibility buttons */
-    userVisibilityButton = new Button("user-visibility-button", ["images/buttons/user-full.svg", "images/buttons/user-partial.svg", "images/buttons/user-none.svg", "images/buttons/user-hidden.svg"], () => { });
-    aiVisibilityButton = new Button("ai-visibility-button", ["images/buttons/ai-full.svg", "images/buttons/ai-partial.svg", "images/buttons/ai-none.svg", "images/buttons/ai-hidden.svg"], () => { });
-    weaponVisibilityButton = new Button("weapon-visibility-button", ["images/buttons/weapon-partial.svg", "images/buttons/weapon-none.svg", "images/buttons/weapon-hidden.svg"], () => { });
-    deadVisibilityButton = new Button("dead-visibility-button", ["images/buttons/dead.svg", "images/buttons/dead-hidden.svg"], () => { });
+    userVisibilityButton = new Button("user-visibility-button", ["images/buttons/user-full.svg", "images/buttons/user-partial.svg", "images/buttons/user-none.svg", "images/buttons/user-hidden.svg"], () => { getUnitsManager().forceUpdate() });
+    aiVisibilityButton = new Button("ai-visibility-button", ["images/buttons/ai-full.svg", "images/buttons/ai-partial.svg", "images/buttons/ai-none.svg", "images/buttons/ai-hidden.svg"], () => { getUnitsManager().forceUpdate() });
+    weaponVisibilityButton = new Button("weapon-visibility-button", ["images/buttons/weapon-partial.svg", "images/buttons/weapon-none.svg", "images/buttons/weapon-hidden.svg"], () => { getUnitsManager().forceUpdate() });
+    deadVisibilityButton = new Button("dead-visibility-button", ["images/buttons/dead.svg", "images/buttons/dead-hidden.svg"], () => { getUnitsManager().forceUpdate() });
 
     aiVisibilityButton.setState(1);
     weaponVisibilityButton.setState(1);

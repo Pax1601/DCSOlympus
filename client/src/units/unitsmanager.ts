@@ -88,6 +88,12 @@ export class UnitsManager {
         }
     }
 
+    forceUpdate() {
+        for (let ID in this.#units) {
+            this.#units[ID].forceUpdate();
+        }
+    }
+
     onUnitSelection() {
         if (this.getSelectedUnits().length > 0) {
             getMap().setState("MOVE_UNIT");

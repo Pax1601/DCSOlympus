@@ -91,7 +91,7 @@ export class UnitMarker extends L.Marker {
                 altitudeDiv.style.display = 'none';
                 speedDiv.style.display = 'none';
             }
-            if (this.getVisibility() === "none")
+            if (this.getVisibility() === "none" && nameDiv.style.display != 'none')
                 nameDiv.style.display = 'none';
 
             nameDiv.style.left = (-(nameDiv.offsetWidth - container.offsetWidth) / 2) + "px";
