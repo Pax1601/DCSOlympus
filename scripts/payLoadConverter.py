@@ -4,8 +4,8 @@ import json
 # Load data from an Excel file
 df = pd.read_excel('data.xlsx')
 
-# Group by 'Name', 'Fuel', 'Loadout Name', 'Role', and 'CLSID' and aggregate 'Items - Name' and 'Items - Quantity'
-grouped = df.groupby(['Name', 'Fuel', 'Loadout Name', 'Role', 'CLSID'])['Items - Name', 'Items - Quantity'].agg(lambda x: list(x)).reset_index()
+# Group by 'Name', 'Fuel', 'Loadout Name', 'Role', and 'Code' and aggregate 'Items - Name' and 'Items - Quantity'
+grouped = df.groupby(['Name', 'Fuel', 'Loadout Name', 'Role', 'Code'])['Items - Name', 'Items - Quantity'].agg(lambda x: list(x)).reset_index()
 
 # Convert the grouped data into the desired format
 result = {}
@@ -25,7 +25,7 @@ for index, row in grouped.iterrows():
                         } for item, quantity in zip(row['Items - Name'], row['Items - Quantity'])
                     ],
                     "roles": [row['Role']],
-                    "CLSID": row['CLSID'],
+                    "code": row['Code'],
                     "loadout_name": row['Loadout Name']
                 }
             ]
@@ -33,7 +33,7 @@ for index, row in grouped.iterrows():
     else:
         found = False
         for loadout in result[name]["loadouts"]:
-            if loadout["fuel"] == row['Fuel'] and loadout["CLSID"] == row['CLSID'] and loadout["loadout_name"] == row['Loadout Name']:
+            if loadout["fuel"] == row['Fuel'] and loadout["code"] == row['Code'] and loadout["loadout_name"] == row['Loadout Name']:
                 loadout["items"].extend([
                     {
                         "name": item,
@@ -53,7 +53,7 @@ for index, row in grouped.iterrows():
                     } for item, quantity in zip(row['Items - Name'], row['Items - Quantity'])
                 ],
                 "roles": [row['Role']],
-                "CLSID": row['CLSID'],
+                "code": row['Code'],
                 "loadout_name": row['Loadout Name']
             })
 
