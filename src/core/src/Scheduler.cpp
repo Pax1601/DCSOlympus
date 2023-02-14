@@ -182,7 +182,10 @@ void Scheduler::handleRequest(wstring key, json::value value)
 	else if (key.compare(L"cloneUnit") == 0)
 	{
 		int ID = value[L"ID"].as_integer();
-		command = dynamic_cast<Command*>(new Clone(ID));
+		double lat = value[L"location"][L"lat"].as_double();
+		double lng = value[L"location"][L"lng"].as_double();
+		Coords loc; loc.lat = lat; loc.lng = lng;
+		command = dynamic_cast<Command*>(new Clone(ID, loc));
 		log(L"Cloning unit " + to_wstring(ID));
 	}
 	else if (key.compare(L"setLeader") == 0)
@@ -218,6 +221,34 @@ void Scheduler::handleRequest(wstring key, json::value value)
 		Unit* unit = unitsFactory->getUnit(ID);
 		wstring formation = value[L"formation"].as_string();
 		unit->setFormation(formation);
+	}
+	else if (key.compare(L"setROE") == 0)
+	{
+		int ID = value[L"ID"].as_integer();
+		Unit* unit = unitsFactory->getUnit(ID);
+		wstring ROE = value[L"ROE"].as_string();
+		unit->setROE(ROE);
+	}
+	else if (key.compare(L"setReactionToThreat") == 0)
+	{
+		int ID = value[L"ID"].as_integer();
+		Unit* unit = unitsFactory->getUnit(ID);
+		wstring reactionToThreat = value[L"reactionToThreat"].as_string();
+		unit->setReactionToThreat(reactionToThreat);
+	}
+	else if (key.compare(L"landAt") == 0)
+	{
+		int ID = value[L"ID"].as_integer();
+		Unit* unit = unitsFactory->getUnit(ID);
+		double lat = value[L"location"][L"lat"].as_double();
+		double lng = value[L"location"][L"lng"].as_double();
+		Coords loc; loc.lat = lat; loc.lng = lng;
+		unit->landAt(loc);
+	}
+	else if (key.compare(L"deleteUnit") == 0)
+	{
+		int ID = value[L"ID"].as_integer();
+		unitsFactory->deleteUnit(ID);
 	}
 	else
 	{

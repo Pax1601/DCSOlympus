@@ -69,7 +69,19 @@ wstring Clone::getString(lua_State* L)
 {
     std::wostringstream commandSS;
     commandSS.precision(10);
-    commandSS << "Olympus.clone, " 
+    commandSS << "Olympus.clone, "
+        << ID << ", "
+        << location.lat << ", "
+        << location.lng;
+    return commandSS.str();
+}
+
+/* Delete unit command */
+wstring Delete::getString(lua_State* L)
+{
+    std::wostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.delete, "
         << ID;
     return commandSS.str();
 }

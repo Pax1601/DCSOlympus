@@ -12,8 +12,10 @@ public:
 	virtual void changeAltitude(wstring change);
 	virtual double getTargetSpeed() { return targetSpeed; };
 	virtual double getTargetAltitude() { return targetAltitude; };
+	virtual void setTargetSpeed(double newTargetSpeed);
+	virtual void setTargetAltitude(double newTargetAltitude);
 
 protected:
-	double targetSpeed = 50;
-	double targetAltitude = 1000;
+	double targetSpeed = 100 / 1.94384;
+	double targetAltitude = 5000 * 0.3048;
 };

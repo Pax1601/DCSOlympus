@@ -154,6 +154,14 @@ export class Map extends L.Map {
         getSelectionScroll().hide();
     }
 
+    getMousePosition() {
+        return this.#lastMousePosition;
+    }
+
+    getMouseCoordinates() {
+        return this.containerPointToLatLng(this.#lastMousePosition);
+    }
+
     /* Event handlers */
     #onClick(e: any) {
         if (!this.#preventLeftClick) {

@@ -41,6 +41,9 @@ void AirUnit::setState(int newState)
 				return;
 			break;
 		}
+		case State::LAND: {
+			break;
+		}
 		default:
 			break;
 		}
@@ -69,6 +72,10 @@ void AirUnit::setState(int newState)
 			break;
 		}
 		case State::WINGMAN: {
+			resetActiveDestination();
+			break;
+		}
+		case State::LAND: {
 			resetActiveDestination();
 			break;
 		}
@@ -242,6 +249,22 @@ void AirUnit::AIloop()
 			
 			break;
 		}
+
+		case State::LAND: {
+			wstring enrouteTask = L"{" "id = 'land' }";
+			currentTask = L"Landing";
+
+			if (activeDestination == NULL)
+			{
+				setActiveDestination();
+				goToDestination(enrouteTask);
+			}
+			
+			if (isLeader)
+				taskWingmen();
+
+			break;
+		}
 		case State::ATTACK: {
 			/* If the target is not alive (either not set or was succesfully destroyed) go back to REACH_DESTINATION */
 			if (!isTargetAlive()) {
@@ -318,14 +341,4 @@ void AirUnit::AIloop()
 		default:
 			break;
 	}
-}
-
-void AirUnit::setTargetSpeed(double newTargetSpeed) {
-	targetSpeed = newTargetSpeed;
-	goToDestination();
-}
-
-void AirUnit::setTargetAltitude(double newTargetAltitude) {
-	targetAltitude = newTargetAltitude;
-	goToDestination();
 }

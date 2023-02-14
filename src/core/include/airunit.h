@@ -15,8 +15,8 @@ public:
 	virtual wstring getCategory() = 0;
 	virtual void changeSpeed(wstring change) {};
 	virtual void changeAltitude(wstring change) {};
-	virtual void setTargetSpeed(double newTargetSpeed);
-	virtual void setTargetAltitude(double newTargetAltitude);
+	virtual void setTargetSpeed(double newTargetSpeed) {};
+	virtual void setTargetAltitude(double newTargetAltitude) {};
 
 protected:
 	virtual void AIloop();

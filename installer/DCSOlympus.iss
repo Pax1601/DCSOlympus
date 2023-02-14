@@ -2,7 +2,7 @@
 
 [Setup] 
 AppName=DCS Olympus 
-AppVerName=DCS Olympus Alpha v0.0.3
+AppVerName=DCS Olympus Alpha v0.0.5
 DefaultDirName={usersavedgames}\DCS.openbeta
 DefaultGroupName=DCSOlympus  
 OutputBaseFilename=DCSOlympus

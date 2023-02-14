@@ -10,6 +10,7 @@ import { Button } from "./controls/button";
 import { MissionData } from "./missiondata/missiondata";
 import { UnitControlPanel } from "./panels/unitcontrolpanel";
 import { MouseInfoPanel } from "./panels/mouseInfoPanel";
+import { Slider } from "./controls/slider";
 
 /* TODO: should this be a class? */
 var map: Map;
@@ -36,6 +37,9 @@ var aiVisibilityButton: Button;
 var weaponVisibilityButton: Button;
 var deadVisibilityButton: Button;
 
+var altitudeSlider: Slider;
+var airspeedSlider: Slider;
+
 var connected: boolean;
 var activeCoalition: string;
 
@@ -58,6 +62,10 @@ function setup() {
     fastButton = new Button("fast-button", ["images/buttons/fast.svg"], () => { getUnitsManager().selectedUnitsChangeSpeed("fast"); });
     climbButton = new Button("climb-button", ["images/buttons/climb.svg"], () => { getUnitsManager().selectedUnitsChangeAltitude("climb"); });
     descendButton = new Button("descend-button", ["images/buttons/descend.svg"], () => { getUnitsManager().selectedUnitsChangeAltitude("descend"); });
+
+    /* Unit control sliders */
+    altitudeSlider = new Slider("altitude-slider", 0, 100, "ft", (value: number) => getUnitsManager().selectedUnitsSetAltitude(value * 0.3048));
+    airspeedSlider = new Slider("airspeed-slider", 0, 100, "kts", (value: number) => getUnitsManager().selectedUnitsSetSpeed(value / 1.94384));
 
     /* Visibility buttons */
     userVisibilityButton = new Button("user-visibility-button", ["images/buttons/user-full.svg", "images/buttons/user-partial.svg", "images/buttons/user-none.svg", "images/buttons/user-hidden.svg"], () => { });
@@ -182,6 +190,14 @@ export function getVisibilitySettings() {
             visibility.dead = "hidden"; break;
     }
     return visibility;
+}
+
+export function getVisibilityButtons() {
+    return {user: userVisibilityButton, ai: aiVisibilityButton, weapon: weaponVisibilityButton, dead: deadVisibilityButton}
+}
+
+export function getUnitControlSliders() {
+    return {altitude: altitudeSlider, airspeed: airspeedSlider}
 }
 
 window.onload = setup;
