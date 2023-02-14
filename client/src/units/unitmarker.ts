@@ -8,6 +8,7 @@ export interface MarkerOptions {
     human: boolean
     coalitionID: number
     type: any
+    AI: boolean
 }
 
 export interface MarkerData {
@@ -21,6 +22,7 @@ export class UnitMarker extends L.Marker {
     #unitName: string
     #name: string
     #human: boolean
+    #AI: boolean
     #alive: boolean = true
     #selected: boolean = false
 
@@ -29,6 +31,7 @@ export class UnitMarker extends L.Marker {
         this.#unitName = options.unitName;
         this.#name = options.name;
         this.#human = options.human;
+        this.#AI = options.AI;
 
         var symbol = new Symbol(this.#computeMarkerCode(options), { size: 25 });
         var img = symbol.asCanvas().toDataURL('image/png');
@@ -125,6 +128,10 @@ export class UnitMarker extends L.Marker {
 
     getHuman() {
         return this.#human;
+    }
+
+    getAI() {
+        return this.#AI;
     }
 
     getAlive() {
@@ -226,7 +233,7 @@ export class AirUnitMarker extends UnitMarker {
         else if (!this.getAlive())
             return "none";
         else
-            return getVisibilitySettings().ai;
+            return this.getAI()? getVisibilitySettings().ai: getVisibilitySettings().uncontrolled;
     }
 }
 
@@ -247,7 +254,7 @@ export class GroundUnitMarker extends UnitMarker {
         else if (!this.getAlive())
             return "none";
         else
-            return getVisibilitySettings().ai;
+            return this.getAI()? getVisibilitySettings().ai: getVisibilitySettings().uncontrolled;
     }
 }
 
@@ -259,7 +266,7 @@ export class NavyUnitMarker extends UnitMarker {
         if (!this.getAlive())
             return "none";
         else
-            return getVisibilitySettings().ai;
+            return this.getAI()? getVisibilitySettings().ai: getVisibilitySettings().uncontrolled;
     }
 }
 

@@ -12,6 +12,7 @@ public:
 	void appendCommand(Command* command);
 	void execute(lua_State* L);
 	void handleRequest(wstring key, json::value value);
+	
 
 private:
 	list<Command*> commands;

@@ -98,6 +98,7 @@ json::value Unit::json()
 	auto json = json::value::object();
 
 	json[L"alive"] = alive;
+	json[L"AI"] = AI;
 	json[L"name"] = json::value::string(name);
 	json[L"unitName"] = json::value::string(unitName);
 	json[L"groupName"] = json::value::string(groupName);

@@ -12,6 +12,7 @@ var pathIcon = new Icon({
 
 export class Unit {
     ID: number = -1;
+    AI: boolean = false;
     formation: string = "";
     name: string = "";
     unitName: string = "";
@@ -387,6 +388,9 @@ export class Unit {
 
 export class AirUnit extends Unit {
     getHidden() {
+        if (this.AI == false && getVisibilitySettings().uncontrolled === "hidden")
+            return true
+
         if (this.alive)
         {
             if (this.flags.user && getVisibilitySettings().user === "hidden")
@@ -421,6 +425,9 @@ export class GroundUnit extends Unit {
     }
 
     getHidden() {
+        if (this.AI == false && getVisibilitySettings().uncontrolled === "hidden")
+            return true
+
         if (this.alive)
         {
             if (this.flags.user && getVisibilitySettings().user === "hidden")
@@ -441,6 +448,9 @@ export class NavyUnit extends Unit {
     }
 
     getHidden() {
+        if (this.AI == false && getVisibilitySettings().uncontrolled === "hidden")
+            return true
+            
         if (this.alive)
         {
             if (this.flags.user && getVisibilitySettings().user === "hidden")

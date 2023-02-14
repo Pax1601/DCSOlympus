@@ -43,9 +43,9 @@ body {
 
 #visibility-control-panel {
 	position: absolute;
-	left: 430px;
+	left: 230px;
 	height: 30px;
-	width: 110;
+	width: 150;
 	top: 10px;
 	z-index: 1000;
 	display: flex;
