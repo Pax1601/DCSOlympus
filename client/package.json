@@ -5,8 +5,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "npm run copy & concurrently --kill-others \"npm run watch\" \"nodemon ./bin/www\"",
     "copy": "copy .\\node_modules\\leaflet\\dist\\leaflet.css .\\public\\stylesheets\\leaflet.css",
+    "start": "npm run copy & concurrently --kill-others \"npm run watch\" \"nodemon ./bin/www\"",
     "watch": "watchify .\\src\\index.ts --debug -p [ tsify --noImplicitAny ] -o .\\public\\javascripts\\bundle.js"
   },
   "dependencies": {

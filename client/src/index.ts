@@ -11,8 +11,8 @@ import { MissionData } from "./missiondata/missiondata";
 import { UnitControlPanel } from "./panels/unitcontrolpanel";
 import { MouseInfoPanel } from "./panels/mouseInfoPanel";
 import { Slider } from "./controls/slider";
+import { AIC } from "./aic/AIC";
 
-import { AIC } from "./aic/aic";
 
 /* TODO: should this be a class? */
 var map: Map;
@@ -41,6 +41,7 @@ var deadVisibilityButton: Button;
 
 var aic: AIC;
 var aicToggleButton: Button;
+var aicHelpButton: Button;
 
 var altitudeSlider: Slider;
 var airspeedSlider: Slider;
@@ -84,11 +85,31 @@ function setup() {
 
     /* AIC */
     aic = new AIC();
-
-   setupAICFormations( aic );
     
-    aicToggleButton = new Button( "toggle-aic-button", ["images/buttons/ai-full.svg"], () => {
+    aicToggleButton = new Button( "toggle-aic-button", ["images/buttons/radar.svg"], () => {
         aic.toggleStatus();
+    });
+
+    aicHelpButton = new Button( "aic-help-button", [ "images/buttons/question-mark.svg" ], () => {
+        aic.toggleHelp();
+    });
+
+
+    /* Generic clicks */
+
+    document.addEventListener( "click", ( ev ) => {
+
+        if ( ev instanceof PointerEvent && ev.target instanceof HTMLElement ) {
+
+            if ( ev.target.classList.contains( "olympus-dialog-close" ) ) {
+                ev.target.closest( "div.olympus-dialog" )?.classList.add( "hide" );
+            }
+
+        }
+
+
+
+
     });
 
     /* Default values */
@@ -225,56 +246,5 @@ export function getUnitControlSliders() {
     return {altitude: altitudeSlider, airspeed: airspeedSlider}
 }
 
-
-function setupAICFormations( aic:AIC ) {
-    let $aicFormationList = document.getElementById( "aic-formation-list" );
-
-    if ( $aicFormationList ) {
-
-        /* //  Example display
-        <div>
-            <div class="aic-formation-image">
-                <img src="images/formations/azimuth.png" />
-            </div>
-            <div class="aic-formation-name">Azimuth</div>
-            <div class="aic-formation-descriptor">(instructions)</div>
-        </div>
-        //*/
-
-        aic.getFormations().forEach( formation => {
-
-            //  Image
-            let imageDiv = document.createElement( "div" );
-            imageDiv.classList.add( "aic-formation-image" );
-
-            let img = document.createElement( "img" );
-            img.src = "images/formations/" + formation.icon;
-
-            imageDiv.appendChild( img );
-            
-            //  Name
-            let nameDiv  = document.createElement( "div" );
-            nameDiv.classList.add( "aic-formation-name" );
-            nameDiv.innerText = formation.label;
-            
-            //  Descriptor
-            let descriptorDiv = document.createElement( "div" );
-            descriptorDiv.classList.add( "aic-formation-descriptor" );
-            descriptorDiv.innerText = formation.descriptor;
-
-            // Wrapper
-            let wrapperDiv = document.createElement( "div" );
-            wrapperDiv.dataset.formationName = formation.name;
-            wrapperDiv.appendChild( imageDiv )
-            wrapperDiv.appendChild( nameDiv );
-            wrapperDiv.appendChild( descriptorDiv );
-
-            //  Add to DOM
-            $aicFormationList?.appendChild( wrapperDiv );
-
-        });
-
-    }
-}
 
 window.onload = setup;
