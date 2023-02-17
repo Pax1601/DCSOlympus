@@ -1,9 +1,7 @@
-import { AICFormation } from "./AICFormation";
 import { AICFormation_Azimuth } from "./AICFormation/Azimuth";
 import { AICFormation_Range } from "./AICFormation/Range";
 import { AICFormation_Single } from "./AICFormation/Single";
 import { AICFormationDescriptorSection } from "./AICFormationDescriptorSection";
-//  import { AICFormationDescriptor } from "./aicformationdescriptor"
 
 
 export class AIC {
@@ -148,31 +146,36 @@ export class AIC {
                 $sectionLabel.innerText = section.label;
                 $section.appendChild( $sectionLabel );
 
-                
-                let $components = newDiv();
-                $components.classList.add( "aic-descriptor-components" );
 
-                for ( const component of section.getComponents() ) {
+                for ( const phrase of section.getPhrases() ) {
 
-                    let $component = newDiv();
-                    $component.classList.add( "aic-descriptor-component" );
+                    let $phrase = newDiv();
+                    $phrase.classList.add( "aic-descriptor-phrase" );
 
-                    let $componentLabel = newDiv();
-                    $componentLabel.classList.add( "aic-descriptor-component-label" );
-                    $componentLabel.innerText = component.label;
+                    for ( const component of phrase.getComponents() ) {
 
-                    let $componentValue = newDiv();
-                    $componentValue.classList.add( "aic-descriptor-component-value" );
-                    $componentValue.innerText = component.value;
+                        let $component = newDiv();
+                        $component.classList.add( "aic-descriptor-component" );
+    
+                        let $componentLabel = newDiv();
+                        $componentLabel.classList.add( "aic-descriptor-component-label" );
+                        $componentLabel.innerText = component.label;
+    
+                        let $componentValue = newDiv();
+                        $componentValue.classList.add( "aic-descriptor-component-value" );
+                        $componentValue.innerText = component.value;
+    
+                        $component.appendChild( $componentLabel );
+                        $component.appendChild( $componentValue );
 
-                    $component.appendChild( $componentLabel );
-                    $component.appendChild( $componentValue );
+                        $phrase.appendChild( $component );
+                        
+                    }
 
-                    $components.appendChild( $component );
+                    $section.appendChild( $phrase );
 
                 }
 
-                $section.appendChild( $components );
                 $descriptor.appendChild( $section );
 
             }

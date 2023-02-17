@@ -214,9 +214,16 @@ body {
 	text-align: center;
 }
 
-#aic-descriptor .aic-descriptor-components {
+#aic-descriptor .aic-descriptor-phrase {
+	border-bottom: 1px solid #ccc;
 	display:flex;
 	flex-direction: row;
+	margin-bottom:5px;
+	padding-bottom:2px;
+}
+
+#aic-descriptor .aic-descriptor-phrase:last-of-type {
+	margin-bottom: 0;
 }
 
 #aic-descriptor .aic-descriptor-components .aic-descriptor-component {
@@ -230,10 +237,11 @@ body {
 
 #aic-descriptor .aic-descriptor-component-value:after {
 	content:",";
+	margin-right:5px;
 }
 
 #aic-descriptor .aic-descriptor-component:last-of-type .aic-descriptor-component-value:after {
-	content:";";
+	content:"; ";
 }
 
 #aic-descriptor .aic-descriptor-section:last-of-type .aic-descriptor-component:last-of-type .aic-descriptor-component-value:after {
