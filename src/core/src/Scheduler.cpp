@@ -65,9 +65,9 @@ void Scheduler::handleRequest(wstring key, json::value value)
 			wstring unitName = unit->getUnitName();
 			json::value path = value[L"path"];
 			list<Coords> newPath;
-			for (auto const& e : path.as_object())
+			for (int i = 1; i <= path.as_object().size(); i++)
 			{
-				wstring WP = e.first;
+				wstring WP = to_wstring(i);
 				double lat = path[WP][L"lat"].as_double();
 				double lng = path[WP][L"lng"].as_double();
 				log(unitName + L" set path destination " + WP + L" (" + to_wstring(lat) + L", " + to_wstring(lng) + L")");

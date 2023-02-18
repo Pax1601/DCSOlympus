@@ -74,6 +74,10 @@ body {
 
 .control-panel {
 	position: absolute;
+	left: 230px;
+	height: 30px;
+	width: 150;
+	top: 10px;
 	z-index: 1000;
 	display: flex;
 	align-items: center;

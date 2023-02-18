@@ -2,7 +2,7 @@ Olympus.unitCounter = 1
 Olympus.payloadRegistry = {}
   
 function Olympus.notify(message, displayFor)
-    trigger.action.outText(message, displayFor)
+    -- trigger.action.outText(message, displayFor)
 end
 
 -- Gets a unit class reference from a given ObjectID (the ID used by Olympus for unit referencing)

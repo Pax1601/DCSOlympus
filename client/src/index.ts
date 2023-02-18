@@ -36,6 +36,7 @@ var climbButton: Button;
 var descendButton: Button;
 var userVisibilityButton: Button;
 var aiVisibilityButton: Button;
+var uncontrolledVisibilityButton: Button;
 var weaponVisibilityButton: Button;
 var deadVisibilityButton: Button;
 
@@ -74,12 +75,14 @@ function setup() {
     airspeedSlider = new Slider("airspeed-slider", 0, 100, "kts", (value: number) => getUnitsManager().selectedUnitsSetSpeed(value / 1.94384));
 
     /* Visibility buttons */
-    userVisibilityButton = new Button("user-visibility-button", ["images/buttons/user-full.svg", "images/buttons/user-partial.svg", "images/buttons/user-none.svg", "images/buttons/user-hidden.svg"], () => { });
-    aiVisibilityButton = new Button("ai-visibility-button", ["images/buttons/ai-full.svg", "images/buttons/ai-partial.svg", "images/buttons/ai-none.svg", "images/buttons/ai-hidden.svg"], () => { });
-    weaponVisibilityButton = new Button("weapon-visibility-button", ["images/buttons/weapon-partial.svg", "images/buttons/weapon-none.svg", "images/buttons/weapon-hidden.svg"], () => { });
-    deadVisibilityButton = new Button("dead-visibility-button", ["images/buttons/dead.svg", "images/buttons/dead-hidden.svg"], () => { });
+    userVisibilityButton = new Button("user-visibility-button", ["images/buttons/user-full.svg", "images/buttons/user-partial.svg", "images/buttons/user-none.svg", "images/buttons/user-hidden.svg"], () => { getUnitsManager().forceUpdate() });
+    aiVisibilityButton = new Button("ai-visibility-button", ["images/buttons/ai-full.svg", "images/buttons/ai-partial.svg", "images/buttons/ai-none.svg", "images/buttons/ai-hidden.svg"], () => { getUnitsManager().forceUpdate() });
+    uncontrolledVisibilityButton = new Button("uncontrolled-visibility-button", ["images/buttons/ai-full.svg", "images/buttons/ai-partial.svg", "images/buttons/ai-none.svg", "images/buttons/ai-hidden.svg"], () => { getUnitsManager().forceUpdate() });
+    weaponVisibilityButton = new Button("weapon-visibility-button", ["images/buttons/weapon-partial.svg", "images/buttons/weapon-none.svg", "images/buttons/weapon-hidden.svg"], () => { getUnitsManager().forceUpdate() });
+    deadVisibilityButton = new Button("dead-visibility-button", ["images/buttons/dead.svg", "images/buttons/dead-hidden.svg"], () => { getUnitsManager().forceUpdate() });
 
     aiVisibilityButton.setState(1);
+    uncontrolledVisibilityButton.setState(3);
     weaponVisibilityButton.setState(1);
     deadVisibilityButton.setState(1);
 
@@ -194,6 +197,7 @@ export function getVisibilitySettings() {
     var visibility = {
         user: "",
         ai: "",
+        uncontrolled: "",
         weapon: "",
         dead: ""
     };
@@ -218,6 +222,17 @@ export function getVisibilitySettings() {
             visibility.ai = "none"; break;
         case 3:
             visibility.ai = "hidden"; break;
+    }
+
+    switch (uncontrolledVisibilityButton.getState()) {
+        case 0:
+            visibility.uncontrolled = "full"; break;
+        case 1:
+            visibility.uncontrolled = "partial"; break;
+        case 2:
+            visibility.uncontrolled = "none"; break;
+        case 3:
+            visibility.uncontrolled = "hidden"; break;
     }
 
     switch (weaponVisibilityButton.getState()) {

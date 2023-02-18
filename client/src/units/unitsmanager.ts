@@ -39,7 +39,8 @@ export class UnitsManager {
                 name: data.name,
                 human: data.human,
                 coalitionID: data.coalitionID,
-                type: data.type
+                type: data.type,
+                AI: data.AI
             }
             this.#units[ID] = new constructor(ID, options);
         }
@@ -88,6 +89,12 @@ export class UnitsManager {
         }
     }
 
+    forceUpdate() {
+        for (let ID in this.#units) {
+            this.#units[ID].forceUpdate();
+        }
+    }
+
     onUnitSelection() {
         if (this.getSelectedUnits().length > 0) {
             getMap().setState("MOVE_UNIT");
@@ -106,10 +113,13 @@ export class UnitsManager {
         this.deselectAllUnits();
         for (let ID in this.#units)
         {
-            var latlng = new LatLng(this.#units[ID].latitude, this.#units[ID].longitude);
-            if (bounds.contains(latlng))
+            if (this.#units[ID].getHidden() == false)
             {
-                this.#units[ID].setSelected(true);
+                var latlng = new LatLng(this.#units[ID].latitude, this.#units[ID].longitude);
+                if (bounds.contains(latlng))
+                {
+                    this.#units[ID].setSelected(true);
+                }
             }
         }
     }

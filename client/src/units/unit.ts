@@ -12,6 +12,7 @@ var pathIcon = new Icon({
 
 export class Unit {
     ID: number = -1;
+    AI: boolean = false;
     formation: string = "";
     name: string = "";
     unitName: string = "";
@@ -49,6 +50,7 @@ export class Unit {
     #targetsPolylines: Polyline[];
     #marker: UnitMarker;
     #timer: number = 0;
+    #forceUpdate: boolean = false;
 
     static getConstructor(name: string) {
         if (name === "GroundUnit") return GroundUnit;
@@ -76,6 +78,10 @@ export class Unit {
     }
 
     update(response: any) {
+        var updateMarker = false;
+        if (this.latitude != response['latitude'] || this.longitude != response['longitude'] || this.alive != response['alive'] || this.#forceUpdate)
+            updateMarker = true;
+
         for (let entry in response) {
             // @ts-ignore TODO handle better
             this[entry] = response[entry];
@@ -88,7 +94,8 @@ export class Unit {
         /* Dead units can't be selected */
         this.setSelected(this.getSelected() && this.alive)
 
-        this.#updateMarker();
+        if (updateMarker)
+            this.#updateMarker();
 
         this.#clearTargets();
         if (this.getSelected() && this.activePath != null)
@@ -164,6 +171,11 @@ export class Unit {
         return wingmen;
     }
 
+    forceUpdate()
+    {
+        this.#forceUpdate = true;
+    }
+
     #onClick(e: any) {
         this.#timer = setTimeout(() => {
             if (!this.#preventClick) {
@@ -218,6 +230,8 @@ export class Unit {
                 alive: this.alive
             });
         }
+
+        this.#forceUpdate = false;
     }
 
     #drawPath() {
@@ -374,6 +388,9 @@ export class Unit {
 
 export class AirUnit extends Unit {
     getHidden() {
+        if (this.AI == false && getVisibilitySettings().uncontrolled === "hidden")
+            return true
+
         if (this.alive)
         {
             if (this.flags.user && getVisibilitySettings().user === "hidden")
@@ -408,6 +425,9 @@ export class GroundUnit extends Unit {
     }
 
     getHidden() {
+        if (this.AI == false && getVisibilitySettings().uncontrolled === "hidden")
+            return true
+
         if (this.alive)
         {
             if (this.flags.user && getVisibilitySettings().user === "hidden")
@@ -428,6 +448,9 @@ export class NavyUnit extends Unit {
     }
 
     getHidden() {
+        if (this.AI == false && getVisibilitySettings().uncontrolled === "hidden")
+            return true
+            
         if (this.alive)
         {
             if (this.flags.user && getVisibilitySettings().user === "hidden")

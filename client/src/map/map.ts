@@ -2,7 +2,7 @@ import * as L from "leaflet"
 import { getSelectionWheel, getSelectionScroll, getUnitsManager, getActiveCoalition, getMouseInfoPanel } from "..";
 import { spawnAircraft, spawnGroundUnit, spawnSmoke } from "../dcs/dcs";
 import { bearing, distance, zeroAppend } from "../other/utils";
-import { payloadNames } from "../units/payloadNames";
+import { aircraftDatabase, getAircraftLabelsByRole, getLoadoutsByName, getLoadoutNamesByRole } from "../units/aircraftDatabase";
 import { unitTypes } from "../units/unitTypes";
 import { BoxSelect } from "./boxselect";
 
@@ -278,6 +278,23 @@ export class Map extends L.Map {
     }
 
     /* Spawning menus */
+    #aircraftSpawnMenu(e: SpawnEvent) {
+        var options = [
+            { 'coalition': true, 'tooltip': 'CAP', 'src': 'spawnCAP.png', 'callback': () => this.#selectAircraft(e, "cap") },
+            { 'coalition': true, 'tooltip': 'CAS', 'src': 'spawnCAS.png', 'callback': () => this.#selectAircraft(e, "cas") },
+            { 'coalition': true, 'tooltip': 'Strike', 'src': 'spawnStrike.png', 'callback': () => this.#selectAircraft(e, "strike") },
+            { 'coalition': true, 'tooltip': 'Recce', 'src': 'spawnStrike.png', 'callback': () => this.#selectAircraft(e, "reconnaissance") },
+            { 'coalition': true, 'tooltip': 'Tanker', 'src': 'spawnTanker.png', 'callback': () => this.#selectAircraft(e, "tanker") },
+            { 'coalition': true, 'tooltip': 'AWACS', 'src': 'spawnAWACS.png', 'callback': () => this.#selectAircraft(e, "awacs") },
+            { 'coalition': true, 'tooltip': 'Drone', 'src': 'spawnDrone.png', 'callback': () => this.#selectAircraft(e, "drone") },
+            { 'coalition': true, 'tooltip': 'Transport', 'src': 'spawnTransport.png', 'callback': () => this.#selectAircraft(e, "transport") },
+        ]
+        if (e.airbaseName != null)
+            this.showSelectionScroll(e, "Spawn at " + e.airbaseName, options, () => {}, true);
+        else
+            this.showSelectionScroll(e, "Spawn air unit", options, () => {}, true);
+    }
+
     #groundUnitSpawnMenu(e: SpawnEvent) {
         var options = [
             {'coalition': true, 'tooltip': 'Howitzer',   'src': 'spawnHowitzer.png', 'callback': () => this.#selectGroundUnit(e, "Howitzers")},
@@ -308,50 +325,31 @@ export class Map extends L.Map {
 
     }
 
-    #aircraftSpawnMenu(e: SpawnEvent) {
-        var options = [
-            { 'coalition': true, 'tooltip': 'CAP', 'src': 'spawnCAP.png', 'callback': () => this.#selectAircraft(e, "CAP") },
-            { 'coalition': true, 'tooltip': 'CAS', 'src': 'spawnCAS.png', 'callback': () => this.#selectAircraft(e, "CAS") },
-            { 'coalition': true, 'tooltip': 'Tanker', 'src': 'spawnTanker.png', 'callback': () => this.#selectAircraft(e, "tanker") },
-            { 'coalition': true, 'tooltip': 'AWACS', 'src': 'spawnAWACS.png', 'callback': () => this.#selectAircraft(e, "awacs") },
-            { 'coalition': true, 'tooltip': 'Strike', 'src': 'spawnStrike.png', 'callback': () => this.#selectAircraft(e, "strike") },
-            { 'coalition': true, 'tooltip': 'Drone', 'src': 'spawnDrone.png', 'callback': () => this.#selectAircraft(e, "drone") },
-            { 'coalition': true, 'tooltip': 'Transport', 'src': 'spawnTransport.png', 'callback': () => this.#selectAircraft(e, "transport") },
-        ]
-        if (e.airbaseName != null)
-            this.showSelectionScroll(e, "Spawn at " + e.airbaseName, options, () => {}, true);
-        else
-            this.showSelectionScroll(e, "Spawn air unit", options, () => {}, true);
-    }
-
     /* Show unit selection for air units */
-    #selectAircraft(e: SpawnEvent, group: string) {
+    #selectAircraft(e: SpawnEvent, role: string) {
         this.hideSelectionWheel();
         this.hideSelectionScroll();
-        var options = unitTypes.air[group];
-        if (options != undefined)
-            options.sort();
-        else
-            options = [];
+        var options = getAircraftLabelsByRole(role);
         this.showSelectionScroll(e, "Select aircraft", options, (unitType: string) => {
             this.hideSelectionWheel();
             this.hideSelectionScroll();
-            this.#unitSelectPayload(e, unitType);
+            this.#unitSelectPayload(e, unitType, role);
         }, true);
     }
 
     /* Show weapon selection for air units */
-    #unitSelectPayload(e: SpawnEvent, unitType: string) {
+    #unitSelectPayload(e: SpawnEvent, unitType: string, role: string) {
         this.hideSelectionWheel();
         this.hideSelectionScroll();
-        var options = [];
-        options = payloadNames[unitType]
+        var options = getLoadoutNamesByRole(unitType, role);
+        //options = payloadNames[unitType]
         if (options != undefined && options.length > 0) {
             options.sort();
-            this.showSelectionScroll({x: e.x, y: e.y, latlng: e.latlng}, "Select loadout", options, (payloadName: string) => {
+            this.showSelectionScroll({x: e.x, y: e.y, latlng: e.latlng}, "Select loadout", options, (loadoutName: string) => {
                 this.hideSelectionWheel();
                 this.hideSelectionScroll();
-                spawnAircraft(unitType, e.latlng, getActiveCoalition(), payloadName, e.airbaseName);
+                var loadout = getLoadoutsByName(unitType, loadoutName);
+                spawnAircraft(unitType, e.latlng, getActiveCoalition(), loadout.code, e.airbaseName);
             }, true);
         }
         else {
