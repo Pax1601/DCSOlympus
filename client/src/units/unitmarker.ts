@@ -1,6 +1,6 @@
 import * as L from 'leaflet'
 import { Symbol } from 'milsymbol'
-import { getVisibilitySettings } from '..'
+import { AirUnit, GroundUnit, NavyUnit, Weapon } from './unit'
 
 export interface MarkerOptions {
     unitName: string
@@ -88,13 +88,13 @@ export class UnitMarker extends L.Marker {
             speedDiv.style.display = '';
 
             /* If visibility is partial shown only icon and unit name. If none, shown only icon. */
-            if (this.getVisibility() === "partial" || this.getVisibility() === "none")
+            if (this.getVisibility() === "partial" || this.getVisibility() === "minimal")
             {
                 unitNameDiv.style.display = 'none';
                 altitudeDiv.style.display = 'none';
                 speedDiv.style.display = 'none';
             }
-            if (this.getVisibility() === "none" && nameDiv.style.display != 'none')
+            if (this.getVisibility() === "minimal" && nameDiv.style.display != 'none')
                 nameDiv.style.display = 'none';
 
             nameDiv.style.left = (-(nameDiv.offsetWidth - container.offsetWidth) / 2) + "px";
@@ -225,15 +225,19 @@ export class UnitMarker extends L.Marker {
 
 export class AirUnitMarker extends UnitMarker {
     getVisibility() {
-        if (this.getSelected())
-            return "full";
-
-        if (this.getHuman())
-            return getVisibilitySettings().user;
-        else if (!this.getAlive())
-            return "none";
-        else
-            return this.getAI()? getVisibilitySettings().ai: getVisibilitySettings().uncontrolled;
+        if (this.getAlive())
+        {
+            if (this.getSelected())
+                return "full";
+            else if (this.getHuman())
+                return AirUnit.getVisibility().human;
+            else if (this.getAI())
+                return AirUnit.getVisibility().ai;
+            else 
+                return AirUnit.getVisibility().uncontrolled;
+        }
+        else 
+            return "minimal";
     }
 }
 
@@ -246,38 +250,54 @@ export class HelicopterMarker extends AirUnitMarker {
 export class GroundUnitMarker extends UnitMarker {
     /* Are user driven units recognized as human? */
     getVisibility() {
-        if (this.getSelected())
-            return "full";
-
-        if (this.getHuman())
-            return getVisibilitySettings().user;
-        else if (!this.getAlive())
-            return "none";
-        else
-            return this.getAI()? getVisibilitySettings().ai: getVisibilitySettings().uncontrolled;
+        if (this.getAlive())
+        {
+            if (this.getSelected())
+                return "full";
+            else if (this.getHuman())
+                return GroundUnit.getVisibility().human;
+            else if (this.getAI())
+                return GroundUnit.getVisibility().ai;
+            else 
+                return GroundUnit.getVisibility().uncontrolled;
+        }
+        else 
+            return "minimal";
     }
 }
 
 export class NavyUnitMarker extends UnitMarker {
     getVisibility() {
-        if (this.getSelected())
-            return "full";
-
-        if (!this.getAlive())
-            return "none";
-        else
-            return this.getAI()? getVisibilitySettings().ai: getVisibilitySettings().uncontrolled;
+        if (this.getAlive())
+        {
+            if (this.getSelected())
+                return "full";
+            else if (this.getHuman())
+                return NavyUnit.getVisibility().human;
+            else if (this.getAI())
+                return NavyUnit.getVisibility().ai;
+            else 
+                return NavyUnit.getVisibility().uncontrolled;
+        }
+        else 
+            return "minimal";
     }
 }
 
 export class WeaponMarker extends UnitMarker {
     getVisibility() {
-        if (this.getSelected())
-            return "full";
-
-        if (!this.getAlive())
-            return "none";
-        else
-            return getVisibilitySettings().weapon;
+        if (this.getAlive())
+        {
+            if (this.getSelected())
+                return "full";
+            else if (this.getHuman())
+                return Weapon.getVisibility().human;
+            else if (this.getAI())
+                return Weapon.getVisibility().ai;
+            else 
+                return Weapon.getVisibility().uncontrolled;
+        }
+        else 
+            return "minimal";
     }
 }

@@ -119,3 +119,12 @@
     font-weight: 600;
 }
 
+#loadout-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    column-gap: 2px;
+    row-gap: 2px;
+    min-height: 0px;
+    max-height: 70px; /* TODO: fix me, magic number */
+}

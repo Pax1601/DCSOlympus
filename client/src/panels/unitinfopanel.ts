@@ -26,7 +26,7 @@ export class UnitInfoPanel {
         if (this.#element != null) {
             var els = this.#element.getElementsByClassName("js-loadout-element");
             while (els.length > 0)
-                this.#element.querySelector("#loadout-data")?.removeChild(els[0]);
+                this.#element.querySelector("#loadout-container")?.removeChild(els[0]);
   
             for (let index in unit.ammo) {
                 var ammo = unit.ammo[index];
@@ -35,7 +35,7 @@ export class UnitInfoPanel {
                 var el = document.createElement("div")
                 el.classList.add("js-loadout-element", "rectangular-container-dark")
                 el.innerHTML = amount + "x" + displayName;
-                this.#element.querySelector("#loadout-data")?.appendChild(el);
+                this.#element.querySelector("#loadout-container")?.appendChild(el);
             }
 
             this.#element.querySelector("#unit-name")!.innerHTML = unit.unitName;

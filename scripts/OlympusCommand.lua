@@ -137,7 +137,7 @@ function Olympus.move(ID, lat, lng, altitude, speed, category, taskOptions)
 			Olympus.notify("Olympus.move not implemented yet for " .. category, 2)
 		end
 	else
-        Olympus.notify("Error in Olympus.move " .. unitName, 2)
+        Olympus.notify("Error in Olympus.move " .. ID, 2)
 	end
 end  
 

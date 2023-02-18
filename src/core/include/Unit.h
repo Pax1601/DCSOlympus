@@ -105,9 +105,6 @@ protected:
 	Coords oldPosition = Coords(0); // Used to approximate speed
 
 	virtual void AIloop() = 0;
-
-private:
-	mutex mutexLock;
 };
 
 

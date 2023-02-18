@@ -25,9 +25,6 @@ Unit::~Unit()
 
 void Unit::updateExportData(json::value json)
 {
-	/* Lock for thread safety */
-	lock_guard<mutex> guard(mutexLock);
-
 	/* Compute speed (loGetWorldObjects does not provide speed, we compute it for better performance instead of relying on many lua calls) */
 	if (oldPosition != NULL)
 	{
@@ -77,11 +74,8 @@ void Unit::updateExportData(json::value json)
 
 void Unit::updateMissionData(json::value json)
 {
-	/* Lock for thread safety */
-	lock_guard<mutex> guard(mutexLock);
-
 	if (json.has_number_field(L"fuel"))
-		fuel = json[L"fuel"].as_number().to_int32();
+		fuel = int(json[L"fuel"].as_number().to_double() * 100);
 	if (json.has_object_field(L"ammo"))
 		ammo = json[L"ammo"];
 	if (json.has_object_field(L"targets"))
@@ -92,9 +86,6 @@ void Unit::updateMissionData(json::value json)
 
 json::value Unit::json()
 {
-	/* Lock for thread safety */
-	lock_guard<mutex> guard(mutexLock);
-
 	auto json = json::value::object();
 
 	json[L"alive"] = alive;

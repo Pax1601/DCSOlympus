@@ -29,7 +29,10 @@
     flex-direction: column;
     row-gap: 5px;
     width: 100%;
-    height: 100%;
+    height: fit-content;
+    max-height: 200px;
+    padding-top: 10px;
+	padding-bottom: 10px;
 }
 
 #formation-buttons-container {

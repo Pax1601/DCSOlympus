@@ -76,7 +76,7 @@ body {
 	position: absolute;
 	left: 230px;
 	height: 30px;
-	width: 150;
+	width: fit-content;
 	top: 10px;
 	z-index: 1000;
 	display: flex;

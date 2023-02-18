@@ -20,18 +20,17 @@ export class SelectionScroll {
         this.hide();
 
         if (this.#container != null && options.length >= 1) {
-            var titleDiv = this.#container.querySelector("#olympus-selection-scroll-top-bar")?.querySelector(".olympus-selection-scroll-title");
+            var titleDiv = this.#container.querySelector("#ol-selection-scroll-top-bar")?.querySelector(".ol-selection-scroll-title");
             if (titleDiv)
                 titleDiv.innerHTML = title;
             this.#container.style.display = this.#display;
-            this.#container.style.left = x - this.#container.offsetWidth / 2 + "px";
-            this.#container.style.top = y - 20 + "px";
-            var scroll = this.#container.querySelector(".olympus-selection-scroll");
+
+            var scroll = this.#container.querySelector(".ol-selection-scroll");
             if (scroll != null)
             {
                 for (let optionID in options) {
                     var node = document.createElement("div");
-                    node.classList.add("olympus-selection-scroll-element");
+                    node.classList.add("ol-selection-scroll-element");
                     if (typeof options[optionID] === 'string' || options[optionID] instanceof String){
                         node.appendChild(document.createTextNode(options[optionID]));
                         node.addEventListener('click', () => callback(options[optionID]));
@@ -45,7 +44,7 @@ export class SelectionScroll {
             }
 
             /* Hide the coalition switch if required */
-            var switchContainer = <HTMLElement>this.#container.querySelector("#olympus-selection-scroll-top-bar")?.querySelector("#coalition-switch-container");
+            var switchContainer = <HTMLElement>this.#container.querySelector("#ol-selection-scroll-top-bar")?.querySelector("#coalition-switch-container");
             if (showCoalition == false) {
                 switchContainer.style.display = "none";
                 document.documentElement.style.setProperty('--active-coalition-color', getComputedStyle(this.#container).getPropertyValue("--neutral-coalition-color"));
@@ -57,14 +56,26 @@ export class SelectionScroll {
                 else
                     document.documentElement.style.setProperty('--active-coalition-color', getComputedStyle(this.#container).getPropertyValue("--red-coalition-color"));
             }
+
+            if (x - this.#container.offsetWidth / 2 + this.#container.offsetWidth < window.innerWidth)
+                this.#container.style.left = x - this.#container.offsetWidth / 2 + "px";
+            else
+                this.#container.style.left = window.innerWidth - this.#container.offsetWidth + "px";
+
+            console.log(y - 20 + this.#container.offsetHeight)
+            if (y - 20 + this.#container.offsetHeight < window.innerHeight)
+                this.#container.style.top = y - 20 + "px";
+            else
+                this.#container.style.top = window.innerHeight - this.#container.offsetHeight + "px";
+
         }
     }
 
     hide() {
         if (this.#container != null) {
             this.#container.style.display = "none";
-            var buttons = this.#container.querySelectorAll(".olympus-selection-scroll-element");
-            var scroll = this.#container.querySelector(".olympus-selection-scroll");
+            var buttons = this.#container.querySelectorAll(".ol-selection-scroll-element");
+            var scroll = this.#container.querySelector(".ol-selection-scroll");
             if (scroll != null)
             {
                 for (let child of buttons) {
