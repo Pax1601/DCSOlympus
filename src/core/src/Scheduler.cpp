@@ -24,8 +24,6 @@ void Scheduler::appendCommand(Command* command)
 
 void Scheduler::execute(lua_State* L)
 {
-	/* Lock for thread safety */
-	lock_guard<mutex> guard(mutexLock);
 	int priority = CommandPriority::HIGH;
 	while (priority >= CommandPriority::LOW)
 	{
@@ -51,8 +49,6 @@ void Scheduler::execute(lua_State* L)
 
 void Scheduler::handleRequest(wstring key, json::value value)
 {
-	/* Lock for thread safety */
-	lock_guard<mutex> guard(mutexLock);
 	Command* command = nullptr;
 
 	log(L"Received request with ID: " + key);

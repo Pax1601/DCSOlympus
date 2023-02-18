@@ -11,6 +11,7 @@ extern UnitsFactory* unitsFactory;
 extern Scheduler* scheduler;
 extern json::value airbasesData;
 extern json::value bullseyeData;
+extern mutex mutexLock;
 
 void handle_eptr(std::exception_ptr eptr)
 {
@@ -49,6 +50,9 @@ void Server::handle_options(http_request request)
 
 void Server::handle_get(http_request request)
 {
+    /* Lock for thread safety */
+    lock_guard<mutex> guard(mutexLock);
+
     http_response response(status_codes::OK);
     response.headers().add(U("Allow"), U("GET, POST, PUT, OPTIONS"));
     response.headers().add(U("Access-Control-Allow-Origin"), U("*"));
@@ -107,6 +111,9 @@ void Server::handle_put(http_request request)
     request,
     [](json::value const& jvalue, json::value& answer)
     {
+        /* Lock for thread safety */
+        lock_guard<mutex> guard(mutexLock);
+
         for (auto const& e : jvalue.as_object())
         {
             auto key = e.first;

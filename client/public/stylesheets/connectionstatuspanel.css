@@ -10,7 +10,7 @@
     color: white;
 }
 
-.olympus-status-disconnected::after {
+.ol-status-disconnected::after {
     content: "";
     position: absolute;
     right: 5px;
@@ -21,7 +21,7 @@
     background-color: red;
 }
 
-.olympus-status-connected::after {
+.ol-status-connected::after {
     content: "";
     position: absolute;
     right: 5px;

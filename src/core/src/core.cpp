@@ -13,11 +13,15 @@ Server* server = nullptr;
 Scheduler* scheduler = nullptr;
 json::value airbasesData;
 json::value bullseyeData;
-
+mutex mutexLock;
+bool initialized = false;
 
 /* Called when DCS simulation stops. All singleton instances are deleted. */
 extern "C" DllExport int coreDeinit(lua_State* L)
 {
+    if (!initialized)
+        return (0);
+
     log("Olympus coreDeinit called successfully");
 
     delete unitsFactory;
@@ -38,11 +42,18 @@ extern "C" DllExport int coreInit(lua_State* L)
 
     registerLuaFunctions(L);
 
+    initialized = true;
     return(0);
 }
 
 extern "C" DllExport int coreFrame(lua_State* L)
 {
+    if (!initialized)
+        return (0);
+
+    /* Lock for thread safety */
+    lock_guard<mutex> guard(mutexLock);
+
     const std::chrono::duration<double> duration = std::chrono::system_clock::now() - before;
 
     // TODO make intervals editable
@@ -65,6 +76,12 @@ extern "C" DllExport int coreFrame(lua_State* L)
 
 extern "C" DllExport int coreMissionData(lua_State * L)
 {
+    if (!initialized)
+        return (0);
+
+    /* Lock for thread safety */
+    lock_guard<mutex> guard(mutexLock);
+
     lua_getglobal(L, "Olympus");
     lua_getfield(L, -1, "missionData");
     json::value missionData = luaTableToJSON(L, -1);

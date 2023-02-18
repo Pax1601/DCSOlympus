@@ -1,4 +1,16 @@
-#visibility-control-panel .olympus-button {
-    filter: invert(100%);
-    opacity: 0.8;
+#visibility-control-panel
+{
+    display: flex;
+    column-gap: 10px;
 }
+
+#visibility-control-panel .label {
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+#visibility-control-panel .vl {
+    height: 60%;
+}
+

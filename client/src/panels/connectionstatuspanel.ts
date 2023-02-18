@@ -11,13 +11,13 @@ export class ConnectionStatusPanel {
             if (div != null) {
                 if (connected) {
                     div.innerHTML = "Connected";
-                    div.classList.add("olympus-status-connected");
-                    div.classList.remove("olympus-status-disconnected");
+                    div.classList.add("ol-status-connected");
+                    div.classList.remove("ol-status-disconnected");
                 }
                 else {
                     div.innerHTML = "Disconnected";
-                    div.classList.add("olympus-status-disconnected");
-                    div.classList.remove("olympus-status-connected");
+                    div.classList.add("ol-status-disconnected");
+                    div.classList.remove("ol-status-connected");
                 }
             }
         }

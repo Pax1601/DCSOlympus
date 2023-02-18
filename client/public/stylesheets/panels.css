@@ -1,5 +1,5 @@
 /* Panels style */
-.olympus-panel {
+.ol-panel {
     background-color: var(--background-color-dark);
     font-size: 12px;
     transition: bottom 0.2s;

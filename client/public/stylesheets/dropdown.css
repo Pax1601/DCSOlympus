@@ -1,4 +1,4 @@
-.olympus-dropdown {
+.ol-dropdown {
     width: 100%;
     min-width: 100px;
     height: 30px;
@@ -18,7 +18,7 @@
     padding-left: 15px;
 }
 
-.olympus-dropdown::before {
+.ol-dropdown::before {
     content: "";
     position: absolute;
     height: 30px;
@@ -31,11 +31,11 @@
     border-bottom-right-radius: 15px;
 }
 
-.olympus-dropdown-open {
+.ol-dropdown-open {
     border-bottom-left-radius: 0px;
 }
 
-.olympus-dropdown-open::after {
+.ol-dropdown-open::after {
     content: "";
     position: absolute;
     top: 13px;
@@ -50,7 +50,7 @@
     -webkit-transform: rotate(-135deg);
 }
 
-.olympus-dropdown-closed::after {
+.ol-dropdown-closed::after {
     content: "";
     position: absolute;
     top: 9px;
@@ -65,7 +65,7 @@
     -webkit-transform: rotate(45deg);
 }
 
-.olympus-dropdown-content {
+.ol-dropdown-content {
     position: fixed;
     /*overflow: visible;
     overflow-y: scroll;*/
@@ -75,7 +75,7 @@
     border-bottom-right-radius: 4px;
 }
 
-.olympus-dropdown-element {
+.ol-dropdown-element {
     margin: 2px;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     color: var(--background-color-dark);
@@ -85,6 +85,6 @@
     padding-left: 5px;
 }
 
-.olympus-dropdown-element:hover {
+.ol-dropdown-element:hover {
     background-color: var(--highlight-color);
 }

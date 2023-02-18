@@ -1,8 +1,14 @@
 import { Marker, LatLng, Polyline, Icon } from 'leaflet';
-import { ConvertDDToDMS } from '../other/utils';
-import { getMap, getUnitsManager, getVisibilitySettings } from '..';
+import { getMap, getUnitsManager} from '..';
 import { UnitMarker, MarkerOptions, AircraftMarker, HelicopterMarker, GroundUnitMarker, NavyUnitMarker, WeaponMarker } from './unitmarker';
 import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, landAt, setAltitude, setReactionToThreat, setROE, setSpeed } from '../dcs/dcs';
+
+interface visibilityOptions {
+    dead: string;
+    ai: string;
+    uncontrolled: string;
+    human: string;
+}
 
 var pathIcon = new Icon({
     iconUrl: 'images/marker-icon.png',
@@ -387,20 +393,33 @@ export class Unit {
 }
 
 export class AirUnit extends Unit {
-    getHidden() {
-        if (this.AI == false && getVisibilitySettings().uncontrolled === "hidden")
-            return true
+    static visibility: visibilityOptions = {dead: "hidden", ai: "partial", uncontrolled: "partial", human: "partial"}
+    static setVisibility(visibility: visibilityOptions)
+    {
+        getUnitsManager().forceUpdate();
+        AirUnit.visibility = visibility;
+    }
 
+    static getVisibility()
+    {
+        return AirUnit.visibility;
+    }
+
+    getHidden() {
         if (this.alive)
         {
-            if (this.flags.user && getVisibilitySettings().user === "hidden")
-                return true
-            else if (!this.flags.user && getVisibilitySettings().ai === "hidden")
-                return true
+            if (this.flags.user)
+                return AirUnit.getVisibility().human === "hidden"
+
+            if (this.AI)
+                return AirUnit.getVisibility().ai === "hidden"
+            else
+                return AirUnit.getVisibility().uncontrolled === "hidden"
         }
         else
-            return getVisibilitySettings().dead === "hidden"
-        return false;
+        {
+            return AirUnit.getVisibility().dead === "hidden"
+        }
     }
 }
 
@@ -419,52 +438,87 @@ export class Helicopter extends AirUnit {
 }
 
 export class GroundUnit extends Unit {
+    static visibility: visibilityOptions = {dead: "hidden", ai: "partial", uncontrolled: "partial", human: "partial"}
+    static setVisibility(visibility: visibilityOptions)
+    {
+        getUnitsManager().forceUpdate();
+        GroundUnit.visibility = visibility;
+    }
+
+    static getVisibility()
+    {
+        return GroundUnit.visibility;
+    }
+
     constructor(ID: number, options: MarkerOptions) {
         var marker = new GroundUnitMarker(options);
         super(ID, marker);
     }
 
     getHidden() {
-        if (this.AI == false && getVisibilitySettings().uncontrolled === "hidden")
-            return true
-
         if (this.alive)
         {
-            if (this.flags.user && getVisibilitySettings().user === "hidden")
-                return true
-            else if (!this.flags.user && getVisibilitySettings().ai === "hidden")
-                return true
+            if (this.flags.user)
+                return GroundUnit.getVisibility().human === "hidden"
+
+            if (this.AI)
+                return GroundUnit.getVisibility().ai === "hidden"
+            else
+                return GroundUnit.getVisibility().uncontrolled === "hidden"
         }
         else
-            return getVisibilitySettings().dead === "hidden"
-        return false;
+        {
+            return GroundUnit.getVisibility().dead === "hidden"
+        }
     }
 }
 
 export class NavyUnit extends Unit {
+    static visibility: visibilityOptions = {dead: "hidden", ai: "partial", uncontrolled: "partial", human: "partial"}
+    static setVisibility(visibility: visibilityOptions)
+    {
+        getUnitsManager().forceUpdate();
+        NavyUnit.visibility = visibility;
+    }
+
+    static getVisibility()
+    {
+        return NavyUnit.visibility;
+    }
+
     constructor(ID: number, options: MarkerOptions) {
         var marker = new NavyUnitMarker(options);
         super(ID, marker);
     }
 
     getHidden() {
-        if (this.AI == false && getVisibilitySettings().uncontrolled === "hidden")
-            return true
-            
         if (this.alive)
         {
-            if (this.flags.user && getVisibilitySettings().user === "hidden")
-                return true
-            else if (!this.flags.user && getVisibilitySettings().ai === "hidden")
-                return true
+            if (this.AI)
+                return NavyUnit.getVisibility().ai === "hidden"
+            else
+                return NavyUnit.getVisibility().uncontrolled === "hidden"
         }
         else
-            return getVisibilitySettings().dead === "hidden"
-        return false;
+        {
+            return NavyUnit.getVisibility().dead === "hidden"
+        }
     }
 }
 
 export class Weapon extends Unit {
+    static visibility: visibilityOptions = {dead: "hidden", ai: "partial", uncontrolled: "partial", human: "partial"}
+    static setVisibility(visibility: visibilityOptions)
+    {
+        getUnitsManager().forceUpdate();
+        Weapon.visibility = visibility;
+    }
+
+    static getVisibility()
+    {
+        return Weapon.visibility;
+    }
+
     constructor(ID: number, marker: UnitMarker)
     {
         super(ID, marker);
@@ -473,13 +527,9 @@ export class Weapon extends Unit {
 
     getHidden() {
         if (this.alive)
-        {
-            if (!this.flags.user && getVisibilitySettings().weapon === "hidden")
-                return true
-        }
+            return Weapon.getVisibility().uncontrolled === "hidden"
         else
-            return getVisibilitySettings().dead === "hidden"
-        return false;
+            return true;
     }
 }
 
