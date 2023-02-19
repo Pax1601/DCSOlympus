@@ -44,6 +44,12 @@ export function getLoadoutsByName(aircraft: string, loadoutName: string)
    return null;
 }
 
+export function getUnitLabel(name: string)
+{
+   //@ts-ignore TODO
+   return aircraftDatabase[name] === undefined? name: aircraftDatabase[name].label;
+}
+
 export var aircraftDatabase = {
    "A-10C": {
       "name": "A-10C",
@@ -512,8 +518,8 @@ export var aircraftDatabase = {
       ]
    },
 
-   "F/A-18C": {
-      "name": "F/A-18C",
+   "FA-18C_hornet": {
+      "name": "FA-18C_hornet",
       "label": "F/A-18C",
       "loadouts": [
          {

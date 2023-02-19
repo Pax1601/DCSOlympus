@@ -51,7 +51,7 @@ export class VisibilityControlPanel {
             
             var airVisibilityCheckbox = <HTMLInputElement> this.#element.querySelector("#air-visibility");
             if (airVisibilityCheckbox.checked)
-                AirUnit.setVisibility({human: activeVisibility, ai: activeVisibility, uncontrolled: uncontrolledVisibility? activeVisibility: "hidden", dead: "hidden"});
+                AirUnit.setVisibility({human: "full", ai: activeVisibility, uncontrolled: uncontrolledVisibility? activeVisibility: "hidden", dead: "hidden"});
             else
                 AirUnit.setVisibility({human: "hidden", ai: "hidden", uncontrolled: "hidden", dead: "hidden"});
 

@@ -1,5 +1,6 @@
 import * as L from 'leaflet'
-import { Symbol } from 'milsymbol'
+import { getMap } from '..'
+import { getUnitLabel } from './aircraftDatabase'
 import { AirUnit, GroundUnit, NavyUnit, Weapon } from './unit'
 
 export interface MarkerOptions {
@@ -29,12 +30,11 @@ export class UnitMarker extends L.Marker {
     constructor(options: MarkerOptions) {
         super(new L.LatLng(0, 0), { riseOnHover: true });
         this.#unitName = options.unitName;
-        this.#name = options.name;
+        this.#name = getUnitLabel(options.name);
         this.#human = options.human;
         this.#AI = options.AI;
 
-        var symbol = new Symbol(this.#computeMarkerCode(options), { size: 25 });
-        var img = symbol.asCanvas().toDataURL('image/png');
+        var img = this.getUnitImage();
 
         var coalition = "";
         if (options.coalitionID == 1)
@@ -50,7 +50,7 @@ export class UnitMarker extends L.Marker {
                         <td>
                             <div class="${coalition}" id="background"></div>
                             <div class="${coalition}" id="ring"></div>
-                            <div class="unit-marker-icon" id="icon"><img src="${img}"></div>
+                            <div class="unit-marker-icon" id="icon"><img class="${coalition} unit-marker-image" src="${img}"></div>
                             <div class="unit-marker-unitName" id="unitName">${this.#unitName}</div>
                             <div class="unit-marker-altitude" id="altitude"></div>
                             <div class="unit-marker-speed" id="speed"></div>
@@ -104,6 +104,9 @@ export class UnitMarker extends L.Marker {
             altitudeDiv.innerHTML = String(Math.round(data.altitude / 0.3048 / 100) / 10);
             speedDiv.innerHTML = String(Math.round(data.speed * 1.94384));
 
+            var pos = getMap().latLngToLayerPoint(this.getLatLng()).round();
+            this.setZIndexOffset(Math.floor(data.altitude) - pos.y);
+
             if (!this.#alive)
             {
                 this.getElement()?.querySelector("#icon")?.classList.add("unit-marker-dead");
@@ -142,85 +145,9 @@ export class UnitMarker extends L.Marker {
         return "full";
     }
 
-    #computeMarkerCode(options: MarkerOptions) {
-        var identity = "00";
-        var set = "00";
-        var entity = "00";
-        var entityType = "00";
-        var entitySubtype = "00";
-        var sectorOneModifier = "00";
-        var sectorTwoModifier = "00";
-
-        /* Identity */
-        if (options.coalitionID == 1)
-            identity = "06" /* Hostile */
-        else if (options.coalitionID == 2)
-            identity = "03" /* Friendly */
-        else
-            identity = "04" /* Neutral */
-
-        /* Air */
-        if (options.type.level1 == 1) {
-            set = "01"
-            entity = "11"
-            if (options.type.level2 == 1)
-                entityType = "01"
-            else if (options.type.level2 == 1)
-                entityType = "02"
-
-            if (options.type.level3 == 1)
-                entitySubtype = "04";
-            else if (options.type.level3 == 2)
-                entitySubtype = "05";
-            else if (options.type.level3 == 3)
-                entitySubtype = "04";
-            else if (options.type.level3 == 4)
-                entitySubtype = "02";
-            else if (options.type.level3 == 5)
-                entitySubtype = "00";
-            else if (options.type.level3 == 6)
-                entitySubtype = "00";
-        }
-
-        /* Ground */
-        else if (options.type.level1 == 2)
-        {
-            set = "10"
-            entity = "12"
-            entityType = "05"
-        }
-        /* Navy */
-        else if (options.type.level1 == 3)
-            set = "30"
-        /* Weapon */
-        else if (options.type.level1 == 4)
-        {
-            set = "02"
-            entity = "11"
-            if (options.type.level3 == 7)
-            {
-                sectorOneModifier = "01"
-                sectorTwoModifier = "01"
-            }
-            else if (options.type.level3 == 8)
-            {
-                sectorOneModifier = "01"
-                sectorTwoModifier = "02"
-            }
-            else if (options.type.level3 == 34)
-            {
-                sectorOneModifier = "02"
-                sectorTwoModifier = "01"
-            }
-            else if (options.type.level3 == 11)
-            {
-                sectorOneModifier = "02"
-                sectorTwoModifier = "02"
-            }
-        }
-
-        return `10${identity}${set}0000${entity}${entityType}${entitySubtype}${sectorOneModifier}${sectorTwoModifier}`
-    } 
+    getUnitImage() {
+        return new Image().src = "images/units/unit.png" 
+    }
 }
 
 export class AirUnitMarker extends UnitMarker {
@@ -238,6 +165,11 @@ export class AirUnitMarker extends UnitMarker {
         }
         else 
             return "minimal";
+    }
+
+    getUnitImage()
+    {
+        return new Image().src = "images/units/airUnit.png"
     }
 }
 
@@ -264,6 +196,11 @@ export class GroundUnitMarker extends UnitMarker {
         else 
             return "minimal";
     }
+
+    getUnitImage()
+    {
+        return new Image().src = "images/units/groundUnit.png"
+    }
 }
 
 export class NavyUnitMarker extends UnitMarker {
@@ -282,6 +219,11 @@ export class NavyUnitMarker extends UnitMarker {
         else 
             return "minimal";
     }
+
+    getUnitImage()
+    {
+        return new Image().src = "images/units/navyUnit.png"
+    }
 }
 
 export class WeaponMarker extends UnitMarker {
@@ -299,5 +241,19 @@ export class WeaponMarker extends UnitMarker {
         }
         else 
             return "minimal";
+    }
+}
+
+export class BombMarker extends WeaponMarker {
+    getUnitImage()
+    {
+        return new Image().src = "images/units/bomb.png"
+    }
+}
+
+export class MissileMarker extends WeaponMarker {
+    getUnitImage()
+    {
+        return new Image().src = "images/units/missile.png"
     }
 }

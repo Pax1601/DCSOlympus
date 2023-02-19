@@ -37,7 +37,7 @@ export class UnitsManager {
             var options = {
                 unitName: data.unitName,
                 name: data.name,
-                human: data.human,
+                human: data.flags.Human,
                 coalitionID: data.coalitionID,
                 type: data.type,
                 AI: data.AI
@@ -298,12 +298,12 @@ export class UnitsManager {
             {
                 if (selectedUnits[idx].isWingman)
                 {
-                    console.log(selectedUnits[idx].unitName + " is already in a formation.");
+                    //console.log(selectedUnits[idx].unitName + " is already in a formation.");
                     return;
                 }
                 else if (selectedUnits[idx].isLeader)
                 {
-                    console.log(selectedUnits[idx].unitName + " is already in a formation.");
+                    //console.log(selectedUnits[idx].unitName + " is already in a formation.");
                     return;
                 }
                 else
@@ -326,7 +326,7 @@ export class UnitsManager {
             }
             else
             {
-                console.log("At least 2 units must be selected to create a formation.");
+                //console.log("At least 2 units must be selected to create a formation.");
             }
         }
         setTimeout(() => this.#updateUnitControlPanel(), 300); // TODO find better method, may fail

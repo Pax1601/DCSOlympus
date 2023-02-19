@@ -21,6 +21,23 @@
     align-items: center;
 }
 
+.unit-marker-image {
+    height: 60px;
+    width: 60px;
+}
+
+.blue.unit-marker-image {
+    filter: invert(40%) sepia(94%) saturate(2477%) hue-rotate(197deg) brightness(92%) contrast(91%) drop-shadow(1px 1px #FFFA) drop-shadow(1px -1px #FFFA) drop-shadow(-1px 1px 0px #FFFA) drop-shadow(-1px -1px #FFFA);
+}
+
+.red.unit-marker-image {
+    filter:invert(32%) sepia(91%) saturate(5128%) hue-rotate(349deg) brightness(97%) contrast(97%) drop-shadow(1px 1px #FFFA) drop-shadow(1px -1px #FFFA) drop-shadow(-1px 1px 0px #FFFA) drop-shadow(-1px -1px #FFFA);
+}
+
+.neutral.unit-marker-image {
+    filter: invert(71%) sepia(12%) saturate(9%) hue-rotate(319deg) brightness(92%) contrast(96%) drop-shadow(1px 1px #FFFA) drop-shadow(1px -1px #FFFA) drop-shadow(-1px 1px 0px #FFFA) drop-shadow(-1px -1px #FFFA);
+}
+
 .unit-marker-selected {
     width: 100%;
     height: 100%;
@@ -50,7 +67,6 @@
     background-color: var(--red-coalition-color);
 }
 
-
 .unit-marker-hovered {
     filter: brightness(130%);
 }
@@ -63,7 +79,7 @@
     top: -20px;
     position: absolute;
     text-align: center;
-    font: 800 16px Arial;
+    font: 800 14px Arial;
     white-space: nowrap;
     -webkit-text-fill-color: white;
     -webkit-text-stroke: 1px;
@@ -73,7 +89,7 @@
     bottom: -20px;
     position: absolute;
     text-align: center;
-    font: 800 14px Arial;
+    font: 800 12px Arial;
     white-space: nowrap;
     -webkit-text-fill-color: white;
     -webkit-text-stroke: 1px;

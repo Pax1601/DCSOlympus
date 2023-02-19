@@ -1,4 +1,4 @@
-.airbasemarker-container {
+.airbase-marker-container {
     height: 60px; 
     width: 60px; 
     left: -30px; 
@@ -7,7 +7,7 @@
     position: absolute;
 }
 
-.airbasemarker-icon {
+.airbase-marker-image {
     height: 60px; 
     width: 60px; 
     left: 0px; 
@@ -15,17 +15,22 @@
     display: block; 
     position: absolute;
     filter: drop-shadow(1px 1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px 1px 0 white) drop-shadow(-1px -1px 0 white);
+    opacity: 0.8;
 }
 
-.airbasemarker-icon-blue {
-    filter: invert(69%) sepia(84%) saturate(264%) hue-rotate(162deg) brightness(100%) contrast(102%) drop-shadow(0px 1px 0 #000A) drop-shadow(1px 0px 0 #000A) drop-shadow(-1px 0px 0 #000A) drop-shadow(0px -1px 0 #000A);
+.blue.airbase-marker-image {
+    filter: invert(40%) sepia(94%) saturate(2477%) hue-rotate(197deg) brightness(92%) contrast(91%) drop-shadow(1px 1px #FFFA) drop-shadow(1px -1px #FFFA) drop-shadow(-1px 1px 0px #FFFA) drop-shadow(-1px -1px #FFFA);
 }
 
-.airbasemarker-icon-red {
-    filter: invert(68%) sepia(85%) saturate(2385%) hue-rotate(313deg) brightness(108%) contrast(102%) drop-shadow(0px 1px 0 #000A) drop-shadow(1px 0px 0 #000A) drop-shadow(-1px 0px 0 #000A) drop-shadow(0px -1px 0 #000A);
+.red.airbase-marker-image {
+    filter:invert(32%) sepia(91%) saturate(5128%) hue-rotate(349deg) brightness(97%) contrast(97%) drop-shadow(1px 1px #FFFA) drop-shadow(1px -1px #FFFA) drop-shadow(-1px 1px 0px #FFFA) drop-shadow(-1px -1px #FFFA);
 }
 
-.airbasemarker-name {
+.neutral.airbase-marker-image {
+    filter: invert(71%) sepia(12%) saturate(9%) hue-rotate(319deg) brightness(92%) contrast(96%) drop-shadow(1px 1px #000A) drop-shadow(1px -1px #000A) drop-shadow(-1px 1px 0px #000A) drop-shadow(-1px -1px #000A);
+}
+
+.airbase-marker-name {
     bottom: -20px; 
     position: absolute; 
     text-align: center; 

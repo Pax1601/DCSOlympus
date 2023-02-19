@@ -19,11 +19,11 @@ export class AirbaseMarker extends L.Marker
         this.#name = options.name;
 
         var icon = new L.DivIcon({
-            html: `<table class="airbasemarker-container" id="container">
+            html: `<table class="airbase-marker-container" id="container">
                     <tr>
                         <td>
-                            <img class="airbasemarker-icon" id="icon" src="${options.src}">
-                            <div class="airbasemarker-name" id="name">${options.name}</div>
+                            <img class="airbase-marker-image" id="icon" src="${options.src}">
+                            <div class="airbase-marker-name" id="name">${options.name}</div>
                         </td>
                     </tr>
                 </table>`, 
@@ -40,16 +40,9 @@ export class AirbaseMarker extends L.Marker
             var img = element.querySelector("#icon");
             if (img != null)
             {
-                img.classList.remove("airbasemarker-icon-blue");
-                img.classList.remove("airbasemarker-icon-red");
-                if (this.#coalitionID == 2)
-                {
-                    img.classList.add("airbasemarker-icon-blue");
-                }
-                else if (this.#coalitionID == 1)
-                {
-                    img.classList.add("airbasemarker-icon-red");
-                }
+                img.classList.toggle("blue", this.#coalitionID == 2);
+                img.classList.toggle("red", this.#coalitionID == 1);
+                img.classList.toggle("neutral", this.#coalitionID == 0);
             }
         }
     }

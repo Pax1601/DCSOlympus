@@ -62,7 +62,6 @@ export class SelectionScroll {
             else
                 this.#container.style.left = window.innerWidth - this.#container.offsetWidth + "px";
 
-            console.log(y - 20 + this.#container.offsetHeight)
             if (y - 20 + this.#container.offsetHeight < window.innerHeight)
                 this.#container.style.top = y - 20 + "px";
             else

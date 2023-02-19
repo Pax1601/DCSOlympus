@@ -120,12 +120,6 @@ export class Map extends L.Map {
         else if (this.#state === "MOVE_UNIT") {
             L.DomUtil.addClass(this.getContainer(),'crosshair-cursor-enabled');
         }
-        else if (this.#state === "ATTACK") {
-
-        }
-        else if (this.#state === "FORMATION") {
-
-        }
     }
 
     getState() {
