@@ -1,4 +1,3 @@
-import { firestore } from "../firebase";
 
 export interface ATCAPIInterface {
     get: CallableFunction
@@ -6,10 +5,10 @@ export interface ATCAPIInterface {
 
 export abstract class ATCAPI {
 
-    firestore;
+
     
     constructor() {
-        this.firestore = firestore;
+
     }
 
 }

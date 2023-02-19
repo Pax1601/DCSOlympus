@@ -102,9 +102,6 @@ function setup() {
 
         }
 
-
-
-
     });
 
     /* Default values */
