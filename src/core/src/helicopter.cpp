@@ -4,13 +4,13 @@
 #include "commands.h"
 #include "scheduler.h"
 #include "defines.h"
-#include "unitsFactory.h"
+#include "unitsManager.h"
 
 #include <GeographicLib/Geodesic.hpp>
 using namespace GeographicLib;
 
 extern Scheduler* scheduler;
-extern UnitsFactory* unitsFactory;
+extern UnitsManager* unitsManager;
 
 /* Helicopter */
 Helicopter::Helicopter(json::value json, int ID) : AirUnit(json, ID)

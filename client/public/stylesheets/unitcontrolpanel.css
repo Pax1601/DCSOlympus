@@ -65,17 +65,17 @@
     height: 100%;
 }
 
-#selected-units-container .rounded-container {
+#selected-units-container .ol-rounded-container {
     width: calc(100% - 25px); 
     cursor: pointer;
     margin-left: 25px;
 }
 
-#selected-units-container .rounded-container.not-selected {
+#selected-units-container .ol-rounded-container.not-selected {
     background-color: transparent;
 }
 
-#selected-units-container .rounded-container .rounded-container-small {
+#selected-units-container .ol-rounded-container .ol-rounded-container-small {
     display: inline-block;
 	position: absolute;
 	left: 5px;
@@ -98,7 +98,7 @@
     filter: invert(93%) sepia(97%) saturate(1174%) hue-rotate(291deg) brightness(105%) contrast(97%);
 }
 
-#unit-control-panel #title-label {
+#unit-control-panel .ol-title-label {
     color: white;
     font-size: 14px;
     width: 100%;

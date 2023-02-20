@@ -5,7 +5,7 @@
 using namespace web::http;
 using namespace web::http::experimental::listener;
 
-class UnitsFactory;
+class UnitsManager;
 class Scheduler;
 
 class Server

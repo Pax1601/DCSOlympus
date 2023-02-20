@@ -13,3 +13,8 @@ void log(const wstring& message)
 {
 	LOGGER->Log(message);
 }
+
+std::list<std::string> getLogs()
+{
+	return LOGGER->getLogs();
+}

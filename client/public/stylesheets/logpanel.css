@@ -1,0 +1,23 @@
+#log-panel {
+    overflow-y: scroll;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 2px;
+}
+
+.ol-log-element {
+    font-size: 12px;
+    color: white;
+    text-shadow: 1px 1px 0px black, 1px -1px 0px black, -1px 1px 0px black, -1px -1px 0px black;
+    font-weight: 600;
+    width: 100%;
+}
+
+#log-panel {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+}
+#log-panel::-webkit-scrollbar { 
+    display: none;  /* Safari and Chrome */
+}

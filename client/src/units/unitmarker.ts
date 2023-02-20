@@ -1,6 +1,6 @@
 import * as L from 'leaflet'
 import { getMap } from '..'
-import { getUnitLabel } from './aircraftDatabase'
+import { getAircrafImage, getAircraftLabelByName } from './aircraftDatabase'
 import { AirUnit, GroundUnit, NavyUnit, Weapon } from './unit'
 
 export interface MarkerOptions {
@@ -30,7 +30,7 @@ export class UnitMarker extends L.Marker {
     constructor(options: MarkerOptions) {
         super(new L.LatLng(0, 0), { riseOnHover: true });
         this.#unitName = options.unitName;
-        this.#name = getUnitLabel(options.name);
+        this.#name = getAircraftLabelByName(options.name);
         this.#human = options.human;
         this.#AI = options.AI;
 
@@ -45,20 +45,21 @@ export class UnitMarker extends L.Marker {
             coalition = "neutral"
 
         var icon = new L.DivIcon({
-            html: `<table class="unit-marker-container" id="container">
+            html: `<table class="ol-unit-marker-container" id="container">
                     <tr>
                         <td>
                             <div class="${coalition}" id="background"></div>
                             <div class="${coalition}" id="ring"></div>
-                            <div class="unit-marker-icon" id="icon"><img class="${coalition} unit-marker-image" src="${img}"></div>
-                            <div class="unit-marker-unitName" id="unitName">${this.#unitName}</div>
-                            <div class="unit-marker-altitude" id="altitude"></div>
-                            <div class="unit-marker-speed" id="speed"></div>
-                            <div class="unit-marker-name" id="name">${this.#name}</div>
+                            <div class="ol-unit-marker-icon" id="icon"><img class="${coalition} ol-unit-marker-image" src="${img}"></div>
+                            <div class="ol-unit-marker-unitName" id="unitName">${this.#unitName}</div>
+                            <div class="ol-unit-marker-altitude" id="altitude"></div>
+                            <div class="ol-unit-marker-speed" id="speed"></div>
+                            <div class="ol-unit-marker-name" id="name">${this.#name}</div>
                         </td>
                     </tr>
                 </table>`,
-            className: 'unit-marker'
+            className: 'ol-unit-marker',
+            iconAnchor: [30, 30]
         });
         this.setIcon(icon);
     }
@@ -109,16 +110,16 @@ export class UnitMarker extends L.Marker {
 
             if (!this.#alive)
             {
-                this.getElement()?.querySelector("#icon")?.classList.add("unit-marker-dead");
+                this.getElement()?.querySelector("#icon")?.classList.add("ol-unit-marker-dead");
             }
         }
     }
 
     setSelected(selected: boolean) {
         this.#selected = selected;
-        this.getElement()?.querySelector("#icon")?.classList.remove("unit-marker-hovered");
-        this.getElement()?.querySelector("#ring")?.classList.toggle("unit-marker-selected", selected);
-        this.getElement()?.querySelector("#background")?.classList.toggle("unit-marker-selected", selected);
+        this.getElement()?.querySelector("#icon")?.classList.remove("ol-unit-marker-hovered");
+        this.getElement()?.querySelector("#ring")?.classList.toggle("ol-unit-marker-selected", selected);
+        this.getElement()?.querySelector("#background")?.classList.toggle("ol-unit-marker-selected", selected);
     }
 
     getSelected() {
@@ -126,7 +127,11 @@ export class UnitMarker extends L.Marker {
     }
 
     setHovered(hovered: boolean) {
-        this.getElement()?.querySelector("#icon")?.classList.toggle("unit-marker-hovered", hovered && this.#alive);
+        this.getElement()?.querySelector("#icon")?.classList.toggle("ol-unit-marker-hovered", hovered && this.#alive);
+    }
+
+    getName() {
+        return this.#name;
     }
 
     getHuman() {
@@ -166,17 +171,20 @@ export class AirUnitMarker extends UnitMarker {
         else 
             return "minimal";
     }
+}
 
+export class AircraftMarker extends AirUnitMarker {
+    getUnitImage()
+    {
+        return new Image().src = "images/units/" + getAircrafImage(this.getName());
+    }
+}
+
+export class HelicopterMarker extends AirUnitMarker {
     getUnitImage()
     {
         return new Image().src = "images/units/airUnit.png"
     }
-}
-
-export class AircraftMarker extends AirUnitMarker {
-}
-
-export class HelicopterMarker extends AirUnitMarker {
 }
 
 export class GroundUnitMarker extends UnitMarker {

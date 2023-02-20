@@ -4,13 +4,13 @@
 #include "commands.h"
 #include "scheduler.h"
 #include "defines.h"
-#include "unitsFactory.h"
+#include "unitsManager.h"
 
 #include <GeographicLib/Geodesic.hpp>
 using namespace GeographicLib;
 
 extern Scheduler* scheduler;
-extern UnitsFactory* unitsFactory;
+extern UnitsManager* unitsManager;
 
 Unit::Unit(json::value json, int ID) :
 	ID(ID)
@@ -159,7 +159,7 @@ wstring Unit::getTarget()
 {
 	if (isTargetAlive())
 	{
-		Unit* target = unitsFactory->getUnit(targetID);
+		Unit* target = unitsManager->getUnit(targetID);
 		if (target != nullptr)
 			return target->getUnitName();
 	}
@@ -171,7 +171,7 @@ bool Unit::isTargetAlive()
 	if (targetID == NULL)
 		return false;
 
-	Unit* target = unitsFactory->getUnit(targetID);
+	Unit* target = unitsManager->getUnit(targetID);
 	if (target != nullptr)
 		return target->alive;
 	else

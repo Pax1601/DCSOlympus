@@ -5,7 +5,6 @@
     width: 220px;
     height: fit-content;
     z-index: 2000;
-    max-height: 400px;
     padding: 8px;
     display: flex;
     flex-direction: column;
@@ -35,6 +34,7 @@
     overflow-y: auto;
     height: 100%;
     width: 100%;
+    max-height: 400px;
 }
 
 .ol-selection-scroll::-webkit-scrollbar {

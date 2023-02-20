@@ -1,8 +1,8 @@
-.unit-marker-container {
+.ol-unit-marker-container {
     height: 60px;
     width: 60px;
-    left: -30px;
-    top: -30px;
+    left: 0px;
+    top: 0px;
     border: 0px black solid;
     position: absolute;
     padding: 0;
@@ -10,7 +10,7 @@
     border-collapse: collapse;
 }
 
-.unit-marker-icon {
+.ol-unit-marker-icon {
     height: 60px;
     width: 60px;
     left: 0px;
@@ -21,24 +21,24 @@
     align-items: center;
 }
 
-.unit-marker-image {
+.ol-unit-marker-image {
     height: 60px;
     width: 60px;
 }
 
-.blue.unit-marker-image {
-    filter: invert(40%) sepia(94%) saturate(2477%) hue-rotate(197deg) brightness(92%) contrast(91%) drop-shadow(1px 1px #FFFA) drop-shadow(1px -1px #FFFA) drop-shadow(-1px 1px 0px #FFFA) drop-shadow(-1px -1px #FFFA);
+.blue.ol-unit-marker-image {
+    filter: invert(40%) sepia(94%) saturate(2477%) hue-rotate(197deg) brightness(92%) contrast(91%) drop-shadow(1px 1px #0005) drop-shadow(1px -1px #0005) drop-shadow(-1px 1px 0px #0005) drop-shadow(-1px -1px #0005);
 }
 
-.red.unit-marker-image {
-    filter:invert(32%) sepia(91%) saturate(5128%) hue-rotate(349deg) brightness(97%) contrast(97%) drop-shadow(1px 1px #FFFA) drop-shadow(1px -1px #FFFA) drop-shadow(-1px 1px 0px #FFFA) drop-shadow(-1px -1px #FFFA);
+.red.ol-unit-marker-image {
+    filter:invert(32%) sepia(91%) saturate(5128%) hue-rotate(349deg) brightness(97%) contrast(97%) drop-shadow(1px 1px #0005) drop-shadow(1px -1px #0005) drop-shadow(-1px 1px 0px #0005) drop-shadow(-1px -1px #0005);
 }
 
-.neutral.unit-marker-image {
-    filter: invert(71%) sepia(12%) saturate(9%) hue-rotate(319deg) brightness(92%) contrast(96%) drop-shadow(1px 1px #FFFA) drop-shadow(1px -1px #FFFA) drop-shadow(-1px 1px 0px #FFFA) drop-shadow(-1px -1px #FFFA);
+.neutral.ol-unit-marker-image {
+    filter: invert(71%) sepia(12%) saturate(9%) hue-rotate(319deg) brightness(92%) contrast(96%) drop-shadow(1px 1px #0005) drop-shadow(1px -1px #0005) drop-shadow(-1px 1px 0px #0005) drop-shadow(-1px -1px #0005);
 }
 
-.unit-marker-selected {
+.ol-unit-marker-selected {
     width: 100%;
     height: 100%;
     border-radius: 50%;
@@ -59,23 +59,23 @@
     opacity: 0.2;
 }
 
-.blue.unit-marker-selected {
+.blue.ol-unit-marker-selected {
     background-color: var(--blue-coalition-color);
 }
 
-.red.unit-marker-selected {
+.red.ol-unit-marker-selected {
     background-color: var(--red-coalition-color);
 }
 
-.unit-marker-hovered {
+.ol-unit-marker-hovered {
     filter: brightness(130%);
 }
 
-.unit-marker-dead {
+.ol-unit-marker-dead {
     filter: brightness(50%);
 }
 
-.unit-marker-unitName {
+.ol-unit-marker-unitName {
     top: -20px;
     position: absolute;
     text-align: center;
@@ -85,8 +85,8 @@
     -webkit-text-stroke: 1px;
 }
 
-.unit-marker-name {
-    bottom: -20px;
+.ol-unit-marker-name {
+    bottom: -12px;
     position: absolute;
     text-align: center;
     font: 800 12px Arial;
@@ -95,7 +95,7 @@
     -webkit-text-stroke: 1px;
 }
 
-.unit-marker-altitude {
+.ol-unit-marker-altitude {
     width: 100%;
     left: 0px;
     top: 0px;
@@ -107,7 +107,7 @@
     -webkit-text-stroke: 1px;
 }
 
-.unit-marker-speed {
+.ol-unit-marker-speed {
     width: 100%;
     left: 0px;
     top: 0px;
@@ -119,6 +119,6 @@
     -webkit-text-stroke: 1px;
 }
 
-.unit-marker-container-table-dead .unit-marker-name {
+.ol-unit-marker-container-table-dead .ol-unit-marker-name {
     opacity: 0;
 }

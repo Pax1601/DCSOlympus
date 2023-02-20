@@ -5,5 +5,3 @@ explosion
 wrong name for ground units
 improve map zIndex
 human symbol if user
-
-IF YOU DISCONNECT IT FLAGS YOU DEAD AND YOU DISAPPEAR!

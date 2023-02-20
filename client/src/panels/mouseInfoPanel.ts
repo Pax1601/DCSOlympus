@@ -1,28 +1,11 @@
 import { LatLng } from "leaflet";
 import { getMissionData } from "..";
 import { distance, bearing, zeroPad, zeroAppend } from "../other/utils";
-import { Unit } from "../units/unit";
+import { Panel } from "./panel";
 
-export class MouseInfoPanel {
-    #element: HTMLElement
-    #display: string;
-
+export class MouseInfoPanel extends Panel {
     constructor(ID: string) {
-        this.#element = <HTMLElement>document.getElementById(ID);
-        this.#display = '';
-        if (this.#element != null) {
-            this.#display = this.#element.style.display;
-            var el = <HTMLElement>this.#element.querySelector(`#measure-position`);
-            this.show();
-        }
-    }
-
-    show() {
-        this.#element.style.display = this.#display;
-    }
-
-    hide() {
-        this.#element.style.display = "none";
+        super(ID);
     }
 
     update(mousePosition: LatLng, measurePosition: LatLng | null, unitPosition: LatLng | null) {
@@ -31,7 +14,7 @@ export class MouseInfoPanel {
         {
             var dist = distance(bullseyes[idx].lat, bullseyes[idx].lng, mousePosition.lat, mousePosition.lng);
             var bear = bearing(bullseyes[idx].lat, bullseyes[idx].lng, mousePosition.lat, mousePosition.lng);
-            var el = <HTMLElement>this.#element.querySelector(`#bullseye-${idx}`);
+            var el = <HTMLElement>this.getElement().querySelector(`#bullseye-${idx}`);
             if (el != null)
                 el.innerHTML = `${zeroAppend(Math.floor(bear), 3)}° / ${zeroAppend(Math.floor(dist*0.000539957), 3)} NM`
         }
@@ -39,16 +22,16 @@ export class MouseInfoPanel {
         if (measurePosition) {
             var dist = distance(measurePosition.lat, measurePosition.lng, mousePosition.lat, mousePosition.lng);
             var bear = bearing(measurePosition.lat, measurePosition.lng, mousePosition.lat, mousePosition.lng);
-            var el = <HTMLElement>this.#element.querySelector(`#measure-position`);
+            var el = <HTMLElement>this.getElement().querySelector(`#measure-position`);
             if (el != null)
             {
                 el.innerHTML = `${zeroAppend(Math.floor(bear), 3)}° / ${zeroAppend(Math.floor(dist*0.000539957), 3)} NM`
                 if (el.parentElement != null)
-                    el.parentElement.style.display = 'flex';    //TODO: don't like that its hardcoded
+                    el.parentElement.style.display = 'flex';    //TODO: don't like that it's hardcoded
             }
         }
         else {
-            var el = <HTMLElement>this.#element.querySelector(`#measure-position`);
+            var el = <HTMLElement>this.getElement().querySelector(`#measure-position`);
             if (el != null && el.parentElement != null)
                 el.parentElement.style.display = 'none';
         }
@@ -56,7 +39,7 @@ export class MouseInfoPanel {
         if (unitPosition) {
             var dist = distance(unitPosition.lat, unitPosition.lng, mousePosition.lat, mousePosition.lng);
             var bear = bearing(unitPosition.lat, unitPosition.lng, mousePosition.lat, mousePosition.lng);
-            var el = <HTMLElement>this.#element.querySelector(`#unit-position`);
+            var el = <HTMLElement>this.getElement().querySelector(`#unit-position`);
             if (el != null)
             {
                 el.innerHTML = `${zeroAppend(Math.floor(bear), 3)}° / ${zeroAppend(Math.floor(dist*0.000539957), 3)} NM`
@@ -65,7 +48,7 @@ export class MouseInfoPanel {
             }
         }
         else {
-            var el = <HTMLElement>this.#element.querySelector(`#unit-position`);
+            var el = <HTMLElement>this.getElement().querySelector(`#unit-position`);
             if (el != null && el.parentElement != null)
                 el.parentElement.style.display = 'none';
         }

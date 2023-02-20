@@ -33,7 +33,7 @@ export function getLoadoutNamesByRole(aircraft: string, role: string)
 
 export function getLoadoutsByName(aircraft: string, loadoutName: string)
 {
-   //@ts-ignore
+   //@ts-ignore TODO
    for (let loadout of aircraftDatabase[aircraft]["loadouts"])
    {
       if (loadout["name"] === loadoutName)
@@ -44,7 +44,21 @@ export function getLoadoutsByName(aircraft: string, loadoutName: string)
    return null;
 }
 
-export function getUnitLabel(name: string)
+export function getAircraftNameByLabel(label: string)
+{
+   for (let name in aircraftDatabase)
+   {
+       //@ts-ignore TODO
+      if (aircraftDatabase[name]["label"] === label)
+      {
+         return name;
+      }
+   }
+   return null;
+}
+
+
+export function getAircraftLabelByName(name: string)
 {
    //@ts-ignore TODO
    return aircraftDatabase[name] === undefined? name: aircraftDatabase[name].label;
@@ -1240,3 +1254,164 @@ export var aircraftDatabase = {
       ]
    },
 }
+
+export function getAircrafImage(name: string)
+{
+   var results = []
+   for (let imageName of imageNames) {
+      var score = similarity(imageName, name);
+      results.push({score: score, imageName: imageName});
+   }
+
+   var bestResult = null;
+   for (let result of results)
+   {
+      if (bestResult == null)
+         bestResult = result;
+      else {
+         if (result.score > bestResult.score)
+            bestResult = result;
+      }
+   }
+   return bestResult?.imageName + ".png";
+}
+
+function similarity(s1: string, s2: string) {
+   var longer = s1;
+   var shorter = s2;
+   if (s1.length < s2.length) {
+     longer = s2;
+     shorter = s1;
+   }
+   var longerLength = longer.length;
+   if (longerLength == 0) {
+     return 1.0;
+   }
+   return (longerLength - editDistance(longer, shorter)) / longerLength;
+ }
+
+function editDistance(s1: string, s2: string) {
+   s1 = s1.toLowerCase();
+   s2 = s2.toLowerCase();
+ 
+   var costs = new Array();
+   for (var i = 0; i <= s1.length; i++) {
+     var lastValue = i;
+     for (var j = 0; j <= s2.length; j++) {
+       if (i == 0)
+         costs[j] = j;
+       else {
+         if (j > 0) {
+           var newValue = costs[j - 1];
+           if (s1.charAt(i - 1) != s2.charAt(j - 1))
+             newValue = Math.min(Math.min(newValue, lastValue),
+               costs[j]) + 1;
+           costs[j - 1] = lastValue;
+           lastValue = newValue;
+         }
+       }
+     }
+     if (i > 0)
+       costs[s2.length] = lastValue;
+   }
+   return costs[s2.length];
+ }
+
+var imageNames = [
+   'a-10',
+   'a-20',
+   'a-29',
+   'a-4',
+   'a-400',
+   'a-50',
+   'a-6',
+   'ah-1',
+   'ah-64',
+   'an-26',
+   'av8bna',
+   'b-1',
+   'b-17',
+   'b-2',
+   'b-52',
+   'b707',
+   'bf109',
+   'bomb',
+   'c-101',
+   'c-130',
+   'c-17',
+   'c-5',
+   'ch-47',
+   'ch-53',
+   'christeneagleii',
+   'e-2',
+   'e-3',
+   'eurofighter',
+   'f-111',
+   'f-117',
+   'f-14',
+   'f-15',
+   'f-16',
+   'f-18',
+   'f-22',
+   'f-35',
+   'f-4',
+   'f-5',
+   'f-86',
+   'fw190',
+   'general1',
+   'gripen',
+   'h-6',
+   'hawk',
+   'helicopter1',
+   'i-16',
+   'il-76',
+   'j-10',
+   'j-20',
+   'j-7',
+   'jf-17',
+   'ju-88',
+   'ka-27',
+   'ka-50',
+   'kc-10',
+   'kc-135',
+   'l-159',
+   'l-39',
+   'm2000',
+   'mi-24',
+   'mi-26',
+   'mi-28',
+   'mi-8',
+   'mig-15',
+   'mig-19',
+   'mig-21',
+   'mig-23',
+   'mig-25',
+   'mig-29',
+   'mosquito',
+   'multiengine',
+   'oh-58',
+   'p-47',
+   'p-51',
+   'rafale',
+   'rq-1',
+   'rq-4',
+   's-3',
+   'sa-342',
+   'spitfire',
+   'su-17',
+   'su-24',
+   'su-25',
+   'su-27',
+   'su-34',
+   'su-57',
+   'tornado',
+   'tu-160',
+   'tu-22',
+   'tu-95',
+   'u-28',
+   'uh-1',
+   'uh-60',
+   'viggen',
+   'yak-40',
+   'yak-52'
+]
