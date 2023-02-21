@@ -1,0 +1,106 @@
+/* Variables definitions */
+:root {
+	--active-coalition-color: var(--blue-coalition-color);
+	--background-color-dark: #202831;
+	--background-color-light: #AAA;
+	--blue-coalition-color: #247be2;
+	--highlight-color: #FFF5;
+	--neutral-coalition-color: whitesmoke;
+	--neutral-coalition-text: #202831;
+	--red-coalition-color: #f32121;
+	--text-color: white;
+	--title-color: #d3e9ff;
+}
+
+
+* { 
+    -moz-box-sizing: border-box; 
+    -webkit-box-sizing: border-box; 
+    box-sizing: border-box; 
+}
+
+
+html {
+    font-family: 'Open Sans', sans-serif;
+}
+
+
+
+.ol-panel {
+    background-color: var(--background-color-dark);
+    border-radius: 15px;
+    box-shadow: 0px 2px 5px #000A;
+    color:white;
+    font-size: 12px;
+    height:fit-content;
+    padding:10px;
+    width:fit-content;
+}
+
+
+.ol-panel-list {
+    display: flex;
+    flex-direction: column;
+	height: fit-content;
+    row-gap: 5px;
+	text-align: center;
+	width: fit-content;
+    border-radius: 5px;
+}
+
+.ol-panel-list .list-item {
+    border-radius: 10px;
+    display:flex;
+    justify-content: space-between;
+	padding: 6px 10px;
+}
+
+.ol-panel-list.sortable > .sortable-item {
+    align-items: center;
+    column-gap: 5px;
+    display:flex;
+    flex-direction: row;
+}
+
+.ol-panel-list.sortable > .sortable-item > .handle {
+    cursor:grab;
+    filter:invert(100);
+}
+
+.ol-panel-list.sortable > .sortable-item > .handle img {
+    max-width: 16px;
+}
+
+
+.ol-panel-info {
+    display:flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.ol-panel-info > .panel-section {
+    border-right: 1px solid #555;
+    padding:10px;
+}
+
+.ol-panel-info > .panel-section:last-of-type {
+    border-right-width: 0;
+}
+
+
+.highlight-primary {
+	background-color: var(--highlight-color);
+}
+
+.highlight-bluefor {
+	background-color: var(--blue-coalition-color);
+}
+
+.highlight-redfor {
+	background-color: var(--red-coalition-color);
+}
+
+.highlight-neutral {
+	background-color: var(--neutral-coalition-color);
+    color: var(--neutral-coalition-text)
+}

@@ -14,6 +14,8 @@ import { Slider } from "./controls/slider";
 import { AIC } from "./aic/AIC";
 
 import { VisibilityControlPanel } from "./panels/visibilitycontrolpanel";
+import { ATC } from "./atc/ATC";
+import { FeatureSwitches } from "./FeatureSwitches";
 
 /* TODO: should this be a class? */
 var map: Map;
@@ -41,13 +43,22 @@ var aic: AIC;
 var aicToggleButton: Button;
 var aicHelpButton: Button;
 
+
+var atc: ATC;
+var atcToggleButton: Button;
+
 var altitudeSlider: Slider;
 var airspeedSlider: Slider;
 
 var connected: boolean;
 var activeCoalition: string;
 
+var featureSwitches;
+
 function setup() {
+
+    featureSwitches = new FeatureSwitches();
+
     /* Initialize */
     map = new Map('map-container');
     unitsManager = new UnitsManager();
@@ -63,9 +74,6 @@ function setup() {
     mouseInfoPanel = new MouseInfoPanel("mouse-info-panel");
     visibilityControlPanel = new VisibilityControlPanel("visibility-control-panel");
 
-    scenarioDropdown = new Dropdown("scenario-dropdown", ["Caucasus", "Syria", "Marianas", "Nevada", "South Atlantic", "The channel"], () => { });
-    mapSourceDropdown = new Dropdown("map-source-dropdown", map.getLayers(), (option: string) => map.setLayer(option));
-
     missionData = new MissionData();
 
     /* Unit control buttons */
@@ -79,15 +87,20 @@ function setup() {
     airspeedSlider = new Slider("airspeed-slider", 0, 100, "kts", (value: number) => getUnitsManager().selectedUnitsSetSpeed(value / 1.94384));
 
     /* AIC */
-    aic = new AIC();
     
-    aicToggleButton = new Button( "toggle-aic-button", ["images/buttons/radar.svg"], () => {
-        aic.toggleStatus();
-    });
+    let aicFeatureSwitch = featureSwitches.getSwitch( "aic" );
 
-    aicHelpButton = new Button( "aic-help-button", [ "images/buttons/question-mark.svg" ], () => {
-        aic.toggleHelp();
-    });
+    if ( aicFeatureSwitch?.isEnabled() ) {
+        aic = new AIC();
+        
+        aicToggleButton = new Button( "toggle-aic-button", ["images/buttons/radar.svg"], () => {
+            aic.toggleStatus();
+        });
+
+        aicHelpButton = new Button( "aic-help-button", [ "images/buttons/question-mark.svg" ], () => {
+            aic.toggleHelp();
+        });
+    }
 
 
     /* Generic clicks */
@@ -103,6 +116,22 @@ function setup() {
         }
 
     });
+
+
+    /*** ATC ***/
+
+    let atcFeatureSwitch = featureSwitches.getSwitch( "atc" );
+
+    if ( atcFeatureSwitch?.isEnabled() ) {
+
+        atc = new ATC();
+    
+        atcToggleButton = new Button( "atc-toggle-button", [ "images/buttons/atc.svg" ], () => {
+            atc.toggleStatus();
+        } );
+
+    }
+
 
     /* Default values */
     activeCoalition = "blue";

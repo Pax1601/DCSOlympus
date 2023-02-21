@@ -1,12 +1,11 @@
+import { ToggleableFeature } from "../ToggleableFeature";
 import { AICFormation_Azimuth } from "./AICFormation/Azimuth";
 import { AICFormation_Range } from "./AICFormation/Range";
 import { AICFormation_Single } from "./AICFormation/Single";
 import { AICFormationDescriptorSection } from "./AICFormationDescriptorSection";
 
 
-export class AIC {
-
-    #status:boolean = true;
+export class AIC extends ToggleableFeature {
 
     #formations = [
 
@@ -18,8 +17,10 @@ export class AIC {
 
 
     constructor() {
+
+        super( false );
         
-        this.#onStatusUpdate();
+        this.onStatusUpdate();
 
         //  This feels kind of dirty
         let $aicFormationList = document.getElementById( "aic-formation-list" );
@@ -80,30 +81,10 @@ export class AIC {
     }
 
 
-    getStatus() {
-        return this.#status;
-    }
-
-
-    #onStatusUpdate() {
-
-        const status:boolean = this.getStatus();
+    onStatusUpdate() {
 
         //  Update the DOM
-        document.body.classList.toggle( "aic-enabled", status );
-
-    }
-
-
-    toggleStatus(force?:boolean) {
-
-        if ( force ) {
-            this.#status = force;
-        } else {
-            this.#status = !this.#status;
-        }
-
-        this.#onStatusUpdate();
+        document.body.classList.toggle( "aic-enabled", this.getStatus() );
 
     }
 
