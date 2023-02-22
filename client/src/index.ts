@@ -146,14 +146,6 @@ function requestUpdate() {
     /* Main update rate = 250ms is minimum time, equal to server update time. */
     setTimeout(() => requestUpdate(), getConnected() ? 250 : 1000);
 
-    setInterval( () => {
-        /*
-        gtag( "event", "heartbeat", {
-
-        });
-        //*/
-    }, 60000);
-
     connectionStatusPanel.update(getConnected());
 }
 

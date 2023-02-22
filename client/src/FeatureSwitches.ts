@@ -1,6 +1,7 @@
 export interface FeatureSwitchInterface {
-    "enabled": boolean,
+    "defaultEnabled": boolean,  //  default on/off state (if allowed by masterSwitch)
     "label": string,
+    "masterSwitch": boolean,    //  on/off regardless of user preference
     "name": string,
     "options"?: object,
     "removeArtifactsIfDisabled"?: boolean
@@ -8,22 +9,46 @@ export interface FeatureSwitchInterface {
 
 
 class FeatureSwitch {
-    enabled;
+
+    //  From config param
+    defaultEnabled;
     label;
+    masterSwitch;
     name;
     removeArtifactsIfDisabled = true;
 
+    //  Self-set
+    userPreference;
+
+
     constructor( config:FeatureSwitchInterface ) {
 
-        this.enabled = config.enabled;
-        this.label   = config.label;
-        this.name    = config.name;
+        this.defaultEnabled = config.defaultEnabled;
+        this.label          = config.label;
+        this.masterSwitch   = config.masterSwitch;
+        this.name           = config.name;
+
+        this.userPreference = this.getUserPreference();
+
+    }
+
+
+    getUserPreference() {
+
+        let preferences = JSON.parse( localStorage.getItem( "featureSwitches" ) || "{}" );
+
+        return ( preferences.hasOwnProperty( this.name ) ) ? preferences[ this.name ] : this.defaultEnabled;        
 
     }
 
 
     isEnabled() {
-        return this.enabled;
+
+        if ( !this.masterSwitch ) {
+            return false;
+        }
+
+        return this.userPreference;
     }
 
 }
@@ -33,18 +58,25 @@ export class FeatureSwitches {
     #featureSwitches:FeatureSwitch[] = [
 
         new FeatureSwitch({
-            "enabled": false,
+            "defaultEnabled": false,
             "label": "AIC",
+            "masterSwitch": true,
             "name": "aic"
         }),
         
         new FeatureSwitch({
-            "enabled": false,
+            "defaultEnabled": false,
+            "label": "AI Formations",
+            "masterSwitch": true,
+            "name": "ai-formations",
+            "removeArtifactsIfDisabled": false
+        }),
+        
+        new FeatureSwitch({
+            "defaultEnabled": false,
             "label": "ATC",
-            "name": "atc",
-            "options": {
-                "key": "value"
-            }
+            "masterSwitch": true,
+            "name": "atc"
         })
 
     ];
@@ -53,6 +85,8 @@ export class FeatureSwitches {
     constructor() {
 
         this.#removeArtifacts();
+
+        this.savePreferences();
 
     }
 
@@ -67,10 +101,33 @@ export class FeatureSwitches {
     #removeArtifacts() {
         
         for ( const featureSwitch of this.#featureSwitches ) {
-            if ( !featureSwitch.isEnabled() && featureSwitch.removeArtifactsIfDisabled !== false ) {
-                document.querySelectorAll( "[data-feature-switch='" + featureSwitch.name + "']" ).forEach( el => el.remove() );
+            if ( !featureSwitch.isEnabled() ) {
+                
+                document.querySelectorAll( "[data-feature-switch='" + featureSwitch.name + "']" ).forEach( el => {
+
+                    if ( featureSwitch.removeArtifactsIfDisabled === false ) {
+                        el.remove();
+                    } else {
+                        el.classList.add( "hide" );
+                    }
+
+                });
+
             }
         }
+
+    }
+
+
+    savePreferences() {
+
+        let preferences:any = {};
+
+        for ( const featureSwitch of this.#featureSwitches ) {
+            preferences[ featureSwitch.name ] = featureSwitch.isEnabled();
+        }
+
+        localStorage.setItem( "featureSwitches", JSON.stringify( preferences ) );
 
     }
 

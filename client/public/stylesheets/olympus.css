@@ -3,7 +3,11 @@
 	--active-coalition-color: var(--blue-coalition-color);
 	--background-color-dark: #202831;
 	--background-color-light: #AAA;
+    --border-radius-sm:5px;
+    --border-radius-md:10px;
+    --border-radius-lg:15px;
 	--blue-coalition-color: #247be2;
+    --font-weight-bolder:600;
 	--highlight-color: #FFF5;
 	--neutral-coalition-color: whitesmoke;
 	--neutral-coalition-text: #202831;
@@ -25,6 +29,29 @@ html {
 }
 
 
+button {
+    background-color:var(--background-color-dark);
+    border:1px solid var( --background-color-dark );
+    border-radius: var( --border-radius-sm );
+    color:whitesmoke;
+    cursor:pointer;
+    font-weight: var( --font-weight-bolder );
+    padding:8px;
+}
+
+button[disabled="disabled"] {
+    color: var( --highlight-color );
+    cursor:not-allowed;
+}
+
+
+.pill {
+    border-radius: var( --border-radius-sm );
+    display:inline-block;
+    padding:6px;
+}
+
+
 
 .ol-panel {
     background-color: var(--background-color-dark);
@@ -39,17 +66,17 @@ html {
 
 
 .ol-panel-list {
+    border-radius: var( --border-radius-sm );
     display: flex;
     flex-direction: column;
 	height: fit-content;
     row-gap: 5px;
 	text-align: center;
 	width: fit-content;
-    border-radius: 5px;
 }
 
 .ol-panel-list .list-item {
-    border-radius: 10px;
+    border-radius: var( --border-radius-md );
     display:flex;
     justify-content: space-between;
 	padding: 6px 10px;
@@ -72,20 +99,32 @@ html {
 }
 
 
-.ol-panel-info {
+.ol-panel-board {
     display:flex;
     flex-direction: row;
     justify-content: space-evenly;
 }
 
-.ol-panel-info > .panel-section {
+.ol-panel-board > .panel-section {
     border-right: 1px solid #555;
     padding:10px;
 }
 
-.ol-panel-info > .panel-section:last-of-type {
+.ol-panel-board > .panel-section:last-of-type {
     border-right-width: 0;
 }
+
+.ol-panel-board h1, .ol-panel-board h2 {
+    font-size:18px;
+    font-weight: var( --font-weight-bolder );
+    margin: 0;
+    padding:0 0 5px 0;
+}
+
+.ol-panel-board h2 {
+    font-size:14px;
+}
+
 
 
 .highlight-primary {
