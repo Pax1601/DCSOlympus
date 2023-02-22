@@ -1,9 +1,9 @@
 import { Marker, LatLng, Polyline, Icon } from 'leaflet';
 import { getMap, getUnitsManager} from '..';
-import { UnitMarker, MarkerOptions, AircraftMarker, HelicopterMarker, GroundUnitMarker, NavyUnitMarker, WeaponMarker } from './unitmarker';
+import { UnitMarker, MarkerOptions, AircraftMarker, HelicopterMarker, GroundUnitMarker, NavyUnitMarker, WeaponMarker, MissileMarker, BombMarker } from './unitmarker';
 import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, landAt, setAltitude, setReactionToThreat, setROE, setSpeed } from '../dcs/dcs';
 
-interface visibilityOptions {
+interface VisibilityOptions {
     dead: string;
     ai: string;
     uncontrolled: string;
@@ -393,8 +393,8 @@ export class Unit {
 }
 
 export class AirUnit extends Unit {
-    static visibility: visibilityOptions = {dead: "hidden", ai: "partial", uncontrolled: "partial", human: "partial"}
-    static setVisibility(visibility: visibilityOptions)
+    static visibility: VisibilityOptions = {dead: "hidden", ai: "partial", uncontrolled: "partial", human: "full"}
+    static setVisibility(visibility: VisibilityOptions)
     {
         getUnitsManager().forceUpdate();
         AirUnit.visibility = visibility;
@@ -438,8 +438,8 @@ export class Helicopter extends AirUnit {
 }
 
 export class GroundUnit extends Unit {
-    static visibility: visibilityOptions = {dead: "hidden", ai: "partial", uncontrolled: "partial", human: "partial"}
-    static setVisibility(visibility: visibilityOptions)
+    static visibility: VisibilityOptions = {dead: "hidden", ai: "partial", uncontrolled: "partial", human: "partial"}
+    static setVisibility(visibility: VisibilityOptions)
     {
         getUnitsManager().forceUpdate();
         GroundUnit.visibility = visibility;
@@ -474,8 +474,8 @@ export class GroundUnit extends Unit {
 }
 
 export class NavyUnit extends Unit {
-    static visibility: visibilityOptions = {dead: "hidden", ai: "partial", uncontrolled: "partial", human: "partial"}
-    static setVisibility(visibility: visibilityOptions)
+    static visibility: VisibilityOptions = {dead: "hidden", ai: "partial", uncontrolled: "partial", human: "partial"}
+    static setVisibility(visibility: VisibilityOptions)
     {
         getUnitsManager().forceUpdate();
         NavyUnit.visibility = visibility;
@@ -507,8 +507,8 @@ export class NavyUnit extends Unit {
 }
 
 export class Weapon extends Unit {
-    static visibility: visibilityOptions = {dead: "hidden", ai: "partial", uncontrolled: "partial", human: "partial"}
-    static setVisibility(visibility: visibilityOptions)
+    static visibility: VisibilityOptions = {dead: "hidden", ai: "partial", uncontrolled: "partial", human: "partial"}
+    static setVisibility(visibility: VisibilityOptions)
     {
         getUnitsManager().forceUpdate();
         Weapon.visibility = visibility;
@@ -535,14 +535,14 @@ export class Weapon extends Unit {
 
 export class Missile extends Weapon {
     constructor(ID: number, options: MarkerOptions) {
-        var marker = new WeaponMarker(options);
+        var marker = new MissileMarker(options);
         super(ID, marker);
     }
 }
 
 export class Bomb extends Weapon {
     constructor(ID: number, options: MarkerOptions) {
-        var marker = new WeaponMarker(options);
+        var marker = new BombMarker(options);
         super(ID, marker);
     }
 }

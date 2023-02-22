@@ -5,6 +5,7 @@
 const string Logger::m_sFileName = LOG_NAME;
 Logger* Logger::m_pThis = NULL;
 ofstream Logger::m_Logfile;
+std::list<std::string> Logger::m_logs;
 
 Logger::Logger()
 {
@@ -37,6 +38,7 @@ void Logger::Log(const string& message)
     Open();
     m_Logfile << CurrentDateTime() << ":\t";
     m_Logfile << message << "\n";
+    m_logs.push_back(CurrentDateTime() + ": " + message);
     Close();
 }
 
@@ -45,5 +47,6 @@ void Logger::Log(const wstring& message)
     Open();
     m_Logfile << CurrentDateTime() << ":\t";
     m_Logfile << to_string(message) << "\n";
+    m_logs.push_back(CurrentDateTime() + ": " + to_string(message));
     Close();
 }

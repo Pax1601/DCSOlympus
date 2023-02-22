@@ -43,7 +43,7 @@
     <ClInclude Include="include\scriptloader.h" />
     <ClInclude Include="include\server.h" />
     <ClInclude Include="include\unit.h" />
-    <ClInclude Include="include\unitsfactory.h" />
+    <ClInclude Include="include\unitsmanager.h" />
     <ClInclude Include="include\weapon.h" />
   </ItemGroup>
   <ItemGroup>
@@ -58,7 +58,7 @@
     <ClCompile Include="src\scriptloader.cpp" />
     <ClCompile Include="src\server.cpp" />
     <ClCompile Include="src\unit.cpp" />
-    <ClCompile Include="src\unitsfactory.cpp" />
+    <ClCompile Include="src\unitsmanager.cpp" />
     <ClCompile Include="src\weapon.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -39,7 +39,7 @@
     <ClInclude Include="include\unit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\unitsfactory.h">
+    <ClInclude Include="include\unitsmanager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\weapon.h">
@@ -80,7 +80,7 @@
     <ClCompile Include="src\unit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\unitsfactory.cpp">
+    <ClCompile Include="src\unitsmanager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\weapon.cpp">

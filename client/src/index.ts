@@ -6,7 +6,6 @@ import { UnitInfoPanel } from "./panels/unitinfopanel";
 import { SelectionScroll } from "./controls/selectionscroll";
 import { Dropdown } from "./controls/dropdown";
 import { ConnectionStatusPanel } from "./panels/connectionstatuspanel";
-import { Button } from "./controls/button";
 import { MissionData } from "./missiondata/missiondata";
 import { UnitControlPanel } from "./panels/unitcontrolpanel";
 import { MouseInfoPanel } from "./panels/mouseInfoPanel";
@@ -16,6 +15,8 @@ import { AIC } from "./aic/AIC";
 import { VisibilityControlPanel } from "./panels/visibilitycontrolpanel";
 import { ATC } from "./atc/ATC";
 import { FeatureSwitches } from "./FeatureSwitches";
+import { LogPanel } from "./panels/logpanel";
+import { Button } from "./controls/button";
 
 /* TODO: should this be a class? */
 var map: Map;
@@ -30,8 +31,8 @@ var connectionStatusPanel: ConnectionStatusPanel;
 var unitControlPanel: UnitControlPanel;
 var mouseInfoPanel: MouseInfoPanel;
 var visibilityControlPanel: VisibilityControlPanel;
+var logPanel: LogPanel;
 
-var scenarioDropdown: Dropdown;
 var mapSourceDropdown: Dropdown;
 
 var slowButton: Button;
@@ -62,17 +63,19 @@ function setup() {
     /* Initialize */
     map = new Map('map-container');
     unitsManager = new UnitsManager();
+    missionData = new MissionData();
 
     selectionWheel = new SelectionWheel("selection-wheel");
     selectionScroll = new SelectionScroll("selection-scroll");
    
     unitInfoPanel = new UnitInfoPanel("unit-info-panel");
     unitControlPanel = new UnitControlPanel("unit-control-panel");
-    scenarioDropdown = new Dropdown("scenario-dropdown", ["Caucasus", "Marianas", "Nevada", "South Atlantic", "Syria", "The Channel"], () => { });
+    //scenarioDropdown = new Dropdown("scenario-dropdown", ["Caucasus", "Marianas", "Nevada", "South Atlantic", "Syria", "The Channel"], () => { });
     mapSourceDropdown = new Dropdown("map-source-dropdown", map.getLayers(), (option: string) => map.setLayer(option));
     connectionStatusPanel = new ConnectionStatusPanel("connection-status-panel");
     mouseInfoPanel = new MouseInfoPanel("mouse-info-panel");
     visibilityControlPanel = new VisibilityControlPanel("visibility-control-panel");
+    logPanel = new LogPanel("log-panel");
 
     missionData = new MissionData();
 
@@ -132,6 +135,7 @@ function setup() {
 
     }
 
+    mapSourceDropdown = new Dropdown("map-source-dropdown", map.getLayers(), (option: string) => map.setLayer(option));
 
     /* Default values */
     activeCoalition = "blue";
@@ -153,6 +157,7 @@ export function update(data: JSON) {
     console.log( data );
     unitsManager.update(data);
     missionData.update(data);
+    logPanel.update(data);
 }
 
 export function getMap() {

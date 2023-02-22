@@ -1,5 +1,5 @@
 #include "framework.h"
-#include "unitsFactory.h"
+#include "unitsManager.h"
 #include "logger.h"
 #include "unit.h"
 #include "aircraft.h"
@@ -12,17 +12,17 @@
 
 extern Scheduler* scheduler;
 
-UnitsFactory::UnitsFactory(lua_State* L)
+UnitsManager::UnitsManager(lua_State* L)
 {
 	LogInfo(L, "Units Factory constructor called successfully");
 }
 
-UnitsFactory::~UnitsFactory()
+UnitsManager::~UnitsManager()
 {
 
 }
 
-Unit* UnitsFactory::getUnit(int ID)
+Unit* UnitsManager::getUnit(int ID)
 {
 	if (units.find(ID) == units.end()) {
 		return nullptr;
@@ -32,7 +32,7 @@ Unit* UnitsFactory::getUnit(int ID)
 	}
 }
 
-void UnitsFactory::updateExportData(lua_State* L)
+void UnitsManager::updateExportData(lua_State* L)
 {
 	map<int, json::value> unitJSONs = getAllUnits(L);
 
@@ -94,7 +94,7 @@ void UnitsFactory::updateExportData(lua_State* L)
 	}
 }
 
-void UnitsFactory::updateMissionData(json::value missionData)
+void UnitsManager::updateMissionData(json::value missionData)
 {
 	/* Update all units */
 	for (auto const& p : units)
@@ -107,7 +107,7 @@ void UnitsFactory::updateMissionData(json::value missionData)
 	}
 }
 
-void UnitsFactory::updateAnswer(json::value& answer)
+void UnitsManager::updateAnswer(json::value& answer)
 {
 	// TODO THREAT SAFEY!
 	auto unitsJson = json::value::object();
@@ -120,7 +120,7 @@ void UnitsFactory::updateAnswer(json::value& answer)
 	answer[L"units"] = unitsJson;
 }
 
-void UnitsFactory::deleteUnit(int ID)
+void UnitsManager::deleteUnit(int ID)
 {
 	if (getUnit(ID) != nullptr)
 	{

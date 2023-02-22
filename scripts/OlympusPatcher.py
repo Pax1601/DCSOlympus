@@ -1,8 +1,8 @@
 import shutil
 import sys
 
-START_STRING = "/* Olympus START */\n"
-END_STRING = "/* Olympus END */\n"
+START_STRING = "-- Olympus START\n"
+END_STRING = "-- Olympus END\n"
 EXPORT_STRING = "local Olympuslfs=require('lfs');dofile(Olympuslfs.writedir()..'Scripts/OlympusExport.lua')\n"
 
 def main(flag):

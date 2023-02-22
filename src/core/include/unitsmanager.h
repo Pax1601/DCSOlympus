@@ -4,11 +4,11 @@
 
 class Unit;
 
-class UnitsFactory
+class UnitsManager
 {
 public:
-	UnitsFactory(lua_State* L);
-	~UnitsFactory();
+	UnitsManager(lua_State* L);
+	~UnitsManager();
 
 	Unit* getUnit(int ID);
 	void updateExportData(lua_State* L);

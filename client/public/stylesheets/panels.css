@@ -2,7 +2,13 @@
 .ol-panel {
     background-color: var(--background-color-dark);
     font-size: 12px;
-    transition: bottom 0.2s;
     border-radius: 15px;
     box-shadow: 0px 2px 5px #000A;
+}
+
+.ol-panel-transparent {
+    background-color: transparent;
+    font-size: 12px;
+    box-shadow: 0px 0px 0px transparent;
+    border-radius: 0px;
 }

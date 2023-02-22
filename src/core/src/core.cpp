@@ -1,14 +1,14 @@
 #include "dcstools.h"
 #include "logger.h"
 #include "defines.h"
-#include "unitsFactory.h"
+#include "unitsManager.h"
 #include "server.h"
 #include "scheduler.h"
 #include "scriptLoader.h"
 #include "luatools.h"
 
 auto before = std::chrono::system_clock::now();
-UnitsFactory* unitsFactory = nullptr;
+UnitsManager* unitsManager = nullptr;
 Server* server = nullptr;
 Scheduler* scheduler = nullptr;
 json::value airbasesData;
@@ -24,7 +24,7 @@ extern "C" DllExport int coreDeinit(lua_State* L)
 
     log("Olympus coreDeinit called successfully");
 
-    delete unitsFactory;
+    delete unitsManager;
     delete server;
     delete scheduler;
 
@@ -36,7 +36,7 @@ extern "C" DllExport int coreDeinit(lua_State* L)
 /* Called when DCS simulation starts. All singletons are instantiated, and the custom Lua functions are registered in the Lua state. */
 extern "C" DllExport int coreInit(lua_State* L)
 {
-    unitsFactory = new UnitsFactory(L);
+    unitsManager = new UnitsManager(L);
     server = new Server(L);
     scheduler = new Scheduler(L);
 
@@ -59,9 +59,9 @@ extern "C" DllExport int coreFrame(lua_State* L)
     // TODO make intervals editable
     if (duration.count() > UPDATE_TIME_INTERVAL)
     {
-        if (unitsFactory != nullptr)
+        if (unitsManager != nullptr)
         {
-            unitsFactory->updateExportData(L);
+            unitsManager->updateExportData(L);
         }
 
         // TODO allow for different intervals
@@ -87,7 +87,7 @@ extern "C" DllExport int coreMissionData(lua_State * L)
     json::value missionData = luaTableToJSON(L, -1);
 
     if (missionData.has_object_field(L"unitsData"))
-        unitsFactory->updateMissionData(missionData[L"unitsData"]);
+        unitsManager->updateMissionData(missionData[L"unitsData"]);
     if (missionData.has_object_field(L"airbases"))
         airbasesData = missionData[L"airbases"];
     if (missionData.has_object_field(L"bullseye"))

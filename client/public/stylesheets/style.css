@@ -14,6 +14,7 @@
 @import url("visibilitycontrolpanel.css");
 @import url("unitinfopanel.css");
 @import url("mouseinfopanel.css");
+@import url("logpanel.css");
 
 @import url( "aic.css" );
 @import url( "atc.css" );
@@ -48,7 +49,7 @@ html {
     cursor:crosshair;
 }
 
-.rectangular-container {
+.ol-rectangular-container {
 	padding: 0.5em;
 	background-color: gray;
 	border-radius: 5px;
@@ -59,7 +60,7 @@ html {
     font-size: 12px;
 }
 
-.rectangular-container-dark {
+.ol-rectangular-container-dark {
 	padding-left: 0.5em;
 	padding-right: 0.5em;
 	padding-top: 0.2em;
@@ -73,7 +74,7 @@ html {
     font-size: 12px;
 }
 
-.rounded-container {
+.ol-rounded-container {
 	position: relative;
 	padding: 0.5em;
 	width: fit-content;
@@ -85,21 +86,21 @@ html {
 	background-color: gray;
 }
 
-.rounded-container.blue {
+.ol-rounded-container.blue {
     background-color: var(--blue-coalition-color);
 	border: 1px solid var(--blue-coalition-color);
 }
 
-.rounded-container.red {
+.ol-rounded-container.red {
     background-color: var(--red-coalition-color);
 	border: 1px solid var(--red-coalition-color);
 }
 
-.rounded-container.neutral {
+.ol-rounded-container.neutral {
     background-color: var(--neutral-coalition-color);
 }
 
-.rounded-container-small {
+.ol-rounded-container-small {
 	padding: 0.2em;
 	width: fit-content;
 	height: fit-content;
@@ -113,7 +114,7 @@ html {
 	padding-right: 5px;
 }
 
-.rectangular-button {
+.ol-rectangular-button {
 	position: relative;
 	padding: 0.5em;
 	width: fit-content;
@@ -131,48 +132,48 @@ html {
 	column-gap: 5px;
 }
 
-.rectangular-button.blue {
+.ol-rectangular-button.blue {
     border: 1px solid var(--blue-coalition-color);
 	color: var(--blue-coalition-color);
 }
 
-.rectangular-button.red {
+.ol-rectangular-button.red {
     border: 1px solid var(--red-coalition-color);
 	color: var(--red-coalition-color);
 }
 
-.rectangular-button.white {
+.ol-rectangular-button.white {
     border: 1px solid white;
 	color: white;
 }
 
-.rectangular-button.white>img {
+.ol-rectangular-button.white>img {
     filter: invert(100%);
 }
 
-.rectangular-button>img {
+.ol-rectangular-button>img {
 	display: inline-block;
 	height: 18px;
 	width: 18px;
 }
 
-.rectangular-button.red {
+.ol-rectangular-button.red {
     border: 1px solid var(--red-coalition-color);
 }
 
-.vl {
+.ol-vl {
 	border-left: 1px solid #555;
 	width: 1px !important;
 	display: inline-block; 
 }
 
-.hl {
+.ol-hl {
 	border-top: 1px solid #555;
 	height: 1px !important;
 	display: inline-block; 
 }
 
-.measure-box {
+.ol-measure-box {
 	position: absolute;
 	padding-left: 0.5em;
 	padding-right: 0.5em;

@@ -5,7 +5,7 @@
     row-gap: 5px;
 }
 
-#mouse-info-panel .rectangular-container{
+#mouse-info-panel .ol-rectangular-container{
     width: 100%;
     font-weight: 600;
     font-size: 12px;

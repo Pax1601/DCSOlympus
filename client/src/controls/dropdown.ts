@@ -28,7 +28,6 @@ export class Dropdown {
 
             this.#content.style.left = this.#container.offsetLeft + "px";
             this.#content.style.top = this.#container.offsetTop + this.#container.offsetHeight + "px";
-            console.log(this.#container);
             document.body.appendChild(this.#content);
 
             var height = 2;

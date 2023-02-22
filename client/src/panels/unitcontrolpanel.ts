@@ -1,159 +1,155 @@
-import { imageOverlay } from "leaflet";
-import { getUnitControlSliders, getUnitsManager } from "..";
-import { ConvertDDToDMS, rad2deg } from "../other/utils";
+import { getUnitsManager } from "..";
+import { Slider } from "../controls/slider";
 import { Aircraft, AirUnit, GroundUnit, Helicopter, NavyUnit, Unit } from "../units/unit";
+import { Panel } from "./panel";
 
-export class UnitControlPanel {
-    #element: HTMLElement
-    #display: string;
+interface Button {
+    id: string,
+    value: string,
+    element: null | HTMLElement
+}
+
+export class UnitControlPanel extends Panel {
+    #altitudeSlider: Slider;
+    #airspeedSlider: Slider;
+    #formationCreationContainer: HTMLElement;
+    #ROEButtonsContainer: HTMLElement;
+    #reactionToThreatButtonsContainer: HTMLElement;
+    #selectedUnitsContainer: HTMLElement;
+    #ROEButtons: Button[] = [
+        {id: "#free", value: "Free", element: null}, 
+        {id: "#designated-free", value: "Designated free", element: null}, 
+        {id: "#designated", value: "Designated", element: null}, 
+        {id: "#return", value: "Return", element: null}, 
+        {id: "#hold", value: "Hold", element: null}
+    ]
+    #reactionToThreatButtons: Button[] = [
+        {id: "#none", value: "None", element: null}, 
+        {id: "#passive", value: "Passive", element: null}, 
+        {id: "#evade", value: "Evade", element: null}, 
+        {id: "#escape", value: "Escape", element: null}, 
+        {id: "#abort", value: "Abort", element: null}
+    ]
 
     constructor(ID: string) {
-        this.#element = <HTMLElement>document.getElementById(ID);
-        this.#display = '';
-        if (this.#element != null) {
-            this.#display = this.#element.style.display;
-            var formationCreationContainer = <HTMLElement>(this.#element.querySelector("#formation-creation-container"));
-            if (formationCreationContainer != null)
-            {
-                var createButton = <HTMLElement>formationCreationContainer.querySelector("#create-formation");
-                createButton?.addEventListener("click", () => getUnitsManager().selectedUnitsCreateFormation());
+        super(ID);
 
-                var undoButton = <HTMLElement>formationCreationContainer.querySelector("#undo-formation");
-                undoButton?.addEventListener("click", () => getUnitsManager().selectedUnitsUndoFormation());
-            }
-            var ROEButtonsContainer = <HTMLElement>(this.#element.querySelector("#roe-buttons-container"));
-            if (ROEButtonsContainer != null)
-            {
-                (<HTMLElement>ROEButtonsContainer.querySelector("#free"))?.addEventListener("click", () => getUnitsManager().selectedUnitsSetROE("Free"));
-                (<HTMLElement>ROEButtonsContainer.querySelector("#designated-free"))?.addEventListener("click", () => getUnitsManager().selectedUnitsSetROE("Designated free"));
-                (<HTMLElement>ROEButtonsContainer.querySelector("#designated"))?.addEventListener("click", () => getUnitsManager().selectedUnitsSetROE("Designated"));
-                (<HTMLElement>ROEButtonsContainer.querySelector("#return"))?.addEventListener("click", () => getUnitsManager().selectedUnitsSetROE("Return"));
-                (<HTMLElement>ROEButtonsContainer.querySelector("#hold"))?.addEventListener("click", () => getUnitsManager().selectedUnitsSetROE("Hold"));
-            }
+        /* Selected units container */
+        this.#selectedUnitsContainer = <HTMLElement>(this.getElement().querySelector("#selected-units-container"));
 
-            var reactionToThreatButtonsContainer = <HTMLElement>(this.#element.querySelector("#reaction-to-threat-buttons-container"));
-            if (reactionToThreatButtonsContainer != null)
-            {
-                (<HTMLElement>reactionToThreatButtonsContainer.querySelector("#none"))?.addEventListener("click", () => getUnitsManager().selectedUnitsSetReactionToThreat("None"));
-                (<HTMLElement>reactionToThreatButtonsContainer.querySelector("#passive"))?.addEventListener("click", () => getUnitsManager().selectedUnitsSetReactionToThreat("Passive"));
-                (<HTMLElement>reactionToThreatButtonsContainer.querySelector("#evade"))?.addEventListener("click", () => getUnitsManager().selectedUnitsSetReactionToThreat("Evade"));
-                (<HTMLElement>reactionToThreatButtonsContainer.querySelector("#escape"))?.addEventListener("click", () => getUnitsManager().selectedUnitsSetReactionToThreat("Escape"));
-                (<HTMLElement>reactionToThreatButtonsContainer.querySelector("#abort"))?.addEventListener("click", () => getUnitsManager().selectedUnitsSetReactionToThreat("Abort"));
-            }
-            this.hide();
+        /* Unit control sliders */
+        this.#altitudeSlider = new Slider("altitude-slider", 0, 100, "ft", (value: number) => getUnitsManager().selectedUnitsSetAltitude(value * 0.3048));
+        this.#airspeedSlider = new Slider("airspeed-slider", 0, 100, "kts", (value: number) => getUnitsManager().selectedUnitsSetSpeed(value / 1.94384));
+
+        /* Formation control buttons */
+        this.#formationCreationContainer = <HTMLElement>(this.getElement().querySelector("#formation-creation-container"));
+        //var createButton = <HTMLElement>this.#formationCreationContainer.querySelector("#create-formation");
+        //createButton?.addEventListener("click", () => getUnitsManager().selectedUnitsCreateFormation());
+        //var undoButton = <HTMLElement>this.#formationCreationContainer.querySelector("#undo-formation");
+        //undoButton?.addEventListener("click", () => getUnitsManager().selectedUnitsUndoFormation());
+      
+        /* ROE buttons */
+        this.#ROEButtonsContainer = <HTMLElement>(this.getElement().querySelector("#roe-buttons-container"));
+        for (let button of this.#ROEButtons)
+        {
+            button.element = <HTMLElement>(this.#ROEButtonsContainer.querySelector(button.id));
+            button.element?.addEventListener("click", () => getUnitsManager().selectedUnitsSetROE(button.value));
         }
-    }
+        
+        /* Reaction to threat buttons */
+        this.#reactionToThreatButtonsContainer = <HTMLElement>(this.getElement().querySelector("#reaction-to-threat-buttons-container"));
+        for (let button of this.#reactionToThreatButtons)
+        {
+            button.element = <HTMLElement>(this.#reactionToThreatButtonsContainer.querySelector(button.id));
+            button.element?.addEventListener("click", () => getUnitsManager().selectedUnitsSetReactionToThreat(button.value));
+        }
 
-    show() {
-        this.#element.style.display = this.#display;
-    }
-
-    hide() {
-        this.#element.style.display = "none";
+        this.hide();
     }
 
     update(units: Unit[]) {
-        if (this.#element != null)
+        if (this.getElement() != null)
         {
-            var selectedUnitsContainer = <HTMLElement>(this.#element.querySelector("#selected-units-container"));
-            var formationCreationContainer = <HTMLElement>(this.#element.querySelector("#formation-creation-container"));
-            if (selectedUnitsContainer != null && formationCreationContainer != null)
-            {
-                this.#addUnitsButtons(units, selectedUnitsContainer);
-                this.#showFlightControlSliders(units);
-                this.#showFormationButtons(units, formationCreationContainer);
-            }
+            //this.#addUnitsButtons(units);
+            //this.#showFormationButtons(units);
+            
+            this.#showFlightControlSliders(units);
 
-            var ROEButtonsContainer = <HTMLElement>(this.#element.querySelector("#roe-buttons-container"));
-            if (ROEButtonsContainer != null)
-            {
-                (<HTMLElement>ROEButtonsContainer.querySelector("#free"))?.classList.toggle("white", this.#getROE(units) === "Free");
-                (<HTMLElement>ROEButtonsContainer.querySelector("#designated-free"))?.classList.toggle("white", this.#getROE(units) === "Designated free");
-                (<HTMLElement>ROEButtonsContainer.querySelector("#designated"))?.classList.toggle("white", this.#getROE(units) === "Designated");
-                (<HTMLElement>ROEButtonsContainer.querySelector("#return"))?.classList.toggle("white", this.#getROE(units) === "Return");
-                (<HTMLElement>ROEButtonsContainer.querySelector("#hold"))?.classList.toggle("white", this.#getROE(units) === "Hold");
-            }
-
-            var reactionToThreatButtonsContainer = <HTMLElement>(this.#element.querySelector("#reaction-to-threat-buttons-container"));
-            if (reactionToThreatButtonsContainer != null)
-            {
-                (<HTMLElement>reactionToThreatButtonsContainer.querySelector("#none"))?.classList.toggle("white", this.#getReactionToThreat(units) === "None");
-                (<HTMLElement>reactionToThreatButtonsContainer.querySelector("#passive"))?.classList.toggle("white", this.#getReactionToThreat(units) === "Passive");
-                (<HTMLElement>reactionToThreatButtonsContainer.querySelector("#evade"))?.classList.toggle("white", this.#getReactionToThreat(units) === "Evade");
-                (<HTMLElement>reactionToThreatButtonsContainer.querySelector("#escape"))?.classList.toggle("white", this.#getReactionToThreat(units) === "Escape");
-                (<HTMLElement>reactionToThreatButtonsContainer.querySelector("#abort"))?.classList.toggle("white", this.#getReactionToThreat(units) === "Abort");
-            }
+            for (let button of this.#ROEButtons)
+                button.element?.classList.toggle("white", this.#getROE(units) === button.value);      
+                
+            for (let button of this.#reactionToThreatButtons)
+                button.element?.classList.toggle("white", this.#getReactionToThreat(units) === button.value);           
         }
     }
 
     #showFlightControlSliders(units: Unit[])
     {
-        var sliders = getUnitControlSliders();
-        sliders.airspeed.show();
-        sliders.altitude.show();
+        this.#airspeedSlider.show();
+        this.#altitudeSlider.show();
 
         if (this.#checkAllUnitsAircraft(units))
         {
-            sliders.airspeed.setMinMax(100, 600);
-            sliders.altitude.setMinMax(0, 50000);
+            this.#airspeedSlider.setMinMax(100, 600);
+            this.#altitudeSlider.setMinMax(0, 50000);
         }
         else if (this.#checkAllUnitsHelicopter(units))
         {
-            sliders.airspeed.setMinMax(0, 200);
-            sliders.altitude.setMinMax(0, 10000);
+            this.#airspeedSlider.setMinMax(0, 200);
+            this.#altitudeSlider.setMinMax(0, 10000);
         }
         else if (this.#checkAllUnitsGroundUnit(units))
         {
-            sliders.airspeed.setMinMax(0, 60);
-            sliders.altitude.hide();
+            this.#airspeedSlider.setMinMax(0, 60);
+            this.#altitudeSlider.hide();
         }
         else if (this.#checkAllUnitsNavyUnit(units))
         {
-            sliders.airspeed.setMinMax(0, 60);
-            sliders.altitude.hide();
+            this.#airspeedSlider.setMinMax(0, 60);
+            this.#altitudeSlider.hide();
         }
         else {
-            sliders.airspeed.hide();
-            sliders.altitude.hide();
+            this.#airspeedSlider.hide();
+            this.#altitudeSlider.hide();
         }
 
         var targetSpeed = this.#getTargetAirspeed(units);
         if (targetSpeed != null)
         {
-            sliders.airspeed.setActive(true);
-            sliders.airspeed.setValue(targetSpeed * 1.94384);
+            this.#airspeedSlider.setActive(true);
+            this.#airspeedSlider.setValue(targetSpeed * 1.94384);
         }
         else
         {
-            sliders.airspeed.setActive(false);
+            this.#airspeedSlider.setActive(false);
         }
 
         var targetAltitude = this.#getTargetAltitude(units);
         if (targetAltitude != null)
         {
-            sliders.altitude.setActive(true);
-            sliders.altitude.setValue(targetAltitude / 0.3048);
+            this.#altitudeSlider.setActive(true);
+            this.#altitudeSlider.setValue(targetAltitude / 0.3048);
         }
         else
         {
-            sliders.altitude.setActive(false);
+            this.#altitudeSlider.setActive(false);
         }
     }
 
-    #addUnitsButtons(units: Unit[], selectedUnitsContainer: HTMLElement)
+    #addUnitsButtons(units: Unit[])
     {
         /* Remove any pre-existing unit button */
-        var elements = selectedUnitsContainer.getElementsByClassName("js-unit-container");
+        var elements = this.#selectedUnitsContainer.getElementsByClassName("js-unit-container");
         while (elements.length > 0)
-            selectedUnitsContainer.removeChild(elements[0])
+            this.#selectedUnitsContainer.removeChild(elements[0])
 
         /* Create all the units buttons */
         for (let unit of units)
         {
-            this.#addUnitButton(unit, selectedUnitsContainer);
+            this.#addUnitButton(unit, this.#selectedUnitsContainer);
             if (unit.isLeader)
                 for (let wingman of unit.getWingmen())
-                    this.#addUnitButton(wingman, selectedUnitsContainer);
+                    this.#addUnitButton(wingman, this.#selectedUnitsContainer);
         }
     }
 
@@ -163,7 +159,7 @@ export class UnitControlPanel {
             
         /* Unit name (actually type, but DCS calls it name for some reason) */
         var nameDiv = document.createElement("div");
-        nameDiv.classList.add("rounded-container-small");
+        nameDiv.classList.add("ol-rounded-container-small");
         if (unit.name.length >= 7)
             nameDiv.innerHTML = `${unit.name.substring(0, 4)} ...`;
         else 
@@ -193,36 +189,27 @@ export class UnitControlPanel {
         if ((unit instanceof AirUnit))
             el.append(icon);
 
-        el.classList.add("rounded-container", "js-unit-container");
+        el.classList.add("ol-rounded-container", "js-unit-container");
 
         if (!unit.getSelected())
             el.classList.add("not-selected")
 
         /* Set background color */
-        if (unit.coalitionID == 1)
-        {
-            el.classList.add("red");
-            icon.classList.add("red");
-        }
-        else if (unit.coalitionID == 2)
-        {
-            el.classList.add("blue");
-            icon.classList.add("blue");
-        }
-        else
-        {
-            el.classList.add("neutral"); 
-            icon.classList.add("neutral");
-        }
-
+        el.classList.toggle("red", unit.coalitionID == 1);
+        icon.classList.toggle("red", unit.coalitionID == 1);
+        el.classList.toggle("blue", unit.coalitionID == 2);
+        icon.classList.toggle("blue", unit.coalitionID == 2);
+        el.classList.toggle("neutral", unit.coalitionID == 0); 
+        icon.classList.toggle("neutral", unit.coalitionID == 0);
+        
         el.addEventListener("click", () => getUnitsManager().selectUnit(unit.ID));
         container.appendChild(el);
     }
 
-    #showFormationButtons(units: Unit[], formationCreationContainer: HTMLElement)
+    #showFormationButtons(units: Unit[])
     {
-        var createButton = <HTMLElement>formationCreationContainer.querySelector("#create-formation");
-        var undoButton = <HTMLElement>formationCreationContainer.querySelector("#undo-formation");
+        var createButton = <HTMLElement>this.#formationCreationContainer.querySelector("#create-formation");
+        var undoButton = <HTMLElement>this.#formationCreationContainer.querySelector("#undo-formation");
         if (createButton && undoButton && this.#checkAllUnitsAir(units))
         {
             if (!this.#checkUnitsAlreadyInFormation(units))

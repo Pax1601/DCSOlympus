@@ -2,7 +2,7 @@ import * as L from "leaflet"
 import { getSelectionWheel, getSelectionScroll, getUnitsManager, getActiveCoalition, getMouseInfoPanel } from "..";
 import { spawnAircraft, spawnGroundUnit, spawnSmoke } from "../dcs/dcs";
 import { bearing, distance, zeroAppend } from "../other/utils";
-import { aircraftDatabase, getAircraftLabelsByRole, getLoadoutsByName, getLoadoutNamesByRole } from "../units/aircraftDatabase";
+import { aircraftDatabase, getAircraftLabelsByRole, getLoadoutsByName, getLoadoutNamesByRole, getAircraftNameByLabel } from "../units/aircraftDatabase";
 import { unitTypes } from "../units/unitTypes";
 import { BoxSelect } from "./boxselect";
 
@@ -46,7 +46,7 @@ export class Map extends L.Map {
         this.#measureIcon = new L.Icon({ iconUrl: 'images/pin.png', iconAnchor: [16, 32]});
         this.#measureMarker = new L.Marker([0, 0], {icon: this.#measureIcon, interactive: false});
         this.#measureLineDiv = document.createElement("div");
-        this.#measureLineDiv.classList.add("measure-box");
+        this.#measureLineDiv.classList.add("ol-measure-box");
         this.#measureLineDiv.style.display = 'none';
 
         document.body.appendChild(this.#measureLineDiv);
@@ -119,12 +119,6 @@ export class Map extends L.Map {
         }
         else if (this.#state === "MOVE_UNIT") {
             L.DomUtil.addClass(this.getContainer(),'crosshair-cursor-enabled');
-        }
-        else if (this.#state === "ATTACK") {
-
-        }
-        else if (this.#state === "FORMATION") {
-
         }
     }
 
@@ -330,10 +324,12 @@ export class Map extends L.Map {
         this.hideSelectionWheel();
         this.hideSelectionScroll();
         var options = getAircraftLabelsByRole(role);
-        this.showSelectionScroll(e, "Select aircraft", options, (unitType: string) => {
+        this.showSelectionScroll(e, "Select aircraft", options, (label: string) => {
             this.hideSelectionWheel();
             this.hideSelectionScroll();
-            this.#unitSelectPayload(e, unitType, role);
+            var name = getAircraftNameByLabel(label);
+            if (name != null)
+                this.#unitSelectPayload(e, name, role);
         }, true);
     }
 

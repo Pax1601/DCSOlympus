@@ -4,13 +4,13 @@
 #include "commands.h"
 #include "scheduler.h"
 #include "defines.h"
-#include "unitsFactory.h"
+#include "unitsManager.h"
 
 #include <GeographicLib/Geodesic.hpp>
 using namespace GeographicLib;
 
 extern Scheduler* scheduler;
-extern UnitsFactory* unitsFactory;
+extern UnitsManager* unitsManager;
 
 /* Air unit */
 AirUnit::AirUnit(json::value json, int ID) : Unit(json, ID)
@@ -59,7 +59,7 @@ void AirUnit::setState(int newState)
 		}
 		case State::ATTACK: {
 			if (isTargetAlive()) {
-				Unit* target = unitsFactory->getUnit(targetID);
+				Unit* target = unitsManager->getUnit(targetID);
 				Coords targetPosition = Coords(target->getLatitude(), target->getLongitude(), 0);
 				activePath.clear();
 				activePath.push_front(targetPosition);

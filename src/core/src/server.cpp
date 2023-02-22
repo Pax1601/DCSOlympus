@@ -1,13 +1,13 @@
 #include "server.h"
 #include "logger.h"
 #include "defines.h"
-#include "unitsFactory.h"
+#include "unitsManager.h"
 #include "scheduler.h"
 #include "luatools.h"
 #include <exception>
 #include <stdexcept>
 
-extern UnitsFactory* unitsFactory; 
+extern UnitsManager* unitsManager; 
 extern Scheduler* scheduler;
 extern json::value airbasesData;
 extern json::value bullseyeData;
@@ -62,9 +62,15 @@ void Server::handle_get(http_request request)
     auto answer = json::value::object();
     std::exception_ptr eptr;
     try {
-        unitsFactory->updateAnswer(answer);
+        unitsManager->updateAnswer(answer);
         answer[L"airbases"] = airbasesData;
         answer[L"bullseye"] = bullseyeData;
+        answer[L"logs"] = json::value::object();
+
+        int i = 0;
+        for (auto log : getLogs())
+            answer[L"logs"][to_wstring(i++)] = json::value::string(to_wstring(log));
+
         response.set_body(answer);
     }
     catch (...) {
