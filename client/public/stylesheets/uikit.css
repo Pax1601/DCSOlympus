@@ -15,6 +15,7 @@ section {
     column-gap: 20px;
     display:flex;
     flex-direction: row;
+    flex-wrap: wrap;
 }
 
 .section-header {
@@ -42,6 +43,12 @@ section {
     column-gap: 20px;
     display:flex;
     flex-direction: row;
+}
+
+.example {
+    align-items: center;
+    display:flex;
+    flex-direction: column;
 }
 
 .caption {
