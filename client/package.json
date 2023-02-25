@@ -5,8 +5,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "npm run copy & concurrently --kill-others \"npm run watch\" \"nodemon ./bin/www\"",
     "copy": "copy .\\node_modules\\leaflet\\dist\\leaflet.css .\\public\\stylesheets\\leaflet.css",
+    "start": "npm run copy & concurrently --kill-others \"npm run watch\" \"nodemon ./bin/www\"",
     "watch": "watchify .\\src\\index.ts --debug -p [ tsify --noImplicitAny ] -o .\\public\\javascripts\\bundle.js"
   },
   "dependencies": {
@@ -22,9 +22,12 @@
     "save": "^2.9.0"
   },
   "devDependencies": {
+    "@types/gtag.js": "^0.0.12",
+    "@types/sortablejs": "^1.15.0",
     "browserify": "^17.0.0",
     "concurrently": "^7.6.0",
     "nodemon": "^2.0.20",
+    "sortablejs": "^1.15.0",
     "tsify": "^5.0.4",
     "typescript": "^4.9.4",
     "watchify": "^4.0.0"

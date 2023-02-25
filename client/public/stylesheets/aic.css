@@ -1,0 +1,194 @@
+/**************************************/
+
+.olympus-dialog {
+	align-self: center;
+	background:white;
+	border-radius: 10px;
+	display: flex;
+	flex-direction: column;
+	justify-self: center;
+	padding:10px;
+	position:absolute;
+	width:fit-content;
+	z-index: 9999;
+}
+
+.olympus-dialog-close {
+	cursor:pointer;
+	position:absolute;
+	right:10px;
+	top:5px;
+}
+
+.olympus-dialog-header {
+	font-weight:bold;
+}
+
+
+/**************************************/
+
+
+/*****  AIC  *****/
+
+.aic-panel {
+    z-index: 9999;
+}
+
+#aic-control-panel {
+    bottom:30px;
+    position: absolute;
+    left:30px;
+}
+
+
+#aic-control-panel .olympus-button img {
+    max-width: 32px;
+}
+
+
+#aic-toolbox, #aic-callsign-panel {
+	align-items: flex-start;
+	align-self: center;
+	flex-direction: column;
+	row-gap: 10px;
+	display:none;
+	position:absolute;
+}
+
+.aic-panel {
+	background:#eaeaea;
+	border-bottom-right-radius: 10px;
+	border-top-right-radius: 10px;
+	justify-self: left;
+	padding:5px 10px;
+}
+
+.aic-enabled #aic-toolbox, .aic-enabled #aic-callsign-panel {
+	display:flex;
+}
+
+.aic-enabled #aic-callsign-panel {
+	align-self: auto;
+	top: 100px;
+}
+
+.aic-panel h2 {
+	font-size:90%;
+	margin:0;
+	padding:0;
+	text-align: center;
+}
+
+#aic-callsign-display {
+	text-align: center;
+}
+
+#aic-formation-list {
+	display:flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+#aic-formation-list > div {
+	align-items: center;
+	cursor: pointer;
+	display:flex;
+	flex-direction: column;
+	justify-content: center;
+	margin-top:10px;
+	position:relative;
+}
+
+#aic-formation-list .aic-formation-image img {
+	border: 1px solid #ccc;
+	border-radius: 10px;
+	max-width: 50px;
+}
+
+#aic-formation-list .aic-formation-name {
+	font-size:90%;
+}
+
+#aic-formation-list .aic-formation-descriptor {
+	background:white;
+	border-radius: 10px;
+	left:100px;
+	padding:5px;
+	position:absolute;
+	width: max-content;
+}
+
+#aic-teleprompt {
+	background-color: white;
+	border:2px solid black;
+	border-radius: 10px;
+	bottom: 50px;
+	color: black;
+	display: none;
+	justify-content: center;
+	justify-self: center;
+	padding: 10px;
+	position: absolute;
+	width: fit-content;
+	z-index: 1000;
+}
+
+.aic-enabled #aic-teleprompt {
+	display:flex;
+}
+
+#aic-descriptor {
+	display:flex;
+	flex-direction: row;
+}
+
+#aic-descriptor .aic-descriptor-section {
+	display:flex;
+	flex-direction: column;
+	margin:0 10px;
+}
+
+#aic-descriptor .aic-descriptor-section-label {
+	background-color:#eaeaea;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	padding:.25em;
+	text-align: center;
+}
+
+#aic-descriptor .aic-descriptor-phrase {
+	border-bottom: 1px solid #ccc;
+	display:flex;
+	flex-direction: row;
+	margin-bottom:5px;
+	padding-bottom:2px;
+}
+
+#aic-descriptor .aic-descriptor-phrase:last-of-type {
+	margin-bottom: 0;
+}
+
+#aic-descriptor .aic-descriptor-components .aic-descriptor-component {
+	margin:0 5px;
+	text-align: center;
+}
+
+#aic-descriptor .aic-descriptor-component-label {
+	display:none;
+}
+
+#aic-descriptor .aic-descriptor-component-value:after {
+	content:",";
+	margin-right:5px;
+}
+
+#aic-descriptor .aic-descriptor-component:last-of-type .aic-descriptor-component-value:after {
+	content:"; ";
+}
+
+#aic-descriptor .aic-descriptor-section:last-of-type .aic-descriptor-component:last-of-type .aic-descriptor-component-value:after {
+	content:".";
+}
+
+
+/**************************************/

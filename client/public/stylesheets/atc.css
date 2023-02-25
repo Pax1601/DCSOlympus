@@ -1,0 +1,211 @@
+/***  Control panel  ***/
+
+#atc-control-panel {
+    align-self: flex-end;
+    background: white;
+    border-radius: 10px;
+    display:flex;
+    margin: 0 0 50px 100px;
+    padding:5px;
+    position: absolute;
+    z-index: 9999;
+}
+
+.atc-tool {
+    align-self: center;
+    border-radius: 10px;
+    display:none;
+    justify-self: center;
+    padding: 10px;
+    position: absolute;
+    z-index: 9999;
+}
+
+
+.atc-enabled .atc-tool {
+    display:flex;
+}
+
+
+
+
+#atc-flight-list {
+    flex-direction: column;
+}
+
+#atc-flight-list table {
+    color:white;
+}
+
+#atc-flight-list table td {
+    padding:0 10px;
+    text-align: center;
+}
+
+#atc-flight-list table td:first-of-type {
+    text-align: left;
+}
+
+#atc-flight-list table tr[data-status='checkedIn'] td {
+    background-color:goldenrod;
+}
+
+#atc-flight-list table tr[data-status='readyToTaxi'] td {
+    background-color:darkgreen;
+}
+
+#atc-flight-list table button {
+    background-color: #666;
+    border:1px solid white;
+    color:white;
+    font-weight: bold;
+    margin:2px 0;
+}
+
+
+.atc-strip-board {
+    align-self: center;
+    display:flex;
+    justify-self: center;
+    position: absolute;
+    z-index: 9999   ;
+}
+
+.atc-strip-board-header {
+    display:none;
+}
+
+.atc-strip-board-strips {
+    display:flex;
+    flex-direction: column;
+}
+
+.atc-strip-board-strip {
+    display:flex;
+    flex-direction: row;
+}
+
+
+/*
+.atc-strip-board-header {
+    background:black;
+    color:white;
+    display:none;
+    justify-content: right;
+}
+
+
+.atc-strip-board {
+    display:flex;
+    flex-direction: column;
+    row-gap: 5px;
+}
+
+.atc-strip-board-strips {
+    display:flex;
+    flex-direction: column;
+    padding:10px;
+    row-gap: 5px;
+}
+
+.atc-strip-board-strips > div {
+    align-items: center;
+    color:white;
+    column-gap: 2px;
+    display: flex;
+    flex-direction: row;
+    padding: 5px;
+}
+
+.atc-strip-board-header > div, .atc-strip-board-strips > div > div {
+    text-align: center;
+    width: 75px;
+}
+
+.atc-strip-board-header > .name {
+    width:150px;
+}
+
+.atc-strip-board-header > div, .atc-strip-board-strips > div > div {
+    text-align: center;
+    width: 75px;
+}
+
+.atc-strip-board-strips > div > .name {
+    text-align: left;
+    width:150px;
+}
+
+.atc-strip-board-strips > div {
+    align-items: center;
+    column-gap: 5px;
+    display: flex;
+    flex-direction: row;
+    font-size:12px;
+    font-weight: 600;
+    padding: 5px;
+    row-gap: 5px;
+}
+
+
+/* 
+
+.atc-strip-board-header, .atc-strip-board-strips > div {
+    align-items: center;
+    background:#FFF3;
+    color:white;
+    column-gap: 5px;
+    display: flex;
+    flex-direction: row;
+    font-size:12px;
+    font-weight: 600;
+    padding: 5px;
+    row-gap: 5px;
+}
+
+.atc-strip-board-header {
+    background:black;
+    color:white;
+    display:none;
+    justify-content: right;
+}
+
+.atc-strip-board-strips > div {
+    border-bottom:1px solid black;
+}
+
+.atc-strip-board-header > div, .atc-strip-board-strips > div > div {
+    text-align: center;
+    width: 75px;
+}
+
+.atc-strip-board-header > .name {
+    width:150px;
+}
+
+.atc-strip-board-strips > div > .handle {
+    background: black;
+    border-radius: 50%;
+    cursor:grab;
+    height:10px;
+    width:10px;
+}
+
+.atc-strip-board-strips > div > .name {
+    text-align: left;
+    width:150px;
+}
+
+.atc-strip-board-strips > div > .warning {
+    background:red;
+    color: white;
+    font-weight: bold;
+}
+
+.atc-strip-board-strips > div > .link-warning {
+    border: 1px solid red;
+    color: red;
+    font-weight: bold;
+    
+}
+ */

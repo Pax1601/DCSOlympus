@@ -16,6 +16,9 @@
 @import url("mouseinfopanel.css");
 @import url("logpanel.css");
 
+@import url( "aic.css" );
+@import url( "atc.css" );
+
 @import url("layout.css");
 
 
@@ -35,7 +38,7 @@
 * { 
     -moz-box-sizing: border-box; 
     -webkit-box-sizing: border-box; 
-     box-sizing: border-box; 
+    box-sizing: border-box; 
 }
 
 html {
