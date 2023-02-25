@@ -24,6 +24,8 @@ extern "C" DllExport int coreDeinit(lua_State* L)
 
     log("Olympus coreDeinit called successfully");
 
+    server->stop(L);
+
     delete unitsManager;
     delete server;
     delete scheduler;
@@ -41,6 +43,8 @@ extern "C" DllExport int coreInit(lua_State* L)
     scheduler = new Scheduler(L);
 
     registerLuaFunctions(L);
+
+    server->start(L);
 
     initialized = true;
     return(0);

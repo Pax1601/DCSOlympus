@@ -12,10 +12,13 @@ class Server
 {
 public:
 	Server(lua_State* L);
-	~Server();
+
+    void start(lua_State* L);
+    void stop(lua_State* L);
 
 private:
 	std::thread* serverThread;
+    json::value answer;
 
     void handle_options(http_request request);
     void handle_get(http_request request);

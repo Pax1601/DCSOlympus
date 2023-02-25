@@ -79,7 +79,7 @@ export class MissionData
             options = ["Spawn unit", "Land here"];
         else 
             options = ["Spawn unit"];
-        getMap().showSelectionScroll(e.originalEvent, e.sourceTarget.getName(), options, (option: string) => this.#onAirbaseOptionSelection(e, option), false);
+        getMap().showContextMenu(e.originalEvent, e.sourceTarget.getName(), options, (option: string) => this.#onAirbaseOptionSelection(e, option), false);
         
     }
 
@@ -90,8 +90,7 @@ export class MissionData
         }
         else if (option === "Land here")
         {
-            getMap().hideSelectionWheel();
-            getMap().hideSelectionScroll();
+            getMap().hideContextMenu();
             getUnitsManager().selectedUnitsLandAt(e.latlng);
         }
     }

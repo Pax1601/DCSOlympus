@@ -13,6 +13,7 @@ export class UnitsManager {
 
         document.addEventListener('copy', () => this.copyUnits());
         document.addEventListener('paste', () => this.pasteUnits());
+        document.addEventListener('unitSelection', () => this.onUnitSelection());
     }
 
     #updateUnitControlPanel() {
@@ -98,13 +99,12 @@ export class UnitsManager {
     onUnitSelection() {
         if (this.getSelectedUnits().length > 0) {
             getMap().setState("MOVE_UNIT");
-            //unitControlPanel.setEnabled(true);
+            document.dispatchEvent(new CustomEvent("unitsSelection", {detail: this.getSelectedUnits()}));
         }
         else {
             getMap().setState("IDLE");
-            //unitControlPanel.setEnabled(false);
+            document.dispatchEvent(new CustomEvent("clearSelection"));
         }
-
         this.#updateUnitControlPanel();
     }
 

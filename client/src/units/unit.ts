@@ -118,8 +118,7 @@ export class Unit {
         if ((this.alive || !selected) && this.#selectable && this.#selected != selected) {
             this.#selected = selected;
             this.#marker.setSelected(selected);
-            getUnitsManager().onUnitSelection();
-
+            document.dispatchEvent(new CustomEvent("unitSelection", {detail: this}));
         }
     }
 
@@ -207,11 +206,11 @@ export class Unit {
             'Follow'
         ]
 
-        getMap().showSelectionScroll(e.originalEvent, "Action: " + this.unitName, options, (action: string) => this.#executeAction(action));
+        getMap().showContextMenu(e.originalEvent, "Action: " + this.unitName, options, (action: string) => this.#executeAction(action));
     }
 
     #executeAction(action: string) {
-        getMap().hideSelectionScroll();
+        getMap().hideContextMenu();
         if (action === "Attack")
             getUnitsManager().selectedUnitsAttackUnit(this.ID);
     }

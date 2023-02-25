@@ -1,8 +1,8 @@
 import * as L from "leaflet"
-import { getSelectionWheel, getSelectionScroll, getUnitsManager, getActiveCoalition, getMouseInfoPanel } from "..";
+import { getContextMenu, getUnitsManager, getActiveCoalition, getMouseInfoPanel } from "..";
 import { spawnAircraft, spawnGroundUnit, spawnSmoke } from "../dcs/dcs";
 import { bearing, distance, zeroAppend } from "../other/utils";
-import { aircraftDatabase, getAircraftLabelsByRole, getLoadoutsByName, getLoadoutNamesByRole, getAircraftNameByLabel } from "../units/aircraftDatabase";
+import { getAircraftLabelsByRole, getLoadoutsByName, getLoadoutNamesByRole, getAircraftNameByLabel } from "../units/aircraftDatabase";
 import { unitTypes } from "../units/unitTypes";
 import { BoxSelect } from "./boxselect";
 
@@ -14,14 +14,14 @@ export interface ClickEvent {
     latlng: L.LatLng;
 }
 
-export interface SpawnEvent extends ClickEvent{
+export interface SpawnEvent extends ClickEvent {
     airbaseName: string | null;
     coalitionID: number | null;
 }
 
 export class Map extends L.Map {
     #state: string;
-    #layer?: L.TileLayer;
+    #layer: L.TileLayer | null = null;
     #preventLeftClick: boolean = false;
     #leftClickTimer: number = 0;
     #measurePoint: L.LatLng | null;
@@ -113,39 +113,30 @@ export class Map extends L.Map {
     /* State machine */
     setState(state: string) {
         this.#state = state;
-
         if (this.#state === "IDLE") {
             L.DomUtil.removeClass(this.getContainer(),'crosshair-cursor-enabled');
         }
         else if (this.#state === "MOVE_UNIT") {
             L.DomUtil.addClass(this.getContainer(),'crosshair-cursor-enabled');
         }
+        document.dispatchEvent(new CustomEvent("mapStateChanged"));
     }
 
     getState() {
         return this.#state;
     }
 
-    /* Selection wheel */
-    showSelectionWheel(e: ClickEvent | SpawnEvent, options: any, showCoalition: boolean) {
-        var x = e.x;
-        var y = e.y;
-        getSelectionWheel().show(x, y, options, showCoalition);
-    }
-
-    hideSelectionWheel() {
-        getSelectionWheel().hide();
-    }
-
     /* Selection scroll */
-    showSelectionScroll(e: ClickEvent | SpawnEvent, title: string, options: any, callback: CallableFunction, showCoalition: boolean = false) {
+    showContextMenu(e: ClickEvent | SpawnEvent, title: string, options: any, callback: CallableFunction, showCoalition: boolean = false) {
         var x = e.x;
         var y = e.y;
-        getSelectionScroll().show(x, y, title, options, callback, showCoalition);
+        getContextMenu().show(x, y, title, options, callback, showCoalition);
+        document.dispatchEvent(new CustomEvent("mapContextMenu"));
     }
 
-    hideSelectionScroll() {
-        getSelectionScroll().hide();
+    hideContextMenu() {
+        getContextMenu().hide();
+        document.dispatchEvent(new CustomEvent("mapContextMenu"));
     }
 
     getMousePosition() {
@@ -156,11 +147,16 @@ export class Map extends L.Map {
         return this.containerPointToLatLng(this.#lastMousePosition);
     }
 
+    /* Spawn from air base */
+    spawnFromAirbase(e: SpawnEvent)
+    {
+        this.#aircraftSpawnMenu(e);
+    }
+
     /* Event handlers */
     #onClick(e: any) {
         if (!this.#preventLeftClick) {
-            this.hideSelectionWheel();
-            this.hideSelectionScroll();
+            this.hideContextMenu();
             if (this.#state === "IDLE") {
                 if (e.originalEvent.ctrlKey)
                     if (!this.#measurePoint)
@@ -179,8 +175,7 @@ export class Map extends L.Map {
             else if (this.#state === "MOVE_UNIT") {
                 this.setState("IDLE");
                 getUnitsManager().deselectAllUnits();
-                this.hideSelectionWheel();
-                this.hideSelectionScroll();
+                this.hideContextMenu();
             }
         }
     }
@@ -190,8 +185,7 @@ export class Map extends L.Map {
     }
 
     #onContextMenu(e: any) {
-        this.hideSelectionWheel();
-        this.hideSelectionScroll();
+        this.hideContextMenu();
         if (this.#state === "IDLE") {
             var spawnEvent: SpawnEvent = {x: e.originalEvent.x, y: e.originalEvent.y, latlng: e.latlng, airbaseName: null, coalitionID: null};
             if (this.#state == "IDLE") {
@@ -201,7 +195,7 @@ export class Map extends L.Map {
                     { "tooltip": "Smoke", "src": "spawnSmoke.png", "callback": () => this.#smokeSpawnMenu(spawnEvent) },
                     //{ "tooltip": "Explosion", "src": "spawnExplosion.png", "callback": () => this.#explosionSpawnMenu(e) }
                 ]
-                this.showSelectionScroll(spawnEvent, "Action", options, () => {}, false);
+                this.showContextMenu(spawnEvent, "Action", options, () => {}, false);
             }
         }
         else if (this.#state === "MOVE_UNIT") {
@@ -265,12 +259,6 @@ export class Map extends L.Map {
             this.#hideMeasureLine();
     }
 
-    /* Spawn from air base */
-    spawnFromAirbase(e: SpawnEvent)
-    {
-        this.#aircraftSpawnMenu(e);
-    }
-
     /* Spawning menus */
     #aircraftSpawnMenu(e: SpawnEvent) {
         var options = [
@@ -284,9 +272,9 @@ export class Map extends L.Map {
             { 'coalition': true, 'tooltip': 'Transport', 'src': 'spawnTransport.png', 'callback': () => this.#selectAircraft(e, "transport") },
         ]
         if (e.airbaseName != null)
-            this.showSelectionScroll(e, "Spawn at " + e.airbaseName, options, () => {}, true);
+            this.showContextMenu(e, "Spawn at " + e.airbaseName, options, () => {}, true);
         else
-            this.showSelectionScroll(e, "Spawn air unit", options, () => {}, true);
+            this.showContextMenu(e, "Spawn air unit", options, () => {}, true);
     }
 
     #groundUnitSpawnMenu(e: SpawnEvent) {
@@ -299,20 +287,19 @@ export class Map extends L.Map {
             {'coalition': true, 'tooltip': 'Radar',      'src': 'spawnRadar.png',    'callback': () => this.#selectGroundUnit(e, "Radar")},
             {'coalition': true, 'tooltip': 'Unarmed',    'src': 'spawnUnarmed.png',  'callback': () => this.#selectGroundUnit(e, "Unarmed")}
         ]
-        this.showSelectionScroll(e, "Spawn ground unit", options, () => {}, true);
+        this.showContextMenu(e, "Spawn ground unit", options, () => {}, true);
     }
 
     #smokeSpawnMenu(e: SpawnEvent) {
-        this.hideSelectionWheel();
-        this.hideSelectionScroll();
+        this.hideContextMenu();
         var options = [
-            {'tooltip': 'Red smoke',      'src': 'spawnSmoke.png',  'callback': () => {this.hideSelectionWheel(); this.hideSelectionScroll(); spawnSmoke('red', e.latlng)}, 'tint': 'red'},
-            {'tooltip': 'White smoke',    'src': 'spawnSmoke.png',  'callback': () => {this.hideSelectionWheel(); this.hideSelectionScroll(); spawnSmoke('white', e.latlng)}, 'tint': 'white'},
-            {'tooltip': 'Blue smoke',     'src': 'spawnSmoke.png',  'callback': () => {this.hideSelectionWheel(); this.hideSelectionScroll(); spawnSmoke('blue', e.latlng)}, 'tint': 'blue'},
-            {'tooltip': 'Green smoke',    'src': 'spawnSmoke.png',  'callback': () => {this.hideSelectionWheel(); this.hideSelectionScroll(); spawnSmoke('green', e.latlng)}, 'tint': 'green'},
-            {'tooltip': 'Orange smoke',   'src': 'spawnSmoke.png',  'callback': () => {this.hideSelectionWheel(); this.hideSelectionScroll(); spawnSmoke('orange', e.latlng)}, 'tint': 'orange'},
+            {'tooltip': 'Red smoke',      'src': 'spawnSmoke.png',  'callback': () => {this.hideContextMenu(); spawnSmoke('red', e.latlng)}, 'tint': 'red'},
+            {'tooltip': 'White smoke',    'src': 'spawnSmoke.png',  'callback': () => {this.hideContextMenu(); spawnSmoke('white', e.latlng)}, 'tint': 'white'},
+            {'tooltip': 'Blue smoke',     'src': 'spawnSmoke.png',  'callback': () => {this.hideContextMenu(); spawnSmoke('blue', e.latlng)}, 'tint': 'blue'},
+            {'tooltip': 'Green smoke',    'src': 'spawnSmoke.png',  'callback': () => {this.hideContextMenu(); spawnSmoke('green', e.latlng)}, 'tint': 'green'},
+            {'tooltip': 'Orange smoke',   'src': 'spawnSmoke.png',  'callback': () => {this.hideContextMenu(); spawnSmoke('orange', e.latlng)}, 'tint': 'orange'},
         ]
-        this.showSelectionScroll(e, "Spawn smoke", options, () => {}, false);
+        this.showContextMenu(e, "Spawn smoke", options, () => {}, false);
     }
 
     #explosionSpawnMenu(e: SpawnEvent) {
@@ -321,12 +308,10 @@ export class Map extends L.Map {
 
     /* Show unit selection for air units */
     #selectAircraft(e: SpawnEvent, role: string) {
-        this.hideSelectionWheel();
-        this.hideSelectionScroll();
+        this.hideContextMenu();
         var options = getAircraftLabelsByRole(role);
-        this.showSelectionScroll(e, "Select aircraft", options, (label: string) => {
-            this.hideSelectionWheel();
-            this.hideSelectionScroll();
+        this.showContextMenu(e, "Select aircraft", options, (label: string) => {
+            this.hideContextMenu();
             var name = getAircraftNameByLabel(label);
             if (name != null)
                 this.#unitSelectPayload(e, name, role);
@@ -335,15 +320,13 @@ export class Map extends L.Map {
 
     /* Show weapon selection for air units */
     #unitSelectPayload(e: SpawnEvent, unitType: string, role: string) {
-        this.hideSelectionWheel();
-        this.hideSelectionScroll();
+        this.hideContextMenu();
         var options = getLoadoutNamesByRole(unitType, role);
         //options = payloadNames[unitType]
         if (options != undefined && options.length > 0) {
             options.sort();
-            this.showSelectionScroll({x: e.x, y: e.y, latlng: e.latlng}, "Select loadout", options, (loadoutName: string) => {
-                this.hideSelectionWheel();
-                this.hideSelectionScroll();
+            this.showContextMenu({x: e.x, y: e.y, latlng: e.latlng}, "Select loadout", options, (loadoutName: string) => {
+                this.hideContextMenu();
                 var loadout = getLoadoutsByName(unitType, loadoutName);
                 spawnAircraft(unitType, e.latlng, getActiveCoalition(), loadout.code, e.airbaseName);
             }, true);
@@ -356,13 +339,11 @@ export class Map extends L.Map {
     /* Show unit selection for ground units */
     #selectGroundUnit(e: any, group: string)
     {
-        this.hideSelectionWheel();
-        this.hideSelectionScroll();
+        this.hideContextMenu();
         var options = unitTypes.vehicles[group];
         options.sort();
-        this.showSelectionScroll(e, "Select ground unit", options, (unitType: string) => {
-            this.hideSelectionWheel();
-            this.hideSelectionScroll();
+        this.showContextMenu(e, "Select ground unit", options, (unitType: string) => {
+            this.hideContextMenu();
             spawnGroundUnit(unitType, e.latlng, getActiveCoalition());
         }, true);
     }

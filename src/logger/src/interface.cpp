@@ -6,15 +6,15 @@
 
 void log(const string& message)
 {
-	LOGGER->Log(message);
+	LOGGER->log(message);
 }
 
 void log(const wstring& message)
 {
-	LOGGER->Log(message);
+	LOGGER->log(message);
 }
 
-std::list<std::string> getLogs()
+void logsToJSON(json::value& json)
 {
-	return LOGGER->getLogs();
+	LOGGER->toJSON(json);
 }

@@ -16,8 +16,7 @@ Logger* Logger::GetLogger()
     if (m_pThis == NULL) {
         m_pThis = new Logger();
         std::filesystem::path dirPath = std::filesystem::temp_directory_path();
-        m_Logfile.open((dirPath.string() + m_sFileName).c_str(), ios::out | ios::app);
-        m_pThis->Log("**************************************************");
+        m_Logfile.open((dirPath.string() + m_sFileName).c_str(), ios::out);
     }
     return m_pThis;
 }
@@ -33,8 +32,17 @@ void Logger::Close()
     m_Logfile.close();
 }
 
-void Logger::Log(const string& message)
+void Logger::toJSON(json::value& json)
 {
+    lock_guard<mutex> guard(mutexLock);
+    int i = 0;
+    for (auto log : m_logs)
+        json[to_wstring(i++)] = json::value::string(to_wstring(log));
+}
+
+void Logger::log(const string& message)
+{
+    lock_guard<mutex> guard(mutexLock);
     Open();
     m_Logfile << CurrentDateTime() << ":\t";
     m_Logfile << message << "\n";
@@ -42,8 +50,9 @@ void Logger::Log(const string& message)
     Close();
 }
 
-void Logger::Log(const wstring& message)
+void Logger::log(const wstring& message)
 {
+    lock_guard<mutex> guard(mutexLock);
     Open();
     m_Logfile << CurrentDateTime() << ":\t";
     m_Logfile << to_string(message) << "\n";

@@ -26,15 +26,25 @@ void handle_eptr(std::exception_ptr eptr)
 }
 
 Server::Server(lua_State* L):
+    serverThread(nullptr),
     runListener(true)
 {
-    LogInfo(L, "Starting RESTServer");
+     
+}
+
+
+void Server::start(lua_State* L)
+{
+    log("Starting RESTServer");
     serverThread = new thread(&Server::task, this);
 }
 
-Server::~Server()
+void Server::stop(lua_State* L)
 {
+    log("Stopping RESTServer");
     runListener = false;
+    if (serverThread != nullptr)
+        serverThread->join();
 }
 
 void Server::handle_options(http_request request)
@@ -59,18 +69,18 @@ void Server::handle_get(http_request request)
     response.headers().add(U("Access-Control-Allow-Methods"), U("GET, POST, PUT, OPTIONS"));
     response.headers().add(U("Access-Control-Allow-Headers"), U("Content-Type"));
 
-    auto answer = json::value::object();
     std::exception_ptr eptr;
     try {
         unitsManager->updateAnswer(answer);
+
+        /* Get the logs from the logger */
+        auto logs = json::value::object();
+        logsToJSON(logs);   // By reference, for thread safety
+
         answer[L"airbases"] = airbasesData;
         answer[L"bullseye"] = bullseyeData;
-        answer[L"logs"] = json::value::object();
-
-        int i = 0;
-        for (auto log : getLogs())
-            answer[L"logs"][to_wstring(i++)] = json::value::string(to_wstring(log));
-
+        answer[L"logs"]     = logs;
+        
         response.set_body(answer);
     }
     catch (...) {
@@ -156,7 +166,10 @@ void Server::task()
             
         while (runListener);
 
-        listener.close();
+        listener.close()
+                .then([&listener]() {log("RESTServer stopping connections"); })
+                .wait();
+
         log("RESTServer stopped listening");
     }
     catch (exception const& e)

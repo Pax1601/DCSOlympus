@@ -1,9 +1,8 @@
 import { Map } from "./map/map"
 import { getDataFromDCS } from "./dcs/dcs"
-import { SelectionWheel } from "./controls/selectionwheel";
 import { UnitsManager } from "./units/unitsmanager";
 import { UnitInfoPanel } from "./panels/unitinfopanel";
-import { SelectionScroll } from "./controls/selectionscroll";
+import { ContextMenu } from "./controls/contextmenu";
 import { Dropdown } from "./controls/dropdown";
 import { ConnectionStatusPanel } from "./panels/connectionstatuspanel";
 import { MissionData } from "./missiondata/missiondata";
@@ -14,8 +13,7 @@ import { LogPanel } from "./panels/logpanel";
 
 /* TODO: should this be a class? */
 var map: Map;
-var selectionWheel: SelectionWheel;
-var selectionScroll: SelectionScroll;
+var contextMenu: ContextMenu;
 
 var unitsManager: UnitsManager;
 var missionData: MissionData;
@@ -38,8 +36,7 @@ function setup() {
     unitsManager = new UnitsManager();
     missionData = new MissionData();
 
-    selectionWheel = new SelectionWheel("selection-wheel");
-    selectionScroll = new SelectionScroll("selection-scroll");
+    contextMenu = new ContextMenu("selection-scroll");
    
     unitInfoPanel = new UnitInfoPanel("unit-info-panel");
     unitControlPanel = new UnitControlPanel("unit-control-panel");
@@ -78,12 +75,8 @@ export function getMissionData() {
     return missionData;
 }
 
-export function getSelectionWheel() {
-    return selectionWheel;
-}
-
-export function getSelectionScroll() {
-    return selectionScroll;
+export function getContextMenu() {
+    return contextMenu;
 }
 
 export function getUnitsManager() {

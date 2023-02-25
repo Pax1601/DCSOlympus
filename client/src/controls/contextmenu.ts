@@ -1,7 +1,7 @@
 import { LatLng } from "leaflet";
 import { getActiveCoalition, setActiveCoalition } from "..";
 
-export class SelectionScroll {
+export class ContextMenu {
     #container: HTMLElement | null;
     #display: string;
 
