@@ -1,8 +1,9 @@
 
 /* Page style */
 body {
-	padding: 0;
+	display:grid;
 	margin: 0;
+	padding: 0;
 }
 
 html,
@@ -108,4 +109,11 @@ body {
 	#unit-control-panel {
 		top: 50px;
 	}
+}
+
+
+
+
+.hide {
+	display:none !important;
 }

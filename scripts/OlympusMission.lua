@@ -77,9 +77,11 @@ function Olympus.setMissionData(arg, time)
 		basesData[i] = info
 	end
 
+	
+
 	-- Assemble missionData table
 	missionData["bullseye"] = bullseye
-	missionData["unitsData"] = unitsData 
+	missionData["unitsData"] = unitsData
 	missionData["airbases"] = basesData
 
 	local command = "Olympus.missionData = " .. Olympus.serializeTable(missionData) .. "\n" .. "Olympus.OlympusDLL.setMissionData()"
