@@ -1,7 +1,7 @@
 import { Marker, LatLng, Polyline, Icon } from 'leaflet';
 import { getMap, getUnitsManager} from '..';
 import { UnitMarker, MarkerOptions, AircraftMarker, HelicopterMarker, GroundUnitMarker, NavyUnitMarker, WeaponMarker, MissileMarker, BombMarker } from './unitmarker';
-import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, landAt, setAltitude, setReactionToThreat, setROE, setSpeed } from '../dcs/dcs';
+import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, landAt, setAltitude, setReactionToThreat, setROE, setSpeed } from '../dcs/dcs';
 
 interface VisibilityOptions {
     dead: string;
@@ -362,6 +362,11 @@ export class Unit {
     setReactionToThreat(reactionToThreat: string)
     {
         setReactionToThreat(this.ID, reactionToThreat);
+    }
+
+    delete()
+    {
+        deleteUnit(this.ID);
     }
 
     /*

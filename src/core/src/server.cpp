@@ -75,7 +75,7 @@ void Server::handle_get(http_request request)
 
         /* Get the logs from the logger */
         auto logs = json::value::object();
-        logsToJSON(logs);   // By reference, for thread safety
+        getLogsJSON(logs);   // By reference, for thread safety
 
         answer[L"airbases"] = airbasesData;
         answer[L"bullseye"] = bullseyeData;

@@ -115,6 +115,22 @@ export function cloneUnit(ID: number, latlng: L.LatLng) {
     xhr.send(JSON.stringify(data));
 }
 
+export function deleteUnit(ID: number) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("PUT", RESTaddress);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4) {
+            //console.log("Unit " + getUnitsManager().getUnitByID(ID).unitName + " cloned");
+        }
+    };
+
+    var command = { "ID": ID};
+    var data = { "deleteUnit": command }
+
+    xhr.send(JSON.stringify(data));
+}
+
 export function landAt(ID: number, latlng: L.LatLng) {
     var xhr = new XMLHttpRequest();
     xhr.open("PUT", RESTaddress);

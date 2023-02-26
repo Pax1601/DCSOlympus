@@ -14,6 +14,7 @@ export class UnitsManager {
         document.addEventListener('copy', () => this.copyUnits());
         document.addEventListener('paste', () => this.pasteUnits());
         document.addEventListener('unitSelection', () => this.onUnitSelection());
+        document.addEventListener('keydown', (event) => this.#onKeyDown(event));
     }
 
     #updateUnitControlPanel() {
@@ -24,6 +25,14 @@ export class UnitsManager {
         }
         else {
             getUnitControlPanel().hide();
+        }
+    }
+
+    #onKeyDown(event: KeyboardEvent)
+    {
+        if (event.key === "Delete")
+        {
+            this.selectedUnitsDelete();
         }
     }
 
@@ -257,21 +266,6 @@ export class UnitsManager {
         setTimeout(() => this.#updateUnitControlPanel(), 300); // TODO find better method, may fail
     }
 
-
-    copyUnits()
-    {
-        this.#copiedUnits = this.getSelectedUnits();
-    }
-
-    pasteUnits()
-    {
-        for (let idx in this.#copiedUnits)
-        {
-            var unit = this.#copiedUnits[idx];
-            cloneUnit(unit.ID, getMap().getMouseCoordinates());
-        }
-    }
-
     selectedUnitsAttackUnit(ID: number) {
         var selectedUnits = this.getSelectedUnits();
         for (let idx in selectedUnits) {
@@ -339,5 +333,28 @@ export class UnitsManager {
             leader.setLeader(false);
         }
         setTimeout(() => this.#updateUnitControlPanel(), 300); // TODO find better method, may fail 
+    }
+
+    copyUnits()
+    {
+        this.#copiedUnits = this.getSelectedUnits();
+    }
+
+    pasteUnits()
+    {
+        for (let idx in this.#copiedUnits)
+        {
+            var unit = this.#copiedUnits[idx];
+            cloneUnit(unit.ID, getMap().getMouseCoordinates());
+        }
+    }
+
+    selectedUnitsDelete()
+    {
+        var selectedUnits = this.getSelectedUnits();
+        for (let idx in selectedUnits)
+        {
+            selectedUnits[idx].delete();
+        }
     }
 }
