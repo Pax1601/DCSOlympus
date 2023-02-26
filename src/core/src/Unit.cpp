@@ -61,15 +61,11 @@ void Unit::updateExportData(json::value json)
 	/* All units which contain the name "Olympus" are automatically under AI control */
 	/* TODO: I don't really like using this method */
 	if (unitName.find(L"Olympus") != wstring::npos)
-	{
 		AI = true;
-	}
 
 	/* If the unit is alive and it is not a human, run the AI Loop that performs the requested commands and instructions (moving, attacking, etc) */
 	if (AI && alive && flags[L"Human"].as_bool() == false)
-	{
 		AIloop();
-	}
 }
 
 void Unit::updateMissionData(json::value json)
@@ -88,44 +84,56 @@ json::value Unit::json()
 {
 	auto json = json::value::object();
 
-	json[L"alive"] = alive;
+	/********** Base data **********/
 	json[L"AI"] = AI;
 	json[L"name"] = json::value::string(name);
 	json[L"unitName"] = json::value::string(unitName);
 	json[L"groupName"] = json::value::string(groupName);
-	json[L"type"] = type;
-	json[L"country"] = country;
-	json[L"coalitionID"] = coalitionID;
-	json[L"latitude"] = latitude;
-	json[L"longitude"] = longitude;
-	json[L"altitude"] = altitude;
-	json[L"speed"] = speed; 
-	json[L"heading"] = heading;
-	json[L"flags"] = flags;
+	json[L"alive"] = alive;
 	json[L"category"] = json::value::string(getCategory());
-	json[L"currentTask"] = json::value::string(getCurrentTask());
-	json[L"isLeader"] = isLeader;
-	json[L"isWingman"] = isWingman;
-	json[L"formation"] = json::value::string(formation);
-	json[L"fuel"] = fuel;
-	json[L"ammo"] = ammo;
-	json[L"targets"] = targets;
-	json[L"targetSpeed"] = getTargetSpeed();
-	json[L"targetAltitude"] = getTargetAltitude();
-	json[L"hasTask"] = hasTask;
-	json[L"ROE"] = json::value::string(ROE);
-	json[L"reactionToThreat"] = json::value::string(reactionToThreat);
 
+	/********** Flight data **********/
+	json[L"flightData"] = json::value::object();
+	json[L"flightData"][L"latitude"] = latitude;
+	json[L"flightData"][L"longitude"] = longitude;
+	json[L"flightData"][L"altitude"] = altitude;
+	json[L"flightData"][L"speed"] = speed;
+	json[L"flightData"][L"heading"] = heading;
+
+	/********** Mission data **********/
+	json[L"missionData"] = json::value::object();
+	json[L"missionData"][L"fuel"] = fuel;
+	json[L"missionData"][L"ammo"] = ammo;
+	json[L"missionData"][L"targets"] = targets;
+	json[L"missionData"][L"hasTask"] = hasTask;
+	if (coalitionID == 0)
+		json[L"missionData"][L"coalition"] = json::value::string(L"neutral");
+	else if (coalitionID == 1)
+		json[L"missionData"][L"coalition"] = json::value::string(L"red");
+	else
+		json[L"missionData"][L"coalition"] = json::value::string(L"blue");
+	json[L"missionData"][L"flags"] = flags;
+
+	/********** Formation data **********/
+	json[L"formationData"] = json::value::object();
+	json[L"formationData"][L"isLeader"] = isLeader;
+	json[L"formationData"][L"isWingman"] = isWingman;
+	json[L"formationData"][L"formation"] = json::value::string(formation);
 	int i = 0;
 	for (auto itr = wingmen.begin(); itr != wingmen.end(); itr++)
-		json[L"wingmenIDs"][i++] = (*itr)->getID();
+		json[L"formationData"][L"wingmenIDs"][i++] = (*itr)->getID();
 
 	if (leader != nullptr)
-		json[L"leaderID"] = leader->getID();
+		json[L"formationData"][L"leaderID"] = leader->getID();
 
+	/********** Task data **********/
+	json[L"taskData"] = json::value::object();
+	json[L"taskData"][L"currentTask"] = json::value::string(getCurrentTask());
+	json[L"taskData"][L"targetSpeed"] = getTargetSpeed();
+	json[L"taskData"][L"targetAltitude"] = getTargetAltitude();
 	/* Send the active path as a json object */
+	auto path = json::value::object();
 	if (activePath.size() > 0) {
-		auto path = json::value::object();
 		int count = 1;
 		for (auto& destination : activePath)
 		{
@@ -135,8 +143,13 @@ json::value Unit::json()
 			json[L"alt"] = destination.alt;
 			path[to_wstring(count++)] = json;
 		}
-		json[L"activePath"] = path;
 	}
+	json[L"taskData"][L"activePath"] = path;
+
+	/********** Options data **********/
+	json[L"optionsData"] = json::value::object();
+	json[L"optionsData"][L"ROE"] = json::value::string(ROE);
+	json[L"optionsData"][L"reactionToThreat"] = json::value::string(reactionToThreat);
 
 	return json;
 }
@@ -178,7 +191,6 @@ bool Unit::isTargetAlive()
 		return false;
 }
 
-/* This function reset the activation so that the AI lopp will call again the MoveCommand. This is useful to change speed and altitude, for example */
 void Unit::resetActiveDestination()
 {
 	activeDestination = Coords(NULL);

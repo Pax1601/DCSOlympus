@@ -7,9 +7,10 @@
 
 extern UnitsManager* unitsManager;
 
-Scheduler::Scheduler(lua_State* L)
+Scheduler::Scheduler(lua_State* L):
+	load(0)
 {
-	LogInfo(L, "Units Factory constructor called successfully");
+	LogInfo(L, "Scheduler constructor called successfully");
 }
 
 Scheduler::~Scheduler()
@@ -24,6 +25,13 @@ void Scheduler::appendCommand(Command* command)
 
 void Scheduler::execute(lua_State* L)
 {
+	/* Decrease the active computation load. New commands can be sent only if the load has reached 0. 
+		This is needed to avoid server lag. */
+	if (load > 0) {
+		load--;
+		return;
+	}
+
 	int priority = CommandPriority::HIGH;
 	while (priority >= CommandPriority::LOW)
 	{
@@ -33,9 +41,8 @@ void Scheduler::execute(lua_State* L)
 			{
 				wstring commandString = L"Olympus.protectedCall(" + command->getString(L) + L")";
 				if (dostring_in(L, "server", to_string(commandString)))
-				{
 					log(L"Error executing command " + commandString);
-				}
+				load = command->getLoad();
 				commands.remove(command);
 				return;
 			}

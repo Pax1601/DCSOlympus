@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 Olympus.unitPayloads = {
     ["A-10A"] = { ["MK-84*2 , LAU-68*2 , AGM-65K*2"] = { [1] = { ["CLSID"] = "{6D21ECEA-F85B-4E8D-9D51-31DC9B8AA4EF}" },
         [2] = { ["CLSID"] = "{174C6E6D-0C3D-42ff-BCB3-0853CB371F5C}" },
@@ -25178,4 +25177,3 @@ Olympus.unitPayloads = {["A-10A"]={["MK-84*2 , LAU-68*2 , AGM-65K*2"]={[1] = {["
  [5] = {["CLSID"]="XM158_MK5"},
  [6] = {["CLSID"]="M134_R"}}},
  ["UH-60A"]={}}
->>>>>>> 433b4bdf569d0aca79794685ee41021190722f5b

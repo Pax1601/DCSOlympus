@@ -1,9 +1,9 @@
 import * as L from "leaflet"
 import { getContextMenu, getUnitsManager, getActiveCoalition, getMouseInfoPanel } from "..";
-import { spawnAircraft, spawnGroundUnit, spawnSmoke } from "../dcs/dcs";
+import { spawnAircraft, spawnGroundUnit, spawnSmoke } from "../server/server";
 import { bearing, distance, zeroAppend } from "../other/utils";
-import { getAircraftLabelsByRole, getLoadoutsByName, getLoadoutNamesByRole, getAircraftNameByLabel } from "../units/aircraftdatabase";
-import { unitTypes } from "../units/unitTypes";
+import { aircraftDatabase } from "../units/aircraftdatabase";
+import { unitTypes } from "../units/unittypes";
 import { BoxSelect } from "./boxselect";
 
 L.Map.addInitHook('addHandler', 'boxSelect', BoxSelect);
@@ -238,7 +238,7 @@ export class Map extends L.Map {
         var selectedUnits = getUnitsManager().getSelectedUnits();
         if (selectedUnits && selectedUnits.length == 1)
         {
-            selectedUnitPosition = new L.LatLng(selectedUnits[0].latitude, selectedUnits[0].longitude);
+            selectedUnitPosition = new L.LatLng(selectedUnits[0].getFlightData().latitude, selectedUnits[0].getFlightData().longitude);
         }
         getMouseInfoPanel().update(<L.LatLng>e.latlng, this.#measurePoint, selectedUnitPosition);
 
@@ -309,10 +309,10 @@ export class Map extends L.Map {
     /* Show unit selection for air units */
     #selectAircraft(e: SpawnEvent, role: string) {
         this.hideContextMenu();
-        var options = getAircraftLabelsByRole(role);
+        var options = aircraftDatabase.getLabelsByRole(role);
         this.showContextMenu(e, "Select aircraft", options, (label: string) => {
             this.hideContextMenu();
-            var name = getAircraftNameByLabel(label);
+            var name = aircraftDatabase.getNameByLabel(label);
             if (name != null)
                 this.#unitSelectPayload(e, name, role);
         }, true);
@@ -321,14 +321,14 @@ export class Map extends L.Map {
     /* Show weapon selection for air units */
     #unitSelectPayload(e: SpawnEvent, unitType: string, role: string) {
         this.hideContextMenu();
-        var options = getLoadoutNamesByRole(unitType, role);
+        var options = aircraftDatabase.getLoadoutNamesByRole(unitType, role);
         //options = payloadNames[unitType]
         if (options != undefined && options.length > 0) {
             options.sort();
             this.showContextMenu({x: e.x, y: e.y, latlng: e.latlng}, "Select loadout", options, (loadoutName: string) => {
                 this.hideContextMenu();
-                var loadout = getLoadoutsByName(unitType, loadoutName);
-                spawnAircraft(unitType, e.latlng, getActiveCoalition(), loadout.code, e.airbaseName);
+                var loadout = aircraftDatabase.getLoadoutsByName(unitType, loadoutName);
+                spawnAircraft(unitType, e.latlng, getActiveCoalition(), loadout != null? loadout.code: "", e.airbaseName);
             }, true);
         }
         else {

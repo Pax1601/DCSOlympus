@@ -1,7 +1,7 @@
 import { LatLng, LatLngBounds } from "leaflet";
 import { getMap, getUnitControlPanel, getUnitInfoPanel } from "..";
 import { Unit, GroundUnit } from "./unit";
-import { cloneUnit } from "../dcs/dcs";
+import { cloneUnit } from "../server/server";
 
 export class UnitsManager {
     #units: { [ID: number]: Unit };
@@ -40,19 +40,11 @@ export class UnitsManager {
         return this.#units;
     }
 
-    addUnit(ID: number, data: any) {
+    addUnit(ID: number, data: UnitData) {
         /* The name of the unit category is exactly the same as the constructor name */
         var constructor = Unit.getConstructor(data.category);
         if (constructor != undefined) {
-            var options = {
-                unitName: data.unitName,
-                name: data.name,
-                human: data.flags.Human,
-                coalitionID: data.coalitionID,
-                type: data.type,
-                AI: data.AI
-            }
-            this.#units[ID] = new constructor(ID, options);
+            this.#units[ID] = new constructor(ID, data);
         }
     }
 
@@ -80,13 +72,13 @@ export class UnitsManager {
         this.#units[ID]?.setSelected(true);
     }
 
-    update(data: any) {
-        for (let ID in data["units"]) {
+    update(data: ServerData) {
+        for (let ID in data.units) {
             /* Create the unit if missing from the local array, then update the data. Drawing is handled by leaflet. */
             if (!(ID in this.#units)) {
-                this.addUnit(parseInt(ID), data["units"][ID]);
+                this.addUnit(parseInt(ID), data.units[ID]);
             }
-            this.#units[parseInt(ID)].update(data["units"][ID]);
+            this.#units[parseInt(ID)].update(data.units[ID]);
         }
 
         /* Update the unit info panel */
@@ -124,7 +116,7 @@ export class UnitsManager {
         {
             if (this.#units[ID].getHidden() == false)
             {
-                var latlng = new LatLng(this.#units[ID].latitude, this.#units[ID].longitude);
+                var latlng = new LatLng(this.#units[ID].getFlightData().latitude, this.#units[ID].getFlightData().longitude);
                 if (bounds.contains(latlng))
                 {
                     this.#units[ID].setSelected(true);
@@ -148,9 +140,9 @@ export class UnitsManager {
         for (let idx in this.getSelectedUnits())
         {
             var unit = this.getSelectedUnits()[idx];
-            if (unit.isLeader)
+            if (unit.getFormationData().isLeader)
                 leaders.push(unit);
-            else if (unit.isWingman)
+            else if (unit.getFormationData().isWingman)
             {
                 var leader = unit.getLeader();
                 if (leader && !leaders.includes(leader))
@@ -165,7 +157,7 @@ export class UnitsManager {
         for (let idx in this.getSelectedUnits())
         {
             var unit = this.getSelectedUnits()[idx];
-            if (!unit.isLeader && !unit.isWingman)
+            if (!unit.getFormationData().isLeader && !unit.getFormationData().isWingman)
                 singletons.push(unit);
         }
         return singletons;
@@ -290,12 +282,12 @@ export class UnitsManager {
             var wingmenIDs = [];
             for (let idx in selectedUnits)
             {
-                if (selectedUnits[idx].isWingman)
+                if (selectedUnits[idx].getFormationData().isWingman)
                 {
                     //console.log(selectedUnits[idx].unitName + " is already in a formation.");
                     return;
                 }
-                else if (selectedUnits[idx].isLeader)
+                else if (selectedUnits[idx].getFormationData().isLeader)
                 {
                     //console.log(selectedUnits[idx].unitName + " is already in a formation.");
                     return;

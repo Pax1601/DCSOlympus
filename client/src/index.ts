@@ -1,5 +1,5 @@
 import { Map } from "./map/map"
-import { getDataFromDCS } from "./dcs/dcs"
+import { getDataFromDCS } from "./server/server"
 import { UnitsManager } from "./units/unitsmanager";
 import { UnitInfoPanel } from "./panels/unitinfopanel";
 import { ContextMenu } from "./controls/contextmenu";
@@ -38,9 +38,6 @@ var aicHelpButton: Button;
 
 var atc: ATC;
 var atcToggleButton: Button;
-
-var altitudeSlider: Slider;
-var airspeedSlider: Slider;
 
 var connected: boolean;
 var activeCoalition: string;
@@ -132,7 +129,7 @@ function requestUpdate() {
     connectionStatusPanel.update(getConnected());
 }
 
-export function update(data: JSON) {
+export function update(data: ServerData) {
     unitsManager.update(data);
     missionData.update(data);
     logPanel.update(data);
@@ -181,10 +178,5 @@ export function setConnected(newConnected: boolean) {
 export function getConnected() {
     return connected;
 }
-
-export function getUnitControlSliders() {
-    return {altitude: altitudeSlider, airspeed: airspeedSlider}
-}
-
 
 window.onload = setup;

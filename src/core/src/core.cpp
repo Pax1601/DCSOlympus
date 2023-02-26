@@ -60,21 +60,17 @@ extern "C" DllExport int coreFrame(lua_State* L)
 
     const std::chrono::duration<double> duration = std::chrono::system_clock::now() - before;
 
-    // TODO make intervals editable
+    /* TODO make intervals editable */
     if (duration.count() > UPDATE_TIME_INTERVAL)
     {
         if (unitsManager != nullptr)
-        {
             unitsManager->updateExportData(L);
-        }
-
-        // TODO allow for different intervals
-        if (scheduler != nullptr)
-        {
-            scheduler->execute(L);
-        }
         before = std::chrono::system_clock::now();
     }
+
+    if (scheduler != nullptr)
+        scheduler->execute(L);
+ 
     return(0);
 }
 

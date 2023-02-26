@@ -49,29 +49,29 @@ export class VisibilityControlPanel {
             var uncontrolledVisibilityCheckbox = <HTMLInputElement> this.#element.querySelector("#uncontrolled-visibility");
             var uncontrolledVisibility = !uncontrolledVisibilityCheckbox.checked;
             
-            var airVisibilityCheckbox = <HTMLInputElement> this.#element.querySelector("#air-visibility");
-            if (airVisibilityCheckbox.checked)
-                AirUnit.setVisibility({human: "full", ai: activeVisibility, uncontrolled: uncontrolledVisibility? activeVisibility: "hidden", dead: "hidden"});
-            else
-                AirUnit.setVisibility({human: "hidden", ai: "hidden", uncontrolled: "hidden", dead: "hidden"});
-
-            var groundVisibilityCheckbox = <HTMLInputElement> this.#element.querySelector("#ground-visibility");
-            if (groundVisibilityCheckbox.checked)
-                GroundUnit.setVisibility({human: activeVisibility, ai: activeVisibility, uncontrolled: uncontrolledVisibility? activeVisibility: "hidden", dead: "hidden"});
-            else
-                GroundUnit.setVisibility({human: "hidden", ai: "hidden", uncontrolled: "hidden", dead: "hidden"});
-
-            var navyVisibilityCheckbox = <HTMLInputElement> this.#element.querySelector("#navy-visibility");
-            if (navyVisibilityCheckbox.checked)
-                NavyUnit.setVisibility({human: activeVisibility, ai: activeVisibility, uncontrolled: uncontrolledVisibility? activeVisibility: "hidden", dead: "hidden"});
-            else
-                NavyUnit.setVisibility({human: "hidden", ai: "hidden", uncontrolled: "hidden", dead: "hidden"});
-
-            var weaponVisibilityCheckbox = <HTMLInputElement> this.#element.querySelector("#weapon-visibility");
-            if (weaponVisibilityCheckbox.checked)
-                Weapon.setVisibility({human: activeVisibility, ai: activeVisibility, uncontrolled: uncontrolledVisibility? activeVisibility: "hidden", dead: "hidden"});
-            else
-                Weapon.setVisibility({human: "hidden", ai: "hidden", uncontrolled: "hidden", dead: "hidden"});
+            //var airVisibilityCheckbox = <HTMLInputElement> this.#element.querySelector("#air-visibility");
+            //if (airVisibilityCheckbox.checked)
+            //    AirUnit.setVisibility({human: "full", AI: activeVisibility, uncontrolled: uncontrolledVisibility? activeVisibility: "hidden", dead: "hidden"});
+            //else
+            //    AirUnit.setVisibility({human: "hidden", AI: "hidden", uncontrolled: "hidden", dead: "hidden"});
+//
+            //var groundVisibilityCheckbox = <HTMLInputElement> this.#element.querySelector("#ground-visibility");
+            //if (groundVisibilityCheckbox.checked)
+            //    GroundUnit.setVisibility({human: activeVisibility, AI: activeVisibility, uncontrolled: uncontrolledVisibility? activeVisibility: "hidden", dead: "hidden"});
+            //else
+            //    GroundUnit.setVisibility({human: "hidden", AI: "hidden", uncontrolled: "hidden", dead: "hidden"});
+//
+            //var navyVisibilityCheckbox = <HTMLInputElement> this.#element.querySelector("#navy-visibility");
+            //if (navyVisibilityCheckbox.checked)
+            //    NavyUnit.setVisibility({human: activeVisibility, AI: activeVisibility, uncontrolled: uncontrolledVisibility? activeVisibility: "hidden", dead: "hidden"});
+            //else
+            //    NavyUnit.setVisibility({human: "hidden", AI: "hidden", uncontrolled: "hidden", dead: "hidden"});
+//
+            //var weaponVisibilityCheckbox = <HTMLInputElement> this.#element.querySelector("#weapon-visibility");
+            //if (weaponVisibilityCheckbox.checked)
+            //    Weapon.setVisibility({human: activeVisibility, AI: activeVisibility, uncontrolled: uncontrolledVisibility? activeVisibility: "hidden", dead: "hidden"});
+            //else
+            //    Weapon.setVisibility({human: "hidden", AI: "hidden", uncontrolled: "hidden", dead: "hidden"});
         }
         
     }

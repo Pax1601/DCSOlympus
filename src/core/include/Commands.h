@@ -17,7 +17,7 @@ namespace SetCommandType {
 		REACTION_ON_THREAT = 1,
 		RADAR_USING = 3,
 		FLARE_USING = 4,
-		Formation = 5,
+		FORMATION = 5,
 		RTB_ON_BINGO = 6,
 		SILENCE = 7,
 		RTB_ON_OUT_OF_AMMO = 10,
@@ -56,9 +56,6 @@ namespace ReactionToThreat {
 	};
 }
 
-
-
-
 /* Base command class */
 class Command
 {
@@ -66,6 +63,7 @@ public:
 	int getPriority() { return priority; }
 	int getType() { return type; }
 	virtual wstring getString(lua_State* L) = 0;
+	virtual int getLoad() = 0;
 
 protected:
 	int priority = CommandPriority::LOW;
@@ -88,6 +86,7 @@ public:
 		type = CommandType::MOVE; 
 	};
 	virtual wstring getString(lua_State* L);
+	virtual int getLoad() { return 5; }
 
 private:
 	const int ID;
@@ -110,6 +109,7 @@ public:
 		type = CommandType::SMOKE; 
 	};
 	virtual wstring getString(lua_State* L);
+	virtual int getLoad() { return 5; }
 
 private:
 	const wstring color;
@@ -129,6 +129,7 @@ public:
 		type = CommandType::SPAWN_GROUND; 
 	};
 	virtual wstring getString(lua_State* L);
+	virtual int getLoad() { return 100; }
 
 private:
 	const wstring coalition;
@@ -150,8 +151,8 @@ public:
 		priority = CommandPriority::LOW; 
 		type = CommandType::SPAWN_AIR; 
 	};
-
 	virtual wstring getString(lua_State* L);
+	virtual int getLoad() { return 100; }
 
 private:
 	const wstring coalition;
@@ -173,6 +174,7 @@ public:
 		type = CommandType::CLONE;
 	};
 	virtual wstring getString(lua_State* L);
+	virtual int getLoad() { return 100; }
 
 private:
 	const int ID;
@@ -190,6 +192,7 @@ public:
 		type = CommandType::CLONE;
 	};
 	virtual wstring getString(lua_State* L);
+	virtual int getLoad() { return 20; }
 
 private:
 	const int ID;
@@ -207,6 +210,7 @@ public:
 		type = CommandType::FOLLOW;
 	};
 	virtual wstring getString(lua_State* L);
+	virtual int getLoad() { return 10; }
 
 private:
 	const int ID;
@@ -224,6 +228,7 @@ public:
 		type = CommandType::RESET_TASK;
 	};
 	virtual wstring getString(lua_State* L);
+	virtual int getLoad() { return 10; }
 
 private:
 	const int ID;
@@ -241,6 +246,7 @@ public:
 		type = CommandType::RESET_TASK;
 	};
 	virtual wstring getString(lua_State* L);
+	virtual int getLoad() { return 10; }
 
 private:
 	const int ID;
@@ -260,6 +266,7 @@ public:
 		type = CommandType::RESET_TASK;
 	};
 	virtual wstring getString(lua_State* L);
+	virtual int getLoad() { return 10; }
 
 private:
 	const int ID;

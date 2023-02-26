@@ -27,7 +27,7 @@ export class MissionData
         this.#airbasesMarkers = {};
     }
 
-    update(data: any)
+    update(data: ServerData)
     {
         this.#bullseyes = data.bullseye;
         this.#airbases = data.airbases;

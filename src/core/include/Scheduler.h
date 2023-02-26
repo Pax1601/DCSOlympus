@@ -15,5 +15,6 @@ public:
 	
 private:
 	list<Command*> commands;
+	int load;
 };
 

@@ -147,7 +147,7 @@ export class UnitControlPanel extends Panel {
         for (let unit of units)
         {
             this.#addUnitButton(unit, this.#selectedUnitsContainer);
-            if (unit.isLeader)
+            if (unit.getFormationData().isLeader)
                 for (let wingman of unit.getWingmen())
                     this.#addUnitButton(wingman, this.#selectedUnitsContainer);
         }
@@ -160,16 +160,16 @@ export class UnitControlPanel extends Panel {
         /* Unit name (actually type, but DCS calls it name for some reason) */
         var nameDiv = document.createElement("div");
         nameDiv.classList.add("ol-rounded-container-small");
-        if (unit.name.length >= 7)
-            nameDiv.innerHTML = `${unit.name.substring(0, 4)} ...`;
+        if (unit.getData().name.length >= 7)
+            nameDiv.innerHTML = `${unit.getData().name.substring(0, 4)} ...`;
         else 
-            nameDiv.innerHTML = `${unit.name}`;
+            nameDiv.innerHTML = `${unit.getData().name}`;
 
         /* Unit icon */
         var icon = document.createElement("img");
-        if (unit.isLeader)
+        if (unit.getFormationData().isLeader)
             icon.src = "images/icons/formation.png"
-        else if (unit.isWingman)
+        else if (unit.getFormationData().isWingman)
         {
             var wingmen = unit.getLeader()?.getWingmen();
             if (wingmen && wingmen.lastIndexOf(unit) == wingmen.length - 1)
@@ -181,7 +181,7 @@ export class UnitControlPanel extends Panel {
         else
             icon.src = "images/icons/singleton.png"
 
-        el.innerHTML = unit.unitName;
+        el.innerHTML = unit.getData().unitName;
 
         el.prepend(nameDiv);
 
@@ -195,12 +195,12 @@ export class UnitControlPanel extends Panel {
             el.classList.add("not-selected")
 
         /* Set background color */
-        el.classList.toggle("red", unit.coalitionID == 1);
-        icon.classList.toggle("red", unit.coalitionID == 1);
-        el.classList.toggle("blue", unit.coalitionID == 2);
-        icon.classList.toggle("blue", unit.coalitionID == 2);
-        el.classList.toggle("neutral", unit.coalitionID == 0); 
-        icon.classList.toggle("neutral", unit.coalitionID == 0);
+        el.classList.toggle("red", unit.getMissionData().coalition === "red");
+        icon.classList.toggle("red", unit.getMissionData().coalition === "red");
+        el.classList.toggle("blue", unit.getMissionData().coalition === "blue");
+        icon.classList.toggle("blue", unit.getMissionData().coalition === "blue");
+        el.classList.toggle("neutral", unit.getMissionData().coalition === "neutral"); 
+        icon.classList.toggle("neutral", unit.getMissionData().coalition === "neutral");
         
         el.addEventListener("click", () => getUnitsManager().selectUnit(unit.ID));
         container.appendChild(el);
@@ -275,14 +275,14 @@ export class UnitControlPanel extends Panel {
         var leaderFound = false;
         for (let unit of units)
         {
-            if (unit.isLeader)
+            if (unit.getFormationData().isLeader)
             {
                 if (leaderFound)
                     return false
                 else 
                     leaderFound = true;
             }
-            if (!unit.isLeader)
+            if (!unit.getFormationData().isLeader)
                 return false
         }
         return true
@@ -291,7 +291,7 @@ export class UnitControlPanel extends Panel {
     #checkUnitsAlreadyInFormation(units: Unit[])
     {
         for (let unit of units)
-            if (unit.isLeader)
+            if (unit.getFormationData().isLeader)
                 return true
         return false
     }
@@ -301,10 +301,10 @@ export class UnitControlPanel extends Panel {
         var airspeed = null;
         for (let unit of units)
         {
-            if (unit.targetSpeed != airspeed && airspeed != null)
+            if (unit.getTaskData().targetSpeed != airspeed && airspeed != null)
                 return null
             else
-                airspeed = unit.targetSpeed;
+                airspeed = unit.getTaskData().targetSpeed;
         }
         return airspeed;
     }
@@ -314,10 +314,10 @@ export class UnitControlPanel extends Panel {
         var altitude = null;
         for (let unit of units)
         {
-            if (unit.targetAltitude != altitude && altitude != null)
+            if (unit.getTaskData().targetAltitude != altitude && altitude != null)
                 return null
             else
-                altitude = unit.targetAltitude;
+                altitude = unit.getTaskData().targetAltitude;
         }
         return altitude;
     }
@@ -327,10 +327,10 @@ export class UnitControlPanel extends Panel {
         var ROE = null;
         for (let unit of units)
         {
-            if (unit.ROE !== ROE && ROE != null)
+            if (unit.getOptionsData().ROE !== ROE && ROE != null)
                 return null
             else
-                ROE = unit.ROE;
+                ROE = unit.getOptionsData().ROE;
         }
         return ROE;
     }
@@ -340,10 +340,10 @@ export class UnitControlPanel extends Panel {
         var reactionToThreat = null;
         for (let unit of units)
         {
-            if (unit.reactionToThreat !== reactionToThreat && reactionToThreat != null)
+            if (unit.getOptionsData().reactionToThreat !== reactionToThreat && reactionToThreat != null)
                 return null
             else
-                reactionToThreat = unit.reactionToThreat;
+                reactionToThreat = unit.getOptionsData().reactionToThreat;
         }
         return reactionToThreat;
     }

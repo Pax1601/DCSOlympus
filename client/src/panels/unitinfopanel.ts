@@ -36,35 +36,35 @@ export class UnitInfoPanel extends Panel {
     update(unit: Unit) {
         if (this.getElement() != null) {
             /* Set the unit info */
-            this.#unitName.innerHTML = unit.unitName;
-            this.#groupName.innerHTML = unit.groupName;
-            this.#name.innerHTML = unit.name;
-            this.#heading.innerHTML = String(Math.floor(rad2deg(unit.heading)) + " °");
-            this.#altitude.innerHTML = String(Math.floor(unit.altitude / 0.3048) + " ft");
-            this.#groundSpeed.innerHTML = String(Math.floor(unit.speed * 1.94384) + " kts");
-            this.#fuel.innerHTML = String(unit.fuel + "%");
-            this.#latitude.innerHTML = ConvertDDToDMS(unit.latitude, false);
-            this.#longitude.innerHTML = ConvertDDToDMS(unit.longitude, true);
-            this.#task.innerHTML = unit.currentTask !== ""? unit.currentTask: "No task";
+            this.#unitName.innerHTML = unit.getData().unitName;
+            this.#groupName.innerHTML = unit.getData().groupName;
+            this.#name.innerHTML = unit.getData().name;
+            this.#heading.innerHTML = String(Math.floor(rad2deg(unit.getFlightData().heading)) + " °");
+            this.#altitude.innerHTML = String(Math.floor(unit.getFlightData().altitude / 0.3048) + " ft");
+            this.#groundSpeed.innerHTML = String(Math.floor(unit.getFlightData().speed * 1.94384) + " kts");
+            this.#fuel.innerHTML = String(unit.getMissionData().fuel + "%");
+            this.#latitude.innerHTML = ConvertDDToDMS(unit.getFlightData().latitude, false);
+            this.#longitude.innerHTML = ConvertDDToDMS(unit.getFlightData().longitude, true);
+            this.#task.innerHTML = unit.getTaskData().currentTask !== ""? unit.getTaskData().currentTask: "No task";
 
             /* Set the class of the task container */
-            this.#task.classList.toggle("red", unit.coalitionID == 1);
-            this.#task.classList.toggle("blue", unit.coalitionID == 2);
-            this.#task.classList.toggle("neutral", unit.coalitionID == 0);
+            this.#task.classList.toggle("red", unit.getMissionData().coalition === "red");
+            this.#task.classList.toggle("blue", unit.getMissionData().coalition === "blue");
+            this.#task.classList.toggle("neutral", unit.getMissionData().coalition === "neutral");
             
             /* Add the loadout elements */
             var els = this.getElement().getElementsByClassName("js-loadout-element");
             while (els.length > 0)
                 this.#loadoutContainer.removeChild(els[0]);
   
-            for (let index in unit.ammo) 
+            for (let index in unit.getMissionData().ammo) 
                 this.#addLoadoutElement(unit, index);
         }
     }
 
     #addLoadoutElement(unit: Unit, index: string)
     {
-        var ammo = unit.ammo[index];
+        var ammo = unit.getMissionData().ammo[index];
         var displayName = ammo.desc.displayName;
         var amount = ammo.count;
         var el = document.createElement("div")
