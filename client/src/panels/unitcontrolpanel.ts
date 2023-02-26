@@ -70,7 +70,7 @@ export class UnitControlPanel extends Panel {
     update(units: Unit[]) {
         if (this.getElement() != null)
         {
-            //this.#addUnitsButtons(units);
+            this.#addUnitsButtons(units);
             //this.#showFormationButtons(units);
             
             this.#showFlightControlSliders(units);

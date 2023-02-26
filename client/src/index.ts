@@ -7,9 +7,9 @@ import { Dropdown } from "./controls/dropdown";
 import { ConnectionStatusPanel } from "./panels/connectionstatuspanel";
 import { MissionData } from "./missiondata/missiondata";
 import { UnitControlPanel } from "./panels/unitcontrolpanel";
-import { MouseInfoPanel } from "./panels/mouseInfoPanel";
+import { MouseInfoPanel } from "./panels/mouseinfopanel";
 import { Slider } from "./controls/slider";
-import { AIC } from "./aic/AIC";
+import { AIC } from "./aic/aic";
 
 import { VisibilityControlPanel } from "./panels/visibilitycontrolpanel";
 import { ATC } from "./atc/ATC";
@@ -17,7 +17,6 @@ import { FeatureSwitches } from "./FeatureSwitches";
 import { LogPanel } from "./panels/logpanel";
 import { Button } from "./controls/button";
 
-/* TODO: should this be a class? */
 var map: Map;
 var contextMenu: ContextMenu;
 
@@ -33,15 +32,9 @@ var logPanel: LogPanel;
 
 var mapSourceDropdown: Dropdown;
 
-var slowButton: Button;
-var fastButton: Button;
-var climbButton: Button;
-var descendButton: Button;
-
 var aic: AIC;
 var aicToggleButton: Button;
 var aicHelpButton: Button;
-
 
 var atc: ATC;
 var atcToggleButton: Button;
@@ -67,7 +60,6 @@ function setup() {
    
     unitInfoPanel = new UnitInfoPanel("unit-info-panel");
     unitControlPanel = new UnitControlPanel("unit-control-panel");
-    //scenarioDropdown = new Dropdown("scenario-dropdown", ["Caucasus", "Marianas", "Nevada", "South Atlantic", "Syria", "The Channel"], () => { });
     mapSourceDropdown = new Dropdown("map-source-dropdown", map.getLayers(), (option: string) => map.setLayer(option));
     connectionStatusPanel = new ConnectionStatusPanel("connection-status-panel");
     mouseInfoPanel = new MouseInfoPanel("mouse-info-panel");
@@ -75,16 +67,6 @@ function setup() {
     logPanel = new LogPanel("log-panel");
 
     missionData = new MissionData();
-
-    /* Unit control buttons */
-    slowButton = new Button("slow-button", ["images/buttons/slow.svg"], () => { getUnitsManager().selectedUnitsChangeSpeed("slow"); });
-    fastButton = new Button("fast-button", ["images/buttons/fast.svg"], () => { getUnitsManager().selectedUnitsChangeSpeed("fast"); });
-    climbButton = new Button("climb-button", ["images/buttons/climb.svg"], () => { getUnitsManager().selectedUnitsChangeAltitude("climb"); });
-    descendButton = new Button("descend-button", ["images/buttons/descend.svg"], () => { getUnitsManager().selectedUnitsChangeAltitude("descend"); });
-
-    /* Unit control sliders */
-    altitudeSlider = new Slider("altitude-slider", 0, 100, "ft", (value: number) => getUnitsManager().selectedUnitsSetAltitude(value * 0.3048));
-    airspeedSlider = new Slider("airspeed-slider", 0, 100, "kts", (value: number) => getUnitsManager().selectedUnitsSetSpeed(value / 1.94384));
 
     /* AIC */
     
@@ -151,7 +133,6 @@ function requestUpdate() {
 }
 
 export function update(data: JSON) {
-    console.log( data );
     unitsManager.update(data);
     missionData.update(data);
     logPanel.update(data);

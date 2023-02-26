@@ -1,6 +1,7 @@
 import * as L from 'leaflet'
 import { getMap } from '..'
-import { getAircrafImage, getAircraftLabelByName } from './aircraftDatabase'
+import { rad2deg } from '../other/utils'
+import { getAircrafImage, getAircraftLabelByName } from './aircraftdatabase'
 import { AirUnit, GroundUnit, NavyUnit, Weapon } from './unit'
 
 export interface MarkerOptions {
@@ -34,8 +35,6 @@ export class UnitMarker extends L.Marker {
         this.#human = options.human;
         this.#AI = options.AI;
 
-        var img = this.getUnitImage();
-
         var coalition = "";
         if (options.coalitionID == 1)
             coalition = "red"
@@ -45,19 +44,35 @@ export class UnitMarker extends L.Marker {
             coalition = "neutral"
 
         var icon = new L.DivIcon({
-            html: `<table class="ol-unit-marker-container" id="container">
-                    <tr>
-                        <td>
-                            <div class="${coalition}" id="background"></div>
-                            <div class="${coalition}" id="ring"></div>
-                            <div class="ol-unit-marker-icon" id="icon"><img class="${coalition} ol-unit-marker-image" src="${img}"></div>
-                            <div class="ol-unit-marker-unitName" id="unitName">${this.#unitName}</div>
-                            <div class="ol-unit-marker-altitude" id="altitude"></div>
-                            <div class="ol-unit-marker-speed" id="speed"></div>
-                            <div class="ol-unit-marker-name" id="name">${this.#name}</div>
-                        </td>
-                    </tr>
-                </table>`,
+            html: `<div class="unit"
+                        data-coalition=${coalition}
+                        data-pilot=${this.#human? "human": "ai"}>
+                        <div class="unit-spotlight">
+                            <div class="unit-selected-border">
+                                <div class="unit-vvi">
+                                    <div class="unit-vvi-heading"></div>
+                                </div>
+                                <div class="unit-id">${this.#name}</div>
+                            </div>
+                        </div>
+                        <div class="unit-hotgroup">
+                            <div class="unit-hotgroup-id"></div>
+                        </div>
+                        <div class="unit-fuel">
+                            <div class="unit-fuel-level"></div>
+                        </div>
+                        <div class="unit-ammo">
+                            <div data-ammo-type="fox-1"></div>
+                            <div data-ammo-type="fox-2"></div>
+                            <div data-ammo-type="fox-3"></div>
+                            <div data-ammo-type="other"></div>
+                        </div>
+                        <div class="unit-summary">
+                            <div class="unit-callsign">${this.#unitName}</div>
+                            <div class="unit-heading"></div>
+                            <div class="unit-altitude"></div>
+                        </div>
+                    </div>`,
             className: 'ol-unit-marker',
             iconAnchor: [30, 30]
         });
@@ -73,46 +88,24 @@ export class UnitMarker extends L.Marker {
 
     draw(data: MarkerData) {
         this.#alive = data.alive;
+
         var element = this.getElement();
-        if (element != null) {
-            var nameDiv = <HTMLElement>element.querySelector("#name");
-            var unitNameDiv = <HTMLElement>element.querySelector("#unitName");
-            var container = <HTMLElement>element.querySelector("#container");
-            var icon = <HTMLElement>element.querySelector("#icon");
-            var altitudeDiv = <HTMLElement>element.querySelector("#altitude");
-            var speedDiv = <HTMLElement>element.querySelector("#speed");
 
-            /* If visibility is full show all labels */
-            nameDiv.style.display = '';
-            unitNameDiv.style.display = '';
-            altitudeDiv.style.display = '';
-            speedDiv.style.display = '';
+        if (element != null)
+        {
+            element.querySelector(".unit")?.setAttribute("data-is-selected", String(this.getSelected()));
+            element.querySelector(".unit-vvi-heading")?.setAttribute("style",`transform: rotate(${rad2deg(data.heading)}deg); width: ${data.speed / 5}px`);
 
-            /* If visibility is partial shown only icon and unit name. If none, shown only icon. */
-            if (this.getVisibility() === "partial" || this.getVisibility() === "minimal")
-            {
-                unitNameDiv.style.display = 'none';
-                altitudeDiv.style.display = 'none';
-                speedDiv.style.display = 'none';
-            }
-            if (this.getVisibility() === "minimal" && nameDiv.style.display != 'none')
-                nameDiv.style.display = 'none';
+            var unitHeadingDiv = element.querySelector(".unit-heading");
+            if (unitHeadingDiv != null)
+                unitHeadingDiv.innerHTML = String(Math.floor(rad2deg(data.heading)));
 
-            nameDiv.style.left = (-(nameDiv.offsetWidth - container.offsetWidth) / 2) + "px";
-            unitNameDiv.style.left = (-(unitNameDiv.offsetWidth - container.offsetWidth) / 2) + "px";
-
-            icon.style.transform = "rotate(" + data.heading + "rad)";
-            altitudeDiv.innerHTML = String(Math.round(data.altitude / 0.3048 / 100) / 10);
-            speedDiv.innerHTML = String(Math.round(data.speed * 1.94384));
-
-            var pos = getMap().latLngToLayerPoint(this.getLatLng()).round();
-            this.setZIndexOffset(Math.floor(data.altitude) - pos.y);
-
-            if (!this.#alive)
-            {
-                this.getElement()?.querySelector("#icon")?.classList.add("ol-unit-marker-dead");
-            }
+            var unitAltitudeDiv = element.querySelector(".unit-altitude");
+            if (unitAltitudeDiv != null)
+                unitAltitudeDiv.innerHTML = String(Math.floor(data.altitude / 1000));
         }
+        var pos = getMap().latLngToLayerPoint(this.getLatLng()).round();
+        this.setZIndexOffset(Math.floor(data.altitude) - pos.y);        
     }
 
     setSelected(selected: boolean) {

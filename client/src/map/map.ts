@@ -2,7 +2,7 @@ import * as L from "leaflet"
 import { getContextMenu, getUnitsManager, getActiveCoalition, getMouseInfoPanel } from "..";
 import { spawnAircraft, spawnGroundUnit, spawnSmoke } from "../dcs/dcs";
 import { bearing, distance, zeroAppend } from "../other/utils";
-import { getAircraftLabelsByRole, getLoadoutsByName, getLoadoutNamesByRole, getAircraftNameByLabel } from "../units/aircraftDatabase";
+import { getAircraftLabelsByRole, getLoadoutsByName, getLoadoutNamesByRole, getAircraftNameByLabel } from "../units/aircraftdatabase";
 import { unitTypes } from "../units/unitTypes";
 import { BoxSelect } from "./boxselect";
 
