@@ -18,11 +18,7 @@ section {
     flex-wrap: wrap;
 }
 
-.section-header {
-    font-size:125%;
-    font-weight: bold;
-    margin-bottom: 1vh;
-}
+
 
 .content {
     background:white;
@@ -43,6 +39,7 @@ section {
     column-gap: 20px;
     display:flex;
     flex-direction: row;
+    flex-wrap: wrap;
 }
 
 .example {
@@ -58,4 +55,33 @@ section {
 
 #paragraph {
     max-width: 750px;
+}
+
+
+#tabs {
+    column-gap: 10px;
+    display: flex;
+    flex-direction: row;
+    margin-bottom:1em;
+}
+
+#tabs > div {
+    background:rgb(199, 174, 120);
+    border-radius: 5px;
+    color:#333;
+    cursor: pointer;
+    padding:6px 10px;
+}
+
+
+#overlaying-planes {
+    background-color:#99ccff;
+    padding:20px;
+    position:relative;
+}
+
+#overlaying-planes svg:nth-of-type(2) {
+    position: absolute;
+    left: 40px;
+    top: 10px;
 }

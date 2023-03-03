@@ -5,7 +5,7 @@ import { AICFormation_Single } from "./AICFormation/Single";
 import { AICFormationDescriptorSection } from "./AICFormationDescriptorSection";
 
 
-export class AIC extends ToggleableFeature {
+export class aic extends ToggleableFeature {
 
     #formations = [
 

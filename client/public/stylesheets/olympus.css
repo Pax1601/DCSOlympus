@@ -1,54 +1,69 @@
-@import url("unitmarker.css");
-
 /* Variables definitions */
 :root {
-    --accent-green: #8bff63;
-    --accent-light-blue: #5ca7ff;
-    --background-grey: #3d4651;
-    --background-offwhite: #f2f2f3;
-    --background-steel: #202831;
-    --primary-blue: #247be2;
-    --primary-grey: #CFD9E8;
-    --primary-red: #ff5858;
-    --secondary-blue-outline: #082e44;
-    --secondary-dark-steel: #181e25;
-    --secondary-gunmetal-grey: #2f2f2f;
-    --secondary-light-grey: #797e83;
-    --secondary-red-outline: #262222;
-    --secondary-yellow: #ffd46893;
+    --accent-green            : #8bff63;
+    --accent-light-blue       : #5ca7ff;
+    --background-grey         : #3d4651;
+    --background-offwhite     : #f2f2f3;
+    --background-steel        : #202831;
+    --primary-blue            : #247be2;
+    --primary-grey            : #CFD9E8;
+    --primary-red             : #ff5858;
+    --secondary-blue-outline  : #082e44;
+    --secondary-dark-steel    : #181e25;
+    --secondary-gunmetal-grey : #2f2f2f;
+    --secondary-light-grey    : #797e83;
+    --secondary-neutral       : #111111;
+    --secondary-red-outline   : #262222;
+    --secondary-yellow        : #ffd46893;
+    --nav-text : #ECECEC;
+
+    
+    --border-radius-xs : 2px;
+    --border-radius-sm : 5px;
+    --border-radius-md : 10px;
+    --border-radius-lg : 15px;
+    
+    --font-weight-bolder : 600;
 
 
-    --border-radius-xs: 2px;
-    --border-radius-sm: 5px;
-    --border-radius-md: 10px;
-    --border-radius-lg: 15px;
+    /*  Generic marker settings  */
+    --unit-marker-border-radius: 3px;
+    --unit-marker-centre-x: calc( var( --unit-marker-width ) / 2 );
+    --unit-marker-centre-y: calc( var( --unit-marker-height ) / 2 );
+    --unit-marker-font-size: 12px;
+    --unit-marker-font-weight: bold;
+    --unit-marker-height: 100px;
+    --unit-marker-spotlight-fill: var( --secondary-yellow );
+    --unit-marker-spotlight-opacity: 68%;
+    --unit-marker-spotlight-radius: 28px;
+    --unit-marker-stroke-width: 2px;
+    --unit-marker-width: 150px;
 
-    --font-weight-bolder: 600;
+    --unit-marker-hotgroup-height: 12px;
+    --unit-marker-hotgroup-width: var( --unit-marker-hotgroup-height );
+
+
+    /*  Air units' marker settings  */
+    --unit-marker-air-ammo-gap: calc( 2px + var( --unit-marker-stroke-width ) );
+    --unit-marker-air-ammo-radius: 3px;
+    --unit-marker-air-ammo-y: calc( var( --unit-marker-height ) - 8px );
+    --unit-marker-air-fuel-height: 6px;
+    --unit-marker-air-fuel-width: 36px;
+    --unit-marker-air-fuel-x: calc( var( --unit-marker-centre-x ) - ( var( --unit-marker-air-fuel-width ) / 2 ) );
+    --unit-marker-air-fuel-y: calc( var( --unit-marker-height ) - 21px );
+    --unit-marker-air-height: 28px;
+    --unit-marker-air-vvi-rotation-offset: -180deg;
+    --unit-marker-air-width: var( --unit-marker-air-height );
+    --unit-marker-air-label-x: calc( var( --unit-marker-centre-x ) - ( var( --unit-marker-air-width ) / 2 ) + ( var( --unit-marker-stroke-width ) / 2 ) );
+    --unit-marker-air-label-y: calc( var( --unit-marker-centre-y ) - ( var( --unit-marker-air-height ) / 2 ) + ( var( --unit-marker-stroke-width ) / 2 ) );
 
 }
 
-:rootOLD {
-    --active-coalition-color: var(--blue-coalition-color);
-    --background-color-dark: #202831;
-    --background-color-light: #AAA;
-    --border-radius-sm: 5px;
-    --border-radius-md: 10px;
-    --border-radius-lg: 15px;
-    --blue-coalition-color: #247be2;
-    --font-weight-bolder: 600;
-    --highlight-color: #FFF5;
-    --neutral-coalition-color: whitesmoke;
-    --neutral-coalition-text: #202831;
-    --red-coalition-color: #f32121;
-    --text-color: white;
-    --title-color: #d3e9ff;
-}
 
-
-* {
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
+* { 
+    -moz-box-sizing: border-box; 
+    -webkit-box-sizing: border-box; 
+    box-sizing: border-box; 
 }
 
 
@@ -58,112 +73,396 @@ html {
 
 
 button {
-    background-color: var(--background-steel);
-    border: 1px solid var(--background-steel);
-    border-radius: var(--border-radius-sm);
-    color: whitesmoke;
-    cursor: pointer;
-    font-weight: var(--font-weight-bolder);
-    padding: 8px;
+    background-color:var(--background-steel);
+    border:1px solid var( --background-steel );
+    border-radius: var( --border-radius-sm );
+    color:whitesmoke;
+    cursor:pointer;
+    font-weight: var( --font-weight-bolder );
+    padding:8px;
 }
 
 button[disabled="disabled"] {
-    color: var(--highlight-color);
-    cursor: not-allowed;
+    color: var( --highlight-color );
+    cursor:not-allowed;
 }
+
 
 .pill {
-    border-radius: var(--border-radius-sm);
-    display: inline-block;
-    padding: 6px;
+    border-radius: var( --border-radius-sm );
+    display:inline-block;
+    padding:6px;
 }
 
-.ol-panel {
+
+
+nav, .ol-panel {
     background-color: var(--background-steel);
     border-radius: 15px;
     box-shadow: 0px 2px 5px #000A;
-    color: white;
+    color:white;
     font-size: 12px;
-    height: fit-content;
-    padding: 10px;
-    width: fit-content;
+    height:fit-content;
+    padding:10px;
+    width:fit-content;
+}
+
+nav .ol-select {
+    color: var( --nav-text );
+}
+
+nav .ol-select .ol-select-value {
+    align-content: center;
+    background-color: var( --background-grey );
+    border-radius: var( --border-radius-sm );
+    display:flex;
+    justify-content: left;
+    padding:1em;
+    text-align: center;
+}
+
+nav .ol-select .ol-select-options {
+    background-color: var( --background-grey );
+    border-radius: var( --border-radius-sm );
+    display:none;
+    list-style: none;
+    padding:.5em 0;
+    position: relative;
+}
+
+nav .ol-select:hover .ol-select-options {
+    display: block;
+}
+
+nav .ol-select .ol-select-options li {
+    background-color: var( --background-grey );
+    display:flex;
+    justify-content: left;
+}
+
+nav .ol-select .ol-select-options li.hr {
+    border-bottom:1px solid var( --nav-text );
+    margin:8px;
+}
+
+nav .ol-select .ol-select-options li button {
+    background-color: var( --background-grey );
+    border:none;
+    font-size:14px;
+    font-weight: normal;
+    text-align: left;
+    width:100%;
 }
 
 .ol-panel-list {
-    border-radius: var(--border-radius-sm);
+    border-radius: var( --border-radius-sm );
     display: flex;
     flex-direction: column;
-    height: fit-content;
+	height: fit-content;
     row-gap: 5px;
-    text-align: center;
-    width: fit-content;
+	text-align: center;
+	width: fit-content;
 }
 
 .ol-panel-list .list-item {
-    border-radius: var(--border-radius-md);
-    display: flex;
+    border-radius: var( --border-radius-md );
+    display:flex;
     justify-content: space-between;
-    padding: 6px 10px;
+	padding: 6px 10px;
 }
 
-.ol-panel-list.sortable>.sortable-item {
+.ol-panel-list.sortable > .sortable-item {
     align-items: center;
     column-gap: 5px;
-    display: flex;
+    display:flex;
     flex-direction: row;
 }
 
-.ol-panel-list.sortable>.sortable-item>.handle {
-    cursor: grab;
-    filter: invert(100);
+.ol-panel-list.sortable > .sortable-item > .handle {
+    cursor:grab;
+    filter:invert(100);
 }
 
-.ol-panel-list.sortable>.sortable-item>.handle img {
+.ol-panel-list.sortable > .sortable-item > .handle img {
     max-width: 16px;
 }
 
+
 .ol-panel-board {
-    display: flex;
+    display:flex;
     flex-direction: row;
     justify-content: space-evenly;
 }
 
-.ol-panel-board>.panel-section {
+.ol-panel-board > .panel-section {
     border-right: 1px solid #555;
-    padding: 10px;
+    padding:10px;
 }
 
-.ol-panel-board>.panel-section:last-of-type {
+.ol-panel-board > .panel-section:last-of-type {
     border-right-width: 0;
 }
 
-.ol-panel-board h1,
-.ol-panel-board h2 {
-    font-size: 18px;
-    font-weight: var(--font-weight-bolder);
+.ol-panel-board h1, .ol-panel-board h2 {
+    font-size:18px;
+    font-weight: var( --font-weight-bolder );
     margin: 0;
-    padding: 0 0 5px 0;
+    padding:0 0 5px 0;
 }
 
 .ol-panel-board h2 {
-    font-size: 14px;
+    font-size:14px;
 }
+
+
 
 .highlight-primary {
-    background-color: var(--secondary-light-grey);
+	background-color: var(--secondary-light-grey);
 }
 
 .highlight-bluefor {
-    background-color: var(--primary-blue);
-    color: var(--background-steel)
+	background-color: var(--primary-blue);
+    color: var(--background-steel )
 }
 
 .highlight-redfor {
-    background-color: var(--primary-red);
+	background-color: var(--primary-red);
 }
 
 .highlight-neutral {
-    background-color: var(--primary-grey);
+	background-color: var(--primary-grey);
     color: var(--secondary-gunmetal-grey)
 }
 
+
+
+svg.unit {
+    height: var( --unit-marker-height );
+    width: var( --unit-marker-width );
+}
+
+svg.unit .unit-vvi {
+    fill:black;
+    height: 4px;
+    transform-box: fill-box;
+    transform-origin:top;
+    translate: var( --unit-marker-centre-x ) calc( var( --unit-marker-centre-y ) - 2px );
+    width:4px;
+}
+
+svg.unit rect.unit-hotgroup {
+    display:none;
+    fill: var( --secondary-neutral );
+    height: var( --unit-marker-hotgroup-height );
+    transform: rotate( -45deg );
+    transform-origin: center;
+    translate: calc( var( --unit-marker-centre-x ) + ( var( --unit-marker-hotgroup-width ) / 2 ) ) -44px;
+    width: var( --unit-marker-hotgroup-height );
+}
+
+svg.unit text.unit-hotgroup-id {
+    font-weight: bolder;
+    display:none;
+    fill:white;
+    font-size:9px;
+}
+
+svg.unit[data-is-in-hotgroup="true"] rect.unit-hotgroup, svg.unit[data-is-in-hotgroup="true"] text.unit-hotgroup-id {
+    display:block;
+}
+
+svg.unit rect.unit-selected-border {
+    fill:transparent;
+    height: calc( var( --unit-marker-air-height ) + ( var( --unit-marker-stroke-width ) * 2 ) );
+    rx: var( --unit-marker-stroke-width );
+    stroke: var( white );
+    stroke-width: var( --unit-marker-stroke-width );
+    width: calc( var( --unit-marker-air-width ) + ( var( --unit-marker-stroke-width ) * 2 ) );
+    x: calc( var(--unit-marker-air-label-x) - 3px );
+    y: calc( var(--unit-marker-air-label-y) - 3px );
+}
+
+svg.unit rect.unit-marker {
+    fill: var( --primary-grey );
+    height: calc( var( --unit-marker-air-height ) - var( --unit-marker-stroke-width ) );
+    rx: var( --unit-marker-stroke-width );
+    ry: var( --unit-marker-stroke-width );
+    stroke: var( --secondary-neutral );
+    stroke-linejoin: round;
+    stroke-width: var( --unit-marker-stroke-width );
+    width: calc( var( --unit-marker-air-width ) - var( --unit-marker-stroke-width ) );
+    x: var(--unit-marker-air-label-x);
+    y: var(--unit-marker-air-label-y);
+}
+
+
+svg.unit text.unit-short-label {
+    fill: var( --secondary-neutral );
+    font-size: var( --unit-marker-font-size );
+    font-weight: var( --unit-marker-font-weight );
+    text-anchor: middle;
+}
+
+
+svg.unit rect.unit-fuel, svg.unit rect.unit-fuel-level {
+    height: var( --unit-marker-air-fuel-height );
+    width: var( --unit-marker-air-fuel-width );
+    x: var( --unit-marker-air-fuel-x );
+    y: var( --unit-marker-air-fuel-y );
+}
+
+
+svg.unit rect.unit-fuel {
+    display:none;
+    fill: white;
+    rx: var( --unit-marker-stroke-width );
+    ry: var( --unit-marker-stroke-width );
+    stroke: var( --secondary-gunmetal-grey );
+    stroke-linejoin: round;
+    stroke-width: var( --unit-marker-stroke-width );
+    y: var( --unit-marker-air-fuel-y );
+}
+
+svg.unit rect.unit-fuel-level {
+    display:none;
+    fill: var( --secondary-light-grey );
+    height: calc( var( --unit-marker-air-fuel-height ) - var( --unit-marker-stroke-width ) );
+    y: calc( var( --unit-marker-air-fuel-y ) + ( var( --unit-marker-stroke-width ) / 2 ) );
+}
+
+
+svg.unit circle.unit-ammo {
+    cy: var( --unit-marker-air-ammo-y );
+    display: none;
+    fill: white;
+    r: var( --unit-marker-air-ammo-radius );
+    stroke: var( --secondary-neutral );
+    stroke-width: var( --unit-marker-stroke-width );
+}
+
+svg.unit circle.unit-ammo-fox-1 {
+    cx: calc( var( --unit-marker-centre-x ) - ( ( var( --unit-marker-air-ammo-radius ) * 3 ) + ( var( --unit-marker-air-ammo-gap ) * 1.5 ) ) );
+}
+
+svg.unit circle.unit-ammo-fox-2 {
+    cx: calc( var( --unit-marker-centre-x ) - ( var( --unit-marker-air-ammo-radius ) + ( var( --unit-marker-air-ammo-gap ) / 2 ) ) );
+}
+
+svg.unit circle.unit-ammo-fox-3 {
+    cx: calc( var( --unit-marker-centre-x ) + var( --unit-marker-air-ammo-radius ) + ( var( --unit-marker-air-ammo-gap ) / 2 ) );
+}
+
+svg.unit circle.unit-ammo-other {
+    cx: calc( var( --unit-marker-centre-x ) + ( var( --unit-marker-air-ammo-radius ) * 3 ) + ( var( --unit-marker-air-ammo-gap ) * 1.5 ) );
+}
+
+svg.unit[data-has-fox-1="true"] circle.unit-ammo-fox-1,
+svg.unit[data-has-fox-2="true"] circle.unit-ammo-fox-2,
+svg.unit[data-has-fox-3="true"] circle.unit-ammo-fox-3,
+svg.unit[data-has-other-ammo="true"] circle.unit-ammo-other {
+    fill: var( --secondary-gunmetal-grey );
+}
+
+svg.unit .unit-summary text {
+    fill:white;
+    font-size:10px;
+    paint-order: stroke;
+    stroke: black;
+    stroke-width: 2px;
+}
+
+
+
+/***  Default style  **/
+
+svg.unit[data-coalition="blue"] rect.unit-marker {
+    fill: var( --primary-blue );
+    stroke: var( --secondary-blue-outline );
+}
+
+svg.unit[data-coalition="blue"] rect.unit-hotgroup,
+svg.unit[data-coalition="blue"] text.unit-short-label {
+    fill: var( --secondary-blue-outline );
+}
+
+svg.unit[data-coalition="blue"] rect.unit-fuel {
+    stroke: var( --secondary-blue-outline );
+}
+
+svg.unit[data-coalition="blue"] rect.unit-fuel-level {
+    fill: var( --primary-blue );
+}
+
+
+svg.unit[data-coalition="red"] rect.unit-marker {
+    fill: var( --primary-red );
+    stroke: var( --secondary-red-outline );
+}
+
+svg.unit[data-coalition="red"] rect.unit-hotgroup,
+svg.unit[data-coalition="red"] text.unit-short-label {
+    fill: var( --secondary-red-outline );
+}
+
+svg.unit[data-coalition="red"] rect.unit-fuel {
+    stroke: var( --secondary-red-outline );
+}
+
+svg.unit[data-coalition="red"] rect.unit-fuel-level {
+    fill: var( --primary-red );
+}
+
+
+
+/***  Selected style  **/
+
+
+svg.unit[data-is-selected="true"] .unit-spotlight {
+    cx:50%;
+    cy:50%;
+    fill:var( --unit-marker-spotlight-fill );
+    r: var( --unit-marker-spotlight-radius );
+}
+
+svg.unit[data-is-selected="true"] rect.unit-selected-border,
+svg.unit[data-is-selected="true"] rect.unit-marker {
+    fill:white;
+}
+
+
+
+svg.unit[data-pilot="ai"][data-is-selected="true"] rect.unit-fuel,
+svg.unit[data-pilot="ai"][data-is-selected="true"] rect.unit-fuel-level,
+svg.unit[data-pilot="ai"][data-is-selected="true"] circle.unit-ammo {
+    display:block;
+}
+
+@keyframes pulse {
+    50% {
+      opacity: 0;
+    }
+}
+svg.unit[data-pilot="ai"][data-is-selected="true"][data-has-low-fuel="true"] rect.unit-fuel,
+svg.unit[data-pilot="ai"][data-is-selected="true"][data-has-low-fuel="true"] rect.unit-fuel-level {
+    animation: pulse 1.5s linear infinite;
+}
+
+
+
+
+svg.unit[data-coalition="blue"][data-is-selected="true"] text.unit-short-label,
+svg.unit[data-coalition="blue"][data-has-fox-1="true"] circle.unit-ammo-fox-1,
+svg.unit[data-coalition="blue"][data-has-fox-2="true"] circle.unit-ammo-fox-2,
+svg.unit[data-coalition="blue"][data-has-fox-3="true"] circle.unit-ammo-fox-3,
+svg.unit[data-coalition="blue"][data-has-other-ammo="true"] circle.unit-ammo-other {
+    fill: var( --primary-blue );
+}
+
+
+svg.unit[data-coalition="red"][data-is-selected="true"] text.unit-short-label,
+svg.unit[data-coalition="red"][data-has-fox-1="true"] circle.unit-ammo-fox-1,
+svg.unit[data-coalition="red"][data-has-fox-2="true"] circle.unit-ammo-fox-2,
+svg.unit[data-coalition="red"][data-has-fox-3="true"] circle.unit-ammo-fox-3,
+svg.unit[data-coalition="red"][data-has-other-ammo="true"] circle.unit-ammo-other {
+    fill: var( --primary-red );
+}
