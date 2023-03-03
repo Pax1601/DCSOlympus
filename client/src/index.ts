@@ -10,7 +10,7 @@ import { MissionData } from "./missiondata/missiondata";
 import { UnitControlPanel } from "./panels/unitcontrolpanel";
 import { MouseInfoPanel } from "./panels/mouseInfoPanel";
 import { Slider } from "./controls/slider";
-import { AIC } from "./aic/AIC";
+import { aic } from "./aic/aic";
 
 import { VisibilityControlPanel } from "./panels/visibilitycontrolpanel";
 import { ATC } from "./atc/ATC";
@@ -40,7 +40,7 @@ var fastButton: Button;
 var climbButton: Button;
 var descendButton: Button;
 
-var aic: AIC;
+var aicMode: aic;
 var aicToggleButton: Button;
 var aicHelpButton: Button;
 
@@ -94,14 +94,14 @@ function setup() {
     let aicFeatureSwitch = featureSwitches.getSwitch( "aic" );
 
     if ( aicFeatureSwitch?.isEnabled() ) {
-        aic = new AIC();
+        aicMode = new aic();
         
         aicToggleButton = new Button( "toggle-aic-button", ["images/buttons/radar.svg"], () => {
-            aic.toggleStatus();
+            aicMode.toggleStatus();
         });
 
         aicHelpButton = new Button( "aic-help-button", [ "images/buttons/question-mark.svg" ], () => {
-            aic.toggleHelp();
+            aicMode.toggleHelp();
         });
     }
 

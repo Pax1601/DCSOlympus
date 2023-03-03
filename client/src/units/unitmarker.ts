@@ -75,6 +75,7 @@ export class UnitMarker extends L.Marker {
         this.#alive = data.alive;
         var element = this.getElement();
         if (element != null) {
+            
             var nameDiv = <HTMLElement>element.querySelector("#name");
             var unitNameDiv = <HTMLElement>element.querySelector("#unitName");
             var container = <HTMLElement>element.querySelector("#container");

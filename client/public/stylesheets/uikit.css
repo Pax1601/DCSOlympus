@@ -18,11 +18,7 @@ section {
     flex-wrap: wrap;
 }
 
-.section-header {
-    font-size:125%;
-    font-weight: bold;
-    margin-bottom: 1vh;
-}
+
 
 .content {
     background:white;
@@ -58,4 +54,20 @@ section {
 
 #paragraph {
     max-width: 750px;
+}
+
+
+#tabs {
+    column-gap: 10px;
+    display: flex;
+    flex-direction: row;
+    margin-bottom:1em;
+}
+
+#tabs > div {
+    background:rgb(226, 166, 54);
+    border-radius: 5px;
+    color:#333;
+    cursor: pointer;
+    padding:6px 10px;
 }
