@@ -1,6 +1,6 @@
-import { Marker, LatLng, Polyline, Icon } from 'leaflet';
+import { Marker, LatLng, Polyline, Icon, DivIcon } from 'leaflet';
 import { getMap, getUnitsManager } from '..';
-import { UnitMarker, MarkerOptions, AircraftMarker, HelicopterMarker, GroundUnitMarker, NavyUnitMarker, WeaponMarker, MissileMarker, BombMarker } from './unitmarker';
+import { rad2deg } from '../other/utils';
 import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, landAt, setAltitude, setReactionToThreat, setROE, setSpeed } from '../server/server';
 import { aircraftDatabase } from './aircraftdatabase';
 
@@ -10,11 +10,10 @@ var pathIcon = new Icon({
     iconAnchor: [13, 41]
 });
 
-export class Unit {
+export class Unit extends Marker {
     ID: number;
 
     #data: UnitData;
-    #marker: UnitMarker;
 
     #selectable: boolean;
     #selected: boolean = false;
@@ -37,17 +36,52 @@ export class Unit {
         if (type === "NavyUnit") return NavyUnit;
     }
 
-    constructor(ID: number, marker: UnitMarker, data: UnitData) {
+    constructor(ID: number, data: UnitData) {
+        super(new LatLng(0, 0), { riseOnHover: true });
+
         this.ID = ID;
 
         this.#selectable = true;
         this.#data = data;
 
-        /* The marker is set by the inherited class */
-        this.#marker = marker;
-        this.#marker.on('click', (e) => this.#onClick(e));
-        this.#marker.on('dblclick', (e) => this.#onDoubleClick(e));
-        this.#marker.on('contextmenu', (e) => this.#onContextMenu(e));
+        this.on('click', (e) => this.#onClick(e));
+        this.on('dblclick', (e) => this.#onDoubleClick(e));
+        this.on('contextmenu', (e) => this.#onContextMenu(e));
+
+        var icon = new DivIcon({
+            html: `<div class="unit"
+                        data-coalition=${this.getMissionData().coalition}
+                        data-pilot=${this.getMissionData().flags.human? "human": "ai"}>
+                        <div class="unit-spotlight">
+                            <div class="unit-selected-border">
+                                <div class="unit-vvi">
+                                    <div class="unit-vvi-heading"></div>
+                                </div>
+                                <div class="unit-id">${aircraftDatabase.getShortLabelByName(this.getData().name)}</div>
+                            </div>
+                        </div>
+                        <div class="unit-hotgroup">
+                            <div class="unit-hotgroup-id"></div>
+                        </div>
+                        <div class="unit-fuel">
+                            <div class="unit-fuel-level"></div>
+                        </div>
+                        <div class="unit-ammo">
+                            <div data-ammo-type="fox-1"></div>
+                            <div data-ammo-type="fox-2"></div>
+                            <div data-ammo-type="fox-3"></div>
+                            <div data-ammo-type="other"></div>
+                        </div>
+                        <div class="unit-summary">
+                            <div class="unit-callsign">${this.getData().unitName}</div>
+                            <div class="unit-heading"></div>
+                            <div class="unit-altitude"></div>
+                        </div>
+                    </div>`,
+            className: 'ol-unit-marker',
+            iconAnchor: [30, 30]
+        });
+        this.setIcon(icon);
 
         this.#pathPolyline = new Polyline([], { color: '#2d3e50', weight: 3, opacity: 0.5, smoothFactor: 1 });
         this.#pathPolyline.addTo(getMap());
@@ -55,9 +89,13 @@ export class Unit {
     }
 
     update(response: UnitData) {
-        var updateMarker = false;
-        if (this.#data.flightData.latitude != response.flightData.latitude || this.#data.flightData.longitude != response.flightData.longitude || this.#data.alive != response.alive || this.#forceUpdate)
-            updateMarker = true;
+        var updateMarker = true;
+        //if (this.#data.flightData.latitude != response.flightData.latitude || 
+        //    this.#data.flightData.longitude != response.flightData.longitude || 
+        //    this.#data.alive != response.alive || 
+        //    this.#forceUpdate || 
+        //    !getMap().hasLayer(this.#marker))
+        //    updateMarker = true;
 
         this.#data = response;
 
@@ -80,7 +118,7 @@ export class Unit {
         /* Only alive units can be selected. Some units are not selectable (weapons) */
         if ((this.#data.alive || !selected) && this.#selectable && this.#selected != selected) {
             this.#selected = selected;
-            this.#marker.setSelected(selected);
+            this.getElement()?.querySelector(".unit")?.setAttribute("data-is-selected", String(this.getSelected()));
             document.dispatchEvent(new CustomEvent("unitSelection", { detail: this }));
         }
     }
@@ -253,22 +291,33 @@ export class Unit {
 
     #updateMarker() {
         /* Add the marker if not present */
-        if (!getMap().hasLayer(this.#marker) && !this.getHidden()) {
-            this.#marker.addTo(getMap());
+        if (!getMap().hasLayer(this) && !this.getHidden()) {
+            this.addTo(getMap());
         }
 
         /* Hide the marker if necessary*/
-        if (getMap().hasLayer(this.#marker) && this.getHidden()) {
-            getMap().removeLayer(this.#marker);
+        if (getMap().hasLayer(this) && this.getHidden()) {
+            getMap().removeLayer(this);
         }
         else {
-            this.#marker.setLatLng(new LatLng(this.#data.flightData.latitude, this.#data.flightData.longitude));
-            this.#marker.draw({
-                heading: this.#data.flightData.heading,
-                speed: this.#data.flightData.speed,
-                altitude: this.#data.flightData.altitude,
-                alive: this.#data.alive
-            });
+            this.setLatLng(new LatLng(this.#data.flightData.latitude, this.#data.flightData.longitude));
+            var element = this.getElement();
+            if (element != null)
+            {
+                element.querySelector(".unit-vvi-heading")?.setAttribute("style",`transform: rotate(${rad2deg(this.getFlightData().heading)}deg); width: ${15 + this.getFlightData().speed / 5}px`);
+                element.querySelector(".unit")?.setAttribute("data-fuel-level", "20");
+                element.querySelector(".unit")?.setAttribute("data-has-fox-1", "true");
+    
+                var unitHeadingDiv = element.querySelector(".unit-heading");
+                if (unitHeadingDiv != null)
+                    unitHeadingDiv.innerHTML = String(Math.floor(rad2deg(this.getFlightData().heading)));
+    
+                var unitAltitudeDiv = element.querySelector(".unit-altitude");
+                if (unitAltitudeDiv != null)
+                    unitAltitudeDiv.innerHTML = String(Math.floor(this.getFlightData().altitude / 0.3048 / 1000));
+            }
+            var pos = getMap().latLngToLayerPoint(this.getLatLng()).round();
+            this.setZIndexOffset(Math.floor(this.getFlightData().altitude) - pos.y);        
         }
 
         this.#forceUpdate = false;
@@ -350,37 +399,19 @@ export class AirUnit extends Unit {
 
 export class Aircraft extends AirUnit {
     constructor(ID: number, data: UnitData) {
-        var marker = new AircraftMarker({
-            AI: data.AI,
-            unitName: data.unitName, 
-            name: aircraftDatabase.getShortLabelByName(data.name), 
-            human: data.missionData.flags.human, 
-            coalition: data.missionData.coalition});
-        super(ID, marker, data);
+        super(ID, data);
     }
 }
 
 export class Helicopter extends AirUnit {
     constructor(ID: number, data: UnitData) {
-        var marker = new HelicopterMarker({
-            AI: data.AI,
-            unitName: data.unitName, 
-            name: "H", 
-            human: data.missionData.flags.human, 
-            coalition: data.missionData.coalition});
-        super(ID, marker, data);
+        super(ID, data);
     }
 }
 
 export class GroundUnit extends Unit {
     constructor(ID: number, data: UnitData) {
-        var marker = new GroundUnitMarker({
-            AI: data.AI,
-            unitName: data.unitName, 
-            name: "G", 
-            human: data.missionData.flags.human, 
-            coalition: data.missionData.coalition});
-        super(ID, marker, data);
+        super(ID, data);
     }
 
     getHidden() {
@@ -390,13 +421,7 @@ export class GroundUnit extends Unit {
 
 export class NavyUnit extends Unit {
     constructor(ID: number, data: UnitData) {
-        var marker = new NavyUnitMarker({
-            AI: data.AI,
-            unitName: data.unitName, 
-            name: "N", 
-            human: data.missionData.flags.human, 
-            coalition: data.missionData.coalition});
-        super(ID, marker, data);
+        super(ID, data);
     }
 
     getHidden() {
@@ -405,32 +430,20 @@ export class NavyUnit extends Unit {
 }
 
 export class Weapon extends Unit {
-    constructor(ID: number, marker: UnitMarker, data: UnitData) {
-        super(ID, marker, data);
+    constructor(ID: number, data: UnitData) {
+        super(ID, data);
         this.setSelectable(false);
     }
 }
 
 export class Missile extends Weapon {
     constructor(ID: number, data: UnitData) {
-        var marker = new MissileMarker({
-            AI: data.AI,
-            unitName: data.unitName, 
-            name: "M", 
-            human: data.missionData.flags.human, 
-            coalition: data.missionData.coalition});
-        super(ID, marker, data);
+        super(ID, data);
     }
 }
 
 export class Bomb extends Weapon {
     constructor(ID: number, data: UnitData) {
-        var marker = new BombMarker({
-            AI: data.AI,
-            unitName: data.unitName, 
-            name: "B", 
-            human: data.missionData.flags.human, 
-            coalition: data.missionData.coalition});
-        super(ID, marker, data);
+        super(ID, data);
     }
 }
