@@ -32,12 +32,12 @@
     --unit-marker-centre-y: calc( var( --unit-marker-height ) / 2 );
     --unit-marker-font-size: 12px;
     --unit-marker-font-weight: bold;
-    --unit-marker-height: 80px;
+    --unit-marker-height: 100px;
     --unit-marker-spotlight-fill: var( --secondary-yellow );
     --unit-marker-spotlight-opacity: 68%;
     --unit-marker-spotlight-radius: 28px;
     --unit-marker-stroke-width: 2px;
-    --unit-marker-width: 80px;
+    --unit-marker-width: 150px;
 
     --unit-marker-hotgroup-height: 12px;
     --unit-marker-hotgroup-width: var( --unit-marker-hotgroup-height );
@@ -255,9 +255,9 @@ svg.unit rect.unit-hotgroup {
     fill: var( --secondary-neutral );
     height: var( --unit-marker-hotgroup-height );
     transform: rotate( -45deg );
+    transform-origin: center;
+    translate: calc( var( --unit-marker-centre-x ) + ( var( --unit-marker-hotgroup-width ) / 2 ) ) -44px;
     width: var( --unit-marker-hotgroup-height );
-    x: 13px;
-    y: 33px;
 }
 
 svg.unit text.unit-hotgroup-id {
@@ -361,6 +361,14 @@ svg.unit[data-has-fox-2="true"] circle.unit-ammo-fox-2,
 svg.unit[data-has-fox-3="true"] circle.unit-ammo-fox-3,
 svg.unit[data-has-other-ammo="true"] circle.unit-ammo-other {
     fill: var( --secondary-gunmetal-grey );
+}
+
+svg.unit .unit-summary text {
+    fill:white;
+    font-size:10px;
+    paint-order: stroke;
+    stroke: black;
+    stroke-width: 2px;
 }
 
 

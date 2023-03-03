@@ -39,6 +39,7 @@ section {
     column-gap: 20px;
     display:flex;
     flex-direction: row;
+    flex-wrap: wrap;
 }
 
 .example {
@@ -65,9 +66,22 @@ section {
 }
 
 #tabs > div {
-    background:rgb(226, 166, 54);
+    background:rgb(199, 174, 120);
     border-radius: 5px;
     color:#333;
     cursor: pointer;
     padding:6px 10px;
+}
+
+
+#overlaying-planes {
+    background-color:#99ccff;
+    padding:20px;
+    position:relative;
+}
+
+#overlaying-planes svg:nth-of-type(2) {
+    position: absolute;
+    left: 40px;
+    top: 10px;
 }
