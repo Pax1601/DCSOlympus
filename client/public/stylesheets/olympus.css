@@ -26,37 +26,6 @@
     --font-weight-bolder : 600;
 
 
-    /*  Generic marker settings  */
-    --unit-marker-border-radius: 3px;
-    --unit-marker-centre-x: calc( var( --unit-marker-width ) / 2 );
-    --unit-marker-centre-y: calc( var( --unit-marker-height ) / 2 );
-    --unit-marker-font-size: 12px;
-    --unit-marker-font-weight: bold;
-    --unit-marker-height: 100px;
-    --unit-marker-spotlight-fill: var( --secondary-yellow );
-    --unit-marker-spotlight-opacity: 68%;
-    --unit-marker-spotlight-radius: 28px;
-    --unit-marker-stroke-width: 2px;
-    --unit-marker-width: 150px;
-
-    --unit-marker-hotgroup-height: 12px;
-    --unit-marker-hotgroup-width: var( --unit-marker-hotgroup-height );
-
-
-    /*  Air units' marker settings  */
-    --unit-marker-air-ammo-gap: calc( 2px + var( --unit-marker-stroke-width ) );
-    --unit-marker-air-ammo-radius: 3px;
-    --unit-marker-air-ammo-y: calc( var( --unit-marker-height ) - 8px );
-    --unit-marker-air-fuel-height: 6px;
-    --unit-marker-air-fuel-width: 36px;
-    --unit-marker-air-fuel-x: calc( var( --unit-marker-centre-x ) - ( var( --unit-marker-air-fuel-width ) / 2 ) );
-    --unit-marker-air-fuel-y: calc( var( --unit-marker-height ) - 21px );
-    --unit-marker-air-height: 28px;
-    --unit-marker-air-vvi-rotation-offset: -180deg;
-    --unit-marker-air-width: var( --unit-marker-air-height );
-    --unit-marker-air-label-x: calc( var( --unit-marker-centre-x ) - ( var( --unit-marker-air-width ) / 2 ) + ( var( --unit-marker-stroke-width ) / 2 ) );
-    --unit-marker-air-label-y: calc( var( --unit-marker-centre-y ) - ( var( --unit-marker-air-height ) / 2 ) + ( var( --unit-marker-stroke-width ) / 2 ) );
-
 }
 
 
@@ -236,6 +205,10 @@ nav .ol-select .ol-select-options li button {
 
 
 
+
+
+
+/*
 svg.unit {
     height: var( --unit-marker-height );
     width: var( --unit-marker-width );
@@ -373,7 +346,6 @@ svg.unit .unit-summary text {
 
 
 
-/***  Default style  **/
 
 svg.unit[data-coalition="blue"] rect.unit-marker {
     fill: var( --primary-blue );
@@ -413,8 +385,6 @@ svg.unit[data-coalition="red"] rect.unit-fuel-level {
 }
 
 
-
-/***  Selected style  **/
 
 
 svg.unit[data-is-selected="true"] .unit-spotlight {
@@ -466,3 +436,6 @@ svg.unit[data-coalition="red"][data-has-fox-3="true"] circle.unit-ammo-fox-3,
 svg.unit[data-coalition="red"][data-has-other-ammo="true"] circle.unit-ammo-other {
     fill: var( --primary-red );
 }
+
+
+/* */

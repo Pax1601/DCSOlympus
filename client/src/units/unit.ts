@@ -2,7 +2,7 @@ import { Marker, LatLng, Polyline, Icon, DivIcon } from 'leaflet';
 import { getMap, getUnitsManager } from '..';
 import { rad2deg } from '../other/utils';
 import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, landAt, setAltitude, setReactionToThreat, setROE, setSpeed } from '../server/server';
-import { aircraftDatabase } from './aircraftdatabase';
+import { aircraftDatabase } from './aircraftDatabase';
 
 var pathIcon = new Icon({
     iconUrl: 'images/marker-icon.png',

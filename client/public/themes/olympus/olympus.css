@@ -1,0 +1,80 @@
+:root {
+
+    /**  Colours  **/
+
+    /*** Coalition: neutral  **/
+    --primary-grey            : #CFD9E8;
+    --secondary-neutral       : #111111;
+
+    /*** Coalition: blue  **/
+    --primary-blue            : #247be2;
+    --secondary-blue-outline  : #082e44;
+    --secondary-blue-text     : #017DC1;
+
+    /*** Coalition: red  **/
+    --primary-red             : #ff5858;
+    --secondary-red-outline   : #262222;
+    --secondary-red-text      : #D42121;
+
+
+    --accent-green            : #8bff63;
+    --accent-light-blue       : #5ca7ff;
+
+    --background-grey         : #3d4651;
+    --background-offwhite     : #f2f2f3;
+    --background-steel        : #202831;
+
+    --secondary-dark-steel    : #181e25;
+    --secondary-gunmetal-grey : #2f2f2f;
+    --secondary-light-grey    : #797e83;
+    --secondary-yellow        : #ffd46893;
+
+    --nav-text : #ECECEC;
+
+
+    /*** General border radii  **/
+
+    --border-radius-xs : 2px;
+    --border-radius-sm : 5px;
+    --border-radius-md : 10px;
+    --border-radius-lg : 15px;
+
+
+    /***  Font stuff  **/
+    --font-weight-bolder : 600;
+
+
+
+    /***  Unit marker settings  ***/
+
+
+    /***   All markers  **/
+    --unit-marker-border-radius: var( --border-radius-xs );
+    --unit-marker-font-size: 12px;
+    --unit-marker-font-weight: bolder;
+    --unit-marker-height: 32px;
+    --unit-marker-label-border-width: 3px;
+    --unit-marker-spotlight-fill: var( --secondary-yellow );
+    --unit-marker-spotlight-radius: 28px;
+    --unit-marker-stroke-width: 3px;
+    --unit-marker-width: 32px;
+
+
+    /*  Air units' marker settings  */
+    --unit-marker-air-ammo-gap: calc( 2px + var( --unit-marker-stroke-width ) );
+    --unit-marker-air-ammo-border-radius: 50%;
+    --unit-marker-air-ammo-border-width: 2px;
+    --unit-marker-air-ammo-radius: 2px;
+    --unit-marker-air-ammo-spacing: 2px;
+    --unit-marker-air-ammo-x:0px;
+    --unit-marker-air-ammo-y:28px;
+    --unit-marker-air-fuel-border-width: 2px;
+    --unit-marker-air-fuel-height: 6px;
+    --unit-marker-air-fuel-width: 36px;
+    --unit-marker-air-fuel-x:0px;
+    --unit-marker-air-fuel-y:20px;
+    --unit-marker-air-height: 28px;
+    --unit-marker-air-vvi-width: 4px;
+    --unit-marker-air-width: var( --unit-marker-air-height );
+
+}

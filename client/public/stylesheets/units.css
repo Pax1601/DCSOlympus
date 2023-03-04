@@ -1,0 +1,255 @@
+:root {
+        /*  Generic marker settings  */
+        --unit-marker-centre-x: calc( var( --unit-marker-width ) / 2 );
+        --unit-marker-centre-y: calc( var( --unit-marker-height ) / 2 );
+    
+        --unit-marker-hotgroup-height: 10px;
+        --unit-marker-hotgroup-width: var( --unit-marker-hotgroup-height );
+    
+    
+        /*  Air units' marker settings  */
+        --unit-marker-air-label-x: calc( var( --unit-marker-centre-x ) - ( var( --unit-marker-air-width ) / 2 ) + ( var( --unit-marker-stroke-width ) / 2 ) );
+        --unit-marker-air-label-y: calc( var( --unit-marker-centre-y ) - ( var( --unit-marker-air-height ) / 2 ) + ( var( --unit-marker-stroke-width ) / 2 ) );
+}
+
+
+div.unit {
+    align-items: center;
+    cursor:pointer;
+    display:flex;
+    justify-content: center;
+    position:relative;
+}
+
+div.unit .unit-selected-spotlight {
+    background-color: var( --unit-marker-spotlight-fill );
+    border-radius: 50%;
+    display:none;
+    padding: var( --unit-marker-spotlight-radius );
+    position: absolute;
+}
+
+
+div.unit .unit-vvi {
+    align-self: center;
+    background:black;
+    display:flex;
+    justify-self: center;
+    transform-origin: bottom;
+    translate:0 -50%;
+    padding-bottom: calc( ( var( --unit-marker-air-width ) / 2 ) + var( --unit-marker-stroke-width ) );
+    position:absolute;
+    width: var( --unit-marker-air-vvi-width );
+}
+
+
+div.unit .unit-hotgroup {
+    align-content: center;
+    background-color: black;
+    border-radius: var( --border-radius-xs );
+    display:none;
+    height: var( --unit-marker-hotgroup-height );
+    justify-content: center;
+    position:absolute;
+    transform: rotate( -45deg );
+    translate:0 -24px;
+    width: var( --unit-marker-hotgroup-width );
+}
+
+div.unit .unit-hotgroup-id {
+    background-color: transparent;
+    color:white;
+    font-size: 9px;
+    font-weight: bolder;
+    transform:rotate( 45deg );
+}
+
+div.unit .unit-marker-border {
+    background-color: white;
+    border-radius: var( --border-radius-sm );
+    display:none;
+    height: calc( var( --unit-marker-air-height ) + ( var( --unit-marker-label-border-width ) * 2 ) );
+    position:absolute;
+    width: calc( var( --unit-marker-air-width ) + ( var( --unit-marker-label-border-width ) * 2 ) );
+}
+
+div.unit:hover .unit-marker-border,
+div.unit[data-is-selected="true"] .unit-marker-border {
+    display:block;
+}
+
+div.unit svg {
+    border-radius: var( --border-radius-sm );
+    height: var( --unit-marker-height );
+    width: var( --unit-marker-width );
+    z-index:1;
+}
+
+div.unit svg rect.unit-marker {
+    fill: var( --primary-grey );
+    height: calc( var( --unit-marker-air-height ) - var( --unit-marker-stroke-width ) );
+    rx: var( --unit-marker-stroke-width );
+    ry: var( --unit-marker-stroke-width );
+    stroke: var( --secondary-neutral );
+    stroke-linejoin: round;
+    stroke-width: var( --unit-marker-stroke-width );
+    width: calc( var( --unit-marker-air-width ) - var( --unit-marker-stroke-width ) );
+    x: var(--unit-marker-air-label-x);
+    y: var(--unit-marker-air-label-y);
+}
+
+div.unit .unit-short-label {
+    font-size: var(--unit-marker-font-size);
+    font-weight: var(--unit-marker-font-weight);
+    position: absolute;
+    z-index:10;
+}
+
+
+div.unit .unit-fuel {
+    background:white;
+    border: var( --unit-marker-air-fuel-border-width ) solid var( --secondary-dark-steel );
+    border-radius: var( --border-radius-sm );
+    display:none;
+    height: var( --unit-marker-air-fuel-height );
+    position: absolute;
+    translate:var( --unit-marker-air-fuel-x ) 20px;
+    width: var( --unit-marker-air-fuel-width );
+}
+
+div.unit .unit-fuel-level {
+    background-color: var( --secondary-light-grey );
+    height:100%;
+    width:100%;
+}
+
+
+div.unit .unit-ammo {
+    column-gap: var( --unit-marker-air-ammo-spacing );
+    display:none;
+    height:fit-content;
+    position:absolute;
+    translate:var( --unit-marker-air-ammo-x ) var( --unit-marker-air-ammo-y );
+    width:fit-content;
+}
+
+div.unit .unit-ammo > * {
+    background-color: white;
+    border: var( --unit-marker-air-ammo-border-width ) solid var( --secondary-dark-steel );
+    border-radius: 50%;
+    padding: var( --unit-marker-air-ammo-radius );
+}
+
+
+div.unit .unit-summary {
+    column-gap: 6px;
+    color:white;
+    display:flex;
+    flex-wrap: wrap;
+    font-size:11px;
+    font-weight: bold;
+    justify-content: right;
+    paint-order: stroke fill;
+    position:absolute;
+    row-gap: 1px;
+    text-shadow:
+        -1px -1px 0 #000,  
+        1px -1px 0 #000,
+        -1px  1px 0 #000,
+        1px  1px 0 #000;
+    translate: -55px 0;
+    width:fit-content;
+    z-index:20;
+}
+
+div.unit .unit-summary > * {
+    padding:1px;
+}
+
+div.unit .unit-summary .unit-callsign {
+    color:white;
+    overflow: hidden;
+    text-align: right;
+    transform-origin: right;
+    white-space: nowrap;
+    width: 80px;
+}
+
+div.unit .unit-summary .unit-callsign:hover {
+    direction: rtl;
+    overflow:visible;
+}
+
+
+
+div.unit[data-pilot="ai"]:hover .unit-ammo,
+div.unit[data-pilot="ai"]:hover .unit-fuel {
+    display:flex;
+}
+
+div.unit[data-is-in-hotgroup="true"] .unit-hotgroup,
+div.unit[data-pilot="ai"][data-is-selected="true"] .unit-ammo,
+div.unit[data-pilot="ai"][data-is-selected="true"] .unit-fuel,
+div.unit[data-is-selected="true"] .unit-selected-spotlight {
+    display:flex;
+}
+
+div.unit[data-has-fox-1="true"] .unit-ammo-fox-1,
+div.unit[data-has-fox-2="true"] .unit-ammo-fox-2,
+div.unit[data-has-fox-3="true"] .unit-ammo-fox-3,
+div.unit[data-has-other-ammo="true"] .unit-ammo-other {
+    background-color: var( --primary-grey );
+}
+
+
+div.unit[data-coalition="blue"] rect.unit-marker {
+    fill:var( --primary-blue );
+    stroke: var( --secondary-blue-outline );
+}
+
+div.unit[data-coalition="blue"][data-is-selected="true"] .unit-short-label {
+    color: var( --secondary-blue-text );
+}
+
+div.unit[data-coalition="blue"] .unit-fuel-level,
+div.unit[data-coalition="blue"][data-has-fox-1="true"] .unit-ammo-fox-1,
+div.unit[data-coalition="blue"][data-has-fox-2="true"] .unit-ammo-fox-2,
+div.unit[data-coalition="blue"][data-has-fox-3="true"] .unit-ammo-fox-3,
+div.unit[data-coalition="blue"][data-has-other-ammo="true"] .unit-ammo-other {
+    background-color: var( --primary-blue );
+}
+
+
+
+div.unit[data-coalition="red"] rect.unit-marker {
+    fill:var( --primary-red );
+    stroke: var( --secondary-red-outline );
+}
+
+div.unit[data-coalition="red"][data-is-selected="true"] .unit-short-label {
+    color: var( --secondary-red-text );
+}
+
+div.unit[data-coalition="red"] .unit-fuel-level,
+div.unit[data-coalition="red"][data-has-fox-1="true"] .unit-ammo-fox-1,
+div.unit[data-coalition="red"][data-has-fox-2="true"] .unit-ammo-fox-2,
+div.unit[data-coalition="red"][data-has-fox-3="true"] .unit-ammo-fox-3,
+div.unit[data-coalition="red"][data-has-other-ammo="true"] .unit-ammo-other {
+    background-color: var( --primary-red );
+}
+
+
+@keyframes pulse {
+    50% {
+      opacity: 0;
+    }
+}
+
+div.unit[data-pilot="ai"][data-has-low-fuel="true"] .unit-fuel {
+    animation: pulse 1.5s linear infinite;
+}
+
+
+div.unit[data-is-selected="true"] rect.unit-marker {
+    fill:white;
+}

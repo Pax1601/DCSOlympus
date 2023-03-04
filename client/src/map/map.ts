@@ -2,8 +2,8 @@ import * as L from "leaflet"
 import { getContextMenu, getUnitsManager, getActiveCoalition, getMouseInfoPanel } from "..";
 import { spawnAircraft, spawnGroundUnit, spawnSmoke } from "../server/server";
 import { bearing, distance, zeroAppend } from "../other/utils";
-import { aircraftDatabase } from "../units/aircraftdatabase";
-import { unitTypes } from "../units/unittypes";
+import { aircraftDatabase } from "../units/aircraftDatabase";
+import { unitTypes } from "../units/unitTypes";
 import { BoxSelect } from "./boxselect";
 
 L.Map.addInitHook('addHandler', 'boxSelect', BoxSelect);
