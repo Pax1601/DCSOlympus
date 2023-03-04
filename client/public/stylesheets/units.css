@@ -85,6 +85,11 @@ div.unit svg {
     z-index:1;
 }
 
+
+div.unit-ground-vehicle svg {
+    transform: rotate( -45deg );
+}
+
 div.unit svg rect.unit-marker {
     fill: var( --primary-grey );
     height: calc( var( --unit-marker-air-height ) - var( --unit-marker-stroke-width ) );
@@ -149,7 +154,6 @@ div.unit .unit-summary {
     font-size:11px;
     font-weight: bold;
     justify-content: right;
-    paint-order: stroke fill;
     position:absolute;
     row-gap: 1px;
     text-shadow:
@@ -157,7 +161,7 @@ div.unit .unit-summary {
         1px -1px 0 #000,
         -1px  1px 0 #000,
         1px  1px 0 #000;
-    translate: -55px 0;
+    translate: -60px 0;
     width:fit-content;
     z-index:20;
 }
@@ -252,4 +256,46 @@ div.unit[data-pilot="ai"][data-has-low-fuel="true"] .unit-fuel {
 
 div.unit[data-is-selected="true"] rect.unit-marker {
     fill:white;
+}
+
+
+div.unit .unit-status {
+    background-repeat: no-repeat;
+    position:absolute;
+    height:var( --unit-marker-air-status-rtb-height );
+    translate: calc( 0px - ( var( --unit-marker-air-width ) / 2 ) ) calc( 0px - ( var( --unit-marker-air-height ) / 2 ) );
+    transform-origin: center;
+    width:var( --unit-marker-air-status-rtb-width );
+    z-index: 10;
+}
+
+div.unit[data-status="rtb"] .unit-status {
+    background-image: var( --unit-marker-air-status-rtb-neutral-url );
+    height:var( --unit-marker-air-status-rtb-height );
+    width:var( --unit-marker-air-status-rtb-width );
+}
+
+div.unit[data-status="rtb"][data-coalition="blue"] .unit-status {
+    background-image: var( --unit-marker-air-status-rtb-blue-url );
+}
+
+div.unit[data-status="rtb"][data-coalition="red"] .unit-status {
+    background-image: var( --unit-marker-air-status-rtb-red-url );
+}
+
+
+
+
+div.unit[data-status="hold"] .unit-status {
+    background-image: var( --unit-marker-air-status-hold-neutral-url );
+    height:var( --unit-marker-air-status-hold-height );
+    width:var( --unit-marker-air-status-hold-width );
+}
+
+div.unit[data-status="hold"][data-coalition="blue"] .unit-status {
+    background-image: var( --unit-marker-air-status-hold-blue-url );
+}
+
+div.unit[data-status="hold"][data-coalition="red"] .unit-status {
+    background-image: var( --unit-marker-air-status-hold-red-url );
 }
