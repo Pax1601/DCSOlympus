@@ -36,16 +36,16 @@ export class UnitInfoPanel extends Panel {
     update(unit: Unit) {
         if (this.getElement() != null) {
             /* Set the unit info */
-            this.#unitName.innerHTML = unit.getData().unitName;
-            this.#groupName.innerHTML = unit.getData().groupName;
-            this.#name.innerHTML = unit.getData().name;
-            this.#heading.innerHTML = String(Math.floor(rad2deg(unit.getFlightData().heading)) + " °");
-            this.#altitude.innerHTML = String(Math.floor(unit.getFlightData().altitude / 0.3048) + " ft");
-            this.#groundSpeed.innerHTML = String(Math.floor(unit.getFlightData().speed * 1.94384) + " kts");
-            this.#fuel.innerHTML = String(unit.getMissionData().fuel + "%");
-            this.#latitude.innerHTML = ConvertDDToDMS(unit.getFlightData().latitude, false);
-            this.#longitude.innerHTML = ConvertDDToDMS(unit.getFlightData().longitude, true);
-            this.#task.innerHTML = unit.getTaskData().currentTask !== ""? unit.getTaskData().currentTask: "No task";
+            this.#unitName.innerText = unit.getData().unitName;
+            this.#groupName.innerText = unit.getData().groupName;
+            this.#name.innerText = unit.getData().name;
+            this.#heading.innerText = String(Math.floor(rad2deg(unit.getFlightData().heading)) + " °");
+            this.#altitude.innerText = String(Math.floor(unit.getFlightData().altitude / 0.3048) + " ft");
+            this.#groundSpeed.innerText = String(Math.floor(unit.getFlightData().speed * 1.94384) + " kts");
+            this.#fuel.innerText = String(unit.getMissionData().fuel + "%");
+            this.#latitude.innerText = ConvertDDToDMS(unit.getFlightData().latitude, false);
+            this.#longitude.innerText = ConvertDDToDMS(unit.getFlightData().longitude, true);
+            this.#task.innerText = unit.getTaskData().currentTask !== ""? unit.getTaskData().currentTask: "No task";
 
             /* Set the class of the task container */
             this.#task.classList.toggle("red", unit.getMissionData().coalition === "red");
@@ -69,7 +69,7 @@ export class UnitInfoPanel extends Panel {
         var amount = ammo.count;
         var el = document.createElement("div")
         el.classList.add("js-loadout-element", "ol-rectangular-container-dark")
-        el.innerHTML = amount + "x" + displayName;
+        el.innerText = amount + "x" + displayName;
         this.#loadoutContainer.appendChild(el);
     }
 }

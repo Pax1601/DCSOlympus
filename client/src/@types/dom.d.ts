@@ -26,4 +26,10 @@ declare global {
     }
 }
 
+export interface ContextMenuOption {
+    tooltip: string;
+    src: string;
+    callback: CallableFunction;
+}
+
 export { }; 

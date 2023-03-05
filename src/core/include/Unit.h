@@ -16,7 +16,7 @@ public:
 
 	void updateExportData(json::value json);
 	void updateMissionData(json::value json);
-	json::value json();
+	json::value json(bool fullRefresh);
 
 	virtual void setState(int newState) { state = newState; };
 	void resetTask();

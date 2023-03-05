@@ -48,32 +48,20 @@ void UnitsManager::updateExportData(lua_State* L)
 				if (type[L"level1"].as_number().to_int32() == 1)
 				{
 					if (type[L"level2"].as_number().to_int32() == 1)
-					{
 						units[ID] = dynamic_cast<Unit*>(new Aircraft(p.second, ID));
-					}
 					else if (type[L"level2"].as_number().to_int32() == 2)
-					{
 						units[ID] = dynamic_cast<Unit*>(new Helicopter(p.second, ID));
-					}
 				}
 				else if (type[L"level1"].as_number().to_int32() == 2)
-				{
 					units[ID] = dynamic_cast<Unit*>(new GroundUnit(p.second, ID));
-				}
 				else if (type[L"level1"].as_number().to_int32() == 3)
-				{
 					units[ID] = dynamic_cast<Unit*>(new NavyUnit(p.second, ID));
-				}
 				else if (type[L"level1"].as_number().to_int32() == 4)
 				{
 					if (type[L"level2"].as_number().to_int32() == 4)
-					{
 						units[ID] = dynamic_cast<Unit*>(new Missile(p.second, ID));
-					}
 					else if (type[L"level2"].as_number().to_int32() == 5)
-					{
 						units[ID] = dynamic_cast<Unit*>(new Bomb(p.second, ID));
-					}
 				}
 			}
 		}
@@ -87,10 +75,7 @@ void UnitsManager::updateExportData(lua_State* L)
 	/* Set the units that are not present in the JSON as dead (probably have been destroyed) */
 	for (auto const& unit : units)
 	{
-		if (unitJSONs.find(unit.first) == unitJSONs.end())
-		{
-			unit.second->setAlive(false);
-		}
+		unit.second->setAlive(unitJSONs.find(unit.first) != unitJSONs.end());		
 	}
 }
 
@@ -107,16 +92,13 @@ void UnitsManager::updateMissionData(json::value missionData)
 	}
 }
 
-void UnitsManager::updateAnswer(json::value& answer)
+void UnitsManager::updateAnswer(json::value& answer, bool fullRefresh)
 {
-	// TODO THREAT SAFEY!
 	auto unitsJson = json::value::object();
-
 	for (auto const& p : units)
 	{
-		unitsJson[to_wstring(p.first)] = p.second->json();
+		unitsJson[to_wstring(p.first)] = p.second->json(fullRefresh);
 	}
-
 	answer[L"units"] = unitsJson;
 }
 

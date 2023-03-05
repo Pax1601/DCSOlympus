@@ -1,119 +1,55 @@
-.ol-selection-scroll-container {
+#contextmenu {
     position: absolute;
-    font-size: 12px;
-    border-radius: 5px;
-    width: 220px;
-    height: fit-content;
-    z-index: 2000;
-    padding: 8px;
+}
+
+.ol-contextmenu {
     display: flex;
     flex-direction: column;
     row-gap: 5px;
-    align-items: center;
+    width: 200px;
+    height: fit-content;
+    z-index: 1000;
 }
 
-#ol-selection-scroll-top-bar {
-    color: white;
-    font-size: 14px;
-    opacity: 1;
-    border-radius: 5px;
-    padding: 5px;
-    background-color: #333D;
-    width: 100%;
-    text-align: center;
+.ol-contextmenu>div:first-child{
     display: flex;
-    align-items: center;
+    flex-direction: row;
     justify-content: space-between;
-    height: 40px;
-    padding-left: 15px;
-    padding-right: 15px;
+    align-items: center;
 }
 
-.ol-selection-scroll {
+.ol-contextmenu>ul{
+    max-height: 200px;
     overflow-x: hidden;
     overflow-y: auto;
-    height: 100%;
-    width: 100%;
-    max-height: 400px;
 }
 
-.ol-selection-scroll::-webkit-scrollbar {
+.ol-contextmenu .ol-panel {
+    width: 100%;
+    border-radius: var(--border-radius-sm);
+}
+
+.ol-contextmenu ul {
+    margin: 0px;
+}
+
+.ol-contextmenu button {
+    width: 100%;
+    text-align: left;
+}
+
+.ol-contextmenu>ul::-webkit-scrollbar {
     width: 10px;
 }
   
-.ol-selection-scroll::-webkit-scrollbar-track {
+.ol-contextmenu>ul::-webkit-scrollbar-track {
     background-color: transparent;
     border-radius: 100px;
 }
 
-.ol-selection-scroll::-webkit-scrollbar-thumb {
+.ol-contextmenu>ul::-webkit-scrollbar-thumb {
     background-color: white;
     border-radius: 100px;
     opacity: 0.8;
     margin-top: 10px;
-}
-  
-.ol-selection-scroll-element {
-    border-bottom: 1px solid #FFF5; 
-    color: white;
-    cursor: pointer;
-    font-size: 13px;
-    opacity: 1;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 15px;
-    background-color: var(--background-color-dark);
-    font-weight: 600;
-}
-
-.ol-selection-scroll:last-child {
-    border-radius: 5px;
-    border-bottom: 0px transparent !important;
-}
-
-.ol-selection-scroll-container label {
-    display: inline-block;
-    width: 40px;
-    height: 24px;
-}
-
-.ol-selection-scroll-container input {
-    display: inline-block;
-    width: 0;
-    height: 0;
-    margin: 0px;
-}
-
-.ol-selection-scroll-switch {
-    position: relative;
-    display: inline-block;
-    width: 40px;
-    height: 24px;
-    background-color: var(--active-coalition-color);
-    border-radius: 999px;
-    cursor: pointer;
-}
-
-.ol-selection-scroll-switch:before {
-    position: absolute;
-    content: "";
-    height: 16px;
-    width: 16px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    -webkit-transition: 0.2s;
-    transition: 0.2s;
-    border-radius: 999px;
-}
-
-input:checked+.ol-selection-scroll-switch:before {
-    -webkit-transform: translateX(16px);
-    -ms-transform: translateX(16px);
-    transform: translateX(16px);
-}
-
-.ol-selection-scroll-title {
-    font-size: 11px;
-    font-weight: 600;
 }

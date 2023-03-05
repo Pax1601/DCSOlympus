@@ -64,7 +64,7 @@ export class Slider {
         {
             this.#container.classList.toggle("active", newActive);
             if (!newActive && this.#value != null)
-                this.#value.innerHTML = "Mixed values"
+                this.#value.innerText = "Mixed values";
         }
     }
 

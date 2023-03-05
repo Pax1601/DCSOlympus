@@ -5,6 +5,7 @@ import { bearing, distance, zeroAppend } from "../other/utils";
 import { aircraftDatabase } from "../units/aircraftdatabase";
 import { unitTypes } from "../units/unittypes";
 import { BoxSelect } from "./boxselect";
+import { ContextMenuOption } from "../@types/dom";
 
 L.Map.addInitHook('addHandler', 'boxSelect', BoxSelect);
 
@@ -126,16 +127,16 @@ export class Map extends L.Map {
         return this.#state;
     }
 
-    /* Selection scroll */
-    showContextMenu(e: ClickEvent | SpawnEvent, title: string, options: any, callback: CallableFunction, showCoalition: boolean = false) {
+    /* Context Menu */
+    showContextMenu(e: ClickEvent | SpawnEvent, title: string, options: ContextMenuOption[], showCoalition: boolean = false) {
         var x = e.x;
         var y = e.y;
-        getContextMenu().show(x, y, title, options, callback, showCoalition);
+        getContextMenu()?.show(x, y, title, options, showCoalition);
         document.dispatchEvent(new CustomEvent("mapContextMenu"));
     }
 
     hideContextMenu() {
-        getContextMenu().hide();
+        getContextMenu()?.hide();
         document.dispatchEvent(new CustomEvent("mapContextMenu"));
     }
 
@@ -195,7 +196,7 @@ export class Map extends L.Map {
                     { "tooltip": "Smoke", "src": "spawnSmoke.png", "callback": () => this.#smokeSpawnMenu(spawnEvent) },
                     //{ "tooltip": "Explosion", "src": "spawnExplosion.png", "callback": () => this.#explosionSpawnMenu(e) }
                 ]
-                this.showContextMenu(spawnEvent, "Action", options, () => {}, false);
+                this.showContextMenu(spawnEvent, "Action", options, false);
             }
         }
         else if (this.#state === "MOVE_UNIT") {
@@ -240,7 +241,7 @@ export class Map extends L.Map {
         {
             selectedUnitPosition = new L.LatLng(selectedUnits[0].getFlightData().latitude, selectedUnits[0].getFlightData().longitude);
         }
-        getMouseInfoPanel().update(<L.LatLng>e.latlng, this.#measurePoint, selectedUnitPosition);
+        getMouseInfoPanel()?.update(<L.LatLng>e.latlng, this.#measurePoint, selectedUnitPosition);
 
         this.#lastMousePosition.x = e.originalEvent.x;
         this.#lastMousePosition.y = e.originalEvent.y;
@@ -272,9 +273,9 @@ export class Map extends L.Map {
             { 'coalition': true, 'tooltip': 'Transport', 'src': 'spawnTransport.png', 'callback': () => this.#selectAircraft(e, "transport") },
         ]
         if (e.airbaseName != null)
-            this.showContextMenu(e, "Spawn at " + e.airbaseName, options, () => {}, true);
+            this.showContextMenu(e, "Spawn at " + e.airbaseName, options, true);
         else
-            this.showContextMenu(e, "Spawn air unit", options, () => {}, true);
+            this.showContextMenu(e, "Spawn air unit", options, true);
     }
 
     #groundUnitSpawnMenu(e: SpawnEvent) {
@@ -287,7 +288,7 @@ export class Map extends L.Map {
             {'coalition': true, 'tooltip': 'Radar',      'src': 'spawnRadar.png',    'callback': () => this.#selectGroundUnit(e, "Radar")},
             {'coalition': true, 'tooltip': 'Unarmed',    'src': 'spawnUnarmed.png',  'callback': () => this.#selectGroundUnit(e, "Unarmed")}
         ]
-        this.showContextMenu(e, "Spawn ground unit", options, () => {}, true);
+        this.showContextMenu(e, "Spawn ground unit", options, true);
     }
 
     #smokeSpawnMenu(e: SpawnEvent) {
@@ -299,7 +300,7 @@ export class Map extends L.Map {
             {'tooltip': 'Green smoke',    'src': 'spawnSmoke.png',  'callback': () => {this.hideContextMenu(); spawnSmoke('green', e.latlng)}, 'tint': 'green'},
             {'tooltip': 'Orange smoke',   'src': 'spawnSmoke.png',  'callback': () => {this.hideContextMenu(); spawnSmoke('orange', e.latlng)}, 'tint': 'orange'},
         ]
-        this.showContextMenu(e, "Spawn smoke", options, () => {}, false);
+        this.showContextMenu(e, "Spawn smoke", options, false);
     }
 
     #explosionSpawnMenu(e: SpawnEvent) {
@@ -310,12 +311,14 @@ export class Map extends L.Map {
     #selectAircraft(e: SpawnEvent, role: string) {
         this.hideContextMenu();
         var options = aircraftDatabase.getLabelsByRole(role);
-        this.showContextMenu(e, "Select aircraft", options, (label: string) => {
-            this.hideContextMenu();
-            var name = aircraftDatabase.getNameByLabel(label);
-            if (name != null)
-                this.#unitSelectPayload(e, name, role);
-        }, true);
+        this.showContextMenu(e, "Select aircraft", 
+            options.map((option: string) => {
+                return {tooltip: option, src: "", callback: (label: string) => {
+                    this.hideContextMenu();
+                    var name = aircraftDatabase.getNameByLabel(label);
+                    if (name != null)
+                        this.#unitSelectPayload(e, name, role);
+                }}}), true);
     }
 
     /* Show weapon selection for air units */
@@ -325,11 +328,13 @@ export class Map extends L.Map {
         //options = payloadNames[unitType]
         if (options != undefined && options.length > 0) {
             options.sort();
-            this.showContextMenu({x: e.x, y: e.y, latlng: e.latlng}, "Select loadout", options, (loadoutName: string) => {
-                this.hideContextMenu();
-                var loadout = aircraftDatabase.getLoadoutsByName(unitType, loadoutName);
-                spawnAircraft(unitType, e.latlng, getActiveCoalition(), loadout != null? loadout.code: "", e.airbaseName);
-            }, true);
+            this.showContextMenu({x: e.x, y: e.y, latlng: e.latlng}, "Select loadout", 
+                options.map((option: string) => {
+                    return {tooltip: option, src: "", callback: (loadoutName: string) => {
+                        this.hideContextMenu();
+                        var loadout = aircraftDatabase.getLoadoutsByName(unitType, loadoutName);
+                        spawnAircraft(unitType, e.latlng, getActiveCoalition(), loadout != null? loadout.code: "", e.airbaseName);
+                }}}), true);
         }
         else {
             spawnAircraft(unitType, e.latlng, getActiveCoalition());
@@ -342,10 +347,12 @@ export class Map extends L.Map {
         this.hideContextMenu();
         var options = unitTypes.vehicles[group];
         options.sort();
-        this.showContextMenu(e, "Select ground unit", options, (unitType: string) => {
-            this.hideContextMenu();
-            spawnGroundUnit(unitType, e.latlng, getActiveCoalition());
-        }, true);
+        this.showContextMenu(e, "Select ground unit", 
+            options.map((option: string) => {
+                return {tooltip: option, src: "", callback: (unitType: string) => {
+                this.hideContextMenu();
+                spawnGroundUnit(unitType, e.latlng, getActiveCoalition());
+        }}}), true);
     }
 
     #drawMeasureLine()

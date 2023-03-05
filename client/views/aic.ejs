@@ -1,0 +1,52 @@
+<div class="ol-panel aic-panel" id="aic-control-panel" data-feature-switch="aic">
+    <div class="olympus-button" id="toggle-aic-button"></div>
+    <div class="olympus-button" id="aic-help-button"></div>
+</div>
+
+<div id="aic-help" class="olympus-dialog hide" data-feature-switch="aic">
+    <div class="olympus-dialog-close">&times;</div>
+    <div class="olympus-dialog-header">AIC Help</div>
+    <div class="olympus-dialog-content">
+        <p>How to be a good AIC and get people to do stuff good, too.</p>
+        <div
+            style="align-items: center; background:black; color:white; display:flex; height:250px; justify-content: center; justify-self: center; width:450px;">
+            <div>[DCS with Volvo video]</div>
+        </div>
+    </div>
+</div>
+
+<div id="aic-teleprompt" data-feature-switch="aic"></div>
+
+<div id="aic-callsign-panel" class="aic-panel" data-feature-switch="aic">
+
+    <div class="aic-panel">
+        <h2>My callsign</h2>
+        <div>Magic</div>
+    </div>
+
+</div>
+
+
+<div id="aic-toolbox" class="aic-panel" data-feature-switch="aic">
+
+    <div id="aic-control-type" class="aic-toolbox-panel">
+        <h2>Control</h2>
+        <div>
+            <input type="radio" name="control-type" id="control-type-broadcast" value="broadcast" checked="checked" />
+            <label for="control-type-broadcast">Broadcast</label>
+        </div>
+        <div>
+            <input type="radio" name="control-type" id="control-type-tactical" value="tactical" />
+            <label for="control-type-tactical">Tactical</label>
+        </div>
+    </div>
+
+    <div id="aic-formation-panel" class="aic-toolbox-panel">
+
+        <h2>Formations</h2>
+
+        <div id="aic-formation-list"></div>
+
+    </div>
+
+</div>

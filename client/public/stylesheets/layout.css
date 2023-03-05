@@ -1,5 +1,16 @@
 
 /* Page style */
+* {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+
+html {
+    font-family: 'Open Sans', sans-serif;
+}
+
 body {
 	display:grid;
 	margin: 0;
@@ -20,49 +31,21 @@ body {
 
 #unit-info-panel {
 	position: fixed;
-	height: 160px;
-	width: 800px;
 	left: 10px;
 	bottom: 10px;
 	z-index: 1000;
 }
 
-#map-source-dropdown {
+#settings-panel {
 	position: absolute;
 	left: 10px;
-	top: 10px;
-	width: 200px;
-	color: black;
-}
-
-#scenario-dropdown {
-	position: absolute;
-	left: 220px;
-	top: 10px;
-	width: 200px;
-}
-
-#visibility-control-panel {
-	position: absolute;
-	left: 230px;
-	height: 30px;
+	height: fit-content;
 	width: fit-content;
 	top: 10px;
 	z-index: 1000;
 	display: flex;
-	justify-content: space-between;
 	align-items: center;
-	padding-left: 10px;
-	padding-right: 10px;
-}
-
-#unit-control-buttons {
-	position: fixed;
-	top: 10px;
-	height: fit-content;
-	width: fit-content;
-	right: 270px;
-	z-index: 1000;
+	column-gap: 10px;
 }
 
 #unit-control-panel {
@@ -99,21 +82,4 @@ body {
 	top: 60px;
 	left: 10px;
 	z-index: 1000;
-}
-
-@media only screen and (max-width: 1000px) {
-	#unit-control-buttons {
-		top: 50px;
-	}
-
-	#unit-control-panel {
-		top: 50px;
-	}
-}
-
-
-
-
-.hide {
-	display:none !important;
 }

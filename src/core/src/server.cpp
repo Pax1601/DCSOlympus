@@ -32,7 +32,6 @@ Server::Server(lua_State* L):
      
 }
 
-
 void Server::start(lua_State* L)
 {
     log("Starting RESTServer");
@@ -71,15 +70,28 @@ void Server::handle_get(http_request request)
 
     std::exception_ptr eptr;
     try {
-        unitsManager->updateAnswer(answer);
+        auto answer = json::value::object();
+        wstring requestUri = request.request_uri().to_string();
+        log(requestUri);
+        if (requestUri.compare(L"/" + wstring(REST_URI) + L"/" + wstring(UNITS_URI) + L"/" + wstring(PARTIAL_REFRESH_URI)) == 0)
+            unitsManager->updateAnswer(answer, false);
+
+        if (requestUri.compare(L"/" + wstring(REST_URI) + L"/" + wstring(UNITS_URI) + L"/" + wstring(FULL_REFRESH_URI)) == 0)
+            unitsManager->updateAnswer(answer, true);
 
         /* Get the logs from the logger */
-        auto logs = json::value::object();
-        getLogsJSON(logs);   // By reference, for thread safety
+        if (requestUri.compare(L"/" + wstring(REST_URI) + L"/" + wstring(LOGS_URI)) == 0)
+        {
+            auto logs = json::value::object();
+            getLogsJSON(logs);   // By reference, for thread safety
+            answer[L"logs"] = logs;
+        }
 
-        answer[L"airbases"] = airbasesData;
-        answer[L"bullseye"] = bullseyeData;
-        answer[L"logs"]     = logs;
+        if (requestUri.compare(L"/" + wstring(REST_URI) + L"/" + wstring(AIRBASES_URI)) == 0)
+            answer[L"airbases"] = airbasesData;
+
+        if (requestUri.compare(L"/" + wstring(REST_URI) + L"/" + wstring(BULLSEYE_URI)) == 0)
+            answer[L"bullseye"] = bullseyeData;
         
         response.set_body(answer);
     }
@@ -94,7 +106,6 @@ void Server::handle_get(http_request request)
 void Server::handle_request(http_request request, function<void(json::value const&, json::value&)> action)
 {
     auto answer = json::value::object();
-
     request.extract_json().then([&answer, &action](pplx::task<json::value> task) 
     {
         try
@@ -148,7 +159,7 @@ void Server::handle_put(http_request request)
 
 void Server::task()
 {
-    http_listener listener(REST_ADDRESS);
+    http_listener listener(wstring(REST_ADDRESS) + L"/" + wstring(REST_URI));
 
     std::function<void(http_request)> handle_options = std::bind(&Server::handle_options, this, std::placeholders::_1);
     std::function<void(http_request)> handle_get = std::bind(&Server::handle_get, this, std::placeholders::_1);

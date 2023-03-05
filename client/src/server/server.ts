@@ -1,11 +1,16 @@
 import * as L from 'leaflet'
-import { getUnitsManager, setConnected } from '..';
-import { ConvertDDToDMS } from '../other/utils';
+import { setConnected } from '..';
 
 /* Edit here to change server address */
-var RESTaddress = "http://localhost:30000/restdemo";
+const RESTaddress = "http://localhost:30000/olympus";
+const UNITS_URI = "units";
+const FULL_UPDATE_URI = "full";
+const PARTIAL_UPDATE_URI = "partial";
+const LOGS_URI = "logs";
+const AIRBASES_URI = "airbases";
+const BULLSEYE_URI = "bullseye";
 
-export function getDataFromDCS(callback: CallableFunction) {
+export function getDataFromDCS(refresh: boolean, callback: CallableFunction) {
     /* Request the updated unit data from the server */
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open("GET", RESTaddress, true);
@@ -20,7 +25,9 @@ export function getDataFromDCS(callback: CallableFunction) {
         console.error("An error occurred during the XMLHttpRequest");
         setConnected(false);
     };
-    xmlHttp.send(null);
+
+    var request = { "refresh": refresh }
+    xmlHttp.send(JSON.stringify(request));
 }
 
 export function addDestination(ID: number, path: any) {

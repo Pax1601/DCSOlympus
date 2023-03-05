@@ -1,7 +1,7 @@
 import { Marker, LatLng, Icon } from "leaflet";
 import { getMap, getUnitsManager } from "..";
 import { SpawnEvent } from "../map/map";
-import { AirbaseMarker } from "./airbasemarker";
+import { Airbase } from "./airbase";
 
 var bullseyeIcons = [
     new Icon({ iconUrl: 'images/bullseye0.png', iconAnchor: [30, 30]}),
@@ -14,7 +14,7 @@ export class MissionData
     #bullseyes      : any; //TODO declare interface
     #bullseyeMarkers: any;
     #airbases       : any; //TODO declare interface
-    #airbasesMarkers: {[name: string]: AirbaseMarker};
+    #airbasesMarkers: {[name: string]: Airbase};
 
     constructor()
     {
@@ -59,7 +59,7 @@ export class MissionData
             var airbase = this.#airbases[idx]
             if (this.#airbasesMarkers[idx] === undefined)
             {
-                this.#airbasesMarkers[idx] = new AirbaseMarker({
+                this.#airbasesMarkers[idx] = new Airbase({
                     position: new LatLng(airbase.lat, airbase.lng), 
                     name: airbase.callsign,
                     src: "images/airbase.png"}).addTo(getMap());
@@ -79,8 +79,10 @@ export class MissionData
             options = ["Spawn unit", "Land here"];
         else 
             options = ["Spawn unit"];
-        getMap().showContextMenu(e.originalEvent, e.sourceTarget.getName(), options, (option: string) => this.#onAirbaseOptionSelection(e, option), false);
-        
+
+        getMap().showContextMenu(e.originalEvent, e.sourceTarget.getName(),
+            options.map((option) => {return {tooltip: option, src: "", callback: (label: string) => {this.#onAirbaseOptionSelection(e, label)}}}, false)
+        )
     }
 
     #onAirbaseOptionSelection(e: any, option: string) {

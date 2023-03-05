@@ -1,23 +1,3 @@
-export interface LoadoutItemBlueprint {
-    name: string;
-    quantity: number;
-}
-
-export interface LoadoutBlueprint {
-    fuel: number;
-    items: LoadoutItemBlueprint[];
-    roles: string[];
-    code: string;
-    name: string;
-}
-
-export interface UnitBlueprint {
-    name: string;
-    label: string;
-    shortLabel: string;
-    loadouts: LoadoutBlueprint[];
-}
-
 export class UnitDatabase {
     units: {[key: string]: UnitBlueprint} = {};
 

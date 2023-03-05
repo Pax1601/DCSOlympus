@@ -1,0 +1,233 @@
+svg.unit {
+    height: var(--unit-marker-height);
+    width: var(--unit-marker-width);
+}
+
+svg.unit .unit-vvi {
+    fill: black;
+    height: 4px;
+    transform-box: fill-box;
+    transform-origin: top;
+    translate: var(--unit-marker-centre-x) calc(var(--unit-marker-centre-y) - 2px);
+    width: 4px;
+}
+
+svg.unit rect.unit-hotgroup {
+    display: none;
+    fill: var(--secondary-neutral);
+    height: var(--unit-marker-hotgroup-height);
+    transform: rotate(-45deg);
+    transform-origin: center;
+    translate: calc(var(--unit-marker-centre-x) + (var(--unit-marker-hotgroup-width) / 2)) -44px;
+    width: var(--unit-marker-hotgroup-height);
+}
+
+svg.unit text.unit-hotgroup-id {
+    font-weight: bolder;
+    display: none;
+    fill: white;
+    font-size: 9px;
+}
+
+svg.unit[data-is-in-hotgroup="true"] rect.unit-hotgroup,
+svg.unit[data-is-in-hotgroup="true"] text.unit-hotgroup-id {
+    display: block;
+}
+
+svg.unit rect.unit-selected-border {
+    fill: transparent;
+    height: calc(var(--unit-marker-air-height) + (var(--unit-marker-stroke-width) * 2));
+    rx: var(--unit-marker-stroke-width);
+    stroke: var(white);
+    stroke-width: var(--unit-marker-stroke-width);
+    width: calc(var(--unit-marker-air-width) + (var(--unit-marker-stroke-width) * 2));
+    x: calc(var(--unit-marker-air-label-x) - 3px);
+    y: calc(var(--unit-marker-air-label-y) - 3px);
+}
+
+svg.unit rect.unit-marker {
+    fill: var(--primary-grey);
+    height: calc(var(--unit-marker-air-height) - var(--unit-marker-stroke-width));
+    rx: var(--unit-marker-stroke-width);
+    ry: var(--unit-marker-stroke-width);
+    stroke: var(--secondary-neutral);
+    stroke-linejoin: round;
+    stroke-width: var(--unit-marker-stroke-width);
+    width: calc(var(--unit-marker-air-width) - var(--unit-marker-stroke-width));
+    x: var(--unit-marker-air-label-x);
+    y: var(--unit-marker-air-label-y);
+}
+
+
+svg.unit text.unit-short-label {
+    fill: var(--secondary-neutral);
+    font-size: var(--unit-marker-font-size);
+    font-weight: var(--unit-marker-font-weight);
+    text-anchor: middle;
+}
+
+
+svg.unit rect.unit-fuel,
+svg.unit rect.unit-fuel-level {
+    height: var(--unit-marker-air-fuel-height);
+    width: var(--unit-marker-air-fuel-width);
+    x: var(--unit-marker-air-fuel-x);
+    y: var(--unit-marker-air-fuel-y);
+}
+
+
+svg.unit rect.unit-fuel {
+    display: none;
+    fill: white;
+    rx: var(--unit-marker-stroke-width);
+    ry: var(--unit-marker-stroke-width);
+    stroke: var(--secondary-gunmetal-grey);
+    stroke-linejoin: round;
+    stroke-width: var(--unit-marker-stroke-width);
+    y: var(--unit-marker-air-fuel-y);
+}
+
+svg.unit rect.unit-fuel-level {
+    display: none;
+    fill: var(--secondary-light-grey);
+    height: calc(var(--unit-marker-air-fuel-height) - var(--unit-marker-stroke-width));
+    y: calc(var(--unit-marker-air-fuel-y) + (var(--unit-marker-stroke-width) / 2));
+}
+
+
+svg.unit circle.unit-ammo {
+    cy: var(--unit-marker-air-ammo-y);
+    display: none;
+    fill: white;
+    r: var(--unit-marker-air-ammo-radius);
+    stroke: var(--secondary-neutral);
+    stroke-width: var(--unit-marker-stroke-width);
+}
+
+svg.unit circle.unit-ammo-fox-1 {
+    cx: calc(var(--unit-marker-centre-x) - ((var(--unit-marker-air-ammo-radius) * 3) + (var(--unit-marker-air-ammo-gap) * 1.5)));
+}
+
+svg.unit circle.unit-ammo-fox-2 {
+    cx: calc(var(--unit-marker-centre-x) - (var(--unit-marker-air-ammo-radius) + (var(--unit-marker-air-ammo-gap) / 2)));
+}
+
+svg.unit circle.unit-ammo-fox-3 {
+    cx: calc(var(--unit-marker-centre-x) + var(--unit-marker-air-ammo-radius) + (var(--unit-marker-air-ammo-gap) / 2));
+}
+
+svg.unit circle.unit-ammo-other {
+    cx: calc(var(--unit-marker-centre-x) + (var(--unit-marker-air-ammo-radius) * 3) + (var(--unit-marker-air-ammo-gap) * 1.5));
+}
+
+svg.unit[data-has-fox-1="true"] circle.unit-ammo-fox-1,
+svg.unit[data-has-fox-2="true"] circle.unit-ammo-fox-2,
+svg.unit[data-has-fox-3="true"] circle.unit-ammo-fox-3,
+svg.unit[data-has-other-ammo="true"] circle.unit-ammo-other {
+    fill: var(--secondary-gunmetal-grey);
+}
+
+svg.unit .unit-summary text {
+    fill: white;
+    font-size: 10px;
+    paint-order: stroke;
+    stroke: black;
+    stroke-width: 2px;
+}
+
+
+
+/***  Default style  **/
+
+svg.unit[data-coalition="blue"] rect.unit-marker {
+    fill: var(--primary-blue);
+    stroke: var(--secondary-blue-outline);
+}
+
+svg.unit[data-coalition="blue"] rect.unit-hotgroup,
+svg.unit[data-coalition="blue"] text.unit-short-label {
+    fill: var(--secondary-blue-outline);
+}
+
+svg.unit[data-coalition="blue"] rect.unit-fuel {
+    stroke: var(--secondary-blue-outline);
+}
+
+svg.unit[data-coalition="blue"] rect.unit-fuel-level {
+    fill: var(--primary-blue);
+}
+
+
+svg.unit[data-coalition="red"] rect.unit-marker {
+    fill: var(--primary-red);
+    stroke: var(--secondary-red-outline);
+}
+
+svg.unit[data-coalition="red"] rect.unit-hotgroup,
+svg.unit[data-coalition="red"] text.unit-short-label {
+    fill: var(--secondary-red-outline);
+}
+
+svg.unit[data-coalition="red"] rect.unit-fuel {
+    stroke: var(--secondary-red-outline);
+}
+
+svg.unit[data-coalition="red"] rect.unit-fuel-level {
+    fill: var(--primary-red);
+}
+
+
+
+/***  Selected style  **/
+
+
+svg.unit[data-is-selected="true"] .unit-spotlight {
+    cx: 50%;
+    cy: 50%;
+    fill: var(--unit-marker-spotlight-fill);
+    r: var(--unit-marker-spotlight-radius);
+}
+
+svg.unit[data-is-selected="true"] rect.unit-selected-border,
+svg.unit[data-is-selected="true"] rect.unit-marker {
+    fill: white;
+}
+
+
+
+svg.unit[data-pilot="ai"][data-is-selected="true"] rect.unit-fuel,
+svg.unit[data-pilot="ai"][data-is-selected="true"] rect.unit-fuel-level,
+svg.unit[data-pilot="ai"][data-is-selected="true"] circle.unit-ammo {
+    display: block;
+}
+
+@keyframes pulse {
+    50% {
+        opacity: 0;
+    }
+}
+
+svg.unit[data-pilot="ai"][data-is-selected="true"][data-has-low-fuel="true"] rect.unit-fuel,
+svg.unit[data-pilot="ai"][data-is-selected="true"][data-has-low-fuel="true"] rect.unit-fuel-level {
+    animation: pulse 1.5s linear infinite;
+}
+
+
+
+
+svg.unit[data-coalition="blue"][data-is-selected="true"] text.unit-short-label,
+svg.unit[data-coalition="blue"][data-has-fox-1="true"] circle.unit-ammo-fox-1,
+svg.unit[data-coalition="blue"][data-has-fox-2="true"] circle.unit-ammo-fox-2,
+svg.unit[data-coalition="blue"][data-has-fox-3="true"] circle.unit-ammo-fox-3,
+svg.unit[data-coalition="blue"][data-has-other-ammo="true"] circle.unit-ammo-other {
+    fill: var(--primary-blue);
+}
+
+
+svg.unit[data-coalition="red"][data-is-selected="true"] text.unit-short-label,
+svg.unit[data-coalition="red"][data-has-fox-1="true"] circle.unit-ammo-fox-1,
+svg.unit[data-coalition="red"][data-has-fox-2="true"] circle.unit-ammo-fox-2,
+svg.unit[data-coalition="red"][data-has-fox-3="true"] circle.unit-ammo-fox-3,
+svg.unit[data-coalition="red"][data-has-other-ammo="true"] circle.unit-ammo-other {
+    fill: var(--primary-red);
+}

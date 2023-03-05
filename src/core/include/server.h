@@ -18,7 +18,6 @@ public:
 
 private:
 	std::thread* serverThread;
-    json::value answer;
 
     void handle_options(http_request request);
     void handle_get(http_request request);

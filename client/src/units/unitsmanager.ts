@@ -17,35 +17,8 @@ export class UnitsManager {
         document.addEventListener('keydown', (event) => this.#onKeyDown(event));
     }
 
-    #updateUnitControlPanel() {
-        /* Update the unit control panel */
-        if (this.getSelectedUnits().length > 0) {
-            getUnitControlPanel().show();
-            getUnitControlPanel().update(this.getSelectedLeaders().concat(this.getSelectedSingletons()));
-        }
-        else {
-            getUnitControlPanel().hide();
-        }
-    }
-
-    #onKeyDown(event: KeyboardEvent)
-    {
-        if (event.key === "Delete")
-        {
-            this.selectedUnitsDelete();
-        }
-    }
-
     getUnits() {
         return this.#units;
-    }
-
-    addUnit(ID: number, data: UnitData) {
-        /* The name of the unit category is exactly the same as the constructor name */
-        var constructor = Unit.getConstructor(data.category);
-        if (constructor != undefined) {
-            this.#units[ID] = new constructor(ID, data);
-        }
     }
 
     getUnitByID(ID: number) {
@@ -55,21 +28,17 @@ export class UnitsManager {
             return null;
     }
 
-    removeUnit(ID: number) {
-
-    }
-
-    deselectAllUnits() {
-        for (let ID in this.#units) {
-            this.#units[ID].setSelected(false);
+    addUnit(ID: number, data: UnitData) {
+        /* The name of the unit category is exactly the same as the constructor name */
+        var constructor = Unit.getConstructor(data.category);
+        if (constructor != undefined) {
+            this.#units[ID] = new constructor(ID, data);
         }
     }
+    
 
-    selectUnit(ID: number, deselectAllUnits: boolean = true)
-    {
-        if (deselectAllUnits)
-            this.deselectAllUnits();
-        this.#units[ID]?.setSelected(true);
+    removeUnit(ID: number) {
+
     }
 
     update(data: ServerData) {
@@ -78,16 +47,16 @@ export class UnitsManager {
             if (!(ID in this.#units)) {
                 this.addUnit(parseInt(ID), data.units[ID]);
             }
-            this.#units[parseInt(ID)].update(data.units[ID]);
+            this.#units[parseInt(ID)].setData(data.units[ID]);
         }
 
         /* Update the unit info panel */
         if (this.getSelectedUnits().length == 1) {
-            getUnitInfoPanel().show();
-            getUnitInfoPanel().update(this.getSelectedUnits()[0]);
+            getUnitInfoPanel()?.show();
+            getUnitInfoPanel()?.update(this.getSelectedUnits()[0]);
         }
         else {
-            getUnitInfoPanel().hide();
+            getUnitInfoPanel()?.hide();
         }
     }
 
@@ -95,6 +64,13 @@ export class UnitsManager {
         for (let ID in this.#units) {
             this.#units[ID].forceUpdate();
         }
+    }
+
+    selectUnit(ID: number, deselectAllUnits: boolean = true)
+    {
+        if (deselectAllUnits)
+            this.deselectAllUnits();
+        this.#units[ID]?.setSelected(true);
     }
 
     onUnitSelection() {
@@ -135,6 +111,12 @@ export class UnitsManager {
         return selectedUnits;
     }
 
+    deselectAllUnits() {
+        for (let ID in this.#units) {
+            this.#units[ID].setSelected(false);
+        }
+    }
+
     getSelectedLeaders() {
         var leaders: Unit[] = [];
         for (let idx in this.getSelectedUnits())
@@ -163,14 +145,34 @@ export class UnitsManager {
         return singletons;
     }
 
+    getSelectedUnitsType () {
+        return this.getSelectedUnits().map((unit: Unit) => {
+            return unit.constructor.name
+        }).reduce((a: any, b: any) => {
+            return a == b? a: undefined
+        });
+    };
+
+    getSelectedUnitsTargetSpeed () {
+        return this.getSelectedUnits().map((unit: Unit) => {
+            return unit.getTaskData().targetSpeed
+        }).reduce((a: any, b: any) => {
+            return a == b? a: undefined
+        });
+    };
+
+    getSelectedUnitsTargetAltitude () {
+        return this.getSelectedUnits().map((unit: Unit) => {
+            return unit.getTaskData().targetAltitude
+        }).reduce((a: any, b: any) => {
+            return a == b? a: undefined
+        });
+    };
+
     selectedUnitsAddDestination(latlng: L.LatLng) {
         var selectedUnits = this.getSelectedUnits();
         for (let idx in selectedUnits) {
             var commandedUnit = selectedUnits[idx];
-            //if (selectedUnits[idx].wingman)
-            //{
-            //    commandedUnit = this.getLeader(selectedUnits[idx].ID);
-            //}
             commandedUnit.addDestination(latlng);
         }
     }
@@ -179,10 +181,6 @@ export class UnitsManager {
         var selectedUnits = this.getSelectedUnits();
         for (let idx in selectedUnits) {
             var commandedUnit = selectedUnits[idx];
-            //if (selectedUnits[idx].wingman)
-            //{
-            //    commandedUnit = this.getLeader(selectedUnits[idx].ID);
-            //}
             commandedUnit.clearDestinations();
         }
     }
@@ -327,6 +325,15 @@ export class UnitsManager {
         setTimeout(() => this.#updateUnitControlPanel(), 300); // TODO find better method, may fail 
     }
 
+    selectedUnitsDelete()
+    {
+        var selectedUnits = this.getSelectedUnits();
+        for (let idx in selectedUnits)
+        {
+            selectedUnits[idx].delete();
+        }
+    }
+
     copyUnits()
     {
         this.#copiedUnits = this.getSelectedUnits();
@@ -341,12 +348,22 @@ export class UnitsManager {
         }
     }
 
-    selectedUnitsDelete()
+    #updateUnitControlPanel() {
+        /* Update the unit control panel */
+        if (this.getSelectedUnits().length > 0) {
+            getUnitControlPanel()?.show();
+            getUnitControlPanel()?.update(this.getSelectedLeaders().concat(this.getSelectedSingletons()));
+        }
+        else {
+            getUnitControlPanel()?.hide();
+        }
+    }
+
+    #onKeyDown(event: KeyboardEvent)
     {
-        var selectedUnits = this.getSelectedUnits();
-        for (let idx in selectedUnits)
+        if (event.key === "Delete")
         {
-            selectedUnits[idx].delete();
+            this.selectedUnitsDelete();
         }
     }
 }

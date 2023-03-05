@@ -2,7 +2,7 @@
 
 <head>
   <title>Olympus client</title>
-  <link rel="stylesheet" href="/stylesheets/style.css">
+  <link rel="stylesheet" href="stylesheets/olympus.css">
   <link rel="stylesheet" href="stylesheets/leaflet.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +14,6 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-Z4L2TC3YX0');
 </script>
 
@@ -22,21 +21,17 @@
 
 <body>
   <div id="map-container"></div>
+  <%- include('aic.ejs') %>
+  <%- include('atc.ejs') %>
+
   <%- include('contextmenu.ejs') %>
-  <div class="ol-dropdown" id="map-source-dropdown"></div>
-  <!-- <div class="ol-dropdown" id="scenario-dropdown"></div> -->
-  <%- include('unitinfopanel.ejs') %>
-  <%- include('unitcontrolpanel.ejs') %>
-  <%- include('visibilitycontrolpanel.ejs') %>
-  <%- include('connectionstatuspanel.ejs') %> 
-  <%- include('mouseinfopanel.ejs') %>
-
-  <%- include('aiccontrolpanel.ejs') %>
-  <%- include('aicformationpanel.ejs') %>
-
-  <%- include( 'atc.ejs' ) %>
-
-  <%- include('logpanel.ejs') %>
+  <%- include('unitcontrol.ejs') %>
+  <%- include('settings.ejs') %>
+  <%- include('mouseinfo.ejs') %>
+  
+  <% /* %>
+  <%- include('log.ejs') %> 
+  <% */ %>
   <script src="javascripts/bundle.js"></script>
 </body>
 
