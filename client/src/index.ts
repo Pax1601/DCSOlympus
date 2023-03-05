@@ -7,7 +7,7 @@ import { Dropdown } from "./controls/dropdown";
 import { ConnectionStatusPanel } from "./panels/connectionstatuspanel";
 import { MissionData } from "./missiondata/missiondata";
 import { UnitControlPanel } from "./panels/unitcontrolpanel";
-import { MouseInfoPanel } from "./panels/mouseInfoPanel";
+import { MouseInfoPanel } from "./panels/mouseinfopanel";
 import { Slider } from "./controls/slider";
 import { AIC } from "./aic/aic";
 

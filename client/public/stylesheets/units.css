@@ -1,15 +1,15 @@
 :root {
         /*  Generic marker settings  */
-        --unit-marker-centre-x: calc( var( --unit-marker-width ) / 2 );
-        --unit-marker-centre-y: calc( var( --unit-marker-height ) / 2 );
+        --unit-centre-x: calc( var( --unit-width ) / 2 );
+        --unit-centre-y: calc( var( --unit-height ) / 2 );
     
-        --unit-marker-hotgroup-height: 10px;
-        --unit-marker-hotgroup-width: var( --unit-marker-hotgroup-height );
+        --unit-hotgroup-height: 10px;
+        --unit-hotgroup-width: var( --unit-hotgroup-height );
     
     
         /*  Air units' marker settings  */
-        --unit-marker-air-label-x: calc( var( --unit-marker-centre-x ) - ( var( --unit-marker-air-width ) / 2 ) + ( var( --unit-marker-stroke-width ) / 2 ) );
-        --unit-marker-air-label-y: calc( var( --unit-marker-centre-y ) - ( var( --unit-marker-air-height ) / 2 ) + ( var( --unit-marker-stroke-width ) / 2 ) );
+        --unit-air-label-x: calc( var( --unit-centre-x ) - ( var( --unit-air-width ) / 2 ) + ( var( --unit-stroke-width ) / 2 ) );
+        --unit-air-label-y: calc( var( --unit-centre-y ) - ( var( --unit-air-height ) / 2 ) + ( var( --unit-stroke-width ) / 2 ) );
 }
 
 
@@ -22,11 +22,12 @@ div.unit {
 }
 
 div.unit .unit-selected-spotlight {
-    background-color: var( --unit-marker-spotlight-fill );
+    background-color: var( --unit-spotlight-fill );
     border-radius: 50%;
     display:none;
-    padding: var( --unit-marker-spotlight-radius );
+    padding: var( --unit-spotlight-radius );
     position: absolute;
+    z-index:1;
 }
 
 
@@ -37,9 +38,9 @@ div.unit .unit-vvi {
     justify-self: center;
     transform-origin: bottom;
     translate:0 -50%;
-    padding-bottom: calc( ( var( --unit-marker-air-width ) / 2 ) + var( --unit-marker-stroke-width ) );
+    padding-bottom: calc( ( var( --unit-air-width ) / 2 ) + var( --unit-stroke-width ) );
     position:absolute;
-    width: var( --unit-marker-air-vvi-width );
+    width: var( --unit-air-vvi-width );
 }
 
 
@@ -48,12 +49,12 @@ div.unit .unit-hotgroup {
     background-color: black;
     border-radius: var( --border-radius-xs );
     display:none;
-    height: var( --unit-marker-hotgroup-height );
+    height: var( --unit-hotgroup-height );
     justify-content: center;
     position:absolute;
     transform: rotate( -45deg );
     translate:0 -24px;
-    width: var( --unit-marker-hotgroup-width );
+    width: var( --unit-hotgroup-width );
 }
 
 div.unit .unit-hotgroup-id {
@@ -68,9 +69,10 @@ div.unit .unit-marker-border {
     background-color: white;
     border-radius: var( --border-radius-sm );
     display:none;
-    height: calc( var( --unit-marker-air-height ) + ( var( --unit-marker-label-border-width ) * 2 ) );
+    height: calc( var( --unit-air-height ) + ( var( --unit-label-border-width ) * 2 ) );
     position:absolute;
-    width: calc( var( --unit-marker-air-width ) + ( var( --unit-marker-label-border-width ) * 2 ) );
+    width: calc( var( --unit-air-width ) + ( var( --unit-label-border-width ) * 2 ) );
+    z-index:2;
 }
 
 div.unit:hover .unit-marker-border,
@@ -78,10 +80,16 @@ div.unit[data-is-selected="true"] .unit-marker-border {
     display:block;
 }
 
+
+/******************************
+    Marker
+******************************/
+
+/*
 div.unit svg {
     border-radius: var( --border-radius-sm );
-    height: var( --unit-marker-height );
-    width: var( --unit-marker-width );
+    height: var( --unit-height );
+    width: var( --unit-width );
     z-index:1;
 }
 
@@ -92,34 +100,114 @@ div.unit-ground-vehicle svg {
 
 div.unit svg rect.unit-marker {
     fill: var( --primary-grey );
-    height: calc( var( --unit-marker-air-height ) - var( --unit-marker-stroke-width ) );
-    rx: var( --unit-marker-stroke-width );
-    ry: var( --unit-marker-stroke-width );
+    height: calc( var( --unit-air-height ) - var( --unit-stroke-width ) );
+    rx: var( --unit-stroke-width );
+    ry: var( --unit-stroke-width );
     stroke: var( --secondary-neutral );
     stroke-linejoin: round;
-    stroke-width: var( --unit-marker-stroke-width );
-    width: calc( var( --unit-marker-air-width ) - var( --unit-marker-stroke-width ) );
-    x: var(--unit-marker-air-label-x);
-    y: var(--unit-marker-air-label-y);
+    stroke-width: var( --unit-stroke-width );
+    width: calc( var( --unit-air-width ) - var( --unit-stroke-width ) );
+    x: var(--unit-air-label-x);
+    y: var(--unit-air-label-y);
+}
+//*/
+
+div.unit .unit-marker {
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position:absolute;
+    transform-origin: center;
+    z-index:3;
 }
 
+
+div.unit-air .unit-marker {
+    background-image: var( --unit-ground-sam-neutral-url );
+    height: var( --unit-ground-sam-height );
+    width: var( --unit-ground-sam-width );
+}
+
+
+/*  Air  */
+
+div.unit-air .unit-marker {
+    background-image: var( --unit-air-marker-neutral-url );
+    height: var( --unit-air-marker-height );
+    width: var( --unit-air-marker-width );
+}
+
+
+div.unit-air[data-coalition="blue"] .unit-marker {
+    background-image: var( --unit-air-marker-blue-url );
+}
+
+
+div.unit-air[data-coalition="red"] .unit-marker {
+    background-image: var( --unit-air-marker-red-url );
+}
+
+
+/*  Ground vehicles (not SAMs)  */
+
+div.unit-vehicle .unit-marker {
+    background-image: var( --unit-vehicle-marker-neutral-url );
+    height: var( --unit-vehicle-marker-height );
+    width: var( --unit-vehicle-marker-width );
+}
+
+
+div.unit-vehicle[data-coalition="blue"] .unit-marker {
+    background-image: var( --unit-vehicle-marker-blue-url );
+}
+
+
+div.unit-vehicle[data-coalition="red"] .unit-marker {
+    background-image: var( --unit-vehicle-marker-red-url );
+}
+
+
+/*  SAMs  */
+
+div.unit-ground-sam .unit-marker {
+    background-image: var( --unit-ground-sam-marker-neutral-url );
+    height: var( --unit-ground-sam-marker-height );
+    width: var( --unit-ground-sam-marker-width );
+}
+
+
+div.unit-ground-sam[data-coalition="blue"] .unit-marker {
+    background-image: var( --unit-ground-sam-marker-blue-url );
+}
+
+
+div.unit-ground-sam[data-coalition="red"] .unit-marker {
+    background-image: var( --unit-ground-sam-marker-red-url );
+}
+
+
+
 div.unit .unit-short-label {
-    font-size: var(--unit-marker-font-size);
-    font-weight: var(--unit-marker-font-weight);
+    font-size: var(--unit-font-size);
+    font-weight: var(--unit-font-weight);
     position: absolute;
     z-index:10;
+}
+
+div.unit-ground-sam .unit-short-label {
+    translate:0 50%;
 }
 
 
 div.unit .unit-fuel {
     background:white;
-    border: var( --unit-marker-air-fuel-border-width ) solid var( --secondary-dark-steel );
+    border: var( --unit-air-fuel-border-width ) solid var( --secondary-dark-steel );
     border-radius: var( --border-radius-sm );
     display:none;
-    height: var( --unit-marker-air-fuel-height );
+    height: var( --unit-air-fuel-height );
     position: absolute;
-    translate:var( --unit-marker-air-fuel-x ) 20px;
-    width: var( --unit-marker-air-fuel-width );
+    translate:var( --unit-air-fuel-x ) 20px;
+    width: var( --unit-air-fuel-width );
 }
 
 div.unit .unit-fuel-level {
@@ -130,19 +218,19 @@ div.unit .unit-fuel-level {
 
 
 div.unit .unit-ammo {
-    column-gap: var( --unit-marker-air-ammo-spacing );
+    column-gap: var( --unit-air-ammo-spacing );
     display:none;
     height:fit-content;
     position:absolute;
-    translate:var( --unit-marker-air-ammo-x ) var( --unit-marker-air-ammo-y );
+    translate:var( --unit-air-ammo-x ) var( --unit-air-ammo-y );
     width:fit-content;
 }
 
 div.unit .unit-ammo > * {
     background-color: white;
-    border: var( --unit-marker-air-ammo-border-width ) solid var( --secondary-dark-steel );
+    border: var( --unit-air-ammo-border-width ) solid var( --secondary-dark-steel );
     border-radius: 50%;
-    padding: var( --unit-marker-air-ammo-radius );
+    padding: var( --unit-air-ammo-radius );
 }
 
 
@@ -262,40 +350,40 @@ div.unit[data-is-selected="true"] rect.unit-marker {
 div.unit .unit-status {
     background-repeat: no-repeat;
     position:absolute;
-    height:var( --unit-marker-air-status-rtb-height );
-    translate: calc( 0px - ( var( --unit-marker-air-width ) / 2 ) ) calc( 0px - ( var( --unit-marker-air-height ) / 2 ) );
+    height:var( --unit-air-status-rtb-height );
+    translate: calc( 0px - ( var( --unit-air-width ) / 2 ) ) calc( 0px - ( var( --unit-air-height ) / 2 ) );
     transform-origin: center;
-    width:var( --unit-marker-air-status-rtb-width );
+    width:var( --unit-air-status-rtb-width );
     z-index: 10;
 }
 
 div.unit[data-status="rtb"] .unit-status {
-    background-image: var( --unit-marker-air-status-rtb-neutral-url );
-    height:var( --unit-marker-air-status-rtb-height );
-    width:var( --unit-marker-air-status-rtb-width );
+    background-image: var( --unit-air-status-rtb-neutral-url );
+    height:var( --unit-air-status-rtb-height );
+    width:var( --unit-air-status-rtb-width );
 }
 
 div.unit[data-status="rtb"][data-coalition="blue"] .unit-status {
-    background-image: var( --unit-marker-air-status-rtb-blue-url );
+    background-image: var( --unit-air-status-rtb-blue-url );
 }
 
 div.unit[data-status="rtb"][data-coalition="red"] .unit-status {
-    background-image: var( --unit-marker-air-status-rtb-red-url );
+    background-image: var( --unit-air-status-rtb-red-url );
 }
 
 
 
 
 div.unit[data-status="hold"] .unit-status {
-    background-image: var( --unit-marker-air-status-hold-neutral-url );
-    height:var( --unit-marker-air-status-hold-height );
-    width:var( --unit-marker-air-status-hold-width );
+    background-image: var( --unit-air-status-hold-neutral-url );
+    height:var( --unit-air-status-hold-height );
+    width:var( --unit-air-status-hold-width );
 }
 
 div.unit[data-status="hold"][data-coalition="blue"] .unit-status {
-    background-image: var( --unit-marker-air-status-hold-blue-url );
+    background-image: var( --unit-air-status-hold-blue-url );
 }
 
 div.unit[data-status="hold"][data-coalition="red"] .unit-status {
-    background-image: var( --unit-marker-air-status-hold-red-url );
+    background-image: var( --unit-air-status-hold-red-url );
 }
