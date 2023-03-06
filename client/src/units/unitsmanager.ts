@@ -1,6 +1,6 @@
 import { LatLng, LatLngBounds } from "leaflet";
-import { getMap, getUnitControlPanel, getUnitInfoPanel } from "..";
-import { Unit, GroundUnit } from "./unit";
+import { getMap } from "..";
+import { Unit } from "./unit";
 import { cloneUnit } from "../server/server";
 import { IDLE, MOVE_UNIT } from "../map/map";
 
@@ -15,7 +15,8 @@ export class UnitsManager {
 
         document.addEventListener('copy', () => this.copyUnits());
         document.addEventListener('paste', () => this.pasteUnits());
-        document.addEventListener('unitSelection', (e: CustomEvent) => this.onUnitSelection(e.detail));
+        document.addEventListener('unitSelection', (e: CustomEvent) => this.#onUnitSelection(e.detail));
+        document.addEventListener('unitDeselection', (e: CustomEvent) => this.#onUnitDeselection(e.detail));
         document.addEventListener('keydown', (event) => this.#onKeyDown(event));
     }
 
@@ -56,15 +57,6 @@ export class UnitsManager {
         Object.keys(data.units)
         .filter((ID: string) => ID in this.#units)
         .forEach((ID: string) => this.#units[parseInt(ID)].setData(data.units[ID]));
-
-        /* Update the unit info panel */
-        if (this.getSelectedUnits().length == 1) {
-            getUnitInfoPanel()?.show();
-            getUnitInfoPanel()?.update(this.getSelectedUnits()[0]);
-        }
-        else {
-            getUnitInfoPanel()?.hide();
-        }
     }
 
     forceUpdate() {
@@ -78,25 +70,6 @@ export class UnitsManager {
         if (deselectAllUnits) 
             this.getSelectedUnits().filter((unit: Unit) => unit.ID !== ID ).forEach((unit: Unit) => unit.setSelected(false));
         this.#units[ID]?.setSelected(true);
-    }
-
-    onUnitSelection(unit: Unit) {
-        if (this.getSelectedUnits().length > 0) {
-            getMap().setState(MOVE_UNIT);
-            /* Disable the firing of the selection event for a certain amount of time. This avoids firing many events if many units are selected */
-            if (!this.#selectionEventDisabled)
-            {
-                setTimeout(() => {
-                    document.dispatchEvent(new CustomEvent("unitsSelection", {detail: this.getSelectedUnits()}));
-                    this.#selectionEventDisabled = false;
-                }, 300);
-                this.#selectionEventDisabled = true;
-            }
-        }
-        else {
-            getMap().setState(IDLE);
-            document.dispatchEvent(new CustomEvent("clearSelection"));
-        }
     }
 
     selectFromBounds(bounds: LatLngBounds)
@@ -358,5 +331,33 @@ export class UnitsManager {
         {
             this.selectedUnitsDelete();
         }
+    }
+
+    #onUnitSelection(unit: Unit) {
+        if (this.getSelectedUnits().length > 0) {
+            getMap().setState(MOVE_UNIT);
+            /* Disable the firing of the selection event for a certain amount of time. This avoids firing many events if many units are selected */
+            if (!this.#selectionEventDisabled)
+            {
+                setTimeout(() => {
+                    document.dispatchEvent(new CustomEvent("unitsSelection", {detail: this.getSelectedUnits()}));
+                    this.#selectionEventDisabled = false;
+                }, 300);
+                this.#selectionEventDisabled = true;
+            }
+        }
+        else {
+            getMap().setState(IDLE);
+            document.dispatchEvent(new CustomEvent("clearSelection"));
+        }
+    }
+
+    #onUnitDeselection(unit: Unit) {
+        if (this.getSelectedUnits().length == 0) {
+            getMap().setState(IDLE);
+            document.dispatchEvent(new CustomEvent("clearSelection"));
+        }
+        else 
+            document.dispatchEvent(new CustomEvent("unitsDeselection", {detail: this.getSelectedUnits()}));
     }
 }

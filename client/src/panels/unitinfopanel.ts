@@ -30,11 +30,15 @@ export class UnitInfoPanel extends Panel {
         this.#task = <HTMLElement>(this.getElement().querySelector("#task"));
         this.#loadoutContainer = <HTMLElement>(this.getElement().querySelector("#loadout-container"));
 
+        document.addEventListener("unitsSelection", (e: CustomEvent<Unit[]>) => this.#onUnitsSelection(e.detail));
+        document.addEventListener("unitsDeselection", (e: CustomEvent<Unit[]>) => this.#onUnitsDeselection(e.detail));
+        document.addEventListener("unitUpdated", (e: CustomEvent<Unit>) => this.#onUnitUpdate(e.detail));
+
         this.hide();
     }
     
-    update(unit: Unit) {
-        if (this.getElement() != null) {
+    #onUnitUpdate(unit: Unit) {
+        if (this.getElement() != null && this.getVisible()) {
             /* Set the unit info */
             this.#unitName.innerText = unit.getData().unitName;
             this.#groupName.innerText = unit.getData().groupName;
@@ -71,5 +75,19 @@ export class UnitInfoPanel extends Panel {
         el.classList.add("js-loadout-element", "ol-rectangular-container-dark")
         el.innerText = amount + "x" + displayName;
         this.#loadoutContainer.appendChild(el);
+    }
+
+    #onUnitsSelection(units: Unit[]){
+        if (units.length == 1)
+            this.show();
+        else
+            this.hide();
+    }
+
+    #onUnitsDeselection(units: Unit[]){
+        if (units.length == 1)
+            this.show();
+        else
+            this.hide();
     }
 }

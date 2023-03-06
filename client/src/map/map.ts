@@ -1,7 +1,6 @@
 import * as L from "leaflet"
-import { getContextMenu, getUnitsManager, getActiveCoalition, getMouseInfoPanel } from "..";
+import { getContextMenu, getUnitsManager, getActiveCoalition } from "..";
 import { spawnAircraft, spawnGroundUnit, spawnSmoke } from "../server/server";
-import { bearing, distance, zeroAppend } from "../other/utils";
 import { aircraftDatabase } from "../units/aircraftdatabase";
 import { unitTypes } from "../units/unittypes";
 import { BoxSelect } from "./boxselect";
@@ -28,11 +27,6 @@ export class Map extends L.Map {
     #layer: L.TileLayer | null = null;
     #preventLeftClick: boolean = false;
     #leftClickTimer: number = 0;
-    #measurePoint: L.LatLng | null;
-    #measureIcon: L.Icon;
-    #measureMarker: L.Marker;
-    #measureLine: L.Polyline = new L.Polyline([], { color: '#2d3e50', weight: 3, opacity: 0.5, smoothFactor: 1, interactive: false });
-    #measureLineDiv: HTMLElement;
     #lastMousePosition: L.Point = new L.Point(0, 0);
 
     constructor(ID: string) {
@@ -45,15 +39,7 @@ export class Map extends L.Map {
 
         /* Init the state machine */
         this.#state = IDLE;
-        this.#measurePoint = null;
-
-        this.#measureIcon = new L.Icon({ iconUrl: 'images/pin.png', iconAnchor: [16, 32]});
-        this.#measureMarker = new L.Marker([0, 0], {icon: this.#measureIcon, interactive: false});
-        this.#measureLineDiv = document.createElement("div");
-        this.#measureLineDiv.classList.add("ol-measure-box");
-        this.#measureLineDiv.style.display = 'none';
-
-        document.body.appendChild(this.#measureLineDiv);
+       
 
         /* Register event handles */
         this.on("click", (e: any) => this.#onClick(e));
@@ -63,7 +49,6 @@ export class Map extends L.Map {
         this.on('mousedown', (e: any) => this.#onMouseDown(e));
         this.on('mouseup', (e: any) => this.#onMouseUp(e));
         this.on('mousemove', (e: any) => this.#onMouseMove(e));
-        this.on('zoom', (e: any) => this.#onZoom(e));
     }
 
     setLayer(layerName: string) {
@@ -162,19 +147,7 @@ export class Map extends L.Map {
         if (!this.#preventLeftClick) {
             this.hideContextMenu();
             if (this.#state === IDLE) {
-                if (e.originalEvent.ctrlKey)
-                    if (!this.#measurePoint)
-                    {
-                        this.#measurePoint = e.latlng;
-                        this.#measureMarker.setLatLng(e.latlng);
-                        this.#measureMarker.addTo(this);
-                    }
-                    else
-                    {
-                        this.#measurePoint = null;
-                        if (this.hasLayer(this.#measureMarker))
-                            this.removeLayer(this.#measureMarker);
-                    }
+                
             }
             else if (this.#state === MOVE_UNIT) {
                 this.setState(IDLE);
@@ -223,17 +196,13 @@ export class Map extends L.Map {
     #onMouseDown(e: any)
     {
         if ((e.originalEvent.which == 1) && (e.originalEvent.button == 0)) 
-        {
             this.dragging.disable();
-        }
     }
 
     #onMouseUp(e: any)
     {
         if ((e.originalEvent.which == 1) && (e.originalEvent.button == 0)) 
-        {
             this.dragging.enable();
-        }
     }
 
     #onMouseMove(e: any)
@@ -241,26 +210,10 @@ export class Map extends L.Map {
         var selectedUnitPosition = null;
         var selectedUnits = getUnitsManager().getSelectedUnits();
         if (selectedUnits && selectedUnits.length == 1)
-        {
             selectedUnitPosition = new L.LatLng(selectedUnits[0].getFlightData().latitude, selectedUnits[0].getFlightData().longitude);
-        }
-        getMouseInfoPanel()?.update(<L.LatLng>e.latlng, this.#measurePoint, selectedUnitPosition);
 
         this.#lastMousePosition.x = e.originalEvent.x;
         this.#lastMousePosition.y = e.originalEvent.y;
-
-        if ( this.#measurePoint)
-            this.#drawMeasureLine();
-        else
-            this.#hideMeasureLine();
-    }
-
-    #onZoom(e: any)
-    {
-        if (this.#measurePoint)
-            this.#drawMeasureLine();
-        else
-            this.#hideMeasureLine();
     }
 
     /* Spawning menus */
@@ -356,44 +309,5 @@ export class Map extends L.Map {
                 this.hideContextMenu();
                 spawnGroundUnit(unitType, e.latlng, getActiveCoalition());
         }}}), true);
-    }
-
-    #drawMeasureLine()
-    {
-        var mouseLatLng = this.containerPointToLatLng(this.#lastMousePosition);
-        if (this.#measurePoint != null)
-        {
-            var points = [this.#measurePoint, mouseLatLng];
-            this.#measureLine.setLatLngs(points);
-            var dist = distance(this.#measurePoint.lat, this.#measurePoint.lng, mouseLatLng.lat, mouseLatLng.lng);
-            var bear = bearing(this.#measurePoint.lat, this.#measurePoint.lng, mouseLatLng.lat, mouseLatLng.lng);
-            var startXY = this.latLngToContainerPoint(this.#measurePoint);
-            var dx = (this.#lastMousePosition.x - startXY.x);
-            var dy = (this.#lastMousePosition.y - startXY.y);
-
-            var angle = Math.atan2(dy, dx);
-            if (angle > Math.PI / 2) 
-                angle = angle - Math.PI;
-
-            if (angle < -Math.PI / 2) 
-                angle = angle + Math.PI;
-
-            this.#measureLineDiv.innerHTML = `${zeroAppend(Math.floor(bear), 3)}° / ${zeroAppend(Math.floor(dist*0.000539957), 3)} NM`
-            this.#measureLineDiv.style.left = (this.#lastMousePosition.x + startXY.x) / 2 - this.#measureLineDiv.offsetWidth / 2 + "px";
-            this.#measureLineDiv.style.top = (this.#lastMousePosition.y + startXY.y) / 2 - this.#measureLineDiv.offsetHeight / 2 + "px";
-            this.#measureLineDiv.style.rotate = angle + "rad";
-            this.#measureLineDiv.style.display = "";
-        }
-        
-        if (!this.hasLayer(this.#measureLine))
-            this.#measureLine.addTo(this);
-    }
-
-    #hideMeasureLine()
-    {
-        this.#measureLineDiv.style.display = "none";
-
-        if (this.hasLayer(this.#measureLine))
-            this.removeLayer(this.#measureLine)
     }
 } 

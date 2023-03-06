@@ -87,6 +87,7 @@ export class Unit extends Marker {
     }
 
     setData(data: UnitData) {
+        document.dispatchEvent(new CustomEvent("unitUpdated", { detail: this }));
         var updateMarker = true;
         //if (this.getFlightData().latitude != response.flightData.latitude || 
         //    this.getFlightData().longitude != response.flightData.longitude || 
@@ -141,7 +142,10 @@ export class Unit extends Marker {
         if ((this.getData().alive || !selected) && this.#selectable && this.#selected != selected) {
             this.#selected = selected;
             this.getElement()?.querySelector(".unit")?.setAttribute("data-is-selected", String(this.getSelected()));
-            document.dispatchEvent(new CustomEvent("unitSelection", { detail: this }));
+            if (selected)
+                document.dispatchEvent(new CustomEvent("unitSelection", { detail: this }));
+            else
+                document.dispatchEvent(new CustomEvent("unitDeselection", { detail: this }));
         }
     }
 
