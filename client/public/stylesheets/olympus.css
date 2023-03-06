@@ -122,12 +122,19 @@ nav .ol-select .ol-select-value {
     text-align: center;
 }
 
+nav .ol-select-value.icon {
+    align-content: center;
+    background-color: transparent;
+    border-radius: 0px;
+    padding: 0px;
+}
+
 nav .ol-select .ol-select-options {
     background-color: var(--background-grey);
     border-radius: var(--border-radius-sm);
     display: none;
     list-style: none;
-    padding: .5em 0;
+    padding: 20px;
     margin: 0px;
 }
 
@@ -327,6 +334,24 @@ nav .ol-select .ol-select-options li button {
 }
 
 .main-logo {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
+}
+
+.version-control {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+}
+
+.version-control>img {
+    margin: 5px;
+}
+
+.version-control>div{
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    height: 100%;
 }
