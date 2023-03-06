@@ -1588,6 +1588,17 @@
                 });
             });
 
+
+            document.querySelectorAll( ".ol-select" ).forEach( select => {
+                select.addEventListener( "click", ev => {
+                    select.classList.toggle( "is-open" );
+                });
+
+                select.addEventListener( "mouseleave", ev => {
+                    select.classList.remove( "is-open" );
+                });
+            });
+
         </script>
 
     </body>

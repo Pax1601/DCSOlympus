@@ -85,33 +85,6 @@ div.unit[data-is-selected="true"] .unit-marker-border {
     Marker
 ******************************/
 
-/*
-div.unit svg {
-    border-radius: var( --border-radius-sm );
-    height: var( --unit-height );
-    width: var( --unit-width );
-    z-index:1;
-}
-
-
-div.unit-ground-vehicle svg {
-    transform: rotate( -45deg );
-}
-
-div.unit svg rect.unit-marker {
-    fill: var( --primary-grey );
-    height: calc( var( --unit-air-height ) - var( --unit-stroke-width ) );
-    rx: var( --unit-stroke-width );
-    ry: var( --unit-stroke-width );
-    stroke: var( --secondary-neutral );
-    stroke-linejoin: round;
-    stroke-width: var( --unit-stroke-width );
-    width: calc( var( --unit-air-width ) - var( --unit-stroke-width ) );
-    x: var(--unit-air-label-x);
-    y: var(--unit-air-label-y);
-}
-//*/
-
 div.unit .unit-marker {
     background-color: transparent;
     background-repeat: no-repeat;
