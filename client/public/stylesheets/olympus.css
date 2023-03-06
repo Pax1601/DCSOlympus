@@ -89,22 +89,27 @@ button[disabled="disabled"] {
 
 .ol-select .ol-select-value {
     align-content: center;
-    background-color: var( --background-grey );
-    border-radius: var( --border-radius-sm );
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    cursor:pointer;
     display:flex;
     justify-content: left;
-    padding:1em;
     position: relative;
     text-align: center;
+}
+
+.ol-select:not( .ol-select-image ) .ol-select-value {
+    background-color: var( --background-grey );
+    border-radius: var( --border-radius-sm );
+    padding:1em;
     width:100%;
 }
 
-.ol-select .ol-select-value:before {
+.ol-select:not( .ol-select-image ) .ol-select-value:before {
     content: "[ ]";
     margin-right: 10px;
 }
 
-.ol-select .ol-select-value:after {
+.ol-select:not( .ol-select-image ) .ol-select-value:after {
     content: "[V]";
     margin-left:10px;
 }
@@ -114,6 +119,10 @@ button[disabled="disabled"] {
     max-height: 0;
     position: relative;
     translate:0 -2px;
+}
+
+.ol-select.ol-select-image .ol-select-options {
+    position:absolute;
 }
 
 
@@ -126,7 +135,7 @@ button[disabled="disabled"] {
     background-color: var( --background-grey );
     display:flex;
     justify-content: left;
-    padding:6px 30px;
+    padding:6px 25px;
     width:100%;
 }
 
@@ -142,9 +151,10 @@ button[disabled="disabled"] {
     padding-bottom:16px;
 }
 
-.ol-select .ol-select-options div.hr {
-    border-bottom:1px solid #FFFFFF2E;
-    margin:8px;
+.ol-select .ol-select-options div hr {
+    background-color: white;
+    height:1px;
+    width:100%;
 }
 
 .ol-select .ol-select-options div button {
