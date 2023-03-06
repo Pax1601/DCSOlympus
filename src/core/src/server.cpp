@@ -10,7 +10,7 @@
 extern UnitsManager* unitsManager; 
 extern Scheduler* scheduler;
 extern json::value airbasesData;
-extern json::value bullseyeData;
+extern json::value bullseyesData;
 extern mutex mutexLock;
 
 void handle_eptr(std::exception_ptr eptr)
@@ -71,28 +71,29 @@ void Server::handle_get(http_request request)
     std::exception_ptr eptr;
     try {
         auto answer = json::value::object();
-        wstring requestUri = request.request_uri().to_string();
-        log(requestUri);
-        if (requestUri.compare(L"/" + wstring(REST_URI) + L"/" + wstring(UNITS_URI) + L"/" + wstring(PARTIAL_REFRESH_URI)) == 0)
-            unitsManager->updateAnswer(answer, false);
+        auto path = uri::split_path(uri::decode(request.relative_uri().path()));
 
-        if (requestUri.compare(L"/" + wstring(REST_URI) + L"/" + wstring(UNITS_URI) + L"/" + wstring(FULL_REFRESH_URI)) == 0)
-            unitsManager->updateAnswer(answer, true);
-
-        /* Get the logs from the logger */
-        if (requestUri.compare(L"/" + wstring(REST_URI) + L"/" + wstring(LOGS_URI)) == 0)
+        if (path.size() > 0)
         {
-            auto logs = json::value::object();
-            getLogsJSON(logs);   // By reference, for thread safety
-            answer[L"logs"] = logs;
+            if (path[0] == UNITS_URI && path.size() > 1)
+            {
+                if (path[1] == UPDATE_URI)
+                    unitsManager->updateAnswer(answer, false);
+                else if (path[1] == REFRESH_URI)
+                    unitsManager->updateAnswer(answer, true);
+
+            }
+            else if (path[0] == LOGS_URI)
+            {
+                auto logs = json::value::object();
+                getLogsJSON(logs, 100);   // By reference, for thread safety. Get the last 100 log entries
+                answer[L"logs"] = logs;
+            }
+            else if (path[0] == AIRBASES_URI)
+                answer[L"airbases"] = airbasesData;
+            else if (path[0] == BULLSEYE_URI)
+                answer[L"bullseyes"] = bullseyesData;
         }
-
-        if (requestUri.compare(L"/" + wstring(REST_URI) + L"/" + wstring(AIRBASES_URI)) == 0)
-            answer[L"airbases"] = airbasesData;
-
-        if (requestUri.compare(L"/" + wstring(REST_URI) + L"/" + wstring(BULLSEYE_URI)) == 0)
-            answer[L"bullseye"] = bullseyeData;
-        
         response.set_body(answer);
     }
     catch (...) {

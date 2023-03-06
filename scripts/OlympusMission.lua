@@ -11,13 +11,13 @@ function Olympus.setMissionData(arg, time)
 	local missionData = {}
 
 	-- Bullseye data
-	local bullseye = {}
+	local bullseyes = {}
 	for i = 0, 2 do
 		local bullseyeVec3 = coalition.getMainRefPoint(i)
 		local bullseyeLatitude, bullseyeLongitude, bullseyeAltitude = coord.LOtoLL(bullseyeVec3)
-		bullseye[i] = {}
-		bullseye[i]["lat"] =  bullseyeLatitude
-		bullseye[i]["lng"] =  bullseyeLongitude
+		bullseyes[i] = {}
+		bullseyes[i]["lat"] =  bullseyeLatitude
+		bullseyes[i]["lng"] =  bullseyeLongitude
 	end
 
 	-- Units tactical data
@@ -51,7 +51,7 @@ function Olympus.setMissionData(arg, time)
 				end
 			end
 		end
-		if index == endIndex then
+		if index >= endIndex then
 			break
 		end
 	end
@@ -77,10 +77,8 @@ function Olympus.setMissionData(arg, time)
 		basesData[i] = info
 	end
 
-	
-
 	-- Assemble missionData table
-	missionData["bullseye"] = bullseye
+	missionData["bullseyes"] = bullseyes
 	missionData["unitsData"] = unitsData
 	missionData["airbases"] = basesData
 

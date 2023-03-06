@@ -83,16 +83,24 @@ json::value Unit::json(bool fullRefresh)
 {
 	auto json = json::value::object();
 
+	/********** Base data **********/
+	json[L"AI"] = AI;
+	json[L"name"] = json::value::string(name);
+	json[L"unitName"] = json::value::string(unitName);
+	json[L"groupName"] = json::value::string(groupName);
+	json[L"alive"] = alive;
+	json[L"category"] = json::value::string(getCategory());
+
+	/********** Flight data **********/
+	json[L"flightData"] = json::value::object();
+	json[L"flightData"][L"latitude"] = latitude;
+	json[L"flightData"][L"longitude"] = longitude;
+	json[L"flightData"][L"altitude"] = altitude;
+	json[L"flightData"][L"speed"] = speed;
+	json[L"flightData"][L"heading"] = heading;
+
 	if (fullRefresh)
 	{
-		/********** Base data **********/
-		json[L"AI"] = AI;
-		json[L"name"] = json::value::string(name);
-		json[L"unitName"] = json::value::string(unitName);
-		json[L"groupName"] = json::value::string(groupName);
-		json[L"alive"] = alive;
-		json[L"category"] = json::value::string(getCategory());
-
 		/********** Mission data **********/
 		json[L"missionData"] = json::value::object();
 		json[L"missionData"][L"fuel"] = fuel;
@@ -144,14 +152,6 @@ json::value Unit::json(bool fullRefresh)
 		json[L"optionsData"][L"ROE"] = json::value::string(ROE);
 		json[L"optionsData"][L"reactionToThreat"] = json::value::string(reactionToThreat);
 	}
-
-	/********** Flight data **********/
-	json[L"flightData"] = json::value::object();
-	json[L"flightData"][L"latitude"] = latitude;
-	json[L"flightData"][L"longitude"] = longitude;
-	json[L"flightData"][L"altitude"] = altitude;
-	json[L"flightData"][L"speed"] = speed;
-	json[L"flightData"][L"heading"] = heading;
 
 	return json;
 }

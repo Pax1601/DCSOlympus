@@ -1,7 +1,7 @@
 import * as L from 'leaflet'
 import { setConnected } from '..';
 
-const DEMO = true;
+const DEMO = false;
 
 /* Edit here to change server address */
 const REST_ADDRESS = "http://localhost:30000/olympus";
@@ -18,9 +18,11 @@ export function GET(callback: CallableFunction, uri: string){
     xmlHttp.onload = function (e) {
         var data = JSON.parse(xmlHttp.responseText);
         callback(data);
+        setConnected(true);
     };
     xmlHttp.onerror = function () {
         console.error("An error occurred during the XMLHttpRequest");
+        setConnected(false);
     };
     xmlHttp.send(null);
 }
@@ -29,7 +31,9 @@ export function POST(request: object, callback: CallableFunction){
     var xhr = new XMLHttpRequest();
     xhr.open("PUT", REST_ADDRESS);
     xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.onreadystatechange = () => { callback(); };
+    xhr.onreadystatechange = () => { 
+        callback(); 
+    };
     xhr.send(JSON.stringify(request));
 }
 
@@ -47,7 +51,7 @@ export function getLogs(callback: CallableFunction) {
 
 export function getUnits(callback: CallableFunction, refresh: boolean = false) {
     if (!DEMO)
-        GET(callback, `${UNITS_URI}/${refresh? REFRESH_URI: UPDATE_URI}}`);
+        GET(callback, `${UNITS_URI}/${refresh? REFRESH_URI: UPDATE_URI}`);
     else
         callback(refresh? generateRandomUnitsDemoData(100): {units:{}});
 }

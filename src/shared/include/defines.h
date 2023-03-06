@@ -5,10 +5,10 @@
 #define REST_ADDRESS L"http://localhost:30000"
 #define REST_URI L"olympus"
 #define UNITS_URI L"units"
-#define PARTIAL_REFRESH_URI L"partial"
-#define FULL_REFRESH_URI L"full"
+#define UPDATE_URI L"update"
+#define REFRESH_URI L"refresh"
 #define LOGS_URI L"logs"
 #define AIRBASES_URI L"airbases"
-#define BULLSEYE_URI L"bullseye"
+#define BULLSEYE_URI L"bullseyes"
 
 #define UPDATE_TIME_INTERVAL 0.25
