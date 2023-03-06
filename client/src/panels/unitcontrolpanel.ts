@@ -3,12 +3,12 @@ import { Slider } from "../controls/slider";
 import { Aircraft, AirUnit, GroundUnit, Helicopter, NavyUnit, Unit } from "../units/unit";
 import { Panel } from "./panel";
 
-var ROEs: string[] = ["Free", "Designated free", "Designated", "Return", "Hold"];
-var reactionsToThreat: string[] = [ "None", "Passive", "Evade", "Escape", "Abort"];
-var minSpeedValues: {[key: string]: number} = {Aircraft: 100, Helicopter: 0, NavyUnit: 0, GroundUnit: 0};
-var maxSpeedValues: {[key: string]: number} = {Aircraft: 800, Helicopter: 300, NavyUnit: 60, GroundUnit: 60};
-var minAltitudeValues: {[key: string]: number} = {Aircraft: 500, Helicopter: 0, NavyUnit: 0, GroundUnit: 0};
-var maxAltitudeValues: {[key: string]: number} = {Aircraft: 50000, Helicopter: 10000, NavyUnit: 60, GroundUnit: 60};
+const ROEs: string[] = ["Free", "Designated free", "Designated", "Return", "Hold"];
+const reactionsToThreat: string[] = [ "None", "Passive", "Evade", "Escape", "Abort"];
+const minSpeedValues: {[key: string]: number} = {Aircraft: 100, Helicopter: 0, NavyUnit: 0, GroundUnit: 0};
+const maxSpeedValues: {[key: string]: number} = {Aircraft: 800, Helicopter: 300, NavyUnit: 60, GroundUnit: 60};
+const minAltitudeValues: {[key: string]: number} = {Aircraft: 500, Helicopter: 0, NavyUnit: 0, GroundUnit: 0};
+const maxAltitudeValues: {[key: string]: number} = {Aircraft: 50000, Helicopter: 10000, NavyUnit: 60, GroundUnit: 60};
 
 export class UnitControlPanel extends Panel {
     #altitudeSlider: Slider;
@@ -39,6 +39,9 @@ export class UnitControlPanel extends Panel {
 
         this.getElement().querySelector("#roe-buttons-container")?.append(...this.#optionButtons["ROE"]);
         this.getElement().querySelector("#reaction-to-threat-buttons-container")?.append(...this.#optionButtons["reactionToThreat"]);
+
+        document.addEventListener("unitsSelection", (e: CustomEvent<Unit[]>) => {console.log("Select"); this.show(); this.update(e.detail)});
+        document.addEventListener("clearSelection", () => {this.hide()});        
 
         this.hide();
     }

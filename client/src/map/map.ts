@@ -7,6 +7,9 @@ import { unitTypes } from "../units/unittypes";
 import { BoxSelect } from "./boxselect";
 import { ContextMenuOption } from "../@types/dom";
 
+export const IDLE = "IDLE";
+export const MOVE_UNIT = "MOVE_UNIT";
+
 L.Map.addInitHook('addHandler', 'boxSelect', BoxSelect);
 
 export interface ClickEvent {
@@ -41,7 +44,7 @@ export class Map extends L.Map {
         this.setLayer("ArcGIS Satellite");
 
         /* Init the state machine */
-        this.#state = "IDLE";
+        this.#state = IDLE;
         this.#measurePoint = null;
 
         this.#measureIcon = new L.Icon({ iconUrl: 'images/pin.png', iconAnchor: [16, 32]});
@@ -114,10 +117,10 @@ export class Map extends L.Map {
     /* State machine */
     setState(state: string) {
         this.#state = state;
-        if (this.#state === "IDLE") {
+        if (this.#state === IDLE) {
             L.DomUtil.removeClass(this.getContainer(),'crosshair-cursor-enabled');
         }
-        else if (this.#state === "MOVE_UNIT") {
+        else if (this.#state === MOVE_UNIT) {
             L.DomUtil.addClass(this.getContainer(),'crosshair-cursor-enabled');
         }
         document.dispatchEvent(new CustomEvent("mapStateChanged"));
@@ -158,7 +161,7 @@ export class Map extends L.Map {
     #onClick(e: any) {
         if (!this.#preventLeftClick) {
             this.hideContextMenu();
-            if (this.#state === "IDLE") {
+            if (this.#state === IDLE) {
                 if (e.originalEvent.ctrlKey)
                     if (!this.#measurePoint)
                     {
@@ -173,8 +176,8 @@ export class Map extends L.Map {
                             this.removeLayer(this.#measureMarker);
                     }
             }
-            else if (this.#state === "MOVE_UNIT") {
-                this.setState("IDLE");
+            else if (this.#state === MOVE_UNIT) {
+                this.setState(IDLE);
                 getUnitsManager().deselectAllUnits();
                 this.hideContextMenu();
             }
@@ -187,9 +190,9 @@ export class Map extends L.Map {
 
     #onContextMenu(e: any) {
         this.hideContextMenu();
-        if (this.#state === "IDLE") {
+        if (this.#state === IDLE) {
             var spawnEvent: SpawnEvent = {x: e.originalEvent.x, y: e.originalEvent.y, latlng: e.latlng, airbaseName: null, coalitionID: null};
-            if (this.#state == "IDLE") {
+            if (this.#state == IDLE) {
                 var options = [
                     { "tooltip": "Spawn air unit", "src": "spawnAir.png", "callback": () => this.#aircraftSpawnMenu(spawnEvent) },
                     { "tooltip": "Spawn ground unit", "src": "spawnGround.png", "callback": () => this.#groundUnitSpawnMenu(spawnEvent) },
@@ -199,7 +202,7 @@ export class Map extends L.Map {
                 this.showContextMenu(spawnEvent, "Action", options, false);
             }
         }
-        else if (this.#state === "MOVE_UNIT") {
+        else if (this.#state === MOVE_UNIT) {
             if (!e.originalEvent.ctrlKey) {
                 getUnitsManager().selectedUnitsClearDestinations();
             }

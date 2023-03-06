@@ -49,7 +49,7 @@ export function getUnits(callback: CallableFunction, refresh: boolean = false) {
     if (!DEMO)
         GET(callback, `${UNITS_URI}/${refresh? REFRESH_URI: UPDATE_URI}}`);
     else
-        callback(DEMO_UNITS_DATA);
+        callback(refresh? generateRandomUnitsDemoData(1000): {units:{}});
 }
 
 export function addDestination(ID: number, path: any) {
@@ -142,91 +142,57 @@ export function setReactionToThreat(ID: number, reactionToThreat: string) {
     POST(data, () => { });
 }
 
-const DEMO_UNITS_DATA = {   
-    units: {
-        "1": {
-            AI: true,
-            name: "F-5E",
-            unitName: "Olympus 1-1",
-            groupName: "Group 1",
-            alive: true,
-            category: "Aircraft",
-            flightData:  {
-                latitude: 37.3,
-                longitude: -116,
-                altitude: 2000,
-                heading: 0.5,
-                speed: 300
-            },
-            missionData:  {
-                fuel: 0.5,
-                flags: {human: false},
-                ammo: [],
-                targets: [],
-                hasTask: true,
-                coalition: "blue"
-            },
-            formationData:  {
-                formation: "Echelon",
-                isLeader: false,
-                isWingman: false,
-                leaderID: null,
-                wingmen: [],
-                wingmenIDs: []
-            },
-            taskData: {
-                currentTask: "Example task",
-                activePath: undefined,
-                targetSpeed: 400,
-                targetAltitude: 3000
-            },
-            optionsData: {
-                ROE: "None",
-                reactionToThreat: "None",
-            }
-        },
-        "2": {
-            AI: true,
-            name: "F-5E",
-            unitName: "Olympus 1-1",
-            groupName: "Group 1",
-            alive: true,
-            category: "Aircraft",
-            flightData:  {
-                latitude: 37.3,
-                longitude: -115.9,
-                altitude: 2000,
-                heading: .5,
-                speed: 300
-            },
-            missionData:  {
-                fuel: 0.5,
-                flags: {human: false},
-                ammo: [],
-                targets: [],
-                hasTask: true,
-                coalition: "red"
-            },
-            formationData:  {
-                formation: "Echelon",
-                isLeader: false,
-                isWingman: false,
-                leaderID: null,
-                wingmen: [],
-                wingmenIDs: []
-            },
-            taskData: {
-                currentTask: "Example task",
-                activePath: undefined,
-                targetSpeed: 400,
-                targetAltitude: 3000
-            },
-            optionsData: {
-                ROE: "None",
-                reactionToThreat: "None",
-            }
-        }
+
+function generateRandomUnitsDemoData(unitsNumber: number) 
+{
+    var units: any = {};
+    for (let i = 0; i < unitsNumber; i++)
+    {
+        units[String(i)] = structuredClone(DEMO_UNIT_DATA);
+        units[String(i)].flightData.latitude += (Math.random() - 0.5) * 0.1;
+        units[String(i)].flightData.longitude += (Math.random() - 0.5) * 0.1;
+    }
+    return {"units": units};
+}
+
+const DEMO_UNIT_DATA = {
+    AI: true,
+    name: "F-5E",
+    unitName: "Olympus 1-1",
+    groupName: "Group 1",
+    alive: true,
+    category: "Aircraft",
+    flightData:  {
+        latitude: 37.3,
+        longitude: -116,
+        altitude: 2000,
+        heading: 0.5,
+        speed: 300
     },
-    bullseyes: [],
-    airbases: []
+    missionData:  {
+        fuel: 0.5,
+        flags: {human: false},
+        ammo: [],
+        targets: [],
+        hasTask: true,
+        coalition: "blue"
+    },
+    formationData:  {
+        formation: "Echelon",
+        isLeader: false,
+        isWingman: false,
+        leaderID: null,
+        wingmen: [],
+        wingmenIDs: []
+    },
+    taskData: {
+        currentTask: "Example task",
+        activePath: undefined,
+        targetSpeed: 400,
+        targetAltitude: 3000
+    },
+    optionsData: {
+        ROE: "None",
+        reactionToThreat: "None",
+    } 
 }

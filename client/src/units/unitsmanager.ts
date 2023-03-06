@@ -2,10 +2,12 @@ import { LatLng, LatLngBounds } from "leaflet";
 import { getMap, getUnitControlPanel, getUnitInfoPanel } from "..";
 import { Unit, GroundUnit } from "./unit";
 import { cloneUnit } from "../server/server";
+import { IDLE, MOVE_UNIT } from "../map/map";
 
 export class UnitsManager {
     #units: { [ID: number]: Unit };
     #copiedUnits: Unit[];
+    #selectionEventDisabled: boolean = false;
 
     constructor() {
         this.#units = {};
@@ -13,7 +15,7 @@ export class UnitsManager {
 
         document.addEventListener('copy', () => this.copyUnits());
         document.addEventListener('paste', () => this.pasteUnits());
-        document.addEventListener('unitSelection', () => this.onUnitSelection());
+        document.addEventListener('unitSelection', (e: CustomEvent) => this.onUnitSelection(e.detail));
         document.addEventListener('keydown', (event) => this.#onKeyDown(event));
     }
 
@@ -41,13 +43,19 @@ export class UnitsManager {
     }
 
     update(data: UnitsData) {
-        for (let ID in data.units) {
-            /* Create the unit if missing from the local array, then update the data. Drawing is handled by leaflet. */
-            if (!(ID in this.#units)) {
-                this.addUnit(parseInt(ID), data.units[ID]);
-            }
-            this.#units[parseInt(ID)].setData(data.units[ID]);
-        }
+        Object.keys(data.units)
+                .filter((ID: string) => !(ID in this.#units))
+                .reduce((timeout: number, ID: string) => {
+                    setTimeout(() => {
+                        this.addUnit(parseInt(ID), data.units[ID]);
+                        this.#units[parseInt(ID)].setData(data.units[ID]);
+                    }, timeout);
+                    return timeout + 10;
+                }, 10);
+          
+        Object.keys(data.units)
+        .filter((ID: string) => ID in this.#units)
+        .forEach((ID: string) => this.#units[parseInt(ID)].setData(data.units[ID]));
 
         /* Update the unit info panel */
         if (this.getSelectedUnits().length == 1) {
@@ -67,21 +75,28 @@ export class UnitsManager {
 
     selectUnit(ID: number, deselectAllUnits: boolean = true)
     {
-        if (deselectAllUnits)
-            this.deselectAllUnits();
+        if (deselectAllUnits) 
+            this.getSelectedUnits().filter((unit: Unit) => unit.ID !== ID ).forEach((unit: Unit) => unit.setSelected(false));
         this.#units[ID]?.setSelected(true);
     }
 
-    onUnitSelection() {
+    onUnitSelection(unit: Unit) {
         if (this.getSelectedUnits().length > 0) {
-            getMap().setState("MOVE_UNIT");
-            document.dispatchEvent(new CustomEvent("unitsSelection", {detail: this.getSelectedUnits()}));
+            getMap().setState(MOVE_UNIT);
+            /* Disable the firing of the selection event for a certain amount of time. This avoids firing many events if many units are selected */
+            if (!this.#selectionEventDisabled)
+            {
+                setTimeout(() => {
+                    document.dispatchEvent(new CustomEvent("unitsSelection", {detail: this.getSelectedUnits()}));
+                    this.#selectionEventDisabled = false;
+                }, 300);
+                this.#selectionEventDisabled = true;
+            }
         }
         else {
-            getMap().setState("IDLE");
+            getMap().setState(IDLE);
             document.dispatchEvent(new CustomEvent("clearSelection"));
         }
-        this.#updateUnitControlPanel();
     }
 
     selectFromBounds(bounds: LatLngBounds)
@@ -147,7 +162,7 @@ export class UnitsManager {
     getSelectedUnitsType () {
         return this.getSelectedUnits().map((unit: Unit) => {
             return unit.constructor.name
-        }).reduce((a: any, b: any) => {
+        })?.reduce((a: any, b: any) => {
             return a == b? a: undefined
         });
     };
@@ -155,7 +170,7 @@ export class UnitsManager {
     getSelectedUnitsTargetSpeed () {
         return this.getSelectedUnits().map((unit: Unit) => {
             return unit.getTaskData().targetSpeed
-        }).reduce((a: any, b: any) => {
+        })?.reduce((a: any, b: any) => {
             return a == b? a: undefined
         });
     };
@@ -163,7 +178,7 @@ export class UnitsManager {
     getSelectedUnitsTargetAltitude () {
         return this.getSelectedUnits().map((unit: Unit) => {
             return unit.getTaskData().targetAltitude
-        }).reduce((a: any, b: any) => {
+        })?.reduce((a: any, b: any) => {
             return a == b? a: undefined
         });
     };
@@ -200,8 +215,6 @@ export class UnitsManager {
         {
             selectedUnits[idx].changeSpeed(speedChange);
         }
-
-        setTimeout(() => this.#updateUnitControlPanel(), 300); // TODO find better method, may fail
     }
 
     selectedUnitsChangeAltitude(altitudeChange: string)
@@ -211,8 +224,6 @@ export class UnitsManager {
         {
             selectedUnits[idx].changeAltitude(altitudeChange);
         }
-
-        setTimeout(() => this.#updateUnitControlPanel(), 300); // TODO find better method, may fail
     }
 
     selectedUnitsSetSpeed(speed: number)
@@ -240,8 +251,6 @@ export class UnitsManager {
         {
             selectedUnits[idx].setROE(ROE);
         }
-
-        setTimeout(() => this.#updateUnitControlPanel(), 300); // TODO find better method, may fail
     }
 
     selectedUnitsSetReactionToThreat(reactionToThreat: string)
@@ -251,8 +260,6 @@ export class UnitsManager {
         {
             selectedUnits[idx].setReactionToThreat(reactionToThreat);
         }
-        
-        setTimeout(() => this.#updateUnitControlPanel(), 300); // TODO find better method, may fail
     }
 
     selectedUnitsAttackUnit(ID: number) {
@@ -312,16 +319,14 @@ export class UnitsManager {
                 //console.log("At least 2 units must be selected to create a formation.");
             }
         }
-        setTimeout(() => this.#updateUnitControlPanel(), 300); // TODO find better method, may fail
     }
 
-    selectedUnitsUndoFormation(ID: number | null = null)
+    selectedUnitsUndoFormation()
     {
         for (let leader of this.getSelectedLeaders())
         {
             leader.setLeader(false);
         }
-        setTimeout(() => this.#updateUnitControlPanel(), 300); // TODO find better method, may fail 
     }
 
     selectedUnitsDelete()
@@ -344,17 +349,6 @@ export class UnitsManager {
         {
             var unit = this.#copiedUnits[idx];
             cloneUnit(unit.ID, getMap().getMouseCoordinates());
-        }
-    }
-
-    #updateUnitControlPanel() {
-        /* Update the unit control panel */
-        if (this.getSelectedUnits().length > 0) {
-            getUnitControlPanel()?.show();
-            getUnitControlPanel()?.update(this.getSelectedLeaders().concat(this.getSelectedSingletons()));
-        }
-        else {
-            getUnitControlPanel()?.hide();
         }
     }
 
