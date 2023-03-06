@@ -1,7 +1,34 @@
-<div class="ol-panel" id="unit-control-panel">
+<div id="unit-control-panel" class="ol-panel">
     <h2>Selected units</h2>
     <div id="selected-units-container" class="ol-scroll">
         <!-- This is where all the unit selection buttons will be shown-->
+    </div>
+
+    <div id="unit-info-panel">
+        <div id="general" class="panel-section">
+            <h3 id="unit-name">Olympus 1-1</h3>
+            <div id="name" class="pill highlight-primary">Name</div>
+            <div id="group-name" class="pill highlight-primary">Group</div>
+            <div id="task" class="pill highlight-primary">Task</div>
+        </div>
+        <div id="flight-data" class="panel-section">
+            <h3 id="flight-data-label">Flight data</h3>
+            <div id="latitude"></div>
+            <div id="longitude"></div>
+            <div class="data-grid">
+                <div class="data-row"><img class="icon-small" src="images/icons/speed.svg"><h5>Ground Speed</h5><h4 id="ground-speed">12</h4></div>
+                <div class="data-row"><img class="icon-small" src="images/icons/altitude.svg"><h5>Altitude</h5><h4 id="altitude"></h4></div>
+                <div class="data-row"><img class="icon-small" src="images/icons/heading.svg"><h5>Heading</h5><h4 id="heading"></h4></div>
+            </div>
+        </div>
+        <div id="loadout-data" class="panel-section">
+            <h3 id="loadout-label">Loadout</h3>
+            <div class="data-grid">
+                <div class="data-row"><img class="icon-small" src="images/icons/fuel.svg"><h5>Fuel</h5><h4 id="fuel"></h4></div>
+            </div>
+            <div id="loadout-container" class="ol-scroll">
+            </div>
+        </div>
     </div>
 
     <h3>Controls</h3>

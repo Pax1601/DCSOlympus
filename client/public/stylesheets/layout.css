@@ -29,18 +29,6 @@ body {
 	min-width: 820px;
 }
 
-#unit-info-panel {
-	position: fixed;
-	left: 10px;
-	bottom: 10px;
-	z-index: 1000;
-}
-
-.content #unit-info-panel {
-	position: static;
-	margin: 50px;
-}
-
 #primary-toolbar {
 	position: absolute;
 	left: 10px;
@@ -54,10 +42,10 @@ body {
 
 #unit-control-panel {
 	position: absolute;
-	top: 10px;
+	top: 80px;
 	height: fit-content;
 	width: 250px;
-	right: 10px;
+	left: 10px;
 	z-index: 1000;
 }
 

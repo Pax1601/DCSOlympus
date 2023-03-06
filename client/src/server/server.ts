@@ -49,7 +49,7 @@ export function getUnits(callback: CallableFunction, refresh: boolean = false) {
     if (!DEMO)
         GET(callback, `${UNITS_URI}/${refresh? REFRESH_URI: UPDATE_URI}}`);
     else
-        callback(refresh? generateRandomUnitsDemoData(1000): {units:{}});
+        callback(refresh? generateRandomUnitsDemoData(100): {units:{}});
 }
 
 export function addDestination(ID: number, path: any) {
@@ -149,8 +149,8 @@ function generateRandomUnitsDemoData(unitsNumber: number)
     for (let i = 0; i < unitsNumber; i++)
     {
         units[String(i)] = structuredClone(DEMO_UNIT_DATA);
-        units[String(i)].flightData.latitude += (Math.random() - 0.5) * 0.1;
-        units[String(i)].flightData.longitude += (Math.random() - 0.5) * 0.1;
+        units[String(i)].flightData.latitude += (Math.random() - 0.5) * 0.3;
+        units[String(i)].flightData.longitude += (Math.random() - 0.5) * 0.3;
     }
     return {"units": units};
 }
@@ -163,8 +163,8 @@ const DEMO_UNIT_DATA = {
     alive: true,
     category: "Aircraft",
     flightData:  {
-        latitude: 37.3,
-        longitude: -116,
+        latitude: 37.2,
+        longitude: -115.8,
         altitude: 2000,
         heading: 0.5,
         speed: 300

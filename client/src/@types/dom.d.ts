@@ -1,6 +1,8 @@
 interface CustomEventMap {
     "unitSelection":                    CustomEvent<Unit>,  
+    "unitDeselection":                  CustomEvent<Unit>,  
     "unitsSelection":                   CustomEvent<Unit[]>,
+    "unitsDeselection":                 CustomEvent<Unit[]>,
     "clearSelection":                   CustomEvent<>,
     "unitCreation":                     CustomEvent<Unit>,  
     "unitDeletion":                     CustomEvent<Unit>,  
@@ -10,8 +12,7 @@ interface CustomEventMap {
     "unitLandCommand":                  CustomEvent<Unit>,
     "unitSetAltitudeCommand":           CustomEvent<Unit>,
     "unitSetSpeedCommand":              CustomEvent<Unit>,
-    "unitSetROECommand":                CustomEvent<Unit>,
-    "unitSetReactionToThreatCommand":   CustomEvent<Unit>,
+    "unitSetOption":                    CustomEvent<Unit>,
     "groupCreation":                    CustomEvent<Unit[]>,
     "groupDeletion":                    CustomEvent<Unit[]>,
     "mapStateChanged":                  CustomEvent<string>,
