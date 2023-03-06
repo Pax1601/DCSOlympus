@@ -60,12 +60,31 @@ function setup() {
 
     /* Generic clicks */
     document.addEventListener( "click", ( ev ) => {
+
         if ( ev instanceof PointerEvent && ev.target instanceof HTMLElement ) {
             if ( ev.target.classList.contains( "olympus-dialog-close" ) ) {
                 ev.target.closest( "div.olympus-dialog" )?.classList.add( "hide" );
             }
         }
+        
     });
+
+
+    /**  Olympus UI ***/
+    document.querySelectorAll( ".ol-select" ).forEach( select => {
+
+        //  Do open/close toggle
+        select.addEventListener( "click", ev => {
+            select.classList.toggle( "is-open" );
+        });
+
+        //  Autoclose on mouseleave
+        select.addEventListener( "mouseleave", ev => {
+            select.classList.remove( "is-open" );
+        });
+
+    });
+
 
     /* ATC */
     let atcFeatureSwitch = featureSwitches.getSwitch( "atc" );
