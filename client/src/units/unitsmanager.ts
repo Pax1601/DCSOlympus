@@ -36,12 +36,11 @@ export class UnitsManager {
         }
     }
     
-
     removeUnit(ID: number) {
 
     }
 
-    update(data: ServerData) {
+    update(data: UnitsData) {
         for (let ID in data.units) {
             /* Create the unit if missing from the local array, then update the data. Drawing is handled by leaflet. */
             if (!(ID in this.#units)) {

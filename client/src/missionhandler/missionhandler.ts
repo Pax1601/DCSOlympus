@@ -9,7 +9,7 @@ var bullseyeIcons = [
     new Icon({ iconUrl: 'images/bullseye2.png', iconAnchor: [30, 30]})
 ]
 
-export class MissionData
+export class MissionHandler
 {
     #bullseyes      : any; //TODO declare interface
     #bullseyeMarkers: any;
@@ -27,13 +27,17 @@ export class MissionData
         this.#airbasesMarkers = {};
     }
 
-    update(data: ServerData)
+    update(data: BullseyesData | AirbasesData)
     {
-        this.#bullseyes = data.bullseye;
-        this.#airbases = data.airbases;
-        if (this.#bullseyes != null && this.#airbases != null)
+        if ("bullseyes" in data)
         {
-            this.#drawBullseye();
+            this.#bullseyes = data.bullseyes;
+            this.#drawBullseyes();
+        }
+
+        if ("airbases" in data)
+        {
+            this.#airbases = data.airbases;
             this.#drawAirbases();
         }
     }
@@ -43,7 +47,7 @@ export class MissionData
         return this.#bullseyes;
     }
 
-    #drawBullseye()
+    #drawBullseyes()
     {
         for (let idx in this.#bullseyes)
         {

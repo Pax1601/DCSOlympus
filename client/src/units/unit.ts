@@ -49,26 +49,33 @@ export class Unit extends Marker {
         this.on('contextmenu', (e) => this.#onContextMenu(e));
 
         var icon = new DivIcon({
-            html: ` <svg class="unit" data-coalition="${this.getMissionData().coalition}" xmlns="http://www.w3.org/2000/svg">
-                        <circle class="unit-spotlight" />
-                        <rect class="unit-vvi" style="transform:rotate( calc( var( --unit-marker-air-vvi-rotation-offset ) + 090deg ) ); height:calc( ( var( --unit-marker-air-height ) / 2 ) + 25px );" />
-                        <rect class="unit-hotgroup"></rect>
-                        <text x="74" y="27" class="unit-hotgroup-id">3</text>
-                        <rect class="unit-selected-border" />
-                        <rect class="unit-marker" />
-                        <text x="50%" y="54px" class="unit-short-label">${aircraftDatabase.getShortLabelByName(this.getData().name)}</text>
-                        <rect class="unit-fuel" />
-                        <rect class="unit-fuel-level" />
-                        <circle class="unit-ammo unit-ammo-fox-1" />
-                        <circle class="unit-ammo unit-ammo-fox-2" />
-                        <circle class="unit-ammo unit-ammo-fox-3" />
-                        <circle class="unit-ammo unit-ammo-other" />
-                        <g class="unit-summary">
-                            <text class="unit-callsign" x="1" y="46">${this.getData().unitName}</text>
-                            <text class="unit-heading" x="20" y="60"></text>
-                            <text class="unit-altitude" x="46" y="60"></text>
-                        </g>
-                    </svg>`,
+            html: ` 
+                <div class="unit unit-air" data-status="hold" data-coalition="${this.getMissionData().coalition}" data-is-in-hotgroup="false" data-is-selected="false">
+                <div class="unit-selected-spotlight"></div>
+                <div class="unit-marker-border"></div>
+                <div class="unit-status"></div>
+                <div class="unit-vvi"></div>
+                <div class="unit-hotgroup">
+                    <div class="unit-hotgroup-id">4</div>
+                </div>
+                <div class="unit-marker"></div>
+                <div class="unit-short-label">${aircraftDatabase.getShortLabelByName(this.getData().name)}</div>
+                <div class="unit-fuel">
+                    <div class="unit-fuel-level" style="width:100%;"></div>
+                </div>
+                <div class="unit-ammo">
+                    <div class="unit-ammo-fox-1"></div>
+                    <div class="unit-ammo-fox-2"></div>
+                    <div class="unit-ammo-fox-3"></div>
+                    <div class="unit-ammo-other"></div>
+                </div>
+                <div class="unit-summary">
+                    <div class="unit-callsign">${this.getData().unitName}</div>
+                    <div class="unit-heading"></div>
+                    <div class="unit-altitude"></div>
+                </div>
+            </div>
+            `,
             className: 'ol-unit-marker',
             iconAnchor: [60, 60]
         });
@@ -287,7 +294,7 @@ export class Unit extends Marker {
             this.setLatLng(new LatLng(this.getFlightData().latitude, this.getFlightData().longitude));
             var element = this.getElement();
             if (element != null) {
-                element.querySelector(".unit-vvi")?.setAttribute("style", `transform:rotate( calc( var( --unit-marker-air-vvi-rotation-offset ) + ${rad2deg(this.getFlightData().heading)}deg ) ); height:calc( ( var( --unit-marker-air-height ) / 2 ) + ${this.getFlightData().speed / 5}px );`);
+                element.querySelector(".unit-vvi")?.setAttribute("style", `style="height: ${this.getFlightData().speed / 5}px; transform:rotate(${rad2deg(this.getFlightData().heading)}deg);`);
                 element.querySelector(".unit")?.setAttribute("data-fuel-level", "20");
                 element.querySelector(".unit")?.setAttribute("data-has-fox-1", "true");
 

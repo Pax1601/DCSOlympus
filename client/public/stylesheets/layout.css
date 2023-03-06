@@ -41,16 +41,15 @@ body {
 	margin: 50px;
 }
 
-#settings-panel {
+#primary-toolbar {
 	position: absolute;
 	left: 10px;
-	height: fit-content;
-	width: fit-content;
 	top: 10px;
 	z-index: 1000;
-	display: flex;
-	align-items: center;
-	column-gap: 10px;
+}
+
+.content #primary-toolbar {
+	position: static;
 }
 
 #unit-control-panel {

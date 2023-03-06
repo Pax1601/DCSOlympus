@@ -20,7 +20,6 @@ interface FormationData {
     isLeader: boolean;
     isWingman: boolean;
     leaderID: number;
-    wingmen: Unit[];
     wingmenIDs: number[];
 }
 
