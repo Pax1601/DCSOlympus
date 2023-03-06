@@ -163,7 +163,7 @@ button[disabled="disabled"] {
     border-radius: 0;
     font-size:14px;
     font-weight: normal;
-    padding:8px 2px;
+    padding:6px 2px;
     text-align: left;
     white-space: nowrap;
     width:fit-content;
