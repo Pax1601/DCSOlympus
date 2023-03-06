@@ -49,14 +49,14 @@ export class UnitsManager {
                 .reduce((timeout: number, ID: string) => {
                     setTimeout(() => {
                         this.addUnit(parseInt(ID), data.units[ID]);
-                        this.#units[parseInt(ID)].setData(data.units[ID]);
+                        this.#units[parseInt(ID)]?.setData(data.units[ID]);
                     }, timeout);
                     return timeout + 10;
                 }, 10);
           
         Object.keys(data.units)
         .filter((ID: string) => ID in this.#units)
-        .forEach((ID: string) => this.#units[parseInt(ID)].setData(data.units[ID]));
+        .forEach((ID: string) => this.#units[parseInt(ID)]?.setData(data.units[ID]));
     }
 
     forceUpdate() {

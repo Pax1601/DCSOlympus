@@ -99,15 +99,27 @@ function setup() {
     getUnits((data: UnitsData) => getUnitsManager()?.update(data), true /* Does a full refresh */);
     
     /* Start periodically requesting updates */
-    requestUpdate(true /* Start looping */);
+    startPeriodicUpdate();
 }
 
-function requestUpdate(loop: boolean) {
+function startPeriodicUpdate()
+{
+    requestUpdate();
+    requestRefresh();
+}
+
+function requestUpdate() {
     /* Main update rate = 250ms is minimum time, equal to server update time. */
-    getUnits((data: UnitsData) => getUnitsManager()?.update(data))
-    setTimeout(() => requestUpdate(loop), getConnected() ? 250 : 1000);
+    getUnits((data: UnitsData) => getUnitsManager()?.update(data), false);
+    setTimeout(() => requestUpdate(), getConnected() ? 250 : 1000);
 
     getConnectionStatusPanel()?.update(getConnected());
+}
+
+function requestRefresh() {
+    /* Main refresh rate = 5000ms. */
+    getUnits((data: UnitsData) => getUnitsManager()?.update(data), true);
+    setTimeout(() => requestUpdate(), 5000);
 }
 
 export function getMap() {

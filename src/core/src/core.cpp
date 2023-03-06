@@ -12,7 +12,7 @@ UnitsManager* unitsManager = nullptr;
 Server* server = nullptr;
 Scheduler* scheduler = nullptr;
 json::value airbasesData;
-json::value bullseyeData;
+json::value bullseyesData;
 mutex mutexLock;
 bool initialized = false;
 
@@ -91,7 +91,7 @@ extern "C" DllExport int coreMissionData(lua_State * L)
     if (missionData.has_object_field(L"airbases"))
         airbasesData = missionData[L"airbases"];
     if (missionData.has_object_field(L"bullseye"))
-        bullseyeData = missionData[L"bullseye"];
+        bullseyesData = missionData[L"bullseyes"];
 
     return(0);
 }

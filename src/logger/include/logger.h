@@ -7,7 +7,7 @@ class Logger
 public:
     void log(const string& sMessage);
     void log(const wstring& sMessage);
-    void toJSON(json::value& json);
+    void toJSON(json::value& json, int logsNumber = NULL);
 
     static Logger* GetLogger();
 
