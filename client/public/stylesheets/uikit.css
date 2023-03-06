@@ -65,9 +65,9 @@ section {
 }
 
 #tabs > div {
-    background:rgb(199, 174, 120);
+    background:#660066;
     border-radius: 5px;
-    color:#333;
+    color:white;
     cursor: pointer;
     padding:6px 10px;
 }

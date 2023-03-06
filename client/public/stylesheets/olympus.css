@@ -117,7 +117,7 @@ button[disabled="disabled"] {
 }
 
 
-.ol-select:hover .ol-select-options {
+.ol-select.is-open .ol-select-options {
     max-height: fit-content;
     padding:8px 0;
 }
@@ -234,12 +234,8 @@ nav.ol-panel {
     height:58px;
 }
 
-nav.ol-panel > :first-child {
-    margin-left:20px;
-}
-
 nav.ol-panel > :last-child {
-    margin-right:20px;
+    margin-right:5px;
 }
 
 
