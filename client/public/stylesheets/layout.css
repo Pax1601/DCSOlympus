@@ -36,6 +36,11 @@ body {
 	z-index: 1000;
 }
 
+.content #unit-info-panel {
+	position: static;
+	margin: 50px;
+}
+
 #settings-panel {
 	position: absolute;
 	left: 10px;
@@ -57,6 +62,10 @@ body {
 	z-index: 1000;
 }
 
+.content #unit-control-panel {
+	position: static;
+}
+
 #connection-status-panel {
 	position: absolute;
 	height: 30px;
@@ -74,6 +83,12 @@ body {
 	right: 10px;
 	z-index: 1000;
 }
+
+.content #mouse-info-panel {
+	margin-bottom: 100px;
+	position: static;
+}
+
 
 #log-panel {
 	position: absolute;

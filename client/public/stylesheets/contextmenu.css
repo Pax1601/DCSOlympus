@@ -2,6 +2,10 @@
     position: absolute;
 }
 
+.content #contextmenu {
+    position: relative;
+}
+
 .ol-contextmenu {
     display: flex;
     flex-direction: column;

@@ -17,6 +17,8 @@
                 <div class="section-header">Typeography</div>
                 <div class="section-header">Navbar</div>
                 <div class="section-header">Context menu</div>
+                <div class="section-header">Unit control panel</div>
+                <div class="section-header">Mouse info panel</div>
                 <div class="section-header">Buttons</div>
                 <div class="section-header">Ground Units</div>
                 <div class="section-header">Planes</div>
@@ -75,83 +77,7 @@
                     <div class="content-body">
 
                         <div class="example">
-                            
-                            <nav id="primary-toolbar" class="ol-panel">
-                                <div id="app-icon">
-                                    (I)
-                                </div>
-                                <div id="map-type" class="ol-select">
-                                    <div class="ol-select-value">ArcGIS Satellite</div>
-                                    <div class="ol-select-options">
-                                        <div>
-                                            <button>ArcGIS Satellite</button>
-                                        </div>
-                                        <div>
-                                            <button>USGS Topographic</button>
-                                        </div>
-                                        <div>
-                                            <button>OpenStreet Map</button>
-                                        </div>
-                                        <div>
-                                            <button>OPENVKarte</button>
-                                        </div>
-                                        <div>
-                                            <button>ESRI.Delorme</button>
-                                        </div>
-                                        <div>
-                                            <button>CyclOSM</button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="ol-select">
-                                    <div class="ol-select-value">Caucasus</div>
-                                    <div class="ol-select-options">
-                                        <div>
-                                            <button>Caucasus</button>
-                                        </div>
-                                        <div>
-                                            <button>Nevada</button>
-                                        </div>
-                                        <div>
-                                            <button>Syria</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="ol-group">
-                                    <button>A</button>
-                                    <button>B</button>
-                                    <button>C</button>
-                                </div>
-
-                                <div class="ol-group ol-group-checkbox">
-
-                                    <div class="ol-checkbox">
-                                        <div class="ol-checkbox-input">
-                                            <input id="checkbox-1" type="checkbox" />
-                                        </div>
-                                        <label for="checkbox-1">My label</label>
-                                    </div>
-
-                                    <div class="ol-checkbox">
-                                        <div class="ol-checkbox-input">
-                                            <input id="checkbox-2" type="checkbox" />
-                                        </div>
-                                        <label for="checkbox-2">My label</label>
-                                    </div>
-
-                                    <div class="ol-checkbox">
-                                        <div class="ol-checkbox-input">
-                                            <input id="checkbox-3" type="checkbox" />
-                                        </div>
-                                        <label for="checkbox-3">My label</label>
-                                    </div>
-
-                                </div>
-
-                            </nav>
-                            
+                            <%- include('navbar.ejs') %>   
                         </div>
 
                     </div>
@@ -166,32 +92,40 @@
 
                     <div class="content-header">Context menu</div>
                     <div class="content-body">
+                        <div class="example">
+                            <%- include('contextmenu.ejs') %>  
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+            <section>
+
+                <div class="content">
+
+                    <div class="content-header">Primary nav</div>
+                    <div class="content-body">
 
                         <div class="example">
-                            
-                            <div class="ol-contextmenu" style="position: relative; left: 0px; top:0px;">
-                                <div class="ol-panel">
-                                    <div> Title </div>
-                                    <div> 
-                                        <label class="toggle">
-                                        <input type="checkbox">
-                                        <span class="slider"></span>
-                                      </label>
-                                    </div>
-                                </div>
-                                <ul id="list" class="ol-panel ol-scroll">
-                                    <li><button>Option 1</button></li>
-                                    <li><button>Option 2</button></li>
-                                    <li><button>Option 3</button></li>
-                                    <li><button>Option 4</button></li>
-                                    <li><button>Option 5</button></li>
-                                    <li><button>Option 6</button></li>
-                                    <li><button>Option 7</button></li>
-                                    <li><button>Option 8</button></li>
-                                    <li><button>Option 9</button></li>
-                                </ul>
-                            </div>
-                            
+                            <%- include('unitcontrolpanel.ejs') %>   
+                        </div>
+
+                    </div>
+        
+                </div>
+
+            </section>
+
+            <section>
+
+                <div class="content">
+
+                    <div class="content-header">Primary nav</div>
+                    <div class="content-body">
+
+                        <div class="example">
+                            <%- include('mouseinfopanel.ejs') %>   
                         </div>
 
                     </div>
