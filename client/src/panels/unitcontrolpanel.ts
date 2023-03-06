@@ -50,6 +50,7 @@ export class UnitControlPanel extends Panel {
         if (this.getElement() != null)
         {
             this.#showFlightControlSliders(units);
+            console.log( this.getElement().querySelector("#selected-units-container") );
             this.getElement().querySelector("#selected-units-container")?.replaceChildren(...units.map((unit: Unit) =>
             {
                 var button = document.createElement("button");
