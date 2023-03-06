@@ -44,6 +44,7 @@ section {
     align-items: center;
     display:flex;
     flex-direction: column;
+    min-width: 100px;
 }
 
 .caption {
@@ -74,11 +75,11 @@ section {
 
 #overlaying-planes {
     background-color:#99ccff;
-    padding:20px;
+    padding:60px;
     position:relative;
 }
 
-#overlaying-planes svg:nth-of-type(2) {
+#overlaying-planes .unit:nth-of-type(2) {
     position: absolute;
     left: 40px;
     top: 10px;

@@ -17,7 +17,7 @@ var contextMenu: ContextMenu;
 
 var unitsManager: UnitsManager;
 var missionData: MissionData;
-
+ 
 var aic: AIC;
 var atc: ATC;
 

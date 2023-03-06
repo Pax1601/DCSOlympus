@@ -1,0 +1,389 @@
+:root {
+        /*  Generic marker settings  */
+        --unit-centre-x: calc( var( --unit-width ) / 2 );
+        --unit-centre-y: calc( var( --unit-height ) / 2 );
+    
+        --unit-hotgroup-height: 10px;
+        --unit-hotgroup-width: var( --unit-hotgroup-height );
+    
+    
+        /*  Air units' marker settings  */
+        --unit-air-label-x: calc( var( --unit-centre-x ) - ( var( --unit-air-width ) / 2 ) + ( var( --unit-stroke-width ) / 2 ) );
+        --unit-air-label-y: calc( var( --unit-centre-y ) - ( var( --unit-air-height ) / 2 ) + ( var( --unit-stroke-width ) / 2 ) );
+}
+
+
+div.unit {
+    align-items: center;
+    cursor:pointer;
+    display:flex;
+    justify-content: center;
+    position:relative;
+}
+
+div.unit .unit-selected-spotlight {
+    background-color: var( --unit-spotlight-fill );
+    border-radius: 50%;
+    display:none;
+    padding: var( --unit-spotlight-radius );
+    position: absolute;
+    z-index:1;
+}
+
+
+div.unit .unit-vvi {
+    align-self: center;
+    background:black;
+    display:flex;
+    justify-self: center;
+    transform-origin: bottom;
+    translate:0 -50%;
+    padding-bottom: calc( ( var( --unit-air-width ) / 2 ) + var( --unit-stroke-width ) );
+    position:absolute;
+    width: var( --unit-air-vvi-width );
+}
+
+
+div.unit .unit-hotgroup {
+    align-content: center;
+    background-color: black;
+    border-radius: var( --border-radius-xs );
+    display:none;
+    height: var( --unit-hotgroup-height );
+    justify-content: center;
+    position:absolute;
+    transform: rotate( -45deg );
+    translate:0 -24px;
+    width: var( --unit-hotgroup-width );
+}
+
+div.unit .unit-hotgroup-id {
+    background-color: transparent;
+    color:white;
+    font-size: 9px;
+    font-weight: bolder;
+    transform:rotate( 45deg );
+}
+
+div.unit .unit-marker-border {
+    background-color: white;
+    border-radius: var( --border-radius-sm );
+    display:none;
+    height: calc( var( --unit-air-height ) + ( var( --unit-label-border-width ) * 2 ) );
+    position:absolute;
+    width: calc( var( --unit-air-width ) + ( var( --unit-label-border-width ) * 2 ) );
+    z-index:2;
+}
+
+div.unit:hover .unit-marker-border,
+div.unit[data-is-selected="true"] .unit-marker-border {
+    display:block;
+}
+
+
+/******************************
+    Marker
+******************************/
+
+/*
+div.unit svg {
+    border-radius: var( --border-radius-sm );
+    height: var( --unit-height );
+    width: var( --unit-width );
+    z-index:1;
+}
+
+
+div.unit-ground-vehicle svg {
+    transform: rotate( -45deg );
+}
+
+div.unit svg rect.unit-marker {
+    fill: var( --primary-grey );
+    height: calc( var( --unit-air-height ) - var( --unit-stroke-width ) );
+    rx: var( --unit-stroke-width );
+    ry: var( --unit-stroke-width );
+    stroke: var( --secondary-neutral );
+    stroke-linejoin: round;
+    stroke-width: var( --unit-stroke-width );
+    width: calc( var( --unit-air-width ) - var( --unit-stroke-width ) );
+    x: var(--unit-air-label-x);
+    y: var(--unit-air-label-y);
+}
+//*/
+
+div.unit .unit-marker {
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position:absolute;
+    transform-origin: center;
+    z-index:3;
+}
+
+
+div.unit-air .unit-marker {
+    background-image: var( --unit-ground-sam-neutral-url );
+    height: var( --unit-ground-sam-height );
+    width: var( --unit-ground-sam-width );
+}
+
+
+/*  Air  */
+
+div.unit-air .unit-marker {
+    background-image: var( --unit-air-marker-neutral-url );
+    height: var( --unit-air-marker-height );
+    width: var( --unit-air-marker-width );
+}
+
+
+div.unit-air[data-coalition="blue"] .unit-marker {
+    background-image: var( --unit-air-marker-blue-url );
+}
+
+
+div.unit-air[data-coalition="red"] .unit-marker {
+    background-image: var( --unit-air-marker-red-url );
+}
+
+
+/*  Ground vehicles (not SAMs)  */
+
+div.unit-vehicle .unit-marker {
+    background-image: var( --unit-vehicle-marker-neutral-url );
+    height: var( --unit-vehicle-marker-height );
+    width: var( --unit-vehicle-marker-width );
+}
+
+
+div.unit-vehicle[data-coalition="blue"] .unit-marker {
+    background-image: var( --unit-vehicle-marker-blue-url );
+}
+
+
+div.unit-vehicle[data-coalition="red"] .unit-marker {
+    background-image: var( --unit-vehicle-marker-red-url );
+}
+
+
+/*  SAMs  */
+
+div.unit-ground-sam .unit-marker {
+    background-image: var( --unit-ground-sam-marker-neutral-url );
+    height: var( --unit-ground-sam-marker-height );
+    width: var( --unit-ground-sam-marker-width );
+}
+
+
+div.unit-ground-sam[data-coalition="blue"] .unit-marker {
+    background-image: var( --unit-ground-sam-marker-blue-url );
+}
+
+
+div.unit-ground-sam[data-coalition="red"] .unit-marker {
+    background-image: var( --unit-ground-sam-marker-red-url );
+}
+
+
+
+div.unit .unit-short-label {
+    font-size: var(--unit-font-size);
+    font-weight: var(--unit-font-weight);
+    position: absolute;
+    z-index:10;
+}
+
+div.unit-ground-sam .unit-short-label {
+    translate:0 50%;
+}
+
+
+div.unit .unit-fuel {
+    background:white;
+    border: var( --unit-air-fuel-border-width ) solid var( --secondary-dark-steel );
+    border-radius: var( --border-radius-sm );
+    display:none;
+    height: var( --unit-air-fuel-height );
+    position: absolute;
+    translate:var( --unit-air-fuel-x ) 20px;
+    width: var( --unit-air-fuel-width );
+}
+
+div.unit .unit-fuel-level {
+    background-color: var( --secondary-light-grey );
+    height:100%;
+    width:100%;
+}
+
+
+div.unit .unit-ammo {
+    column-gap: var( --unit-air-ammo-spacing );
+    display:none;
+    height:fit-content;
+    position:absolute;
+    translate:var( --unit-air-ammo-x ) var( --unit-air-ammo-y );
+    width:fit-content;
+}
+
+div.unit .unit-ammo > * {
+    background-color: white;
+    border: var( --unit-air-ammo-border-width ) solid var( --secondary-dark-steel );
+    border-radius: 50%;
+    padding: var( --unit-air-ammo-radius );
+}
+
+
+div.unit .unit-summary {
+    column-gap: 6px;
+    color:white;
+    display:flex;
+    flex-wrap: wrap;
+    font-size:11px;
+    font-weight: bold;
+    justify-content: right;
+    position:absolute;
+    row-gap: 1px;
+    text-shadow:
+        -1px -1px 0 #000,  
+        1px -1px 0 #000,
+        -1px  1px 0 #000,
+        1px  1px 0 #000;
+    translate: -60px 0;
+    width:fit-content;
+    z-index:20;
+}
+
+div.unit .unit-summary > * {
+    padding:1px;
+}
+
+div.unit .unit-summary .unit-callsign {
+    color:white;
+    overflow: hidden;
+    text-align: right;
+    transform-origin: right;
+    white-space: nowrap;
+    width: 80px;
+}
+
+div.unit .unit-summary .unit-callsign:hover {
+    direction: rtl;
+    overflow:visible;
+}
+
+
+
+div.unit[data-pilot="ai"]:hover .unit-ammo,
+div.unit[data-pilot="ai"]:hover .unit-fuel {
+    display:flex;
+}
+
+div.unit[data-is-in-hotgroup="true"] .unit-hotgroup,
+div.unit[data-pilot="ai"][data-is-selected="true"] .unit-ammo,
+div.unit[data-pilot="ai"][data-is-selected="true"] .unit-fuel,
+div.unit[data-is-selected="true"] .unit-selected-spotlight {
+    display:flex;
+}
+
+div.unit[data-has-fox-1="true"] .unit-ammo-fox-1,
+div.unit[data-has-fox-2="true"] .unit-ammo-fox-2,
+div.unit[data-has-fox-3="true"] .unit-ammo-fox-3,
+div.unit[data-has-other-ammo="true"] .unit-ammo-other {
+    background-color: var( --primary-grey );
+}
+
+
+div.unit[data-coalition="blue"] rect.unit-marker {
+    fill:var( --primary-blue );
+    stroke: var( --secondary-blue-outline );
+}
+
+div.unit[data-coalition="blue"][data-is-selected="true"] .unit-short-label {
+    color: var( --secondary-blue-text );
+}
+
+div.unit[data-coalition="blue"] .unit-fuel-level,
+div.unit[data-coalition="blue"][data-has-fox-1="true"] .unit-ammo-fox-1,
+div.unit[data-coalition="blue"][data-has-fox-2="true"] .unit-ammo-fox-2,
+div.unit[data-coalition="blue"][data-has-fox-3="true"] .unit-ammo-fox-3,
+div.unit[data-coalition="blue"][data-has-other-ammo="true"] .unit-ammo-other {
+    background-color: var( --primary-blue );
+}
+
+
+
+div.unit[data-coalition="red"] rect.unit-marker {
+    fill:var( --primary-red );
+    stroke: var( --secondary-red-outline );
+}
+
+div.unit[data-coalition="red"][data-is-selected="true"] .unit-short-label {
+    color: var( --secondary-red-text );
+}
+
+div.unit[data-coalition="red"] .unit-fuel-level,
+div.unit[data-coalition="red"][data-has-fox-1="true"] .unit-ammo-fox-1,
+div.unit[data-coalition="red"][data-has-fox-2="true"] .unit-ammo-fox-2,
+div.unit[data-coalition="red"][data-has-fox-3="true"] .unit-ammo-fox-3,
+div.unit[data-coalition="red"][data-has-other-ammo="true"] .unit-ammo-other {
+    background-color: var( --primary-red );
+}
+
+
+@keyframes pulse {
+    50% {
+      opacity: 0;
+    }
+}
+
+div.unit[data-pilot="ai"][data-has-low-fuel="true"] .unit-fuel {
+    animation: pulse 1.5s linear infinite;
+}
+
+
+div.unit[data-is-selected="true"] rect.unit-marker {
+    fill:white;
+}
+
+
+div.unit .unit-status {
+    background-repeat: no-repeat;
+    position:absolute;
+    height:var( --unit-air-status-rtb-height );
+    translate: calc( 0px - ( var( --unit-air-width ) / 2 ) ) calc( 0px - ( var( --unit-air-height ) / 2 ) );
+    transform-origin: center;
+    width:var( --unit-air-status-rtb-width );
+    z-index: 10;
+}
+
+div.unit[data-status="rtb"] .unit-status {
+    background-image: var( --unit-air-status-rtb-neutral-url );
+    height:var( --unit-air-status-rtb-height );
+    width:var( --unit-air-status-rtb-width );
+}
+
+div.unit[data-status="rtb"][data-coalition="blue"] .unit-status {
+    background-image: var( --unit-air-status-rtb-blue-url );
+}
+
+div.unit[data-status="rtb"][data-coalition="red"] .unit-status {
+    background-image: var( --unit-air-status-rtb-red-url );
+}
+
+
+
+
+div.unit[data-status="hold"] .unit-status {
+    background-image: var( --unit-air-status-hold-neutral-url );
+    height:var( --unit-air-status-hold-height );
+    width:var( --unit-air-status-hold-width );
+}
+
+div.unit[data-status="hold"][data-coalition="blue"] .unit-status {
+    background-image: var( --unit-air-status-hold-blue-url );
+}
+
+div.unit[data-status="hold"][data-coalition="red"] .unit-status {
+    background-image: var( --unit-air-status-hold-red-url );
+}

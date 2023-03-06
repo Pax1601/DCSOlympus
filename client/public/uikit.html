@@ -2,7 +2,9 @@
 <html lang="en">
     <head>
         <title>Olympus UI Kit</title>
+        <link rel="stylesheet" type="text/css" href="./themes/olympus/olympus.css" />
         <link rel="stylesheet" type="text/css" href="stylesheets/olympus.css" />
+        <link rel="stylesheet" type="text/css" href="stylesheets/units.css" />
         <link rel="stylesheet" type="text/css" href="stylesheets/uikit.css" />
     </head>
     <body>
@@ -74,22 +76,80 @@
 
                         <div class="example">
                             
-                            <nav>
-                                <div class="ol-select">
-                                    <div class="ol-select-value">Something a bit longer is selected</div>
-                                    <ul class="ol-select-options">
-                                        <li>
-                                            <button>Option A</button>
-                                        </li>
-                                        <li>
-                                            <button>Option B</button>
-                                        </li>
-                                        <li class="hr"></li>
-                                        <li>
-                                            <button>Option C</button>
-                                        </li>
-                                    </ul>
+                            <nav id="primary-toolbar" class="ol-panel">
+                                <div id="app-icon">
+                                    (I)
                                 </div>
+                                <div id="map-type" class="ol-select">
+                                    <div class="ol-select-value">ArcGIS Satellite</div>
+                                    <div class="ol-select-options">
+                                        <div>
+                                            <button>ArcGIS Satellite</button>
+                                        </div>
+                                        <div>
+                                            <button>USGS Topographic</button>
+                                        </div>
+                                        <div>
+                                            <button>OpenStreet Map</button>
+                                        </div>
+                                        <div>
+                                            <button>OPENVKarte</button>
+                                        </div>
+                                        <div>
+                                            <button>ESRI.Delorme</button>
+                                        </div>
+                                        <div>
+                                            <button>CyclOSM</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="ol-select">
+                                    <div class="ol-select-value">Caucasus</div>
+                                    <div class="ol-select-options">
+                                        <div>
+                                            <button>Caucasus</button>
+                                        </div>
+                                        <div>
+                                            <button>Nevada</button>
+                                        </div>
+                                        <div>
+                                            <button>Syria</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="ol-group">
+                                    <button>A</button>
+                                    <button>B</button>
+                                    <button>C</button>
+                                </div>
+
+                                <div class="ol-group ol-group-checkbox">
+
+                                    <div class="ol-checkbox">
+                                        <div class="ol-checkbox-input">
+                                            <input id="checkbox-1" type="checkbox" />
+                                        </div>
+                                        <label for="checkbox-1">My label</label>
+                                    </div>
+
+                                    <div class="ol-checkbox">
+                                        <div class="ol-checkbox-input">
+                                            <input id="checkbox-2" type="checkbox" />
+                                        </div>
+                                        <label for="checkbox-2">My label</label>
+                                    </div>
+
+                                    <div class="ol-checkbox">
+                                        <div class="ol-checkbox-input">
+                                            <input id="checkbox-3" type="checkbox" />
+                                        </div>
+                                        <label for="checkbox-3">My label</label>
+                                    </div>
+
+                                </div>
+
                             </nav>
                             
                         </div>
@@ -167,82 +227,95 @@
 
                 <div class="content">
 
-                    <div class="content-header">AA?</div>
+                    <div class="content-header">Ground</div>
                     <div class="content-body">
 
                         <div class="example">
                             
-                            <div class="unit unit-ground unit-ground-aa">
-                                <div class="unit-spotlight">
-                                    <div class="unit-selected-border">
-                                        <div class="unit-shape-outer">
-                                            <div class="unit-shape-inner">
-                                                <div class="unit-shape-marker"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                            <div class="caption">Neutral</div>
                             
-                        <div class="unit unit-ground unit-ground-aa" data-is-selected="true">
-                            <div class="unit-spotlight">
-                                <div class="unit-selected-border">
-                                    <div class="unit-shape-outer">
-                                        <div class="unit-shape-inner">
-                                            <div class="unit-shape-marker"></div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="unit unit-ground unit-vehicle" data-coalition="">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">Z</div>
                             </div>
-                        </div>
                             
-                        <div class="unit unit-ground unit-ground-aa" data-coalition="blue">
-                            <div class="unit-spotlight">
-                                <div class="unit-selected-border">
-                                    <div class="unit-shape-outer">
-                                        <div class="unit-shape-inner">
-                                            <div class="unit-shape-marker"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
+
+                        <div class="example">
                             
-                        <div class="unit unit-ground unit-ground-aa" data-coalition="blue" data-is-selected="true">
-                            <div class="unit-spotlight">
-                                <div class="unit-selected-border">
-                                    <div class="unit-shape-outer">
-                                        <div class="unit-shape-inner">
-                                            <div class="unit-shape-marker"></div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="caption">Blue</div>
+                            
+                            <div class="unit unit-ground unit-vehicle" data-coalition="blue">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">Y</div>
                             </div>
+                            
                         </div>
+
+                        <div class="example">
                             
-                        <div class="unit unit-ground unit-ground-aa" data-coalition="red">
-                            <div class="unit-spotlight">
-                                <div class="unit-selected-border">
-                                    <div class="unit-shape-outer">
-                                        <div class="unit-shape-inner">
-                                            <div class="unit-shape-marker"></div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="caption">Red</div>
+                            
+                            <div class="unit unit-ground unit-vehicle" data-coalition="red">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">X</div>
                             </div>
+                            
                         </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="content">
+
+                    <div class="content-header">SAM</div>
+                    <div class="content-body">
+
+                        <div class="example">
                             
-                        <div class="unit unit-ground unit-ground-aa" data-coalition="red" data-is-selected="true">
-                            <div class="unit-spotlight">
-                                <div class="unit-selected-border">
-                                    <div class="unit-shape-outer">
-                                        <div class="unit-shape-inner">
-                                            <div class="unit-shape-marker"></div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="caption">Neutral</div>
+                            
+                            <div class="unit unit-ground unit-ground-sam" data-coalition="">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">Z</div>
                             </div>
+                            
+                        </div>
+
+                        <div class="example">
+                            
+                            <div class="caption">Blue</div>
+                            
+                            <div class="unit unit-ground unit-ground-sam" data-coalition="blue">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">Y</div>
+                            </div>
+                            
+                        </div>
+
+                        <div class="example">
+                            
+                            <div class="caption">Red</div>
+                            
+                            <div class="unit unit-ground unit-ground-sam" data-coalition="red">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">X</div>
+                            </div>
+                            
                         </div>
 
                     </div>
@@ -256,47 +329,106 @@
 
                 <div class="content">
 
-                    <div class="content-header">Human-controlled</div>
+                    <div class="content-header">Planes</div>
                     <div class="content-body">
 
                         <div class="example">
 
+                            <div class="caption">Neutral, not selected</div>
+
+                            <div class="unit unit-air">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                        <div class="example">
+
+                            <div class="caption">Neutral, selected</div>
+
+                            <div class="unit unit-air" data-is-selected="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                        <div class="example">
+
                             <div class="caption">BLUEFOR, not selected</div>
-                            <svg class="unit" data-coalition="blue" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">3</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">18</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
+
+                            <div class="unit unit-air" data-coalition="blue">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
                             
                         </div>
 
                         <div class="example">
 
                             <div class="caption">BLUEFOR, selected</div>
-                
-                            <svg class="unit" data-coalition="blue" data-is-selected="true"  data-has-fox-2="true" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">4</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker"  />
-                                <text x="50%" y="54px" class="unit-short-label">16</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
+
+                            <div class="unit unit-air" data-coalition="blue" data-is-selected="true" data-has-fox-1="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
                             
                         </div>
 
@@ -306,20 +438,24 @@
                             <div class="caption">REDFOR, not selected</div>
 
                 
-                            <svg class="unit" data-coalition="red" data-has-fox-2="true" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">4</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker"  />
-                                <text x="50%" y="54px" class="unit-short-label">16</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
+                            <div class="unit unit-air" data-coalition="red">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
                             
                         </div>
 
@@ -329,20 +465,24 @@
                             <div class="caption">REDFOR, selected</div>
 
                 
-                            <svg class="unit" data-coalition="red" data-is-selected="true" data-has-fox-2="true" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">4</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker"  />
-                                <text x="50%" y="54px" class="unit-short-label">16</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
+                            <div class="unit unit-air" data-coalition="red" data-is-selected="true" data-has-fox-1="true" data-has-fox-2="true" data-has-fox-3="true" data-has-other-ammo="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
                             
                         </div>
 
@@ -352,271 +492,158 @@
         
                 </div>
 
+                               
                 <div class="content">
 
-                    <div class="content-header">Neutral</div>
+                    <div class="content-header">Hotgroup</div>
                     <div class="content-body">
 
                         <div class="example">
 
-                            <div class="caption">Not selected, no hotgroup</div>
-
-                            <svg class="unit" data-coalition="" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">U</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
-                            
-                        </div>
-
-                        <div class="example">
-
-                            <div class="caption">Selected, no hotgroup</div>
-
-                            <svg class="unit" data-is-selected="true" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">U</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
-                            
-                        </div>
-
-                        <div class="example">
-
-                            <div class="caption">Not selected, in hotgroup</div>
-
-                            <svg class="unit" data-is-in-hotgroup="true" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">4</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">U</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
-                            
-                        </div>
-
-                        <div class="example">
-
-                            <div class="caption">Selected, in hotgroup</div>
-                            <svg class="unit" data-is-selected="true" data-is-in-hotgroup="true" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">4</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">U</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
-                            
-                        </div>
-
-                    </div>
-        
-                </div>
-                
-                <div class="content">
-
-                    <div class="content-header">BLUEFOR</div>
-                    <div class="content-body">
-
-                        <div class="example">
-
-                            <div class="caption">Not selected, no hotgroup</div>
-                            <svg class="unit" data-coalition="blue" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">4</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">18</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
+                            <div class="caption">Neutral</div>
+                            <div class="unit unit-air" data-is-in-hotgroup="true" data-has-fox-1="true" data-has-fox-2="true" data-has-fox-3="true" data-has-other-ammo="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
 
                         </div>
 
                         <div class="example">
 
-                            <div class="caption">Selected, no hotgroup</div>
+                            <div class="caption">Neutral, selected</div>
                             
-                            <svg class="unit" data-coalition="blue" data-is-selected="true" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">4</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">18</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
-                            
-                        </div>
-
-                        <div class="example">
-
-                            <div class="caption">Not selected, in hotgroup</div>
-
-                            <svg class="unit" data-coalition="blue" data-is-in-hotgroup="true" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">2</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">18</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
+                            <div class="unit unit-air" data-is-selected="true" data-is-in-hotgroup="true" data-has-fox-1="true" data-has-fox-2="true" data-has-fox-3="true" data-has-other-ammo="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
                             
                         </div>
 
                         <div class="example">
 
-                            <div class="caption">Selected, in hotgroup</div>
+                            <div class="caption">BLUEFOR</div>
 
-                            <svg class="unit" data-coalition="blue" data-is-in-hotgroup="true" data-is-selected="true" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">2</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">18</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
-                            
-                        </div>
-
-                    </div>
-        
-                </div>
-                
-                <div class="content">
-
-                    <div class="content-header">REDFOR</div>
-                    <div class="content-body">
-
-                        <div class="example">
-
-                            <div class="caption">Not selected, no hotgroup</div>
-                            <svg class="unit" data-coalition="red" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">4</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">29</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
-
-                        </div>
-
-                        <div class="example">
-
-                            <div class="caption">Selected, no hotgroup</div>
-                            
-                            <svg class="unit" data-coalition="red" data-is-selected="true" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">4</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">29</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
+                            <div class="unit unit-air" data-coalition="blue" data-is-in-hotgroup="true" data-has-fox-1="true" data-has-fox-2="true" data-has-fox-3="true" data-has-other-ammo="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
                             
                         </div>
 
                         <div class="example">
 
-                            <div class="caption">Not selected, in hotgroup</div>
+                            <div class="caption">BLUEFOR, selected</div>
 
-                            <svg class="unit" data-coalition="red" data-is-in-hotgroup="true" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">2</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">5</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
+                            <div class="unit unit-air" data-coalition="blue" data-is-selected="true" data-is-in-hotgroup="true" data-has-fox-1="true" data-has-fox-2="true" data-has-fox-3="true" data-has-other-ammo="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
                             
                         </div>
 
                         <div class="example">
 
-                            <div class="caption">Selected, in hotgroup</div>
+                            <div class="caption">REDFOR</div>
 
-                            <svg class="unit" data-coalition="red" data-is-in-hotgroup="true" data-is-selected="true" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">2</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">5</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
+                            <div class="unit unit-air" data-coalition="red" data-is-in-hotgroup="true" data-has-fox-1="true" data-has-fox-2="true" data-has-fox-3="true" data-has-other-ammo="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                        <div class="example">
+
+                            <div class="caption">REDFOR, selected</div>
+
+                            <div class="unit unit-air" data-coalition="red" data-is-selected="true" data-is-in-hotgroup="true" data-has-fox-1="true" data-has-fox-2="true" data-has-fox-3="true" data-has-other-ammo="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
                             
                         </div>
 
@@ -632,20 +659,24 @@
                         <div class="example">
 
                             <div class="caption">0% (empty)</div>
-                            <svg class="unit" data-pilot="ai" data-coalition="red" data-is-selected="true" data-has-low-fuel="true" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">2</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">5</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" style="width: calc( var( --unit-marker-air-fuel-width ) * 0 );" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
+                            <div class="unit unit-air" data-pilot="ai" data-has-low-fuel="true" data-coalition="red" data-is-selected="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:0%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
                             
                         </div>
 
@@ -653,140 +684,120 @@
 
                             <div class="caption">10%</div>
                             
-                            <svg class="unit" data-pilot="ai" data-coalition="red" data-is-selected="true" data-has-low-fuel="true" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">2</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">5</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" style="width: calc( var( --unit-marker-air-fuel-width ) * 0.1 );" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
+                            <div class="unit unit-air" data-pilot="ai" data-has-low-fuel="true" data-coalition="red" data-is-selected="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:10%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
                             
                         </div>
 
                         <div class="example">
 
                             <div class="caption">20%</div>
-                            <svg class="unit" data-pilot="ai" data-coalition="red" data-is-selected="true" data-has-low-fuel="true" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">2</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">5</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" style="width: calc( var( --unit-marker-air-fuel-width ) * 0.2 );" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
-                            
+                            <div class="unit unit-air" data-pilot="ai" data-has-low-fuel="true" data-coalition="red">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:20%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="example">
-
-                            <div class="caption">30%</div>
-                            <svg class="unit" data-pilot="ai" data-coalition="red" data-is-selected="true" data-has-low-fuel="true" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">2</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">5</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" style="width: calc( var( --unit-marker-air-fuel-width ) * 0.3 );" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
-                            
-                        </div>
-
-                        <div class="example">
-
-                            <div class="caption">33%</div>
-                            <svg class="unit" data-pilot="ai" data-coalition="red" data-is-selected="true" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">2</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">5</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" style="width: calc( var( --unit-marker-air-fuel-width ) * 0.33);" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
-                            
-                        </div>
-
+                        
                         <div class="example">
 
                             <div class="caption">50%</div>
-                            <svg class="unit" data-pilot="ai" data-coalition="red" data-is-selected="true" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">2</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">5</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" style="width: calc( var( --unit-marker-air-fuel-width ) * 0.5 );" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
+                            <div class="unit unit-air" data-pilot="ai" data-coalition="red" data-is-selected="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:50%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
                             
                         </div>
 
                         <div class="example">
 
                             <div class="caption">75%</div>
-                            <svg class="unit" data-pilot="ai" data-coalition="red" data-is-selected="true" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">2</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">5</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" style="width: calc( var( --unit-marker-air-fuel-width ) * 0.75 );" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
+                            <div class="unit unit-air" data-pilot="ai" data-coalition="red">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:75%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
                             
                         </div>
 
                         <div class="example">
 
                             <div class="caption">100%</div>
-                            <svg class="unit" data-pilot="ai" data-coalition="red" data-is-selected="true" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">2</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">5</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" style="width: calc( var( --unit-marker-air-fuel-width ) * 1 );" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
+                            <div class="unit unit-air" data-pilot="ai" data-coalition="red" data-is-selected="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
                             
                         </div>
 
@@ -801,109 +812,148 @@
 
                         <div class="example">
 
-                            <div class="caption">BLUEFOR, Fox 1</div>
-                            <svg class="unit" data-pilot="ai" data-coalition="blue" data-has-fox-1="true" data-is-selected="true" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">2</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">16</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" style="width: calc( var( --unit-marker-air-fuel-width ) * 1 );" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
+                            <div class="caption">Neutral</div>
+                            <div class="unit unit-air" data-pilot="ai" data-has-fox-1="true"  data-has-fox-2="true"  data-has-fox-3="true" data-has-other-ammo="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
                             
                         </div>
 
                         <div class="example">
-
-                            <div class="caption">BLUEFOR, Fox 2</div>
-                            <svg class="unit" data-pilot="ai" data-coalition="blue" data-has-fox-2="true" data-is-selected="true" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">2</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">14</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" style="width: calc( var( --unit-marker-air-fuel-width ) * 1 );" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
                             
-                        </div>
+                            <div class="caption">Neutral</div>
+                            <div class="unit unit-air" data-pilot="ai" data-is-selected="true" data-has-fox-1="true"  data-has-fox-2="true"  data-has-fox-3="true" data-has-other-ammo="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
 
+                        </div>
 
                         <div class="example">
-
-                            <div class="caption">REDFOR, Fox 3</div>
-                            <svg class="unit" data-pilot="ai" data-coalition="red" data-has-fox-3="true" data-is-selected="true" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">2</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">5</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" style="width: calc( var( --unit-marker-air-fuel-width ) * 1 );" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
                             
-                        </div>
+                            <div class="caption">Blue</div>
+                            <div class="unit unit-air" data-pilot="ai" data-coalition="blue" data-has-fox-1="true"  data-has-fox-2="true"  data-has-fox-3="true" data-has-other-ammo="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
 
+                        </div>
 
                         <div class="example">
-
-                            <div class="caption">REDFOR, other ammo</div>
-                            <svg class="unit" data-pilot="ai" data-coalition="red" data-has-other-ammo="true" data-is-selected="true" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">2</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">31</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" style="width: calc( var( --unit-marker-air-fuel-width ) * 1 );" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
                             
-                        </div>
+                            <div class="caption">Blue</div>
+                            <div class="unit unit-air" data-pilot="ai" data-coalition="blue" data-is-selected="true" data-has-fox-1="true"  data-has-fox-2="true"  data-has-fox-3="true" data-has-other-ammo="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
 
+                        </div>
 
                         <div class="example">
-
-                            <div class="caption">Neutral, all ordinance</div>
-                            <svg class="unit" data-pilot="ai" data-has-fox-1="true" data-has-fox-2="true" data-has-fox-3="true" data-has-other-ammo="true" data-is-selected="true" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">2</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">15</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" style="width: calc( var( --unit-marker-air-fuel-width ) * 1 );" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
                             
+                            <div class="caption">Red</div>
+                            <div class="unit unit-air" data-pilot="ai" data-coalition="red" data-has-fox-1="true"  data-has-fox-2="true"  data-has-fox-3="true" data-has-other-ammo="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
+
                         </div>
 
+                        <div class="example">
+                            
+                            <div class="caption">Red</div>
+                            <div class="unit unit-air" data-pilot="ai" data-coalition="red" data-is-selected="true" data-has-fox-1="true"  data-has-fox-2="true"  data-has-fox-3="true" data-has-other-ammo="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
+
+                        </div>
                         
-
                     </div>
         
                 </div>
@@ -914,157 +964,155 @@
                     <div class="content-body">
 
                         <div class="example">
-
-                            <div class="caption">BLUEFOR, stationary</div>
-
-                            <svg class="unit" data-pilot="ai" data-coalition="blue" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">2</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">16</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" style="width: calc( var( --unit-marker-air-fuel-width ) * 1 );" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
                             
-                        </div>
+                            <div class="caption">&nbsp;</div>
+                            <div class="unit unit-air" data-pilot="ai" data-coalition="red" data-is-in-hotgroup="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-vvi" style="height: 50px; transform:rotate(0deg);"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">1</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
 
+                        </div>
 
                         <div class="example">
-
-                            <div class="caption">BLUEFOR, 360&deg;</div>
-                            <svg class="unit" data-pilot="ai" data-coalition="blue" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-vvi" style="transform:rotate( calc( var( --unit-marker-air-vvi-rotation-offset ) ) ); height:calc( ( var( --unit-marker-air-height ) / 2 ) + 45px );" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">2</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">15</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" style="width: calc( var( --unit-marker-air-fuel-width ) * 1 );" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
                             
-                        </div>
+                            <div class="caption">&nbsp;</div>
+                            <div class="unit unit-air" data-pilot="ai" data-coalition="red" data-is-in-hotgroup="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-vvi" style="height: 80px; transform:rotate(45deg);"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">2</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
 
+                        </div>
 
                         <div class="example">
-
-                            <div class="caption">BLUEFOR, 045&deg;</div>
-                            <svg class="unit" data-pilot="ai" data-coalition="blue" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-vvi" style="transform:rotate( calc( var( --unit-marker-air-vvi-rotation-offset ) + 45deg ) ); height:calc( ( var( --unit-marker-air-height ) / 2 ) + 16px );" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">2</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">15</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" style="width: calc( var( --unit-marker-air-fuel-width ) * 1 );" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
                             
-                        </div>
+                            <div class="caption">&nbsp;</div>
+                            <div class="unit unit-air" data-pilot="ai" data-coalition="red" data-is-in-hotgroup="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-vvi" style="height: 50px; transform:rotate(90deg);"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">3</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
 
+                        </div>
 
                         <div class="example">
-
-                            <div class="caption">REDFOR, 090&deg;</div>
-                            <svg class="unit" data-pilot="ai" data-coalition="red" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-vvi" style="transform:rotate( calc( var( --unit-marker-air-vvi-rotation-offset ) + 90deg ) ); height:calc( ( var( --unit-marker-air-height ) / 2 ) + 16px );" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">2</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">15</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" style="width: calc( var( --unit-marker-air-fuel-width ) * 1 );" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
                             
-                        </div>
+                            <div class="caption">&nbsp;</div>
+                            <div class="unit unit-air" data-pilot="ai" data-coalition="red" data-is-in-hotgroup="true" data-is-selected="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-vvi" style="height: 50px; transform:rotate(135deg);"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
 
+                        </div>
 
                         <div class="example">
-
-                            <div class="caption">BLUEFOR, 121&deg;</div>
-                            <svg class="unit" data-pilot="ai" data-coalition="blue" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-vvi" style="transform:rotate( calc( var( --unit-marker-air-vvi-rotation-offset ) + 121deg ) ); height:calc( ( var( --unit-marker-air-height ) / 2 ) + 10px );" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">2</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">18</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" style="width: calc( var( --unit-marker-air-fuel-width ) * 1 );" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
                             
-                        </div>
+                            <div class="caption">&nbsp;</div>
+                            <div class="unit unit-air" data-pilot="ai" data-coalition="red" data-is-in-hotgroup="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-vvi" style="height: 50px; transform:rotate(180deg);"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">5</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
 
+                        </div>
 
                         <div class="example">
-
-                            <div class="caption">REDFOR, 201&deg;</div>
-                            <svg class="unit" data-pilot="ai" data-coalition="red" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-vvi" style="transform:rotate( calc( var( --unit-marker-air-vvi-rotation-offset ) + 201deg ) ); height:calc( ( var( --unit-marker-air-height ) / 2 ) + 25px );" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">2</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">29</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" style="width: calc( var( --unit-marker-air-fuel-width ) * 1 );" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
                             
+                            <div class="caption">&nbsp;</div>
+                            <div class="unit unit-air" data-pilot="ai" data-coalition="red" data-is-in-hotgroup="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-vvi" style="height: 20px; transform:rotate(272deg);"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">5</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
+
                         </div>
-
-
-                        <div class="example">
-
-                            <div class="caption">REDFOR, 329&deg;</div>
-                            <svg class="unit" data-pilot="ai" data-coalition="red" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-vvi" style="transform:rotate( calc( var( --unit-marker-air-vvi-rotation-offset ) + 329deg ) ); height:calc( ( var( --unit-marker-air-height ) / 2 ) + 25px );" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">2</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">33</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" style="width: calc( var( --unit-marker-air-fuel-width ) * 1 );" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                            </svg>
-                            
-                        </div>
+                        
 
                     </div>
         
@@ -1078,54 +1126,93 @@
 
                         <div class="example">
 
-                            <div class="caption">Olympus 1-1; 090&deg;; 25,000ft</div>
-                            <svg class="unit" data-pilot="ai" data-coalition="red" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-vvi" style="transform:rotate( calc( var( --unit-marker-air-vvi-rotation-offset ) + 090deg ) ); height:calc( ( var( --unit-marker-air-height ) / 2 ) + 25px );" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">2</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">33</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" style="width: calc( var( --unit-marker-air-fuel-width ) * 1 );" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                                <g class="unit-summary">
-                                    <text class="unit-callsign" x="1" y="46">Olympus 1-1</text>
-                                    <text class="unit-heading" x="20" y="60">090</text>
-                                    <text class="unit-altitude" x="46" y="60">25</text>
-                                </g>
-                            </svg>
+                            <div class="caption">&nbsp;</div>
+                            <div class="unit unit-air" data-pilot="ai" data-coalition="blue">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-vvi" style="height: 30px; transform:rotate(90deg);"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                                <div class="unit-summary">
+                                    <div class="unit-callsign">Olympus 1-1</div>
+                                    <div class="unit-heading">090</div>
+                                    <div class="unit-altitude">25</div>
+                                </div>
+                            </div>
                             
                         </div>
 
 
                         <div class="example">
 
-                            <div class="caption">Olympus 3-1; 260&deg;; 31,000ft</div>
-                            <svg class="unit" data-pilot="ai" data-coalition="red" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-vvi" style="transform:rotate( calc( var( --unit-marker-air-vvi-rotation-offset ) + 260deg ) ); height:calc( ( var( --unit-marker-air-height ) / 2 ) + 25px );" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">2</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">33</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" style="width: calc( var( --unit-marker-air-fuel-width ) * 1 );" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                                <g class="unit-summary">
-                                    <text class="unit-callsign" x="1" y="46">Olympus 3-1</text>
-                                    <text class="unit-heading" x="20" y="60">260</text>
-                                    <text class="unit-altitude" x="46" y="60">31</text>
-                                </g>
-                            </svg>
+                            <div class="caption">&nbsp;</div>
+                            <div class="unit unit-air" data-pilot="ai" data-coalition="red" data-is-in-hotgroup="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-vvi" style="height: 50px; transform:rotate(135deg);"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                                <div class="unit-summary">
+                                    <div class="unit-callsign">Springfield 3-1 | Longname</div>
+                                    <div class="unit-heading">260</div>
+                                    <div class="unit-altitude">31</div>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+
+                        <div class="example">
+
+                            <div class="caption">&nbsp;</div>
+                            <div class="unit unit-air" data-pilot="ai" data-coalition="red" data-is-in-hotgroup="true" data-is-selected="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-vvi" style="height: 50px; transform:rotate(135deg);"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                                <div class="unit-summary">
+                                    <div class="unit-callsign">Springfield 3-1 | Longname</div>
+                                    <div class="unit-heading">260</div>
+                                    <div class="unit-altitude">31</div>
+                                </div>
+                            </div>
                             
                         </div>
 
@@ -1135,52 +1222,252 @@
 
                 <div class="content">
 
+                    <div class="content-header">Status icons</div>
+                    <div class="content-body">
+
+                        <div class="example">
+                            
+                            <div class="unit unit-air" data-status="rtb" data-pilot="ai">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-status"></div>
+                                <div class="unit-vvi" style="height: 50px; transform:rotate(135deg);"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                                <div class="unit-summary">
+                                    <div class="unit-callsign">Springfield 3-1 | Longname</div>
+                                    <div class="unit-heading">260</div>
+                                    <div class="unit-altitude">31</div>
+                                </div>
+                            </div>
+
+                        </div>
+                        
+
+                        <div class="example">
+                            
+                            <div class="unit unit-air" data-status="rtb" data-coalition="blue" data-is-in-hotgroup="true" data-is-selected="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-status"></div>
+                                <div class="unit-vvi" style="height: 50px; transform:rotate(315deg);"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                                <div class="unit-summary">
+                                    <div class="unit-callsign">Springfield 3-1 | Longname</div>
+                                    <div class="unit-heading">260</div>
+                                    <div class="unit-altitude">31</div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="example">
+                            
+                            <div class="unit unit-air" data-status="rtb" data-pilot="ai" data-coalition="red" data-is-in-hotgroup="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-status"></div>
+                                <div class="unit-vvi" style="height: 50px; transform:rotate(270deg);"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                                <div class="unit-summary">
+                                    <div class="unit-callsign">Springfield 3-1 | Longname</div>
+                                    <div class="unit-heading">260</div>
+                                    <div class="unit-altitude">31</div>
+                                </div>
+                            </div>
+
+                        </div>
+                        
+
+                        <div class="example">
+                            
+                            <div class="unit unit-air" data-status="hold" data-pilot="ai">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-status"></div>
+                                <div class="unit-vvi" style="height: 50px; transform:rotate(135deg);"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                                <div class="unit-summary">
+                                    <div class="unit-callsign">Springfield 3-1 | Longname</div>
+                                    <div class="unit-heading">260</div>
+                                    <div class="unit-altitude">31</div>
+                                </div>
+                            </div>
+
+                        </div>
+                        
+
+                        <div class="example">
+                            
+                            <div class="unit unit-air" data-status="hold" data-coalition="blue" data-is-in-hotgroup="true" data-is-selected="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-status"></div>
+                                <div class="unit-vvi" style="height: 50px; transform:rotate(315deg);"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                                <div class="unit-summary">
+                                    <div class="unit-callsign">Springfield 3-1 | Longname</div>
+                                    <div class="unit-heading">260</div>
+                                    <div class="unit-altitude">31</div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="example">
+                            
+                            <div class="unit unit-air" data-status="hold" data-pilot="ai" data-coalition="red" data-is-in-hotgroup="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-status"></div>
+                                <div class="unit-vvi" style="height: 50px; transform:rotate(280deg);"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                                <div class="unit-summary">
+                                    <div class="unit-callsign">Springfield 3-1 | Longname</div>
+                                    <div class="unit-heading">260</div>
+                                    <div class="unit-altitude">31</div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+                <div class="content">
+
                     <div class="content-header">Overlaying planes</div>
                     <div class="content-body">
 
                         <div id="overlaying-planes" class="example">
 
-                            <svg class="unit" data-pilot="ai" data-coalition="red" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-vvi" style="transform:rotate( calc( var( --unit-marker-air-vvi-rotation-offset ) + 090deg ) ); height:calc( ( var( --unit-marker-air-height ) / 2 ) + 25px );" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">2</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">33</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" style="width: calc( var( --unit-marker-air-fuel-width ) * 1 );" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                                <g class="unit-summary">
-                                    <text class="unit-callsign" x="1" y="46">Olympus 1-1</text>
-                                    <text class="unit-heading" x="20" y="60">090</text>
-                                    <text class="unit-altitude" x="46" y="60">25</text>
-                                </g>
-                            </svg>
+                            <div class="unit unit-air" data-pilot="ai" data-coalition="red" data-is-in-hotgroup="true" data-is-selected="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-vvi" style="height: 50px; transform:rotate(135deg);"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                                <div class="unit-summary">
+                                    <div class="unit-callsign">Springfield 3-1 | Longname</div>
+                                    <div class="unit-heading">260</div>
+                                    <div class="unit-altitude">31</div>
+                                </div>
+                            </div>
 
-                            <svg class="unit" data-pilot="ai" data-coalition="red" xmlns="http://www.w3.org/2000/svg">
-                                <circle class="unit-spotlight" />
-                                <rect class="unit-vvi" style="transform:rotate( calc( var( --unit-marker-air-vvi-rotation-offset ) + 260deg ) ); height:calc( ( var( --unit-marker-air-height ) / 2 ) + 25px );" />
-                                <rect class="unit-hotgroup"></rect>
-                                <text x="74" y="27" class="unit-hotgroup-id">2</text>
-                                <rect class="unit-selected-border" />
-                                <rect class="unit-marker" />
-                                <text x="50%" y="54px" class="unit-short-label">33</text>
-                                <rect class="unit-fuel" />
-                                <rect class="unit-fuel-level" style="width: calc( var( --unit-marker-air-fuel-width ) * 1 );" />
-                                <circle class="unit-ammo unit-ammo-fox-1" />
-                                <circle class="unit-ammo unit-ammo-fox-2" />
-                                <circle class="unit-ammo unit-ammo-fox-3" />
-                                <circle class="unit-ammo unit-ammo-other" />
-                                <g class="unit-summary">
-                                    <text class="unit-callsign" x="1" y="46">Olympus 3-1</text>
-                                    <text class="unit-heading" x="20" y="60">260</text>
-                                    <text class="unit-altitude" x="46" y="60">31</text>
-                                </g>
-                            </svg>
+                            <div class="unit unit-air" data-pilot="ai" data-coalition="red" data-is-in-hotgroup="true" data-is-selected="true">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker-border"></div>
+                                <div class="unit-vvi" style="height: 50px; transform:rotate(135deg);"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                                <div class="unit-summary">
+                                    <div class="unit-callsign">Springfield 3-1 | Longname</div>
+                                    <div class="unit-heading">260</div>
+                                    <div class="unit-altitude">31</div>
+                                </div>
+                            </div>
                             
                         </div>
 
@@ -1306,6 +1593,29 @@
                     </div>
     
                 </div>
+            
+                <div class="content">
+    
+                    <div class="content-header">Button group</div>
+    
+                    <div class="content-body">
+
+                        <div class="example">
+
+                            <div class="ol-panel">
+                                <div class="ol-button-group">
+                                    <button>A</button>
+                                    <button>B</button>
+                                    <button>C</button>
+                                </div>
+                            </div>
+
+                        </div>
+    
+    
+                    </div>
+    
+                </div>
 
             </section>
 
@@ -1321,7 +1631,7 @@
 
                 if ( section ) {
                     const index = section.split( "-" )[ 1 ];
-                    document.querySelector( "section:nth-of-type(" + index + ")" ).style.display = "block";
+                    document.querySelector( "section:nth-of-type(" + index + ")" ).style.display = "flex";
                 }
 
             }
@@ -1336,6 +1646,13 @@
             });
 
             showSection();
+
+            document.querySelectorAll( ".unit" ).forEach( unit => {
+                unit.addEventListener( "click", ev => {
+                    console.log( unit.dataset.isSelected );
+                    unit.dataset.isSelected = ( unit.dataset.isSelected === "true" ) ? null : "true";
+                });
+            });
 
         </script>
 
