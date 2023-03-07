@@ -98,19 +98,20 @@ button[disabled="disabled"] {
 }
 
 .ol-select:not( .ol-select-image ) > .ol-select-value {
+    align-items: center;
     background-color: var( --background-grey );
     border-radius: var( --border-radius-sm );
+    justify-content: center;
     padding:1em;
     width:100%;
 }
 
-.ol-select:not( .ol-select-image ) > .ol-select-value:before {
-    content: "[ ]";
+.ol-select:not( .ol-select-image ) > .ol-select-value svg {
     margin-right: 10px;
 }
 
 .ol-select:not( .ol-select-image ) > .ol-select-value:after {
-    content: "[V]";
+    content: url( "/themes/olympus/images/chevron-down.svg" );
     margin-left:10px;
 }
 
@@ -423,4 +424,35 @@ nav.ol-panel > :last-child {
 #unit-info-panel {
     display: flex;
     flex-direction: column;
+}
+
+
+#visibility-control {
+    align-items: center;
+}
+
+#visibility-control button {
+    border:none;
+    height:32px;
+    width:32px;
+}
+
+#visibility-control-aircraft {
+    background-image: var( --visibility-control-aircraft-visible-url );
+}
+
+#visibility-control-ground {
+    background-image: var( --visibility-control-ground-visible-url );
+}
+
+#visibility-control-sam {
+    background-image: var( --visibility-control-sam-visible-url );
+}
+
+#visibility-control-naval {
+    background-image: var( --visibility-control-naval-visible-url );
+}
+
+#visibility-control-threat {
+    background-image: var( --visibility-control-threat-visible-url );
 }

@@ -45,6 +45,25 @@
 
 
 
+    /***  Navbar  ***/
+
+    --visibility-control-aircraft-visible-url: url( "/themes/olympus/images/visibility_aircraft_visible.svg" );
+    --visibility-control-aircraft-hidden-url: url( "/themes/olympus/images/visibility_aircraft_hidden.svg" );
+
+    --visibility-control-ground-visible-url: url( "/themes/olympus/images/visibility_ground_visible.svg" );
+    --visibility-control-ground-hidden-url: url( "/themes/olympus/images/visibility_ground_hidden.svg" );
+
+    --visibility-control-sam-visible-url: url( "/themes/olympus/images/visibility_sam_visible.svg" );
+    --visibility-control-sam-hidden-url: url( "/themes/olympus/images/visibility_sam_hidden.svg" );
+
+    --visibility-control-naval-visible-url: url( "/themes/olympus/images/visibility_naval_visible.svg" );
+    --visibility-control-naval-hidden-url: url( "/themes/olympus/images/visibility_naval_hidden.svg" );
+
+    --visibility-control-threat-visible-url: url( "/themes/olympus/images/visibility_threat_visible.svg" );
+    --visibility-control-threat-hidden-url: url( "/themes/olympus/images/visibility_threat_hidden.svg" );
+
+
+
     /***  Unit marker settings  ***/
 
 
