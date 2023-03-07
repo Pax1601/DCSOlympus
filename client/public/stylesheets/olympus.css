@@ -100,12 +100,12 @@ button[disabled="disabled"] {
 .ol-select:not( .ol-select-image ) > .ol-select-value {
     background-color: var( --background-grey );
     border-radius: var( --border-radius-sm );
+    justify-content: center;
     padding:1em;
     width:100%;
 }
 
-.ol-select:not( .ol-select-image ) > .ol-select-value:before {
-    content: "[ ]";
+.ol-select:not( .ol-select-image ) > .ol-select-value svg {
     margin-right: 10px;
 }
 
