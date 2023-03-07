@@ -21,6 +21,18 @@ div.unit {
     position:relative;
 }
 
+[data-hide-aircraft] div.unit-air,
+[data-hide-ground] div.unit-ground,
+[data-hide-sam] div.unit-sam,
+[data-hide-threat] div.unit-threat,
+[data-hide-naval] div.unit-naval,
+[data-hide-blue] div.unit[data-coalition="blue"],
+[data-hide-red] div.unit[data-coalition="red"],
+[data-hide-neutral] div.unit[data-coalition="neutral"] {
+    display:none;
+}
+
+
 div.unit .unit-selected-spotlight {
     background-color: var( --unit-spotlight-fill );
     border-radius: 50%;
@@ -94,25 +106,6 @@ div.unit .unit-marker {
     z-index:3;
 }
 
-[data-hide-aircraft] div.unit-air {
-    display:none;
-}
-
-[data-hide-ground] div.unit-ground {
-    display:none;
-}
-
-[data-hide-sam] div.unit-sam {
-    display:none;
-}
-
-[data-hide-threat] div.unit-threat {
-    display:none;
-}
-
-[data-hide-naval] div.unit-naval {
-    display:none;
-}
 
 
 /*  Air  */
@@ -184,6 +177,44 @@ div.unit-sam[data-coalition="red"] .unit-marker {
 }
 
 
+/*  Naval  */
+
+div.unit-naval .unit-marker {
+    background-image: var( --unit-naval-marker-neutral-url );
+    height: var( --unit-naval-marker-height );
+    width: var( --unit-naval-marker-width );
+}
+
+
+div.unit-naval[data-coalition="blue"] .unit-marker {
+    background-image: var( --unit-naval-marker-blue-url );
+}
+
+
+div.unit-naval[data-coalition="red"] .unit-marker {
+    background-image: var( --unit-naval-marker-red-url );
+}
+
+
+/*  Building  */
+
+div.unit-building .unit-marker {
+    background-image: var( --unit-building-marker-neutral-url );
+    height: var( --unit-building-marker-height );
+    width: var( --unit-building-marker-width );
+}
+
+
+div.unit-building[data-coalition="blue"] .unit-marker {
+    background-image: var( --unit-building-marker-blue-url );
+}
+
+
+div.unit-building[data-coalition="red"] .unit-marker {
+    background-image: var( --unit-building-marker-red-url );
+}
+
+
 
 div.unit .unit-short-label {
     font-size: var(--unit-font-size);
@@ -194,6 +225,10 @@ div.unit .unit-short-label {
 
 div.unit-sam .unit-short-label {
     translate:0 50%;
+}
+
+div.unit-naval .unit-short-label {
+    translate:0 -50%;
 }
 
 

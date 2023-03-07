@@ -144,4 +144,22 @@
     --unit-sam-marker-neutral-url: url( "/themes/olympus/images/icon_sam_neutral.svg" );
     --unit-sam-marker-red-url: url( "/themes/olympus/images/icon_sam_red.svg" );
 
+
+    /***  Naval  ***/
+    --unit-naval-marker-height: 38px;
+    --unit-naval-marker-width: 50px;
+
+    --unit-naval-marker-blue-url: url( "/themes/olympus/images/icon_naval_blue.svg" );
+    --unit-naval-marker-neutral-url: url( "/themes/olympus/images/icon_naval_neutral.svg" );
+    --unit-naval-marker-red-url: url( "/themes/olympus/images/icon_naval_red.svg" );
+
+
+    /***  Building  ***/
+    --unit-building-marker-height: 24px;
+    --unit-building-marker-width: 43px;
+
+    --unit-building-marker-blue-url: url( "/themes/olympus/images/icon_building_blue.svg" );
+    --unit-building-marker-neutral-url: url( "/themes/olympus/images/icon_building_neutral.svg" );
+    --unit-building-marker-red-url: url( "/themes/olympus/images/icon_building_red.svg" );
+
 }

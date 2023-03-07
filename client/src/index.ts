@@ -68,10 +68,12 @@ function setup() {
             if ( target.classList.contains( "olympus-dialog-close" ) ) {
                 target.closest( "div.olympus-dialog" )?.classList.add( "hide" );
             }
-        
-            if ( target.dataset.hasOwnProperty( "onClick" ) ) {
-                const eventName:string = target.dataset.onClick || "";
-                const params:string    = target.dataset.onClickParams || "{}";
+
+            const triggerElement = target.closest( "[data-on-click]" );
+ 
+            if ( triggerElement instanceof HTMLElement ) {
+                const eventName:string = triggerElement.dataset.onClick || "";
+                const params:string    = triggerElement.dataset.onClickParams || "{}";
 
                 if ( eventName ) {
                     document.dispatchEvent( new CustomEvent( eventName, {
@@ -98,10 +100,12 @@ function setup() {
     });
 
 
-    document.addEventListener( "toggleVisibility", ( ev:CustomEventInit ) => {
+    document.addEventListener( "toggleCoalitionVisibility", ( ev:CustomEventInit ) => {
+        document.body.toggleAttribute( "data-hide-" + ev.detail.coalition );
+    });
 
-        document.body.toggleAttribute( "data-hide-" + ev.detail.unitType )
-
+    document.addEventListener( "toggleUnitVisibility", ( ev:CustomEventInit ) => {
+        document.body.toggleAttribute( "data-hide-" + ev.detail.unitType );
     });
 
 

@@ -250,6 +250,96 @@
 
                 </div>
 
+                <div class="content">
+
+                    <div class="content-header">Naval</div>
+                    <div class="content-body">
+
+                        <div class="example">
+                            
+                            <div class="caption">Neutral</div>
+                            
+                            <div class="unit unit-naval" data-coalition="">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">Z</div>
+                            </div>
+                            
+                        </div>
+
+                        <div class="example">
+                            
+                            <div class="caption">Blue</div>
+                            
+                            <div class="unit unit-naval" data-coalition="blue">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">Y</div>
+                            </div>
+                            
+                        </div>
+
+                        <div class="example">
+                            
+                            <div class="caption">Red</div>
+                            
+                            <div class="unit unit-naval" data-coalition="red">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">X</div>
+                            </div>
+                            
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="content">
+
+                    <div class="content-header">Buildings</div>
+                    <div class="content-body">
+
+                        <div class="example">
+                            
+                            <div class="caption">Neutral</div>
+                            
+                            <div class="unit unit-building" data-coalition="">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">J</div>
+                            </div>
+                            
+                        </div>
+
+                        <div class="example">
+                            
+                            <div class="caption">Blue</div>
+                            
+                            <div class="unit unit-building" data-coalition="blue">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">K</div>
+                            </div>
+                            
+                        </div>
+
+                        <div class="example">
+                            
+                            <div class="caption">Red</div>
+                            
+                            <div class="unit unit-building" data-coalition="red">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-marker"></div>
+                                <div class="unit-short-label">L</div>
+                            </div>
+                            
+                        </div>
+
+                    </div>
+
+                </div>
+
             </section>
             
 
@@ -1631,13 +1721,17 @@
 
 
             document.querySelectorAll( ".ol-select" ).forEach( select => {
+
                 select.addEventListener( "click", ev => {
+                    ev.preventDefault();
+                    ev.stopPropagation();
                     select.classList.toggle( "is-open" );
                 });
 
                 select.addEventListener( "mouseleave", ev => {
                     select.classList.remove( "is-open" );
                 });
+                
             });
 
         </script>

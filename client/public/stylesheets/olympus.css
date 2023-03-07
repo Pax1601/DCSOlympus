@@ -274,26 +274,24 @@ nav.ol-panel > :last-child {
     border-radius: var( --border-radius-sm );
 }
 
-.ol-panel .ol-group-checkbox {
+.ol-panel .ol-group-button-toggle {
     align-items: center;
-    column-gap: 20px;
+    column-gap: 15px;
     display:flex;
     flex-wrap: nowrap;
     white-space: nowrap;
     width:fit-content;
 }
 
-.ol-panel .ol-group-checkbox .ol-checkbox {
+.ol-panel .ol-group-button-toggle button {
     align-items: center;
-    display:flex;
-    flex-direction: row;
+    background-image: url( "/themes/olympus/images/check_square.svg");
+    background-position: 5px 50%;
+    background-repeat: no-repeat;
+    border:0;
+    text-indent: 15px;
 }
 
-
-.ol-panel .ol-group-checkbox input,
-.ol-panel .ol-group-checkbox .ol-checkbox label {
-    cursor: pointer;
-}
 
 
 
@@ -314,6 +312,24 @@ nav.ol-panel > :last-child {
 	background-color: var(--primary-grey);
     color: var(--secondary-gunmetal-grey)
 }
+
+
+.accent-bluefor {
+    color: var(--primary-blue);
+    font-weight: var( --font-weight-bolder );
+}
+
+.accent-redfor {
+    color: var(--primary-red);
+    font-weight: var( --font-weight-bolder );
+}
+
+.accent-neutral {
+    color: var( --primary-grey );
+    font-weight: var( --font-weight-bolder );
+}
+
+
 
 .hide {
     display: none !important;
@@ -427,52 +443,62 @@ nav.ol-panel > :last-child {
 }
 
 
-#visibility-control {
+
+
+
+#unit-visibility-control {
     align-items: center;
 }
 
-#visibility-control button {
+#unit-visibility-control button {
     border:none;
     height:32px;
     width:32px;
 }
 
-#visibility-control-aircraft {
+#unit-visibility-control-aircraft {
     background-image: var( --visibility-control-aircraft-visible-url );
 }
 
-body[data-hide-aircraft] #visibility-control-aircraft {
+body[data-hide-aircraft] #unit-visibility-control-aircraft {
     background-image: var( --visibility-control-aircraft-hidden-url );
 }
 
-#visibility-control-ground {
+#unit-visibility-control-ground {
     background-image: var( --visibility-control-ground-visible-url );
 }
 
-body[data-hide-ground] #visibility-control-ground {
+body[data-hide-ground] #unit-visibility-control-ground {
     background-image: var( --visibility-control-ground-hidden-url );
 }
 
-#visibility-control-sam {
+#unit-visibility-control-sam {
     background-image: var( --visibility-control-sam-visible-url );
 }
 
-body[data-hide-sam] #visibility-control-sam {
+body[data-hide-sam] #unit-visibility-control-sam {
     background-image: var( --visibility-control-sam-hidden-url );
 }
 
-#visibility-control-threat {
+#unit-visibility-control-threat {
     background-image: var( --visibility-control-threat-visible-url );
 }
 
-body[data-hide-threat] #visibility-control-threat {
+body[data-hide-threat] #unit-visibility-control-threat {
     background-image: var( --visibility-control-threat-hidden-url );
 }
 
-#visibility-control-naval {
+#unit-visibility-control-naval {
     background-image: var( --visibility-control-naval-visible-url );
 }
 
-body[data-hide-naval] #visibility-control-naval {
+body[data-hide-naval] #unit-visibility-control-naval {
     background-image: var( --visibility-control-naval-hidden-url );
+}
+
+
+[data-hide-blue] #coalition-visibility-control #coalition-visibility-control-blue,
+[data-hide-red] #coalition-visibility-control #coalition-visibility-control-red,
+[data-hide-neutral] #coalition-visibility-control #coalition-visibility-control-neutral {
+    background-image:none;
 }
