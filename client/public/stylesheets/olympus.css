@@ -441,18 +441,38 @@ nav.ol-panel > :last-child {
     background-image: var( --visibility-control-aircraft-visible-url );
 }
 
+body[data-hide-aircraft] #visibility-control-aircraft {
+    background-image: var( --visibility-control-aircraft-hidden-url );
+}
+
 #visibility-control-ground {
     background-image: var( --visibility-control-ground-visible-url );
+}
+
+body[data-hide-ground] #visibility-control-ground {
+    background-image: var( --visibility-control-ground-hidden-url );
 }
 
 #visibility-control-sam {
     background-image: var( --visibility-control-sam-visible-url );
 }
 
-#visibility-control-naval {
-    background-image: var( --visibility-control-naval-visible-url );
+body[data-hide-sam] #visibility-control-sam {
+    background-image: var( --visibility-control-sam-hidden-url );
 }
 
 #visibility-control-threat {
     background-image: var( --visibility-control-threat-visible-url );
+}
+
+body[data-hide-threat] #visibility-control-threat {
+    background-image: var( --visibility-control-threat-hidden-url );
+}
+
+#visibility-control-naval {
+    background-image: var( --visibility-control-naval-visible-url );
+}
+
+body[data-hide-naval] #visibility-control-naval {
+    background-image: var( --visibility-control-naval-hidden-url );
 }

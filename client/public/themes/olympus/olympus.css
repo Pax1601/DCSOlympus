@@ -122,21 +122,21 @@
     --unit-air-status-hold-red-url: url( "data:image/svg+xml,%3Csvg width='17' height='17' viewBox='0 0 17 17' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M8.51217 0.900581C9.67164 -0.282964 11.571 -0.302474 12.7546 0.857004L14.5409 2.607C15.1169 3.17128 15.4415 3.94367 15.4415 4.75C15.4415 4.98835 15.4131 5.22373 15.3583 5.45165C15.8011 5.85549 16.1275 6.39558 16.2654 7.02558L16.3869 7.58115L16.3869 7.58116C17.2098 11.3434 14.2774 14.75 10.5451 14.75H8.61971C8.47923 15.0566 8.28425 15.3446 8.03463 15.5994C6.87515 16.783 4.97576 16.8025 3.79221 15.643L2.00589 13.893C1.4299 13.3287 1.10531 12.5563 1.10531 11.75C1.10531 11.5117 1.13367 11.2763 1.1885 11.0484C0.745688 10.6445 0.419237 10.1044 0.281433 9.47436L0.159919 8.91882C0.159918 8.91881 0.159916 8.9188 0.159915 8.9188C-0.662986 5.15664 2.26935 1.75 6.00175 1.75H7.92709C8.06757 1.44337 8.26255 1.15538 8.51217 0.900581ZM7.92709 7.75H7.87615C7.90687 7.77715 7.93716 7.80505 7.96701 7.83367C7.95325 7.80595 7.93994 7.77805 7.92709 7.75ZM8.57979 8.66633C8.59355 8.69406 8.60686 8.72195 8.61971 8.75H8.67065C8.63993 8.72285 8.60963 8.69496 8.57979 8.66633Z' fill='%23262222'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M10.1192 2.47515C10.4091 2.17926 10.8839 2.17438 11.1798 2.46425L12.9661 4.21425C13.1101 4.35532 13.1913 4.54842 13.1913 4.75C13.1913 4.95158 13.1101 5.14468 12.9661 5.28575L11.1798 7.03575C10.8839 7.32562 10.4091 7.32074 10.1192 7.02486C9.82932 6.72897 9.8342 6.25412 10.1301 5.96425L10.604 5.5H6.00153C4.56536 5.5 3.53239 6.78851 3.82309 8.11751L3.82309 8.11751L3.9446 8.67308C4.03311 9.07772 3.77683 9.4775 3.37218 9.56601C2.96754 9.65452 2.56775 9.39824 2.47925 8.99359L2.35773 8.43803C2.35773 8.43803 2.35773 8.43803 2.35773 8.43802C1.85415 6.13576 3.64687 4 6.00153 4H10.604L10.1301 3.53575C9.8342 3.24588 9.82932 2.77103 10.1192 2.47515ZM13.1742 6.93399C13.5788 6.84548 13.9786 7.10175 14.0671 7.5064L14.1886 8.06196L13.4843 8.21604L14.1886 8.06196C14.6922 10.3642 12.8995 12.5 10.5448 12.5H5.94238L6.41627 12.9643C6.71215 13.2541 6.71703 13.729 6.42716 14.0249C6.13729 14.3207 5.66244 14.3256 5.36656 14.0357L3.58023 12.2857C3.43624 12.1447 3.35509 11.9516 3.35509 11.75C3.35509 11.5484 3.43624 11.3553 3.58023 11.2143L5.36656 9.46425C5.66244 9.17438 6.13729 9.17926 6.42716 9.47515C6.71703 9.77103 6.71215 10.2459 6.41627 10.5357L5.94238 11H10.5448C11.981 11 13.014 9.71149 12.7233 8.38251L12.6018 7.82694C12.5132 7.42229 12.7695 7.02251 13.1742 6.93399Z' fill='white'/%3E%3C/svg%3E" );
 
     
-    /***  Ground vehicles  ***/
-    --unit-vehicle-marker-height: 38px;
-    --unit-vehicle-marker-width: 50px;
+    /***  Ground ***/
+    --unit-ground-marker-height: 38px;
+    --unit-ground-marker-width: 50px;
 
-    --unit-vehicle-marker-blue-url: url( "data:image/svg+xml,%3Csvg width='50' height='38' viewBox='0 0 50 38' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.08142 36.5L25 2L44.9186 36.5H5.08142Z' fill='%233BB9FF' stroke='%23082E44' stroke-width='2'/%3E%3C/svg%3E" );
-    --unit-vehicle-marker-neutral-url: url( "data:image/svg+xml,%3Csvg width='50' height='38' viewBox='0 0 50 38' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.08142 36.5L25 2L44.9186 36.5H5.08142Z' fill='%23CFD9E8' stroke='%232F2F2F' stroke-width='2'/%3E%3C/svg%3E" );
-    --unit-vehicle-marker-red-url: url( "data:image/svg+xml,%3Csvg width='50' height='38' viewBox='0 0 50 38' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.08142 36.5L25 2L44.9186 36.5H5.08142Z' fill='%23FF5858' stroke='%23262222' stroke-width='2'/%3E%3C/svg%3E" );
+    --unit-ground-marker-blue-url: url( "data:image/svg+xml,%3Csvg width='50' height='38' viewBox='0 0 50 38' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.08142 36.5L25 2L44.9186 36.5H5.08142Z' fill='%233BB9FF' stroke='%23082E44' stroke-width='2'/%3E%3C/svg%3E" );
+    --unit-ground-marker-neutral-url: url( "data:image/svg+xml,%3Csvg width='50' height='38' viewBox='0 0 50 38' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.08142 36.5L25 2L44.9186 36.5H5.08142Z' fill='%23CFD9E8' stroke='%232F2F2F' stroke-width='2'/%3E%3C/svg%3E" );
+    --unit-ground-marker-red-url: url( "data:image/svg+xml,%3Csvg width='50' height='38' viewBox='0 0 50 38' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.08142 36.5L25 2L44.9186 36.5H5.08142Z' fill='%23FF5858' stroke='%23262222' stroke-width='2'/%3E%3C/svg%3E" );
 
 
     /***  SAMs  ***/
-    --unit-ground-sam-marker-height: 38px;
-    --unit-ground-sam-marker-width: 50px;
+    --unit-sam-marker-height: 38px;
+    --unit-sam-marker-width: 50px;
 
-    --unit-ground-sam-marker-blue-url: url( "data:image/svg+xml,%3Csvg width='50' height='38' viewBox='0 0 50 38' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.08142 36.5L25 2L44.9186 36.5H5.08142Z' fill='%233BB9FF' stroke='%23082E44' stroke-width='2'/%3E%3C/svg%3E" );
-    --unit-ground-sam-marker-neutral-url: url( "data:image/svg+xml,%3Csvg width='50' height='38' viewBox='0 0 50 38' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.08142 36.5L25 2L44.9186 36.5H5.08142Z' fill='%23CFD9E8' stroke='%232F2F2F' stroke-width='2'/%3E%3C/svg%3E" );
-    --unit-ground-sam-marker-red-url: url( "data:image/svg+xml,%3Csvg width='50' height='38' viewBox='0 0 50 38' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.08142 36.5L25 2L44.9186 36.5H5.08142Z' fill='%23FF5858' stroke='%23262222' stroke-width='2'/%3E%3C/svg%3E" );
+    --unit-sam-marker-blue-url: url( "data:image/svg+xml,%3Csvg width='50' height='38' viewBox='0 0 50 38' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.08142 36.5L25 2L44.9186 36.5H5.08142Z' fill='%233BB9FF' stroke='%23082E44' stroke-width='2'/%3E%3C/svg%3E" );
+    --unit-sam-marker-neutral-url: url( "data:image/svg+xml,%3Csvg width='50' height='38' viewBox='0 0 50 38' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.08142 36.5L25 2L44.9186 36.5H5.08142Z' fill='%23CFD9E8' stroke='%232F2F2F' stroke-width='2'/%3E%3C/svg%3E" );
+    --unit-sam-marker-red-url: url( "data:image/svg+xml,%3Csvg width='50' height='38' viewBox='0 0 50 38' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.08142 36.5L25 2L44.9186 36.5H5.08142Z' fill='%23FF5858' stroke='%23262222' stroke-width='2'/%3E%3C/svg%3E" );
 
 }
