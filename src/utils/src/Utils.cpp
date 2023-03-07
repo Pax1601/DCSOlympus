@@ -38,6 +38,22 @@ std::string to_string(const std::wstring& wstr)
     return result;
 }
 
+std::string random_string(size_t length)
+{
+    auto randchar = []() -> char
+    {
+        const char charset[] =
+            "0123456789"
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            "abcdefghijklmnopqrstuvwxyz";
+        const size_t max_index = (sizeof(charset) - 1);
+        return charset[rand() % max_index];
+    };
+    std::string str(length, 0);
+    std::generate_n(str.begin(), length, randchar);
+    return str;
+}
+
 bool operator== (const Coords& a, const Coords& b) { return a.lat == b.lat && a.lng == b.lng && a.alt == b.alt; }
 bool operator!= (const Coords& a, const Coords& b) { return !(a == b); }
 bool operator== (const Coords& a, const int& b) { return a.lat == b && a.lng == b && a.alt == b; }

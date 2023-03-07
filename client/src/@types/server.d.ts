@@ -1,5 +1,6 @@
 interface UnitsData {
-    units: {[key: string]: UnitData},      
+    units: {[key: string]: UnitData},  
+    sessionHash: string    
 }
 
 interface AirbasesData {

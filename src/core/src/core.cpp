@@ -15,6 +15,7 @@ json::value airbasesData;
 json::value bullseyesData;
 mutex mutexLock;
 bool initialized = false;
+string sessionHash;
 
 /* Called when DCS simulation stops. All singleton instances are deleted. */
 extern "C" DllExport int coreDeinit(lua_State* L)
@@ -38,6 +39,7 @@ extern "C" DllExport int coreDeinit(lua_State* L)
 /* Called when DCS simulation starts. All singletons are instantiated, and the custom Lua functions are registered in the Lua state. */
 extern "C" DllExport int coreInit(lua_State* L)
 {
+    sessionHash = random_string(16);
     unitsManager = new UnitsManager(L);
     server = new Server(L);
     scheduler = new Scheduler(L);
