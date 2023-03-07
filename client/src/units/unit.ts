@@ -298,7 +298,7 @@ export class Unit extends Marker {
             this.setLatLng(new LatLng(this.getFlightData().latitude, this.getFlightData().longitude));
             var element = this.getElement();
             if (element != null) {
-                element.querySelector(".unit-vvi")?.setAttribute("style", `style="height: ${this.getFlightData().speed / 5}px; transform:rotate(${rad2deg(this.getFlightData().heading)}deg);`);
+                element.querySelector(".unit-vvi")?.setAttribute("style", `height: ${this.getFlightData().speed / 5}px; transform:rotate(${rad2deg(this.getFlightData().heading)}deg);`);
                 element.querySelector(".unit")?.setAttribute("data-fuel-level", "20");
                 element.querySelector(".unit")?.setAttribute("data-has-fox-1", "true");
 
