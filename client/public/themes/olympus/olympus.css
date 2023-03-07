@@ -74,7 +74,7 @@
     --unit-height: 32px;
     --unit-label-border-width: 2px;
     --unit-spotlight-fill: var( --secondary-yellow );
-    --unit-spotlight-radius: 24px;
+    --unit-spotlight-radius: 26px;
     --unit-stroke-width: 3px;
     --unit-width: 32px;
 
@@ -86,12 +86,12 @@
     --unit-air-ammo-radius: 2px;
     --unit-air-ammo-spacing: 2px;
     --unit-air-ammo-x:0px;
-    --unit-air-ammo-y:28px;
+    --unit-air-ammo-y:30px;
     --unit-air-fuel-border-width: 2px;
     --unit-air-fuel-height: 6px;
     --unit-air-fuel-width: 36px;
     --unit-air-fuel-x:0px;
-    --unit-air-fuel-y:20px;
+    --unit-air-fuel-y:22px;
     --unit-air-height: 28px;
     --unit-air-vvi-width: 4px;
     --unit-air-width: var( --unit-air-height );
@@ -128,20 +128,20 @@
 
     
     /***  Ground ***/
-    --unit-ground-marker-height: 38px;
-    --unit-ground-marker-width: 50px;
+    --unit-ground-marker-height: 43px;
+    --unit-ground-marker-width: 43px;
 
-    --unit-ground-marker-blue-url: url( "data:image/svg+xml,%3Csvg width='50' height='38' viewBox='0 0 50 38' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.08142 36.5L25 2L44.9186 36.5H5.08142Z' fill='%233BB9FF' stroke='%23082E44' stroke-width='2'/%3E%3C/svg%3E" );
-    --unit-ground-marker-neutral-url: url( "data:image/svg+xml,%3Csvg width='50' height='38' viewBox='0 0 50 38' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.08142 36.5L25 2L44.9186 36.5H5.08142Z' fill='%23CFD9E8' stroke='%232F2F2F' stroke-width='2'/%3E%3C/svg%3E" );
-    --unit-ground-marker-red-url: url( "data:image/svg+xml,%3Csvg width='50' height='38' viewBox='0 0 50 38' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.08142 36.5L25 2L44.9186 36.5H5.08142Z' fill='%23FF5858' stroke='%23262222' stroke-width='2'/%3E%3C/svg%3E" );
+    --unit-ground-marker-blue-url: url( "/themes/olympus/images/icon_ground_blue.svg" );
+    --unit-ground-marker-neutral-url: url( "/themes/olympus/images/icon_ground_neutral.svg" );
+    --unit-ground-marker-red-url: url( "/themes/olympus/images/icon_ground_red.svg" );
 
 
     /***  SAMs  ***/
     --unit-sam-marker-height: 38px;
     --unit-sam-marker-width: 50px;
 
-    --unit-sam-marker-blue-url: url( "data:image/svg+xml,%3Csvg width='50' height='38' viewBox='0 0 50 38' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.08142 36.5L25 2L44.9186 36.5H5.08142Z' fill='%233BB9FF' stroke='%23082E44' stroke-width='2'/%3E%3C/svg%3E" );
-    --unit-sam-marker-neutral-url: url( "data:image/svg+xml,%3Csvg width='50' height='38' viewBox='0 0 50 38' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.08142 36.5L25 2L44.9186 36.5H5.08142Z' fill='%23CFD9E8' stroke='%232F2F2F' stroke-width='2'/%3E%3C/svg%3E" );
-    --unit-sam-marker-red-url: url( "data:image/svg+xml,%3Csvg width='50' height='38' viewBox='0 0 50 38' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.08142 36.5L25 2L44.9186 36.5H5.08142Z' fill='%23FF5858' stroke='%23262222' stroke-width='2'/%3E%3C/svg%3E" );
+    --unit-sam-marker-blue-url: url( "/themes/olympus/images/icon_sam_blue.svg" );
+    --unit-sam-marker-neutral-url: url( "/themes/olympus/images/icon_sam_neutral.svg" );
+    --unit-sam-marker-red-url: url( "/themes/olympus/images/icon_sam_red.svg" );
 
 }

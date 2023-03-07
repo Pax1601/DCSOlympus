@@ -204,8 +204,9 @@ div.unit .unit-fuel {
     display:none;
     height: var( --unit-air-fuel-height );
     position: absolute;
-    translate:var( --unit-air-fuel-x ) 20px;
+    translate:var( --unit-air-fuel-x ) var( --unit-air-fuel-y );
     width: var( --unit-air-fuel-width );
+    z-index: 5;
 }
 
 div.unit .unit-fuel-level {
@@ -293,7 +294,7 @@ div.unit[data-has-fox-1="true"] .unit-ammo-fox-1,
 div.unit[data-has-fox-2="true"] .unit-ammo-fox-2,
 div.unit[data-has-fox-3="true"] .unit-ammo-fox-3,
 div.unit[data-has-other-ammo="true"] .unit-ammo-other {
-    background-color: var( --primary-grey );
+    background-color: var( --secondary-gunmetal-grey );
 }
 
 
