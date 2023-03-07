@@ -40,7 +40,7 @@ export class UnitControlPanel extends Panel {
         this.getElement().querySelector("#roe-buttons-container")?.append(...this.#optionButtons["ROE"]);
         this.getElement().querySelector("#reaction-to-threat-buttons-container")?.append(...this.#optionButtons["reactionToThreat"]);
 
-        document.addEventListener("unitsSelection", (e: CustomEvent<Unit[]>) => {console.log("Select"); this.show(); this.update(e.detail)});
+        document.addEventListener("unitsSelection", (e: CustomEvent<Unit[]>) => {this.show(); this.update(e.detail)});
         document.addEventListener("clearSelection", () => {this.hide()});        
 
         this.hide();
@@ -50,7 +50,6 @@ export class UnitControlPanel extends Panel {
         if (this.getElement() != null)
         {
             this.#showFlightControlSliders(units);
-            console.log( this.getElement().querySelector("#selected-units-container") );
             this.getElement().querySelector("#selected-units-container")?.replaceChildren(...units.map((unit: Unit) =>
             {
                 var button = document.createElement("button");

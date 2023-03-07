@@ -77,7 +77,7 @@ export class Unit extends Marker {
             </div>
             `,
             className: 'ol-unit-marker',
-            iconAnchor: [60, 60]
+            iconAnchor: [0, 0]
         });
         this.setIcon(icon);
 
