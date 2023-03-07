@@ -62,11 +62,34 @@ function setup() {
     document.addEventListener( "click", ( ev ) => {
 
         if ( ev instanceof PointerEvent && ev.target instanceof HTMLElement ) {
-            if ( ev.target.classList.contains( "olympus-dialog-close" ) ) {
-                ev.target.closest( "div.olympus-dialog" )?.classList.add( "hide" );
+
+            const target = ev.target;
+
+            if ( target.classList.contains( "olympus-dialog-close" ) ) {
+                target.closest( "div.olympus-dialog" )?.classList.add( "hide" );
             }
+        
+            if ( target.dataset.hasOwnProperty( "onClick" ) ) {
+                const eventName:string = target.dataset.onClick || "";
+                const params:string    = target.dataset.onClickParams || "{}";
+
+                if ( eventName ) {
+                    document.dispatchEvent( new CustomEvent( eventName, {
+                        detail: JSON.parse( params )
+                    } ) );
+                }
+                
+            }
+
         }
         
+    });
+
+
+    document.addEventListener( "toggleVisibility", ( ev:CustomEventInit ) => {
+
+        document.body.toggleAttribute( "data-hide-" + ev.detail.unitType )
+
     });
 
 

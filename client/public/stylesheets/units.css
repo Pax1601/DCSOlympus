@@ -94,11 +94,31 @@ div.unit .unit-marker {
     z-index:3;
 }
 
+[data-hide-aircraft] div.unit-air {
+    display:none;
+}
+
+[data-hide-ground] div.unit-ground {
+    display:none;
+}
+
+[data-hide-sam] div.unit-sam {
+    display:none;
+}
+
+[data-hide-threat] div.unit-threat {
+    display:none;
+}
+
+[data-hide-naval] div.unit-naval {
+    display:none;
+}
+
 
 div.unit-air .unit-marker {
-    background-image: var( --unit-ground-sam-neutral-url );
-    height: var( --unit-ground-sam-height );
-    width: var( --unit-ground-sam-width );
+    background-image: var( --unit-sam-neutral-url );
+    height: var( --unit-sam-height );
+    width: var( --unit-sam-width );
 }
 
 
@@ -123,39 +143,39 @@ div.unit-air[data-coalition="red"] .unit-marker {
 
 /*  Ground vehicles (not SAMs)  */
 
-div.unit-vehicle .unit-marker {
-    background-image: var( --unit-vehicle-marker-neutral-url );
-    height: var( --unit-vehicle-marker-height );
-    width: var( --unit-vehicle-marker-width );
+div.unit-ground .unit-marker {
+    background-image: var( --unit-ground-marker-neutral-url );
+    height: var( --unit-ground-marker-height );
+    width: var( --unit-ground-marker-width );
 }
 
 
-div.unit-vehicle[data-coalition="blue"] .unit-marker {
-    background-image: var( --unit-vehicle-marker-blue-url );
+div.unit-ground[data-coalition="blue"] .unit-marker {
+    background-image: var( --unit-ground-marker-blue-url );
 }
 
 
-div.unit-vehicle[data-coalition="red"] .unit-marker {
-    background-image: var( --unit-vehicle-marker-red-url );
+div.unit-ground[data-coalition="red"] .unit-marker {
+    background-image: var( --unit-ground-marker-red-url );
 }
 
 
 /*  SAMs  */
 
-div.unit-ground-sam .unit-marker {
-    background-image: var( --unit-ground-sam-marker-neutral-url );
-    height: var( --unit-ground-sam-marker-height );
-    width: var( --unit-ground-sam-marker-width );
+div.unit-sam .unit-marker {
+    background-image: var( --unit-sam-marker-neutral-url );
+    height: var( --unit-sam-marker-height );
+    width: var( --unit-sam-marker-width );
 }
 
 
-div.unit-ground-sam[data-coalition="blue"] .unit-marker {
-    background-image: var( --unit-ground-sam-marker-blue-url );
+div.unit-sam[data-coalition="blue"] .unit-marker {
+    background-image: var( --unit-sam-marker-blue-url );
 }
 
 
-div.unit-ground-sam[data-coalition="red"] .unit-marker {
-    background-image: var( --unit-ground-sam-marker-red-url );
+div.unit-sam[data-coalition="red"] .unit-marker {
+    background-image: var( --unit-sam-marker-red-url );
 }
 
 
@@ -167,7 +187,7 @@ div.unit .unit-short-label {
     z-index:10;
 }
 
-div.unit-ground-sam .unit-short-label {
+div.unit-sam .unit-short-label {
     translate:0 50%;
 }
 
