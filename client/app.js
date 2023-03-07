@@ -22,3 +22,15 @@ app.use('/uikit', uikitRouter);
 app.set('view engine', 'ejs');
 
 module.exports = app;
+
+const DemoDataGenerator = require('./demo.js');
+
+var demoDataGenerator = new DemoDataGenerator(10);
+
+app.get('/demo/units/refresh', (req, res) => demoDataGenerator.unitsRefresh(req, res));
+app.get('/demo/units/update', (req, res) => demoDataGenerator.unitsUpdate(req, res));
+app.get('/demo/logs', (req, res) => demoDataGenerator.logs(req, res));
+app.get('/demo/bullseyes', (req, res) => demoDataGenerator.bullseyes(req, res));
+app.get('/demo/airbases', (req, res) => demoDataGenerator.airbases(req, res));
+
+

@@ -48,7 +48,8 @@ export class UnitsManager {
                 .filter((ID: string) => !(ID in this.#units))
                 .reduce((timeout: number, ID: string) => {
                     setTimeout(() => {
-                        this.addUnit(parseInt(ID), data.units[ID]);
+                        if (!(ID in this.#units))
+                            this.addUnit(parseInt(ID), data.units[ID]);
                         this.#units[parseInt(ID)]?.setData(data.units[ID]);
                     }, timeout);
                     return timeout + 10;

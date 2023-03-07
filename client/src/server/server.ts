@@ -1,16 +1,14 @@
 import * as L from 'leaflet'
 import { setConnected } from '..';
 
-const DEMO = false;
-
 /* Edit here to change server address */
-const REST_ADDRESS = "http://localhost:30000/olympus";
+const REST_ADDRESS = "http://localhost:3000/demo";
 const UNITS_URI = "units";
 const REFRESH_URI = "refresh";
 const UPDATE_URI = "update";
 const LOGS_URI = "logs";
 const AIRBASES_URI = "airbases";
-const BULLSEYE_URI = "bullseye";
+const BULLSEYE_URI = "bullseyes";
 
 export function GET(callback: CallableFunction, uri: string){
     var xmlHttp = new XMLHttpRequest();
@@ -50,10 +48,7 @@ export function getLogs(callback: CallableFunction) {
 }
 
 export function getUnits(callback: CallableFunction, refresh: boolean = false) {
-    if (!DEMO)
-        GET(callback, `${UNITS_URI}/${refresh? REFRESH_URI: UPDATE_URI}`);
-    else
-        callback(refresh? generateRandomUnitsDemoData(100): {units:{}});
+    GET(callback, `${UNITS_URI}/${refresh? REFRESH_URI: UPDATE_URI}`);
 }
 
 export function addDestination(ID: number, path: any) {
@@ -144,59 +139,4 @@ export function setReactionToThreat(ID: number, reactionToThreat: string) {
     var command = {"ID": ID, "reactionToThreat": reactionToThreat}
     var data = {"setReactionToThreat": command}
     POST(data, () => { });
-}
-
-
-function generateRandomUnitsDemoData(unitsNumber: number) 
-{
-    var units: any = {};
-    for (let i = 0; i < unitsNumber; i++)
-    {
-        units[String(i)] = structuredClone(DEMO_UNIT_DATA);
-        units[String(i)].flightData.latitude += (Math.random() - 0.5) * 0.3;
-        units[String(i)].flightData.longitude += (Math.random() - 0.5) * 0.3;
-    }
-    return {"units": units};
-}
-
-const DEMO_UNIT_DATA = {
-    AI: true,
-    name: "F-5E",
-    unitName: "Olympus 1-1",
-    groupName: "Group 1",
-    alive: true,
-    category: "Aircraft",
-    flightData:  {
-        latitude: 37.2,
-        longitude: -115.8,
-        altitude: 2000,
-        heading: 0.5,
-        speed: 300
-    },
-    missionData:  {
-        fuel: 0.5,
-        flags: {human: false},
-        ammo: [],
-        targets: [],
-        hasTask: true,
-        coalition: "blue"
-    },
-    formationData:  {
-        formation: "Echelon",
-        isLeader: false,
-        isWingman: false,
-        leaderID: null,
-        wingmen: [],
-        wingmenIDs: []
-    },
-    taskData: {
-        currentTask: "Example task",
-        activePath: undefined,
-        targetSpeed: 400,
-        targetAltitude: 3000
-    },
-    optionsData: {
-        ROE: "None",
-        reactionToThreat: "None",
-    } 
 }
