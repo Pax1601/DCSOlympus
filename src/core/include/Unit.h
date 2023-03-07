@@ -34,6 +34,7 @@ public:
 	void setROE(wstring newROE);
 	void setReactionToThreat(wstring newReactionToThreat);
 	void landAt(Coords loc);
+	void setHasNewData(bool newHasNewData) { hasNewData = newHasNewData; }
 
 	int getID() { return ID; }
 	wstring getName() { return name; }
@@ -56,6 +57,7 @@ public:
 	bool getIsLeader() { return isLeader; }
 	bool getIsWingman() { return isWingman; }
 	wstring getFormation() { return formation; }
+	bool getHasNewData() { return hasNewData; }
 
 	virtual double getTargetSpeed() { return targetSpeed; };
 	virtual double getTargetAltitude() { return targetAltitude; };
@@ -68,6 +70,8 @@ public:
 
 protected:
 	int ID;
+	bool hasNewData				= false;
+	int newDataCounter			= 0;
 	int state					= State::IDLE;
 	bool hasTask				= false;
 	bool AI						= false;
@@ -103,6 +107,8 @@ protected:
 	list<Coords> activePath;
 	Coords activeDestination = Coords(0);
 	Coords oldPosition = Coords(0); // Used to approximate speed
+
+	list<pair<int, std::function<void(void)>>> schedule;
 
 	virtual void AIloop() = 0;
 };

@@ -12,6 +12,7 @@ extern Scheduler* scheduler;
 extern json::value airbasesData;
 extern json::value bullseyesData;
 extern mutex mutexLock;
+extern string sessionHash;
 
 void handle_eptr(std::exception_ptr eptr)
 {
@@ -93,7 +94,10 @@ void Server::handle_get(http_request request)
                 answer[L"airbases"] = airbasesData;
             else if (path[0] == BULLSEYE_URI)
                 answer[L"bullseyes"] = bullseyesData;
+
+            answer[L"sessionHash"] = json::value::string(to_wstring(sessionHash));
         }
+
         response.set_body(answer);
     }
     catch (...) {

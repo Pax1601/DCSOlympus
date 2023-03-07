@@ -88,15 +88,30 @@ export class Unit extends Marker {
 
     setData(data: UnitData) {
         document.dispatchEvent(new CustomEvent("unitUpdated", { detail: this }));
-        var updateMarker = true;
-        //if (this.getFlightData().latitude != response.flightData.latitude || 
-        //    this.getFlightData().longitude != response.flightData.longitude || 
-        //    this.getData().alive != response.alive || 
-        //    this.#forceUpdate || 
-        //    !getMap().hasLayer(this.#marker))
-        //    updateMarker = true;
+        var updateMarker = false;
+        if (this.getFlightData().latitude != data.flightData.latitude || 
+            this.getFlightData().longitude != data.flightData.longitude || 
+            this.getData().alive != data.alive || this.#forceUpdate || !getMap().hasLayer(this))
+            updateMarker = true;
 
-        this.#data = data;
+        this.#data.AI = data.AI;
+        this.#data.name = data.name;
+        this.#data.unitName = data.unitName;
+        this.#data.groupName = data.groupName;
+        this.#data.alive = data.alive;
+        this.#data.category = data.category;
+        
+        if (data.flightData != undefined)
+            this.#data.flightData = data.flightData;
+        if (data.missionData != undefined)
+            this.#data.missionData = data.missionData;
+        if (data.formationData != undefined)
+            this.#data.formationData = data.formationData;
+        if (data.taskData != undefined)
+            this.#data.taskData = data.taskData;
+        if (data.optionsData != undefined)
+            this.#data.optionsData = data.optionsData;
+
 
         /* Dead units can't be selected */
         this.setSelected(this.getSelected() && this.getData().alive)
@@ -163,7 +178,7 @@ export class Unit extends Marker {
 
     addDestination(latlng: L.LatLng) {
         var path: any = {};
-        if (this.getTaskData().activePath != null) {
+        if (this.getTaskData().activePath != undefined) {
             path = this.getTaskData().activePath;
             path[(Object.keys(path).length + 1).toString()] = latlng;
         }
@@ -174,7 +189,7 @@ export class Unit extends Marker {
     }
 
     clearDestinations() {
-        this.getTaskData().activePath = null;
+        this.getTaskData().activePath = undefined;
     }
 
     getHidden() {
@@ -191,7 +206,7 @@ export class Unit extends Marker {
 
     getWingmen() {
         var wingmen: Unit[] = [];
-        if (this.getFormationData().wingmenIDs != null) {
+        if (this.getFormationData().wingmenIDs != undefined) {
             for (let ID of this.getFormationData().wingmenIDs) {
                 var unit = getUnitsManager().getUnitByID(ID)
                 if (unit)
@@ -318,7 +333,7 @@ export class Unit extends Marker {
     }
 
     #drawPath() {
-        if (this.getTaskData().activePath != null) {
+        if (this.getTaskData().activePath != undefined) {
             var points = [];
             points.push(new LatLng(this.getFlightData().latitude, this.getFlightData().longitude));
 

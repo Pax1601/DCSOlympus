@@ -2,7 +2,7 @@ import * as L from 'leaflet'
 import { setConnected } from '..';
 
 /* Edit here to change server address */
-const REST_ADDRESS = "http://localhost:3000/demo";
+const REST_ADDRESS = "http://localhost:30000/olympus";
 const UNITS_URI = "units";
 const REFRESH_URI = "refresh";
 const UPDATE_URI = "update";

@@ -16,6 +16,7 @@ Unit::Unit(json::value json, int ID) :
 	ID(ID)
 {
 	log("Creating unit with ID: " + to_string(ID));
+	newDataCounter = 1.0 / UPDATE_TIME_INTERVAL > 0? 1.0 / UPDATE_TIME_INTERVAL: 1; // Mark the unit has hasNewData for 1 second
 }
 
 Unit::~Unit()
@@ -25,6 +26,10 @@ Unit::~Unit()
 
 void Unit::updateExportData(json::value json)
 {
+	if (newDataCounter > 0)
+		newDataCounter--;
+	setHasNewData(newDataCounter);
+
 	/* Compute speed (loGetWorldObjects does not provide speed, we compute it for better performance instead of relying on many lua calls) */
 	if (oldPosition != NULL)
 	{
@@ -69,6 +74,7 @@ void Unit::updateExportData(json::value json)
 
 void Unit::updateMissionData(json::value json)
 {
+	newDataCounter = 1.0 / UPDATE_TIME_INTERVAL > 0 ? 1.0 / UPDATE_TIME_INTERVAL : 1; // Mark the unit has hasNewData for 1 second
 	if (json.has_number_field(L"fuel"))
 		fuel = int(json[L"fuel"].as_number().to_double() * 100);
 	if (json.has_object_field(L"ammo"))
@@ -99,7 +105,7 @@ json::value Unit::json(bool fullRefresh)
 	json[L"flightData"][L"speed"] = speed;
 	json[L"flightData"][L"heading"] = heading;
 
-	if (fullRefresh)
+	if (fullRefresh || getHasNewData())
 	{
 		/********** Mission data **********/
 		json[L"missionData"] = json::value::object();
