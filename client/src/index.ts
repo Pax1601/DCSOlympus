@@ -75,6 +75,8 @@ function setup() {
 
         //  Do open/close toggle
         select.addEventListener( "click", ev => {
+            ev.preventDefault();
+            ev.stopPropagation();
             select.classList.toggle( "is-open" );
         });
 

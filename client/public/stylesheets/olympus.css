@@ -84,80 +84,81 @@ button[disabled="disabled"] {
 
 .ol-select {
     color: var( --nav-text );
-    position: relative;
 }
 
-.ol-select .ol-select-value {
+.ol-select > .ol-select-value {
     align-content: center;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     cursor:pointer;
     display:flex;
     justify-content: left;
-    position: relative;
     text-align: center;
+    white-space: nowrap;
+    width: fit-content;
 }
 
-.ol-select:not( .ol-select-image ) .ol-select-value {
+.ol-select:not( .ol-select-image ) > .ol-select-value {
     background-color: var( --background-grey );
     border-radius: var( --border-radius-sm );
     padding:1em;
     width:100%;
 }
 
-.ol-select:not( .ol-select-image ) .ol-select-value:before {
+.ol-select:not( .ol-select-image ) > .ol-select-value:before {
     content: "[ ]";
     margin-right: 10px;
 }
 
-.ol-select:not( .ol-select-image ) .ol-select-value:after {
+.ol-select:not( .ol-select-image ) > .ol-select-value:after {
     content: "[V]";
     margin-left:10px;
 }
 
-.ol-select .ol-select-options {
+.ol-select > .ol-select-options {
     overflow:hidden;
     max-height: 0;
-    position: relative;
     translate:0 -2px;
 }
 
-.ol-select.ol-select-image .ol-select-options {
+.ol-select.ol-select-image > .ol-select-options {
     position:absolute;
 }
 
 
-.ol-select.is-open .ol-select-options {
+.ol-select.is-open > .ol-select-options {
     max-height: fit-content;
+    overflow: visible;
     padding:8px 0;
 }
 
-.ol-select .ol-select-options > div {
+.ol-select > .ol-select-options > div {
     background-color: var( --background-grey );
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     display:flex;
     justify-content: left;
     padding:6px 25px;
     width:100%;
 }
 
-.ol-select .ol-select-options > div:first-of-type {
+.ol-select > .ol-select-options > div:first-of-type {
     border-top-left-radius: var( --border-radius-md );
     border-top-right-radius: var( --border-radius-md );
     padding-top:16px;
 }
 
-.ol-select .ol-select-options > div:last-of-type {
+.ol-select > .ol-select-options > div:last-of-type {
     border-bottom-left-radius: var( --border-radius-md );
     border-bottom-right-radius: var( --border-radius-md );
     padding-bottom:16px;
 }
 
-.ol-select .ol-select-options div hr {
+.ol-select > .ol-select-options div hr {
     background-color: white;
     height:1px;
     width:100%;
 }
 
-.ol-select .ol-select-options div button {
+.ol-select > .ol-select-options div button {
     background-color: transparent;
     border:none;
     border-radius: 0;
@@ -169,7 +170,7 @@ button[disabled="disabled"] {
     width:fit-content;
 }
 
-.ol-select .ol-select-options > div button:hover {
+.ol-select > .ol-select-options > div button:hover {
     text-decoration: underline;
 }
 
