@@ -86,6 +86,18 @@ function setup() {
     });
 
 
+    /* Keyup events */
+    document.addEventListener( "keyup", ev => {
+
+        switch( ev.code ) {
+            case "KeyL":
+                document.body.toggleAttribute( "data-hide-labels" );
+                break;
+        }
+
+    });
+
+
     document.addEventListener( "toggleVisibility", ( ev:CustomEventInit ) => {
 
         document.body.toggleAttribute( "data-hide-" + ev.detail.unitType )

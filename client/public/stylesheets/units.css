@@ -247,6 +247,10 @@ div.unit .unit-summary {
     z-index:20;
 }
 
+[data-hide-labels] div.unit .unit-summary {
+    display:none;
+}
+
 div.unit .unit-summary > * {
     padding:1px;
 }
