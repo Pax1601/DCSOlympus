@@ -96,16 +96,16 @@
     --unit-air-vvi-width: 4px;
     --unit-air-width: var( --unit-air-height );
 
-    --unit-air-marker-height: 34px;
-    --unit-air-marker-width: 34px;
+    --unit-air-marker-height: 36px;
+    --unit-air-marker-width: 36px;
 
     --unit-air-marker-blue-url: url( "/themes/olympus/images/icon_aircraft_blue.svg" );
     --unit-air-marker-blue-hover-url: url( "/themes/olympus/images/icon_aircraft_blue_hover.svg" );
     
-    --unit-air-marker-neutral-url: url( "data:image/svg+xml,%3Csvg width='50' height='38' viewBox='0 0 50 38' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.08142 36.5L25 2L44.9186 36.5H5.08142Z' fill='%23CFD9E8' stroke='%232F2F2F' stroke-width='2'/%3E%3C/svg%3E" );
+    --unit-air-marker-neutral-url: url( "/themes/olympus/images/icon_aircraft_neutral.svg" );
     --unit-air-marker-neutral-hover-url: url( "/themes/olympus/images/icon_aircraft_neutral_hover.svg" );
     
-    --unit-air-marker-red-url: url( "data:image/svg+xml,%3Csvg width='50' height='38' viewBox='0 0 50 38' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.08142 36.5L25 2L44.9186 36.5H5.08142Z' fill='%23FF5858' stroke='%23262222' stroke-width='2'/%3E%3C/svg%3E" );
+    --unit-air-marker-red-url: url( "/themes/olympus/images/icon_aircraft_red.svg" );
     --unit-air-marker-red-hover-url: url( "/themes/olympus/images/icon_aircraft_red_hover.svg" );
 
 
