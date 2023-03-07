@@ -69,7 +69,7 @@
 
     /***   All markers  **/
     --unit-border-radius: var( --border-radius-xs );
-    --unit-font-size: 12px;
+    --unit-font-size: 14px;
     --unit-font-weight: bolder;
     --unit-height: 32px;
     --unit-label-border-width: 2px;
