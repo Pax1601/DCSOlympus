@@ -33,7 +33,7 @@ div.unit .unit-selected-spotlight {
 
 div.unit .unit-vvi {
     align-self: center;
-    background:black;
+    background:var( --secondary-gunmetal-grey );
     display:flex;
     justify-self: center;
     transform-origin: bottom;
@@ -297,10 +297,7 @@ div.unit[data-has-other-ammo="true"] .unit-ammo-other {
 }
 
 
-div.unit[data-coalition="blue"] rect.unit-marker {
-    fill:var( --primary-blue );
-    stroke: var( --secondary-blue-outline );
-}
+
 
 div.unit[data-coalition="blue"][data-is-selected="true"] .unit-short-label {
     color: var( --secondary-blue-text );
@@ -314,12 +311,10 @@ div.unit[data-coalition="blue"][data-has-other-ammo="true"] .unit-ammo-other {
     background-color: var( --primary-blue );
 }
 
-
-
-div.unit[data-coalition="red"] rect.unit-marker {
-    fill:var( --primary-red );
-    stroke: var( --secondary-red-outline );
+div.unit[data-coalition="blue"] .unit-vvi {
+    background-color: var( --secondary-blue-outline );
 }
+
 
 div.unit[data-coalition="red"][data-is-selected="true"] .unit-short-label {
     color: var( --secondary-red-text );
@@ -332,6 +327,11 @@ div.unit[data-coalition="red"][data-has-fox-3="true"] .unit-ammo-fox-3,
 div.unit[data-coalition="red"][data-has-other-ammo="true"] .unit-ammo-other {
     background-color: var( --primary-red );
 }
+
+div.unit[data-coalition="blue"] .unit-vvi {
+    background-color: var( --secondary-red-outline );
+}
+
 
 
 @keyframes pulse {
