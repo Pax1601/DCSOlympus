@@ -78,7 +78,7 @@ void Scheduler::handleRequest(wstring key, json::value value)
 			Unit* unit = unitsManager->getUnit(ID);
 			if (unit != nullptr)
 			{
-				unit->setPath(newPath);
+				unit->setActivePath(newPath);
 				unit->setState(State::REACH_DESTINATION);
 				log(unitName + L" new path set successfully");
 			}

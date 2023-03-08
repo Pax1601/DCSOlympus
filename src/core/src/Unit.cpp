@@ -90,12 +90,13 @@ json::value Unit::json(bool fullRefresh)
 	auto json = json::value::object();
 
 	/********** Base data **********/
-	json[L"AI"] = AI;
-	json[L"name"] = json::value::string(name);
-	json[L"unitName"] = json::value::string(unitName);
-	json[L"groupName"] = json::value::string(groupName);
-	json[L"alive"] = alive;
-	json[L"category"] = json::value::string(getCategory());
+	json[L"baseData"] = json::value::object();
+	json[L"baseData"][L"AI"] = AI;
+	json[L"baseData"][L"name"] = json::value::string(name);
+	json[L"baseData"][L"unitName"] = json::value::string(unitName);
+	json[L"baseData"][L"groupName"] = json::value::string(groupName);
+	json[L"baseData"][L"alive"] = alive;
+	json[L"baseData"][L"category"] = json::value::string(getCategory());
 
 	/********** Flight data **********/
 	json[L"flightData"] = json::value::object();
@@ -162,7 +163,7 @@ json::value Unit::json(bool fullRefresh)
 	return json;
 }
 
-void Unit::setPath(list<Coords> path)
+void Unit::setActivePath(list<Coords> path)
 {
 	if (state != State::WINGMAN && state != State::FOLLOW)
 	{

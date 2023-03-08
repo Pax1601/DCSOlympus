@@ -60,12 +60,6 @@ export class UnitsManager {
         .forEach((ID: string) => this.#units[parseInt(ID)]?.setData(data.units[ID]));
     }
 
-    forceUpdate() {
-        for (let ID in this.#units) {
-            this.#units[ID].forceUpdate();
-        }
-    }
-
     selectUnit(ID: number, deselectAllUnits: boolean = true)
     {
         if (deselectAllUnits) 

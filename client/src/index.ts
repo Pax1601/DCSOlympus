@@ -10,7 +10,7 @@ import { AIC } from "./aic/aic";
 import { ATC } from "./atc/ATC";
 import { FeatureSwitches } from "./FeatureSwitches";
 import { LogPanel } from "./panels/logpanel";
-import { getAirbases, getBulllseye, getUnits } from "./server/server";
+import { getAirbases, getBulllseye as getBulllseyes, getUnits } from "./server/server";
 
 var map: Map;
 var contextMenu: ContextMenu;
@@ -138,7 +138,7 @@ function setup() {
 
     /* On the first connection, force request of full data */
     getAirbases((data: AirbasesData) => getMissionData()?.update(data));
-    getBulllseye((data: BullseyesData) => getMissionData()?.update(data));
+    getBulllseyes((data: BullseyesData) => getMissionData()?.update(data));
     getUnits((data: UnitsData) => getUnitsManager()?.update(data), true /* Does a full refresh */);
     
     /* Start periodically requesting updates */
@@ -165,9 +165,8 @@ function requestUpdate() {
 function requestRefresh() {
     /* Main refresh rate = 5000ms. */
     getUnits((data: UnitsData) => {
-        getUnitsManager()?.update(data);
         getAirbases((data: AirbasesData) => getMissionData()?.update(data));
-        getBulllseye((data: BullseyesData) => getMissionData()?.update(data));
+        getBulllseyes((data: BullseyesData) => getMissionData()?.update(data));
         checkSessionHash(data.sessionHash);
     }, true);
     setTimeout(() => requestRefresh(), 5000);
