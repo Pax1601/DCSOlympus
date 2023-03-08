@@ -102,6 +102,7 @@ function setup() {
     });
 
     
+    /*
     const unitName = document.getElementById( "unit-name" );
 
     if ( unitName instanceof HTMLInputElement ) {
@@ -124,6 +125,7 @@ function setup() {
         });
 
     }
+    //*/
 
 
 

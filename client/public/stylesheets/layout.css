@@ -49,6 +49,11 @@ body {
 	z-index: 1000;
 }
 
+#unit-control-panel h4 {
+	margin-bottom:8px;
+	margin-top:20px;
+}
+
 body.feature-forceShowUnitControlPanel #unit-control-panel {
 	display:block !important;
 }
@@ -56,6 +61,54 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 .content #unit-control-panel {
 	position: static;
 }
+
+dl.data-grid {
+	display:flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	margin:0;
+	row-gap: 4px;
+}
+
+dl.data-grid dt {
+	width:40%;
+}
+
+dl.data-grid dd {
+	width:60%;
+}
+
+
+dl.data-grid dt.icon {
+	text-indent: 10px;
+}
+
+dl.data-grid dt.icon::before {
+	content: url( /images/icons/speed.svg );
+	display:inline-block;
+	filter:invert(100%);
+	width: 20px;
+	translate:-20px 2px;
+}
+
+
+dl.data-grid dt.icon-speed::before {
+	content: url( /images/icons/speed.svg );
+}
+
+
+dl.data-grid dt.icon-altitude::before {
+	content: url( /images/icons/altitude.svg );
+}
+
+
+dl.data-grid dd {
+	display: flex;
+	justify-content: flex-end;
+	margin-left: auto;
+}
+
+
 
 
 .ol-button-box {
