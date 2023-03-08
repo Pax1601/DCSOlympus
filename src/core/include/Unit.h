@@ -4,8 +4,22 @@
 #include "dcstools.h"
 #include "luatools.h"
 
-namespace State {
-	enum States { IDLE, REACH_DESTINATION, ATTACK, WINGMAN, FOLLOW, LAND, REFUEL, AWACS, EWR, TANKER, RUN_AWAY };
+namespace State
+{
+	enum States
+	{
+		IDLE,
+		REACH_DESTINATION,
+		ATTACK,
+		WINGMAN,
+		FOLLOW,
+		LAND,
+		REFUEL,
+		AWACS,
+		EWR,
+		TANKER,
+		RUN_AWAY
+	};
 };
 
 class Unit
@@ -14,109 +28,159 @@ public:
 	Unit(json::value json, int ID);
 	~Unit();
 
+	int getID() { return ID; }
+
 	void updateExportData(json::value json);
 	void updateMissionData(json::value json);
 	json::value json(bool fullRefresh);
 
+	/********** Base data **********/
+	void setAI(bool newAI) { AI = newAI; }
+	bool getAI() { return AI; }
+	void setName(wstring newName){name = newName};
+	wstring getName() { return name; }
+	void setUnitName(wstring newName){name = newName};
+	wstring getUnitName() { return unitName; }
+	void setGroupName(wstring newName){name = newName};
+	wstring getGroupName() { return groupName; }
+	void setAlive(bool newAlive) { alive = newAlive; }
+	bool getAlive() { return alive; }
+	void setType(json::value newType) { type = newType; }
+	json::value getType() { return type; }
+	void setCountry(int newCountry) { country = newCountry; }
+	int getCountry() { return country; }
+
+	/********** Flight data **********/
+	void setLatitude(double newLatitude) {latitude = newLatitude;}
+	double getLatitude() { return latitude; }
+	void setLongitude(double newLatitude) {longitude = newLongitude;}
+	double getLongitude() { return longitude; }
+	void setAltitude(double newAltitude) {altitude = newAltitude;}
+	double getAltitude() { return altitude; }
+	void setHeading(double newHeading) {heading = newHeading;}
+	double getHeading() { return heading; }
+	void setSpeed(double newSpeed) {speed = newSpeed;}
+	double getSpeed() {return speed; }
+
+	/********** Mission data **********/
+	void setFuel(double newFuel) { fuel = newFuel;}
+	double getFuel() {return fuel;}
+	void setAmmo(json::value newAmmo) { ammo = newAmmo; }
+	json::value getAmmo { return ammo; }
+	void setTargets(json::value newTargets) {targets = newTargets;}
+	json::value getTargets() { return targets; }
+	void setHasTask(bool newHasTask) { hasTask = newHasTask;}
+	bool getHasTask() { return hasTask; }
+	void setCoalitionID(int newCoalitionID) { coalitionID = newCoalitionID; }
+	int getCoalitionID() { return coalitionID; }
+	void setFlags(json::value newFlags) { flags = newFlags; }
+	json::value getFlags() { return flags; }
+
+	/********** Formation data **********/
+	void setIsLeader(bool newIsLeader);
+	bool getIsLeader() { return isLeader; }
+	void setIsWingman(bool newIsWingman);
+	bool getIsWingman() { return isWingman; }
+	void setLeader(Unit *newLeader) { leader = newLeader; }
+	Unit* getLeader() {return leader;}
+	void setWingmen(vector<Unit *> newWingmen) { wingmen = newWingmen; }
+	vector<Unit*> getWingmen() {return wingmen;}
+	void setFormation(wstring newFormation) { formation = newFormation; }
+	wstring getFormation() { return formation; }
+	void setFormationOffset(Offset formationOffset);
+	Offset getFormationoffset() {return formationOffset;}
+
+	/********** Task data **********/
+	void setCurrentTask(wstring newCurrentTask) { currentTask = newCurrentTask; } 
+	wstring getCurrentTask() { return currentTask; }
+	virtual void setTargetSpeed(double newSpeed) { targetSpeed = newSpeed; }
+	virtual double getTargetSpeed() { return targetSpeed; };
+	virtual void setTargetAltitude(double newAltitude) { targetAltitude = newAltitude; }
+	virtual double getTargetAltitude() { return targetAltitude; };
+	void setActiveDestination(Coords newActiveDestination) { activeDestination = newActiveDestination; }
+	Coords getActiveDestination() { return activeDestination; }
+	void setActivePath(list<Coords> newActivePath);
+	list<Coords> getPath() {return activePath}
+	void setActiveDestination(Coords newActiveDestination) { activeDestination = newActiveDestination; }
+	Coords getActiveDestination() { return activeDestination; }
+	void setTarget(int targetID);
+	wstring getTarget();
+	
+	/********** Options data **********/
+	void setROE(wstring newROE);
+	wstring getROE() {return ROE;}
+	void setReactionToThreat(wstring newReactionToThreat);
+	wstring getReactionToThreat() {return reactionToThreat;}
+
+	/********** Control functions **********/
+	void landAt(Coords loc);
+	virtual void changeSpeed(wstring change){};
+	virtual void changeAltitude(wstring change){};
+	void resetActiveDestination();
 	virtual void setState(int newState) { state = newState; };
 	void resetTask();
 
-	void setPath(list<Coords> path);
-	void setActiveDestination(Coords newActiveDestination) { activeDestination = newActiveDestination; }
-	void setAlive(bool newAlive) { alive = newAlive; }
-	void setTarget(int targetID);
-	void setIsLeader(bool newIsLeader);
-	void setIsWingman(bool newIsWingman);
-	void setLeader(Unit* newLeader) { leader = newLeader; }
-	void setWingmen(vector<Unit*> newWingmen) { wingmen = newWingmen; }
-	void setFormation(wstring newFormation) { formation = newFormation; }
-	void setFormationOffset(Offset formationOffset);
-	void setROE(wstring newROE);
-	void setReactionToThreat(wstring newReactionToThreat);
-	void landAt(Coords loc);
+	/********** Other functions **********/
 	void setHasNewData(bool newHasNewData) { hasNewData = newHasNewData; }
-
-	int getID() { return ID; }
-	wstring getName() { return name; }
-	wstring getUnitName() { return unitName; }
-	wstring getGroupName() { return groupName; }
-	json::value getType() { return type; }			// This function returns the complete type of the object (Level1, Level2, Level3, Level4)
-	int getCountry() { return country; }
-	int getCoalitionID() { return coalitionID; }
-	double getLatitude() { return latitude; }
-	double getLongitude() { return longitude; }
-	double getAltitude() { return altitude; }
-	double getHeading() { return heading; }
-	json::value getFlags() { return flags; }
-	Coords getActiveDestination() { return activeDestination; }
 	virtual wstring getCategory() { return L"No category"; };
-	wstring getTarget();
-	bool isTargetAlive();
-	wstring getCurrentTask() { return currentTask; }
-	bool getAlive() { return alive; }
-	bool getIsLeader() { return isLeader; }
-	bool getIsWingman() { return isWingman; }
-	wstring getFormation() { return formation; }
+	bool isTargetAlive();	
 	bool getHasNewData() { return hasNewData; }
-
-	virtual double getTargetSpeed() { return targetSpeed; };
-	virtual double getTargetAltitude() { return targetAltitude; };
-	virtual void setTargetSpeed(double newSpeed) { targetSpeed = newSpeed; }
-	virtual void setTargetAltitude(double newAltitude) { targetAltitude = newAltitude; }
-	virtual void changeSpeed(wstring change) {};
-	virtual void changeAltitude(wstring change) {};
-
-	void resetActiveDestination();
 
 protected:
 	int ID;
-	bool hasNewData				= false;
-	int newDataCounter			= 0;
-	int state					= State::IDLE;
-	bool hasTask				= false;
-	bool AI						= false;
-	bool alive					= true;
-	wstring name				= L"undefined";
-	wstring unitName			= L"undefined";
-	wstring groupName			= L"undefined";
-	json::value type			= json::value::null();
-	int country					= NULL;
-	int coalitionID				= NULL;
-	double latitude				= NULL;
-	double longitude			= NULL;
-	double altitude				= NULL;
-	double heading				= NULL;
-	double speed				= NULL;
-	json::value flags			= json::value::null();
-	int targetID				= NULL;
-	wstring currentTask			= L"";
-	bool isLeader				= false;
-	bool isWingman				= false;
-	Offset formationOffset		= Offset(NULL);
-	wstring formation			= L"";
-	Unit* leader				= nullptr;
-	wstring ROE					= L"";
-	wstring reactionToThreat	= L"";
-	vector<Unit*> wingmen;
-	double targetSpeed			= 0;
-	double targetAltitude		= 0;
-	double fuel					= 0;
-	json::value ammo;
-	json::value targets;
 
+	/********** Base data **********/
+	bool AI = false;
+	wstring name = L"undefined";
+	wstring unitName = L"undefined";
+	wstring groupName = L"undefined";
+	bool alive = true;
+	json::value type = json::value::null();
+	int country = NULL;
+
+	/********** Flight data **********/
+	double latitude = NULL;
+	double longitude = NULL;
+	double altitude = NULL;
+	double speed = NULL;
+	double heading = NULL;
+
+	/********** Mission data **********/
+	double fuel = 0;
+	json::value ammo = json::value::null();
+	json::value targets = json::value::null();
+	bool hasTask = false;
+	int coalitionID = NULL; // TODO: save coalition directly
+	json::value flags = json::value::null();
+
+	/********** Formation data **********/
+	bool isLeader = false;
+	bool isWingman = false;
+	wstring formation = L"";
+	Unit *leader = nullptr;
+	vector<Unit *> wingmen;
+	Offset formationOffset = Offset(NULL);
+
+	/********** Task data **********/
+	wstring currentTask = L"";
+	double targetSpeed = 0;
+	double targetAltitude = 0;
 	list<Coords> activePath;
 	Coords activeDestination = Coords(0);
+	int targetID = NULL;
+
+	/********** Options data **********/
+	wstring ROE = L"";
+	wstring reactionToThreat = L"";
+
+	/********** State machine **********/
+	int state = State::IDLE;
+
+	/********** Other **********/
 	Coords oldPosition = Coords(0); // Used to approximate speed
+	bool hasNewData = false;
+	int newDataCounter = 0;
 
-	list<pair<int, std::function<void(void)>>> schedule;
-
+	/********** Functions **********/
 	virtual void AIloop() = 0;
 };
-
-
-
-
-
-
-
-
