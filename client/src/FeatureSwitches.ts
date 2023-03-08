@@ -3,6 +3,7 @@ export interface FeatureSwitchInterface {
     "label": string,
     "masterSwitch": boolean,    //  on/off regardless of user preference
     "name": string,
+    "onEnabled"?: CallableFunction,
     "options"?: object,
     "removeArtifactsIfDisabled"?: boolean
 }
@@ -15,6 +16,7 @@ class FeatureSwitch {
     label;
     masterSwitch;
     name;
+    onEnabled;
     removeArtifactsIfDisabled = true;
 
     //  Self-set
@@ -27,6 +29,7 @@ class FeatureSwitch {
         this.label          = config.label;
         this.masterSwitch   = config.masterSwitch;
         this.name           = config.name;
+        this.onEnabled      = config.onEnabled;
 
         this.userPreference = this.getUserPreference();
 
@@ -77,6 +80,16 @@ export class FeatureSwitches {
             "label": "ATC",
             "masterSwitch": true,
             "name": "atc"
+        }),
+        
+        new FeatureSwitch({
+            "defaultEnabled": false,
+            "label": "Force show unit control panel",
+            "masterSwitch": true,
+            "name": "forceShowUnitControlPanel",
+            "onEnabled": function() {
+                document.body.classList.add( "forceShowUnitControlPanel" );
+            }
         })
 
     ];
@@ -84,7 +97,7 @@ export class FeatureSwitches {
 
     constructor() {
 
-        this.#removeArtifacts();
+        this.#testSwitches();
 
         this.savePreferences();
 
@@ -98,10 +111,20 @@ export class FeatureSwitches {
     }
 
 
-    #removeArtifacts() {
+    #testSwitches() {
         
         for ( const featureSwitch of this.#featureSwitches ) {
-            if ( !featureSwitch.isEnabled() ) {
+
+            if ( featureSwitch.isEnabled() ) {
+
+                if ( typeof featureSwitch.onEnabled === "function" ) {
+
+                    featureSwitch.onEnabled();
+
+                }
+
+
+            } else {
                 
                 document.querySelectorAll( "[data-feature-switch='" + featureSwitch.name + "']" ).forEach( el => {
 
