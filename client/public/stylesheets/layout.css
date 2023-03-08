@@ -49,7 +49,7 @@ body {
 	z-index: 1000;
 }
 
-body.forceShowUnitControlPanel #unit-control-panel {
+body.feature-forceShowUnitControlPanel #unit-control-panel {
 	display:block !important;
 }
 

@@ -86,10 +86,7 @@ export class FeatureSwitches {
             "defaultEnabled": false,
             "label": "Force show unit control panel",
             "masterSwitch": true,
-            "name": "forceShowUnitControlPanel",
-            "onEnabled": function() {
-                document.body.classList.add( "forceShowUnitControlPanel" );
-            }
+            "name": "forceShowUnitControlPanel"
         })
 
     ];
@@ -118,11 +115,8 @@ export class FeatureSwitches {
             if ( featureSwitch.isEnabled() ) {
 
                 if ( typeof featureSwitch.onEnabled === "function" ) {
-
                     featureSwitch.onEnabled();
-
                 }
-
 
             } else {
                 
@@ -137,6 +131,9 @@ export class FeatureSwitches {
                 });
 
             }
+
+            document.body.classList.toggle( "feature-" + featureSwitch.name, featureSwitch.isEnabled() );
+
         }
 
     }
