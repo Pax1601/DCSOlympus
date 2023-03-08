@@ -15,10 +15,13 @@
 
 div.unit {
     align-items: center;
-    cursor:pointer;
     display:flex;
     justify-content: center;
     position:relative;
+}
+
+div.unit:not( .no-function ) {
+    cursor:pointer;
 }
 
 [data-hide-aircraft] div.unit-air,
@@ -117,7 +120,7 @@ div.unit-air .unit-marker {
     width: var( --unit-air-marker-width );
 }
 
-div.unit-air:hover .unit-marker, div.unit-air[data-is-selected="true"] .unit-marker {
+div.unit-air:not( .no-function ):hover  .unit-marker, div.unit-air[data-is-selected="true"] .unit-marker {
     background-image: var( --unit-air-marker-neutral-hover-url );
 }
 
@@ -126,7 +129,7 @@ div.unit-air[data-coalition="blue"] .unit-marker {
     background-image: var( --unit-air-marker-blue-url );
 }
 
-div.unit-air[data-coalition="blue"]:hover .unit-marker, div.unit-air[data-coalition="blue"][data-is-selected="true"] .unit-marker {
+div.unit-air[data-coalition="blue"]:not( .no-function ):hover .unit-marker, div.unit-air[data-coalition="blue"][data-is-selected="true"] .unit-marker {
     background-image: var( --unit-air-marker-blue-hover-url );
 }
 
@@ -135,7 +138,7 @@ div.unit-air[data-coalition="red"] .unit-marker {
     background-image: var( --unit-air-marker-red-url );
 }
 
-div.unit-air[data-coalition="red"]:hover .unit-marker, div.unit-air[data-coalition="red"][data-is-selected="true"] .unit-marker {
+div.unit-air[data-coalition="red"]:not( .no-function ):hover .unit-marker, div.unit-air[data-coalition="red"][data-is-selected="true"] .unit-marker {
     background-image: var( --unit-air-marker-red-hover-url );
 }
 
@@ -218,6 +221,7 @@ div.unit-building[data-coalition="red"] .unit-marker {
 
 
 div.unit .unit-short-label {
+    color: var( --secondary-gunmetal-grey );
     font-size: var(--unit-font-size);
     font-weight: var(--unit-font-weight);
     position: absolute;

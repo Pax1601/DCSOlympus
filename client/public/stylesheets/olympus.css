@@ -82,6 +82,10 @@ button[disabled="disabled"] {
     width:fit-content;
 }
 
+.ol-panel-padding-lg {
+    padding:24px 30px;
+}
+
 .ol-select {
     color: var( --nav-text );
 }
@@ -228,7 +232,6 @@ button[disabled="disabled"] {
 }
 
 .ol-panel-board h1, .ol-panel-board h2 {
-    font-size:18px;
     font-weight: var( --font-weight-bolder );
     margin: 0;
     padding:0 0 5px 0;
@@ -238,14 +241,30 @@ button[disabled="disabled"] {
     font-size:14px;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+h1, h2, h3, h4, h5, h6 {
     margin: 0px;
 }
+
+h1 {
+    font-size:36px;
+    font-weight: 800;
+}
+
+h2 {
+    font-size:24px;
+    font-weight: bold;
+}
+
+h3 {
+    font-size:18px;
+    font-weight: bold;
+}
+
+h4 {
+    font-size:14px;
+    font-weight: normal;
+}
+
 
 nav.ol-panel {
     column-gap: 20px;
@@ -264,10 +283,6 @@ nav.ol-panel > :last-child {
     display:flex;
     flex-direction: row;
     flex-wrap:nowrap;
-}
-
-.ol-panel .ol-group button {
-    border:1px solid white;
 }
 
 .ol-panel .ol-group  {
@@ -437,12 +452,54 @@ nav.ol-panel > :last-child {
 	font-weight: var(--font-weight-bolder);
 }
 
+
+
 #unit-info-panel {
     display: flex;
     flex-direction: column;
 }
 
+#unit-info-panel #unit-identification {
+    align-items: center;
+    display:flex;
+    margin-bottom:11px;
+}
 
+#unit-info-panel #unit-identification .unit {
+    height:28px;
+    margin-right:10px;
+    width:28px;
+}
+
+#unit-info-panel #unit-identification .unit .unit-marker {
+    background-size: 28px 28px;
+    height:28px;
+    width:28px;
+}
+
+#unit-info-panel #unit-identification .unit .unit-short-label {
+    font-size:12px;
+}
+
+#unit-info-panel #unit-identification #unit-name {
+    background-color:transparent;
+    border:none;
+    color:white;
+    font-size:18px;
+    font-weight: var( --font-weight-bolder );
+    outline:none;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 130px;
+}
+
+#edit-unit-name {
+    background-image: url( "/images/buttons/edit.svg" );
+    background-repeat: no-repeat;
+    height:14px;
+    margin-left:10px;
+    width:15px;
+}
 
 
 

@@ -25,15 +25,15 @@ export class UnitControlPanel extends Panel {
         /* Option buttons */
         this.#optionButtons["ROE"] = ROEs.map((option: string) => {
             var button = document.createElement("button");
-            button.innerText = option;
-            button.addEventListener("click", () => getUnitsManager().selectedUnitsSetROE(button.value));
+            button.title = option;
+            button.addEventListener("click", () => getUnitsManager().selectedUnitsSetROE(button.title));
             return button;
         })
 
         this.#optionButtons["reactionToThreat"] = reactionsToThreat.map((option: string) => {
             var button = document.createElement("button");
-            button.innerText = option;
-            button.addEventListener("click", () => getUnitsManager().selectedUnitsSetROE(button.value));
+            button.title = option;
+            button.addEventListener("click", () => getUnitsManager().selectedUnitsSetROE(button.title));
             return button;
         })
 

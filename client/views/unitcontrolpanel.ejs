@@ -1,22 +1,30 @@
-<div id="unit-control-panel" class="ol-panel ol-panel-padded">
-    <h2>Selected units</h2>
-    
+<div id="unit-control-panel" class="ol-panel ol-panel-padding-lg"> 
 
     <div id="unit-info-panel">
         <div id="general" class="panel-section">
-            <h3>
-                <div id="unit-name">Olympus 1-1</div>
-                <button>[e]</button>
-            </h3>
+
+            <div id="unit-identification">
+                <div class="unit unit-air no-function">
+                    <div class="unit-marker"></div>
+                    <div class="unit-short-label">18</div>
+                </div>
+                
+                <input id="unit-name" value="Olympus 1-1" readonly disabled />
+
+                <button id="edit-unit-name" data-on-click="editUnitName"></button>
+            </div>
+
             <div id="name" class="pill highlight-primary">Name</div>
             <div id="group-name" class="pill highlight-primary">Group</div>
             <div id="task" class="pill highlight-primary">Task</div>
         </div>
+
         <div id="selected-units-container" class="ol-scroll">
-        <!-- This is where all the unit selection buttons will be shown-->
-    </div>
+            <!-- This is where all the unit selection buttons will be shown-->
+        </div>
+
         <div id="flight-data" class="panel-section">
-            <h3 id="flight-data-label">Flight data</h3>
+            <h4 id="flight-data-label">Flight data</h4>
             <div id="latitude"></div>
             <div id="longitude"></div>
             <div class="data-grid">
@@ -26,7 +34,7 @@
             </div>
         </div>
         <div id="loadout-data" class="panel-section">
-            <h3 id="loadout-label">Loadout</h3>
+            <h4 id="loadout-label">Loadout</h4>
             <div class="data-grid">
                 <div class="data-row"><img class="icon-small" src="images/icons/fuel.svg"><h5>Fuel</h5><h4 id="fuel"></h4></div>
             </div>
@@ -49,18 +57,20 @@
         </div>
     </div>
 
-    <h3>Formation</h3>
-    <div id="formation-buttons-container">
+    <!-- <h3>Formation</h3> -->
+    <!-- <div id="formation-buttons-container"> -->
          <!-- This is where all the formation control buttons will be shown -->
+    <!-- </div> -->
+
+    <div id="roe">
+        <h4>Rules of engagement</h4>
+        <div id="roe-buttons-container" class="ol-group ol-button-box">
+             <!-- This is where the roe buttons will be shown -->
+        </div>
     </div>
 
-    <h3>Rules of engagement</h3>
-    <div id="roe-buttons-container">
-         <!-- This is where the roe buttons will be shown -->
-    </div>
-
-    <h3>Reaction to threat</h3>
-    <div id="reaction-to-threat-buttons-container">
+    <h4>Reaction to threat</h4>
+    <div id="reaction-to-threat-buttons-container" class="ol-group ol-button-box">
          <!-- This is where the reaction to threat buttons will be shown -->
     </div>
 </div>

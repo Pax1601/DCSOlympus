@@ -104,7 +104,7 @@
 
                 <div class="content">
 
-                    <div class="content-header">Primary nav</div>
+                    <div class="content-header">Unit Control Panel</div>
                     <div class="content-body">
 
                         <div class="example">
@@ -1612,15 +1612,15 @@
                             <div class="ol-panel">
                                 <div class="ol-panel-board">
                                     <div class="panel-section">
-                                        <h1>Unit Callsign</h1>
+                                        <h3>Unit Callsign</h3>
                                         <div class="pill highlight-primary">Airframe</div>
                                         <div class="pill highlight-neutral">Group</div>
                                     </div>
                                     <div class="panel-section">
-                                        <h2>Flight data</h2>
+                                        <h4>Flight data</h4>
                                     </div>
                                     <div class="panel-section">
-                                        <h2>Loadout</h2>
+                                        <h4>Loadout</h4>
                                     </div>
                                 </div>
                             </div>
@@ -1732,6 +1732,21 @@
                     select.classList.remove( "is-open" );
                 });
                 
+            });
+
+
+            const $roe = document.getElementById( "roe-buttons-container" );
+            [ "Free", "Designated free", "Designated", "Return", "Hold" ].forEach( option => {
+                let $btn = document.createElement( "button" );
+                $btn.title = option;
+                $roe.appendChild( $btn );
+            });
+
+            const $threat = document.getElementById( "reaction-to-threat-buttons-container" );
+            [ "None", "Passive", "Evade", "Escape", "Abort" ].forEach( option => {
+                let $btn = document.createElement( "button" );
+                $btn.title = option;
+                $threat.appendChild( $btn );
             });
 
         </script>

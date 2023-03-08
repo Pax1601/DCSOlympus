@@ -57,6 +57,32 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	position: static;
 }
 
+
+.ol-button-box {
+	column-gap: 6px;
+	display:flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	margin:5px 0;
+	row-gap: 5px;
+}
+
+.ol-button-box button {
+	border:1px solid var( --accent-light-blue );
+	color: var( --accent-light-blue );
+}
+
+.ol-button-box button:first-of-type, .ol-button-box button.selected {
+	border-color: white;
+	background-color: white;
+	color: var( --background-steel );
+}
+
+.ol-button-box button:after {
+	content: "[]";
+}
+
+
 #connection-status-panel {
 	bottom: 20px;
 	height: 30px;

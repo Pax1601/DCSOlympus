@@ -101,6 +101,31 @@ function setup() {
 
     });
 
+    
+    const unitName = document.getElementById( "unit-name" );
+
+    if ( unitName instanceof HTMLInputElement ) {
+
+        unitName.addEventListener( "change", ev => {
+            unitName.setAttribute( "disabled", "true" );
+            unitName.setAttribute( "readonly", "true" );
+            
+            //  Do something with this:
+            console.log( unitName.value );
+        });
+        
+
+        document.addEventListener( "editUnitName", ev => {
+    
+            unitName.removeAttribute( "disabled" );
+            unitName.removeAttribute( "readonly" );
+            unitName.focus();
+
+        });
+
+    }
+
+
 
     document.addEventListener( "toggleCoalitionVisibility", ( ev:CustomEventInit ) => {
         document.body.toggleAttribute( "data-hide-" + ev.detail.coalition );
