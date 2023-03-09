@@ -6,18 +6,6 @@ export class ConnectionStatusPanel extends Panel {
     }
 
     update(connected: boolean) {
-        var div = this.getElement().querySelector("#status-string");
-        if (div != null) {
-            if (connected) {
-                div.innerHTML = "Connected";
-                div.classList.add("ol-status-connected");
-                div.classList.remove("ol-status-disconnected");
-            }
-            else {
-                div.innerHTML = "Disconnected";
-                div.classList.add("ol-status-disconnected");
-                div.classList.remove("ol-status-connected");
-            }
-        }
+        this.getElement().toggleAttribute( "data-is-connected", connected );
     }
 }

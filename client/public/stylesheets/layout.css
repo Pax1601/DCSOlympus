@@ -63,6 +63,7 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 }
 
 dl.data-grid {
+	align-items: center;
 	display:flex;
 	flex-direction: row;
 	flex-wrap: wrap;
@@ -71,11 +72,11 @@ dl.data-grid {
 }
 
 dl.data-grid dt {
-	width:40%;
+	width:60%;
 }
 
 dl.data-grid dd {
-	width:60%;
+	width:40%;
 }
 
 
@@ -138,12 +139,34 @@ dl.data-grid dd {
 
 #connection-status-panel {
 	bottom: 20px;
-	height: 30px;
+	font-size:12px;
 	position: absolute;
 	right: 10px;
 	width: 160px;
 	z-index: 1000;
 }
+
+#connection-status-panel dt::before {
+	content: "No connection";
+}
+
+#connection-status-panel dd::after {
+	border-radius: 50%;
+	background: red;
+	content: " ";
+	height:12px;
+	width:12px;
+}
+
+
+#connection-status-panel[data-is-connected] dt::before {
+	content: "Connected";
+}
+
+#connection-status-panel[data-is-connected] dd::after {
+	background:var( --accent-green );
+}
+
 
 #mouse-info-panel {
 	bottom: 60px;
