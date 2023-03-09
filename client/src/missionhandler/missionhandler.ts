@@ -84,9 +84,9 @@ export class MissionHandler
         else 
             options = ["Spawn unit"];
 
-        getMap().showContextMenu(e.originalEvent, e.sourceTarget.getName(),
-            options.map((option) => {return {tooltip: option, src: "", callback: (label: string) => {this.#onAirbaseOptionSelection(e, label)}}}, false)
-        )
+        //getMap().showContextMenu(e.originalEvent, e.sourceTarget.getName(),
+        //    options.map((option) => {return {tooltip: option, src: "", callback: (label: string) => {this.#onAirbaseOptionSelection(e, label)}}}, false)
+        //)
     }
 
     #onAirbaseOptionSelection(e: any, option: string) {

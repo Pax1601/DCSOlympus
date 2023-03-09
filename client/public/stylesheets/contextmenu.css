@@ -6,6 +6,10 @@
     position: relative;
 }
 
+#aircraft-spawn-menu {
+    height: 191px;
+}
+
 .ol-contextmenu {
     display: flex;
     flex-direction: column;
@@ -42,18 +46,42 @@
     text-align: left;
 }
 
-.ol-contextmenu>ul::-webkit-scrollbar {
-    width: 10px;
-}
-  
-.ol-contextmenu>ul::-webkit-scrollbar-track {
-    background-color: transparent;
-    border-radius: 100px;
+.ol-contextmenu>div:nth-child(2){
+    display: flex;
+    flex-direction: column;
+    
+    justify-content: space-between;
+    align-items: center;
+    row-gap: 5px;
 }
 
-.ol-contextmenu>ul::-webkit-scrollbar-thumb {
-    background-color: white;
-    border-radius: 100px;
-    opacity: 0.8;
-    margin-top: 10px;
+.ol-contextmenu .ol-select-container{
+    width: 100%;
+    flex:0 0 auto;
+    align-self: stretch;
 }
+
+#deploy-unit-button {
+    width: 100%;
+    text-align: center;
+}
+
+#unit-spawn-aircraft {
+    background-image: var( --spawn-aircraft-url );
+}
+
+#unit-spawn-ground {
+    background-image: var( --spawn-ground-url );
+}
+
+#unit-spawn button {
+    border: none;
+    height: 32px;
+    width: 32px;
+}
+
+#unit-spawn button:not(:hover){
+    background-color: transparent !important;
+}
+
+

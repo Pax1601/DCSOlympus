@@ -290,7 +290,7 @@ export class Unit extends Marker {
             'Attack',
             'Follow'
         ]
-        getMap().showContextMenu(e.originalEvent, "Action: " + this.getData().unitName, options.map((option: string) => {return {tooltip: option, src: "", callback: (action: string) => this.#executeAction(action)}}));
+        //getMap().showContextMenu(e.originalEvent, "Action: " + this.getData().unitName, options.map((option: string) => {return {tooltip: option, src: "", callback: (action: string) => this.#executeAction(action)}}));
     }
 
     #executeAction(action: string) {

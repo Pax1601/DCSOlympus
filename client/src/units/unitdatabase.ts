@@ -6,6 +6,24 @@ export class UnitDatabase {
 
     }
 
+    getRoles()
+    {
+        var roles: string[] = [];
+        for (let unit in this.units)
+        {
+            for (let loadout of this.units[unit].loadouts)
+            {
+                for (let role of loadout.roles)
+                {
+                    role = role.toUpperCase();
+                    if (role !== "" && !roles.includes(role))
+                        roles.push(role);
+                }
+            }
+        }
+        return roles;
+    }
+
     getLabelsByRole(role: string)
     {
         var units = [];
@@ -13,7 +31,7 @@ export class UnitDatabase {
         {
             for (let loadout of this.units[unit].loadouts)
             {
-                if (loadout.roles.includes(role))
+                if (loadout.roles.includes(role) || loadout.roles.includes(role.toLowerCase()))
                 {
                     units.push(this.units[unit].label)
                     break;
@@ -28,7 +46,7 @@ export class UnitDatabase {
         var loadouts = [];
         for (let loadout of this.units[unit].loadouts)
         {
-            if (loadout.roles.includes(role) || loadout.roles.includes(""))
+            if (loadout.roles.includes(role) || loadout.roles.includes(role.toLowerCase()) || loadout.roles.includes(""))
             {
                 loadouts.push(loadout.name)
             }

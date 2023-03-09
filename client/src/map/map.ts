@@ -5,6 +5,7 @@ import { aircraftDatabase } from "../units/aircraftdatabase";
 import { unitTypes } from "../units/unittypes";
 import { BoxSelect } from "./boxselect";
 import { ContextMenuOption } from "../@types/dom";
+import { SpawnOptions } from "../controls/contextmenu";
 
 export const IDLE = "IDLE";
 export const MOVE_UNIT = "MOVE_UNIT";
@@ -116,10 +117,10 @@ export class Map extends L.Map {
     }
 
     /* Context Menu */
-    showContextMenu(e: ClickEvent | SpawnEvent, title: string, options: ContextMenuOption[], showCoalition: boolean = false) {
-        var x = e.x;
-        var y = e.y;
-        getContextMenu()?.show(x, y, title, options, showCoalition);
+    showContextMenu(e: any, spawnOptions: SpawnOptions | null = null) {
+        var x = e.originalEvent.x;
+        var y = e.originalEvent.y;
+        getContextMenu()?.show(x, y, e.latlng);
         document.dispatchEvent(new CustomEvent("mapContextMenu"));
     }
 
@@ -139,7 +140,7 @@ export class Map extends L.Map {
     /* Spawn from air base */
     spawnFromAirbase(e: SpawnEvent)
     {
-        this.#aircraftSpawnMenu(e);
+        //this.#aircraftSpawnMenu(e);
     }
 
     /* Event handlers */
@@ -164,15 +165,8 @@ export class Map extends L.Map {
     #onContextMenu(e: any) {
         this.hideContextMenu();
         if (this.#state === IDLE) {
-            var spawnEvent: SpawnEvent = {x: e.originalEvent.x, y: e.originalEvent.y, latlng: e.latlng, airbaseName: null, coalitionID: null};
             if (this.#state == IDLE) {
-                var options = [
-                    { "tooltip": "Spawn air unit", "src": "spawnAir.png", "callback": () => this.#aircraftSpawnMenu(spawnEvent) },
-                    { "tooltip": "Spawn ground unit", "src": "spawnGround.png", "callback": () => this.#groundUnitSpawnMenu(spawnEvent) },
-                    { "tooltip": "Smoke", "src": "spawnSmoke.png", "callback": () => this.#smokeSpawnMenu(spawnEvent) },
-                    //{ "tooltip": "Explosion", "src": "spawnExplosion.png", "callback": () => this.#explosionSpawnMenu(e) }
-                ]
-                this.showContextMenu(spawnEvent, "Action", options, false);
+                this.showContextMenu(e);
             }
         }
         else if (this.#state === MOVE_UNIT) {
@@ -214,100 +208,5 @@ export class Map extends L.Map {
 
         this.#lastMousePosition.x = e.originalEvent.x;
         this.#lastMousePosition.y = e.originalEvent.y;
-    }
-
-    /* Spawning menus */
-    #aircraftSpawnMenu(e: SpawnEvent) {
-        var options = [
-            { 'coalition': true, 'tooltip': 'CAP', 'src': 'spawnCAP.png', 'callback': () => this.#selectAircraft(e, "cap") },
-            { 'coalition': true, 'tooltip': 'CAS', 'src': 'spawnCAS.png', 'callback': () => this.#selectAircraft(e, "cas") },
-            { 'coalition': true, 'tooltip': 'Strike', 'src': 'spawnStrike.png', 'callback': () => this.#selectAircraft(e, "strike") },
-            { 'coalition': true, 'tooltip': 'Recce', 'src': 'spawnStrike.png', 'callback': () => this.#selectAircraft(e, "reconnaissance") },
-            { 'coalition': true, 'tooltip': 'Tanker', 'src': 'spawnTanker.png', 'callback': () => this.#selectAircraft(e, "tanker") },
-            { 'coalition': true, 'tooltip': 'AWACS', 'src': 'spawnAWACS.png', 'callback': () => this.#selectAircraft(e, "awacs") },
-            { 'coalition': true, 'tooltip': 'Drone', 'src': 'spawnDrone.png', 'callback': () => this.#selectAircraft(e, "drone") },
-            { 'coalition': true, 'tooltip': 'Transport', 'src': 'spawnTransport.png', 'callback': () => this.#selectAircraft(e, "transport") },
-        ]
-        if (e.airbaseName != null)
-            this.showContextMenu(e, "Spawn at " + e.airbaseName, options, true);
-        else
-            this.showContextMenu(e, "Spawn air unit", options, true);
-    }
-
-    #groundUnitSpawnMenu(e: SpawnEvent) {
-        var options = [
-            {'coalition': true, 'tooltip': 'Howitzer',   'src': 'spawnHowitzer.png', 'callback': () => this.#selectGroundUnit(e, "Howitzers")},
-            {'coalition': true, 'tooltip': 'SAM',        'src': 'spawnSAM.png',      'callback': () => this.#selectGroundUnit(e, "SAM")},
-            {'coalition': true, 'tooltip': 'IFV',        'src': 'spawnIFV.png',      'callback': () => this.#selectGroundUnit(e, "IFV")},
-            {'coalition': true, 'tooltip': 'Tank',       'src': 'spawnTank.png',     'callback': () => this.#selectGroundUnit(e, "Tanks")},
-            {'coalition': true, 'tooltip': 'MLRS',       'src': 'spawnMLRS.png',     'callback': () => this.#selectGroundUnit(e, "MLRS")},
-            {'coalition': true, 'tooltip': 'Radar',      'src': 'spawnRadar.png',    'callback': () => this.#selectGroundUnit(e, "Radar")},
-            {'coalition': true, 'tooltip': 'Unarmed',    'src': 'spawnUnarmed.png',  'callback': () => this.#selectGroundUnit(e, "Unarmed")}
-        ]
-        this.showContextMenu(e, "Spawn ground unit", options, true);
-    }
-
-    #smokeSpawnMenu(e: SpawnEvent) {
-        this.hideContextMenu();
-        var options = [
-            {'tooltip': 'Red smoke',      'src': 'spawnSmoke.png',  'callback': () => {this.hideContextMenu(); spawnSmoke('red', e.latlng)}, 'tint': 'red'},
-            {'tooltip': 'White smoke',    'src': 'spawnSmoke.png',  'callback': () => {this.hideContextMenu(); spawnSmoke('white', e.latlng)}, 'tint': 'white'},
-            {'tooltip': 'Blue smoke',     'src': 'spawnSmoke.png',  'callback': () => {this.hideContextMenu(); spawnSmoke('blue', e.latlng)}, 'tint': 'blue'},
-            {'tooltip': 'Green smoke',    'src': 'spawnSmoke.png',  'callback': () => {this.hideContextMenu(); spawnSmoke('green', e.latlng)}, 'tint': 'green'},
-            {'tooltip': 'Orange smoke',   'src': 'spawnSmoke.png',  'callback': () => {this.hideContextMenu(); spawnSmoke('orange', e.latlng)}, 'tint': 'orange'},
-        ]
-        this.showContextMenu(e, "Spawn smoke", options, false);
-    }
-
-    #explosionSpawnMenu(e: SpawnEvent) {
-
-    }
-
-    /* Show unit selection for air units */
-    #selectAircraft(e: SpawnEvent, role: string) {
-        this.hideContextMenu();
-        var options = aircraftDatabase.getLabelsByRole(role);
-        this.showContextMenu(e, "Select aircraft", 
-            options.map((option: string) => {
-                return {tooltip: option, src: "", callback: (label: string) => {
-                    this.hideContextMenu();
-                    var name = aircraftDatabase.getNameByLabel(label);
-                    if (name != null)
-                        this.#unitSelectPayload(e, name, role);
-                }}}), true);
-    }
-
-    /* Show weapon selection for air units */
-    #unitSelectPayload(e: SpawnEvent, unitType: string, role: string) {
-        this.hideContextMenu();
-        var options = aircraftDatabase.getLoadoutNamesByRole(unitType, role);
-        //options = payloadNames[unitType]
-        if (options != undefined && options.length > 0) {
-            options.sort();
-            this.showContextMenu({x: e.x, y: e.y, latlng: e.latlng}, "Select loadout", 
-                options.map((option: string) => {
-                    return {tooltip: option, src: "", callback: (loadoutName: string) => {
-                        this.hideContextMenu();
-                        var loadout = aircraftDatabase.getLoadoutsByName(unitType, loadoutName);
-                        spawnAircraft(unitType, e.latlng, getActiveCoalition(), loadout != null? loadout.code: "", e.airbaseName);
-                }}}), true);
-        }
-        else {
-            spawnAircraft(unitType, e.latlng, getActiveCoalition());
-        }
-    }
-
-    /* Show unit selection for ground units */
-    #selectGroundUnit(e: any, group: string)
-    {
-        this.hideContextMenu();
-        var options = unitTypes.vehicles[group];
-        options.sort();
-        this.showContextMenu(e, "Select ground unit", 
-            options.map((option: string) => {
-                return {tooltip: option, src: "", callback: (unitType: string) => {
-                this.hideContextMenu();
-                spawnGroundUnit(unitType, e.latlng, getActiveCoalition());
-        }}}), true);
     }
 } 

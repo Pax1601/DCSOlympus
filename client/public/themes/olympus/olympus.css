@@ -162,4 +162,10 @@
     --unit-building-marker-neutral-url: url( "/themes/olympus/images/icon_building_neutral.svg" );
     --unit-building-marker-red-url: url( "/themes/olympus/images/icon_building_red.svg" );
 
+
+    /***  Context menu  ***/
+
+    --spawn-aircraft-url: url( "/themes/olympus/images/spawn_aircraft.svg" );
+    --spawn-ground-url: url( "/themes/olympus/images/spawn_ground.svg" );
+
 }

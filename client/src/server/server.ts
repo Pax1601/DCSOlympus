@@ -1,5 +1,6 @@
 import * as L from 'leaflet'
 import { setConnected } from '..';
+import { SpawnOptions } from '../controls/contextmenu';
 
 /* Edit here to change server address */
 const REST_ADDRESS = "http://localhost:30000/olympus";
@@ -69,8 +70,8 @@ export function spawnGroundUnit(type: string, latlng: L.LatLng, coalition: strin
     POST(data, () => { });
 }
 
-export function spawnAircraft(type: string, latlng: L.LatLng, coalition: string, payloadName: string | null = null, airbaseName: string | null = null) {
-    var command = { "type": type, "location": latlng, "coalition": coalition, "payloadName": payloadName != null? payloadName: "", "airbaseName": airbaseName != null? airbaseName: ""};
+export function spawnAircraft(spawnOptions: SpawnOptions) {
+    var command = { "type": spawnOptions.type, "location": spawnOptions.latlng, "coalition": spawnOptions.coalition, "payloadName": spawnOptions.loadout != null? spawnOptions.loadout: "", "airbaseName": spawnOptions.airbaseName != null? spawnOptions.airbaseName: ""};
     var data = { "spawnAir": command }
     POST(data, () => { });
 }
