@@ -1,6 +1,6 @@
 import { Icon, LatLng, Marker, Polyline } from "leaflet";
 import { getMap, getMissionData, getUnitsManager } from "..";
-import { distance, bearing, zeroPad, zeroAppend } from "../other/utils";
+import { distance, bearing, zeroPad, zeroAppend, reciprocalHeading } from "../other/utils";
 import { Unit } from "../units/unit";
 import { Panel } from "./panel";
 
@@ -121,7 +121,10 @@ export class MouseInfoPanel extends Panel {
             if (angle < -Math.PI / 2) 
                 angle = angle + Math.PI;
 
-            this.#measureBox.innerText = `${zeroAppend(Math.floor(bear), 3)}° / ${zeroAppend(Math.floor(dist*0.000539957), 3)} NM`
+            const bng = zeroAppend(Math.floor(bear), 3);
+            const reciprocal = reciprocalHeading( parseInt( bng ) );
+
+            this.#measureBox.innerText = `${bng}° / ${zeroAppend(Math.floor(dist*0.000539957), 3)} NM / ${reciprocal}°`;
             this.#measureBox.style.left = (getMap().getMousePosition().x + startXY.x) / 2 - this.#measureBox.offsetWidth / 2 + "px";
             this.#measureBox.style.top = (getMap().getMousePosition().y + startXY.y) / 2 - this.#measureBox.offsetHeight / 2 + "px";
             this.#measureBox.style.rotate = angle + "rad";
