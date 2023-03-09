@@ -30,7 +30,7 @@ void AirUnit::setState(int newState)
 			break;
 		}
 		case State::ATTACK: {
-			setTarget(NULL);
+			setTargetID(NULL);
 			break;
 		}
 		case State::FOLLOW: {
@@ -280,7 +280,7 @@ void AirUnit::AIloop()
 				<< "targetID = " << targetID << ","
 				<< "}";
 			wstring enrouteTask = enrouteTaskSS.str();
-			currentTask = L"Attacking " + getTarget();
+			currentTask = L"Attacking " + getTargetName();
 			
 			if (activeDestination == NULL || !hasTask)
 			{

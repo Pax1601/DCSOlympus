@@ -139,7 +139,7 @@ void Scheduler::handleRequest(wstring key, json::value value)
 			return;
 
 		log(L"Unit " + unitName + L" attacking unit " + targetName);
-		unit->setTarget(targetID);
+		unit->setTargetID(targetID);
 		unit->setState(State::ATTACK);
 	}
 	else if (key.compare(L"stopAttack") == 0)

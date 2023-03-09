@@ -25,12 +25,12 @@ void Aircraft::changeSpeed(wstring change)
 		setState(State::IDLE);
 	}
 	else if (change.compare(L"slow") == 0)
-		targetSpeed -= 25 / 1.94384;
+		setTargetSpeed(getTargetSpeed() - 25 / 1.94384);
 	else if (change.compare(L"fast") == 0)
-		targetSpeed += 25 / 1.94384;
+		setTargetSpeed(getTargetSpeed() + 25 / 1.94384);
 
-	if (targetSpeed < 50 / 1.94384)
-		targetSpeed = 50 / 1.94384;
+	if (getTargetSpeed() < 50 / 1.94384)
+		setTargetSpeed(50 / 1.94384);
 
 	goToDestination();		/* Send the command to reach the destination */
 }
@@ -39,30 +39,30 @@ void Aircraft::changeAltitude(wstring change)
 {
 	if (change.compare(L"descend") == 0)
 	{
-		if (targetAltitude > 5000)
-			targetAltitude -= 2500 / 3.28084;
-		else if (targetAltitude > 0)
-			targetAltitude -= 500 / 3.28084;
+		if (getTargetAltitude() > 5000)
+			setTargetAltitude(getTargetAltitude() - 2500 / 3.28084);
+		else if (getTargetAltitude() > 0)
+			setTargetAltitude(getTargetAltitude() - 500 / 3.28084);
 	}
 	else if (change.compare(L"climb") == 0)
 	{
-		if (targetAltitude > 5000)
-			targetAltitude += 2500 / 3.28084;
-		else if (targetAltitude >= 0)
-			targetAltitude += 500 / 3.28084;
+		if (getTargetAltitude() > 5000)
+			setTargetAltitude(getTargetAltitude() + 2500 / 3.28084);
+		else if (getTargetAltitude() >= 0)
+				setTargetAltitude(getTargetAltitude() + 500 / 3.28084);
 	}
-	if (targetAltitude < 0)
-		targetAltitude = 0;
+	if (getTargetAltitude() < 0)
+		setTargetAltitude(0);
 
 	goToDestination();		/* Send the command to reach the destination */
 }
 
 void Aircraft::setTargetSpeed(double newTargetSpeed) {
-	targetSpeed = newTargetSpeed;
+	setTargetSpeed(newTargetSpeed);
 	goToDestination();
 }
 
 void Aircraft::setTargetAltitude(double newTargetAltitude) {
-	targetAltitude = newTargetAltitude;
+	setTargetAltitude(newTargetAltitude);
 	goToDestination();
 }

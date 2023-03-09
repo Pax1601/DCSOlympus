@@ -76,13 +76,10 @@ void Server::handle_get(http_request request)
 
         if (path.size() > 0)
         {
-            if (path[0] == UNITS_URI && path.size() > 1)
+            if (path[0] == UNITS_URI)
             {
-                if (path[1] == UPDATE_URI)
-                    unitsManager->updateAnswer(answer, false);
-                else if (path[1] == REFRESH_URI)
-                    unitsManager->updateAnswer(answer, true);
-
+                wstring fragment = uri::decode(request.relative_uri().fragment())
+                unitsManager->getData(answer);
             }
             else if (path[0] == LOGS_URI)
             {

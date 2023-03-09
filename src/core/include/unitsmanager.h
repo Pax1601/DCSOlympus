@@ -11,9 +11,10 @@ public:
 	~UnitsManager();
 
 	Unit* getUnit(int ID);
+	void expireMeasures();
 	void updateExportData(lua_State* L);
 	void updateMissionData(json::value missionData);
-	void updateAnswer(json::value& answer, bool fullRefresh);
+	void getData(json::value& answer, int time);
 	void deleteUnit(int ID);
 	
 private:

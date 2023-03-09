@@ -32,6 +32,16 @@ Unit* UnitsManager::getUnit(int ID)
 	}
 }
 
+
+void UnitsManager::expireMeasures()
+{
+	/* Decrement the time to live of all measures and remove stale measures */
+	for (auto const& p : units)
+	{
+		p.second->expireMeasures();
+	}
+}
+
 void UnitsManager::updateExportData(lua_State* L)
 {
 	map<int, json::value> unitJSONs = getAllUnits(L);
@@ -92,12 +102,12 @@ void UnitsManager::updateMissionData(json::value missionData)
 	}
 }
 
-void UnitsManager::updateAnswer(json::value& answer, bool fullRefresh)
+void UnitsManager::getData(json::value& answer, int time)
 {
 	auto unitsJson = json::value::object();
 	for (auto const& p : units)
 	{
-		unitsJson[to_wstring(p.first)] = p.second->json(fullRefresh);
+		unitsJson[to_wstring(p.first)] = p.second->getData(time);
 	}
 	answer[L"units"] = unitsJson;
 }
