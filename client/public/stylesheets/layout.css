@@ -202,7 +202,7 @@ dl.data-grid dd.br-info[data-bearing][data-distance][data-distance-units]::after
 	width:40%;
 }
 
-#mouse-info-panel dt::before {
+#mouse-info-panel dt::after {
 	align-items: center;
 	background-color: white;
 	border-radius: var( --border-radius-sm );
@@ -218,7 +218,7 @@ dl.data-grid dd.br-info[data-bearing][data-distance][data-distance-units]::after
 	width:16px;
 }
 
-#mouse-info-panel dt#ref-measure-position::before {
+#mouse-info-panel dt#ref-measure-position::after {
 	background-image: url( "/images/unit.png" );
 	background-position: 50% 50%;
 	background-repeat: no-repeat;
@@ -227,15 +227,15 @@ dl.data-grid dd.br-info[data-bearing][data-distance][data-distance-units]::after
 }
 
 
-#mouse-info-panel dt[data-label]::before {
+#mouse-info-panel dt[data-label]::after {
 	content: attr( data-label );
 }
 
-#mouse-info-panel dt[data-coalition="blue"]::before {
+#mouse-info-panel dt[data-coalition="blue"]::after {
 	background-color: var( --primary-blue );
 }
 
-#mouse-info-panel dt[data-coalition="red"]::before {
+#mouse-info-panel dt[data-coalition="red"]::after {
 	background-color: var( --primary-red );
 }
 
@@ -254,46 +254,4 @@ dl.data-grid dd.br-info[data-bearing][data-distance][data-distance-units]::after
 
 #mouse-info-panel dd {
 	width:60%;
-}
-
-/*
-
-
-#mouse-info-panel dt {
-	background-position: 50% 50%;
-	background-repeat: no-repeat;
-	background-size:24px 24px;
-	display:inline-block;
-}
-
-
-#ref-measure-position {
-	background-image: url( "/images/pin.png" );
-}
-
-#ref-unit-position {
-	background-image: url( "/images/unit.png" );
-}
-
-#ref-bullseye-0 {
-	background-image: url( "/images/bullseye0.png" );
-}
-
-#ref-bullseye-1 {
-	background-image: url( "/images/bullseye1.png" );
-}
-
-#ref-bullseye-2 {
-	background-image: url( "/images/bullseye2.png" );
-}
-
-
-
-#log-panel {
-	height: 200px;
-	left: 10px;
-	position: absolute;
-	top: 60px;
-	width: 400px;
-	z-index: 1000;
 }
