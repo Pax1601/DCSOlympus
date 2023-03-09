@@ -248,7 +248,7 @@ export function getConnectionStatusPanel() {
 
 export function setActiveCoalition(newActiveCoalition: string) {
     activeCoalition = newActiveCoalition;
-    document.querySelectorAll('[data-coalition]').forEach((element: any) => {element.setAttribute("data-coalition", activeCoalition)});
+    document.querySelectorAll('[data-active-coalition]').forEach((element: any) => {element.setAttribute("data-active-coalition", activeCoalition)});
 }
 
 export function getActiveCoalition() {

@@ -78,8 +78,9 @@ void Server::handle_get(http_request request)
         {
             if (path[0] == UNITS_URI)
             {
-                wstring fragment = uri::decode(request.relative_uri().fragment())
-                unitsManager->getData(answer);
+                wstring fragment = uri::decode(request.relative_uri().fragment());
+                log(fragment);
+                //unitsManager->getData(answer);
             }
             else if (path[0] == LOGS_URI)
             {

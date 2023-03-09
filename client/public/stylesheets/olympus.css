@@ -655,5 +655,5 @@ body[data-hide-naval] #unit-visibility-control-naval {
     transform: translateX(var(--height));
 }
 
-[data-coalition=blue] {background-color: var(--primary-blue) !important}
-[data-coalition=red] {background-color:var(--primary-red)!important}
+[data-coalition=blue], [data-active-coalition=blue] {background-color: var(--primary-blue)}
+[data-coalition=red], [data-active-coalition=red] {background-color:var(--primary-red)}

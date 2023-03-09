@@ -11,7 +11,6 @@ public:
 	~UnitsManager();
 
 	Unit* getUnit(int ID);
-	void expireMeasures();
 	void updateExportData(lua_State* L);
 	void updateMissionData(json::value missionData);
 	void getData(json::value& answer, int time);
