@@ -109,6 +109,10 @@ dl.data-grid dd {
 	margin-left: auto;
 }
 
+dl.data-grid dd.br-info[data-bearing][data-distance][data-distance-units]::after {
+	content: attr( data-bearing ) '\00B0  / ' attr( data-distance ) attr( data-distance-units );
+}
+
 
 
 
@@ -177,9 +181,58 @@ dl.data-grid dd {
 	z-index: 1000;
 }
 
-.content #mouse-info-panel {
-	margin-bottom: 100px;
-	position: static;
+
+#mouse-info-panel dl {
+	row-gap: 14px;
+}
+
+#mouse-info-panel dt {
+	height:20px;
+	width:40%;
+}
+
+
+#mouse-info-panel dt {
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	background-size:24px 24px;
+	display:inline-block;
+}
+
+#mouse-info-panel dt[data-tooltip]:hover::before {
+	background-color: var( --background-steel );
+	border-radius: 5px;
+	content: attr( data-tooltip );
+	display:flex;
+	flex-wrap: nowrap;
+	padding: 5px;
+	position: absolute;
+	translate: calc( -100% - 15px ) 0;
+	white-space: nowrap;
+}
+
+#ref-measure-position {
+	background-image: url( "/images/pin.png" );
+}
+
+#ref-unit-position {
+	background-image: url( "/images/unit.png" );
+}
+
+#ref-bullseye-0 {
+	background-image: url( "/images/bullseye0.png" );
+}
+
+#ref-bullseye-1 {
+	background-image: url( "/images/bullseye1.png" );
+}
+
+#ref-bullseye-2 {
+	background-image: url( "/images/bullseye2.png" );
+}
+
+#mouse-info-panel dd {
+	width:60%;
 }
 
 
