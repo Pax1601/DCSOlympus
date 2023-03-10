@@ -1,4 +1,4 @@
-<div id="contextmenu" class="ol-contextmenu">
+<div id="contextmenu">
     <div id="active-coalition-label" data-active-coalition="blue"></div>
     <div class="ol-panel">
         <label id="context-menu-switch" class="toggle" for="context-menu-toggle">
@@ -39,6 +39,11 @@
                 </div>
             </div>
         </div>
-        <button id="deploy-unit-button" title="" data-active-coalition="blue" data-on-click="contextMenuDeployUnit" disabled>Deploy units</button>
+        <div id="loadout-preview">
+            <img id="unit-image" class="hide">
+            <div id="loadout-list">
+            </div>
+        </div>
+        <button id="deploy-unit-button" title="" data-active-coalition="blue" data-on-click="contextMenuDeployUnit" disabled>Deploy unit</button>
     </div>
 </div>

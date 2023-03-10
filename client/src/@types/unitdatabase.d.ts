@@ -16,4 +16,5 @@ interface UnitBlueprint {
     label: string;
     shortLabel: string;
     loadouts: LoadoutBlueprint[];
+    filename: string;
 }

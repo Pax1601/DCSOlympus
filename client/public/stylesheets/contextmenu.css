@@ -2,8 +2,17 @@
     position: absolute;
 }
 
+#contextmenu {
+    display: flex;
+    flex-direction: column;
+    row-gap: 5px;
+    width: 230px;
+    height: fit-content;
+    z-index: 1000;
+}
+
 #aircraft-spawn-menu {
-    height: 191px;
+    height: fit-content;
 }
 
 #active-coalition-label {
@@ -25,16 +34,7 @@
     margin-right: 10px;
 }
 
-.ol-contextmenu {
-    display: flex;
-    flex-direction: column;
-    row-gap: 5px;
-    width: fit-content;
-    height: fit-content;
-    z-index: 1000;
-}
-
-.ol-contextmenu>div:nth-child(2){
+#contextmenu>div:nth-child(2){
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -42,27 +42,27 @@
     padding-right: 0px;
 }
 
-.ol-contextmenu>ul{
+#contextmenu>ul{
     max-height: 200px;
     overflow-x: hidden;
     overflow-y: auto;
 }
 
-.ol-contextmenu .ol-panel {
+#contextmenu .ol-panel {
     width: 100%;
     border-radius: var(--border-radius-sm);
 }
 
-.ol-contextmenu ul {
+#contextmenu ul {
     margin: 0px;
 }
 
-.ol-contextmenu>div:nth-child(3)>button {
+#contextmenu>div:nth-child(3)>button {
     width: 100%;
     text-align: left;
 }
 
-.ol-contextmenu>div:nth-child(3){
+#contextmenu>div:nth-child(3){
     display: flex;
     flex-direction: column;
     
@@ -71,13 +71,13 @@
     row-gap: 5px;
 }
 
-.ol-contextmenu .ol-select-container{
+#contextmenu .ol-select-container{
     width: 100%;
     flex:0 0 auto;
     align-self: stretch;
 }
 
-#deploy-unit-button {
+#contextmenu>div:nth-child(3)>button:last-of-type {
     width: 100%;
     text-align: center;
 }
@@ -145,4 +145,27 @@
 }
 [data-active-coalition=red]#active-coalition-label::after {
     content: "Create red unit";
+}
+
+#loadout-preview {
+    display: flex;
+    flex-direction: row;
+    align-content: space-between;
+    align-items: center;
+    width: 100%;
+    column-gap: 20px;
+}
+
+#loadout-list {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    height: 100%;
+}
+
+#unit-image {
+    width: 100px;
+    filter: invert(100%);
+    margin-top: 10px;
+    margin-bottom: 10px;
 }

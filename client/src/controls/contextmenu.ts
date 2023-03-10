@@ -28,7 +28,7 @@ export class ContextMenu {
         this.#container = document.getElementById(id);
         this.#container?.querySelector("#context-menu-switch")?.addEventListener('change', (e) => this.#onSwitch(e));
 
-        this.#aircraftRoleDropdown = new Dropdown("role-options", (role: string) => this.#setAircraftRole(role), aircraftDatabase.getRoles());
+        this.#aircraftRoleDropdown = new Dropdown("role-options", (role: string) => this.#setAircraftRole(role));
         this.#aircraftTypeDropdown = new Dropdown("aircraft-options", (type: string) => this.#setAircraftType(type));
         this.#aircraftLoadoutDropdown = new Dropdown("loadout-options", (loadout: string) => this.#setAircraftLoadout(loadout));
         //this.#unitsNumberDropdown = new Dropdown("#units-options", this.#setAircraftType, [""]);
@@ -36,6 +36,9 @@ export class ContextMenu {
         document.addEventListener("contextMenuShow", (e: any) => {
             this.#container?.querySelector("#aircraft-spawn-menu")?.classList.toggle("hide", e.detail.type !== "aircraft");
             this.#container?.querySelector("#unit-spawn-aircraft")?.classList.toggle("is-open", e.detail.type === "aircraft");
+
+            this.#resetAircraftRole();
+            this.#resetAircraftType();
         })
 
         document.addEventListener("contextMenuDeployAircraft", () => {
@@ -77,22 +80,48 @@ export class ContextMenu {
         }
     }
 
+    /********* Aircraft spawn menu *********/
     #setAircraftRole(role: string)
     {
         if (this.#spawnOptions != null)
         {
             this.#spawnOptions.role = role;
+            this.#resetAircraftRole();
             this.#aircraftTypeDropdown.setOptions(aircraftDatabase.getLabelsByRole(role));
+            this.#aircraftTypeDropdown.selectValue(0);
         }
     }
 
-    #setAircraftType(type: string)
+    #resetAircraftRole() {
+        (<HTMLButtonElement>this.#container?.querySelector("#deploy-unit-button")).disabled = true;
+        (<HTMLButtonElement>this.#container?.querySelector("#loadout-list")).replaceChildren();
+        this.#aircraftTypeDropdown.reset();
+        this.#aircraftRoleDropdown.setOptions(aircraftDatabase.getRoles());
+    }
+
+    #setAircraftType(label: string)
     {
         if (this.#spawnOptions != null)
         {
-            this.#spawnOptions.type = type;
-            this.#aircraftLoadoutDropdown.setOptions(aircraftDatabase.getLoadoutNamesByRole(type, this.#spawnOptions.role));
+            this.#resetAircraftType();
+            var type = aircraftDatabase.getNameByLabel(label);
+            if (type != null)
+            {
+                this.#spawnOptions.type = type;
+                this.#aircraftLoadoutDropdown.setOptions(aircraftDatabase.getLoadoutNamesByRole(type, this.#spawnOptions.role));
+                this.#aircraftLoadoutDropdown.selectValue(0);
+                var image = (<HTMLImageElement>this.#container?.querySelector("#unit-image"));
+                image.src = `images/units/${aircraftDatabase.getByLabel(label)?.filename}`;
+                image.classList.toggle("hide", false); 
+            }
         }
+    }
+
+    #resetAircraftType() {
+        (<HTMLButtonElement>this.#container?.querySelector("#deploy-unit-button")).disabled = true;
+        (<HTMLButtonElement>this.#container?.querySelector("#loadout-list")).replaceChildren();
+        this.#aircraftLoadoutDropdown.reset();
+        (<HTMLImageElement>this.#container?.querySelector("#unit-image")).classList.toggle("hide", true);
     }
 
     #setAircraftLoadout(loadoutName: string)
@@ -104,12 +133,16 @@ export class ContextMenu {
             {
                 this.#spawnOptions.loadout = loadout.code;
                 (<HTMLButtonElement>this.#container?.querySelector("#deploy-unit-button")).disabled = false;
+                var items = loadout.items.map((item: any) => {return `${item.quantity}x ${item.name}`;});
+                items.length == 0? items.push("Empty loadout"): "";
+                (<HTMLButtonElement>this.#container?.querySelector("#loadout-list")).replaceChildren(
+                    ...items.map((item: any) => {
+                        var div = document.createElement('div');
+                        div.innerText = item;
+                        return div;
+                    })
+                )
             }
         }
-    }
-
-    #setUnitsNumber(unitsNumber: string)
-    {
-
     }
 }
