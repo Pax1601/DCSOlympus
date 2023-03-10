@@ -124,7 +124,13 @@ export class MouseInfoPanel extends Panel {
             const bng = zeroAppend(Math.floor(bear), 3);
             const reciprocal = zeroAppend( reciprocalHeading( parseInt( bng ) ), 3 );
 
-            this.#measureBox.innerText = `${bng}° | ${Math.floor(dist*0.000539957)}nm | ${reciprocal}°`;
+            let data = [ `${bng}°`, `${Math.floor(dist*0.000539957)}nm`, `${reciprocal}°` ];
+
+            if ( bear < 180 ) {
+                data = data.reverse();
+            }
+
+            this.#measureBox.innerText = data.join( " | " );
             this.#measureBox.style.left = (getMap().getMousePosition().x + startXY.x) / 2 - this.#measureBox.offsetWidth / 2 + "px";
             this.#measureBox.style.top = (getMap().getMousePosition().y + startXY.y) / 2 - this.#measureBox.offsetHeight / 2 + "px";
             this.#measureBox.style.rotate = angle + "rad";
