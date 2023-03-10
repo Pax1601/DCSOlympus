@@ -167,5 +167,6 @@
 
     --spawn-aircraft-url: url( "/themes/olympus/images/spawn_aircraft.svg" );
     --spawn-ground-url: url( "/themes/olympus/images/spawn_ground.svg" );
+    --spawn-smoke-url: url( "/themes/olympus/images/spawn_smoke.svg" );
 
 }

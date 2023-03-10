@@ -1,16 +1,16 @@
-<div id="contextmenu" class="ol-contextmenu">
+<div id="contextmenu">
+    <div id="active-coalition-label" data-active-coalition="blue"></div>
     <div class="ol-panel">
         <label id="context-menu-switch" class="toggle" for="context-menu-toggle">
             <input class="toggle-input" name="" type="checkbox" id="context-menu-toggle">
             <div data-active-coalition="blue" class="toggle-fill"></div>
         </label>
-        
-        <div id="unit-spawn" class="ol-group">
-            <button data-active-coalition="blue" id="unit-spawn-aircraft" title="Spawn aircraft" data-on-click="contextMenuShow"
-                data-on-click-params='{ "unitType": "aircraft" }'></button>
-            <button data-active-coalition="blue" id="unit-spawn-ground" title="Spawn ground unit" data-on-click="contextMenuShow"
-                data-on-click-params='{ "unitType": "ground" }'></button>
-        </div>
+        <button data-active-coalition="blue" id="unit-spawn-aircraft" title="Spawn aircraft" data-on-click="contextMenuShow"
+            data-on-click-params='{ "type": "aircraft" }' class="unit-spawn-button"></button>
+        <button data-active-coalition="blue" id="unit-spawn-ground" title="Spawn ground unit" data-on-click="contextMenuShow"
+            data-on-click-params='{ "type": "ground" }' class="unit-spawn-button"></button>
+        <button data-active-coalition="blue" id="unit-spawn-smoke" title="Spawn smoke" data-on-click="contextMenuShow"
+            data-on-click-params='{ "type": "smoke" }' class="unit-spawn-button"></button>
     </div>
     <div id="aircraft-spawn-menu" class="ol-panel hide">
         <div class="ol-select-container">
@@ -39,6 +39,11 @@
                 </div>
             </div>
         </div>
-        <button id="deploy-unit-button" title="" data-active-coalition="blue" data-on-click="contextMenuDeployUnit">Deploy units</button>
+        <div id="loadout-preview">
+            <img id="unit-image" class="hide">
+            <div id="loadout-list">
+            </div>
+        </div>
+        <button id="deploy-unit-button" title="" data-active-coalition="blue" data-on-click="contextMenuDeployUnit" disabled>Deploy unit</button>
     </div>
 </div>

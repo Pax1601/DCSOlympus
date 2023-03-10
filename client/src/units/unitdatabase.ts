@@ -6,6 +6,16 @@ export class UnitDatabase {
 
     }
 
+    getByLabel(label: string)
+    {
+        for (let unit in this.units)
+        {
+            if (this.units[unit].label === label)
+                return this.units[unit];
+        }
+        return null;
+    }
+
     getRoles()
     {
         var roles: string[] = [];
@@ -15,7 +25,6 @@ export class UnitDatabase {
             {
                 for (let role of loadout.roles)
                 {
-                    role = role.toUpperCase();
                     if (role !== "" && !roles.includes(role))
                         roles.push(role);
                 }
@@ -46,7 +55,7 @@ export class UnitDatabase {
         var loadouts = [];
         for (let loadout of this.units[unit].loadouts)
         {
-            if (loadout.roles.includes(role) || loadout.roles.includes(role.toLowerCase()) || loadout.roles.includes(""))
+            if (loadout.roles.includes(role) || loadout.roles.includes(""))
             {
                 loadouts.push(loadout.name)
             }
