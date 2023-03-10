@@ -68,7 +68,7 @@ div.unit .unit-hotgroup {
     justify-content: center;
     position:absolute;
     transform: rotate( -45deg );
-    translate:0 -24px;
+    translate:0 -275%;
     width: var( --unit-hotgroup-width );
     z-index: 5;
 }

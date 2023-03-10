@@ -84,3 +84,18 @@ section {
     left: 40px;
     top: 10px;
 }
+
+.icon-list {
+    text-align: center;
+}
+
+.icon-list {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+}
+
+.icon-list span {
+    display:block;
+    font-size: 12px;
+}
