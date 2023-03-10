@@ -75,11 +75,12 @@ function setup() {
  
             if ( triggerElement instanceof HTMLElement ) {
                 const eventName:string = triggerElement.dataset.onClick || "";
-                const params:string    = triggerElement.dataset.onClickParams || "{}";
+                let params             = JSON.parse( triggerElement.dataset.onClickParams || "{}" );
+                params._element        = triggerElement;
 
                 if ( eventName ) {
                     document.dispatchEvent( new CustomEvent( eventName, {
-                        detail: JSON.parse( params )
+                        detail: params
                     } ) );
                 }
                 
@@ -130,6 +131,7 @@ function setup() {
 
 
     document.addEventListener( "toggleCoalitionVisibility", ( ev:CustomEventInit ) => {
+        ev.detail._element.classList.toggle( "off" );
         document.body.toggleAttribute( "data-hide-" + ev.detail.coalition );
     });
 

@@ -372,6 +372,11 @@ nav.ol-panel> :last-child {
 }
 
 
+.ol-panel .ol-group-button-toggle button.off::before {
+    background-image: url("/images/icons/square-regular.svg");
+}
+
+
 
 
 .highlight-primary {
@@ -625,12 +630,6 @@ body[data-hide-naval] #unit-visibility-control-naval {
     background-image: var(--visibility-control-naval-hidden-url);
 }
 
-
-[data-hide-blue] #coalition-visibility-control #coalition-visibility-control-blue::before,
-[data-hide-red] #coalition-visibility-control #coalition-visibility-control-red::before,
-[data-hide-neutral] #coalition-visibility-control #coalition-visibility-control-neutral::before {
-    background-image: url("/images/icons/square-regular.svg");
-}
 
 .toggle {
     --width: 40px;
