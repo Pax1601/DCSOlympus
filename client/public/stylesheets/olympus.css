@@ -558,8 +558,6 @@ nav.ol-panel> :last-child {
     width: 15px;
 }
 
-
-
 #unit-visibility-control {
     align-items: center;
 }
@@ -655,5 +653,4 @@ body[data-hide-naval] #unit-visibility-control-naval {
     transform: translateX(var(--height));
 }
 
-[data-coalition=blue], [data-active-coalition=blue] {background-color: var(--primary-blue)}
-[data-coalition=red], [data-active-coalition=red] {background-color:var(--primary-red)}
+ 

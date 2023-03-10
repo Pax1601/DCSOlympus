@@ -34,7 +34,8 @@ export class ContextMenu {
         //this.#unitsNumberDropdown = new Dropdown("#units-options", this.#setAircraftType, [""]);
 
         document.addEventListener("contextMenuShow", (e: any) => {
-            this.#container?.querySelector("#aircraft-spawn-menu")?.classList.toggle("hide", e.detail.unitType !== "aircraft");
+            this.#container?.querySelector("#aircraft-spawn-menu")?.classList.toggle("hide", e.detail.type !== "aircraft");
+            this.#container?.querySelector("#unit-spawn-aircraft")?.classList.toggle("is-open", e.detail.type === "aircraft");
         })
 
         document.addEventListener("contextMenuDeployAircraft", () => {
@@ -100,7 +101,10 @@ export class ContextMenu {
         {
             var loadout = aircraftDatabase.getLoadoutsByName(this.#spawnOptions.type, loadoutName);
             if (loadout)
+            {
                 this.#spawnOptions.loadout = loadout.code;
+                (<HTMLButtonElement>this.#container?.querySelector("#deploy-unit-button")).disabled = false;
+            }
         }
     }
 
