@@ -54,7 +54,7 @@ button {
     color: whitesmoke;
     cursor: pointer;
     font-weight: var(--font-weight-bolder);
-    padding: 8px;
+    padding: 6px;
 }
 
 button[disabled="disabled"] {
@@ -667,4 +667,112 @@ body[data-hide-naval] #unit-visibility-control-naval {
 
 .toggle-input:checked ~ .toggle-fill::after {
     transform: translateX(var(--height));
+}
+
+
+#roe-buttons-container button {
+    background-color:transparent;
+    border:1px solid var( --accent-light-blue );
+}
+
+#roe-buttons-container button.selected, #reaction-to-threat-buttons-container button.selected {
+    background-color: white;
+    border-color: white;
+}
+
+#roe-buttons-container button::before, #reaction-to-threat-buttons-container button::before {
+    background-repeat: no-repeat;
+    background-size:16px 16px;
+    content: "";
+    display:block;
+    height:16px;
+    width:16px;
+}
+
+
+
+#roe-buttons-container button[title="Free"]::before {
+    background-image: url( "/themes/olympus/images/icons_roe_free_light.svg");
+}
+
+#roe-buttons-container button[title="Designated free"]::before {
+    background-image: url( "/themes/olympus/images/icons_roe_stop_light.svg");
+}
+
+#roe-buttons-container button[title="Designated"]::before {
+    background-image: url( "/themes/olympus/images/icons_roe_stop_light.svg");
+}
+
+#roe-buttons-container button[title="Return"]::before {
+    background-image: url( "/themes/olympus/images/icons_roe_target_light.svg");
+}
+
+#roe-buttons-container button[title="Hold"]::before {
+    background-image: url( "/themes/olympus/images/icons_actions_nothing_light.svg");
+}
+
+#roe-buttons-container button[title="Free"].selected::before {
+    background-image: url( "/themes/olympus/images/icons_roe_free_dark.svg");
+}
+
+#roe-buttons-container button[title="Designated free"].selected::before {
+    background-image: url( "/themes/olympus/images/icons_roe_stop_dark.svg");
+}
+
+#roe-buttons-container button[title="Designated"].selected::before {
+    background-image: url( "/themes/olympus/images/icons_roe_stop_dark.svg");
+}
+
+#roe-buttons-container button[title="Return"].selected::before {
+    background-image: url( "/themes/olympus/images/icons_roe_target_dark.svg");
+}
+
+#roe-buttons-container button[title="Hold"].selected::before {
+    background-image: url( "/themes/olympus/images/icons_actions_nothing_dark.svg");
+}
+
+
+
+#reaction-to-threat-buttons-container button[title="None"]::before {
+    background-image: url( "/themes/olympus/images/icons_actions_nothing_light.svg");
+}
+
+#reaction-to-threat-buttons-container button[title="Passive"]::before {
+    background-image: url( "/themes/olympus/images/icons_roe_stop_light.svg");
+}
+
+#reaction-to-threat-buttons-container button[title="Evade"]::before {
+    background-image: url( "/themes/olympus/images/icons_roe_stop_light.svg");
+}
+
+#reaction-to-threat-buttons-container button[title="Escape"]::before {
+    background-image: url( "/themes/olympus/images/icons_threat_retreat_light.svg");
+}
+
+#reaction-to-threat-buttons-container button[title="Abort"]::before {
+    background-image: url( "/themes/olympus/images/icons_roe_stop_light.svg");
+}
+#reaction-to-threat-buttons-container button[title="None"]::before {
+    background-image: url( "/themes/olympus/images/icons_actions_nothing_light.svg");
+}
+
+
+#reaction-to-threat-buttons-container button[title="None"].selected::before {
+    background-image: url( "/themes/olympus/images/icons_actions_nothing_dark.svg");
+}
+
+#reaction-to-threat-buttons-container button[title="Passive"].selected::before {
+    background-image: url( "/themes/olympus/images/icons_roe_stop_dark.svg");
+}
+
+#reaction-to-threat-buttons-container button[title="Evade"].selected::before {
+    background-image: url( "/themes/olympus/images/icons_roe_stop_dark.svg");
+}
+
+#reaction-to-threat-buttons-container button[title="Escape"].selected::before {
+    background-image: url( "/themes/olympus/images/icons_threat_retreat_dark.svg");
+}
+
+#reaction-to-threat-buttons-container button[title="Abort"].selected::before {
+    background-image: url( "/themes/olympus/images/icons_roe_stop_dark.svg");
 }

@@ -23,19 +23,34 @@ export class UnitControlPanel extends Panel {
         this.#airspeedSlider = new Slider("airspeed-slider", 0, 100, "kts", (value: number) => getUnitsManager().selectedUnitsSetSpeed(value / 1.94384));
 
         /* Option buttons */
-        this.#optionButtons["ROE"] = ROEs.map((option: string) => {
+        this.#optionButtons["ROE"] = ROEs.map((option: string, index:number) => {
             var button = document.createElement("button");
             button.title = option;
-            button.addEventListener("click", () => getUnitsManager().selectedUnitsSetROE(button.title));
+            if ( index === 0 ) {
+                button.classList.add( "selected" );
+            }
+            button.addEventListener("click", () => {
+                this.getElement().querySelector("#roe-buttons-container button.selected")?.classList.remove( "selected" );
+                button.classList.add( "selected" );
+                getUnitsManager().selectedUnitsSetROE(button.title);
+            });
             return button;
-        })
+        });
 
-        this.#optionButtons["reactionToThreat"] = reactionsToThreat.map((option: string) => {
+        this.#optionButtons["reactionToThreat"] = reactionsToThreat.map((option: string, index:number) => {
             var button = document.createElement("button");
             button.title = option;
-            button.addEventListener("click", () => getUnitsManager().selectedUnitsSetROE(button.title));
+            if ( index === 0 ) {
+                button.classList.add( "selected" );
+            }
+            button.addEventListener("click", () => {
+                this.getElement().querySelector("#reaction-to-threat-buttons-container button.selected")?.classList.remove( "selected" );
+                button.classList.add( "selected" );
+
+                getUnitsManager().selectedUnitsSetROE(button.title);
+            });
             return button;
-        })
+        });
 
         this.getElement().querySelector("#roe-buttons-container")?.append(...this.#optionButtons["ROE"]);
         this.getElement().querySelector("#reaction-to-threat-buttons-container")?.append(...this.#optionButtons["reactionToThreat"]);

@@ -150,18 +150,9 @@ dl.data-grid dd.br-info[data-bearing][data-distance][data-distance-units]::after
 }
 
 .ol-button-box button {
+	background-repeat: no-repeat;;
 	border:1px solid var( --accent-light-blue );
 	color: var( --accent-light-blue );
-}
-
-.ol-button-box button:first-of-type, .ol-button-box button.selected {
-	border-color: white;
-	background-color: white;
-	color: var( --background-steel );
-}
-
-.ol-button-box button:after {
-	content: "[]";
 }
 
 
