@@ -64,9 +64,16 @@ button[disabled="disabled"] {
 
 
 .pill {
+    background-color: var( --background-darksteel );
     border-radius: var(--border-radius-sm);
     padding: 2px 6px;
     width: fit-content;
+}
+
+
+
+.loadout-item::after {
+    content: attr( data-qty ) 'x ' attr( data-item );
 }
 
 
@@ -194,7 +201,7 @@ button[disabled="disabled"] {
     padding: 6px 2px;
     text-align: left;
     white-space: nowrap;
-    width: fit-content;
+    width: 100%;
 }
 
 .ol-select>.ol-select-options>div button:hover {
@@ -655,5 +662,10 @@ body[data-hide-naval] #unit-visibility-control-naval {
     transform: translateX(var(--height));
 }
 
-[data-coalition=blue], [data-active-coalition=blue] {background-color: var(--primary-blue)}
-[data-coalition=red], [data-active-coalition=red] {background-color:var(--primary-red)}
+[data-active-coalition="blue"] {
+    background-color: var(--primary-blue)
+}
+
+[data-active-coalition="red"] {
+    background-color:var(--primary-red)
+}

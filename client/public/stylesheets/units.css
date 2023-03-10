@@ -24,14 +24,14 @@ div.unit:not( .no-function ) {
     cursor:pointer;
 }
 
-[data-hide-aircraft] div.unit-air,
-[data-hide-ground] div.unit-ground,
-[data-hide-sam] div.unit-sam,
-[data-hide-threat] div.unit-threat,
-[data-hide-naval] div.unit-naval,
-[data-hide-blue] div.unit[data-coalition="blue"],
-[data-hide-red] div.unit[data-coalition="red"],
-[data-hide-neutral] div.unit[data-coalition="neutral"] {
+[data-hide-aircraft] #map-container div.unit-air,
+[data-hide-ground] #map-container div.unit-ground,
+[data-hide-sam] #map-container div.unit-sam,
+[data-hide-threat] #map-container div.unit-threat,
+[data-hide-naval] #map-container div.unit-naval,
+[data-hide-blue] #map-container div.unit[data-coalition="blue"],
+[data-hide-red] #map-container div.unit[data-coalition="red"],
+[data-hide-neutral] #map-container div.unit[data-coalition="neutral"] {
     display:none;
 }
 
