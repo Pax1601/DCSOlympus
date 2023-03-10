@@ -1,4 +1,3 @@
-import { similarity } from "../other/utils";
 import { UnitDatabase } from "./unitdatabase"
 
 export class AircraftDatabase extends UnitDatabase {

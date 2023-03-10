@@ -6,6 +6,13 @@ export class UnitDatabase {
 
     }
 
+    getByName(name: string)
+    {
+        if (name in this.units)
+            return this.units[name];
+        return null;
+    }
+
     getByLabel(label: string)
     {
         for (let unit in this.units)

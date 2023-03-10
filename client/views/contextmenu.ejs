@@ -5,16 +5,16 @@
             <input class="toggle-input" name="" type="checkbox" id="context-menu-toggle">
             <div data-active-coalition="blue" class="toggle-fill"></div>
         </label>
-        <button data-active-coalition="blue" id="unit-spawn-aircraft" title="Spawn aircraft" data-on-click="contextMenuShow"
+        <button data-active-coalition="blue" id="aircraft-spawn-button" title="Spawn aircraft" data-on-click="contextMenuShow"
             data-on-click-params='{ "type": "aircraft" }' class="unit-spawn-button"></button>
-        <button data-active-coalition="blue" id="unit-spawn-ground" title="Spawn ground unit" data-on-click="contextMenuShow"
-            data-on-click-params='{ "type": "ground" }' class="unit-spawn-button"></button>
-        <button data-active-coalition="blue" id="unit-spawn-smoke" title="Spawn smoke" data-on-click="contextMenuShow"
+        <button data-active-coalition="blue" id="ground-unit-spawn-button" title="Spawn ground unit" data-on-click="contextMenuShow"
+            data-on-click-params='{ "type": "ground-unit" }' class="unit-spawn-button"></button>
+        <button data-active-coalition="blue" id="smoke-spawn-button" title="Spawn smoke" data-on-click="contextMenuShow"
             data-on-click-params='{ "type": "smoke" }' class="unit-spawn-button"></button>
     </div>
     <div id="aircraft-spawn-menu" class="ol-panel hide">
         <div class="ol-select-container">
-            <div id="role-options" class="ol-select">
+            <div id="aircraft-role-options" class="ol-select">
                 <div class="ol-select-value">Aircraft role</div>
                 <div class="ol-select-options">
                     <!-- This is where all the aircraft roles buttons will be shown-->
@@ -22,7 +22,7 @@
             </div>
         </div>
         <div class="ol-select-container">
-            <div id="aircraft-options" class="ol-select">
+            <div id="aircraft-type-options" class="ol-select">
                 <div class="ol-select-value">Aircraft type</div>
                 <div class="ol-select-options">
                     <div>Select role first</div>
@@ -44,6 +44,33 @@
             <div id="loadout-list">
             </div>
         </div>
-        <button id="deploy-unit-button" title="" data-active-coalition="blue" data-on-click="contextMenuDeployUnit" disabled>Deploy unit</button>
+        <button class="deploy-unit-button" title="" data-active-coalition="blue" data-on-click="contextMenuDeployAircraft" disabled>Deploy unit</button>
+    </div>
+    <div id="ground-unit-spawn-menu" class="ol-panel hide">
+        <div class="ol-select-container">
+            <div id="ground-unit-role-options" class="ol-select">
+                <div class="ol-select-value">Ground unit role</div>
+                <div class="ol-select-options">
+                    <!-- This is where all the ground unit roles buttons will be shown-->
+                </div>
+            </div>
+        </div>
+        <div class="ol-select-container">
+            <div id="ground-unit-type-options" class="ol-select">
+                <div class="ol-select-value">Ground unit type</div>
+                <div class="ol-select-options">
+                    <div>Select role first</div>
+                    <!-- This is where all the ground unit types buttons will be shown-->
+                </div>
+            </div>
+        </div>
+        <button class="deploy-unit-button" title="" data-active-coalition="blue" data-on-click="contextMenuDeployGroundUnit" disabled>Deploy unit</button>
+    </div>
+    <div id="smoke-spawn-menu" class="ol-panel hide">
+        <button class="smoke-button" title="" data-smoke-color="white" data-on-click="contextMenuDeploySmoke" data-on-click-params='{ "type": "white" }'>White smoke</button>
+        <button class="smoke-button" title="" data-smoke-color="blue" data-on-click="contextMenuDeploySmoke" data-on-click-params='{ "type": "blue" }'>Blue smoke</button>
+        <button class="smoke-button" title="" data-smoke-color="red" data-on-click="contextMenuDeploySmoke" data-on-click-params='{ "type": "red" }'>Red smoke</button>
+        <button class="smoke-button" title="" data-smoke-color="green" data-on-click="contextMenuDeploySmoke" data-on-click-params='{ "type": "green" }'>Green smoke</button>
+        <button class="smoke-button" title="" data-smoke-color="orange" data-on-click="contextMenuDeploySmoke" data-on-click-params='{ "type": "orange" }'>Orange smoke</button>
     </div>
 </div>

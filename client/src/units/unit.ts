@@ -3,6 +3,7 @@ import { getMap, getUnitsManager } from '..';
 import { rad2deg } from '../other/utils';
 import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, landAt, setAltitude, setReactionToThreat, setROE, setSpeed } from '../server/server';
 import { aircraftDatabase } from './aircraftdatabase';
+import { groundUnitsDatabase } from './groundunitsdatabase';
 
 var pathIcon = new Icon({
     iconUrl: 'images/marker-icon.png',
@@ -36,7 +37,7 @@ export class Unit extends Marker {
         if (type === "NavyUnit") return NavyUnit;
     }
 
-    constructor(ID: number, data: UnitData) {
+    constructor(ID: number, data: UnitData, html: string) {
         super(new LatLng(0, 0), { riseOnHover: true });
 
         this.ID = ID;
@@ -49,33 +50,7 @@ export class Unit extends Marker {
         this.on('contextmenu', (e) => this.#onContextMenu(e));
 
         var icon = new DivIcon({
-            html: ` 
-                <div class="unit unit-air" data-status="hold" data-coalition="${this.getMissionData().coalition}" data-is-in-hotgroup="false" data-is-selected="false">
-                <div class="unit-selected-spotlight"></div>
-                <div class="unit-marker-border"></div>
-                <div class="unit-status"></div>
-                <div class="unit-vvi"></div>
-                <div class="unit-hotgroup">
-                    <div class="unit-hotgroup-id">4</div>
-                </div>
-                <div class="unit-marker"></div>
-                <div class="unit-short-label">${aircraftDatabase.getShortLabelByName(this.getData().name)}</div>
-                <div class="unit-fuel">
-                    <div class="unit-fuel-level" style="width:100%;"></div>
-                </div>
-                <div class="unit-ammo">
-                    <div class="unit-ammo-fox-1"></div>
-                    <div class="unit-ammo-fox-2"></div>
-                    <div class="unit-ammo-fox-3"></div>
-                    <div class="unit-ammo-other"></div>
-                </div>
-                <div class="unit-summary">
-                    <div class="unit-callsign">${this.getData().unitName}</div>
-                    <div class="unit-heading"></div>
-                    <div class="unit-altitude"></div>
-                </div>
-            </div>
-            `,
+            html: html,
             className: 'ol-unit-marker',
             iconAnchor: [0, 0]
         });
@@ -408,19 +383,55 @@ export class AirUnit extends Unit {
 
 export class Aircraft extends AirUnit {
     constructor(ID: number, data: UnitData) {
-        super(ID, data);
+        super(ID, data,
+           `<div class="unit unit-air" data-status="hold" data-coalition="${data.missionData.coalition}" data-is-in-hotgroup="false" data-is-selected="false">
+                <div class="unit-selected-spotlight"></div>
+                <div class="unit-marker-border"></div>
+                <div class="unit-status"></div>
+                <div class="unit-vvi"></div>
+                <div class="unit-hotgroup">
+                    <div class="unit-hotgroup-id">4</div>
+                </div>
+                <div class="unit-marker"></div>
+                <div class="unit-short-label">${aircraftDatabase.getShortLabelByName(data.name)}</div>
+                <div class="unit-fuel">
+                    <div class="unit-fuel-level" style="width:100%;"></div>
+                </div>
+                <div class="unit-ammo">
+                    <div class="unit-ammo-fox-1"></div>
+                    <div class="unit-ammo-fox-2"></div>
+                    <div class="unit-ammo-fox-3"></div>
+                    <div class="unit-ammo-other"></div>
+                </div>
+                <div class="unit-summary">
+                    <div class="unit-callsign">${data.unitName}</div>
+                    <div class="unit-heading"></div>
+                    <div class="unit-altitude"></div>
+                </div>
+            </div>`);
     }
 }
 
 export class Helicopter extends AirUnit {
     constructor(ID: number, data: UnitData) {
-        super(ID, data);
+        super(ID, data, 
+            ``);
     }
 }
 
 export class GroundUnit extends Unit {
     constructor(ID: number, data: UnitData) {
-        super(ID, data);
+        var role = groundUnitsDatabase.getByName(data.name)?.loadouts[0].roles[0];
+        var roleType = "ground";
+        if (role === "SAM")
+            roleType = "sam"
+        super(ID, data, `
+            <div class="unit unit-${roleType}" data-coalition="${data.missionData.coalition}">
+                <div class="unit-selected-spotlight"></div>
+                <div class="unit-marker"></div>
+                <div class="unit-short-label">${role?.substring(0, 1).toUpperCase()}</div>
+            </div>
+        `);
     }
 
     getHidden() {
@@ -430,7 +441,7 @@ export class GroundUnit extends Unit {
 
 export class NavyUnit extends Unit {
     constructor(ID: number, data: UnitData) {
-        super(ID, data);
+        super(ID, data, "");
     }
 
     getHidden() {
@@ -440,7 +451,7 @@ export class NavyUnit extends Unit {
 
 export class Weapon extends Unit {
     constructor(ID: number, data: UnitData) {
-        super(ID, data);
+        super(ID, data, "");
         this.setSelectable(false);
     }
 }

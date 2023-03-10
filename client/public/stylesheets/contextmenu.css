@@ -15,6 +15,10 @@
     height: fit-content;
 }
 
+#ground-unit-spawn-menu {
+    height: fit-content;
+}
+
 #active-coalition-label {
     position: absolute;
     top: -28px;
@@ -57,12 +61,7 @@
     margin: 0px;
 }
 
-#contextmenu>div:nth-child(3)>button {
-    width: 100%;
-    text-align: left;
-}
-
-#contextmenu>div:nth-child(3){
+#contextmenu>div:nth-child(n+3){
     display: flex;
     flex-direction: column;
     
@@ -77,22 +76,23 @@
     align-self: stretch;
 }
 
-#contextmenu>div:nth-child(3)>button:last-of-type {
+#aircraft-spawn-menu>button,
+#ground-unit-spawn-menu>button {
     width: 100%;
     text-align: center;
 }
 
-#unit-spawn-aircraft {
+#aircraft-spawn-button {
     background-image: var( --spawn-aircraft-url );
     background-size: 48px;
 }
 
-#unit-spawn-ground {
+#ground-unit-spawn-button {
     background-image: var( --spawn-ground-url );
     background-size: 48px;
 }
 
-#unit-spawn-smoke {
+#smoke-spawn-button {
     background-image: var( --spawn-smoke-url );
     background-size: 48px;
 }
@@ -115,7 +115,7 @@
 [data-active-coalition=blue].unit-spawn-button:hover, 
 [data-active-coalition=blue].unit-spawn-button.is-open, 
 [data-active-coalition=blue]#active-coalition-label,
-[data-active-coalition=blue]#deploy-unit-button
+[data-active-coalition=blue].deploy-unit-button
 {
     background-color: var(--primary-blue)
 }
@@ -124,17 +124,17 @@
 [data-active-coalition=red].unit-spawn-button:hover, 
 [data-active-coalition=red].unit-spawn-button.is-open, 
 [data-active-coalition=red]#active-coalition-label,
-[data-active-coalition=red]#deploy-unit-button
+[data-active-coalition=red].deploy-unit-button
 {
     background-color: var(--primary-red)
 }
 
-[data-active-coalition=blue]#deploy-unit-button:disabled {
+[data-active-coalition=blue].deploy-unit-button:disabled {
     background-color: transparent;
     border: 1px solid var(--primary-blue);
     cursor: default;
 }
-[data-active-coalition=red]#deploy-unit-button:disabled {
+[data-active-coalition=red].deploy-unit-button:disabled {
     background-color: transparent;
     border: 1px solid var(--primary-red);
     cursor: default;
@@ -169,3 +169,35 @@
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
+#smoke-spawn-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+#smoke-spawn-menu>button {
+    width: 100%;
+    text-align: left;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: 10px;
+}
+
+#smoke-spawn-menu>button::before {
+    display: block;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    content: "";
+}
+
+[data-smoke-color=red]::before{ background-color: red; }
+[data-smoke-color=white]::before{ background-color: white; }
+[data-smoke-color=blue]::before{ background-color: blue; }
+[data-smoke-color=green]::before{ background-color: green; }
+[data-smoke-color=orange]::before{ background-color: orange; }
+
+

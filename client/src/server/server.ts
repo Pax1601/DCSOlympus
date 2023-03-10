@@ -3,7 +3,7 @@ import { setConnected } from '..';
 import { SpawnOptions } from '../controls/contextmenu';
 
 /* Edit here to change server address */
-const REST_ADDRESS = "http://localhost:30000/olympus";
+const REST_ADDRESS = "http://localhost:3000/demo";
 const UNITS_URI = "units";
 const REFRESH_URI = "refresh";
 const UPDATE_URI = "update";
@@ -64,8 +64,8 @@ export function spawnSmoke(color: string, latlng: L.LatLng) {
     POST(data, () => { });
 }
 
-export function spawnGroundUnit(type: string, latlng: L.LatLng, coalition: string) {
-    var command = { "type": type, "location": latlng, "coalition": coalition };
+export function spawnGroundUnit(spawnOptions: SpawnOptions) {
+    var command = { "type": spawnOptions.type, "location": spawnOptions.latlng, "coalition": spawnOptions.coalition };
     var data = { "spawnGround": command }
     POST(data, () => { });
 }

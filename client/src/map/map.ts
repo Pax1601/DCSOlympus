@@ -1,10 +1,6 @@
 import * as L from "leaflet"
-import { getContextMenu, getUnitsManager, getActiveCoalition } from "..";
-import { spawnAircraft, spawnGroundUnit, spawnSmoke } from "../server/server";
-import { aircraftDatabase } from "../units/aircraftdatabase";
-import { unitTypes } from "../units/unittypes";
+import { getContextMenu, getUnitsManager } from "..";
 import { BoxSelect } from "./boxselect";
-import { ContextMenuOption } from "../@types/dom";
 import { SpawnOptions } from "../controls/contextmenu";
 
 export const IDLE = "IDLE";
@@ -201,11 +197,6 @@ export class Map extends L.Map {
 
     #onMouseMove(e: any)
     {
-        var selectedUnitPosition = null;
-        var selectedUnits = getUnitsManager().getSelectedUnits();
-        if (selectedUnits && selectedUnits.length == 1)
-            selectedUnitPosition = new L.LatLng(selectedUnits[0].getFlightData().latitude, selectedUnits[0].getFlightData().longitude);
-
         this.#lastMousePosition.x = e.originalEvent.x;
         this.#lastMousePosition.y = e.originalEvent.y;
     }
