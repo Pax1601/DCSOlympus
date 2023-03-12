@@ -45,7 +45,7 @@ function setup() {
 
     contextMenu = new ContextMenu("contextmenu");
    
-    //unitInfoPanel = new UnitInfoPanel("unit-info-panel");
+    unitInfoPanel = new UnitInfoPanel("unit-info-panel");
     unitControlPanel = new UnitControlPanel("unit-control-panel");
     connectionStatusPanel = new ConnectionStatusPanel("connection-status-panel");
     mouseInfoPanel = new MouseInfoPanel("mouse-info-panel");
