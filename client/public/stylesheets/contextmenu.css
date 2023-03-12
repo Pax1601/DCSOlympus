@@ -64,7 +64,6 @@
 #contextmenu>div:nth-child(n+3){
     display: flex;
     flex-direction: column;
-    
     justify-content: space-between;
     align-items: center;
     row-gap: 5px;
@@ -74,6 +73,12 @@
     width: 100%;
     flex:0 0 auto;
     align-self: stretch;
+}
+
+
+
+#aircraft-spawn-menu .ol-select.is-open .ol-select-options {
+    max-height: 300px;
 }
 
 #aircraft-spawn-menu>button,
@@ -111,39 +116,39 @@
     border-bottom-right-radius: var(--border-radius-sm);
 }
 
-[data-active-coalition=blue].toggle-fill,
-[data-active-coalition=blue].unit-spawn-button:hover, 
-[data-active-coalition=blue].unit-spawn-button.is-open, 
-[data-active-coalition=blue]#active-coalition-label,
-[data-active-coalition=blue].deploy-unit-button
+[data-active-coalition="blue"].toggle-fill,
+[data-active-coalition="blue"].unit-spawn-button:hover, 
+[data-active-coalition="blue"].unit-spawn-button.is-open, 
+[data-active-coalition="blue"]#active-coalition-label,
+[data-active-coalition="blue"].deploy-unit-button
 {
     background-color: var(--primary-blue)
 }
 
-[data-active-coalition=red].toggle-fill,
-[data-active-coalition=red].unit-spawn-button:hover, 
-[data-active-coalition=red].unit-spawn-button.is-open, 
-[data-active-coalition=red]#active-coalition-label,
-[data-active-coalition=red].deploy-unit-button
+[data-active-coalition="red"].toggle-fill,
+[data-active-coalition="red"].unit-spawn-button:hover, 
+[data-active-coalition="red"].unit-spawn-button.is-open, 
+[data-active-coalition="red"]#active-coalition-label,
+[data-active-coalition="red"].deploy-unit-button
 {
     background-color: var(--primary-red)
 }
 
-[data-active-coalition=blue].deploy-unit-button:disabled {
+[data-active-coalition="blue"].deploy-unit-button:disabled {
     background-color: transparent;
     border: 1px solid var(--primary-blue);
     cursor: default;
 }
-[data-active-coalition=red].deploy-unit-button:disabled {
+[data-active-coalition="red"].deploy-unit-button:disabled {
     background-color: transparent;
     border: 1px solid var(--primary-red);
     cursor: default;
 }
 
-[data-active-coalition=blue]#active-coalition-label::after {
+[data-active-coalition="blue"]#active-coalition-label::after {
     content: "Create blue unit";
 }
-[data-active-coalition=red]#active-coalition-label::after {
+[data-active-coalition="red"]#active-coalition-label::after {
     content: "Create red unit";
 }
 
@@ -194,10 +199,10 @@
     content: "";
 }
 
-[data-smoke-color=red]::before{ background-color: red; }
-[data-smoke-color=white]::before{ background-color: white; }
-[data-smoke-color=blue]::before{ background-color: blue; }
-[data-smoke-color=green]::before{ background-color: green; }
-[data-smoke-color=orange]::before{ background-color: orange; }
+[data-smoke-color="red"]::before{ background-color: red; }
+[data-smoke-color="white"]::before{ background-color: white; }
+[data-smoke-color="blue"]::before{ background-color: blue; }
+[data-smoke-color="green"]::before{ background-color: green; }
+[data-smoke-color="orange"]::before{ background-color: orange; }
 
 

@@ -156,14 +156,16 @@ button[disabled="disabled"] {
 }
 
 
-.ol-select.is-open>.ol-select-options {
+.ol-select.is-open > .ol-select-options {
     max-height: fit-content;
     overflow: visible;
     overflow-y: auto;
     padding: 8px 0;
-    max-height: 300px;
     min-width: 100%;
 }
+
+
+
 
 .ol-select>.ol-select-options>div {
     background-color: var(--background-grey);
