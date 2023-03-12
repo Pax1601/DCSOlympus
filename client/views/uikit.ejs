@@ -1070,10 +1070,9 @@
 
             showSection();
 
-            document.querySelectorAll( ".unit" ).forEach( unit => {
+            document.querySelectorAll( `[data-object|="unit"]` ).forEach( unit => {
                 unit.addEventListener( "click", ev => {
-                    console.log( unit.dataset.isSelected );
-                    unit.dataset.isSelected = ( unit.dataset.isSelected === "true" ) ? null : "true";
+                    unit.toggleAttribute( "data-is-selected" );
                 });
             });
 

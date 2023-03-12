@@ -131,7 +131,7 @@ export class Unit extends Marker {
         /* Only alive units can be selected. Some units are not selectable (weapons) */
         if ((this.getData().alive || !selected) && this.#selectable && this.#selected != selected) {
             this.#selected = selected;
-            this.getElement()?.querySelector(".unit")?.setAttribute("data-is-selected", String(this.getSelected()));
+            this.getElement()?.querySelector( `[data-object|="unit"]` )?.toggleAttribute( "data-is-selected" );
             if (selected)
                 document.dispatchEvent(new CustomEvent("unitSelection", { detail: this }));
             else
