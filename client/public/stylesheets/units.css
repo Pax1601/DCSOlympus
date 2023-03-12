@@ -463,7 +463,7 @@
 [data-object|="unit-air"][ data-is-dead ] .unit-ammo,
 [data-object|="unit-air"][ data-is-dead ]:hover .unit-fuel,
 [data-object|="unit-air"][ data-is-dead ]:hover .unit-ammo {
-    display:none;
+    display:none !important;
 }
 
 
