@@ -290,7 +290,7 @@ export class Unit extends Marker {
             if (element != null) {
                 element.querySelector(".unit-vvi")?.setAttribute("style", `height: ${this.getFlightData().speed / 5}px; transform:rotate(${rad2deg(this.getFlightData().heading)}deg);`);
                 element.querySelector(".unit")?.setAttribute("data-fuel-level", "20");
-                element.querySelector(".unit")?.setAttribute("data-has-fox-1", "true");
+                element.querySelector(".unit")?.toggleAttribute("data-has-fox-1", true );
 
                 var unitHeadingDiv = element.querySelector(".unit-heading");
                 if (unitHeadingDiv != null)
@@ -384,7 +384,7 @@ export class AirUnit extends Unit {
 export class Aircraft extends AirUnit {
     constructor(ID: number, data: UnitData) {
         super(ID, data,
-           `<div class="unit unit-air" data-status="hold" data-coalition="${data.missionData.coalition}" data-is-in-hotgroup="false" data-is-selected="false">
+           `<div class="unit unit-air" data-status="hold" data-coalition="${data.missionData.coalition}">
                 <div class="unit-selected-spotlight"></div>
                 <div class="unit-marker-border"></div>
                 <div class="unit-status"></div>

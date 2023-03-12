@@ -101,12 +101,15 @@
 
     --unit-air-marker-blue-url: url( "/themes/olympus/images/icon_aircraft_blue.svg" );
     --unit-air-marker-blue-hover-url: url( "/themes/olympus/images/icon_aircraft_blue_hover.svg" );
+    --unit-air-marker-blue-dead-url: url( "/themes/olympus/images/icon_death_blue.svg" );
     
     --unit-air-marker-neutral-url: url( "/themes/olympus/images/icon_aircraft_neutral.svg" );
     --unit-air-marker-neutral-hover-url: url( "/themes/olympus/images/icon_aircraft_neutral_hover.svg" );
+    --unit-air-marker-neutral-dead-url: url( "/themes/olympus/images/icon_death_neutral.svg" );
     
     --unit-air-marker-red-url: url( "/themes/olympus/images/icon_aircraft_red.svg" );
     --unit-air-marker-red-hover-url: url( "/themes/olympus/images/icon_aircraft_red_hover.svg" );
+    --unit-air-marker-red-dead-url: url( "/themes/olympus/images/icon_death_red.svg" );
 
 
     /***  Air units' statuses  ***/
