@@ -32,13 +32,14 @@ export class UnitInfoPanel extends Panel {
 
         document.addEventListener("unitsSelection", (e: CustomEvent<Unit[]>) => this.#onUnitsSelection(e.detail));
         document.addEventListener("unitsDeselection", (e: CustomEvent<Unit[]>) => this.#onUnitsDeselection(e.detail));
+        document.addEventListener("clearSelection", () => this.#onUnitsDeselection([]));
         document.addEventListener("unitUpdated", (e: CustomEvent<Unit>) => this.#onUnitUpdate(e.detail));
 
         this.hide();
     }
     
     #onUnitUpdate(unit: Unit) {
-        if (this.getElement() != null && this.getVisible()) {
+        if (this.getElement() != null && this.getVisible() && unit.getSelected()) {
             /* Set the unit info */
             this.#unitName.innerText = unit.getBaseData().unitName;
             this.#groupName.innerText = unit.getBaseData().groupName;
@@ -46,9 +47,9 @@ export class UnitInfoPanel extends Panel {
             this.#heading.innerText = String(Math.floor(rad2deg(unit.getFlightData().heading)) + " °");
             this.#altitude.innerText = String(Math.floor(unit.getFlightData().altitude / 0.3048) + " ft");
             this.#groundSpeed.innerText = String(Math.floor(unit.getFlightData().speed * 1.94384) + " kts");
-            this.#fuel.innerText = String(unit.getMissionData().fuel + "%");
-            this.#latitude.innerText = ConvertDDToDMS(unit.getFlightData().latitude, false);
-            this.#longitude.innerText = ConvertDDToDMS(unit.getFlightData().longitude, true);
+            //this.#fuel.innerText = String(unit.getMissionData().fuel + "%");
+            //this.#latitude.innerText = ConvertDDToDMS(unit.getFlightData().latitude, false);
+            //this.#longitude.innerText = ConvertDDToDMS(unit.getFlightData().longitude, true);
             this.#task.innerText = unit.getTaskData().currentTask !== ""? unit.getTaskData().currentTask: "No task";
 
             /* Set the class of the task container */

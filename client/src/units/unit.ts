@@ -365,6 +365,10 @@ export class Unit extends Marker {
             var element = this.getElement();
             if (element != null) {
                 element.querySelector(".unit-vvi")?.setAttribute("style", `height: ${15 + this.getFlightData().speed / 5}px; transform:rotate(${rad2deg(this.getFlightData().heading)}deg);`);
+                element.querySelector(".unit")?.setAttribute("data-pilot", this.getMissionData().flags.human? "human": "ai");
+
+                element.querySelector(".unit-fuel-level")?.setAttribute("style", `width: ${this.getMissionData().fuel}%`);
+                element.querySelector(".unit")?.toggleAttribute("data-has-low-fuel", this.getMissionData().fuel < 20);
 
                 var unitHeadingDiv = element.querySelector(".unit-heading");
                 if (unitHeadingDiv != null)
@@ -458,7 +462,7 @@ export class AirUnit extends Unit {
 export class Aircraft extends AirUnit {
     constructor(ID: number, data: UnitData) {
         super(ID, data,
-           `<div data-object="unit-air-aircraft" data-status="hold" data-coalition="${data.missionData.coalition}">
+           `<div class="unit" data-object="unit-air-aircraft" data-status="" data-coalition="${data.missionData.coalition}">
                 <div class="unit-selected-spotlight"></div>
                 <div class="unit-marker-border"></div>
                 <div class="unit-status"></div>
@@ -499,7 +503,7 @@ export class GroundUnit extends Unit {
         var roleType = (role === "SAM") ? "sam" : "mi";
 
         super(ID, data, `
-            <div data-object="unit-ground-${roleType}" data-coalition="${data.missionData.coalition}">
+            <div class="unit" data-object="unit-ground-${roleType}" data-coalition="${data.missionData.coalition}">
                 <div class="unit-selected-spotlight"></div>
                 <div class="unit-marker"></div>
                 <div class="unit-short-label">${role?.substring(0, 1).toUpperCase()}</div>
