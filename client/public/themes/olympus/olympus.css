@@ -166,6 +166,15 @@
     --unit-building-marker-red-url: url( "/themes/olympus/images/icon_building_red.svg" );
 
 
+    /***  Weapons  ***/
+    --unit-weapons-missile-marker-height: 33px;
+    --unit-weapons-missile-marker-width: 17px;
+
+    --unit-weapons-missile-marker-blue-url: url( "/themes/olympus/images/icon_missile_blue.svg" );
+    --unit-weapons-missile-marker-neutral-url: url( "/themes/olympus/images/icon_missile_neutral.svg" );
+    --unit-weapons-missile-marker-red-url: url( "/themes/olympus/images/icon_missile_red.svg" );
+
+
     /***  Context menu  ***/
     --spawn-aircraft-url: url( "/themes/olympus/images/spawn_aircraft.svg" );
     --spawn-ground-url: url( "/themes/olympus/images/spawn_ground.svg" );

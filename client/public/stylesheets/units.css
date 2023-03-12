@@ -219,6 +219,29 @@
 
 
 
+/*  Weapons  */
+
+[data-object="unit-weapon-missile"] .unit-marker {
+    background-image: var( --unit-weapons-missile-marker-neutral-url );
+    height: var( --unit-weapons-missile-marker-height );
+    width: var( --unit-weapons-missile-marker-width );
+}
+
+
+[data-object="unit-weapon-missile"][data-coalition="blue"] .unit-marker {
+    background-image: var( --unit-weapons-missile-marker-blue-url );
+}
+
+
+[data-object="unit-weapon-missile"][data-coalition="red"] .unit-marker {
+    background-image: var( --unit-weapons-missile-marker-red-url );
+}
+
+
+/********************************************
+*  Labels
+********************************************/
+
 [data-object|="unit"] .unit-short-label {
     color: var( --secondary-gunmetal-grey );
     font-size: var(--unit-font-size);
@@ -474,10 +497,4 @@
 [data-object|="unit-air"][ data-is-dead ] .unit-summary .unit-callsign {
     display:block;
 }
-
-
-
-/******************************
-    Weapons
-******************************/
 
