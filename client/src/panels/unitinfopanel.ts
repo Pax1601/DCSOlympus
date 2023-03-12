@@ -40,9 +40,9 @@ export class UnitInfoPanel extends Panel {
     #onUnitUpdate(unit: Unit) {
         if (this.getElement() != null && this.getVisible()) {
             /* Set the unit info */
-            this.#unitName.innerText = unit.getData().unitName;
-            this.#groupName.innerText = unit.getData().groupName;
-            this.#name.innerText = unit.getData().name;
+            this.#unitName.innerText = unit.getBaseData().unitName;
+            this.#groupName.innerText = unit.getBaseData().groupName;
+            this.#name.innerText = unit.getBaseData().name;
             this.#heading.innerText = String(Math.floor(rad2deg(unit.getFlightData().heading)) + " °");
             this.#altitude.innerText = String(Math.floor(unit.getFlightData().altitude / 0.3048) + " ft");
             this.#groundSpeed.innerText = String(Math.floor(unit.getFlightData().speed * 1.94384) + " kts");

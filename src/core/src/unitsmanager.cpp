@@ -92,7 +92,7 @@ void UnitsManager::updateMissionData(json::value missionData)
 	}
 }
 
-void UnitsManager::getData(json::value& answer, int time)
+void UnitsManager::getData(json::value& answer, long long time)
 {
 	auto unitsJson = json::value::object();
 	for (auto const& p : units)

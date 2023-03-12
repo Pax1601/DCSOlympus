@@ -7,6 +7,9 @@
 #include <exception>
 #include <stdexcept>
 
+#include <chrono>
+using namespace std::chrono;
+
 extern UnitsManager* unitsManager; 
 extern Scheduler* scheduler;
 extern json::value airbasesData;
@@ -78,9 +81,18 @@ void Server::handle_get(http_request request)
         {
             if (path[0] == UNITS_URI)
             {
-                wstring fragment = uri::decode(request.relative_uri().fragment());
-                log(fragment);
-                //unitsManager->getData(answer);
+                map<utility::string_t, utility::string_t> query = request.relative_uri().split_query(request.relative_uri().query());
+                long long time = 0;
+                if (query.find(L"time") != query.end())
+                {
+                    try {
+                        time = stoll((*(query.find(L"time"))).second);   
+                    }
+                    catch (const std::exception& e) {
+                        time = 0;
+                    }
+                }
+                unitsManager->getData(answer, time);
             }
             else if (path[0] == LOGS_URI)
             {
@@ -93,6 +105,8 @@ void Server::handle_get(http_request request)
             else if (path[0] == BULLSEYE_URI)
                 answer[L"bullseyes"] = bullseyesData;
 
+            milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
+            answer[L"time"] = json::value::string(to_wstring(ms.count()));
             answer[L"sessionHash"] = json::value::string(to_wstring(sessionHash));
         }
 

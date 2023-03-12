@@ -533,34 +533,34 @@ nav.ol-panel> :last-child {
 
 
 
-#unit-info-panel {
+#unit-control-panel {
     display: flex;
     flex-direction: column;
 }
 
-#unit-info-panel #unit-identification {
+#unit-control-panel #unit-identification {
     align-items: center;
     display: flex;
     margin-bottom: 11px;
 }
 
-#unit-info-panel #unit-identification .unit {
+#unit-control-panel #unit-identification .unit {
     height: 28px;
     margin-right: 6px;
     width: 28px;
 }
 
-#unit-info-panel #unit-identification .unit .unit-marker {
+#unit-control-panel #unit-identification .unit .unit-marker {
     background-size: 28px 28px;
     height: 28px;
     width: 28px;
 }
 
-#unit-info-panel #unit-identification .unit .unit-short-label {
+#unit-control-panel #unit-identification .unit .unit-short-label {
     font-size: 12px;
 }
 
-#unit-info-panel #unit-identification #unit-name {
+#unit-control-panel #unit-identification #unit-name {
     background-color: transparent;
     border: none;
     color: white;

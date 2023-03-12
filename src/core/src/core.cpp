@@ -94,7 +94,7 @@ extern "C" DllExport int coreMissionData(lua_State * L)
         unitsManager->updateMissionData(missionData[L"unitsData"]);
     if (missionData.has_object_field(L"airbases"))
         airbasesData = missionData[L"airbases"];
-    if (missionData.has_object_field(L"bullseye"))
+    if (missionData.has_object_field(L"bullseyes"))
         bullseyesData = missionData[L"bullseyes"];
 
     return(0);

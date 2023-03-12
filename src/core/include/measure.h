@@ -4,16 +4,16 @@
 class Measure
 {
 public:
-	Measure(json::value value, int time): value(value), time(time) {};
+	Measure(json::value value, long long time): value(value), time(time) {};
 	
 	void setValue(json::value newValue) { value = newValue; }
-	void setTime(int newTime) { time = newTime; }
+	void setTime(long long newTime) { time = newTime; }
 	json::value getValue() { return value; }
-	int getTime() { return time; }
+	long long getTime() { return time; }
 
 private:
 	json::value value;
-	int time;
+	long long time;
 
 };
 

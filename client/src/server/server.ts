@@ -3,13 +3,13 @@ import { setConnected } from '..';
 import { SpawnOptions } from '../controls/contextmenu';
 
 /* Edit here to change server address */
-const REST_ADDRESS = "http://localhost:3000/demo";
+const REST_ADDRESS = "http://localhost:30000/olympus";
 const UNITS_URI = "units";
-const REFRESH_URI = "refresh";
-const UPDATE_URI = "update";
 const LOGS_URI = "logs";
 const AIRBASES_URI = "airbases";
 const BULLSEYE_URI = "bullseyes";
+
+var lastUpdateTime = 0;
 
 export function GET(callback: CallableFunction, uri: string){
     var xmlHttp = new XMLHttpRequest();
@@ -17,6 +17,7 @@ export function GET(callback: CallableFunction, uri: string){
     xmlHttp.onload = function (e) {
         var data = JSON.parse(xmlHttp.responseText);
         callback(data);
+        lastUpdateTime = parseInt(data.time);
         setConnected(true);
     };
     xmlHttp.onerror = function () {
@@ -49,7 +50,7 @@ export function getLogs(callback: CallableFunction) {
 }
 
 export function getUnits(callback: CallableFunction, refresh: boolean = false) {
-    GET(callback, `${UNITS_URI}/${refresh? REFRESH_URI: UPDATE_URI}`);
+    GET(callback, `${UNITS_URI}?time=${refresh? 0: lastUpdateTime}`);
 }
 
 export function addDestination(ID: number, path: any) {

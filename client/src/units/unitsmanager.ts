@@ -33,7 +33,7 @@ export class UnitsManager {
 
     addUnit(ID: number, data: UnitData) {
         /* The name of the unit category is exactly the same as the constructor name */
-        var constructor = Unit.getConstructor(data.category);
+        var constructor = Unit.getConstructor(data.baseData.category);
         if (constructor != undefined) {
             this.#units[ID] = new constructor(ID, data);
         }

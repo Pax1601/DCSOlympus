@@ -51,7 +51,7 @@ function setup() {
     mouseInfoPanel = new MouseInfoPanel("mouse-info-panel");
     //logPanel = new LogPanel("log-panel");
 
-    missionHandler = new MissionHandler();
+    missionHandler = new MissionHandler(); 
 
     /* AIC */
     let aicFeatureSwitch = featureSwitches.getSwitch( "aic" );
