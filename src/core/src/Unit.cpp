@@ -48,7 +48,7 @@ void Unit::updateExportData(json::value json)
 	{
 		double dist = 0;
 		Geodesic::WGS84().Inverse(latitude, longitude, oldPosition.lat, oldPosition.lng, dist);
-		speed = speed * 0.95 + (dist / UPDATE_TIME_INTERVAL) * 0.05;
+		setSpeed(getSpeed() * 0.95 + (dist / UPDATE_TIME_INTERVAL) * 0.05);
 	}
 	oldPosition = Coords(latitude, longitude, altitude);
 
@@ -77,11 +77,10 @@ void Unit::updateExportData(json::value json)
 
 	/* All units which contain the name "Olympus" are automatically under AI control */
 	/* TODO: I don't really like using this method */
-	if (unitName.find(L"Olympus") != wstring::npos)
-		setAI(true);
+	setAI(getUnitName().find(L"Olympus") != wstring::npos);
 
 	/* If the unit is alive and it is not a human, run the AI Loop that performs the requested commands and instructions (moving, attacking, etc) */
-	if (AI && alive && flags[L"Human"].as_bool() == false)
+	if (getAI() && getAlive() && getFlags()[L"Human"].as_bool() == false)
 		AIloop();
 }
 
@@ -96,83 +95,8 @@ void Unit::updateMissionData(json::value json)
 	if (json.has_boolean_field(L"hasTask"))
 		setHasTask(json[L"hasTask"].as_bool());
 }
-//
-//json::value Unit::getRefreshData()
-//{
-//	auto json = json::value::object();
-//
-//	/********** Base data **********/
-//	json[L"baseData"] = json::value::object();
-//	json[L"baseData"][L"AI"] = AI;
-//	json[L"baseData"][L"name"] = json::value::string(name);
-//	json[L"baseData"][L"unitName"] = json::value::string(unitName);
-//	json[L"baseData"][L"groupName"] = json::value::string(groupName);
-//	json[L"baseData"][L"alive"] = alive;
-//	json[L"baseData"][L"category"] = json::value::string(getCategory());
-//
-//	/********** Flight data **********/
-//	json[L"flightData"] = json::value::object();
-//	json[L"flightData"][L"latitude"] = latitude;
-//	json[L"flightData"][L"longitude"] = longitude;
-//	json[L"flightData"][L"altitude"] = altitude;
-//	json[L"flightData"][L"speed"] = speed;
-//	json[L"flightData"][L"heading"] = heading;
-//
-//	/********** Mission data **********/
-//	json[L"missionData"] = json::value::object();
-//	json[L"missionData"][L"fuel"] = fuel;
-//	json[L"missionData"][L"ammo"] = ammo;
-//	json[L"missionData"][L"targets"] = targets;
-//	json[L"missionData"][L"hasTask"] = hasTask;
-//	if (coalitionID == 0)
-//		json[L"missionData"][L"coalition"] = json::value::string(L"neutral");
-//	else if (coalitionID == 1)
-//		json[L"missionData"][L"coalition"] = json::value::string(L"red");
-//	else
-//		json[L"missionData"][L"coalition"] = json::value::string(L"blue");
-//	json[L"missionData"][L"flags"] = flags;
-//
-//	/********** Formation data **********/
-//	json[L"formationData"] = json::value::object();
-//	json[L"formationData"][L"isLeader"] = isLeader;
-//	json[L"formationData"][L"isWingman"] = isWingman;
-//	json[L"formationData"][L"formation"] = json::value::string(formation);
-//	int i = 0;
-//	for (auto itr = wingmen.begin(); itr != wingmen.end(); itr++)
-//		json[L"formationData"][L"wingmenIDs"][i++] = (*itr)->getID();
-//
-//	if (leader != nullptr)
-//		json[L"formationData"][L"leaderID"] = leader->getID();
-//
-//	/********** Task data **********/
-//	json[L"taskData"] = json::value::object();
-//	json[L"taskData"][L"currentTask"] = json::value::string(getCurrentTask());
-//	json[L"taskData"][L"targetSpeed"] = getTargetSpeed();
-//	json[L"taskData"][L"targetAltitude"] = getTargetAltitude();
-//	/* Send the active path as a json object */
-//	auto path = json::value::object();
-//	if (activePath.size() > 0) {
-//		int count = 1;
-//		for (auto& destination : activePath)
-//		{
-//			auto json = json::value::object();
-//			json[L"lat"] = destination.lat;
-//			json[L"lng"] = destination.lng;
-//			json[L"alt"] = destination.alt;
-//			path[to_wstring(count++)] = json;
-//		}
-//	}
-//	json[L"taskData"][L"activePath"] = path;
-//
-//	/********** Options data **********/
-//	json[L"optionsData"] = json::value::object();
-//	json[L"optionsData"][L"ROE"] = json::value::string(ROE);
-//	json[L"optionsData"][L"reactionToThreat"] = json::value::string(reactionToThreat);
-//	return json;
-//}
 
-
-json::value Unit::getData(int time)
+json::value Unit::getData(long long time)
 {
 	auto json = json::value::object();
 
@@ -227,16 +151,65 @@ json::value Unit::getData(int time)
 	return json;
 }
 
-void Unit::setActivePath(list<Coords> path)
+void Unit::setActivePath(list<Coords> newPath)
 {
 	if (state != State::WINGMAN && state != State::FOLLOW)
 	{
-		activePath = path;
+		activePath = newPath;
 		resetActiveDestination();
 	}
 
-	addMeasure(L"activePath", json::value("")); // TODO fix
+	auto path = json::value::object();
+	if (activePath.size() > 0) {
+		int count = 1;
+		for (auto& destination : activePath)
+		{
+			auto json = json::value::object();
+			json[L"lat"] = destination.lat;
+			json[L"lng"] = destination.lng;
+			json[L"alt"] = destination.alt;
+			path[to_wstring(count++)] = json;
+		}
+	}
+	addMeasure(L"activePath", path); 
 }
+
+void Unit::setCoalitionID(int newCoalitionID) 
+{ 
+	if (newCoalitionID == 0)
+		coalition = L"neutral";
+	else if (newCoalitionID == 1)
+		coalition = L"red";
+	else
+		coalition = L"blue";
+	addMeasure(L"coalition", json::value(coalition));
+} 
+
+int Unit::getCoalitionID()
+{
+	if (coalition == L"neutral")
+		return 0;
+	else if (coalition == L"red")
+		return 1;
+	else
+		return 2;
+}
+
+void Unit::setLeader(Unit* newLeader) 
+{ 
+	leader = newLeader; 
+	if (leader != nullptr)
+		addMeasure(L"leaderID", json::value(leader->getID()));
+} 
+
+void Unit::setWingmen(vector<Unit*> newWingmen) {
+	wingmen = newWingmen; 
+	auto wingmenIDs = json::value::object();
+	int i = 0;
+	for (auto itr = wingmen.begin(); itr != wingmen.end(); itr++)
+		wingmenIDs[i++] = (*itr)->getID();
+	addMeasure(L"wingmen", wingmenIDs);
+} 
 
 wstring Unit::getTargetName()
 {

@@ -33,13 +33,13 @@ public:
 	int getID() { return ID; }
 	void updateExportData(json::value json);
 	void updateMissionData(json::value json);
-	json::value getData(int time);
+	json::value getData(long long time);
 
 	/********** Base data **********/
 	void setAI(bool newAI) { AI = newAI; addMeasure(L"AI", json::value(newAI)); }
 	void setName(wstring newName) { name = newName; addMeasure(L"name", json::value(newName));}
-	void setUnitName(wstring newUnitName) { name = newUnitName; addMeasure(L"unitName", json::value(newUnitName));}
-	void setGroupName(wstring newGroupName) { name = newGroupName; addMeasure(L"groupName", json::value(newGroupName));}
+	void setUnitName(wstring newUnitName) { unitName = newUnitName; addMeasure(L"unitName", json::value(newUnitName));}
+	void setGroupName(wstring newGroupName) { groupName = newGroupName; addMeasure(L"groupName", json::value(newGroupName));}
 	void setAlive(bool newAlive) { alive = newAlive; addMeasure(L"alive", json::value(newAlive));}
 	void setType(json::value newType) { type = newType; addMeasure(L"type", newType);}
 	void setCountry(int newCountry) { country = newCountry; addMeasure(L"country", json::value(newCountry));}
@@ -68,20 +68,21 @@ public:
 	void setAmmo(json::value newAmmo) { ammo = newAmmo; addMeasure(L"ammo", json::value(newAmmo));}
 	void setTargets(json::value newTargets) {targets = newTargets; addMeasure(L"targets", json::value(newTargets));}
 	void setHasTask(bool newHasTask) { hasTask = newHasTask; addMeasure(L"hasTask", json::value(newHasTask));}
-	void setCoalitionID(int newCoalitionID) { coalitionID = newCoalitionID; addMeasure(L"coalition", json::value(newCoalitionID)); } // TODO fix
+	void setCoalitionID(int newCoalitionID);
 	void setFlags(json::value newFlags) { flags = newFlags; addMeasure(L"flags", json::value(newFlags));}
 	double getFuel() { return fuel; }
 	json::value getAmmo() { return ammo; }
 	json::value getTargets() { return targets; }
 	bool getHasTask() { return hasTask; }
-	int getCoalitionID() { return coalitionID; }
+	wstring getCoalition() { return coalition; }
+	int getCoalitionID();
 	json::value getFlags() { return flags; }
 
 	/********** Formation data **********/
 	void setIsLeader(bool newIsLeader);
 	void setIsWingman(bool newIsWingman);
-	void setLeader(Unit *newLeader) { leader = newLeader; addMeasure(L"leader", json::value("")); } // TODO fix
-	void setWingmen(vector<Unit*> newWingmen) { wingmen = newWingmen; addMeasure(L"wingmen", json::value("")); } // TODO fix
+	void setLeader(Unit* newLeader);
+	void setWingmen(vector<Unit*> newWingmen);
 	void setFormation(wstring newFormation) { formation = newFormation; addMeasure(L"formation", json::value(formation));}
 	void setFormationOffset(Offset formationOffset);
 	bool getIsLeader() { return isLeader; }
@@ -145,7 +146,7 @@ protected:
 	json::value ammo = json::value::null();
 	json::value targets = json::value::null();
 	bool hasTask = false;
-	int coalitionID = NULL; // TODO: save coalition directly
+	wstring coalition = L"";
 	json::value flags = json::value::null();
 
 	/********** Formation data **********/

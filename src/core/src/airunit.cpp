@@ -203,6 +203,7 @@ void AirUnit::taskWingmen()
 
 void AirUnit::AIloop()
 {
+	log(L"AILoop");
 	/* State machine */
 	switch (state) {
 		case State::IDLE: {

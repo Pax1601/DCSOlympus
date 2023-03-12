@@ -16,6 +16,7 @@ extern UnitsManager* unitsManager;
 Aircraft::Aircraft(json::value json, int ID) : AirUnit(json, ID)
 {
 	log("New Aircraft created with ID: " + to_string(ID));
+	addMeasure(L"category", json::value(getCategory()));
 };
 
 void Aircraft::changeSpeed(wstring change)
@@ -58,11 +59,13 @@ void Aircraft::changeAltitude(wstring change)
 }
 
 void Aircraft::setTargetSpeed(double newTargetSpeed) {
-	setTargetSpeed(newTargetSpeed);
+	targetSpeed = newTargetSpeed;
+	addMeasure(L"targetSpeed", json::value(targetSpeed));
 	goToDestination();
 }
 
 void Aircraft::setTargetAltitude(double newTargetAltitude) {
-	setTargetAltitude(newTargetAltitude);
+	targetAltitude = newTargetAltitude;
+	addMeasure(L"targetAltitude", json::value(targetAltitude));
 	goToDestination();
 }

@@ -22,10 +22,12 @@ Weapon::Weapon(json::value json, int ID) : Unit(json, ID)
 Missile::Missile(json::value json, int ID) : Weapon(json, ID)
 {
 	log("New Missile created with ID: " + to_string(ID));
+	addMeasure(L"category", json::value(getCategory()));
 };
 
 /* Bomb */
 Bomb::Bomb(json::value json, int ID) : Weapon(json, ID)
 {
 	log("New Bomb created with ID: " + to_string(ID));
+	addMeasure(L"category", json::value(getCategory()));
 };

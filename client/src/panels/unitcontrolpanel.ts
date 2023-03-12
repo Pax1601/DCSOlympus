@@ -1,6 +1,6 @@
 import { getUnitsManager } from "..";
 import { Slider } from "../controls/slider";
-import { Aircraft, AirUnit, GroundUnit, Helicopter, NavyUnit, Unit } from "../units/unit";
+import { Unit } from "../units/unit";
 import { Panel } from "./panel";
 
 const ROEs: string[] = ["Free", "Designated free", "Designated", "Return", "Hold"];
@@ -62,13 +62,13 @@ export class UnitControlPanel extends Panel {
     }
 
     update(units: Unit[]) {
-        if (this.getElement() != null)
+        if (this.getElement() != null && units.length > 0)
         {
             this.#showFlightControlSliders(units);
             this.getElement().querySelector("#selected-units-container")?.replaceChildren(...units.map((unit: Unit) =>
             {
                 var button = document.createElement("button");
-                button.innerText = unit.getData().unitName;
+                button.innerText = unit.getBaseData().unitName;
                 button.addEventListener("click", () => getUnitsManager().selectUnit(unit.ID, true));
                 return (button);
             }));

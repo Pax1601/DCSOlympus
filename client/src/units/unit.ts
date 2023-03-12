@@ -14,7 +14,48 @@ var pathIcon = new Icon({
 export class Unit extends Marker {
     ID: number;
 
-    #data: UnitData;
+    #data: UnitData = {
+        baseData: {
+            AI: false,
+            name: "",
+            unitName: "",
+            groupName: "",
+            alive: true,
+            category: "",
+        },
+        flightData: {
+            latitude: 0,
+            longitude: 0,
+            altitude: 0,
+            heading: 0,
+            speed: 0,
+        },
+        missionData: {
+            fuel: 0,
+            flags: {},
+            ammo: {},
+            targets: {},
+            hasTask: false,
+            coalition: "",
+        },
+        formationData: {
+            formation: "",
+            isLeader: false,
+            isWingman: false,
+            leaderID: 0,
+            wingmenIDs: [],
+        },
+        taskData: {
+            currentTask: "",
+            activePath: {},
+            targetSpeed: 0,
+            targetAltitude: 0,
+        },
+        optionsData: {
+            ROE: "",
+            reactionToThreat: "",
+        }
+    };
 
     #selectable: boolean;
     #selected: boolean = false;
@@ -37,14 +78,13 @@ export class Unit extends Marker {
         if (type === "NavyUnit") return NavyUnit;
     }
 
-    constructor(ID: number, data: UnitData, html: string) {
+    constructor(ID: number, data: UpdateData, html: string) {
         super(new LatLng(0, 0), { riseOnHover: true });
 
         this.ID = ID;
 
         this.#selectable = true;
-        this.#data = data;
-
+        
         this.on('click', (e) => this.#onClick(e));
         this.on('dblclick', (e) => this.#onDoubleClick(e));
         this.on('contextmenu', (e) => this.#onContextMenu(e));
@@ -59,37 +99,69 @@ export class Unit extends Marker {
         this.#pathPolyline = new Polyline([], { color: '#2d3e50', weight: 3, opacity: 0.5, smoothFactor: 1 });
         this.#pathPolyline.addTo(getMap());
         this.#targetsPolylines = [];
+
+        this.setData(data);
     }
 
-    setData(data: UnitData) {
+    setData(data: UpdateData) {
         document.dispatchEvent(new CustomEvent("unitUpdated", { detail: this }));
         var updateMarker = false;
         if (this.getFlightData().latitude != data.flightData.latitude || 
             this.getFlightData().longitude != data.flightData.longitude || 
-            this.getData().alive != data.alive || this.#forceUpdate || !getMap().hasLayer(this))
+            this.getBaseData().alive != data.baseData.alive || this.#forceUpdate || !getMap().hasLayer(this))
             updateMarker = true;
+            
 
-        this.#data.AI = data.AI;
-        this.#data.name = data.name;
-        this.#data.unitName = data.unitName;
-        this.#data.groupName = data.groupName;
-        this.#data.alive = data.alive;
-        this.#data.category = data.category;
-        
+        if (data.baseData != undefined)
+        {
+            for (let key in this.#data.baseData)
+                if (key in data.baseData)
+                    //@ts-ignore
+                    this.#data.baseData[key] = data.baseData[key];
+        }
+
         if (data.flightData != undefined)
-            this.#data.flightData = data.flightData;
-        if (data.missionData != undefined)
-            this.#data.missionData = data.missionData;
-        if (data.formationData != undefined)
-            this.#data.formationData = data.formationData;
-        if (data.taskData != undefined)
-            this.#data.taskData = data.taskData;
-        if (data.optionsData != undefined)
-            this.#data.optionsData = data.optionsData;
+        {
+            for (let key in this.#data.flightData)
+                if (key in data.flightData)
+                    //@ts-ignore
+                    this.#data.flightData[key] = data.flightData[key];
+        }
 
+        if (data.missionData != undefined)
+        {
+            for (let key in this.#data.missionData)
+                if (key in data.missionData)
+                    //@ts-ignore
+                    this.#data.missionData[key] = data.missionData[key];
+        }
+
+        if (data.formationData != undefined)
+        {
+            for (let key in this.#data.formationData)
+                if (key in data.formationData)
+                    //@ts-ignore
+                    this.#data.formationData[key] = data.formationData[key];
+        }
+
+        if (data.taskData != undefined)
+        {
+            for (let key in this.#data.taskData)
+                if (key in data.taskData)
+                    //@ts-ignore
+                    this.#data.taskData[key] = data.taskData[key];
+        }
+
+        if (data.optionsData != undefined)
+        {
+            for (let key in this.#data.optionsData)
+                if (key in data.optionsData)
+                    //@ts-ignore
+                    this.#data.optionsData[key] = data.optionsData[key];
+        }
 
         /* Dead units can't be selected */
-        this.setSelected(this.getSelected() && this.getData().alive)
+        this.setSelected(this.getSelected() && this.getBaseData().alive)
 
         if (updateMarker)
             this.#updateMarker();
@@ -105,6 +177,10 @@ export class Unit extends Marker {
 
     getData() {
         return this.#data;
+    }
+
+    getBaseData() {
+        return this.getData().baseData;
     }
 
     getFlightData() {
@@ -129,7 +205,7 @@ export class Unit extends Marker {
 
     setSelected(selected: boolean) {
         /* Only alive units can be selected. Some units are not selectable (weapons) */
-        if ((this.getData().alive || !selected) && this.#selectable && this.#selected != selected) {
+        if ((this.getBaseData().alive || !selected) && this.#selectable && this.#selected != selected) {
             this.#selected = selected;
             this.getElement()?.querySelector( `[data-object|="unit"]` )?.toggleAttribute( "data-is-selected" );
             if (selected)
@@ -288,9 +364,7 @@ export class Unit extends Marker {
             this.setLatLng(new LatLng(this.getFlightData().latitude, this.getFlightData().longitude));
             var element = this.getElement();
             if (element != null) {
-                element.querySelector(".unit-vvi")?.setAttribute("style", `height: ${this.getFlightData().speed / 5}px; transform:rotate(${rad2deg(this.getFlightData().heading)}deg);`);
-                element.querySelector(".unit")?.setAttribute("data-fuel-level", "20");
-                element.querySelector(".unit")?.toggleAttribute("data-has-fox-1", true );
+                element.querySelector(".unit-vvi")?.setAttribute("style", `height: ${15 + this.getFlightData().speed / 5}px; transform:rotate(${rad2deg(this.getFlightData().heading)}deg);`);
 
                 var unitHeadingDiv = element.querySelector(".unit-heading");
                 if (unitHeadingDiv != null)
@@ -390,10 +464,10 @@ export class Aircraft extends AirUnit {
                 <div class="unit-status"></div>
                 <div class="unit-vvi"></div>
                 <div class="unit-hotgroup">
-                    <div class="unit-hotgroup-id">4</div>
+                    <div class="unit-hotgroup-id"></div>
                 </div>
                 <div class="unit-marker"></div>
-                <div class="unit-short-label">${aircraftDatabase.getShortLabelByName(data.name)}</div>
+                <div class="unit-short-label">${aircraftDatabase.getShortLabelByName(data.baseData.name)}</div>
                 <div class="unit-fuel">
                     <div class="unit-fuel-level" style="width:100%;"></div>
                 </div>
@@ -404,7 +478,7 @@ export class Aircraft extends AirUnit {
                     <div class="unit-ammo-other"></div>
                 </div>
                 <div class="unit-summary">
-                    <div class="unit-callsign">${data.unitName}</div>
+                    <div class="unit-callsign">${data.baseData.unitName}</div>
                     <div class="unit-heading"></div>
                     <div class="unit-altitude"></div>
                 </div>
@@ -421,7 +495,7 @@ export class Helicopter extends AirUnit {
 
 export class GroundUnit extends Unit {
     constructor(ID: number, data: UnitData) {
-        var role = groundUnitsDatabase.getByName(data.name)?.loadouts[0].roles[0];
+        var role = groundUnitsDatabase.getByName(data.baseData.name)?.loadouts[0].roles[0];
         var roleType = (role === "SAM") ? "sam" : "mi";
 
         super(ID, data, `

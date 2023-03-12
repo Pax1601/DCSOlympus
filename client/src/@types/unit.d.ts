@@ -1,3 +1,16 @@
+interface UpdateData {
+    [key: string]: any
+}
+
+interface BaseData {
+    AI: boolean;
+    name: string;
+    unitName: string;
+    groupName: string;
+    alive: boolean;
+    category: string;
+}
+
 interface FlightData {
     latitude: number;
     longitude: number;
@@ -36,13 +49,7 @@ interface OptionsData {
 }
 
 interface UnitData {
-    AI: boolean;
-    name: string;
-    unitName: string;
-    groupName: string;
-    alive: boolean;
-    category: string;
-
+    baseData: BaseData;
     flightData: FlightData;
     missionData: MissionData;
     formationData: FormationData;
