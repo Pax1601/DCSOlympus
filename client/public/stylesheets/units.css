@@ -322,14 +322,14 @@
 
 
 
-[data-object|="unit"][data-pilot="ai"]:hover .unit-ammo,
-[data-object|="unit"][data-pilot="ai"]:hover .unit-fuel {
+[data-object|="unit"][data-pilot|="ai"]:hover .unit-ammo,
+[data-object|="unit"][data-pilot|="ai"]:hover .unit-fuel {
     display:flex;
 }
 
 [data-object|="unit"][data-is-in-hotgroup] .unit-hotgroup,
-[data-object|="unit"][data-pilot="ai"][data-is-selected] .unit-ammo,
-[data-object|="unit"][data-pilot="ai"][data-is-selected] .unit-fuel,
+[data-object|="unit"][data-pilot|="ai"][data-is-selected] .unit-ammo,
+[data-object|="unit"][data-pilot|="ai"][data-is-selected] .unit-fuel,
 [data-object|="unit"][data-is-selected] .unit-selected-spotlight {
     display:flex;
 }
@@ -385,7 +385,7 @@
     }
 }
 
-[data-object|="unit"][data-pilot="ai"][data-has-low-fuel] .unit-fuel {
+[data-object|="unit"][data-pilot|="ai"][data-has-low-fuel] .unit-fuel {
     animation: pulse 1.5s linear infinite;
 }
 
@@ -463,7 +463,7 @@
 [data-object|="unit-air"][ data-is-dead ] .unit-ammo,
 [data-object|="unit-air"][ data-is-dead ]:hover .unit-fuel,
 [data-object|="unit-air"][ data-is-dead ]:hover .unit-ammo {
-    display:none;
+    display:none !important;
 }
 
 
