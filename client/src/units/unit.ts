@@ -384,7 +384,7 @@ export class AirUnit extends Unit {
 export class Aircraft extends AirUnit {
     constructor(ID: number, data: UnitData) {
         super(ID, data,
-           `<div class="unit unit-air" data-status="hold" data-coalition="${data.missionData.coalition}">
+           `<div data-object="unit-air-aircraft" data-status="hold" data-coalition="${data.missionData.coalition}">
                 <div class="unit-selected-spotlight"></div>
                 <div class="unit-marker-border"></div>
                 <div class="unit-status"></div>
@@ -422,11 +422,10 @@ export class Helicopter extends AirUnit {
 export class GroundUnit extends Unit {
     constructor(ID: number, data: UnitData) {
         var role = groundUnitsDatabase.getByName(data.name)?.loadouts[0].roles[0];
-        var roleType = "ground";
-        if (role === "SAM")
-            roleType = "sam"
+        var roleType = (role === "SAM") ? "sam" : "mi";
+
         super(ID, data, `
-            <div class="unit unit-${roleType}" data-coalition="${data.missionData.coalition}">
+            <div data-object="unit-ground-${roleType}" data-coalition="${data.missionData.coalition}">
                 <div class="unit-selected-spotlight"></div>
                 <div class="unit-marker"></div>
                 <div class="unit-short-label">${role?.substring(0, 1).toUpperCase()}</div>
