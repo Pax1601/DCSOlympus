@@ -80,18 +80,12 @@
 }
 
 [data-object|="unit"] .unit-marker-border {
-    background-color: white;
     border-radius: var( --border-radius-sm );
     display:none;
     height: calc( var( --unit-air-height ) + ( var( --unit-label-border-width ) * 2 ) );
     position:absolute;
     width: calc( var( --unit-air-width ) + ( var( --unit-label-border-width ) * 2 ) );
     z-index:2;
-}
-
-.unit:hover .unit-marker-border,
-[data-object|="unit"][data-is-selected] .unit-marker-border {
-    display:block;
 }
 
 
@@ -158,23 +152,51 @@
 /*  Ground vehicles (not SAMs)  */
 
 [data-object|="unit-ground-mi"] .unit-marker {
-    background-image: var( --unit-ground-marker-neutral-url );
-    height: var( --unit-ground-marker-height );
-    width: var( --unit-ground-marker-width );
+    background-image: var( --unit-ground-mi-marker-neutral-url );
+    height: var( --unit-ground-mi-marker-height );
+    width: var( --unit-ground-mi-marker-width );
+}
+
+[data-object|="unit-ground-mi"]:hover .unit-marker {
+    background-image: var( --unit-ground-mi-marker-neutral-hover-url );
+}
+
+[data-object|="unit-ground-mi"][data-is-selected] .unit-marker {
+    background-image: var( --unit-ground-mi-marker-neutral-selected-url );
 }
 
 
 [data-object|="unit-ground-mi"][data-coalition="blue"] .unit-marker {
-    background-image: var( --unit-ground-marker-blue-url );
+    background-image: var( --unit-ground-mi-marker-blue-url );
+}
+
+[data-object|="unit-ground-mi"][data-coalition="blue"]:hover .unit-marker {
+    background-image: var( --unit-ground-mi-marker-blue-hover-url );
+}
+
+[data-object|="unit-ground-mi"][data-coalition="blue"][data-is-selected] .unit-marker {
+    background-image: var( --unit-ground-mi-marker-blue-selected-url );
 }
 
 
 [data-object|="unit-ground-mi"][data-coalition="red"] .unit-marker {
-    background-image: var( --unit-ground-marker-red-url );
+    background-image: var( --unit-ground-mi-marker-red-url );
+}
+
+[data-object|="unit-ground-mi"][data-coalition="red"]:hover .unit-marker {
+    background-image: var( --unit-ground-mi-marker-red-hover-url );
+}
+
+[data-object|="unit-ground-mi"][data-coalition="red"][data-is-selected] .unit-marker {
+    background-image: var( --unit-ground-mi-marker-red-selected-url );
 }
 
 
 /*  SAMs  */
+
+[data-object|="unit-ground-sam"] .unit-selected-spotlight {
+    translate:0 2px;
+}
 
 [data-object|="unit-ground-sam"] .unit-marker {
     background-image: var( --unit-sam-marker-neutral-url );
@@ -183,17 +205,46 @@
 }
 
 
+[data-object|="unit-ground-sam"]:hover .unit-marker {
+    background-image: var( --unit-ground-sam-marker-neutral-hover-url );
+}
+
+[data-object|="unit-ground-sam"][data-is-selected] .unit-marker {
+    background-image: var( --unit-ground-sam-marker-neutral-selected-url );
+}
+
+
 [data-object|="unit-ground-sam"][data-coalition="blue"] .unit-marker {
-    background-image: var( --unit-sam-marker-blue-url );
+    background-image: var( --unit-ground-sam-marker-blue-url );
+}
+
+[data-object|="unit-ground-sam"][data-coalition="blue"]:hover .unit-marker {
+    background-image: var( --unit-ground-sam-marker-blue-hover-url );
+}
+
+[data-object|="unit-ground-sam"][data-coalition="blue"][data-is-selected] .unit-marker {
+    background-image: var( --unit-ground-sam-marker-blue-selected-url );
 }
 
 
 [data-object|="unit-ground-sam"][data-coalition="red"] .unit-marker {
-    background-image: var( --unit-sam-marker-red-url );
+    background-image: var( --unit-ground-sam-marker-red-url );
+}
+
+[data-object|="unit-ground-sam"][data-coalition="red"]:hover .unit-marker {
+    background-image: var( --unit-ground-sam-marker-red-hover-url );
+}
+
+[data-object|="unit-ground-sam"][data-coalition="red"][data-is-selected] .unit-marker {
+    background-image: var( --unit-ground-sam-marker-red-selected-url );
 }
 
 
 /*  Naval  */
+
+[data-object|="unit-naval"] .unit-selected-spotlight {
+    translate:0 -2px;
+}
 
 [data-object|="unit-naval"] .unit-marker {
     background-image: var( --unit-naval-marker-neutral-url );
@@ -202,13 +253,38 @@
 }
 
 
+[data-object|="unit-naval"]:hover .unit-marker {
+    background-image: var( --unit-naval-marker-neutral-hover-url );
+}
+
+[data-object|="unit-naval"][data-is-selected] .unit-marker {
+    background-image: var( --unit-naval-marker-neutral-selected-url );
+}
+
+
 [data-object|="unit-naval"][data-coalition="blue"] .unit-marker {
     background-image: var( --unit-naval-marker-blue-url );
+}
+
+[data-object|="unit-naval"][data-coalition="blue"]:hover .unit-marker {
+    background-image: var( --unit-naval-marker-blue-hover-url );
+}
+
+[data-object|="unit-naval"][data-coalition="blue"][data-is-selected] .unit-marker {
+    background-image: var( --unit-naval-marker-blue-selected-url );
 }
 
 
 [data-object|="unit-naval"][data-coalition="red"] .unit-marker {
     background-image: var( --unit-naval-marker-red-url );
+}
+
+[data-object|="unit-naval"][data-coalition="red"]:hover .unit-marker {
+    background-image: var( --unit-naval-marker-red-hover-url );
+}
+
+[data-object|="unit-naval"][data-coalition="red"][data-is-selected] .unit-marker {
+    background-image: var( --unit-naval-marker-red-selected-url );
 }
 
 
@@ -234,19 +310,23 @@
 
 /*  Weapons  */
 
-[data-object="unit-weapon-missile"] .unit-marker {
+[data-object|="unit-weapon"] {
+    cursor: default;
+}
+
+[data-object|="unit-weapon-missile"] .unit-marker {
     background-image: var( --unit-weapons-missile-marker-neutral-url );
     height: var( --unit-weapons-missile-marker-height );
     width: var( --unit-weapons-missile-marker-width );
 }
 
 
-[data-object="unit-weapon-missile"][data-coalition="blue"] .unit-marker {
+[data-object|="unit-weapon-missile"][data-coalition="blue"] .unit-marker {
     background-image: var( --unit-weapons-missile-marker-blue-url );
 }
 
 
-[data-object="unit-weapon-missile"][data-coalition="red"] .unit-marker {
+[data-object|="unit-weapon-missile"][data-coalition="red"] .unit-marker {
     background-image: var( --unit-weapons-missile-marker-red-url );
 }
 
@@ -469,6 +549,10 @@
 
 
 /***  DEAD  ***/
+[data-object|="unit-air"][ data-is-dead ] {
+    cursor: default;
+}
+
 [data-object|="unit-air"][ data-is-dead ] .unit-marker {
     background-image: var( --unit-air-marker-neutral-dead-url );
     background-position: 50% 50%;
