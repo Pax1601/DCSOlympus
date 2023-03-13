@@ -1,6 +1,6 @@
 import * as L from 'leaflet'
 import { setConnected } from '..';
-import { SpawnOptions } from '../controls/contextmenu';
+import { SpawnOptions } from '../controls/mapcontextmenu';
 
 /* Edit here to change server address */
 const REST_ADDRESS = "http://localhost:30000/olympus";

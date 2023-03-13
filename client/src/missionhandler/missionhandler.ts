@@ -1,6 +1,5 @@
 import { Marker, LatLng, Icon } from "leaflet";
 import { getMap, getUnitsManager } from "..";
-import { SpawnEvent } from "../map/map";
 import { Airbase } from "./airbase";
 
 var bullseyeIcons = [
@@ -71,7 +70,8 @@ export class MissionHandler
             }
             else
             {
-                this.#airbasesMarkers[idx].setCoalitionID(airbase.coalition);
+                this.#airbasesMarkers[idx].setLatLng(new LatLng(airbase.lat, airbase.lng));
+                this.#airbasesMarkers[idx].setCoalition(airbase.coalition);
             }
         }
     }
@@ -84,20 +84,21 @@ export class MissionHandler
         else 
             options = ["Spawn unit"];
 
+        getMap().showAirbaseContextMenu(e);
         //getMap().showContextMenu(e.originalEvent, e.sourceTarget.getName(),
         //    options.map((option) => {return {tooltip: option, src: "", callback: (label: string) => {this.#onAirbaseOptionSelection(e, label)}}}, false)
         //)
     }
 
     #onAirbaseOptionSelection(e: any, option: string) {
-        if (option === "Spawn unit") {
-            var spawnEvent: SpawnEvent = {x: e.originalEvent.x, y: e.originalEvent.y, latlng: e.latlng, airbaseName: e.sourceTarget.getName(), coalitionID: e.sourceTarget.getCoalitionID()};
-            getMap().spawnFromAirbase(spawnEvent);
-        }
-        else if (option === "Land here")
-        {
-            getMap().hideContextMenu();
-            getUnitsManager().selectedUnitsLandAt(e.latlng);
-        }
+        //if (option === "Spawn unit") {
+        //    var spawnEvent: SpawnEvent = {x: e.originalEvent.x, y: e.originalEvent.y, latlng: e.latlng, airbaseName: e.sourceTarget.getName(), coalitionID: e.sourceTarget.getCoalitionID()};
+        //    getMap().spawnFromAirbase(spawnEvent);
+        //}
+        //else if (option === "Land here")
+        //{
+        //    getMap().hideContextMenu();
+        //    getUnitsManager().selectedUnitsLandAt(e.latlng);
+        //}
     }
 }

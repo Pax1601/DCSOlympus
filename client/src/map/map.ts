@@ -1,23 +1,14 @@
 import * as L from "leaflet"
-import { getContextMenu, getUnitsManager } from "..";
+import { getUnitsManager } from "..";
 import { BoxSelect } from "./boxselect";
-import { SpawnOptions } from "../controls/contextmenu";
+import { MapContextMenu, SpawnOptions } from "../controls/mapcontextmenu";
+import { UnitContextMenu } from "../controls/unitcontextmenu";
+import { AirbaseContextMenu } from "../controls/airbasecontextmenu";
 
 export const IDLE = "IDLE";
 export const MOVE_UNIT = "MOVE_UNIT";
 
 L.Map.addInitHook('addHandler', 'boxSelect', BoxSelect);
-
-export interface ClickEvent {
-    x: number;
-    y: number;
-    latlng: L.LatLng;
-}
-
-export interface SpawnEvent extends ClickEvent {
-    airbaseName: string | null;
-    coalitionID: number | null;
-}
 
 export class Map extends L.Map {
     #state: string;
@@ -25,6 +16,10 @@ export class Map extends L.Map {
     #preventLeftClick: boolean = false;
     #leftClickTimer: number = 0;
     #lastMousePosition: L.Point = new L.Point(0, 0);
+
+    #mapContextMenu: MapContextMenu = new MapContextMenu("map-contextmenu");
+    #unitContextMenu: UnitContextMenu = new UnitContextMenu("unit-contextmenu");
+    #airbaseContextMenu: AirbaseContextMenu = new AirbaseContextMenu("airbase-contextmenu");
 
     constructor(ID: string) {
         /* Init the leaflet map */
@@ -36,7 +31,6 @@ export class Map extends L.Map {
 
         /* Init the state machine */
         this.#state = IDLE;
-       
 
         /* Register event handles */
         this.on("click", (e: any) => this.#onClick(e));
@@ -112,19 +106,62 @@ export class Map extends L.Map {
         return this.#state;
     }
 
-    /* Context Menu */
-    showContextMenu(e: any, spawnOptions: SpawnOptions | null = null) {
+    /* Context Menus */
+    hideAllContextMenus()
+    {
+        this.hideMapContextMenu();
+        this.hideUnitContextMenu();
+        this.hideAirbaseContextMenu();
+    }
+
+    showMapContextMenu(e: any) {
+        this.hideAllContextMenus();
         var x = e.originalEvent.x;
         var y = e.originalEvent.y;
-        getContextMenu()?.show(x, y, e.latlng);
+        this.#mapContextMenu.show(x, y, e.latlng);
         document.dispatchEvent(new CustomEvent("mapContextMenu"));
     }
 
-    hideContextMenu() {
-        getContextMenu()?.hide();
+    hideMapContextMenu() {
+        this.#mapContextMenu.hide();
         document.dispatchEvent(new CustomEvent("mapContextMenu"));
     }
 
+    getMapContextMenu(){
+        return this.#mapContextMenu;
+    }
+
+    showUnitContextMenu(e: any) {
+        this.hideAllContextMenus();
+        var x = e.originalEvent.x;
+        var y = e.originalEvent.y;
+        this.#unitContextMenu.show(x, y, e.latlng);
+    }
+
+    getUnitContextMenu(){
+        return this.#unitContextMenu;
+    }
+
+    hideUnitContextMenu() {
+        this.#unitContextMenu.hide();
+    }
+
+    showAirbaseContextMenu(e: any) {
+        this.hideAllContextMenus();
+        var x = e.originalEvent.x;
+        var y = e.originalEvent.y;
+        this.#airbaseContextMenu.show(x, y, e.latlng);
+    }
+
+    getAirbaseContextMenu(){
+        return this.#airbaseContextMenu;
+    }
+
+    hideAirbaseContextMenu() {
+        this.#airbaseContextMenu.hide();
+    }
+
+    /* Mouse coordinates */
     getMousePosition() {
         return this.#lastMousePosition;
     }
@@ -134,7 +171,7 @@ export class Map extends L.Map {
     }
 
     /* Spawn from air base */
-    spawnFromAirbase(e: SpawnEvent)
+    spawnFromAirbase(e: any)
     {
         //this.#aircraftSpawnMenu(e);
     }
@@ -142,14 +179,13 @@ export class Map extends L.Map {
     /* Event handlers */
     #onClick(e: any) {
         if (!this.#preventLeftClick) {
-            this.hideContextMenu();
+            this.hideAllContextMenus();
             if (this.#state === IDLE) {
                 
             }
             else if (this.#state === MOVE_UNIT) {
                 this.setState(IDLE);
                 getUnitsManager().deselectAllUnits();
-                this.hideContextMenu();
             }
         }
     }
@@ -159,10 +195,10 @@ export class Map extends L.Map {
     }
 
     #onContextMenu(e: any) {
-        this.hideContextMenu();
+        this.hideMapContextMenu();
         if (this.#state === IDLE) {
             if (this.#state == IDLE) {
-                this.showContextMenu(e);
+                this.showMapContextMenu(e);
             }
         }
         else if (this.#state === MOVE_UNIT) {
