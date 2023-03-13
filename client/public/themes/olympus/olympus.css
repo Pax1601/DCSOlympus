@@ -101,14 +101,17 @@
 
     --unit-air-marker-blue-url: url( "/themes/olympus/images/icon_aircraft_blue.svg" );
     --unit-air-marker-blue-hover-url: url( "/themes/olympus/images/icon_aircraft_blue_hover.svg" );
+    --unit-air-marker-blue-selected-url: url( "/themes/olympus/images/icon_aircraft_blue_selected.svg" );
     --unit-air-marker-blue-dead-url: url( "/themes/olympus/images/icon_death_blue.svg" );
     
     --unit-air-marker-neutral-url: url( "/themes/olympus/images/icon_aircraft_neutral.svg" );
     --unit-air-marker-neutral-hover-url: url( "/themes/olympus/images/icon_aircraft_neutral_hover.svg" );
+    --unit-air-marker-neutral-selected-url: url( "/themes/olympus/images/icon_aircraft_neutral_selected.svg" );
     --unit-air-marker-neutral-dead-url: url( "/themes/olympus/images/icon_death_neutral.svg" );
     
     --unit-air-marker-red-url: url( "/themes/olympus/images/icon_aircraft_red.svg" );
     --unit-air-marker-red-hover-url: url( "/themes/olympus/images/icon_aircraft_red_hover.svg" );
+    --unit-air-marker-red-selected-url: url( "/themes/olympus/images/icon_aircraft_red_selected.svg" );
     --unit-air-marker-red-dead-url: url( "/themes/olympus/images/icon_death_red.svg" );
 
 
@@ -131,30 +134,54 @@
 
     
     /***  Ground ***/
-    --unit-ground-marker-height: 43px;
-    --unit-ground-marker-width: 43px;
+    --unit-ground-mi-marker-height: 43px;
+    --unit-ground-mi-marker-width: 43px;
 
-    --unit-ground-marker-blue-url: url( "/themes/olympus/images/icon_ground_blue.svg" );
-    --unit-ground-marker-neutral-url: url( "/themes/olympus/images/icon_ground_neutral.svg" );
-    --unit-ground-marker-red-url: url( "/themes/olympus/images/icon_ground_red.svg" );
+    --unit-ground-mi-marker-blue-url: url( "/themes/olympus/images/icon_ground_blue.svg" );
+    --unit-ground-mi-marker-blue-hover-url: url( "/themes/olympus/images/icon_ground_blue_hover.svg" );
+    --unit-ground-mi-marker-blue-selected-url: url( "/themes/olympus/images/icon_ground_blue_selected.svg" );
+
+    --unit-ground-mi-marker-neutral-url: url( "/themes/olympus/images/icon_ground_neutral.svg" );
+    --unit-ground-mi-marker-neutral-hover-url: url( "/themes/olympus/images/icon_ground_neutral_hover.svg" );
+    --unit-ground-mi-marker-neutral-selected-url: url( "/themes/olympus/images/icon_ground_neutral_selected.svg" );
+
+    --unit-ground-mi-marker-red-url: url( "/themes/olympus/images/icon_ground_red.svg" );
+    --unit-ground-mi-marker-red-hover-url: url( "/themes/olympus/images/icon_ground_red_hover.svg" );
+    --unit-ground-mi-marker-red-selected-url: url( "/themes/olympus/images/icon_ground_red_selected.svg" );
 
 
     /***  SAMs  ***/
-    --unit-sam-marker-height: 38px;
+    --unit-sam-marker-height: 42px;
     --unit-sam-marker-width: 50px;
 
-    --unit-sam-marker-blue-url: url( "/themes/olympus/images/icon_sam_blue.svg" );
-    --unit-sam-marker-neutral-url: url( "/themes/olympus/images/icon_sam_neutral.svg" );
-    --unit-sam-marker-red-url: url( "/themes/olympus/images/icon_sam_red.svg" );
+    --unit-ground-sam-marker-blue-url: url( "/themes/olympus/images/icon_aa_blue.svg" );
+    --unit-ground-sam-marker-blue-hover-url: url( "/themes/olympus/images/icon_aa_blue_hover.svg" );
+    --unit-ground-sam-marker-blue-selected-url: url( "/themes/olympus/images/icon_aa_blue_selected.svg" );
+
+    --unit-ground-sam-marker-neutral-url: url( "/themes/olympus/images/icon_aa_neutral.svg" );
+    --unit-ground-sam-marker-neutral-hover-url: url( "/themes/olympus/images/icon_aa_neutral_hover.svg" );
+    --unit-ground-sam-marker-neutral-selected-url: url( "/themes/olympus/images/icon_aa_neutral_selected.svg" );
+
+    --unit-ground-sam-marker-red-url: url( "/themes/olympus/images/icon_aa_red.svg" );
+    --unit-ground-sam-marker-red-hover-url: url( "/themes/olympus/images/icon_aa_red_hover.svg" );
+    --unit-ground-sam-marker-red-selected-url: url( "/themes/olympus/images/icon_aa_red_selected.svg" );
 
 
     /***  Naval  ***/
-    --unit-naval-marker-height: 38px;
+    --unit-naval-marker-height: 42px;
     --unit-naval-marker-width: 50px;
 
-    --unit-naval-marker-blue-url: url( "/themes/olympus/images/icon_naval_blue.svg" );
-    --unit-naval-marker-neutral-url: url( "/themes/olympus/images/icon_naval_neutral.svg" );
-    --unit-naval-marker-red-url: url( "/themes/olympus/images/icon_naval_red.svg" );
+    --unit-naval-marker-blue-url: url( "/themes/olympus/images/icon_ship_blue.svg" );
+    --unit-naval-marker-blue-hover-url: url( "/themes/olympus/images/icon_ship_blue_hover.svg" );
+    --unit-naval-marker-blue-selected-url: url( "/themes/olympus/images/icon_ship_blue_selected.svg" );
+
+    --unit-naval-marker-neutral-url: url( "/themes/olympus/images/icon_ship_neutral.svg" );
+    --unit-naval-marker-neutral-hover-url: url( "/themes/olympus/images/icon_ship_neutral_hover.svg" );
+    --unit-naval-marker-neutral-selected-url: url( "/themes/olympus/images/icon_ship_neutral_selected.svg" );
+
+    --unit-naval-marker-red-url: url( "/themes/olympus/images/icon_ship_red.svg" );
+    --unit-naval-marker-red-hover-url: url( "/themes/olympus/images/icon_ship_red_hover.svg" );
+    --unit-naval-marker-red-selected-url: url( "/themes/olympus/images/icon_ship_red_selected.svg" );    
 
 
     /***  Building  ***/
