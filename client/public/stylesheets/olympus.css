@@ -442,26 +442,6 @@ nav.ol-panel> :last-child {
     flex-direction: column;
 }
 
-.data-row {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    column-gap: 2px;
-}
-
-.data-row>*:nth-child(2) {
-    width: 100px;
-}
-
-.data-row>*:last-child {
-    width: 30px;
-    text-align: right;
-}
-
-.data-row>.icon-small {
-    margin: 2px;
-}
 
 .slider-container {
     width: 100%;
