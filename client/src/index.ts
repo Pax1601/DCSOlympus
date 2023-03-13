@@ -172,6 +172,15 @@ function setupEvents() {
         document.body.toggleAttribute("data-hide-" + ev.detail.unitType);
     });
 
+    document.addEventListener( "closeDialog", (ev: CustomEventInit) => {
+        ev.detail._element.closest( ".ol-dialog" ).classList.add( "hide" );
+    });
+
+    document.addEventListener( "toggleElements", (ev: CustomEventInit) => {
+        document.querySelectorAll( ev.detail.selector ).forEach( el => {
+            el.classList.toggle( "hide" );
+        })
+    });
 
     /**  Olympus UI ***/
     document.querySelectorAll(".ol-select").forEach(select => {
@@ -179,6 +188,10 @@ function setupEvents() {
         //  Do open/close toggle
         select.addEventListener("click", ev => {
 
+            if ( ev.target instanceof HTMLElement && ev.target.nodeName !== "A" ) {
+                ev.preventDefault();
+            }
+            
             ev.stopPropagation();
             select.classList.toggle("is-open");
         });

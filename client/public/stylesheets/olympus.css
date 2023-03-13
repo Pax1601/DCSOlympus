@@ -71,6 +71,15 @@ button[disabled="disabled"] {
     cursor: not-allowed;
 }
 
+form {
+    margin: 0;
+    padding: 0;
+}
+
+form > div {
+    margin: 20px 0;
+}
+
 
 .pill {
     background-color: var( --background-darksteel );

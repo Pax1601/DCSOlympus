@@ -347,3 +347,106 @@ dl.data-grid dd {
 #mouse-info-panel dd {
 	width:60%;
 }
+
+
+.ol-panel.ol-dialog {
+	align-self: center;
+	background-color: var( --background-slate-blue );
+	justify-self: center;
+	padding:25px;
+	position: absolute;
+	z-index:1000;
+}
+
+.ol-dialog-close {
+	cursor: pointer;
+	font-size:16px;
+	font-weight: var( --font-weight-bolder );
+	position: absolute;
+	right: 25px;
+	top: 25px;
+}
+
+.ol-dialog-close::before {
+	content: "\d7";
+}
+
+.ol-dialog-header {
+	border-bottom:1px solid var( --background-grey );
+	padding-bottom:10px;
+}
+
+.ol-dialog-footer {
+	border-top:1px solid var( --background-grey );
+	padding-top:15px;
+}
+
+.ol-checkbox label {
+	align-items: center;
+	cursor: pointer;
+	display: flex;
+	flex-wrap: nowrap;
+	white-space: nowrap;
+}
+
+.ol-checkbox input[type="checkbox"] {
+	appearance:none;
+	background-color: transparent;
+	border:none;
+	margin:0;
+}
+
+.ol-checkbox input[type="checkbox"]::before {
+	align-self:center;
+	background-image: url( "/images/icons/square-check-solid.svg" );
+	background-repeat: no-repeat;
+	content: "";
+	filter: invert( 100% );
+	display:flex;
+	height:16px;
+	margin-right:10px;
+	width:16px;
+}
+
+
+.ol-checkbox input[type="checkbox"]:checked::before {
+	background-image: url( "/images/icons/square-regular.svg" );
+}
+
+
+[class|="ol-button"] {
+	align-items: center;
+	background-repeat: no-repeat;
+	display:flex;
+	font-weight: normal;
+	padding:8px 10px;
+	white-space: nowrap;
+}
+
+[class|="ol-button"]::before {
+	margin-right:8px;
+}
+
+.ol-button-close {
+	background: transparent;
+	border:1px solid white;
+}
+
+.ol-button-close::before {
+	content: "\d7";
+}
+
+.ol-button-settings {
+	background-color: var( --background-slate-blue );
+}
+
+.ol-button-settings::before {
+	background-image: url( "/images/icons/gears-solid.svg" );
+	background-position:0 50%;
+	background-size:24px 24px;
+	content: "";
+	display:flex;
+	filter: invert( 100% );
+	height: 24px;
+	width: 24px;
+}
