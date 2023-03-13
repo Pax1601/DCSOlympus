@@ -392,6 +392,7 @@ nav.ol-panel> :last-child {
 
 .highlight-coalition[data-coalition="red"], .highlight-redfor {
     background-color: var(--primary-red);
+    color: white;
 }
 
 

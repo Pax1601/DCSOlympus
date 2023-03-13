@@ -58,6 +58,36 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	display:block !important;
 }
 
+#unit-control-panel #selected-units-container {
+	align-items: center;
+	border-radius: var( --border-radius-md );
+	display:flex;
+	flex-direction: column;
+	row-gap: 4px;
+}
+
+#unit-control-panel #selected-units-container button {
+	font-size: 12px;
+	padding:8px 0;
+	position: relative;
+	width:90%;
+}
+
+#unit-control-panel #selected-units-container button::before {
+	background-color: var( --accent-light-blue );
+	border-radius: var( --border-radius-sm );
+	content: attr( data-short-label );
+	padding:4px;
+	position: absolute;
+	translate:-40px -4px;
+}
+
+#unit-control-panel #selected-units-container button::after {
+	content: attr( data-callsign );
+}
+
+
+
 dl.data-grid {
 	align-items: center;
 	display:flex;

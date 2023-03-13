@@ -69,6 +69,12 @@ export class UnitControlPanel extends Panel {
             {
                 var button = document.createElement("button");
                 button.innerText = unit.getBaseData().unitName;
+                button.setAttribute( "data-short-label", unit.getBaseData().name );
+                button.classList.add( "pill", "highlight-coalition" )
+                
+                //  TODO: make this dynamic, Mr. Weltro.
+                button.setAttribute( "data-coalition", "blue" );
+
                 button.addEventListener("click", () => getUnitsManager().selectUnit(unit.ID, true));
                 return (button);
             }));
