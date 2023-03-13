@@ -1,7 +1,6 @@
 import { Map } from "./map/map"
 import { UnitsManager } from "./units/unitsmanager";
 import { UnitInfoPanel } from "./panels/unitinfopanel";
-import { ContextMenu } from "./controls/contextmenu";
 import { ConnectionStatusPanel } from "./panels/connectionstatuspanel";
 import { MissionHandler } from "./missionhandler/missionhandler";
 import { UnitControlPanel } from "./panels/unitcontrolpanel";
@@ -13,7 +12,6 @@ import { LogPanel } from "./panels/logpanel";
 import { getAirbases, getBulllseye as getBulllseyes, getUnits, toggleDemoEnabled } from "./server/server";
 
 var map: Map;
-var contextMenu: ContextMenu;
 
 var unitsManager: UnitsManager;
 var missionHandler: MissionHandler;
@@ -42,9 +40,6 @@ function setup() {
     map = new Map('map-container');
     unitsManager = new UnitsManager();
     missionHandler = new MissionHandler();
-
-    /* Context menus */
-    contextMenu = new ContextMenu("contextmenu");
 
     /* Panels */
     unitInfoPanel = new UnitInfoPanel("unit-info-panel");
@@ -202,10 +197,6 @@ export function getMap() {
 
 export function getMissionData() {
     return missionHandler;
-}
-
-export function getContextMenu() {
-    return contextMenu;
 }
 
 export function getUnitsManager() {

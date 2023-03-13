@@ -91,7 +91,7 @@ export class Unit extends Marker {
 
         var icon = new DivIcon({
             html: html,
-            className: 'ol-unit-marker',
+            className: 'leaflet-unit-marker',
             iconAnchor: [0, 0]
         });
         this.setIcon(icon);
@@ -338,14 +338,16 @@ export class Unit extends Marker {
 
     #onContextMenu(e: any) {
         var options = [
-            'Attack',
-            'Follow'
+            'Attack'
         ]
-        //getMap().showContextMenu(e.originalEvent, "Action: " + this.getData().unitName, options.map((option: string) => {return {tooltip: option, src: "", callback: (action: string) => this.#executeAction(action)}}));
+        getMap().showUnitContextMenu(e);
+        getMap().getUnitContextMenu().setOptions(options, (option: string) => {
+            getMap().hideUnitContextMenu();
+            this.#executeAction(option);
+        });
     }
 
     #executeAction(action: string) {
-        getMap().hideContextMenu();
         if (action === "Attack")
             getUnitsManager().selectedUnitsAttackUnit(this.ID);
     }

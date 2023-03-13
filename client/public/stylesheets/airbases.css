@@ -1,41 +1,44 @@
-.airbase-marker-container {
-    height: 60px; 
-    width: 60px; 
-    left: -30px; 
-    top: -30px; 
-    border: 1px transparent solid; 
+:root {
+    --airbase-marker-height: 63px;
+    --airbase-marker-width: 63px;
+}
+
+[data-object|="airbase"] {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+[data-hide-airbase] #map-container [data-object|="airbase"] {
+    display: none;
+}
+
+/******************************
+Marker
+******************************/
+
+[data-object|="airbase"] .airbase {
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-size: cover;
     position: absolute;
+    transform-origin: center;
+    z-index: 3;
 }
 
-.airbase-marker-image {
-    height: 60px; 
-    width: 60px; 
-    left: 0px; 
-    top: 0px; 
-    display: block; 
-    position: absolute;
-    filter: drop-shadow(1px 1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px 1px 0 white) drop-shadow(-1px -1px 0 white);
-    opacity: 0.8;
+/*  Airbase  */
+[data-object|="airbase"] .airbase-marker {
+    background-image: var(--airbase-marker-neutral-url);
+    height: var(--airbase-marker-height);
+    width: var(--airbase-marker-width);
 }
 
-.blue.airbase-marker-image {
-    filter: invert(40%) sepia(94%) saturate(2477%) hue-rotate(197deg) brightness(92%) contrast(91%) drop-shadow(1px 1px #FFFA) drop-shadow(1px -1px #FFFA) drop-shadow(-1px 1px 0px #FFFA) drop-shadow(-1px -1px #FFFA);
+[data-object|="airbase"][data-coalition="red"] .airbase-marker {
+    background-image: var(--airbase-marker-red-url);
 }
 
-.red.airbase-marker-image {
-    filter:invert(32%) sepia(91%) saturate(5128%) hue-rotate(349deg) brightness(97%) contrast(97%) drop-shadow(1px 1px #FFFA) drop-shadow(1px -1px #FFFA) drop-shadow(-1px 1px 0px #FFFA) drop-shadow(-1px -1px #FFFA);
-}
-
-.neutral.airbase-marker-image {
-    filter: invert(71%) sepia(12%) saturate(9%) hue-rotate(319deg) brightness(92%) contrast(96%) drop-shadow(1px 1px #000A) drop-shadow(1px -1px #000A) drop-shadow(-1px 1px 0px #000A) drop-shadow(-1px -1px #000A);
-}
-
-.airbase-marker-name {
-    bottom: -20px; 
-    position: absolute; 
-    text-align: center; 
-    font: 800 14px Arial; 
-    white-space: nowrap;
-    -webkit-text-fill-color: white; 
-    -webkit-text-stroke: 1px;
+[data-object|="airbase"][data-coalition="blue"] .airbase-marker {
+    background-image: var(--airbase-marker-blue-url);
 }

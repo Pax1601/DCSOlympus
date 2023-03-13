@@ -535,24 +535,49 @@ class DemoDataGenerator {
     };
     
     airbases(req, res){
-        var ret = {airbases: {}};
+        var ret = {airbases: {
+            ["0"]: {
+                callsign: "Neutral",
+                lat: 37.3,
+                lng: -115.8,
+                coalition: "neutral"
+            },
+            ["1"]: {
+                callsign: "Red",
+                lat: 37.3,
+                lng: -115.75,
+                coalition: "red"
+            },
+            ["2"]: {
+                callsign: "Blue",
+                lat: 37.3,
+                lng: -115.7,
+                coalition: "blue"
+            }
+        }};
         res.send(JSON.stringify(ret));
     };
     
     bullseyes(req, res){
-        var ret = {bullseyes: {}};
+        var ret = {bullseyes: {
+            "0": {
+                lat: 37.25,
+                lng: -115.8
+            },
+            "1": {
+                lat: 37.25,
+                lng: -115.75
+            },
+            "2": {
+                lat: 37.25,
+                lng: -115.7
+            }
+        }};
         res.send(JSON.stringify(ret));
     };
     
     generateRandomUnitsDemoData(unitsNumber) 
     {
-        //var units = {};
-        //for (let i = 0; i < unitsNumber; i++)
-        //{
-        //    units[String(i)] = JSON.parse(JSON.stringify(DEMO_UNIT_DATA));
-        //    units[String(i)].flightData.latitude += (Math.random() - 0.5) * 0.3;
-        //    units[String(i)].flightData.longitude += (Math.random() - 0.5) * 0.3;
-        //}
         return {"units": DEMO_UNIT_DATA};
     }
 }
