@@ -44,9 +44,9 @@ export class UnitInfoPanel extends Panel {
             this.#unitName.innerText = unit.getBaseData().unitName;
             this.#groupName.innerText = unit.getBaseData().groupName;
             this.#name.innerText = unit.getBaseData().name;
-            this.#heading.innerText = String(Math.floor(rad2deg(unit.getFlightData().heading)) + " °");
-            this.#altitude.innerText = String(Math.floor(unit.getFlightData().altitude / 0.3048) + " ft");
-            this.#groundSpeed.innerText = String(Math.floor(unit.getFlightData().speed * 1.94384) + " kts");
+            //this.#heading.innerText = String(Math.floor(rad2deg(unit.getFlightData().heading)) + " °");
+            //this.#altitude.innerText = String(Math.floor(unit.getFlightData().altitude / 0.3048) + " ft");
+            //this.#groundSpeed.innerText = String(Math.floor(unit.getFlightData().speed * 1.94384) + " kts");
             //this.#fuel.innerText = String(unit.getMissionData().fuel + "%");
             //this.#latitude.innerText = ConvertDDToDMS(unit.getFlightData().latitude, false);
             //this.#longitude.innerText = ConvertDDToDMS(unit.getFlightData().longitude, true);

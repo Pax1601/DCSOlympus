@@ -66,16 +66,9 @@ button[disabled="disabled"] {
 .pill {
     background-color: var( --background-darksteel );
     border-radius: var(--border-radius-sm);
-    padding: 2px 6px;
+    padding: 4px 8px;
     width: fit-content;
 }
-
-
-
-.loadout-item::after {
-    content: attr( data-qty ) 'x ' attr( data-item );
-}
-
 
 
 .ol-panel {
@@ -267,25 +260,24 @@ button[disabled="disabled"] {
     justify-content: space-evenly;
 }
 
-.ol-panel-board>.panel-section {
+.ol-panel-board > .panel-section {
     border-right: 1px solid #555;
-    padding: 10px;
+    margin:10px 0;
+    padding:0 30px;
 }
 
-.ol-panel-board>.panel-section:last-of-type {
+.ol-panel-board > .panel-section:first-child {
+    padding-left:20px;
+}
+
+.ol-panel-board > .panel-section:last-child {
+    padding-right:20px;
+}
+
+.ol-panel-board > .panel-section:last-of-type {
     border-right-width: 0;
 }
 
-.ol-panel-board h1,
-.ol-panel-board h2 {
-    font-weight: var(--font-weight-bolder);
-    margin: 0;
-    padding: 0 0 5px 0;
-}
-
-.ol-panel-board h2 {
-    font-size: 14px;
-}
 
 h1,
 h2,
@@ -335,15 +327,18 @@ nav.ol-panel> :last-child {
 
 
 .ol-panel .ol-group {
+    border-radius: var(--border-radius-sm);
     column-gap: 10px;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
+    row-gap: 4px;
 }
 
-.ol-panel .ol-group {
-    border-radius: var(--border-radius-sm);
+.ol-panel .ol-group.wrap {
+    flex-wrap: wrap;
 }
+
 
 .ol-panel .ol-group-button-toggle {
     align-items: center;
@@ -385,18 +380,18 @@ nav.ol-panel> :last-child {
     background-color: var(--secondary-light-grey);
 }
 
-.highlight-bluefor {
-    background-color: var(--primary-blue);
-    color: var(--background-steel)
-}
-
-.highlight-redfor {
-    background-color: var(--primary-red);
-}
-
-.highlight-neutral {
+.highlight-coalition, .highlight-neutral {
     background-color: var(--primary-grey);
     color: var(--secondary-gunmetal-grey)
+}
+
+.highlight-coalition[data-coalition="blue"], .highlight-bluefor {
+    background-color: var(--primary-blue);
+    color: white;
+}
+
+.highlight-coalition[data-coalition="red"], .highlight-redfor {
+    background-color: var(--primary-red);
 }
 
 
