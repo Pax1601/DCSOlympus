@@ -42,6 +42,15 @@
 }
 
 
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+
 html {
     font-family: 'Open Sans', sans-serif;
 }
@@ -160,7 +169,7 @@ button[disabled="disabled"] {
 
 
 
-.ol-select>.ol-select-options>div {
+.ol-select>.ol-select-options > div {
     background-color: var(--background-grey);
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     display: flex;
@@ -187,10 +196,12 @@ button[disabled="disabled"] {
     width: 100%;
 }
 
-.ol-select>.ol-select-options div button {
+.ol-select>.ol-select-options > div a, .ol-select>.ol-select-options > div button {
     background-color: transparent;
     border: none;
     border-radius: 0;
+    color: white;
+    display:block;
     font-size: 14px;
     font-weight: normal;
     padding: 6px 2px;
@@ -199,7 +210,7 @@ button[disabled="disabled"] {
     width: 100%;
 }
 
-.ol-select>.ol-select-options>div button:hover {
+.ol-select>.ol-select-options > div a:hover, .ol-select>.ol-select-options > div button:hover {
     text-decoration: underline;
 }
 

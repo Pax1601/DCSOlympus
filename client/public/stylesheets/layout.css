@@ -36,9 +36,18 @@ body {
 	z-index: 1000;
 }
 
-.content #primary-toolbar {
-	position: static;
+#olympus-toolbar-summary {
+	background-image: url( "/images/icon-round.png" );
+	background-position: 25px 20px;
+	background-repeat: no-repeat;
+	background-size:36px 36px;
+	display: flex;
+	flex-direction: column;
+	text-indent: 44px;
 }
+
+
+
 
 #unit-control-panel {
 	height: fit-content;
