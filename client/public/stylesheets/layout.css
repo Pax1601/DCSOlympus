@@ -135,8 +135,12 @@ dl.data-grid dd {
 	margin-left: auto;
 }
 
-dl.data-grid dd.br-info[data-bearing][data-distance][data-distance-units]::after {
+.br-info[data-bearing][data-distance][data-distance-units]::after {
 	content: attr( data-bearing ) '\00B0  / ' attr( data-distance ) attr( data-distance-units );
+}
+
+.coordinates::after {
+	content: attr( data-dd ) "\00b0 " attr( data-mm ) "'" attr( data-ss ) "." attr( data-sss ) '"' attr( data-label );
 }
 
 
