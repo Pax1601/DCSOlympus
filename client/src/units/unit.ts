@@ -370,6 +370,8 @@ export class Unit extends Marker {
                 element.querySelector(".unit-fuel-level")?.setAttribute("style", `width: ${this.getMissionData().fuel}%`);
                 element.querySelector(".unit")?.toggleAttribute("data-has-low-fuel", this.getMissionData().fuel < 20);
 
+                element.querySelector(".unit")?.toggleAttribute("data-is-dead", !this.getBaseData().alive);
+
                 var unitHeadingDiv = element.querySelector(".unit-heading");
                 if (unitHeadingDiv != null)
                     unitHeadingDiv.innerHTML = String(Math.floor(rad2deg(this.getFlightData().heading)));
@@ -518,7 +520,13 @@ export class GroundUnit extends Unit {
 
 export class NavyUnit extends Unit {
     constructor(ID: number, data: UnitData) {
-        super(ID, data, "");
+        super(ID, data, `
+            <div class="unit" data-object="unit-naval" data-coalition="${data.missionData.coalition}">
+                <div class="unit-selected-spotlight"></div>
+                <div class="unit-marker"></div>
+                <div class="unit-short-label">N</div>
+            </div>
+        `);
     }
 
     getHidden() {
@@ -527,20 +535,26 @@ export class NavyUnit extends Unit {
 }
 
 export class Weapon extends Unit {
-    constructor(ID: number, data: UnitData) {
-        super(ID, data, "");
+    constructor(ID: number, data: UnitData, html: string) {
+        super(ID, data, html);
         this.setSelectable(false);
     }
 }
 
 export class Missile extends Weapon {
     constructor(ID: number, data: UnitData) {
-        super(ID, data);
+        super(ID, data, `
+            <div class="unit" data-object="unit-weapon-missile" data-coalition="${data.missionData.coalition}">
+                <div class="unit-selected-spotlight"></div>
+                <div class="unit-marker"></div>
+                <div class="unit-short-label"></div>
+            </div>
+        `);
     }
 }
 
 export class Bomb extends Weapon {
     constructor(ID: number, data: UnitData) {
-        super(ID, data);
+        super(ID, data, "");
     }
 }

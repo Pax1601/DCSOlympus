@@ -4,16 +4,23 @@ import { SpawnOptions } from '../controls/contextmenu';
 
 /* Edit here to change server address */
 const REST_ADDRESS = "http://localhost:30000/olympus";
+const DEMO_ADDRESS = "http://localhost:3000/demo";
 const UNITS_URI = "units";
 const LOGS_URI = "logs";
 const AIRBASES_URI = "airbases";
 const BULLSEYE_URI = "bullseyes";
 
 var lastUpdateTime = 0;
+var demoEnabled = false;
+
+export function toggleDemoEnabled()
+{
+    demoEnabled = !demoEnabled;
+}
 
 export function GET(callback: CallableFunction, uri: string){
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", `${REST_ADDRESS}/${uri}`, true);
+    xmlHttp.open("GET", `${demoEnabled? DEMO_ADDRESS: REST_ADDRESS}/${uri}`, true);
     xmlHttp.onload = function (e) {
         var data = JSON.parse(xmlHttp.responseText);
         callback(data);
@@ -29,7 +36,7 @@ export function GET(callback: CallableFunction, uri: string){
 
 export function POST(request: object, callback: CallableFunction){
     var xhr = new XMLHttpRequest();
-    xhr.open("PUT", REST_ADDRESS);
+    xhr.open("PUT", demoEnabled? DEMO_ADDRESS: REST_ADDRESS);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.onreadystatechange = () => { 
         callback(); 
