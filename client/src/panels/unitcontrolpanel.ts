@@ -1,4 +1,4 @@
-import { getUnitsManager } from "..";
+import { getMissionData, getUnitsManager } from "..";
 import { Slider } from "../controls/slider";
 import { Unit } from "../units/unit";
 import { Panel } from "./panel";
@@ -70,10 +70,8 @@ export class UnitControlPanel extends Panel {
                 var button = document.createElement("button");
                 button.innerText = unit.getBaseData().unitName;
                 button.setAttribute( "data-short-label", unit.getBaseData().name );
+                button.setAttribute( "data-coalition", unit.getMissionData().coalition );
                 button.classList.add( "pill", "highlight-coalition" )
-                
-                //  TODO: make this dynamic, Mr. Weltro.
-                button.setAttribute( "data-coalition", "blue" );
 
                 button.addEventListener("click", () => getUnitsManager().selectUnit(unit.ID, true));
                 return (button);
