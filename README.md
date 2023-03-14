@@ -1,3 +1,5 @@
+# Important note: DCS Olympus is in alpha state. No official release has been produced yet. v1.0.0, the first public version, is planned for Q2 2023.
+
 # DCS Olympus
 *A real-time web interface to spawn and control units in DCS World*
 
