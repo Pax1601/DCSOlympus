@@ -774,3 +774,8 @@ body[data-hide-naval] #unit-visibility-control-naval {
 #reaction-to-threat-buttons-container button[title="Abort"].selected::before {
     background-image: url( "/themes/olympus/images/icons_roe_stop_dark.svg");
 }
+
+.map-source-dropdown::before {
+    content: url("/themes/olympus/images/map_source.svg");
+    margin-right: 10px;
+}

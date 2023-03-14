@@ -4,6 +4,7 @@ import { BoxSelect } from "./boxselect";
 import { MapContextMenu, SpawnOptions } from "../controls/mapcontextmenu";
 import { UnitContextMenu } from "../controls/unitcontextmenu";
 import { AirbaseContextMenu } from "../controls/airbasecontextmenu";
+import { Dropdown } from "../controls/dropdown";
 
 export const IDLE = "IDLE";
 export const MOVE_UNIT = "MOVE_UNIT";
@@ -20,6 +21,8 @@ export class Map extends L.Map {
     #mapContextMenu: MapContextMenu = new MapContextMenu("map-contextmenu");
     #unitContextMenu: UnitContextMenu = new UnitContextMenu("unit-contextmenu");
     #airbaseContextMenu: AirbaseContextMenu = new AirbaseContextMenu("airbase-contextmenu");
+
+    #mapSourceDropdown: Dropdown;
 
     constructor(ID: string) {
         /* Init the leaflet map */
@@ -40,6 +43,8 @@ export class Map extends L.Map {
         this.on('mousedown', (e: any) => this.#onMouseDown(e));
         this.on('mouseup', (e: any) => this.#onMouseUp(e));
         this.on('mousemove', (e: any) => this.#onMouseMove(e));
+
+        this.#mapSourceDropdown = new Dropdown("map-type", (layerName: string) => this.setLayer(layerName), this.getLayers())
     }
 
     setLayer(layerName: string) {
