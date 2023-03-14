@@ -11,6 +11,8 @@ export class Airbase extends L.Marker
 {
     #name: string = "";
     #coalition: string = "";
+    #properties: string[] = [];
+    #parkings: string[] = [];
 
     constructor(options: AirbaseOptions)
     {
@@ -24,8 +26,7 @@ export class Airbase extends L.Marker
             className: 'leaflet-airbase-marker',
             iconSize: [63, 63]
             });   // Set the marker, className must be set to avoid white square
-        this.setIcon(icon);
-        
+        this.setIcon(icon); 
     }
 
     setCoalition(coalition: string)
@@ -39,8 +40,33 @@ export class Airbase extends L.Marker
         return this.#coalition;
     }
 
+    setName(name: string)
+    {
+        this.#name = name;
+    }
+
     getName()
     {
         return this.#name;
+    }
+
+    setProperties(properties: string[])
+    {
+        this.#properties = properties;
+    }
+
+    getProperties()
+    {
+        return this.#properties;
+    }
+
+    setParkings(parkings: string[])
+    {
+        this.#parkings = parkings;
+    }
+
+    getParkings()
+    {
+        return this.#parkings;
     }
 }

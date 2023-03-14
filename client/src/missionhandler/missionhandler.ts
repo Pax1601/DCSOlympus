@@ -72,13 +72,14 @@ export class MissionHandler
             {
                 this.#airbasesMarkers[idx].setLatLng(new LatLng(airbase.lat, airbase.lng));
                 this.#airbasesMarkers[idx].setCoalition(airbase.coalition);
+                this.#airbasesMarkers[idx].setProperties(["test1", "test2"]);
+                this.#airbasesMarkers[idx].setParkings(["2x big", "5x small"]);
             }
         }
     }
 
     #onAirbaseClick(e: any)
     {
-        var enableLandHere = getUnitsManager().getSelectedUnitsType() === "Aircraft" && (getUnitsManager().getSelectedUnitsCoalition() === e.sourceTarget.getCoalition() || e.sourceTarget.getActiveCoalition === "neutral");
-        getMap().showAirbaseContextMenu(e, e.sourceTarget.getName(), ["test1", "tes2"], ["2x small", "3x large"], enableLandHere, e.sourceTarget.getActiveCoalition);
+        getMap().showAirbaseContextMenu(e, e.sourceTarget);
     }
 }

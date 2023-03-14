@@ -1,16 +1,26 @@
+import { getUnitsManager } from "..";
+import { Airbase } from "../missionhandler/airbase";
 import { ContextMenu } from "./contextmenu";
 
 export class AirbaseContextMenu extends ContextMenu {
-    #airbaseName: string | null = null;
+    #airbase: Airbase | null = null;
 
     constructor(id: string)
     {
         super(id);
     }
 
+    setAirbase(airbase: Airbase)
+    {
+        this.#airbase = airbase;
+        this.setAirbaseName(airbase.getName());
+        this.setAirbaseProperties(airbase.getProperties());
+        this.setAirbaseParkings(airbase.getParkings());
+        this.enableLandButton(getUnitsManager().getSelectedUnitsType() === "Aircraft" && (getUnitsManager().getSelectedUnitsCoalition() === airbase.getCoalition() || airbase.getCoalition() === "neutral"))
+    }
+
     setAirbaseName(airbaseName: string)
     {
-        this.#airbaseName = airbaseName;
         var nameDiv = <HTMLElement>this.getContainer()?.querySelector("#airbase-name");
         if (nameDiv != null)
             nameDiv.innerText = airbaseName; 

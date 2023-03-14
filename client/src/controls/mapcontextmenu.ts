@@ -45,6 +45,7 @@ export class MapContextMenu extends ContextMenu {
             this.#resetAircraftType();
             this.#resetGroundUnitRole();
             this.#resetGroundUnitType();
+            this.clip();
         })
 
         document.addEventListener("contextMenuDeployAircraft", () => {
@@ -88,6 +89,7 @@ export class MapContextMenu extends ContextMenu {
             this.#aircraftTypeDropdown.setOptions(aircraftDatabase.getLabelsByRole(role));
             this.#aircraftTypeDropdown.selectValue(0);
         }
+        this.clip();
     }
 
     #resetAircraftRole() {
@@ -96,6 +98,7 @@ export class MapContextMenu extends ContextMenu {
         this.#aircraftRoleDropdown.reset();
         this.#aircraftTypeDropdown.reset();
         this.#aircraftRoleDropdown.setOptions(aircraftDatabase.getRoles());
+        this.clip();
     }
 
     #setAircraftType(label: string)
@@ -114,6 +117,7 @@ export class MapContextMenu extends ContextMenu {
                 image.classList.toggle("hide", false); 
             }
         }
+        this.clip();
     }
 
     #resetAircraftType() {
@@ -121,6 +125,7 @@ export class MapContextMenu extends ContextMenu {
         (<HTMLButtonElement>this.getContainer()?.querySelector("#loadout-list")).replaceChildren();
         this.#aircraftLoadoutDropdown.reset();
         (<HTMLImageElement>this.getContainer()?.querySelector("#unit-image")).classList.toggle("hide", true);
+        this.clip();
     }
 
     #setAircraftLoadout(loadoutName: string)
@@ -143,6 +148,7 @@ export class MapContextMenu extends ContextMenu {
                 )
             }
         }
+        this.clip();
     }
 
     /********* Ground unit spawn menu *********/
@@ -155,6 +161,7 @@ export class MapContextMenu extends ContextMenu {
             this.#groundUnitTypeDropdown.setOptions(groundUnitsDatabase.getLabelsByRole(role));
             this.#groundUnitTypeDropdown.selectValue(0);
         }
+        this.clip();
     }
 
     #resetGroundUnitRole() {
@@ -163,6 +170,7 @@ export class MapContextMenu extends ContextMenu {
         this.#groundUnitRoleDropdown.reset();
         this.#groundUnitTypeDropdown.reset();
         this.#groundUnitRoleDropdown.setOptions(groundUnitsDatabase.getRoles());
+        this.clip();
     }
 
     #setGroundUnitType(label: string)
@@ -177,9 +185,11 @@ export class MapContextMenu extends ContextMenu {
                 (<HTMLButtonElement>this.getContainer()?.querySelector("#ground-unit-spawn-menu")?.querySelector(".deploy-unit-button")).disabled = false;
             }
         }
+        this.clip();
     }
 
     #resetGroundUnitType() {
         (<HTMLButtonElement>this.getContainer()?.querySelector("#ground-unit-spawn-menu")?.querySelector(".deploy-unit-button")).disabled = true;
+        this.clip();
     }
 }
