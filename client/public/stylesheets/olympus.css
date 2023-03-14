@@ -82,7 +82,7 @@ form > div {
 
 
 .pill {
-    background-color: var( --background-darksteel );
+    background-color: var( --background-dark-steel );
     border-radius: var(--border-radius-sm);
     padding: 4px 8px;
     width: fit-content;
@@ -773,4 +773,76 @@ body[data-hide-naval] #unit-visibility-control-naval {
 
 #reaction-to-threat-buttons-container button[title="Abort"].selected::before {
     background-image: url( "/themes/olympus/images/icons_roe_stop_dark.svg");
+}
+
+
+#splash-screen {
+    background-image: url( "/images/splash/splash_pic_ship.png" );
+    background-position:100% 50%;
+    background-size:320px;
+    border-radius: var( --border-radius-lg );
+    display:none;
+    overflow: hidden;
+    width:700px;
+}
+
+#splash-content {
+    background-color: var( --background-steel );
+    display: flex;
+    flex-direction: column;
+    padding:20px;
+    position:relative;
+    row-gap:10px;
+    width:55%;
+    z-index:10;
+}
+
+#splash-content::after {
+    background-color: var( --background-steel );
+    content: "";
+    display: block;
+    height:250px;
+    position: absolute;
+    right:0;
+    top:0;
+    transform: rotate(-23deg);
+    transform-origin: top right;
+    width:200px;
+    z-index: -1;
+}
+
+#splash-content #app-summary {
+    background-image: url( "/images/olympus-500x500.png" );
+    background-position: 0 50%;
+    background-repeat: no-repeat;
+    background-size:75px 75px;
+    content: "";
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 75px;
+    text-indent: 85px;
+}
+
+#splash-content #app-summary > * {
+    height:fit-content;
+    line-height: 25px;
+    white-space: nowrap;
+    width:fit-content;
+}
+
+#splash-content .app-version {
+    font-size:11px;
+}
+
+#splash-content #legal-stuff h4 {
+    text-transform:uppercase;
+}
+
+#splash-content #legal-stuff p {
+    font-size:10px;
+}
+
+.feature-splashScreen #splash-screen {
+    display:flex;
 }

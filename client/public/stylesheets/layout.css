@@ -349,13 +349,17 @@ dl.data-grid dd {
 }
 
 
-.ol-panel.ol-dialog {
+.ol-dialog {
 	align-self: center;
 	background-color: var( --background-slate-blue );
+	color:white;
 	justify-self: center;
-	padding:25px;
 	position: absolute;
 	z-index:1000;
+}
+
+.ol-panel.ol-dialog {
+	padding:25px;
 }
 
 .ol-dialog-close {
