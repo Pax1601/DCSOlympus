@@ -87,6 +87,13 @@ export class FeatureSwitches {
             "label": "Force show unit control panel",
             "masterSwitch": true,
             "name": "forceShowUnitControlPanel"
+        }),
+        
+        new FeatureSwitch({
+            "defaultEnabled": false,
+            "label": "Show splash screen",
+            "masterSwitch": true,
+            "name": "splashScreen"
         })
 
     ];
