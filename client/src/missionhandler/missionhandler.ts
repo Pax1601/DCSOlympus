@@ -78,27 +78,7 @@ export class MissionHandler
 
     #onAirbaseClick(e: any)
     {
-        var options = [];
-        if (getUnitsManager().getSelectedUnits().length > 0)
-            options = ["Spawn unit", "Land here"];
-        else 
-            options = ["Spawn unit"];
-
-        getMap().showAirbaseContextMenu(e);
-        //getMap().showContextMenu(e.originalEvent, e.sourceTarget.getName(),
-        //    options.map((option) => {return {tooltip: option, src: "", callback: (label: string) => {this.#onAirbaseOptionSelection(e, label)}}}, false)
-        //)
-    }
-
-    #onAirbaseOptionSelection(e: any, option: string) {
-        //if (option === "Spawn unit") {
-        //    var spawnEvent: SpawnEvent = {x: e.originalEvent.x, y: e.originalEvent.y, latlng: e.latlng, airbaseName: e.sourceTarget.getName(), coalitionID: e.sourceTarget.getCoalitionID()};
-        //    getMap().spawnFromAirbase(spawnEvent);
-        //}
-        //else if (option === "Land here")
-        //{
-        //    getMap().hideContextMenu();
-        //    getUnitsManager().selectedUnitsLandAt(e.latlng);
-        //}
+        var enableLandHere = getUnitsManager().getSelectedUnitsType() === "Aircraft" && (getUnitsManager().getSelectedUnitsCoalition() === e.sourceTarget.getCoalition() || e.sourceTarget.getActiveCoalition === "neutral");
+        getMap().showAirbaseContextMenu(e, e.sourceTarget.getName(), ["test1", "tes2"], ["2x small", "3x large"], enableLandHere, e.sourceTarget.getActiveCoalition);
     }
 }

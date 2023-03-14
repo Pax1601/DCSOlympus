@@ -151,11 +151,16 @@ export class Map extends L.Map {
         this.#unitContextMenu.hide();
     }
 
-    showAirbaseContextMenu(e: any) {
+    showAirbaseContextMenu(e: any, airbaseName: string, airbaseProperties: string[], airbaseParkings: string[], enableLandButton: boolean, airbaseCoalition: string) {
         this.hideAllContextMenus();
         var x = e.originalEvent.x;
         var y = e.originalEvent.y;
         this.#airbaseContextMenu.show(x, y, e.latlng);
+        this.#airbaseContextMenu.setAirbaseName(airbaseName);        
+        this.#airbaseContextMenu.setAirbaseProperties(airbaseProperties);
+        this.#airbaseContextMenu.setAirbaseParkings(airbaseParkings);
+        this.#airbaseContextMenu.enableLandButton(enableLandButton);
+        this.#airbaseContextMenu.setCoalition(airbaseCoalition);
     }
 
     getAirbaseContextMenu(){

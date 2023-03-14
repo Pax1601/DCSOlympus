@@ -34,13 +34,13 @@ export class Airbase extends L.Marker
         (<HTMLElement> this.getElement()?.querySelector(".airbase")).dataset.coalition = this.#coalition;
     }
 
-    getName()
-    {
-        return this.#name;
-    }
-
     getCoalition()
     {
         return this.#coalition;
+    }
+
+    getName()
+    {
+        return this.#name;
     }
 }

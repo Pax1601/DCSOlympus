@@ -128,6 +128,8 @@ export class UnitsManager {
     }
 
     getSelectedUnitsType () {
+        if (this.getSelectedUnits().length == 0)
+            return undefined;
         return this.getSelectedUnits().map((unit: Unit) => {
             return unit.constructor.name
         })?.reduce((a: any, b: any) => {
@@ -136,6 +138,8 @@ export class UnitsManager {
     };
 
     getSelectedUnitsTargetSpeed () {
+        if (this.getSelectedUnits().length == 0)
+            return undefined;
         return this.getSelectedUnits().map((unit: Unit) => {
             return unit.getTaskData().targetSpeed
         })?.reduce((a: any, b: any) => {
@@ -144,8 +148,20 @@ export class UnitsManager {
     };
 
     getSelectedUnitsTargetAltitude () {
+        if (this.getSelectedUnits().length == 0)
+            return undefined;
         return this.getSelectedUnits().map((unit: Unit) => {
             return unit.getTaskData().targetAltitude
+        })?.reduce((a: any, b: any) => {
+            return a == b? a: undefined
+        });
+    };
+
+    getSelectedUnitsCoalition () {
+        if (this.getSelectedUnits().length == 0)
+            return undefined;
+        return this.getSelectedUnits().map((unit: Unit) => {
+            return unit.getMissionData().coalition
         })?.reduce((a: any, b: any) => {
             return a == b? a: undefined
         });
