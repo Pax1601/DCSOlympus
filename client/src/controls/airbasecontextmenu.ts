@@ -13,20 +13,21 @@ export class AirbaseContextMenu extends ContextMenu {
     setAirbase(airbase: Airbase)
     {
         this.#airbase = airbase;
-        this.setAirbaseName(airbase.getName());
-        this.setAirbaseProperties(airbase.getProperties());
-        this.setAirbaseParkings(airbase.getParkings());
+        this.setName(airbase.getName());
+        this.setProperties(airbase.getProperties());
+        this.setParkings(airbase.getParkings());
+        this.setCoalition(airbase.getCoalition());
         this.enableLandButton(getUnitsManager().getSelectedUnitsType() === "Aircraft" && (getUnitsManager().getSelectedUnitsCoalition() === airbase.getCoalition() || airbase.getCoalition() === "neutral"))
     }
 
-    setAirbaseName(airbaseName: string)
+    setName(airbaseName: string)
     {
         var nameDiv = <HTMLElement>this.getContainer()?.querySelector("#airbase-name");
         if (nameDiv != null)
             nameDiv.innerText = airbaseName; 
     }
 
-    setAirbaseProperties(airbaseProperties: string[])
+    setProperties(airbaseProperties: string[])
     {
         this.getContainer()?.querySelector("#airbase-properties")?.replaceChildren(...airbaseProperties.map((property: string) => {
             var div = document.createElement("div");
@@ -35,13 +36,18 @@ export class AirbaseContextMenu extends ContextMenu {
         }));
     }
 
-    setAirbaseParkings(airbaseParkings: string[])
+    setParkings(airbaseParkings: string[])
     {
         this.getContainer()?.querySelector("#airbase-parking")?.replaceChildren(...airbaseParkings.map((parking: string) => {
             var div = document.createElement("div");
             div.innerText = parking;
             return div;
         }));
+    }
+
+    setCoalition(coalition: string)
+    {
+        (<HTMLElement>this.getContainer()?.querySelector("#spawn-airbase-aircraft-button")).dataset.activeCoalition = coalition;
     }
 
     enableLandButton(enableLandButton: boolean)

@@ -117,7 +117,8 @@
 [data-active-coalition="blue"].unit-spawn-button:hover, 
 [data-active-coalition="blue"].unit-spawn-button.is-open, 
 [data-active-coalition="blue"]#active-coalition-label,
-[data-active-coalition="blue"].deploy-unit-button
+[data-active-coalition="blue"].deploy-unit-button,
+[data-active-coalition="blue"]#spawn-airbase-aircraft-button
 {
     background-color: var(--primary-blue)
 }
@@ -126,7 +127,8 @@
 [data-active-coalition="red"].unit-spawn-button:hover, 
 [data-active-coalition="red"].unit-spawn-button.is-open, 
 [data-active-coalition="red"]#active-coalition-label,
-[data-active-coalition="red"].deploy-unit-button
+[data-active-coalition="red"].deploy-unit-button,
+[data-active-coalition="red"]#spawn-airbase-aircraft-button
 {
     background-color: var(--primary-red)
 }
