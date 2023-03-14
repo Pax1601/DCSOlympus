@@ -15,7 +15,7 @@ extern UnitsManager* unitsManager;
 /* Air unit */
 AirUnit::AirUnit(json::value json, int ID) : Unit(json, ID)
 {
-
+	
 };
 
 void AirUnit::setState(int newState) 
@@ -203,7 +203,6 @@ void AirUnit::taskWingmen()
 
 void AirUnit::AIloop()
 {
-	log(L"AILoop");
 	/* State machine */
 	switch (state) {
 		case State::IDLE: {

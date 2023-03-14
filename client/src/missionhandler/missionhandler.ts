@@ -14,6 +14,7 @@ export class MissionHandler
     #bullseyeMarkers: any;
     #airbases       : any; //TODO declare interface
     #airbasesMarkers: {[name: string]: Airbase};
+    #theatre        : string = "";
 
     constructor()
     {
@@ -26,7 +27,7 @@ export class MissionHandler
         this.#airbasesMarkers = {};
     }
 
-    update(data: BullseyesData | AirbasesData)
+    update(data: BullseyesData | AirbasesData | any)
     {
         if ("bullseyes" in data)
         {
@@ -38,6 +39,17 @@ export class MissionHandler
         {
             this.#airbases = data.airbases;
             this.#drawAirbases();
+        }
+
+        if ("mission" in data)
+        {
+            var foo = 1;
+            if (data.mission.theatre != this.#theatre) 
+            {
+                this.#theatre = data.mission.theatre
+                if (this.#theatre == "Syria")
+                    getMap().setView(new LatLng(34.5, 36.0), 8);
+            }
         }
     }
 
@@ -51,7 +63,7 @@ export class MissionHandler
         for (let idx in this.#bullseyes)
         {
             var bullseye = this.#bullseyes[idx];
-            this.#bullseyeMarkers[idx].setLatLng(new LatLng(bullseye.lat, bullseye.lng)); 
+            this.#bullseyeMarkers[idx].setLatLng(new LatLng(bullseye.latitude, bullseye.longitude)); 
         }
     }
 
@@ -63,14 +75,14 @@ export class MissionHandler
             if (this.#airbasesMarkers[idx] === undefined)
             {
                 this.#airbasesMarkers[idx] = new Airbase({
-                    position: new LatLng(airbase.lat, airbase.lng), 
+                    position: new LatLng(airbase.latitude, airbase.longitude), 
                     name: airbase.callsign,
                     src: "images/airbase.png"}).addTo(getMap());
                 this.#airbasesMarkers[idx].on('contextmenu', (e) => this.#onAirbaseClick(e));
             }
             else
             {
-                this.#airbasesMarkers[idx].setLatLng(new LatLng(airbase.lat, airbase.lng));
+                this.#airbasesMarkers[idx].setLatLng(new LatLng(airbase.latitude, airbase.longitude));
                 this.#airbasesMarkers[idx].setCoalition(airbase.coalition);
                 this.#airbasesMarkers[idx].setProperties(["test1", "test2"]);
                 this.#airbasesMarkers[idx].setParkings(["2x big", "5x small"]);

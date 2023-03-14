@@ -1,6 +1,8 @@
 import { getUnitsManager } from "..";
 import { Slider } from "../controls/slider";
-import { Unit } from "../units/unit";
+import { aircraftDatabase } from "../units/aircraftdatabase";
+import { groundUnitsDatabase } from "../units/groundunitsdatabase";
+import { Aircraft, GroundUnit, Unit } from "../units/unit";
 import { Panel } from "./panel";
 
 const ROEs: string[] = ["Free", "Designated free", "Designated", "Return", "Hold"];
@@ -69,7 +71,14 @@ export class UnitControlPanel extends Panel {
             {
                 var button = document.createElement("button");
                 button.innerText = unit.getBaseData().unitName;
-                button.setAttribute( "data-short-label", unit.getBaseData().name );
+                
+                if (unit instanceof Aircraft)
+                    button.setAttribute( "data-short-label", aircraftDatabase.getShortLabelByName(unit.getBaseData().name));
+                else if (unit instanceof GroundUnit)
+                    button.setAttribute( "data-short-label", groundUnitsDatabase.getShortLabelByName(unit.getBaseData().name));
+                else 
+                    button.setAttribute( "data-short-label", "");
+
                 button.setAttribute( "data-coalition", unit.getMissionData().coalition );
                 button.classList.add( "pill", "highlight-coalition" )
 

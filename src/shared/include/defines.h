@@ -10,5 +10,6 @@
 #define LOGS_URI L"logs"
 #define AIRBASES_URI L"airbases"
 #define BULLSEYE_URI L"bullseyes"
+#define MISSION_URI L"mission"
 
 #define UPDATE_TIME_INTERVAL 0.25

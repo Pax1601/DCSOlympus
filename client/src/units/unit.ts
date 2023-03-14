@@ -383,7 +383,7 @@ export class Unit extends Marker {
                     unitAltitudeDiv.innerHTML = String(Math.floor(this.getFlightData().altitude / 0.3048 / 1000));
             }
             var pos = getMap().latLngToLayerPoint(this.getLatLng()).round();
-            this.setZIndexOffset(Math.floor(this.getFlightData().altitude) - pos.y);
+            this.setZIndexOffset(1000 + Math.floor(this.getFlightData().altitude) - pos.y);
         }
 
         this.#forceUpdate = false;
@@ -503,7 +503,10 @@ export class Helicopter extends AirUnit {
 
 export class GroundUnit extends Unit {
     constructor(ID: number, data: UnitData) {
+        // TODO this is very messy
         var role = groundUnitsDatabase.getByName(data.baseData.name)?.loadouts[0].roles[0];
+        if (role == undefined)
+            role = "U";
         var roleType = (role === "SAM") ? "sam" : "mi";
 
         super(ID, data, `

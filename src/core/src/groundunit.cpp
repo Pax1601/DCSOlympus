@@ -17,6 +17,8 @@ GroundUnit::GroundUnit(json::value json, int ID) : Unit(json, ID)
 {
 	log("New Ground Unit created with ID: " + to_string(ID));
 	addMeasure(L"category", json::value(getCategory()));
+	setTargetSpeed(targetSpeed);
+	setTargetAltitude(targetAltitude);
 };
 
 void GroundUnit::AIloop()

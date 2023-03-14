@@ -16,8 +16,8 @@ function Olympus.setMissionData(arg, time)
 		local bullseyeVec3 = coalition.getMainRefPoint(i)
 		local bullseyeLatitude, bullseyeLongitude, bullseyeAltitude = coord.LOtoLL(bullseyeVec3)
 		bullseyes[i] = {}
-		bullseyes[i]["lat"] =  bullseyeLatitude
-		bullseyes[i]["lng"] =  bullseyeLongitude
+		bullseyes[i]["latitude"] = bullseyeLatitude
+		bullseyes[i]["longitude"] = bullseyeLongitude
 	end
 
 	-- Units tactical data
@@ -63,24 +63,35 @@ function Olympus.setMissionData(arg, time)
 
 	-- Airbases data
 	local base = world.getAirbases()
-	local basesData = {}
+	local airbases = {}
 	for i = 1, #base do
 		local info = {}
 		local latitude, longitude, altitude = coord.LOtoLL(Airbase.getPoint(base[i]))
 		info["callsign"] = Airbase.getCallsign(base[i])
-		info["coalition"] = Airbase.getCoalition(base[i])
-		info["lat"] =  latitude
-		info["lng"] =  longitude
+		local coalitionID = Airbase.getCoalition(base[i])
+		if coalitionID == 0 then
+			info["coalition"] = "neutral"
+		elseif coalitionID == 1 then
+			info["coalition"] = "red"
+		else 
+			info["coalition"] = "blue"
+		end
+		info["latitude"] =  latitude
+		info["longitude"] =  longitude
 		if Airbase.getUnit(base[i]) then
 			info["unitId"] = Airbase.getUnit(base[i]):getID()
 		end
-		basesData[i] = info
+		airbases[i] = info
 	end
+
+	local mission = {}
+	mission.theatre = env.mission.theatre
 
 	-- Assemble missionData table
 	missionData["bullseyes"] = bullseyes
 	missionData["unitsData"] = unitsData
-	missionData["airbases"] = basesData
+	missionData["airbases"] = airbases
+	missionData["mission"] = mission
 
 	local command = "Olympus.missionData = " .. Olympus.serializeTable(missionData) .. "\n" .. "Olympus.OlympusDLL.setMissionData()"
 	net.dostring_in("export", command)

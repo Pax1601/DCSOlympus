@@ -101,6 +101,6 @@ export class UnitDatabase {
 
     getShortLabelByName(name: string)
     {
-        return this.units[name] === undefined? name: this.units[name].shortLabel;
+        return this.units[name] === undefined? "U": this.units[name].shortLabel;
     }
 }

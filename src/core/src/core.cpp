@@ -11,8 +11,9 @@ auto before = std::chrono::system_clock::now();
 UnitsManager* unitsManager = nullptr;
 Server* server = nullptr;
 Scheduler* scheduler = nullptr;
-json::value airbasesData;
-json::value bullseyesData;
+json::value airbases;
+json::value bullseyes;
+json::value mission;
 mutex mutexLock;
 bool initialized = false;
 string sessionHash;
@@ -93,9 +94,11 @@ extern "C" DllExport int coreMissionData(lua_State * L)
     if (missionData.has_object_field(L"unitsData"))
         unitsManager->updateMissionData(missionData[L"unitsData"]);
     if (missionData.has_object_field(L"airbases"))
-        airbasesData = missionData[L"airbases"];
+        airbases = missionData[L"airbases"];
     if (missionData.has_object_field(L"bullseyes"))
-        bullseyesData = missionData[L"bullseyes"];
+        bullseyes = missionData[L"bullseyes"];
+    if (missionData.has_object_field(L"mission"))
+        mission = missionData[L"mission"];
 
     return(0);
 }

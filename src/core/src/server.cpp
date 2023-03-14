@@ -12,8 +12,9 @@ using namespace std::chrono;
 
 extern UnitsManager* unitsManager; 
 extern Scheduler* scheduler;
-extern json::value airbasesData;
-extern json::value bullseyesData;
+extern json::value airbases;
+extern json::value bullseyes;
+extern json::value mission;
 extern mutex mutexLock;
 extern string sessionHash;
 
@@ -101,9 +102,11 @@ void Server::handle_get(http_request request)
                 answer[L"logs"] = logs;
             }
             else if (path[0] == AIRBASES_URI)
-                answer[L"airbases"] = airbasesData;
+                answer[L"airbases"] = airbases;
             else if (path[0] == BULLSEYE_URI)
-                answer[L"bullseyes"] = bullseyesData;
+                answer[L"bullseyes"] = bullseyes;
+            else if (path[0] == MISSION_URI)
+                answer[L"mission"] = mission;
 
             milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
             answer[L"time"] = json::value::string(to_wstring(ms.count()));

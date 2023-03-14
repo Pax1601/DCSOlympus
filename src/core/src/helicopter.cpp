@@ -17,6 +17,8 @@ Helicopter::Helicopter(json::value json, int ID) : AirUnit(json, ID)
 {
 	log("New Helicopter created with ID: " + to_string(ID));
 	addMeasure(L"category", json::value(getCategory()));
+	setTargetSpeed(targetSpeed);
+	setTargetAltitude(targetAltitude);
 };
 
 void Helicopter::changeSpeed(wstring change)

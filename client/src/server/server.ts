@@ -9,6 +9,7 @@ const UNITS_URI = "units";
 const LOGS_URI = "logs";
 const AIRBASES_URI = "airbases";
 const BULLSEYE_URI = "bullseyes";
+const MISSION_URI = "mission";
 
 var lastUpdateTime = 0;
 var demoEnabled = false;
@@ -54,6 +55,10 @@ export function getBulllseye(callback: CallableFunction) {
 
 export function getLogs(callback: CallableFunction) {
     GET(callback, LOGS_URI);
+}
+
+export function getMission(callback: CallableFunction) {
+    GET(callback, MISSION_URI);
 }
 
 export function getUnits(callback: CallableFunction, refresh: boolean = false) {

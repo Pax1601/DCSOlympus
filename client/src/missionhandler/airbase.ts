@@ -24,7 +24,8 @@ export class Airbase extends L.Marker
                         <div class="airbase-marker"> </div>
                     </div>`, 
             className: 'leaflet-airbase-marker',
-            iconSize: [63, 63]
+            iconSize: [40, 40],
+            iconAnchor: [20, 20]
             });   // Set the marker, className must be set to avoid white square
         this.setIcon(icon); 
     }
