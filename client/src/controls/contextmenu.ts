@@ -33,6 +33,16 @@ export class ContextMenu {
         return this.#latlng;
     }
 
+    getX()
+    {
+        return this.#x;
+    }
+
+    getY()
+    {
+        return this.#y;
+    }
+
     clip()
     {
         if (this.#container != null) {

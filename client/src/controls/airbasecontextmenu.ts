@@ -1,4 +1,4 @@
-import { getUnitsManager } from "..";
+import { getMap, getUnitsManager, setActiveCoalition } from "..";
 import { Airbase } from "../missionhandler/airbase";
 import { ContextMenu } from "./contextmenu";
 
@@ -8,6 +8,9 @@ export class AirbaseContextMenu extends ContextMenu {
     constructor(id: string)
     {
         super(id);
+        document.addEventListener("contextMenuSpawnAirbase", (e: any) => {
+            this.showSpawnMenu();
+        })
     }
 
     setAirbase(airbase: Airbase)
@@ -53,6 +56,16 @@ export class AirbaseContextMenu extends ContextMenu {
     enableLandButton(enableLandButton: boolean)
     {
         this.getContainer()?.querySelector("#land-here-button")?.classList.toggle("hide", !enableLandButton);
-        
+    }
+
+    showSpawnMenu()
+    {
+        if (this.#airbase != null)
+        {
+            setActiveCoalition(this.#airbase.getCoalition());
+            getMap().showMapContextMenu({originalEvent: {x: this.getX(), y: this.getY(), latlng: this.getLatLng()}});
+            getMap().getMapContextMenu().hideUpperBar();
+            getMap().getMapContextMenu().showSubMenu("aircraft");
+        }
     }
 }

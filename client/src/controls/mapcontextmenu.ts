@@ -34,18 +34,7 @@ export class MapContextMenu extends ContextMenu {
         this.#groundUnitTypeDropdown = new Dropdown("ground-unit-type-options", (type: string) => this.#setGroundUnitType(type));
 
         document.addEventListener("contextMenuShow", (e: any) => {
-            this.getContainer()?.querySelector("#aircraft-spawn-menu")?.classList.toggle("hide", e.detail.type !== "aircraft");
-            this.getContainer()?.querySelector("#aircraft-spawn-button")?.classList.toggle("is-open", e.detail.type === "aircraft");
-            this.getContainer()?.querySelector("#ground-unit-spawn-menu")?.classList.toggle("hide", e.detail.type !== "ground-unit");
-            this.getContainer()?.querySelector("#ground-unit-spawn-button")?.classList.toggle("is-open", e.detail.type === "ground-unit");
-            this.getContainer()?.querySelector("#smoke-spawn-menu")?.classList.toggle("hide", e.detail.type !== "smoke");
-            this.getContainer()?.querySelector("#smoke-spawn-button")?.classList.toggle("is-open", e.detail.type === "smoke");
-
-            this.#resetAircraftRole();
-            this.#resetAircraftType();
-            this.#resetGroundUnitRole();
-            this.#resetGroundUnitType();
-            this.clip();
+            this.showSubMenu(e.detail.type);
         })
 
         document.addEventListener("contextMenuDeployAircraft", () => {
@@ -68,6 +57,30 @@ export class MapContextMenu extends ContextMenu {
     show(x: number, y: number, latlng: LatLng) {
         super.show(x, y, latlng);
         this.#spawnOptions.latlng = latlng;
+        this.showUpperBar();
+    }
+
+    showSubMenu(type: string){
+        this.getContainer()?.querySelector("#aircraft-spawn-menu")?.classList.toggle("hide", type !== "aircraft");
+        this.getContainer()?.querySelector("#aircraft-spawn-button")?.classList.toggle("is-open", type === "aircraft");
+        this.getContainer()?.querySelector("#ground-unit-spawn-menu")?.classList.toggle("hide", type !== "ground-unit");
+        this.getContainer()?.querySelector("#ground-unit-spawn-button")?.classList.toggle("is-open", type === "ground-unit");
+        this.getContainer()?.querySelector("#smoke-spawn-menu")?.classList.toggle("hide", type !== "smoke");
+        this.getContainer()?.querySelector("#smoke-spawn-button")?.classList.toggle("is-open", type === "smoke");
+
+        this.#resetAircraftRole();
+        this.#resetAircraftType();
+        this.#resetGroundUnitRole();
+        this.#resetGroundUnitType();
+        this.clip();
+    }
+
+    showUpperBar() {
+        this.getContainer()?.querySelector("#upper-bar")?.classList.toggle("hide", false);
+    }
+
+    hideUpperBar() {
+        this.getContainer()?.querySelector("#upper-bar")?.classList.toggle("hide", true);
     }
 
     #onSwitch(e: any) {
