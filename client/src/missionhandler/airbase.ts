@@ -18,7 +18,7 @@ export class Airbase extends L.Marker
 
         this.#name = options.name;
         var icon = new L.DivIcon({
-            html: ` <div class="airbase" data-object="airbase" data-coalition="red">
+            html: ` <div class="airbase" data-object="airbase" data-coalition="neutral">
                         <div class="airbase-marker"> </div>
                     </div>`, 
             className: 'leaflet-airbase-marker',
@@ -31,7 +31,7 @@ export class Airbase extends L.Marker
     setCoalition(coalition: string)
     {
         this.#coalition = coalition;
-        this.getElement()?.setAttribute("data-coalition", this.#coalition);
+        (<HTMLElement> this.getElement()?.querySelector(".airbase")).dataset.coalition = this.#coalition;
     }
 
     getName()
