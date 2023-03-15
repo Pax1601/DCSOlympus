@@ -206,22 +206,22 @@
 
 /* Unit context menu */
 #unit-contextmenu {
-    position: absolute;
     display: flex;
     flex-direction: column;
+    height: fit-content;
+    position: absolute;
     row-gap: 5px;
     width: 150px;
-    height: fit-content;
     z-index: 1000;
 }
 
 /* Airbase context menu */
 #airbase-contextmenu {
-    position: absolute;
     display: flex;
     flex-direction: column;
-    row-gap: 5px;
-    width: 230px;
     height: fit-content;
+    position: absolute;
+    row-gap: 5px;
+    width: 180px;
     z-index: 1000;
 }

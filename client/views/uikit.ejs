@@ -95,8 +95,8 @@
                     <div class="content-header">Context menu</div>
                     <div class="content-body">
                         <div class="example">
-                            <%- include('contextmenu.ejs') %>  
-                        </div>
+                            <%- include('contextmenus.ejs') %>  
+                        </div>  
                     </div>
                 </div>
 
@@ -979,6 +979,40 @@
                                         <button>Option 2</button>
                                     </div>
                                 </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="content">
+                    <div class="content-header">Airfield menu</div>
+                    <div class="content-body">
+                        <div class="example">
+
+                            <div id="airbase-contextmenu" class="ol-panel">
+                                <h3 id="airbase-name">Al Alhambra</h3>
+                                <dl id="airbase-properties" class="data-grid">
+                                    <dt>Runway 1</dt>
+                                    <dd>31 / 13</dd>
+                                    <dt>Runway 2</dt>
+                                    <dd>27 / 09</dd>
+                                    <dt>TCN</dt>
+                                    <dd>19X</dd>
+                                    <dt>ILS</dt>
+                                    <dd>-</dd>
+                                </dl>
+                                <hr />
+                                <h4>Parking available:</h4> 
+                                <dl id="airbase-parking" class="data-grid">
+                                    <dt>Shelters</dt>
+                                    <dd>2</dd>
+                                    <dt>Open air</dt>
+                                    <dd>5</dd>
+                                </dl>
+                                <button id="spawn-airbase-aircraft-button" data-active-coalition="red" title="Spawn aircraft" data-on-click="contextMenuSpawnAirbase" class="deploy-unit-button">Spawn</button>
+                                <button id="land-here-button" title="Land here" data-on-click="contextMenuLandAirbase" class="hide">Land here</button>
                             </div>
 
                         </div>

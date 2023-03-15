@@ -199,7 +199,7 @@
 }
 
 [data-object|="unit-ground-sam"] .unit-marker {
-    background-image: var( --unit-sam-marker-neutral-url );
+    background-image: var( --unit-ground-sam-marker-neutral-url );
     height: var( --unit-sam-marker-height );
     width: var( --unit-sam-marker-width );
 }
@@ -510,8 +510,6 @@
     background-repeat: no-repeat;
     position:absolute;
     height:var( --unit-air-status-rtb-height );
-    translate: calc( 0px - ( var( --unit-air-width ) / 2 ) ) calc( 0px - ( var( --unit-air-height ) / 2 ) );
-    transform-origin: center;
     width:var( --unit-air-status-rtb-width );
     z-index: 10;
 }
