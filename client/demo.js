@@ -538,20 +538,20 @@ class DemoDataGenerator {
         var ret = {airbases: {
             ["0"]: {
                 callsign: "Neutral",
-                lat: 37.3,
-                lng: -115.8,
+                latitude: 37.3,
+                longitude: -115.8,
                 coalition: "neutral"
             },
             ["1"]: {
                 callsign: "Red",
-                lat: 37.3,
-                lng: -115.75,
+                latitude: 37.3,
+                longitude: -115.75,
                 coalition: "red"
             },
             ["2"]: {
                 callsign: "Blue",
-                lat: 37.3,
-                lng: -115.7,
+                latitude: 37.3,
+                longitude: -115.7,
                 coalition: "blue"
             }
         }};
@@ -561,16 +561,16 @@ class DemoDataGenerator {
     bullseyes(req, res){
         var ret = {bullseyes: {
             "0": {
-                lat: 37.25,
-                lng: -115.8
+                latitude: 37.25,
+                longitude: -115.8
             },
             "1": {
-                lat: 37.25,
-                lng: -115.75
+                latitude: 37.25,
+                longitude: -115.75
             },
             "2": {
-                lat: 37.25,
-                lng: -115.7
+                latitude: 37.25,
+                longitude: -115.7
             }
         }};
         res.send(JSON.stringify(ret));
