@@ -1,10 +1,10 @@
 #map-contextmenu {
-    position: absolute;
     display: flex;
     flex-direction: column;
+    height: fit-content;
+    position: absolute;
     row-gap: 5px;
     width: 230px;
-    height: fit-content;
     z-index: 1000;
 }
 
@@ -22,9 +22,7 @@
     border-radius: 999px;
     width: fit-content;
     height: fit-content;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 3px;
+    padding: 3px 10px;
     padding-bottom: 3px;
     font-weight: 600;
     color: var(--nav-text);
@@ -36,10 +34,10 @@
 }
 
 #map-contextmenu>div:nth-child(2){
+    align-items: center;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: center;
     padding-right: 0px;
 }
 
@@ -59,10 +57,10 @@
 }
 
 #map-contextmenu>div:nth-child(n+3){
+    align-items: center;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    align-items: center;
     row-gap: 5px;
 }
 
@@ -100,12 +98,12 @@
 }
 
 .unit-spawn-button {
+    border-radius: 0px;
     border: none;
     height: 48px;
-    width: 48px;
-    margin-top: -10px;
     margin-bottom: -10px;
-    border-radius: 0px;
+    margin-top: -10px;
+    width: 48px;
 }
 
 .unit-spawn-button:last-of-type {

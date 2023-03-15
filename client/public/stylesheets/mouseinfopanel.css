@@ -1,0 +1,83 @@
+#mouse-info-panel {
+	bottom: 60px;
+	display:flex;
+	flex-direction: column;
+	height: fit-content;
+	position: absolute;
+	right: 10px;
+	row-gap: 10px;
+	width: 160px;
+	z-index: 1000;
+}
+
+
+#mouse-info-panel > * {
+	background-color: var( --background-grey );
+	border-radius: var( --border-radius-sm );
+	padding:6px;
+}
+
+
+#mouse-info-panel dl {
+	margin-bottom:4px;
+	row-gap: 8px;
+}
+
+#mouse-info-panel dt {
+	height:20px;
+	width:40%;
+}
+
+#mouse-info-panel dt::after {
+	align-items: center;
+	background-color: white;
+	border-radius: var( --border-radius-sm );
+	color: var( --background-steel );
+	display:flex;
+	font-size:15.6px;
+	font-weight: bolder;
+	height:16px;
+	justify-content: center;
+	line-height: 16px;
+	padding:4px;
+	text-transform: uppercase;
+	width:16px;
+}
+
+#mouse-info-panel dt#ref-measure-position::after {
+	background-image: url( "/images/icons/ruler.svg" );
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	background-size:16px 16px;
+	content: " ";
+}
+
+
+#mouse-info-panel dt[data-label]::after {
+	content: attr( data-label );
+}
+
+#mouse-info-panel dt[data-coalition="blue"]::after {
+	background-color: var( --primary-blue );
+}
+
+#mouse-info-panel dt[data-coalition="red"]::after {
+	background-color: var( --primary-red );
+}
+
+
+#mouse-info-panel dt[data-tooltip]:hover::before {
+	background-color: var( --background-grey );
+	border-radius: 5px;
+	content: attr( data-tooltip );
+	display:flex;
+	flex-wrap: nowrap;
+	padding: 5px;
+	position: absolute;
+	translate: calc( -100% - 15px ) 0;
+	white-space: nowrap;
+}
+
+#mouse-info-panel dd {
+	width:60%;
+}

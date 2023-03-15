@@ -1,38 +1,12 @@
 @import url("layout.css");
 @import url("airbase.css");
+@import url("connectionstatuspanel.css");
 @import url("contextmenus.css");
+@import url("mouseinfopanel.css");
 @import url("units.css");
+@import url("unitcontrolpanel.css");
+@import url("unitinfopanel.css");
 
-/* Variables definitions */
-:root {
-    --accent-green: #8bff63;
-    --accent-light-blue: #5ca7ff;
-    --background-grey: #3d4651;
-    --background-offwhite: #f2f2f3;
-    --background-steel: #202831;
-    --primary-blue: #247be2;
-    --primary-grey: #CFD9E8;
-    --primary-red: #ff5858;
-    --secondary-blue-outline: #082e44;
-    --secondary-dark-steel: #181e25;
-    --secondary-gunmetal-grey: #2f2f2f;
-    --secondary-light-grey: #797e83;
-    --secondary-neutral: #111111;
-    --secondary-red-outline: #262222;
-    --secondary-yellow: #ffd46893;
-    --nav-text: #ECECEC;
-
-    --ol-select-secondary: #545F6C;
-
-    --border-radius-xs: 2px;
-    --border-radius-sm: 5px;
-    --border-radius-md: 10px;
-    --border-radius-lg: 15px;
-
-    --font-weight-bolder: 600;
-
-
-}
 
 
 * {
@@ -42,17 +16,29 @@
 }
 
 
+html {
+    font-family: 'Open Sans', sans-serif;
+}
+
+body {
+	display:grid;
+	margin: 0;
+	padding: 0;
+}
+
+html,
+body {
+	height: 100%;
+	width: 100%;
+}
+
+
 a {
     text-decoration: none;
 }
 
 a:hover {
     text-decoration: underline;
-}
-
-
-html {
-    font-family: 'Open Sans', sans-serif;
 }
 
 
@@ -453,7 +439,7 @@ nav.ol-panel> :last-child {
     filter: invert(100%);
 }
 
-.data-grid {
+.ol-data-grid {
     display: flex;
     flex-direction: column;
 }

@@ -1,0 +1,60 @@
+
+#unit-info-panel {
+	bottom: 20px;
+	font-size:12px;
+	position: absolute;
+	left: 10px;
+	width: fit-content;
+	z-index: 1000;
+}
+
+
+#unit-info-panel #unit-name {
+    line-height: 18px;
+	margin-bottom:10px;
+}
+
+#unit-info-panel #current-task {
+	border-radius: var( --border-radius-lg );
+	margin-top:15px;
+}
+
+#unit-info-panel #current-task::after {
+	content: attr( data-current-task );
+	display:block;
+}
+
+
+#unit-info-panel #loadout-data {
+	max-width: 250px;
+}
+
+#unit-info-panel #loadout-data .ol-data-grid {
+	margin: 6px 0;
+}
+
+#unit-info-panel #loadout-data .ol-data-grid dt:first-child {
+	text-indent: 5px;
+}
+
+#unit-info-panel #loadout-data .ol-data-grid dt:first-child::before {
+	content: url( /images/icons/fuel.svg );
+	display:inline-block;
+	filter:invert(100%);
+	height:16px;
+	text-indent:5px;
+	translate:-10px 5%;
+	width:16px;
+}
+
+#unit-info-panel #loadout-fuel-level::after {
+	content: attr( data-fuel-level ) "%";
+}
+
+#unit-info-panel #loadout-container .loadout-item {
+	background-color: black;
+}
+
+#unit-info-panel #loadout-container .loadout-item::before {
+	content: attr( data-loadout-item ) ' \d7  ' attr( data-loadout-qty );
+}
