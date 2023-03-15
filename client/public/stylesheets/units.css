@@ -25,7 +25,7 @@
 [data-hide-ground] #map-container [data-object|="unit-ground-mi"],
 [data-hide-sam] #map-container [data-object|="unit-ground-sam"],
 [data-hide-threat] #map-container .unit-threat,
-[data-hide-naval] #map-container [data-object|="unit-ground-naval"],
+[data-hide-naval] #map-container [data-object|="unit-naval"],
 [data-hide-blue] #map-container [data-object|="unit"][data-coalition="blue"],
 [data-hide-red] #map-container [data-object|="unit"][data-coalition="red"],
 [data-hide-neutral] #map-container [data-object|="unit"][data-coalition="neutral"] {
