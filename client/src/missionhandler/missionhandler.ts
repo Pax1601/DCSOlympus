@@ -84,7 +84,7 @@ export class MissionHandler
             {
                 this.#airbasesMarkers[idx].setLatLng(new LatLng(airbase.latitude, airbase.longitude));
                 this.#airbasesMarkers[idx].setCoalition(airbase.coalition);
-                this.#airbasesMarkers[idx].setProperties(["test1", "test2"]);
+                this.#airbasesMarkers[idx].setProperties(["Runway 1: 31L / 13R", "Runway 2: 31R / 13L", "TCN: 17X", "ILS: ---" ]);
                 this.#airbasesMarkers[idx].setParkings(["2x big", "5x small"]);
             }
         }
