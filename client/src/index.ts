@@ -6,8 +6,8 @@ import { MissionHandler } from "./missionhandler/missionhandler";
 import { UnitControlPanel } from "./panels/unitcontrolpanel";
 import { MouseInfoPanel } from "./panels/mouseinfopanel";
 import { AIC } from "./aic/aic";
-import { ATC } from "./atc/ATC";
-import { FeatureSwitches } from "./FeatureSwitches";
+import { ATC } from "./atc/atc";
+import { FeatureSwitches } from "./featureswitches";
 import { LogPanel } from "./panels/logpanel";
 import { getAirbases, getBulllseye as getBulllseyes, getMission, getUnits, toggleDemoEnabled } from "./server/server";
 

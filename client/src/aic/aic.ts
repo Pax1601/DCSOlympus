@@ -1,8 +1,8 @@
-import { ToggleableFeature } from "../ToggleableFeature";
-import { AICFormation_Azimuth } from "./AICFormation/Azimuth";
-import { AICFormation_Range } from "./AICFormation/Range";
-import { AICFormation_Single } from "./AICFormation/Single";
-import { AICFormationDescriptorSection } from "./AICFormationDescriptorSection";
+import { ToggleableFeature } from "../toggleablefeature";
+import { AICFormation_Azimuth } from "./aicformation/azimuth";
+import { AICFormation_Range } from "./aicformation/range";
+import { AICFormation_Single } from "./aicformation/single";
+import { AICFormationDescriptorSection } from "./aicformationdescriptorsection";
 
 
 export class AIC extends ToggleableFeature {
