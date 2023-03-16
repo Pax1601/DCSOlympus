@@ -1,6 +1,6 @@
 :root {
-    --airbase-marker-height: 63px;
-    --airbase-marker-width: 63px;
+    --airbase-marker-height: 40px;
+    --airbase-marker-width: 40px;
 }
 
 [data-object|="airbase"] {
@@ -31,6 +31,7 @@ Marker
 /*  Airbase  */
 [data-object|="airbase"] .airbase-marker {
     background-image: var(--airbase-marker-neutral-url);
+    background-size: contain;
     height: var(--airbase-marker-height);
     width: var(--airbase-marker-width);
 }
