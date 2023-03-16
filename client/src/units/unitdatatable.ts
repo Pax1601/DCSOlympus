@@ -2,7 +2,6 @@ export class UnitDataTable {
 
     #element;
     #tableId = "unit-data-table";
-    #hasUpdated = false;
 
 
     constructor() {
@@ -28,13 +27,27 @@ export class UnitDataTable {
     }
 
 
+    hide() {
+        this.getElement()?.closest( ".ol-dialog" )?.classList.add( "hide" );
+    }
+
+
     refresh( units:object ) {
 
-        if ( this.#hasUpdated ) {
-            return;
-        }
+        const unitsArray = Object.values( units ).sort( ( a, b ) => {
 
-        const unitsArray = Object.values( units );
+            const aVal = a.baseData.unitName.toLowerCase();
+            const bVal = b.baseData.unitName.toLowerCase();
+
+            if ( aVal > bVal ) {
+                return 1;
+            } else if ( bVal > aVal ) {
+                return -1;
+            } else {
+                return 0;
+            }
+
+        });
 
 
         function addRow( parentEl:HTMLElement, columns:string[] ) {
@@ -75,8 +88,16 @@ export class UnitDataTable {
 
         }
 
-
-        this.#hasUpdated = true;
-
     }
+
+
+    show() {
+        this.getElement()?.closest( ".ol-dialog" )?.classList.remove( "hide" );
+    }
+
+
+    toggle() {
+        this.getElement()?.closest( ".ol-dialog" )?.classList.toggle( "hide" );
+    }
+
 }

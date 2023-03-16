@@ -141,13 +141,21 @@ function setupEvents() {
 
     /* Keyup events */
     document.addEventListener("keyup", ev => {
+        
         switch (ev.code) {
+        
             case "KeyL":
                 document.body.toggleAttribute("data-hide-labels");
                 break;
+
             case "KeyD":
                 toggleDemoEnabled();
+                break;
+
+            case "Quote":
+                unitDataTable.toggle();
         }
+
     });
 
     /*
@@ -158,7 +166,6 @@ function setupEvents() {
             unitName.setAttribute( "readonly", "true" );
             
             //  Do something with this:
-            console.log( unitName.value );
         });
 
         document.addEventListener( "editUnitName", ev => {
