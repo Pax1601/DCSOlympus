@@ -10,6 +10,7 @@ import { ATC } from "./atc/ATC";
 import { FeatureSwitches } from "./FeatureSwitches";
 import { LogPanel } from "./panels/logpanel";
 import { getAirbases, getBulllseye as getBulllseyes, getMission, getUnits, toggleDemoEnabled } from "./server/server";
+import { UnitDataTable } from "./units/unitdatatable";
 
 var map: Map;
 
@@ -29,6 +30,7 @@ var connected: boolean = false;
 var activeCoalition: string = "blue";
 
 var sessionHash: string | null = null;
+var unitDataTable = new UnitDataTable();
 
 var featureSwitches;
 
@@ -75,6 +77,7 @@ function setup() {
     startPeriodicUpdate();
 }
 
+
 function startPeriodicUpdate() {
     requestUpdate();
     requestRefresh();
@@ -84,6 +87,7 @@ function requestUpdate() {
     /* Main update rate = 250ms is minimum time, equal to server update time. */
     getUnits((data: UnitsData) => {
         getUnitsManager()?.update(data);
+        unitDataTable.refresh( data.units );
         checkSessionHash(data.sessionHash);
     }, false);
     setTimeout(() => requestUpdate(), getConnected() ? 250 : 1000);
