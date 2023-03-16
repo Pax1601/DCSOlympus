@@ -1,22 +1,26 @@
 export class Panel {
     #element: HTMLElement
-    #display: string;
+    #visible: boolean = true;
 
     constructor(ID: string) {
         this.#element = <HTMLElement>document.getElementById(ID);
-        this.#display = '';
-        this.#display = this.#element.style.display;
     }
 
     show() {
-        this.#element.style.display = this.#display;
+        this.#element.classList.toggle("hide", false);
+        this.#visible = true;
     }
 
     hide() {
-        this.#element.style.display = "none";
+        this.#element.classList.toggle("hide", true);
+        this.#visible = false;
     }
 
     getElement() {
         return this.#element;
+    }
+
+    getVisible(){
+        return this.#visible;
     }
 }

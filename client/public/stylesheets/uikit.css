@@ -18,12 +18,6 @@ section {
     flex-wrap: wrap;
 }
 
-.section-header {
-    font-size:125%;
-    font-weight: bold;
-    margin-bottom: 1vh;
-}
-
 .content {
     background:white;
     border-radius: 10px;
@@ -43,12 +37,14 @@ section {
     column-gap: 20px;
     display:flex;
     flex-direction: row;
+    flex-wrap: wrap;
 }
 
 .example {
     align-items: center;
     display:flex;
     flex-direction: column;
+    min-width: 100px;
 }
 
 .caption {
@@ -58,4 +54,48 @@ section {
 
 #paragraph {
     max-width: 750px;
+}
+
+
+#tabs {
+    column-gap: 10px;
+    display: flex;
+    flex-direction: row;
+    margin-bottom:1em;
+}
+
+#tabs > div {
+    background:#660066;
+    border-radius: 5px;
+    color:white;
+    cursor: pointer;
+    padding:6px 10px;
+}
+
+
+#overlaying-planes {
+    background-color:#99ccff;
+    padding:60px;
+    position:relative;
+}
+
+#overlaying-planes .unit:nth-of-type(2) {
+    position: absolute;
+    left: 40px;
+    top: 10px;
+}
+
+.icon-list {
+    text-align: center;
+}
+
+.icon-list {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+}
+
+.icon-list span {
+    display:block;
+    font-size: 12px;
 }

@@ -45,6 +45,9 @@
     <ClInclude Include="include\weapon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\measure.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\aircraft.cpp">
@@ -84,6 +87,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\weapon.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\measure.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

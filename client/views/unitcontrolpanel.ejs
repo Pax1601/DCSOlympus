@@ -1,65 +1,67 @@
-<div class="ol-panel" id="unit-control-panel">
-    <!--
-    <div id="ol-title-label">Selected units</div>
+<div id="unit-control-panel" class="ol-panel ol-panel-padding-lg"> 
 
-    <div id="selected-units-container" class="ol-scrollable">
-    -->
-        <!-- This is where all the unit selection buttons will be shown-->
-        <!--
-    </div>
-    
+    <div id="unit-selection">
 
-    <div id="formation-creation-container" data-feature-switch="ai-formations">
-        <div class="rectangular-button white" id="create-formation"><img src="images\buttons\create.svg">Create formation</div>
-        <div class="rectangular-button white" id="undo-formation"><img src="images\buttons\erase.svg">Undo formation</div>
-    </div>
-    <div class="ol-hl"></div>
-    -->
+        <div id="unit-identification">
+            <div data-object="unit-air-aircraft">
+                <div class="unit-marker"></div>
+                <div class="unit-short-label">18</div>
+            </div>
+            
+            <input id="unit-name" value="Olympus 1-1" readonly disabled />
 
-    <div class="ol-title-label">Controls</div>
-    <div id="flight-controls-buttons-container">
-        <div class="slider-container flight-control-slider" id="altitude-slider">
-            <div class="flight-control-title">Altitude</div>
-            <div class="flight-control-value" id="value"></div>
-            <input type="range" min="1" max="100" value="50" class="slider">
+            <!-- <button id="edit-unit-name" data-on-click="editUnitName"></button> -->
         </div>
-        <div class="slider-container flight-control-slider" id="airspeed-slider">
-            <div class="flight-control-title">Speed</div>
-            <div class="flight-control-value" id="value"></div>
-            <input type="range" min="1" max="100" value="50" class="slider">
+
+        <div id="selected-units-container" class="ol-scroll">
+            <!-- This is where all the unit selection buttons will be shown-->
+            <!-- <button class="pill highlight-coalition" data-coalition="blue" data-short-label="18">Olympus 1-1</button> -->
+        </div>
+
+        <div id="flight-data">
+            <h4>Flight controls</h4>
+            <div class="slider-container flight-control-slider" id="airspeed-slider">
+                <dl class="ol-data-grid">
+                    <dt>Speed</dt>
+                    <dd class="flight-control-value" id="value">451kts</dd>
+                </dl>
+                <input type="range" min="1" max="100" value="0" class="slider">
+            </div>
+
+            <div class="slider-container flight-control-slider" id="altitude-slider">
+                <dl class="ol-data-grid">
+                    <dt>Altitude</dt>
+                    <dd class="flight-control-value" id="value">21,594ft</dd>
+                </dl>
+                <input type="range" min="1" max="100" value="0" class="slider">
+            </div>
+            
         </div>
     </div>
 
- <!--
-    <div id="section-label">Formation</div>
-    <div id="formation-buttons-container">
-        <div class="ol-rectangular-button">Echelon</div>
-        <div class="ol-rectangular-button">Fingertip</div>
-        <div class="ol-rectangular-button">Trail</div>
-        <div class="ol-rectangular-button">Line abreast</div>
-    </div>
--->
+    <!-- <h3>Formation</h3> -->
+    <!-- <div id="formation-buttons-container"> -->
+         <!-- This is where all the formation control buttons will be shown -->
+    <!-- </div> -->
 
-    <div class="ol-hl"></div>
-
-    <div class="ol-title-label">Rules of engagement</div>
-    <div id="roe-buttons-container">
-        <div class="ol-rectangular-button" id="free">Free</div>
-        <div class="ol-rectangular-button" id="designated-free">Designated free</div>
-        <div class="ol-rectangular-button" id="designated">Designated</div>
-        <div class="ol-rectangular-button" id="return">Return</div>
-        <div class="ol-rectangular-button" id="hold">Hold</div>
+    <div id="roe">
+        <h4>Rules of engagement</h4>
+        <div id="roe-buttons-container" class="ol-group ol-button-box">
+             <!-- This is where the roe buttons will be shown -->
+        </div>
     </div>
 
-    <div class="ol-hl"></div>
-
-    <div class="ol-title-label">Reaction to threat</div>
-    <div id="reaction-to-threat-buttons-container">
-        <div class="ol-rectangular-button" id="none">None</div>
-        <div class="ol-rectangular-button" id="passive">Passive</div>
-        <div class="ol-rectangular-button" id="evade">Evade</div>
-        <div class="ol-rectangular-button" id="escape">Escape</div>
-        <div class="ol-rectangular-button" id="abort">Abort</div>
+    <h4>Reaction to threat</h4>
+    <div id="reaction-to-threat-buttons-container" class="ol-group ol-button-box">
+         <!-- This is where the reaction to threat buttons will be shown -->
     </div>
+
+    <hr />
+
+    <button class="ol-button-settings" data-on-click="toggleElements" data-on-click-params='{"selector": "#aircraft-settings-dialog"}'>Adjust settings</button>
+
+    <hr />
+
+    <button class="ol-button-warning">Delete unit</button>
 
 </div>

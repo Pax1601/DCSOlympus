@@ -5,11 +5,12 @@
 class Logger
 {
 public:
-    void Log(const string& sMessage);
-    void Log(const wstring& sMessage);
-    std::list<std::string> getLogs() { return m_logs; };
+    void log(const string& sMessage);
+    void log(const wstring& sMessage);
+    void toJSON(json::value& json, int logsNumber = NULL);
 
     static Logger* GetLogger();
+
 private:
     Logger();
     Logger(const Logger&) {};                               // copy constructor is private
@@ -19,6 +20,8 @@ private:
     static Logger* m_pThis;
     static ofstream m_Logfile;
     static std::list<std::string> m_logs;
+
+    mutex mutexLock;
 
     void Open();
     void Close();

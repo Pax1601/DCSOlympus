@@ -6,7 +6,6 @@ core.user
 core.vcxproj.user
 *.user
 Output
-server
 node_modules
 /client/TODO.txt
 /client/public/javascripts/bundle.js

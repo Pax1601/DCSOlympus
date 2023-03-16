@@ -218,6 +218,8 @@ function Olympus.spawnAircraft(coalition, unitType, lat, lng, spawnOptions)
 			["type"] = unitType,
 			["x"] = spawnLocation.x,
 			["y"] = spawnLocation.z,
+			["alt"] = 20000 * 0.3048,
+            ["alt_type"] = "BARO",
 			["skill"] = "Excellent",
 			["payload"] = 
 			{
@@ -262,6 +264,7 @@ function Olympus.spawnAircraft(coalition, unitType, lat, lng, spawnOptions)
 						["ETA_locked"] = true,
 						["x"] = spawnLocation.x,
 						["y"] = spawnLocation.z,
+                        ["alt_type"] = "BARO",
 						["formation_template"] = "",
 						["airdromeId"] = airbaseID,
 						["speed_locked"] = true,

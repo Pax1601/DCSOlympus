@@ -1,85 +1,98 @@
 import { getUnitsManager } from "..";
 import { Slider } from "../controls/slider";
-import { Aircraft, AirUnit, GroundUnit, Helicopter, NavyUnit, Unit } from "../units/unit";
+import { aircraftDatabase } from "../units/aircraftdatabase";
+import { groundUnitsDatabase } from "../units/groundunitsdatabase";
+import { Aircraft, GroundUnit, Unit } from "../units/unit";
 import { Panel } from "./panel";
 
-interface Button {
-    id: string,
-    value: string,
-    element: null | HTMLElement
-}
+const ROEs: string[] = ["Free", "Designated free", "Designated", "Return", "Hold"];
+const reactionsToThreat: string[] = [ "None", "Passive", "Evade", "Escape", "Abort"];
+const minSpeedValues: {[key: string]: number} = {Aircraft: 100, Helicopter: 0, NavyUnit: 0, GroundUnit: 0};
+const maxSpeedValues: {[key: string]: number} = {Aircraft: 800, Helicopter: 300, NavyUnit: 60, GroundUnit: 60};
+const minAltitudeValues: {[key: string]: number} = {Aircraft: 500, Helicopter: 0, NavyUnit: 0, GroundUnit: 0};
+const maxAltitudeValues: {[key: string]: number} = {Aircraft: 50000, Helicopter: 10000, NavyUnit: 60, GroundUnit: 60};
 
 export class UnitControlPanel extends Panel {
     #altitudeSlider: Slider;
     #airspeedSlider: Slider;
-    #formationCreationContainer: HTMLElement;
-    #ROEButtonsContainer: HTMLElement;
-    #reactionToThreatButtonsContainer: HTMLElement;
-    #selectedUnitsContainer: HTMLElement;
-    #ROEButtons: Button[] = [
-        {id: "#free", value: "Free", element: null}, 
-        {id: "#designated-free", value: "Designated free", element: null}, 
-        {id: "#designated", value: "Designated", element: null}, 
-        {id: "#return", value: "Return", element: null}, 
-        {id: "#hold", value: "Hold", element: null}
-    ]
-    #reactionToThreatButtons: Button[] = [
-        {id: "#none", value: "None", element: null}, 
-        {id: "#passive", value: "Passive", element: null}, 
-        {id: "#evade", value: "Evade", element: null}, 
-        {id: "#escape", value: "Escape", element: null}, 
-        {id: "#abort", value: "Abort", element: null}
-    ]
-
+    #optionButtons: {[key: string]: HTMLButtonElement[]} = {}
+    
     constructor(ID: string) {
         super(ID);
-
-        /* Selected units container */
-        this.#selectedUnitsContainer = <HTMLElement>(this.getElement().querySelector("#selected-units-container"));
 
         /* Unit control sliders */
         this.#altitudeSlider = new Slider("altitude-slider", 0, 100, "ft", (value: number) => getUnitsManager().selectedUnitsSetAltitude(value * 0.3048));
         this.#airspeedSlider = new Slider("airspeed-slider", 0, 100, "kts", (value: number) => getUnitsManager().selectedUnitsSetSpeed(value / 1.94384));
 
-        /* Formation control buttons */
-        this.#formationCreationContainer = <HTMLElement>(this.getElement().querySelector("#formation-creation-container"));
-        //var createButton = <HTMLElement>this.#formationCreationContainer.querySelector("#create-formation");
-        //createButton?.addEventListener("click", () => getUnitsManager().selectedUnitsCreateFormation());
-        //var undoButton = <HTMLElement>this.#formationCreationContainer.querySelector("#undo-formation");
-        //undoButton?.addEventListener("click", () => getUnitsManager().selectedUnitsUndoFormation());
-      
-        /* ROE buttons */
-        this.#ROEButtonsContainer = <HTMLElement>(this.getElement().querySelector("#roe-buttons-container"));
-        for (let button of this.#ROEButtons)
-        {
-            button.element = <HTMLElement>(this.#ROEButtonsContainer.querySelector(button.id));
-            button.element?.addEventListener("click", () => getUnitsManager().selectedUnitsSetROE(button.value));
-        }
-        
-        /* Reaction to threat buttons */
-        this.#reactionToThreatButtonsContainer = <HTMLElement>(this.getElement().querySelector("#reaction-to-threat-buttons-container"));
-        for (let button of this.#reactionToThreatButtons)
-        {
-            button.element = <HTMLElement>(this.#reactionToThreatButtonsContainer.querySelector(button.id));
-            button.element?.addEventListener("click", () => getUnitsManager().selectedUnitsSetReactionToThreat(button.value));
-        }
+        /* Option buttons */
+        this.#optionButtons["ROE"] = ROEs.map((option: string, index:number) => {
+            var button = document.createElement("button");
+            button.title = option;
+            if ( index === 0 ) {
+                button.classList.add( "selected" );
+            }
+            button.addEventListener("click", () => {
+                this.getElement().querySelector("#roe-buttons-container button.selected")?.classList.remove( "selected" );
+                button.classList.add( "selected" );
+                getUnitsManager().selectedUnitsSetROE(button.title);
+            });
+            return button;
+        });
+
+        this.#optionButtons["reactionToThreat"] = reactionsToThreat.map((option: string, index:number) => {
+            var button = document.createElement("button");
+            button.title = option;
+            if ( index === 0 ) {
+                button.classList.add( "selected" );
+            }
+            button.addEventListener("click", () => {
+                this.getElement().querySelector("#reaction-to-threat-buttons-container button.selected")?.classList.remove( "selected" );
+                button.classList.add( "selected" );
+
+                getUnitsManager().selectedUnitsSetROE(button.title);
+            });
+            return button;
+        });
+
+        this.getElement().querySelector("#roe-buttons-container")?.append(...this.#optionButtons["ROE"]);
+        this.getElement().querySelector("#reaction-to-threat-buttons-container")?.append(...this.#optionButtons["reactionToThreat"]);
+
+        document.addEventListener("unitsSelection", (e: CustomEvent<Unit[]>) => {this.show(); this.update(e.detail)});
+        document.addEventListener("clearSelection", () => {this.hide()});        
 
         this.hide();
     }
 
     update(units: Unit[]) {
-        if (this.getElement() != null)
+        if (this.getElement() != null && units.length > 0)
         {
-            //this.#addUnitsButtons(units);
-            //this.#showFormationButtons(units);
-            
             this.#showFlightControlSliders(units);
-
-            for (let button of this.#ROEButtons)
-                button.element?.classList.toggle("white", this.#getROE(units) === button.value);      
+            this.getElement().querySelector("#selected-units-container")?.replaceChildren(...units.map((unit: Unit) =>
+            {
+                var button = document.createElement("button");
+                button.innerText = unit.getBaseData().unitName;
                 
-            for (let button of this.#reactionToThreatButtons)
-                button.element?.classList.toggle("white", this.#getReactionToThreat(units) === button.value);           
+                if (unit instanceof Aircraft)
+                    button.setAttribute( "data-short-label", aircraftDatabase.getShortLabelByName(unit.getBaseData().name));
+                else if (unit instanceof GroundUnit)
+                    button.setAttribute( "data-short-label", groundUnitsDatabase.getShortLabelByName(unit.getBaseData().name));
+                else 
+                    button.setAttribute( "data-short-label", "");
+
+                button.setAttribute( "data-coalition", unit.getMissionData().coalition );
+                button.classList.add( "pill", "highlight-coalition" )
+
+                button.addEventListener("click", () => getUnitsManager().selectUnit(unit.ID, true));
+                return (button);
+            }));
+
+            this.#optionButtons["ROE"].forEach((button: HTMLButtonElement) => {
+                button.classList.toggle("active", units.every((unit: Unit) => unit.getOptionsData().ROE === button.value))
+            });    
+
+            this.#optionButtons["reactionToThreat"].forEach((button: HTMLButtonElement) => {
+                button.classList.toggle("active", units.every((unit: Unit) => unit.getOptionsData().reactionToThreat === button.value))
+            });     
         }
     }
 
@@ -88,263 +101,25 @@ export class UnitControlPanel extends Panel {
         this.#airspeedSlider.show();
         this.#altitudeSlider.show();
 
-        if (this.#checkAllUnitsAircraft(units))
-        {
-            this.#airspeedSlider.setMinMax(100, 600);
-            this.#altitudeSlider.setMinMax(0, 50000);
-        }
-        else if (this.#checkAllUnitsHelicopter(units))
-        {
-            this.#airspeedSlider.setMinMax(0, 200);
-            this.#altitudeSlider.setMinMax(0, 10000);
-        }
-        else if (this.#checkAllUnitsGroundUnit(units))
-        {
-            this.#airspeedSlider.setMinMax(0, 60);
-            this.#altitudeSlider.hide();
-        }
-        else if (this.#checkAllUnitsNavyUnit(units))
-        {
-            this.#airspeedSlider.setMinMax(0, 60);
-            this.#altitudeSlider.hide();
-        }
-        else {
-            this.#airspeedSlider.hide();
-            this.#altitudeSlider.hide();
-        }
+        var unitsType = getUnitsManager().getSelectedUnitsType();
+        var targetAltitude = getUnitsManager().getSelectedUnitsTargetAltitude();
+        var targetSpeed = getUnitsManager().getSelectedUnitsTargetSpeed();
 
-        var targetSpeed = this.#getTargetAirspeed(units);
-        if (targetSpeed != null)
+        if (unitsType != undefined && targetAltitude != undefined && targetSpeed != undefined)
         {
+            if (["GroundUnit", "NavyUnit"].includes(unitsType))
+                this.#altitudeSlider.hide()
+
+            this.#airspeedSlider.setMinMax(minSpeedValues[unitsType], maxSpeedValues[unitsType]);
+            this.#altitudeSlider.setMinMax(minAltitudeValues[unitsType], maxAltitudeValues[unitsType]);
             this.#airspeedSlider.setActive(true);
             this.#airspeedSlider.setValue(targetSpeed * 1.94384);
-        }
-        else
-        {
-            this.#airspeedSlider.setActive(false);
-        }
-
-        var targetAltitude = this.#getTargetAltitude(units);
-        if (targetAltitude != null)
-        {
             this.#altitudeSlider.setActive(true);
             this.#altitudeSlider.setValue(targetAltitude / 0.3048);
         }
-        else
-        {
+        else {
+            this.#airspeedSlider.setActive(false);
             this.#altitudeSlider.setActive(false);
         }
-    }
-
-    #addUnitsButtons(units: Unit[])
-    {
-        /* Remove any pre-existing unit button */
-        var elements = this.#selectedUnitsContainer.getElementsByClassName("js-unit-container");
-        while (elements.length > 0)
-            this.#selectedUnitsContainer.removeChild(elements[0])
-
-        /* Create all the units buttons */
-        for (let unit of units)
-        {
-            this.#addUnitButton(unit, this.#selectedUnitsContainer);
-            if (unit.isLeader)
-                for (let wingman of unit.getWingmen())
-                    this.#addUnitButton(wingman, this.#selectedUnitsContainer);
-        }
-    }
-
-    #addUnitButton(unit: Unit, container: HTMLElement)
-    {
-        var el = document.createElement("div");
-            
-        /* Unit name (actually type, but DCS calls it name for some reason) */
-        var nameDiv = document.createElement("div");
-        nameDiv.classList.add("ol-rounded-container-small");
-        if (unit.name.length >= 7)
-            nameDiv.innerHTML = `${unit.name.substring(0, 4)} ...`;
-        else 
-            nameDiv.innerHTML = `${unit.name}`;
-
-        /* Unit icon */
-        var icon = document.createElement("img");
-        if (unit.isLeader)
-            icon.src = "images/icons/formation.png"
-        else if (unit.isWingman)
-        {
-            var wingmen = unit.getLeader()?.getWingmen();
-            if (wingmen && wingmen.lastIndexOf(unit) == wingmen.length - 1)
-                icon.src = "images/icons/formation-end.svg" 
-            else
-                icon.src = "images/icons/formation-middle.svg" 
-        }
-            
-        else
-            icon.src = "images/icons/singleton.png"
-
-        el.innerHTML = unit.unitName;
-
-        el.prepend(nameDiv);
-
-        /* Show the icon only for air units */
-        if ((unit instanceof AirUnit))
-            el.append(icon);
-
-        el.classList.add("ol-rounded-container", "js-unit-container");
-
-        if (!unit.getSelected())
-            el.classList.add("not-selected")
-
-        /* Set background color */
-        el.classList.toggle("red", unit.coalitionID == 1);
-        icon.classList.toggle("red", unit.coalitionID == 1);
-        el.classList.toggle("blue", unit.coalitionID == 2);
-        icon.classList.toggle("blue", unit.coalitionID == 2);
-        el.classList.toggle("neutral", unit.coalitionID == 0); 
-        icon.classList.toggle("neutral", unit.coalitionID == 0);
-        
-        el.addEventListener("click", () => getUnitsManager().selectUnit(unit.ID));
-        container.appendChild(el);
-    }
-
-    #showFormationButtons(units: Unit[])
-    {
-        var createButton = <HTMLElement>this.#formationCreationContainer.querySelector("#create-formation");
-        var undoButton = <HTMLElement>this.#formationCreationContainer.querySelector("#undo-formation");
-        if (createButton && undoButton && this.#checkAllUnitsAir(units))
-        {
-            if (!this.#checkUnitsAlreadyInFormation(units))
-            {
-                createButton.style.display = '';
-                undoButton.style.display = 'none';
-            }
-            else if (this.#checkUnitsAlreadyInFormation(units) && this.#checkAllUnitsSameFormation(units))
-            {
-                createButton.style.display = 'none';
-                undoButton.style.display = '';
-            }
-            else
-            {
-                createButton.style.display = 'none';
-                undoButton.style.display = 'none';
-            }
-        }
-    }
-
-    #checkAllUnitsAir(units: Unit[])
-    {
-        for (let unit of units)
-            if (!(unit instanceof AirUnit))
-                return false
-        return true
-    }
-
-    #checkAllUnitsAircraft(units: Unit[])
-    {
-        for (let unit of units)
-            if (!(unit instanceof Aircraft))
-                return false
-        return true
-    }
-
-    #checkAllUnitsHelicopter(units: Unit[])
-    {
-        for (let unit of units)
-            if (!(unit instanceof Helicopter))
-                return false
-        return true
-    }
-
-    #checkAllUnitsGroundUnit(units: Unit[])
-    {
-        for (let unit of units)
-            if (!(unit instanceof GroundUnit))
-                return false
-        return true
-    }
-
-    #checkAllUnitsNavyUnit(units: Unit[])
-    {
-        for (let unit of units)
-            if (!(unit instanceof NavyUnit))
-                return false
-        return true
-    }
-
-    #checkAllUnitsSameFormation(units: Unit[])
-    {
-        var leaderFound = false;
-        for (let unit of units)
-        {
-            if (unit.isLeader)
-            {
-                if (leaderFound)
-                    return false
-                else 
-                    leaderFound = true;
-            }
-            if (!unit.isLeader)
-                return false
-        }
-        return true
-    }
-
-    #checkUnitsAlreadyInFormation(units: Unit[])
-    {
-        for (let unit of units)
-            if (unit.isLeader)
-                return true
-        return false
-    }
-
-    #getTargetAirspeed(units: Unit[])
-    {
-        var airspeed = null;
-        for (let unit of units)
-        {
-            if (unit.targetSpeed != airspeed && airspeed != null)
-                return null
-            else
-                airspeed = unit.targetSpeed;
-        }
-        return airspeed;
-    }
-
-    #getTargetAltitude(units: Unit[])
-    {
-        var altitude = null;
-        for (let unit of units)
-        {
-            if (unit.targetAltitude != altitude && altitude != null)
-                return null
-            else
-                altitude = unit.targetAltitude;
-        }
-        return altitude;
-    }
-
-    #getROE(units: Unit[])
-    {
-        var ROE = null;
-        for (let unit of units)
-        {
-            if (unit.ROE !== ROE && ROE != null)
-                return null
-            else
-                ROE = unit.ROE;
-        }
-        return ROE;
-    }
-
-    #getReactionToThreat(units: Unit[])
-    {
-        var reactionToThreat = null;
-        for (let unit of units)
-        {
-            if (unit.reactionToThreat !== reactionToThreat && reactionToThreat != null)
-                return null
-            else
-                reactionToThreat = unit.reactionToThreat;
-        }
-        return reactionToThreat;
     }
 }

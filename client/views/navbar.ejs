@@ -1,0 +1,53 @@
+<nav id="primary-toolbar" class="ol-panel">
+
+    <div id="app-icon" class="ol-select ol-select-image">
+        <div class="ol-select-value icon">
+            <img src="images/icon.png" class="main-logo" />
+        </div>  
+        <div class="ol-select-options">
+            <div id="olympus-toolbar-summary">
+                <h3>Olympus</h3>
+                <div class="accent-green app-version-number">v0.1.0</div>
+            </div>
+            <div>
+                <a href="https://www.discord.com" target="_blank">Discord</a>
+            </div>
+            <div>
+                <a href="https://github.com/Pax1601/DCSOlympus" target="_blank">Github</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="map-type" class="ol-select">
+        <div class="ol-select-value map-source-dropdown">
+            <span>ArcGIS Satellite</span>
+        </div>
+        <div class="ol-select-options">
+            <!-- Here the available map sources will be listed-->
+        </div>
+    </div>
+    
+    <div id="unit-visibility-control" class="ol-group">
+        <button id="unit-visibility-control-aircraft" title="Toggle aircraft' visibility" data-on-click="toggleUnitVisibility" data-on-click-params='{ "unitType": "aircraft" }'></button>
+        <button id="unit-visibility-control-ground" title="Toggle ground units' visibility" data-on-click="toggleUnitVisibility" data-on-click-params='{ "unitType": "ground" }'></button>
+        <button id="unit-visibility-control-sam" title="Toggle SAMs' visibility" data-on-click="toggleUnitVisibility" data-on-click-params='{ "unitType": "sam" }'></button>
+        <button id="unit-visibility-control-threat" title="Toggle threat rings' visibility" data-on-click="toggleUnitVisibility" data-on-click-params='{ "unitType": "threat" }'></button>
+        <button id="unit-visibility-control-naval" title="Toggle naval visibility" data-on-click="toggleUnitVisibility" data-on-click-params='{ "unitType": "naval" }'></button>
+    </div>
+
+    <div id="coalition-visibility-control" class="ol-group ol-group-button-toggle">
+
+        <div>
+            <button id="coalition-visibility-control-blue" data-on-click="toggleCoalitionVisibility" data-on-click-params='{ "coalition": "blue" }'>View <span class="accent-bluefor">BLUEFOR</span></button>
+        </div>
+
+        <div>
+            <button id="coalition-visibility-control-red" data-on-click="toggleCoalitionVisibility" data-on-click-params='{ "coalition": "red" }'>View <span class="accent-redfor">REDFOR</span></button>
+        </div>
+
+        <div>
+            <button id="coalition-visibility-control-neutral" data-on-click="toggleCoalitionVisibility" data-on-click-params='{ "coalition": "neutral" }'>View <span class="accent-neutral">NEUTRAL</span></button>
+        </div>
+        
+    </div>
+</nav>

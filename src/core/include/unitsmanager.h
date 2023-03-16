@@ -13,7 +13,7 @@ public:
 	Unit* getUnit(int ID);
 	void updateExportData(lua_State* L);
 	void updateMissionData(json::value missionData);
-	void updateAnswer(json::value& answer);
+	void getData(json::value& answer, long long time);
 	void deleteUnit(int ID);
 	
 private:

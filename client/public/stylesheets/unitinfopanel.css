@@ -1,130 +1,60 @@
 
-/* Panel properties */
 #unit-info-panel {
-    display: flex;
-    flex-direction: row;
-    padding-left: 30px;
-    padding-right: 30px;
-    padding-top: 20px;
-    padding-bottom: 20px;
+	bottom: 20px;
+	font-size:12px;
+	position: absolute;
+	left: 10px;
+	width: fit-content;
+	z-index: 1000;
 }
 
-/* Common */
-#unit-info-panel>div {
-    height: 100%;
-    width: 100%;
+
+#unit-info-panel #unit-name {
+    line-height: 18px;
+	margin-bottom:10px;
 }
 
-#unit-info-panel>.ol-vl {
-    margin-left: 30px;
-	margin-right: 30px;
+#unit-info-panel #current-task {
+	border-radius: var( --border-radius-lg );
+	margin-top:15px;
 }
 
-/* Sections */
-#unit-info-panel #general {
-    display: flex;
-    flex-flow: row;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    column-gap: 5px;
-    row-gap: 5px;
-    align-content: flex-start;
+#unit-info-panel #current-task::after {
+	content: attr( data-current-task );
+	display:block;
 }
 
-#unit-info-panel #flight-data {
-    display: flex;
-    flex-flow: row;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-content: center;
-    align-items: center;
-    align-content: space-between;
-}
 
 #unit-info-panel #loadout-data {
-    display: flex;
-    flex-flow: row;
-    flex-wrap: wrap;
-    align-content: flex-start;
-    justify-content: flex-start;
-    row-gap: 5px;
+	max-width: 250px;
 }
 
-/* General section */
-#general #unit-name {
-    color: white;
-    font-size: 18px;
-    width: 100%;
-    padding-bottom: 5px;
-    font-weight: 600;
+#unit-info-panel #loadout-data .ol-data-grid {
+	margin: 6px 0;
 }
 
-#general #task {
-    width: 100%;
+#unit-info-panel #loadout-data .ol-data-grid dt:first-child {
+	text-indent: 5px;
 }
 
-/* Flight data section */
-#flight-data #flight-data-label {
-    color: white;
-    font-size: 14px;
-    width: 100%;
-    font-weight: 600;
+#unit-info-panel #loadout-data .ol-data-grid dt:first-child::before {
+	content: url( /images/icons/fuel.svg );
+	display:inline-block;
+	filter:invert(100%);
+	height:16px;
+	text-indent:5px;
+	translate:-10px 5%;
+	width:16px;
 }
 
-#flight-data #latitude {
-    width: 50%;
-    color: white;
-    font-size: 13px;
-    text-align: center;
-    font-weight: 600;
-    color: #8bff63;
-} 
-
-#flight-data #longitude {
-    width: 50%;
-    color: white;
-    font-size: 13px;
-    text-align: center;
-    font-weight: 600;
-    color: #5ca7ff;
-} 
-
-.flight-data-label, .flight-data-value {
-    color: white;
-    font-size: 12px;
-    padding-left: 10px;
+#unit-info-panel #loadout-fuel-level::after {
+	content: attr( data-fuel-level ) "%";
 }
 
-.flight-data-icon {
-    width: 10%;
-    padding: 2px;
-    filter: invert(100%);
+#unit-info-panel #loadout-container .loadout-item {
+	background-color: black;
 }
 
-.flight-data-label {
-    width: 58%;
-}
-
-.flight-data-value {
-    width: 30%;
-    font-weight: 600;
-    text-align: right;
-}
-
-/* Loadout section */
-#loadout-data #loadout-label {
-    color: white;
-    font-size: 14px;
-    width: 100%;
-    font-weight: 600;
-}
-
-#loadout-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    column-gap: 2px;
-    row-gap: 2px;
-    min-height: 0px;
-    max-height: 70px; /* TODO: fix me, magic number */
+#unit-info-panel #loadout-container .loadout-item::before {
+	content: attr( data-loadout-item ) ' \d7  ' attr( data-loadout-qty );
 }

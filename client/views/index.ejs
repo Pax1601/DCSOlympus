@@ -2,11 +2,12 @@
 
 <head>
   <title>Olympus client</title>
-  <link rel="stylesheet" href="/stylesheets/style.css">
+  <link rel="stylesheet" type="text/css" href="./themes/olympus/olympus.css" />
+  <link rel="stylesheet" type="text/css" href="stylesheets/olympus.css" />
   <link rel="stylesheet" href="stylesheets/leaflet.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;600&display=swap" rel="stylesheet"> 
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;600;700;800&display=swap" rel="stylesheet"> 
 
   <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z4L2TC3YX0"></script>
@@ -14,7 +15,6 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-Z4L2TC3YX0');
 </script>
 
@@ -22,22 +22,20 @@
 
 <body>
   <div id="map-container"></div>
-  <%- include('selectionwheel.ejs') %>
-  <%- include('selectionscroll.ejs') %>
-  <div class="ol-dropdown" id="map-source-dropdown"></div>
-  <!-- <div class="ol-dropdown" id="scenario-dropdown"></div> -->
-  <%- include('unitinfopanel.ejs') %>
+  <%- include('aic.ejs') %>
+  <%- include('atc.ejs') %>
+
+  <%- include('contextmenus.ejs') %>
   <%- include('unitcontrolpanel.ejs') %>
-  <%- include('visibilitycontrolpanel.ejs') %>
-  <%- include('connectionstatuspanel.ejs') %> 
+  <%- include('unitinfopanel.ejs') %>
   <%- include('mouseinfopanel.ejs') %>
-
-  <%- include('aiccontrolpanel.ejs') %>
-  <%- include('aicformationpanel.ejs') %>
-
-  <%- include( 'atc.ejs' ) %>
-
-  <%- include('logpanel.ejs') %>
+  <%- include('navbar.ejs') %>
+  <%- include('connectionstatuspanel.ejs') %>
+  <%- include('dialogs.ejs') %>
+  
+  <% /* %>
+  <%- include('log.ejs') %> 
+  <% */ %>
   <script src="javascripts/bundle.js"></script>
 </body>
 

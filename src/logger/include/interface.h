@@ -3,4 +3,4 @@
 
 void DllExport log(const std::string& sMessage);
 void DllExport log(const std::wstring& sMessage);
-std::list<std::string> DllExport getLogs();
+void DllExport getLogsJSON(json::value& json, int logsNumber = NULL);

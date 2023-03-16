@@ -1,33 +1,35 @@
-<div class="ol-panel padding-large" id="unit-info-panel">
-    <div id="general">
-        <div id="unit-name"></div>
-        <div class="ol-rectangular-container" id="name"></div>
-        <div class="ol-rectangular-container" id="group-name"></div>
-        <div class="ol-rounded-container" id="task"></div>
-    </div>
-    <div class="ol-vl h-margin-largest"></div>
-    <div id="flight-data">
-        <div id="flight-data-label">Flight data</div>
-        <div id="latitude"></div>
-        <div id="longitude"></div>
-        <img class="flight-data-icon" src="images/icons/speed.svg">
-        <div class="flight-data-label">Ground Speed</div>
-        <div class="flight-data-value" id="ground-speed"></div>
-        <img class="flight-data-icon" src="images/icons/altitude.svg">
-        <div class="flight-data-label">Altitude</div>
-        <div class="flight-data-value" id="altitude"></div>
-        <img class="flight-data-icon" src="images/icons/heading.svg">
-        <div class="flight-data-label">Heading</div>
-        <div class="flight-data-value" id="heading"></div>
-    </div>
-    <div class="ol-vl h-margin-largest"></div>
-    <div id="loadout-data">
-        <div id="loadout-label">Loadout</div>
-        <img class="flight-data-icon" src="images/icons/fuel.svg">
-        <div class="flight-data-label">Fuel</div>
-        <div class="flight-data-value" id="fuel"></div>
-        <div id="loadout-container" class="ol-scrollable">
-            <!-- Unit loadout will be shown here -->
+<div id="unit-info-panel" class="ol-panel" >
+
+    <div class="ol-panel-board">
+
+        <div id="general" class="panel-section">
+            <h3 id="unit-name">Olympus 1-1</h3>
+            <div class="ol-group">
+                <div id="name" class="pill highlight-primary">Name</div>
+                <div id="group-name" class="pill highlight-primary">Group</div>
+                <div id="task" class="pill highlight-primary">Task</div>
+            </div>
+            <div id="current-task" class="pill highlight-coalition" data-coalition="blue" data-current-task="Orbiting in place"></div>
         </div>
+
+        <div id="loadout-data" class="panel-section">
+            
+            <h4 id="loadout-label">Loadout</h4>
+            
+            <dl class="ol-data-grid">
+                <dt>Fuel</dt>
+                <dd id="loadout-fuel-level" data-fuel-level="69"></dd>
+            </dl>
+
+            <div id="loadout-container" class="ol-group wrap">
+                <div class="pill loadout-item" data-loadout-qty="4" data-loadout-item="AIM-120"></div>
+                <div class="pill loadout-item" data-loadout-qty="4" data-loadout-item="AIM-54"></div>
+                <div class="pill loadout-item" data-loadout-qty="2" data-loadout-item="AIM-9P"></div>
+                <div class="pill loadout-item" data-loadout-qty="895" data-loadout-item="bullets"></div>
+            </div>
+
+        </div>
+
     </div>
+
 </div>

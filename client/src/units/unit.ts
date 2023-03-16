@@ -1,14 +1,9 @@
-import { Marker, LatLng, Polyline, Icon } from 'leaflet';
-import { getMap, getUnitsManager} from '..';
-import { UnitMarker, MarkerOptions, AircraftMarker, HelicopterMarker, GroundUnitMarker, NavyUnitMarker, WeaponMarker, MissileMarker, BombMarker } from './unitmarker';
-import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, landAt, setAltitude, setReactionToThreat, setROE, setSpeed } from '../dcs/dcs';
-
-interface VisibilityOptions {
-    dead: string;
-    ai: string;
-    uncontrolled: string;
-    human: string;
-}
+import { Marker, LatLng, Polyline, Icon, DivIcon } from 'leaflet';
+import { getMap, getUnitsManager } from '..';
+import { rad2deg } from '../other/utils';
+import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, landAt, setAltitude, setReactionToThreat, setROE, setSpeed } from '../server/server';
+import { aircraftDatabase } from './aircraftdatabase';
+import { groundUnitsDatabase } from './groundunitsdatabase';
 
 var pathIcon = new Icon({
     iconUrl: 'images/marker-icon.png',
@@ -16,110 +11,207 @@ var pathIcon = new Icon({
     iconAnchor: [13, 41]
 });
 
-export class Unit {
-    ID: number = -1;
-    AI: boolean = false;
-    formation: string = "";
-    name: string = "";
-    unitName: string = "";
-    groupName: string = "";
-    latitude: number = 0;
-    longitude: number = 0;
-    altitude: number = 0;
-    heading: number = 0;
-    speed: number = 0;
-    coalitionID: number = -1;
-    alive: boolean = true;
-    currentTask: string = "";
-    fuel: number = 0;
-    type: any = null;
-    flags: any = null;
-    activePath: any = null;
-    ammo: any = null;
-    targets: any = null;
-    hasTask: boolean = false;
-    isLeader: boolean = false;
-    isWingman: boolean = false;
-    leaderID: number = 0;
-    wingmen: Unit[] = [];
-    wingmenIDs: number[] = [];
-    targetSpeed: number = 0;
-    targetAltitude: number = 0;
-    ROE: string = "";
-    reactionToThreat: string = "";
-    
+export class Unit extends Marker {
+    ID: number;
+
+    #data: UnitData = {
+        baseData: {
+            AI: false,
+            name: "",
+            unitName: "",
+            groupName: "",
+            alive: true,
+            category: "",
+        },
+        flightData: {
+            latitude: 0,
+            longitude: 0,
+            altitude: 0,
+            heading: 0,
+            speed: 0,
+        },
+        missionData: {
+            fuel: 0,
+            flags: {},
+            ammo: {},
+            targets: {},
+            hasTask: false,
+            coalition: "",
+        },
+        formationData: {
+            formation: "",
+            isLeader: false,
+            isWingman: false,
+            leaderID: 0,
+            wingmenIDs: [],
+        },
+        taskData: {
+            currentTask: "",
+            activePath: {},
+            targetSpeed: 0,
+            targetAltitude: 0,
+        },
+        optionsData: {
+            ROE: "",
+            reactionToThreat: "",
+        }
+    };
+
     #selectable: boolean;
     #selected: boolean = false;
+
     #preventClick: boolean = false;
+
     #pathMarkers: Marker[] = [];
     #pathPolyline: Polyline;
     #targetsPolylines: Polyline[];
-    #marker: UnitMarker;
+
     #timer: number = 0;
     #forceUpdate: boolean = false;
 
-    static getConstructor(name: string) {
-        if (name === "GroundUnit") return GroundUnit;
-        if (name === "Aircraft") return Aircraft;
-        if (name === "Helicopter") return Helicopter;
-        if (name === "Missile") return Missile;
-        if (name === "Bomb") return Bomb;
-        if (name === "NavyUnit") return NavyUnit;
+    static getConstructor(type: string) {
+        if (type === "GroundUnit") return GroundUnit;
+        if (type === "Aircraft") return Aircraft;
+        if (type === "Helicopter") return Helicopter;
+        if (type === "Missile") return Missile;
+        if (type === "Bomb") return Bomb;
+        if (type === "NavyUnit") return NavyUnit;
     }
 
-    constructor(ID: number, marker: UnitMarker) {
+    constructor(ID: number, data: UpdateData, html: string) {
+        super(new LatLng(0, 0), { riseOnHover: true });
+
         this.ID = ID;
 
         this.#selectable = true;
+        
+        this.on('click', (e) => this.#onClick(e));
+        this.on('dblclick', (e) => this.#onDoubleClick(e));
+        this.on('contextmenu', (e) => this.#onContextMenu(e));
 
-        /* The marker is set by the inherited class */
-        this.#marker = marker;
-        this.#marker.on('click', (e) => this.#onClick(e));
-        this.#marker.on('dblclick', (e) => this.#onDoubleClick(e));
-        this.#marker.on('contextmenu', (e) => this.#onContextMenu(e));
+        var icon = new DivIcon({
+            html: html,
+            className: 'leaflet-unit-marker',
+            iconAnchor: [0, 0]
+        });
+        this.setIcon(icon);
 
         this.#pathPolyline = new Polyline([], { color: '#2d3e50', weight: 3, opacity: 0.5, smoothFactor: 1 });
         this.#pathPolyline.addTo(getMap());
         this.#targetsPolylines = [];
+
+        this.setData(data);
     }
 
-    update(response: any) {
+    setData(data: UpdateData) {
+        document.dispatchEvent(new CustomEvent("unitUpdated", { detail: this }));
         var updateMarker = false;
-        if (this.latitude != response['latitude'] || this.longitude != response['longitude'] || this.alive != response['alive'] || this.#forceUpdate)
+        if (this.getFlightData().latitude != data.flightData.latitude || 
+            this.getFlightData().longitude != data.flightData.longitude || 
+            this.getBaseData().alive != data.baseData.alive || this.#forceUpdate || !getMap().hasLayer(this))
             updateMarker = true;
+            
 
-        for (let entry in response) {
-            // @ts-ignore TODO handle better
-            this[entry] = response[entry];
+        if (data.baseData != undefined)
+        {
+            for (let key in this.#data.baseData)
+                if (key in data.baseData)
+                    //@ts-ignore
+                    this.#data.baseData[key] = data.baseData[key];
         }
 
-        // TODO handle better
-        if (response['activePath'] == undefined)
-            this.activePath = null
+        if (data.flightData != undefined)
+        {
+            for (let key in this.#data.flightData)
+                if (key in data.flightData)
+                    //@ts-ignore
+                    this.#data.flightData[key] = data.flightData[key];
+        }
+
+        if (data.missionData != undefined)
+        {
+            for (let key in this.#data.missionData)
+                if (key in data.missionData)
+                    //@ts-ignore
+                    this.#data.missionData[key] = data.missionData[key];
+        }
+
+        if (data.formationData != undefined)
+        {
+            for (let key in this.#data.formationData)
+                if (key in data.formationData)
+                    //@ts-ignore
+                    this.#data.formationData[key] = data.formationData[key];
+        }
+
+        if (data.taskData != undefined)
+        {
+            for (let key in this.#data.taskData)
+                if (key in data.taskData)
+                    //@ts-ignore
+                    this.#data.taskData[key] = data.taskData[key];
+        }
+
+        if (data.optionsData != undefined)
+        {
+            for (let key in this.#data.optionsData)
+                if (key in data.optionsData)
+                    //@ts-ignore
+                    this.#data.optionsData[key] = data.optionsData[key];
+        }
 
         /* Dead units can't be selected */
-        this.setSelected(this.getSelected() && this.alive)
+        this.setSelected(this.getSelected() && this.getBaseData().alive)
 
         if (updateMarker)
             this.#updateMarker();
 
         this.#clearTargets();
-        if (this.getSelected() && this.activePath != null)
-        {
+        if (this.getSelected()) {
             this.#drawPath();
             this.#drawTargets();
         }
         else
-            this.#clearPath();        
+            this.#clearPath();
+    }
+
+    getData() {
+        return this.#data;
+    }
+
+    getBaseData() {
+        return this.getData().baseData;
+    }
+
+    getFlightData() {
+        return this.getData().flightData;
+    }
+
+    getTaskData() {
+        return this.getData().taskData;
+    }
+
+    getMissionData() {
+        return this.getData().missionData;
+    }
+
+    getFormationData() {
+        return this.getData().formationData;
+    }
+
+    getOptionsData() {
+        return this.getData().optionsData;
     }
 
     setSelected(selected: boolean) {
         /* Only alive units can be selected. Some units are not selectable (weapons) */
-        if ((this.alive || !selected) && this.#selectable && this.#selected != selected) {
+        if ((this.getBaseData().alive || !selected) && this.#selectable && this.#selected != selected) {
             this.#selected = selected;
-            this.#marker.setSelected(selected);
-            getUnitsManager().onUnitSelection();
-
+            this.getElement()?.querySelector( `[data-object|="unit"]` )?.toggleAttribute( "data-is-selected" );
+            if (selected)
+                document.dispatchEvent(new CustomEvent("unitSelection", { detail: this }));
+            else
+                document.dispatchEvent(new CustomEvent("unitDeselection", { detail: this }));
         }
     }
 
@@ -137,8 +229,8 @@ export class Unit {
 
     addDestination(latlng: L.LatLng) {
         var path: any = {};
-        if (this.activePath != null) {
-            path = this.activePath;
+        if (this.getTaskData().activePath != undefined) {
+            path = this.getTaskData().activePath;
             path[(Object.keys(path).length + 1).toString()] = latlng;
         }
         else {
@@ -148,7 +240,7 @@ export class Unit {
     }
 
     clearDestinations() {
-        this.activePath = null;
+        this.getTaskData().activePath = undefined;
     }
 
     getHidden() {
@@ -156,7 +248,7 @@ export class Unit {
     }
 
     getLeader() {
-        return getUnitsManager().getUnitByID(this.leaderID);
+        return getUnitsManager().getUnitByID(this.getFormationData().leaderID);
     }
 
     getFormation() {
@@ -165,10 +257,8 @@ export class Unit {
 
     getWingmen() {
         var wingmen: Unit[] = [];
-        if (this.wingmenIDs != null)
-        {
-            for (let ID of this.wingmenIDs)
-            {
+        if (this.getFormationData().wingmenIDs != undefined) {
+            for (let ID of this.getFormationData().wingmenIDs) {
                 var unit = getUnitsManager().getUnitByID(ID)
                 if (unit)
                     wingmen.push(unit);
@@ -177,9 +267,54 @@ export class Unit {
         return wingmen;
     }
 
-    forceUpdate()
-    {
+    forceUpdate() {
         this.#forceUpdate = true;
+    }
+
+    attackUnit(targetID: number) {
+        /* Call DCS attackUnit function */
+        if (this.ID != targetID) {
+            attackUnit(this.ID, targetID);
+        }
+        else {
+            // TODO: show a message
+        }
+    }
+
+    landAt(latlng: LatLng) {
+        landAt(this.ID, latlng);
+    }
+
+    changeSpeed(speedChange: string) {
+        changeSpeed(this.ID, speedChange);
+    }
+
+    changeAltitude(altitudeChange: string) {
+        changeAltitude(this.ID, altitudeChange);
+    }
+
+    setSpeed(speed: number) {
+        setSpeed(this.ID, speed);
+    }
+
+    setAltitude(altitude: number) {
+        setAltitude(this.ID, altitude);
+    }
+
+    setROE(ROE: string) {
+        setROE(this.ID, ROE);
+    }
+
+    setReactionToThreat(reactionToThreat: string) {
+        setReactionToThreat(this.ID, reactionToThreat);
+    }
+
+    setLeader(isLeader: boolean, wingmenIDs: number[] = []) {
+        setLeader(this.ID, isLeader, wingmenIDs);
+    }
+
+    delete() {
+        deleteUnit(this.ID);
     }
 
     #onClick(e: any) {
@@ -203,63 +338,77 @@ export class Unit {
 
     #onContextMenu(e: any) {
         var options = [
-            'Attack',
-            'Follow'
+            'Attack'
         ]
-
-        getMap().showSelectionScroll(e.originalEvent, "Action: " + this.unitName, options, (action: string) => this.#executeAction(action));
+        getMap().showUnitContextMenu(e);
+        getMap().getUnitContextMenu().setOptions(options, (option: string) => {
+            getMap().hideUnitContextMenu();
+            this.#executeAction(option);
+        });
     }
 
     #executeAction(action: string) {
-        getMap().hideSelectionScroll();
         if (action === "Attack")
             getUnitsManager().selectedUnitsAttackUnit(this.ID);
     }
 
     #updateMarker() {
         /* Add the marker if not present */
-        if (!getMap().hasLayer(this.#marker) && !this.getHidden()) {
-            this.#marker.addTo(getMap());
+        if (!getMap().hasLayer(this) && !this.getHidden()) {
+            this.addTo(getMap());
         }
 
         /* Hide the marker if necessary*/
-        if (getMap().hasLayer(this.#marker) && this.getHidden()) {
-            getMap().removeLayer(this.#marker);
+        if (getMap().hasLayer(this) && this.getHidden()) {
+            getMap().removeLayer(this);
         }
-        else
-        {
-            this.#marker.setLatLng(new LatLng(this.latitude, this.longitude));
-            this.#marker.draw({
-                heading: this.heading,
-                speed: this.speed,
-                altitude: this.altitude,
-                alive: this.alive
-            });
+        else {
+            this.setLatLng(new LatLng(this.getFlightData().latitude, this.getFlightData().longitude));
+            var element = this.getElement();
+            if (element != null) {
+                element.querySelector(".unit-vvi")?.setAttribute("style", `height: ${15 + this.getFlightData().speed / 5}px; transform:rotate(${rad2deg(this.getFlightData().heading)}deg);`);
+                element.querySelector(".unit")?.setAttribute("data-pilot", this.getMissionData().flags.human? "human": "ai");
+
+                element.querySelector(".unit-fuel-level")?.setAttribute("style", `width: ${this.getMissionData().fuel}%`);
+                element.querySelector(".unit")?.toggleAttribute("data-has-low-fuel", this.getMissionData().fuel < 20);
+
+                element.querySelector(".unit")?.toggleAttribute("data-is-dead", !this.getBaseData().alive);
+
+                var unitHeadingDiv = element.querySelector(".unit-heading");
+                if (unitHeadingDiv != null)
+                    unitHeadingDiv.innerHTML = String(Math.floor(rad2deg(this.getFlightData().heading)));
+
+                var unitAltitudeDiv = element.querySelector(".unit-altitude");
+                if (unitAltitudeDiv != null)
+                    unitAltitudeDiv.innerHTML = String(Math.floor(this.getFlightData().altitude / 0.3048 / 1000));
+            }
+            var pos = getMap().latLngToLayerPoint(this.getLatLng()).round();
+            this.setZIndexOffset(1000 + Math.floor(this.getFlightData().altitude) - pos.y);
         }
 
         this.#forceUpdate = false;
     }
 
     #drawPath() {
-        if (this.activePath != null) {
+        if (this.getTaskData().activePath != undefined) {
             var points = [];
-            points.push(new LatLng(this.latitude, this.longitude));
+            points.push(new LatLng(this.getFlightData().latitude, this.getFlightData().longitude));
 
             /* Add markers if missing */
-            while (this.#pathMarkers.length < Object.keys(this.activePath).length) {
+            while (this.#pathMarkers.length < Object.keys(this.getTaskData().activePath).length) {
                 var marker = new Marker([0, 0], { icon: pathIcon }).addTo(getMap());
                 this.#pathMarkers.push(marker);
             }
 
             /* Remove markers if too many */
-            while (this.#pathMarkers.length > Object.keys(this.activePath).length) {
+            while (this.#pathMarkers.length > Object.keys(this.getTaskData().activePath).length) {
                 getMap().removeLayer(this.#pathMarkers[this.#pathMarkers.length - 1]);
                 this.#pathMarkers.splice(this.#pathMarkers.length - 1, 1)
             }
 
             /* Update the position of the existing markers (to avoid creating markers uselessly) */
-            for (let WP in this.activePath) {
-                var destination = this.activePath[WP];
+            for (let WP in this.getTaskData().activePath) {
+                var destination = this.getTaskData().activePath[WP];
                 this.#pathMarkers[parseInt(WP) - 1].setLatLng([destination.lat, destination.lng]);
                 points.push(new LatLng(destination.lat, destination.lng));
                 this.#pathPolyline.setLatLngs(points);
@@ -275,36 +424,25 @@ export class Unit {
         this.#pathPolyline.setLatLngs([]);
     }
 
-    #drawTargets()
-    {
-        for (let typeIndex in this.targets)
-        {
-            for (let index in this.targets[typeIndex])
-            {
-                var targetData = this.targets[typeIndex][index];
+    #drawTargets() {
+        for (let typeIndex in this.getMissionData().targets) {
+            for (let index in this.getMissionData().targets[typeIndex]) {
+                var targetData = this.getMissionData().targets[typeIndex][index];
                 var target = getUnitsManager().getUnitByID(targetData.object["id_"])
-                if (target != null){
-                    var startLatLng = new LatLng(this.latitude, this.longitude)
-                    var endLatLng = new LatLng(target.latitude, target.longitude)
-                    
+                if (target != null) {
+                    var startLatLng = new LatLng(this.getFlightData().latitude, this.getFlightData().longitude)
+                    var endLatLng = new LatLng(target.getFlightData().latitude, target.getFlightData().longitude)
+
                     var color;
                     if (typeIndex === "radar")
-                    {
                         color = "#FFFF00";
-                    }
                     else if (typeIndex === "visual")
-                    {
                         color = "#FF00FF";
-                    }
                     else if (typeIndex === "rwr")
-                    {
                         color = "#00FF00";
-                    }
                     else
-                    {
                         color = "#FFFFFF";
-                    }
-                    var targetPolyline = new Polyline([startLatLng, endLatLng], {color: color, weight: 3, opacity: 1, smoothFactor: 1});
+                    var targetPolyline = new Polyline([startLatLng, endLatLng], { color: color, weight: 3, opacity: 1, smoothFactor: 1 });
                     targetPolyline.addTo(getMap());
                     this.#targetsPolylines.push(targetPolyline)
                 }
@@ -312,237 +450,116 @@ export class Unit {
         }
     }
 
-    #clearTargets()
-    {
-        for (let index in this.#targetsPolylines)
-        {
+    #clearTargets() {
+        for (let index in this.#targetsPolylines) {
             getMap().removeLayer(this.#targetsPolylines[index])
         }
     }
-    
-    attackUnit(targetID: number) {
-        /* Call DCS attackUnit function */
-        if (this.ID != targetID) {
-            attackUnit(this.ID, targetID);
-        }
-        else {
-            // TODO: show a message
-        }
-    }
-
-    landAt(latlng: LatLng)
-    {
-        landAt(this.ID, latlng);
-    }
-
-    changeSpeed(speedChange: string)
-    {
-       changeSpeed(this.ID, speedChange);
-    }
-
-    changeAltitude(altitudeChange: string)
-    {
-        changeAltitude(this.ID, altitudeChange);
-    }
-
-    setSpeed(speed: number)
-    {
-       setSpeed(this.ID, speed);
-    }
-
-    setAltitude(altitude: number)
-    {
-        setAltitude(this.ID, altitude);
-    }
-
-    setROE(ROE: string)
-    {
-        setROE(this.ID, ROE);
-    }
-
-    setReactionToThreat(reactionToThreat: string)
-    {
-        setReactionToThreat(this.ID, reactionToThreat);
-    }
-
-    /*
-    setformation(formation)
-    {
-        // TODO move in dedicated file
-        var xhr = new XMLHttpRequest();
-        xhr.open("PUT", RESTaddress);
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.onreadystatechange = () => {
-            if (xhr.readyState === 4) {
-                console.log(this.unitName + " formation change: " + formation);
-            }
-        };
-
-        var command = {"ID": this.ID, "formation": formation}
-        var data = {"setFormation": command}
-
-        xhr.send(JSON.stringify(data));
-    }
-    */
-
-    setLeader(isLeader: boolean, wingmenIDs: number[] = [])
-    {
-        setLeader(this.ID, isLeader, wingmenIDs);
-    }
-    
 }
 
 export class AirUnit extends Unit {
-    static visibility: VisibilityOptions = {dead: "hidden", ai: "partial", uncontrolled: "partial", human: "full"}
-    static setVisibility(visibility: VisibilityOptions)
-    {
-        getUnitsManager().forceUpdate();
-        AirUnit.visibility = visibility;
-    }
-
-    static getVisibility()
-    {
-        return AirUnit.visibility;
-    }
-
     getHidden() {
-        if (this.alive)
-        {
-            if (this.flags.user)
-                return AirUnit.getVisibility().human === "hidden"
-
-            if (this.AI)
-                return AirUnit.getVisibility().ai === "hidden"
-            else
-                return AirUnit.getVisibility().uncontrolled === "hidden"
-        }
-        else
-        {
-            return AirUnit.getVisibility().dead === "hidden"
-        }
+        return false;
     }
 }
 
 export class Aircraft extends AirUnit {
-    constructor(ID: number, options: MarkerOptions) {
-        var marker = new AircraftMarker(options);
-        super(ID, marker);
+    constructor(ID: number, data: UnitData) {
+        super(ID, data,
+           `<div class="unit" data-object="unit-air-aircraft" data-status="" data-coalition="${data.missionData.coalition}">
+                <div class="unit-selected-spotlight"></div>
+                <div class="unit-marker-border"></div>
+                <div class="unit-status"></div>
+                <div class="unit-vvi"></div>
+                <div class="unit-hotgroup">
+                    <div class="unit-hotgroup-id"></div>
+                </div>
+                <div class="unit-marker"></div>
+                <div class="unit-short-label">${aircraftDatabase.getShortLabelByName(data.baseData.name)}</div>
+                <div class="unit-fuel">
+                    <div class="unit-fuel-level" style="width:100%;"></div>
+                </div>
+                <div class="unit-ammo">
+                    <div class="unit-ammo-fox-1"></div>
+                    <div class="unit-ammo-fox-2"></div>
+                    <div class="unit-ammo-fox-3"></div>
+                    <div class="unit-ammo-other"></div>
+                </div>
+                <div class="unit-summary">
+                    <div class="unit-callsign">${data.baseData.unitName}</div>
+                    <div class="unit-heading"></div>
+                    <div class="unit-altitude"></div>
+                </div>
+            </div>`);
     }
 }
 
 export class Helicopter extends AirUnit {
-    constructor(ID: number, options: MarkerOptions) {
-        var marker = new HelicopterMarker(options);
-        super(ID, marker);
+    constructor(ID: number, data: UnitData) {
+        super(ID, data, 
+            ``);
     }
 }
 
 export class GroundUnit extends Unit {
-    static visibility: VisibilityOptions = {dead: "hidden", ai: "partial", uncontrolled: "partial", human: "partial"}
-    static setVisibility(visibility: VisibilityOptions)
-    {
-        getUnitsManager().forceUpdate();
-        GroundUnit.visibility = visibility;
-    }
+    constructor(ID: number, data: UnitData) {
+        // TODO this is very messy
+        var role = groundUnitsDatabase.getByName(data.baseData.name)?.loadouts[0].roles[0];
+        if (role == undefined)
+            role = "U";
+        var roleType = (role === "SAM") ? "sam" : "mi";
 
-    static getVisibility()
-    {
-        return GroundUnit.visibility;
-    }
-
-    constructor(ID: number, options: MarkerOptions) {
-        var marker = new GroundUnitMarker(options);
-        super(ID, marker);
+        super(ID, data, `
+            <div class="unit" data-object="unit-ground-${roleType}" data-coalition="${data.missionData.coalition}">
+                <div class="unit-selected-spotlight"></div>
+                <div class="unit-marker"></div>
+                <div class="unit-short-label">${role?.substring(0, 1).toUpperCase()}</div>
+            </div>
+        `);
     }
 
     getHidden() {
-        if (this.alive)
-        {
-            if (this.flags.user)
-                return GroundUnit.getVisibility().human === "hidden"
-
-            if (this.AI)
-                return GroundUnit.getVisibility().ai === "hidden"
-            else
-                return GroundUnit.getVisibility().uncontrolled === "hidden"
-        }
-        else
-        {
-            return GroundUnit.getVisibility().dead === "hidden"
-        }
+        return false;
     }
 }
 
 export class NavyUnit extends Unit {
-    static visibility: VisibilityOptions = {dead: "hidden", ai: "partial", uncontrolled: "partial", human: "partial"}
-    static setVisibility(visibility: VisibilityOptions)
-    {
-        getUnitsManager().forceUpdate();
-        NavyUnit.visibility = visibility;
-    }
-
-    static getVisibility()
-    {
-        return NavyUnit.visibility;
-    }
-
-    constructor(ID: number, options: MarkerOptions) {
-        var marker = new NavyUnitMarker(options);
-        super(ID, marker);
+    constructor(ID: number, data: UnitData) {
+        super(ID, data, `
+            <div class="unit" data-object="unit-naval" data-coalition="${data.missionData.coalition}">
+                <div class="unit-selected-spotlight"></div>
+                <div class="unit-marker"></div>
+                <div class="unit-short-label">N</div>
+            </div>
+        `);
     }
 
     getHidden() {
-        if (this.alive)
-        {
-            if (this.AI)
-                return NavyUnit.getVisibility().ai === "hidden"
-            else
-                return NavyUnit.getVisibility().uncontrolled === "hidden"
-        }
-        else
-        {
-            return NavyUnit.getVisibility().dead === "hidden"
-        }
+        return false;
     }
 }
 
 export class Weapon extends Unit {
-    static visibility: VisibilityOptions = {dead: "hidden", ai: "partial", uncontrolled: "partial", human: "partial"}
-    static setVisibility(visibility: VisibilityOptions)
-    {
-        getUnitsManager().forceUpdate();
-        Weapon.visibility = visibility;
-    }
-
-    static getVisibility()
-    {
-        return Weapon.visibility;
-    }
-
-    constructor(ID: number, marker: UnitMarker)
-    {
-        super(ID, marker);
+    constructor(ID: number, data: UnitData, html: string) {
+        super(ID, data, html);
         this.setSelectable(false);
-    }
-
-    getHidden() {
-        if (this.alive)
-            return Weapon.getVisibility().uncontrolled === "hidden"
-        else
-            return true;
     }
 }
 
 export class Missile extends Weapon {
-    constructor(ID: number, options: MarkerOptions) {
-        var marker = new MissileMarker(options);
-        super(ID, marker);
+    constructor(ID: number, data: UnitData) {
+        super(ID, data, `
+            <div class="unit" data-object="unit-weapon-missile" data-coalition="${data.missionData.coalition}">
+                <div class="unit-selected-spotlight"></div>
+                <div class="unit-marker"></div>
+                <div class="unit-short-label"></div>
+            </div>
+        `);
     }
 }
 
 export class Bomb extends Weapon {
-    constructor(ID: number, options: MarkerOptions) {
-        var marker = new BombMarker(options);
-        super(ID, marker);
+    constructor(ID: number, data: UnitData) {
+        super(ID, data, "");
     }
 }

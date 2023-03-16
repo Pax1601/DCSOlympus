@@ -7,11 +7,16 @@
 #include <exception>
 #include <stdexcept>
 
+#include <chrono>
+using namespace std::chrono;
+
 extern UnitsManager* unitsManager; 
 extern Scheduler* scheduler;
-extern json::value airbasesData;
-extern json::value bullseyeData;
+extern json::value airbases;
+extern json::value bullseyes;
+extern json::value mission;
 extern mutex mutexLock;
+extern string sessionHash;
 
 void handle_eptr(std::exception_ptr eptr)
 {
@@ -26,15 +31,24 @@ void handle_eptr(std::exception_ptr eptr)
 }
 
 Server::Server(lua_State* L):
+    serverThread(nullptr),
     runListener(true)
 {
-    LogInfo(L, "Starting RESTServer");
+     
+}
+
+void Server::start(lua_State* L)
+{
+    log("Starting RESTServer");
     serverThread = new thread(&Server::task, this);
 }
 
-Server::~Server()
+void Server::stop(lua_State* L)
 {
+    log("Stopping RESTServer");
     runListener = false;
+    if (serverThread != nullptr)
+        serverThread->join();
 }
 
 void Server::handle_options(http_request request)
@@ -59,17 +73,45 @@ void Server::handle_get(http_request request)
     response.headers().add(U("Access-Control-Allow-Methods"), U("GET, POST, PUT, OPTIONS"));
     response.headers().add(U("Access-Control-Allow-Headers"), U("Content-Type"));
 
-    auto answer = json::value::object();
     std::exception_ptr eptr;
     try {
-        unitsManager->updateAnswer(answer);
-        answer[L"airbases"] = airbasesData;
-        answer[L"bullseye"] = bullseyeData;
-        answer[L"logs"] = json::value::object();
+        auto answer = json::value::object();
+        auto path = uri::split_path(uri::decode(request.relative_uri().path()));
 
-        int i = 0;
-        for (auto log : getLogs())
-            answer[L"logs"][to_wstring(i++)] = json::value::string(to_wstring(log));
+        if (path.size() > 0)
+        {
+            if (path[0] == UNITS_URI)
+            {
+                map<utility::string_t, utility::string_t> query = request.relative_uri().split_query(request.relative_uri().query());
+                long long time = 0;
+                if (query.find(L"time") != query.end())
+                {
+                    try {
+                        time = stoll((*(query.find(L"time"))).second);   
+                    }
+                    catch (const std::exception& e) {
+                        time = 0;
+                    }
+                }
+                unitsManager->getData(answer, time);
+            }
+            else if (path[0] == LOGS_URI)
+            {
+                auto logs = json::value::object();
+                getLogsJSON(logs, 100);   // By reference, for thread safety. Get the last 100 log entries
+                answer[L"logs"] = logs;
+            }
+            else if (path[0] == AIRBASES_URI)
+                answer[L"airbases"] = airbases;
+            else if (path[0] == BULLSEYE_URI)
+                answer[L"bullseyes"] = bullseyes;
+            else if (path[0] == MISSION_URI)
+                answer[L"mission"] = mission;
+
+            milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
+            answer[L"time"] = json::value::string(to_wstring(ms.count()));
+            answer[L"sessionHash"] = json::value::string(to_wstring(sessionHash));
+        }
 
         response.set_body(answer);
     }
@@ -84,7 +126,6 @@ void Server::handle_get(http_request request)
 void Server::handle_request(http_request request, function<void(json::value const&, json::value&)> action)
 {
     auto answer = json::value::object();
-
     request.extract_json().then([&answer, &action](pplx::task<json::value> task) 
     {
         try
@@ -138,7 +179,7 @@ void Server::handle_put(http_request request)
 
 void Server::task()
 {
-    http_listener listener(REST_ADDRESS);
+    http_listener listener(wstring(REST_ADDRESS) + L"/" + wstring(REST_URI));
 
     std::function<void(http_request)> handle_options = std::bind(&Server::handle_options, this, std::placeholders::_1);
     std::function<void(http_request)> handle_get = std::bind(&Server::handle_get, this, std::placeholders::_1);
@@ -156,7 +197,10 @@ void Server::task()
             
         while (runListener);
 
-        listener.close();
+        listener.close()
+                .then([&listener]() {log("RESTServer stopping connections"); })
+                .wait();
+
         log("RESTServer stopped listening");
     }
     catch (exception const& e)

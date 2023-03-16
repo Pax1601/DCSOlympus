@@ -30,46 +30,65 @@ export class UnitInfoPanel extends Panel {
         this.#task = <HTMLElement>(this.getElement().querySelector("#task"));
         this.#loadoutContainer = <HTMLElement>(this.getElement().querySelector("#loadout-container"));
 
+        document.addEventListener("unitsSelection", (e: CustomEvent<Unit[]>) => this.#onUnitsSelection(e.detail));
+        document.addEventListener("unitsDeselection", (e: CustomEvent<Unit[]>) => this.#onUnitsDeselection(e.detail));
+        document.addEventListener("clearSelection", () => this.#onUnitsDeselection([]));
+        document.addEventListener("unitUpdated", (e: CustomEvent<Unit>) => this.#onUnitUpdate(e.detail));
+
         this.hide();
     }
     
-    update(unit: Unit) {
-        if (this.getElement() != null) {
+    #onUnitUpdate(unit: Unit) {
+        if (this.getElement() != null && this.getVisible() && unit.getSelected()) {
             /* Set the unit info */
-            this.#unitName.innerHTML = unit.unitName;
-            this.#groupName.innerHTML = unit.groupName;
-            this.#name.innerHTML = unit.name;
-            this.#heading.innerHTML = String(Math.floor(rad2deg(unit.heading)) + " °");
-            this.#altitude.innerHTML = String(Math.floor(unit.altitude / 0.3048) + " ft");
-            this.#groundSpeed.innerHTML = String(Math.floor(unit.speed * 1.94384) + " kts");
-            this.#fuel.innerHTML = String(unit.fuel + "%");
-            this.#latitude.innerHTML = ConvertDDToDMS(unit.latitude, false);
-            this.#longitude.innerHTML = ConvertDDToDMS(unit.longitude, true);
-            this.#task.innerHTML = unit.currentTask !== ""? unit.currentTask: "No task";
+            this.#unitName.innerText = unit.getBaseData().unitName;
+            this.#groupName.innerText = unit.getBaseData().groupName;
+            this.#name.innerText = unit.getBaseData().name;
+            //this.#heading.innerText = String(Math.floor(rad2deg(unit.getFlightData().heading)) + " °");
+            //this.#altitude.innerText = String(Math.floor(unit.getFlightData().altitude / 0.3048) + " ft");
+            //this.#groundSpeed.innerText = String(Math.floor(unit.getFlightData().speed * 1.94384) + " kts");
+            //this.#fuel.innerText = String(unit.getMissionData().fuel + "%");
+            //this.#latitude.innerText = ConvertDDToDMS(unit.getFlightData().latitude, false);
+            //this.#longitude.innerText = ConvertDDToDMS(unit.getFlightData().longitude, true);
+            this.#task.innerText = unit.getTaskData().currentTask !== ""? unit.getTaskData().currentTask: "No task";
 
             /* Set the class of the task container */
-            this.#task.classList.toggle("red", unit.coalitionID == 1);
-            this.#task.classList.toggle("blue", unit.coalitionID == 2);
-            this.#task.classList.toggle("neutral", unit.coalitionID == 0);
+            this.#task.classList.toggle("red", unit.getMissionData().coalition === "red");
+            this.#task.classList.toggle("blue", unit.getMissionData().coalition === "blue");
+            this.#task.classList.toggle("neutral", unit.getMissionData().coalition === "neutral");
             
             /* Add the loadout elements */
             var els = this.getElement().getElementsByClassName("js-loadout-element");
             while (els.length > 0)
                 this.#loadoutContainer.removeChild(els[0]);
   
-            for (let index in unit.ammo) 
+            for (let index in unit.getMissionData().ammo) 
                 this.#addLoadoutElement(unit, index);
         }
     }
 
     #addLoadoutElement(unit: Unit, index: string)
     {
-        var ammo = unit.ammo[index];
+        var ammo = unit.getMissionData().ammo[index];
         var displayName = ammo.desc.displayName;
         var amount = ammo.count;
         var el = document.createElement("div")
         el.classList.add("js-loadout-element", "ol-rectangular-container-dark")
-        el.innerHTML = amount + "x" + displayName;
+        el.innerText = amount + "x" + displayName;
         this.#loadoutContainer.appendChild(el);
+    }
+
+    #onUnitsSelection(units: Unit[]){
+        if (units.length == 1)
+            this.show();
+        else
+            this.hide();
+    }
+
+    #onUnitsDeselection(units: Unit[]){
+        if (units.length == 1)
+            this.show();
+        else
+            this.hide();
     }
 }

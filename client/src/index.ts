@@ -1,58 +1,34 @@
 import { Map } from "./map/map"
-import { getDataFromDCS } from "./dcs/dcs"
-import { SelectionWheel } from "./controls/selectionwheel";
 import { UnitsManager } from "./units/unitsmanager";
 import { UnitInfoPanel } from "./panels/unitinfopanel";
-import { SelectionScroll } from "./controls/selectionscroll";
-import { Dropdown } from "./controls/dropdown";
 import { ConnectionStatusPanel } from "./panels/connectionstatuspanel";
-import { MissionData } from "./missiondata/missiondata";
+import { MissionHandler } from "./missionhandler/missionhandler";
 import { UnitControlPanel } from "./panels/unitcontrolpanel";
-import { MouseInfoPanel } from "./panels/mouseInfoPanel";
-import { Slider } from "./controls/slider";
-import { AIC } from "./aic/AIC";
-
-import { VisibilityControlPanel } from "./panels/visibilitycontrolpanel";
-import { ATC } from "./atc/ATC";
-import { FeatureSwitches } from "./FeatureSwitches";
+import { MouseInfoPanel } from "./panels/mouseinfopanel";
+import { AIC } from "./aic/aic";
+import { ATC } from "./atc/atc";
+import { FeatureSwitches } from "./featureswitches";
 import { LogPanel } from "./panels/logpanel";
-import { Button } from "./controls/button";
+import { getAirbases, getBulllseye as getBulllseyes, getMission, getUnits, toggleDemoEnabled } from "./server/server";
 
-/* TODO: should this be a class? */
 var map: Map;
-var selectionWheel: SelectionWheel;
-var selectionScroll: SelectionScroll;
 
 var unitsManager: UnitsManager;
-var missionData: MissionData;
+var missionHandler: MissionHandler;
+
+var aic: AIC;
+var atc: ATC;
 
 var unitInfoPanel: UnitInfoPanel;
 var connectionStatusPanel: ConnectionStatusPanel;
 var unitControlPanel: UnitControlPanel;
 var mouseInfoPanel: MouseInfoPanel;
-var visibilityControlPanel: VisibilityControlPanel;
 var logPanel: LogPanel;
 
-var mapSourceDropdown: Dropdown;
+var connected: boolean = false;
+var activeCoalition: string = "blue";
 
-var slowButton: Button;
-var fastButton: Button;
-var climbButton: Button;
-var descendButton: Button;
-
-var aic: AIC;
-var aicToggleButton: Button;
-var aicHelpButton: Button;
-
-
-var atc: ATC;
-var atcToggleButton: Button;
-
-var altitudeSlider: Slider;
-var airspeedSlider: Slider;
-
-var connected: boolean;
-var activeCoalition: string;
+var sessionHash: string | null = null;
 
 var featureSwitches;
 
@@ -60,104 +36,174 @@ function setup() {
 
     featureSwitches = new FeatureSwitches();
 
-    /* Initialize */
+    /* Initialize base functionalitites*/
     map = new Map('map-container');
     unitsManager = new UnitsManager();
-    missionData = new MissionData();
+    missionHandler = new MissionHandler();
 
-    selectionWheel = new SelectionWheel("selection-wheel");
-    selectionScroll = new SelectionScroll("selection-scroll");
-   
+    /* Panels */
     unitInfoPanel = new UnitInfoPanel("unit-info-panel");
     unitControlPanel = new UnitControlPanel("unit-control-panel");
-    //scenarioDropdown = new Dropdown("scenario-dropdown", ["Caucasus", "Marianas", "Nevada", "South Atlantic", "Syria", "The Channel"], () => { });
-    mapSourceDropdown = new Dropdown("map-source-dropdown", map.getLayers(), (option: string) => map.setLayer(option));
     connectionStatusPanel = new ConnectionStatusPanel("connection-status-panel");
     mouseInfoPanel = new MouseInfoPanel("mouse-info-panel");
-    visibilityControlPanel = new VisibilityControlPanel("visibility-control-panel");
-    logPanel = new LogPanel("log-panel");
-
-    missionData = new MissionData();
-
-    /* Unit control buttons */
-    slowButton = new Button("slow-button", ["images/buttons/slow.svg"], () => { getUnitsManager().selectedUnitsChangeSpeed("slow"); });
-    fastButton = new Button("fast-button", ["images/buttons/fast.svg"], () => { getUnitsManager().selectedUnitsChangeSpeed("fast"); });
-    climbButton = new Button("climb-button", ["images/buttons/climb.svg"], () => { getUnitsManager().selectedUnitsChangeAltitude("climb"); });
-    descendButton = new Button("descend-button", ["images/buttons/descend.svg"], () => { getUnitsManager().selectedUnitsChangeAltitude("descend"); });
-
-    /* Unit control sliders */
-    altitudeSlider = new Slider("altitude-slider", 0, 100, "ft", (value: number) => getUnitsManager().selectedUnitsSetAltitude(value * 0.3048));
-    airspeedSlider = new Slider("airspeed-slider", 0, 100, "kts", (value: number) => getUnitsManager().selectedUnitsSetSpeed(value / 1.94384));
+    //logPanel = new LogPanel("log-panel");
 
     /* AIC */
-    
-    let aicFeatureSwitch = featureSwitches.getSwitch( "aic" );
-
-    if ( aicFeatureSwitch?.isEnabled() ) {
+    let aicFeatureSwitch = featureSwitches.getSwitch("aic");
+    if (aicFeatureSwitch?.isEnabled()) {
         aic = new AIC();
-        
-        aicToggleButton = new Button( "toggle-aic-button", ["images/buttons/radar.svg"], () => {
-            aic.toggleStatus();
-        });
-
-        aicHelpButton = new Button( "aic-help-button", [ "images/buttons/question-mark.svg" ], () => {
-            aic.toggleHelp();
-        });
+        // TODO: add back buttons
     }
 
-
-    /* Generic clicks */
-
-    document.addEventListener( "click", ( ev ) => {
-
-        if ( ev instanceof PointerEvent && ev.target instanceof HTMLElement ) {
-
-            if ( ev.target.classList.contains( "olympus-dialog-close" ) ) {
-                ev.target.closest( "div.olympus-dialog" )?.classList.add( "hide" );
-            }
-
-        }
-
-    });
-
-
-    /*** ATC ***/
-
-    let atcFeatureSwitch = featureSwitches.getSwitch( "atc" );
-
-    if ( atcFeatureSwitch?.isEnabled() ) {
-
+    /* ATC */
+    let atcFeatureSwitch = featureSwitches.getSwitch("atc");
+    if (atcFeatureSwitch?.isEnabled()) {
         atc = new ATC();
-    
-        atcToggleButton = new Button( "atc-toggle-button", [ "images/buttons/atc.svg" ], () => {
-            atc.toggleStatus();
-        } );
-
+        // TODO: add back buttons
     }
 
-    mapSourceDropdown = new Dropdown("map-source-dropdown", map.getLayers(), (option: string) => map.setLayer(option));
+    /* Setup event handlers */
+    setupEvents();
 
-    /* Default values */
-    activeCoalition = "blue";
-    connected = false;
+    /* On the first connection, force request of full data */
+    getAirbases((data: AirbasesData) => getMissionData()?.update(data));
+    getBulllseyes((data: BullseyesData) => getMissionData()?.update(data));
+    getMission((data: any) => {getMissionData()?.update(data)});
+    getUnits((data: UnitsData) => getUnitsManager()?.update(data), true /* Does a full refresh */);
 
+    /* Start periodically requesting updates */
+    startPeriodicUpdate();
+}
+
+function startPeriodicUpdate() {
     requestUpdate();
+    requestRefresh();
 }
 
 function requestUpdate() {
-    getDataFromDCS(update);
-    
     /* Main update rate = 250ms is minimum time, equal to server update time. */
+    getUnits((data: UnitsData) => {
+        getUnitsManager()?.update(data);
+        checkSessionHash(data.sessionHash);
+    }, false);
     setTimeout(() => requestUpdate(), getConnected() ? 250 : 1000);
 
-    connectionStatusPanel.update(getConnected());
+    getConnectionStatusPanel()?.update(getConnected());
 }
 
-export function update(data: JSON) {
-    console.log( data );
-    unitsManager.update(data);
-    missionData.update(data);
-    logPanel.update(data);
+function requestRefresh() {
+    /* Main refresh rate = 5000ms. */
+    getUnits((data: UnitsData) => {
+        getAirbases((data: AirbasesData) => getMissionData()?.update(data));
+        getBulllseyes((data: BullseyesData) => getMissionData()?.update(data));
+        getMission((data: any) => {getMissionData()?.update(data)});
+        checkSessionHash(data.sessionHash);
+    }, true);
+    setTimeout(() => requestRefresh(), 5000);
+}
+
+function checkSessionHash(newSessionHash: string) {
+    if (sessionHash != null) {
+        if (newSessionHash != sessionHash)
+            location.reload();
+    }
+    else
+        sessionHash = newSessionHash;
+}
+
+function setupEvents() {
+    /* Generic clicks */
+    document.addEventListener("click", (ev) => {
+        if (ev instanceof PointerEvent && ev.target instanceof HTMLElement) {
+            const target = ev.target;
+            if (target.classList.contains("olympus-dialog-close")) {
+                target.closest("div.olympus-dialog")?.classList.add("hide");
+            }
+
+            const triggerElement = target.closest("[data-on-click]");
+            if (triggerElement instanceof HTMLElement) {
+                const eventName: string = triggerElement.dataset.onClick || "";
+                let params = JSON.parse(triggerElement.dataset.onClickParams || "{}");
+                params._element = triggerElement;
+
+                if (eventName) {
+                    document.dispatchEvent(new CustomEvent(eventName, {
+                        detail: params
+                    }));
+                }
+            }
+        }
+    });
+
+    /* Keyup events */
+    document.addEventListener("keyup", ev => {
+        switch (ev.code) {
+            case "KeyL":
+                document.body.toggleAttribute("data-hide-labels");
+                break;
+            case "KeyD":
+                toggleDemoEnabled();
+        }
+    });
+
+    /*
+    const unitName = document.getElementById( "unit-name" );
+    if ( unitName instanceof HTMLInputElement ) {
+        unitName.addEventListener( "change", ev => {
+            unitName.setAttribute( "disabled", "true" );
+            unitName.setAttribute( "readonly", "true" );
+            
+            //  Do something with this:
+            console.log( unitName.value );
+        });
+
+        document.addEventListener( "editUnitName", ev => {
+            unitName.removeAttribute( "disabled" );
+            unitName.removeAttribute( "readonly" );
+            unitName.focus();
+        });
+    }
+    //*/
+
+    document.addEventListener("toggleCoalitionVisibility", (ev: CustomEventInit) => {
+        ev.detail._element.classList.toggle("off");
+        document.body.toggleAttribute("data-hide-" + ev.detail.coalition);
+    });
+
+    document.addEventListener("toggleUnitVisibility", (ev: CustomEventInit) => {
+        document.body.toggleAttribute("data-hide-" + ev.detail.unitType);
+    });
+
+    document.addEventListener( "closeDialog", (ev: CustomEventInit) => {
+        ev.detail._element.closest( ".ol-dialog" ).classList.add( "hide" );
+    });
+
+    document.addEventListener( "toggleElements", (ev: CustomEventInit) => {
+        document.querySelectorAll( ev.detail.selector ).forEach( el => {
+            el.classList.toggle( "hide" );
+        })
+    });
+
+    /**  Olympus UI ***/
+    document.querySelectorAll(".ol-select").forEach(select => {
+
+        //  Do open/close toggle
+        select.addEventListener("click", ev => {
+
+            if ( ev.target instanceof HTMLElement && ev.target.nodeName !== "A" ) {
+                ev.preventDefault();
+            }
+            
+            ev.stopPropagation();
+            select.classList.toggle("is-open");
+        });
+
+        //  Autoclose on mouseleave
+        select.addEventListener("mouseleave", ev => {
+            select.classList.remove("is-open");
+        });
+
+    });
 }
 
 export function getMap() {
@@ -165,15 +211,7 @@ export function getMap() {
 }
 
 export function getMissionData() {
-    return missionData;
-}
-
-export function getSelectionWheel() {
-    return selectionWheel;
-}
-
-export function getSelectionScroll() {
-    return selectionScroll;
+    return missionHandler;
 }
 
 export function getUnitsManager() {
@@ -192,8 +230,17 @@ export function getMouseInfoPanel() {
     return mouseInfoPanel;
 }
 
+export function getLogPanel() {
+    return logPanel;
+}
+
+export function getConnectionStatusPanel() {
+    return connectionStatusPanel;
+}
+
 export function setActiveCoalition(newActiveCoalition: string) {
     activeCoalition = newActiveCoalition;
+    document.querySelectorAll('[data-active-coalition]').forEach((element: any) => { element.setAttribute("data-active-coalition", activeCoalition) });
 }
 
 export function getActiveCoalition() {
@@ -207,10 +254,5 @@ export function setConnected(newConnected: boolean) {
 export function getConnected() {
     return connected;
 }
-
-export function getUnitControlSliders() {
-    return {altitude: altitudeSlider, airspeed: airspeedSlider}
-}
-
 
 window.onload = setup;

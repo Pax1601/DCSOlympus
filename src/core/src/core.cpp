@@ -11,10 +11,12 @@ auto before = std::chrono::system_clock::now();
 UnitsManager* unitsManager = nullptr;
 Server* server = nullptr;
 Scheduler* scheduler = nullptr;
-json::value airbasesData;
-json::value bullseyeData;
+json::value airbases;
+json::value bullseyes;
+json::value mission;
 mutex mutexLock;
 bool initialized = false;
+string sessionHash;
 
 /* Called when DCS simulation stops. All singleton instances are deleted. */
 extern "C" DllExport int coreDeinit(lua_State* L)
@@ -23,6 +25,8 @@ extern "C" DllExport int coreDeinit(lua_State* L)
         return (0);
 
     log("Olympus coreDeinit called successfully");
+
+    server->stop(L);
 
     delete unitsManager;
     delete server;
@@ -36,11 +40,14 @@ extern "C" DllExport int coreDeinit(lua_State* L)
 /* Called when DCS simulation starts. All singletons are instantiated, and the custom Lua functions are registered in the Lua state. */
 extern "C" DllExport int coreInit(lua_State* L)
 {
+    sessionHash = random_string(16);
     unitsManager = new UnitsManager(L);
     server = new Server(L);
     scheduler = new Scheduler(L);
 
     registerLuaFunctions(L);
+
+    server->start(L);
 
     initialized = true;
     return(0);
@@ -56,21 +63,19 @@ extern "C" DllExport int coreFrame(lua_State* L)
 
     const std::chrono::duration<double> duration = std::chrono::system_clock::now() - before;
 
-    // TODO make intervals editable
+    /* TODO make intervals editable */
     if (duration.count() > UPDATE_TIME_INTERVAL)
     {
         if (unitsManager != nullptr)
         {
             unitsManager->updateExportData(L);
         }
-
-        // TODO allow for different intervals
-        if (scheduler != nullptr)
-        {
-            scheduler->execute(L);
-        }
         before = std::chrono::system_clock::now();
     }
+
+    if (scheduler != nullptr)
+        scheduler->execute(L);
+ 
     return(0);
 }
 
@@ -89,9 +94,11 @@ extern "C" DllExport int coreMissionData(lua_State * L)
     if (missionData.has_object_field(L"unitsData"))
         unitsManager->updateMissionData(missionData[L"unitsData"]);
     if (missionData.has_object_field(L"airbases"))
-        airbasesData = missionData[L"airbases"];
-    if (missionData.has_object_field(L"bullseye"))
-        bullseyeData = missionData[L"bullseye"];
+        airbases = missionData[L"airbases"];
+    if (missionData.has_object_field(L"bullseyes"))
+        bullseyes = missionData[L"bullseyes"];
+    if (missionData.has_object_field(L"mission"))
+        mission = missionData[L"mission"];
 
     return(0);
 }
