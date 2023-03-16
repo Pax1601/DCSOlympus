@@ -1,5 +1,5 @@
-import { AICFormation, AICFormationInterface } from "../AICFormation";
-import { AICFormationContextDataInterface, AICFormationDescriptor } from "../AICFormationDescriptor";
+import { AICFormation, AICFormationInterface } from "../aicformation";
+import { AICFormationContextDataInterface, AICFormationDescriptor } from "../aicformationdescriptor";
 
 export class AICFormation_Single extends AICFormation implements AICFormationInterface {
 

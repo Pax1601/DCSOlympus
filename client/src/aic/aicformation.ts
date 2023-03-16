@@ -1,6 +1,6 @@
-import { AICFormationContextDataInterface, AICFormationDescriptor } from "./AICFormationDescriptor";
-import { AICFormationDescriptorPhrase } from "./AICFormationDescriptorPhrase";
-import { AICFormationDescriptorSection } from "./AICFormationDescriptorSection";
+import { AICFormationContextDataInterface, AICFormationDescriptor } from "./aicformationdescriptor";
+import { AICFormationDescriptorPhrase } from "./aicformationdescriptorphrase";
+import { AICFormationDescriptorSection } from "./aicformationdescriptorsection";
 
 export interface AICFormationInterface {
     "icon"          : string,

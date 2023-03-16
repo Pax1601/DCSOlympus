@@ -1,9 +1,9 @@
-import { AICFormation } from "./AICFormation";
-import { AICFormationDescriptorSection } from "./AICFormationDescriptorSection";
-import { AICFormationDescriptorSection_Formation } from "./AICFormationDescriptorSection/Formation";
-import { AICFormationDescriptorSection_Unit } from "./AICFormationDescriptorSection/Unit";
-import { AICFormationDescriptorSection_NumGroups } from "./AICFormationDescriptorSection/NumGroups";
-import { AICFormationDescriptorSection_Who } from "./AICFormationDescriptorSection/Who";
+import { AICFormation } from "./aicformation";
+import { AICFormationDescriptorSection } from "./aicformationdescriptorsection";
+import { AICFormationDescriptorSection_Formation } from "./aicformationdescriptorsection/formation";
+import { AICFormationDescriptorSection_Unit } from "./aicformationdescriptorsection/unit";
+import { AICFormationDescriptorSection_NumGroups } from "./aicformationdescriptorsection/numgroups";
+import { AICFormationDescriptorSection_Who } from "./aicformationdescriptorsection/who";
 
 
 export interface AICFormationContextDataInterface {

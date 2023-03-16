@@ -1,6 +1,6 @@
-import { AICFormation } from "./AICFormation";
-import { AICFormationContextDataInterface } from "./AICFormationDescriptor";
-import { AICFormationDescriptorPhrase } from "./AICFormationDescriptorPhrase";
+import { AICFormation } from "./aicformation";
+import { AICFormationContextDataInterface } from "./aicformationdescriptor";
+import { AICFormationDescriptorPhrase } from "./aicformationdescriptorphrase";
 
 export interface AICFormationDescriptorSectionInterface {
     "generate"      : CallableFunction,

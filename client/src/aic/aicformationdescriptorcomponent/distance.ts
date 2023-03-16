@@ -1,4 +1,4 @@
-import { AICFormationDescriptorComponent } from "../AICFormationDescriptorComponent";
+import { AICFormationDescriptorComponent } from "../aicformationdescriptorcomponent";
 
 export abstract class AICFormactionDescriptorComponent_Distance extends AICFormationDescriptorComponent {
 

@@ -1,8 +1,8 @@
-import { AICFormation } from "../AICFormation";
-import { AICFormationContextDataInterface } from "../AICFormationDescriptor";
-import { AICFormationDescriptorSection } from "../AICFormationDescriptorSection";
-import { AICFormationDescriptorComponent } from "../AICFormationDescriptorComponent";
-import { AICFormationDescriptorPhrase } from "../AICFormationDescriptorPhrase";
+import { AICFormation } from "../aicformation";
+import { AICFormationContextDataInterface } from "../aicformationdescriptor";
+import { AICFormationDescriptorSection } from "../aicformationdescriptorsection";
+import { AICFormationDescriptorComponent } from "../aicformationdescriptorcomponent";
+import { AICFormationDescriptorPhrase } from "../aicformationdescriptorphrase";
 
 export class AICFormationDescriptorSection_Formation extends AICFormationDescriptorSection {
 
