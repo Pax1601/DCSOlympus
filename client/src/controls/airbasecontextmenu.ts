@@ -36,7 +36,7 @@ export class AirbaseContextMenu extends ContextMenu {
             var div = document.createElement("div");
             div.innerText = property;
             return div;
-        }));
+        }), );
     }
 
     setParkings(airbaseParkings: string[])
