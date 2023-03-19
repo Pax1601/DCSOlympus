@@ -58,24 +58,16 @@ export class UnitInfoPanel extends Panel {
             this.#task.classList.toggle("neutral", unit.getMissionData().coalition === "neutral");
             
             /* Add the loadout elements */
-            var els = this.getElement().getElementsByClassName("js-loadout-element");
-            while (els.length > 0)
-                this.#loadoutContainer.removeChild(els[0]);
-  
-            for (let index in unit.getMissionData().ammo) 
-                this.#addLoadoutElement(unit, index);
+            this.#loadoutContainer.replaceChildren(...unit.getMissionData().ammo.map(
+                (ammo: any) => {
+                    var el = document.createElement("div");
+                    el.classList.add("pill", "loadout-item");
+                    el.dataset.loadoutQty = ammo.count;
+                    el.dataset.loadoutItem = ammo.desc.displayName;
+                    return el;
+                }
+            ))
         }
-    }
-
-    #addLoadoutElement(unit: Unit, index: string)
-    {
-        var ammo = unit.getMissionData().ammo[index];
-        var displayName = ammo.desc.displayName;
-        var amount = ammo.count;
-        var el = document.createElement("div")
-        el.classList.add("js-loadout-element", "ol-rectangular-container-dark")
-        el.innerText = amount + "x" + displayName;
-        this.#loadoutContainer.appendChild(el);
     }
 
     #onUnitsSelection(units: Unit[]){
