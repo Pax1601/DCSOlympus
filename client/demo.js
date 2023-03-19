@@ -19,7 +19,20 @@ const DEMO_UNIT_DATA = {
         missionData:  {
             fuel: 50,
             flags: {human: false},
-            ammo: [],
+            ammo: [
+                {
+                    count: 4,
+                    desc: {
+                        displayName: "AIM-120"
+                    }
+                },
+                {
+                    count: 2,
+                    desc: {
+                        displayName: "AIM-7"
+                    }
+                }
+            ],
             targets: [],
             hasTask: true,
             coalition: "blue"

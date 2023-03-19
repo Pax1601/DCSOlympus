@@ -56,5 +56,5 @@
 }
 
 #unit-info-panel #loadout-container .loadout-item::before {
-	content: attr( data-loadout-item ) ' \d7  ' attr( data-loadout-qty );
+	content: attr( data-loadout-qty )'\d7  ' attr( data-loadout-item )  ;
 }
