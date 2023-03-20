@@ -363,10 +363,12 @@ export class Unit extends Marker {
             getMap().removeLayer(this);
         }
         else {
+
             this.setLatLng(new LatLng(this.getFlightData().latitude, this.getFlightData().longitude));
             var element = this.getElement();
             if (element != null) {
-                element.querySelector(".unit-vvi")?.setAttribute("style", `height: ${15 + this.getFlightData().speed / 5}px; transform:rotate(${rad2deg(this.getFlightData().heading)}deg);`);
+
+                element.querySelector(".unit-vvi")?.setAttribute("style", `height: ${15 + this.getFlightData().speed / 5}px;`);
                 element.querySelector(".unit")?.setAttribute("data-pilot", this.getMissionData().flags.human? "human": "ai");
 
                 element.querySelector(".unit-fuel-level")?.setAttribute("style", `width: ${this.getMissionData().fuel}%`);
@@ -379,12 +381,22 @@ export class Unit extends Marker {
                     unitHeadingDiv.innerHTML = String(Math.floor(rad2deg(this.getFlightData().heading)));
 
                 var unitAltitudeDiv = element.querySelector(".unit-altitude");
-                if (unitAltitudeDiv != null)
+                if (unitAltitudeDiv != null) {
                     unitAltitudeDiv.innerHTML = String(Math.floor(this.getFlightData().altitude / 0.3048 / 1000));
+
+                }
+                
+                const headingDeg = rad2deg( this.getFlightData().heading );
+
+                element.querySelectorAll( "[data-rotate-to-heading]" ).forEach( el => {
+                    let currentStyle = el.getAttribute( "style" ) || "";
+                    el.setAttribute( "style", currentStyle + `transform:rotate(${headingDeg}deg);` );
+                });
 
                 var unitSpeedDiv = element.querySelector(".unit-speed");
                 if (unitSpeedDiv != null)
                     unitSpeedDiv.innerHTML = String(Math.floor(this.getFlightData().speed * 1.94384 ) );
+
             }
             var pos = getMap().latLngToLayerPoint(this.getLatLng()).round();
             this.setZIndexOffset(1000 + Math.floor(this.getFlightData().altitude) - pos.y);
@@ -474,7 +486,7 @@ export class Aircraft extends AirUnit {
                 <div class="unit-selected-spotlight"></div>
                 <div class="unit-marker-border"></div>
                 <div class="unit-status"></div>
-                <div class="unit-vvi"></div>
+                <div class="unit-vvi" data-rotate-to-heading></div>
                 <div class="unit-hotgroup">
                     <div class="unit-hotgroup-id"></div>
                 </div>
@@ -555,7 +567,7 @@ export class Missile extends Weapon {
         super(ID, data, `
             <div class="unit" data-object="unit-weapon-missile" data-coalition="${data.missionData.coalition}">
                 <div class="unit-selected-spotlight"></div>
-                <div class="unit-marker"></div>
+                <div class="unit-marker" data-rotate-to-heading></div>
                 <div class="unit-short-label"></div>
             </div>
         `);
