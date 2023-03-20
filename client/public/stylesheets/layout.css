@@ -112,7 +112,7 @@ dl.ol-data-grid dd {
 }
 
 .ol-panel.ol-dialog {
-	padding:25px;
+	padding:20px;
 }
 
 .ol-dialog-close {
@@ -137,6 +137,12 @@ dl.ol-data-grid dd {
 	border-top:1px solid var( --background-grey );
 	padding-top:15px;
 }
+
+.ol-dialog.scrollable .ol-dialog-content {
+	overflow-y: auto;
+}
+
+
 
 .ol-checkbox label {
 	align-items: center;
