@@ -32,7 +32,17 @@ export class UnitDataTable {
     }
 
 
-    refresh( units:object ) {
+    show() {
+        this.getElement()?.closest( ".ol-dialog" )?.classList.remove( "hide" );
+    }
+
+
+    toggle() {
+        this.getElement()?.closest( ".ol-dialog" )?.classList.toggle( "hide" );
+    }
+
+    
+    update( units:object ) {
 
         const unitsArray = Object.values( units ).sort( ( a, b ) => {
 
@@ -88,16 +98,6 @@ export class UnitDataTable {
 
         }
 
-    }
-
-
-    show() {
-        this.getElement()?.closest( ".ol-dialog" )?.classList.remove( "hide" );
-    }
-
-
-    toggle() {
-        this.getElement()?.closest( ".ol-dialog" )?.classList.toggle( "hide" );
     }
 
 }

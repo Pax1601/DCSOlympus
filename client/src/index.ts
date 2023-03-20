@@ -87,7 +87,7 @@ function requestUpdate() {
     /* Main update rate = 250ms is minimum time, equal to server update time. */
     getUnits((data: UnitsData) => {
         getUnitsManager()?.update(data);
-        unitDataTable.refresh( data.units );
+        getUnitDataTable().update( data.units )
         checkSessionHash(data.sessionHash);
     }, false);
     setTimeout(() => requestUpdate(), getConnected() ? 250 : 1000);
@@ -223,6 +223,10 @@ export function getMap() {
 
 export function getMissionData() {
     return missionHandler;
+}
+
+export function getUnitDataTable() {
+    return unitDataTable;
 }
 
 export function getUnitsManager() {
