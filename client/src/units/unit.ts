@@ -101,14 +101,13 @@ export class Unit extends Marker {
         this.#pathPolyline.addTo(getMap());
         this.#targetsPolylines = [];
 
+        // Deselect units if they are hidden
         document.addEventListener("toggleCoalitionVisibility", (ev: CustomEventInit) => {
-            if (ev.detail.coalition === this.getMissionData().coalition)
-                this.setHidden(true);
+            setTimeout(() => {this.setSelected(this.getSelected() && !this.getHidden())}, 300);
         });
     
         document.addEventListener("toggleUnitVisibility", (ev: CustomEventInit) => {
-            if (ev.detail.category === this.getBaseData().category)
-                this.setHidden(true);
+            setTimeout(() => {this.setSelected(this.getSelected() && !this.getHidden())}, 300);
         });
 
         this.setData(data);
@@ -122,7 +121,6 @@ export class Unit extends Marker {
             this.getBaseData().alive != data.baseData.alive || this.#forceUpdate || !getMap().hasLayer(this))
             updateMarker = true;
             
-
         if (data.baseData != undefined)
         {
             for (let key in this.#data.baseData)
@@ -172,7 +170,7 @@ export class Unit extends Marker {
         }
 
         /* Dead units can't be selected */
-        this.setSelected(this.getSelected() && this.getBaseData().alive)
+        this.setSelected(this.getSelected() && this.getBaseData().alive && !this.getHidden())
 
         if (updateMarker)
             this.#updateMarker();
@@ -216,9 +214,9 @@ export class Unit extends Marker {
 
     setSelected(selected: boolean) {
         /* Only alive units can be selected. Some units are not selectable (weapons) */
-        if ((this.getBaseData().alive || !selected) && this.#selectable && this.#selected != selected) {
+        if ((this.getBaseData().alive || !selected) && this.getSelectable() && this.getSelected() != selected) {
             this.#selected = selected;
-            this.getElement()?.querySelector( `[data-object|="unit"]` )?.toggleAttribute( "data-is-selected" );
+            this.getElement()?.querySelector(`[data-object|="unit"]`)?.toggleAttribute("data-is-selected");
             if (selected)
                 document.dispatchEvent(new CustomEvent("unitSelection", { detail: this }));
             else
@@ -260,7 +258,7 @@ export class Unit extends Marker {
     }
 
     getHidden() {
-        return this.#hidden;
+        return (<HTMLElement>this.getElement()?.querySelector(`.unit`))?.offsetParent === null; 
     }
 
     getLeader() {
@@ -474,9 +472,7 @@ export class Unit extends Marker {
 }
 
 export class AirUnit extends Unit {
-    getHidden() {
-        return false;
-    }
+
 }
 
 export class Aircraft extends AirUnit {
@@ -533,10 +529,6 @@ export class GroundUnit extends Unit {
             </div>
         `);
     }
-
-    getHidden() {
-        return false;
-    }
 }
 
 export class NavyUnit extends Unit {
@@ -548,10 +540,6 @@ export class NavyUnit extends Unit {
                 <div class="unit-short-label">N</div>
             </div>
         `);
-    }
-
-    getHidden() {
-        return false;
     }
 }
 
