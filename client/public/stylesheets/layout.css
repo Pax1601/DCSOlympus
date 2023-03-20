@@ -72,8 +72,12 @@ dl.ol-data-grid dd {
 	margin-left: auto;
 }
 
-.br-info[data-bearing][data-distance][data-distance-units]::after {
+.br-info::after {
 	content: attr( data-bearing ) '\00B0  / ' attr( data-distance ) attr( data-distance-units );
+}
+
+.br-info[data-message]::after {
+	content: attr( data-message );
 }
 
 .coordinates::after {
