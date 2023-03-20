@@ -72,6 +72,41 @@ export class MouseInfoPanel extends Panel {
                 el.dataset.distanceUnits = "nm";
             }
         }
+
+        const refMouseLat = <HTMLElement>document.getElementById( "ref-mouse-position-latitude" );
+        const mouseLat    = <HTMLElement>document.getElementById( "mouse-position-latitude" );
+
+        if ( refMouseLat && mouseLat ) {
+            
+            let matches = String( mousePosition.lat ).match( /^\-?(\d+)\.(\d{2})(\d{2})(\d{2})/ );
+
+            if ( matches && matches.length ) {
+                mouseLat.dataset.dd = matches[1];
+                mouseLat.dataset.mm = matches[2];
+                mouseLat.dataset.ss = matches[3];
+                mouseLat.dataset.sss = matches[4];
+            }
+
+            refMouseLat.dataset.label = ( mousePosition.lat < 0 ) ? "S" : "N";
+
+        }
+
+        const refMouseLng = <HTMLElement>document.getElementById( "ref-mouse-position-longitude" );
+        const mouseLng    = <HTMLElement>document.getElementById( "mouse-position-longitude" );
+
+        if ( refMouseLng && mouseLng ) {
+           
+            let matches = String( mousePosition.lng ).match( /^\-?(\d+)\.(\d{2})(\d{2})(\d{2})/ );
+
+            if ( matches && matches.length ) {
+                mouseLng.dataset.dd = matches[1];
+                mouseLng.dataset.mm = matches[2];
+                mouseLng.dataset.ss = matches[3];
+                mouseLng.dataset.sss = matches[4];
+            }
+
+            refMouseLng.dataset.label = ( mousePosition.lng < 0 ) ? "W" : "E";
+        }
     }
 
     #onMapClick(e: any)
