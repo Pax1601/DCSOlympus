@@ -1,3 +1,4 @@
+local version = 'v0.1.0-alpha'
 
 Olympus = {}
 Olympus.groupIndex = 0
@@ -131,4 +132,4 @@ function Olympus.serializeTable(val, name, skipnewlines, depth)
 end
 
 timer.scheduleFunction(Olympus.setMissionData, {}, timer.getTime() + 1)
-Olympus.notify("OlympusMission script loaded correctly", 10)
+Olympus.notify("OlympusMission " .. version .. " script loaded correctly", 10)

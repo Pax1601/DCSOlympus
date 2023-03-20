@@ -1,3 +1,5 @@
+local version = 'v0.1.0-alpha'
+
 Olympus = {}
 Olympus.OlympusDLL = nil
 Olympus.cppRESTDLL = nil
@@ -24,7 +26,7 @@ end
 
 do
 	if isOlympusModuleInitialized~=true then
-		local OlympusName = 'Olympus 0.0.1 C++ module';
+		local OlympusName = 'Olympus ' .. version .. ' C++ module';
 		Olympus.loadDLLs();
 	
 		-- Register callbacks
