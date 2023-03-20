@@ -59,6 +59,7 @@ export class Unit extends Marker {
 
     #selectable: boolean;
     #selected: boolean = false;
+    #hidden: boolean = false;
 
     #preventClick: boolean = false;
 
@@ -99,6 +100,16 @@ export class Unit extends Marker {
         this.#pathPolyline = new Polyline([], { color: '#2d3e50', weight: 3, opacity: 0.5, smoothFactor: 1 });
         this.#pathPolyline.addTo(getMap());
         this.#targetsPolylines = [];
+
+        document.addEventListener("toggleCoalitionVisibility", (ev: CustomEventInit) => {
+            if (ev.detail.coalition === this.getMissionData().coalition)
+                this.setHidden(true);
+        });
+    
+        document.addEventListener("toggleUnitVisibility", (ev: CustomEventInit) => {
+            if (ev.detail.category === this.getBaseData().category)
+                this.setHidden(true);
+        });
 
         this.setData(data);
     }
@@ -243,8 +254,13 @@ export class Unit extends Marker {
         this.getTaskData().activePath = undefined;
     }
 
+    setHidden(hidden: boolean)
+    {
+        this.#hidden = hidden;
+    }
+
     getHidden() {
-        return false;
+        return this.#hidden;
     }
 
     getLeader() {

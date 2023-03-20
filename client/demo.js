@@ -588,6 +588,11 @@ class DemoDataGenerator {
         }};
         res.send(JSON.stringify(ret));
     };
+
+    mission(req, res){
+        var ret = {theatre: "NTTR"};
+        res.send(JSON.stringify(ret));
+    }
     
     generateRandomUnitsDemoData(unitsNumber) 
     {

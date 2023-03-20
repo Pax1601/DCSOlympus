@@ -171,7 +171,7 @@ function setupEvents() {
     });
 
     document.addEventListener("toggleUnitVisibility", (ev: CustomEventInit) => {
-        document.body.toggleAttribute("data-hide-" + ev.detail.unitType);
+        document.body.toggleAttribute("data-hide-" + ev.detail.category);
     });
 
     document.addEventListener( "closeDialog", (ev: CustomEventInit) => {
