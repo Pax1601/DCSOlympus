@@ -155,13 +155,30 @@ export class MouseInfoPanel extends Panel {
 
     #onUnitsSelection(units: Unit[])
     {
-        if (units.length == 1)
-            this.getElement().querySelector(`#unit-position`)?.classList.toggle("hide", false);
+        const pos = this.getElement().querySelector(`#unit-position`);
+        
+        if ( units.length > 1 ) {
+            pos?.setAttribute( "data-message", "(multiple units)" );
+        } else {
+            pos?.removeAttribute( "data-message" );
+        }
+
     }
     
     #onClearSelection()
     {
         this.#measureBox.classList.toggle("hide", true);
-        this.getElement().querySelector(`#unit-position`)?.classList.toggle("hide", true);
+        
+        const pos = this.getElement().querySelector(`#unit-position`);
+
+        
+        if ( pos instanceof HTMLElement ) {
+            pos?.removeAttribute( "data-message" );
+
+            pos.dataset.bearing       = "---";
+            pos.dataset.distance      = "---";
+            pos.dataset.distanceUnits = "nm";
+
+        }
     }
 }

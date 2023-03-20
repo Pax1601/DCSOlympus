@@ -25,7 +25,7 @@
 
 #mouse-info-panel dt {
 	height:20px;
-	width:40%;
+	width:30%;
 }
 
 #mouse-info-panel dt::after {
@@ -44,12 +44,20 @@
 	width:16px;
 }
 
-#mouse-info-panel dt#ref-measure-position::after {
+#mouse-info-panel dt#ref-unit-position::after {
 	background-image: url( "/images/icons/ruler.svg" );
 	background-position: 50% 50%;
 	background-repeat: no-repeat;
 	background-size:16px 16px;
-	content: " ";
+	content: "";
+}
+
+#mouse-info-panel dt#ref-measure-position::after {
+	background-image: url( "/images/pin.png" );
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	background-size:16px 16px;
+	content: "";
 }
 
 
@@ -79,5 +87,5 @@
 }
 
 #mouse-info-panel dd {
-	width:60%;
+	width:70%;
 }
