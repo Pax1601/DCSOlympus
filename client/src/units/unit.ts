@@ -383,6 +383,7 @@ export class Unit extends Marker {
                 var unitAltitudeDiv = element.querySelector(".unit-altitude");
                 if (unitAltitudeDiv != null) {
                     unitAltitudeDiv.innerHTML = String(Math.floor(this.getFlightData().altitude / 0.3048 / 1000));
+
                 }
                 
                 const headingDeg = rad2deg( this.getFlightData().heading );
@@ -392,7 +393,10 @@ export class Unit extends Marker {
                     el.setAttribute( "style", currentStyle + `transform:rotate(${headingDeg}deg);` );
                 });
 
-                
+                var unitSpeedDiv = element.querySelector(".unit-speed");
+                if (unitSpeedDiv != null)
+                    unitSpeedDiv.innerHTML = String(Math.floor(this.getFlightData().speed * 1.94384 ) );
+
             }
             var pos = getMap().latLngToLayerPoint(this.getLatLng()).round();
             this.setZIndexOffset(1000 + Math.floor(this.getFlightData().altitude) - pos.y);
@@ -499,8 +503,8 @@ export class Aircraft extends AirUnit {
                 </div>
                 <div class="unit-summary">
                     <div class="unit-callsign">${data.baseData.unitName}</div>
-                    <div class="unit-heading"></div>
                     <div class="unit-altitude"></div>
+                    <div class="unit-speed"></div>
                 </div>
             </div>`);
     }

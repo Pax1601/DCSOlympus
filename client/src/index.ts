@@ -10,6 +10,7 @@ import { ATC } from "./atc/atc";
 import { FeatureSwitches } from "./featureswitches";
 import { LogPanel } from "./panels/logpanel";
 import { getAirbases, getBulllseye as getBulllseyes, getMission, getUnits, toggleDemoEnabled } from "./server/server";
+import { UnitDataTable } from "./units/unitdatatable";
 
 var map: Map;
 
@@ -29,6 +30,7 @@ var connected: boolean = false;
 var activeCoalition: string = "blue";
 
 var sessionHash: string | null = null;
+var unitDataTable = new UnitDataTable();
 
 var featureSwitches;
 
@@ -75,6 +77,7 @@ function setup() {
     startPeriodicUpdate();
 }
 
+
 function startPeriodicUpdate() {
     requestUpdate();
     requestRefresh();
@@ -84,6 +87,7 @@ function requestUpdate() {
     /* Main update rate = 250ms is minimum time, equal to server update time. */
     getUnits((data: UnitsData) => {
         getUnitsManager()?.update(data);
+        getUnitDataTable().update( data.units )
         checkSessionHash(data.sessionHash);
     }, false);
     setTimeout(() => requestUpdate(), getConnected() ? 250 : 1000);
@@ -137,13 +141,21 @@ function setupEvents() {
 
     /* Keyup events */
     document.addEventListener("keyup", ev => {
+        
         switch (ev.code) {
+        
             case "KeyL":
                 document.body.toggleAttribute("data-hide-labels");
                 break;
+
             case "KeyD":
                 toggleDemoEnabled();
+                break;
+
+            case "Quote":
+                unitDataTable.toggle();
         }
+
     });
 
     /*
@@ -154,7 +166,6 @@ function setupEvents() {
             unitName.setAttribute( "readonly", "true" );
             
             //  Do something with this:
-            console.log( unitName.value );
         });
 
         document.addEventListener( "editUnitName", ev => {
@@ -212,6 +223,10 @@ export function getMap() {
 
 export function getMissionData() {
     return missionHandler;
+}
+
+export function getUnitDataTable() {
+    return unitDataTable;
 }
 
 export function getUnitsManager() {

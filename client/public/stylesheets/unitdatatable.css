@@ -1,0 +1,27 @@
+#unit-data-table {
+    display:flex;
+    flex-direction: column;
+    font-size:13px;
+    height: 250px;
+    width:fit-content;
+}
+
+#unit-data-table > div {
+    display:flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+#unit-data-table > div > div {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width:100px;
+}
+
+#unit-data-table > div:first-of-type {
+    text-align: center;
+}
+
+#unit-data-table > div > div:nth-of-type( 4 ) {
+    text-align: center;
+}
