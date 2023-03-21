@@ -26,7 +26,7 @@ void Helicopter::changeSpeed(wstring change)
 	if (change.compare(L"stop") == 0)
 	{
 		/* Air units can't hold a position, so we can only set them to hold. At the moment, this will erase any other command. TODO: helicopters should be able to hover in place */
-		activePath.clear();
+		clearActivePath();
 	}
 	else if (change.compare(L"slow") == 0)
 		targetSpeed -= 10 / 1.94384;

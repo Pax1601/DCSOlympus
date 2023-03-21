@@ -174,6 +174,34 @@ void Unit::setActivePath(list<Coords> newPath)
 	addMeasure(L"activePath", path); 
 }
 
+void Unit::clearActivePath()
+{
+	list<Coords> newPath;
+	setActivePath(newPath);
+}
+
+void Unit::pushActivePathFront(Coords newActivePathFront)
+{
+	list<Coords> path = activePath;
+	path.push_front(newActivePathFront);
+	setActivePath(path);
+}
+
+void Unit::pushActivePathBack(Coords newActivePathBack)
+{
+	list<Coords> path = activePath;
+	path.push_back(newActivePathBack);
+	setActivePath(path);
+}
+
+void Unit::popActivePathFront()
+{
+	list<Coords> path = activePath;
+	path.pop_front();
+	setActivePath(path);
+}
+
+
 void Unit::setCoalitionID(int newCoalitionID) 
 { 
 	if (newCoalitionID == 0)
@@ -316,7 +344,7 @@ void Unit::setReactionToThreat(wstring newReactionToThreat) {
 }
 
 void Unit::landAt(Coords loc) {
-	activePath.clear();
-	activePath.push_back(loc);
+	clearActivePath();
+	pushActivePathBack(loc);
 	setState(State::LAND);
 }

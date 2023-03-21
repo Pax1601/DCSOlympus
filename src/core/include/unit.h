@@ -98,6 +98,10 @@ public:
 	virtual void setTargetAltitude(double newTargetAltitude) { targetAltitude = newTargetAltitude; addMeasure(L"targetAltitude", json::value(newTargetAltitude));} //TODO fix, double definition
 	void setActiveDestination(Coords newActiveDestination) { activeDestination = newActiveDestination; addMeasure(L"activeDestination", json::value("")); } // TODO fix
 	void setActivePath(list<Coords> newActivePath);
+	void clearActivePath();
+	void pushActivePathFront(Coords newActivePathFront);
+	void pushActivePathBack(Coords newActivePathBack);
+	void popActivePathFront();
 	void setTargetID(int newTargetID) { targetID = newTargetID; addMeasure(L"targetID", json::value(newTargetID));}
 	wstring getCurrentTask() { return currentTask; }
 	virtual double getTargetSpeed() { return targetSpeed; };
