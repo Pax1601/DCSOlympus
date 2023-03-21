@@ -38,7 +38,7 @@ export class UnitControlPanel extends Panel {
             var button = document.createElement("button");
             button.title = option;
             button.value = option;
-            button.addEventListener("click", () => {getUnitsManager().selectedUnitsSetROE(button.title);});
+            button.addEventListener("click", () => {getUnitsManager().selectedUnitsSetReactionToThreat(button.title);});
             return button;
         });
 

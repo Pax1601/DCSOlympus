@@ -1,4 +1,4 @@
-#unit-data-table {
+#unit-list {
     display:flex;
     flex-direction: column;
     font-size:13px;
@@ -6,22 +6,22 @@
     width:fit-content;
 }
 
-#unit-data-table > div {
+#unit-list > div {
     display:flex;
     flex-direction: row;
     flex-wrap: nowrap;
 }
 
-#unit-data-table > div > div {
+#unit-list > div > div {
     text-overflow: ellipsis;
     white-space: nowrap;
     width:100px;
 }
 
-#unit-data-table > div:first-of-type {
+#unit-list > div:first-of-type {
     text-align: center;
 }
 
-#unit-data-table > div > div:nth-of-type( 4 ) {
+#unit-list > div > div:nth-of-type( 4 ) {
     text-align: center;
 }

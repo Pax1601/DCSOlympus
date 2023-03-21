@@ -16,6 +16,14 @@ export class Panel {
         this.#visible = false;
     }
 
+    toggle() {
+        // Simple way to track if currently visible
+        if (this.#visible)
+            this.hide();
+        else 
+            this.show();
+    }
+
     getElement() {
         return this.#element;
     }

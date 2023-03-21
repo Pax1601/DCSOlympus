@@ -1,5 +1,5 @@
 import { LatLng, LatLngBounds } from "leaflet";
-import { getMap } from "..";
+import { getMap, getUnitDataTable } from "..";
 import { Unit } from "./unit";
 import { cloneUnit } from "../server/server";
 import { IDLE, MOVE_UNIT } from "../map/map";
