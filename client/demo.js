@@ -590,7 +590,7 @@ class DemoDataGenerator {
     };
 
     mission(req, res){
-        var ret = {theatre: "NTTR"};
+        var ret = {mission: {theatre: "Nevada"}};
         res.send(JSON.stringify(ret));
     }
     
