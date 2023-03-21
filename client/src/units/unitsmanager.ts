@@ -18,6 +18,7 @@ export class UnitsManager {
         document.addEventListener('unitSelection', (e: CustomEvent) => this.#onUnitSelection(e.detail));
         document.addEventListener('unitDeselection', (e: CustomEvent) => this.#onUnitDeselection(e.detail));
         document.addEventListener('keydown', (event) => this.#onKeyDown(event));
+        document.addEventListener('deleteSelectedUnits', () => this.selectedUnitsDelete() )
     }
 
     getUnits() {
