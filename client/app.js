@@ -33,3 +33,4 @@ app.get('/demo/bullseyes', (req, res) => demoDataGenerator.bullseyes(req, res));
 app.get('/demo/airbases', (req, res) => demoDataGenerator.airbases(req, res));
 app.get('/demo/mission', (req, res) => demoDataGenerator.mission(req, res));
 
+module.exports = app;
