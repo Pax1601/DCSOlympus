@@ -9,7 +9,7 @@ import { AIC } from "./aic/aic";
 import { ATC } from "./atc/atc";
 import { FeatureSwitches } from "./featureswitches";
 import { LogPanel } from "./panels/logpanel";
-import { getAirbases, getBulllseye as getBulllseyes, getMission, getUnits, toggleDemoEnabled } from "./server/server";
+import { getAirbases, getBullseye as getBullseyes, getMission, getUnits, toggleDemoEnabled } from "./server/server";
 import { UnitDataTable } from "./units/unitdatatable";
 
 var map: Map;
@@ -69,7 +69,7 @@ function setup() {
 
     /* On the first connection, force request of full data */
     getAirbases((data: AirbasesData) => getMissionData()?.update(data));
-    getBulllseyes((data: BullseyesData) => getMissionData()?.update(data));
+    getBullseyes((data: BullseyesData) => getMissionData()?.update(data));
     getMission((data: any) => {getMissionData()?.update(data)});
     getUnits((data: UnitsData) => getUnitsManager()?.update(data), true /* Does a full refresh */);
 
@@ -99,7 +99,7 @@ function requestRefresh() {
     /* Main refresh rate = 5000ms. */
     getUnits((data: UnitsData) => {
         getAirbases((data: AirbasesData) => getMissionData()?.update(data));
-        getBulllseyes((data: BullseyesData) => getMissionData()?.update(data));
+        getBullseyes((data: BullseyesData) => getMissionData()?.update(data));
         getMission((data: any) => {getMissionData()?.update(data)});
         checkSessionHash(data.sessionHash);
     }, true);

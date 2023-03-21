@@ -49,7 +49,7 @@ export function getAirbases(callback: CallableFunction) {
     GET(callback, AIRBASES_URI);
 }
 
-export function getBulllseye(callback: CallableFunction) {
+export function getBullseye(callback: CallableFunction) {
     GET(callback, BULLSEYE_URI);
 }
 
