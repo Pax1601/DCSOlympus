@@ -9,6 +9,7 @@ export class Slider {
     #maxValueDiv: HTMLElement | null = null;
     #unit: string;
     #display: string = "";
+    #dragged: boolean = false;
 
     constructor(ID: string, minValue: number, maxValue: number, unit: string, callback: CallableFunction) {
         this.#container = document.getElementById(ID);
@@ -22,28 +23,11 @@ export class Slider {
             if (this.#slider != null)
             {
                 this.#slider.addEventListener("input", (e: any) => this.#onInput());
+                this.#slider.addEventListener("mousedown", (e: any) => this.#onStart());
                 this.#slider.addEventListener("mouseup", (e: any) => this.#onFinalize());
             }
             this.#value = <HTMLElement>this.#container.querySelector("#value");
         }
-    }
-
-    #onValue()
-    {
-        if (this.#value != null && this.#slider != null)
-            this.#value.innerHTML = this.#minValue + Math.round(parseFloat(this.#slider.value) / 100 * (this.#maxValue - this.#minValue)) + this.#unit
-        this.setActive(true);
-    }
-
-    #onInput()
-    {
-        this.#onValue();
-    }
-
-    #onFinalize()
-    {
-        if (this.#slider != null)
-            this.#callback(this.#minValue + parseFloat(this.#slider.value) / 100 * (this.#maxValue - this.#minValue));
     }
 
     show()
@@ -60,7 +44,7 @@ export class Slider {
 
     setActive(newActive: boolean)
     {
-        if (this.#container)
+        if (this.#container && !this.#dragged)
         {
             this.#container.classList.toggle("active", newActive);
             if (!newActive && this.#value != null)
@@ -76,8 +60,41 @@ export class Slider {
 
     setValue(newValue: number)
     {
+        // Disable value setting if the user is dragging the element
+        if (!this.#dragged)
+        {
+            if (this.#slider != null)
+                this.#slider.value = String((newValue - this.#minValue) / (this.#maxValue - this.#minValue) * 100); 
+            this.#onValue()
+        }
+    }
+
+    getDragged()
+    {
+        return this.#dragged;
+    }
+
+    #onValue()
+    {
+        if (this.#value != null && this.#slider != null)
+            this.#value.innerHTML = this.#minValue + Math.round(parseFloat(this.#slider.value) / 100 * (this.#maxValue - this.#minValue)) + this.#unit
+        this.setActive(true);
+    }
+
+    #onInput()
+    {
+        this.#onValue();
+    }
+
+    #onStart()
+    {
+        this.#dragged = true;
+    }
+
+    #onFinalize()
+    {
+        this.#dragged = false;
         if (this.#slider != null)
-            this.#slider.value = String((newValue - this.#minValue) / (this.#maxValue - this.#minValue) * 100); 
-        this.#onValue()
+            this.#callback(this.#minValue + parseFloat(this.#slider.value) / 100 * (this.#maxValue - this.#minValue));
     }
 }

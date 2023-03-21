@@ -95,17 +95,21 @@ export class UnitControlPanel extends Panel {
         var targetAltitude = getUnitsManager().getSelectedUnitsTargetAltitude();
         var targetSpeed = getUnitsManager().getSelectedUnitsTargetSpeed();
 
-        if (unitsType != undefined && targetAltitude != undefined && targetSpeed != undefined)
+        if (unitsType != undefined)
         {
             if (["GroundUnit", "NavyUnit"].includes(unitsType))
                 this.#altitudeSlider.hide()
 
             this.#airspeedSlider.setMinMax(minSpeedValues[unitsType], maxSpeedValues[unitsType]);
             this.#altitudeSlider.setMinMax(minAltitudeValues[unitsType], maxAltitudeValues[unitsType]);
-            this.#airspeedSlider.setActive(true);
-            this.#airspeedSlider.setValue(targetSpeed * 1.94384);
-            this.#altitudeSlider.setActive(true);
-            this.#altitudeSlider.setValue(targetAltitude / 0.3048);
+
+            this.#airspeedSlider.setActive(targetSpeed != undefined);
+            if (targetSpeed != undefined)
+                this.#airspeedSlider.setValue(targetSpeed * 1.94384);
+
+            this.#altitudeSlider.setActive(targetAltitude != undefined);
+            if (targetAltitude != undefined)
+                this.#altitudeSlider.setValue(targetAltitude / 0.3048);
         }
         else {
             this.#airspeedSlider.setActive(false);

@@ -91,7 +91,7 @@ const DEMO_UNIT_DATA = {
         taskData: {
             currentTask: "Example task",
             activePath: undefined,
-            targetSpeed: 400,
+            targetSpeed: 300,
             targetAltitude: 3000
         },
         optionsData: {
