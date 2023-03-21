@@ -12,7 +12,7 @@ export class UnitInfoPanel extends Panel {
     #fuel: HTMLElement;
     #latitude: HTMLElement;
     #longitude: HTMLElement;
-    #task: HTMLElement;
+    #currentTask: HTMLElement;
     #loadoutContainer: HTMLElement;
 
     constructor(ID: string) {
@@ -27,7 +27,7 @@ export class UnitInfoPanel extends Panel {
         this.#fuel = <HTMLElement>(this.getElement().querySelector("#fuel"));
         this.#latitude = <HTMLElement>(this.getElement().querySelector("#latitude"));
         this.#longitude = <HTMLElement>(this.getElement().querySelector("#longitude"));
-        this.#task = <HTMLElement>(this.getElement().querySelector("#task"));
+        this.#currentTask = <HTMLElement>(this.getElement().querySelector("#current-task"));
         this.#loadoutContainer = <HTMLElement>(this.getElement().querySelector("#loadout-container"));
 
         document.addEventListener("unitsSelection", (e: CustomEvent<Unit[]>) => this.#onUnitsSelection(e.detail));
@@ -50,12 +50,8 @@ export class UnitInfoPanel extends Panel {
             //this.#fuel.innerText = String(unit.getMissionData().fuel + "%");
             //this.#latitude.innerText = ConvertDDToDMS(unit.getFlightData().latitude, false);
             //this.#longitude.innerText = ConvertDDToDMS(unit.getFlightData().longitude, true);
-            this.#task.innerText = unit.getTaskData().currentTask !== ""? unit.getTaskData().currentTask: "No task";
-
-            /* Set the class of the task container */
-            this.#task.classList.toggle("red", unit.getMissionData().coalition === "red");
-            this.#task.classList.toggle("blue", unit.getMissionData().coalition === "blue");
-            this.#task.classList.toggle("neutral", unit.getMissionData().coalition === "neutral");
+            this.#currentTask.dataset.currentTask = unit.getTaskData().currentTask !== ""? unit.getTaskData().currentTask: "No task";
+            this.#currentTask.dataset.coalition = unit.getMissionData().coalition;
             
             /* Add the loadout elements */
             this.#loadoutContainer.replaceChildren(...unit.getMissionData().ammo.map(

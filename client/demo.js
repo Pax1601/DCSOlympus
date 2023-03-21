@@ -46,7 +46,7 @@ const DEMO_UNIT_DATA = {
             wingmenIDs: []
         },
         taskData: {
-            currentTask: "Example task",
+            currentTask: "Holding",
             activePath: undefined,
             targetSpeed: 400,
             targetAltitude: 3000
