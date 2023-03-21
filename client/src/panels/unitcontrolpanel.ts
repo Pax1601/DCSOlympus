@@ -3,6 +3,7 @@ import { Slider } from "../controls/slider";
 import { aircraftDatabase } from "../units/aircraftdatabase";
 import { groundUnitsDatabase } from "../units/groundunitsdatabase";
 import { Aircraft, GroundUnit, Unit } from "../units/unit";
+import { UnitsManager } from "../units/unitsmanager";
 import { Panel } from "./panel";
 
 const ROEs: string[] = ["Free", "Designated free", "Designated", "Return", "Hold"];
@@ -28,42 +29,31 @@ export class UnitControlPanel extends Panel {
         this.#optionButtons["ROE"] = ROEs.map((option: string, index:number) => {
             var button = document.createElement("button");
             button.title = option;
-            if ( index === 0 ) {
-                button.classList.add( "selected" );
-            }
-            button.addEventListener("click", () => {
-                this.getElement().querySelector("#roe-buttons-container button.selected")?.classList.remove( "selected" );
-                button.classList.add( "selected" );
-                getUnitsManager().selectedUnitsSetROE(button.title);
-            });
+            button.value = option;
+            button.addEventListener("click", () => {getUnitsManager().selectedUnitsSetROE(button.title);});
             return button;
         });
 
         this.#optionButtons["reactionToThreat"] = reactionsToThreat.map((option: string, index:number) => {
             var button = document.createElement("button");
             button.title = option;
-            if ( index === 0 ) {
-                button.classList.add( "selected" );
-            }
-            button.addEventListener("click", () => {
-                this.getElement().querySelector("#reaction-to-threat-buttons-container button.selected")?.classList.remove( "selected" );
-                button.classList.add( "selected" );
-
-                getUnitsManager().selectedUnitsSetROE(button.title);
-            });
+            button.value = option;
+            button.addEventListener("click", () => {getUnitsManager().selectedUnitsSetROE(button.title);});
             return button;
         });
 
         this.getElement().querySelector("#roe-buttons-container")?.append(...this.#optionButtons["ROE"]);
         this.getElement().querySelector("#reaction-to-threat-buttons-container")?.append(...this.#optionButtons["reactionToThreat"]);
 
-        document.addEventListener("unitsSelection", (e: CustomEvent<Unit[]>) => {this.show(); this.update(e.detail)});
+        document.addEventListener("unitUpdated", (e: CustomEvent<Unit>) => {if (e.detail.getSelected()) this.update()});
+        document.addEventListener("unitsSelection", (e: CustomEvent<Unit[]>) => {this.show(); this.update()});
         document.addEventListener("clearSelection", () => {this.hide()});        
 
         this.hide();
     }
 
-    update(units: Unit[]) {
+    update() {
+        var units = getUnitsManager().getSelectedUnits();
         if (this.getElement() != null && units.length > 0)
         {
             this.#showFlightControlSliders(units);
@@ -87,11 +77,11 @@ export class UnitControlPanel extends Panel {
             }));
 
             this.#optionButtons["ROE"].forEach((button: HTMLButtonElement) => {
-                button.classList.toggle("active", units.every((unit: Unit) => unit.getOptionsData().ROE === button.value))
+                button.classList.toggle("selected", units.every((unit: Unit) => unit.getOptionsData().ROE === button.value))
             });    
 
             this.#optionButtons["reactionToThreat"].forEach((button: HTMLButtonElement) => {
-                button.classList.toggle("active", units.every((unit: Unit) => unit.getOptionsData().reactionToThreat === button.value))
+                button.classList.toggle("selected", units.every((unit: Unit) => unit.getOptionsData().reactionToThreat === button.value))
             });     
         }
     }
@@ -105,17 +95,21 @@ export class UnitControlPanel extends Panel {
         var targetAltitude = getUnitsManager().getSelectedUnitsTargetAltitude();
         var targetSpeed = getUnitsManager().getSelectedUnitsTargetSpeed();
 
-        if (unitsType != undefined && targetAltitude != undefined && targetSpeed != undefined)
+        if (unitsType != undefined)
         {
             if (["GroundUnit", "NavyUnit"].includes(unitsType))
                 this.#altitudeSlider.hide()
 
             this.#airspeedSlider.setMinMax(minSpeedValues[unitsType], maxSpeedValues[unitsType]);
             this.#altitudeSlider.setMinMax(minAltitudeValues[unitsType], maxAltitudeValues[unitsType]);
-            this.#airspeedSlider.setActive(true);
-            this.#airspeedSlider.setValue(targetSpeed * 1.94384);
-            this.#altitudeSlider.setActive(true);
-            this.#altitudeSlider.setValue(targetAltitude / 0.3048);
+
+            this.#airspeedSlider.setActive(targetSpeed != undefined);
+            if (targetSpeed != undefined)
+                this.#airspeedSlider.setValue(targetSpeed * 1.94384);
+
+            this.#altitudeSlider.setActive(targetAltitude != undefined);
+            if (targetAltitude != undefined)
+                this.#altitudeSlider.setValue(targetAltitude / 0.3048);
         }
         else {
             this.#airspeedSlider.setActive(false);

@@ -11,7 +11,7 @@ const DEMO_UNIT_DATA = {
         },
         flightData:  {
             latitude: 37.20,
-            longitude: -115.8,
+            longitude: -115.80,
             altitude: 2000,
             heading: 0.5,
             speed: 300
@@ -52,8 +52,8 @@ const DEMO_UNIT_DATA = {
             targetAltitude: 3000
         },
         optionsData: {
-            ROE: "None",
-            reactionToThreat: "None",
+            ROE: "Designated",
+            reactionToThreat: "Abort",
         }
     },
     ["2"]:{
@@ -91,12 +91,12 @@ const DEMO_UNIT_DATA = {
         taskData: {
             currentTask: "Example task",
             activePath: undefined,
-            targetSpeed: 400,
+            targetSpeed: 300,
             targetAltitude: 3000
         },
         optionsData: {
-            ROE: "None",
-            reactionToThreat: "None",
+            ROE: "Designated",
+            reactionToThreat: "Abort",
         }
     },
     ["3"]:{
