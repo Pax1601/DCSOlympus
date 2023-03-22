@@ -1,8 +1,37 @@
+local version = "v0.1.0-alpha"
+
+local debug = false
+
 Olympus.unitCounter = 1
 Olympus.payloadRegistry = {}
+Olympus.groupIndex = 0
+Olympus.groupStep = 40
   
+Olympus.OlympusDLL = nil
+Olympus.DLLsloaded = false
+Olympus.OlympusModPath = os.getenv('DCSOLYMPUS_PATH')..'\\bin\\' 
+
+function Olympus.debug(message, displayFor)
+	if debug then:
+    	trigger.action.outText(message, displayFor)
+	end
+end
+
 function Olympus.notify(message, displayFor)
-    -- trigger.action.outText(message, displayFor)
+    trigger.action.outText(message, displayFor)
+end
+
+function Olympus.loadDLLs()
+	-- Add the .dll paths
+	package.cpath = package.cpath..';'..Olympus.OlympusModPath..'?.dll;'
+	
+	local status
+	status, Olympus.OlympusDLL = pcall(require, 'olympus')
+	if status then
+		return true
+	else
+		return false
+	end	
 end
 
 -- Gets a unit class reference from a given ObjectID (the ID used by Olympus for unit referencing)
@@ -77,7 +106,7 @@ end
 
 -- Move a unit. Since many tasks in DCS are Enroute tasks, this function is an important way to control the unit AI
 function Olympus.move(ID, lat, lng, altitude, speed, category, taskOptions)
-    Olympus.notify("Olympus.move " .. ID .. " (" .. lat .. ", " .. lng ..") " .. altitude .. "m " .. speed .. "m/s " .. category, 2)
+    Olympus.debug("Olympus.move " .. ID .. " (" .. lat .. ", " .. lng ..") " .. altitude .. "m " .. speed .. "m/s " .. category, 2)
     local unit = Olympus.getUnitByID(ID)
 	if unit then
 		if category == "Aircraft" then
@@ -120,7 +149,7 @@ function Olympus.move(ID, lat, lng, altitude, speed, category, taskOptions)
 			if groupCon then
 				groupCon:setTask(missionTask)
 			end
-			Olympus.notify("Olympus.move executed successfully on a Aircraft", 2)
+			Olympus.debug("Olympus.move executed successfully on a Aircraft", 2)
 		elseif category == "GroundUnit" then
 			vars = 
 				{
@@ -132,18 +161,18 @@ function Olympus.move(ID, lat, lng, altitude, speed, category, taskOptions)
 					disableRoads = true
 				}
 			mist.groupToRandomPoint(vars)
-			Olympus.notify("Olympus.move executed succesfully on a ground unit", 2)
+			Olympus.debug("Olympus.move executed succesfully on a ground unit", 2)
 		else
-			Olympus.notify("Olympus.move not implemented yet for " .. category, 2)
+			Olympus.debug("Olympus.move not implemented yet for " .. category, 2)
 		end
 	else
-        Olympus.notify("Error in Olympus.move " .. ID, 2)
+        Olympus.debug("Error in Olympus.move " .. ID, 2)
 	end
 end  
 
 -- Creates a simple smoke on the ground
 function Olympus.smoke(color, lat, lng)
-    Olympus.notify("Olympus.smoke " .. color .. " (" .. lat .. ", " .. lng ..")", 2)
+    Olympus.debug("Olympus.smoke " .. color .. " (" .. lat .. ", " .. lng ..")", 2)
 	local colorEnum = nil
 	if color == "green" then
 		colorEnum = trigger.smokeColor.Green
@@ -161,7 +190,7 @@ end
 
 -- Spawns a single ground unit
 function Olympus.spawnGroundUnit(coalition, unitType, lat, lng)
-    Olympus.notify("Olympus.spawnGroundUnit " .. coalition .. " " .. unitType .. " (" .. lat .. ", " .. lng ..")", 2)
+    Olympus.debug("Olympus.spawnGroundUnit " .. coalition .. " " .. unitType .. " (" .. lat .. ", " .. lng ..")", 2)
 	local spawnLocation = mist.utils.makeVec3GL(coord.LLtoLO(lat, lng, 0))
 	local unitTable = 
 	{
@@ -186,7 +215,7 @@ function Olympus.spawnGroundUnit(coalition, unitType, lat, lng)
 	}
 	mist.dynAdd(vars)
 	Olympus.unitCounter = Olympus.unitCounter + 1
-	Olympus.notify("Olympus.spawnGround completed succesfully", 2)
+	Olympus.debug("Olympus.spawnGround completed succesfully", 2)
 end  
 
 -- Spawns a single aircraft. Spawn options are:
@@ -198,7 +227,7 @@ function Olympus.spawnAircraft(coalition, unitType, lat, lng, spawnOptions)
 	local airbaseName = spawnOptions["airbaseName"]
 	local payload = spawnOptions["payload"]
 
-	Olympus.notify("Olympus.spawnAircraft " .. coalition .. " " .. unitType .. " (" .. lat .. ", " .. lng ..")", 2)
+	Olympus.debug("Olympus.spawnAircraft " .. coalition .. " " .. unitType .. " (" .. lat .. ", " .. lng ..")", 2)
 	local spawnLocation = mist.utils.makeVec3GL(coord.LLtoLO(lat, lng, 0))
 
 	if payload == nil then
@@ -289,12 +318,12 @@ function Olympus.spawnAircraft(coalition, unitType, lat, lng, spawnOptions)
 	-- Save the payload to be reused in case the unit is cloned. TODO: save by ID not by name (it works but I like consistency)
 	Olympus.payloadRegistry[vars.name] = payload
 	Olympus.unitCounter = Olympus.unitCounter + 1
-	Olympus.notify("Olympus.spawnAir completed successfully", 2)
+	Olympus.debug("Olympus.spawnAir completed successfully", 2)
 end
 
 -- Clones a unit by ID. Will clone the unit with the same original payload as the source unit. TODO: only works on Olympus unit not ME units.
 function Olympus.clone(ID, lat, lng)
-	Olympus.notify("Olympus.clone " .. ID, 2)
+	Olympus.debug("Olympus.clone " .. ID, 2)
 	local unit = Olympus.getUnitByID(ID)
 	if unit then
 		local coalition = Olympus.getCoalitionByCoalitionID(unit:getCoalition())
@@ -305,54 +334,54 @@ function Olympus.clone(ID, lat, lng)
 		}
 		Olympus.spawnAircraft(coalition, unit:getTypeName(), lat, lng, spawnOptions)
 	end
-	Olympus.notify("Olympus.clone completed successfully", 2)
+	Olympus.debug("Olympus.clone completed successfully", 2)
 end
 
 function Olympus.delete(ID, lat, lng)
-	Olympus.notify("Olympus.delete " .. ID, 2)
+	Olympus.debug("Olympus.delete " .. ID, 2)
 	local unit = Olympus.getUnitByID(ID)
 	if unit then
 		unit:destroy();
-		Olympus.notify("Olympus.delete completed successfully", 2)
+		Olympus.debug("Olympus.delete completed successfully", 2)
 	end
 end
 
 function Olympus.setTask(ID, taskOptions)
-	Olympus.notify("Olympus.setTask " .. ID .. " " .. Olympus.serializeTable(taskOptions), 2)
+	Olympus.debug("Olympus.setTask " .. ID .. " " .. Olympus.serializeTable(taskOptions), 2)
 	local unit = Olympus.getUnitByID(ID)
 	if unit then
 		local task = Olympus.buildTask(taskOptions);
 		if task then
 			unit:getGroup():getController():setTask(task)
-			Olympus.notify("Olympus.setTask completed successfully", 2)
+			Olympus.debug("Olympus.setTask completed successfully", 2)
 		end
 	end
 end
 
 function Olympus.resetTask(ID)
-	Olympus.notify("Olympus.resetTask " .. ID, 2)
+	Olympus.debug("Olympus.resetTask " .. ID, 2)
 	local unit = Olympus.getUnitByID(ID)
 	if unit then
 		unit:getGroup():getController():resetTask()
-		Olympus.notify("Olympus.resetTask completed successfully", 2)
+		Olympus.debug("Olympus.resetTask completed successfully", 2)
 	end
 end
 
 function Olympus.setCommand(ID, command)
-	Olympus.notify("Olympus.setCommand " .. ID .. " " .. Olympus.serializeTable(command), 2)
+	Olympus.debug("Olympus.setCommand " .. ID .. " " .. Olympus.serializeTable(command), 2)
 	local unit = Olympus.getUnitByID(ID)
 	if unit then
 		unit:getGroup():getController():setCommand(command)
-		Olympus.notify("Olympus.setCommand completed successfully", 2)
+		Olympus.debug("Olympus.setCommand completed successfully", 2)
 	end
 end
 
 function Olympus.setOption(ID, optionID, optionValue)
-	Olympus.notify("Olympus.setCommand " .. ID .. " " .. optionID .. " " .. optionValue, 2)
+	Olympus.debug("Olympus.setCommand " .. ID .. " " .. optionID .. " " .. optionValue, 2)
 	local unit = Olympus.getUnitByID(ID)
 	if unit then
 		unit:getGroup():getController():setOption(optionID, optionValue)
-		Olympus.notify("Olympus.setOption completed successfully", 2)
+		Olympus.debug("Olympus.setOption completed successfully", 2)
 	end
 end
 
@@ -388,4 +417,106 @@ function Olympus.serializeTable(val, name, skipnewlines, depth)
     return tmp
 end
 
-Olympus.notify("OlympusCommand script loaded successfully", 2)
+function Olympus.setMissionData(arg, time)
+	local missionData = {}
+
+	-- Bullseye data
+	local bullseyes = {}
+	for i = 0, 2 do
+		local bullseyeVec3 = coalition.getMainRefPoint(i)
+		local bullseyeLatitude, bullseyeLongitude, bullseyeAltitude = coord.LOtoLL(bullseyeVec3)
+		bullseyes[i] = {}
+		bullseyes[i]["latitude"] = bullseyeLatitude
+		bullseyes[i]["longitude"] = bullseyeLongitude
+	end
+
+	-- Units tactical data
+	local unitsData = {}
+	
+	local startIndex = Olympus.groupIndex
+	local endIndex = startIndex + Olympus.groupStep
+	local index = 0
+	for groupName, gp in pairs(mist.DBs.groupsByName) do
+		index = index + 1
+		if index > startIndex then
+			if groupName ~= nil then
+				local group = Group.getByName(groupName)
+				if group ~= nil then
+					local controller = group:getController()
+					for index, unit in pairs(group:getUnits()) do
+						local table = {}
+						table["targets"] = {}
+						table["targets"]["visual"] = controller:getDetectedTargets(1)
+						table["targets"]["radar"] = controller:getDetectedTargets(4)
+						table["targets"]["rwr"] = controller:getDetectedTargets(16)
+						table["targets"]["other"] = controller:getDetectedTargets(2, 8, 32)
+
+						table["hasTask"] = controller:hasTask()
+						
+						table["ammo"] = unit:getAmmo()
+						table["fuel"] = unit:getFuel()
+						table["life"] = unit:getLife() / unit:getLife0()
+						unitsData[unit:getObjectID()] = table
+					end
+				end
+			end
+		end
+		if index >= endIndex then
+			break
+		end
+	end
+	if index ~= endIndex then 
+		Olympus.groupIndex = 0
+	else
+		Olympus.groupIndex = endIndex
+	end
+
+	-- Airbases data
+	local base = world.getAirbases()
+	local airbases = {}
+	for i = 1, #base do
+		local info = {}
+		local latitude, longitude, altitude = coord.LOtoLL(Airbase.getPoint(base[i]))
+		info["callsign"] = Airbase.getCallsign(base[i])
+		local coalitionID = Airbase.getCoalition(base[i])
+		if coalitionID == 0 then
+			info["coalition"] = "neutral"
+		elseif coalitionID == 1 then
+			info["coalition"] = "red"
+		else 
+			info["coalition"] = "blue"
+		end
+		info["latitude"] =  latitude
+		info["longitude"] =  longitude
+		if Airbase.getUnit(base[i]) then
+			info["unitId"] = Airbase.getUnit(base[i]):getID()
+		end
+		airbases[i] = info
+	end
+
+	local mission = {}
+	mission.theatre = env.mission.theatre
+
+	-- Assemble missionData table
+	missionData["bullseyes"] = bullseyes
+	missionData["unitsData"] = unitsData
+	missionData["airbases"] = airbases
+	missionData["mission"] = mission
+
+	Olympus.missionData = missionData
+	Olympus.OlympusDLL.setMissionData()
+	return time + 1
+end
+
+local OlympusName = 'Olympus ' .. version .. ' C++ module';
+isOlympusModuleInitialized=true;
+Olympus.DLLsloaded = Olympus.loadDLLs()
+if Olympus.DLLsloaded then
+	Olympus.notify(OlympusName..' successfully loaded.', 20)
+else
+	Olympus.notify('Failed to load '..OlympusName, 20)
+end
+
+timer.scheduleFunction(Olympus.setMissionData, {}, timer.getTime() + 1)
+
+Olympus.notify("OlympusCommand script " .. version .. " loaded successfully", 2, true)

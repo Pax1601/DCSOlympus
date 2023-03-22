@@ -15,12 +15,12 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files] 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files 
-Source: "..\scripts\OlympusExport.lua"; DestDir: "{app}\Scripts"; Flags: ignoreversion 
-Source: "..\scripts\OlympusPatcher.exe"; DestDir: "{app}\Scripts"; Flags: ignoreversion 
+;Source: "..\scripts\OlympusExport.lua"; DestDir: "{app}\Scripts"; Flags: ignoreversion 
+;Source: "..\scripts\OlympusPatcher.exe"; DestDir: "{app}\Scripts"; Flags: ignoreversion 
 Source: "..\scripts\OlympusHook.lua"; DestDir: "{app}\Scripts\Hooks"; Flags: ignoreversion 
 Source: "..\scripts\OlympusCommand.lua"; DestDir: "{app}\Mods\Services\Olympus\Scripts"; Flags: ignoreversion 
 Source: "..\scripts\unitPayloads.lua"; DestDir: "{app}\Mods\Services\Olympus\Scripts"; Flags: ignoreversion
-Source: "..\scripts\OlympusMission.lua"; DestDir: "{app}\Mods\Services\Olympus\Scripts"; Flags: ignoreversion 
+;Source: "..\scripts\OlympusMission.lua"; DestDir: "{app}\Mods\Services\Olympus\Scripts"; Flags: ignoreversion 
 Source: "..\scripts\mist_4_4_90.lua"; DestDir: "{app}\Mods\Services\Olympus\Scripts"; Flags: ignoreversion 
 Source: "..\mod\*"; DestDir: "{app}\Mods\Services\Olympus"; Flags: ignoreversion recursesubdirs;
 Source: "..\bin\*.dll"; DestDir: "{app}\Mods\Services\Olympus\bin"; Flags: ignoreversion;
@@ -60,8 +60,8 @@ ChangesEnvironment=yes
 [Icons]
 Name: "{userdesktop}\DCS Olympus Client"; Filename: "{app}\Mods\Services\Olympus\client\nw.exe"; Tasks: desktopicon
 
-[Run]
-Filename: "{app}\Scripts\OlympusPatcher.exe"; Parameters: "-i"
+;[Run]
+;Filename: "{app}\Scripts\OlympusPatcher.exe"; Parameters: "-i"
 
-[UninstallRun]
-Filename: "{app}\Scripts\OlympusPatcher.exe"; Parameters: "-u"
+;[UninstallRun]
+;Filename: "{app}\Scripts\OlympusPatcher.exe"; Parameters: "-u"
