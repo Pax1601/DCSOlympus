@@ -32,13 +32,24 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 }
 
 #unit-control-panel #selected-units-container button::before {
-	background-color: var( --accent-light-blue );
+	background-color: var( --primary-grey );
 	border-radius: var( --border-radius-md );
 	content: attr( data-short-label );
 	margin:0 5px;
 	padding:4px 6px;
 	white-space: nowrap;
 	width:fit-content;
+}
+
+
+
+#unit-control-panel #selected-units-container button[data-coalition="blue"]::before {
+	background-color: var( --accent-light-blue );
+}
+
+#unit-control-panel #selected-units-container button[data-coalition="red"]::before {
+	background-color: var( --accent-light-red );
+	color:var(--secondary-red-outline)
 }
 
 #unit-control-panel #selected-units-container button::after {
