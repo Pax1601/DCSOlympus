@@ -13,7 +13,7 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 }
 
 #unit-control-panel #selected-units-container {
-	align-items: center;
+	align-items: left;
 	border-radius: var( --border-radius-md );
 	display:flex;
 	flex-direction: column;
@@ -21,7 +21,11 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 }
 
 #unit-control-panel #selected-units-container button {
-	font-size: 12px;
+	align-items: center;
+	border-radius: var( --border-radius-lg );
+	display:flex;
+	font-size: 11px;
+	height:30px;
 	padding:8px 0;
 	position: relative;
 	width:90%;
@@ -29,15 +33,42 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 
 #unit-control-panel #selected-units-container button::before {
 	background-color: var( --accent-light-blue );
-	border-radius: var( --border-radius-sm );
+	border-radius: var( --border-radius-md );
 	content: attr( data-short-label );
-	padding:4px;
-	position: absolute;
-	translate:-40px -4px;
+	margin:0 5px;
+	padding:4px 6px;
+	white-space: nowrap;
+	width:fit-content;
 }
 
 #unit-control-panel #selected-units-container button::after {
 	content: attr( data-callsign );
+	display: block;
+	overflow: hidden;
+	padding:4px;
+	padding-left:0;
+	text-align: left;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	width:fit-content;
+}
+
+
+#unit-control-panel #selected-units-container button:hover::after {
+	overflow: visible;
+	text-overflow:initial;
+}
+
+#unit-control-panel #selected-units-container button:hover::after {
+	background-color: var( --background-grey );
+}
+
+#unit-control-panel #selected-units-container button[data-coalition="blue"]:hover::after {
+	background-color: var( --primary-blue );
+}
+
+#unit-control-panel #selected-units-container button[data-coalition="red"]:hover::after {
+	background-color: var( --primary-red );
 }
 
 #unit-control-panel h4 {
