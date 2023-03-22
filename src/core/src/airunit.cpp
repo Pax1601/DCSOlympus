@@ -61,8 +61,8 @@ void AirUnit::setState(int newState)
 			if (isTargetAlive()) {
 				Unit* target = unitsManager->getUnit(targetID);
 				Coords targetPosition = Coords(target->getLatitude(), target->getLongitude(), 0);
-				activePath.clear();
-				activePath.push_front(targetPosition);
+				clearActivePath();
+				pushActivePathFront(targetPosition);
 				resetActiveDestination();
 			}
 			break;
@@ -128,17 +128,17 @@ bool AirUnit::setActiveDestination()
 void AirUnit::createHoldingPattern()
 {
 	/* Air units must ALWAYS have a destination or they will RTB and become uncontrollable */
-	activePath.clear();
+	clearActivePath();
 	Coords point1;
 	Coords point2;
 	Coords point3;
 	Geodesic::WGS84().Direct(latitude, longitude, 45, 10000, point1.lat, point1.lng);
 	Geodesic::WGS84().Direct(point1.lat, point1.lng, 135, 10000, point2.lat, point2.lng);
 	Geodesic::WGS84().Direct(point2.lat, point2.lng, 225, 10000, point3.lat, point3.lng);
-	activePath.push_back(point1);
-	activePath.push_back(point2);
-	activePath.push_back(point3);
-	activePath.push_back(Coords(latitude, longitude));
+	pushActivePathBack(point1);
+	pushActivePathBack(point2);
+	pushActivePathBack(point3);
+	pushActivePathBack(Coords(latitude, longitude));
 	log(unitName + L" holding pattern created");
 }
 
@@ -148,7 +148,7 @@ bool AirUnit::updateActivePath(bool looping)
 	{
 		/* Push the next destination in the queue to the front */
 		if (looping)
-			activePath.push_back(activePath.front());
+			pushActivePathBack(activePath.front());
 		activePath.pop_front();
 		log(unitName + L" active path front popped");
 		return true;
@@ -310,7 +310,7 @@ void AirUnit::AIloop()
 		}
 		case State::WINGMAN: {
 			/* In the WINGMAN state, the unit relinquishes control to the leader */
-			activePath.clear();
+			clearActivePath();
 			activeDestination = Coords(NULL);
 			if (leader == nullptr || !leader->getAlive())
 			{

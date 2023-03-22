@@ -51,7 +51,7 @@ void GroundUnit::AIloop()
 		if (newDist < GROUND_DEST_DIST_THR)
 		{
 			/* Destination reached */
-			activePath.pop_front();
+			popActivePathFront();
 			log(unitName + L" destination reached");
 		}
 	}
