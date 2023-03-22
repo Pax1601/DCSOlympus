@@ -11,6 +11,12 @@ export class AirbaseContextMenu extends ContextMenu {
         document.addEventListener("contextMenuSpawnAirbase", (e: any) => {
             this.showSpawnMenu();
         })
+
+        document.addEventListener("contextMenuLandAirbase", (e: any) => {
+            if (this.#airbase)
+                getUnitsManager().selectedUnitsLandAt(this.#airbase.getLatLng());
+            this.hide();
+        })
     }
 
     setAirbase(airbase: Airbase)
