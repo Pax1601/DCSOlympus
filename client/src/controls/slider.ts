@@ -2,20 +2,23 @@ export class Slider {
     #container: HTMLElement | null;
     #callback: CallableFunction;
     #slider: HTMLInputElement | null = null;
-    #value: HTMLElement | null = null;
+    #valueText: HTMLElement | null = null;
     #minValue: number;
     #maxValue: number;
+    #increment: number;
     #minValueDiv: HTMLElement | null = null;
     #maxValueDiv: HTMLElement | null = null;
     #unit: string;
     #display: string = "";
     #dragged: boolean = false;
+    #value: number = 0;
 
     constructor(ID: string, minValue: number, maxValue: number, unit: string, callback: CallableFunction) {
         this.#container = document.getElementById(ID);
         this.#callback = callback;
         this.#minValue = minValue;
         this.#maxValue = maxValue;
+        this.#increment = 1;
         this.#unit = unit;
         if (this.#container != null) {
             this.#display = this.#container.style.display;
@@ -26,7 +29,7 @@ export class Slider {
                 this.#slider.addEventListener("mousedown", (e: any) => this.#onStart());
                 this.#slider.addEventListener("mouseup", (e: any) => this.#onFinalize());
             }
-            this.#value = <HTMLElement>this.#container.querySelector("#value");
+            this.#valueText = <HTMLElement>this.#container.querySelector("#value");
         }
     }
 
@@ -47,8 +50,8 @@ export class Slider {
         if (this.#container && !this.#dragged)
         {
             this.#container.classList.toggle("active", newActive);
-            if (!newActive && this.#value != null)
-                this.#value.innerText = "Mixed values";
+            if (!newActive && this.#valueText != null)
+                this.#valueText.innerText = "Mixed values";
         }
     }
 
@@ -56,6 +59,13 @@ export class Slider {
     {
         this.#minValue = newMinValue;
         this.#maxValue = newMaxValue;
+        this.#updateMax();
+    }
+
+    setIncrement(newIncrement: number)
+    {
+        this.#increment = newIncrement;
+        this.#updateMax();
     }
 
     setValue(newValue: number)
@@ -63,10 +73,16 @@ export class Slider {
         // Disable value setting if the user is dragging the element
         if (!this.#dragged)
         {
+            this.#value = newValue;
             if (this.#slider != null)
                 this.#slider.value = String((newValue - this.#minValue) / (this.#maxValue - this.#minValue) * 100); 
             this.#onValue()
         }
+    }
+
+    getValue()
+    {
+        return this.#value;
     }
 
     getDragged()
@@ -74,10 +90,18 @@ export class Slider {
         return this.#dragged;
     }
 
+    #updateMax()
+    {
+        var oldValue = this.getValue();
+        if (this.#slider != null)
+            this.#slider.max = String((this.#maxValue - this.#minValue) / this.#increment);
+        this.setValue(oldValue);
+    }
+
     #onValue()
     {
-        if (this.#value != null && this.#slider != null)
-            this.#value.innerHTML = this.#minValue + Math.round(parseFloat(this.#slider.value) / 100 * (this.#maxValue - this.#minValue)) + this.#unit
+        if (this.#valueText != null && this.#slider != null)
+            this.#valueText.innerHTML = this.#minValue + Math.round(parseFloat(this.#slider.value) / parseFloat(this.#slider.max)  * (this.#maxValue - this.#minValue)) + this.#unit
         this.setActive(true);
     }
 
@@ -95,6 +119,9 @@ export class Slider {
     {
         this.#dragged = false;
         if (this.#slider != null)
-            this.#callback(this.#minValue + parseFloat(this.#slider.value) / 100 * (this.#maxValue - this.#minValue));
+        {
+            this.#value = this.#minValue + parseFloat(this.#slider.value) / 100 * (this.#maxValue - this.#minValue);
+            this.#callback(this.getValue());
+        }
     }
 }

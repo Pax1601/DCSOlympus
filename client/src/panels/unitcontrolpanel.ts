@@ -10,8 +10,10 @@ const ROEs: string[] = ["Free", "Designated free", "Designated", "Return", "Hold
 const reactionsToThreat: string[] = [ "None", "Passive", "Evade", "Escape", "Abort"];
 const minSpeedValues: {[key: string]: number} = {Aircraft: 100, Helicopter: 0, NavyUnit: 0, GroundUnit: 0};
 const maxSpeedValues: {[key: string]: number} = {Aircraft: 800, Helicopter: 300, NavyUnit: 60, GroundUnit: 60};
-const minAltitudeValues: {[key: string]: number} = {Aircraft: 500, Helicopter: 0, NavyUnit: 0, GroundUnit: 0};
-const maxAltitudeValues: {[key: string]: number} = {Aircraft: 50000, Helicopter: 10000, NavyUnit: 60, GroundUnit: 60};
+const speedIncrements: {[key: string]: number} = {Aircraft: 25, Helicopter: 10, NavyUnit: 5, GroundUnit: 5};
+const minAltitudeValues: {[key: string]: number} = {Aircraft: 0, Helicopter: 0};
+const maxAltitudeValues: {[key: string]: number} = {Aircraft: 50000, Helicopter: 10000};
+const altitudeIncrements: {[key: string]: number} = {Aircraft: 2500, Helicopter: 1000};
 
 export class UnitControlPanel extends Panel {
     #altitudeSlider: Slider;
@@ -102,6 +104,8 @@ export class UnitControlPanel extends Panel {
 
             this.#airspeedSlider.setMinMax(minSpeedValues[unitsType], maxSpeedValues[unitsType]);
             this.#altitudeSlider.setMinMax(minAltitudeValues[unitsType], maxAltitudeValues[unitsType]);
+            this.#airspeedSlider.setIncrement(speedIncrements[unitsType]);
+            this.#altitudeSlider.setIncrement(altitudeIncrements[unitsType]);
 
             this.#airspeedSlider.setActive(targetSpeed != undefined);
             if (targetSpeed != undefined)
