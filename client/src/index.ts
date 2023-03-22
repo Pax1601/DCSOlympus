@@ -30,7 +30,7 @@ var connected: boolean = false;
 var activeCoalition: string = "blue";
 
 var sessionHash: string | null = null;
-var unitDataTable = new UnitDataTable();
+var unitDataTable: UnitDataTable;
 
 var featureSwitches;
 
@@ -49,6 +49,8 @@ function setup() {
     connectionStatusPanel = new ConnectionStatusPanel("connection-status-panel");
     mouseInfoPanel = new MouseInfoPanel("mouse-info-panel");
     //logPanel = new LogPanel("log-panel");
+
+    unitDataTable = new UnitDataTable("unit-data-table");
 
     /* AIC */
     let aicFeatureSwitch = featureSwitches.getSwitch("aic");
@@ -87,7 +89,6 @@ function requestUpdate() {
     /* Main update rate = 250ms is minimum time, equal to server update time. */
     getUnits((data: UnitsData) => {
         getUnitsManager()?.update(data);
-        getUnitDataTable().update( data.units )
         checkSessionHash(data.sessionHash);
     }, false);
     setTimeout(() => requestUpdate(), getConnected() ? 250 : 1000);
@@ -98,9 +99,14 @@ function requestUpdate() {
 function requestRefresh() {
     /* Main refresh rate = 5000ms. */
     getUnits((data: UnitsData) => {
+        getUnitsManager()?.update(data);
         getAirbases((data: AirbasesData) => getMissionData()?.update(data));
         getBullseyes((data: BullseyesData) => getMissionData()?.update(data));
         getMission((data: any) => {getMissionData()?.update(data)});
+
+        // Update the list of existing units
+        getUnitDataTable()?.update();
+
         checkSessionHash(data.sessionHash);
     }, true);
     setTimeout(() => requestRefresh(), 5000);
@@ -152,8 +158,10 @@ function setupEvents() {
                 toggleDemoEnabled();
                 break;
 
+            case "Minus": // For Veltro's italian layout keyboard, which lacks a quote
             case "Quote":
                 unitDataTable.toggle();
+                break
         }
 
     });

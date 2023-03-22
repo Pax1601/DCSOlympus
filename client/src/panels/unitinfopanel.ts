@@ -54,7 +54,7 @@ export class UnitInfoPanel extends Panel {
             this.#currentTask.dataset.coalition = unit.getMissionData().coalition;
             
             /* Add the loadout elements */
-            this.#loadoutContainer.replaceChildren(...unit.getMissionData().ammo.map(
+            this.#loadoutContainer.replaceChildren(...Object.values(unit.getMissionData().ammo).map(
                 (ammo: any) => {
                     var el = document.createElement("div");
                     el.classList.add("pill", "loadout-item");
