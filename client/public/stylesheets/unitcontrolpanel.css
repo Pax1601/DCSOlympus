@@ -42,6 +42,7 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 }
 
 #unit-control-panel #selected-units-container button::after {
+	border-radius: var( --border-radius-sm );
 	content: attr( data-callsign );
 	display: block;
 	overflow: hidden;
