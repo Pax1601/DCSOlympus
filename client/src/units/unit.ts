@@ -116,11 +116,12 @@ export class Unit extends Marker {
     setData(data: UpdateData) {
         document.dispatchEvent(new CustomEvent("unitUpdated", { detail: this }));
         var updateMarker = false;
-        if (this.getFlightData().latitude != data.flightData.latitude || 
-            this.getFlightData().longitude != data.flightData.longitude || 
-            this.getBaseData().alive != data.baseData.alive || this.#forceUpdate || !getMap().hasLayer(this))
+    
+        if ((data.flightData.latitude != undefined && data.flightData.longitude != undefined && (this.getFlightData().latitude != data.flightData.latitude || this.getFlightData().longitude != data.flightData.longitude)) 
+            || (data.baseData.alive != undefined && this.getBaseData().alive != data.baseData.alive)
+            || this.#forceUpdate || !getMap().hasLayer(this))
             updateMarker = true;
-            
+        
         if (data.baseData != undefined)
         {
             for (let key in this.#data.baseData)

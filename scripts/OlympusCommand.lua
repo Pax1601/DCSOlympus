@@ -12,7 +12,7 @@ Olympus.DLLsloaded = false
 Olympus.OlympusModPath = os.getenv('DCSOLYMPUS_PATH')..'\\bin\\' 
 
 function Olympus.debug(message, displayFor)
-	if debug then:
+	if debug == true then
     	trigger.action.outText(message, displayFor)
 	end
 end
