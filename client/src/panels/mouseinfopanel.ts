@@ -53,7 +53,13 @@ export class MouseInfoPanel extends Panel {
                 var bear = bearing(measurePosition.lat, measurePosition.lng, mousePosition.lat, mousePosition.lng);
                 var dist = distance(measurePosition.lat, measurePosition.lng, mousePosition.lat, mousePosition.lng);
 
-                el.dataset.bearing       = zeroAppend(Math.floor(bear), 3);
+                let bng = zeroAppend(Math.floor(bear), 3);
+
+                if ( bng === "000" ) {
+                    bng = "360";
+                }
+                
+                el.dataset.bearing       = bng;
                 el.dataset.distance      = zeroAppend(Math.floor(dist*0.000539957), 3);
                 el.dataset.distanceUnits = "NM";
 
@@ -156,8 +162,12 @@ export class MouseInfoPanel extends Panel {
             if (angle < -Math.PI / 2) 
                 angle = angle + Math.PI;
 
-            const bng = zeroAppend(Math.floor(bear), 3);
+            let bng = zeroAppend(Math.floor(bear), 3);
             const reciprocal = zeroAppend( reciprocalHeading( parseInt( bng ) ), 3 );
+
+            if ( bng === "000" ) {
+                bng = "360";
+            }
 
             let data = [ `${bng}°`, `${Math.floor(dist*0.000539957)}nm`, `${reciprocal}°` ];
 
