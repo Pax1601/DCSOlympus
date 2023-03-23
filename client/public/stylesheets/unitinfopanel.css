@@ -74,8 +74,9 @@
 	align-items: center;
 	background-color: var( --secondary-light-grey );
 	border-radius: 50%;
-	content: attr( data-quantity );
+	content: attr( data-qty );
 	display:flex;
+	font-weight: var( --font-weight-bolder );
 	justify-content: center;
 	height:20px;
 	width:20px;

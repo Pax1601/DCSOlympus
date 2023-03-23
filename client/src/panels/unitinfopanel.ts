@@ -1,3 +1,4 @@
+import { getUnitsManager } from "..";
 import { ConvertDDToDMS, rad2deg } from "../other/utils";
 import { aircraftDatabase } from "../units/aircraftdatabase";
 import { Unit } from "../units/unit";
@@ -51,8 +52,7 @@ export class UnitInfoPanel extends Panel {
         if (this.getElement() != null && this.getVisible() && unit.getSelected()) {
 
             const baseData = unit.getBaseData();
-            //style=""
-            console.log(  );
+
             /* Set the unit info */
             this.#unitLabel.innerText   = aircraftDatabase.getLabelByName( baseData.name );
             this.#unitName.innerText    = baseData.unitName;
@@ -69,14 +69,15 @@ export class UnitInfoPanel extends Panel {
             this.#currentTask.dataset.currentTask = unit.getTaskData().currentTask !== ""? unit.getTaskData().currentTask: "No task";
             this.#currentTask.dataset.coalition = unit.getMissionData().coalition;
             
+            this.#silhouette.setAttribute( "style", `--loadout-background-image:url('/images/units/${aircraftDatabase.getByName( baseData.name )?.filename}');` );;
+            
             /* Add the loadout elements */
             const items = <HTMLElement>this.#loadoutContainer.querySelector( "#loadout-items" );
 
-            this.#silhouette.setAttribute( "style", `--loadout-background-image:url('/images/units/${aircraftDatabase.getByName( baseData.name )?.filename}');` );;
 
             if ( items ) {
 
-                const ammo = Object.values(unit.getMissionData().ammo); 
+                const ammo = Object.values( unit.getMissionData().ammo ); 
 
                 if ( ammo.length > 0 ) {
 
