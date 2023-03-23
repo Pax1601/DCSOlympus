@@ -10,13 +10,14 @@
 
 
 #unit-info-panel #unit-name {
-    line-height: 18px;
-	margin-bottom:10px;
+	padding:0px 0;
+	margin-bottom:4px;
 }
 
 #unit-info-panel #current-task {
 	border-radius: var( --border-radius-lg );
-	margin-top:15px;
+	margin-top:8px;
+	padding:6px 16px;
 }
 
 #unit-info-panel #current-task::after {
@@ -25,36 +26,97 @@
 }
 
 
-#unit-info-panel #loadout-data {
-	max-width: 250px;
+#loadout-container {
+	width:250px;
 }
 
-#unit-info-panel #loadout-data .ol-data-grid {
-	margin: 6px 0;
+#loadout {
+	display:flex;
 }
 
-#unit-info-panel #loadout-data .ol-data-grid dt:first-child {
-	text-indent: 5px;
+#loadout-silhouette {
+	align-items: center;
+	display:flex;
+	justify-content: center;
+	width:55%;
 }
 
-#unit-info-panel #loadout-data .ol-data-grid dt:first-child::before {
+#loadout-silhouette::before {
+	background-image: var( --loadout-background-image );
+	background-repeat: no-repeat;
+	background-size:75px 75px;
+	content:"";
+	display:block;
+	filter: invert( 100% );
+	height:75px;
+	translate:-10px 0;
+	width:75px;
+}
+
+#loadout-items {
+	align-self: center;
+	display:flex;
+	flex-flow: column nowrap;
+	row-gap: 8px;
+	text-align: center;
+	width:45%;
+}
+
+
+#loadout-items > * {
+	align-items: center;
+	column-gap: 8px;
+	display:flex;
+	white-space: nowrap;
+}
+
+#loadout-items > *::before {
+	align-items: center;
+	background-color: var( --secondary-light-grey );
+	border-radius: 50%;
+	content: attr( data-quantity );
+	display:flex;
+	justify-content: center;
+	height:20px;
+	width:20px;
+}
+
+#loadout-items > *::after {
+	content: attr( data-item );
+}
+
+
+
+#fuel-percentage {
+	align-items: center;
+	display:flex;
+}
+
+#fuel-percentage::before {
 	content: url( /images/icons/fuel.svg );
 	display:inline-block;
 	filter:invert(100%);
 	height:16px;
-	text-indent:5px;
-	translate:-10px 5%;
+	margin-right:6px;
 	width:16px;
 }
 
-#unit-info-panel #loadout-fuel-level::after {
-	content: attr( data-fuel-level ) "%";
+#fuel-percentage::after {
+	content: attr( data-percentage ) "%";
 }
 
-#unit-info-panel #loadout-container .loadout-item {
-	background-color: black;
+
+#fuel-display {
+	background-color: var( --background-grey );
+	border-radius: var( --border-radius-md );
+	height:6px;
+	margin-top:4px;
+	overflow: hidden;
+	width:90%;
 }
 
-#unit-info-panel #loadout-container .loadout-item::before {
-	content: attr( data-loadout-qty )'\d7  ' attr( data-loadout-item )  ;
+#fuel-display #fuel-bar {
+	border-radius: var( --border-radius-md );
+	height:100%;
 }
+

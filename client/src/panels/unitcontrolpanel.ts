@@ -59,17 +59,38 @@ export class UnitControlPanel extends Panel {
         if (this.getElement() != null && units.length > 0)
         {
             this.#showFlightControlSliders(units);
-            this.getElement().querySelector("#selected-units-container")?.replaceChildren(...units.map((unit: Unit) =>
+
+            this.getElement().querySelector("#selected-units-container")?.replaceChildren(...units.map((unit: Unit, index:number) =>
             {
-                var button = document.createElement("button");
-                button.innerText = unit.getBaseData().unitName;
                 
-                if (unit instanceof Aircraft)
-                    button.setAttribute( "data-short-label", aircraftDatabase.getShortLabelByName(unit.getBaseData().name));
-                else if (unit instanceof GroundUnit)
-                    button.setAttribute( "data-short-label", groundUnitsDatabase.getShortLabelByName(unit.getBaseData().name));
-                else 
+                const baseData = unit.getBaseData();
+
+                if ( index === 0 ) {
+
+                    this.getElement().querySelectorAll(`[data-object|="unit"]`).forEach(  marker => {
+                        marker.setAttribute( "data-coalition", unit.getMissionData().coalition );
+                        const shortLabel = <HTMLElement>marker.querySelector( ".unit-short-label" );
+                        if ( shortLabel ) {
+                            shortLabel.innerText = aircraftDatabase.getShortLabelByName( baseData.name );
+                        }
+                    });
+                }
+
+                var button = document.createElement("button");
+                button.innerText = baseData.unitName;
+
+                if (unit instanceof Aircraft) {
+                    button.innerText = "";
+                    button.setAttribute( "data-short-label", aircraftDatabase.getLabelByName( baseData.name ) );
+                    button.setAttribute( "data-callsign", aircraftDatabase.getLabelByName( baseData.unitName ) );
+                } else if (unit instanceof GroundUnit) {
+
+                    button.setAttribute( "data-short-label", groundUnitsDatabase.getShortLabelByName(baseData.name));
+                    button.setAttribute( "data-callsign", groundUnitsDatabase.getLabelByName( baseData.unitName ) );
+                } else {
                     button.setAttribute( "data-short-label", "");
+                    button.setAttribute( "data-callsign", "" );
+                }
 
                 button.setAttribute( "data-coalition", unit.getMissionData().coalition );
                 button.classList.add( "pill", "highlight-coalition" )
