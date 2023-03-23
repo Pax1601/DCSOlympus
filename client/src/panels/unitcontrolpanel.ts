@@ -77,19 +77,34 @@ export class UnitControlPanel extends Panel {
                 }
 
                 var button = document.createElement("button");
-                button.innerText = baseData.unitName;
+
+                let callsign;
+
+                const unitName = <HTMLInputElement>this.getElement().querySelector( "#unit-name" );
 
                 if (unit instanceof Aircraft) {
                     button.innerText = "";
                     button.setAttribute( "data-short-label", aircraftDatabase.getLabelByName( baseData.name ) );
-                    button.setAttribute( "data-callsign", aircraftDatabase.getLabelByName( baseData.unitName ) );
+
+                    callsign = aircraftDatabase.getLabelByName( baseData.unitName );
+                    
+                    button.setAttribute( "data-callsign", callsign );
+                    unitName.value = callsign;
+
                 } else if (unit instanceof GroundUnit) {
 
                     button.setAttribute( "data-short-label", groundUnitsDatabase.getShortLabelByName(baseData.name));
+                    
+                    callsign = aircraftDatabase.getLabelByName( baseData.unitName ) || "";
+                    
                     button.setAttribute( "data-callsign", groundUnitsDatabase.getLabelByName( baseData.unitName ) );
+                    unitName.value = callsign;
+
                 } else {
+
                     button.setAttribute( "data-short-label", "");
                     button.setAttribute( "data-callsign", "" );
+
                 }
 
                 button.setAttribute( "data-coalition", unit.getMissionData().coalition );
