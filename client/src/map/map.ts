@@ -228,6 +228,7 @@ export class Map extends L.Map {
 
     #onMouseDown(e: any)
     {
+        this.hideAllContextMenus();
         if ((e.originalEvent.which == 1) && (e.originalEvent.button == 0)) 
             this.dragging.disable();
     }
