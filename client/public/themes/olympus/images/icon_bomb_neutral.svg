@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="50"
+   height="50"
+   viewBox="0 0 50 50"
+   fill="none"
+   version="1.1"
+   id="svg12"
+   sodipodi:docname="icon_bomb_blue.svg"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs16" />
+  <sodipodi:namedview
+     id="namedview14"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="11.766257"
+     inkscape:cx="22.139581"
+     inkscape:cy="24.689245"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg12" />
+  <path
+     d="m 24.9348,12.27041 c 1.781649,0 2.774707,2.202308 2.833594,7.603552 0.05889,5.401244 -2.283654,16.513641 -2.283654,16.513641 h -1.039784 c 0,0 -2.188799,-11.37979 -2.19351,-16.573737 -0.0047,-5.193947 0.901705,-7.543456 2.683354,-7.543456 z"
+     fill="#CFD9E8"
+     stroke="#082e44"
+     stroke-width="1.81059"
+     id="path2"
+     sodipodi:nodetypes="zzcczz" />
+  <path
+     d="m 23.573821,31.288106 0.871135,5.099497 -5.000516,-2.740929 z"
+     fill="#082e44"
+     id="path4"
+     style="stroke-width:0.928076"
+     sodipodi:nodetypes="cccc" />
+  <path
+     d="m 25.48474,36.387603 0.871136,-5.078251 4.12938,2.337232 z"
+     fill="#082e44"
+     id="path4-2"
+     style="stroke-width:0.928076"
+     sodipodi:nodetypes="cccc" />
+</svg>

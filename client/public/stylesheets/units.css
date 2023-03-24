@@ -298,7 +298,7 @@
 
 /*  Weapons  */
 
-[data-object|="unit-weapon"] {
+[data-object|="unit-missile"], [data-object|="unit-bomb"] {
     cursor: default;
 }
 
@@ -308,14 +308,26 @@
     width: var( --unit-missile-marker-width );
 }
 
-
 [data-object|="unit-missile"][data-coalition="blue"] .unit-marker {
     background-image: var( --unit-missile-marker-blue-url );
 }
 
-
 [data-object|="unit-missile"][data-coalition="red"] .unit-marker {
     background-image: var( --unit-missile-marker-red-url );
+}
+
+[data-object|="unit-bomb"] .unit-marker {
+    background-image: var( --unit-bomb-marker-neutral-url );
+    height: var( --unit-bomb-marker-height );
+    width: var( --unit-bomb-marker-width );
+}
+
+[data-object|="unit-bomb"][data-coalition="blue"] .unit-marker {
+    background-image: var( --unit-bomb-marker-blue-url );
+}
+
+[data-object|="unit-bomb"][data-coalition="red"] .unit-marker {
+    background-image: var( --unit-bomb-marker-red-url );
 }
 
 
