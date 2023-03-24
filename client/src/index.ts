@@ -184,15 +184,6 @@ function setupEvents() {
     }
     //*/
 
-    document.addEventListener("toggleCoalitionVisibility", (ev: CustomEventInit) => {
-        ev.detail._element.classList.toggle("off");
-        document.body.toggleAttribute("data-hide-" + ev.detail.coalition);
-    });
-
-    document.addEventListener("toggleUnitVisibility", (ev: CustomEventInit) => {
-        document.body.toggleAttribute("data-hide-" + ev.detail.category);
-    });
-
     document.addEventListener( "closeDialog", (ev: CustomEventInit) => {
         ev.detail._element.closest( ".ol-dialog" ).classList.add( "hide" );
     });

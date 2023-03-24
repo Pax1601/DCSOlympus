@@ -3,7 +3,7 @@ import { UnitDatabase } from "./unitdatabase"
 export class GroundUnitsDatabase extends UnitDatabase {
     constructor() {
         super();
-        this.units = {
+        this.blueprints = {
             "2B11 mortar": {
                 "name": "2B11 mortar",
                 "label": "2B11 mortar",
