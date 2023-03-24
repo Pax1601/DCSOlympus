@@ -1,6 +1,6 @@
 import { LatLng } from "leaflet";
 import { getActiveCoalition, setActiveCoalition } from "..";
-import { spawnAircraft, spawnGroundUnit } from "../server/server";
+import { spawnAircraft, spawnGroundUnit, spawnSmoke } from "../server/server";
 import { aircraftDatabase } from "../units/aircraftdatabase";
 import { groundUnitsDatabase } from "../units/groundunitsdatabase";
 import { ContextMenu } from "./contextmenu";
@@ -35,21 +35,26 @@ export class MapContextMenu extends ContextMenu {
 
         document.addEventListener("contextMenuShow", (e: any) => {
             this.showSubMenu(e.detail.type);
-        })
+        });
 
         document.addEventListener("contextMenuDeployAircraft", () => {
             this.hide();
             this.#spawnOptions.coalition = getActiveCoalition();
             if (this.#spawnOptions)
                 spawnAircraft(this.#spawnOptions);
-        })
+        });
 
         document.addEventListener("contextMenuDeployGroundUnit", () => {
             this.hide();
             this.#spawnOptions.coalition = getActiveCoalition();
             if (this.#spawnOptions)
                 spawnGroundUnit(this.#spawnOptions);
-        })
+        });
+
+        document.addEventListener("contextMenuDeploySmoke", (e: any) => {
+            this.hide();
+            spawnSmoke(e.detail.color, this.getLatLng());
+        });
 
         this.hide();
     }
