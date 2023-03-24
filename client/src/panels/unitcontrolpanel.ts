@@ -126,8 +126,17 @@ export class UnitControlPanel extends Panel {
 
     #showFlightControlSliders(units: Unit[])
     {
-        this.#airspeedSlider.show();
-        this.#altitudeSlider.show();
+        if (getUnitsManager().getSelectedUnitsType() !== undefined) 
+            this.#airspeedSlider.show() 
+        else
+            this.#airspeedSlider.hide();
+        
+        if (getUnitsManager().getSelectedUnitsType() === "Aircraft" || getUnitsManager().getSelectedUnitsType() === "Helicopter") 
+            this.#altitudeSlider.show() 
+        else
+            this.#altitudeSlider.hide();
+
+        this.getElement().querySelector(`#categories-tooltip`)?.classList.toggle("hide", getUnitsManager().getSelectedUnitsType() !== undefined);
 
         var unitsType = getUnitsManager().getSelectedUnitsType();
         var targetAltitude = getUnitsManager().getSelectedUnitsTargetAltitude();
