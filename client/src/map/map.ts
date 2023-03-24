@@ -6,6 +6,7 @@ import { UnitContextMenu } from "../controls/unitcontextmenu";
 import { AirbaseContextMenu } from "../controls/airbasecontextmenu";
 import { Dropdown } from "../controls/dropdown";
 import { Airbase } from "../missionhandler/airbase";
+import { Unit } from "../units/unit";
 
 export const IDLE = "IDLE";
 export const MOVE_UNIT = "MOVE_UNIT";
@@ -45,6 +46,17 @@ export class Map extends L.Map {
         this.on('mouseup', (e: any) => this.#onMouseUp(e));
         this.on('mousemove', (e: any) => this.#onMouseMove(e));
 
+        document.addEventListener("toggleCoalitionVisibility", (ev: CustomEventInit) => {
+            ev.detail._element.classList.toggle("off");
+            document.body.toggleAttribute("data-hide-" + ev.detail.coalition);
+            Object.values(getUnitsManager().getUnits()).forEach((unit: Unit) => unit.updateVisibility());
+        });
+    
+        document.addEventListener("toggleUnitVisibility", (ev: CustomEventInit) => {
+            document.body.toggleAttribute("data-hide-" + ev.detail.category);
+            Object.values(getUnitsManager().getUnits()).forEach((unit: Unit) => unit.updateVisibility());
+        });
+   
         this.#mapSourceDropdown = new Dropdown("map-type", (layerName: string) => this.setLayer(layerName), this.getLayers())
     }
 

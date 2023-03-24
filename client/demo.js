@@ -363,7 +363,7 @@ const DEMO_UNIT_DATA = {
             name: "CVN-75",
             unitName: "Olympus 1-9",
             groupName: "Group 1",
-            alive: false,
+            alive: true,
             category: "Aircraft",
         },
         flightData:  {
@@ -406,7 +406,7 @@ const DEMO_UNIT_DATA = {
             name: "CVN-75",
             unitName: "Olympus 1-10",
             groupName: "Group 1",
-            alive: false,
+            alive: true,
             category: "Aircraft",
         },
         flightData:  {
@@ -449,12 +449,12 @@ const DEMO_UNIT_DATA = {
             name: "CVN-75",
             unitName: "Olympus 1-11",
             groupName: "Group 1",
-            alive: false,
+            alive: true,
             category: "Missile",
         },
         flightData:  {
             latitude: 37.075,
-            longitude: -115.8,
+            longitude: -115.81,
             altitude: 2000,
             heading: 0.5,
             speed: 300
@@ -492,14 +492,14 @@ const DEMO_UNIT_DATA = {
             name: "CVN-75",
             unitName: "Olympus 1-12",
             groupName: "Group 1",
-            alive: false,
+            alive: true,
             category: "Missile",
         },
         flightData:  {
             latitude: 37.075,
             longitude: -115.75,
             altitude: 2000,
-            heading: 0.5,
+            heading: 0.6,
             speed: 300
         },
         missionData:  {
