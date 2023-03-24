@@ -583,12 +583,12 @@ body[data-hide-aircraft] #unit-visibility-control-aircraft {
     background-image: var(--visibility-control-aircraft-hidden-url);
 }
 
-#unit-visibility-control-ground {
-    background-image: var(--visibility-control-ground-visible-url);
+#unit-visibility-control-groundunit {
+    background-image: var(--visibility-control-groundunit-visible-url);
 }
 
-body[data-hide-ground] #unit-visibility-control-ground {
-    background-image: var(--visibility-control-ground-hidden-url);
+body[data-hide-groundunit] #unit-visibility-control-groundunit {
+    background-image: var(--visibility-control-groundunit-hidden-url);
 }
 
 #unit-visibility-control-sam {
@@ -607,12 +607,12 @@ body[data-hide-threat] #unit-visibility-control-threat {
     background-image: var(--visibility-control-threat-hidden-url);
 }
 
-#unit-visibility-control-naval {
-    background-image: var(--visibility-control-naval-visible-url);
+#unit-visibility-control-navyunit {
+    background-image: var(--visibility-control-navyunit-visible-url);
 }
 
-body[data-hide-naval] #unit-visibility-control-naval {
-    background-image: var(--visibility-control-naval-hidden-url);
+body[data-hide-navyunit] #unit-visibility-control-navyunit {
+    background-image: var(--visibility-control-navyunit-hidden-url);
 }
 
 

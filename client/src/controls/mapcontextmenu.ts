@@ -112,8 +112,8 @@ export class MapContextMenu extends ContextMenu {
     #setAircraftRole(role: string)
     {
         this.#spawnOptions.role = role;
-        this.#resetAircraftRole();
-        this.#aircraftTypeDropdown.setOptions(aircraftDatabase.getLabelsByRole(role));
+        this.#resetAircraftType();
+        this.#aircraftTypeDropdown.setOptions(aircraftDatabase.getByRole(role).map((blueprint) => {return blueprint.label}));
         this.#aircraftTypeDropdown.selectValue(0);
         this.clip();
     }
@@ -130,7 +130,7 @@ export class MapContextMenu extends ContextMenu {
     #setAircraftType(label: string)
     {
         this.#resetAircraftType();
-        var type = aircraftDatabase.getNameByLabel(label);
+        var type = aircraftDatabase.getByLabel(label)?.name || null;
         if (type != null)
         {
             this.#spawnOptions.type = type;
@@ -154,7 +154,7 @@ export class MapContextMenu extends ContextMenu {
 
     #setAircraftLoadout(loadoutName: string)
     {
-        var loadout = aircraftDatabase.getLoadoutsByName(this.#spawnOptions.type, loadoutName);
+        var loadout = aircraftDatabase.getLoadoutByName(this.#spawnOptions.type, loadoutName);
         if (loadout)
         {
             this.#spawnOptions.loadout = loadout.code;
@@ -177,7 +177,7 @@ export class MapContextMenu extends ContextMenu {
     {
         this.#spawnOptions.role = role;
         this.#resetGroundUnitRole();
-        this.#groundUnitTypeDropdown.setOptions(groundUnitsDatabase.getLabelsByRole(role));
+        this.#groundUnitTypeDropdown.setOptions(groundUnitsDatabase.getByRole(role).map((blueprint) => {return blueprint.label}));
         this.#groundUnitTypeDropdown.selectValue(0);
         this.clip();
     }
@@ -194,7 +194,7 @@ export class MapContextMenu extends ContextMenu {
     #setGroundUnitType(label: string)
     {
         this.#resetGroundUnitType();
-        var type = groundUnitsDatabase.getNameByLabel(label);
+        var type = groundUnitsDatabase.getByLabel(label)?.name || null;
         if (type != null)
         {
             this.#spawnOptions.type = type;
