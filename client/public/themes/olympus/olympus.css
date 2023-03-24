@@ -206,6 +206,13 @@
     --unit-missile-marker-neutral-url: url( "/themes/olympus/images/icon_missile_neutral.svg" );
     --unit-missile-marker-red-url: url( "/themes/olympus/images/icon_missile_red.svg" );
 
+    --unit-bomb-marker-height: 50px;
+    --unit-bomb-marker-width: 50px;
+
+    --unit-bomb-marker-blue-url: url( "/themes/olympus/images/icon_bomb_blue.svg" );
+    --unit-bomb-marker-neutral-url: url( "/themes/olympus/images/icon_bomb_neutral.svg" );
+    --unit-bomb-marker-red-url: url( "/themes/olympus/images/icon_bomb_red.svg" );
+
 
     /***  Context menu  ***/
     --spawn-aircraft-url: url( "/themes/olympus/images/spawn_aircraft.svg" );
