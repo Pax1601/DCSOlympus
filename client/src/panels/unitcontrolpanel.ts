@@ -4,11 +4,14 @@ import { aircraftDatabase } from "../units/aircraftdatabase";
 import { groundUnitsDatabase } from "../units/groundunitsdatabase";
 import { Aircraft, GroundUnit, Unit } from "../units/unit";
 import { UnitDatabase } from "../units/unitdatabase";
-import { UnitsManager } from "../units/unitsmanager";
 import { Panel } from "./panel";
 
-const ROEs: string[] = ["Free", "Designated free", "Designated", "Return", "Hold"];
-const reactionsToThreat: string[] = ["None", "Passive", "Evade", "Escape", "Abort"];
+//  const ROEs: string[] = ["Free", "Designated free", "Designated", "Return", "Hold"];  //  Full list
+//  const reactionsToThreat: string[] = ["None", "Passive", "Evade", "Escape", "Abort"];  //  Full list
+
+const ROEs: string[] = [ "Hold", "Return", "Designated", "Free" ];
+const reactionsToThreat: string[] = [ "None", "Passive", "Evade"  ];
+
 const minSpeedValues: { [key: string]: number } = { Aircraft: 100, Helicopter: 0, NavyUnit: 0, GroundUnit: 0 };
 const maxSpeedValues: { [key: string]: number } = { Aircraft: 800, Helicopter: 300, NavyUnit: 60, GroundUnit: 60 };
 const speedIncrements: { [key: string]: number } = { Aircraft: 25, Helicopter: 10, NavyUnit: 5, GroundUnit: 5 };
