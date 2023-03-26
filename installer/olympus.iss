@@ -1,11 +1,12 @@
 #define nwjsFolder "C:\Users\dpass\Documents\nwjs\"
+#define version "v0.1.1-alpha"
 
 [Setup] 
 AppName=DCS Olympus 
-AppVerName=DCS Olympus v0.1.1-alpha
+AppVerName={#version}
 DefaultDirName={usersavedgames}\DCS.openbeta
 DefaultGroupName=DCSOlympus  
-OutputBaseFilename=DCSOlympus
+OutputBaseFilename=DCSOlympus_{#version}
 UninstallFilesDir={app}\Mods\Services\Olympus
 ;SetupIconFile="..\img\olympus.ico"
   
