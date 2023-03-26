@@ -573,6 +573,15 @@ export class GroundUnit extends Unit {
         super(ID, data);
     }
 
+    getMarkerHTML() {
+        var role = groundUnitsDatabase.getByName(this.getBaseData().name)?.loadouts[0].roles[0];
+        return  `<div class="unit" data-object="unit-${this.getMarkerCategory()}" data-coalition="${this.getMissionData().coalition}">
+                    <div class="unit-selected-spotlight"></div>
+                    <div class="unit-marker"></div>
+                    <div class="unit-short-label">${role?.substring(0, 1)?.toUpperCase() || ""}</div>
+                </div>`
+    }
+
     getMarkerCategory()
     {
         // TODO this is very messy

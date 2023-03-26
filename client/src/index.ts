@@ -9,7 +9,7 @@ import { AIC } from "./aic/aic";
 import { ATC } from "./atc/atc";
 import { FeatureSwitches } from "./featureswitches";
 import { LogPanel } from "./panels/logpanel";
-import { getAirbases, getBullseye as getBullseyes, getMission, getUnits, toggleDemoEnabled } from "./server/server";
+import { getAirbases, getBullseye as getBullseyes, getConfig, getMission, getUnits, setAddress, toggleDemoEnabled } from "./server/server";
 import { UnitDataTable } from "./units/unitdatatable";
 
 var map: Map;
@@ -69,16 +69,33 @@ function setup() {
     /* Setup event handlers */
     setupEvents();
 
-    /* On the first connection, force request of full data */
-    getAirbases((data: AirbasesData) => getMissionData()?.update(data));
-    getBullseyes((data: BullseyesData) => getMissionData()?.update(data));
-    getMission((data: any) => {getMissionData()?.update(data)});
-    getUnits((data: UnitsData) => getUnitsManager()?.update(data), true /* Does a full refresh */);
-
-    /* Start periodically requesting updates */
-    startPeriodicUpdate();
+    getConfig(readConfig)
 }
 
+function readConfig(config: any)
+{
+    if (config && config["server"] != undefined && config["server"]["address"] != undefined && config["server"]["port"] != undefined)
+    {
+        const address = config["server"]["address"];
+        const port = config["server"]["port"];
+        if ((typeof address === 'string' || address instanceof String) && typeof port == 'number')
+        {
+            setAddress(<string>address, <number>port);
+        } 
+
+        /* On the first connection, force request of full data */
+        getAirbases((data: AirbasesData) => getMissionData()?.update(data));
+        getBullseyes((data: BullseyesData) => getMissionData()?.update(data));
+        getMission((data: any) => {getMissionData()?.update(data)});
+        getUnits((data: UnitsData) => getUnitsManager()?.update(data), true /* Does a full refresh */);
+
+        /* Start periodically requesting updates */
+        startPeriodicUpdate();
+    }
+    else {
+        throw new Error('Could not read configuration file!');
+    }    
+}
 
 function startPeriodicUpdate() {
     requestUpdate();

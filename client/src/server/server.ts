@@ -2,9 +2,8 @@ import * as L from 'leaflet'
 import { setConnected } from '..';
 import { SpawnOptions } from '../controls/mapcontextmenu';
 
-/* Edit here to change server address */
-const REST_ADDRESS = "http://localhost:30000/olympus";
-const DEMO_ADDRESS = "http://localhost:3000/demo";
+var REST_ADDRESS = "http://localhost:30000/olympus";
+var DEMO_ADDRESS = window.location.href + "demo";
 const UNITS_URI = "units";
 const LOGS_URI = "logs";
 const AIRBASES_URI = "airbases";
@@ -43,6 +42,25 @@ export function POST(request: object, callback: CallableFunction){
         callback(); 
     };
     xhr.send(JSON.stringify(request));
+}
+
+export function getConfig(callback: CallableFunction) {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", window.location.href + "config", true);
+    xmlHttp.onload = function (e) {
+        var data = JSON.parse(xmlHttp.responseText);
+        callback(data);
+        lastUpdateTime = parseInt(data.time);
+    };
+    xmlHttp.onerror = function () {
+        console.error("An error occurred during the XMLHttpRequest, could not retrieve configuration file");
+    };
+    xmlHttp.send(null);
+}
+
+export function setAddress(address: string, port: number) {
+    REST_ADDRESS = `http://${address}:${port}/olympus`
+    console.log(`Setting REST address to ${REST_ADDRESS}`)
 }
 
 export function getAirbases(callback: CallableFunction) {

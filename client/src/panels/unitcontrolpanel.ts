@@ -87,7 +87,7 @@ export class UnitControlPanel extends Panel {
                 }
 
                 var button = document.createElement("button");
-                var callsign = aircraftDatabase.getByName(unit.getBaseData().unitName)?.label || "";
+                var callsign = unit.getBaseData().unitName || "";
 
                 button.innerText = unit.getBaseData().unitName;
                 button.setAttribute("data-short-label", database?.getByName(unit.getBaseData().name)?.shortLabel || "");
