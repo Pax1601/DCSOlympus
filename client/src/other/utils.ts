@@ -26,6 +26,27 @@ export function ConvertDDToDMS(D: number, lng: boolean) {
 }
 
 
+export function dataPointMap( container:HTMLElement, data:any) {
+
+    Object.keys( data ).forEach( ( key ) => {
+
+        const val = "" + data[ key ];  //  Ensure a string
+
+        container.querySelectorAll( `[data-point="${key}"]`).forEach( el => {
+
+            //  We could probably have options here
+            if ( el instanceof HTMLInputElement ) {
+                el.value = val;
+            } else if ( el instanceof HTMLElement ) {
+                el.innerText = val;
+            }
+        });
+
+    });
+
+}
+
+
 export function deg2rad(deg: number) {
     var pi = Math.PI;
     return deg * (pi / 180);

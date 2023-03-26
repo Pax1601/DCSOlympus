@@ -1,14 +1,18 @@
 import { getUnitsManager } from "..";
 import { Slider } from "../controls/slider";
+import { dataPointMap } from "../other/utils";
 import { aircraftDatabase } from "../units/aircraftdatabase";
 import { groundUnitsDatabase } from "../units/groundunitsdatabase";
 import { Aircraft, GroundUnit, Unit } from "../units/unit";
 import { UnitDatabase } from "../units/unitdatabase";
-import { UnitsManager } from "../units/unitsmanager";
 import { Panel } from "./panel";
 
-const ROEs: string[] = ["Free", "Designated free", "Designated", "Return", "Hold"];
-const reactionsToThreat: string[] = ["None", "Passive", "Evade", "Escape", "Abort"];
+//  const ROEs: string[] = ["Free", "Designated free", "Designated", "Return", "Hold"];  //  Full list
+//  const reactionsToThreat: string[] = ["None", "Passive", "Evade", "Escape", "Abort"];  //  Full list
+
+const ROEs: string[] = [ "Hold", "Return", "Designated", "Free" ];
+const reactionsToThreat: string[] = [ "None", "Passive", "Evade"  ];
+
 const minSpeedValues: { [key: string]: number } = { Aircraft: 100, Helicopter: 0, NavyUnit: 0, GroundUnit: 0 };
 const maxSpeedValues: { [key: string]: number } = { Aircraft: 800, Helicopter: 300, NavyUnit: 60, GroundUnit: 60 };
 const speedIncrements: { [key: string]: number } = { Aircraft: 25, Helicopter: 10, NavyUnit: 5, GroundUnit: 5 };
@@ -71,21 +75,23 @@ export class UnitControlPanel extends Panel {
 
                 if (index === 0) {
                     this.getElement().querySelectorAll(`[data-object|="unit"]`).forEach(marker => {
+
                         marker.setAttribute("data-coalition", unit.getMissionData().coalition);
-                        const shortLabel = <HTMLElement>marker.querySelector(".unit-short-label");
-                        if (shortLabel)
-                            shortLabel.innerText = database?.getByName(unit.getBaseData().name)?.shortLabel || "";
+
+                        dataPointMap( this.getElement(), {
+                            "shortLabel" : database?.getByName(unit.getBaseData().name)?.shortLabel,
+                            "unitName": unit.getBaseData().unitName
+                        });
+
                     });
                 }
 
                 var button = document.createElement("button");
-                const unitName = <HTMLInputElement>this.getElement().querySelector("#unit-name");
                 var callsign = unit.getBaseData().unitName || "";
 
-                button.innerText = "";
+                button.innerText = unit.getBaseData().unitName;
                 button.setAttribute("data-short-label", database?.getByName(unit.getBaseData().name)?.shortLabel || "");
                 button.setAttribute("data-callsign", callsign);
-                unitName.value = callsign;
 
                 button.setAttribute("data-coalition", unit.getMissionData().coalition);
                 button.classList.add("pill", "highlight-coalition")
