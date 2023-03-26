@@ -179,7 +179,37 @@ void Server::handle_put(http_request request)
 
 void Server::task()
 {
-    http_listener listener(wstring(REST_ADDRESS) + L"/" + wstring(REST_URI));
+    wstring address = wstring(REST_ADDRESS);
+    wstring modLocation;
+    char* buf = nullptr;
+    size_t sz = 0;
+    if (_dupenv_s(&buf, &sz, "DCSOLYMPUS_PATH") == 0 && buf != nullptr)
+    {
+        std::ifstream ifstream(string(buf) + "\\olympus.json");
+        std::stringstream ss;
+        ss << ifstream.rdbuf();
+        std::error_code errorCode;
+        json::value config = json::value::parse(to_wstring(ss.str()), errorCode);
+        log(to_string(config[L"server"].type()));
+        if (config.is_object() && config.has_object_field(L"server") &&
+            config[L"server"].has_string_field(L"address") && config[L"server"].has_number_field(L"port"))
+        {
+            log("Object");
+            address = L"http://" + config[L"server"][L"address"].as_string() + L":" + to_wstring(config[L"server"][L"port"].as_number().to_int32());
+            log(L"Starting server on " + address);
+        }
+        else
+        {
+            log(L"Error reading configuration file. Starting server on " + address);
+        }
+        free(buf);
+    }
+    else
+    {
+        log(L"DCSOLYMPUS_PATH environment variable is missing, starting server on " + address);
+    }
+
+    http_listener listener(address + L"/" + wstring(REST_URI));
 
     std::function<void(http_request)> handle_options = std::bind(&Server::handle_options, this, std::placeholders::_1);
     std::function<void(http_request)> handle_get = std::bind(&Server::handle_get, this, std::placeholders::_1);
