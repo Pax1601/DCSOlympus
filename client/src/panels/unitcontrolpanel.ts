@@ -1,5 +1,6 @@
 import { getUnitsManager } from "..";
 import { Slider } from "../controls/slider";
+import { dataPointMap } from "../other/utils";
 import { aircraftDatabase } from "../units/aircraftdatabase";
 import { groundUnitsDatabase } from "../units/groundunitsdatabase";
 import { Aircraft, GroundUnit, Unit } from "../units/unit";
@@ -74,21 +75,23 @@ export class UnitControlPanel extends Panel {
 
                 if (index === 0) {
                     this.getElement().querySelectorAll(`[data-object|="unit"]`).forEach(marker => {
+
                         marker.setAttribute("data-coalition", unit.getMissionData().coalition);
-                        const shortLabel = <HTMLElement>marker.querySelector(".unit-short-label");
-                        if (shortLabel)
-                            shortLabel.innerText = database?.getByName(unit.getBaseData().name)?.shortLabel || "";
+
+                        dataPointMap( this.getElement(), {
+                            "shortLabel" : database?.getByName(unit.getBaseData().name)?.shortLabel,
+                            "unitName": unit.getBaseData().unitName
+                        });
+
                     });
                 }
 
                 var button = document.createElement("button");
-                const unitName = <HTMLInputElement>this.getElement().querySelector("#unit-name");
                 var callsign = aircraftDatabase.getByName(unit.getBaseData().unitName)?.label || "";
 
-                button.innerText = "";
+                button.innerText = unit.getBaseData().unitName;
                 button.setAttribute("data-short-label", database?.getByName(unit.getBaseData().name)?.shortLabel || "");
                 button.setAttribute("data-callsign", callsign);
-                unitName.value = callsign;
 
                 button.setAttribute("data-coalition", unit.getMissionData().coalition);
                 button.classList.add("pill", "highlight-coalition")
