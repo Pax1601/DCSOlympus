@@ -190,11 +190,9 @@ void Server::task()
         ss << ifstream.rdbuf();
         std::error_code errorCode;
         json::value config = json::value::parse(to_wstring(ss.str()), errorCode);
-        log(to_string(config[L"server"].type()));
         if (config.is_object() && config.has_object_field(L"server") &&
             config[L"server"].has_string_field(L"address") && config[L"server"].has_number_field(L"port"))
         {
-            log("Object");
             address = L"http://" + config[L"server"][L"address"].as_string() + L":" + to_wstring(config[L"server"][L"port"].as_number().to_int32());
             log(L"Starting server on " + address);
         }
