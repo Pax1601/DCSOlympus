@@ -149,7 +149,7 @@ bool AirUnit::updateActivePath(bool looping)
 		/* Push the next destination in the queue to the front */
 		if (looping)
 			pushActivePathBack(activePath.front());
-		activePath.pop_front();
+		popActivePathFront();
 		log(unitName + L" active path front popped");
 		return true;
 	}
