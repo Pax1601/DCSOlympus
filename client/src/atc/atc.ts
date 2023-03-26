@@ -2,14 +2,16 @@ import { ATCBoard } from "./atcboard";
 import { ATCBoardFlight } from "./board/flight";
 
 export interface FlightInterface {
-    id   : string;
-    name : string;
+    id     : string;
+    name   : string;
+    status : "unknown";
 }
 
 
 class ATCDataHandler {
 
     #atc:ATC;
+    #flights:{[key:string]: FlightInterface} = {};
 
     #updateInterval:number|undefined = undefined;
     #updateIntervalDelay:number      = 1000;
@@ -20,6 +22,12 @@ class ATCDataHandler {
         this.#atc = atc;
 
     }
+
+
+    getFlights() {
+        return this.#flights;
+    }
+
 
     startUpdates() {
         
@@ -34,12 +42,20 @@ class ATCDataHandler {
             })
             .then( response => response.json() )
             .then( data => {
-                this.#atc.setFlights( data );
+                this.setFlights( data );
             });
 
         }, this.#updateIntervalDelay );
 
     }
+
+
+    setFlights( flights:{[key:string]: any} ) {
+
+        this.#flights = flights;
+
+    }
+
 
     stopUpdates() {
         
@@ -54,9 +70,8 @@ class ATCDataHandler {
 
 export class ATC {
 
-    #boards<T extends ATCBoard>:<T>[] = [];
+    #boards:ATCBoard[] = [];
     #dataHandler:ATCDataHandler;
-    #flights:{[key:string]: FlightInterface} = {};
 
 
     constructor() {
@@ -69,29 +84,30 @@ export class ATC {
 
 
     addBoard<T extends ATCBoard>( board:T ) {
+
+        board.startUpdates();
+
+        this.#boards.push( board );
         
+    }
+
+
+    getDataHandler() {
+        return this.#dataHandler;
     }
 
 
     lookForBoards() {
 
-        document.querySelectorAll( "ol-atc-board" ).forEach( board => {
+        document.querySelectorAll( ".ol-atc-board" ).forEach( board => {
 
             if ( board instanceof HTMLElement ) {
-                this.addBoard( new ATCBoardFlight( board ) );
+                this.addBoard( new ATCBoardFlight( this, board ) );
             }
 
         });
 
     }
-
-
-    setFlights( flights:{[key:string]: any} ) {
-
-        this.#flights = flights;
-
-    }
-
 
     startUpdates() {
 

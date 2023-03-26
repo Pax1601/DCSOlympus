@@ -26,8 +26,9 @@ function uuidv4() {
 
 
 function Flight( name ) {
-    this.id = uuidv4();
-    this.name = name;
+    this.id     = uuidv4();
+    this.name   = name;
+    this.status = "unknown";
 }
 
 Flight.prototype.getData = function() {
