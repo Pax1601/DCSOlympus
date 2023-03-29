@@ -8,6 +8,7 @@ export class UnitsManager {
     #units: { [ID: number]: Unit };
     #copiedUnits: Unit[];
     #selectionEventDisabled: boolean = false;
+    #pasteDisabled: boolean = false;
 
     constructor() {
         this.#units = {};
@@ -330,10 +331,16 @@ export class UnitsManager {
 
     pasteUnits()
     {
-        for (let idx in this.#copiedUnits)
+        if (!this.#pasteDisabled)
         {
-            var unit = this.#copiedUnits[idx];
-            cloneUnit(unit.ID, getMap().getMouseCoordinates());
+            console.log("paste")
+            for (let idx in this.#copiedUnits)
+            {
+                var unit = this.#copiedUnits[idx];
+                cloneUnit(unit.ID, getMap().getMouseCoordinates());
+            }
+            this.#pasteDisabled = true;
+            setTimeout(() => this.#pasteDisabled = false, 250);
         }
     }
 
