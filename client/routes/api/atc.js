@@ -26,17 +26,52 @@ function uuidv4() {
 
 
 function Flight( name ) {
-    this.id     = uuidv4();
-    this.name   = name;
-    this.status = "unknown";
+    this.id          = uuidv4();
+    this.name        = name;
+    this.status      = "unknown";
+    this.takeoffTime = -1;
 }
 
 Flight.prototype.getData = function() {
     return {
-        "id": this.id,
-        "name": this.name
+        "id"          : this.id,
+        "name"        : this.name,
+        "status"      : this.status,
+        "takeoffTime" : this.takeoffTime
     };
 }
+
+
+Flight.prototype.setStatus = function( status ) {
+
+    if ( [ "unknown", "checkedin", "readytotaxi", "clearedtotaxi", "halted", "terminated" ].indexOf( status ) < 0 ) {
+        return "Invalid status";
+    }
+
+    this.status = status;
+
+    return true;
+
+}
+
+
+Flight.prototype.setTakeoffTime = function( takeoffTime ) {
+
+    if ( takeoffTime === "" || takeoffTime === -1 ) {
+        this.takeoffTime = -1;
+    }
+
+    if ( isNaN( takeoffTime ) ) {
+        return "Invalid takeoff time"
+    }
+
+    this.takeoffTime = parseInt( takeoffTime );
+
+    return true;
+
+}
+
+
 
 function ATCDataHandler( data ) {
     this.data = data;
@@ -82,6 +117,40 @@ const dataHandler = new ATCDataHandler( {
 app.get( "/flight", ( req, res ) => {
 
     res.json( dataHandler.getFlights() );
+
+});
+
+
+app.patch( "/flight/:flightId", ( req, res ) => {
+
+    const flightId = req.params.flightId;
+    const flight   = dataHandler.getFlight( flightId );
+
+    if ( !flight ) {
+        res.status( 400 ).send( `Unrecognised flight ID (given: "${req.params.flightId}")` );
+    }
+
+    if ( req.body.status ) {
+
+        const statusChangeSuccess = flight.setStatus( req.body.status );
+
+        if ( statusChangeSuccess !== true ) {
+            res.status( 400 ).send( statusChangeSuccess );
+        }
+
+    }
+
+    if ( req.body.hasOwnProperty( "takeoffTime" ) ) {
+
+        const takeoffChangeSuccess = flight.setTakeoffTime( req.body.takeoffTime );
+
+        if ( takeoffChangeSuccess !== true ) {
+            res.status( 400 ).send( takeoffChangeSuccess );
+        }
+
+    }
+
+    res.json( flight.getData() );
 
 });
 

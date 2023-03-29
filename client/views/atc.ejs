@@ -1,5 +1,26 @@
-<div class="ol-panel ol-dialog ol-atc-board" data-feature-switch="atc">
+<div class="ol-panel ol-dialog ol-strip-board" data-feature-switch="atc">
+
+    <div class="ol-dialog-close" data-on-click="closeDialog"></div>
     
-    <div class="atc-strip-board"></div>
+    <div class="ol-dialog-header">
+        <div class="ol-strip-board-clock"></div>
+    </div>
+
+    <div class="ol-dialog-content">
+        <div class="ol-strip-board-headers">
+            <div>Flight</div>
+            <div>Status</div>
+            <div>T/O Time</div>
+            <div>TTG</div>
+        </div>
+        <div class="ol-strip-board-strips"></div>
+    </div>
+
+    <div class="ol-dialog-footer">
+        <form class="ol-strip-board-add-flight">
+            <input type="text" name="flightName" placeholder="Add a flight" />
+            <button type="submit">Add</button>
+        </form>
+    </div>
 
 </div>

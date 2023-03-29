@@ -13,8 +13,29 @@ export class Dropdown {
         this.#value = <HTMLElement>this.#element.querySelector(".ol-select-value");
         this.#defaultValue = this.#value.innerText;
         this.#callback = callback;
-        if (options != null)
+        if (options != null) {
             this.setOptions(options);
+        }
+
+        
+
+        //  Do open/close toggle
+        this.#element.addEventListener("click", ev => {
+
+            if ( ev.target instanceof HTMLElement && ev.target.nodeName !== "A" ) {
+                ev.preventDefault();
+            }
+            
+            ev.stopPropagation();
+            this.#element.classList.toggle("is-open");
+
+        });
+
+        //  Autoclose on mouseleave
+        this.#element.addEventListener("mouseleave", ev => {
+            this.#element.classList.remove("is-open");
+        });
+
     }
 
     setOptions(optionsList: string[])
@@ -27,7 +48,7 @@ export class Dropdown {
             div.appendChild(button);
             button.addEventListener("click", (e: MouseEvent) => {
                 this.#value.innerText = option;
-                this.#callback(option);
+                this.#callback( option, e );
             });
             return div;
         }));

@@ -2,9 +2,10 @@ import { ATCBoard } from "./atcboard";
 import { ATCBoardFlight } from "./board/flight";
 
 export interface FlightInterface {
-    id     : string;
-    name   : string;
-    status : "unknown";
+    id          : string;
+    name        : string;
+    status      : "unknown";
+    takeoffTime : number;
 }
 
 
@@ -73,6 +74,7 @@ export class ATC {
     #boards:ATCBoard[] = [];
     #dataHandler:ATCDataHandler;
 
+    #initDate:Date = new Date();
 
     constructor() {
         
@@ -97,9 +99,24 @@ export class ATC {
     }
 
 
+    getMissionElapsedSeconds() : number {
+        return new Date().getTime() - this.#initDate.getTime();
+    }
+
+
+    getMissionStartDateTime() : Date {
+        return new Date( 1990, 3, 1, 18, 0, 0 );
+    }
+
+
+    getMissionDateTime() : Date {
+        return new Date( this.getMissionStartDateTime().getTime() + this.getMissionElapsedSeconds() );
+    }
+
+
     lookForBoards() {
 
-        document.querySelectorAll( ".ol-atc-board" ).forEach( board => {
+        document.querySelectorAll( ".ol-strip-board" ).forEach( board => {
 
             if ( board instanceof HTMLElement ) {
                 this.addBoard( new ATCBoardFlight( this, board ) );

@@ -1,0 +1,114 @@
+
+
+.ol-strip-board-strips {
+    display:flex;
+    flex-direction: column;
+    row-gap: 4px;
+}
+
+.ol-strip-board-strip {
+    align-items: center;
+    border-radius: var( --border-radius-sm );
+    column-gap: 4px;
+    display:flex;
+    flex-flow: row nowrap;
+    padding:4px;
+}
+
+.ol-strip-board-strip[data-flight-status="checkedin"] {
+    background-color: #ffffff2A;
+}
+
+.ol-strip-board-strip[data-flight-status="readytotaxi"] {
+    background-color: #ffff002A;
+}
+
+.ol-strip-board-strip[data-flight-status="clearedtotaxi"] {
+    background-color: #00ff0030;
+}
+
+.ol-strip-board-strip[data-flight-status="halted"] {
+    background-color: #FF000040;
+}
+
+.ol-strip-board-strip[data-flight-status="terminated"] {
+    background-color: black;
+}
+
+.ol-strip-board-headers {
+    column-gap: 4px;
+    display:flex;
+    flex-flow:row nowrap;
+    text-align: center;
+}
+
+.ol-strip-board-headers > *, .ol-strip-board-strip > * {
+    padding: 4px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width:70px;
+}
+
+.ol-strip-board-strip input[type="text"] {
+    appearance: none;
+    background-color: transparent;
+    border:1px solid #ffffff30;
+    border-radius: var( --border-radius-sm );
+    color:white;
+    font-size:12px;
+    font-weight:normal;
+    outline:none;
+    padding: 4px 0;
+    text-align: center;
+    width:100%;
+}
+
+.ol-strip-board-strip[data-time-warning="level-1"] [data-point="timeToGo"] {
+    border:1px solid #cc0000;
+}
+
+.ol-strip-board-headers :nth-child(1),
+.ol-strip-board-headers :nth-child(2),
+.ol-strip-board-strip :nth-child(1),
+.ol-strip-board-strip :nth-child(2) {
+    width:120px;
+}
+
+.ol-strip-board-strip :nth-child(4) {
+    text-align: center;
+}
+
+.ol-strip-board-strip > [data-point="name"] {
+    text-overflow: ellipsis;
+    overflow:hidden;
+}
+
+.ol-strip-board-strip .ol-select-value {
+    opacity: .85;
+}
+
+
+.ol-strip-board-add-flight {
+    display:flex;
+    flex-flow: row nowrap;
+}
+
+
+.ol-strip-board-add-flight > * {
+    border:none;
+    outline: none;
+    padding:4px 8px;
+}
+
+.ol-strip-board-add-flight button {
+    background-color: darkgreen;
+    border-bottom-right-radius: var( --border-radius-sm );
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: var( --border-radius-sm );
+}
+
+.ol-strip-board-add-flight input {
+    border-bottom-left-radius: var( --border-radius-sm );
+    border-top-left-radius: var( --border-radius-sm );
+}

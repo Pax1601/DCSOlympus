@@ -1,5 +1,6 @@
 @import url("layout.css");
 @import url("airbase.css");
+@import url("atc.css");
 @import url("connectionstatuspanel.css");
 @import url("contextmenus.css");
 @import url("mouseinfopanel.css");
@@ -123,12 +124,15 @@ form > div {
     align-items: center;
     background-color: var(--background-grey);
     border-radius: var(--border-radius-sm);
-    padding: 1em;
+    padding: 1em 30px 1em 20px;
     width: 100%;
-    padding-left: 20px;
-    padding-right: 30px;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.ol-select.narrow:not(.ol-select-image)>.ol-select-value {
+    opacity: .9;
+    padding:6px 30px 6px 15px;
 }
 
 .ol-select:not(.ol-select-image)>.ol-select-value svg {
