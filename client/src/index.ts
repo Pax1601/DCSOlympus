@@ -80,7 +80,7 @@ function readConfig(config: any)
         const port = config["server"]["port"];
         if ((typeof address === 'string' || address instanceof String) && typeof port == 'number')
         {
-            setAddress(<string>address, <number>port);
+            setAddress(window.location.hostname, <number>port);
         } 
 
         /* On the first connection, force request of full data */
