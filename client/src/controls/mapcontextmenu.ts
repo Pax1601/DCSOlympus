@@ -168,7 +168,7 @@ export class MapContextMenu extends ContextMenu {
     /********* Ground unit spawn menu *********/
     #setGroundUnitRole(role: string) {
         this.#spawnOptions.role = role;
-        this.#resetGroundUnitRole();
+        this.#resetGroundUnitType();
         this.#groundUnitTypeDropdown.setOptions(groundUnitsDatabase.getByRole(role).map((blueprint) => { return blueprint.label }));
         this.#groundUnitTypeDropdown.selectValue(0);
         this.clip();
