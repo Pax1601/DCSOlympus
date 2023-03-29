@@ -333,7 +333,6 @@ export class UnitsManager {
     {
         if (!this.#pasteDisabled)
         {
-            console.log("paste")
             for (let idx in this.#copiedUnits)
             {
                 var unit = this.#copiedUnits[idx];
