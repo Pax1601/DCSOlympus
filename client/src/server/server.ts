@@ -23,9 +23,14 @@ export function GET(callback: CallableFunction, uri: string){
     xmlHttp.open("GET", `${demoEnabled? DEMO_ADDRESS: REST_ADDRESS}/${uri}`, true);
     xmlHttp.onload = function (e) {
         var data = JSON.parse(xmlHttp.responseText);
-        callback(data);
-        lastUpdateTime = parseInt(data.time);
-        setConnected(true);
+        if (parseInt(data.time) > lastUpdateTime)
+        {
+            callback(data);
+            lastUpdateTime = parseInt(data.time);
+            if (isNaN(lastUpdateTime))
+                lastUpdateTime = 0;
+            setConnected(true);
+        }
     };
     xmlHttp.onerror = function () {
         console.error("An error occurred during the XMLHttpRequest");
@@ -50,7 +55,6 @@ export function getConfig(callback: CallableFunction) {
     xmlHttp.onload = function (e) {
         var data = JSON.parse(xmlHttp.responseText);
         callback(data);
-        lastUpdateTime = parseInt(data.time);
     };
     xmlHttp.onerror = function () {
         console.error("An error occurred during the XMLHttpRequest, could not retrieve configuration file");
