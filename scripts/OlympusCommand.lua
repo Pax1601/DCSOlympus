@@ -341,8 +341,13 @@ function Olympus.delete(ID, lat, lng)
 	Olympus.debug("Olympus.delete " .. ID, 2)
 	local unit = Olympus.getUnitByID(ID)
 	if unit then
-		unit:destroy();
-		Olympus.debug("Olympus.delete completed successfully", 2)
+		if unit:getPlayerName() then
+			trigger.action.explosion(unit:getPoint() , 250 ) --consider replacing with forcibly deslotting the player, however this will work for now
+			Olympus.debug("Olympus.delete completed successfully", 2)
+		else
+			unit:destroy(); --works for AI units not players
+			Olympus.debug("Olympus.delete completed successfully", 2)
+		end
 	end
 end
 

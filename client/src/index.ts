@@ -141,13 +141,16 @@ function checkSessionHash(newSessionHash: string) {
 function setupEvents() {
     /* Generic clicks */
     document.addEventListener("click", (ev) => {
-        if (ev instanceof PointerEvent && ev.target instanceof HTMLElement) {
+        if (ev instanceof MouseEvent && ev.target instanceof HTMLElement) {
+
             const target = ev.target;
+
             if (target.classList.contains("olympus-dialog-close")) {
                 target.closest("div.olympus-dialog")?.classList.add("hide");
             }
 
             const triggerElement = target.closest("[data-on-click]");
+            
             if (triggerElement instanceof HTMLElement) {
                 const eventName: string = triggerElement.dataset.onClick || "";
                 let params = JSON.parse(triggerElement.dataset.onClickParams || "{}");
