@@ -9,7 +9,7 @@ import { AIC } from "./aic/aic";
 import { ATC } from "./atc/atc";
 import { FeatureSwitches } from "./featureswitches";
 import { LogPanel } from "./panels/logpanel";
-import { getAirbases, getBullseye as getBullseyes, getMission, getUnits, toggleDemoEnabled } from "./server/server";
+import { getAirbases, getBullseye as getBullseyes, getConfig, getMission, getUnits, setAddress, toggleDemoEnabled } from "./server/server";
 import { UnitDataTable } from "./units/unitdatatable";
 
 var map: Map;
@@ -69,16 +69,33 @@ function setup() {
     /* Setup event handlers */
     setupEvents();
 
-    /* On the first connection, force request of full data */
-    getAirbases((data: AirbasesData) => getMissionData()?.update(data));
-    getBullseyes((data: BullseyesData) => getMissionData()?.update(data));
-    getMission((data: any) => {getMissionData()?.update(data)});
-    getUnits((data: UnitsData) => getUnitsManager()?.update(data), true /* Does a full refresh */);
-
-    /* Start periodically requesting updates */
-    startPeriodicUpdate();
+    getConfig(readConfig)
 }
 
+function readConfig(config: any)
+{
+    if (config && config["server"] != undefined && config["server"]["address"] != undefined && config["server"]["port"] != undefined)
+    {
+        const address = config["server"]["address"];
+        const port = config["server"]["port"];
+        if ((typeof address === 'string' || address instanceof String) && typeof port == 'number')
+        {
+            setAddress(window.location.hostname, <number>port);
+        } 
+
+        /* On the first connection, force request of full data */
+        getAirbases((data: AirbasesData) => getMissionData()?.update(data));
+        getBullseyes((data: BullseyesData) => getMissionData()?.update(data));
+        getMission((data: any) => {getMissionData()?.update(data)});
+        getUnits((data: UnitsData) => getUnitsManager()?.update(data), true /* Does a full refresh */);
+
+        /* Start periodically requesting updates */
+        startPeriodicUpdate();
+    }
+    else {
+        throw new Error('Could not read configuration file!');
+    }    
+}
 
 function startPeriodicUpdate() {
     requestUpdate();
@@ -124,13 +141,16 @@ function checkSessionHash(newSessionHash: string) {
 function setupEvents() {
     /* Generic clicks */
     document.addEventListener("click", (ev) => {
-        if (ev instanceof PointerEvent && ev.target instanceof HTMLElement) {
+        if (ev instanceof MouseEvent && ev.target instanceof HTMLElement) {
+
             const target = ev.target;
+
             if (target.classList.contains("olympus-dialog-close")) {
                 target.closest("div.olympus-dialog")?.classList.add("hide");
             }
 
             const triggerElement = target.closest("[data-on-click]");
+            
             if (triggerElement instanceof HTMLElement) {
                 const eventName: string = triggerElement.dataset.onClick || "";
                 let params = JSON.parse(triggerElement.dataset.onClickParams || "{}");
@@ -183,15 +203,6 @@ function setupEvents() {
         });
     }
     //*/
-
-    document.addEventListener("toggleCoalitionVisibility", (ev: CustomEventInit) => {
-        ev.detail._element.classList.toggle("off");
-        document.body.toggleAttribute("data-hide-" + ev.detail.coalition);
-    });
-
-    document.addEventListener("toggleUnitVisibility", (ev: CustomEventInit) => {
-        document.body.toggleAttribute("data-hide-" + ev.detail.category);
-    });
 
     document.addEventListener( "closeDialog", (ev: CustomEventInit) => {
         ev.detail._element.closest( ".ol-dialog" ).classList.add( "hide" );

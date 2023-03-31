@@ -3,25 +3,25 @@
     <div class="ol-panel-board">
 
         <div id="general" class="panel-section">
-            <h3 id="unit-name">Olympus 1-1</h3>
+            <h3 id="unit-name"></h3>
             <div class="ol-group">
-                <div id="name" class="pill highlight-primary">Name</div>
-                <div id="group-name" class="pill highlight-primary">Group</div>
+                <div id="unit-label"></div>
+                <div id="unit-control"></div>
             </div>
             <div id="current-task" class="pill highlight-coalition" data-coalition="blue" data-current-task=""></div>
         </div>
 
-        <div id="loadout-data" class="panel-section">
+        <div id="loadout-container" class="panel-section">
+                            
+            <div id="loadout">
+                <div id="loadout-silhouette"></div>
+                <div id="loadout-items">
+                </div>
+            </div>
             
-            <h4 id="loadout-label">Loadout</h4>
-            
-            <dl class="ol-data-grid">
-                <dt>Fuel</dt>
-                <dd id="loadout-fuel-level" data-fuel-level="69"></dd>
-            </dl>
-
-            <div id="loadout-container" class="ol-group wrap">
-                <!-- Here the loadout elements will be shown -->
+            <div id="fuel-percentage" data-percentage=""></div>
+            <div id="fuel-display">
+                <div id="fuel-bar" class="highlight-coalition" data-coalition="blue" style="width:30%;"></div>
             </div>
 
         </div>

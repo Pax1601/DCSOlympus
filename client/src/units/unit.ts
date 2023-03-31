@@ -1,7 +1,7 @@
 import { Marker, LatLng, Polyline, Icon, DivIcon } from 'leaflet';
 import { getMap, getUnitsManager } from '..';
 import { rad2deg } from '../other/utils';
-import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, landAt, setAltitude, setReactionToThreat, setROE, setSpeed } from '../server/server';
+import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, getUnits, landAt, setAltitude, setReactionToThreat, setROE, setSpeed } from '../server/server';
 import { aircraftDatabase } from './aircraftdatabase';
 import { groundUnitsDatabase } from './groundunitsdatabase';
 
@@ -79,7 +79,7 @@ export class Unit extends Marker {
         if (type === "NavyUnit") return NavyUnit;
     }
 
-    constructor(ID: number, data: UpdateData, html: string) {
+    constructor(ID: number, data: UpdateData) {
         super(new LatLng(0, 0), { riseOnHover: true });
 
         this.ID = ID;
@@ -89,19 +89,12 @@ export class Unit extends Marker {
         this.on('click', (e) => this.#onClick(e));
         this.on('dblclick', (e) => this.#onDoubleClick(e));
         this.on('contextmenu', (e) => this.#onContextMenu(e));
-
-        var icon = new DivIcon({
-            html: html,
-            className: 'leaflet-unit-marker',
-            iconAnchor: [0, 0]
-        });
-        this.setIcon(icon);
-
+        
         this.#pathPolyline = new Polyline([], { color: '#2d3e50', weight: 3, opacity: 0.5, smoothFactor: 1 });
         this.#pathPolyline.addTo(getMap());
         this.#targetsPolylines = [];
 
-        // Deselect units if they are hidden
+        /* Deselect units if they are hidden */
         document.addEventListener("toggleCoalitionVisibility", (ev: CustomEventInit) => {
             setTimeout(() => {this.setSelected(this.getSelected() && !this.getHidden())}, 300);
         });
@@ -110,7 +103,31 @@ export class Unit extends Marker {
             setTimeout(() => {this.setSelected(this.getSelected() && !this.getHidden())}, 300);
         });
 
+        /* Set the unit data */
         this.setData(data);
+
+        /* Set the icon */
+        var icon = new DivIcon({
+            html: this.getMarkerHTML(),
+            className: 'leaflet-unit-marker',
+            iconAnchor: [0, 0]
+        });
+        this.setIcon(icon);
+
+    }
+
+    getMarkerHTML() {
+        return  `<div class="unit" data-object="unit-${this.getMarkerCategory()}" data-coalition="${this.getMissionData().coalition}">
+                    <div class="unit-selected-spotlight"></div>
+                    <div class="unit-marker"></div>
+                    <div class="unit-short-label"></div>
+                </div>`
+    }
+
+    getMarkerCategory()
+    {
+        // Overloaded by child classes
+        return "";
     }
 
     setData(data: UpdateData) {
@@ -118,6 +135,7 @@ export class Unit extends Marker {
         var updateMarker = false;
     
         if ((data.flightData.latitude != undefined && data.flightData.longitude != undefined && (this.getFlightData().latitude != data.flightData.latitude || this.getFlightData().longitude != data.flightData.longitude)) 
+            || (data.flightData.heading != undefined && this.getFlightData().heading != data.flightData.heading)
             || (data.baseData.alive != undefined && this.getBaseData().alive != data.baseData.alive)
             || this.#forceUpdate || !getMap().hasLayer(this))
             updateMarker = true;
@@ -253,13 +271,30 @@ export class Unit extends Marker {
         this.getTaskData().activePath = undefined;
     }
 
+    updateVisibility()
+    {
+        this.setHidden( document.body.getAttribute(`data-hide-${this.getMissionData().coalition}`) != null || 
+                        document.body.getAttribute(`data-hide-${this.getMarkerCategory()}`) != null ||
+                        !this.getBaseData().alive)
+    }
+
     setHidden(hidden: boolean)
     {
-        this.#hidden = hidden;
+        this.#hidden = hidden; 
+
+        /* Add the marker if not present */
+        if (!getMap().hasLayer(this) && !this.getHidden()) {
+            this.addTo(getMap());
+        }
+
+        /* Hide the marker if necessary*/
+        if (getMap().hasLayer(this) && this.getHidden()) {
+            getMap().removeLayer(this);
+        }        
     }
 
     getHidden() {
-        return (<HTMLElement>this.getElement()?.querySelector(`.unit`))?.offsetParent === null; 
+        return this.#hidden;
     }
 
     getLeader() {
@@ -280,10 +315,6 @@ export class Unit extends Marker {
             }
         }
         return wingmen;
-    }
-
-    forceUpdate() {
-        this.#forceUpdate = true;
     }
 
     attackUnit(targetID: number) {
@@ -355,11 +386,14 @@ export class Unit extends Marker {
         var options = [
             'Attack'
         ]
-        getMap().showUnitContextMenu(e);
-        getMap().getUnitContextMenu().setOptions(options, (option: string) => {
-            getMap().hideUnitContextMenu();
-            this.#executeAction(option);
-        });
+        if (getUnitsManager().getSelectedUnits().length > 0 && !(getUnitsManager().getSelectedUnits().includes(this)))
+        {
+            getMap().showUnitContextMenu(e);
+            getMap().getUnitContextMenu().setOptions(options, (option: string) => {
+                getMap().hideUnitContextMenu();
+                this.#executeAction(option);
+            });
+        }
     }
 
     #executeAction(action: string) {
@@ -368,21 +402,13 @@ export class Unit extends Marker {
     }
 
     #updateMarker() {
-        /* Add the marker if not present */
-        if (!getMap().hasLayer(this) && !this.getHidden()) {
-            this.addTo(getMap());
-        }
+        this.updateVisibility();
 
-        /* Hide the marker if necessary*/
-        if (getMap().hasLayer(this) && this.getHidden()) {
-            getMap().removeLayer(this);
-        }
-        else {
+        if (!this.getHidden()) {
 
             this.setLatLng(new LatLng(this.getFlightData().latitude, this.getFlightData().longitude));
             var element = this.getElement();
             if (element != null) {
-
                 element.querySelector(".unit-vvi")?.setAttribute("style", `height: ${15 + this.getFlightData().speed / 5}px;`);
                 element.querySelector(".unit")?.setAttribute("data-pilot", this.getMissionData().flags.human? "human": "ai");
 
@@ -401,9 +427,8 @@ export class Unit extends Marker {
 
                 }
                 
-                const headingDeg = rad2deg( this.getFlightData().heading );
-
                 element.querySelectorAll( "[data-rotate-to-heading]" ).forEach( el => {
+                    const headingDeg = rad2deg( this.getFlightData().heading );
                     let currentStyle = el.getAttribute( "style" ) || "";
                     el.setAttribute( "style", currentStyle + `transform:rotate(${headingDeg}deg);` );
                 });
@@ -494,93 +519,120 @@ export class AirUnit extends Unit {
 
 export class Aircraft extends AirUnit {
     constructor(ID: number, data: UnitData) {
-        super(ID, data,
-           `<div class="unit" data-object="unit-air-aircraft" data-status="" data-coalition="${data.missionData.coalition}">
-                <div class="unit-selected-spotlight"></div>
-                <div class="unit-marker-border"></div>
-                <div class="unit-status"></div>
-                <div class="unit-vvi" data-rotate-to-heading></div>
-                <div class="unit-hotgroup">
-                    <div class="unit-hotgroup-id"></div>
-                </div>
-                <div class="unit-marker"></div>
-                <div class="unit-short-label">${aircraftDatabase.getShortLabelByName(data.baseData.name)}</div>
-                <div class="unit-fuel">
-                    <div class="unit-fuel-level" style="width:100%;"></div>
-                </div>
-                <div class="unit-ammo">
-                    <div class="unit-ammo-fox-1"></div>
-                    <div class="unit-ammo-fox-2"></div>
-                    <div class="unit-ammo-fox-3"></div>
-                    <div class="unit-ammo-other"></div>
-                </div>
-                <div class="unit-summary">
-                    <div class="unit-callsign">${data.baseData.unitName}</div>
-                    <div class="unit-altitude"></div>
-                    <div class="unit-speed"></div>
-                </div>
-            </div>`);
+        super(ID, data);
+    }
+
+    getMarkerHTML()
+    {
+        return `<div class="unit" data-object="unit-aircraft" data-status="" data-coalition="${this.getMissionData().coalition}">
+                    <div class="unit-selected-spotlight"></div>
+                    <div class="unit-marker-border"></div>
+                    <div class="unit-status"></div>
+                    <div class="unit-vvi" data-rotate-to-heading></div>
+                    <div class="unit-hotgroup">
+                        <div class="unit-hotgroup-id"></div>
+                    </div>
+                    <div class="unit-marker"></div>
+                    <div class="unit-short-label">${aircraftDatabase.getByName(this.getBaseData().name)?.shortLabel || ""}</div>
+                    <div class="unit-fuel">
+                        <div class="unit-fuel-level" style="width:100%;"></div>
+                    </div>
+                    <div class="unit-ammo">
+                        <div class="unit-ammo-fox-1"></div>
+                        <div class="unit-ammo-fox-2"></div>
+                        <div class="unit-ammo-fox-3"></div>
+                        <div class="unit-ammo-other"></div>
+                    </div>
+                    <div class="unit-summary">
+                        <div class="unit-callsign">${this.getBaseData().unitName}</div>
+                        <div class="unit-altitude"></div>
+                        <div class="unit-speed"></div>
+                    </div>
+                </div>`
+    }
+
+    getMarkerCategory()
+    {
+        return "aircraft";
     }
 }
 
 export class Helicopter extends AirUnit {
     constructor(ID: number, data: UnitData) {
-        super(ID, data, 
-            ``);
+        super(ID, data);
+    }
+
+    getVisibilityCategory()
+    {
+        return "helicopter";
     }
 }
 
 export class GroundUnit extends Unit {
     constructor(ID: number, data: UnitData) {
-        // TODO this is very messy
-        var role = groundUnitsDatabase.getByName(data.baseData.name)?.loadouts[0].roles[0];
-        if (role == undefined)
-            role = "U";
-        var roleType = (role === "SAM") ? "sam" : "mi";
+        super(ID, data);
+    }
 
-        super(ID, data, `
-            <div class="unit" data-object="unit-ground-${roleType}" data-coalition="${data.missionData.coalition}">
-                <div class="unit-selected-spotlight"></div>
-                <div class="unit-marker"></div>
-                <div class="unit-short-label">${role?.substring(0, 1).toUpperCase()}</div>
-            </div>
-        `);
+    getMarkerHTML() {
+        var role = groundUnitsDatabase.getByName(this.getBaseData().name)?.loadouts[0].roles[0];
+        return  `<div class="unit" data-object="unit-${this.getMarkerCategory()}" data-coalition="${this.getMissionData().coalition}">
+                    <div class="unit-selected-spotlight"></div>
+                    <div class="unit-marker"></div>
+                    <div class="unit-short-label">${role?.substring(0, 1)?.toUpperCase() || ""}</div>
+                </div>`
+    }
+
+    getMarkerCategory()
+    {
+        // TODO this is very messy
+        var role = groundUnitsDatabase.getByName(this.getBaseData().name)?.loadouts[0].roles[0];
+        var markerCategory = (role === "SAM") ? "sam" : "groundunit";
+        return markerCategory;
     }
 }
 
 export class NavyUnit extends Unit {
     constructor(ID: number, data: UnitData) {
-        super(ID, data, `
-            <div class="unit" data-object="unit-naval" data-coalition="${data.missionData.coalition}">
-                <div class="unit-selected-spotlight"></div>
-                <div class="unit-marker"></div>
-                <div class="unit-short-label">N</div>
-            </div>
-        `);
+        super(ID, data);
+    }
+    
+    getMarkerCategory() {
+        return "navyunit";
     }
 }
 
 export class Weapon extends Unit {
-    constructor(ID: number, data: UnitData, html: string) {
-        super(ID, data, html);
+    constructor(ID: number, data: UnitData) {
+        super(ID, data);
         this.setSelectable(false);
     }
+
+    getMarkerHTML(): string {
+        return `<div class="unit" data-object="unit-${this.getMarkerCategory()}" data-coalition="${this.getMissionData().coalition}">
+                    <div class="unit-selected-spotlight"></div>
+                    <div class="unit-marker" data-rotate-to-heading></div>
+                    <div class="unit-short-label"></div>
+                </div>`
+    }
+
 }
 
 export class Missile extends Weapon {
     constructor(ID: number, data: UnitData) {
-        super(ID, data, `
-            <div class="unit" data-object="unit-weapon-missile" data-coalition="${data.missionData.coalition}">
-                <div class="unit-selected-spotlight"></div>
-                <div class="unit-marker" data-rotate-to-heading></div>
-                <div class="unit-short-label"></div>
-            </div>
-        `);
+        super(ID, data);
+    }
+
+    getMarkerCategory() {
+        return "missile";
     }
 }
 
 export class Bomb extends Weapon {
     constructor(ID: number, data: UnitData) {
-        super(ID, data, "");
+        super(ID, data);
+    }
+
+    getMarkerCategory() {
+        return "bomb";
     }
 }

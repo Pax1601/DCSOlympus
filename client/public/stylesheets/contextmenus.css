@@ -88,7 +88,7 @@
 }
 
 #ground-unit-spawn-button {
-    background-image: var( --spawn-ground-url );
+    background-image: var( --spawn-groundunit-url );
     background-size: 48px;
 }
 

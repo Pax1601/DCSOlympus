@@ -75,7 +75,7 @@ export class Slider {
         {
             this.#value = newValue;
             if (this.#slider != null)
-                this.#slider.value = String((newValue - this.#minValue) / (this.#maxValue - this.#minValue) * 100); 
+                this.#slider.value = String((newValue - this.#minValue) / (this.#maxValue - this.#minValue) * parseFloat(this.#slider.max)); 
             this.#onValue()
         }
     }
@@ -120,7 +120,7 @@ export class Slider {
         this.#dragged = false;
         if (this.#slider != null)
         {
-            this.#value = this.#minValue + parseFloat(this.#slider.value) / 100 * (this.#maxValue - this.#minValue);
+            this.#value = this.#minValue + parseFloat(this.#slider.value) / parseFloat(this.#slider.max) * (this.#maxValue - this.#minValue);
             this.#callback(this.getValue());
         }
     }

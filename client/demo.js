@@ -363,7 +363,7 @@ const DEMO_UNIT_DATA = {
             name: "CVN-75",
             unitName: "Olympus 1-9",
             groupName: "Group 1",
-            alive: false,
+            alive: true,
             category: "Aircraft",
         },
         flightData:  {
@@ -406,7 +406,7 @@ const DEMO_UNIT_DATA = {
             name: "CVN-75",
             unitName: "Olympus 1-10",
             groupName: "Group 1",
-            alive: false,
+            alive: true,
             category: "Aircraft",
         },
         flightData:  {
@@ -449,12 +449,12 @@ const DEMO_UNIT_DATA = {
             name: "CVN-75",
             unitName: "Olympus 1-11",
             groupName: "Group 1",
-            alive: false,
+            alive: true,
             category: "Missile",
         },
         flightData:  {
             latitude: 37.075,
-            longitude: -115.8,
+            longitude: -115.80,
             altitude: 2000,
             heading: 0.5,
             speed: 300
@@ -492,14 +492,100 @@ const DEMO_UNIT_DATA = {
             name: "CVN-75",
             unitName: "Olympus 1-12",
             groupName: "Group 1",
-            alive: false,
+            alive: true,
             category: "Missile",
         },
         flightData:  {
             latitude: 37.075,
             longitude: -115.75,
             altitude: 2000,
+            heading: 0.6,
+            speed: 300
+        },
+        missionData:  {
+            fuel: 0.5,
+            flags: {human: false},
+            ammo: [],
+            targets: [],
+            hasTask: true,
+            coalition: "red"
+        },
+        formationData:  {
+            formation: "Echelon",
+            isLeader: false,
+            isWingman: false,
+            leaderID: null,
+            wingmen: [],
+            wingmenIDs: []
+        },
+        taskData: {
+            currentTask: "Example task",
+            activePath: undefined,
+            targetSpeed: 400,
+            targetAltitude: 3000
+        },
+        optionsData: {
+            ROE: "None",
+            reactionToThreat: "None",
+        }
+    },
+    ["13"]:{
+        baseData: {
+            AI: true,
+            name: "CVN-75",
+            unitName: "Olympus 1-11",
+            groupName: "Group 1",
+            alive: true,
+            category: "Bomb",
+        },
+        flightData:  {
+            latitude: 37.05,
+            longitude: -115.8,
+            altitude: 2000,
             heading: 0.5,
+            speed: 300
+        },
+        missionData:  {
+            fuel: 0.5,
+            flags: {human: false},
+            ammo: [],
+            targets: [],
+            hasTask: true,
+            coalition: "blue"
+        },
+        formationData:  {
+            formation: "Echelon",
+            isLeader: false,
+            isWingman: false,
+            leaderID: null,
+            wingmen: [],
+            wingmenIDs: []
+        },
+        taskData: {
+            currentTask: "Example task",
+            activePath: undefined,
+            targetSpeed: 400,
+            targetAltitude: 3000
+        },
+        optionsData: {
+            ROE: "None",
+            reactionToThreat: "None",
+        }
+    },
+    ["14"]:{
+        baseData: {
+            AI: true,
+            name: "CVN-75",
+            unitName: "Olympus 1-12",
+            groupName: "Group 1",
+            alive: true,
+            category: "Bomb",
+        },
+        flightData:  {
+            latitude: 37.05,
+            longitude: -115.75,
+            altitude: 2000,
+            heading: 0.6,
             speed: 300
         },
         missionData:  {

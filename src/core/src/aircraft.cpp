@@ -63,11 +63,13 @@ void Aircraft::changeAltitude(wstring change)
 void Aircraft::setTargetSpeed(double newTargetSpeed) {
 	targetSpeed = newTargetSpeed;
 	addMeasure(L"targetSpeed", json::value(targetSpeed));
-	goToDestination();
+	if (activeDestination != NULL)
+		goToDestination();
 }
 
 void Aircraft::setTargetAltitude(double newTargetAltitude) {
 	targetAltitude = newTargetAltitude;
 	addMeasure(L"targetAltitude", json::value(targetAltitude));
-	goToDestination();
+	if (activeDestination != NULL)
+		goToDestination();
 }

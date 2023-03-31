@@ -1,23 +1,25 @@
 #define nwjsFolder "C:\Users\dpass\Documents\nwjs\"
+#define version "v0.1.1-alpha"
 
 [Setup] 
 AppName=DCS Olympus 
-AppVerName=DCS Olympus Alpha v0.1.0
+AppVerName={#version}
 DefaultDirName={usersavedgames}\DCS.openbeta
 DefaultGroupName=DCSOlympus  
-OutputBaseFilename=DCSOlympus
+OutputBaseFilename=DCSOlympus_{#version}
 UninstallFilesDir={app}\Mods\Services\Olympus
+;SetupIconFile="..\img\olympus.ico"
   
 [Tasks] 
 ; NOTE: The following entry contains English phrases ("Create a desktop icon" and "Additional icons"). You are free to translate them into another language if required. 
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
-
 
 [Files] 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files 
 ;Source: "..\scripts\OlympusExport.lua"; DestDir: "{app}\Scripts"; Flags: ignoreversion 
 ;Source: "..\scripts\OlympusPatcher.exe"; DestDir: "{app}\Scripts"; Flags: ignoreversion 
 Source: "..\scripts\OlympusHook.lua"; DestDir: "{app}\Scripts\Hooks"; Flags: ignoreversion 
+Source: "..\olympus.json"; DestDir: "{app}\Mods\Services\Olympus"; Flags: onlyifdoesntexist 
 Source: "..\scripts\OlympusCommand.lua"; DestDir: "{app}\Mods\Services\Olympus\Scripts"; Flags: ignoreversion 
 Source: "..\scripts\unitPayloads.lua"; DestDir: "{app}\Mods\Services\Olympus\Scripts"; Flags: ignoreversion
 ;Source: "..\scripts\OlympusMission.lua"; DestDir: "{app}\Mods\Services\Olympus\Scripts"; Flags: ignoreversion 
@@ -30,6 +32,7 @@ Source: "..\client\public\*"; DestDir: "{app}\Mods\Services\Olympus\client\publi
 Source: "..\client\routes\*"; DestDir: "{app}\Mods\Services\Olympus\client\routes"; Flags: ignoreversion recursesubdirs;
 Source: "..\client\views\*"; DestDir: "{app}\Mods\Services\Olympus\client\views"; Flags: ignoreversion recursesubdirs;
 Source: "..\client\*.*"; DestDir: "{app}\Mods\Services\Olympus\client"; Flags: ignoreversion;
+Source: "..\img\olympus.ico"; DestDir: "{app}\Mods\Services\Olympus\img"; Flags: ignoreversion;
 Source: "{#nwjsFolder}\*.*"; DestDir: "{app}\Mods\Services\Olympus\client"; Flags: ignoreversion recursesubdirs;
 
 [Code]
@@ -58,7 +61,7 @@ Root: HKCU; Subkey: "Environment"; ValueType: expandsz; ValueName: "Path"; Value
 ChangesEnvironment=yes
 
 [Icons]
-Name: "{userdesktop}\DCS Olympus Client"; Filename: "{app}\Mods\Services\Olympus\client\nw.exe"; Tasks: desktopicon
+Name: "{userdesktop}\DCS Olympus Client"; Filename: "{app}\Mods\Services\Olympus\client\nw.exe"; Tasks: desktopicon; IconFilename: "{app}\Mods\Services\Olympus\img\olympus.ico"
 
 ;[Run]
 ;Filename: "{app}\Scripts\OlympusPatcher.exe"; Parameters: "-i"
