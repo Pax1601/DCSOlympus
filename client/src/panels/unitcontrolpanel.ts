@@ -73,23 +73,11 @@ export class UnitControlPanel extends Panel {
                 else
                     database = null; // TODO add databases for other unit types
 
-                if (index === 0) {
-                    this.getElement().querySelectorAll(`[data-object|="unit"]`).forEach(marker => {
-
-                        marker.setAttribute("data-coalition", unit.getMissionData().coalition);
-
-                        dataPointMap( this.getElement(), {
-                            "shortLabel" : database?.getByName(unit.getBaseData().name)?.shortLabel,
-                            "unitName": unit.getBaseData().unitName
-                        });
-
-                    });
-                }
+                console.log( unit.getBaseData() );
 
                 var button = document.createElement("button");
                 var callsign = unit.getBaseData().unitName || "";
 
-                button.innerText = unit.getBaseData().unitName;
                 button.setAttribute("data-short-label", database?.getByName(unit.getBaseData().name)?.shortLabel || "");
                 button.setAttribute("data-callsign", callsign);
 
