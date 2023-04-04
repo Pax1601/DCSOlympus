@@ -213,27 +213,6 @@ function setupEvents() {
             el.classList.toggle( "hide" );
         })
     });
-
-    /**  Olympus UI ***/
-    document.querySelectorAll(".ol-select").forEach(select => {
-
-        //  Do open/close toggle
-        select.addEventListener("click", ev => {
-
-            if ( ev.target instanceof HTMLElement && ev.target.nodeName !== "A" ) {
-                ev.preventDefault();
-            }
-            
-            ev.stopPropagation();
-            select.classList.toggle("is-open");
-        });
-
-        //  Autoclose on mouseleave
-        select.addEventListener("mouseleave", ev => {
-            select.classList.remove("is-open");
-        });
-
-    });
 }
 
 export function getMap() {

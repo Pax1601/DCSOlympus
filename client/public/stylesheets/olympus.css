@@ -142,8 +142,9 @@ form > div {
 }
 
 .ol-select>.ol-select-options {
-    position: absolute;
+    border-radius: var( --border-radius-md );
     overflow: hidden;
+    position: absolute;
     max-height: 0;
     translate: 0 -2px;
     z-index: 1000;
@@ -160,8 +161,14 @@ form > div {
     overflow-y: auto;
     padding: 8px 0;
     min-width: 100%;
+    z-index:9999;
 }
 
+
+.ol-select.is-open[data-position="top"] > .ol-select-options {
+    top:0;
+    translate:0 -100%;
+}
 
 
 
