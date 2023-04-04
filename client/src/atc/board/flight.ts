@@ -1,7 +1,7 @@
 import { getMissionData } from "../..";
 import { Dropdown } from "../../controls/dropdown";
 import { ATC } from "../atc";
-import { ATCBoard } from "../atcboard";
+import { ATCBoard, StripBoardStripInterface } from "../atcboard";
 
 
 export class ATCBoardFlight extends ATCBoard {
@@ -83,7 +83,7 @@ export class ATCBoardFlight extends ATCBoard {
 
         flights.forEach( flight => {
 
-            let strip = stripBoard.querySelector( `[data-flight-id="${flight.id}"]`);
+            let strip = this.getStrip( flight.id );
 
             if ( !strip ) {
 
@@ -104,15 +104,20 @@ export class ATCBoardFlight extends ATCBoard {
 
                 stripBoard.insertAdjacentHTML( "beforeend", template );
 
-                strip = <HTMLElement>stripBoard.lastElementChild;
 
-                strip.querySelectorAll( ".ol-select" ).forEach( select => {
+                strip = {
+                    "id": flight.id,
+                    "element": <HTMLElement>stripBoard.lastElementChild,
+                    "dropdowns": {}
+                };
+
+                strip.element.querySelectorAll( ".ol-select" ).forEach( select => {
                     
                     switch( select.getAttribute( "data-point" ) ) {
 
                         case "status":
 
-                                new Dropdown( select.id, ( value:string, ev:MouseEvent ) => {
+                                strip.dropdowns.status = new Dropdown( select.id, ( value:string, ev:MouseEvent ) => {
                                     
                                     fetch( '/api/atc/flight/' + flight.id, {
                                         method: 'PATCH',      
@@ -135,10 +140,7 @@ export class ATCBoardFlight extends ATCBoard {
 
                 });
 
-
-
-
-                strip.querySelectorAll( `input[type="text"]` ).forEach( input => {
+                strip.element.querySelectorAll( `input[type="text"]` ).forEach( input => {
 
                     if ( input instanceof HTMLInputElement ) {
 
@@ -190,22 +192,26 @@ export class ATCBoardFlight extends ATCBoard {
 
                 });
 
+                this.addStrip( strip );
+
             } else {
 
-                //  TODO: change status dropdown if status is different
-                strip.setAttribute( "data-flight-status", flight.status );
+                if ( flight.status !== strip.element.getAttribute( "data-flight-status" ) ) {
+                    strip.element.setAttribute( "data-flight-status", flight.status );
+                    strip.dropdowns.status.selectText( flight.status );
+                }
 
-                strip.querySelectorAll( `input[name="takeoffTime"]:not(:focus)` ).forEach( el => {
+                strip.element.querySelectorAll( `input[name="takeoffTime"]:not(:focus)` ).forEach( el => {
                     if ( el instanceof HTMLInputElement ) {
                         el.value = this.timestampToLocaleTime( flight.takeoffTime );
                         el.dataset.previousValue = el.value;
                     }
                 });
 
-                strip.querySelectorAll( `[data-point="timeToGo"]` ).forEach( el => {
+                strip.element.querySelectorAll( `[data-point="timeToGo"]` ).forEach( el => {
 
                     if ( flight.takeoffTime > 0 && this.calculateTimeToGo( missionTime, flight.takeoffTime ).totalSeconds <= 120 ) {
-                        strip?.setAttribute( "data-time-warning", "level-1" );
+                        strip.element.setAttribute( "data-time-warning", "level-1" );
                     }
                     
                     if ( el instanceof HTMLElement ) {
@@ -217,12 +223,12 @@ export class ATCBoardFlight extends ATCBoard {
 
             }
 
-            strip.toggleAttribute( "data-updating", false );
+            strip.element.toggleAttribute( "data-updating", false );
 
         });
         
         stripBoard.querySelectorAll( `[data-updating]` ).forEach( strip => {
-            strip.remove();
+            this.deleteStrip( strip.getAttribute( "data-flight-id" ) || "" );
         });
 
     }

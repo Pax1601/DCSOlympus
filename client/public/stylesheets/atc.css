@@ -12,7 +12,7 @@
     column-gap: 4px;
     display:flex;
     flex-flow: row nowrap;
-    padding:4px;
+    row-gap:4px;
 }
 
 .ol-strip-board-strip[data-flight-status="checkedin"] {
@@ -20,7 +20,7 @@
 }
 
 .ol-strip-board-strip[data-flight-status="readytotaxi"] {
-    background-color: #ffff002A;
+    background-color: #ffff0063;
 }
 
 .ol-strip-board-strip[data-flight-status="clearedtotaxi"] {
@@ -46,7 +46,7 @@
     padding: 4px;
     text-overflow: ellipsis;
     white-space: nowrap;
-    width:70px;
+    width:80px;
 }
 
 .ol-strip-board-strip input[type="text"] {

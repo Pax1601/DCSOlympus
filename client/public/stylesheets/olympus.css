@@ -346,6 +346,11 @@ nav.ol-panel> :last-child {
     row-gap: 4px;
 }
 
+.ol-group-header {
+    text-align: center;
+    width: 100%;
+}
+
 .ol-panel .ol-group.wrap {
     flex-wrap: wrap;
 }
@@ -545,30 +550,6 @@ nav.ol-panel> :last-child {
     width: 28px;
 }
 
-#unit-selection #unit-identification [data-object|="unit"] .unit-short-label {
-    font-size: 12px;
-}
-
-#unit-selection #unit-identification #unit-name {
-    background-color: transparent;
-    border: none;
-    color: white;
-    font-size: 16px;
-    font-weight: var(--font-weight-bolder);
-    outline: none;
-    overflow: hidden;
-    white-space: nowrap;
-    width: 150px;
-}
-
-#edit-unit-name {
-    background-image: url("/images/buttons/edit.svg");
-    background-repeat: no-repeat;
-    height: 14px;
-    margin-left: 10px;
-    width: 15px;
-}
-
 #unit-visibility-control {
     align-items: center;
 }
@@ -617,6 +598,18 @@ body[data-hide-threat] #unit-visibility-control-threat {
 
 body[data-hide-navyunit] #unit-visibility-control-navyunit {
     background-image: var(--visibility-control-navyunit-hidden-url);
+}
+
+#atc-navbar-control {
+    align-items: center;
+    display:flex;
+    flex-direction: column;
+}
+
+#atc-navbar-control button {
+    background:#ffffff20;
+    border-radius: var( --border-radius-sm );
+    padding:4px;
 }
 
 
