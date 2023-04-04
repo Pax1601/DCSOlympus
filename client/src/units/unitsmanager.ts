@@ -3,6 +3,7 @@ import { getMap, getUnitDataTable } from "..";
 import { Unit } from "./unit";
 import { cloneUnit } from "../server/server";
 import { IDLE, MOVE_UNIT } from "../map/map";
+import { keyEventWasInInput } from "../other/utils";
 
 export class UnitsManager {
     #units: { [ID: number]: Unit };
@@ -345,7 +346,7 @@ export class UnitsManager {
 
     #onKeyDown(event: KeyboardEvent)
     {
-        if (event.key === "Delete")
+        if ( !keyEventWasInInput( event ) && event.key === "Delete")
         {
             this.selectedUnitsDelete();
         }
