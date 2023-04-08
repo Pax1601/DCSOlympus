@@ -36,10 +36,17 @@ export class MouseInfoPanel extends Panel {
             var el = <HTMLElement>this.getElement().querySelector(`#bullseye-${idx}`);
 
             if ( el != null ) {
+
                 var dist = distance(bullseyes[idx].latitude, bullseyes[idx].longitude, mousePosition.lat, mousePosition.lng);
                 var bear = bearing(bullseyes[idx].latitude, bullseyes[idx].longitude, mousePosition.lat, mousePosition.lng);
 
-                el.dataset.bearing       = zeroAppend(Math.floor(bear), 3);
+                let bng = zeroAppend(Math.floor(bear), 3);
+
+                if ( bng === "000" ) {
+                    bng = "360";
+                }
+
+                el.dataset.bearing       = bng;
                 el.dataset.distance      = zeroAppend(Math.floor(dist*0.000539957), 3);
                 el.dataset.distanceUnits = "NM";
             }
