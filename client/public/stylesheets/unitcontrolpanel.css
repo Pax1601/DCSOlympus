@@ -12,11 +12,17 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	z-index: 1000;
 }
 
+#unit-control-panel h3 {
+	margin-bottom:8px;
+}
+
 #unit-control-panel #selected-units-container {
 	align-items: left;
 	border-radius: var( --border-radius-md );
 	display:flex;
 	flex-direction: column;
+	max-height: 136px;
+	overflow-y:auto;
 	row-gap: 4px;
 }
 
@@ -85,5 +91,10 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 
 #unit-control-panel h4 {
 	margin-bottom:8px;
-	margin-top:20px;
+}
+
+
+#unit-control-panel #threat,
+#unit-control-panel #roe {
+	margin-top:12px;
 }

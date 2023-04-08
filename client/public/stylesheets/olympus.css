@@ -76,6 +76,23 @@ form > div {
 }
 
 
+.ol-scrollable::-webkit-scrollbar {
+    width: 10px;
+}
+  
+.ol-scrollable::-webkit-scrollbar-track {
+    background-color: transparent;
+    border-radius: 100px;
+}
+
+.ol-scrollable::-webkit-scrollbar-thumb {
+    background-color: white;
+    border-radius: 100px;
+    opacity: 0.8;
+    margin-top: 10px;
+}
+
+
 .ol-panel {
     background-color: var(--background-steel);
     border-radius: 15px;
@@ -215,22 +232,6 @@ form > div {
 
 .ol-select>.ol-select-options > div a:hover, .ol-select>.ol-select-options > div button:hover {
     text-decoration: underline;
-}
-
-.ol-select>.ol-select-options::-webkit-scrollbar {
-    width: 10px;
-}
-  
-.ol-select>.ol-select-options::-webkit-scrollbar-track {
-    background-color: transparent;
-    border-radius: 100px;
-}
-
-.ol-select>.ol-select-options::-webkit-scrollbar-thumb {
-    background-color: white;
-    border-radius: 100px;
-    opacity: 0.8;
-    margin-top: 10px;
 }
 
 
