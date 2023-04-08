@@ -11,6 +11,7 @@ import { FeatureSwitches } from "./featureswitches";
 import { LogPanel } from "./panels/logpanel";
 import { getAirbases, getBullseye as getBullseyes, getConfig, getMission, getUnits, setAddress, toggleDemoEnabled } from "./server/server";
 import { UnitDataTable } from "./units/unitdatatable";
+import { keyEventWasInInput } from "./other/utils";
 
 var map: Map;
 
@@ -167,6 +168,10 @@ function setupEvents() {
 
     /* Keyup events */
     document.addEventListener("keyup", ev => {
+
+        if ( keyEventWasInInput( ev ) ) {
+            return;
+        }
         
         switch (ev.code) {
         

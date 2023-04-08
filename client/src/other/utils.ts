@@ -69,6 +69,15 @@ export function distance(lat1: number, lon1: number, lat2: number, lon2: number)
 }
 
 
+export function keyEventWasInInput( event:KeyboardEvent ) {
+
+    const target = event.target;
+
+    return ( target instanceof HTMLElement && ( [ "INPUT", "TEXTAREA" ].includes( target.nodeName ) ) );
+
+}
+
+
 export function rad2deg(rad: number) {
     var pi = Math.PI;
     return rad / (pi / 180);
