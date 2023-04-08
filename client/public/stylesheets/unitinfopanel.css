@@ -58,7 +58,6 @@
 	display:flex;
 	flex-flow: column nowrap;
 	row-gap: 8px;
-	text-align: center;
 	width:45%;
 }
 
@@ -67,23 +66,23 @@
 	align-items: center;
 	column-gap: 8px;
 	display:flex;
+	justify-content: flex-end;
 	white-space: nowrap;
 }
 
 #loadout-items > *::before {
 	align-items: center;
 	background-color: var( --secondary-light-grey );
-	border-radius: 50%;
+	border-radius: var( --border-radius-sm );
 	content: attr( data-qty );
 	display:flex;
 	font-weight: var( --font-weight-bolder );
-	justify-content: center;
-	height:20px;
-	width:20px;
+	padding:1px 4px;
 }
 
 #loadout-items > *::after {
 	content: attr( data-item );
+	width:52px;
 }
 
 
