@@ -174,21 +174,16 @@ function setupEvents() {
         }
         
         switch (ev.code) {
-        
             case "KeyL":
                 document.body.toggleAttribute("data-hide-labels");
                 break;
-
             case "KeyD":
                 toggleDemoEnabled();
                 break;
-
-            case "Minus": // For Veltro's italian layout keyboard, which lacks a quote
             case "Quote":
                 unitDataTable.toggle();
                 break
         }
-
     });
 
     /*
