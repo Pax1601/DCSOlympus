@@ -169,7 +169,11 @@ export class MapContextMenu extends ContextMenu {
     #setGroundUnitRole(role: string) {
         this.#spawnOptions.role = role;
         this.#resetGroundUnitType();
-        this.#groundUnitTypeDropdown.setOptions(groundUnitsDatabase.getByRole(role).map((blueprint) => { return blueprint.label }));
+
+        const types = groundUnitsDatabase.getByRole(role).map((blueprint) => { return blueprint.label } );
+        types.sort();
+
+        this.#groundUnitTypeDropdown.setOptions( types );
         this.#groundUnitTypeDropdown.selectValue(0);
         this.clip();
     }
@@ -179,7 +183,11 @@ export class MapContextMenu extends ContextMenu {
         (<HTMLButtonElement>this.getContainer()?.querySelector("#loadout-list")).replaceChildren();
         this.#groundUnitRoleDropdown.reset();
         this.#groundUnitTypeDropdown.reset();
-        this.#groundUnitRoleDropdown.setOptions(groundUnitsDatabase.getRoles());
+
+        const roles = groundUnitsDatabase.getRoles();
+        roles.sort();
+        
+        this.#groundUnitRoleDropdown.setOptions( roles );
         this.clip();
     }
 

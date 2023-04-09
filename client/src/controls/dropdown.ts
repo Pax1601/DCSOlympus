@@ -25,6 +25,8 @@ export class Dropdown {
 
         });
 
+        this.#options.classList.add( "ol-scrollable" );
+
         this.#element.addEventListener("mouseleave", ev => {
             this.#close();
         });
