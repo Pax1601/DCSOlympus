@@ -441,39 +441,41 @@ function Olympus.setMissionData(arg, time)
 	local startIndex = Olympus.groupIndex
 	local endIndex = startIndex + Olympus.groupStep
 	local index = 0
-	for groupName, gp in pairs(mist.DBs.groupsByName) do
-		index = index + 1
-		if index > startIndex then
-			if groupName ~= nil then
-				local group = Group.getByName(groupName)
-				if group ~= nil then
-					local controller = group:getController()
-					for index, unit in pairs(group:getUnits()) do
-						local table = {}
-						table["targets"] = {}
-						table["targets"]["visual"] = controller:getDetectedTargets(1)
-						table["targets"]["radar"] = controller:getDetectedTargets(4)
-						table["targets"]["rwr"] = controller:getDetectedTargets(16)
-						table["targets"]["other"] = controller:getDetectedTargets(2, 8, 32)
+	if mist ~= nil and mist.DBs ~= nil and mist.DBs.groupsByName ~= nil then
+		for groupName, gp in pairs(mist.DBs.groupsByName) do
+			index = index + 1
+			if index > startIndex then
+				if groupName ~= nil then
+					local group = Group.getByName(groupName)
+					if group ~= nil then
+						local controller = group:getController()
+						for index, unit in pairs(group:getUnits()) do
+							local table = {}
+							table["targets"] = {}
+							table["targets"]["visual"] = controller:getDetectedTargets(1)
+							table["targets"]["radar"] = controller:getDetectedTargets(4)
+							table["targets"]["rwr"] = controller:getDetectedTargets(16)
+							table["targets"]["other"] = controller:getDetectedTargets(2, 8, 32)
 
-						table["hasTask"] = controller:hasTask()
-						
-						table["ammo"] = unit:getAmmo()
-						table["fuel"] = unit:getFuel()
-						table["life"] = unit:getLife() / unit:getLife0()
-						unitsData[unit:getObjectID()] = table
+							table["hasTask"] = controller:hasTask()
+							
+							table["ammo"] = unit:getAmmo()
+							table["fuel"] = unit:getFuel()
+							table["life"] = unit:getLife() / unit:getLife0()
+							unitsData[unit:getObjectID()] = table
+						end
 					end
 				end
 			end
+			if index >= endIndex then
+				break
+			end
 		end
-		if index >= endIndex then
-			break
+		if index ~= endIndex then 
+			Olympus.groupIndex = 0
+		else
+			Olympus.groupIndex = endIndex
 		end
-	end
-	if index ~= endIndex then 
-		Olympus.groupIndex = 0
-	else
-		Olympus.groupIndex = endIndex
 	end
 
 	-- Airbases data
