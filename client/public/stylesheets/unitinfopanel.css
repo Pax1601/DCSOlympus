@@ -26,19 +26,16 @@
 }
 
 
-#loadout-container {
-	width:250px;
-}
-
 #loadout {
 	display:flex;
+	overflow: visible;
 }
 
 #loadout-silhouette {
 	align-items: center;
 	display:flex;
 	justify-content: center;
-	width:55%;
+	width:100px;
 }
 
 #loadout-silhouette::before {
@@ -58,7 +55,6 @@
 	display:flex;
 	flex-flow: column nowrap;
 	row-gap: 8px;
-	width:45%;
 }
 
 
@@ -82,9 +78,11 @@
 
 #loadout-items > *::after {
 	content: attr( data-item );
-	width:52px;
+	overflow: hidden;
+	position:relative;
+	text-overflow: ellipsis;
+	width:80px;
 }
-
 
 
 #fuel-percentage {
@@ -112,7 +110,6 @@
 	height:6px;
 	margin-top:4px;
 	overflow: hidden;
-	width:90%;
 }
 
 #fuel-display #fuel-bar {
