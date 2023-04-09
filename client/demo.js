@@ -625,6 +625,7 @@ class DemoDataGenerator {
     
     units(req, res){
         var ret = this.demoUnits;
+        ret.time = Date.now();
         res.send(JSON.stringify(ret));
     };
     
