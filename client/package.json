@@ -2,7 +2,7 @@
   "name": "DCSOlympus",
   "node-main": "./bin/www",
   "main": "http://localhost:3000",
-  "version": "0.1.0-alpha",
+  "version": "0.1.1-alpha",
   "private": true,
   "scripts": {
     "copy": "copy .\\node_modules\\leaflet\\dist\\leaflet.css .\\public\\stylesheets\\leaflet.css",

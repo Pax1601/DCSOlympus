@@ -8,35 +8,60 @@ export class Dropdown {
     
     constructor(ID: string, callback: CallableFunction, options: string[] | null = null)
     {
-        this.#element = <HTMLElement>document.getElementById(ID);
-        this.#options = <HTMLElement>this.#element.querySelector(".ol-select-options");
-        this.#value = <HTMLElement>this.#element.querySelector(".ol-select-value");
+        this.#element      = <HTMLElement>document.getElementById(ID);
+        this.#options      = <HTMLElement>this.#element.querySelector(".ol-select-options");
+        this.#value        = <HTMLElement>this.#element.querySelector(".ol-select-value");
         this.#defaultValue = this.#value.innerText;
-        this.#callback = callback;
+        this.#callback     = callback;
+        
         if (options != null) {
             this.setOptions(options);
-        }
+        }          
 
-        
-
-        //  Do open/close toggle
-        this.#element.addEventListener("click", ev => {
-
-            if ( ev.target instanceof HTMLElement && ev.target.nodeName !== "A" ) {
-                ev.preventDefault();
-            }
+        this.#value.addEventListener( "click", ev => {
             
-            ev.stopPropagation();
-            this.#element.classList.toggle("is-open");
+            this.#element.classList.toggle( "is-open" );
+            this.#clip();
 
         });
 
-        //  Autoclose on mouseleave
         this.#element.addEventListener("mouseleave", ev => {
-            this.#element.classList.remove("is-open");
+            this.#close();
         });
 
     }
+
+    #clip() {
+
+        const options = this.#options;
+        const bounds  = options.getBoundingClientRect();
+
+        this.#element.dataset.position = ( bounds.bottom > window.innerHeight ) ? "top" : "";
+
+    }
+
+
+    #close() {
+        this.#element.classList.remove( "is-open" );
+        this.#element.dataset.position = "";
+    }
+
+
+    #open() {
+        this.#element.classList.add( "is-open" );
+    }
+
+
+    #toggle() {
+        
+        if ( this.#element.classList.contains( "is-open" ) ) {
+            this.#close();
+        } else {
+            this.#open();
+        }
+
+    }
+
 
     setOptions(optionsList: string[])
     {
@@ -47,7 +72,9 @@ export class Dropdown {
             button.textContent = option;
             div.appendChild(button);
             button.addEventListener("click", (e: MouseEvent) => {
+                e.stopPropagation();
                 this.#value.innerText = option;
+                this.#close();
                 this.#callback( option, e );
             });
             return div;

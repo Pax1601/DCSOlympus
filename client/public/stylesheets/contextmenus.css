@@ -5,7 +5,7 @@
     position: absolute;
     row-gap: 5px;
     width: 230px;
-    z-index: 1000;
+    z-index: 9999;
 }
 
 #aircraft-spawn-menu {

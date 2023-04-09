@@ -11,9 +11,13 @@ export class Panel {
         this.#visible = true;
     }
 
+    protected onHide() {}
+
     hide() {
         this.#element.classList.toggle("hide", true);
         this.#visible = false;
+
+        this.onHide();
     }
 
     toggle() {

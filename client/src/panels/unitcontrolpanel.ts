@@ -1,14 +1,18 @@
 import { getUnitsManager } from "..";
 import { Slider } from "../controls/slider";
+import { dataPointMap } from "../other/utils";
 import { aircraftDatabase } from "../units/aircraftdatabase";
 import { groundUnitsDatabase } from "../units/groundunitsdatabase";
 import { Aircraft, GroundUnit, Unit } from "../units/unit";
 import { UnitDatabase } from "../units/unitdatabase";
-import { UnitsManager } from "../units/unitsmanager";
 import { Panel } from "./panel";
 
-const ROEs: string[] = ["Free", "Designated free", "Designated", "Return", "Hold"];
-const reactionsToThreat: string[] = ["None", "Passive", "Evade", "Escape", "Abort"];
+//  const ROEs: string[] = ["Free", "Designated free", "Designated", "Return", "Hold"];  //  Full list
+//  const reactionsToThreat: string[] = ["None", "Passive", "Evade", "Escape", "Abort"];  //  Full list
+
+const ROEs: string[] = [ "Hold", "Return", "Designated", "Free" ];
+const reactionsToThreat: string[] = [ "None", "Passive", "Evade"  ];
+
 const minSpeedValues: { [key: string]: number } = { Aircraft: 100, Helicopter: 0, NavyUnit: 0, GroundUnit: 0 };
 const maxSpeedValues: { [key: string]: number } = { Aircraft: 800, Helicopter: 300, NavyUnit: 60, GroundUnit: 60 };
 const speedIncrements: { [key: string]: number } = { Aircraft: 25, Helicopter: 10, NavyUnit: 5, GroundUnit: 5 };
@@ -19,14 +23,23 @@ const altitudeIncrements: { [key: string]: number } = { Aircraft: 2500, Helicopt
 export class UnitControlPanel extends Panel {
     #altitudeSlider: Slider;
     #airspeedSlider: Slider;
+    #expectedAltitude:number = -1;
+    #expectedSpeed: number   = -1;
     #optionButtons: { [key: string]: HTMLButtonElement[] } = {}
 
     constructor(ID: string) {
         super(ID);
 
         /* Unit control sliders */
-        this.#altitudeSlider = new Slider("altitude-slider", 0, 100, "ft", (value: number) => getUnitsManager().selectedUnitsSetAltitude(value * 0.3048));
-        this.#airspeedSlider = new Slider("airspeed-slider", 0, 100, "kts", (value: number) => getUnitsManager().selectedUnitsSetSpeed(value / 1.94384));
+        this.#altitudeSlider = new Slider("altitude-slider", 0, 100, "ft", (value: number) => {
+            this.#expectedAltitude = value;
+            getUnitsManager().selectedUnitsSetAltitude(value * 0.3048)
+        });
+        
+        this.#airspeedSlider = new Slider("airspeed-slider", 0, 100, "kts", (value: number) => {
+            this.#expectedSpeed = value;
+            getUnitsManager().selectedUnitsSetSpeed(value / 1.94384)
+        });
 
         /* Option buttons */
         this.#optionButtons["ROE"] = ROEs.map((option: string, index: number) => {
@@ -55,6 +68,39 @@ export class UnitControlPanel extends Panel {
         this.hide();
     }
 
+
+    //  Do this after panel is hidden (make sure there's a reset)
+    protected onHide() {
+        this.#expectedAltitude = -1;
+        this.#expectedSpeed    = -1;
+    }
+
+
+    //  Update function will only be allowed to update the sliders once it's matched the expected value for the first time (due to lag of Ajax request)
+    #updateCanSetAltitudeSlider( altitude:number ) {
+
+        if ( this.#expectedAltitude < 0 || altitude === this.#expectedAltitude ) {
+            this.#expectedAltitude = -1;
+            return true;
+        }
+
+        return false;
+
+    }
+
+
+    #updateCanSetSpeedSlider( altitude:number ) {
+
+        if ( this.#expectedSpeed < 0 || altitude === this.#expectedSpeed ) {
+            this.#expectedSpeed = -1;
+            return true;
+        }
+
+        return false;
+
+    }
+
+
     update() {
         var units = getUnitsManager().getSelectedUnits();
         if (this.getElement() != null && units.length > 0) {
@@ -69,23 +115,13 @@ export class UnitControlPanel extends Panel {
                 else
                     database = null; // TODO add databases for other unit types
 
-                if (index === 0) {
-                    this.getElement().querySelectorAll(`[data-object|="unit"]`).forEach(marker => {
-                        marker.setAttribute("data-coalition", unit.getMissionData().coalition);
-                        const shortLabel = <HTMLElement>marker.querySelector(".unit-short-label");
-                        if (shortLabel)
-                            shortLabel.innerText = database?.getByName(unit.getBaseData().name)?.shortLabel || "";
-                    });
-                }
+                console.log( unit.getBaseData() );
 
                 var button = document.createElement("button");
-                const unitName = <HTMLInputElement>this.getElement().querySelector("#unit-name");
-                var callsign = aircraftDatabase.getByName(unit.getBaseData().unitName)?.label || "";
+                var callsign = unit.getBaseData().unitName || "";
 
-                button.innerText = "";
                 button.setAttribute("data-short-label", database?.getByName(unit.getBaseData().name)?.shortLabel || "");
                 button.setAttribute("data-callsign", callsign);
-                unitName.value = callsign;
 
                 button.setAttribute("data-coalition", unit.getMissionData().coalition);
                 button.classList.add("pill", "highlight-coalition")
@@ -103,6 +139,7 @@ export class UnitControlPanel extends Panel {
             });
         }
     }
+
 
     #showFlightControlSliders(units: Unit[])
     {
@@ -132,12 +169,24 @@ export class UnitControlPanel extends Panel {
             this.#altitudeSlider.setIncrement(altitudeIncrements[unitsType]);
 
             this.#airspeedSlider.setActive(targetSpeed != undefined);
-            if (targetSpeed != undefined)
-                this.#airspeedSlider.setValue(targetSpeed * 1.94384);
+            if (targetSpeed != undefined) {
+
+                targetSpeed *= 1.94384;
+
+                if ( this.#updateCanSetSpeedSlider( targetSpeed ) ) {
+                    this.#airspeedSlider.setValue( targetSpeed );
+                }
+
+            }
 
             this.#altitudeSlider.setActive(targetAltitude != undefined);
-            if (targetAltitude != undefined)
-                this.#altitudeSlider.setValue(targetAltitude / 0.3048);
+            if (targetAltitude != undefined) {
+                targetAltitude /= 0.3048;
+
+                if ( this.#updateCanSetAltitudeSlider( targetAltitude ) ) {
+                    this.#altitudeSlider.setValue( targetAltitude );
+                }
+            }
         }
         else {
             this.#airspeedSlider.setActive(false);

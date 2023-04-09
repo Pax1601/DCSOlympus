@@ -3,11 +3,13 @@ import { getMap, getUnitDataTable } from "..";
 import { Unit } from "./unit";
 import { cloneUnit } from "../server/server";
 import { IDLE, MOVE_UNIT } from "../map/map";
+import { keyEventWasInInput } from "../other/utils";
 
 export class UnitsManager {
     #units: { [ID: number]: Unit };
     #copiedUnits: Unit[];
     #selectionEventDisabled: boolean = false;
+    #pasteDisabled: boolean = false;
 
     constructor() {
         this.#units = {};
@@ -330,16 +332,21 @@ export class UnitsManager {
 
     pasteUnits()
     {
-        for (let idx in this.#copiedUnits)
+        if (!this.#pasteDisabled)
         {
-            var unit = this.#copiedUnits[idx];
-            cloneUnit(unit.ID, getMap().getMouseCoordinates());
+            for (let idx in this.#copiedUnits)
+            {
+                var unit = this.#copiedUnits[idx];
+                cloneUnit(unit.ID, getMap().getMouseCoordinates());
+            }
+            this.#pasteDisabled = true;
+            setTimeout(() => this.#pasteDisabled = false, 250);
         }
     }
 
     #onKeyDown(event: KeyboardEvent)
     {
-        if (event.key === "Delete")
+        if ( !keyEventWasInInput( event ) && event.key === "Delete")
         {
             this.selectedUnitsDelete();
         }

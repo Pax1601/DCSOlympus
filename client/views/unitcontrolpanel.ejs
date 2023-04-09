@@ -1,22 +1,15 @@
 <div id="unit-control-panel" class="ol-panel ol-panel-padding-lg"> 
 
+    <h3>Selected Units</h3>
+
     <div id="unit-selection">
 
-        <div id="unit-identification">
-            <div data-object="unit-aircraft">
-                <div class="unit-marker"></div>
-                <div class="unit-short-label"></div>
-            </div>
-            
-            <input id="unit-name" value="" readonly disabled />
-
-            <!-- <button id="edit-unit-name" data-on-click="editUnitName"></button> -->
-        </div>
-
-        <div id="selected-units-container" class="ol-scroll">
+        <div id="selected-units-container" class="ol-scrollable">
             <!-- This is where all the unit selection buttons will be shown-->
             <!-- <button class="pill highlight-coalition" data-coalition="blue" data-short-label="18">Olympus 1-1</button> -->
         </div>
+
+        <hr />
 
         <div id="flight-data">
             <h4>Flight controls</h4>
@@ -52,9 +45,11 @@
         </div>
     </div>
 
-    <h4>Reaction to threat</h4>
-    <div id="reaction-to-threat-buttons-container" class="ol-group ol-button-box">
-         <!-- This is where the reaction to threat buttons will be shown -->
+    <div id="threat">
+        <h4>Reaction to threat</h4>
+        <div id="reaction-to-threat-buttons-container" class="ol-group ol-button-box">
+             <!-- This is where the reaction to threat buttons will be shown -->
+        </div>
     </div>
 
     <hr />

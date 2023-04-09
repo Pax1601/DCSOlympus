@@ -201,7 +201,6 @@ void Unit::popActivePathFront()
 	setActivePath(path);
 }
 
-
 void Unit::setCoalitionID(int newCoalitionID) 
 { 
 	if (newCoalitionID == 0)

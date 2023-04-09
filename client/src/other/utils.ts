@@ -26,6 +26,27 @@ export function ConvertDDToDMS(D: number, lng: boolean) {
 }
 
 
+export function dataPointMap( container:HTMLElement, data:any) {
+
+    Object.keys( data ).forEach( ( key ) => {
+
+        const val = "" + data[ key ];  //  Ensure a string
+
+        container.querySelectorAll( `[data-point="${key}"]`).forEach( el => {
+
+            //  We could probably have options here
+            if ( el instanceof HTMLInputElement ) {
+                el.value = val;
+            } else if ( el instanceof HTMLElement ) {
+                el.innerText = val;
+            }
+        });
+
+    });
+
+}
+
+
 export function deg2rad(deg: number) {
     var pi = Math.PI;
     return deg * (pi / 180);
@@ -45,6 +66,15 @@ export function distance(lat1: number, lon1: number, lat2: number, lon2: number)
     const d = R * c; // in metres
 
     return d;
+}
+
+
+export function keyEventWasInInput( event:KeyboardEvent ) {
+
+    const target = event.target;
+
+    return ( target instanceof HTMLElement && ( [ "INPUT", "TEXTAREA" ].includes( target.nodeName ) ) );
+
 }
 
 
