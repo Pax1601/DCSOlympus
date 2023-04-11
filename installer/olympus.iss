@@ -1,9 +1,9 @@
 #define nwjsFolder "C:\Users\dpass\Documents\nwjs\"
-#define version "v0.1.1-alpha"
+#define version "v0.1.2-alpha"
 
 [Setup] 
 AppName=DCS Olympus 
-AppVerName={#version}
+AppVerName=DCS Olympus {#version}
 DefaultDirName={usersavedgames}\DCS.openbeta
 DefaultGroupName=DCSOlympus  
 OutputBaseFilename=DCSOlympus_{#version}
