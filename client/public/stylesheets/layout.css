@@ -7,6 +7,8 @@
 }
 
 #primary-toolbar {
+	align-items: center;
+	display:flex;
 	position: absolute;
 	left: 10px;
 	top: 10px;
@@ -124,8 +126,8 @@ dl.ol-data-grid dd {
 	font-size:16px;
 	font-weight: var( --font-weight-bolder );
 	position: absolute;
-	right: 25px;
-	top: 25px;
+	right: 20px;
+	top: 10px;
 }
 
 .ol-dialog-close::before {
@@ -135,6 +137,10 @@ dl.ol-data-grid dd {
 .ol-dialog-header {
 	border-bottom:1px solid var( --background-grey );
 	padding-bottom:10px;
+}
+
+.ol-dialog-content {
+	margin:4px 0;
 }
 
 .ol-dialog-footer {

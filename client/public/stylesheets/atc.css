@@ -1,211 +1,114 @@
-/***  Control panel  ***/
-
-#atc-control-panel {
-    align-self: flex-end;
-    background: white;
-    border-radius: 10px;
-    display:flex;
-    margin: 0 0 50px 100px;
-    padding:5px;
-    position: absolute;
-    z-index: 9999;
-}
-
-.atc-tool {
-    align-self: center;
-    border-radius: 10px;
-    display:none;
-    justify-self: center;
-    padding: 10px;
-    position: absolute;
-    z-index: 9999;
-}
 
 
-.atc-enabled .atc-tool {
-    display:flex;
-}
-
-
-
-
-#atc-flight-list {
-    flex-direction: column;
-}
-
-#atc-flight-list table {
-    color:white;
-}
-
-#atc-flight-list table td {
-    padding:0 10px;
-    text-align: center;
-}
-
-#atc-flight-list table td:first-of-type {
-    text-align: left;
-}
-
-#atc-flight-list table tr[data-status='checkedIn'] td {
-    background-color:goldenrod;
-}
-
-#atc-flight-list table tr[data-status='readyToTaxi'] td {
-    background-color:darkgreen;
-}
-
-#atc-flight-list table button {
-    background-color: #666;
-    border:1px solid white;
-    color:white;
-    font-weight: bold;
-    margin:2px 0;
-}
-
-
-.atc-strip-board {
-    align-self: center;
-    display:flex;
-    justify-self: center;
-    position: absolute;
-    z-index: 9999   ;
-}
-
-.atc-strip-board-header {
-    display:none;
-}
-
-.atc-strip-board-strips {
+.ol-strip-board-strips {
     display:flex;
     flex-direction: column;
+    row-gap: 4px;
 }
 
-.atc-strip-board-strip {
-    display:flex;
-    flex-direction: row;
-}
-
-
-/*
-.atc-strip-board-header {
-    background:black;
-    color:white;
-    display:none;
-    justify-content: right;
-}
-
-
-.atc-strip-board {
-    display:flex;
-    flex-direction: column;
-    row-gap: 5px;
-}
-
-.atc-strip-board-strips {
-    display:flex;
-    flex-direction: column;
-    padding:10px;
-    row-gap: 5px;
-}
-
-.atc-strip-board-strips > div {
+.ol-strip-board-strip {
     align-items: center;
+    border-radius: var( --border-radius-sm );
+    column-gap: 4px;
+    display:flex;
+    flex-flow: row nowrap;
+    row-gap:4px;
+}
+
+.ol-strip-board-strip[data-flight-status="checkedin"] {
+    background-color: #ffffff2A;
+}
+
+.ol-strip-board-strip[data-flight-status="readytotaxi"] {
+    background-color: #ffff0063;
+}
+
+.ol-strip-board-strip[data-flight-status="clearedtotaxi"] {
+    background-color: #00ff0030;
+}
+
+.ol-strip-board-strip[data-flight-status="halted"] {
+    background-color: #FF000040;
+}
+
+.ol-strip-board-strip[data-flight-status="terminated"] {
+    background-color: black;
+}
+
+.ol-strip-board-headers {
+    column-gap: 4px;
+    display:flex;
+    flex-flow:row nowrap;
+    text-align: center;
+}
+
+.ol-strip-board-headers > *, .ol-strip-board-strip > * {
+    padding: 4px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width:80px;
+}
+
+.ol-strip-board-strip input[type="text"] {
+    appearance: none;
+    background-color: transparent;
+    border:1px solid #ffffff30;
+    border-radius: var( --border-radius-sm );
     color:white;
-    column-gap: 2px;
-    display: flex;
-    flex-direction: row;
-    padding: 5px;
-}
-
-.atc-strip-board-header > div, .atc-strip-board-strips > div > div {
-    text-align: center;
-    width: 75px;
-}
-
-.atc-strip-board-header > .name {
-    width:150px;
-}
-
-.atc-strip-board-header > div, .atc-strip-board-strips > div > div {
-    text-align: center;
-    width: 75px;
-}
-
-.atc-strip-board-strips > div > .name {
-    text-align: left;
-    width:150px;
-}
-
-.atc-strip-board-strips > div {
-    align-items: center;
-    column-gap: 5px;
-    display: flex;
-    flex-direction: row;
     font-size:12px;
-    font-weight: 600;
-    padding: 5px;
-    row-gap: 5px;
-}
-
-
-/* 
-
-.atc-strip-board-header, .atc-strip-board-strips > div {
-    align-items: center;
-    background:#FFF3;
-    color:white;
-    column-gap: 5px;
-    display: flex;
-    flex-direction: row;
-    font-size:12px;
-    font-weight: 600;
-    padding: 5px;
-    row-gap: 5px;
-}
-
-.atc-strip-board-header {
-    background:black;
-    color:white;
-    display:none;
-    justify-content: right;
-}
-
-.atc-strip-board-strips > div {
-    border-bottom:1px solid black;
-}
-
-.atc-strip-board-header > div, .atc-strip-board-strips > div > div {
+    font-weight:normal;
+    outline:none;
+    padding: 4px 0;
     text-align: center;
-    width: 75px;
+    width:100%;
 }
 
-.atc-strip-board-header > .name {
-    width:150px;
+.ol-strip-board-strip[data-time-warning="level-1"] [data-point="timeToGo"] {
+    border:1px solid #cc0000;
 }
 
-.atc-strip-board-strips > div > .handle {
-    background: black;
-    border-radius: 50%;
-    cursor:grab;
-    height:10px;
-    width:10px;
+.ol-strip-board-headers :nth-child(1),
+.ol-strip-board-headers :nth-child(2),
+.ol-strip-board-strip :nth-child(1),
+.ol-strip-board-strip :nth-child(2) {
+    width:120px;
 }
 
-.atc-strip-board-strips > div > .name {
-    text-align: left;
-    width:150px;
+.ol-strip-board-strip :nth-child(4) {
+    text-align: center;
 }
 
-.atc-strip-board-strips > div > .warning {
-    background:red;
-    color: white;
-    font-weight: bold;
+.ol-strip-board-strip > [data-point="name"] {
+    text-overflow: ellipsis;
+    overflow:hidden;
 }
 
-.atc-strip-board-strips > div > .link-warning {
-    border: 1px solid red;
-    color: red;
-    font-weight: bold;
-    
+.ol-strip-board-strip .ol-select-value {
+    opacity: .85;
 }
- */
+
+
+.ol-strip-board-add-flight {
+    display:flex;
+    flex-flow: row nowrap;
+}
+
+
+.ol-strip-board-add-flight > * {
+    border:none;
+    outline: none;
+    padding:4px 8px;
+}
+
+.ol-strip-board-add-flight button {
+    background-color: darkgreen;
+    border-bottom-right-radius: var( --border-radius-sm );
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: var( --border-radius-sm );
+}
+
+.ol-strip-board-add-flight input {
+    border-bottom-left-radius: var( --border-radius-sm );
+    border-top-left-radius: var( --border-radius-sm );
+}

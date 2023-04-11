@@ -83,6 +83,15 @@ export class Dropdown {
         }));
     }
 
+    selectText( text:string ) {
+
+        const index = [].slice.call( this.#options.children ).findIndex( ( opt:Element ) => opt.querySelector( "button" )?.innerText === text );
+        if ( index > -1 ) {
+            this.selectValue( index );
+        }
+
+    }
+
     selectValue(idx: number)
     {
         if (idx < this.#optionsList.length)

@@ -65,7 +65,7 @@ function setup() {
     let atcFeatureSwitch = featureSwitches.getSwitch("atc");
     if (atcFeatureSwitch?.isEnabled()) {
         atc = new ATC();
-        // TODO: add back buttons
+        atc.startUpdates();
     }
 
 
@@ -217,6 +217,7 @@ function setupEvents() {
             el.classList.toggle( "hide" );
         })
     });
+
 }
 
 export function getMap() {
