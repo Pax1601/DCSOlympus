@@ -1,6 +1,6 @@
 local version = "v0.1.1-alpha"
 
-local debug = false
+local debug = true
 
 Olympus.unitCounter = 1
 Olympus.payloadRegistry = {}
@@ -79,6 +79,18 @@ function Olympus.buildEnrouteTask(options)
 				} 
 			}
 		end
+	-- Start being an active tanker
+	elseif options['id'] == 'Tanker' then
+		task = { 
+			id = 'Tanker', 
+			params = {},
+		}
+	-- Start being an active AWACS
+	elseif options['id'] == 'AWACS' then
+		task = { 
+			id = 'AWACS', 
+			params = {},
+		}
 	end
 	return task
 end
@@ -86,7 +98,6 @@ end
 -- Builds a valid task depending on the provided options
 function Olympus.buildTask(options)
 	local task = nil
-	-- Engage specific target by ID. Checks if target exists.
 	if options['id'] == 'FollowUnit' and options['leaderID'] and options['offset'] then
 		local leader = Olympus.getUnitByID(options['leaderID'])
 		if leader and leader:isExist() then
@@ -100,6 +111,11 @@ function Olympus.buildTask(options)
 				}    
 			}
 		end
+	elseif options['id'] == 'Refuel' then
+		task = {
+			id = 'Refueling', 
+			params = {}   
+		}
 	end
 	return task
 end
@@ -356,6 +372,7 @@ function Olympus.setTask(ID, taskOptions)
 	local unit = Olympus.getUnitByID(ID)
 	if unit then
 		local task = Olympus.buildTask(taskOptions);
+		Olympus.debug("Olympus.setTask " .. Olympus.serializeTable(task), 20)
 		if task then
 			unit:getGroup():getController():setTask(task)
 			Olympus.debug("Olympus.setTask completed successfully", 2)

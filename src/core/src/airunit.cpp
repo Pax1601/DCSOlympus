@@ -22,6 +22,7 @@ void AirUnit::setState(int newState)
 {
 	if (state != newState)
 	{
+		/* Perform any action required when LEAVING a certain state */
 		switch (state) {
 		case State::IDLE: {
 			break;
@@ -44,10 +45,14 @@ void AirUnit::setState(int newState)
 		case State::LAND: {
 			break;
 		}
+		case State::REFUEL: {
+			break;
+		}
 		default:
 			break;
 		}
 
+		/* Perform any action required when ENTERING a certain state */
 		switch (newState) {
 		case State::IDLE: {
 			resetActiveDestination();
@@ -76,6 +81,11 @@ void AirUnit::setState(int newState)
 			break;
 		}
 		case State::LAND: {
+			resetActiveDestination();
+			break;
+		}
+		case State::REFUEL: {
+			clearActivePath();
 			resetActiveDestination();
 			break;
 		}
@@ -225,8 +235,23 @@ void AirUnit::AIloop()
 			break;
 		}
 		case State::REACH_DESTINATION: {
-			wstring enrouteTask = L"nil";
-			currentTask = L"Reaching destination";
+			wstring enrouteTask = L"";
+
+			if (isTanker)
+			{
+				enrouteTask = L"{" "id = 'Tanker' }";
+				currentTask = L"Tanker";
+			}
+			else if (isAWACS)
+			{
+				enrouteTask = L"{" "id = 'AWACS' }";
+				currentTask = L"AWACS";
+			}
+			else
+			{
+				enrouteTask = L"nil";
+				currentTask = L"Reaching destination";
+			}
 			
 			if (activeDestination == NULL || !hasTask)
 			{
@@ -337,6 +362,17 @@ void AirUnit::AIloop()
 				}
 			}
 			break;
+		}
+		case State::REFUEL: {
+			if (!hasTask) {
+				std::wostringstream taskSS;
+				taskSS << "{"
+					<< "id = 'Refuel'"
+					<< "}";
+				Command* command = dynamic_cast<Command*>(new SetTask(ID, taskSS.str()));
+				scheduler->appendCommand(command);
+				hasTask = true;
+			}
 		}
 		default:
 			break;

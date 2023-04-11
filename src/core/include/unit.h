@@ -103,12 +103,16 @@ public:
 	void pushActivePathBack(Coords newActivePathBack);
 	void popActivePathFront();
 	void setTargetID(int newTargetID) { targetID = newTargetID; addMeasure(L"targetID", json::value(newTargetID));}
+	void setIsTanker(bool newIsTanker) { isTanker = newIsTanker; addMeasure(L"isTanker", json::value(newIsTanker));}
+	void setIsAWACS(bool newIsAWACS) { isAWACS = newIsAWACS; addMeasure(L"isAWACS", json::value(newIsAWACS));}
 	wstring getCurrentTask() { return currentTask; }
 	virtual double getTargetSpeed() { return targetSpeed; };
 	virtual double getTargetAltitude() { return targetAltitude; };
 	Coords getActiveDestination() { return activeDestination; }
 	list<Coords> getActivePath() { return activePath; }
 	int getTargetID() { return targetID; }
+	bool getIsTanker() { return isTanker; }
+	bool getIsAWACS() { return isAWACS; }
 	
 	/********** Options data **********/
 	void setROE(wstring newROE);
@@ -168,6 +172,8 @@ protected:
 	list<Coords> activePath;
 	Coords activeDestination = Coords(0);
 	int targetID = NULL;
+	bool isTanker = false;
+	bool isAWACS = false;
 
 	/********** Options data **********/
 	wstring ROE = L"";

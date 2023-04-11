@@ -250,6 +250,26 @@ void Scheduler::handleRequest(wstring key, json::value value)
 		int ID = value[L"ID"].as_integer();
 		unitsManager->deleteUnit(ID);
 	}
+	else if (key.compare(L"refuel") == 0)
+	{
+		int ID = value[L"ID"].as_integer();
+		Unit* unit = unitsManager->getUnit(ID);
+		unit->setState(State::REFUEL);
+	}
+	else if (key.compare(L"setIsTanker") == 0)
+	{
+		int ID = value[L"ID"].as_integer();
+		bool state = value[L"state"].as_bool();
+		Unit* unit = unitsManager->getUnit(ID);
+		unit->setIsTanker(state);
+	}
+	else if (key.compare(L"setIsAWACS") == 0)
+	{
+		int ID = value[L"ID"].as_integer();
+		bool state = value[L"state"].as_bool();
+		Unit* unit = unitsManager->getUnit(ID);
+		unit->setIsAWACS(state);
+	}
 	else
 	{
 		log(L"Unknown command: " + key);

@@ -1,7 +1,7 @@
 import { Marker, LatLng, Polyline, Icon, DivIcon } from 'leaflet';
 import { getMap, getUnitsManager } from '..';
 import { rad2deg } from '../other/utils';
-import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, getUnits, landAt, setAltitude, setReactionToThreat, setROE, setSpeed } from '../server/server';
+import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, getUnits, landAt, setAltitude, setReactionToThreat, setROE, setSpeed, refuel, setTanker, setAWACS } from '../server/server';
 import { aircraftDatabase } from './aircraftdatabase';
 import { groundUnitsDatabase } from './groundunitsdatabase';
 
@@ -50,6 +50,8 @@ export class Unit extends Marker {
             activePath: {},
             targetSpeed: 0,
             targetAltitude: 0,
+            isTanker: false,
+            isAWACS: false,
         },
         optionsData: {
             ROE: "",
@@ -363,6 +365,18 @@ export class Unit extends Marker {
         deleteUnit(this.ID);
     }
 
+    refuel() {
+        refuel(this.ID);
+    }
+
+    toggleTanker() {
+        setTanker(this.ID, !this.getTaskData().isTanker);
+    }
+
+    toggleAWACS() {
+        setAWACS(this.ID, !this.getTaskData().isAWACS);
+    }
+
     #onClick(e: any) {
         this.#timer = setTimeout(() => {
             if (!this.#preventClick) {
@@ -383,10 +397,32 @@ export class Unit extends Marker {
     }
 
     #onContextMenu(e: any) {
-        var options = [
-            'Attack'
-        ]
+        var options: string[] = [];
         if (getUnitsManager().getSelectedUnits().length > 0 && !(getUnitsManager().getSelectedUnits().includes(this)))
+        {
+            options = [
+                'Attack'
+            ]
+        }
+        else if (getUnitsManager().getSelectedUnits().length > 0 && (getUnitsManager().getSelectedUnits().includes(this)))
+        {
+            if (this.getBaseData().category == "Aircraft")
+            {
+                options.push("Refuel"); // TODO Add some way of knowing which aircraft can AAR
+
+                if (getUnitsManager().getSelectedUnits().length == 1){
+                    var roles = aircraftDatabase.getByName(this.getBaseData().name)?.loadouts.map((loadout) => {return loadout.roles})
+                    if (roles != undefined && Array.prototype.concat.apply([], roles)?.includes("Tanker")){
+                        options.push(this.getTaskData().isTanker? "Stop tanker": "Start tanker");
+                    }
+                    if (roles != undefined && Array.prototype.concat.apply([], roles)?.includes("AWACS")){
+                        options.push(this.getTaskData().isAWACS? "Stop AWACS": "Start AWACS");
+                    }
+                }
+            }
+        }
+
+        if (options.length > 0)
         {
             getMap().showUnitContextMenu(e);
             getMap().getUnitContextMenu().setOptions(options, (option: string) => {
@@ -399,6 +435,12 @@ export class Unit extends Marker {
     #executeAction(action: string) {
         if (action === "Attack")
             getUnitsManager().selectedUnitsAttackUnit(this.ID);
+        if (action === "Refuel")
+            getUnitsManager().selectedUnitsRefuel();
+        if (action === "Start tanker" || action === "Stop tanker")
+            getUnitsManager().selectedUnitsToggleTanker();
+        if (action === "Start AWACS" || action === "Stop AWACS")
+            getUnitsManager().selectedUnitsToggleAWACS();
     }
 
     #updateMarker() {

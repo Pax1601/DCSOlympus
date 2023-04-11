@@ -176,3 +176,21 @@ export function setReactionToThreat(ID: number, reactionToThreat: string) {
     var data = {"setReactionToThreat": command}
     POST(data, () => { });
 }
+
+export function refuel(ID: number) {
+    var command = { "ID": ID };
+    var data = { "refuel": command }
+    POST(data, () => { });
+}
+
+export function setTanker(ID: number, state: boolean) {
+    var command = { "ID": ID, "state": state };
+    var data = { "setIsTanker": command }
+    POST(data, () => { });
+}
+
+export function setAWACS(ID: number, state: boolean) {
+    var command = { "ID": ID, "state": state };
+    var data = { "setIsAWACS": command }
+    POST(data, () => { });
+}

@@ -41,6 +41,8 @@ interface TaskData {
     activePath: any;
     targetSpeed: number;
     targetAltitude: number;
+    isTanker: boolean;
+    isAWACS: boolean;
 }
 
 interface OptionsData {
