@@ -12,6 +12,7 @@ import { LogPanel } from "./panels/logpanel";
 import { getAirbases, getBullseye as getBullseyes, getConfig, getMission, getUnits, setAddress, toggleDemoEnabled } from "./server/server";
 import { UnitDataTable } from "./units/unitdatatable";
 import { keyEventWasInInput } from "./other/utils";
+import { Dropdown } from "./controls/dropdown";
 
 var map: Map;
 
@@ -66,6 +67,9 @@ function setup() {
         atc = new ATC();
         // TODO: add back buttons
     }
+
+
+    new Dropdown( "app-icon", () => {} );
 
     /* Setup event handlers */
     setupEvents();
