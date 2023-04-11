@@ -43,6 +43,12 @@ interface TaskData {
     targetAltitude: number;
     isTanker: boolean;
     isAWACS: boolean;
+    radioOn: boolean;
+	TACANOn: boolean;
+	radioFrequency: number;
+	TACANChannel: number;
+	TACANXY: string;
+	TACANCallsign: string;
 }
 
 interface OptionsData {

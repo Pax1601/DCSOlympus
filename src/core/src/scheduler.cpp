@@ -256,19 +256,20 @@ void Scheduler::handleRequest(wstring key, json::value value)
 		Unit* unit = unitsManager->getUnit(ID);
 		unit->setState(State::REFUEL);
 	}
-	else if (key.compare(L"setIsTanker") == 0)
+	else if (key.compare(L"setAdvancedOptions") == 0)
 	{
 		int ID = value[L"ID"].as_integer();
-		bool state = value[L"state"].as_bool();
 		Unit* unit = unitsManager->getUnit(ID);
-		unit->setIsTanker(state);
-	}
-	else if (key.compare(L"setIsAWACS") == 0)
-	{
-		int ID = value[L"ID"].as_integer();
-		bool state = value[L"state"].as_bool();
-		Unit* unit = unitsManager->getUnit(ID);
-		unit->setIsAWACS(state);
+		if (unit != nullptr)
+		{
+			unit->setIsTanker(value[L"isTanker"].as_bool());
+			unit->setIsAWACS(value[L"isAWACS"].as_bool());
+			unit->setRadioOn(value[L"radioOn"].as_bool());
+			unit->setTACANOn(value[L"TACANOn"].as_bool());
+			unit->setTACANCallsign(value[L"TACANCallsign"].as_string());
+			unit->setTACANChannel(value[L"TACANChannel"].as_number().to_int32());
+			unit->setTACANXY(value[L"TACANXY"].as_string());
+		}
 	}
 	else
 	{

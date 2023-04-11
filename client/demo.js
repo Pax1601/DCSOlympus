@@ -3,7 +3,7 @@ const DEMO_UNIT_DATA = {
     ["1"]:{
         baseData: {
             AI: true,
-            name: "F-5E",
+            name: "KC-135",
             unitName: "Olympus 1-1",
             groupName: "Group 1",
             alive: true,
@@ -49,7 +49,8 @@ const DEMO_UNIT_DATA = {
             currentTask: "Holding",
             activePath: undefined,
             targetSpeed: 400,
-            targetAltitude: 3000
+            targetAltitude: 3000,
+            isTanker: true
         },
         optionsData: {
             ROE: "Designated",

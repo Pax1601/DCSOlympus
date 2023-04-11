@@ -52,6 +52,12 @@ export class Unit extends Marker {
             targetAltitude: 0,
             isTanker: false,
             isAWACS: false,
+            radioOn: false,
+            TACANOn: false,
+            radioFrequency: 0,
+            TACANChannel: 0,
+            TACANXY: "X",
+            TACANCallsign: "",
         },
         optionsData: {
             ROE: "",
@@ -409,16 +415,6 @@ export class Unit extends Marker {
             if (this.getBaseData().category == "Aircraft")
             {
                 options.push("Refuel"); // TODO Add some way of knowing which aircraft can AAR
-
-                if (getUnitsManager().getSelectedUnits().length == 1){
-                    var roles = aircraftDatabase.getByName(this.getBaseData().name)?.loadouts.map((loadout) => {return loadout.roles})
-                    if (roles != undefined && Array.prototype.concat.apply([], roles)?.includes("Tanker")){
-                        options.push(this.getTaskData().isTanker? "Stop tanker": "Start tanker");
-                    }
-                    if (roles != undefined && Array.prototype.concat.apply([], roles)?.includes("AWACS")){
-                        options.push(this.getTaskData().isAWACS? "Stop AWACS": "Start AWACS");
-                    }
-                }
             }
         }
 
@@ -437,10 +433,6 @@ export class Unit extends Marker {
             getUnitsManager().selectedUnitsAttackUnit(this.ID);
         if (action === "Refuel")
             getUnitsManager().selectedUnitsRefuel();
-        if (action === "Start tanker" || action === "Stop tanker")
-            getUnitsManager().selectedUnitsToggleTanker();
-        if (action === "Start AWACS" || action === "Stop AWACS")
-            getUnitsManager().selectedUnitsToggleAWACS();
     }
 
     #updateMarker() {

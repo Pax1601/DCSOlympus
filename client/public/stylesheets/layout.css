@@ -138,15 +138,15 @@ dl.ol-data-grid dd {
 }
 
 .ol-dialog-footer {
-	border-top:1px solid var( --background-grey );
-	padding-top:15px;
+	border-top: 1px solid var( --background-grey );
+	padding-top: 15px;
+	display: flex;
+	row-gap: 10px;
 }
 
 .ol-dialog.scrollable .ol-dialog-content {
 	overflow-y: auto;
 }
-
-
 
 .ol-checkbox label {
 	align-items: center;
@@ -201,6 +201,15 @@ dl.ol-data-grid dd {
 
 .ol-button-close::before {
 	content: "\d7";
+}
+
+.ol-button-apply {
+	background: transparent;
+	border: 1px solid white;
+}
+
+.ol-button-apply::before {
+	content: "\2713";
 }
 
 .ol-button-settings {
