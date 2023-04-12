@@ -1,4 +1,5 @@
 import { getUnitsManager } from "..";
+import { Dropdown } from "../controls/dropdown";
 import { Slider } from "../controls/slider";
 import { dataPointMap } from "../other/utils";
 import { aircraftDatabase } from "../units/aircraftdatabase";
@@ -20,6 +21,9 @@ const altitudeIncrements: { [key: string]: number } = { Aircraft: 2500, Helicopt
 export class UnitControlPanel extends Panel {
     #altitudeSlider: Slider;
     #airspeedSlider: Slider;
+    #TACANXYDropdown: Dropdown;
+    #radioDecimalsDropdown: Dropdown;
+    #radioCallsignDropdown: Dropdown;
     #expectedAltitude: number = -1;
     #expectedSpeed: number = -1;
     #optionButtons: { [key: string]: HTMLButtonElement[] } = {}
@@ -38,6 +42,13 @@ export class UnitControlPanel extends Panel {
             this.#expectedSpeed = value;
             getUnitsManager().selectedUnitsSetSpeed(value / 1.94384)
         });
+
+        /* Advanced settings dropdowns */
+        this.#TACANXYDropdown = new Dropdown("TACAN-XY", () => {});
+        this.#TACANXYDropdown.setOptions(["X", "Y"]);
+        this.#radioDecimalsDropdown = new Dropdown("radio-decimals", () => {});
+        this.#radioDecimalsDropdown.setOptions([".000", ".250", ".500", ".750"]);
+        this.#radioCallsignDropdown = new Dropdown("radio-callsign", () => {});
 
         /* Option buttons */
         this.#optionButtons["ROE"] = ROEs.map((option: string, index: number) => {
@@ -64,6 +75,11 @@ export class UnitControlPanel extends Panel {
         document.addEventListener("unitUpdated", (e: CustomEvent<Unit>) => { if (e.detail.getSelected()) this.update() });
         document.addEventListener("unitsSelection", (e: CustomEvent<Unit[]>) => { this.show(); this.update() });
         document.addEventListener("clearSelection", () => { this.hide() });
+        document.addEventListener("applyAdvancedSettings", () => {this.#applyAdvancedSettings();})
+        document.addEventListener("showAdvancedSettings", () => {
+            this.#updateAdvancedSettingsDialog(getUnitsManager().getSelectedUnits());
+            this.#advancedSettingsDialog.classList.remove("hide");
+        })
 
         this.hide();
     }
@@ -97,7 +113,6 @@ export class UnitControlPanel extends Panel {
         var units = getUnitsManager().getSelectedUnits();
         if (this.getElement() != null && units.length > 0) {
             this.#showFlightControlSliders(units);
-            this.#updateAdvancedSettingsDialog(units);
 
             this.getElement().querySelector("#selected-units-container")?.replaceChildren(...units.map((unit: Unit, index: number) => {
                 let database: UnitDatabase | null;
@@ -195,10 +210,15 @@ export class UnitControlPanel extends Panel {
             (<HTMLElement>this.#advancedSettingsDialog.querySelector("#unit-name")).innerText = unit.getBaseData().unitName;
 
             if (getUnitsManager().getSelectedUnits().length == 1){
+                this.#radioCallsignDropdown.setOptions(["Enfield", "Springfield", "Uzi", "Colt", "Dodge", "Ford", "Chevy", "Pontiac"]);
+                this.#radioCallsignDropdown.selectValue(unit.getTaskData().radioCallsign);
+
                 var roles = aircraftDatabase.getByName(unit.getBaseData().name)?.loadouts.map((loadout) => {return loadout.roles})
                 if (roles != undefined && Array.prototype.concat.apply([], roles)?.includes("Tanker")){
                     this.#advancedSettingsDialog.querySelector("#tanker-checkbox")?.querySelector("input")?.setAttribute('checked', String(unit.getTaskData().isTanker));
                     this.#advancedSettingsDialog.querySelector("#tanker-checkbox")?.classList.remove("hide");
+                    this.#radioCallsignDropdown.setOptions(["Texaco", "Arco", "Shell"]);
+                    this.#radioCallsignDropdown.selectValue(unit.getTaskData().radioCallsign);
                 }
                 else {
                     this.#advancedSettingsDialog.querySelector("#tanker-checkbox")?.classList.add("hide");
@@ -207,10 +227,32 @@ export class UnitControlPanel extends Panel {
                 if (roles != undefined && Array.prototype.concat.apply([], roles)?.includes("AWACS")){
                     this.#advancedSettingsDialog.querySelector("#AWACS-checkbox")?.querySelector("input")?.setAttribute('checked', String(unit.getTaskData().isAWACS));
                     this.#advancedSettingsDialog.querySelector("#AWACS-checkbox")?.classList.remove("hide");
+                    this.#radioCallsignDropdown.setOptions(["Overlord", "Magic", "Wizard", "Focus", "Darkstar"]);
+                    this.#radioCallsignDropdown.selectValue(unit.getTaskData().radioCallsign);
                 } else {
                     this.#advancedSettingsDialog.querySelector("#AWACS-checkbox")?.classList.add("hide");
                 }
             }
         }
+    }
+
+    #applyAdvancedSettings()
+    {
+        this.#advancedSettingsDialog.classList.add("hide");
+
+        const isTanker = <boolean> this.#advancedSettingsDialog.querySelector("#tanker-checkbox")?.querySelector("input")?.checked;
+        const isAWACS= <boolean> this.#advancedSettingsDialog.querySelector("#AWACS-checkbox")?.querySelector("input")?.checked;
+        const TACANChannel = Number(this.#advancedSettingsDialog.querySelector("#TACAN-channel")?.querySelector("input")?.value);
+        const TACANXY = this.#TACANXYDropdown.getValue();
+        const TACANCallsign = <string> this.#advancedSettingsDialog.querySelector("#tacan-callsign")?.querySelector("input")?.value
+        const radioMHz = Number(this.#advancedSettingsDialog.querySelector("#radio-mhz")?.querySelector("input")?.value);
+        const radioDecimals = this.#radioDecimalsDropdown.getValue();
+        const radioCallsign = this.#radioCallsignDropdown.getIndex();
+
+        var radioFrequency = (radioMHz * 1000 + Number(radioDecimals.substring(1))) * 1000;
+
+        var units = getUnitsManager().getSelectedUnits();
+        if (units.length > 0)
+            units[0].setAdvancedOptions(isTanker, isAWACS, TACANChannel, TACANXY, TACANCallsign, radioFrequency, radioCallsign);
     }
 }

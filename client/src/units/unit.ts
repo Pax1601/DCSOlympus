@@ -1,7 +1,7 @@
 import { Marker, LatLng, Polyline, Icon, DivIcon } from 'leaflet';
 import { getMap, getUnitsManager } from '..';
 import { rad2deg } from '../other/utils';
-import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, getUnits, landAt, setAltitude, setReactionToThreat, setROE, setSpeed, refuel, setTanker, setAWACS } from '../server/server';
+import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, getUnits, landAt, setAltitude, setReactionToThreat, setROE, setSpeed, refuel, setAdvacedOptions } from '../server/server';
 import { aircraftDatabase } from './aircraftdatabase';
 import { groundUnitsDatabase } from './groundunitsdatabase';
 
@@ -55,6 +55,7 @@ export class Unit extends Marker {
             radioOn: false,
             TACANOn: false,
             radioFrequency: 0,
+            radioCallsign: 0,
             TACANChannel: 0,
             TACANXY: "X",
             TACANCallsign: "",
@@ -375,12 +376,8 @@ export class Unit extends Marker {
         refuel(this.ID);
     }
 
-    toggleTanker() {
-        setTanker(this.ID, !this.getTaskData().isTanker);
-    }
-
-    toggleAWACS() {
-        setAWACS(this.ID, !this.getTaskData().isAWACS);
+    setAdvancedOptions(isTanker: boolean, isAWACS: boolean, TACANChannel: number, TACANXY: string, TACANcallsign: string, radioFrequency: number, radioCallsign: number) {
+        setAdvacedOptions(this.ID, isTanker, isAWACS, TACANChannel, TACANXY, TACANcallsign, radioFrequency, radioCallsign);
     }
 
     #onClick(e: any) {

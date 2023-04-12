@@ -348,6 +348,7 @@ nav.ol-panel> :last-child {
     flex-direction: row;
     flex-wrap: nowrap;
     row-gap: 4px;
+    align-items: center;
 }
 
 .ol-panel .ol-group.wrap {

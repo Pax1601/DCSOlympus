@@ -334,24 +334,6 @@ export class UnitsManager {
         }
     }
 
-    selectedUnitsToggleTanker()
-    {
-        var selectedUnits = this.getSelectedUnits();
-        for (let idx in selectedUnits)
-        {
-            selectedUnits[idx].toggleTanker();
-        }
-    }
-
-    selectedUnitsToggleAWACS()
-    {
-        var selectedUnits = this.getSelectedUnits();
-        for (let idx in selectedUnits)
-        {
-            selectedUnits[idx].toggleAWACS();
-        }
-    }
-
     copyUnits()
     {
         this.#copiedUnits = this.getSelectedUnits();

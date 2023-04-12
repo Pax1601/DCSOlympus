@@ -55,10 +55,145 @@
     <hr />
 
     <div id="advanced-settings-div">
-        <button id="advanced-settings-button" class="ol-button-settings" data-on-click="toggleElements" data-on-click-params='{"selector": "#advanced-settings-dialog"}'>Adjust settings</button>
+        <button id="advanced-settings-button" class="ol-button-settings" data-on-click="showAdvancedSettings">Adjust settings</button>
         <hr />
     </div>
 
     <button class="ol-button-warning" data-on-click="deleteSelectedUnits">Delete unit</button>
+
+</div>
+
+
+<div id="advanced-settings-dialog" class="ol-panel ol-dialog hide">
+    <div class="ol-dialog-close" data-on-click="closeDialog"></div>
+
+    <div class="ol-dialog-header">
+        <h3 id="unit-name">Olympus 1-1</h3>
+    </div>
+
+    <div class="ol-dialog-content">
+        <form onsubmit="return false">
+            <!--
+            <div class="ol-checkbox">
+                <label>
+                    <input type="checkbox" />
+                    Use ECM when available
+                </label>
+            </div>
+        
+            <div class="ol-checkbox">
+                <label>
+                    <input type="checkbox" />
+                    Prohibit jettison
+                </label>
+            </div>
+        
+            <div class="ol-checkbox">
+                <label>
+                    <input type="checkbox" />
+                    Prohibit afterburner
+                </label>
+            </div>
+        
+            <div class="ol-checkbox">
+                <label>
+                    <input type="checkbox" />
+                    Prohibit A/A
+                </label>
+            </div>
+        
+            <div class="ol-checkbox">
+                <label>
+                    <input type="checkbox" />
+                    Prohibit A/G
+                </label>
+            </div>
+            -->
+
+            <div id="tanker-checkbox" class="ol-checkbox">
+                <label>
+                    <input type="checkbox"/>
+                    Operate as tanker
+                </label>
+            </div>
+
+            <div id="AWACS-checkbox" class="ol-checkbox">
+                <label>
+                    <input type="checkbox" />
+                    Operate as AWACS
+                </label>
+            </div>
+        
+            <div class="ol-group">
+                <div id="TACAN-checkbox" class="ol-checkbox">
+                    <label>
+                        A/A TACAN:
+                    </label>
+                </div>
+        
+                <div id="TACAN-channel" class="ol-text-input">
+                    <input type="number" min="1" max="126" step="1" value="40">
+                </div>
+                
+                <div id="TACAN-XY" class="ol-select">
+                    <div class="ol-select-value">X</div>
+                    <div class="ol-select-options">
+                    </div>
+                </div>
+
+                <label>
+                    Morse:
+                </label>
+
+                <div id="TACAN-callsign" class="ol-text-input">
+                    <input type="text" maxlength="3" value="TKR" style="width: 50px">
+                </div>
+            </div>
+        
+            <div class="ol-group">
+                <div id="radio-checkbox" class="ol-checkbox">
+                    <label>
+                        Radio frequency:
+                    </label>
+                </div>
+            
+                <div id="radio-mhz" class="ol-text-input">
+                    <input type="number" min="1" max="999" step="1" value="260">
+                </div>
+                                
+                <div id="radio-decimals" class="ol-select">
+                    <div class="ol-select-value">.000</div>
+                    <div class="ol-select-options">
+                    </div>
+                </div>
+            </div>
+
+            <div class="ol-group">
+                <label>
+                    Radio callsign:
+                </label>
+
+                <div id="radio-callsign" class="ol-select">
+                    <div class="ol-select-value"></div>
+                    <div class="ol-select-options">
+                    </div>
+                </div>
+
+                <label>
+                    -
+                </label>
+            
+                <div id="radio-callsign-number" class="ol-text-input">
+                    <input type="number" min="1" max="999" step="1" value="1">
+                </div>
+                
+            </div>
+        </form>
+    </div>
+
+    <div class="ol-dialog-footer ol-group">
+        <button class="ol-button-apply" data-on-click="applyAdvancedSettings">Apply</button>
+        <button class="ol-button-close" data-on-click="closeDialog">Close</button>
+    </div>
 
 </div>

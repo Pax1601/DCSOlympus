@@ -183,14 +183,18 @@ export function refuel(ID: number) {
     POST(data, () => { });
 }
 
-export function setTanker(ID: number, state: boolean) {
-    var command = { "ID": ID, "state": state };
-    var data = { "setIsTanker": command }
-    POST(data, () => { });
-}
+export function setAdvacedOptions(ID: number, isTanker: boolean, isAWACS: boolean, TACANChannel: number, TACANXY: string, TACANCallsign: string, radioFrequency: number, radioCallsign: number)
+{
+    var command = { "ID": ID,
+                    "isTanker": isTanker,
+                    "isAWACS": isAWACS,
+                    "TACANChannel": TACANChannel,
+                    "TACANXY":  TACANXY,
+                    "TACANCallsign": TACANCallsign,
+                    "radioFrequency": radioFrequency,
+                    "radioCallsign": radioCallsign 
+    };
 
-export function setAWACS(ID: number, state: boolean) {
-    var command = { "ID": ID, "state": state };
-    var data = { "setIsAWACS": command }
+    var data = { "setAdvancedOptions": command };
     POST(data, () => { });
 }

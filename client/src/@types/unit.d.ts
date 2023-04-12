@@ -46,6 +46,7 @@ interface TaskData {
     radioOn: boolean;
 	TACANOn: boolean;
 	radioFrequency: number;
+    radioCallsign: number;
 	TACANChannel: number;
 	TACANXY: string;
 	TACANCallsign: string;
