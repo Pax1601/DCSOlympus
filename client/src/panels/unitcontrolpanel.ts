@@ -248,11 +248,12 @@ export class UnitControlPanel extends Panel {
         const radioMHz = Number(this.#advancedSettingsDialog.querySelector("#radio-mhz")?.querySelector("input")?.value);
         const radioDecimals = this.#radioDecimalsDropdown.getValue();
         const radioCallsign = this.#radioCallsignDropdown.getIndex();
+        const radioCallsignNumber = Number(this.#advancedSettingsDialog.querySelector("#radio-callsign-number")?.querySelector("input")?.value);
 
         var radioFrequency = (radioMHz * 1000 + Number(radioDecimals.substring(1))) * 1000;
 
         var units = getUnitsManager().getSelectedUnits();
         if (units.length > 0)
-            units[0].setAdvancedOptions(isTanker, isAWACS, TACANChannel, TACANXY, TACANCallsign, radioFrequency, radioCallsign);
+            units[0].setAdvancedOptions(isTanker, isAWACS, TACANChannel, TACANXY, TACANCallsign, radioFrequency, radioCallsign, radioCallsignNumber);
     }
 }

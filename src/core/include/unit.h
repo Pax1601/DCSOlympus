@@ -105,12 +105,16 @@ public:
 	void setTargetID(int newTargetID) { targetID = newTargetID; addMeasure(L"targetID", json::value(newTargetID));}
 	void setIsTanker(bool newIsTanker) { isTanker = newIsTanker; addMeasure(L"isTanker", json::value(newIsTanker));}
 	void setIsAWACS(bool newIsAWACS) { isAWACS = newIsAWACS; addMeasure(L"isAWACS", json::value(newIsAWACS));}
-	void setRadioOn(bool newRadioOn) { radioOn = newRadioOn; addMeasure(L"radioOn", json::value(newRadioOn)); }
-	void setTACANOn(bool newTACANOn) { TACANOn = newTACANOn; addMeasure(L"TACANOn", json::value(newTACANOn)); }
-	void setRadioFrequency(int newRadioFrequency) { radioFrequency = newRadioFrequency; addMeasure(L"radioFrequency", json::value(newRadioFrequency)); }
-	void setTACANChannel(int newTACANChannel) { TACANChannel = newTACANChannel; addMeasure(L"TACANChannel", json::value(newTACANChannel)); }
-	void setTACANXY(wstring newTACANXY) { TACANXY = newTACANXY; addMeasure(L"TACANXY", json::value(newTACANXY)); }
-	void setTACANCallsign(wstring newTACANCallsign) { TACANCallsign = newTACANCallsign; addMeasure(L"TACANCallsign", json::value(newTACANCallsign)); }
+	void setTACANOn(bool newTACANOn);
+	void setTACANChannel(int newTACANChannel);
+	void setTACANXY(wstring newTACANXY);
+	void setTACANCallsign(wstring newTACANCallsign);
+	void setTACAN();
+	void setRadioOn(bool newRadioOn);
+	void setRadioFrequency(int newRadioFrequency);
+	void setRadioCallsign(int newRadioCallsign);
+	void setRadioCallsignNumber(int newRadioCallsignNumber);
+	void setRadio();
 	wstring getCurrentTask() { return currentTask; }
 	virtual double getTargetSpeed() { return targetSpeed; };
 	virtual double getTargetAltitude() { return targetAltitude; };
@@ -119,12 +123,14 @@ public:
 	int getTargetID() { return targetID; }
 	bool getIsTanker() { return isTanker; }
 	bool getIsAWACS() { return isAWACS; }
-	bool setRadioOn() { return radioOn;  }
-	bool setTACANOn() { return TACANOn; }
-	int setRadioFrequency() { return radioFrequency; }
-	int setTACANChannel() { return TACANChannel; }
-	wstring setTACANXY() { return TACANXY; }
-	wstring setTACANCallsign() { return TACANCallsign; }
+	bool getTACANOn() { return TACANOn; }
+	int getTACANChannel() { return TACANChannel; }
+	wstring getTACANXY() { return TACANXY; }
+	wstring getTACANCallsign() { return TACANCallsign; }
+	bool getRadioOn() { return radioOn; }
+	int getRadioFrequency() { return radioFrequency; }
+	int getRadioCallsign() { return radioCallsign; }
+	int getRadioCallsignNumber() { return radioCallsignNumber; }
 
 	/********** Options data **********/
 	void setROE(wstring newROE);
@@ -186,12 +192,14 @@ protected:
 	int targetID = NULL;
 	bool isTanker = false;
 	bool isAWACS = false;
-	bool radioOn = false;
 	bool TACANOn = false;
-	int radioFrequency = 0;
 	int TACANChannel = 0;
-	wstring TACANXY = "X";
-	wstring TACANCallsign = "TKR";
+	wstring TACANXY = L"X";
+	wstring TACANCallsign = L"TKR";
+	bool radioOn = false;
+	int radioFrequency = 0;
+	int radioCallsign = 0;
+	int radioCallsignNumber = 1;
 
 	/********** Options data **********/
 	wstring ROE = L"";

@@ -264,11 +264,20 @@ void Scheduler::handleRequest(wstring key, json::value value)
 		{
 			unit->setIsTanker(value[L"isTanker"].as_bool());
 			unit->setIsAWACS(value[L"isAWACS"].as_bool());
-			unit->setRadioOn(value[L"radioOn"].as_bool());
-			unit->setTACANOn(value[L"TACANOn"].as_bool());
-			unit->setTACANCallsign(value[L"TACANCallsign"].as_string());
+
+			unit->setTACANOn(true);	// TODO Remove
 			unit->setTACANChannel(value[L"TACANChannel"].as_number().to_int32());
 			unit->setTACANXY(value[L"TACANXY"].as_string());
+			unit->setTACANCallsign(value[L"TACANCallsign"].as_string());
+			unit->setTACAN();
+
+			unit->setRadioOn(true);	// TODO Remove
+			unit->setRadioFrequency(value[L"radioFrequency"].as_number().to_int32());
+			unit->setRadioCallsign(value[L"radioCallsign"].as_number().to_int32());
+			unit->setRadioCallsignNumber(value[L"radioCallsignNumber"].as_number().to_int32());
+			unit->setRadio();
+
+			unit->resetActiveDestination();
 		}
 	}
 	else

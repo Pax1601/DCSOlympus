@@ -399,7 +399,7 @@ function Olympus.setCommand(ID, command)
 end
 
 function Olympus.setOption(ID, optionID, optionValue)
-	Olympus.debug("Olympus.setCommand " .. ID .. " " .. optionID .. " " .. optionValue, 2)
+	Olympus.debug("Olympus.setOption " .. ID .. " " .. optionID .. " " .. optionValue, 2)
 	local unit = Olympus.getUnitByID(ID)
 	if unit then
 		unit:getGroup():getController():setOption(optionID, optionValue)

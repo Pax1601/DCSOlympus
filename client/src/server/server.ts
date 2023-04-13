@@ -183,7 +183,7 @@ export function refuel(ID: number) {
     POST(data, () => { });
 }
 
-export function setAdvacedOptions(ID: number, isTanker: boolean, isAWACS: boolean, TACANChannel: number, TACANXY: string, TACANCallsign: string, radioFrequency: number, radioCallsign: number)
+export function setAdvacedOptions(ID: number, isTanker: boolean, isAWACS: boolean, TACANChannel: number, TACANXY: string, TACANCallsign: string, radioFrequency: number, radioCallsign: number, radioCallsignNumber: number)
 {
     var command = { "ID": ID,
                     "isTanker": isTanker,
@@ -192,7 +192,8 @@ export function setAdvacedOptions(ID: number, isTanker: boolean, isAWACS: boolea
                     "TACANXY":  TACANXY,
                     "TACANCallsign": TACANCallsign,
                     "radioFrequency": radioFrequency,
-                    "radioCallsign": radioCallsign 
+                    "radioCallsign": radioCallsign,
+                    "radioCallsignNumber": radioCallsignNumber
     };
 
     var data = { "setAdvancedOptions": command };

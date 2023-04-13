@@ -347,3 +347,89 @@ void Unit::landAt(Coords loc) {
 	pushActivePathBack(loc);
 	setState(State::LAND);
 }
+
+void Unit::setTACANOn(bool newTACANOn) { 
+	TACANOn = newTACANOn; 
+	addMeasure(L"TACANOn", json::value(newTACANOn)); 
+}
+
+void Unit::setTACANChannel(int newTACANChannel) { 
+	TACANChannel = newTACANChannel; 
+	addMeasure(L"TACANChannel", json::value(newTACANChannel)); 
+}
+
+void Unit::setTACANXY(wstring newTACANXY) { 
+	TACANXY = newTACANXY; 
+	addMeasure(L"TACANXY", json::value(newTACANXY));
+}
+void Unit::setTACANCallsign(wstring newTACANCallsign) { 
+	TACANCallsign = newTACANCallsign; 
+	addMeasure(L"TACANCallsign", json::value(newTACANCallsign)); 
+}
+
+void Unit::setRadioOn(bool newRadioOn) { 
+	radioOn = newRadioOn; 
+	addMeasure(L"radioOn", json::value(newRadioOn));
+}
+
+void Unit::setRadioFrequency(int newRadioFrequency) { 
+	radioFrequency = newRadioFrequency; 
+	addMeasure(L"radioFrequency", json::value(newRadioFrequency)); 
+}
+
+void Unit::setRadioCallsign(int newRadioCallsign) { 
+	radioCallsign = newRadioCallsign; 
+	addMeasure(L"radioCallsign", json::value(newRadioCallsign));
+}
+
+void Unit::setRadioCallsignNumber(int newRadioCallsignNumber) { 
+	radioCallsignNumber = newRadioCallsignNumber; 
+	addMeasure(L"radioCallsignNumber", json::value(newRadioCallsignNumber)); 
+}
+
+void Unit::setTACAN()
+{
+	std::wostringstream commandSS;
+	commandSS << "{"
+		<<	"id = 'ActivateBeacon',"
+		<<		"params = {"
+		<<			"type = 4,"
+		<<			"system = 4,"
+		<<			"name = Olympus_TACAN,"
+		<<			"callsign = " << TACANCallsign << ", "
+		<<			"frequency = " << TACANChannelToFrequency(TACANChannel, TACANXY) << ","
+		<<		"}"
+		<<	"}";
+	Command* command = dynamic_cast<Command*>(new SetCommand(ID, commandSS.str()));
+	scheduler->appendCommand(command);
+}
+
+void Unit::setRadio()
+{
+	{
+		std::wostringstream commandSS;
+		commandSS << "{"
+			<<	"id = 'SetFrequency',"
+			<<		"params = {"
+			<<			"modulation = 0,"	// TODO Allow selection
+			<<			"frequency = " << TACANChannelToFrequency(TACANChannel, TACANXY) << ","
+			<<		"}"
+			<<	"}";
+		Command* command = dynamic_cast<Command*>(new SetCommand(ID, commandSS.str()));
+		scheduler->appendCommand(command);
+	}
+
+	{
+		std::wostringstream commandSS;
+		commandSS << "{"
+			<<	"id = 'SetCallsign',"
+			<<		"params = {"
+			<<			"callname = " << radioCallsign << ","
+			<<			"number = " << radioCallsignNumber << ","
+			<<		"}"
+			<<	"}";
+		Command* command = dynamic_cast<Command*>(new SetCommand(ID, commandSS.str()));
+		scheduler->appendCommand(command);
+	}
+}
+
