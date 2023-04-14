@@ -155,7 +155,7 @@ dl.ol-data-grid dd {
 
 .ol-checkbox input[type="checkbox"]::before {
 	align-self: center;
-	background-image: url("/images/icons/square-check-solid.svg");
+	background-image: url("/images/icons/square-regular.svg");
 	background-repeat: no-repeat;
 	content: "";
 	filter: invert(100%);
@@ -166,7 +166,7 @@ dl.ol-data-grid dd {
 }
 
 .ol-checkbox input[type="checkbox"]:checked::before {
-	background-image: url("/images/icons/square-regular.svg");
+	background-image: url("/images/icons/square-check-solid.svg");
 }
 
 .ol-text-input input {

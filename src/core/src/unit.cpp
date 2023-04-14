@@ -393,7 +393,7 @@ void Unit::setTACAN()
 	commandSS << "{"
 		<<	"id = 'ActivateBeacon',"
 		<<		"params = {"
-		<<			"type = 4,"
+		<<			"type = " << ((TACANXY.compare(L"X") == 0)? 4: 5) << ","
 		<<			"system = 4,"
 		<<			"name = Olympus_TACAN,"
 		<<			"callsign = " << TACANCallsign << ", "
@@ -412,7 +412,7 @@ void Unit::setRadio()
 			<<	"id = 'SetFrequency',"
 			<<		"params = {"
 			<<			"modulation = 0,"	// TODO Allow selection
-			<<			"frequency = " << TACANChannelToFrequency(TACANChannel, TACANXY) << ","
+			<<			"frequency = " << radioFrequency << ","
 			<<		"}"
 			<<	"}";
 		Command* command = dynamic_cast<Command*>(new SetCommand(ID, commandSS.str()));

@@ -210,12 +210,14 @@ export class UnitControlPanel extends Panel {
             (<HTMLElement>this.#advancedSettingsDialog.querySelector("#unit-name")).innerText = unit.getBaseData().unitName;
 
             if (getUnitsManager().getSelectedUnits().length == 1){
+
                 this.#radioCallsignDropdown.setOptions(["Enfield", "Springfield", "Uzi", "Colt", "Dodge", "Ford", "Chevy", "Pontiac"]);
                 this.#radioCallsignDropdown.selectValue(unit.getTaskData().radioCallsign);
+                this.#advancedSettingsDialog.querySelector("#tanker-checkbox")?.querySelector("input")?.setAttribute('checked', String(unit.getTaskData().isTanker));
+                this.#advancedSettingsDialog.querySelector("#AWACS-checkbox")?.querySelector("input")?.setAttribute('checked', String(unit.getTaskData().isAWACS));
 
                 var roles = aircraftDatabase.getByName(unit.getBaseData().name)?.loadouts.map((loadout) => {return loadout.roles})
                 if (roles != undefined && Array.prototype.concat.apply([], roles)?.includes("Tanker")){
-                    this.#advancedSettingsDialog.querySelector("#tanker-checkbox")?.querySelector("input")?.setAttribute('checked', String(unit.getTaskData().isTanker));
                     this.#advancedSettingsDialog.querySelector("#tanker-checkbox")?.classList.remove("hide");
                     this.#radioCallsignDropdown.setOptions(["Texaco", "Arco", "Shell"]);
                     this.#radioCallsignDropdown.selectValue(unit.getTaskData().radioCallsign);
@@ -225,7 +227,6 @@ export class UnitControlPanel extends Panel {
                 }
 
                 if (roles != undefined && Array.prototype.concat.apply([], roles)?.includes("AWACS")){
-                    this.#advancedSettingsDialog.querySelector("#AWACS-checkbox")?.querySelector("input")?.setAttribute('checked', String(unit.getTaskData().isAWACS));
                     this.#advancedSettingsDialog.querySelector("#AWACS-checkbox")?.classList.remove("hide");
                     this.#radioCallsignDropdown.setOptions(["Overlord", "Magic", "Wizard", "Focus", "Darkstar"]);
                     this.#radioCallsignDropdown.selectValue(unit.getTaskData().radioCallsign);
@@ -238,10 +239,8 @@ export class UnitControlPanel extends Panel {
 
     #applyAdvancedSettings()
     {
-        this.#advancedSettingsDialog.classList.add("hide");
-
-        const isTanker = <boolean> this.#advancedSettingsDialog.querySelector("#tanker-checkbox")?.querySelector("input")?.checked;
-        const isAWACS= <boolean> this.#advancedSettingsDialog.querySelector("#AWACS-checkbox")?.querySelector("input")?.checked;
+        const isTanker = this.#advancedSettingsDialog.querySelector("#tanker-checkbox")?.querySelector("input")?.checked? true: false;
+        const isAWACS = false; //this.#advancedSettingsDialog.querySelector("#AWACS-checkbox")?.querySelector("input")?.checked? true: false;
         const TACANChannel = Number(this.#advancedSettingsDialog.querySelector("#TACAN-channel")?.querySelector("input")?.value);
         const TACANXY = this.#TACANXYDropdown.getValue();
         const TACANCallsign = <string> this.#advancedSettingsDialog.querySelector("#tacan-callsign")?.querySelector("input")?.value
@@ -255,5 +254,7 @@ export class UnitControlPanel extends Panel {
         var units = getUnitsManager().getSelectedUnits();
         if (units.length > 0)
             units[0].setAdvancedOptions(isTanker, isAWACS, TACANChannel, TACANXY, TACANCallsign, radioFrequency, radioCallsign, radioCallsignNumber);
+
+        this.#advancedSettingsDialog.classList.add("hide");
     }
 }
