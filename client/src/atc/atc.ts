@@ -1,8 +1,10 @@
 import { ATCBoard } from "./atcboard";
-import { ATCBoardFlight } from "./board/flight";
+import { ATCBoardGround } from "./board/ground";
+import { ATCBoardTower } from "./board/tower";
 
 export interface FlightInterface {
     id          : string;
+    boardId     : string;
     name        : string;
     status      : "unknown";
     takeoffTime : number;
@@ -25,8 +27,16 @@ class ATCDataHandler {
     }
 
 
-    getFlights() {
-        return this.#flights;
+    getFlights( boardId:string ) {
+
+        return Object.values( this.#flights ).reduce( ( acc:{[key:string]: FlightInterface}, flight ) => {
+            
+            if ( flight.boardId === boardId ) {
+                acc[ flight.id ] = flight;
+            }
+
+            return acc;
+        }, {} );
     }
 
 
@@ -119,7 +129,22 @@ export class ATC {
         document.querySelectorAll( ".ol-strip-board" ).forEach( board => {
 
             if ( board instanceof HTMLElement ) {
-                this.addBoard( new ATCBoardFlight( this, board ) );
+
+                switch ( board.dataset.boardType ) {
+
+                    case "ground":
+                        this.addBoard( new ATCBoardGround( this, board ) );
+                        return;
+                    
+                    case "tower":
+                        this.addBoard( new ATCBoardTower( this, board ) );
+                        return;
+                    
+                    default:
+                        console.warn( "Unknown board type for ATC board, got: " + board.dataset.boardType );
+
+                }
+
             }
 
         });

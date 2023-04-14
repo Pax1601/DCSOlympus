@@ -67,16 +67,25 @@
     border:1px solid #cc0000;
 }
 
-.ol-strip-board-headers :nth-child(1),
-.ol-strip-board-headers :nth-child(2),
-.ol-strip-board-strip :nth-child(1),
-.ol-strip-board-strip :nth-child(2) {
+[data-board-type="ground"] .ol-strip-board-headers :nth-child(1),
+[data-board-type="ground"] .ol-strip-board-headers :nth-child(2),
+[data-board-type="ground"] .ol-strip-board-strip :nth-child(1),
+[data-board-type="ground"] .ol-strip-board-strip :nth-child(2) {
     width:120px;
 }
 
-.ol-strip-board-strip :nth-child(4) {
+[data-board-type="ground"] .ol-strip-board-strip :nth-child(4) {
     text-align: center;
 }
+
+
+
+[data-board-type="tower"] .ol-strip-board-strip :nth-child(2) input {
+    width:25px;
+}
+
+
+
 
 .ol-strip-board-strip > [data-point="name"] {
     text-overflow: ellipsis;
@@ -111,4 +120,13 @@
 .ol-strip-board-add-flight input {
     border-bottom-left-radius: var( --border-radius-sm );
     border-top-left-radius: var( --border-radius-sm );
+}
+
+
+[data-board-type="ground"] {
+    translate: 0 100%;
+}
+
+[data-board-type="tower"] {
+    translate: 0 -100%;
 }

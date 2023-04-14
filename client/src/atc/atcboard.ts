@@ -1,6 +1,6 @@
 import { Draggable } from "leaflet";
 import { Dropdown } from "../controls/dropdown";
-import { zeroAppend } from "../other/utils";
+import { generateUUIDv4, zeroAppend } from "../other/utils";
 import { ATC } from "./atc";
 
 export interface StripBoardStripInterface {
@@ -12,6 +12,7 @@ export interface StripBoardStripInterface {
 export abstract class ATCBoard {
 
     #atc:ATC;
+    #boardId:string = "";
     #templates: {[key:string]: string} = {};
 
     //  Elements
@@ -27,7 +28,9 @@ export abstract class ATCBoard {
     #updateIntervalDelay:number      = 1000;
 
 
-    constructor( atc:ATC, boardElement:HTMLElement ) {
+    constructor( atc:ATC, boardElement:HTMLElement, options?:{[key:string]: any} ) {
+
+        options = options || {};
 
         this.#atc          = atc;
         this.#boardElement = boardElement;
@@ -50,6 +53,24 @@ export abstract class ATCBoard {
         setInterval( () => {
             this.updateClock();
         }, 1000 );
+
+
+    }
+
+
+    addFlight( flightName:string ) {
+
+        return fetch( '/api/atc/flight/', {
+            method: 'POST',      
+            headers: { 
+                'Accept': '*/*',
+                'Content-Type': 'application/json' 
+            },
+            "body": JSON.stringify({
+                "boardId" : this.getBoardId(),
+                "name"    : flightName
+            })
+        });
 
     }
 
@@ -108,6 +129,11 @@ export abstract class ATCBoard {
     }
 
 
+    getBoardId(): string {
+        return this.getBoardElement().id;
+    }
+
+
     getStripBoardElement() {
         return this.#stripBoardElement;
     }
@@ -127,11 +153,6 @@ export abstract class ATCBoard {
 
         return this.#templates[ key ] || false;
 
-    }
-
-
-    protected update() {
-        console.warn( "No custom update method defined." );
     }
 
 
@@ -171,6 +192,11 @@ export abstract class ATCBoard {
 
         return ( timestamp === -1 ) ? "-" : timeData.elapsedMarker + timeData.time;
 
+    }
+
+
+    protected update() {
+        console.warn( "No custom update method defined." );
     }
 
 

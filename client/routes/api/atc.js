@@ -25,8 +25,9 @@ function uuidv4() {
 
 
 
-function Flight( name ) {
+function Flight( name, boardId ) {
     this.id          = uuidv4();
+    this.boardId     = boardId;
     this.name        = name;
     this.status      = "unknown";
     this.takeoffTime = -1;
@@ -35,6 +36,7 @@ function Flight( name ) {
 Flight.prototype.getData = function() {
     return {
         "id"          : this.id,
+        "boardId"     : this.boardId,
         "name"        : this.name,
         "status"      : this.status,
         "takeoffTime" : this.takeoffTime
@@ -116,7 +118,20 @@ const dataHandler = new ATCDataHandler( {
 
 app.get( "/flight", ( req, res ) => {
 
-    res.json( dataHandler.getFlights() );
+    let flights = Object.values( dataHandler.getFlights() );
+
+    if ( flights && req.query.boardId ) {
+        
+        flights = flights.reduce( ( acc, flight ) => {
+            if ( flight.boardId === req.query.boardId ) {
+                acc[ flight.id ] = flight;
+            }
+            return acc;
+        }, {} );
+
+    }
+
+    res.json( flights );
 
 });
 
@@ -157,11 +172,15 @@ app.patch( "/flight/:flightId", ( req, res ) => {
 
 app.post( "/flight", ( req, res ) => {
 
+    if ( !req.body.boardId ) {
+        res.status( 400 ).send( "Invalid/missing boardId" );
+    }
+
     if ( !req.body.name ) {
         res.status( 400 ).send( "Invalid/missing flight name" );
     }
 
-    const flight = new Flight( req.body.name );
+    const flight = new Flight( req.body.name, req.body.boardId );
 
     dataHandler.addFlight( flight );
 

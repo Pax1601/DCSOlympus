@@ -1,10 +1,9 @@
-import { getMissionData } from "../..";
 import { Dropdown } from "../../controls/dropdown";
 import { ATC } from "../atc";
-import { ATCBoard, StripBoardStripInterface } from "../atcboard";
+import { ATCBoard } from "../atcboard";
 
 
-export class ATCBoardFlight extends ATCBoard {
+export class ATCBoardGround extends ATCBoard {
 
     constructor( atc:ATC, element:HTMLElement ) {
 
@@ -45,16 +44,7 @@ export class ATCBoardFlight extends ATCBoard {
                             return;
                         }
                         
-                        fetch( '/api/atc/flight/', {
-                            method: 'POST',      
-                            headers: { 
-                                'Accept': '*/*',
-                                'Content-Type': 'application/json' 
-                            },
-                            "body": JSON.stringify({
-                                "name": flightName.value
-                            })
-                        });
+                        this.addFlight( flightName.value );
     
                         form.reset();
     
@@ -71,7 +61,7 @@ export class ATCBoardFlight extends ATCBoard {
 
     update() {
         
-        const flights    = Object.values( this.getATC().getDataHandler().getFlights() );
+        const flights    = Object.values( this.getATC().getDataHandler().getFlights( this.getBoardId() ) );
         const stripBoard = this.getStripBoardElement();
 
         const missionTime = this.getATC().getMissionDateTime().getTime();
