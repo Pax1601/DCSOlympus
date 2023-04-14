@@ -117,6 +117,12 @@ export function attackUnit(ID: number, targetID: number) {
     POST(data, () => { });
 }
 
+export function followUnit(ID: number, targetID: number) {
+    var command = { "ID": ID, "targetID": targetID };
+    var data = { "followUnit": command }
+    POST(data, () => { });
+}
+
 export function cloneUnit(ID: number, latlng: L.LatLng) {
     var command = { "ID": ID, "location": latlng };
     var data = { "cloneUnit": command }

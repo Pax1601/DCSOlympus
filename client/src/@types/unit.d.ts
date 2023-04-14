@@ -37,19 +37,21 @@ interface FormationData {
 }
 
 interface TaskData {
+    currentState: string;
     currentTask: string;
     activePath: any;
     targetSpeed: number;
     targetAltitude: number;
     isTanker: boolean;
     isAWACS: boolean;
-    radioOn: boolean;
 	TACANOn: boolean;
-	radioFrequency: number;
-    radioCallsign: number;
 	TACANChannel: number;
 	TACANXY: string;
 	TACANCallsign: string;
+    radioFrequency: number;
+    radioCallsign: number;
+    radioCallsignNumber: number;
+    radioAMFM: string;
 }
 
 interface OptionsData {

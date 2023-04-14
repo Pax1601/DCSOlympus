@@ -5,12 +5,12 @@ export class UnitContextMenu extends ContextMenu {
         super(id);
     }
 
-    setOptions(options: string[], callback: CallableFunction)
+    setOptions(options: {[key: string]: string}, callback: CallableFunction)
     {
-        this.getContainer()?.replaceChildren(...options.map((option: string) =>
+        this.getContainer()?.replaceChildren(...Object.keys(options).map((option: string, idx: number) =>
         {
             var button = document.createElement("button");
-            button.innerText = option;
+            button.innerHTML = options[option];
             button.addEventListener("click", () => callback(option));
             return (button);
         }));

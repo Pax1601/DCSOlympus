@@ -53,6 +53,10 @@ button {
     padding: 6px;
 }
 
+button:hover {
+    background-color: var(--background-hover);
+}
+
 button[disabled="disabled"] {
     color: var(--highlight-color);
     cursor: not-allowed;

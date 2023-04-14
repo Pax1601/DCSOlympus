@@ -334,6 +334,14 @@ export class UnitsManager {
         }
     }
 
+    selectedUnitsFollowUnit(ID: number) {
+        var selectedUnits = this.getSelectedUnits();
+        for (let idx in selectedUnits) {
+            var commandedUnit = selectedUnits[idx];
+            commandedUnit.followUnit(ID);
+        }
+    }
+
     copyUnits()
     {
         this.#copiedUnits = this.getSelectedUnits();
@@ -370,7 +378,7 @@ export class UnitsManager {
                 setTimeout(() => {
                     document.dispatchEvent(new CustomEvent("unitsSelection", {detail: this.getSelectedUnits()}));
                     this.#selectionEventDisabled = false;
-                }, 300);
+                }, 100);
                 this.#selectionEventDisabled = true;
             }
         }

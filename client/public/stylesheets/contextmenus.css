@@ -207,10 +207,44 @@
     display: flex;
     flex-direction: column;
     height: fit-content;
+    width: fit-content;
     position: absolute;
     row-gap: 5px;
-    width: 150px;
     z-index: 1000;
+    padding: 15px;
+}
+
+#unit-contextmenu button {
+    border: 1px solid var(--background-offwhite);
+    border-radius: var(--border-radius-sm);
+    padding: 12px;
+    font-weight: normal;
+}
+
+#unit-contextmenu div {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+}
+
+#unit-contextmenu div:before {
+	display: inline-block;
+	filter: invert(100%);
+	height: 16px;
+	margin-right: 15px;
+	width: 16px;
+}
+
+#refuel::before {
+	content: url( /images/icons/fuel.svg );
+}
+
+#attack::before {
+	content: url( /images/icons/sword.svg );
+}
+
+#follow::before {
+	content: url( /images/icons/follow.svg );
 }
 
 /* Airbase context menu */

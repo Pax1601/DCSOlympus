@@ -50,7 +50,15 @@ const DEMO_UNIT_DATA = {
             activePath: undefined,
             targetSpeed: 400,
             targetAltitude: 3000,
-            isTanker: true
+            isTanker: false,
+            TACANOn: false,
+            TACANChannel: 32,
+            TACANXY: "Y",
+            TACANCallsign: "ASD",
+            radioFrequency: 123.750,
+            radioCallsign: 2,
+            radioCallsignNumber: 3,
+            radioAMFM: "FM"
         },
         optionsData: {
             ROE: "Designated",

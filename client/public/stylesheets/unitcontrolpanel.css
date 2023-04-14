@@ -93,8 +93,24 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	margin-bottom:8px;
 }
 
-
 #unit-control-panel #threat,
 #unit-control-panel #roe {
 	margin-top:12px;
+}
+
+#advanced-settings-dialog {
+	width: 400px;
+}
+
+#advanced-settings-dialog > .ol-dialog-content {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	row-gap: 10px;
+}
+
+#advanced-settings-dialog > .ol-dialog-content > .ol-group {
+	justify-content: space-between;
 }

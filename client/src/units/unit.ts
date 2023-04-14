@@ -1,7 +1,7 @@
 import { Marker, LatLng, Polyline, Icon, DivIcon } from 'leaflet';
 import { getMap, getUnitsManager } from '..';
 import { rad2deg } from '../other/utils';
-import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, getUnits, landAt, setAltitude, setReactionToThreat, setROE, setSpeed, refuel, setAdvacedOptions } from '../server/server';
+import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, getUnits, landAt, setAltitude, setReactionToThreat, setROE, setSpeed, refuel, setAdvacedOptions, followUnit } from '../server/server';
 import { aircraftDatabase } from './aircraftdatabase';
 import { groundUnitsDatabase } from './groundunitsdatabase';
 
@@ -46,19 +46,21 @@ export class Unit extends Marker {
             wingmenIDs: [],
         },
         taskData: {
+            currentState: "IDLE",
             currentTask: "",
             activePath: {},
             targetSpeed: 0,
             targetAltitude: 0,
             isTanker: false,
             isAWACS: false,
-            radioOn: false,
             TACANOn: false,
-            radioFrequency: 0,
-            radioCallsign: 0,
             TACANChannel: 0,
             TACANXY: "X",
             TACANCallsign: "",
+            radioFrequency: 0,
+            radioCallsign: 0,
+            radioCallsignNumber: 0,
+            radioAMFM: "AM"
         },
         optionsData: {
             ROE: "",
@@ -336,6 +338,16 @@ export class Unit extends Marker {
         }
     }
 
+    followUnit(targetID: number) {
+        /* Call DCS attackUnit function */
+        if (this.ID != targetID) {
+            followUnit(this.ID, targetID);
+        }
+        else {
+            // TODO: show a message
+        }
+    }
+
     landAt(latlng: LatLng) {
         landAt(this.ID, latlng);
     }
@@ -400,22 +412,23 @@ export class Unit extends Marker {
     }
 
     #onContextMenu(e: any) {
-        var options: string[] = [];
+        var options: {[key: string]: string} = {};
         if (getUnitsManager().getSelectedUnits().length > 0 && !(getUnitsManager().getSelectedUnits().includes(this)))
         {
-            options = [
-                'Attack'
-            ]
+            options = {
+                'Attack': `<div id="attack">Attack</div>`,
+                'Follow': `<div id="follow">Follow</div>`
+            }
         }
-        else if (getUnitsManager().getSelectedUnits().length > 0 && (getUnitsManager().getSelectedUnits().includes(this)))
+        else if ((getUnitsManager().getSelectedUnits().length > 0 && (getUnitsManager().getSelectedUnits().includes(this))) || getUnitsManager().getSelectedUnits().length == 0)
         {
             if (this.getBaseData().category == "Aircraft")
             {
-                options.push("Refuel"); // TODO Add some way of knowing which aircraft can AAR
+                options["Refuel"] = `<div id="refuel">Refuel</div>`; // TODO Add some way of knowing which aircraft can AAR
             }
         }
 
-        if (options.length > 0)
+        if (Object.keys(options).length > 0)
         {
             getMap().showUnitContextMenu(e);
             getMap().getUnitContextMenu().setOptions(options, (option: string) => {
@@ -430,6 +443,8 @@ export class Unit extends Marker {
             getUnitsManager().selectedUnitsAttackUnit(this.ID);
         if (action === "Refuel")
             getUnitsManager().selectedUnitsRefuel();
+        if (action === "Follow")
+            getUnitsManager().selectedUnitsFollowUnit(this.ID);
     }
 
     #updateMarker() {

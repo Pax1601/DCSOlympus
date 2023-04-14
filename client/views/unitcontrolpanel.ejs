@@ -72,91 +72,81 @@
     </div>
 
     <div class="ol-dialog-content">
-        <form onsubmit="return false">
-            <!--
-            <div class="ol-checkbox">
-                <label>
-                    <input type="checkbox" />
-                    Use ECM when available
-                </label>
-            </div>
-        
-            <div class="ol-checkbox">
-                <label>
-                    <input type="checkbox" />
-                    Prohibit jettison
-                </label>
-            </div>
-        
-            <div class="ol-checkbox">
-                <label>
-                    <input type="checkbox" />
-                    Prohibit afterburner
-                </label>
-            </div>
-        
-            <div class="ol-checkbox">
-                <label>
-                    <input type="checkbox" />
-                    Prohibit A/A
-                </label>
-            </div>
-        
-            <div class="ol-checkbox">
-                <label>
-                    <input type="checkbox" />
-                    Prohibit A/G
-                </label>
-            </div>
-            -->
+        <!--
+        <div class="ol-checkbox">
+            <label>
+                <input type="checkbox" />
+                Use ECM when available
+            </label>
+        </div>
+    
+        <div class="ol-checkbox">
+            <label>
+                <input type="checkbox" />
+                Prohibit jettison
+            </label>
+        </div>
+    
+        <div class="ol-checkbox">
+            <label>
+                <input type="checkbox" />
+                Prohibit afterburner
+            </label>
+        </div>
+    
+        <div class="ol-checkbox">
+            <label>
+                <input type="checkbox" />
+                Prohibit A/A
+            </label>
+        </div>
+    
+        <div class="ol-checkbox">
+            <label>
+                <input type="checkbox" />
+                Prohibit A/G
+            </label>
+        </div>
+        -->
 
-            <div id="tanker-checkbox" class="ol-checkbox">
-                <label>
-                    <input type="checkbox" />
-                    Operate as tanker
-                </label>
-            </div>
+        <div id="tanker-checkbox" class="ol-checkbox">
+            <label>
+                <input type="checkbox" />
+                Operate as AAR tanker
+            </label>
+        </div>
 
-            <div id="AWACS-checkbox" class="ol-checkbox">
-                <label>
-                    <input type="checkbox" />
-                    Operate as AWACS
-                </label>
-            </div>
-        
+        <div id="AWACS-checkbox" class="ol-checkbox">
+            <label>
+                <input type="checkbox" />
+                Operate as AWACS
+            </label>
+        </div>
+
+        <div class="ol-group">
+            <label>A/A TACAN: </label>
+    
             <div class="ol-group">
-                <div id="TACAN-checkbox" class="ol-checkbox">
-                    <label>
-                        A/A TACAN:
-                    </label>
-                </div>
-        
                 <div id="TACAN-channel" class="ol-text-input">
                     <input type="number" min="1" max="126" step="1" value="40">
                 </div>
-                
+            
                 <div id="TACAN-XY" class="ol-select">
                     <div class="ol-select-value">X</div>
                     <div class="ol-select-options">
                     </div>
                 </div>
 
-                <label>
-                    Morse:
-                </label>
-
                 <div id="TACAN-callsign" class="ol-text-input">
                     <input type="text" maxlength="3" value="TKR" style="width: 50px">
                 </div>
             </div>
+        </div>
+    
+        <div class="ol-group">
+            <label> Radio frequency: </label>
         
             <div class="ol-group">
-                <div id="radio-checkbox" class="ol-checkbox">
-                    <label>
-                        Radio frequency:
-                    </label>
-                </div>
-            
                 <div id="radio-mhz" class="ol-text-input">
                     <input type="number" min="1" max="999" step="1" value="260">
                 </div>
@@ -167,12 +157,12 @@
                     </div>
                 </div>
             </div>
+        </div>
+        
+        <div class="ol-group">
+            <label> Radio callsign: </label>
 
             <div class="ol-group">
-                <label>
-                    Radio callsign:
-                </label>
-
                 <div id="radio-callsign" class="ol-select">
                     <div class="ol-select-value"></div>
                     <div class="ol-select-options">
@@ -186,9 +176,8 @@
                 <div id="radio-callsign-number" class="ol-text-input">
                     <input type="number" min="1" max="999" step="1" value="1">
                 </div>
-                
             </div>
-        </form>
+        </div>
     </div>
 
     <div class="ol-dialog-footer ol-group">

@@ -111,6 +111,9 @@ export class UnitControlPanel extends Panel {
 
     update() {
         var units = getUnitsManager().getSelectedUnits();
+
+        this.getElement().querySelector("#advanced-settings-div")?.classList.toggle("hide", units.length != 1);
+        
         if (this.getElement() != null && units.length > 0) {
             this.#showFlightControlSliders(units);
 
@@ -122,8 +125,6 @@ export class UnitControlPanel extends Panel {
                     database = groundUnitsDatabase;
                 else
                     database = null; // TODO add databases for other unit types
-
-                console.log(unit.getBaseData());
 
                 var button = document.createElement("button");
                 var callsign = unit.getBaseData().unitName || "";
@@ -202,19 +203,20 @@ export class UnitControlPanel extends Panel {
 
     #updateAdvancedSettingsDialog(units: Unit[])
     {
-        this.getElement().querySelector("#advanced-settings-div")?.classList.toggle("hide", units.length != 1);
-        
         if (units.length == 1)
         {
             const unit = units[0];
             (<HTMLElement>this.#advancedSettingsDialog.querySelector("#unit-name")).innerText = unit.getBaseData().unitName;
 
-            if (getUnitsManager().getSelectedUnits().length == 1){
-
+            if (getUnitsManager().getSelectedUnits().length == 1)
+            {
+                var asd = this.#advancedSettingsDialog;
                 this.#radioCallsignDropdown.setOptions(["Enfield", "Springfield", "Uzi", "Colt", "Dodge", "Ford", "Chevy", "Pontiac"]);
                 this.#radioCallsignDropdown.selectValue(unit.getTaskData().radioCallsign);
-                this.#advancedSettingsDialog.querySelector("#tanker-checkbox")?.querySelector("input")?.setAttribute('checked', String(unit.getTaskData().isTanker));
-                this.#advancedSettingsDialog.querySelector("#AWACS-checkbox")?.querySelector("input")?.setAttribute('checked', String(unit.getTaskData().isAWACS));
+                var tankerCheckbox = this.#advancedSettingsDialog.querySelector("#tanker-checkbox")?.querySelector("input")
+                if (tankerCheckbox) tankerCheckbox.checked = unit.getTaskData().isTanker;
+                var AWACSCheckbox = this.#advancedSettingsDialog.querySelector("#AWACS-checkbox")?.querySelector("input")
+                if (AWACSCheckbox) AWACSCheckbox.checked = unit.getTaskData().isAWACS;
 
                 var roles = aircraftDatabase.getByName(unit.getBaseData().name)?.loadouts.map((loadout) => {return loadout.roles})
                 if (roles != undefined && Array.prototype.concat.apply([], roles)?.includes("Tanker")){
@@ -240,7 +242,7 @@ export class UnitControlPanel extends Panel {
     #applyAdvancedSettings()
     {
         const isTanker = this.#advancedSettingsDialog.querySelector("#tanker-checkbox")?.querySelector("input")?.checked? true: false;
-        const isAWACS = false; //this.#advancedSettingsDialog.querySelector("#AWACS-checkbox")?.querySelector("input")?.checked? true: false;
+        const isAWACS = this.#advancedSettingsDialog.querySelector("#AWACS-checkbox")?.querySelector("input")?.checked? true: false;
         const TACANChannel = Number(this.#advancedSettingsDialog.querySelector("#TACAN-channel")?.querySelector("input")?.value);
         const TACANXY = this.#TACANXYDropdown.getValue();
         const TACANCallsign = <string> this.#advancedSettingsDialog.querySelector("#tacan-callsign")?.querySelector("input")?.value
