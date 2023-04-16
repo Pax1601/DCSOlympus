@@ -8,6 +8,7 @@ export interface FlightInterface {
     name        : string;
     status      : "unknown";
     takeoffTime : number;
+    unitId      : number;
 }
 
 

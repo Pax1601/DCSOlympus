@@ -115,8 +115,6 @@ export class UnitControlPanel extends Panel {
                 else
                     database = null; // TODO add databases for other unit types
 
-                console.log( unit.getBaseData() );
-
                 var button = document.createElement("button");
                 var callsign = unit.getBaseData().unitName || "";
 

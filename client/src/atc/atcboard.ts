@@ -1,12 +1,14 @@
-import { Draggable } from "leaflet";
 import { Dropdown } from "../controls/dropdown";
-import { generateUUIDv4, zeroAppend } from "../other/utils";
+import { zeroAppend } from "../other/utils";
 import { ATC } from "./atc";
+import { Unit } from "../units/unit";
 
 export interface StripBoardStripInterface {
     "id": string,
     "element": HTMLElement,
-    "dropdowns": {[key:string]: Dropdown}
+    "dropdowns": {[key:string]: Dropdown},
+    "isDeleted"?: boolean,
+    "unitId": number
 }
 
 export abstract class ATCBoard {
@@ -15,13 +17,16 @@ export abstract class ATCBoard {
     #boardId:string = "";
     #templates: {[key:string]: string} = {};
 
+
     //  Elements
     #boardElement:HTMLElement;
     #clockElement:HTMLElement;
     #stripBoardElement:HTMLElement;
 
     //  Content
+    #isAddFlightByClickEnabled:boolean = false;
     #strips:{[key:string]: StripBoardStripInterface} = {};
+    #unitIdsBeingMonitored:number[] = [];
     
     //  Update timing
     #updateInterval:number|undefined = undefined;
@@ -37,6 +42,12 @@ export abstract class ATCBoard {
         this.#stripBoardElement = <HTMLElement>this.getBoardElement().querySelector( ".ol-strip-board-strips" );
         this.#clockElement      = <HTMLElement>this.getBoardElement().querySelector( ".ol-strip-board-clock" );
 
+
+        setInterval( () => {
+            this.updateClock();
+        }, 1000 );
+
+
         if ( this.#boardElement.classList.contains( "ol-draggable" ) ) {
 
             let options:any = {};
@@ -50,15 +61,37 @@ export abstract class ATCBoard {
         }
 
 
-        setInterval( () => {
-            this.updateClock();
-        }, 1000 );
-
+        this.#setupAddFlight();
 
     }
 
 
-    addFlight( flightName:string ) {
+    addFlight( unit:Unit ) {
+
+        const baseData = unit.getBaseData();
+
+        const unitCanBeAdded = () => {
+
+            if ( baseData.category !== "Aircraft" ) {
+                return false;
+            }
+
+            if ( baseData.AI === true ) {
+                //  return false;
+            }
+
+            if ( this.#unitIdsBeingMonitored.includes( unit.ID ) ) {
+                return false;
+            }
+
+            return true;
+        }
+
+        if ( !unitCanBeAdded() ) {
+            return;
+        }
+
+        this.#unitIdsBeingMonitored.push( unit.ID );
 
         return fetch( '/api/atc/flight/', {
             method: 'POST',      
@@ -68,7 +101,8 @@ export abstract class ATCBoard {
             },
             "body": JSON.stringify({
                 "boardId" : this.getBoardId(),
-                "name"    : flightName
+                "name"    : baseData.unitName,
+                "unitId"  : unit.ID
             })
         });
 
@@ -76,7 +110,16 @@ export abstract class ATCBoard {
 
 
     addStrip( strip:StripBoardStripInterface ) {
+        
         this.#strips[ strip.id ] = strip;
+
+        strip.element.querySelectorAll( "button.deleteFlight" ).forEach( btn => {
+            btn.addEventListener( "click", ev => {
+                ev.preventDefault();
+                this.deleteFlight( strip.id );
+            });
+        });
+
     }
 
 
@@ -109,12 +152,33 @@ export abstract class ATCBoard {
     }
 
 
-    deleteStrip( id:string ) {
+    deleteStrip( flightId:string ) {
 
-        if ( this.#strips.hasOwnProperty( id ) ) {
-            this.#strips[ id ].element.remove();
-            delete this.#strips[ id ];
+        if ( this.#strips.hasOwnProperty( flightId ) ) {
+            
+            this.#strips[ flightId ].element.remove();
+            this.#strips[ flightId ].isDeleted = true;
+
+            setTimeout( () => {
+                delete this.#strips[ flightId ];
+            }, 10000 );
+
         }
+
+    }
+
+
+    deleteFlight( flightId:string ) {
+        
+        this.deleteStrip( flightId );
+
+        fetch( '/api/atc/flight/' + flightId, {
+            method: 'DELETE',      
+            headers: { 
+                'Accept': '*/*',
+                'Content-Type': 'application/json' 
+            }
+        });
 
     }
 
@@ -158,6 +222,67 @@ export abstract class ATCBoard {
 
     setTemplates( templates:{[key:string]: string} ) {
         this.#templates = templates;
+    }
+
+
+    #setupAddFlight() {
+
+        const toggleIsAddFlightByClickEnabled = () => {
+            this.#isAddFlightByClickEnabled = ( !this.#isAddFlightByClickEnabled );
+            this.getBoardElement().classList.toggle( "add-flight-by-click", this.#isAddFlightByClickEnabled );
+        }
+
+
+        document.addEventListener( "unitSelection", ( ev:CustomEventInit ) => {
+
+            if ( this.#isAddFlightByClickEnabled !== true ) {
+                return;
+            }
+
+            this.addFlight( ev.detail );
+
+            toggleIsAddFlightByClickEnabled();
+
+        });
+        
+
+        this.getBoardElement().querySelectorAll( "form.ol-strip-board-add-flight" ).forEach( form => {
+
+            if ( form instanceof HTMLFormElement ) {
+
+                form.addEventListener( "submit", ev => {
+                    
+                    ev.preventDefault();
+    
+                    
+                    if ( ev.target instanceof HTMLFormElement ) {
+    
+                        const elements   = ev.target.elements;
+                        const flightName = <HTMLInputElement>elements[1];
+    
+                        if ( flightName.value === "" ) {
+                            return;
+                        }
+                        
+                        //  this.addFlight( -1, flightName.value );
+    
+                        form.reset();
+    
+                    }
+    
+                });
+
+            }
+
+        });
+
+
+        this.getBoardElement().querySelectorAll( ".add-flight-by-click" ).forEach( el => {
+            el.addEventListener( "click", () => {
+                toggleIsAddFlightByClickEnabled();
+            });
+        });
+
     }
 
 

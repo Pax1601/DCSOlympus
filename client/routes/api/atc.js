@@ -25,12 +25,13 @@ function uuidv4() {
 
 
 
-function Flight( name, boardId ) {
+function Flight( name, boardId, unitId ) {
     this.id          = uuidv4();
     this.boardId     = boardId;
     this.name        = name;
     this.status      = "unknown";
     this.takeoffTime = -1;
+    this.unitId      = parseInt( unitId );
 }
 
 Flight.prototype.getData = function() {
@@ -39,7 +40,8 @@ Flight.prototype.getData = function() {
         "boardId"     : this.boardId,
         "name"        : this.name,
         "status"      : this.status,
-        "takeoffTime" : this.takeoffTime
+        "takeoffTime" : this.takeoffTime,
+        "unitId"      : this.unitId
     };
 }
 
@@ -180,7 +182,11 @@ app.post( "/flight", ( req, res ) => {
         res.status( 400 ).send( "Invalid/missing flight name" );
     }
 
-    const flight = new Flight( req.body.name, req.body.boardId );
+    if ( !req.body.unitId || isNaN( req.body.unitId ) ) {
+        res.status( 400 ).send( "Invalid/missing unitId" );
+    }
+
+    const flight = new Flight( req.body.name, req.body.boardId, req.body.unitId );
 
     dataHandler.addFlight( flight );
 
