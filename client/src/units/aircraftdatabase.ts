@@ -708,6 +708,25 @@ export class AircraftDatabase extends UnitDatabase {
             ],
             "filename": "kc-135.png"
          },
+         "KC135MPRS": {
+            "name": "KC135MPRS",
+            "label": "KC-135 MPRS",
+            "shortLabel": "135M",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+
+                  ],
+                  "roles": [
+                     "Tanker"
+                  ],
+                  "code": "",
+                  "name": "Default Tanker"
+               }
+            ],
+            "filename": "kc-135.png"
+         },
          "MiG-23MLD": {
             "name": "MiG-23MLD",
             "label": "MiG-23MLD",

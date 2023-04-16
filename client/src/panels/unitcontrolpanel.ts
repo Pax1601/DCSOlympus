@@ -210,7 +210,6 @@ export class UnitControlPanel extends Panel {
 
             if (getUnitsManager().getSelectedUnits().length == 1)
             {
-                var asd = this.#advancedSettingsDialog;
                 this.#radioCallsignDropdown.setOptions(["Enfield", "Springfield", "Uzi", "Colt", "Dodge", "Ford", "Chevy", "Pontiac"]);
                 this.#radioCallsignDropdown.selectValue(unit.getTaskData().radioCallsign);
                 var tankerCheckbox = this.#advancedSettingsDialog.querySelector("#tanker-checkbox")?.querySelector("input")

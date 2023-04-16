@@ -105,6 +105,6 @@ int dostring_in(lua_State* L, string target, string command)
 
 int TACANChannelToFrequency(int channel, wstring XY)
 {
-    int basef = (XY == L"X" && channel > 63) || (XY == L"Y" && channel < 64) ? 1087000000 : 961000000;
-    return basef + 1000000 * channel;
+    int basef = (XY == L"X" && channel > 63) || (XY == L"Y" && channel < 64) ? 1087: 961;
+    return (basef + channel) * 1000000;
 }

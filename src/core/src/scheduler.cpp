@@ -142,14 +142,34 @@ void Scheduler::handleRequest(wstring key, json::value value)
 		unit->setTargetID(targetID);
 		unit->setState(State::ATTACK);
 	}
-	else if (key.compare(L"stopAttack") == 0)
+	else if (key.compare(L"followUnit") == 0)
 	{
 		int ID = value[L"ID"].as_integer();
+		int targetID = value[L"targetID"].as_integer();
+		int offsetX = value[L"offsetX"].as_integer();
+		int offsetY = value[L"offsetY"].as_integer();
+		int offsetZ = value[L"offsetZ"].as_integer();
+
 		Unit* unit = unitsManager->getUnit(ID);
+		Unit* target = unitsManager->getUnit(targetID);
+
+		wstring unitName;
+		wstring targetName;
+
 		if (unit != nullptr)
-			unit->setState(State::REACH_DESTINATION);
+			unitName = unit->getUnitName();
 		else
 			return;
+
+		if (target != nullptr)
+			targetName = target->getUnitName();
+		else
+			return;
+
+		log(L"Unit " + unitName + L" following unit " + targetName);
+		unit->setFormationOffset(Offset(offsetX, offsetY, offsetZ));
+		unit->setTargetID(targetID);
+		unit->setState(State::FOLLOW);
 	}
 	else if (key.compare(L"changeSpeed") == 0)
 	{

@@ -98,24 +98,46 @@ end
 -- Builds a valid task depending on the provided options
 function Olympus.buildTask(options)
 	local task = nil
-	if options['id'] == 'FollowUnit' and options['leaderID'] and options['offset'] then
-		local leader = Olympus.getUnitByID(options['leaderID'])
-		if leader and leader:isExist() then
+
+	if (Olympus.isArray(options)) then
+		local tasks = {}
+		for idx, subOptions in pairs(options) do
+			tasks[idx] = Olympus.buildTask(subOptions) or Olympus.buildEnrouteTask(subOptions)
+		end
+		task = { 
+			id = 'ComboTask', 
+			params = { 
+				tasks = tasks
+			} 
+		} 
+		Olympus.debug(Olympus.serializeTable(task), 30)
+	else 
+		if options['id'] == 'FollowUnit' and options['leaderID'] and options['offset'] then
+			local leader = Olympus.getUnitByID(options['leaderID'])
+			if leader and leader:isExist() then
+				task = {
+					id = 'Follow',
+					params = {
+						groupId = leader:getGroup():getID(),
+						pos = options['offset'],
+						lastWptIndexFlag = false,
+						lastWptIndex = 1
+					}    
+				}
+			end
+		elseif options['id'] == 'Refuel' then
 			task = {
-				id = 'Follow',
-				params = {
-					groupId = leader:getGroup():getID(),
-					pos = options['offset'],
-					lastWptIndexFlag = false,
-					lastWptIndex = 1
-				}    
+				id = 'Refueling', 
+				params = {}   
+			}
+		elseif options['id'] == 'Orbit' then
+			task = { 
+				id = 'Orbit', 
+				params = { 
+					pattern = options['pattern'] or "Circle"
+				} 
 			}
 		end
-	elseif options['id'] == 'Refuel' then
-		task = {
-			id = 'Refueling', 
-			params = {}   
-		}
 	end
 	return task
 end
@@ -269,6 +291,7 @@ function Olympus.spawnAircraft(coalition, unitType, lat, lng, spawnOptions)
 			["payload"] = 
 			{
 				["pylons"] = payload, 
+				["fuel"] = 999999,
 				["flare"] = 60,
 				["ammo_type"] = 1,
 				["chaff"] = 60,
@@ -438,6 +461,16 @@ function Olympus.serializeTable(val, name, skipnewlines, depth)
 
     return tmp
 end
+
+function Olympus.isArray(t)
+	local i = 0
+	for _ in pairs(t) do
+		i = i + 1
+		if t[i] == nil then return false end
+	end
+	return true
+end
+  
 
 function Olympus.setMissionData(arg, time)
 	local missionData = {}

@@ -118,7 +118,11 @@ export function attackUnit(ID: number, targetID: number) {
 }
 
 export function followUnit(ID: number, targetID: number) {
-    var command = { "ID": ID, "targetID": targetID };
+    // X: front-rear, positive front
+    // Y: top-bottom, positive bottom
+    // Z: left-right, positive right
+    
+    var command = { "ID": ID, "targetID": targetID, "offsetX": -50, "offsetY": -10, "offsetZ": 50};
     var data = { "followUnit": command }
     POST(data, () => { });
 }

@@ -515,6 +515,9 @@ export class Unit extends Marker {
                 points.push(new LatLng(destination.lat, destination.lng));
                 this.#pathPolyline.setLatLngs(points);
             }
+
+            if (points.length == 1)
+                this.#clearPath();
         }
     }
 

@@ -28,6 +28,7 @@ var mouseInfoPanel: MouseInfoPanel;
 var logPanel: LogPanel;
 
 var connected: boolean = false;
+var paused: boolean = false;
 var activeCoalition: string = "blue";
 
 var sessionHash: string | null = null;
@@ -106,8 +107,10 @@ function startPeriodicUpdate() {
 function requestUpdate() {
     /* Main update rate = 250ms is minimum time, equal to server update time. */
     getUnits((data: UnitsData) => {
-        getUnitsManager()?.update(data);
-        checkSessionHash(data.sessionHash);
+        if (!getPaused()){
+            getUnitsManager()?.update(data);
+            checkSessionHash(data.sessionHash);
+        }
     }, false);
     setTimeout(() => requestUpdate(), getConnected() ? 250 : 1000);
 
@@ -117,15 +120,17 @@ function requestUpdate() {
 function requestRefresh() {
     /* Main refresh rate = 5000ms. */
     getUnits((data: UnitsData) => {
-        getUnitsManager()?.update(data);
-        getAirbases((data: AirbasesData) => getMissionData()?.update(data));
-        getBullseyes((data: BullseyesData) => getMissionData()?.update(data));
-        getMission((data: any) => {getMissionData()?.update(data)});
+        if (!getPaused()){
+            getUnitsManager()?.update(data);
+            getAirbases((data: AirbasesData) => getMissionData()?.update(data));
+            getBullseyes((data: BullseyesData) => getMissionData()?.update(data));
+            getMission((data: any) => {getMissionData()?.update(data)});
 
-        // Update the list of existing units
-        getUnitDataTable()?.update();
-
-        checkSessionHash(data.sessionHash);
+            // Update the list of existing units
+            getUnitDataTable()?.update();
+            
+            checkSessionHash(data.sessionHash);
+        }
     }, true);
     setTimeout(() => requestRefresh(), 5000);
 }
@@ -183,6 +188,9 @@ function setupEvents() {
             case "Quote":
                 unitDataTable.toggle();
                 break
+            case "Space":
+                setPaused(!getPaused());
+                break;
         }
     });
 
@@ -266,6 +274,14 @@ export function setConnected(newConnected: boolean) {
 
 export function getConnected() {
     return connected;
+}
+
+export function setPaused(newPaused: boolean) {
+    paused = newPaused;
+}
+
+export function getPaused() {
+    return paused;
 }
 
 window.onload = setup;
