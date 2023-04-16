@@ -2,6 +2,9 @@ import { Dropdown } from "../controls/dropdown";
 import { zeroAppend } from "../other/utils";
 import { ATC } from "./atc";
 import { Unit } from "../units/unit";
+import { getUnitsManager } from "..";
+import Sortable from "sortablejs";
+import { FlightInterface } from "./atc";
 
 export interface StripBoardStripInterface {
     "id": string,
@@ -43,6 +46,30 @@ export abstract class ATCBoard {
         this.#clockElement      = <HTMLElement>this.getBoardElement().querySelector( ".ol-strip-board-clock" );
 
 
+        new Sortable( this.getStripBoardElement(), {
+            "handle": ".handle",
+            "onUpdate": ev => {
+
+                const order = [].slice.call( this.getStripBoardElement().children ).map( ( strip:HTMLElement ) => {
+                    return strip.dataset.flightId
+                });
+
+                fetch( '/api/atc/flight/order', {
+                    method: 'POST',      
+                    headers: { 
+                        'Accept': '*/*',
+                        'Content-Type': 'application/json' 
+                    },
+                    "body": JSON.stringify({
+                        "boardId" : this.getBoardId(),
+                        "order"   : order
+                    })
+                });
+
+            }
+        });
+
+
         setInterval( () => {
             this.updateClock();
         }, 1000 );
@@ -62,6 +89,8 @@ export abstract class ATCBoard {
 
 
         this.#setupAddFlight();
+
+        //this.#_setupDemoData();
 
     }
 
@@ -177,7 +206,10 @@ export abstract class ATCBoard {
             headers: { 
                 'Accept': '*/*',
                 'Content-Type': 'application/json' 
-            }
+            },
+            "body": JSON.stringify({
+                "boardId": this.getBoardId()
+            })
         });
 
     }
@@ -220,6 +252,13 @@ export abstract class ATCBoard {
     }
 
 
+    getUnitIdsBeingMonitored() {
+
+        return this.#unitIdsBeingMonitored;
+
+    }
+
+
     setTemplates( templates:{[key:string]: string} ) {
         this.#templates = templates;
     }
@@ -246,42 +285,101 @@ export abstract class ATCBoard {
         });
         
 
-        this.getBoardElement().querySelectorAll( "form.ol-strip-board-add-flight" ).forEach( form => {
+        const form        = <HTMLElement>this.getBoardElement().querySelector( "form.ol-strip-board-add-flight" );
+        const suggestions = <HTMLElement>form.querySelector( ".ol-auto-suggest" );
+        const unitName    = <HTMLInputElement>form.querySelector( "input[name='unitName']" );
 
-            if ( form instanceof HTMLFormElement ) {
+        const toggleSuggestions = ( bool:boolean ) => {
+            suggestions.toggleAttribute( "data-has-suggestions", bool );
+        }
 
-                form.addEventListener( "submit", ev => {
+        let searchTimeout:number|null;
+
+        unitName.addEventListener( "keyup", ev => {
+
+            if ( searchTimeout ) {
+                clearTimeout( searchTimeout );
+            }
+
+            const resetSuggestions = () => {
+                suggestions.innerHTML = "";
+                toggleSuggestions( false );
+            }
+
+            resetSuggestions();
+
+            searchTimeout = setTimeout( () => {
+            
+                const searchString = unitName.value.toLowerCase();
+    
+                if ( searchString === "" ) {
+                    return;
+                }
+
+                const units                 = getUnitsManager().getSelectableAircraft();
+                const unitIdsBeingMonitored = this.getUnitIdsBeingMonitored();
+
+                const results = Object.keys( units ).reduce( ( acc:Unit[], unitId:any ) => {
                     
-                    ev.preventDefault();
-    
-                    
-                    if ( ev.target instanceof HTMLFormElement ) {
-    
-                        const elements   = ev.target.elements;
-                        const flightName = <HTMLInputElement>elements[1];
-    
-                        if ( flightName.value === "" ) {
-                            return;
-                        }
-                        
-                        //  this.addFlight( -1, flightName.value );
-    
-                        form.reset();
-    
+                    const unit     = units[ unitId ];
+                    const baseData = unit.getBaseData();
+
+                    if ( !unitIdsBeingMonitored.includes( parseInt( unitId ) ) && baseData.unitName.toLowerCase().indexOf( searchString ) > -1 ) {
+                        acc.push( unit );
                     }
-    
+
+                    return acc;
+
+                }, [] );
+
+                toggleSuggestions( results.length > 0 );
+                
+                results.forEach( unit => {
+
+                    const baseData = unit.getBaseData();
+
+                    const a     = document.createElement( "a" );
+                    a.innerText = baseData.unitName;
+
+                    a.addEventListener( "click", ev => {
+                        this.addFlight( unit );
+                        resetSuggestions();
+                        unitName.value = "";
+                    });
+
+                    suggestions.appendChild( a );
+
                 });
 
-            }
+
+
+            }, 1000 );
+
 
         });
 
-
-        this.getBoardElement().querySelectorAll( ".add-flight-by-click" ).forEach( el => {
-            el.addEventListener( "click", () => {
+        form.querySelectorAll( ".add-flight-by-click" ).forEach( el => {
+            el.addEventListener( "click", ev => {
+                ev.preventDefault();
                 toggleIsAddFlightByClickEnabled();
             });
         });
+
+    }
+
+
+    sortFlights( flights:FlightInterface[] ) {
+
+        flights.sort( ( a, b ) => {
+            
+            const aVal = a.order;
+            const bVal = b.order;
+
+            return ( aVal > bVal ) ? 1 : -1;
+
+        });
+
+        return flights;
 
     }
 
@@ -329,6 +427,50 @@ export abstract class ATCBoard {
 
         const now = this.#atc.getMissionDateTime();
         this.#clockElement.innerText = now.toLocaleTimeString();
+
+    }
+
+
+    #_setupDemoData() {
+
+        fetch( '/api/atc/flight/', {
+            method: 'POST',      
+            headers: { 
+                'Accept': '*/*',
+                'Content-Type': 'application/json' 
+            },
+            "body": JSON.stringify({
+                "boardId" : this.getBoardId(),
+                "name"    : this.getBoardId() + " 1",
+                "unitId"  : 1
+            })
+        });
+
+        fetch( '/api/atc/flight/', {
+            method: 'POST',      
+            headers: { 
+                'Accept': '*/*',
+                'Content-Type': 'application/json' 
+            },
+            "body": JSON.stringify({
+                "boardId" : this.getBoardId(),
+                "name"    : this.getBoardId() + " 2",
+                "unitId"  : 1
+            })
+        });
+
+        fetch( '/api/atc/flight/', {
+            method: 'POST',      
+            headers: { 
+                'Accept': '*/*',
+                'Content-Type': 'application/json' 
+            },
+            "body": JSON.stringify({
+                "boardId" : this.getBoardId(),
+                "name"    : this.getBoardId() + " 3",
+                "unitId"  : 1
+            })
+        });
 
     }
 

@@ -46,6 +46,15 @@ Flight.prototype.getData = function() {
 }
 
 
+Flight.prototype.setOrder = function( order ) {
+
+    this.order = order;
+
+    return true;
+
+}
+
+
 Flight.prototype.setStatus = function( status ) {
 
     if ( [ "unknown", "checkedin", "readytotaxi", "clearedtotaxi", "halted", "terminated" ].indexOf( status ) < 0 ) {
@@ -168,6 +177,27 @@ app.patch( "/flight/:flightId", ( req, res ) => {
     }
 
     res.json( flight.getData() );
+
+});
+
+
+app.post( "/flight/order", ( req, res ) => {
+
+    if ( !req.body.boardId ) {
+        res.status( 400 ).send( "Invalid/missing boardId" );
+    }
+
+    if ( !req.body.order || !Array.isArray( req.body.order ) ) {
+        res.status( 400 ).send( "Invalid/missing boardId" );
+    }
+
+    req.body.order.forEach( ( flightId, i ) => {
+
+        dataHandler.getFlight( flightId ).setOrder( i );
+
+    });
+
+    res.send( "" );
 
 });
 

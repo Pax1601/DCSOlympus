@@ -14,7 +14,7 @@ export class ATCBoardGround extends ATCBoard {
 
     update() {
         
-        const flights    = Object.values( this.getATC().getDataHandler().getFlights( this.getBoardId() ) );
+        const flights    = this.sortFlights( Object.values( this.getATC().getDataHandler().getFlights( this.getBoardId() ) ) );
         const stripBoard = this.getStripBoardElement();
 
         const missionTime = this.getATC().getMissionDateTime().getTime();
@@ -31,6 +31,7 @@ export class ATCBoardGround extends ATCBoard {
             if ( !strip ) {
 
                 const template = `<div class="ol-strip-board-strip" data-flight-id="${flight.id}" data-flight-status="${flight.status}">
+                <div class="handle"></div>
                     <div data-point="name">${flight.name}</div>
                     
                     <div id="flight-status-${flight.id}" class="ol-select narrow" data-point="status">
@@ -42,7 +43,7 @@ export class ATCBoardGround extends ATCBoard {
 
                     <div data-point="timeToGo">${this.timeToGo( flight.takeoffTime )}</div>
                     
-                    <button class="deleteFlight">Delete</button>
+                    <button class="deleteFlight">&times;</button>
                 </div>`;
 
                 stripBoard.insertAdjacentHTML( "beforeend", template );
