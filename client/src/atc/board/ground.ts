@@ -9,53 +9,6 @@ export class ATCBoardGround extends ATCBoard {
 
         super( atc, element );
 
-        document.addEventListener( "deleteFlightStrip", ( ev:CustomEventInit ) => {
-
-            if ( ev.detail.id ) {
-                
-                fetch( '/api/atc/flight/' + ev.detail.id, {
-                    method: 'DELETE',      
-                    headers: { 
-                        'Accept': '*/*',
-                        'Content-Type': 'application/json' 
-                    }
-                });
-                
-            }
-
-        });
-
-
-        this.getBoardElement().querySelectorAll( "form.ol-strip-board-add-flight" ).forEach( form => {
-
-            if ( form instanceof HTMLFormElement ) {
-
-                form.addEventListener( "submit", ev => {
-                    
-                    ev.preventDefault();
-    
-                    
-                    if ( ev.target instanceof HTMLFormElement ) {
-    
-                        const elements   = ev.target.elements;
-                        const flightName = <HTMLInputElement>elements[0];
-    
-                        if ( flightName.value === "" ) {
-                            return;
-                        }
-                        
-                        this.addFlight( flightName.value );
-    
-                        form.reset();
-    
-                    }
-    
-                });
-
-            }
-
-        });
-
     }
 
 
@@ -89,7 +42,7 @@ export class ATCBoardGround extends ATCBoard {
 
                     <div data-point="timeToGo">${this.timeToGo( flight.takeoffTime )}</div>
                     
-                    <button data-on-click="deleteFlightStrip" data-on-click-params='{"id":"${flight.id}"}'>Delete</button>
+                    <button class="deleteFlight">Delete</button>
                 </div>`;
 
                 stripBoard.insertAdjacentHTML( "beforeend", template );
@@ -98,7 +51,8 @@ export class ATCBoardGround extends ATCBoard {
                 strip = {
                     "id": flight.id,
                     "element": <HTMLElement>stripBoard.lastElementChild,
-                    "dropdowns": {}
+                    "dropdowns": {},
+                    "unitId": -1
                 };
 
                 strip.element.querySelectorAll( ".ol-select" ).forEach( select => {
@@ -217,6 +171,7 @@ export class ATCBoardGround extends ATCBoard {
 
         });
         
+
         stripBoard.querySelectorAll( `[data-updating]` ).forEach( strip => {
             this.deleteStrip( strip.getAttribute( "data-flight-id" ) || "" );
         });

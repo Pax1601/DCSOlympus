@@ -80,8 +80,20 @@
 
 
 
+[data-board-type="tower"] .ol-strip-board-strip > * {
+    text-align: center;
+}
+
+[data-board-type="tower"] .ol-strip-board-strip > :first-child {
+    text-align: left;
+}
+
 [data-board-type="tower"] .ol-strip-board-strip :nth-child(2) input {
     width:25px;
+}
+
+[data-board-type="tower"] .ol-strip-board-strip :nth-child(2) {
+    font-size:10px;
 }
 
 
@@ -109,7 +121,12 @@
     padding:4px 8px;
 }
 
-.ol-strip-board-add-flight button {
+.add-flight-by-click img {
+    filter:invert();
+    height: 12px;
+}
+
+.ol-strip-board-add-flight button[type="submit"] {
     background-color: darkgreen;
     border-bottom-right-radius: var( --border-radius-sm );
     border-bottom-left-radius: 0;
