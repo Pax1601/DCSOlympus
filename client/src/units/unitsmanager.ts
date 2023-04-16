@@ -23,6 +23,24 @@ export class UnitsManager {
         document.addEventListener('deleteSelectedUnits', () => this.selectedUnitsDelete() )
     }
 
+    getSelectableAircraft() {
+
+        const units = this.getUnits();
+
+        return Object.keys( units ).reduce( ( acc:{[key:number]: Unit}, unitId:any ) => {
+            
+            const baseData = units[ unitId ].getBaseData();
+            
+            if ( baseData.category === "Aircraft" && baseData.alive === true ) {
+                acc[ unitId ] = units[ unitId ];
+            }
+
+            return acc;
+
+        }, {});
+
+    }
+
     getUnits() {
         return this.#units;
     }

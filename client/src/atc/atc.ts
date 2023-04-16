@@ -6,6 +6,7 @@ export interface FlightInterface {
     id          : string;
     boardId     : string;
     name        : string;
+    order       : number;
     status      : "unknown";
     takeoffTime : number;
     unitId      : number;

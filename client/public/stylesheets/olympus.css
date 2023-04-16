@@ -149,7 +149,7 @@ form > div {
 
 .ol-select.narrow:not(.ol-select-image)>.ol-select-value {
     opacity: .9;
-    padding:6px 30px 6px 15px;
+    padding:4px 30px 4px 15px;
 }
 
 .ol-select:not(.ol-select-image)>.ol-select-value svg {
@@ -531,6 +531,15 @@ nav.ol-panel> :last-child {
     font-size: 12px;
     z-index: 2000;
     font-weight: var(--font-weight-bolder);
+}
+
+
+.ol-sortable .handle {
+    background-image: url( "/images/icons/grip-lines-solid.svg" );
+    cursor:ns-resize;
+    filter:invert();
+    height:12px;
+    width:12px;
 }
 
 
