@@ -235,6 +235,10 @@
 	width: 16px;
 }
 
+#center-map::before {
+	content: url( /images/icons/arrows-to-eye-solid.svg );
+}
+
 #refuel::before {
 	content: url( /images/icons/fuel.svg );
 }
@@ -245,6 +249,68 @@
 
 #follow::before {
 	content: url( /images/icons/follow.svg );
+}
+
+#trail::before {
+	content: url( /images/icons/trail.svg );
+}
+
+#echelon-lh::before {
+	content: url( /images/icons/echelon-lh.svg );
+}
+
+#echelon-rh::before {
+	content: url( /images/icons/echelon-rh.svg );
+}
+
+#line-abreast::before {
+	content: url( /images/icons/line-abreast.svg );
+}
+
+#front::before {
+	content: url( /images/icons/front.svg );
+}
+
+#custom::before {
+	content: url( /images/icons/custom.svg );
+}
+
+#custom-formation-dialog {
+	width: 250px;
+}
+
+#custom-formation-dialog > .ol-dialog-content {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	row-gap: 10px;
+    align-items: center;
+}
+
+#custom-formation-dialog > .ol-dialog-content > .ol-group {
+    width: 100%;
+	justify-content: space-between;
+}
+
+#reference-system {
+    content: url( /images/reference-system.svg );
+    display: inline-block;
+	filter: invert(100%);
+    width: 50px;
+    transform: translate(-50%, -50%); 
+    position: absolute;
+}
+
+.formation-position-clock {
+    transform: translate(-50%, -50%); 
+    display: flex; 
+    position: absolute; 
+    align-items: center; 
+    justify-content: center; 
+    height: 20px; 
+    width: 20px;
 }
 
 /* Airbase context menu */

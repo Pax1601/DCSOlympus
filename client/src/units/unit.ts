@@ -142,7 +142,6 @@ export class Unit extends Marker {
     }
 
     setData(data: UpdateData) {
-        document.dispatchEvent(new CustomEvent("unitUpdated", { detail: this }));
         var updateMarker = false;
     
         if ((data.flightData.latitude != undefined && data.flightData.longitude != undefined && (this.getFlightData().latitude != data.flightData.latitude || this.getFlightData().longitude != data.flightData.longitude)) 
@@ -212,6 +211,8 @@ export class Unit extends Marker {
         }
         else
             this.#clearPath();
+
+        document.dispatchEvent(new CustomEvent("unitUpdated", { detail: this }));
     }
 
     getData() {
@@ -413,11 +414,14 @@ export class Unit extends Marker {
 
     #onContextMenu(e: any) {
         var options: {[key: string]: string} = {};
+
+        options["Center"] = `<div id="center-map">Center map</div>`; 
+
         if (getUnitsManager().getSelectedUnits().length > 0 && !(getUnitsManager().getSelectedUnits().includes(this)))
         {
             options = {
                 'Attack': `<div id="attack">Attack</div>`,
-                'Follow': `<div id="follow">Follow</div>`
+                'Follow': `<div id="follow">Follow</div>`,
             }
         }
         else if ((getUnitsManager().getSelectedUnits().length > 0 && (getUnitsManager().getSelectedUnits().includes(this))) || getUnitsManager().getSelectedUnits().length == 0)
@@ -433,18 +437,50 @@ export class Unit extends Marker {
             getMap().showUnitContextMenu(e);
             getMap().getUnitContextMenu().setOptions(options, (option: string) => {
                 getMap().hideUnitContextMenu();
-                this.#executeAction(option);
+                this.#executeAction(e, option);
             });
         }
     }
 
-    #executeAction(action: string) {
+    #executeAction(e: any, action: string) {
+        if (action === "Center")
+            getMap().centerOnUnit(this.ID);
         if (action === "Attack")
             getUnitsManager().selectedUnitsAttackUnit(this.ID);
-        if (action === "Refuel")
+        else if (action === "Refuel")
             getUnitsManager().selectedUnitsRefuel();
-        if (action === "Follow")
+        else if (action === "Follow")
+            this.#showFollowOptions(e);
+    }
+
+    #showFollowOptions(e: any) {
+        var options: {[key: string]: string} = {};
+
+        options = {
+            'Trail': `<div id="trail">Trail</div>`,
+            'Echelon (LH)': `<div id="echelon-lh">Echelon (LH)</div>`,
+            'Echelon (RH)': `<div id="echelon-rh">Echelon (RH)</div>`,
+            'Line abreast': `<div id="line-abreast">Line abreast</div>`,
+            'Front': `<div id="front">In front</div>`,
+            'Custom': `<div id="custom">Custom</div>`
+        }
+
+        getMap().getUnitContextMenu().setOptions(options, (option: string) => {
+            getMap().hideUnitContextMenu();
+            this.#applyFollowOptions(option);
+        });
+        getMap().showUnitContextMenu(e);
+    }
+
+    #applyFollowOptions(action: string)
+    {
+        if (action === "Custom")
+        {
+            document.getElementById("custom-formation-dialog")?.classList.remove("hide");
+        }
+        else {
             getUnitsManager().selectedUnitsFollowUnit(this.ID);
+        }
     }
 
     #updateMarker() {

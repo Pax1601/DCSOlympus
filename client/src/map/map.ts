@@ -19,6 +19,7 @@ export class Map extends L.Map {
     #preventLeftClick: boolean = false;
     #leftClickTimer: number = 0;
     #lastMousePosition: L.Point = new L.Point(0, 0);
+    #centerUnit: Unit | null = null;
 
     #mapContextMenu: MapContextMenu = new MapContextMenu("map-contextmenu");
     #unitContextMenu: UnitContextMenu = new UnitContextMenu("unit-contextmenu");
@@ -29,7 +30,7 @@ export class Map extends L.Map {
     constructor(ID: string) {
         /* Init the leaflet map */
         //@ts-ignore
-        super(ID, { doubleClickZoom: false, zoomControl: false, boxZoom: false, boxSelect: true });
+        super(ID, { doubleClickZoom: false, zoomControl: false, boxZoom: false, boxSelect: true, zoomAnimation: false });
         this.setView([37.23, -115.8], 12);
 
         this.setLayer("ArcGIS Satellite");
@@ -39,7 +40,9 @@ export class Map extends L.Map {
 
         /* Register event handles */
         this.on("click", (e: any) => this.#onClick(e));
-        this.on("dblclick", (e: any) => this.#onDoubleClick(e));      
+        this.on("dblclick", (e: any) => this.#onDoubleClick(e));   
+        this.on("zoomstart", (e: any) => this.#onZoom(e));   
+        this.on("drag", (e: any) => this.centerOnUnit(null));   
         this.on("contextmenu", (e: any) => this.#onContextMenu(e));
         this.on('selectionend', (e: any) => this.#onSelectionEnd(e));
         this.on('mousedown', (e: any) => this.#onMouseDown(e));
@@ -55,6 +58,11 @@ export class Map extends L.Map {
         document.addEventListener("toggleUnitVisibility", (ev: CustomEventInit) => {
             document.body.toggleAttribute("data-hide-" + ev.detail.category);
             Object.values(getUnitsManager().getUnits()).forEach((unit: Unit) => unit.updateVisibility());
+        });
+
+        document.addEventListener("unitUpdated", (ev: CustomEvent) => {
+            if (this.#centerUnit != null && ev.detail == this.#centerUnit)
+                this.#panToUnit(this.#centerUnit);
         });
    
         this.#mapSourceDropdown = new Dropdown("map-type", (layerName: string) => this.setLayer(layerName), this.getLayers())
@@ -195,6 +203,18 @@ export class Map extends L.Map {
         //this.#aircraftSpawnMenu(e);
     }
 
+    centerOnUnit(ID: number | null){
+        if (ID != null)
+        {
+            this.options.scrollWheelZoom = 'center';
+            this.#centerUnit = getUnitsManager().getUnitByID(ID);
+        }
+        else {
+            this.options.scrollWheelZoom = undefined;
+            this.#centerUnit = null;
+        }
+    }
+
     /* Event handlers */
     #onClick(e: any) {
         if (!this.#preventLeftClick) {
@@ -255,5 +275,17 @@ export class Map extends L.Map {
     {
         this.#lastMousePosition.x = e.originalEvent.x;
         this.#lastMousePosition.y = e.originalEvent.y;
+    }
+
+    #onZoom(e: any)
+    {
+        if (this.#centerUnit != null)
+            this.#panToUnit(this.#centerUnit);
+    }
+
+    #panToUnit(unit: Unit)
+    {
+        var unitPosition = new L.LatLng(unit.getFlightData().latitude, unit.getFlightData().longitude);
+        this.setView(unitPosition, this.getZoom(), {animate: false});
     }
 } 

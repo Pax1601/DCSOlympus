@@ -1,8 +1,21 @@
 import { ContextMenu } from "./contextmenu";
 
 export class UnitContextMenu extends ContextMenu {
+    #callback: CallableFunction | null = null;
+
     constructor(id: string) {
         super(id);
+
+        document.addEventListener("applyCustomFormation", () => {
+            var dialog = document.getElementById("custom-formation-dialog");
+            if (dialog)
+            {
+                dialog.classList.add("hide");
+            }
+
+            if (this.#callback)
+                this.#callback()
+        })
     }
 
     setOptions(options: {[key: string]: string}, callback: CallableFunction)
