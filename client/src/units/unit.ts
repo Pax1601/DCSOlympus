@@ -330,7 +330,6 @@ export class Unit extends Marker {
     }
 
     attackUnit(targetID: number) {
-        /* Call DCS attackUnit function */
         if (this.ID != targetID) {
             attackUnit(this.ID, targetID);
         }
@@ -339,10 +338,9 @@ export class Unit extends Marker {
         }
     }
 
-    followUnit(targetID: number) {
-        /* Call DCS attackUnit function */
+    followUnit(targetID: number, offset: {"x": number, "y": number, "z": number}) {
         if (this.ID != targetID) {
-            followUnit(this.ID, targetID);
+            followUnit(this.ID, targetID, offset);
         }
         else {
             // TODO: show a message
@@ -458,9 +456,10 @@ export class Unit extends Marker {
 
         options = {
             'Trail': `<div id="trail">Trail</div>`,
-            'Echelon (LH)': `<div id="echelon-lh">Echelon (LH)</div>`,
-            'Echelon (RH)': `<div id="echelon-rh">Echelon (RH)</div>`,
-            'Line abreast': `<div id="line-abreast">Line abreast</div>`,
+            'Echelon (LH)': `<div id="echelon-lh">Echelon (left)</div>`,
+            'Echelon (RH)': `<div id="echelon-rh">Echelon (right)</div>`,
+            'Line abreast (LH)': `<div id="line-abreast">Line abreast (left)</div>`,
+            'Line abreast (RH)': `<div id="line-abreast">Line abreast (right)</div>`,
             'Front': `<div id="front">In front</div>`,
             'Custom': `<div id="custom">Custom</div>`
         }
@@ -479,7 +478,36 @@ export class Unit extends Marker {
             document.getElementById("custom-formation-dialog")?.classList.remove("hide");
         }
         else {
-            getUnitsManager().selectedUnitsFollowUnit(this.ID);
+            // X: front-rear, positive front
+            // Y: top-bottom, positive top
+            // Z: left-right, positive right
+
+            var offset = {"x": 0, "y": 0, "z": 0};
+            if (action == "Trail")
+            {
+                offset.x = -50; offset.y = -30; offset.z = 0;
+            }
+            else if (action == "Echelon (LH)")
+            {
+                offset.x = -50; offset.y = -10; offset.z = -50;
+            }
+            else if (action == "Echelon (RH)")
+            {
+                offset.x = -50; offset.y = -10; offset.z = 50;
+            }
+            else if (action == "Line abreast (RH)")
+            {
+                offset.x = 0; offset.y = 0; offset.z = 50;
+            }
+            else if (action == "Line abreast (LH)")
+            {
+                offset.x = 0; offset.y = 0; offset.z = -50;
+            }
+            else if (action == "Front")
+            {
+                offset.x = 100; offset.y = 0; offset.z = 0;
+            }
+            getUnitsManager().selectedUnitsFollowUnit(this.ID, offset);
         }
     }
 
@@ -498,6 +526,8 @@ export class Unit extends Marker {
                 element.querySelector(".unit")?.toggleAttribute("data-has-low-fuel", this.getMissionData().fuel < 20);
 
                 element.querySelector(".unit")?.toggleAttribute("data-is-dead", !this.getBaseData().alive);
+
+                element.querySelector(".unit")?.setAttribute("data-state", this.getTaskData().currentState.toLowerCase());
 
                 var unitHeadingDiv = element.querySelector(".unit-heading");
                 if (unitHeadingDiv != null)
@@ -609,10 +639,10 @@ export class Aircraft extends AirUnit {
 
     getMarkerHTML()
     {
-        return `<div class="unit" data-object="unit-aircraft" data-status="" data-coalition="${this.getMissionData().coalition}">
+        return `<div class="unit" data-object="unit-aircraft" data-coalition="${this.getMissionData().coalition}">
                     <div class="unit-selected-spotlight"></div>
                     <div class="unit-marker-border"></div>
-                    <div class="unit-status"></div>
+                    <div class="unit-state"></div>
                     <div class="unit-vvi" data-rotate-to-heading></div>
                     <div class="unit-hotgroup">
                         <div class="unit-hotgroup-id"></div>

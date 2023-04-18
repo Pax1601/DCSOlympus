@@ -304,6 +304,13 @@
 }
 
 .formation-position-clock {
+    position: relative; 
+    height: 100px;
+    width: 100px; 
+    margin: 15px;
+}
+
+.formation-position-clock > .clock-hand {
     transform: translate(-50%, -50%); 
     display: flex; 
     position: absolute; 

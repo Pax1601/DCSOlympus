@@ -334,11 +334,13 @@ export class UnitsManager {
         }
     }
 
-    selectedUnitsFollowUnit(ID: number) {
+    selectedUnitsFollowUnit(ID: number, offset: {"x": number, "y": number, "z": number}) {
         var selectedUnits = this.getSelectedUnits();
+        var count = 1;
         for (let idx in selectedUnits) {
             var commandedUnit = selectedUnits[idx];
-            commandedUnit.followUnit(ID);
+            commandedUnit.followUnit(ID, {"x": offset.x * count, "y": offset.y * count, "z": offset.z * count} );
+            count++;
         }
     }
 

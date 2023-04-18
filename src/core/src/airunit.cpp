@@ -52,10 +52,12 @@ void AirUnit::setState(int newState)
 		case State::IDLE: {
 			clearActivePath();
 			resetActiveDestination();
+			addMeasure(L"currentState", json::value(L"Idle"));
 			break;
 		}
 		case State::REACH_DESTINATION: {
 			resetActiveDestination();
+			addMeasure(L"currentState", json::value(L"Reach destination"));
 			break;
 		}
 		case State::ATTACK: {
@@ -65,21 +67,25 @@ void AirUnit::setState(int newState)
 				clearActivePath();
 				pushActivePathFront(targetPosition);
 				resetActiveDestination();
+				addMeasure(L"currentState", json::value(L"Attack"));
 			}
 			break;
 		}
 		case State::FOLLOW: {
 			clearActivePath();
 			resetActiveDestination();
+			addMeasure(L"currentState", json::value(L"Follow"));
 			break;
 		}
 		case State::LAND: {
 			resetActiveDestination();
+			addMeasure(L"currentState", json::value(L"Land"));
 			break;
 		}
 		case State::REFUEL: {
 			clearActivePath();
 			resetActiveDestination();
+			addMeasure(L"currentState", json::value(L"Refuel"));
 			break;
 		}
 		default:
@@ -184,7 +190,7 @@ void AirUnit::AIloop()
 			{
 				std::wostringstream taskSS;
 				if (isTanker) {
-					taskSS << "{ [1] = { id = 'Orbit', pattern = 'Race-Track' }, [2] = { id = 'Tanker' } }";
+					taskSS << "{ [1] = { id = 'Tanker' }, [2] = { id = 'Orbit', pattern = 'Race-Track' } }";
 				}
 				else {
 					taskSS << "{ id = 'Orbit', pattern = 'Circle' }";
@@ -260,21 +266,12 @@ void AirUnit::AIloop()
 			wstring enrouteTask = enrouteTaskSS.str();
 			currentTask = L"Attacking " + getTargetName();
 			
-			if (activeDestination == NULL || !hasTask)
+			if (!hasTask)
 			{
 				setActiveDestination();
 				goToDestination(enrouteTask);
 			}
-			else {
-				if (isDestinationReached()) {
-					if (updateActivePath(false) && setActiveDestination())
-						goToDestination(enrouteTask);
-					else {
-						setState(State::IDLE);
-						break;
-					}
-				}
-			}
+
 			break;
 		}
 		case State::FOLLOW: {
@@ -327,5 +324,4 @@ void AirUnit::AIloop()
 			break;
 	}
 	addMeasure(L"currentTask", json::value(currentTask));
-	addMeasure(L"currentState", json::value(state));
 }

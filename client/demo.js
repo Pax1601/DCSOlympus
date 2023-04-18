@@ -635,7 +635,7 @@ class DemoDataGenerator {
     units(req, res){
         var ret = this.demoUnits;
         for (let ID in this.demoUnits["units"]){
-            this.demoUnits["units"][ID].flightData.latitude += 0.00;
+            this.demoUnits["units"][ID].flightData.latitude += 0.00001;
         }
         ret.time = Date.now();
         res.send(JSON.stringify(ret));

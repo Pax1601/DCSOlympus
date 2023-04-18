@@ -506,45 +506,37 @@
 }
 
 
-[data-object|="unit"] .unit-status {
+[data-object|="unit"] .unit-state {
     background-repeat: no-repeat;
     position:absolute;
-    height:var( --unit-aircraft-status-rtb-height );
-    width:var( --unit-aircraft-status-rtb-width );
+    height:var( --unit-aircraft-state-height );
+    width:var( --unit-aircraft-state-width );
     z-index: 10;
 }
 
-[data-object|="unit"][data-status="rtb"] .unit-status {
-    background-image: var( --unit-aircraft-status-rtb-neutral-url );
-    height:var( --unit-aircraft-status-rtb-height );
-    width:var( --unit-aircraft-status-rtb-width );
+[data-object|="unit"][data-state="rtb"] .unit-state {
+    background-image: var( --unit-aircraft-state-rtb );
 }
 
-[data-object|="unit"][data-status="rtb"][data-coalition="blue"] .unit-status {
-    background-image: var( --unit-aircraft-status-rtb-blue-url );
+[data-object|="unit"][data-state="land"] .unit-state {
+    background-image: var( --unit-aircraft-state-rtb );
 }
 
-[data-object|="unit"][data-status="rtb"][data-coalition="red"] .unit-status {
-    background-image: var( --unit-aircraft-status-rtb-red-url );
+[data-object|="unit"][data-state="idle"] .unit-state {
+    background-image: var( --unit-aircraft-state-idle );
 }
 
-
-
-
-[data-object|="unit"][data-status="hold"] .unit-status {
-    background-image: var( --unit-aircraft-status-hold-neutral-url );
-    height:var( --unit-aircraft-status-hold-height );
-    width:var( --unit-aircraft-status-hold-width );
+[data-object|="unit"][data-state="attack"] .unit-state {
+    background-image: var( --unit-aircraft-state-attack );
 }
 
-[data-object|="unit"][data-status="hold"][data-coalition="blue"] .unit-status {
-    background-image: var( --unit-aircraft-status-hold-blue-url );
+[data-object|="unit"][data-state="follow"] .unit-state {
+    background-image: var( --unit-aircraft-state-follow );
 }
 
-[data-object|="unit"][data-status="hold"][data-coalition="red"] .unit-status {
-    background-image: var( --unit-aircraft-status-hold-red-url );
+[data-object|="unit"][data-state="refuel"] .unit-state {
+    background-image: var( --unit-aircraft-state-refuel );
 }
-
 
 /***  DEAD  ***/
 [data-object|="unit-aircraft"][ data-is-dead ] {
@@ -571,7 +563,7 @@
 [data-object|="unit-aircraft"][ data-is-dead ] .unit-vvi,
 [data-object|="unit-aircraft"][ data-is-dead ] .unit-hotgroup,
 [data-object|="unit-aircraft"][ data-is-dead ] .unit-hotgroup-id,
-[data-object|="unit-aircraft"][ data-is-dead ] .unit-status,
+[data-object|="unit-aircraft"][ data-is-dead ] .unit-state,
 [data-object|="unit-aircraft"][ data-is-dead ] .unit-fuel,
 [data-object|="unit-aircraft"][ data-is-dead ] .unit-ammo,
 [data-object|="unit-aircraft"][ data-is-dead ]:hover .unit-fuel,

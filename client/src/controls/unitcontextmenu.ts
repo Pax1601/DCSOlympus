@@ -11,6 +11,18 @@ export class UnitContextMenu extends ContextMenu {
             if (dialog)
             {
                 dialog.classList.add("hide");
+                var clock = 1;
+                while (clock < 8)
+                {
+                    if ((<HTMLInputElement> dialog.querySelector(`#formation-${clock}`)).checked) 
+                        break
+                    clock++;
+                }
+                var angleDeg = 360 - (clock - 1) * 45;
+                var distance = parseInt((<HTMLInputElement> dialog.querySelector(`#distance`)?.querySelector("input")).value);
+                var upDown = parseInt((<HTMLInputElement> dialog.querySelector(`#up-down`)?.querySelector("input")).value);
+                var asd= 1;
+                
             }
 
             if (this.#callback)
