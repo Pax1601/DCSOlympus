@@ -1,7 +1,9 @@
+import { getUnitsManager } from "..";
+import { deg2rad } from "../other/utils";
 import { ContextMenu } from "./contextmenu";
 
 export class UnitContextMenu extends ContextMenu {
-    #callback: CallableFunction | null = null;
+    #customFormationCallback: CallableFunction | null = null;
 
     constructor(id: string) {
         super(id);
@@ -19,15 +21,26 @@ export class UnitContextMenu extends ContextMenu {
                     clock++;
                 }
                 var angleDeg = 360 - (clock - 1) * 45;
-                var distance = parseInt((<HTMLInputElement> dialog.querySelector(`#distance`)?.querySelector("input")).value);
-                var upDown = parseInt((<HTMLInputElement> dialog.querySelector(`#up-down`)?.querySelector("input")).value);
-                var asd= 1;
+                var angleRad = deg2rad(angleDeg);
+                var distance = parseInt((<HTMLInputElement> dialog.querySelector(`#distance`)?.querySelector("input")).value) * 0.3048;
+                var upDown = parseInt((<HTMLInputElement> dialog.querySelector(`#up-down`)?.querySelector("input")).value) * 0.3048;
                 
-            }
+                // X: front-rear, positive front
+                // Y: top-bottom, positive top
+                // Z: left-right, positive right
 
-            if (this.#callback)
-                this.#callback()
+                var x = distance * Math.cos(angleRad);
+                var y = upDown;
+                var z = distance * Math.sin(angleRad);
+
+                if (this.#customFormationCallback)
+                    this.#customFormationCallback({"x": x, "y": y, "z": z})
+            }
         })
+    }
+
+    setCustomFormationCallback(callback: CallableFunction) {
+        this.#customFormationCallback = callback;
     }
 
     setOptions(options: {[key: string]: string}, callback: CallableFunction)

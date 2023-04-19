@@ -476,6 +476,9 @@ export class Unit extends Marker {
         if (action === "Custom")
         {
             document.getElementById("custom-formation-dialog")?.classList.remove("hide");
+            getMap().getUnitContextMenu().setCustomFormationCallback((offset: {x: number, y: number, z: number}) => {
+                getUnitsManager().selectedUnitsFollowUnit(this.ID, offset);
+            })
         }
         else {
             // X: front-rear, positive front

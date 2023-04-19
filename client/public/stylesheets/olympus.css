@@ -7,7 +7,7 @@
 @import url("unitdatatable.css");
 @import url("unitcontrolpanel.css");
 @import url("unitinfopanel.css");
-
+@import url("popup.css");
 
 
 * {
@@ -440,8 +440,6 @@ nav.ol-panel> :last-child {
     color: var(--primary-grey);
     font-weight: var(--font-weight-bolder);
 }
-
-
 
 .hide {
     display: none !important;
