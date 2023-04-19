@@ -7,7 +7,7 @@
         <div class="ol-select-options">
             <div id="olympus-toolbar-summary">
                 <h3>Olympus</h3>
-                <div class="accent-green app-version-number">v0.1.1</div>
+                <div class="accent-green app-version-number">v0.1.2</div>
             </div>
             <div>
                 <a href="https://www.discord.com" target="_blank">Discord</a>
@@ -49,5 +49,14 @@
             <button id="coalition-visibility-control-neutral" data-on-click="toggleCoalitionVisibility" data-on-click-params='{ "coalition": "neutral" }'>View <span class="accent-neutral">NEUTRAL</span></button>
         </div>
         
+    </div>
+
+
+    <div id="atc-navbar-control" class="ol-group-container" data-feature-switch="atc">
+        <div class="ol-group-header">ATC</div>
+        <div class="ol-group">
+            <button data-on-click="toggleElements" data-on-click-params='{"selector": "#strip-board-ground"}'>GND</button>
+            <button>TWR</button>
+        </div>
     </div>
 </nav>

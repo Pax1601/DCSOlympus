@@ -1,5 +1,6 @@
 @import url("layout.css");
 @import url("airbase.css");
+@import url("atc.css");
 @import url("connectionstatuspanel.css");
 @import url("contextmenus.css");
 @import url("mouseinfopanel.css");
@@ -144,12 +145,15 @@ form > div {
     align-items: center;
     background-color: var(--background-grey);
     border-radius: var(--border-radius-sm);
-    padding: 1em;
+    padding: 1em 30px 1em 20px;
     width: 100%;
-    padding-left: 20px;
-    padding-right: 30px;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.ol-select.narrow:not(.ol-select-image)>.ol-select-value {
+    opacity: .9;
+    padding:6px 30px 6px 15px;
 }
 
 .ol-select:not(.ol-select-image)>.ol-select-value svg {
@@ -177,7 +181,7 @@ form > div {
 
 
 .ol-select.is-open > .ol-select-options {
-    max-height: fit-content;
+    max-height: 382px;
     overflow: visible;
     overflow-y: auto;
     padding: 8px 0;
@@ -198,7 +202,7 @@ form > div {
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     display: flex;
     justify-content: left;
-    padding: 6px 25px;
+    padding: 4px 25px;
     width: 100%;
 }
 
@@ -353,6 +357,11 @@ nav.ol-panel> :last-child {
     flex-wrap: nowrap;
     row-gap: 4px;
     align-items: center;
+}
+
+.ol-group-header {
+    text-align: center;
+    width: 100%;
 }
 
 .ol-panel .ol-group.wrap {
@@ -552,30 +561,6 @@ nav.ol-panel> :last-child {
     width: 28px;
 }
 
-#unit-selection #unit-identification [data-object|="unit"] .unit-short-label {
-    font-size: 12px;
-}
-
-#unit-selection #unit-identification #unit-name {
-    background-color: transparent;
-    border: none;
-    color: white;
-    font-size: 16px;
-    font-weight: var(--font-weight-bolder);
-    outline: none;
-    overflow: hidden;
-    white-space: nowrap;
-    width: 150px;
-}
-
-#edit-unit-name {
-    background-image: url("/images/buttons/edit.svg");
-    background-repeat: no-repeat;
-    height: 14px;
-    margin-left: 10px;
-    width: 15px;
-}
-
 #unit-visibility-control {
     align-items: center;
 }
@@ -624,6 +609,18 @@ body[data-hide-threat] #unit-visibility-control-threat {
 
 body[data-hide-navyunit] #unit-visibility-control-navyunit {
     background-image: var(--visibility-control-navyunit-hidden-url);
+}
+
+#atc-navbar-control {
+    align-items: center;
+    display:flex;
+    flex-direction: column;
+}
+
+#atc-navbar-control button {
+    background:#ffffff20;
+    border-radius: var( --border-radius-sm );
+    padding:4px;
 }
 
 

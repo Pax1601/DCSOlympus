@@ -24,6 +24,8 @@ export class Dropdown {
             this.#clip();
         });
 
+        this.#options.classList.add( "ol-scrollable" );
+
         // Commented out since it is a bit frustrating, particularly when the dropdown opens towards the top and not to the bottom
         //this.#element.addEventListener("mouseleave", ev => {
         //    this.#close();
@@ -51,6 +53,15 @@ export class Dropdown {
             });
             return div;
         }));
+    }
+
+    selectText( text:string ) {
+
+        const index = [].slice.call( this.#options.children ).findIndex( ( opt:Element ) => opt.querySelector( "button" )?.innerText === text );
+        if ( index > -1 ) {
+            this.selectValue( index );
+        }
+
     }
 
     selectValue(idx: number)

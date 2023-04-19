@@ -13,6 +13,7 @@ import { getAirbases, getBullseye as getBullseyes, getConfig, getMission, getUni
 import { UnitDataTable } from "./units/unitdatatable";
 import { keyEventWasInInput } from "./other/utils";
 import { Popup } from "./popups/popup";
+import { Dropdown } from "./controls/dropdown";
 
 var map: Map;
 
@@ -71,8 +72,11 @@ function setup() {
     let atcFeatureSwitch = featureSwitches.getSwitch("atc");
     if (atcFeatureSwitch?.isEnabled()) {
         atc = new ATC();
-        // TODO: add back buttons
+        atc.startUpdates();
     }
+
+
+    new Dropdown( "app-icon", () => {} );
 
     /* Setup event handlers */
     setupEvents();
@@ -227,6 +231,7 @@ function setupEvents() {
             el.classList.toggle( "hide" );
         })
     });
+
 }
 
 export function getMap() {
