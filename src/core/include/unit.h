@@ -169,6 +169,7 @@ protected:
 
 	/********** Mission data **********/
 	double fuel = 0;
+	double initialFuel = 0; // Used internally to detect refueling completed
 	json::value ammo = json::value::null();
 	json::value targets = json::value::null();
 	bool hasTask = false;
@@ -193,12 +194,12 @@ protected:
 	bool isTanker = false;
 	bool isAWACS = false;
 	bool TACANOn = false;
-	int TACANChannel = 0;
+	int TACANChannel = 40;
 	wstring TACANXY = L"X";
 	wstring TACANCallsign = L"TKR";
 	bool radioOn = false;
-	int radioFrequency = 0;
-	int radioCallsign = 0;
+	int radioFrequency = 260000000;	// MHz
+	int radioCallsign = 1;
 	int radioCallsignNumber = 1;
 
 	/********** Options data **********/

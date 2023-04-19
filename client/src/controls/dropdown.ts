@@ -24,9 +24,10 @@ export class Dropdown {
             this.#clip();
         });
 
-        this.#element.addEventListener("mouseleave", ev => {
-            this.#close();
-        });
+        // Commented out since it is a bit frustrating, particularly when the dropdown opens towards the top and not to the bottom
+        //this.#element.addEventListener("mouseleave", ev => {
+        //    this.#close();
+        //});
     }
 
     setOptions(optionsList: string[])
@@ -61,7 +62,10 @@ export class Dropdown {
             this.#index = idx;
             this.#close();
             this.#callback(option);
+            return true;
         }
+        else
+            return false;
     }
 
     reset() {
@@ -71,6 +75,12 @@ export class Dropdown {
 
     getValue() {
         return this.#value.innerText;
+    }
+
+    setValue(value: string) {
+        var index = this.#optionsList.findIndex((option) => {return option === value});
+        if (index > -1) 
+            this.selectValue(index);
     }
 
     getIndex() {

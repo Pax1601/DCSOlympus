@@ -83,6 +83,7 @@ void AirUnit::setState(int newState)
 			break;
 		}
 		case State::REFUEL: {
+			initialFuel = fuel;
 			clearActivePath();
 			resetActiveDestination();
 			addMeasure(L"currentState", json::value(L"Refuel"));
@@ -192,6 +193,9 @@ void AirUnit::AIloop()
 				if (isTanker) {
 					taskSS << "{ [1] = { id = 'Tanker' }, [2] = { id = 'Orbit', pattern = 'Race-Track' } }";
 				}
+				else if (isAWACS) {
+					taskSS << "{ [1] = { id = 'AWACS' }, [2] = { id = 'Orbit', pattern = 'Circle' } }";
+				}
 				else {
 					taskSS << "{ id = 'Orbit', pattern = 'Circle' }";
 				}
@@ -239,7 +243,7 @@ void AirUnit::AIloop()
 			break;
 		}
 		case State::LAND: {
-			wstring enrouteTask = L"{" "id = 'land' }";
+			wstring enrouteTask = L"{ id = 'Land' }";
 			currentTask = L"Landing";
 
 			if (activeDestination == NULL)
@@ -311,13 +315,18 @@ void AirUnit::AIloop()
 			currentTask = L"Refueling";
 
 			if (!hasTask) {
-				std::wostringstream taskSS;
-				taskSS << "{"
-					<< "id = 'Refuel'"
-					<< "}";
-				Command* command = dynamic_cast<Command*>(new SetTask(ID, taskSS.str()));
-				scheduler->appendCommand(command);
-				hasTask = true;
+				if (fuel <= initialFuel) {
+					std::wostringstream taskSS;
+					taskSS << "{"
+						<< "id = 'Refuel'"
+						<< "}";
+					Command* command = dynamic_cast<Command*>(new SetTask(ID, taskSS.str()));
+					scheduler->appendCommand(command);
+					hasTask = true;
+				}
+				else {
+					setState(State::IDLE);
+				}
 			}
 		}
 		default:
