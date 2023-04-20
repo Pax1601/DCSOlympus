@@ -25,20 +25,63 @@ function uuidv4() {
 
 
 
-function Flight( name ) {
-    this.id          = uuidv4();
-    this.name        = name;
-    this.status      = "unknown";
-    this.takeoffTime = -1;
+function Flight( name, boardId, unitId ) {
+    this.assignedAltitude = 0;
+    this.assignedSpeed    = 0;
+    this.id               = uuidv4();
+    this.boardId          = boardId;
+    this.name             = name;
+    this.status           = "unknown";
+    this.takeoffTime      = -1;
+    this.unitId           = parseInt( unitId );
 }
 
 Flight.prototype.getData = function() {
     return {
-        "id"          : this.id,
-        "name"        : this.name,
-        "status"      : this.status,
-        "takeoffTime" : this.takeoffTime
+        "assignedAltitude" : this.assignedAltitude,
+        "assignedSpeed"    : this.assignedSpeed,
+        "id"               : this.id,
+        "boardId"          : this.boardId,
+        "name"             : this.name,
+        "status"           : this.status,
+        "takeoffTime"      : this.takeoffTime,
+        "unitId"           : this.unitId
     };
+}
+
+
+Flight.prototype.setAssignedAltitude = function( assignedAltitude ) {
+
+    if ( isNaN( assignedAltitude ) ) {
+        return "Altitude must be a number"
+    }
+
+    this.assignedAltitude = parseInt( assignedAltitude );
+
+    return true;
+
+}
+
+
+Flight.prototype.setAssignedSpeed = function( assignedSpeed ) {
+
+    if ( isNaN( assignedSpeed ) ) {
+        return "Speed must be a number"
+    }
+
+    this.assignedSpeed = parseInt( assignedSpeed );
+
+    return true;
+
+}
+
+
+Flight.prototype.setOrder = function( order ) {
+
+    this.order = order;
+
+    return true;
+
 }
 
 
@@ -116,7 +159,20 @@ const dataHandler = new ATCDataHandler( {
 
 app.get( "/flight", ( req, res ) => {
 
-    res.json( dataHandler.getFlights() );
+    let flights = Object.values( dataHandler.getFlights() );
+
+    if ( flights && req.query.boardId ) {
+        
+        flights = flights.reduce( ( acc, flight ) => {
+            if ( flight.boardId === req.query.boardId ) {
+                acc[ flight.id ] = flight;
+            }
+            return acc;
+        }, {} );
+
+    }
+
+    res.json( flights );
 
 });
 
@@ -128,6 +184,26 @@ app.patch( "/flight/:flightId", ( req, res ) => {
 
     if ( !flight ) {
         res.status( 400 ).send( `Unrecognised flight ID (given: "${req.params.flightId}")` );
+    }
+
+    if ( req.body.hasOwnProperty( "assignedAltitude" ) ) {
+
+        const altitudeChangeSuccess = flight.setAssignedAltitude( req.body.assignedAltitude );
+
+        if ( altitudeChangeSuccess !== true ) {
+            res.status( 400 ).send( altitudeChangeSuccess );
+        }
+
+    }
+
+    if ( req.body.hasOwnProperty( "assignedSpeed" ) ) {
+
+        const speedChangeSuccess = flight.setAssignedSpeed( req.body.assignedSpeed );
+
+        if ( speedChangeSuccess !== true ) {
+            res.status( 400 ).send( speedChangeSuccess );
+        }
+
     }
 
     if ( req.body.status ) {
@@ -155,13 +231,42 @@ app.patch( "/flight/:flightId", ( req, res ) => {
 });
 
 
+app.post( "/flight/order", ( req, res ) => {
+
+    if ( !req.body.boardId ) {
+        res.status( 400 ).send( "Invalid/missing boardId" );
+    }
+
+    if ( !req.body.order || !Array.isArray( req.body.order ) ) {
+        res.status( 400 ).send( "Invalid/missing boardId" );
+    }
+
+    req.body.order.forEach( ( flightId, i ) => {
+
+        dataHandler.getFlight( flightId ).setOrder( i );
+
+    });
+
+    res.send( "" );
+
+});
+
+
 app.post( "/flight", ( req, res ) => {
+
+    if ( !req.body.boardId ) {
+        res.status( 400 ).send( "Invalid/missing boardId" );
+    }
 
     if ( !req.body.name ) {
         res.status( 400 ).send( "Invalid/missing flight name" );
     }
 
-    const flight = new Flight( req.body.name );
+    if ( !req.body.unitId || isNaN( req.body.unitId ) ) {
+        res.status( 400 ).send( "Invalid/missing unitId" );
+    }
+
+    const flight = new Flight( req.body.name, req.body.boardId, req.body.unitId );
 
     dataHandler.addFlight( flight );
 
