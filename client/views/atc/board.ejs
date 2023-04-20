@@ -1,0 +1,25 @@
+<div id="<%= boardId %>" class="ol-panel ol-dialog ol-strip-board ol-draggable" data-board-type="<%= boardType %>" data-feature-switch="atc">
+
+    <div class="ol-dialog-close" data-on-click="closeDialog"></div>
+    
+    <div class="ol-dialog-header">
+        <h3><%= boardType %></h3>
+        <div class="ol-strip-board-clock"></div>
+    </div>
+
+    <div class="ol-dialog-content">
+        <div class="ol-strip-board-headers">
+            <div><!-- handles --></div>
+            <% headers.forEach( header => { %>
+                <div><%= header %></div>
+            <% }); %>
+            <div><!-- delete  --></div>
+        </div>
+        <div class="ol-strip-board-strips ol-sortable"></div>
+    </div>
+
+    <div class="ol-dialog-footer">
+        <%- include('addflight.ejs') %>
+    </div>
+
+</div>
