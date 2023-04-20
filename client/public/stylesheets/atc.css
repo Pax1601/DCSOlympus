@@ -84,8 +84,8 @@
 
 
 
-.ol-strip-board-headers :nth-child(6),
-.ol-strip-board-strip :nth-child(6) {
+.ol-strip-board-headers :last-child,
+.ol-strip-board-strip :last-child {
     width:20px;
 }
 
@@ -98,18 +98,36 @@
     text-align: center;
 }
 
-[data-board-type="tower"] .ol-strip-board-strip > :first-child {
+[data-board-type="tower"] .ol-strip-board-strip a {
+    color:white;
+}
+
+[data-board-type="tower"] .ol-strip-board-strip > :nth-child(2) {
     text-align: left;
 }
 
-[data-board-type="tower"] .ol-strip-board-strip :nth-child(3) input {
-    width:25px;
+[data-board-type="tower"] .ol-strip-board-strip :nth-child(3) input,
+[data-board-type="tower"] .ol-strip-board-strip :nth-child(5) input {
+    width:30px;
 }
 
 [data-board-type="tower"] .ol-strip-board-strip :nth-child(3) {
     font-size:10px;
 }
 
+
+[data-altitude-assigned] [data-point="assignedAltitude"] input,
+[data-speed-assigned] [data-point="assignedSpeed"] input {
+    background-color:#ffffffbb;
+    color: black;
+    font-weight: var( --font-weight-bolder );
+}
+
+[data-warning-altitude] [data-point="altitude"],
+[data-warning-speed] [data-point="speed"] {
+    background:#cc0000;
+    border-radius: var( --border-radius-sm );
+}
 
 
 
@@ -172,5 +190,6 @@
 }
 
 [data-board-type="tower"] {
-    top:100px;
+    right:10px;
+    top:10px;
 }
