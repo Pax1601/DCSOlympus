@@ -94,7 +94,6 @@ exit:
     return units;
 }
 
-
 int dostring_in(lua_State* L, string target, string command)
 {
     lua_getglobal(L, "net");
@@ -102,4 +101,10 @@ int dostring_in(lua_State* L, string target, string command)
     lua_pushstring(L, target.c_str());
     lua_pushstring(L, command.c_str());
     return lua_pcall(L, 2, 0, 0);
+}
+
+int TACANChannelToFrequency(int channel, wstring XY)
+{
+    int basef = (XY == L"X" && channel > 63) || (XY == L"Y" && channel < 64) ? 1087: 961;
+    return (basef + channel) * 1000000;
 }

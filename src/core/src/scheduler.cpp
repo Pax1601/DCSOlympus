@@ -142,14 +142,34 @@ void Scheduler::handleRequest(wstring key, json::value value)
 		unit->setTargetID(targetID);
 		unit->setState(State::ATTACK);
 	}
-	else if (key.compare(L"stopAttack") == 0)
+	else if (key.compare(L"followUnit") == 0)
 	{
 		int ID = value[L"ID"].as_integer();
+		int targetID = value[L"targetID"].as_integer();
+		int offsetX = value[L"offsetX"].as_integer();
+		int offsetY = value[L"offsetY"].as_integer();
+		int offsetZ = value[L"offsetZ"].as_integer();
+
 		Unit* unit = unitsManager->getUnit(ID);
+		Unit* target = unitsManager->getUnit(targetID);
+
+		wstring unitName;
+		wstring targetName;
+
 		if (unit != nullptr)
-			unit->setState(State::REACH_DESTINATION);
+			unitName = unit->getUnitName();
 		else
 			return;
+
+		if (target != nullptr)
+			targetName = target->getUnitName();
+		else
+			return;
+
+		log(L"Unit " + unitName + L" following unit " + targetName);
+		unit->setFormationOffset(Offset(offsetX, offsetY, offsetZ));
+		unit->setTargetID(targetID);
+		unit->setState(State::FOLLOW);
 	}
 	else if (key.compare(L"changeSpeed") == 0)
 	{
@@ -249,6 +269,36 @@ void Scheduler::handleRequest(wstring key, json::value value)
 	{
 		int ID = value[L"ID"].as_integer();
 		unitsManager->deleteUnit(ID);
+	}
+	else if (key.compare(L"refuel") == 0)
+	{
+		int ID = value[L"ID"].as_integer();
+		Unit* unit = unitsManager->getUnit(ID);
+		unit->setState(State::REFUEL);
+	}
+	else if (key.compare(L"setAdvancedOptions") == 0)
+	{
+		int ID = value[L"ID"].as_integer();
+		Unit* unit = unitsManager->getUnit(ID);
+		if (unit != nullptr)
+		{
+			unit->setIsTanker(value[L"isTanker"].as_bool());
+			unit->setIsAWACS(value[L"isAWACS"].as_bool());
+
+			unit->setTACANOn(true);	// TODO Remove
+			unit->setTACANChannel(value[L"TACANChannel"].as_number().to_int32());
+			unit->setTACANXY(value[L"TACANXY"].as_string());
+			unit->setTACANCallsign(value[L"TACANCallsign"].as_string());
+			unit->setTACAN();
+
+			unit->setRadioOn(true);	// TODO Remove
+			unit->setRadioFrequency(value[L"radioFrequency"].as_number().to_int32());
+			unit->setRadioCallsign(value[L"radioCallsign"].as_number().to_int32());
+			unit->setRadioCallsignNumber(value[L"radioCallsignNumber"].as_number().to_int32());
+			unit->setRadio();
+
+			unit->resetActiveDestination();
+		}
 	}
 	else
 	{

@@ -8,7 +8,7 @@
 @import url("unitdatatable.css");
 @import url("unitcontrolpanel.css");
 @import url("unitinfopanel.css");
-
+@import url("popup.css");
 
 
 * {
@@ -52,6 +52,10 @@ button {
     cursor: pointer;
     font-weight: var(--font-weight-bolder);
     padding: 6px;
+}
+
+button:hover {
+    background-color: var(--background-hover);
 }
 
 button[disabled="disabled"] {
@@ -352,6 +356,7 @@ nav.ol-panel> :last-child {
     flex-direction: row;
     flex-wrap: nowrap;
     row-gap: 4px;
+    align-items: center;
 }
 
 .ol-group-header {
@@ -444,8 +449,6 @@ nav.ol-panel> :last-child {
     color: var(--primary-grey);
     font-weight: var(--font-weight-bolder);
 }
-
-
 
 .hide {
     display: none !important;

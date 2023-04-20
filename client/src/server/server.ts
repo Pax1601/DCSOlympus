@@ -117,6 +117,16 @@ export function attackUnit(ID: number, targetID: number) {
     POST(data, () => { });
 }
 
+export function followUnit(ID: number, targetID: number, offset: {"x": number, "y": number, "z": number}) {
+    // X: front-rear, positive front
+    // Y: top-bottom, positive bottom
+    // Z: left-right, positive right
+    
+    var command = { "ID": ID, "targetID": targetID, "offsetX": offset["x"], "offsetY": offset["y"], "offsetZ": offset["z"]};
+    var data = { "followUnit": command }
+    POST(data, () => { });
+}
+
 export function cloneUnit(ID: number, latlng: L.LatLng) {
     var command = { "ID": ID, "location": latlng };
     var data = { "cloneUnit": command }
@@ -174,5 +184,28 @@ export function setROE(ID: number, ROE: string) {
 export function setReactionToThreat(ID: number, reactionToThreat: string) {
     var command = {"ID": ID, "reactionToThreat": reactionToThreat}
     var data = {"setReactionToThreat": command}
+    POST(data, () => { });
+}
+
+export function refuel(ID: number) {
+    var command = { "ID": ID };
+    var data = { "refuel": command }
+    POST(data, () => { });
+}
+
+export function setAdvacedOptions(ID: number, isTanker: boolean, isAWACS: boolean, TACANChannel: number, TACANXY: string, TACANCallsign: string, radioFrequency: number, radioCallsign: number, radioCallsignNumber: number)
+{
+    var command = { "ID": ID,
+                    "isTanker": isTanker,
+                    "isAWACS": isAWACS,
+                    "TACANChannel": TACANChannel,
+                    "TACANXY":  TACANXY,
+                    "TACANCallsign": TACANCallsign,
+                    "radioFrequency": radioFrequency,
+                    "radioCallsign": radioCallsign,
+                    "radioCallsignNumber": radioCallsignNumber
+    };
+
+    var data = { "setAdvancedOptions": command };
     POST(data, () => { });
 }

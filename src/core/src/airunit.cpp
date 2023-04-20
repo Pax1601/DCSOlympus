@@ -22,6 +22,7 @@ void AirUnit::setState(int newState)
 {
 	if (state != newState)
 	{
+		/* Perform any action required when LEAVING a certain state */
 		switch (state) {
 		case State::IDLE: {
 			break;
@@ -36,25 +37,27 @@ void AirUnit::setState(int newState)
 		case State::FOLLOW: {
 			break;
 		}
-		case State::WINGMAN: {
-			if (isWingman)
-				return;
+		case State::LAND: {
 			break;
 		}
-		case State::LAND: {
+		case State::REFUEL: {
 			break;
 		}
 		default:
 			break;
 		}
 
+		/* Perform any action required when ENTERING a certain state */
 		switch (newState) {
 		case State::IDLE: {
+			clearActivePath();
 			resetActiveDestination();
+			addMeasure(L"currentState", json::value(L"Idle"));
 			break;
 		}
 		case State::REACH_DESTINATION: {
 			resetActiveDestination();
+			addMeasure(L"currentState", json::value(L"Reach destination"));
 			break;
 		}
 		case State::ATTACK: {
@@ -64,19 +67,26 @@ void AirUnit::setState(int newState)
 				clearActivePath();
 				pushActivePathFront(targetPosition);
 				resetActiveDestination();
+				addMeasure(L"currentState", json::value(L"Attack"));
 			}
 			break;
 		}
 		case State::FOLLOW: {
+			clearActivePath();
 			resetActiveDestination();
-			break;
-		}
-		case State::WINGMAN: {
-			resetActiveDestination();
+			addMeasure(L"currentState", json::value(L"Follow"));
 			break;
 		}
 		case State::LAND: {
 			resetActiveDestination();
+			addMeasure(L"currentState", json::value(L"Land"));
+			break;
+		}
+		case State::REFUEL: {
+			initialFuel = fuel;
+			clearActivePath();
+			resetActiveDestination();
+			addMeasure(L"currentState", json::value(L"Refuel"));
 			break;
 		}
 		default:
@@ -170,63 +180,50 @@ void AirUnit::goToDestination(wstring enrouteTask)
 		log(unitName + L" error, no active destination!");
 }
 
-void AirUnit::taskWingmen()
-{
-	switch (state) {
-		case State::IDLE:
-		case State::REACH_DESTINATION:
-		case State::ATTACK:{
-			int idx = 1;
-			for (auto const& wingman : wingmen)
-			{
-				if (!wingman->getIsWingman())
-				{
-					wingman->setIsWingman(true);
-					wingman->setLeader(this);
-				}
-
-				if (wingman->getFormation().compare(formation) != 0)
-				{
-					wingman->resetTask();
-					wingman->setFormation(formation);
-					if (formation.compare(L"Line abreast") == 0)
-						wingman->setFormationOffset(Offset(0 * idx, 0 * idx, 1852 * idx));
-					idx++;
-				}
-			}
-			break;
-		}
-		default:
-			break;
-	}
-}
-
 void AirUnit::AIloop()
 {
 	/* State machine */
 	switch (state) {
 		case State::IDLE: {
-			wstring enrouteTask = L"nil";
 			currentTask = L"Idle";
 			
-			if (activeDestination == NULL || !hasTask)
+			if (!hasTask)
 			{
-				createHoldingPattern();		
-				setActiveDestination();		
-				goToDestination(enrouteTask);
+				std::wostringstream taskSS;
+				if (isTanker) {
+					taskSS << "{ [1] = { id = 'Tanker' }, [2] = { id = 'Orbit', pattern = 'Race-Track' } }";
+				}
+				else if (isAWACS) {
+					taskSS << "{ [1] = { id = 'AWACS' }, [2] = { id = 'Orbit', pattern = 'Circle' } }";
+				}
+				else {
+					taskSS << "{ id = 'Orbit', pattern = 'Circle' }";
+				}
+				Command* command = dynamic_cast<Command*>(new SetTask(ID, taskSS.str()));
+				scheduler->appendCommand(command);
+				hasTask = true;
 			}
-			else {
-				if (isDestinationReached() && updateActivePath(true) && setActiveDestination()) 
-					goToDestination(enrouteTask);	
-			}
-
-			if (isLeader)
-				taskWingmen();
 			break;
 		}
 		case State::REACH_DESTINATION: {
-			wstring enrouteTask = L"nil";
-			currentTask = L"Reaching destination";
+			wstring enrouteTask = L"";
+			bool looping = false;
+
+			if (isTanker)
+			{
+				enrouteTask = L"{ id = 'Tanker' }";
+				currentTask = L"Tanker";
+			}
+			else if (isAWACS)
+			{
+				enrouteTask = L"{ id = 'AWACS' }";
+				currentTask = L"AWACS";
+			}
+			else
+			{
+				enrouteTask = L"nil";
+				currentTask = L"Reaching destination";
+			}
 			
 			if (activeDestination == NULL || !hasTask)
 			{
@@ -235,23 +232,18 @@ void AirUnit::AIloop()
 			}
 			else {
 				if (isDestinationReached()) {
-					if (updateActivePath(false) && setActiveDestination())
+					if (updateActivePath(looping) && setActiveDestination())
 						goToDestination(enrouteTask);
 					else {
 						setState(State::IDLE);
 						break;
 					}
 				}
-			}
-
-			if (isLeader)
-				taskWingmen();
-			
+			}			
 			break;
 		}
-
 		case State::LAND: {
-			wstring enrouteTask = L"{" "id = 'land' }";
+			wstring enrouteTask = L"{ id = 'Land' }";
 			currentTask = L"Landing";
 
 			if (activeDestination == NULL)
@@ -259,10 +251,6 @@ void AirUnit::AIloop()
 				setActiveDestination();
 				goToDestination(enrouteTask);
 			}
-			
-			if (isLeader)
-				taskWingmen();
-
 			break;
 		}
 		case State::ATTACK: {
@@ -282,49 +270,34 @@ void AirUnit::AIloop()
 			wstring enrouteTask = enrouteTaskSS.str();
 			currentTask = L"Attacking " + getTargetName();
 			
-			if (activeDestination == NULL || !hasTask)
+			if (!hasTask)
 			{
 				setActiveDestination();
 				goToDestination(enrouteTask);
 			}
-			else {
-				if (isDestinationReached()) {
-					if (updateActivePath(false) && setActiveDestination())
-						goToDestination(enrouteTask);
-					else {
-						setState(State::IDLE);
-						break;
-					}
-				}
-			}
-
-			if (isLeader)
-				taskWingmen();
 
 			break;
 		}
 		case State::FOLLOW: {
-			/* TODO */
-			setState(State::IDLE);
-			break;
-		}
-		case State::WINGMAN: {
-			/* In the WINGMAN state, the unit relinquishes control to the leader */
 			clearActivePath();
 			activeDestination = Coords(NULL);
-			if (leader == nullptr || !leader->getAlive())
-			{
-				this->setFormation(L"");
-				this->setIsWingman(false);
+
+			/* If the target is not alive (either not set or was destroyed) go back to IDLE */
+			if (!isTargetAlive()) {
+				setState(State::IDLE);
 				break;
 			}
+
+			currentTask = L"Following " + getTargetName();
+
+			Unit* target = unitsManager->getUnit(targetID);
 			if (!hasTask) {
-				if (leader != nullptr && leader->getAlive() && formationOffset != NULL)
+				if (target != nullptr && target->getAlive() && formationOffset != NULL)
 				{
 					std::wostringstream taskSS;
 					taskSS << "{"
 						<< "id = 'FollowUnit'" << ", "
-						<< "leaderID = " << leader->getID() << ","
+						<< "leaderID = " << target->getID() << ","
 						<< "offset = {" 
 						<< "x = " << formationOffset.x << ","
 						<< "y = " << formationOffset.y << ","
@@ -338,7 +311,26 @@ void AirUnit::AIloop()
 			}
 			break;
 		}
+		case State::REFUEL: {
+			currentTask = L"Refueling";
+
+			if (!hasTask) {
+				if (fuel <= initialFuel) {
+					std::wostringstream taskSS;
+					taskSS << "{"
+						<< "id = 'Refuel'"
+						<< "}";
+					Command* command = dynamic_cast<Command*>(new SetTask(ID, taskSS.str()));
+					scheduler->appendCommand(command);
+					hasTask = true;
+				}
+				else {
+					setState(State::IDLE);
+				}
+			}
+		}
 		default:
 			break;
 	}
+	addMeasure(L"currentTask", json::value(currentTask));
 }

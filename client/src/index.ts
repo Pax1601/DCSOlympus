@@ -12,6 +12,7 @@ import { LogPanel } from "./panels/logpanel";
 import { getAirbases, getBullseye as getBullseyes, getConfig, getMission, getUnits, setAddress, toggleDemoEnabled } from "./server/server";
 import { UnitDataTable } from "./units/unitdatatable";
 import { keyEventWasInInput } from "./other/utils";
+import { Popup } from "./popups/popup";
 import { Dropdown } from "./controls/dropdown";
 
 var map: Map;
@@ -28,7 +29,10 @@ var unitControlPanel: UnitControlPanel;
 var mouseInfoPanel: MouseInfoPanel;
 var logPanel: LogPanel;
 
+var infoPopup: Popup;
+
 var connected: boolean = false;
+var paused: boolean = false;
 var activeCoalition: string = "blue";
 
 var sessionHash: string | null = null;
@@ -51,6 +55,9 @@ function setup() {
     connectionStatusPanel = new ConnectionStatusPanel("connection-status-panel");
     mouseInfoPanel = new MouseInfoPanel("mouse-info-panel");
     //logPanel = new LogPanel("log-panel");
+
+    /* Popups */
+    infoPopup = new Popup("info-popup");
 
     unitDataTable = new UnitDataTable("unit-data-table");
 
@@ -110,8 +117,10 @@ function startPeriodicUpdate() {
 function requestUpdate() {
     /* Main update rate = 250ms is minimum time, equal to server update time. */
     getUnits((data: UnitsData) => {
-        getUnitsManager()?.update(data);
-        checkSessionHash(data.sessionHash);
+        if (!getPaused()){
+            getUnitsManager()?.update(data);
+            checkSessionHash(data.sessionHash);
+        }
     }, false);
     setTimeout(() => requestUpdate(), getConnected() ? 250 : 1000);
 
@@ -121,15 +130,17 @@ function requestUpdate() {
 function requestRefresh() {
     /* Main refresh rate = 5000ms. */
     getUnits((data: UnitsData) => {
-        getUnitsManager()?.update(data);
-        getAirbases((data: AirbasesData) => getMissionData()?.update(data));
-        getBullseyes((data: BullseyesData) => getMissionData()?.update(data));
-        getMission((data: any) => {getMissionData()?.update(data)});
+        if (!getPaused()){
+            getUnitsManager()?.update(data);
+            getAirbases((data: AirbasesData) => getMissionData()?.update(data));
+            getBullseyes((data: BullseyesData) => getMissionData()?.update(data));
+            getMission((data: any) => {getMissionData()?.update(data)});
 
-        // Update the list of existing units
-        getUnitDataTable()?.update();
-
-        checkSessionHash(data.sessionHash);
+            // Update the list of existing units
+            getUnitDataTable()?.update();
+            
+            checkSessionHash(data.sessionHash);
+        }
     }, true);
     setTimeout(() => requestRefresh(), 5000);
 }
@@ -187,6 +198,9 @@ function setupEvents() {
             case "Quote":
                 unitDataTable.toggle();
                 break
+            case "Space":
+                setPaused(!getPaused());
+                break;
         }
     });
 
@@ -266,11 +280,26 @@ export function getActiveCoalition() {
 }
 
 export function setConnected(newConnected: boolean) {
-    connected = newConnected
+    if (connected != newConnected)
+        newConnected? getInfoPopup().setText("Connected to DCS Olympus server"): getInfoPopup().setText("Disconnected from DCS Olympus server");
+    connected = newConnected;
 }
 
 export function getConnected() {
     return connected;
+}
+
+export function setPaused(newPaused: boolean) {
+    paused = newPaused;
+    paused? getInfoPopup().setText("Paused"): getInfoPopup().setText("Unpaused");
+}
+
+export function getPaused() {
+    return paused;
+}
+
+export function getInfoPopup() {
+    return infoPopup;
 }
 
 window.onload = setup;

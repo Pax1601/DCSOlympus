@@ -1,5 +1,5 @@
 import { Marker, LatLng, Icon } from "leaflet";
-import { getMap, getUnitsManager } from "..";
+import { getInfoPopup, getMap, getUnitsManager } from "..";
 import { Airbase } from "./airbase";
 
 var bullseyeIcons = [
@@ -58,6 +58,8 @@ export class MissionHandler
                     getMap().setView(new LatLng(-50.6, -42.7), 7);
                 else if (this.#theatre == "Caucasus")
                     getMap().setView(new LatLng(42.1, 42.3), 8);
+
+                getInfoPopup().setText("Map set to " + this.#theatre);
             }
         }
     }
@@ -93,8 +95,8 @@ export class MissionHandler
             {
                 this.#airbasesMarkers[idx].setLatLng(new LatLng(airbase.latitude, airbase.longitude));
                 this.#airbasesMarkers[idx].setCoalition(airbase.coalition);
-                this.#airbasesMarkers[idx].setProperties(["Runway 1: 31L / 13R", "Runway 2: 31R / 13L", "TCN: 17X", "ILS: ---" ]);
-                this.#airbasesMarkers[idx].setParkings(["2x big", "5x small"]);
+                //this.#airbasesMarkers[idx].setProperties(["Runway 1: 31L / 13R", "Runway 2: 31R / 13L", "TCN: 17X", "ILS: ---" ]);
+                //this.#airbasesMarkers[idx].setParkings(["2x big", "5x small"]);
             }
         }
     }

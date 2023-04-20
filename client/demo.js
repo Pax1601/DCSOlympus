@@ -3,7 +3,7 @@ const DEMO_UNIT_DATA = {
     ["1"]:{
         baseData: {
             AI: true,
-            name: "F-5E",
+            name: "KC-135",
             unitName: "Olympus 1-1",
             groupName: "Group 1",
             alive: true,
@@ -49,7 +49,16 @@ const DEMO_UNIT_DATA = {
             currentTask: "Holding",
             activePath: undefined,
             targetSpeed: 400,
-            targetAltitude: 3000
+            targetAltitude: 3000,
+            isTanker: false,
+            TACANOn: false,
+            TACANChannel: 32,
+            TACANXY: "Y",
+            TACANCallsign: "ASD",
+            radioFrequency: 123.750,
+            radioCallsign: 2,
+            radioCallsignNumber: 3,
+            radioAMFM: "FM"
         },
         optionsData: {
             ROE: "Designated",
@@ -625,6 +634,9 @@ class DemoDataGenerator {
     
     units(req, res){
         var ret = this.demoUnits;
+        for (let ID in this.demoUnits["units"]){
+            this.demoUnits["units"][ID].flightData.latitude += 0.00001;
+        }
         ret.time = Date.now();
         res.send(JSON.stringify(ret));
     };

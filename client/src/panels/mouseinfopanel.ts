@@ -18,7 +18,7 @@ export class MouseInfoPanel extends Panel {
         this.#measureMarker = new Marker([0, 0], {icon: this.#measureIcon, interactive: false});
 
         this.#measureBox = document.createElement("div");
-        this.#measureBox.classList.add("ol-measure-box");
+        this.#measureBox.classList.add("ol-measure-box", "hide");
         document.body.appendChild(this.#measureBox);
 
         getMap()?.on("click", (e: any) => this.#onMapClick(e));

@@ -103,13 +103,35 @@ public:
 	void pushActivePathBack(Coords newActivePathBack);
 	void popActivePathFront();
 	void setTargetID(int newTargetID) { targetID = newTargetID; addMeasure(L"targetID", json::value(newTargetID));}
+	void setIsTanker(bool newIsTanker) { isTanker = newIsTanker; addMeasure(L"isTanker", json::value(newIsTanker));}
+	void setIsAWACS(bool newIsAWACS) { isAWACS = newIsAWACS; addMeasure(L"isAWACS", json::value(newIsAWACS));}
+	void setTACANOn(bool newTACANOn);
+	void setTACANChannel(int newTACANChannel);
+	void setTACANXY(wstring newTACANXY);
+	void setTACANCallsign(wstring newTACANCallsign);
+	void setTACAN();
+	void setRadioOn(bool newRadioOn);
+	void setRadioFrequency(int newRadioFrequency);
+	void setRadioCallsign(int newRadioCallsign);
+	void setRadioCallsignNumber(int newRadioCallsignNumber);
+	void setRadio();
 	wstring getCurrentTask() { return currentTask; }
 	virtual double getTargetSpeed() { return targetSpeed; };
 	virtual double getTargetAltitude() { return targetAltitude; };
 	Coords getActiveDestination() { return activeDestination; }
 	list<Coords> getActivePath() { return activePath; }
 	int getTargetID() { return targetID; }
-	
+	bool getIsTanker() { return isTanker; }
+	bool getIsAWACS() { return isAWACS; }
+	bool getTACANOn() { return TACANOn; }
+	int getTACANChannel() { return TACANChannel; }
+	wstring getTACANXY() { return TACANXY; }
+	wstring getTACANCallsign() { return TACANCallsign; }
+	bool getRadioOn() { return radioOn; }
+	int getRadioFrequency() { return radioFrequency; }
+	int getRadioCallsign() { return radioCallsign; }
+	int getRadioCallsignNumber() { return radioCallsignNumber; }
+
 	/********** Options data **********/
 	void setROE(wstring newROE);
 	void setReactionToThreat(wstring newReactionToThreat);
@@ -147,6 +169,7 @@ protected:
 
 	/********** Mission data **********/
 	double fuel = 0;
+	double initialFuel = 0; // Used internally to detect refueling completed
 	json::value ammo = json::value::null();
 	json::value targets = json::value::null();
 	bool hasTask = false;
@@ -168,6 +191,16 @@ protected:
 	list<Coords> activePath;
 	Coords activeDestination = Coords(0);
 	int targetID = NULL;
+	bool isTanker = false;
+	bool isAWACS = false;
+	bool TACANOn = false;
+	int TACANChannel = 40;
+	wstring TACANXY = L"X";
+	wstring TACANCallsign = L"TKR";
+	bool radioOn = false;
+	int radioFrequency = 260000000;	// MHz
+	int radioCallsign = 1;
+	int radioCallsignNumber = 1;
 
 	/********** Options data **********/
 	wstring ROE = L"";

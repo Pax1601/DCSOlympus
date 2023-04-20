@@ -1,5 +1,5 @@
 import { LatLng, LatLngBounds } from "leaflet";
-import { getMap, getUnitDataTable } from "..";
+import { getInfoPopup, getMap, getUnitDataTable } from "..";
 import { Unit } from "./unit";
 import { cloneUnit } from "../server/server";
 import { IDLE, MOVE_UNIT } from "../map/map";
@@ -176,6 +176,7 @@ export class UnitsManager {
             var commandedUnit = selectedUnits[idx];
             commandedUnit.addDestination(latlng);
         }
+        this.#showActionMessage(selectedUnits, " new destination added");
     }
 
     selectedUnitsClearDestinations() {
@@ -193,6 +194,7 @@ export class UnitsManager {
         {
             selectedUnits[idx].landAt(latlng);
         }
+        this.#showActionMessage(selectedUnits, " landing");
     }
 
     selectedUnitsChangeSpeed(speedChange: string)
@@ -220,6 +222,8 @@ export class UnitsManager {
         {
             selectedUnits[idx].setSpeed(speed);
         }
+        
+        this.#showActionMessage(selectedUnits, `setting speed to ${speed * 1.94384} kts`);
     }
 
     selectedUnitsSetAltitude(altitude: number)
@@ -229,6 +233,7 @@ export class UnitsManager {
         {
             selectedUnits[idx].setAltitude(altitude);
         }
+        this.#showActionMessage(selectedUnits, `setting altitude to ${altitude / 0.3048} ft`);
     }
 
     selectedUnitsSetROE(ROE: string)
@@ -238,6 +243,7 @@ export class UnitsManager {
         {
             selectedUnits[idx].setROE(ROE);
         }
+        this.#showActionMessage(selectedUnits, `ROE set to ${ROE}`);
     }
 
     selectedUnitsSetReactionToThreat(reactionToThreat: string)
@@ -247,73 +253,15 @@ export class UnitsManager {
         {
             selectedUnits[idx].setReactionToThreat(reactionToThreat);
         }
+        this.#showActionMessage(selectedUnits, `reaction to threat set to ${reactionToThreat}`);
     }
 
     selectedUnitsAttackUnit(ID: number) {
         var selectedUnits = this.getSelectedUnits();
         for (let idx in selectedUnits) {
-            /* If a unit is a wingman, send the command to its leader */
-            var commandedUnit = selectedUnits[idx];
-            //if (selectedUnits[idx].wingman)
-            //{
-            //    commandedUnit = this.getLeader(selectedUnits[idx].ID);
-            //}
-            commandedUnit.attackUnit(ID);
+            selectedUnits[idx].attackUnit(ID);
         }
-    }
-
-    selectedUnitsCreateFormation(ID: number | null = null)
-    {
-        var selectedUnits = this.getSelectedUnits();
-        if (selectedUnits.length >= 2)
-        {
-            if (ID == null)
-                ID = selectedUnits[0].ID
-            
-            var wingmenIDs = [];
-            for (let idx in selectedUnits)
-            {
-                if (selectedUnits[idx].getFormationData().isWingman)
-                {
-                    //console.log(selectedUnits[idx].unitName + " is already in a formation.");
-                    return;
-                }
-                else if (selectedUnits[idx].getFormationData().isLeader)
-                {
-                    //console.log(selectedUnits[idx].unitName + " is already in a formation.");
-                    return;
-                }
-                else
-                {
-                    /* TODO
-                    if (selectedUnits[idx].category !== this.getUnitByID(ID).category)
-                    {
-                        showMessage("All units must be of the same category to create a formation.");
-                    }
-                    */
-                    if (selectedUnits[idx].ID != ID)
-                    {
-                        wingmenIDs.push(selectedUnits[idx].ID);
-                    }
-                }
-            }
-            if (wingmenIDs.length > 0)
-            {
-                this.getUnitByID(ID)?.setLeader(true, wingmenIDs);
-            }
-            else
-            {
-                //console.log("At least 2 units must be selected to create a formation.");
-            }
-        }
-    }
-
-    selectedUnitsUndoFormation()
-    {
-        for (let leader of this.getSelectedLeaders())
-        {
-            leader.setLeader(false);
-        }
+        this.#showActionMessage(selectedUnits, `attacking unit ${this.getUnitByID(ID)?.getBaseData().unitName}`);
     }
 
     selectedUnitsDelete()
@@ -323,11 +271,34 @@ export class UnitsManager {
         {
             selectedUnits[idx].delete();
         }
+        this.#showActionMessage(selectedUnits, `deleted`);
+    }
+
+    selectedUnitsRefuel()
+    {
+        var selectedUnits = this.getSelectedUnits();
+        for (let idx in selectedUnits)
+        {
+            selectedUnits[idx].refuel();
+        }
+        this.#showActionMessage(selectedUnits, `sent to nearest tanker`);
+    }
+
+    selectedUnitsFollowUnit(ID: number, offset: {"x": number, "y": number, "z": number}) {
+        var selectedUnits = this.getSelectedUnits();
+        var count = 1;
+        for (let idx in selectedUnits) {
+            var commandedUnit = selectedUnits[idx];
+            commandedUnit.followUnit(ID, {"x": offset.x * count, "y": offset.y * count, "z": offset.z * count} );
+            count++;
+        }
+        this.#showActionMessage(selectedUnits, `following unit ${this.getUnitByID(ID)?.getBaseData().unitName}`);
     }
 
     copyUnits()
     {
         this.#copiedUnits = this.getSelectedUnits();
+        this.#showActionMessage(this.#copiedUnits, `copied`);
     }
 
     pasteUnits()
@@ -338,6 +309,7 @@ export class UnitsManager {
             {
                 var unit = this.#copiedUnits[idx];
                 cloneUnit(unit.ID, getMap().getMouseCoordinates());
+                this.#showActionMessage(this.#copiedUnits, `pasted`);   
             }
             this.#pasteDisabled = true;
             setTimeout(() => this.#pasteDisabled = false, 250);
@@ -361,7 +333,7 @@ export class UnitsManager {
                 setTimeout(() => {
                     document.dispatchEvent(new CustomEvent("unitsSelection", {detail: this.getSelectedUnits()}));
                     this.#selectionEventDisabled = false;
-                }, 300);
+                }, 100);
                 this.#selectionEventDisabled = true;
             }
         }
@@ -378,5 +350,12 @@ export class UnitsManager {
         }
         else 
             document.dispatchEvent(new CustomEvent("unitsDeselection", {detail: this.getSelectedUnits()}));
+    }
+
+    #showActionMessage(units: Unit[], message: string) {
+        if (units.length == 1)
+            getInfoPopup().setText(`${units[0].getBaseData().unitName} ${message}`);
+        else 
+            getInfoPopup().setText(`${units[0].getBaseData().unitName} and ${units.length - 1} other units ${message}`);
     }
 }

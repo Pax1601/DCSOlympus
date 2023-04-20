@@ -26,5 +26,4 @@ protected:
 	void createHoldingPattern();
 	bool updateActivePath(bool looping);
 	void goToDestination(wstring enrouteTask = L"nil");
-	void taskWingmen();
 };

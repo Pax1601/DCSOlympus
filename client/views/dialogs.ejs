@@ -5,7 +5,7 @@
         <div id="app-summary">
             <h2>DCS Olympus</h2>
             <h4>Dynamic Unit Command</h4>
-            <div class="app-version">Version <span class="app-version-number">v0.1.0</span></div>
+            <div class="app-version">Version <span class="app-version-number">v0.1.2</span></div>
         </div>
 
         <div id="legal-stuff">
@@ -17,165 +17,175 @@
 
 </div>
 
-
-
-<div id="aircraft-settings-dialog" class="ol-panel ol-dialog hide" >
-
+<div id="advanced-settings-dialog" class="ol-panel ol-dialog hide">
     <div class="ol-dialog-close" data-on-click="closeDialog"></div>
 
     <div class="ol-dialog-header">
-        <h3>Olympus 1-1</h3>
+        <h3 id="unit-name">Olympus 1-1</h3>
     </div>
 
     <div class="ol-dialog-content">
+        <!--
+        <div class="ol-checkbox">
+            <label>
+                <input type="checkbox" />
+                Use ECM when available
+            </label>
+        </div>
+    
+        <div class="ol-checkbox">
+            <label>
+                <input type="checkbox" />
+                Prohibit jettison
+            </label>
+        </div>
+    
+        <div class="ol-checkbox">
+            <label>
+                <input type="checkbox" />
+                Prohibit afterburner
+            </label>
+        </div>
+    
+        <div class="ol-checkbox">
+            <label>
+                <input type="checkbox" />
+                Prohibit A/A
+            </label>
+        </div>
+    
+        <div class="ol-checkbox">
+            <label>
+                <input type="checkbox" />
+                Prohibit A/G
+            </label>
+        </div>
+        -->
 
-        <form>
+        <div id="tanker-checkbox" class="ol-checkbox">
+            <label>
+                <input type="checkbox" />
+                Operate as AAR tanker
+            </label>
+        </div>
 
-            <div class="ol-checkbox">
-                <label>
-                    <input type="checkbox" />
-                    Use ECM when available
-                </label>
-            </div>
-        
-            <div class="ol-checkbox">
-                <label>
-                    <input type="checkbox" />
-                    Prohibit jettison
-                </label>
-            </div>
-        
-            <div class="ol-checkbox">
-                <label>
-                    <input type="checkbox" />
-                    Prohibit afterburner
-                </label>
-            </div>
-        
-            <div class="ol-checkbox">
-                <label>
-                    <input type="checkbox" />
-                    Prohibit A/A
-                </label>
-            </div>
-        
-            <div class="ol-checkbox">
-                <label>
-                    <input type="checkbox" />
-                    Prohibit A/G
-                </label>
-            </div>
-        
-            <div class="ol-checkbox">
-                <label>
-                    <input type="checkbox" />
-                    Enable TACAN:
-                </label>
-            </div>
-        
+        <div id="AWACS-checkbox" class="ol-checkbox">
+            <label>
+                <input type="checkbox" />
+                Operate as AWACS
+            </label>
+        </div>
+
+        <div class="ol-group">
+            <label>A/A TACAN: </label>
+    
             <div class="ol-group">
-        
-                <div class="ol-select">
-                    <div class="ol-select-value">40</div>
-                    <div class="ol-select-options">
-                        <div>
-                            <button>40</button>
-                        </div>
-                        <div>
-                            <button>41</button>
-                        </div>
-                        <div>
-                            <button>42</button>
-                        </div>
-                        <div>
-                            <button>43</button>
-                        </div>
-                        <div>
-                            <button>44</button>
-                        </div>
-                        <div>
-                            <button>45</button>
-                        </div>
-                    </div>
+                <div id="TACAN-channel" class="ol-text-input">
+                    <input type="number" min="1" max="126" step="1" value="40">
                 </div>
-                
-                <div class="ol-select">
+            
+                <div id="TACAN-XY" class="ol-select">
                     <div class="ol-select-value">X</div>
                     <div class="ol-select-options">
-                        <div>
-                            <button>X</button>
-                        </div>
-                        <div>
-                            <button>Y</button>
-                        </div>
                     </div>
-                    
                 </div>
-        
+
+                <div id="TACAN-callsign" class="ol-text-input">
+                    <input type="text" maxlength="3" value="TKR" style="width: 50px">
+                </div>
             </div>
-        
-            <div class="ol-checkbox">
-                <label>
-                    <input type="checkbox" />
-                    Use radio frequency:
-                </label>
-            </div>
+        </div>
+    
+        <div class="ol-group">
+            <label> Radio frequency: </label>
         
             <div class="ol-group">
-        
-                <div class="ol-select">
-                    <div class="ol-select-value">120</div>
+                <div id="radio-mhz" class="ol-text-input">
+                    <input type="number" min="1" max="999" step="1" value="260">
+                </div>
+                                
+                <div id="radio-decimals" class="ol-select">
+                    <div class="ol-select-value">.000</div>
                     <div class="ol-select-options">
-                        <div>
-                            <button>120</button>
-                        </div>
-                        <div>
-                            <button>121</button>
-                        </div>
-                        <div>
-                            <button>122</button>
-                        </div>
-                        <div>
-                            <button>123</button>
-                        </div>
-                        <div>
-                            <button>124</button>
-                        </div>
-                        <div>
-                            <button>125</button>
-                        </div>
                     </div>
                 </div>
-                
-                <div class="ol-select">
-                    <div class="ol-select-value">.750</div>
-                    <div class="ol-select-options">
-                        <div>
-                            <button>.000</button>
-                        </div>
-                        <div>
-                            <button>.250</button>
-                        </div>
-                        <div>
-                            <button>.500</button>
-                        </div>
-                        <div>
-                            <button>.750</button>
-                        </div>
-                    </div>
-                    
-                </div>
-        
             </div>
+        </div>
+        
+        <div class="ol-group">
+            <label> Radio callsign: </label>
 
-        </form>
+            <div class="ol-group">
+                <div id="radio-callsign" class="ol-select">
+                    <div class="ol-select-value"></div>
+                    <div class="ol-select-options">
+                    </div>
+                </div>
 
+                <label>
+                    -
+                </label>
+            
+                <div id="radio-callsign-number" class="ol-text-input">
+                    <input type="number" min="1" max="999" step="1" value="1">
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="ol-dialog-footer">
-
+    <div class="ol-dialog-footer ol-group">
+        <button class="ol-button-apply" data-on-click="applyAdvancedSettings">Apply</button>
         <button class="ol-button-close" data-on-click="closeDialog">Close</button>
-
     </div>
 
+</div>
+
+
+<div id="custom-formation-dialog" class="ol-panel ol-dialog hide">
+    <div class="ol-dialog-close" data-on-click="closeDialog"></div>
+
+    <div class="ol-dialog-header">
+        <h3 id="unit-name">Custom formation</h3>
+    </div>
+
+    <div class="ol-dialog-content">
+        <div class="formation-position-clock">
+            <div class="clock-hand" style="top: 0px;   left: 50px;"><input  type="radio" id="formation-1" name="formation-position" value="1"></div>
+            <div class="clock-hand" style="top: 14px;  left: 14px;"><input  type="radio" id="formation-2" name="formation-position" value="2"></div>
+            <div class="clock-hand" style="top: 50px;  left: 0px; "><input  type="radio" id="formation-3" name="formation-position" value="3"></div>
+            <div class="clock-hand" style="top: 86px;  left: 14px;"><input  type="radio" id="formation-4" name="formation-position" value="4"></div>
+            <div class="clock-hand" style="top: 100px; left: 50px;"><input  type="radio" id="formation-5" name="formation-position" value="5"></div>
+            <div class="clock-hand" style="top: 86px;  left: 86px;"><input  type="radio" id="formation-6" name="formation-position" value="6" checked></div>
+            <div class="clock-hand" style="top: 50px;  left: 100px"><input  type="radio" id="formation-7" name="formation-position" value="7"></div>
+            <div class="clock-hand" style="top: 14px;  left: 86px;"><input  type="radio" id="formation-8" name="formation-position" value="8"></div>
+            <div style="top: 50px; left: 50px;" id="reference-system"></div>
+        </div>
+
+        <div class="ol-group">
+            <label>Distance: </label>
+            
+            <div class="ol-group">
+                <div id="distance" class="ol-text-input">
+                    <input type="number" min="0" max="999999" step="1" value="150">
+                </div>
+                <label>ft</label>
+            </div>
+        </div>
+
+        <div class="ol-group">
+            <label>Up-down: </label>
+            
+            <div class="ol-group">
+                <div id="up-down" class="ol-text-input">
+                    <input type="number" min="-99999" max="99999" step="1" value="30">
+                </div>
+                <label>ft</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="ol-dialog-footer ol-group">
+        <button class="ol-button-apply" data-on-click="applyCustomFormation">Apply</button>
+        <button class="ol-button-close" data-on-click="closeDialog">Close</button>
+    </div>
 </div>
