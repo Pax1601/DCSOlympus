@@ -45,6 +45,19 @@ export abstract class ATCBoard {
         this.#stripBoardElement = <HTMLElement>this.getBoardElement().querySelector( ".ol-strip-board-strips" );
         this.#clockElement      = <HTMLElement>this.getBoardElement().querySelector( ".ol-strip-board-clock" );
 
+        
+        new MutationObserver( () => {
+            if ( this.boardIsVisible() ) {
+                this.startUpdates();
+            } else {
+                this.stopUpdates();
+            }
+        }).observe( this.getBoardElement(), {
+            "attributes": true,
+            "childList": false,
+            "subtree": false
+        });
+
 
         new Sortable( this.getStripBoardElement(), {
             "handle": ".handle",
@@ -90,7 +103,7 @@ export abstract class ATCBoard {
 
         this.#setupAddFlight();
 
-        //this.#_setupDemoData();
+        //  this.#_setupDemoData();
 
     }
 
@@ -149,6 +162,11 @@ export abstract class ATCBoard {
             });
         });
 
+    }
+
+
+    boardIsVisible() {
+        return ( !this.getBoardElement().classList.contains( "hide" ) );
     }
 
 
@@ -386,6 +404,10 @@ export abstract class ATCBoard {
 
     startUpdates() {
 
+        if ( !this.boardIsVisible() ) {
+            return;
+        }
+
         this.#updateInterval = setInterval( () => {
 
             this.update();
@@ -417,7 +439,6 @@ export abstract class ATCBoard {
 
     }
 
-
     protected update() {
         console.warn( "No custom update method defined." );
     }
@@ -427,6 +448,20 @@ export abstract class ATCBoard {
 
         const now = this.#atc.getMissionDateTime();
         this.#clockElement.innerText = now.toLocaleTimeString();
+
+    }
+
+
+    updateFlight( flightId:string, reqBody:object ) {
+        
+        return fetch( '/api/atc/flight/' + flightId, {
+            method: 'PATCH',      
+            headers: { 
+                'Accept': '*/*',
+                'Content-Type': 'application/json' 
+            },
+            "body": JSON.stringify( reqBody )
+        });
 
     }
 
@@ -446,31 +481,32 @@ export abstract class ATCBoard {
             })
         });
 
-        fetch( '/api/atc/flight/', {
-            method: 'POST',      
-            headers: { 
-                'Accept': '*/*',
-                'Content-Type': 'application/json' 
-            },
-            "body": JSON.stringify({
-                "boardId" : this.getBoardId(),
-                "name"    : this.getBoardId() + " 2",
-                "unitId"  : 1
-            })
-        });
+        
+        // fetch( '/api/atc/flight/', {
+        //     method: 'POST',      
+        //     headers: { 
+        //         'Accept': '*/*',
+        //         'Content-Type': 'application/json' 
+        //     },
+        //     "body": JSON.stringify({
+        //         "boardId" : this.getBoardId(),
+        //         "name"    : this.getBoardId() + " 2",
+        //         "unitId"  : 2
+        //     })
+        // });
 
-        fetch( '/api/atc/flight/', {
-            method: 'POST',      
-            headers: { 
-                'Accept': '*/*',
-                'Content-Type': 'application/json' 
-            },
-            "body": JSON.stringify({
-                "boardId" : this.getBoardId(),
-                "name"    : this.getBoardId() + " 3",
-                "unitId"  : 1
-            })
-        });
+        // fetch( '/api/atc/flight/', {
+        //     method: 'POST',      
+        //     headers: { 
+        //         'Accept': '*/*',
+        //         'Content-Type': 'application/json' 
+        //     },
+        //     "body": JSON.stringify({
+        //         "boardId" : this.getBoardId(),
+        //         "name"    : this.getBoardId() + " 3",
+        //         "unitId"  : 9
+        //     })
+        // });
 
     }
 

@@ -3,13 +3,15 @@ import { ATCBoardGround } from "./board/ground";
 import { ATCBoardTower } from "./board/tower";
 
 export interface FlightInterface {
-    id          : string;
-    boardId     : string;
-    name        : string;
-    order       : number;
-    status      : "unknown";
-    takeoffTime : number;
-    unitId      : number;
+    assignedSpeed: any;
+    assignedAltitude : any;
+    id               : string;
+    boardId          : string;
+    name             : string;
+    order            : number;
+    status           : "unknown";
+    takeoffTime      : number;
+    unitId           : number;
 }
 
 
@@ -19,7 +21,7 @@ class ATCDataHandler {
     #flights:{[key:string]: FlightInterface} = {};
 
     #updateInterval:number|undefined = undefined;
-    #updateIntervalDelay:number      = 1000;
+    #updateIntervalDelay:number      = 2500;            //  Wait between unit update requests
 
 
     constructor( atc:ATC ) {
@@ -43,23 +45,29 @@ class ATCDataHandler {
 
 
     startUpdates() {
-        
+            
         this.#updateInterval = setInterval( () => {
 
-            fetch( '/api/atc/flight', {
-                method: 'GET',      
-                headers: { 
-                    'Accept': '*/*',
-                    'Content-Type': 'application/json' 
-                }
-            })
-            .then( response => response.json() )
-            .then( data => {
-                this.setFlights( data );
-            });
+            const aBoardIsVisible = this.#atc.getBoards().some( board => board.boardIsVisible() );
+
+            if ( aBoardIsVisible ) {
+
+                fetch( '/api/atc/flight', {
+                    method: 'GET',      
+                    headers: { 
+                        'Accept': '*/*',
+                        'Content-Type': 'application/json' 
+                    }
+                })
+                .then( response => response.json() )
+                .then( data => {
+                    this.setFlights( data );
+                });
+
+            }
 
         }, this.#updateIntervalDelay );
-
+        
     }
 
 
@@ -103,6 +111,11 @@ export class ATC {
 
         this.#boards.push( board );
         
+    }
+
+
+    getBoards() {
+        return this.#boards;
     }
 
 

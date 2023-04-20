@@ -26,23 +26,53 @@ function uuidv4() {
 
 
 function Flight( name, boardId, unitId ) {
-    this.id          = uuidv4();
-    this.boardId     = boardId;
-    this.name        = name;
-    this.status      = "unknown";
-    this.takeoffTime = -1;
-    this.unitId      = parseInt( unitId );
+    this.assignedAltitude = 0;
+    this.assignedSpeed    = 0;
+    this.id               = uuidv4();
+    this.boardId          = boardId;
+    this.name             = name;
+    this.status           = "unknown";
+    this.takeoffTime      = -1;
+    this.unitId           = parseInt( unitId );
 }
 
 Flight.prototype.getData = function() {
     return {
-        "id"          : this.id,
-        "boardId"     : this.boardId,
-        "name"        : this.name,
-        "status"      : this.status,
-        "takeoffTime" : this.takeoffTime,
-        "unitId"      : this.unitId
+        "assignedAltitude" : this.assignedAltitude,
+        "assignedSpeed"    : this.assignedSpeed,
+        "id"               : this.id,
+        "boardId"          : this.boardId,
+        "name"             : this.name,
+        "status"           : this.status,
+        "takeoffTime"      : this.takeoffTime,
+        "unitId"           : this.unitId
     };
+}
+
+
+Flight.prototype.setAssignedAltitude = function( assignedAltitude ) {
+
+    if ( isNaN( assignedAltitude ) ) {
+        return "Altitude must be a number"
+    }
+
+    this.assignedAltitude = parseInt( assignedAltitude );
+
+    return true;
+
+}
+
+
+Flight.prototype.setAssignedSpeed = function( assignedSpeed ) {
+
+    if ( isNaN( assignedSpeed ) ) {
+        return "Speed must be a number"
+    }
+
+    this.assignedSpeed = parseInt( assignedSpeed );
+
+    return true;
+
 }
 
 
@@ -154,6 +184,26 @@ app.patch( "/flight/:flightId", ( req, res ) => {
 
     if ( !flight ) {
         res.status( 400 ).send( `Unrecognised flight ID (given: "${req.params.flightId}")` );
+    }
+
+    if ( req.body.hasOwnProperty( "assignedAltitude" ) ) {
+
+        const altitudeChangeSuccess = flight.setAssignedAltitude( req.body.assignedAltitude );
+
+        if ( altitudeChangeSuccess !== true ) {
+            res.status( 400 ).send( altitudeChangeSuccess );
+        }
+
+    }
+
+    if ( req.body.hasOwnProperty( "assignedSpeed" ) ) {
+
+        const speedChangeSuccess = flight.setAssignedSpeed( req.body.assignedSpeed );
+
+        if ( speedChangeSuccess !== true ) {
+            res.status( 400 ).send( speedChangeSuccess );
+        }
+
     }
 
     if ( req.body.status ) {
