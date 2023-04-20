@@ -1,11 +1,17 @@
 import { ATCBoard } from "./atcboard";
-import { ATCBoardFlight } from "./board/flight";
+import { ATCBoardGround } from "./board/ground";
+import { ATCBoardTower } from "./board/tower";
 
 export interface FlightInterface {
-    id          : string;
-    name        : string;
-    status      : "unknown";
-    takeoffTime : number;
+    assignedSpeed: any;
+    assignedAltitude : any;
+    id               : string;
+    boardId          : string;
+    name             : string;
+    order            : number;
+    status           : "unknown";
+    takeoffTime      : number;
+    unitId           : number;
 }
 
 
@@ -15,7 +21,7 @@ class ATCDataHandler {
     #flights:{[key:string]: FlightInterface} = {};
 
     #updateInterval:number|undefined = undefined;
-    #updateIntervalDelay:number      = 1000;
+    #updateIntervalDelay:number      = 2500;            //  Wait between unit update requests
 
 
     constructor( atc:ATC ) {
@@ -25,29 +31,43 @@ class ATCDataHandler {
     }
 
 
-    getFlights() {
-        return this.#flights;
+    getFlights( boardId:string ) {
+
+        return Object.values( this.#flights ).reduce( ( acc:{[key:string]: FlightInterface}, flight ) => {
+            
+            if ( flight.boardId === boardId ) {
+                acc[ flight.id ] = flight;
+            }
+
+            return acc;
+        }, {} );
     }
 
 
     startUpdates() {
-        
+            
         this.#updateInterval = setInterval( () => {
 
-            fetch( '/api/atc/flight', {
-                method: 'GET',      
-                headers: { 
-                    'Accept': '*/*',
-                    'Content-Type': 'application/json' 
-                }
-            })
-            .then( response => response.json() )
-            .then( data => {
-                this.setFlights( data );
-            });
+            const aBoardIsVisible = this.#atc.getBoards().some( board => board.boardIsVisible() );
+
+            if ( aBoardIsVisible ) {
+
+                fetch( '/api/atc/flight', {
+                    method: 'GET',      
+                    headers: { 
+                        'Accept': '*/*',
+                        'Content-Type': 'application/json' 
+                    }
+                })
+                .then( response => response.json() )
+                .then( data => {
+                    this.setFlights( data );
+                });
+
+            }
 
         }, this.#updateIntervalDelay );
-
+        
     }
 
 
@@ -94,6 +114,11 @@ export class ATC {
     }
 
 
+    getBoards() {
+        return this.#boards;
+    }
+
+
     getDataHandler() {
         return this.#dataHandler;
     }
@@ -119,7 +144,22 @@ export class ATC {
         document.querySelectorAll( ".ol-strip-board" ).forEach( board => {
 
             if ( board instanceof HTMLElement ) {
-                this.addBoard( new ATCBoardFlight( this, board ) );
+
+                switch ( board.dataset.boardType ) {
+
+                    case "ground":
+                        this.addBoard( new ATCBoardGround( this, board ) );
+                        return;
+                    
+                    case "tower":
+                        this.addBoard( new ATCBoardTower( this, board ) );
+                        return;
+                    
+                    default:
+                        console.warn( "Unknown board type for ATC board, got: " + board.dataset.boardType );
+
+                }
+
             }
 
         });
