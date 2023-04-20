@@ -16,7 +16,7 @@ const maxSpeedValues: { [key: string]: number } = { Aircraft: 800, Helicopter: 3
 const speedIncrements: { [key: string]: number } = { Aircraft: 25, Helicopter: 10, NavyUnit: 5, GroundUnit: 5 };
 const minAltitudeValues: { [key: string]: number } = { Aircraft: 0, Helicopter: 0 };
 const maxAltitudeValues: { [key: string]: number } = { Aircraft: 50000, Helicopter: 10000 };
-const altitudeIncrements: { [key: string]: number } = { Aircraft: 2500, Helicopter: 1000 };
+const altitudeIncrements: { [key: string]: number } = { Aircraft: 500, Helicopter: 100 };
 
 export class UnitControlPanel extends Panel {
     #altitudeSlider: Slider;

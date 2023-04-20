@@ -4,7 +4,6 @@ export class AircraftDatabase extends UnitDatabase {
    constructor() {
       super();
       this.blueprints = {
-
          "A-10C": {
             "name": "A-10C",
             "label": "A-10CII",
@@ -727,9 +726,85 @@ export class AircraftDatabase extends UnitDatabase {
             ],
             "filename": "kc-135.png"
          },
+         "I-16": {
+            "name": "I-16",
+            "label": "I-16",
+            "shortLabel": "I16",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "",
+                  "name": "Empty Loadout"
+               }
+            ],
+            "filename": "i-16.png"
+         },
+         "MiG-15bis": {
+            "name": "MiG-15bis",
+            "label": "MiG-15",
+            "shortLabel": "M15",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "",
+                  "name": "Empty Loadout"
+               }
+            ],
+            "filename": "mig-15.png"
+         },
+         "MiG-19P": {
+            "name": "MiG-19P",
+            "label": "MiG-19",
+            "shortLabel": "19",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "",
+                  "name": "Empty Loadout"
+               }
+            ],
+            "filename": "mig-19.png"
+         },
+         "MiG-21Bis": {
+            "name": "MiG-21Bis",
+            "label": "MiG-21",
+            "shortLabel": "21",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "",
+                  "name": "Empty Loadout"
+               }
+            ],
+            "filename": "mig-21.png"
+         },
          "MiG-23MLD": {
             "name": "MiG-23MLD",
-            "label": "MiG-23MLD",
+            "label": "MiG-23",
             "shortLabel": "23",
             "loadouts": [
                {
