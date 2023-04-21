@@ -47,7 +47,7 @@ void registerLuaFunctions(lua_State* L)
         return;
     }
 
-    executeLuaScript(L, modLocation + "\\Scripts\\mist_4_4_90.lua");
+    executeLuaScript(L, modLocation + "\\Scripts\\mist.lua");
     executeLuaScript(L, modLocation + "\\Scripts\\OlympusCommand.lua");
     executeLuaScript(L, modLocation + "\\Scripts\\unitPayloads.lua");
 }
