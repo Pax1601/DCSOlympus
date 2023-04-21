@@ -1,6 +1,6 @@
 local version = "v0.2.0-alpha"
 
-local debug = true
+local debug = false
 
 Olympus.unitCounter = 1
 Olympus.payloadRegistry = {}
@@ -38,7 +38,7 @@ end
 function Olympus.getUnitByID(ID)
 	for name, table in pairs(mist.DBs.unitsByName) do
 		local unit = Unit.getByName(name)
-		if unit and unit:getObjectID() == ID then
+		if unit and unit["getObjectID"] and unit:getObjectID() == ID then
 			return unit
 		end
 	end
@@ -553,6 +553,7 @@ function Olympus.setMissionData(arg, time)
 
 	local mission = {}
 	mission.theatre = env.mission.theatre
+	mission.time = DCS.getRealTime()
 
 	-- Assemble missionData table
 	missionData["bullseyes"] = bullseyes
