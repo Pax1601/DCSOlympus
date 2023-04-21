@@ -443,7 +443,7 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "F-16C bl.52d": {
             "name": "F-16C bl.52d",
-            "label": "F-16C bl.52d",
+            "label": "F-16C",
             "shortLabel": "16",
             "loadouts": [
                {
@@ -779,6 +779,38 @@ export class AircraftDatabase extends UnitDatabase {
                   ],
                   "code": "",
                   "name": "Empty Loadout"
+               }, 
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "K-13A Atoll",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "K-13A x 2",
+                  "name": "Light / Fox-2 / Short range"
+               }, 
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "K-13A Atoll",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "167 gal tanks",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "K-13A x 2, PTB-760 x 2",
+                  "name": "Medium / Fox-2 / Medium range"
                }
             ],
             "filename": "mig-19.png"
@@ -798,6 +830,50 @@ export class AircraftDatabase extends UnitDatabase {
                   ],
                   "code": "",
                   "name": "Empty Loadout"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "R-3 Atoll",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "R-60 Aphid",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "130 gal tanks",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "Patrol, short range",
+                  "name": "Light / Fox-2 / Short range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "R-3 Atoll",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "R-60 Aphid",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "210 gal tanks",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "Patrol, medium range",
+                  "name": "Medium / Fox-2 / Medium range"
                }
             ],
             "filename": "mig-21.png"
