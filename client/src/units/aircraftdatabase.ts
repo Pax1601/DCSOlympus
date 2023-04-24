@@ -4,9 +4,9 @@ export class AircraftDatabase extends UnitDatabase {
    constructor() {
       super();
       this.blueprints = {
-         "A-10C": {
-            "name": "A-10C",
-            "label": "A-10CII",
+         "A-10C_2": {
+            "name": "A-10C_2",
+            "label": "A-10C Warthog",
             "shortLabel": "10",
             "loadouts": [
                {
@@ -38,6 +38,62 @@ export class AircraftDatabase extends UnitDatabase {
                {
                   "fuel": 1,
                   "items": [
+                     {
+                        "name": "AGM-65D",
+                        "quantity": 4
+                     },
+                     {
+                        "name": "CBU-97",
+                        "quantity": 4
+                     },
+                     {
+                        "name": "TGP",
+                        "quantity": 1
+                     },
+                     {
+                        "name": "ECM",
+                        "quantity": 1
+                     },
+                     {
+                        "name": "AIM-9",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "CAS"
+                  ],
+                  "code": "AGM-65D*4, CBU-97*4,TGP, ECM, AIM-9*2",
+                  "name": "Heavy / AGM-65D / Short Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "GBU-12",
+                        "quantity": 6
+                     },
+                     {
+                        "name": "GBU-10",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "TGP",
+                        "quantity": 1
+                     },
+                     {
+                        "name": "AIM-9",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "CAS"
+                  ],
+                  "code": "GBU-12*6,GBU-10*2,TGP, AIM-9*2",
+                  "name": "Heavy / GBU-12 / Short Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
 
                   ],
                   "roles": [
@@ -49,9 +105,495 @@ export class AircraftDatabase extends UnitDatabase {
             ],
             "filename": "a-10.png"
          },
-         "F-5E": {
-            "name": "F-5E",
-            "label": "F-5E",
+         "AJS37": {
+            "name": "AJS37",
+            "label": "AJS37 Viggen",
+            "shortLabel": "37",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "BK90",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "RB-74",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "XT",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "Strike: BK90 (MJ1)*2, RB-74*2, XT",
+                  "name": "Heavy / BK90 / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "ARAK M70 HE",
+                        "quantity": 4
+                     },
+                     {
+                        "name": "XT",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "CAS"
+                  ],
+                  "code": "CAS: ARAK M70 HE*4, XT",
+                  "name": "Heavy / ARAK M79 HE / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "RB05",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "RB74",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "XT",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "Anti-Ship"
+                  ],
+                  "code": "Anti-ship (RB05): RB-05A*2, RB-74*2, XT",
+                  "name": "Heavy / RB05 / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+
+                  ],
+                  "roles": [
+                     ""
+                  ],
+                  "code": "",
+                  "name": "Empty Loadout"
+               }
+            ],
+            "filename": "viggen.png"
+         },
+         "AV8BNA": {
+            "name": "AV8BNA",
+            "label": "AV8BNA Harrier",
+            "shortLabel": "8",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "GBU-38",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "AIM-9M",
+                        "quantity": 1
+                     },
+                     {
+                        "name": "AGM-122 Sidearm",
+                        "quantity": 1
+                     },
+                     {
+                        "name": "Fuel 300",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "H-M-H 3",
+                  "name": "Heavy / GBU-38 / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "AGM-65F",
+                        "quantity": 4
+                     },
+                     {
+                        "name": "AIM-9M",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "GAU-12",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "CAS"
+                  ],
+                  "code": "Anti Armor",
+                  "name": "Heavy / AGM-65F / Short Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+
+                  ],
+                  "roles": [
+                     ""
+                  ],
+                  "code": "",
+                  "name": "Empty Loadout"
+               }
+            ],
+            "filename": "av8bna.png"
+         },
+         "C-101CC": {
+            "name": "C-101CC",
+            "label": "C-101CC",
+            "shortLabel": "101",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "AIM-9M",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "DEFA 553 CANNON (I)",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "2*AIM-9M, DEFA 553 CANNON (I)",
+                  "name": "Light / Fox 2 / Short Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "AIM-9M",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "BELOUGA",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "BIN-200",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "AN-M3 CANNON",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "2*AIM-9M ,2*BELOUGA,2*BIN-200, AN-M3 CANNON",
+                  "name": "Heavy / BELOUGA, BIN-200 / Short Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+
+                  ],
+                  "roles": [
+                     ""
+                  ],
+                  "code": "",
+                  "name": "Empty Loadout"
+               }
+            ],
+            "filename": "c-101.png"
+         },
+         "J-11A": {
+            "name": "J-11A",
+            "label": "J-11A Copyright Infringement",
+            "shortLabel": "11",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "FAB-500",
+                        "quantity": 8
+                     },
+                     {
+                        "name": "R-73",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "FAB-500x8,R-73x2,ECM",
+                  "name": "Heavy / Fox 2 / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "R-77",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "R-73",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "R-77x2, R-73x2",
+                  "name": "Light / Fox 3 / Long Range"
+               },
+                              {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "R-27ER",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "R-73",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "R-27ERx2, R-73x2",
+                  "name": "Light / Fox 1 / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+
+                  ],
+                  "roles": [
+                     ""
+                  ],
+                  "code": "",
+                  "name": "Empty Loadout"
+               }
+            ],
+            "filename": "su-27.png"
+         },
+         "JF-17": {
+            "name": "JF-17",
+            "label": "JF-17 Thunder",
+            "shortLabel": "17",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "PL-5E2",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "C802AK",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "800L Tank",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "Anti-Ship"
+                  ],
+                  "code": "PL-5Ex2, C802AKx2, 800L Tank",
+                  "name": "Heavy / C802AK ASM / Short Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "PL-5E2",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "GBU-12",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "800L Tank",
+                        "quantity": 1
+                     },
+                     {
+                        "name": "WMD7",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "Anti-Ship"
+                  ],
+                  "code": "PL-5Ex2, 2*GBU-12x2, 800L Tank, WMD7",
+                  "name": "Heavy / C802AK ASM / Short Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "PL-5E2",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "SD-10",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "1100L Tank",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "WMD7",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "PL-5Ex2, SD-10x2, 1100L Tankx2, WMD7",
+                  "name": "Heavy / Fox 3 / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+
+                  ],
+                  "roles": [
+                     ""
+                  ],
+                  "code": "",
+                  "name": "Empty Loadout"
+               }
+            ],
+            "filename": "jf-17.png"
+         },
+         "F-16C_50": {
+            "name": "F-16C_50",
+            "label": "F-16C Viper",
+            "shortLabel": "16",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "fuel",
+                        "quantity": 3
+                     },
+                     {
+                        "name": "AIM-120C",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "AIM-9X",
+                        "quantity": 4
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "AIM-120C*2, AIM-9X*4, FUEL*2",
+                  "name": "Heavy / Fox 3 / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "fuel",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "AIM-120C",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "AIM-9X",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "ECM",
+                        "quantity": 1
+                     },
+                     {
+                        "name": "TGP",
+                        "quantity": 1
+                     },
+                     {
+                        "name": "AGM-65D",
+                        "quantity": 4
+                     }
+                  ],
+                  "roles": [
+                     "CAS"
+                  ],
+                  "code": "AIM-120C*2, AIM-9X*2, AGM-65D*4, FUEL*2, ECM, TGP",
+                  "name": "Heavy / Fox 3, AGM-65D / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "fuel",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "AIM-120C",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "AIM-9X",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "ECM",
+                        "quantity": 1
+                     },
+                     {
+                        "name": "TGP",
+                        "quantity": 1
+                     },
+                     {
+                        "name": "GBU-10",
+                        "quantity": 4
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "AIM-120C*2, AIM-9X*2, GBU-10*2, FUEL*2, ECM, TGP",
+                  "name": "Heavy / Fox 3, GBU-10 / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+
+                  ],
+                  "roles": [
+                     ""
+                  ],
+                  "code": "",
+                  "name": "Empty Loadout"
+               }
+            ],
+            "filename": "f-16c.png"
+         },
+         "F-5E-3": {
+            "name": "F-5E-3",
+            "label": "F-5E Tiger",
             "shortLabel": "5",
             "loadouts": [
                {
@@ -70,7 +612,912 @@ export class AircraftDatabase extends UnitDatabase {
                      "CAP"
                   ],
                   "code": "AIM-9P5*2, Fuel 275*3",
-                  "name": "Light / Fox 2 / Long Range"
+                  "name": "Heavy / Fox 2 / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "Mk-82",
+                        "quantity": 4
+                     },
+                     {
+                        "name": "AIM-9P5",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "Fuel 275",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "Mk-82LD*4,AIM-9P*2,Fuel 275",
+                  "name": "Heavy / Fox 2 / Short Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+
+                  ],
+                  "roles": [
+                     ""
+                  ],
+                  "code": "",
+                  "name": "Empty Loadout"
+               }
+            ],
+            "filename": "f-5.png"
+         },
+         "F-86F Sabre": {
+            "name": "F-86F Sabre",
+            "label": "F-86F Sabre",
+            "shortLabel": "86",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "120gal Fuel",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "120gal Fuel*2",
+                  "name": "Light / Guns / Short Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "HVAR",
+                        "quantity": 16
+                     }
+                  ],
+                  "roles": [
+                     "CAS"
+                  ],
+                  "code": "HVAR*16",
+                  "name": "Light / HVAR / Short Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "AN-M64",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "AN-M64*2",
+                  "name": "Light / AN-M64 / Short Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+
+                  ],
+                  "roles": [
+                     ""
+                  ],
+                  "code": "",
+                  "name": "Light / Guns / Short Range"
+               }
+            ],
+            "filename": "f-5.png"
+         },
+         "F-14A-135-GR": {
+            "name": "F-14A-135-GR",
+            "label": "F-14A-135-GR Tomcat",
+            "shortLabel": "14A",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "fuel",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "AIM-54A",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "AIM-7F",
+                        "quantity": 1
+                     },
+                     {
+                        "name": "AIM-9L",
+                        "quantity": 4
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "AIM-54A-MK47*2, AIM-7F*1, AIM-9L*4, XT*2",
+                  "name": "Heavy / Fox 3 / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "fuel",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "AIM-7F",
+                        "quantity": 4
+                     },
+                     {
+                        "name": "AIM-9L",
+                        "quantity": 4
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "AIM-7F*4, AIM-9L*4, XT*2",
+                  "name": "Heavy / Fox 1 / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "fuel",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "AIM-7M",
+                        "quantity": 1
+                     },
+                     {
+                        "name": "AIM-9M",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "GBU-12",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "LANTIRN",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "AIM-7M*1, AIM-9M*2, XT*2, GBU-12*2, LANTIRN",
+                  "name": "Heavy / Fox 3, GBU-12 / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+
+                  ],
+                  "roles": [
+                     ""
+                  ],
+                  "code": "",
+                  "name": "Empty Loadout"
+               }
+            ],
+            "filename": "f-14.png"
+         },
+         "F-14B": {
+            "name": "F-14B",
+            "label": "F-14B Tomcat",
+            "shortLabel": "14B",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "fuel",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "AIM-54C",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "AIM-7M",
+                        "quantity": 3
+                     },
+                     {
+                        "name": "AIM-9M",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "AIM-54C-MK47*2, AIM-7M*3, AIM-9M*2, XT*2",
+                  "name": "Heavy / Fox 3 / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "fuel",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "AIM-7M",
+                        "quantity": 6
+                     },
+                     {
+                        "name": "AIM-9M",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "AIM-7M*6, AIM-9M*2, XT*2",
+                  "name": "Heavy / Fox 1 / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "fuel",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "AIM-7M",
+                        "quantity": 1
+                     },
+                     {
+                        "name": "AIM-9M",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "GBU-12",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "LANTIRN",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "AIM-7M*1, AIM-9M*2, XT*2, GBU-12*2, LANTIRN",
+                  "name": "Heavy / Fox 3, GBU-12 / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+
+                  ],
+                  "roles": [
+                     ""
+                  ],
+                  "code": "",
+                  "name": "Empty Loadout"
+               }
+            ],
+            "filename": "f-14.png"
+         },
+         "FA-18C_hornet": {
+            "name": "FA-18C_hornet",
+            "label": "F/A-18C",
+            "shortLabel": "18",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "fuel",
+                        "quantity": 3
+                     },
+                     {
+                        "name": "AIM-120C-5",
+                        "quantity": 6
+                     },
+                     {
+                        "name": "AIM-9X",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "AIM-9X*2, AIM-120C-5*6, FUEL*3",
+                  "name": "Heavy / Fox 3 / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "fuel",
+                        "quantity": 3
+                     },
+                     {
+                        "name": "AIM-7M",
+                        "quantity": 4
+                     },
+                     {
+                        "name": "AIM-9M",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "AIM-9M*2, AIM-7M*4, FUEL*3",
+                  "name": "Heavy / Fox 1 / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "fuel",
+                        "quantity": 1
+                     },
+                     {
+                        "name": "AIM-120C-5",
+                        "quantity": 1
+                     },
+                     {
+                        "name": "AIM-9X",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "AGM-88C",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "SEAD"
+                  ],
+                  "code": "AIM-9X*2, AIM-120C-5*2, AGM-88C*2, FUEL",
+                  "name": "Heavy / Fox 3, AGM-88C / Short Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "fuel",
+                        "quantity": 1
+                     },
+                     {
+                        "name": "AIM-120C-5",
+                        "quantity": 1
+                     },
+                     {
+                        "name": "AIM-9M",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "AGM-84D",
+                        "quantity": 4
+                     }
+                  ],
+                  "roles": [
+                     "Anti-Ship"
+                  ],
+                  "code": "AIM-9M*2, AIM-120C-5*1, AGM-84D*4, ATFLIR, FUEL",
+                  "name": "Heavy / Fox 3, AGM-84D / Short Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "fuel",
+                        "quantity": 1
+                     },
+                     {
+                        "name": "AIM-120C-5",
+                        "quantity": 1
+                     },
+                     {
+                        "name": "AIM-9X",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "GBU-12",
+                        "quantity": 4
+                     },
+                     {
+                        "name": "GBU-38",
+                        "quantity": 4
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "AIM-9X*2, AIM-120C-5*1, GBU-38*4, GBU-12*4, ATFLIR, FUEL",
+                  "name": "Heavy / Fox 3, GBU-12, GBU-38 / Short Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+
+                  ],
+                  "roles": [
+                     ""
+                  ],
+                  "code": "",
+                  "name": "Empty Loadout"
+               }
+            ],
+            "filename": "fa-18c.png"
+         },
+         "I-16": {
+            "name": "I-16",
+            "label": "I-16",
+            "shortLabel": "I16",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "",
+                  "name": "Empty Loadout"
+               }
+            ],
+            "filename": "i-16.png"
+         },
+         "L-39ZA": {
+            "name": "L-39ZA",
+            "label": "L-39ZA",
+            "shortLabel": "39",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "S-5KO",
+                        "quantity": 32
+                     }
+                  ],
+                  "roles": [
+                     "CAS"
+                  ],
+                  "code": "S-5KOx32",
+                  "name": "Heavy / S-5KO / Short Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "FAB-100",
+                        "quantity": 4
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "FAB-100x4",
+                  "name": "Heavy / FAB-100 / Short Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "R-60M",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "R-60Mx2",
+                  "name": "Light / Fox 2 / Short Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+
+                  ],
+                  "roles": [
+                     ""
+                  ],
+                  "code": "",
+                  "name": "Empty Loadout"
+               }
+            ],
+            "filename": "l-39.png"
+         },
+         "M-2000C": {
+            "name": "M-2000C",
+            "label": "M-2000C Baguette",
+            "shortLabel": "M2KC",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "Matra Magic II",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "Super 530D",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "Eclair",
+                        "quantity": 1
+                     },
+                     {
+                        "name": "fuel",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "Fox / S530D / Magic / Eclair",
+                  "name": "Heavy / Fox 1 / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "Matra Magic II",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "Mk82",
+                        "quantity": 4
+                     },
+                     {
+                        "name": "fuel",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "Kilo / 4xMk-82 / Magic",
+                  "name": "Heavy / Mk 82 / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "Matra Magic II",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "BAP-100",
+                        "quantity": 18
+                     },
+                     {
+                        "name": "fuel",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "Runway Strike"
+                  ],
+                  "code": "Bravo / BAP-100 / Magic",
+                  "name": "Heavy / BAP-100 / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+
+                  ],
+                  "roles": [
+                     ""
+                  ],
+                  "code": "",
+                  "name": "Empty Loadout"
+               }
+            ],
+            "filename": "m2000.png"
+         },
+         "MB-339A": {
+            "name": "MB-339A",
+            "label": "MB-339A",
+            "shortLabel": "339A",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "320L TipTanks",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "DEFA 553 GunPods",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "Mk83",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "Mk81",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "A - 2*320L TipTanks + 2*DEFA-553 GunPods + 2*Mk.83 + 2*Mk.81 ",
+                  "name": "Heavy / Mk81, Mk83 / Medium Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "320L TipTanks",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "DEFA GunPods",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "LAU-10(Zuni Rockets)",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "CAS"
+                  ],
+                  "code": "AA - 2*320L TipTanks + 2*DEFA-553 GunPods + 2*LAU-10(Zuni Rockets) [ARMADA]",
+                  "name": "Heavy / Mk 82 / Medium Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+
+                  ],
+                  "roles": [
+                     ""
+                  ],
+                  "code": "",
+                  "name": "Empty Loadout"
+               }
+            ],
+            "filename": "c-101.png"
+         },
+         "MiG-19P": {
+            "name": "MiG-19P",
+            "label": "MiG-19 Farmer",
+            "shortLabel": "19",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "K-13A Atoll",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "K-13A x 2",
+                  "name": "Light / Fox-2 / Short range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "K-13A Atoll",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "167 gal tanks",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "K-13A x 2, PTB-760 x 2",
+                  "name": "Medium / Fox-2 / Medium range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "FAB-250",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "ORO-57K",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "FAB-250 x 2, ORO-57K x 2",
+                  "name": "Medium / FAB250, ORO57K / Short range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "",
+                  "name": "Light / Guns / Short range"
+               }
+            ],
+            "filename": "mig-19.png"
+         },
+         "MiG-21Bis": {
+            "name": "MiG-21Bis",
+            "label": "MiG-21 Fishbed",
+            "shortLabel": "21",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "R-3 Atoll",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "R-60 Aphid",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "130 gal tanks",
+                        "quantity": 1
+                     },
+                     {
+                        "name": "ASO-2 Countermeasures",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "Patrol, short range",
+                  "name": "Light / Fox-2 / Short range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "R-3 Atoll",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "R-60 Aphid",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "210 gal tanks",
+                        "quantity": 1
+                     },
+                     {
+                        "name": "ASO-2 Countermeasures",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "Patrol, medium range",
+                  "name": "Medium / Fox-2 / Medium range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "R-3R Atoll",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "210 gal tanks",
+                        "quantity": 1
+                     },
+                     {
+                        "name": "ASO-2 Countermeasures",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "Patrol, R-3R Only",
+                  "name": "Medium / Fox-1 / Medium range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "GROM",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "FAB-250",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "210 gal tanks",
+                        "quantity": 1
+                     },
+                     {
+                        "name": "ASO-2 Countermeasures",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "Few big targets, GROM + BOMBS",
+                  "name": "Heavy / GROM, FAB250 / Medium range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "",
+                  "name": "Empty Loadout"
+               }
+            ],
+            "filename": "mig-21.png"
+         },
+         "Mirage-F1EE": {
+            "name": "Mirage-F1EE",
+            "label": "Mirage-F1EE",
+            "shortLabel": "F1EE",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "AIM-9JULI",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "R530EM",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "1137L Fuel Tank",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "2*AIM9-JULI, 2*R530EM, 1*Fuel Tank",
+                  "name": "Medium / Fox 1 / Medium Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "AIM-9JULI",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "SAMP 400 LD",
+                        "quantity": 8
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "2*AIM-9JULI, 8*SAMP 400 LD",
+                  "name": "Heavy / SAMP400 / Short Range"
                },
                {
                   "fuel": 1,
@@ -88,7 +1535,7 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "A-50": {
             "name": "A-50",
-            "label": "A-50",
+            "label": "A-50 Mainstay",
             "shortLabel": "50",
             "loadouts": [
                {
@@ -118,7 +1565,7 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "An-26B": {
             "name": "An-26B",
-            "label": "An-26B",
+            "label": "An-26B Curl",
             "shortLabel": "26",
             "loadouts": [
                {
@@ -137,7 +1584,7 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "An-30M": {
             "name": "An-30M",
-            "label": "An-30M",
+            "label": "An-30M Clank",
             "shortLabel": "30",
             "loadouts": [
                {
@@ -156,7 +1603,7 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "B-1B": {
             "name": "B-1B",
-            "label": "B-1B",
+            "label": "B-1B Lancer",
             "shortLabel": "1",
             "loadouts": [
                {
@@ -189,7 +1636,7 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "B-52H": {
             "name": "B-52H",
-            "label": "B-52H",
+            "label": "B-52H Stratofortress",
             "shortLabel": "52",
             "loadouts": [
                {
@@ -222,7 +1669,7 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "C-130": {
             "name": "C-130",
-            "label": "C-130",
+            "label": "C-130 Hercules",
             "shortLabel": "130",
             "loadouts": [
                {
@@ -241,7 +1688,7 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "C-17A": {
             "name": "C-17A",
-            "label": "C-17A",
+            "label": "C-17A Globemaster",
             "shortLabel": "C17",
             "loadouts": [
                {
@@ -260,8 +1707,8 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "E-3A": {
             "name": "E-3A",
-            "label": "E-3A",
-            "shortLabel": "3",
+            "label": "E-3A Sentry",
+            "shortLabel": "E3",
             "loadouts": [
                {
                   "fuel": 1,
@@ -272,14 +1719,33 @@ export class AircraftDatabase extends UnitDatabase {
                      "AWACS"
                   ],
                   "code": "",
-                  "name": "Default AWACS"
+                  "name": "Blue Air Force AWACS"
                }
             ],
             "filename": "e-3.png"
          },
+         "E-2C": {
+            "name": "E-2C",
+            "label": "E-2C Hawkeye",
+            "shortLabel": "2C",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+
+                  ],
+                  "roles": [
+                     "AWACS"
+                  ],
+                  "code": "",
+                  "name": "Blue Naval AWACS"
+               }
+            ],
+            "filename": "e-2.png"
+         },
          "F-117A": {
             "name": "F-117A",
-            "label": "F-117A",
+            "label": "F-117A Nighthawk",
             "shortLabel": "117",
             "loadouts": [
                {
@@ -310,54 +1776,9 @@ export class AircraftDatabase extends UnitDatabase {
             ],
             "filename": "f-117.png"
          },
-         "F-14A": {
-            "name": "F-14A",
-            "label": "F-14A",
-            "shortLabel": "14",
-            "loadouts": [
-               {
-                  "fuel": 1,
-                  "items": [
-                     {
-                        "name": "fuel",
-                        "quantity": 2
-                     },
-                     {
-                        "name": "AIM-24C",
-                        "quantity": 4
-                     },
-                     {
-                        "name": "AIM-7",
-                        "quantity": 4
-                     },
-                     {
-                        "name": "AIM-9M",
-                        "quantity": 2
-                     }
-                  ],
-                  "roles": [
-                     "CAP"
-                  ],
-                  "code": "AIM-54C*4,AIM-9*2,AIM-7*2",
-                  "name": "Heavy / Fox 3 / Short Range"
-               },
-               {
-                  "fuel": 1,
-                  "items": [
-
-                  ],
-                  "roles": [
-                     ""
-                  ],
-                  "code": "",
-                  "name": "Empty Loadout"
-               }
-            ],
-            "filename": "f-14.png"
-         },
          "F-15C": {
             "name": "F-15C",
-            "label": "F-15C",
+            "label": "F-15C Eagle",
             "shortLabel": "15",
             "loadouts": [
                {
@@ -385,6 +1806,28 @@ export class AircraftDatabase extends UnitDatabase {
                {
                   "fuel": 1,
                   "items": [
+                     {
+                        "name": "fuel",
+                        "quantity": 3
+                     },
+                     {
+                        "name": "AIM-7",
+                        "quantity": 4
+                     },
+                     {
+                        "name": "AIM-9M",
+                        "quantity": 4
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "AIM-9*4,AIM-7*4,Fuel",
+                  "name": "Heavy / Fox 1 / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
 
                   ],
                   "roles": [
@@ -398,7 +1841,7 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "F-15E": {
             "name": "F-15E",
-            "label": "F-15E",
+            "label": "F-15E Strike Eagle",
             "shortLabel": "15",
             "loadouts": [
                {
@@ -406,7 +1849,7 @@ export class AircraftDatabase extends UnitDatabase {
                   "items": [
                      {
                         "name": "fuel",
-                        "quantity": 2
+                        "quantity": 3
                      },
                      {
                         "name": "AIM-120B",
@@ -430,6 +1873,40 @@ export class AircraftDatabase extends UnitDatabase {
                {
                   "fuel": 1,
                   "items": [
+                     {
+                        "name": "fuel",
+                        "quantity": 1
+                     },
+                     {
+                        "name": "AIM-120B",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "AIM-9M",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "GBU-12",
+                        "quantity": 4
+                     },
+                     {
+                        "name": "GBU-38",
+                        "quantity": 4
+                     },
+                     {
+                        "name": "AGM-154C",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "AIM-120B*2,AIM-9M*2,FUEL,GBU-12*4,GBU-38*4,AGM-154C*2",
+                  "name": "Heavy / Fox 3, GBU-12, GBU-38, AGM-154C / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
 
                   ],
                   "roles": [
@@ -441,84 +1918,9 @@ export class AircraftDatabase extends UnitDatabase {
             ],
             "filename": "f-15.png"
          },
-         "F-16C bl.52d": {
-            "name": "F-16C bl.52d",
-            "label": "F-16C",
-            "shortLabel": "16",
-            "loadouts": [
-               {
-                  "fuel": 1,
-                  "items": [
-                     {
-                        "name": "fuel",
-                        "quantity": 2
-                     },
-                     {
-                        "name": "AIM-120C",
-                        "quantity": 4
-                     },
-                     {
-                        "name": "AIM-9M",
-                        "quantity": 2
-                     },
-                     {
-                        "name": "ECM",
-                        "quantity": 1
-                     }
-                  ],
-                  "roles": [
-                     "CAP"
-                  ],
-                  "code": "AIM-120C*4,AIM-9M*2,ECM,Fuel*2",
-                  "name": "Heavy / Fox 3 / Long Range"
-               },
-               {
-                  "fuel": 1,
-                  "items": [
-                     {
-                        "name": "fuel",
-                        "quantity": 2
-                     },
-                     {
-                        "name": "AIM-120C",
-                        "quantity": 2
-                     },
-                     {
-                        "name": "ECM",
-                        "quantity": 1
-                     },
-                     {
-                        "name": "LIGHTNING",
-                        "quantity": 1
-                     },
-                     {
-                        "name": "Mk-84",
-                        "quantity": 2
-                     }
-                  ],
-                  "roles": [
-                     "Strike"
-                  ],
-                  "code": "Mk-84*2,AIM-120*2,ECM,Fuel*2,LIGHTNING",
-                  "name": "Heavy / Fox 3, Mk-84 / Long Range"
-               },
-               {
-                  "fuel": 1,
-                  "items": [
-
-                  ],
-                  "roles": [
-                     ""
-                  ],
-                  "code": "",
-                  "name": "Empty Loadout"
-               }
-            ],
-            "filename": "f-16c.png"
-         },
          "F-4E": {
             "name": "F-4E",
-            "label": "F-4E",
+            "label": "F-4E Phantom II",
             "shortLabel": "4",
             "loadouts": [
                {
@@ -551,7 +1953,7 @@ export class AircraftDatabase extends UnitDatabase {
                         "quantity": 1
                      },
                      {
-                        "name": "AIM-7",
+                        "name": "AIM-7M",
                         "quantity": 2
                      },
                      {
@@ -560,10 +1962,36 @@ export class AircraftDatabase extends UnitDatabase {
                      }
                   ],
                   "roles": [
-                     "CAS"
+                     "Strike"
                   ],
                   "code": "Mk-82*18,AIM-7*2,ECM",
-                  "name": "Heavy / Fox 1, Mk-84 / Long Range"
+                  "name": "Heavy / Fox 1, Mk-82 / Short Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "ECM",
+                        "quantity": 1
+                     },
+                     {
+                        "name": "AIM-7M",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "AGM-65K",
+                        "quantity": 4
+                     },
+                     {
+                        "name": "Fuel",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "CAS"
+                  ],
+                  "code": "AGM-65K*4,AIM-7*2,Fuel*2,ECM",
+                  "name": "Heavy / Fox 1, AGM-65K / Long Range"
                },
                {
                   "fuel": 1,
@@ -579,80 +2007,9 @@ export class AircraftDatabase extends UnitDatabase {
             ],
             "filename": "f-4.png"
          },
-         "FA-18C_hornet": {
-            "name": "FA-18C_hornet",
-            "label": "F/A-18C",
-            "shortLabel": "18",
-            "loadouts": [
-               {
-                  "fuel": 1,
-                  "items": [
-                     {
-                        "name": "fuel",
-                        "quantity": 3
-                     },
-                     {
-                        "name": "AIM-120C",
-                        "quantity": 4
-                     },
-                     {
-                        "name": "AIM-9M",
-                        "quantity": 2
-                     }
-                  ],
-                  "roles": [
-                     "CAP"
-                  ],
-                  "code": "AIM-120*4,AIM-9*2,Fuel*3",
-                  "name": "Heavy / Fox 3 / Long Range"
-               },
-               {
-                  "fuel": 1,
-                  "items": [
-                     {
-                        "name": "fuel",
-                        "quantity": 3
-                     },
-                     {
-                        "name": "GBU-10",
-                        "quantity": 2
-                     },
-                     {
-                        "name": "AIM-9M",
-                        "quantity": 2
-                     },
-                     {
-                        "name": "FLIR Pod",
-                        "quantity": 1
-                     },
-                     {
-                        "name": "AIM-7",
-                        "quantity": 1
-                     }
-                  ],
-                  "roles": [
-                     "Strike"
-                  ],
-                  "code": "GBU-10*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3",
-                  "name": "Heavy / Fox 1, Mk-84 / Long Range"
-               },
-               {
-                  "fuel": 1,
-                  "items": [
-
-                  ],
-                  "roles": [
-                     ""
-                  ],
-                  "code": "",
-                  "name": "Empty Loadout"
-               }
-            ],
-            "filename": "fa-18c.png"
-         },
          "IL-76MD": {
             "name": "IL-76MD",
-            "label": "IL-76MD",
+            "label": "IL-76MD Candid",
             "shortLabel": "76",
             "loadouts": [
                {
@@ -671,7 +2028,7 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "IL-78M": {
             "name": "IL-78M",
-            "label": "IL-78M",
+            "label": "IL-78M Midas",
             "shortLabel": "78",
             "loadouts": [
                {
@@ -690,7 +2047,7 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "KC-135": {
             "name": "KC-135",
-            "label": "KC-135",
+            "label": "KC-135 Stratotanker",
             "shortLabel": "135",
             "loadouts": [
                {
@@ -707,9 +2064,9 @@ export class AircraftDatabase extends UnitDatabase {
             ],
             "filename": "kc-135.png"
          },
-         "KC135MPRS": {
-            "name": "KC135MPRS",
-            "label": "KC-135 MPRS",
+         "KC-135MPRS": {
+            "name": "KC-135MPRS",
+            "label": "KC-135 MPRS Stratotanker",
             "shortLabel": "135M",
             "loadouts": [
                {
@@ -726,161 +2083,56 @@ export class AircraftDatabase extends UnitDatabase {
             ],
             "filename": "kc-135.png"
          },
-         "I-16": {
-            "name": "I-16",
-            "label": "I-16",
-            "shortLabel": "I16",
-            "loadouts": [
-               {
-                  "fuel": 1,
-                  "items": [
-
-                  ],
-                  "roles": [
-                     "CAP"
-                  ],
-                  "code": "",
-                  "name": "Empty Loadout"
-               }
-            ],
-            "filename": "i-16.png"
-         },
          "MiG-15bis": {
             "name": "MiG-15bis",
-            "label": "MiG-15",
+            "label": "MiG-15 Fagot",
             "shortLabel": "M15",
             "loadouts": [
                {
                   "fuel": 1,
                   "items": [
+                     {
+                        "name": "300L Fuel Tanks",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "2*300L",
+                  "name": "Medium / Guns / Medium Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "FAB-100M",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "2*FAB-100M",
+                  "name": "Medium / FAB-100M / Short Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
 
                   ],
                   "roles": [
                      "CAP"
                   ],
                   "code": "",
-                  "name": "Empty Loadout"
-               }
+                  "name": "Light / Guns / Short Range"
+               },
             ],
             "filename": "mig-15.png"
          },
-         "MiG-19P": {
-            "name": "MiG-19P",
-            "label": "MiG-19",
-            "shortLabel": "19",
-            "loadouts": [
-               {
-                  "fuel": 1,
-                  "items": [
-
-                  ],
-                  "roles": [
-                     "CAP"
-                  ],
-                  "code": "",
-                  "name": "Empty Loadout"
-               }, 
-               {
-                  "fuel": 1,
-                  "items": [
-                     {
-                        "name": "K-13A Atoll",
-                        "quantity": 2
-                     }
-                  ],
-                  "roles": [
-                     "CAP"
-                  ],
-                  "code": "K-13A x 2",
-                  "name": "Light / Fox-2 / Short range"
-               }, 
-               {
-                  "fuel": 1,
-                  "items": [
-                     {
-                        "name": "K-13A Atoll",
-                        "quantity": 2
-                     },
-                     {
-                        "name": "167 gal tanks",
-                        "quantity": 2
-                     }
-                  ],
-                  "roles": [
-                     "CAP"
-                  ],
-                  "code": "K-13A x 2, PTB-760 x 2",
-                  "name": "Medium / Fox-2 / Medium range"
-               }
-            ],
-            "filename": "mig-19.png"
-         },
-         "MiG-21Bis": {
-            "name": "MiG-21Bis",
-            "label": "MiG-21",
-            "shortLabel": "21",
-            "loadouts": [
-               {
-                  "fuel": 1,
-                  "items": [
-
-                  ],
-                  "roles": [
-                     "CAP"
-                  ],
-                  "code": "",
-                  "name": "Empty Loadout"
-               },
-               {
-                  "fuel": 1,
-                  "items": [
-                     {
-                        "name": "R-3 Atoll",
-                        "quantity": 2
-                     },
-                     {
-                        "name": "R-60 Aphid",
-                        "quantity": 2
-                     },
-                     {
-                        "name": "130 gal tanks",
-                        "quantity": 1
-                     }
-                  ],
-                  "roles": [
-                     "CAP"
-                  ],
-                  "code": "Patrol, short range",
-                  "name": "Light / Fox-2 / Short range"
-               },
-               {
-                  "fuel": 1,
-                  "items": [
-                     {
-                        "name": "R-3 Atoll",
-                        "quantity": 2
-                     },
-                     {
-                        "name": "R-60 Aphid",
-                        "quantity": 2
-                     },
-                     {
-                        "name": "210 gal tanks",
-                        "quantity": 1
-                     }
-                  ],
-                  "roles": [
-                     "CAP"
-                  ],
-                  "code": "Patrol, medium range",
-                  "name": "Medium / Fox-2 / Medium range"
-               }
-            ],
-            "filename": "mig-21.png"
-         },
          "MiG-23MLD": {
             "name": "MiG-23MLD",
-            "label": "MiG-23",
+            "label": "MiG-23 Flogger",
             "shortLabel": "23",
             "loadouts": [
                {
@@ -943,7 +2195,7 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "MiG-25RBT": {
             "name": "MiG-25RBT",
-            "label": "MiG-25RBT",
+            "label": "MiG-25RBT Foxbat",
             "shortLabel": "25",
             "loadouts": [
                {
@@ -955,7 +2207,7 @@ export class AircraftDatabase extends UnitDatabase {
                      }
                   ],
                   "roles": [
-                     "CAP"
+                     "Recon"
                   ],
                   "code": "R-60M*2",
                   "name": "Heavy / Fox 2 / Long Range"
@@ -992,9 +2244,46 @@ export class AircraftDatabase extends UnitDatabase {
             ],
             "filename": "mig-25.png"
          },
+         "MiG-25PD": {
+            "name": "MiG-25PD",
+            "label": "MiG-25PD Foxbat",
+            "shortLabel": "25",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "R-40R",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "R-60M",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "R-40R*2,R-60M*2",
+                  "name": "Heavy / Fox 1 / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+
+                  ],
+                  "roles": [
+                     ""
+                  ],
+                  "code": "",
+                  "name": "Empty Loadout"
+               }
+            ],
+            "filename": "mig-25.png"
+         },
          "MiG-27K": {
             "name": "MiG-27K",
-            "label": "MiG-27K",
+            "label": "MiG-27K Flogger-D",
             "shortLabel": "27",
             "loadouts": [
                {
@@ -1014,6 +2303,127 @@ export class AircraftDatabase extends UnitDatabase {
                {
                   "fuel": 1,
                   "items": [
+                     {
+                        "name": "Kh-29L",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "R-60M",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "Kh-29L*2,R-60M*2,Fuel",
+                  "name": "Heavy / Fox 2, Kh-29L / Medium Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "FAB-250",
+                        "quantity": 6
+                     },
+                     {
+                        "name": "R-60M",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "FAB-250*6,R-60M*2,Fuel",
+                  "name": "Heavy / Fox 2, FAB250 / Medium Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+
+                  ],
+                  "roles": [
+                     ""
+                  ],
+                  "code": "",
+                  "name": "Empty Loadout"
+               }
+            ],
+            "filename": "mig-23.png"
+         },
+         "MiG-29A": {
+            "name": "MiG-29A",
+            "label": "MiG-29A Fulcrum",
+            "shortLabel": "29A",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "R-73",
+                        "quantity": 4
+                     },
+                     {
+                        "name": "R-27R",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "Fuel-1500",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "R-73*2,R-27R*2,Fuel-1500",
+                  "name": "Heavy / Fox 1, HOBS Fox 2 / Medium Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "R-60M",
+                        "quantity": 4
+                     },
+                     {
+                        "name": "R-27R",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "Fuel-1500",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "R-60M*4,R-27R*2,Fuel-1500",
+                  "name": "Heavy / Fox 1 / Medium Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "R-73",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "FAB-500",
+                        "quantity": 4
+                     },
+                     {
+                        "name": "Fuel-1500",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "FAB-500*4,R-73*2,Fuel",
+                  "name": "Heavy / Fox 2, FAB500 / Medium Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
 
                   ],
                   "roles": [
@@ -1027,19 +2437,19 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "MiG-29S": {
             "name": "MiG-29S",
-            "label": "MiG-29S",
+            "label": "MiG-29S Fulcrum",
             "shortLabel": "29",
             "loadouts": [
                {
                   "fuel": 1,
                   "items": [
                      {
-                        "name": "R-73M",
-                        "quantity": 2
+                        "name": "R-73",
+                        "quantity": 4
                      },
                      {
-                        "name": "R-77",
-                        "quantity": 4
+                        "name": "R-27R",
+                        "quantity": 2
                      },
                      {
                         "name": "Fuel-1500",
@@ -1049,8 +2459,74 @@ export class AircraftDatabase extends UnitDatabase {
                   "roles": [
                      "CAP"
                   ],
-                  "code": "R-73*2,R-60M*2,R-27R*2",
-                  "name": "Heavy / Fox 3 / Long Range"
+                  "code": "R-73*2,R-27R*2,Fuel-1500",
+                  "name": "Heavy / Fox 1 / Medium Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "R-60M",
+                        "quantity": 4
+                     },
+                     {
+                        "name": "R-27R",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "Fuel-1500",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "R-60M*4,R-27R*2",
+                  "name": "Heavy / Fox 1 / Medium Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "R-73",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "S-24",
+                        "quantity": 4
+                     },
+                     {
+                        "name": "Fuel-1500",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "CAS"
+                  ],
+                  "code": "S-24*4,R-73*2,Fuel",
+                  "name": "Heavy / Fox 2, S-24 / Medium Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "R-73",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "FAB-500",
+                        "quantity": 4
+                     },
+                     {
+                        "name": "Fuel-1500",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "FAB-500*4,R-73*2,Fuel",
+                  "name": "Heavy / Fox 2, FAB500 / Medium Range"
                },
                {
                   "fuel": 1,
@@ -1068,7 +2544,7 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "MiG-31": {
             "name": "MiG-31",
-            "label": "MiG-31",
+            "label": "MiG-31 Foxhound",
             "shortLabel": "31",
             "loadouts": [
                {
@@ -1087,47 +2563,6 @@ export class AircraftDatabase extends UnitDatabase {
                      "CAP"
                   ],
                   "code": "R-40T*2,R-33*4",
-                  "name": "Heavy / Fox 3 / Short Range"
-               },
-               {
-                  "fuel": 1,
-                  "items": [
-
-                  ],
-                  "roles": [
-                     ""
-                  ],
-                  "code": "",
-                  "name": "Empty Loadout"
-               }
-            ],
-            "filename": "mig-23.png"
-         },
-         "Mirage 2000-5": {
-            "name": "Mirage 2000-5",
-            "label": "Mirage 2000-5",
-            "shortLabel": "M2",
-            "loadouts": [
-               {
-                  "fuel": 1,
-                  "items": [
-                     {
-                        "name": "R 550",
-                        "quantity": 2
-                     },
-                     {
-                        "name": "SUPER 530F",
-                        "quantity": 2
-                     },
-                     {
-                        "name": "fuel",
-                        "quantity": 1
-                     }
-                  ],
-                  "roles": [
-                     "CAP"
-                  ],
-                  "code": "R 550*2,SUPER 530F*2,Fuel",
                   "name": "Heavy / Fox 1 / Long Range"
                },
                {
@@ -1142,7 +2577,7 @@ export class AircraftDatabase extends UnitDatabase {
                   "name": "Empty Loadout"
                }
             ],
-            "filename": "m2000.png"
+            "filename": "mig-23.png"
          },
          "MQ-9 Reaper": {
             "name": "MQ-9 Reaper",
@@ -1175,12 +2610,12 @@ export class AircraftDatabase extends UnitDatabase {
                   "name": "Empty Loadout"
                }
             ],
-            "filename": "mig-29.png"
+            "filename": "i-16.png"
          },
          "Su-17M4": {
             "name": "Su-17M4",
-            "label": "Su-17M4",
-            "shortLabel": "17",
+            "label": "Su-17M4 Fitter",
+            "shortLabel": "17M4",
             "loadouts": [
                {
                   "fuel": 1,
@@ -1220,7 +2655,7 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "Su-24M": {
             "name": "Su-24M",
-            "label": "Su-24M",
+            "label": "Su-24M Fencer",
             "shortLabel": "24",
             "loadouts": [
                {
@@ -1257,7 +2692,7 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "Su-25": {
             "name": "Su-25",
-            "label": "Su-25",
+            "label": "Su-25 Frogfoot",
             "shortLabel": "S25",
             "loadouts": [
                {
@@ -1280,7 +2715,142 @@ export class AircraftDatabase extends UnitDatabase {
                      "CAS"
                   ],
                   "code": "UB-13*6,R-60M*2,Fuel*2",
-                  "name": "Heavy / Rockets / Short Range"
+                  "name": "Heavy / Rockets / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "R-60M",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "B-8MI",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "RBK-500",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "Kh-25ML",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "2-25L",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "CAS"
+                  ],
+                  "code": "2-25L*2, KH-25ML*2, RBK-500*2, B-8MI*2, R-60M*2",
+                  "name": "Heavy / Everything A-G / Medium Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+
+                  ],
+                  "roles": [
+                     ""
+                  ],
+                  "code": "",
+                  "name": "Empty Loadout"
+               }
+            ],
+            "filename": "su-25.png"
+         },
+         "Su-25T": {
+            "name": "Su-25",
+            "label": "Su-25 Frogfoot",
+            "shortLabel": "S25T",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "Kh-29L",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "Kh-25ML",
+                        "quantity": 4
+                     },
+                     {
+                        "name": "R-73",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "Mercury LLTV Pod",
+                        "quantity": 1
+                     },
+                     {
+                        "name": "MPS-410",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "CAS"
+                  ],
+                  "code": "Kh-29L*2,Kh-25ML*4,R-73*2,Mercury LLTV Pod,MPS-410",
+                  "name": "Heavy / Everything A-G / Medium Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "R-73",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "APU-8 Vikhr-M",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "Kh-25ML",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "SPPU-22*2",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "Mercury LLTV Pod",
+                        "quantity": 1
+                     },
+                     {
+                        "name": "MPS-410",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "CAS"
+                  ],
+                  "code": "APU-8 Vikhr-M*2,Kh-25ML,R-73*2,SPPU-22*2,Mercury LLTV Pod,MPS-410",
+                  "name": "Heavy / Everything A-G / Medium Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "FAB-500",
+                        "quantity": 6
+                     },
+                     {
+                        "name": "R-60M",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "Fuel",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "FAB-500*6,R-60M*2,Fuel*2",
+                  "name": "Medium / FAB-500 / Long Range"
                },
                {
                   "fuel": 1,
@@ -1298,7 +2868,7 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "Su-27": {
             "name": "Su-27",
-            "label": "Su-27",
+            "label": "Su-27 Flanker",
             "shortLabel": "27",
             "loadouts": [
                {
@@ -1306,18 +2876,80 @@ export class AircraftDatabase extends UnitDatabase {
                   "items": [
                      {
                         "name": "R-73",
-                        "quantity": 4
+                        "quantity": 2
                      },
                      {
                         "name": "R-27ER",
-                        "quantity": 6
+                        "quantity": 2
                      }
                   ],
                   "roles": [
                      "CAP"
                   ],
-                  "code": "R-73*4,R-27ER*6",
-                  "name": "Heavy / Fox 3 / Short Range"
+                  "code": "R-73*2,R-27ER*2,ECM",
+                  "name": "Light / Fox 1 / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "R-73",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "R-27ER",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "R-27ET",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "R-73*2,R-27ER*2,R-27ET*2,ECM",
+                  "name": "Heavy / Fox 1 / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "R-73",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "R-27ET",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "R-73*2,R-27ET*2,ECM",
+                  "name": "Heavy / Fox 2 / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "R-73",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "S-25",
+                        "quantity": 4
+                     },
+                     {
+                        "name": "FAB-500",
+                        "quantity": 4
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "S-25*4, FAB-500*4, R-73*2, ECM",
+                  "name": "Heavy / Fox 2, Bombs, Rockets / Long Range"
                },
                {
                   "fuel": 1,
@@ -1335,7 +2967,7 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "Su-30": {
             "name": "Su-30",
-            "label": "Su-30",
+            "label": "Su-30 Super Flanker",
             "shortLabel": "30",
             "loadouts": [
                {
@@ -1347,18 +2979,66 @@ export class AircraftDatabase extends UnitDatabase {
                      },
                      {
                         "name": "R-77",
-                        "quantity": 4
-                     },
-                     {
-                        "name": "R-27ER",
                         "quantity": 2
                      }
                   ],
                   "roles": [
                      "CAP"
                   ],
-                  "code": "R-40T*2,R-33*4",
-                  "name": "Heavy / Fox 3 / Short Range"
+                  "code": "R-73*2,R-77*2",
+                  "name": "Light / Fox 3 / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "R-73",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "R-77",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "R-27ER",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "ECM",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "R-73*2,R-77*2,R-27ER*2,ECM",
+                  "name": "Heavy / Fox 3, Fox 1 / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "R-73",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "R-77",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "FAB-1500",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "ECM",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "FAB-1500*2,R-73*2,R-77*2,ECM",
+                  "name": "Heavy / Fox 3, Bombs / Long Range"
                },
                {
                   "fuel": 1,
@@ -1376,7 +3056,7 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "Su-33": {
             "name": "Su-33",
-            "label": "Su-33",
+            "label": "Su-33 Naval Flanker",
             "shortLabel": "33",
             "loadouts": [
                {
@@ -1384,22 +3064,70 @@ export class AircraftDatabase extends UnitDatabase {
                   "items": [
                      {
                         "name": "R-73",
-                        "quantity": 4
+                        "quantity": 2
                      },
                      {
                         "name": "R-27ER",
-                        "quantity": 6
-                     },
-                     {
-                        "name": "R-27R",
                         "quantity": 2
                      }
                   ],
                   "roles": [
                      "CAP"
                   ],
-                  "code": "R-73*4,R-27R*2,R-27ER*6",
-                  "name": "Heavy / Fox 3 / Short Range"
+                  "code": "R-73*2, R-27ER*2",
+                  "name": "Light / Fox 1 / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "R-73",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "R-73",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "R-27ER",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "ECM",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "R-73*2,R-27ET*2,R-27ER*2,ECM",
+                  "name": "Heavy / Fox 1 / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "S-25",
+                        "quantity": 4
+                     },
+                     {
+                        "name": "FAB-250",
+                        "quantity": 4
+                     },
+                     {
+                        "name": "R-73",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "ECM",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "S-25*4,FAB-250*4,R-73*2,ECM",
+                  "name": "Heavy / Rockets, Bombs / Long Range"
                },
                {
                   "fuel": 1,
@@ -1417,7 +3145,7 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "Su-34": {
             "name": "Su-34",
-            "label": "Su-34",
+            "label": "Su-34 Hellduck",
             "shortLabel": "34",
             "loadouts": [
                {
@@ -1501,9 +3229,102 @@ export class AircraftDatabase extends UnitDatabase {
             ],
             "filename": "tornado.png"
          },
+         "Tornado GR4": {
+            "name": "Tornado GR4",
+            "label": "Tornado GR4",
+            "shortLabel": "GR4",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "ALARM",
+                        "quantity": 4
+                     },
+                     {
+                        "name": "fuel",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "ECM",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "SEAD"
+                  ],
+                  "code": "ALARM*4, Fuel*2, ECM",
+                  "name": "Heavy / ALARM / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "AIM-9M",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "GBU-16",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "fuel",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "ECM",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "GBU-16*2, AIM-9M*2, Fuel*2, ECM",
+                  "name": "Heavy / GBU-16 / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "AIM-9M",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "Sea Eagle",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "fuel",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "ECM",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "Anti-Ship"
+                  ],
+                  "code": "Sea Eagle*2, AIM-9M*2, Fuel*2, ECM",
+                  "name": "Heavy / Sea Eagle / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+
+                  ],
+                  "roles": [
+                     ""
+                  ],
+                  "code": "",
+                  "name": "Empty Loadout"
+               }
+            ],
+            "filename": "tornado.png"
+         },
          "Tu-142": {
             "name": "Tu-142",
-            "label": "Tu-142",
+            "label": "Tu-142 Bear",
             "shortLabel": "142",
             "loadouts": [
                {
@@ -1515,7 +3336,7 @@ export class AircraftDatabase extends UnitDatabase {
                      }
                   ],
                   "roles": [
-                     "Strike"
+                     "Anti-Ship"
                   ],
                   "code": "Kh-35*6",
                   "name": "Heavy / Kh-35 / Long Range"
@@ -1532,11 +3353,11 @@ export class AircraftDatabase extends UnitDatabase {
                   "name": "Empty Loadout"
                }
             ],
-            "filename": "tu-22.png"
+            "filename": "tu-95.png"
          },
          "Tu-160": {
             "name": "Tu-160",
-            "label": "Tu-160",
+            "label": "Tu-160 Blackjack",
             "shortLabel": "160",
             "loadouts": [
                {
@@ -1569,7 +3390,7 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "Tu-22M3": {
             "name": "Tu-22M3",
-            "label": "Tu-22M3",
+            "label": "Tu-22M3 Backfire",
             "shortLabel": "T22",
             "loadouts": [
                {
@@ -1581,9 +3402,23 @@ export class AircraftDatabase extends UnitDatabase {
                      }
                   ],
                   "roles": [
-                     "Strike"
+                     "Anti-Ship"
                   ],
                   "code": "Kh-22N*2",
+                  "name": "Heavy / Kh-22N / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "FAB-250",
+                        "quantity": 69
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "FAB-250*69",
                   "name": "Heavy / Kh-22n / Long Range"
                },
                {
@@ -1602,7 +3437,7 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "Tu-95MS": {
             "name": "Tu-95MS",
-            "label": "Tu-95MS",
+            "label": "Tu-95MS Bear",
             "shortLabel": "95",
             "loadouts": [
                {
@@ -1614,7 +3449,7 @@ export class AircraftDatabase extends UnitDatabase {
                      }
                   ],
                   "roles": [
-                     "Strike"
+                     "Anti-Ship"
                   ],
                   "code": "Kh-65*6",
                   "name": "Heavy / Kh-65 / Long Range"
