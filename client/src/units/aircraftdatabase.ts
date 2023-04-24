@@ -1347,10 +1347,10 @@ export class AircraftDatabase extends UnitDatabase {
 
                   ],
                   "roles": [
-                     ""
+                     "CAP"
                   ],
                   "code": "",
-                  "name": "Empty Loadout"
+                  "name": "Light / Guns / Short range"
                }
             ],
             "filename": "mig-19.png"
@@ -1411,6 +1411,28 @@ export class AircraftDatabase extends UnitDatabase {
                   ],
                   "code": "Patrol, medium range",
                   "name": "Medium / Fox-2 / Medium range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "R-3R Atoll",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "210 gal tanks",
+                        "quantity": 1
+                     },
+                     {
+                        "name": "ASO-2 Countermeasures",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "Patrol, R-3R Only",
+                  "name": "Medium / Fox-1 / Medium range"
                },
                {
                   "fuel": 1,
