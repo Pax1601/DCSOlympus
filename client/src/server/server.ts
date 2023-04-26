@@ -23,7 +23,7 @@ export function GET(callback: CallableFunction, uri: string){
     xmlHttp.open("GET", `${demoEnabled? DEMO_ADDRESS: REST_ADDRESS}/${uri}`, true);
     xmlHttp.onload = function (e) {
         var data = JSON.parse(xmlHttp.responseText);
-        if (parseInt(data.time) > lastUpdateTime)
+        if (uri != UNITS_URI || parseInt(data.time) > lastUpdateTime)
         {
             callback(data);
             lastUpdateTime = parseInt(data.time);

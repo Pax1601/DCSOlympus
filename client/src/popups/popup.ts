@@ -17,10 +17,10 @@ export class Popup extends Panel {
 
         clearTimeout(this.#visibilityTimer);
         clearTimeout(this.#hideTimer);
-        this.#visibilityTimer = setTimeout(() => {
+        this.#visibilityTimer = window.setTimeout(() => {
             this.getElement().classList.remove("visible");
             this.getElement().classList.add("invisible");
-            this.#hideTimer = setTimeout(() => this.hide(), 2000);
+            this.#hideTimer = window.setTimeout(() => this.hide(), 2000);
         }, this.#fadeTime);
     }
 }

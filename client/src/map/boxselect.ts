@@ -114,7 +114,7 @@ export var BoxSelect = Handler.extend({
 		if (!this._moved) { return; }
 		// Postpone to next JS tick so internal click event handling
 		// still see it as "moved".
-		setTimeout(Util.bind(this._resetState, this), 0);
+		window.setTimeout(Util.bind(this._resetState, this), 0);
 		var bounds = new LatLngBounds(
 			this._map.containerPointToLatLng(this._startPoint),
 			this._map.containerPointToLatLng(this._point));

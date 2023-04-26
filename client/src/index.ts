@@ -90,10 +90,8 @@ function readConfig(config: any)
     {
         const address = config["server"]["address"];
         const port = config["server"]["port"];
-        if ((typeof address === 'string' || address instanceof String) && typeof port == 'number')
-        {
-            setAddress(window.location.hostname, <number>port);
-        } 
+        if (typeof address === 'string' && typeof port == 'number')
+            setAddress(address == "*"? window.location.hostname: address, <number>port);
 
         /* On the first connection, force request of full data */
         getAirbases((data: AirbasesData) => getMissionData()?.update(data));
@@ -122,7 +120,7 @@ function requestUpdate() {
             checkSessionHash(data.sessionHash);
         }
     }, false);
-    setTimeout(() => requestUpdate(), getConnected() ? 250 : 1000);
+    window.setTimeout(() => requestUpdate(), getConnected() ? 250 : 1000);
 
     getConnectionStatusPanel()?.update(getConnected());
 }
@@ -134,7 +132,9 @@ function requestRefresh() {
             getUnitsManager()?.update(data);
             getAirbases((data: AirbasesData) => getMissionData()?.update(data));
             getBullseyes((data: BullseyesData) => getMissionData()?.update(data));
-            getMission((data: any) => {getMissionData()?.update(data)});
+            getMission((data: any) => {
+                getMissionData()?.update(data)
+            });
 
             // Update the list of existing units
             getUnitDataTable()?.update();
@@ -142,7 +142,7 @@ function requestRefresh() {
             checkSessionHash(data.sessionHash);
         }
     }, true);
-    setTimeout(() => requestRefresh(), 5000);
+    window.setTimeout(() => requestRefresh(), 5000);
 }
 
 function checkSessionHash(newSessionHash: string) {

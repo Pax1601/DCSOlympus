@@ -643,6 +643,7 @@ class DemoDataGenerator {
     
     logs(req, res){
         var ret = {logs: {}};
+        ret.time = Date.now();
         res.send(JSON.stringify(ret));
     };
     
@@ -667,6 +668,7 @@ class DemoDataGenerator {
                 coalition: "blue"
             }
         }};
+        ret.time = Date.now();
         res.send(JSON.stringify(ret));
     };
     
@@ -685,11 +687,13 @@ class DemoDataGenerator {
                 longitude: -115.7
             }
         }};
+        ret.time = Date.now();
         res.send(JSON.stringify(ret));
     };
 
     mission(req, res){
         var ret = {mission: {theatre: "Nevada"}};
+        ret.time = Date.now();
         res.send(JSON.stringify(ret));
     }
     

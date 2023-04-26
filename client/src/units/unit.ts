@@ -1,4 +1,4 @@
-import { Marker, LatLng, Polyline, Icon, DivIcon } from 'leaflet';
+import { Marker, LatLng, Polyline, Icon, DivIcon, CircleMarker } from 'leaflet';
 import { getMap, getUnitsManager } from '..';
 import { rad2deg } from '../other/utils';
 import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, getUnits, landAt, setAltitude, setReactionToThreat, setROE, setSpeed, refuel, setAdvacedOptions, followUnit } from '../server/server';
@@ -77,6 +77,7 @@ export class Unit extends Marker {
     #pathMarkers: Marker[] = [];
     #pathPolyline: Polyline;
     #targetsPolylines: Polyline[];
+    #miniMapMarker: CircleMarker | null = null;
 
     #timer: number = 0;
     #forceUpdate: boolean = false;
@@ -107,11 +108,11 @@ export class Unit extends Marker {
 
         /* Deselect units if they are hidden */
         document.addEventListener("toggleCoalitionVisibility", (ev: CustomEventInit) => {
-            setTimeout(() => {this.setSelected(this.getSelected() && !this.getHidden())}, 300);
+            window.setTimeout(() => {this.setSelected(this.getSelected() && !this.getHidden())}, 300);
         });
     
         document.addEventListener("toggleUnitVisibility", (ev: CustomEventInit) => {
-            setTimeout(() => {this.setSelected(this.getSelected() && !this.getHidden())}, 300);
+            window.setTimeout(() => {this.setSelected(this.getSelected() && !this.getHidden())}, 300);
         });
 
         /* Set the unit data */
@@ -124,7 +125,6 @@ export class Unit extends Marker {
             iconAnchor: [0, 0]
         });
         this.setIcon(icon);
-
     }
 
     getMarkerHTML() {
@@ -392,7 +392,7 @@ export class Unit extends Marker {
     }
 
     #onClick(e: any) {
-        this.#timer = setTimeout(() => {
+        this.#timer = window.setTimeout(() => {
             if (!this.#preventClick) {
                 if (getMap().getState() === 'IDLE' || getMap().getState() === 'MOVE_UNIT' || e.originalEvent.ctrlKey) {
                     if (!e.originalEvent.ctrlKey) {
@@ -517,8 +517,24 @@ export class Unit extends Marker {
     #updateMarker() {
         this.updateVisibility();
 
-        if (!this.getHidden()) {
+        if (this.#miniMapMarker == null)
+        {
+            this.#miniMapMarker = new CircleMarker(new LatLng(this.getFlightData().latitude, this.getFlightData().longitude), {radius: 0.5});
+            if (this.getMissionData().coalition == "neutral")
+                this.#miniMapMarker.setStyle({color: "#CFD9E8"});
+            else if (this.getMissionData().coalition == "red")
+                this.#miniMapMarker.setStyle({color: "#ff5858"});
+            else 
+                this.#miniMapMarker.setStyle({color: "#247be2"});
+            this.#miniMapMarker.addTo(getMap().getMiniMapLayerGroup());
+            this.#miniMapMarker.bringToBack();
+        }
+        else {
+            this.#miniMapMarker.setLatLng(new LatLng(this.getFlightData().latitude, this.getFlightData().longitude));
+            this.#miniMapMarker.bringToBack();
+        }
 
+        if (!this.getHidden()) {
             this.setLatLng(new LatLng(this.getFlightData().latitude, this.getFlightData().longitude));
             var element = this.getElement();
             if (element != null) {
@@ -538,8 +554,7 @@ export class Unit extends Marker {
 
                 var unitAltitudeDiv = element.querySelector(".unit-altitude");
                 if (unitAltitudeDiv != null) {
-                    unitAltitudeDiv.innerHTML = String(Math.floor(this.getFlightData().altitude / 0.3048 / 1000));
-
+                    unitAltitudeDiv.innerHTML = "FL" + String(Math.floor(this.getFlightData().altitude / 0.3048 / 1000));
                 }
                 
                 element.querySelectorAll( "[data-rotate-to-heading]" ).forEach( el => {

@@ -68,7 +68,7 @@ export class UnitsManager {
         Object.keys(data.units)
                 .filter((ID: string) => !(ID in this.#units))
                 .reduce((timeout: number, ID: string) => {
-                    setTimeout(() => {
+                    window.setTimeout(() => {
                         if (!(ID in this.#units))
                             this.addUnit(parseInt(ID), data.units[ID]);
                         this.#units[parseInt(ID)]?.setData(data.units[ID]);
@@ -330,7 +330,7 @@ export class UnitsManager {
                 this.#showActionMessage(this.#copiedUnits, `pasted`);   
             }
             this.#pasteDisabled = true;
-            setTimeout(() => this.#pasteDisabled = false, 250);
+            window.setTimeout(() => this.#pasteDisabled = false, 250);
         }
     }
 
@@ -348,7 +348,7 @@ export class UnitsManager {
             /* Disable the firing of the selection event for a certain amount of time. This avoids firing many events if many units are selected */
             if (!this.#selectionEventDisabled)
             {
-                setTimeout(() => {
+                window.setTimeout(() => {
                     document.dispatchEvent(new CustomEvent("unitsSelection", {detail: this.getSelectedUnits()}));
                     this.#selectionEventDisabled = false;
                 }, 100);

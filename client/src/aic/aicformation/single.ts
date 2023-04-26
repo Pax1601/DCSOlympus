@@ -8,7 +8,7 @@ export class AICFormation_Single extends AICFormation implements AICFormationInt
     "name"          = "single";
     "numGroups"     = 1;
     "summary"       = "One contact on its own";
-    "unitBreakdown" = [];
+    "unitBreakdown": string[] = [];
 
     constructor() {
 
