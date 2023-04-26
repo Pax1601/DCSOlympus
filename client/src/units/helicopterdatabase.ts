@@ -1,6 +1,6 @@
 import { UnitDatabase } from "./unitdatabase"
 
-export class AircraftDatabase extends UnitDatabase {
+export class HelicopterDatabase extends UnitDatabase {
    constructor() {
       super();
       this.blueprints = {
@@ -618,5 +618,5 @@ export class AircraftDatabase extends UnitDatabase {
    }
 }
 
-export var aircraftDatabase = new AircraftDatabase();
+export var helicopterDatabase = new HelicopterDatabase();
 
