@@ -1,5 +1,5 @@
 import { Marker, LatLng, Icon } from "leaflet";
-import { getInfoPopup, getMap, getUnitsManager } from "..";
+import { getInfoPopup, getMap } from "..";
 import { Airbase } from "./airbase";
 
 var bullseyeIcons = [

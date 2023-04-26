@@ -18,7 +18,7 @@ const DEMO_UNIT_DATA = {
         },
         missionData:  {
             fuel: 50,
-            flags: {human: false},
+            flags: {human: true},
             ammo: [
                 {
                     count: 4,
@@ -67,8 +67,8 @@ const DEMO_UNIT_DATA = {
     },
     ["2"]:{
         baseData: {
-            AI: true,
-            name: "F-5E",
+            AI: false,
+            name: "KC-135",
             unitName: "Olympus 1-2",
             groupName: "Group 1",
             alive: true,

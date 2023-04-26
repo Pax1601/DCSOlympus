@@ -546,7 +546,12 @@ export class Unit extends Marker {
 
                 element.querySelector(".unit")?.toggleAttribute("data-is-dead", !this.getBaseData().alive);
 
-                element.querySelector(".unit")?.setAttribute("data-state", this.getTaskData().currentState.toLowerCase());
+                if (this.getMissionData().flags.human) // Unit is human
+                    element.querySelector(".unit")?.setAttribute("data-state", "human");
+                else if (!this.getBaseData().AI) // Unit is under DCS control (no Olympus)
+                    element.querySelector(".unit")?.setAttribute("data-state", "dcs");
+                else    // Unit is under Olympus control
+                    element.querySelector(".unit")?.setAttribute("data-state", this.getTaskData().currentState.toLowerCase());
 
                 var unitHeadingDiv = element.querySelector(".unit-heading");
                 if (unitHeadingDiv != null)

@@ -132,6 +132,8 @@
     --unit-aircraft-state-attack: url( "/themes/olympus/images/state_attack.svg" );
     --unit-aircraft-state-follow: url( "/themes/olympus/images/state_follow.svg" );
     --unit-aircraft-state-refuel: url( "/themes/olympus/images/state_refuel.svg" );
+    --unit-aircraft-state-human: url( "/themes/olympus/images/state_human.svg" );
+    --unit-aircraft-state-dcs: url( "/themes/olympus/images/state_dcs.svg" );
 
     /***  Ground ***/
     --unit-groundunit-marker-height: 50px;
