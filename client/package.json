@@ -16,6 +16,7 @@
     "debug": "~2.6.9",
     "ejs": "^3.1.8",
     "express": "~4.16.1",
+    "geomag": "^1.0.0",
     "leaflet": "^1.9.3",
     "leaflet-control-mini-map": "^0.4.0",
     "leaflet.nauticscale": "^1.1.0",

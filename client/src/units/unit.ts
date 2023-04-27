@@ -4,6 +4,7 @@ import { rad2deg } from '../other/utils';
 import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, getUnits, landAt, setAltitude, setReactionToThreat, setROE, setSpeed, refuel, setAdvacedOptions, followUnit } from '../server/server';
 import { aircraftDatabase } from './aircraftdatabase';
 import { groundUnitsDatabase } from './groundunitsdatabase';
+import { field } from 'geomag'
 
 var pathIcon = new Icon({
     iconUrl: 'images/marker-icon.png',
@@ -517,21 +518,30 @@ export class Unit extends Marker {
     #updateMarker() {
         this.updateVisibility();
 
-        if (this.#miniMapMarker == null)
+        if (this.getBaseData().alive )
         {
-            this.#miniMapMarker = new CircleMarker(new LatLng(this.getFlightData().latitude, this.getFlightData().longitude), {radius: 0.5});
-            if (this.getMissionData().coalition == "neutral")
-                this.#miniMapMarker.setStyle({color: "#CFD9E8"});
-            else if (this.getMissionData().coalition == "red")
-                this.#miniMapMarker.setStyle({color: "#ff5858"});
-            else 
-                this.#miniMapMarker.setStyle({color: "#247be2"});
-            this.#miniMapMarker.addTo(getMap().getMiniMapLayerGroup());
-            this.#miniMapMarker.bringToBack();
+            if (this.#miniMapMarker == null)
+            {
+                this.#miniMapMarker = new CircleMarker(new LatLng(this.getFlightData().latitude, this.getFlightData().longitude), {radius: 0.5});
+                if (this.getMissionData().coalition == "neutral")
+                    this.#miniMapMarker.setStyle({color: "#CFD9E8"});
+                else if (this.getMissionData().coalition == "red")
+                    this.#miniMapMarker.setStyle({color: "#ff5858"});
+                else 
+                    this.#miniMapMarker.setStyle({color: "#247be2"});
+                this.#miniMapMarker.addTo(getMap().getMiniMapLayerGroup());
+                this.#miniMapMarker.bringToBack();
+            }
+            else {
+                this.#miniMapMarker.setLatLng(new LatLng(this.getFlightData().latitude, this.getFlightData().longitude));
+                this.#miniMapMarker.bringToBack();
+            }
         }
         else {
-            this.#miniMapMarker.setLatLng(new LatLng(this.getFlightData().latitude, this.getFlightData().longitude));
-            this.#miniMapMarker.bringToBack();
+            if (this.#miniMapMarker != null && getMap().getMiniMapLayerGroup().hasLayer(this.#miniMapMarker)) {
+                getMap().getMiniMapLayerGroup().removeLayer(this.#miniMapMarker);
+                this.#miniMapMarker = null;
+            }
         }
 
         if (!this.getHidden()) {
@@ -546,21 +556,20 @@ export class Unit extends Marker {
 
                 element.querySelector(".unit")?.toggleAttribute("data-is-dead", !this.getBaseData().alive);
 
-                if (this.getMissionData().flags.human) // Unit is human
+                if (this.getMissionData().flags.Human) // Unit is human
                     element.querySelector(".unit")?.setAttribute("data-state", "human");
                 else if (!this.getBaseData().AI) // Unit is under DCS control (no Olympus)
                     element.querySelector(".unit")?.setAttribute("data-state", "dcs");
                 else    // Unit is under Olympus control
                     element.querySelector(".unit")?.setAttribute("data-state", this.getTaskData().currentState.toLowerCase());
 
-                var unitHeadingDiv = element.querySelector(".unit-heading");
-                if (unitHeadingDiv != null)
-                    unitHeadingDiv.innerHTML = String(Math.floor(rad2deg(this.getFlightData().heading)));
-
                 var unitAltitudeDiv = element.querySelector(".unit-altitude");
-                if (unitAltitudeDiv != null) {
+                if (unitAltitudeDiv != null) 
                     unitAltitudeDiv.innerHTML = "FL" + String(Math.floor(this.getFlightData().altitude / 0.3048 / 1000));
-                }
+                
+                var unitSpeedDiv = element.querySelector(".unit-speed");
+                if (unitSpeedDiv != null)
+                    unitSpeedDiv.innerHTML = String(Math.floor(this.getFlightData().speed * 1.94384 ) );
                 
                 element.querySelectorAll( "[data-rotate-to-heading]" ).forEach( el => {
                     const headingDeg = rad2deg( this.getFlightData().heading );
@@ -568,9 +577,7 @@ export class Unit extends Marker {
                     el.setAttribute( "style", currentStyle + `transform:rotate(${headingDeg}deg);` );
                 });
 
-                var unitSpeedDiv = element.querySelector(".unit-speed");
-                if (unitSpeedDiv != null)
-                    unitSpeedDiv.innerHTML = String(Math.floor(this.getFlightData().speed * 1.94384 ) );
+                
 
             }
             var pos = getMap().latLngToLayerPoint(this.getLatLng()).round();
