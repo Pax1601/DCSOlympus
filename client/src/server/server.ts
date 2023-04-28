@@ -18,12 +18,12 @@ export function toggleDemoEnabled()
     demoEnabled = !demoEnabled;
 }
 
-export function GET(callback: CallableFunction, uri: string){
+export function GET(callback: CallableFunction, uri: string, options?: string){
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", `${demoEnabled? DEMO_ADDRESS: REST_ADDRESS}/${uri}`, true);
+    xmlHttp.open("GET", `${demoEnabled? DEMO_ADDRESS: REST_ADDRESS}/${uri}${options? options: ''}`, true);
     xmlHttp.onload = function (e) {
         var data = JSON.parse(xmlHttp.responseText);
-        if (parseInt(data.time) > lastUpdateTime)
+        if (uri !== UNITS_URI || parseInt(data.time) > lastUpdateTime)
         {
             callback(data);
             lastUpdateTime = parseInt(data.time);
@@ -84,7 +84,7 @@ export function getMission(callback: CallableFunction) {
 }
 
 export function getUnits(callback: CallableFunction, refresh: boolean = false) {
-    GET(callback, `${UNITS_URI}?time=${refresh? 0: lastUpdateTime}`);
+    GET(callback, `${UNITS_URI}`, `?time=${refresh? 0: lastUpdateTime}`);
 }
 
 export function addDestination(ID: number, path: any) {

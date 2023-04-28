@@ -2064,8 +2064,8 @@ export class AircraftDatabase extends UnitDatabase {
             ],
             "filename": "kc-135.png"
          },
-         "KC-135MPRS": {
-            "name": "KC-135MPRS",
+         "KC135MPRS": {
+            "name": "KC135MPRS",
             "label": "KC-135 MPRS Stratotanker",
             "shortLabel": "135M",
             "loadouts": [
@@ -2082,6 +2082,44 @@ export class AircraftDatabase extends UnitDatabase {
                }
             ],
             "filename": "kc-135.png"
+         },
+         "KC_10_Extender": {
+            "name": "KC_10_Extender",
+            "label": "KC-10 Extender",
+            "shortLabel": "KC10",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+
+                  ],
+                  "roles": [
+                     "Tanker"
+                  ],
+                  "code": "",
+                  "name": "Default Tanker"
+               }
+            ],
+            "filename": "kc-10.png"
+         },
+         "KC_10_Extender_D": {
+            "name": "KC_10_Extender_D",
+            "label": "KC-10 Extender (Drogue)",
+            "shortLabel": "KC10",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+
+                  ],
+                  "roles": [
+                     "Tanker"
+                  ],
+                  "code": "",
+                  "name": "Default Tanker"
+               }
+            ],
+            "filename": "kc-10.png"
          },
          "MiG-15bis": {
             "name": "MiG-15bis",

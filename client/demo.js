@@ -18,7 +18,7 @@ const DEMO_UNIT_DATA = {
         },
         missionData:  {
             fuel: 50,
-            flags: {human: false},
+            flags: {human: true},
             ammo: [
                 {
                     count: 4,
@@ -67,8 +67,8 @@ const DEMO_UNIT_DATA = {
     },
     ["2"]:{
         baseData: {
-            AI: true,
-            name: "F-5E",
+            AI: false,
+            name: "KC-135",
             unitName: "Olympus 1-2",
             groupName: "Group 1",
             alive: true,
@@ -643,6 +643,7 @@ class DemoDataGenerator {
     
     logs(req, res){
         var ret = {logs: {}};
+        ret.time = Date.now();
         res.send(JSON.stringify(ret));
     };
     
@@ -667,6 +668,7 @@ class DemoDataGenerator {
                 coalition: "blue"
             }
         }};
+        ret.time = Date.now();
         res.send(JSON.stringify(ret));
     };
     
@@ -685,11 +687,13 @@ class DemoDataGenerator {
                 longitude: -115.7
             }
         }};
+        ret.time = Date.now();
         res.send(JSON.stringify(ret));
     };
 
     mission(req, res){
         var ret = {mission: {theatre: "Nevada"}};
+        ret.time = Date.now();
         res.send(JSON.stringify(ret));
     }
     

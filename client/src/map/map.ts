@@ -1,4 +1,6 @@
 import * as L from "leaflet"
+import { MiniMap, MiniMapOptions } from "leaflet-control-mini-map";
+
 import { getUnitsManager } from "..";
 import { BoxSelect } from "./boxselect";
 import { MapContextMenu } from "../controls/mapcontextmenu";
@@ -8,18 +10,35 @@ import { Dropdown } from "../controls/dropdown";
 import { Airbase } from "../missionhandler/airbase";
 import { Unit } from "../units/unit";
 
+// TODO a bit of a hack, this module is provided as pure javascript only
+require("../../node_modules/leaflet.nauticscale/dist/leaflet.nauticscale.js")
+
 export const IDLE = "IDLE";
 export const MOVE_UNIT = "MOVE_UNIT";
 
 L.Map.addInitHook('addHandler', 'boxSelect', BoxSelect);
 
+export class ClickableMiniMap extends MiniMap {
+    constructor(layer: L.TileLayer | L.LayerGroup, options?: MiniMapOptions)
+    {
+        super(layer, options);
+    }
+
+    getMap() {
+        //@ts-ignore needed to access not exported member. A bit of a hack, required to access click events
+        return this._miniMap;
+    }
+}
+
 export class Map extends L.Map {
     #state: string;
     #layer: L.TileLayer | null = null;
     #preventLeftClick: boolean = false;
-    #leftClickTimer: number = 0;
+    #leftClickTimer: any = 0;
     #lastMousePosition: L.Point = new L.Point(0, 0);
     #centerUnit: Unit | null = null;
+    #miniMap: ClickableMiniMap | null = null;
+    #miniMapLayerGroup: L.LayerGroup;
 
     #mapContextMenu: MapContextMenu = new MapContextMenu("map-contextmenu");
     #unitContextMenu: UnitContextMenu = new UnitContextMenu("unit-contextmenu");
@@ -30,10 +49,58 @@ export class Map extends L.Map {
     constructor(ID: string) {
         /* Init the leaflet map */
         //@ts-ignore
-        super(ID, { doubleClickZoom: false, zoomControl: false, boxZoom: false, boxSelect: true, zoomAnimation: false });
-        this.setView([37.23, -115.8], 12);
+        super(ID, { doubleClickZoom: false, zoomControl: false, boxZoom: false, boxSelect: true, zoomAnimation: true, maxBoundsViscosity: 1.0, minZoom: 7 });
+        this.setView([37.23, -115.8], 10);
 
         this.setLayer("ArcGIS Satellite");
+
+        /* Minimap */
+        /* Draw the limits of the maps in the minimap*/
+        var latlngs = [[    // NTTR
+                            new L.LatLng(39.7982463,    -119.985425 ),
+                            new L.LatLng(34.4037128,    -119.7806729),
+                            new L.LatLng(34.3483316,    -112.4529351),
+                            new L.LatLng(39.7372411,    -112.1130805),
+                            new L.LatLng(39.7982463,    -119.985425 )
+                        ],
+                        [   // Syria
+                            new L.LatLng(37.3630556,    29.2686111),
+                            new L.LatLng(31.8472222,    29.8975),
+                            new L.LatLng(32.1358333,    42.1502778),
+                            new L.LatLng(37.7177778,    42.3716667),
+                            new L.LatLng(37.3630556,    29.2686111)
+                        ],
+                        [   // Caucasus
+                            new L.LatLng(39.6170191, 27.634935),  
+                            new L.LatLng(38.8735863, 47.1423108), 
+                            new L.LatLng(47.3907982, 49.3101946),
+                            new L.LatLng(48.3955879, 26.7753625),
+                            new L.LatLng(39.6170191, 27.634935) 
+                        ],
+                        [   // Persian Gulf
+                            new L.LatLng(32.9355285, 46.5623682), 
+                            new L.LatLng(21.729393,  47.572675),  
+                            new L.LatLng(21.8501348, 63.9734737), 
+                            new L.LatLng(33.131584,  64.7313594), 
+                            new L.LatLng(32.9355285, 46.5623682) 
+                        ], 
+                        [   // Marianas
+                            new L.LatLng(22.09,      135.0572222),
+                            new L.LatLng(10.5777778, 135.7477778),
+                            new L.LatLng(10.7725,    149.3918333),
+                            new L.LatLng(22.5127778, 149.5427778),
+                            new L.LatLng(22.09,      135.0572222)
+                        ]
+                    ];
+
+        var minimapLayer = new L.TileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { minZoom: 0, maxZoom: 13 });
+        this.#miniMapLayerGroup = new L.LayerGroup([minimapLayer]);
+        var miniMapPolyline = new L.Polyline(latlngs, {color: '#202831'});
+        miniMapPolyline.addTo(this.#miniMapLayerGroup);
+        
+        /* Scale */
+        //@ts-ignore TODO more hacking because the module is provided as a pure javascript module only
+        L.control.scalenautic({position: "topright", maxWidth: 300, nautic: true, metric: true, imperial: false}).addTo(this);
 
         /* Init the state machine */
         this.#state = IDLE;
@@ -198,12 +265,11 @@ export class Map extends L.Map {
     }
 
     /* Spawn from air base */
-    spawnFromAirbase(e: any)
-    {
+    spawnFromAirbase(e: any) {
         //this.#aircraftSpawnMenu(e);
     }
 
-    centerOnUnit(ID: number | null){
+    centerOnUnit(ID: number | null) {
         if (ID != null)
         {
             this.options.scrollWheelZoom = 'center';
@@ -213,6 +279,47 @@ export class Map extends L.Map {
             this.options.scrollWheelZoom = undefined;
             this.#centerUnit = null;
         }
+    }
+
+    setTheatre(theatre: string) {
+        var bounds = new L.LatLngBounds([-90, -180], [90, 180]);
+        var miniMapZoom = 5;
+        if (theatre == "Syria")
+            bounds = new L.LatLngBounds([31.8472222, 29.8975], [37.7177778, 42.3716667]);
+        else if (theatre == "MarianaIslands")
+            bounds = new L.LatLngBounds([10.5777778, 135.7477778], [22.5127778, 149.5427778]);
+        else if (theatre == "Nevada")
+            bounds = new L.LatLngBounds([34.4037128, -119.7806729],  [39.7372411, -112.1130805])
+        else if (theatre == "PersianGulf")
+            bounds = new L.LatLngBounds([21.729393,  47.572675],  [33.131584,  64.7313594])
+        else if (theatre == "Falklands")
+        {
+            // TODO
+        }
+        else if (theatre == "Caucasus")
+        {
+            bounds = new L.LatLngBounds([39.6170191, 27.634935],  [47.3907982, 49.3101946])
+            miniMapZoom = 4;
+        }
+
+        this.setView(bounds.getCenter(), 8);
+        this.setMaxBounds(bounds);
+
+        if (this.#miniMap)
+            this.#miniMap.remove();
+
+        //@ts-ignore // Needed because some of the inputs are wrong in the original module interface
+        this.#miniMap = new ClickableMiniMap(this.#miniMapLayerGroup, {position: "topright", width: 192*1.5, height: 108*1.5, zoomLevelFixed: miniMapZoom, centerFixed: bounds.getCenter()}).addTo(this);
+        this.#miniMap.disableInteractivity();
+        this.#miniMap.getMap().on("click", (e: any) => {
+            if (this.#miniMap)
+                this.setView(e.latlng);
+        })
+        
+    }
+
+    getMiniMapLayerGroup() {
+        return this.#miniMapLayerGroup;
     }
 
     /* Event handlers */
@@ -252,7 +359,7 @@ export class Map extends L.Map {
     {
         clearTimeout(this.#leftClickTimer);
         this.#preventLeftClick = true;
-        this.#leftClickTimer = setTimeout(() => {
+        this.#leftClickTimer = window.setTimeout(() => {
             this.#preventLeftClick = false;  
         }, 200);
         getUnitsManager().selectFromBounds(e.selectionBounds);

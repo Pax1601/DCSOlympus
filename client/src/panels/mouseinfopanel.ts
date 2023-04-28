@@ -82,7 +82,7 @@ export class MouseInfoPanel extends Panel {
 
                 el.dataset.bearing       = zeroAppend(Math.floor(bear), 3);
                 el.dataset.distance      = zeroAppend(Math.floor(dist*0.000539957), 3);
-                el.dataset.distanceUnits = "nm";
+                el.dataset.distanceUnits = "NM";
             }
         }
 
@@ -176,7 +176,7 @@ export class MouseInfoPanel extends Panel {
                 bng = "360";
             }
 
-            let data = [ `${bng}°`, `${Math.floor(dist*0.000539957)}nm`, `${reciprocal}°` ];
+            let data = [ `${bng}°`, `${Math.floor(dist*0.000539957)}NM`, `${reciprocal}°` ];
 
             if ( bear < 180 ) {
                 data = data.reverse();
@@ -229,7 +229,7 @@ export class MouseInfoPanel extends Panel {
 
             pos.dataset.bearing       = "---";
             pos.dataset.distance      = "---";
-            pos.dataset.distanceUnits = "nm";
+            pos.dataset.distanceUnits = "NM";
 
         }
     }

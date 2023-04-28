@@ -83,7 +83,7 @@ export abstract class ATCBoard {
         });
 
 
-        setInterval( () => {
+        window.setInterval( () => {
             this.updateClock();
         }, 1000 );
 
@@ -206,7 +206,7 @@ export abstract class ATCBoard {
             this.#strips[ flightId ].element.remove();
             this.#strips[ flightId ].isDeleted = true;
 
-            setTimeout( () => {
+            window.setTimeout( () => {
                 delete this.#strips[ flightId ];
             }, 10000 );
 
@@ -326,7 +326,7 @@ export abstract class ATCBoard {
 
             resetSuggestions();
 
-            searchTimeout = setTimeout( () => {
+            searchTimeout = window.setTimeout( () => {
             
                 const searchString = unitName.value.toLowerCase();
     
@@ -408,7 +408,7 @@ export abstract class ATCBoard {
             return;
         }
 
-        this.#updateInterval = setInterval( () => {
+        this.#updateInterval = window.setInterval( () => {
 
             this.update();
 

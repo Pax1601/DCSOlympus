@@ -42,7 +42,7 @@ export class UnitInfoPanel extends Panel {
 
         document.addEventListener("unitsSelection", (e: CustomEvent<Unit[]>) => this.#onUnitsSelection(e.detail));
         document.addEventListener("unitsDeselection", (e: CustomEvent<Unit[]>) => this.#onUnitsDeselection(e.detail));
-        document.addEventListener("clearSelection", () => this.#onUnitsDeselection([]));
+        document.addEventListener("clearSelection", (e: CustomEvent<Unit[]>) => this.#onUnitsDeselection([]));
         document.addEventListener("unitUpdated", (e: CustomEvent<Unit>) => this.#onUnitUpdate(e.detail));
 
         this.hide();

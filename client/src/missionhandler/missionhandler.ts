@@ -1,5 +1,5 @@
 import { Marker, LatLng, Icon } from "leaflet";
-import { getInfoPopup, getMap, getUnitsManager } from "..";
+import { getInfoPopup, getMap } from "..";
 import { Airbase } from "./airbase";
 
 var bullseyeIcons = [
@@ -43,21 +43,10 @@ export class MissionHandler
 
         if ("mission" in data)
         {
-            if (data.mission.theatre != this.#theatre) 
+            if (data.mission != null && data.mission.theatre != this.#theatre) 
             {
-                this.#theatre = data.mission.theatre
-                if (this.#theatre == "Syria")
-                    getMap().setView(new LatLng(34.5, 36.0), 8);
-                else if (this.#theatre == "MarianaIslands")
-                    getMap().setView(new LatLng(16.7, 145.7), 7);
-                else if (this.#theatre == "Nevada")
-                    getMap().setView(new LatLng(37.1, -115.2), 8);
-                else if (this.#theatre == "PersianGulf")
-                    getMap().setView(new LatLng(26.5, 55.3), 8);
-                else if (this.#theatre == "Falklands")
-                    getMap().setView(new LatLng(-50.6, -42.7), 7);
-                else if (this.#theatre == "Caucasus")
-                    getMap().setView(new LatLng(42.1, 42.3), 8);
+                this.#theatre = data.mission.theatre;
+                getMap().setTheatre(this.#theatre);
 
                 getInfoPopup().setText("Map set to " + this.#theatre);
             }

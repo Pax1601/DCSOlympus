@@ -46,7 +46,7 @@ class ATCDataHandler {
 
     startUpdates() {
             
-        this.#updateInterval = setInterval( () => {
+        this.#updateInterval = window.setInterval( () => {
 
             const aBoardIsVisible = this.#atc.getBoards().some( board => board.boardIsVisible() );
 

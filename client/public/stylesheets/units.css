@@ -538,6 +538,14 @@
     background-image: var( --unit-aircraft-state-refuel );
 }
 
+[data-object|="unit"][data-state="human"] .unit-state {
+    background-image: var( --unit-aircraft-state-human );
+}
+
+[data-object|="unit"][data-state="dcs"] .unit-state {
+    background-image: var( --unit-aircraft-state-dcs );
+}
+
 /***  DEAD  ***/
 [data-object|="unit-aircraft"][ data-is-dead ] {
     cursor: default;
