@@ -191,8 +191,17 @@ export class UnitsManager {
     selectedUnitsAddDestination(latlng: L.LatLng) {
         var selectedUnits = this.getSelectedUnits();
         for (let idx in selectedUnits) {
-            var commandedUnit = selectedUnits[idx];
-            commandedUnit.addDestination(latlng);
+            const unit = selectedUnits[idx];
+            if (unit.getTaskData().currentState === "Follow")
+            {
+                const leader = this.getUnitByID(unit.getFormationData().leaderID)
+                if (leader && leader.getSelected())
+                    leader.addDestination(latlng);
+                else
+                    unit.addDestination(latlng);
+            }
+            else 
+                unit.addDestination(latlng);
         }
         this.#showActionMessage(selectedUnits, " new destination added");
     }
@@ -200,8 +209,17 @@ export class UnitsManager {
     selectedUnitsClearDestinations() {
         var selectedUnits = this.getSelectedUnits();
         for (let idx in selectedUnits) {
-            var commandedUnit = selectedUnits[idx];
-            commandedUnit.clearDestinations();
+            const unit = selectedUnits[idx];
+            if (unit.getTaskData().currentState === "Follow")
+            {
+                const leader = this.getUnitByID(unit.getFormationData().leaderID)
+                if (leader && leader.getSelected())
+                    leader.clearDestinations();
+                else
+                    unit.clearDestinations();
+            }
+            else 
+                unit.clearDestinations();
         }
     }
 

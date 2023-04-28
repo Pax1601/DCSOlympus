@@ -71,6 +71,7 @@ export class Unit extends Marker {
 
     #selectable: boolean;
     #selected: boolean = false;
+    #hovered: boolean = false;
     #hidden: boolean = false;
 
     #preventClick: boolean = false;
@@ -81,7 +82,6 @@ export class Unit extends Marker {
     #miniMapMarker: CircleMarker | null = null;
 
     #timer: number = 0;
-    #forceUpdate: boolean = false;
 
     static getConstructor(type: string) {
         if (type === "GroundUnit") return GroundUnit;
@@ -102,6 +102,8 @@ export class Unit extends Marker {
         this.on('click', (e) => this.#onClick(e));
         this.on('dblclick', (e) => this.#onDoubleClick(e));
         this.on('contextmenu', (e) => this.#onContextMenu(e));
+        this.on('mouseover', () => { this.#hovered = true;})
+        this.on('mouseout', () => { this.#hovered = false;})
         
         this.#pathPolyline = new Polyline([], { color: '#2d3e50', weight: 3, opacity: 0.5, smoothFactor: 1 });
         this.#pathPolyline.addTo(getMap());
@@ -123,7 +125,8 @@ export class Unit extends Marker {
         var icon = new DivIcon({
             html: this.getMarkerHTML(),
             className: 'leaflet-unit-marker',
-            iconAnchor: [0, 0]
+            iconAnchor: [25, 0],
+            iconSize: [50, 50],
         });
         this.setIcon(icon);
     }
@@ -143,13 +146,11 @@ export class Unit extends Marker {
     }
 
     setData(data: UpdateData) {
-        var updateMarker = false;
-    
-        if ((data.flightData.latitude != undefined && data.flightData.longitude != undefined && (this.getFlightData().latitude != data.flightData.latitude || this.getFlightData().longitude != data.flightData.longitude)) 
-            || (data.flightData.heading != undefined && this.getFlightData().heading != data.flightData.heading)
-            || (data.baseData.alive != undefined && this.getBaseData().alive != data.baseData.alive)
-            || this.#forceUpdate || !getMap().hasLayer(this))
-            updateMarker = true;
+        /* Check if data has changed comparing new values to old values */
+        const positionChanged = (data.flightData.latitude != undefined && data.flightData.longitude != undefined && (this.getFlightData().latitude != data.flightData.latitude || this.getFlightData().longitude != data.flightData.longitude));
+        const headingChanged = (data.flightData.heading != undefined && this.getFlightData().heading != data.flightData.heading);
+        const aliveChanged = (data.baseData.alive != undefined && this.getBaseData().alive != data.baseData.alive);
+        var updateMarker = (positionChanged || headingChanged || aliveChanged || !getMap().hasLayer(this))
         
         if (data.baseData != undefined)
         {
@@ -331,20 +332,16 @@ export class Unit extends Marker {
     }
 
     attackUnit(targetID: number) {
+        /* Units can't attack themselves */
         if (this.ID != targetID) {
             attackUnit(this.ID, targetID);
-        }
-        else {
-            // TODO: show a message
         }
     }
 
     followUnit(targetID: number, offset: {"x": number, "y": number, "z": number}) {
+        /* Units can't follow themselves */
         if (this.ID != targetID) {
             followUnit(this.ID, targetID, offset);
-        }
-        else {
-            // TODO: show a message
         }
     }
 
@@ -399,7 +396,7 @@ export class Unit extends Marker {
                     if (!e.originalEvent.ctrlKey) {
                         getUnitsManager().deselectAllUnits();
                     }
-                    this.setSelected(true);
+                    this.setSelected(!this.getSelected());
                 }
             }
             this.#preventClick = false;
@@ -416,12 +413,11 @@ export class Unit extends Marker {
 
         options["Center"] = `<div id="center-map">Center map</div>`; 
 
-        if (getUnitsManager().getSelectedUnits().length > 0 && !(getUnitsManager().getSelectedUnits().includes(this)))
+        if (getUnitsManager().getSelectedUnits().length > 0 && !(getUnitsManager().getSelectedUnits().length == 1 && (getUnitsManager().getSelectedUnits().includes(this))))
         {
-            options = {
-                'Attack': `<div id="attack">Attack</div>`,
-                'Follow': `<div id="follow">Follow</div>`,
-            }
+            options['Attack'] = `<div id="attack">Attack</div>`;
+            if (getUnitsManager().getSelectedUnitsType() === "Aircraft")
+                options['Follow'] = `<div id="follow">Follow</div>`;
         }
         else if ((getUnitsManager().getSelectedUnits().length > 0 && (getUnitsManager().getSelectedUnits().includes(this))) || getUnitsManager().getSelectedUnits().length == 0)
         {
@@ -487,30 +483,12 @@ export class Unit extends Marker {
             // Z: left-right, positive right
 
             var offset = {"x": 0, "y": 0, "z": 0};
-            if (action == "Trail")
-            {
-                offset.x = -50; offset.y = -30; offset.z = 0;
-            }
-            else if (action == "Echelon (LH)")
-            {
-                offset.x = -50; offset.y = -10; offset.z = -50;
-            }
-            else if (action == "Echelon (RH)")
-            {
-                offset.x = -50; offset.y = -10; offset.z = 50;
-            }
-            else if (action == "Line abreast (RH)")
-            {
-                offset.x = 0; offset.y = 0; offset.z = 50;
-            }
-            else if (action == "Line abreast (LH)")
-            {
-                offset.x = 0; offset.y = 0; offset.z = -50;
-            }
-            else if (action == "Front")
-            {
-                offset.x = 100; offset.y = 0; offset.z = 0;
-            }
+            if (action == "Trail")                  { offset.x = -50; offset.y = -30; offset.z = 0; }
+            else if (action == "Echelon (LH)")      { offset.x = -50; offset.y = -10; offset.z = -50; }
+            else if (action == "Echelon (RH)")      { offset.x = -50; offset.y = -10; offset.z = 50; }
+            else if (action == "Line abreast (RH)") { offset.x = 0; offset.y = 0; offset.z = 50; }
+            else if (action == "Line abreast (LH)") { offset.x = 0; offset.y = 0; offset.z = -50; }
+            else if (action == "Front")             { offset.x = 100; offset.y = 0; offset.z = 0; }
             getUnitsManager().selectedUnitsFollowUnit(this.ID, offset);
         }
     }
@@ -518,6 +496,7 @@ export class Unit extends Marker {
     #updateMarker() {
         this.updateVisibility();
 
+        /* Draw the minimap marker */
         if (this.getBaseData().alive )
         {
             if (this.#miniMapMarker == null)
@@ -544,47 +523,47 @@ export class Unit extends Marker {
             }
         }
 
+        /* Draw the marker */
         if (!this.getHidden()) {
             this.setLatLng(new LatLng(this.getFlightData().latitude, this.getFlightData().longitude));
+
             var element = this.getElement();
             if (element != null) {
+                /* Draw the velocity vector */
                 element.querySelector(".unit-vvi")?.setAttribute("style", `height: ${15 + this.getFlightData().speed / 5}px;`);
-                element.querySelector(".unit")?.setAttribute("data-pilot", this.getMissionData().flags.human? "human": "ai");
 
+                /* Set fuel data */
                 element.querySelector(".unit-fuel-level")?.setAttribute("style", `width: ${this.getMissionData().fuel}%`);
                 element.querySelector(".unit")?.toggleAttribute("data-has-low-fuel", this.getMissionData().fuel < 20);
 
+                /* Set dead/alive flag */
                 element.querySelector(".unit")?.toggleAttribute("data-is-dead", !this.getBaseData().alive);
 
-                if (this.getMissionData().flags.Human) // Unit is human
+                /* Set current unit state */
+                if (this.getMissionData().flags.Human)  // Unit is human
                     element.querySelector(".unit")?.setAttribute("data-state", "human");
-                else if (!this.getBaseData().AI) // Unit is under DCS control (no Olympus)
+                else if (!this.getBaseData().AI)        // Unit is under DCS control (not Olympus)
                     element.querySelector(".unit")?.setAttribute("data-state", "dcs");
-                else    // Unit is under Olympus control
+                else                                    // Unit is under Olympus control
                     element.querySelector(".unit")?.setAttribute("data-state", this.getTaskData().currentState.toLowerCase());
 
-                var unitAltitudeDiv = element.querySelector(".unit-altitude");
-                if (unitAltitudeDiv != null) 
-                    unitAltitudeDiv.innerHTML = "FL" + String(Math.floor(this.getFlightData().altitude / 0.3048 / 1000));
+                /* Set altitude and speed */
+                if (element.querySelector(".unit-altitude"))
+                    (<HTMLElement> element.querySelector(".unit-altitude")).innerText = "FL" + String(Math.floor(this.getFlightData().altitude / 0.3048 / 1000));
+                if (element.querySelector(".unit-speed"))
+                    (<HTMLElement> element.querySelector(".unit-speed")).innerHTML = String(Math.floor(this.getFlightData().speed * 1.94384 ) );
                 
-                var unitSpeedDiv = element.querySelector(".unit-speed");
-                if (unitSpeedDiv != null)
-                    unitSpeedDiv.innerHTML = String(Math.floor(this.getFlightData().speed * 1.94384 ) );
-                
+                /* Rotate elements according to heading */
                 element.querySelectorAll( "[data-rotate-to-heading]" ).forEach( el => {
                     const headingDeg = rad2deg( this.getFlightData().heading );
                     let currentStyle = el.getAttribute( "style" ) || "";
                     el.setAttribute( "style", currentStyle + `transform:rotate(${headingDeg}deg);` );
                 });
-
-                
-
             }
+            /* Set vertical offset for altitude stacking */
             var pos = getMap().latLngToLayerPoint(this.getLatLng()).round();
-            this.setZIndexOffset(1000 + Math.floor(this.getFlightData().altitude) - pos.y);
+            this.setZIndexOffset(1000 + Math.floor(this.getFlightData().altitude) - pos.y + (this.#hovered || this.#selected? 5000: 0));
         }
-
-        this.#forceUpdate = false;
     }
 
     #drawPath() {
@@ -643,7 +622,7 @@ export class Unit extends Marker {
                         color = "#00FF00";
                     else
                         color = "#FFFFFF";
-                    var targetPolyline = new Polyline([startLatLng, endLatLng], { color: color, weight: 3, opacity: 1, smoothFactor: 1 });
+                    var targetPolyline = new Polyline([startLatLng, endLatLng], { color: color, weight: 3, opacity: 0.4, smoothFactor: 1 });
                     targetPolyline.addTo(getMap());
                     this.#targetsPolylines.push(targetPolyline)
                 }

@@ -1,10 +1,83 @@
-<svg width="63" height="63" viewBox="0 0 63 63" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M31.4998 46.9756C40.0468 46.9756 46.9756 40.0468 46.9756 31.4998C46.9756 22.9528 40.0468 16.024 31.4998 16.024C22.9528 16.024 16.024 22.9528 16.024 31.4998C16.024 40.0468 22.9528 46.9756 31.4998 46.9756ZM31.4998 52.734C43.2271 52.734 52.734 43.2271 52.734 31.4998C52.734 19.7725 43.2271 10.2656 31.4998 10.2656C19.7725 10.2656 10.2656 19.7725 10.2656 31.4998C10.2656 43.2271 19.7725 52.734 31.4998 52.734Z" fill="white"/>
-<path d="M35.3291 61L37.3291 61L37.3291 59L37.3291 49.2532L37.3291 47.2532L35.3291 47.2532L27.6709 47.2532L25.6709 47.2532L25.6709 49.2532L25.6709 59L25.6709 61L27.6709 61L35.3291 61Z" fill="#ff5858" stroke="white" stroke-width="4"/>
-<path d="M47.2529 35.3291V37.3291H49.2529H58.9998H60.9998V35.3291V27.6709V25.6709L58.9998 25.6709H49.2529H47.2529V27.6709V35.3291Z" fill="#ff5858" stroke="white" stroke-width="4"/>
-<path d="M35.3291 15.7471L37.3291 15.7471L37.3291 13.7471L37.3291 4.00023L37.3291 2.00023L35.3291 2.00023L27.6709 2.00023L25.6709 2.00023L25.6709 4.00023L25.6709 13.7471L25.6709 15.7471L27.6709 15.7471L35.3291 15.7471Z" fill="#ff5858" stroke="white" stroke-width="4"/>
-<path d="M2 35.3291V37.3291H4H13.7468H15.7468V35.3291L15.7468 27.6709V25.6709L13.7468 25.6709H4H2V27.6709L2 35.3291Z" fill="#ff5858" stroke="white" stroke-width="4"/>
-<circle cx="31.5001" cy="31.5001" r="15.4494" fill="white" stroke="#ff5858" stroke-width="6"/>
-<line x1="25.7895" y1="23.9132" x2="36.5242" y2="38.6028" stroke="#ff5858" stroke-width="2" stroke-linecap="square"/>
-<line x1="38.9357" y1="33.9313" x2="25.9313" y2="33.0643" stroke="#ff5858" stroke-width="2" stroke-linecap="square"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   sodipodi:docname="icon_airbase_red.svg"
+   id="svg18"
+   version="1.1"
+   fill="none"
+   viewBox="0 0 63 63"
+   height="63"
+   width="63">
+  <metadata
+     id="metadata24">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs22" />
+  <sodipodi:namedview
+     inkscape:current-layer="svg18"
+     inkscape:window-maximized="1"
+     inkscape:window-y="-8"
+     inkscape:window-x="1912"
+     inkscape:cy="31.5"
+     inkscape:cx="31.5"
+     inkscape:zoom="13.492063"
+     showgrid="false"
+     id="namedview20"
+     inkscape:window-height="1017"
+     inkscape:window-width="1920"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0"
+     guidetolerance="10"
+     gridtolerance="10"
+     objecttolerance="10"
+     borderopacity="1"
+     bordercolor="#666666"
+     pagecolor="#ffffff" />
+  <path
+     id="path2"
+     fill="white"
+     d="M31.4998 46.9756C40.0468 46.9756 46.9756 40.0468 46.9756 31.4998C46.9756 22.9528 40.0468 16.024 31.4998 16.024C22.9528 16.024 16.024 22.9528 16.024 31.4998C16.024 40.0468 22.9528 46.9756 31.4998 46.9756ZM31.4998 52.734C43.2271 52.734 52.734 43.2271 52.734 31.4998C52.734 19.7725 43.2271 10.2656 31.4998 10.2656C19.7725 10.2656 10.2656 19.7725 10.2656 31.4998C10.2656 43.2271 19.7725 52.734 31.4998 52.734Z"
+     clip-rule="evenodd"
+     fill-rule="evenodd" />
+  <circle
+     id="circle12"
+     stroke-width="6"
+     stroke="#ff5858"
+     fill="white"
+     r="15.4494"
+     cy="31.5001"
+     cx="31.5001" />
+  <line
+     id="line14"
+     stroke-linecap="square"
+     stroke-width="2"
+     stroke="#ff5858"
+     y2="38.6028"
+     x2="36.5242"
+     y1="23.9132"
+     x1="25.7895" />
+  <line
+     id="line16"
+     stroke-linecap="square"
+     stroke-width="2"
+     stroke="#ff5858"
+     y2="33.0643"
+     x2="25.9313"
+     y1="33.9313"
+     x1="38.9357" />
 </svg>
