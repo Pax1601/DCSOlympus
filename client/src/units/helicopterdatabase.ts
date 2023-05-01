@@ -381,57 +381,6 @@ export class HelicopterDatabase extends UnitDatabase {
             ],
             "filename": "ah-1.png"
          },
-         "AH-1W": {
-            "name": "AH-1W",
-            "label": "AH-1W Cobra",
-            "shortLabel": "AH1",
-            "loadouts": [
-               {
-                  "fuel": 1,
-                  "items": [
-                     {
-                        "name": "BGM-71 TOW",
-                        "quantity": 8
-                     },
-                     {
-                        "name": "Hydra-70 WP",
-                        "quantity": 38
-                     }
-                  ],
-                  "roles": [
-                     "CAS"
-                  ],
-                  "code": "8xBGM-71, 38xHYDRA-70 WP",
-                  "name": "TOW / Hydra"
-               },
-               {
-                  "fuel": 1,
-                  "items": [
-                     {
-                        "name": "Hydra-70",
-                        "quantity": 76
-                     }
-                  ],
-                  "roles": [
-                     "CAS"
-                  ],
-                  "code": "76xHYDRA-70",
-                  "name": "Hydra"
-               },
-               {
-                  "fuel": 1,
-                  "items": [
-
-                  ],
-                  "roles": [
-                     ""
-                  ],
-                  "code": "",
-                  "name": "Empty Loadout"
-               }
-            ],
-            "filename": "ah-1.png"
-         },
          "Mi-26": {
             "name": "Mi-26",
             "label": "Mi-26 Halo",

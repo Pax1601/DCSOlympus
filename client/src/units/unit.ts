@@ -40,11 +40,7 @@ export class Unit extends Marker {
             coalition: "",
         },
         formationData: {
-            formation: "",
-            isLeader: false,
-            isWingman: false,
-            leaderID: 0,
-            wingmenIDs: [],
+            leaderID: 0
         },
         taskData: {
             currentState: "IDLE",
@@ -313,22 +309,6 @@ export class Unit extends Marker {
 
     getLeader() {
         return getUnitsManager().getUnitByID(this.getFormationData().leaderID);
-    }
-
-    getFormation() {
-        return [<Unit>this].concat(this.getWingmen())
-    }
-
-    getWingmen() {
-        var wingmen: Unit[] = [];
-        if (this.getFormationData().wingmenIDs != undefined) {
-            for (let ID of this.getFormationData().wingmenIDs) {
-                var unit = getUnitsManager().getUnitByID(ID)
-                if (unit)
-                    wingmen.push(unit);
-            }
-        }
-        return wingmen;
     }
 
     attackUnit(targetID: number) {

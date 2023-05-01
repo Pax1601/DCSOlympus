@@ -119,35 +119,7 @@ export class UnitsManager {
             this.#units[ID].setSelected(false);
         }
     }
-
-    getSelectedLeaders() {
-        var leaders: Unit[] = [];
-        for (let idx in this.getSelectedUnits())
-        {
-            var unit = this.getSelectedUnits()[idx];
-            if (unit.getFormationData().isLeader)
-                leaders.push(unit);
-            else if (unit.getFormationData().isWingman)
-            {
-                var leader = unit.getLeader();
-                if (leader && !leaders.includes(leader))
-                    leaders.push(leader);
-            }
-        }
-        return leaders;
-    }
-
-    getSelectedSingletons() {
-        var singletons: Unit[] = [];
-        for (let idx in this.getSelectedUnits())
-        {
-            var unit = this.getSelectedUnits()[idx];
-            if (!unit.getFormationData().isLeader && !unit.getFormationData().isWingman)
-                singletons.push(unit);
-        }
-        return singletons;
-    }
-
+    
     getSelectedUnitsType () {
         if (this.getSelectedUnits().length == 0)
             return undefined;

@@ -23,7 +23,6 @@ protected:
 	virtual void setState(int newState);
 	bool isDestinationReached();
 	bool setActiveDestination();
-	void createHoldingPattern();
 	bool updateActivePath(bool looping);
 	void goToDestination(wstring enrouteTask = L"nil");
 };
