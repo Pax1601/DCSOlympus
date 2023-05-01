@@ -79,17 +79,9 @@ public:
 	json::value getFlags() { return flags; }
 
 	/********** Formation data **********/
-	void setIsLeader(bool newIsLeader);
-	void setIsWingman(bool newIsWingman);
-	void setLeader(Unit* newLeader);
-	void setWingmen(vector<Unit*> newWingmen);
-	void setFormation(wstring newFormation) { formation = newFormation; addMeasure(L"formation", json::value(formation));}
+	void setLeaderID(int newLeaderID) { leaderID = newLeaderID; addMeasure(L"leaderID", json::value(newLeaderID)); }
 	void setFormationOffset(Offset formationOffset);
-	bool getIsLeader() { return isLeader; }
-	bool getIsWingman() { return isWingman; }
-	Unit* getLeader() { return leader; }
-	vector<Unit*> getWingmen() { return wingmen; }
-	wstring getFormation() { return formation; }
+	int getLeaderID() { return leaderID; }
 	Offset getFormationoffset() { return formationOffset; }
 	
 	/********** Task data **********/
@@ -177,11 +169,7 @@ protected:
 	json::value flags = json::value::null();
 
 	/********** Formation data **********/
-	bool isLeader = false;
-	bool isWingman = false;
-	wstring formation = L"";
-	Unit *leader = nullptr;
-	vector<Unit *> wingmen;
+	int leaderID = NULL;
 	Offset formationOffset = Offset(NULL);
 
 	/********** Task data **********/
@@ -215,7 +203,9 @@ protected:
 	/********** Functions **********/
 	virtual wstring getCategory() { return L"No category"; };
 	wstring getTargetName();
+	wstring getLeaderName();
 	bool isTargetAlive();
+	bool isLeaderAlive();
 	virtual void AIloop() = 0;
 	void addMeasure(wstring key, json::value value);
 };

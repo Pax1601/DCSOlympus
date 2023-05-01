@@ -29,11 +29,7 @@ interface MissionData {
 }
 
 interface FormationData {
-    formation: string;
-    isLeader: boolean;
-    isWingman: boolean;
     leaderID: number;
-    wingmenIDs: number[];
 }
 
 interface TaskData {

@@ -20,6 +20,14 @@ Unit::Unit(json::value json, int ID) :
 {
 	log("Creating unit with ID: " + to_string(ID));
 	addMeasure(L"currentState", json::value(L"Idle"));
+
+	addMeasure(L"TACANChannel", json::value(TACANChannel));
+	addMeasure(L"TACANXY", json::value(TACANXY));
+	addMeasure(L"TACANCallsign", json::value(TACANCallsign));
+
+	addMeasure(L"radioFrequency", json::value(radioFrequency));
+	addMeasure(L"radioCallsign", json::value(radioCallsign));
+	addMeasure(L"radioCallsignNumber", json::value(radioCallsignNumber));
 }
 
 Unit::~Unit()
@@ -127,10 +135,10 @@ json::value Unit::getData(long long time)
 
 	/********** Formation data **********/
 	json[L"formationData"] = json::value::object();
-	for (auto key : { L"isLeader", L"isWingman", L"formation", L"wingmenIDs", L"leaderID" })
+	for (auto key : { L"leaderID" })
 	{
 		if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
-			json[L"missionData"][key] = measures[key]->getValue();
+			json[L"formationData"][key] = measures[key]->getValue();
 	}
 
 	/********** Task data **********/
@@ -154,12 +162,9 @@ json::value Unit::getData(long long time)
 
 void Unit::setActivePath(list<Coords> newPath)
 {
-	if (state != State::WINGMAN && state != State::FOLLOW)
-	{
-		activePath = newPath;
-		resetActiveDestination();
-	}
-
+	activePath = newPath;
+	resetActiveDestination();
+	
 	auto path = json::value::object();
 	if (activePath.size() > 0) {
 		int count = 1;
@@ -223,22 +228,6 @@ int Unit::getCoalitionID()
 		return 2;
 }
 
-void Unit::setLeader(Unit* newLeader) 
-{ 
-	leader = newLeader; 
-	if (leader != nullptr)
-		addMeasure(L"leaderID", json::value(leader->getID()));
-} 
-
-void Unit::setWingmen(vector<Unit*> newWingmen) {
-	wingmen = newWingmen; 
-	auto wingmenIDs = json::value::object();
-	int i = 0;
-	for (auto itr = wingmen.begin(); itr != wingmen.end(); itr++)
-		wingmenIDs[i++] = (*itr)->getID();
-	addMeasure(L"wingmen", wingmenIDs);
-} 
-
 wstring Unit::getTargetName()
 {
 	if (isTargetAlive())
@@ -262,6 +251,29 @@ bool Unit::isTargetAlive()
 		return false;
 }
 
+wstring Unit::getLeaderName()
+{
+	if (isLeaderAlive())
+	{
+		Unit* leader = unitsManager->getUnit(leaderID);
+		if (leader != nullptr)
+			return leader->getUnitName();
+	}
+	return L"";
+}
+
+bool Unit::isLeaderAlive()
+{
+	if (leaderID == NULL)
+		return false;
+
+	Unit* leader = unitsManager->getUnit(leaderID);
+	if (leader != nullptr)
+		return leader->alive;
+	else
+		return false;
+}
+
 void Unit::resetActiveDestination()
 {
 	activeDestination = Coords(NULL);
@@ -271,30 +283,6 @@ void Unit::resetTask()
 {
 	Command* command = dynamic_cast<Command*>(new ResetTask(ID));
 	scheduler->appendCommand(command);
-}
-
-void Unit::setIsLeader(bool newIsLeader) {
-	isLeader = newIsLeader;
-	if (!isLeader) {
-		for (auto wingman : wingmen)
-		{
-			wingman->setFormation(L"");
-			wingman->setIsWingman(false);
-			wingman->setLeader(nullptr);
-		}
-	}
-	addMeasure(L"isLeader", json::value(newIsLeader));
-}
-
-void Unit::setIsWingman(bool newIsWingman)
-{
-	isWingman = newIsWingman;
-	if (isWingman)
-		setState(State::WINGMAN);
-	else
-		setState(State::IDLE);
-
-	addMeasure(L"isWingman", json::value(isWingman));
 }
 
 void Unit::setFormationOffset(Offset newFormationOffset)
