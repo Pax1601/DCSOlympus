@@ -15,7 +15,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "120mm Mortar Tube",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             }
 
                         ],
@@ -39,7 +39,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "122mm Howitzer",
                             "quantity": 1,
-                            "effective_against": "Surface (Hard)"
+                            "effectiveAgainst": "Surface (Hard)"
                             }
 
                         ],
@@ -63,7 +63,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "152mm Howitzer",
                             "quantity": 1,
-                            "effective_against": "Surface (Hard)"
+                            "effectiveAgainst": "Surface (Hard)"
                             }
                         ],
                         "roles": [
@@ -86,7 +86,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "152mm Howitzer",
                             "quantity": 1,
-                            "effective_against": "Surface (Hard)"
+                            "effectiveAgainst": "Surface (Hard)"
                             }
                         ],
                         "roles": [
@@ -109,7 +109,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "120mm Mortar",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             }
                         ],
                         "roles": [
@@ -132,7 +132,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "155mm Howitzer",
                             "quantity": 1,
-                            "effective_against": "Surface (Hard)"
+                            "effectiveAgainst": "Surface (Hard)"
                             }
                         ],
                         "roles": [
@@ -155,7 +155,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "12.7mm M2 HMG",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             }
                         ],
                         "roles": [
@@ -178,17 +178,17 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "73mm Gun",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             },
                             {
                             "name": "7.62mm PKT GPMG",
                             "quantity": 3,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             },
                             {
                             "name": "AT-3 Sagger ATGM",
                             "quantity": 1,
-                            "effective_against": "Surface (Hard)"
+                            "effectiveAgainst": "Surface (Hard)"
                             }
                         ],
                         "roles": [
@@ -211,17 +211,17 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "73mm Gun",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             },
                             {
                             "name": "7.62mm PKT GPMG",
                             "quantity": 3,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             },
                             {
                             "name": "AT-3 Sagger ATGM",
                             "quantity": 1,
-                            "effective_against": "Surface (Hard)"
+                            "effectiveAgainst": "Surface (Hard)"
                             }
                         ],
                         "roles": [
@@ -244,17 +244,17 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "30mm Autocannon",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             },
                             {
                             "name": "7.62mm PKT GPMG",
                             "quantity": 3,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             },
                             {
                             "name": "AT-5 Konkurs ATGM",
                             "quantity": 1,
-                            "effective_against": "Surface (Hard)"
+                            "effectiveAgainst": "Surface (Hard)"
                             }
                         ],
                         "roles": [
@@ -277,22 +277,22 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "100mm Gun",
                             "quantity": 1,
-                            "effective_against": "Surface (Hard)"
+                            "effectiveAgainst": "Surface (Hard)"
                             },
                             {
                             "name": "30mm Autocannon",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             },
                             {
                             "name": "7.62mm PKT GPMG",
                             "quantity": 3,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             },
                             {
                             "name": "AT-10 Stabber ATGM",
                             "quantity": 1,
-                            "effective_against": "Surface (Hard)"
+                            "effectiveAgainst": "Surface (Hard)"
                             }
                         ],
                         "roles": [
@@ -315,12 +315,12 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "7.62mm PKMB GPMG",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             },
                             {
                             "name": "RPG-7",
                             "quantity": 1,
-                            "effective_against": "Surface (Hard)"
+                            "effectiveAgainst": "Surface (Hard)"
                             }
                         ],
                         "roles": [
@@ -343,12 +343,12 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "14.5mm KPVT HMG",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             },
                             {
                             "name": "7.62mm PKT GPMG",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             }
                         ],
                         "roles": [
@@ -371,12 +371,12 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "14.5mm KPVT HMG",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             },
                             {
                             "name": "7.62mm PKT GPMG",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             }
                         ],
                         "roles": [
@@ -399,12 +399,12 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "7.62mm PKT GPMG",
                             "quantity": 2,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             },
                             {
                             "name": "AT-5 Konkurs ATGM",
                             "quantity": 1,
-                            "effective_against": "Surface (Hard)"
+                            "effectiveAgainst": "Surface (Hard)"
                             }
                         ],
                         "roles": [
@@ -446,7 +446,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "12.7mm HMG",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             }
                         ],
                         "roles": [
@@ -469,12 +469,12 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "25mm M242 Autocannon",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             },
                             {
                             "name": "7.62mm M240 GPMG",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             }
                         ],
                         "roles": [
@@ -497,7 +497,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "12.7mm M2 HMG",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             }
                         ],
                         "roles": [
@@ -520,7 +520,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "BGM-71 TOW ATGM",
                             "quantity": 1,
-                            "effective_against": "Surface (Hard)"
+                            "effectiveAgainst": "Surface (Hard)"
                             }
                         ],
                         "roles": [
@@ -543,7 +543,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "12.7mm M2 HMG",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             }
                         ],
                         "roles": [
@@ -566,7 +566,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "12.7mm M2 HMG",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             }
                         ],
                         "roles": [
@@ -589,12 +589,12 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "12.7mm M2 HMG",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             },
                             {
                             "name": "BGM-71 TOW",
                             "quantity": 2,
-                            "effective_against": "Surface (Hard)"
+                            "effectiveAgainst": "Surface (Hard)"
                             }
                         ],
                         "roles": [
@@ -617,17 +617,17 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "25mm M242 Autocannon",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             },
                             {
                             "name": "BGM-71 TOW",
                             "quantity": 2,
-                            "effective_against": "Surface (Hard)"
+                            "effectiveAgainst": "Surface (Hard)"
                             },
                             {
                             "name": "7.62mm M240 GPMG",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             }
                         ],
                         "roles": [
@@ -650,12 +650,12 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "20mm MK 20 Rh 202 Autocannon",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             },
                             {
                             "name": "7.62mm MG3 GPMG",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             }
                         ],
                         "roles": [
@@ -678,12 +678,12 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "30mm L21A1 Autocannon",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             },
                             {
                             "name": "7.62mm L94A1 GPMG",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             }
                         ],
                         "roles": [
@@ -706,7 +706,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "7.62mm PKT GPMG",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             }
                         ],
                         "roles": [
@@ -729,7 +729,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "RPG-16",
                             "quantity": 1,
-                            "effective_against": "Surface (Hard)"
+                            "effectiveAgainst": "Surface (Hard)"
                             }
                         ],
                         "roles": [
@@ -752,7 +752,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "5.45mm AKS-74",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             }
                         ],
                         "roles": [
@@ -794,7 +794,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "5.45mm AK-74",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             }
                         ],
                         "roles": [
@@ -817,7 +817,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "5.45mm AK-74",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             }
                         ],
                         "roles": [
@@ -840,7 +840,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "5.56mm M249 SAW",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             }
                         ],
                         "roles": [
@@ -863,7 +863,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "5.56mm M4",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             }
                         ],
                         "roles": [
@@ -886,7 +886,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "5.56mm M4",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             }
                         ],
                         "roles": [
@@ -909,7 +909,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "RPG-16",
                             "quantity": 1,
-                            "effective_against": "Surface (Hard)"
+                            "effectiveAgainst": "Surface (Hard)"
                             }
                         ],
                         "roles": [
@@ -932,7 +932,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "7.62mm M3 GPMG",
                             "quantity": 1,
-                            "effective_against": "Surface (soft)"
+                            "effectiveAgainst": "Surface (soft)"
                             }
                         ],
                         "roles": [
@@ -955,7 +955,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "122mm Grad 9M21 Rocket",
                             "quantity": 40,
-                            "effective_against": "Surface (Hard)"
+                            "effectiveAgainst": "Surface (Hard)"
                             }
                         ],
                         "roles": [
@@ -978,7 +978,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "220mm Uragan 9M27 Rocket",
                             "quantity": 16,
-                            "effective_against": "Surface (Hard)"
+                            "effectiveAgainst": "Surface (Hard)"
                             }
                         ],
                         "roles": [
@@ -1001,7 +1001,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "300mm Smerch 9M55 Rocket",
                             "quantity": 12,
-                            "effective_against": "Surface (Hard)"
+                            "effectiveAgainst": "Surface (Hard)"
                             }
                         ],
                         "roles": [
@@ -1024,7 +1024,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "227mm with 644 DPICM Submunitions",
                             "quantity": 12,
-                            "effective_against": "Surface (Hard)"
+                            "effectiveAgainst": "Surface (Hard)"
                             }
                         ],
                         "roles": [
@@ -1047,12 +1047,12 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "Twin Barrel 30mm 2A38M Autocannons",
                             "quantity": 2,
-                            "effective_against": "Surface (Soft), Aircraft"
+                            "effectiveAgainst": "Surface (Soft), Aircraft"
                             },
                             {
                             "name": "9M311 SAM (Radio Command Guidance)",
                             "quantity": 4,
-                            "effective_against": "Surface (Soft), Aircraft"
+                            "effectiveAgainst": "Surface (Soft), Aircraft"
                             }
                         ],
                         "roles": [
@@ -1075,7 +1075,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "3M9M SAM (SARH)",
                             "quantity": 3,
-                            "effective_against": "Aircraft"
+                            "effectiveAgainst": "Aircraft"
                             }
                         ],
                         "roles": [
@@ -1098,7 +1098,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "SA-3 3M9M SAM (RF CLOS)",
                             "quantity": 3,
-                            "effective_against": "Aircraft"
+                            "effectiveAgainst": "Aircraft"
                             }
                         ],
                         "roles": [
@@ -1121,7 +1121,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "48N6 SAM (SARH)",
                             "quantity": 2,
-                            "effective_against": "Aircraft"
+                            "effectiveAgainst": "Aircraft"
                             }
                         ],
                         "roles": [
@@ -1144,7 +1144,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "48N6 SAM (SARH)",
                             "quantity": 4,
-                            "effective_against": "Aircraft"
+                            "effectiveAgainst": "Aircraft"
                             }
                         ],
                         "roles": [
@@ -1167,7 +1167,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "9M38M1 SAM (SARH)",
                             "quantity": 4,
-                            "effective_against": "Aircraft"
+                            "effectiveAgainst": "Aircraft"
                             }
                         ],
                         "roles": [
@@ -1190,7 +1190,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "9M33 SAM (SARH)",
                             "quantity": 4,
-                            "effective_against": "Aircraft"
+                            "effectiveAgainst": "Aircraft"
                             }
                         ],
                         "roles": [
@@ -1213,7 +1213,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "9M330 SAM (Radio Command Guidance)",
                             "quantity": 8,
-                            "effective_against": "Aircraft"
+                            "effectiveAgainst": "Aircraft"
                             }
                         ],
                         "roles": [
@@ -1236,7 +1236,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "9M333 SAM (IR)",
                             "quantity": 4,
-                            "effective_against": "Aircraft"
+                            "effectiveAgainst": "Aircraft"
                             }
                         ],
                         "roles": [
@@ -1259,7 +1259,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "9M31 SAM (IR)",
                             "quantity": 4,
-                            "effective_against": "Aircraft"
+                            "effectiveAgainst": "Aircraft"
                             }
                         ],
                         "roles": [
@@ -1282,7 +1282,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "Command Post",
                             "quantity": 1,
-                            "effective_against": "None"
+                            "effectiveAgainst": "None"
                             }
                         ],
                         "roles": [
@@ -1305,7 +1305,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "Transloader",
                             "quantity": 1,
-                            "effective_against": "None"
+                            "effectiveAgainst": "None"
                             }
                         ],
                         "roles": [
@@ -1328,7 +1328,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "Antenna Mast Group",
                             "quantity": 1,
-                            "effective_against": "None"
+                            "effectiveAgainst": "None"
                             }
                         ],
                         "roles": [
@@ -1351,7 +1351,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "Engagement Control Station",
                             "quantity": 1,
-                            "effective_against": "None"
+                            "effectiveAgainst": "None"
                             }
                         ],
                         "roles": [
@@ -1374,7 +1374,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "35mm KDA Autocannon",
                             "quantity": 2,
-                            "effective_against": "Surface (Soft), Aircraft"
+                            "effectiveAgainst": "Surface (Soft), Aircraft"
                             }
                         ],
                         "roles": [
@@ -1397,7 +1397,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "Command Post",
                             "quantity": 1,
-                            "effective_against": "None"
+                            "effectiveAgainst": "None"
                             }
                         ],
                         "roles": [
@@ -1420,7 +1420,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "9K38 SAM (IR)",
                             "quantity": 1,
-                            "effective_against": "Aircraft"
+                            "effectiveAgainst": "Aircraft"
                             }
                         ],
                         "roles": [
@@ -1443,7 +1443,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "Commander",
                             "quantity": 1,
-                            "effective_against": "None"
+                            "effectiveAgainst": "None"
                             }
                         ],
                         "roles": [
@@ -1466,7 +1466,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "9K38 SAM (IR)",
                             "quantity": 1,
-                            "effective_against": "Aircraft"
+                            "effectiveAgainst": "Aircraft"
                             }
                         ],
                         "roles": [
@@ -1489,7 +1489,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "9K338 SAM (IR)",
                             "quantity": 1,
-                            "effective_against": "Aircraft"
+                            "effectiveAgainst": "Aircraft"
                             }
                         ],
                         "roles": [
@@ -1512,7 +1512,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "Commander",
                             "quantity": 1,
-                            "effective_against": "None"
+                            "effectiveAgainst": "None"
                             }
                         ],
                         "roles": [
@@ -1535,7 +1535,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "M168 20mm Vulcan",
                             "quantity": 1,
-                            "effective_against": "Aircraft"
+                            "effectiveAgainst": "Aircraft"
                             }
                         ],
                         "roles": [
@@ -1558,7 +1558,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "MIM 23B SAM (SARH)",
                             "quantity": 3,
-                            "effective_against": "Aircraft"
+                            "effectiveAgainst": "Aircraft"
                             }
                         ],
                         "roles": [
@@ -1581,7 +1581,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "MIM-72G SAM (IR)",
                             "quantity": 4,
-                            "effective_against": "Aircraft"
+                            "effectiveAgainst": "Aircraft"
                             }
                         ],
                         "roles": [
@@ -1604,17 +1604,17 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "M242 25mm Autocannon",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             },
                             {
                             "name": "7.62mm M240C GPMG",
                             "quantity": 4,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             },
                             {
                             "name": "Stinger SAM (IR)",
                             "quantity": 4,
-                            "effective_against": "Aircraft"
+                            "effectiveAgainst": "Aircraft"
                             }
                         ],
                         "roles": [
@@ -1637,7 +1637,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "MIM-104 SAM (SARH)",
                             "quantity": 4,
-                            "effective_against": "Aircraft"
+                            "effectiveAgainst": "Aircraft"
                             }
                         ],
                         "roles": [
@@ -1660,12 +1660,12 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "12.7mm M2 HMG",
                             "quantity": 2,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             },
                             {
                             "name": "Stinger SAM (IR)",
                             "quantity": 4,
-                            "effective_against": "Aircraft"
+                            "effectiveAgainst": "Aircraft"
                             }
                         ],
                         "roles": [
@@ -1688,7 +1688,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "Diesel-Electric Generator",
                             "quantity": 1,
-                            "effective_against": "None"
+                            "effectiveAgainst": "None"
                             }
                         ],
                         "roles": [
@@ -1711,7 +1711,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "Command Post",
                             "quantity": 1,
-                            "effective_against": "None"
+                            "effectiveAgainst": "None"
                             }
                         ],
                         "roles": [
@@ -1734,7 +1734,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "MIM-115 SAM (Radio Command Guidance)",
                             "quantity": 2,
-                            "effective_against": "Aircraft"
+                            "effectiveAgainst": "Aircraft"
                             }
                         ],
                         "roles": [
@@ -1757,7 +1757,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "Command Post",
                             "quantity": 1,
-                            "effective_against": "None"
+                            "effectiveAgainst": "None"
                             }
                         ],
                         "roles": [
@@ -1780,7 +1780,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "Stinger SAM (IR)",
                             "quantity": 1,
-                            "effective_against": "Aircraft"
+                            "effectiveAgainst": "Aircraft"
                             }
                         ],
                         "roles": [
@@ -1803,7 +1803,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "Stinger SAM (IR)",
                             "quantity": 1,
-                            "effective_against": "Aircraft"
+                            "effectiveAgainst": "Aircraft"
                             }
                         ],
                         "roles": [
@@ -1826,7 +1826,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "Commander",
                             "quantity": 1,
-                            "effective_against": "None"
+                            "effectiveAgainst": "None"
                             }
                         ],
                         "roles": [
@@ -1849,7 +1849,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "Stinger SAM (IR)",
                             "quantity": 1,
-                            "effective_against": "Aircraft"
+                            "effectiveAgainst": "Aircraft"
                             }
                         ],
                         "roles": [
@@ -1872,7 +1872,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "Commander",
                             "quantity": 1,
-                            "effective_against": "None"
+                            "effectiveAgainst": "None"
                             }
                         ],
                         "roles": [
@@ -1895,7 +1895,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "23mm AZP-23M Autocannon",
                             "quantity": 4,
-                            "effective_against": "Surface (Soft), Aircraft"
+                            "effectiveAgainst": "Surface (Soft), Aircraft"
                             }
                         ],
                         "roles": [
@@ -1918,7 +1918,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "23mm 2A14 Autocannon",
                             "quantity": 4,
-                            "effective_against": "Surface (Soft), Aircraft"
+                            "effectiveAgainst": "Surface (Soft), Aircraft"
                             }
                         ],
                         "roles": [
@@ -1941,7 +1941,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "23mm 2A14 Autocannon",
                             "quantity": 4,
-                            "effective_against": "Surface (Soft), Aircraft"
+                            "effectiveAgainst": "Surface (Soft), Aircraft"
                             }
                         ],
                         "roles": [
@@ -1964,7 +1964,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "23mm 2A14 Autocannon",
                             "quantity": 4,
-                            "effective_against": "Surface (Soft), Aircraft"
+                            "effectiveAgainst": "Surface (Soft), Aircraft"
                             }
                         ],
                         "roles": [
@@ -1987,7 +1987,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "23mm 2A14 Autocannon",
                             "quantity": 4,
-                            "effective_against": "Surface (Soft), Aircraft"
+                            "effectiveAgainst": "Surface (Soft), Aircraft"
                             }
                         ],
                         "roles": [
@@ -2010,7 +2010,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "23mm 2A14 Autocannon",
                             "quantity": 4,
-                            "effective_against": "Surface (Soft), Aircraft"
+                            "effectiveAgainst": "Surface (Soft), Aircraft"
                             }
                         ],
                         "roles": [
@@ -2033,7 +2033,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "23mm 2A14 Autocannon",
                             "quantity": 4,
-                            "effective_against": "Surface (Soft), Aircraft"
+                            "effectiveAgainst": "Surface (Soft), Aircraft"
                             }
                         ],
                         "roles": [
@@ -2056,7 +2056,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "Early Warning Radar",
                             "quantity": 1,
-                            "effective_against": "None"
+                            "effectiveAgainst": "None"
                             }
                         ],
                         "roles": [
@@ -2079,7 +2079,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "Search and Track Radar",
                             "quantity": 1,
-                            "effective_against": "None"
+                            "effectiveAgainst": "None"
                             }
                         ],
                         "roles": [
@@ -2102,7 +2102,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "Track Radar",
                             "quantity": 1,
-                            "effective_against": "None"
+                            "effectiveAgainst": "None"
                             }
                         ],
                         "roles": [
@@ -2125,7 +2125,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "Search Radar",
                             "quantity": 1,
-                            "effective_against": "None"
+                            "effectiveAgainst": "None"
                             }
                         ],
                         "roles": [
@@ -2148,7 +2148,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "Early Warning Radar",
                             "quantity": 1,
-                            "effective_against": "None"
+                            "effectiveAgainst": "None"
                             }
                         ],
                         "roles": [
@@ -2171,7 +2171,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "Search Radar",
                             "quantity": 1,
-                            "effective_against": "None"
+                            "effectiveAgainst": "None"
                             }
                         ],
                         "roles": [
@@ -2194,7 +2194,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "Search Radar",
                             "quantity": 1,
-                            "effective_against": "None"
+                            "effectiveAgainst": "None"
                             }
                         ],
                         "roles": [
@@ -2217,7 +2217,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "Search Radar",
                             "quantity": 1,
-                            "effective_against": "None"
+                            "effectiveAgainst": "None"
                             }
                         ],
                         "roles": [
@@ -2240,7 +2240,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "Track Radar",
                             "quantity": 1,
-                            "effective_against": "None"
+                            "effectiveAgainst": "None"
                             }
                         ],
                         "roles": [
@@ -2263,7 +2263,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "Search Radar",
                             "quantity": 1,
-                            "effective_against": "None"
+                            "effectiveAgainst": "None"
                             }
                         ],
                         "roles": [
@@ -2286,7 +2286,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "Search and Track Radar",
                             "quantity": 1,
-                            "effective_against": "None"
+                            "effectiveAgainst": "None"
                             }
                         ],
                         "roles": [
@@ -2309,7 +2309,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "Search and Track Radar",
                             "quantity": 1,
-                            "effective_against": "None"
+                            "effectiveAgainst": "None"
                             }
                         ],
                         "roles": [
@@ -2332,7 +2332,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "Search Radar",
                             "quantity": 1,
-                            "effective_against": "None"
+                            "effectiveAgainst": "None"
                             }
                         ],
                         "roles": [
@@ -2355,7 +2355,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "Search Radar",
                             "quantity": 1,
-                            "effective_against": "None"
+                            "effectiveAgainst": "None"
                             }
                         ],
                         "roles": [
@@ -2378,7 +2378,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "Track Radar",
                             "quantity": 1,
-                            "effective_against": "None"
+                            "effectiveAgainst": "None"
                             }
                         ],
                         "roles": [
@@ -2496,17 +2496,17 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "120mm L30A1 Gun",
                             "quantity": 1,
-                            "effective_against": "Surface (Hard)"
+                            "effectiveAgainst": "Surface (Hard)"
                             },
                             {
                             "name": "7.62mm L94A1 GPMG",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             },
                             {
                             "name": "7.62mm L37A2 GPMG",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             }
                         ],
                         "roles": [
@@ -2529,12 +2529,12 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "120mm F1 Gun",
                             "quantity": 1,
-                            "effective_against": "Surface (Hard)"
+                            "effectiveAgainst": "Surface (Hard)"
                             },
                             {
                             "name": "12.7mm M2HB HMG",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             }
                         ],
                         "roles": [
@@ -2557,12 +2557,12 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "105mm L7A3 Gun",
                             "quantity": 1,
-                            "effective_against": "Surface (Hard)"
+                            "effectiveAgainst": "Surface (Hard)"
                             },
                             {
                             "name": "7.62mm MG3 GPMG",
                             "quantity": 2,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             }
                         ],
                         "roles": [
@@ -2585,12 +2585,12 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "120mm Rh L/44 Gun",
                             "quantity": 1,
-                            "effective_against": "Surface (Hard)"
+                            "effectiveAgainst": "Surface (Hard)"
                             },
                             {
                             "name": "7.62mm MG3 GPMG",
                             "quantity": 2,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             }
                         ],
                         "roles": [
@@ -2613,17 +2613,17 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "105mm M68 Gun",
                             "quantity": 1,
-                            "effective_against": "Surface (Hard)"
+                            "effectiveAgainst": "Surface (Hard)"
                             },
                             {
                             "name": "7.62mm M73 GPMG",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             },
                             {
                             "name": "12.7mm M85 HMG",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             }
                         ],
                         "roles": [
@@ -2646,12 +2646,12 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "105mm M68 Gun",
                             "quantity": 1,
-                            "effective_against": "Surface (Hard)"
+                            "effectiveAgainst": "Surface (Hard)"
                             },
                             {
                             "name": "7.62mm M240 GPMG",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             }
                         ],
                         "roles": [
@@ -2674,17 +2674,17 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "120mm Rh L/44 Gun",
                             "quantity": 1,
-                            "effective_against": "Surface (Hard)"
+                            "effectiveAgainst": "Surface (Hard)"
                             },
                             {
                             "name": "7.62mm M240 GPMG",
                             "quantity": 2,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             },
                             {
                             "name": "12.7mm M2 HMG",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             }
                         ],
                         "roles": [
@@ -2707,17 +2707,17 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "100mm D-10T Gun",
                             "quantity": 1,
-                            "effective_against": "Surface (Hard)"
+                            "effectiveAgainst": "Surface (Hard)"
                             },
                             {
                             "name": "7.62mm SGMT GPMG",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             },
                             {
                             "name": "12.7mm DShK HMG",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             }
                         ],
                         "roles": [
@@ -2740,17 +2740,17 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "125mm 2A46M Gun",
                             "quantity": 1,
-                            "effective_against": "Surface (Hard)"
+                            "effectiveAgainst": "Surface (Hard)"
                             },
                             {
                             "name": "7.62mm PKT GPMG",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             },
                             {
                             "name": "12.7mm NSVT HMG",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             }
                         ],
                         "roles": [
@@ -2773,17 +2773,17 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "125mm 2A46M Gun",
                             "quantity": 1,
-                            "effective_against": "Surface (Hard)"
+                            "effectiveAgainst": "Surface (Hard)"
                             },
                             {
                             "name": "7.62mm PKT GPMG",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             },
                             {
                             "name": "12.7mm NSVT HMG",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             }
                         ],
                         "roles": [
@@ -2806,22 +2806,22 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             {
                             "name": "125mm 2A46M-5 Gun",
                             "quantity": 1,
-                            "effective_against": "Surface (Hard)"
+                            "effectiveAgainst": "Surface (Hard)"
                             },
                             {
                             "name": "7.62mm PKT GPMG",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             },
                             {
                             "name": "12.7mm NSVT HMG",
                             "quantity": 1,
-                            "effective_against": "Surface (Soft)"
+                            "effectiveAgainst": "Surface (Soft)"
                             },
                              {
                             "name": "9K119M ATGM",
                             "quantity": 1,
-                            "effective_against": "Surface (Hard)"
+                            "effectiveAgainst": "Surface (Hard)"
                             }
                         ],
                         "roles": [

@@ -1827,59 +1827,6 @@ export class AircraftDatabase extends UnitDatabase {
             ],
             "filename": "mosquito.png"
          },
-         "MosquitoFBMkVI": {
-            "name": "MosquitoFBMkVI",
-            "label": "Mosquito FB MkVI",
-            "era": ["WW2", "Early Cold War"],
-            "shortLabel": "Mosquito",
-            "loadouts": [
-               {
-                  "fuel": 1,
-                  "items": [
-                     {
-                        "name": "20mm Hispano Gun",
-                        "quantity": 4
-                     },
-                     {
-                        "name": "7.7mm MG",
-                        "quantity": 4
-                     },
-                     {
-                        "name": "500 lb GP Mk.V",
-                        "quantity": 2
-                     },
-                     {
-                        "name": "500 lb GP Short tail",
-                        "quantity": 2
-                     }
-                  ],
-                  "roles": [
-                     "Strike"
-                  ],
-                  "code": "500 lb GP Mk.V*2, 500 lb GP Short tail*2",
-                  "name": "Medium / Bombs / Medium Range"
-               },
-               {
-                  "fuel": 1,
-                  "items": [
-                     {
-                        "name": "20mm Hispano Gun",
-                        "quantity": 4
-                     },
-                     {
-                        "name": "7.7mm MG",
-                        "quantity": 4
-                     }
-                  ],
-                  "roles": [
-                     "CAP"
-                  ],
-                  "code": "",
-                  "name": "Light / Guns / Medium Range"
-               }
-            ],
-            "filename": "mosquito.png"
-         },
          "P-47D-40": {
             "name": "P-47D-40",
             "label": "P-47D Thunderbolt",
@@ -1961,7 +1908,7 @@ export class AircraftDatabase extends UnitDatabase {
                }
             ],
             "filename": "p-51.png"
-         }
+         },
          "A-50": {
             "name": "A-50",
             "label": "A-50 Mainstay",

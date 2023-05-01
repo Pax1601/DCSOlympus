@@ -1,6 +1,7 @@
 interface LoadoutItemBlueprint {
     name: string;
     quantity: number;
+    effectiveAgainst?: string;
 }
 
 interface LoadoutBlueprint {
@@ -13,6 +14,7 @@ interface LoadoutBlueprint {
 
 interface UnitBlueprint {
     name: string;
+    era?: string[];
     label: string;
     shortLabel: string;
     loadouts: LoadoutBlueprint[];
