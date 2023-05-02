@@ -36,8 +36,10 @@ export class Map extends L.Map {
     #leftClickTimer: number = 0;
     #deafultPanDelta: number = 100;
     #panInterval: number | null = null;
-    #panDeltaX: number;
-    #panDeltaY: number;
+    #panLeft: boolean = false;
+    #panRight: boolean = false;
+    #panUp: boolean = false;
+    #panDown: boolean = false;
     #lastMousePosition: L.Point = new L.Point(0, 0);
     #centerUnit: Unit | null = null;
     #miniMap: ClickableMiniMap | null = null;
@@ -137,11 +139,9 @@ export class Map extends L.Map {
 
         this.#mapSourceDropdown = new Dropdown("map-type", (layerName: string) => this.setLayer(layerName), this.getLayers())
 
-        this.#panDeltaX = 0;
-        this.#panDeltaY = 0;
-
         this.#panInterval = window.setInterval(() => { 
-            this.panBy(new L.Point(this.#panDeltaX, this.#panDeltaY)); 
+            this.panBy(new L.Point( ((this.#panLeft? -1: 0) + (this.#panRight? 1: 0)) * this.#deafultPanDelta, 
+                                    ((this.#panUp? -1: 0) + (this.#panDown? 1: 0)) * this.#deafultPanDelta)); 
         }, 20);
     }
 
@@ -332,37 +332,41 @@ export class Map extends L.Map {
         if (e.type === "keyup"){
             switch (e.code) {
                 case "KeyA":
+                case "ArrowLeft":
+                    this.#panLeft = false;
+                    break;
                 case "KeyD":
-                case "ArrowLeft":    
                 case "ArrowRight":
-                    this.#panDeltaX = 0;
+                    this.#panRight = false;
                     break;
                 case "KeyW":
-                case "KeyS":
                 case "ArrowUp":
+                    this.#panUp = false;
+                    break;
+                case "KeyS":
                 case "ArrowDown":
-                    this.#panDeltaY = 0
+                    this.#panDown = false;
                     break;
             }
         }
         else {        
             switch (e.code)
             {   
-                case 'KeyD':
-                case 'ArrowRight':
-                    this.#panDeltaX = this.#deafultPanDelta;
-                    break;
                 case 'KeyA':
                 case 'ArrowLeft':
-                    this.#panDeltaX = -this.#deafultPanDelta;
+                    this.#panLeft = true;
+                    break;
+                case 'KeyD':
+                case 'ArrowRight':
+                    this.#panRight = true;
                     break;
                 case 'KeyW':
                 case 'ArrowUp':
-                    this.#panDeltaY = -this.#deafultPanDelta;
+                    this.#panUp = true;
                     break;
                 case 'KeyS':
                 case 'ArrowDown':
-                    this.#panDeltaY = this.#deafultPanDelta;
+                    this.#panDown = true;
                     break;
             }
         }
