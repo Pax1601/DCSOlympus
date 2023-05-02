@@ -89,7 +89,7 @@ export class Unit extends Marker {
     }
 
     constructor(ID: number, data: UpdateData) {
-        super(new LatLng(0, 0), { riseOnHover: true });
+        super(new LatLng(0, 0), { riseOnHover: true, keyboard: false });
 
         this.ID = ID;
 
@@ -121,7 +121,7 @@ export class Unit extends Marker {
         var icon = new DivIcon({
             html: this.getMarkerHTML(),
             className: 'leaflet-unit-marker',
-            iconAnchor: [25, 0],
+            iconAnchor: [25, 25],
             iconSize: [50, 50],
         });
         this.setIcon(icon);

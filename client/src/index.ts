@@ -192,7 +192,7 @@ function setupEvents() {
             case "KeyL":
                 document.body.toggleAttribute("data-hide-labels");
                 break;
-            case "KeyD":
+            case "KeyT":
                 toggleDemoEnabled();
                 break;
             case "Quote":
@@ -200,6 +200,37 @@ function setupEvents() {
                 break
             case "Space":
                 setPaused(!getPaused());
+                break;
+            case "KeyW":
+            case "KeyA":
+            case "KeyS":
+            case "KeyD":
+            case "ArrowLeft":    
+            case "ArrowRight":
+            case "ArrowUp":
+            case "ArrowDown":
+                getMap().handleMapPanning(ev);
+                break;
+        }
+    });
+
+    /* Keydown events */
+    document.addEventListener("keydown", ev => {
+
+        if ( keyEventWasInInput( ev ) ) {
+            return;
+        }
+        
+        switch (ev.code) {
+            case "KeyW":
+            case "KeyA":
+            case "KeyS":
+            case "KeyD":
+            case "ArrowLeft":    
+            case "ArrowRight":
+            case "ArrowUp":
+            case "ArrowDown":
+                getMap().handleMapPanning(ev);
                 break;
         }
     });
@@ -231,7 +262,6 @@ function setupEvents() {
             el.classList.toggle( "hide" );
         })
     });
-
 }
 
 export function getMap() {
