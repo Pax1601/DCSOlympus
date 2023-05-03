@@ -156,7 +156,7 @@ void AirUnit::goToDestination(wstring enrouteTask)
 {
 	if (activeDestination != NULL)
 	{
-		Command* command = dynamic_cast<Command*>(new Move(ID, activeDestination, getTargetSpeed(), getTargetAltitude(), getCategory(), enrouteTask));
+		Command* command = dynamic_cast<Command*>(new Move(ID, activeDestination, getTargetSpeed(), getTargetAltitude(), enrouteTask));
 		scheduler->appendCommand(command);
 		hasTask = true;
 	}
