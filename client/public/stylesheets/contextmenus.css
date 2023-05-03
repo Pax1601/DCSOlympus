@@ -167,6 +167,7 @@
 
 #unit-image {
     width: 100px;
+    height: 100px;
     filter: invert(100%);
     margin-top: 10px;
     margin-bottom: 10px;

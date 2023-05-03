@@ -135,7 +135,6 @@ export class MapContextMenu extends ContextMenu {
             image.src = `images/units/${aircraftDatabase.getByLabel(label)?.filename}`;
             image.classList.toggle("hide", false);
         }
-
         this.clip();
     }
 

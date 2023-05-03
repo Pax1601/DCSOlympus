@@ -321,13 +321,13 @@ function Olympus.spawnAircraft(coalition, unitType, lat, lng, spawnOptions)
 				{
 					[1] = 
 					{
-						["action"] = "From Runway",
+						["action"] = "From Parking Area Hot",
 						["task"] = 
 						{
 							["id"] = "ComboTask",
 							["params"] = {["tasks"] = {},}, 
 						},
-						["type"] = "TakeOff",
+						["type"] = "TakeOffParkingHot",
 						["ETA"] = 0,
 						["ETA_locked"] = true,
 						["x"] = spawnLocation.x,
