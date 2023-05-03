@@ -1,6 +1,6 @@
 local version = "v0.2.0-alpha"
 
-local debug = false
+local debug = true
 
 Olympus.unitCounter = 1
 Olympus.payloadRegistry = {}
@@ -361,17 +361,20 @@ function Olympus.spawnAircraft(coalition, unitType, lat, lng, spawnOptions)
 end
 
 -- Clones a unit by ID. Will clone the unit with the same original payload as the source unit. TODO: only works on Olympus unit not ME units.
-function Olympus.clone(ID, lat, lng)
-	Olympus.debug("Olympus.clone " .. ID, 2)
+function Olympus.clone(ID, lat, lng, category)
+	Olympus.debug("Olympus.clone " .. ID .. ", " .. category, 2)
 	local unit = Olympus.getUnitByID(ID)
 	if unit then
 		local coalition = Olympus.getCoalitionByCoalitionID(unit:getCoalition())
 		
-		-- TODO: only works on Aircraft
-		local spawnOptions = {
-			payload = Olympus.payloadRegistry[unit:getName()]
-		}
-		Olympus.spawnAircraft(coalition, unit:getTypeName(), lat, lng, spawnOptions)
+		if category == "Aircraft" then 
+			local spawnOptions = {
+				payload = Olympus.payloadRegistry[unit:getName()]
+			}
+			Olympus.spawnAircraft(coalition, unit:getTypeName(), lat, lng, spawnOptions)
+		elseif category == "GroundUnit" then
+			Olympus.spawnGroundUnit(coalition, unit:getTypeName(), lat, lng)
+		end
 	end
 	Olympus.debug("Olympus.clone completed successfully", 2)
 end

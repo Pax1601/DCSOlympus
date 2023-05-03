@@ -7,10 +7,6 @@ namespace CommandPriority {
 	enum CommandPriorities { LOW, MEDIUM, HIGH };
 };
 
-namespace CommandType {
-	enum CommandTypes { NO_TYPE, MOVE, SMOKE, SPAWN_AIR, SPAWN_GROUND, CLONE, FOLLOW, RESET_TASK, SET_OPTION, SET_COMMAND, SET_TASK };
-};
-
 namespace SetCommandType {
 	enum SetCommandTypes {
 		ROE = 0,
@@ -61,29 +57,25 @@ class Command
 {
 public:
 	int getPriority() { return priority; }
-	int getType() { return type; }
 	virtual wstring getString(lua_State* L) = 0;
 	virtual int getLoad() = 0;
 
 protected:
 	int priority = CommandPriority::LOW;
-	int type = CommandType::NO_TYPE;
 };
 
 /* Simple low priority move command (from user click) */
 class Move : public Command
 {
 public:
-	Move(int ID, Coords destination, double speed, double altitude, wstring unitCategory, wstring taskOptions):
+	Move(int ID, Coords destination, double speed, double altitude, wstring taskOptions):
 		ID(ID),
 		destination(destination),
 		speed(speed),
 		altitude(altitude),
-		unitCategory(unitCategory),
 		taskOptions(taskOptions)
 	{ 
 		priority = CommandPriority::HIGH; 
-		type = CommandType::MOVE; 
 	};
 	virtual wstring getString(lua_State* L);
 	virtual int getLoad() { return 5; }
@@ -91,7 +83,6 @@ public:
 private:
 	const int ID;
 	const Coords destination;
-	const wstring unitCategory;
 	const double speed;
 	const double altitude;
 	const wstring taskOptions;
@@ -106,7 +97,6 @@ public:
 		location(location) 
 	{ 
 		priority = CommandPriority::LOW; 
-		type = CommandType::SMOKE; 
 	};
 	virtual wstring getString(lua_State* L);
 	virtual int getLoad() { return 5; }
@@ -126,7 +116,6 @@ public:
 		location(location) 
 	{ 
 		priority = CommandPriority::LOW; 
-		type = CommandType::SPAWN_GROUND; 
 	};
 	virtual wstring getString(lua_State* L);
 	virtual int getLoad() { return 100; }
@@ -149,7 +138,6 @@ public:
 		airbaseName(airbaseName)
 	{ 
 		priority = CommandPriority::LOW; 
-		type = CommandType::SPAWN_AIR; 
 	};
 	virtual wstring getString(lua_State* L);
 	virtual int getLoad() { return 100; }
@@ -171,7 +159,6 @@ public:
 		location(location)
 	{
 		priority = CommandPriority::LOW;
-		type = CommandType::CLONE;
 	};
 	virtual wstring getString(lua_State* L);
 	virtual int getLoad() { return 100; }
@@ -189,7 +176,6 @@ public:
 		ID(ID)
 	{
 		priority = CommandPriority::HIGH;
-		type = CommandType::CLONE;
 	};
 	virtual wstring getString(lua_State* L);
 	virtual int getLoad() { return 20; }
@@ -207,7 +193,6 @@ public:
 		task(task)
 	{
 		priority = CommandPriority::MEDIUM;
-		type = CommandType::FOLLOW;
 	};
 	virtual wstring getString(lua_State* L);
 	virtual int getLoad() { return 10; }
@@ -225,7 +210,6 @@ public:
 		ID(ID)
 	{
 		priority = CommandPriority::HIGH;
-		type = CommandType::RESET_TASK;
 	};
 	virtual wstring getString(lua_State* L);
 	virtual int getLoad() { return 10; }
@@ -243,7 +227,6 @@ public:
 		command(command)
 	{
 		priority = CommandPriority::HIGH;
-		type = CommandType::RESET_TASK;
 	};
 	virtual wstring getString(lua_State* L);
 	virtual int getLoad() { return 10; }
@@ -263,7 +246,6 @@ public:
 		optionValue(optionValue)
 	{
 		priority = CommandPriority::HIGH;
-		type = CommandType::RESET_TASK;
 	};
 	virtual wstring getString(lua_State* L);
 	virtual int getLoad() { return 10; }

@@ -34,6 +34,7 @@ public:
 	void updateExportData(json::value json);
 	void updateMissionData(json::value json);
 	json::value getData(long long time);
+	virtual wstring getCategory() { return L"No category"; };
 
 	/********** Base data **********/
 	void setAI(bool newAI) { AI = newAI; addMeasure(L"AI", json::value(newAI)); }
@@ -201,7 +202,6 @@ protected:
 	Coords oldPosition = Coords(0); // Used to approximate speed
 
 	/********** Functions **********/
-	virtual wstring getCategory() { return L"No category"; };
 	wstring getTargetName();
 	wstring getLeaderName();
 	bool isTargetAlive();
