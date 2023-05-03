@@ -1,5 +1,5 @@
 import { LatLng } from "leaflet";
-import { getActiveCoalition, setActiveCoalition } from "..";
+import { getActiveCoalition, getMap, setActiveCoalition } from "..";
 import { spawnAircraft, spawnGroundUnit, spawnSmoke } from "../server/server";
 import { aircraftDatabase } from "../units/aircraftdatabase";
 import { groundUnitsDatabase } from "../units/groundunitsdatabase";
@@ -41,14 +41,20 @@ export class MapContextMenu extends ContextMenu {
             this.hide();
             this.#spawnOptions.coalition = getActiveCoalition();
             if (this.#spawnOptions)
+            {
+                getMap().addTemporaryMarker(this.#spawnOptions.latlng);
                 spawnAircraft(this.#spawnOptions);
+            }
         });
 
         document.addEventListener("contextMenuDeployGroundUnit", () => {
             this.hide();
             this.#spawnOptions.coalition = getActiveCoalition();
             if (this.#spawnOptions)
+            {
+                getMap().addTemporaryMarker(this.#spawnOptions.latlng);
                 spawnGroundUnit(this.#spawnOptions);
+            }
         });
 
         document.addEventListener("contextMenuDeploySmoke", (e: any) => {

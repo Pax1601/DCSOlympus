@@ -292,12 +292,42 @@ export class UnitsManager {
         this.#showActionMessage(selectedUnits, `sent to nearest tanker`);
     }
 
-    selectedUnitsFollowUnit(ID: number, offset: {"x": number, "y": number, "z": number}) {
+    selectedUnitsFollowUnit(ID: number, offset?: {"x": number, "y": number, "z": number}, formation?: string) {
+        if (offset == undefined){
+            // X: front-rear, positive front
+            // Y: top-bottom, positive top
+            // Z: left-right, positive right
+            offset = {"x": 0, "y": 0, "z": 0};
+            if (formation === "Trail")                  { offset.x = -50; offset.y = -30; offset.z = 0; }
+            else if (formation === "Echelon (LH)")      { offset.x = -50; offset.y = -10; offset.z = -50; }
+            else if (formation === "Echelon (RH)")      { offset.x = -50; offset.y = -10; offset.z = 50; }
+            else if (formation === "Line abreast (RH)") { offset.x = 0; offset.y = 0; offset.z = 50; }
+            else if (formation === "Line abreast (LH)") { offset.x = 0; offset.y = 0; offset.z = -50; }
+            else if (formation === "Front")             { offset.x = 100; offset.y = 0; offset.z = 0; }
+            else offset = undefined;
+        }
         var selectedUnits = this.getSelectedUnits();
         var count = 1;
+        var xr = 0; var yr = 1; var zr = -1;
+        var layer = 1;
         for (let idx in selectedUnits) {
             var commandedUnit = selectedUnits[idx];
-            commandedUnit.followUnit(ID, {"x": offset.x * count, "y": offset.y * count, "z": offset.z * count} );
+            if (offset != undefined)
+                commandedUnit.followUnit(ID, {"x": offset.x * count, "y": offset.y * count, "z": offset.z * count} );
+            else {
+                if (formation === "Diamond")           
+                { 
+                    var xl = xr * Math.cos(Math.PI / 4) - yr * Math.sin(Math.PI / 4);
+                    var yl = xr * Math.sin(Math.PI / 4) + yr * Math.cos(Math.PI / 4);
+                    commandedUnit.followUnit(ID, {"x": -yl * 50, "y": zr * 10, "z": xl * 50} );
+
+                    if (yr == 0) { layer++; xr = 0; yr = layer; zr = -layer; }
+                    else {
+                    if (xr < layer){ xr++; zr--; }
+                    else { yr--; zr++; }
+                    }
+                }
+            }
             count++;
         }
         this.#showActionMessage(selectedUnits, `following unit ${this.getUnitByID(ID)?.getBaseData().unitName}`);
@@ -316,6 +346,7 @@ export class UnitsManager {
             for (let idx in this.#copiedUnits)
             {
                 var unit = this.#copiedUnits[idx];
+                getMap().addTemporaryMarker(getMap().getMouseCoordinates());
                 cloneUnit(unit.ID, getMap().getMouseCoordinates());
                 this.#showActionMessage(this.#copiedUnits, `pasted`);   
             }
