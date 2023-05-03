@@ -3,7 +3,7 @@ import { MiniMap, MiniMapOptions } from "leaflet-control-mini-map";
 
 import { getUnitsManager } from "..";
 import { BoxSelect } from "./boxselect";
-import { MapContextMenu } from "../controls/mapcontextmenu";
+import { MapContextMenu, SpawnOptions } from "../controls/mapcontextmenu";
 import { UnitContextMenu } from "../controls/unitcontextmenu";
 import { AirbaseContextMenu } from "../controls/airbasecontextmenu";
 import { Dropdown } from "../controls/dropdown";
@@ -17,6 +17,12 @@ export const IDLE = "IDLE";
 export const MOVE_UNIT = "MOVE_UNIT";
 
 L.Map.addInitHook('addHandler', 'boxSelect', BoxSelect);
+
+var temporaryIcon = new L.Icon({
+    iconUrl: 'images/icon-temporary.png',
+    iconSize: [52, 52],
+    iconAnchor: [26, 26]
+});
 
 export class ClickableMiniMap extends MiniMap {
     constructor(layer: L.TileLayer | L.LayerGroup, options?: MiniMapOptions) {
@@ -44,6 +50,7 @@ export class Map extends L.Map {
     #centerUnit: Unit | null = null;
     #miniMap: ClickableMiniMap | null = null;
     #miniMapLayerGroup: L.LayerGroup;
+    #temporaryMarkers: L.Marker[] = [];
 
     #mapContextMenu: MapContextMenu = new MapContextMenu("map-contextmenu");
     #unitContextMenu: UnitContextMenu = new UnitContextMenu("unit-contextmenu");
@@ -369,6 +376,31 @@ export class Map extends L.Map {
                     this.#panDown = true;
                     break;
             }
+        }
+    }
+
+    addTemporaryMarker(latlng: L.LatLng) {
+        var marker = new L.Marker(latlng, {icon: temporaryIcon});
+        marker.addTo(this);
+        this.#temporaryMarkers.push(marker);
+    }
+
+    removeTemporaryMarker(latlng: L.LatLng) {
+        var d: number | null = null;
+        var closest: L.Marker | null = null;
+        var i: number = 0;
+        this.#temporaryMarkers.forEach((marker: L.Marker, idx: number) => {
+            var t = latlng.distanceTo(marker.getLatLng());
+            if (d == null || t < d) {
+                d = t;
+                closest = marker;
+                i = idx;
+            }
+        });
+        if (closest)
+        {
+            this.removeLayer(closest);
+            delete this.#temporaryMarkers[i];
         }
     }
 

@@ -1,4 +1,4 @@
-import { Marker, LatLng, Polyline, Icon, DivIcon, CircleMarker } from 'leaflet';
+import { Marker, LatLng, Polyline, Icon, DivIcon, CircleMarker, Map } from 'leaflet';
 import { getMap, getUnitsManager } from '..';
 import { rad2deg } from '../other/utils';
 import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, getUnits, landAt, setAltitude, setReactionToThreat, setROE, setSpeed, refuel, setAdvacedOptions, followUnit } from '../server/server';
@@ -383,6 +383,12 @@ export class Unit extends Marker {
         }, 200);
     }
 
+    onAdd(map: Map): this {
+        super.onAdd(map);
+        getMap().removeTemporaryMarker(new LatLng(this.getFlightData().latitude, this.getFlightData().longitude));
+        return this;
+    }
+
     #onDoubleClick(e: any) {
         clearTimeout(this.#timer);
         this.#preventClick = true;
@@ -438,6 +444,7 @@ export class Unit extends Marker {
             'Line abreast (LH)': `<div id="line-abreast">Line abreast (left)</div>`,
             'Line abreast (RH)': `<div id="line-abreast">Line abreast (right)</div>`,
             'Front': `<div id="front">In front</div>`,
+            'Diamond': `<div id="diamond">Diamond</div>`,
             'Custom': `<div id="custom">Custom</div>`
         }
 
@@ -458,18 +465,7 @@ export class Unit extends Marker {
             })
         }
         else {
-            // X: front-rear, positive front
-            // Y: top-bottom, positive top
-            // Z: left-right, positive right
-
-            var offset = {"x": 0, "y": 0, "z": 0};
-            if (action == "Trail")                  { offset.x = -50; offset.y = -30; offset.z = 0; }
-            else if (action == "Echelon (LH)")      { offset.x = -50; offset.y = -10; offset.z = -50; }
-            else if (action == "Echelon (RH)")      { offset.x = -50; offset.y = -10; offset.z = 50; }
-            else if (action == "Line abreast (RH)") { offset.x = 0; offset.y = 0; offset.z = 50; }
-            else if (action == "Line abreast (LH)") { offset.x = 0; offset.y = 0; offset.z = -50; }
-            else if (action == "Front")             { offset.x = 100; offset.y = 0; offset.z = 0; }
-            getUnitsManager().selectedUnitsFollowUnit(this.ID, offset);
+            getUnitsManager().selectedUnitsFollowUnit(this.ID, undefined, action);
         }
     }
 
