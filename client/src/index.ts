@@ -41,24 +41,24 @@ var unitDataTable: UnitDataTable;
 var featureSwitches;
 
 function setup() {
-
     featureSwitches = new FeatureSwitches();
 
-    /* Initialize base functionalitites*/
+    /* Initialize base functionalitites */
     map = new Map('map-container');
     unitsManager = new UnitsManager();
     missionHandler = new MissionHandler();
 
     /* Panels */
-    unitInfoPanel = new UnitInfoPanel("unit-info-panel");
-    unitControlPanel = new UnitControlPanel("unit-control-panel");
-    connectionStatusPanel = new ConnectionStatusPanel("connection-status-panel");
-    mouseInfoPanel = new MouseInfoPanel("mouse-info-panel");
+    unitInfoPanel           = new UnitInfoPanel("unit-info-panel");
+    unitControlPanel        = new UnitControlPanel("unit-control-panel");
+    connectionStatusPanel   = new ConnectionStatusPanel("connection-status-panel");
+    mouseInfoPanel          = new MouseInfoPanel("mouse-info-panel");
     //logPanel = new LogPanel("log-panel");
 
     /* Popups */
     infoPopup = new Popup("info-popup");
 
+    /* Unit data table */
     unitDataTable = new UnitDataTable("unit-data-table");
 
     /* AIC */
@@ -74,7 +74,6 @@ function setup() {
         atc = new ATC();
         atc.startUpdates();
     }
-
 
     new Dropdown( "app-icon", () => {} );
 
@@ -158,7 +157,6 @@ function setupEvents() {
     /* Generic clicks */
     document.addEventListener("click", (ev) => {
         if (ev instanceof MouseEvent && ev.target instanceof HTMLElement) {
-
             const target = ev.target;
 
             if (target.classList.contains("olympus-dialog-close")) {
@@ -183,11 +181,9 @@ function setupEvents() {
 
     /* Keyup events */
     document.addEventListener("keyup", ev => {
-
         if ( keyEventWasInInput( ev ) ) {
             return;
         }
-        
         switch (ev.code) {
             case "KeyL":
                 document.body.toggleAttribute("data-hide-labels");
@@ -216,11 +212,9 @@ function setupEvents() {
 
     /* Keydown events */
     document.addEventListener("keydown", ev => {
-
         if ( keyEventWasInInput( ev ) ) {
             return;
         }
-        
         switch (ev.code) {
             case "KeyW":
             case "KeyA":
@@ -234,24 +228,6 @@ function setupEvents() {
                 break;
         }
     });
-
-    /*
-    const unitName = document.getElementById( "unit-name" );
-    if ( unitName instanceof HTMLInputElement ) {
-        unitName.addEventListener( "change", ev => {
-            unitName.setAttribute( "disabled", "true" );
-            unitName.setAttribute( "readonly", "true" );
-            
-            //  Do something with this:
-        });
-
-        document.addEventListener( "editUnitName", ev => {
-            unitName.removeAttribute( "disabled" );
-            unitName.removeAttribute( "readonly" );
-            unitName.focus();
-        });
-    }
-    //*/
 
     document.addEventListener( "closeDialog", (ev: CustomEventInit) => {
         ev.detail._element.closest( ".ol-dialog" ).classList.add( "hide" );
