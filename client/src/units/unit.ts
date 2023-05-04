@@ -370,15 +370,16 @@ export class Unit extends Marker {
     }
 
     #onClick(e: any) {
-        this.#timer = window.setTimeout(() => {
-            if (!this.#preventClick) {
-                if (getMap().getState() === 'IDLE' || getMap().getState() === 'MOVE_UNIT' || e.originalEvent.ctrlKey) {
-                    if (!e.originalEvent.ctrlKey) {
-                        getUnitsManager().deselectAllUnits();
-                    }
-                    this.setSelected(!this.getSelected());
+        if (!this.#preventClick) {
+            if (getMap().getState() === 'IDLE' || getMap().getState() === 'MOVE_UNIT' || e.originalEvent.ctrlKey) {
+                if (!e.originalEvent.ctrlKey) {
+                    getUnitsManager().deselectAllUnits();
                 }
+                this.setSelected(!this.getSelected());
             }
+        }
+
+        this.#timer = window.setTimeout(() => {
             this.#preventClick = false;
         }, 200);
     }

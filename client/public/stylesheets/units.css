@@ -352,7 +352,7 @@
 }
 
 [data-object|="unit-sam"] .unit-short-label {
-    translate: 0 50%;
+    translate: 0 25%;
 }
 
 [data-object|="unit-navyunit"] .unit-short-label {

@@ -1,5 +1,5 @@
 body.feature-forceShowUnitControlPanel #unit-control-panel {
-	display:block !important;
+	display: block !important;
 }
 
 
@@ -13,96 +13,96 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 }
 
 #unit-control-panel h3 {
-	margin-bottom:8px;
+	margin-bottom: 8px;
 }
 
 #unit-control-panel #selected-units-container {
 	align-items: left;
-	border-radius: var( --border-radius-md );
-	display:flex;
+	border-radius: var(--border-radius-md);
+	display: flex;
 	flex-direction: column;
 	max-height: 136px;
-	overflow-y:auto;
+	overflow-y: auto;
 	row-gap: 4px;
 }
 
 #unit-control-panel #selected-units-container button {
 	align-items: center;
-	border-radius: var( --border-radius-lg );
-	display:flex;
+	border-radius: var(--border-radius-lg);
+	display: flex;
 	font-size: 11px;
-	height:30px;
-	padding:8px 0;
+	height: 30px;
+	padding: 8px 0;
 	position: relative;
-	width:90%;
+	width: 100%;
 }
 
 #unit-control-panel #selected-units-container button::before {
-	background-color: var( --primary-grey );
-	border-radius: var( --border-radius-md );
-	content: attr( data-short-label );
-	margin:0 5px;
-	padding:4px 6px;
+	background-color: var(--primary-grey);
+	border-radius: 999px;
+	content: attr(data-short-label);
+	margin: 0 5px;
+	padding: 4px 6px;
 	white-space: nowrap;
-	width:fit-content;
+	width: 30px;
+	text-overflow: ellipsis;
+	overflow: hidden;
 }
 
-
-
 #unit-control-panel #selected-units-container button[data-coalition="blue"]::before {
-	background-color: var( --accent-light-blue );
+	background-color: var(--accent-light-blue);
 }
 
 #unit-control-panel #selected-units-container button[data-coalition="red"]::before {
-	background-color: var( --accent-light-red );
-	color:var(--secondary-red-outline)
+	background-color: var(--accent-light-red);
+	color: var(--secondary-red-outline)
 }
 
 #unit-control-panel #selected-units-container button::after {
-	border-radius: var( --border-radius-sm );
-	content: attr( data-callsign );
+	border-radius: var(--border-radius-sm);
+	content: attr(data-callsign);
 	display: block;
 	overflow: hidden;
-	padding:4px;
-	padding-left:0;
+	padding: 4px;
+	padding-left: 0;
 	text-align: left;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	width:fit-content;
+	width: fit-content;
 }
 
 
 #unit-control-panel #selected-units-container button:hover::after {
 	overflow: visible;
-	text-overflow:initial;
+	text-overflow: initial;
 }
 
 #unit-control-panel #selected-units-container button:hover::after {
-	background-color: var( --background-grey );
+	background-color: var(--background-grey);
 }
 
 #unit-control-panel #selected-units-container button[data-coalition="blue"]:hover::after {
-	background-color: var( --primary-blue );
+	background-color: var(--primary-blue);
 }
 
 #unit-control-panel #selected-units-container button[data-coalition="red"]:hover::after {
-	background-color: var( --primary-red );
+	background-color: var(--primary-red);
 }
 
 #unit-control-panel h4 {
-	margin-bottom:8px;
+	margin-bottom: 8px;
 }
 
 #unit-control-panel #threat,
 #unit-control-panel #roe {
-	margin-top:12px;
+	margin-top: 12px;
 }
 
 #advanced-settings-dialog {
 	width: 400px;
 }
 
-#advanced-settings-dialog > .ol-dialog-content {
+#advanced-settings-dialog>.ol-dialog-content {
 	margin-top: 10px;
 	margin-bottom: 10px;
 	display: flex;
@@ -111,6 +111,6 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	row-gap: 10px;
 }
 
-#advanced-settings-dialog > .ol-dialog-content > .ol-group {
+#advanced-settings-dialog>.ol-dialog-content>.ol-group {
 	justify-content: space-between;
 }
