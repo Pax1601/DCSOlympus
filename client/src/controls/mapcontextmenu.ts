@@ -25,7 +25,8 @@ export class MapContextMenu extends ContextMenu {
 
     constructor(id: string) {
         super(id);
-        this.getContainer()?.querySelector("#context-menu-switch")?.addEventListener('change', (e) => this.#onSwitch(e));
+        this.getContainer()?.querySelector("#context-menu-switch")?.addEventListener('click', (e) => this.#onToggleLeftClick(e));
+        this.getContainer()?.querySelector("#context-menu-switch")?.addEventListener('contextmenu', (e) => this.#onToggleRightClick(e));
 
         this.#aircraftRoleDropdown = new Dropdown("aircraft-role-options", (role: string) => this.#setAircraftRole(role));
         this.#aircraftTypeDropdown = new Dropdown("aircraft-type-options", (type: string) => this.#setAircraftType(type));
@@ -103,12 +104,25 @@ export class MapContextMenu extends ContextMenu {
         this.#spawnOptions.latlng = latlng;
     }
 
-    #onSwitch(e: any) {
+    #onToggleLeftClick(e: any) {
         if (this.getContainer() != null) {
-            if (e.srcElement.checked)
+            if (e.srcElement.dataset.activeCoalition == "blue")
+                setActiveCoalition("neutral");
+            else if (e.srcElement.dataset.activeCoalition == "neutral")
                 setActiveCoalition("red");
             else
                 setActiveCoalition("blue");
+        }
+    }
+
+    #onToggleRightClick(e: any) {
+        if (this.getContainer() != null) {
+            if (e.srcElement.dataset.activeCoalition == "red")
+                setActiveCoalition("neutral");
+            else if (e.srcElement.dataset.activeCoalition == "neutral")
+                setActiveCoalition("blue");
+            else
+                setActiveCoalition("red");
         }
     }
 

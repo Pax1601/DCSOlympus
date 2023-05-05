@@ -411,7 +411,7 @@ nav.ol-panel> :last-child {
 
 .highlight-coalition,
 .highlight-neutral {
-    background-color: var(--primary-grey);
+    background-color: var(--primary-neutral);
     color: var(--secondary-gunmetal-grey)
 }
 
@@ -448,7 +448,7 @@ nav.ol-panel> :last-child {
 }
 
 .accent-neutral {
-    color: var(--primary-grey);
+    color: var(--primary-neutral);
     font-weight: var(--font-weight-bolder);
 }
 
@@ -531,7 +531,7 @@ nav.ol-panel> :last-child {
     width: fit-content;
     height: fit-content;
     text-align: center;
-    color: var(--primary-grey);
+    color: var(--primary-neutral);
     font-size: 12px;
     z-index: 2000;
     font-weight: var(--font-weight-bolder);
@@ -628,44 +628,6 @@ body[data-hide-navyunit] #unit-visibility-control-navyunit {
     background: #ffffff20;
     border-radius: var(--border-radius-sm);
     padding: 4px;
-}
-
-.toggle {
-    --width: 40px;
-    --height: calc(var(--width) / 2);
-    --border-radius: calc(var(--height) / 2);
-
-    display: inline-block;
-    cursor: pointer;
-}
-
-.toggle-input {
-    display: none;
-}
-
-.toggle-fill {
-    position: relative;
-    width: var(--width);
-    height: var(--height);
-    border-radius: var(--border-radius);
-    transition: background-color 0.2s;
-}
-
-.toggle-fill::after {
-    content: "";
-    position: absolute;
-    top: 2;
-    left: 2;
-    height: calc(var(--height) - 4px);
-    width: calc(var(--height) - 4px);
-    background-color: #ffffff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
-    border-radius: var(--border-radius);
-    transition: transform 0.2s;
-}
-
-.toggle-input:checked~.toggle-fill::after {
-    transform: translateX(var(--height));
 }
 
 #roe-buttons-container button {

@@ -38,7 +38,7 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 }
 
 #unit-control-panel #selected-units-container button::before {
-	background-color: var( --primary-grey );
+	background-color: var( --primary-neutral );
 	border-radius: var( --border-radius-md );
 	content: attr( data-short-label );
 	margin:0 5px;
