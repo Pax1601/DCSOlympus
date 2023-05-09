@@ -3,6 +3,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var fs = require('fs');
+var basicAuth = require('express-basic-auth')
 
 var atcRouter   = require('./routes/api/atc');
 var indexRouter = require('./routes/index');
@@ -10,6 +11,10 @@ var uikitRouter = require('./routes/uikit');
 var usersRouter = require('./routes/users');
 
 var app = express();
+
+app.use('/demo', basicAuth({
+    users: { 'admin': 'socks' }
+}))
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -37,4 +42,6 @@ app.get('/demo/logs', (req, res) => demoDataGenerator.logs(req, res));
 app.get('/demo/bullseyes', (req, res) => demoDataGenerator.bullseyes(req, res));
 app.get('/demo/airbases', (req, res) => demoDataGenerator.airbases(req, res));
 app.get('/demo/mission', (req, res) => demoDataGenerator.mission(req, res));
+
+
 

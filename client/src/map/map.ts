@@ -316,7 +316,7 @@ export class Map extends L.Map {
         }
 
         this.setView(bounds.getCenter(), 8);
-        this.setMaxBounds(bounds);
+        //this.setMaxBounds(bounds);
 
         if (this.#miniMap)
             this.#miniMap.remove();

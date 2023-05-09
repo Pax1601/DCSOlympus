@@ -1,6 +1,9 @@
 import * as L from 'leaflet'
-import { setConnected } from '..';
+import { getConnectionStatusPanel, getInfoPopup, getMissionData, getUnitDataTable, getUnitsManager, setConnectionStatus } from '..';
 import { SpawnOptions } from '../controls/mapcontextmenu';
+
+var connected: boolean = false;
+var freezed: boolean = false;
 
 var REST_ADDRESS = "http://localhost:30000/olympus";
 var DEMO_ADDRESS = window.location.href + "demo";
@@ -10,29 +13,46 @@ const AIRBASES_URI = "airbases";
 const BULLSEYE_URI = "bullseyes";
 const MISSION_URI = "mission";
 
+var username = "";
+var credentials = "";
+
+var sessionHash: string | null = null;
 var lastUpdateTime = 0;
 var demoEnabled = false;
 
-export function toggleDemoEnabled()
-{
+export function toggleDemoEnabled() {
     demoEnabled = !demoEnabled;
 }
 
-export function GET(callback: CallableFunction, uri: string, options?: string){
+export function setCredentials(newUsername: string, newCredentials: string) {
+    username = newUsername;
+    credentials = newCredentials;
+}
+
+export function GET(callback: CallableFunction, uri: string, options?: string) {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open("GET", `${demoEnabled? DEMO_ADDRESS: REST_ADDRESS}/${uri}${options? options: ''}`, true);
+    if (credentials)
+        xmlHttp.setRequestHeader("Authorization", "Basic " + credentials);
     xmlHttp.onload = function (e) {
-        var data = JSON.parse(xmlHttp.responseText);
-        if (uri !== UNITS_URI || parseInt(data.time) > lastUpdateTime)
-        {
-            callback(data);
-            lastUpdateTime = parseInt(data.time);
-            if (isNaN(lastUpdateTime))
-                lastUpdateTime = 0;
-            setConnected(true);
+        if (xmlHttp.status == 200) {
+            var data = JSON.parse(xmlHttp.responseText);
+            if (uri !== UNITS_URI || parseInt(data.time) > lastUpdateTime)
+            {
+                callback(data);
+                lastUpdateTime = parseInt(data.time);
+                if (isNaN(lastUpdateTime))
+                    lastUpdateTime = 0;
+                setConnected(true);
+            }
+        } else if (xmlHttp.status == 401) {
+            console.error("Incorrect username/password");
+            setConnectionStatus("failed");
+        } else {
+            setConnected(false);
         }
     };
-    xmlHttp.onerror = function () {
+    xmlHttp.onerror = function (res) {
         console.error("An error occurred during the XMLHttpRequest");
         setConnected(false);
     };
@@ -40,13 +60,15 @@ export function GET(callback: CallableFunction, uri: string, options?: string){
 }
 
 export function POST(request: object, callback: CallableFunction){
-    var xhr = new XMLHttpRequest();
-    xhr.open("PUT", demoEnabled? DEMO_ADDRESS: REST_ADDRESS);
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.onreadystatechange = () => { 
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("PUT", demoEnabled? DEMO_ADDRESS: REST_ADDRESS);
+    xmlHttp.setRequestHeader("Content-Type", "application/json");
+    if (credentials)
+        xmlHttp.setRequestHeader("Authorization", "Basic " + credentials);
+        xmlHttp.onreadystatechange = () => { 
         callback(); 
     };
-    xhr.send(JSON.stringify(request));
+    xmlHttp.send(JSON.stringify(request));
 }
 
 export function getConfig(callback: CallableFunction) {
@@ -208,4 +230,81 @@ export function setAdvacedOptions(ID: number, isTanker: boolean, isAWACS: boolea
 
     var data = { "setAdvancedOptions": command };
     POST(data, () => { });
+}
+
+export function startUpdate() {
+    /* On the first connection, force request of full data */
+    getAirbases((data: AirbasesData) => getMissionData()?.update(data));
+    getBullseye((data: BullseyesData) => getMissionData()?.update(data));
+    getMission((data: any) => { getMissionData()?.update(data) });
+    getUnits((data: UnitsData) => getUnitsManager()?.update(data), true /* Does a full refresh */);
+
+    requestUpdate();
+    requestRefresh();
+}
+
+export function requestUpdate() {
+    /* Main update rate = 250ms is minimum time, equal to server update time. */
+    getUnits((data: UnitsData) => {
+        if (!getFreezed()) {
+            getUnitsManager()?.update(data);
+            checkSessionHash(data.sessionHash);
+        }
+    }, false);
+    window.setTimeout(() => requestUpdate(), getConnected() ? 250 : 1000);
+
+    getConnectionStatusPanel()?.update(getConnected());
+}
+
+export function requestRefresh() {
+    /* Main refresh rate = 5000ms. */
+    getUnits((data: UnitsData) => {
+        if (!getFreezed()) {
+            getUnitsManager()?.update(data);
+            getAirbases((data: AirbasesData) => getMissionData()?.update(data));
+            getBullseye((data: BullseyesData) => getMissionData()?.update(data));
+            getMission((data: any) => {
+                getMissionData()?.update(data)
+            });
+
+            // Update the list of existing units
+            getUnitDataTable()?.update();
+
+            checkSessionHash(data.sessionHash);
+        }
+    }, true);
+    window.setTimeout(() => requestRefresh(), 5000);
+}
+
+export function checkSessionHash(newSessionHash: string) {
+    if (sessionHash != null) {
+        if (newSessionHash != sessionHash)
+            location.reload();
+    }
+    else
+        sessionHash = newSessionHash;
+}
+
+export function setConnected(newConnected: boolean) {
+    if (connected != newConnected)
+        newConnected ? getInfoPopup().setText("Connected to DCS Olympus server") : getInfoPopup().setText("Disconnected from DCS Olympus server");
+    connected = newConnected;
+
+    if (connected) {
+        document.querySelector("#splash-screen")?.classList.add("hide");
+        document.querySelector("#gray-out")?.classList.add("hide");
+    }
+}
+
+export function getConnected() {
+    return connected;
+}
+
+export function setFreezed(newFreezed: boolean) {
+    freezed = newFreezed;
+    freezed ? getInfoPopup().setText("Freezed") : getInfoPopup().setText("Unfreezed");
+}
+
+export function getFreezed() {
+    return freezed;
 }
