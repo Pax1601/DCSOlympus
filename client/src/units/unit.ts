@@ -139,6 +139,8 @@ export class Unit extends Marker {
         return "";
     }
 
+    /********************** Unit data *************************/
+
     setData(data: UpdateData) {
         /* Check if data has changed comparing new values to old values */
         const positionChanged = (data.flightData != undefined && data.flightData.latitude != undefined && data.flightData.longitude != undefined && (this.getFlightData().latitude != data.flightData.latitude || this.getFlightData().longitude != data.flightData.longitude));
@@ -263,22 +265,7 @@ export class Unit extends Marker {
         return this.#selectable;
     }
 
-    addDestination(latlng: L.LatLng) {
-        var path: any = {};
-        if (this.getTaskData().activePath != undefined) {
-            path = this.getTaskData().activePath;
-            path[(Object.keys(path).length + 1).toString()] = latlng;
-        }
-        else {
-            path = { "1": latlng };
-        }
-        addDestination(this.ID, path);
-    }
-
-    clearDestinations() {
-        this.getTaskData().activePath = undefined;
-    }
-
+    /********************** Visibility *************************/
     updateVisibility()
     {
         this.setHidden( document.body.getAttribute(`data-hide-${this.getMissionData().coalition}`) != null || 
@@ -309,64 +296,103 @@ export class Unit extends Marker {
         return getUnitsManager().getUnitByID(this.getFormationData().leaderID);
     }
 
+    /********************** Unit commands *************************/
+    addDestination(latlng: L.LatLng) {
+        if (!this.getMissionData().flags.Human) {
+            var path: any = {};
+            if (this.getTaskData().activePath != undefined) {
+                path = this.getTaskData().activePath;
+                path[(Object.keys(path).length + 1).toString()] = latlng;
+            }
+            else {
+                path = { "1": latlng };
+            }
+            addDestination(this.ID, path);
+        }
+    }
+
+    clearDestinations() {
+        if (!this.getMissionData().flags.Human)
+            this.getTaskData().activePath = undefined;
+    }
+
     attackUnit(targetID: number) {
         /* Units can't attack themselves */
-        if (this.ID != targetID) {
-            attackUnit(this.ID, targetID);
-        }
+        if (!this.getMissionData().flags.Human)
+            if (this.ID != targetID) 
+                attackUnit(this.ID, targetID);
     }
 
     followUnit(targetID: number, offset: {"x": number, "y": number, "z": number}) {
         /* Units can't follow themselves */
-        if (this.ID != targetID) {
-            followUnit(this.ID, targetID, offset);
-        }
+        if (!this.getMissionData().flags.Human)
+            if (this.ID != targetID) 
+                followUnit(this.ID, targetID, offset);  
     }
 
     landAt(latlng: LatLng) {
-        landAt(this.ID, latlng);
+        if (!this.getMissionData().flags.Human)
+            landAt(this.ID, latlng);
     }
 
     changeSpeed(speedChange: string) {
-        changeSpeed(this.ID, speedChange);
+        if (!this.getMissionData().flags.Human)
+            changeSpeed(this.ID, speedChange);
     }
 
     changeAltitude(altitudeChange: string) {
-        changeAltitude(this.ID, altitudeChange);
+        if (!this.getMissionData().flags.Human)
+            changeAltitude(this.ID, altitudeChange);
     }
 
     setSpeed(speed: number) {
-        setSpeed(this.ID, speed);
+        if (!this.getMissionData().flags.Human)
+            setSpeed(this.ID, speed);
     }
 
     setAltitude(altitude: number) {
-        setAltitude(this.ID, altitude);
+        if (!this.getMissionData().flags.Human)
+            setAltitude(this.ID, altitude);
     }
 
     setROE(ROE: string) {
-        setROE(this.ID, ROE);
+        if (!this.getMissionData().flags.Human)
+            setROE(this.ID, ROE);
     }
 
     setReactionToThreat(reactionToThreat: string) {
-        setReactionToThreat(this.ID, reactionToThreat);
+        if (!this.getMissionData().flags.Human)
+            setReactionToThreat(this.ID, reactionToThreat);
     }
 
     setLeader(isLeader: boolean, wingmenIDs: number[] = []) {
-        setLeader(this.ID, isLeader, wingmenIDs);
+        if (!this.getMissionData().flags.Human)
+            setLeader(this.ID, isLeader, wingmenIDs);
     }
 
     delete() {
+        // TODO: add confirmation popup
         deleteUnit(this.ID);
     }
 
     refuel() {
-        refuel(this.ID);
+        if (!this.getMissionData().flags.Human)
+            refuel(this.ID);
     }
 
     setAdvancedOptions(isTanker: boolean, isAWACS: boolean, TACANChannel: number, TACANXY: string, TACANcallsign: string, radioFrequency: number, radioCallsign: number, radioCallsignNumber: number) {
-        setAdvacedOptions(this.ID, isTanker, isAWACS, TACANChannel, TACANXY, TACANcallsign, radioFrequency, radioCallsign, radioCallsignNumber);
+        if (!this.getMissionData().flags.Human)
+            setAdvacedOptions(this.ID, isTanker, isAWACS, TACANChannel, TACANXY, TACANcallsign, radioFrequency, radioCallsign, radioCallsignNumber);
     }
 
+    /***********************************************/
+    onAdd(map: Map): this {
+        super.onAdd(map);
+        getMap().removeTemporaryMarker(new LatLng(this.getFlightData().latitude, this.getFlightData().longitude));
+        return this;
+    }
+
+    /***********************************************/
     #onClick(e: any) {
         if (!this.#preventClick) {
             if (getMap().getState() === 'IDLE' || getMap().getState() === 'MOVE_UNIT' || e.originalEvent.ctrlKey) {
@@ -380,12 +406,6 @@ export class Unit extends Marker {
         this.#timer = window.setTimeout(() => {
             this.#preventClick = false;
         }, 200);
-    }
-
-    onAdd(map: Map): this {
-        super.onAdd(map);
-        getMap().removeTemporaryMarker(new LatLng(this.getFlightData().latitude, this.getFlightData().longitude));
-        return this;
     }
 
     #onDoubleClick(e: any) {
