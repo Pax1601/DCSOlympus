@@ -1,6 +1,6 @@
-local version = "v0.2.0-alpha"
+local version = "v0.2.1-alpha"
 
-local debug = true
+local debug = false
 
 Olympus.unitCounter = 1
 Olympus.payloadRegistry = {}

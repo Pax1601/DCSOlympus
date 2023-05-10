@@ -1,7 +1,0 @@
-RTB
-tanker
-scenario dropdown
-explosion
-wrong name for ground units
-improve map zIndex
-human symbol if user
