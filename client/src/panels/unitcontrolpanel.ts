@@ -271,9 +271,11 @@ export class UnitControlPanel extends Panel {
     {
         const isTanker = this.#advancedSettingsDialog.querySelector("#tanker-checkbox")?.querySelector("input")?.checked? true: false;
         const isAWACS = this.#advancedSettingsDialog.querySelector("#AWACS-checkbox")?.querySelector("input")?.checked? true: false;
+
         const TACANChannel = Number(this.#advancedSettingsDialog.querySelector("#TACAN-channel")?.querySelector("input")?.value);
         const TACANXY = this.#TACANXYDropdown.getValue();
         const TACANCallsign = <string> this.#advancedSettingsDialog.querySelector("#tacan-callsign")?.querySelector("input")?.value
+        
         const radioMHz = Number(this.#advancedSettingsDialog.querySelector("#radio-mhz")?.querySelector("input")?.value);
         const radioDecimals = this.#radioDecimalsDropdown.getValue();
         const radioCallsign = this.#radioCallsignDropdown.getIndex() + 1;

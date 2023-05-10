@@ -50,14 +50,12 @@ export class Unit extends Marker {
             targetAltitude: 0,
             isTanker: false,
             isAWACS: false,
-            TACANOn: false,
             TACANChannel: 0,
             TACANXY: "X",
             TACANCallsign: "",
             radioFrequency: 0,
             radioCallsign: 0,
-            radioCallsignNumber: 0,
-            radioAMFM: "AM"
+            radioCallsignNumber: 0
         },
         optionsData: {
             ROE: "",
@@ -536,7 +534,41 @@ export class Unit extends Marker {
                     let currentStyle = el.getAttribute( "style" ) || "";
                     el.setAttribute( "style", currentStyle + `transform:rotate(${headingDeg}deg);` );
                 });
+
+                /* Turn on ordnance indicators */
+
+                var hasFox1 = element.querySelector(".unit")?.hasAttribute("data-has-fox-1");
+                var hasFox2 = element.querySelector(".unit")?.hasAttribute("data-has-fox-2");
+                var hasFox3 = element.querySelector(".unit")?.hasAttribute("data-has-fox-3");
+                var hasOtherAmmo = element.querySelector(".unit")?.hasAttribute("data-has-other-ammo");
+
+                var newHasFox1 = false;
+                var newHasFox2 = false;
+                var newHasFox3 = false;
+                var newHasOtherAmmo = false;
+                Object.values(this.getMissionData().ammo).forEach((ammo: any) => {
+                    if (ammo.desc.category == 1 && ammo.desc.missileCategory == 1) {
+                        if (ammo.desc.guidance == 4 || ammo.desc.guidance == 5) {
+                            newHasFox1 = true;
+                        }
+                        else if (ammo.desc.guidance == 2) {
+                            newHasFox2 = true;
+                        }
+                        else if (ammo.desc.guidance == 3) {
+                            newHasFox3 = true;
+                        }
+                    }
+                    else {
+                        newHasOtherAmmo = true;
+                    }
+                });
+
+                if (hasFox1 != newHasFox1) element.querySelector(".unit")?.toggleAttribute("data-has-fox-1", newHasFox1);
+                if (hasFox2 != newHasFox2) element.querySelector(".unit")?.toggleAttribute("data-has-fox-2", newHasFox2);
+                if (hasFox3 != newHasFox3) element.querySelector(".unit")?.toggleAttribute("data-has-fox-3", newHasFox3);
+                if (hasOtherAmmo != newHasOtherAmmo) element.querySelector(".unit")?.toggleAttribute("data-has-other-ammo", newHasOtherAmmo);
             }
+            
             /* Set vertical offset for altitude stacking */
             var pos = getMap().latLngToLayerPoint(this.getLatLng()).round();
             this.setZIndexOffset(1000 + Math.floor(this.getFlightData().altitude) - pos.y + (this.#hovered || this.#selected? 5000: 0));

@@ -28,6 +28,9 @@ Unit::Unit(json::value json, int ID) :
 	addMeasure(L"radioFrequency", json::value(radioFrequency));
 	addMeasure(L"radioCallsign", json::value(radioCallsign));
 	addMeasure(L"radioCallsignNumber", json::value(radioCallsignNumber));
+
+	setROE(L"Designated");
+	setReactionToThreat(L"Evade");
 }
 
 Unit::~Unit()

@@ -52,10 +52,6 @@ export function GET(callback: CallableFunction, uri: string, options?: string) {
             setConnected(false);
         }
     };
-    xmlHttp.onreadystatechange = function (res) {
-        console.error("An error occurred during the XMLHttpRequest");
-        setConnected(false);
-    };
     xmlHttp.onerror = function (res) {
         console.error("An error occurred during the XMLHttpRequest");
         setConnected(false);
