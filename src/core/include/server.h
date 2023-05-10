@@ -27,5 +27,7 @@ private:
     void task();
 
     atomic<bool> runListener;
+
+    wstring password = L"";
 };
 

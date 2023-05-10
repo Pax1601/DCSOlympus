@@ -82,9 +82,9 @@ function setup() {
 }
 
 function readConfig(config: any) {
-    if (config && config["server"] != undefined && config["server"]["address"] != undefined && config["server"]["port"] != undefined) {
-        const address = config["server"]["address"];
-        const port = config["server"]["port"];
+    if (config && config["address"] != undefined && config["port"] != undefined) {
+        const address = config["address"];
+        const port = config["port"];
         if (typeof address === 'string' && typeof port == 'number')
             setAddress(address == "*" ? window.location.hostname : address, <number>port);
     }

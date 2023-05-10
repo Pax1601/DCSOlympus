@@ -337,9 +337,17 @@ void Unit::landAt(Coords loc) {
 	setState(State::LAND);
 }
 
-void Unit::setTACANOn(bool newTACANOn) { 
-	TACANOn = newTACANOn; 
-	addMeasure(L"TACANOn", json::value(newTACANOn)); 
+void Unit::setIsTanker(bool newIsTanker) { 
+	isTanker = newIsTanker; 
+	resetTask(); 
+	addMeasure(L"isTanker", json::value(newIsTanker));
+}
+
+void Unit::setIsAWACS(bool newIsAWACS) { 
+	isAWACS = newIsAWACS; 
+	resetTask(); 
+	addMeasure(L"isAWACS", json::value(newIsAWACS)); 
+	setEPLRS(true);
 }
 
 void Unit::setTACANChannel(int newTACANChannel) { 
@@ -354,11 +362,6 @@ void Unit::setTACANXY(wstring newTACANXY) {
 void Unit::setTACANCallsign(wstring newTACANCallsign) { 
 	TACANCallsign = newTACANCallsign; 
 	addMeasure(L"TACANCallsign", json::value(newTACANCallsign)); 
-}
-
-void Unit::setRadioOn(bool newRadioOn) { 
-	radioOn = newRadioOn; 
-	addMeasure(L"radioOn", json::value(newRadioOn));
 }
 
 void Unit::setRadioFrequency(int newRadioFrequency) { 
@@ -376,6 +379,19 @@ void Unit::setRadioCallsignNumber(int newRadioCallsignNumber) {
 	addMeasure(L"radioCallsignNumber", json::value(newRadioCallsignNumber)); 
 }
 
+void Unit::setEPLRS(bool state)
+{
+	std::wostringstream commandSS;
+	commandSS << "{"
+		<< "id = 'EPLRS',"
+		<< "params = {"
+		<< "value = " << (state? "true": "false") << ", "
+		<< "}"
+		<< "}";
+	Command* command = dynamic_cast<Command*>(new SetCommand(ID, commandSS.str()));
+	scheduler->appendCommand(command);
+}
+
 void Unit::setTACAN()
 {
 	std::wostringstream commandSS;
@@ -383,9 +399,9 @@ void Unit::setTACAN()
 		<<	"id = 'ActivateBeacon',"
 		<<		"params = {"
 		<<			"type = " << ((TACANXY.compare(L"X") == 0)? 4: 5) << ","
-		<<			"system = 4,"
-		<<			"name = Olympus_TACAN,"
-		<<			"callsign = " << TACANCallsign << ", "
+		<<			"system = 3,"
+		<<			"name = \"Olympus_TACAN\","
+		<<			"callsign = \"" << TACANCallsign << "\", "
 		<<			"frequency = " << TACANChannelToFrequency(TACANChannel, TACANXY) << ","
 		<<		"}"
 		<<	"}";

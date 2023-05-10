@@ -12,10 +12,6 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 
-app.use('/demo', basicAuth({
-    users: { 'admin': 'socks' }
-}))
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -31,7 +27,8 @@ app.set('view engine', 'ejs');
 
 let rawdata = fs.readFileSync('../olympus.json');
 let config = JSON.parse(rawdata);
-app.get('/config', (req, res) => res.send(config));
+if (config["server"] != undefined)
+    app.get('/config', (req, res) => res.send(config["server"]));
 
 module.exports = app;
 
@@ -43,5 +40,8 @@ app.get('/demo/bullseyes', (req, res) => demoDataGenerator.bullseyes(req, res));
 app.get('/demo/airbases', (req, res) => demoDataGenerator.airbases(req, res));
 app.get('/demo/mission', (req, res) => demoDataGenerator.mission(req, res));
 
+app.use('/demo', basicAuth({
+    users: { 'admin': 'socks' }
+}))
 
 
