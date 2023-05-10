@@ -219,7 +219,7 @@ export class UnitControlPanel extends Panel {
 
                 // Default values for "normal" units
                 this.#radioCallsignDropdown.setOptions(["Enfield", "Springfield", "Uzi", "Colt", "Dodge", "Ford", "Chevy", "Pontiac"]);
-                this.#radioCallsignDropdown.selectValue(unit.getTaskData().radioCallsign);
+                this.#radioCallsignDropdown.selectValue(unit.getTaskData().radioCallsign - 1);
 
                 // Input values
                 var tankerCheckbox = this.#advancedSettingsDialog.querySelector("#tanker-checkbox")?.querySelector("input")
@@ -241,7 +241,7 @@ export class UnitControlPanel extends Panel {
                 this.#radioDecimalsDropdown.setValue("." + radioDecimals);
 
                 // Make sure its in the valid range
-                if (!this.#radioCallsignDropdown.selectValue(unit.getTaskData().radioCallsign))
+                if (!this.#radioCallsignDropdown.selectValue(unit.getTaskData().radioCallsign - 1))
                     this.#radioCallsignDropdown.selectValue(0);
 
                 // Set options for tankers
@@ -249,7 +249,7 @@ export class UnitControlPanel extends Panel {
                 if (roles != undefined && Array.prototype.concat.apply([], roles)?.includes("Tanker")){
                     this.#advancedSettingsDialog.querySelector("#tanker-checkbox")?.classList.remove("hide");
                     this.#radioCallsignDropdown.setOptions(["Texaco", "Arco", "Shell"]);
-                    this.#radioCallsignDropdown.selectValue(unit.getTaskData().radioCallsign);
+                    this.#radioCallsignDropdown.selectValue(unit.getTaskData().radioCallsign - 1);
                 }
                 else {
                     this.#advancedSettingsDialog.querySelector("#tanker-checkbox")?.classList.add("hide");
@@ -259,7 +259,7 @@ export class UnitControlPanel extends Panel {
                 if (roles != undefined && Array.prototype.concat.apply([], roles)?.includes("AWACS")){
                     this.#advancedSettingsDialog.querySelector("#AWACS-checkbox")?.classList.remove("hide");
                     this.#radioCallsignDropdown.setOptions(["Overlord", "Magic", "Wizard", "Focus", "Darkstar"]);
-                    this.#radioCallsignDropdown.selectValue(unit.getTaskData().radioCallsign);
+                    this.#radioCallsignDropdown.selectValue(unit.getTaskData().radioCallsign - 1);
                 } else {
                     this.#advancedSettingsDialog.querySelector("#AWACS-checkbox")?.classList.add("hide");
                 }
@@ -276,7 +276,7 @@ export class UnitControlPanel extends Panel {
         const TACANCallsign = <string> this.#advancedSettingsDialog.querySelector("#tacan-callsign")?.querySelector("input")?.value
         const radioMHz = Number(this.#advancedSettingsDialog.querySelector("#radio-mhz")?.querySelector("input")?.value);
         const radioDecimals = this.#radioDecimalsDropdown.getValue();
-        const radioCallsign = this.#radioCallsignDropdown.getIndex();
+        const radioCallsign = this.#radioCallsignDropdown.getIndex() + 1;
         const radioCallsignNumber = Number(this.#advancedSettingsDialog.querySelector("#radio-callsign-number")?.querySelector("input")?.value);
 
         var radioFrequency = (radioMHz * 1000 + Number(radioDecimals.substring(1))) * 1000;

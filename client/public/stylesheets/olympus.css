@@ -251,13 +251,14 @@ form>div {
     text-align: left;
     white-space: nowrap;
     width: 100%;
-    padding: 10px;
+    padding: 5px;
     border-radius: var(--border-radius-sm);
 }
 
 .ol-select>.ol-select-options>div a:hover,
 .ol-select>.ol-select-options>div button:hover {
     background-color: #FFF3;
+    text-decoration: none;
 }
 
 .ol-panel-list {
@@ -725,21 +726,21 @@ body[data-hide-navyunit] #unit-visibility-control-navyunit {
 #splash-screen {
     background-image: url("/images/splash/splash_pic_ship.png");
     background-position: 100% 50%;
-    background-size: 320px;
+    background-size: 60%;
     border-radius: var(--border-radius-lg);
-    display: none;
     overflow: hidden;
-    width: 700px;
+    width: 1200px;
+    z-index: 99999;
 }
 
 #splash-content {
     background-color: var(--background-steel);
     display: flex;
     flex-direction: column;
-    padding: 20px;
+    padding: 30px;
     position: relative;
     row-gap: 10px;
-    width: 55%;
+    width: 50%;
     z-index: 10;
 }
 
@@ -747,7 +748,7 @@ body[data-hide-navyunit] #unit-visibility-control-navyunit {
     background-color: var(--background-steel);
     content: "";
     display: block;
-    height: 250px;
+    height: 800px;
     position: absolute;
     right: 0;
     top: 0;
@@ -775,20 +776,84 @@ body[data-hide-navyunit] #unit-visibility-control-navyunit {
     line-height: 25px;
     white-space: nowrap;
     width: fit-content;
+    padding: 2px;
 }
 
 #splash-content .app-version {
     font-size: 11px;
 }
 
-#splash-content #legal-stuff h4 {
+#splash-content #legal-stuff h5 {
     text-transform: uppercase;
 }
 
 #splash-content #legal-stuff p {
     font-size: 10px;
+    color:#FFF7;
+    width: 120%;
+}
+
+#splash-content.ol-dialog-content {
+    margin: 0px;
 }
 
 .feature-splashScreen #splash-screen {
     display: flex;
+}
+
+#gray-out {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    left: 0px;
+    top: 0px;
+    z-index: 9999;
+    background-color: #000A;
+}
+
+#authentication-form {
+    display: flex;
+    align-items: end;
+    column-gap: 10px;
+    margin: 10px 0px;
+    flex-direction: row;
+}
+
+#authentication-form>div {
+    display: flex;
+    align-items: start;
+    row-gap: 4px;
+    flex-direction: column;
+}
+
+#authentication-form>div>input {
+    height: 35px;
+    border-radius: var(--border-radius-sm);
+    border: 0px solid transparent;
+    width: 200px;
+}
+
+#splash-content a {
+    color: #FFFB;
+    font-weight: bold;
+}
+
+#connection-status {
+    margin-bottom: 5px;
+}
+
+#connection-status[data-status="connecting"]::before {
+    content: "Connecting...";
+    animation: blinker 1s linear infinite;
+}
+
+#connection-status[data-status="failed"]::before {
+    content: "Incorrect username/password!";
+    color: var(--primary-red);
+}
+
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
 }

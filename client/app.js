@@ -3,6 +3,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var fs = require('fs');
+var basicAuth = require('express-basic-auth')
 
 var atcRouter   = require('./routes/api/atc');
 var indexRouter = require('./routes/index');
@@ -26,7 +27,8 @@ app.set('view engine', 'ejs');
 
 let rawdata = fs.readFileSync('../olympus.json');
 let config = JSON.parse(rawdata);
-app.get('/config', (req, res) => res.send(config));
+if (config["server"] != undefined)
+    app.get('/config', (req, res) => res.send(config["server"]));
 
 module.exports = app;
 
@@ -37,4 +39,9 @@ app.get('/demo/logs', (req, res) => demoDataGenerator.logs(req, res));
 app.get('/demo/bullseyes', (req, res) => demoDataGenerator.bullseyes(req, res));
 app.get('/demo/airbases', (req, res) => demoDataGenerator.airbases(req, res));
 app.get('/demo/mission', (req, res) => demoDataGenerator.mission(req, res));
+
+app.use('/demo', basicAuth({
+    users: { 'admin': 'socks' }
+}))
+
 

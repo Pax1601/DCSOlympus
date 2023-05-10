@@ -90,7 +90,7 @@ export class FeatureSwitches {
         }),
         
         new FeatureSwitch({
-            "defaultEnabled": false,
+            "defaultEnabled": true,
             "label": "Show splash screen",
             "masterSwitch": true,
             "name": "splashScreen"
@@ -116,35 +116,23 @@ export class FeatureSwitches {
 
 
     #testSwitches() {
-        
         for ( const featureSwitch of this.#featureSwitches ) {
-
             if ( featureSwitch.isEnabled() ) {
-
                 if ( typeof featureSwitch.onEnabled === "function" ) {
                     featureSwitch.onEnabled();
                 }
-
             } else {
-                
                 document.querySelectorAll( "[data-feature-switch='" + featureSwitch.name + "']" ).forEach( el => {
-
                     if ( featureSwitch.removeArtifactsIfDisabled === false ) {
                         el.remove();
                     } else {
                         el.classList.add( "hide" );
                     }
-
                 });
-
             }
-
             document.body.classList.toggle( "feature-" + featureSwitch.name, featureSwitch.isEnabled() );
-
         }
-
     }
-
 
     savePreferences() {
 
