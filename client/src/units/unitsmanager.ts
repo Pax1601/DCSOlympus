@@ -92,12 +92,16 @@ export class UnitsManager {
         }
     }
 
-    getSelectedUnits() {
+    getSelectedUnits(options?: {excludeHumans?: boolean}) {
         var selectedUnits = [];
         for (let ID in this.#units) {
             if (this.#units[ID].getSelected()) {
                 selectedUnits.push(this.#units[ID]);
             }
+        }
+        if (options) {
+            if (options.excludeHumans)
+                selectedUnits = selectedUnits.filter((unit: Unit) => {return !unit.getMissionData().flags.Human});
         }
         return selectedUnits;
     }
@@ -148,10 +152,12 @@ export class UnitsManager {
         });
     };
 
+    /*********************** Actions on selected units ************************/
     selectedUnitsAddDestination(latlng: L.LatLng) {
-        var selectedUnits = this.getSelectedUnits();
+        var selectedUnits = this.getSelectedUnits({excludeHumans: true});
         for (let idx in selectedUnits) {
             const unit = selectedUnits[idx];
+            /* If a unit is following another unit, and that unit is also selected, send the command to the followed unit */
             if (unit.getTaskData().currentState === "Follow") {
                 const leader = this.getUnitByID(unit.getFormationData().leaderID)
                 if (leader && leader.getSelected())
@@ -166,7 +172,7 @@ export class UnitsManager {
     }
 
     selectedUnitsClearDestinations() {
-        var selectedUnits = this.getSelectedUnits();
+        var selectedUnits = this.getSelectedUnits({excludeHumans: true});
         for (let idx in selectedUnits) {
             const unit = selectedUnits[idx];
             if (unit.getTaskData().currentState === "Follow") {
@@ -182,7 +188,7 @@ export class UnitsManager {
     }
 
     selectedUnitsLandAt(latlng: LatLng) {
-        var selectedUnits = this.getSelectedUnits();
+        var selectedUnits = this.getSelectedUnits({excludeHumans: true});
         for (let idx in selectedUnits) {
             selectedUnits[idx].landAt(latlng);
         }
@@ -190,21 +196,21 @@ export class UnitsManager {
     }
 
     selectedUnitsChangeSpeed(speedChange: string) {
-        var selectedUnits = this.getSelectedUnits();
+        var selectedUnits = this.getSelectedUnits({excludeHumans: true});
         for (let idx in selectedUnits) {
             selectedUnits[idx].changeSpeed(speedChange);
         }
     }
 
     selectedUnitsChangeAltitude(altitudeChange: string) {
-        var selectedUnits = this.getSelectedUnits();
+        var selectedUnits = this.getSelectedUnits({excludeHumans: true});
         for (let idx in selectedUnits) {
             selectedUnits[idx].changeAltitude(altitudeChange);
         }
     }
 
     selectedUnitsSetSpeed(speed: number) {
-        var selectedUnits = this.getSelectedUnits();
+        var selectedUnits = this.getSelectedUnits({excludeHumans: true});
         for (let idx in selectedUnits) {
             selectedUnits[idx].setSpeed(speed);
         }
@@ -213,7 +219,7 @@ export class UnitsManager {
     }
 
     selectedUnitsSetAltitude(altitude: number) {
-        var selectedUnits = this.getSelectedUnits();
+        var selectedUnits = this.getSelectedUnits({excludeHumans: true});
         for (let idx in selectedUnits) {
             selectedUnits[idx].setAltitude(altitude);
         }
@@ -221,7 +227,7 @@ export class UnitsManager {
     }
 
     selectedUnitsSetROE(ROE: string) {
-        var selectedUnits = this.getSelectedUnits();
+        var selectedUnits = this.getSelectedUnits({excludeHumans: true});
         for (let idx in selectedUnits) {
             selectedUnits[idx].setROE(ROE);
         }
@@ -229,7 +235,7 @@ export class UnitsManager {
     }
 
     selectedUnitsSetReactionToThreat(reactionToThreat: string) {
-        var selectedUnits = this.getSelectedUnits();
+        var selectedUnits = this.getSelectedUnits({excludeHumans: true});
         for (let idx in selectedUnits) {
             selectedUnits[idx].setReactionToThreat(reactionToThreat);
         }
@@ -237,7 +243,7 @@ export class UnitsManager {
     }
 
     selectedUnitsAttackUnit(ID: number) {
-        var selectedUnits = this.getSelectedUnits();
+        var selectedUnits = this.getSelectedUnits({excludeHumans: true});
         for (let idx in selectedUnits) {
             selectedUnits[idx].attackUnit(ID);
         }
@@ -245,7 +251,7 @@ export class UnitsManager {
     }
 
     selectedUnitsDelete() {
-        var selectedUnits = this.getSelectedUnits();
+        var selectedUnits = this.getSelectedUnits(); /* Can be applied to humans too */
         for (let idx in selectedUnits) {
             selectedUnits[idx].delete();
         }
@@ -253,7 +259,7 @@ export class UnitsManager {
     }
 
     selectedUnitsRefuel() {
-        var selectedUnits = this.getSelectedUnits();
+         var selectedUnits = this.getSelectedUnits({excludeHumans: true});
         for (let idx in selectedUnits) {
             selectedUnits[idx].refuel();
         }
@@ -262,6 +268,7 @@ export class UnitsManager {
 
     selectedUnitsFollowUnit(ID: number, offset?: { "x": number, "y": number, "z": number }, formation?: string) {
         if (offset == undefined) {
+            /* Simple formations with fixed offsets */
             // X: front-rear, positive front
             // Y: top-bottom, positive top
             // Z: left-right, positive right
@@ -274,19 +281,21 @@ export class UnitsManager {
             else if (formation === "Front") { offset.x = 100; offset.y = 0; offset.z = 0; }
             else offset = undefined;
         }
-        var selectedUnits = this.getSelectedUnits();
+         var selectedUnits = this.getSelectedUnits({excludeHumans: true});
         var count = 1;
         var xr = 0; var yr = 1; var zr = -1;
         var layer = 1;
         for (let idx in selectedUnits) {
-            var commandedUnit = selectedUnits[idx];
+            var unit = selectedUnits[idx];
             if (offset != undefined)
-                commandedUnit.followUnit(ID, { "x": offset.x * count, "y": offset.y * count, "z": offset.z * count });
+                /* Offset is set, apply it */
+                unit.followUnit(ID, { "x": offset.x * count, "y": offset.y * count, "z": offset.z * count });
             else {
+                /* More complex formations with variable offsets */
                 if (formation === "Diamond") {
                     var xl = xr * Math.cos(Math.PI / 4) - yr * Math.sin(Math.PI / 4);
                     var yl = xr * Math.sin(Math.PI / 4) + yr * Math.cos(Math.PI / 4);
-                    commandedUnit.followUnit(ID, { "x": -yl * 50, "y": zr * 10, "z": xl * 50 });
+                    unit.followUnit(ID, { "x": -yl * 50, "y": zr * 10, "z": xl * 50 });
 
                     if (yr == 0) { layer++; xr = 0; yr = layer; zr = -layer; }
                     else {
@@ -300,8 +309,9 @@ export class UnitsManager {
         this.#showActionMessage(selectedUnits, `following unit ${this.getUnitByID(ID)?.getBaseData().unitName}`);
     }
 
+    /***********************************************/
     copyUnits() {
-        this.#copiedUnits = this.getSelectedUnits();
+        this.#copiedUnits = this.getSelectedUnits(); /* Can be applied to humans too */
         this.#showActionMessage(this.#copiedUnits, `copied`);
     }
 
@@ -318,6 +328,7 @@ export class UnitsManager {
         }
     }
 
+    /***********************************************/
     #onKeyDown(event: KeyboardEvent) {
         if (!keyEventWasInInput(event) && event.key === "Delete") {
             this.selectedUnitsDelete();
@@ -354,7 +365,7 @@ export class UnitsManager {
     #showActionMessage(units: Unit[], message: string) {
         if (units.length == 1)
             getInfoPopup().setText(`${units[0].getBaseData().unitName} ${message}`);
-        else
+        else if (units.length > 1)
             getInfoPopup().setText(`${units[0].getBaseData().unitName} and ${units.length - 1} other units ${message}`);
     }
 }
