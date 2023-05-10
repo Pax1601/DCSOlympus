@@ -72,8 +72,9 @@ export class UnitControlPanel extends Panel {
 
         this.#advancedSettingsDialog = <HTMLElement> document.querySelector("#advanced-settings-dialog");
 
-        document.addEventListener("unitUpdated", (e: CustomEvent<Unit>) => { if (e.detail.getSelected()) this.update() });
-        document.addEventListener("unitsSelection", (e: CustomEvent<Unit[]>) => { this.show(); this.addButtons(); this.update()});
+        window.setInterval(() => {this.update();}, 25);
+
+        document.addEventListener("unitsSelection", (e: CustomEvent<Unit[]>) => { this.show(); this.addButtons();});
         document.addEventListener("clearSelection", () => { this.hide() });
         document.addEventListener("applyAdvancedSettings", () => {this.#applyAdvancedSettings();})
         document.addEventListener("showAdvancedSettings", () => {
@@ -94,45 +95,53 @@ export class UnitControlPanel extends Panel {
 
     addButtons() {
         var units = getUnitsManager().getSelectedUnits();
-        this.getElement().querySelector("#selected-units-container")?.replaceChildren(...units.map((unit: Unit, index: number) => {
-            let database: UnitDatabase | null;
-            if (unit instanceof Aircraft)
-                database = aircraftDatabase;
-            else if (unit instanceof GroundUnit)
-                database = groundUnitsDatabase;
-            else
-                database = null; // TODO add databases for other unit types
+        if (units.length < 20) {
+            this.getElement().querySelector("#selected-units-container")?.replaceChildren(...units.map((unit: Unit, index: number) => {
+                let database: UnitDatabase | null;
+                if (unit instanceof Aircraft)
+                    database = aircraftDatabase;
+                else if (unit instanceof GroundUnit)
+                    database = groundUnitsDatabase;
+                else
+                    database = null; // TODO add databases for other unit types
 
-            var button = document.createElement("button");
-            var callsign = unit.getBaseData().unitName || "";
+                var button = document.createElement("button");
+                var callsign = unit.getBaseData().unitName || "";
 
-            button.setAttribute("data-short-label", database?.getByName(unit.getBaseData().name)?.shortLabel || "");
-            button.setAttribute("data-callsign", callsign);
+                button.setAttribute("data-short-label", database?.getByName(unit.getBaseData().name)?.shortLabel || unit.getBaseData().name);
+                button.setAttribute("data-callsign", callsign);
 
-            button.setAttribute("data-coalition", unit.getMissionData().coalition);
-            button.classList.add("pill", "highlight-coalition")
+                button.setAttribute("data-coalition", unit.getMissionData().coalition);
+                button.classList.add("pill", "highlight-coalition")
 
-            button.addEventListener("click", () => {
-                getUnitsManager().deselectAllUnits();
-                getUnitsManager().selectUnit(unit.ID, true);
-            });
-            return (button);
-        }));
+                button.addEventListener("click", () => {
+                    getUnitsManager().deselectAllUnits();
+                    getUnitsManager().selectUnit(unit.ID, true);
+                });
+                return (button);
+            }));
+        } else {
+            var el = document.createElement("div");
+            el.innerText = "Too many units selected"
+            this.getElement().querySelector("#selected-units-container")?.replaceChildren(el);
+        }
     }
 
     update() {
-        var units = getUnitsManager().getSelectedUnits();
-        this.getElement().querySelector("#advanced-settings-div")?.classList.toggle("hide", units.length != 1);
-        if (this.getElement() != null && units.length > 0) {
-            this.#showFlightControlSliders(units);
+        if (this.getVisible()){
+            var units = getUnitsManager().getSelectedUnits();
+            this.getElement().querySelector("#advanced-settings-div")?.classList.toggle("hide", units.length != 1);
+            if (this.getElement() != null && units.length > 0) {
+                this.#showFlightControlSliders(units);
 
-            this.#optionButtons["ROE"].forEach((button: HTMLButtonElement) => {
-                button.classList.toggle("selected", units.every((unit: Unit) => unit.getOptionsData().ROE === button.value))
-            });
+                this.#optionButtons["ROE"].forEach((button: HTMLButtonElement) => {
+                    button.classList.toggle("selected", units.every((unit: Unit) => unit.getOptionsData().ROE === button.value))
+                });
 
-            this.#optionButtons["reactionToThreat"].forEach((button: HTMLButtonElement) => {
-                button.classList.toggle("selected", units.every((unit: Unit) => unit.getOptionsData().reactionToThreat === button.value))
-            });
+                this.#optionButtons["reactionToThreat"].forEach((button: HTMLButtonElement) => {
+                    button.classList.toggle("selected", units.every((unit: Unit) => unit.getOptionsData().reactionToThreat === button.value))
+                });
+            }
         }
     }
 
