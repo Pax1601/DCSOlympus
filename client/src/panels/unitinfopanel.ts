@@ -54,7 +54,7 @@ export class UnitInfoPanel extends Panel {
             const baseData = unit.getBaseData();
 
             /* Set the unit info */
-            this.#unitLabel.innerText   = aircraftDatabase.getByName(baseData.name)?.label || "";
+            this.#unitLabel.innerText   = aircraftDatabase.getByName(baseData.name)?.label || baseData.name;
             this.#unitName.innerText    = baseData.unitName;
             this.#unitControl.innerText = ( ( baseData.AI ) ? "AI" : "Human" ) + " controlled";
             // this.#groupName.innerText = baseData.groupName;

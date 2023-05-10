@@ -29,8 +29,8 @@ Unit::Unit(json::value json, int ID) :
 	addMeasure(L"radioCallsign", json::value(radioCallsign));
 	addMeasure(L"radioCallsignNumber", json::value(radioCallsignNumber));
 
-	setROE(L"Designated");
-	setReactionToThreat(L"Evade");
+	addMeasure(L"ROE", json::value(L"Designated"));
+	addMeasure(L"reactionToThreat", json::value(L"Evade"));
 }
 
 Unit::~Unit()
@@ -119,45 +119,59 @@ json::value Unit::getData(long long time)
 		if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
 			json[L"baseData"][key] = measures[key]->getValue();
 	}
+	if (json[L"baseData"].size() == 0)
+		json.erase(L"baseData");
 
-	/********** Flight data **********/
-	json[L"flightData"] = json::value::object();
-	for (auto key : { L"latitude", L"longitude", L"altitude", L"speed", L"heading"})
-	{
-		if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
-			json[L"flightData"][key] = measures[key]->getValue();
-	}
+	if (alive) {
+		/********** Flight data **********/
+		json[L"flightData"] = json::value::object();
+		for (auto key : { L"latitude", L"longitude", L"altitude", L"speed", L"heading" })
+		{
+			if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
+				json[L"flightData"][key] = measures[key]->getValue();
+		}
+		if (json[L"flightData"].size() == 0)
+			json.erase(L"flightData");
 
-	/********** Mission data **********/
-	json[L"missionData"] = json::value::object();
-	for (auto key : { L"fuel", L"ammo", L"targets", L"hasTask", L"coalition", L"flags"})
-	{
-		if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
-			json[L"missionData"][key] = measures[key]->getValue();
-	}
+		/********** Mission data **********/
+		json[L"missionData"] = json::value::object();
+		for (auto key : { L"fuel", L"ammo", L"targets", L"hasTask", L"coalition", L"flags" })
+		{
+			if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
+				json[L"missionData"][key] = measures[key]->getValue();
+		}
+		if (json[L"missionData"].size() == 0)
+			json.erase(L"missionData");
 
-	/********** Formation data **********/
-	json[L"formationData"] = json::value::object();
-	for (auto key : { L"leaderID" })
-	{
-		if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
-			json[L"formationData"][key] = measures[key]->getValue();
-	}
+		/********** Formation data **********/
+		json[L"formationData"] = json::value::object();
+		for (auto key : { L"leaderID" })
+		{
+			if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
+				json[L"formationData"][key] = measures[key]->getValue();
+		}
+		if (json[L"formationData"].size() == 0)
+			json.erase(L"formationData");
 
-	/********** Task data **********/
-	json[L"taskData"] = json::value::object();
-	for (auto key : { L"currentState", L"currentTask", L"targetSpeed", L"targetAltitude", L"activePath", L"isTanker", L"isAWACS", L"TACANChannel", L"TACANXY", L"TACANCallsign", L"radioFrequency", L"radioCallsign", L"radioCallsignNumber"})
-	{
-		if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
-			json[L"taskData"][key] = measures[key]->getValue();
-	}
+		/********** Task data **********/
+		json[L"taskData"] = json::value::object();
+		for (auto key : { L"currentState", L"currentTask", L"targetSpeed", L"targetAltitude", L"activePath", L"isTanker", L"isAWACS", L"TACANChannel", L"TACANXY", L"TACANCallsign", L"radioFrequency", L"radioCallsign", L"radioCallsignNumber" })
+		{
+			if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
+				json[L"taskData"][key] = measures[key]->getValue();
+		}
+		if (json[L"taskData"].size() == 0)
+			json.erase(L"taskData");
 
-	/********** Options data **********/
-	json[L"optionsData"] = json::value::object();
-	for (auto key : { L"ROE", L"reactionToThreat" })
-	{
-		if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
-			json[L"optionsData"][key] = measures[key]->getValue();
+		/********** Options data **********/
+		json[L"optionsData"] = json::value::object();
+		for (auto key : { L"ROE", L"reactionToThreat" })
+		{
+			if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
+				json[L"optionsData"][key] = measures[key]->getValue();
+		}
+		if (json[L"optionsData"].size() == 0)
+			json.erase(L"optionsData");
 	}
 
 	return json;

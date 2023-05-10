@@ -48,9 +48,11 @@ end
 function Olympus.getCountryIDByCoalition(coalition)
 	local countryID = 0
 	if coalition == 'red' then
-		countryID = country.id.RUSSIA
+		countryID = country.id.CJTF_RED
+	elseif coalition == 'blue' then
+		countryID = country.id.CJTF_BLUE
 	else
-		countryID = country.id.USA
+		countryID = country.id.UN_PEACEKEEPERS
 	end
 	return countryID
 end

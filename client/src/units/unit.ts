@@ -141,9 +141,9 @@ export class Unit extends Marker {
 
     setData(data: UpdateData) {
         /* Check if data has changed comparing new values to old values */
-        const positionChanged = (data.flightData.latitude != undefined && data.flightData.longitude != undefined && (this.getFlightData().latitude != data.flightData.latitude || this.getFlightData().longitude != data.flightData.longitude));
-        const headingChanged = (data.flightData.heading != undefined && this.getFlightData().heading != data.flightData.heading);
-        const aliveChanged = (data.baseData.alive != undefined && this.getBaseData().alive != data.baseData.alive);
+        const positionChanged = (data.flightData != undefined && data.flightData.latitude != undefined && data.flightData.longitude != undefined && (this.getFlightData().latitude != data.flightData.latitude || this.getFlightData().longitude != data.flightData.longitude));
+        const headingChanged = (data.flightData != undefined &&  data.flightData.heading != undefined && this.getFlightData().heading != data.flightData.heading);
+        const aliveChanged = (data.baseData != undefined &&  data.baseData.alive != undefined && this.getBaseData().alive != data.baseData.alive);
         var updateMarker = (positionChanged || headingChanged || aliveChanged || !getMap().hasLayer(this))
         
         if (data.baseData != undefined)
