@@ -645,13 +645,15 @@ body[data-hide-navyunit] #unit-visibility-control-navyunit {
 }
 
 #roe-buttons-container button.selected,
-#reaction-to-threat-buttons-container button.selected {
+#reaction-to-threat-buttons-container button.selected,
+#emissions-countermeasures-buttons-container button.selected {
     background-color: white;
     border-color: white;
 }
 
 #roe-buttons-container button::before,
-#reaction-to-threat-buttons-container button::before {
+#reaction-to-threat-buttons-container button::before,
+#emissions-countermeasures-buttons-container button::before {
     background-position: center;
     background-repeat: no-repeat;
     content: "";
@@ -660,66 +662,102 @@ body[data-hide-navyunit] #unit-visibility-control-navyunit {
     width: 24px;
 }
 
-#roe-buttons-container button[title="Hold"]::before {
+#roe-buttons-container button[value="Hold"]::before {
     background-image: url("/themes/olympus/images/icons_roe_stop_light.svg");
 }
 
-#roe-buttons-container button[title="Hold"].selected::before {
+#roe-buttons-container button[value="Hold"].selected::before {
     background-image: url("/themes/olympus/images/icons_roe_stop_dark.svg");
 }
 
 /**/
-#roe-buttons-container button[title="Return"]::before {
+#roe-buttons-container button[value="Return"]::before {
     background-image: url("/themes/olympus/images/icons_roe_defend_light.svg");
 }
 
-#roe-buttons-container button[title="Return"].selected::before {
+#roe-buttons-container button[value="Return"].selected::before {
     background-image: url("/themes/olympus/images/icons_roe_defend_dark.svg");
 }
 
 /**/
-#roe-buttons-container button[title="Designated"]::before {
+#roe-buttons-container button[value="Designated"]::before {
     background-image: url("/themes/olympus/images/icons_roe_target_light.svg");
 }
 
-#roe-buttons-container button[title="Designated"].selected::before {
+#roe-buttons-container button[value="Designated"].selected::before {
     background-image: url("/themes/olympus/images/icons_roe_target_dark.svg");
 }
 
 /**/
-#roe-buttons-container button[title="Free"]::before {
+#roe-buttons-container button[value="Free"]::before {
     background-image: url("/themes/olympus/images/icons_roe_free_light.svg");
 }
 
-#roe-buttons-container button[title="Free"].selected::before {
+#roe-buttons-container button[value="Free"].selected::before {
     background-image: url("/themes/olympus/images/icons_roe_free_dark.svg");
 }
 
 /****************************************************************************************/
-#reaction-to-threat-buttons-container button[title="None"]::before {
+#reaction-to-threat-buttons-container button[value="None"]::before {
     background-image: url("/themes/olympus/images/icons_threat_nothing_light.svg");
 }
 
-#reaction-to-threat-buttons-container button[title="None"].selected::before {
+#reaction-to-threat-buttons-container button[value="None"].selected::before {
     background-image: url("/themes/olympus/images/icons_threat_nothing_dark.svg");
 }
 
 /**/
-#reaction-to-threat-buttons-container button[title="Passive"]::before {
+#reaction-to-threat-buttons-container button[value="Passive"]::before {
     background-image: url("/themes/olympus/images/icons_threat_cms_light.svg");
 }
 
-#reaction-to-threat-buttons-container button[title="Passive"].selected::before {
+#reaction-to-threat-buttons-container button[value="Passive"].selected::before {
     background-image: url("/themes/olympus/images/icons_threat_cms_dark.svg");
 }
 
 /**/
-#reaction-to-threat-buttons-container button[title="Evade"]::before {
+#reaction-to-threat-buttons-container button[value="Evade"]::before {
     background-image: url("/themes/olympus/images/icons_threat_defend_light.svg");
 }
 
-#reaction-to-threat-buttons-container button[title="Evade"].selected::before {
+#reaction-to-threat-buttons-container button[value="Evade"].selected::before {
     background-image: url("/themes/olympus/images/icons_threat_defend_dark.svg");
+}
+
+/****************************************************************************************/
+#emissions-countermeasures-buttons-container button[value="Silent"]::before {
+    background-image: url("/themes/olympus/images/icons_roe_stop_light.svg");
+}
+
+#emissions-countermeasures-buttons-container button[value="Silent"].selected::before {
+    background-image: url("/themes/olympus/images/icons_roe_stop_dark.svg");
+}
+
+/**/
+#emissions-countermeasures-buttons-container button[value="Defend"]::before {
+    background-image: url("/themes/olympus/images/icons_roe_defend_light.svg");
+}
+
+#emissions-countermeasures-buttons-container button[value="Defend"].selected::before {
+    background-image: url("/themes/olympus/images/icons_roe_defend_dark.svg");
+}
+
+/**/
+#emissions-countermeasures-buttons-container button[value="Attack"]::before {
+    background-image: url("/themes/olympus/images/icons_roe_target_light.svg");
+}
+
+#emissions-countermeasures-buttons-container button[value="Attack"].selected::before {
+    background-image: url("/themes/olympus/images/icons_roe_target_dark.svg");
+}
+
+/**/
+#emissions-countermeasures-buttons-container button[value="Free"]::before {
+    background-image: url("/themes/olympus/images/icons_roe_free_light.svg");
+}
+
+#emissions-countermeasures-buttons-container button[value="Free"].selected::before {
+    background-image: url("/themes/olympus/images/icons_roe_free_dark.svg");
 }
 
 /****************************************************************************************/

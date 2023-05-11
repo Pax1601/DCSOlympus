@@ -1,7 +1,6 @@
 import { getUnitsManager } from "..";
 import { Dropdown } from "../controls/dropdown";
 import { Slider } from "../controls/slider";
-import { dataPointMap } from "../other/utils";
 import { aircraftDatabase } from "../units/aircraftdatabase";
 import { groundUnitsDatabase } from "../units/groundunitsdatabase";
 import { Aircraft, GroundUnit, Unit } from "../units/unit";
@@ -10,6 +9,11 @@ import { Panel } from "./panel";
 
 const ROEs: string[] = ["Hold", "Return", "Designated", "Free"];
 const reactionsToThreat: string[] = ["None", "Passive", "Evade"];
+const emissionsCountermeasures: string[] = ["Silent", "Attack", "Defend", "Free"];
+
+const ROEDescriptions: string[] = ["Hold (Never fire)", "Return (Only fire if fired upon)", "Designated (Attack the designated target only)", "Free (Attack anyone)"];
+const reactionsToThreatDescriptions: string[] = ["None (No reaction)", "Passive (Countermeasures only, no manoeuvre)", "Evade (Countermeasures and manoeuvers)"];
+const emissionsCountermeasuresDescriptions: string[] = ["Silent (Radar off, no countermeasures)", "Attack (Radar only for targeting, countermeasures only if attacked/locked)", "Defend (Radar for searching, jammer if locked, countermeasures inside WEZ)", "Always on (Radar and jammer always on, countermeasures when hostile detected)"];
 
 const minSpeedValues: { [key: string]: number } = { Aircraft: 100, Helicopter: 0, NavyUnit: 0, GroundUnit: 0 };
 const maxSpeedValues: { [key: string]: number } = { Aircraft: 800, Helicopter: 300, NavyUnit: 60, GroundUnit: 60 };
@@ -52,23 +56,20 @@ export class UnitControlPanel extends Panel {
 
         /* Option buttons */
         this.#optionButtons["ROE"] = ROEs.map((option: string, index: number) => {
-            var button = document.createElement("button");
-            button.title = option;
-            button.value = option;
-            button.addEventListener("click", () => { getUnitsManager().selectedUnitsSetROE(button.title); });
-            return button;
+            return this.#createOptionButton(option, ROEDescriptions[index], () => { getUnitsManager().selectedUnitsSetROE(option); });
         });
 
         this.#optionButtons["reactionToThreat"] = reactionsToThreat.map((option: string, index: number) => {
-            var button = document.createElement("button");
-            button.title = option;
-            button.value = option;
-            button.addEventListener("click", () => { getUnitsManager().selectedUnitsSetReactionToThreat(button.title); });
-            return button;
+            return this.#createOptionButton(option, reactionsToThreatDescriptions[index],() => { getUnitsManager().selectedUnitsSetReactionToThreat(option); });
+        });
+
+        this.#optionButtons["emissionsCountermeasures"] = emissionsCountermeasures.map((option: string, index: number) => {
+            return this.#createOptionButton(option, emissionsCountermeasuresDescriptions[index],() => { getUnitsManager().selectedUnitsSetEmissionsCountermeasures(option); });
         });
 
         this.getElement().querySelector("#roe-buttons-container")?.append(...this.#optionButtons["ROE"]);
         this.getElement().querySelector("#reaction-to-threat-buttons-container")?.append(...this.#optionButtons["reactionToThreat"]);
+        this.getElement().querySelector("#emissions-countermeasures-buttons-container")?.append(...this.#optionButtons["emissionsCountermeasures"]);
 
         this.#advancedSettingsDialog = <HTMLElement> document.querySelector("#advanced-settings-dialog");
 
@@ -122,7 +123,7 @@ export class UnitControlPanel extends Panel {
             }));
         } else {
             var el = document.createElement("div");
-            el.innerText = "Too many units selected"
+            el.innerText = "Too many units selected";
             this.getElement().querySelector("#selected-units-container")?.replaceChildren(el);
         }
     }
@@ -297,5 +298,13 @@ export class UnitControlPanel extends Panel {
             units[0].setAdvancedOptions(isTanker, isAWACS, TACANChannel, TACANXY, TACANCallsign, radioFrequency, radioCallsign, radioCallsignNumber);
 
         this.#advancedSettingsDialog.classList.add("hide");
+    }
+
+    #createOptionButton(option: string, title: string, callback: EventListenerOrEventListenerObject) {
+        var button = document.createElement("button");
+        button.value = option;
+        button.title = title;
+        button.addEventListener("click", callback);
+        return button;
     }
 }

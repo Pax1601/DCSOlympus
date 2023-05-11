@@ -1,7 +1,7 @@
 import { Marker, LatLng, Polyline, Icon, DivIcon, CircleMarker, Map } from 'leaflet';
 import { getMap, getUnitsManager } from '..';
 import { rad2deg } from '../other/utils';
-import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, getUnits, landAt, setAltitude, setReactionToThreat, setROE, setSpeed, refuel, setAdvacedOptions, followUnit } from '../server/server';
+import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, getUnits, landAt, setAltitude, setReactionToThreat, setROE, setSpeed, refuel, setAdvacedOptions, followUnit, setEmissionsCountermeasures } from '../server/server';
 import { aircraftDatabase } from './aircraftdatabase';
 import { groundUnitsDatabase } from './groundunitsdatabase';
 import { field } from 'geomag'
@@ -363,6 +363,11 @@ export class Unit extends Marker {
     setReactionToThreat(reactionToThreat: string) {
         if (!this.getMissionData().flags.Human)
             setReactionToThreat(this.ID, reactionToThreat);
+    }
+
+    setEmissionsCountermeasures(emissionCountermeasure: string) {
+        if (!this.getMissionData().flags.Human)
+            setEmissionsCountermeasures(this.ID, emissionCountermeasure);
     }
 
     setLeader(isLeader: boolean, wingmenIDs: number[] = []) {

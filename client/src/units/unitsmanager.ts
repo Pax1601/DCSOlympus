@@ -242,6 +242,15 @@ export class UnitsManager {
         this.#showActionMessage(selectedUnits, `reaction to threat set to ${reactionToThreat}`);
     }
 
+    selectedUnitsSetEmissionsCountermeasures(emissionCountermeasure: string) {
+        var selectedUnits = this.getSelectedUnits({excludeHumans: true});
+        for (let idx in selectedUnits) {
+            selectedUnits[idx].setEmissionsCountermeasures(emissionCountermeasure);
+        }
+        this.#showActionMessage(selectedUnits, `reaction to threat set to ${emissionCountermeasure}`);
+    }
+
+
     selectedUnitsAttackUnit(ID: number) {
         var selectedUnits = this.getSelectedUnits({excludeHumans: true});
         for (let idx in selectedUnits) {

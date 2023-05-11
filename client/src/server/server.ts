@@ -209,6 +209,12 @@ export function setReactionToThreat(ID: number, reactionToThreat: string) {
     POST(data, () => { });
 }
 
+export function setEmissionsCountermeasures(ID: number, emissionCountermeasure: string) {
+    var command = {"ID": ID, "emissionCountermeasure": emissionCountermeasure}
+    var data = {"setEmissionsCountermeasures": command}
+    POST(data, () => { });
+}
+
 export function refuel(ID: number) {
     var command = { "ID": ID };
     var data = { "refuel": command }

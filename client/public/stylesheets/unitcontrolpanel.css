@@ -8,7 +8,7 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	left: 10px;
 	position: absolute;
 	top: 80px;
-	width: 250px;
+	width: 260px;
 	z-index: 1000;
 }
 
@@ -94,7 +94,8 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 }
 
 #unit-control-panel #threat,
-#unit-control-panel #roe {
+#unit-control-panel #roe,
+#unit-control-panel #emissions-countermeasures {
 	margin-top: 12px;
 }
 
@@ -113,4 +114,24 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 
 #advanced-settings-dialog>.ol-dialog-content>.ol-group {
 	justify-content: space-between;
+
+}
+
+#advanced-settings-dialog h4 {
+	white-space: nowrap;
+}
+
+#advanced-settings-dialog hr {
+	margin-top: 15px;
+	margin-bottom: 10px;
+}
+
+#advanced-options-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	row-gap: 10px;
+}
+
+#advanced-options-grid>div {
+	width: 49%;
 }
