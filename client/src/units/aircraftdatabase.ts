@@ -318,7 +318,7 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "J-11A": {
             "name": "J-11A",
-            "label": "J-11A Copyright Infringement",
+            "label": "J-11A Flaming Dragon",
             "shortLabel": "11",
             "loadouts": [
                {
@@ -1132,7 +1132,7 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "M-2000C": {
             "name": "M-2000C",
-            "label": "M-2000C Baguette",
+            "label": "M-2000C Mirage",
             "shortLabel": "M2KC",
             "loadouts": [
                {
@@ -2082,44 +2082,6 @@ export class AircraftDatabase extends UnitDatabase {
                }
             ],
             "filename": "kc-135.png"
-         },
-         "KC_10_Extender": {
-            "name": "KC_10_Extender",
-            "label": "KC-10 Extender",
-            "shortLabel": "KC10",
-            "loadouts": [
-               {
-                  "fuel": 1,
-                  "items": [
-
-                  ],
-                  "roles": [
-                     "Tanker"
-                  ],
-                  "code": "",
-                  "name": "Default Tanker"
-               }
-            ],
-            "filename": "kc-10.png"
-         },
-         "KC_10_Extender_D": {
-            "name": "KC_10_Extender_D",
-            "label": "KC-10 Extender (Drogue)",
-            "shortLabel": "KC10",
-            "loadouts": [
-               {
-                  "fuel": 1,
-                  "items": [
-
-                  ],
-                  "roles": [
-                     "Tanker"
-                  ],
-                  "code": "",
-                  "name": "Default Tanker"
-               }
-            ],
-            "filename": "kc-10.png"
          },
          "MiG-15bis": {
             "name": "MiG-15bis",
