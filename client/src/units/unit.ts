@@ -77,6 +77,8 @@ export class Unit extends Marker {
 
     #timer: number = 0;
 
+    #hotgroup: number | null = null;
+
     static getConstructor(type: string) {
         if (type === "GroundUnit") return GroundUnit;
         if (type === "Aircraft") return Aircraft;
@@ -263,6 +265,14 @@ export class Unit extends Marker {
 
     getSelectable() {
         return this.#selectable;
+    }
+
+    setHotgroup(hotgroup: number | null) {
+        this.#hotgroup = hotgroup;
+    }
+
+    getHotgroup() {
+        return this.#hotgroup;
     }
 
     /********************** Visibility *************************/
@@ -556,7 +566,6 @@ export class Unit extends Marker {
                 });
 
                 /* Turn on ordnance indicators */
-
                 var hasFox1 = element.querySelector(".unit")?.hasAttribute("data-has-fox-1");
                 var hasFox2 = element.querySelector(".unit")?.hasAttribute("data-has-fox-2");
                 var hasFox3 = element.querySelector(".unit")?.hasAttribute("data-has-fox-3");
@@ -568,25 +577,30 @@ export class Unit extends Marker {
                 var newHasOtherAmmo = false;
                 Object.values(this.getMissionData().ammo).forEach((ammo: any) => {
                     if (ammo.desc.category == 1 && ammo.desc.missileCategory == 1) {
-                        if (ammo.desc.guidance == 4 || ammo.desc.guidance == 5) {
+                        if (ammo.desc.guidance == 4 || ammo.desc.guidance == 5) 
                             newHasFox1 = true;
-                        }
-                        else if (ammo.desc.guidance == 2) {
+                        else if (ammo.desc.guidance == 2) 
                             newHasFox2 = true;
-                        }
-                        else if (ammo.desc.guidance == 3) {
+                        else if (ammo.desc.guidance == 3) 
                             newHasFox3 = true;
-                        }
                     }
-                    else {
+                    else 
                         newHasOtherAmmo = true;
-                    }
                 });
 
                 if (hasFox1 != newHasFox1) element.querySelector(".unit")?.toggleAttribute("data-has-fox-1", newHasFox1);
                 if (hasFox2 != newHasFox2) element.querySelector(".unit")?.toggleAttribute("data-has-fox-2", newHasFox2);
                 if (hasFox3 != newHasFox3) element.querySelector(".unit")?.toggleAttribute("data-has-fox-3", newHasFox3);
                 if (hasOtherAmmo != newHasOtherAmmo) element.querySelector(".unit")?.toggleAttribute("data-has-other-ammo", newHasOtherAmmo);
+
+                /* Draw the hotgroup element */
+                if (this.#hotgroup) {
+                    element.querySelector(".unit")?.toggleAttribute("data-is-in-hotgroup", this.#hotgroup != null);
+                    const hotgroupEl = element.querySelector(".unit-hotgroup-id") as HTMLElement;
+                    if (hotgroupEl)
+                        hotgroupEl.innerText = String(this.#hotgroup);
+                }
+
             }
             
             /* Set vertical offset for altitude stacking */
@@ -732,6 +746,9 @@ export class GroundUnit extends Unit {
                     <div class="unit-selected-spotlight"></div>
                     <div class="unit-marker"></div>
                     <div class="unit-short-label">${role?.substring(0, 1)?.toUpperCase() || ""}</div>
+                    <div class="unit-hotgroup">
+                        <div class="unit-hotgroup-id"></div>
+                    </div>
                 </div>`
     }
 

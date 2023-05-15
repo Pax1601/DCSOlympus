@@ -1,5 +1,5 @@
 import { LatLng, LatLngBounds } from "leaflet";
-import { getInfoPopup, getMap, getUnitDataTable } from "..";
+import { getHotgroupPanel, getInfoPopup, getMap, getUnitDataTable } from "..";
 import { Unit } from "./unit";
 import { cloneUnit } from "../server/server";
 import { IDLE, MOVE_UNIT } from "../map/map";
@@ -43,6 +43,10 @@ export class UnitsManager {
             return this.#units[ID];
         else
             return null;
+    }
+
+    getUnitsByHotgroup(hotgroup: number) {
+        return Object.values(this.#units).filter((unit: Unit) => {return unit.getHotgroup() == hotgroup});
     }
 
     addUnit(ID: number, data: UnitData) {
@@ -110,6 +114,10 @@ export class UnitsManager {
         for (let ID in this.#units) {
             this.#units[ID].setSelected(false);
         }
+    }
+
+    selectUnitsByHotgroup(hotgroup: number) {
+        this.getUnitsByHotgroup(hotgroup).forEach((unit: Unit) => unit.setSelected(true))
     }
 
     getSelectedUnitsType() {
@@ -259,7 +267,7 @@ export class UnitsManager {
     }
 
     selectedUnitsRefuel() {
-         var selectedUnits = this.getSelectedUnits({excludeHumans: true});
+        var selectedUnits = this.getSelectedUnits({excludeHumans: true});
         for (let idx in selectedUnits) {
             selectedUnits[idx].refuel();
         }
@@ -307,6 +315,16 @@ export class UnitsManager {
             count++;
         }
         this.#showActionMessage(selectedUnits, `following unit ${this.getUnitByID(ID)?.getBaseData().unitName}`);
+    }
+
+    selectedUnitsAddToHotgroup(hotgroup: number)
+    {
+        var selectedUnits = this.getSelectedUnits();
+        for (let idx in selectedUnits) {
+            selectedUnits[idx].setHotgroup(hotgroup);
+        }
+        this.#showActionMessage(selectedUnits, `added to hotgroup ${hotgroup}`);
+        getHotgroupPanel().addHotgroup(hotgroup);
     }
 
     /***********************************************/
