@@ -62,7 +62,7 @@ wstring SpawnAircraft::getString(lua_State* L)
     optionsSS.precision(10);
     optionsSS << "{" 
         << "payloadName = \"" << payloadName << "\", "
-        << "airbaseName = \"" << airbaseName << "\","
+        << "airbaseName = \"" << airbaseName << "\", "
         << "}";
 
     std::wostringstream commandSS;
@@ -71,7 +71,7 @@ wstring SpawnAircraft::getString(lua_State* L)
         << "\"" << coalition << "\"" << ", "
         << "\"" << unitType << "\"" << ", "
         << location.lat << ", " 
-        << location.lng << "," 
+        << location.lng << ", " 
         << optionsSS.str();
     return commandSS.str();
 }
@@ -113,7 +113,7 @@ wstring SetTask::getString(lua_State* L)
     std::wostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.setTask, "
-        << ID << ","
+        << ID << ", "
         << task;
 
     return commandSS.str();
@@ -136,7 +136,7 @@ wstring SetCommand::getString(lua_State* L)
     std::wostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.setCommand, "
-        << ID << ","
+        << ID << ", "
         << command;
 
     return commandSS.str();
@@ -147,10 +147,17 @@ wstring SetOption::getString(lua_State* L)
 {
     std::wostringstream commandSS;
     commandSS.precision(10);
-    commandSS << "Olympus.setOption, "
-        << ID << ","
-        << optionID << ","
-        << optionValue;
 
+    if (!isBoolean) {
+        commandSS << "Olympus.setOption, "
+            << ID << ", "
+            << optionID << ", "
+            << optionValue;
+    } else {
+        commandSS << "Olympus.setOption, "
+            << ID << ", "
+            << optionID << ", "
+            << (optionBool? "true": "false");
+    }
     return commandSS.str();
 }

@@ -40,17 +40,15 @@ interface TaskData {
     targetAltitude: number;
     isTanker: boolean;
     isAWACS: boolean;
-	TACANChannel: number;
-	TACANXY: string;
-	TACANCallsign: string;
-    radioFrequency: number;
-    radioCallsign: number;
-    radioCallsignNumber: number;
 }
 
 interface OptionsData {
     ROE: string;
     reactionToThreat: string;
+    emissionsCountermeasures: string;
+    TACAN: TACAN;
+    radio: Radio;
+    generalSettings: GeneralSettings;
 }
 
 interface UnitData {
@@ -60,4 +58,25 @@ interface UnitData {
     formationData: FormationData;
     taskData: TaskData;
     optionsData: OptionsData;
+}
+
+interface TACAN {
+    isOn: boolean;
+    channel: number;
+    XY: string;
+    callsign: string;
+}
+
+interface Radio {
+    frequency: number;
+    callsign: number;
+    callsignNumber: number;
+}
+
+interface GeneralSettings {
+    prohibitJettison: boolean;
+    prohibitAA: boolean;
+    prohibitAG: boolean;
+    prohibitAfterburner: boolean;
+    prohibitAirWpn: boolean;
 }

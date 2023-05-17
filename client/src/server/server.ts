@@ -210,7 +210,7 @@ export function setReactionToThreat(ID: number, reactionToThreat: string) {
 }
 
 export function setEmissionsCountermeasures(ID: number, emissionCountermeasure: string) {
-    var command = {"ID": ID, "emissionCountermeasure": emissionCountermeasure}
+    var command = {"ID": ID, "emissionsCountermeasures": emissionCountermeasure}
     var data = {"setEmissionsCountermeasures": command}
     POST(data, () => { });
 }
@@ -221,17 +221,14 @@ export function refuel(ID: number) {
     POST(data, () => { });
 }
 
-export function setAdvacedOptions(ID: number, isTanker: boolean, isAWACS: boolean, TACANChannel: number, TACANXY: string, TACANCallsign: string, radioFrequency: number, radioCallsign: number, radioCallsignNumber: number)
+export function setAdvacedOptions(ID: number, isTanker: boolean, isAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings)
 {
     var command = { "ID": ID,
                     "isTanker": isTanker,
                     "isAWACS": isAWACS,
-                    "TACANChannel": TACANChannel,
-                    "TACANXY":  TACANXY,
-                    "TACANCallsign": TACANCallsign,
-                    "radioFrequency": radioFrequency,
-                    "radioCallsign": radioCallsign,
-                    "radioCallsignNumber": radioCallsignNumber
+                    "TACAN": TACAN,
+                    "radio": radio,
+                    "generalSettings": generalSettings
     };
 
     var data = { "setAdvancedOptions": command };

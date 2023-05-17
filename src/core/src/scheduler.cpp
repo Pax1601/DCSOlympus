@@ -222,6 +222,13 @@ void Scheduler::handleRequest(wstring key, json::value value)
 		wstring reactionToThreat = value[L"reactionToThreat"].as_string();
 		unit->setReactionToThreat(reactionToThreat);
 	}
+	else if (key.compare(L"setEmissionsCountermeasures") == 0)
+	{
+		int ID = value[L"ID"].as_integer();
+		Unit* unit = unitsManager->getUnit(ID);
+		wstring emissionsCountermeasures = value[L"emissionsCountermeasures"].as_string();
+		unit->setEmissionsCountermeasures(emissionsCountermeasures);
+	}
 	else if (key.compare(L"landAt") == 0)
 	{
 		int ID = value[L"ID"].as_integer();
@@ -248,18 +255,33 @@ void Scheduler::handleRequest(wstring key, json::value value)
 		Unit* unit = unitsManager->getUnit(ID);
 		if (unit != nullptr)
 		{
+			/* Advanced tasking */
 			unit->setIsTanker(value[L"isTanker"].as_bool());
 			unit->setIsAWACS(value[L"isAWACS"].as_bool());
 
-			unit->setTACANChannel(value[L"TACANChannel"].as_number().to_int32());
-			unit->setTACANXY(value[L"TACANXY"].as_string());
-			unit->setTACANCallsign(value[L"TACANCallsign"].as_string());
-			unit->setTACAN();
+			/* TACAN Options */
+			auto TACAN = value[L"TACAN"];
+			unit->setTACAN({ TACAN[L"isOn"].as_bool(),
+				TACAN[L"channel"].as_number().to_int32(),
+				TACAN[L"XY"].as_string(),
+				TACAN[L"callsign"].as_string()
+				});
 
-			unit->setRadioFrequency(value[L"radioFrequency"].as_number().to_int32());
-			unit->setRadioCallsign(value[L"radioCallsign"].as_number().to_int32());
-			unit->setRadioCallsignNumber(value[L"radioCallsignNumber"].as_number().to_int32());
-			unit->setRadio();
+			/* Radio Options */
+			auto radio = value[L"radio"];
+			unit->setRadio({ radio[L"frequency"].as_number().to_int32(),
+				radio[L"callsign"].as_number().to_int32(),
+				radio[L"callsignNumber"].as_number().to_int32()
+				});
+
+			/* General Settings */
+			auto generalSettings = value[L"generalSettings"];
+			unit->setGeneralSettings({ generalSettings[L"prohibitJettison"].as_bool(),
+				generalSettings[L"prohibitAA"].as_bool(),
+				generalSettings[L"prohibitAG"].as_bool(),
+				generalSettings[L"prohibitAfterburner"].as_bool(),
+				generalSettings[L"prohibitAirWpn"].as_bool(),
+				});
 
 			unit->resetActiveDestination();
 		}

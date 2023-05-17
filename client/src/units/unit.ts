@@ -4,7 +4,6 @@ import { rad2deg } from '../other/utils';
 import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, getUnits, landAt, setAltitude, setReactionToThreat, setROE, setSpeed, refuel, setAdvacedOptions, followUnit, setEmissionsCountermeasures } from '../server/server';
 import { aircraftDatabase } from './aircraftdatabase';
 import { groundUnitsDatabase } from './groundunitsdatabase';
-import { field } from 'geomag'
 
 var pathIcon = new Icon({
     iconUrl: 'images/marker-icon.png',
@@ -43,23 +42,21 @@ export class Unit extends Marker {
             leaderID: 0
         },
         taskData: {
-            currentState: "IDLE",
+            currentState: "NONE",
             currentTask: "",
             activePath: {},
             targetSpeed: 0,
             targetAltitude: 0,
             isTanker: false,
             isAWACS: false,
-            TACANChannel: 0,
-            TACANXY: "X",
-            TACANCallsign: "",
-            radioFrequency: 0,
-            radioCallsign: 0,
-            radioCallsignNumber: 0
         },
         optionsData: {
             ROE: "",
             reactionToThreat: "",
+            emissionsCountermeasures: "",
+            TACAN: { isOn: false, channel: 0, XY: "X", callsign: "" },
+            radio: { frequency: 0, callsign: 1, callsignNumber: 1},
+            generalSettings: { prohibitJettison: false, prohibitAA: false, prohibitAG: false, prohibitAfterburner: false, prohibitAirWpn: false}
         }
     };
 
@@ -385,9 +382,9 @@ export class Unit extends Marker {
             refuel(this.ID);
     }
 
-    setAdvancedOptions(isTanker: boolean, isAWACS: boolean, TACANChannel: number, TACANXY: string, TACANcallsign: string, radioFrequency: number, radioCallsign: number, radioCallsignNumber: number) {
+    setAdvancedOptions(isTanker: boolean, isAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings) {
         if (!this.getMissionData().flags.Human)
-            setAdvacedOptions(this.ID, isTanker, isAWACS, TACANChannel, TACANXY, TACANcallsign, radioFrequency, radioCallsign, radioCallsignNumber);
+            setAdvacedOptions(this.ID, isTanker, isAWACS, TACAN, radio, generalSettings);
     }
 
     /***********************************************/

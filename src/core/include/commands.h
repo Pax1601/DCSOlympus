@@ -2,6 +2,7 @@
 #include "framework.h"
 #include "luatools.h"
 #include "utils.h"
+#include "logger.h"
 
 namespace CommandPriority {
 	enum CommandPriorities { LOW, MEDIUM, HIGH };
@@ -24,6 +25,7 @@ namespace SetCommandType {
 		PROHIBIT_AG = 17,
 		MISSILE_ATTACK = 18,
 		PROHIBIT_WP_PASS_REPORT = 19,
+		ENGAGE_AIR_WEAPONS = 20,
 		OPTION_RADIO_USAGE_CONTACT = 21,
 		OPTION_RADIO_USAGE_ENGAGE = 22,
 		OPTION_RADIO_USAGE_KILL = 23,
@@ -43,7 +45,7 @@ namespace ROE {
 }
 
 namespace ReactionToThreat {
-	enum ReactionToThreats {
+	enum ReactionsToThreat {
 		NO_REACTION = 0,
 		PASSIVE_DEFENCE = 1,
 		EVADE_FIRE = 2,
@@ -51,6 +53,35 @@ namespace ReactionToThreat {
 		ALLOW_ABORT_MISSION = 4
 	};
 }
+
+namespace RadarUse {
+	enum RadarUses {
+		NEVER = 0,
+		FOR_ATTACK_ONLY = 1,
+		FOR_SEARCH_IF_REQUIRED = 2,
+		FOR_CONTINUOUS_SEARCH = 3
+	};
+}
+
+namespace FlareUse {
+	enum FlareUses {
+		NEVER = 0,
+		AGAINST_FIRED_MISSILE = 1,
+		WHEN_FLYING_IN_SAM_WEZ = 2,
+		WHEN_FLYING_NEAR_ENEMIES = 3
+	};
+}
+
+namespace ECMUse {
+	enum ECMUses {
+		NEVER_USE = 0,
+		USE_IF_ONLY_LOCK_BY_RADAR = 1,
+		USE_IF_DETECTED_LOCK_BY_RADAR = 2,
+		ALWAYS_USE = 3
+	};
+}
+
+
 
 /* Base command class */
 class Command
@@ -243,7 +274,19 @@ public:
 	SetOption(int ID, int optionID, int optionValue) :
 		ID(ID),
 		optionID(optionID),
-		optionValue(optionValue)
+		optionValue(optionValue),
+		optionBool(false),
+		isBoolean(false)
+	{
+		priority = CommandPriority::HIGH;
+	};
+
+	SetOption(int ID, int optionID, bool optionBool) :
+		ID(ID),
+		optionID(optionID),
+		optionValue(0),
+		optionBool(optionBool),
+		isBoolean(true)
 	{
 		priority = CommandPriority::HIGH;
 	};
@@ -254,4 +297,6 @@ private:
 	const int ID;
 	const int optionID;
 	const int optionValue;
+	const bool optionBool;
+	const bool isBoolean;
 };

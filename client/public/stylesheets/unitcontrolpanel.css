@@ -31,7 +31,7 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	border-radius: var(--border-radius-lg);
 	display: flex;
 	font-size: 11px;
-	height: 30px;
+	height: 32px;
 	padding: 8px 0;
 	position: relative;
 	width: 100%;
@@ -103,6 +103,31 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	width: 400px;
 }
 
+#advanced-settings-dialog:not([data-show-settings]) #general-settings {
+	display: none;
+}
+
+#advanced-settings-dialog:not([data-show-tasking]) #tasking {
+	display: none;
+}
+
+#advanced-settings-dialog:not([data-show-tanker]) #tanker-checkbox {
+	display: none;
+}
+
+#advanced-settings-dialog:not([data-show-AWACS]) #AWACS-checkbox {
+	display: none;
+}
+
+#advanced-settings-dialog:not([data-show-TACAN]) #TACAN-options {
+	display: none;
+}
+
+#advanced-settings-dialog:not([data-show-radio]) #radio-options {
+	display: none;
+}
+
+
 #advanced-settings-dialog>.ol-dialog-content {
 	margin-top: 10px;
 	margin-bottom: 10px;
@@ -112,9 +137,15 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	row-gap: 10px;
 }
 
-#advanced-settings-dialog>.ol-dialog-content>.ol-group {
-	justify-content: space-between;
+#advanced-settings-dialog>.ol-dialog-content>div {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	row-gap: 10px;
+}
 
+#advanced-settings-dialog>.ol-dialog-content>div>.ol-group {
+	justify-content: space-between;
 }
 
 #advanced-settings-dialog h4 {
@@ -126,12 +157,12 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	margin-bottom: 10px;
 }
 
-#advanced-options-grid {
+#general-settings-grid {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	row-gap: 10px;
 }
 
-#advanced-options-grid>div {
+#general-settings-grid>div {
 	width: 49%;
 }

@@ -163,7 +163,10 @@ form>div {
     align-items: center;
     background-color: var(--background-grey);
     border-radius: var(--border-radius-sm);
-    padding: 1em 30px 1em 20px;
+    height: 32px;
+    padding-right: 30px;
+    padding-left: 20px;
+    
     width: calc(100%);
     overflow: hidden;
     text-overflow: ellipsis;
