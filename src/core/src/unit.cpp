@@ -15,27 +15,51 @@ using namespace GeographicLib;
 extern Scheduler* scheduler;
 extern UnitsManager* unitsManager;
 
+// TODO: Make dedicated file
+bool operator==(const Options::TACAN& lhs, const Options::TACAN& rhs)
+{
+	return lhs.isOn == rhs.isOn && lhs.channel == rhs.channel && lhs.XY == rhs.XY && lhs.callsign == rhs.callsign;
+}
+
+bool operator==(const Options::Radio& lhs, const Options::Radio& rhs)
+{
+	return lhs.frequency == rhs.frequency && lhs.callsign == rhs.callsign && lhs.callsignNumber == rhs.callsignNumber;
+}
+
+bool operator==(const Options::GeneralSettings& lhs, const Options::GeneralSettings& rhs)
+{
+	return	lhs.prohibitAA == rhs.prohibitAA && lhs.prohibitAfterburner == rhs.prohibitAfterburner && lhs.prohibitAG == rhs.prohibitAG &&
+			lhs.prohibitAirWpn == rhs.prohibitAirWpn && lhs.prohibitJettison == rhs.prohibitJettison;
+}
+
 Unit::Unit(json::value json, int ID) :
 	ID(ID)
 {
 	log("Creating unit with ID: " + to_string(ID));
-	addMeasure(L"currentState", json::value(L"Idle"));
-
-	addMeasure(L"TACANChannel", json::value(TACANChannel));
-	addMeasure(L"TACANXY", json::value(TACANXY));
-	addMeasure(L"TACANCallsign", json::value(TACANCallsign));
-
-	addMeasure(L"radioFrequency", json::value(radioFrequency));
-	addMeasure(L"radioCallsign", json::value(radioCallsign));
-	addMeasure(L"radioCallsignNumber", json::value(radioCallsignNumber));
-
-	addMeasure(L"ROE", json::value(L"Designated"));
-	addMeasure(L"reactionToThreat", json::value(L"Evade"));
 }
 
 Unit::~Unit()
 {
 
+}
+
+void Unit::initialize(json::value json)
+{
+	updateExportData(json);
+
+	if (getAI()) {
+		/* Set the default IDLE state */
+		setState(State::IDLE);
+
+		/* Set the default options (these are all defaults so will only affect the export data, no DCS command will be sent) */
+		setROE(L"Designated");
+		setReactionToThreat(L"Evade");
+		setEmissionsCountermeasures(L"Defend");
+		setTACAN(TACAN);
+		setRadio(radio);
+		setEPLRS(EPLRS);
+		setGeneralSettings(generalSettings);
+	}
 }
 
 void Unit::addMeasure(wstring key, json::value value)
@@ -155,7 +179,7 @@ json::value Unit::getData(long long time)
 
 		/********** Task data **********/
 		json[L"taskData"] = json::value::object();
-		for (auto key : { L"currentState", L"currentTask", L"targetSpeed", L"targetAltitude", L"activePath", L"isTanker", L"isAWACS", L"TACANChannel", L"TACANXY", L"TACANCallsign", L"radioFrequency", L"radioCallsign", L"radioCallsignNumber" })
+		for (auto key : { L"currentState", L"currentTask", L"targetSpeed", L"targetAltitude", L"activePath", L"isTanker", L"isAWACS" })
 		{
 			if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
 				json[L"taskData"][key] = measures[key]->getValue();
@@ -165,7 +189,7 @@ json::value Unit::getData(long long time)
 
 		/********** Options data **********/
 		json[L"optionsData"] = json::value::object();
-		for (auto key : { L"ROE", L"reactionToThreat" })
+		for (auto key : { L"ROE", L"reactionToThreat", L"emissionsCountermeasures", L"TACAN", L"radio", L"generalSettings"})
 		{
 			if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
 				json[L"optionsData"][key] = measures[key]->getValue();
@@ -309,43 +333,102 @@ void Unit::setFormationOffset(Offset newFormationOffset)
 }
 
 void Unit::setROE(wstring newROE) {
-	ROE = newROE;
-	int ROEEnum;
-	if (newROE.compare(L"Free") == 0)
-		ROEEnum = ROE::WEAPON_FREE;
-	else if (newROE.compare(L"Designated free") == 0)
-		ROEEnum = ROE::OPEN_FIRE_WEAPON_FREE;
-	else if (newROE.compare(L"Designated") == 0)
-		ROEEnum = ROE::OPEN_FIRE;
-	else if (newROE.compare(L"Return") == 0)
-		ROEEnum = ROE::RETURN_FIRE;
-	else if (newROE.compare(L"Hold") == 0)
-		ROEEnum = ROE::WEAPON_HOLD;
-	else
-		return;
-	Command* command = dynamic_cast<Command*>(new SetOption(ID, SetCommandType::ROE, ROEEnum));
-	scheduler->appendCommand(command);
 	addMeasure(L"ROE", json::value(newROE));
+	
+	if (ROE != newROE) {
+		ROE = newROE;
+
+		int ROEEnum;
+		if (ROE.compare(L"Free") == 0)
+			ROEEnum = ROE::WEAPON_FREE;
+		else if (ROE.compare(L"Designated free") == 0)
+			ROEEnum = ROE::OPEN_FIRE_WEAPON_FREE;
+		else if (ROE.compare(L"Designated") == 0)
+			ROEEnum = ROE::OPEN_FIRE;
+		else if (ROE.compare(L"Return") == 0)
+			ROEEnum = ROE::RETURN_FIRE;
+		else if (ROE.compare(L"Hold") == 0)
+			ROEEnum = ROE::WEAPON_HOLD;
+		else
+			return;
+
+		Command* command = dynamic_cast<Command*>(new SetOption(ID, SetCommandType::ROE, ROEEnum));
+		scheduler->appendCommand(command);
+	}
 }
 
 void Unit::setReactionToThreat(wstring newReactionToThreat) {
-	reactionToThreat = newReactionToThreat;
-	int reactionToThreatEnum;
-	if (newReactionToThreat.compare(L"None") == 0)
-		reactionToThreatEnum = ReactionToThreat::NO_REACTION;
-	else if (newReactionToThreat.compare(L"Passive") == 0)
-		reactionToThreatEnum = ReactionToThreat::PASSIVE_DEFENCE;
-	else if (newReactionToThreat.compare(L"Evade") == 0)
-		reactionToThreatEnum = ReactionToThreat::EVADE_FIRE;
-	else if (newReactionToThreat.compare(L"Escape") == 0)
-		reactionToThreatEnum = ReactionToThreat::BYPASS_AND_ESCAPE;
-	else if (newReactionToThreat.compare(L"Abort") == 0)
-		reactionToThreatEnum = ReactionToThreat::ALLOW_ABORT_MISSION;
-	else
-		return;
-	Command* command = dynamic_cast<Command*>(new SetOption(ID, SetCommandType::REACTION_ON_THREAT, reactionToThreatEnum));
-	scheduler->appendCommand(command);
 	addMeasure(L"reactionToThreat", json::value(newReactionToThreat));
+
+	if (reactionToThreat != newReactionToThreat) {
+		reactionToThreat = newReactionToThreat;
+
+		int reactionToThreatEnum;
+		if (reactionToThreat.compare(L"None") == 0)
+			reactionToThreatEnum = ReactionToThreat::NO_REACTION;
+		else if (reactionToThreat.compare(L"Passive") == 0)
+			reactionToThreatEnum = ReactionToThreat::PASSIVE_DEFENCE;
+		else if (reactionToThreat.compare(L"Evade") == 0)
+			reactionToThreatEnum = ReactionToThreat::EVADE_FIRE;
+		else if (reactionToThreat.compare(L"Escape") == 0)
+			reactionToThreatEnum = ReactionToThreat::BYPASS_AND_ESCAPE;
+		else if (reactionToThreat.compare(L"Abort") == 0)
+			reactionToThreatEnum = ReactionToThreat::ALLOW_ABORT_MISSION;
+		else
+			return;
+
+		Command* command = dynamic_cast<Command*>(new SetOption(ID, SetCommandType::REACTION_ON_THREAT, reactionToThreatEnum));
+		scheduler->appendCommand(command);
+	}
+}
+
+void Unit::setEmissionsCountermeasures(wstring newEmissionsCountermeasures) {
+	addMeasure(L"emissionsCountermeasures", json::value(newEmissionsCountermeasures)); 
+
+	if (emissionsCountermeasures != newEmissionsCountermeasures) {
+		emissionsCountermeasures = newEmissionsCountermeasures;
+
+		int radarEnum;
+		int flareEnum;
+		int ECMEnum;
+		if (emissionsCountermeasures.compare(L"Silent") == 0)
+		{
+			radarEnum = RadarUse::NEVER;
+			flareEnum = FlareUse::NEVER;
+			ECMEnum = ECMUse::NEVER_USE;
+		}
+		else if (emissionsCountermeasures.compare(L"Attack") == 0)
+		{
+			radarEnum = RadarUse::FOR_ATTACK_ONLY;
+			flareEnum = FlareUse::AGAINST_FIRED_MISSILE;
+			ECMEnum = ECMUse::USE_IF_ONLY_LOCK_BY_RADAR;
+		}
+		else if (emissionsCountermeasures.compare(L"Defend") == 0)
+		{
+			radarEnum = RadarUse::FOR_SEARCH_IF_REQUIRED;
+			flareEnum = FlareUse::WHEN_FLYING_IN_SAM_WEZ;
+			ECMEnum = ECMUse::USE_IF_DETECTED_LOCK_BY_RADAR;
+		}
+		else if (emissionsCountermeasures.compare(L"Free") == 0)
+		{
+			radarEnum = RadarUse::FOR_CONTINUOUS_SEARCH;
+			flareEnum = FlareUse::WHEN_FLYING_NEAR_ENEMIES;
+			ECMEnum = ECMUse::ALWAYS_USE;
+		}
+		else
+			return;
+
+		Command* command;
+
+		command = dynamic_cast<Command*>(new SetOption(ID, SetCommandType::RADAR_USING, radarEnum));
+		scheduler->appendCommand(command);
+
+		command = dynamic_cast<Command*>(new SetOption(ID, SetCommandType::FLARE_USING, flareEnum));
+		scheduler->appendCommand(command);
+
+		command = dynamic_cast<Command*>(new SetOption(ID, SetCommandType::ECM_USING, ECMEnum));
+		scheduler->appendCommand(command);
+	}
 }
 
 void Unit::landAt(Coords loc) {
@@ -364,93 +447,131 @@ void Unit::setIsAWACS(bool newIsAWACS) {
 	isAWACS = newIsAWACS; 
 	resetTask(); 
 	addMeasure(L"isAWACS", json::value(newIsAWACS)); 
-	setEPLRS(true);
+	setEPLRS(isAWACS);
 }
 
-void Unit::setTACANChannel(int newTACANChannel) { 
-	TACANChannel = newTACANChannel; 
-	addMeasure(L"TACANChannel", json::value(newTACANChannel)); 
-}
+void Unit::setTACAN(Options::TACAN newTACAN) {
+	auto json = json::value();
+	json[L"isOn"] = json::value(newTACAN.isOn);
+	json[L"channel"] = json::value(newTACAN.channel);
+	json[L"XY"] = json::value(newTACAN.XY);
+	json[L"callsign"] = json::value(newTACAN.callsign);
+	addMeasure(L"TACAN", json);
 
-void Unit::setTACANXY(wstring newTACANXY) { 
-	TACANXY = newTACANXY; 
-	addMeasure(L"TACANXY", json::value(newTACANXY));
-}
-void Unit::setTACANCallsign(wstring newTACANCallsign) { 
-	TACANCallsign = newTACANCallsign; 
-	addMeasure(L"TACANCallsign", json::value(newTACANCallsign)); 
-}
-
-void Unit::setRadioFrequency(int newRadioFrequency) { 
-	radioFrequency = newRadioFrequency; 
-	addMeasure(L"radioFrequency", json::value(newRadioFrequency)); 
-}
-
-void Unit::setRadioCallsign(int newRadioCallsign) { 
-	radioCallsign = newRadioCallsign; 
-	addMeasure(L"radioCallsign", json::value(newRadioCallsign));
-}
-
-void Unit::setRadioCallsignNumber(int newRadioCallsignNumber) { 
-	radioCallsignNumber = newRadioCallsignNumber; 
-	addMeasure(L"radioCallsignNumber", json::value(newRadioCallsignNumber)); 
-}
-
-void Unit::setEPLRS(bool state)
-{
-	std::wostringstream commandSS;
-	commandSS << "{"
-		<< "id = 'EPLRS',"
-		<< "params = {"
-		<< "value = " << (state? "true": "false") << ", "
-		<< "}"
-		<< "}";
-	Command* command = dynamic_cast<Command*>(new SetCommand(ID, commandSS.str()));
-	scheduler->appendCommand(command);
-}
-
-void Unit::setTACAN()
-{
-	std::wostringstream commandSS;
-	commandSS << "{"
-		<<	"id = 'ActivateBeacon',"
-		<<		"params = {"
-		<<			"type = " << ((TACANXY.compare(L"X") == 0)? 4: 5) << ","
-		<<			"system = 3,"
-		<<			"name = \"Olympus_TACAN\","
-		<<			"callsign = \"" << TACANCallsign << "\", "
-		<<			"frequency = " << TACANChannelToFrequency(TACANChannel, TACANXY) << ","
-		<<		"}"
-		<<	"}";
-	Command* command = dynamic_cast<Command*>(new SetCommand(ID, commandSS.str()));
-	scheduler->appendCommand(command);
-}
-
-void Unit::setRadio()
-{
+	if (TACAN != newTACAN)
 	{
+		TACAN = newTACAN;
+		if (TACAN.isOn) {
+			std::wostringstream commandSS;
+			commandSS << "{"
+				<< "id = 'ActivateBeacon',"
+				<< "params = {"
+				<< "type = " << ((TACAN.XY.compare(L"X") == 0) ? 4 : 5) << ","
+				<< "system = 3,"
+				<< "name = \"Olympus_TACAN\","
+				<< "callsign = \"" << TACAN.callsign << "\", "
+				<< "frequency = " << TACANChannelToFrequency(TACAN.channel, TACAN.XY) << ","
+				<< "}"
+				<< "}";
+			Command* command = dynamic_cast<Command*>(new SetCommand(ID, commandSS.str()));
+			scheduler->appendCommand(command);
+		}
+		else {
+			std::wostringstream commandSS;
+			commandSS << "{"
+				<< "id = 'DeactivateBeacon',"
+				<< "params = {"
+				<< "}"
+				<< "}";
+			Command* command = dynamic_cast<Command*>(new SetCommand(ID, commandSS.str()));
+			scheduler->appendCommand(command);
+		}
+	}
+}
+
+void Unit::setRadio(Options::Radio newRadio) {
+
+	auto json = json::value();
+	json[L"frequency"] = json::value(newRadio.frequency);
+	json[L"callsign"] = json::value(newRadio.callsign);
+	json[L"callsignNumber"] = json::value(newRadio.callsignNumber);
+	addMeasure(L"radio", json);
+
+	if (radio != newRadio)
+	{
+		radio = newRadio;
+
 		std::wostringstream commandSS;
+		Command* command;
+
 		commandSS << "{"
-			<<	"id = 'SetFrequency',"
-			<<		"params = {"
-			<<			"modulation = 0,"	// TODO Allow selection
-			<<			"frequency = " << radioFrequency << ","
-			<<		"}"
-			<<	"}";
-		Command* command = dynamic_cast<Command*>(new SetCommand(ID, commandSS.str()));
+			<< "id = 'SetFrequency',"
+			<< "params = {"
+			<< "modulation = 0,"	// TODO Allow selection
+			<< "frequency = " << radio.frequency << ","
+			<< "}"
+			<< "}";
+		command = dynamic_cast<Command*>(new SetCommand(ID, commandSS.str()));
+		scheduler->appendCommand(command);
+
+		// Clear the stringstream
+		commandSS.str(wstring());
+
+		commandSS << "{"
+			<< "id = 'SetCallsign',"
+			<< "params = {"
+			<< "callname = " << radio.callsign << ","
+			<< "number = " << radio.callsignNumber << ","
+			<< "}"
+			<< "}";
+		command = dynamic_cast<Command*>(new SetCommand(ID, commandSS.str()));
 		scheduler->appendCommand(command);
 	}
+}
 
+void Unit::setEPLRS(bool newEPLRS)
+{
+	//addMeasure(L"EPLRS", json::value(newEPLRS)); 
+	//
+	//if (EPLRS != newEPLRS) {
+	//	EPLRS = newEPLRS;
+	//
+	//	std::wostringstream commandSS;
+	//	commandSS << "{"
+	//		<< "id = 'EPLRS',"
+	//		<< "params = {"
+	//		<< "value = " << (EPLRS ? "true" : "false") << ", "
+	//		<< "}"
+	//		<< "}";
+	//	Command* command = dynamic_cast<Command*>(new SetCommand(ID, commandSS.str()));
+	//	scheduler->appendCommand(command);
+	//}
+}
+
+void Unit::setGeneralSettings(Options::GeneralSettings newGeneralSettings) {
+
+	auto json = json::value();
+	json[L"prohibitJettison"] = json::value(newGeneralSettings.prohibitJettison);
+	json[L"prohibitAA"] = json::value(newGeneralSettings.prohibitAA);
+	json[L"prohibitAG"] = json::value(newGeneralSettings.prohibitAG);
+	json[L"prohibitAfterburner"] = json::value(newGeneralSettings.prohibitAfterburner);
+	json[L"prohibitAirWpn"] = json::value(newGeneralSettings.prohibitAirWpn);
+	addMeasure(L"generalSettings", json);
+
+	if (generalSettings != newGeneralSettings)
 	{
-		std::wostringstream commandSS;
-		commandSS << "{"
-			<<	"id = 'SetCallsign',"
-			<<		"params = {"
-			<<			"callname = " << radioCallsign << ","
-			<<			"number = " << radioCallsignNumber << ","
-			<<		"}"
-			<<	"}";
-		Command* command = dynamic_cast<Command*>(new SetCommand(ID, commandSS.str()));
+		generalSettings = newGeneralSettings;
+
+		Command* command;
+		command = dynamic_cast<Command*>(new SetOption(ID, SetCommandType::PROHIBIT_AA, generalSettings.prohibitAA));
+		scheduler->appendCommand(command);
+		command = dynamic_cast<Command*>(new SetOption(ID, SetCommandType::PROHIBIT_AG, generalSettings.prohibitAG));
+		scheduler->appendCommand(command);
+		command = dynamic_cast<Command*>(new SetOption(ID, SetCommandType::PROHIBIT_JETT, generalSettings.prohibitJettison));
+		scheduler->appendCommand(command);
+		command = dynamic_cast<Command*>(new SetOption(ID, SetCommandType::PROHIBIT_AB, generalSettings.prohibitAfterburner));
+		scheduler->appendCommand(command);
+		command = dynamic_cast<Command*>(new SetOption(ID, SetCommandType::ENGAGE_AIR_WEAPONS, !generalSettings.prohibitAirWpn));
 		scheduler->appendCommand(command);
 	}
 }

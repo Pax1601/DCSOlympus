@@ -92,7 +92,7 @@ function readConfig(config: any) {
             setAddress(address == "*" ? window.location.hostname : address, <number>port);
     }
     else {
-        throw new Error('Could not read configuration file!');
+        throw new Error('Could not read configuration file');
     }
 }
 

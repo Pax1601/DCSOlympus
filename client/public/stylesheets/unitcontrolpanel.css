@@ -8,7 +8,7 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	left: 10px;
 	position: absolute;
 	top: 80px;
-	width: 250px;
+	width: 260px;
 	z-index: 1000;
 }
 
@@ -31,7 +31,7 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	border-radius: var(--border-radius-lg);
 	display: flex;
 	font-size: 11px;
-	height: 30px;
+	height: 32px;
 	padding: 8px 0;
 	position: relative;
 	width: 100%;
@@ -94,13 +94,39 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 }
 
 #unit-control-panel #threat,
-#unit-control-panel #roe {
+#unit-control-panel #roe,
+#unit-control-panel #emissions-countermeasures {
 	margin-top: 12px;
 }
 
 #advanced-settings-dialog {
 	width: 400px;
 }
+
+#advanced-settings-dialog:not([data-show-settings]) #general-settings {
+	display: none;
+}
+
+#advanced-settings-dialog:not([data-show-tasking]) #tasking {
+	display: none;
+}
+
+#advanced-settings-dialog:not([data-show-tanker]) #tanker-checkbox {
+	display: none;
+}
+
+#advanced-settings-dialog:not([data-show-AWACS]) #AWACS-checkbox {
+	display: none;
+}
+
+#advanced-settings-dialog:not([data-show-TACAN]) #TACAN-options {
+	display: none;
+}
+
+#advanced-settings-dialog:not([data-show-radio]) #radio-options {
+	display: none;
+}
+
 
 #advanced-settings-dialog>.ol-dialog-content {
 	margin-top: 10px;
@@ -111,6 +137,32 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	row-gap: 10px;
 }
 
-#advanced-settings-dialog>.ol-dialog-content>.ol-group {
+#advanced-settings-dialog>.ol-dialog-content>div {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	row-gap: 10px;
+}
+
+#advanced-settings-dialog>.ol-dialog-content>div>.ol-group {
 	justify-content: space-between;
+}
+
+#advanced-settings-dialog h4 {
+	white-space: nowrap;
+}
+
+#advanced-settings-dialog hr {
+	margin-top: 15px;
+	margin-bottom: 10px;
+}
+
+#general-settings-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	row-gap: 10px;
+}
+
+#general-settings-grid>div {
+	width: 49%;
 }

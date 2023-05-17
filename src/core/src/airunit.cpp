@@ -185,7 +185,7 @@ void AirUnit::AIloop()
 				}
 				Command* command = dynamic_cast<Command*>(new SetTask(ID, taskSS.str()));
 				scheduler->appendCommand(command);
-				hasTask = true;
+				setHasTask(true);
 			}
 			break;
 		}
@@ -290,7 +290,7 @@ void AirUnit::AIloop()
 						<< "}";
 					Command* command = dynamic_cast<Command*>(new SetTask(ID, taskSS.str()));
 					scheduler->appendCommand(command);
-					hasTask = true;
+					setHasTask(true);
 				}
 			}
 			break;
@@ -306,7 +306,7 @@ void AirUnit::AIloop()
 						<< "}";
 					Command* command = dynamic_cast<Command*>(new SetTask(ID, taskSS.str()));
 					scheduler->appendCommand(command);
-					hasTask = true;
+					setHasTask(true);
 				}
 				else {
 					setState(State::IDLE);

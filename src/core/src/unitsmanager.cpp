@@ -64,11 +64,14 @@ void UnitsManager::updateExportData(lua_State* L)
 						units[ID] = dynamic_cast<Unit*>(new Bomb(p.second, ID));
 				}
 			}
+			/* Initialize the unit if creation was successfull */
+			if (units.count(ID) != 0)
+				units[ID]->initialize(p.second);
 		}
-		/* Update the unit if present*/
-		if (units.count(ID) != 0)
-		{
-			units[ID]->updateExportData(p.second);
+		else {
+			/* Update the unit if present*/
+			if (units.count(ID) != 0)
+				units[ID]->updateExportData(p.second);
 		}
 	}
 

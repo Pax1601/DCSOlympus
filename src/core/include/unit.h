@@ -9,19 +9,43 @@ namespace State
 {
 	enum States
 	{
+		NONE = 0,
 		IDLE,
 		REACH_DESTINATION,
 		ATTACK,
-		WINGMAN,
 		FOLLOW,
 		LAND,
 		REFUEL,
 		AWACS,
-		EWR,
-		TANKER,
-		RUN_AWAY
+		TANKER
 	};
 };
+
+namespace Options {
+	struct TACAN
+	{
+		bool isOn = false;
+		int channel = 40;
+		wstring XY = L"X";
+		wstring callsign = L"TKR";
+	};
+
+	struct Radio
+	{
+		int frequency = 124000000;	// MHz
+		int callsign = 1;
+		int callsignNumber = 1;
+	};
+
+	struct GeneralSettings
+	{
+		bool prohibitJettison = false;
+		bool prohibitAA = false;
+		bool prohibitAG = false;
+		bool prohibitAfterburner = false;
+		bool prohibitAirWpn = false;
+	};
+}
 
 class Unit
 {
@@ -30,6 +54,7 @@ public:
 	~Unit();
 
 	/********** Public methods **********/
+	void initialize(json::value json);
 	int getID() { return ID; }
 	void updateExportData(json::value json);
 	void updateMissionData(json::value json);
@@ -98,15 +123,7 @@ public:
 	void setTargetID(int newTargetID) { targetID = newTargetID; addMeasure(L"targetID", json::value(newTargetID));}
 	void setIsTanker(bool newIsTanker);
 	void setIsAWACS(bool newIsAWACS);
-	void setTACANChannel(int newTACANChannel);
-	void setTACANXY(wstring newTACANXY);
-	void setTACANCallsign(wstring newTACANCallsign);
-	void setTACAN();
-	void setEPLRS(bool state);
-	void setRadioFrequency(int newRadioFrequency);
-	void setRadioCallsign(int newRadioCallsign);
-	void setRadioCallsignNumber(int newRadioCallsignNumber);
-	void setRadio();
+	
 	wstring getCurrentTask() { return currentTask; }
 	virtual double getTargetSpeed() { return targetSpeed; };
 	virtual double getTargetAltitude() { return targetAltitude; };
@@ -115,18 +132,22 @@ public:
 	int getTargetID() { return targetID; }
 	bool getIsTanker() { return isTanker; }
 	bool getIsAWACS() { return isAWACS; }
-	int getTACANChannel() { return TACANChannel; }
-	wstring getTACANXY() { return TACANXY; }
-	wstring getTACANCallsign() { return TACANCallsign; }
-	int getRadioFrequency() { return radioFrequency; }
-	int getRadioCallsign() { return radioCallsign; }
-	int getRadioCallsignNumber() { return radioCallsignNumber; }
 
 	/********** Options data **********/
 	void setROE(wstring newROE);
 	void setReactionToThreat(wstring newReactionToThreat);
+	void setEmissionsCountermeasures(wstring newEmissionsCountermeasures);
+	void setTACAN(Options::TACAN newTACAN);
+	void setRadio(Options::Radio newradio);
+	void setGeneralSettings(Options::GeneralSettings newGeneralSettings);
+	void setEPLRS(bool newEPLRS);
 	wstring getROE() { return ROE; }
-	wstring getReactionToThreat() {return reactionToThreat;}
+	wstring getReactionToThreat() { return reactionToThreat; }
+	wstring getEmissionsCountermeasures() { return emissionsCountermeasures; };
+	Options::TACAN getTACAN() { return TACAN; }
+	Options::Radio getRadio() { return radio; }
+	Options::GeneralSettings getGeneralSettings() { return generalSettings; }
+	bool getEPLRS() { return EPLRS; }
 
 	/********** Control functions **********/
 	void landAt(Coords loc);
@@ -179,19 +200,18 @@ protected:
 	int targetID = NULL;
 	bool isTanker = false;
 	bool isAWACS = false;
-	int TACANChannel = 40;
-	wstring TACANXY = L"X";
-	wstring TACANCallsign = L"TKR";
-	int radioFrequency = 260000000;	// MHz
-	int radioCallsign = 1;
-	int radioCallsignNumber = 1;
-
+	
 	/********** Options data **********/
-	wstring ROE = L"";
-	wstring reactionToThreat = L"";
+	wstring ROE = L"Designated";
+	wstring reactionToThreat = L"Evade";
+	wstring emissionsCountermeasures = L"Defend";
+	Options::TACAN TACAN;
+	Options::Radio radio;
+	Options::GeneralSettings generalSettings;
+	bool EPLRS = false;
 
 	/********** State machine **********/
-	int state = State::IDLE;
+	int state = State::NONE;
 
 	/********** Other **********/
 	Coords oldPosition = Coords(0); // Used to approximate speed

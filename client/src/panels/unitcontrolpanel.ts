@@ -1,7 +1,6 @@
 import { getUnitsManager } from "..";
 import { Dropdown } from "../controls/dropdown";
 import { Slider } from "../controls/slider";
-import { dataPointMap } from "../other/utils";
 import { aircraftDatabase } from "../units/aircraftdatabase";
 import { groundUnitsDatabase } from "../units/groundunitsdatabase";
 import { Aircraft, GroundUnit, Unit } from "../units/unit";
@@ -10,6 +9,11 @@ import { Panel } from "./panel";
 
 const ROEs: string[] = ["Hold", "Return", "Designated", "Free"];
 const reactionsToThreat: string[] = ["None", "Passive", "Evade"];
+const emissionsCountermeasures: string[] = ["Silent", "Attack", "Defend", "Free"];
+
+const ROEDescriptions: string[] = ["Hold (Never fire)", "Return (Only fire if fired upon)", "Designated (Attack the designated target only)", "Free (Attack anyone)"];
+const reactionsToThreatDescriptions: string[] = ["None (No reaction)", "Passive (Countermeasures only, no manoeuvre)", "Evade (Countermeasures and manoeuvers)"];
+const emissionsCountermeasuresDescriptions: string[] = ["Silent (Radar off, no countermeasures)", "Attack (Radar only for targeting, countermeasures only if attacked/locked)", "Defend (Radar for searching, jammer if locked, countermeasures inside WEZ)", "Always on (Radar and jammer always on, countermeasures when hostile detected)"];
 
 const minSpeedValues: { [key: string]: number } = { Aircraft: 100, Helicopter: 0, NavyUnit: 0, GroundUnit: 0 };
 const maxSpeedValues: { [key: string]: number } = { Aircraft: 800, Helicopter: 300, NavyUnit: 60, GroundUnit: 60 };
@@ -52,23 +56,20 @@ export class UnitControlPanel extends Panel {
 
         /* Option buttons */
         this.#optionButtons["ROE"] = ROEs.map((option: string, index: number) => {
-            var button = document.createElement("button");
-            button.title = option;
-            button.value = option;
-            button.addEventListener("click", () => { getUnitsManager().selectedUnitsSetROE(button.title); });
-            return button;
+            return this.#createOptionButton(option, ROEDescriptions[index], () => { getUnitsManager().selectedUnitsSetROE(option); });
         });
 
         this.#optionButtons["reactionToThreat"] = reactionsToThreat.map((option: string, index: number) => {
-            var button = document.createElement("button");
-            button.title = option;
-            button.value = option;
-            button.addEventListener("click", () => { getUnitsManager().selectedUnitsSetReactionToThreat(button.title); });
-            return button;
+            return this.#createOptionButton(option, reactionsToThreatDescriptions[index],() => { getUnitsManager().selectedUnitsSetReactionToThreat(option); });
+        });
+
+        this.#optionButtons["emissionsCountermeasures"] = emissionsCountermeasures.map((option: string, index: number) => {
+            return this.#createOptionButton(option, emissionsCountermeasuresDescriptions[index],() => { getUnitsManager().selectedUnitsSetEmissionsCountermeasures(option); });
         });
 
         this.getElement().querySelector("#roe-buttons-container")?.append(...this.#optionButtons["ROE"]);
         this.getElement().querySelector("#reaction-to-threat-buttons-container")?.append(...this.#optionButtons["reactionToThreat"]);
+        this.getElement().querySelector("#emissions-countermeasures-buttons-container")?.append(...this.#optionButtons["emissionsCountermeasures"]);
 
         this.#advancedSettingsDialog = <HTMLElement> document.querySelector("#advanced-settings-dialog");
 
@@ -122,7 +123,7 @@ export class UnitControlPanel extends Panel {
             }));
         } else {
             var el = document.createElement("div");
-            el.innerText = "Too many units selected"
+            el.innerText = "Too many units selected";
             this.getElement().querySelector("#selected-units-container")?.replaceChildren(el);
         }
     }
@@ -141,11 +142,15 @@ export class UnitControlPanel extends Panel {
                 this.#optionButtons["reactionToThreat"].forEach((button: HTMLButtonElement) => {
                     button.classList.toggle("selected", units.every((unit: Unit) => unit.getOptionsData().reactionToThreat === button.value))
                 });
+
+                this.#optionButtons["emissionsCountermeasures"].forEach((button: HTMLButtonElement) => {
+                    button.classList.toggle("selected", units.every((unit: Unit) => unit.getOptionsData().emissionsCountermeasures === button.value))
+                });
             }
         }
     }
 
-    //  Update function will only be allowed to update the sliders once it's matched the expected value for the first time (due to lag of Ajax request)
+    /*  Update function will only be allowed to update the sliders once it's matched the expected value for the first time (due to lag of Ajax request) */
     #updateCanSetAltitudeSlider(altitude: number) {
         if (this.#expectedAltitude < 0 || altitude === this.#expectedAltitude) {
             this.#expectedAltitude = -1;
@@ -190,19 +195,15 @@ export class UnitControlPanel extends Panel {
 
             this.#airspeedSlider.setActive(targetSpeed != undefined);
             if (targetSpeed != undefined) {
-
                 targetSpeed *= 1.94384;
-
                 if (this.#updateCanSetSpeedSlider(targetSpeed)) {
                     this.#airspeedSlider.setValue(targetSpeed);
                 }
-
             }
 
             this.#altitudeSlider.setActive(targetAltitude != undefined);
             if (targetAltitude != undefined) {
                 targetAltitude /= 0.3048;
-
                 if (this.#updateCanSetAltitudeSlider(targetAltitude)) {
                     this.#altitudeSlider.setValue(targetAltitude);
                 }
@@ -218,84 +219,134 @@ export class UnitControlPanel extends Panel {
     {
         if (units.length == 1)
         {
+            /* HTML Elements */
+            const unitNameEl = this.#advancedSettingsDialog.querySelector("#unit-name") as HTMLElement;
+            const prohibitJettisonCheckbox = this.#advancedSettingsDialog.querySelector("#prohibit-jettison-checkbox")?.querySelector("input") as HTMLInputElement;
+            const prohibitAfterburnerCheckbox = this.#advancedSettingsDialog.querySelector("#prohibit-afterburner-checkbox")?.querySelector("input") as HTMLInputElement;
+            const prohibitAACheckbox = this.#advancedSettingsDialog.querySelector("#prohibit-AA-checkbox")?.querySelector("input") as HTMLInputElement;
+            const prohibitAGCheckbox = this.#advancedSettingsDialog.querySelector("#prohibit-AG-checkbox")?.querySelector("input") as HTMLInputElement;
+            const prohibitAirWpnCheckbox = this.#advancedSettingsDialog.querySelector("#prohibit-air-wpn-checkbox")?.querySelector("input") as HTMLInputElement;
+            const tankerCheckbox = this.#advancedSettingsDialog.querySelector("#tanker-checkbox")?.querySelector("input") as HTMLInputElement;
+            const AWACSCheckbox = this.#advancedSettingsDialog.querySelector("#AWACS-checkbox")?.querySelector("input") as HTMLInputElement;
+            const TACANCheckbox = this.#advancedSettingsDialog.querySelector("#TACAN-checkbox")?.querySelector("input") as HTMLInputElement;
+            const TACANChannelInput = this.#advancedSettingsDialog.querySelector("#TACAN-channel")?.querySelector("input") as HTMLInputElement;
+            const TACANCallsignInput = this.#advancedSettingsDialog.querySelector("#tacan-callsign")?.querySelector("input") as HTMLInputElement;
+            const radioMhzInput = this.#advancedSettingsDialog.querySelector("#radio-mhz")?.querySelector("input") as HTMLInputElement;
+            const radioCallsignNumberInput = this.#advancedSettingsDialog.querySelector("#radio-callsign-number")?.querySelector("input") as HTMLInputElement;
+            
             const unit = units[0];
-            (<HTMLElement>this.#advancedSettingsDialog.querySelector("#unit-name")).innerText = unit.getBaseData().unitName;
+            const roles = aircraftDatabase.getByName(unit.getBaseData().name)?.loadouts.map((loadout) => {return loadout.roles})
+            const tanker = roles != undefined && Array.prototype.concat.apply([], roles)?.includes("Tanker");
+            const AWACS = roles != undefined && Array.prototype.concat.apply([], roles)?.includes("AWACS");
+            const radioMHz = Math.floor(unit.getOptionsData().radio.frequency / 1000000);
+            const radioDecimals = (unit.getOptionsData().radio.frequency / 1000000 - radioMHz) * 1000;
 
-            if (getUnitsManager().getSelectedUnits().length == 1)
-            {
-                var radioMHz = Math.floor(unit.getTaskData().radioFrequency / 1000000);
-                var radioDecimals = (unit.getTaskData().radioFrequency / 1000000 - radioMHz) * 1000;
+            /* Activate the correct options depending on unit type */
+            this.#advancedSettingsDialog.toggleAttribute("data-show-settings", !tanker && !AWACS);
+            this.#advancedSettingsDialog.toggleAttribute("data-show-tasking", tanker || AWACS);
+            this.#advancedSettingsDialog.toggleAttribute("data-show-tanker", tanker);
+            this.#advancedSettingsDialog.toggleAttribute("data-show-AWACS", AWACS);
+            this.#advancedSettingsDialog.toggleAttribute("data-show-TACAN", tanker);
+            this.#advancedSettingsDialog.toggleAttribute("data-show-radio", tanker || AWACS);
 
-                // Default values for "normal" units
+            /* Set common properties */
+            // Name
+            unitNameEl.innerText = unit.getBaseData().unitName;
+
+            // General settings
+            prohibitJettisonCheckbox.checked = unit.getOptionsData().generalSettings.prohibitJettison;
+            prohibitAfterburnerCheckbox.checked = unit.getOptionsData().generalSettings.prohibitAfterburner;
+            prohibitAACheckbox.checked = unit.getOptionsData().generalSettings.prohibitAA;
+            prohibitAGCheckbox.checked = unit.getOptionsData().generalSettings.prohibitAG;
+            prohibitAirWpnCheckbox.checked = unit.getOptionsData().generalSettings.prohibitAirWpn;
+
+            // Tasking
+            tankerCheckbox.checked = unit.getTaskData().isTanker;
+            AWACSCheckbox.checked = unit.getTaskData().isAWACS;
+
+            // TACAN
+            TACANCheckbox.checked = unit.getOptionsData().TACAN.isOn;
+            TACANChannelInput.value = String(unit.getOptionsData().TACAN.channel);
+            TACANCallsignInput.value = String(unit.getOptionsData().TACAN.callsign);
+            this.#TACANXYDropdown.setValue(unit.getOptionsData().TACAN.XY);
+
+            // Radio
+            radioMhzInput.value = String(radioMHz);
+            radioCallsignNumberInput.value = String(unit.getOptionsData().radio.callsignNumber);
+            this.#radioDecimalsDropdown.setValue("." + radioDecimals);
+                    
+            if (tanker) /* Set tanker specific options */
+                this.#radioCallsignDropdown.setOptions(["Texaco", "Arco", "Shell"]);
+            else if (AWACS) /* Set AWACS specific options */
+                this.#radioCallsignDropdown.setOptions(["Overlord", "Magic", "Wizard", "Focus", "Darkstar"]);
+            else
                 this.#radioCallsignDropdown.setOptions(["Enfield", "Springfield", "Uzi", "Colt", "Dodge", "Ford", "Chevy", "Pontiac"]);
-                this.#radioCallsignDropdown.selectValue(unit.getTaskData().radioCallsign - 1);
 
-                // Input values
-                var tankerCheckbox = this.#advancedSettingsDialog.querySelector("#tanker-checkbox")?.querySelector("input")
-                var AWACSCheckbox = this.#advancedSettingsDialog.querySelector("#AWACS-checkbox")?.querySelector("input")
-
-                var TACANChannelInput = this.#advancedSettingsDialog.querySelector("#TACAN-channel")?.querySelector("input");
-                var TACANCallsignInput = this.#advancedSettingsDialog.querySelector("#tacan-callsign")?.querySelector("input");
-                var radioMhzInput = this.#advancedSettingsDialog.querySelector("#radio-mhz")?.querySelector("input");
-                var radioCallsignNumberInput = this.#advancedSettingsDialog.querySelector("#radio-callsign-number")?.querySelector("input");
-
-                if (tankerCheckbox) tankerCheckbox.checked = unit.getTaskData().isTanker;
-                if (AWACSCheckbox) AWACSCheckbox.checked = unit.getTaskData().isAWACS;
-                if (TACANChannelInput) TACANChannelInput.value = String(unit.getTaskData().TACANChannel);
-                if (TACANCallsignInput) TACANCallsignInput.value = String(unit.getTaskData().TACANCallsign);
-                if (radioMhzInput) radioMhzInput.value = String(radioMHz);
-                if (radioCallsignNumberInput) radioCallsignNumberInput.value = String(unit.getTaskData().radioCallsignNumber);
-
-                this.#TACANXYDropdown.setValue(unit.getTaskData().TACANXY);
-                this.#radioDecimalsDropdown.setValue("." + radioDecimals);
-
-                // Make sure its in the valid range
-                if (!this.#radioCallsignDropdown.selectValue(unit.getTaskData().radioCallsign - 1))
-                    this.#radioCallsignDropdown.selectValue(0);
-
-                // Set options for tankers
-                var roles = aircraftDatabase.getByName(unit.getBaseData().name)?.loadouts.map((loadout) => {return loadout.roles})
-                if (roles != undefined && Array.prototype.concat.apply([], roles)?.includes("Tanker")){
-                    this.#advancedSettingsDialog.querySelector("#tanker-checkbox")?.classList.remove("hide");
-                    this.#radioCallsignDropdown.setOptions(["Texaco", "Arco", "Shell"]);
-                    this.#radioCallsignDropdown.selectValue(unit.getTaskData().radioCallsign - 1);
-                }
-                else {
-                    this.#advancedSettingsDialog.querySelector("#tanker-checkbox")?.classList.add("hide");
-                }
-
-                // Set options for AWACS
-                if (roles != undefined && Array.prototype.concat.apply([], roles)?.includes("AWACS")){
-                    this.#advancedSettingsDialog.querySelector("#AWACS-checkbox")?.classList.remove("hide");
-                    this.#radioCallsignDropdown.setOptions(["Overlord", "Magic", "Wizard", "Focus", "Darkstar"]);
-                    this.#radioCallsignDropdown.selectValue(unit.getTaskData().radioCallsign - 1);
-                } else {
-                    this.#advancedSettingsDialog.querySelector("#AWACS-checkbox")?.classList.add("hide");
-                }
-            }
+            // This must be done after setting the options
+            if (!this.#radioCallsignDropdown.selectValue(unit.getOptionsData().radio.callsign - 1)) // Ensure the selected value is in the acceptable range
+                this.#radioCallsignDropdown.selectValue(0);
         }
     }
 
     #applyAdvancedSettings()
     {
-        const isTanker = this.#advancedSettingsDialog.querySelector("#tanker-checkbox")?.querySelector("input")?.checked? true: false;
-        const isAWACS = this.#advancedSettingsDialog.querySelector("#AWACS-checkbox")?.querySelector("input")?.checked? true: false;
+        /* HTML Elements */
+        const prohibitJettisonCheckbox = this.#advancedSettingsDialog.querySelector("#prohibit-jettison-checkbox")?.querySelector("input") as HTMLInputElement;
+        const prohibitAfterburnerCheckbox = this.#advancedSettingsDialog.querySelector("#prohibit-afterburner-checkbox")?.querySelector("input") as HTMLInputElement;
+        const prohibitAACheckbox = this.#advancedSettingsDialog.querySelector("#prohibit-AA-checkbox")?.querySelector("input") as HTMLInputElement;
+        const prohibitAGCheckbox = this.#advancedSettingsDialog.querySelector("#prohibit-AG-checkbox")?.querySelector("input") as HTMLInputElement;
+        const prohibitAirWpnCheckbox = this.#advancedSettingsDialog.querySelector("#prohibit-air-wpn-checkbox")?.querySelector("input") as HTMLInputElement;
+        const tankerCheckbox = this.#advancedSettingsDialog.querySelector("#tanker-checkbox")?.querySelector("input") as HTMLInputElement;
+        const AWACSCheckbox = this.#advancedSettingsDialog.querySelector("#AWACS-checkbox")?.querySelector("input") as HTMLInputElement;
+        const TACANCheckbox = this.#advancedSettingsDialog.querySelector("#TACAN-checkbox")?.querySelector("input") as HTMLInputElement;
+        const TACANChannelInput = this.#advancedSettingsDialog.querySelector("#TACAN-channel")?.querySelector("input") as HTMLInputElement;
+        const TACANCallsignInput = this.#advancedSettingsDialog.querySelector("#tacan-callsign")?.querySelector("input") as HTMLInputElement;
+        const radioMhzInput = this.#advancedSettingsDialog.querySelector("#radio-mhz")?.querySelector("input") as HTMLInputElement;
+        const radioCallsignNumberInput = this.#advancedSettingsDialog.querySelector("#radio-callsign-number")?.querySelector("input") as HTMLInputElement;
 
-        const TACANChannel = Number(this.#advancedSettingsDialog.querySelector("#TACAN-channel")?.querySelector("input")?.value);
-        const TACANXY = this.#TACANXYDropdown.getValue();
-        const TACANCallsign = <string> this.#advancedSettingsDialog.querySelector("#tacan-callsign")?.querySelector("input")?.value
-        
-        const radioMHz = Number(this.#advancedSettingsDialog.querySelector("#radio-mhz")?.querySelector("input")?.value);
+        /* Tasking */
+        const isTanker = tankerCheckbox.checked? true: false;
+        const isAWACS = AWACSCheckbox.checked? true: false;
+
+        /* TACAN */
+        const TACAN: TACAN = {
+            isOn: TACANCheckbox.checked? true: false,
+            channel: Number(TACANChannelInput.value),
+            XY: this.#TACANXYDropdown.getValue(),
+            callsign: TACANCallsignInput.value as string
+        }
+
+        /* Radio */
+        const radioMHz = Number(radioMhzInput.value);
         const radioDecimals = this.#radioDecimalsDropdown.getValue();
-        const radioCallsign = this.#radioCallsignDropdown.getIndex() + 1;
-        const radioCallsignNumber = Number(this.#advancedSettingsDialog.querySelector("#radio-callsign-number")?.querySelector("input")?.value);
+        const radio: Radio = {
+            frequency: (radioMHz * 1000 + Number(radioDecimals.substring(1))) * 1000,
+            callsign: this.#radioCallsignDropdown.getIndex() + 1,
+            callsignNumber:  Number(radioCallsignNumberInput.value)
+        }
 
-        var radioFrequency = (radioMHz * 1000 + Number(radioDecimals.substring(1))) * 1000;
-
+        /* General settings */
+        const generalSettings: GeneralSettings = {
+            prohibitJettison: prohibitJettisonCheckbox.checked? true: false,
+            prohibitAfterburner: prohibitAfterburnerCheckbox.checked? true: false,
+            prohibitAA: prohibitAACheckbox.checked? true: false,
+            prohibitAG: prohibitAGCheckbox.checked? true: false,
+            prohibitAirWpn: prohibitAirWpnCheckbox.checked? true: false
+        }
+        
+        /* Send command and close */
         var units = getUnitsManager().getSelectedUnits();
         if (units.length > 0)
-            units[0].setAdvancedOptions(isTanker, isAWACS, TACANChannel, TACANXY, TACANCallsign, radioFrequency, radioCallsign, radioCallsignNumber);
+            units[0].setAdvancedOptions(isTanker, isAWACS, TACAN, radio, generalSettings);
 
         this.#advancedSettingsDialog.classList.add("hide");
+    }
+
+    #createOptionButton(option: string, title: string, callback: EventListenerOrEventListenerObject) {
+        var button = document.createElement("button");
+        button.value = option;
+        button.title = title;
+        button.addEventListener("click", callback);
+        return button;
     }
 }

@@ -109,7 +109,7 @@ dl.ol-data-grid dd {
 }
 
 .ol-panel.ol-dialog {
-	padding: 20px;
+	padding: 24px 30px;
 }
 
 .ol-dialog-close {
@@ -177,7 +177,7 @@ dl.ol-data-grid dd {
 }
 
 .ol-text-input input {
-	height: 40px;
+	height: 32px;
 	border-radius: 5px;
 	color: var(--background-offwhite);
 	background-color: var(--background-grey);

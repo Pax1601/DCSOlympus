@@ -1,6 +1,6 @@
 local version = "v0.2.1-alpha"
 
-local debug = false
+local debug = true
 
 Olympus.unitCounter = 1
 Olympus.payloadRegistry = {}
@@ -427,7 +427,7 @@ function Olympus.setCommand(ID, command)
 end
 
 function Olympus.setOption(ID, optionID, optionValue)
-	Olympus.debug("Olympus.setOption " .. ID .. " " .. optionID .. " " .. optionValue, 2)
+	Olympus.debug("Olympus.setOption " .. ID .. " " .. optionID .. " " .. tostring(optionValue), 2)
 	local unit = Olympus.getUnitByID(ID)
 	if unit then
 		unit:getGroup():getController():setOption(optionID, optionValue)

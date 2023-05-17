@@ -30,109 +30,147 @@
     </div>
 
     <div class="ol-dialog-content">
-        <!--
-        <div class="ol-checkbox">
-            <label>
-                <input type="checkbox" />
-                Use ECM when available
-            </label>
-        </div>
-    
-        <div class="ol-checkbox">
-            <label>
-                <input type="checkbox" />
-                Prohibit jettison
-            </label>
-        </div>
-    
-        <div class="ol-checkbox">
-            <label>
-                <input type="checkbox" />
-                Prohibit afterburner
-            </label>
-        </div>
-    
-        <div class="ol-checkbox">
-            <label>
-                <input type="checkbox" />
-                Prohibit A/A
-            </label>
-        </div>
-    
-        <div class="ol-checkbox">
-            <label>
-                <input type="checkbox" />
-                Prohibit A/G
-            </label>
-        </div>
-        -->
 
-        <div id="tanker-checkbox" class="ol-checkbox">
-            <label>
-                <input type="checkbox" />
-                Operate as AAR tanker
-            </label>
-        </div>
-
-        <div id="AWACS-checkbox" class="ol-checkbox">
-            <label>
-                <input type="checkbox" />
-                Operate as AWACS
-            </label>
-        </div>
-
-        <div class="ol-group">
-            <label>A/A TACAN: </label>
-    
+        <!-- General settings -->
+        <div id="general-settings">
             <div class="ol-group">
-                <div id="TACAN-channel" class="ol-text-input">
-                    <input type="number" min="1" max="126" step="1" value="40">
+                <h4>General settings</h4>
+                <hr>
+            </div>
+            <div id="general-settings-grid">
+                <div id="prohibit-jettison-checkbox" class="ol-checkbox">
+                    <label title="The unit will not jettison external stores">
+                        <input type="checkbox"/>
+                        Prohibit jettison
+                    </label>
                 </div>
             
-                <div id="TACAN-XY" class="ol-select">
-                    <div class="ol-select-value">X</div>
-                    <div class="ol-select-options">
-                    </div>
+                <div id="prohibit-afterburner-checkbox" class="ol-checkbox">
+                    <label title="The unit will not engage the afterburner">
+                        <input type="checkbox" />
+                        Prohibit afterburner
+                    </label>
+                </div>
+            
+                <div id="prohibit-AA-checkbox" class="ol-checkbox">
+                    <label title="The unit will not engage airborne targets">
+                        <input type="checkbox" />
+                        Prohibit A/A
+                    </label>
+                </div>
+            
+                <div id="prohibit-AG-checkbox" class="ol-checkbox">
+                    <label title="The unit will not engage ground targets">
+                        <input type="checkbox" />
+                        Prohibit A/G
+                    </label>
                 </div>
 
-                <div id="TACAN-callsign" class="ol-text-input">
-                    <input type="text" maxlength="3" value="TKR" style="width: 50px">
+                <div id="prohibit-air-wpn-checkbox" class="ol-checkbox">
+                    <label title="The unit will not engage A/A weapons (e.g. SAM sites will not engage HARMs)">
+                        <input type="checkbox" />
+                        Prohibit air wpn engage
+                    </label>
                 </div>
             </div>
         </div>
-    
-        <div class="ol-group">
-            <label> Radio frequency: </label>
-        
+
+        <!-- Tasking -->
+        <div id="tasking">
             <div class="ol-group">
-                <div id="radio-mhz" class="ol-text-input">
-                    <input type="number" min="1" max="999" step="1" value="260">
-                </div>
-                                
-                <div id="radio-decimals" class="ol-select">
-                    <div class="ol-select-value">.000</div>
-                    <div class="ol-select-options">
-                    </div>
-                </div>
+                <h4>Tasking</h4>
+                <hr>
             </div>
-        </div>
-        
-        <div class="ol-group">
-            <label> Radio callsign: </label>
-
-            <div class="ol-group">
-                <div id="radio-callsign" class="ol-select">
-                    <div class="ol-select-value"></div>
-                    <div class="ol-select-options">
-                    </div>
-                </div>
-
-                <label>
-                    -
+            
+            <div id="tanker-checkbox" class="ol-checkbox">
+                <label title="The unit will operate as Air to Air Refueling tanker for airplanes that have a compatible refueling system">
+                    <input type="checkbox" />
+                    Operate as AAR tanker
                 </label>
+            </div>
+
+            <div id="AWACS-checkbox" class="ol-checkbox">
+                <label title="The unit will operate as AWACS on datalink">
+                    <input type="checkbox" />
+                    Operate as AWACS
+                </label>
+            </div>
+        </div>
+
+        <!-- TACAN options -->
+        <div id="TACAN-options">
+            <div class="ol-group">
+                <h4>TACAN options</h4>
+                <hr>
+            </div>
+            <div id="TACAN-checkbox" class="ol-checkbox">
+                <label title="Turn ON the A/A TACAN">
+                    <input type="checkbox" />
+                    Use A/A TACAN
+                </label>
+            </div>
+
+            <div class="ol-group">
+                <label>A/A TACAN: </label>
+        
+                <div class="ol-group">
+                    <div id="TACAN-channel" class="ol-text-input">
+                        <input type="number" min="1" max="126" step="1" value="40">
+                    </div>
+                
+                    <div id="TACAN-XY" class="ol-select">
+                        <div class="ol-select-value">X</div>
+                        <div class="ol-select-options">
+                        </div>
+                    </div>
+
+                    <div id="TACAN-callsign" class="ol-text-input">
+                        <input type="text" maxlength="3" value="TKR" style="width: 50px">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Radio options -->
+        <div id="radio-options">
+            <div class="ol-group">
+                <h4>Radio options</h4>
+                <hr>
+            </div>
+        
+            <div class="ol-group">
+                <label> Radio frequency: </label>
             
-                <div id="radio-callsign-number" class="ol-text-input">
-                    <input type="number" min="1" max="999" step="1" value="1">
+                <div class="ol-group">
+                    <div id="radio-mhz" class="ol-text-input">
+                        <input type="number" min="1" max="999" step="1" value="260">
+                    </div>
+                                    
+                    <div id="radio-decimals" class="ol-select">
+                        <div class="ol-select-value">.000</div>
+                        <div class="ol-select-options">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="ol-group">
+                <label> Radio callsign: </label>
+
+                <div class="ol-group">
+                    <div id="radio-callsign" class="ol-select">
+                        <div class="ol-select-value"></div>
+                        <div class="ol-select-options">
+                        </div>
+                    </div>
+
+                    <label>
+                        -
+                    </label>
+                
+                    <div id="radio-callsign-number" class="ol-text-input">
+                        <input type="number" min="1" max="999" step="1" value="1">
+                    </div>
                 </div>
             </div>
         </div>
