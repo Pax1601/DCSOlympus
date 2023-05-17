@@ -6,6 +6,7 @@ export class AircraftDatabase extends UnitDatabase {
       this.blueprints = {
          "A-10C_2": {
             "name": "A-10C_2",
+            "era": ["Late Cold War", "Modern"],
             "label": "A-10C Warthog",
             "shortLabel": "10",
             "loadouts": [
@@ -108,6 +109,7 @@ export class AircraftDatabase extends UnitDatabase {
          "AJS37": {
             "name": "AJS37",
             "label": "AJS37 Viggen",
+            "era": ["Mid Cold War", "Late Cold War"],
             "shortLabel": "37",
             "loadouts": [
                {
@@ -189,6 +191,7 @@ export class AircraftDatabase extends UnitDatabase {
          "AV8BNA": {
             "name": "AV8BNA",
             "label": "AV8BNA Harrier",
+            "era": ["Late Cold War", "Modern"],
             "shortLabel": "8",
             "loadouts": [
                {
@@ -256,6 +259,7 @@ export class AircraftDatabase extends UnitDatabase {
          "C-101CC": {
             "name": "C-101CC",
             "label": "C-101CC",
+            "era": ["Late Cold War", "Modern"],
             "shortLabel": "101",
             "loadouts": [
                {
@@ -316,9 +320,47 @@ export class AircraftDatabase extends UnitDatabase {
             ],
             "filename": "c-101.png"
          },
+         "H-6J": {
+            "name": "H-6J",
+            "label": "H-6J Badger,
+            "era": ["Mid Cold War, Late Cold War", "Modern"],
+            "shortLabel": "H6",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "250-3 LD Bomb",
+                        "quantity": 36
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "250-3 LD Bomb x 36",
+                  "name": "Heavy / Bombs / Long Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "KD-20",
+                        "quantity": 4
+                     }
+                  ],
+                  "roles": [
+                     "Anti-Ship"
+                  ],
+                  "code": "KD-20 x 4",
+                  "name": "Heavy / KD-20 / Long Range"
+               }
+            ],
+            "filename": "h-6.png"
+         },
          "J-11A": {
             "name": "J-11A",
             "label": "J-11A Flaming Dragon",
+            "era": ["Modern"],
             "shortLabel": "11",
             "loadouts": [
                {
@@ -392,6 +434,7 @@ export class AircraftDatabase extends UnitDatabase {
          "JF-17": {
             "name": "JF-17",
             "label": "JF-17 Thunder",
+            "era": ["Modern"],
             "shortLabel": "17",
             "loadouts": [
                {
@@ -485,6 +528,7 @@ export class AircraftDatabase extends UnitDatabase {
          "F-16C_50": {
             "name": "F-16C_50",
             "label": "F-16C Viper",
+            "era": ["Late Cold War", "Modern"],
             "shortLabel": "16",
             "loadouts": [
                {
@@ -594,6 +638,7 @@ export class AircraftDatabase extends UnitDatabase {
          "F-5E-3": {
             "name": "F-5E-3",
             "label": "F-5E Tiger",
+            "era": ["Mid Cold War", "Late Cold War"],
             "shortLabel": "5",
             "loadouts": [
                {
@@ -653,6 +698,7 @@ export class AircraftDatabase extends UnitDatabase {
          "F-86F Sabre": {
             "name": "F-86F Sabre",
             "label": "F-86F Sabre",
+            "era": ["Early Cold War, Mid Cold War"],
             "shortLabel": "86",
             "loadouts": [
                {
@@ -714,6 +760,7 @@ export class AircraftDatabase extends UnitDatabase {
          "F-14A-135-GR": {
             "name": "F-14A-135-GR",
             "label": "F-14A-135-GR Tomcat",
+            "era": ["Mid Cold War", "Late Cold War", "Modern"],
             "shortLabel": "14A",
             "loadouts": [
                {
@@ -811,6 +858,7 @@ export class AircraftDatabase extends UnitDatabase {
          "F-14B": {
             "name": "F-14B",
             "label": "F-14B Tomcat",
+            "era": ["Late Cold War", "Modern"],
             "shortLabel": "14B",
             "loadouts": [
                {
@@ -907,6 +955,7 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "FA-18C_hornet": {
             "name": "FA-18C_hornet",
+            "era": ["Late Cold War", "Modern"],
             "label": "F/A-18C",
             "shortLabel": "18",
             "loadouts": [
@@ -1053,6 +1102,7 @@ export class AircraftDatabase extends UnitDatabase {
          "I-16": {
             "name": "I-16",
             "label": "I-16",
+            "era": ["WW2"],
             "shortLabel": "I16",
             "loadouts": [
                {
@@ -1072,6 +1122,7 @@ export class AircraftDatabase extends UnitDatabase {
          "L-39ZA": {
             "name": "L-39ZA",
             "label": "L-39ZA",
+            "era": ["Mid Cold War", "Late Cold War"],
             "shortLabel": "39",
             "loadouts": [
                {
@@ -1133,6 +1184,7 @@ export class AircraftDatabase extends UnitDatabase {
          "M-2000C": {
             "name": "M-2000C",
             "label": "M-2000C Mirage",
+            "era": ["Late Cold War", "Modern"],
             "shortLabel": "M2KC",
             "loadouts": [
                {
@@ -1222,6 +1274,7 @@ export class AircraftDatabase extends UnitDatabase {
          "MB-339A": {
             "name": "MB-339A",
             "label": "MB-339A",
+            "era": ["Mid Cold War", "Late Cold War"],
             "shortLabel": "339A",
             "loadouts": [
                {
@@ -1289,6 +1342,7 @@ export class AircraftDatabase extends UnitDatabase {
          "MiG-19P": {
             "name": "MiG-19P",
             "label": "MiG-19 Farmer",
+            "era": ["Early Cold War", "Mid Cold War"],
             "shortLabel": "19",
             "loadouts": [
                {
@@ -1358,6 +1412,7 @@ export class AircraftDatabase extends UnitDatabase {
          "MiG-21Bis": {
             "name": "MiG-21Bis",
             "label": "MiG-21 Fishbed",
+            "era": ["Mid Cold War", "Late Cold War"],
             "shortLabel": "21",
             "loadouts": [
                {
@@ -1477,6 +1532,7 @@ export class AircraftDatabase extends UnitDatabase {
          "Mirage-F1EE": {
             "name": "Mirage-F1EE",
             "label": "Mirage-F1EE",
+            "era": ["Mid Cold War", "Late Cold War"],
             "shortLabel": "F1EE",
             "loadouts": [
                {
@@ -1533,10 +1589,331 @@ export class AircraftDatabase extends UnitDatabase {
             ],
             "filename": "f-5.png"
          },
+         "A-20G": {
+            "name": "A-20G",
+            "label": "A-20G Havoc",
+            "era": ["WW2"],
+            "shortLabel": "A20",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "12.7mm M2 HMG",
+                        "quantity": 6
+                     },
+                     {
+                        "name": "500lb Bomb LD",
+                        "quantity": 4
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "500 lb GP bomb LD*4",
+                  "name": "Medium / Bombs / Medium Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+
+                  ],
+                  "roles": [
+                     ""
+                  ],
+                  "code": "",
+                  "name": "Empty Loadout"
+               }
+            ],
+            "filename": "a-20.png"
+         },
+         "Bf-109K-4": {
+            "name": "Bf-109K-4",
+            "label": "Bf-109K-4 Fritz",
+            "era": ["WW2"],
+            "shortLabel": "109",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "30mm MK108 Gun",
+                        "quantity": 1
+                     },
+                     {
+                        "name": "13mm MG131 Gun",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "SC500",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "500 lb GP bomb LD*4",
+                  "name": "Medium / Bombs / Short Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "30mm MK108 Gun",
+                        "quantity": 1
+                     },
+                     {
+                        "name": "13mm MG131 Gun",
+                        "quantity": 2
+                     },
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "",
+                  "name": "Light / Guns / Short Range"
+               }
+            ],
+            "filename": "bf109.png"
+         },
+         "FW-190A8": {
+            "name": "FW-190A8",
+            "label": "FW-190A8 Bosch",
+            "era": ["WW2"],
+            "shortLabel": "190A8",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "20mm MG151 Gun",
+                        "quantity": 4
+                     },
+                     {
+                        "name": "13mm MG131 Gun",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "SD500",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "SD 500 A",
+                  "name": "Medium / Bombs / Short Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "20mm MG151 Gun",
+                        "quantity": 4
+                     },
+                     {
+                        "name": "13mm MG131 Gun",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "",
+                  "name": "Light / Guns / Short Range"
+               }
+            ],
+            "filename": "fw190.png"
+         },
+         "FW-190D9": {
+            "name": "FW-190D9",
+            "label": "FW-190D9 Jerry",
+            "era": ["WW2"],
+            "shortLabel": "190D9",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "20mm MG151 Gun",
+                        "quantity": 4
+                     },
+                     {
+                        "name": "13mm MG131 Gun",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "SC500",
+                        "quantity": 1
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "SD 500 A",
+                  "name": "Medium / Bombs / Short Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "20mm MG151 Gun",
+                        "quantity": 4
+                     },
+                     {
+                        "name": "13mm MG131 Gun",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "",
+                  "name": "Light / Guns / Short Range"
+               }
+            ],
+            "filename": "fw190.png"
+         },
+         "MosquitoFBMkVI": {
+            "name": "MosquitoFBMkVI",
+            "label": "Mosquito FB MkVI",
+            "era": ["WW2"],
+            "shortLabel": "Mosquito",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "20mm Hispano Gun",
+                        "quantity": 4
+                     },
+                     {
+                        "name": "7.7mm MG",
+                        "quantity": 4
+                     },
+                     {
+                        "name": "500 lb GP Mk.V",
+                        "quantity": 2
+                     },
+                     {
+                        "name": "500 lb GP Short tail",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "500 lb GP Mk.V*2, 500 lb GP Short tail*2",
+                  "name": "Medium / Bombs / Medium Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "20mm Hispano Gun",
+                        "quantity": 4
+                     },
+                     {
+                        "name": "7.7mm MG",
+                        "quantity": 4
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "",
+                  "name": "Light / Guns / Medium Range"
+               }
+            ],
+            "filename": "mosquito.png"
+         },
+         "P-47D-40": {
+            "name": "P-47D-40",
+            "label": "P-47D Thunderbolt",
+            "era": ["WW2"],
+            "shortLabel": "P47",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "12.7mm HMG",
+                        "quantity": 8
+                     },
+                     {
+                        "name": "AN-M65",
+                        "quantity": 2
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "AN-M65*2",
+                  "name": "Medium / Bombs / Medium Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "12.7mm HMG",
+                        "quantity": 8
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "",
+                  "name": "Light / Guns / Medium Range"
+               }
+            ],
+            "filename": "p-47.png"
+         },
+         "P-51D-30-NA": {
+            "name": "P-51D-30-NA",
+            "label": "P-51D Mustang",
+            "era": ["WW2", "Early Cold War"],
+            "shortLabel": "P51",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "12.7mm HMG",
+                        "quantity": 6
+                     },
+                     {
+                        "name": "HVAR",
+                        "quantity": 10
+                     }
+                  ],
+                  "roles": [
+                     "Strike"
+                  ],
+                  "code": "HVAR*10",
+                  "name": "Medium / Rockets / Medium Range"
+               },
+               {
+                  "fuel": 1,
+                  "items": [
+                     {
+                        "name": "12.7mm HMG",
+                        "quantity": 6
+                     }
+                  ],
+                  "roles": [
+                     "CAP"
+                  ],
+                  "code": "",
+                  "name": "Light / Guns / Medium Range"
+               }
+            ],
+            "filename": "p-51.png"
+         },
          "A-50": {
             "name": "A-50",
             "label": "A-50 Mainstay",
-            "shortLabel": "50",
+            "era": ["Late Cold War", "Modern"],
+            "shortLabel": "A50",
             "loadouts": [
                {
                   "fuel": 1,
@@ -1566,6 +1943,7 @@ export class AircraftDatabase extends UnitDatabase {
          "An-26B": {
             "name": "An-26B",
             "label": "An-26B Curl",
+            "era": ["Mid Cold War", "Late Cold War", "Modern"],
             "shortLabel": "26",
             "loadouts": [
                {
@@ -1585,6 +1963,7 @@ export class AircraftDatabase extends UnitDatabase {
          "An-30M": {
             "name": "An-30M",
             "label": "An-30M Clank",
+            "era": ["Mid Cold War", "Late Cold War", "Modern"],
             "shortLabel": "30",
             "loadouts": [
                {
@@ -1604,6 +1983,7 @@ export class AircraftDatabase extends UnitDatabase {
          "B-1B": {
             "name": "B-1B",
             "label": "B-1B Lancer",
+            "era": ["Late Cold War", "Modern"],
             "shortLabel": "1",
             "loadouts": [
                {
@@ -1637,6 +2017,7 @@ export class AircraftDatabase extends UnitDatabase {
          "B-52H": {
             "name": "B-52H",
             "label": "B-52H Stratofortress",
+            "era": ["Early Cold War", "Mid Cold War", "Late Cold War", "Modern"],
             "shortLabel": "52",
             "loadouts": [
                {
@@ -1670,6 +2051,7 @@ export class AircraftDatabase extends UnitDatabase {
          "C-130": {
             "name": "C-130",
             "label": "C-130 Hercules",
+            "era": ["Early Cold War", "Mid Cold War", "Late Cold War", "Modern"],
             "shortLabel": "130",
             "loadouts": [
                {
@@ -1689,6 +2071,7 @@ export class AircraftDatabase extends UnitDatabase {
          "C-17A": {
             "name": "C-17A",
             "label": "C-17A Globemaster",
+            "era": ["Modern"],
             "shortLabel": "C17",
             "loadouts": [
                {
@@ -1708,6 +2091,7 @@ export class AircraftDatabase extends UnitDatabase {
          "E-3A": {
             "name": "E-3A",
             "label": "E-3A Sentry",
+            "era": ["Mid Cold War", "Late Cold War", "Modern"],
             "shortLabel": "E3",
             "loadouts": [
                {
@@ -1727,6 +2111,7 @@ export class AircraftDatabase extends UnitDatabase {
          "E-2C": {
             "name": "E-2C",
             "label": "E-2C Hawkeye",
+            "era": ["Mid Cold War", "Late Cold War", "Modern"],
             "shortLabel": "2C",
             "loadouts": [
                {
@@ -1746,6 +2131,7 @@ export class AircraftDatabase extends UnitDatabase {
          "F-117A": {
             "name": "F-117A",
             "label": "F-117A Nighthawk",
+            "era": ["Late Cold War", "Modern"],
             "shortLabel": "117",
             "loadouts": [
                {
@@ -1779,6 +2165,7 @@ export class AircraftDatabase extends UnitDatabase {
          "F-15C": {
             "name": "F-15C",
             "label": "F-15C Eagle",
+            "era": ["Late Cold War", "Modern"],
             "shortLabel": "15",
             "loadouts": [
                {
@@ -1842,6 +2229,7 @@ export class AircraftDatabase extends UnitDatabase {
          "F-15E": {
             "name": "F-15E",
             "label": "F-15E Strike Eagle",
+            "era": ["Late Cold War", "Modern"],
             "shortLabel": "15",
             "loadouts": [
                {
@@ -1921,6 +2309,7 @@ export class AircraftDatabase extends UnitDatabase {
          "F-4E": {
             "name": "F-4E",
             "label": "F-4E Phantom II",
+            "era": ["Mid Cold War", "Late Cold War"],
             "shortLabel": "4",
             "loadouts": [
                {
@@ -2010,6 +2399,7 @@ export class AircraftDatabase extends UnitDatabase {
          "IL-76MD": {
             "name": "IL-76MD",
             "label": "IL-76MD Candid",
+            "era": ["Mid Cold War", "Late Cold War", "Modern"],
             "shortLabel": "76",
             "loadouts": [
                {
@@ -2029,6 +2419,7 @@ export class AircraftDatabase extends UnitDatabase {
          "IL-78M": {
             "name": "IL-78M",
             "label": "IL-78M Midas",
+            "era": ["Late Cold War", "Modern"],
             "shortLabel": "78",
             "loadouts": [
                {
@@ -2048,6 +2439,7 @@ export class AircraftDatabase extends UnitDatabase {
          "KC-135": {
             "name": "KC-135",
             "label": "KC-135 Stratotanker",
+            "era": ["Early Cold War", "Mid Cold War", "Late Cold War", "Modern"],
             "shortLabel": "135",
             "loadouts": [
                {
@@ -2064,9 +2456,10 @@ export class AircraftDatabase extends UnitDatabase {
             ],
             "filename": "kc-135.png"
          },
-         "KC135MPRS": {
-            "name": "KC135MPRS",
+         "KC-135MPRS": {
+            "name": "KC-135MPRS",
             "label": "KC-135 MPRS Stratotanker",
+            "era": ["Early Cold War", "Mid Cold War", "Late Cold War", "Modern"],
             "shortLabel": "135M",
             "loadouts": [
                {
@@ -2086,6 +2479,7 @@ export class AircraftDatabase extends UnitDatabase {
          "MiG-15bis": {
             "name": "MiG-15bis",
             "label": "MiG-15 Fagot",
+            "era": ["Early Cold War", "Mid Cold War"],
             "shortLabel": "M15",
             "loadouts": [
                {
@@ -2133,6 +2527,7 @@ export class AircraftDatabase extends UnitDatabase {
          "MiG-23MLD": {
             "name": "MiG-23MLD",
             "label": "MiG-23 Flogger",
+            "era": ["Mid Cold War", "Late Cold War"],
             "shortLabel": "23",
             "loadouts": [
                {
@@ -2196,6 +2591,7 @@ export class AircraftDatabase extends UnitDatabase {
          "MiG-25RBT": {
             "name": "MiG-25RBT",
             "label": "MiG-25RBT Foxbat",
+            "era": ["Mid Cold War", "Late Cold War"],
             "shortLabel": "25",
             "loadouts": [
                {
@@ -2247,6 +2643,7 @@ export class AircraftDatabase extends UnitDatabase {
          "MiG-25PD": {
             "name": "MiG-25PD",
             "label": "MiG-25PD Foxbat",
+            "era": ["Mid Cold War", "Late Cold War"],
             "shortLabel": "25",
             "loadouts": [
                {
@@ -2284,6 +2681,7 @@ export class AircraftDatabase extends UnitDatabase {
          "MiG-27K": {
             "name": "MiG-27K",
             "label": "MiG-27K Flogger-D",
+            "era": ["Mid Cold War", "Late Cold War"],
             "shortLabel": "27",
             "loadouts": [
                {
@@ -2353,6 +2751,7 @@ export class AircraftDatabase extends UnitDatabase {
          "MiG-29A": {
             "name": "MiG-29A",
             "label": "MiG-29A Fulcrum",
+            "era": ["Late Cold War", "Modern"],
             "shortLabel": "29A",
             "loadouts": [
                {
@@ -2438,6 +2837,7 @@ export class AircraftDatabase extends UnitDatabase {
          "MiG-29S": {
             "name": "MiG-29S",
             "label": "MiG-29S Fulcrum",
+            "era": ["Late Cold War", "Modern"],
             "shortLabel": "29",
             "loadouts": [
                {
@@ -2545,6 +2945,7 @@ export class AircraftDatabase extends UnitDatabase {
          "MiG-31": {
             "name": "MiG-31",
             "label": "MiG-31 Foxhound",
+            "era": ["Late Cold War", "Modern"],
             "shortLabel": "31",
             "loadouts": [
                {
@@ -2582,6 +2983,7 @@ export class AircraftDatabase extends UnitDatabase {
          "MQ-9 Reaper": {
             "name": "MQ-9 Reaper",
             "label": "MQ-9 Reaper",
+            "era": ["Modern"],
             "shortLabel": "9",
             "loadouts": [
                {
@@ -2615,6 +3017,7 @@ export class AircraftDatabase extends UnitDatabase {
          "Su-17M4": {
             "name": "Su-17M4",
             "label": "Su-17M4 Fitter",
+            "era": ["Mid Cold War", "Late Cold War"],
             "shortLabel": "17M4",
             "loadouts": [
                {
@@ -2656,6 +3059,7 @@ export class AircraftDatabase extends UnitDatabase {
          "Su-24M": {
             "name": "Su-24M",
             "label": "Su-24M Fencer",
+            "era": ["Mid Cold War", "Late Cold War", "Modern"],
             "shortLabel": "24",
             "loadouts": [
                {
@@ -2692,7 +3096,8 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "Su-25": {
             "name": "Su-25",
-            "label": "Su-25 Frogfoot",
+            "label": "Su-25A Frogfoot",
+            "era": ["Late Cold War"],
             "shortLabel": "S25",
             "loadouts": [
                {
@@ -2763,7 +3168,8 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "Su-25T": {
             "name": "Su-25",
-            "label": "Su-25 Frogfoot",
+            "label": "Su-25T Frogfoot",
+            "era": ["Late Cold War", "Modern"],
             "shortLabel": "S25T",
             "loadouts": [
                {
@@ -2869,6 +3275,7 @@ export class AircraftDatabase extends UnitDatabase {
          "Su-27": {
             "name": "Su-27",
             "label": "Su-27 Flanker",
+            "era": ["Late Cold War", "Modern"],
             "shortLabel": "27",
             "loadouts": [
                {
@@ -2968,6 +3375,7 @@ export class AircraftDatabase extends UnitDatabase {
          "Su-30": {
             "name": "Su-30",
             "label": "Su-30 Super Flanker",
+            "era": ["Modern"],
             "shortLabel": "30",
             "loadouts": [
                {
@@ -3057,6 +3465,7 @@ export class AircraftDatabase extends UnitDatabase {
          "Su-33": {
             "name": "Su-33",
             "label": "Su-33 Naval Flanker",
+            "era": ["Late Cold War", "Modern"],
             "shortLabel": "33",
             "loadouts": [
                {
@@ -3146,6 +3555,7 @@ export class AircraftDatabase extends UnitDatabase {
          "Su-34": {
             "name": "Su-34",
             "label": "Su-34 Hellduck",
+            "era": ["Modern"],
             "shortLabel": "34",
             "loadouts": [
                {
@@ -3191,6 +3601,7 @@ export class AircraftDatabase extends UnitDatabase {
          "Tornado IDS": {
             "name": "Tornado IDS",
             "label": "Tornado IDS",
+            "era": ["Late Cold War", "Modern"],
             "shortLabel": "IDS",
             "loadouts": [
                {
@@ -3232,6 +3643,7 @@ export class AircraftDatabase extends UnitDatabase {
          "Tornado GR4": {
             "name": "Tornado GR4",
             "label": "Tornado GR4",
+            "era": ["Late Cold War", "Modern"],
             "shortLabel": "GR4",
             "loadouts": [
                {
@@ -3325,6 +3737,7 @@ export class AircraftDatabase extends UnitDatabase {
          "Tu-142": {
             "name": "Tu-142",
             "label": "Tu-142 Bear",
+            "era": ["Mid Cold War", "Late Cold War", "Modern"],
             "shortLabel": "142",
             "loadouts": [
                {
@@ -3358,6 +3771,7 @@ export class AircraftDatabase extends UnitDatabase {
          "Tu-160": {
             "name": "Tu-160",
             "label": "Tu-160 Blackjack",
+            "era": ["Late Cold War", "Modern"],
             "shortLabel": "160",
             "loadouts": [
                {
@@ -3391,6 +3805,7 @@ export class AircraftDatabase extends UnitDatabase {
          "Tu-22M3": {
             "name": "Tu-22M3",
             "label": "Tu-22M3 Backfire",
+            "era": ["Late Cold War", "Modern"],
             "shortLabel": "T22",
             "loadouts": [
                {
@@ -3438,6 +3853,7 @@ export class AircraftDatabase extends UnitDatabase {
          "Tu-95MS": {
             "name": "Tu-95MS",
             "label": "Tu-95MS Bear",
+            "era": ["Mid Cold War", "Late Cold War", "Modern"],
             "shortLabel": "95",
             "loadouts": [
                {
