@@ -9,11 +9,12 @@ import { AIC } from "./aic/aic";
 import { ATC } from "./atc/atc";
 import { FeatureSwitches } from "./featureswitches";
 import { LogPanel } from "./panels/logpanel";
-import { getAirbases, getBullseye, getConfig, getFreezed, getMission, getUnits, setAddress, setCredentials, setFreezed, startUpdate, toggleDemoEnabled } from "./server/server";
+import { getConfig, getPaused, setAddress, setCredentials, setPaused, startUpdate, toggleDemoEnabled } from "./server/server";
 import { UnitDataTable } from "./units/unitdatatable";
 import { keyEventWasInInput } from "./other/utils";
 import { Popup } from "./popups/popup";
 import { Dropdown } from "./controls/dropdown";
+import { HotgroupPanel } from "./panels/hotgrouppanel";
 
 var map: Map;
 
@@ -28,6 +29,7 @@ var connectionStatusPanel: ConnectionStatusPanel;
 var unitControlPanel: UnitControlPanel;
 var mouseInfoPanel: MouseInfoPanel;
 var logPanel: LogPanel;
+var hotgroupPanel: HotgroupPanel;
 
 var infoPopup: Popup;
 
@@ -50,6 +52,7 @@ function setup() {
     unitControlPanel = new UnitControlPanel("unit-control-panel");
     connectionStatusPanel = new ConnectionStatusPanel("connection-status-panel");
     mouseInfoPanel = new MouseInfoPanel("mouse-info-panel");
+    hotgroupPanel = new HotgroupPanel("hotgroup-panel");
     //logPanel = new LogPanel("log-panel");
 
     /* Popups */
@@ -135,7 +138,7 @@ function setupEvents() {
                 unitDataTable.toggle();
                 break
             case "Space":
-                setFreezed(!getFreezed());
+                setPaused(!getPaused());
                 break;
             case "KeyW":
             case "KeyA":
@@ -146,6 +149,23 @@ function setupEvents() {
             case "ArrowUp":
             case "ArrowDown":
                 getMap().handleMapPanning(ev);
+                break;
+            case "Digit1":
+            case "Digit2":
+            case "Digit3":
+            case "Digit4":
+            case "Digit5":
+            case "Digit6":
+            case "Digit7":
+            case "Digit8":
+            case "Digit9":
+                // Using the substring because the key will be invalid when pressing the Shift key
+                if (ev.ctrlKey && ev.shiftKey)
+                    getUnitsManager().selectedUnitsAddToHotgroup(parseInt(ev.code.substring(5)));   
+                else if (ev.ctrlKey && !ev.shiftKey)
+                    getUnitsManager().selectedUnitsSetHotgroup(parseInt(ev.code.substring(5)));
+                else
+                    getUnitsManager().selectUnitsByHotgroup(parseInt(ev.code.substring(5)));
                 break;
         }
     });
@@ -230,6 +250,10 @@ export function getLogPanel() {
 
 export function getConnectionStatusPanel() {
     return connectionStatusPanel;
+}
+
+export function getHotgroupPanel() {
+    return hotgroupPanel;
 }
 
 export function setActiveCoalition(newActiveCoalition: string) {

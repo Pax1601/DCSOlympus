@@ -857,3 +857,36 @@ body[data-hide-navyunit] #unit-visibility-control-navyunit {
         opacity: 0;
     }
 }
+
+#hotgroup-panel {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    translate: -50%;
+    z-index: 9999;
+    display: flex;
+    column-gap: 10px;
+}
+
+#hotgroup-panel>div {
+    width: 50px;
+    height: 50px;
+    background-color: var(--background-steel);
+    border-radius: var(--border-radius-sm);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    border: 0px solid transparent;
+}
+
+#hotgroup-panel>div:hover {
+    cursor: pointer;
+    border: 2px solid white;
+}
+
+.hotgroup-selector>.unit-hotgroup {
+    display: flex;
+    translate: 0% -300%;
+}

@@ -3,7 +3,7 @@ import { getConnectionStatusPanel, getInfoPopup, getMissionData, getUnitDataTabl
 import { SpawnOptions } from '../controls/mapcontextmenu';
 
 var connected: boolean = false;
-var freezed: boolean = false;
+var paused: boolean = false;
 
 var REST_ADDRESS = "http://localhost:30000/olympus";
 var DEMO_ADDRESS = window.location.href + "demo";
@@ -246,7 +246,7 @@ export function startUpdate() {
 export function requestUpdate() {
     /* Main update rate = 250ms is minimum time, equal to server update time. */
     getUnits((data: UnitsData) => {
-        if (!getFreezed()) {
+        if (!getPaused()) {
             getUnitsManager()?.update(data);
             checkSessionHash(data.sessionHash);
         }
@@ -259,7 +259,7 @@ export function requestUpdate() {
 export function requestRefresh() {
     /* Main refresh rate = 5000ms. */
     getUnits((data: UnitsData) => {
-        if (!getFreezed()) {
+        if (!getPaused()) {
             getUnitsManager()?.update(data);
             getAirbases((data: AirbasesData) => getMissionData()?.update(data));
             getBullseye((data: BullseyesData) => getMissionData()?.update(data));
@@ -300,11 +300,11 @@ export function getConnected() {
     return connected;
 }
 
-export function setFreezed(newFreezed: boolean) {
-    freezed = newFreezed;
-    freezed ? getInfoPopup().setText("Freezed") : getInfoPopup().setText("Unfreezed");
+export function setPaused(newPaused: boolean) {
+    paused = newPaused;
+    paused ? getInfoPopup().setText("View paused") : getInfoPopup().setText("View unpaused");
 }
 
-export function getFreezed() {
-    return freezed;
+export function getPaused() {
+    return paused;
 }
