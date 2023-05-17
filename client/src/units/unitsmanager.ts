@@ -19,7 +19,7 @@ export class UnitsManager {
         document.addEventListener('paste', () => this.pasteUnits());
         document.addEventListener('unitSelection', (e: CustomEvent) => this.#onUnitSelection(e.detail));
         document.addEventListener('unitDeselection', (e: CustomEvent) => this.#onUnitDeselection(e.detail));
-        document.addEventListener('keydown', (event) => this.#onKeyDown(event));
+        document.addEventListener('keyup', (event) => this.#onKeyUp(event));
         document.addEventListener('deleteSelectedUnits', () => this.selectedUnitsDelete())
     }
 
@@ -329,8 +329,8 @@ export class UnitsManager {
     }
 
     /***********************************************/
-    #onKeyDown(event: KeyboardEvent) {
-        if (!keyEventWasInInput(event) && event.key === "Delete") {
+    #onKeyUp(event: KeyboardEvent) {
+        if (!keyEventWasInInput(event) && event.key === "Delete" && confirm( "Are you sure you want to delete?" ) ) {
             this.selectedUnitsDelete();
         }
     }

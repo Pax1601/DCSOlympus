@@ -94,6 +94,7 @@ function readConfig(config: any) {
 }
 
 function setupEvents() {
+
     /* Generic clicks */
     document.addEventListener("click", (ev) => {
         if (ev instanceof MouseEvent && ev.target instanceof HTMLElement) {

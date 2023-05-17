@@ -371,7 +371,6 @@ export class Unit extends Marker {
     }
 
     delete() {
-        // TODO: add confirmation popup
         deleteUnit(this.ID);
     }
 
