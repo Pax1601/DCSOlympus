@@ -1,3 +1,5 @@
+import { getMissionData } from "..";
+import { getConnected } from "../server/server";
 import { ATCBoard } from "./atcboard";
 import { ATCBoardGround } from "./board/ground";
 import { ATCBoardTower } from "./board/tower";
@@ -47,6 +49,10 @@ class ATCDataHandler {
     startUpdates() {
             
         this.#updateInterval = window.setInterval( () => {
+
+            if ( !getConnected() ) {
+                return;
+            }
 
             const aBoardIsVisible = this.#atc.getBoards().some( board => board.boardIsVisible() );
 
@@ -135,7 +141,7 @@ export class ATC {
 
 
     getMissionDateTime() : Date {
-        return new Date( this.getMissionStartDateTime().getTime() + this.getMissionElapsedSeconds() );
+        return new Date( getMissionData().getNowDate() );
     }
 
 
