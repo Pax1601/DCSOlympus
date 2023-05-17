@@ -34,6 +34,7 @@ public:
 	void updateExportData(json::value json);
 	void updateMissionData(json::value json);
 	json::value getData(long long time);
+	virtual wstring getCategory() { return L"No category"; };
 
 	/********** Base data **********/
 	void setAI(bool newAI) { AI = newAI; addMeasure(L"AI", json::value(newAI)); }
@@ -79,17 +80,9 @@ public:
 	json::value getFlags() { return flags; }
 
 	/********** Formation data **********/
-	void setIsLeader(bool newIsLeader);
-	void setIsWingman(bool newIsWingman);
-	void setLeader(Unit* newLeader);
-	void setWingmen(vector<Unit*> newWingmen);
-	void setFormation(wstring newFormation) { formation = newFormation; addMeasure(L"formation", json::value(formation));}
+	void setLeaderID(int newLeaderID) { leaderID = newLeaderID; addMeasure(L"leaderID", json::value(newLeaderID)); }
 	void setFormationOffset(Offset formationOffset);
-	bool getIsLeader() { return isLeader; }
-	bool getIsWingman() { return isWingman; }
-	Unit* getLeader() { return leader; }
-	vector<Unit*> getWingmen() { return wingmen; }
-	wstring getFormation() { return formation; }
+	int getLeaderID() { return leaderID; }
 	Offset getFormationoffset() { return formationOffset; }
 	
 	/********** Task data **********/
@@ -103,14 +96,13 @@ public:
 	void pushActivePathBack(Coords newActivePathBack);
 	void popActivePathFront();
 	void setTargetID(int newTargetID) { targetID = newTargetID; addMeasure(L"targetID", json::value(newTargetID));}
-	void setIsTanker(bool newIsTanker) { isTanker = newIsTanker; addMeasure(L"isTanker", json::value(newIsTanker));}
-	void setIsAWACS(bool newIsAWACS) { isAWACS = newIsAWACS; addMeasure(L"isAWACS", json::value(newIsAWACS));}
-	void setTACANOn(bool newTACANOn);
+	void setIsTanker(bool newIsTanker);
+	void setIsAWACS(bool newIsAWACS);
 	void setTACANChannel(int newTACANChannel);
 	void setTACANXY(wstring newTACANXY);
 	void setTACANCallsign(wstring newTACANCallsign);
 	void setTACAN();
-	void setRadioOn(bool newRadioOn);
+	void setEPLRS(bool state);
 	void setRadioFrequency(int newRadioFrequency);
 	void setRadioCallsign(int newRadioCallsign);
 	void setRadioCallsignNumber(int newRadioCallsignNumber);
@@ -123,11 +115,9 @@ public:
 	int getTargetID() { return targetID; }
 	bool getIsTanker() { return isTanker; }
 	bool getIsAWACS() { return isAWACS; }
-	bool getTACANOn() { return TACANOn; }
 	int getTACANChannel() { return TACANChannel; }
 	wstring getTACANXY() { return TACANXY; }
 	wstring getTACANCallsign() { return TACANCallsign; }
-	bool getRadioOn() { return radioOn; }
 	int getRadioFrequency() { return radioFrequency; }
 	int getRadioCallsign() { return radioCallsign; }
 	int getRadioCallsignNumber() { return radioCallsignNumber; }
@@ -177,11 +167,7 @@ protected:
 	json::value flags = json::value::null();
 
 	/********** Formation data **********/
-	bool isLeader = false;
-	bool isWingman = false;
-	wstring formation = L"";
-	Unit *leader = nullptr;
-	vector<Unit *> wingmen;
+	int leaderID = NULL;
 	Offset formationOffset = Offset(NULL);
 
 	/********** Task data **********/
@@ -193,11 +179,9 @@ protected:
 	int targetID = NULL;
 	bool isTanker = false;
 	bool isAWACS = false;
-	bool TACANOn = false;
 	int TACANChannel = 40;
 	wstring TACANXY = L"X";
 	wstring TACANCallsign = L"TKR";
-	bool radioOn = false;
 	int radioFrequency = 260000000;	// MHz
 	int radioCallsign = 1;
 	int radioCallsignNumber = 1;
@@ -213,9 +197,10 @@ protected:
 	Coords oldPosition = Coords(0); // Used to approximate speed
 
 	/********** Functions **********/
-	virtual wstring getCategory() { return L"No category"; };
 	wstring getTargetName();
+	wstring getLeaderName();
 	bool isTargetAlive();
+	bool isLeaderAlive();
 	virtual void AIloop() = 0;
 	void addMeasure(wstring key, json::value value);
 };

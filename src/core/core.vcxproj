@@ -185,7 +185,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>include;..\..\third-party\lua\include;..\utils\include;..\shared\include;..\dcstools\include;..\logger\include;..\luatools\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;..\..\third-party\base64\include;..\..\third-party\lua\include;..\utils\include;..\shared\include;..\dcstools\include;..\logger\include;..\luatools\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>

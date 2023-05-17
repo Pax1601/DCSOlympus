@@ -4,7 +4,7 @@
 #include "commands.h"
 #include "scheduler.h"
 #include "defines.h"
-#include "unitsManager.h"
+#include "unitsmanager.h"
 
 #include <chrono>
 using namespace std::chrono;
@@ -20,6 +20,17 @@ Unit::Unit(json::value json, int ID) :
 {
 	log("Creating unit with ID: " + to_string(ID));
 	addMeasure(L"currentState", json::value(L"Idle"));
+
+	addMeasure(L"TACANChannel", json::value(TACANChannel));
+	addMeasure(L"TACANXY", json::value(TACANXY));
+	addMeasure(L"TACANCallsign", json::value(TACANCallsign));
+
+	addMeasure(L"radioFrequency", json::value(radioFrequency));
+	addMeasure(L"radioCallsign", json::value(radioCallsign));
+	addMeasure(L"radioCallsignNumber", json::value(radioCallsignNumber));
+
+	addMeasure(L"ROE", json::value(L"Designated"));
+	addMeasure(L"reactionToThreat", json::value(L"Evade"));
 }
 
 Unit::~Unit()
@@ -108,45 +119,59 @@ json::value Unit::getData(long long time)
 		if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
 			json[L"baseData"][key] = measures[key]->getValue();
 	}
+	if (json[L"baseData"].size() == 0)
+		json.erase(L"baseData");
 
-	/********** Flight data **********/
-	json[L"flightData"] = json::value::object();
-	for (auto key : { L"latitude", L"longitude", L"altitude", L"speed", L"heading"})
-	{
-		if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
-			json[L"flightData"][key] = measures[key]->getValue();
-	}
+	if (alive) {
+		/********** Flight data **********/
+		json[L"flightData"] = json::value::object();
+		for (auto key : { L"latitude", L"longitude", L"altitude", L"speed", L"heading" })
+		{
+			if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
+				json[L"flightData"][key] = measures[key]->getValue();
+		}
+		if (json[L"flightData"].size() == 0)
+			json.erase(L"flightData");
 
-	/********** Mission data **********/
-	json[L"missionData"] = json::value::object();
-	for (auto key : { L"fuel", L"ammo", L"targets", L"hasTask", L"coalition", L"flags"})
-	{
-		if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
-			json[L"missionData"][key] = measures[key]->getValue();
-	}
+		/********** Mission data **********/
+		json[L"missionData"] = json::value::object();
+		for (auto key : { L"fuel", L"ammo", L"targets", L"hasTask", L"coalition", L"flags" })
+		{
+			if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
+				json[L"missionData"][key] = measures[key]->getValue();
+		}
+		if (json[L"missionData"].size() == 0)
+			json.erase(L"missionData");
 
-	/********** Formation data **********/
-	json[L"formationData"] = json::value::object();
-	for (auto key : { L"isLeader", L"isWingman", L"formation", L"wingmenIDs", L"leaderID" })
-	{
-		if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
-			json[L"missionData"][key] = measures[key]->getValue();
-	}
+		/********** Formation data **********/
+		json[L"formationData"] = json::value::object();
+		for (auto key : { L"leaderID" })
+		{
+			if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
+				json[L"formationData"][key] = measures[key]->getValue();
+		}
+		if (json[L"formationData"].size() == 0)
+			json.erase(L"formationData");
 
-	/********** Task data **********/
-	json[L"taskData"] = json::value::object();
-	for (auto key : { L"currentState", L"currentTask", L"targetSpeed", L"targetAltitude", L"activePath", L"isTanker", L"isAWACS", L"TACANChannel", L"TACANXY", L"TACANCallsign", L"radioFrequency", L"radioCallsign", L"radioCallsignNumber"})
-	{
-		if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
-			json[L"taskData"][key] = measures[key]->getValue();
-	}
+		/********** Task data **********/
+		json[L"taskData"] = json::value::object();
+		for (auto key : { L"currentState", L"currentTask", L"targetSpeed", L"targetAltitude", L"activePath", L"isTanker", L"isAWACS", L"TACANChannel", L"TACANXY", L"TACANCallsign", L"radioFrequency", L"radioCallsign", L"radioCallsignNumber" })
+		{
+			if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
+				json[L"taskData"][key] = measures[key]->getValue();
+		}
+		if (json[L"taskData"].size() == 0)
+			json.erase(L"taskData");
 
-	/********** Options data **********/
-	json[L"optionsData"] = json::value::object();
-	for (auto key : { L"ROE", L"reactionToThreat" })
-	{
-		if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
-			json[L"optionsData"][key] = measures[key]->getValue();
+		/********** Options data **********/
+		json[L"optionsData"] = json::value::object();
+		for (auto key : { L"ROE", L"reactionToThreat" })
+		{
+			if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
+				json[L"optionsData"][key] = measures[key]->getValue();
+		}
+		if (json[L"optionsData"].size() == 0)
+			json.erase(L"optionsData");
 	}
 
 	return json;
@@ -154,12 +179,9 @@ json::value Unit::getData(long long time)
 
 void Unit::setActivePath(list<Coords> newPath)
 {
-	if (state != State::WINGMAN && state != State::FOLLOW)
-	{
-		activePath = newPath;
-		resetActiveDestination();
-	}
-
+	activePath = newPath;
+	resetActiveDestination();
+	
 	auto path = json::value::object();
 	if (activePath.size() > 0) {
 		int count = 1;
@@ -223,22 +245,6 @@ int Unit::getCoalitionID()
 		return 2;
 }
 
-void Unit::setLeader(Unit* newLeader) 
-{ 
-	leader = newLeader; 
-	if (leader != nullptr)
-		addMeasure(L"leaderID", json::value(leader->getID()));
-} 
-
-void Unit::setWingmen(vector<Unit*> newWingmen) {
-	wingmen = newWingmen; 
-	auto wingmenIDs = json::value::object();
-	int i = 0;
-	for (auto itr = wingmen.begin(); itr != wingmen.end(); itr++)
-		wingmenIDs[i++] = (*itr)->getID();
-	addMeasure(L"wingmen", wingmenIDs);
-} 
-
 wstring Unit::getTargetName()
 {
 	if (isTargetAlive())
@@ -262,6 +268,29 @@ bool Unit::isTargetAlive()
 		return false;
 }
 
+wstring Unit::getLeaderName()
+{
+	if (isLeaderAlive())
+	{
+		Unit* leader = unitsManager->getUnit(leaderID);
+		if (leader != nullptr)
+			return leader->getUnitName();
+	}
+	return L"";
+}
+
+bool Unit::isLeaderAlive()
+{
+	if (leaderID == NULL)
+		return false;
+
+	Unit* leader = unitsManager->getUnit(leaderID);
+	if (leader != nullptr)
+		return leader->alive;
+	else
+		return false;
+}
+
 void Unit::resetActiveDestination()
 {
 	activeDestination = Coords(NULL);
@@ -271,30 +300,6 @@ void Unit::resetTask()
 {
 	Command* command = dynamic_cast<Command*>(new ResetTask(ID));
 	scheduler->appendCommand(command);
-}
-
-void Unit::setIsLeader(bool newIsLeader) {
-	isLeader = newIsLeader;
-	if (!isLeader) {
-		for (auto wingman : wingmen)
-		{
-			wingman->setFormation(L"");
-			wingman->setIsWingman(false);
-			wingman->setLeader(nullptr);
-		}
-	}
-	addMeasure(L"isLeader", json::value(newIsLeader));
-}
-
-void Unit::setIsWingman(bool newIsWingman)
-{
-	isWingman = newIsWingman;
-	if (isWingman)
-		setState(State::WINGMAN);
-	else
-		setState(State::IDLE);
-
-	addMeasure(L"isWingman", json::value(isWingman));
 }
 
 void Unit::setFormationOffset(Offset newFormationOffset)
@@ -349,9 +354,17 @@ void Unit::landAt(Coords loc) {
 	setState(State::LAND);
 }
 
-void Unit::setTACANOn(bool newTACANOn) { 
-	TACANOn = newTACANOn; 
-	addMeasure(L"TACANOn", json::value(newTACANOn)); 
+void Unit::setIsTanker(bool newIsTanker) { 
+	isTanker = newIsTanker; 
+	resetTask(); 
+	addMeasure(L"isTanker", json::value(newIsTanker));
+}
+
+void Unit::setIsAWACS(bool newIsAWACS) { 
+	isAWACS = newIsAWACS; 
+	resetTask(); 
+	addMeasure(L"isAWACS", json::value(newIsAWACS)); 
+	setEPLRS(true);
 }
 
 void Unit::setTACANChannel(int newTACANChannel) { 
@@ -366,11 +379,6 @@ void Unit::setTACANXY(wstring newTACANXY) {
 void Unit::setTACANCallsign(wstring newTACANCallsign) { 
 	TACANCallsign = newTACANCallsign; 
 	addMeasure(L"TACANCallsign", json::value(newTACANCallsign)); 
-}
-
-void Unit::setRadioOn(bool newRadioOn) { 
-	radioOn = newRadioOn; 
-	addMeasure(L"radioOn", json::value(newRadioOn));
 }
 
 void Unit::setRadioFrequency(int newRadioFrequency) { 
@@ -388,6 +396,19 @@ void Unit::setRadioCallsignNumber(int newRadioCallsignNumber) {
 	addMeasure(L"radioCallsignNumber", json::value(newRadioCallsignNumber)); 
 }
 
+void Unit::setEPLRS(bool state)
+{
+	std::wostringstream commandSS;
+	commandSS << "{"
+		<< "id = 'EPLRS',"
+		<< "params = {"
+		<< "value = " << (state? "true": "false") << ", "
+		<< "}"
+		<< "}";
+	Command* command = dynamic_cast<Command*>(new SetCommand(ID, commandSS.str()));
+	scheduler->appendCommand(command);
+}
+
 void Unit::setTACAN()
 {
 	std::wostringstream commandSS;
@@ -395,9 +416,9 @@ void Unit::setTACAN()
 		<<	"id = 'ActivateBeacon',"
 		<<		"params = {"
 		<<			"type = " << ((TACANXY.compare(L"X") == 0)? 4: 5) << ","
-		<<			"system = 4,"
-		<<			"name = Olympus_TACAN,"
-		<<			"callsign = " << TACANCallsign << ", "
+		<<			"system = 3,"
+		<<			"name = \"Olympus_TACAN\","
+		<<			"callsign = \"" << TACANCallsign << "\", "
 		<<			"frequency = " << TACANChannelToFrequency(TACANChannel, TACANXY) << ","
 		<<		"}"
 		<<	"}";

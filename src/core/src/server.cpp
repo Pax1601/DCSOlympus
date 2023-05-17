@@ -6,9 +6,11 @@
 #include "luatools.h"
 #include <exception>
 #include <stdexcept>
+#include "base64.hpp"
 
 #include <chrono>
 using namespace std::chrono;
+using namespace base64;
 
 extern UnitsManager* unitsManager; 
 extern Scheduler* scheduler;
@@ -54,10 +56,10 @@ void Server::stop(lua_State* L)
 void Server::handle_options(http_request request)
 {
     http_response response(status_codes::OK);
-    response.headers().add(U("Allow"), U("GET, POST, PUT, OPTIONS"));
+    response.headers().add(U("Allow"), U("GET, PUT, OPTIONS"));
     response.headers().add(U("Access-Control-Allow-Origin"), U("*"));
-    response.headers().add(U("Access-Control-Allow-Methods"), U("GET, POST, PUT, OPTIONS"));
-    response.headers().add(U("Access-Control-Allow-Headers"), U("Content-Type"));
+    response.headers().add(U("Access-Control-Allow-Methods"), U("GET, PUT, OPTIONS"));
+    response.headers().add(U("Access-Control-Allow-Headers"), U("Content-Type, Authorization"));
 
     request.reply(response);
 }
@@ -68,87 +70,102 @@ void Server::handle_get(http_request request)
     lock_guard<mutex> guard(mutexLock);
 
     http_response response(status_codes::OK);
-    response.headers().add(U("Allow"), U("GET, POST, PUT, OPTIONS"));
-    response.headers().add(U("Access-Control-Allow-Origin"), U("*"));
-    response.headers().add(U("Access-Control-Allow-Methods"), U("GET, POST, PUT, OPTIONS"));
-    response.headers().add(U("Access-Control-Allow-Headers"), U("Content-Type"));
+    string authorization = to_base64("admin:" + to_string(password));
+    if (password == L"" || (request.headers().has(L"Authorization") && request.headers().find(L"Authorization")->second == L"Basic " + to_wstring(authorization)))
+    {
+        std::exception_ptr eptr;
+        try {
+            auto answer = json::value::object();
+            auto path = uri::split_path(uri::decode(request.relative_uri().path()));
 
-    std::exception_ptr eptr;
-    try {
-        auto answer = json::value::object();
-        auto path = uri::split_path(uri::decode(request.relative_uri().path()));
-
-        if (path.size() > 0)
-        {
-            if (path[0] == UNITS_URI)
+            if (path.size() > 0)
             {
-                map<utility::string_t, utility::string_t> query = request.relative_uri().split_query(request.relative_uri().query());
-                long long time = 0;
-                if (query.find(L"time") != query.end())
+                if (path[0] == UNITS_URI)
                 {
-                    try {
-                        time = stoll((*(query.find(L"time"))).second);   
+                    map<utility::string_t, utility::string_t> query = request.relative_uri().split_query(request.relative_uri().query());
+                    long long time = 0;
+                    if (query.find(L"time") != query.end())
+                    {
+                        try {
+                            time = stoll((*(query.find(L"time"))).second);
+                        }
+                        catch (const std::exception& e) {
+                            time = 0;
+                        }
                     }
-                    catch (const std::exception& e) {
-                        time = 0;
-                    }
+                    unitsManager->getData(answer, time);
                 }
-                unitsManager->getData(answer, time);
-            }
-            else if (path[0] == LOGS_URI)
-            {
-                auto logs = json::value::object();
-                getLogsJSON(logs, 100);   // By reference, for thread safety. Get the last 100 log entries
-                answer[L"logs"] = logs;
-            }
-            else if (path[0] == AIRBASES_URI)
-                answer[L"airbases"] = airbases;
-            else if (path[0] == BULLSEYE_URI)
-                answer[L"bullseyes"] = bullseyes;
-            else if (path[0] == MISSION_URI)
-                answer[L"mission"] = mission;
+                else if (path[0] == LOGS_URI)
+                {
+                    auto logs = json::value::object();
+                    getLogsJSON(logs, 100);   // By reference, for thread safety. Get the last 100 log entries
+                    answer[L"logs"] = logs;
+                }
+                else if (path[0] == AIRBASES_URI)
+                    answer[L"airbases"] = airbases;
+                else if (path[0] == BULLSEYE_URI)
+                    answer[L"bullseyes"] = bullseyes;
+                else if (path[0] == MISSION_URI)
+                    answer[L"mission"] = mission;
 
-            milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
-            answer[L"time"] = json::value::string(to_wstring(ms.count()));
-            answer[L"sessionHash"] = json::value::string(to_wstring(sessionHash));
+                milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
+                answer[L"time"] = json::value::string(to_wstring(ms.count()));
+                answer[L"sessionHash"] = json::value::string(to_wstring(sessionHash));
+            }
+
+            response.set_body(answer);
         }
+        catch (...) {
+            eptr = std::current_exception(); // capture
+        }
+        handle_eptr(eptr);
+    }
+    else {
+        response = status_codes::Unauthorized;
+    }
 
-        response.set_body(answer);
-    }
-    catch (...) {
-        eptr = std::current_exception(); // capture
-    }
-    handle_eptr(eptr);
+    response.headers().add(U("Allow"), U("GET, PUT, OPTIONS"));
+    response.headers().add(U("Access-Control-Allow-Origin"), U("*"));
+    response.headers().add(U("Access-Control-Allow-Methods"), U("GET, PUT, OPTIONS"));
+    response.headers().add(U("Access-Control-Allow-Headers"), U("Content-Type, Authorization"));
     
     request.reply(response);
 }
 
 void Server::handle_request(http_request request, function<void(json::value const&, json::value&)> action)
 {
-    auto answer = json::value::object();
-    request.extract_json().then([&answer, &action](pplx::task<json::value> task) 
-    {
-        try
-        {
-            auto const& jvalue = task.get();
-
-            if (!jvalue.is_null())
-            {
-                action(jvalue, answer);
-            }
-        }
-        catch (http_exception const& e)
-        {
-            log(e.what());
-        }
-    }).wait();
-
     http_response response(status_codes::OK);
-    response.headers().add(U("Allow"), U("GET, POST, PUT, OPTIONS"));
+    string authorization = to_base64("admin:" + to_string(password));
+    if (password == L"" || (request.headers().has(L"Authorization") && request.headers().find(L"Authorization")->second == L"Basic " + to_wstring(authorization)))
+    {
+        auto answer = json::value::object();
+        request.extract_json().then([&answer, &action](pplx::task<json::value> task)
+        {
+            try
+            {
+                auto const& jvalue = task.get();
+
+                if (!jvalue.is_null())
+                {
+                    action(jvalue, answer);
+                }
+            }
+            catch (http_exception const& e)
+            {
+                log(e.what());
+            }
+        }).wait();
+        response.set_body(answer);
+    }
+    else {
+        response = status_codes::Unauthorized;
+    }
+
+    response.headers().add(U("Allow"), U("GET, PUT, OPTIONS"));
     response.headers().add(U("Access-Control-Allow-Origin"), U("*"));
-    response.headers().add(U("Access-Control-Allow-Methods"), U("GET, POST, PUT, OPTIONS"));
-    response.headers().add(U("Access-Control-Allow-Headers"), U("Content-Type"));
-    response.set_body(answer);
+    response.headers().add(U("Access-Control-Allow-Methods"), U("GET, PUT, OPTIONS"));
+    response.headers().add(U("Access-Control-Allow-Headers"), U("Content-Type, Authorization"));
+    
     request.reply(response);
 }
 
@@ -197,9 +214,15 @@ void Server::task()
             log(L"Starting server on " + address);
         }
         else
-        {
             log(L"Error reading configuration file. Starting server on " + address);
+
+        if (config.is_object() && config.has_object_field(L"authentication") &&
+            config[L"authentication"].has_string_field(L"password"))
+        {
+            password = config[L"authentication"][L"password"].as_string();
         }
+        else
+            log(L"Error reading configuration file. No password set.");
         free(buf);
     }
     else

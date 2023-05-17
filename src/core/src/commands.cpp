@@ -1,21 +1,33 @@
 #include "commands.h"
 #include "logger.h"
 #include "dcstools.h"
+#include "unit.h"
+#include "unitsmanager.h"
+
+extern UnitsManager* unitsManager;
 
 /* Move command */
 wstring Move::getString(lua_State* L)
 {
-    std::wostringstream commandSS;
-    commandSS.precision(10);
-    commandSS << "Olympus.move, " 
-        << ID << ", "
-        << destination.lat << ", " 
-        << destination.lng << ", " 
-        << altitude << ", " 
-        << speed << ", " 
-        << "\"" << unitCategory << "\"" << ", "
-        << taskOptions;
-    return commandSS.str();
+    Unit* unit = unitsManager->getUnit(ID);
+    if (unit != nullptr)
+    {
+        std::wostringstream commandSS;
+        commandSS.precision(10);
+        commandSS << "Olympus.move, "
+            << ID << ", "
+            << destination.lat << ", "
+            << destination.lng << ", "
+            << altitude << ", "
+            << speed << ", "
+            << "\"" << unit->getCategory() << "\"" << ", "
+            << taskOptions;
+        return commandSS.str();
+    }
+    else 
+    {
+        return L"";
+    }
 }
 
 /* Smoke command */
@@ -67,13 +79,22 @@ wstring SpawnAircraft::getString(lua_State* L)
 /* Clone unit command */
 wstring Clone::getString(lua_State* L)
 {
-    std::wostringstream commandSS;
-    commandSS.precision(10);
-    commandSS << "Olympus.clone, "
-        << ID << ", "
-        << location.lat << ", "
-        << location.lng;
-    return commandSS.str();
+    Unit* unit = unitsManager->getUnit(ID);
+    if (unit != nullptr)
+    {
+        std::wostringstream commandSS;
+        commandSS.precision(10);
+        commandSS << "Olympus.clone, "
+            << ID << ", "
+            << location.lat << ", "
+            << location.lng << ", "
+            << "\"" << unit->getCategory() << "\"";
+        return commandSS.str();
+    }
+    else
+    {
+        return L"";
+    }
 }
 
 /* Delete unit command */

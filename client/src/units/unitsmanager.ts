@@ -1,5 +1,5 @@
 import { LatLng, LatLngBounds } from "leaflet";
-import { getInfoPopup, getMap, getUnitDataTable } from "..";
+import { getHotgroupPanel, getInfoPopup, getMap, getUnitDataTable } from "..";
 import { Unit } from "./unit";
 import { cloneUnit } from "../server/server";
 import { IDLE, MOVE_UNIT } from "../map/map";
@@ -20,25 +20,18 @@ export class UnitsManager {
         document.addEventListener('unitSelection', (e: CustomEvent) => this.#onUnitSelection(e.detail));
         document.addEventListener('unitDeselection', (e: CustomEvent) => this.#onUnitDeselection(e.detail));
         document.addEventListener('keydown', (event) => this.#onKeyDown(event));
-        document.addEventListener('deleteSelectedUnits', () => this.selectedUnitsDelete() )
+        document.addEventListener('deleteSelectedUnits', () => this.selectedUnitsDelete())
     }
 
     getSelectableAircraft() {
-
         const units = this.getUnits();
-
-        return Object.keys( units ).reduce( ( acc:{[key:number]: Unit}, unitId:any ) => {
-            
-            const baseData = units[ unitId ].getBaseData();
-            
-            if ( baseData.category === "Aircraft" && baseData.alive === true ) {
-                acc[ unitId ] = units[ unitId ];
+        return Object.keys(units).reduce((acc: { [key: number]: Unit }, unitId: any) => {
+            const baseData = units[unitId].getBaseData();
+            if (baseData.category === "Aircraft" && baseData.alive === true) {
+                acc[unitId] = units[unitId];
             }
-
             return acc;
-
         }, {});
-
     }
 
     getUnits() {
@@ -52,6 +45,10 @@ export class UnitsManager {
             return null;
     }
 
+    getUnitsByHotgroup(hotgroup: number) {
+        return Object.values(this.#units).filter((unit: Unit) => {return unit.getBaseData().alive && unit.getHotgroup() == hotgroup});
+    }
+
     addUnit(ID: number, data: UnitData) {
         /* The name of the unit category is exactly the same as the constructor name */
         var constructor = Unit.getConstructor(data.baseData.category);
@@ -59,57 +56,56 @@ export class UnitsManager {
             this.#units[ID] = new constructor(ID, data);
         }
     }
-    
+
     removeUnit(ID: number) {
 
     }
 
     update(data: UnitsData) {
         Object.keys(data.units)
-                .filter((ID: string) => !(ID in this.#units))
-                .reduce((timeout: number, ID: string) => {
-                    window.setTimeout(() => {
-                        if (!(ID in this.#units))
-                            this.addUnit(parseInt(ID), data.units[ID]);
-                        this.#units[parseInt(ID)]?.setData(data.units[ID]);
-                    }, timeout);
-                    return timeout + 10;
-                }, 10);
-          
+            .filter((ID: string) => !(ID in this.#units))
+            .reduce((timeout: number, ID: string) => {
+                window.setTimeout(() => {
+                    if (!(ID in this.#units))
+                        this.addUnit(parseInt(ID), data.units[ID]);
+                    this.#units[parseInt(ID)]?.setData(data.units[ID]);
+                }, timeout);
+                return timeout + 10;
+            }, 10);
+
         Object.keys(data.units)
-        .filter((ID: string) => ID in this.#units)
-        .forEach((ID: string) => this.#units[parseInt(ID)]?.setData(data.units[ID]));
+            .filter((ID: string) => ID in this.#units)
+            .forEach((ID: string) => this.#units[parseInt(ID)]?.setData(data.units[ID]));
     }
 
-    selectUnit(ID: number, deselectAllUnits: boolean = true)
-    {
-        if (deselectAllUnits) 
-            this.getSelectedUnits().filter((unit: Unit) => unit.ID !== ID ).forEach((unit: Unit) => unit.setSelected(false));
+    selectUnit(ID: number, deselectAllUnits: boolean = true) {
+        if (deselectAllUnits)
+            this.getSelectedUnits().filter((unit: Unit) => unit.ID !== ID).forEach((unit: Unit) => unit.setSelected(false));
         this.#units[ID]?.setSelected(true);
     }
 
-    selectFromBounds(bounds: LatLngBounds)
-    {
+    selectFromBounds(bounds: LatLngBounds) {
         this.deselectAllUnits();
-        for (let ID in this.#units)
-        {
-            if (this.#units[ID].getHidden() == false)
-            {
+        for (let ID in this.#units) {
+            if (this.#units[ID].getHidden() == false) {
                 var latlng = new LatLng(this.#units[ID].getFlightData().latitude, this.#units[ID].getFlightData().longitude);
-                if (bounds.contains(latlng))
-                {
+                if (bounds.contains(latlng)) {
                     this.#units[ID].setSelected(true);
                 }
             }
         }
     }
 
-    getSelectedUnits() {
+    getSelectedUnits(options?: {excludeHumans?: boolean}) {
         var selectedUnits = [];
         for (let ID in this.#units) {
             if (this.#units[ID].getSelected()) {
                 selectedUnits.push(this.#units[ID]);
             }
+        }
+        if (options) {
+            if (options.excludeHumans)
+                selectedUnits = selectedUnits.filter((unit: Unit) => {return !unit.getMissionData().flags.Human});
         }
         return selectedUnits;
     }
@@ -120,224 +116,245 @@ export class UnitsManager {
         }
     }
 
-    getSelectedLeaders() {
-        var leaders: Unit[] = [];
-        for (let idx in this.getSelectedUnits())
-        {
-            var unit = this.getSelectedUnits()[idx];
-            if (unit.getFormationData().isLeader)
-                leaders.push(unit);
-            else if (unit.getFormationData().isWingman)
-            {
-                var leader = unit.getLeader();
-                if (leader && !leaders.includes(leader))
-                    leaders.push(leader);
-            }
-        }
-        return leaders;
+    selectUnitsByHotgroup(hotgroup: number) {
+        this.deselectAllUnits();
+        this.getUnitsByHotgroup(hotgroup).forEach((unit: Unit) => unit.setSelected(true))
     }
 
-    getSelectedSingletons() {
-        var singletons: Unit[] = [];
-        for (let idx in this.getSelectedUnits())
-        {
-            var unit = this.getSelectedUnits()[idx];
-            if (!unit.getFormationData().isLeader && !unit.getFormationData().isWingman)
-                singletons.push(unit);
-        }
-        return singletons;
-    }
-
-    getSelectedUnitsType () {
+    getSelectedUnitsType() {
         if (this.getSelectedUnits().length == 0)
             return undefined;
         return this.getSelectedUnits().map((unit: Unit) => {
             return unit.constructor.name
         })?.reduce((a: any, b: any) => {
-            return a == b? a: undefined
+            return a == b ? a : undefined
         });
     };
 
-    getSelectedUnitsTargetSpeed () {
+    getSelectedUnitsTargetSpeed() {
         if (this.getSelectedUnits().length == 0)
             return undefined;
         return this.getSelectedUnits().map((unit: Unit) => {
             return unit.getTaskData().targetSpeed
         })?.reduce((a: any, b: any) => {
-            return a == b? a: undefined
+            return a == b ? a : undefined
         });
     };
 
-    getSelectedUnitsTargetAltitude () {
+    getSelectedUnitsTargetAltitude() {
         if (this.getSelectedUnits().length == 0)
             return undefined;
         return this.getSelectedUnits().map((unit: Unit) => {
             return unit.getTaskData().targetAltitude
         })?.reduce((a: any, b: any) => {
-            return a == b? a: undefined
+            return a == b ? a : undefined
         });
     };
 
-    getSelectedUnitsCoalition () {
+    getSelectedUnitsCoalition() {
         if (this.getSelectedUnits().length == 0)
             return undefined;
         return this.getSelectedUnits().map((unit: Unit) => {
             return unit.getMissionData().coalition
         })?.reduce((a: any, b: any) => {
-            return a == b? a: undefined
+            return a == b ? a : undefined
         });
     };
 
+    /*********************** Actions on selected units ************************/
     selectedUnitsAddDestination(latlng: L.LatLng) {
-        var selectedUnits = this.getSelectedUnits();
+        var selectedUnits = this.getSelectedUnits({excludeHumans: true});
         for (let idx in selectedUnits) {
-            var commandedUnit = selectedUnits[idx];
-            commandedUnit.addDestination(latlng);
+            const unit = selectedUnits[idx];
+            /* If a unit is following another unit, and that unit is also selected, send the command to the followed unit */
+            if (unit.getTaskData().currentState === "Follow") {
+                const leader = this.getUnitByID(unit.getFormationData().leaderID)
+                if (leader && leader.getSelected())
+                    leader.addDestination(latlng);
+                else
+                    unit.addDestination(latlng);
+            }
+            else
+                unit.addDestination(latlng);
         }
         this.#showActionMessage(selectedUnits, " new destination added");
     }
 
     selectedUnitsClearDestinations() {
-        var selectedUnits = this.getSelectedUnits();
+        var selectedUnits = this.getSelectedUnits({excludeHumans: true});
         for (let idx in selectedUnits) {
-            var commandedUnit = selectedUnits[idx];
-            commandedUnit.clearDestinations();
+            const unit = selectedUnits[idx];
+            if (unit.getTaskData().currentState === "Follow") {
+                const leader = this.getUnitByID(unit.getFormationData().leaderID)
+                if (leader && leader.getSelected())
+                    leader.clearDestinations();
+                else
+                    unit.clearDestinations();
+            }
+            else
+                unit.clearDestinations();
         }
     }
 
-    selectedUnitsLandAt(latlng: LatLng)
-    {
-        var selectedUnits = this.getSelectedUnits();
-        for (let idx in selectedUnits)
-        {
+    selectedUnitsLandAt(latlng: LatLng) {
+        var selectedUnits = this.getSelectedUnits({excludeHumans: true});
+        for (let idx in selectedUnits) {
             selectedUnits[idx].landAt(latlng);
         }
         this.#showActionMessage(selectedUnits, " landing");
     }
 
-    selectedUnitsChangeSpeed(speedChange: string)
-    {
-        var selectedUnits = this.getSelectedUnits();
-        for (let idx in selectedUnits)
-        {
+    selectedUnitsChangeSpeed(speedChange: string) {
+        var selectedUnits = this.getSelectedUnits({excludeHumans: true});
+        for (let idx in selectedUnits) {
             selectedUnits[idx].changeSpeed(speedChange);
         }
     }
 
-    selectedUnitsChangeAltitude(altitudeChange: string)
-    {
-        var selectedUnits = this.getSelectedUnits();
-        for (let idx in selectedUnits)
-        {
+    selectedUnitsChangeAltitude(altitudeChange: string) {
+        var selectedUnits = this.getSelectedUnits({excludeHumans: true});
+        for (let idx in selectedUnits) {
             selectedUnits[idx].changeAltitude(altitudeChange);
         }
     }
 
-    selectedUnitsSetSpeed(speed: number)
-    {
-        var selectedUnits = this.getSelectedUnits();
-        for (let idx in selectedUnits)
-        {
+    selectedUnitsSetSpeed(speed: number) {
+        var selectedUnits = this.getSelectedUnits({excludeHumans: true});
+        for (let idx in selectedUnits) {
             selectedUnits[idx].setSpeed(speed);
         }
-        
         this.#showActionMessage(selectedUnits, `setting speed to ${speed * 1.94384} kts`);
     }
 
-    selectedUnitsSetAltitude(altitude: number)
-    {
-        var selectedUnits = this.getSelectedUnits();
-        for (let idx in selectedUnits)
-        {
+    selectedUnitsSetAltitude(altitude: number) {
+        var selectedUnits = this.getSelectedUnits({excludeHumans: true});
+        for (let idx in selectedUnits) {
             selectedUnits[idx].setAltitude(altitude);
         }
         this.#showActionMessage(selectedUnits, `setting altitude to ${altitude / 0.3048} ft`);
     }
 
-    selectedUnitsSetROE(ROE: string)
-    {
-        var selectedUnits = this.getSelectedUnits();
-        for (let idx in selectedUnits)
-        {
+    selectedUnitsSetROE(ROE: string) {
+        var selectedUnits = this.getSelectedUnits({excludeHumans: true});
+        for (let idx in selectedUnits) {
             selectedUnits[idx].setROE(ROE);
         }
         this.#showActionMessage(selectedUnits, `ROE set to ${ROE}`);
     }
 
-    selectedUnitsSetReactionToThreat(reactionToThreat: string)
-    {
-        var selectedUnits = this.getSelectedUnits();
-        for (let idx in selectedUnits)
-        {
+    selectedUnitsSetReactionToThreat(reactionToThreat: string) {
+        var selectedUnits = this.getSelectedUnits({excludeHumans: true});
+        for (let idx in selectedUnits) {
             selectedUnits[idx].setReactionToThreat(reactionToThreat);
         }
         this.#showActionMessage(selectedUnits, `reaction to threat set to ${reactionToThreat}`);
     }
 
     selectedUnitsAttackUnit(ID: number) {
-        var selectedUnits = this.getSelectedUnits();
+        var selectedUnits = this.getSelectedUnits({excludeHumans: true});
         for (let idx in selectedUnits) {
             selectedUnits[idx].attackUnit(ID);
         }
         this.#showActionMessage(selectedUnits, `attacking unit ${this.getUnitByID(ID)?.getBaseData().unitName}`);
     }
 
-    selectedUnitsDelete()
-    {
-        var selectedUnits = this.getSelectedUnits();
-        for (let idx in selectedUnits)
-        {
+    selectedUnitsDelete() {
+        var selectedUnits = this.getSelectedUnits(); /* Can be applied to humans too */
+        for (let idx in selectedUnits) {
             selectedUnits[idx].delete();
         }
         this.#showActionMessage(selectedUnits, `deleted`);
     }
 
-    selectedUnitsRefuel()
-    {
-        var selectedUnits = this.getSelectedUnits();
-        for (let idx in selectedUnits)
-        {
+    selectedUnitsRefuel() {
+        var selectedUnits = this.getSelectedUnits({excludeHumans: true});
+        for (let idx in selectedUnits) {
             selectedUnits[idx].refuel();
         }
         this.#showActionMessage(selectedUnits, `sent to nearest tanker`);
     }
 
-    selectedUnitsFollowUnit(ID: number, offset: {"x": number, "y": number, "z": number}) {
-        var selectedUnits = this.getSelectedUnits();
+    selectedUnitsFollowUnit(ID: number, offset?: { "x": number, "y": number, "z": number }, formation?: string) {
+        if (offset == undefined) {
+            /* Simple formations with fixed offsets */
+            // X: front-rear, positive front
+            // Y: top-bottom, positive top
+            // Z: left-right, positive right
+            offset = { "x": 0, "y": 0, "z": 0 };
+            if (formation === "Trail") { offset.x = -50; offset.y = -30; offset.z = 0; }
+            else if (formation === "Echelon (LH)") { offset.x = -50; offset.y = -10; offset.z = -50; }
+            else if (formation === "Echelon (RH)") { offset.x = -50; offset.y = -10; offset.z = 50; }
+            else if (formation === "Line abreast (RH)") { offset.x = 0; offset.y = 0; offset.z = 50; }
+            else if (formation === "Line abreast (LH)") { offset.x = 0; offset.y = 0; offset.z = -50; }
+            else if (formation === "Front") { offset.x = 100; offset.y = 0; offset.z = 0; }
+            else offset = undefined;
+        }
+         var selectedUnits = this.getSelectedUnits({excludeHumans: true});
         var count = 1;
+        var xr = 0; var yr = 1; var zr = -1;
+        var layer = 1;
         for (let idx in selectedUnits) {
-            var commandedUnit = selectedUnits[idx];
-            commandedUnit.followUnit(ID, {"x": offset.x * count, "y": offset.y * count, "z": offset.z * count} );
+            var unit = selectedUnits[idx];
+            if (offset != undefined)
+                /* Offset is set, apply it */
+                unit.followUnit(ID, { "x": offset.x * count, "y": offset.y * count, "z": offset.z * count });
+            else {
+                /* More complex formations with variable offsets */
+                if (formation === "Diamond") {
+                    var xl = xr * Math.cos(Math.PI / 4) - yr * Math.sin(Math.PI / 4);
+                    var yl = xr * Math.sin(Math.PI / 4) + yr * Math.cos(Math.PI / 4);
+                    unit.followUnit(ID, { "x": -yl * 50, "y": zr * 10, "z": xl * 50 });
+
+                    if (yr == 0) { layer++; xr = 0; yr = layer; zr = -layer; }
+                    else {
+                        if (xr < layer) { xr++; zr--; }
+                        else { yr--; zr++; }
+                    }
+                }
+            }
             count++;
         }
         this.#showActionMessage(selectedUnits, `following unit ${this.getUnitByID(ID)?.getBaseData().unitName}`);
     }
 
-    copyUnits()
+    selectedUnitsSetHotgroup(hotgroup: number)
     {
-        this.#copiedUnits = this.getSelectedUnits();
+        this.getUnitsByHotgroup(hotgroup).forEach((unit: Unit) => unit.setHotgroup(null));
+        this.selectedUnitsAddToHotgroup(hotgroup);
+    }
+
+    selectedUnitsAddToHotgroup(hotgroup: number)
+    {
+        var selectedUnits = this.getSelectedUnits();
+        for (let idx in selectedUnits) {
+            selectedUnits[idx].setHotgroup(hotgroup);
+        }
+        this.#showActionMessage(selectedUnits, `added to hotgroup ${hotgroup}`);
+        getHotgroupPanel().refreshHotgroups();
+    }
+
+    /***********************************************/
+    copyUnits() {
+        this.#copiedUnits = this.getSelectedUnits(); /* Can be applied to humans too */
         this.#showActionMessage(this.#copiedUnits, `copied`);
     }
 
-    pasteUnits()
-    {
-        if (!this.#pasteDisabled)
-        {
-            for (let idx in this.#copiedUnits)
-            {
+    pasteUnits() {
+        if (!this.#pasteDisabled) {
+            for (let idx in this.#copiedUnits) {
                 var unit = this.#copiedUnits[idx];
+                getMap().addTemporaryMarker(getMap().getMouseCoordinates());
                 cloneUnit(unit.ID, getMap().getMouseCoordinates());
-                this.#showActionMessage(this.#copiedUnits, `pasted`);   
+                this.#showActionMessage(this.#copiedUnits, `pasted`);
             }
             this.#pasteDisabled = true;
             window.setTimeout(() => this.#pasteDisabled = false, 250);
         }
     }
 
-    #onKeyDown(event: KeyboardEvent)
-    {
-        if ( !keyEventWasInInput( event ) && event.key === "Delete")
-        {
+    /***********************************************/
+    #onKeyDown(event: KeyboardEvent) {
+        if (!keyEventWasInInput(event) && event.key === "Delete") {
             this.selectedUnitsDelete();
         }
     }
@@ -346,10 +363,9 @@ export class UnitsManager {
         if (this.getSelectedUnits().length > 0) {
             getMap().setState(MOVE_UNIT);
             /* Disable the firing of the selection event for a certain amount of time. This avoids firing many events if many units are selected */
-            if (!this.#selectionEventDisabled)
-            {
+            if (!this.#selectionEventDisabled) {
                 window.setTimeout(() => {
-                    document.dispatchEvent(new CustomEvent("unitsSelection", {detail: this.getSelectedUnits()}));
+                    document.dispatchEvent(new CustomEvent("unitsSelection", { detail: this.getSelectedUnits() }));
                     this.#selectionEventDisabled = false;
                 }, 100);
                 this.#selectionEventDisabled = true;
@@ -366,14 +382,14 @@ export class UnitsManager {
             getMap().setState(IDLE);
             document.dispatchEvent(new CustomEvent("clearSelection"));
         }
-        else 
-            document.dispatchEvent(new CustomEvent("unitsDeselection", {detail: this.getSelectedUnits()}));
+        else
+            document.dispatchEvent(new CustomEvent("unitsDeselection", { detail: this.getSelectedUnits() }));
     }
 
     #showActionMessage(units: Unit[], message: string) {
         if (units.length == 1)
             getInfoPopup().setText(`${units[0].getBaseData().unitName} ${message}`);
-        else 
+        else if (units.length > 1)
             getInfoPopup().setText(`${units[0].getBaseData().unitName} and ${units.length - 1} other units ${message}`);
     }
 }

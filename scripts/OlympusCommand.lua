@@ -1,4 +1,4 @@
-local version = "v0.2.0-alpha"
+local version = "v0.2.1-alpha"
 
 local debug = false
 
@@ -48,9 +48,11 @@ end
 function Olympus.getCountryIDByCoalition(coalition)
 	local countryID = 0
 	if coalition == 'red' then
-		countryID = country.id.RUSSIA
+		countryID = country.id.CJTF_RED
+	elseif coalition == 'blue' then
+		countryID = country.id.CJTF_BLUE
 	else
-		countryID = country.id.USA
+		countryID = country.id.UN_PEACEKEEPERS
 	end
 	return countryID
 end
@@ -321,13 +323,13 @@ function Olympus.spawnAircraft(coalition, unitType, lat, lng, spawnOptions)
 				{
 					[1] = 
 					{
-						["action"] = "From Runway",
+						["action"] = "From Parking Area Hot",
 						["task"] = 
 						{
 							["id"] = "ComboTask",
 							["params"] = {["tasks"] = {},}, 
 						},
-						["type"] = "TakeOff",
+						["type"] = "TakeOffParkingHot",
 						["ETA"] = 0,
 						["ETA_locked"] = true,
 						["x"] = spawnLocation.x,
@@ -361,17 +363,20 @@ function Olympus.spawnAircraft(coalition, unitType, lat, lng, spawnOptions)
 end
 
 -- Clones a unit by ID. Will clone the unit with the same original payload as the source unit. TODO: only works on Olympus unit not ME units.
-function Olympus.clone(ID, lat, lng)
-	Olympus.debug("Olympus.clone " .. ID, 2)
+function Olympus.clone(ID, lat, lng, category)
+	Olympus.debug("Olympus.clone " .. ID .. ", " .. category, 2)
 	local unit = Olympus.getUnitByID(ID)
 	if unit then
 		local coalition = Olympus.getCoalitionByCoalitionID(unit:getCoalition())
 		
-		-- TODO: only works on Aircraft
-		local spawnOptions = {
-			payload = Olympus.payloadRegistry[unit:getName()]
-		}
-		Olympus.spawnAircraft(coalition, unit:getTypeName(), lat, lng, spawnOptions)
+		if category == "Aircraft" then 
+			local spawnOptions = {
+				payload = Olympus.payloadRegistry[unit:getName()]
+			}
+			Olympus.spawnAircraft(coalition, unit:getTypeName(), lat, lng, spawnOptions)
+		elseif category == "GroundUnit" then
+			Olympus.spawnGroundUnit(coalition, unit:getTypeName(), lat, lng)
+		end
 	end
 	Olympus.debug("Olympus.clone completed successfully", 2)
 end

@@ -19,17 +19,19 @@ export class Dropdown {
             this.setOptions(options);
         }          
 
-        this.#value.addEventListener( "click", ev => {
-            this.#element.classList.toggle( "is-open" );
+        this.#value.addEventListener("click", (ev) => {
+            this.#element.classList.toggle("is-open");
+            this.#options.classList.toggle("scrollbar-visible", this.#options.scrollHeight > this.#options.clientHeight);
             this.#clip();
         });
 
-        this.#options.classList.add( "ol-scrollable" );
+        document.addEventListener("click", (ev) => {
+            if (!(this.#value.contains(ev.target as Node) || this.#options.contains(ev.target as Node) || this.#element.contains(ev.target as Node))) {
+                this.#element.classList.remove("is-open");
+            }
+        });
 
-        // Commented out since it is a bit frustrating, particularly when the dropdown opens towards the top and not to the bottom
-        //this.#element.addEventListener("mouseleave", ev => {
-        //    this.#close();
-        //});
+        this.#options.classList.add( "ol-scrollable" );
     }
 
     setOptions(optionsList: string[])
@@ -46,7 +48,7 @@ export class Dropdown {
 
             button.addEventListener("click", (e: MouseEvent) => {
                 e.stopPropagation();
-                this.#value.innerText = option;
+                this.#value.innerHTML = `<div class = "ol-ellipsed"> ${option} </div>`;
                 this.#close();
                 this.#callback(option, e);
                 this.#index = idx;
@@ -69,7 +71,7 @@ export class Dropdown {
         if (idx < this.#optionsList.length)
         {
             var option = this.#optionsList[idx];
-            this.#value.innerText = option;
+            this.#value.innerHTML = `<div class = "ol-ellipsed"> ${option} </div>`;
             this.#index = idx;
             this.#close();
             this.#callback(option);

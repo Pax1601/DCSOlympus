@@ -145,30 +145,30 @@ void Scheduler::handleRequest(wstring key, json::value value)
 	else if (key.compare(L"followUnit") == 0)
 	{
 		int ID = value[L"ID"].as_integer();
-		int targetID = value[L"targetID"].as_integer();
+		int leaderID = value[L"targetID"].as_integer();
 		int offsetX = value[L"offsetX"].as_integer();
 		int offsetY = value[L"offsetY"].as_integer();
 		int offsetZ = value[L"offsetZ"].as_integer();
 
 		Unit* unit = unitsManager->getUnit(ID);
-		Unit* target = unitsManager->getUnit(targetID);
+		Unit* leader = unitsManager->getUnit(leaderID);
 
 		wstring unitName;
-		wstring targetName;
+		wstring leaderName;
 
 		if (unit != nullptr)
 			unitName = unit->getUnitName();
 		else
 			return;
 
-		if (target != nullptr)
-			targetName = target->getUnitName();
+		if (leader != nullptr)
+			leaderName = leader->getUnitName();
 		else
 			return;
 
-		log(L"Unit " + unitName + L" following unit " + targetName);
+		log(L"Unit " + unitName + L" following unit " + leaderName);
 		unit->setFormationOffset(Offset(offsetX, offsetY, offsetZ));
-		unit->setTargetID(targetID);
+		unit->setLeaderID(leaderID);
 		unit->setState(State::FOLLOW);
 	}
 	else if (key.compare(L"changeSpeed") == 0)
@@ -207,40 +207,6 @@ void Scheduler::handleRequest(wstring key, json::value value)
 		Coords loc; loc.lat = lat; loc.lng = lng;
 		command = dynamic_cast<Command*>(new Clone(ID, loc));
 		log(L"Cloning unit " + to_wstring(ID));
-	}
-	else if (key.compare(L"setLeader") == 0)
-	{
-		int ID = value[L"ID"].as_integer();
-		Unit* unit = unitsManager->getUnit(ID);
-		bool isLeader = value[L"isLeader"].as_bool();
-		if (isLeader)
-		{
-			json::value wingmenIDs = value[L"wingmenIDs"];
-			vector<Unit*> wingmen;
-			if (unit != nullptr)
-			{
-				for (auto itr = wingmenIDs.as_array().begin(); itr != wingmenIDs.as_array().end(); itr++)
-				{
-					Unit* wingman = unitsManager->getUnit(itr->as_integer());
-					if (wingman != nullptr)
-						wingmen.push_back(wingman);
-				}
-				unit->setFormation(L"Line abreast");
-				unit->setIsLeader(true);
-				unit->setWingmen(wingmen);
-				log(L"Setting " + unit->getName() + L" as formation leader");
-			}
-		}
-		else {
-			unit->setIsLeader(false);
-		}
-	}
-	else if (key.compare(L"setFormation") == 0)
-	{
-		int ID = value[L"ID"].as_integer();
-		Unit* unit = unitsManager->getUnit(ID);
-		wstring formation = value[L"formation"].as_string();
-		unit->setFormation(formation);
 	}
 	else if (key.compare(L"setROE") == 0)
 	{
@@ -285,13 +251,11 @@ void Scheduler::handleRequest(wstring key, json::value value)
 			unit->setIsTanker(value[L"isTanker"].as_bool());
 			unit->setIsAWACS(value[L"isAWACS"].as_bool());
 
-			unit->setTACANOn(true);	// TODO Remove
 			unit->setTACANChannel(value[L"TACANChannel"].as_number().to_int32());
 			unit->setTACANXY(value[L"TACANXY"].as_string());
 			unit->setTACANCallsign(value[L"TACANCallsign"].as_string());
 			unit->setTACAN();
 
-			unit->setRadioOn(true);	// TODO Remove
 			unit->setRadioFrequency(value[L"radioFrequency"].as_number().to_int32());
 			unit->setRadioCallsign(value[L"radioCallsign"].as_number().to_int32());
 			unit->setRadioCallsignNumber(value[L"radioCallsignNumber"].as_number().to_int32());

@@ -3,7 +3,7 @@ import { MiniMap, MiniMapOptions } from "leaflet-control-mini-map";
 
 import { getUnitsManager } from "..";
 import { BoxSelect } from "./boxselect";
-import { MapContextMenu } from "../controls/mapcontextmenu";
+import { MapContextMenu, SpawnOptions } from "../controls/mapcontextmenu";
 import { UnitContextMenu } from "../controls/unitcontextmenu";
 import { AirbaseContextMenu } from "../controls/airbasecontextmenu";
 import { Dropdown } from "../controls/dropdown";
@@ -18,9 +18,14 @@ export const MOVE_UNIT = "MOVE_UNIT";
 
 L.Map.addInitHook('addHandler', 'boxSelect', BoxSelect);
 
+var temporaryIcon = new L.Icon({
+    iconUrl: 'images/icon-temporary.png',
+    iconSize: [52, 52],
+    iconAnchor: [26, 26]
+});
+
 export class ClickableMiniMap extends MiniMap {
-    constructor(layer: L.TileLayer | L.LayerGroup, options?: MiniMapOptions)
-    {
+    constructor(layer: L.TileLayer | L.LayerGroup, options?: MiniMapOptions) {
         super(layer, options);
     }
 
@@ -34,11 +39,18 @@ export class Map extends L.Map {
     #state: string;
     #layer: L.TileLayer | null = null;
     #preventLeftClick: boolean = false;
-    #leftClickTimer: any = 0;
+    #leftClickTimer: number = 0;
+    #deafultPanDelta: number = 100;
+    #panInterval: number | null = null;
+    #panLeft: boolean = false;
+    #panRight: boolean = false;
+    #panUp: boolean = false;
+    #panDown: boolean = false;
     #lastMousePosition: L.Point = new L.Point(0, 0);
     #centerUnit: Unit | null = null;
     #miniMap: ClickableMiniMap | null = null;
     #miniMapLayerGroup: L.LayerGroup;
+    #temporaryMarkers: L.Marker[] = [];
 
     #mapContextMenu: MapContextMenu = new MapContextMenu("map-contextmenu");
     #unitContextMenu: UnitContextMenu = new UnitContextMenu("unit-contextmenu");
@@ -49,7 +61,7 @@ export class Map extends L.Map {
     constructor(ID: string) {
         /* Init the leaflet map */
         //@ts-ignore
-        super(ID, { doubleClickZoom: false, zoomControl: false, boxZoom: false, boxSelect: true, zoomAnimation: true, maxBoundsViscosity: 1.0, minZoom: 7 });
+        super(ID, { doubleClickZoom: false, zoomControl: false, boxZoom: false, boxSelect: true, zoomAnimation: true, maxBoundsViscosity: 1.0, minZoom: 7, keyboard: true, keyboardPanDelta: 0 });
         this.setView([37.23, -115.8], 10);
 
         this.setLayer("ArcGIS Satellite");
@@ -57,59 +69,59 @@ export class Map extends L.Map {
         /* Minimap */
         /* Draw the limits of the maps in the minimap*/
         var latlngs = [[    // NTTR
-                            new L.LatLng(39.7982463,    -119.985425 ),
-                            new L.LatLng(34.4037128,    -119.7806729),
-                            new L.LatLng(34.3483316,    -112.4529351),
-                            new L.LatLng(39.7372411,    -112.1130805),
-                            new L.LatLng(39.7982463,    -119.985425 )
-                        ],
-                        [   // Syria
-                            new L.LatLng(37.3630556,    29.2686111),
-                            new L.LatLng(31.8472222,    29.8975),
-                            new L.LatLng(32.1358333,    42.1502778),
-                            new L.LatLng(37.7177778,    42.3716667),
-                            new L.LatLng(37.3630556,    29.2686111)
-                        ],
-                        [   // Caucasus
-                            new L.LatLng(39.6170191, 27.634935),  
-                            new L.LatLng(38.8735863, 47.1423108), 
-                            new L.LatLng(47.3907982, 49.3101946),
-                            new L.LatLng(48.3955879, 26.7753625),
-                            new L.LatLng(39.6170191, 27.634935) 
-                        ],
-                        [   // Persian Gulf
-                            new L.LatLng(32.9355285, 46.5623682), 
-                            new L.LatLng(21.729393,  47.572675),  
-                            new L.LatLng(21.8501348, 63.9734737), 
-                            new L.LatLng(33.131584,  64.7313594), 
-                            new L.LatLng(32.9355285, 46.5623682) 
-                        ], 
-                        [   // Marianas
-                            new L.LatLng(22.09,      135.0572222),
-                            new L.LatLng(10.5777778, 135.7477778),
-                            new L.LatLng(10.7725,    149.3918333),
-                            new L.LatLng(22.5127778, 149.5427778),
-                            new L.LatLng(22.09,      135.0572222)
-                        ]
-                    ];
+            new L.LatLng(39.7982463, -119.985425),
+            new L.LatLng(34.4037128, -119.7806729),
+            new L.LatLng(34.3483316, -112.4529351),
+            new L.LatLng(39.7372411, -112.1130805),
+            new L.LatLng(39.7982463, -119.985425)
+        ],
+        [   // Syria
+            new L.LatLng(37.3630556, 29.2686111),
+            new L.LatLng(31.8472222, 29.8975),
+            new L.LatLng(32.1358333, 42.1502778),
+            new L.LatLng(37.7177778, 42.3716667),
+            new L.LatLng(37.3630556, 29.2686111)
+        ],
+        [   // Caucasus
+            new L.LatLng(39.6170191, 27.634935),
+            new L.LatLng(38.8735863, 47.1423108),
+            new L.LatLng(47.3907982, 49.3101946),
+            new L.LatLng(48.3955879, 26.7753625),
+            new L.LatLng(39.6170191, 27.634935)
+        ],
+        [   // Persian Gulf
+            new L.LatLng(32.9355285, 46.5623682),
+            new L.LatLng(21.729393, 47.572675),
+            new L.LatLng(21.8501348, 63.9734737),
+            new L.LatLng(33.131584, 64.7313594),
+            new L.LatLng(32.9355285, 46.5623682)
+        ],
+        [   // Marianas
+            new L.LatLng(22.09, 135.0572222),
+            new L.LatLng(10.5777778, 135.7477778),
+            new L.LatLng(10.7725, 149.3918333),
+            new L.LatLng(22.5127778, 149.5427778),
+            new L.LatLng(22.09, 135.0572222)
+        ]
+        ];
 
         var minimapLayer = new L.TileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { minZoom: 0, maxZoom: 13 });
         this.#miniMapLayerGroup = new L.LayerGroup([minimapLayer]);
-        var miniMapPolyline = new L.Polyline(latlngs, {color: '#202831'});
+        var miniMapPolyline = new L.Polyline(latlngs, { color: '#202831' });
         miniMapPolyline.addTo(this.#miniMapLayerGroup);
-        
+
         /* Scale */
         //@ts-ignore TODO more hacking because the module is provided as a pure javascript module only
-        L.control.scalenautic({position: "topright", maxWidth: 300, nautic: true, metric: true, imperial: false}).addTo(this);
+        L.control.scalenautic({ position: "topright", maxWidth: 300, nautic: true, metric: true, imperial: false }).addTo(this);
 
         /* Init the state machine */
         this.#state = IDLE;
 
         /* Register event handles */
         this.on("click", (e: any) => this.#onClick(e));
-        this.on("dblclick", (e: any) => this.#onDoubleClick(e));   
-        this.on("zoomstart", (e: any) => this.#onZoom(e));   
-        this.on("drag", (e: any) => this.centerOnUnit(null));   
+        this.on("dblclick", (e: any) => this.#onDoubleClick(e));
+        this.on("zoomstart", (e: any) => this.#onZoom(e));
+        this.on("drag", (e: any) => this.centerOnUnit(null));
         this.on("contextmenu", (e: any) => this.#onContextMenu(e));
         this.on('selectionend', (e: any) => this.#onSelectionEnd(e));
         this.on('mousedown', (e: any) => this.#onMouseDown(e));
@@ -121,7 +133,7 @@ export class Map extends L.Map {
             document.body.toggleAttribute("data-hide-" + ev.detail.coalition);
             Object.values(getUnitsManager().getUnits()).forEach((unit: Unit) => unit.updateVisibility());
         });
-    
+
         document.addEventListener("toggleUnitVisibility", (ev: CustomEventInit) => {
             document.body.toggleAttribute("data-hide-" + ev.detail.category);
             Object.values(getUnitsManager().getUnits()).forEach((unit: Unit) => unit.updateVisibility());
@@ -131,8 +143,13 @@ export class Map extends L.Map {
             if (this.#centerUnit != null && ev.detail == this.#centerUnit)
                 this.#panToUnit(this.#centerUnit);
         });
-   
+
         this.#mapSourceDropdown = new Dropdown("map-type", (layerName: string) => this.setLayer(layerName), this.getLayers())
+
+        this.#panInterval = window.setInterval(() => { 
+            this.panBy(new L.Point( ((this.#panLeft? -1: 0) + (this.#panRight? 1: 0)) * this.#deafultPanDelta, 
+                                    ((this.#panUp? -1: 0) + (this.#panDown? 1: 0)) * this.#deafultPanDelta)); 
+        }, 20);
     }
 
     setLayer(layerName: string) {
@@ -187,10 +204,10 @@ export class Map extends L.Map {
     setState(state: string) {
         this.#state = state;
         if (this.#state === IDLE) {
-            L.DomUtil.removeClass(this.getContainer(),'crosshair-cursor-enabled');
+            L.DomUtil.removeClass(this.getContainer(), 'crosshair-cursor-enabled');
         }
         else if (this.#state === MOVE_UNIT) {
-            L.DomUtil.addClass(this.getContainer(),'crosshair-cursor-enabled');
+            L.DomUtil.addClass(this.getContainer(), 'crosshair-cursor-enabled');
         }
         document.dispatchEvent(new CustomEvent("mapStateChanged"));
     }
@@ -200,8 +217,7 @@ export class Map extends L.Map {
     }
 
     /* Context Menus */
-    hideAllContextMenus()
-    {
+    hideAllContextMenus() {
         this.hideMapContextMenu();
         this.hideUnitContextMenu();
         this.hideAirbaseContextMenu();
@@ -220,7 +236,7 @@ export class Map extends L.Map {
         document.dispatchEvent(new CustomEvent("mapContextMenu"));
     }
 
-    getMapContextMenu(){
+    getMapContextMenu() {
         return this.#mapContextMenu;
     }
 
@@ -231,7 +247,7 @@ export class Map extends L.Map {
         this.#unitContextMenu.show(x, y, e.latlng);
     }
 
-    getUnitContextMenu(){
+    getUnitContextMenu() {
         return this.#unitContextMenu;
     }
 
@@ -247,7 +263,7 @@ export class Map extends L.Map {
         this.#airbaseContextMenu.setAirbase(airbase);
     }
 
-    getAirbaseContextMenu(){
+    getAirbaseContextMenu() {
         return this.#airbaseContextMenu;
     }
 
@@ -270,8 +286,7 @@ export class Map extends L.Map {
     }
 
     centerOnUnit(ID: number | null) {
-        if (ID != null)
-        {
+        if (ID != null) {
             this.options.scrollWheelZoom = 'center';
             this.#centerUnit = getUnitsManager().getUnitByID(ID);
         }
@@ -289,37 +304,104 @@ export class Map extends L.Map {
         else if (theatre == "MarianaIslands")
             bounds = new L.LatLngBounds([10.5777778, 135.7477778], [22.5127778, 149.5427778]);
         else if (theatre == "Nevada")
-            bounds = new L.LatLngBounds([34.4037128, -119.7806729],  [39.7372411, -112.1130805])
+            bounds = new L.LatLngBounds([34.4037128, -119.7806729], [39.7372411, -112.1130805])
         else if (theatre == "PersianGulf")
-            bounds = new L.LatLngBounds([21.729393,  47.572675],  [33.131584,  64.7313594])
-        else if (theatre == "Falklands")
-        {
+            bounds = new L.LatLngBounds([21.729393, 47.572675], [33.131584, 64.7313594])
+        else if (theatre == "Falklands") {
             // TODO
         }
-        else if (theatre == "Caucasus")
-        {
-            bounds = new L.LatLngBounds([39.6170191, 27.634935],  [47.3907982, 49.3101946])
+        else if (theatre == "Caucasus") {
+            bounds = new L.LatLngBounds([39.6170191, 27.634935], [47.3907982, 49.3101946])
             miniMapZoom = 4;
         }
 
         this.setView(bounds.getCenter(), 8);
-        this.setMaxBounds(bounds);
+        //this.setMaxBounds(bounds);
 
         if (this.#miniMap)
             this.#miniMap.remove();
 
         //@ts-ignore // Needed because some of the inputs are wrong in the original module interface
-        this.#miniMap = new ClickableMiniMap(this.#miniMapLayerGroup, {position: "topright", width: 192*1.5, height: 108*1.5, zoomLevelFixed: miniMapZoom, centerFixed: bounds.getCenter()}).addTo(this);
+        this.#miniMap = new ClickableMiniMap(this.#miniMapLayerGroup, { position: "topright", width: 192 * 1.5, height: 108 * 1.5, zoomLevelFixed: miniMapZoom, centerFixed: bounds.getCenter() }).addTo(this);
         this.#miniMap.disableInteractivity();
         this.#miniMap.getMap().on("click", (e: any) => {
             if (this.#miniMap)
                 this.setView(e.latlng);
         })
-        
+
     }
 
     getMiniMapLayerGroup() {
         return this.#miniMapLayerGroup;
+    }
+
+    handleMapPanning(e: any) {
+        if (e.type === "keyup"){
+            switch (e.code) {
+                case "KeyA":
+                case "ArrowLeft":
+                    this.#panLeft = false;
+                    break;
+                case "KeyD":
+                case "ArrowRight":
+                    this.#panRight = false;
+                    break;
+                case "KeyW":
+                case "ArrowUp":
+                    this.#panUp = false;
+                    break;
+                case "KeyS":
+                case "ArrowDown":
+                    this.#panDown = false;
+                    break;
+            }
+        }
+        else {        
+            switch (e.code)
+            {   
+                case 'KeyA':
+                case 'ArrowLeft':
+                    this.#panLeft = true;
+                    break;
+                case 'KeyD':
+                case 'ArrowRight':
+                    this.#panRight = true;
+                    break;
+                case 'KeyW':
+                case 'ArrowUp':
+                    this.#panUp = true;
+                    break;
+                case 'KeyS':
+                case 'ArrowDown':
+                    this.#panDown = true;
+                    break;
+            }
+        }
+    }
+
+    addTemporaryMarker(latlng: L.LatLng) {
+        var marker = new L.Marker(latlng, {icon: temporaryIcon});
+        marker.addTo(this);
+        this.#temporaryMarkers.push(marker);
+    }
+
+    removeTemporaryMarker(latlng: L.LatLng) {
+        var d: number | null = null;
+        var closest: L.Marker | null = null;
+        var i: number = 0;
+        this.#temporaryMarkers.forEach((marker: L.Marker, idx: number) => {
+            var t = latlng.distanceTo(marker.getLatLng());
+            if (d == null || t < d) {
+                d = t;
+                closest = marker;
+                i = idx;
+            }
+        });
+        if (closest)
+        {
+            this.removeLayer(closest);
+            delete this.#temporaryMarkers[i];
+        }
     }
 
     /* Event handlers */
@@ -327,7 +409,7 @@ export class Map extends L.Map {
         if (!this.#preventLeftClick) {
             this.hideAllContextMenus();
             if (this.#state === IDLE) {
-                
+
             }
             else if (this.#state === MOVE_UNIT) {
                 this.setState(IDLE);
@@ -337,7 +419,7 @@ export class Map extends L.Map {
     }
 
     #onDoubleClick(e: any) {
-        
+
     }
 
     #onContextMenu(e: any) {
@@ -355,44 +437,34 @@ export class Map extends L.Map {
         }
     }
 
-    #onSelectionEnd(e: any)
-    {
+    #onSelectionEnd(e: any) {
         clearTimeout(this.#leftClickTimer);
         this.#preventLeftClick = true;
         this.#leftClickTimer = window.setTimeout(() => {
-            this.#preventLeftClick = false;  
+            this.#preventLeftClick = false;
         }, 200);
         getUnitsManager().selectFromBounds(e.selectionBounds);
     }
 
-    #onMouseDown(e: any)
-    {
+    #onMouseDown(e: any) {
         this.hideAllContextMenus();
-        if ((e.originalEvent.which == 1) && (e.originalEvent.button == 0)) 
-            this.dragging.disable();
     }
 
-    #onMouseUp(e: any)
-    {
-        if ((e.originalEvent.which == 1) && (e.originalEvent.button == 0)) 
-            this.dragging.enable();
+    #onMouseUp(e: any) {
     }
 
-    #onMouseMove(e: any)
-    {
+    #onMouseMove(e: any) {
         this.#lastMousePosition.x = e.originalEvent.x;
         this.#lastMousePosition.y = e.originalEvent.y;
     }
 
-    #onZoom(e: any)
-    {
+    #onZoom(e: any) {
         if (this.#centerUnit != null)
             this.#panToUnit(this.#centerUnit);
     }
 
-    #panToUnit(unit: Unit)
-    {
+    #panToUnit(unit: Unit) {
         var unitPosition = new L.LatLng(unit.getFlightData().latitude, unit.getFlightData().longitude);
-        this.setView(unitPosition, this.getZoom(), {animate: false});
+        this.setView(unitPosition, this.getZoom(), { animate: false });
     }
 } 

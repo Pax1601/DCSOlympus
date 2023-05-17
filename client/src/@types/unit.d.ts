@@ -29,11 +29,7 @@ interface MissionData {
 }
 
 interface FormationData {
-    formation: string;
-    isLeader: boolean;
-    isWingman: boolean;
     leaderID: number;
-    wingmenIDs: number[];
 }
 
 interface TaskData {
@@ -44,14 +40,12 @@ interface TaskData {
     targetAltitude: number;
     isTanker: boolean;
     isAWACS: boolean;
-	TACANOn: boolean;
 	TACANChannel: number;
 	TACANXY: string;
 	TACANCallsign: string;
     radioFrequency: number;
     radioCallsign: number;
     radioCallsignNumber: number;
-    radioAMFM: string;
 }
 
 interface OptionsData {

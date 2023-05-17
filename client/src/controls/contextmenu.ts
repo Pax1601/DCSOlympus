@@ -49,12 +49,12 @@ export class ContextMenu {
             if (this.#x + this.#container.offsetWidth < window.innerWidth)
                 this.#container.style.left = this.#x + "px";
             else
-                this.#container.style.left = window.innerWidth - this.#container.offsetWidth + "px";
+                this.#container.style.left = window.innerWidth - this.#container.offsetWidth - 10 + "px";
 
             if (this.#y + this.#container.offsetHeight < window.innerHeight)
                 this.#container.style.top = this.#y + "px";
             else
-                this.#container.style.top = window.innerHeight - this.#container.offsetHeight + "px";
+                this.#container.style.top = window.innerHeight - this.#container.offsetHeight - 10 + "px";
         }
     }
 }

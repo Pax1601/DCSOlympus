@@ -22,7 +22,7 @@ void AirUnit::setState(int newState)
 {
 	if (state != newState)
 	{
-		/* Perform any action required when LEAVING a certain state */
+		/************ Perform any action required when LEAVING a certain state ************/
 		switch (state) {
 		case State::IDLE: {
 			break;
@@ -35,6 +35,7 @@ void AirUnit::setState(int newState)
 			break;
 		}
 		case State::FOLLOW: {
+			setLeaderID(NULL);
 			break;
 		}
 		case State::LAND: {
@@ -47,7 +48,7 @@ void AirUnit::setState(int newState)
 			break;
 		}
 
-		/* Perform any action required when ENTERING a certain state */
+		/************ Perform any action required when ENTERING a certain state ************/
 		switch (newState) {
 		case State::IDLE: {
 			clearActivePath();
@@ -135,23 +136,6 @@ bool AirUnit::setActiveDestination()
 	}
 }
 
-void AirUnit::createHoldingPattern()
-{
-	/* Air units must ALWAYS have a destination or they will RTB and become uncontrollable */
-	clearActivePath();
-	Coords point1;
-	Coords point2;
-	Coords point3;
-	Geodesic::WGS84().Direct(latitude, longitude, 45, 10000, point1.lat, point1.lng);
-	Geodesic::WGS84().Direct(point1.lat, point1.lng, 135, 10000, point2.lat, point2.lng);
-	Geodesic::WGS84().Direct(point2.lat, point2.lng, 225, 10000, point3.lat, point3.lng);
-	pushActivePathBack(point1);
-	pushActivePathBack(point2);
-	pushActivePathBack(point3);
-	pushActivePathBack(Coords(latitude, longitude));
-	log(unitName + L" holding pattern created");
-}
-
 bool AirUnit::updateActivePath(bool looping)
 {
 	if (activePath.size() > 0)
@@ -172,7 +156,7 @@ void AirUnit::goToDestination(wstring enrouteTask)
 {
 	if (activeDestination != NULL)
 	{
-		Command* command = dynamic_cast<Command*>(new Move(ID, activeDestination, getTargetSpeed(), getTargetAltitude(), getCategory(), enrouteTask));
+		Command* command = dynamic_cast<Command*>(new Move(ID, activeDestination, getTargetSpeed(), getTargetAltitude(), enrouteTask));
 		scheduler->appendCommand(command);
 		hasTask = true;
 	}
@@ -282,22 +266,22 @@ void AirUnit::AIloop()
 			clearActivePath();
 			activeDestination = Coords(NULL);
 
-			/* If the target is not alive (either not set or was destroyed) go back to IDLE */
-			if (!isTargetAlive()) {
+			/* If the leader is not alive (either not set or was destroyed) go back to IDLE */
+			if (!isLeaderAlive()) {
 				setState(State::IDLE);
 				break;
 			}
 
 			currentTask = L"Following " + getTargetName();
 
-			Unit* target = unitsManager->getUnit(targetID);
+			Unit* leader = unitsManager->getUnit(leaderID);
 			if (!hasTask) {
-				if (target != nullptr && target->getAlive() && formationOffset != NULL)
+				if (leader != nullptr && leader->getAlive() && formationOffset != NULL)
 				{
 					std::wostringstream taskSS;
 					taskSS << "{"
 						<< "id = 'FollowUnit'" << ", "
-						<< "leaderID = " << target->getID() << ","
+						<< "leaderID = " << leader->getID() << ","
 						<< "offset = {" 
 						<< "x = " << formationOffset.x << ","
 						<< "y = " << formationOffset.y << ","
@@ -332,5 +316,6 @@ void AirUnit::AIloop()
 		default:
 			break;
 	}
+
 	addMeasure(L"currentTask", json::value(currentTask));
 }

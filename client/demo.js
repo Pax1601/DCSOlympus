@@ -2,7 +2,7 @@
 const DEMO_UNIT_DATA = {
     ["1"]:{
         baseData: {
-            AI: true,
+            AI: false,
             name: "KC-135",
             unitName: "Olympus 1-1",
             groupName: "Group 1",
@@ -18,7 +18,7 @@ const DEMO_UNIT_DATA = {
         },
         missionData:  {
             fuel: 50,
-            flags: {human: true},
+            flags: {Human: false},
             ammo: [
                 {
                     count: 4,
@@ -47,6 +47,7 @@ const DEMO_UNIT_DATA = {
         },
         taskData: {
             currentTask: "Holding",
+            currentState: "Idle",
             activePath: undefined,
             targetSpeed: 400,
             targetAltitude: 3000,
@@ -67,7 +68,7 @@ const DEMO_UNIT_DATA = {
     },
     ["2"]:{
         baseData: {
-            AI: false,
+            AI: true,
             name: "KC-135",
             unitName: "Olympus 1-2",
             groupName: "Group 1",

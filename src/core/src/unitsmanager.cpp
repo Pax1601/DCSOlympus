@@ -97,7 +97,9 @@ void UnitsManager::getData(json::value& answer, long long time)
 	auto unitsJson = json::value::object();
 	for (auto const& p : units)
 	{
-		unitsJson[to_wstring(p.first)] = p.second->getData(time);
+		auto unitJson = p.second->getData(time);
+		if (unitJson.size() > 0)
+			unitsJson[to_wstring(p.first)] = p.second->getData(time);
 	}
 	answer[L"units"] = unitsJson;
 }

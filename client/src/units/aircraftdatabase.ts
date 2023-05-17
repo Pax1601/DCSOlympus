@@ -322,7 +322,7 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "H-6J": {
             "name": "H-6J",
-            "label": "H-6J (the other) Copyright Infringement",
+            "label": "H-6J Badger,
             "era": ["Mid Cold War, Late Cold War", "Modern"],
             "shortLabel": "H6",
             "loadouts": [
@@ -359,7 +359,7 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "J-11A": {
             "name": "J-11A",
-            "label": "J-11A Copyright Infringement",
+            "label": "J-11A Flaming Dragon",
             "era": ["Modern"],
             "shortLabel": "11",
             "loadouts": [
@@ -1183,7 +1183,7 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "M-2000C": {
             "name": "M-2000C",
-            "label": "M-2000C Baguette",
+            "label": "M-2000C Mirage",
             "era": ["Late Cold War", "Modern"],
             "shortLabel": "M2KC",
             "loadouts": [

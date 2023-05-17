@@ -2,7 +2,7 @@
   "name": "DCSOlympus",
   "node-main": "./bin/www",
   "main": "http://localhost:3000",
-  "version": "v0.2.0-alpha",
+  "version": "v0.2.1-alpha",
   "private": true,
   "scripts": {
     "copy": "copy .\\node_modules\\leaflet\\dist\\leaflet.css .\\public\\stylesheets\\leaflet.css",
@@ -33,6 +33,7 @@
     "browserify": "^17.0.0",
     "concurrently": "^7.6.0",
     "esmify": "^2.1.1",
+    "express-basic-auth": "^1.2.1",
     "nodemon": "^2.0.20",
     "sortablejs": "^1.15.0",
     "tsify": "^5.0.4",

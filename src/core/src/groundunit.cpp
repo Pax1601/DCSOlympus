@@ -29,7 +29,7 @@ void GroundUnit::AIloop()
 		if (activeDestination != activePath.front())
 		{
 			activeDestination = activePath.front();
-			Command* command = dynamic_cast<Command*>(new Move(ID, activeDestination, getTargetSpeed(), getTargetAltitude(), getCategory(), L"nil"));
+			Command* command = dynamic_cast<Command*>(new Move(ID, activeDestination, getTargetSpeed(), getTargetAltitude(), L"nil"));
 			scheduler->appendCommand(command);
 		}
 	}

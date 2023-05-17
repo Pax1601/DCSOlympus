@@ -1,23 +1,28 @@
-<div id="splash-screen" class="ol-dialog" data-on-click="closeDialog">
-
+<div id="splash-screen" class="ol-dialog" oncontextmenu="return false;">
     <div id="splash-content" class="ol-dialog-content">
-
         <div id="app-summary">
             <h2>DCS Olympus</h2>
             <h4>Dynamic Unit Command</h4>
-            <div class="app-version">Version <span class="app-version-number">v0.2.0</span></div>
+            <div class="app-version">Version <span class="app-version-number">v0.2.1</span></div>
         </div>
+
+        <div id="authentication-form">
+            <div><h5>Username</h5> <input type="text" id="username" name="username" required autocomplete="username" placeholder="Enter username..."></div>
+            <div><h5>Password</h5> <input type="password" id="password" name="password" minlength="8" required autocomplete="current-password" placeholder="Enter password..."></div>
+            <button id="connection-button" class="ol-button-apply" data-on-click="tryConnection">Connect</button>
+        </div>
+
+        <h5 id="connection-status"><br></h5>
 
         <div id="legal-stuff">
-            <h4>Disclaimer</h4>
-            <p>We ain't no friends with no Eagle Dynamics.</p>
+            <h5>DISCLAIMER</h5>
+            <p> DCS Olympus (the "MATERIAL" or "Software") is provided completely free to users subject to the terms of the <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0 Licence</a> except where such terms conflict with this disclaimer, in which case, the terms of this disclaimer shall prevail. 
+                The authors and/or copyright holders of the Software have not received any financial benefit in connection with the Software. In any event, the Software is provided “as is”, without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and non-infringement. In no event shall the authors and/or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the Software or the use or other dealings in the Software.  Any party making use of the Software in any manner agrees to be bound by the terms set out in this disclaimer. THIS MATERIAL IS NOT MADE OR SUPPORTED BY EAGLE DYNAMICS SA.
         </div>
-
     </div>
-
 </div>
 
-<div id="advanced-settings-dialog" class="ol-panel ol-dialog olympus-dialog-close hide">
+<div id="advanced-settings-dialog" class="ol-panel ol-dialog olympus-dialog-close hide" oncontextmenu="return false;">
     <div class="ol-dialog-close" data-on-click="closeDialog"></div>
 
     <div class="ol-dialog-header">
@@ -141,7 +146,7 @@
 </div>
 
 
-<div id="custom-formation-dialog" class="ol-panel ol-dialog olympus-dialog-close hide">
+<div id="custom-formation-dialog" class="ol-panel ol-dialog olympus-dialog-close hide" oncontextmenu="return false;">
     <div class="ol-dialog-close" data-on-click="closeDialog"></div>
 
     <div class="ol-dialog-header">

@@ -45,25 +45,28 @@ export var BoxSelect = Handler.extend({
 	},
 
 	_onMouseDown: function (e: any) {
-		if (((e.which !== 1) && (e.button !== 0))) { return false; }
+		if ((e.which == 1 && e.button == 0 && e.shiftKey)) {
 
-		// Clear the deferred resetState if it hasn't executed yet, otherwise it
-		// will interrupt the interaction and orphan a box element in the container.
-		this._clearDeferredResetState();
-		this._resetState();
+			// Clear the deferred resetState if it hasn't executed yet, otherwise it
+			// will interrupt the interaction and orphan a box element in the container.
+			this._clearDeferredResetState();
+			this._resetState();
 
-		DomUtil.disableTextSelection();
-		DomUtil.disableImageDrag();
+			DomUtil.disableTextSelection();
+			DomUtil.disableImageDrag();
 
-		this._startPoint = this._map.mouseEventToContainerPoint(e);
+			this._startPoint = this._map.mouseEventToContainerPoint(e);
 
-		//@ts-ignore
-		DomEvent.on(document, {
-			contextmenu: DomEvent.stop,
-			mousemove: this._onMouseMove,
-			mouseup: this._onMouseUp,
-			keydown: this._onKeyDown
-		}, this);
+			//@ts-ignore
+			DomEvent.on(document, {
+				contextmenu: DomEvent.stop,
+				mousemove: this._onMouseMove,
+				mouseup: this._onMouseUp,
+				keydown: this._onKeyDown
+			}, this);
+		} else {
+			return false;
+		}
 	},
 
 	_onMouseMove: function (e: any) {

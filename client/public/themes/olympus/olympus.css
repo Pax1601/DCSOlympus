@@ -3,35 +3,35 @@
     /**  Colours  **/
 
     /*** Coalition: neutral  **/
-    --primary-grey            : #CFD9E8;
-    --secondary-neutral       : #111111;
+    --primary-neutral           : #949ba7;
+    --secondary-neutral-outline : #111111;
+    --secondary-neutral-text    : #111111;
 
     /*** Coalition: blue  **/
-    --primary-blue            : #247be2;
-    --secondary-blue-outline  : #082e44;
-    --secondary-blue-text     : #017DC1;
+    --primary-blue              : #247be2;
+    --secondary-blue-outline    : #082e44;
+    --secondary-blue-text       : #017DC1;
 
     /*** Coalition: red  **/
-    --primary-red             : #ff5858;
-    --secondary-red-outline   : #262222;
-    --secondary-red-text      : #D42121;
+    --primary-red               : #ff5858;
+    --secondary-red-outline     : #262222;
+    --secondary-red-text        : #D42121;
 
+    --accent-green              : #8bff63;
+    --accent-light-blue         : #5ca7ff;
+    --accent-light-red          : #F5B6B6;
 
-    --accent-green            : #8bff63;
-    --accent-light-blue       : #5ca7ff;
-    --accent-light-red        : #F5B6B6;
+    --background-grey           : #3d4651;
+    --background-slate-blue     : #363c43;
+    --background-offwhite       : #f2f2f3;
+    --background-steel          : #202831;
 
-    --background-grey         : #3d4651;
-    --background-slate-blue   : #363c43;
-    --background-offwhite     : #f2f2f3;
-    --background-steel        : #202831;
+    --secondary-dark-steel      : #181e25;
+    --secondary-gunmetal-grey   : #2f2f2f;
+    --secondary-light-grey      : #797e83;
+    --secondary-yellow          : #ffd46893;
 
-    --secondary-dark-steel    : #181e25;
-    --secondary-gunmetal-grey : #2f2f2f;
-    --secondary-light-grey    : #797e83;
-    --secondary-yellow        : #ffd46893;
-
-    --background-hover        : #f2f2f333;
+    --background-hover          : #f2f2f333;
 
     --nav-text : #ECECEC;
 
