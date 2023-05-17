@@ -9,7 +9,7 @@ import { AIC } from "./aic/aic";
 import { ATC } from "./atc/atc";
 import { FeatureSwitches } from "./featureswitches";
 import { LogPanel } from "./panels/logpanel";
-import { getConfig, getFreezed, setAddress, setCredentials, setFreezed, startUpdate, toggleDemoEnabled } from "./server/server";
+import { getConfig, getPaused, setAddress, setCredentials, setPaused, startUpdate, toggleDemoEnabled } from "./server/server";
 import { UnitDataTable } from "./units/unitdatatable";
 import { keyEventWasInInput } from "./other/utils";
 import { Popup } from "./popups/popup";
@@ -138,7 +138,7 @@ function setupEvents() {
                 unitDataTable.toggle();
                 break
             case "Space":
-                setFreezed(!getFreezed());
+                setPaused(!getPaused());
                 break;
             case "KeyW":
             case "KeyA":
@@ -159,10 +159,13 @@ function setupEvents() {
             case "Digit7":
             case "Digit8":
             case "Digit9":
-                if (ev.ctrlKey)
-                    getUnitsManager().selectedUnitsAddToHotgroup(parseInt(ev.key));
+                // Using the substring because the key will be invalid when pressing the Shift key
+                if (ev.ctrlKey && ev.shiftKey)
+                    getUnitsManager().selectedUnitsAddToHotgroup(parseInt(ev.code.substring(5)));   
+                else if (ev.ctrlKey && !ev.shiftKey)
+                    getUnitsManager().selectedUnitsSetHotgroup(parseInt(ev.code.substring(5)));
                 else
-                    getUnitsManager().selectUnitsByHotgroup(parseInt(ev.key));
+                    getUnitsManager().selectUnitsByHotgroup(parseInt(ev.code.substring(5)));
                 break;
         }
     });

@@ -99,7 +99,7 @@
     width: var(--unit-aircraft-marker-width);
 }
 
-[data-object|="unit-aircraft"]:hover .unit-marker {
+[data-object|="unit-aircraft"][data-is-highlighted] .unit-marker {
     background-image: var(--unit-aircraft-marker-neutral-hover-url);
 }
 
@@ -111,7 +111,7 @@
     background-image: var(--unit-aircraft-marker-blue-url);
 }
 
-[data-object|="unit-aircraft"][data-coalition="blue"]:hover .unit-marker {
+[data-object|="unit-aircraft"][data-coalition="blue"][data-is-highlighted] .unit-marker {
     background-image: var(--unit-aircraft-marker-blue-hover-url);
 }
 
@@ -124,7 +124,7 @@
     background-image: var(--unit-aircraft-marker-red-url);
 }
 
-[data-object|="unit-aircraft"][data-coalition="red"]:hover .unit-marker {
+[data-object|="unit-aircraft"][data-coalition="red"][data-is-highlighted] .unit-marker {
     background-image: var(--unit-aircraft-marker-red-hover-url);
 }
 
@@ -140,7 +140,7 @@
     width: var(--unit-groundunit-marker-width);
 }
 
-[data-object|="unit-groundunit"]:hover .unit-marker {
+[data-object|="unit-groundunit"][data-is-highlighted] .unit-marker {
     background-image: var(--unit-groundunit-marker-neutral-hover-url);
 }
 
@@ -153,7 +153,7 @@
     background-image: var(--unit-groundunit-marker-blue-url);
 }
 
-[data-object|="unit-groundunit"][data-coalition="blue"]:hover .unit-marker {
+[data-object|="unit-groundunit"][data-coalition="blue"][data-is-highlighted] .unit-marker {
     background-image: var(--unit-groundunit-marker-blue-hover-url);
 }
 
@@ -166,7 +166,7 @@
     background-image: var(--unit-groundunit-marker-red-url);
 }
 
-[data-object|="unit-groundunit"][data-coalition="red"]:hover .unit-marker {
+[data-object|="unit-groundunit"][data-coalition="red"][data-is-highlighted] .unit-marker {
     background-image: var(--unit-groundunit-marker-red-hover-url);
 }
 
@@ -188,7 +188,7 @@
 }
 
 
-[data-object|="unit-sam"]:hover .unit-marker {
+[data-object|="unit-sam"][data-is-highlighted] .unit-marker {
     background-image: var(--unit-sam-marker-neutral-hover-url);
 }
 
@@ -201,7 +201,7 @@
     background-image: var(--unit-sam-marker-blue-url);
 }
 
-[data-object|="unit-sam"][data-coalition="blue"]:hover .unit-marker {
+[data-object|="unit-sam"][data-coalition="blue"][data-is-highlighted] .unit-marker {
     background-image: var(--unit-sam-marker-blue-hover-url);
 }
 
@@ -214,7 +214,7 @@
     background-image: var(--unit-sam-marker-red-url);
 }
 
-[data-object|="unit-sam"][data-coalition="red"]:hover .unit-marker {
+[data-object|="unit-sam"][data-coalition="red"][data-is-highlighted] .unit-marker {
     background-image: var(--unit-sam-marker-red-hover-url);
 }
 
@@ -236,7 +236,7 @@
 }
 
 
-[data-object|="unit-navyunit"]:hover .unit-marker {
+[data-object|="unit-navyunit"][data-is-highlighted] .unit-marker {
     background-image: var(--unit-navyunit-marker-neutral-hover-url);
 }
 
@@ -249,7 +249,7 @@
     background-image: var(--unit-navyunit-marker-blue-url);
 }
 
-[data-object|="unit-navyunit"][data-coalition="blue"]:hover .unit-marker {
+[data-object|="unit-navyunit"][data-coalition="blue"][data-is-highlighted] .unit-marker {
     background-image: var(--unit-navyunit-marker-blue-hover-url);
 }
 
@@ -262,7 +262,7 @@
     background-image: var(--unit-navyunit-marker-red-url);
 }
 
-[data-object|="unit-navyunit"][data-coalition="red"]:hover .unit-marker {
+[data-object|="unit-navyunit"][data-coalition="red"][data-is-highlighted] .unit-marker {
     background-image: var(--unit-navyunit-marker-red-hover-url);
 }
 

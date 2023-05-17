@@ -46,7 +46,7 @@ export class UnitsManager {
     }
 
     getUnitsByHotgroup(hotgroup: number) {
-        return Object.values(this.#units).filter((unit: Unit) => {return unit.getHotgroup() == hotgroup});
+        return Object.values(this.#units).filter((unit: Unit) => {return unit.getBaseData().alive && unit.getHotgroup() == hotgroup});
     }
 
     addUnit(ID: number, data: UnitData) {
@@ -117,6 +117,7 @@ export class UnitsManager {
     }
 
     selectUnitsByHotgroup(hotgroup: number) {
+        this.deselectAllUnits();
         this.getUnitsByHotgroup(hotgroup).forEach((unit: Unit) => unit.setSelected(true))
     }
 
@@ -222,7 +223,6 @@ export class UnitsManager {
         for (let idx in selectedUnits) {
             selectedUnits[idx].setSpeed(speed);
         }
-
         this.#showActionMessage(selectedUnits, `setting speed to ${speed * 1.94384} kts`);
     }
 
@@ -317,6 +317,12 @@ export class UnitsManager {
         this.#showActionMessage(selectedUnits, `following unit ${this.getUnitByID(ID)?.getBaseData().unitName}`);
     }
 
+    selectedUnitsSetHotgroup(hotgroup: number)
+    {
+        this.getUnitsByHotgroup(hotgroup).forEach((unit: Unit) => unit.setHotgroup(null));
+        this.selectedUnitsAddToHotgroup(hotgroup);
+    }
+
     selectedUnitsAddToHotgroup(hotgroup: number)
     {
         var selectedUnits = this.getSelectedUnits();
@@ -324,7 +330,7 @@ export class UnitsManager {
             selectedUnits[idx].setHotgroup(hotgroup);
         }
         this.#showActionMessage(selectedUnits, `added to hotgroup ${hotgroup}`);
-        getHotgroupPanel().addHotgroup(hotgroup);
+        getHotgroupPanel().refreshHotgroups();
     }
 
     /***********************************************/
