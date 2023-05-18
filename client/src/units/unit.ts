@@ -646,27 +646,25 @@ export class Unit extends Marker {
     }
 
     #drawTargets() {
-        for (let typeIndex in this.getMissionData().targets) {
-            for (let index in this.getMissionData().targets[typeIndex]) {
-                var targetData = this.getMissionData().targets[typeIndex][index];
-                var target = getUnitsManager().getUnitByID(targetData.object["id_"])
-                if (target != null) {
-                    var startLatLng = new LatLng(this.getFlightData().latitude, this.getFlightData().longitude)
-                    var endLatLng = new LatLng(target.getFlightData().latitude, target.getFlightData().longitude)
+        for (let index in this.getMissionData().targets) {
+            var targetData = this.getMissionData().targets[index];
+            var target = getUnitsManager().getUnitByID(targetData.object["id_"])
+            if (target != null) {
+                var startLatLng = new LatLng(this.getFlightData().latitude, this.getFlightData().longitude)
+                var endLatLng = new LatLng(target.getFlightData().latitude, target.getFlightData().longitude)
 
-                    var color;
-                    if (typeIndex === "radar")
-                        color = "#FFFF00";
-                    else if (typeIndex === "visual")
-                        color = "#FF00FF";
-                    else if (typeIndex === "rwr")
-                        color = "#00FF00";
-                    else
-                        color = "#FFFFFF";
-                    var targetPolyline = new Polyline([startLatLng, endLatLng], { color: color, weight: 3, opacity: 0.4, smoothFactor: 1 });
-                    targetPolyline.addTo(getMap());
-                    this.#targetsPolylines.push(targetPolyline)
-                }
+                var color;
+                if (targetData.detectionMethod === "RADAR")
+                    color = "#FFFF00";
+                else if (targetData.detectionMethod === "VISUAL")
+                    color = "#FF00FF";
+                else if (targetData.detectionMethod === "RWR")
+                    color = "#00FF00";
+                else
+                    color = "#FFFFFF";
+                var targetPolyline = new Polyline([startLatLng, endLatLng], { color: color, weight: 3, opacity: 0.4, smoothFactor: 1 });
+                targetPolyline.addTo(getMap());
+                this.#targetsPolylines.push(targetPolyline)
             }
         }
     }

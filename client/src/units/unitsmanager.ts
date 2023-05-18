@@ -62,6 +62,7 @@ export class UnitsManager {
     }
 
     update(data: UnitsData) {
+        var updatedUnits: Unit[] = [];
         Object.keys(data.units)
             .filter((ID: string) => !(ID in this.#units))
             .reduce((timeout: number, ID: string) => {
@@ -75,7 +76,15 @@ export class UnitsManager {
 
         Object.keys(data.units)
             .filter((ID: string) => ID in this.#units)
-            .forEach((ID: string) => this.#units[parseInt(ID)]?.setData(data.units[ID]));
+            .forEach((ID: string) => {
+                updatedUnits.push(this.#units[parseInt(ID)]);
+                this.#units[parseInt(ID)]?.setData(data.units[ID])
+            });
+
+        this.getSelectedUnits().forEach((unit: Unit) => {
+            if (!updatedUnits.includes(unit))
+                unit.setData({})
+        });
     }
 
     selectUnit(ID: number, deselectAllUnits: boolean = true) {

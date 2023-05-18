@@ -4,6 +4,24 @@ export class GroundUnitsDatabase extends UnitDatabase {
     constructor() {
         super();
         this.blueprints = {
+            "SA-2 SAM Battery": {
+                "name": "SA-2 SAM Battery",
+                "label": "SA-2 SAM Battery",
+                "shortLabel": "SA-2 SAM Battery",
+                "loadouts": [
+                    {
+                        "fuel": 1,
+                        "items": [
+                        ],
+                        "roles": [
+                            "Template"
+                        ],
+                        "code": "",
+                        "name": "Default"
+                    }
+                ],
+                "filename": ""
+            },
             "2B11 mortar": {
                 "name": "2B11 mortar",
                 "label": "2B11 mortar",
