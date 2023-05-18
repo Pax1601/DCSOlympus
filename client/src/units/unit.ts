@@ -137,8 +137,56 @@ export class Unit extends Marker {
         return "";
     }
 
-    /********************** Unit data *************************/
+    setSelected(selected: boolean) {
+        /* Only alive units can be selected. Some units are not selectable (weapons) */
+        if ((this.getBaseData().alive || !selected) && this.getSelectable() && this.getSelected() != selected) {
+            this.#selected = selected;
+            this.getElement()?.querySelector(`[data-object|="unit"]`)?.toggleAttribute("data-is-selected");
+            if (selected){
+                document.dispatchEvent(new CustomEvent("unitSelection", { detail: this }));
+                this.getGroupMembers().forEach((unit: Unit) => unit.setSelected(true));
+            }
+            else {
+                document.dispatchEvent(new CustomEvent("unitDeselection", { detail: this }));
+                this.getGroupMembers().forEach((unit: Unit) => unit.setSelected(false));
+            }
+        }
+    }
 
+    getSelected() {
+        return this.#selected;
+    }
+
+    setSelectable(selectable: boolean) {
+        this.#selectable = selectable;
+    }
+
+    getSelectable() {
+        return this.#selectable;
+    }
+
+    setHotgroup(hotgroup: number | null) {
+        this.#hotgroup = hotgroup;
+    }
+
+    getHotgroup() {
+        return this.#hotgroup;
+    }
+
+    setHighlighted(highlighted: boolean) {
+        this.getElement()?.querySelector(`[data-object|="unit"]`)?.toggleAttribute("data-is-highlighted", highlighted);
+        this.#highlighted = highlighted;
+    }
+
+    getHighlighted() {
+        return this.#highlighted;
+    }
+
+    getGroupMembers() {
+        return Object.values(getUnitsManager().getUnits()).filter((unit: Unit) => {return unit != this && unit.getBaseData().groupName === this.getBaseData().groupName;});
+    }
+
+    /********************** Unit data *************************/
     setData(data: UpdateData) {
         /* Check if data has changed comparing new values to old values */
         const positionChanged = (data.flightData != undefined && data.flightData.latitude != undefined && data.flightData.longitude != undefined && (this.getFlightData().latitude != data.flightData.latitude || this.getFlightData().longitude != data.flightData.longitude));
@@ -235,47 +283,6 @@ export class Unit extends Marker {
 
     getOptionsData() {
         return this.getData().optionsData;
-    }
-
-    setSelected(selected: boolean) {
-        /* Only alive units can be selected. Some units are not selectable (weapons) */
-        if ((this.getBaseData().alive || !selected) && this.getSelectable() && this.getSelected() != selected) {
-            this.#selected = selected;
-            this.getElement()?.querySelector(`[data-object|="unit"]`)?.toggleAttribute("data-is-selected");
-            if (selected)
-                document.dispatchEvent(new CustomEvent("unitSelection", { detail: this }));
-            else
-                document.dispatchEvent(new CustomEvent("unitDeselection", { detail: this }));
-        }
-    }
-
-    getSelected() {
-        return this.#selected;
-    }
-
-    setSelectable(selectable: boolean) {
-        this.#selectable = selectable;
-    }
-
-    getSelectable() {
-        return this.#selectable;
-    }
-
-    setHotgroup(hotgroup: number | null) {
-        this.#hotgroup = hotgroup;
-    }
-
-    getHotgroup() {
-        return this.#hotgroup;
-    }
-
-    setHighlighted(highlighted: boolean) {
-        this.getElement()?.querySelector(`[data-object|="unit"]`)?.toggleAttribute("data-is-highlighted", highlighted);
-        this.#highlighted = highlighted;
-    }
-
-    getHighlighted() {
-        return this.#highlighted;
     }
 
     /********************** Visibility *************************/

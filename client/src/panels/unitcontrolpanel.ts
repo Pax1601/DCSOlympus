@@ -8,12 +8,12 @@ import { UnitDatabase } from "../units/unitdatabase";
 import { Panel } from "./panel";
 
 const ROEs: string[] = ["Hold", "Return", "Designated", "Free"];
-const reactionsToThreat: string[] = ["None", "Passive", "Evade"];
+const reactionsToThreat: string[] = ["None", "Manoeuvre", "Passive", "Evade"];
 const emissionsCountermeasures: string[] = ["Silent", "Attack", "Defend", "Free"];
 
 const ROEDescriptions: string[] = ["Hold (Never fire)", "Return (Only fire if fired upon)", "Designated (Attack the designated target only)", "Free (Attack anyone)"];
-const reactionsToThreatDescriptions: string[] = ["None (No reaction)", "Passive (Countermeasures only, no manoeuvre)", "Evade (Countermeasures and manoeuvers)"];
-const emissionsCountermeasuresDescriptions: string[] = ["Silent (Radar off, no countermeasures)", "Attack (Radar only for targeting, countermeasures only if attacked/locked)", "Defend (Radar for searching, jammer if locked, countermeasures inside WEZ)", "Always on (Radar and jammer always on, countermeasures when hostile detected)"];
+const reactionsToThreatDescriptions: string[] = ["None (No reaction)", "Manoeuvre (no countermeasures)", "Passive (Countermeasures only, no manoeuvre)", "Evade (Countermeasures and manoeuvers)"];
+const emissionsCountermeasuresDescriptions: string[] = ["Silent (Radar OFF, no ECM)", "Attack (Radar only for targeting, ECM only if locked)", "Defend (Radar for searching, ECM if locked)", "Always on (Radar and ECM always on)"];
 
 const minSpeedValues: { [key: string]: number } = { Aircraft: 100, Helicopter: 0, NavyUnit: 0, GroundUnit: 0 };
 const maxSpeedValues: { [key: string]: number } = { Aircraft: 800, Helicopter: 300, NavyUnit: 60, GroundUnit: 60 };

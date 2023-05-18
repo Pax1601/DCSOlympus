@@ -21,7 +21,8 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	border-radius: var(--border-radius-md);
 	display: flex;
 	flex-direction: column;
-	max-height: 136px;
+	max-height: 215px;
+	overflow-x: hidden;
 	overflow-y: auto;
 	row-gap: 4px;
 }
@@ -34,19 +35,29 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	height: 32px;
 	padding: 8px 0;
 	position: relative;
-	width: 100%;
+	width: calc(100% - 5px);
+	margin-right: 5px;
 }
 
 #unit-control-panel #selected-units-container button::before {
 	background-color: var( --primary-neutral );
 	border-radius: 999px;
 	content: attr(data-short-label);
-	margin: 0 5px;
+	margin: 2px 4px;
 	padding: 4px 6px;
 	white-space: nowrap;
-	width: 30px;
+	width: fit-content;
+	min-width: 20px;
+	max-width: 30px;
 	text-overflow: ellipsis;
 	overflow: hidden;
+	font-size: 10px;
+}
+
+#unit-control-panel #selected-units-container button:hover::before {
+	max-width: 100%;
+	text-overflow: unset;
+	background-color: black;
 }
 
 #unit-control-panel #selected-units-container button[data-coalition="blue"]::before {
@@ -69,24 +80,6 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	width: fit-content;
-}
-
-
-#unit-control-panel #selected-units-container button:hover::after {
-	overflow: visible;
-	text-overflow: initial;
-}
-
-#unit-control-panel #selected-units-container button:hover::after {
-	background-color: var(--background-grey);
-}
-
-#unit-control-panel #selected-units-container button[data-coalition="blue"]:hover::after {
-	background-color: var(--primary-blue);
-}
-
-#unit-control-panel #selected-units-container button[data-coalition="red"]:hover::after {
-	background-color: var(--primary-red);
 }
 
 #unit-control-panel h4 {
