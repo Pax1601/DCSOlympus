@@ -11,48 +11,6 @@ export function bearing(lat1: number, lon1: number, lat2: number, lon2: number) 
     return brng;
 }
 
-
-export function ConvertDDToDMS(D: number, lng: boolean) {
-    var dir = D < 0 ? (lng ? "W" : "S") : lng ? "E" : "N";
-    var deg = 0 | (D < 0 ? (D = -D) : D);
-    var min = 0 | (((D += 1e-9) % 1) * 60);
-    var sec = (0 | (((D * 60) % 1) * 6000)) / 100;
-    var dec = Math.round((sec - Math.floor(sec)) * 100);
-    var sec = Math.floor(sec);
-    if (lng)
-        return dir + zeroPad(deg, 3) + "°" + zeroPad(min, 2) + "'" + zeroPad(sec, 2) + "." + zeroPad(dec, 2) + "\"";
-    else
-        return dir + zeroPad(deg, 2) + "°" + zeroPad(min, 2) + "'" + zeroPad(sec, 2) + "." + zeroPad(dec, 2) + "\"";
-}
-
-
-export function dataPointMap( container:HTMLElement, data:any) {
-
-    Object.keys( data ).forEach( ( key ) => {
-
-        const val = "" + data[ key ];  //  Ensure a string
-
-        container.querySelectorAll( `[data-point="${key}"]`).forEach( el => {
-
-            //  We could probably have options here
-            if ( el instanceof HTMLInputElement ) {
-                el.value = val;
-            } else if ( el instanceof HTMLElement ) {
-                el.innerText = val;
-            }
-        });
-
-    });
-
-}
-
-
-export function deg2rad(deg: number) {
-    var pi = Math.PI;
-    return deg * (pi / 180);
-}
-
-
 export function distance(lat1: number, lon1: number, lat2: number, lon2: number) {
     const R = 6371e3; // metres
     const φ1 = deg2rad(lat1); // φ, λ in radians
@@ -68,6 +26,42 @@ export function distance(lat1: number, lon1: number, lat2: number, lon2: number)
     return d;
 }
 
+export function ConvertDDToDMS(D: number, lng: boolean) {
+    var dir = D < 0 ? (lng ? "W" : "S") : lng ? "E" : "N";
+    var deg = 0 | (D < 0 ? (D = -D) : D);
+    var min = 0 | (((D += 1e-9) % 1) * 60);
+    var sec = (0 | (((D * 60) % 1) * 6000)) / 100;
+    var dec = Math.round((sec - Math.floor(sec)) * 100);
+    var sec = Math.floor(sec);
+    if (lng)
+        return dir + zeroPad(deg, 3) + "°" + zeroPad(min, 2) + "'" + zeroPad(sec, 2) + "." + zeroPad(dec, 2) + "\"";
+    else
+        return dir + zeroPad(deg, 2) + "°" + zeroPad(min, 2) + "'" + zeroPad(sec, 2) + "." + zeroPad(dec, 2) + "\"";
+}
+
+export function dataPointMap( container:HTMLElement, data:any) {
+    Object.keys( data ).forEach( ( key ) => {
+        const val = "" + data[ key ];  //  Ensure a string
+        container.querySelectorAll( `[data-point="${key}"]`).forEach( el => {
+            //  We could probably have options here
+            if ( el instanceof HTMLInputElement ) {
+                el.value = val;
+            } else if ( el instanceof HTMLElement ) {
+                el.innerText = val;
+            }
+        });
+    });
+}
+
+export function deg2rad(deg: number) {
+    var pi = Math.PI;
+    return deg * (pi / 180);
+}
+
+export function rad2deg(rad: number) {
+    var pi = Math.PI;
+    return rad / (pi / 180);
+}
 
 export function generateUUIDv4() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -76,32 +70,14 @@ export function generateUUIDv4() {
     });
 }
 
-
 export function keyEventWasInInput( event:KeyboardEvent ) {
-
     const target = event.target;
-
     return ( target instanceof HTMLElement && ( [ "INPUT", "TEXTAREA" ].includes( target.nodeName ) ) );
-
 }
-
-
-export function rad2deg(rad: number) {
-    var pi = Math.PI;
-    return rad / (pi / 180);
-}
-
 
 export function reciprocalHeading(heading: number): number {
-
-    if (heading > 180) {
-        return heading - 180;
-    }
-
-    return heading + 180;
-
+    return heading > 180? heading - 180: heading + 180;
 }
-
 
 export const zeroAppend = function (num: number, places: number) {
     var string = String(num);
@@ -111,7 +87,6 @@ export const zeroAppend = function (num: number, places: number) {
     return string;
 }
 
-
 export const zeroPad = function (num: number, places: number) {
     var string = String(num);
     while (string.length < places) {
@@ -119,7 +94,6 @@ export const zeroPad = function (num: number, places: number) {
     }
     return string;
 }
-
 
 export function similarity(s1: string, s2: string) {
     var longer = s1;
@@ -160,4 +134,24 @@ export function editDistance(s1: string, s2: string) {
             costs[s2.length] = lastValue;
     }
     return costs[s2.length];
+}
+
+export function latLngToMercator(lat: number, lng: number): {x: number, y: number} {
+    var rMajor = 6378137; //Equatorial Radius, WGS84
+    var shift  = Math.PI * rMajor;
+    var x      = lng * shift / 180;
+    var y      = Math.log(Math.tan((90 + lat) * Math.PI / 360)) / (Math.PI / 180);
+    y = y * shift / 180;
+    
+    return {x: x, y: y};
+}
+
+export function mercatorToLatLng(x: number, y: number) {
+    var rMajor = 6378137; //Equatorial Radius, WGS84
+    var shift  = Math.PI * rMajor;
+    var lng    = x / shift * 180.0;
+    var lat    = y / shift * 180.0;
+    lat = 180 / Math.PI * (2 * Math.atan(Math.exp(lat * Math.PI / 180.0)) - Math.PI / 2.0);
+
+    return { lng: lng, lat: lat };            
 }

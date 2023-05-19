@@ -931,3 +931,15 @@ body[data-hide-navyunit] #unit-visibility-control-navyunit {
     display: flex;
     translate: 0% -300%;
 }
+
+.ol-destination-preview-icon {
+    width: 52px;
+    height: 52px;
+    background-color: var(--secondary-yellow);
+    pointer-events: none;
+    border-radius: 999px;
+}
+
+.ol-destination-preview {
+    pointer-events: none;
+}

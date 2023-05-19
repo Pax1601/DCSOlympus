@@ -9,6 +9,7 @@ import { AirbaseContextMenu } from "../controls/airbasecontextmenu";
 import { Dropdown } from "../controls/dropdown";
 import { Airbase } from "../missionhandler/airbase";
 import { Unit } from "../units/unit";
+import { bearing } from "../other/utils";
 
 // TODO a bit of a hack, this module is provided as pure javascript only
 require("../../node_modules/leaflet.nauticscale/dist/leaflet.nauticscale.js")
@@ -23,6 +24,13 @@ var temporaryIcon = new L.Icon({
     iconSize: [52, 52],
     iconAnchor: [26, 26]
 });
+
+var destinationPreviewIcon = new L.DivIcon({
+    html: `<div class="ol-destination-preview-icon"></div>`,
+    iconSize: [52, 52],
+    iconAnchor: [26, 26],
+    className: "ol-destination-preview"
+})
 
 export class ClickableMiniMap extends MiniMap {
     constructor(layer: L.TileLayer | L.LayerGroup, options?: MiniMapOptions) {
@@ -51,6 +59,10 @@ export class Map extends L.Map {
     #miniMap: ClickableMiniMap | null = null;
     #miniMapLayerGroup: L.LayerGroup;
     #temporaryMarkers: L.Marker[] = [];
+    #destinationPreviewMarkers: L.Marker[] = [];
+    #destinationGroupRotation: number = 0;
+    #computeDestinationRotation: boolean = false;
+    #destinationRotationCenter: L.LatLng | null = null;
 
     #mapContextMenu: MapContextMenu = new MapContextMenu("map-contextmenu");
     #unitContextMenu: UnitContextMenu = new UnitContextMenu("unit-contextmenu");
@@ -67,52 +79,17 @@ export class Map extends L.Map {
         this.setLayer("ArcGIS Satellite");
 
         /* Minimap */
-        /* Draw the limits of the maps in the minimap*/
-        var latlngs = [[    // NTTR
-            new L.LatLng(39.7982463, -119.985425),
-            new L.LatLng(34.4037128, -119.7806729),
-            new L.LatLng(34.3483316, -112.4529351),
-            new L.LatLng(39.7372411, -112.1130805),
-            new L.LatLng(39.7982463, -119.985425)
-        ],
-        [   // Syria
-            new L.LatLng(37.3630556, 29.2686111),
-            new L.LatLng(31.8472222, 29.8975),
-            new L.LatLng(32.1358333, 42.1502778),
-            new L.LatLng(37.7177778, 42.3716667),
-            new L.LatLng(37.3630556, 29.2686111)
-        ],
-        [   // Caucasus
-            new L.LatLng(39.6170191, 27.634935),
-            new L.LatLng(38.8735863, 47.1423108),
-            new L.LatLng(47.3907982, 49.3101946),
-            new L.LatLng(48.3955879, 26.7753625),
-            new L.LatLng(39.6170191, 27.634935)
-        ],
-        [   // Persian Gulf
-            new L.LatLng(32.9355285, 46.5623682),
-            new L.LatLng(21.729393, 47.572675),
-            new L.LatLng(21.8501348, 63.9734737),
-            new L.LatLng(33.131584, 64.7313594),
-            new L.LatLng(32.9355285, 46.5623682)
-        ],
-        [   // Marianas
-            new L.LatLng(22.09, 135.0572222),
-            new L.LatLng(10.5777778, 135.7477778),
-            new L.LatLng(10.7725, 149.3918333),
-            new L.LatLng(22.5127778, 149.5427778),
-            new L.LatLng(22.09, 135.0572222)
-        ]
-        ];
-
         var minimapLayer = new L.TileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { minZoom: 0, maxZoom: 13 });
         this.#miniMapLayerGroup = new L.LayerGroup([minimapLayer]);
-        var miniMapPolyline = new L.Polyline(latlngs, { color: '#202831' });
+        var miniMapPolyline = new L.Polyline(this.#getMinimapBoundaries(), { color: '#202831' });
         miniMapPolyline.addTo(this.#miniMapLayerGroup);
 
         /* Scale */
         //@ts-ignore TODO more hacking because the module is provided as a pure javascript module only
         L.control.scalenautic({ position: "topright", maxWidth: 300, nautic: true, metric: true, imperial: false }).addTo(this);
+
+        /* Map source dropdown */
+        this.#mapSourceDropdown = new Dropdown("map-type", (layerName: string) => this.setLayer(layerName), this.getLayers())
 
         /* Init the state machine */
         this.#state = IDLE;
@@ -127,7 +104,10 @@ export class Map extends L.Map {
         this.on('mousedown', (e: any) => this.#onMouseDown(e));
         this.on('mouseup', (e: any) => this.#onMouseUp(e));
         this.on('mousemove', (e: any) => this.#onMouseMove(e));
-
+        this.on('keydown',  (e: any) => this.#updateDestinationPreview(e));
+        this.on('keyup',  (e: any) => this.#updateDestinationPreview(e));
+        
+        /* Event listeners */
         document.addEventListener("toggleCoalitionVisibility", (ev: CustomEventInit) => {
             ev.detail._element.classList.toggle("off");
             document.body.toggleAttribute("data-hide-" + ev.detail.coalition);
@@ -144,8 +124,7 @@ export class Map extends L.Map {
                 this.#panToUnit(this.#centerUnit);
         });
 
-        this.#mapSourceDropdown = new Dropdown("map-type", (layerName: string) => this.setLayer(layerName), this.getLayers())
-
+        /* Pan interval */
         this.#panInterval = window.setInterval(() => { 
             this.panBy(new L.Point( ((this.#panLeft? -1: 0) + (this.#panRight? 1: 0)) * this.#deafultPanDelta, 
                                     ((this.#panUp? -1: 0) + (this.#panDown? 1: 0)) * this.#deafultPanDelta)); 
@@ -205,9 +184,34 @@ export class Map extends L.Map {
         this.#state = state;
         if (this.#state === IDLE) {
             L.DomUtil.removeClass(this.getContainer(), 'crosshair-cursor-enabled');
+
+            /* Remove all the destination preview markers */
+            this.#destinationPreviewMarkers.forEach((marker: L.Marker) => {
+                this.removeLayer(marker);
+            })
+            this.#destinationPreviewMarkers = [];
+
+            this.#destinationGroupRotation = 0;
+            this.#computeDestinationRotation = false;
+            this.#destinationRotationCenter = null;
         }
         else if (this.#state === MOVE_UNIT) {
             L.DomUtil.addClass(this.getContainer(), 'crosshair-cursor-enabled');
+
+            /* Remove all the exising destination preview markers */
+            this.#destinationPreviewMarkers.forEach((marker: L.Marker) => {
+                this.removeLayer(marker);
+            })
+            this.#destinationPreviewMarkers = [];
+
+            if (getUnitsManager().getSelectedUnits({excludeHumans: true}).length < 20) {
+                /* Create the unit destination preview markers */
+                this.#destinationPreviewMarkers = getUnitsManager().getSelectedUnits({excludeHumans: true}).map((unit: Unit) => {
+                    var marker = new L.Marker(this.getMouseCoordinates(), {icon: destinationPreviewIcon, interactive: false});
+                    marker.addTo(this);
+                    return marker;
+                })
+            }
         }
         document.dispatchEvent(new CustomEvent("mapStateChanged"));
     }
@@ -328,7 +332,6 @@ export class Map extends L.Map {
             if (this.#miniMap)
                 this.setView(e.latlng);
         })
-
     }
 
     getMiniMapLayerGroup() {
@@ -433,7 +436,7 @@ export class Map extends L.Map {
             if (!e.originalEvent.ctrlKey) {
                 getUnitsManager().selectedUnitsClearDestinations();
             }
-            getUnitsManager().selectedUnitsAddDestination(e.latlng)
+            getUnitsManager().selectedUnitsAddDestination(this.#computeDestinationRotation && this.#destinationRotationCenter != null? this.#destinationRotationCenter: e.latlng, !e.originalEvent.shiftKey, this.#destinationGroupRotation)
         }
     }
 
@@ -448,14 +451,31 @@ export class Map extends L.Map {
 
     #onMouseDown(e: any) {
         this.hideAllContextMenus();
+
+        if (this.#state == MOVE_UNIT && e.originalEvent.button == 2)
+        {
+            this.#computeDestinationRotation = true;
+            this.#destinationRotationCenter = this.getMouseCoordinates();
+        }
     }
 
     #onMouseUp(e: any) {
+        if (this.#state == MOVE_UNIT)
+        {
+            this.#computeDestinationRotation = false;
+            this.#destinationRotationCenter = null;
+            this.#destinationGroupRotation = 0;
+        }
     }
 
     #onMouseMove(e: any) {
         this.#lastMousePosition.x = e.originalEvent.x;
         this.#lastMousePosition.y = e.originalEvent.y;
+
+        if (this.#computeDestinationRotation && this.#destinationRotationCenter != null)
+            this.#destinationGroupRotation = -bearing(this.#destinationRotationCenter.lat, this.#destinationRotationCenter.lng, this.getMouseCoordinates().lat, this.getMouseCoordinates().lng);
+
+        this.#updateDestinationPreview(e); 
     }
 
     #onZoom(e: any) {
@@ -466,5 +486,52 @@ export class Map extends L.Map {
     #panToUnit(unit: Unit) {
         var unitPosition = new L.LatLng(unit.getFlightData().latitude, unit.getFlightData().longitude);
         this.setView(unitPosition, this.getZoom(), { animate: false });
+    }
+
+    #getMinimapBoundaries() {
+        /* Draw the limits of the maps in the minimap*/
+        return [[    // NTTR
+            new L.LatLng(39.7982463, -119.985425),
+            new L.LatLng(34.4037128, -119.7806729),
+            new L.LatLng(34.3483316, -112.4529351),
+            new L.LatLng(39.7372411, -112.1130805),
+            new L.LatLng(39.7982463, -119.985425)
+        ],
+        [   // Syria
+            new L.LatLng(37.3630556, 29.2686111),
+            new L.LatLng(31.8472222, 29.8975),
+            new L.LatLng(32.1358333, 42.1502778),
+            new L.LatLng(37.7177778, 42.3716667),
+            new L.LatLng(37.3630556, 29.2686111)
+        ],
+        [   // Caucasus
+            new L.LatLng(39.6170191, 27.634935),
+            new L.LatLng(38.8735863, 47.1423108),
+            new L.LatLng(47.3907982, 49.3101946),
+            new L.LatLng(48.3955879, 26.7753625),
+            new L.LatLng(39.6170191, 27.634935)
+        ],
+        [   // Persian Gulf
+            new L.LatLng(32.9355285, 46.5623682),
+            new L.LatLng(21.729393, 47.572675),
+            new L.LatLng(21.8501348, 63.9734737),
+            new L.LatLng(33.131584, 64.7313594),
+            new L.LatLng(32.9355285, 46.5623682)
+        ],
+        [   // Marianas
+            new L.LatLng(22.09, 135.0572222),
+            new L.LatLng(10.5777778, 135.7477778),
+            new L.LatLng(10.7725, 149.3918333),
+            new L.LatLng(22.5127778, 149.5427778),
+            new L.LatLng(22.09, 135.0572222)
+        ]
+        ];
+    }
+
+    #updateDestinationPreview(e: any) {
+        Object.values(getUnitsManager().selectedUnitsComputeGroupDestination(this.#computeDestinationRotation && this.#destinationRotationCenter != null? this.#destinationRotationCenter: this.getMouseCoordinates(), this.#destinationGroupRotation)).forEach((latlng: L.LatLng, idx: number) => {
+            if (idx < this.#destinationPreviewMarkers.length)
+                this.#destinationPreviewMarkers[idx].setLatLng(!e.originalEvent.shiftKey? latlng: this.getMouseCoordinates());
+        })   
     }
 } 

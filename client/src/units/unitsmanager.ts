@@ -3,7 +3,7 @@ import { getHotgroupPanel, getInfoPopup, getMap, getUnitDataTable } from "..";
 import { Unit } from "./unit";
 import { cloneUnit } from "../server/server";
 import { IDLE, MOVE_UNIT } from "../map/map";
-import { keyEventWasInInput } from "../other/utils";
+import { deg2rad, keyEventWasInInput, latLngToMercator, mercatorToLatLng } from "../other/utils";
 
 export class UnitsManager {
     #units: { [ID: number]: Unit };
@@ -171,8 +171,16 @@ export class UnitsManager {
     };
 
     /*********************** Actions on selected units ************************/
-    selectedUnitsAddDestination(latlng: L.LatLng) {
+    selectedUnitsAddDestination(latlng: L.LatLng, mantainRelativePosition: boolean, rotation: number) {
         var selectedUnits = this.getSelectedUnits({excludeHumans: true});
+
+        /* Compute the destination for each unit. If mantainRelativePosition is true, compute the destination so to hold the relative distances */
+        var unitDestinations: {[key: number]: LatLng} = {};
+        if (mantainRelativePosition)
+            unitDestinations = this.selectedUnitsComputeGroupDestination(latlng, rotation);
+        else
+            selectedUnits.forEach((unit: Unit) => {unitDestinations[unit.ID] = latlng});
+
         for (let idx in selectedUnits) {
             const unit = selectedUnits[idx];
             /* If a unit is following another unit, and that unit is also selected, send the command to the followed unit */
@@ -180,11 +188,14 @@ export class UnitsManager {
                 const leader = this.getUnitByID(unit.getFormationData().leaderID)
                 if (leader && leader.getSelected())
                     leader.addDestination(latlng);
-                else
+                else 
                     unit.addDestination(latlng);
             }
-            else
-                unit.addDestination(latlng);
+            else {
+                if (unit.ID in unitDestinations)
+                    unit.addDestination(unitDestinations[unit.ID]);
+            }
+
         }
         this.#showActionMessage(selectedUnits, " new destination added");
     }
@@ -307,7 +318,7 @@ export class UnitsManager {
             else if (formation === "Front") { offset.x = 100; offset.y = 0; offset.z = 0; }
             else offset = undefined;
         }
-         var selectedUnits = this.getSelectedUnits({excludeHumans: true});
+        var selectedUnits = this.getSelectedUnits({excludeHumans: true});
         var count = 1;
         var xr = 0; var yr = 1; var zr = -1;
         var layer = 1;
@@ -349,6 +360,39 @@ export class UnitsManager {
         }
         this.#showActionMessage(selectedUnits, `added to hotgroup ${hotgroup}`);
         getHotgroupPanel().refreshHotgroups();
+    }
+
+    selectedUnitsComputeGroupDestination(latlng: LatLng, rotation: number)
+    {
+        var selectedUnits = this.getSelectedUnits({excludeHumans: true});
+        /* Compute the center of the group */
+        var center = {x: 0, y: 0};
+        selectedUnits.forEach((unit: Unit) => {
+            var mercator = latLngToMercator(unit.getFlightData().latitude, unit.getFlightData().longitude);
+            center.x += mercator.x / selectedUnits.length;
+            center.y += mercator.y / selectedUnits.length;
+        });
+
+        /* Compute the distances from the center of the group */
+        
+        var unitDestinations: {[key: number]: LatLng} = {};
+        selectedUnits.forEach((unit: Unit) => {
+            var mercator = latLngToMercator(unit.getFlightData().latitude, unit.getFlightData().longitude);
+            var distancesFromCenter = {dx: mercator.x - center.x, dy: mercator.y - center.y};
+
+            /* Rotate the distance according to the group rotation */
+            var rotatedDistancesFromCenter: {dx: number, dy: number} = {dx: 0, dy: 0};
+            rotatedDistancesFromCenter.dx = distancesFromCenter.dx * Math.cos(deg2rad(rotation)) - distancesFromCenter.dy * Math.sin(deg2rad(rotation));
+            rotatedDistancesFromCenter.dy = distancesFromCenter.dx * Math.sin(deg2rad(rotation)) + distancesFromCenter.dy * Math.cos(deg2rad(rotation));
+
+            /* Compute the final position of the unit */
+            var destMercator = latLngToMercator(latlng.lat, latlng.lng);    // Convert destination point to mercator
+            var unitMercator = {x: destMercator.x + rotatedDistancesFromCenter.dx, y: destMercator.y + rotatedDistancesFromCenter.dy};  // Compute final position of this unit in mercator coordinates
+            var unitLatLng = mercatorToLatLng(unitMercator.x, unitMercator.y);
+            unitDestinations[unit.ID] = new LatLng(unitLatLng.lat, unitLatLng.lng);
+        });
+
+        return unitDestinations;
     }
 
     /***********************************************/

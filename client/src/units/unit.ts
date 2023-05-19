@@ -142,14 +142,11 @@ export class Unit extends Marker {
         if ((this.getBaseData().alive || !selected) && this.getSelectable() && this.getSelected() != selected) {
             this.#selected = selected;
             this.getElement()?.querySelector(`[data-object|="unit"]`)?.toggleAttribute("data-is-selected");
-            if (selected){
+            if (selected)
                 document.dispatchEvent(new CustomEvent("unitSelection", { detail: this }));
-                this.getGroupMembers().forEach((unit: Unit) => unit.setSelected(true));
-            }
-            else {
+            else 
                 document.dispatchEvent(new CustomEvent("unitDeselection", { detail: this }));
-                this.getGroupMembers().forEach((unit: Unit) => unit.setSelected(false));
-            }
+            this.getGroupMembers().forEach((unit: Unit) => unit.setSelected(selected));
         }
     }
 
@@ -174,8 +171,11 @@ export class Unit extends Marker {
     }
 
     setHighlighted(highlighted: boolean) {
-        this.getElement()?.querySelector(`[data-object|="unit"]`)?.toggleAttribute("data-is-highlighted", highlighted);
-        this.#highlighted = highlighted;
+        if (this.#highlighted != highlighted) {
+            this.getElement()?.querySelector(`[data-object|="unit"]`)?.toggleAttribute("data-is-highlighted", highlighted);
+            this.#highlighted = highlighted;
+            this.getGroupMembers().forEach((unit: Unit) => unit.setHighlighted(highlighted));
+        }
     }
 
     getHighlighted() {
