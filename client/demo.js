@@ -5,7 +5,7 @@ const DEMO_UNIT_DATA = {
             AI: false,
             name: "KC-135",
             unitName: "Olympus 1-1 aka Mr. Very long name",
-            groupName: "Group 1",
+            groupName: "Group 2",
             alive: true,
             category: "Aircraft",
         },
@@ -284,7 +284,7 @@ const DEMO_UNIT_DATA = {
     ["7"]:{
         baseData: {
             AI: true,
-            name: "CVN-75",
+            name: "CVN-75 Very long name",
             unitName: "Olympus 1-7",
             groupName: "Group 1",
             alive: true,
