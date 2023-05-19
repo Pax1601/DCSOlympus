@@ -141,7 +141,7 @@ export class Unit extends Marker {
         /* Only alive units can be selected. Some units are not selectable (weapons) */
         if ((this.getBaseData().alive || !selected) && this.getSelectable() && this.getSelected() != selected) {
             this.#selected = selected;
-            this.getElement()?.querySelector(`[data-object|="unit"]`)?.toggleAttribute("data-is-selected");
+            this.getElement()?.querySelector(`[data-object|="unit"]`)?.toggleAttribute("data-is-selected", selected);
             if (selected)
                 document.dispatchEvent(new CustomEvent("unitSelection", { detail: this }));
             else 
@@ -539,6 +539,15 @@ export class Unit extends Marker {
 
             var element = this.getElement();
             if (element != null) {
+                /* Set the element styling */
+                const unitMarker = element.querySelector(".unit-marker") as HTMLElement;
+
+                const styles = getComputedStyle(document.documentElement);
+                const primaryBlue = styles.getPropertyValue('--primary-blue');
+
+                if (unitMarker)
+                    unitMarker.style.backgroundImage = `url("/resources/theme/images/units/aircraft.svg?background-colour=${primaryBlue}")`;
+
                 /* Draw the velocity vector */
                 element.querySelector(".unit-vvi")?.setAttribute("style", `height: ${15 + this.getFlightData().speed / 5}px;`);
 
