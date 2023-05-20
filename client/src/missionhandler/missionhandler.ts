@@ -128,8 +128,13 @@ export class MissionHandler
 
 
     getNowDate() {
+
         const date = this.getDate();
         const time = this.getTime();
+
+        if ( !date ) {
+            return new Date();
+        }
         
         let year  = date.Year;
         let month = date.Month - 1;
