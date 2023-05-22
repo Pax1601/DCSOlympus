@@ -56,15 +56,15 @@ export class UnitControlPanel extends Panel {
 
         /* Option buttons */
         this.#optionButtons["ROE"] = ROEs.map((option: string, index: number) => {
-            return this.#createOptionButton(option, ROEDescriptions[index], () => { getUnitsManager().selectedUnitsSetROE(option); });
+            return this.#createOptionButton(option, `roe/${option.toLowerCase()}.svg`, ROEDescriptions[index], () => { getUnitsManager().selectedUnitsSetROE(option); });
         });
 
         this.#optionButtons["reactionToThreat"] = reactionsToThreat.map((option: string, index: number) => {
-            return this.#createOptionButton(option, reactionsToThreatDescriptions[index],() => { getUnitsManager().selectedUnitsSetReactionToThreat(option); });
+            return this.#createOptionButton(option, `threat/${option.toLowerCase()}.svg`, reactionsToThreatDescriptions[index],() => { getUnitsManager().selectedUnitsSetReactionToThreat(option); });
         });
 
         this.#optionButtons["emissionsCountermeasures"] = emissionsCountermeasures.map((option: string, index: number) => {
-            return this.#createOptionButton(option, emissionsCountermeasuresDescriptions[index],() => { getUnitsManager().selectedUnitsSetEmissionsCountermeasures(option); });
+            return this.#createOptionButton(option, `emissions/${option.toLowerCase()}.svg`, emissionsCountermeasuresDescriptions[index],() => { getUnitsManager().selectedUnitsSetEmissionsCountermeasures(option); });
         });
 
         this.getElement().querySelector("#roe-buttons-container")?.append(...this.#optionButtons["ROE"]);
@@ -342,10 +342,11 @@ export class UnitControlPanel extends Panel {
         this.#advancedSettingsDialog.classList.add("hide");
     }
 
-    #createOptionButton(option: string, title: string, callback: EventListenerOrEventListenerObject) {
+    #createOptionButton(value: string, url: string, title: string, callback: EventListenerOrEventListenerObject) {
         var button = document.createElement("button");
-        button.value = option;
         button.title = title;
+        button.value = value;
+        button.innerHTML = `<img src="/resources/theme/images/buttons/${url}" onload="SVGInject(this)" />`
         button.addEventListener("click", callback);
         return button;
     }

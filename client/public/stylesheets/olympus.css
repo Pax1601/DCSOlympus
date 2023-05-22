@@ -588,46 +588,27 @@ nav.ol-panel> :last-child {
     border: none;
     height: 32px;
     width: 32px;
+    padding: 0px;
 }
 
-#unit-visibility-control-aircraft {
-    background-image: var(--visibility-control-aircraft-visible-url);
+#unit-visibility-control button svg {
+    pointer-events: none;
 }
 
-body[data-hide-aircraft] #unit-visibility-control-aircraft {
-    background-image: var(--visibility-control-aircraft-hidden-url);
+#unit-visibility-control button svg .background {
+    fill: white;
 }
 
-#unit-visibility-control-groundunit {
-    background-image: var(--visibility-control-groundunit-visible-url);
+#unit-visibility-control button.off svg .foreground {
+    fill: var(--background-steel);
 }
 
-body[data-hide-groundunit] #unit-visibility-control-groundunit {
-    background-image: var(--visibility-control-groundunit-hidden-url);
+#unit-visibility-control button.off svg .background {
+    fill: none;
 }
 
-#unit-visibility-control-sam {
-    background-image: var(--visibility-control-sam-visible-url);
-}
-
-body[data-hide-sam] #unit-visibility-control-sam {
-    background-image: var(--visibility-control-sam-hidden-url);
-}
-
-#unit-visibility-control-threat {
-    background-image: var(--visibility-control-threat-visible-url);
-}
-
-body[data-hide-threat] #unit-visibility-control-threat {
-    background-image: var(--visibility-control-threat-hidden-url);
-}
-
-#unit-visibility-control-navyunit {
-    background-image: var(--visibility-control-navyunit-visible-url);
-}
-
-body[data-hide-navyunit] #unit-visibility-control-navyunit {
-    background-image: var(--visibility-control-navyunit-hidden-url);
+#unit-visibility-control button.off svg .foreground {
+    fill: white;
 }
 
 #atc-navbar-control {
@@ -642,9 +623,16 @@ body[data-hide-navyunit] #unit-visibility-control-navyunit {
     padding: 4px;
 }
 
-#roe-buttons-container button {
+#roe-buttons-container button,
+#reaction-to-threat-buttons-container button,
+#emissions-countermeasures-buttons-container button {
+    display: flex;
     background-color: transparent;
     border: 1px solid var(--accent-light-blue);
+    height: 30px;
+    width: 30px;
+    align-items: center;
+    justify-content: center;
 }
 
 #roe-buttons-container button.selected,
@@ -654,113 +642,10 @@ body[data-hide-navyunit] #unit-visibility-control-navyunit {
     border-color: white;
 }
 
-#roe-buttons-container button::before,
-#reaction-to-threat-buttons-container button::before,
-#emissions-countermeasures-buttons-container button::before {
-    background-position: center;
-    background-repeat: no-repeat;
-    content: "";
-    display: block;
-    height: 24px;
-    width: 24px;
-}
-
-#roe-buttons-container button[value="Hold"]::before {
-    background-image: url("/themes/olympus/images/icons_roe_stop_light.svg");
-}
-
-#roe-buttons-container button[value="Hold"].selected::before {
-    background-image: url("/themes/olympus/images/icons_roe_stop_dark.svg");
-}
-
-/**/
-#roe-buttons-container button[value="Return"]::before {
-    background-image: url("/themes/olympus/images/icons_roe_defend_light.svg");
-}
-
-#roe-buttons-container button[value="Return"].selected::before {
-    background-image: url("/themes/olympus/images/icons_roe_defend_dark.svg");
-}
-
-/**/
-#roe-buttons-container button[value="Designated"]::before {
-    background-image: url("/themes/olympus/images/icons_roe_target_light.svg");
-}
-
-#roe-buttons-container button[value="Designated"].selected::before {
-    background-image: url("/themes/olympus/images/icons_roe_target_dark.svg");
-}
-
-/**/
-#roe-buttons-container button[value="Free"]::before {
-    background-image: url("/themes/olympus/images/icons_roe_free_light.svg");
-}
-
-#roe-buttons-container button[value="Free"].selected::before {
-    background-image: url("/themes/olympus/images/icons_roe_free_dark.svg");
-}
-
-/****************************************************************************************/
-#reaction-to-threat-buttons-container button[value="None"]::before {
-    background-image: url("/themes/olympus/images/icons_threat_nothing_light.svg");
-}
-
-#reaction-to-threat-buttons-container button[value="None"].selected::before {
-    background-image: url("/themes/olympus/images/icons_threat_nothing_dark.svg");
-}
-
-/**/
-#reaction-to-threat-buttons-container button[value="Passive"]::before {
-    background-image: url("/themes/olympus/images/icons_threat_cms_light.svg");
-}
-
-#reaction-to-threat-buttons-container button[value="Passive"].selected::before {
-    background-image: url("/themes/olympus/images/icons_threat_cms_dark.svg");
-}
-
-/**/
-#reaction-to-threat-buttons-container button[value="Evade"]::before {
-    background-image: url("/themes/olympus/images/icons_threat_defend_light.svg");
-}
-
-#reaction-to-threat-buttons-container button[value="Evade"].selected::before {
-    background-image: url("/themes/olympus/images/icons_threat_defend_dark.svg");
-}
-
-/****************************************************************************************/
-#emissions-countermeasures-buttons-container button[value="Silent"]::before {
-    background-image: url("/themes/olympus/images/icons_roe_stop_light.svg");
-}
-
-#emissions-countermeasures-buttons-container button[value="Silent"].selected::before {
-    background-image: url("/themes/olympus/images/icons_roe_stop_dark.svg");
-}
-
-/**/
-#emissions-countermeasures-buttons-container button[value="Defend"]::before {
-    background-image: url("/themes/olympus/images/icons_roe_defend_light.svg");
-}
-
-#emissions-countermeasures-buttons-container button[value="Defend"].selected::before {
-    background-image: url("/themes/olympus/images/icons_roe_defend_dark.svg");
-}
-
-/**/
-#emissions-countermeasures-buttons-container button[value="Attack"]::before {
-    background-image: url("/themes/olympus/images/icons_roe_target_light.svg");
-}
-
-#emissions-countermeasures-buttons-container button[value="Attack"].selected::before {
-    background-image: url("/themes/olympus/images/icons_roe_target_dark.svg");
-}
-
-/**/
-#emissions-countermeasures-buttons-container button[value="Free"]::before {
-    background-image: url("/themes/olympus/images/icons_roe_free_light.svg");
-}
-
-#emissions-countermeasures-buttons-container button[value="Free"].selected::before {
-    background-image: url("/themes/olympus/images/icons_roe_free_dark.svg");
+#roe-buttons-container button.selected svg .foreground,
+#reaction-to-threat-buttons-container button.selected svg .foreground,
+#emissions-countermeasures-buttons-container button.selected svg .foreground {
+    fill: var(--background-steel);
 }
 
 /****************************************************************************************/

@@ -127,7 +127,7 @@ export class Unit extends Marker {
     getMarkerHTML() {
         return `<div class="unit" data-object="unit-${this.getMarkerCategory()}" data-coalition="${this.getMissionData().coalition}">
                     <div class="unit-selected-spotlight"></div>
-                    <div class="unit-marker"></div>
+                    <div class="unit-marker"><img src="/resources/theme/images/units/${this.getMarkerCategory()}.svg" onload="SVGInject(this)"/></div>
                     <div class="unit-short-label"></div>
                 </div>`
     }
@@ -539,15 +539,6 @@ export class Unit extends Marker {
 
             var element = this.getElement();
             if (element != null) {
-                /* Set the element styling */
-                const unitMarker = element.querySelector(".unit-marker") as HTMLElement;
-
-                const styles = getComputedStyle(document.documentElement);
-                const primaryBlue = styles.getPropertyValue('--primary-blue');
-
-                if (unitMarker)
-                    unitMarker.style.backgroundImage = `url("/resources/theme/images/units/aircraft.svg?background-colour=${primaryBlue}")`;
-
                 /* Draw the velocity vector */
                 element.querySelector(".unit-vvi")?.setAttribute("style", `height: ${15 + this.getFlightData().speed / 5}px;`);
 
@@ -703,14 +694,10 @@ export class Aircraft extends AirUnit {
 
     getMarkerHTML() {
         return `<div class="unit" data-object="unit-aircraft" data-coalition="${this.getMissionData().coalition}">
-                    <div class="unit-selected-spotlight"></div>
-                    <div class="unit-marker-border"></div>
                     <div class="unit-state"></div>
                     <div class="unit-vvi" data-rotate-to-heading></div>
-                    <div class="unit-hotgroup">
-                        <div class="unit-hotgroup-id"></div>
-                    </div>
-                    <div class="unit-marker"></div>
+                    <div class="unit-hotgroup"><div class="unit-hotgroup-id"></div></div>
+                    <div class="unit-marker"><img src="/resources/theme/images/units/aircraft.svg" onload="SVGInject(this)"/></div>
                     <div class="unit-short-label">${aircraftDatabase.getByName(this.getBaseData().name)?.shortLabel || ""}</div>
                     <div class="unit-fuel">
                         <div class="unit-fuel-level" style="width:100%;"></div>
@@ -752,8 +739,7 @@ export class GroundUnit extends Unit {
     getMarkerHTML() {
         var role = groundUnitsDatabase.getByName(this.getBaseData().name)?.loadouts[0].roles[0];
         return `<div class="unit" data-object="unit-${this.getMarkerCategory()}" data-coalition="${this.getMissionData().coalition}">
-                    <div class="unit-selected-spotlight"></div>
-                    <div class="unit-marker"></div>
+                    <div class="unit-marker"><img src="/resources/theme/images/units/groundunit-${this.getMarkerCategory()}.svg" onload="SVGInject(this)"/></div>
                     <div class="unit-short-label">${role?.substring(0, 1)?.toUpperCase() || ""}</div>
                     <div class="unit-hotgroup">
                         <div class="unit-hotgroup-id"></div>
@@ -764,7 +750,7 @@ export class GroundUnit extends Unit {
     getMarkerCategory() {
         // TODO this is very messy
         var role = groundUnitsDatabase.getByName(this.getBaseData().name)?.loadouts[0].roles[0];
-        var markerCategory = (role === "SAM") ? "sam" : "groundunit";
+        var markerCategory = (role === "SAM") ? "sam" : "other";
         return markerCategory;
     }
 }
@@ -787,8 +773,7 @@ export class Weapon extends Unit {
 
     getMarkerHTML(): string {
         return `<div class="unit" data-object="unit-${this.getMarkerCategory()}" data-coalition="${this.getMissionData().coalition}">
-                    <div class="unit-selected-spotlight"></div>
-                    <div class="unit-marker" data-rotate-to-heading></div>
+                    <div class="unit-marker" data-rotate-to-heading><img src="/resources/theme/images/units/${this.getMarkerCategory()}.svg" onload="SVGInject(this)"/></div>
                     <div class="unit-short-label"></div>
                 </div>`
     }

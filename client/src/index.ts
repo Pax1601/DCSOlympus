@@ -16,6 +16,8 @@ import { Popup } from "./popups/popup";
 import { Dropdown } from "./controls/dropdown";
 import { HotgroupPanel } from "./panels/hotgrouppanel";
 
+import "@iconfu/svg-inject";
+
 var map: Map;
 
 var unitsManager: UnitsManager;
@@ -214,6 +216,7 @@ function setupEvents() {
     document.addEventListener("reloadPage", () => {
         location.reload();
     })
+
 }
 
 export function getMap() {

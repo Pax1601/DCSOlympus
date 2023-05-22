@@ -115,6 +115,7 @@ export class Map extends L.Map {
         });
 
         document.addEventListener("toggleUnitVisibility", (ev: CustomEventInit) => {
+            ev.detail._element.classList.toggle("off");
             document.body.toggleAttribute("data-hide-" + ev.detail.category);
             Object.values(getUnitsManager().getUnits()).forEach((unit: Unit) => unit.updateVisibility());
         });

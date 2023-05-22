@@ -2,17 +2,9 @@
     /*  Generic marker settings  */
     --unit-centre-x: calc(var(--unit-width) / 2);
     --unit-centre-y: calc(var(--unit-height) / 2);
-
-    --unit-hotgroup-height: 15px;
-    --unit-hotgroup-width: var(--unit-hotgroup-height);
-
-
-    /*  Air units' marker settings  */
-    --unit-aircraft-label-x: calc(var(--unit-centre-x) - (var(--unit-aircraft-width) / 2) + (var(--unit-stroke-width) / 2));
-    --unit-aircraft-label-y: calc(var(--unit-centre-y) - (var(--unit-aircraft-height) / 2) + (var(--unit-stroke-width) / 2));
 }
 
-
+/*** Unit marker elements ***/
 [data-object|="unit"] {
     align-items: center;
     cursor: pointer;
@@ -21,15 +13,6 @@
     position: relative;
     height: 100%;
     width: 100%;
-}
-
-.unit-selected-spotlight {
-    background-color: var(--unit-spotlight-fill);
-    border-radius: 50%;
-    display: none;
-    padding: var(--unit-spotlight-radius);
-    position: absolute;
-    z-index: 1;
 }
 
 .unit-vvi {
@@ -42,16 +25,6 @@
     padding-bottom: calc((var(--unit-aircraft-width) / 2) + var(--unit-stroke-width));
     position: absolute;
     width: var(--unit-aircraft-vvi-width);
-    z-index: 3;
-}
-
-.unit-marker-border {
-    border-radius: var(--border-radius-sm);
-    display: none;
-    height: calc(var(--unit-aircraft-height) + (var(--unit-label-border-width) * 2));
-    position: absolute;
-    width: calc(var(--unit-aircraft-width) + (var(--unit-label-border-width) * 2));
-    z-index: 2;
 }
 
 .unit-hotgroup {
@@ -59,13 +32,12 @@
     background-color: var(--background-steel);
     border-radius: var(--border-radius-xs);
     display: none;
-    height: var(--unit-hotgroup-height);
+    height: 15px;
     justify-content: center;
     position: absolute;
     transform: rotate(-45deg);
     translate: 0 -200%;
-    width: var(--unit-hotgroup-width);
-    z-index: 5;
+    width: 15px;
 }
 
 .unit-hotgroup-id {
@@ -77,258 +49,61 @@
     translate: -1px 1px;
 }
 
-
-/******************************
-    Marker
-******************************/
 .unit-marker {
     position: absolute;
     transform-origin: center;
-    z-index: 3;
     height: var(--unit-height);
     width: var(--unit-width);
 }
 
-[data-is-highlighted] .unit-marker {
-    stroke: white; 
+[data-is-selected] .unit-marker::before {
+    content: "";
+    height: 100%;
+    width: 100%;
+    background-color: var(--unit-spotlight-fill);
+    border-radius: 50%;
+    position: absolute;
+    z-index: -1;
 }
 
-[data-is-selected] .unit-marker {
+/*** Basic colours ***/
+[data-coalition="blue"] .unit-marker>svg>.background {
+    fill: var(--primary-blue);
 }
 
-[data-coalition="blue"] .unit-marker {
+[data-coalition="red"] .unit-marker>svg>.background {
+    fill: var(--primary-red);
 }
 
-[data-coalition="red"] .unit-marker {
+[data-coalition="neutral"] .unit-marker>svg>.background {
+    fill: var(--primary-neutral);
 }
 
-[data-coalition="neutral"] .unit-marker {
-   
+[data-is-selected] .unit-marker>svg>.background {
+    fill: white;
 }
 
-/*  Aircraft  */
-[data-object|="unit-aircraft"] .unit-marker {
-    
+[data-is-highlighted] .unit-marker>svg>.background {
+    stroke: white;
 }
 
-/*  Ground vehicles (not SAMs)  */
-
-[data-object|="unit-groundunit"] .unit-marker {
-    background-image: var(--unit-groundunit-marker-neutral-url);
-    height: var(--unit-groundunit-marker-height);
-    width: var(--unit-groundunit-marker-width);
-}
-
-[data-object|="unit-groundunit"][data-is-highlighted] .unit-marker {
-    background-image: var(--unit-groundunit-marker-neutral-hover-url);
-}
-
-[data-object|="unit-groundunit"][data-is-selected] .unit-marker {
-    background-image: var(--unit-groundunit-marker-neutral-selected-url);
-}
-
-
-[data-object|="unit-groundunit"][data-coalition="blue"] .unit-marker {
-    background-image: var(--unit-groundunit-marker-blue-url);
-}
-
-[data-object|="unit-groundunit"][data-coalition="blue"][data-is-highlighted] .unit-marker {
-    background-image: var(--unit-groundunit-marker-blue-hover-url);
-}
-
-[data-object|="unit-groundunit"][data-coalition="blue"][data-is-selected] .unit-marker {
-    background-image: var(--unit-groundunit-marker-blue-selected-url);
-}
-
-
-[data-object|="unit-groundunit"][data-coalition="red"] .unit-marker {
-    background-image: var(--unit-groundunit-marker-red-url);
-}
-
-[data-object|="unit-groundunit"][data-coalition="red"][data-is-highlighted] .unit-marker {
-    background-image: var(--unit-groundunit-marker-red-hover-url);
-}
-
-[data-object|="unit-groundunit"][data-coalition="red"][data-is-selected] .unit-marker {
-    background-image: var(--unit-groundunit-marker-red-selected-url);
-}
-
-
-/*  SAMs  */
-
-[data-object|="unit-sam"] .unit-selected-spotlight {
-    translate: 0 2px;
-}
-
-[data-object|="unit-sam"] .unit-marker {
-    background-image: var(--unit-sam-marker-neutral-url);
-    height: var(--unit-sam-marker-height);
-    width: var(--unit-sam-marker-width);
-}
-
-
-[data-object|="unit-sam"][data-is-highlighted] .unit-marker {
-    background-image: var(--unit-sam-marker-neutral-hover-url);
-}
-
-[data-object|="unit-sam"][data-is-selected] .unit-marker {
-    background-image: var(--unit-sam-marker-neutral-selected-url);
-}
-
-
-[data-object|="unit-sam"][data-coalition="blue"] .unit-marker {
-    background-image: var(--unit-sam-marker-blue-url);
-}
-
-[data-object|="unit-sam"][data-coalition="blue"][data-is-highlighted] .unit-marker {
-    background-image: var(--unit-sam-marker-blue-hover-url);
-}
-
-[data-object|="unit-sam"][data-coalition="blue"][data-is-selected] .unit-marker {
-    background-image: var(--unit-sam-marker-blue-selected-url);
-}
-
-
-[data-object|="unit-sam"][data-coalition="red"] .unit-marker {
-    background-image: var(--unit-sam-marker-red-url);
-}
-
-[data-object|="unit-sam"][data-coalition="red"][data-is-highlighted] .unit-marker {
-    background-image: var(--unit-sam-marker-red-hover-url);
-}
-
-[data-object|="unit-sam"][data-coalition="red"][data-is-selected] .unit-marker {
-    background-image: var(--unit-sam-marker-red-selected-url);
-}
-
-
-/*  navyunit  */
-
-[data-object|="unit-navyunit"] .unit-selected-spotlight {
-    translate: 0 -2px;
-}
-
-[data-object|="unit-navyunit"] .unit-marker {
-    background-image: var(--unit-navyunit-marker-neutral-url);
-    height: var(--unit-navyunit-marker-height);
-    width: var(--unit-navyunit-marker-width);
-}
-
-
-[data-object|="unit-navyunit"][data-is-highlighted] .unit-marker {
-    background-image: var(--unit-navyunit-marker-neutral-hover-url);
-}
-
-[data-object|="unit-navyunit"][data-is-selected] .unit-marker {
-    background-image: var(--unit-navyunit-marker-neutral-selected-url);
-}
-
-
-[data-object|="unit-navyunit"][data-coalition="blue"] .unit-marker {
-    background-image: var(--unit-navyunit-marker-blue-url);
-}
-
-[data-object|="unit-navyunit"][data-coalition="blue"][data-is-highlighted] .unit-marker {
-    background-image: var(--unit-navyunit-marker-blue-hover-url);
-}
-
-[data-object|="unit-navyunit"][data-coalition="blue"][data-is-selected] .unit-marker {
-    background-image: var(--unit-navyunit-marker-blue-selected-url);
-}
-
-
-[data-object|="unit-navyunit"][data-coalition="red"] .unit-marker {
-    background-image: var(--unit-navyunit-marker-red-url);
-}
-
-[data-object|="unit-navyunit"][data-coalition="red"][data-is-highlighted] .unit-marker {
-    background-image: var(--unit-navyunit-marker-red-hover-url);
-}
-
-[data-object|="unit-navyunit"][data-coalition="red"][data-is-selected] .unit-marker {
-    background-image: var(--unit-navyunit-marker-red-selected-url);
-}
-
-
-/*  Building  */
-[data-object|="unit-building"] .unit-marker {
-    background-image: var(--unit-building-marker-neutral-url);
-    height: var(--unit-building-marker-height);
-    width: var(--unit-building-marker-width);
-}
-
-
-[data-object|="unit-building"][data-coalition="blue"] .unit-marker {
-    background-image: var(--unit-building-marker-blue-url);
-}
-
-
-[data-object|="unit-building"][data-coalition="red"] .unit-marker {
-    background-image: var(--unit-building-marker-red-url);
-}
-
-/*  Weapons  */
-
+/*** Cursors ***/
+[data-is-dead],
 [data-object|="unit-missile"],
 [data-object|="unit-bomb"] {
     cursor: default;
 }
 
-[data-object|="unit-missile"] .unit-marker {
-    background-image: var(--unit-missile-marker-neutral-url);
-    height: var(--unit-missile-marker-height);
-    width: var(--unit-missile-marker-width);
-}
-
-[data-object|="unit-missile"][data-coalition="blue"] .unit-marker {
-    background-image: var(--unit-missile-marker-blue-url);
-}
-
-[data-object|="unit-missile"][data-coalition="red"] .unit-marker {
-    background-image: var(--unit-missile-marker-red-url);
-}
-
-[data-object|="unit-bomb"] .unit-marker {
-    background-image: var(--unit-bomb-marker-neutral-url);
-    height: var(--unit-bomb-marker-height);
-    width: var(--unit-bomb-marker-width);
-}
-
-[data-object|="unit-bomb"][data-coalition="blue"] .unit-marker {
-    background-image: var(--unit-bomb-marker-blue-url);
-}
-
-[data-object|="unit-bomb"][data-coalition="red"] .unit-marker {
-    background-image: var(--unit-bomb-marker-red-url);
-}
-
-
-/********************************************
-*  Labels
-********************************************/
-
+/*** Labels ***/
 [data-object|="unit"] .unit-short-label {
     color: var(--secondary-gunmetal-grey);
     font-size: var(--unit-font-size);
     font-weight: var(--unit-font-weight);
     line-height: normal;
     position: absolute;
-    z-index: 10;
 }
 
-[data-object|="unit-groundunit"] .unit-short-label {
-    translate: -1px 0;
-}
-
-[data-object|="unit-sam"] .unit-short-label {
-    translate: 0 25%;
-}
-
-[data-object|="unit-navyunit"] .unit-short-label {
-    translate: 0 -50%;
-}
-
-
+/*** Fuel indicator ***/
 [data-object|="unit"] .unit-fuel {
     background: white;
     border: var(--unit-aircraft-fuel-border-width) solid var(--secondary-dark-steel);
@@ -338,7 +113,6 @@
     position: absolute;
     translate: var(--unit-aircraft-fuel-x) var(--unit-aircraft-fuel-y);
     width: var(--unit-aircraft-fuel-width);
-    z-index: 5;
 }
 
 [data-object|="unit"] .unit-fuel-level {
@@ -347,7 +121,7 @@
     width: 100%;
 }
 
-
+/*** Ammo indicator ***/
 [data-object|="unit"] .unit-ammo {
     column-gap: var(--unit-aircraft-ammo-spacing);
     display: none;
@@ -364,6 +138,7 @@
     padding: var(--unit-aircraft-ammo-radius);
 }
 
+/*** Unit summary ***/
 [data-object|="unit"] .unit-summary {
     pointer-events: none;
     column-gap: 6px;
@@ -383,7 +158,6 @@
         1px 1px 0 #000;
     translate: -60px 0;
     width: fit-content;
-    z-index: 20;
 }
 
 [data-hide-labels] [data-object|="unit"] .unit-summary {
@@ -408,9 +182,20 @@
     overflow: visible;
 }
 
+/*** Common ***/
 [data-object|="unit"]:hover .unit-ammo,
 [data-object|="unit"]:hover .unit-fuel {
     display: flex;
+}
+
+@keyframes pulse {
+    50% {
+        opacity: 0;
+    }
+}
+
+[data-object|="unit"][data-has-low-fuel] .unit-fuel {
+    animation: pulse 1.5s linear infinite;
 }
 
 [data-object|="unit"][data-is-in-hotgroup] .unit-hotgroup,
@@ -443,7 +228,6 @@
     background-color: var(--secondary-blue-outline);
 }
 
-
 [data-object|="unit"][data-coalition="red"][data-is-selected] .unit-short-label {
     color: var(--secondary-red-text);
 }
@@ -460,76 +244,47 @@
     background-color: var(--secondary-red-outline);
 }
 
-@keyframes pulse {
-    50% {
-        opacity: 0;
-    }
-}
-
-[data-object|="unit"][data-has-low-fuel] .unit-fuel {
-    animation: pulse 1.5s linear infinite;
-}
-
+/*** Unit state ***/
 [data-object|="unit"] .unit-state {
     background-repeat: no-repeat;
     position: absolute;
-    height: var(--unit-aircraft-state-height);
-    width: var(--unit-aircraft-state-width);
-    z-index: 10;
+    height: 20px;
+    width: 20px;
 }
 
 [data-object|="unit"][data-state="rtb"] .unit-state {
-    background-image: var(--unit-aircraft-state-rtb);
+    background-image: url("/theme/images/states/rtb.svg");
 }
 
 [data-object|="unit"][data-state="land"] .unit-state {
-    background-image: var(--unit-aircraft-state-rtb);
+    background-image: url("/theme/images/states/rtb.svg");
 }
 
 [data-object|="unit"][data-state="idle"] .unit-state {
-    background-image: var(--unit-aircraft-state-idle);
+    background-image: url("/theme/images/states/idle.svg");
 }
 
 [data-object|="unit"][data-state="attack"] .unit-state {
-    background-image: var(--unit-aircraft-state-attack);
+    background-image: url("/theme/images/states/attack.svg");
 }
 
 [data-object|="unit"][data-state="follow"] .unit-state {
-    background-image: var(--unit-aircraft-state-follow);
+    background-image: url("/theme/images/states/follow.svg");
 }
 
 [data-object|="unit"][data-state="refuel"] .unit-state {
-    background-image: var(--unit-aircraft-state-refuel);
+    background-image: url("/theme/images/states/refuel.svg");
 }
 
 [data-object|="unit"][data-state="human"] .unit-state {
-    background-image: var(--unit-aircraft-state-human);
+    background-image: url("/theme/images/states/human.svg");
 }
 
 [data-object|="unit"][data-state="dcs"] .unit-state {
-    background-image: var(--unit-aircraft-state-dcs);
+    background-image: url("/theme/images/states/dcs.svg");
 }
 
-/***  DEAD  ***/
-[data-object|="unit-aircraft"][ data-is-dead] {
-    cursor: default;
-}
-
-[data-object|="unit-aircraft"][ data-is-dead] .unit-marker {
-    background-image: var(--unit-aircraft-marker-neutral-dead-url);
-    background-position: 50% 50%;
-    background-size: auto 32px;
-}
-
-[data-object|="unit-aircraft"][ data-is-dead][data-coalition="blue"] .unit-marker {
-    background-image: var(--unit-aircraft-marker-blue-dead-url);
-}
-
-[data-object|="unit-aircraft"][ data-is-dead][data-coalition="red"] .unit-marker {
-    background-image: var(--unit-aircraft-marker-red-dead-url);
-}
-
-
+/*** Dead unit ***/
 [data-object|="unit-aircraft"][data-is-dead] .unit-selected-spotlight,
 [data-object|="unit-aircraft"][data-is-dead] .unit-short-label,
 [data-object|="unit-aircraft"][data-is-dead] .unit-vvi,
@@ -543,10 +298,10 @@
     display: none;
 }
 
-[data-object|="unit-aircraft"][ data-is-dead] .unit-summary>* {
+[data-object|="unit-aircraft"][data-is-dead] .unit-summary>* {
     display: none;
 }
 
-[data-object|="unit-aircraft"][ data-is-dead] .unit-summary .unit-callsign {
+[data-object|="unit-aircraft"][data-is-dead] .unit-summary .unit-callsign {
     display: block;
 }
