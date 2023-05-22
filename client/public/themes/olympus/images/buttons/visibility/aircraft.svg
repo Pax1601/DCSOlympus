@@ -1,5 +1,41 @@
-<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect class="background" x="0.5" y="0.5" width="31" height="31" rx="7.5" fill="white"/>
-<path class="foreground" d="M21.3047 14C22.2344 14 23.875 14.793 23.875 15.75C23.875 16.7344 22.2344 17.5 21.3047 17.5H18.1055L15.3711 22.3125C15.207 22.5859 14.9062 22.75 14.6055 22.75H13.0742C12.7734 22.75 12.5547 22.4766 12.6367 22.2031L13.9766 17.5H11.1875L9.98438 19.0859C9.90234 19.1953 9.79297 19.25 9.65625 19.25H8.50781C8.28906 19.25 8.125 19.0859 8.125 18.8672C8.125 18.8398 8.125 18.8125 8.125 18.7852L9 15.75L8.125 12.7422C8.125 12.7148 8.125 12.6875 8.125 12.6328C8.125 12.4414 8.28906 12.25 8.50781 12.25H9.65625C9.79297 12.25 9.90234 12.332 9.98438 12.4414L11.1875 14H13.9766L12.6367 9.32422C12.5547 9.05078 12.7734 8.75 13.0742 8.75H14.6055C14.9062 8.75 15.207 8.94141 15.3711 9.21484L18.1055 14H21.3047Z" fill="#202831"/>
-<rect x="0.5" y="0.5" width="31" height="31" rx="7.5" stroke="white"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="15.75"
+   height="14"
+   viewBox="0 0 15.75 14"
+   fill="none"
+   version="1.1"
+   id="svg7234"
+   sodipodi:docname="aircraft.svg"
+   inkscape:version="1.2.2 (732a01da63, 2022-12-09)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs7238" />
+  <sodipodi:namedview
+     id="namedview7236"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="26.15625"
+     inkscape:cx="7.8757467"
+     inkscape:cy="7.2640382"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg7234" />
+  <path
+     stroke-width="0"
+     d="m 13.1797,5.25 c 0.9297,0 2.5703,0.793 2.5703,1.75 0,0.9844 -1.6406,1.75 -2.5703,1.75 H 9.9805 L 7.2461,13.5625 C 7.082,13.8359 6.7812,14 6.4805,14 H 4.9492 C 4.6484,14 4.4297,13.7266 4.5117,13.4531 L 5.8516,8.75 H 3.0625 L 1.85938,10.3359 C 1.77734,10.4453 1.66797,10.5 1.53125,10.5 H 0.38281 C 0.16406,10.5 0,10.3359 0,10.1172 0,10.0898 0,10.0625 0,10.0352 L 0.875,7 0,3.9922 C 0,3.9648 0,3.9375 0,3.8828 0,3.6914 0.16406,3.5 0.38281,3.5 h 1.14844 c 0.13672,0 0.24609,0.082 0.32813,0.1914 L 3.0625,5.25 H 5.8516 L 4.5117,0.57422 C 4.4297,0.30078 4.6484,0 4.9492,0 H 6.4805 C 6.7812,0 7.082,0.19141 7.2461,0.46484 L 9.9805,5.25 Z"
+     fill="#202831"
+     id="path7232" />
 </svg>

@@ -67,23 +67,23 @@
 }
 
 /*** Basic colours ***/
-[data-coalition="blue"] .unit-marker>svg>.background {
-    fill: var(--primary-blue);
+[data-coalition="blue"] .unit-marker svg>*:first-child {
+    fill: var(--unit-background-blue);
 }
 
-[data-coalition="red"] .unit-marker>svg>.background {
-    fill: var(--primary-red);
+[data-coalition="red"] .unit-marker svg>*:first-child  {
+    fill: var(--unit-background-red);
 }
 
-[data-coalition="neutral"] .unit-marker>svg>.background {
-    fill: var(--primary-neutral);
+[data-coalition="neutral"] .unit-marker svg>*:first-child  {
+    fill: var(--unit-background-neutral);
 }
 
-[data-is-selected] .unit-marker>svg>.background {
+[data-is-selected] .unit-marker svg>*:first-child  {
     fill: white;
 }
 
-[data-is-highlighted] .unit-marker>svg>.background {
+[data-is-highlighted] .unit-marker svg>*:first-child  {
     stroke: white;
 }
 

@@ -32,6 +32,8 @@ var destinationPreviewIcon = new L.DivIcon({
     className: "ol-destination-preview"
 })
 
+const visibilityControls: string[] = ["human", "dcs", "aircraft", "groundunit-sam", "groundunit-other", "navyunit", "airbase"];
+
 export class ClickableMiniMap extends MiniMap {
     constructor(layer: L.TileLayer | L.LayerGroup, options?: MiniMapOptions) {
         super(layer, options);
@@ -69,6 +71,7 @@ export class Map extends L.Map {
     #airbaseContextMenu: AirbaseContextMenu = new AirbaseContextMenu("airbase-contextmenu");
 
     #mapSourceDropdown: Dropdown;
+    #optionButtons: { [key: string]: HTMLButtonElement[] } = {}
 
     constructor(ID: string) {
         /* Init the leaflet map */
@@ -130,6 +133,15 @@ export class Map extends L.Map {
             this.panBy(new L.Point( ((this.#panLeft? -1: 0) + (this.#panRight? 1: 0)) * this.#deafultPanDelta, 
                                     ((this.#panUp? -1: 0) + (this.#panDown? 1: 0)) * this.#deafultPanDelta)); 
         }, 20);
+
+        /* Option buttons */
+        this.#optionButtons["visibility"] = visibilityControls.map((option: string, index: number) => {
+            return this.#createOptionButton(option, `visibility/${option.toLowerCase()}.svg`, "", (e: any) => { 
+                getUnitsManager().setHiddenType(option, (e?.currentTarget as HTMLElement)?.classList.contains("off"));
+                (e?.currentTarget as HTMLElement)?.classList.toggle("off");
+            });
+        });
+        document.querySelector("#unit-visibility-control")?.append(...this.#optionButtons["visibility"]);
     }
 
     setLayer(layerName: string) {
@@ -534,5 +546,14 @@ export class Map extends L.Map {
             if (idx < this.#destinationPreviewMarkers.length)
                 this.#destinationPreviewMarkers[idx].setLatLng(!e.originalEvent.shiftKey? latlng: this.getMouseCoordinates());
         })   
+    }
+
+    #createOptionButton(value: string, url: string, title: string, callback: EventListenerOrEventListenerObject) {
+        var button = document.createElement("button");
+        button.title = title;
+        button.value = value;
+        button.innerHTML = `<img src="/resources/theme/images/buttons/${url}" onload="SVGInject(this)" />`
+        button.addEventListener("click", callback);
+        return button;
     }
 } 

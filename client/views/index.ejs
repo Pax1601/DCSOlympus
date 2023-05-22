@@ -2,47 +2,39 @@
 
 <head>
   <title>Olympus client</title>
-  <link rel="stylesheet" type="text/css" href="/resources/theme/theme.css" />
-  <link rel="stylesheet" type="text/css" href="/stylesheets/olympus.css" />
-  <link rel="stylesheet" href="stylesheets/leaflet.css">
+  <link rel="stylesheet" type="text/css" href="stylesheets/olympus.css" />
+  <link rel="stylesheet" type="text/css" href="stylesheets/leaflet/leaflet.css">
+
+  <link rel="stylesheet" type="text/css" href="/resources/theme/theme.css" /> <!-- Theme specifc css, autorouted to point to active theme -->
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;600;700;800&display=swap" rel="stylesheet"> 
 
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z4L2TC3YX0"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-Z4L2TC3YX0');
-  </script>
-
+  <script src="javascripts/svg-inject.js"></script>
 </head>
 
 <body>
   <div id="map-container"></div>
   
-  <%- include('aic.ejs') %>
-  <%- include('atc.ejs') %>
-  <%- include('contextmenus.ejs') %>
-  <%- include('unitcontrolpanel.ejs') %>
-  <%- include('unitinfopanel.ejs') %>
-  <%- include('mouseinfopanel.ejs') %>
-  <%- include('navbar.ejs') %>
-  <%- include('connectionstatuspanel.ejs') %>
-  <%- include('dialogs.ejs') %>
-  <%- include('unitdatatable.ejs') %>
-  <%- include('popups.ejs') %>
-  <%- include('hotgrouppanel.ejs') %>
+  <%- include('aic/aic.ejs') %>
 
-  <div id="gray-out"></div>
+  <%- include('atc/atc.ejs') %>
+  <%- include('atc/unitdatatable.ejs') %>
+
+  <%- include('panels/unitcontrol.ejs') %>
+  <%- include('panels/unitinfo.ejs') %>
+  <%- include('panels/mouseinfo.ejs') %>
+  <%- include('panels/connectionstatus.ejs') %>
+  <%- include('panels/hotgroup.ejs') %>
+  <%- include('panels/navbar.ejs') %>
+
+  <%- include('other/dialogs.ejs') %>
+  <%- include('other/popups.ejs') %>
+  <%- include('other/contextmenus.ejs') %>
+
+  <div id="gray-out"></div> <!-- Used to provide grayout effect of the background when login prompt is visible -->
   
-  <% /* %>
-  <%- include('log.ejs') %> 
-  <% */ %>
-
   <script src="javascripts/bundle.js"></script>
 </body>
 

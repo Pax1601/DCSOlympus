@@ -1,14 +1,15 @@
-@import url("layout.css");
-@import url("airbase.css");
-@import url("atc.css");
-@import url("connectionstatuspanel.css");
-@import url("contextmenus.css");
-@import url("mouseinfopanel.css");
-@import url("/stylesheets/units.css");
-@import url("unitdatatable.css");
-@import url("unitcontrolpanel.css");
-@import url("unitinfopanel.css");
-@import url("popup.css");
+@import url("layout/layout.css");
+@import url("atc/atc.css");
+@import url("atc/unitdatatable.css");
+@import url("aic/aic.css");
+@import url("panels/connectionstatus.css");
+@import url("panels/mouseinfo.css");
+@import url("panels/unitcontrol.css");
+@import url("panels/unitinfo.css");
+@import url("other/contextmenus.css");
+@import url("other/popup.css");
+@import url("markers/airbase.css");
+@import url("markers/units.css");
 
 * {
     -moz-box-sizing: border-box;
@@ -593,22 +594,28 @@ nav.ol-panel> :last-child {
 
 #unit-visibility-control button svg {
     pointer-events: none;
+    height: 16px;
+    width: 16px;
 }
 
-#unit-visibility-control button svg .background {
-    fill: white;
+#unit-visibility-control button {
+    background-color: white;
+    border: 1px solid transparent;
 }
 
-#unit-visibility-control button.off svg .foreground {
-    fill: var(--background-steel);
+#unit-visibility-control button.off {
+    background-color: transparent;
+    border: 1px solid white;
 }
 
-#unit-visibility-control button.off svg .background {
-    fill: none;
+#unit-visibility-control button.off svg * {
+    fill: white !important;
+    stroke: white !important;
 }
 
-#unit-visibility-control button.off svg .foreground {
-    fill: white;
+#unit-visibility-control button svg * {
+    fill: var(--background-steel) !important;
+    stroke: var(--background-steel) !important;
 }
 
 #atc-navbar-control {

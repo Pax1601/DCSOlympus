@@ -5,16 +5,19 @@
     --primary-neutral: #949ba7;
     --secondary-neutral-outline: #111111;
     --secondary-neutral-text: #111111;
+    --unit-background-neutral: #CFD9E8;
 
     /*** Coalition: blue  ***/
     --primary-blue: #247be2;
     --secondary-blue-outline: #082e44;
     --secondary-blue-text: #017DC1;
+    --unit-background-blue: #3BB9FF;
 
     /*** Coalition: red  ***/
     --primary-red: #ff5858;
     --secondary-red-outline: #262222;
     --secondary-red-text: #D42121;
+    --unit-background-red: #FF5858;
 
     /*** UI Colours **/
     --accent-green: #8bff63;

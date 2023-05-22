@@ -10,6 +10,7 @@ export class UnitsManager {
     #copiedUnits: Unit[];
     #selectionEventDisabled: boolean = false;
     #pasteDisabled: boolean = false;
+    #hiddenTypes: string[] = [];
 
     constructor() {
         this.#units = {};
@@ -85,6 +86,23 @@ export class UnitsManager {
             if (!updatedUnits.includes(unit))
                 unit.setData({})
         });
+    }
+
+    setHiddenType(key: string, value: boolean)
+    {
+        if (value)
+        {
+            if (this.#hiddenTypes.includes(key))
+                delete this.#hiddenTypes[this.#hiddenTypes.indexOf(key)];
+        }
+        else
+            this.#hiddenTypes.push(key);
+        Object.values(this.getUnits()).forEach((unit: Unit) => unit.updateVisibility());
+    }
+
+    getHiddenTypes()
+    {
+        return this.#hiddenTypes;
     }
 
     selectUnit(ID: number, deselectAllUnits: boolean = true) {

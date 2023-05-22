@@ -287,9 +287,15 @@ export class Unit extends Marker {
 
     /********************** Visibility *************************/
     updateVisibility() {
-        this.setHidden(document.body.getAttribute(`data-hide-${this.getMissionData().coalition}`) != null ||
-            document.body.getAttribute(`data-hide-${this.getMarkerCategory()}`) != null ||
-            !this.getBaseData().alive)
+        var hidden = false;
+        const hiddenUnits = getUnitsManager().getHiddenTypes();
+        if (this.getMissionData().flags.Human && hiddenUnits.includes("human"))
+            hidden = true;
+        else if (this.getBaseData().AI == false && hiddenUnits.includes("dcs"))
+            hidden = true;
+        else if (hiddenUnits.includes(this.getMarkerCategory()))
+            hidden = true;
+        this.setHidden(document.body.getAttribute(`data-hide-${this.getMissionData().coalition}`) != null || hidden || !this.getBaseData().alive);
     }
 
     setHidden(hidden: boolean) {
@@ -739,7 +745,7 @@ export class GroundUnit extends Unit {
     getMarkerHTML() {
         var role = groundUnitsDatabase.getByName(this.getBaseData().name)?.loadouts[0].roles[0];
         return `<div class="unit" data-object="unit-${this.getMarkerCategory()}" data-coalition="${this.getMissionData().coalition}">
-                    <div class="unit-marker"><img src="/resources/theme/images/units/groundunit-${this.getMarkerCategory()}.svg" onload="SVGInject(this)"/></div>
+                    <div class="unit-marker"><img src="/resources/theme/images/units/${this.getMarkerCategory()}.svg" onload="SVGInject(this)"/></div>
                     <div class="unit-short-label">${role?.substring(0, 1)?.toUpperCase() || ""}</div>
                     <div class="unit-hotgroup">
                         <div class="unit-hotgroup-id"></div>
@@ -750,7 +756,7 @@ export class GroundUnit extends Unit {
     getMarkerCategory() {
         // TODO this is very messy
         var role = groundUnitsDatabase.getByName(this.getBaseData().name)?.loadouts[0].roles[0];
-        var markerCategory = (role === "SAM") ? "sam" : "other";
+        var markerCategory = (role === "SAM") ? "groundunit-sam" : "groundunit-other";
         return markerCategory;
     }
 }

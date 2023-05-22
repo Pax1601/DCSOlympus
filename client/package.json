@@ -5,7 +5,7 @@
   "version": "v0.2.1-alpha",
   "private": true,
   "scripts": {
-    "copy": "copy .\\node_modules\\leaflet\\dist\\leaflet.css .\\public\\stylesheets\\leaflet.css",
+    "copy": "copy .\\node_modules\\leaflet\\dist\\leaflet.css .\\public\\stylesheets\\leaflet\\leaflet.css & copy .\\node_modules\\@iconfu\\svg-inject\\dist\\svg-inject.js .\\public\\javascripts\\svg-inject.js",
     "start": "npm run copy & concurrently --kill-others \"npm run watch\" \"nodemon ./bin/www\"",
     "watch": "watchify .\\src\\index.ts --debug -o .\\public\\javascripts\\bundle.js -t [ babelify --global true --presets [ @babel/preset-env ] --extensions '.js'] -p [ tsify --noImplicitAny ]"
   },

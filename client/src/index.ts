@@ -7,16 +7,14 @@ import { UnitControlPanel } from "./panels/unitcontrolpanel";
 import { MouseInfoPanel } from "./panels/mouseinfopanel";
 import { AIC } from "./aic/aic";
 import { ATC } from "./atc/atc";
-import { FeatureSwitches } from "./featureswitches";
+import { FeatureSwitches } from "./features/featureswitches";
 import { LogPanel } from "./panels/logpanel";
 import { getConfig, getPaused, setAddress, setCredentials, setPaused, startUpdate, toggleDemoEnabled } from "./server/server";
-import { UnitDataTable } from "./units/unitdatatable";
+import { UnitDataTable } from "./atc/unitdatatable";
 import { keyEventWasInInput } from "./other/utils";
 import { Popup } from "./popups/popup";
 import { Dropdown } from "./controls/dropdown";
 import { HotgroupPanel } from "./panels/hotgrouppanel";
-
-import "@iconfu/svg-inject";
 
 var map: Map;
 
