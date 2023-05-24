@@ -4,8 +4,8 @@ const DEMO_UNIT_DATA = {
         baseData: {
             AI: false,
             name: "KC-135",
-            unitName: "Olympus 1-1",
-            groupName: "Group 1",
+            unitName: "Olympus 1-1 aka Mr. Very long name",
+            groupName: "Group 2",
             alive: true,
             category: "Aircraft",
         },
@@ -71,7 +71,7 @@ const DEMO_UNIT_DATA = {
             AI: true,
             name: "KC-135",
             unitName: "Olympus 1-2",
-            groupName: "Group 1",
+            groupName: "Group 3",
             alive: true,
             category: "Aircraft",
         },
@@ -114,7 +114,7 @@ const DEMO_UNIT_DATA = {
             AI: true,
             name: "2S6 Tunguska",
             unitName: "Olympus 1-3",
-            groupName: "Group 1",
+            groupName: "Group 4",
             alive: true,
             category: "GroundUnit",
         },
@@ -284,7 +284,7 @@ const DEMO_UNIT_DATA = {
     ["7"]:{
         baseData: {
             AI: true,
-            name: "CVN-75",
+            name: "CVN-75 Very long name",
             unitName: "Olympus 1-7",
             groupName: "Group 1",
             alive: true,
@@ -677,15 +677,18 @@ class DemoDataGenerator {
         var ret = {bullseyes: {
             "0": {
                 latitude: 37.25,
-                longitude: -115.8
+                longitude: -115.8,
+                coalition: "neutral"
             },
             "1": {
                 latitude: 37.25,
-                longitude: -115.75
+                longitude: -115.75,
+                coalition: "red"
             },
             "2": {
                 latitude: 37.25,
-                longitude: -115.7
+                longitude: -115.7,
+                coalition: "blue"
             }
         }};
         ret.time = Date.now();

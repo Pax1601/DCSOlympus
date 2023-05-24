@@ -20,9 +20,8 @@ AirUnit::AirUnit(json::value json, int ID) : Unit(json, ID)
 
 void AirUnit::setState(int newState) 
 {
-	if (state != newState)
-	{
-		/************ Perform any action required when LEAVING a certain state ************/
+	/************ Perform any action required when LEAVING a certain state ************/
+	if (newState != state) {
 		switch (state) {
 		case State::IDLE: {
 			break;
@@ -47,58 +46,58 @@ void AirUnit::setState(int newState)
 		default:
 			break;
 		}
-
-		/************ Perform any action required when ENTERING a certain state ************/
-		switch (newState) {
-		case State::IDLE: {
-			clearActivePath();
-			resetActiveDestination();
-			addMeasure(L"currentState", json::value(L"Idle"));
-			break;
-		}
-		case State::REACH_DESTINATION: {
-			resetActiveDestination();
-			addMeasure(L"currentState", json::value(L"Reach destination"));
-			break;
-		}
-		case State::ATTACK: {
-			if (isTargetAlive()) {
-				Unit* target = unitsManager->getUnit(targetID);
-				Coords targetPosition = Coords(target->getLatitude(), target->getLongitude(), 0);
-				clearActivePath();
-				pushActivePathFront(targetPosition);
-				resetActiveDestination();
-				addMeasure(L"currentState", json::value(L"Attack"));
-			}
-			break;
-		}
-		case State::FOLLOW: {
-			clearActivePath();
-			resetActiveDestination();
-			addMeasure(L"currentState", json::value(L"Follow"));
-			break;
-		}
-		case State::LAND: {
-			resetActiveDestination();
-			addMeasure(L"currentState", json::value(L"Land"));
-			break;
-		}
-		case State::REFUEL: {
-			initialFuel = fuel;
-			clearActivePath();
-			resetActiveDestination();
-			addMeasure(L"currentState", json::value(L"Refuel"));
-			break;
-		}
-		default:
-			break;
-		}
-
-		resetTask();
-
-		log(unitName + L" setting state from " + to_wstring(state) + L" to " + to_wstring(newState));
-		state = newState;
 	}
+
+	/************ Perform any action required when ENTERING a certain state ************/
+	switch (newState) {
+	case State::IDLE: {
+		clearActivePath();
+		resetActiveDestination();
+		addMeasure(L"currentState", json::value(L"Idle"));
+		break;
+	}
+	case State::REACH_DESTINATION: {
+		resetActiveDestination();
+		addMeasure(L"currentState", json::value(L"Reach destination"));
+		break;
+	}
+	case State::ATTACK: {
+		if (isTargetAlive()) {
+			Unit* target = unitsManager->getUnit(targetID);
+			Coords targetPosition = Coords(target->getLatitude(), target->getLongitude(), 0);
+			clearActivePath();
+			pushActivePathFront(targetPosition);
+			resetActiveDestination();
+			addMeasure(L"currentState", json::value(L"Attack"));
+		}
+		break;
+	}
+	case State::FOLLOW: {
+		clearActivePath();
+		resetActiveDestination();
+		addMeasure(L"currentState", json::value(L"Follow"));
+		break;
+	}
+	case State::LAND: {
+		resetActiveDestination();
+		addMeasure(L"currentState", json::value(L"Land"));
+		break;
+	}
+	case State::REFUEL: {
+		initialFuel = fuel;
+		clearActivePath();
+		resetActiveDestination();
+		addMeasure(L"currentState", json::value(L"Refuel"));
+		break;
+	}
+	default:
+		break;
+	}
+
+	resetTask();
+
+	log(unitName + L" setting state from " + to_wstring(state) + L" to " + to_wstring(newState));
+	state = newState;
 }
 
 bool AirUnit::isDestinationReached()
@@ -158,7 +157,7 @@ void AirUnit::goToDestination(wstring enrouteTask)
 	{
 		Command* command = dynamic_cast<Command*>(new Move(ID, activeDestination, getTargetSpeed(), getTargetAltitude(), enrouteTask));
 		scheduler->appendCommand(command);
-		hasTask = true;
+		setHasTask(true);
 	}
 	else
 		log(unitName + L" error, no active destination!");
@@ -211,17 +210,17 @@ void AirUnit::AIloop()
 			
 			if (activeDestination == NULL || !hasTask)
 			{
-				setActiveDestination();
-				goToDestination(enrouteTask);
+				if (!setActiveDestination())
+					setState(State::IDLE);
+				else
+					goToDestination(enrouteTask);
 			}
 			else {
 				if (isDestinationReached()) {
 					if (updateActivePath(looping) && setActiveDestination())
 						goToDestination(enrouteTask);
-					else {
+					else 
 						setState(State::IDLE);
-						break;
-					}
 				}
 			}			
 			break;

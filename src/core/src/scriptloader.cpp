@@ -50,4 +50,5 @@ void registerLuaFunctions(lua_State* L)
     executeLuaScript(L, modLocation + "\\Scripts\\mist.lua");
     executeLuaScript(L, modLocation + "\\Scripts\\OlympusCommand.lua");
     executeLuaScript(L, modLocation + "\\Scripts\\unitPayloads.lua");
+    executeLuaScript(L, modLocation + "\\Scripts\\templates.lua");
 }

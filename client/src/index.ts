@@ -7,10 +7,10 @@ import { UnitControlPanel } from "./panels/unitcontrolpanel";
 import { MouseInfoPanel } from "./panels/mouseinfopanel";
 import { AIC } from "./aic/aic";
 import { ATC } from "./atc/atc";
-import { FeatureSwitches } from "./featureswitches";
+import { FeatureSwitches } from "./features/featureswitches";
 import { LogPanel } from "./panels/logpanel";
 import { getConfig, getPaused, setAddress, setCredentials, setPaused, startUpdate, toggleDemoEnabled } from "./server/server";
-import { UnitDataTable } from "./units/unitdatatable";
+import { UnitDataTable } from "./atc/unitdatatable";
 import { keyEventWasInInput } from "./other/utils";
 import { Popup } from "./popups/popup";
 import { Dropdown } from "./controls/dropdown";
@@ -140,28 +140,14 @@ function setupEvents() {
             case "Space":
                 setPaused(!getPaused());
                 break;
-            case "KeyW":
-            case "KeyA":
-            case "KeyS":
-            case "KeyD":
-            case "ArrowLeft":
-            case "ArrowRight":
-            case "ArrowUp":
-            case "ArrowDown":
+            case "KeyW": case "KeyA": case "KeyS": case "KeyD":
+            case "ArrowLeft":  case "ArrowRight": case "ArrowUp": case "ArrowDown":
                 getMap().handleMapPanning(ev);
                 break;
-            case "Digit1":
-            case "Digit2":
-            case "Digit3":
-            case "Digit4":
-            case "Digit5":
-            case "Digit6":
-            case "Digit7":
-            case "Digit8":
-            case "Digit9":
+            case "Digit1": case "Digit2": case "Digit3": case "Digit4": case "Digit5": case "Digit6": case "Digit7": case "Digit8": case "Digit9":     
                 // Using the substring because the key will be invalid when pressing the Shift key
                 if (ev.ctrlKey && ev.shiftKey)
-                    getUnitsManager().selectedUnitsAddToHotgroup(parseInt(ev.code.substring(5)));   
+                    getUnitsManager().selectedUnitsAddToHotgroup(parseInt(ev.code.substring(5)));
                 else if (ev.ctrlKey && !ev.shiftKey)
                     getUnitsManager().selectedUnitsSetHotgroup(parseInt(ev.code.substring(5)));
                 else
@@ -176,14 +162,7 @@ function setupEvents() {
             return;
         }
         switch (ev.code) {
-            case "KeyW":
-            case "KeyA":
-            case "KeyS":
-            case "KeyD":
-            case "ArrowLeft":
-            case "ArrowRight":
-            case "ArrowUp":
-            case "ArrowDown":
+            case "KeyW": case "KeyA": case "KeyS": case "KeyD": case "ArrowLeft": case "ArrowRight": case "ArrowUp": case "ArrowDown":
                 getMap().handleMapPanning(ev);
                 break;
         }
@@ -201,8 +180,8 @@ function setupEvents() {
 
     document.addEventListener("tryConnection", () => {
         const form = document.querySelector("#splash-content")?.querySelector("#authentication-form");
-        const username = (<HTMLInputElement> (form?.querySelector("#username"))).value;
-        const password = (<HTMLInputElement> (form?.querySelector("#password"))).value;
+        const username = (<HTMLInputElement>(form?.querySelector("#username"))).value;
+        const password = (<HTMLInputElement>(form?.querySelector("#password"))).value;
         setCredentials(username, btoa("admin" + ":" + password));
 
         /* Start periodically requesting updates */
@@ -214,6 +193,7 @@ function setupEvents() {
     document.addEventListener("reloadPage", () => {
         location.reload();
     })
+
 }
 
 export function getMap() {

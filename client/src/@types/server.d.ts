@@ -8,7 +8,7 @@ interface AirbasesData {
 }
 
 interface BullseyesData {
-    bullseyes: {[key: string]: any},
+    bullseyes: {[key: string]: {latitude: number, longitude: number, coalition: string}},
 }
 
 interface LogData {

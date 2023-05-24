@@ -41,8 +41,7 @@ export class MapContextMenu extends ContextMenu {
         document.addEventListener("contextMenuDeployAircraft", () => {
             this.hide();
             this.#spawnOptions.coalition = getActiveCoalition();
-            if (this.#spawnOptions)
-            {
+            if (this.#spawnOptions) {
                 getMap().addTemporaryMarker(this.#spawnOptions.latlng);
                 spawnAircraft(this.#spawnOptions);
             }
@@ -51,8 +50,7 @@ export class MapContextMenu extends ContextMenu {
         document.addEventListener("contextMenuDeployGroundUnit", () => {
             this.hide();
             this.#spawnOptions.coalition = getActiveCoalition();
-            if (this.#spawnOptions)
-            {
+            if (this.#spawnOptions) {
                 getMap().addTemporaryMarker(this.#spawnOptions.latlng);
                 spawnGroundUnit(this.#spawnOptions);
             }
@@ -189,10 +187,8 @@ export class MapContextMenu extends ContextMenu {
         this.#spawnOptions.role = role;
         this.#resetGroundUnitType();
 
-        const types = groundUnitsDatabase.getByRole(role).map((blueprint) => { return blueprint.label } );
-        types.sort();
-
-        this.#groundUnitTypeDropdown.setOptions( types );
+        const types = groundUnitsDatabase.getByRole(role).map((blueprint) => { return blueprint.label });
+        this.#groundUnitTypeDropdown.setOptions(types);
         this.#groundUnitTypeDropdown.selectValue(0);
         this.clip();
     }
@@ -204,9 +200,7 @@ export class MapContextMenu extends ContextMenu {
         this.#groundUnitTypeDropdown.reset();
 
         const roles = groundUnitsDatabase.getRoles();
-        roles.sort();
-        
-        this.#groundUnitRoleDropdown.setOptions( roles );
+        this.#groundUnitRoleDropdown.setOptions(roles);
         this.clip();
     }
 

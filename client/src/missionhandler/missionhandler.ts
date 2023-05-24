@@ -1,19 +1,12 @@
-import { Marker, LatLng, Icon } from "leaflet";
+import { LatLng } from "leaflet";
 import { getInfoPopup, getMap } from "..";
 import { Airbase } from "./airbase";
-
-var bullseyeIcons = [
-    new Icon({ iconUrl: 'images/bullseye0.png', iconAnchor: [30, 30]}),
-    new Icon({ iconUrl: 'images/bullseye1.png', iconAnchor: [30, 30]}),
-    new Icon({ iconUrl: 'images/bullseye2.png', iconAnchor: [30, 30]})
-]
+import { Bullseye } from "./bullseye";
 
 export class MissionHandler
 {
-    #bullseyes      : any; //TODO declare interface
-    #bullseyeMarkers: any;
-    #airbases       : any; //TODO declare interface
-    #airbasesMarkers: {[name: string]: Airbase};
+    #bullseyes      : {[name: string]: Bullseye} = {};        
+    #airbases       : {[name: string]: Airbase} = {};
     #theatre        : string = "";
 
     //  Time
@@ -26,27 +19,48 @@ export class MissionHandler
 
     constructor()
     {
-        this.#bullseyes = undefined;
-        this.#bullseyeMarkers = [
-            new Marker([0, 0], {icon: bullseyeIcons[0]}).addTo(getMap()),
-            new Marker([0, 0], {icon: bullseyeIcons[1]}).addTo(getMap()),
-            new Marker([0, 0], {icon: bullseyeIcons[2]}).addTo(getMap())
-        ]
-        this.#airbasesMarkers = {};
+
     }
 
     update(data: BullseyesData | AirbasesData | any)
     {
         if ("bullseyes" in data)
         {
-            this.#bullseyes = data.bullseyes;
-            this.#drawBullseyes();
+            for (let idx in data.bullseyes)
+            {
+                const bullseye = data.bullseyes[idx];
+                if (!(idx in this.#bullseyes))
+                    this.#bullseyes[idx] = new Bullseye([0, 0]).addTo(getMap());
+                    
+                if (bullseye.latitude && bullseye.longitude && bullseye.coalition)
+                {
+                    this.#bullseyes[idx].setLatLng(new LatLng(bullseye.latitude, bullseye.longitude)); 
+                    this.#bullseyes[idx].setCoalition(bullseye.coalition);
+                }
+            }
         }
 
         if ("airbases" in data)
         {
-            this.#airbases = data.airbases;
-            this.#drawAirbases();
+            for (let idx in data.airbases)
+            {
+                var airbase = data.airbases[idx]
+                if (this.#airbases[idx] === undefined)
+                {
+                    this.#airbases[idx] = new Airbase({
+                        position: new LatLng(airbase.latitude, airbase.longitude), 
+                        name: airbase.callsign
+                    }).addTo(getMap());
+                    this.#airbases[idx].on('contextmenu', (e) => this.#onAirbaseClick(e));
+                }
+                if (airbase.latitude && airbase.longitude && airbase.coalition)
+                {
+                    this.#airbases[idx].setLatLng(new LatLng(airbase.latitude, airbase.longitude));
+                    this.#airbases[idx].setCoalition(airbase.coalition);
+                }
+                //this.#airbases[idx].setProperties(["Runway 1: 31L / 13R", "Runway 2: 31R / 13L", "TCN: 17X", "ILS: ---" ]);
+                //this.#airbases[idx].setParkings(["2x big", "5x small"]);
+            }
         }
 
         if ("mission" in data)
@@ -81,46 +95,12 @@ export class MissionHandler
         if ( "time" in data ) {
             this.#updateTime = data.time;
         }
-
     }
 
     getBullseyes()
     {
         return this.#bullseyes;
     }
-
-    #drawBullseyes()
-    {
-        for (let idx in this.#bullseyes)
-        {
-            var bullseye = this.#bullseyes[idx];
-            this.#bullseyeMarkers[idx].setLatLng(new LatLng(bullseye.latitude, bullseye.longitude)); 
-        }
-    }
-
-    #drawAirbases()
-    {
-        for (let idx in this.#airbases)
-        {
-            var airbase = this.#airbases[idx]
-            if (this.#airbasesMarkers[idx] === undefined)
-            {
-                this.#airbasesMarkers[idx] = new Airbase({
-                    position: new LatLng(airbase.latitude, airbase.longitude), 
-                    name: airbase.callsign,
-                    src: "images/airbase.png"}).addTo(getMap());
-                this.#airbasesMarkers[idx].on('contextmenu', (e) => this.#onAirbaseClick(e));
-            }
-            else
-            {
-                this.#airbasesMarkers[idx].setLatLng(new LatLng(airbase.latitude, airbase.longitude));
-                this.#airbasesMarkers[idx].setCoalition(airbase.coalition);
-                //this.#airbasesMarkers[idx].setProperties(["Runway 1: 31L / 13R", "Runway 2: 31R / 13L", "TCN: 17X", "ILS: ---" ]);
-                //this.#airbasesMarkers[idx].setParkings(["2x big", "5x small"]);
-            }
-        }
-    }
-
 
     getDate() {
         return this.#date;
@@ -156,7 +136,6 @@ export class MissionHandler
     getUpdateTime() {
         return this.#updateTime;
     }
-
 
     #onAirbaseClick(e: any)
     {

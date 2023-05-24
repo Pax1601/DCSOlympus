@@ -18,14 +18,24 @@ export class HotgroupPanel extends Panel {
     }
 
     addHotgroup(hotgroup: number) {
-        const hotgroupHtml =    `<div class="unit-hotgroup">
-                                    <div class="unit-hotgroup-id">${hotgroup}</div>
-                                </div>
-                                x${getUnitsManager().getUnitsByHotgroup(hotgroup).length}`
+        // Hotgroup number
+        var hotgroupDiv = document.createElement("div");
+        hotgroupDiv.classList.add("unit-hotgroup");
+        var idDiv = document.createElement("div");
+        idDiv.classList.add("unit-hotgroup-id");
+        idDiv.innerText = String(hotgroup);
+        hotgroupDiv.appendChild(idDiv);
+
+        // Hotgroup unit count
+        var countDiv = document.createElement("div");
+        countDiv.innerText = `x${getUnitsManager().getUnitsByHotgroup(hotgroup).length}`;
+
         var el = document.createElement("div");
+        el.appendChild(hotgroupDiv);
+        el.appendChild(countDiv);
         el.classList.add("hotgroup-selector");
-        el.innerHTML = hotgroupHtml;
         el.toggleAttribute(`data-hotgroup-${hotgroup}`, true)
+        
         this.getElement().appendChild(el);
 
         el.addEventListener("click", () => {
