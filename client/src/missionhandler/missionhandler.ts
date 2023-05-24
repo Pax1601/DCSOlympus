@@ -9,6 +9,14 @@ export class MissionHandler
     #airbases       : {[name: string]: Airbase} = {};
     #theatre        : string = "";
 
+    //  Time
+    #date        : any;
+    #elapsedTime : any;
+    #startTime   : any;
+    #time        : any;
+
+    #updateTime  : any;
+
     constructor()
     {
 
@@ -64,12 +72,69 @@ export class MissionHandler
 
                 getInfoPopup().setText("Map set to " + this.#theatre);
             }
+
+            if ( "date" in data.mission ) {
+                this.#date = data.mission.date;
+            }
+
+            if ( "elapsedTime" in data.mission ) {
+                this.#elapsedTime = data.mission.elapsedTime;
+            }
+
+            if ( "startTime" in data.mission ) {
+                this.#startTime = data.mission.startTime;
+            }
+
+            if ( "time" in data.mission ) {
+                this.#time = data.mission.time;
+            }
+
+        }
+
+
+        if ( "time" in data ) {
+            this.#updateTime = data.time;
         }
     }
 
     getBullseyes()
     {
         return this.#bullseyes;
+    }
+
+    getDate() {
+        return this.#date;
+    }
+
+
+    getNowDate() {
+
+        const date = this.getDate();
+        const time = this.getTime();
+
+        if ( !date ) {
+            return new Date();
+        }
+        
+        let year  = date.Year;
+        let month = date.Month - 1;
+
+        if ( month < 0 ) {
+            month = 11;
+            year--;
+        }
+
+        return new Date( year, month, date.Day, time.h, time.m, time.s );
+    }
+
+
+    getTime() {
+        return this.#time;
+    }
+
+
+    getUpdateTime() {
+        return this.#updateTime;
     }
 
     #onAirbaseClick(e: any)

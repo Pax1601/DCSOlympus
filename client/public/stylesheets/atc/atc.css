@@ -1,4 +1,8 @@
-
+.ol-strip-board .ol-dialog-header {
+    align-items: center;
+    display:flex;
+    justify-content: space-between;
+}
 
 .ol-strip-board-strips {
     display:flex;
@@ -178,6 +182,7 @@
 
 .ol-strip-board-add-flight .ol-auto-suggest[data-has-suggestions] {
     display:flex;
+    row-gap: 4px;
 }
 
 .ol-strip-board-add-flight .ol-auto-suggest[data-has-suggestions] a {
@@ -192,4 +197,9 @@
 [data-board-type="tower"] {
     right:10px;
     top:10px;
+}
+
+[data-board-type="tower"] .ol-auto-suggest {
+    top:30px;
+    translate:0;
 }
