@@ -33,8 +33,8 @@ export class Dropdown {
         this.#options.classList.add("ol-scrollable");
     }
 
-    setOptions(optionsList: string[]) {
-        this.#optionsList = optionsList;
+    setOptions(optionsList: string[], sortAlphabetically: boolean = true) {
+        this.#optionsList = optionsList.sort();
         this.#options.replaceChildren(...optionsList.map((option: string, idx: number) => {
             var div = document.createElement("div");
             var button = document.createElement("button");
@@ -70,6 +70,7 @@ export class Dropdown {
             var el = document.createElement("div");
             el.classList.add("ol-ellipsed");
             el.innerText = option;
+            this.#value.replaceChildren();
             this.#value.appendChild(el);
             this.#index = idx;
             this.#close();

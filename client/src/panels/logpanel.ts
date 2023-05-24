@@ -18,7 +18,7 @@ export class LogPanel extends Panel
             if (parseInt(idx) >= this.#logs.length) {
                 this.#logs.push(logs[idx]);
                 var el = document.createElement("div");
-                el.innerHTML = logs[idx];
+                el.innerText = logs[idx];
                 el.classList.add("js-log-element", "ol-log-element");
                 this.getElement().appendChild(el);
                 this.getElement().scrollTop = this.getElement().scrollHeight;
