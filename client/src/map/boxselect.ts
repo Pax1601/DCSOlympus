@@ -1,10 +1,10 @@
 import { Map } from 'leaflet';
-import { Handler} from 'leaflet';
+import { Handler } from 'leaflet';
 import { Util } from 'leaflet';
 import { DomUtil } from 'leaflet';
 import { DomEvent } from 'leaflet';
 import { LatLngBounds } from 'leaflet';
-import { Bounds }  from 'leaflet';
+import { Bounds } from 'leaflet';
 
 export var BoxSelect = Handler.extend({
 	initialize: function (map: Map) {
@@ -82,12 +82,12 @@ export var BoxSelect = Handler.extend({
 		this._point = this._map.mouseEventToContainerPoint(e);
 
 		var bounds = new Bounds(this._point, this._startPoint),
-		    size = bounds.getSize();
+			size = bounds.getSize();
 
 		if (bounds.min != undefined)
 			DomUtil.setPosition(this._box, bounds.min);
 
-		this._box.style.width  = size.x + 'px';
+		this._box.style.width = size.x + 'px';
 		this._box.style.height = size.y + 'px';
 	},
 
@@ -113,7 +113,7 @@ export var BoxSelect = Handler.extend({
 		if ((e.which !== 1) && (e.button !== 0)) { return; }
 
 		this._finish();
-        
+
 		if (!this._moved) { return; }
 		// Postpone to next JS tick so internal click event handling
 		// still see it as "moved".
@@ -121,8 +121,8 @@ export var BoxSelect = Handler.extend({
 		var bounds = new LatLngBounds(
 			this._map.containerPointToLatLng(this._startPoint),
 			this._map.containerPointToLatLng(this._point));
-	
-		this._map.fire('selectionend', {selectionBounds: bounds});
+
+		this._map.fire('selectionend', { selectionBounds: bounds });
 	},
 
 	_onKeyDown: function (e: any) {

@@ -17,23 +17,23 @@
 }
 
 #active-coalition-label {
-    position: absolute;
-    top: -28px;
     border-radius: 999px;
-    width: fit-content;
+    color: var(--nav-text);
+    font-size: 12px;
+    font-weight: 600;
     height: fit-content;
     padding: 3px 10px;
     padding-bottom: 3px;
-    font-weight: 600;
-    color: var(--nav-text);
-    font-size: 12px;
+    position: absolute;
+    top: -28px;
+    width: fit-content;
 }
 
 #context-menu-switch {
     margin-right: 10px;
 }
 
-#map-contextmenu>div:nth-child(2){
+#map-contextmenu>div:nth-child(2) {
     align-items: center;
     display: flex;
     flex-direction: row;
@@ -41,22 +41,22 @@
     padding-right: 0px;
 }
 
-#map-contextmenu>ul{
+#map-contextmenu>ul {
     max-height: 200px;
     overflow-x: hidden;
     overflow-y: auto;
 }
 
 #map-contextmenu .ol-panel {
-    width: 100%;
     border-radius: var(--border-radius-sm);
+    width: 100%;
 }
 
 #map-contextmenu ul {
     margin: 0px;
 }
 
-#map-contextmenu>div:nth-child(n+3){
+#map-contextmenu>div:nth-child(n+3) {
     align-items: center;
     display: flex;
     flex-direction: column;
@@ -64,10 +64,10 @@
     row-gap: 5px;
 }
 
-#map-contextmenu .ol-select-container{
-    width: 100%;
-    flex:0 0 auto;
+#map-contextmenu .ol-select-container {
     align-self: stretch;
+    flex: 0 0 auto;
+    width: 100%;
 }
 
 #aircraft-spawn-menu .ol-select.is-open .ol-select-options {
@@ -76,28 +76,28 @@
 
 #aircraft-spawn-menu>button,
 #ground-unit-spawn-menu>button {
-    width: 100%;
     text-align: center;
+    width: 100%;
 }
 
 #aircraft-spawn-button {
-    background-image: var( --spawn-aircraft-url );
+    background-image: url("/resources/theme/images/buttons/spawn/aircraft.svg");
     background-size: 48px;
 }
 
 #ground-unit-spawn-button {
-    background-image: var( --spawn-groundunit-url );
+    background-image: url("/resources/theme/images/buttons/spawn/ground.svg");
     background-size: 48px;
 }
 
 #smoke-spawn-button {
-    background-image: var( --spawn-smoke-url );
+    background-image: url("/resources/theme/images/buttons/spawn/smoke.svg");
     background-size: 48px;
 }
 
 .unit-spawn-button {
-    border-radius: 0px;
     border: none;
+    border-radius: 0px;
     height: 48px;
     margin-bottom: -10px;
     margin-top: -10px;
@@ -105,37 +105,34 @@
 }
 
 .unit-spawn-button:last-of-type {
-    border-top-right-radius: var(--border-radius-sm);
     border-bottom-right-radius: var(--border-radius-sm);
+    border-top-right-radius: var(--border-radius-sm);
 }
 
 [data-active-coalition="blue"].toggle-fill,
-[data-active-coalition="blue"].unit-spawn-button:hover, 
-[data-active-coalition="blue"].unit-spawn-button.is-open, 
+[data-active-coalition="blue"].unit-spawn-button:hover,
+[data-active-coalition="blue"].unit-spawn-button.is-open,
 [data-active-coalition="blue"]#active-coalition-label,
 [data-active-coalition="blue"].deploy-unit-button,
-[data-active-coalition="blue"]#spawn-airbase-aircraft-button
-{
+[data-active-coalition="blue"]#spawn-airbase-aircraft-button {
     background-color: var(--primary-blue)
 }
 
 [data-active-coalition="red"].toggle-fill,
-[data-active-coalition="red"].unit-spawn-button:hover, 
-[data-active-coalition="red"].unit-spawn-button.is-open, 
+[data-active-coalition="red"].unit-spawn-button:hover,
+[data-active-coalition="red"].unit-spawn-button.is-open,
 [data-active-coalition="red"]#active-coalition-label,
 [data-active-coalition="red"].deploy-unit-button,
-[data-active-coalition="red"]#spawn-airbase-aircraft-button
-{
+[data-active-coalition="red"]#spawn-airbase-aircraft-button {
     background-color: var(--primary-red)
 }
 
 [data-active-coalition="neutral"].toggle-fill,
-[data-active-coalition="neutral"].unit-spawn-button:hover, 
-[data-active-coalition="neutral"].unit-spawn-button.is-open, 
+[data-active-coalition="neutral"].unit-spawn-button:hover,
+[data-active-coalition="neutral"].unit-spawn-button.is-open,
 [data-active-coalition="neutral"]#active-coalition-label,
 [data-active-coalition="neutral"].deploy-unit-button,
-[data-active-coalition="neutral"]#spawn-airbase-aircraft-button
-{
+[data-active-coalition="neutral"]#spawn-airbase-aircraft-button {
     background-color: var(--primary-neutral)
 }
 
@@ -144,11 +141,13 @@
     border: 1px solid var(--primary-blue);
     cursor: default;
 }
+
 [data-active-coalition="red"].deploy-unit-button:disabled {
     background-color: transparent;
     border: 1px solid var(--primary-red);
     cursor: default;
 }
+
 [data-active-coalition="neutral"].deploy-unit-button:disabled {
     background-color: transparent;
     border: 1px solid var(--primary-neutral);
@@ -158,9 +157,11 @@
 [data-active-coalition="blue"].toggle-fill::after {
     transform: translateX(0);
 }
+
 [data-active-coalition="red"].toggle-fill::after {
     transform: translateX(var(--height));
 }
+
 [data-active-coalition="neutral"].toggle-fill::after {
     transform: translateX(calc(var(--height) / 2));
 }
@@ -168,182 +169,198 @@
 [data-active-coalition="blue"]#active-coalition-label::after {
     content: "Create blue unit";
 }
+
 [data-active-coalition="red"]#active-coalition-label::after {
     content: "Create red unit";
 }
+
 [data-active-coalition="neutral"]#active-coalition-label::after {
     content: "Create neutral unit";
 }
 
 #loadout-preview {
-    display: flex;
-    flex-direction: row;
     align-content: space-between;
     align-items: center;
-    width: 100%;
     column-gap: 20px;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
 }
 
 #loadout-list {
+    align-content: center;
     display: flex;
     flex-direction: column;
-    align-content: center;
     height: 100%;
 }
 
 #unit-image {
-    width: 100px;
-    height: 100px;
     filter: invert(100%);
-    margin-top: 10px;
+    height: 100px;
     margin-bottom: 10px;
+    margin-top: 10px;
+    width: 100px;
 }
 
 #smoke-spawn-menu {
+    align-items: center;
     display: flex;
     flex-direction: column;
-    align-items: center;
     text-align: center;
 }
 
 #smoke-spawn-menu>button {
-    width: 100%;
-    text-align: left;
-    display: flex;
-    flex-wrap: wrap;
     align-items: center;
     column-gap: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    text-align: left;
+    width: 100%;
 }
 
 #smoke-spawn-menu>button::before {
-    display: block;
-    width: 10px;
-    height: 10px;
     border-radius: 999px;
     content: "";
+    display: block;
+    height: 10px;
+    width: 10px;
 }
 
-[data-smoke-color="red"]::before{ background-color: red; }
-[data-smoke-color="white"]::before{ background-color: white; }
-[data-smoke-color="blue"]::before{ background-color: blue; }
-[data-smoke-color="green"]::before{ background-color: green; }
-[data-smoke-color="orange"]::before{ background-color: orange; }
+[data-smoke-color="red"]::before {
+    background-color: red;
+}
+
+[data-smoke-color="white"]::before {
+    background-color: white;
+}
+
+[data-smoke-color="blue"]::before {
+    background-color: blue;
+}
+
+[data-smoke-color="green"]::before {
+    background-color: green;
+}
+
+[data-smoke-color="orange"]::before {
+    background-color: orange;
+}
 
 /* Unit context menu */
 #unit-contextmenu {
     display: flex;
     flex-direction: column;
     height: fit-content;
-    width: fit-content;
+    padding: 15px;
     position: absolute;
     row-gap: 5px;
+    width: fit-content;
     z-index: 1000;
-    padding: 15px;
 }
 
 #unit-contextmenu button {
     border: 1px solid var(--background-offwhite);
     border-radius: var(--border-radius-sm);
-    padding: 12px;
     font-weight: normal;
+    padding: 12px;
 }
 
 #unit-contextmenu div {
+    align-content: center;
     display: flex;
     flex-direction: row;
-    align-content: center;
 }
 
 #unit-contextmenu div:before {
-	display: inline-block;
-	filter: invert(100%);
-	height: 16px;
-	margin-right: 15px;
-	width: 16px;
+    display: inline-block;
+    filter: invert(100%);
+    height: 16px;
+    margin-right: 15px;
+    width: 16px;
 }
 
 #center-map::before {
-	content: url( /images/icons/arrows-to-eye-solid.svg );
+    content: url("/resources/theme/images/icons/arrows-to-eye-solid.svg");
 }
 
 #refuel::before {
-	content: url( /images/icons/fuel.svg );
+    content: url("/resources/theme/images/icons/fuel.svg");
 }
 
 #attack::before {
-	content: url( /images/icons/sword.svg );
+    content: url("/resources/theme/images/icons/sword.svg");
 }
 
 #follow::before {
-	content: url( /images/icons/follow.svg );
+    content: url("/resources/theme/images/icons/follow.svg");
 }
 
 #trail::before {
-	content: url( /images/icons/trail.svg );
+    content: url("/resources/theme/images/icons/trail.svg");
 }
 
 #echelon-lh::before {
-	content: url( /images/icons/echelon-lh.svg );
+    content: url("/resources/theme/images/icons/echelon-lh.svg");
 }
 
 #echelon-rh::before {
-	content: url( /images/icons/echelon-rh.svg );
+    content: url("/resources/theme/images/icons/echelon-rh.svg");
 }
 
 #line-abreast::before {
-	content: url( /images/icons/line-abreast.svg );
+    content: url("/resources/theme/images/icons/line-abreast.svg");
 }
 
 #front::before {
-	content: url( /images/icons/front.svg );
+    content: url("/resources/theme/images/icons/front.svg");
 }
 
 #custom::before {
-	content: url( /images/icons/custom.svg );
+    content: url("/resources/theme/images/icons/custom.svg");
 }
 
 #custom-formation-dialog {
-	width: 250px;
+    width: 250px;
 }
 
-#custom-formation-dialog > .ol-dialog-content {
-	margin-top: 10px;
-	margin-bottom: 10px;
-	display: flex;
-	flex-direction: column;
-	flex-wrap: nowrap;
-	row-gap: 10px;
+#custom-formation-dialog>.ol-dialog-content {
     align-items: center;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    row-gap: 10px;
 }
 
-#custom-formation-dialog > .ol-dialog-content > .ol-group {
+#custom-formation-dialog>.ol-dialog-content>.ol-group {
+    justify-content: space-between;
     width: 100%;
-	justify-content: space-between;
 }
 
 #reference-system {
-    content: url( /images/reference-system.svg );
+    content: url("/images/reference-system.svg");
     display: inline-block;
-	filter: invert(100%);
-    width: 50px;
-    transform: translate(-50%, -50%); 
+    filter: invert(100%);
     position: absolute;
+    transform: translate(-50%, -50%);
+    width: 50px;
 }
 
 .formation-position-clock {
-    position: relative; 
     height: 100px;
-    width: 100px; 
     margin: 15px;
+    position: relative;
+    width: 100px;
 }
 
-.formation-position-clock > .clock-hand {
-    transform: translate(-50%, -50%); 
-    display: flex; 
-    position: absolute; 
-    align-items: center; 
-    justify-content: center; 
-    height: 20px; 
+.formation-position-clock>.clock-hand {
+    align-items: center;
+    display: flex;
+    height: 20px;
+    justify-content: center;
+    position: absolute;
+    transform: translate(-50%, -50%);
     width: 20px;
 }
 
@@ -362,9 +379,9 @@
     --width: 40px;
     --height: calc(var(--width) / 2);
     --border-radius: calc(var(--height) / 2);
+    cursor: pointer;
 
     display: inline-block;
-    cursor: pointer;
 }
 
 .toggle-input {
@@ -372,23 +389,22 @@
 }
 
 .toggle-fill {
-    position: relative;
-    width: var(--width);
-    height: var(--height);
     border-radius: var(--border-radius);
+    height: var(--height);
+    position: relative;
     transition: background-color 0.2s;
+    width: var(--width);
 }
 
 .toggle-fill::after {
+    background-color: #ffffff;
+    border-radius: var(--border-radius);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
     content: "";
+    height: calc(var(--height) - 4px);
+    left: 2;
     position: absolute;
     top: 2;
-    left: 2;
-    height: calc(var(--height) - 4px);
-    width: calc(var(--height) - 4px);
-    background-color: #ffffff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
-    border-radius: var(--border-radius);
     transition: transform 0.2s;
+    width: calc(var(--height) - 4px);
 }
-

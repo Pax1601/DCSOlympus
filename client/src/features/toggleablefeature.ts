@@ -1,9 +1,9 @@
 export abstract class ToggleableFeature {
 
-    #status:boolean = false;
+    #status: boolean = false;
 
 
-    constructor( defaultStatus:boolean ) {
+    constructor(defaultStatus: boolean) {
 
         this.#status = defaultStatus;
 
@@ -12,17 +12,17 @@ export abstract class ToggleableFeature {
     }
 
 
-    getStatus() : boolean {
+    getStatus(): boolean {
         return this.#status;
     }
 
 
-    protected onStatusUpdate() {}
+    protected onStatusUpdate() { }
 
 
-    toggleStatus( force?:boolean ) : void {
+    toggleStatus(force?: boolean): void {
 
-        if ( force ) {
+        if (force) {
             this.#status = force;
         } else {
             this.#status = !this.#status;

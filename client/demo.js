@@ -677,15 +677,18 @@ class DemoDataGenerator {
         var ret = {bullseyes: {
             "0": {
                 latitude: 37.25,
-                longitude: -115.8
+                longitude: -115.8,
+                coalition: "neutral"
             },
             "1": {
                 latitude: 37.25,
-                longitude: -115.75
+                longitude: -115.75,
+                coalition: "red"
             },
             "2": {
                 latitude: 37.25,
-                longitude: -115.7
+                longitude: -115.7,
+                coalition: "blue"
             }
         }};
         ret.time = Date.now();

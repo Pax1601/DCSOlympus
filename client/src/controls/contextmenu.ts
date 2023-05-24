@@ -23,28 +23,23 @@ export class ContextMenu {
         this.#container?.classList.toggle("hide", true);
     }
 
-    getContainer()
-    {
+    getContainer() {
         return this.#container;
     }
 
-    getLatLng()
-    {
+    getLatLng() {
         return this.#latlng;
     }
 
-    getX()
-    {
+    getX() {
         return this.#x;
     }
 
-    getY()
-    {
+    getY() {
         return this.#y;
     }
 
-    clip()
-    {
+    clip() {
         if (this.#container != null) {
             if (this.#x + this.#container.offsetWidth < window.innerWidth)
                 this.#container.style.left = this.#x + "px";

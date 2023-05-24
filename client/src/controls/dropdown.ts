@@ -7,17 +7,16 @@ export class Dropdown {
     #optionsList: string[] = [];
     #index: number = 0;
 
-    constructor(ID: string, callback: CallableFunction, options: string[] | null = null)
-    {
-        this.#element      = <HTMLElement>document.getElementById(ID);
-        this.#options      = <HTMLElement>this.#element.querySelector(".ol-select-options");
-        this.#value        = <HTMLElement>this.#element.querySelector(".ol-select-value");
+    constructor(ID: string, callback: CallableFunction, options: string[] | null = null) {
+        this.#element = <HTMLElement>document.getElementById(ID);
+        this.#options = <HTMLElement>this.#element.querySelector(".ol-select-options");
+        this.#value = <HTMLElement>this.#element.querySelector(".ol-select-value");
         this.#defaultValue = this.#value.innerText;
-        this.#callback     = callback;
+        this.#callback = callback;
 
         if (options != null) {
             this.setOptions(options);
-        }          
+        }
 
         this.#value.addEventListener("click", (ev) => {
             this.#element.classList.toggle("is-open");
@@ -31,11 +30,10 @@ export class Dropdown {
             }
         });
 
-        this.#options.classList.add( "ol-scrollable" );
+        this.#options.classList.add("ol-scrollable");
     }
 
-    setOptions(optionsList: string[])
-    {
+    setOptions(optionsList: string[]) {
         this.#optionsList = optionsList;
         this.#options.replaceChildren(...optionsList.map((option: string, idx: number) => {
             var div = document.createElement("div");
@@ -48,7 +46,9 @@ export class Dropdown {
 
             button.addEventListener("click", (e: MouseEvent) => {
                 e.stopPropagation();
-                this.#value.innerHTML = `<div class = "ol-ellipsed"> ${option} </div>`;
+                this.#value = document.createElement("div");
+                this.#value.classList.add("ol-ellipsed");
+                this.#value.innerText = option;
                 this.#close();
                 this.#callback(option, e);
                 this.#index = idx;
@@ -57,19 +57,15 @@ export class Dropdown {
         }));
     }
 
-    selectText( text:string ) {
-
-        const index = [].slice.call( this.#options.children ).findIndex( ( opt:Element ) => opt.querySelector( "button" )?.innerText === text );
-        if ( index > -1 ) {
-            this.selectValue( index );
+    selectText(text: string) {
+        const index = [].slice.call(this.#options.children).findIndex((opt: Element) => opt.querySelector("button")?.innerText === text);
+        if (index > -1) {
+            this.selectValue(index);
         }
-
     }
 
-    selectValue(idx: number)
-    {
-        if (idx < this.#optionsList.length)
-        {
+    selectValue(idx: number) {
+        if (idx < this.#optionsList.length) {
             var option = this.#optionsList[idx];
             this.#value.innerHTML = `<div class = "ol-ellipsed"> ${option} </div>`;
             this.#index = idx;
@@ -91,8 +87,8 @@ export class Dropdown {
     }
 
     setValue(value: string) {
-        var index = this.#optionsList.findIndex((option) => {return option === value});
-        if (index > -1) 
+        var index = this.#optionsList.findIndex((option) => { return option === value });
+        if (index > -1)
             this.selectValue(index);
     }
 
@@ -102,21 +98,21 @@ export class Dropdown {
 
     #clip() {
         const options = this.#options;
-        const bounds  = options.getBoundingClientRect();
-        this.#element.dataset.position = ( bounds.bottom > window.innerHeight ) ? "top" : "";
+        const bounds = options.getBoundingClientRect();
+        this.#element.dataset.position = (bounds.bottom > window.innerHeight) ? "top" : "";
     }
 
     #close() {
-        this.#element.classList.remove( "is-open" );
+        this.#element.classList.remove("is-open");
         this.#element.dataset.position = "";
     }
 
     #open() {
-        this.#element.classList.add( "is-open" );
+        this.#element.classList.add("is-open");
     }
 
     #toggle() {
-        if ( this.#element.classList.contains( "is-open" ) ) {
+        if (this.#element.classList.contains("is-open")) {
             this.#close();
         } else {
             this.#open();

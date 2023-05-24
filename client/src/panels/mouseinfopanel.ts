@@ -37,8 +37,8 @@ export class MouseInfoPanel extends Panel {
 
             if ( el != null ) {
 
-                var dist = distance(bullseyes[idx].latitude, bullseyes[idx].longitude, mousePosition.lat, mousePosition.lng);
-                var bear = bearing(bullseyes[idx].latitude, bullseyes[idx].longitude, mousePosition.lat, mousePosition.lng);
+                var dist = distance(bullseyes[idx].getLatLng().lat, bullseyes[idx].getLatLng().lng, mousePosition.lat, mousePosition.lng);
+                var bear = bearing(bullseyes[idx].getLatLng().lat, bullseyes[idx].getLatLng().lng, mousePosition.lat, mousePosition.lng);
 
                 let bng = zeroAppend(Math.floor(bear), 3);
 

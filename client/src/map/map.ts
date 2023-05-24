@@ -1,6 +1,4 @@
 import * as L from "leaflet"
-import { MiniMap, MiniMapOptions } from "leaflet-control-mini-map";
-
 import { getUnitsManager } from "..";
 import { BoxSelect } from "./boxselect";
 import { MapContextMenu, SpawnOptions } from "../controls/mapcontextmenu";
@@ -10,40 +8,20 @@ import { Dropdown } from "../controls/dropdown";
 import { Airbase } from "../missionhandler/airbase";
 import { Unit } from "../units/unit";
 import { bearing } from "../other/utils";
-
-// TODO a bit of a hack, this module is provided as pure javascript only
-require("../../node_modules/leaflet.nauticscale/dist/leaflet.nauticscale.js")
-
-export const IDLE = "IDLE";
-export const MOVE_UNIT = "MOVE_UNIT";
+import { DestinationPreviewMarker } from "./destinationpreviewmarker";
+import { TemporaryUnitMarker } from "./temporaryunitmarker";
+import { ClickableMiniMap } from "./clickableminimap";
+import { SVGInjector } from '@tanem/svg-injector'
 
 L.Map.addInitHook('addHandler', 'boxSelect', BoxSelect);
 
-var temporaryIcon = new L.Icon({
-    iconUrl: 'images/icon-temporary.png',
-    iconSize: [52, 52],
-    iconAnchor: [26, 26]
-});
+// TODO would be nice to convert to ts
+require("../../public/javascripts/leaflet.nauticscale.js")
 
-var destinationPreviewIcon = new L.DivIcon({
-    html: `<div class="ol-destination-preview-icon"></div>`,
-    iconSize: [52, 52],
-    iconAnchor: [26, 26],
-    className: "ol-destination-preview"
-})
-
-const visibilityControls: string[] = ["human", "dcs", "aircraft", "groundunit-sam", "groundunit-other", "navyunit", "airbase"];
-
-export class ClickableMiniMap extends MiniMap {
-    constructor(layer: L.TileLayer | L.LayerGroup, options?: MiniMapOptions) {
-        super(layer, options);
-    }
-
-    getMap() {
-        //@ts-ignore needed to access not exported member. A bit of a hack, required to access click events
-        return this._miniMap;
-    }
-}
+/* Map constants */
+export const IDLE = "IDLE";
+export const MOVE_UNIT = "MOVE_UNIT";
+export const visibilityControls: string[] = ["human", "dcs", "aircraft", "groundunit-sam", "groundunit-other", "navyunit", "airbase"];
 
 export class Map extends L.Map {
     #state: string;
@@ -107,19 +85,21 @@ export class Map extends L.Map {
         this.on('mousedown', (e: any) => this.#onMouseDown(e));
         this.on('mouseup', (e: any) => this.#onMouseUp(e));
         this.on('mousemove', (e: any) => this.#onMouseMove(e));
-        this.on('keydown',  (e: any) => this.#updateDestinationPreview(e));
-        this.on('keyup',  (e: any) => this.#updateDestinationPreview(e));
-        
+        this.on('keydown', (e: any) => this.#updateDestinationPreview(e));
+        this.on('keyup', (e: any) => this.#updateDestinationPreview(e));
+
         /* Event listeners */
         document.addEventListener("toggleCoalitionVisibility", (ev: CustomEventInit) => {
-            ev.detail._element.classList.toggle("off");
-            document.body.toggleAttribute("data-hide-" + ev.detail.coalition);
+            const el = ev.detail._element;
+            el?.classList.toggle("off");
+            getUnitsManager().setHiddenType(ev.detail.coalition, (el?.currentTarget as HTMLElement)?.classList.contains("off"));
             Object.values(getUnitsManager().getUnits()).forEach((unit: Unit) => unit.updateVisibility());
         });
 
         document.addEventListener("toggleUnitVisibility", (ev: CustomEventInit) => {
-            ev.detail._element.classList.toggle("off");
-            document.body.toggleAttribute("data-hide-" + ev.detail.category);
+            const el = ev.detail._element;
+            el?.classList.toggle("off");
+            getUnitsManager().setHiddenType(ev.detail.type, !el?.classList.contains("off"));
             Object.values(getUnitsManager().getUnits()).forEach((unit: Unit) => unit.updateVisibility());
         });
 
@@ -129,17 +109,14 @@ export class Map extends L.Map {
         });
 
         /* Pan interval */
-        this.#panInterval = window.setInterval(() => { 
-            this.panBy(new L.Point( ((this.#panLeft? -1: 0) + (this.#panRight? 1: 0)) * this.#deafultPanDelta, 
-                                    ((this.#panUp? -1: 0) + (this.#panDown? 1: 0)) * this.#deafultPanDelta)); 
+        this.#panInterval = window.setInterval(() => {
+            this.panBy(new L.Point(((this.#panLeft ? -1 : 0) + (this.#panRight ? 1 : 0)) * this.#deafultPanDelta,
+                ((this.#panUp ? -1 : 0) + (this.#panDown ? 1 : 0)) * this.#deafultPanDelta));
         }, 20);
 
         /* Option buttons */
         this.#optionButtons["visibility"] = visibilityControls.map((option: string, index: number) => {
-            return this.#createOptionButton(option, `visibility/${option.toLowerCase()}.svg`, "", (e: any) => { 
-                getUnitsManager().setHiddenType(option, (e?.currentTarget as HTMLElement)?.classList.contains("off"));
-                (e?.currentTarget as HTMLElement)?.classList.toggle("off");
-            });
+            return this.#createOptionButton(option, `visibility/${option.toLowerCase()}.svg`, "", "toggleUnitVisibility", `{"type": "${option}"}`);
         });
         document.querySelector("#unit-visibility-control")?.append(...this.#optionButtons["visibility"]);
     }
@@ -217,10 +194,10 @@ export class Map extends L.Map {
             })
             this.#destinationPreviewMarkers = [];
 
-            if (getUnitsManager().getSelectedUnits({excludeHumans: true}).length < 20) {
+            if (getUnitsManager().getSelectedUnits({ excludeHumans: true }).length < 20) {
                 /* Create the unit destination preview markers */
-                this.#destinationPreviewMarkers = getUnitsManager().getSelectedUnits({excludeHumans: true}).map((unit: Unit) => {
-                    var marker = new L.Marker(this.getMouseCoordinates(), {icon: destinationPreviewIcon, interactive: false});
+                this.#destinationPreviewMarkers = getUnitsManager().getSelectedUnits({ excludeHumans: true }).map((unit: Unit) => {
+                    var marker = new DestinationPreviewMarker(this.getMouseCoordinates());
                     marker.addTo(this);
                     return marker;
                 })
@@ -352,7 +329,7 @@ export class Map extends L.Map {
     }
 
     handleMapPanning(e: any) {
-        if (e.type === "keyup"){
+        if (e.type === "keyup") {
             switch (e.code) {
                 case "KeyA":
                 case "ArrowLeft":
@@ -372,9 +349,8 @@ export class Map extends L.Map {
                     break;
             }
         }
-        else {        
-            switch (e.code)
-            {   
+        else {
+            switch (e.code) {
                 case 'KeyA':
                 case 'ArrowLeft':
                     this.#panLeft = true;
@@ -396,7 +372,7 @@ export class Map extends L.Map {
     }
 
     addTemporaryMarker(latlng: L.LatLng) {
-        var marker = new L.Marker(latlng, {icon: temporaryIcon});
+        var marker = new TemporaryUnitMarker(latlng);
         marker.addTo(this);
         this.#temporaryMarkers.push(marker);
     }
@@ -413,8 +389,7 @@ export class Map extends L.Map {
                 i = idx;
             }
         });
-        if (closest)
-        {
+        if (closest) {
             this.removeLayer(closest);
             delete this.#temporaryMarkers[i];
         }
@@ -449,7 +424,7 @@ export class Map extends L.Map {
             if (!e.originalEvent.ctrlKey) {
                 getUnitsManager().selectedUnitsClearDestinations();
             }
-            getUnitsManager().selectedUnitsAddDestination(this.#computeDestinationRotation && this.#destinationRotationCenter != null? this.#destinationRotationCenter: e.latlng, !e.originalEvent.shiftKey, this.#destinationGroupRotation)
+            getUnitsManager().selectedUnitsAddDestination(this.#computeDestinationRotation && this.#destinationRotationCenter != null ? this.#destinationRotationCenter : e.latlng, !e.originalEvent.shiftKey, this.#destinationGroupRotation)
         }
     }
 
@@ -465,16 +440,14 @@ export class Map extends L.Map {
     #onMouseDown(e: any) {
         this.hideAllContextMenus();
 
-        if (this.#state == MOVE_UNIT && e.originalEvent.button == 2)
-        {
+        if (this.#state == MOVE_UNIT && e.originalEvent.button == 2) {
             this.#computeDestinationRotation = true;
             this.#destinationRotationCenter = this.getMouseCoordinates();
         }
     }
 
     #onMouseUp(e: any) {
-        if (this.#state == MOVE_UNIT)
-        {
+        if (this.#state == MOVE_UNIT) {
             this.#computeDestinationRotation = false;
             this.#destinationRotationCenter = null;
             this.#destinationGroupRotation = 0;
@@ -488,7 +461,7 @@ export class Map extends L.Map {
         if (this.#computeDestinationRotation && this.#destinationRotationCenter != null)
             this.#destinationGroupRotation = -bearing(this.#destinationRotationCenter.lat, this.#destinationRotationCenter.lng, this.getMouseCoordinates().lat, this.getMouseCoordinates().lng);
 
-        this.#updateDestinationPreview(e); 
+        this.#updateDestinationPreview(e);
     }
 
     #onZoom(e: any) {
@@ -542,18 +515,23 @@ export class Map extends L.Map {
     }
 
     #updateDestinationPreview(e: any) {
-        Object.values(getUnitsManager().selectedUnitsComputeGroupDestination(this.#computeDestinationRotation && this.#destinationRotationCenter != null? this.#destinationRotationCenter: this.getMouseCoordinates(), this.#destinationGroupRotation)).forEach((latlng: L.LatLng, idx: number) => {
+        Object.values(getUnitsManager().selectedUnitsComputeGroupDestination(this.#computeDestinationRotation && this.#destinationRotationCenter != null ? this.#destinationRotationCenter : this.getMouseCoordinates(), this.#destinationGroupRotation)).forEach((latlng: L.LatLng, idx: number) => {
             if (idx < this.#destinationPreviewMarkers.length)
-                this.#destinationPreviewMarkers[idx].setLatLng(!e.originalEvent.shiftKey? latlng: this.getMouseCoordinates());
-        })   
+                this.#destinationPreviewMarkers[idx].setLatLng(!e.originalEvent.shiftKey ? latlng : this.getMouseCoordinates());
+        })
     }
 
-    #createOptionButton(value: string, url: string, title: string, callback: EventListenerOrEventListenerObject) {
+    #createOptionButton(value: string, url: string, title: string, callback: string, argument: string) {
         var button = document.createElement("button");
+        const img = document.createElement("img");
+        img.src = `/resources/theme/images/buttons/${url}`;
+        img.onload = () => SVGInjector(img);
         button.title = title;
         button.value = value;
-        button.innerHTML = `<img src="/resources/theme/images/buttons/${url}" onload="SVGInject(this)" />`
-        button.addEventListener("click", callback);
+        button.appendChild(img);
+        button.setAttribute("data-on-click", callback);
+        button.setAttribute("data-on-click-params", argument);
         return button;
     }
 } 
+

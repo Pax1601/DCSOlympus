@@ -4,14 +4,16 @@ import { rad2deg } from '../other/utils';
 import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, getUnits, landAt, setAltitude, setReactionToThreat, setROE, setSpeed, refuel, setAdvacedOptions, followUnit, setEmissionsCountermeasures } from '../server/server';
 import { aircraftDatabase } from './aircraftdatabase';
 import { groundUnitsDatabase } from './groundunitsdatabase';
+import { CustomMarker } from '../map/custommarker';
+import { SVGInjector } from '@tanem/svg-injector';
 
 var pathIcon = new Icon({
-    iconUrl: 'images/marker-icon.png',
-    shadowUrl: 'images/marker-shadow.png',
+    iconUrl: '/resources/theme/images/markers/marker-icon.png',
+    shadowUrl: '/resources/theme/images/markers/marker-shadow.png',
     iconAnchor: [13, 41]
 });
 
-export class Unit extends Marker {
+export class Unit extends CustomMarker {
     ID: number;
 
     #data: UnitData = {
@@ -114,27 +116,26 @@ export class Unit extends Marker {
         /* Set the unit data */
         this.setData(data);
 
-        /* Set the icon */
-        var icon = new DivIcon({
-            html: this.getMarkerHTML(),
-            className: 'leaflet-unit-marker',
-            iconAnchor: [25, 25],
-            iconSize: [50, 50],
-        });
-        this.setIcon(icon);
-    }
-
-    getMarkerHTML() {
-        return `<div class="unit" data-object="unit-${this.getMarkerCategory()}" data-coalition="${this.getMissionData().coalition}">
-                    <div class="unit-selected-spotlight"></div>
-                    <div class="unit-marker"><img src="/resources/theme/images/units/${this.getMarkerCategory()}.svg" onload="SVGInject(this)"/></div>
-                    <div class="unit-short-label"></div>
-                </div>`
+        
     }
 
     getMarkerCategory() {
         // Overloaded by child classes
         return "";
+    }
+
+    getActiveMarkerElements() {
+        // Default values
+        return {
+            state: false,
+            vvi: false,
+            hotgroup: false,
+            unitIcon: true,
+            shortLabel: false,
+            fuel: false,
+            ammo: false,
+            summary: false
+        }
     }
 
     setSelected(selected: boolean) {
@@ -285,6 +286,104 @@ export class Unit extends Marker {
         return this.getData().optionsData;
     }
 
+    /********************** Icon *************************/
+    createIcon(): void {
+        /* Set the icon */
+        var icon = new DivIcon({
+            className: 'leaflet-unit-icon',
+            iconAnchor: [25, 25],
+            iconSize: [50, 50],
+        });
+        this.setIcon(icon);
+
+        var el = document.createElement("div");
+        el.setAttribute("data-object", `unit-${this.getMarkerCategory()}`);
+        el.setAttribute("data-coalition", this.getMissionData().coalition);
+
+        // Generate and append elements depending on active options
+        // State icon
+        if (this.getActiveMarkerElements().state){
+            var state = document.createElement("div");
+            state.classList.add("unit-state");
+            el.appendChild(state);
+        }
+          
+        // Velocity vector
+        if (this.getActiveMarkerElements().vvi) {
+            var vvi = document.createElement("div");
+            vvi.classList.add("unit-vvi");
+            vvi.toggleAttribute("data-rotate-to-heading");
+            el.append(vvi);
+        }
+
+        // Hotgroup indicator
+        if (this.getActiveMarkerElements().hotgroup) {
+            var hotgroup = document.createElement("div");
+            hotgroup.classList.add("unit-hotgroup");
+            var hotgroupId = document.createElement("div");
+            hotgroupId.classList.add("unit-hotgroup-id");
+            hotgroup.appendChild(hotgroupId);
+            el.append(hotgroup);
+        }
+
+        // Main icon
+        if (this.getActiveMarkerElements().unitIcon) {
+            var unitIcon = document.createElement("div");
+            unitIcon.classList.add("unit-icon");
+            var img = document.createElement("img");
+            img.src = `/resources/theme/images/units/${this.getMarkerCategory()}.svg`;
+            img.onload = () => SVGInjector(img);
+            unitIcon.appendChild(img);
+            el.append(unitIcon);
+        }
+
+        // Short label
+        if (this.getActiveMarkerElements().shortLabel) {
+            var shortLabel = document.createElement("div");
+            shortLabel.classList.add("unit-short-label");
+            shortLabel.innerText = aircraftDatabase.getByName(this.getBaseData().name)?.shortLabel || ""; //TODO: fix, use correct database
+            el.append(shortLabel);
+        }
+
+        // Fuel indicator
+        if (this.getActiveMarkerElements().fuel) {
+            var fuelIndicator = document.createElement("div");
+            fuelIndicator.classList.add("unit-fuel");
+            var fuelLevel = document.createElement("div");
+            fuelLevel.classList.add("unit-fuel-level");
+            fuelIndicator.appendChild(fuelLevel);
+            el.append(fuelIndicator);
+        }
+
+        // Ammo indicator
+        if (this.getActiveMarkerElements().ammo){ 
+            var ammoIndicator = document.createElement("div");
+            ammoIndicator.classList.add("unit-ammo");
+            for (let i = 0; i <= 3; i++)
+                ammoIndicator.appendChild(document.createElement("div"));
+            el.append(ammoIndicator);
+        }
+
+        // Unit summary
+        if (this.getActiveMarkerElements().summary) {
+            var summary = document.createElement("div");
+            summary.classList.add("unit-summary");
+            var callsign = document.createElement("div");
+            callsign.classList.add("unit-callsign");
+            callsign.innerText = this.getBaseData().unitName;
+            var altitude = document.createElement("div");
+            altitude.classList.add("unit-altitude");
+            var speed = document.createElement("div");
+            speed.classList.add("unit-speed");
+            summary.appendChild(callsign);
+            summary.appendChild(altitude);
+            summary.appendChild(speed);
+            el.appendChild(summary);
+        }
+
+        this.getElement()?.appendChild(el);
+    }
+
     /********************** Visibility *************************/
     updateVisibility() {
         var hidden = false;
@@ -295,7 +394,9 @@ export class Unit extends Marker {
             hidden = true;
         else if (hiddenUnits.includes(this.getMarkerCategory()))
             hidden = true;
-        this.setHidden(document.body.getAttribute(`data-hide-${this.getMissionData().coalition}`) != null || hidden || !this.getBaseData().alive);
+        else if (hiddenUnits.includes(this.getMissionData().coalition))
+            hidden = true;
+        this.setHidden(hidden || !this.getBaseData().alive);
     }
 
     setHidden(hidden: boolean) {
@@ -576,7 +677,7 @@ export class Unit extends Marker {
                     el.setAttribute("style", currentStyle + `transform:rotate(${headingDeg}deg);`);
                 });
 
-                /* Turn on ordnance indicators */
+                /* Turn on ammo indicators */
                 var hasFox1 = element.querySelector(".unit")?.hasAttribute("data-has-fox-1");
                 var hasFox2 = element.querySelector(".unit")?.hasAttribute("data-has-fox-2");
                 var hasFox3 = element.querySelector(".unit")?.hasAttribute("data-has-fox-3");
@@ -690,36 +791,23 @@ export class Unit extends Marker {
 }
 
 export class AirUnit extends Unit {
-
+    getActiveMarkerElements() {
+        return {
+            state: true,
+            vvi: true,
+            hotgroup: true,
+            unitIcon: true,
+            shortLabel: true,
+            fuel: true,
+            ammo: true,
+            summary: true
+        };
+    }
 }
 
 export class Aircraft extends AirUnit {
     constructor(ID: number, data: UnitData) {
         super(ID, data);
-    }
-
-    getMarkerHTML() {
-        return `<div class="unit" data-object="unit-aircraft" data-coalition="${this.getMissionData().coalition}">
-                    <div class="unit-state"></div>
-                    <div class="unit-vvi" data-rotate-to-heading></div>
-                    <div class="unit-hotgroup"><div class="unit-hotgroup-id"></div></div>
-                    <div class="unit-marker"><img src="/resources/theme/images/units/aircraft.svg" onload="SVGInject(this)"/></div>
-                    <div class="unit-short-label">${aircraftDatabase.getByName(this.getBaseData().name)?.shortLabel || ""}</div>
-                    <div class="unit-fuel">
-                        <div class="unit-fuel-level" style="width:100%;"></div>
-                    </div>
-                    <div class="unit-ammo">
-                        <div class="unit-ammo-fox-1"></div>
-                        <div class="unit-ammo-fox-2"></div>
-                        <div class="unit-ammo-fox-3"></div>
-                        <div class="unit-ammo-other"></div>
-                    </div>
-                    <div class="unit-summary">
-                        <div class="unit-callsign">${this.getBaseData().unitName}</div>
-                        <div class="unit-altitude"></div>
-                        <div class="unit-speed"></div>
-                    </div>
-                </div>`
     }
 
     getMarkerCategory() {
@@ -732,7 +820,7 @@ export class Helicopter extends AirUnit {
         super(ID, data);
     }
 
-    getVisibilityCategory() {
+    getMarkerCategory() {
         return "helicopter";
     }
 }
@@ -742,15 +830,17 @@ export class GroundUnit extends Unit {
         super(ID, data);
     }
 
-    getMarkerHTML() {
-        var role = groundUnitsDatabase.getByName(this.getBaseData().name)?.loadouts[0].roles[0];
-        return `<div class="unit" data-object="unit-${this.getMarkerCategory()}" data-coalition="${this.getMissionData().coalition}">
-                    <div class="unit-marker"><img src="/resources/theme/images/units/${this.getMarkerCategory()}.svg" onload="SVGInject(this)"/></div>
-                    <div class="unit-short-label">${role?.substring(0, 1)?.toUpperCase() || ""}</div>
-                    <div class="unit-hotgroup">
-                        <div class="unit-hotgroup-id"></div>
-                    </div>
-                </div>`
+    getActiveMarkerElements() {
+        return {
+            state: true,
+            vvi: false,
+            hotgroup: true,
+            unitIcon: true,
+            shortLabel: true,
+            fuel: false,
+            ammo: false,
+            summary: false
+        };
     }
 
     getMarkerCategory() {
@@ -766,6 +856,19 @@ export class NavyUnit extends Unit {
         super(ID, data);
     }
 
+    getActiveMarkerElements() {
+        return {
+            state: true,
+            vvi: false,
+            hotgroup: true,
+            unitIcon: true,
+            shortLabel: true,
+            fuel: false,
+            ammo: false,
+            summary: false
+        };
+    }
+
     getMarkerCategory() {
         return "navyunit";
     }
@@ -776,14 +879,6 @@ export class Weapon extends Unit {
         super(ID, data);
         this.setSelectable(false);
     }
-
-    getMarkerHTML(): string {
-        return `<div class="unit" data-object="unit-${this.getMarkerCategory()}" data-coalition="${this.getMissionData().coalition}">
-                    <div class="unit-marker" data-rotate-to-heading><img src="/resources/theme/images/units/${this.getMarkerCategory()}.svg" onload="SVGInject(this)"/></div>
-                    <div class="unit-short-label"></div>
-                </div>`
-    }
-
 }
 
 export class Missile extends Weapon {

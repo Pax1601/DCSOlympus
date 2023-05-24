@@ -1,9 +1,4 @@
-:root {
-    --airbase-marker-height: 40px;
-    --airbase-marker-width: 40px;
-}
-
-[data-object|="airbase"] {
+.airbase-icon {
     align-items: center;
     cursor: pointer;
     display: flex;
@@ -11,35 +6,15 @@
     position: relative;
 }
 
-[data-hide-airbase] #map-container [data-object|="airbase"] {
-    display: none;
+.airbase-icon[data-coalition="red"] svg * {
+    stroke: var(--unit-background-red);
 }
 
-/******************************
-Marker
-******************************/
-
-[data-object|="airbase"] .airbase {
-    background-color: transparent;
-    background-repeat: no-repeat;
-    background-size: cover;
-    position: absolute;
-    transform-origin: center;
-    z-index: 3;
+.airbase-icon[data-coalition="blue"] svg * {
+    stroke: var(--unit-background-blue);
 }
 
-/*  Airbase  */
-[data-object|="airbase"] .airbase-marker {
-    background-image: var(--airbase-marker-neutral-url);
-    background-size: contain;
-    height: var(--airbase-marker-height);
-    width: var(--airbase-marker-width);
+.airbase-icon[data-coalition="neutral"] svg * {
+    stroke: var(--unit-background-neutral);
 }
 
-[data-object|="airbase"][data-coalition="red"] .airbase-marker {
-    background-image: var(--airbase-marker-red-url);
-}
-
-[data-object|="airbase"][data-coalition="blue"] .airbase-marker {
-    background-image: var(--airbase-marker-blue-url);
-}

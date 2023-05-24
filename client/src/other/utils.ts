@@ -155,3 +155,9 @@ export function mercatorToLatLng(x: number, y: number) {
 
     return { lng: lng, lat: lat };            
 }
+
+export function createDivWithClass(className: string) {
+    var el = document.createElement("div");
+    el.classList.add(className);
+    return el;
+}

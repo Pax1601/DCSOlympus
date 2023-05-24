@@ -1,12 +1,3 @@
-#connection-status-panel {
-	bottom: 20px;
-	font-size:12px;
-	position: absolute;
-	right: 10px;
-	width: 160px;
-	z-index: 1000;
-}
-
 #connection-status-panel dt::before {
 	content: "No connection";
 }
@@ -15,15 +6,14 @@
 	border-radius: 50%;
 	background: red;
 	content: " ";
-	height:12px;
-	width:12px;
+	height: 12px;
+	width: 12px;
 }
-
 
 #connection-status-panel[data-is-connected] dt::before {
 	content: "Connected";
 }
 
 #connection-status-panel[data-is-connected] dd::after {
-	background:var( --accent-green );
+	background: var(--accent-green);
 }

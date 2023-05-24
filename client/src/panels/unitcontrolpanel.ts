@@ -346,7 +346,7 @@ export class UnitControlPanel extends Panel {
         var button = document.createElement("button");
         button.title = title;
         button.value = value;
-        button.innerHTML = `<img src="/resources/theme/images/buttons/${url}" onload="SVGInject(this)" />`
+        button.innerHTML = `<img src="/resources/theme/images/buttons/${url}" />`
         button.addEventListener("click", callback);
         return button;
     }

@@ -9,9 +9,9 @@
     align-items: center;
     cursor: pointer;
     display: flex;
+    height: 100%;
     justify-content: center;
     position: relative;
-    height: 100%;
     width: 100%;
 }
 
@@ -20,10 +20,10 @@
     background: var(--secondary-gunmetal-grey);
     display: flex;
     justify-self: center;
-    transform-origin: bottom;
-    translate: 0 -50%;
     padding-bottom: calc((var(--unit-aircraft-width) / 2) + var(--unit-stroke-width));
     position: absolute;
+    transform-origin: bottom;
+    translate: 0 -50%;
     width: var(--unit-aircraft-vvi-width);
 }
 
@@ -49,41 +49,41 @@
     translate: -1px 1px;
 }
 
-.unit-marker {
+.unit-icon {
+    height: var(--unit-height);
     position: absolute;
     transform-origin: center;
-    height: var(--unit-height);
     width: var(--unit-width);
 }
 
-[data-is-selected] .unit-marker::before {
-    content: "";
-    height: 100%;
-    width: 100%;
+[data-is-selected] .unit-icon::before {
     background-color: var(--unit-spotlight-fill);
     border-radius: 50%;
+    content: "";
+    height: 100%;
     position: absolute;
+    width: 100%;
     z-index: -1;
 }
 
 /*** Basic colours ***/
-[data-coalition="blue"] .unit-marker svg>*:first-child {
+[data-coalition="blue"] .unit-icon svg>*:first-child {
     fill: var(--unit-background-blue);
 }
 
-[data-coalition="red"] .unit-marker svg>*:first-child  {
+[data-coalition="red"] .unit-icon svg>*:first-child {
     fill: var(--unit-background-red);
 }
 
-[data-coalition="neutral"] .unit-marker svg>*:first-child  {
+[data-coalition="neutral"] .unit-icon svg>*:first-child {
     fill: var(--unit-background-neutral);
 }
 
-[data-is-selected] .unit-marker svg>*:first-child  {
+[data-is-selected] .unit-icon svg>*:first-child {
     fill: white;
 }
 
-[data-is-highlighted] .unit-marker svg>*:first-child  {
+[data-is-highlighted] .unit-icon svg>*:first-child {
     stroke: white;
 }
 
@@ -140,15 +140,15 @@
 
 /*** Unit summary ***/
 [data-object|="unit"] .unit-summary {
-    pointer-events: none;
-    column-gap: 6px;
     color: white;
+    column-gap: 6px;
     display: flex;
     flex-wrap: wrap;
     font-size: 11px;
     font-weight: bold;
     justify-content: right;
     line-height: 12px;
+    pointer-events: none;
     position: absolute;
     row-gap: 1px;
     text-shadow:
@@ -247,41 +247,41 @@
 /*** Unit state ***/
 [data-object|="unit"] .unit-state {
     background-repeat: no-repeat;
-    position: absolute;
     height: 20px;
+    position: absolute;
     width: 20px;
 }
 
 [data-object|="unit"][data-state="rtb"] .unit-state {
-    background-image: url("/theme/images/states/rtb.svg");
+    background-image: url("/resources/theme/images/states/rtb.svg");
 }
 
 [data-object|="unit"][data-state="land"] .unit-state {
-    background-image: url("/theme/images/states/rtb.svg");
+    background-image: url("/resources/theme/images/states/rtb.svg");
 }
 
 [data-object|="unit"][data-state="idle"] .unit-state {
-    background-image: url("/theme/images/states/idle.svg");
+    background-image: url("/resources/theme/images/states/idle.svg");
 }
 
 [data-object|="unit"][data-state="attack"] .unit-state {
-    background-image: url("/theme/images/states/attack.svg");
+    background-image: url("/resources/theme/images/states/attack.svg");
 }
 
 [data-object|="unit"][data-state="follow"] .unit-state {
-    background-image: url("/theme/images/states/follow.svg");
+    background-image: url("/resources/theme/images/states/follow.svg");
 }
 
 [data-object|="unit"][data-state="refuel"] .unit-state {
-    background-image: url("/theme/images/states/refuel.svg");
+    background-image: url("/resources/theme/images/states/refuel.svg");
 }
 
 [data-object|="unit"][data-state="human"] .unit-state {
-    background-image: url("/theme/images/states/human.svg");
+    background-image: url("/resources/theme/images/states/human.svg");
 }
 
 [data-object|="unit"][data-state="dcs"] .unit-state {
-    background-image: url("/theme/images/states/dcs.svg");
+    background-image: url("/resources/theme/images/states/dcs.svg");
 }
 
 /*** Dead unit ***/

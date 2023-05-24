@@ -2,16 +2,6 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	display: block !important;
 }
 
-
-#unit-control-panel {
-	height: fit-content;
-	left: 10px;
-	position: absolute;
-	top: 80px;
-	width: 240px;
-	z-index: 1000;
-}
-
 #unit-control-panel h3 {
 	margin-bottom: 8px;
 }
@@ -33,31 +23,31 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	display: flex;
 	font-size: 11px;
 	height: 32px;
+	margin-right: 5px;
 	padding: 8px 0;
 	position: relative;
 	width: calc(100% - 5px);
-	margin-right: 5px;
 }
 
 #unit-control-panel #selected-units-container button::before {
-	background-color: var( --primary-neutral );
+	background-color: var(--primary-neutral);
 	border-radius: 999px;
 	content: attr(data-short-label);
+	font-size: 10px;
 	margin: 2px 4px;
+	max-width: 30px;
+	min-width: 20px;
+	overflow: hidden;
 	padding: 4px 6px;
+	text-overflow: ellipsis;
 	white-space: nowrap;
 	width: fit-content;
-	min-width: 20px;
-	max-width: 30px;
-	text-overflow: ellipsis;
-	overflow: hidden;
-	font-size: 10px;
 }
 
 #unit-control-panel #selected-units-container button:hover::before {
+	background-color: black;
 	max-width: 100%;
 	text-overflow: unset;
-	background-color: black;
 }
 
 #unit-control-panel #selected-units-container button[data-coalition="blue"]::before {
@@ -120,13 +110,12 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	display: none;
 }
 
-
 #advanced-settings-dialog>.ol-dialog-content {
-	margin-top: 10px;
-	margin-bottom: 10px;
 	display: flex;
 	flex-direction: column;
 	flex-wrap: nowrap;
+	margin-bottom: 10px;
+	margin-top: 10px;
 	row-gap: 10px;
 }
 
@@ -146,8 +135,8 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 }
 
 #advanced-settings-dialog hr {
-	margin-top: 15px;
 	margin-bottom: 10px;
+	margin-top: 15px;
 }
 
 #general-settings-grid {
