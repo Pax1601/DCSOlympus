@@ -1,0 +1,66 @@
+<nav id="primary-toolbar" class="ol-panel" oncontextmenu="return false;">
+    <div id="app-icon" class="ol-select ol-select-image">
+        <div class="ol-select-value icon">
+            <img src="images/icon.png" class="main-logo" />
+        </div>
+        <div class="ol-select-options">
+            <div id="toolbar-summary">
+                <h3>DCS Olympus</h3>
+                <div class="accent-green app-version-number">version v0.2.1</div>
+            </div>
+            <div>
+                <a href="https://www.discord.com" target="_blank">Discord</a>
+            </div>
+            <div>
+                <a href="https://github.com/Pax1601/DCSOlympus" target="_blank">Github</a>
+            </div>
+            <div data-on-click="reloadPage">
+                <a href="" target="_blank" data-on-click="reloadPage">Restart Olyumpus</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="map-type" class="ol-select">
+        <div class="ol-select-value map-source-dropdown">
+            <span>ArcGIS Satellite</span>
+        </div>
+        <div class="ol-select-options">
+            <!-- Here the available map sources will be listed-->
+        </div>
+    </div>
+
+    <div id="unit-visibility-control" class="ol-group">
+            <!-- Here the available visibility controls will be listed -->
+    </div>
+
+    <div id="coalition-visibility-control" class="ol-group ol-group-button-toggle">
+
+        <div>
+            <button id="coalition-visibility-control-blue" data-on-click="toggleCoalitionVisibility"
+                data-on-click-params='{ "coalition": "blue" }'>View <span class="accent-bluefor">BLUEFOR</span></button>
+        </div>
+
+        <div>
+            <button id="coalition-visibility-control-red" data-on-click="toggleCoalitionVisibility"
+                data-on-click-params='{ "coalition": "red" }'>View <span class="accent-redfor">REDFOR</span></button>
+        </div>
+
+        <div>
+            <button id="coalition-visibility-control-neutral" data-on-click="toggleCoalitionVisibility"
+                data-on-click-params='{ "coalition": "neutral" }'>View <span
+                    class="accent-neutral">NEUTRAL</span></button>
+        </div>
+
+    </div>
+
+
+    <div id="atc-navbar-control" class="ol-group-container" data-feature-switch="atc">
+        <div class="ol-group-header">ATC</div>
+        <div class="ol-group">
+            <button data-on-click="toggleElements"
+                data-on-click-params='{"selector": "#strip-board-ground"}'>GND</button>
+            <button data-on-click="toggleElements"
+                data-on-click-params='{"selector": "#strip-board-tower"}'>TWR</button>
+        </div>
+    </div>
+</nav>

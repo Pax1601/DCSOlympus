@@ -1,0 +1,13 @@
+.ol-popup > div {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.visible {
+    opacity: 1;
+}
+
+.invisible {
+    opacity: 0;
+    transition: opacity 2s linear;
+}

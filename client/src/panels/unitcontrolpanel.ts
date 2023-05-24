@@ -1,3 +1,4 @@
+import { SVGInjector } from "@tanem/svg-injector";
 import { getUnitsManager } from "..";
 import { Dropdown } from "../controls/dropdown";
 import { Slider } from "../controls/slider";
@@ -8,12 +9,12 @@ import { UnitDatabase } from "../units/unitdatabase";
 import { Panel } from "./panel";
 
 const ROEs: string[] = ["Hold", "Return", "Designated", "Free"];
-const reactionsToThreat: string[] = ["None", "Passive", "Evade"];
+const reactionsToThreat: string[] = ["None", "Manoeuvre", "Passive", "Evade"];
 const emissionsCountermeasures: string[] = ["Silent", "Attack", "Defend", "Free"];
 
 const ROEDescriptions: string[] = ["Hold (Never fire)", "Return (Only fire if fired upon)", "Designated (Attack the designated target only)", "Free (Attack anyone)"];
-const reactionsToThreatDescriptions: string[] = ["None (No reaction)", "Passive (Countermeasures only, no manoeuvre)", "Evade (Countermeasures and manoeuvers)"];
-const emissionsCountermeasuresDescriptions: string[] = ["Silent (Radar off, no countermeasures)", "Attack (Radar only for targeting, countermeasures only if attacked/locked)", "Defend (Radar for searching, jammer if locked, countermeasures inside WEZ)", "Always on (Radar and jammer always on, countermeasures when hostile detected)"];
+const reactionsToThreatDescriptions: string[] = ["None (No reaction)", "Manoeuvre (no countermeasures)", "Passive (Countermeasures only, no manoeuvre)", "Evade (Countermeasures and manoeuvers)"];
+const emissionsCountermeasuresDescriptions: string[] = ["Silent (Radar OFF, no ECM)", "Attack (Radar only for targeting, ECM only if locked)", "Defend (Radar for searching, ECM if locked)", "Always on (Radar and ECM always on)"];
 
 const minSpeedValues: { [key: string]: number } = { Aircraft: 100, Helicopter: 0, NavyUnit: 0, GroundUnit: 0 };
 const maxSpeedValues: { [key: string]: number } = { Aircraft: 800, Helicopter: 300, NavyUnit: 60, GroundUnit: 60 };
@@ -56,15 +57,15 @@ export class UnitControlPanel extends Panel {
 
         /* Option buttons */
         this.#optionButtons["ROE"] = ROEs.map((option: string, index: number) => {
-            return this.#createOptionButton(option, ROEDescriptions[index], () => { getUnitsManager().selectedUnitsSetROE(option); });
+            return this.#createOptionButton(option, `roe/${option.toLowerCase()}.svg`, ROEDescriptions[index], () => { getUnitsManager().selectedUnitsSetROE(option); });
         });
 
         this.#optionButtons["reactionToThreat"] = reactionsToThreat.map((option: string, index: number) => {
-            return this.#createOptionButton(option, reactionsToThreatDescriptions[index],() => { getUnitsManager().selectedUnitsSetReactionToThreat(option); });
+            return this.#createOptionButton(option, `threat/${option.toLowerCase()}.svg`, reactionsToThreatDescriptions[index],() => { getUnitsManager().selectedUnitsSetReactionToThreat(option); });
         });
 
         this.#optionButtons["emissionsCountermeasures"] = emissionsCountermeasures.map((option: string, index: number) => {
-            return this.#createOptionButton(option, emissionsCountermeasuresDescriptions[index],() => { getUnitsManager().selectedUnitsSetEmissionsCountermeasures(option); });
+            return this.#createOptionButton(option, `emissions/${option.toLowerCase()}.svg`, emissionsCountermeasuresDescriptions[index],() => { getUnitsManager().selectedUnitsSetEmissionsCountermeasures(option); });
         });
 
         this.getElement().querySelector("#roe-buttons-container")?.append(...this.#optionButtons["ROE"]);
@@ -342,10 +343,14 @@ export class UnitControlPanel extends Panel {
         this.#advancedSettingsDialog.classList.add("hide");
     }
 
-    #createOptionButton(option: string, title: string, callback: EventListenerOrEventListenerObject) {
+    #createOptionButton(value: string, url: string, title: string, callback: EventListenerOrEventListenerObject) {
         var button = document.createElement("button");
-        button.value = option;
         button.title = title;
+        button.value = value;
+        var img = document.createElement("img");
+        img.src = `/resources/theme/images/buttons/${url}`;
+        img.onload = () => SVGInjector(img);
+        button.appendChild(img);
         button.addEventListener("click", callback);
         return button;
     }

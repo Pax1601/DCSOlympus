@@ -5,7 +5,7 @@
   "version": "v0.2.1-alpha",
   "private": true,
   "scripts": {
-    "copy": "copy .\\node_modules\\leaflet\\dist\\leaflet.css .\\public\\stylesheets\\leaflet.css",
+    "copy": "copy.bat",
     "start": "npm run copy & concurrently --kill-others \"npm run watch\" \"nodemon ./bin/www\"",
     "watch": "watchify .\\src\\index.ts --debug -o .\\public\\javascripts\\bundle.js -t [ babelify --global true --presets [ @babel/preset-env ] --extensions '.js'] -p [ tsify --noImplicitAny ]"
   },
@@ -16,22 +16,22 @@
     "debug": "~2.6.9",
     "ejs": "^3.1.8",
     "express": "~4.16.1",
-    "geomag": "^1.0.0",
     "leaflet": "^1.9.3",
     "leaflet-control-mini-map": "^0.4.0",
     "leaflet.nauticscale": "^1.1.0",
-    "milsymbol": "^2.0.0",
     "morgan": "~1.9.1",
     "save": "^2.9.0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.21.4",
+    "@tanem/svg-injector": "^10.1.55",
     "@types/gtag.js": "^0.0.12",
     "@types/node": "^18.16.1",
     "@types/sortablejs": "^1.15.0",
     "babelify": "^10.0.0",
     "browserify": "^17.0.0",
     "concurrently": "^7.6.0",
+    "cp": "^0.2.0",
     "esmify": "^2.1.1",
     "express-basic-auth": "^1.2.1",
     "nodemon": "^2.0.20",

@@ -1,0 +1,19 @@
+#connection-status-panel dt::before {
+	content: "No connection";
+}
+
+#connection-status-panel dd::after {
+	border-radius: 50%;
+	background: red;
+	content: " ";
+	height: 12px;
+	width: 12px;
+}
+
+#connection-status-panel[data-is-connected] dt::before {
+	content: "Connected";
+}
+
+#connection-status-panel[data-is-connected] dd::after {
+	background: var(--accent-green);
+}

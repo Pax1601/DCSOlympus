@@ -80,3 +80,15 @@ interface GeneralSettings {
     prohibitAfterburner: boolean;
     prohibitAirWpn: boolean;
 }
+
+interface UnitIconOptions {
+    showState: boolean,
+    showVvi: boolean,
+    showHotgroup: boolean,
+    showUnitIcon: boolean,
+    showShortLabel: boolean,
+    showFuel: boolean,
+    showAmmo: boolean,
+    showSummary: boolean, 
+    rotateToHeading: boolean
+}
