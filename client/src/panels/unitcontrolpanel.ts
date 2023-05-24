@@ -48,6 +48,8 @@ export class UnitControlPanel extends Panel {
             getUnitsManager().selectedUnitsSetSpeed(value / 1.94384)
         });
 
+        this.getElement()?.querySelector("#altitude-type-switch")?.addEventListener('click', (e) => this.#onToggleAltitudeTypeSwitch(e));
+
         /* Advanced settings dropdowns */
         this.#TACANXYDropdown = new Dropdown("TACAN-XY", () => {});
         this.#TACANXYDropdown.setOptions(["X", "Y"]);
@@ -82,7 +84,7 @@ export class UnitControlPanel extends Panel {
         document.addEventListener("showAdvancedSettings", () => {
             this.#updateAdvancedSettingsDialog(getUnitsManager().getSelectedUnits());
             this.#advancedSettingsDialog.classList.remove("hide");
-        })
+        });
 
         this.hide();
     }
@@ -353,5 +355,11 @@ export class UnitControlPanel extends Panel {
         button.appendChild(img);
         button.addEventListener("click", callback);
         return button;
+    }
+
+    #onToggleAltitudeTypeSwitch(e: any) {
+        const altitudeType = this.getElement()?.querySelector("#altitude-type-switch")?.getAttribute("data-altitude-type");
+        var newAltitudeType = altitudeType == "asl"? "agl": "asl";
+        this.getElement()?.querySelector("#altitude-type-switch")?.setAttribute("data-altitude-type", newAltitudeType);
     }
 }

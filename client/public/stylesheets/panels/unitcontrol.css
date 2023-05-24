@@ -148,3 +148,61 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 #general-settings-grid>div {
 	width: 49%;
 }
+
+#altitude-type-switch>.toggle-fill {
+	background-color: var(--background-offwhite);
+	height: 15px;
+	width: 40px;
+}
+
+#altitude-type-switch>.toggle-fill::before {
+	display: flex;
+	position: absolute;
+	box-sizing: border-box;
+	align-items: center;
+	padding: 0px 5px;
+	color: var(--background-steel);
+	font-weight: bold;
+	font-size: 10px;
+	transition: transform 0.2s;
+	height: 15px;
+}
+
+#altitude-type-switch[data-altitude-type="agl"]>.toggle-fill::before {
+	content: "AGL";
+}
+
+#altitude-type-switch[data-altitude-type="asl"]>.toggle-fill::before {
+	content: "ASL";
+	transform: translateX(calc(40px - 28px));
+}
+
+#altitude-type-switch>.toggle-fill::after {
+	position: absolute;
+	display: block;
+	background-color: var(--background-steel);
+	width: 15px;
+	top: 0px;
+}
+
+#altitude-type-switch[data-altitude-type="asl"]>.toggle-fill::after {
+    transform: translateX(0);
+}
+
+#altitude-type-switch[data-altitude-type="agl"]>.toggle-fill::after {
+    transform: translateX(calc(40px - 15px));
+}
+
+#altitude-slider dt {
+	width: 40%;
+}
+
+#altitude-slider dd {
+	column-gap: 5px;
+	width: 60%;
+}
+
+#altitude-slider dd>*:nth-child(2) {
+	width: 40px;
+	text-align: right;
+}

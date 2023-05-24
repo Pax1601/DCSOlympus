@@ -1,9 +1,3 @@
-:root {
-    /*  Generic marker settings  */
-    --unit-centre-x: calc(var(--unit-width) / 2);
-    --unit-centre-y: calc(var(--unit-height) / 2);
-}
-
 /*** Unit marker elements ***/
 [data-object|="unit"] {
     align-items: center;

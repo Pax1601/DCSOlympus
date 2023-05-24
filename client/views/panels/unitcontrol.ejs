@@ -20,23 +20,22 @@
                 </dl>
                 <input type="range" min="0" max="100" value="0" class="slider">
             </div>
-
             <div class="slider-container flight-control-slider" id="altitude-slider">
                 <dl class="ol-data-grid">
-                    <dt>Altitude</dt>
-                    <dd class="flight-control-value" id="value"></dd>
+                    <dt> Altitude
+                    </dt>
+                    <dd>
+                        <label id="altitude-type-switch" class="toggle" data-altitude-type="agl">
+                            <div class="toggle-fill"></div>
+                        </label>
+                        <div class="flight-control-value" id="value"></div>
+                    </dd>
                 </dl>
                 <input type="range" min="0" max="100" value="0" class="slider">
             </div>
-            
             <h5 id="categories-tooltip" class="hide">Multiple categories selected</h5>
         </div>
     </div>
-
-    <!-- <h3>Formation</h3> -->
-    <!-- <div id="formation-buttons-container"> -->
-         <!-- This is where all the formation control buttons will be shown -->
-    <!-- </div> -->
 
     <div id="roe">
         <h4>Rules of engagement</h4>
