@@ -330,8 +330,17 @@ export class UnitsManager {
 
     /***********************************************/
     #onKeyUp(event: KeyboardEvent) {
-        if (!keyEventWasInInput(event) && event.key === "Delete" && confirm( "Are you sure you want to delete?" ) ) {
-            this.selectedUnitsDelete();
+        if (!keyEventWasInInput(event) && event.key === "Delete" ) {
+
+            const selectedUnits           = this.getSelectedUnits();
+            const selectionContainsAHuman = selectedUnits.some( ( unit:Unit ) => {
+                return unit.getBaseData().AI === false;
+            });
+
+            if ( !selectionContainsAHuman || confirm( "Your selection includes a human player. Deleting humans causes their vehicle to crash.\n\nAre you sure you want to do this?" ) ) {
+                this.selectedUnitsDelete();
+            }
+
         }
     }
 
