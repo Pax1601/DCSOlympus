@@ -39,7 +39,7 @@
 }
 
 #mouse-info-panel dt#ref-measure-position::after {
-	background-image: url("/resources/theme/images/pin.png");
+	background-image: url("/resources/theme/images/icons/pin.png");
 	background-position: 50% 50%;
 	background-repeat: no-repeat;
 	background-size: 16px 16px;

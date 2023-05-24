@@ -88,7 +88,7 @@ export class Slider {
 
     #onValue() {
         if (this.#valueText != null && this.#slider != null)
-            this.#valueText.innerHTML = this.#minValue + Math.round(parseFloat(this.#slider.value) / parseFloat(this.#slider.max) * (this.#maxValue - this.#minValue)) + this.#unit
+            this.#valueText.innerText = this.#minValue + Math.round(parseFloat(this.#slider.value) / parseFloat(this.#slider.max) * (this.#maxValue - this.#minValue)) + this.#unit
         this.setActive(true);
     }
 

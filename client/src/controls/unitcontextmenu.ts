@@ -40,11 +40,16 @@ export class UnitContextMenu extends ContextMenu {
         this.#customFormationCallback = callback;
     }
 
-    setOptions(options: { [key: string]: string }, callback: CallableFunction) {
-        this.getContainer()?.replaceChildren(...Object.keys(options).map((option: string, idx: number) => {
+    setOptions(options: { [key: string]: {text: string, tooltip: string }}, callback: CallableFunction) {
+        this.getContainer()?.replaceChildren(...Object.keys(options).map((key: string, idx: number) => {
+            const option = options[key];
             var button = document.createElement("button");
-            button.innerHTML = options[option];
-            button.addEventListener("click", () => callback(option));
+            var el = document.createElement("div");
+            el.title = option.tooltip;
+            el.innerText = option.text;
+            el.id = key;
+            button.addEventListener("click", () => callback(key));
+            button.appendChild(el);
             return (button);
         }));
     }

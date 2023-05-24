@@ -307,12 +307,17 @@
     content: url("/resources/theme/images/icons/echelon-rh.svg");
 }
 
-#line-abreast::before {
+#line-abreast-rh::before,
+#line-abreast-lh::before {
     content: url("/resources/theme/images/icons/line-abreast.svg");
 }
 
 #front::before {
     content: url("/resources/theme/images/icons/front.svg");
+}
+
+#diamond::before {
+    content: url("/resources/theme/images/icons/diamond.svg");
 }
 
 #custom::before {

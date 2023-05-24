@@ -205,10 +205,10 @@
     display: flex;
 }
 
-[data-object|="unit"][data-has-fox-1] .unit-ammo-fox-1,
-[data-object|="unit"][data-has-fox-2] .unit-ammo-fox-2,
-[data-object|="unit"][data-has-fox-3] .unit-ammo-fox-3,
-[data-object|="unit"][data-has-other-ammo] .unit-ammo-other {
+[data-object|="unit"][data-has-fox-1] .unit-ammo>div:nth-child(1),
+[data-object|="unit"][data-has-fox-2] .unit-ammo>div:nth-child(2),
+[data-object|="unit"][data-has-fox-3] .unit-ammo>div:nth-child(3),
+[data-object|="unit"][data-has-other-ammo] .unit-ammo>div:nth-child(4) {
     background-color: var(--secondary-gunmetal-grey);
 }
 
@@ -217,10 +217,10 @@
 }
 
 [data-object|="unit"][data-coalition="blue"] .unit-fuel-level,
-[data-object|="unit"][data-coalition="blue"][data-has-fox-1] .unit-ammo-fox-1,
-[data-object|="unit"][data-coalition="blue"][data-has-fox-2] .unit-ammo-fox-2,
-[data-object|="unit"][data-coalition="blue"][data-has-fox-3] .unit-ammo-fox-3,
-[data-object|="unit"][data-coalition="blue"][data-has-other-ammo] .unit-ammo-other {
+[data-object|="unit"][data-coalition="blue"][data-has-fox-1] .unit-ammo>div:nth-child(1),
+[data-object|="unit"][data-coalition="blue"][data-has-fox-2] .unit-ammo>div:nth-child(2),
+[data-object|="unit"][data-coalition="blue"][data-has-fox-3] .unit-ammo>div:nth-child(3),
+[data-object|="unit"][data-coalition="blue"][data-has-other-ammo] .unit-ammo>div:nth-child(4) {
     background-color: var(--primary-blue);
 }
 
@@ -233,10 +233,10 @@
 }
 
 [data-object|="unit"][data-coalition="red"] .unit-fuel-level,
-[data-object|="unit"][data-coalition="red"][data-has-fox-1] .unit-ammo-fox-1,
-[data-object|="unit"][data-coalition="red"][data-has-fox-2] .unit-ammo-fox-2,
-[data-object|="unit"][data-coalition="red"][data-has-fox-3] .unit-ammo-fox-3,
-[data-object|="unit"][data-coalition="red"][data-has-other-ammo] .unit-ammo-other {
+[data-object|="unit"][data-coalition="red"][data-has-fox-1] .unit-ammo>div:nth-child(1),
+[data-object|="unit"][data-coalition="red"][data-has-fox-2] .unit-ammo>div:nth-child(2),
+[data-object|="unit"][data-coalition="red"][data-has-fox-3] .unit-ammo>div:nth-child(3),
+[data-object|="unit"][data-coalition="red"][data-has-other-ammo] .unit-ammo>div:nth-child(4) {
     background-color: var(--primary-red);
 }
 
@@ -250,6 +250,8 @@
     height: 20px;
     position: absolute;
     width: 20px;
+    left: 0px;
+    top: 0px;
 }
 
 [data-object|="unit"][data-state="rtb"] .unit-state {

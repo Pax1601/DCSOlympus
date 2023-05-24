@@ -22,6 +22,7 @@ require("../../public/javascripts/leaflet.nauticscale.js")
 export const IDLE = "IDLE";
 export const MOVE_UNIT = "MOVE_UNIT";
 export const visibilityControls: string[] = ["human", "dcs", "aircraft", "groundunit-sam", "groundunit-other", "navyunit", "airbase"];
+export const visibilityControlsTootlips: string[] = ["Toggle human players visibility", "Toggle DCS controlled units visibility", "Toggle aircrafts visibility", "Toggle SAM units visibility", "Toggle ground units (not SAM) visibility", "Toggle navy units visibility", "Toggle airbases visibility"];
 
 export class Map extends L.Map {
     #state: string;
@@ -116,7 +117,7 @@ export class Map extends L.Map {
 
         /* Option buttons */
         this.#optionButtons["visibility"] = visibilityControls.map((option: string, index: number) => {
-            return this.#createOptionButton(option, `visibility/${option.toLowerCase()}.svg`, "", "toggleUnitVisibility", `{"type": "${option}"}`);
+            return this.#createOptionButton(option, `visibility/${option.toLowerCase()}.svg`, visibilityControlsTootlips[index], "toggleUnitVisibility", `{"type": "${option}"}`);
         });
         document.querySelector("#unit-visibility-control")?.append(...this.#optionButtons["visibility"]);
     }
@@ -194,7 +195,7 @@ export class Map extends L.Map {
             })
             this.#destinationPreviewMarkers = [];
 
-            if (getUnitsManager().getSelectedUnits({ excludeHumans: true }).length < 20) {
+            if (getUnitsManager().getSelectedUnits({ excludeHumans: true }).length > 1 && getUnitsManager().getSelectedUnits({ excludeHumans: true }).length < 20) {
                 /* Create the unit destination preview markers */
                 this.#destinationPreviewMarkers = getUnitsManager().getSelectedUnits({ excludeHumans: true }).map((unit: Unit) => {
                     var marker = new DestinationPreviewMarker(this.getMouseCoordinates());
@@ -425,6 +426,9 @@ export class Map extends L.Map {
                 getUnitsManager().selectedUnitsClearDestinations();
             }
             getUnitsManager().selectedUnitsAddDestination(this.#computeDestinationRotation && this.#destinationRotationCenter != null ? this.#destinationRotationCenter : e.latlng, !e.originalEvent.shiftKey, this.#destinationGroupRotation)
+            this.#destinationGroupRotation = 0; 
+            this.#destinationRotationCenter = null;
+            this.#computeDestinationRotation = false;
         }
     }
 
@@ -440,18 +444,18 @@ export class Map extends L.Map {
     #onMouseDown(e: any) {
         this.hideAllContextMenus();
 
-        if (this.#state == MOVE_UNIT && e.originalEvent.button == 2) {
-            this.#computeDestinationRotation = true;
-            this.#destinationRotationCenter = this.getMouseCoordinates();
+        if (this.#state == MOVE_UNIT) {
+            this.#destinationGroupRotation = 0; 
+            this.#destinationRotationCenter = null;
+            this.#computeDestinationRotation = false;
+            if (e.originalEvent.button == 2) {
+                this.#computeDestinationRotation = true;
+                this.#destinationRotationCenter = this.getMouseCoordinates();
+            }
         }
     }
 
     #onMouseUp(e: any) {
-        if (this.#state == MOVE_UNIT) {
-            this.#computeDestinationRotation = false;
-            this.#destinationRotationCenter = null;
-            this.#destinationGroupRotation = 0;
-        }
     }
 
     #onMouseMove(e: any) {

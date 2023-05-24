@@ -6,6 +6,7 @@ import { aircraftDatabase } from './aircraftdatabase';
 import { groundUnitsDatabase } from './groundunitsdatabase';
 import { CustomMarker } from '../map/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
+import { UnitDatabase } from './unitdatabase';
 
 var pathIcon = new Icon({
     iconUrl: '/resources/theme/images/markers/marker-icon.png',
@@ -124,17 +125,23 @@ export class Unit extends CustomMarker {
         return "";
     }
 
-    getActiveMarkerElements() {
-        // Default values
+    getDatabase(): UnitDatabase | null {
+        // Overloaded by child classes
+        return null;
+    }
+
+    getIconOptions(): UnitIconOptions {
+        // Default values, overloaded by child classes if needed
         return {
-            state: false,
-            vvi: false,
-            hotgroup: false,
-            unitIcon: true,
-            shortLabel: false,
-            fuel: false,
-            ammo: false,
-            summary: false
+            showState: false,
+            showVvi: false,
+            showHotgroup: false,
+            showUnitIcon: true,
+            showShortLabel: false,
+            showFuel: false,
+            showAmmo: false,
+            showSummary: false, 
+            rotateToHeading: false
         }
     }
 
@@ -165,6 +172,7 @@ export class Unit extends CustomMarker {
 
     setHotgroup(hotgroup: number | null) {
         this.#hotgroup = hotgroup;
+        this.#updateMarker();
     }
 
     getHotgroup() {
@@ -172,7 +180,7 @@ export class Unit extends CustomMarker {
     }
 
     setHighlighted(highlighted: boolean) {
-        if (this.#highlighted != highlighted) {
+        if (this.getSelectable() && this.#highlighted != highlighted) {
             this.getElement()?.querySelector(`[data-object|="unit"]`)?.toggleAttribute("data-is-highlighted", highlighted);
             this.#highlighted = highlighted;
             this.getGroupMembers().forEach((unit: Unit) => unit.setHighlighted(highlighted));
@@ -297,19 +305,13 @@ export class Unit extends CustomMarker {
         this.setIcon(icon);
 
         var el = document.createElement("div");
+        el.classList.add("unit");
         el.setAttribute("data-object", `unit-${this.getMarkerCategory()}`);
         el.setAttribute("data-coalition", this.getMissionData().coalition);
 
-        // Generate and append elements depending on active options
-        // State icon
-        if (this.getActiveMarkerElements().state){
-            var state = document.createElement("div");
-            state.classList.add("unit-state");
-            el.appendChild(state);
-        }
-          
+        // Generate and append elements depending on active options          
         // Velocity vector
-        if (this.getActiveMarkerElements().vvi) {
+        if (this.getIconOptions().showVvi) {
             var vvi = document.createElement("div");
             vvi.classList.add("unit-vvi");
             vvi.toggleAttribute("data-rotate-to-heading");
@@ -317,7 +319,7 @@ export class Unit extends CustomMarker {
         }
 
         // Hotgroup indicator
-        if (this.getActiveMarkerElements().hotgroup) {
+        if (this.getIconOptions().showHotgroup) {
             var hotgroup = document.createElement("div");
             hotgroup.classList.add("unit-hotgroup");
             var hotgroupId = document.createElement("div");
@@ -327,26 +329,34 @@ export class Unit extends CustomMarker {
         }
 
         // Main icon
-        if (this.getActiveMarkerElements().unitIcon) {
+        if (this.getIconOptions().showUnitIcon) {
             var unitIcon = document.createElement("div");
             unitIcon.classList.add("unit-icon");
             var img = document.createElement("img");
             img.src = `/resources/theme/images/units/${this.getMarkerCategory()}.svg`;
             img.onload = () => SVGInjector(img);
             unitIcon.appendChild(img);
+            unitIcon.toggleAttribute("data-rotate-to-heading", this.getIconOptions().rotateToHeading);
             el.append(unitIcon);
         }
 
+        // State icon
+        if (this.getIconOptions().showState){
+            var state = document.createElement("div");
+            state.classList.add("unit-state");
+            el.appendChild(state);
+        }
+
         // Short label
-        if (this.getActiveMarkerElements().shortLabel) {
+        if (this.getIconOptions().showShortLabel) {
             var shortLabel = document.createElement("div");
             shortLabel.classList.add("unit-short-label");
-            shortLabel.innerText = aircraftDatabase.getByName(this.getBaseData().name)?.shortLabel || ""; //TODO: fix, use correct database
+            shortLabel.innerText = this.getDatabase()?.getByName(this.getBaseData().name)?.shortLabel || ""; 
             el.append(shortLabel);
         }
 
         // Fuel indicator
-        if (this.getActiveMarkerElements().fuel) {
+        if (this.getIconOptions().showFuel) {
             var fuelIndicator = document.createElement("div");
             fuelIndicator.classList.add("unit-fuel");
             var fuelLevel = document.createElement("div");
@@ -356,7 +366,7 @@ export class Unit extends CustomMarker {
         }
 
         // Ammo indicator
-        if (this.getActiveMarkerElements().ammo){ 
+        if (this.getIconOptions().showAmmo){ 
             var ammoIndicator = document.createElement("div");
             ammoIndicator.classList.add("unit-ammo");
             for (let i = 0; i <= 3; i++)
@@ -365,7 +375,7 @@ export class Unit extends CustomMarker {
         }
 
         // Unit summary
-        if (this.getActiveMarkerElements().summary) {
+        if (this.getIconOptions().showSummary) {
             var summary = document.createElement("div");
             summary.classList.add("unit-summary");
             var callsign = document.createElement("div");
@@ -544,18 +554,18 @@ export class Unit extends CustomMarker {
     }
 
     #onContextMenu(e: any) {
-        var options: { [key: string]: string } = {};
+        var options: {[key: string]: {text: string, tooltip: string}} = {};
 
-        options["Center"] = `<div id="center-map">Center map</div>`;
+        options["center-map"] = {text: "Center map", tooltip: "Center the map on the unit and follow it"};
 
         if (getUnitsManager().getSelectedUnits().length > 0 && !(getUnitsManager().getSelectedUnits().length == 1 && (getUnitsManager().getSelectedUnits().includes(this)))) {
-            options['Attack'] = `<div id="attack">Attack</div>`;
+            options["attack"] = {text: "Attack", tooltip: "Attack the unit using A/A or A/G weapons"};
             if (getUnitsManager().getSelectedUnitsType() === "Aircraft")
-                options['Follow'] = `<div id="follow">Follow</div>`;
+                options["follow"] = {text: "Follow", tooltip: "Follow the unit at a user defined distance and position"};;
         }
         else if ((getUnitsManager().getSelectedUnits().length > 0 && (getUnitsManager().getSelectedUnits().includes(this))) || getUnitsManager().getSelectedUnits().length == 0) {
             if (this.getBaseData().category == "Aircraft") {
-                options["Refuel"] = `<div id="refuel">Refuel</div>`; // TODO Add some way of knowing which aircraft can AAR
+                options["refuel"] = {text: "AAR Refuel", tooltip: "Refuel unit at the nearest AAR Tanker. If no tanker is available the unit will RTB."}; // TODO Add some way of knowing which aircraft can AAR
             }
         }
 
@@ -569,28 +579,28 @@ export class Unit extends CustomMarker {
     }
 
     #executeAction(e: any, action: string) {
-        if (action === "Center")
+        if (action === "center-map")
             getMap().centerOnUnit(this.ID);
-        if (action === "Attack")
+        if (action === "attack")
             getUnitsManager().selectedUnitsAttackUnit(this.ID);
-        else if (action === "Refuel")
+        else if (action === "refuel")
             getUnitsManager().selectedUnitsRefuel();
-        else if (action === "Follow")
+        else if (action === "follow")
             this.#showFollowOptions(e);
     }
 
     #showFollowOptions(e: any) {
-        var options: { [key: string]: string } = {};
+        var options: {[key: string]: {text: string, tooltip: string}} = {};
 
         options = {
-            'Trail': `<div id="trail">Trail</div>`,
-            'Echelon (LH)': `<div id="echelon-lh">Echelon (left)</div>`,
-            'Echelon (RH)': `<div id="echelon-rh">Echelon (right)</div>`,
-            'Line abreast (LH)': `<div id="line-abreast">Line abreast (left)</div>`,
-            'Line abreast (RH)': `<div id="line-abreast">Line abreast (right)</div>`,
-            'Front': `<div id="front">In front</div>`,
-            'Diamond': `<div id="diamond">Diamond</div>`,
-            'Custom': `<div id="custom">Custom</div>`
+            'trail': {text: "Trail", tooltip: "Follow unit in trail formation"},
+            'echelon-lh': {text: "Echelon (LH)", tooltip: "Follow unit in echelon left formation"},
+            'echelon-rh': {text: "Echelon (RH)", tooltip: "Follow unit in echelon right formation"},
+            'line-abreast-lh': {text: "Line abreast (LH)", tooltip: "Follow unit in line abreast left formation"},
+            'line-abreast-rh': {text: "Line abreast (RH)", tooltip: "Follow unit in line abreast right formation"},
+            'front': {text: "Front", tooltip: "Fly in front of unit"},
+            'diamond': {text: "Diamond", tooltip: "Follow unit in diamond formation"},
+            'custom': {text: "Custom", tooltip: "Set a custom formation position"},
         }
 
         getMap().getUnitContextMenu().setOptions(options, (option: string) => {
@@ -601,7 +611,7 @@ export class Unit extends CustomMarker {
     }
 
     #applyFollowOptions(action: string) {
-        if (action === "Custom") {
+        if (action === "custom") {
             document.getElementById("custom-formation-dialog")?.classList.remove("hide");
             getMap().getUnitContextMenu().setCustomFormationCallback((offset: { x: number, y: number, z: number }) => {
                 getUnitsManager().selectedUnitsFollowUnit(this.ID, offset);
@@ -657,18 +667,18 @@ export class Unit extends CustomMarker {
                 element.querySelector(".unit")?.toggleAttribute("data-is-dead", !this.getBaseData().alive);
 
                 /* Set current unit state */
-                if (this.getMissionData().flags.Human)  // Unit is human
+                if (this.getMissionData().flags.Human)     // Unit is human
                     element.querySelector(".unit")?.setAttribute("data-state", "human");
-                else if (!this.getBaseData().AI)        // Unit is under DCS control (not Olympus)
+                else if (!this.getBaseData().AI)            // Unit is under DCS control (not Olympus)
                     element.querySelector(".unit")?.setAttribute("data-state", "dcs");
-                else                                    // Unit is under Olympus control
+                else                                        // Unit is under Olympus control
                     element.querySelector(".unit")?.setAttribute("data-state", this.getTaskData().currentState.toLowerCase());
 
                 /* Set altitude and speed */
                 if (element.querySelector(".unit-altitude"))
                     (<HTMLElement>element.querySelector(".unit-altitude")).innerText = "FL" + String(Math.floor(this.getFlightData().altitude / 0.3048 / 100));
                 if (element.querySelector(".unit-speed"))
-                    (<HTMLElement>element.querySelector(".unit-speed")).innerHTML = String(Math.floor(this.getFlightData().speed * 1.94384));
+                    (<HTMLElement>element.querySelector(".unit-speed")).innerText = String(Math.floor(this.getFlightData().speed * 1.94384));
 
                 /* Rotate elements according to heading */
                 element.querySelectorAll("[data-rotate-to-heading]").forEach(el => {
@@ -791,16 +801,17 @@ export class Unit extends CustomMarker {
 }
 
 export class AirUnit extends Unit {
-    getActiveMarkerElements() {
+    getIconOptions() {
         return {
-            state: true,
-            vvi: true,
-            hotgroup: true,
-            unitIcon: true,
-            shortLabel: true,
-            fuel: true,
-            ammo: true,
-            summary: true
+            showState: true,
+            showVvi: true,
+            showHotgroup: true,
+            showUnitIcon: true,
+            showShortLabel: true,
+            showFuel: true,
+            showAmmo: true,
+            showSummary: true,
+            rotateToHeading: false
         };
     }
 }
@@ -812,6 +823,10 @@ export class Aircraft extends AirUnit {
 
     getMarkerCategory() {
         return "aircraft";
+    }
+
+    getDatabase(): UnitDatabase | null {
+        return aircraftDatabase;
     }
 }
 
@@ -830,16 +845,17 @@ export class GroundUnit extends Unit {
         super(ID, data);
     }
 
-    getActiveMarkerElements() {
+    getIconOptions() {
         return {
-            state: true,
-            vvi: false,
-            hotgroup: true,
-            unitIcon: true,
-            shortLabel: true,
-            fuel: false,
-            ammo: false,
-            summary: false
+            showState: true,
+            showVvi: false,
+            showHotgroup: true,
+            showUnitIcon: true,
+            showShortLabel: true,
+            showFuel: false,
+            showAmmo: false,
+            showSummary: false,
+            rotateToHeading: false
         };
     }
 
@@ -849,6 +865,10 @@ export class GroundUnit extends Unit {
         var markerCategory = (role === "SAM") ? "groundunit-sam" : "groundunit-other";
         return markerCategory;
     }
+
+    getDatabase(): UnitDatabase | null {
+        return groundUnitsDatabase;
+    }
 }
 
 export class NavyUnit extends Unit {
@@ -856,16 +876,17 @@ export class NavyUnit extends Unit {
         super(ID, data);
     }
 
-    getActiveMarkerElements() {
+    getIconOptions() {
         return {
-            state: true,
-            vvi: false,
-            hotgroup: true,
-            unitIcon: true,
-            shortLabel: true,
-            fuel: false,
-            ammo: false,
-            summary: false
+            showState: true,
+            showVvi: false,
+            showHotgroup: true,
+            showUnitIcon: true,
+            showShortLabel: true,
+            showFuel: false,
+            showAmmo: false,
+            showSummary: false,
+            rotateToHeading: false
         };
     }
 
@@ -878,6 +899,20 @@ export class Weapon extends Unit {
     constructor(ID: number, data: UnitData) {
         super(ID, data);
         this.setSelectable(false);
+    }
+
+    getIconOptions() {
+        return {
+            showState: false,
+            showVvi: false,
+            showHotgroup: false,
+            showUnitIcon: true,
+            showShortLabel: false,
+            showFuel: false,
+            showAmmo: false,
+            showSummary: false,
+            rotateToHeading: true
+        };
     }
 }
 

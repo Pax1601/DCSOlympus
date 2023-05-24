@@ -67,7 +67,10 @@ export class Dropdown {
     selectValue(idx: number) {
         if (idx < this.#optionsList.length) {
             var option = this.#optionsList[idx];
-            this.#value.innerHTML = `<div class = "ol-ellipsed"> ${option} </div>`;
+            var el = document.createElement("div");
+            el.classList.add("ol-ellipsed");
+            el.innerText = option;
+            this.#value.appendChild(el);
             this.#index = idx;
             this.#close();
             this.#callback(option);

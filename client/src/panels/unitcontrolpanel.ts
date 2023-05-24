@@ -1,3 +1,4 @@
+import { SVGInjector } from "@tanem/svg-injector";
 import { getUnitsManager } from "..";
 import { Dropdown } from "../controls/dropdown";
 import { Slider } from "../controls/slider";
@@ -346,7 +347,10 @@ export class UnitControlPanel extends Panel {
         var button = document.createElement("button");
         button.title = title;
         button.value = value;
-        button.innerHTML = `<img src="/resources/theme/images/buttons/${url}" />`
+        var img = document.createElement("img");
+        img.src = `/resources/theme/images/buttons/${url}`;
+        img.onload = () => SVGInjector(img);
+        button.appendChild(img);
         button.addEventListener("click", callback);
         return button;
     }

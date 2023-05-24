@@ -524,6 +524,7 @@ function Olympus.setMissionData(arg, time)
 		bullseyes[i] = {}
 		bullseyes[i]["latitude"] = bullseyeLatitude
 		bullseyes[i]["longitude"] = bullseyeLongitude
+		bullseyes[i]["coalition"] = Olympus.getCoalitionByCoalitionID(i) 
 	end
 
 	-- Units tactical data
@@ -589,14 +590,7 @@ function Olympus.setMissionData(arg, time)
 		local info = {}
 		local latitude, longitude, altitude = coord.LOtoLL(Airbase.getPoint(base[i]))
 		info["callsign"] = Airbase.getCallsign(base[i])
-		local coalitionID = Airbase.getCoalition(base[i])
-		if coalitionID == 0 then
-			info["coalition"] = "neutral"
-		elseif coalitionID == 1 then
-			info["coalition"] = "red"
-		else 
-			info["coalition"] = "blue"
-		end
+		info["coalition"] = Olympus.getCoalitionByCoalitionID(Airbase.getCoalition(base[i])) 
 		info["latitude"] =  latitude
 		info["longitude"] =  longitude
 		if Airbase.getUnit(base[i]) then

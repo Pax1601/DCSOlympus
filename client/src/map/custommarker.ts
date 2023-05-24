@@ -1,4 +1,4 @@
-import { Map, Marker } from "leaflet";
+import { DivIcon, Map, Marker } from "leaflet";
 import { MarkerOptions } from "leaflet";
 import { LatLngExpression } from "leaflet";
 
@@ -8,6 +8,7 @@ export class CustomMarker extends Marker {
     }
 
     onAdd(map: Map): this {
+        this.setIcon(new DivIcon()); // Default empty icon
         super.onAdd(map);
         this.createIcon();
         return this;
