@@ -4,6 +4,7 @@
 #include "dcstools.h"
 #include "luatools.h"
 #include "measure.h"
+#include "logger.h"
 
 namespace State
 {
@@ -93,7 +94,7 @@ public:
 	void setFuel(double newFuel) { fuel = newFuel; addMeasure(L"fuel", json::value(newFuel));}
 	void setAmmo(json::value newAmmo) { ammo = newAmmo; addMeasure(L"ammo", json::value(newAmmo));}
 	void setTargets(json::value newTargets) {targets = newTargets; addMeasure(L"targets", json::value(newTargets));}
-	void setHasTask(bool newHasTask) { hasTask = newHasTask; addMeasure(L"hasTask", json::value(newHasTask));}
+	void setHasTask(bool newHasTask) { hasTask = newHasTask; addMeasure(L"hasTask", json::value(newHasTask)); }
 	void setCoalitionID(int newCoalitionID);
 	void setFlags(json::value newFlags) { flags = newFlags; addMeasure(L"flags", json::value(newFlags));}
 	double getFuel() { return fuel; }

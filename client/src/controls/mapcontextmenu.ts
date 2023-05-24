@@ -188,8 +188,6 @@ export class MapContextMenu extends ContextMenu {
         this.#resetGroundUnitType();
 
         const types = groundUnitsDatabase.getByRole(role).map((blueprint) => { return blueprint.label });
-        types.sort();
-
         this.#groundUnitTypeDropdown.setOptions(types);
         this.#groundUnitTypeDropdown.selectValue(0);
         this.clip();
@@ -202,8 +200,6 @@ export class MapContextMenu extends ContextMenu {
         this.#groundUnitTypeDropdown.reset();
 
         const roles = groundUnitsDatabase.getRoles();
-        roles.sort();
-
         this.#groundUnitRoleDropdown.setOptions(roles);
         this.clip();
     }
