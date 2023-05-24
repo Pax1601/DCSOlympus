@@ -334,7 +334,7 @@ export class UnitsManager {
 
             const selectedUnits           = this.getSelectedUnits();
             const selectionContainsAHuman = selectedUnits.some( ( unit:Unit ) => {
-                return unit.getMissionData().flags.human === true;
+                return unit.getMissionData().flags.Human === true;
             });
 
             if ( !selectionContainsAHuman || confirm( "Your selection includes a human player. Deleting humans causes their vehicle to crash.\n\nAre you sure you want to do this?" ) ) {
