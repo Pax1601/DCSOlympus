@@ -232,17 +232,34 @@ end
 function Olympus.spawnGroundUnit(coalition, unitType, lat, lng)
     Olympus.debug("Olympus.spawnGroundUnit " .. coalition .. " " .. unitType .. " (" .. lat .. ", " .. lng ..")", 2)
 	local spawnLocation = mist.utils.makeVec3GL(coord.LLtoLO(lat, lng, 0))
-	local unitTable = 
-	{
-		[1] = 
+
+	local unitTable = {}
+
+	if Olympus.hasKey(templates, unitType) then
+		for idx, value in pairs(templates[unitType].units) do
+			unitTable[#unitTable + 1] = {
+				["type"] = value.name,
+				["x"] = spawnLocation.x + value.dx,
+				["y"] = spawnLocation.z + value.dy,
+				["playerCanDrive"] = true,
+				["heading"] = 0,
+				["skill"] = "High"
+			}
+		end 
+	else
+		unitTable = 
 		{
-			["type"] = unitType,
-			["x"] = spawnLocation.x,
-			["y"] = spawnLocation.z,
-			["playerCanDrive"] = true,
-			["heading"] = 0,
-		},
-	} 
+			[1] = 
+			{
+				["type"] = unitType,
+				["x"] = spawnLocation.x,
+				["y"] = spawnLocation.z,
+				["playerCanDrive"] = true,
+				["heading"] = 0,
+				["skill"] = "High"
+			},
+		} 
+	end
 
 	local countryID = Olympus.getCountryIDByCoalition(coalition)
 	
@@ -475,7 +492,26 @@ function Olympus.isArray(t)
 	end
 	return true
 end
-  
+
+function Olympus.hasValue(tab, val)
+    for index, value in ipairs(tab) do
+        if value == val then
+            return true
+        end
+    end
+
+    return false
+end
+
+function Olympus.hasKey(tab, key)
+    for k, value in pairs(tab) do
+        if k == key then
+            return true
+        end
+    end
+
+    return false
+end
 
 function Olympus.setMissionData(arg, time)
 	local missionData = {}
@@ -488,6 +524,7 @@ function Olympus.setMissionData(arg, time)
 		bullseyes[i] = {}
 		bullseyes[i]["latitude"] = bullseyeLatitude
 		bullseyes[i]["longitude"] = bullseyeLongitude
+		bullseyes[i]["coalition"] = Olympus.getCoalitionByCoalitionID(i) 
 	end
 
 	-- Units tactical data
@@ -503,14 +540,27 @@ function Olympus.setMissionData(arg, time)
 				if groupName ~= nil then
 					local group = Group.getByName(groupName)
 					if group ~= nil then
+						-- Get the targets detected by the group controller
 						local controller = group:getController()
+						local controllerTargets = controller:getDetectedTargets()
+
 						for index, unit in pairs(group:getUnits()) do
+							local unitController = unit:getController()
 							local table = {}
 							table["targets"] = {}
-							table["targets"]["visual"] = controller:getDetectedTargets(1)
-							table["targets"]["radar"] = controller:getDetectedTargets(4)
-							table["targets"]["rwr"] = controller:getDetectedTargets(16)
-							table["targets"]["other"] = controller:getDetectedTargets(2, 8, 32)
+
+							for i, target in ipairs(controllerTargets) do
+								for det, enum in pairs(Controller.Detection) do
+									if target.object ~= nil then
+										local detected = unitController:isTargetDetected(target.object, enum)
+
+										if detected then
+											target["detectionMethod"] = det
+											table["targets"][#table["targets"] + 1] = target
+										end
+									end
+								end
+							end
 
 							table["hasTask"] = controller:hasTask()
 							
@@ -540,14 +590,7 @@ function Olympus.setMissionData(arg, time)
 		local info = {}
 		local latitude, longitude, altitude = coord.LOtoLL(Airbase.getPoint(base[i]))
 		info["callsign"] = Airbase.getCallsign(base[i])
-		local coalitionID = Airbase.getCoalition(base[i])
-		if coalitionID == 0 then
-			info["coalition"] = "neutral"
-		elseif coalitionID == 1 then
-			info["coalition"] = "red"
-		else 
-			info["coalition"] = "blue"
-		end
+		info["coalition"] = Olympus.getCoalitionByCoalitionID(Airbase.getCoalition(base[i])) 
 		info["latitude"] =  latitude
 		info["longitude"] =  longitude
 		if Airbase.getUnit(base[i]) then

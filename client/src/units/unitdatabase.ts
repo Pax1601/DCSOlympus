@@ -1,21 +1,16 @@
 export class UnitDatabase {
-    blueprints: {[key: string]: UnitBlueprint} = {};
+    blueprints: { [key: string]: UnitBlueprint } = {};
 
-    constructor()
-    {
+    constructor() {
 
     }
 
     /* Returns a list of all possible roles in a database */
-    getRoles()
-    {
+    getRoles() {
         var roles: string[] = [];
-        for (let unit in this.blueprints)
-        {
-            for (let loadout of this.blueprints[unit].loadouts)
-            {
-                for (let role of loadout.roles)
-                {
+        for (let unit in this.blueprints) {
+            for (let loadout of this.blueprints[unit].loadouts) {
+                for (let role of loadout.roles) {
                     if (role !== "" && !roles.includes(role))
                         roles.push(role);
                 }
@@ -25,18 +20,15 @@ export class UnitDatabase {
     }
 
     /* Gets a specific blueprint by name */
-    getByName(name: string)
-    {
+    getByName(name: string) {
         if (name in this.blueprints)
             return this.blueprints[name];
         return null;
     }
 
     /* Gets a specific blueprint by label */
-    getByLabel(label: string)
-    {
-        for (let unit in this.blueprints)
-        {
+    getByLabel(label: string) {
+        for (let unit in this.blueprints) {
             if (this.blueprints[unit].label === label)
                 return this.blueprints[unit];
         }
@@ -44,15 +36,11 @@ export class UnitDatabase {
     }
 
     /* Get all blueprints by role */
-    getByRole(role: string)
-    {
+    getByRole(role: string) {
         var units = [];
-        for (let unit in this.blueprints)
-        {
-            for (let loadout of this.blueprints[unit].loadouts)
-            {
-                if (loadout.roles.includes(role) || loadout.roles.includes(role.toLowerCase()))
-                {
+        for (let unit in this.blueprints) {
+            for (let loadout of this.blueprints[unit].loadouts) {
+                if (loadout.roles.includes(role) || loadout.roles.includes(role.toLowerCase())) {
                     units.push(this.blueprints[unit])
                     break;
                 }
@@ -62,13 +50,10 @@ export class UnitDatabase {
     }
 
     /* Get the names of all the loadouts for a specific unit and for a specific role */
-    getLoadoutNamesByRole(name: string, role: string)
-    {
+    getLoadoutNamesByRole(name: string, role: string) {
         var loadouts = [];
-        for (let loadout of this.blueprints[name].loadouts)
-        {
-            if (loadout.roles.includes(role) || loadout.roles.includes(""))
-            {
+        for (let loadout of this.blueprints[name].loadouts) {
+            if (loadout.roles.includes(role) || loadout.roles.includes("")) {
                 loadouts.push(loadout.name)
             }
         }
@@ -76,10 +61,8 @@ export class UnitDatabase {
     }
 
     /* Get the loadout content from the unit name and loadout name */
-    getLoadoutByName(name: string, loadoutName: string)
-    {
-        for (let loadout of this.blueprints[name].loadouts)
-        {
+    getLoadoutByName(name: string, loadoutName: string) {
+        for (let loadout of this.blueprints[name].loadouts) {
             if (loadout.name === loadoutName)
                 return loadout;
         }

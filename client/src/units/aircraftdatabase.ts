@@ -322,7 +322,7 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "H-6J": {
             "name": "H-6J",
-            "label": "H-6J Badger,
+            "label": "H-6J Badger",
             "era": ["Mid Cold War, Late Cold War", "Modern"],
             "shortLabel": "H6",
             "loadouts": [

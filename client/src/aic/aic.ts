@@ -1,4 +1,4 @@
-import { ToggleableFeature } from "../toggleablefeature";
+import { ToggleableFeature } from "../features/toggleablefeature";
 import { AICFormation_Azimuth } from "./aicformation/azimuth";
 import { AICFormation_Range } from "./aicformation/range";
 import { AICFormation_Single } from "./aicformation/single";

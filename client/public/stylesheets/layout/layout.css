@@ -1,0 +1,75 @@
+/* Page style */
+#map-container {
+	height: 100%;
+	min-width: 820px;
+	width: 100%;
+}
+
+#primary-toolbar {
+	align-items: center;
+	display: flex;
+	left: 10px;
+	position: absolute;
+	top: 10px;
+	z-index: 1000;
+}
+
+#toolbar-summary {
+	background-image: url("/images/icon-round.png");
+	background-position: 20px 22px;
+	background-repeat: no-repeat;
+	background-size: 45px 45px;
+	display: flex;
+	flex-direction: column;
+	padding: 20px;
+	text-indent: 60px;
+}
+
+#connection-status-panel {
+	bottom: 20px;
+	font-size: 12px;
+	position: absolute;
+	right: 10px;
+	width: 160px;
+	z-index: 1000;
+}
+
+#mouse-info-panel {
+	bottom: 60px;
+	display: flex;
+	flex-direction: column;
+	height: fit-content;
+	position: absolute;
+	right: 10px;
+	row-gap: 10px;
+	width: 160px;
+	z-index: 1000;
+}
+
+#unit-control-panel {
+	height: fit-content;
+	left: 10px;
+	position: absolute;
+	top: 80px;
+	width: 240px;
+	z-index: 1000;
+}
+
+#unit-info-panel {
+	bottom: 20px;
+	font-size: 12px;
+	left: 10px;
+	position: absolute;
+	width: fit-content;
+	z-index: 1000;
+}
+
+#info-popup {
+    position: absolute;
+    width: fit-content;
+    height: fit-content;
+    top: 100px;
+    left: 50%;
+    translate: -50% 0%;
+    z-index: 9999;
+}

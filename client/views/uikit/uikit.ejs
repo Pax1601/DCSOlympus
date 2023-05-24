@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Olympus UI Kit</title>
+        <link rel="stylesheet" type="text/css" href="./resources/theme/olympus.css" />
+        <link rel="stylesheet" type="text/css" href="stylesheets/olympus.css" />
+        <link rel="stylesheet" type="text/css" href="stylesheets/units.css" />
+        <link rel="stylesheet" type="text/css" href="stylesheets/uikit.css" />
+    </head>
+    <body>
+
+        <div id="content-wrapper">
+
+            <h1>Olympus UI Kit</h1>
+
+            <div id="tabs">
+                <div class="section-header">Typeography</div>
+                <div class="section-header">Navbar</div>
+                <div class="section-header">Context menu</div>
+                <div class="section-header">Unit control panel</div>
+                <div class="section-header">Mouse info panel</div>
+                <div class="section-header">Buttons</div>
+                <div class="section-header">Ground Units</div>
+                <div class="section-header">Planes</div>
+                <div class="section-header">Weapons</div>
+                <div class="section-header">.ol-panel</div>
+                <div class="section-header">Icons</div>
+            </div>
+
+            <section>
+
+                <div class="content">
+
+                    <div class="content-header">Headings</div>
+                    <div class="content-body">
+
+                        <div class="example">
+                            <h1>h1 | open sans | 32px</h1>
+                            <h2>h2 | open sans | 24px</h2>
+                            <h3>h3 | open sans | 18.72px</h3>
+                            <h4>h4 | open sans | 16px</h4>
+                            <h5>h5 | open sans | 13.28px</h5>
+                            <h6>h6 | open sans | 10.72px</h6>
+                        </div>
+
+                    </div>
+        
+                </div>
+
+                <div id="paragraph" class="content">
+
+                    <div class="content-header">Paragraph</div>
+                    <div class="content-body">
+
+                        <div class="example">
+                            <div class="caption">Plain</div>
+                            <p>Nullam iaculis nisi sed mi tincidunt pretium blandit tempus urna. Vestibulum non ex vitae massa tristique auctor. Praesent orci justo, porttitor pellentesque convallis non, commodo at augue.</p>
+                        </div>
+
+                        <div class="example">
+                            <div class="caption">In a panel</div>
+                            <div class="ol-panel">
+                                <p>Donec nibh est, fringilla sed pharetra eu, varius vel sem. Aliquam ac libero leo. Sed consectetur enim aliquam dui pellentesque luctus. Pellentesque vel iaculis quam.</p>
+                            </div>
+                        </div>
+
+                    </div>
+        
+                </div>
+
+            </section>
+
+            
+            <section>
+
+                <div class="content">
+
+                    <div class="content-header">Primary nav</div>
+                    <div class="content-body">
+
+                        <div class="example">
+                            <%- include('navbar.ejs') %>   
+                        </div>
+
+                    </div>
+        
+                </div>
+
+            </section>
+
+            <section>
+
+                <div class="content">
+
+                    <div class="content-header">Context menu</div>
+                    <div class="content-body">
+                        <div class="example">
+                            <%- include('contextmenus.ejs') %>  
+                        </div>  
+                    </div>
+                </div>
+
+            </section>
+
+            <section>
+
+                <div class="content">
+
+                    <div class="content-header">Unit Control Panel</div>
+                    <div class="content-body">
+
+                        <div class="example">
+                            <%- include('unitcontrolpanel.ejs') %>   
+                        </div>
+
+                    </div>
+        
+                </div>
+
+            </section>
+
+            <section>
+
+                <div class="content">
+
+                    <div class="content-header">Primary nav</div>
+                    <div class="content-body">
+
+                        <div class="example">
+                            <%- include('mouseinfopanel.ejs') %>   
+                        </div>
+
+                    </div>
+        
+                </div>
+
+            </section>
+
+            
+            <section>
+
+                <div class="content">
+
+                    <div class="content-header">Buttons</div>
+                    <div class="content-body">
+
+                        <div class="example">
+                            <button>Button enabled</button>
+                        </div>
+
+                        <div class="example">
+                            <button disabled="disabled">Button disabled</button>
+                        </div>
+
+                    </div>
+        
+                </div>
+
+            </section>        
+
+
+            <section>
+
+                <div class="content">
+
+                    <div class="content-header">Ground</div>
+                    <div class="content-body">
+
+                        <div class="example">
+                            
+                            <div class="caption">Neutral</div>
+                            
+                            <div data-object="unit-groundunit-other" data-coalition="">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-icon"></div>
+                                <div class="unit-short-label">Z</div>
+                            </div>
+                            
+                        </div>
+
+                        <div class="example">
+                            
+                            <div class="caption">Blue</div>
+                            
+                            <div data-object="unit-groundunit-other" data-coalition="blue">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-icon"></div>
+                                <div class="unit-short-label">Y</div>
+                            </div>
+                            
+                        </div>
+
+                        <div class="example">
+                            
+                            <div class="caption">Red</div>
+                            
+                            <div data-object="unit-groundunit-other" data-coalition="red">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-icon"></div>
+                                <div class="unit-short-label">X</div>
+                            </div>
+                            
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="content">
+
+                    <div class="content-header">SAM</div>
+                    <div class="content-body">
+
+                        <div class="example">
+                            
+                            <div class="caption">Neutral</div>
+                            
+                            <div data-object="unit-groundunit-sam" data-coalition="">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-icon"></div>
+                                <div class="unit-short-label">Z</div>
+                            </div>
+                            
+                        </div>
+
+                        <div class="example">
+                            
+                            <div class="caption">Blue</div>
+                            
+                            <div data-object="unit-groundunit-sam" data-coalition="blue">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-icon"></div>
+                                <div class="unit-short-label">Y</div>
+                            </div>
+                            
+                        </div>
+
+                        <div class="example">
+                            
+                            <div class="caption">Red</div>
+                            
+                            <div data-object="unit-groundunit-sam" data-coalition="red">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-icon"></div>
+                                <div class="unit-short-label">X</div>
+                            </div>
+                            
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="content">
+
+                    <div class="content-header">navyunit</div>
+                    <div class="content-body">
+
+                        <div class="example">
+                            
+                            <div class="caption">Neutral</div>
+                            
+                            <div data-object="unit-navyunit" data-coalition="">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-icon"></div>
+                                <div class="unit-short-label">Z</div>
+                            </div>
+                            
+                        </div>
+
+                        <div class="example">
+                            
+                            <div class="caption">Blue</div>
+                            
+                            <div data-object="unit-navyunit" data-coalition="blue">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-icon"></div>
+                                <div class="unit-short-label">Y</div>
+                            </div>
+                            
+                        </div>
+
+                        <div class="example">
+                            
+                            <div class="caption">Red</div>
+                            
+                            <div data-object="unit-navyunit" data-coalition="red">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-icon"></div>
+                                <div class="unit-short-label">X</div>
+                            </div>
+                            
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="content">
+
+                    <div class="content-header">Buildings</div>
+                    <div class="content-body">
+
+                        <div class="example">
+                            
+                            <div class="caption">Neutral</div>
+                            
+                            <div data-object="unit-building" data-coalition="">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-icon"></div>
+                                <div class="unit-short-label">J</div>
+                            </div>
+                            
+                        </div>
+
+                        <div class="example">
+                            
+                            <div class="caption">Blue</div>
+                            
+                            <div data-object="unit-building" data-coalition="blue">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-icon"></div>
+                                <div class="unit-short-label">K</div>
+                            </div>
+                            
+                        </div>
+
+                        <div class="example">
+                            
+                            <div class="caption">Red</div>
+                            
+                            <div data-object="unit-building" data-coalition="red">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-icon"></div>
+                                <div class="unit-short-label">L</div>
+                            </div>
+                            
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+            
+
+            <section>
+
+                <div class="content">
+
+                    <div class="content-header">Fuel states (AI only)</div>
+                    <div class="content-body">
+
+                        <div class="example">
+
+                            <div class="caption">0% (empty)</div>
+                            <div data-object="unit-aircraft" data-pilot="ai" data-has-low-fuel data-coalition="red" data-is-selected>
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-icon"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:0%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                        <div class="example">
+
+                            <div class="caption">10%</div>
+                            
+                            <div data-object="unit-aircraft" data-pilot="ai" data-has-low-fuel data-coalition="red" data-is-selected>
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-icon"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:10%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                        <div class="example">
+
+                            <div class="caption">20%</div>
+                            <div data-object="unit-aircraft" data-pilot="ai" data-has-low-fuel data-coalition="red">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-icon"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:20%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        
+                        <div class="example">
+
+                            <div class="caption">50%</div>
+                            <div data-object="unit-aircraft" data-pilot="ai" data-coalition="red" data-is-selected>
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-icon"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:50%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                        <div class="example">
+
+                            <div class="caption">75%</div>
+                            <div data-object="unit-aircraft" data-pilot="ai" data-coalition="red">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-icon"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:75%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                        <div class="example">
+
+                            <div class="caption">100%</div>
+                            <div data-object="unit-aircraft" data-pilot="ai" data-coalition="red" data-is-selected>
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-icon"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                    </div>
+        
+                </div>
+
+                <div class="content">
+
+                    <div class="content-header">Status icons</div>
+                    <div class="content-body">
+
+                        <div class="example">
+                            
+                            <div data-object="unit-aircraft" data-state="rtb" data-pilot="ai">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-state"></div>
+                                <div class="unit-vvi" style="height: 50px; transform:rotate(135deg);"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-icon"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                                <div class="unit-summary">
+                                    <div class="unit-callsign">Springfield 3-1 | Longname</div>
+                                    <div class="unit-heading">260</div>
+                                    <div class="unit-altitude">31</div>
+                                </div>
+                            </div>
+
+                        </div>
+                        
+
+                        <div class="example">
+                            
+                            <div data-object="unit-aircraft" data-state="rtb" data-coalition="blue" data-is-in-hotgroup data-is-selected>
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-state"></div>
+                                <div class="unit-vvi" style="height: 50px; transform:rotate(315deg);"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-icon"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                                <div class="unit-summary">
+                                    <div class="unit-callsign">Springfield 3-1 | Longname</div>
+                                    <div class="unit-heading">260</div>
+                                    <div class="unit-altitude">31</div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="example">
+                            
+                            <div data-object="unit-aircraft" data-state="rtb" data-pilot="ai" data-coalition="red" data-is-in-hotgroup>
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-state"></div>
+                                <div class="unit-vvi" style="height: 50px; transform:rotate(270deg);"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-icon"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                                <div class="unit-summary">
+                                    <div class="unit-callsign">Springfield 3-1 | Longname</div>
+                                    <div class="unit-heading">260</div>
+                                    <div class="unit-altitude">31</div>
+                                </div>
+                            </div>
+
+                        </div>
+                        
+
+                        <div class="example">
+                            
+                            <div data-object="unit-aircraft" data-state="hold" data-pilot="ai">
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-state"></div>
+                                <div class="unit-vvi" style="height: 50px; transform:rotate(135deg);"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-icon"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                                <div class="unit-summary">
+                                    <div class="unit-callsign">Springfield 3-1 | Longname</div>
+                                    <div class="unit-heading">260</div>
+                                    <div class="unit-altitude">31</div>
+                                </div>
+                            </div>
+
+                        </div>
+                        
+
+                        <div class="example">
+                            
+                            <div data-object="unit-aircraft" data-state="hold" data-coalition="blue" data-is-in-hotgroup data-is-selected>
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-state"></div>
+                                <div class="unit-vvi" style="height: 50px; transform:rotate(315deg);"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-icon"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                                <div class="unit-summary">
+                                    <div class="unit-callsign">Springfield 3-1 | Longname</div>
+                                    <div class="unit-heading">260</div>
+                                    <div class="unit-altitude">31</div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="example">
+                            
+                            <div data-object="unit-aircraft" data-state="hold" data-pilot="ai" data-coalition="red" data-is-in-hotgroup>
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-state"></div>
+                                <div class="unit-vvi" style="height: 50px; transform:rotate(280deg);"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-icon"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                                <div class="unit-summary">
+                                    <div class="unit-callsign">Springfield 3-1 | Longname</div>
+                                    <div class="unit-heading">260</div>
+                                    <div class="unit-altitude">31</div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+                <div class="content">
+
+                    <div class="content-header">Dead</div>
+                    <div class="content-body">
+
+                        <div class="example">
+                            
+                            <div data-object="unit-aircraft" data-state="hold" data-pilot="ai" data-is-dead>
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-state"></div>
+                                <div class="unit-vvi" style="height: 50px; transform:rotate(135deg);"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-icon"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                                <div class="unit-summary">
+                                    <div class="unit-callsign">Springfield 3-1 | Longname</div>
+                                    <div class="unit-heading">260</div>
+                                    <div class="unit-altitude">31</div>
+                                </div>
+                            </div>
+
+                        </div>
+                        
+
+                        <div class="example">
+                            
+                            <div data-object="unit-aircraft" data-state="hold" data-coalition="blue" data-is-in-hotgroup data-is-selected data-is-dead>
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-state"></div>
+                                <div class="unit-vvi" style="height: 50px; transform:rotate(315deg);"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-icon"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                                <div class="unit-summary">
+                                    <div class="unit-callsign">Springfield 3-1 | Longname</div>
+                                    <div class="unit-heading">260</div>
+                                    <div class="unit-altitude">31</div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="example">
+                            
+                            <div data-object="unit-aircraft" data-state="hold" data-pilot="ai" data-coalition="red"  data-is-dead>
+                                <div class="unit-selected-spotlight"></div>
+                                <div class="unit-state"></div>
+                                <div class="unit-vvi" style="height: 50px; transform:rotate(280deg);"></div>
+                                <div class="unit-hotgroup">
+                                    <div class="unit-hotgroup-id">4</div>
+                                </div>
+                                <div class="unit-icon"></div>
+                                <div class="unit-short-label">18</div>
+                                <div class="unit-fuel">
+                                    <div class="unit-fuel-level" style="width:100%;"></div>
+                                </div>
+                                <div class="unit-ammo">
+                                    <div class="unit-ammo-fox-1"></div>
+                                    <div class="unit-ammo-fox-2"></div>
+                                    <div class="unit-ammo-fox-3"></div>
+                                    <div class="unit-ammo-other"></div>
+                                </div>
+                                <div class="unit-summary">
+                                    <div class="unit-callsign">Springfield 3-1 | Longname</div>
+                                    <div class="unit-heading">260</div>
+                                    <div class="unit-altitude">31</div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </section>
+
+            <section>
+
+                <div class="content">
+
+                    <div class="content-header">Missile</div>
+    
+                    <div class="content-body">
+
+                        <div class="example">
+
+                            <div data-object="unit-missile">
+                                <div class="unit-icon"></div>
+                            </div>
+
+                        </div>
+                            
+
+                        <div class="example">
+
+                            <div data-object="unit-missile" data-coalition="blue">
+                                <div class="unit-icon" style="transform: rotate( 90deg );"></div>
+                            </div>
+
+                        </div>
+
+                        <div class="example">
+
+                            <div data-object="unit-missile" data-coalition="red">
+                                <div class="unit-icon" style="transform: rotate( 225deg );"></div>
+                            </div>
+
+                        </div>
+                    
+                    </div>
+
+                </div>
+
+            </section>
+
+            <section>
+
+                <div class="content">
+
+                    <div class="content-header">Plain panel</div>
+    
+                    <div class="content-body">
+
+                        <div class="example">
+    
+                            <div class="ol-panel">
+                                Disconnected
+                            </div>
+
+                        </div>
+    
+                    </div>
+    
+                </div>
+    
+                <div class="content">
+    
+                    <div class="content-header">Panel list</div>
+    
+                    <div class="content-body">
+
+                        <div class="example">
+
+                            <div class="caption">Basic list</div>
+        
+                            <div class="ol-panel">
+                                <div class="ol-panel-list">
+                                    <div class="list-item">List item 1</div>
+                                    <div class="list-item">List item 2</div>
+                                    <div class="list-item">List item 3</div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="example">
+
+                            <div class="caption">List with .highlight-primary</div>
+        
+                            <div class="ol-panel">
+                                <div class="ol-panel-list">
+                                    <div class="list-item highlight-primary">List item with highlight-primary</div>
+                                    <div class="list-item highlight-bluefor">List item with highlight-bluefor</div>
+                                    <div class="list-item highlight-redfor">List item with highlight-redfor</div>
+                                    <div class="list-item highlight-neutral">List item with highlight-neutral</div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="example">
+                            
+                            <div class="caption">Sortable list</div>
+        
+                            <div class="ol-panel">
+                                <div class="ol-panel-list sortable">
+                                    <div class="sortable-item">
+                                        <div class="handle"><img src="images/buttons/reorder.svg" /></div>
+                                        <div class="list-item">List item 1</div>
+                                    </div>
+                                    <div class="sortable-item">
+                                        <div class="handle"><img src="images/buttons/reorder.svg" /></div>
+                                        <div class="list-item">List item 2</div>
+                                    </div>
+                                    <div class="sortable-item">
+                                        <div class="handle"><img src="images/buttons/reorder.svg" /></div>
+                                        <div class="list-item">List item 3</div>
+                                    </div>
+                                </div>
+                                <!-- JavaScript: new Sortable( element:HTMLElement, [ options:object ]) -->
+                            </div>
+
+                        </div>
+    
+    
+    
+                    </div>
+    
+                </div>
+            
+                <div class="content">
+    
+                    <div class="content-header">Panel board</div>
+    
+                    <div class="content-body">
+
+                        <div class="example">
+
+                            <div class="ol-panel">
+                                <div class="ol-panel-board">
+                                    <div class="panel-section">
+                                        <h3>Unit Callsign</h3>
+                                        <div class="pill highlight-primary">Airframe</div>
+                                        <div class="pill highlight-neutral">Group</div>
+                                    </div>
+                                    <div class="panel-section">
+                                        <h4>Flight data</h4>
+                                    </div>
+                                    <div class="panel-section">
+                                        <h4>Loadout</h4>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+    
+    
+                    </div>
+    
+                </div>
+            
+                <div class="content">
+    
+                    <div class="content-header">Button group</div>
+    
+                    <div class="content-body">
+
+                        <div class="example">
+
+                            <div class="ol-panel">
+                                <div class="ol-button-group">
+                                    <button>A</button>
+                                    <button>B</button>
+                                    <button>C</button>
+                                </div>
+                            </div>
+
+                        </div>
+    
+    
+                    </div>
+    
+                </div>
+
+
+                <div class="content">
+                    <div class="content-header">ol select</div>
+                    <div class="content-body">
+                        <div class="example">
+
+                            <div class="ol-select ol-select-image">
+                                <div class="ol-select-value icon">
+                                    <img src="/images/icon.png" class="main-logo" />
+                                </div>  
+                                <div class="ol-select-options">
+                                    <div>
+                                        <button>Option 1</button>
+                                    </div>
+                                    <div>
+                                        <hr />
+                                    </div>
+                                    <div>
+                                        <button>Option 2</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="example">
+
+                            <div class="ol-select">
+                                <div class="ol-select-value">
+                                    The selected value goes here
+                                </div>  
+                                <div class="ol-select-options">
+                                    <div>
+                                        <button>Option 1</button>
+                                    </div>
+                                    <div>
+                                        <button>Option 2</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="example">
+
+                            <div class="ol-select" data-position="top">
+                                <div class="ol-select-value">
+                                    Options go up
+                                </div>  
+                                <div class="ol-select-options">
+                                    <div>
+                                        <button>Option 1</button>
+                                    </div>
+                                    <div>
+                                        <button>Option 2</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="content">
+                    <div class="content-header">Airfield menu</div>
+                    <div class="content-body">
+                        <div class="example">
+
+                            <div id="airbase-contextmenu" class="ol-panel" style="position:relative;">
+                                <h3 id="airbase-name">Al Alhambra</h3>
+                                <dl id="airbase-properties" class="ol-data-grid">
+                                    <dt>Runway 1</dt>
+                                    <dd>31 / 13</dd>
+                                    <dt>Runway 2</dt>
+                                    <dd>27 / 09</dd>
+                                    <dt>TCN</dt>
+                                    <dd>19X</dd>
+                                    <dt>ILS</dt>
+                                    <dd>-</dd>
+                                </dl>
+                                <hr />
+                                <h4>Parking available:</h4> 
+                                <dl id="airbase-parking" class="ol-data-grid">
+                                    <dt>Shelters</dt>
+                                    <dd>2</dd>
+                                    <dt>Open air</dt>
+                                    <dd>5</dd>
+                                </dl>
+                                <button id="spawn-airbase-aircraft-button" data-active-coalition="red" title="Spawn aircraft" data-on-click="contextMenuSpawnAirbase" class="deploy-unit-button">Spawn</button>
+                                <button id="land-here-button" title="Land here" data-on-click="contextMenuLandAirbase" class="hide">Land here</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="content">
+                    <div class="content-header">Airfield menu</div>
+                    <div class="content-body">
+                        <div class="example">
+
+                            <div id="unit-info-panel" class="ol-panel" style="position:relative;">
+
+                                <div class="ol-panel-board">
+                            
+                                    <div id="general" class="panel-section">
+                                        <h3 class="unit-name">Olympus 1-1</h3>
+                                        <div class="ol-group">
+                                            <div class="unit-label">Name</div>
+                                            <div class="unit-control">AI Controlled</div>
+                                        </div>
+                                        <div id="current-task" class="pill highlight-coalition" data-coalition="blue" data-current-task="Awaiting tasking"></div>
+                                    </div>
+                            
+                                    <div id="loadout-container" class="panel-section">
+                            
+                                        <div id="loadout">
+                                            <div id="loadout-silhouette" style="--loadout-background-image:url('/images/units/f-15.png');"></div>
+                                            <div id="loadout-items" data-empty-message="Empty loadout">
+                                                Empty loadout
+                                            </div>
+                                        </div>
+                                        
+
+                                        <div id="fuel-percentage" data-percentage="45"></div>
+                                        <div id="fuel-display">
+                                            <div id="fuel-bar" class="highlight-coalition" data-coalition="blue" style="width:0%;"></div>
+                                        </div>
+                            
+                                    </div>
+                            
+                                </div>
+                            
+                            </div>
+
+                        </div>
+
+                        <div class="example">
+
+                            <div id="unit-info-panel" class="ol-panel" style="position:relative;">
+
+                                <div class="ol-panel-board">
+                            
+                                    <div id="general" class="panel-section">
+                                        <h3 class="unit-name">Olympus 1-1</h3>
+                                        <div class="ol-group">
+                                            <div class="unit-label">Name</div>
+                                            <div class="unit-control">AI Controlled</div>
+                                        </div>
+                                        <div id="current-task" class="pill highlight-coalition" data-coalition="blue" data-current-task="Awaiting tasking"></div>
+                                    </div>
+                            
+                                    <div id="loadout-container" class="panel-section">
+                            
+                                        <div id="loadout">
+                                            <div id="loadout-silhouette" style="--loadout-background-image:url('/images/units/f-15.png');"></div>
+                                            <div id="loadout-items">
+                                                <div data-qty="1150" data-item="30mm AP"></div>
+                                                <div data-qty="2" data-item="AIM-9M"></div>
+                                                <div data-qty="6" data-item="Mk-82"></div>
+                                            </div>
+                                        </div>
+                                        
+
+                                        <div id="fuel-percentage" data-percentage="45"></div>
+                                        <div id="fuel-display">
+                                            <div id="fuel-bar" class="highlight-coalition" data-coalition="blue" style="width:0%;"></div>
+                                        </div>
+                            
+                                    </div>
+                            
+                                </div>
+                            
+                            </div>
+
+                        </div>
+
+                        <div class="example">
+
+                            <div id="unit-info-panel" class="ol-panel" style="position:relative;">
+
+                                <div class="ol-panel-board">
+                            
+                                    <div id="loadout-container" class="panel-section">
+                            
+                                        <div id="loadout">
+                                            <div id="loadout-silhouette" style="--loadout-background-image:url('/images/units/f-15.png');"></div>
+                                            <div id="loadout-items">
+                                                <div data-qty="1150" data-item="30mm AP"></div>
+                                                <div data-qty="2" data-item="AIM-9M with a really long name for no reason"></div>
+                                                <div data-qty="6" data-item="Mk-82"></div>
+                                            </div>
+                                        </div>
+                                        
+
+                                        <div id="fuel-percentage" data-percentage="45"></div>
+                                        <div id="fuel-display">
+                                            <div id="fuel-bar" class="highlight-coalition" data-coalition="blue" style="width:0%;"></div>
+                                        </div>
+                            
+                                    </div>
+                            
+                                </div>
+                            
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+            <section>
+
+                <div class="content">
+
+                    <div class="content-header">Icons</div>
+                    <div class="content-body">
+
+                        <div class="example">
+                            <div class="caption">Actions</div>
+                            <div class="icon-list">
+                                <div>
+                                    <img src="/resources/theme/images/icons_actions_gas_dark.svg" />
+                                    <span>icons_actions_gas</span>
+                                </div>
+                                <div>
+                                    <img src="/resources/theme/images/icons_actions_nothing_dark.svg" />
+                                    <span>icons_actions_nothing</span>
+                                </div>
+                                <div>
+                                    <img src="/resources/theme/images/icons_actions_rtb_dark.svg" />
+                                    <span>icons_actions_rtb</span>
+                                </div>
+                                <div>
+                                    <img src="/resources/theme/images/icons_actions_search_dark.svg" />
+                                    <span>icons_actions_search</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="example">
+                            <div class="caption">RoE</div>
+                            <div class="icon-list">
+                                <div>
+                                    <img src="/resources/theme/images/icons_roe_free_dark.svg" />
+                                    <span>icons_roe_free</span>
+                                </div>
+                                <div>
+                                    <img src="/resources/theme/images/icons_roe_return_dark.svg" />
+                                    <span>icons_roe_return</span>
+                                </div>
+                                <div>
+                                    <img src="/resources/theme/images/icons_roe_stop_dark.svg" />
+                                    <span>icons_roe_stop</span>
+                                </div>
+                                <div>
+                                    <img src="/resources/theme/images/icons_roe_target_dark.svg" />
+                                    <span>icons_roe_target</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="example">
+                            <div class="caption">Threat</div>
+                            <div class="icon-list">
+                                <div>
+                                    <img src="/resources/theme/images/icons_threat_protect_dark.svg" />
+                                    <span>icons_threat_protect</span>
+                                </div>
+                                <div>
+                                    <img src="/resources/theme/images/icons_threat_retreat_dark.svg" />
+                                    <span>icons_threat_retreat</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+        
+                </div>
+
+            </section>
+
+        </div>
+
+        <script>
+
+            function showSection() {
+                
+                document.querySelectorAll( "section" ).forEach( section => { section.style.display="none"; } );
+
+                const section = location.hash;
+
+                if ( section ) {
+                    const index = section.split( "-" )[ 1 ];
+                    document.querySelector( "section:nth-of-type(" + index + ")" ).style.display = "flex";
+                }
+
+            }
+
+            document.querySelectorAll( ".section-header" ).forEach( ( sh, i ) => {
+                sh.addEventListener( "click", ev => {
+                    ev.preventDefault();
+                    document.location.hash = "#section-" + ( i + 1 );
+            showSection();
+                    
+                });
+            });
+
+            showSection();
+
+            document.querySelectorAll( `[data-object|="unit"]` ).forEach( unit => {
+                unit.addEventListener( "click", ev => {
+                    unit.toggleAttribute( "data-is-selected" );
+                });
+            });
+
+
+            document.querySelectorAll( ".ol-select" ).forEach( select => {
+
+                select.addEventListener( "click", ev => {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    select.classList.toggle( "is-open" );
+                });
+
+                select.addEventListener( "mouseleave", ev => {
+                    select.classList.remove( "is-open" );
+                });
+                
+            });
+
+
+            const $roe = document.getElementById( "roe-buttons-container" );
+            [ "Free", "Designated free", "Designated", "Return", "Hold" ].forEach( option => {
+                let $btn = document.createElement( "button" );
+                $btn.title = option;
+                $roe.appendChild( $btn );
+            });
+
+            const $threat = document.getElementById( "reaction-to-threat-buttons-container" );
+            [ "None", "Passive", "Evade", "Escape", "Abort" ].forEach( option => {
+                let $btn = document.createElement( "button" );
+                $btn.title = option;
+                $threat.appendChild( $btn );
+            });
+
+        </script>
+
+    </body>
+</html>
