@@ -145,13 +145,13 @@ export class UnitsManager {
         this.getUnitsByHotgroup(hotgroup).forEach((unit: Unit) => unit.setSelected(true))
     }
 
-    getSelectedUnitsType() {
+    getSelectedUnitsTypes() {
         if (this.getSelectedUnits().length == 0)
-            return undefined;
+            return [];
         return this.getSelectedUnits().map((unit: Unit) => {
             return unit.constructor.name
-        })?.reduce((a: any, b: any) => {
-            return a == b ? a : undefined
+        })?.filter((value: any, index: any, array: string[]) => {
+            return array.indexOf(value) === index;
         });
     };
 

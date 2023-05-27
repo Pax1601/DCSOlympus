@@ -50,6 +50,7 @@ button {
     cursor: pointer;
     font-weight: var(--font-weight-bolder);
     padding: 6px;
+    column-gap: 5px;
 }
 
 button:hover {
@@ -59,6 +60,13 @@ button:hover {
 button[disabled="disabled"] {
     color: var(--highlight-color);
     cursor: not-allowed;
+}
+
+button>svg:first-child,
+button>img:first-child {
+    position: relative;
+    aspect-ratio: initial;
+    height: 100%;
 }
 
 form {
@@ -121,10 +129,10 @@ form>div {
 }
 
 .ol-panel hr {
-    background-color: var(--secondary-light-grey);
+    background-color: var(--secondary-transparent-white);
     border: none;
     height: 1px;
-    margin: 20px 0;
+    margin: 10px 0;
     width: 100%;
 }
 
@@ -356,6 +364,12 @@ h4 {
 button.ol-button-warning {
     border: 1px solid var(--primary-red);
     color: var(--primary-red);
+    font-weight: bold;
+}
+
+button.ol-button-warning>svg:first-child {
+    stroke: var(--primary-red);
+    fill: var(--primary-red);
 }
 
 nav.ol-panel {
@@ -482,16 +496,16 @@ nav.ol-panel> :last-child {
     flex-direction: column;
 }
 
-.slider-container {
+.ol-slider-container {
     width: 100%;
 }
 
-.slider-container:not(:first-of-type) {
+.ol-slider-container:not(:first-of-type) {
     margin-top: 10px;
     width: 100%;
 }
 
-.slider {
+.ol-slider {
     -webkit-appearance: none;
     appearance: none;
     background: #d3d3d3;
@@ -505,34 +519,51 @@ nav.ol-panel> :last-child {
     width: 100%;
 }
 
-.slider:hover {
+.ol-slider:hover {
     opacity: 1;
 }
 
-.slider::-webkit-slider-thumb {
+.ol-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    background: gray;
+    background: var(--background-grey);
     border-radius: 999px;
     cursor: pointer;
-    height: 20px;
-    width: 20px;
+    height: 25px;
+    width: 25px;
 }
 
-.active .slider::-webkit-slider-thumb {
-    background: #5ca7ff;
+.active .ol-slider::-webkit-slider-thumb {
+    background: radial-gradient(circle at center, var(--accent-light-blue), var(--accent-light-blue) 40%, color-mix(in srgb, var(--accent-light-blue), transparent 66%) 50%);
 }
 
-.slider::-moz-range-thumb {
-    background: gray;
+.ol-slider::-moz-range-thumb {
+    -moz-appearance: none;
+    border: 0px solid transparent;
+    background: var(--background-grey);
     border-radius: 999px;
     cursor: pointer;
-    height: 20px;
-    width: 20px;
+    height: 25px;
+    width: 25px;
 }
 
-.active .slider::-moz-range-thumb {
-    background: #5ca7ff;
+.active .ol-slider::-moz-range-thumb {
+    -moz-appearance: none;
+    background: radial-gradient(circle at center, var(--accent-light-blue), var(--accent-light-blue) 40%, color-mix(in srgb, var(--accent-light-blue), transparent 66%) 50%);
+}
+
+.ol-slider-min-max {
+    display: flex;
+    justify-content: space-between;
+    color: var(--secondary-light-grey);
+}
+
+.ol-slider-min-max::before {
+    content: attr(data-min-value);
+}
+
+.ol-slider-min-max::after {
+    content: attr(data-max-value);
 }
 
 .main-logo {
@@ -848,12 +879,8 @@ dl.ol-data-grid {
     row-gap: 4px;
 }
 
-dl.ol-data-grid dt {
-    width: 60%;
-}
-
 dl.ol-data-grid dd {
-    width: 40%;
+    width: fit-content;
 }
 
 dl.ol-data-grid dt.icon {
@@ -1056,25 +1083,26 @@ input[type=number]::-webkit-outer-spin-button {
     width: 24px;
 }
 
-.toggle {
+.ol-switch {
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.toggle-input {
+.ol-switch-input {
     display: none;
 }
 
-.toggle-fill {
+.ol-switch-fill {
     border-radius: 999px;
-    height: 20px;
     position: relative;
     transition: background-color 0.2s;
+    height: var(--height);
+	width: var(--width);
 }
 
-.toggle-fill::after {
+.ol-switch-fill::after {
     aspect-ratio : 1 / 1;
     background-clip: content-box;
     background-color: #ffffff;
@@ -1082,7 +1110,29 @@ input[type=number]::-webkit-outer-spin-button {
     box-sizing: border-box;
     content: "";
     height: 100%;
-    padding: 2px;
+    padding: 3px;
     position: absolute;
     transition: transform 0.2s;
+    top: 0px;
+}
+
+.ol-switch-fill::before {
+	align-items: center;
+	box-sizing: border-box;
+	color: white;
+	display: flex;
+	font-size: 11px;
+	height: 100%;
+	padding: 0px 7px;
+	position: absolute;
+	transition: transform 0.2s;
+}
+
+.ol-switch[data-value="false"]>.ol-switch-fill::before {
+    transform: translateX(calc(var(--width) - 100%));
+	
+}
+
+.ol-switch[data-value="true"]>.ol-switch-fill::after {
+	transform: translateX(calc(var(--width) - var(--height)));
 }

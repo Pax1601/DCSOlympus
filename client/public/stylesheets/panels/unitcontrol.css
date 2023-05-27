@@ -2,6 +2,12 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	display: block !important;
 }
 
+#unit-control-panel {
+	display: flex;
+	flex-direction: column;
+	row-gap: 10px;
+}
+
 #unit-control-panel h3 {
 	margin-bottom: 8px;
 }
@@ -24,42 +30,27 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	font-size: 11px;
 	height: 32px;
 	margin-right: 5px;
-	padding: 8px 0;
 	position: relative;
 	width: calc(100% - 5px);
+	justify-content: space-between;
 }
 
-#unit-control-panel #selected-units-container button::before {
-	background-color: var(--primary-neutral);
+#unit-control-panel #selected-units-container button::after {
 	border-radius: 999px;
-	content: attr(data-short-label);
+	color: var(--secondary-semitransparent-white);
+	content: attr(data-label);
 	font-size: 10px;
-	margin: 2px 4px;
-	max-width: 30px;
-	min-width: 20px;
-	overflow: hidden;
 	padding: 4px 6px;
-	text-overflow: ellipsis;
-	white-space: nowrap;
 	width: fit-content;
+	white-space: nowrap;
 }
 
-#unit-control-panel #selected-units-container button:hover::before {
-	background-color: black;
+#unit-control-panel #selected-units-container button:hover::after {
 	max-width: 100%;
 	text-overflow: unset;
 }
 
-#unit-control-panel #selected-units-container button[data-coalition="blue"]::before {
-	background-color: var(--accent-light-blue);
-}
-
-#unit-control-panel #selected-units-container button[data-coalition="red"]::before {
-	background-color: var(--accent-light-red);
-	color: var(--secondary-red-outline)
-}
-
-#unit-control-panel #selected-units-container button::after {
+#unit-control-panel #selected-units-container button::before {
 	border-radius: var(--border-radius-sm);
 	content: attr(data-callsign);
 	display: block;
@@ -76,38 +67,8 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	margin-bottom: 8px;
 }
 
-#unit-control-panel #threat,
-#unit-control-panel #roe,
-#unit-control-panel #emissions-countermeasures {
-	margin-top: 12px;
-}
-
 #advanced-settings-dialog {
 	width: 400px;
-}
-
-#advanced-settings-dialog:not([data-show-settings]) #general-settings {
-	display: none;
-}
-
-#advanced-settings-dialog:not([data-show-tasking]) #tasking {
-	display: none;
-}
-
-#advanced-settings-dialog:not([data-show-tanker]) #tanker-checkbox {
-	display: none;
-}
-
-#advanced-settings-dialog:not([data-show-AWACS]) #AWACS-checkbox {
-	display: none;
-}
-
-#advanced-settings-dialog:not([data-show-TACAN]) #TACAN-options {
-	display: none;
-}
-
-#advanced-settings-dialog:not([data-show-radio]) #radio-options {
-	display: none;
 }
 
 #advanced-settings-dialog>.ol-dialog-content {
@@ -149,60 +110,155 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	width: 49%;
 }
 
-#altitude-type-switch>.toggle-fill {
-	background-color: var(--background-offwhite);
-	height: 15px;
-	width: 40px;
+#flight-data .ol-slider {
+	margin: 20px 0px;
 }
 
-#altitude-type-switch>.toggle-fill::before {
-	display: flex;
-	position: absolute;
-	box-sizing: border-box;
-	align-items: center;
-	padding: 0px 5px;
-	color: var(--background-steel);
-	font-weight: bold;
-	font-size: 10px;
-	transition: transform 0.2s;
-	height: 15px;
+.ol-slider-container dd {
+	column-gap: 5px;
 }
 
-#altitude-type-switch[data-altitude-type="agl"]>.toggle-fill::before {
+#flight-data .ol-switch {
+	height: 20px;
+	width: 50px;
+}
+
+#flight-data .ol-switch-fill {
+	background-color: var(--accent-light-blue);
+}
+
+#flight-data .ol-switch-fill::after {
+	background-color: white;
+}
+
+#altitude-type-switch[data-value="true"]>.ol-switch-fill::before {
 	content: "AGL";
 }
 
-#altitude-type-switch[data-altitude-type="asl"]>.toggle-fill::before {
+#altitude-type-switch[data-value="false"]>.ol-switch-fill::before {
 	content: "ASL";
-	transform: translateX(calc(40px - 28px));
 }
 
-#altitude-type-switch>.toggle-fill::after {
-	position: absolute;
-	display: block;
-	background-color: var(--background-steel);
-	width: 15px;
-	top: 0px;
+#airspeed-type-switch[data-value="true"]>.ol-switch-fill::before {
+	content: "GS";
 }
 
-#altitude-type-switch[data-altitude-type="asl"]>.toggle-fill::after {
-    transform: translateX(0);
+#airspeed-type-switch[data-value="false"]>.ol-switch-fill::before {
+	content: "CAS";
 }
 
-#altitude-type-switch[data-altitude-type="agl"]>.toggle-fill::after {
-    transform: translateX(calc(40px - 15px));
+#unit-control-panel .ol-slider-value {
+	color: var(--accent-light-blue);
+	cursor: pointer;
+	font-size: 14px;
+	font-weight: bold;
 }
 
-#altitude-slider dt {
-	width: 40%;
+#ai-on-off {
+	align-items: center;
+	display: grid;
+	grid-template-columns: 1.35fr 0.65fr ;
 }
 
-#altitude-slider dd {
+#ai-on-off>*:nth-child(2) {
+	justify-self: end;
+}
+
+#ai-on-off>*:nth-child(3) {
+	color: var(--secondary-semitransparent-white);
+}
+
+#ai-on-off h4 {
+	margin: 0px;
+}
+
+#on-off-switch {
+	width: 60px;
+	height: 25px;
+}
+
+#on-off-switch>.ol-switch-fill {
+	background-color: var(--accent-light-blue);
+}
+
+#on-off-switch>.ol-switch-fill::after {
+	background-color: white;
+}
+
+#on-off-switch[data-value="true"]>.ol-switch-fill::before {
+	content: "ON";
+}
+
+#on-off-switch[data-value="false"]>.ol-switch-fill::before {
+	content: "OFF";
+}
+
+#advanced-settings-div {
+	display: flex;
 	column-gap: 5px;
-	width: 60%;
 }
 
-#altitude-slider dd>*:nth-child(2) {
-	width: 40px;
-	text-align: right;
+#advanced-settings-div>*:nth-child(2) {
+	margin-left: auto;
+}
+
+#advanced-settings-div button {
+	height: 40px;
+}
+
+/* Element visibility control */
+#unit-control-panel:not([data-show-categories-tooltip]) #categories-tooltip {
+	display: none;
+}
+
+#unit-control-panel:not([data-show-airspeed-slider]) #airspeed-slider {
+	display: none;
+}
+
+#unit-control-panel:not([data-show-altitude-slider]) #altitude-slider {
+	display: none;
+}
+
+#unit-control-panel:not([data-show-roe]) #roe {
+	display: none;
+}
+
+#unit-control-panel:not([data-show-threat]) #threat {
+	display: none;
+}
+
+#unit-control-panel:not([data-show-emissions-countermeasures]) #emissions-countermeasures {
+	display: none;
+}
+
+#unit-control-panel:not([data-show-on-off]) #ai-on-off {
+	display: none;
+}
+
+#unit-control-panel:not([data-show-advanced-settings-button]) #advanced-settings-button {
+	display: none;
+}
+
+#advanced-settings-dialog:not([data-show-settings]) #general-settings {
+	display: none;
+}
+
+#advanced-settings-dialog:not([data-show-tasking]) #tasking {
+	display: none;
+}
+
+#advanced-settings-dialog:not([data-show-tanker]) #tanker-checkbox {
+	display: none;
+}
+
+#advanced-settings-dialog:not([data-show-AWACS]) #AWACS-checkbox {
+	display: none;
+}
+
+#advanced-settings-dialog:not([data-show-TACAN]) #TACAN-options {
+	display: none;
+}
+
+#advanced-settings-dialog:not([data-show-radio]) #radio-options {
+	display: none;
 }

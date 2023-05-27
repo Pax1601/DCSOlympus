@@ -560,7 +560,7 @@ export class Unit extends CustomMarker {
 
         if (getUnitsManager().getSelectedUnits().length > 0 && !(getUnitsManager().getSelectedUnits().length == 1 && (getUnitsManager().getSelectedUnits().includes(this)))) {
             options["attack"] = {text: "Attack", tooltip: "Attack the unit using A/A or A/G weapons"};
-            if (getUnitsManager().getSelectedUnitsType() === "Aircraft")
+            if (getUnitsManager().getSelectedUnitsTypes().length == 1 && getUnitsManager().getSelectedUnitsTypes()[0] === "Aircraft")
                 options["follow"] = {text: "Follow", tooltip: "Follow the unit at a user defined distance and position"};;
         }
         else if ((getUnitsManager().getSelectedUnits().length > 0 && (getUnitsManager().getSelectedUnits().includes(this))) || getUnitsManager().getSelectedUnits().length == 0) {

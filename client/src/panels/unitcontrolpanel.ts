@@ -7,6 +7,7 @@ import { groundUnitsDatabase } from "../units/groundunitsdatabase";
 import { Aircraft, GroundUnit, Unit } from "../units/unit";
 import { UnitDatabase } from "../units/unitdatabase";
 import { Panel } from "./panel";
+import { Switch } from "../controls/switch";
 
 const ROEs: string[] = ["Hold", "Return", "Designated", "Free"];
 const reactionsToThreat: string[] = ["None", "Manoeuvre", "Passive", "Evade"];
@@ -25,7 +26,10 @@ const altitudeIncrements: { [key: string]: number } = { Aircraft: 500, Helicopte
 
 export class UnitControlPanel extends Panel {
     #altitudeSlider: Slider;
+    #altitudeTypeSwitch: Switch;
     #airspeedSlider: Slider;
+    #airspeedTypeSwitch: Switch;
+    #onOffSwitch: Switch;
     #TACANXYDropdown: Dropdown;
     #radioDecimalsDropdown: Dropdown;
     #radioCallsignDropdown: Dropdown;
@@ -40,22 +44,15 @@ export class UnitControlPanel extends Panel {
         /* Unit control sliders */
         this.#altitudeSlider = new Slider("altitude-slider", 0, 100, "ft", (value: number) => {
             this.#expectedAltitude = value;
-            getUnitsManager().selectedUnitsSetAltitude(value * 0.3048)
+            getUnitsManager().selectedUnitsSetAltitude(value * 0.3048);
         });
+        this.#altitudeTypeSwitch = new Switch("altitude-type-switch");
 
         this.#airspeedSlider = new Slider("airspeed-slider", 0, 100, "kts", (value: number) => {
             this.#expectedSpeed = value;
-            getUnitsManager().selectedUnitsSetSpeed(value / 1.94384)
+            getUnitsManager().selectedUnitsSetSpeed(value / 1.94384);
         });
-
-        this.getElement()?.querySelector("#altitude-type-switch")?.addEventListener('click', (e) => this.#onToggleAltitudeTypeSwitch(e));
-
-        /* Advanced settings dropdowns */
-        this.#TACANXYDropdown = new Dropdown("TACAN-XY", () => {});
-        this.#TACANXYDropdown.setOptions(["X", "Y"]);
-        this.#radioDecimalsDropdown = new Dropdown("radio-decimals", () => {});
-        this.#radioDecimalsDropdown.setOptions([".000", ".250", ".500", ".750"]);
-        this.#radioCallsignDropdown = new Dropdown("radio-callsign", () => {});
+        this.#airspeedTypeSwitch = new Switch("airspeed-type-switch");
 
         /* Option buttons */
         this.#optionButtons["ROE"] = ROEs.map((option: string, index: number) => {
@@ -74,8 +71,20 @@ export class UnitControlPanel extends Panel {
         this.getElement().querySelector("#reaction-to-threat-buttons-container")?.append(...this.#optionButtons["reactionToThreat"]);
         this.getElement().querySelector("#emissions-countermeasures-buttons-container")?.append(...this.#optionButtons["emissionsCountermeasures"]);
 
+        /* On off switch */
+        this.#onOffSwitch = new Switch("on-off-switch");
+
+        /* Advanced settings dialog */
         this.#advancedSettingsDialog = <HTMLElement> document.querySelector("#advanced-settings-dialog");
 
+        /* Advanced settings dropdowns */
+        this.#TACANXYDropdown = new Dropdown("TACAN-XY", () => {});
+        this.#TACANXYDropdown.setOptions(["X", "Y"]);
+        this.#radioDecimalsDropdown = new Dropdown("radio-decimals", () => {});
+        this.#radioDecimalsDropdown.setOptions([".000", ".250", ".500", ".750"]);
+        this.#radioCallsignDropdown = new Dropdown("radio-callsign", () => {});
+
+        /* Events and timer */
         window.setInterval(() => {this.update();}, 25);
 
         document.addEventListener("unitsSelection", (e: CustomEvent<Unit[]>) => { this.show(); this.addButtons();});
@@ -112,7 +121,7 @@ export class UnitControlPanel extends Panel {
                 var button = document.createElement("button");
                 var callsign = unit.getBaseData().unitName || "";
 
-                button.setAttribute("data-short-label", database?.getByName(unit.getBaseData().name)?.shortLabel || unit.getBaseData().name);
+                button.setAttribute("data-label", unit.getBaseData().name);
                 button.setAttribute("data-callsign", callsign);
 
                 button.setAttribute("data-coalition", unit.getMissionData().coalition);
@@ -133,11 +142,53 @@ export class UnitControlPanel extends Panel {
 
     update() {
         if (this.getVisible()){
-            var units = getUnitsManager().getSelectedUnits();
-            this.getElement().querySelector("#advanced-settings-div")?.classList.toggle("hide", units.length != 1);
-            if (this.getElement() != null && units.length > 0) {
-                this.#showFlightControlSliders(units);
+            const element = this.getElement();
+            const units = getUnitsManager().getSelectedUnits();
+            const selectedUnitsTypes = getUnitsManager().getSelectedUnitsTypes();
+                
+            if (element != null && units.length > 0) {
+                /* Toggle visibility of control elements */
+                element.toggleAttribute("data-show-categories-tooltip", selectedUnitsTypes.length > 1);
+                element.toggleAttribute("data-show-airspeed-slider", selectedUnitsTypes.length == 1);
+                element.toggleAttribute("data-show-altitude-slider", selectedUnitsTypes.length == 1 && (selectedUnitsTypes.includes("Aircraft") || selectedUnitsTypes.includes("Helicopter")));
+                element.toggleAttribute("data-show-roe", true);
+                element.toggleAttribute("data-show-threat", (selectedUnitsTypes.includes("Aircraft") || selectedUnitsTypes.includes("Helicopter")) && !(selectedUnitsTypes.includes("GroundUnit") || selectedUnitsTypes.includes("NavyUnit")));
+                element.toggleAttribute("data-show-emissions-countermeasures", (selectedUnitsTypes.includes("Aircraft") || selectedUnitsTypes.includes("Helicopter")) && !(selectedUnitsTypes.includes("GroundUnit") || selectedUnitsTypes.includes("NavyUnit")));
+                element.toggleAttribute("data-show-on-off", (selectedUnitsTypes.includes("GroundUnit") || selectedUnitsTypes.includes("NavyUnit")) && !(selectedUnitsTypes.includes("Aircraft") || selectedUnitsTypes.includes("Helicopter")));
+                element.toggleAttribute("data-show-advanced-settings-button", units.length == 1);
+                
+                /* Flight controls */
+                var targetAltitude = getUnitsManager().getSelectedUnitsTargetAltitude();
+                var targetSpeed = getUnitsManager().getSelectedUnitsTargetSpeed();
 
+                if (selectedUnitsTypes.length == 1) {
+                    this.#airspeedSlider.setMinMax(minSpeedValues[selectedUnitsTypes[0]], maxSpeedValues[selectedUnitsTypes[0]]);
+                    this.#altitudeSlider.setMinMax(minAltitudeValues[selectedUnitsTypes[0]], maxAltitudeValues[selectedUnitsTypes[0]]);
+                    this.#airspeedSlider.setIncrement(speedIncrements[selectedUnitsTypes[0]]);
+                    this.#altitudeSlider.setIncrement(altitudeIncrements[selectedUnitsTypes[0]]);
+
+                    this.#airspeedSlider.setActive(targetSpeed != undefined);
+                    if (targetSpeed != undefined) {
+                        targetSpeed *= 1.94384;
+                        if (this.#updateCanSetSpeedSlider(targetSpeed)) {
+                            this.#airspeedSlider.setValue(targetSpeed);
+                        }
+                    }
+
+                    this.#altitudeSlider.setActive(targetAltitude != undefined);
+                    if (targetAltitude != undefined) {
+                        targetAltitude /= 0.3048;
+                        if (this.#updateCanSetAltitudeSlider(targetAltitude)) {
+                            this.#altitudeSlider.setValue(targetAltitude);
+                        }
+                    }
+                }
+                else {
+                    this.#airspeedSlider.setActive(false);
+                    this.#altitudeSlider.setActive(false);
+                }
+
+                /* Option buttons */
                 this.#optionButtons["ROE"].forEach((button: HTMLButtonElement) => {
                     button.classList.toggle("selected", units.every((unit: Unit) => unit.getOptionsData().ROE === button.value))
                 });
@@ -168,54 +219,6 @@ export class UnitControlPanel extends Panel {
             return true;
         }
         return false;
-    }
-
-    #showFlightControlSliders(units: Unit[]) {
-        if (getUnitsManager().getSelectedUnitsType() !== undefined)
-            this.#airspeedSlider.show()
-        else
-            this.#airspeedSlider.hide();
-
-        if (getUnitsManager().getSelectedUnitsType() === "Aircraft" || getUnitsManager().getSelectedUnitsType() === "Helicopter")
-            this.#altitudeSlider.show()
-        else
-            this.#altitudeSlider.hide();
-
-        this.getElement().querySelector(`#categories-tooltip`)?.classList.toggle("hide", getUnitsManager().getSelectedUnitsType() !== undefined);
-
-        var unitsType = getUnitsManager().getSelectedUnitsType();
-        var targetAltitude = getUnitsManager().getSelectedUnitsTargetAltitude();
-        var targetSpeed = getUnitsManager().getSelectedUnitsTargetSpeed();
-
-        if (unitsType != undefined) {
-            if (["GroundUnit", "NavyUnit"].includes(unitsType))
-                this.#altitudeSlider.hide()
-
-            this.#airspeedSlider.setMinMax(minSpeedValues[unitsType], maxSpeedValues[unitsType]);
-            this.#altitudeSlider.setMinMax(minAltitudeValues[unitsType], maxAltitudeValues[unitsType]);
-            this.#airspeedSlider.setIncrement(speedIncrements[unitsType]);
-            this.#altitudeSlider.setIncrement(altitudeIncrements[unitsType]);
-
-            this.#airspeedSlider.setActive(targetSpeed != undefined);
-            if (targetSpeed != undefined) {
-                targetSpeed *= 1.94384;
-                if (this.#updateCanSetSpeedSlider(targetSpeed)) {
-                    this.#airspeedSlider.setValue(targetSpeed);
-                }
-            }
-
-            this.#altitudeSlider.setActive(targetAltitude != undefined);
-            if (targetAltitude != undefined) {
-                targetAltitude /= 0.3048;
-                if (this.#updateCanSetAltitudeSlider(targetAltitude)) {
-                    this.#altitudeSlider.setValue(targetAltitude);
-                }
-            }
-        }
-        else {
-            this.#airspeedSlider.setActive(false);
-            this.#altitudeSlider.setActive(false);
-        }
     }
 
     #updateAdvancedSettingsDialog(units: Unit[])
@@ -355,11 +358,5 @@ export class UnitControlPanel extends Panel {
         button.appendChild(img);
         button.addEventListener("click", callback);
         return button;
-    }
-
-    #onToggleAltitudeTypeSwitch(e: any) {
-        const altitudeType = this.getElement()?.querySelector("#altitude-type-switch")?.getAttribute("data-altitude-type");
-        var newAltitudeType = altitudeType == "asl"? "agl": "asl";
-        this.getElement()?.querySelector("#altitude-type-switch")?.setAttribute("data-altitude-type", newAltitudeType);
     }
 }
