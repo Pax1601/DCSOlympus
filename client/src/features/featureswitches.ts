@@ -1,7 +1,7 @@
 export interface FeatureSwitchInterface {
-    "defaultEnabled": boolean,  //  default on/off state (if allowed by masterSwitch)
+    "defaultEnabled": boolean,  //  default on/off state (if allowed by forceState)
+    "forceState": number,       //  -1 don't force; 0 force off; 1 force on
     "label": string,
-    "masterSwitch": boolean,    //  on/off regardless of user preference
     "name": string,
     "onEnabled"?: CallableFunction,
     "options"?: object,
@@ -13,8 +13,8 @@ class FeatureSwitch {
 
     //  From config param
     defaultEnabled;
+    forceState = -1;
     label;
-    masterSwitch;
     name;
     onEnabled;
     removeArtifactsIfDisabled = true;
@@ -26,10 +26,10 @@ class FeatureSwitch {
     constructor(config: FeatureSwitchInterface) {
 
         this.defaultEnabled = config.defaultEnabled;
-        this.label = config.label;
-        this.masterSwitch = config.masterSwitch;
-        this.name = config.name;
-        this.onEnabled = config.onEnabled;
+        this.forceState     = config.forceState;
+        this.label          = config.label;
+        this.name           = config.name;
+        this.onEnabled      = config.onEnabled;
 
         this.userPreference = this.getUserPreference();
 
@@ -47,8 +47,12 @@ class FeatureSwitch {
 
     isEnabled() {
 
-        if (!this.masterSwitch) {
+        if ( this.forceState === 0 ) {
             return false;
+        }
+
+        if ( this.forceState === 1 ) {
+            return true;
         }
 
         return this.userPreference;
@@ -62,37 +66,37 @@ export class FeatureSwitches {
 
         new FeatureSwitch({
             "defaultEnabled": false,
+            "forceState": -1,
             "label": "AIC",
-            "masterSwitch": true,
             "name": "aic"
         }),
 
         new FeatureSwitch({
             "defaultEnabled": false,
+            "forceState": -1,
             "label": "AI Formations",
-            "masterSwitch": true,
             "name": "ai-formations",
             "removeArtifactsIfDisabled": false
         }),
 
         new FeatureSwitch({
             "defaultEnabled": false,
+            "forceState": 1,
             "label": "ATC",
-            "masterSwitch": true,
             "name": "atc"
         }),
 
         new FeatureSwitch({
             "defaultEnabled": false,
+            "forceState": -1,
             "label": "Force show unit control panel",
-            "masterSwitch": true,
             "name": "forceShowUnitControlPanel"
         }),
 
         new FeatureSwitch({
             "defaultEnabled": true,
+            "forceState": -1,
             "label": "Show splash screen",
-            "masterSwitch": true,
             "name": "splashScreen"
         })
 

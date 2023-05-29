@@ -2,9 +2,10 @@ import { Dropdown } from "../controls/dropdown";
 import { zeroAppend } from "../other/utils";
 import { ATC } from "./atc";
 import { Unit } from "../units/unit";
-import { getUnitsManager } from "..";
+import { getMissionData, getUnitsManager } from "..";
 import Sortable from "sortablejs";
 import { FlightInterface } from "./atc";
+import { getConnected } from "../server/server";
 
 export interface StripBoardStripInterface {
     "id": string,
@@ -84,6 +85,10 @@ export abstract class ATCBoard {
 
 
         window.setInterval( () => {
+
+            if ( !getConnected() ) {
+                return;
+            }
             this.updateClock();
         }, 1000 );
 
@@ -410,6 +415,10 @@ export abstract class ATCBoard {
 
         this.#updateInterval = window.setInterval( () => {
 
+            if ( !getConnected() ) {
+                return;
+            }
+
             this.update();
 
         }, this.#updateIntervalDelay );
@@ -446,8 +455,12 @@ export abstract class ATCBoard {
 
     updateClock() {
 
-        const now = this.#atc.getMissionDateTime();
-        this.#clockElement.innerText = now.toLocaleTimeString();
+        const missionTime   = this.#atc.getMissionDateTime().getTime();
+        const timeDiff      = new Date().getTime() - getMissionData().getUpdateTime();
+
+        const nowDate = new Date( missionTime + timeDiff );
+        
+        this.#clockElement.innerText = nowDate.toLocaleTimeString();
 
     }
 
