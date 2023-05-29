@@ -5,10 +5,11 @@ var logger = require('morgan');
 var fs = require('fs');
 var basicAuth = require('express-basic-auth')
 
-var atcRouter   = require('./routes/api/atc');
-var indexRouter = require('./routes/index');
-var uikitRouter = require('./routes/uikit');
-var usersRouter = require('./routes/users');
+var atcRouter       = require('./routes/api/atc');
+var airbasesRouter  = require('./routes/api/airbases');
+var indexRouter     = require('./routes/index');
+var uikitRouter     = require('./routes/uikit');
+var usersRouter     = require('./routes/users');
 var resourcesRouter = require('./routes/resources');
 
 var app = express();
@@ -21,6 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/api/atc', atcRouter);
+app.use('/api/airbases', airbasesRouter);
 app.use('/users', usersRouter);
 app.use('/uikit', uikitRouter);
 app.use('/resources', resourcesRouter);
