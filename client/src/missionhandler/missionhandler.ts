@@ -9,6 +9,8 @@ export class MissionHandler
     #airbases       : {[name: string]: Airbase} = {};
     #theatre        : string = "";
 
+    #airbaseData : { [name: string]: object } = {};
+
     constructor()
     {
 
@@ -32,8 +34,29 @@ export class MissionHandler
             }
         }
 
+        
+        if ("mission" in data)
+        {
+            if (data.mission != null && data.mission.theatre != this.#theatre) 
+            {
+                this.#theatre = data.mission.theatre;
+                getMap().setTheatre(this.#theatre);
+
+                getInfoPopup().setText("Map set to " + this.#theatre);
+            }
+        }
+
+
         if ("airbases" in data)
         {
+/*
+            console.log( Object.values( data.airbases ).sort( ( a:any, b:any ) => {
+                const aVal = a.callsign.toLowerCase();
+                const bVal = b.callsign.toLowerCase();
+                
+                return aVal > bVal ? 1 : -1;
+            }) );
+//*/
             for (let idx in data.airbases)
             {
                 var airbase = data.airbases[idx]
@@ -52,17 +75,6 @@ export class MissionHandler
                 }
                 //this.#airbases[idx].setProperties(["Runway 1: 31L / 13R", "Runway 2: 31R / 13L", "TCN: 17X", "ILS: ---" ]);
                 //this.#airbases[idx].setParkings(["2x big", "5x small"]);
-            }
-        }
-
-        if ("mission" in data)
-        {
-            if (data.mission != null && data.mission.theatre != this.#theatre) 
-            {
-                this.#theatre = data.mission.theatre;
-                getMap().setTheatre(this.#theatre);
-
-                getInfoPopup().setText("Map set to " + this.#theatre);
             }
         }
     }
