@@ -39,7 +39,8 @@ export function ConvertDDToDMS(D: number, lng: boolean) {
         return dir + zeroPad(deg, 2) + "°" + zeroPad(min, 2) + "'" + zeroPad(sec, 2) + "." + zeroPad(dec, 2) + "\"";
 }
 
-export function dataPointMap( container:HTMLElement, data:any) {
+export function dataPointMap( container:HTMLElement, data:any ) {
+
     Object.keys( data ).forEach( ( key ) => {
         const val = "" + data[ key ];  //  Ensure a string
         container.querySelectorAll( `[data-point="${key}"]`).forEach( el => {
@@ -47,7 +48,7 @@ export function dataPointMap( container:HTMLElement, data:any) {
             if ( el instanceof HTMLInputElement ) {
                 el.value = val;
             } else if ( el instanceof HTMLElement ) {
-                el.innerText = val;
+                el.innerText = val || "-";
             }
         });
     });

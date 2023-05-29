@@ -4,7 +4,7 @@
         "ICAO": "URKA",
         "Elevation": "141",
         "TACAN": "",
-        "Runways:": {
+        "Runways": {
           "04": {
             "Mag Hdg": "034",
             "Length": "9000",
@@ -221,7 +221,7 @@
           }
         }
       },
-      "Nalchick": {
+      "Nalchik": {
         "ICAO": "URMN",
         "Elevation": "1411",
         "TACAN": "",

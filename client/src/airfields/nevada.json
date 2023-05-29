@@ -1,6 +1,7 @@
 {
   "airfields": {
-    "BeattyAirport": {
+    
+    "Beatty": {
       "ICAO": "KBTY",
       "Elevation": "3173",
       "TACAN": "94X",
@@ -17,7 +18,8 @@
         }
       }
     },
-    "BoulderCityAirport": {
+
+    "Boulder City": {
       "ICAO": "KBVU",
       "Elevation": "2205",
       "TACAN": "114X",
@@ -44,6 +46,7 @@
         }
       }
     },
+
     "Creech": {
       "ICAO": "KINS",
       "Elevation": "3126",
@@ -71,7 +74,8 @@
         }
       }
     },
-    "EchoBayAirport": {
+
+    "Echo Bay": {
       "ICAO": "0L9",
       "Elevation": "1549",
       "TACAN": "",
@@ -88,7 +92,8 @@
         }
       }
     },
-    "groom": {
+
+    "Groom Lake": {
       "ICAO": "KXTA",
       "Elevation": "4495",
       "TACAN": "18X",
@@ -115,7 +120,8 @@
         }
       }
     },
-    "HendersonExecutiveAirport": {
+
+    "Henderson Executive": {
       "ICAO": "KHND",
       "Elevation": "2493",
       "TACAN": "",
@@ -142,7 +148,8 @@
         }
       }
     },
-    "JeanAirport": {
+
+    "Jean": {
       "ICAO": "",
       "Elevation": "2825",
       "TACAN": "",
@@ -169,7 +176,8 @@
         }
       }
     },
-    "LasVegas": {
+
+    "McCarran International": {
       "ICAO": "KLAS",
       "Elevation": "2178",
       "TACAN": "116X",
@@ -216,7 +224,8 @@
         }
       }
     },
-    "LaughlinAirport": {
+
+    "Laughlin": {
       "ICAO": "KIFP",
       "Elevation": "673",
       "TACAN": "",
@@ -233,7 +242,8 @@
         }
       }
     },
-    "LincolnCountyAirport": {
+
+    "Lincoln County": {
       "ICAO": "",
       "Elevation": "4816",
       "TACAN": "",
@@ -250,7 +260,8 @@
         }
       }
     },
-    "MesquiteAirport": {
+
+    "Mesquite": {
       "ICAO": "67L",
       "Elevation": "1859",
       "TACAN": "",
@@ -267,7 +278,8 @@
         }
       }
     },
-    "MinahAirport_3Q0": {
+
+    "Mina": {
       "ICAO": "",
       "Elevation": "4560",
       "TACAN": "",
@@ -284,7 +296,8 @@
         }
       }
     },
-    "nellis": {
+
+    "Nellis": {
       "ICAO": "KLSV",
       "Elevation": "1849",
       "TACAN": "12X",
@@ -311,7 +324,8 @@
         }
       }
     },
-    "NorthLasVegasAirport": {
+
+    "North Las Vegas": {
       "ICAO": "KVGT",
       "Elevation": "2228",
       "TACAN": "",
@@ -348,7 +362,8 @@
         }
       }
     },
-    "PahuteMesaAirstrip": {
+
+    "Pahute Mesa": {
       "ICAO": "",
       "Elevation": "5059",
       "TACAN": "",
@@ -365,7 +380,8 @@
         }
       }
     },
-    "TonopahAirport": {
+
+    "Tonopah": {
       "ICAO": "KTPH",
       "Elevation": "5390",
       "TACAN": "119X",
@@ -392,7 +408,8 @@
         }
       }
     },
-    "TonopathAFB": {
+
+    "Tonopah Test Range": {
       "ICAO": "KTNX",
       "Elevation": "5535",
       "TACAN": "77X",
@@ -409,5 +426,6 @@
         }
       }
     }
+
   }
 }
