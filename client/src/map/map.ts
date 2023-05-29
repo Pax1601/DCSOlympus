@@ -111,8 +111,9 @@ export class Map extends L.Map {
 
         /* Pan interval */
         this.#panInterval = window.setInterval(() => {
-            this.panBy(new L.Point(((this.#panLeft ? -1 : 0) + (this.#panRight ? 1 : 0)) * this.#deafultPanDelta,
-                ((this.#panUp ? -1 : 0) + (this.#panDown ? 1 : 0)) * this.#deafultPanDelta));
+            if (this.#panLeft || this.#panDown || this.#panRight || this.#panLeft)
+                this.panBy(new L.Point(((this.#panLeft? -1 : 0) + (this.#panRight ? 1 : 0)) * this.#deafultPanDelta,
+                    ((this.#panUp ? -1 : 0) + (this.#panDown ? 1 : 0)) * this.#deafultPanDelta));
         }, 20);
 
         /* Option buttons */

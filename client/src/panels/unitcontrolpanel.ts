@@ -120,8 +120,9 @@ export class UnitControlPanel extends Panel {
 
                 var button = document.createElement("button");
                 var callsign = unit.getBaseData().unitName || "";
+                var label = unit.getDatabase()?.getByName(unit.getBaseData().name)?.label || unit.getBaseData().name;
 
-                button.setAttribute("data-label", unit.getBaseData().name);
+                button.setAttribute("data-label", label);
                 button.setAttribute("data-callsign", callsign);
 
                 button.setAttribute("data-coalition", unit.getMissionData().coalition);

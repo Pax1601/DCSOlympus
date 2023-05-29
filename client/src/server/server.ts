@@ -29,15 +29,22 @@ export function setCredentials(newUsername: string, newCredentials: string) {
     credentials = newCredentials;
 }
 
-export function GET(callback: CallableFunction, uri: string, options?: string) {
+export function GET(callback: CallableFunction, uri: string, options?: {time?: number}) {
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", `${demoEnabled? DEMO_ADDRESS: REST_ADDRESS}/${uri}${options? options: ''}`, true);
+
+    /* Assemble the request options string */
+    var optionsString = '';
+    if (options?.time != undefined)
+        optionsString = `time=${options.time}`;
+
+    
+    xmlHttp.open("GET", `${demoEnabled? DEMO_ADDRESS: REST_ADDRESS}/${uri}${optionsString? `?${optionsString}`: ''}`, true);
     if (credentials)
         xmlHttp.setRequestHeader("Authorization", "Basic " + credentials);
     xmlHttp.onload = function (e) {
         if (xmlHttp.status == 200) {
             var data = JSON.parse(xmlHttp.responseText);
-            if (uri !== UNITS_URI || parseInt(data.time) > lastUpdateTime)
+            if (uri !== UNITS_URI || (options?.time == 0) || parseInt(data.time) > lastUpdateTime)
             {
                 callback(data);
                 lastUpdateTime = parseInt(data.time);
@@ -106,7 +113,7 @@ export function getMission(callback: CallableFunction) {
 }
 
 export function getUnits(callback: CallableFunction, refresh: boolean = false) {
-    GET(callback, `${UNITS_URI}`, `?time=${refresh? 0: lastUpdateTime}`);
+    GET(callback, `${UNITS_URI}`, {time: refresh? 0: lastUpdateTime});
 }
 
 export function addDestination(ID: number, path: any) {

@@ -772,23 +772,25 @@ export class Unit extends CustomMarker {
     #drawTargets() {
         for (let index in this.getMissionData().targets) {
             var targetData = this.getMissionData().targets[index];
-            var target = getUnitsManager().getUnitByID(targetData.object["id_"])
-            if (target != null) {
-                var startLatLng = new LatLng(this.getFlightData().latitude, this.getFlightData().longitude)
-                var endLatLng = new LatLng(target.getFlightData().latitude, target.getFlightData().longitude)
+            if (targetData.object != undefined){
+                var target = getUnitsManager().getUnitByID(targetData.object["id_"])
+                if (target != null) {
+                    var startLatLng = new LatLng(this.getFlightData().latitude, this.getFlightData().longitude)
+                    var endLatLng = new LatLng(target.getFlightData().latitude, target.getFlightData().longitude)
 
-                var color;
-                if (targetData.detectionMethod === "RADAR")
-                    color = "#FFFF00";
-                else if (targetData.detectionMethod === "VISUAL")
-                    color = "#FF00FF";
-                else if (targetData.detectionMethod === "RWR")
-                    color = "#00FF00";
-                else
-                    color = "#FFFFFF";
-                var targetPolyline = new Polyline([startLatLng, endLatLng], { color: color, weight: 3, opacity: 0.4, smoothFactor: 1 });
-                targetPolyline.addTo(getMap());
-                this.#targetsPolylines.push(targetPolyline)
+                    var color;
+                    if (targetData.detectionMethod === "RADAR")
+                        color = "#FFFF00";
+                    else if (targetData.detectionMethod === "VISUAL")
+                        color = "#FF00FF";
+                    else if (targetData.detectionMethod === "RWR")
+                        color = "#00FF00";
+                    else
+                        color = "#FFFFFF";
+                    var targetPolyline = new Polyline([startLatLng, endLatLng], { color: color, weight: 3, opacity: 0.4, smoothFactor: 1 });
+                    targetPolyline.addTo(getMap());
+                    this.#targetsPolylines.push(targetPolyline)
+                }
             }
         }
     }
@@ -851,7 +853,7 @@ export class GroundUnit extends Unit {
             showVvi: false,
             showHotgroup: true,
             showUnitIcon: true,
-            showShortLabel: true,
+            showShortLabel: false,
             showFuel: false,
             showAmmo: false,
             showSummary: false,
