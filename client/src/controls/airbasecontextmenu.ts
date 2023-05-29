@@ -1,5 +1,6 @@
 import { getMap, getUnitsManager, setActiveCoalition } from "..";
 import { Airbase } from "../missionhandler/airbase";
+import { dataPointMap } from "../other/utils";
 import { ContextMenu } from "./contextmenu";
 
 export class AirbaseContextMenu extends ContextMenu {
@@ -22,9 +23,45 @@ export class AirbaseContextMenu extends ContextMenu {
         this.#airbase = airbase;
         this.setName(airbase.getName());
         this.setProperties(airbase.getProperties());
-        this.setParkings(airbase.getParkings());
+        //  this.setParkings(airbase.getParkings());
         this.setCoalition(airbase.getCoalition());
         this.enableLandButton(getUnitsManager().getSelectedUnitsType() === "Aircraft" && (getUnitsManager().getSelectedUnitsCoalition() === airbase.getCoalition() || airbase.getCoalition() === "neutral"))
+
+        
+        dataPointMap( <HTMLElement>this.getContainer(), {
+            "coalition": airbase.getCoalition(),
+            "airbaseName": airbase.getName()
+        });
+        
+        dataPointMap( <HTMLElement>this.getContainer(), this.#airbase.getChartData() );
+        
+        const runwaysContainer     = <HTMLElement>this.getContainer()?.querySelector( "#airbase-runways" );
+        runwaysContainer.innerHTML = "";
+
+        if ( runwaysContainer instanceof HTMLElement ) {
+
+            const runways = this.#airbase.getChartData().Runways;
+
+            for ( const runway in runways ) {
+
+                let r = runways[ runway ];
+
+                let dt       = document.createElement( "dt" );
+                dt.innerText = `${runway} (${r["Mag Hdg"]}` + `º)`;
+
+                runwaysContainer.appendChild( dt );
+
+                let dd       = document.createElement( "dd" );
+                dd.innerText = r.ILS ? `ILS: ${r.ILS}` : "-";
+
+                runwaysContainer.appendChild( dd );
+
+            }
+
+        }
+
+        this.clip();
+
     }
 
     setName(airbaseName: string) {

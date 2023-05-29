@@ -82,12 +82,22 @@
     
     <h3 id="airbase-name"></h3>
     
-    <div id="airbase-properties"></div>
+    <dl id="airbase-chart-data" class="ol-data-grid">
+        <dt>ICAO</dt>
+        <dd data-point="ICAO"></dd>
+        <dt>Coalition</dt>
+        <dd data-point="coalition"></dd>
+        <dt>Elevation</dt>
+        <dd><span data-point="Elevation"></span>ft</dd>
+        <dt>TACAN</dt>
+        <dd data-point="TACAN"></dd>
+    </dl>
+
+    <h4>Runways</h4>
+    <dl id="airbase-runways" class="ol-data-grid">
+    </dl>
     
     <hr />
-    
-    <h4>Parking available:</h4> 
-    <div id="airbase-parking"></div>
 
     <button id="spawn-airbase-aircraft-button" data-active-coalition="red" title="Spawn aircraft" data-on-click="contextMenuSpawnAirbase" class="deploy-unit-button">Spawn</button>
     <button id="land-here-button" title="Land here" data-on-click="contextMenuLandAirbase" class="hide">Land here</button>

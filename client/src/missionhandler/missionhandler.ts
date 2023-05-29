@@ -29,7 +29,7 @@ export class MissionHandler
     update(data: BullseyesData | AirbasesData | any)
     {
 
-        if ("mission" in data)
+        if ("mission" in data && data.mission !== null)
         {
             if (data.mission != null && data.mission.theatre != this.#theatre) 
             {
@@ -75,18 +75,6 @@ export class MissionHandler
             }
         }
 
-        
-        if ("mission" in data)
-        {
-            if (data.mission != null && data.mission.theatre != this.#theatre) 
-            {
-                this.#theatre = data.mission.theatre;
-                getMap().setTheatre(this.#theatre);
-
-                getInfoPopup().setText("Map set to " + this.#theatre);
-            }
-        }
-
 
         if ("airbases" in data)
         {
@@ -122,7 +110,7 @@ export class MissionHandler
 
                 if ( loadedChartKeys.length > 0 ) {
                   
-                  if ( this.#airbaseCharts.hasOwnProperty( airbase.callsign ) && !this.#airbases[idx].chartDataHasBeenSet() ) {
+                  if ( this.#airbaseCharts.hasOwnProperty( airbase.callsign ) ) {
 
                     const chartData:AirbaseChartData = this.#airbaseCharts[ airbase.callsign ];
                     this.#airbases[ idx ].setChartData( chartData );
