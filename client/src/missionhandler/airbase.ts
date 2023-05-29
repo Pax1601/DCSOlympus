@@ -8,10 +8,31 @@ export interface AirbaseOptions
     position: L.LatLng
 }
 
+
+export interface AirbaseChartData {
+    Elevation: string,
+    ICAO: string,
+    TACAN: string,
+    Runways: { [index: string]: AirbaseChartRunwayData }
+}
+
+export interface AirbaseChartRunwayData {
+    "Mag Hdg": string,
+    "Length": string,
+    "ILS": string
+}
+
 export class Airbase extends CustomMarker
 {
     #name: string = "";
+    #chartData: AirbaseChartData = {
+        Elevation: "",
+        ICAO: "",
+        TACAN: "",
+        Runways: {}
+    };
     #coalition: string = "";
+    #hasChartDataBeenSet:boolean = false;
     #properties: string[] = [];
     #parkings: string[] = [];
 
@@ -20,6 +41,10 @@ export class Airbase extends CustomMarker
         super(options.position, { riseOnHover: true });
 
         this.#name = options.name;
+    }
+
+    chartDataHasBeenSet() {
+        return this.#hasChartDataBeenSet;
     }
 
     createIcon() {
@@ -46,6 +71,11 @@ export class Airbase extends CustomMarker
         (<HTMLElement> this.getElement()?.querySelector(".airbase-icon")).dataset.coalition = this.#coalition;
     }
 
+    getChartData()
+    {
+        return this.#chartData;
+    }
+
     getCoalition()
     {
         return this.#coalition;
@@ -59,6 +89,12 @@ export class Airbase extends CustomMarker
     getName()
     {
         return this.#name;
+    }
+
+    setChartData( chartData:AirbaseChartData )
+    {
+        this.#hasChartDataBeenSet = true;
+        this.#chartData           = chartData;
     }
 
     setProperties(properties: string[])
