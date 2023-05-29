@@ -20,7 +20,7 @@ export class UnitsManager {
         document.addEventListener('paste', () => this.pasteUnits());
         document.addEventListener('unitSelection', (e: CustomEvent) => this.#onUnitSelection(e.detail));
         document.addEventListener('unitDeselection', (e: CustomEvent) => this.#onUnitDeselection(e.detail));
-        document.addEventListener('keydown', (event) => this.#onKeyDown(event));
+        document.addEventListener('keyup', (event) => this.#onKeyUp(event));
         document.addEventListener('deleteSelectedUnits', () => this.selectedUnitsDelete())
     }
 
@@ -426,9 +426,18 @@ export class UnitsManager {
     }
 
     /***********************************************/
-    #onKeyDown(event: KeyboardEvent) {
-        if (!keyEventWasInInput(event) && event.key === "Delete") {
-            this.selectedUnitsDelete();
+    #onKeyUp(event: KeyboardEvent) {
+        if (!keyEventWasInInput(event) && event.key === "Delete" ) {
+
+            const selectedUnits           = this.getSelectedUnits();
+            const selectionContainsAHuman = selectedUnits.some( ( unit:Unit ) => {
+                return unit.getMissionData().flags.Human === true;
+            });
+
+            if ( !selectionContainsAHuman || confirm( "Your selection includes a human player. Deleting humans causes their vehicle to crash.\n\nAre you sure you want to do this?" ) ) {
+                this.selectedUnitsDelete();
+            }
+
         }
     }
 

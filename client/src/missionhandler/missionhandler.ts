@@ -9,7 +9,6 @@ export class MissionHandler
     #airbases       : {[name: string]: Airbase} = {};
     #theatre        : string = "";
 
-
     #airbaseData : { [name: string]: object } = {};
 
     //  Time
@@ -19,7 +18,6 @@ export class MissionHandler
     #time        : any;
 
     #updateTime  : any;
-
 
     constructor()
     {
