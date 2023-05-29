@@ -4,7 +4,7 @@
       "ICAO": "KBTY",
       "Elevation": "3173",
       "TACAN": "94X",
-      "Runways:": {
+      "Runways": {
         "16": {
           "Mag Hdg": "168",
           "Length": "5500",
@@ -21,7 +21,7 @@
       "ICAO": "KBVU",
       "Elevation": "2205",
       "TACAN": "114X",
-      "Runways:": {
+      "Runways": {
         "09": {
           "Mag Hdg": "087",
           "Length": "4400",
@@ -48,7 +48,7 @@
       "ICAO": "KINS",
       "Elevation": "3126",
       "TACAN": "87X",
-      "Runways:": {
+      "Runways": {
         "08": {
           "Mag Hdg": "080",
           "Length": "8700",
@@ -75,7 +75,7 @@
       "ICAO": "0L9",
       "Elevation": "1549",
       "TACAN": "",
-      "Runways:": {
+      "Runways": {
         "06": {
           "Mag Hdg": "066",
           "Length": "3300",
@@ -92,7 +92,7 @@
       "ICAO": "KXTA",
       "Elevation": "4495",
       "TACAN": "18X",
-      "Runways:": {
+      "Runways": {
         "14L": {
           "Mag Hdg": "145",
           "Length": "11700",
@@ -119,7 +119,7 @@
       "ICAO": "KHND",
       "Elevation": "2493",
       "TACAN": "",
-      "Runways:": {
+      "Runways": {
         "17L": {
           "Mag Hdg": "168",
           "Length": "4600",
@@ -146,7 +146,7 @@
       "ICAO": "",
       "Elevation": "2825",
       "TACAN": "",
-      "Runways:": {
+      "Runways": {
         "02L": {
           "Mag Hdg": "020",
           "Length": "4500",
@@ -173,7 +173,7 @@
       "ICAO": "KLAS",
       "Elevation": "2178",
       "TACAN": "116X",
-      "Runways:": {
+      "Runways": {
         "01L": {
           "Mag Hdg": "013",
           "Length": "8000",
@@ -220,7 +220,7 @@
       "ICAO": "KIFP",
       "Elevation": "673",
       "TACAN": "",
-      "Runways:": {
+      "Runways": {
         "16": {
           "Mag Hdg": "164",
           "Length": "7100",
@@ -237,7 +237,7 @@
       "ICAO": "",
       "Elevation": "4816",
       "TACAN": "",
-      "Runways:": {
+      "Runways": {
         "17": {
           "Mag Hdg": "170",
           "Length": "4500",
@@ -254,7 +254,7 @@
       "ICAO": "67L",
       "Elevation": "1859",
       "TACAN": "",
-      "Runways:": {
+      "Runways": {
         "01": {
           "Mag Hdg": "017",
           "Length": "5000",
@@ -271,7 +271,7 @@
       "ICAO": "",
       "Elevation": "4560",
       "TACAN": "",
-      "Runways:": {
+      "Runways": {
         "13": {
           "Mag Hdg": "140",
           "Length": "4100",
@@ -288,7 +288,7 @@
       "ICAO": "KLSV",
       "Elevation": "1849",
       "TACAN": "12X",
-      "Runways:": {
+      "Runways": {
         "03L": {
           "Mag Hdg": "029",
           "Length": "9800",
@@ -315,7 +315,7 @@
       "ICAO": "KVGT",
       "Elevation": "2228",
       "TACAN": "",
-      "Runways:": {
+      "Runways": {
         "07": {
           "Mag Hdg": "076",
           "Length": "4900",
@@ -352,7 +352,7 @@
       "ICAO": "",
       "Elevation": "5059",
       "TACAN": "",
-      "Runways:": {
+      "Runways": {
         "18": {
           "Mag Hdg": "182",
           "Length": "5500",
@@ -369,7 +369,7 @@
       "ICAO": "KTPH",
       "Elevation": "5390",
       "TACAN": "119X",
-      "Runways:": {
+      "Runways": {
         "11": {
           "Mag Hdg": "113",
           "Length": "5600",
@@ -396,7 +396,7 @@
       "ICAO": "KTNX",
       "Elevation": "5535",
       "TACAN": "77X",
-      "Runways:": {
+      "Runways": {
         "14": {
           "Mag Hdg": "145",
           "Length": "11700",

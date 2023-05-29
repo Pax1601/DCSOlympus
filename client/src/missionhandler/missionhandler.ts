@@ -1,12 +1,14 @@
 import { LatLng } from "leaflet";
 import { getInfoPopup, getMap } from "..";
-import { Airbase } from "./airbase";
+import { Airbase, AirbaseChartData } from "./airbase";
 import { Bullseye } from "./bullseye";
+
 
 export class MissionHandler
 {
     #bullseyes      : {[name: string]: Bullseye} = {};        
     #airbases       : {[name: string]: Airbase} = {};
+    #airbaseCharts  : {[name: string]: AirbaseChartData } = {};
     #theatre        : string = "";
 
     #airbaseData : { [name: string]: object } = {};
@@ -26,6 +28,37 @@ export class MissionHandler
 
     update(data: BullseyesData | AirbasesData | any)
     {
+
+        if ("mission" in data)
+        {
+            if (data.mission != null && data.mission.theatre != this.#theatre) 
+            {
+                this.#theatre = data.mission.theatre;
+                getMap().setTheatre(this.#theatre);
+
+                getInfoPopup().setText("Map set to " + this.#theatre);
+
+                this.setAirbasesCharts( this.#theatre );
+            }
+
+            if ( "date" in data.mission ) {
+                this.#date = data.mission.date;
+            }
+
+            if ( "elapsedTime" in data.mission ) {
+                this.#elapsedTime = data.mission.elapsedTime;
+            }
+
+            if ( "startTime" in data.mission ) {
+                this.#startTime = data.mission.startTime;
+            }
+
+            if ( "time" in data.mission ) {
+                this.#time = data.mission.time;
+            }
+
+        }
+
         if ("bullseyes" in data)
         {
             for (let idx in data.bullseyes)
@@ -68,6 +101,7 @@ export class MissionHandler
             for (let idx in data.airbases)
             {
                 var airbase = data.airbases[idx]
+
                 if (this.#airbases[idx] === undefined)
                 {
                     this.#airbases[idx] = new Airbase({
@@ -76,42 +110,32 @@ export class MissionHandler
                     }).addTo(getMap());
                     this.#airbases[idx].on('contextmenu', (e) => this.#onAirbaseClick(e));
                 }
-                if (airbase.latitude && airbase.longitude && airbase.coalition)
-                {
+                
+                if (airbase.latitude && airbase.longitude && airbase.coalition) {
                     this.#airbases[idx].setLatLng(new LatLng(airbase.latitude, airbase.longitude));
                     this.#airbases[idx].setCoalition(airbase.coalition);
                 }
-                //this.#airbases[idx].setProperties(["Runway 1: 31L / 13R", "Runway 2: 31R / 13L", "TCN: 17X", "ILS: ---" ]);
-                //this.#airbases[idx].setParkings(["2x big", "5x small"]);
+
+                //  Enrich data from ATC API
+
+                const loadedChartKeys = Object.keys( this.#airbaseCharts );
+
+                if ( loadedChartKeys.length > 0 ) {
+                  
+                  if ( this.#airbaseCharts.hasOwnProperty( airbase.callsign ) && !this.#airbases[idx].chartDataHasBeenSet() ) {
+
+                    const chartData:AirbaseChartData = this.#airbaseCharts[ airbase.callsign ];
+                    this.#airbases[ idx ].setChartData( chartData );
+
+                  } else {
+
+                      console.warn( `Airbase "${airbase.callsign}" not in chart data.  Options:` + loadedChartKeys.join( ", " ) );
+
+                  }
+
+                }
+                
             }
-        }
-
-        if ("mission" in data)
-        {
-            if (data.mission != null && data.mission.theatre != this.#theatre) 
-            {
-                this.#theatre = data.mission.theatre;
-                getMap().setTheatre(this.#theatre);
-
-                getInfoPopup().setText("Map set to " + this.#theatre);
-            }
-
-            if ( "date" in data.mission ) {
-                this.#date = data.mission.date;
-            }
-
-            if ( "elapsedTime" in data.mission ) {
-                this.#elapsedTime = data.mission.elapsedTime;
-            }
-
-            if ( "startTime" in data.mission ) {
-                this.#startTime = data.mission.startTime;
-            }
-
-            if ( "time" in data.mission ) {
-                this.#time = data.mission.time;
-            }
-
         }
 
 
@@ -165,4 +189,22 @@ export class MissionHandler
     {
         getMap().showAirbaseContextMenu(e, e.sourceTarget);
     }
+
+    
+    setAirbasesCharts( theatre:string ) {
+
+      fetch( '/api/airbases/' + theatre.toLowerCase() , {
+          method: 'GET',      
+          headers: { 
+              'Accept': '*/*',
+              'Content-Type': 'application/json' 
+          }
+      })
+      .then( response => response.json() )
+      .then( data => {
+          this.#airbaseCharts = data;
+      });
+
+    }
+
 }
