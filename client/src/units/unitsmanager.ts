@@ -450,9 +450,18 @@ export class UnitsManager {
     }
 
     /***********************************************/
-    #onKeyDown(event: KeyboardEvent) {
-        if (!keyEventWasInInput(event) && event.key === "Delete") {
-            this.selectedUnitsDelete();
+    #onKeyUp(event: KeyboardEvent) {
+        if (!keyEventWasInInput(event) && event.key === "Delete" ) {
+
+            const selectedUnits           = this.getSelectedUnits();
+            const selectionContainsAHuman = selectedUnits.some( ( unit:Unit ) => {
+                return unit.getMissionData().flags.Human === true;
+            });
+
+            if ( !selectionContainsAHuman || confirm( "Your selection includes a human player. Deleting humans causes their vehicle to crash.\n\nAre you sure you want to do this?" ) ) {
+                this.selectedUnitsDelete();
+            }
+
         }
     }
 

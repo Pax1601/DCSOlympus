@@ -504,7 +504,6 @@ export class Unit extends CustomMarker {
     }
 
     delete(explosion: boolean) {
-        // TODO: add confirmation popup
         deleteUnit(this.ID, explosion);
     }
 

@@ -589,7 +589,7 @@ nav.ol-panel> :last-child {
 }
 
 .ol-sortable .handle {
-    background-image: url("/images/icons/grip-lines-solid.svg");
+    background-image: url("/resources/theme/images/icons/grip-lines-solid.svg");
     cursor: ns-resize;
     filter: invert();
     height: 12px;
