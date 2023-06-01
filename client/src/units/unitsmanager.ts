@@ -20,7 +20,6 @@ export class UnitsManager {
         document.addEventListener('paste', () => this.pasteUnits());
         document.addEventListener('unitSelection', (e: CustomEvent) => this.#onUnitSelection(e.detail));
         document.addEventListener('unitDeselection', (e: CustomEvent) => this.#onUnitDeselection(e.detail));
-        document.addEventListener('keydown', (event) => this.#onKeyDown(event));
         document.addEventListener('deleteSelectedUnits', () => this.selectedUnitsDelete());
         document.addEventListener('explodeSelectedUnits', () => this.selectedUnitsDelete(true));
     }
@@ -328,6 +327,14 @@ export class UnitsManager {
 
     selectedUnitsDelete(explosion: boolean = false) {
         var selectedUnits = this.getSelectedUnits(); /* Can be applied to humans too */
+        const selectionContainsAHuman = selectedUnits.some( ( unit:Unit ) => {
+            return unit.getMissionData().flags.Human === true;
+        });
+
+        if (selectionContainsAHuman && !confirm( "Your selection includes a human player. Deleting humans causes their vehicle to crash.\n\nAre you sure you want to do this?" ) ) {
+            return;
+        }
+
         for (let idx in selectedUnits) {
             selectedUnits[idx].delete(explosion);
         }
@@ -450,21 +457,6 @@ export class UnitsManager {
     }
 
     /***********************************************/
-    #onKeyUp(event: KeyboardEvent) {
-        if (!keyEventWasInInput(event) && event.key === "Delete" ) {
-
-            const selectedUnits           = this.getSelectedUnits();
-            const selectionContainsAHuman = selectedUnits.some( ( unit:Unit ) => {
-                return unit.getMissionData().flags.Human === true;
-            });
-
-            if ( !selectionContainsAHuman || confirm( "Your selection includes a human player. Deleting humans causes their vehicle to crash.\n\nAre you sure you want to do this?" ) ) {
-                this.selectedUnitsDelete();
-            }
-
-        }
-    }
-
     #onUnitSelection(unit: Unit) {
         if (this.getSelectedUnits().length > 0) {
             getMap().setState(MOVE_UNIT);
