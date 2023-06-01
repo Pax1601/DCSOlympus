@@ -50,16 +50,11 @@ const DEMO_UNIT_DATA = {
             currentState: "Idle",
             activePath: undefined,
             targetSpeed: 400,
+            targetSpeedType: "CAS",
             targetAltitude: 3000,
+            targetAltitudeType: "ASL",
             isTanker: false,
-            TACANOn: false,
-            TACANChannel: 32,
-            TACANXY: "Y",
-            TACANCallsign: "ASD",
-            radioFrequency: 123.750,
-            radioCallsign: 2,
-            radioCallsignNumber: 3,
-            radioAMFM: "FM"
+
         },
         optionsData: {
             ROE: "Designated",
@@ -145,7 +140,8 @@ const DEMO_UNIT_DATA = {
             currentTask: "Example task",
             activePath: undefined,
             targetSpeed: 400,
-            targetAltitude: 3000
+            targetAltitude: 3000,
+            onOff: false
         },
         optionsData: {
             ROE: "None",
@@ -157,7 +153,6 @@ const DEMO_UNIT_DATA = {
             AI: true,
             name: "2S6 Tunguska",
             unitName: "Olympus 1-4",
-            groupName: "Group 1",
             alive: true,
             category: "GroundUnit",
         },

@@ -37,9 +37,13 @@ interface TaskData {
     currentTask: string;
     activePath: any;
     targetSpeed: number;
+    targetSpeedType: string;
     targetAltitude: number;
+    targetAltitudeType: string;
     isTanker: boolean;
     isAWACS: boolean;
+    onOff: boolean;
+    followRoads: boolean;
 }
 
 interface OptionsData {
@@ -49,15 +53,6 @@ interface OptionsData {
     TACAN: TACAN;
     radio: Radio;
     generalSettings: GeneralSettings;
-}
-
-interface UnitData {
-    baseData: BaseData;
-    flightData: FlightData;
-    missionData: MissionData;
-    formationData: FormationData;
-    taskData: TaskData;
-    optionsData: OptionsData;
 }
 
 interface TACAN {
@@ -91,4 +86,13 @@ interface UnitIconOptions {
     showAmmo: boolean,
     showSummary: boolean, 
     rotateToHeading: boolean
+}
+
+interface UnitData {
+    baseData: BaseData;
+    flightData: FlightData;
+    missionData: MissionData;
+    formationData: FormationData;
+    taskData: TaskData;
+    optionsData: OptionsData;
 }

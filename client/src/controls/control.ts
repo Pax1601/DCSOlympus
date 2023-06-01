@@ -1,5 +1,6 @@
 export class Control {
     #container: HTMLElement | null;
+    expectedValue: any = null;
     
     constructor(ID: string) {
         this.#container = document.getElementById(ID);
@@ -17,5 +18,17 @@ export class Control {
 
     getContainer() {
         return this.#container;
+    }
+
+    setExpectedValue(expectedValue: any) {
+        this.expectedValue = expectedValue;
+    }
+
+    resetExpectedValue() {
+        this.expectedValue = null;
+    }
+
+    checkExpectedValue(value: any) {
+        return this.expectedValue === null || value === this.expectedValue;
     }
 }

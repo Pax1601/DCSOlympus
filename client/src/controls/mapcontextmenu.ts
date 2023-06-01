@@ -5,6 +5,8 @@ import { aircraftDatabase } from "../units/aircraftdatabase";
 import { groundUnitsDatabase } from "../units/groundunitsdatabase";
 import { ContextMenu } from "./contextmenu";
 import { Dropdown } from "./dropdown";
+import { Switch } from "./switch";
+import { Slider } from "./slider";
 
 export interface SpawnOptions {
     role: string;
@@ -13,24 +15,29 @@ export interface SpawnOptions {
     coalition: string;
     loadout: string | null;
     airbaseName: string | null;
+    altitude: number | null;
 }
 
 export class MapContextMenu extends ContextMenu {
+    #coalitionSwitch: Switch;
     #aircraftRoleDropdown: Dropdown;
     #aircraftTypeDropdown: Dropdown;
     #aircraftLoadoutDropdown: Dropdown;
+    #aircrafSpawnAltitudeSlider: Slider;
     #groundUnitRoleDropdown: Dropdown;
     #groundUnitTypeDropdown: Dropdown;
-    #spawnOptions: SpawnOptions = { role: "", type: "", latlng: new LatLng(0, 0), loadout: null, coalition: "blue", airbaseName: null };
-
+    #spawnOptions: SpawnOptions = { role: "", type: "", latlng: new LatLng(0, 0), loadout: null, coalition: "blue", airbaseName: null, altitude: 20000 };
+    
     constructor(id: string) {
         super(id);
-        this.getContainer()?.querySelector("#context-menu-switch")?.addEventListener('click', (e) => this.#onToggleLeftClick(e));
-        this.getContainer()?.querySelector("#context-menu-switch")?.addEventListener('contextmenu', (e) => this.#onToggleRightClick(e));
 
+        this.#coalitionSwitch = new Switch("coalition-switch", this.#onSwitchClick);
+        this.#coalitionSwitch.setValue(false);
+        this.#coalitionSwitch.getContainer()?.addEventListener("contextmenu", (e) => this.#onSwitchRightClick(e));
         this.#aircraftRoleDropdown = new Dropdown("aircraft-role-options", (role: string) => this.#setAircraftRole(role));
         this.#aircraftTypeDropdown = new Dropdown("aircraft-type-options", (type: string) => this.#setAircraftType(type));
         this.#aircraftLoadoutDropdown = new Dropdown("loadout-options", (loadout: string) => this.#setAircraftLoadout(loadout));
+        this.#aircrafSpawnAltitudeSlider = new Slider("aircraft-spawn-altitude-slider", 0, 50000, "ft", (value: number) => {this.#spawnOptions.altitude = value;});
         this.#groundUnitRoleDropdown = new Dropdown("ground-unit-role-options", (role: string) => this.#setGroundUnitRole(role));
         this.#groundUnitTypeDropdown = new Dropdown("ground-unit-type-options", (type: string) => this.#setGroundUnitType(type));
 
@@ -60,6 +67,10 @@ export class MapContextMenu extends ContextMenu {
             this.hide();
             spawnSmoke(e.detail.color, this.getLatLng());
         });
+
+        this.#aircrafSpawnAltitudeSlider.setIncrement(500);
+        this.#aircrafSpawnAltitudeSlider.setValue(20000);
+        this.#aircrafSpawnAltitudeSlider.setActive(true);
 
         this.hide();
     }
@@ -102,26 +113,13 @@ export class MapContextMenu extends ContextMenu {
         this.#spawnOptions.latlng = latlng;
     }
 
-    #onToggleLeftClick(e: any) {
-        if (this.getContainer() != null) {
-            if (e.srcElement.dataset.activeCoalition == "blue")
-                setActiveCoalition("neutral");
-            else if (e.srcElement.dataset.activeCoalition == "neutral")
-                setActiveCoalition("red");
-            else
-                setActiveCoalition("blue");
-        }
+    #onSwitchClick(value: boolean) {
+        value? setActiveCoalition("red"): setActiveCoalition("blue");
     }
 
-    #onToggleRightClick(e: any) {
-        if (this.getContainer() != null) {
-            if (e.srcElement.dataset.activeCoalition == "red")
-                setActiveCoalition("neutral");
-            else if (e.srcElement.dataset.activeCoalition == "neutral")
-                setActiveCoalition("blue");
-            else
-                setActiveCoalition("red");
-        }
+    #onSwitchRightClick(e: any) {
+        this.#coalitionSwitch.setValue(undefined);
+        setActiveCoalition("neutral");
     }
 
     /********* Aircraft spawn menu *********/

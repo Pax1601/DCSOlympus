@@ -14,12 +14,12 @@
 
     <div id="flight-data">
         <h4>Controls</h4>
-        <div id="airspeed-slider" class="ol-slider-container flight-control-ol-slider">
+        <div id="speed-slider" class="ol-slider-container flight-control-ol-slider">
             <dl class="ol-data-grid">
                 <dt>Speed</dt>
                 <dd>
                     <div class="ol-slider-value"></div>
-                    <div id="airspeed-type-switch" class="ol-switch"></div>
+                    <div id="speed-type-switch" class="ol-switch"></div>
                 </dd>
             </dl>
             <input type="range" min="0" max="100" value="0" class="ol-slider">
@@ -61,10 +61,15 @@
         </div>
     </div>
 
-    <div id="ai-on-off">
+    <div id="ai-on-off" class="switch-control">
         <h4>Unit active</h4>
         <div id="on-off-switch" class="ol-switch"></div>
         <div>Toggling this disables unit AI completely. It will no longer move, react or emit radio waves.</div>
+    </div>
+
+    <div id="follow-roads" class="switch-control">
+        <h4>Follow roads</h4>
+        <div id="follow-roads-switch" class="ol-switch"></div>
     </div>
 
     <hr />

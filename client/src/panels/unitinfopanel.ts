@@ -16,7 +16,7 @@ export class UnitInfoPanel extends Panel {
     #latitude: HTMLElement;
     #longitude: HTMLElement;
     #loadoutContainer: HTMLElement;
-    #silhouette: HTMLElement;
+    #silhouette: HTMLImageElement;
     #unitControl: HTMLElement;
     #unitLabel: HTMLElement;
     #unitName: HTMLElement;
@@ -24,21 +24,21 @@ export class UnitInfoPanel extends Panel {
     constructor(ID: string) {
         super(ID);
 
-        this.#altitude         = <HTMLElement>(this.getElement().querySelector("#altitude"));
-        this.#currentTask      = <HTMLElement>(this.getElement().querySelector("#current-task"));
-        this.#groundSpeed      = <HTMLElement>(this.getElement().querySelector("#ground-speed"));
-        this.#fuelBar          = <HTMLElement>(this.getElement().querySelector("#fuel-bar"));
-        this.#fuelPercentage   = <HTMLElement>(this.getElement().querySelector("#fuel-percentage"));
-        this.#groupName        = <HTMLElement>(this.getElement().querySelector("#group-name"));
-        this.#heading          = <HTMLElement>(this.getElement().querySelector("#heading"));
-        this.#name             = <HTMLElement>(this.getElement().querySelector("#name"));
-        this.#latitude         = <HTMLElement>(this.getElement().querySelector("#latitude"));
-        this.#loadoutContainer = <HTMLElement>(this.getElement().querySelector("#loadout-container"));
-        this.#longitude        = <HTMLElement>(this.getElement().querySelector("#longitude"));
-        this.#silhouette       = <HTMLElement>(this.getElement().querySelector("#loadout-silhouette"));
-        this.#unitControl      = <HTMLElement>(this.getElement().querySelector("#unit-control"));
-        this.#unitLabel        = <HTMLElement>(this.getElement().querySelector("#unit-label"));
-        this.#unitName         = <HTMLElement>(this.getElement().querySelector("#unit-name"));
+        this.#altitude         = (this.getElement().querySelector("#altitude")) as HTMLElement;
+        this.#currentTask      = (this.getElement().querySelector("#current-task")) as HTMLElement;
+        this.#groundSpeed      = (this.getElement().querySelector("#ground-speed")) as HTMLElement;
+        this.#fuelBar          = (this.getElement().querySelector("#fuel-bar")) as HTMLElement;
+        this.#fuelPercentage   = (this.getElement().querySelector("#fuel-percentage")) as HTMLElement;
+        this.#groupName        = (this.getElement().querySelector("#group-name")) as HTMLElement;
+        this.#heading          = (this.getElement().querySelector("#heading")) as HTMLElement;
+        this.#name             = (this.getElement().querySelector("#name")) as HTMLElement;
+        this.#latitude         = (this.getElement().querySelector("#latitude")) as HTMLElement;
+        this.#loadoutContainer = (this.getElement().querySelector("#loadout-container")) as HTMLElement;
+        this.#longitude        = (this.getElement().querySelector("#longitude")) as HTMLElement;
+        this.#silhouette       = (this.getElement().querySelector("#loadout-silhouette")) as HTMLImageElement;
+        this.#unitControl      = (this.getElement().querySelector("#unit-control")) as HTMLElement;
+        this.#unitLabel        = (this.getElement().querySelector("#unit-label")) as HTMLElement;
+        this.#unitName         = (this.getElement().querySelector("#unit-name")) as HTMLElement;
 
         document.addEventListener("unitsSelection", (e: CustomEvent<Unit[]>) => this.#onUnitsSelection(e.detail));
         document.addEventListener("unitsDeselection", (e: CustomEvent<Unit[]>) => this.#onUnitsDeselection(e.detail));
@@ -69,18 +69,15 @@ export class UnitInfoPanel extends Panel {
             this.#currentTask.dataset.currentTask = unit.getTaskData().currentTask !== ""? unit.getTaskData().currentTask: "No task";
             this.#currentTask.dataset.coalition = unit.getMissionData().coalition;
             
-            this.#silhouette.setAttribute( "style", `--loadout-background-image:url('/images/units/${aircraftDatabase.getByName( baseData.name )?.filename}');` );;
-            
+            this.#silhouette.src = `/images/units/${unit.getDatabase()?.getByName(baseData.name)?.filename}`;
+            this.#silhouette.classList.toggle("hide", unit.getDatabase()?.getByName(baseData.name)?.filename == undefined || unit.getDatabase()?.getByName(baseData.name)?.filename == '');
+                
             /* Add the loadout elements */
             const items = <HTMLElement>this.#loadoutContainer.querySelector( "#loadout-items" );
 
-
             if ( items ) {
-
                 const ammo = Object.values( unit.getMissionData().ammo ); 
-
                 if ( ammo.length > 0 ) {
-
                     items.replaceChildren(...Object.values(unit.getMissionData().ammo).map(
                         (ammo: any) => {
                             var el = document.createElement("div");
@@ -91,25 +88,28 @@ export class UnitInfoPanel extends Panel {
                     ));
 
                 } else {
-
-                    items.innerText = "No loadout";
-                    
+                    items.innerText = "No loadout"; 
                 }
-
             }
         }
     }
 
     #onUnitsSelection(units: Unit[]){
         if (units.length == 1)
+        {
             this.show();
+            this.#onUnitUpdate(units[0]);
+        }
         else
             this.hide();
     }
 
     #onUnitsDeselection(units: Unit[]){
         if (units.length == 1)
+        {
             this.show();
+            this.#onUnitUpdate(units[0]);
+        }
         else
             this.hide();
     }

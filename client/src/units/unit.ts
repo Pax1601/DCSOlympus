@@ -1,7 +1,7 @@
 import { Marker, LatLng, Polyline, Icon, DivIcon, CircleMarker, Map } from 'leaflet';
 import { getMap, getUnitsManager } from '..';
 import { rad2deg } from '../other/utils';
-import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, getUnits, landAt, setAltitude, setReactionToThreat, setROE, setSpeed, refuel, setAdvacedOptions, followUnit, setEmissionsCountermeasures } from '../server/server';
+import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, getUnits, landAt, setAltitude, setReactionToThreat, setROE, setSpeed, refuel, setAdvacedOptions, followUnit, setEmissionsCountermeasures, setSpeedType, setAltitudeType, setOnOff, setFollowRoads } from '../server/server';
 import { aircraftDatabase } from './aircraftdatabase';
 import { groundUnitsDatabase } from './groundunitsdatabase';
 import { CustomMarker } from '../map/custommarker';
@@ -49,9 +49,13 @@ export class Unit extends CustomMarker {
             currentTask: "",
             activePath: {},
             targetSpeed: 0,
+            targetSpeedType: "GS",
             targetAltitude: 0,
+            targetAltitudeType: "AGL",
             isTanker: false,
             isAWACS: false,
+            onOff: true,
+            followRoads: false
         },
         optionsData: {
             ROE: "",
@@ -116,8 +120,6 @@ export class Unit extends CustomMarker {
 
         /* Set the unit data */
         this.setData(data);
-
-        
     }
 
     getMarkerCategory() {
@@ -203,48 +205,19 @@ export class Unit extends CustomMarker {
         const aliveChanged = (data.baseData != undefined && data.baseData.alive != undefined && this.getBaseData().alive != data.baseData.alive);
         var updateMarker = (positionChanged || headingChanged || aliveChanged || !getMap().hasLayer(this));
 
-        if (data.baseData != undefined) {
-            for (let key in this.#data.baseData)
-                if (key in data.baseData)
-                    //@ts-ignore
-                    this.#data.baseData[key] = data.baseData[key];
-        }
-
-        if (data.flightData != undefined) {
-            for (let key in this.#data.flightData)
-                if (key in data.flightData)
-                    //@ts-ignore
-                    this.#data.flightData[key] = data.flightData[key];
-        }
-
-        if (data.missionData != undefined) {
-            for (let key in this.#data.missionData)
-                if (key in data.missionData)
-                    //@ts-ignore
-                    this.#data.missionData[key] = data.missionData[key];
-        }
-
-        if (data.formationData != undefined) {
-            for (let key in this.#data.formationData)
-                if (key in data.formationData)
-                    //@ts-ignore
-                    this.#data.formationData[key] = data.formationData[key];
-        }
-
-        if (data.taskData != undefined) {
-            for (let key in this.#data.taskData)
-                if (key in data.taskData)
-                    //@ts-ignore
-                    this.#data.taskData[key] = data.taskData[key];
-        }
-
-        if (data.optionsData != undefined) {
-            for (let key in this.#data.optionsData)
-                if (key in data.optionsData)
-                    //@ts-ignore
-                    this.#data.optionsData[key] = data.optionsData[key];
-        }
-
+        /* Load the data from the received json */
+        Object.keys(this.#data).forEach((key1: string) => {
+            Object.keys(this.#data[key1 as keyof(UnitData)]).forEach((key2: string) => {
+                if (key1 in data && key2 in data[key1]) {
+                    var value1 = this.#data[key1 as keyof(UnitData)];
+                    var value2 = value1[key2 as keyof typeof value1];
+                    if (typeof data[key1][key2] === typeof value2)
+                        //@ts-ignore
+                        this.#data[key1 as keyof(UnitData)][key2 as keyof typeof struct] = data[key1][key2];
+                }
+            });
+        });
+        
         /* Fire an event when a unit dies */
         if (aliveChanged && this.getBaseData().alive == false)
             document.dispatchEvent(new CustomEvent("unitDeath", { detail: this }));
@@ -485,9 +458,19 @@ export class Unit extends CustomMarker {
             setSpeed(this.ID, speed);
     }
 
+    setSpeedType(speedType: string) {
+        if (!this.getMissionData().flags.Human)
+            setSpeedType(this.ID, speedType);
+    }
+
     setAltitude(altitude: number) {
         if (!this.getMissionData().flags.Human)
             setAltitude(this.ID, altitude);
+    }
+
+    setAltitudeType(altitudeType: string) {
+        if (!this.getMissionData().flags.Human)
+            setAltitudeType(this.ID, altitudeType);
     }
 
     setROE(ROE: string) {
@@ -510,9 +493,19 @@ export class Unit extends CustomMarker {
             setLeader(this.ID, isLeader, wingmenIDs);
     }
 
-    delete() {
+    setOnOff(onOff: boolean) {
+        if (!this.getMissionData().flags.Human)
+            setOnOff(this.ID, onOff);
+    }
+
+    setFollowRoads(followRoads: boolean) {
+        if (!this.getMissionData().flags.Human)
+            setFollowRoads(this.ID, followRoads);
+    }
+
+    delete(explosion: boolean) {
         // TODO: add confirmation popup
-        deleteUnit(this.ID);
+        deleteUnit(this.ID, explosion);
     }
 
     refuel() {

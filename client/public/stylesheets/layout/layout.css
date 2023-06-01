@@ -62,6 +62,7 @@
 	position: absolute;
 	width: fit-content;
 	z-index: 1000;
+	padding: 24px 30px;
 }
 
 #info-popup {

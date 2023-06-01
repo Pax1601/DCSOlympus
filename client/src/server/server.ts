@@ -29,7 +29,7 @@ export function setCredentials(newUsername: string, newCredentials: string) {
     credentials = newCredentials;
 }
 
-export function GET(callback: CallableFunction, uri: string, options?: {time?: number}) {
+export function GET(callback: CallableFunction, uri: string, options?: { time?: number }) {
     var xmlHttp = new XMLHttpRequest();
 
     /* Assemble the request options string */
@@ -37,15 +37,14 @@ export function GET(callback: CallableFunction, uri: string, options?: {time?: n
     if (options?.time != undefined)
         optionsString = `time=${options.time}`;
 
-    
-    xmlHttp.open("GET", `${demoEnabled? DEMO_ADDRESS: REST_ADDRESS}/${uri}${optionsString? `?${optionsString}`: ''}`, true);
+
+    xmlHttp.open("GET", `${demoEnabled ? DEMO_ADDRESS : REST_ADDRESS}/${uri}${optionsString ? `?${optionsString}` : ''}`, true);
     if (credentials)
         xmlHttp.setRequestHeader("Authorization", "Basic " + credentials);
     xmlHttp.onload = function (e) {
         if (xmlHttp.status == 200) {
             var data = JSON.parse(xmlHttp.responseText);
-            if (uri !== UNITS_URI || (options?.time == 0) || parseInt(data.time) > lastUpdateTime)
-            {
+            if (uri !== UNITS_URI || (options?.time == 0) || parseInt(data.time) > lastUpdateTime) {
                 callback(data);
                 lastUpdateTime = parseInt(data.time);
                 if (isNaN(lastUpdateTime))
@@ -66,14 +65,14 @@ export function GET(callback: CallableFunction, uri: string, options?: {time?: n
     xmlHttp.send(null);
 }
 
-export function POST(request: object, callback: CallableFunction){
+export function POST(request: object, callback: CallableFunction) {
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("PUT", demoEnabled? DEMO_ADDRESS: REST_ADDRESS);
+    xmlHttp.open("PUT", demoEnabled ? DEMO_ADDRESS : REST_ADDRESS);
     xmlHttp.setRequestHeader("Content-Type", "application/json");
     if (credentials)
         xmlHttp.setRequestHeader("Authorization", "Basic " + credentials);
-        xmlHttp.onreadystatechange = () => { 
-        callback(); 
+    xmlHttp.onreadystatechange = () => {
+        callback();
     };
     xmlHttp.send(JSON.stringify(request));
 }
@@ -113,7 +112,7 @@ export function getMission(callback: CallableFunction) {
 }
 
 export function getUnits(callback: CallableFunction, refresh: boolean = false) {
-    GET(callback, `${UNITS_URI}`, {time: refresh? 0: lastUpdateTime});
+    GET(callback, `${UNITS_URI}`, { time: refresh ? 0 : lastUpdateTime });
 }
 
 export function addDestination(ID: number, path: any) {
@@ -135,7 +134,7 @@ export function spawnGroundUnit(spawnOptions: SpawnOptions) {
 }
 
 export function spawnAircraft(spawnOptions: SpawnOptions) {
-    var command = { "type": spawnOptions.type, "location": spawnOptions.latlng, "coalition": spawnOptions.coalition, "payloadName": spawnOptions.loadout != null? spawnOptions.loadout: "", "airbaseName": spawnOptions.airbaseName != null? spawnOptions.airbaseName: ""};
+    var command = { "type": spawnOptions.type, "location": spawnOptions.latlng, "coalition": spawnOptions.coalition, "altitude": spawnOptions.altitude, "payloadName": spawnOptions.loadout != null ? spawnOptions.loadout : "", "airbaseName": spawnOptions.airbaseName != null ? spawnOptions.airbaseName : "" };
     var data = { "spawnAir": command }
     POST(data, () => { });
 }
@@ -146,12 +145,12 @@ export function attackUnit(ID: number, targetID: number) {
     POST(data, () => { });
 }
 
-export function followUnit(ID: number, targetID: number, offset: {"x": number, "y": number, "z": number}) {
+export function followUnit(ID: number, targetID: number, offset: { "x": number, "y": number, "z": number }) {
     // X: front-rear, positive front
     // Y: top-bottom, positive bottom
     // Z: left-right, positive right
-    
-    var command = { "ID": ID, "targetID": targetID, "offsetX": offset["x"], "offsetY": offset["y"], "offsetZ": offset["z"]};
+
+    var command = { "ID": ID, "targetID": targetID, "offsetX": offset["x"], "offsetY": offset["y"], "offsetZ": offset["z"] };
     var data = { "followUnit": command }
     POST(data, () => { });
 }
@@ -162,8 +161,8 @@ export function cloneUnit(ID: number, latlng: L.LatLng) {
     POST(data, () => { });
 }
 
-export function deleteUnit(ID: number) {
-    var command = { "ID": ID};
+export function deleteUnit(ID: number, explosion: boolean) {
+    var command = { "ID": ID, "explosion": explosion };
     var data = { "deleteUnit": command }
     POST(data, () => { });
 }
@@ -175,50 +174,74 @@ export function landAt(ID: number, latlng: L.LatLng) {
 }
 
 export function changeSpeed(ID: number, speedChange: string) {
-    var command = {"ID": ID, "change": speedChange}
-    var data = {"changeSpeed": command}
+    var command = { "ID": ID, "change": speedChange }
+    var data = { "changeSpeed": command }
     POST(data, () => { });
 }
 
 export function setSpeed(ID: number, speed: number) {
-    var command = {"ID": ID, "speed": speed}
-    var data = {"setSpeed": command}
+    var command = { "ID": ID, "speed": speed }
+    var data = { "setSpeed": command }
+    POST(data, () => { });
+}
+
+export function setSpeedType(ID: number, speedType: string) {
+    var command = { "ID": ID, "speedType": speedType }
+    var data = { "setSpeedType": command }
     POST(data, () => { });
 }
 
 export function changeAltitude(ID: number, altitudeChange: string) {
-    var command = {"ID": ID, "change": altitudeChange}
-    var data = {"changeAltitude": command}
+    var command = { "ID": ID, "change": altitudeChange }
+    var data = { "changeAltitude": command }
+    POST(data, () => { });
+}
+
+export function setAltitudeType(ID: number, altitudeType: string) {
+    var command = { "ID": ID, "altitudeType": altitudeType }
+    var data = { "setAltitudeType": command }
     POST(data, () => { });
 }
 
 export function setAltitude(ID: number, altitude: number) {
-    var command = {"ID": ID, "altitude": altitude}
-    var data = {"setAltitude": command}
+    var command = { "ID": ID, "altitude": altitude }
+    var data = { "setAltitude": command }
     POST(data, () => { });
 }
 
 export function createFormation(ID: number, isLeader: boolean, wingmenIDs: number[]) {
-    var command = {"ID": ID, "wingmenIDs": wingmenIDs, "isLeader": isLeader}
-    var data = {"setLeader": command}
+    var command = { "ID": ID, "wingmenIDs": wingmenIDs, "isLeader": isLeader }
+    var data = { "setLeader": command }
     POST(data, () => { });
 }
 
 export function setROE(ID: number, ROE: string) {
-    var command = {"ID": ID, "ROE": ROE}
-    var data = {"setROE": command}
+    var command = { "ID": ID, "ROE": ROE }
+    var data = { "setROE": command }
     POST(data, () => { });
 }
 
 export function setReactionToThreat(ID: number, reactionToThreat: string) {
-    var command = {"ID": ID, "reactionToThreat": reactionToThreat}
-    var data = {"setReactionToThreat": command}
+    var command = { "ID": ID, "reactionToThreat": reactionToThreat }
+    var data = { "setReactionToThreat": command }
     POST(data, () => { });
 }
 
 export function setEmissionsCountermeasures(ID: number, emissionCountermeasure: string) {
-    var command = {"ID": ID, "emissionsCountermeasures": emissionCountermeasure}
-    var data = {"setEmissionsCountermeasures": command}
+    var command = { "ID": ID, "emissionsCountermeasures": emissionCountermeasure }
+    var data = { "setEmissionsCountermeasures": command }
+    POST(data, () => { });
+}
+
+export function setOnOff(ID: number, onOff: boolean) {
+    var command = { "ID": ID, "onOff": onOff }
+    var data = { "setOnOff": command }
+    POST(data, () => { });
+}
+
+export function setFollowRoads(ID: number, followRoads: boolean) {
+    var command = { "ID": ID, "followRoads": followRoads }
+    var data = { "setFollowRoads": command }
     POST(data, () => { });
 }
 
@@ -228,14 +251,14 @@ export function refuel(ID: number) {
     POST(data, () => { });
 }
 
-export function setAdvacedOptions(ID: number, isTanker: boolean, isAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings)
-{
-    var command = { "ID": ID,
-                    "isTanker": isTanker,
-                    "isAWACS": isAWACS,
-                    "TACAN": TACAN,
-                    "radio": radio,
-                    "generalSettings": generalSettings
+export function setAdvacedOptions(ID: number, isTanker: boolean, isAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings) {
+    var command = {
+        "ID": ID,
+        "isTanker": isTanker,
+        "isAWACS": isAWACS,
+        "TACAN": TACAN,
+        "radio": radio,
+        "generalSettings": generalSettings
     };
 
     var data = { "setAdvancedOptions": command };

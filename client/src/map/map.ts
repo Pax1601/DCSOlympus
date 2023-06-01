@@ -12,6 +12,7 @@ import { DestinationPreviewMarker } from "./destinationpreviewmarker";
 import { TemporaryUnitMarker } from "./temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
 import { SVGInjector } from '@tanem/svg-injector'
+import { layers as mapLayers, mapBounds, minimapBoundaries } from "../constants/constants";
 
 L.Map.addInitHook('addHandler', 'boxSelect', BoxSelect);
 
@@ -58,10 +59,10 @@ export class Map extends L.Map {
         super(ID, { doubleClickZoom: false, zoomControl: false, boxZoom: false, boxSelect: true, zoomAnimation: true, maxBoundsViscosity: 1.0, minZoom: 7, keyboard: true, keyboardPanDelta: 0 });
         this.setView([37.23, -115.8], 10);
 
-        this.setLayer("ArcGIS Satellite");
+        this.setLayer(Object.keys(mapLayers)[0]);
 
         /* Minimap */
-        var minimapLayer = new L.TileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { minZoom: 0, maxZoom: 13 });
+        var minimapLayer = new L.TileLayer(mapLayers[Object.keys(mapLayers)[0] as keyof typeof mapLayers].urlTemplate, { minZoom: 0, maxZoom: 13 });
         this.#miniMapLayerGroup = new L.LayerGroup([minimapLayer]);
         var miniMapPolyline = new L.Polyline(this.#getMinimapBoundaries(), { color: '#202831' });
         miniMapPolyline.addTo(this.#miniMapLayerGroup);
@@ -124,59 +125,30 @@ export class Map extends L.Map {
     }
 
     setLayer(layerName: string) {
-        if (this.#layer != null) {
+        if (this.#layer != null) 
             this.removeLayer(this.#layer)
+        
+        if (layerName in mapLayers){
+            const layerData = mapLayers[layerName as keyof typeof mapLayers];
+            var options: L.TileLayerOptions = {
+                attribution: layerData.attribution,
+                minZoom: layerData.minZoom,
+                maxZoom: layerData.maxZoom
+            };
+            this.#layer = new L.TileLayer(layerData.urlTemplate, options);
         }
 
-        if (layerName == "ArcGIS Satellite") {
-            this.#layer = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
-                attribution: "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
-            });
-        }
-        else if (layerName == "USGS Topo") {
-            this.#layer = L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}', {
-                maxZoom: 20,
-                attribution: 'Tiles courtesy of the <a href="https://usgs.gov/">U.S. Geological Survey</a>'
-            });
-        }
-        else if (layerName == "OpenStreetMap Mapnik") {
-            this.#layer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            });
-        }
-        else if (layerName == "OPENVKarte") {
-            this.#layer = L.tileLayer('https://tileserver.memomaps.de/tilegen/{z}/{x}/{y}.png', {
-                maxZoom: 18,
-                attribution: 'Map <a href="https://memomaps.de/">memomaps.de</a> <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            });
-        }
-        else if (layerName == "Esri.DeLorme") {
-            this.#layer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Specialty/DeLorme_World_Base_Map/MapServer/tile/{z}/{y}/{x}', {
-                attribution: 'Tiles &copy; Esri &mdash; Copyright: &copy;2012 DeLorme',
-                minZoom: 1,
-                maxZoom: 11
-            });
-        }
-        else if (layerName == "CyclOSM") {
-            this.#layer = L.tileLayer('https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png', {
-                maxZoom: 20,
-                attribution: '<a href="https://github.com/cyclosm/cyclosm-cartocss-style/releases" title="CyclOSM - Open Bicycle render">CyclOSM</a> | Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            });
-        }
         this.#layer?.addTo(this);
     }
 
     getLayers() {
-        return ["ArcGIS Satellite", "USGS Topo", "OpenStreetMap Mapnik", "OPENVKarte", "Esri.DeLorme", "CyclOSM"]
+        return Object.keys(mapLayers);
     }
 
     /* State machine */
     setState(state: string) {
         this.#state = state;
         if (this.#state === IDLE) {
-            L.DomUtil.removeClass(this.getContainer(), 'crosshair-cursor-enabled');
-
             /* Remove all the destination preview markers */
             this.#destinationPreviewMarkers.forEach((marker: L.Marker) => {
                 this.removeLayer(marker);
@@ -188,8 +160,6 @@ export class Map extends L.Map {
             this.#destinationRotationCenter = null;
         }
         else if (this.#state === MOVE_UNIT) {
-            L.DomUtil.addClass(this.getContainer(), 'crosshair-cursor-enabled');
-
             /* Remove all the exising destination preview markers */
             this.#destinationPreviewMarkers.forEach((marker: L.Marker) => {
                 this.removeLayer(marker);
@@ -199,7 +169,7 @@ export class Map extends L.Map {
             if (getUnitsManager().getSelectedUnits({ excludeHumans: true }).length > 1 && getUnitsManager().getSelectedUnits({ excludeHumans: true }).length < 20) {
                 /* Create the unit destination preview markers */
                 this.#destinationPreviewMarkers = getUnitsManager().getSelectedUnits({ excludeHumans: true }).map((unit: Unit) => {
-                    var marker = new DestinationPreviewMarker(this.getMouseCoordinates());
+                    var marker = new DestinationPreviewMarker(this.getMouseCoordinates(), {interactive: false});
                     marker.addTo(this);
                     return marker;
                 })
@@ -295,20 +265,9 @@ export class Map extends L.Map {
     setTheatre(theatre: string) {
         var bounds = new L.LatLngBounds([-90, -180], [90, 180]);
         var miniMapZoom = 5;
-        if (theatre == "Syria")
-            bounds = new L.LatLngBounds([31.8472222, 29.8975], [37.7177778, 42.3716667]);
-        else if (theatre == "MarianaIslands")
-            bounds = new L.LatLngBounds([10.5777778, 135.7477778], [22.5127778, 149.5427778]);
-        else if (theatre == "Nevada")
-            bounds = new L.LatLngBounds([34.4037128, -119.7806729], [39.7372411, -112.1130805])
-        else if (theatre == "PersianGulf")
-            bounds = new L.LatLngBounds([21.729393, 47.572675], [33.131584, 64.7313594])
-        else if (theatre == "Falklands") {
-            // TODO
-        }
-        else if (theatre == "Caucasus") {
-            bounds = new L.LatLngBounds([39.6170191, 27.634935], [47.3907982, 49.3101946])
-            miniMapZoom = 4;
+        if (theatre in mapBounds) {
+            bounds = mapBounds[theatre as keyof typeof mapBounds].bounds;
+            miniMapZoom = mapBounds[theatre as keyof typeof mapBounds].zoom;
         }
 
         this.setView(bounds.getCenter(), 8);
@@ -426,7 +385,7 @@ export class Map extends L.Map {
             if (!e.originalEvent.ctrlKey) {
                 getUnitsManager().selectedUnitsClearDestinations();
             }
-            getUnitsManager().selectedUnitsAddDestination(this.#computeDestinationRotation && this.#destinationRotationCenter != null ? this.#destinationRotationCenter : e.latlng, !e.originalEvent.shiftKey, this.#destinationGroupRotation)
+            getUnitsManager().selectedUnitsAddDestination(this.#computeDestinationRotation && this.#destinationRotationCenter != null ? this.#destinationRotationCenter : e.latlng, e.originalEvent.shiftKey, this.#destinationGroupRotation)
             this.#destinationGroupRotation = 0; 
             this.#destinationRotationCenter = null;
             this.#computeDestinationRotation = false;
@@ -481,48 +440,13 @@ export class Map extends L.Map {
 
     #getMinimapBoundaries() {
         /* Draw the limits of the maps in the minimap*/
-        return [[    // NTTR
-            new L.LatLng(39.7982463, -119.985425),
-            new L.LatLng(34.4037128, -119.7806729),
-            new L.LatLng(34.3483316, -112.4529351),
-            new L.LatLng(39.7372411, -112.1130805),
-            new L.LatLng(39.7982463, -119.985425)
-        ],
-        [   // Syria
-            new L.LatLng(37.3630556, 29.2686111),
-            new L.LatLng(31.8472222, 29.8975),
-            new L.LatLng(32.1358333, 42.1502778),
-            new L.LatLng(37.7177778, 42.3716667),
-            new L.LatLng(37.3630556, 29.2686111)
-        ],
-        [   // Caucasus
-            new L.LatLng(39.6170191, 27.634935),
-            new L.LatLng(38.8735863, 47.1423108),
-            new L.LatLng(47.3907982, 49.3101946),
-            new L.LatLng(48.3955879, 26.7753625),
-            new L.LatLng(39.6170191, 27.634935)
-        ],
-        [   // Persian Gulf
-            new L.LatLng(32.9355285, 46.5623682),
-            new L.LatLng(21.729393, 47.572675),
-            new L.LatLng(21.8501348, 63.9734737),
-            new L.LatLng(33.131584, 64.7313594),
-            new L.LatLng(32.9355285, 46.5623682)
-        ],
-        [   // Marianas
-            new L.LatLng(22.09, 135.0572222),
-            new L.LatLng(10.5777778, 135.7477778),
-            new L.LatLng(10.7725, 149.3918333),
-            new L.LatLng(22.5127778, 149.5427778),
-            new L.LatLng(22.09, 135.0572222)
-        ]
-        ];
+        return minimapBoundaries;
     }
 
     #updateDestinationPreview(e: any) {
         Object.values(getUnitsManager().selectedUnitsComputeGroupDestination(this.#computeDestinationRotation && this.#destinationRotationCenter != null ? this.#destinationRotationCenter : this.getMouseCoordinates(), this.#destinationGroupRotation)).forEach((latlng: L.LatLng, idx: number) => {
             if (idx < this.#destinationPreviewMarkers.length)
-                this.#destinationPreviewMarkers[idx].setLatLng(!e.originalEvent.shiftKey ? latlng : this.getMouseCoordinates());
+                this.#destinationPreviewMarkers[idx].setLatLng(e.originalEvent.shiftKey ? latlng : this.getMouseCoordinates());
         })
     }
 

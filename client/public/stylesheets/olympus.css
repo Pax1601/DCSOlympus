@@ -67,6 +67,7 @@ button>img:first-child {
     position: relative;
     aspect-ratio: initial;
     height: 100%;
+    pointer-events: none;
 }
 
 form {
@@ -316,16 +317,15 @@ form>div {
 
 .ol-panel-board>.panel-section {
     border-right: 1px solid #555;
-    margin: 10px 0;
     padding: 0 30px;
 }
 
 .ol-panel-board>.panel-section:first-child {
-    padding-left: 20px;
+    padding-left: 0px;
 }
 
 .ol-panel-board>.panel-section:last-child {
-    padding-right: 20px;
+    padding-right: 0px;
 }
 
 .ol-panel-board>.panel-section:last-of-type {
@@ -861,6 +861,7 @@ nav.ol-panel> :last-child {
 .ol-destination-preview-icon {
     background-color: var(--secondary-yellow);
     border-radius: 999px;
+    cursor: grab;
     height: 52px;
     pointer-events: none;
     width: 52px;
@@ -1130,9 +1131,12 @@ input[type=number]::-webkit-outer-spin-button {
 
 .ol-switch[data-value="false"]>.ol-switch-fill::before {
     transform: translateX(calc(var(--width) - 100%));
-	
 }
 
 .ol-switch[data-value="true"]>.ol-switch-fill::after {
 	transform: translateX(calc(var(--width) - var(--height)));
+}
+
+.ol-switch[data-value="undefined"]>.ol-switch-fill::after {
+	transform: translateX(calc((var(--width) - var(--height)) * 0.5));
 }

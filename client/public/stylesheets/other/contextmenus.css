@@ -29,8 +29,22 @@
     width: fit-content;
 }
 
-#context-menu-switch {
+#coalition-switch {
     margin-right: 10px;
+    height: 25px;
+    width: 50px;
+}
+
+#coalition-switch[data-value="false"]>.ol-switch-fill {
+	background-color: var(--primary-blue);
+}
+
+#coalition-switch[data-value="true"]>.ol-switch-fill {
+	background-color: var(--primary-red);
+}
+
+#coalition-switch[data-value="undefined"]>.ol-switch-fill {
+	background-color: var(--primary-neutral);
 }
 
 #map-contextmenu>div:nth-child(2) {
@@ -109,11 +123,6 @@
     border-top-right-radius: var(--border-radius-sm);
 }
 
-#context-menu-switch .ol-switch-fill {
-    width: 40;
-}
-
-[data-active-coalition="blue"].ol-switch-fill,
 [data-active-coalition="blue"].unit-spawn-button:hover,
 [data-active-coalition="blue"].unit-spawn-button.is-open,
 [data-active-coalition="blue"]#active-coalition-label,
@@ -122,7 +131,6 @@
     background-color: var(--primary-blue)
 }
 
-[data-active-coalition="red"].ol-switch-fill,
 [data-active-coalition="red"].unit-spawn-button:hover,
 [data-active-coalition="red"].unit-spawn-button.is-open,
 [data-active-coalition="red"]#active-coalition-label,
@@ -131,7 +139,6 @@
     background-color: var(--primary-red)
 }
 
-[data-active-coalition="neutral"].ol-switch-fill,
 [data-active-coalition="neutral"].unit-spawn-button:hover,
 [data-active-coalition="neutral"].unit-spawn-button.is-open,
 [data-active-coalition="neutral"]#active-coalition-label,
@@ -156,18 +163,6 @@
     background-color: transparent;
     border: 1px solid var(--primary-neutral);
     cursor: default;
-}
-
-[data-active-coalition="blue"].ol-switch-fill::after {
-    transform: translateX(0%);
-}
-
-[data-active-coalition="red"].ol-switch-fill::after {
-    transform: translateX(100%);
-}
-
-[data-active-coalition="neutral"].ol-switch-fill::after {
-    transform: translateX(50%);
 }
 
 [data-active-coalition="blue"]#active-coalition-label::after {
@@ -248,6 +243,17 @@
 
 [data-smoke-color="orange"]::before {
     background-color: orange;
+}
+
+#aircraft-spawn-menu .ol-slider-value {
+	color: var(--accent-light-blue);
+	cursor: pointer;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+#aircraft-spawn-altitude-slider {
+    padding: 0px 10px;
 }
 
 /* Unit context menu */

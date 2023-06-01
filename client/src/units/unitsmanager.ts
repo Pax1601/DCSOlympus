@@ -21,7 +21,8 @@ export class UnitsManager {
         document.addEventListener('unitSelection', (e: CustomEvent) => this.#onUnitSelection(e.detail));
         document.addEventListener('unitDeselection', (e: CustomEvent) => this.#onUnitDeselection(e.detail));
         document.addEventListener('keydown', (event) => this.#onKeyDown(event));
-        document.addEventListener('deleteSelectedUnits', () => this.selectedUnitsDelete())
+        document.addEventListener('deleteSelectedUnits', () => this.selectedUnitsDelete());
+        document.addEventListener('explodeSelectedUnits', () => this.selectedUnitsDelete(true));
     }
 
     getSelectableAircraft() {
@@ -155,25 +156,16 @@ export class UnitsManager {
         });
     };
 
-    getSelectedUnitsTargetSpeed() {
+    getSelectedUnitsVariable(variableGetter: CallableFunction) {
         if (this.getSelectedUnits().length == 0)
             return undefined;
         return this.getSelectedUnits().map((unit: Unit) => {
-            return unit.getTaskData().targetSpeed
+            return variableGetter(unit);
         })?.reduce((a: any, b: any) => {
             return a == b ? a : undefined
         });
     };
 
-    getSelectedUnitsTargetAltitude() {
-        if (this.getSelectedUnits().length == 0)
-            return undefined;
-        return this.getSelectedUnits().map((unit: Unit) => {
-            return unit.getTaskData().targetAltitude
-        })?.reduce((a: any, b: any) => {
-            return a == b ? a : undefined
-        });
-    };
 
     getSelectedUnitsCoalition() {
         if (this.getSelectedUnits().length == 0)
@@ -261,12 +253,28 @@ export class UnitsManager {
         this.#showActionMessage(selectedUnits, `setting speed to ${speed * 1.94384} kts`);
     }
 
+    selectedUnitsSetSpeedType(speedType: string) {
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        for (let idx in selectedUnits) {
+            selectedUnits[idx].setSpeedType(speedType);
+        }
+        this.#showActionMessage(selectedUnits, `setting speed type to ${speedType}`);
+    }
+
     selectedUnitsSetAltitude(altitude: number) {
         var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].setAltitude(altitude);
         }
         this.#showActionMessage(selectedUnits, `setting altitude to ${altitude / 0.3048} ft`);
+    }
+
+    selectedUnitsSetAltitudeType(altitudeType: string) {
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        for (let idx in selectedUnits) {
+            selectedUnits[idx].setAltitudeType(altitudeType);
+        }
+        this.#showActionMessage(selectedUnits, `setting altitude type to ${altitudeType}`);
     }
 
     selectedUnitsSetROE(ROE: string) {
@@ -290,7 +298,23 @@ export class UnitsManager {
         for (let idx in selectedUnits) {
             selectedUnits[idx].setEmissionsCountermeasures(emissionCountermeasure);
         }
-        this.#showActionMessage(selectedUnits, `reaction to threat set to ${emissionCountermeasure}`);
+        this.#showActionMessage(selectedUnits, `emissions & countermeasures set to ${emissionCountermeasure}`);
+    }
+
+    selectedUnitsSetOnOff(onOff: boolean) {
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        for (let idx in selectedUnits) {
+            selectedUnits[idx].setOnOff(onOff);
+        }
+        this.#showActionMessage(selectedUnits, `unit acitve set to ${onOff}`);
+    }
+
+    selectedUnitsSetFollowRoads(followRoads: boolean) {
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        for (let idx in selectedUnits) {
+            selectedUnits[idx].setFollowRoads(followRoads);
+        }
+        this.#showActionMessage(selectedUnits, `follow roads set to ${followRoads}`);
     }
 
 
@@ -302,10 +326,10 @@ export class UnitsManager {
         this.#showActionMessage(selectedUnits, `attacking unit ${this.getUnitByID(ID)?.getBaseData().unitName}`);
     }
 
-    selectedUnitsDelete() {
+    selectedUnitsDelete(explosion: boolean = false) {
         var selectedUnits = this.getSelectedUnits(); /* Can be applied to humans too */
         for (let idx in selectedUnits) {
-            selectedUnits[idx].delete();
+            selectedUnits[idx].delete(explosion);
         }
         this.#showActionMessage(selectedUnits, `deleted`);
     }

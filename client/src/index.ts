@@ -98,8 +98,6 @@ function readConfig(config: any) {
 }
 
 function setupEvents() {
-    window.onanimationiteration = console.log;
-
     /* Generic clicks */
     document.addEventListener("click", (ev) => {
         if (ev instanceof MouseEvent && ev.target instanceof HTMLElement) {

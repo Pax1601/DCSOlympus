@@ -1,9 +1,7 @@
 <div id="map-contextmenu" oncontextmenu="return false;">
     <div id="active-coalition-label" data-active-coalition="blue"></div>
     <div id="upper-bar" class="ol-panel">
-        <label id="context-menu-switch" class="ol-switch" for="context-menu-ol-switch">
-            <div data-active-coalition="blue" class="ol-switch-fill"></div>
-        </label>
+        <div id="coalition-switch" class="ol-switch"></div>
         <button data-active-coalition="blue" id="aircraft-spawn-button" title="Spawn aircraft" data-on-click="contextMenuShow"
             data-on-click-params='{ "type": "aircraft" }' class="unit-spawn-button"></button>
         <button data-active-coalition="blue" id="ground-unit-spawn-button" title="Spawn ground unit" data-on-click="contextMenuShow"
@@ -37,6 +35,17 @@
                     <!-- This is where all the aircraft loadouts buttons will be shown-->
                 </div>
             </div>
+        </div>
+        <div id="aircraft-spawn-altitude-slider" class="ol-slider-container flight-control-ol-slider">
+            <dl class="ol-data-grid">
+                <dt> Spawn altitude
+                </dt>
+                <dd>
+                    <div class="ol-slider-value"></div>
+                </dd>
+            </dl>
+            <input type="range" min="0" max="100" value="0" class="ol-slider">
+            
         </div>
         <div id="loadout-preview">
             <img id="unit-image" class="hide">

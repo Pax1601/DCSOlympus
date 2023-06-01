@@ -37,7 +37,7 @@ export class MissionHandler
             for (let idx in data.airbases)
             {
                 var airbase = data.airbases[idx]
-                if (this.#airbases[idx] === undefined)
+                if (this.#airbases[idx] === undefined && airbase.callsign != '')
                 {
                     this.#airbases[idx] = new Airbase({
                         position: new LatLng(airbase.latitude, airbase.longitude), 
@@ -45,7 +45,8 @@ export class MissionHandler
                     }).addTo(getMap());
                     this.#airbases[idx].on('contextmenu', (e) => this.#onAirbaseClick(e));
                 }
-                if (airbase.latitude && airbase.longitude && airbase.coalition)
+
+                if (this.#airbases[idx] != undefined && airbase.latitude && airbase.longitude && airbase.coalition)
                 {
                     this.#airbases[idx].setLatLng(new LatLng(airbase.latitude, airbase.longitude));
                     this.#airbases[idx].setCoalition(airbase.coalition);
