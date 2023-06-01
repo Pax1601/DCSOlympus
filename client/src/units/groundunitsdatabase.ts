@@ -22,6 +22,108 @@ export class GroundUnitsDatabase extends UnitDatabase {
                 ],
                 "filename": ""
             },
+            "SA-3 SAM Battery": {
+                "name": "SA-3 SAM Battery",
+                "label": "SA-3 SAM Battery",
+                "shortLabel": "SA-3 SAM Battery",
+                "loadouts": [
+                    {
+                        "fuel": 1,
+                        "items": [],
+                        "roles": [
+                            "Template"
+                        ],
+                        "code": "",
+                        "name": "Default"
+                    }
+                ],
+                "filename": ""
+            },
+            "SA-6 SAM Battery": {
+                "name": "SA-6 SAM Battery",
+                "label": "SA-6 SAM Battery",
+                "shortLabel": "SA-6 SAM Battery",
+                "loadouts": [
+                    {
+                        "fuel": 1,
+                        "items": [],
+                        "roles": [
+                            "Template"
+                        ],
+                        "code": "",
+                        "name": "Default"
+                    }
+                ],
+                "filename": ""
+            },
+            "SA-10 SAM Battery": {
+                "name": "SA-10 SAM Battery",
+                "label": "SA-10 SAM Battery",
+                "shortLabel": "SA-10 SAM Battery",
+                "loadouts": [
+                    {
+                        "fuel": 1,
+                        "items": [],
+                        "roles": [
+                            "Template"
+                        ],
+                        "code": "",
+                        "name": "Default"
+                    }
+                ],
+                "filename": ""
+            },
+            "SA-11 SAM Battery": {
+                "name": "SA-11 SAM Battery",
+                "label": "SA-11 SAM Battery",
+                "shortLabel": "SA-11 SAM Battery",
+                "loadouts": [
+                    {
+                        "fuel": 1,
+                        "items": [],
+                        "roles": [
+                            "Template"
+                        ],
+                        "code": "",
+                        "name": "Default"
+                    }
+                ],
+                "filename": ""
+            },
+            "Patriot site": {
+                "name": "Patriot site",
+                "label": "Patriot site",
+                "shortLabel": "Patriot site",
+                "loadouts": [
+                    {
+                        "fuel": 1,
+                        "items": [],
+                        "roles": [
+                            "Template"
+                        ],
+                        "code": "",
+                        "name": "Default"
+                    }
+                ],
+                "filename": ""
+            },
+            "Hawk SAM Battery": {
+                "name": "Hawk SAM Battery",
+                "label": "Hawk SAM Battery",
+                "shortLabel": "Hawk SAM Battery",
+                "loadouts": [
+                    {
+                        "fuel": 1,
+                        "items": [],
+                        "roles": [
+                            "Template"
+                        ],
+                        "code": "",
+                        "name": "Default"
+                    }
+                ],
+                "filename": ""
+            }
             "2B11 mortar": {
                 "name": "2B11 mortar",
                 "label": "2B11 mortar",
