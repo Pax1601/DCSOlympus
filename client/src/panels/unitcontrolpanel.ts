@@ -88,6 +88,8 @@ export class UnitControlPanel extends Panel {
         this.#altitudeTypeSwitch.resetExpectedValue();
         this.#onOffSwitch.resetExpectedValue();
         this.#followRoadsSwitch.resetExpectedValue();
+        this.#altitudeSlider.resetExpectedValue();
+        this.#speedSlider.resetExpectedValue();
     }
 
     addButtons() {

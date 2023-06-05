@@ -12,8 +12,7 @@ public:
 	virtual wstring getCategory() { return L"GroundUnit"; };
 	virtual void changeSpeed(wstring change);
 	virtual void changeAltitude(wstring change) {};
-	virtual double getTargetSpeed() { return targetSpeed; };
+	virtual void setOnOff(bool newOnOff);
+	virtual void setFollowRoads(bool newFollowRoads);
 
-protected:
-	double targetSpeed = 10;
 };

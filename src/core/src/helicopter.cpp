@@ -17,6 +17,9 @@ Helicopter::Helicopter(json::value json, int ID) : AirUnit(json, ID)
 {
 	log("New Helicopter created with ID: " + to_string(ID));
 	addMeasure(L"category", json::value(getCategory()));
+
+	double targetSpeed = 100 / 1.94384;
+	double targetAltitude = 5000 * 0.3048;
 	setTargetSpeed(targetSpeed);
 	setTargetAltitude(targetAltitude);
 };
@@ -58,17 +61,4 @@ void Helicopter::changeAltitude(wstring change)
 		targetAltitude = 0;
 
 	goToDestination();		/* Send the command to reach the destination */
-}
-
-
-void Helicopter::setTargetSpeed(double newTargetSpeed) {
-	targetSpeed = newTargetSpeed;
-	addMeasure(L"targetSpeed", json::value(targetSpeed));
-	goToDestination();
-}
-
-void Helicopter::setTargetAltitude(double newTargetAltitude) {
-	targetAltitude = newTargetAltitude;
-	addMeasure(L"targetAltitude", json::value(targetAltitude));
-	goToDestination();
 }

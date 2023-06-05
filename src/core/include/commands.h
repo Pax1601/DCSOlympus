@@ -81,8 +81,6 @@ namespace ECMUse {
 	};
 }
 
-
-
 /* Base command class */
 class Command
 {
@@ -99,11 +97,13 @@ protected:
 class Move : public Command
 {
 public:
-	Move(int ID, Coords destination, double speed, double altitude, wstring taskOptions):
+	Move(int ID, Coords destination, double speed, wstring speedType, double altitude, wstring altitudeType, wstring taskOptions):
 		ID(ID),
 		destination(destination),
 		speed(speed),
+		speedType(speedType),
 		altitude(altitude),
+		altitudeType(altitudeType),
 		taskOptions(taskOptions)
 	{ 
 		priority = CommandPriority::HIGH; 
@@ -115,7 +115,9 @@ private:
 	const int ID;
 	const Coords destination;
 	const double speed;
+	const wstring speedType;
 	const double altitude;
+	const wstring altitudeType;
 	const wstring taskOptions;
 };
 
@@ -203,8 +205,9 @@ private:
 class Delete : public Command
 {
 public:
-	Delete(int ID) :
-		ID(ID)
+	Delete(int ID, bool explosion) :
+		ID(ID), 
+		explosion(explosion)
 	{
 		priority = CommandPriority::HIGH;
 	};
@@ -213,6 +216,7 @@ public:
 
 private:
 	const int ID;
+	const bool explosion;
 };
 
 /* Follow command */
@@ -299,4 +303,22 @@ private:
 	const int optionValue;
 	const bool optionBool;
 	const bool isBoolean;
+};
+
+/* Set on ooff */
+class SetOnOff : public Command
+{
+public:
+	SetOnOff(int ID, bool onOff) :
+		ID(ID),
+		onOff(onOff)
+	{
+		priority = CommandPriority::HIGH;
+	};
+	virtual wstring getString(lua_State* L);
+	virtual int getLoad() { return 10; }
+
+private:
+	const int ID;
+	const bool onOff;
 };

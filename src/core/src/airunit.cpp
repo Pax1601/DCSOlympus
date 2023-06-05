@@ -155,12 +155,10 @@ void AirUnit::goToDestination(wstring enrouteTask)
 {
 	if (activeDestination != NULL)
 	{
-		Command* command = dynamic_cast<Command*>(new Move(ID, activeDestination, getTargetSpeed(), getTargetAltitude(), enrouteTask));
+		Command* command = dynamic_cast<Command*>(new Move(ID, activeDestination, getTargetSpeed(), getTargetSpeedType(), getTargetAltitude(), getTargetAltitudeType(), enrouteTask));
 		scheduler->appendCommand(command);
 		setHasTask(true);
 	}
-	else
-		log(unitName + L" error, no active destination!");
 }
 
 void AirUnit::AIloop()
@@ -317,4 +315,24 @@ void AirUnit::AIloop()
 	}
 
 	addMeasure(L"currentTask", json::value(currentTask));
+}
+
+void AirUnit::setTargetSpeed(double newTargetSpeed) {
+	Unit::setTargetSpeed(newTargetSpeed);
+	goToDestination();
+}
+
+void AirUnit::setTargetAltitude(double newTargetAltitude) {
+	Unit::setTargetAltitude(newTargetAltitude);
+	goToDestination();
+}
+
+void AirUnit::setTargetSpeedType(wstring newTargetSpeedType) { 
+	Unit::setTargetSpeedType(newTargetSpeedType);
+	goToDestination();
+}
+
+void AirUnit::setTargetAltitudeType(wstring newTargetAltitudeType) { 
+	Unit::setTargetAltitudeType(newTargetAltitudeType);
+	goToDestination();
 }

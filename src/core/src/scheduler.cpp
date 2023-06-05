@@ -111,7 +111,8 @@ void Scheduler::handleRequest(wstring key, json::value value)
 		wstring type = value[L"type"].as_string();
 		double lat = value[L"location"][L"lat"].as_double();
 		double lng = value[L"location"][L"lng"].as_double();
-		Coords loc; loc.lat = lat; loc.lng = lng;
+		double altitude = value[L"altitude"].as_double();
+		Coords loc; loc.lat = lat; loc.lng = lng; loc.alt = altitude;
 		wstring payloadName = value[L"payloadName"].as_string();
 		wstring airbaseName = value[L"airbaseName"].as_string();
 		log(L"Spawning " + coalition + L" air unit of type " + type + L" with payload " + payloadName + L" at (" + to_wstring(lat) + L", " + to_wstring(lng) + L" " + airbaseName + L")");
@@ -192,12 +193,26 @@ void Scheduler::handleRequest(wstring key, json::value value)
 		if (unit != nullptr)
 			unit->setTargetSpeed(value[L"speed"].as_double());
 	}
+	else if (key.compare(L"setSpeedType") == 0)
+	{
+	int ID = value[L"ID"].as_integer();
+	Unit* unit = unitsManager->getUnit(ID);
+	if (unit != nullptr)
+		unit->setTargetSpeedType(value[L"speedType"].as_string());
+	}
 	else if (key.compare(L"setAltitude") == 0)
 	{
 		int ID = value[L"ID"].as_integer();
 		Unit* unit = unitsManager->getUnit(ID);
 		if (unit != nullptr)
 			unit->setTargetAltitude(value[L"altitude"].as_double());
+	}
+	else if (key.compare(L"setAltitudeType") == 0)
+	{
+		int ID = value[L"ID"].as_integer();
+		Unit* unit = unitsManager->getUnit(ID);
+		if (unit != nullptr)
+			unit->setTargetAltitudeType(value[L"altitudeType"].as_string());
 	}
 	else if (key.compare(L"cloneUnit") == 0)
 	{
@@ -241,7 +256,8 @@ void Scheduler::handleRequest(wstring key, json::value value)
 	else if (key.compare(L"deleteUnit") == 0)
 	{
 		int ID = value[L"ID"].as_integer();
-		unitsManager->deleteUnit(ID);
+		bool explosion = value[L"explosion"].as_bool();
+		unitsManager->deleteUnit(ID, explosion);
 	}
 	else if (key.compare(L"refuel") == 0)
 	{
@@ -285,6 +301,20 @@ void Scheduler::handleRequest(wstring key, json::value value)
 
 			unit->resetActiveDestination();
 		}
+	}
+	else if (key.compare(L"setFollowRoads") == 0)
+		{
+		int ID = value[L"ID"].as_integer();
+		bool followRoads = value[L"followRoads"].as_bool();
+		Unit* unit = unitsManager->getUnit(ID);
+		unit->setFollowRoads(followRoads);
+	}
+	else if (key.compare(L"setOnOff") == 0)
+		{
+		int ID = value[L"ID"].as_integer();
+		bool onOff = value[L"onOff"].as_bool();
+		Unit* unit = unitsManager->getUnit(ID);
+		unit->setOnOff(onOff);
 	}
 	else
 	{

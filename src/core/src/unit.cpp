@@ -179,7 +179,7 @@ json::value Unit::getData(long long time)
 
 		/********** Task data **********/
 		json[L"taskData"] = json::value::object();
-		for (auto key : { L"currentState", L"currentTask", L"targetSpeed", L"targetAltitude", L"activePath", L"isTanker", L"isAWACS" })
+		for (auto key : { L"currentState", L"currentTask", L"targetSpeed", L"targetAltitude", L"targetSpeedType", L"targetAltitudeType", L"activePath", L"isTanker", L"isAWACS", L"onOff", L"followRoads"})
 		{
 			if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
 				json[L"taskData"][key] = measures[key]->getValue();

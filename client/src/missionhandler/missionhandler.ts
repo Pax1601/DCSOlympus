@@ -87,7 +87,7 @@ export class MissionHandler
             }
         }
 
-        if ("mission" in data)
+        if ("mission" in data && data.mission != null)
         {
             if (data.mission != null && data.mission.theatre != this.#theatre) 
             {

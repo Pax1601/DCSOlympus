@@ -22,6 +22,7 @@ export class UnitsManager {
         document.addEventListener('unitDeselection', (e: CustomEvent) => this.#onUnitDeselection(e.detail));
         document.addEventListener('deleteSelectedUnits', () => this.selectedUnitsDelete());
         document.addEventListener('explodeSelectedUnits', () => this.selectedUnitsDelete(true));
+        document.addEventListener('keyup', (event) => this.#onKeyUp(event));
     }
 
     getSelectableAircraft() {
@@ -457,6 +458,12 @@ export class UnitsManager {
     }
 
     /***********************************************/
+    #onKeyUp(event: KeyboardEvent) {
+        if (!keyEventWasInInput(event) && event.key === "Delete" ) {
+            this.selectedUnitsDelete();
+        }
+    }
+
     #onUnitSelection(unit: Unit) {
         if (this.getSelectedUnits().length > 0) {
             getMap().setState(MOVE_UNIT);

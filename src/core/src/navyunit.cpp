@@ -17,8 +17,9 @@ NavyUnit::NavyUnit(json::value json, int ID) : Unit(json, ID)
 {
 	log("New Navy Unit created with ID: " + to_string(ID));
 	addMeasure(L"category", json::value(getCategory()));
+
+	double targetSpeed = 10;
 	setTargetSpeed(targetSpeed);
-	setTargetAltitude(targetAltitude);
 };
 
 void NavyUnit::AIloop()

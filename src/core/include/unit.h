@@ -112,9 +112,11 @@ public:
 	Offset getFormationoffset() { return formationOffset; }
 	
 	/********** Task data **********/
-	void setCurrentTask(wstring newCurrentTask) { currentTask = newCurrentTask;addMeasure(L"currentTask", json::value(newCurrentTask)); } 
+	void setCurrentTask(wstring newCurrentTask) { currentTask = newCurrentTask; addMeasure(L"currentTask", json::value(newCurrentTask)); } 
 	virtual void setTargetSpeed(double newTargetSpeed) { targetSpeed = newTargetSpeed; addMeasure(L"targetSpeed", json::value(newTargetSpeed));}
-	virtual void setTargetAltitude(double newTargetAltitude) { targetAltitude = newTargetAltitude; addMeasure(L"targetAltitude", json::value(newTargetAltitude));} //TODO fix, double definition
+	virtual void setTargetAltitude(double newTargetAltitude) { targetAltitude = newTargetAltitude; addMeasure(L"targetAltitude", json::value(newTargetAltitude));}
+	virtual void setTargetSpeedType(wstring newTargetSpeedType) { targetSpeedType = newTargetSpeedType; addMeasure(L"targetSpeedType", json::value(newTargetSpeedType)); }
+	virtual void setTargetAltitudeType(wstring newTargetAltitudeType) { targetAltitudeType = newTargetAltitudeType; addMeasure(L"targetAltitudeType", json::value(newTargetAltitudeType)); }
 	void setActiveDestination(Coords newActiveDestination) { activeDestination = newActiveDestination; addMeasure(L"activeDestination", json::value("")); } // TODO fix
 	void setActivePath(list<Coords> newActivePath);
 	void clearActivePath();
@@ -124,15 +126,21 @@ public:
 	void setTargetID(int newTargetID) { targetID = newTargetID; addMeasure(L"targetID", json::value(newTargetID));}
 	void setIsTanker(bool newIsTanker);
 	void setIsAWACS(bool newIsAWACS);
+	virtual void setOnOff(bool newOnOff) { onOff = newOnOff; addMeasure(L"onOff", json::value(newOnOff));};
+	virtual void setFollowRoads(bool newFollowRoads) { followRoads = newFollowRoads; addMeasure(L"followRoads", json::value(newFollowRoads)); };
 	
 	wstring getCurrentTask() { return currentTask; }
 	virtual double getTargetSpeed() { return targetSpeed; };
 	virtual double getTargetAltitude() { return targetAltitude; };
+	virtual wstring getTargetSpeedType() { return targetSpeedType; };
+	virtual wstring getTargetAltitudeType() { return targetAltitudeType; };
 	Coords getActiveDestination() { return activeDestination; }
 	list<Coords> getActivePath() { return activePath; }
 	int getTargetID() { return targetID; }
 	bool getIsTanker() { return isTanker; }
 	bool getIsAWACS() { return isAWACS; }
+	bool getOnOff() { return onOff; };
+	bool getFollowRoads() { return followRoads; };
 
 	/********** Options data **********/
 	void setROE(wstring newROE);
@@ -196,11 +204,15 @@ protected:
 	wstring currentTask = L"";
 	double targetSpeed = 0;
 	double targetAltitude = 0;
+	wstring targetSpeedType = L"GS";
+	wstring targetAltitudeType = L"AGL";
 	list<Coords> activePath;
 	Coords activeDestination = Coords(0);
 	int targetID = NULL;
 	bool isTanker = false;
 	bool isAWACS = false;
+	bool onOff = true;
+	bool followRoads = false;
 	
 	/********** Options data **********/
 	wstring ROE = L"Designated";

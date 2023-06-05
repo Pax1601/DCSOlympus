@@ -211,7 +211,7 @@ export class Unit extends CustomMarker {
                 if (key1 in data && key2 in data[key1]) {
                     var value1 = this.#data[key1 as keyof(UnitData)];
                     var value2 = value1[key2 as keyof typeof value1];
-                    if (typeof data[key1][key2] === typeof value2)
+                    if (typeof data[key1][key2] === typeof value2 || typeof value2 === "undefined")
                         //@ts-ignore
                         this.#data[key1 as keyof(UnitData)][key2 as keyof typeof struct] = data[key1][key2];
                 }

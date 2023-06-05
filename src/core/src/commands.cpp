@@ -19,7 +19,9 @@ wstring Move::getString(lua_State* L)
             << destination.lat << ", "
             << destination.lng << ", "
             << altitude << ", "
+            << "\"" << altitudeType << "\"" << ", "
             << speed << ", "
+            << "\"" << speedType << "\"" << ", "
             << "\"" << unit->getCategory() << "\"" << ", "
             << taskOptions;
         return commandSS.str();
@@ -72,6 +74,7 @@ wstring SpawnAircraft::getString(lua_State* L)
         << "\"" << unitType << "\"" << ", "
         << location.lat << ", " 
         << location.lng << ", " 
+        << location.alt << ", "
         << optionsSS.str();
     return commandSS.str();
 }
@@ -103,7 +106,8 @@ wstring Delete::getString(lua_State* L)
     std::wostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.delete, "
-        << ID;
+        << ID << ", "
+        << (explosion ? "true" : "false");
     return commandSS.str();
 }
 
@@ -159,5 +163,18 @@ wstring SetOption::getString(lua_State* L)
             << optionID << ", "
             << (optionBool? "true": "false");
     }
+    return commandSS.str();
+}
+
+/* Set onOff command */
+wstring SetOnOff::getString(lua_State* L)
+{
+    std::wostringstream commandSS;
+    commandSS.precision(10);
+
+    commandSS << "Olympus.setOnOff, "
+        << ID << ", "
+        << (onOff ? "true" : "false");
+ 
     return commandSS.str();
 }

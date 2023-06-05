@@ -107,11 +107,11 @@ void UnitsManager::getData(json::value& answer, long long time)
 	answer[L"units"] = unitsJson;
 }
 
-void UnitsManager::deleteUnit(int ID)
+void UnitsManager::deleteUnit(int ID, bool explosion)
 {
 	if (getUnit(ID) != nullptr)
 	{
-		Command* command = dynamic_cast<Command*>(new Delete(ID));
+		Command* command = dynamic_cast<Command*>(new Delete(ID, explosion));
 		scheduler->appendCommand(command);
 	}
 }

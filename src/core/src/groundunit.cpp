@@ -17,8 +17,9 @@ GroundUnit::GroundUnit(json::value json, int ID) : Unit(json, ID)
 {
 	log("New Ground Unit created with ID: " + to_string(ID));
 	addMeasure(L"category", json::value(getCategory()));
+
+	double targetSpeed = 10;
 	setTargetSpeed(targetSpeed);
-	setTargetAltitude(targetAltitude);
 };
 
 void GroundUnit::AIloop()
@@ -29,7 +30,11 @@ void GroundUnit::AIloop()
 		if (activeDestination != activePath.front())
 		{
 			activeDestination = activePath.front();
-			Command* command = dynamic_cast<Command*>(new Move(ID, activeDestination, getTargetSpeed(), getTargetAltitude(), L"nil"));
+
+			std::wostringstream taskSS;
+			taskSS << "{ id = 'FollowRoads', value = " << (getFollowRoads()? "true" : "false") << " }";
+
+			Command* command = dynamic_cast<Command*>(new Move(ID, activeDestination, getTargetSpeed(), getTargetSpeedType(), getTargetAltitude(), getTargetAltitudeType(), taskSS.str()));
 			scheduler->appendCommand(command);
 		}
 	}
@@ -71,4 +76,17 @@ void GroundUnit::changeSpeed(wstring change)
 	{
 
 	}
+}
+
+void GroundUnit::setOnOff(bool newOnOff) 
+{
+	Unit::setOnOff(newOnOff);
+	Command* command = dynamic_cast<Command*>(new SetOnOff(ID, onOff));
+	scheduler->appendCommand(command);
+}
+
+void GroundUnit::setFollowRoads(bool newFollowRoads) 
+{
+	Unit::setFollowRoads(newFollowRoads);
+	resetActiveDestination(); /* Reset active destination to apply option*/
 }
