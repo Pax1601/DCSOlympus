@@ -14,8 +14,8 @@ export class MouseInfoPanel extends Panel {
     constructor(ID: string) {
         super(ID);
 
-        this.#measureIcon = new Icon({ iconUrl: 'images/pin.png', iconAnchor: [16, 32]});
-        this.#measureMarker = new Marker([0, 0], {icon: this.#measureIcon, interactive: false});
+        this.#measureIcon = new Icon({ iconUrl: 'resources/theme/images/icons/pin.svg', iconAnchor: [16, 32] });
+        this.#measureMarker = new Marker([0, 0], { icon: this.#measureIcon, interactive: false });
 
         this.#measureBox = document.createElement("div");
         this.#measureBox.classList.add("ol-measure-box", "hide");
@@ -25,109 +25,36 @@ export class MouseInfoPanel extends Panel {
         getMap()?.on('zoom', (e: any) => this.#onZoom(e));
         getMap()?.on('mousemove', (e: any) => this.#onMouseMove(e));
 
-        document.addEventListener('unitsSelection', (e: CustomEvent<Unit[]>) => this.#onUnitsSelection(e.detail));
-        document.addEventListener('clearSelection', () => this.#onClearSelection());
+        document.addEventListener('unitsSelection', (e: CustomEvent<Unit[]>) => this.#update());
+        document.addEventListener('clearSelection', () => this.#update());
     }
 
-    #update(mousePosition: LatLng, measurePosition: LatLng | null, unitPosition: LatLng | null) {
+    #update() {
+        const mousePosition = getMap().getMouseCoordinates();
+
+        var selectedUnitPosition = null;
+        var selectedUnits = getUnitsManager().getSelectedUnits();
+        if (selectedUnits && selectedUnits.length == 1)
+            selectedUnitPosition = new LatLng(selectedUnits[0].getFlightData().latitude, selectedUnits[0].getFlightData().longitude);
+
+        /* Draw measures from selected unit, from pin location, and from bullseyes */
+        this.#drawMeasure("ref-measure-position", "measure-position", this.#measurePoint, mousePosition);
+        this.#drawMeasure("ref-unit-position", "unit-position", selectedUnitPosition, mousePosition);
+
+        this.getElement().querySelector(`#measuring-tool`)?.classList.toggle("hide", this.#measurePoint === null && selectedUnitPosition === null);
+
         var bullseyes = getMissionData().getBullseyes();
         for (let idx in bullseyes)
-        {
-            var el = <HTMLElement>this.getElement().querySelector(`#bullseye-${idx}`);
+            this.#drawMeasure(null, `bullseye-${idx}`, bullseyes[idx].getLatLng(), mousePosition);
 
-            if ( el != null ) {
-
-                var dist = distance(bullseyes[idx].getLatLng().lat, bullseyes[idx].getLatLng().lng, mousePosition.lat, mousePosition.lng);
-                var bear = bearing(bullseyes[idx].getLatLng().lat, bullseyes[idx].getLatLng().lng, mousePosition.lat, mousePosition.lng);
-
-                let bng = zeroAppend(Math.floor(bear), 3);
-
-                if ( bng === "000" ) {
-                    bng = "360";
-                }
-
-                el.dataset.bearing       = bng;
-                el.dataset.distance      = zeroAppend(Math.floor(dist*0.000539957), 3);
-                el.dataset.distanceUnits = "NM";
-            }
-            
-        }
-
-        if (measurePosition) {
-            var el = <HTMLElement>this.getElement().querySelector(`#measure-position`);
-
-            if (el != null) {
-                var bear = bearing(measurePosition.lat, measurePosition.lng, mousePosition.lat, mousePosition.lng);
-                var dist = distance(measurePosition.lat, measurePosition.lng, mousePosition.lat, mousePosition.lng);
-
-                let bng = zeroAppend(Math.floor(bear), 3);
-
-                if ( bng === "000" ) {
-                    bng = "360";
-                }
-                
-                el.dataset.bearing       = bng;
-                el.dataset.distance      = zeroAppend(Math.floor(dist*0.000539957), 3);
-                el.dataset.distanceUnits = "NM";
-
-            }
-        }
-
-
-        if (unitPosition) {
-            var el = <HTMLElement>this.getElement().querySelector(`#unit-position`);
-            if (el != null) {
-                var dist = distance(unitPosition.lat, unitPosition.lng, mousePosition.lat, mousePosition.lng);
-                var bear = bearing(unitPosition.lat, unitPosition.lng, mousePosition.lat, mousePosition.lng);
-
-                el.dataset.bearing       = zeroAppend(Math.floor(bear), 3);
-                el.dataset.distance      = zeroAppend(Math.floor(dist*0.000539957), 3);
-                el.dataset.distanceUnits = "NM";
-            }
-        }
-
-        const refMouseLat = <HTMLElement>document.getElementById( "ref-mouse-position-latitude" );
-        const mouseLat    = <HTMLElement>document.getElementById( "mouse-position-latitude" );
-
-        if ( refMouseLat && mouseLat ) {
-            
-            let matches = String( mousePosition.lat ).match( /^\-?(\d+)\.(\d{2})(\d{2})(\d{2})/ );
-
-            if ( matches && matches.length ) {
-                mouseLat.dataset.dd = matches[1];
-                mouseLat.dataset.mm = matches[2];
-                mouseLat.dataset.ss = matches[3];
-                mouseLat.dataset.sss = matches[4];
-            }
-
-            refMouseLat.dataset.label = ( mousePosition.lat < 0 ) ? "S" : "N";
-
-        }
-
-        const refMouseLng = <HTMLElement>document.getElementById( "ref-mouse-position-longitude" );
-        const mouseLng    = <HTMLElement>document.getElementById( "mouse-position-longitude" );
-
-        if ( refMouseLng && mouseLng ) {
-           
-            let matches = String( mousePosition.lng ).match( /^\-?(\d+)\.(\d{2})(\d{2})(\d{2})/ );
-
-            if ( matches && matches.length ) {
-                mouseLng.dataset.dd = matches[1];
-                mouseLng.dataset.mm = matches[2];
-                mouseLng.dataset.ss = matches[3];
-                mouseLng.dataset.sss = matches[4];
-            }
-
-            refMouseLng.dataset.label = ( mousePosition.lng < 0 ) ? "W" : "E";
-        }
+        /* Draw coordinates */
+        this.#drawCoordinates("ref-mouse-position-latitude", "mouse-position-latitude", mousePosition.lat, ["N", "S"]);
+        this.#drawCoordinates("ref-mouse-position-longitude", "mouse-position-longitude", mousePosition.lng, ["E", "W"]);
     }
 
-    #onMapClick(e: any)
-    {
-        if (e.originalEvent.ctrlKey)
-        {
-            if (!this.#measurePoint)
-            {
+    #onMapClick(e: any) {
+        if (e.originalEvent.ctrlKey) {
+            if (!this.#measurePoint) {
                 this.#measureBox.classList.toggle("hide", false);
                 this.#measurePoint = e.latlng;
                 this.#measureMarker.setLatLng(e.latlng);
@@ -135,8 +62,7 @@ export class MouseInfoPanel extends Panel {
                 if (!getMap().hasLayer(this.#measureLine))
                     this.#measureLine.addTo(getMap());
             }
-            else
-            {
+            else {
                 this.#measureBox.classList.toggle("hide", true);
                 this.#measurePoint = null;
                 if (getMap().hasLayer(this.#measureMarker))
@@ -147,13 +73,13 @@ export class MouseInfoPanel extends Panel {
                     getMap().removeLayer(this.#measureLine);
             }
         }
+
+        this.#update();
     }
 
-    #drawMeasureLine()
-    {
+    #drawMeasureLine() {
         var mouseLatLng = getMap().containerPointToLatLng(getMap().getMousePosition());
-        if (this.#measurePoint != null)
-        {
+        if (this.#measurePoint != null) {
             var points = [this.#measurePoint, mouseLatLng];
             this.#measureLine.setLatLngs(points);
             var dist = distance(this.#measurePoint.lat, this.#measurePoint.lng, mouseLatLng.lat, mouseLatLng.lng);
@@ -163,74 +89,79 @@ export class MouseInfoPanel extends Panel {
             var dy = (getMap().getMousePosition().y - startXY.y);
 
             var angle = Math.atan2(dy, dx);
-            if (angle > Math.PI / 2) 
+            if (angle > Math.PI / 2)
                 angle = angle - Math.PI;
 
-            if (angle < -Math.PI / 2) 
+            if (angle < -Math.PI / 2)
                 angle = angle + Math.PI;
 
             let bng = zeroAppend(Math.floor(bear), 3);
-            const reciprocal = zeroAppend( reciprocalHeading( parseInt( bng ) ), 3 );
 
-            if ( bng === "000" ) {
+            if (bng === "000") 
                 bng = "360";
-            }
 
-            let data = [ `${bng}°`, `${Math.floor(dist*0.000539957)}NM`, `${reciprocal}°` ];
+            let data = [`${bng}°`, `${Math.floor(dist * 0.000539957)} NM`];
 
-            if ( bear < 180 ) {
-                data = data.reverse();
-            }
-
-            this.#measureBox.innerText = data.join( " | " );
+            this.#measureBox.innerText = data.join(" / ");
             this.#measureBox.style.left = (getMap().getMousePosition().x + startXY.x) / 2 - this.#measureBox.offsetWidth / 2 + "px";
             this.#measureBox.style.top = (getMap().getMousePosition().y + startXY.y) / 2 - this.#measureBox.offsetHeight / 2 + "px";
             this.#measureBox.style.rotate = angle + "rad";
         }
     }
 
-    #onMouseMove(e: any)
-    {
-        var selectedUnitPosition = null;
-        var selectedUnits = getUnitsManager().getSelectedUnits();
-        if (selectedUnits && selectedUnits.length == 1)
-            selectedUnitPosition = new LatLng(selectedUnits[0].getFlightData().latitude, selectedUnits[0].getFlightData().longitude);
-
-        this.#update(<LatLng>e.latlng, this.#measurePoint, selectedUnitPosition);
-        this.#drawMeasureLine();
-    }
-
-    #onZoom(e: any)
-    {
-        this.#drawMeasureLine();
-    }
-
-    #onUnitsSelection(units: Unit[])
-    {
-        const pos = this.getElement().querySelector(`#unit-position`);
+    #onMouseMove(e: any) {
         
-        if ( units.length > 1 ) {
-            pos?.setAttribute( "data-message", "(multiple units)" );
-        } else {
-            pos?.removeAttribute( "data-message" );
+        this.#update();
+        this.#drawMeasureLine();
+    }
+
+    #onZoom(e: any) {
+        this.#drawMeasureLine();
+    }
+
+    #drawMeasure(imgId: string | null, textId: string, value: LatLng | null, mousePosition: LatLng) {
+        var el = this.getElement().querySelector(`#${textId}`) as HTMLElement;
+        var img = imgId != null ? this.getElement().querySelector(`#${imgId}`) as HTMLElement : null;
+        if (value) {
+            if (el != null) {
+                el.classList.remove("hide");
+
+                var bear = bearing(value.lat, value.lng, mousePosition.lat, mousePosition.lng);
+                var dist = distance(value.lat, value.lng, mousePosition.lat, mousePosition.lng);
+
+                let bng = zeroAppend(Math.floor(bear), 3);
+
+                if (bng === "000")
+                    bng = "360";
+
+                el.dataset.bearing = bng;
+                el.dataset.distance = zeroAppend(Math.floor(dist * 0.000539957), 3);
+                el.dataset.distanceUnits = "NM";
+            }
+            if (img != null)
+                img.classList.remove("hide");
         }
-
+        else {
+            if (el != null)
+                el.classList.add("hide");
+            if (img != null)
+                img.classList.add("hide");
+        }
     }
-    
-    #onClearSelection()
-    {
-        this.#measureBox.classList.toggle("hide", true);
-        
-        const pos = this.getElement().querySelector(`#unit-position`);
 
-        
-        if ( pos instanceof HTMLElement ) {
-            pos?.removeAttribute( "data-message" );
+    #drawCoordinates(imgId: string, textId: string, value: number, prefixes: string[]) {
+        const el = this.getElement().querySelector(`#${textId}`) as HTMLElement;
+        const img = this.getElement().querySelector(`#${imgId}`) as HTMLElement;
 
-            pos.dataset.bearing       = "---";
-            pos.dataset.distance      = "---";
-            pos.dataset.distanceUnits = "NM";
-
+        if (img && el) {
+            let matches = String(value).match(/^\-?(\d+)\.(\d{2})(\d{2})(\d{2})/);
+            if (matches && matches.length) {
+                el.dataset.dd = matches[1];
+                el.dataset.mm = matches[2];
+                el.dataset.ss = matches[3];
+                el.dataset.sss = matches[4];
+            }
+            img.dataset.label = (value < 0) ? prefixes[1] : prefixes[0];
         }
     }
 }
