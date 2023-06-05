@@ -8,6 +8,8 @@
             data-on-click-params='{ "type": "ground-unit" }' class="unit-spawn-button"></button>
         <button data-active-coalition="blue" id="smoke-spawn-button" title="Spawn smoke" data-on-click="contextMenuShow"
             data-on-click-params='{ "type": "smoke" }' class="unit-spawn-button"></button>
+        <button data-active-coalition="blue" id="explosion-spawn-button" title="Explosion" data-on-click="contextMenuShow"
+            data-on-click-params='{ "type": "explosion" }' class="unit-spawn-button"></button>
     </div>
     <div id="aircraft-spawn-menu" class="ol-panel hide">
         <div class="ol-select-container">
@@ -80,6 +82,12 @@
         <button class="smoke-button" title="" data-smoke-color="red" data-on-click="contextMenuDeploySmoke" data-on-click-params='{ "color": "red" }'>Red smoke</button>
         <button class="smoke-button" title="" data-smoke-color="green" data-on-click="contextMenuDeploySmoke" data-on-click-params='{ "color": "green" }'>Green smoke</button>
         <button class="smoke-button" title="" data-smoke-color="orange" data-on-click="contextMenuDeploySmoke" data-on-click-params='{ "color": "orange" }'>Orange smoke</button>
+    </div>
+    <div id="explosion-menu" class="ol-panel hide">
+        <button class="explosion-button" title="" data-on-click="contextMenuExplosion" data-on-click-params='{ "strength": 1 }'>Small explosion</button>
+        <button class="explosion-button" title="" data-on-click="contextMenuExplosion" data-on-click-params='{ "strength": 2 }'>Medium explosion</button>
+        <button class="explosion-button" title="" data-on-click="contextMenuExplosion" data-on-click-params='{ "strength": 3 }'>Big explosion</button>
+        <button class="explosion-button" title="" data-on-click="contextMenuExplosion" data-on-click-params='{ "strength": 4 }'>Huge explosion</button>
     </div>
 </div>
 
