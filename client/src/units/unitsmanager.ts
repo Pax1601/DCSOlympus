@@ -3,7 +3,7 @@ import { getHotgroupPanel, getInfoPopup, getMap, getUnitDataTable } from "..";
 import { Unit } from "./unit";
 import { cloneUnit } from "../server/server";
 import { IDLE, MOVE_UNIT } from "../map/map";
-import { deg2rad, keyEventWasInInput, latLngToMercator, mercatorToLatLng } from "../other/utils";
+import { deg2rad, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots } from "../other/utils";
 
 export class UnitsManager {
     #units: { [ID: number]: Unit };
@@ -250,7 +250,7 @@ export class UnitsManager {
         for (let idx in selectedUnits) {
             selectedUnits[idx].setSpeed(speed);
         }
-        this.#showActionMessage(selectedUnits, `setting speed to ${speed * 1.94384} kts`);
+        this.#showActionMessage(selectedUnits, `setting speed to ${msToKnots(speed)} kts`);
     }
 
     selectedUnitsSetSpeedType(speedType: string) {
@@ -266,7 +266,7 @@ export class UnitsManager {
         for (let idx in selectedUnits) {
             selectedUnits[idx].setAltitude(altitude);
         }
-        this.#showActionMessage(selectedUnits, `setting altitude to ${altitude / 0.3048} ft`);
+        this.#showActionMessage(selectedUnits, `setting altitude to ${mToFt(altitude)} ft`);
     }
 
     selectedUnitsSetAltitudeType(altitudeType: string) {

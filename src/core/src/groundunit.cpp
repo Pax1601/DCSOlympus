@@ -22,60 +22,98 @@ GroundUnit::GroundUnit(json::value json, int ID) : Unit(json, ID)
 	setTargetSpeed(targetSpeed);
 };
 
+void GroundUnit::setState(int newState)
+{
+	/************ Perform any action required when LEAVING a state ************/
+	if (newState != state) {
+		switch (state) {
+		case State::IDLE: {
+			break;
+		}
+		case State::REACH_DESTINATION: {
+			break;
+		}
+		default:
+			break;
+		}
+	}
+
+	/************ Perform any action required when ENTERING a state ************/
+	switch (newState) {
+	case State::IDLE: {
+		clearActivePath();
+		resetActiveDestination();
+		addMeasure(L"currentState", json::value(L"Idle"));
+		break;
+	}
+	case State::REACH_DESTINATION: {
+		resetActiveDestination();
+		addMeasure(L"currentState", json::value(L"Reach destination"));
+		break;
+	}
+	default:
+		break;
+	}
+
+	resetTask();
+
+	log(unitName + L" setting state from " + to_wstring(state) + L" to " + to_wstring(newState));
+	state = newState;
+}
+
 void GroundUnit::AIloop()
 {
-	/* Set the active destination to be always equal to the first point of the active path. This is in common with all AI units */
-	if (activePath.size() > 0)
-	{
-		if (activeDestination != activePath.front())
-		{
-			activeDestination = activePath.front();
 
-			std::wostringstream taskSS;
-			taskSS << "{ id = 'FollowRoads', value = " << (getFollowRoads()? "true" : "false") << " }";
+	switch (state) {
+	case State::IDLE: {
+		currentTask = L"Idle";
+		if (getHasTask())
+			resetTask();
+		break;
+	}
+	case State::REACH_DESTINATION: {
+		wstring enrouteTask = L"";
+		bool looping = false;
 
-			Command* command = dynamic_cast<Command*>(new Move(ID, activeDestination, getTargetSpeed(), getTargetSpeedType(), getTargetAltitude(), getTargetAltitudeType(), taskSS.str()));
-			scheduler->appendCommand(command);
-		}
-	}
-	else
-	{
-		if (activeDestination != NULL)
+		std::wostringstream taskSS;
+		taskSS << "{ id = 'FollowRoads', value = " << (getFollowRoads() ? "true" : "false") << " }";
+		enrouteTask = taskSS.str();
+
+		if (activeDestination == NULL || !getHasTask())
 		{
-			log(unitName + L" no more points in active path");
-			activeDestination = Coords(0); // Set the active path to NULL
-			currentTask = L"Idle";
+			if (!setActiveDestination())
+				setState(State::IDLE);
+			else
+				goToDestination(enrouteTask);
 		}
+		else {
+			if (isDestinationReached(GROUND_DEST_DIST_THR)) {
+				if (updateActivePath(looping) && setActiveDestination())
+					goToDestination(enrouteTask);
+				else
+					setState(State::IDLE);
+			}
+		}
+		break;
+	}
+	default:
+		break;
 	}
 
-	/* Ground unit AI Loop */
-	if (activeDestination != NULL)
-	{
-		double newDist = 0;
-		Geodesic::WGS84().Inverse(latitude, longitude, activeDestination.lat, activeDestination.lng, newDist);
-		if (newDist < GROUND_DEST_DIST_THR)
-		{
-			/* Destination reached */
-			popActivePathFront();
-			log(unitName + L" destination reached");
-		}
-	}
+	addMeasure(L"currentTask", json::value(currentTask));
 }
 
 void GroundUnit::changeSpeed(wstring change)
 {
 	if (change.compare(L"stop") == 0)
-	{
-
-	}
+		setState(State::IDLE);
 	else if (change.compare(L"slow") == 0)
-	{
-
-	}
+		setTargetSpeed(getTargetSpeed() - knotsToMs(5));
 	else if (change.compare(L"fast") == 0)
-	{
+		setTargetSpeed(getTargetSpeed() + knotsToMs(5));
 
-	}
+	if (getTargetSpeed() < 0)
+		setTargetSpeed(0);
 }
 
 void GroundUnit::setOnOff(bool newOnOff) 

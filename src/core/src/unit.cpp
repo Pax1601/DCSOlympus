@@ -324,6 +324,7 @@ void Unit::resetTask()
 {
 	Command* command = dynamic_cast<Command*>(new ResetTask(ID));
 	scheduler->appendCommand(command);
+	setHasTask(false);
 }
 
 void Unit::setFormationOffset(Offset newFormationOffset)
@@ -576,3 +577,87 @@ void Unit::setGeneralSettings(Options::GeneralSettings newGeneralSettings) {
 	}
 }
 
+void Unit::setTargetSpeed(double newTargetSpeed) {
+	targetSpeed = newTargetSpeed; 
+	addMeasure(L"targetSpeed", json::value(newTargetSpeed));
+	goToDestination();
+}
+
+void Unit::setTargetAltitude(double newTargetAltitude) {
+	targetAltitude = newTargetAltitude;
+	addMeasure(L"targetAltitude", json::value(newTargetAltitude));
+	goToDestination();
+}
+
+void Unit::setTargetSpeedType(wstring newTargetSpeedType) {
+	targetSpeedType = newTargetSpeedType; 
+	addMeasure(L"targetSpeedType", json::value(newTargetSpeedType));
+	goToDestination();
+}
+
+void Unit::setTargetAltitudeType(wstring newTargetAltitudeType) {
+	targetAltitudeType = newTargetAltitudeType; 
+	addMeasure(L"targetAltitudeType", json::value(newTargetAltitudeType));
+	goToDestination();
+}
+
+void Unit::goToDestination(wstring enrouteTask)
+{
+	if (activeDestination != NULL)
+	{
+		Command* command = dynamic_cast<Command*>(new Move(ID, activeDestination, getTargetSpeed(), getTargetSpeedType(), getTargetAltitude(), getTargetAltitudeType(), enrouteTask));
+		scheduler->appendCommand(command);
+		setHasTask(true);
+	}
+}
+
+bool Unit::isDestinationReached(double threshold)
+{
+	if (activeDestination != NULL)
+	{
+		double dist = 0;
+		Geodesic::WGS84().Inverse(latitude, longitude, activeDestination.lat, activeDestination.lng, dist);
+		if (dist < threshold)
+		{
+			log(unitName + L" destination reached");
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	else
+		return true;
+}
+
+bool Unit::setActiveDestination()
+{
+	if (activePath.size() > 0)
+	{
+		activeDestination = activePath.front();
+		log(unitName + L" active destination set to queue front");
+		return true;
+	}
+	else
+	{
+		activeDestination = Coords(0);
+		log(unitName + L" active destination set to NULL");
+		return false;
+	}
+}
+
+bool Unit::updateActivePath(bool looping)
+{
+	if (activePath.size() > 0)
+	{
+		/* Push the next destination in the queue to the front */
+		if (looping)
+			pushActivePathBack(activePath.front());
+		popActivePathFront();
+		log(unitName + L" active path front popped");
+		return true;
+	}
+	else {
+		return false;
+	}
+}

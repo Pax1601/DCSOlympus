@@ -7,6 +7,7 @@ import { Unit } from "../units/unit";
 import { Panel } from "./panel";
 import { Switch } from "../controls/switch";
 import { ROEDescriptions, ROEs, altitudeIncrements, emissionsCountermeasures, emissionsCountermeasuresDescriptions, maxAltitudeValues, maxSpeedValues, minAltitudeValues, minSpeedValues, reactionsToThreat, reactionsToThreatDescriptions, speedIncrements } from "../constants/constants";
+import { ftToM, knotsToMs, mToFt, msToKnots } from "../other/utils";
 
 export class UnitControlPanel extends Panel {
     #altitudeSlider: Slider;
@@ -25,10 +26,10 @@ export class UnitControlPanel extends Panel {
         super(ID);
 
         /* Unit control sliders */
-        this.#altitudeSlider = new Slider("altitude-slider", 0, 100, "ft", (value: number) => { getUnitsManager().selectedUnitsSetAltitude(value * 0.3048); });
+        this.#altitudeSlider = new Slider("altitude-slider", 0, 100, "ft", (value: number) => { getUnitsManager().selectedUnitsSetAltitude(ftToM(value)); });
         this.#altitudeTypeSwitch = new Switch("altitude-type-switch", (value: boolean) => { getUnitsManager().selectedUnitsSetAltitudeType(value? "AGL": "ASL"); });
 
-        this.#speedSlider = new Slider("speed-slider", 0, 100, "kts", (value: number) => { getUnitsManager().selectedUnitsSetSpeed(value / 1.94384); });
+        this.#speedSlider = new Slider("speed-slider", 0, 100, "kts", (value: number) => { getUnitsManager().selectedUnitsSetSpeed(knotsToMs(value)); });
         this.#speedTypeSwitch = new Switch("speed-type-switch", (value: boolean) => { getUnitsManager().selectedUnitsSetSpeedType(value? "GS": "CAS"); });
 
         /* Option buttons */
@@ -156,11 +157,11 @@ export class UnitControlPanel extends Panel {
 
                     this.#speedSlider.setActive(targetSpeed != undefined);
                     if (targetSpeed != undefined)
-                        this.#speedSlider.setValue(targetSpeed * 1.94384, false);
+                        this.#speedSlider.setValue(msToKnots(targetSpeed), false);
 
                     this.#altitudeSlider.setActive(targetAltitude != undefined);
                     if (targetAltitude != undefined)
-                        this.#altitudeSlider.setValue(targetAltitude / 0.3048, false);
+                        this.#altitudeSlider.setValue(mToFt(targetAltitude), false);
                 }
                 else {
                     this.#speedSlider.setActive(false);

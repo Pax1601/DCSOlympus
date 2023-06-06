@@ -161,3 +161,19 @@ export function createDivWithClass(className: string) {
     el.classList.add(className);
     return el;
 }
+
+export function knotsToMs(knots: number) {
+    return knots / 1.94384;
+}
+
+export function msToKnots(ms: number) {
+    return ms * 1.94384;
+}
+
+export function ftToM(ft: number) {
+    return ft * 0.3048;
+}
+
+export function mToFt(m: number) {
+    return m / 0.3048;
+}

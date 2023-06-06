@@ -18,8 +18,8 @@ Helicopter::Helicopter(json::value json, int ID) : AirUnit(json, ID)
 	log("New Helicopter created with ID: " + to_string(ID));
 	addMeasure(L"category", json::value(getCategory()));
 
-	double targetSpeed = 100 / 1.94384;
-	double targetAltitude = 5000 * 0.3048;
+	double targetSpeed = knotsToMs(100);
+	double targetAltitude = ftToM(5000);
 	setTargetSpeed(targetSpeed);
 	setTargetAltitude(targetAltitude);
 };
@@ -32,9 +32,9 @@ void Helicopter::changeSpeed(wstring change)
 		clearActivePath();
 	}
 	else if (change.compare(L"slow") == 0)
-		targetSpeed -= 10 / 1.94384;
+		targetSpeed -= knotsToMs(10);
 	else if (change.compare(L"fast") == 0)
-		targetSpeed += 10 / 1.94384;
+		targetSpeed += knotsToMs(10);
 	if (targetSpeed < 0)
 		targetSpeed = 0;
 
@@ -46,16 +46,16 @@ void Helicopter::changeAltitude(wstring change)
 	if (change.compare(L"descend") == 0)
 	{
 		if (targetAltitude > 100)
-			targetAltitude -= 100 / 3.28084;
+			targetAltitude -= ftToM(100);
 		else if (targetAltitude > 0)
-			targetAltitude -= 10 / 3.28084;
+			targetAltitude -= ftToM(10);
 	}
 	else if (change.compare(L"climb") == 0)
 	{
 		if (targetAltitude > 100)
-			targetAltitude += 100 / 3.28084;
+			targetAltitude += ftToM(100);
 		else if (targetAltitude >= 0)
-			targetAltitude += 10 / 3.28084;
+			targetAltitude += ftToM(10);
 	}
 	if (targetAltitude < 0)
 		targetAltitude = 0;

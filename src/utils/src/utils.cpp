@@ -63,3 +63,20 @@ bool operator== (const Offset& a, const Offset& b) { return a.x == b.x && a.y ==
 bool operator!= (const Offset& a, const Offset& b) { return !(a == b); }
 bool operator== (const Offset& a, const int& b) { return a.x == b && a.y == b && a.z == b; }
 bool operator!= (const Offset& a, const int& b) { return !(a == b); }
+
+
+double knotsToMs(const double knots) {
+    return knots / 1.94384;
+}
+
+double msToKnots(const double ms) {
+    return ms * 1.94384;
+}
+
+double ftToM(const double ft) {
+    return ft * 0.3048;
+}
+
+double mToFt(const double m) {
+    return m / 0.3048;
+}

@@ -57,15 +57,8 @@ export class UnitInfoPanel extends Panel {
             this.#unitLabel.innerText   = aircraftDatabase.getByName(baseData.name)?.label || baseData.name;
             this.#unitName.innerText    = baseData.unitName;
             this.#unitControl.innerText = ( ( baseData.AI ) ? "AI" : "Human" ) + " controlled";
-            // this.#groupName.innerText = baseData.groupName;
-            //this.#name.innerText = baseData.name;
-            //this.#heading.innerText = String(Math.floor(rad2deg(unit.getFlightData().heading)) + " °");
-            //this.#altitude.innerText = String(Math.floor(unit.getFlightData().altitude / 0.3048) + " ft");
-            //this.#groundSpeed.innerText = String(Math.floor(unit.getFlightData().speed * 1.94384) + " kts");
             this.#fuelBar.style.width = String(unit.getMissionData().fuel + "%");
             this.#fuelPercentage.dataset.percentage = "" + unit.getMissionData().fuel;
-            //this.#latitude.innerText = ConvertDDToDMS(unit.getFlightData().latitude, false);
-            //this.#longitude.innerText = ConvertDDToDMS(unit.getFlightData().longitude, true);
             this.#currentTask.dataset.currentTask = unit.getTaskData().currentTask !== ""? unit.getTaskData().currentTask: "No task";
             this.#currentTask.dataset.coalition = unit.getMissionData().coalition;
             

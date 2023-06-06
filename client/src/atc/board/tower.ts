@@ -1,5 +1,6 @@
 import { getUnitsManager } from "../..";
 import { Dropdown } from "../../controls/dropdown";
+import { mToFt, msToKnots } from "../../other/utils";
 import { ATC } from "../atc";
 import { ATCBoard } from "../atcboard";
 
@@ -139,7 +140,7 @@ export class ATCBoardTower extends ATCBoard {
                     assignedAltitude.value = flight.assignedAltitude;
                 }
 
-                flightData.altitude = Math.floor( flightData.altitude / 0.3048 );
+                flightData.altitude = Math.floor( mToFt(flightData.altitude) );
 
                 strip.element.querySelectorAll( `[data-point="altitude"]` ).forEach( el => {
                     if ( el instanceof HTMLElement ) {
@@ -163,7 +164,7 @@ export class ATCBoardTower extends ATCBoard {
                     assignedSpeed.value = flight.assignedSpeed;
                 }
 
-                flightData.speed = Math.floor( flightData.speed * 1.94384 );
+                flightData.speed = Math.floor( msToKnots(flightData.speed) );
 
                 strip.element.querySelectorAll( `[data-point="speed"]` ).forEach( el => {
                     if ( el instanceof HTMLElement ) {

@@ -20,7 +20,7 @@ AirUnit::AirUnit(json::value json, int ID) : Unit(json, ID)
 
 void AirUnit::setState(int newState) 
 {
-	/************ Perform any action required when LEAVING a certain state ************/
+	/************ Perform any action required when LEAVING a state ************/
 	if (newState != state) {
 		switch (state) {
 		case State::IDLE: {
@@ -48,7 +48,7 @@ void AirUnit::setState(int newState)
 		}
 	}
 
-	/************ Perform any action required when ENTERING a certain state ************/
+	/************ Perform any action required when ENTERING a state ************/
 	switch (newState) {
 	case State::IDLE: {
 		clearActivePath();
@@ -100,67 +100,6 @@ void AirUnit::setState(int newState)
 	state = newState;
 }
 
-bool AirUnit::isDestinationReached()
-{
-	if (activeDestination != NULL)
-	{
-		double dist = 0;
-		Geodesic::WGS84().Inverse(latitude, longitude, activeDestination.lat, activeDestination.lng, dist);
-		if (dist < AIR_DEST_DIST_THR)
-		{
-			log(unitName + L" destination reached");
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
-	else
-		return true;
-}
-
-bool AirUnit::setActiveDestination()
-{
-	if (activePath.size() > 0)
-	{
-		activeDestination = activePath.front();
-		log(unitName + L" active destination set to queue front");
-		return true;
-	}
-	else
-	{
-		activeDestination = Coords(0);
-		log(unitName + L" active destination set to NULL");
-		return false;
-	}
-}
-
-bool AirUnit::updateActivePath(bool looping)
-{
-	if (activePath.size() > 0)
-	{
-		/* Push the next destination in the queue to the front */
-		if (looping)
-			pushActivePathBack(activePath.front());
-		popActivePathFront();
-		log(unitName + L" active path front popped");
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
-void AirUnit::goToDestination(wstring enrouteTask)
-{
-	if (activeDestination != NULL)
-	{
-		Command* command = dynamic_cast<Command*>(new Move(ID, activeDestination, getTargetSpeed(), getTargetSpeedType(), getTargetAltitude(), getTargetAltitudeType(), enrouteTask));
-		scheduler->appendCommand(command);
-		setHasTask(true);
-	}
-}
-
 void AirUnit::AIloop()
 {
 	/* State machine */
@@ -168,7 +107,7 @@ void AirUnit::AIloop()
 		case State::IDLE: {
 			currentTask = L"Idle";
 			
-			if (!hasTask)
+			if (!getHasTask())
 			{
 				std::wostringstream taskSS;
 				if (isTanker) {
@@ -206,7 +145,7 @@ void AirUnit::AIloop()
 				currentTask = L"Reaching destination";
 			}
 			
-			if (activeDestination == NULL || !hasTask)
+			if (activeDestination == NULL || !getHasTask())
 			{
 				if (!setActiveDestination())
 					setState(State::IDLE);
@@ -214,7 +153,7 @@ void AirUnit::AIloop()
 					goToDestination(enrouteTask);
 			}
 			else {
-				if (isDestinationReached()) {
+				if (isDestinationReached(AIR_DEST_DIST_THR)) {
 					if (updateActivePath(looping) && setActiveDestination())
 						goToDestination(enrouteTask);
 					else 
@@ -251,7 +190,7 @@ void AirUnit::AIloop()
 			wstring enrouteTask = enrouteTaskSS.str();
 			currentTask = L"Attacking " + getTargetName();
 			
-			if (!hasTask)
+			if (!getHasTask())
 			{
 				setActiveDestination();
 				goToDestination(enrouteTask);
@@ -272,7 +211,7 @@ void AirUnit::AIloop()
 			currentTask = L"Following " + getTargetName();
 
 			Unit* leader = unitsManager->getUnit(leaderID);
-			if (!hasTask) {
+			if (!getHasTask()) {
 				if (leader != nullptr && leader->getAlive() && formationOffset != NULL)
 				{
 					std::wostringstream taskSS;
@@ -295,7 +234,7 @@ void AirUnit::AIloop()
 		case State::REFUEL: {
 			currentTask = L"Refueling";
 
-			if (!hasTask) {
+			if (!getHasTask()) {
 				if (fuel <= initialFuel) {
 					std::wostringstream taskSS;
 					taskSS << "{"
@@ -315,24 +254,4 @@ void AirUnit::AIloop()
 	}
 
 	addMeasure(L"currentTask", json::value(currentTask));
-}
-
-void AirUnit::setTargetSpeed(double newTargetSpeed) {
-	Unit::setTargetSpeed(newTargetSpeed);
-	goToDestination();
-}
-
-void AirUnit::setTargetAltitude(double newTargetAltitude) {
-	Unit::setTargetAltitude(newTargetAltitude);
-	goToDestination();
-}
-
-void AirUnit::setTargetSpeedType(wstring newTargetSpeedType) { 
-	Unit::setTargetSpeedType(newTargetSpeedType);
-	goToDestination();
-}
-
-void AirUnit::setTargetAltitudeType(wstring newTargetAltitudeType) { 
-	Unit::setTargetAltitudeType(newTargetAltitudeType);
-	goToDestination();
 }
