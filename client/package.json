@@ -2,7 +2,7 @@
   "name": "DCSOlympus",
   "node-main": "./bin/www",
   "main": "http://localhost:3000",
-  "version": "v0.2.1-alpha",
+  "version": "v0.3.0-alpha",
   "private": true,
   "scripts": {
     "copy": "copy.bat",

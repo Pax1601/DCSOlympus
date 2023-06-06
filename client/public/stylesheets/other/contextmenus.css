@@ -4,7 +4,7 @@
     height: fit-content;
     position: absolute;
     row-gap: 5px;
-    width: 230px;
+    width: 280px;
     z-index: 9999;
 }
 
@@ -109,6 +109,11 @@
     background-size: 48px;
 }
 
+#explosion-spawn-button {
+    background-image: url("/resources/theme/images/buttons/spawn/explosion.svg");
+    background-size: 48px;
+}
+
 .unit-spawn-button {
     border: none;
     border-radius: 0px;
@@ -208,6 +213,7 @@
     text-align: center;
 }
 
+#explosion-menu>button,
 #smoke-spawn-menu>button {
     align-items: center;
     column-gap: 10px;

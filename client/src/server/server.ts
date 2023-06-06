@@ -1,4 +1,4 @@
-import * as L from 'leaflet'
+import { LatLng } from 'leaflet';
 import { getConnectionStatusPanel, getInfoPopup, getMissionData, getUnitDataTable, getUnitsManager, setConnectionStatus } from '..';
 import { SpawnOptions } from '../controls/mapcontextmenu';
 
@@ -121,9 +121,15 @@ export function addDestination(ID: number, path: any) {
     POST(data, () => { });
 }
 
-export function spawnSmoke(color: string, latlng: L.LatLng) {
+export function spawnSmoke(color: string, latlng: LatLng) {
     var command = { "color": color, "location": latlng };
     var data = { "smoke": command }
+    POST(data, () => { });
+}
+
+export function spawnExplosion(strength: number, latlng: LatLng) {
+    var command = { "strength": strength, "location": latlng };
+    var data = { "explosion": command }
     POST(data, () => { });
 }
 
@@ -155,7 +161,7 @@ export function followUnit(ID: number, targetID: number, offset: { "x": number, 
     POST(data, () => { });
 }
 
-export function cloneUnit(ID: number, latlng: L.LatLng) {
+export function cloneUnit(ID: number, latlng: LatLng) {
     var command = { "ID": ID, "location": latlng };
     var data = { "cloneUnit": command }
     POST(data, () => { });
@@ -167,7 +173,7 @@ export function deleteUnit(ID: number, explosion: boolean) {
     POST(data, () => { });
 }
 
-export function landAt(ID: number, latlng: L.LatLng) {
+export function landAt(ID: number, latlng: LatLng) {
     var command = { "ID": ID, "location": latlng };
     var data = { "landAt": command }
     POST(data, () => { });
@@ -251,6 +257,29 @@ export function refuel(ID: number) {
     POST(data, () => { });
 }
 
+export function bombPoint(ID: number, latlng: LatLng) {
+    var command = { "ID": ID, "location": latlng }
+    var data = { "bombPoint": command }
+    POST(data, () => { });
+}
+
+export function carpetBomb(ID: number, latlng: LatLng) {
+    var command = { "ID": ID, "location": latlng }
+    var data = { "carpetBomb": command }
+    POST(data, () => { });
+}
+
+export function bombBuilding(ID: number, latlng: LatLng) {
+    var command = { "ID": ID, "location": latlng }
+    var data = { "bombBuilding": command }
+    POST(data, () => { });
+}
+
+export function fireAtArea(ID: number, latlng: LatLng) {
+    var command = { "ID": ID, "location": latlng }
+    var data = { "fireAtArea": command }
+    POST(data, () => { });
+}
 export function setAdvacedOptions(ID: number, isTanker: boolean, isAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings) {
     var command = {
         "ID": ID,

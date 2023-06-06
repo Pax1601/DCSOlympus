@@ -1,7 +1,7 @@
 import { Marker, LatLng, Polyline, Icon, DivIcon, CircleMarker, Map } from 'leaflet';
 import { getMap, getUnitsManager } from '..';
 import { mToFt, msToKnots, rad2deg } from '../other/utils';
-import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, getUnits, landAt, setAltitude, setReactionToThreat, setROE, setSpeed, refuel, setAdvacedOptions, followUnit, setEmissionsCountermeasures, setSpeedType, setAltitudeType, setOnOff, setFollowRoads } from '../server/server';
+import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, getUnits, landAt, setAltitude, setReactionToThreat, setROE, setSpeed, refuel, setAdvacedOptions, followUnit, setEmissionsCountermeasures, setSpeedType, setAltitudeType, setOnOff, setFollowRoads, bombPoint, carpetBomb, bombBuilding, fireAtArea } from '../server/server';
 import { aircraftDatabase } from './aircraftdatabase';
 import { groundUnitsDatabase } from './groundunitsdatabase';
 import { CustomMarker } from '../map/custommarker';
@@ -517,6 +517,22 @@ export class Unit extends CustomMarker {
             setAdvacedOptions(this.ID, isTanker, isAWACS, TACAN, radio, generalSettings);
     }
 
+    bombPoint(latlng: LatLng) {
+        bombPoint(this.ID, latlng);
+    }
+
+    carpetBomb(latlng: LatLng) {
+        carpetBomb(this.ID, latlng);
+    }
+
+    bombBuilding(latlng: LatLng) {
+        bombBuilding(this.ID, latlng);
+    }
+
+    fireAtArea(latlng: LatLng) {
+        fireAtArea(this.ID, latlng);
+    }
+
     /***********************************************/
     onAdd(map: Map): this {
         super.onAdd(map);
@@ -557,7 +573,7 @@ export class Unit extends CustomMarker {
         }
         else if ((getUnitsManager().getSelectedUnits().length > 0 && (getUnitsManager().getSelectedUnits().includes(this))) || getUnitsManager().getSelectedUnits().length == 0) {
             if (this.getBaseData().category == "Aircraft") {
-                options["refuel"] = {text: "AAR Refuel", tooltip: "Refuel unit at the nearest AAR Tanker. If no tanker is available the unit will RTB."}; // TODO Add some way of knowing which aircraft can AAR
+                options["refuel"] = {text: "Air to air refuel", tooltip: "Refuel unit at the nearest AAR Tanker. If no tanker is available the unit will RTB."}; // TODO Add some way of knowing which aircraft can AAR
             }
         }
 

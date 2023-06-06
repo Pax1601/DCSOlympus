@@ -574,9 +574,9 @@ nav.ol-panel> :last-child {
 .ol-measure-box {
     background-color: var(--background-steel);
     border-radius: 999px;
-    color: var(--primary-neutral);
+    color: var(--background-offwhite);
     font-size: 12px;
-    font-weight: var(--font-weight-bolder);
+    font-weight: bolder;
     height: fit-content;
     padding-bottom: 0.2em;
     padding-left: 0.5em;
@@ -586,6 +586,7 @@ nav.ol-panel> :last-child {
     text-align: center;
     width: fit-content;
     z-index: 2000;
+    pointer-events: none;
 }
 
 .ol-sortable .handle {
@@ -908,18 +909,6 @@ dl.ol-data-grid dd {
     display: flex;
     justify-content: flex-end;
     margin-left: auto;
-}
-
-.br-info::after {
-    content: attr(data-bearing) '\00B0  / ' attr(data-distance) attr(data-distance-units);
-}
-
-.br-info[data-message]::after {
-    content: attr(data-message);
-}
-
-.coordinates::after {
-    content: attr(data-dd) "\00b0 " attr(data-mm) "'" attr(data-ss) "." attr(data-sss) '"' attr(data-label);
 }
 
 .ol-button-box {

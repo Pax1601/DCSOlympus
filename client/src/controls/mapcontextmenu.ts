@@ -1,6 +1,6 @@
 import { LatLng } from "leaflet";
 import { getActiveCoalition, getMap, setActiveCoalition } from "..";
-import { spawnAircraft, spawnGroundUnit, spawnSmoke } from "../server/server";
+import { spawnAircraft, spawnExplosion, spawnGroundUnit, spawnSmoke } from "../server/server";
 import { aircraftDatabase } from "../units/aircraftdatabase";
 import { groundUnitsDatabase } from "../units/groundunitsdatabase";
 import { ContextMenu } from "./contextmenu";
@@ -39,6 +39,9 @@ export class MapContextMenu extends ContextMenu {
         this.#aircraftTypeDropdown = new Dropdown("aircraft-type-options", (type: string) => this.#setAircraftType(type));
         this.#aircraftLoadoutDropdown = new Dropdown("loadout-options", (loadout: string) => this.#setAircraftLoadout(loadout));
         this.#aircrafSpawnAltitudeSlider = new Slider("aircraft-spawn-altitude-slider", 0, 50000, "ft", (value: number) => {this.#spawnOptions.altitude = ftToM(value);});
+        this.#aircrafSpawnAltitudeSlider.setIncrement(500);
+        this.#aircrafSpawnAltitudeSlider.setValue(20000);
+        this.#aircrafSpawnAltitudeSlider.setActive(true);
         this.#groundUnitRoleDropdown = new Dropdown("ground-unit-role-options", (role: string) => this.#setGroundUnitRole(role));
         this.#groundUnitTypeDropdown = new Dropdown("ground-unit-type-options", (type: string) => this.#setGroundUnitType(type));
 
@@ -69,9 +72,11 @@ export class MapContextMenu extends ContextMenu {
             spawnSmoke(e.detail.color, this.getLatLng());
         });
 
-        this.#aircrafSpawnAltitudeSlider.setIncrement(500);
-        this.#aircrafSpawnAltitudeSlider.setValue(20000);
-        this.#aircrafSpawnAltitudeSlider.setActive(true);
+        document.addEventListener("contextMenuExplosion", (e: any) => {
+            this.hide();
+            spawnExplosion(e.detail.strength, this.getLatLng());
+        });
+
 
         this.hide();
     }
@@ -90,6 +95,8 @@ export class MapContextMenu extends ContextMenu {
         this.getContainer()?.querySelector("#ground-unit-spawn-button")?.classList.toggle("is-open", type === "ground-unit");
         this.getContainer()?.querySelector("#smoke-spawn-menu")?.classList.toggle("hide", type !== "smoke");
         this.getContainer()?.querySelector("#smoke-spawn-button")?.classList.toggle("is-open", type === "smoke");
+        this.getContainer()?.querySelector("#explosion-menu")?.classList.toggle("hide", type !== "explosion");
+        this.getContainer()?.querySelector("#explosion-spawn-button")?.classList.toggle("is-open", type === "explosion");
 
         this.#resetAircraftRole();
         this.#resetAircraftType();

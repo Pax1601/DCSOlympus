@@ -2,8 +2,8 @@ import { LatLng, LatLngBounds } from "leaflet";
 import { getHotgroupPanel, getInfoPopup, getMap, getUnitDataTable } from "..";
 import { Unit } from "./unit";
 import { cloneUnit } from "../server/server";
-import { IDLE, MOVE_UNIT } from "../map/map";
 import { deg2rad, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots } from "../other/utils";
+import { IDLE, UNIT_SELECTED } from "../map/map";
 
 export class UnitsManager {
     #units: { [ID: number]: Unit };
@@ -306,7 +306,7 @@ export class UnitsManager {
         for (let idx in selectedUnits) {
             selectedUnits[idx].setOnOff(onOff);
         }
-        this.#showActionMessage(selectedUnits, `unit acitve set to ${onOff}`);
+        this.#showActionMessage(selectedUnits, `unit active set to ${onOff}`);
     }
 
     selectedUnitsSetFollowRoads(followRoads: boolean) {
@@ -438,6 +438,38 @@ export class UnitsManager {
         return unitDestinations;
     }
 
+    selectedUnitsBombPoint(mouseCoordinates: LatLng) {
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        for (let idx in selectedUnits) {
+            selectedUnits[idx].bombPoint(mouseCoordinates);
+        }
+        this.#showActionMessage(selectedUnits, `unit bombing point`);
+    }
+
+    selectedUnitsCarpetBomb(mouseCoordinates: LatLng) {
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        for (let idx in selectedUnits) {
+            selectedUnits[idx].carpetBomb(mouseCoordinates);
+        }
+        this.#showActionMessage(selectedUnits, `unit bombing point`);
+    }
+
+    selectedUnitsBombBuilding(mouseCoordinates: LatLng) {
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        for (let idx in selectedUnits) {
+            selectedUnits[idx].bombBuilding(mouseCoordinates);
+        }
+        this.#showActionMessage(selectedUnits, `unit bombing point`);
+    }
+
+    selectedUnitsFireAtArea(mouseCoordinates: LatLng) {
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        for (let idx in selectedUnits) {
+            selectedUnits[idx].fireAtArea(mouseCoordinates);
+        }
+        this.#showActionMessage(selectedUnits, `unit bombing point`);
+    }
+
     /***********************************************/
     copyUnits() {
         this.#copiedUnits = this.getSelectedUnits(); /* Can be applied to humans too */
@@ -466,7 +498,7 @@ export class UnitsManager {
 
     #onUnitSelection(unit: Unit) {
         if (this.getSelectedUnits().length > 0) {
-            getMap().setState(MOVE_UNIT);
+            getMap().setState(UNIT_SELECTED);
             /* Disable the firing of the selection event for a certain amount of time. This avoids firing many events if many units are selected */
             if (!this.#selectionEventDisabled) {
                 window.setTimeout(() => {
