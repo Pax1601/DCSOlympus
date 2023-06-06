@@ -33,6 +33,10 @@ void GroundUnit::setState(int newState)
 		case State::REACH_DESTINATION: {
 			break;
 		}
+		case State::FIRE_AT_AREA: {
+			setTargetLocation(Coords(NULL));
+			break;
+		}
 		default:
 			break;
 		}
@@ -49,6 +53,12 @@ void GroundUnit::setState(int newState)
 	case State::REACH_DESTINATION: {
 		resetActiveDestination();
 		addMeasure(L"currentState", json::value(L"Reach destination"));
+		break;
+	}
+	case State::FIRE_AT_AREA: {
+		addMeasure(L"currentState", json::value(L"Firing at area"));
+		clearActivePath();
+		resetActiveDestination();
 		break;
 	}
 	default:
@@ -95,6 +105,17 @@ void GroundUnit::AIloop()
 			}
 		}
 		break;
+	}
+	case State::FIRE_AT_AREA: {
+		currentTask = L"Firing at area";
+
+		if (!getHasTask()) {
+			std::wostringstream taskSS;
+			taskSS << "{id = 'FireAtPoint', lat = " << targetLocation.lat << ", lng = " << targetLocation.lng << ", radius = 1000}";
+			Command* command = dynamic_cast<Command*>(new SetTask(ID, taskSS.str()));
+			scheduler->appendCommand(command);
+			setHasTask(true);
+		}
 	}
 	default:
 		break;

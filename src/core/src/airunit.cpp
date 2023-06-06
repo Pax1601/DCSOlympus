@@ -43,6 +43,12 @@ void AirUnit::setState(int newState)
 		case State::REFUEL: {
 			break;
 		}
+		case State::BOMB_POINT:
+		case State::CARPET_BOMB: 
+		case State::BOMB_BUILDING: {
+			setTargetLocation(Coords(NULL));
+			break;
+		}
 		default:
 			break;
 		}
@@ -88,6 +94,24 @@ void AirUnit::setState(int newState)
 		clearActivePath();
 		resetActiveDestination();
 		addMeasure(L"currentState", json::value(L"Refuel"));
+		break;
+	}
+	case State::BOMB_POINT: {
+		addMeasure(L"currentState", json::value(L"Bombing point"));
+		clearActivePath();
+		resetActiveDestination();
+		break;
+	}
+	case State::CARPET_BOMB: {
+		addMeasure(L"currentState", json::value(L"Carpet bombing"));
+		clearActivePath();
+		resetActiveDestination();
+		break;
+	}
+	case State::BOMB_BUILDING: {
+		addMeasure(L"currentState", json::value(L"Bombing building"));
+		clearActivePath();
+		resetActiveDestination();
 		break;
 	}
 	default:
@@ -247,6 +271,39 @@ void AirUnit::AIloop()
 				else {
 					setState(State::IDLE);
 				}
+			}
+		}
+		case State::BOMB_POINT: {
+			currentTask = L"Bombing point";
+
+			if (!getHasTask()) {
+				std::wostringstream taskSS;
+				taskSS << "{id = 'Bombing', lat = " << targetLocation.lat << ", lng = " << targetLocation.lng << "}";
+				Command* command = dynamic_cast<Command*>(new SetTask(ID, taskSS.str()));
+				scheduler->appendCommand(command);
+				setHasTask(true);
+			}
+		}
+		case State::CARPET_BOMB: {
+			currentTask = L"Carpet bombing";
+
+			if (!getHasTask()) {
+				std::wostringstream taskSS;
+				taskSS << "{id = 'CarpetBombing', lat = " << targetLocation.lat << ", lng = " << targetLocation.lng << "}";
+				Command* command = dynamic_cast<Command*>(new SetTask(ID, taskSS.str()));
+				scheduler->appendCommand(command);
+				setHasTask(true);
+			}
+		}
+		case State::BOMB_BUILDING: {
+			currentTask = L"Bombing building";
+
+			if (!getHasTask()) {
+				std::wostringstream taskSS;
+				taskSS << "{id = 'AttackMapObject', lat = " << targetLocation.lat << ", lng = " << targetLocation.lng << "}";
+				Command* command = dynamic_cast<Command*>(new SetTask(ID, taskSS.str()));
+				scheduler->appendCommand(command);
+				setHasTask(true);
 			}
 		}
 		default:

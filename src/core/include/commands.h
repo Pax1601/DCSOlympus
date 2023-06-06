@@ -305,7 +305,7 @@ private:
 	const bool isBoolean;
 };
 
-/* Set on ooff */
+/* Set on off */
 class SetOnOff : public Command
 {
 public:
@@ -321,4 +321,22 @@ public:
 private:
 	const int ID;
 	const bool onOff;
+};
+
+/* Make a ground explosion */
+class Explosion : public Command
+{
+public:
+	Explosion(int intensity, Coords location) :
+		location(location),
+		intensity(intensity)
+	{
+		priority = CommandPriority::MEDIUM;
+	};
+	virtual wstring getString(lua_State* L);
+	virtual int getLoad() { return 10; }
+
+private:
+	const Coords location;
+	const int intensity;
 };

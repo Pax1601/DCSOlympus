@@ -179,7 +179,7 @@ json::value Unit::getData(long long time)
 
 		/********** Task data **********/
 		json[L"taskData"] = json::value::object();
-		for (auto key : { L"currentState", L"currentTask", L"targetSpeed", L"targetAltitude", L"targetSpeedType", L"targetAltitudeType", L"activePath", L"isTanker", L"isAWACS", L"onOff", L"followRoads"})
+		for (auto key : { L"currentState", L"currentTask", L"targetSpeed", L"targetAltitude", L"targetSpeedType", L"targetAltitudeType", L"activePath", L"isTanker", L"isAWACS", L"onOff", L"followRoads", L"targetID", L"targetLocation"})
 		{
 			if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
 				json[L"taskData"][key] = measures[key]->getValue();
@@ -660,4 +660,12 @@ bool Unit::updateActivePath(bool looping)
 	else {
 		return false;
 	}
+}
+
+void Unit::setTargetLocation(Coords newTargetLocation) { 
+	targetLocation = newTargetLocation; 
+	auto json = json::value();
+	json[L"latitude"] = json::value(newTargetLocation.lat);
+	json[L"longitude"] = json::value(newTargetLocation.lng);
+	addMeasure(L"targetLocation", json::value(json));
 }

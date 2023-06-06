@@ -280,6 +280,7 @@ export function fireAtArea(ID: number, latlng: LatLng) {
     var data = { "fireAtArea": command }
     POST(data, () => { });
 }
+
 export function setAdvacedOptions(ID: number, isTanker: boolean, isAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings) {
     var command = {
         "ID": ID,

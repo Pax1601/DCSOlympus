@@ -139,8 +139,41 @@ function Olympus.buildTask(options)
 					pattern = options['pattern'] or "Circle"
 				} 
 			}
+		elseif options['id'] == 'Bombing' and options['lat'] and options['lng'] then
+			task = {
+				id = 'Bombing', 
+				params = {
+					point = coord.LLtoLO(options['lat'], options['lng'], 0),
+					attackQty = 1
+				}   
+			}
+		elseif options['id'] == 'CarpetBombing' and options['lat'] and options['lng'] then
+			task = {
+				id = 'CarpetBombing', 
+				params = {
+					point = coord.LLtoLO(options['lat'], options['lng'], 0),
+					attackQty = 1,
+					carpetLength = 1000,
+					attackType = 'Carpet' 
+				}   
+			}
+		elseif options['id'] == 'AttackMapObject' and options['lat'] and options['lng'] then
+			task = {
+				id = 'AttackMapObject', 
+				params = {
+					point = coord.LLtoLO(options['lat'], options['lng'], 0),
+				}   
+			}
 		end
-	end
+		elseif options['id'] == 'FireAtPoint' and options['lat'] and options['lng'] and options['radius'] then
+			task = {
+				id = 'AttackMapObject', 
+				params = {
+					point = coord.LLtoLO(options['lat'], options['lng'], 0),
+					radius = options['radius']
+				}   
+			}
+		end
 	return task
 end
 
@@ -236,6 +269,12 @@ function Olympus.smoke(color, lat, lng)
 		colorEnum = trigger.smokeColor.Blue
 	end
     trigger.action.smoke(mist.utils.makeVec3GL(coord.LLtoLO(lat, lng, 0)), colorEnum)
+end  
+
+-- Creates an explosion on the ground
+function Olympus.explosion(intensity, lat, lng)
+    Olympus.debug("Olympus.explosion " .. intensity .. " (" .. lat .. ", " .. lng ..")", 2)
+	trigger.action.explosion(mist.utils.makeVec3GL(coord.LLtoLO(lat, lng, 0)), intensity)
 end  
 
 -- Spawns a single ground unit

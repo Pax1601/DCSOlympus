@@ -316,6 +316,51 @@ void Scheduler::handleRequest(wstring key, json::value value)
 		Unit* unit = unitsManager->getUnit(ID);
 		unit->setOnOff(onOff);
 	}
+	else if (key.compare(L"explosion") == 0)
+	{
+		int intensity = value[L"intensity"].as_integer();
+		double lat = value[L"location"][L"lat"].as_double();
+		double lng = value[L"location"][L"lng"].as_double();
+		log(L"Adding " + to_wstring(intensity) + L" explosion at (" + to_wstring(lat) + L", " + to_wstring(lng) + L")");
+		Coords loc; loc.lat = lat; loc.lng = lng;
+		command = dynamic_cast<Command*>(new Explosion(intensity, loc));
+	}
+	else if (key.compare(L"bombPoint") == 0)
+	{
+		int ID = value[L"ID"].as_integer();
+		double lat = value[L"location"][L"lat"].as_double();
+		double lng = value[L"location"][L"lng"].as_double();
+		Coords loc; loc.lat = lat; loc.lng = lng;
+		Unit* unit = unitsManager->getUnit(ID);
+		unit->setState(State::BOMB_POINT);
+	}
+	else if (key.compare(L"carpetBomb") == 0)
+	{
+		int ID = value[L"ID"].as_integer();
+		double lat = value[L"location"][L"lat"].as_double();
+		double lng = value[L"location"][L"lng"].as_double();
+		Coords loc; loc.lat = lat; loc.lng = lng;
+		Unit* unit = unitsManager->getUnit(ID);
+		unit->setState(State::CARPET_BOMB);
+	}
+	else if (key.compare(L"bombBuilding") == 0)
+	{
+		int ID = value[L"ID"].as_integer();
+		double lat = value[L"location"][L"lat"].as_double();
+		double lng = value[L"location"][L"lng"].as_double();
+		Coords loc; loc.lat = lat; loc.lng = lng;
+		Unit* unit = unitsManager->getUnit(ID);
+		unit->setState(State::BOMB_BUILDING);
+	}
+	else if (key.compare(L"fireAtArea") == 0)
+	{
+		int ID = value[L"ID"].as_integer();
+		double lat = value[L"location"][L"lat"].as_double();
+		double lng = value[L"location"][L"lng"].as_double();
+		Coords loc; loc.lat = lat; loc.lng = lng;
+		Unit* unit = unitsManager->getUnit(ID);
+		unit->setState(State::FIRE_AT_AREA);
+	}
 	else
 	{
 		log(L"Unknown command: " + key);

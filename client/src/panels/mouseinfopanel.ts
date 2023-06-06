@@ -97,7 +97,7 @@ export class MouseInfoPanel extends Panel {
 
             let bng = zeroAppend(Math.floor(bear), 3);
 
-            if (bng === "000") 
+            if (bng === "000")
                 bng = "360";
 
             var [str, unit] = this.#computeDistanceString(dist)
@@ -112,7 +112,7 @@ export class MouseInfoPanel extends Panel {
     }
 
     #onMouseMove(e: any) {
-        
+
         this.#update();
         this.#drawMeasureLine();
     }
@@ -171,7 +171,7 @@ export class MouseInfoPanel extends Panel {
 
     #computeDistanceString(dist: number) {
         var val = mToNm(dist);
-        var strVal = 0; 
+        var strVal = 0;
         var decimal = false;
         var unit = "NM";
         if (val > 10)

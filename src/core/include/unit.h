@@ -18,7 +18,11 @@ namespace State
 		LAND,
 		REFUEL,
 		AWACS,
-		TANKER
+		TANKER,
+		BOMB_POINT,
+		CARPET_BOMB,
+		BOMB_BUILDING,
+		FIRE_AT_AREA
 	};
 };
 
@@ -124,6 +128,7 @@ public:
 	void setActiveDestination(Coords newActiveDestination) { activeDestination = newActiveDestination; addMeasure(L"activeDestination", json::value("")); } // TODO fix
 	void setActivePath(list<Coords> newActivePath);
 	void setTargetID(int newTargetID) { targetID = newTargetID; addMeasure(L"targetID", json::value(newTargetID));}
+	void setTargetLocation(Coords newTargetLocation);
 	void setIsTanker(bool newIsTanker);
 	void setIsAWACS(bool newIsAWACS);
 	virtual void setOnOff(bool newOnOff) { onOff = newOnOff; addMeasure(L"onOff", json::value(newOnOff));};
@@ -137,6 +142,7 @@ public:
 	Coords getActiveDestination() { return activeDestination; }
 	list<Coords> getActivePath() { return activePath; }
 	int getTargetID() { return targetID; }
+	Coords getTargetLocation() { return targetLocation; }
 	bool getIsTanker() { return isTanker; }
 	bool getIsAWACS() { return isAWACS; }
 	bool getOnOff() { return onOff; };
@@ -212,8 +218,9 @@ protected:
 	wstring targetSpeedType = L"GS";
 	wstring targetAltitudeType = L"AGL";
 	list<Coords> activePath;
-	Coords activeDestination = Coords(0);
+	Coords activeDestination = Coords(NULL);
 	int targetID = NULL;
+	Coords targetLocation = Coords(NULL);
 	bool isTanker = false;
 	bool isAWACS = false;
 	bool onOff = true;

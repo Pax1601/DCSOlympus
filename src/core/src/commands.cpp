@@ -178,3 +178,15 @@ wstring SetOnOff::getString(lua_State* L)
  
     return commandSS.str();
 }
+
+/* Explosion command */
+wstring Explosion::getString(lua_State* L)
+{
+    std::wostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.explosion, "
+        << intensity << ", "
+        << location.lat << ", "
+        << location.lng;
+    return commandSS.str();
+}
