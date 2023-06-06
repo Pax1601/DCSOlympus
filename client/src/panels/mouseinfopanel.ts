@@ -1,6 +1,6 @@
 import { Icon, LatLng, Marker, Polyline } from "leaflet";
 import { getMap, getMissionData, getUnitsManager } from "..";
-import { distance, bearing, zeroPad, zeroAppend, reciprocalHeading } from "../other/utils";
+import { distance, bearing, zeroAppend, mToNm, nmToFt } from "../other/utils";
 import { Unit } from "../units/unit";
 import { Panel } from "./panel";
 
@@ -100,7 +100,9 @@ export class MouseInfoPanel extends Panel {
             if (bng === "000") 
                 bng = "360";
 
-            let data = [`${bng}°`, `${Math.floor(dist * 0.000539957)} NM`];
+            var [str, unit] = this.#computeDistanceString(dist)
+
+            let data = [`${bng}°`, `${str} ${unit}`];
 
             this.#measureBox.innerText = data.join(" / ");
             this.#measureBox.style.left = (getMap().getMousePosition().x + startXY.x) / 2 - this.#measureBox.offsetWidth / 2 + "px";
@@ -134,9 +136,11 @@ export class MouseInfoPanel extends Panel {
                 if (bng === "000")
                     bng = "360";
 
+                var [str, unit] = this.#computeDistanceString(dist)
+
                 el.dataset.bearing = bng;
-                el.dataset.distance = zeroAppend(Math.floor(dist * 0.000539957), 3);
-                el.dataset.distanceUnits = "NM";
+                el.dataset.distance = str;
+                el.dataset.distanceUnits = unit;
             }
             if (img != null)
                 img.classList.remove("hide");
@@ -163,5 +167,24 @@ export class MouseInfoPanel extends Panel {
             }
             img.dataset.label = (value < 0) ? prefixes[1] : prefixes[0];
         }
+    }
+
+    #computeDistanceString(dist: number) {
+        var val = mToNm(dist);
+        var strVal = 0; 
+        var decimal = false;
+        var unit = "NM";
+        if (val > 10)
+            strVal = Math.floor(val);
+        else if (val > 1 && val <= 10) {
+            strVal = Math.floor(val * 100) / 100;
+            decimal = true;
+        }
+        else {
+            strVal = Math.floor(nmToFt(val));
+            unit = "ft";
+        }
+
+        return [zeroAppend(strVal, 3, decimal), unit];
     }
 }

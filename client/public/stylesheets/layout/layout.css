@@ -38,7 +38,7 @@
 	font-size: 12px;
 	position: absolute;
 	right: 10px;
-	width: 160px;
+	width: 180px;
 	z-index: 1000;
 }
 
@@ -50,7 +50,7 @@
 	position: absolute;
 	right: 10px;
 	row-gap: 10px;
-	width: 160px;
+	width: 180px;
 	z-index: 1000;
 }
 
