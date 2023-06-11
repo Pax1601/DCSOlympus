@@ -13,6 +13,7 @@ import { TemporaryUnitMarker } from "./temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
 import { SVGInjector } from '@tanem/svg-injector'
 import { layers as mapLayers, mapBounds, minimapBoundaries } from "../constants/constants";
+import { TargetMarker } from "./targetmarker";
 
 L.Map.addInitHook('addHandler', 'boxSelect', BoxSelect);
 
@@ -20,12 +21,16 @@ L.Map.addInitHook('addHandler', 'boxSelect', BoxSelect);
 require("../../public/javascripts/leaflet.nauticscale.js")
 
 /* Map constants */
-export const IDLE = "IDLE";
-export const UNIT_SELECTED = "MOVE_UNIT";
+export const IDLE = "Idle";
+export const MOVE_UNIT = "Move unit";
+export const BOMBING = "Bombing";
+export const CARPET_BOMBING = "Carpet bombing";
+export const FIRE_AT_AREA = "Fire at area";
 export const visibilityControls: string[] = ["human", "dcs", "aircraft", "groundunit-sam", "groundunit-other", "navyunit", "airbase"];
 export const visibilityControlsTootlips: string[] = ["Toggle human players visibility", "Toggle DCS controlled units visibility", "Toggle aircrafts visibility", "Toggle SAM units visibility", "Toggle ground units (not SAM) visibility", "Toggle navy units visibility", "Toggle airbases visibility"];
 
 export class Map extends L.Map {
+    #ID: string;
     #state: string;
     #layer: L.TileLayer | null = null;
     #preventLeftClick: boolean = false;
@@ -40,8 +45,9 @@ export class Map extends L.Map {
     #centerUnit: Unit | null = null;
     #miniMap: ClickableMiniMap | null = null;
     #miniMapLayerGroup: L.LayerGroup;
-    #temporaryMarkers: L.Marker[] = [];
-    #destinationPreviewMarkers: L.Marker[] = [];
+    #temporaryMarkers: TemporaryUnitMarker[] = [];
+    #destinationPreviewMarkers: DestinationPreviewMarker[] = [];
+    #targetMarker: TargetMarker;
     #destinationGroupRotation: number = 0;
     #computeDestinationRotation: boolean = false;
     #destinationRotationCenter: L.LatLng | null = null;
@@ -55,9 +61,12 @@ export class Map extends L.Map {
 
     constructor(ID: string) {
         /* Init the leaflet map */
+        
         //@ts-ignore
         super(ID, { doubleClickZoom: false, zoomControl: false, boxZoom: false, boxSelect: true, zoomAnimation: true, maxBoundsViscosity: 1.0, minZoom: 7, keyboard: true, keyboardPanDelta: 0 });
         this.setView([37.23, -115.8], 10);
+
+        this.#ID = ID;
 
         this.setLayer(Object.keys(mapLayers)[0]);
 
@@ -122,6 +131,9 @@ export class Map extends L.Map {
             return this.#createOptionButton(option, `visibility/${option.toLowerCase()}.svg`, visibilityControlsTootlips[index], "toggleUnitVisibility", `{"type": "${option}"}`);
         });
         document.querySelector("#unit-visibility-control")?.append(...this.#optionButtons["visibility"]);
+
+        /* Markers */
+        this.#targetMarker = new TargetMarker(new L.LatLng(0, 0), {interactive: false});
     }
 
     setLayer(layerName: string) {
@@ -149,31 +161,20 @@ export class Map extends L.Map {
     setState(state: string) {
         this.#state = state;
         if (this.#state === IDLE) {
-            /* Remove all the destination preview markers */
-            this.#destinationPreviewMarkers.forEach((marker: L.Marker) => {
-                this.removeLayer(marker);
-            })
-            this.#destinationPreviewMarkers = [];
-
-            this.#destinationGroupRotation = 0;
-            this.#computeDestinationRotation = false;
-            this.#destinationRotationCenter = null;
+            this.#resetDestinationMarkers();
+            this.#resetTargetMarker();
+            this.#showCursor();
         }
-        else if (this.#state === UNIT_SELECTED) {
-            /* Remove all the exising destination preview markers */
-            this.#destinationPreviewMarkers.forEach((marker: L.Marker) => {
-                this.removeLayer(marker);
-            })
-            this.#destinationPreviewMarkers = [];
-
-            if (getUnitsManager().getSelectedUnits({ excludeHumans: true }).length > 1 && getUnitsManager().getSelectedUnits({ excludeHumans: true }).length < 20) {
-                /* Create the unit destination preview markers */
-                this.#destinationPreviewMarkers = getUnitsManager().getSelectedUnits({ excludeHumans: true }).map((unit: Unit) => {
-                    var marker = new DestinationPreviewMarker(this.getMouseCoordinates(), {interactive: false});
-                    marker.addTo(this);
-                    return marker;
-                })
-            }
+        else if (this.#state === MOVE_UNIT) {
+            this.#resetTargetMarker();
+            this.#createDestinationMarkers();
+            if (this.#destinationPreviewMarkers.length > 0)
+                this.#hideCursor();
+        }
+        else if ([BOMBING, CARPET_BOMBING, FIRE_AT_AREA].includes(this.#state)) {
+            this.#resetDestinationMarkers();
+            this.#createTargetMarker();
+            this.#hideCursor();
         }
         document.dispatchEvent(new CustomEvent("mapStateChanged"));
     }
@@ -363,7 +364,7 @@ export class Map extends L.Map {
             if (this.#state === IDLE) {
 
             }
-            else if (this.#state === UNIT_SELECTED) {
+            else {
                 this.setState(IDLE);
                 getUnitsManager().deselectAllUnits();
             }
@@ -381,38 +382,26 @@ export class Map extends L.Map {
                 this.showMapContextMenu(e);
             }
         }
-        else if (this.#state === UNIT_SELECTED) {
-            if (e.originalEvent.shiftKey) {
-                var options: {[key: string]: {text: string, tooltip: string}} = {};
-                var selectedUnitTypes = getUnitsManager().getSelectedUnitsTypes();
-
-                if (selectedUnitTypes.length === 1 && ["Aircraft"].includes(selectedUnitTypes[0])) 
-                {
-                    options["bomb"] = {text: "Bomb here", tooltip: "Precision bombing of this specific point"};
-                    options["carpet-bomb"] = {text: "Carpet bomb", tooltip: "Carpet bombing around this point"};
-                    options["building-bomb"] = {text: "Bomb building", tooltip: "Precision bombing of the building closest to this point"};
-                }
-
-                if (selectedUnitTypes.length === 1 && ["GroundUnit"].includes(selectedUnitTypes[0])) 
-                    options["fire-at-area"] = {text: "Fire at area", tooltip: "Fire at this point"};  
-                
-                if (Object.keys(options).length > 0) {
-                    this.showUnitContextMenu(e);
-                    this.getUnitContextMenu().setOptions(options, (option: string) => {
-                        this.hideUnitContextMenu();
-                        this.#executeAction(e, option);
-                    });
-                }
-
-            } else {
-                if (!e.originalEvent.ctrlKey) {
-                    getUnitsManager().selectedUnitsClearDestinations();
-                }
-                getUnitsManager().selectedUnitsAddDestination(this.#computeDestinationRotation && this.#destinationRotationCenter != null ? this.#destinationRotationCenter : e.latlng, e.originalEvent.shiftKey, this.#destinationGroupRotation)
-                this.#destinationGroupRotation = 0; 
-                this.#destinationRotationCenter = null;
-                this.#computeDestinationRotation = false;
+        else if (this.#state === MOVE_UNIT) {
+            if (!e.originalEvent.ctrlKey) {
+                getUnitsManager().selectedUnitsClearDestinations();
             }
+            getUnitsManager().selectedUnitsAddDestination(this.#computeDestinationRotation && this.#destinationRotationCenter != null ? this.#destinationRotationCenter : e.latlng, e.originalEvent.shiftKey, this.#destinationGroupRotation)
+            this.#destinationGroupRotation = 0; 
+            this.#destinationRotationCenter = null;
+            this.#computeDestinationRotation = false;
+        }
+        else if (this.#state === BOMBING) {
+            getUnitsManager().getSelectedUnits().length > 0? this.setState(MOVE_UNIT): this.setState(IDLE);
+            getUnitsManager().selectedUnitsBombPoint(this.getMouseCoordinates()); 
+        }
+        else if (this.#state === CARPET_BOMBING) {
+            getUnitsManager().getSelectedUnits().length > 0? this.setState(MOVE_UNIT): this.setState(IDLE);
+            getUnitsManager().selectedUnitsCarpetBomb(this.getMouseCoordinates()); 
+        }
+        else if (this.#state === FIRE_AT_AREA) {
+            getUnitsManager().getSelectedUnits().length > 0? this.setState(MOVE_UNIT): this.setState(IDLE);
+            getUnitsManager().selectedUnitsFireAtArea(this.getMouseCoordinates()); 
         }
     }
 
@@ -439,7 +428,7 @@ export class Map extends L.Map {
     #onMouseDown(e: any) {
         this.hideAllContextMenus();
 
-        if (this.#state == UNIT_SELECTED) {
+        if (this.#state == MOVE_UNIT) {
             this.#destinationGroupRotation = 0; 
             this.#destinationRotationCenter = null;
             this.#computeDestinationRotation = false;
@@ -457,10 +446,14 @@ export class Map extends L.Map {
         this.#lastMousePosition.x = e.originalEvent.x;
         this.#lastMousePosition.y = e.originalEvent.y;
 
-        if (this.#computeDestinationRotation && this.#destinationRotationCenter != null)
-            this.#destinationGroupRotation = -bearing(this.#destinationRotationCenter.lat, this.#destinationRotationCenter.lng, this.getMouseCoordinates().lat, this.getMouseCoordinates().lng);
-
-        this.#updateDestinationPreview(e);
+        if (this.#state === MOVE_UNIT){
+            if (this.#computeDestinationRotation && this.#destinationRotationCenter != null)
+                this.#destinationGroupRotation = -bearing(this.#destinationRotationCenter.lat, this.#destinationRotationCenter.lng, this.getMouseCoordinates().lat, this.getMouseCoordinates().lng);
+            this.#updateDestinationPreview(e);
+        }
+        else if ([BOMBING, CARPET_BOMBING, FIRE_AT_AREA].includes(this.#state)) {
+            this.#targetMarker.setLatLng(this.getMouseCoordinates());
+        }
     }
 
     #onZoom(e: any) {
@@ -496,6 +489,49 @@ export class Map extends L.Map {
         button.setAttribute("data-on-click", callback);
         button.setAttribute("data-on-click-params", argument);
         return button;
+    }
+
+    #createDestinationMarkers() {
+        this.#resetDestinationMarkers();
+
+        if (getUnitsManager().getSelectedUnits({ excludeHumans: true }).length > 0 && getUnitsManager().getSelectedUnits({ excludeHumans: true }).length < 20) {
+            /* Create the unit destination preview markers */
+            this.#destinationPreviewMarkers = getUnitsManager().getSelectedUnits({ excludeHumans: true }).map((unit: Unit) => {
+                var marker = new DestinationPreviewMarker(this.getMouseCoordinates(), {interactive: false});
+                marker.addTo(this);
+                return marker;
+            })
+        }
+    }
+
+    #resetDestinationMarkers() {
+        /* Remove all the destination preview markers */
+        this.#destinationPreviewMarkers.forEach((marker: L.Marker) => {
+            this.removeLayer(marker);
+        })
+        this.#destinationPreviewMarkers = [];
+
+        this.#destinationGroupRotation = 0;
+        this.#computeDestinationRotation = false;
+        this.#destinationRotationCenter = null;
+    }
+
+    #createTargetMarker(){
+        this.#resetTargetMarker();
+        this.#targetMarker.addTo(this);
+    }
+
+    #resetTargetMarker() {
+        this.#targetMarker.setLatLng(new L.LatLng(0, 0));
+        this.removeLayer(this.#targetMarker);
+    }
+
+    #showCursor() {
+        document.getElementById(this.#ID)?.classList.remove("hidden-cursor");
+    }
+
+    #hideCursor() {
+        document.getElementById(this.#ID)?.classList.add("hidden-cursor");
     }
 } 
 

@@ -2603,7 +2603,7 @@ export class AircraftDatabase extends UnitDatabase {
                      }
                   ],
                   "roles": [
-                     "Recon"
+                     "Reconnaissance"
                   ],
                   "code": "R-60M*2",
                   "name": "Heavy / Fox 2 / Long Range"

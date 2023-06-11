@@ -73,7 +73,6 @@ void GroundUnit::setState(int newState)
 
 void GroundUnit::AIloop()
 {
-
 	switch (state) {
 	case State::IDLE: {
 		currentTask = L"Idle";
@@ -112,7 +111,7 @@ void GroundUnit::AIloop()
 		if (!getHasTask()) {
 			std::wostringstream taskSS;
 			taskSS << "{id = 'FireAtPoint', lat = " << targetLocation.lat << ", lng = " << targetLocation.lng << ", radius = 1000}";
-			Command* command = dynamic_cast<Command*>(new SetTask(ID, taskSS.str()));
+			Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str()));
 			scheduler->appendCommand(command);
 			setHasTask(true);
 		}
@@ -140,7 +139,7 @@ void GroundUnit::changeSpeed(wstring change)
 void GroundUnit::setOnOff(bool newOnOff) 
 {
 	Unit::setOnOff(newOnOff);
-	Command* command = dynamic_cast<Command*>(new SetOnOff(ID, onOff));
+	Command* command = dynamic_cast<Command*>(new SetOnOff(groupName, onOff));
 	scheduler->appendCommand(command);
 }
 

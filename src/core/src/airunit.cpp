@@ -143,7 +143,7 @@ void AirUnit::AIloop()
 				else {
 					taskSS << "{ id = 'Orbit', pattern = 'Circle' }";
 				}
-				Command* command = dynamic_cast<Command*>(new SetTask(ID, taskSS.str()));
+				Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str()));
 				scheduler->appendCommand(command);
 				setHasTask(true);
 			}
@@ -248,7 +248,7 @@ void AirUnit::AIloop()
 						<< "z = " << formationOffset.z 
 						<< "},"
 						<< "}";
-					Command* command = dynamic_cast<Command*>(new SetTask(ID, taskSS.str()));
+					Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str()));
 					scheduler->appendCommand(command);
 					setHasTask(true);
 				}
@@ -264,7 +264,7 @@ void AirUnit::AIloop()
 					taskSS << "{"
 						<< "id = 'Refuel'"
 						<< "}";
-					Command* command = dynamic_cast<Command*>(new SetTask(ID, taskSS.str()));
+					Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str()));
 					scheduler->appendCommand(command);
 					setHasTask(true);
 				}
@@ -279,7 +279,7 @@ void AirUnit::AIloop()
 			if (!getHasTask()) {
 				std::wostringstream taskSS;
 				taskSS << "{id = 'Bombing', lat = " << targetLocation.lat << ", lng = " << targetLocation.lng << "}";
-				Command* command = dynamic_cast<Command*>(new SetTask(ID, taskSS.str()));
+				Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str()));
 				scheduler->appendCommand(command);
 				setHasTask(true);
 			}
@@ -290,10 +290,11 @@ void AirUnit::AIloop()
 			if (!getHasTask()) {
 				std::wostringstream taskSS;
 				taskSS << "{id = 'CarpetBombing', lat = " << targetLocation.lat << ", lng = " << targetLocation.lng << "}";
-				Command* command = dynamic_cast<Command*>(new SetTask(ID, taskSS.str()));
+				Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str()));
 				scheduler->appendCommand(command);
 				setHasTask(true);
 			}
+			break;
 		}
 		case State::BOMB_BUILDING: {
 			currentTask = L"Bombing building";
@@ -301,14 +302,16 @@ void AirUnit::AIloop()
 			if (!getHasTask()) {
 				std::wostringstream taskSS;
 				taskSS << "{id = 'AttackMapObject', lat = " << targetLocation.lat << ", lng = " << targetLocation.lng << "}";
-				Command* command = dynamic_cast<Command*>(new SetTask(ID, taskSS.str()));
+				Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str()));
 				scheduler->appendCommand(command);
 				setHasTask(true);
 			}
+			break;
 		}
 		default:
 			break;
 	}
 
 	addMeasure(L"currentTask", json::value(currentTask));
+
 }

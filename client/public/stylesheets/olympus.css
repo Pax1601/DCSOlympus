@@ -34,6 +34,10 @@ body {
     width: 100%;
 }
 
+.hidden-cursor {
+    cursor: none !important;
+}
+
 a {
     text-decoration: none;
 }
@@ -203,7 +207,7 @@ form>div {
     max-height: 0;
     overflow: hidden;
     position: absolute;
-    z-index: 1000;
+    z-index: 9999;
 }
 
 .ol-select-options.scrollbar-visible {
@@ -709,7 +713,6 @@ nav.ol-panel> :last-child {
     position: relative;
     row-gap: 10px;
     width: 50%;
-    z-index: 10;
 }
 
 #splash-content::after {
@@ -860,16 +863,18 @@ nav.ol-panel> :last-child {
 }
 
 .ol-destination-preview-icon {
-    background-color: var(--secondary-yellow);
-    border-radius: 999px;
-    cursor: grab;
+    background-image: url("/resources/theme/images/markers/move.svg");
     height: 52px;
     pointer-events: none;
     width: 52px;
 }
 
-.ol-destination-preview {
+.ol-target-icon {
+    background-image: url("/resources/theme/images/markers/target.svg");
+    height: 52px;
     pointer-events: none;
+    width: 52px;
+    z-index: 9999;
 }
 
 dl.ol-data-grid {
@@ -933,7 +938,7 @@ dl.ol-data-grid dd {
     color: white;
     justify-self: center;
     position: absolute;
-    z-index: 1000;
+    z-index: 9999;
 }
 
 .ol-panel.ol-dialog {

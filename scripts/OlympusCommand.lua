@@ -140,50 +140,57 @@ function Olympus.buildTask(options)
 				} 
 			}
 		elseif options['id'] == 'Bombing' and options['lat'] and options['lng'] then
+			local point = coord.LLtoLO(options['lat'], options['lng'], 0)
 			task = {
 				id = 'Bombing', 
 				params = {
-					point = coord.LLtoLO(options['lat'], options['lng'], 0),
+					point = {x = point.x, y = point.z},
 					attackQty = 1
 				}   
 			}
 		elseif options['id'] == 'CarpetBombing' and options['lat'] and options['lng'] then
+			local point = coord.LLtoLO(options['lat'], options['lng'], 0)
 			task = {
 				id = 'CarpetBombing', 
 				params = {
-					point = coord.LLtoLO(options['lat'], options['lng'], 0),
-					attackQty = 1,
+					x = point.x,
+					y = point.z,
 					carpetLength = 1000,
-					attackType = 'Carpet' 
+					attackType = 'Carpet',
+					expend = "All",
+					attackQty = 1,
+					attackQtyLimit = true 
 				}   
 			}
 		elseif options['id'] == 'AttackMapObject' and options['lat'] and options['lng'] then
+			local point = coord.LLtoLO(options['lat'], options['lng'], 0)
 			task = {
 				id = 'AttackMapObject', 
 				params = {
-					point = coord.LLtoLO(options['lat'], options['lng'], 0),
+					point = {x = point.x, y = point.z}
 				}   
 			}
-		end
 		elseif options['id'] == 'FireAtPoint' and options['lat'] and options['lng'] and options['radius'] then
+			local point = coord.LLtoLO(options['lat'], options['lng'], 0)
 			task = {
-				id = 'AttackMapObject', 
+				id = 'FireAtPoint', 
 				params = {
-					point = coord.LLtoLO(options['lat'], options['lng'], 0),
+					point = {x = point.x, y = point.z},
 					radius = options['radius']
 				}   
 			}
 		end
+	end
 	return task
 end
 
 -- Move a unit. Since many tasks in DCS are Enroute tasks, this function is an important way to control the unit AI
-function Olympus.move(ID, lat, lng, altitude, altitudeType, speed, speedType, category, taskOptions)
-    Olympus.debug("Olympus.move " .. ID .. " (" .. lat .. ", " .. lng ..") " .. altitude .. "m " .. altitudeType .. " ".. speed .. "m/s " .. category .. " " .. Olympus.serializeTable(taskOptions), 2)
-    local unit = Olympus.getUnitByID(ID)
-	if unit then
+function Olympus.move(groupName, lat, lng, altitude, altitudeType, speed, speedType, category, taskOptions)
+    Olympus.debug("Olympus.move " .. groupName .. " (" .. lat .. ", " .. lng ..") " .. altitude .. "m " .. altitudeType .. " ".. speed .. "m/s " .. category .. " " .. Olympus.serializeTable(taskOptions), 2)
+    local group = Group.getByName(groupName)
+	if group then
 		if category == "Aircraft" then
-			local startPoint = mist.getLeadPos(unit:getGroup())
+			local startPoint = mist.getLeadPos(group)
 			local endPoint = coord.LLtoLO(lat, lng, 0) 
 
 			if altitudeType == "AGL" then
@@ -221,7 +228,6 @@ function Olympus.move(ID, lat, lng, altitude, altitudeType, speed, speedType, ca
 					},
 				},
 			}
-			group = unit:getGroup()
 			local groupCon = group:getController()
 			if groupCon then
 				groupCon:setTask(missionTask)
@@ -230,7 +236,7 @@ function Olympus.move(ID, lat, lng, altitude, altitudeType, speed, speedType, ca
 		elseif category == "GroundUnit" then
 			vars = 
 				{
-					group = unit:getGroup(), 
+					group = group, 
 					point = coord.LLtoLO(lat, lng, 0),
 					heading = 0,
 					speed = speed
@@ -249,7 +255,7 @@ function Olympus.move(ID, lat, lng, altitude, altitudeType, speed, speedType, ca
 			Olympus.debug("Olympus.move not implemented yet for " .. category, 2)
 		end
 	else
-        Olympus.debug("Error in Olympus.move " .. ID, 2)
+        Olympus.debug("Error in Olympus.move " .. groupName, 2)
 	end
 end  
 
@@ -408,8 +414,61 @@ function Olympus.spawnAircraft(coalition, unitType, lat, lng, alt, spawnOptions)
 				}, 
 			} 			
 		end
+	else
+		route = {
+				["points"] = 
+				{
+					[1] = 
+					{
+						["alt"] = alt,
+						["alt_type"] = "BARO",
+						["task"] = 
+						{
+							["id"] = "ComboTask",
+							["params"] = 
+							{
+								["tasks"] = 
+								{
+									[1] = 
+									{
+										["number"] = 1,
+										["auto"] = true,
+										["id"] = "WrappedAction",
+										["enabled"] = true,
+										["params"] = 
+										{
+											["action"] = 
+											{
+												["id"] = "EPLRS",
+												["params"] = 
+												{
+													["value"] = true
+												}, 
+											}, 
+										}, 
+									},
+									[2] = 
+									{
+										["number"] = 2,
+										["auto"] = false,
+										["id"] = "Orbit",
+										["enabled"] = true,
+										["params"] = 
+										{
+											["pattern"] = "Circle"
+										}, 
+									},
+								}, 
+							}, 
+						}, 
+						["type"] = "Turning Point",
+						["x"] = spawnLocation.x,
+						["y"] = spawnLocation.z,
+					}, -- end of [1]
+				}, -- end of ["points"]
+			} -- end of ["route"]
 	end
-	
+
 	local vars = 
 	{
 		units = unitTable, 
@@ -461,51 +520,51 @@ function Olympus.delete(ID, explosion)
 	end
 end
 
-function Olympus.setTask(ID, taskOptions)
-	Olympus.debug("Olympus.setTask " .. ID .. " " .. Olympus.serializeTable(taskOptions), 2)
-	local unit = Olympus.getUnitByID(ID)
-	if unit then
+function Olympus.setTask(groupName, taskOptions)
+	Olympus.debug("Olympus.setTask " .. groupName .. " " .. Olympus.serializeTable(taskOptions), 2)
+	local group = Group.getByName(groupName)
+	if group then
 		local task = Olympus.buildTask(taskOptions);
 		Olympus.debug("Olympus.setTask " .. Olympus.serializeTable(task), 20)
 		if task then
-			unit:getGroup():getController():setTask(task)
+			group:getController():setTask(task)
 			Olympus.debug("Olympus.setTask completed successfully", 2)
 		end
 	end
 end
 
-function Olympus.resetTask(ID)
-	Olympus.debug("Olympus.resetTask " .. ID, 2)
-	local unit = Olympus.getUnitByID(ID)
-	if unit then
-		unit:getGroup():getController():resetTask()
+function Olympus.resetTask(groupName)
+	Olympus.debug("Olympus.resetTask " .. groupName, 2)
+	local group = Group.getByName(groupName)
+	if group then
+		group:getController():resetTask()
 		Olympus.debug("Olympus.resetTask completed successfully", 2)
 	end
 end
 
-function Olympus.setCommand(ID, command)
-	Olympus.debug("Olympus.setCommand " .. ID .. " " .. Olympus.serializeTable(command), 2)
-	local unit = Olympus.getUnitByID(ID)
-	if unit then
-		unit:getGroup():getController():setCommand(command)
+function Olympus.setCommand(groupName, command)
+	Olympus.debug("Olympus.setCommand " .. groupName .. " " .. Olympus.serializeTable(command), 2)
+	local group = Group.getByName(groupName)
+	if group then
+		group:getController():setCommand(command)
 		Olympus.debug("Olympus.setCommand completed successfully", 2)
 	end
 end
 
-function Olympus.setOption(ID, optionID, optionValue)
-	Olympus.debug("Olympus.setOption " .. ID .. " " .. optionID .. " " .. tostring(optionValue), 2)
-	local unit = Olympus.getUnitByID(ID)
-	if unit then
-		unit:getGroup():getController():setOption(optionID, optionValue)
+function Olympus.setOption(groupName, optionID, optionValue)
+	Olympus.debug("Olympus.setOption " .. groupName .. " " .. optionID .. " " .. tostring(optionValue), 2)
+	local group = Group.getByName(groupName)
+	if group then
+		group:getController():setOption(optionID, optionValue)
 		Olympus.debug("Olympus.setOption completed successfully", 2)
 	end
 end
 
-function Olympus.setOnOff(ID, onOff)
-	Olympus.debug("Olympus.setOnOff " .. ID .. " " .. tostring(onOff), 2)
-	local unit = Olympus.getUnitByID(ID)
-	if unit then
-		unit:getGroup():getController():setOnOff(onOff)
+function Olympus.setOnOff(groupName, onOff)
+	Olympus.debug("Olympus.setOnOff " .. groupName .. " " .. tostring(onOff), 2)
+	local group = Group.getByName(groupName)
+	if group then
+		group:getController():setOnOff(onOff)
 		Olympus.debug("Olympus.setOnOff completed successfully", 2)
 	end
 end

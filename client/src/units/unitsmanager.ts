@@ -3,7 +3,7 @@ import { getHotgroupPanel, getInfoPopup, getMap, getUnitDataTable } from "..";
 import { Unit } from "./unit";
 import { cloneUnit } from "../server/server";
 import { deg2rad, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots } from "../other/utils";
-import { IDLE, UNIT_SELECTED } from "../map/map";
+import { IDLE, MOVE_UNIT } from "../map/map";
 
 export class UnitsManager {
     #units: { [ID: number]: Unit };
@@ -52,10 +52,12 @@ export class UnitsManager {
     }
 
     addUnit(ID: number, data: UnitData) {
+        if (data.baseData && data.baseData.category){
         /* The name of the unit category is exactly the same as the constructor name */
-        var constructor = Unit.getConstructor(data.baseData.category);
-        if (constructor != undefined) {
-            this.#units[ID] = new constructor(ID, data);
+            var constructor = Unit.getConstructor(data.baseData.category);
+            if (constructor != undefined) {
+                this.#units[ID] = new constructor(ID, data);
+            }
         }
     }
 
@@ -498,7 +500,7 @@ export class UnitsManager {
 
     #onUnitSelection(unit: Unit) {
         if (this.getSelectedUnits().length > 0) {
-            getMap().setState(UNIT_SELECTED);
+            getMap().setState(MOVE_UNIT);
             /* Disable the firing of the selection event for a certain amount of time. This avoids firing many events if many units are selected */
             if (!this.#selectionEventDisabled) {
                 window.setTimeout(() => {

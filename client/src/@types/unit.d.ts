@@ -40,10 +40,12 @@ interface TaskData {
     targetSpeedType: string;
     targetAltitude: number;
     targetAltitudeType: string;
+    targetLocation: any;
     isTanker: boolean;
     isAWACS: boolean;
     onOff: boolean;
     followRoads: boolean;
+    targetID: number;
 }
 
 interface OptionsData {

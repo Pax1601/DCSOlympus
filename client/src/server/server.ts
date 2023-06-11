@@ -127,8 +127,8 @@ export function spawnSmoke(color: string, latlng: LatLng) {
     POST(data, () => { });
 }
 
-export function spawnExplosion(strength: number, latlng: LatLng) {
-    var command = { "strength": strength, "location": latlng };
+export function spawnExplosion(intensity: number, latlng: LatLng) {
+    var command = { "intensity": intensity, "location": latlng };
     var data = { "explosion": command }
     POST(data, () => { });
 }

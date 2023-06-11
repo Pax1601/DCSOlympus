@@ -6,6 +6,8 @@
 #include "measure.h"
 #include "logger.h"
 
+#define TASK_CHECK_INIT_VALUE 10
+
 namespace State
 {
 	enum States
@@ -63,7 +65,7 @@ public:
 	int getID() { return ID; }
 	void updateExportData(json::value json);
 	void updateMissionData(json::value json);
-	json::value getData(long long time);
+	json::value getData(long long time, bool getAll = false);
 	virtual wstring getCategory() { return L"No category"; };
 
 	/********** Base data **********/
@@ -100,7 +102,7 @@ public:
 	void setFuel(double newFuel) { fuel = newFuel; addMeasure(L"fuel", json::value(newFuel));}
 	void setAmmo(json::value newAmmo) { ammo = newAmmo; addMeasure(L"ammo", json::value(newAmmo));}
 	void setTargets(json::value newTargets) {targets = newTargets; addMeasure(L"targets", json::value(newTargets));}
-	void setHasTask(bool newHasTask) { hasTask = newHasTask; addMeasure(L"hasTask", json::value(newHasTask)); }
+	void setHasTask(bool newHasTask);
 	void setCoalitionID(int newCoalitionID);
 	void setFlags(json::value newFlags) { flags = newFlags; addMeasure(L"flags", json::value(newFlags));}
 
@@ -181,6 +183,7 @@ protected:
 	int ID;
 
 	map<wstring, Measure*> measures;
+	int taskCheckCounter = 0;
 
 	/********** Base data **********/
 	bool AI = false;
@@ -252,4 +255,6 @@ protected:
 	bool setActiveDestination();
 	bool updateActivePath(bool looping);
 	void goToDestination(wstring enrouteTask = L"nil");
+	bool checkTaskFailed();
+	void resetTaskFailedCounter();
 };

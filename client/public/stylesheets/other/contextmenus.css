@@ -271,7 +271,7 @@
     position: absolute;
     row-gap: 5px;
     width: fit-content;
-    z-index: 1000;
+    z-index: 9999;
 }
 
 #unit-contextmenu button {
@@ -305,6 +305,18 @@
 
 #attack::before {
     content: url("/resources/theme/images/icons/sword.svg");
+}
+
+#bomb::before {
+    content: url("/resources/theme/images/icons/crosshairs-solid.svg");
+}
+
+#carpet-bomb::before {
+    content: url("/resources/theme/images/icons/explosion-solid.svg");
+}
+
+#fire-at-area::before {
+    content: url("/resources/theme/images/icons/crosshairs-solid.svg");
 }
 
 #follow::before {
@@ -393,5 +405,5 @@
     position: absolute;
     row-gap: 5px;
     width: 180px;
-    z-index: 1000;
+    z-index: 9999;
 }

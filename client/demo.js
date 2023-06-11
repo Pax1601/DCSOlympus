@@ -107,7 +107,7 @@ const DEMO_UNIT_DATA = {
     ["3"]:{
         baseData: {
             AI: true,
-            name: "2S6 Tunguska",
+            name: "M-60",
             unitName: "Olympus 1-3",
             groupName: "Group 4",
             alive: true,

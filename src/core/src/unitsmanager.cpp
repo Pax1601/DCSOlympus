@@ -32,6 +32,67 @@ Unit* UnitsManager::getUnit(int ID)
 	}
 }
 
+bool UnitsManager::isUnitInGroup(Unit* unit) 
+{
+	if (unit != nullptr) {
+		wstring groupName = unit->getGroupName();
+		for (auto const& p : units)
+		{
+			if (p.second->getGroupName().compare(groupName) == 0 && p.second != unit)
+				return true;
+		}
+	}
+	return false;
+}
+
+bool UnitsManager::isUnitGroupLeader(Unit* unit) 
+{
+	if (unit != nullptr)
+		return unit == getGroupLeader(unit);
+	else
+		return false;
+}
+
+// The group leader is the unit with the lowest ID that is part of the group. This is different from DCS's concept of leader, which will change if the leader is destroyed
+Unit* UnitsManager::getGroupLeader(Unit* unit) 
+{
+	if (unit != nullptr) {
+		wstring groupName = unit->getGroupName();
+
+		/* Get the unit IDs in order */
+		std::vector<int> keys;
+		for (auto const& p : units)
+			keys.push_back(p.first);
+		sort(keys.begin(), keys.end());
+
+		/* Find the first unit that has the same groupName */
+		for (auto const& tempID : keys)
+		{
+			Unit* tempUnit = getUnit(tempID);
+			if (tempUnit != nullptr && tempUnit->getGroupName().compare(groupName) == 0)
+				return tempUnit;
+		}
+	}
+	return nullptr;
+}
+
+vector<Unit*> UnitsManager::getGroupMembers(wstring groupName) 
+{
+	vector<Unit*> members;
+	for (auto const& p : units)
+	{
+		if (p.second->getGroupName().compare(groupName) == 0)
+			members.push_back(p.second);
+	}
+	return members;
+}
+
+Unit* UnitsManager::getGroupLeader(int ID)
+{
+	Unit* unit = getUnit(ID);
+	return getGroupLeader(unit);
+}
+
 void UnitsManager::updateExportData(lua_State* L)
 {
 	map<int, json::value> unitJSONs = getAllUnits(L);

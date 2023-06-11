@@ -9,27 +9,20 @@ extern UnitsManager* unitsManager;
 /* Move command */
 wstring Move::getString(lua_State* L)
 {
-    Unit* unit = unitsManager->getUnit(ID);
-    if (unit != nullptr)
-    {
-        std::wostringstream commandSS;
-        commandSS.precision(10);
-        commandSS << "Olympus.move, "
-            << ID << ", "
-            << destination.lat << ", "
-            << destination.lng << ", "
-            << altitude << ", "
-            << "\"" << altitudeType << "\"" << ", "
-            << speed << ", "
-            << "\"" << speedType << "\"" << ", "
-            << "\"" << unit->getCategory() << "\"" << ", "
-            << taskOptions;
-        return commandSS.str();
-    }
-    else 
-    {
-        return L"";
-    }
+
+    std::wostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.move, "
+        << "\"" << groupName << "\"" << ", "
+        << destination.lat << ", "
+        << destination.lng << ", "
+        << altitude << ", "
+        << "\"" << altitudeType << "\"" << ", "
+        << speed << ", "
+        << "\"" << speedType << "\"" << ", "
+        << "\"" << category << "\"" << ", "
+        << taskOptions;
+    return commandSS.str();
 }
 
 /* Smoke command */
@@ -117,7 +110,7 @@ wstring SetTask::getString(lua_State* L)
     std::wostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.setTask, "
-        << ID << ", "
+        << "\"" << groupName << "\"" << ", "
         << task;
 
     return commandSS.str();
@@ -129,7 +122,7 @@ wstring ResetTask::getString(lua_State* L)
     std::wostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.resetTask, "
-        << ID;
+        << "\"" << groupName << "\"";
 
     return commandSS.str();
 }
@@ -140,7 +133,7 @@ wstring SetCommand::getString(lua_State* L)
     std::wostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.setCommand, "
-        << ID << ", "
+        << "\"" << groupName << "\"" << ", "
         << command;
 
     return commandSS.str();
@@ -154,12 +147,12 @@ wstring SetOption::getString(lua_State* L)
 
     if (!isBoolean) {
         commandSS << "Olympus.setOption, "
-            << ID << ", "
+            << "\"" << groupName << "\"" << ", "
             << optionID << ", "
             << optionValue;
     } else {
         commandSS << "Olympus.setOption, "
-            << ID << ", "
+            << "\"" << groupName << "\"" << ", "
             << optionID << ", "
             << (optionBool? "true": "false");
     }
@@ -173,7 +166,7 @@ wstring SetOnOff::getString(lua_State* L)
     commandSS.precision(10);
 
     commandSS << "Olympus.setOnOff, "
-        << ID << ", "
+        << "\"" << groupName << "\"" << ", "
         << (onOff ? "true" : "false");
  
     return commandSS.str();

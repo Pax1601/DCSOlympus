@@ -11,7 +11,7 @@
 	left: 10px;
 	position: absolute;
 	top: 10px;
-	z-index: 1000;
+	z-index: 9999;
 }
 
 #app-icon>.ol-select-options {
@@ -39,7 +39,7 @@
 	position: absolute;
 	right: 10px;
 	width: 180px;
-	z-index: 1000;
+	z-index: 9999;
 }
 
 #mouse-info-panel {
@@ -51,7 +51,7 @@
 	right: 10px;
 	row-gap: 10px;
 	width: 180px;
-	z-index: 1000;
+	z-index: 9999;
 }
 
 #unit-control-panel {
@@ -60,7 +60,7 @@
 	position: absolute;
 	top: 80px;
 	width: 320px;
-	z-index: 1000;
+	z-index: 9999;
 }
 
 #unit-info-panel {
@@ -69,7 +69,7 @@
 	left: 10px;
 	position: absolute;
 	width: fit-content;
-	z-index: 1000;
+	z-index: 9999;
 	padding: 24px 30px;
 }
 
