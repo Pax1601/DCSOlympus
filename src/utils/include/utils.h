@@ -29,3 +29,8 @@ bool DllExport operator!= (const Offset& a, const Offset& b);
 bool DllExport operator== (const Offset& a, const int& b);
 bool DllExport operator!= (const Offset& a, const int& b);
 
+double DllExport knotsToMs(const double knots);
+double DllExport msToKnots(const double ms);
+double DllExport ftToM(const double ft);
+double DllExport mToFt(const double m);
+

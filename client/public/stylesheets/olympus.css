@@ -34,6 +34,10 @@ body {
     width: 100%;
 }
 
+.hidden-cursor {
+    cursor: none !important;
+}
+
 a {
     text-decoration: none;
 }
@@ -50,6 +54,7 @@ button {
     cursor: pointer;
     font-weight: var(--font-weight-bolder);
     padding: 6px;
+    column-gap: 5px;
 }
 
 button:hover {
@@ -59,6 +64,14 @@ button:hover {
 button[disabled="disabled"] {
     color: var(--highlight-color);
     cursor: not-allowed;
+}
+
+button>svg:first-child,
+button>img:first-child {
+    position: relative;
+    aspect-ratio: initial;
+    height: 100%;
+    pointer-events: none;
 }
 
 form {
@@ -121,10 +134,10 @@ form>div {
 }
 
 .ol-panel hr {
-    background-color: var(--secondary-light-grey);
+    background-color: var(--secondary-transparent-white);
     border: none;
     height: 1px;
-    margin: 20px 0;
+    margin: 10px 0;
     width: 100%;
 }
 
@@ -194,7 +207,7 @@ form>div {
     max-height: 0;
     overflow: hidden;
     position: absolute;
-    z-index: 1000;
+    z-index: 9999;
 }
 
 .ol-select-options.scrollbar-visible {
@@ -308,16 +321,15 @@ form>div {
 
 .ol-panel-board>.panel-section {
     border-right: 1px solid #555;
-    margin: 10px 0;
     padding: 0 30px;
 }
 
 .ol-panel-board>.panel-section:first-child {
-    padding-left: 20px;
+    padding-left: 0px;
 }
 
 .ol-panel-board>.panel-section:last-child {
-    padding-right: 20px;
+    padding-right: 0px;
 }
 
 .ol-panel-board>.panel-section:last-of-type {
@@ -356,6 +368,12 @@ h4 {
 button.ol-button-warning {
     border: 1px solid var(--primary-red);
     color: var(--primary-red);
+    font-weight: bold;
+}
+
+button.ol-button-warning>svg:first-child {
+    stroke: var(--primary-red);
+    fill: var(--primary-red);
 }
 
 nav.ol-panel {
@@ -482,17 +500,22 @@ nav.ol-panel> :last-child {
     flex-direction: column;
 }
 
-.slider-container {
+.ol-slider-container {
     width: 100%;
 }
 
-.slider {
+.ol-slider-container:not(:first-of-type) {
+    margin-top: 10px;
+    width: 100%;
+}
+
+.ol-slider {
     -webkit-appearance: none;
     appearance: none;
     background: #d3d3d3;
     height: 2px;
     margin-bottom: 10px;
-    margin-top: 10px;
+    margin-top: 15px;
     opacity: 0.7;
     outline: none;
     -webkit-transition: .2s;
@@ -500,34 +523,51 @@ nav.ol-panel> :last-child {
     width: 100%;
 }
 
-.slider:hover {
+.ol-slider:hover {
     opacity: 1;
 }
 
-.slider::-webkit-slider-thumb {
+.ol-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    background: gray;
+    background: var(--background-grey);
     border-radius: 999px;
     cursor: pointer;
-    height: 20px;
-    width: 20px;
+    height: 25px;
+    width: 25px;
 }
 
-.active .slider::-webkit-slider-thumb {
-    background: #5ca7ff;
+.active .ol-slider::-webkit-slider-thumb {
+    background: radial-gradient(circle at center, var(--accent-light-blue), var(--accent-light-blue) 40%, color-mix(in srgb, var(--accent-light-blue), transparent 66%) 50%);
 }
 
-.slider::-moz-range-thumb {
-    background: gray;
+.ol-slider::-moz-range-thumb {
+    -moz-appearance: none;
+    border: 0px solid transparent;
+    background: var(--background-grey);
     border-radius: 999px;
     cursor: pointer;
-    height: 20px;
-    width: 20px;
+    height: 25px;
+    width: 25px;
 }
 
-.active .slider::-moz-range-thumb {
-    background: #5ca7ff;
+.active .ol-slider::-moz-range-thumb {
+    -moz-appearance: none;
+    background: radial-gradient(circle at center, var(--accent-light-blue), var(--accent-light-blue) 40%, color-mix(in srgb, var(--accent-light-blue), transparent 66%) 50%);
+}
+
+.ol-slider-min-max {
+    display: flex;
+    justify-content: space-between;
+    color: var(--secondary-light-grey);
+}
+
+.ol-slider-min-max::before {
+    content: attr(data-min-value);
+}
+
+.ol-slider-min-max::after {
+    content: attr(data-max-value);
 }
 
 .main-logo {
@@ -538,9 +578,9 @@ nav.ol-panel> :last-child {
 .ol-measure-box {
     background-color: var(--background-steel);
     border-radius: 999px;
-    color: var(--primary-neutral);
+    color: var(--background-offwhite);
     font-size: 12px;
-    font-weight: var(--font-weight-bolder);
+    font-weight: bolder;
     height: fit-content;
     padding-bottom: 0.2em;
     padding-left: 0.5em;
@@ -550,6 +590,7 @@ nav.ol-panel> :last-child {
     text-align: center;
     width: fit-content;
     z-index: 2000;
+    pointer-events: none;
 }
 
 .ol-sortable .handle {
@@ -672,7 +713,6 @@ nav.ol-panel> :last-child {
     position: relative;
     row-gap: 10px;
     width: 50%;
-    z-index: 10;
 }
 
 #splash-content::after {
@@ -823,15 +863,18 @@ nav.ol-panel> :last-child {
 }
 
 .ol-destination-preview-icon {
-    background-color: var(--secondary-yellow);
-    border-radius: 999px;
+    background-image: url("/resources/theme/images/markers/move.svg");
     height: 52px;
     pointer-events: none;
     width: 52px;
 }
 
-.ol-destination-preview {
+.ol-target-icon {
+    background-image: url("/resources/theme/images/markers/target.svg");
+    height: 52px;
     pointer-events: none;
+    width: 52px;
+    z-index: 9999;
 }
 
 dl.ol-data-grid {
@@ -843,12 +886,8 @@ dl.ol-data-grid {
     row-gap: 4px;
 }
 
-dl.ol-data-grid dt {
-    width: 60%;
-}
-
 dl.ol-data-grid dd {
-    width: 40%;
+    width: fit-content;
 }
 
 dl.ol-data-grid dt.icon {
@@ -877,18 +916,6 @@ dl.ol-data-grid dd {
     margin-left: auto;
 }
 
-.br-info::after {
-    content: attr(data-bearing) '\00B0  / ' attr(data-distance) attr(data-distance-units);
-}
-
-.br-info[data-message]::after {
-    content: attr(data-message);
-}
-
-.coordinates::after {
-    content: attr(data-dd) "\00b0 " attr(data-mm) "'" attr(data-ss) "." attr(data-sss) '"' attr(data-label);
-}
-
 .ol-button-box {
     column-gap: 6px;
     display: flex;
@@ -911,7 +938,7 @@ dl.ol-data-grid dd {
     color: white;
     justify-self: center;
     position: absolute;
-    z-index: 1000;
+    z-index: 9999;
 }
 
 .ol-panel.ol-dialog {
@@ -1049,4 +1076,61 @@ input[type=number]::-webkit-outer-spin-button {
     filter: invert(100%);
     height: 24px;
     width: 24px;
+}
+
+.ol-switch {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ol-switch-input {
+    display: none;
+}
+
+.ol-switch-fill {
+    border-radius: 999px;
+    position: relative;
+    transition: background-color 0.2s;
+    height: var(--height);
+	width: var(--width);
+}
+
+.ol-switch-fill::after {
+    aspect-ratio : 1 / 1;
+    background-clip: content-box;
+    background-color: #ffffff;
+    border-radius: 999px;
+    box-sizing: border-box;
+    content: "";
+    height: 100%;
+    padding: 3px;
+    position: absolute;
+    transition: transform 0.2s;
+    top: 0px;
+}
+
+.ol-switch-fill::before {
+	align-items: center;
+	box-sizing: border-box;
+	color: white;
+	display: flex;
+	font-size: 11px;
+	height: 100%;
+	padding: 0px 7px;
+	position: absolute;
+	transition: transform 0.2s;
+}
+
+.ol-switch[data-value="false"]>.ol-switch-fill::before {
+    transform: translateX(calc(var(--width) - 100%));
+}
+
+.ol-switch[data-value="true"]>.ol-switch-fill::after {
+	transform: translateX(calc(var(--width) - var(--height)));
+}
+
+.ol-switch[data-value="undefined"]>.ol-switch-fill::after {
+	transform: translateX(calc((var(--width) - var(--height)) * 0.5));
 }

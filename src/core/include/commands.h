@@ -81,8 +81,6 @@ namespace ECMUse {
 	};
 }
 
-
-
 /* Base command class */
 class Command
 {
@@ -99,12 +97,15 @@ protected:
 class Move : public Command
 {
 public:
-	Move(int ID, Coords destination, double speed, double altitude, wstring taskOptions):
-		ID(ID),
+	Move(wstring groupName, Coords destination, double speed, wstring speedType, double altitude, wstring altitudeType, wstring taskOptions, wstring category):
+		groupName(groupName),
 		destination(destination),
 		speed(speed),
+		speedType(speedType),
 		altitude(altitude),
-		taskOptions(taskOptions)
+		altitudeType(altitudeType),
+		taskOptions(taskOptions),
+		category(category)
 	{ 
 		priority = CommandPriority::HIGH; 
 	};
@@ -112,11 +113,14 @@ public:
 	virtual int getLoad() { return 5; }
 
 private:
-	const int ID;
+	const wstring groupName;
 	const Coords destination;
 	const double speed;
+	const wstring speedType;
 	const double altitude;
+	const wstring altitudeType;
 	const wstring taskOptions;
+	const wstring category;
 };
 
 /* Smoke command */
@@ -203,8 +207,9 @@ private:
 class Delete : public Command
 {
 public:
-	Delete(int ID) :
-		ID(ID)
+	Delete(int ID, bool explosion) :
+		ID(ID), 
+		explosion(explosion)
 	{
 		priority = CommandPriority::HIGH;
 	};
@@ -213,14 +218,15 @@ public:
 
 private:
 	const int ID;
+	const bool explosion;
 };
 
 /* Follow command */
 class SetTask : public Command
 {
 public:
-	SetTask(int ID, wstring task) :
-		ID(ID),
+	SetTask(wstring groupName, wstring task) :
+		groupName(groupName),
 		task(task)
 	{
 		priority = CommandPriority::MEDIUM;
@@ -229,7 +235,7 @@ public:
 	virtual int getLoad() { return 10; }
 
 private:
-	const int ID;
+	const wstring groupName;
 	const wstring task;
 };
 
@@ -237,8 +243,8 @@ private:
 class ResetTask : public Command
 {
 public:
-	ResetTask(int ID) :
-		ID(ID)
+	ResetTask(wstring groupName) :
+		groupName(groupName)
 	{
 		priority = CommandPriority::HIGH;
 	};
@@ -246,15 +252,15 @@ public:
 	virtual int getLoad() { return 10; }
 
 private:
-	const int ID;
+	const wstring groupName;
 };
 
 /* Set command */
 class SetCommand : public Command
 {
 public:
-	SetCommand(int ID, wstring command) :
-		ID(ID),
+	SetCommand(wstring groupName, wstring command) :
+		groupName(groupName),
 		command(command)
 	{
 		priority = CommandPriority::HIGH;
@@ -263,7 +269,7 @@ public:
 	virtual int getLoad() { return 10; }
 
 private:
-	const int ID;
+	const wstring groupName;
 	const wstring command;
 };
 
@@ -271,8 +277,8 @@ private:
 class SetOption : public Command
 {
 public:
-	SetOption(int ID, int optionID, int optionValue) :
-		ID(ID),
+	SetOption(wstring groupName, int optionID, int optionValue) :
+		groupName(groupName),
 		optionID(optionID),
 		optionValue(optionValue),
 		optionBool(false),
@@ -281,8 +287,8 @@ public:
 		priority = CommandPriority::HIGH;
 	};
 
-	SetOption(int ID, int optionID, bool optionBool) :
-		ID(ID),
+	SetOption(wstring groupName, int optionID, bool optionBool) :
+		groupName(groupName),
 		optionID(optionID),
 		optionValue(0),
 		optionBool(optionBool),
@@ -294,9 +300,45 @@ public:
 	virtual int getLoad() { return 10; }
 
 private:
-	const int ID;
+	const wstring groupName;
 	const int optionID;
 	const int optionValue;
 	const bool optionBool;
 	const bool isBoolean;
+};
+
+/* Set on off */
+class SetOnOff : public Command
+{
+public:
+	SetOnOff(wstring groupName, bool onOff) :
+		groupName(groupName),
+		onOff(onOff)
+	{
+		priority = CommandPriority::HIGH;
+	};
+	virtual wstring getString(lua_State* L);
+	virtual int getLoad() { return 10; }
+
+private:
+	const wstring groupName;
+	const bool onOff;
+};
+
+/* Make a ground explosion */
+class Explosion : public Command
+{
+public:
+	Explosion(int intensity, Coords location) :
+		location(location),
+		intensity(intensity)
+	{
+		priority = CommandPriority::MEDIUM;
+	};
+	virtual wstring getString(lua_State* L);
+	virtual int getLoad() { return 10; }
+
+private:
+	const Coords location;
+	const int intensity;
 };

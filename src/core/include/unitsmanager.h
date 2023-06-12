@@ -11,10 +11,15 @@ public:
 	~UnitsManager();
 
 	Unit* getUnit(int ID);
+	bool isUnitInGroup(Unit* unit);
+	bool isUnitGroupLeader(Unit* unit);
+	Unit* getGroupLeader(int ID);
+	Unit* getGroupLeader(Unit* unit);
+	vector<Unit*> getGroupMembers(wstring groupName);
 	void updateExportData(lua_State* L);
 	void updateMissionData(json::value missionData);
 	void getData(json::value& answer, long long time);
-	void deleteUnit(int ID);
+	void deleteUnit(int ID, bool explosion);
 	
 private:
 	map<int, Unit*> units;

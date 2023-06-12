@@ -123,7 +123,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                     }
                 ],
                 "filename": ""
-            }
+            },
             "2B11 mortar": {
                 "name": "2B11 mortar",
                 "label": "2B11 mortar",

@@ -79,8 +79,8 @@ export function reciprocalHeading(heading: number): number {
     return heading > 180? heading - 180: heading + 180;
 }
 
-export const zeroAppend = function (num: number, places: number) {
-    var string = String(num);
+export const zeroAppend = function (num: number, places: number, decimal: boolean = false) {
+    var string = decimal? num.toFixed(2): String(num);
     while (string.length < places) {
         string = "0" + string;
     }
@@ -160,4 +160,28 @@ export function createDivWithClass(className: string) {
     var el = document.createElement("div");
     el.classList.add(className);
     return el;
+}
+
+export function knotsToMs(knots: number) {
+    return knots / 1.94384;
+}
+
+export function msToKnots(ms: number) {
+    return ms * 1.94384;
+}
+
+export function ftToM(ft: number) {
+    return ft * 0.3048;
+}
+
+export function mToFt(m: number) {
+    return m / 0.3048;
+}
+
+export function mToNm(m: number) {
+    return m * 0.000539957;
+}
+
+export function nmToFt(nm: number) {
+    return nm * 6076.12;
 }

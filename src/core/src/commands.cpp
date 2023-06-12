@@ -9,25 +9,20 @@ extern UnitsManager* unitsManager;
 /* Move command */
 wstring Move::getString(lua_State* L)
 {
-    Unit* unit = unitsManager->getUnit(ID);
-    if (unit != nullptr)
-    {
-        std::wostringstream commandSS;
-        commandSS.precision(10);
-        commandSS << "Olympus.move, "
-            << ID << ", "
-            << destination.lat << ", "
-            << destination.lng << ", "
-            << altitude << ", "
-            << speed << ", "
-            << "\"" << unit->getCategory() << "\"" << ", "
-            << taskOptions;
-        return commandSS.str();
-    }
-    else 
-    {
-        return L"";
-    }
+
+    std::wostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.move, "
+        << "\"" << groupName << "\"" << ", "
+        << destination.lat << ", "
+        << destination.lng << ", "
+        << altitude << ", "
+        << "\"" << altitudeType << "\"" << ", "
+        << speed << ", "
+        << "\"" << speedType << "\"" << ", "
+        << "\"" << category << "\"" << ", "
+        << taskOptions;
+    return commandSS.str();
 }
 
 /* Smoke command */
@@ -72,6 +67,7 @@ wstring SpawnAircraft::getString(lua_State* L)
         << "\"" << unitType << "\"" << ", "
         << location.lat << ", " 
         << location.lng << ", " 
+        << location.alt << ", "
         << optionsSS.str();
     return commandSS.str();
 }
@@ -103,7 +99,8 @@ wstring Delete::getString(lua_State* L)
     std::wostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.delete, "
-        << ID;
+        << ID << ", "
+        << (explosion ? "true" : "false");
     return commandSS.str();
 }
 
@@ -113,7 +110,7 @@ wstring SetTask::getString(lua_State* L)
     std::wostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.setTask, "
-        << ID << ", "
+        << "\"" << groupName << "\"" << ", "
         << task;
 
     return commandSS.str();
@@ -125,7 +122,7 @@ wstring ResetTask::getString(lua_State* L)
     std::wostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.resetTask, "
-        << ID;
+        << "\"" << groupName << "\"";
 
     return commandSS.str();
 }
@@ -136,7 +133,7 @@ wstring SetCommand::getString(lua_State* L)
     std::wostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.setCommand, "
-        << ID << ", "
+        << "\"" << groupName << "\"" << ", "
         << command;
 
     return commandSS.str();
@@ -150,14 +147,39 @@ wstring SetOption::getString(lua_State* L)
 
     if (!isBoolean) {
         commandSS << "Olympus.setOption, "
-            << ID << ", "
+            << "\"" << groupName << "\"" << ", "
             << optionID << ", "
             << optionValue;
     } else {
         commandSS << "Olympus.setOption, "
-            << ID << ", "
+            << "\"" << groupName << "\"" << ", "
             << optionID << ", "
             << (optionBool? "true": "false");
     }
+    return commandSS.str();
+}
+
+/* Set onOff command */
+wstring SetOnOff::getString(lua_State* L)
+{
+    std::wostringstream commandSS;
+    commandSS.precision(10);
+
+    commandSS << "Olympus.setOnOff, "
+        << "\"" << groupName << "\"" << ", "
+        << (onOff ? "true" : "false");
+ 
+    return commandSS.str();
+}
+
+/* Explosion command */
+wstring Explosion::getString(lua_State* L)
+{
+    std::wostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.explosion, "
+        << intensity << ", "
+        << location.lat << ", "
+        << location.lng;
     return commandSS.str();
 }

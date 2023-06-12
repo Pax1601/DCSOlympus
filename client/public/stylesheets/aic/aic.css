@@ -130,7 +130,7 @@
 	padding: 10px;
 	position: absolute;
 	width: fit-content;
-	z-index: 1000;
+	z-index: 9999;
 }
 
 .aic-enabled #aic-teleprompt {

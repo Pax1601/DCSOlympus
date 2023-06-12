@@ -2,8 +2,8 @@ import { LatLng, LatLngBounds } from "leaflet";
 import { getHotgroupPanel, getInfoPopup, getMap, getUnitDataTable } from "..";
 import { Unit } from "./unit";
 import { cloneUnit } from "../server/server";
+import { deg2rad, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots } from "../other/utils";
 import { IDLE, MOVE_UNIT } from "../map/map";
-import { deg2rad, keyEventWasInInput, latLngToMercator, mercatorToLatLng } from "../other/utils";
 
 export class UnitsManager {
     #units: { [ID: number]: Unit };
@@ -20,8 +20,9 @@ export class UnitsManager {
         document.addEventListener('paste', () => this.pasteUnits());
         document.addEventListener('unitSelection', (e: CustomEvent) => this.#onUnitSelection(e.detail));
         document.addEventListener('unitDeselection', (e: CustomEvent) => this.#onUnitDeselection(e.detail));
+        document.addEventListener('deleteSelectedUnits', () => this.selectedUnitsDelete());
+        document.addEventListener('explodeSelectedUnits', () => this.selectedUnitsDelete(true));
         document.addEventListener('keyup', (event) => this.#onKeyUp(event));
-        document.addEventListener('deleteSelectedUnits', () => this.selectedUnitsDelete())
     }
 
     getSelectableAircraft() {
@@ -51,10 +52,12 @@ export class UnitsManager {
     }
 
     addUnit(ID: number, data: UnitData) {
+        if (data.baseData && data.baseData.category){
         /* The name of the unit category is exactly the same as the constructor name */
-        var constructor = Unit.getConstructor(data.baseData.category);
-        if (constructor != undefined) {
-            this.#units[ID] = new constructor(ID, data);
+            var constructor = Unit.getConstructor(data.baseData.category);
+            if (constructor != undefined) {
+                this.#units[ID] = new constructor(ID, data);
+            }
         }
     }
 
@@ -145,35 +148,26 @@ export class UnitsManager {
         this.getUnitsByHotgroup(hotgroup).forEach((unit: Unit) => unit.setSelected(true))
     }
 
-    getSelectedUnitsType() {
+    getSelectedUnitsTypes() {
         if (this.getSelectedUnits().length == 0)
-            return undefined;
+            return [];
         return this.getSelectedUnits().map((unit: Unit) => {
             return unit.constructor.name
+        })?.filter((value: any, index: any, array: string[]) => {
+            return array.indexOf(value) === index;
+        });
+    };
+
+    getSelectedUnitsVariable(variableGetter: CallableFunction) {
+        if (this.getSelectedUnits().length == 0)
+            return undefined;
+        return this.getSelectedUnits().map((unit: Unit) => {
+            return variableGetter(unit);
         })?.reduce((a: any, b: any) => {
             return a == b ? a : undefined
         });
     };
 
-    getSelectedUnitsTargetSpeed() {
-        if (this.getSelectedUnits().length == 0)
-            return undefined;
-        return this.getSelectedUnits().map((unit: Unit) => {
-            return unit.getTaskData().targetSpeed
-        })?.reduce((a: any, b: any) => {
-            return a == b ? a : undefined
-        });
-    };
-
-    getSelectedUnitsTargetAltitude() {
-        if (this.getSelectedUnits().length == 0)
-            return undefined;
-        return this.getSelectedUnits().map((unit: Unit) => {
-            return unit.getTaskData().targetAltitude
-        })?.reduce((a: any, b: any) => {
-            return a == b ? a : undefined
-        });
-    };
 
     getSelectedUnitsCoalition() {
         if (this.getSelectedUnits().length == 0)
@@ -258,7 +252,15 @@ export class UnitsManager {
         for (let idx in selectedUnits) {
             selectedUnits[idx].setSpeed(speed);
         }
-        this.#showActionMessage(selectedUnits, `setting speed to ${speed * 1.94384} kts`);
+        this.#showActionMessage(selectedUnits, `setting speed to ${msToKnots(speed)} kts`);
+    }
+
+    selectedUnitsSetSpeedType(speedType: string) {
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        for (let idx in selectedUnits) {
+            selectedUnits[idx].setSpeedType(speedType);
+        }
+        this.#showActionMessage(selectedUnits, `setting speed type to ${speedType}`);
     }
 
     selectedUnitsSetAltitude(altitude: number) {
@@ -266,7 +268,15 @@ export class UnitsManager {
         for (let idx in selectedUnits) {
             selectedUnits[idx].setAltitude(altitude);
         }
-        this.#showActionMessage(selectedUnits, `setting altitude to ${altitude / 0.3048} ft`);
+        this.#showActionMessage(selectedUnits, `setting altitude to ${mToFt(altitude)} ft`);
+    }
+
+    selectedUnitsSetAltitudeType(altitudeType: string) {
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        for (let idx in selectedUnits) {
+            selectedUnits[idx].setAltitudeType(altitudeType);
+        }
+        this.#showActionMessage(selectedUnits, `setting altitude type to ${altitudeType}`);
     }
 
     selectedUnitsSetROE(ROE: string) {
@@ -290,7 +300,23 @@ export class UnitsManager {
         for (let idx in selectedUnits) {
             selectedUnits[idx].setEmissionsCountermeasures(emissionCountermeasure);
         }
-        this.#showActionMessage(selectedUnits, `reaction to threat set to ${emissionCountermeasure}`);
+        this.#showActionMessage(selectedUnits, `emissions & countermeasures set to ${emissionCountermeasure}`);
+    }
+
+    selectedUnitsSetOnOff(onOff: boolean) {
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        for (let idx in selectedUnits) {
+            selectedUnits[idx].setOnOff(onOff);
+        }
+        this.#showActionMessage(selectedUnits, `unit active set to ${onOff}`);
+    }
+
+    selectedUnitsSetFollowRoads(followRoads: boolean) {
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        for (let idx in selectedUnits) {
+            selectedUnits[idx].setFollowRoads(followRoads);
+        }
+        this.#showActionMessage(selectedUnits, `follow roads set to ${followRoads}`);
     }
 
 
@@ -302,10 +328,18 @@ export class UnitsManager {
         this.#showActionMessage(selectedUnits, `attacking unit ${this.getUnitByID(ID)?.getBaseData().unitName}`);
     }
 
-    selectedUnitsDelete() {
+    selectedUnitsDelete(explosion: boolean = false) {
         var selectedUnits = this.getSelectedUnits(); /* Can be applied to humans too */
+        const selectionContainsAHuman = selectedUnits.some( ( unit:Unit ) => {
+            return unit.getMissionData().flags.Human === true;
+        });
+
+        if (selectionContainsAHuman && !confirm( "Your selection includes a human player. Deleting humans causes their vehicle to crash.\n\nAre you sure you want to do this?" ) ) {
+            return;
+        }
+
         for (let idx in selectedUnits) {
-            selectedUnits[idx].delete();
+            selectedUnits[idx].delete(explosion);
         }
         this.#showActionMessage(selectedUnits, `deleted`);
     }
@@ -406,6 +440,38 @@ export class UnitsManager {
         return unitDestinations;
     }
 
+    selectedUnitsBombPoint(mouseCoordinates: LatLng) {
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        for (let idx in selectedUnits) {
+            selectedUnits[idx].bombPoint(mouseCoordinates);
+        }
+        this.#showActionMessage(selectedUnits, `unit bombing point`);
+    }
+
+    selectedUnitsCarpetBomb(mouseCoordinates: LatLng) {
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        for (let idx in selectedUnits) {
+            selectedUnits[idx].carpetBomb(mouseCoordinates);
+        }
+        this.#showActionMessage(selectedUnits, `unit bombing point`);
+    }
+
+    selectedUnitsBombBuilding(mouseCoordinates: LatLng) {
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        for (let idx in selectedUnits) {
+            selectedUnits[idx].bombBuilding(mouseCoordinates);
+        }
+        this.#showActionMessage(selectedUnits, `unit bombing point`);
+    }
+
+    selectedUnitsFireAtArea(mouseCoordinates: LatLng) {
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        for (let idx in selectedUnits) {
+            selectedUnits[idx].fireAtArea(mouseCoordinates);
+        }
+        this.#showActionMessage(selectedUnits, `unit bombing point`);
+    }
+
     /***********************************************/
     copyUnits() {
         this.#copiedUnits = this.getSelectedUnits(); /* Can be applied to humans too */
@@ -428,16 +494,7 @@ export class UnitsManager {
     /***********************************************/
     #onKeyUp(event: KeyboardEvent) {
         if (!keyEventWasInInput(event) && event.key === "Delete" ) {
-
-            const selectedUnits           = this.getSelectedUnits();
-            const selectionContainsAHuman = selectedUnits.some( ( unit:Unit ) => {
-                return unit.getMissionData().flags.Human === true;
-            });
-
-            if ( !selectionContainsAHuman || confirm( "Your selection includes a human player. Deleting humans causes their vehicle to crash.\n\nAre you sure you want to do this?" ) ) {
-                this.selectedUnitsDelete();
-            }
-
+            this.selectedUnitsDelete();
         }
     }
 
