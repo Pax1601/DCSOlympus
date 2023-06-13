@@ -123,7 +123,7 @@ export abstract class ATCBoard {
                 return false;
             }
 
-            if ( baseData.AI === true ) {
+            if ( baseData.controlled === true ) {
                 //  return false;
             }
 

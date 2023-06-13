@@ -139,29 +139,29 @@ export class UnitControlPanel extends Panel {
                 element.toggleAttribute("data-show-advanced-settings-button", units.length == 1);
                 
                 /* Flight controls */
-                var targetAltitude: number | undefined = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getTaskData().targetAltitude});
-                var targetAltitudeType = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getTaskData().targetAltitudeType});
-                var targetSpeed = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getTaskData().targetSpeed});
-                var targetSpeedType = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getTaskData().targetSpeedType});
+                var desiredAltitude: number | undefined = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getTaskData().desiredAltitude});
+                var desiredAltitudeType = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getTaskData().desiredAltitudeType});
+                var desiredSpeed = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getTaskData().desiredSpeed});
+                var desiredSpeedType = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getTaskData().desiredSpeedType});
                 var onOff = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getTaskData().onOff});
                 var followRoads = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getTaskData().followRoads});
 
                 if (selectedUnitsTypes.length == 1) {
-                    this.#altitudeTypeSwitch.setValue(targetAltitudeType != undefined? targetAltitudeType == "AGL": undefined, false);
-                    this.#speedTypeSwitch.setValue(targetSpeedType != undefined? targetSpeedType == "GS": undefined, false);
+                    this.#altitudeTypeSwitch.setValue(desiredAltitudeType != undefined? desiredAltitudeType == "AGL": undefined, false);
+                    this.#speedTypeSwitch.setValue(desiredSpeedType != undefined? desiredSpeedType == "GS": undefined, false);
 
                     this.#speedSlider.setMinMax(minSpeedValues[selectedUnitsTypes[0]], maxSpeedValues[selectedUnitsTypes[0]]);
                     this.#altitudeSlider.setMinMax(minAltitudeValues[selectedUnitsTypes[0]], maxAltitudeValues[selectedUnitsTypes[0]]);
                     this.#speedSlider.setIncrement(speedIncrements[selectedUnitsTypes[0]]);
                     this.#altitudeSlider.setIncrement(altitudeIncrements[selectedUnitsTypes[0]]);
 
-                    this.#speedSlider.setActive(targetSpeed != undefined);
-                    if (targetSpeed != undefined)
-                        this.#speedSlider.setValue(msToKnots(targetSpeed), false);
+                    this.#speedSlider.setActive(desiredSpeed != undefined);
+                    if (desiredSpeed != undefined)
+                        this.#speedSlider.setValue(msToKnots(desiredSpeed), false);
 
-                    this.#altitudeSlider.setActive(targetAltitude != undefined);
-                    if (targetAltitude != undefined)
-                        this.#altitudeSlider.setValue(mToFt(targetAltitude), false);
+                    this.#altitudeSlider.setActive(desiredAltitude != undefined);
+                    if (desiredAltitude != undefined)
+                        this.#altitudeSlider.setValue(mToFt(desiredAltitude), false);
                 }
                 else {
                     this.#speedSlider.setActive(false);

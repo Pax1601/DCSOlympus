@@ -18,8 +18,10 @@ public:
 	vector<Unit*> getGroupMembers(wstring groupName);
 	void updateExportData(lua_State* L);
 	void updateMissionData(json::value missionData);
+	void runAILoop();
 	void getData(json::value& answer, long long time);
 	void deleteUnit(int ID, bool explosion);
+	void acquireControl(int ID);
 	
 private:
 	map<int, Unit*> units;

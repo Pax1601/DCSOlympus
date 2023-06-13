@@ -135,13 +135,13 @@ void AirUnit::AIloop()
 			{
 				std::wostringstream taskSS;
 				if (isTanker) {
-					taskSS << "{ [1] = { id = 'Tanker' }, [2] = { id = 'Orbit', pattern = 'Race-Track' } }";
+					taskSS << "{ [1] = { id = 'Tanker' }, [2] = { id = 'Orbit', pattern = 'Race-Track', altitude = " << desiredAltitude << ", speed = " << desiredSpeed << ", altitudeType = '" << desiredAltitudeType << "' } }";
 				}
 				else if (isAWACS) {
-					taskSS << "{ [1] = { id = 'AWACS' }, [2] = { id = 'Orbit', pattern = 'Circle' } }";
+					taskSS << "{ [1] = { id = 'AWACS' }, [2] = { id = 'Orbit', pattern = 'Circle', altitude = " << desiredAltitude << ", speed = " << desiredSpeed << ", altitudeType = '" << desiredAltitudeType << "' } }";
 				}
 				else {
-					taskSS << "{ id = 'Orbit', pattern = 'Circle' }";
+					taskSS << "{ id = 'Orbit', pattern = 'Circle', altitude = " << desiredAltitude << ", speed = " << desiredSpeed << ", altitudeType = '" << desiredAltitudeType << "' }";
 				}
 				Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str()));
 				scheduler->appendCommand(command);
@@ -313,5 +313,4 @@ void AirUnit::AIloop()
 	}
 
 	addMeasure(L"currentTask", json::value(currentTask));
-
 }

@@ -59,8 +59,8 @@ void Scheduler::handleRequest(wstring key, json::value value)
 	if (key.compare(L"setPath") == 0)
 	{
 		int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
 		Unit* unit = unitsManager->getGroupLeader(ID);
-
 		if (unit != nullptr)
 		{
 			wstring unitName = unit->getUnitName();
@@ -116,6 +116,7 @@ void Scheduler::handleRequest(wstring key, json::value value)
 	else if (key.compare(L"attackUnit") == 0)
 	{
 		int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
 		int targetID = value[L"targetID"].as_integer();
 
 		Unit* unit = unitsManager->getGroupLeader(ID);
@@ -141,6 +142,7 @@ void Scheduler::handleRequest(wstring key, json::value value)
 	else if (key.compare(L"followUnit") == 0)
 	{
 		int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
 		int leaderID = value[L"targetID"].as_integer();
 		int offsetX = value[L"offsetX"].as_integer();
 		int offsetY = value[L"offsetY"].as_integer();
@@ -170,6 +172,7 @@ void Scheduler::handleRequest(wstring key, json::value value)
 	else if (key.compare(L"changeSpeed") == 0)
 	{
 		int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr)
 			unit->changeSpeed(value[L"change"].as_string());
@@ -177,6 +180,7 @@ void Scheduler::handleRequest(wstring key, json::value value)
 	else if (key.compare(L"changeAltitude") == 0)
 	{
 		int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr)
 			unit->changeAltitude(value[L"change"].as_string());
@@ -184,30 +188,34 @@ void Scheduler::handleRequest(wstring key, json::value value)
 	else if (key.compare(L"setSpeed") == 0)
 	{
 		int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr)
-			unit->setTargetSpeed(value[L"speed"].as_double());
+			unit->setDesiredSpeed(value[L"speed"].as_double());
 	}
 	else if (key.compare(L"setSpeedType") == 0)
 	{
 	int ID = value[L"ID"].as_integer();
+	unitsManager->acquireControl(ID);
 	Unit* unit = unitsManager->getGroupLeader(ID);
 	if (unit != nullptr)
-		unit->setTargetSpeedType(value[L"speedType"].as_string());
+		unit->setDesiredSpeedType(value[L"speedType"].as_string());
 	}
 	else if (key.compare(L"setAltitude") == 0)
 	{
 		int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr)
-			unit->setTargetAltitude(value[L"altitude"].as_double());
+			unit->setDesiredAltitude(value[L"altitude"].as_double());
 	}
 	else if (key.compare(L"setAltitudeType") == 0)
 	{
 		int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr)
-			unit->setTargetAltitudeType(value[L"altitudeType"].as_string());
+			unit->setDesiredAltitudeType(value[L"altitudeType"].as_string());
 	}
 	else if (key.compare(L"cloneUnit") == 0)
 	{
@@ -221,6 +229,7 @@ void Scheduler::handleRequest(wstring key, json::value value)
 	else if (key.compare(L"setROE") == 0)
 	{
 		int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		wstring ROE = value[L"ROE"].as_string();
 		unit->setROE(ROE);
@@ -228,6 +237,7 @@ void Scheduler::handleRequest(wstring key, json::value value)
 	else if (key.compare(L"setReactionToThreat") == 0)
 	{
 		int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		wstring reactionToThreat = value[L"reactionToThreat"].as_string();
 		unit->setReactionToThreat(reactionToThreat);
@@ -235,6 +245,7 @@ void Scheduler::handleRequest(wstring key, json::value value)
 	else if (key.compare(L"setEmissionsCountermeasures") == 0)
 	{
 		int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		wstring emissionsCountermeasures = value[L"emissionsCountermeasures"].as_string();
 		unit->setEmissionsCountermeasures(emissionsCountermeasures);
@@ -242,6 +253,7 @@ void Scheduler::handleRequest(wstring key, json::value value)
 	else if (key.compare(L"landAt") == 0)
 	{
 		int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		double lat = value[L"location"][L"lat"].as_double();
 		double lng = value[L"location"][L"lng"].as_double();
@@ -257,12 +269,14 @@ void Scheduler::handleRequest(wstring key, json::value value)
 	else if (key.compare(L"refuel") == 0)
 	{
 		int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		unit->setState(State::REFUEL);
 	}
 	else if (key.compare(L"setAdvancedOptions") == 0)
 	{
 		int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr)
 		{
@@ -300,6 +314,7 @@ void Scheduler::handleRequest(wstring key, json::value value)
 	else if (key.compare(L"setFollowRoads") == 0)
 		{
 		int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
 		bool followRoads = value[L"followRoads"].as_bool();
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		unit->setFollowRoads(followRoads);
@@ -307,6 +322,7 @@ void Scheduler::handleRequest(wstring key, json::value value)
 	else if (key.compare(L"setOnOff") == 0)
 		{
 		int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
 		bool onOff = value[L"onOff"].as_bool();
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		unit->setOnOff(onOff);
@@ -323,6 +339,7 @@ void Scheduler::handleRequest(wstring key, json::value value)
 	else if (key.compare(L"bombPoint") == 0)
 	{
 		int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
 		double lat = value[L"location"][L"lat"].as_double();
 		double lng = value[L"location"][L"lng"].as_double();
 		Coords loc; loc.lat = lat; loc.lng = lng;
@@ -333,6 +350,7 @@ void Scheduler::handleRequest(wstring key, json::value value)
 	else if (key.compare(L"carpetBomb") == 0)
 	{
 		int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
 		double lat = value[L"location"][L"lat"].as_double();
 		double lng = value[L"location"][L"lng"].as_double();
 		Coords loc; loc.lat = lat; loc.lng = lng;
@@ -343,6 +361,7 @@ void Scheduler::handleRequest(wstring key, json::value value)
 	else if (key.compare(L"bombBuilding") == 0)
 	{
 		int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
 		double lat = value[L"location"][L"lat"].as_double();
 		double lng = value[L"location"][L"lng"].as_double();
 		Coords loc; loc.lat = lat; loc.lng = lng;
@@ -353,6 +372,7 @@ void Scheduler::handleRequest(wstring key, json::value value)
 	else if (key.compare(L"fireAtArea") == 0)
 	{
 		int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
 		double lat = value[L"location"][L"lat"].as_double();
 		double lng = value[L"location"][L"lng"].as_double();
 		Coords loc; loc.lat = lat; loc.lng = lng;

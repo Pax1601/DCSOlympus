@@ -69,6 +69,7 @@ extern "C" DllExport int coreFrame(lua_State* L)
         if (unitsManager != nullptr)
         {
             unitsManager->updateExportData(L);
+            unitsManager->runAILoop();
         }
         before = std::chrono::system_clock::now();
     }

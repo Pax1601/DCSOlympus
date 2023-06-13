@@ -24,21 +24,21 @@ export class UnitInfoPanel extends Panel {
     constructor(ID: string) {
         super(ID);
 
-        this.#altitude         = (this.getElement().querySelector("#altitude")) as HTMLElement;
-        this.#currentTask      = (this.getElement().querySelector("#current-task")) as HTMLElement;
-        this.#groundSpeed      = (this.getElement().querySelector("#ground-speed")) as HTMLElement;
-        this.#fuelBar          = (this.getElement().querySelector("#fuel-bar")) as HTMLElement;
-        this.#fuelPercentage   = (this.getElement().querySelector("#fuel-percentage")) as HTMLElement;
-        this.#groupName        = (this.getElement().querySelector("#group-name")) as HTMLElement;
-        this.#heading          = (this.getElement().querySelector("#heading")) as HTMLElement;
-        this.#name             = (this.getElement().querySelector("#name")) as HTMLElement;
-        this.#latitude         = (this.getElement().querySelector("#latitude")) as HTMLElement;
+        this.#altitude = (this.getElement().querySelector("#altitude")) as HTMLElement;
+        this.#currentTask = (this.getElement().querySelector("#current-task")) as HTMLElement;
+        this.#groundSpeed = (this.getElement().querySelector("#ground-speed")) as HTMLElement;
+        this.#fuelBar = (this.getElement().querySelector("#fuel-bar")) as HTMLElement;
+        this.#fuelPercentage = (this.getElement().querySelector("#fuel-percentage")) as HTMLElement;
+        this.#groupName = (this.getElement().querySelector("#group-name")) as HTMLElement;
+        this.#heading = (this.getElement().querySelector("#heading")) as HTMLElement;
+        this.#name = (this.getElement().querySelector("#name")) as HTMLElement;
+        this.#latitude = (this.getElement().querySelector("#latitude")) as HTMLElement;
         this.#loadoutContainer = (this.getElement().querySelector("#loadout-container")) as HTMLElement;
-        this.#longitude        = (this.getElement().querySelector("#longitude")) as HTMLElement;
-        this.#silhouette       = (this.getElement().querySelector("#loadout-silhouette")) as HTMLImageElement;
-        this.#unitControl      = (this.getElement().querySelector("#unit-control")) as HTMLElement;
-        this.#unitLabel        = (this.getElement().querySelector("#unit-label")) as HTMLElement;
-        this.#unitName         = (this.getElement().querySelector("#unit-name")) as HTMLElement;
+        this.#longitude = (this.getElement().querySelector("#longitude")) as HTMLElement;
+        this.#silhouette = (this.getElement().querySelector("#loadout-silhouette")) as HTMLImageElement;
+        this.#unitControl = (this.getElement().querySelector("#unit-control")) as HTMLElement;
+        this.#unitLabel = (this.getElement().querySelector("#unit-label")) as HTMLElement;
+        this.#unitName = (this.getElement().querySelector("#unit-name")) as HTMLElement;
 
         document.addEventListener("unitsSelection", (e: CustomEvent<Unit[]>) => this.#onUnitsSelection(e.detail));
         document.addEventListener("unitsDeselection", (e: CustomEvent<Unit[]>) => this.#onUnitsDeselection(e.detail));
@@ -47,49 +47,53 @@ export class UnitInfoPanel extends Panel {
 
         this.hide();
     }
-    
+
     #onUnitUpdate(unit: Unit) {
         if (this.getElement() != null && this.getVisible() && unit.getSelected()) {
 
             const baseData = unit.getBaseData();
 
             /* Set the unit info */
-            this.#unitLabel.innerText   = aircraftDatabase.getByName(baseData.name)?.label || baseData.name;
-            this.#unitName.innerText    = baseData.unitName;
-            this.#unitControl.innerText = ( ( baseData.AI ) ? "AI" : "Human" ) + " controlled";
+            this.#unitLabel.innerText = aircraftDatabase.getByName(baseData.name)?.label || baseData.name;
+            this.#unitName.innerText = baseData.unitName;
+            if (unit.getMissionData().flags.Human)
+                this.#unitControl.innerText = "Human";
+            else if (baseData.controlled)
+                this.#unitControl.innerText = "Olympus controlled";
+            else
+                this.#unitControl.innerText = "DCS Controlled";
             this.#fuelBar.style.width = String(unit.getMissionData().fuel + "%");
             this.#fuelPercentage.dataset.percentage = "" + unit.getMissionData().fuel;
-            this.#currentTask.dataset.currentTask = unit.getTaskData().currentTask !== ""? unit.getTaskData().currentTask: "No task";
+            this.#currentTask.dataset.currentTask = unit.getTaskData().currentTask !== "" ? unit.getTaskData().currentTask : "No task";
             this.#currentTask.dataset.coalition = unit.getMissionData().coalition;
-            
+
             this.#silhouette.src = `/images/units/${unit.getDatabase()?.getByName(baseData.name)?.filename}`;
             this.#silhouette.classList.toggle("hide", unit.getDatabase()?.getByName(baseData.name)?.filename == undefined || unit.getDatabase()?.getByName(baseData.name)?.filename == '');
-                
-            /* Add the loadout elements */
-            const items = <HTMLElement>this.#loadoutContainer.querySelector( "#loadout-items" );
 
-            if ( items ) {
-                const ammo = Object.values( unit.getMissionData().ammo ); 
-                if ( ammo.length > 0 ) {
+            /* Add the loadout elements */
+            const items = <HTMLElement>this.#loadoutContainer.querySelector("#loadout-items");
+
+            if (items) {
+                const ammo = Object.values(unit.getMissionData().ammo);
+                if (ammo.length > 0) {
                     items.replaceChildren(...Object.values(unit.getMissionData().ammo).map(
                         (ammo: any) => {
                             var el = document.createElement("div");
-                            el.dataset.qty  = ammo.count;
+                            el.dataset.qty = ammo.count;
                             el.dataset.item = ammo.desc.displayName;
                             return el;
                         }
                     ));
 
                 } else {
-                    items.innerText = "No loadout"; 
+                    items.innerText = "No loadout";
                 }
             }
         }
     }
 
-    #onUnitsSelection(units: Unit[]){
-        if (units.length == 1)
-        {
+    #onUnitsSelection(units: Unit[]) {
+        if (units.length == 1) {
             this.show();
             this.#onUnitUpdate(units[0]);
         }
@@ -97,9 +101,8 @@ export class UnitInfoPanel extends Panel {
             this.hide();
     }
 
-    #onUnitsDeselection(units: Unit[]){
-        if (units.length == 1)
-        {
+    #onUnitsDeselection(units: Unit[]) {
+        if (units.length == 1) {
             this.show();
             this.#onUnitUpdate(units[0]);
         }

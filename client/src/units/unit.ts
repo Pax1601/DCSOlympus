@@ -21,7 +21,7 @@ export class Unit extends CustomMarker {
 
     #data: UnitData = {
         baseData: {
-            AI: false,
+            controlled: false,
             name: "",
             unitName: "",
             groupName: "",
@@ -39,7 +39,7 @@ export class Unit extends CustomMarker {
             fuel: 0,
             flags: {},
             ammo: {},
-            targets: {},
+            contacts: {},
             hasTask: false,
             coalition: "",
         },
@@ -50,10 +50,10 @@ export class Unit extends CustomMarker {
             currentState: "NONE",
             currentTask: "",
             activePath: {},
-            targetSpeed: 0,
-            targetSpeedType: "GS",
-            targetAltitude: 0,
-            targetAltitudeType: "AGL",
+            desiredSpeed: 0,
+            desiredSpeedType: "GS",
+            desiredAltitude: 0,
+            desiredAltitudeType: "AGL",
             targetLocation: {},
             isTanker: false,
             isAWACS: false,
@@ -80,7 +80,7 @@ export class Unit extends CustomMarker {
 
     #pathMarkers: Marker[] = [];
     #pathPolyline: Polyline;
-    #targetsPolylines: Polyline[];
+    #contactsPolylines: Polyline[];
     #miniMapMarker: CircleMarker | null = null;
     #targetLocationMarker: TargetMarker;
     #targetLocationPolyline: Polyline;
@@ -113,7 +113,7 @@ export class Unit extends CustomMarker {
 
         this.#pathPolyline = new Polyline([], { color: '#2d3e50', weight: 3, opacity: 0.5, smoothFactor: 1 });
         this.#pathPolyline.addTo(getMap());
-        this.#targetsPolylines = [];
+        this.#contactsPolylines = [];
 
         this.#targetLocationMarker = new TargetMarker(new LatLng(0, 0));
         this.#targetLocationPolyline = new Polyline([], { color: '#FF0000', weight: 3, opacity: 0.5, smoothFactor: 1 });
@@ -217,7 +217,9 @@ export class Unit extends CustomMarker {
         const positionChanged = (data.flightData != undefined && data.flightData.latitude != undefined && data.flightData.longitude != undefined && (this.getFlightData().latitude != data.flightData.latitude || this.getFlightData().longitude != data.flightData.longitude));
         const headingChanged = (data.flightData != undefined && data.flightData.heading != undefined && this.getFlightData().heading != data.flightData.heading);
         const aliveChanged = (data.baseData != undefined && data.baseData.alive != undefined && this.getBaseData().alive != data.baseData.alive);
-        var updateMarker = (positionChanged || headingChanged || aliveChanged || !getMap().hasLayer(this));
+        const stateChanged = (data.taskData != undefined && data.taskData.currentState != undefined && this.getTaskData().currentState != data.taskData.currentState);
+        const controlledChanged = (data.baseData != undefined && data.baseData.controlled != undefined && this.getBaseData().controlled != data.baseData.controlled);
+        var updateMarker = (positionChanged || headingChanged || aliveChanged || stateChanged || controlledChanged || !getMap().hasLayer(this));
 
         /* Load the data from the received json */
         Object.keys(this.#data).forEach((key1: string) => {
@@ -391,7 +393,7 @@ export class Unit extends CustomMarker {
         const hiddenUnits = getUnitsManager().getHiddenTypes();
         if (this.getMissionData().flags.Human && hiddenUnits.includes("human"))
             hidden = true;
-        else if (this.getBaseData().AI == false && hiddenUnits.includes("dcs"))
+        else if (this.getBaseData().controlled == false && hiddenUnits.includes("dcs"))
             hidden = true;
         else if (hiddenUnits.includes(this.getMarkerCategory()))
             hidden = true;
@@ -724,7 +726,7 @@ export class Unit extends CustomMarker {
                 /* Set current unit state */
                 if (this.getMissionData().flags.Human)     // Unit is human
                     element.querySelector(".unit")?.setAttribute("data-state", "human");
-                else if (!this.getBaseData().AI)            // Unit is under DCS control (not Olympus)
+                else if (!this.getBaseData().controlled)            // Unit is under DCS control (not Olympus)
                     element.querySelector(".unit")?.setAttribute("data-state", "dcs");
                 else if ((this.getBaseData().category == "Aircraft" || this.getBaseData().category == "Helicopter") && !this.getMissionData().hasTask)
                     element.querySelector(".unit")?.setAttribute("data-state", "no-task");
@@ -827,8 +829,8 @@ export class Unit extends CustomMarker {
     }
 
     #drawDetectedUnits() {
-        for (let index in this.getMissionData().targets) {
-            var targetData = this.getMissionData().targets[index];
+        for (let index in this.getMissionData().contacts) {
+            var targetData = this.getMissionData().contacts[index];
             if (targetData.object != undefined){
                 var target = getUnitsManager().getUnitByID(targetData.object["id_"])
                 if (target != null) {
@@ -846,15 +848,15 @@ export class Unit extends CustomMarker {
                         color = "#FFFFFF";
                     var targetPolyline = new Polyline([startLatLng, endLatLng], { color: color, weight: 3, opacity: 0.4, smoothFactor: 1, dashArray: "4, 8" });
                     targetPolyline.addTo(getMap());
-                    this.#targetsPolylines.push(targetPolyline)
+                    this.#contactsPolylines.push(targetPolyline)
                 }
             }
         }
     }
 
     #clearDetectedUnits() {
-        for (let index in this.#targetsPolylines) {
-            getMap().removeLayer(this.#targetsPolylines[index])
+        for (let index in this.#contactsPolylines) {
+            getMap().removeLayer(this.#contactsPolylines[index])
         }
     }
 

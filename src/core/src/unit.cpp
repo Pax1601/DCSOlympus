@@ -46,19 +46,30 @@ Unit::~Unit()
 void Unit::initialize(json::value json)
 {
 	updateExportData(json);
+	setDefaults();
+}
 
-	if (getAI()) {
+void Unit::setDefaults(bool force)
+{
+	const bool isUnitControlledByOlympus = getControlled();
+	const bool isUnitAlive = getAlive();
+	const bool isUnitLeader = unitsManager->isUnitGroupLeader(this);
+	const bool isUnitLeaderOfAGroupWithOtherUnits = unitsManager->isUnitInGroup(this) && unitsManager->isUnitGroupLeader(this);
+	const bool isUnitHuman = getFlags()[L"Human"].as_bool();
+	if (isUnitControlledByOlympus && (isUnitAlive || isUnitLeaderOfAGroupWithOtherUnits) && isUnitLeader && !isUnitHuman) {
 		/* Set the default IDLE state */
 		setState(State::IDLE);
 
 		/* Set the default options (these are all defaults so will only affect the export data, no DCS command will be sent) */
-		setROE(L"Designated");
-		setReactionToThreat(L"Evade");
-		setEmissionsCountermeasures(L"Defend");
-		setTACAN(TACAN);
-		setRadio(radio);
-		setEPLRS(EPLRS);
-		setGeneralSettings(generalSettings);
+		setROE(L"Designated", force);
+		setReactionToThreat(L"Evade", force);
+		setEmissionsCountermeasures(L"Defend", force);
+		setTACAN(TACAN, force);
+		setRadio(radio, force);
+		setEPLRS(EPLRS, force);
+		setGeneralSettings(generalSettings, force);
+		setOnOff(onOff);
+		setFollowRoads(followRoads);
 	}
 }
 
@@ -74,6 +85,24 @@ void Unit::addMeasure(wstring key, json::value value)
 			measures[key]->setValue(value);
 			measures[key]->setTime(ms.count());
 		}
+	}
+}
+
+void Unit::runAILoop() {
+	/* If the unit is alive and it is not a human, run the AI Loop that performs the requested commands and instructions (moving, attacking, etc) */
+	const bool isUnitControlledByOlympus = getControlled();
+	const bool isUnitAlive = getAlive();
+	const bool isUnitLeader = unitsManager->isUnitGroupLeader(this);
+	const bool isUnitLeaderOfAGroupWithOtherUnits = unitsManager->isUnitInGroup(this) && unitsManager->isUnitGroupLeader(this);
+	const bool isUnitHuman = getFlags()[L"Human"].as_bool();
+
+	// Keep running the AI loop even if the unit is dead if it is the leader of a group which has other members in it
+	if (isUnitControlledByOlympus && (isUnitAlive || isUnitLeaderOfAGroupWithOtherUnits) && isUnitLeader && !isUnitHuman)
+	{
+		if (checkTaskFailed() && state != State::IDLE && State::LAND)
+			setState(State::IDLE);
+
+		AIloop();
 	}
 }
 
@@ -112,25 +141,8 @@ void Unit::updateExportData(json::value json)
 		setFlags(json[L"Flags"]);
 
 	/* All units which contain the name "Olympus" are automatically under AI control */
-	/* TODO: I don't really like using this method */
-	setAI(getUnitName().find(L"Olympus") != wstring::npos);
-
-	/* If the unit is alive and it is not a human, run the AI Loop that performs the requested commands and instructions (moving, attacking, etc) */
-	// TODO at the moment groups will stop moving correctly if the leader dies
-	const bool isUnitControlledByOlympus = getAI();
-	const bool isUnitAlive = getAlive();
-	const bool isUnitLeader = unitsManager->isUnitGroupLeader(this);
-	const bool isUnitLeaderOfAGroupWithOtherUnits = unitsManager->isUnitInGroup(this) && unitsManager->isUnitGroupLeader(this);
-	const bool isUnitHuman = getFlags()[L"Human"].as_bool();
-
-	// Keep running the AI loop even if the unit is dead if it is the leader of a group which has other members in it
-	if (isUnitControlledByOlympus && (isUnitAlive || isUnitLeaderOfAGroupWithOtherUnits) && isUnitLeader && !isUnitHuman)
-	{
-		if (checkTaskFailed() && state != State::IDLE && State::LAND)
-			setState(State::IDLE);
-
-		AIloop();
-	}
+	if (getUnitName().find(L"Olympus") != wstring::npos)
+		setControlled(true);
 }
 
 void Unit::updateMissionData(json::value json)
@@ -139,8 +151,8 @@ void Unit::updateMissionData(json::value json)
 		setFuel(int(json[L"fuel"].as_number().to_double() * 100));
 	if (json.has_object_field(L"ammo"))
 		setAmmo(json[L"ammo"]);
-	if (json.has_object_field(L"targets"))
-		setTargets(json[L"targets"]);
+	if (json.has_object_field(L"contacts"))
+		setContacts(json[L"contacts"]);
 	if (json.has_boolean_field(L"hasTask"))
 		setHasTask(json[L"hasTask"].as_bool());
 }
@@ -155,7 +167,7 @@ json::value Unit::getData(long long time, bool sendAll)
 	
 	/********** Base data **********/
 	json[L"baseData"] = json::value::object();
-	for (auto key : { L"AI", L"name", L"unitName", L"groupName", L"alive", L"category"})
+	for (auto key : { L"controlled", L"name", L"unitName", L"groupName", L"alive", L"category"})
 	{
 		if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
 			json[L"baseData"][key] = measures[key]->getValue();
@@ -176,7 +188,7 @@ json::value Unit::getData(long long time, bool sendAll)
 
 		/********** Mission data **********/
 		json[L"missionData"] = json::value::object();
-		for (auto key : { L"fuel", L"ammo", L"targets", L"hasTask", L"coalition", L"flags" })
+		for (auto key : { L"fuel", L"ammo", L"contacts", L"hasTask", L"coalition", L"flags" })
 		{
 			if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
 				json[L"missionData"][key] = measures[key]->getValue();
@@ -198,7 +210,7 @@ json::value Unit::getData(long long time, bool sendAll)
 		if (unitsManager->isUnitGroupLeader(this)) {
 			/********** Task data **********/
 			json[L"taskData"] = json::value::object();
-			for (auto key : { L"currentState", L"currentTask", L"targetSpeed", L"targetAltitude", L"targetSpeedType", L"targetAltitudeType", L"activePath", L"isTanker", L"isAWACS", L"onOff", L"followRoads", L"targetID", L"targetLocation" })
+			for (auto key : { L"currentState", L"currentTask", L"desiredSpeed", L"desiredAltitude", L"desiredSpeedType", L"desiredAltitudeType", L"activePath", L"isTanker", L"isAWACS", L"onOff", L"followRoads", L"targetID", L"targetLocation" })
 			{
 				if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
 					json[L"taskData"][key] = measures[key]->getValue();
@@ -354,10 +366,10 @@ void Unit::setFormationOffset(Offset newFormationOffset)
 	resetTask();
 }
 
-void Unit::setROE(wstring newROE) {
+void Unit::setROE(wstring newROE, bool force) {
 	addMeasure(L"ROE", json::value(newROE));
 	
-	if (ROE != newROE) {
+	if (ROE != newROE || force) {
 		ROE = newROE;
 
 		int ROEEnum;
@@ -379,10 +391,10 @@ void Unit::setROE(wstring newROE) {
 	}
 }
 
-void Unit::setReactionToThreat(wstring newReactionToThreat) {
+void Unit::setReactionToThreat(wstring newReactionToThreat, bool force) {
 	addMeasure(L"reactionToThreat", json::value(newReactionToThreat));
 
-	if (reactionToThreat != newReactionToThreat) {
+	if (reactionToThreat != newReactionToThreat || force) {
 		reactionToThreat = newReactionToThreat;
 
 		int reactionToThreatEnum;
@@ -404,10 +416,10 @@ void Unit::setReactionToThreat(wstring newReactionToThreat) {
 	}
 }
 
-void Unit::setEmissionsCountermeasures(wstring newEmissionsCountermeasures) {
+void Unit::setEmissionsCountermeasures(wstring newEmissionsCountermeasures, bool force) {
 	addMeasure(L"emissionsCountermeasures", json::value(newEmissionsCountermeasures)); 
 
-	if (emissionsCountermeasures != newEmissionsCountermeasures) {
+	if (emissionsCountermeasures != newEmissionsCountermeasures || force) {
 		emissionsCountermeasures = newEmissionsCountermeasures;
 
 		int radarEnum;
@@ -472,7 +484,7 @@ void Unit::setIsAWACS(bool newIsAWACS) {
 	setEPLRS(isAWACS);
 }
 
-void Unit::setTACAN(Options::TACAN newTACAN) {
+void Unit::setTACAN(Options::TACAN newTACAN, bool force) {
 	auto json = json::value();
 	json[L"isOn"] = json::value(newTACAN.isOn);
 	json[L"channel"] = json::value(newTACAN.channel);
@@ -480,7 +492,7 @@ void Unit::setTACAN(Options::TACAN newTACAN) {
 	json[L"callsign"] = json::value(newTACAN.callsign);
 	addMeasure(L"TACAN", json);
 
-	if (TACAN != newTACAN)
+	if (TACAN != newTACAN || force)
 	{
 		TACAN = newTACAN;
 		if (TACAN.isOn) {
@@ -511,7 +523,7 @@ void Unit::setTACAN(Options::TACAN newTACAN) {
 	}
 }
 
-void Unit::setRadio(Options::Radio newRadio) {
+void Unit::setRadio(Options::Radio newRadio, bool force) {
 
 	auto json = json::value();
 	json[L"frequency"] = json::value(newRadio.frequency);
@@ -519,7 +531,7 @@ void Unit::setRadio(Options::Radio newRadio) {
 	json[L"callsignNumber"] = json::value(newRadio.callsignNumber);
 	addMeasure(L"radio", json);
 
-	if (radio != newRadio)
+	if (radio != newRadio || force)
 	{
 		radio = newRadio;
 
@@ -551,11 +563,11 @@ void Unit::setRadio(Options::Radio newRadio) {
 	}
 }
 
-void Unit::setEPLRS(bool newEPLRS)
+void Unit::setEPLRS(bool newEPLRS, bool force)
 {
 	//addMeasure(L"EPLRS", json::value(newEPLRS)); 
 	//
-	//if (EPLRS != newEPLRS) {
+	//if (EPLRS != newEPLRS || force) {
 	//	EPLRS = newEPLRS;
 	//
 	//	std::wostringstream commandSS;
@@ -570,7 +582,7 @@ void Unit::setEPLRS(bool newEPLRS)
 	//}
 }
 
-void Unit::setGeneralSettings(Options::GeneralSettings newGeneralSettings) {
+void Unit::setGeneralSettings(Options::GeneralSettings newGeneralSettings, bool force) {
 
 	auto json = json::value();
 	json[L"prohibitJettison"] = json::value(newGeneralSettings.prohibitJettison);
@@ -598,35 +610,47 @@ void Unit::setGeneralSettings(Options::GeneralSettings newGeneralSettings) {
 	}
 }
 
-void Unit::setTargetSpeed(double newTargetSpeed) {
-	targetSpeed = newTargetSpeed; 
-	addMeasure(L"targetSpeed", json::value(newTargetSpeed));
-	goToDestination();
+void Unit::setDesiredSpeed(double newDesiredSpeed) {
+	desiredSpeed = newDesiredSpeed; 
+	addMeasure(L"desiredSpeed", json::value(newDesiredSpeed));
+	if (state == State::IDLE)
+		resetTask();
+	else
+		goToDestination();		/* Send the command to reach the destination */
 }
 
-void Unit::setTargetAltitude(double newTargetAltitude) {
-	targetAltitude = newTargetAltitude;
-	addMeasure(L"targetAltitude", json::value(newTargetAltitude));
-	goToDestination();
+void Unit::setDesiredAltitude(double newDesiredAltitude) {
+	desiredAltitude = newDesiredAltitude;
+	addMeasure(L"desiredAltitude", json::value(newDesiredAltitude));
+	if (state == State::IDLE)
+		resetTask();
+	else
+		goToDestination();		/* Send the command to reach the destination */
 }
 
-void Unit::setTargetSpeedType(wstring newTargetSpeedType) {
-	targetSpeedType = newTargetSpeedType; 
-	addMeasure(L"targetSpeedType", json::value(newTargetSpeedType));
-	goToDestination();
+void Unit::setDesiredSpeedType(wstring newDesiredSpeedType) {
+	desiredSpeedType = newDesiredSpeedType; 
+	addMeasure(L"desiredSpeedType", json::value(newDesiredSpeedType));
+	if (state == State::IDLE)
+		resetTask();
+	else
+		goToDestination();		/* Send the command to reach the destination */
 }
 
-void Unit::setTargetAltitudeType(wstring newTargetAltitudeType) {
-	targetAltitudeType = newTargetAltitudeType; 
-	addMeasure(L"targetAltitudeType", json::value(newTargetAltitudeType));
-	goToDestination();
+void Unit::setDesiredAltitudeType(wstring newDesiredAltitudeType) {
+	desiredAltitudeType = newDesiredAltitudeType; 
+	addMeasure(L"desiredAltitudeType", json::value(newDesiredAltitudeType));
+	if (state == State::IDLE)
+		resetTask();
+	else
+		goToDestination();		/* Send the command to reach the destination */
 }
 
 void Unit::goToDestination(wstring enrouteTask)
 {
 	if (activeDestination != NULL)
 	{
-		Command* command = dynamic_cast<Command*>(new Move(groupName, activeDestination, getTargetSpeed(), getTargetSpeedType(), getTargetAltitude(), getTargetAltitudeType(), enrouteTask, getCategory()));
+		Command* command = dynamic_cast<Command*>(new Move(groupName, activeDestination, getDesiredSpeed(), getDesiredSpeedType(), getDesiredAltitude(), getDesiredAltitudeType(), enrouteTask, getCategory()));
 		scheduler->appendCommand(command);
 		setHasTask(true);
 	}

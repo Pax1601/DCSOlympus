@@ -156,6 +156,14 @@ void UnitsManager::updateMissionData(json::value missionData)
 	}
 }
 
+void UnitsManager::runAILoop() {
+	/* Run the AI Loop on all units */
+	for (auto const& unit : units)
+	{
+		unit.second->runAILoop();
+	}
+}
+
 void UnitsManager::getData(json::value& answer, long long time)
 {
 	auto unitsJson = json::value::object();
@@ -175,5 +183,19 @@ void UnitsManager::deleteUnit(int ID, bool explosion)
 		Command* command = dynamic_cast<Command*>(new Delete(ID, explosion));
 		scheduler->appendCommand(command);
 	}
+}
+
+void UnitsManager::acquireControl(int ID) {
+	Unit* unit = getUnit(ID);
+	if (unit != nullptr) {
+		for (auto const& groupMember : getGroupMembers(unit->getGroupName())) {
+			if (!groupMember->getControlled()) {
+				groupMember->setControlled(true);
+				groupMember->setState(State::IDLE);
+				groupMember->setDefaults(true);
+			}
+		}
+	}
+	
 }
 

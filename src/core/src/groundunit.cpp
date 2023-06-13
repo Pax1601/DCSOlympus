@@ -18,8 +18,8 @@ GroundUnit::GroundUnit(json::value json, int ID) : Unit(json, ID)
 	log("New Ground Unit created with ID: " + to_string(ID));
 	addMeasure(L"category", json::value(getCategory()));
 
-	double targetSpeed = 10;
-	setTargetSpeed(targetSpeed);
+	double desiredSpeed = 10;
+	setDesiredSpeed(desiredSpeed);
 };
 
 void GroundUnit::setState(int newState)
@@ -128,12 +128,12 @@ void GroundUnit::changeSpeed(wstring change)
 	if (change.compare(L"stop") == 0)
 		setState(State::IDLE);
 	else if (change.compare(L"slow") == 0)
-		setTargetSpeed(getTargetSpeed() - knotsToMs(5));
+		setDesiredSpeed(getDesiredSpeed() - knotsToMs(5));
 	else if (change.compare(L"fast") == 0)
-		setTargetSpeed(getTargetSpeed() + knotsToMs(5));
+		setDesiredSpeed(getDesiredSpeed() + knotsToMs(5));
 
-	if (getTargetSpeed() < 0)
-		setTargetSpeed(0);
+	if (getDesiredSpeed() < 0)
+		setDesiredSpeed(0);
 }
 
 void GroundUnit::setOnOff(bool newOnOff) 

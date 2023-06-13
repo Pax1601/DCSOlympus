@@ -3,7 +3,7 @@ interface UpdateData {
 }
 
 interface BaseData {
-    AI: boolean;
+    controlled: boolean;
     name: string;
     unitName: string;
     groupName: string;
@@ -23,7 +23,7 @@ interface MissionData {
     fuel: number;
     flags: any;
     ammo: any;
-    targets: any;
+    contacts: any;
     hasTask: boolean;
     coalition: string;
 }
@@ -36,10 +36,10 @@ interface TaskData {
     currentState: string;
     currentTask: string;
     activePath: any;
-    targetSpeed: number;
-    targetSpeedType: string;
-    targetAltitude: number;
-    targetAltitudeType: string;
+    desiredSpeed: number;
+    desiredSpeedType: string;
+    desiredAltitude: number;
+    desiredAltitudeType: string;
     targetLocation: any;
     isTanker: boolean;
     isAWACS: boolean;

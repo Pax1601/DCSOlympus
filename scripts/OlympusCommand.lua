@@ -98,13 +98,14 @@ function Olympus.buildEnrouteTask(options)
 end
 
 -- Builds a valid task depending on the provided options
-function Olympus.buildTask(options)
+function Olympus.buildTask(groupName, options)
 	local task = nil
 
+	local group = Group.getByName(groupName)
 	if (Olympus.isArray(options)) then
 		local tasks = {}
 		for idx, subOptions in pairs(options) do
-			tasks[idx] = Olympus.buildTask(subOptions) or Olympus.buildEnrouteTask(subOptions)
+			tasks[idx] = Olympus.buildTask(groupName, subOptions) or Olympus.buildEnrouteTask(subOptions)
 		end
 		task = { 
 			id = 'ComboTask', 
@@ -139,6 +140,25 @@ function Olympus.buildTask(options)
 					pattern = options['pattern'] or "Circle"
 				} 
 			}
+			if options['altitude'] then
+				if options ['altitudeType'] then
+					if options ['altitudeType'] == "AGL" then
+						local groundHeight = 0
+						if group then
+							local groupPos = mist.getLeadPos(group)
+							groundHeight = land.getHeight({x = groupPos.x, y = groupPos.z})
+						end
+						task['params']['altitude'] = groundHeight + options['altitude']
+					else
+						task['params']['altitude'] = options['altitude']
+					end
+				else
+					task['params']['altitude'] = options['altitude']
+				end
+			end
+			if options['speed'] then
+				task['params']['speed'] = options['speed']
+			end
 		elseif options['id'] == 'Bombing' and options['lat'] and options['lng'] then
 			local point = coord.LLtoLO(options['lat'], options['lng'], 0)
 			task = {
@@ -524,7 +544,7 @@ function Olympus.setTask(groupName, taskOptions)
 	Olympus.debug("Olympus.setTask " .. groupName .. " " .. Olympus.serializeTable(taskOptions), 2)
 	local group = Group.getByName(groupName)
 	if group then
-		local task = Olympus.buildTask(taskOptions);
+		local task = Olympus.buildTask(groupName, taskOptions);
 		Olympus.debug("Olympus.setTask " .. Olympus.serializeTable(task), 20)
 		if task then
 			group:getController():setTask(task)
@@ -664,7 +684,7 @@ function Olympus.setMissionData(arg, time)
 						for index, unit in pairs(group:getUnits()) do
 							local unitController = unit:getController()
 							local table = {}
-							table["targets"] = {}
+							table["contacts"] = {}
 
 							for i, target in ipairs(controllerTargets) do
 								for det, enum in pairs(Controller.Detection) do
@@ -673,7 +693,7 @@ function Olympus.setMissionData(arg, time)
 
 										if detected then
 											target["detectionMethod"] = det
-											table["targets"][#table["targets"] + 1] = target
+											table["contacts"][#table["contacts"] + 1] = target
 										end
 									end
 								end

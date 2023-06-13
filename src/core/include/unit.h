@@ -62,14 +62,16 @@ public:
 
 	/********** Public methods **********/
 	void initialize(json::value json);
+	void setDefaults(bool force = false);
 	int getID() { return ID; }
+	void runAILoop();
 	void updateExportData(json::value json);
 	void updateMissionData(json::value json);
 	json::value getData(long long time, bool getAll = false);
 	virtual wstring getCategory() { return L"No category"; };
 
 	/********** Base data **********/
-	void setAI(bool newAI) { AI = newAI; addMeasure(L"AI", json::value(newAI)); }
+	void setControlled(bool newControlled) { controlled = newControlled; addMeasure(L"controlled", json::value(newControlled)); }
 	void setName(wstring newName) { name = newName; addMeasure(L"name", json::value(newName));}
 	void setUnitName(wstring newUnitName) { unitName = newUnitName; addMeasure(L"unitName", json::value(newUnitName));}
 	void setGroupName(wstring newGroupName) { groupName = newGroupName; addMeasure(L"groupName", json::value(newGroupName));}
@@ -77,7 +79,7 @@ public:
 	void setType(json::value newType) { type = newType; addMeasure(L"type", newType);}
 	void setCountry(int newCountry) { country = newCountry; addMeasure(L"country", json::value(newCountry));}
 
-	bool getAI() { return AI; }
+	bool getControlled() { return controlled; }
 	wstring getName() { return name; }
 	wstring getUnitName() { return unitName; }
 	wstring getGroupName() { return groupName; }
@@ -101,14 +103,14 @@ public:
 	/********** Mission data **********/
 	void setFuel(double newFuel) { fuel = newFuel; addMeasure(L"fuel", json::value(newFuel));}
 	void setAmmo(json::value newAmmo) { ammo = newAmmo; addMeasure(L"ammo", json::value(newAmmo));}
-	void setTargets(json::value newTargets) {targets = newTargets; addMeasure(L"targets", json::value(newTargets));}
+	void setContacts(json::value newContacts) {contacts = newContacts; addMeasure(L"contacts", json::value(newContacts));}
 	void setHasTask(bool newHasTask);
 	void setCoalitionID(int newCoalitionID);
 	void setFlags(json::value newFlags) { flags = newFlags; addMeasure(L"flags", json::value(newFlags));}
 
 	double getFuel() { return fuel; }
 	json::value getAmmo() { return ammo; }
-	json::value getTargets() { return targets; }
+	json::value getTargets() { return contacts; }
 	bool getHasTask() { return hasTask; }
 	wstring getCoalition() { return coalition; }
 	int getCoalitionID();
@@ -123,10 +125,10 @@ public:
 	
 	/********** Task data **********/
 	void setCurrentTask(wstring newCurrentTask) { currentTask = newCurrentTask; addMeasure(L"currentTask", json::value(newCurrentTask)); } 
-	void setTargetSpeed(double newTargetSpeed);
-	void setTargetAltitude(double newTargetAltitude);
-	void setTargetSpeedType(wstring newTargetSpeedType);
-	void setTargetAltitudeType(wstring newTargetAltitudeType);
+	void setDesiredSpeed(double newDesiredSpeed);
+	void setDesiredAltitude(double newDesiredAltitude);
+	void setDesiredSpeedType(wstring newDesiredSpeedType);
+	void setDesiredAltitudeType(wstring newDesiredAltitudeType);
 	void setActiveDestination(Coords newActiveDestination) { activeDestination = newActiveDestination; addMeasure(L"activeDestination", json::value("")); } // TODO fix
 	void setActivePath(list<Coords> newActivePath);
 	void setTargetID(int newTargetID) { targetID = newTargetID; addMeasure(L"targetID", json::value(newTargetID));}
@@ -137,10 +139,10 @@ public:
 	virtual void setFollowRoads(bool newFollowRoads) { followRoads = newFollowRoads; addMeasure(L"followRoads", json::value(newFollowRoads)); };
 	
 	wstring getCurrentTask() { return currentTask; }
-	virtual double getTargetSpeed() { return targetSpeed; };
-	virtual double getTargetAltitude() { return targetAltitude; };
-	virtual wstring getTargetSpeedType() { return targetSpeedType; };
-	virtual wstring getTargetAltitudeType() { return targetAltitudeType; };
+	virtual double getDesiredSpeed() { return desiredSpeed; };
+	virtual double getDesiredAltitude() { return desiredAltitude; };
+	virtual wstring getDesiredSpeedType() { return desiredSpeedType; };
+	virtual wstring getDesiredAltitudeType() { return desiredAltitudeType; };
 	Coords getActiveDestination() { return activeDestination; }
 	list<Coords> getActivePath() { return activePath; }
 	int getTargetID() { return targetID; }
@@ -151,13 +153,13 @@ public:
 	bool getFollowRoads() { return followRoads; };
 
 	/********** Options data **********/
-	void setROE(wstring newROE);
-	void setReactionToThreat(wstring newReactionToThreat);
-	void setEmissionsCountermeasures(wstring newEmissionsCountermeasures);
-	void setTACAN(Options::TACAN newTACAN);
-	void setRadio(Options::Radio newradio);
-	void setGeneralSettings(Options::GeneralSettings newGeneralSettings);
-	void setEPLRS(bool newEPLRS);
+	void setROE(wstring newROE, bool force = false);
+	void setReactionToThreat(wstring newReactionToThreat, bool force = false);
+	void setEmissionsCountermeasures(wstring newEmissionsCountermeasures, bool force = false);
+	void setTACAN(Options::TACAN newTACAN, bool force = false);
+	void setRadio(Options::Radio newradio, bool force = false);
+	void setGeneralSettings(Options::GeneralSettings newGeneralSettings, bool force = false);
+	void setEPLRS(bool newEPLRS, bool force = false);
 
 	wstring getROE() { return ROE; }
 	wstring getReactionToThreat() { return reactionToThreat; }
@@ -186,7 +188,7 @@ protected:
 	int taskCheckCounter = 0;
 
 	/********** Base data **********/
-	bool AI = false;
+	bool controlled = false;
 	wstring name = L"undefined";
 	wstring unitName = L"undefined";
 	wstring groupName = L"undefined";
@@ -205,7 +207,7 @@ protected:
 	double fuel = 0;
 	double initialFuel = 0; // Used internally to detect refueling completed
 	json::value ammo = json::value::null();
-	json::value targets = json::value::null();
+	json::value contacts = json::value::null();
 	bool hasTask = false;
 	wstring coalition = L"";
 	json::value flags = json::value::null();
@@ -216,10 +218,10 @@ protected:
 
 	/********** Task data **********/
 	wstring currentTask = L"";
-	double targetSpeed = 0;
-	double targetAltitude = 0;
-	wstring targetSpeedType = L"GS";
-	wstring targetAltitudeType = L"AGL";
+	double desiredSpeed = 0;
+	double desiredAltitude = 0;
+	wstring desiredSpeedType = L"GS";
+	wstring desiredAltitudeType = L"AGL";
 	list<Coords> activePath;
 	Coords activeDestination = Coords(NULL);
 	int targetID = NULL;
