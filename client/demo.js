@@ -49,17 +49,12 @@ const DEMO_UNIT_DATA = {
             currentTask: "Holding",
             currentState: "Idle",
             activePath: undefined,
-            targetSpeed: 400,
-            targetAltitude: 3000,
+            desiredSpeed: 400,
+            desiredSpeedType: "CAS",
+            desiredAltitude: 3000,
+            desiredAltitudeType: "ASL",
             isTanker: false,
-            TACANOn: false,
-            TACANChannel: 32,
-            TACANXY: "Y",
-            TACANCallsign: "ASD",
-            radioFrequency: 123.750,
-            radioCallsign: 2,
-            radioCallsignNumber: 3,
-            radioAMFM: "FM"
+
         },
         optionsData: {
             ROE: "Designated",
@@ -101,8 +96,8 @@ const DEMO_UNIT_DATA = {
         taskData: {
             currentTask: "Example task",
             activePath: undefined,
-            targetSpeed: 300,
-            targetAltitude: 3000
+            desiredSpeed: 300,
+            desiredAltitude: 3000
         },
         optionsData: {
             ROE: "Designated",
@@ -112,7 +107,7 @@ const DEMO_UNIT_DATA = {
     ["3"]:{
         baseData: {
             AI: true,
-            name: "2S6 Tunguska",
+            name: "M-60",
             unitName: "Olympus 1-3",
             groupName: "Group 4",
             alive: true,
@@ -144,8 +139,9 @@ const DEMO_UNIT_DATA = {
         taskData: {
             currentTask: "Example task",
             activePath: undefined,
-            targetSpeed: 400,
-            targetAltitude: 3000
+            desiredSpeed: 400,
+            desiredAltitude: 3000,
+            onOff: false
         },
         optionsData: {
             ROE: "None",
@@ -157,7 +153,6 @@ const DEMO_UNIT_DATA = {
             AI: true,
             name: "2S6 Tunguska",
             unitName: "Olympus 1-4",
-            groupName: "Group 1",
             alive: true,
             category: "GroundUnit",
         },
@@ -187,8 +182,8 @@ const DEMO_UNIT_DATA = {
         taskData: {
             currentTask: "Example task",
             activePath: undefined,
-            targetSpeed: 400,
-            targetAltitude: 3000
+            desiredSpeed: 400,
+            desiredAltitude: 3000
         },
         optionsData: {
             ROE: "None",
@@ -230,8 +225,8 @@ const DEMO_UNIT_DATA = {
         taskData: {
             currentTask: "Example task",
             activePath: undefined,
-            targetSpeed: 400,
-            targetAltitude: 3000
+            desiredSpeed: 400,
+            desiredAltitude: 3000
         },
         optionsData: {
             ROE: "None",
@@ -273,8 +268,8 @@ const DEMO_UNIT_DATA = {
         taskData: {
             currentTask: "Example task",
             activePath: undefined,
-            targetSpeed: 400,
-            targetAltitude: 3000
+            desiredSpeed: 400,
+            desiredAltitude: 3000
         },
         optionsData: {
             ROE: "None",
@@ -316,8 +311,8 @@ const DEMO_UNIT_DATA = {
         taskData: {
             currentTask: "Example task",
             activePath: undefined,
-            targetSpeed: 400,
-            targetAltitude: 3000
+            desiredSpeed: 400,
+            desiredAltitude: 3000
         },
         optionsData: {
             ROE: "None",
@@ -359,8 +354,8 @@ const DEMO_UNIT_DATA = {
         taskData: {
             currentTask: "Example task",
             activePath: undefined,
-            targetSpeed: 400,
-            targetAltitude: 3000
+            desiredSpeed: 400,
+            desiredAltitude: 3000
         },
         optionsData: {
             ROE: "None",
@@ -402,8 +397,8 @@ const DEMO_UNIT_DATA = {
         taskData: {
             currentTask: "Example task",
             activePath: undefined,
-            targetSpeed: 400,
-            targetAltitude: 3000
+            desiredSpeed: 400,
+            desiredAltitude: 3000
         },
         optionsData: {
             ROE: "None",
@@ -445,8 +440,8 @@ const DEMO_UNIT_DATA = {
         taskData: {
             currentTask: "Example task",
             activePath: undefined,
-            targetSpeed: 400,
-            targetAltitude: 3000
+            desiredSpeed: 400,
+            desiredAltitude: 3000
         },
         optionsData: {
             ROE: "None",
@@ -488,8 +483,8 @@ const DEMO_UNIT_DATA = {
         taskData: {
             currentTask: "Example task",
             activePath: undefined,
-            targetSpeed: 400,
-            targetAltitude: 3000
+            desiredSpeed: 400,
+            desiredAltitude: 3000
         },
         optionsData: {
             ROE: "None",
@@ -531,8 +526,8 @@ const DEMO_UNIT_DATA = {
         taskData: {
             currentTask: "Example task",
             activePath: undefined,
-            targetSpeed: 400,
-            targetAltitude: 3000
+            desiredSpeed: 400,
+            desiredAltitude: 3000
         },
         optionsData: {
             ROE: "None",
@@ -574,8 +569,8 @@ const DEMO_UNIT_DATA = {
         taskData: {
             currentTask: "Example task",
             activePath: undefined,
-            targetSpeed: 400,
-            targetAltitude: 3000
+            desiredSpeed: 400,
+            desiredAltitude: 3000
         },
         optionsData: {
             ROE: "None",
@@ -617,8 +612,8 @@ const DEMO_UNIT_DATA = {
         taskData: {
             currentTask: "Example task",
             activePath: undefined,
-            targetSpeed: 400,
-            targetAltitude: 3000
+            desiredSpeed: 400,
+            desiredAltitude: 3000
         },
         optionsData: {
             ROE: "None",

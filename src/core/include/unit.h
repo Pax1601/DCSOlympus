@@ -6,6 +6,8 @@
 #include "measure.h"
 #include "logger.h"
 
+#define TASK_CHECK_INIT_VALUE 10
+
 namespace State
 {
 	enum States
@@ -18,7 +20,11 @@ namespace State
 		LAND,
 		REFUEL,
 		AWACS,
-		TANKER
+		TANKER,
+		BOMB_POINT,
+		CARPET_BOMB,
+		BOMB_BUILDING,
+		FIRE_AT_AREA
 	};
 };
 
@@ -56,21 +62,24 @@ public:
 
 	/********** Public methods **********/
 	void initialize(json::value json);
+	void setDefaults(bool force = false);
 	int getID() { return ID; }
+	void runAILoop();
 	void updateExportData(json::value json);
 	void updateMissionData(json::value json);
-	json::value getData(long long time);
+	json::value getData(long long time, bool getAll = false);
 	virtual wstring getCategory() { return L"No category"; };
 
 	/********** Base data **********/
-	void setAI(bool newAI) { AI = newAI; addMeasure(L"AI", json::value(newAI)); }
+	void setControlled(bool newControlled) { controlled = newControlled; addMeasure(L"controlled", json::value(newControlled)); }
 	void setName(wstring newName) { name = newName; addMeasure(L"name", json::value(newName));}
 	void setUnitName(wstring newUnitName) { unitName = newUnitName; addMeasure(L"unitName", json::value(newUnitName));}
 	void setGroupName(wstring newGroupName) { groupName = newGroupName; addMeasure(L"groupName", json::value(newGroupName));}
 	void setAlive(bool newAlive) { alive = newAlive; addMeasure(L"alive", json::value(newAlive));}
 	void setType(json::value newType) { type = newType; addMeasure(L"type", newType);}
 	void setCountry(int newCountry) { country = newCountry; addMeasure(L"country", json::value(newCountry));}
-	bool getAI() { return AI; }
+
+	bool getControlled() { return controlled; }
 	wstring getName() { return name; }
 	wstring getUnitName() { return unitName; }
 	wstring getGroupName() { return groupName; }
@@ -84,6 +93,7 @@ public:
 	void setAltitude(double newAltitude) {altitude = newAltitude; addMeasure(L"altitude", json::value(newAltitude));}
 	void setHeading(double newHeading) {heading = newHeading; addMeasure(L"heading", json::value(newHeading));}
 	void setSpeed(double newSpeed) {speed = newSpeed; addMeasure(L"speed", json::value(newSpeed));}
+
 	double getLatitude() { return latitude; }
 	double getLongitude() { return longitude; }
 	double getAltitude() { return altitude; }
@@ -93,13 +103,14 @@ public:
 	/********** Mission data **********/
 	void setFuel(double newFuel) { fuel = newFuel; addMeasure(L"fuel", json::value(newFuel));}
 	void setAmmo(json::value newAmmo) { ammo = newAmmo; addMeasure(L"ammo", json::value(newAmmo));}
-	void setTargets(json::value newTargets) {targets = newTargets; addMeasure(L"targets", json::value(newTargets));}
-	void setHasTask(bool newHasTask) { hasTask = newHasTask; addMeasure(L"hasTask", json::value(newHasTask)); }
+	void setContacts(json::value newContacts) {contacts = newContacts; addMeasure(L"contacts", json::value(newContacts));}
+	void setHasTask(bool newHasTask);
 	void setCoalitionID(int newCoalitionID);
 	void setFlags(json::value newFlags) { flags = newFlags; addMeasure(L"flags", json::value(newFlags));}
+
 	double getFuel() { return fuel; }
 	json::value getAmmo() { return ammo; }
-	json::value getTargets() { return targets; }
+	json::value getTargets() { return contacts; }
 	bool getHasTask() { return hasTask; }
 	wstring getCoalition() { return coalition; }
 	int getCoalitionID();
@@ -108,40 +119,48 @@ public:
 	/********** Formation data **********/
 	void setLeaderID(int newLeaderID) { leaderID = newLeaderID; addMeasure(L"leaderID", json::value(newLeaderID)); }
 	void setFormationOffset(Offset formationOffset);
+
 	int getLeaderID() { return leaderID; }
 	Offset getFormationoffset() { return formationOffset; }
 	
 	/********** Task data **********/
-	void setCurrentTask(wstring newCurrentTask) { currentTask = newCurrentTask;addMeasure(L"currentTask", json::value(newCurrentTask)); } 
-	virtual void setTargetSpeed(double newTargetSpeed) { targetSpeed = newTargetSpeed; addMeasure(L"targetSpeed", json::value(newTargetSpeed));}
-	virtual void setTargetAltitude(double newTargetAltitude) { targetAltitude = newTargetAltitude; addMeasure(L"targetAltitude", json::value(newTargetAltitude));} //TODO fix, double definition
+	void setCurrentTask(wstring newCurrentTask) { currentTask = newCurrentTask; addMeasure(L"currentTask", json::value(newCurrentTask)); } 
+	void setDesiredSpeed(double newDesiredSpeed);
+	void setDesiredAltitude(double newDesiredAltitude);
+	void setDesiredSpeedType(wstring newDesiredSpeedType);
+	void setDesiredAltitudeType(wstring newDesiredAltitudeType);
 	void setActiveDestination(Coords newActiveDestination) { activeDestination = newActiveDestination; addMeasure(L"activeDestination", json::value("")); } // TODO fix
 	void setActivePath(list<Coords> newActivePath);
-	void clearActivePath();
-	void pushActivePathFront(Coords newActivePathFront);
-	void pushActivePathBack(Coords newActivePathBack);
-	void popActivePathFront();
 	void setTargetID(int newTargetID) { targetID = newTargetID; addMeasure(L"targetID", json::value(newTargetID));}
+	void setTargetLocation(Coords newTargetLocation);
 	void setIsTanker(bool newIsTanker);
 	void setIsAWACS(bool newIsAWACS);
+	virtual void setOnOff(bool newOnOff) { onOff = newOnOff; addMeasure(L"onOff", json::value(newOnOff));};
+	virtual void setFollowRoads(bool newFollowRoads) { followRoads = newFollowRoads; addMeasure(L"followRoads", json::value(newFollowRoads)); };
 	
 	wstring getCurrentTask() { return currentTask; }
-	virtual double getTargetSpeed() { return targetSpeed; };
-	virtual double getTargetAltitude() { return targetAltitude; };
+	virtual double getDesiredSpeed() { return desiredSpeed; };
+	virtual double getDesiredAltitude() { return desiredAltitude; };
+	virtual wstring getDesiredSpeedType() { return desiredSpeedType; };
+	virtual wstring getDesiredAltitudeType() { return desiredAltitudeType; };
 	Coords getActiveDestination() { return activeDestination; }
 	list<Coords> getActivePath() { return activePath; }
 	int getTargetID() { return targetID; }
+	Coords getTargetLocation() { return targetLocation; }
 	bool getIsTanker() { return isTanker; }
 	bool getIsAWACS() { return isAWACS; }
+	bool getOnOff() { return onOff; };
+	bool getFollowRoads() { return followRoads; };
 
 	/********** Options data **********/
-	void setROE(wstring newROE);
-	void setReactionToThreat(wstring newReactionToThreat);
-	void setEmissionsCountermeasures(wstring newEmissionsCountermeasures);
-	void setTACAN(Options::TACAN newTACAN);
-	void setRadio(Options::Radio newradio);
-	void setGeneralSettings(Options::GeneralSettings newGeneralSettings);
-	void setEPLRS(bool newEPLRS);
+	void setROE(wstring newROE, bool force = false);
+	void setReactionToThreat(wstring newReactionToThreat, bool force = false);
+	void setEmissionsCountermeasures(wstring newEmissionsCountermeasures, bool force = false);
+	void setTACAN(Options::TACAN newTACAN, bool force = false);
+	void setRadio(Options::Radio newradio, bool force = false);
+	void setGeneralSettings(Options::GeneralSettings newGeneralSettings, bool force = false);
+	void setEPLRS(bool newEPLRS, bool force = false);
+
 	wstring getROE() { return ROE; }
 	wstring getReactionToThreat() { return reactionToThreat; }
 	wstring getEmissionsCountermeasures() { return emissionsCountermeasures; };
@@ -152,19 +171,24 @@ public:
 
 	/********** Control functions **********/
 	void landAt(Coords loc);
-	virtual void changeSpeed(wstring change){};
-	virtual void changeAltitude(wstring change){};
+	virtual void changeSpeed(wstring change) {};
+	virtual void changeAltitude(wstring change) {};
 	void resetActiveDestination();
 	virtual void setState(int newState) { state = newState; };
 	void resetTask();
+	void clearActivePath();
+	void pushActivePathFront(Coords newActivePathFront);
+	void pushActivePathBack(Coords newActivePathBack);
+	void popActivePathFront();
 
 protected:
 	int ID;
 
 	map<wstring, Measure*> measures;
+	int taskCheckCounter = 0;
 
 	/********** Base data **********/
-	bool AI = false;
+	bool controlled = false;
 	wstring name = L"undefined";
 	wstring unitName = L"undefined";
 	wstring groupName = L"undefined";
@@ -183,7 +207,7 @@ protected:
 	double fuel = 0;
 	double initialFuel = 0; // Used internally to detect refueling completed
 	json::value ammo = json::value::null();
-	json::value targets = json::value::null();
+	json::value contacts = json::value::null();
 	bool hasTask = false;
 	wstring coalition = L"";
 	json::value flags = json::value::null();
@@ -194,13 +218,18 @@ protected:
 
 	/********** Task data **********/
 	wstring currentTask = L"";
-	double targetSpeed = 0;
-	double targetAltitude = 0;
+	double desiredSpeed = 0;
+	double desiredAltitude = 0;
+	wstring desiredSpeedType = L"GS";
+	wstring desiredAltitudeType = L"AGL";
 	list<Coords> activePath;
-	Coords activeDestination = Coords(0);
+	Coords activeDestination = Coords(NULL);
 	int targetID = NULL;
+	Coords targetLocation = Coords(NULL);
 	bool isTanker = false;
 	bool isAWACS = false;
+	bool onOff = true;
+	bool followRoads = false;
 	
 	/********** Options data **********/
 	wstring ROE = L"Designated";
@@ -224,4 +253,10 @@ protected:
 	bool isLeaderAlive();
 	virtual void AIloop() = 0;
 	void addMeasure(wstring key, json::value value);
+	bool isDestinationReached(double threshold);
+	bool setActiveDestination();
+	bool updateActivePath(bool looping);
+	void goToDestination(wstring enrouteTask = L"nil");
+	bool checkTaskFailed();
+	void resetTaskFailedCounter();
 };

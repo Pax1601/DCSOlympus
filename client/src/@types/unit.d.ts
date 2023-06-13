@@ -3,7 +3,7 @@ interface UpdateData {
 }
 
 interface BaseData {
-    AI: boolean;
+    controlled: boolean;
     name: string;
     unitName: string;
     groupName: string;
@@ -23,7 +23,7 @@ interface MissionData {
     fuel: number;
     flags: any;
     ammo: any;
-    targets: any;
+    contacts: any;
     hasTask: boolean;
     coalition: string;
 }
@@ -36,10 +36,16 @@ interface TaskData {
     currentState: string;
     currentTask: string;
     activePath: any;
-    targetSpeed: number;
-    targetAltitude: number;
+    desiredSpeed: number;
+    desiredSpeedType: string;
+    desiredAltitude: number;
+    desiredAltitudeType: string;
+    targetLocation: any;
     isTanker: boolean;
     isAWACS: boolean;
+    onOff: boolean;
+    followRoads: boolean;
+    targetID: number;
 }
 
 interface OptionsData {
@@ -49,15 +55,6 @@ interface OptionsData {
     TACAN: TACAN;
     radio: Radio;
     generalSettings: GeneralSettings;
-}
-
-interface UnitData {
-    baseData: BaseData;
-    flightData: FlightData;
-    missionData: MissionData;
-    formationData: FormationData;
-    taskData: TaskData;
-    optionsData: OptionsData;
 }
 
 interface TACAN {
@@ -91,4 +88,13 @@ interface UnitIconOptions {
     showAmmo: boolean,
     showSummary: boolean, 
     rotateToHeading: boolean
+}
+
+interface UnitData {
+    baseData: BaseData;
+    flightData: FlightData;
+    missionData: MissionData;
+    formationData: FormationData;
+    taskData: TaskData;
+    optionsData: OptionsData;
 }
