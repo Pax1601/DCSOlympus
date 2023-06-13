@@ -99,7 +99,7 @@
 }
 
 .coordinates::after {
-    content: attr(data-dd) "\00b0 " attr(data-mm) "'" attr(data-ss) "." attr(data-sss) '"' attr(data-label);
+    content: attr(data-value);
 	font-weight: bold;
 	font-size: 13px;
 	overflow: hidden;

@@ -3,6 +3,7 @@ import { getMap, getMissionData, getUnitsManager } from "..";
 import { distance, bearing, zeroAppend, mToNm, nmToFt } from "../other/utils";
 import { Unit } from "../units/unit";
 import { Panel } from "./panel";
+import formatcoords from "formatcoords";
 
 export class MouseInfoPanel extends Panel {
     #measureMarker: Marker;
@@ -48,8 +49,10 @@ export class MouseInfoPanel extends Panel {
             this.#drawMeasure(null, `bullseye-${idx}`, bullseyes[idx].getLatLng(), mousePosition);
 
         /* Draw coordinates */
-        this.#drawCoordinates("ref-mouse-position-latitude", "mouse-position-latitude", mousePosition.lat, ["N", "S"]);
-        this.#drawCoordinates("ref-mouse-position-longitude", "mouse-position-longitude", mousePosition.lng, ["E", "W"]);
+        var coords = formatcoords(mousePosition.lat, mousePosition.lng);
+        var coordString = coords.format('XDDMMss', {decimalPlaces: 4});
+        this.#drawCoordinates("ref-mouse-position-latitude", "mouse-position-latitude", coordString.split(" ")[0]);
+        this.#drawCoordinates("ref-mouse-position-longitude", "mouse-position-longitude", coordString.split(" ")[1]);
     }
 
     #onMapClick(e: any) {
@@ -153,19 +156,12 @@ export class MouseInfoPanel extends Panel {
         }
     }
 
-    #drawCoordinates(imgId: string, textId: string, value: number, prefixes: string[]) {
+    #drawCoordinates(imgId: string, textId: string, value: string) {
         const el = this.getElement().querySelector(`#${textId}`) as HTMLElement;
         const img = this.getElement().querySelector(`#${imgId}`) as HTMLElement;
-
         if (img && el) {
-            let matches = String(value).match(/^\-?(\d+)\.(\d{2})(\d{2})(\d{2})/);
-            if (matches && matches.length) {
-                el.dataset.dd = matches[1];
-                el.dataset.mm = matches[2];
-                el.dataset.ss = matches[3];
-                el.dataset.sss = matches[4];
-            }
-            img.dataset.label = (value < 0) ? prefixes[1] : prefixes[0];
+            el.dataset.value = value.substring(1);
+            img.dataset.label = value[0];
         }
     }
 
