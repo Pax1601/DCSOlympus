@@ -933,10 +933,11 @@ dl.ol-data-grid dd {
 }
 
 .ol-dialog {
-    align-self: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     background-color: var(--background-slate-blue);
     color: white;
-    justify-self: center;
     position: absolute;
     z-index: 9999;
 }

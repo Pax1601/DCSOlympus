@@ -123,7 +123,7 @@ export class UnitsManager {
         }
     }
 
-    getSelectedUnits(options?: { excludeHumans?: boolean }) {
+    getSelectedUnits(options?: { excludeHumans?: boolean, onlyOnePerGroup?: boolean }) {
         var selectedUnits = [];
         for (let ID in this.#units) {
             if (this.#units[ID].getSelected()) {
@@ -133,6 +133,14 @@ export class UnitsManager {
         if (options) {
             if (options.excludeHumans)
                 selectedUnits = selectedUnits.filter((unit: Unit) => { return !unit.getMissionData().flags.Human });
+            if (options.onlyOnePerGroup) {
+                var temp: Unit[] = [];
+                for (let unit of selectedUnits) {
+                    if (!temp.some((otherUnit: Unit) => unit.getBaseData().groupName == otherUnit.getBaseData().groupName))
+                        temp.push(unit);
+                }
+                selectedUnits = temp;
+            }
         }
         return selectedUnits;
     }
@@ -181,7 +189,7 @@ export class UnitsManager {
 
     /*********************** Actions on selected units ************************/
     selectedUnitsAddDestination(latlng: L.LatLng, mantainRelativePosition: boolean, rotation: number) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
 
         /* Compute the destination for each unit. If mantainRelativePosition is true, compute the destination so to hold the relative distances */
         var unitDestinations: { [key: number]: LatLng } = {};
@@ -210,7 +218,7 @@ export class UnitsManager {
     }
 
     selectedUnitsClearDestinations() {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
             const unit = selectedUnits[idx];
             if (unit.getTaskData().currentState === "Follow") {
@@ -226,7 +234,7 @@ export class UnitsManager {
     }
 
     selectedUnitsLandAt(latlng: LatLng) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].landAt(latlng);
         }
@@ -234,21 +242,21 @@ export class UnitsManager {
     }
 
     selectedUnitsChangeSpeed(speedChange: string) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].changeSpeed(speedChange);
         }
     }
 
     selectedUnitsChangeAltitude(altitudeChange: string) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].changeAltitude(altitudeChange);
         }
     }
 
     selectedUnitsSetSpeed(speed: number) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].setSpeed(speed);
         }
@@ -256,7 +264,7 @@ export class UnitsManager {
     }
 
     selectedUnitsSetSpeedType(speedType: string) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].setSpeedType(speedType);
         }
@@ -264,7 +272,7 @@ export class UnitsManager {
     }
 
     selectedUnitsSetAltitude(altitude: number) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].setAltitude(altitude);
         }
@@ -272,7 +280,7 @@ export class UnitsManager {
     }
 
     selectedUnitsSetAltitudeType(altitudeType: string) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].setAltitudeType(altitudeType);
         }
@@ -280,7 +288,7 @@ export class UnitsManager {
     }
 
     selectedUnitsSetROE(ROE: string) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].setROE(ROE);
         }
@@ -288,7 +296,7 @@ export class UnitsManager {
     }
 
     selectedUnitsSetReactionToThreat(reactionToThreat: string) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].setReactionToThreat(reactionToThreat);
         }
@@ -296,7 +304,7 @@ export class UnitsManager {
     }
 
     selectedUnitsSetEmissionsCountermeasures(emissionCountermeasure: string) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].setEmissionsCountermeasures(emissionCountermeasure);
         }
@@ -304,7 +312,7 @@ export class UnitsManager {
     }
 
     selectedUnitsSetOnOff(onOff: boolean) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].setOnOff(onOff);
         }
@@ -312,7 +320,7 @@ export class UnitsManager {
     }
 
     selectedUnitsSetFollowRoads(followRoads: boolean) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].setFollowRoads(followRoads);
         }
@@ -321,7 +329,7 @@ export class UnitsManager {
 
 
     selectedUnitsAttackUnit(ID: number) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].attackUnit(ID);
         }
@@ -345,7 +353,7 @@ export class UnitsManager {
     }
 
     selectedUnitsRefuel() {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].refuel();
         }
@@ -367,7 +375,7 @@ export class UnitsManager {
             else if (formation === "front") { offset.x = 100; offset.y = 0; offset.z = 0; }
             else offset = undefined;
         }
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         var count = 1;
         var xr = 0; var yr = 1; var zr = -1;
         var layer = 1;
@@ -410,7 +418,7 @@ export class UnitsManager {
     }
 
     selectedUnitsComputeGroupDestination(latlng: LatLng, rotation: number) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         /* Compute the center of the group */
         var center = { x: 0, y: 0 };
         selectedUnits.forEach((unit: Unit) => {
@@ -441,7 +449,7 @@ export class UnitsManager {
     }
 
     selectedUnitsBombPoint(mouseCoordinates: LatLng) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].bombPoint(mouseCoordinates);
         }
@@ -449,7 +457,7 @@ export class UnitsManager {
     }
 
     selectedUnitsCarpetBomb(mouseCoordinates: LatLng) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].carpetBomb(mouseCoordinates);
         }
@@ -457,7 +465,7 @@ export class UnitsManager {
     }
 
     selectedUnitsBombBuilding(mouseCoordinates: LatLng) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].bombBuilding(mouseCoordinates);
         }
@@ -465,7 +473,7 @@ export class UnitsManager {
     }
 
     selectedUnitsFireAtArea(mouseCoordinates: LatLng) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].fireAtArea(mouseCoordinates);
         }

@@ -494,9 +494,9 @@ export class Map extends L.Map {
     #createDestinationMarkers() {
         this.#resetDestinationMarkers();
 
-        if (getUnitsManager().getSelectedUnits({ excludeHumans: true }).length > 0 && getUnitsManager().getSelectedUnits({ excludeHumans: true }).length < 20) {
+        if (getUnitsManager().getSelectedUnits({ excludeHumans: true }).length > 0) {
             /* Create the unit destination preview markers */
-            this.#destinationPreviewMarkers = getUnitsManager().getSelectedUnits({ excludeHumans: true }).map((unit: Unit) => {
+            this.#destinationPreviewMarkers = getUnitsManager().getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true }).map((unit: Unit) => {
                 var marker = new DestinationPreviewMarker(this.getMouseCoordinates(), {interactive: false});
                 marker.addTo(this);
                 return marker;

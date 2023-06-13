@@ -60,6 +60,9 @@ void Unit::setDefaults(bool force)
 		/* Set the default IDLE state */
 		setState(State::IDLE);
 
+		/* Set desired altitude to be equal to current altitude so the unit does not climb/descend after spawn */
+		setDesiredAltitude(altitude);
+
 		/* Set the default options (these are all defaults so will only affect the export data, no DCS command will be sent) */
 		setROE(L"Designated", force);
 		setReactionToThreat(L"Evade", force);

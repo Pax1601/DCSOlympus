@@ -58,6 +58,7 @@ void Aircraft::changeAltitude(wstring change)
 		else if (getDesiredAltitude() >= 0)
 				setDesiredAltitude(getDesiredAltitude() + ftToM(500));
 	}
+
 	if (getDesiredAltitude() < 0)
 		setDesiredAltitude(0);
 
