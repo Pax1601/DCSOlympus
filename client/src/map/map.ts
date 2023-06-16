@@ -14,11 +14,14 @@ import { ClickableMiniMap } from "./clickableminimap";
 import { SVGInjector } from '@tanem/svg-injector'
 import { layers as mapLayers, mapBounds, minimapBoundaries } from "../constants/constants";
 import { TargetMarker } from "./targetmarker";
+import { CoalitionArea } from "./coalitionarea";
+import { CoalitionAreaContextMenu } from "../controls/coalitionareacontextmenu";
 
 L.Map.addInitHook('addHandler', 'boxSelect', BoxSelect);
 
 // TODO would be nice to convert to ts
 require("../../public/javascripts/leaflet.nauticscale.js")
+require("../../public/javascripts/L.Path.Drag.js")
 
 /* Map constants */
 export const IDLE = "Idle";
@@ -26,6 +29,7 @@ export const MOVE_UNIT = "Move unit";
 export const BOMBING = "Bombing";
 export const CARPET_BOMBING = "Carpet bombing";
 export const FIRE_AT_AREA = "Fire at area";
+export const DRAW_POLYGON = "Draw polygon";
 export const visibilityControls: string[] = ["human", "dcs", "aircraft", "groundunit-sam", "groundunit-other", "navyunit", "airbase"];
 export const visibilityControlsTootlips: string[] = ["Toggle human players visibility", "Toggle DCS controlled units visibility", "Toggle aircrafts visibility", "Toggle SAM units visibility", "Toggle ground units (not SAM) visibility", "Toggle navy units visibility", "Toggle airbases visibility"];
 
@@ -51,10 +55,12 @@ export class Map extends L.Map {
     #destinationGroupRotation: number = 0;
     #computeDestinationRotation: boolean = false;
     #destinationRotationCenter: L.LatLng | null = null;
-
+    #polygons: CoalitionArea[] = [];
+    
     #mapContextMenu: MapContextMenu = new MapContextMenu("map-contextmenu");
     #unitContextMenu: UnitContextMenu = new UnitContextMenu("unit-contextmenu");
     #airbaseContextMenu: AirbaseContextMenu = new AirbaseContextMenu("airbase-contextmenu");
+    #coalitionAreaContextMenu: CoalitionAreaContextMenu = new CoalitionAreaContextMenu("coalition-area-contextmenu");
 
     #mapSourceDropdown: Dropdown;
     #optionButtons: { [key: string]: HTMLButtonElement[] } = {}
@@ -113,6 +119,12 @@ export class Map extends L.Map {
             getUnitsManager().setHiddenType(ev.detail.type, !el?.classList.contains("off"));
             Object.values(getUnitsManager().getUnits()).forEach((unit: Unit) => unit.updateVisibility());
         });
+
+        document.addEventListener("toggleMapDraw", (ev: CustomEventInit) => {
+            if (ev.detail?.type == "polygon") {
+                this.setState(DRAW_POLYGON);
+            }
+        })
 
         document.addEventListener("unitUpdated", (ev: CustomEvent) => {
             if (this.#centerUnit != null && ev.detail == this.#centerUnit)
@@ -176,6 +188,14 @@ export class Map extends L.Map {
             this.#createTargetMarker();
             this.#hideCursor();
         }
+        else if (this.#state === DRAW_POLYGON) {
+            this.#resetDestinationMarkers();
+            this.#resetTargetMarker();
+            this.#showCursor();
+            //@ts-ignore draggable option added by plugin
+            this.#polygons.push(new CoalitionArea([]));
+            this.#polygons[this.#polygons.length - 1].addTo(this);
+        }
         document.dispatchEvent(new CustomEvent("mapStateChanged"));
     }
 
@@ -188,6 +208,7 @@ export class Map extends L.Map {
         this.hideMapContextMenu();
         this.hideUnitContextMenu();
         this.hideAirbaseContextMenu();
+        this.hideCoalitionAreaContextMenu();
     }
 
     showMapContextMenu(e: any) {
@@ -236,6 +257,22 @@ export class Map extends L.Map {
 
     hideAirbaseContextMenu() {
         this.#airbaseContextMenu.hide();
+    }
+
+    showCoalitionAreaContextMenu(e: any, coalitionArea: CoalitionArea) {
+        this.hideAllContextMenus();
+        var x = e.originalEvent.x;
+        var y = e.originalEvent.y;
+        this.#coalitionAreaContextMenu.show(x, y, e.latlng);
+        this.#coalitionAreaContextMenu.setCoalitionArea(coalitionArea);
+    }
+
+    getCoalitionAreaContextMenu() {
+        return this.#coalitionAreaContextMenu;
+    }
+
+    hideCoalitionAreaContextMenu() {
+        this.#coalitionAreaContextMenu.hide();
     }
 
     /* Mouse coordinates */
@@ -364,6 +401,9 @@ export class Map extends L.Map {
             if (this.#state === IDLE) {
 
             }
+            else if (this.#state === DRAW_POLYGON) {
+                this.#polygons[this.#polygons.length - 1].addLatLng(e.latlng);
+            }
             else {
                 this.setState(IDLE);
                 getUnitsManager().deselectAllUnits();
@@ -402,6 +442,9 @@ export class Map extends L.Map {
         else if (this.#state === FIRE_AT_AREA) {
             getUnitsManager().getSelectedUnits().length > 0? this.setState(MOVE_UNIT): this.setState(IDLE);
             getUnitsManager().selectedUnitsFireAtArea(this.getMouseCoordinates()); 
+        }
+        else {
+            this.setState(IDLE);
         }
     }
 

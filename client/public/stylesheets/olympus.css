@@ -408,7 +408,6 @@ nav.ol-panel> :last-child {
 
 .ol-panel .ol-group-button-toggle {
     align-items: center;
-    column-gap: 15px;
     display: flex;
     flex-wrap: nowrap;
     white-space: nowrap;
@@ -421,7 +420,7 @@ nav.ol-panel> :last-child {
     border: 0;
     display: flex;
     justify-items: left;
-    text-indent: 5px;
+    text-indent: 2px;
 }
 
 .ol-panel .ol-group-button-toggle button::before {
@@ -1134,4 +1133,87 @@ input[type=number]::-webkit-outer-spin-button {
 
 .ol-switch[data-value="undefined"]>.ol-switch-fill::after {
 	transform: translateX(calc((var(--width) - var(--height)) * 0.5));
+}
+
+.ol-contexmenu-panel {
+    padding: 20px;
+}
+
+.ol-coalition-switch[data-value="false"]>.ol-switch-fill {
+	background-color: var(--primary-blue);
+}
+
+.ol-coalition-switch[data-value="true"]>.ol-switch-fill {
+	background-color: var(--primary-red);
+}
+
+.ol-coalition-switch[data-value="undefined"]>.ol-switch-fill {
+	background-color: var(--primary-neutral);
+}
+
+.ol-context-menu>div:nth-child(2) {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-right: 0px;
+}
+
+.ol-context-menu>ul {
+    max-height: 200px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.ol-context-menu .ol-panel {
+    border-radius: var(--border-radius-sm);
+    width: 100%;
+}
+
+.ol-context-menu ul {
+    margin: 0px;
+}
+
+.ol-context-menu>div:nth-child(n+3) {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    row-gap: 5px;
+}
+
+.ol-context-menu .ol-select-container {
+    align-self: stretch;
+    flex: 0 0 auto;
+    width: 100%;
+}
+
+
+.ol-contexmenu-button {
+    border: none;
+    border-radius: 0px;
+    height: 48px;
+    margin-bottom: -10px;
+    margin-top: -10px;
+    width: 48px;
+}
+
+.ol-contexmenu-button:last-of-type {
+    border-bottom-right-radius: var(--border-radius-sm);
+    border-top-right-radius: var(--border-radius-sm);
+}
+
+[data-active-coalition="blue"].ol-contexmenu-button:hover,
+[data-active-coalition="blue"].ol-contexmenu-button.is-open {
+    background-color: var(--primary-blue)
+}
+
+[data-active-coalition="red"].ol-contexmenu-button:hover,
+[data-active-coalition="red"].ol-contexmenu-button.is-open {
+    background-color: var(--primary-red)
+}
+
+[data-active-coalition="neutral"].ol-contexmenu-button:hover,
+[data-active-coalition="neutral"].ol-contexmenu-button.is-open {
+    background-color: var(--primary-neutral)
 }

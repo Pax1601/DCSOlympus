@@ -50,6 +50,11 @@ export class Dropdown {
         }));
     }
 
+    setOptionsElements(optionsElements: HTMLElement[]) {
+        this.#optionsList = [];
+        this.#options.replaceChildren(...optionsElements);
+    }
+
     selectText(text: string) {
         const index = [].slice.call(this.#options.children).findIndex((opt: Element) => opt.querySelector("button")?.innerText === text);
         if (index > -1) {

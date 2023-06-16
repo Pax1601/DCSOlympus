@@ -45,7 +45,7 @@ export class MapContextMenu extends ContextMenu {
         this.#groundUnitRoleDropdown = new Dropdown("ground-unit-role-options", (role: string) => this.#setGroundUnitRole(role));
         this.#groundUnitTypeDropdown = new Dropdown("ground-unit-type-options", (type: string) => this.#setGroundUnitType(type));
 
-        document.addEventListener("contextMenuShow", (e: any) => {
+        document.addEventListener("mapContextMenuShow", (e: any) => {
             this.showSubMenu(e.detail.type);
         });
 
@@ -92,7 +92,7 @@ export class MapContextMenu extends ContextMenu {
         this.getContainer()?.querySelector("#aircraft-spawn-menu")?.classList.toggle("hide", type !== "aircraft");
         this.getContainer()?.querySelector("#aircraft-spawn-button")?.classList.toggle("is-open", type === "aircraft");
         this.getContainer()?.querySelector("#ground-unit-spawn-menu")?.classList.toggle("hide", type !== "ground-unit");
-        this.getContainer()?.querySelector("#ground-unit-spawn-button")?.classList.toggle("is-open", type === "ground-unit");
+        this.getContainer()?.querySelector("#ground-ol-contexmenu-button")?.classList.toggle("is-open", type === "ground-unit");
         this.getContainer()?.querySelector("#smoke-spawn-menu")?.classList.toggle("hide", type !== "smoke");
         this.getContainer()?.querySelector("#smoke-spawn-button")?.classList.toggle("is-open", type === "smoke");
         this.getContainer()?.querySelector("#explosion-menu")?.classList.toggle("hide", type !== "explosion");

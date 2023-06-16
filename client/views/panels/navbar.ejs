@@ -30,37 +30,39 @@
     </div>
 
     <div id="unit-visibility-control" class="ol-group">
-            <!-- Here the available visibility controls will be listed -->
+        <!-- Here the available visibility controls will be listed -->
     </div>
 
     <div id="coalition-visibility-control" class="ol-group ol-group-button-toggle">
-
         <div>
             <button id="coalition-visibility-control-blue" data-on-click="toggleCoalitionVisibility"
-                data-on-click-params='{ "coalition": "blue" }'>View <span class="accent-bluefor">BLUEFOR</span></button>
+                data-on-click-params='{ "coalition": "blue" }'><span class="accent-bluefor">BLUEFOR</span></button>
         </div>
 
         <div>
             <button id="coalition-visibility-control-red" data-on-click="toggleCoalitionVisibility"
-                data-on-click-params='{ "coalition": "red" }'>View <span class="accent-redfor">REDFOR</span></button>
+                data-on-click-params='{ "coalition": "red" }'><span class="accent-redfor">REDFOR</span></button>
         </div>
 
         <div>
             <button id="coalition-visibility-control-neutral" data-on-click="toggleCoalitionVisibility"
-                data-on-click-params='{ "coalition": "neutral" }'>View <span
-                    class="accent-neutral">NEUTRAL</span></button>
+                data-on-click-params='{ "coalition": "neutral" }'><span class="accent-neutral">NEUTRAL</span></button>
         </div>
-
     </div>
 
-
     <div id="atc-navbar-control" class="ol-group-container" data-feature-switch="atc">
-        <div class="ol-group-header">ATC</div>
+        
         <div class="ol-group">
             <button data-on-click="toggleElements"
                 data-on-click-params='{"selector": "#strip-board-ground"}'>GND</button>
             <button data-on-click="toggleElements"
                 data-on-click-params='{"selector": "#strip-board-tower"}'>TWR</button>
+        </div>
+    </div>
+
+    <div id="map-drawer" class="ol-group-container">
+        <div class="ol-group">
+            <button data-on-click="toggleMapDraw" data-on-click-params='{"type": "polygon"}'>Polygon</button>
         </div>
     </div>
 </nav>

@@ -14,7 +14,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                         "items": [
                         ],
                         "roles": [
-                            "Template"
+                            "SAM Site"
                         ],
                         "code": "",
                         "name": "Default"
@@ -31,7 +31,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                         "fuel": 1,
                         "items": [],
                         "roles": [
-                            "Template"
+                            "SAM Site"
                         ],
                         "code": "",
                         "name": "Default"
@@ -48,7 +48,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                         "fuel": 1,
                         "items": [],
                         "roles": [
-                            "Template"
+                            "SAM Site"
                         ],
                         "code": "",
                         "name": "Default"
@@ -65,7 +65,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                         "fuel": 1,
                         "items": [],
                         "roles": [
-                            "Template"
+                            "SAM Site"
                         ],
                         "code": "",
                         "name": "Default"
@@ -82,7 +82,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                         "fuel": 1,
                         "items": [],
                         "roles": [
-                            "Template"
+                            "SAM Site"
                         ],
                         "code": "",
                         "name": "Default"
@@ -99,7 +99,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                         "fuel": 1,
                         "items": [],
                         "roles": [
-                            "Template"
+                            "SAM Site"
                         ],
                         "code": "",
                         "name": "Default"
@@ -116,7 +116,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                         "fuel": 1,
                         "items": [],
                         "roles": [
-                            "Template"
+                            "SAM Site"
                         ],
                         "code": "",
                         "name": "Default"
