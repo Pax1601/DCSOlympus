@@ -1,9 +1,12 @@
 import { LatLng, LatLngBounds } from "leaflet";
-import { getHotgroupPanel, getInfoPopup, getMap, getUnitDataTable } from "..";
+import { getHotgroupPanel, getInfoPopup, getMap, getMissionHandler, getUnitDataTable } from "..";
 import { Unit } from "./unit";
-import { cloneUnit } from "../server/server";
-import { deg2rad, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots } from "../other/utils";
+import { cloneUnit, spawnGroundUnit } from "../server/server";
+import { deg2rad, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots, polygonArea, randomPointInPoly, randomUnitBlueprintByRole } from "../other/utils";
 import { IDLE, MOVE_UNIT } from "../map/map";
+import { CoalitionArea } from "../map/coalitionarea";
+import { Airbase } from "../missionhandler/airbase";
+import { groundUnitsDatabase } from "./groundunitsdatabase";
 
 export class UnitsManager {
     #units: { [ID: number]: Unit };
@@ -496,6 +499,35 @@ export class UnitsManager {
             }
             this.#pasteDisabled = true;
             window.setTimeout(() => this.#pasteDisabled = false, 250);
+        }
+    }
+
+    createIADS(coalitionArea: CoalitionArea, options: {[key: string]: boolean}, density: number) {
+        const activeRoles = Object.keys(options).filter((key: string) => { return options[key]; }); 
+        const airbases = getMissionHandler().getAirbases();
+        const pointsNumber = polygonArea(coalitionArea) / 1e7 * density / 100;
+        for (let i = 0; i < pointsNumber; i++) {
+            const latlng = randomPointInPoly(coalitionArea);
+            var minDistance: number = Infinity;
+            var maxDistance: number = 0;
+            Object.values(airbases).forEach((airbase: Airbase) => {
+                var distance = airbase.getLatLng().distanceTo(latlng);
+                if (distance < minDistance) minDistance = distance;
+                if (distance > maxDistance) maxDistance = distance;
+            });
+
+            const probability = Math.pow(1 - minDistance / 50e3, 5);
+            if (Math.random() < probability){
+                const role = activeRoles[Math.floor(Math.random() * activeRoles.length)];
+                const unitBlueprint = randomUnitBlueprintByRole(groundUnitsDatabase, role);
+                spawnGroundUnit({
+                    role: role,
+                    latlng: latlng,
+                    type: unitBlueprint.name,
+                    coalition: coalitionArea.getCoalition(),
+                    immediate: true
+                })
+            }
         }
     }
 

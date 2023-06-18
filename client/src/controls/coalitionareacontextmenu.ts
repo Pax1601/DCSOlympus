@@ -1,11 +1,11 @@
+import { getUnitsManager } from "..";
 import { CoalitionArea } from "../map/coalitionarea";
-import { groundUnitsDatabase } from "../units/groundunitsdatabase";
 import { ContextMenu } from "./contextmenu";
 import { Dropdown } from "./dropdown";
 import { Slider } from "./slider";
 import { Switch } from "./switch";
 
-const unitRole = ["AAA", "MANPADS", "Short range SAM", "Long range SAM", "Radar"];
+const unitRole = ["AAA", "MANPADS", "SAM Sites", "Radar"];
 
 export class CoalitionAreaContextMenu extends ContextMenu {
     #coalitionSwitch: Switch;
@@ -30,6 +30,22 @@ export class CoalitionAreaContextMenu extends ContextMenu {
             this.showSubMenu(e.detail.type);
         });
 
+        document.addEventListener("contextMenuCreateIads", (e: any) => {
+            const values: {[key: string]: boolean} = {};
+            const element = this.#iadsRoleDropdown.getOptionElements();
+            for (let idx = 0; idx < element.length; idx++) {
+                const option = element.item(idx) as HTMLElement;
+                const key = option.querySelector("span")?.innerText;
+                const value = option.querySelector("input")?.checked;
+                if (key !== undefined && value !== undefined)
+                    values[key] = value;
+            }
+
+            const area = this.getCoalitionArea();
+            if (area)
+                getUnitsManager().createIADS(area, values, this.#iadsDensitySlider.getValue());
+        })
+
         /* Create the checkboxes to select the unit roles */
         this.#iadsRoleDropdown.setOptionsElements(unitRole.map((unitRole: string) => {
             var div = document.createElement("div");
@@ -38,6 +54,7 @@ export class CoalitionAreaContextMenu extends ContextMenu {
             label.title = `Add ${unitRole}s to the IADS`;
             var input = document.createElement("input");
             input.type = "checkbox";
+            input.checked = true;
             var span = document.createElement("span");
             span.innerText = unitRole;
             label.appendChild(input);
@@ -45,8 +62,6 @@ export class CoalitionAreaContextMenu extends ContextMenu {
             div.appendChild(label);
             return div as HTMLElement;
         }));
-
-        
 
         this.hide();
     }

@@ -14,9 +14,10 @@ export interface SpawnOptions {
     type: string;
     latlng: LatLng;
     coalition: string;
-    loadout: string | null;
-    airbaseName: string | null;
-    altitude: number | null;
+    loadout?: string | null;
+    airbaseName?: string | null;
+    altitude?: number | null;
+    immediate?: boolean;
 }
 
 export class MapContextMenu extends ContextMenu {

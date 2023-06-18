@@ -112,7 +112,7 @@
     <div id="area-coalition-label" data-active-coalition="blue"></div>
     <div id="upper-bar" class="ol-panel">
         <div id="coalition-area-switch" class="ol-switch ol-coalition-switch"></div>
-        <button data-active-coalition="blue" id="iads-button" title="Create Integrated Air Defens System" data-on-click="coalitionAreaContextMenuShow"
+        <button data-active-coalition="blue" id="iads-button" title="Create Integrated Air Defense System" data-on-click="coalitionAreaContextMenuShow"
             data-on-click-params='{ "type": "iads" }' class="ol-contexmenu-button"></button>
     </div>
     <div id="iads-menu" class="ol-panel ol-contexmenu-panel hide">
@@ -123,11 +123,12 @@
             </div>
         </div>
 
+        <!--
         <div class="ol-select-container">
             <div id="iads-period-options" class="ol-select">
                 <div class="ol-select-value">Units period</div>
                 <div class="ol-select-options">
-                    <!-- This is where all the iads unit period buttons will be shown-->
+                    <!-- This is where all the iads unit period buttons will be shown--><!--
                 </div>
             </div>
         </div>
@@ -138,6 +139,7 @@
                 Coalition specific units
             </label>
         </div>
+    -->
         
         <div id="iads-density-slider" class="ol-slider-container">
             <dl class="ol-data-grid">
@@ -145,6 +147,6 @@
             </dl>
             <input type="range" min="0" max="100" value="0" class="ol-slider">
         </div>
-        <button class="create-iads-button" title="" data-active-coalition="blue" data-on-click="contextMenuCreateIads" disabled>Add units to IADS</button>
+        <button class="create-iads-button" title="" data-active-coalition="blue" data-on-click="contextMenuCreateIads">Add units to IADS</button>
     </div>
 </div>

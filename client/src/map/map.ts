@@ -55,7 +55,7 @@ export class Map extends L.Map {
     #destinationGroupRotation: number = 0;
     #computeDestinationRotation: boolean = false;
     #destinationRotationCenter: L.LatLng | null = null;
-    #polygons: CoalitionArea[] = [];
+    #coalitionAreas: CoalitionArea[] = [];
     
     #mapContextMenu: MapContextMenu = new MapContextMenu("map-contextmenu");
     #unitContextMenu: UnitContextMenu = new UnitContextMenu("unit-contextmenu");
@@ -175,16 +175,19 @@ export class Map extends L.Map {
         if (this.#state === IDLE) {
             this.#resetDestinationMarkers();
             this.#resetTargetMarker();
+            this.#deselectCoalitionAreas();
             this.#showCursor();
         }
         else if (this.#state === MOVE_UNIT) {
             this.#resetTargetMarker();
+            this.#deselectCoalitionAreas();
             this.#createDestinationMarkers();
             if (this.#destinationPreviewMarkers.length > 0)
                 this.#hideCursor();
         }
         else if ([BOMBING, CARPET_BOMBING, FIRE_AT_AREA].includes(this.#state)) {
             this.#resetDestinationMarkers();
+            this.#deselectCoalitionAreas();
             this.#createTargetMarker();
             this.#hideCursor();
         }
@@ -193,8 +196,8 @@ export class Map extends L.Map {
             this.#resetTargetMarker();
             this.#showCursor();
             //@ts-ignore draggable option added by plugin
-            this.#polygons.push(new CoalitionArea([]));
-            this.#polygons[this.#polygons.length - 1].addTo(this);
+            this.#coalitionAreas.push(new CoalitionArea([]));
+            this.#coalitionAreas[this.#coalitionAreas.length - 1].addTo(this);
         }
         document.dispatchEvent(new CustomEvent("mapStateChanged"));
     }
@@ -394,6 +397,10 @@ export class Map extends L.Map {
         }
     }
 
+    getSelectedCoalitionArea() {
+        return this.#coalitionAreas.find((area: CoalitionArea) => {return area.getSelected()});
+    }
+
     /* Event handlers */
     #onClick(e: any) {
         if (!this.#preventLeftClick) {
@@ -402,7 +409,14 @@ export class Map extends L.Map {
 
             }
             else if (this.#state === DRAW_POLYGON) {
-                this.#polygons[this.#polygons.length - 1].addLatLng(e.latlng);
+                /* This gets only called to create the first point of the area. All other points are added by the area itself */
+                if (this.getSelectedCoalitionArea()?.getEditing()) {
+                    this.getSelectedCoalitionArea()?.addLatLng(e.latlng);
+                    this.getSelectedCoalitionArea()?.addTemporaryLatLng(e.latlng);
+                }
+                else {
+                    this.getSelectedCoalitionArea()?.setSelected(false);
+                }
             }
             else {
                 this.setState(IDLE);
@@ -448,17 +462,6 @@ export class Map extends L.Map {
         }
     }
 
-    #executeAction(e: any, action: string) {
-        if (action === "bomb")
-            getUnitsManager().selectedUnitsBombPoint(this.getMouseCoordinates());
-        else if (action === "carpet-bomb")
-            getUnitsManager().selectedUnitsCarpetBomb(this.getMouseCoordinates());
-        else if (action === "building-bomb")
-            getUnitsManager().selectedUnitsBombBuilding(this.getMouseCoordinates());
-        else if (action === "fire-at-area")
-            getUnitsManager().selectedUnitsFireAtArea(this.getMouseCoordinates());
-    }
-
     #onSelectionEnd(e: any) {
         clearTimeout(this.#leftClickTimer);
         this.#preventLeftClick = true;
@@ -496,6 +499,10 @@ export class Map extends L.Map {
         }
         else if ([BOMBING, CARPET_BOMBING, FIRE_AT_AREA].includes(this.#state)) {
             this.#targetMarker.setLatLng(this.getMouseCoordinates());
+        }
+        else if (this.#state === DRAW_POLYGON) {
+            if (this.getSelectedCoalitionArea()?.getEditing())
+                this.getSelectedCoalitionArea()?.moveTemporaryLatLng(e.latlng);
         }
     }
 
@@ -567,6 +574,10 @@ export class Map extends L.Map {
     #resetTargetMarker() {
         this.#targetMarker.setLatLng(new L.LatLng(0, 0));
         this.removeLayer(this.#targetMarker);
+    }
+
+    #deselectCoalitionAreas() {
+        this.getSelectedCoalitionArea()?.setSelected(false);
     }
 
     #showCursor() {

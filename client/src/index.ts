@@ -223,6 +223,10 @@ export function getUnitsManager() {
     return unitsManager;
 }
 
+export function getMissionHandler() {
+    return missionHandler;
+}
+
 export function getUnitInfoPanel() {
     return unitInfoPanel;
 }

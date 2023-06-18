@@ -1,3 +1,7 @@
+import { LatLng, Point, Polygon } from "leaflet";
+import * as turf from "@turf/turf";
+import { UnitDatabase } from "../units/unitdatabase";
+
 export function bearing(lat1: number, lon1: number, lat2: number, lon2: number) {
     const φ1 = deg2rad(lat1); // φ, λ in radians
     const φ2 = deg2rad(lat2);
@@ -184,4 +188,35 @@ export function mToNm(m: number) {
 
 export function nmToFt(nm: number) {
     return nm * 6076.12;
+}
+
+export function randomPointInPoly(polygon: Polygon): LatLng {
+    var bounds = polygon.getBounds(); 
+    var x_min  = bounds.getEast();
+    var x_max  = bounds.getWest();
+    var y_min  = bounds.getSouth();
+    var y_max  = bounds.getNorth();
+
+    var lat = y_min + (Math.random() * (y_max - y_min));
+    var lng = x_min + (Math.random() * (x_max - x_min));
+
+    var poly   = polygon.toGeoJSON();
+    var inside = turf.inside(turf.point([lng, lat]), poly);
+
+    if (inside) {
+        return new LatLng(lat, lng);
+    } else {
+        return randomPointInPoly(polygon);
+    }
+}
+
+export function polygonArea(polygon: Polygon) {
+    var poly   = polygon.toGeoJSON();
+    return turf.area(poly);
+}
+
+export function randomUnitBlueprintByRole(unitDatabse: UnitDatabase, role: string) {
+    const unitBlueprints = unitDatabse.getByRole(role);
+    var index = Math.floor(Math.random() * unitBlueprints.length);
+    return unitBlueprints[index];
 }

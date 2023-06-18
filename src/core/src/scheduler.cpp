@@ -92,16 +92,18 @@ void Scheduler::handleRequest(wstring key, json::value value)
 	}
 	else if (key.compare(L"spawnGround") == 0)
 	{
+		bool immediate = value[L"immediate"].as_bool();
 		wstring coalition = value[L"coalition"].as_string();
 		wstring type = value[L"type"].as_string();
 		double lat = value[L"location"][L"lat"].as_double();
 		double lng = value[L"location"][L"lng"].as_double();
 		log(L"Spawning " + coalition + L" ground unit of type " + type + L" at (" + to_wstring(lat) + L", " + to_wstring(lng) + L")");
 		Coords loc; loc.lat = lat; loc.lng = lng;
-		command = dynamic_cast<Command*>(new SpawnGroundUnit(coalition, type, loc));
+		command = dynamic_cast<Command*>(new SpawnGroundUnit(coalition, type, loc, immediate));
 	}
 	else if (key.compare(L"spawnAir") == 0)
 	{
+		bool immediate = value[L"immediate"].as_bool();
 		wstring coalition = value[L"coalition"].as_string();
 		wstring type = value[L"type"].as_string();
 		double lat = value[L"location"][L"lat"].as_double();
@@ -111,7 +113,7 @@ void Scheduler::handleRequest(wstring key, json::value value)
 		wstring payloadName = value[L"payloadName"].as_string();
 		wstring airbaseName = value[L"airbaseName"].as_string();
 		log(L"Spawning " + coalition + L" air unit of type " + type + L" with payload " + payloadName + L" at (" + to_wstring(lat) + L", " + to_wstring(lng) + L" " + airbaseName + L")");
-		command = dynamic_cast<Command*>(new SpawnAircraft(coalition, type, loc, payloadName, airbaseName));
+		command = dynamic_cast<Command*>(new SpawnAircraft(coalition, type, loc, payloadName, airbaseName, immediate));
 	}
 	else if (key.compare(L"attackUnit") == 0)
 	{

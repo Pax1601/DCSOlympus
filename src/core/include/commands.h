@@ -145,37 +145,40 @@ private:
 class SpawnGroundUnit : public Command
 {
 public:
-	SpawnGroundUnit(wstring coalition, wstring unitType, Coords location) :  
+	SpawnGroundUnit(wstring coalition, wstring unitType, Coords location, bool immediate) :  
 		coalition(coalition), 
 		unitType(unitType), 
-		location(location) 
+		location(location),
+		immediate(immediate)
 	{ 
 		priority = CommandPriority::LOW; 
 	};
 	virtual wstring getString(lua_State* L);
-	virtual int getLoad() { return 100; }
+	virtual int getLoad() { return 100 * !immediate; }
 
 private:
 	const wstring coalition;
 	const wstring unitType;
 	const Coords location;
+	const bool immediate;
 };
 
 /* Spawn air unit command */
 class SpawnAircraft : public Command
 {
 public:
-	SpawnAircraft(wstring coalition, wstring unitType, Coords location, wstring payloadName, wstring airbaseName) :
+	SpawnAircraft(wstring coalition, wstring unitType, Coords location, wstring payloadName, wstring airbaseName, bool immediate) :
 		coalition(coalition), 
 		unitType(unitType), 
 		location(location),
 		payloadName(payloadName),
-		airbaseName(airbaseName)
+		airbaseName(airbaseName),
+		immediate(immediate)
 	{ 
 		priority = CommandPriority::LOW; 
 	};
 	virtual wstring getString(lua_State* L);
-	virtual int getLoad() { return 100; }
+	virtual int getLoad() { return 100 * !immediate; }
 
 private:
 	const wstring coalition;
@@ -183,6 +186,7 @@ private:
 	const Coords location;
 	const wstring payloadName;
 	const wstring airbaseName;
+	const bool immediate;
 };
 
 /* Clone unit command */
@@ -232,7 +236,7 @@ public:
 		priority = CommandPriority::MEDIUM;
 	};
 	virtual wstring getString(lua_State* L);
-	virtual int getLoad() { return 10; }
+	virtual int getLoad() { return 2; }
 
 private:
 	const wstring groupName;
@@ -249,7 +253,7 @@ public:
 		priority = CommandPriority::HIGH;
 	};
 	virtual wstring getString(lua_State* L);
-	virtual int getLoad() { return 10; }
+	virtual int getLoad() { return 2; }
 
 private:
 	const wstring groupName;
@@ -266,7 +270,7 @@ public:
 		priority = CommandPriority::HIGH;
 	};
 	virtual wstring getString(lua_State* L);
-	virtual int getLoad() { return 10; }
+	virtual int getLoad() { return 2; }
 
 private:
 	const wstring groupName;
@@ -297,7 +301,7 @@ public:
 		priority = CommandPriority::HIGH;
 	};
 	virtual wstring getString(lua_State* L);
-	virtual int getLoad() { return 10; }
+	virtual int getLoad() { return 2; }
 
 private:
 	const wstring groupName;
@@ -318,7 +322,7 @@ public:
 		priority = CommandPriority::HIGH;
 	};
 	virtual wstring getString(lua_State* L);
-	virtual int getLoad() { return 10; }
+	virtual int getLoad() { return 2; }
 
 private:
 	const wstring groupName;
