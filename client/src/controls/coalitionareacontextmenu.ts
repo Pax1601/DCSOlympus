@@ -1,4 +1,4 @@
-import { getUnitsManager } from "..";
+import { getMap, getUnitsManager } from "..";
 import { CoalitionArea } from "../map/coalitionarea";
 import { ContextMenu } from "./contextmenu";
 import { Dropdown } from "./dropdown";
@@ -9,29 +9,39 @@ const unitRole = ["AAA", "MANPADS", "SAM Sites", "Radar"];
 
 export class CoalitionAreaContextMenu extends ContextMenu {
     #coalitionSwitch: Switch;
-    #coalitionArea: CoalitionArea|null = null;
+    #coalitionArea: CoalitionArea | null = null;
     #iadsDensitySlider: Slider;
     #iadsRoleDropdown: Dropdown;
+
     //#iadsPeriodDropdown: Dropdown;
-        
+
     constructor(id: string) {
         super(id);
 
         this.#coalitionSwitch = new Switch("coalition-area-switch", (value: boolean) => this.#onSwitchClick(value));
         this.#coalitionSwitch.setValue(false);
-        this.#iadsRoleDropdown = new Dropdown("iads-units-role-options", () => {});
+        this.#iadsRoleDropdown = new Dropdown("iads-units-role-options", () => { });
         //this.#iadsPeriodDropdown = new Dropdown("iads-period-options", () => {});
-        this.#iadsDensitySlider = new Slider("iads-density-slider", 5, 100, "%", (value: number) => {});
+        this.#iadsDensitySlider = new Slider("iads-density-slider", 5, 100, "%", (value: number) => { });
         this.#iadsDensitySlider.setIncrement(5);
         this.#iadsDensitySlider.setValue(50);
         this.#iadsDensitySlider.setActive(true);
 
         document.addEventListener("coalitionAreaContextMenuShow", (e: any) => {
-            this.showSubMenu(e.detail.type);
+            if (this.getVisibleSubMenu() !== e.detail.type)
+                this.showSubMenu(e.detail.type);
+            else
+                this.hideSubMenus();
+        });
+
+        document.addEventListener("coalitionAreaDelete", (e: any) => {
+            if (this.#coalitionArea)
+                getMap().deleteCoalitionArea(this.#coalitionArea);
+            getMap().hideCoalitionAreaContextMenu();
         });
 
         document.addEventListener("contextMenuCreateIads", (e: any) => {
-            const values: {[key: string]: boolean} = {};
+            const values: { [key: string]: boolean } = {};
             const element = this.#iadsRoleDropdown.getOptionElements();
             for (let idx = 0; idx < element.length; idx++) {
                 const option = element.item(idx) as HTMLElement;
@@ -70,6 +80,16 @@ export class CoalitionAreaContextMenu extends ContextMenu {
         this.getContainer()?.querySelector("#iads-menu")?.classList.toggle("hide", type !== "iads");
         this.getContainer()?.querySelector("#iads-button")?.classList.toggle("is-open", type === "iads");
         this.clip();
+
+        this.setVisibleSubMenu(type);
+    }
+
+    hideSubMenus() {
+        this.getContainer()?.querySelector("#iads-menu")?.classList.toggle("hide", true);
+        this.getContainer()?.querySelector("#iads-button")?.classList.toggle("is-open", false);
+        this.clip();
+
+        this.setVisibleSubMenu(null);
     }
 
     getCoalitionArea() {
@@ -78,9 +98,16 @@ export class CoalitionAreaContextMenu extends ContextMenu {
 
     setCoalitionArea(coalitionArea: CoalitionArea) {
         this.#coalitionArea = coalitionArea;
+        this.getContainer()?.querySelectorAll('[data-coalition]').forEach((element: any) => {
+            element.setAttribute("data-coalition", this.getCoalitionArea()?.getCoalition())
+        });
+        this.#coalitionSwitch.setValue(this.getCoalitionArea()?.getCoalition() === "red");
     }
 
     #onSwitchClick(value: boolean) {
-        this.getCoalitionArea()?.setCoalition(value? "red": "blue");
+        this.getCoalitionArea()?.setCoalition(value ? "red" : "blue");
+        this.getContainer()?.querySelectorAll('[data-coalition]').forEach((element: any) => {
+            element.setAttribute("data-coalition", this.getCoalitionArea()?.getCoalition())
+        });
     }
 }

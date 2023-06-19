@@ -1,7 +1,12 @@
-import { DivIcon } from "leaflet";
+import { DivIcon, LatLngExpression, MarkerOptions } from "leaflet";
 import { CustomMarker } from "./custommarker";
 
 export class DestinationPreviewMarker extends CustomMarker {
+    constructor(latlng: LatLngExpression, options?: MarkerOptions) {
+        super(latlng, options);
+        this.setZIndexOffset(9999);
+    }
+
     createIcon() {
         this.setIcon(new DivIcon({
             iconSize: [52, 52],

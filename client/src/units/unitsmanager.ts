@@ -526,7 +526,8 @@ export class UnitsManager {
                     type: unitBlueprint.name,
                     coalition: coalitionArea.getCoalition(),
                     immediate: true
-                })
+                });
+                getMap().addTemporaryMarker(latlng);
             }
         }
     }

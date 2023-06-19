@@ -45,7 +45,6 @@ export class MissionHandler {
             }
         }
 
-
         if ("airbases" in data) {
             for (let idx in data.airbases) {
                 var airbase = data.airbases[idx]

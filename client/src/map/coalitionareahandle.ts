@@ -8,12 +8,12 @@ export class CoalitionAreaHandle extends CustomMarker {
 
     createIcon() {
         this.setIcon(new DivIcon({
-            iconSize: [52, 52],
-            iconAnchor: [26, 26],
-            className: "leaflet-target-marker",
+            iconSize: [24, 24],
+            iconAnchor: [12, 12],
+            className: "leaflet-coalitionarea-handle-marker",
         }));
         var el = document.createElement("div");
-        el.classList.add("ol-target-icon");
+        el.classList.add("ol-coalitionarea-handle-icon");
         this.getElement()?.appendChild(el);
     }
 }

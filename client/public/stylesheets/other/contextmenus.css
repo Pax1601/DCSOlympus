@@ -66,54 +66,54 @@
     background-size: 48px;
 }
 
-[data-active-coalition="blue"]#active-coalition-label,
-[data-active-coalition="blue"].deploy-unit-button,
-[data-active-coalition="blue"]#spawn-airbase-aircraft-button,
-[data-active-coalition="blue"].create-iads-button {
+[data-coalition="blue"]#active-coalition-label,
+[data-coalition="blue"].deploy-unit-button,
+[data-coalition="blue"]#spawn-airbase-aircraft-button,
+[data-coalition="blue"].create-iads-button {
     background-color: var(--primary-blue)
 }
 
-[data-active-coalition="red"]#active-coalition-label,
-[data-active-coalition="red"].deploy-unit-button,
-[data-active-coalition="red"]#spawn-airbase-aircraft-button,
-[data-active-coalition="red"].create-iads-button {
+[data-coalition="red"]#active-coalition-label,
+[data-coalition="red"].deploy-unit-button,
+[data-coalition="red"]#spawn-airbase-aircraft-button,
+[data-coalition="red"].create-iads-button {
     background-color: var(--primary-red)
 }
 
-[data-active-coalition="neutral"]#active-coalition-label,
-[data-active-coalition="neutral"].deploy-unit-button,
-[data-active-coalition="neutral"]#spawn-airbase-aircraft-button,
-[data-active-coalition="neutral"].create-iads-button {
+[data-coalition="neutral"]#active-coalition-label,
+[data-coalition="neutral"].deploy-unit-button,
+[data-coalition="neutral"]#spawn-airbase-aircraft-button,
+[data-coalition="neutral"].create-iads-button {
     background-color: var(--primary-neutral)
 }
 
-[data-active-coalition="blue"].deploy-unit-button:disabled {
+[data-coalition="blue"].deploy-unit-button:disabled {
     background-color: transparent;
     border: 1px solid var(--primary-blue);
     cursor: default;
 }
 
-[data-active-coalition="red"].deploy-unit-button:disabled {
+[data-coalition="red"].deploy-unit-button:disabled {
     background-color: transparent;
     border: 1px solid var(--primary-red);
     cursor: default;
 }
 
-[data-active-coalition="neutral"].deploy-unit-button:disabled {
+[data-coalition="neutral"].deploy-unit-button:disabled {
     background-color: transparent;
     border: 1px solid var(--primary-neutral);
     cursor: default;
 }
 
-[data-active-coalition="blue"]#active-coalition-label::after {
+[data-coalition="blue"]#active-coalition-label::after {
     content: "Create blue unit";
 }
 
-[data-active-coalition="red"]#active-coalition-label::after {
+[data-coalition="red"]#active-coalition-label::after {
     content: "Create red unit";
 }
 
-[data-active-coalition="neutral"]#active-coalition-label::after {
+[data-coalition="neutral"]#active-coalition-label::after {
     content: "Create neutral unit";
 }
 
@@ -361,7 +361,17 @@
 }
 
 #iads-button {
+    background-image: url("/resources/theme/images/buttons/spawn/sam.svg");
+    background-size: 48px;
+}
+
+#cap-button {
     background-image: url("/resources/theme/images/buttons/spawn/aircraft.svg");
+    background-size: 48px;
+}
+
+#coalitionarea-delete-button {
+    background-image: url("/resources/theme/images/buttons/other/delete.svg");
     background-size: 48px;
 }
 

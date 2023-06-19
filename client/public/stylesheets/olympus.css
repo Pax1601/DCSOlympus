@@ -38,6 +38,11 @@ body {
     cursor: none !important;
 }
 
+.hidden-cursor * {
+    cursor: none !important;
+    pointer-events: none !important;
+}
+
 a {
     text-decoration: none;
 }
@@ -623,39 +628,39 @@ nav.ol-panel> :last-child {
     width: 28px;
 }
 
-#unit-visibility-control {
+.ol-navbar-buttons-group {
     align-items: center;
 }
 
-#unit-visibility-control button {
+.ol-navbar-buttons-group button {
     border: none;
     height: 32px;
     padding: 0px;
     width: 32px;
 }
 
-#unit-visibility-control button svg {
+.ol-navbar-buttons-group button svg {
     height: 16px;
     pointer-events: none;
     width: 16px;
 }
 
-#unit-visibility-control button {
+.ol-navbar-buttons-group button {
     background-color: white;
     border: 1px solid transparent;
 }
 
-#unit-visibility-control button.off {
+.ol-navbar-buttons-group button.off {
     background-color: transparent;
     border: 1px solid white;
 }
 
-#unit-visibility-control button.off svg * {
+.ol-navbar-buttons-group button.off svg * {
     fill: white !important;
     stroke: white !important;
 }
 
-#unit-visibility-control button svg * {
+.ol-navbar-buttons-group button svg * {
     fill: var(--background-steel) !important;
     stroke: var(--background-steel) !important;
 }
@@ -666,10 +671,9 @@ nav.ol-panel> :last-child {
     flex-direction: column;
 }
 
-#atc-navbar-control button {
-    background: #ffffff20;
-    border-radius: var(--border-radius-sm);
-    padding: 4px;
+#atc-navbar-control button svg {
+    height: 24px;
+    width: 24px;
 }
 
 #roe-buttons-container button,
@@ -874,6 +878,33 @@ nav.ol-panel> :last-child {
     pointer-events: none;
     width: 52px;
     z-index: 9999;
+}
+
+.ol-draw-icon {
+    background-image: url("/resources/theme/images/markers/draw.svg");
+    height: 24px;
+    pointer-events: none;
+    width: 24px;
+    z-index: 9999;
+}
+
+.ol-coalitionarea-handle-icon,
+.ol-coalitionarea-middle-handle-icon {
+    pointer-events: none;
+    z-index: 9999;
+    border-radius: 999px;
+}
+
+.ol-coalitionarea-handle-icon {
+    background-color: #FFFFFFEE;
+    width: 24px;
+    height: 24px;
+}
+
+.ol-coalitionarea-middle-handle-icon {
+    background-color: #FFFFFFAA;
+    width: 16px;
+    height: 16px;
 }
 
 dl.ol-data-grid {
@@ -1203,17 +1234,17 @@ input[type=number]::-webkit-outer-spin-button {
     border-top-right-radius: var(--border-radius-sm);
 }
 
-[data-active-coalition="blue"].ol-contexmenu-button:hover,
-[data-active-coalition="blue"].ol-contexmenu-button.is-open {
+[data-coalition="blue"].ol-contexmenu-button:hover,
+[data-coalition="blue"].ol-contexmenu-button.is-open {
     background-color: var(--primary-blue)
 }
 
-[data-active-coalition="red"].ol-contexmenu-button:hover,
-[data-active-coalition="red"].ol-contexmenu-button.is-open {
+[data-coalition="red"].ol-contexmenu-button:hover,
+[data-coalition="red"].ol-contexmenu-button.is-open {
     background-color: var(--primary-red)
 }
 
-[data-active-coalition="neutral"].ol-contexmenu-button:hover,
-[data-active-coalition="neutral"].ol-contexmenu-button.is-open {
+[data-coalition="neutral"].ol-contexmenu-button:hover,
+[data-coalition="neutral"].ol-contexmenu-button.is-open {
     background-color: var(--primary-neutral)
 }

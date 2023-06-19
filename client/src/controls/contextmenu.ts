@@ -5,6 +5,7 @@ export class ContextMenu {
     #latlng: LatLng = new LatLng(0, 0);
     #x: number = 0;
     #y: number = 0;
+    #visibleSubMenu: string | null = null;
 
     constructor(id: string) {
         this.#container = document.getElementById(id);
@@ -51,5 +52,13 @@ export class ContextMenu {
             else
                 this.#container.style.top = window.innerHeight - this.#container.offsetHeight - 10 + "px";
         }
+    }
+
+    setVisibleSubMenu(menu: string | null) {
+        this.#visibleSubMenu = menu;
+    }
+
+    getVisibleSubMenu() {
+        return this.#visibleSubMenu;
     }
 }

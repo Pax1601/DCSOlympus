@@ -1,40 +1,24 @@
-import { LatLng, LatLngExpression, Polygon, PolylineOptions } from "leaflet";
+import { LatLng, LatLngExpression, Map, Point, Polygon, PolylineOptions } from "leaflet";
 import { getMap } from "..";
-import { DRAW_POLYGON } from "./map";
 import { CoalitionAreaHandle } from "./coalitionareahandle";
+import { CoalitionAreaMiddleHandle } from "./coalitionareamiddlehandle";
 
 export class CoalitionArea extends Polygon {
     #coalition: string = "blue";
     #selected: boolean = true;
     #editing: boolean = true;
     #handles: CoalitionAreaHandle[] = [];
+    #middleHandles: CoalitionAreaMiddleHandle[] = [];
+    #activeIndex: number = 0;
 
     constructor(latlngs: LatLngExpression[] | LatLngExpression[][] | LatLngExpression[][][], options?: PolylineOptions) {
-        if (options === undefined) 
+        if (options === undefined)
             options = {};
-        
+
         options.bubblingMouseEvents = false;
         super(latlngs, options);
-
-        this.on("click", (e: any) => {
-            if (!this.getSelected()) {
-                this.setSelected(true);
-                getMap().setState(DRAW_POLYGON);
-            }
-            else if (this.getEditing()) {
-                this.addLatLng(e.latlng);
-                this.addTemporaryLatLng(e.latlng);
-            }
-        });
-
-        this.on("contextmenu", (e: any) => {
-            if (!this.#editing)
-                getMap().showCoalitionAreaContextMenu(e, this);
-            else 
-                this.setEditing(false);
-        });
-
         this.#setColors();
+        this.#registerCallbacks();
     }
 
     setCoalition(coalition: string) {
@@ -50,10 +34,15 @@ export class CoalitionArea extends Polygon {
         this.#selected = selected;
         this.#setColors();
         this.#setHandles();
-        if (!selected)
+        if (!this.getSelected() && this.getEditing()) {
+            /* Remove the vertex we were working on */
+            var latlngs = this.getLatLngs()[0] as LatLng[];
+            latlngs.splice(this.#activeIndex, 1);
+            this.setLatLngs(latlngs);
             this.setEditing(false);
+        }
     }
-    
+
     getSelected() {
         return this.#selected;
     }
@@ -61,6 +50,11 @@ export class CoalitionArea extends Polygon {
     setEditing(editing: boolean) {
         this.#editing = editing;
         this.#setHandles();
+        var latlngs = this.getLatLngs()[0] as LatLng[];
+
+        /* Remove areas with less than 2 vertexes */
+        if (latlngs.length <= 2)
+            getMap().deleteCoalitionArea(this);
     }
 
     getEditing() {
@@ -68,38 +62,92 @@ export class CoalitionArea extends Polygon {
     }
 
     addTemporaryLatLng(latlng: LatLng) {
-        this.addLatLng(latlng);
+        this.#activeIndex++;
+        var latlngs = this.getLatLngs()[0] as LatLng[];
+        latlngs.splice(this.#activeIndex, 0, latlng);
+        this.setLatLngs(latlngs);
+        this.#setHandles();
     }
 
     moveTemporaryLatLng(latlng: LatLng) {
         var latlngs = this.getLatLngs()[0] as LatLng[];
-        latlngs[latlngs.length - 1] = latlng;
+        latlngs[this.#activeIndex] = latlng;
         this.setLatLngs(latlngs);
-    }
-
-    addLatLng(latlng: LatLngExpression | LatLngExpression[], latlngs?: LatLng[] | undefined): this {
-        super.addLatLng(latlng, latlngs)
         this.#setHandles();
-        return this;
     }
 
     #setColors() {
-        this.setStyle({color: this.getSelected()? "white": this.#coalition, fillColor: this.#coalition});
+        const coalitionColor = this.getCoalition() === "blue" ? "#247be2" : "#ff5858";
+        this.setStyle({ color: this.getSelected() ? "white" : coalitionColor, fillColor: coalitionColor });
     }
 
     #setHandles() {
         this.#handles.forEach((handle: CoalitionAreaHandle) => handle.removeFrom(getMap()));
         this.#handles = [];
-        var latlngs = this.getLatLngs()[0] as LatLng[];
-        latlngs.forEach((latlng: LatLng, idx: number) => {
-            const handle = new CoalitionAreaHandle(latlng);
-            handle.addTo(getMap());
-            handle.on("dragend", (e: any) => {
-                var latlngs = this.getLatLngs()[0] as LatLng[];
-                latlngs[idx] = e.latlng;
-                this.setLatLngs(latlngs);
+        if (this.getSelected()) {
+            var latlngs = this.getLatLngs()[0] as LatLng[];
+            latlngs.forEach((latlng: LatLng, idx: number) => {
+                /* Add the polygon vertex handle (for moving the vertex) */
+                const handle = new CoalitionAreaHandle(latlng);
+                handle.addTo(getMap());
+                handle.on("drag", (e: any) => {
+                    var latlngs = this.getLatLngs()[0] as LatLng[];
+                    latlngs[idx] = e.target.getLatLng();
+                    this.setLatLngs(latlngs);
+                    this.#setMiddleHandles();
+                });
+                this.#handles.push(handle);
             });
-            this.#handles.push(handle);
+        }
+        this.#setMiddleHandles();
+    }
+
+    #setMiddleHandles() {
+        this.#middleHandles.forEach((handle: CoalitionAreaMiddleHandle) => handle.removeFrom(getMap()));
+        this.#middleHandles = [];
+        var latlngs = this.getLatLngs()[0] as LatLng[];
+        if (this.getSelected() && latlngs.length >= 2) {
+            var lastLatLng: LatLng | null = null;
+            latlngs.concat([latlngs[0]]).forEach((latlng: LatLng, idx: number) => {
+                /* Add the polygon middle point handle (for adding new vertexes) */
+                if (lastLatLng != null) {
+                    const handle1Point = getMap().latLngToLayerPoint(latlng);
+                    const handle2Point = getMap().latLngToLayerPoint(lastLatLng);
+                    const middlePoint = new Point((handle1Point.x + handle2Point.x) / 2, (handle1Point.y + handle2Point.y) / 2);
+                    const middleLatLng = getMap().layerPointToLatLng(middlePoint);
+
+                    const middleHandle = new CoalitionAreaMiddleHandle(middleLatLng);
+                    middleHandle.addTo(getMap());
+                    middleHandle.on("click", (e: any) => {
+                        this.#activeIndex = idx - 1;
+                        this.addTemporaryLatLng(middleLatLng);
+                    });
+                    this.#middleHandles.push(middleHandle);
+                }
+                lastLatLng = latlng;
+            });
+        }
+    }
+
+    #registerCallbacks() {
+        this.on("click", (e: any) => {
+            getMap().deselectAllCoalitionAreas();
+            if (!this.getSelected()) {
+                this.setSelected(true);
+            }
         });
+
+        this.on("contextmenu", (e: any) => {
+            if (this.getSelected() && !this.getEditing())
+                getMap().showCoalitionAreaContextMenu(e, this);
+            else
+                this.setEditing(false);
+        });
+    }
+
+    onRemove(map: Map): this {
+        super.onRemove(map);
+        this.#handles.concat(this.#middleHandles).forEach((handle: CoalitionAreaHandle | CoalitionAreaMiddleHandle) => handle.removeFrom(getMap()));
+        return this;
     }
 }

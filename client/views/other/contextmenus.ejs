@@ -1,14 +1,14 @@
 <div id="map-contextmenu" class="ol-context-menu" oncontextmenu="return false;">
-    <div id="active-coalition-label" data-active-coalition="blue"></div>
+    <div id="active-coalition-label" data-coalition="blue"></div>
     <div id="upper-bar" class="ol-panel">
         <div id="coalition-switch" class="ol-switch ol-coalition-switch"></div>
-        <button data-active-coalition="blue" id="aircraft-spawn-button" title="Spawn aircraft" data-on-click="mapContextMenuShow"
+        <button data-coalition="blue" id="aircraft-spawn-button" title="Spawn aircraft" data-on-click="mapContextMenuShow"
             data-on-click-params='{ "type": "aircraft" }' class="ol-contexmenu-button"></button>
-        <button data-active-coalition="blue" id="ground-ol-contexmenu-button" title="Spawn ground unit" data-on-click="mapContextMenuShow"
+        <button data-coalition="blue" id="ground-ol-contexmenu-button" title="Spawn ground unit" data-on-click="mapContextMenuShow"
             data-on-click-params='{ "type": "ground-unit" }' class="ol-contexmenu-button"></button>
-        <button data-active-coalition="blue" id="smoke-spawn-button" title="Spawn smoke" data-on-click="mapContextMenuShow"
+        <button data-coalition="blue" id="smoke-spawn-button" title="Spawn smoke" data-on-click="mapContextMenuShow"
             data-on-click-params='{ "type": "smoke" }' class="ol-contexmenu-button"></button>
-        <button data-active-coalition="blue" id="explosion-spawn-button" title="Explosion" data-on-click="mapContextMenuShow"
+        <button data-coalition="blue" id="explosion-spawn-button" title="Explosion" data-on-click="mapContextMenuShow"
             data-on-click-params='{ "type": "explosion" }' class="ol-contexmenu-button"></button>
     </div>
     <div id="aircraft-spawn-menu" class="ol-contexmenu-panel ol-panel hide">
@@ -54,7 +54,7 @@
             <div id="loadout-list">
             </div>
         </div>
-        <button class="deploy-unit-button" title="" data-active-coalition="blue" data-on-click="contextMenuDeployAircraft" disabled>Deploy unit</button>
+        <button class="deploy-unit-button" title="" data-coalition="blue" data-on-click="contextMenuDeployAircraft" disabled>Deploy unit</button>
     </div>
     <div id="ground-unit-spawn-menu" class="ol-panel ol-contexmenu-panel hide">
         <div class="ol-select-container">
@@ -74,7 +74,7 @@
                 </div>
             </div>
         </div>
-        <button class="deploy-unit-button" title="" data-active-coalition="blue" data-on-click="contextMenuDeployGroundUnit" disabled>Deploy unit</button>
+        <button class="deploy-unit-button" title="" data-coalition="blue" data-on-click="contextMenuDeployGroundUnit" disabled>Deploy unit</button>
     </div>
     <div id="smoke-spawn-menu" class="ol-panel ol-contexmenu-panel hide">
         <button class="smoke-button" title="" data-smoke-color="white" data-on-click="contextMenuDeploySmoke" data-on-click-params='{ "color": "white" }'>White smoke</button>
@@ -104,16 +104,20 @@
     <h4>Parking available:</h4> 
     <div id="airbase-parking"></div>
 
-    <button id="spawn-airbase-aircraft-button" data-active-coalition="red" title="Spawn aircraft" data-on-click="contextMenuSpawnAirbase" class="deploy-unit-button">Spawn</button>
+    <button id="spawn-airbase-aircraft-button" data-coalition="red" title="Spawn aircraft" data-on-click="contextMenuSpawnAirbase" class="deploy-unit-button">Spawn</button>
     <button id="land-here-button" title="Land here" data-on-click="contextMenuLandAirbase" class="hide">Land here</button>
 </div>
 
 <div id="coalition-area-contextmenu" class="ol-context-menu" oncontextmenu="return false;">
-    <div id="area-coalition-label" data-active-coalition="blue"></div>
+    <div id="area-coalition-label" data-coalition="blue"></div>
     <div id="upper-bar" class="ol-panel">
         <div id="coalition-area-switch" class="ol-switch ol-coalition-switch"></div>
-        <button data-active-coalition="blue" id="iads-button" title="Create Integrated Air Defense System" data-on-click="coalitionAreaContextMenuShow"
+        <button data-coalition="blue" id="iads-button" title="Create Integrated Air Defense System" data-on-click="coalitionAreaContextMenuShow"
             data-on-click-params='{ "type": "iads" }' class="ol-contexmenu-button"></button>
+        <button data-coalition="blue" id="cap-button" title="Create Combat Air Patrols" data-on-click="coalitionAreaContextMenuShow"
+            data-on-click-params='{ "type": "cap" }' class="ol-contexmenu-button"></button>
+        <button data-coalition="blue" id="coalitionarea-delete-button" title="Delete area" data-on-click="coalitionAreaDelete"
+             class="ol-contexmenu-button"></button>
     </div>
     <div id="iads-menu" class="ol-panel ol-contexmenu-panel hide">
         <div id="iads-units-role-options" class="ol-select">
@@ -147,6 +151,6 @@
             </dl>
             <input type="range" min="0" max="100" value="0" class="ol-slider">
         </div>
-        <button class="create-iads-button" title="" data-active-coalition="blue" data-on-click="contextMenuCreateIads">Add units to IADS</button>
+        <button class="create-iads-button" title="" data-coalition="blue" data-on-click="contextMenuCreateIads">Add units to IADS</button>
     </div>
 </div>

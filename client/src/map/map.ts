@@ -16,6 +16,7 @@ import { layers as mapLayers, mapBounds, minimapBoundaries } from "../constants/
 import { TargetMarker } from "./targetmarker";
 import { CoalitionArea } from "./coalitionarea";
 import { CoalitionAreaContextMenu } from "../controls/coalitionareacontextmenu";
+import { DrawingCursor } from "./drawingmarker";
 
 L.Map.addInitHook('addHandler', 'boxSelect', BoxSelect);
 
@@ -29,7 +30,7 @@ export const MOVE_UNIT = "Move unit";
 export const BOMBING = "Bombing";
 export const CARPET_BOMBING = "Carpet bombing";
 export const FIRE_AT_AREA = "Fire at area";
-export const DRAW_POLYGON = "Draw polygon";
+export const DRAW_COALITIONAREA_POLYGON = "Draw Coalition Area";
 export const visibilityControls: string[] = ["human", "dcs", "aircraft", "groundunit-sam", "groundunit-other", "navyunit", "airbase"];
 export const visibilityControlsTootlips: string[] = ["Toggle human players visibility", "Toggle DCS controlled units visibility", "Toggle aircrafts visibility", "Toggle SAM units visibility", "Toggle ground units (not SAM) visibility", "Toggle navy units visibility", "Toggle airbases visibility"];
 
@@ -50,12 +51,15 @@ export class Map extends L.Map {
     #miniMap: ClickableMiniMap | null = null;
     #miniMapLayerGroup: L.LayerGroup;
     #temporaryMarkers: TemporaryUnitMarker[] = [];
-    #destinationPreviewMarkers: DestinationPreviewMarker[] = [];
-    #targetMarker: TargetMarker;
+    
     #destinationGroupRotation: number = 0;
     #computeDestinationRotation: boolean = false;
     #destinationRotationCenter: L.LatLng | null = null;
     #coalitionAreas: CoalitionArea[] = [];
+
+    #targetCursor: TargetMarker = new TargetMarker(new L.LatLng(0, 0), {interactive: false});
+    #destinationPreviewCursors: DestinationPreviewMarker[] = [];
+    #drawingCursor: DrawingCursor = new DrawingCursor();
     
     #mapContextMenu: MapContextMenu = new MapContextMenu("map-contextmenu");
     #unitContextMenu: UnitContextMenu = new UnitContextMenu("unit-contextmenu");
@@ -102,8 +106,8 @@ export class Map extends L.Map {
         this.on('mousedown', (e: any) => this.#onMouseDown(e));
         this.on('mouseup', (e: any) => this.#onMouseUp(e));
         this.on('mousemove', (e: any) => this.#onMouseMove(e));
-        this.on('keydown', (e: any) => this.#updateDestinationPreview(e));
-        this.on('keyup', (e: any) => this.#updateDestinationPreview(e));
+        this.on('keydown', (e: any) => this.#onKeyDown(e));
+        this.on('keyup', (e: any) => this.#onKeyUp(e));
 
         /* Event listeners */
         document.addEventListener("toggleCoalitionVisibility", (ev: CustomEventInit) => {
@@ -120,9 +124,14 @@ export class Map extends L.Map {
             Object.values(getUnitsManager().getUnits()).forEach((unit: Unit) => unit.updateVisibility());
         });
 
-        document.addEventListener("toggleMapDraw", (ev: CustomEventInit) => {
+        document.addEventListener("toggleCoalitionAreaDraw", (ev: CustomEventInit) => {
+            const el = ev.detail._element;
+            document.addEventListener("mapStateChanged", () => el?.classList.toggle("off", !(this.getState() === DRAW_COALITIONAREA_POLYGON)));
             if (ev.detail?.type == "polygon") {
-                this.setState(DRAW_POLYGON);
+                if (this.getState() !== DRAW_COALITIONAREA_POLYGON)
+                    this.setState(DRAW_COALITIONAREA_POLYGON);
+                else 
+                    this.setState(IDLE);
             }
         })
 
@@ -143,9 +152,6 @@ export class Map extends L.Map {
             return this.#createOptionButton(option, `visibility/${option.toLowerCase()}.svg`, visibilityControlsTootlips[index], "toggleUnitVisibility", `{"type": "${option}"}`);
         });
         document.querySelector("#unit-visibility-control")?.append(...this.#optionButtons["visibility"]);
-
-        /* Markers */
-        this.#targetMarker = new TargetMarker(new L.LatLng(0, 0), {interactive: false});
     }
 
     setLayer(layerName: string) {
@@ -172,30 +178,17 @@ export class Map extends L.Map {
     /* State machine */
     setState(state: string) {
         this.#state = state;
+        this.#showCursor();
         if (this.#state === IDLE) {
-            this.#resetDestinationMarkers();
-            this.#resetTargetMarker();
             this.#deselectCoalitionAreas();
-            this.#showCursor();
         }
         else if (this.#state === MOVE_UNIT) {
-            this.#resetTargetMarker();
             this.#deselectCoalitionAreas();
-            this.#createDestinationMarkers();
-            if (this.#destinationPreviewMarkers.length > 0)
-                this.#hideCursor();
         }
         else if ([BOMBING, CARPET_BOMBING, FIRE_AT_AREA].includes(this.#state)) {
-            this.#resetDestinationMarkers();
             this.#deselectCoalitionAreas();
-            this.#createTargetMarker();
-            this.#hideCursor();
         }
-        else if (this.#state === DRAW_POLYGON) {
-            this.#resetDestinationMarkers();
-            this.#resetTargetMarker();
-            this.#showCursor();
-            //@ts-ignore draggable option added by plugin
+        else if (this.#state === DRAW_COALITIONAREA_POLYGON) {
             this.#coalitionAreas.push(new CoalitionArea([]));
             this.#coalitionAreas[this.#coalitionAreas.length - 1].addTo(this);
         }
@@ -204,6 +197,17 @@ export class Map extends L.Map {
 
     getState() {
         return this.#state;
+    }
+
+    deselectAllCoalitionAreas() {
+        this.#coalitionAreas.forEach((coalitionArea: CoalitionArea) => coalitionArea.setSelected(false));
+    }
+
+    deleteCoalitionArea(coalitionArea: CoalitionArea) {
+        if (this.#coalitionAreas.includes(coalitionArea))
+            this.#coalitionAreas.splice(this.#coalitionAreas.indexOf(coalitionArea), 1);
+        if (this.hasLayer(coalitionArea))
+            this.removeLayer(coalitionArea);
     }
 
     /* Context Menus */
@@ -393,7 +397,7 @@ export class Map extends L.Map {
         });
         if (closest) {
             this.removeLayer(closest);
-            delete this.#temporaryMarkers[i];
+            this.#temporaryMarkers.splice(i, 1);
         }
     }
 
@@ -406,16 +410,14 @@ export class Map extends L.Map {
         if (!this.#preventLeftClick) {
             this.hideAllContextMenus();
             if (this.#state === IDLE) {
-
+                this.deselectAllCoalitionAreas();
             }
-            else if (this.#state === DRAW_POLYGON) {
-                /* This gets only called to create the first point of the area. All other points are added by the area itself */
+            else if (this.#state === DRAW_COALITIONAREA_POLYGON) {
                 if (this.getSelectedCoalitionArea()?.getEditing()) {
-                    this.getSelectedCoalitionArea()?.addLatLng(e.latlng);
                     this.getSelectedCoalitionArea()?.addTemporaryLatLng(e.latlng);
                 }
                 else {
-                    this.getSelectedCoalitionArea()?.setSelected(false);
+                    this.deselectAllCoalitionAreas();
                 }
             }
             else {
@@ -426,7 +428,7 @@ export class Map extends L.Map {
     }
 
     #onDoubleClick(e: any) {
-
+        this.deselectAllCoalitionAreas();
     }
 
     #onContextMenu(e: any) {
@@ -492,18 +494,32 @@ export class Map extends L.Map {
         this.#lastMousePosition.x = e.originalEvent.x;
         this.#lastMousePosition.y = e.originalEvent.y;
 
+        this.#showCursor(e);
+
         if (this.#state === MOVE_UNIT){
             if (this.#computeDestinationRotation && this.#destinationRotationCenter != null)
                 this.#destinationGroupRotation = -bearing(this.#destinationRotationCenter.lat, this.#destinationRotationCenter.lng, this.getMouseCoordinates().lat, this.getMouseCoordinates().lng);
             this.#updateDestinationPreview(e);
         }
         else if ([BOMBING, CARPET_BOMBING, FIRE_AT_AREA].includes(this.#state)) {
-            this.#targetMarker.setLatLng(this.getMouseCoordinates());
+            this.#targetCursor.setLatLng(this.getMouseCoordinates());
         }
-        else if (this.#state === DRAW_POLYGON) {
-            if (this.getSelectedCoalitionArea()?.getEditing())
+        else if (this.#state === DRAW_COALITIONAREA_POLYGON) {
+            if (this.getSelectedCoalitionArea()?.getEditing() && !e.originalEvent.ctrlKey){
+                this.#drawingCursor.setLatLng(e.latlng);
                 this.getSelectedCoalitionArea()?.moveTemporaryLatLng(e.latlng);
+            }
         }
+    }
+
+    #onKeyDown(e: any) {
+        this.#updateDestinationPreview(e);
+        this.#showCursor(e);
+    }
+
+    #onKeyUp(e: any) {
+        this.#updateDestinationPreview(e);
+        this.#showCursor(e);
     }
 
     #onZoom(e: any) {
@@ -523,8 +539,8 @@ export class Map extends L.Map {
 
     #updateDestinationPreview(e: any) {
         Object.values(getUnitsManager().selectedUnitsComputeGroupDestination(this.#computeDestinationRotation && this.#destinationRotationCenter != null ? this.#destinationRotationCenter : this.getMouseCoordinates(), this.#destinationGroupRotation)).forEach((latlng: L.LatLng, idx: number) => {
-            if (idx < this.#destinationPreviewMarkers.length)
-                this.#destinationPreviewMarkers[idx].setLatLng(e.originalEvent.shiftKey ? latlng : this.getMouseCoordinates());
+            if (idx < this.#destinationPreviewCursors.length)
+                this.#destinationPreviewCursors[idx].setLatLng(e.originalEvent.shiftKey ? latlng : this.getMouseCoordinates());
         })
     }
 
@@ -541,12 +557,12 @@ export class Map extends L.Map {
         return button;
     }
 
-    #createDestinationMarkers() {
-        this.#resetDestinationMarkers();
+    #showDestinationCursors() {
+        this.#hideDestinationCursors();
 
         if (getUnitsManager().getSelectedUnits({ excludeHumans: true }).length > 0) {
             /* Create the unit destination preview markers */
-            this.#destinationPreviewMarkers = getUnitsManager().getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true }).map((unit: Unit) => {
+            this.#destinationPreviewCursors = getUnitsManager().getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true }).map((unit: Unit) => {
                 var marker = new DestinationPreviewMarker(this.getMouseCoordinates(), {interactive: false});
                 marker.addTo(this);
                 return marker;
@@ -554,38 +570,79 @@ export class Map extends L.Map {
         }
     }
 
-    #resetDestinationMarkers() {
+    #hideDestinationCursors() {
         /* Remove all the destination preview markers */
-        this.#destinationPreviewMarkers.forEach((marker: L.Marker) => {
+        this.#destinationPreviewCursors.forEach((marker: L.Marker) => {
             this.removeLayer(marker);
         })
-        this.#destinationPreviewMarkers = [];
+        this.#destinationPreviewCursors = [];
 
         this.#destinationGroupRotation = 0;
         this.#computeDestinationRotation = false;
         this.#destinationRotationCenter = null;
     }
 
-    #createTargetMarker(){
-        this.#resetTargetMarker();
-        this.#targetMarker.addTo(this);
+    #showTargetCursor(){
+        this.#hideTargetCursor();
+        this.#targetCursor.addTo(this);
     }
 
-    #resetTargetMarker() {
-        this.#targetMarker.setLatLng(new L.LatLng(0, 0));
-        this.removeLayer(this.#targetMarker);
+    #hideTargetCursor() {
+        this.#targetCursor.setLatLng(new L.LatLng(0, 0));
+        this.removeLayer(this.#targetCursor);
     }
 
     #deselectCoalitionAreas() {
         this.getSelectedCoalitionArea()?.setSelected(false);
     }
 
-    #showCursor() {
+    #showDefaultCursor() {
         document.getElementById(this.#ID)?.classList.remove("hidden-cursor");
     }
 
-    #hideCursor() {
+    #hideDefaultCursor() {
         document.getElementById(this.#ID)?.classList.add("hidden-cursor");
+    }
+
+    #showDrawingCursor() {
+        this.#hideDefaultCursor();
+        if (!this.hasLayer(this.#drawingCursor))
+            this.#drawingCursor.addTo(this);
+    }
+
+    #hideDrawingCursor() {
+        if (this.hasLayer(this.#drawingCursor))
+            this.#drawingCursor.removeFrom(this);
+    }
+
+    #showCursor(e?: any) {
+        if (e?.originalEvent.ctrlKey) {
+            this.#hideDefaultCursor();
+            this.#hideDestinationCursors();
+            this.#hideTargetCursor();
+            this.#hideDrawingCursor();
+            this.#showDefaultCursor();
+        } else {
+            if (this.#state !== IDLE) this.#hideDefaultCursor();
+            if (this.#state !== MOVE_UNIT) this.#hideDestinationCursors();
+            if (![BOMBING, CARPET_BOMBING, FIRE_AT_AREA].includes(this.#state)) this.#hideTargetCursor();
+            if (this.#state !== DRAW_COALITIONAREA_POLYGON) this.#hideDrawingCursor();
+
+            if (this.#state === IDLE) this.#showDefaultCursor();
+            else if (this.#state === MOVE_UNIT) this.#showDestinationCursors();
+            else if ([BOMBING, CARPET_BOMBING, FIRE_AT_AREA].includes(this.#state)) this.#showTargetCursor();
+            else if (this.#state === DRAW_COALITIONAREA_POLYGON) {
+                if (this.getSelectedCoalitionArea()?.getEditing())
+                {
+                    this.#hideDefaultCursor();
+                    this.#showDrawingCursor();
+                }
+                else {
+                    this.#hideDrawingCursor();
+                    this.#showDefaultCursor();
+                }
+            }
+        }
     }
 } 
 
