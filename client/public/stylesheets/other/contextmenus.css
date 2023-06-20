@@ -350,7 +350,7 @@
     height: fit-content;
     position: absolute;
     row-gap: 5px;
-    width: 225px;
+    width: 250px;
     z-index: 9999;
 }
 
@@ -367,6 +367,11 @@
 
 #cap-button {
     background-image: url("/resources/theme/images/buttons/spawn/aircraft.svg");
+    background-size: 48px;
+}
+
+#coalitionarea-back-button {
+    background-image: url("/resources/theme/images/buttons/other/back.svg");
     background-size: 48px;
 }
 

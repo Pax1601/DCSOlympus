@@ -1,4 +1,4 @@
-import { LatLng, LatLngExpression, Map, Point, Polygon, PolylineOptions } from "leaflet";
+import { DomUtil, LatLng, LatLngExpression, Map, Point, Polygon, PolylineOptions } from "leaflet";
 import { getMap } from "..";
 import { CoalitionAreaHandle } from "./coalitionareahandle";
 import { CoalitionAreaMiddleHandle } from "./coalitionareamiddlehandle";
@@ -19,6 +19,7 @@ export class CoalitionArea extends Polygon {
         super(latlngs, options);
         this.#setColors();
         this.#registerCallbacks();
+        
     }
 
     setCoalition(coalition: string) {
@@ -61,6 +62,17 @@ export class CoalitionArea extends Polygon {
         return this.#editing;
     }
 
+    setInteractive(interactive: boolean) {
+        this.setOpacity(interactive? 1: 0.5);
+        this.options.interactive = interactive;
+
+        if (interactive) {
+            DomUtil.addClass(this.getElement() as HTMLElement, 'leaflet-interactive');
+        } else {
+            DomUtil.removeClass(this.getElement() as HTMLElement, 'leaflet-interactive');
+        }
+    }
+
     addTemporaryLatLng(latlng: LatLng) {
         this.#activeIndex++;
         var latlngs = this.getLatLngs()[0] as LatLng[];
@@ -69,11 +81,15 @@ export class CoalitionArea extends Polygon {
         this.#setHandles();
     }
 
-    moveTemporaryLatLng(latlng: LatLng) {
+    moveActiveVertex(latlng: LatLng) {
         var latlngs = this.getLatLngs()[0] as LatLng[];
         latlngs[this.#activeIndex] = latlng;
         this.setLatLngs(latlngs);
         this.#setHandles();
+    }
+
+    setOpacity(opacity: number) {
+        this.setStyle({opacity: opacity, fillOpacity: opacity * 0.25});
     }
 
     #setColors() {
@@ -138,8 +154,11 @@ export class CoalitionArea extends Polygon {
         });
 
         this.on("contextmenu", (e: any) => {
-            if (this.getSelected() && !this.getEditing())
+            if (!this.getEditing()) {
+                getMap().deselectAllCoalitionAreas();
+                this.setSelected(true);
                 getMap().showCoalitionAreaContextMenu(e, this);
+            }
             else
                 this.setEditing(false);
         });

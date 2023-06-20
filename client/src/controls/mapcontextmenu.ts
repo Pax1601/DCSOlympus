@@ -11,7 +11,7 @@ import { ftToM } from "../other/utils";
 
 export interface SpawnOptions {
     role: string;
-    type: string;
+    name: string;
     latlng: LatLng;
     coalition: string;
     loadout?: string | null;
@@ -28,7 +28,7 @@ export class MapContextMenu extends ContextMenu {
     #aircrafSpawnAltitudeSlider: Slider;
     #groundUnitRoleDropdown: Dropdown;
     #groundUnitTypeDropdown: Dropdown;
-    #spawnOptions: SpawnOptions = { role: "", type: "", latlng: new LatLng(0, 0), loadout: null, coalition: "blue", airbaseName: null, altitude: ftToM(20000) };
+    #spawnOptions: SpawnOptions = { role: "", name: "", latlng: new LatLng(0, 0), loadout: null, coalition: "blue", airbaseName: null, altitude: ftToM(20000) };
 
     constructor(id: string) {
         super(id);
@@ -57,7 +57,7 @@ export class MapContextMenu extends ContextMenu {
             this.hide();
             this.#spawnOptions.coalition = getActiveCoalition();
             if (this.#spawnOptions) {
-                getMap().addTemporaryMarker(this.#spawnOptions.latlng);
+                getMap().addTemporaryMarker(this.#spawnOptions);
                 spawnAircraft(this.#spawnOptions);
             }
         });
@@ -66,7 +66,7 @@ export class MapContextMenu extends ContextMenu {
             this.hide();
             this.#spawnOptions.coalition = getActiveCoalition();
             if (this.#spawnOptions) {
-                getMap().addTemporaryMarker(this.#spawnOptions.latlng);
+                getMap().addTemporaryMarker(this.#spawnOptions);
                 spawnGroundUnit(this.#spawnOptions);
             }
         });
@@ -179,7 +179,7 @@ export class MapContextMenu extends ContextMenu {
         this.#resetAircraftType();
         var type = aircraftDatabase.getByLabel(label)?.name || null;
         if (type != null) {
-            this.#spawnOptions.type = type;
+            this.#spawnOptions.name = type;
             this.#aircraftLoadoutDropdown.setOptions(aircraftDatabase.getLoadoutNamesByRole(type, this.#spawnOptions.role));
             this.#aircraftLoadoutDropdown.selectValue(0);
             var image = (<HTMLImageElement>this.getContainer()?.querySelector("#unit-image"));
@@ -198,7 +198,7 @@ export class MapContextMenu extends ContextMenu {
     }
 
     #setAircraftLoadout(loadoutName: string) {
-        var loadout = aircraftDatabase.getLoadoutByName(this.#spawnOptions.type, loadoutName);
+        var loadout = aircraftDatabase.getLoadoutByName(this.#spawnOptions.name, loadoutName);
         if (loadout) {
             this.#spawnOptions.loadout = loadout.code;
             (<HTMLButtonElement>this.getContainer()?.querySelector("#aircraft-spawn-menu")?.querySelector(".deploy-unit-button")).disabled = false;
@@ -241,7 +241,7 @@ export class MapContextMenu extends ContextMenu {
         this.#resetGroundUnitType();
         var type = groundUnitsDatabase.getByLabel(label)?.name || null;
         if (type != null) {
-            this.#spawnOptions.type = type;
+            this.#spawnOptions.name = type;
             (<HTMLButtonElement>this.getContainer()?.querySelector("#ground-unit-spawn-menu")?.querySelector(".deploy-unit-button")).disabled = false;
         }
         this.clip();

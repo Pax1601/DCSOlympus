@@ -3,10 +3,10 @@ import { getHotgroupPanel, getInfoPopup, getMap, getMissionHandler, getUnitDataT
 import { Unit } from "./unit";
 import { cloneUnit, spawnGroundUnit } from "../server/server";
 import { deg2rad, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots, polygonArea, randomPointInPoly, randomUnitBlueprintByRole } from "../other/utils";
-import { IDLE, MOVE_UNIT } from "../map/map";
 import { CoalitionArea } from "../map/coalitionarea";
 import { Airbase } from "../missionhandler/airbase";
 import { groundUnitsDatabase } from "./groundunitsdatabase";
+import { IDLE, MOVE_UNIT } from "../constants/constants";
 
 export class UnitsManager {
     #units: { [ID: number]: Unit };
@@ -493,7 +493,7 @@ export class UnitsManager {
         if (!this.#pasteDisabled) {
             for (let idx in this.#copiedUnits) {
                 var unit = this.#copiedUnits[idx];
-                getMap().addTemporaryMarker(getMap().getMouseCoordinates());
+                //getMap().addTemporaryMarker(getMap().getMouseCoordinates());
                 cloneUnit(unit.ID, getMap().getMouseCoordinates());
                 this.#showActionMessage(this.#copiedUnits, `pasted`);
             }
@@ -520,14 +520,9 @@ export class UnitsManager {
             if (Math.random() < probability){
                 const role = activeRoles[Math.floor(Math.random() * activeRoles.length)];
                 const unitBlueprint = randomUnitBlueprintByRole(groundUnitsDatabase, role);
-                spawnGroundUnit({
-                    role: role,
-                    latlng: latlng,
-                    type: unitBlueprint.name,
-                    coalition: coalitionArea.getCoalition(),
-                    immediate: true
-                });
-                getMap().addTemporaryMarker(latlng);
+                const spawnOptions = {role: role, latlng: latlng, name: unitBlueprint.name, coalition: coalitionArea.getCoalition(), immediate: true};
+                spawnGroundUnit(spawnOptions);
+                getMap().addTemporaryMarker(spawnOptions);
             }
         }
     }

@@ -1,6 +1,9 @@
 import { LatLng, Point, Polygon } from "leaflet";
 import * as turf from "@turf/turf";
 import { UnitDatabase } from "../units/unitdatabase";
+import { aircraftDatabase } from "../units/aircraftdatabase";
+import { helicopterDatabase } from "../units/helicopterdatabase";
+import { groundUnitsDatabase } from "../units/groundunitsdatabase";
 
 export function bearing(lat1: number, lon1: number, lat2: number, lon2: number) {
     const φ1 = deg2rad(lat1); // φ, λ in radians
@@ -219,4 +222,29 @@ export function randomUnitBlueprintByRole(unitDatabse: UnitDatabase, role: strin
     const unitBlueprints = unitDatabse.getByRole(role);
     var index = Math.floor(Math.random() * unitBlueprints.length);
     return unitBlueprints[index];
+}
+
+export function getMarkerCategoryByName(name: string) {
+    if (aircraftDatabase.getByName(name) != null)
+        return "aircraft";
+    else if (helicopterDatabase.getByName(name) != null)
+        return "helicopter";
+    else if (groundUnitsDatabase.getByName(name) != null){
+        // TODO this is very messy
+        var role = groundUnitsDatabase.getByName(name)?.loadouts[0].roles[0];
+        return (role?.includes("SAM")) ? "groundunit-sam" : "groundunit-other";
+    }
+    else 
+        return ""; // TODO add other unit types  
+}
+
+export function getUnitDatabaseByCategory(category: string) {
+    if (category == "aircraft")
+        return aircraftDatabase;
+    else if (category == "helicopter")
+        return helicopterDatabase;
+    else if (category.includes("groundunit"))
+        return groundUnitsDatabase;
+    else
+        return null;
 }

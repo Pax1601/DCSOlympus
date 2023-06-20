@@ -1,14 +1,12 @@
 import { Marker, LatLng, Polyline, Icon, DivIcon, CircleMarker, Map } from 'leaflet';
 import { getMap, getUnitsManager } from '..';
-import { mToFt, msToKnots, rad2deg } from '../other/utils';
+import { getMarkerCategoryByName, getUnitDatabaseByCategory, mToFt, msToKnots, rad2deg } from '../other/utils';
 import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, getUnits, landAt, setAltitude, setReactionToThreat, setROE, setSpeed, refuel, setAdvacedOptions, followUnit, setEmissionsCountermeasures, setSpeedType, setAltitudeType, setOnOff, setFollowRoads, bombPoint, carpetBomb, bombBuilding, fireAtArea } from '../server/server';
-import { aircraftDatabase } from './aircraftdatabase';
-import { groundUnitsDatabase } from './groundunitsdatabase';
 import { CustomMarker } from '../map/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
 import { UnitDatabase } from './unitdatabase';
-import { BOMBING, CARPET_BOMBING, FIRE_AT_AREA, IDLE, MOVE_UNIT } from '../map/map';
 import { TargetMarker } from '../map/targetmarker';
+import { BOMBING, CARPET_BOMBING, FIRE_AT_AREA, IDLE, MOVE_UNIT } from '../constants/constants';
 
 var pathIcon = new Icon({
     iconUrl: '/resources/theme/images/markers/marker-icon.png',
@@ -133,12 +131,12 @@ export class Unit extends CustomMarker {
 
     getMarkerCategory() {
         // Overloaded by child classes
+        // TODO convert to use getMarkerCategoryByName 
         return "";
     }
 
     getDatabase(): UnitDatabase | null {
-        // Overloaded by child classes
-        return null;
+        return getUnitDatabaseByCategory(this.getMarkerCategory());
     }
 
     getIconOptions(): UnitIconOptions {
@@ -344,7 +342,7 @@ export class Unit extends CustomMarker {
         if (this.getIconOptions().showShortLabel) {
             var shortLabel = document.createElement("div");
             shortLabel.classList.add("unit-short-label");
-            shortLabel.innerText = this.getDatabase()?.getByName(this.getBaseData().name)?.shortLabel || ""; 
+            shortLabel.innerText = getUnitDatabaseByCategory(this.getMarkerCategory())?.getByName(this.getBaseData().name)?.shortLabel || ""; 
             el.append(shortLabel);
         }
 
@@ -424,7 +422,7 @@ export class Unit extends CustomMarker {
         return getUnitsManager().getUnitByID(this.getFormationData().leaderID);
     }
 
-    canRole(roles: string | string[]) {
+    canFulfillRole(roles: string | string[]) {
         if (typeof(roles) === "string") 
             roles = [roles];
 
@@ -565,7 +563,9 @@ export class Unit extends CustomMarker {
     /***********************************************/
     onAdd(map: Map): this {
         super.onAdd(map);
-        getMap().removeTemporaryMarker(new LatLng(this.getFlightData().latitude, this.getFlightData().longitude));
+        /* If this is the first time adding this unit to the map, remove the temporary marker */
+        if (getUnitsManager().getUnitByID(this.ID) == null)
+            getMap().removeTemporaryMarker(new LatLng(this.getFlightData().latitude, this.getFlightData().longitude));
         return this;
     }
 
@@ -609,14 +609,14 @@ export class Unit extends CustomMarker {
 
         if ((selectedUnits.length === 0 && this.getBaseData().category == "Aircraft") || (selectedUnitTypes.length === 1 && ["Aircraft"].includes(selectedUnitTypes[0]))) 
         {
-            if (selectedUnits.concat([this]).every((unit: Unit) => {return unit.canRole(["CAS", "Strike"])})) {
+            if (selectedUnits.concat([this]).every((unit: Unit) => {return unit.canFulfillRole(["CAS", "Strike"])})) {
                 options["bomb"] = {text: "Precision bombing", tooltip: "Precision bombing of a specific point"};
                 options["carpet-bomb"] = {text: "Carpet bombing", tooltip: "Carpet bombing close to a point"};
             }
         }
 
         if ((selectedUnits.length === 0 && this.getBaseData().category == "GroundUnit") || selectedUnitTypes.length === 1 && ["GroundUnit"].includes(selectedUnitTypes[0])) {
-            if (selectedUnits.concat([this]).every((unit: Unit) => {return unit.canRole(["Gun Artillery", "Rocket Artillery", "Infantry", "IFV", "Tank"])}))
+            if (selectedUnits.concat([this]).every((unit: Unit) => {return unit.canFulfillRole(["Gun Artillery", "Rocket Artillery", "Infantry", "IFV", "Tank"])}))
             options["fire-at-area"] = {text: "Fire at area", tooltip: "Fire at a large area"};  
         }
 
@@ -915,21 +915,17 @@ export class AirUnit extends Unit {
 }
 
 export class Aircraft extends AirUnit {
-    constructor(ID: number, data: UnitData) {
+    constructor(ID: number, data: UpdateData) {
         super(ID, data);
     }
 
     getMarkerCategory() {
         return "aircraft";
     }
-
-    getDatabase(): UnitDatabase | null {
-        return aircraftDatabase;
-    }
 }
 
 export class Helicopter extends AirUnit {
-    constructor(ID: number, data: UnitData) {
+    constructor(ID: number, data: UpdateData) {
         super(ID, data);
     }
 
@@ -939,7 +935,7 @@ export class Helicopter extends AirUnit {
 }
 
 export class GroundUnit extends Unit {
-    constructor(ID: number, data: UnitData) {
+    constructor(ID: number, data: UpdateData) {
         super(ID, data);
     }
 
@@ -958,19 +954,12 @@ export class GroundUnit extends Unit {
     }
 
     getMarkerCategory() {
-        // TODO this is very messy
-        var role = groundUnitsDatabase.getByName(this.getBaseData().name)?.loadouts[0].roles[0];
-        var markerCategory = (role === "SAM") ? "groundunit-sam" : "groundunit-other";
-        return markerCategory;
-    }
-
-    getDatabase(): UnitDatabase | null {
-        return groundUnitsDatabase;
+        return getMarkerCategoryByName(this.getBaseData().name);
     }
 }
 
 export class NavyUnit extends Unit {
-    constructor(ID: number, data: UnitData) {
+    constructor(ID: number, data: UpdateData) {
         super(ID, data);
     }
 
@@ -994,7 +983,7 @@ export class NavyUnit extends Unit {
 }
 
 export class Weapon extends Unit {
-    constructor(ID: number, data: UnitData) {
+    constructor(ID: number, data: UpdateData) {
         super(ID, data);
         this.setSelectable(false);
     }
@@ -1015,7 +1004,7 @@ export class Weapon extends Unit {
 }
 
 export class Missile extends Weapon {
-    constructor(ID: number, data: UnitData) {
+    constructor(ID: number, data: UpdateData) {
         super(ID, data);
     }
 
@@ -1025,7 +1014,7 @@ export class Missile extends Weapon {
 }
 
 export class Bomb extends Weapon {
-    constructor(ID: number, data: UnitData) {
+    constructor(ID: number, data: UpdateData) {
         super(ID, data);
     }
 

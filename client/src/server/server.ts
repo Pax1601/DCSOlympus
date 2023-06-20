@@ -134,13 +134,13 @@ export function spawnExplosion(intensity: number, latlng: LatLng) {
 }
 
 export function spawnGroundUnit(spawnOptions: SpawnOptions) {
-    var command = { "type": spawnOptions.type, "location": spawnOptions.latlng, "coalition": spawnOptions.coalition, "immediate": spawnOptions.immediate? true: false };
+    var command = { "type": spawnOptions.name, "location": spawnOptions.latlng, "coalition": spawnOptions.coalition, "immediate": spawnOptions.immediate? true: false };
     var data = { "spawnGround": command }
     POST(data, () => { });
 }
 
 export function spawnAircraft(spawnOptions: SpawnOptions) {
-    var command = { "type": spawnOptions.type, "location": spawnOptions.latlng, "coalition": spawnOptions.coalition, "altitude": spawnOptions.altitude, "payloadName": spawnOptions.loadout != null ? spawnOptions.loadout : "", "airbaseName": spawnOptions.airbaseName != null ? spawnOptions.airbaseName : "", "immediate": spawnOptions.immediate? true: false };
+    var command = { "type": spawnOptions.name, "location": spawnOptions.latlng, "coalition": spawnOptions.coalition, "altitude": spawnOptions.altitude, "payloadName": spawnOptions.loadout != null ? spawnOptions.loadout : "", "airbaseName": spawnOptions.airbaseName != null ? spawnOptions.airbaseName : "", "immediate": spawnOptions.immediate? true: false };
     var data = { "spawnAir": command }
     POST(data, () => { });
 }
