@@ -1,0 +1,27 @@
+#unit-list {
+    display:flex;
+    flex-direction: column;
+    font-size:13px;
+    height: 250px;
+    width:fit-content;
+}
+
+#unit-list > div {
+    display:flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+#unit-list > div > div {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width:100px;
+}
+
+#unit-list > div:first-of-type {
+    text-align: center;
+}
+
+#unit-list > div > div:nth-of-type( 4 ) {
+    text-align: center;
+}

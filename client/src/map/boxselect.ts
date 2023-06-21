@@ -1,10 +1,10 @@
 import { Map } from 'leaflet';
-import { Handler} from 'leaflet';
+import { Handler } from 'leaflet';
 import { Util } from 'leaflet';
 import { DomUtil } from 'leaflet';
 import { DomEvent } from 'leaflet';
 import { LatLngBounds } from 'leaflet';
-import { Bounds }  from 'leaflet';
+import { Bounds } from 'leaflet';
 
 export var BoxSelect = Handler.extend({
 	initialize: function (map: Map) {
@@ -45,25 +45,28 @@ export var BoxSelect = Handler.extend({
 	},
 
 	_onMouseDown: function (e: any) {
-		if (((e.which !== 1) && (e.button !== 0))) { return false; }
+		if ((e.which == 1 && e.button == 0 && e.shiftKey)) {
 
-		// Clear the deferred resetState if it hasn't executed yet, otherwise it
-		// will interrupt the interaction and orphan a box element in the container.
-		this._clearDeferredResetState();
-		this._resetState();
+			// Clear the deferred resetState if it hasn't executed yet, otherwise it
+			// will interrupt the interaction and orphan a box element in the container.
+			this._clearDeferredResetState();
+			this._resetState();
 
-		DomUtil.disableTextSelection();
-		DomUtil.disableImageDrag();
+			DomUtil.disableTextSelection();
+			DomUtil.disableImageDrag();
 
-		this._startPoint = this._map.mouseEventToContainerPoint(e);
+			this._startPoint = this._map.mouseEventToContainerPoint(e);
 
-		//@ts-ignore
-		DomEvent.on(document, {
-			contextmenu: DomEvent.stop,
-			mousemove: this._onMouseMove,
-			mouseup: this._onMouseUp,
-			keydown: this._onKeyDown
-		}, this);
+			//@ts-ignore
+			DomEvent.on(document, {
+				contextmenu: DomEvent.stop,
+				mousemove: this._onMouseMove,
+				mouseup: this._onMouseUp,
+				keydown: this._onKeyDown
+			}, this);
+		} else {
+			return false;
+		}
 	},
 
 	_onMouseMove: function (e: any) {
@@ -79,12 +82,12 @@ export var BoxSelect = Handler.extend({
 		this._point = this._map.mouseEventToContainerPoint(e);
 
 		var bounds = new Bounds(this._point, this._startPoint),
-		    size = bounds.getSize();
+			size = bounds.getSize();
 
 		if (bounds.min != undefined)
 			DomUtil.setPosition(this._box, bounds.min);
 
-		this._box.style.width  = size.x + 'px';
+		this._box.style.width = size.x + 'px';
 		this._box.style.height = size.y + 'px';
 	},
 
@@ -110,16 +113,16 @@ export var BoxSelect = Handler.extend({
 		if ((e.which !== 1) && (e.button !== 0)) { return; }
 
 		this._finish();
-        
+
 		if (!this._moved) { return; }
 		// Postpone to next JS tick so internal click event handling
 		// still see it as "moved".
-		setTimeout(Util.bind(this._resetState, this), 0);
+		window.setTimeout(Util.bind(this._resetState, this), 0);
 		var bounds = new LatLngBounds(
 			this._map.containerPointToLatLng(this._startPoint),
 			this._map.containerPointToLatLng(this._point));
-	
-		this._map.fire('selectionend', {selectionBounds: bounds});
+
+		this._map.fire('selectionend', { selectionBounds: bounds });
 	},
 
 	_onKeyDown: function (e: any) {

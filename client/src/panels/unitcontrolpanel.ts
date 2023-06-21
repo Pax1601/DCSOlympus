@@ -1,363 +1,328 @@
-import { imageOverlay } from "leaflet";
-import { getUnitControlSliders, getUnitsManager } from "..";
-import { ConvertDDToDMS, rad2deg } from "../other/utils";
-import { Aircraft, AirUnit, GroundUnit, Helicopter, NavyUnit, Unit } from "../units/unit";
+import { SVGInjector } from "@tanem/svg-injector";
+import { getUnitsManager } from "..";
+import { Dropdown } from "../controls/dropdown";
+import { Slider } from "../controls/slider";
+import { aircraftDatabase } from "../units/aircraftdatabase";
+import { Unit } from "../units/unit";
+import { Panel } from "./panel";
+import { Switch } from "../controls/switch";
+import { ROEDescriptions, ROEs, altitudeIncrements, emissionsCountermeasures, emissionsCountermeasuresDescriptions, maxAltitudeValues, maxSpeedValues, minAltitudeValues, minSpeedValues, reactionsToThreat, reactionsToThreatDescriptions, speedIncrements } from "../constants/constants";
+import { ftToM, knotsToMs, mToFt, msToKnots } from "../other/utils";
 
-export class UnitControlPanel {
-    #element: HTMLElement
-    #display: string;
+export class UnitControlPanel extends Panel {
+    #altitudeSlider: Slider;
+    #altitudeTypeSwitch: Switch;
+    #speedSlider: Slider;
+    #speedTypeSwitch: Switch;
+    #onOffSwitch: Switch;
+    #followRoadsSwitch: Switch;
+    #TACANXYDropdown: Dropdown;
+    #radioDecimalsDropdown: Dropdown;
+    #radioCallsignDropdown: Dropdown;
+    #optionButtons: { [key: string]: HTMLButtonElement[] } = {}
+    #advancedSettingsDialog: HTMLElement;
 
     constructor(ID: string) {
-        this.#element = <HTMLElement>document.getElementById(ID);
-        this.#display = '';
-        if (this.#element != null) {
-            this.#display = this.#element.style.display;
-            var formationCreationContainer = <HTMLElement>(this.#element.querySelector("#formation-creation-container"));
-            if (formationCreationContainer != null)
-            {
-                var createButton = <HTMLElement>formationCreationContainer.querySelector("#create-formation");
-                createButton?.addEventListener("click", () => getUnitsManager().selectedUnitsCreateFormation());
+        super(ID);
 
-                var undoButton = <HTMLElement>formationCreationContainer.querySelector("#undo-formation");
-                undoButton?.addEventListener("click", () => getUnitsManager().selectedUnitsUndoFormation());
-            }
-            var ROEButtonsContainer = <HTMLElement>(this.#element.querySelector("#roe-buttons-container"));
-            if (ROEButtonsContainer != null)
-            {
-                (<HTMLElement>ROEButtonsContainer.querySelector("#free"))?.addEventListener("click", () => getUnitsManager().selectedUnitsSetROE("Free"));
-                (<HTMLElement>ROEButtonsContainer.querySelector("#designated-free"))?.addEventListener("click", () => getUnitsManager().selectedUnitsSetROE("Designated free"));
-                (<HTMLElement>ROEButtonsContainer.querySelector("#designated"))?.addEventListener("click", () => getUnitsManager().selectedUnitsSetROE("Designated"));
-                (<HTMLElement>ROEButtonsContainer.querySelector("#return"))?.addEventListener("click", () => getUnitsManager().selectedUnitsSetROE("Return"));
-                (<HTMLElement>ROEButtonsContainer.querySelector("#hold"))?.addEventListener("click", () => getUnitsManager().selectedUnitsSetROE("Hold"));
-            }
+        /* Unit control sliders */
+        this.#altitudeSlider = new Slider("altitude-slider", 0, 100, "ft", (value: number) => { getUnitsManager().selectedUnitsSetAltitude(ftToM(value)); });
+        this.#altitudeTypeSwitch = new Switch("altitude-type-switch", (value: boolean) => { getUnitsManager().selectedUnitsSetAltitudeType(value? "AGL": "ASL"); });
 
-            var reactionToThreatButtonsContainer = <HTMLElement>(this.#element.querySelector("#reaction-to-threat-buttons-container"));
-            if (reactionToThreatButtonsContainer != null)
-            {
-                (<HTMLElement>reactionToThreatButtonsContainer.querySelector("#none"))?.addEventListener("click", () => getUnitsManager().selectedUnitsSetReactionToThreat("None"));
-                (<HTMLElement>reactionToThreatButtonsContainer.querySelector("#passive"))?.addEventListener("click", () => getUnitsManager().selectedUnitsSetReactionToThreat("Passive"));
-                (<HTMLElement>reactionToThreatButtonsContainer.querySelector("#evade"))?.addEventListener("click", () => getUnitsManager().selectedUnitsSetReactionToThreat("Evade"));
-                (<HTMLElement>reactionToThreatButtonsContainer.querySelector("#escape"))?.addEventListener("click", () => getUnitsManager().selectedUnitsSetReactionToThreat("Escape"));
-                (<HTMLElement>reactionToThreatButtonsContainer.querySelector("#abort"))?.addEventListener("click", () => getUnitsManager().selectedUnitsSetReactionToThreat("Abort"));
-            }
-            this.hide();
-        }
+        this.#speedSlider = new Slider("speed-slider", 0, 100, "kts", (value: number) => { getUnitsManager().selectedUnitsSetSpeed(knotsToMs(value)); });
+        this.#speedTypeSwitch = new Switch("speed-type-switch", (value: boolean) => { getUnitsManager().selectedUnitsSetSpeedType(value? "GS": "CAS"); });
+
+        /* Option buttons */
+        this.#optionButtons["ROE"] = ROEs.map((option: string, index: number) => {
+            return this.#createOptionButton(option, `roe/${option.toLowerCase()}.svg`, ROEDescriptions[index], () => { getUnitsManager().selectedUnitsSetROE(option); });
+        });
+
+        this.#optionButtons["reactionToThreat"] = reactionsToThreat.map((option: string, index: number) => {
+            return this.#createOptionButton(option, `threat/${option.toLowerCase()}.svg`, reactionsToThreatDescriptions[index],() => { getUnitsManager().selectedUnitsSetReactionToThreat(option); });
+        });
+
+        this.#optionButtons["emissionsCountermeasures"] = emissionsCountermeasures.map((option: string, index: number) => {
+            return this.#createOptionButton(option, `emissions/${option.toLowerCase()}.svg`, emissionsCountermeasuresDescriptions[index],() => { getUnitsManager().selectedUnitsSetEmissionsCountermeasures(option); });
+        });
+
+        this.getElement().querySelector("#roe-buttons-container")?.append(...this.#optionButtons["ROE"]);
+        this.getElement().querySelector("#reaction-to-threat-buttons-container")?.append(...this.#optionButtons["reactionToThreat"]);
+        this.getElement().querySelector("#emissions-countermeasures-buttons-container")?.append(...this.#optionButtons["emissionsCountermeasures"]);
+
+        /* On off switch */
+        this.#onOffSwitch = new Switch("on-off-switch", (value: boolean) => {
+            getUnitsManager().selectedUnitsSetOnOff(value);
+        });
+
+        /* Follow roads switch */
+        this.#followRoadsSwitch = new Switch("follow-roads-switch", (value: boolean) => {
+            getUnitsManager().selectedUnitsSetFollowRoads(value);
+        });
+
+        /* Advanced settings dialog */
+        this.#advancedSettingsDialog = <HTMLElement> document.querySelector("#advanced-settings-dialog");
+
+        /* Advanced settings dropdowns */
+        this.#TACANXYDropdown = new Dropdown("TACAN-XY", () => {});
+        this.#TACANXYDropdown.setOptions(["X", "Y"]);
+        this.#radioDecimalsDropdown = new Dropdown("radio-decimals", () => {});
+        this.#radioDecimalsDropdown.setOptions([".000", ".250", ".500", ".750"]);
+        this.#radioCallsignDropdown = new Dropdown("radio-callsign", () => {});
+
+        /* Events and timer */
+        window.setInterval(() => {this.update();}, 25);
+
+        document.addEventListener("unitsSelection", (e: CustomEvent<Unit[]>) => { this.show(); this.addButtons();});
+        document.addEventListener("clearSelection", () => { this.hide() });
+        document.addEventListener("applyAdvancedSettings", () => {this.#applyAdvancedSettings();})
+        document.addEventListener("showAdvancedSettings", () => {
+            this.#updateAdvancedSettingsDialog(getUnitsManager().getSelectedUnits());
+            this.#advancedSettingsDialog.classList.remove("hide");
+        });
+
+        this.hide();
     }
 
     show() {
-        this.#element.style.display = this.#display;
+        super.show();
+        this.#speedTypeSwitch.resetExpectedValue();
+        this.#altitudeTypeSwitch.resetExpectedValue();
+        this.#onOffSwitch.resetExpectedValue();
+        this.#followRoadsSwitch.resetExpectedValue();
+        this.#altitudeSlider.resetExpectedValue();
+        this.#speedSlider.resetExpectedValue();
     }
 
-    hide() {
-        this.#element.style.display = "none";
+    addButtons() {
+        var units = getUnitsManager().getSelectedUnits();
+        if (units.length < 20) {
+            this.getElement().querySelector("#selected-units-container")?.replaceChildren(...units.map((unit: Unit, index: number) => {
+                var button = document.createElement("button");
+                var callsign = unit.getBaseData().unitName || "";
+                var label = unit.getDatabase()?.getByName(unit.getBaseData().name)?.label || unit.getBaseData().name;
+
+                button.setAttribute("data-label", label);
+                button.setAttribute("data-callsign", callsign);
+
+                button.setAttribute("data-coalition", unit.getMissionData().coalition);
+                button.classList.add("pill", "highlight-coalition")
+
+                button.addEventListener("click", () => {
+                    getUnitsManager().deselectAllUnits();
+                    getUnitsManager().selectUnit(unit.ID, true);
+                });
+                return (button);
+            }));
+        } else {
+            var el = document.createElement("div");
+            el.innerText = "Too many units selected";
+            this.getElement().querySelector("#selected-units-container")?.replaceChildren(el);
+        }
     }
 
-    update(units: Unit[]) {
-        if (this.#element != null)
-        {
-            var selectedUnitsContainer = <HTMLElement>(this.#element.querySelector("#selected-units-container"));
-            var formationCreationContainer = <HTMLElement>(this.#element.querySelector("#formation-creation-container"));
-            if (selectedUnitsContainer != null && formationCreationContainer != null)
-            {
-                this.#addUnitsButtons(units, selectedUnitsContainer);
-                this.#showFlightControlSliders(units);
-                this.#showFormationButtons(units, formationCreationContainer);
+    update() {
+        if (this.getVisible()){
+            const element = this.getElement();
+            const units = getUnitsManager().getSelectedUnits();
+            const selectedUnitsTypes = getUnitsManager().getSelectedUnitsTypes();
+                
+            if (element != null && units.length > 0) {
+                /* Toggle visibility of control elements */
+                element.toggleAttribute("data-show-categories-tooltip", selectedUnitsTypes.length > 1);
+                element.toggleAttribute("data-show-speed-slider", selectedUnitsTypes.length == 1);
+                element.toggleAttribute("data-show-altitude-slider", selectedUnitsTypes.length == 1 && (selectedUnitsTypes.includes("Aircraft") || selectedUnitsTypes.includes("Helicopter")));
+                element.toggleAttribute("data-show-roe", true);
+                element.toggleAttribute("data-show-threat", (selectedUnitsTypes.includes("Aircraft") || selectedUnitsTypes.includes("Helicopter")) && !(selectedUnitsTypes.includes("GroundUnit") || selectedUnitsTypes.includes("NavyUnit")));
+                element.toggleAttribute("data-show-emissions-countermeasures", (selectedUnitsTypes.includes("Aircraft") || selectedUnitsTypes.includes("Helicopter")) && !(selectedUnitsTypes.includes("GroundUnit") || selectedUnitsTypes.includes("NavyUnit")));
+                element.toggleAttribute("data-show-on-off", (selectedUnitsTypes.includes("GroundUnit") || selectedUnitsTypes.includes("NavyUnit")) && !(selectedUnitsTypes.includes("Aircraft") || selectedUnitsTypes.includes("Helicopter")));
+                element.toggleAttribute("data-show-follow-roads", (selectedUnitsTypes.length == 1 && selectedUnitsTypes.includes("GroundUnit")));
+                element.toggleAttribute("data-show-advanced-settings-button", units.length == 1);
+                
+                /* Flight controls */
+                var desiredAltitude: number | undefined = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getTaskData().desiredAltitude});
+                var desiredAltitudeType = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getTaskData().desiredAltitudeType});
+                var desiredSpeed = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getTaskData().desiredSpeed});
+                var desiredSpeedType = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getTaskData().desiredSpeedType});
+                var onOff = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getTaskData().onOff});
+                var followRoads = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getTaskData().followRoads});
+
+                if (selectedUnitsTypes.length == 1) {
+                    this.#altitudeTypeSwitch.setValue(desiredAltitudeType != undefined? desiredAltitudeType == "AGL": undefined, false);
+                    this.#speedTypeSwitch.setValue(desiredSpeedType != undefined? desiredSpeedType == "GS": undefined, false);
+
+                    this.#speedSlider.setMinMax(minSpeedValues[selectedUnitsTypes[0]], maxSpeedValues[selectedUnitsTypes[0]]);
+                    this.#altitudeSlider.setMinMax(minAltitudeValues[selectedUnitsTypes[0]], maxAltitudeValues[selectedUnitsTypes[0]]);
+                    this.#speedSlider.setIncrement(speedIncrements[selectedUnitsTypes[0]]);
+                    this.#altitudeSlider.setIncrement(altitudeIncrements[selectedUnitsTypes[0]]);
+
+                    this.#speedSlider.setActive(desiredSpeed != undefined);
+                    if (desiredSpeed != undefined)
+                        this.#speedSlider.setValue(msToKnots(desiredSpeed), false);
+
+                    this.#altitudeSlider.setActive(desiredAltitude != undefined);
+                    if (desiredAltitude != undefined)
+                        this.#altitudeSlider.setValue(mToFt(desiredAltitude), false);
+                }
+                else {
+                    this.#speedSlider.setActive(false);
+                    this.#altitudeSlider.setActive(false);
+                }
+
+                /* Option buttons */
+                this.#optionButtons["ROE"].forEach((button: HTMLButtonElement) => {
+                    button.classList.toggle("selected", units.every((unit: Unit) => unit.getOptionsData().ROE === button.value))
+                });
+
+                this.#optionButtons["reactionToThreat"].forEach((button: HTMLButtonElement) => {
+                    button.classList.toggle("selected", units.every((unit: Unit) => unit.getOptionsData().reactionToThreat === button.value))
+                });
+
+                this.#optionButtons["emissionsCountermeasures"].forEach((button: HTMLButtonElement) => {
+                    button.classList.toggle("selected", units.every((unit: Unit) => unit.getOptionsData().emissionsCountermeasures === button.value))
+                });
+
+                this.#onOffSwitch.setValue(onOff, false);
+                this.#followRoadsSwitch.setValue(followRoads, false);
             }
-
-            var ROEButtonsContainer = <HTMLElement>(this.#element.querySelector("#roe-buttons-container"));
-            if (ROEButtonsContainer != null)
-            {
-                (<HTMLElement>ROEButtonsContainer.querySelector("#free"))?.classList.toggle("white", this.#getROE(units) === "Free");
-                (<HTMLElement>ROEButtonsContainer.querySelector("#designated-free"))?.classList.toggle("white", this.#getROE(units) === "Designated free");
-                (<HTMLElement>ROEButtonsContainer.querySelector("#designated"))?.classList.toggle("white", this.#getROE(units) === "Designated");
-                (<HTMLElement>ROEButtonsContainer.querySelector("#return"))?.classList.toggle("white", this.#getROE(units) === "Return");
-                (<HTMLElement>ROEButtonsContainer.querySelector("#hold"))?.classList.toggle("white", this.#getROE(units) === "Hold");
-            }
-
-            var reactionToThreatButtonsContainer = <HTMLElement>(this.#element.querySelector("#reaction-to-threat-buttons-container"));
-            if (reactionToThreatButtonsContainer != null)
-            {
-                (<HTMLElement>reactionToThreatButtonsContainer.querySelector("#none"))?.classList.toggle("white", this.#getReactionToThreat(units) === "None");
-                (<HTMLElement>reactionToThreatButtonsContainer.querySelector("#passive"))?.classList.toggle("white", this.#getReactionToThreat(units) === "Passive");
-                (<HTMLElement>reactionToThreatButtonsContainer.querySelector("#evade"))?.classList.toggle("white", this.#getReactionToThreat(units) === "Evade");
-                (<HTMLElement>reactionToThreatButtonsContainer.querySelector("#escape"))?.classList.toggle("white", this.#getReactionToThreat(units) === "Escape");
-                (<HTMLElement>reactionToThreatButtonsContainer.querySelector("#abort"))?.classList.toggle("white", this.#getReactionToThreat(units) === "Abort");
-            }
         }
     }
 
-    #showFlightControlSliders(units: Unit[])
+    #updateAdvancedSettingsDialog(units: Unit[])
     {
-        var sliders = getUnitControlSliders();
-        sliders.airspeed.show();
-        sliders.altitude.show();
-
-        if (this.#checkAllUnitsAircraft(units))
+        if (units.length == 1)
         {
-            sliders.airspeed.setMinMax(100, 600);
-            sliders.altitude.setMinMax(0, 50000);
-        }
-        else if (this.#checkAllUnitsHelicopter(units))
-        {
-            sliders.airspeed.setMinMax(0, 200);
-            sliders.altitude.setMinMax(0, 10000);
-        }
-        else if (this.#checkAllUnitsGroundUnit(units))
-        {
-            sliders.airspeed.setMinMax(0, 60);
-            sliders.altitude.hide();
-        }
-        else if (this.#checkAllUnitsNavyUnit(units))
-        {
-            sliders.airspeed.setMinMax(0, 60);
-            sliders.altitude.hide();
-        }
-        else {
-            sliders.airspeed.hide();
-            sliders.altitude.hide();
-        }
-
-        var targetSpeed = this.#getTargetAirspeed(units);
-        if (targetSpeed != null)
-        {
-            sliders.airspeed.setActive(true);
-            sliders.airspeed.setValue(targetSpeed * 1.94384);
-        }
-        else
-        {
-            sliders.airspeed.setActive(false);
-        }
-
-        var targetAltitude = this.#getTargetAltitude(units);
-        if (targetAltitude != null)
-        {
-            sliders.altitude.setActive(true);
-            sliders.altitude.setValue(targetAltitude / 0.3048);
-        }
-        else
-        {
-            sliders.altitude.setActive(false);
-        }
-    }
-
-    #addUnitsButtons(units: Unit[], selectedUnitsContainer: HTMLElement)
-    {
-        /* Remove any pre-existing unit button */
-        var elements = selectedUnitsContainer.getElementsByClassName("js-unit-container");
-        while (elements.length > 0)
-            selectedUnitsContainer.removeChild(elements[0])
-
-        /* Create all the units buttons */
-        for (let unit of units)
-        {
-            this.#addUnitButton(unit, selectedUnitsContainer);
-            if (unit.isLeader)
-                for (let wingman of unit.getWingmen())
-                    this.#addUnitButton(wingman, selectedUnitsContainer);
-        }
-    }
-
-    #addUnitButton(unit: Unit, container: HTMLElement)
-    {
-        var el = document.createElement("div");
+            /* HTML Elements */
+            const unitNameEl = this.#advancedSettingsDialog.querySelector("#unit-name") as HTMLElement;
+            const prohibitJettisonCheckbox = this.#advancedSettingsDialog.querySelector("#prohibit-jettison-checkbox")?.querySelector("input") as HTMLInputElement;
+            const prohibitAfterburnerCheckbox = this.#advancedSettingsDialog.querySelector("#prohibit-afterburner-checkbox")?.querySelector("input") as HTMLInputElement;
+            const prohibitAACheckbox = this.#advancedSettingsDialog.querySelector("#prohibit-AA-checkbox")?.querySelector("input") as HTMLInputElement;
+            const prohibitAGCheckbox = this.#advancedSettingsDialog.querySelector("#prohibit-AG-checkbox")?.querySelector("input") as HTMLInputElement;
+            const prohibitAirWpnCheckbox = this.#advancedSettingsDialog.querySelector("#prohibit-air-wpn-checkbox")?.querySelector("input") as HTMLInputElement;
+            const tankerCheckbox = this.#advancedSettingsDialog.querySelector("#tanker-checkbox")?.querySelector("input") as HTMLInputElement;
+            const AWACSCheckbox = this.#advancedSettingsDialog.querySelector("#AWACS-checkbox")?.querySelector("input") as HTMLInputElement;
+            const TACANCheckbox = this.#advancedSettingsDialog.querySelector("#TACAN-checkbox")?.querySelector("input") as HTMLInputElement;
+            const TACANChannelInput = this.#advancedSettingsDialog.querySelector("#TACAN-channel")?.querySelector("input") as HTMLInputElement;
+            const TACANCallsignInput = this.#advancedSettingsDialog.querySelector("#tacan-callsign")?.querySelector("input") as HTMLInputElement;
+            const radioMhzInput = this.#advancedSettingsDialog.querySelector("#radio-mhz")?.querySelector("input") as HTMLInputElement;
+            const radioCallsignNumberInput = this.#advancedSettingsDialog.querySelector("#radio-callsign-number")?.querySelector("input") as HTMLInputElement;
             
-        /* Unit name (actually type, but DCS calls it name for some reason) */
-        var nameDiv = document.createElement("div");
-        nameDiv.classList.add("rounded-container-small");
-        if (unit.name.length >= 7)
-            nameDiv.innerHTML = `${unit.name.substring(0, 4)} ...`;
-        else 
-            nameDiv.innerHTML = `${unit.name}`;
+            const unit = units[0];
+            const roles = aircraftDatabase.getByName(unit.getBaseData().name)?.loadouts.map((loadout) => {return loadout.roles})
+            const tanker = roles != undefined && Array.prototype.concat.apply([], roles)?.includes("Tanker");
+            const AWACS = roles != undefined && Array.prototype.concat.apply([], roles)?.includes("AWACS");
+            const radioMHz = Math.floor(unit.getOptionsData().radio.frequency / 1000000);
+            const radioDecimals = (unit.getOptionsData().radio.frequency / 1000000 - radioMHz) * 1000;
 
-        /* Unit icon */
-        var icon = document.createElement("img");
-        if (unit.isLeader)
-            icon.src = "images/icons/formation.png"
-        else if (unit.isWingman)
-        {
-            var wingmen = unit.getLeader()?.getWingmen();
-            if (wingmen && wingmen.lastIndexOf(unit) == wingmen.length - 1)
-                icon.src = "images/icons/formation-end.svg" 
+            /* Activate the correct options depending on unit type */
+            this.#advancedSettingsDialog.toggleAttribute("data-show-settings", !tanker && !AWACS);
+            this.#advancedSettingsDialog.toggleAttribute("data-show-tasking", tanker || AWACS);
+            this.#advancedSettingsDialog.toggleAttribute("data-show-tanker", tanker);
+            this.#advancedSettingsDialog.toggleAttribute("data-show-AWACS", AWACS);
+            this.#advancedSettingsDialog.toggleAttribute("data-show-TACAN", tanker);
+            this.#advancedSettingsDialog.toggleAttribute("data-show-radio", tanker || AWACS);
+
+            /* Set common properties */
+            // Name
+            unitNameEl.innerText = unit.getBaseData().unitName;
+
+            // General settings
+            prohibitJettisonCheckbox.checked = unit.getOptionsData().generalSettings.prohibitJettison;
+            prohibitAfterburnerCheckbox.checked = unit.getOptionsData().generalSettings.prohibitAfterburner;
+            prohibitAACheckbox.checked = unit.getOptionsData().generalSettings.prohibitAA;
+            prohibitAGCheckbox.checked = unit.getOptionsData().generalSettings.prohibitAG;
+            prohibitAirWpnCheckbox.checked = unit.getOptionsData().generalSettings.prohibitAirWpn;
+
+            // Tasking
+            tankerCheckbox.checked = unit.getTaskData().isTanker;
+            AWACSCheckbox.checked = unit.getTaskData().isAWACS;
+
+            // TACAN
+            TACANCheckbox.checked = unit.getOptionsData().TACAN.isOn;
+            TACANChannelInput.value = String(unit.getOptionsData().TACAN.channel);
+            TACANCallsignInput.value = String(unit.getOptionsData().TACAN.callsign);
+            this.#TACANXYDropdown.setValue(unit.getOptionsData().TACAN.XY);
+
+            // Radio
+            radioMhzInput.value = String(radioMHz);
+            radioCallsignNumberInput.value = String(unit.getOptionsData().radio.callsignNumber);
+            this.#radioDecimalsDropdown.setValue("." + radioDecimals);
+                    
+            if (tanker) /* Set tanker specific options */
+                this.#radioCallsignDropdown.setOptions(["Texaco", "Arco", "Shell"]);
+            else if (AWACS) /* Set AWACS specific options */
+                this.#radioCallsignDropdown.setOptions(["Overlord", "Magic", "Wizard", "Focus", "Darkstar"]);
             else
-                icon.src = "images/icons/formation-middle.svg" 
-        }
-            
-        else
-            icon.src = "images/icons/singleton.png"
+                this.#radioCallsignDropdown.setOptions(["Enfield", "Springfield", "Uzi", "Colt", "Dodge", "Ford", "Chevy", "Pontiac"]);
 
-        el.innerHTML = unit.unitName;
-
-        el.prepend(nameDiv);
-
-        /* Show the icon only for air units */
-        if ((unit instanceof AirUnit))
-            el.append(icon);
-
-        el.classList.add("rounded-container", "js-unit-container");
-
-        if (!unit.getSelected())
-            el.classList.add("not-selected")
-
-        /* Set background color */
-        if (unit.coalitionID == 1)
-        {
-            el.classList.add("red");
-            icon.classList.add("red");
-        }
-        else if (unit.coalitionID == 2)
-        {
-            el.classList.add("blue");
-            icon.classList.add("blue");
-        }
-        else
-        {
-            el.classList.add("neutral"); 
-            icon.classList.add("neutral");
-        }
-
-        el.addEventListener("click", () => getUnitsManager().selectUnit(unit.ID));
-        container.appendChild(el);
-    }
-
-    #showFormationButtons(units: Unit[], formationCreationContainer: HTMLElement)
-    {
-        var createButton = <HTMLElement>formationCreationContainer.querySelector("#create-formation");
-        var undoButton = <HTMLElement>formationCreationContainer.querySelector("#undo-formation");
-        if (createButton && undoButton && this.#checkAllUnitsAir(units))
-        {
-            if (!this.#checkUnitsAlreadyInFormation(units))
-            {
-                createButton.style.display = '';
-                undoButton.style.display = 'none';
-            }
-            else if (this.#checkUnitsAlreadyInFormation(units) && this.#checkAllUnitsSameFormation(units))
-            {
-                createButton.style.display = 'none';
-                undoButton.style.display = '';
-            }
-            else
-            {
-                createButton.style.display = 'none';
-                undoButton.style.display = 'none';
-            }
+            // This must be done after setting the options
+            if (!this.#radioCallsignDropdown.selectValue(unit.getOptionsData().radio.callsign - 1)) // Ensure the selected value is in the acceptable range
+                this.#radioCallsignDropdown.selectValue(0);
         }
     }
 
-    #checkAllUnitsAir(units: Unit[])
+    #applyAdvancedSettings()
     {
-        for (let unit of units)
-            if (!(unit instanceof AirUnit))
-                return false
-        return true
-    }
+        /* HTML Elements */
+        const prohibitJettisonCheckbox = this.#advancedSettingsDialog.querySelector("#prohibit-jettison-checkbox")?.querySelector("input") as HTMLInputElement;
+        const prohibitAfterburnerCheckbox = this.#advancedSettingsDialog.querySelector("#prohibit-afterburner-checkbox")?.querySelector("input") as HTMLInputElement;
+        const prohibitAACheckbox = this.#advancedSettingsDialog.querySelector("#prohibit-AA-checkbox")?.querySelector("input") as HTMLInputElement;
+        const prohibitAGCheckbox = this.#advancedSettingsDialog.querySelector("#prohibit-AG-checkbox")?.querySelector("input") as HTMLInputElement;
+        const prohibitAirWpnCheckbox = this.#advancedSettingsDialog.querySelector("#prohibit-air-wpn-checkbox")?.querySelector("input") as HTMLInputElement;
+        const tankerCheckbox = this.#advancedSettingsDialog.querySelector("#tanker-checkbox")?.querySelector("input") as HTMLInputElement;
+        const AWACSCheckbox = this.#advancedSettingsDialog.querySelector("#AWACS-checkbox")?.querySelector("input") as HTMLInputElement;
+        const TACANCheckbox = this.#advancedSettingsDialog.querySelector("#TACAN-checkbox")?.querySelector("input") as HTMLInputElement;
+        const TACANChannelInput = this.#advancedSettingsDialog.querySelector("#TACAN-channel")?.querySelector("input") as HTMLInputElement;
+        const TACANCallsignInput = this.#advancedSettingsDialog.querySelector("#tacan-callsign")?.querySelector("input") as HTMLInputElement;
+        const radioMhzInput = this.#advancedSettingsDialog.querySelector("#radio-mhz")?.querySelector("input") as HTMLInputElement;
+        const radioCallsignNumberInput = this.#advancedSettingsDialog.querySelector("#radio-callsign-number")?.querySelector("input") as HTMLInputElement;
 
-    #checkAllUnitsAircraft(units: Unit[])
-    {
-        for (let unit of units)
-            if (!(unit instanceof Aircraft))
-                return false
-        return true
-    }
+        /* Tasking */
+        const isTanker = tankerCheckbox.checked? true: false;
+        const isAWACS = AWACSCheckbox.checked? true: false;
 
-    #checkAllUnitsHelicopter(units: Unit[])
-    {
-        for (let unit of units)
-            if (!(unit instanceof Helicopter))
-                return false
-        return true
-    }
-
-    #checkAllUnitsGroundUnit(units: Unit[])
-    {
-        for (let unit of units)
-            if (!(unit instanceof GroundUnit))
-                return false
-        return true
-    }
-
-    #checkAllUnitsNavyUnit(units: Unit[])
-    {
-        for (let unit of units)
-            if (!(unit instanceof NavyUnit))
-                return false
-        return true
-    }
-
-    #checkAllUnitsSameFormation(units: Unit[])
-    {
-        var leaderFound = false;
-        for (let unit of units)
-        {
-            if (unit.isLeader)
-            {
-                if (leaderFound)
-                    return false
-                else 
-                    leaderFound = true;
-            }
-            if (!unit.isLeader)
-                return false
+        /* TACAN */
+        const TACAN: TACAN = {
+            isOn: TACANCheckbox.checked? true: false,
+            channel: Number(TACANChannelInput.value),
+            XY: this.#TACANXYDropdown.getValue(),
+            callsign: TACANCallsignInput.value as string
         }
-        return true
-    }
 
-    #checkUnitsAlreadyInFormation(units: Unit[])
-    {
-        for (let unit of units)
-            if (unit.isLeader)
-                return true
-        return false
-    }
-
-    #getTargetAirspeed(units: Unit[])
-    {
-        var airspeed = null;
-        for (let unit of units)
-        {
-            if (unit.targetSpeed != airspeed && airspeed != null)
-                return null
-            else
-                airspeed = unit.targetSpeed;
+        /* Radio */
+        const radioMHz = Number(radioMhzInput.value);
+        const radioDecimals = this.#radioDecimalsDropdown.getValue();
+        const radio: Radio = {
+            frequency: (radioMHz * 1000 + Number(radioDecimals.substring(1))) * 1000,
+            callsign: this.#radioCallsignDropdown.getIndex() + 1,
+            callsignNumber:  Number(radioCallsignNumberInput.value)
         }
-        return airspeed;
+
+        /* General settings */
+        const generalSettings: GeneralSettings = {
+            prohibitJettison: prohibitJettisonCheckbox.checked? true: false,
+            prohibitAfterburner: prohibitAfterburnerCheckbox.checked? true: false,
+            prohibitAA: prohibitAACheckbox.checked? true: false,
+            prohibitAG: prohibitAGCheckbox.checked? true: false,
+            prohibitAirWpn: prohibitAirWpnCheckbox.checked? true: false
+        }
+        
+        /* Send command and close */
+        var units = getUnitsManager().getSelectedUnits();
+        if (units.length > 0)
+            units[0].setAdvancedOptions(isTanker, isAWACS, TACAN, radio, generalSettings);
+
+        this.#advancedSettingsDialog.classList.add("hide");
     }
 
-    #getTargetAltitude(units: Unit[])
-    {
-        var altitude = null;
-        for (let unit of units)
-        {
-            if (unit.targetAltitude != altitude && altitude != null)
-                return null
-            else
-                altitude = unit.targetAltitude;
-        }
-        return altitude;
-    }
-
-    #getROE(units: Unit[])
-    {
-        var ROE = null;
-        for (let unit of units)
-        {
-            if (unit.ROE !== ROE && ROE != null)
-                return null
-            else
-                ROE = unit.ROE;
-        }
-        return ROE;
-    }
-
-    #getReactionToThreat(units: Unit[])
-    {
-        var reactionToThreat = null;
-        for (let unit of units)
-        {
-            if (unit.reactionToThreat !== reactionToThreat && reactionToThreat != null)
-                return null
-            else
-                reactionToThreat = unit.reactionToThreat;
-        }
-        return reactionToThreat;
+    #createOptionButton(value: string, url: string, title: string, callback: EventListenerOrEventListenerObject) {
+        var button = document.createElement("button");
+        button.title = title;
+        button.value = value;
+        var img = document.createElement("img");
+        img.src = `/resources/theme/images/buttons/${url}`;
+        img.onload = () => SVGInjector(img);
+        button.appendChild(img);
+        button.addEventListener("click", callback);
+        return button;
     }
 }

@@ -1,0 +1,82 @@
+:root {
+    /**  Colours  **/
+
+    /*** Coalition: neutral  ***/
+    --primary-neutral: #949ba7;
+    --secondary-neutral-outline: #111111;
+    --secondary-neutral-text: #111111;
+    --unit-background-neutral: #CFD9E8;
+
+    /*** Coalition: blue  ***/
+    --primary-blue: #247be2;
+    --secondary-blue-outline: #082e44;
+    --secondary-blue-text: #017DC1;
+    --unit-background-blue: #3BB9FF;
+
+    /*** Coalition: red  ***/
+    --primary-red: #ff5858;
+    --secondary-red-outline: #262222;
+    --secondary-red-text: #D42121;
+    --unit-background-red: #FF5858;
+
+    /*** UI Colours **/
+    --accent-green: #8bff63;
+    --accent-light-blue: #5ca7ff;
+    --accent-light-red: #F5B6B6;
+
+    --background-grey: #3d4651;
+    --background-slate-blue: #363c43;
+    --background-offwhite: #f2f2f3;
+    --background-steel: #202831;
+
+    --secondary-dark-steel: #181e25;
+    --secondary-gunmetal-grey: #2f2f2f;
+    --secondary-lighter-grey: #949ba7;
+    --secondary-light-grey: #797e83;
+    --secondary-semitransparent-white: #FFFFFFAA;
+    --secondary-transparent-white: #FFFFFF30;
+    --secondary-yellow: #ffd46893;
+
+    --background-hover: #f2f2f333;
+
+    --nav-text: #ECECEC;
+
+    --ol-select-secondary: #545F6C;
+
+    /*** General border radii  **/
+    --border-radius-xs: 2px;
+    --border-radius-sm: 5px;
+    --border-radius-md: 10px;
+    --border-radius-lg: 15px;
+
+    /***  Fonts  **/
+    --font-weight-bolder: 600;
+
+    /***  Unit marker settings  ***/
+    /***   All markers  **/
+    --unit-border-radius: var(--border-radius-xs);
+    --unit-font-size: 14px;
+    --unit-font-weight: bolder;
+    --unit-label-border-width: 2px;
+    --unit-spotlight-fill: var(--secondary-yellow);
+    --unit-spotlight-radius: 26px;
+    --unit-stroke-width: 3px;
+    --unit-height: 50px;
+    --unit-width: 50px;
+
+    /***  Air units  ***/
+    --unit-aircraft-ammo-gap: calc(2px + var(--unit-stroke-width));
+    --unit-aircraft-ammo-border-radius: 50%;
+    --unit-aircraft-ammo-border-width: 2px;
+    --unit-aircraft-ammo-radius: 2px;
+    --unit-aircraft-ammo-spacing: 2px;
+    --unit-aircraft-ammo-x: 0px;
+    --unit-aircraft-ammo-y: 30px;
+    --unit-aircraft-fuel-border-width: 2px;
+    --unit-aircraft-fuel-height: 6px;
+    --unit-aircraft-fuel-width: 36px;
+    --unit-aircraft-fuel-x: 0px;
+    --unit-aircraft-fuel-y: 22px;
+    --unit-aircraft-height: 28px;
+    --unit-aircraft-vvi-width: 4px;
+}

@@ -1,0 +1,163 @@
+
+-- Olympus
+
+-- Layout
+
+local TopMargin = 48
+local LeftMargin = 32
+local CenterMargin = 80
+
+local LeftColumnX = LeftMargin
+local LeftColumnLabelWidth = 232
+local LeftColumnOptionWidth = 272
+local LeftColumnWidth = LeftColumnLabelWidth + LeftColumnOptionWidth
+
+local RightColumnX = LeftColumnX + LeftColumnWidth + CenterMargin
+local RightColumnLabelWidth = 192
+local RightColumnOptionWidth = 128
+local RightColumnWidth = RightColumnLabelWidth + RightColumnOptionWidth
+
+local LineHeight = 24
+local TotalLineHeight = LineHeight + 8
+
+local HelpLineHeight = 16
+
+-- Styles
+
+local TitleSkin = {
+		["params"] = {
+			["name"] = "staticOptionsTitleSkin",
+		},
+		["states"] = {
+			["released"] = {
+				[1] = {
+					["text"] = {
+						["horzAlign"] = {
+							["type"] = "min"
+						}
+					}
+				}
+			}
+		}
+	}
+
+local OptionLabelSkin = {
+		["params"] = {
+			["name"] = "staticOptionsCaptionSkin",
+		}
+	}
+
+local WarningSkin = {
+		["params"] = {
+			["name"] = "staticOptionsCaptionSkin",
+		},
+		["states"] = {
+			["released"] = {
+				[1] = {
+					["text"] = {
+						["horzAlign"] = {
+							["type"] = "min"
+						},
+						["color"] = "0xEFB441ff",
+					}
+				}
+			}
+		}
+	}
+
+local CheckBoxSkin = {
+		["params"] = {
+			["name"] = "checkBoxSkin_options",
+		}
+	}
+
+local ComboListSkin = {
+		["params"] = {
+			["name"] = "comboListSkin_options",
+		}
+	}
+
+local EditBoxSkin = {
+		["params"] = {
+			["name"] = "editBoxSkin_login",
+		}
+	}
+
+-- Content
+
+dialog = {
+	["children"] = {
+		["containerPlugin"] = {
+			["children"] = {
+
+				-----------------------------------------------
+				-- [X] Enable Olympus Module
+				-----------------------------------------------
+
+				-- Olympus Module Enabled
+ 
+				["olympusModuleEnabledCheckbox"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = LeftColumnX,
+							["y"] = TopMargin,
+							["w"] = 256,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["state"] = false,
+						["text"] = "$Olympus_MODULE_ENABLED_LABEL",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+						["tabOrder"] = 1,
+					},
+					["skin"] = CheckBoxSkin,
+					["type"] = "CheckBox",
+				},
+			},
+			["params"] = {
+				["bounds"] = {
+					["h"] = 600,
+					["w"] = 974,
+					["x"] = 0,
+					["y"] = 0,
+				},
+				["enabled"] = true,
+				["text"] = "",
+				["tooltip"] = "",
+				["visible"] = true,
+				["zindex"] = 0,
+			},
+			["skin"] = {
+				["params"] = {
+					["name"] = "panelSkin",
+				},
+			},
+			["type"] = "Panel",
+		},
+	},
+	["params"] = {
+		["bounds"] = {
+			["h"] = 851,
+			["w"] = 1135,
+			["x"] = 0,
+			["y"] = 0,
+		},
+		["draggable"] = true,
+		["enabled"] = true,
+		["hasCursor"] = true,
+		["lockFlow"] = false,
+		["modal"] = false,
+		["offscreen"] = false,
+		["resizable"] = false,
+		["text"] = "New dialog",
+		["zOrder"] = 0,
+	},
+	["skin"] = {
+		["params"] = {
+			["name"] = "windowSkin",
+		},
+	},
+	["type"] = "Window",
+}

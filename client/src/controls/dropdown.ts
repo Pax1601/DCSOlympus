@@ -1,62 +1,120 @@
 export class Dropdown {
-    #container: HTMLElement | null;
-    #options: string[];
-    #open?: boolean;
-    #content?: HTMLElement;
-    #callback?: CallableFunction;
+    #element: HTMLElement;
+    #options: HTMLElement;
+    #value: HTMLElement;
+    #callback: CallableFunction;
+    #defaultValue: string;
+    #optionsList: string[] = [];
+    #index: number = 0;
 
-    constructor(ID: string, options: string[], callback: CallableFunction) {
-        this.#container = document.getElementById(ID);
-        this.#options = options;
+    constructor(ID: string, callback: CallableFunction, options: string[] | null = null) {
+        this.#element = <HTMLElement>document.getElementById(ID);
+        this.#options = <HTMLElement>this.#element.querySelector(".ol-select-options");
+        this.#value = <HTMLElement>this.#element.querySelector(".ol-select-value");
+        this.#defaultValue = this.#value.innerText;
         this.#callback = callback;
-        this.close()
-        this.#container?.addEventListener("click", () => {
-            this.#open ? this.close() : this.open();
-        })
-        if (this.#container != null && this.#options.length > 0)
-            this.#container.innerHTML = this.#options[0];
+
+        if (options != null) {
+            this.setOptions(options);
+        }
+
+        this.#value.addEventListener("click", (ev) => {
+            this.#toggle();
+        });
+
+        document.addEventListener("click", (ev) => {
+            if (!(this.#value.contains(ev.target as Node) || this.#options.contains(ev.target as Node) || this.#element.contains(ev.target as Node))) {
+                this.#close();
+            }
+        });
+
+        this.#options.classList.add("ol-scrollable");
     }
 
-    open() {
-        if (this.#container != null) {
-            this.#open = true;
-            this.#container.classList.add("olympus-dropdown-open");
-            this.#container.classList.remove("olympus-dropdown-closed");
-            this.#content = document.createElement("div");
-            this.#content.classList.add("olympus-dropdown-content");
-            this.#content.style.width = (this.#container.offsetWidth - this.#container.offsetHeight) + "px";
+    setOptions(optionsList: string[], sortAlphabetically: boolean = true) {
+        this.#optionsList = optionsList.sort();
+        this.#options.replaceChildren(...optionsList.map((option: string, idx: number) => {
+            var div = document.createElement("div");
+            var button = document.createElement("button");
+            button.textContent = option;
+            div.appendChild(button);
 
-            this.#content.style.left = this.#container.offsetLeft + "px";
-            this.#content.style.top = this.#container.offsetTop + this.#container.offsetHeight + "px";
-            console.log(this.#container);
-            document.body.appendChild(this.#content);
+            if (option === this.#defaultValue)
+                this.#index = idx;
 
-            var height = 2;
-            for (let optionID in this.#options) {
-                var node = document.createElement("div");
-                node.classList.add("olympus-dropdown-element");
-                node.appendChild(document.createTextNode(this.#options[optionID]));
-                this.#content.appendChild(node);
-                height += node.offsetHeight + 2;
-                node.addEventListener('click', () => {
-                    this.close();
-                    if (this.#container != null)
-                        this.#container.innerHTML = this.#options[optionID];
-                    if (this.#callback != null)
-                        this.#callback(this.#options[optionID])
-                })
-            }
-            this.#content.style.height = height + "px";
+            button.addEventListener("click", (e: MouseEvent) => {
+                e.stopPropagation();
+                this.selectValue(idx);
+            });
+            return div;
+        }));
+    }
+
+    selectText(text: string) {
+        const index = [].slice.call(this.#options.children).findIndex((opt: Element) => opt.querySelector("button")?.innerText === text);
+        if (index > -1) {
+            this.selectValue(index);
         }
     }
 
-    close() {
-        if (this.#container != null) {
-            this.#open = false;
-            this.#container?.classList.remove("olympus-dropdown-open");
-            this.#container?.classList.add("olympus-dropdown-closed");
-            if (this.#content != null)
-                document.body.removeChild(this.#content);
+    selectValue(idx: number) {
+        if (idx < this.#optionsList.length) {
+            var option = this.#optionsList[idx];
+            var el = document.createElement("div");
+            el.classList.add("ol-ellipsed");
+            el.innerText = option;
+            this.#value.replaceChildren();
+            this.#value.appendChild(el);
+            this.#index = idx;
+            this.#close();
+            this.#callback(option);
+            return true;
+        }
+        else
+            return false;
+    }
+
+    reset() {
+        this.#options.replaceChildren();
+        this.#value.innerText = this.#defaultValue;
+    }
+
+    getValue() {
+        return this.#value.innerText;
+    }
+
+    setValue(value: string) {
+        var index = this.#optionsList.findIndex((option) => { return option === value });
+        if (index > -1)
+            this.selectValue(index);
+    }
+
+    getIndex() {
+        return this.#index;
+    }
+
+    #clip() {
+        const options = this.#options;
+        const bounds = options.getBoundingClientRect();
+        this.#element.dataset.position = (bounds.bottom > window.innerHeight) ? "top" : "";
+    }
+
+    #close() {
+        this.#element.classList.remove("is-open");
+        this.#element.dataset.position = "";
+    }
+
+    #open() {
+        this.#element.classList.add("is-open");
+        this.#options.classList.toggle("scrollbar-visible", this.#options.scrollHeight > this.#options.clientHeight);
+        this.#clip();
+    }
+
+    #toggle() {
+        if (this.#element.classList.contains("is-open")) {
+            this.#close();
+        } else {
+            this.#open();
         }
     }
 }

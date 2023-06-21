@@ -2,24 +2,37 @@
 
 <head>
   <title>Olympus client</title>
-  <link rel="stylesheet" href="/stylesheets/style.css">
-  <link rel="stylesheet" href="stylesheets/leaflet.css">
+  <link rel="stylesheet" type="text/css" href="stylesheets/olympus.css" />
+  <link rel="stylesheet" type="text/css" href="stylesheets/leaflet/leaflet.css">
+
+  <link rel="stylesheet" type="text/css" href="/resources/theme/theme.css" /> <!-- Theme specifc css, autorouted to point to active theme -->
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;600&display=swap" rel="stylesheet"> 
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;600;700;800&display=swap"> 
 </head>
 
 <body>
   <div id="map-container"></div>
-  <%- include('selectionwheel.ejs') %>
-  <%- include('selectionscroll.ejs') %>
-  <div class="olympus-dropdown" id="map-source-dropdown"></div>
-  <div class="olympus-dropdown" id="scenario-dropdown"></div>
-  <%- include('unitinfopanel.ejs') %>
-  <%- include('unitcontrolpanel.ejs') %>
-  <%- include('visibilitycontrolpanel.ejs') %>
-  <%- include('connectionstatuspanel.ejs') %> 
-  <%- include('mouseinfopanel.ejs') %>
+  
+  <%- include('aic/aic.ejs') %>
+
+  <%- include('atc/atc.ejs') %>
+  <%- include('atc/unitdatatable.ejs') %>
+
+  <%- include('panels/unitcontrol.ejs') %>
+  <%- include('panels/unitinfo.ejs') %>
+  <%- include('panels/mouseinfo.ejs') %>
+  <%- include('panels/connectionstatus.ejs') %>
+  <%- include('panels/hotgroup.ejs') %>
+  <%- include('panels/navbar.ejs') %>
+
+  <%- include('other/dialogs.ejs') %>
+  <%- include('other/popups.ejs') %>
+  <%- include('other/contextmenus.ejs') %>
+
+  <div id="gray-out"></div> <!-- Used to provide grayout effect of the background when login prompt is visible -->
+  
   <script src="javascripts/bundle.js"></script>
 </body>
 

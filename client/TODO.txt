@@ -1,9 +1,0 @@
-RTB
-tanker
-scenario dropdown
-explosion
-wrong name for ground units
-improve map zIndex
-fuel is wrong (either 0 or 1, its is casting it to int somewhere)
-weapons should not be selectable
-human symbol if user

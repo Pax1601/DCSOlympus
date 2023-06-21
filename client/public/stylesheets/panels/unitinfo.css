@@ -1,0 +1,124 @@
+#unit-info-panel>* {
+	position: relative;
+	min-height: 100px;
+	bottom: 0px;
+}
+
+#general {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	row-gap: 4px;
+	position: relative;
+}
+
+#unit-label {
+	font-weight: bold;
+}
+
+#unit-control {
+	color: var(--secondary-lighter-grey);
+	font-weight: bold;
+}
+
+#unit-name {
+	margin-bottom: 4px;
+	padding: 0px 0;
+}
+
+#current-task {
+	border-radius: var(--border-radius-lg);
+	margin-top: auto;
+	padding: 6px 16px;
+}
+
+#current-task::after {
+	content: attr(data-current-task);
+	display: block;
+}
+
+#loadout {
+	display: flex;
+	overflow: visible;
+	width: 100%;
+	min-width: 125px;
+}
+
+#loadout-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+#loadout-silhouette {
+	filter: invert(100%);
+	height: 100px;
+	margin-right: 25px;
+	width: 100px;
+}
+
+#loadout-items {
+	align-self: center;
+	display: flex;
+	flex-flow: column nowrap;
+	row-gap: 8px;
+}
+
+#loadout-items>* {
+	align-items: center;
+	column-gap: 8px;
+	display: flex;
+	white-space: nowrap;
+}
+
+#loadout-items>*::before {
+	align-items: center;
+	background-color: var(--secondary-light-grey);
+	border-radius: 999px;
+	content: attr(data-qty);
+	display: flex;
+	font-size: 11px;
+	font-weight: bold;
+	padding: 4px 6px;
+}
+
+#loadout-items>*::after {
+	content: attr(data-item);
+	max-width: 125px;
+	overflow: hidden;
+	position: relative;
+	text-overflow: ellipsis;
+	width: 100%;
+}
+
+#fuel-percentage {
+	align-items: center;
+	display: flex;
+	margin-top: auto;
+}
+
+#fuel-percentage::before {
+	content: url("/resources/theme/images/icons/fuel.svg");
+	display: inline-block;
+	filter: invert(100%);
+	height: 16px;
+	margin-right: 6px;
+	width: 16px;
+}
+
+#fuel-percentage::after {
+	content: attr(data-percentage) "%";
+}
+
+#fuel-display {
+	background-color: var(--background-grey);
+	border-radius: var(--border-radius-md);
+	height: 6px;
+	margin-top: 4px;
+	overflow: hidden;
+}
+
+#fuel-display #fuel-bar {
+	border-radius: var(--border-radius-md);
+	height: 100%;
+}
