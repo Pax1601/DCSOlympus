@@ -1,159 +1,244 @@
 import * as L from "leaflet"
-import { getSelectionWheel, getSelectionScroll, getUnitsManager, getActiveCoalition, getMouseInfoPanel } from "..";
-import { spawnAircraft, spawnGroundUnit, spawnSmoke } from "../dcs/dcs";
-import { bearing, distance, zeroAppend } from "../other/utils";
-import { payloadNames } from "../units/payloadNames";
-import { unitTypes } from "../units/unitTypes";
+import { getUnitsManager } from "..";
 import { BoxSelect } from "./boxselect";
+import { MapContextMenu, SpawnOptions } from "../controls/mapcontextmenu";
+import { UnitContextMenu } from "../controls/unitcontextmenu";
+import { AirbaseContextMenu } from "../controls/airbasecontextmenu";
+import { Dropdown } from "../controls/dropdown";
+import { Airbase } from "../missionhandler/airbase";
+import { Unit } from "../units/unit";
+import { bearing } from "../other/utils";
+import { DestinationPreviewMarker } from "./destinationpreviewmarker";
+import { TemporaryUnitMarker } from "./temporaryunitmarker";
+import { ClickableMiniMap } from "./clickableminimap";
+import { SVGInjector } from '@tanem/svg-injector'
+import { layers as mapLayers, mapBounds, minimapBoundaries } from "../constants/constants";
+import { TargetMarker } from "./targetmarker";
 
 L.Map.addInitHook('addHandler', 'boxSelect', BoxSelect);
 
-export interface ClickEvent {
-    x: number;
-    y: number;
-    latlng: L.LatLng;
-}
+// TODO would be nice to convert to ts
+require("../../public/javascripts/leaflet.nauticscale.js")
 
-export interface SpawnEvent extends ClickEvent{
-    airbaseName: string | null;
-    coalitionID: number | null;
-}
+/* Map constants */
+export const IDLE = "Idle";
+export const MOVE_UNIT = "Move unit";
+export const BOMBING = "Bombing";
+export const CARPET_BOMBING = "Carpet bombing";
+export const FIRE_AT_AREA = "Fire at area";
+export const visibilityControls: string[] = ["human", "dcs", "aircraft", "groundunit-sam", "groundunit-other", "navyunit", "airbase"];
+export const visibilityControlsTootlips: string[] = ["Toggle human players visibility", "Toggle DCS controlled units visibility", "Toggle aircrafts visibility", "Toggle SAM units visibility", "Toggle ground units (not SAM) visibility", "Toggle navy units visibility", "Toggle airbases visibility"];
 
 export class Map extends L.Map {
+    #ID: string;
     #state: string;
-    #layer?: L.TileLayer;
+    #layer: L.TileLayer | null = null;
     #preventLeftClick: boolean = false;
     #leftClickTimer: number = 0;
-    #measurePoint: L.LatLng | null;
-    #measureIcon: L.Icon;
-    #measureMarker: L.Marker;
-    #measureLine: L.Polyline = new L.Polyline([], { color: '#2d3e50', weight: 3, opacity: 0.5, smoothFactor: 1, interactive: false });
-    #measureLineDiv: HTMLElement;
+    #deafultPanDelta: number = 100;
+    #panInterval: number | null = null;
+    #panLeft: boolean = false;
+    #panRight: boolean = false;
+    #panUp: boolean = false;
+    #panDown: boolean = false;
     #lastMousePosition: L.Point = new L.Point(0, 0);
+    #centerUnit: Unit | null = null;
+    #miniMap: ClickableMiniMap | null = null;
+    #miniMapLayerGroup: L.LayerGroup;
+    #temporaryMarkers: TemporaryUnitMarker[] = [];
+    #destinationPreviewMarkers: DestinationPreviewMarker[] = [];
+    #targetMarker: TargetMarker;
+    #destinationGroupRotation: number = 0;
+    #computeDestinationRotation: boolean = false;
+    #destinationRotationCenter: L.LatLng | null = null;
+
+    #mapContextMenu: MapContextMenu = new MapContextMenu("map-contextmenu");
+    #unitContextMenu: UnitContextMenu = new UnitContextMenu("unit-contextmenu");
+    #airbaseContextMenu: AirbaseContextMenu = new AirbaseContextMenu("airbase-contextmenu");
+
+    #mapSourceDropdown: Dropdown;
+    #optionButtons: { [key: string]: HTMLButtonElement[] } = {}
 
     constructor(ID: string) {
         /* Init the leaflet map */
+        
         //@ts-ignore
-        super(ID, { doubleClickZoom: false, zoomControl: false, boxZoom: false, boxSelect: true });
-        this.setView([37.23, -115.8], 12);
+        super(ID, { doubleClickZoom: false, zoomControl: false, boxZoom: false, boxSelect: true, zoomAnimation: true, maxBoundsViscosity: 1.0, minZoom: 7, keyboard: true, keyboardPanDelta: 0 });
+        this.setView([37.23, -115.8], 10);
 
-        this.setLayer("ArcGIS Satellite");
+        this.#ID = ID;
+
+        this.setLayer(Object.keys(mapLayers)[0]);
+
+        /* Minimap */
+        var minimapLayer = new L.TileLayer(mapLayers[Object.keys(mapLayers)[0] as keyof typeof mapLayers].urlTemplate, { minZoom: 0, maxZoom: 13 });
+        this.#miniMapLayerGroup = new L.LayerGroup([minimapLayer]);
+        var miniMapPolyline = new L.Polyline(this.#getMinimapBoundaries(), { color: '#202831' });
+        miniMapPolyline.addTo(this.#miniMapLayerGroup);
+
+        /* Scale */
+        //@ts-ignore TODO more hacking because the module is provided as a pure javascript module only
+        L.control.scalenautic({ position: "topright", maxWidth: 300, nautic: true, metric: true, imperial: false }).addTo(this);
+
+        /* Map source dropdown */
+        this.#mapSourceDropdown = new Dropdown("map-type", (layerName: string) => this.setLayer(layerName), this.getLayers())
 
         /* Init the state machine */
-        this.#state = "IDLE";
-        this.#measurePoint = null;
-
-        this.#measureIcon = new L.Icon({ iconUrl: 'images/pin.png', iconAnchor: [16, 32]});
-        this.#measureMarker = new L.Marker([0, 0], {icon: this.#measureIcon, interactive: false});
-        this.#measureLineDiv = document.createElement("div");
-        this.#measureLineDiv.classList.add("measure-box");
-        this.#measureLineDiv.style.display = 'none';
-
-        document.body.appendChild(this.#measureLineDiv);
+        this.#state = IDLE;
 
         /* Register event handles */
         this.on("click", (e: any) => this.#onClick(e));
-        this.on("dblclick", (e: any) => this.#onDoubleClick(e));      
+        this.on("dblclick", (e: any) => this.#onDoubleClick(e));
+        this.on("zoomstart", (e: any) => this.#onZoom(e));
+        this.on("drag", (e: any) => this.centerOnUnit(null));
         this.on("contextmenu", (e: any) => this.#onContextMenu(e));
         this.on('selectionend', (e: any) => this.#onSelectionEnd(e));
         this.on('mousedown', (e: any) => this.#onMouseDown(e));
         this.on('mouseup', (e: any) => this.#onMouseUp(e));
         this.on('mousemove', (e: any) => this.#onMouseMove(e));
-        this.on('zoom', (e: any) => this.#onZoom(e));
+        this.on('keydown', (e: any) => this.#updateDestinationPreview(e));
+        this.on('keyup', (e: any) => this.#updateDestinationPreview(e));
+
+        /* Event listeners */
+        document.addEventListener("toggleCoalitionVisibility", (ev: CustomEventInit) => {
+            const el = ev.detail._element;
+            el?.classList.toggle("off");
+            getUnitsManager().setHiddenType(ev.detail.coalition, (el?.currentTarget as HTMLElement)?.classList.contains("off"));
+            Object.values(getUnitsManager().getUnits()).forEach((unit: Unit) => unit.updateVisibility());
+        });
+
+        document.addEventListener("toggleUnitVisibility", (ev: CustomEventInit) => {
+            const el = ev.detail._element;
+            el?.classList.toggle("off");
+            getUnitsManager().setHiddenType(ev.detail.type, !el?.classList.contains("off"));
+            Object.values(getUnitsManager().getUnits()).forEach((unit: Unit) => unit.updateVisibility());
+        });
+
+        document.addEventListener("unitUpdated", (ev: CustomEvent) => {
+            if (this.#centerUnit != null && ev.detail == this.#centerUnit)
+                this.#panToUnit(this.#centerUnit);
+        });
+
+        /* Pan interval */
+        this.#panInterval = window.setInterval(() => {
+            if (this.#panLeft || this.#panDown || this.#panRight || this.#panLeft)
+                this.panBy(new L.Point(((this.#panLeft? -1 : 0) + (this.#panRight ? 1 : 0)) * this.#deafultPanDelta,
+                    ((this.#panUp ? -1 : 0) + (this.#panDown ? 1 : 0)) * this.#deafultPanDelta));
+        }, 20);
+
+        /* Option buttons */
+        this.#optionButtons["visibility"] = visibilityControls.map((option: string, index: number) => {
+            return this.#createOptionButton(option, `visibility/${option.toLowerCase()}.svg`, visibilityControlsTootlips[index], "toggleUnitVisibility", `{"type": "${option}"}`);
+        });
+        document.querySelector("#unit-visibility-control")?.append(...this.#optionButtons["visibility"]);
+
+        /* Markers */
+        this.#targetMarker = new TargetMarker(new L.LatLng(0, 0), {interactive: false});
     }
 
     setLayer(layerName: string) {
-        if (this.#layer != null) {
+        if (this.#layer != null) 
             this.removeLayer(this.#layer)
+        
+        if (layerName in mapLayers){
+            const layerData = mapLayers[layerName as keyof typeof mapLayers];
+            var options: L.TileLayerOptions = {
+                attribution: layerData.attribution,
+                minZoom: layerData.minZoom,
+                maxZoom: layerData.maxZoom
+            };
+            this.#layer = new L.TileLayer(layerData.urlTemplate, options);
         }
 
-        if (layerName == "ArcGIS Satellite") {
-            this.#layer = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
-                attribution: "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
-            });
-        }
-        else if (layerName == "USGS Topo") {
-            this.#layer = L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}', {
-                maxZoom: 20,
-                attribution: 'Tiles courtesy of the <a href="https://usgs.gov/">U.S. Geological Survey</a>'
-            });
-        }
-        else if (layerName == "OpenStreetMap Mapnik") {
-            this.#layer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            });
-        }
-        else if (layerName == "OPENVKarte") {
-            this.#layer = L.tileLayer('https://tileserver.memomaps.de/tilegen/{z}/{x}/{y}.png', {
-                maxZoom: 18,
-                attribution: 'Map <a href="https://memomaps.de/">memomaps.de</a> <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            });
-        }
-        else if (layerName == "Esri.DeLorme") {
-            this.#layer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Specialty/DeLorme_World_Base_Map/MapServer/tile/{z}/{y}/{x}', {
-                attribution: 'Tiles &copy; Esri &mdash; Copyright: &copy;2012 DeLorme',
-                minZoom: 1,
-                maxZoom: 11
-            });
-        }
-        else if (layerName == "CyclOSM") {
-            this.#layer = L.tileLayer('https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png', {
-                maxZoom: 20,
-                attribution: '<a href="https://github.com/cyclosm/cyclosm-cartocss-style/releases" title="CyclOSM - Open Bicycle render">CyclOSM</a> | Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            });
-        }
         this.#layer?.addTo(this);
     }
 
     getLayers() {
-        return ["ArcGIS Satellite", "USGS Topo", "OpenStreetMap Mapnik", "OPENVKarte", "Esri.DeLorme", "CyclOSM"]
+        return Object.keys(mapLayers);
     }
 
     /* State machine */
     setState(state: string) {
         this.#state = state;
-
-        if (this.#state === "IDLE") {
-            L.DomUtil.removeClass(this.getContainer(),'crosshair-cursor-enabled');
+        if (this.#state === IDLE) {
+            this.#resetDestinationMarkers();
+            this.#resetTargetMarker();
+            this.#showCursor();
         }
-        else if (this.#state === "MOVE_UNIT") {
-            L.DomUtil.addClass(this.getContainer(),'crosshair-cursor-enabled');
+        else if (this.#state === MOVE_UNIT) {
+            this.#resetTargetMarker();
+            this.#createDestinationMarkers();
+            if (this.#destinationPreviewMarkers.length > 0)
+                this.#hideCursor();
         }
-        else if (this.#state === "ATTACK") {
-
+        else if ([BOMBING, CARPET_BOMBING, FIRE_AT_AREA].includes(this.#state)) {
+            this.#resetDestinationMarkers();
+            this.#createTargetMarker();
+            this.#hideCursor();
         }
-        else if (this.#state === "FORMATION") {
-
-        }
+        document.dispatchEvent(new CustomEvent("mapStateChanged"));
     }
 
     getState() {
         return this.#state;
     }
 
-    /* Selection wheel */
-    showSelectionWheel(e: ClickEvent | SpawnEvent, options: any, showCoalition: boolean) {
-        var x = e.x;
-        var y = e.y;
-        getSelectionWheel().show(x, y, options, showCoalition);
+    /* Context Menus */
+    hideAllContextMenus() {
+        this.hideMapContextMenu();
+        this.hideUnitContextMenu();
+        this.hideAirbaseContextMenu();
     }
 
-    hideSelectionWheel() {
-        getSelectionWheel().hide();
+    showMapContextMenu(e: any) {
+        this.hideAllContextMenus();
+        var x = e.originalEvent.x;
+        var y = e.originalEvent.y;
+        this.#mapContextMenu.show(x, y, e.latlng);
+        document.dispatchEvent(new CustomEvent("mapContextMenu"));
     }
 
-    /* Selection scroll */
-    showSelectionScroll(e: ClickEvent | SpawnEvent, title: string, options: any, callback: CallableFunction, showCoalition: boolean = false) {
-        var x = e.x;
-        var y = e.y;
-        getSelectionScroll().show(x, y, title, options, callback, showCoalition);
+    hideMapContextMenu() {
+        this.#mapContextMenu.hide();
+        document.dispatchEvent(new CustomEvent("mapContextMenu"));
     }
 
-    hideSelectionScroll() {
-        getSelectionScroll().hide();
+    getMapContextMenu() {
+        return this.#mapContextMenu;
     }
 
+    showUnitContextMenu(e: any) {
+        this.hideAllContextMenus();
+        var x = e.originalEvent.x;
+        var y = e.originalEvent.y;
+        this.#unitContextMenu.show(x, y, e.latlng);
+    }
+
+    getUnitContextMenu() {
+        return this.#unitContextMenu;
+    }
+
+    hideUnitContextMenu() {
+        this.#unitContextMenu.hide();
+    }
+
+    showAirbaseContextMenu(e: any, airbase: Airbase) {
+        this.hideAllContextMenus();
+        var x = e.originalEvent.x;
+        var y = e.originalEvent.y;
+        this.#airbaseContextMenu.show(x, y, e.latlng);
+        this.#airbaseContextMenu.setAirbase(airbase);
+    }
+
+    getAirbaseContextMenu() {
+        return this.#airbaseContextMenu;
+    }
+
+    hideAirbaseContextMenu() {
+        this.#airbaseContextMenu.hide();
+    }
+
+    /* Mouse coordinates */
     getMousePosition() {
         return this.#lastMousePosition;
     }
@@ -162,253 +247,291 @@ export class Map extends L.Map {
         return this.containerPointToLatLng(this.#lastMousePosition);
     }
 
+    /* Spawn from air base */
+    spawnFromAirbase(e: any) {
+        //this.#aircraftSpawnMenu(e);
+    }
+
+    centerOnUnit(ID: number | null) {
+        if (ID != null) {
+            this.options.scrollWheelZoom = 'center';
+            this.#centerUnit = getUnitsManager().getUnitByID(ID);
+        }
+        else {
+            this.options.scrollWheelZoom = undefined;
+            this.#centerUnit = null;
+        }
+    }
+
+    setTheatre(theatre: string) {
+        var bounds = new L.LatLngBounds([-90, -180], [90, 180]);
+        var miniMapZoom = 5;
+        if (theatre in mapBounds) {
+            bounds = mapBounds[theatre as keyof typeof mapBounds].bounds;
+            miniMapZoom = mapBounds[theatre as keyof typeof mapBounds].zoom;
+        }
+
+        this.setView(bounds.getCenter(), 8);
+        //this.setMaxBounds(bounds);
+
+        if (this.#miniMap)
+            this.#miniMap.remove();
+
+        //@ts-ignore // Needed because some of the inputs are wrong in the original module interface
+        this.#miniMap = new ClickableMiniMap(this.#miniMapLayerGroup, { position: "topright", width: 192 * 1.5, height: 108 * 1.5, zoomLevelFixed: miniMapZoom, centerFixed: bounds.getCenter() }).addTo(this);
+        this.#miniMap.disableInteractivity();
+        this.#miniMap.getMap().on("click", (e: any) => {
+            if (this.#miniMap)
+                this.setView(e.latlng);
+        })
+    }
+
+    getMiniMapLayerGroup() {
+        return this.#miniMapLayerGroup;
+    }
+
+    handleMapPanning(e: any) {
+        if (e.type === "keyup") {
+            switch (e.code) {
+                case "KeyA":
+                case "ArrowLeft":
+                    this.#panLeft = false;
+                    break;
+                case "KeyD":
+                case "ArrowRight":
+                    this.#panRight = false;
+                    break;
+                case "KeyW":
+                case "ArrowUp":
+                    this.#panUp = false;
+                    break;
+                case "KeyS":
+                case "ArrowDown":
+                    this.#panDown = false;
+                    break;
+            }
+        }
+        else {
+            switch (e.code) {
+                case 'KeyA':
+                case 'ArrowLeft':
+                    this.#panLeft = true;
+                    break;
+                case 'KeyD':
+                case 'ArrowRight':
+                    this.#panRight = true;
+                    break;
+                case 'KeyW':
+                case 'ArrowUp':
+                    this.#panUp = true;
+                    break;
+                case 'KeyS':
+                case 'ArrowDown':
+                    this.#panDown = true;
+                    break;
+            }
+        }
+    }
+
+    addTemporaryMarker(latlng: L.LatLng) {
+        var marker = new TemporaryUnitMarker(latlng);
+        marker.addTo(this);
+        this.#temporaryMarkers.push(marker);
+    }
+
+    removeTemporaryMarker(latlng: L.LatLng) {
+        var d: number | null = null;
+        var closest: L.Marker | null = null;
+        var i: number = 0;
+        this.#temporaryMarkers.forEach((marker: L.Marker, idx: number) => {
+            var t = latlng.distanceTo(marker.getLatLng());
+            if (d == null || t < d) {
+                d = t;
+                closest = marker;
+                i = idx;
+            }
+        });
+        if (closest) {
+            this.removeLayer(closest);
+            delete this.#temporaryMarkers[i];
+        }
+    }
+
     /* Event handlers */
     #onClick(e: any) {
         if (!this.#preventLeftClick) {
-            this.hideSelectionWheel();
-            this.hideSelectionScroll();
-            if (this.#state === "IDLE") {
-                if (e.originalEvent.ctrlKey)
-                    if (!this.#measurePoint)
-                    {
-                        this.#measurePoint = e.latlng;
-                        this.#measureMarker.setLatLng(e.latlng);
-                        this.#measureMarker.addTo(this);
-                    }
-                    else
-                    {
-                        this.#measurePoint = null;
-                        if (this.hasLayer(this.#measureMarker))
-                            this.removeLayer(this.#measureMarker);
-                    }
+            this.hideAllContextMenus();
+            if (this.#state === IDLE) {
+
             }
-            else if (this.#state === "MOVE_UNIT") {
-                this.setState("IDLE");
+            else {
+                this.setState(IDLE);
                 getUnitsManager().deselectAllUnits();
-                this.hideSelectionWheel();
-                this.hideSelectionScroll();
             }
         }
     }
 
     #onDoubleClick(e: any) {
-        
+
     }
 
     #onContextMenu(e: any) {
-        this.hideSelectionWheel();
-        this.hideSelectionScroll();
-        if (this.#state === "IDLE") {
-            var spawnEvent: SpawnEvent = {x: e.originalEvent.x, y: e.originalEvent.y, latlng: e.latlng, airbaseName: null, coalitionID: null};
-            if (this.#state == "IDLE") {
-                var options = [
-                    { "tooltip": "Spawn air unit", "src": "spawnAir.png", "callback": () => this.#aircraftSpawnMenu(spawnEvent) },
-                    { "tooltip": "Spawn ground unit", "src": "spawnGround.png", "callback": () => this.#groundUnitSpawnMenu(spawnEvent) },
-                    { "tooltip": "Smoke", "src": "spawnSmoke.png", "callback": () => this.#smokeSpawnMenu(spawnEvent) },
-                    //{ "tooltip": "Explosion", "src": "spawnExplosion.png", "callback": () => this.#explosionSpawnMenu(e) }
-                ]
-                this.showSelectionScroll(spawnEvent, "Action", options, () => {}, false);
+        this.hideMapContextMenu();
+        if (this.#state === IDLE) {
+            if (this.#state == IDLE) {
+                this.showMapContextMenu(e);
             }
         }
-        else if (this.#state === "MOVE_UNIT") {
+        else if (this.#state === MOVE_UNIT) {
             if (!e.originalEvent.ctrlKey) {
                 getUnitsManager().selectedUnitsClearDestinations();
             }
-            getUnitsManager().selectedUnitsAddDestination(e.latlng)
+            getUnitsManager().selectedUnitsAddDestination(this.#computeDestinationRotation && this.#destinationRotationCenter != null ? this.#destinationRotationCenter : e.latlng, e.originalEvent.shiftKey, this.#destinationGroupRotation)
+            this.#destinationGroupRotation = 0; 
+            this.#destinationRotationCenter = null;
+            this.#computeDestinationRotation = false;
+        }
+        else if (this.#state === BOMBING) {
+            getUnitsManager().getSelectedUnits().length > 0? this.setState(MOVE_UNIT): this.setState(IDLE);
+            getUnitsManager().selectedUnitsBombPoint(this.getMouseCoordinates()); 
+        }
+        else if (this.#state === CARPET_BOMBING) {
+            getUnitsManager().getSelectedUnits().length > 0? this.setState(MOVE_UNIT): this.setState(IDLE);
+            getUnitsManager().selectedUnitsCarpetBomb(this.getMouseCoordinates()); 
+        }
+        else if (this.#state === FIRE_AT_AREA) {
+            getUnitsManager().getSelectedUnits().length > 0? this.setState(MOVE_UNIT): this.setState(IDLE);
+            getUnitsManager().selectedUnitsFireAtArea(this.getMouseCoordinates()); 
         }
     }
 
-    #onSelectionEnd(e: any)
-    {
+    #executeAction(e: any, action: string) {
+        if (action === "bomb")
+            getUnitsManager().selectedUnitsBombPoint(this.getMouseCoordinates());
+        else if (action === "carpet-bomb")
+            getUnitsManager().selectedUnitsCarpetBomb(this.getMouseCoordinates());
+        else if (action === "building-bomb")
+            getUnitsManager().selectedUnitsBombBuilding(this.getMouseCoordinates());
+        else if (action === "fire-at-area")
+            getUnitsManager().selectedUnitsFireAtArea(this.getMouseCoordinates());
+    }
+
+    #onSelectionEnd(e: any) {
         clearTimeout(this.#leftClickTimer);
         this.#preventLeftClick = true;
-        this.#leftClickTimer = setTimeout(() => {
-            this.#preventLeftClick = false;  
+        this.#leftClickTimer = window.setTimeout(() => {
+            this.#preventLeftClick = false;
         }, 200);
         getUnitsManager().selectFromBounds(e.selectionBounds);
     }
 
-    #onMouseDown(e: any)
-    {
-        if ((e.originalEvent.which == 1) && (e.originalEvent.button == 0)) 
-        {
-            this.dragging.disable();
+    #onMouseDown(e: any) {
+        this.hideAllContextMenus();
+
+        if (this.#state == MOVE_UNIT) {
+            this.#destinationGroupRotation = 0; 
+            this.#destinationRotationCenter = null;
+            this.#computeDestinationRotation = false;
+            if (e.originalEvent.button == 2) {
+                this.#computeDestinationRotation = true;
+                this.#destinationRotationCenter = this.getMouseCoordinates();
+            }
         }
     }
 
-    #onMouseUp(e: any)
-    {
-        if ((e.originalEvent.which == 1) && (e.originalEvent.button == 0)) 
-        {
-            this.dragging.enable();
-        }
+    #onMouseUp(e: any) {
     }
 
-    #onMouseMove(e: any)
-    {
-        var selectedUnitPosition = null;
-        var selectedUnits = getUnitsManager().getSelectedUnits();
-        if (selectedUnits && selectedUnits.length == 1)
-        {
-            selectedUnitPosition = new L.LatLng(selectedUnits[0].latitude, selectedUnits[0].longitude);
-        }
-        getMouseInfoPanel().update(<L.LatLng>e.latlng, this.#measurePoint, selectedUnitPosition);
-
+    #onMouseMove(e: any) {
         this.#lastMousePosition.x = e.originalEvent.x;
         this.#lastMousePosition.y = e.originalEvent.y;
 
-        if ( this.#measurePoint)
-            this.#drawMeasureLine();
-        else
-            this.#hideMeasureLine();
-    }
-
-    #onZoom(e: any)
-    {
-        if (this.#measurePoint)
-            this.#drawMeasureLine();
-        else
-            this.#hideMeasureLine();
-    }
-
-    /* Spawn from air base */
-    spawnFromAirbase(e: SpawnEvent)
-    {
-        this.#aircraftSpawnMenu(e);
-    }
-
-    /* Spawning menus */
-    #groundUnitSpawnMenu(e: SpawnEvent) {
-        var options = [
-            {'coalition': true, 'tooltip': 'Howitzer',   'src': 'spawnHowitzer.png', 'callback': () => this.#selectGroundUnit(e, "Howitzers")},
-            {'coalition': true, 'tooltip': 'SAM',        'src': 'spawnSAM.png',      'callback': () => this.#selectGroundUnit(e, "SAM")},
-            {'coalition': true, 'tooltip': 'IFV',        'src': 'spawnIFV.png',      'callback': () => this.#selectGroundUnit(e, "IFV")},
-            {'coalition': true, 'tooltip': 'Tank',       'src': 'spawnTank.png',     'callback': () => this.#selectGroundUnit(e, "Tanks")},
-            {'coalition': true, 'tooltip': 'MLRS',       'src': 'spawnMLRS.png',     'callback': () => this.#selectGroundUnit(e, "MLRS")},
-            {'coalition': true, 'tooltip': 'Radar',      'src': 'spawnRadar.png',    'callback': () => this.#selectGroundUnit(e, "Radar")},
-            {'coalition': true, 'tooltip': 'Unarmed',    'src': 'spawnUnarmed.png',  'callback': () => this.#selectGroundUnit(e, "Unarmed")}
-        ]
-        this.showSelectionScroll(e, "Spawn ground unit", options, () => {}, true);
-    }
-
-    #smokeSpawnMenu(e: SpawnEvent) {
-        this.hideSelectionWheel();
-        this.hideSelectionScroll();
-        var options = [
-            {'tooltip': 'Red smoke',      'src': 'spawnSmoke.png',  'callback': () => {this.hideSelectionWheel(); this.hideSelectionScroll(); spawnSmoke('red', e.latlng)}, 'tint': 'red'},
-            {'tooltip': 'White smoke',    'src': 'spawnSmoke.png',  'callback': () => {this.hideSelectionWheel(); this.hideSelectionScroll(); spawnSmoke('white', e.latlng)}, 'tint': 'white'},
-            {'tooltip': 'Blue smoke',     'src': 'spawnSmoke.png',  'callback': () => {this.hideSelectionWheel(); this.hideSelectionScroll(); spawnSmoke('blue', e.latlng)}, 'tint': 'blue'},
-            {'tooltip': 'Green smoke',    'src': 'spawnSmoke.png',  'callback': () => {this.hideSelectionWheel(); this.hideSelectionScroll(); spawnSmoke('green', e.latlng)}, 'tint': 'green'},
-            {'tooltip': 'Orange smoke',   'src': 'spawnSmoke.png',  'callback': () => {this.hideSelectionWheel(); this.hideSelectionScroll(); spawnSmoke('orange', e.latlng)}, 'tint': 'orange'},
-        ]
-        this.showSelectionScroll(e, "Spawn smoke", options, () => {}, false);
-    }
-
-    #explosionSpawnMenu(e: SpawnEvent) {
-
-    }
-
-    #aircraftSpawnMenu(e: SpawnEvent) {
-        var options = [
-            { 'coalition': true, 'tooltip': 'CAP', 'src': 'spawnCAP.png', 'callback': () => this.#selectAircraft(e, "CAP") },
-            { 'coalition': true, 'tooltip': 'CAS', 'src': 'spawnCAS.png', 'callback': () => this.#selectAircraft(e, "CAS") },
-            { 'coalition': true, 'tooltip': 'Tanker', 'src': 'spawnTanker.png', 'callback': () => this.#selectAircraft(e, "tanker") },
-            { 'coalition': true, 'tooltip': 'AWACS', 'src': 'spawnAWACS.png', 'callback': () => this.#selectAircraft(e, "awacs") },
-            { 'coalition': true, 'tooltip': 'Strike', 'src': 'spawnStrike.png', 'callback': () => this.#selectAircraft(e, "strike") },
-            { 'coalition': true, 'tooltip': 'Drone', 'src': 'spawnDrone.png', 'callback': () => this.#selectAircraft(e, "drone") },
-            { 'coalition': true, 'tooltip': 'Transport', 'src': 'spawnTransport.png', 'callback': () => this.#selectAircraft(e, "transport") },
-        ]
-        if (e.airbaseName != null)
-            this.showSelectionScroll(e, "Spawn at " + e.airbaseName, options, () => {}, true);
-        else
-            this.showSelectionScroll(e, "Spawn air unit", options, () => {}, true);
-    }
-
-    /* Show unit selection for air units */
-    #selectAircraft(e: SpawnEvent, group: string) {
-        this.hideSelectionWheel();
-        this.hideSelectionScroll();
-        var options = unitTypes.air[group];
-        if (options != undefined)
-            options.sort();
-        else
-            options = [];
-        this.showSelectionScroll(e, "Select aircraft", options, (unitType: string) => {
-            this.hideSelectionWheel();
-            this.hideSelectionScroll();
-            this.#unitSelectPayload(e, unitType);
-        }, true);
-    }
-
-    /* Show weapon selection for air units */
-    #unitSelectPayload(e: SpawnEvent, unitType: string) {
-        this.hideSelectionWheel();
-        this.hideSelectionScroll();
-        var options = [];
-        options = payloadNames[unitType]
-        if (options != undefined && options.length > 0) {
-            options.sort();
-            this.showSelectionScroll({x: e.x, y: e.y, latlng: e.latlng}, "Select loadout", options, (payloadName: string) => {
-                this.hideSelectionWheel();
-                this.hideSelectionScroll();
-                spawnAircraft(unitType, e.latlng, getActiveCoalition(), payloadName, e.airbaseName);
-            }, true);
+        if (this.#state === MOVE_UNIT){
+            if (this.#computeDestinationRotation && this.#destinationRotationCenter != null)
+                this.#destinationGroupRotation = -bearing(this.#destinationRotationCenter.lat, this.#destinationRotationCenter.lng, this.getMouseCoordinates().lat, this.getMouseCoordinates().lng);
+            this.#updateDestinationPreview(e);
         }
-        else {
-            spawnAircraft(unitType, e.latlng, getActiveCoalition());
+        else if ([BOMBING, CARPET_BOMBING, FIRE_AT_AREA].includes(this.#state)) {
+            this.#targetMarker.setLatLng(this.getMouseCoordinates());
         }
     }
 
-    /* Show unit selection for ground units */
-    #selectGroundUnit(e: any, group: string)
-    {
-        this.hideSelectionWheel();
-        this.hideSelectionScroll();
-        var options = unitTypes.vehicles[group];
-        options.sort();
-        this.showSelectionScroll(e, "Select ground unit", options, (unitType: string) => {
-            this.hideSelectionWheel();
-            this.hideSelectionScroll();
-            spawnGroundUnit(unitType, e.latlng, getActiveCoalition());
-        }, true);
+    #onZoom(e: any) {
+        if (this.#centerUnit != null)
+            this.#panToUnit(this.#centerUnit);
     }
 
-    #drawMeasureLine()
-    {
-        var mouseLatLng = this.containerPointToLatLng(this.#lastMousePosition);
-        if (this.#measurePoint != null)
-        {
-            var points = [this.#measurePoint, mouseLatLng];
-            this.#measureLine.setLatLngs(points);
-            var dist = distance(this.#measurePoint.lat, this.#measurePoint.lng, mouseLatLng.lat, mouseLatLng.lng);
-            var bear = bearing(this.#measurePoint.lat, this.#measurePoint.lng, mouseLatLng.lat, mouseLatLng.lng);
-            var startXY = this.latLngToContainerPoint(this.#measurePoint);
-            var dx = (this.#lastMousePosition.x - startXY.x);
-            var dy = (this.#lastMousePosition.y - startXY.y);
+    #panToUnit(unit: Unit) {
+        var unitPosition = new L.LatLng(unit.getFlightData().latitude, unit.getFlightData().longitude);
+        this.setView(unitPosition, this.getZoom(), { animate: false });
+    }
 
-            var angle = Math.atan2(dy, dx);
-            if (angle > Math.PI / 2) 
-                angle = angle - Math.PI;
+    #getMinimapBoundaries() {
+        /* Draw the limits of the maps in the minimap*/
+        return minimapBoundaries;
+    }
 
-            if (angle < -Math.PI / 2) 
-                angle = angle + Math.PI;
+    #updateDestinationPreview(e: any) {
+        Object.values(getUnitsManager().selectedUnitsComputeGroupDestination(this.#computeDestinationRotation && this.#destinationRotationCenter != null ? this.#destinationRotationCenter : this.getMouseCoordinates(), this.#destinationGroupRotation)).forEach((latlng: L.LatLng, idx: number) => {
+            if (idx < this.#destinationPreviewMarkers.length)
+                this.#destinationPreviewMarkers[idx].setLatLng(e.originalEvent.shiftKey ? latlng : this.getMouseCoordinates());
+        })
+    }
 
-            this.#measureLineDiv.innerHTML = `${zeroAppend(Math.floor(bear), 3)}° / ${zeroAppend(Math.floor(dist*0.000539957), 3)} NM`
-            this.#measureLineDiv.style.left = (this.#lastMousePosition.x + startXY.x) / 2 - this.#measureLineDiv.offsetWidth / 2 + "px";
-            this.#measureLineDiv.style.top = (this.#lastMousePosition.y + startXY.y) / 2 - this.#measureLineDiv.offsetHeight / 2 + "px";
-            this.#measureLineDiv.style.rotate = angle + "rad";
-            this.#measureLineDiv.style.display = "";
+    #createOptionButton(value: string, url: string, title: string, callback: string, argument: string) {
+        var button = document.createElement("button");
+        const img = document.createElement("img");
+        img.src = `/resources/theme/images/buttons/${url}`;
+        img.onload = () => SVGInjector(img);
+        button.title = title;
+        button.value = value;
+        button.appendChild(img);
+        button.setAttribute("data-on-click", callback);
+        button.setAttribute("data-on-click-params", argument);
+        return button;
+    }
+
+    #createDestinationMarkers() {
+        this.#resetDestinationMarkers();
+
+        if (getUnitsManager().getSelectedUnits({ excludeHumans: true }).length > 0) {
+            /* Create the unit destination preview markers */
+            this.#destinationPreviewMarkers = getUnitsManager().getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true }).map((unit: Unit) => {
+                var marker = new DestinationPreviewMarker(this.getMouseCoordinates(), {interactive: false});
+                marker.addTo(this);
+                return marker;
+            })
         }
-        
-        if (!this.hasLayer(this.#measureLine))
-            this.#measureLine.addTo(this);
     }
 
-    #hideMeasureLine()
-    {
-        this.#measureLineDiv.style.display = "none";
+    #resetDestinationMarkers() {
+        /* Remove all the destination preview markers */
+        this.#destinationPreviewMarkers.forEach((marker: L.Marker) => {
+            this.removeLayer(marker);
+        })
+        this.#destinationPreviewMarkers = [];
 
-        if (this.hasLayer(this.#measureLine))
-            this.removeLayer(this.#measureLine)
+        this.#destinationGroupRotation = 0;
+        this.#computeDestinationRotation = false;
+        this.#destinationRotationCenter = null;
+    }
+
+    #createTargetMarker(){
+        this.#resetTargetMarker();
+        this.#targetMarker.addTo(this);
+    }
+
+    #resetTargetMarker() {
+        this.#targetMarker.setLatLng(new L.LatLng(0, 0));
+        this.removeLayer(this.#targetMarker);
+    }
+
+    #showCursor() {
+        document.getElementById(this.#ID)?.classList.remove("hidden-cursor");
+    }
+
+    #hideCursor() {
+        document.getElementById(this.#ID)?.classList.add("hidden-cursor");
     }
 } 
+

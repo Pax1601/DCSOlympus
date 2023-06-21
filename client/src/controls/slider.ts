@@ -1,83 +1,123 @@
-export class Slider {
-    #container: HTMLElement | null;
-    #callback: CallableFunction;
-    #slider: HTMLInputElement | null = null;
-    #value: HTMLElement | null = null;
-    #minValue: number;
-    #maxValue: number;
-    #minValueDiv: HTMLElement | null = null;
-    #maxValueDiv: HTMLElement | null = null;
-    #unit: string;
-    #display: string = "";
+import { zeroPad } from "../other/utils";
+import { Control } from "./control";
 
-    constructor(ID: string, minValue: number, maxValue: number, unit: string, callback: CallableFunction) {
-        this.#container = document.getElementById(ID);
-        this.#callback = callback;
-        this.#minValue = minValue;
-        this.#maxValue = maxValue;
-        this.#unit = unit;
-        if (this.#container != null) {
-            this.#display = this.#container.style.display;
-            this.#slider = <HTMLInputElement>this.#container.querySelector("input");
-            if (this.#slider != null)
-            {
-                this.#slider.addEventListener("input", (e: any) => this.#onInput());
-                this.#slider.addEventListener("mouseup", (e: any) => this.#onFinalize());
-            }
-            this.#value = <HTMLElement>this.#container.querySelector("#value");
+export class Slider extends Control {
+    #callback: CallableFunction | null = null;
+    #slider: HTMLInputElement | null = null;
+    #valueText: HTMLElement | null = null;
+    #minValue: number = 0;
+    #maxValue: number = 0;
+    #increment: number = 0;
+    #minMaxValueDiv: HTMLElement | null = null;
+    #unitOfMeasure: string;
+    #dragged: boolean = false;
+    #value: number = 0;
+
+    constructor(ID: string, minValue: number, maxValue: number, unitOfMeasure: string, callback: CallableFunction) {
+        super(ID);
+        this.#callback = callback;     
+        this.#unitOfMeasure = unitOfMeasure;
+        this.#slider = this.getContainer()?.querySelector("input") as HTMLInputElement;
+
+        if (this.#slider != null) {
+            this.#slider.addEventListener("input", (e: any) => this.#update());
+            this.#slider.addEventListener("mousedown", (e: any) => this.#onStart());
+            this.#slider.addEventListener("mouseup", (e: any) => this.#onFinalize());
+        }
+
+        this.#valueText = this.getContainer()?.querySelector(".ol-slider-value") as HTMLElement;
+        this.#minMaxValueDiv = this.getContainer()?.querySelector(".ol-slider-min-max") as HTMLElement;
+
+        this.setIncrement(1);
+        this.setMinMax(minValue, maxValue);
+    }
+
+    setActive(newActive: boolean) {
+        if (!this.getDragged()) {
+            this.getContainer()?.classList.toggle("active", newActive);
+            if (!newActive && this.#valueText != null)
+                this.#valueText.innerText = "Mixed values";
         }
     }
 
-    #onValue()
-    {
-        if (this.#value != null && this.#slider != null)
-            this.#value.innerHTML = this.#minValue + Math.round(parseFloat(this.#slider.value) / 100 * (this.#maxValue - this.#minValue)) + this.#unit
+    setMinMax(newMinValue: number, newMaxValue: number) {
+        if (this.#minValue != newMinValue || this.#maxValue != newMaxValue) {
+            this.#minValue = newMinValue;
+            this.#maxValue = newMaxValue;
+            this.#updateMaxValue();
+
+            if (this.#minMaxValueDiv != null) {
+                this.#minMaxValueDiv.setAttribute('data-min-value', `${this.#minValue}${this.#unitOfMeasure}`);
+                this.#minMaxValueDiv.setAttribute('data-max-value', `${this.#maxValue}${this.#unitOfMeasure}`);
+            }
+        }
+    }
+
+    setIncrement(newIncrement: number) {
+        if (this.#increment != newIncrement) {
+            this.#increment = newIncrement;
+            this.#updateMaxValue();
+        }
+    }
+
+    setValue(newValue: number, ignoreExpectedValue: boolean = true) {
+        if (!this.getDragged() && (ignoreExpectedValue || this.checkExpectedValue(newValue))) {
+            this.#value = newValue;
+            if (this.#slider != null)
+                this.#slider.value = String((newValue - this.#minValue) / (this.#maxValue - this.#minValue) * parseFloat(this.#slider.max));
+            this.#update();
+        }
+    }
+
+    getValue() {
+        return this.#value;
+    }
+
+    setDragged(newDragged: boolean) {
+        this.#dragged = newDragged;
+    } 
+
+    getDragged() {
+        return this.#dragged;
+    }
+
+    #updateMaxValue() {
+        var oldValue = this.getValue();
+        if (this.#slider != null)
+            this.#slider.max = String((this.#maxValue - this.#minValue) / this.#increment);
+        this.setValue(oldValue);
+    }
+
+    #update() {
+        if (this.#valueText != null && this.#slider != null)
+        {
+            /* Update the text value */
+            var value = this.#minValue + Math.round(parseFloat(this.#slider.value) / parseFloat(this.#slider.max) * (this.#maxValue - this.#minValue));
+            var strValue = String(value);
+            if (value > 1000)
+                strValue = String(Math.floor(value / 1000)) + "," + zeroPad(value - Math.floor(value / 1000) * 1000, 3);
+            this.#valueText.innerText = `${strValue} ${this.#unitOfMeasure.toUpperCase()}`;
+
+            /* Update the position of the slider */
+            var percentValue = parseFloat(this.#slider.value) / parseFloat(this.#slider.max) * 90 + 5;
+            this.#slider.style.background = `linear-gradient(to right, var(--accent-light-blue) 5%, var(--accent-light-blue) ${percentValue}%, var(--background-grey) ${percentValue}%, var(--background-grey) 100%)`
+        }
         this.setActive(true);
     }
 
-    #onInput()
-    {
-        this.#onValue();
+    #onStart() {
+        this.setDragged(true);
     }
 
-    #onFinalize()
-    {
-        if (this.#slider != null)
-            this.#callback(this.#minValue + parseFloat(this.#slider.value) / 100 * (this.#maxValue - this.#minValue));
-    }
-
-    show()
-    {
-        if (this.#container != null)
-            this.#container.style.display = this.#display;
-    }
-
-    hide()
-    {
-        if (this.#container != null)
-            this.#container.style.display = 'none';
-    }
-
-    setActive(newActive: boolean)
-    {
-        if (this.#container)
-        {
-            this.#container.classList.toggle("active", newActive);
-            if (!newActive && this.#value != null)
-                this.#value.innerHTML = "Mixed values"
+    #onFinalize() {
+        this.setDragged(false);
+        if (this.#slider != null) {
+            this.resetExpectedValue();
+            this.setValue(this.#minValue + parseFloat(this.#slider.value) / parseFloat(this.#slider.max) * (this.#maxValue - this.#minValue));
+            if (this.#callback) {
+                this.#callback(this.getValue());
+                this.setExpectedValue(this.getValue());
+            }
         }
-    }
-
-    setMinMax(newMinValue: number, newMaxValue: number)
-    {
-        this.#minValue = newMinValue;
-        this.#maxValue = newMaxValue;
-    }
-
-    setValue(newValue: number)
-    {
-        if (this.#slider != null)
-            this.#slider.value = String((newValue - this.#minValue) / (this.#maxValue - this.#minValue) * 100); 
-        this.#onValue()
     }
 }

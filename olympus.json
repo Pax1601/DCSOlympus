@@ -1,0 +1,9 @@
+{
+	"server": {
+		"address": "localhost",
+		"port": 30000
+	},
+	"authentication": {
+		"password": "password"
+	}
+}

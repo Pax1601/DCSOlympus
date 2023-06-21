@@ -6,10 +6,15 @@
 
 void log(const string& message)
 {
-	LOGGER->Log(message);
+	LOGGER->log(message);
 }
 
 void log(const wstring& message)
 {
-	LOGGER->Log(message);
+	LOGGER->log(message);
+}
+
+void getLogsJSON(json::value& json, int logsNumber)
+{
+	LOGGER->toJSON(json, logsNumber);
 }

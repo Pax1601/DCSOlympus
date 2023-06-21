@@ -4,24 +4,24 @@
 #include "commands.h"
 #include "scheduler.h"
 #include "defines.h"
-#include "unitsFactory.h"
+#include "unitsManager.h"
 
 #include <GeographicLib/Geodesic.hpp>
 using namespace GeographicLib;
 
 extern Scheduler* scheduler;
-extern UnitsFactory* unitsFactory;
+extern UnitsManager* unitsManager;
 
 /* Air unit */
 AirUnit::AirUnit(json::value json, int ID) : Unit(json, ID)
 {
-
+	
 };
 
 void AirUnit::setState(int newState) 
 {
-	if (state != newState)
-	{
+	/************ Perform any action required when LEAVING a state ************/
+	if (newState != state) {
 		switch (state) {
 		case State::IDLE: {
 			break;
@@ -30,175 +30,98 @@ void AirUnit::setState(int newState)
 			break;
 		}
 		case State::ATTACK: {
-			setTarget(NULL);
+			setTargetID(NULL);
 			break;
 		}
 		case State::FOLLOW: {
-			break;
-		}
-		case State::WINGMAN: {
-			if (isWingman)
-				return;
+			setLeaderID(NULL);
 			break;
 		}
 		case State::LAND: {
 			break;
 		}
-		default:
+		case State::REFUEL: {
 			break;
 		}
-
-		switch (newState) {
-		case State::IDLE: {
-			resetActiveDestination();
-			break;
-		}
-		case State::REACH_DESTINATION: {
-			resetActiveDestination();
-			break;
-		}
-		case State::ATTACK: {
-			if (isTargetAlive()) {
-				Unit* target = unitsFactory->getUnit(targetID);
-				Coords targetPosition = Coords(target->getLatitude(), target->getLongitude(), 0);
-				activePath.clear();
-				activePath.push_front(targetPosition);
-				resetActiveDestination();
-			}
-			break;
-		}
-		case State::FOLLOW: {
-			resetActiveDestination();
-			break;
-		}
-		case State::WINGMAN: {
-			resetActiveDestination();
-			break;
-		}
-		case State::LAND: {
-			resetActiveDestination();
+		case State::BOMB_POINT:
+		case State::CARPET_BOMB: 
+		case State::BOMB_BUILDING: {
+			setTargetLocation(Coords(NULL));
 			break;
 		}
 		default:
 			break;
 		}
-
-		resetTask();
-
-		log(unitName + L" setting state from " + to_wstring(state) + L" to " + to_wstring(newState));
-		state = newState;
 	}
-}
 
-bool AirUnit::isDestinationReached()
-{
-	if (activeDestination != NULL)
-	{
-		double dist = 0;
-		Geodesic::WGS84().Inverse(latitude, longitude, activeDestination.lat, activeDestination.lng, dist);
-		if (dist < AIR_DEST_DIST_THR)
-		{
-			log(unitName + L" destination reached");
-			return true;
+	/************ Perform any action required when ENTERING a state ************/
+	switch (newState) {
+	case State::IDLE: {
+		clearActivePath();
+		resetActiveDestination();
+		addMeasure(L"currentState", json::value(L"Idle"));
+		break;
+	}
+	case State::REACH_DESTINATION: {
+		resetActiveDestination();
+		addMeasure(L"currentState", json::value(L"Reach destination"));
+		break;
+	}
+	case State::ATTACK: {
+		if (isTargetAlive()) {
+			Unit* target = unitsManager->getUnit(targetID);
+			Coords targetPosition = Coords(target->getLatitude(), target->getLongitude(), 0);
+			clearActivePath();
+			pushActivePathFront(targetPosition);
+			resetActiveDestination();
+			addMeasure(L"currentState", json::value(L"Attack"));
 		}
-		else {
-			return false;
-		}
+		break;
 	}
-	else
-		return true;
-}
+	case State::FOLLOW: {
+		clearActivePath();
+		resetActiveDestination();
+		addMeasure(L"currentState", json::value(L"Follow"));
+		break;
+	}
+	case State::LAND: {
+		resetActiveDestination();
+		addMeasure(L"currentState", json::value(L"Land"));
+		break;
+	}
+	case State::REFUEL: {
+		initialFuel = fuel;
+		clearActivePath();
+		resetActiveDestination();
+		addMeasure(L"currentState", json::value(L"Refuel"));
+		break;
+	}
+	case State::BOMB_POINT: {
+		addMeasure(L"currentState", json::value(L"Bombing point"));
+		clearActivePath();
+		resetActiveDestination();
+		break;
+	}
+	case State::CARPET_BOMB: {
+		addMeasure(L"currentState", json::value(L"Carpet bombing"));
+		clearActivePath();
+		resetActiveDestination();
+		break;
+	}
+	case State::BOMB_BUILDING: {
+		addMeasure(L"currentState", json::value(L"Bombing building"));
+		clearActivePath();
+		resetActiveDestination();
+		break;
+	}
+	default:
+		break;
+	}
 
-bool AirUnit::setActiveDestination()
-{
-	if (activePath.size() > 0)
-	{
-		activeDestination = activePath.front();
-		log(unitName + L" active destination set to queue front");
-		return true;
-	}
-	else
-	{
-		activeDestination = Coords(0);
-		log(unitName + L" active destination set to NULL");
-		return false;
-	}
-}
+	resetTask();
 
-void AirUnit::createHoldingPattern()
-{
-	/* Air units must ALWAYS have a destination or they will RTB and become uncontrollable */
-	activePath.clear();
-	Coords point1;
-	Coords point2;
-	Coords point3;
-	Geodesic::WGS84().Direct(latitude, longitude, 45, 10000, point1.lat, point1.lng);
-	Geodesic::WGS84().Direct(point1.lat, point1.lng, 135, 10000, point2.lat, point2.lng);
-	Geodesic::WGS84().Direct(point2.lat, point2.lng, 225, 10000, point3.lat, point3.lng);
-	activePath.push_back(point1);
-	activePath.push_back(point2);
-	activePath.push_back(point3);
-	activePath.push_back(Coords(latitude, longitude));
-	log(unitName + L" holding pattern created");
-}
-
-bool AirUnit::updateActivePath(bool looping)
-{
-	if (activePath.size() > 0)
-	{
-		/* Push the next destination in the queue to the front */
-		if (looping)
-			activePath.push_back(activePath.front());
-		activePath.pop_front();
-		log(unitName + L" active path front popped");
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
-void AirUnit::goToDestination(wstring enrouteTask)
-{
-	if (activeDestination != NULL)
-	{
-		Command* command = dynamic_cast<Command*>(new Move(ID, activeDestination, getTargetSpeed(), getTargetAltitude(), getCategory(), enrouteTask));
-		scheduler->appendCommand(command);
-		hasTask = true;
-	}
-	else
-		log(unitName + L" error, no active destination!");
-}
-
-void AirUnit::taskWingmen()
-{
-	switch (state) {
-		case State::IDLE:
-		case State::REACH_DESTINATION:
-		case State::ATTACK:{
-			int idx = 1;
-			for (auto const& wingman : wingmen)
-			{
-				if (!wingman->getIsWingman())
-				{
-					wingman->setIsWingman(true);
-					wingman->setLeader(this);
-				}
-
-				if (wingman->getFormation().compare(formation) != 0)
-				{
-					wingman->resetTask();
-					wingman->setFormation(formation);
-					if (formation.compare(L"Line abreast") == 0)
-						wingman->setFormationOffset(Offset(0 * idx, 0 * idx, 1852 * idx));
-					idx++;
-				}
-			}
-			break;
-		}
-		default:
-			break;
-	}
+	log(unitName + L" setting state from " + to_wstring(state) + L" to " + to_wstring(newState));
+	state = newState;
 }
 
 void AirUnit::AIloop()
@@ -206,52 +129,65 @@ void AirUnit::AIloop()
 	/* State machine */
 	switch (state) {
 		case State::IDLE: {
-			wstring enrouteTask = L"nil";
 			currentTask = L"Idle";
 			
-			if (activeDestination == NULL || !hasTask)
+			if (!getHasTask())
 			{
-				createHoldingPattern();		
-				setActiveDestination();		
-				goToDestination(enrouteTask);
+				std::wostringstream taskSS;
+				if (isTanker) {
+					taskSS << "{ [1] = { id = 'Tanker' }, [2] = { id = 'Orbit', pattern = 'Race-Track', altitude = " << desiredAltitude << ", speed = " << desiredSpeed << ", altitudeType = '" << desiredAltitudeType << "' } }";
+				}
+				else if (isAWACS) {
+					taskSS << "{ [1] = { id = 'AWACS' }, [2] = { id = 'Orbit', pattern = 'Circle', altitude = " << desiredAltitude << ", speed = " << desiredSpeed << ", altitudeType = '" << desiredAltitudeType << "' } }";
+				}
+				else {
+					taskSS << "{ id = 'Orbit', pattern = 'Circle', altitude = " << desiredAltitude << ", speed = " << desiredSpeed << ", altitudeType = '" << desiredAltitudeType << "' }";
+				}
+				Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str()));
+				scheduler->appendCommand(command);
+				setHasTask(true);
 			}
-			else {
-				if (isDestinationReached() && updateActivePath(true) && setActiveDestination()) 
-					goToDestination(enrouteTask);	
-			}
-
-			if (isLeader)
-				taskWingmen();
 			break;
 		}
 		case State::REACH_DESTINATION: {
-			wstring enrouteTask = L"nil";
-			currentTask = L"Reaching destination";
-			
-			if (activeDestination == NULL || !hasTask)
+			wstring enrouteTask = L"";
+			bool looping = false;
+
+			if (isTanker)
 			{
-				setActiveDestination();
-				goToDestination(enrouteTask);
+				enrouteTask = L"{ id = 'Tanker' }";
+				currentTask = L"Tanker";
+			}
+			else if (isAWACS)
+			{
+				enrouteTask = L"{ id = 'AWACS' }";
+				currentTask = L"AWACS";
+			}
+			else
+			{
+				enrouteTask = L"nil";
+				currentTask = L"Reaching destination";
+			}
+			
+			if (activeDestination == NULL || !getHasTask())
+			{
+				if (!setActiveDestination())
+					setState(State::IDLE);
+				else
+					goToDestination(enrouteTask);
 			}
 			else {
-				if (isDestinationReached()) {
-					if (updateActivePath(false) && setActiveDestination())
+				if (isDestinationReached(AIR_DEST_DIST_THR)) {
+					if (updateActivePath(looping) && setActiveDestination())
 						goToDestination(enrouteTask);
-					else {
+					else 
 						setState(State::IDLE);
-						break;
-					}
 				}
-			}
-
-			if (isLeader)
-				taskWingmen();
-			
+			}			
 			break;
 		}
-
 		case State::LAND: {
-			wstring enrouteTask = L"{" "id = 'land' }";
+			wstring enrouteTask = L"{ id = 'Land' }";
 			currentTask = L"Landing";
 
 			if (activeDestination == NULL)
@@ -259,10 +195,6 @@ void AirUnit::AIloop()
 				setActiveDestination();
 				goToDestination(enrouteTask);
 			}
-			
-			if (isLeader)
-				taskWingmen();
-
 			break;
 		}
 		case State::ATTACK: {
@@ -280,45 +212,30 @@ void AirUnit::AIloop()
 				<< "targetID = " << targetID << ","
 				<< "}";
 			wstring enrouteTask = enrouteTaskSS.str();
-			currentTask = L"Attacking " + getTarget();
+			currentTask = L"Attacking " + getTargetName();
 			
-			if (activeDestination == NULL || !hasTask)
+			if (!getHasTask())
 			{
 				setActiveDestination();
 				goToDestination(enrouteTask);
 			}
-			else {
-				if (isDestinationReached()) {
-					if (updateActivePath(false) && setActiveDestination())
-						goToDestination(enrouteTask);
-					else {
-						setState(State::IDLE);
-						break;
-					}
-				}
-			}
-
-			if (isLeader)
-				taskWingmen();
 
 			break;
 		}
 		case State::FOLLOW: {
-			/* TODO */
-			setState(State::IDLE);
-			break;
-		}
-		case State::WINGMAN: {
-			/* In the WINGMAN state, the unit relinquishes control to the leader */
-			activePath.clear();
+			clearActivePath();
 			activeDestination = Coords(NULL);
-			if (leader == nullptr || !leader->getAlive())
-			{
-				this->setFormation(L"");
-				this->setIsWingman(false);
+
+			/* If the leader is not alive (either not set or was destroyed) go back to IDLE */
+			if (!isLeaderAlive()) {
+				setState(State::IDLE);
 				break;
 			}
-			if (!hasTask) {
+
+			currentTask = L"Following " + getTargetName();
+
+			Unit* leader = unitsManager->getUnit(leaderID);
+			if (!getHasTask()) {
 				if (leader != nullptr && leader->getAlive() && formationOffset != NULL)
 				{
 					std::wostringstream taskSS;
@@ -331,14 +248,69 @@ void AirUnit::AIloop()
 						<< "z = " << formationOffset.z 
 						<< "},"
 						<< "}";
-					Command* command = dynamic_cast<Command*>(new SetTask(ID, taskSS.str()));
+					Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str()));
 					scheduler->appendCommand(command);
-					hasTask = true;
+					setHasTask(true);
 				}
+			}
+			break;
+		}
+		case State::REFUEL: {
+			currentTask = L"Refueling";
+
+			if (!getHasTask()) {
+				if (fuel <= initialFuel) {
+					std::wostringstream taskSS;
+					taskSS << "{"
+						<< "id = 'Refuel'"
+						<< "}";
+					Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str()));
+					scheduler->appendCommand(command);
+					setHasTask(true);
+				}
+				else {
+					setState(State::IDLE);
+				}
+			}
+		}
+		case State::BOMB_POINT: {
+			currentTask = L"Bombing point";
+
+			if (!getHasTask()) {
+				std::wostringstream taskSS;
+				taskSS << "{id = 'Bombing', lat = " << targetLocation.lat << ", lng = " << targetLocation.lng << "}";
+				Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str()));
+				scheduler->appendCommand(command);
+				setHasTask(true);
+			}
+		}
+		case State::CARPET_BOMB: {
+			currentTask = L"Carpet bombing";
+
+			if (!getHasTask()) {
+				std::wostringstream taskSS;
+				taskSS << "{id = 'CarpetBombing', lat = " << targetLocation.lat << ", lng = " << targetLocation.lng << "}";
+				Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str()));
+				scheduler->appendCommand(command);
+				setHasTask(true);
+			}
+			break;
+		}
+		case State::BOMB_BUILDING: {
+			currentTask = L"Bombing building";
+
+			if (!getHasTask()) {
+				std::wostringstream taskSS;
+				taskSS << "{id = 'AttackMapObject', lat = " << targetLocation.lat << ", lng = " << targetLocation.lng << "}";
+				Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str()));
+				scheduler->appendCommand(command);
+				setHasTask(true);
 			}
 			break;
 		}
 		default:
 			break;
 	}
+
+	addMeasure(L"currentTask", json::value(currentTask));
 }

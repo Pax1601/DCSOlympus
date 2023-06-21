@@ -1,0 +1,226 @@
+body.feature-forceShowUnitControlPanel #unit-control-panel {
+	display: block !important;
+}
+
+#unit-control-panel {
+	display: flex;
+	flex-direction: column;
+	row-gap: 10px;
+}
+
+#unit-control-panel h3 {
+	margin-bottom: 8px;
+}
+
+#unit-control-panel #selected-units-container {
+	align-items: left;
+	border-radius: var(--border-radius-md);
+	display: flex;
+	flex-direction: column;
+	max-height: 215px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	row-gap: 4px;
+}
+
+#unit-control-panel #selected-units-container button {
+	align-items: center;
+	border-radius: var(--border-radius-lg);
+	display: flex;
+	font-size: 11px;
+	height: 32px;
+	justify-content: space-between;
+	margin-right: 5px;
+	position: relative;
+	width: calc(100% - 5px);
+}
+
+#unit-control-panel #selected-units-container button::after {
+	border-radius: 999px;
+	color: var(--secondary-semitransparent-white);
+	content: attr(data-label);
+	font-size: 10px;
+	padding: 4px 6px;
+	white-space: nowrap;
+	width: fit-content;
+}
+
+#unit-control-panel #selected-units-container button:hover::after {
+	max-width: 100%;
+	text-overflow: unset;
+}
+
+#unit-control-panel #selected-units-container button::before {
+	border-radius: var(--border-radius-sm);
+	content: attr(data-callsign);
+	display: block;
+	overflow: hidden;
+	padding: 4px;
+	padding-left: 0;
+	text-align: left;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	width: fit-content;
+}
+
+#unit-control-panel h4 {
+	margin-bottom: 8px;
+}
+
+#advanced-settings-dialog {
+	width: 400px;
+}
+
+#advanced-settings-dialog>.ol-dialog-content {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	margin-bottom: 10px;
+	margin-top: 10px;
+	row-gap: 10px;
+}
+
+#advanced-settings-dialog>.ol-dialog-content>div {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	row-gap: 10px;
+}
+
+#advanced-settings-dialog>.ol-dialog-content>div>.ol-group {
+	justify-content: space-between;
+}
+
+#advanced-settings-dialog h4 {
+	white-space: nowrap;
+}
+
+#advanced-settings-dialog hr {
+	margin-bottom: 10px;
+	margin-top: 15px;
+}
+
+#general-settings-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	row-gap: 10px;
+}
+
+#general-settings-grid>div {
+	width: 49%;
+}
+
+#flight-data .ol-slider {
+	margin: 20px 0px;
+}
+
+.ol-slider-container dd {
+	column-gap: 5px;
+}
+
+#flight-data .ol-switch {
+	height: 20px;
+	width: 50px;
+}
+
+#flight-data .ol-switch-fill {
+	background-color: var(--accent-light-blue);
+}
+
+#flight-data .ol-switch-fill::after {
+	background-color: white;
+}
+
+#altitude-type-switch[data-value="true"]>.ol-switch-fill::before {
+	content: "AGL";
+}
+
+#altitude-type-switch[data-value="false"]>.ol-switch-fill::before {
+	content: "ASL";
+}
+
+#speed-type-switch[data-value="true"]>.ol-switch-fill::before {
+	content: "GS";
+}
+
+#speed-type-switch[data-value="false"]>.ol-switch-fill::before {
+	content: "CAS";
+}
+
+#unit-control-panel .ol-slider-value {
+	color: var(--accent-light-blue);
+	cursor: pointer;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+#unit-control-panel .switch-control {
+	align-items: center;
+	display: grid;
+	grid-template-columns: 1.35fr 0.65fr;
+}
+
+#unit-control-panel .switch-control>*:nth-child(2) {
+	justify-self: end;
+}
+
+#unit-control-panel .switch-control>*:nth-child(3) {
+	color: var(--secondary-semitransparent-white);
+}
+
+#unit-control-panel .switch-control h4 {
+	margin: 0px;
+}
+
+#unit-control-panel .switch-control .ol-switch {
+	height: 25px;
+	width: 60px;
+}
+
+#unit-control-panel .switch-control .ol-switch-fill {
+	background-color: var(--accent-light-blue);
+}
+
+#unit-control-panel .switch-control .ol-switch-fill::after {
+	background-color: white;
+}
+
+#unit-control-panel .switch-control .ol-switch[data-value="true"]>.ol-switch-fill::before {
+	content: "YES";
+}
+
+#unit-control-panel .switch-control .ol-switch[data-value="false"]>.ol-switch-fill::before {
+	content: "NO";
+}
+
+#advanced-settings-div {
+	column-gap: 5px;
+	display: flex;
+}
+
+#advanced-settings-div>*:nth-child(2) {
+	margin-left: auto;
+}
+
+#advanced-settings-div button {
+	height: 40px;
+}
+
+/* Element visibility control */
+#unit-control-panel:not([data-show-categories-tooltip]) #categories-tooltip,
+#unit-control-panel:not([data-show-speed-slider]) #speed-slider,
+#unit-control-panel:not([data-show-altitude-slider]) #altitude-slider,
+#unit-control-panel:not([data-show-roe]) #roe,
+#unit-control-panel:not([data-show-threat]) #threat,
+#unit-control-panel:not([data-show-emissions-countermeasures]) #emissions-countermeasures,
+#unit-control-panel:not([data-show-on-off]) #ai-on-off,
+#unit-control-panel:not([data-show-follow-roads]) #follow-roads,
+#unit-control-panel:not([data-show-advanced-settings-button]) #advanced-settings-button,
+#advanced-settings-dialog:not([data-show-settings]) #general-settings,
+#advanced-settings-dialog:not([data-show-tasking]) #tasking,
+#advanced-settings-dialog:not([data-show-tanker]) #tanker-checkbox,
+#advanced-settings-dialog:not([data-show-AWACS]) #AWACS-checkbox,
+#advanced-settings-dialog:not([data-show-TACAN]) #TACAN-options,
+#advanced-settings-dialog:not([data-show-radio]) #radio-options {
+	display: none;
+}

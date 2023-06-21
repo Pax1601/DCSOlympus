@@ -5,14 +5,16 @@
 using namespace web::http;
 using namespace web::http::experimental::listener;
 
-class UnitsFactory;
+class UnitsManager;
 class Scheduler;
 
 class Server
 {
 public:
 	Server(lua_State* L);
-	~Server();
+
+    void start(lua_State* L);
+    void stop(lua_State* L);
 
 private:
 	std::thread* serverThread;
@@ -25,5 +27,7 @@ private:
     void task();
 
     atomic<bool> runListener;
+
+    wstring password = L"";
 };
 

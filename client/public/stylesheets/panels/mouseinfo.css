@@ -1,0 +1,109 @@
+#mouse-info-panel>* {
+	background-color: var(--background-grey);
+	border-radius: var(--border-radius-sm);
+	padding: 6px;
+}
+
+#mouse-info-panel dl {
+	margin-bottom: 4px;
+	row-gap: 5px;
+}
+
+#mouse-info-panel dt {
+	height: fit-content;
+	width: 30%;
+}
+
+#mouse-info-panel dt::after {
+	align-items: center;
+	background-color: white;
+	border-radius: var(--border-radius-sm);
+	color: var(--background-steel);
+	display: flex;
+	font-size: 15.6px;
+	font-weight: bolder;
+	height: 16px;
+	justify-content: center;
+	line-height: 16px;
+	padding: 4px;
+	text-transform: uppercase;
+	width: 16px;
+}
+
+#mouse-info-panel #measuring-tool dt {
+	height: 24px;
+	width: 24px;
+	background-color: var(--background-offwhite);
+	border-radius: var(--border-radius-sm);
+}
+
+#mouse-info-panel #measuring-tool svg {
+	padding: 3px;
+	height: 100%;
+	width: 100%;
+}
+
+#mouse-info-panel #measuring-tool dt svg>* {
+	fill: black;
+	stroke: black;
+}
+
+#mouse-info-panel dt[data-label]::after {
+	content: attr(data-label);
+}
+
+#mouse-info-panel dt[data-coalition="blue"]::after {
+	background-color: var(--primary-blue);
+}
+
+#mouse-info-panel dt[data-coalition="red"]::after {
+	background-color: var(--primary-red);
+}
+
+#mouse-info-panel dt[data-tooltip]:hover::before {
+	background-color: var(--background-grey);
+	border-radius: 5px;
+	content: attr(data-tooltip);
+	display: flex;
+	flex-wrap: nowrap;
+	padding: 5px;
+	position: absolute;
+	translate: calc(-100% - 15px) 0;
+	white-space: nowrap;
+}
+
+#mouse-info-panel dd {
+	width: 70%;
+}
+
+.br-info::after {
+    content: attr(data-bearing) '\00B0  / ' attr(data-distance) " " attr(data-distance-units);
+	font-weight: bold;
+	font-size: 13px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: var(--background-offwhite);
+}
+
+.br-info[data-coalition="blue"]::after {
+    color: var(--primary-blue)
+}
+
+.br-info[data-coalition="red"]::after {
+    color: var(--primary-red)
+}
+
+.br-info[data-message]::after {
+    content: attr(data-message);
+}
+
+.coordinates::after {
+    content: attr(data-value);
+	font-weight: bold;
+	font-size: 13px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: var(--background-offwhite);
+}

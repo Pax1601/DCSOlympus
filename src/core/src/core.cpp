@@ -1,26 +1,34 @@
 #include "dcstools.h"
 #include "logger.h"
 #include "defines.h"
-#include "unitsFactory.h"
+#include "unitsManager.h"
 #include "server.h"
 #include "scheduler.h"
 #include "scriptLoader.h"
 #include "luatools.h"
 
 auto before = std::chrono::system_clock::now();
-UnitsFactory* unitsFactory = nullptr;
+UnitsManager* unitsManager = nullptr;
 Server* server = nullptr;
 Scheduler* scheduler = nullptr;
-json::value airbasesData;
-json::value bullseyeData;
-
+json::value airbases;
+json::value bullseyes;
+json::value mission;
+mutex mutexLock;
+bool initialized = false;
+string sessionHash;
 
 /* Called when DCS simulation stops. All singleton instances are deleted. */
 extern "C" DllExport int coreDeinit(lua_State* L)
 {
+    if (!initialized)
+        return (0);
+
     log("Olympus coreDeinit called successfully");
 
-    delete unitsFactory;
+    server->stop(L);
+
+    delete unitsManager;
     delete server;
     delete scheduler;
 
@@ -32,49 +40,66 @@ extern "C" DllExport int coreDeinit(lua_State* L)
 /* Called when DCS simulation starts. All singletons are instantiated, and the custom Lua functions are registered in the Lua state. */
 extern "C" DllExport int coreInit(lua_State* L)
 {
-    unitsFactory = new UnitsFactory(L);
+    sessionHash = random_string(16);
+    unitsManager = new UnitsManager(L);
     server = new Server(L);
     scheduler = new Scheduler(L);
 
     registerLuaFunctions(L);
 
+    server->start(L);
+
+    initialized = true;
     return(0);
 }
 
 extern "C" DllExport int coreFrame(lua_State* L)
 {
+    if (!initialized)
+        return (0);
+
+    /* Lock for thread safety */
+    lock_guard<mutex> guard(mutexLock);
+
     const std::chrono::duration<double> duration = std::chrono::system_clock::now() - before;
 
-    // TODO make intervals editable
+    /* TODO make intervals editable */
     if (duration.count() > UPDATE_TIME_INTERVAL)
     {
-        if (unitsFactory != nullptr)
+        if (unitsManager != nullptr)
         {
-            unitsFactory->updateExportData(L);
-        }
-
-        // TODO allow for different intervals
-        if (scheduler != nullptr)
-        {
-            scheduler->execute(L);
+            unitsManager->updateExportData(L);
+            unitsManager->runAILoop();
         }
         before = std::chrono::system_clock::now();
     }
+
+    if (scheduler != nullptr)
+        scheduler->execute(L);
+ 
     return(0);
 }
 
 extern "C" DllExport int coreMissionData(lua_State * L)
 {
+    if (!initialized)
+        return (0);
+
+    /* Lock for thread safety */
+    lock_guard<mutex> guard(mutexLock);
+
     lua_getglobal(L, "Olympus");
     lua_getfield(L, -1, "missionData");
     json::value missionData = luaTableToJSON(L, -1);
 
     if (missionData.has_object_field(L"unitsData"))
-        unitsFactory->updateMissionData(missionData[L"unitsData"]);
+        unitsManager->updateMissionData(missionData[L"unitsData"]);
     if (missionData.has_object_field(L"airbases"))
-        airbasesData = missionData[L"airbases"];
-    if (missionData.has_object_field(L"bullseye"))
-        bullseyeData = missionData[L"bullseye"];
+        airbases = missionData[L"airbases"];
+    if (missionData.has_object_field(L"bullseyes"))
+        bullseyes = missionData[L"bullseyes"];
+    if (missionData.has_object_field(L"mission"))
+        mission = missionData[L"mission"];
 
     return(0);
 }

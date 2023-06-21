@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="21.327999"
+   height="21.327999"
+   fill="none"
+   version="1.1"
+   viewBox="0 0 21.327999 21.327999"
+   id="svg7226"
+   sodipodi:docname="airbase.svg"
+   inkscape:version="1.2.2 (732a01da63, 2022-12-09)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <defs
+     id="defs7230" />
+  <sodipodi:namedview
+     id="namedview7228"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="26.15625"
+     inkscape:cx="10.666667"
+     inkscape:cy="10.666667"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg7226" />
+  <metadata
+     id="metadata7218">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <path
+     d="m 10.664,18.4362 c 4.2922,0 7.7717,-3.4796 7.7717,-7.7717 0,-4.2921 -3.4796,-7.7717 -7.7717,-7.7717 -4.2921,0 -7.7717,3.4796 -7.7717,7.7717 0,4.2921 3.4796,7.7717 7.7717,7.7717 z m 0,2.8918 c 5.8893,0 10.664,-4.7742 10.664,-10.664 C 21.328,4.7742 16.5538,0 10.664,0 4.7742,0 0,4.7742 0,10.664 0,16.5538 4.7742,21.328 10.664,21.328 Z"
+     clip-rule="evenodd"
+     fill="#ffffff"
+     fill-rule="evenodd"
+     stroke-width="0"
+     style="fill:#000000"
+     id="path7220" />
+  <line
+     x1="7.796"
+     x2="13.187"
+     y1="6.8541994"
+     y2="14.231199"
+     stroke="#247BE2"
+     stroke-linecap="square"
+     style="fill:none;stroke:#000000"
+     id="line7222" />
+  <line
+     x1="14.397999"
+     x2="7.8680005"
+     y1="11.885201"
+     y2="11.450199"
+     stroke="#247BE2"
+     stroke-linecap="square"
+     style="fill:none;stroke:#000000"
+     id="line7224" />
+</svg>

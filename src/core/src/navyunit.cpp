@@ -4,18 +4,22 @@
 #include "commands.h"
 #include "scheduler.h"
 #include "defines.h"
-#include "unitsFactory.h"
+#include "unitsManager.h"
 
 #include <GeographicLib/Geodesic.hpp>
 using namespace GeographicLib;
 
 extern Scheduler* scheduler;
-extern UnitsFactory* unitsFactory;
+extern UnitsManager* unitsManager;
 
 /* Navy Unit */
 NavyUnit::NavyUnit(json::value json, int ID) : Unit(json, ID)
 {
 	log("New Navy Unit created with ID: " + to_string(ID));
+	addMeasure(L"category", json::value(getCategory()));
+
+	double desiredSpeed = 10;
+	setDesiredSpeed(desiredSpeed);
 };
 
 void NavyUnit::AIloop()

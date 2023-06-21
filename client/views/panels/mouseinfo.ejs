@@ -1,0 +1,34 @@
+<div id="mouse-info-panel" class="ol-panel" oncontextmenu="return false;">
+
+    <div id="measuring-tool" class="hide">
+        <dl class="ol-data-grid">
+            <dt id="ref-measure-position" data-tooltip="CTRL-click on the map to activate the measuring tool">
+                <img src="/resources/theme/images/icons/pin.svg" inject-svg>
+            </dt>
+            <dd id="measure-position" class="br-info" data-bearing="---" data-distance="---" data-distance-units="NM"></dd>
+            <dt id="ref-unit-position" data-tooltip="Bearing/range from selected unit">
+                <img src="/resources/theme/images/icons/plane.svg" inject-svg>
+            </dt>
+            <dd id="unit-position" class="br-info" data-bearing="---" data-distance="---" data-distance-units="NM"></dd>
+        </dl>
+    </div>
+
+    <div id="bullseyes-tool">
+        <dl class="ol-data-grid">
+            <dt id="ref-bullseye-2" data-tooltip="Bearing/range from this bullseye" data-label="BE" data-coalition="blue"></dt>
+            <dd id="bullseye-2" class="br-info" data-coalition="blue" data-bearing="---" data-distance="---" data-distance-units="NM"></dd>
+            <dt id="ref-bullseye-1" data-tooltip="Bearing/range from this bullseye" data-label="BE" data-coalition="red"></dt>
+            <dd id="bullseye-1" class="br-info" data-coalition="red" data-bearing="---" data-distance="---" data-distance-units="NM"></dd>
+        </dl>
+    </div>
+ 
+    <div id="coordinates-tool">
+        <dl class="ol-data-grid">
+            <dt id="ref-mouse-position-latitude" data-label="?"></dt>
+            <dd id="mouse-position-latitude" class="coordinates" data-dd="---" data-mm="---" data-ss="--" data-sss="--"></dd>
+            <dt id="ref-mouse-position-longitude" data-label="?"></dt>
+            <dd id="mouse-position-longitude" class="coordinates" data-dd="---" data-mm="---" data-ss="--" data-sss="--"></dd>
+        </dl>
+    </div>
+
+</div>

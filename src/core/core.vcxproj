@@ -36,6 +36,7 @@
     <ClInclude Include="include\aircraft.h" />
     <ClInclude Include="include\airunit.h" />
     <ClInclude Include="include\commands.h" />
+    <ClInclude Include="include\measure.h" />
     <ClInclude Include="include\groundunit.h" />
     <ClInclude Include="include\helicopter.h" />
     <ClInclude Include="include\navyunit.h" />
@@ -43,7 +44,7 @@
     <ClInclude Include="include\scriptloader.h" />
     <ClInclude Include="include\server.h" />
     <ClInclude Include="include\unit.h" />
-    <ClInclude Include="include\unitsfactory.h" />
+    <ClInclude Include="include\unitsmanager.h" />
     <ClInclude Include="include\weapon.h" />
   </ItemGroup>
   <ItemGroup>
@@ -51,6 +52,7 @@
     <ClCompile Include="src\airunit.cpp" />
     <ClCompile Include="src\commands.cpp" />
     <ClCompile Include="src\core.cpp" />
+    <ClCompile Include="src\measure.cpp" />
     <ClCompile Include="src\groundunit.cpp" />
     <ClCompile Include="src\helicopter.cpp" />
     <ClCompile Include="src\navyunit.cpp" />
@@ -58,7 +60,7 @@
     <ClCompile Include="src\scriptloader.cpp" />
     <ClCompile Include="src\server.cpp" />
     <ClCompile Include="src\unit.cpp" />
-    <ClCompile Include="src\unitsfactory.cpp" />
+    <ClCompile Include="src\unitsmanager.cpp" />
     <ClCompile Include="src\weapon.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -183,7 +185,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>include;..\..\third-party\lua\include;..\utils\include;..\shared\include;..\dcstools\include;..\logger\include;..\luatools\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;..\..\third-party\base64\include;..\..\third-party\lua\include;..\utils\include;..\shared\include;..\dcstools\include;..\logger\include;..\luatools\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
