@@ -59,18 +59,11 @@ Unit* UnitsManager::getGroupLeader(Unit* unit)
 	if (unit != nullptr) {
 		wstring groupName = unit->getGroupName();
 
-		/* Get the unit IDs in order */
-		std::vector<int> keys;
-		for (auto const& p : units)
-			keys.push_back(p.first);
-		sort(keys.begin(), keys.end());
-
 		/* Find the first unit that has the same groupName */
-		for (auto const& tempID : keys)
+		for (auto const& p : units)
 		{
-			Unit* tempUnit = getUnit(tempID);
-			if (tempUnit != nullptr && tempUnit->getGroupName().compare(groupName) == 0)
-				return tempUnit;
+			if (p.second->getGroupName().compare(groupName) == 0)
+				return p.second;
 		}
 	}
 	return nullptr;
@@ -93,7 +86,7 @@ Unit* UnitsManager::getGroupLeader(int ID)
 	return getGroupLeader(unit);
 }
 
-void UnitsManager::updateExportData(lua_State* L)
+void UnitsManager::updateExportData(lua_State* L, double dt)
 {
 	map<int, json::value> unitJSONs = getAllUnits(L);
 
@@ -132,15 +125,13 @@ void UnitsManager::updateExportData(lua_State* L)
 		else {
 			/* Update the unit if present*/
 			if (units.count(ID) != 0)
-				units[ID]->updateExportData(p.second);
+				units[ID]->updateExportData(p.second, dt);
 		}
 	}
 
 	/* Set the units that are not present in the JSON as dead (probably have been destroyed) */
 	for (auto const& unit : units)
-	{
 		unit.second->setAlive(unitJSONs.find(unit.first) != unitJSONs.end());		
-	}
 }
 
 void UnitsManager::updateMissionData(json::value missionData)
@@ -150,30 +141,36 @@ void UnitsManager::updateMissionData(json::value missionData)
 	{
 		int ID = p.first;
 		if (missionData.has_field(to_wstring(ID)))
-		{
 			p.second->updateMissionData(missionData[to_wstring(ID)]);
-		}
 	}
 }
 
 void UnitsManager::runAILoop() {
 	/* Run the AI Loop on all units */
 	for (auto const& unit : units)
-	{
 		unit.second->runAILoop();
-	}
 }
 
-void UnitsManager::getData(json::value& answer, long long time)
+void UnitsManager::getUnitData(json::value& answer, long long time)
 {
 	auto unitsJson = json::value::object();
 	for (auto const& p : units)
 	{
 		auto unitJson = p.second->getData(time);
 		if (unitJson.size() > 0)
-			unitsJson[to_wstring(p.first)] = p.second->getData(time);
+			unitsJson[to_wstring(p.first)] = unitJson;
 	}
 	answer[L"units"] = unitsJson;
+}
+
+void UnitsManager::appendUnitData(int ID, json::value& answer, long long time)
+{
+	Unit* unit = getUnit(ID);
+	if (unit != nullptr) {
+		auto unitJson = unit->getData(time);
+		if (unitJson.size() > 0)
+			answer[to_wstring(ID)] = unitJson;
+	}
 }
 
 void UnitsManager::deleteUnit(int ID, bool explosion)

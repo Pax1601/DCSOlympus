@@ -65,7 +65,7 @@ public:
 	void setDefaults(bool force = false);
 	int getID() { return ID; }
 	void runAILoop();
-	void updateExportData(json::value json);
+	void updateExportData(json::value json, double dt = 0);
 	void updateMissionData(json::value json);
 	json::value getData(long long time, bool getAll = false);
 	virtual wstring getCategory() { return L"No category"; };

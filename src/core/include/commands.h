@@ -5,7 +5,7 @@
 #include "logger.h"
 
 namespace CommandPriority {
-	enum CommandPriorities { LOW, MEDIUM, HIGH };
+	enum CommandPriorities { LOW, MEDIUM, HIGH, IMMEDIATE };
 };
 
 namespace SetCommandType {
@@ -151,7 +151,7 @@ public:
 		location(location),
 		immediate(immediate)
 	{ 
-		priority = CommandPriority::LOW; 
+		priority = immediate? CommandPriority::IMMEDIATE: CommandPriority::LOW;
 	};
 	virtual wstring getString(lua_State* L);
 	virtual int getLoad() { return 100 * !immediate; }
@@ -175,7 +175,7 @@ public:
 		airbaseName(airbaseName),
 		immediate(immediate)
 	{ 
-		priority = CommandPriority::LOW; 
+		priority = immediate ? CommandPriority::IMMEDIATE : CommandPriority::LOW;
 	};
 	virtual wstring getString(lua_State* L);
 	virtual int getLoad() { return 100 * !immediate; }

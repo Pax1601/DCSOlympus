@@ -396,18 +396,18 @@ export class Map extends L.Map {
 
     removeTemporaryMarker(latlng: L.LatLng) {
         // TODO something more refined than this
-        var d: number | null = null;
+        var dist: number | null = null;
         var closest: L.Marker | null = null;
         var i: number = 0;
         this.#temporaryMarkers.forEach((marker: L.Marker, idx: number) => {
             var t = latlng.distanceTo(marker.getLatLng());
-            if (d == null || t < d) {
-                d = t;
+            if (dist == null || t < dist) {
+                dist = t;
                 closest = marker;
                 i = idx;
             }
         });
-        if (closest) {
+        if (closest && dist != null && dist < 100) {
             this.removeLayer(closest);
             this.#temporaryMarkers.splice(i, 1);
         }
@@ -582,29 +582,40 @@ export class Map extends L.Map {
         document.getElementById(this.#ID)?.classList.add("hidden-cursor");
     }
 
-    #showDestinationCursors() {
+    #showDestinationCursors(singleCursor: boolean) {
         /* Don't create the cursors if there already are the correct number of them available */
-        if (getUnitsManager().getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true }).length != this.#destinationPreviewCursors.length) {
+        if (singleCursor || getUnitsManager().getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true }).length != this.#destinationPreviewCursors.length) {
             /* Reset the cursors to start from a clean condition */
             this.#hideDestinationCursors();
 
             if (getUnitsManager().getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true }).length > 0) {
-                /* Create the cursors. If a group is selected only one cursor is shown for it, because you can't control single units in a group */
-                this.#destinationPreviewCursors = getUnitsManager().getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true }).map((unit: Unit) => {
+                if (singleCursor) {
                     var marker = new DestinationPreviewMarker(this.getMouseCoordinates(), { interactive: false });
                     marker.addTo(this);
-                    return marker;
-                })
+                    this.#destinationPreviewCursors = [marker];
+                }
+                else {
+                /* Create the cursors. If a group is selected only one cursor is shown for it, because you can't control single units in a group */
+                    this.#destinationPreviewCursors = getUnitsManager().getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true }).map((unit: Unit) => {
+                        var marker = new DestinationPreviewMarker(this.getMouseCoordinates(), { interactive: false });
+                        marker.addTo(this);
+                        return marker;
+                    });
+                }
             }
         }
     }
 
     #updateDestinationCursors(e: any) {
         const groupLatLng = this.#computeDestinationRotation && this.#destinationRotationCenter != null ? this.#destinationRotationCenter : this.getMouseCoordinates();
-        Object.values(getUnitsManager().selectedUnitsComputeGroupDestination(groupLatLng, this.#destinationGroupRotation)).forEach((latlng: L.LatLng, idx: number) => {
-            if (idx < this.#destinationPreviewCursors.length)
-                this.#destinationPreviewCursors[idx].setLatLng(e.originalEvent.shiftKey ? latlng : this.getMouseCoordinates());
-        })
+        if (this.#destinationPreviewCursors.length == 1)
+            this.#destinationPreviewCursors[0].setLatLng(this.getMouseCoordinates());
+        else {
+            Object.values(getUnitsManager().selectedUnitsComputeGroupDestination(groupLatLng, this.#destinationGroupRotation)).forEach((latlng: L.LatLng, idx: number) => {
+                if (idx < this.#destinationPreviewCursors.length)
+                    this.#destinationPreviewCursors[idx].setLatLng(e.originalEvent.shiftKey ? latlng : this.getMouseCoordinates());
+            })
+        };
     }
 
     #hideDestinationCursors() {
@@ -660,7 +671,7 @@ export class Map extends L.Map {
 
             /* Show the active cursor depending on the active state */
             if (this.#state === IDLE || this.#state === COALITIONAREA_INTERACT) this.#showDefaultCursor();
-            else if (this.#state === MOVE_UNIT) this.#showDestinationCursors();
+            else if (this.#state === MOVE_UNIT) this.#showDestinationCursors(!e.originalEvent.shiftKey);
             else if ([BOMBING, CARPET_BOMBING, FIRE_AT_AREA].includes(this.#state)) this.#showTargetCursor();
             else if (this.#state === COALITIONAREA_DRAW_POLYGON) this.#showDrawingCursor();
         }

@@ -1,11 +1,10 @@
 import { getMap, getUnitsManager } from "..";
+import { IADSRoles } from "../constants/constants";
 import { CoalitionArea } from "../map/coalitionarea";
 import { ContextMenu } from "./contextmenu";
 import { Dropdown } from "./dropdown";
 import { Slider } from "./slider";
 import { Switch } from "./switch";
-
-const unitRole = ["AAA", "MANPADS", "SAM Sites", "Radar"];
 
 export class CoalitionAreaContextMenu extends ContextMenu {
     #coalitionSwitch: Switch;
@@ -57,7 +56,7 @@ export class CoalitionAreaContextMenu extends ContextMenu {
         })
 
         /* Create the checkboxes to select the unit roles */
-        this.#iadsRoleDropdown.setOptionsElements(unitRole.map((unitRole: string) => {
+        this.#iadsRoleDropdown.setOptionsElements(Object.keys(IADSRoles).map((unitRole: string) => {
             var div = document.createElement("div");
             div.classList.add("ol-checkbox");
             var label = document.createElement("label");

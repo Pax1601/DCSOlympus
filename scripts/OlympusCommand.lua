@@ -1,6 +1,6 @@
 local version = "v0.3.0-alpha"
 
-local debug = true
+local debug = false
 
 Olympus.unitCounter = 1
 Olympus.payloadRegistry = {}
@@ -343,7 +343,7 @@ function Olympus.spawnGroundUnit(coalition, unitType, lat, lng)
 		units = unitTable, 
 		country = countryID, 
 		category = 'vehicle',
-		name = "Olympus-" .. Olympus.unitCounter,
+		name = "Ground-" .. Olympus.unitCounter,
 	}
 	mist.dynAdd(vars)
 	Olympus.unitCounter = Olympus.unitCounter + 1

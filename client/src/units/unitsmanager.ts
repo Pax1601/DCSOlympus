@@ -6,7 +6,7 @@ import { deg2rad, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng,
 import { CoalitionArea } from "../map/coalitionarea";
 import { Airbase } from "../missionhandler/airbase";
 import { groundUnitsDatabase } from "./groundunitsdatabase";
-import { IDLE, MOVE_UNIT } from "../constants/constants";
+import { IADSRoles, IDLE, MOVE_UNIT } from "../constants/constants";
 
 export class UnitsManager {
     #units: { [ID: number]: Unit };
@@ -516,9 +516,9 @@ export class UnitsManager {
                 if (distance > maxDistance) maxDistance = distance;
             });
 
-            const probability = Math.pow(1 - minDistance / 50e3, 5);
+            const role = activeRoles[Math.floor(Math.random() * activeRoles.length)];
+            const probability = Math.pow(1 - minDistance / 50e3, 5) * IADSRoles[role];
             if (Math.random() < probability){
-                const role = activeRoles[Math.floor(Math.random() * activeRoles.length)];
                 const unitBlueprint = randomUnitBlueprintByRole(groundUnitsDatabase, role);
                 const spawnOptions = {role: role, latlng: latlng, name: unitBlueprint.name, coalition: coalitionArea.getCoalition(), immediate: true};
                 spawnGroundUnit(spawnOptions);

@@ -92,31 +92,31 @@ void Unit::addMeasure(wstring key, json::value value)
 }
 
 void Unit::runAILoop() {
-	/* If the unit is alive and it is not a human, run the AI Loop that performs the requested commands and instructions (moving, attacking, etc) */
-	const bool isUnitControlledByOlympus = getControlled();
-	const bool isUnitAlive = getAlive();
-	const bool isUnitLeader = unitsManager->isUnitGroupLeader(this);
-	const bool isUnitLeaderOfAGroupWithOtherUnits = unitsManager->isUnitInGroup(this) && unitsManager->isUnitGroupLeader(this);
-	const bool isUnitHuman = getFlags()[L"Human"].as_bool();
+	/* If the unit is alive, controlled and it is not a human, run the AI Loop that performs the requested commands and instructions (moving, attacking, etc) */
+	if (!getControlled()) return;
+	if (!unitsManager->isUnitGroupLeader(this)) return;
+	if (getFlags()[L"Human"].as_bool()) return;
 
 	// Keep running the AI loop even if the unit is dead if it is the leader of a group which has other members in it
-	if (isUnitControlledByOlympus && (isUnitAlive || isUnitLeaderOfAGroupWithOtherUnits) && isUnitLeader && !isUnitHuman)
-	{
-		if (checkTaskFailed() && state != State::IDLE && State::LAND)
-			setState(State::IDLE);
+	const bool isUnitAlive = getAlive();
+	const bool isUnitLeaderOfAGroupWithOtherUnits = unitsManager->isUnitInGroup(this) && unitsManager->isUnitGroupLeader(this);
+	if (!(isUnitAlive || isUnitLeaderOfAGroupWithOtherUnits)) return;
+	
+	if (checkTaskFailed() && state != State::IDLE && State::LAND)
+		setState(State::IDLE);
 
-		AIloop();
-	}
+	AIloop();
 }
 
-void Unit::updateExportData(json::value json)
+void Unit::updateExportData(json::value json, double dt)
 {
 	/* Compute speed (loGetWorldObjects does not provide speed, we compute it for better performance instead of relying on many lua calls) */
 	if (oldPosition != NULL)
 	{
 		double dist = 0;
 		Geodesic::WGS84().Inverse(latitude, longitude, oldPosition.lat, oldPosition.lng, dist);
-		setSpeed(getSpeed() * 0.95 + (dist / UPDATE_TIME_INTERVAL) * 0.05);
+		if (dt > 0)
+			setSpeed(getSpeed() * 0.95 + (dist / dt) * 0.05);
 	}
 	oldPosition = Coords(latitude, longitude, altitude);
 
@@ -160,7 +160,7 @@ void Unit::updateMissionData(json::value json)
 		setHasTask(json[L"hasTask"].as_bool());
 }
 
-json::value Unit::getData(long long time, bool sendAll)
+json::value Unit::getData(long long time, bool getAll)
 {
 	auto json = json::value::object();
 
@@ -178,7 +178,7 @@ json::value Unit::getData(long long time, bool sendAll)
 	if (json[L"baseData"].size() == 0)
 		json.erase(L"baseData");
 
-	if (alive || sendAll) {
+	if (alive || getAll) {
 		/********** Flight data **********/
 		json[L"flightData"] = json::value::object();
 		for (auto key : { L"latitude", L"longitude", L"altitude", L"speed", L"heading" })

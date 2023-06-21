@@ -32,7 +32,7 @@ void Scheduler::execute(lua_State* L)
 		return;
 	}
 
-	int priority = CommandPriority::HIGH;
+	int priority = CommandPriority::IMMEDIATE;
 	while (priority >= CommandPriority::LOW)
 	{
 		for (auto command : commands)

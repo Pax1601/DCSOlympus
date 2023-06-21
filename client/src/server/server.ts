@@ -321,22 +321,19 @@ export function requestUpdate() {
 
 export function requestRefresh() {
     /* Main refresh rate = 5000ms. */
-    getUnits((data: UnitsData) => {
-        if (!getPaused()) {
-            getUnitsManager()?.update(data);
-            getAirbases((data: AirbasesData) => getMissionData()?.update(data));
-            getBullseye((data: BullseyesData) => getMissionData()?.update(data));
-            getMission((data: any) => {
-                getMissionData()?.update(data)
-            });
-
-            // Update the list of existing units
-            getUnitDataTable()?.update();
-
+    
+    if (!getPaused()) {
+        getAirbases((data: AirbasesData) => getMissionData()?.update(data));
+        getBullseye((data: BullseyesData) => getMissionData()?.update(data));
+        getMission((data: any) => {
             checkSessionHash(data.sessionHash);
-        }
-    }, true);
-    window.setTimeout(() => requestRefresh(), 5000);
+            getMissionData()?.update(data)
+        });
+
+        // Update the list of existing units
+        getUnitDataTable()?.update();
+    }
+    window.setTimeout(() => requestRefresh(), 1000);
 }
 
 export function checkSessionHash(newSessionHash: string) {

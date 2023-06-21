@@ -15,6 +15,8 @@ public:
 
     void start(lua_State* L);
     void stop(lua_State* L);
+    json::value& getUpdateJson() { return updateJson; }
+    json::value& getRefreshJson() { return refreshJson; }
 
 private:
 	std::thread* serverThread;
@@ -27,6 +29,8 @@ private:
     void task();
 
     atomic<bool> runListener;
+    json::value updateJson;
+    json::value refreshJson;
 
     wstring password = L"";
 };

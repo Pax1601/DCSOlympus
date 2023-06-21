@@ -66,11 +66,10 @@ export class CoalitionArea extends Polygon {
         this.setOpacity(interactive? 1: 0.5);
         this.options.interactive = interactive;
 
-        if (interactive) {
+        if (interactive) 
             DomUtil.addClass(this.getElement() as HTMLElement, 'leaflet-interactive');
-        } else {
-            DomUtil.removeClass(this.getElement() as HTMLElement, 'leaflet-interactive');
-        }
+        else 
+            DomUtil.removeClass(this.getElement() as HTMLElement, 'leaflet-interactive'); 
     }
 
     addTemporaryLatLng(latlng: LatLng) {

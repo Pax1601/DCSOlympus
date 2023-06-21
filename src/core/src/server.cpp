@@ -36,7 +36,8 @@ Server::Server(lua_State* L):
     serverThread(nullptr),
     runListener(true)
 {
-     
+    refreshJson = json::value::object();
+    updateJson = json::value::object();
 }
 
 void Server::start(lua_State* L)
@@ -93,7 +94,10 @@ void Server::handle_get(http_request request)
                             time = 0;
                         }
                     }
-                    unitsManager->getData(answer, time);
+                    if (time == 0)
+                        unitsManager->getUnitData(answer, 0);
+                    else 
+                        answer[L"units"] = updateJson;
                 }
                 else if (path[0] == LOGS_URI)
                 {
