@@ -14,7 +14,7 @@ void log(const wstring& message)
 	LOGGER->log(message);
 }
 
-void getLogsJSON(json::value& json, int logsNumber)
+void getLogsJSON(json::value& json, unsigned int logsNumber)
 {
 	LOGGER->toJSON(json, logsNumber);
 }

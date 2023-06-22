@@ -4,10 +4,10 @@
 class Helicopter : public AirUnit
 {
 public:
-	Helicopter(json::value json, int ID);
+	Helicopter(json::value json, unsigned int ID);
 
-	virtual wstring getCategory() { return L"Helicopter"; };
+	virtual string getCategory() { return "Helicopter"; };
 
-	virtual void changeSpeed(wstring change);
-	virtual void changeAltitude(wstring change);
+	virtual void changeSpeed(string change);
+	virtual void changeAltitude(string change);
 };

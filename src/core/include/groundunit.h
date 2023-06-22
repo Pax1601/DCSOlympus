@@ -6,12 +6,12 @@
 class GroundUnit : public Unit
 {
 public:
-	GroundUnit(json::value json, int ID);
-	virtual wstring getCategory() { return L"GroundUnit"; };
+	GroundUnit(json::value json, unsigned int ID);
+	virtual string getCategory() { return "GroundUnit"; };
 
-	virtual void setState(int newState);
+	virtual void setState(unsigned char newState);
 
-	virtual void changeSpeed(wstring change);
+	virtual void changeSpeed(string change);
 	virtual void setOnOff(bool newOnOff);
 	virtual void setFollowRoads(bool newFollowRoads);
 

@@ -6,6 +6,9 @@
 #include "defines.h"
 #include "unitsmanager.h"
 
+#include "base64.hpp"
+using namespace base64;
+
 #include <chrono>
 using namespace std::chrono;
 
@@ -32,7 +35,7 @@ bool operator==(const Options::GeneralSettings& lhs, const Options::GeneralSetti
 			lhs.prohibitAirWpn == rhs.prohibitAirWpn && lhs.prohibitJettison == rhs.prohibitJettison;
 }
 
-Unit::Unit(json::value json, int ID) :
+Unit::Unit(json::value json, unsigned int ID) :
 	ID(ID)
 {
 	log("Creating unit with ID: " + to_string(ID));
@@ -55,18 +58,19 @@ void Unit::setDefaults(bool force)
 	const bool isUnitAlive = getAlive();
 	const bool isUnitLeader = unitsManager->isUnitGroupLeader(this);
 	const bool isUnitLeaderOfAGroupWithOtherUnits = unitsManager->isUnitInGroup(this) && unitsManager->isUnitGroupLeader(this);
-	const bool isUnitHuman = getFlags()[L"Human"].as_bool();
-	if (isUnitControlledByOlympus && (isUnitAlive || isUnitLeaderOfAGroupWithOtherUnits) && isUnitLeader && !isUnitHuman) {
+
+	if (isUnitControlledByOlympus && (isUnitAlive || isUnitLeaderOfAGroupWithOtherUnits) && isUnitLeader && !human) {
 		/* Set the default IDLE state */
 		setState(State::IDLE);
 
 		/* Set desired altitude to be equal to current altitude so the unit does not climb/descend after spawn */
-		setDesiredAltitude(altitude);
+		setDesiredAltitude(position.alt);
 
 		/* Set the default options (these are all defaults so will only affect the export data, no DCS command will be sent) */
-		setROE(L"Designated", force);
-		setReactionToThreat(L"Evade", force);
-		setEmissionsCountermeasures(L"Defend", force);
+		setROE(ROE::OPEN_FIRE_WEAPON_FREE, force);
+		setReactionToThreat(ReactionToThreat::EVADE_FIRE, force);
+		setEmissionsCountermeasures(EmissionCountermeasure::DEFEND, force);
+		strcpy_s(TACAN.callsign, 4, "TKR");
 		setTACAN(TACAN, force);
 		setRadio(radio, force);
 		setEPLRS(EPLRS, force);
@@ -76,28 +80,13 @@ void Unit::setDefaults(bool force)
 	}
 }
 
-void Unit::addMeasure(wstring key, json::value value)
-{
-	milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
-	if (measures.find(key) == measures.end())
-		measures[key] = new Measure(value, ms.count());
-	else
-	{
-		if (measures[key]->getValue() != value)
-		{
-			measures[key]->setValue(value);
-			measures[key]->setTime(ms.count());
-		}
-	}
-}
-
 void Unit::runAILoop() {
 	/* If the unit is alive, controlled and it is not a human, run the AI Loop that performs the requested commands and instructions (moving, attacking, etc) */
 	if (!getControlled()) return;
 	if (!unitsManager->isUnitGroupLeader(this)) return;
-	if (getFlags()[L"Human"].as_bool()) return;
+	if (human) return;
 
-	// Keep running the AI loop even if the unit is dead if it is the leader of a group which has other members in it
+	/* Keep running the AI loop even if the unit is dead if it is the leader of a group which has other members in it */
 	const bool isUnitAlive = getAlive();
 	const bool isUnitLeaderOfAGroupWithOtherUnits = unitsManager->isUnitInGroup(this) && unitsManager->isUnitGroupLeader(this);
 	if (!(isUnitAlive || isUnitLeaderOfAGroupWithOtherUnits)) return;
@@ -114,146 +103,182 @@ void Unit::updateExportData(json::value json, double dt)
 	if (oldPosition != NULL)
 	{
 		double dist = 0;
-		Geodesic::WGS84().Inverse(latitude, longitude, oldPosition.lat, oldPosition.lng, dist);
+		Geodesic::WGS84().Inverse(getPosition().lat, getPosition().lng, oldPosition.lat, oldPosition.lng, dist);
 		if (dt > 0)
 			setSpeed(getSpeed() * 0.95 + (dist / dt) * 0.05);
 	}
-	oldPosition = Coords(latitude, longitude, altitude);
+	oldPosition = position;
 
 	if (json.has_string_field(L"Name"))
-		setName(json[L"Name"].as_string());
+		setName(to_string(json[L"Name"]));
 	if (json.has_string_field(L"UnitName"))
-		setUnitName(json[L"UnitName"].as_string());
+		setUnitName(to_string(json[L"UnitName"]));
 	if (json.has_string_field(L"GroupName"))
-		setGroupName(json[L"GroupName"].as_string());
-	if (json.has_object_field(L"Type"))
-		setType(json[L"Type"]);
+		setGroupName(to_string(json[L"GroupName"]));
 	if (json.has_number_field(L"Country"))
 		setCountry(json[L"Country"].as_number().to_int32());
 	if (json.has_number_field(L"CoalitionID"))
 		setCoalitionID(json[L"CoalitionID"].as_number().to_int32());
 	if (json.has_object_field(L"LatLongAlt"))
 	{
-		setLatitude(json[L"LatLongAlt"][L"Lat"].as_number().to_double());
-		setLongitude(json[L"LatLongAlt"][L"Long"].as_number().to_double());
-		setAltitude(json[L"LatLongAlt"][L"Alt"].as_number().to_double());
+		Coords position = {
+			json[L"LatLongAlt"][L"Lat"].as_number().to_double(),
+			json[L"LatLongAlt"][L"Long"].as_number().to_double(),
+			json[L"LatLongAlt"][L"Alt"].as_number().to_double()
+		};
+		setPosition(position);
 	}
 	if (json.has_number_field(L"Heading"))
 		setHeading(json[L"Heading"].as_number().to_double());
 	if (json.has_object_field(L"Flags"))
-		setFlags(json[L"Flags"]);
+		setHuman(json[L"Flags"][L"Human"].as_bool());
 
 	/* All units which contain the name "Olympus" are automatically under AI control */
-	if (getUnitName().find(L"Olympus") != wstring::npos)
+	if (getUnitName().find("Olympus") != string::npos)
 		setControlled(true);
 }
 
 void Unit::updateMissionData(json::value json)
 {
 	if (json.has_number_field(L"fuel"))
-		setFuel(int(json[L"fuel"].as_number().to_double() * 100));
-	if (json.has_object_field(L"ammo"))
-		setAmmo(json[L"ammo"]);
-	if (json.has_object_field(L"contacts"))
-		setContacts(json[L"contacts"]);
+		setFuel(short(json[L"fuel"].as_number().to_double() * 100));
+
+	if (json.has_object_field(L"ammo")) {
+		vector<DataTypes::Ammo> ammo;
+		for (auto const& el : json[L"ammo"].as_object()) {
+			DataTypes::Ammo ammoItem;
+			auto ammoJson = el.second;
+			ammoItem.quantity = ammoJson[L"count"].as_number().to_uint32();
+			ammoItem.name = to_string(ammoJson[L"desc"][L"displayName"]);
+			ammoItem.guidance = ammoJson[L"desc"][L"guidance"].as_number().to_uint32();
+			ammoItem.category = ammoJson[L"desc"][L"category"].as_number().to_uint32();
+			ammoItem.missileCategory = ammoJson[L"desc"][L"missileCategory"].as_number().to_uint32();
+			ammo.push_back(ammoItem);
+		}
+		setAmmo(ammo);
+	}
+		
+	if (json.has_object_field(L"contacts")) {
+		vector<DataTypes::Contact> contacts;
+		for (auto const& el : json[L"ammo"].as_object()) {
+			DataTypes::Contact contactItem;
+			auto contactJson = el.second;
+			contactItem.ID = contactJson[L"object"][L"id_"].as_number().to_uint32();
+
+			string detectionMethod = to_string(contactJson[L"detectionMethod"]);
+			if		(detectionMethod.compare("VISUAL"))	contactItem.detectionMethod = 1;
+			else if (detectionMethod.compare("OPTIC"))	contactItem.detectionMethod = 2;
+			else if (detectionMethod.compare("RADAR"))	contactItem.detectionMethod = 4;
+			else if (detectionMethod.compare("IRST"))	contactItem.detectionMethod = 8;
+			else if (detectionMethod.compare("RWR"))	contactItem.detectionMethod = 16;
+			else if (detectionMethod.compare("DLINK"))	contactItem.detectionMethod = 32;
+			contacts.push_back(contactItem);
+		}
+		setContacts(contacts);
+	}
+
 	if (json.has_boolean_field(L"hasTask"))
 		setHasTask(json[L"hasTask"].as_bool());
 }
 
-json::value Unit::getData(long long time, bool getAll)
+DataTypes::DataPacket Unit::getDataPacket()
 {
-	auto json = json::value::object();
+	unsigned int bitmask = 0;
+	bitmask |= alive << 0;
+	bitmask |= human << 1;
+	bitmask |= controlled << 2;
+	bitmask |= hasTask << 3;
+	bitmask |= desiredAltitudeType << 16;
+	bitmask |= desiredSpeedType << 17;
+	bitmask |= isTanker << 18;
+	bitmask |= isAWACS << 19;
+	bitmask |= onOff << 19;
+	bitmask |= followRoads << 19;
+	bitmask |= EPLRS << 20;
+	bitmask |= generalSettings.prohibitAA << 21;
+	bitmask |= generalSettings.prohibitAfterburner << 22;
+	bitmask |= generalSettings.prohibitAG << 23;
+	bitmask |= generalSettings.prohibitAirWpn << 24;
+	bitmask |= generalSettings.prohibitJettison << 25;
 
-	/* If the unit is in a group, task & option data is given by the group leader */
-	if (unitsManager->isUnitInGroup(this) && !unitsManager->isUnitGroupLeader(this)) 
-		json = unitsManager->getGroupLeader(this)->getData(time, true);
+	DataTypes::DataPacket datapacket{
+		ID,
+		bitmask,
+		position,
+		speed,
+		heading,
+		fuel,
+		desiredSpeed,
+		desiredAltitude,
+		targetID,
+		targetPosition,
+		state,
+		ROE,
+		reactionToThreat,
+		emissionsCountermeasures,
+		TACAN,
+		radio
+	};
+
+	return datapacket;
+}
+
+string Unit::getData(bool refresh)
+{
+	/* Prepare the data in a stringstream */
+	stringstream ss;
+
+	/* Reserve data for: 
+		1) DataPacket;
+		2) Length of active path;
+		3) Active path;
+	*/
+	char* data = (char*)malloc(sizeof(DataTypes::DataPacket) + sizeof(unsigned short) + activePath.size() * sizeof(Coords));
+	unsigned int offset = 0;
+
+	/* Prepare the data packet and copy it to  memory */
+	DataTypes::DataPacket dataPacket;
+	/* If the unit is in a group, get the datapacket from the group leader and only replace the position, speed and heading */
+	if (unitsManager->isUnitInGroup(this) && !unitsManager->isUnitGroupLeader(this)) {
+		dataPacket = unitsManager->getGroupLeader(this)->getDataPacket();
+		dataPacket.position = position;
+		dataPacket.speed = speed;
+		dataPacket.heading = heading;
+	}
+	else
+		dataPacket = getDataPacket();
 	
-	/********** Base data **********/
-	json[L"baseData"] = json::value::object();
-	for (auto key : { L"controlled", L"name", L"unitName", L"groupName", L"alive", L"category"})
-	{
-		if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
-			json[L"baseData"][key] = measures[key]->getValue();
-	}
-	if (json[L"baseData"].size() == 0)
-		json.erase(L"baseData");
+	memcpy(data + offset, &dataPacket, sizeof(dataPacket));
+	offset += sizeof(dataPacket);
 
-	if (alive || getAll) {
-		/********** Flight data **********/
-		json[L"flightData"] = json::value::object();
-		for (auto key : { L"latitude", L"longitude", L"altitude", L"speed", L"heading" })
-		{
-			if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
-				json[L"flightData"][key] = measures[key]->getValue();
-		}
-		if (json[L"flightData"].size() == 0)
-			json.erase(L"flightData");
+	/* Prepare the path memory and copy it to memory */
+	std::vector<Coords> path;
+	for (const Coords& c : activePath)
+		path.push_back(c);
+	unsigned short pathLength = activePath.size();
 
-		/********** Mission data **********/
-		json[L"missionData"] = json::value::object();
-		for (auto key : { L"fuel", L"ammo", L"contacts", L"hasTask", L"coalition", L"flags" })
-		{
-			if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
-				json[L"missionData"][key] = measures[key]->getValue();
-		}
-		if (json[L"missionData"].size() == 0)
-			json.erase(L"missionData");
+	memcpy(data + offset, &pathLength, sizeof(unsigned short));
+	offset += sizeof(unsigned short);
+	memcpy(data + offset, &path, activePath.size() * sizeof(Coords));
+	offset += sizeof(unsigned short);
 
-		/********** Formation data **********/
-		json[L"formationData"] = json::value::object();
-		for (auto key : { L"leaderID" })
-		{
-			if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
-				json[L"formationData"][key] = measures[key]->getValue();
-		}
-		if (json[L"formationData"].size() == 0)
-			json.erase(L"formationData");
+	ss << to_base64(data, offset);
 
-		/* If the unit is in a group, task & option data is given by the group leader */
-		if (unitsManager->isUnitGroupLeader(this)) {
-			/********** Task data **********/
-			json[L"taskData"] = json::value::object();
-			for (auto key : { L"currentState", L"currentTask", L"desiredSpeed", L"desiredAltitude", L"desiredSpeedType", L"desiredAltitudeType", L"activePath", L"isTanker", L"isAWACS", L"onOff", L"followRoads", L"targetID", L"targetLocation" })
-			{
-				if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
-					json[L"taskData"][key] = measures[key]->getValue();
-			}
-			if (json[L"taskData"].size() == 0)
-				json.erase(L"taskData");
-
-			/********** Options data **********/
-			json[L"optionsData"] = json::value::object();
-			for (auto key : { L"ROE", L"reactionToThreat", L"emissionsCountermeasures", L"TACAN", L"radio", L"generalSettings" })
-			{
-				if (measures.find(key) != measures.end() && measures[key]->getTime() > time)
-					json[L"optionsData"][key] = measures[key]->getValue();
-			}
-			if (json[L"optionsData"].size() == 0)
-				json.erase(L"optionsData");
-		}
+	if (refresh) {
+		ss << name;
+		ss << unitName;
+		ss << groupName;
+		ss << getCategory();
+		ss << coalition;
 	}
 
-	return json;
+	return ss.str();
 }
 
 void Unit::setActivePath(list<Coords> newPath)
 {
 	activePath = newPath;
 	resetActiveDestination();
-	
-	auto path = json::value::object();
-	if (activePath.size() > 0) {
-		int count = 1;
-		for (auto& destination : activePath)
-		{
-			auto json = json::value::object();
-			json[L"lat"] = destination.lat;
-			json[L"lng"] = destination.lng;
-			json[L"alt"] = destination.alt;
-			path[to_wstring(count++)] = json;
-		}
-	}
-	addMeasure(L"activePath", path); 
 }
 
 void Unit::clearActivePath()
@@ -283,28 +308,27 @@ void Unit::popActivePathFront()
 	setActivePath(path);
 }
 
-void Unit::setCoalitionID(int newCoalitionID) 
+void Unit::setCoalitionID(unsigned int newCoalitionID)
 { 
 	if (newCoalitionID == 0)
-		coalition = L"neutral";
+		coalition = "neutral";
 	else if (newCoalitionID == 1)
-		coalition = L"red";
+		coalition = "red";
 	else
-		coalition = L"blue";
-	addMeasure(L"coalition", json::value(coalition));
+		coalition = "blue";
 } 
 
-int Unit::getCoalitionID()
+unsigned int Unit::getCoalitionID()
 {
-	if (coalition == L"neutral")
+	if (coalition == "neutral")
 		return 0;
-	else if (coalition == L"red")
+	else if (coalition == "red")
 		return 1;
 	else
 		return 2;
 }
 
-wstring Unit::getTargetName()
+string Unit::getTargetName()
 {
 	if (isTargetAlive())
 	{
@@ -312,7 +336,7 @@ wstring Unit::getTargetName()
 		if (target != nullptr)
 			return target->getUnitName();
 	}
-	return L"";
+	return "";
 }
 
 bool Unit::isTargetAlive()
@@ -327,7 +351,7 @@ bool Unit::isTargetAlive()
 		return false;
 }
 
-wstring Unit::getLeaderName()
+string Unit::getLeaderName()
 {
 	if (isLeaderAlive())
 	{
@@ -335,7 +359,7 @@ wstring Unit::getLeaderName()
 		if (leader != nullptr)
 			return leader->getUnitName();
 	}
-	return L"";
+	return "";
 }
 
 bool Unit::isLeaderAlive()
@@ -369,84 +393,52 @@ void Unit::setFormationOffset(Offset newFormationOffset)
 	resetTask();
 }
 
-void Unit::setROE(wstring newROE, bool force) {
-	addMeasure(L"ROE", json::value(newROE));
-	
+void Unit::setROE(unsigned char newROE, bool force) 
+{
 	if (ROE != newROE || force) {
 		ROE = newROE;
-
-		int ROEEnum;
-		if (ROE.compare(L"Free") == 0)
-			ROEEnum = ROE::WEAPON_FREE;
-		else if (ROE.compare(L"Designated free") == 0)
-			ROEEnum = ROE::OPEN_FIRE_WEAPON_FREE;
-		else if (ROE.compare(L"Designated") == 0)
-			ROEEnum = ROE::OPEN_FIRE;
-		else if (ROE.compare(L"Return") == 0)
-			ROEEnum = ROE::RETURN_FIRE;
-		else if (ROE.compare(L"Hold") == 0)
-			ROEEnum = ROE::WEAPON_HOLD;
-		else
-			return;
-
-		Command* command = dynamic_cast<Command*>(new SetOption(groupName, SetCommandType::ROE, ROEEnum));
+		Command* command = dynamic_cast<Command*>(new SetOption(groupName, SetCommandType::ROE, ROE));
 		scheduler->appendCommand(command);
 	}
 }
 
-void Unit::setReactionToThreat(wstring newReactionToThreat, bool force) {
-	addMeasure(L"reactionToThreat", json::value(newReactionToThreat));
-
+void Unit::setReactionToThreat(unsigned char newReactionToThreat, bool force)
+{
 	if (reactionToThreat != newReactionToThreat || force) {
 		reactionToThreat = newReactionToThreat;
 
-		int reactionToThreatEnum;
-		if (reactionToThreat.compare(L"None") == 0)
-			reactionToThreatEnum = ReactionToThreat::NO_REACTION;
-		else if (reactionToThreat.compare(L"Passive") == 0)
-			reactionToThreatEnum = ReactionToThreat::PASSIVE_DEFENCE;
-		else if (reactionToThreat.compare(L"Evade") == 0)
-			reactionToThreatEnum = ReactionToThreat::EVADE_FIRE;
-		else if (reactionToThreat.compare(L"Escape") == 0)
-			reactionToThreatEnum = ReactionToThreat::BYPASS_AND_ESCAPE;
-		else if (reactionToThreat.compare(L"Abort") == 0)
-			reactionToThreatEnum = ReactionToThreat::ALLOW_ABORT_MISSION;
-		else
-			return;
-
-		Command* command = dynamic_cast<Command*>(new SetOption(groupName, SetCommandType::REACTION_ON_THREAT, reactionToThreatEnum));
+		Command* command = dynamic_cast<Command*>(new SetOption(groupName, SetCommandType::REACTION_ON_THREAT, reactionToThreat));
 		scheduler->appendCommand(command);
 	}
 }
 
-void Unit::setEmissionsCountermeasures(wstring newEmissionsCountermeasures, bool force) {
-	addMeasure(L"emissionsCountermeasures", json::value(newEmissionsCountermeasures)); 
-
+void Unit::setEmissionsCountermeasures(unsigned char newEmissionsCountermeasures, bool force)
+{
 	if (emissionsCountermeasures != newEmissionsCountermeasures || force) {
 		emissionsCountermeasures = newEmissionsCountermeasures;
 
-		int radarEnum;
-		int flareEnum;
-		int ECMEnum;
-		if (emissionsCountermeasures.compare(L"Silent") == 0)
+		unsigned int radarEnum;
+		unsigned int flareEnum;
+		unsigned int ECMEnum;
+		if (emissionsCountermeasures == EmissionCountermeasure::SILENT)
 		{
 			radarEnum = RadarUse::NEVER;
 			flareEnum = FlareUse::NEVER;
 			ECMEnum = ECMUse::NEVER_USE;
 		}
-		else if (emissionsCountermeasures.compare(L"Attack") == 0)
+		else if (emissionsCountermeasures == EmissionCountermeasure::ATTACK)
 		{
 			radarEnum = RadarUse::FOR_ATTACK_ONLY;
 			flareEnum = FlareUse::AGAINST_FIRED_MISSILE;
 			ECMEnum = ECMUse::USE_IF_ONLY_LOCK_BY_RADAR;
 		}
-		else if (emissionsCountermeasures.compare(L"Defend") == 0)
+		else if (emissionsCountermeasures == EmissionCountermeasure::DEFEND)
 		{
 			radarEnum = RadarUse::FOR_SEARCH_IF_REQUIRED;
 			flareEnum = FlareUse::WHEN_FLYING_IN_SAM_WEZ;
 			ECMEnum = ECMUse::USE_IF_DETECTED_LOCK_BY_RADAR;
 		}
-		else if (emissionsCountermeasures.compare(L"Free") == 0)
+		else if (emissionsCountermeasures == EmissionCountermeasure::FREE)
 		{
 			radarEnum = RadarUse::FOR_CONTINUOUS_SEARCH;
 			flareEnum = FlareUse::WHEN_FLYING_NEAR_ENEMIES;
@@ -468,42 +460,37 @@ void Unit::setEmissionsCountermeasures(wstring newEmissionsCountermeasures, bool
 	}
 }
 
-void Unit::landAt(Coords loc) {
+void Unit::landAt(Coords loc) 
+{
 	clearActivePath();
 	pushActivePathBack(loc);
 	setState(State::LAND);
 }
 
-void Unit::setIsTanker(bool newIsTanker) { 
+void Unit::setIsTanker(bool newIsTanker) 
+{ 
 	isTanker = newIsTanker; 
 	resetTask(); 
-	addMeasure(L"isTanker", json::value(newIsTanker));
 }
 
-void Unit::setIsAWACS(bool newIsAWACS) { 
+void Unit::setIsAWACS(bool newIsAWACS)
+{ 
 	isAWACS = newIsAWACS; 
 	resetTask(); 
-	addMeasure(L"isAWACS", json::value(newIsAWACS)); 
 	setEPLRS(isAWACS);
 }
 
-void Unit::setTACAN(Options::TACAN newTACAN, bool force) {
-	auto json = json::value();
-	json[L"isOn"] = json::value(newTACAN.isOn);
-	json[L"channel"] = json::value(newTACAN.channel);
-	json[L"XY"] = json::value(newTACAN.XY);
-	json[L"callsign"] = json::value(newTACAN.callsign);
-	addMeasure(L"TACAN", json);
-
+void Unit::setTACAN(Options::TACAN newTACAN, bool force) 
+{
 	if (TACAN != newTACAN || force)
 	{
 		TACAN = newTACAN;
 		if (TACAN.isOn) {
-			std::wostringstream commandSS;
+			std::ostringstream commandSS;
 			commandSS << "{"
 				<< "id = 'ActivateBeacon',"
 				<< "params = {"
-				<< "type = " << ((TACAN.XY.compare(L"X") == 0) ? 4 : 5) << ","
+				<< "type = " << ((TACAN.XY == 'X' == 0) ? 4 : 5) << ","
 				<< "system = 3,"
 				<< "name = \"Olympus_TACAN\","
 				<< "callsign = \"" << TACAN.callsign << "\", "
@@ -514,7 +501,7 @@ void Unit::setTACAN(Options::TACAN newTACAN, bool force) {
 			scheduler->appendCommand(command);
 		}
 		else {
-			std::wostringstream commandSS;
+			std::ostringstream commandSS;
 			commandSS << "{"
 				<< "id = 'DeactivateBeacon',"
 				<< "params = {"
@@ -526,19 +513,13 @@ void Unit::setTACAN(Options::TACAN newTACAN, bool force) {
 	}
 }
 
-void Unit::setRadio(Options::Radio newRadio, bool force) {
-
-	auto json = json::value();
-	json[L"frequency"] = json::value(newRadio.frequency);
-	json[L"callsign"] = json::value(newRadio.callsign);
-	json[L"callsignNumber"] = json::value(newRadio.callsignNumber);
-	addMeasure(L"radio", json);
-
+void Unit::setRadio(Options::Radio newRadio, bool force) 
+{
 	if (radio != newRadio || force)
 	{
 		radio = newRadio;
 
-		std::wostringstream commandSS;
+		std::ostringstream commandSS;
 		Command* command;
 
 		commandSS << "{"
@@ -552,7 +533,7 @@ void Unit::setRadio(Options::Radio newRadio, bool force) {
 		scheduler->appendCommand(command);
 
 		// Clear the stringstream
-		commandSS.str(wstring());
+		commandSS.str(string(""));
 
 		commandSS << "{"
 			<< "id = 'SetCallsign',"
@@ -568,12 +549,12 @@ void Unit::setRadio(Options::Radio newRadio, bool force) {
 
 void Unit::setEPLRS(bool newEPLRS, bool force)
 {
-	//addMeasure(L"EPLRS", json::value(newEPLRS)); 
+	//addMeasure("EPLRS", json::value(newEPLRS)); 
 	//
 	//if (EPLRS != newEPLRS || force) {
 	//	EPLRS = newEPLRS;
 	//
-	//	std::wostringstream commandSS;
+	//	std::ostringstream commandSS;
 	//	commandSS << "{"
 	//		<< "id = 'EPLRS',"
 	//		<< "params = {"
@@ -585,16 +566,8 @@ void Unit::setEPLRS(bool newEPLRS, bool force)
 	//}
 }
 
-void Unit::setGeneralSettings(Options::GeneralSettings newGeneralSettings, bool force) {
-
-	auto json = json::value();
-	json[L"prohibitJettison"] = json::value(newGeneralSettings.prohibitJettison);
-	json[L"prohibitAA"] = json::value(newGeneralSettings.prohibitAA);
-	json[L"prohibitAG"] = json::value(newGeneralSettings.prohibitAG);
-	json[L"prohibitAfterburner"] = json::value(newGeneralSettings.prohibitAfterburner);
-	json[L"prohibitAirWpn"] = json::value(newGeneralSettings.prohibitAirWpn);
-	addMeasure(L"generalSettings", json);
-
+void Unit::setGeneralSettings(Options::GeneralSettings newGeneralSettings, bool force) 
+{
 	if (generalSettings != newGeneralSettings)
 	{
 		generalSettings = newGeneralSettings;
@@ -613,47 +586,47 @@ void Unit::setGeneralSettings(Options::GeneralSettings newGeneralSettings, bool 
 	}
 }
 
-void Unit::setDesiredSpeed(double newDesiredSpeed) {
+void Unit::setDesiredSpeed(double newDesiredSpeed) 
+{
 	desiredSpeed = newDesiredSpeed; 
-	addMeasure(L"desiredSpeed", json::value(newDesiredSpeed));
 	if (state == State::IDLE)
 		resetTask();
 	else
 		goToDestination();		/* Send the command to reach the destination */
 }
 
-void Unit::setDesiredAltitude(double newDesiredAltitude) {
+void Unit::setDesiredAltitude(double newDesiredAltitude) 
+{
 	desiredAltitude = newDesiredAltitude;
-	addMeasure(L"desiredAltitude", json::value(newDesiredAltitude));
 	if (state == State::IDLE)
 		resetTask();
 	else
 		goToDestination();		/* Send the command to reach the destination */
 }
 
-void Unit::setDesiredSpeedType(wstring newDesiredSpeedType) {
-	desiredSpeedType = newDesiredSpeedType; 
-	addMeasure(L"desiredSpeedType", json::value(newDesiredSpeedType));
+void Unit::setDesiredSpeedType(string newDesiredSpeedType) 
+{
+	desiredSpeedType = newDesiredSpeedType.compare("GS") == 0;
 	if (state == State::IDLE)
 		resetTask();
 	else
 		goToDestination();		/* Send the command to reach the destination */
 }
 
-void Unit::setDesiredAltitudeType(wstring newDesiredAltitudeType) {
-	desiredAltitudeType = newDesiredAltitudeType; 
-	addMeasure(L"desiredAltitudeType", json::value(newDesiredAltitudeType));
+void Unit::setDesiredAltitudeType(string newDesiredAltitudeType) 
+{
+	desiredAltitudeType = newDesiredAltitudeType.compare("AGL") == 0;
 	if (state == State::IDLE)
 		resetTask();
 	else
 		goToDestination();		/* Send the command to reach the destination */
 }
 
-void Unit::goToDestination(wstring enrouteTask)
+void Unit::goToDestination(string enrouteTask)
 {
 	if (activeDestination != NULL)
 	{
-		Command* command = dynamic_cast<Command*>(new Move(groupName, activeDestination, getDesiredSpeed(), getDesiredSpeedType(), getDesiredAltitude(), getDesiredAltitudeType(), enrouteTask, getCategory()));
+		Command* command = dynamic_cast<Command*>(new Move(groupName, activeDestination, getDesiredSpeed(), getDesiredSpeedType()? "GS": "CAS", getDesiredAltitude(), getDesiredAltitudeType()? "AGL" : "ASL", enrouteTask, getCategory()));
 		scheduler->appendCommand(command);
 		setHasTask(true);
 	}
@@ -667,16 +640,17 @@ bool Unit::isDestinationReached(double threshold)
 		for (auto const& p: unitsManager->getGroupMembers(groupName))
 		{
 			double dist = 0;
-			Geodesic::WGS84().Inverse(p->getLatitude(), p->getLongitude(), activeDestination.lat, activeDestination.lng, dist);
+			Geodesic::WGS84().Inverse(p->getPosition().lat, p->getPosition().lng, activeDestination.lat, activeDestination.lng, dist);
 			if (dist < threshold)
 			{
-				log(unitName + L" destination reached");
+				log(unitName + " destination reached");
 				return true;
 			}
 			else {
 				return false;
 			}
-	}
+		}
+		return false;
 	}
 	else
 		return true;
@@ -687,13 +661,13 @@ bool Unit::setActiveDestination()
 	if (activePath.size() > 0)
 	{
 		activeDestination = activePath.front();
-		log(unitName + L" active destination set to queue front");
+		log(unitName + " active destination set to queue front");
 		return true;
 	}
 	else
 	{
 		activeDestination = Coords(0);
-		log(unitName + L" active destination set to NULL");
+		log(unitName + " active destination set to NULL");
 		return false;
 	}
 }
@@ -706,7 +680,7 @@ bool Unit::updateActivePath(bool looping)
 		if (looping)
 			pushActivePathBack(activePath.front());
 		popActivePathFront();
-		log(unitName + L" active path front popped");
+		log(unitName + " active path front popped");
 		return true;
 	}
 	else {
@@ -714,15 +688,13 @@ bool Unit::updateActivePath(bool looping)
 	}
 }
 
-void Unit::setTargetLocation(Coords newTargetLocation) { 
-	targetLocation = newTargetLocation; 
-	auto json = json::value();
-	json[L"latitude"] = json::value(newTargetLocation.lat);
-	json[L"longitude"] = json::value(newTargetLocation.lng);
-	addMeasure(L"targetLocation", json::value(json));
+void Unit::setTargetPosition(Coords newTargetPosition) 
+{ 
+	targetPosition = newTargetPosition;
 }
 
-bool Unit::checkTaskFailed() {
+bool Unit::checkTaskFailed() 
+{
 	if (getHasTask()) 
 		return false;
 	else {
@@ -736,7 +708,7 @@ void Unit::resetTaskFailedCounter() {
 	taskCheckCounter = TASK_CHECK_INIT_VALUE;
 }
 
-void Unit::setHasTask(bool newHasTask) { 
+void Unit::setHasTask(bool newHasTask) 
+{ 
 	hasTask = newHasTask; 
-	addMeasure(L"hasTask", json::value(newHasTask)); 
 }

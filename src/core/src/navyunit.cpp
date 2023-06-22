@@ -13,10 +13,9 @@ extern Scheduler* scheduler;
 extern UnitsManager* unitsManager;
 
 /* Navy Unit */
-NavyUnit::NavyUnit(json::value json, int ID) : Unit(json, ID)
+NavyUnit::NavyUnit(json::value json, unsigned int ID) : Unit(json, ID)
 {
 	log("New Navy Unit created with ID: " + to_string(ID));
-	addMeasure(L"category", json::value(getCategory()));
 
 	double desiredSpeed = 10;
 	setDesiredSpeed(desiredSpeed);
@@ -27,17 +26,17 @@ void NavyUnit::AIloop()
 	/* TODO */
 }
 
-void NavyUnit::changeSpeed(wstring change)
+void NavyUnit::changeSpeed(string change)
 {
-	if (change.compare(L"stop") == 0)
+	if (change.compare("stop") == 0)
 	{
 
 	}
-	else if (change.compare(L"slow") == 0)
+	else if (change.compare("slow") == 0)
 	{
 
 	}
-	else if (change.compare(L"fast") == 0)
+	else if (change.compare("fast") == 0)
 	{
 
 	}

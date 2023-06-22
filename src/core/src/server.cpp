@@ -36,8 +36,7 @@ Server::Server(lua_State* L):
     serverThread(nullptr),
     runListener(true)
 {
-    refreshJson = json::value::object();
-    updateJson = json::value::object();
+
 }
 
 void Server::start(lua_State* L)
@@ -71,8 +70,8 @@ void Server::handle_get(http_request request)
     lock_guard<mutex> guard(mutexLock);
 
     http_response response(status_codes::OK);
-    string authorization = to_base64("admin:" + to_string(password));
-    if (password == L"" || (request.headers().has(L"Authorization") && request.headers().find(L"Authorization")->second == L"Basic " + to_wstring(authorization)))
+    string authorization = to_base64("admin:" + password);
+    if (password == "" || (request.headers().has(L"Authorization") && request.headers().find(L"Authorization")->second == L"Basic " + to_wstring(authorization)))
     {
         std::exception_ptr eptr;
         try {
@@ -81,7 +80,8 @@ void Server::handle_get(http_request request)
 
             if (path.size() > 0)
             {
-                if (path[0] == UNITS_URI)
+                string URI = to_string(path[0]);
+                if (URI.compare(UNITS_URI) == 0)
                 {
                     map<utility::string_t, utility::string_t> query = request.relative_uri().split_query(request.relative_uri().query());
                     long long time = 0;
@@ -94,22 +94,21 @@ void Server::handle_get(http_request request)
                             time = 0;
                         }
                     }
-                    if (time == 0)
-                        unitsManager->getUnitData(answer, 0);
-                    else 
-                        answer[L"units"] = updateJson;
+
+                    // TODO would be nice to optimize this
+                    answer[L"units"] = json::value(to_wstring(unitsManager->getUnitData(time == 0)));
                 }
-                else if (path[0] == LOGS_URI)
+                else if (URI.compare(LOGS_URI) == 0)
                 {
                     auto logs = json::value::object();
                     getLogsJSON(logs, 100);   // By reference, for thread safety. Get the last 100 log entries
                     answer[L"logs"] = logs;
                 }
-                else if (path[0] == AIRBASES_URI)
+                else if (URI.compare(AIRBASES_URI) == 0)
                     answer[L"airbases"] = airbases;
-                else if (path[0] == BULLSEYE_URI)
+                else if (URI.compare(BULLSEYE_URI) == 0)
                     answer[L"bullseyes"] = bullseyes;
-                else if (path[0] == MISSION_URI)
+                else if (URI.compare(MISSION_URI) == 0)
                     answer[L"mission"] = mission;
 
                 milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
@@ -139,8 +138,8 @@ void Server::handle_get(http_request request)
 void Server::handle_request(http_request request, function<void(json::value const&, json::value&)> action)
 {
     http_response response(status_codes::OK);
-    string authorization = to_base64("admin:" + to_string(password));
-    if (password == L"" || (request.headers().has(L"Authorization") && request.headers().find(L"Authorization")->second == L"Basic " + to_wstring(authorization)))
+    string authorization = to_base64("admin:" + password);
+    if (password == "" || (request.headers().has(L"Authorization") && request.headers().find(L"Authorization")->second.compare(L"Basic " + to_wstring(authorization))))
     {
         auto answer = json::value::object();
         request.extract_json().then([&answer, &action](pplx::task<json::value> task)
@@ -148,11 +147,8 @@ void Server::handle_request(http_request request, function<void(json::value cons
             try
             {
                 auto const& jvalue = task.get();
-
                 if (!jvalue.is_null())
-                {
                     action(jvalue, answer);
-                }
             }
             catch (http_exception const& e)
             {
@@ -188,7 +184,7 @@ void Server::handle_put(http_request request)
             auto value = e.second;
             std::exception_ptr eptr;
             try {
-                scheduler->handleRequest(key, value);
+                scheduler->handleRequest(to_string(key), value);
             }
             catch (...) {
                 eptr = std::current_exception(); // capture
@@ -200,8 +196,8 @@ void Server::handle_put(http_request request)
 
 void Server::task()
 {
-    wstring address = wstring(REST_ADDRESS);
-    wstring modLocation;
+    string address = REST_ADDRESS;
+    string modLocation;
     char* buf = nullptr;
     size_t sz = 0;
     if (_dupenv_s(&buf, &sz, "DCSOLYMPUS_PATH") == 0 && buf != nullptr)
@@ -210,31 +206,31 @@ void Server::task()
         std::stringstream ss;
         ss << ifstream.rdbuf();
         std::error_code errorCode;
-        json::value config = json::value::parse(to_wstring(ss.str()), errorCode);
+        json::value config = json::value::parse(ss.str(), errorCode);
         if (config.is_object() && config.has_object_field(L"server") &&
             config[L"server"].has_string_field(L"address") && config[L"server"].has_number_field(L"port"))
         {
-            address = L"http://" + config[L"server"][L"address"].as_string() + L":" + to_wstring(config[L"server"][L"port"].as_number().to_int32());
-            log(L"Starting server on " + address);
+            address = "http://" + to_string(config[L"server"][L"address"]) + ":" + to_string(config[L"server"][L"port"].as_number().to_int32());
+            log("Starting server on " + address);
         }
         else
-            log(L"Error reading configuration file. Starting server on " + address);
+            log("Error reading configuration file. Starting server on " + address);
 
         if (config.is_object() && config.has_object_field(L"authentication") &&
             config[L"authentication"].has_string_field(L"password"))
         {
-            password = config[L"authentication"][L"password"].as_string();
+            password = to_string(config[L"authentication"][L"password"]);
         }
         else
-            log(L"Error reading configuration file. No password set.");
+            log("Error reading configuration file. No password set.");
         free(buf);
     }
     else
     {
-        log(L"DCSOLYMPUS_PATH environment variable is missing, starting server on " + address);
+        log("DCSOLYMPUS_PATH environment variable is missing, starting server on " + address);
     }
 
-    http_listener listener(address + L"/" + wstring(REST_URI));
+    http_listener listener(to_wstring(address + "/" + REST_URI));
 
     std::function<void(http_request)> handle_options = std::bind(&Server::handle_options, this, std::placeholders::_1);
     std::function<void(http_request)> handle_get = std::bind(&Server::handle_get, this, std::placeholders::_1);

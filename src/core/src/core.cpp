@@ -10,19 +10,24 @@
 using namespace std::chrono;
 
 auto before = std::chrono::system_clock::now();
+
+/* Singleton objects */
 UnitsManager* unitsManager = nullptr;
 Server* server = nullptr;
 Scheduler* scheduler = nullptr;
+
+/* Data jsons */
 json::value airbases;
 json::value bullseyes;
 json::value mission;
+
 mutex mutexLock;
-bool initialized = false;
 string sessionHash;
-int lastUpdateIndex = 0;
-int frameCounter = 0;
+
+bool initialized = false;
+
+unsigned int frameCounter = 0;
 double frameRate = 30;
-long long lastUpdateTime = 0;
 
 /* Called when DCS simulation stops. All singleton instances are deleted. */
 extern "C" DllExport int coreDeinit(lua_State* L)
@@ -64,48 +69,29 @@ extern "C" DllExport int coreFrame(lua_State* L)
     if (!initialized)
         return (0);
 
-    /* Lock for thread safety */
-    lock_guard<mutex> guard(mutexLock);
-
     frameCounter++;
 
+    /* Slow down the update rate if the frameRate is very low since it means DCS is struggling to keep up */
     const std::chrono::duration<double> duration = std::chrono::system_clock::now() - before;
-
-    if (unitsManager != nullptr) {
-        // TODO put in a function
-        vector<int> IDs;
-        for (auto iter = unitsManager->getUnits().begin(); iter != unitsManager->getUnits().end(); ++iter)
-            IDs.push_back(iter->first);
-     
-        int updateChunk = 20;
-        int finalUpdateIndex = lastUpdateIndex + updateChunk;
-
-        /* Get all the new data (with some margin) */
-        while (lastUpdateIndex < unitsManager->getUnits().size() && lastUpdateIndex <= finalUpdateIndex)
-            unitsManager->appendUnitData(IDs[lastUpdateIndex++], server->getUpdateJson(), lastUpdateTime - 1000);
-    }
-     
-    if (duration.count() > UPDATE_TIME_INTERVAL && lastUpdateIndex == unitsManager->getUnits().size())
+    if (duration.count() > UPDATE_TIME_INTERVAL * (60.0 / frameRate)) 
     {
+        /* Lock for thread safety */
+        lock_guard<mutex> guard(mutexLock);
+
         milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
-        lastUpdateTime = ms.count();
         frameRate = frameCounter / duration.count();
         frameCounter = 0;
 
-        if (unitsManager != nullptr)
+        if (unitsManager != nullptr) {
             unitsManager->updateExportData(L, duration.count());
+            unitsManager->runAILoop();
+        }
         before = std::chrono::system_clock::now();
-        
-        /* Restart the update counter */
-        lastUpdateIndex = 0;
     }
 
     if (scheduler != nullptr)
         scheduler->execute(L);
 
-    if (duration.count() > UPDATE_TIME_INTERVAL && unitsManager != nullptr)
-        unitsManager->runAILoop();
- 
     return(0);
 }
 

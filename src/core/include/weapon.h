@@ -4,9 +4,9 @@
 class Weapon : public Unit
 {
 public:
-	Weapon(json::value json, int ID);
+	Weapon(json::value json, unsigned int ID);
 
-	virtual wstring getCategory() = 0;
+	virtual string getCategory() = 0;
 
 protected:
 	/* Weapons are not controllable and have no AIloop */
@@ -16,15 +16,15 @@ protected:
 class Missile : public Weapon
 {
 public:
-	Missile(json::value json, int ID);
+	Missile(json::value json, unsigned int ID);
 
-	virtual wstring getCategory() { return L"Missile"; };
+	virtual string getCategory() { return "Missile"; };
 };
 
 class Bomb : public Weapon
 {
 public:
-	Bomb(json::value json, int ID);
+	Bomb(json::value json, unsigned int ID);
 
-	virtual wstring getCategory() { return L"Bomb"; };
+	virtual string getCategory() { return "Bomb"; };
 };
