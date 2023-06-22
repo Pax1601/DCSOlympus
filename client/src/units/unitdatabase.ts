@@ -35,6 +35,15 @@ export class UnitDatabase {
         return null;
     }
 
+    /* Gets a specific blueprint by range */
+    getByRange(range: string) {
+        for (let unit in this.blueprints) {
+            if (this.blueprints[unit].range === range)
+                return this.blueprints[unit];
+        }
+        return null;
+    }
+
     /* Get all blueprints by role */
     getByRole(role: string) {
         var units = [];
