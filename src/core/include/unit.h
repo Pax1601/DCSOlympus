@@ -29,6 +29,7 @@ namespace State
 	};
 };
 
+#pragma pack(push, 1)
 namespace Options {
 	struct TACAN
 	{
@@ -86,8 +87,15 @@ namespace DataTypes {
 		unsigned char emissionsCountermeasures;
 		Options::TACAN TACAN;
 		Options::Radio Radio;
+		unsigned short pathLength;
+		unsigned char nameLength;
+		unsigned char unitNameLength;
+		unsigned char groupNameLength;
+		unsigned char categoryLength;
+		unsigned char coalitionLength;
 	};
 }
+#pragma pack(pop)
 
 class Unit
 {
@@ -102,8 +110,8 @@ public:
 	void runAILoop();
 	void updateExportData(json::value json, double dt = 0);
 	void updateMissionData(json::value json);
-	DataTypes::DataPacket getDataPacket();
-	string getData(bool refresh);
+	unsigned int getUpdateData(char* &data);
+	void getData(stringstream &ss, bool refresh);
 	virtual string getCategory() { return "No category"; };
 
 	/********** Base data **********/

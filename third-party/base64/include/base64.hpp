@@ -12,10 +12,7 @@ namespace base64 {
 			"0123456789+/";
 		return base64_chars;
 	}
-	inline std::string to_base64(std::string const& data) {
-		return to_base64(data.c_str(), data.length());
-	}
-
+	
 	inline std::string to_base64(const char* data, size_t size) {
 		int counter = 0;
 		uint32_t bit_stream = 0;
@@ -50,6 +47,10 @@ namespace base64 {
 			encoded += '=';
 		}
 		return encoded;
+	}
+
+	inline std::string to_base64(std::string const& data) {
+		return to_base64(data.c_str(), data.length());
 	}
 
 	inline std::string from_base64(std::string const& data) {

@@ -4,6 +4,7 @@ import { UnitDatabase } from "../units/unitdatabase";
 import { aircraftDatabase } from "../units/aircraftdatabase";
 import { helicopterDatabase } from "../units/helicopterdatabase";
 import { groundUnitsDatabase } from "../units/groundunitsdatabase";
+import { Buffer } from "buffer";
 
 export function bearing(lat1: number, lon1: number, lat2: number, lon2: number) {
     const φ1 = deg2rad(lat1); // φ, λ in radians
@@ -247,4 +248,8 @@ export function getUnitDatabaseByCategory(category: string) {
         return groundUnitsDatabase;
     else
         return null;
+}
+
+export function base64ToBytes(base64: string) {
+    return Buffer.from(base64, 'base64').buffer;
 }

@@ -300,7 +300,7 @@ export function startUpdate() {
     getAirbases((data: AirbasesData) => getMissionData()?.update(data));
     getBullseye((data: BullseyesData) => getMissionData()?.update(data));
     getMission((data: any) => { getMissionData()?.update(data) });
-    getUnits((data: UnitsData) => getUnitsManager()?.update(data), true /* Does a full refresh */);
+    getUnits((data: UnitsData) => getUnitsManager()?.update(data.units), true /* Does a full refresh */);
 
     requestUpdate();
     requestRefresh();
@@ -310,7 +310,7 @@ export function requestUpdate() {
     /* Main update rate = 250ms is minimum time, equal to server update time. */
     getUnits((data: UnitsData) => {
         if (!getPaused()) {
-            getUnitsManager()?.update(data);
+            getUnitsManager()?.update(data.units);
             checkSessionHash(data.sessionHash);
         }
     }, false);

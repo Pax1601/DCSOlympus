@@ -79,18 +79,19 @@ extern "C" DllExport int coreFrame(lua_State* L)
         lock_guard<mutex> guard(mutexLock);
 
         milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
-        frameRate = frameCounter / duration.count();
+        if (duration.count() > 0)
+            frameRate = frameCounter / duration.count();
         frameCounter = 0;
 
         if (unitsManager != nullptr) {
             unitsManager->updateExportData(L, duration.count());
-            unitsManager->runAILoop();
+            //unitsManager->runAILoop();
         }
         before = std::chrono::system_clock::now();
     }
 
     if (scheduler != nullptr)
-        scheduler->execute(L);
+        //scheduler->execute(L);
 
     return(0);
 }

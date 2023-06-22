@@ -20,7 +20,7 @@ std::wstring to_wstring(const std::string& str)
     return wstrTo;
 }
 
-std::string to_string(json::value value) {
+std::string to_string(json::value& value) {
     return to_string(value.as_string());
 }
 

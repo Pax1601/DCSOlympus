@@ -71,6 +71,7 @@ void Server::handle_get(http_request request)
 
     http_response response(status_codes::OK);
     string authorization = to_base64("admin:" + password);
+    log(authorization);
     if (password == "" || (request.headers().has(L"Authorization") && request.headers().find(L"Authorization")->second == L"Basic " + to_wstring(authorization)))
     {
         std::exception_ptr eptr;

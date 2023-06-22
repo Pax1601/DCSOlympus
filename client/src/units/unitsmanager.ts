@@ -1,8 +1,8 @@
 import { LatLng, LatLngBounds } from "leaflet";
-import { getHotgroupPanel, getInfoPopup, getMap, getMissionHandler, getUnitDataTable } from "..";
+import { getHotgroupPanel, getInfoPopup, getMap, getMissionHandler } from "..";
 import { Unit } from "./unit";
 import { cloneUnit, spawnGroundUnit } from "../server/server";
-import { deg2rad, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots, polygonArea, randomPointInPoly, randomUnitBlueprintByRole } from "../other/utils";
+import { base64ToBytes, deg2rad, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots, polygonArea, randomPointInPoly, randomUnitBlueprintByRole } from "../other/utils";
 import { CoalitionArea } from "../map/coalitionarea";
 import { Airbase } from "../missionhandler/airbase";
 import { groundUnitsDatabase } from "./groundunitsdatabase";
@@ -68,9 +68,61 @@ export class UnitsManager {
 
     }
 
-    update(data: UnitsData) {
+    update(data: string) {
         var updatedUnits: Unit[] = [];
-        Object.keys(data.units)
+        var buffer = base64ToBytes(data);
+
+        /*Coords position;
+		double speed;
+		double heading;
+		unsigned short fuel;
+		double desiredSpeed;
+		double desiredAltitude;
+		unsigned int targetID;
+		Coords targetPosition;
+		unsigned char state;
+		unsigned char ROE;
+		unsigned char reactionToThreat;
+		unsigned char emissionsCountermeasures;
+		Options::TACAN TACAN;
+		Options::Radio Radio;
+		unsigned short pathLength;
+		unsigned char nameLength;
+		unsigned char unitNameLength;
+		unsigned char groupNameLength;
+		unsigned char categoryLength;
+		unsigned char coalitionLength;*/
+
+        var offset = 0;
+        var dataview = new DataView(buffer);
+        const ID = dataview.getUint32(offset, true); offset += 4;
+        const bitmask = dataview.getUint32(offset , true); offset += 4;
+        const alive = bitmask & (1 << 0);
+        const human = bitmask >> 1 & 1;
+        const controlled = bitmask >> 2 & 1;
+        const hasTask = bitmask >> 3 & 1;
+        const desiredAltitudeType = bitmask >> 16 & 1;
+        const desiredSpeedType = bitmask >> 17 & 1;
+        const isTanker = bitmask >> 18 & 1;
+        const isAWACS = bitmask >> 19 & 1;
+        const onOff = bitmask >> 20 & 1;
+        const followRoads = bitmask >> 21 & 1;
+        const EPLRS = bitmask >> 22 & 1;
+        const prohibitAA = bitmask >> 23 & 1;
+        const prohibitAfterburner = bitmask >> 24 & 1;
+        const prohibitAG = bitmask >> 25 & 1;
+        const prohibitAirWpn = bitmask >> 26 & 1;
+        const prohibitJettison = bitmask >> 27 & 1;
+
+        const latitude = dataview.getFloat64(offset , true); offset += 8;
+        const longitude = dataview.getFloat64(offset , true); offset += 8;
+        const altitude = dataview.getFloat64(offset , true); offset += 8;
+        const speed = dataview.getFloat64(offset , true); offset += 8;
+        const heading = dataview.getFloat64(offset , true); offset += 8;
+        
+
+        var foo = 12;
+        /*Object.keys(data.units)
             .filter((ID: string) => !(ID in this.#units))
             .reduce((timeout: number, ID: string) => {
                 window.setTimeout(() => {
@@ -91,7 +143,7 @@ export class UnitsManager {
         this.getSelectedUnits().forEach((unit: Unit) => {
             if (!updatedUnits.includes(unit))
                 unit.setData({})
-        });
+        });*/
     }
 
     setHiddenType(key: string, value: boolean) {

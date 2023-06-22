@@ -68,7 +68,7 @@ void AirUnit::setState(unsigned char newState)
 	case State::ATTACK: {
 		if (isTargetAlive()) {
 			Unit* target = unitsManager->getUnit(targetID);
-			Coords targetPosition = Coords(target->getLatitude(), target->getLongitude(), 0);
+			Coords targetPosition = Coords(target->getPosition().lat, target->getPosition().lng, 0);
 			clearActivePath();
 			pushActivePathFront(targetPosition);
 			resetActiveDestination();

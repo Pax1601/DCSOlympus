@@ -6,9 +6,6 @@
 #include "defines.h"
 #include "unitsmanager.h"
 
-#include "base64.hpp"
-using namespace base64;
-
 #include <chrono>
 using namespace std::chrono;
 
@@ -54,30 +51,26 @@ void Unit::initialize(json::value json)
 
 void Unit::setDefaults(bool force)
 {
-	const bool isUnitControlledByOlympus = getControlled();
-	const bool isUnitAlive = getAlive();
-	const bool isUnitLeader = unitsManager->isUnitGroupLeader(this);
-	const bool isUnitLeaderOfAGroupWithOtherUnits = unitsManager->isUnitInGroup(this) && unitsManager->isUnitGroupLeader(this);
+	if (!getControlled()) return;
+	if (!unitsManager->isUnitGroupLeader(this)) return;
+	if (!(getAlive() || unitsManager->isUnitInGroup(this) && unitsManager->isUnitGroupLeader(this))) return;
+	if (getHuman()) return;
 
-	if (isUnitControlledByOlympus && (isUnitAlive || isUnitLeaderOfAGroupWithOtherUnits) && isUnitLeader && !human) {
-		/* Set the default IDLE state */
-		setState(State::IDLE);
+	/* Set the default IDLE state */
+	setState(State::IDLE);
 
-		/* Set desired altitude to be equal to current altitude so the unit does not climb/descend after spawn */
-		setDesiredAltitude(position.alt);
+	/* Set desired altitude to be equal to current altitude so the unit does not climb/descend after spawn */
+	setDesiredAltitude(position.alt);
 
-		/* Set the default options (these are all defaults so will only affect the export data, no DCS command will be sent) */
-		setROE(ROE::OPEN_FIRE_WEAPON_FREE, force);
-		setReactionToThreat(ReactionToThreat::EVADE_FIRE, force);
-		setEmissionsCountermeasures(EmissionCountermeasure::DEFEND, force);
-		strcpy_s(TACAN.callsign, 4, "TKR");
-		setTACAN(TACAN, force);
-		setRadio(radio, force);
-		setEPLRS(EPLRS, force);
-		setGeneralSettings(generalSettings, force);
-		setOnOff(onOff);
-		setFollowRoads(followRoads);
-	}
+	/* Set the default options */
+	setROE(ROE::OPEN_FIRE_WEAPON_FREE, force);
+	setReactionToThreat(ReactionToThreat::EVADE_FIRE, force);
+	setEmissionsCountermeasures(EmissionCountermeasure::DEFEND, force);
+	strcpy_s(TACAN.callsign, 4, "TKR");
+	setTACAN(TACAN, force);
+	setRadio(radio, force);
+	setEPLRS(EPLRS, force);
+	setGeneralSettings(generalSettings, force);
 }
 
 void Unit::runAILoop() {
@@ -107,8 +100,7 @@ void Unit::updateExportData(json::value json, double dt)
 		if (dt > 0)
 			setSpeed(getSpeed() * 0.95 + (dist / dt) * 0.05);
 	}
-	oldPosition = position;
-
+	
 	if (json.has_string_field(L"Name"))
 		setName(to_string(json[L"Name"]));
 	if (json.has_string_field(L"UnitName"))
@@ -136,53 +128,63 @@ void Unit::updateExportData(json::value json, double dt)
 	/* All units which contain the name "Olympus" are automatically under AI control */
 	if (getUnitName().find("Olympus") != string::npos)
 		setControlled(true);
+
+	oldPosition = position;
 }
 
 void Unit::updateMissionData(json::value json)
 {
-	if (json.has_number_field(L"fuel"))
-		setFuel(short(json[L"fuel"].as_number().to_double() * 100));
-
-	if (json.has_object_field(L"ammo")) {
-		vector<DataTypes::Ammo> ammo;
-		for (auto const& el : json[L"ammo"].as_object()) {
-			DataTypes::Ammo ammoItem;
-			auto ammoJson = el.second;
-			ammoItem.quantity = ammoJson[L"count"].as_number().to_uint32();
-			ammoItem.name = to_string(ammoJson[L"desc"][L"displayName"]);
-			ammoItem.guidance = ammoJson[L"desc"][L"guidance"].as_number().to_uint32();
-			ammoItem.category = ammoJson[L"desc"][L"category"].as_number().to_uint32();
-			ammoItem.missileCategory = ammoJson[L"desc"][L"missileCategory"].as_number().to_uint32();
-			ammo.push_back(ammoItem);
-		}
-		setAmmo(ammo);
-	}
-		
-	if (json.has_object_field(L"contacts")) {
-		vector<DataTypes::Contact> contacts;
-		for (auto const& el : json[L"ammo"].as_object()) {
-			DataTypes::Contact contactItem;
-			auto contactJson = el.second;
-			contactItem.ID = contactJson[L"object"][L"id_"].as_number().to_uint32();
-
-			string detectionMethod = to_string(contactJson[L"detectionMethod"]);
-			if		(detectionMethod.compare("VISUAL"))	contactItem.detectionMethod = 1;
-			else if (detectionMethod.compare("OPTIC"))	contactItem.detectionMethod = 2;
-			else if (detectionMethod.compare("RADAR"))	contactItem.detectionMethod = 4;
-			else if (detectionMethod.compare("IRST"))	contactItem.detectionMethod = 8;
-			else if (detectionMethod.compare("RWR"))	contactItem.detectionMethod = 16;
-			else if (detectionMethod.compare("DLINK"))	contactItem.detectionMethod = 32;
-			contacts.push_back(contactItem);
-		}
-		setContacts(contacts);
-	}
+	//if (json.has_number_field(L"fuel"))
+	//	setFuel(short(json[L"fuel"].as_number().to_double() * 100));
+	//
+	//if (json.has_object_field(L"ammo")) {
+	//	vector<DataTypes::Ammo> ammo;
+	//	for (auto const& el : json[L"ammo"].as_object()) {
+	//		DataTypes::Ammo ammoItem;
+	//		auto ammoJson = el.second;
+	//		ammoItem.quantity = ammoJson[L"count"].as_number().to_uint32();
+	//		ammoItem.name = to_string(ammoJson[L"desc"][L"displayName"]);
+	//		ammoItem.guidance = ammoJson[L"desc"][L"guidance"].as_number().to_uint32();
+	//		ammoItem.category = ammoJson[L"desc"][L"category"].as_number().to_uint32();
+	//		ammoItem.missileCategory = ammoJson[L"desc"][L"missileCategory"].as_number().to_uint32();
+	//		ammo.push_back(ammoItem);
+	//	}
+	//	setAmmo(ammo);
+	//}
+	//	
+	//if (json.has_object_field(L"contacts")) {
+	//	vector<DataTypes::Contact> contacts;
+	//	for (auto const& el : json[L"ammo"].as_object()) {
+	//		DataTypes::Contact contactItem;
+	//		auto contactJson = el.second;
+	//		contactItem.ID = contactJson[L"object"][L"id_"].as_number().to_uint32();
+	//
+	//		string detectionMethod = to_string(contactJson[L"detectionMethod"]);
+	//		if		(detectionMethod.compare("VISUAL"))	contactItem.detectionMethod = 1;
+	//		else if (detectionMethod.compare("OPTIC"))	contactItem.detectionMethod = 2;
+	//		else if (detectionMethod.compare("RADAR"))	contactItem.detectionMethod = 4;
+	//		else if (detectionMethod.compare("IRST"))	contactItem.detectionMethod = 8;
+	//		else if (detectionMethod.compare("RWR"))	contactItem.detectionMethod = 16;
+	//		else if (detectionMethod.compare("DLINK"))	contactItem.detectionMethod = 32;
+	//		contacts.push_back(contactItem);
+	//	}
+	//	setContacts(contacts);
+	//}
 
 	if (json.has_boolean_field(L"hasTask"))
 		setHasTask(json[L"hasTask"].as_bool());
 }
 
-DataTypes::DataPacket Unit::getDataPacket()
+unsigned int Unit::getUpdateData(char* &data)
 {
+	/* Reserve data for:
+		1) DataPacket;
+		2) Active path;
+	*/
+	data = (char*)malloc(sizeof(DataTypes::DataPacket) + activePath.size() * sizeof(Coords));
+	unsigned int offset = 0;
+
+	/* Prepare the data packet and copy it to  memory */
 	unsigned int bitmask = 0;
 	bitmask |= alive << 0;
 	bitmask |= human << 1;
@@ -192,16 +194,16 @@ DataTypes::DataPacket Unit::getDataPacket()
 	bitmask |= desiredSpeedType << 17;
 	bitmask |= isTanker << 18;
 	bitmask |= isAWACS << 19;
-	bitmask |= onOff << 19;
-	bitmask |= followRoads << 19;
-	bitmask |= EPLRS << 20;
-	bitmask |= generalSettings.prohibitAA << 21;
-	bitmask |= generalSettings.prohibitAfterburner << 22;
-	bitmask |= generalSettings.prohibitAG << 23;
-	bitmask |= generalSettings.prohibitAirWpn << 24;
-	bitmask |= generalSettings.prohibitJettison << 25;
+	bitmask |= onOff << 20;
+	bitmask |= followRoads << 21;
+	bitmask |= EPLRS << 22;
+	bitmask |= generalSettings.prohibitAA << 23;
+	bitmask |= generalSettings.prohibitAfterburner << 24;
+	bitmask |= generalSettings.prohibitAG << 25;
+	bitmask |= generalSettings.prohibitAirWpn << 26;
+	bitmask |= generalSettings.prohibitJettison << 27;
 
-	DataTypes::DataPacket datapacket{
+	DataTypes::DataPacket dataPacket{
 		ID,
 		bitmask,
 		position,
@@ -217,37 +219,15 @@ DataTypes::DataPacket Unit::getDataPacket()
 		reactionToThreat,
 		emissionsCountermeasures,
 		TACAN,
-		radio
+		radio,
+		activePath.size(),
+		name.size(),
+		unitName.size(),
+		groupName.size(),
+		getCategory().size(),
+		coalition.size()
 	};
 
-	return datapacket;
-}
-
-string Unit::getData(bool refresh)
-{
-	/* Prepare the data in a stringstream */
-	stringstream ss;
-
-	/* Reserve data for: 
-		1) DataPacket;
-		2) Length of active path;
-		3) Active path;
-	*/
-	char* data = (char*)malloc(sizeof(DataTypes::DataPacket) + sizeof(unsigned short) + activePath.size() * sizeof(Coords));
-	unsigned int offset = 0;
-
-	/* Prepare the data packet and copy it to  memory */
-	DataTypes::DataPacket dataPacket;
-	/* If the unit is in a group, get the datapacket from the group leader and only replace the position, speed and heading */
-	if (unitsManager->isUnitInGroup(this) && !unitsManager->isUnitGroupLeader(this)) {
-		dataPacket = unitsManager->getGroupLeader(this)->getDataPacket();
-		dataPacket.position = position;
-		dataPacket.speed = speed;
-		dataPacket.heading = heading;
-	}
-	else
-		dataPacket = getDataPacket();
-	
 	memcpy(data + offset, &dataPacket, sizeof(dataPacket));
 	offset += sizeof(dataPacket);
 
@@ -255,14 +235,29 @@ string Unit::getData(bool refresh)
 	std::vector<Coords> path;
 	for (const Coords& c : activePath)
 		path.push_back(c);
-	unsigned short pathLength = activePath.size();
 
-	memcpy(data + offset, &pathLength, sizeof(unsigned short));
-	offset += sizeof(unsigned short);
 	memcpy(data + offset, &path, activePath.size() * sizeof(Coords));
-	offset += sizeof(unsigned short);
+	offset += activePath.size() * sizeof(Coords);
 
-	ss << to_base64(data, offset);
+	return offset;
+}
+
+void Unit::getData(stringstream &ss, bool refresh)
+{
+	char* data;
+	unsigned int size = getUpdateData(data);
+
+	/* Prepare the data packet and copy it to  memory */
+	/* If the unit is in a group, get the update data from the group leader and only replace the position, speed and heading */
+	if (unitsManager->isUnitInGroup(this) && !unitsManager->isUnitGroupLeader(this)) {
+		DataTypes::DataPacket* p = (DataTypes::DataPacket*)data;
+		p->position = position;
+		p->speed = speed;
+		p->heading = heading;
+	}
+	
+	ss.write(data, size);
+	delete data;
 
 	if (refresh) {
 		ss << name;
@@ -271,8 +266,6 @@ string Unit::getData(bool refresh)
 		ss << getCategory();
 		ss << coalition;
 	}
-
-	return ss.str();
 }
 
 void Unit::setActivePath(list<Coords> newPath)
@@ -397,7 +390,7 @@ void Unit::setROE(unsigned char newROE, bool force)
 {
 	if (ROE != newROE || force) {
 		ROE = newROE;
-		Command* command = dynamic_cast<Command*>(new SetOption(groupName, SetCommandType::ROE, ROE));
+		Command* command = dynamic_cast<Command*>(new SetOption(groupName, SetCommandType::ROE, static_cast<unsigned int>(ROE)));
 		scheduler->appendCommand(command);
 	}
 }
@@ -407,7 +400,7 @@ void Unit::setReactionToThreat(unsigned char newReactionToThreat, bool force)
 	if (reactionToThreat != newReactionToThreat || force) {
 		reactionToThreat = newReactionToThreat;
 
-		Command* command = dynamic_cast<Command*>(new SetOption(groupName, SetCommandType::REACTION_ON_THREAT, reactionToThreat));
+		Command* command = dynamic_cast<Command*>(new SetOption(groupName, SetCommandType::REACTION_ON_THREAT, static_cast<unsigned int>(reactionToThreat)));
 		scheduler->appendCommand(command);
 	}
 }

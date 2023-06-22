@@ -10,6 +10,9 @@
 #include "commands.h"
 #include "scheduler.h"
 
+#include "base64.hpp"
+using namespace base64;
+
 extern Scheduler* scheduler;
 
 UnitsManager::UnitsManager(lua_State* L)
@@ -155,8 +158,8 @@ string UnitsManager::getUnitData(bool refresh)
 {
 	stringstream ss;
 	for (auto const& p : units)
-		ss << p.second->getData(refresh);
-	return ss.str();
+		p.second->getData(ss, refresh);
+	return to_base64(ss.str());
 }
 
 void UnitsManager::deleteUnit(unsigned int ID, bool explosion)
