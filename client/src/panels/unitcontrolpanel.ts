@@ -8,6 +8,7 @@ import { Panel } from "./panel";
 import { Switch } from "../controls/switch";
 import { ROEDescriptions, ROEs, altitudeIncrements, emissionsCountermeasures, emissionsCountermeasuresDescriptions, maxAltitudeValues, maxSpeedValues, minAltitudeValues, minSpeedValues, reactionsToThreat, reactionsToThreatDescriptions, speedIncrements } from "../constants/constants";
 import { ftToM, knotsToMs, mToFt, msToKnots } from "../other/utils";
+import { GeneralSettings, Radio, TACAN } from "../@types/unit";
 
 export class UnitControlPanel extends Panel {
     #altitudeSlider: Slider;
@@ -98,13 +99,13 @@ export class UnitControlPanel extends Panel {
         if (units.length < 20) {
             this.getElement().querySelector("#selected-units-container")?.replaceChildren(...units.map((unit: Unit, index: number) => {
                 var button = document.createElement("button");
-                var callsign = unit.getBaseData().unitName || "";
-                var label = unit.getDatabase()?.getByName(unit.getBaseData().name)?.label || unit.getBaseData().name;
+                var callsign = unit.getData().unitName || "";
+                var label = unit.getDatabase()?.getByName(unit.getData().name)?.label || unit.getData().name;
 
                 button.setAttribute("data-label", label);
                 button.setAttribute("data-callsign", callsign);
 
-                button.setAttribute("data-coalition", unit.getMissionData().coalition);
+                button.setAttribute("data-coalition", unit.getData().coalition);
                 button.classList.add("pill", "highlight-coalition")
 
                 button.addEventListener("click", () => {
@@ -139,12 +140,12 @@ export class UnitControlPanel extends Panel {
                 element.toggleAttribute("data-show-advanced-settings-button", units.length == 1);
                 
                 /* Flight controls */
-                var desiredAltitude: number | undefined = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getTaskData().desiredAltitude});
-                var desiredAltitudeType = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getTaskData().desiredAltitudeType});
-                var desiredSpeed = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getTaskData().desiredSpeed});
-                var desiredSpeedType = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getTaskData().desiredSpeedType});
-                var onOff = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getTaskData().onOff});
-                var followRoads = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getTaskData().followRoads});
+                var desiredAltitude: number | undefined = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getData().desiredAltitude});
+                var desiredAltitudeType = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getData().desiredAltitudeType});
+                var desiredSpeed = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getData().desiredSpeed});
+                var desiredSpeedType = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getData().desiredSpeedType});
+                var onOff = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getData().onOff});
+                var followRoads = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getData().followRoads});
 
                 if (selectedUnitsTypes.length == 1) {
                     this.#altitudeTypeSwitch.setValue(desiredAltitudeType != undefined? desiredAltitudeType == "AGL": undefined, false);
@@ -170,15 +171,15 @@ export class UnitControlPanel extends Panel {
 
                 /* Option buttons */
                 this.#optionButtons["ROE"].forEach((button: HTMLButtonElement) => {
-                    button.classList.toggle("selected", units.every((unit: Unit) => unit.getOptionsData().ROE === button.value))
+                    button.classList.toggle("selected", units.every((unit: Unit) => unit.getData().ROE === button.value))
                 });
 
                 this.#optionButtons["reactionToThreat"].forEach((button: HTMLButtonElement) => {
-                    button.classList.toggle("selected", units.every((unit: Unit) => unit.getOptionsData().reactionToThreat === button.value))
+                    button.classList.toggle("selected", units.every((unit: Unit) => unit.getData().reactionToThreat === button.value))
                 });
 
                 this.#optionButtons["emissionsCountermeasures"].forEach((button: HTMLButtonElement) => {
-                    button.classList.toggle("selected", units.every((unit: Unit) => unit.getOptionsData().emissionsCountermeasures === button.value))
+                    button.classList.toggle("selected", units.every((unit: Unit) => unit.getData().emissionsCountermeasures === button.value))
                 });
 
                 this.#onOffSwitch.setValue(onOff, false);
@@ -207,11 +208,11 @@ export class UnitControlPanel extends Panel {
             const radioCallsignNumberInput = this.#advancedSettingsDialog.querySelector("#radio-callsign-number")?.querySelector("input") as HTMLInputElement;
             
             const unit = units[0];
-            const roles = aircraftDatabase.getByName(unit.getBaseData().name)?.loadouts.map((loadout) => {return loadout.roles})
+            const roles = aircraftDatabase.getByName(unit.getData().name)?.loadouts.map((loadout) => {return loadout.roles})
             const tanker = roles != undefined && Array.prototype.concat.apply([], roles)?.includes("Tanker");
             const AWACS = roles != undefined && Array.prototype.concat.apply([], roles)?.includes("AWACS");
-            const radioMHz = Math.floor(unit.getOptionsData().radio.frequency / 1000000);
-            const radioDecimals = (unit.getOptionsData().radio.frequency / 1000000 - radioMHz) * 1000;
+            const radioMHz = Math.floor(unit.getData().radio.frequency / 1000000);
+            const radioDecimals = (unit.getData().radio.frequency / 1000000 - radioMHz) * 1000;
 
             /* Activate the correct options depending on unit type */
             this.#advancedSettingsDialog.toggleAttribute("data-show-settings", !tanker && !AWACS);
@@ -223,28 +224,28 @@ export class UnitControlPanel extends Panel {
 
             /* Set common properties */
             // Name
-            unitNameEl.innerText = unit.getBaseData().unitName;
+            unitNameEl.innerText = unit.getData().unitName;
 
             // General settings
-            prohibitJettisonCheckbox.checked = unit.getOptionsData().generalSettings.prohibitJettison;
-            prohibitAfterburnerCheckbox.checked = unit.getOptionsData().generalSettings.prohibitAfterburner;
-            prohibitAACheckbox.checked = unit.getOptionsData().generalSettings.prohibitAA;
-            prohibitAGCheckbox.checked = unit.getOptionsData().generalSettings.prohibitAG;
-            prohibitAirWpnCheckbox.checked = unit.getOptionsData().generalSettings.prohibitAirWpn;
+            prohibitJettisonCheckbox.checked = unit.getData().generalSettings.prohibitJettison;
+            prohibitAfterburnerCheckbox.checked = unit.getData().generalSettings.prohibitAfterburner;
+            prohibitAACheckbox.checked = unit.getData().generalSettings.prohibitAA;
+            prohibitAGCheckbox.checked = unit.getData().generalSettings.prohibitAG;
+            prohibitAirWpnCheckbox.checked = unit.getData().generalSettings.prohibitAirWpn;
 
             // Tasking
-            tankerCheckbox.checked = unit.getTaskData().isTanker;
-            AWACSCheckbox.checked = unit.getTaskData().isAWACS;
+            tankerCheckbox.checked = unit.getData().isTanker;
+            AWACSCheckbox.checked = unit.getData().isAWACS;
 
             // TACAN
-            TACANCheckbox.checked = unit.getOptionsData().TACAN.isOn;
-            TACANChannelInput.value = String(unit.getOptionsData().TACAN.channel);
-            TACANCallsignInput.value = String(unit.getOptionsData().TACAN.callsign);
-            this.#TACANXYDropdown.setValue(unit.getOptionsData().TACAN.XY);
+            TACANCheckbox.checked = unit.getData().TACAN.isOn;
+            TACANChannelInput.value = String(unit.getData().TACAN.channel);
+            TACANCallsignInput.value = String(unit.getData().TACAN.callsign);
+            this.#TACANXYDropdown.setValue(unit.getData().TACAN.XY);
 
             // Radio
             radioMhzInput.value = String(radioMHz);
-            radioCallsignNumberInput.value = String(unit.getOptionsData().radio.callsignNumber);
+            radioCallsignNumberInput.value = String(unit.getData().radio.callsignNumber);
             this.#radioDecimalsDropdown.setValue("." + radioDecimals);
                     
             if (tanker) /* Set tanker specific options */
@@ -255,7 +256,7 @@ export class UnitControlPanel extends Panel {
                 this.#radioCallsignDropdown.setOptions(["Enfield", "Springfield", "Uzi", "Colt", "Dodge", "Ford", "Chevy", "Pontiac"]);
 
             // This must be done after setting the options
-            if (!this.#radioCallsignDropdown.selectValue(unit.getOptionsData().radio.callsign - 1)) // Ensure the selected value is in the acceptable range
+            if (!this.#radioCallsignDropdown.selectValue(unit.getData().radio.callsign - 1)) // Ensure the selected value is in the acceptable range
                 this.#radioCallsignDropdown.selectValue(0);
         }
     }

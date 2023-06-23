@@ -180,8 +180,13 @@ unsigned int Unit::getUpdateData(char* &data)
 	/* Reserve data for:
 		1) DataPacket;
 		2) Active path;
+		3) Ammo vector;
+		4) Contacts vector;
 	*/
-	data = (char*)malloc(sizeof(DataTypes::DataPacket) + activePath.size() * sizeof(Coords));
+	data = (char*)malloc(sizeof(DataTypes::DataPacket) + 
+		activePath.size() * sizeof(Coords) +
+		ammo.size() * sizeof(Coords) + 
+		contacts.size() * sizeof(Coords));
 	unsigned int offset = 0;
 
 	/* Prepare the data packet and copy it to  memory */
@@ -221,6 +226,8 @@ unsigned int Unit::getUpdateData(char* &data)
 		TACAN,
 		radio,
 		activePath.size(),
+		ammo.size(),
+		contacts.size(),
 		name.size(),
 		unitName.size(),
 		groupName.size(),
@@ -231,13 +238,20 @@ unsigned int Unit::getUpdateData(char* &data)
 	memcpy(data + offset, &dataPacket, sizeof(dataPacket));
 	offset += sizeof(dataPacket);
 
-	/* Prepare the path memory and copy it to memory */
+	/* Prepare the path vector and copy it to memory */
 	std::vector<Coords> path;
 	for (const Coords& c : activePath)
 		path.push_back(c);
-
 	memcpy(data + offset, &path, activePath.size() * sizeof(Coords));
 	offset += activePath.size() * sizeof(Coords);
+
+	/* Copy the ammo vector to memory */
+	memcpy(data + offset, &ammo, ammo.size() * sizeof(DataTypes::Ammo));
+	offset += ammo.size() * sizeof(DataTypes::Ammo);
+
+	/* Copy the contacts vector to memory */
+	memcpy(data + offset, &contacts, contacts.size() * sizeof(DataTypes::Contact));
+	offset += contacts.size() * sizeof(DataTypes::Contact);
 
 	return offset;
 }

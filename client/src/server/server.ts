@@ -1,6 +1,7 @@
 import { LatLng } from 'leaflet';
 import { getConnectionStatusPanel, getInfoPopup, getMissionData, getUnitDataTable, getUnitsManager, setConnectionStatus } from '..';
 import { SpawnOptions } from '../controls/mapcontextmenu';
+import { GeneralSettings, Radio, TACAN } from '../@types/unit';
 
 var connected: boolean = false;
 var paused: boolean = false;

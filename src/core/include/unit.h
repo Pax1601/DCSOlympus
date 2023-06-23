@@ -59,7 +59,7 @@ namespace Options {
 namespace DataTypes {
 	struct Ammo {
 		unsigned short quantity = 0;
-		string name;
+		char name[32];
 		unsigned char guidance = 0;
 		unsigned char category = 0;
 		unsigned char missileCategory = 0;
@@ -88,6 +88,8 @@ namespace DataTypes {
 		Options::TACAN TACAN;
 		Options::Radio Radio;
 		unsigned short pathLength;
+		unsigned short ammoLength;
+		unsigned short contactsLength;
 		unsigned char nameLength;
 		unsigned char unitNameLength;
 		unsigned char groupNameLength;

@@ -547,7 +547,7 @@ export class Map extends L.Map {
     }
 
     #panToUnit(unit: Unit) {
-        var unitPosition = new L.LatLng(unit.getFlightData().latitude, unit.getFlightData().longitude);
+        var unitPosition = new L.LatLng(unit.getData().position.lat, unit.getData().position.lng);
         this.setView(unitPosition, this.getZoom(), { animate: false });
     }
 

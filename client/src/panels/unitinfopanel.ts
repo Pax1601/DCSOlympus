@@ -51,21 +51,21 @@ export class UnitInfoPanel extends Panel {
     #onUnitUpdate(unit: Unit) {
         if (this.getElement() != null && this.getVisible() && unit.getSelected()) {
 
-            const baseData = unit.getBaseData();
+            const baseData = unit.getData();
 
             /* Set the unit info */
             this.#unitLabel.innerText = aircraftDatabase.getByName(baseData.name)?.label || baseData.name;
             this.#unitName.innerText = baseData.unitName;
-            if (unit.getMissionData().flags.Human)
+            if (unit.getData().human)
                 this.#unitControl.innerText = "Human";
             else if (baseData.controlled)
                 this.#unitControl.innerText = "Olympus controlled";
             else
                 this.#unitControl.innerText = "DCS Controlled";
-            this.#fuelBar.style.width = String(unit.getMissionData().fuel + "%");
-            this.#fuelPercentage.dataset.percentage = "" + unit.getMissionData().fuel;
-            this.#currentTask.dataset.currentTask = unit.getTaskData().currentTask !== "" ? unit.getTaskData().currentTask : "No task";
-            this.#currentTask.dataset.coalition = unit.getMissionData().coalition;
+            this.#fuelBar.style.width = String(unit.getData().fuel + "%");
+            this.#fuelPercentage.dataset.percentage = "" + unit.getData().fuel;
+            this.#currentTask.dataset.currentTask = unit.getData().task !== "" ? unit.getData().task : "No task";
+            this.#currentTask.dataset.coalition = unit.getData().coalition;
 
             this.#silhouette.src = `/images/units/${unit.getDatabase()?.getByName(baseData.name)?.filename}`;
             this.#silhouette.classList.toggle("hide", unit.getDatabase()?.getByName(baseData.name)?.filename == undefined || unit.getDatabase()?.getByName(baseData.name)?.filename == '');
@@ -74,9 +74,9 @@ export class UnitInfoPanel extends Panel {
             const items = <HTMLElement>this.#loadoutContainer.querySelector("#loadout-items");
 
             if (items) {
-                const ammo = Object.values(unit.getMissionData().ammo);
+                const ammo = Object.values(unit.getData().ammo);
                 if (ammo.length > 0) {
-                    items.replaceChildren(...Object.values(unit.getMissionData().ammo).map(
+                    items.replaceChildren(...Object.values(unit.getData().ammo).map(
                         (ammo: any) => {
                             var el = document.createElement("div");
                             el.dataset.qty = ammo.count;

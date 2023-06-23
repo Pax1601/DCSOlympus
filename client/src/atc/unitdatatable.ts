@@ -12,8 +12,8 @@ export class UnitDataTable extends Panel {
         var units = getUnitsManager().getUnits();
 
         const unitsArray = Object.values(units).sort((a: Unit, b: Unit) => {
-            const aVal = a.getBaseData().unitName?.toLowerCase();
-            const bVal = b.getBaseData().unitName?.toLowerCase();
+            const aVal = a.getData().unitName?.toLowerCase();
+            const bVal = b.getData().unitName?.toLowerCase();
 
             if (aVal > bVal) {
                 return 1;
@@ -48,7 +48,7 @@ export class UnitDataTable extends Panel {
 
             for (const unit of unitsArray) {
 
-                const dataset = [unit.getBaseData().unitName, unit.getBaseData().name, unit.getBaseData().category, (unit.getBaseData().controlled) ? "AI" : "Human"];
+                const dataset = [unit.getData().unitName, unit.getData().name, unit.getData().category, (unit.getData().controlled) ? "AI" : "Human"];
 
                 addRow(el, dataset);
             }
