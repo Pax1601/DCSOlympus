@@ -69,10 +69,11 @@ void Server::handle_get(http_request request)
     /* Lock for thread safety */
     lock_guard<mutex> guard(mutexLock);
 
+    milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
+
     http_response response(status_codes::OK);
     string authorization = to_base64("admin:" + password);
-    log(authorization);
-    if (password == "" || (request.headers().has(L"Authorization") && request.headers().find(L"Authorization")->second == L"Basic " + to_wstring(authorization)))
+    if (password.length() == 0 || (request.headers().has(L"Authorization") && request.headers().find(L"Authorization")->second.compare(L"Basic " + to_wstring(authorization)) == 0))
     {
         std::exception_ptr eptr;
         try {
@@ -96,28 +97,34 @@ void Server::handle_get(http_request request)
                         }
                     }
 
-                    // TODO would be nice to optimize this
-                    answer[L"units"] = json::value(to_wstring(unitsManager->getUnitData(time == 0)));
-                }
-                else if (URI.compare(LOGS_URI) == 0)
-                {
-                    auto logs = json::value::object();
-                    getLogsJSON(logs, 100);   // By reference, for thread safety. Get the last 100 log entries
-                    answer[L"logs"] = logs;
-                }
-                else if (URI.compare(AIRBASES_URI) == 0)
-                    answer[L"airbases"] = airbases;
-                else if (URI.compare(BULLSEYE_URI) == 0)
-                    answer[L"bullseyes"] = bullseyes;
-                else if (URI.compare(MISSION_URI) == 0)
-                    answer[L"mission"] = mission;
+                    bool refresh = (time == 0);
+                    unsigned long long updateTime = ms.count();
 
-                milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
-                answer[L"time"] = json::value::string(to_wstring(ms.count()));
-                answer[L"sessionHash"] = json::value::string(to_wstring(sessionHash));
+                    stringstream ss;
+                    ss.write((char*)&updateTime, sizeof(updateTime));
+                    unitsManager->getUnitData(ss, time, refresh);
+                    response.set_body(concurrency::streams::bytestream::open_istream(ss.str()));
+                }
+                else {
+                    if (URI.compare(LOGS_URI) == 0)
+                    {
+                        auto logs = json::value::object();
+                        getLogsJSON(logs, 100);   // By reference, for thread safety. Get the last 100 log entries
+                        answer[L"logs"] = logs;
+                    }
+                    else if (URI.compare(AIRBASES_URI) == 0)
+                        answer[L"airbases"] = airbases;
+                    else if (URI.compare(BULLSEYE_URI) == 0)
+                        answer[L"bullseyes"] = bullseyes;
+                    else if (URI.compare(MISSION_URI) == 0)
+                        answer[L"mission"] = mission;
+
+                    
+                    answer[L"time"] = json::value::string(to_wstring(ms.count()));
+                    answer[L"sessionHash"] = json::value::string(to_wstring(sessionHash));
+                    response.set_body(answer);
+                }
             }
-
-            response.set_body(answer);
         }
         catch (...) {
             eptr = std::current_exception(); // capture
@@ -140,7 +147,7 @@ void Server::handle_request(http_request request, function<void(json::value cons
 {
     http_response response(status_codes::OK);
     string authorization = to_base64("admin:" + password);
-    if (password == "" || (request.headers().has(L"Authorization") && request.headers().find(L"Authorization")->second.compare(L"Basic " + to_wstring(authorization))))
+    if (password.length() == 0 || (request.headers().has(L"Authorization") && request.headers().find(L"Authorization")->second.compare(L"Basic " + to_wstring(authorization)) == 0))
     {
         auto answer = json::value::object();
         request.extract_json().then([&answer, &action](pplx::task<json::value> task)

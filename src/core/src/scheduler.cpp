@@ -7,7 +7,7 @@
 
 extern UnitsManager* unitsManager;
 
-Scheduler::Scheduler(lua_State* L):
+Scheduler::Scheduler(lua_State* L) :
 	load(0)
 {
 	LogInfo(L, "Scheduler constructor called successfully");
@@ -25,16 +25,15 @@ void Scheduler::appendCommand(Command* command)
 
 void Scheduler::execute(lua_State* L)
 {
-	/* Decrease the active computation load. New commands can be sent only if the load has reached 0. 
+	/* Decrease the active computation load. New commands can be sent only if the load has reached 0.
 		This is needed to avoid server lag. */
 	if (load > 0) {
 		load--;
 		return;
 	}
 
-	unsigned int priority = CommandPriority::IMMEDIATE;
-	while (priority >= CommandPriority::LOW)
-	{
+	int priority = CommandPriority::IMMEDIATE;
+	while (priority >= CommandPriority::LOW) {
 		for (auto command : commands)
 		{
 			if (command->getPriority() == priority)
@@ -42,13 +41,15 @@ void Scheduler::execute(lua_State* L)
 				string commandString = "Olympus.protectedCall(" + command->getString(L) + ")";
 				if (dostring_in(L, "server", (commandString)))
 					log("Error executing command " + commandString);
+				else
+					log("Command '" + commandString + "' executed correctly, current load " + to_string(load));
 				load = command->getLoad();
 				commands.remove(command);
 				return;
 			}
 		}
 		priority--;
-	}
+	};
 }
 
 void Scheduler::handleRequest(string key, json::value value)
@@ -66,11 +67,11 @@ void Scheduler::handleRequest(string key, json::value value)
 			string unitName = unit->getUnitName();
 			json::value path = value[L"path"];
 			list<Coords> newPath;
-			for (unsigned int i = 1; i <= path.as_object().size(); i++)
+			for (unsigned int i = 0; i < path.as_array().size(); i++)
 			{
 				string WP = to_string(i);
-				double lat = path[to_wstring(i)][L"lat"].as_double();
-				double lng = path[to_wstring(i)][L"lng"].as_double();
+				double lat = path[i][L"lat"].as_double();
+				double lng = path[i][L"lng"].as_double();
 				log(unitName + " set path destination " + WP + " (" + to_string(lat) + ", " + to_string(lng) + ")");
 				Coords dest; dest.lat = lat; dest.lng = lng;
 				newPath.push_back(dest);
@@ -126,7 +127,7 @@ void Scheduler::handleRequest(string key, json::value value)
 
 		string unitName;
 		string targetName;
-		
+
 		if (unit != nullptr)
 			unitName = unit->getUnitName();
 		else
@@ -197,11 +198,11 @@ void Scheduler::handleRequest(string key, json::value value)
 	}
 	else if (key.compare("setSpeedType") == 0)
 	{
-	unsigned int ID = value[L"ID"].as_integer();
-	unitsManager->acquireControl(ID);
-	Unit* unit = unitsManager->getGroupLeader(ID);
-	if (unit != nullptr)
-		unit->setDesiredSpeedType(to_string(value[L"speedType"]));
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		Unit* unit = unitsManager->getGroupLeader(ID);
+		if (unit != nullptr)
+			unit->setDesiredSpeedType(to_string(value[L"speedType"]));
 	}
 	else if (key.compare("setAltitude") == 0)
 	{
@@ -233,7 +234,7 @@ void Scheduler::handleRequest(string key, json::value value)
 		unsigned int ID = value[L"ID"].as_integer();
 		unitsManager->acquireControl(ID);
 		Unit* unit = unitsManager->getGroupLeader(ID);
-		unsigned char ROE = value[L"ROE"].as_number().is_uint32();
+		unsigned char ROE = value[L"ROE"].as_number().to_uint32();
 		unit->setROE(ROE);
 	}
 	else if (key.compare("setReactionToThreat") == 0)
@@ -241,7 +242,7 @@ void Scheduler::handleRequest(string key, json::value value)
 		unsigned int ID = value[L"ID"].as_integer();
 		unitsManager->acquireControl(ID);
 		Unit* unit = unitsManager->getGroupLeader(ID);
-		unsigned char reactionToThreat = value[L"reactionToThreat"].as_number().is_uint32();
+		unsigned char reactionToThreat = value[L"reactionToThreat"].as_number().to_uint32();
 		unit->setReactionToThreat(reactionToThreat);
 	}
 	else if (key.compare("setEmissionsCountermeasures") == 0)
@@ -249,7 +250,7 @@ void Scheduler::handleRequest(string key, json::value value)
 		unsigned int ID = value[L"ID"].as_integer();
 		unitsManager->acquireControl(ID);
 		Unit* unit = unitsManager->getGroupLeader(ID);
-		unsigned char emissionsCountermeasures = value[L"emissionsCountermeasures"].as_number().is_uint32();
+		unsigned char emissionsCountermeasures = value[L"emissionsCountermeasures"].as_number().to_uint32();
 		unit->setEmissionsCountermeasures(emissionsCountermeasures);
 	}
 	else if (key.compare("landAt") == 0)
@@ -317,7 +318,7 @@ void Scheduler::handleRequest(string key, json::value value)
 		}
 	}
 	else if (key.compare("setFollowRoads") == 0)
-		{
+	{
 		unsigned int ID = value[L"ID"].as_integer();
 		unitsManager->acquireControl(ID);
 		bool followRoads = value[L"followRoads"].as_bool();
@@ -325,7 +326,7 @@ void Scheduler::handleRequest(string key, json::value value)
 		unit->setFollowRoads(followRoads);
 	}
 	else if (key.compare("setOnOff") == 0)
-		{
+	{
 		unsigned int ID = value[L"ID"].as_integer();
 		unitsManager->acquireControl(ID);
 		bool onOff = value[L"onOff"].as_bool();
@@ -389,10 +390,11 @@ void Scheduler::handleRequest(string key, json::value value)
 	{
 		log("Unknown command: " + key);
 	}
-	
+
 	if (command != nullptr)
 	{
 		appendCommand(command);
+		log("New command appended correctly to stack. Current server load: " + to_string(load));
 	}
 }
 

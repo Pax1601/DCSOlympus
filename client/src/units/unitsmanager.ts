@@ -1,8 +1,8 @@
 import { LatLng, LatLngBounds } from "leaflet";
 import { getHotgroupPanel, getInfoPopup, getMap, getMissionHandler } from "..";
 import { Unit } from "./unit";
-import { cloneUnit, spawnGroundUnit } from "../server/server";
-import { base64ToBytes, deg2rad, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots, polygonArea, randomPointInPoly, randomUnitBlueprintByRole } from "../other/utils";
+import { cloneUnit, setLastUpdateTime, spawnGroundUnit } from "../server/server";
+import { deg2rad, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots, polygonArea, randomPointInPoly, randomUnitBlueprintByRole } from "../other/utils";
 import { CoalitionArea } from "../map/coalitionarea";
 import { Airbase } from "../missionhandler/airbase";
 import { groundUnitsDatabase } from "./groundunitsdatabase";
@@ -70,13 +70,13 @@ export class UnitsManager {
 
     }
 
-    update(encodedData: string) {
+    update(buffer: ArrayBuffer) {
         var updatedUnits: Unit[] = [];
-        var buffer = base64ToBytes(encodedData);
         var dataExtractor = new DataExtractor(buffer);
         var data: {[key: string]: UnitData} = {};
 
-        var offset = 0;
+        var updateTime = Number(dataExtractor.extractUInt64());
+        var offset = dataExtractor.getOffset();
         while (offset < buffer.byteLength) {
             const result = dataExtractor.extractData(offset);
             data[result.data.ID] = result.data;
@@ -106,6 +106,8 @@ export class UnitsManager {
         //    if (!updatedUnits.includes(unit))
         //        unit.setData(null);
         //});
+
+        setLastUpdateTime(updateTime);
     }
 
     setHiddenType(key: string, value: boolean) {

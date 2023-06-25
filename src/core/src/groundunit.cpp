@@ -71,7 +71,7 @@ void GroundUnit::AIloop()
 {
 	switch (state) {
 	case State::IDLE: {
-		currentTask = "Idle";
+		setTask("Idle");
 		if (getHasTask())
 			resetTask();
 		break;
@@ -102,7 +102,7 @@ void GroundUnit::AIloop()
 		break;
 	}
 	case State::FIRE_AT_AREA: {
-		currentTask = "Firing at area";
+		setTask("Firing at area");
 
 		if (!getHasTask()) {
 			std::ostringstream taskSS;

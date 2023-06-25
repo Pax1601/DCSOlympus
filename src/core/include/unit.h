@@ -7,6 +7,9 @@
 #include "logger.h"
 #include "commands.h"
 
+#include <chrono>
+using namespace std::chrono;
+
 #define TASK_CHECK_INIT_VALUE 10
 
 namespace State
@@ -79,8 +82,10 @@ namespace DataTypes {
 		unsigned short fuel;
 		double desiredSpeed;
 		double desiredAltitude;
+		unsigned int leaderID;
 		unsigned int targetID;
 		Coords targetPosition;
+		unsigned char coalition;
 		unsigned char state;
 		unsigned char ROE;
 		unsigned char reactionToThreat;
@@ -90,11 +95,7 @@ namespace DataTypes {
 		unsigned short pathLength;
 		unsigned short ammoLength;
 		unsigned short contactsLength;
-		unsigned char nameLength;
-		unsigned char unitNameLength;
-		unsigned char groupNameLength;
-		unsigned char categoryLength;
-		unsigned char coalitionLength;
+		unsigned char taskLength;
 	};
 }
 #pragma pack(pop)
@@ -112,18 +113,18 @@ public:
 	void runAILoop();
 	void updateExportData(json::value json, double dt = 0);
 	void updateMissionData(json::value json);
-	unsigned int getUpdateData(char* &data);
-	void getData(stringstream &ss, bool refresh);
+	unsigned int getDataPacket(char* &data);
+	void getData(stringstream &ss, unsigned long long time, bool refresh);
 	virtual string getCategory() { return "No category"; };
 
 	/********** Base data **********/
-	void setControlled(bool newControlled) { controlled = newControlled; }
-	void setName(string newName) { name = newName; }
-	void setUnitName(string newUnitName) { unitName = newUnitName; }
-	void setGroupName(string newGroupName) { groupName = newGroupName; }
-	void setAlive(bool newAlive) { alive = newAlive; }
-	void setCountry(unsigned int newCountry) { country = newCountry; }
-	void setHuman(bool newHuman) { human = newHuman; }
+	void setControlled(bool newValue) { updateValue(controlled, newValue); }
+	void setName(string newValue) { updateValue(name, newValue); }
+	void setUnitName(string newValue) { updateValue(unitName, newValue); }
+	void setGroupName(string newValue) { updateValue(groupName, newValue); }
+	void setAlive(bool newValue) { updateValue(alive, newValue); }
+	void setCountry(unsigned int newValue) { updateValue(country, newValue); }
+	void setHuman(bool newValue) { updateValue(human, newValue); }
 
 	bool getControlled() { return controlled; }
 	string getName() { return name; }
@@ -134,51 +135,50 @@ public:
 	bool getHuman() { return human; }
 
 	/********** Flight data **********/
-	void setPosition(Coords newPosition) { position = newPosition; }
-	void setHeading(double newHeading) {heading = newHeading; }
-	void setSpeed(double newSpeed) {speed = newSpeed; }
+	void setPosition(Coords newValue) { updateValue(position, newValue); }
+	void setHeading(double newValue) { updateValue(heading, newValue); }
+	void setSpeed(double newValue) { updateValue(speed, newValue); }
 
 	Coords getPosition() { return position;  }
 	double getHeading() { return heading; }
 	double getSpeed() { return speed; }
 
 	/********** Mission data **********/
-	void setFuel(short newFuel) { fuel = newFuel; }
+	void setFuel(unsigned short newValue) { updateValue(fuel, newValue); }
 	void setAmmo(vector<DataTypes::Ammo> newAmmo) { ammo = newAmmo; }
-	void setContacts(vector<DataTypes::Contact> newContacts) {contacts = newContacts; }
-	void setHasTask(bool newHasTask);
-	void setCoalitionID(unsigned int newCoalitionID);
+	void setContacts(vector<DataTypes::Contact> newContacts) { contacts = newContacts; }
+	void setHasTask(bool newValue) { updateValue(hasTask, newValue); }
+	void setCoalition(unsigned char newValue) { updateValue(coalition, newValue);}
 
 	double getFuel() { return fuel; }
 	vector<DataTypes::Ammo> getAmmo() { return ammo; }
 	vector<DataTypes::Contact> getTargets() { return contacts; }
 	bool getHasTask() { return hasTask; }
-	string getCoalition() { return coalition; }
-	unsigned int getCoalitionID();
+	unsigned int getCoalition() { return coalition; }
 
 	/********** Formation data **********/
-	void setLeaderID(unsigned int newLeaderID) { leaderID = newLeaderID; }
+	void setLeaderID(unsigned int newValue) { updateValue(leaderID, newValue); }
 	void setFormationOffset(Offset formationOffset);
 
 	unsigned int getLeaderID() { return leaderID; }
 	Offset getFormationoffset() { return formationOffset; }
 	
 	/********** Task data **********/
-	void setCurrentTask(string newCurrentTask) { currentTask = newCurrentTask; } 
-	void setDesiredSpeed(double newDesiredSpeed);
-	void setDesiredAltitude(double newDesiredAltitude);
-	void setDesiredSpeedType(string newDesiredSpeedType);
-	void setDesiredAltitudeType(string newDesiredAltitudeType);
-	void setActiveDestination(Coords newActiveDestination) { activeDestination = newActiveDestination; } 
-	void setActivePath(list<Coords> newActivePath);
-	void setTargetID(unsigned int newTargetID) { targetID = newTargetID; }
-	void setTargetPosition(Coords newTargetPosition);
-	void setIsTanker(bool newIsTanker);
-	void setIsAWACS(bool newIsAWACS);
-	virtual void setOnOff(bool newOnOff) { onOff = newOnOff; };
-	virtual void setFollowRoads(bool newFollowRoads) { followRoads = newFollowRoads; };
+	void setTask(string newValue) { updateValue(task, newValue); }
+	void setDesiredSpeed(double newValue);
+	void setDesiredAltitude(double newValue);
+	void setDesiredSpeedType(string newValue);
+	void setDesiredAltitudeType(string newValue);
+	void setActiveDestination(Coords newValue) { updateValue(activeDestination, newValue); }
+	void setActivePath(list<Coords> newValue);
+	void setTargetID(unsigned int newValue) { updateValue(targetID, newValue); }
+	void setTargetPosition(Coords newValue) { updateValue(targetPosition, newValue); }
+	void setIsTanker(bool newValue);
+	void setIsAWACS(bool newValue);
+	virtual void setOnOff(bool newValue) { updateValue(onOff, newValue); };
+	virtual void setFollowRoads(bool newValue) { updateValue(followRoads, newValue); };
 	
-	string getCurrentTask() { return currentTask; }
+	string getTask() { return task; }
 	virtual double getDesiredSpeed() { return desiredSpeed; };
 	virtual double getDesiredAltitude() { return desiredAltitude; };
 	virtual bool getDesiredSpeedType() { return desiredSpeedType; };
@@ -193,13 +193,13 @@ public:
 	bool getFollowRoads() { return followRoads; };
 
 	/********** Options data **********/
-	void setROE(unsigned char newROE, bool force = false);
-	void setReactionToThreat(unsigned char newReactionToThreat, bool force = false);
-	void setEmissionsCountermeasures(unsigned char newEmissionsCountermeasures, bool force = false);
-	void setTACAN(Options::TACAN newTACAN, bool force = false);
-	void setRadio(Options::Radio newradio, bool force = false);
-	void setGeneralSettings(Options::GeneralSettings newGeneralSettings, bool force = false);
-	void setEPLRS(bool newEPLRS, bool force = false);
+	void setROE(unsigned char newValue, bool force = false);
+	void setReactionToThreat(unsigned char newValue, bool force = false);
+	void setEmissionsCountermeasures(unsigned char newValue, bool force = false);
+	void setTACAN(Options::TACAN newValue, bool force = false);
+	void setRadio(Options::Radio newValue, bool force = false);
+	void setGeneralSettings(Options::GeneralSettings newValue, bool force = false);
+	void setEPLRS(bool newValue, bool force = false);
 
 	unsigned char getROE() { return ROE; }
 	unsigned char getReactionToThreat() { return reactionToThreat; }
@@ -220,6 +220,8 @@ public:
 	void pushActivePathFront(Coords newActivePathFront);
 	void pushActivePathBack(Coords newActivePathBack);
 	void popActivePathFront();
+	void triggerUpdate() { lastUpdateTime = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count(); }
+	unsigned long long getLastUpdateTime() { return lastUpdateTime; };
 
 protected:
 	unsigned int ID;
@@ -247,18 +249,18 @@ protected:
 	vector<DataTypes::Ammo> ammo;
 	vector<DataTypes::Contact> contacts;
 	bool hasTask = false;
-	string coalition = "";
+	unsigned char coalition;
 
 	/********** Formation data **********/
 	unsigned int leaderID = NULL;
 	Offset formationOffset = Offset(NULL);
 
 	/********** Task data **********/
-	string currentTask = "";
+	string task = "";
 	double desiredSpeed = 0;
 	double desiredAltitude = 0;
-	bool desiredSpeedType = 0;
-	bool desiredAltitudeType = 0;
+	bool desiredSpeedType = 1;
+	bool desiredAltitudeType = 1;
 	list<Coords> activePath;
 	Coords activeDestination = Coords(NULL);
 	unsigned int targetID = NULL;
@@ -277,10 +279,14 @@ protected:
 	Options::GeneralSettings generalSettings;
 	bool EPLRS = false;
 
+	/********** Data packet **********/
+	DataTypes::DataPacket dataPacket;
+
 	/********** State machine **********/
 	unsigned char state = State::NONE;
 
 	/********** Other **********/
+	unsigned long long lastUpdateTime = 0;
 	Coords oldPosition = Coords(0); // Used to approximate speed
 
 	/********** Functions **********/
@@ -295,4 +301,14 @@ protected:
 	void goToDestination(string enrouteTask = "nil");
 	bool checkTaskFailed();
 	void resetTaskFailedCounter();
+
+	template <typename T>
+	void updateValue(T& value, T& newValue)
+	{
+		if (newValue != value)
+		{
+			triggerUpdate();
+			*(&value) = newValue;
+		}
+	}
 };

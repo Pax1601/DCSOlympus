@@ -1,6 +1,7 @@
 #pragma once
 #include "framework.h"
 
+#pragma pack(push, 1)
 struct Coords {
     double lat = 0;
     double lng = 0;
@@ -12,6 +13,7 @@ struct Offset {
     double y = 0;
     double z = 0;
 };
+#pragma pack(pop)
 
 // Get current date/time, format is YYYY-MM-DD.HH:mm:ss
 const DllExport std::string CurrentDateTime();

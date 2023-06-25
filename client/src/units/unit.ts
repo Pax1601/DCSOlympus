@@ -24,8 +24,8 @@ export class Unit extends CustomMarker {
         human: false,
         controlled: false,
         hasTask: false,
-        desiredAltitudeType: false,
-        desiredSpeedType: false,
+        desiredAltitudeType: "AGL",
+        desiredSpeedType: "GS",
         isTanker: false,
         isAWACS: false,
         onOff: false,
@@ -222,7 +222,6 @@ export class Unit extends CustomMarker {
         var updateMarker = positionChanged || headingChanged || aliveChanged || stateChanged || controlledChanged || !getMap().hasLayer(this);
 
         /* Assign the data */
-        /* TODO Allow for partial updates */
         this.#data = data;
         
         /* Fire an event when a unit dies */
@@ -406,10 +405,10 @@ export class Unit extends CustomMarker {
             var path: any = {};
             if (this.getData().activePath.length > 0) {
                 path = this.getData().activePath;
-                path[(Object.keys(path).length + 1).toString()] = latlng;
+                path[(Object.keys(path).length).toString()] = latlng;
             }
             else {
-                path = { "1": latlng };
+                path = [latlng];
             }
             addDestination(this.ID, path);
         }
@@ -779,7 +778,7 @@ export class Unit extends CustomMarker {
             /* Update the position of the existing markers (to avoid creating markers uselessly) */
             for (let WP in this.getData().activePath) {
                 var destination = this.getData().activePath[WP];
-                this.#pathMarkers[parseInt(WP) - 1].setLatLng([destination.lat, destination.lng]);
+                this.#pathMarkers[parseInt(WP)].setLatLng([destination.lat, destination.lng]);
                 points.push(new LatLng(destination.lat, destination.lng));
                 this.#pathPolyline.setLatLngs(points);
             }

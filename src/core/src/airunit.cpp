@@ -120,7 +120,7 @@ void AirUnit::AIloop()
 	/* State machine */
 	switch (state) {
 		case State::IDLE: {
-			currentTask = "Idle";
+			setTask("Idle");
 			
 			if (!getHasTask())
 			{
@@ -147,17 +147,17 @@ void AirUnit::AIloop()
 			if (isTanker)
 			{
 				enrouteTask = "{ id = 'Tanker' }";
-				currentTask = "Tanker";
+				setTask("Tanker");
 			}
 			else if (isAWACS)
 			{
 				enrouteTask = "{ id = 'AWACS' }";
-				currentTask = "AWACS";
+				setTask("AWACS");
 			}
 			else
 			{
 				enrouteTask = "nil";
-				currentTask = "Reaching destination";
+				setTask("Reaching destination");
 			}
 			
 			if (activeDestination == NULL || !getHasTask())
@@ -179,7 +179,7 @@ void AirUnit::AIloop()
 		}
 		case State::LAND: {
 			string enrouteTask = "{ id = 'Land' }";
-			currentTask = "Landing";
+			setTask("Landing");
 
 			if (activeDestination == NULL)
 			{
@@ -203,7 +203,7 @@ void AirUnit::AIloop()
 				<< "targetID = " << targetID << ","
 				<< "}";
 			string enrouteTask = enrouteTaskSS.str();
-			currentTask = "Attacking " + getTargetName();
+			setTask("Attacking " + getTargetName());
 			
 			if (!getHasTask())
 			{
@@ -223,7 +223,7 @@ void AirUnit::AIloop()
 				break;
 			}
 
-			currentTask = "Following " + getTargetName();
+			setTask("Following " + getTargetName());
 
 			Unit* leader = unitsManager->getUnit(leaderID);
 			if (!getHasTask()) {
@@ -247,7 +247,7 @@ void AirUnit::AIloop()
 			break;
 		}
 		case State::REFUEL: {
-			currentTask = "Refueling";
+			setTask("Refueling");
 
 			if (!getHasTask()) {
 				if (fuel <= initialFuel) {
@@ -265,7 +265,7 @@ void AirUnit::AIloop()
 			}
 		}
 		case State::BOMB_POINT: {
-			currentTask = "Bombing point";
+			setTask("Bombing point");
 
 			if (!getHasTask()) {
 				std::ostringstream taskSS;
@@ -276,7 +276,7 @@ void AirUnit::AIloop()
 			}
 		}
 		case State::CARPET_BOMB: {
-			currentTask = "Carpet bombing";
+			setTask("Carpet bombing");
 
 			if (!getHasTask()) {
 				std::ostringstream taskSS;
@@ -288,7 +288,7 @@ void AirUnit::AIloop()
 			break;
 		}
 		case State::BOMB_BUILDING: {
-			currentTask = "Bombing building";
+			setTask("Bombing building");
 
 			if (!getHasTask()) {
 				std::ostringstream taskSS;

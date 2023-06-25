@@ -671,7 +671,7 @@ export class Map extends L.Map {
 
             /* Show the active cursor depending on the active state */
             if (this.#state === IDLE || this.#state === COALITIONAREA_INTERACT) this.#showDefaultCursor();
-            else if (this.#state === MOVE_UNIT) this.#showDestinationCursors(!e.originalEvent.shiftKey);
+            else if (this.#state === MOVE_UNIT) this.#showDestinationCursors(e && e.originaleEvent && !e.originalEvent.shiftKey);
             else if ([BOMBING, CARPET_BOMBING, FIRE_AT_AREA].includes(this.#state)) this.#showTargetCursor();
             else if (this.#state === COALITIONAREA_DRAW_POLYGON) this.#showDrawingCursor();
         }

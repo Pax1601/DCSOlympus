@@ -45,6 +45,24 @@ Unit::~Unit()
 
 void Unit::initialize(json::value json)
 {
+	if (json.has_string_field(L"Name"))
+		setName(to_string(json[L"Name"]));
+	if (json.has_string_field(L"UnitName"))
+		setUnitName(to_string(json[L"UnitName"]));
+	if (json.has_string_field(L"GroupName"))
+		setGroupName(to_string(json[L"GroupName"]));
+	if (json.has_number_field(L"Country"))
+		setCountry(json[L"Country"].as_number().to_int32());
+	if (json.has_number_field(L"CoalitionID"))
+		setCoalition(json[L"CoalitionID"].as_number().to_int32());
+
+	if (json.has_object_field(L"Flags"))
+		setHuman(json[L"Flags"][L"Human"].as_bool());
+
+	/* All units which contain the name "Olympus" are automatically under AI control */
+	if (getUnitName().find("Olympus") != string::npos)
+		setControlled(true);
+
 	updateExportData(json);
 	setDefaults();
 }
@@ -92,6 +110,21 @@ void Unit::runAILoop() {
 
 void Unit::updateExportData(json::value json, double dt)
 {
+	Coords newPosition = Coords(NULL);
+	double newHeading = 0;
+	double newSpeed = 0;
+	
+	if (json.has_object_field(L"LatLongAlt"))
+	{
+		setPosition({
+			json[L"LatLongAlt"][L"Lat"].as_number().to_double(),
+			json[L"LatLongAlt"][L"Long"].as_number().to_double(),
+			json[L"LatLongAlt"][L"Alt"].as_number().to_double()
+		});
+	}
+	if (json.has_number_field(L"Heading"))
+		setHeading(json[L"Heading"].as_number().to_double());
+
 	/* Compute speed (loGetWorldObjects does not provide speed, we compute it for better performance instead of relying on many lua calls) */
 	if (oldPosition != NULL)
 	{
@@ -100,35 +133,7 @@ void Unit::updateExportData(json::value json, double dt)
 		if (dt > 0)
 			setSpeed(getSpeed() * 0.95 + (dist / dt) * 0.05);
 	}
-	
-	if (json.has_string_field(L"Name"))
-		setName(to_string(json[L"Name"]));
-	if (json.has_string_field(L"UnitName"))
-		setUnitName(to_string(json[L"UnitName"]));
-	if (json.has_string_field(L"GroupName"))
-		setGroupName(to_string(json[L"GroupName"]));
-	if (json.has_number_field(L"Country"))
-		setCountry(json[L"Country"].as_number().to_int32());
-	if (json.has_number_field(L"CoalitionID"))
-		setCoalitionID(json[L"CoalitionID"].as_number().to_int32());
-	if (json.has_object_field(L"LatLongAlt"))
-	{
-		Coords position = {
-			json[L"LatLongAlt"][L"Lat"].as_number().to_double(),
-			json[L"LatLongAlt"][L"Long"].as_number().to_double(),
-			json[L"LatLongAlt"][L"Alt"].as_number().to_double()
-		};
-		setPosition(position);
-	}
-	if (json.has_number_field(L"Heading"))
-		setHeading(json[L"Heading"].as_number().to_double());
-	if (json.has_object_field(L"Flags"))
-		setHuman(json[L"Flags"][L"Human"].as_bool());
-
-	/* All units which contain the name "Olympus" are automatically under AI control */
-	if (getUnitName().find("Olympus") != string::npos)
-		setControlled(true);
-
+		
 	oldPosition = position;
 }
 
@@ -175,7 +180,7 @@ void Unit::updateMissionData(json::value json)
 		setHasTask(json[L"hasTask"].as_bool());
 }
 
-unsigned int Unit::getUpdateData(char* &data)
+unsigned int Unit::getDataPacket(char* &data)
 {
 	/* Reserve data for:
 		1) DataPacket;
@@ -217,34 +222,31 @@ unsigned int Unit::getUpdateData(char* &data)
 		fuel,
 		desiredSpeed,
 		desiredAltitude,
+		leaderID,
 		targetID,
 		targetPosition,
 		state,
 		ROE,
 		reactionToThreat,
 		emissionsCountermeasures,
+		coalition,
 		TACAN,
 		radio,
 		activePath.size(),
 		ammo.size(),
 		contacts.size(),
-		name.size(),
-		unitName.size(),
-		groupName.size(),
-		getCategory().size(),
-		coalition.size()
+		task.size()
 	};
 
 	memcpy(data + offset, &dataPacket, sizeof(dataPacket));
 	offset += sizeof(dataPacket);
 
 	/* Prepare the path vector and copy it to memory */
-	std::vector<Coords> path;
-	for (const Coords& c : activePath)
-		path.push_back(c);
-	memcpy(data + offset, &path, activePath.size() * sizeof(Coords));
-	offset += activePath.size() * sizeof(Coords);
-
+	for (const Coords& c : activePath) {
+		memcpy(data + offset, &c, sizeof(Coords));
+		offset += sizeof(Coords);
+	}
+	
 	/* Copy the ammo vector to memory */
 	memcpy(data + offset, &ammo, ammo.size() * sizeof(DataTypes::Ammo));
 	offset += ammo.size() * sizeof(DataTypes::Ammo);
@@ -256,10 +258,12 @@ unsigned int Unit::getUpdateData(char* &data)
 	return offset;
 }
 
-void Unit::getData(stringstream &ss, bool refresh)
+void Unit::getData(stringstream &ss, unsigned long long time, bool refresh)
 {
+	if (time > lastUpdateTime && !refresh) return;
+
 	char* data;
-	unsigned int size = getUpdateData(data);
+	unsigned int size = getDataPacket(data);
 
 	/* Prepare the data packet and copy it to  memory */
 	/* If the unit is in a group, get the update data from the group leader and only replace the position, speed and heading */
@@ -271,15 +275,25 @@ void Unit::getData(stringstream &ss, bool refresh)
 	}
 	
 	ss.write(data, size);
-	delete data;
+	ss << task;
 
-	if (refresh) {
-		ss << name;
-		ss << unitName;
-		ss << groupName;
-		ss << getCategory();
-		ss << coalition;
-	}
+	unsigned short nameLength = name.length();
+	unsigned short unitNameLength = unitName.length();
+	unsigned short groupNameLength = groupName.length();
+	unsigned short categoryLength = getCategory().length();
+
+	ss.write((char*)&nameLength, sizeof(nameLength));
+	ss.write((char*)&unitNameLength, sizeof(unitNameLength));
+	ss.write((char*)&groupNameLength, sizeof(groupNameLength));
+	ss.write((char*)&categoryLength, sizeof(categoryLength));
+	
+	ss << name;
+	ss << unitName;
+	ss << groupName;
+	ss << getCategory();
+	
+
+	delete data;
 }
 
 void Unit::setActivePath(list<Coords> newPath)
@@ -313,26 +327,6 @@ void Unit::popActivePathFront()
 	list<Coords> path = activePath;
 	path.pop_front();
 	setActivePath(path);
-}
-
-void Unit::setCoalitionID(unsigned int newCoalitionID)
-{ 
-	if (newCoalitionID == 0)
-		coalition = "neutral";
-	else if (newCoalitionID == 1)
-		coalition = "red";
-	else
-		coalition = "blue";
-} 
-
-unsigned int Unit::getCoalitionID()
-{
-	if (coalition == "neutral")
-		return 0;
-	else if (coalition == "red")
-		return 1;
-	else
-		return 2;
 }
 
 string Unit::getTargetName()
@@ -398,6 +392,8 @@ void Unit::setFormationOffset(Offset newFormationOffset)
 {
 	formationOffset = newFormationOffset;
 	resetTask();
+
+	triggerUpdate();
 }
 
 void Unit::setROE(unsigned char newROE, bool force) 
@@ -406,6 +402,8 @@ void Unit::setROE(unsigned char newROE, bool force)
 		ROE = newROE;
 		Command* command = dynamic_cast<Command*>(new SetOption(groupName, SetCommandType::ROE, static_cast<unsigned int>(ROE)));
 		scheduler->appendCommand(command);
+
+		triggerUpdate();
 	}
 }
 
@@ -416,6 +414,8 @@ void Unit::setReactionToThreat(unsigned char newReactionToThreat, bool force)
 
 		Command* command = dynamic_cast<Command*>(new SetOption(groupName, SetCommandType::REACTION_ON_THREAT, static_cast<unsigned int>(reactionToThreat)));
 		scheduler->appendCommand(command);
+
+		triggerUpdate();
 	}
 }
 
@@ -464,6 +464,8 @@ void Unit::setEmissionsCountermeasures(unsigned char newEmissionsCountermeasures
 
 		command = dynamic_cast<Command*>(new SetOption(groupName, SetCommandType::ECM_USING, ECMEnum));
 		scheduler->appendCommand(command);
+
+		triggerUpdate();
 	}
 }
 
@@ -476,15 +478,23 @@ void Unit::landAt(Coords loc)
 
 void Unit::setIsTanker(bool newIsTanker) 
 { 
-	isTanker = newIsTanker; 
-	resetTask(); 
+	if (isTanker != newIsTanker) {
+		isTanker = newIsTanker;
+		resetTask();
+
+		triggerUpdate();
+	}
 }
 
 void Unit::setIsAWACS(bool newIsAWACS)
 { 
-	isAWACS = newIsAWACS; 
-	resetTask(); 
-	setEPLRS(isAWACS);
+	if (isAWACS != newIsAWACS) {
+		isAWACS = newIsAWACS;
+		resetTask();
+		setEPLRS(isAWACS);
+
+		triggerUpdate();
+	}
 }
 
 void Unit::setTACAN(Options::TACAN newTACAN, bool force) 
@@ -517,6 +527,8 @@ void Unit::setTACAN(Options::TACAN newTACAN, bool force)
 			Command* command = dynamic_cast<Command*>(new SetCommand(groupName, commandSS.str()));
 			scheduler->appendCommand(command);
 		}
+
+		triggerUpdate();
 	}
 }
 
@@ -551,6 +563,8 @@ void Unit::setRadio(Options::Radio newRadio, bool force)
 			<< "}";
 		command = dynamic_cast<Command*>(new SetCommand(groupName, commandSS.str()));
 		scheduler->appendCommand(command);
+
+		triggerUpdate();
 	}
 }
 
@@ -590,6 +604,8 @@ void Unit::setGeneralSettings(Options::GeneralSettings newGeneralSettings, bool 
 		scheduler->appendCommand(command);
 		command = dynamic_cast<Command*>(new SetOption(groupName, SetCommandType::ENGAGE_AIR_WEAPONS, !generalSettings.prohibitAirWpn));
 		scheduler->appendCommand(command);
+
+		triggerUpdate();
 	}
 }
 
@@ -600,6 +616,8 @@ void Unit::setDesiredSpeed(double newDesiredSpeed)
 		resetTask();
 	else
 		goToDestination();		/* Send the command to reach the destination */
+
+	triggerUpdate();
 }
 
 void Unit::setDesiredAltitude(double newDesiredAltitude) 
@@ -609,6 +627,8 @@ void Unit::setDesiredAltitude(double newDesiredAltitude)
 		resetTask();
 	else
 		goToDestination();		/* Send the command to reach the destination */
+
+	triggerUpdate();
 }
 
 void Unit::setDesiredSpeedType(string newDesiredSpeedType) 
@@ -618,6 +638,8 @@ void Unit::setDesiredSpeedType(string newDesiredSpeedType)
 		resetTask();
 	else
 		goToDestination();		/* Send the command to reach the destination */
+
+	triggerUpdate();
 }
 
 void Unit::setDesiredAltitudeType(string newDesiredAltitudeType) 
@@ -627,6 +649,8 @@ void Unit::setDesiredAltitudeType(string newDesiredAltitudeType)
 		resetTask();
 	else
 		goToDestination();		/* Send the command to reach the destination */
+
+	triggerUpdate();
 }
 
 void Unit::goToDestination(string enrouteTask)
@@ -669,12 +693,16 @@ bool Unit::setActiveDestination()
 	{
 		activeDestination = activePath.front();
 		log(unitName + " active destination set to queue front");
+
+		triggerUpdate();
 		return true;
 	}
 	else
 	{
 		activeDestination = Coords(0);
 		log(unitName + " active destination set to NULL");
+
+		triggerUpdate();
 		return false;
 	}
 }
@@ -695,11 +723,6 @@ bool Unit::updateActivePath(bool looping)
 	}
 }
 
-void Unit::setTargetPosition(Coords newTargetPosition) 
-{ 
-	targetPosition = newTargetPosition;
-}
-
 bool Unit::checkTaskFailed() 
 {
 	if (getHasTask()) 
@@ -713,9 +736,4 @@ bool Unit::checkTaskFailed()
 
 void Unit::resetTaskFailedCounter() {
 	taskCheckCounter = TASK_CHECK_INIT_VALUE;
-}
-
-void Unit::setHasTask(bool newHasTask) 
-{ 
-	hasTask = newHasTask; 
 }

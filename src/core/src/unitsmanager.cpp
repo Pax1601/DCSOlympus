@@ -154,11 +154,10 @@ void UnitsManager::runAILoop() {
 		unit.second->runAILoop();
 }
 
-string UnitsManager::getUnitData(bool refresh)
+string UnitsManager::getUnitData(stringstream &ss, unsigned long long time, bool refresh)
 {
-	stringstream ss;
 	for (auto const& p : units)
-		p.second->getData(ss, refresh);
+		p.second->getData(ss, time, refresh);
 	return to_base64(ss.str());
 }
 
