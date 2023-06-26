@@ -238,7 +238,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "SAU 2-C9": {
                 "name": "SAU 2-C9",
-                "era": ["Cold War"],
+                "era": ["Mid Cold War", "Late Cold War"],
                 "label": "SAU Nona",
                 "shortLabel": "SAU Nona",
                 "loadouts": [
@@ -480,7 +480,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "BRDM-2": {
                 "name": "BRDM-2",
-                "era": ["Cold War", "Modern"],
+                "era": ["Late Cold War", "Modern"],
                 "label": "BRDM-2",
                 "shortLabel": "BRDM-2",
                 "loadouts": [
