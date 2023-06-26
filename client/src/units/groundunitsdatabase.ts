@@ -687,7 +687,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "M1126 Stryker ICV": {
                 "name": "M1126 Stryker ICV",
-                "era": [""Modern"],
+                "era": ["Modern"],
                 "label": "Stryker MG",
                 "shortLabel": "Stryker MG",
                 "loadouts": [
