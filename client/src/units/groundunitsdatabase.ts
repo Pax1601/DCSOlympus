@@ -2390,7 +2390,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "SA-11 Buk SR 9S18M1": {
                 "name": "SA-11 Buk SR 9S18M1",
-                "era": ["Mid Cold War", "Late Cold War", "Modern"],
+                "era": ["Mid Cold War"],
                 "label": "SA-11 Buk SR 9S18M1",
                 "shortLabel": "SA-11 Buk SR 9S18M1",
                 "range": "Long",
