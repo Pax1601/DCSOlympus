@@ -26,10 +26,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "SA-3 SAM Battery": {
                 "name": "SA-3 SAM Battery",
-                "era": ["Cold War"],
+                "era": ["Mid Cold War", "Late Cold War"],
                 "label": "SA-3 SAM Battery",
                 "shortLabel": "SA-3 SAM Battery",
-                "range": "Mediun",
+                "range": "Medium",
                 "loadouts": [
                     {
                         "fuel": 1,
