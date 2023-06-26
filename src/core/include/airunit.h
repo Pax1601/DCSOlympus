@@ -14,7 +14,6 @@ public:
 
 	virtual void setState(unsigned char newState);
 
-	virtual string getCategory() = 0;
 	virtual void changeSpeed(string change) = 0;
 	virtual void changeAltitude(string change) = 0;
 	

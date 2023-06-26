@@ -16,20 +16,20 @@ extern Scheduler* scheduler;
 extern UnitsManager* unitsManager;
 
 // TODO: Make dedicated file
-bool operator==(const Options::TACAN& lhs, const Options::TACAN& rhs)
+bool operator==(const DataTypes::TACAN& lhs, const DataTypes::TACAN& rhs)
 {
 	return lhs.isOn == rhs.isOn && lhs.channel == rhs.channel && lhs.XY == rhs.XY && lhs.callsign == rhs.callsign;
 }
 
-bool operator==(const Options::Radio& lhs, const Options::Radio& rhs)
+bool operator==(const DataTypes::Radio& lhs, const DataTypes::Radio& rhs)
 {
 	return lhs.frequency == rhs.frequency && lhs.callsign == rhs.callsign && lhs.callsignNumber == rhs.callsignNumber;
 }
 
-bool operator==(const Options::GeneralSettings& lhs, const Options::GeneralSettings& rhs)
+bool operator==(const DataTypes::GeneralSettings& lhs, const DataTypes::GeneralSettings& rhs)
 {
 	return	lhs.prohibitAA == rhs.prohibitAA && lhs.prohibitAfterburner == rhs.prohibitAfterburner && lhs.prohibitAG == rhs.prohibitAG &&
-			lhs.prohibitAirWpn == rhs.prohibitAirWpn && lhs.prohibitJettison == rhs.prohibitJettison;
+		lhs.prohibitAirWpn == rhs.prohibitAirWpn && lhs.prohibitJettison == rhs.prohibitJettison;
 }
 
 Unit::Unit(json::value json, unsigned int ID) :
@@ -87,7 +87,6 @@ void Unit::setDefaults(bool force)
 	strcpy_s(TACAN.callsign, 4, "TKR");
 	setTACAN(TACAN, force);
 	setRadio(radio, force);
-	setEPLRS(EPLRS, force);
 	setGeneralSettings(generalSettings, force);
 }
 
@@ -101,7 +100,7 @@ void Unit::runAILoop() {
 	const bool isUnitAlive = getAlive();
 	const bool isUnitLeaderOfAGroupWithOtherUnits = unitsManager->isUnitInGroup(this) && unitsManager->isUnitGroupLeader(this);
 	if (!(isUnitAlive || isUnitLeaderOfAGroupWithOtherUnits)) return;
-	
+
 	if (checkTaskFailed() && state != State::IDLE && State::LAND)
 		setState(State::IDLE);
 
@@ -113,14 +112,14 @@ void Unit::updateExportData(json::value json, double dt)
 	Coords newPosition = Coords(NULL);
 	double newHeading = 0;
 	double newSpeed = 0;
-	
+
 	if (json.has_object_field(L"LatLongAlt"))
 	{
 		setPosition({
 			json[L"LatLongAlt"][L"Lat"].as_number().to_double(),
 			json[L"LatLongAlt"][L"Long"].as_number().to_double(),
 			json[L"LatLongAlt"][L"Alt"].as_number().to_double()
-		});
+			});
 	}
 	if (json.has_number_field(L"Heading"))
 		setHeading(json[L"Heading"].as_number().to_double());
@@ -133,7 +132,7 @@ void Unit::updateExportData(json::value json, double dt)
 		if (dt > 0)
 			setSpeed(getSpeed() * 0.95 + (dist / dt) * 0.05);
 	}
-		
+
 	oldPosition = position;
 }
 
@@ -180,120 +179,67 @@ void Unit::updateMissionData(json::value json)
 		setHasTask(json[L"hasTask"].as_bool());
 }
 
-unsigned int Unit::getDataPacket(char* &data)
+
+void Unit::getData(stringstream& ss, unsigned long long time, bool refresh)
 {
-	/* Reserve data for:
-		1) DataPacket;
-		2) Active path;
-		3) Ammo vector;
-		4) Contacts vector;
-	*/
-	data = (char*)malloc(sizeof(DataTypes::DataPacket) + 
-		activePath.size() * sizeof(Coords) +
-		ammo.size() * sizeof(Coords) + 
-		contacts.size() * sizeof(Coords));
-	unsigned int offset = 0;
-
 	/* Prepare the data packet and copy it to  memory */
-	unsigned int bitmask = 0;
-	bitmask |= alive << 0;
-	bitmask |= human << 1;
-	bitmask |= controlled << 2;
-	bitmask |= hasTask << 3;
-	bitmask |= desiredAltitudeType << 16;
-	bitmask |= desiredSpeedType << 17;
-	bitmask |= isTanker << 18;
-	bitmask |= isAWACS << 19;
-	bitmask |= onOff << 20;
-	bitmask |= followRoads << 21;
-	bitmask |= EPLRS << 22;
-	bitmask |= generalSettings.prohibitAA << 23;
-	bitmask |= generalSettings.prohibitAfterburner << 24;
-	bitmask |= generalSettings.prohibitAG << 25;
-	bitmask |= generalSettings.prohibitAirWpn << 26;
-	bitmask |= generalSettings.prohibitJettison << 27;
+	/* If the unit is in a group, get the update data from the group leader and only replace the position: speed and heading */
+	//if (unitsManager->isUnitInGroup(this) && !unitsManager->isUnitGroupLeader(this)) {
+	//	DataTypes::DataPacket* p = (DataTypes::DataPacket*)data;
+	//	p->position = position;
+	//	p->speed = speed;
+	//	p->heading = heading;
+	//}
 
-	DataTypes::DataPacket dataPacket{
-		ID,
-		bitmask,
-		position,
-		speed,
-		heading,
-		fuel,
-		desiredSpeed,
-		desiredAltitude,
-		leaderID,
-		targetID,
-		targetPosition,
-		state,
-		ROE,
-		reactionToThreat,
-		emissionsCountermeasures,
-		coalition,
-		TACAN,
-		radio,
-		activePath.size(),
-		ammo.size(),
-		contacts.size(),
-		task.size()
-	};
+	const unsigned char startOfData = DataIndex::startOfData;
+	const unsigned char endOfData = DataIndex::endOfData;
 
-	memcpy(data + offset, &dataPacket, sizeof(dataPacket));
-	offset += sizeof(dataPacket);
-
-	/* Prepare the path vector and copy it to memory */
-	for (const Coords& c : activePath) {
-		memcpy(data + offset, &c, sizeof(Coords));
-		offset += sizeof(Coords);
+	ss.write((const char*)&ID, sizeof(ID));
+	ss.write((const char*)&startOfData, sizeof(startOfData));
+	for (auto d : updateTimeMap) {
+		if (d.second > time) {
+			switch (d.first) {
+			case DataIndex::category: appendString(ss, d.first, category); break;
+			case DataIndex::alive: appendNumeric(ss, d.first, alive); break;
+			case DataIndex::human: appendNumeric(ss, d.first, human); break;
+			case DataIndex::controlled: appendNumeric(ss, d.first, controlled); break;
+			case DataIndex::coalition: appendNumeric(ss, d.first, coalition); break;
+			case DataIndex::country: appendNumeric(ss, d.first, country); break;
+			case DataIndex::name: appendString(ss, d.first, name); break;
+			case DataIndex::unitName: appendString(ss, d.first, unitName); break;
+			case DataIndex::groupName: appendString(ss, d.first, groupName); break;
+			case DataIndex::state: appendNumeric(ss, d.first, state); break;
+			case DataIndex::task: appendString(ss, d.first, task); break;
+			case DataIndex::hasTask: appendNumeric(ss, d.first, hasTask); break;
+			case DataIndex::position: appendNumeric(ss, d.first, position); break;
+			case DataIndex::speed: appendNumeric(ss, d.first, speed); break;
+			case DataIndex::heading: appendNumeric(ss, d.first, heading); break;
+			case DataIndex::isTanker: appendNumeric(ss, d.first, isTanker); break;
+			case DataIndex::isAWACS: appendNumeric(ss, d.first, isAWACS); break;
+			case DataIndex::onOff: appendNumeric(ss, d.first, onOff); break;
+			case DataIndex::followRoads: appendNumeric(ss, d.first, followRoads); break;
+			case DataIndex::fuel: appendNumeric(ss, d.first, fuel); break;
+			case DataIndex::desiredSpeed: appendNumeric(ss, d.first, desiredSpeed); break;
+			case DataIndex::desiredSpeedType: appendNumeric(ss, d.first, desiredSpeedType); break;
+			case DataIndex::desiredAltitude: appendNumeric(ss, d.first, desiredAltitude); break;
+			case DataIndex::desiredAltitudeType: appendNumeric(ss, d.first, desiredAltitudeType); break;
+			case DataIndex::leaderID: appendNumeric(ss, d.first, leaderID); break;
+			case DataIndex::formationOffset: appendNumeric(ss, d.first, formationOffset); break;
+			case DataIndex::targetID: appendNumeric(ss, d.first, targetID); break;
+			case DataIndex::targetPosition: appendNumeric(ss, d.first, targetPosition); break;
+			case DataIndex::ROE: appendNumeric(ss, d.first, ROE); break;
+			case DataIndex::reactionToThreat: appendNumeric(ss, d.first, reactionToThreat); break;
+			case DataIndex::emissionsCountermeasures: appendNumeric(ss, d.first, emissionsCountermeasures); break;
+			case DataIndex::TACAN: appendNumeric(ss, d.first, TACAN); break;
+			case DataIndex::radio: appendNumeric(ss, d.first, radio); break;
+			case DataIndex::generalSettings: appendNumeric(ss, d.first, generalSettings); break;
+			case DataIndex::ammo: appendVector(ss, d.first, ammo); break;
+			case DataIndex::contacts: appendVector(ss, d.first, contacts); break;
+			case DataIndex::activePath: appendList(ss, d.first, activePath); break;
+			}
+		}
 	}
-	
-	/* Copy the ammo vector to memory */
-	memcpy(data + offset, &ammo, ammo.size() * sizeof(DataTypes::Ammo));
-	offset += ammo.size() * sizeof(DataTypes::Ammo);
-
-	/* Copy the contacts vector to memory */
-	memcpy(data + offset, &contacts, contacts.size() * sizeof(DataTypes::Contact));
-	offset += contacts.size() * sizeof(DataTypes::Contact);
-
-	return offset;
-}
-
-void Unit::getData(stringstream &ss, unsigned long long time, bool refresh)
-{
-	if (time > lastUpdateTime && !refresh) return;
-
-	char* data;
-	unsigned int size = getDataPacket(data);
-
-	/* Prepare the data packet and copy it to  memory */
-	/* If the unit is in a group, get the update data from the group leader and only replace the position, speed and heading */
-	if (unitsManager->isUnitInGroup(this) && !unitsManager->isUnitGroupLeader(this)) {
-		DataTypes::DataPacket* p = (DataTypes::DataPacket*)data;
-		p->position = position;
-		p->speed = speed;
-		p->heading = heading;
-	}
-	
-	ss.write(data, size);
-	ss << task;
-
-	unsigned short nameLength = name.length();
-	unsigned short unitNameLength = unitName.length();
-	unsigned short groupNameLength = groupName.length();
-	unsigned short categoryLength = getCategory().length();
-
-	ss.write((char*)&nameLength, sizeof(nameLength));
-	ss.write((char*)&unitNameLength, sizeof(unitNameLength));
-	ss.write((char*)&groupNameLength, sizeof(groupNameLength));
-	ss.write((char*)&categoryLength, sizeof(categoryLength));
-	
-	ss << name;
-	ss << unitName;
-	ss << groupName;
-	ss << getCategory();
-	
-
-	delete data;
+	ss.write((const char*)&endOfData, sizeof(endOfData));
 }
 
 void Unit::setActivePath(list<Coords> newPath)
@@ -393,17 +339,17 @@ void Unit::setFormationOffset(Offset newFormationOffset)
 	formationOffset = newFormationOffset;
 	resetTask();
 
-	triggerUpdate();
+	triggerUpdate(DataIndex::formationOffset);
 }
 
-void Unit::setROE(unsigned char newROE, bool force) 
+void Unit::setROE(unsigned char newROE, bool force)
 {
 	if (ROE != newROE || force) {
 		ROE = newROE;
 		Command* command = dynamic_cast<Command*>(new SetOption(groupName, SetCommandType::ROE, static_cast<unsigned int>(ROE)));
 		scheduler->appendCommand(command);
 
-		triggerUpdate();
+		triggerUpdate(DataIndex::ROE);
 	}
 }
 
@@ -415,7 +361,7 @@ void Unit::setReactionToThreat(unsigned char newReactionToThreat, bool force)
 		Command* command = dynamic_cast<Command*>(new SetOption(groupName, SetCommandType::REACTION_ON_THREAT, static_cast<unsigned int>(reactionToThreat)));
 		scheduler->appendCommand(command);
 
-		triggerUpdate();
+		triggerUpdate(DataIndex::reactionToThreat);
 	}
 }
 
@@ -465,39 +411,38 @@ void Unit::setEmissionsCountermeasures(unsigned char newEmissionsCountermeasures
 		command = dynamic_cast<Command*>(new SetOption(groupName, SetCommandType::ECM_USING, ECMEnum));
 		scheduler->appendCommand(command);
 
-		triggerUpdate();
+		triggerUpdate(DataIndex::emissionsCountermeasures);
 	}
 }
 
-void Unit::landAt(Coords loc) 
+void Unit::landAt(Coords loc)
 {
 	clearActivePath();
 	pushActivePathBack(loc);
 	setState(State::LAND);
 }
 
-void Unit::setIsTanker(bool newIsTanker) 
-{ 
+void Unit::setIsTanker(bool newIsTanker)
+{
 	if (isTanker != newIsTanker) {
 		isTanker = newIsTanker;
 		resetTask();
 
-		triggerUpdate();
+		triggerUpdate(DataIndex::isTanker);
 	}
 }
 
 void Unit::setIsAWACS(bool newIsAWACS)
-{ 
+{
 	if (isAWACS != newIsAWACS) {
 		isAWACS = newIsAWACS;
 		resetTask();
-		setEPLRS(isAWACS);
 
-		triggerUpdate();
+		triggerUpdate(DataIndex::isAWACS);
 	}
 }
 
-void Unit::setTACAN(Options::TACAN newTACAN, bool force) 
+void Unit::setTACAN(DataTypes::TACAN newTACAN, bool force)
 {
 	if (TACAN != newTACAN || force)
 	{
@@ -528,11 +473,11 @@ void Unit::setTACAN(Options::TACAN newTACAN, bool force)
 			scheduler->appendCommand(command);
 		}
 
-		triggerUpdate();
+		triggerUpdate(DataIndex::TACAN);
 	}
 }
 
-void Unit::setRadio(Options::Radio newRadio, bool force) 
+void Unit::setRadio(DataTypes::Radio newRadio, bool force)
 {
 	if (radio != newRadio || force)
 	{
@@ -564,30 +509,11 @@ void Unit::setRadio(Options::Radio newRadio, bool force)
 		command = dynamic_cast<Command*>(new SetCommand(groupName, commandSS.str()));
 		scheduler->appendCommand(command);
 
-		triggerUpdate();
+		triggerUpdate(DataIndex::radio);
 	}
 }
 
-void Unit::setEPLRS(bool newEPLRS, bool force)
-{
-	//addMeasure("EPLRS", json::value(newEPLRS)); 
-	//
-	//if (EPLRS != newEPLRS || force) {
-	//	EPLRS = newEPLRS;
-	//
-	//	std::ostringstream commandSS;
-	//	commandSS << "{"
-	//		<< "id = 'EPLRS',"
-	//		<< "params = {"
-	//		<< "value = " << (EPLRS ? "true" : "false") << ", "
-	//		<< "}"
-	//		<< "}";
-	//	Command* command = dynamic_cast<Command*>(new SetCommand(ID, commandSS.str()));
-	//	scheduler->appendCommand(command);
-	//}
-}
-
-void Unit::setGeneralSettings(Options::GeneralSettings newGeneralSettings, bool force) 
+void Unit::setGeneralSettings(DataTypes::GeneralSettings newGeneralSettings, bool force)
 {
 	if (generalSettings != newGeneralSettings)
 	{
@@ -605,22 +531,22 @@ void Unit::setGeneralSettings(Options::GeneralSettings newGeneralSettings, bool 
 		command = dynamic_cast<Command*>(new SetOption(groupName, SetCommandType::ENGAGE_AIR_WEAPONS, !generalSettings.prohibitAirWpn));
 		scheduler->appendCommand(command);
 
-		triggerUpdate();
+		triggerUpdate(DataIndex::generalSettings);
 	}
 }
 
-void Unit::setDesiredSpeed(double newDesiredSpeed) 
+void Unit::setDesiredSpeed(double newDesiredSpeed)
 {
-	desiredSpeed = newDesiredSpeed; 
+	desiredSpeed = newDesiredSpeed;
 	if (state == State::IDLE)
 		resetTask();
 	else
 		goToDestination();		/* Send the command to reach the destination */
 
-	triggerUpdate();
+	triggerUpdate(DataIndex::desiredSpeed);
 }
 
-void Unit::setDesiredAltitude(double newDesiredAltitude) 
+void Unit::setDesiredAltitude(double newDesiredAltitude)
 {
 	desiredAltitude = newDesiredAltitude;
 	if (state == State::IDLE)
@@ -628,10 +554,10 @@ void Unit::setDesiredAltitude(double newDesiredAltitude)
 	else
 		goToDestination();		/* Send the command to reach the destination */
 
-	triggerUpdate();
+	triggerUpdate(DataIndex::desiredAltitude);
 }
 
-void Unit::setDesiredSpeedType(string newDesiredSpeedType) 
+void Unit::setDesiredSpeedType(string newDesiredSpeedType)
 {
 	desiredSpeedType = newDesiredSpeedType.compare("GS") == 0;
 	if (state == State::IDLE)
@@ -639,10 +565,10 @@ void Unit::setDesiredSpeedType(string newDesiredSpeedType)
 	else
 		goToDestination();		/* Send the command to reach the destination */
 
-	triggerUpdate();
+	triggerUpdate(DataIndex::desiredSpeedType);
 }
 
-void Unit::setDesiredAltitudeType(string newDesiredAltitudeType) 
+void Unit::setDesiredAltitudeType(string newDesiredAltitudeType)
 {
 	desiredAltitudeType = newDesiredAltitudeType.compare("AGL") == 0;
 	if (state == State::IDLE)
@@ -650,14 +576,14 @@ void Unit::setDesiredAltitudeType(string newDesiredAltitudeType)
 	else
 		goToDestination();		/* Send the command to reach the destination */
 
-	triggerUpdate();
+	triggerUpdate(DataIndex::desiredAltitudeType);
 }
 
 void Unit::goToDestination(string enrouteTask)
 {
 	if (activeDestination != NULL)
 	{
-		Command* command = dynamic_cast<Command*>(new Move(groupName, activeDestination, getDesiredSpeed(), getDesiredSpeedType()? "GS": "CAS", getDesiredAltitude(), getDesiredAltitudeType()? "AGL" : "ASL", enrouteTask, getCategory()));
+		Command* command = dynamic_cast<Command*>(new Move(groupName, activeDestination, getDesiredSpeed(), getDesiredSpeedType() ? "GS" : "CAS", getDesiredAltitude(), getDesiredAltitudeType() ? "AGL" : "ASL", enrouteTask, getCategory()));
 		scheduler->appendCommand(command);
 		setHasTask(true);
 	}
@@ -668,7 +594,7 @@ bool Unit::isDestinationReached(double threshold)
 	if (activeDestination != NULL)
 	{
 		/* Check if any unit in the group has reached the point */
-		for (auto const& p: unitsManager->getGroupMembers(groupName))
+		for (auto const& p : unitsManager->getGroupMembers(groupName))
 		{
 			double dist = 0;
 			Geodesic::WGS84().Inverse(p->getPosition().lat, p->getPosition().lng, activeDestination.lat, activeDestination.lng, dist);
@@ -694,7 +620,7 @@ bool Unit::setActiveDestination()
 		activeDestination = activePath.front();
 		log(unitName + " active destination set to queue front");
 
-		triggerUpdate();
+		triggerUpdate(DataIndex::activePath);
 		return true;
 	}
 	else
@@ -702,7 +628,7 @@ bool Unit::setActiveDestination()
 		activeDestination = Coords(0);
 		log(unitName + " active destination set to NULL");
 
-		triggerUpdate();
+		triggerUpdate(DataIndex::activePath);
 		return false;
 	}
 }
@@ -723,9 +649,9 @@ bool Unit::updateActivePath(bool looping)
 	}
 }
 
-bool Unit::checkTaskFailed() 
+bool Unit::checkTaskFailed()
 {
-	if (getHasTask()) 
+	if (getHasTask())
 		return false;
 	else {
 		if (taskCheckCounter > 0)
@@ -736,4 +662,8 @@ bool Unit::checkTaskFailed()
 
 void Unit::resetTaskFailedCounter() {
 	taskCheckCounter = TASK_CHECK_INIT_VALUE;
+}
+
+void Unit::triggerUpdate(unsigned char datumIndex) {
+	updateTimeMap[datumIndex] = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }

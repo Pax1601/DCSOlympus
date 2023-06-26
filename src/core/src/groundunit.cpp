@@ -17,8 +17,8 @@ GroundUnit::GroundUnit(json::value json, unsigned int ID) : Unit(json, ID)
 {
 	log("New Ground Unit created with ID: " + to_string(ID));
 
-	double desiredSpeed = 10;
-	setDesiredSpeed(desiredSpeed);
+	setCategory("GroundUnit");
+	setDesiredSpeed(10);
 };
 
 void GroundUnit::setState(unsigned char newState)

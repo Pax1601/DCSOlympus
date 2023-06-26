@@ -17,10 +17,9 @@ Helicopter::Helicopter(json::value json, unsigned int ID) : AirUnit(json, ID)
 {
 	log("New Helicopter created with ID: " + to_string(ID));
 
-	double desiredSpeed = knotsToMs(100);
-	double desiredAltitude = ftToM(5000);
-	setDesiredSpeed(desiredSpeed);
-	setDesiredAltitude(desiredAltitude);
+	setCategory("Helicopter");
+	setDesiredSpeed(knotsToMs(100));
+	setDesiredAltitude(ftToM(5000));
 };
 
 void Helicopter::changeSpeed(string change)

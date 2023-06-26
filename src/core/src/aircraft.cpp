@@ -17,10 +17,10 @@ Aircraft::Aircraft(json::value json, unsigned int ID) : AirUnit(json, ID)
 {
 	log("New Aircraft created with ID: " + to_string(ID));
 
-	double desiredSpeed = knotsToMs(300);
-	double desiredAltitude = ftToM(20000);
-	setDesiredSpeed(desiredSpeed);
-	setDesiredAltitude(desiredAltitude);
+	setCategory("Aircraft");
+	setDesiredSpeed(knotsToMs(300));
+	setDesiredAltitude(ftToM(20000));
+	
 };
 
 void Aircraft::changeSpeed(string change)

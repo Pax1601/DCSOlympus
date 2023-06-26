@@ -1,13 +1,14 @@
 import { Marker, LatLng, Polyline, Icon, DivIcon, CircleMarker, Map } from 'leaflet';
 import { getMap, getUnitsManager } from '..';
-import { getMarkerCategoryByName, getUnitDatabaseByCategory, mToFt, msToKnots, rad2deg } from '../other/utils';
+import { enumToCoalition, enumToEmissioNCountermeasure, getMarkerCategoryByName, enumToROE, enumToReactionToThreat, enumToState, getUnitDatabaseByCategory, mToFt, msToKnots, rad2deg } from '../other/utils';
 import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, getUnits, landAt, setAltitude, setReactionToThreat, setROE, setSpeed, refuel, setAdvacedOptions, followUnit, setEmissionsCountermeasures, setSpeedType, setAltitudeType, setOnOff, setFollowRoads, bombPoint, carpetBomb, bombBuilding, fireAtArea } from '../server/server';
 import { CustomMarker } from '../map/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
 import { UnitDatabase } from './unitdatabase';
 import { TargetMarker } from '../map/targetmarker';
-import { BOMBING, CARPET_BOMBING, FIRE_AT_AREA, IDLE, MOVE_UNIT, ROEs, emissionsCountermeasures, reactionsToThreat, states } from '../constants/constants';
-import { GeneralSettings, Radio, TACAN, UnitData, UnitIconOptions } from '../@types/unit';
+import { BOMBING, CARPET_BOMBING, DataIndexes, FIRE_AT_AREA, IDLE, MOVE_UNIT, ROEs, emissionsCountermeasures, reactionsToThreat, states } from '../constants/constants';
+import { Ammo, Contact, GeneralSettings, Offset, Radio, TACAN, UnitIconOptions } from '../@types/unit';
+import { DataExtractor } from './dataextractor';
 
 var pathIcon = new Icon({
     iconUrl: '/resources/theme/images/markers/marker-icon.png',
@@ -18,77 +19,74 @@ var pathIcon = new Icon({
 export class Unit extends CustomMarker {
     ID: number;
 
-    #data: UnitData = {
-        ID: 0,
-        alive: false,
-        human: false,
-        controlled: false,
-        hasTask: false,
-        desiredAltitudeType: "AGL",
-        desiredSpeedType: "GS",
-        isTanker: false,
-        isAWACS: false,
-        onOff: false,
-        followRoads: false,
-        EPLRS: false,
-        generalSettings: {
-            prohibitAA: false,
-            prohibitAfterburner: false,
-            prohibitAG: false,
-            prohibitAirWpn: false,
-            prohibitJettison: false
-        },
-        position: new LatLng(0, 0),
-        speed: 0,
-        heading: 0,
-        fuel: 0,
-        desiredSpeed: 0,
-        desiredAltitude: 0,
-        targetID: 0,
-        leaderID: 0,
-        targetPosition:  new LatLng(0, 0),
-        state: states[0],
-        ROE: ROEs[0],
-        reactionToThreat: reactionsToThreat[0],
-        emissionsCountermeasures: emissionsCountermeasures[0],
-        TACAN: {
-            isOn: false,
-            XY: 'X',
-            callsign: '',
-            channel: 0
-        },
-        radio: {
-            frequency: 0,
-            callsign: 0,
-            callsignNumber: 0
-        },
-        activePath: [],
-        ammo: [],
-        contacts: [],
-        name: "",
-        unitName: "",
-        groupName: "",
-        category: "",
-        coalition: "",    
-        task: ""  
+    #alive: boolean = false;
+    #human: boolean = false;
+    #controlled: boolean = false;
+    #coalition: string = "";
+    #country: number = 0;
+    #name: string = "";
+    #unitName: string = "";
+    #groupName: string = "";
+    #state: string = states[0];
+    #task: string = ""
+    #hasTask: boolean = false;
+    #position: LatLng = new LatLng(0, 0);
+    #speed: number = 0;
+    #heading: number = 0;
+    #isTanker: boolean = false;
+    #isAWACS: boolean = false;
+    #onOff: boolean = false;
+    #followRoads: boolean = false;
+    #fuel: number = 0;
+    #desiredSpeed: number = 0;
+    #desiredSpeedType: string = "GS";
+    #desiredAltitude: number = 0;
+    #desiredAltitudeType: string = "AGL";
+    #leaderID: number = 0;
+    #formationOffset: Offset = {
+        x: 0,
+        y: 0,
+        z: 0
     };
+    #targetID: number = 0;
+    #targetPosition: LatLng = new LatLng(0, 0);
+    #ROE: string = ROEs[0];
+    #reactionToThreat: string = reactionsToThreat[0];
+    #emissionsCountermeasures: string = emissionsCountermeasures[0];
+    #TACAN: TACAN = {
+        isOn: false,
+        XY: 'X',
+        callsign: '',
+        channel: 0
+    };
+    #radio: Radio = {
+        frequency: 0,
+        callsign: 0,
+        callsignNumber: 0
+    };
+    #generalSettings: GeneralSettings = {
+        prohibitAA: false,
+        prohibitAfterburner: false,
+        prohibitAG: false,
+        prohibitAirWpn: false,
+        prohibitJettison: false
+    };
+    #ammo: Ammo[] = [];
+    #contacts: Contact[] = [];
+    #activePath: LatLng[] = [];
 
     #selectable: boolean;
     #selected: boolean = false;
     #hidden: boolean = false;
     #highlighted: boolean = false;
-
     #preventClick: boolean = false;
-
     #pathMarkers: Marker[] = [];
     #pathPolyline: Polyline;
     #contactsPolylines: Polyline[];
     #miniMapMarker: CircleMarker | null = null;
     #targetPositionMarker: TargetMarker;
     #targetPositionPolyline: Polyline;
-
     #timer: number = 0;
-
     #hotgroup: number | null = null;
 
     static getConstructor(type: string) {
@@ -100,7 +98,7 @@ export class Unit extends CustomMarker {
         if (type === "NavyUnit") return NavyUnit;
     }
 
-    constructor(ID: number, data: UnitData) {
+    constructor(ID: number) {
         super(new LatLng(0, 0), { riseOnHover: true, keyboard: false });
 
         this.ID = ID;
@@ -126,9 +124,122 @@ export class Unit extends CustomMarker {
         document.addEventListener("toggleUnitVisibility", (ev: CustomEventInit) => {
             window.setTimeout(() => { this.setSelected(this.getSelected() && !this.getHidden()) }, 300);
         });
+    }
 
-        /* Set the unit data */
-        this.setData(data);
+    getCategory() {
+        // Overloaded by child classes
+        return "";
+    }
+
+    /********************** Unit data *************************/
+    setData(dataExtractor: DataExtractor) {
+        var updateMarker = !getMap().hasLayer(this);
+
+        var datumIndex = dataExtractor.extractUInt8();
+        if (datumIndex == DataIndexes.startOfData) {
+            while (datumIndex != DataIndexes.endOfData) {
+                datumIndex = dataExtractor.extractUInt8();
+                switch (datumIndex) {
+                    case DataIndexes.alive: this.setAlive(dataExtractor.extractBool()); updateMarker = true; break;
+                    case DataIndexes.human: this.#human = dataExtractor.extractBool(); break;
+                    case DataIndexes.controlled: this.#controlled = dataExtractor.extractBool(); updateMarker = true; break;
+                    case DataIndexes.coalition: this.#coalition = enumToCoalition(dataExtractor.extractUInt8()); break;
+                    case DataIndexes.country: this.#country = dataExtractor.extractUInt8(); break;
+                    case DataIndexes.name: this.#name = dataExtractor.extractString(); break;
+                    case DataIndexes.unitName: this.#unitName = dataExtractor.extractString(); break;
+                    case DataIndexes.groupName: this.#groupName = dataExtractor.extractString(); break;
+                    case DataIndexes.state: this.#state = enumToState(dataExtractor.extractUInt8()); updateMarker = true; break;
+                    case DataIndexes.task: this.#task = dataExtractor.extractString(); break;
+                    case DataIndexes.hasTask: this.#hasTask = dataExtractor.extractBool(); break;
+                    case DataIndexes.position: this.#position = dataExtractor.extractLatLng(); updateMarker = true; break;
+                    case DataIndexes.speed: this.#speed = dataExtractor.extractFloat64(); updateMarker = true; break;
+                    case DataIndexes.heading: this.#heading = dataExtractor.extractFloat64(); updateMarker = true; break;
+                    case DataIndexes.isTanker: this.#isTanker = dataExtractor.extractBool(); break;
+                    case DataIndexes.isAWACS: this.#isAWACS = dataExtractor.extractBool(); break;
+                    case DataIndexes.onOff: this.#onOff = dataExtractor.extractBool(); break;
+                    case DataIndexes.followRoads: this.#followRoads = dataExtractor.extractBool(); break;
+                    case DataIndexes.fuel: this.#fuel = dataExtractor.extractUInt16(); break;
+                    case DataIndexes.desiredSpeed: this.#desiredSpeed = dataExtractor.extractFloat64(); break;
+                    case DataIndexes.desiredSpeedType: this.#desiredSpeedType = dataExtractor.extractBool() ? "GS" : "CAS"; break;
+                    case DataIndexes.desiredAltitude: this.#desiredAltitude = dataExtractor.extractFloat64(); break;
+                    case DataIndexes.desiredAltitudeType: this.#desiredAltitudeType = dataExtractor.extractFloat64() ? "AGL" : "ASL"; break;
+                    case DataIndexes.leaderID: this.#leaderID = dataExtractor.extractUInt32(); break;
+                    case DataIndexes.formationOffset: dataExtractor.extractOffset(); break;
+                    case DataIndexes.targetID: this.#targetID = dataExtractor.extractUInt32(); break;
+                    case DataIndexes.targetPosition: this.#targetPosition = dataExtractor.extractLatLng(); break;
+                    case DataIndexes.ROE: this.#ROE = enumToROE(dataExtractor.extractUInt8()); break;
+                    case DataIndexes.reactionToThreat: this.#reactionToThreat = enumToReactionToThreat(dataExtractor.extractUInt8()); break;
+                    case DataIndexes.emissionsCountermeasures: this.#emissionsCountermeasures = enumToEmissioNCountermeasure(dataExtractor.extractUInt8()); break;
+                    case DataIndexes.TACAN: this.#TACAN = dataExtractor.extractTACAN(); break;
+                    case DataIndexes.radio: this.#radio = dataExtractor.extractRadio(); break;
+                    case DataIndexes.generalSettings: this.#generalSettings = dataExtractor.extractGeneralSettings(); break;
+                    case DataIndexes.ammo: this.#ammo = dataExtractor.extractAmmo(); break;
+                    case DataIndexes.contacts: this.#contacts = dataExtractor.extractContacts(); break;
+                    case DataIndexes.activePath: this.#activePath = dataExtractor.extractActivePath(); break;
+                }
+            }
+        }
+
+        /* Dead units can't be selected */
+        this.setSelected(this.getSelected() && this.#alive && !this.getHidden())
+
+        if (updateMarker)
+            this.#updateMarker();
+
+        // TODO dont delete the polylines of the detected units
+        this.#clearDetectedUnits();
+        if (this.getSelected()) {
+            this.#drawPath();
+            this.#drawDetectedUnits();
+            this.#drawTarget();
+        }
+        else {
+            this.#clearPath();
+            this.#clearTarget();
+        }
+
+        document.dispatchEvent(new CustomEvent("unitUpdated", { detail: this }));
+    }
+
+    getData() {
+        return {
+            alive: this.#alive,
+            human: this.#human,
+            controlled: this.#controlled,
+            coalition: this.#coalition,
+            country: this.#country,
+            name: this.#name,
+            unitName: this.#unitName,
+            groupName: this.#groupName,
+            state: this.#state,
+            task: this.#task,
+            hasTask: this.#hasTask,
+            position: this.#position,
+            speed: this.#speed,
+            heading: this.#heading,
+            isTanker: this.#isTanker,
+            isAWACS: this.#isAWACS,
+            onOff: this.#onOff,
+            followRoads: this.#followRoads,
+            fuel: this.#fuel,
+            desiredSpeed: this.#desiredSpeed,
+            desiredSpeedType: this.#desiredSpeedType,
+            desiredAltitude: this.#desiredAltitude,
+            desiredAltitudeType: this.#desiredAltitudeType,
+            leaderID: this.#leaderID,
+            formationOffset: this.#formationOffset,
+            targetID: this.#targetID,
+            targetPosition: this.#targetPosition,
+            ROE: this.#ROE,
+            reactionToThreat: this.#reactionToThreat,
+            emissionsCountermeasures: this.#emissionsCountermeasures,
+            TACAN: this.#TACAN,
+            radio: this.#radio,
+            generalSettings: this.#generalSettings,
+            ammo: this.#ammo,
+            contacts: this.#contacts,
+            activePath: this.#activePath
+        }
     }
 
     getMarkerCategory() {
@@ -151,14 +262,20 @@ export class Unit extends CustomMarker {
             showShortLabel: false,
             showFuel: false,
             showAmmo: false,
-            showSummary: false, 
+            showSummary: false,
             rotateToHeading: false
         }
     }
 
+    setAlive(newAlive: boolean) {
+        if (newAlive != this.#alive)
+            document.dispatchEvent(new CustomEvent("unitDeath", { detail: this }));
+        this.#alive = newAlive;
+    }
+
     setSelected(selected: boolean) {
         /* Only alive units can be selected. Some units are not selectable (weapons) */
-        if ((this.getData().alive || !selected) && this.getSelectable() && this.getSelected() != selected) {
+        if ((this.#alive || !selected) && this.getSelectable() && this.getSelected() != selected) {
             this.#selected = selected;
             this.getElement()?.querySelector(`[data-object|="unit"]`)?.toggleAttribute("data-is-selected", selected);
             if (selected) {
@@ -208,49 +325,7 @@ export class Unit extends CustomMarker {
     }
 
     getGroupMembers() {
-        return Object.values(getUnitsManager().getUnits()).filter((unit: Unit) => {return unit != this && unit.getData().groupName === this.getData().groupName;});
-    }
-
-    /********************** Unit data *************************/
-    setData(data: UnitData) {
-        /* Check if data has changed comparing new values to old values */
-        const positionChanged = this.getData().position.lat != data.position.lat || this.getData().position.lng != data.position.lng;
-        const headingChanged = this.getData().heading != data.heading;
-        const aliveChanged = this.getData().alive != data.alive;
-        const stateChanged = this.getData().state != data.state;
-        const controlledChanged = this.getData().controlled != data.controlled;
-        var updateMarker = positionChanged || headingChanged || aliveChanged || stateChanged || controlledChanged || !getMap().hasLayer(this);
-
-        /* Assign the data */
-        this.#data = data;
-        
-        /* Fire an event when a unit dies */
-        if (aliveChanged && this.getData().alive == false)
-            document.dispatchEvent(new CustomEvent("unitDeath", { detail: this }));
-
-        /* Dead units can't be selected */
-        this.setSelected(this.getSelected() && this.getData().alive && !this.getHidden())
-
-        if (updateMarker)
-            this.#updateMarker();
-
-        // TODO dont delete the polylines of the detected units
-        this.#clearDetectedUnits();
-        if (this.getSelected()) {
-            this.#drawPath();
-            this.#drawDetectedUnits();
-            this.#drawTarget();
-        }
-        else {
-            this.#clearPath();
-            this.#clearTarget();
-        }
-            
-        document.dispatchEvent(new CustomEvent("unitUpdated", { detail: this }));
-    }
-
-    getData() {
-        return this.#data;
+        return Object.values(getUnitsManager().getUnits()).filter((unit: Unit) => { return unit != this && unit.#groupName === this.#groupName; });
     }
 
     /********************** Icon *************************/
@@ -266,7 +341,7 @@ export class Unit extends CustomMarker {
         var el = document.createElement("div");
         el.classList.add("unit");
         el.setAttribute("data-object", `unit-${this.getMarkerCategory()}`);
-        el.setAttribute("data-coalition", this.getData().coalition);
+        el.setAttribute("data-coalition", this.#coalition);
 
         // Generate and append elements depending on active options          
         // Velocity vector
@@ -300,7 +375,7 @@ export class Unit extends CustomMarker {
         }
 
         // State icon
-        if (this.getIconOptions().showState){
+        if (this.getIconOptions().showState) {
             var state = document.createElement("div");
             state.classList.add("unit-state");
             el.appendChild(state);
@@ -310,7 +385,7 @@ export class Unit extends CustomMarker {
         if (this.getIconOptions().showShortLabel) {
             var shortLabel = document.createElement("div");
             shortLabel.classList.add("unit-short-label");
-            shortLabel.innerText = getUnitDatabaseByCategory(this.getMarkerCategory())?.getByName(this.getData().name)?.shortLabel || ""; 
+            shortLabel.innerText = getUnitDatabaseByCategory(this.getMarkerCategory())?.getByName(this.#name)?.shortLabel || "";
             el.append(shortLabel);
         }
 
@@ -325,7 +400,7 @@ export class Unit extends CustomMarker {
         }
 
         // Ammo indicator
-        if (this.getIconOptions().showAmmo){ 
+        if (this.getIconOptions().showAmmo) {
             var ammoIndicator = document.createElement("div");
             ammoIndicator.classList.add("unit-ammo");
             for (let i = 0; i <= 3; i++)
@@ -339,7 +414,7 @@ export class Unit extends CustomMarker {
             summary.classList.add("unit-summary");
             var callsign = document.createElement("div");
             callsign.classList.add("unit-callsign");
-            callsign.innerText = this.getData().unitName;
+            callsign.innerText = this.#unitName;
             var altitude = document.createElement("div");
             altitude.classList.add("unit-altitude");
             var speed = document.createElement("div");
@@ -357,15 +432,15 @@ export class Unit extends CustomMarker {
     updateVisibility() {
         var hidden = false;
         const hiddenUnits = getUnitsManager().getHiddenTypes();
-        if (this.getData().human && hiddenUnits.includes("human"))
+        if (this.#human && hiddenUnits.includes("human"))
             hidden = true;
-        else if (this.getData().controlled == false && hiddenUnits.includes("dcs"))
+        else if (this.#controlled == false && hiddenUnits.includes("dcs"))
             hidden = true;
         else if (hiddenUnits.includes(this.getMarkerCategory()))
             hidden = true;
-        else if (hiddenUnits.includes(this.getData().coalition))
+        else if (hiddenUnits.includes(this.#coalition))
             hidden = true;
-        this.setHidden(hidden || !this.getData().alive);
+        this.setHidden(hidden || !this.#alive);
     }
 
     setHidden(hidden: boolean) {
@@ -387,24 +462,24 @@ export class Unit extends CustomMarker {
     }
 
     getLeader() {
-        return getUnitsManager().getUnitByID(this.getData().leaderID);
+        return getUnitsManager().getUnitByID(this.#leaderID);
     }
 
     canFulfillRole(roles: string | string[]) {
-        if (typeof(roles) === "string") 
+        if (typeof (roles) === "string")
             roles = [roles];
 
-        return this.getDatabase()?.getByName(this.getData().name)?.loadouts.some((loadout: LoadoutBlueprint) => {
-            return (roles as string[]).some((role: string) => {return loadout.roles.includes(role)});
+        return this.getDatabase()?.getByName(this.#name)?.loadouts.some((loadout: LoadoutBlueprint) => {
+            return (roles as string[]).some((role: string) => { return loadout.roles.includes(role) });
         });
     }
 
     /********************** Unit commands *************************/
     addDestination(latlng: L.LatLng) {
-        if (!this.getData().human) {
+        if (!this.#human) {
             var path: any = {};
-            if (this.getData().activePath.length > 0) {
-                path = this.getData().activePath;
+            if (this.#activePath.length > 0) {
+                path = this.#activePath;
                 path[(Object.keys(path).length).toString()] = latlng;
             }
             else {
@@ -415,86 +490,86 @@ export class Unit extends CustomMarker {
     }
 
     clearDestinations() {
-        if (!this.getData().human)
-            this.getData().activePath = [];
+        if (!this.#human)
+            this.#activePath = [];
     }
 
     attackUnit(targetID: number) {
         /* Units can't attack themselves */
-        if (!this.getData().human)
+        if (!this.#human)
             if (this.ID != targetID)
                 attackUnit(this.ID, targetID);
     }
 
     followUnit(targetID: number, offset: { "x": number, "y": number, "z": number }) {
         /* Units can't follow themselves */
-        if (!this.getData().human)
+        if (!this.#human)
             if (this.ID != targetID)
                 followUnit(this.ID, targetID, offset);
     }
 
     landAt(latlng: LatLng) {
-        if (!this.getData().human)
+        if (!this.#human)
             landAt(this.ID, latlng);
     }
 
     changeSpeed(speedChange: string) {
-        if (!this.getData().human)
+        if (!this.#human)
             changeSpeed(this.ID, speedChange);
     }
 
     changeAltitude(altitudeChange: string) {
-        if (!this.getData().human)
+        if (!this.#human)
             changeAltitude(this.ID, altitudeChange);
     }
 
     setSpeed(speed: number) {
-        if (!this.getData().human)
+        if (!this.#human)
             setSpeed(this.ID, speed);
     }
 
     setSpeedType(speedType: string) {
-        if (!this.getData().human)
+        if (!this.#human)
             setSpeedType(this.ID, speedType);
     }
 
     setAltitude(altitude: number) {
-        if (!this.getData().human)
+        if (!this.#human)
             setAltitude(this.ID, altitude);
     }
 
     setAltitudeType(altitudeType: string) {
-        if (!this.getData().human)
+        if (!this.#human)
             setAltitudeType(this.ID, altitudeType);
     }
 
     setROE(ROE: string) {
-        if (!this.getData().human)
+        if (!this.#human)
             setROE(this.ID, ROE);
     }
 
     setReactionToThreat(reactionToThreat: string) {
-        if (!this.getData().human)
+        if (!this.#human)
             setReactionToThreat(this.ID, reactionToThreat);
     }
 
     setEmissionsCountermeasures(emissionCountermeasure: string) {
-        if (!this.getData().human)
+        if (!this.#human)
             setEmissionsCountermeasures(this.ID, emissionCountermeasure);
     }
 
     setLeader(isLeader: boolean, wingmenIDs: number[] = []) {
-        if (!this.getData().human)
+        if (!this.#human)
             setLeader(this.ID, isLeader, wingmenIDs);
     }
 
     setOnOff(onOff: boolean) {
-        if (!this.getData().human)
+        if (!this.#human)
             setOnOff(this.ID, onOff);
     }
 
     setFollowRoads(followRoads: boolean) {
-        if (!this.getData().human)
+        if (!this.#human)
             setFollowRoads(this.ID, followRoads);
     }
 
@@ -503,12 +578,12 @@ export class Unit extends CustomMarker {
     }
 
     refuel() {
-        if (!this.getData().human)
+        if (!this.#human)
             refuel(this.ID);
     }
 
     setAdvancedOptions(isTanker: boolean, isAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings) {
-        if (!this.getData().human)
+        if (!this.#human)
             setAdvacedOptions(this.ID, isTanker, isAWACS, TACAN, radio, generalSettings);
     }
 
@@ -533,7 +608,7 @@ export class Unit extends CustomMarker {
         super.onAdd(map);
         /* If this is the first time adding this unit to the map, remove the temporary marker */
         if (getUnitsManager().getUnitByID(this.ID) == null)
-            getMap().removeTemporaryMarker(new LatLng(this.getData().position.lat, this.getData().position.lng));
+            getMap().removeTemporaryMarker(new LatLng(this.#position.lat, this.#position.lng));
         return this;
     }
 
@@ -541,7 +616,7 @@ export class Unit extends CustomMarker {
     #onClick(e: any) {
         if (!this.#preventClick) {
             if (getMap().getState() === IDLE || getMap().getState() === MOVE_UNIT || e.originalEvent.ctrlKey) {
-                if (!e.originalEvent.ctrlKey) 
+                if (!e.originalEvent.ctrlKey)
                     getUnitsManager().deselectAllUnits();
                 this.setSelected(!this.getSelected());
             }
@@ -558,34 +633,33 @@ export class Unit extends CustomMarker {
     }
 
     #onContextMenu(e: any) {
-        var options: {[key: string]: {text: string, tooltip: string}} = {};
+        var options: { [key: string]: { text: string, tooltip: string } } = {};
         const selectedUnits = getUnitsManager().getSelectedUnits();
         const selectedUnitTypes = getUnitsManager().getSelectedUnitsTypes();
 
-        options["center-map"] = {text: "Center map", tooltip: "Center the map on the unit and follow it"};
+        options["center-map"] = { text: "Center map", tooltip: "Center the map on the unit and follow it" };
 
         if (selectedUnits.length > 0 && !(selectedUnits.length == 1 && (selectedUnits.includes(this)))) {
-            options["attack"] = {text: "Attack", tooltip: "Attack the unit using A/A or A/G weapons"};
+            options["attack"] = { text: "Attack", tooltip: "Attack the unit using A/A or A/G weapons" };
             if (getUnitsManager().getSelectedUnitsTypes().length == 1 && getUnitsManager().getSelectedUnitsTypes()[0] === "Aircraft")
-                options["follow"] = {text: "Follow", tooltip: "Follow the unit at a user defined distance and position"};;
+                options["follow"] = { text: "Follow", tooltip: "Follow the unit at a user defined distance and position" };;
         }
         else if ((selectedUnits.length > 0 && (selectedUnits.includes(this))) || selectedUnits.length == 0) {
-            if (this.getData().category == "Aircraft") {
-                options["refuel"] = {text: "Air to air refuel", tooltip: "Refuel unit at the nearest AAR Tanker. If no tanker is available the unit will RTB."}; // TODO Add some way of knowing which aircraft can AAR
+            if (this.getCategory() == "Aircraft") {
+                options["refuel"] = { text: "Air to air refuel", tooltip: "Refuel unit at the nearest AAR Tanker. If no tanker is available the unit will RTB." }; // TODO Add some way of knowing which aircraft can AAR
             }
         }
 
-        if ((selectedUnits.length === 0 && this.getData().category == "Aircraft") || (selectedUnitTypes.length === 1 && ["Aircraft"].includes(selectedUnitTypes[0]))) 
-        {
-            if (selectedUnits.concat([this]).every((unit: Unit) => {return unit.canFulfillRole(["CAS", "Strike"])})) {
-                options["bomb"] = {text: "Precision bombing", tooltip: "Precision bombing of a specific point"};
-                options["carpet-bomb"] = {text: "Carpet bombing", tooltip: "Carpet bombing close to a point"};
+        if ((selectedUnits.length === 0 && this.getCategory() == "Aircraft") || (selectedUnitTypes.length === 1 && ["Aircraft"].includes(selectedUnitTypes[0]))) {
+            if (selectedUnits.concat([this]).every((unit: Unit) => { return unit.canFulfillRole(["CAS", "Strike"]) })) {
+                options["bomb"] = { text: "Precision bombing", tooltip: "Precision bombing of a specific point" };
+                options["carpet-bomb"] = { text: "Carpet bombing", tooltip: "Carpet bombing close to a point" };
             }
         }
 
-        if ((selectedUnits.length === 0 && this.getData().category == "GroundUnit") || selectedUnitTypes.length === 1 && ["GroundUnit"].includes(selectedUnitTypes[0])) {
-            if (selectedUnits.concat([this]).every((unit: Unit) => {return unit.canFulfillRole(["Gun Artillery", "Rocket Artillery", "Infantry", "IFV", "Tank"])}))
-            options["fire-at-area"] = {text: "Fire at area", tooltip: "Fire at a large area"};  
+        if ((selectedUnits.length === 0 && this.getCategory() == "GroundUnit") || selectedUnitTypes.length === 1 && ["GroundUnit"].includes(selectedUnitTypes[0])) {
+            if (selectedUnits.concat([this]).every((unit: Unit) => { return unit.canFulfillRole(["Gun Artillery", "Rocket Artillery", "Infantry", "IFV", "Tank"]) }))
+                options["fire-at-area"] = { text: "Fire at area", tooltip: "Fire at a large area" };
         }
 
         if (Object.keys(options).length > 0) {
@@ -615,17 +689,17 @@ export class Unit extends CustomMarker {
     }
 
     #showFollowOptions(e: any) {
-        var options: {[key: string]: {text: string, tooltip: string}} = {};
+        var options: { [key: string]: { text: string, tooltip: string } } = {};
 
         options = {
-            'trail': {text: "Trail", tooltip: "Follow unit in trail formation"},
-            'echelon-lh': {text: "Echelon (LH)", tooltip: "Follow unit in echelon left formation"},
-            'echelon-rh': {text: "Echelon (RH)", tooltip: "Follow unit in echelon right formation"},
-            'line-abreast-lh': {text: "Line abreast (LH)", tooltip: "Follow unit in line abreast left formation"},
-            'line-abreast-rh': {text: "Line abreast (RH)", tooltip: "Follow unit in line abreast right formation"},
-            'front': {text: "Front", tooltip: "Fly in front of unit"},
-            'diamond': {text: "Diamond", tooltip: "Follow unit in diamond formation"},
-            'custom': {text: "Custom", tooltip: "Set a custom formation position"},
+            'trail': { text: "Trail", tooltip: "Follow unit in trail formation" },
+            'echelon-lh': { text: "Echelon (LH)", tooltip: "Follow unit in echelon left formation" },
+            'echelon-rh': { text: "Echelon (RH)", tooltip: "Follow unit in echelon right formation" },
+            'line-abreast-lh': { text: "Line abreast (LH)", tooltip: "Follow unit in line abreast left formation" },
+            'line-abreast-rh': { text: "Line abreast (RH)", tooltip: "Follow unit in line abreast right formation" },
+            'front': { text: "Front", tooltip: "Fly in front of unit" },
+            'diamond': { text: "Diamond", tooltip: "Follow unit in diamond formation" },
+            'custom': { text: "Custom", tooltip: "Set a custom formation position" },
         }
 
         getMap().getUnitContextMenu().setOptions(options, (option: string) => {
@@ -651,12 +725,12 @@ export class Unit extends CustomMarker {
         this.updateVisibility();
 
         /* Draw the minimap marker */
-        if (this.getData().alive) {
+        if (this.#alive) {
             if (this.#miniMapMarker == null) {
-                this.#miniMapMarker = new CircleMarker(new LatLng(this.getData().position.lat, this.getData().position.lng), { radius: 0.5 });
-                if (this.getData().coalition == "neutral")
+                this.#miniMapMarker = new CircleMarker(new LatLng(this.#position.lat, this.#position.lng), { radius: 0.5 });
+                if (this.#coalition == "neutral")
                     this.#miniMapMarker.setStyle({ color: "#CFD9E8" });
-                else if (this.getData().coalition == "red")
+                else if (this.#coalition == "red")
                     this.#miniMapMarker.setStyle({ color: "#ff5858" });
                 else
                     this.#miniMapMarker.setStyle({ color: "#247be2" });
@@ -664,7 +738,7 @@ export class Unit extends CustomMarker {
                 this.#miniMapMarker.bringToBack();
             }
             else {
-                this.#miniMapMarker.setLatLng(new LatLng(this.getData().position.lat, this.getData().position.lng));
+                this.#miniMapMarker.setLatLng(new LatLng(this.#position.lat, this.#position.lng));
                 this.#miniMapMarker.bringToBack();
             }
         }
@@ -677,39 +751,39 @@ export class Unit extends CustomMarker {
 
         /* Draw the marker */
         if (!this.getHidden()) {
-            this.setLatLng(new LatLng(this.getData().position.lat, this.getData().position.lng));
+            this.setLatLng(new LatLng(this.#position.lat, this.#position.lng));
 
             var element = this.getElement();
             if (element != null) {
                 /* Draw the velocity vector */
-                element.querySelector(".unit-vvi")?.setAttribute("style", `height: ${15 + this.getData().speed / 5}px;`);
+                element.querySelector(".unit-vvi")?.setAttribute("style", `height: ${15 + this.#speed / 5}px;`);
 
                 /* Set fuel data */
-                element.querySelector(".unit-fuel-level")?.setAttribute("style", `width: ${this.getData().fuel}%`);
-                element.querySelector(".unit")?.toggleAttribute("data-has-low-fuel", this.getData().fuel < 20);
+                element.querySelector(".unit-fuel-level")?.setAttribute("style", `width: ${this.#fuel}%`);
+                element.querySelector(".unit")?.toggleAttribute("data-has-low-fuel", this.#fuel < 20);
 
                 /* Set dead/alive flag */
-                element.querySelector(".unit")?.toggleAttribute("data-is-dead", !this.getData().alive);
+                element.querySelector(".unit")?.toggleAttribute("data-is-dead", !this.#alive);
 
                 /* Set current unit state */
-                if (this.getData().human)                       // Unit is human
+                if (this.#human)                       // Unit is human
                     element.querySelector(".unit")?.setAttribute("data-state", "human");
-                else if (!this.getData().controlled)            // Unit is under DCS control (not Olympus)
+                else if (!this.#controlled)            // Unit is under DCS control (not Olympus)
                     element.querySelector(".unit")?.setAttribute("data-state", "dcs");
-                else if ((this.getData().category == "Aircraft" || this.getData().category == "Helicopter") && !this.getData().hasTask)
+                else if ((this.getCategory() == "Aircraft" || this.getCategory() == "Helicopter") && !this.#hasTask)
                     element.querySelector(".unit")?.setAttribute("data-state", "no-task");
                 else                                            // Unit is under Olympus control
-                    element.querySelector(".unit")?.setAttribute("data-state", this.getData().state.toLowerCase());
+                    element.querySelector(".unit")?.setAttribute("data-state", this.#state.toLowerCase());
 
                 /* Set altitude and speed */
                 if (element.querySelector(".unit-altitude"))
-                    (<HTMLElement>element.querySelector(".unit-altitude")).innerText = "FL" + String(Math.floor(mToFt(this.getData().position.alt as number) / 100));
+                    (<HTMLElement>element.querySelector(".unit-altitude")).innerText = "FL" + String(Math.floor(mToFt(this.#position.alt as number) / 100));
                 if (element.querySelector(".unit-speed"))
-                    (<HTMLElement>element.querySelector(".unit-speed")).innerText = String(Math.floor(msToKnots(this.getData().speed))) + "GS";
+                    (<HTMLElement>element.querySelector(".unit-speed")).innerText = String(Math.floor(msToKnots(this.#speed))) + "GS";
 
                 /* Rotate elements according to heading */
                 element.querySelectorAll("[data-rotate-to-heading]").forEach(el => {
-                    const headingDeg = rad2deg(this.getData().heading);
+                    const headingDeg = rad2deg(this.#heading);
                     let currentStyle = el.getAttribute("style") || "";
                     el.setAttribute("style", currentStyle + `transform:rotate(${headingDeg}deg);`);
                 });
@@ -724,7 +798,7 @@ export class Unit extends CustomMarker {
                 var newHasFox2 = false;
                 var newHasFox3 = false;
                 var newHasOtherAmmo = false;
-                Object.values(this.getData().ammo).forEach((ammo: any) => {
+                Object.values(this.#ammo).forEach((ammo: any) => {
                     if (ammo.desc.category == 1 && ammo.desc.missileCategory == 1) {
                         if (ammo.desc.guidance == 4 || ammo.desc.guidance == 5)
                             newHasFox1 = true;
@@ -754,30 +828,30 @@ export class Unit extends CustomMarker {
 
             /* Set vertical offset for altitude stacking */
             var pos = getMap().latLngToLayerPoint(this.getLatLng()).round();
-            this.setZIndexOffset(1000 + Math.floor(this.getData().position.alt as number) - pos.y + (this.#highlighted || this.#selected ? 5000 : 0));
+            this.setZIndexOffset(1000 + Math.floor(this.#position.alt as number) - pos.y + (this.#highlighted || this.#selected ? 5000 : 0));
         }
     }
 
     #drawPath() {
-        if (this.getData().activePath != undefined) {
+        if (this.#activePath != undefined) {
             var points = [];
-            points.push(new LatLng(this.getData().position.lat, this.getData().position.lng));
+            points.push(new LatLng(this.#position.lat, this.#position.lng));
 
             /* Add markers if missing */
-            while (this.#pathMarkers.length < Object.keys(this.getData().activePath).length) {
+            while (this.#pathMarkers.length < Object.keys(this.#activePath).length) {
                 var marker = new Marker([0, 0], { icon: pathIcon }).addTo(getMap());
                 this.#pathMarkers.push(marker);
             }
 
             /* Remove markers if too many */
-            while (this.#pathMarkers.length > Object.keys(this.getData().activePath).length) {
+            while (this.#pathMarkers.length > Object.keys(this.#activePath).length) {
                 getMap().removeLayer(this.#pathMarkers[this.#pathMarkers.length - 1]);
                 this.#pathMarkers.splice(this.#pathMarkers.length - 1, 1)
             }
 
             /* Update the position of the existing markers (to avoid creating markers uselessly) */
-            for (let WP in this.getData().activePath) {
-                var destination = this.getData().activePath[WP];
+            for (let WP in this.#activePath) {
+                var destination = this.#activePath[WP];
                 this.#pathMarkers[parseInt(WP)].setLatLng([destination.lat, destination.lng]);
                 points.push(new LatLng(destination.lat, destination.lng));
                 this.#pathPolyline.setLatLngs(points);
@@ -797,12 +871,12 @@ export class Unit extends CustomMarker {
     }
 
     #drawDetectedUnits() {
-        for (let index in this.getData().contacts) {
-            var targetData = this.getData().contacts[index];
+        for (let index in this.#contacts) {
+            var targetData = this.#contacts[index];
             var target = getUnitsManager().getUnitByID(targetData.ID)
             if (target != null) {
-                var startLatLng = new LatLng(this.getData().position.lat, this.getData().position.lng)
-                var endLatLng = new LatLng(target.getData().position.lat, target.getData().position.lng)
+                var startLatLng = new LatLng(this.#position.lat, this.#position.lng)
+                var endLatLng = new LatLng(target.#position.lat, target.#position.lng)
 
                 var color;
                 if (targetData.detectionMethod === 1)
@@ -827,31 +901,31 @@ export class Unit extends CustomMarker {
     }
 
     #drawTarget() {
-        if (this.getData().targetPosition.lat != 0 && this.getData().targetPosition.lng != 0) {
-            this.#drawtargetPosition(this.getData().targetPosition);
+        if (this.#targetPosition.lat != 0 && this.#targetPosition.lng != 0) {
+            this.#drawtargetPosition(this.#targetPosition);
         }
-        else if (this.getData().targetID != 0 && getUnitsManager().getUnitByID(this.getData().targetID)) {
-            const position = getUnitsManager().getUnitByID(this.getData().targetID)?.getData().position;
+        else if (this.#targetID != 0 && getUnitsManager().getUnitByID(this.#targetID)) {
+            const position = getUnitsManager().getUnitByID(this.#targetID)?.getData().position;
             if (position)
                 this.#drawtargetPosition(position);
         }
-        else 
+        else
             this.#clearTarget();
     }
 
     #drawtargetPosition(targetPosition: LatLng) {
-        if (!getMap().hasLayer(this.#targetPositionMarker)) 
+        if (!getMap().hasLayer(this.#targetPositionMarker))
             this.#targetPositionMarker.addTo(getMap());
         if (!getMap().hasLayer(this.#targetPositionPolyline))
             this.#targetPositionPolyline.addTo(getMap());
         this.#targetPositionMarker.setLatLng(new LatLng(targetPosition.lat, targetPosition.lng));
-        this.#targetPositionPolyline.setLatLngs([new LatLng(this.getData().position.lat, this.getData().position.lng), new LatLng(targetPosition.lat, targetPosition.lng)])
-    } 
+        this.#targetPositionPolyline.setLatLngs([new LatLng(this.#position.lat, this.#position.lng), new LatLng(targetPosition.lat, targetPosition.lng)])
+    }
 
     #clearTarget() {
         if (getMap().hasLayer(this.#targetPositionMarker))
             this.#targetPositionMarker.removeFrom(getMap());
-        
+
         if (getMap().hasLayer(this.#targetPositionPolyline))
             this.#targetPositionPolyline.removeFrom(getMap());
     }
@@ -874,8 +948,12 @@ export class AirUnit extends Unit {
 }
 
 export class Aircraft extends AirUnit {
-    constructor(ID: number, data: UnitData) {
-        super(ID, data);
+    constructor(ID: number) {
+        super(ID);
+    }
+
+    getCategory() {
+        return "Aircraft";
     }
 
     getMarkerCategory() {
@@ -884,8 +962,12 @@ export class Aircraft extends AirUnit {
 }
 
 export class Helicopter extends AirUnit {
-    constructor(ID: number, data: UnitData) {
-        super(ID, data);
+    constructor(ID: number) {
+        super(ID);
+    }
+
+    getCategory() {
+        return "Helicopter";
     }
 
     getMarkerCategory() {
@@ -894,8 +976,8 @@ export class Helicopter extends AirUnit {
 }
 
 export class GroundUnit extends Unit {
-    constructor(ID: number, data: UnitData) {
-        super(ID, data);
+    constructor(ID: number) {
+        super(ID);
     }
 
     getIconOptions() {
@@ -912,14 +994,18 @@ export class GroundUnit extends Unit {
         };
     }
 
+    getCategory() {
+        return "GroundUnit";
+    }
+
     getMarkerCategory() {
         return getMarkerCategoryByName(this.getData().name);
     }
 }
 
 export class NavyUnit extends Unit {
-    constructor(ID: number, data: UnitData) {
-        super(ID, data);
+    constructor(ID: number) {
+        super(ID);
     }
 
     getIconOptions() {
@@ -936,14 +1022,18 @@ export class NavyUnit extends Unit {
         };
     }
 
+    getCategory() {
+        return "NavyUnit";
+    }
+
     getMarkerCategory() {
         return "navyunit";
     }
 }
 
 export class Weapon extends Unit {
-    constructor(ID: number, data: UnitData) {
-        super(ID, data);
+    constructor(ID: number) {
+        super(ID);
         this.setSelectable(false);
     }
 
@@ -963,8 +1053,12 @@ export class Weapon extends Unit {
 }
 
 export class Missile extends Weapon {
-    constructor(ID: number, data: UnitData) {
-        super(ID, data);
+    constructor(ID: number) {
+        super(ID);
+    }
+
+    getCategory() {
+        return "Missile";
     }
 
     getMarkerCategory() {
@@ -973,8 +1067,12 @@ export class Missile extends Weapon {
 }
 
 export class Bomb extends Weapon {
-    constructor(ID: number, data: UnitData) {
-        super(ID, data);
+    constructor(ID: number) {
+        super(ID);
+    }
+
+    getCategory() {
+        return "Bomb";
     }
 
     getMarkerCategory() {

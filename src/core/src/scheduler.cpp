@@ -288,7 +288,7 @@ void Scheduler::handleRequest(string key, json::value value)
 			unit->setIsAWACS(value[L"isAWACS"].as_bool());
 
 			/* TACAN Options */
-			Options::TACAN TACAN;
+			DataTypes::TACAN TACAN;
 			TACAN.isOn = value[L"TACAN"][L"isOn"].as_bool();
 			TACAN.channel = static_cast<unsigned char>(value[L"TACAN"][L"channel"].as_number().to_uint32());
 			TACAN.XY = to_string(value[L"TACAN"][L"XY"]).at(0);

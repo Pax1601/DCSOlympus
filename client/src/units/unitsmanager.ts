@@ -6,9 +6,8 @@ import { deg2rad, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng,
 import { CoalitionArea } from "../map/coalitionarea";
 import { Airbase } from "../missionhandler/airbase";
 import { groundUnitsDatabase } from "./groundunitsdatabase";
-import { IADSRoles, IDLE, MOVE_UNIT } from "../constants/constants";
+import { DataIndexes, IADSRoles, IDLE, MOVE_UNIT } from "../constants/constants";
 import { DataExtractor } from "./dataextractor";
-import { UnitData } from "../@types/unit";
 
 export class UnitsManager {
     #units: { [ID: number]: Unit };
@@ -33,8 +32,7 @@ export class UnitsManager {
     getSelectableAircraft() {
         const units = this.getUnits();
         return Object.keys(units).reduce((acc: { [key: number]: Unit }, unitId: any) => {
-            const baseData = units[unitId].getData();
-            if (baseData.category === "Aircraft" && baseData.alive === true) {
+            if (units[unitId].getCategory() === "Aircraft" && units[unitId].getData().alive === true) {
                 acc[unitId] = units[unitId];
             }
             return acc;
@@ -56,12 +54,12 @@ export class UnitsManager {
         return Object.values(this.#units).filter((unit: Unit) => { return unit.getData().alive && unit.getHotgroup() == hotgroup });
     }
 
-    addUnit(ID: number, data: UnitData) {
-        if (data.category){
+    addUnit(ID: number, category: string) {
+        if (category){
             /* The name of the unit category is exactly the same as the constructor name */
-            var constructor = Unit.getConstructor(data.category);
+            var constructor = Unit.getConstructor(category);
             if (constructor != undefined) {
-                this.#units[ID] = new constructor(ID, data);
+                this.#units[ID] = new constructor(ID);
             }
         }
     }
@@ -71,41 +69,23 @@ export class UnitsManager {
     }
 
     update(buffer: ArrayBuffer) {
-        var updatedUnits: Unit[] = [];
         var dataExtractor = new DataExtractor(buffer);
-        var data: {[key: string]: UnitData} = {};
-
         var updateTime = Number(dataExtractor.extractUInt64());
-        var offset = dataExtractor.getOffset();
-        while (offset < buffer.byteLength) {
-            const result = dataExtractor.extractData(offset);
-            data[result.data.ID] = result.data;
-            offset = result.offset;
+
+        while (dataExtractor.getSeekPosition() < buffer.byteLength) {
+            const ID = dataExtractor.extractUInt32();
+            if (!(ID in this.#units)) {
+                const datumIndex = dataExtractor.extractUInt8();
+                if (datumIndex == DataIndexes.category) {
+                    const category = dataExtractor.extractString();
+                    this.addUnit(ID, category);
+                }
+                else {
+                    // TODO request a refresh since we must have missed some packets
+                }
+            }
+            this.#units[ID]?.setData(dataExtractor);
         }
-
-        Object.keys(data)
-            .filter((ID: string) => !(ID in this.#units))
-            .reduce((timeout: number, ID: string) => {
-                window.setTimeout(() => {
-                    if (!(ID in this.#units))
-                        this.addUnit(parseInt(ID), data[ID]);
-                    this.#units[parseInt(ID)]?.setData(data[ID]);
-                }, timeout);
-                return timeout + 10;
-            }, 10);
-
-        Object.keys(data)
-            .filter((ID: string) => ID in this.#units)
-            .forEach((ID: string) => {
-                updatedUnits.push(this.#units[parseInt(ID)]);
-                this.#units[parseInt(ID)]?.setData(data[ID]);
-            });
-
-        // TODO why did we do this?
-        //this.getSelectedUnits().forEach((unit: Unit) => {
-        //    if (!updatedUnits.includes(unit))
-        //        unit.setData(null);
-        //});
 
         setLastUpdateTime(updateTime);
     }

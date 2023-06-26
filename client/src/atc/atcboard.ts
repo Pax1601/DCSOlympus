@@ -119,7 +119,7 @@ export abstract class ATCBoard {
 
         const unitCanBeAdded = () => {
 
-            if ( baseData.category !== "Aircraft" ) {
+            if ( unit.getCategory() !== "Aircraft" ) {
                 return false;
             }
 

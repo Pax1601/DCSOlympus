@@ -48,7 +48,7 @@ export class UnitDataTable extends Panel {
 
             for (const unit of unitsArray) {
 
-                const dataset = [unit.getData().unitName, unit.getData().name, unit.getData().category, (unit.getData().controlled) ? "AI" : "Human"];
+                const dataset = [unit.getData().unitName, unit.getData().name, unit.getCategory(), (unit.getData().controlled) ? "AI" : "Human"];
 
                 addRow(el, dataset);
             }

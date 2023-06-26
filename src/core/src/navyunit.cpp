@@ -17,8 +17,8 @@ NavyUnit::NavyUnit(json::value json, unsigned int ID) : Unit(json, ID)
 {
 	log("New Navy Unit created with ID: " + to_string(ID));
 
-	double desiredSpeed = 10;
-	setDesiredSpeed(desiredSpeed);
+	setCategory("NavyUnit");
+	setDesiredSpeed(10);
 };
 
 void NavyUnit::AIloop()

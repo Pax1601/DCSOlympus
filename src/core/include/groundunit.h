@@ -7,7 +7,6 @@ class GroundUnit : public Unit
 {
 public:
 	GroundUnit(json::value json, unsigned int ID);
-	virtual string getCategory() { return "GroundUnit"; };
 
 	virtual void setState(unsigned char newState);
 

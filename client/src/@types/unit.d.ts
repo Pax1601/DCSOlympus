@@ -46,42 +46,8 @@ interface Contact {
     detectionMethod: number
 }
 
-interface UnitData {
-    ID: number,
-    alive: boolean,
-    human: boolean,
-    controlled: boolean,
-    hasTask: boolean,
-    desiredAltitudeType: string,
-    desiredSpeedType: string,
-    isTanker: boolean,
-    isAWACS: boolean,
-    onOff: boolean,
-    followRoads: boolean,
-    EPLRS: boolean,
-    generalSettings: GeneralSettings
-    position: LatLng,
-    speed: number,
-    heading: number,
-    fuel: number,
-    desiredSpeed: number,
-    desiredAltitude: number,
-    targetID: number,
-    leaderID: number,
-    targetPosition: LatLng,
-    state: string,
-    ROE: string,
-    reactionToThreat: string,
-    emissionsCountermeasures: string,
-    TACAN: TACAN,
-    radio: Radio,
-    activePath: LatLng[],
-    ammo: Ammo[],
-    contacts: Contact[],
-    name: string,
-    unitName: string,
-    groupName: string,
-    category: string,
-    coalition: string,
-    task: string
+interface Offset {
+    x: number, 
+    y: number, 
+    z: number
 }

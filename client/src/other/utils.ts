@@ -5,6 +5,7 @@ import { aircraftDatabase } from "../units/aircraftdatabase";
 import { helicopterDatabase } from "../units/helicopterdatabase";
 import { groundUnitsDatabase } from "../units/groundunitsdatabase";
 import { Buffer } from "buffer";
+import { ROEs, emissionsCountermeasures, reactionsToThreat, states } from "../constants/constants";
 
 export function bearing(lat1: number, lon1: number, lat2: number, lon2: number) {
     const φ1 = deg2rad(lat1); // φ, λ in radians
@@ -252,4 +253,41 @@ export function getUnitDatabaseByCategory(category: string) {
 
 export function base64ToBytes(base64: string) {
     return Buffer.from(base64, 'base64').buffer;
+}
+
+export function enumToState(state: number) {
+    if (state < states.length) 
+        return states[state];
+    else 
+        return states[0];
+}
+
+export function enumToROE(ROE: number) {
+    if (ROE < ROEs.length) 
+        return ROEs[ROE];
+    else 
+        return ROEs[0];
+}
+
+export function enumToReactionToThreat(reactionToThreat: number) {
+    if (reactionToThreat < reactionsToThreat.length) 
+        return reactionsToThreat[reactionToThreat];
+    else 
+        return reactionsToThreat[0];
+}
+
+export function enumToEmissioNCountermeasure(emissionCountermeasure: number) {
+    if (emissionCountermeasure < emissionsCountermeasures.length) 
+        return emissionsCountermeasures[emissionCountermeasure];
+    else 
+        return emissionsCountermeasures[0];
+}
+
+export function enumToCoalition(coalitionID: number) {
+    switch (coalitionID){
+        case 0: return "neutral";
+        case 1: return "red";
+        case 2: return "blue";
+    }
+    return "";
 }
