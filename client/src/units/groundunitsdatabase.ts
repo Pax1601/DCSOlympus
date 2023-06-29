@@ -6,8 +6,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
         this.blueprints = {
             "SA-2 SAM Battery": {
                 "name": "SA-2 SAM Battery",
+                "era": ["Early Cold War"],
                 "label": "SA-2 SAM Battery",
                 "shortLabel": "SA-2 SAM Battery",
+                "range": "Long",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -24,8 +26,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "SA-3 SAM Battery": {
                 "name": "SA-3 SAM Battery",
+                "era": ["Early Cold War"],
                 "label": "SA-3 SAM Battery",
                 "shortLabel": "SA-3 SAM Battery",
+                "range": "Medium",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -41,8 +45,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "SA-6 SAM Battery": {
                 "name": "SA-6 SAM Battery",
+                "era": ["Mid Cold War"],
                 "label": "SA-6 SAM Battery",
                 "shortLabel": "SA-6 SAM Battery",
+                "range": "Medium",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -58,8 +64,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "SA-10 SAM Battery": {
                 "name": "SA-10 SAM Battery",
+                "era": ["Late Cold War"],
                 "label": "SA-10 SAM Battery",
                 "shortLabel": "SA-10 SAM Battery",
+                "range": "Long",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -75,8 +83,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "SA-11 SAM Battery": {
                 "name": "SA-11 SAM Battery",
+                "era": ["Late Cold War"],
                 "label": "SA-11 SAM Battery",
                 "shortLabel": "SA-11 SAM Battery",
+                "range": "Medium",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -92,8 +102,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Patriot site": {
                 "name": "Patriot site",
+                "era": ["Late Cold War"],
                 "label": "Patriot site",
                 "shortLabel": "Patriot site",
+                "range": "Long",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -109,8 +121,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Hawk SAM Battery": {
                 "name": "Hawk SAM Battery",
+                "era": ["Early Cold War"],
                 "label": "Hawk SAM Battery",
                 "shortLabel": "Hawk SAM Battery",
+                "range": "Medium",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -126,6 +140,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "2B11 mortar": {
                 "name": "2B11 mortar",
+                "era": ["Late Cold War"],
                 "label": "2B11 mortar",
                 "shortLabel": "2B11 mortar",
                 "loadouts": [
@@ -150,6 +165,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "SAU Gvozdika": {
                 "name": "SAU Gvozdika",
+                "era": ["Mid Cold War"],
                 "label": "SAU Gvozdika",
                 "shortLabel": "SAU Gvozdika",
                 "loadouts": [
@@ -174,6 +190,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "SAU Msta": {
                 "name": "SAU Msta",
+                "era": ["Late Cold War"],
                 "label": "SAU Msta",
                 "shortLabel": "SAU Msta",
                 "loadouts": [
@@ -197,6 +214,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "SAU Akatsia": {
                 "name": "SAU Akatsia",
+                "era": ["Mid Cold War"],
                 "label": "SAU Akatsia",
                 "shortLabel": "SAU Akatsia",
                 "loadouts": [
@@ -220,6 +238,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "SAU 2-C9": {
                 "name": "SAU 2-C9",
+                "era": ["Mid Cold War"],
                 "label": "SAU Nona",
                 "shortLabel": "SAU Nona",
                 "loadouts": [
@@ -243,6 +262,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "M-109": {
                 "name": "M-109",
+                "era": ["Early Cold War"],
                 "label": "M-109 Paladin",
                 "shortLabel": "M-109",
                 "loadouts": [
@@ -266,6 +286,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "AAV7": {
                 "name": "AAV7",
+                "era": ["Mid Cold War"],
                 "label": "AAV7",
                 "shortLabel": "AAV7",
                 "loadouts": [
@@ -289,6 +310,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "BMD-1": {
                 "name": "BMD-1",
+                "era": ["Mid Cold War"],
                 "label": "BMD-1",
                 "shortLabel": "BMD-1",
                 "loadouts": [
@@ -322,6 +344,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "BMP-1": {
                 "name": "BMP-1",
+                "era": ["Mid Cold War"],
                 "label": "BMP-1",
                 "shortLabel": "BMP-1",
                 "loadouts": [
@@ -355,6 +378,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "BMP-2": {
                 "name": "BMP-2",
+                "era": ["Mid Cold War"],
                 "label": "BMP-2",
                 "shortLabel": "BMP-2",
                 "loadouts": [
@@ -388,6 +412,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "BMP-3": {
                 "name": "BMP-3",
+                "era": ["Late Cold War"],
                 "label": "BMP-3",
                 "shortLabel": "BMP-3",
                 "loadouts": [
@@ -426,6 +451,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Boman": {
                 "name": "Boman",
+                "era": ["Late Cold War"],
                 "label": "Grad Fire Direction Manager",
                 "shortLabel": "Boman",
                 "loadouts": [
@@ -454,6 +480,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "BRDM-2": {
                 "name": "BRDM-2",
+                "era": ["Early Cold War"],
                 "label": "BRDM-2",
                 "shortLabel": "BRDM-2",
                 "loadouts": [
@@ -482,6 +509,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "BTR-80": {
                 "name": "BTR-80",
+                "era": ["Late Cold War"],
                 "label": "BTR-80",
                 "shortLabel": "BTR-80",
                 "loadouts": [
@@ -510,6 +538,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "BTR_D": {
                 "name": "BTR_D",
+                "era": ["Mid Cold War"],
                 "label": "BTR_D",
                 "shortLabel": "BTR_D",
                 "loadouts": [
@@ -557,6 +586,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Cobra": {
                 "name": "Cobra",
+                "era": ["Modern"],
                 "label": "Otokar Cobra",
                 "shortLabel": "Cobra",
                 "loadouts": [
@@ -580,6 +610,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "LAV-25": {
                 "name": "LAV-25",
+                "era": ["Late Cold War"],
                 "label": "LAV-25",
                 "shortLabel": "LAV-25",
                 "loadouts": [
@@ -608,6 +639,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "M1043 HMMWV Armament": {
                 "name": "M1043 HMMWV Armament",
+                "era": ["Late Cold War"],
                 "label": "HMMWV M2 Browning",
                 "shortLabel": "HMMWV M2",
                 "loadouts": [
@@ -631,6 +663,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "M1045 HMMWV TOW": {
                 "name": "M1045 HMMWV TOW",
+                "era": ["Late Cold War"],
                 "label": "HMMWV TOW",
                 "shortLabel": "HMMWV TOW",
                 "loadouts": [
@@ -654,6 +687,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "M1126 Stryker ICV": {
                 "name": "M1126 Stryker ICV",
+                "era": ["Modern"],
                 "label": "Stryker MG",
                 "shortLabel": "Stryker MG",
                 "loadouts": [
@@ -677,6 +711,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "M-113": {
                 "name": "M-113",
+                "era": ["Early Cold War"],
                 "label": "M-113",
                 "shortLabel": "M-113",
                 "loadouts": [
@@ -700,6 +735,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "M1134 Stryker ATGM": {
                 "name": "M1134 Stryker ATGM",
+                "era": ["Modern"],
                 "label": "Stryker ATGM",
                 "shortLabel": "Stryker ATGM",
                 "loadouts": [
@@ -728,6 +764,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "M-2 Bradley": {
                 "name": "M-2 Bradley",
+                "era": ["Late Cold War"],
                 "label": "M-2A2 Bradley",
                 "shortLabel": "M-2 Bradley",
                 "loadouts": [
@@ -761,6 +798,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Marder": {
                 "name": "Marder",
+                "era": ["Late Cold War"],
                 "label": "Marder",
                 "shortLabel": "Marder",
                 "loadouts": [
@@ -789,6 +827,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "MCV-80": {
                 "name": "MCV-80",
+                "era": ["Late Cold War"],
                 "label": "Warrior IFV",
                 "shortLabel": "Warrior",
                 "loadouts": [
@@ -817,6 +856,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "MTLB": {
                 "name": "MTLB",
+                "era": ["Mid Cold War"],
                 "label": "MT-LB",
                 "shortLabel": "MT-LB",
                 "loadouts": [
@@ -840,6 +880,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Paratrooper RPG-16": {
                 "name": "Paratrooper RPG-16",
+                "era": ["Modern"],
                 "label": "Paratrooper RPG-16",
                 "shortLabel": "Paratrooper RPG-16",
                 "loadouts": [
@@ -863,6 +904,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Paratrooper AKS-74": {
                 "name": "Paratrooper AKS-74",
+                "era": ["Modern"],
                 "label": "Paratrooper AKS-74",
                 "shortLabel": "Paratrooper AKS-74",
                 "loadouts": [
@@ -905,6 +947,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Soldier AK": {
                 "name": "Soldier AK",
+                "era": ["Early Cold War"],
                 "label": "Soldier AK",
                 "shortLabel": "Soldier AK",
                 "loadouts": [
@@ -928,6 +971,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Infantry AK": {
                 "name": "Infantry AK",
+                "era": ["Mid Cold War"],
                 "label": "Infantry AK",
                 "shortLabel": "Infantry AK",
                 "loadouts": [
@@ -951,6 +995,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Soldier M249": {
                 "name": "Soldier M249",
+                "era": ["Late Cold War"],
                 "label": "Soldier M249",
                 "shortLabel": "Soldier M249",
                 "loadouts": [
@@ -974,6 +1019,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Soldier M4": {
                 "name": "Soldier M4",
+                "era": ["Mid Cold War"],
                 "label": "Soldier M4",
                 "shortLabel": "Soldier M4",
                 "loadouts": [
@@ -997,6 +1043,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Soldier M4 GRG": {
                 "name": "Soldier M4 GRG",
+                "era": ["Mid Cold War"],
                 "label": "Soldier M4 GRG",
                 "shortLabel": "Soldier M4 GRG",
                 "loadouts": [
@@ -1020,6 +1067,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Soldier RPG": {
                 "name": "Soldier RPG",
+                "era": ["Mid Cold War"],
                 "label": "Soldier RPG",
                 "shortLabel": "Soldier RPG",
                 "loadouts": [
@@ -1043,6 +1091,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "TPZ": {
                 "name": "TPZ",
+                "era": ["Late Cold War"],
                 "label": "TPz Fuchs",
                 "shortLabel": "TPz Fuchs",
                 "loadouts": [
@@ -1066,6 +1115,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Grad-URAL": {
                 "name": "Grad-URAL",
+                "era": ["Mid Cold War"],
                 "label": "Grad",
                 "shortLabel": "Grad",
                 "loadouts": [
@@ -1089,6 +1139,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Uragan_BM-27": {
                 "name": "Uragan_BM-27",
+                "era": ["Late Cold War"],
                 "label": "Uragan",
                 "shortLabel": "Uragan",
                 "loadouts": [
@@ -1112,6 +1163,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Smerch": {
                 "name": "Smerch",
+                "era": ["Late Cold War"],
                 "label": "Smerch",
                 "shortLabel": "Smerch",
                 "loadouts": [
@@ -1135,6 +1187,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "MLRS": {
                 "name": "MLRS",
+                "era": ["Late Cold War"],
                 "label": "M270",
                 "shortLabel": "M270",
                 "loadouts": [
@@ -1158,8 +1211,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "2S6 Tunguska": {
                 "name": "2S6 Tunguska",
+                "era": ["Late Cold War"],
                 "label": "SA-19 Tunguska",
                 "shortLabel": "SA-19",
+                "range": "Short",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -1186,8 +1241,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Kub 2P25 ln": {
                 "name": "Kub 2P25 ln",
+                "era": ["Late Cold War"],
                 "label": "SA-6 Kub 2P25 ln",
                 "shortLabel": "Kub 2P25 ln",
+                "range": "Medium",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -1209,8 +1266,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "5p73 s-125 ln": {
                 "name": "5p73 s-125 ln",
+                "era": ["Early Cold War"],
                 "label": "SA-3 5p73 s-125 ln",
                 "shortLabel": "5p73 s-125 ln",
+                "range": "Medium",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -1232,8 +1291,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "S-300PS 5P85C ln": {
                 "name": "S-300PS 5P85C ln",
+                "era": ["Late Cold War"],
                 "label": "SA-10 S-300PS 5P85C ln",
                 "shortLabel": "S-300PS 5P85C ln",
+                "range": "Long",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -1255,8 +1316,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "S-300PS 5P85D ln": {
                 "name": "S-300PS 5P85D ln",
+                "era": ["Late Cold War"],
                 "label": "SA-10 S-300PS 5P85D ln",
                 "shortLabel": "S-300PS 5P85D ln",
+                "range": "Long",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -1278,8 +1341,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "SA-11 Buk LN 9A310M1": {
                 "name": "SA-11 Buk LN 9A310M1",
+                "era": ["Late Cold War"],
                 "label": "SA-11 Buk LN 9A310M1",
                 "shortLabel": "SA-11 Buk LN 9A310M1",
+                "range": "Medium",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -1301,8 +1366,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Osa 9A33 ln": {
                 "name": "Osa 9A33 ln",
+                "era": ["Mid Cold War"],
                 "label": "SA-8 Osa 9A33 ln",
                 "shortLabel": "Osa 9A33 ln",
+                "range": "Short",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -1324,8 +1391,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Tor 9A331": {
                 "name": "Tor 9A331",
+                "era": ["Late Cold War"],
                 "label": "SA-15 Tor 9A331",
                 "shortLabel": "Tor 9A331",
+                "range": "Medium",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -1347,8 +1416,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Strela-10M3": {
                 "name": "Strela-10M3",
+                "era": ["Late Cold War"],
                 "label": "SA-13 Strela-10M3",
                 "shortLabel": "Strela-10M3",
+                "range": "Short",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -1370,8 +1441,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Strela-1 9P31": {
                 "name": "Strela-1 9P31",
+                "era": ["Late Cold War"],
                 "label": "SA-9 Strela-1 9P31",
                 "shortLabel": "Strela-1 9P31",
+                "range": "Short",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -1393,8 +1466,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "SA-11 Buk CC 9S470M1": {
                 "name": "SA-11 Buk CC 9S470M1",
+                "era": ["Late Cold War"],
                 "label": "SA-11 Buk CC 9S470M1",
                 "shortLabel": "SA-11 Buk CC 9S470M1",
+                "range": "Medium",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -1416,8 +1491,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "SA-8 Osa LD 9T217": {
                 "name": "SA-8 Osa LD 9T217",
+                "era": ["Late Cold War"],
                 "label": "SA-8 Osa LD 9T217",
                 "shortLabel": "SA-8 Osa LD 9T217",
+                "range": "Short",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -1439,8 +1516,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Patriot AMG": {
                 "name": "Patriot AMG",
+                "era": ["Modern"],
                 "label": "Patriot AMG",
                 "shortLabel": "Patriot AMG",
+                "range": "Long",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -1462,8 +1541,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Patriot ECS": {
                 "name": "Patriot ECS",
+                "era": ["Modern"],
                 "label": "Patriot ECS",
                 "shortLabel": "Patriot ECS",
+                "range": "Long",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -1485,6 +1566,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Gepard": {
                 "name": "Gepard",
+                "era": ["Late Cold War", "Modern"],
                 "label": "Gepard",
                 "shortLabel": "Gepard",
                 "loadouts": [
@@ -1508,8 +1590,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Hawk pcp": {
                 "name": "Hawk pcp",
+                "era": ["Late Cold War"],
                 "label": "Hawk pcp",
                 "shortLabel": "Hawk pcp",
+                "range": "Medium",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -1531,8 +1615,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "SA-18 Igla manpad": {
                 "name": "SA-18 Igla manpad",
+                "era": ["Late Cold War"],
                 "label": "SA-18 Igla manpad",
                 "shortLabel": "SA-18 Igla manpad",
+                "range": "Short",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -1552,33 +1638,12 @@ export class GroundUnitsDatabase extends UnitDatabase {
                 ],
                 "filename": ""
             },
-            "SA-18 Igla comm": {
-                "name": "SA-18 Igla comm",
-                "label": "SA-18 Igla comm",
-                "shortLabel": "SA-18 Igla comm",
-                "loadouts": [
-                    {
-                        "fuel": 1,
-                        "items": [
-                            {
-                            "name": "Commander",
-                            "quantity": 1,
-                            "effectiveAgainst": "None"
-                            }
-                        ],
-                        "roles": [
-                            "SAM"
-                        ],
-                        "code": "",
-                        "name": "Default"
-                    }
-                ],
-                "filename": ""
-            },
             "Igla manpad INS": {
                 "name": "Igla manpad INS",
+                "era": ["Late Cold War"],
                 "label": "SA-18 Igla manpad INS",
                 "shortLabel": "Igla manpad INS",
+                "range": "Short",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -1600,8 +1665,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "SA-18 Igla-S manpad": {
                 "name": "SA-18 Igla-S manpad",
+                "era": ["Late Cold War"],
                 "label": "SA-18 Igla-S manpad",
                 "shortLabel": "SA-18 Igla-S manpad",
+                "range": "Short",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -1621,31 +1688,9 @@ export class GroundUnitsDatabase extends UnitDatabase {
                 ],
                 "filename": ""
             },
-            "SA-18 Igla-S comm": {
-                "name": "SA-18 Igla-S comm",
-                "label": "SA-18 Igla-S comm",
-                "shortLabel": "SA-18 Igla-S comm",
-                "loadouts": [
-                    {
-                        "fuel": 1,
-                        "items": [
-                            {
-                            "name": "Commander",
-                            "quantity": 1,
-                            "effectiveAgainst": "None"
-                            }
-                        ],
-                        "roles": [
-                            "SAM"
-                        ],
-                        "code": "",
-                        "name": "Default"
-                    }
-                ],
-                "filename": ""
-            },
             "Vulcan": {
                 "name": "Vulcan",
+                "era": ["Late Cold War"],
                 "label": "Vulcan",
                 "shortLabel": "Vulcan",
                 "loadouts": [
@@ -1669,6 +1714,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Hawk ln": {
                 "name": "Hawk ln",
+                "era": ["Late Cold War"],
                 "label": "Hawk ln",
                 "shortLabel": "Hawk ln",
                 "loadouts": [
@@ -1692,6 +1738,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "M48 Chaparral": {
                 "name": "M48 Chaparral",
+                "era": ["Late Cold War"],
                 "label": "M48 Chaparral",
                 "shortLabel": "M48 Chaparral",
                 "loadouts": [
@@ -1715,6 +1762,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "M6 Linebacker": {
                 "name": "M6 Linebacker",
+                "era": ["Late Cold War"],
                 "label": "M6 Linebacker",
                 "shortLabel": "M6 Linebacker",
                 "loadouts": [
@@ -1748,8 +1796,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Patriot ln": {
                 "name": "Patriot ln",
+                "era": ["Late Cold War"],
                 "label": "Patriot ln",
                 "shortLabel": "Patriot ln",
+                "range": "Long",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -1771,6 +1821,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "M1097 Avenger": {
                 "name": "M1097 Avenger",
+                "era": ["Modern"],
                 "label": "M1097 Avenger",
                 "shortLabel": "M1097 Avenger",
                 "loadouts": [
@@ -1799,8 +1850,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Patriot EPP": {
                 "name": "Patriot EPP",
+                "era": ["Late Cold War"],
                 "label": "Patriot EPP",
                 "shortLabel": "Patriot EPP",
+                "range": "Long",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -1822,8 +1875,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Patriot cp": {
                 "name": "Patriot cp",
+                "era": ["Late Cold War"],
                 "label": "Patriot cp",
                 "shortLabel": "Patriot cp",
+                "range": "Long",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -1845,6 +1900,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Roland ADS": {
                 "name": "Roland ADS",
+                "era": ["Late Cold War"],
                 "label": "Roland ADS",
                 "shortLabel": "Roland ADS",
                 "loadouts": [
@@ -1868,8 +1924,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "S-300PS 54K6 cp": {
                 "name": "S-300PS 54K6 cp",
+                "era": ["Late Cold War"],
                 "label": "SA-10 S-300PS 54K6 cp",
                 "shortLabel": "S-300PS 54K6 cp",
+                "range": "Long",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -1891,8 +1949,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Stinger manpad GRG": {
                 "name": "Stinger manpad GRG",
+                "era": ["Late Cold War"],
                 "label": "Stinger manpad GRG",
                 "shortLabel": "Stinger manpad GRG",
+                "range": "Short",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -1914,8 +1974,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Stinger manpad dsr": {
                 "name": "Stinger manpad dsr",
+                "era": ["Late Cold War"],
                 "label": "Stinger manpad dsr",
                 "shortLabel": "Stinger manpad dsr",
+                "range": "Short",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -1937,8 +1999,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Stinger comm dsr": {
                 "name": "Stinger comm dsr",
+                "era": ["Late Cold War"],
                 "label": "Stinger comm dsr",
                 "shortLabel": "Stinger comm dsr",
+                "range": "Short",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -1960,8 +2024,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Stinger manpad": {
                 "name": "Stinger manpad",
+                "era": ["Late Cold War"],
                 "label": "Stinger manpad",
                 "shortLabel": "Stinger manpad",
+                "range": "Short",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -1983,8 +2049,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Stinger comm": {
                 "name": "Stinger comm",
+                "era": ["Late Cold War"],
                 "label": "Stinger comm",
                 "shortLabel": "Stinger comm",
+                "range": "Short",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -2006,6 +2074,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "ZSU-23-4 Shilka": {
                 "name": "ZSU-23-4 Shilka",
+                "era": ["Late Cold War"],
                 "label": "ZSU-23-4 Shilka",
                 "shortLabel": "ZSU-23-4 Shilka",
                 "loadouts": [
@@ -2029,6 +2098,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "ZU-23 Emplacement Closed": {
                 "name": "ZU-23 Emplacement Closed",
+                "era": ["Late Cold War"],
                 "label": "ZU-23 Emplacement Closed",
                 "shortLabel": "ZU-23 Emplacement Closed",
                 "loadouts": [
@@ -2052,6 +2122,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "ZU-23 Emplacement": {
                 "name": "ZU-23 Emplacement",
+                "era": ["Late Cold War"],
                 "label": "ZU-23 Emplacement",
                 "shortLabel": "ZU-23 Emplacement",
                 "loadouts": [
@@ -2075,6 +2146,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "ZU-23 Closed Insurgent": {
                 "name": "ZU-23 Closed Insurgent",
+                "era": ["Late Cold War"],
                 "label": "ZU-23 Closed Insurgent",
                 "shortLabel": "ZU-23 Closed Insurgent",
                 "loadouts": [
@@ -2098,6 +2170,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Ural-375 ZU-23 Insurgent": {
                 "name": "Ural-375 ZU-23 Insurgent",
+                "era": ["Late Cold War"],
                 "label": "Ural-375 ZU-23 Insurgent",
                 "shortLabel": "Ural-375 ZU-23 Insurgent",
                 "loadouts": [
@@ -2121,6 +2194,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "ZU-23 Insurgent": {
                 "name": "ZU-23 Insurgent",
+                "era": ["Late Cold War"],
                 "label": "ZU-23 Insurgent",
                 "shortLabel": "ZU-23 Insurgent",
                 "loadouts": [
@@ -2144,6 +2218,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Ural-375 ZU-23": {
                 "name": "Ural-375 ZU-23",
+                "era": ["Late Cold War"],
                 "label": "Ural-375 ZU-23",
                 "shortLabel": "Ural-375 ZU-23",
                 "loadouts": [
@@ -2167,6 +2242,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "1L13 EWR": {
                 "name": "1L13 EWR",
+                "era": ["Late Cold War"],
                 "label": "1L13 EWR",
                 "shortLabel": "1L13 EWR",
                 "loadouts": [
@@ -2190,8 +2266,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Kub 1S91 str": {
                 "name": "Kub 1S91 str",
+                "era": ["Mid Cold War"],
                 "label": "SA-6 Kub 1S91 str",
                 "shortLabel": "Kub 1S91 str",
+                "range": "Medium",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -2213,8 +2291,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "S-300PS 40B6M tr": {
                 "name": "S-300PS 40B6M tr",
+                "era": ["Late Cold War"],
                 "label": "SA-10 S-300PS 40B6M tr",
                 "shortLabel": "S-300PS 40B6M tr",
+                "range": "Long",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -2236,8 +2316,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "S-300PS 40B6MD sr": {
                 "name": "S-300PS 40B6MD sr",
+                "era": ["Late Cold War"],
                 "label": "SA-10 S-300PS 40B6MD sr",
                 "shortLabel": "S-300PS 40B6MD sr",
+                "range": "Long",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -2259,6 +2341,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "55G6 EWR": {
                 "name": "55G6 EWR",
+                "era": ["Early Cold War"],
                 "label": "55G6 EWR",
                 "shortLabel": "55G6 EWR",
                 "loadouts": [
@@ -2282,8 +2365,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "S-300PS 64H6E sr": {
                 "name": "S-300PS 64H6E sr",
+                "era": ["Late Cold War"],
                 "label": "SA-10 S-300PS 64H6E sr",
                 "shortLabel": "S-300PS 64H6E sr",
+                "range": "Long",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -2305,8 +2390,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "SA-11 Buk SR 9S18M1": {
                 "name": "SA-11 Buk SR 9S18M1",
+                "era": ["Mid Cold War"],
                 "label": "SA-11 Buk SR 9S18M1",
                 "shortLabel": "SA-11 Buk SR 9S18M1",
+                "range": "Long",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -2328,6 +2415,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Dog Ear radar": {
                 "name": "Dog Ear radar",
+                "era": ["Mid Cold War"],
                 "label": "Dog Ear radar",
                 "shortLabel": "Dog Ear radar",
                 "loadouts": [
@@ -2351,8 +2439,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Hawk tr": {
                 "name": "Hawk tr",
+                "era": ["Early Cold War"],
                 "label": "Hawk tr",
                 "shortLabel": "Hawk tr",
+                "range": "Medium",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -2374,8 +2464,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Hawk sr": {
                 "name": "Hawk sr",
+                "era": ["Early Cold War"],
                 "label": "Hawk sr",
                 "shortLabel": "Hawk sr",
+                "range": "Long",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -2397,8 +2489,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Patriot str": {
                 "name": "Patriot str",
+                "era": ["Late Cold War"],
                 "label": "Patriot str",
                 "shortLabel": "Patriot str",
+                "range": "Medium",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -2420,8 +2514,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Hawk cwar": {
                 "name": "Hawk cwar",
+                "era": ["Early Cold War"],
                 "label": "Hawk cwar",
                 "shortLabel": "Hawk cwar",
+                "range": "Long",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -2443,6 +2539,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "p-19 s-125 sr": {
                 "name": "p-19 s-125 sr",
+                "era": ["Mid Cold War"],
                 "label": "SA-3 p-19 s-125 sr",
                 "shortLabel": "p-19 s-125 sr",
                 "loadouts": [
@@ -2466,6 +2563,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Roland Radar": {
                 "name": "Roland Radar",
+                "era": ["Mid Cold War"],
                 "label": "Roland Radar",
                 "shortLabel": "Roland Radar",
                 "loadouts": [
@@ -2489,8 +2587,10 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "snr s-125 tr": {
                 "name": "snr s-125 tr",
+                "era": ["Early Cold War"],
                 "label": "SA-3 snr s-125 tr",
                 "shortLabel": "snr s-125 tr",
+                "range": "Medium",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -2607,6 +2707,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Challenger2": {
                 "name": "Challenger2",
+                "era": ["Modern"],
                 "label": "Challenger2",
                 "shortLabel": "Challenger2",
                 "loadouts": [
@@ -2640,6 +2741,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Leclerc": {
                 "name": "Leclerc",
+                "era": ["Modern"],
                 "label": "Leclerc",
                 "shortLabel": "Leclerc",
                 "loadouts": [
@@ -2668,6 +2770,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Leopard1A3": {
                 "name": "Leopard1A3",
+                "era": ["Mid Cold War"],
                 "label": "Leopard1A3",
                 "shortLabel": "Leopard1A3",
                 "loadouts": [
@@ -2696,6 +2799,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Leopard-2": {
                 "name": "Leopard-2",
+                "era": ["Late Cold War"],
                 "label": "Leopard-2",
                 "shortLabel": "Leopard-2",
                 "loadouts": [
@@ -2724,6 +2828,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "M-60": {
                 "name": "M-60",
+                "era": ["Early Cold War"],
                 "label": "M-60",
                 "shortLabel": "M-60",
                 "loadouts": [
@@ -2757,6 +2862,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "M1128 Stryker MGS": {
                 "name": "M1128 Stryker MGS",
+                "era": ["Modern"],
                 "label": "M1128 Stryker MGS",
                 "shortLabel": "M1128 Stryker MGS",
                 "loadouts": [
@@ -2785,6 +2891,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "M-1 Abrams": {
                 "name": "M-1 Abrams",
+                "era": ["Late Cold War"],
                 "label": "M-1 Abrams",
                 "shortLabel": "M-1 Abrams",
                 "loadouts": [
@@ -2818,6 +2925,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "T-55": {
                 "name": "T-55",
+                "era": ["Early Cold War"],
                 "label": "T-55",
                 "shortLabel": "T-55",
                 "loadouts": [
@@ -2851,6 +2959,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "T-72B": {
                 "name": "T-72B",
+                "era": ["Mid Cold War"],
                 "label": "T-72B",
                 "shortLabel": "T-72B",
                 "loadouts": [
@@ -2884,6 +2993,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "T-80UD": {
                 "name": "T-80UD",
+                "era": ["Mid Cold War"],
                 "label": "T-80UD",
                 "shortLabel": "T-80UD",
                 "loadouts": [
@@ -2917,6 +3027,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "T-90": {
                 "name": "T-90",
+                "era": ["Late Cold War"],
                 "label": "T-90",
                 "shortLabel": "T-90",
                 "loadouts": [
@@ -2955,6 +3066,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Ural-4320 APA-5D": {
                 "name": "Ural-4320 APA-5D",
+                "era": ["Early Cold War"],
                 "label": "Ural-4320 APA-5D",
                 "shortLabel": "Ural-4320 APA-5D",
                 "loadouts": [
@@ -2974,6 +3086,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "ATMZ-5": {
                 "name": "ATMZ-5",
+                "era": ["Early Cold War"],
                 "label": "ATMZ-5",
                 "shortLabel": "ATMZ-5",
                 "loadouts": [
@@ -2993,6 +3106,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "ATZ-10": {
                 "name": "ATZ-10",
+                "era": ["Early Cold War"],
                 "label": "ATZ-10",
                 "shortLabel": "ATZ-10",
                 "loadouts": [
@@ -3012,6 +3126,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "GAZ-3307": {
                 "name": "GAZ-3307",
+                "era": ["Early Cold War"],
                 "label": "GAZ-3307",
                 "shortLabel": "GAZ-3307",
                 "loadouts": [
@@ -3031,6 +3146,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "GAZ-3308": {
                 "name": "GAZ-3308",
+                "era": ["Early Cold War"],
                 "label": "GAZ-3308",
                 "shortLabel": "GAZ-3308",
                 "loadouts": [
@@ -3050,6 +3166,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "GAZ-66": {
                 "name": "GAZ-66",
+                "era": ["Early Cold War"],
                 "label": "GAZ-66",
                 "shortLabel": "GAZ-66",
                 "loadouts": [
@@ -3069,6 +3186,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "M978 HEMTT Tanker": {
                 "name": "M978 HEMTT Tanker",
+                "era": ["Mid Cold War"],
                 "label": "M978 HEMTT Tanker",
                 "shortLabel": "M978 HEMTT Tanker",
                 "loadouts": [
@@ -3088,6 +3206,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "HEMTT TFFT": {
                 "name": "HEMTT TFFT",
+                "era": ["Late Cold War"],
                 "label": "HEMTT TFFT",
                 "shortLabel": "HEMTT TFFT",
                 "loadouts": [
@@ -3107,6 +3226,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "IKARUS Bus": {
                 "name": "IKARUS Bus",
+                "era": ["Mid Cold War"],
                 "label": "IKARUS Bus",
                 "shortLabel": "IKARUS Bus",
                 "loadouts": [
@@ -3126,6 +3246,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "KAMAZ Truck": {
                 "name": "KAMAZ Truck",
+                "era": ["Mid Cold War"],
                 "label": "KAMAZ Truck",
                 "shortLabel": "KAMAZ Truck",
                 "loadouts": [
@@ -3145,6 +3266,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "LAZ Bus": {
                 "name": "LAZ Bus",
+                "era": ["Early Cold War"],
                 "label": "LAZ Bus",
                 "shortLabel": "LAZ Bus",
                 "loadouts": [
@@ -3164,6 +3286,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Hummer": {
                 "name": "Hummer",
+                "era": ["Mid Cold War"],
                 "label": "Hummer",
                 "shortLabel": "Hummer",
                 "loadouts": [
@@ -3183,6 +3306,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "M 818": {
                 "name": "M 818",
+                "era": ["Early Cold War"],
                 "label": "M 818",
                 "shortLabel": "M 818",
                 "loadouts": [
@@ -3202,6 +3326,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "MAZ-6303": {
                 "name": "MAZ-6303",
+                "era": ["Mid Cold War"],
                 "label": "MAZ-6303",
                 "shortLabel": "MAZ-6303",
                 "loadouts": [
@@ -3221,6 +3346,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Predator GCS": {
                 "name": "Predator GCS",
+                "era": ["Late Cold War"],
                 "label": "Predator GCS",
                 "shortLabel": "Predator GCS",
                 "loadouts": [
@@ -3240,6 +3366,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Predator TrojanSpirit": {
                 "name": "Predator TrojanSpirit",
+                "era": ["Late Cold War"],
                 "label": "Predator TrojanSpirit",
                 "shortLabel": "Predator TrojanSpirit",
                 "loadouts": [
@@ -3259,6 +3386,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Suidae": {
                 "name": "Suidae",
+                "era": ["Late Cold War"],
                 "label": "Suidae",
                 "shortLabel": "Suidae",
                 "loadouts": [
@@ -3278,6 +3406,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Tigr_233036": {
                 "name": "Tigr_233036",
+                "era": ["Late Cold War"],
                 "label": "Tigr_233036",
                 "shortLabel": "Tigr_233036",
                 "loadouts": [
@@ -3297,6 +3426,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Trolley bus": {
                 "name": "Trolley bus",
+                "era": ["Late Cold War"],
                 "label": "Trolley bus",
                 "shortLabel": "Trolley bus",
                 "loadouts": [
@@ -3316,6 +3446,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "UAZ-469": {
                 "name": "UAZ-469",
+                "era": ["Mid Cold War"],
                 "label": "UAZ-469",
                 "shortLabel": "UAZ-469",
                 "loadouts": [
@@ -3335,6 +3466,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Ural ATsP-6": {
                 "name": "Ural ATsP-6",
+                "era": ["Mid Cold War"],
                 "label": "Ural ATsP-6",
                 "shortLabel": "Ural ATsP-6",
                 "loadouts": [
@@ -3354,6 +3486,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Ural-375 PBU": {
                 "name": "Ural-375 PBU",
+                "era": ["Mid Cold War"],
                 "label": "Ural-375 PBU",
                 "shortLabel": "Ural-375 PBU",
                 "loadouts": [
@@ -3373,6 +3506,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Ural-375": {
                 "name": "Ural-375",
+                "era": ["Mid Cold War"],
                 "label": "Ural-375",
                 "shortLabel": "Ural-375",
                 "loadouts": [
@@ -3392,6 +3526,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Ural-4320-31": {
                 "name": "Ural-4320-31",
+                "era": ["Late Cold War"],
                 "label": "Ural-4320-31",
                 "shortLabel": "Ural-4320-31",
                 "loadouts": [
@@ -3411,6 +3546,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "Ural-4320T": {
                 "name": "Ural-4320T",
+                "era": ["Late Cold War"],
                 "label": "Ural-4320T",
                 "shortLabel": "Ural-4320T",
                 "loadouts": [
@@ -3430,6 +3566,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "VAZ Car": {
                 "name": "VAZ Car",
+                "era": ["Early Cold War"],
                 "label": "VAZ Car",
                 "shortLabel": "VAZ Car",
                 "loadouts": [
@@ -3449,6 +3586,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "ZiL-131 APA-80": {
                 "name": "ZiL-131 APA-80",
+                "era": ["Early Cold War"],
                 "label": "ZiL-131 APA-80",
                 "shortLabel": "ZiL-131 APA-80",
                 "loadouts": [
@@ -3468,6 +3606,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "SKP-11": {
                 "name": "SKP-11",
+                "era": ["Early Cold War"],
                 "label": "SKP-11",
                 "shortLabel": "SKP-11",
                 "loadouts": [
@@ -3487,6 +3626,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "ZIL-131 KUNG": {
                 "name": "ZIL-131 KUNG",
+                "era": ["Early Cold War"],
                 "label": "ZIL-131 KUNG",
                 "shortLabel": "ZIL-131 KUNG",
                 "loadouts": [
@@ -3506,6 +3646,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
             },
             "ZIL-4331": {
                 "name": "ZIL-4331",
+                "era": ["Early Cold War"],
                 "label": "ZIL-4331",
                 "shortLabel": "ZIL-4331",
                 "loadouts": [
