@@ -15,23 +15,6 @@ using namespace GeographicLib;
 extern Scheduler* scheduler;
 extern UnitsManager* unitsManager;
 
-// TODO: Make dedicated file
-bool operator==(const DataTypes::TACAN& lhs, const DataTypes::TACAN& rhs)
-{
-	return lhs.isOn == rhs.isOn && lhs.channel == rhs.channel && lhs.XY == rhs.XY && lhs.callsign == rhs.callsign;
-}
-
-bool operator==(const DataTypes::Radio& lhs, const DataTypes::Radio& rhs)
-{
-	return lhs.frequency == rhs.frequency && lhs.callsign == rhs.callsign && lhs.callsignNumber == rhs.callsignNumber;
-}
-
-bool operator==(const DataTypes::GeneralSettings& lhs, const DataTypes::GeneralSettings& rhs)
-{
-	return	lhs.prohibitAA == rhs.prohibitAA && lhs.prohibitAfterburner == rhs.prohibitAfterburner && lhs.prohibitAG == rhs.prohibitAG &&
-		lhs.prohibitAirWpn == rhs.prohibitAirWpn && lhs.prohibitJettison == rhs.prohibitJettison;
-}
-
 Unit::Unit(json::value json, unsigned int ID) :
 	ID(ID)
 {
@@ -138,42 +121,51 @@ void Unit::updateExportData(json::value json, double dt)
 
 void Unit::updateMissionData(json::value json)
 {
-	//if (json.has_number_field(L"fuel"))
-	//	setFuel(short(json[L"fuel"].as_number().to_double() * 100));
-	//
-	//if (json.has_object_field(L"ammo")) {
-	//	vector<DataTypes::Ammo> ammo;
-	//	for (auto const& el : json[L"ammo"].as_object()) {
-	//		DataTypes::Ammo ammoItem;
-	//		auto ammoJson = el.second;
-	//		ammoItem.quantity = ammoJson[L"count"].as_number().to_uint32();
-	//		ammoItem.name = to_string(ammoJson[L"desc"][L"displayName"]);
-	//		ammoItem.guidance = ammoJson[L"desc"][L"guidance"].as_number().to_uint32();
-	//		ammoItem.category = ammoJson[L"desc"][L"category"].as_number().to_uint32();
-	//		ammoItem.missileCategory = ammoJson[L"desc"][L"missileCategory"].as_number().to_uint32();
-	//		ammo.push_back(ammoItem);
-	//	}
-	//	setAmmo(ammo);
-	//}
-	//	
-	//if (json.has_object_field(L"contacts")) {
-	//	vector<DataTypes::Contact> contacts;
-	//	for (auto const& el : json[L"ammo"].as_object()) {
-	//		DataTypes::Contact contactItem;
-	//		auto contactJson = el.second;
-	//		contactItem.ID = contactJson[L"object"][L"id_"].as_number().to_uint32();
-	//
-	//		string detectionMethod = to_string(contactJson[L"detectionMethod"]);
-	//		if		(detectionMethod.compare("VISUAL"))	contactItem.detectionMethod = 1;
-	//		else if (detectionMethod.compare("OPTIC"))	contactItem.detectionMethod = 2;
-	//		else if (detectionMethod.compare("RADAR"))	contactItem.detectionMethod = 4;
-	//		else if (detectionMethod.compare("IRST"))	contactItem.detectionMethod = 8;
-	//		else if (detectionMethod.compare("RWR"))	contactItem.detectionMethod = 16;
-	//		else if (detectionMethod.compare("DLINK"))	contactItem.detectionMethod = 32;
-	//		contacts.push_back(contactItem);
-	//	}
-	//	setContacts(contacts);
-	//}
+	if (json.has_number_field(L"fuel")) {
+		setFuel(short(json[L"fuel"].as_number().to_double() * 100));
+	}
+	
+	if (json.has_object_field(L"ammo")) {	
+		vector<DataTypes::Ammo> ammo;
+		for (auto const& el : json[L"ammo"].as_object()) {
+			log(el.second.serialize());
+			DataTypes::Ammo ammoItem;
+			auto ammoJson = el.second;
+			ammoItem.quantity = ammoJson[L"count"].as_number().to_uint32();
+			string name = to_string(ammoJson[L"desc"][L"displayName"].as_string()).substr(0, sizeof(ammoItem.name) - 1);
+			strcpy_s(ammoItem.name, sizeof(ammoItem.name), name.c_str());
+
+			if (ammoJson[L"desc"].has_number_field(L"guidance"))
+				ammoItem.guidance = ammoJson[L"desc"][L"guidance"].as_number().to_uint32();
+
+			if (ammoJson[L"desc"].has_number_field(L"category"))
+				ammoItem.category = ammoJson[L"desc"][L"category"].as_number().to_uint32();
+
+			if (ammoJson[L"desc"].has_number_field(L"missileCategory"))
+				ammoItem.missileCategory = ammoJson[L"desc"][L"missileCategory"].as_number().to_uint32();
+			ammo.push_back(ammoItem);
+		}
+		setAmmo(ammo);
+	}
+		
+	if (json.has_object_field(L"contacts")) {
+		vector<DataTypes::Contact> contacts;
+		for (auto const& el : json[L"contacts"].as_object()) {
+			DataTypes::Contact contactItem;
+			auto contactJson = el.second;
+			contactItem.ID = contactJson[L"object"][L"id_"].as_number().to_uint32();
+	
+			string detectionMethod = to_string(contactJson[L"detectionMethod"]);
+			if		(detectionMethod.compare("VISUAL"))	contactItem.detectionMethod = 1;
+			else if (detectionMethod.compare("OPTIC"))	contactItem.detectionMethod = 2;
+			else if (detectionMethod.compare("RADAR"))	contactItem.detectionMethod = 4;
+			else if (detectionMethod.compare("IRST"))	contactItem.detectionMethod = 8;
+			else if (detectionMethod.compare("RWR"))	contactItem.detectionMethod = 16;
+			else if (detectionMethod.compare("DLINK"))	contactItem.detectionMethod = 32;
+			contacts.push_back(contactItem);
+		}
+		setContacts(contacts);
+	}
 
 	if (json.has_boolean_field(L"hasTask"))
 		setHasTask(json[L"hasTask"].as_bool());
@@ -191,11 +183,9 @@ void Unit::getData(stringstream& ss, unsigned long long time, bool refresh)
 	//	p->heading = heading;
 	//}
 
-	const unsigned char startOfData = DataIndex::startOfData;
 	const unsigned char endOfData = DataIndex::endOfData;
 
 	ss.write((const char*)&ID, sizeof(ID));
-	ss.write((const char*)&startOfData, sizeof(startOfData));
 	for (auto d : updateTimeMap) {
 		if (d.second > time) {
 			switch (d.first) {

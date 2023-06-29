@@ -22,7 +22,7 @@ export class Unit extends CustomMarker {
     #alive: boolean = false;
     #human: boolean = false;
     #controlled: boolean = false;
-    #coalition: string = "";
+    #coalition: string = "neutral";
     #country: number = 0;
     #name: string = "";
     #unitName: string = "";
@@ -30,7 +30,7 @@ export class Unit extends CustomMarker {
     #state: string = states[0];
     #task: string = ""
     #hasTask: boolean = false;
-    #position: LatLng = new LatLng(0, 0);
+    #position: LatLng = new LatLng(0, 0, 0);
     #speed: number = 0;
     #heading: number = 0;
     #isTanker: boolean = false;
@@ -50,13 +50,13 @@ export class Unit extends CustomMarker {
     };
     #targetID: number = 0;
     #targetPosition: LatLng = new LatLng(0, 0);
-    #ROE: string = ROEs[0];
-    #reactionToThreat: string = reactionsToThreat[0];
-    #emissionsCountermeasures: string = emissionsCountermeasures[0];
+    #ROE: string = ROEs[1];
+    #reactionToThreat: string = reactionsToThreat[2];
+    #emissionsCountermeasures: string = emissionsCountermeasures[2];
     #TACAN: TACAN = {
         isOn: false,
         XY: 'X',
-        callsign: '',
+        callsign: 'TKR',
         channel: 0
     };
     #radio: Radio = {
@@ -135,50 +135,50 @@ export class Unit extends CustomMarker {
     setData(dataExtractor: DataExtractor) {
         var updateMarker = !getMap().hasLayer(this);
 
-        var datumIndex = dataExtractor.extractUInt8();
-        if (datumIndex == DataIndexes.startOfData) {
-            while (datumIndex != DataIndexes.endOfData) {
-                datumIndex = dataExtractor.extractUInt8();
-                switch (datumIndex) {
-                    case DataIndexes.alive: this.setAlive(dataExtractor.extractBool()); updateMarker = true; break;
-                    case DataIndexes.human: this.#human = dataExtractor.extractBool(); break;
-                    case DataIndexes.controlled: this.#controlled = dataExtractor.extractBool(); updateMarker = true; break;
-                    case DataIndexes.coalition: this.#coalition = enumToCoalition(dataExtractor.extractUInt8()); break;
-                    case DataIndexes.country: this.#country = dataExtractor.extractUInt8(); break;
-                    case DataIndexes.name: this.#name = dataExtractor.extractString(); break;
-                    case DataIndexes.unitName: this.#unitName = dataExtractor.extractString(); break;
-                    case DataIndexes.groupName: this.#groupName = dataExtractor.extractString(); break;
-                    case DataIndexes.state: this.#state = enumToState(dataExtractor.extractUInt8()); updateMarker = true; break;
-                    case DataIndexes.task: this.#task = dataExtractor.extractString(); break;
-                    case DataIndexes.hasTask: this.#hasTask = dataExtractor.extractBool(); break;
-                    case DataIndexes.position: this.#position = dataExtractor.extractLatLng(); updateMarker = true; break;
-                    case DataIndexes.speed: this.#speed = dataExtractor.extractFloat64(); updateMarker = true; break;
-                    case DataIndexes.heading: this.#heading = dataExtractor.extractFloat64(); updateMarker = true; break;
-                    case DataIndexes.isTanker: this.#isTanker = dataExtractor.extractBool(); break;
-                    case DataIndexes.isAWACS: this.#isAWACS = dataExtractor.extractBool(); break;
-                    case DataIndexes.onOff: this.#onOff = dataExtractor.extractBool(); break;
-                    case DataIndexes.followRoads: this.#followRoads = dataExtractor.extractBool(); break;
-                    case DataIndexes.fuel: this.#fuel = dataExtractor.extractUInt16(); break;
-                    case DataIndexes.desiredSpeed: this.#desiredSpeed = dataExtractor.extractFloat64(); break;
-                    case DataIndexes.desiredSpeedType: this.#desiredSpeedType = dataExtractor.extractBool() ? "GS" : "CAS"; break;
-                    case DataIndexes.desiredAltitude: this.#desiredAltitude = dataExtractor.extractFloat64(); break;
-                    case DataIndexes.desiredAltitudeType: this.#desiredAltitudeType = dataExtractor.extractFloat64() ? "AGL" : "ASL"; break;
-                    case DataIndexes.leaderID: this.#leaderID = dataExtractor.extractUInt32(); break;
-                    case DataIndexes.formationOffset: dataExtractor.extractOffset(); break;
-                    case DataIndexes.targetID: this.#targetID = dataExtractor.extractUInt32(); break;
-                    case DataIndexes.targetPosition: this.#targetPosition = dataExtractor.extractLatLng(); break;
-                    case DataIndexes.ROE: this.#ROE = enumToROE(dataExtractor.extractUInt8()); break;
-                    case DataIndexes.reactionToThreat: this.#reactionToThreat = enumToReactionToThreat(dataExtractor.extractUInt8()); break;
-                    case DataIndexes.emissionsCountermeasures: this.#emissionsCountermeasures = enumToEmissioNCountermeasure(dataExtractor.extractUInt8()); break;
-                    case DataIndexes.TACAN: this.#TACAN = dataExtractor.extractTACAN(); break;
-                    case DataIndexes.radio: this.#radio = dataExtractor.extractRadio(); break;
-                    case DataIndexes.generalSettings: this.#generalSettings = dataExtractor.extractGeneralSettings(); break;
-                    case DataIndexes.ammo: this.#ammo = dataExtractor.extractAmmo(); break;
-                    case DataIndexes.contacts: this.#contacts = dataExtractor.extractContacts(); break;
-                    case DataIndexes.activePath: this.#activePath = dataExtractor.extractActivePath(); break;
-                }
+        var datumIndex = 0;
+        while (datumIndex != DataIndexes.endOfData) {
+            datumIndex = dataExtractor.extractUInt8();
+            switch (datumIndex) {
+                case DataIndexes.category: dataExtractor.extractString(); break;
+                case DataIndexes.alive: this.setAlive(dataExtractor.extractBool()); updateMarker = true; break;
+                case DataIndexes.human: this.#human = dataExtractor.extractBool(); break;
+                case DataIndexes.controlled: this.#controlled = dataExtractor.extractBool(); updateMarker = true; break;
+                case DataIndexes.coalition: this.#coalition = enumToCoalition(dataExtractor.extractUInt8()); break;
+                case DataIndexes.country: this.#country = dataExtractor.extractUInt8(); break;
+                case DataIndexes.name: this.#name = dataExtractor.extractString(); break;
+                case DataIndexes.unitName: this.#unitName = dataExtractor.extractString(); break;
+                case DataIndexes.groupName: this.#groupName = dataExtractor.extractString(); break;
+                case DataIndexes.state: this.#state = enumToState(dataExtractor.extractUInt8()); updateMarker = true; break;
+                case DataIndexes.task: this.#task = dataExtractor.extractString(); break;
+                case DataIndexes.hasTask: this.#hasTask = dataExtractor.extractBool(); break;
+                case DataIndexes.position: this.#position = dataExtractor.extractLatLng(); updateMarker = true; break;
+                case DataIndexes.speed: this.#speed = dataExtractor.extractFloat64(); updateMarker = true; break;
+                case DataIndexes.heading: this.#heading = dataExtractor.extractFloat64(); updateMarker = true; break;
+                case DataIndexes.isTanker: this.#isTanker = dataExtractor.extractBool(); break;
+                case DataIndexes.isAWACS: this.#isAWACS = dataExtractor.extractBool(); break;
+                case DataIndexes.onOff: this.#onOff = dataExtractor.extractBool(); break;
+                case DataIndexes.followRoads: this.#followRoads = dataExtractor.extractBool(); break;
+                case DataIndexes.fuel: this.#fuel = dataExtractor.extractUInt16(); break;
+                case DataIndexes.desiredSpeed: this.#desiredSpeed = dataExtractor.extractFloat64(); break;
+                case DataIndexes.desiredSpeedType: this.#desiredSpeedType = dataExtractor.extractBool() ? "GS" : "CAS"; break;
+                case DataIndexes.desiredAltitude: this.#desiredAltitude = dataExtractor.extractFloat64(); break;
+                case DataIndexes.desiredAltitudeType: this.#desiredAltitudeType = dataExtractor.extractFloat64() ? "AGL" : "ASL"; break;
+                case DataIndexes.leaderID: this.#leaderID = dataExtractor.extractUInt32(); break;
+                case DataIndexes.formationOffset: this.#formationOffset = dataExtractor.extractOffset(); break;
+                case DataIndexes.targetID: this.#targetID = dataExtractor.extractUInt32(); break;
+                case DataIndexes.targetPosition: this.#targetPosition = dataExtractor.extractLatLng(); break;
+                case DataIndexes.ROE: this.#ROE = enumToROE(dataExtractor.extractUInt8()); break;
+                case DataIndexes.reactionToThreat: this.#reactionToThreat = enumToReactionToThreat(dataExtractor.extractUInt8()); break;
+                case DataIndexes.emissionsCountermeasures: this.#emissionsCountermeasures = enumToEmissioNCountermeasure(dataExtractor.extractUInt8()); break;
+                case DataIndexes.TACAN: this.#TACAN = dataExtractor.extractTACAN(); break;
+                case DataIndexes.radio: this.#radio = dataExtractor.extractRadio(); break;
+                case DataIndexes.generalSettings: this.#generalSettings = dataExtractor.extractGeneralSettings(); break;
+                case DataIndexes.ammo: this.#ammo = dataExtractor.extractAmmo(); break;
+                case DataIndexes.contacts: this.#contacts = dataExtractor.extractContacts(); break;
+                case DataIndexes.activePath: this.#activePath = dataExtractor.extractActivePath(); break;
             }
         }
+        
 
         /* Dead units can't be selected */
         this.setSelected(this.getSelected() && this.#alive && !this.getHidden())

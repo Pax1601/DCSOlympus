@@ -6,6 +6,7 @@
 #include "measure.h"
 #include "logger.h"
 #include "commands.h"
+#include "datatypes.h"
 
 #include <chrono>
 using namespace std::chrono;
@@ -76,47 +77,6 @@ namespace State
 	};
 };
 
-#pragma pack(push, 1)
-namespace DataTypes {
-	struct TACAN
-	{
-		bool isOn = false;
-		unsigned char channel = 40;
-		char XY = 'X';
-		char callsign[4];
-	};
-
-	struct Radio
-	{
-		unsigned int frequency = 124000000;	// MHz
-		unsigned char callsign = 1;
-		unsigned char callsignNumber = 1;
-	};
-
-	struct GeneralSettings
-	{
-		bool prohibitJettison = false;
-		bool prohibitAA = false;
-		bool prohibitAG = false;
-		bool prohibitAfterburner = false;
-		bool prohibitAirWpn = false;
-	};
-
-	struct Ammo {
-		unsigned short quantity = 0;
-		char name[32];
-		unsigned char guidance = 0;
-		unsigned char category = 0;
-		unsigned char missileCategory = 0;
-	};
-
-	struct Contact {
-		unsigned int ID = 0;
-		unsigned char detectionMethod = 0;
-	};
-}
-#pragma pack(pop)
-
 class Unit
 {
 public:
@@ -168,7 +128,7 @@ public:
 	virtual void setHuman(bool newValue) { updateValue(human, newValue, DataIndex::human); }
 	virtual void setControlled(bool newValue) { updateValue(controlled, newValue, DataIndex::controlled); }
 	virtual void setCoalition(unsigned char newValue) { updateValue(coalition, newValue, DataIndex::coalition); }
-	virtual void setCountry(unsigned int newValue) { updateValue(country, newValue, DataIndex::country); }
+	virtual void setCountry(unsigned char newValue) { updateValue(country, newValue, DataIndex::country); }
 	virtual void setName(string newValue) { updateValue(name, newValue, DataIndex::name); }
 	virtual void setUnitName(string newValue) { updateValue(unitName, newValue, DataIndex::unitName); }
 	virtual void setGroupName(string newValue) { updateValue(groupName, newValue, DataIndex::groupName); }
@@ -197,8 +157,8 @@ public:
 	virtual void setTACAN(DataTypes::TACAN newValue, bool force = false);
 	virtual void setRadio(DataTypes::Radio newValue, bool force = false);
 	virtual void setGeneralSettings(DataTypes::GeneralSettings newValue, bool force = false);
-	virtual void setAmmo(vector<DataTypes::Ammo> newAmmo) { ammo = newAmmo; }
-	virtual void setContacts(vector<DataTypes::Contact> newContacts) { contacts = newContacts; }
+	virtual void setAmmo(vector<DataTypes::Ammo> newValue) { updateValue(ammo, newValue, DataIndex::ammo); }
+	virtual void setContacts(vector<DataTypes::Contact> newValue) { updateValue(contacts, newValue, DataIndex::contacts); }
 	virtual void setActivePath(list<Coords> newValue);
 
 	/********** Getters **********/
@@ -207,7 +167,7 @@ public:
 	virtual bool getHuman() { return human; }
 	virtual bool getControlled() { return controlled; }
 	virtual unsigned int getCoalition() { return coalition; }
-	virtual unsigned int getCountry() { return country; }
+	virtual unsigned char getCountry() { return country; }
 	virtual string getName() { return name; }
 	virtual string getUnitName() { return unitName; }
 	virtual string getGroupName() { return groupName; }
@@ -244,14 +204,14 @@ protected:
 	unsigned int ID;
 
 	string category;
-	bool alive = true;
+	bool alive = false;
 	bool human = false;
 	bool controlled = false;
-	unsigned char coalition;
-	unsigned int country = NULL;
-	string name = "undefined";
-	string unitName = "undefined";
-	string groupName = "undefined";
+	unsigned char coalition = NULL;
+	unsigned char country = NULL;
+	string name = "";
+	string unitName = "";
+	string groupName = "";
 	unsigned char state = State::NONE;
 	string task = "";
 	bool hasTask = false;
@@ -260,7 +220,7 @@ protected:
 	double heading = NULL;
 	bool isTanker = false;
 	bool isAWACS = false;
-	bool onOff = true;
+	bool onOff = false;
 	bool followRoads = false;
 	unsigned short fuel = 0;
 	double desiredSpeed = 0;
@@ -329,7 +289,7 @@ protected:
 		ss.write((const char*)&datumIndex, sizeof(unsigned char));
 		ss.write((const char*)&size, sizeof(unsigned short));
 
-		for (auto el: datumValue)
+		for (auto& el: datumValue)
 			ss.write((const char*)&el, sizeof(T));
 	}
 };

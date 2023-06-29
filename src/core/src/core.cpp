@@ -105,18 +105,27 @@ extern "C" DllExport int coreMissionData(lua_State * L)
     /* Lock for thread safety */
     lock_guard<mutex> guard(mutexLock);
 
-    lua_getglobal(L, "Olympus");
-    lua_getfield(L, -1, "missionData");
-    json::value missionData = luaTableToJSON(L, -1);
+    try
+    {
+        lua_getglobal(L, "Olympus");
+        lua_getfield(L, -1, "missionData");
+        json::value missionData = luaTableToJSON(L, -1);
 
-    if (missionData.has_object_field(L"unitsData"))
-        unitsManager->updateMissionData(missionData[L"unitsData"]);
-    if (missionData.has_object_field(L"airbases"))
-        airbases = missionData[L"airbases"];
-    if (missionData.has_object_field(L"bullseyes"))
-        bullseyes = missionData[L"bullseyes"];
-    if (missionData.has_object_field(L"mission"))
-        mission = missionData[L"mission"];
+        if (missionData.has_object_field(L"unitsData"))
+            unitsManager->updateMissionData(missionData[L"unitsData"]);
+        if (missionData.has_object_field(L"airbases"))
+            airbases = missionData[L"airbases"];
+        if (missionData.has_object_field(L"bullseyes"))
+            bullseyes = missionData[L"bullseyes"];
+        if (missionData.has_object_field(L"mission"))
+            mission = missionData[L"mission"];
+    }
+    catch (exception const& e)
+    {
+        log(e.what());
+    }
+
+    
 
     return(0);
 }
