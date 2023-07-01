@@ -174,62 +174,92 @@ void Unit::updateMissionData(json::value json)
 
 void Unit::getData(stringstream& ss, unsigned long long time, bool refresh)
 {
-	/* Prepare the data packet and copy it to  memory */
-	/* If the unit is in a group, get the update data from the group leader and only replace the position: speed and heading */
-	//if (unitsManager->isUnitInGroup(this) && !unitsManager->isUnitGroupLeader(this)) {
-	//	DataTypes::DataPacket* p = (DataTypes::DataPacket*)data;
-	//	p->position = position;
-	//	p->speed = speed;
-	//	p->heading = heading;
-	//}
+	Unit* sourceUnit = this;
+	if (unitsManager->isUnitInGroup(this) && !unitsManager->isUnitGroupLeader(this))
+		sourceUnit = unitsManager->getGroupLeader(this);
 
 	const unsigned char endOfData = DataIndex::endOfData;
-
 	ss.write((const char*)&ID, sizeof(ID));
 	for (auto d : updateTimeMap) {
 		if (d.second > time) {
 			switch (d.first) {
 			case DataIndex::category: appendString(ss, d.first, category); break;
 			case DataIndex::alive: appendNumeric(ss, d.first, alive); break;
-			case DataIndex::human: appendNumeric(ss, d.first, human); break;
-			case DataIndex::controlled: appendNumeric(ss, d.first, controlled); break;
-			case DataIndex::coalition: appendNumeric(ss, d.first, coalition); break;
-			case DataIndex::country: appendNumeric(ss, d.first, country); break;
+			case DataIndex::human: appendNumeric(ss, d.first, sourceUnit->human); break;
+			case DataIndex::controlled: appendNumeric(ss, d.first, sourceUnit->controlled); break;
+			case DataIndex::coalition: appendNumeric(ss, d.first, sourceUnit->coalition); break;
+			case DataIndex::country: appendNumeric(ss, d.first, sourceUnit->country); break;
 			case DataIndex::name: appendString(ss, d.first, name); break;
 			case DataIndex::unitName: appendString(ss, d.first, unitName); break;
-			case DataIndex::groupName: appendString(ss, d.first, groupName); break;
-			case DataIndex::state: appendNumeric(ss, d.first, state); break;
-			case DataIndex::task: appendString(ss, d.first, task); break;
-			case DataIndex::hasTask: appendNumeric(ss, d.first, hasTask); break;
+			case DataIndex::groupName: appendString(ss, d.first, sourceUnit->groupName); break;
+			case DataIndex::state: appendNumeric(ss, d.first, sourceUnit->state); break;
+			case DataIndex::task: appendString(ss, d.first, sourceUnit->task); break;
+			case DataIndex::hasTask: appendNumeric(ss, d.first, sourceUnit->hasTask); break;
 			case DataIndex::position: appendNumeric(ss, d.first, position); break;
 			case DataIndex::speed: appendNumeric(ss, d.first, speed); break;
 			case DataIndex::heading: appendNumeric(ss, d.first, heading); break;
-			case DataIndex::isTanker: appendNumeric(ss, d.first, isTanker); break;
-			case DataIndex::isAWACS: appendNumeric(ss, d.first, isAWACS); break;
-			case DataIndex::onOff: appendNumeric(ss, d.first, onOff); break;
-			case DataIndex::followRoads: appendNumeric(ss, d.first, followRoads); break;
+			case DataIndex::isTanker: appendNumeric(ss, d.first, sourceUnit->isTanker); break;
+			case DataIndex::isAWACS: appendNumeric(ss, d.first, sourceUnit->isAWACS); break;
+			case DataIndex::onOff: appendNumeric(ss, d.first, sourceUnit->onOff); break;
+			case DataIndex::followRoads: appendNumeric(ss, d.first, sourceUnit->followRoads); break;
 			case DataIndex::fuel: appendNumeric(ss, d.first, fuel); break;
-			case DataIndex::desiredSpeed: appendNumeric(ss, d.first, desiredSpeed); break;
-			case DataIndex::desiredSpeedType: appendNumeric(ss, d.first, desiredSpeedType); break;
-			case DataIndex::desiredAltitude: appendNumeric(ss, d.first, desiredAltitude); break;
-			case DataIndex::desiredAltitudeType: appendNumeric(ss, d.first, desiredAltitudeType); break;
-			case DataIndex::leaderID: appendNumeric(ss, d.first, leaderID); break;
-			case DataIndex::formationOffset: appendNumeric(ss, d.first, formationOffset); break;
-			case DataIndex::targetID: appendNumeric(ss, d.first, targetID); break;
-			case DataIndex::targetPosition: appendNumeric(ss, d.first, targetPosition); break;
-			case DataIndex::ROE: appendNumeric(ss, d.first, ROE); break;
-			case DataIndex::reactionToThreat: appendNumeric(ss, d.first, reactionToThreat); break;
-			case DataIndex::emissionsCountermeasures: appendNumeric(ss, d.first, emissionsCountermeasures); break;
-			case DataIndex::TACAN: appendNumeric(ss, d.first, TACAN); break;
-			case DataIndex::radio: appendNumeric(ss, d.first, radio); break;
-			case DataIndex::generalSettings: appendNumeric(ss, d.first, generalSettings); break;
+			case DataIndex::desiredSpeed: appendNumeric(ss, d.first, sourceUnit->desiredSpeed); break;
+			case DataIndex::desiredSpeedType: appendNumeric(ss, d.first, sourceUnit->desiredSpeedType); break;
+			case DataIndex::desiredAltitude: appendNumeric(ss, d.first, sourceUnit->desiredAltitude); break;
+			case DataIndex::desiredAltitudeType: appendNumeric(ss, d.first, sourceUnit->desiredAltitudeType); break;
+			case DataIndex::leaderID: appendNumeric(ss, d.first, sourceUnit->leaderID); break;
+			case DataIndex::formationOffset: appendNumeric(ss, d.first, sourceUnit->formationOffset); break;
+			case DataIndex::targetID: appendNumeric(ss, d.first, sourceUnit->targetID); break;
+			case DataIndex::targetPosition: appendNumeric(ss, d.first, sourceUnit->targetPosition); break;
+			case DataIndex::ROE: appendNumeric(ss, d.first, sourceUnit->ROE); break;
+			case DataIndex::reactionToThreat: appendNumeric(ss, d.first, sourceUnit->reactionToThreat); break;
+			case DataIndex::emissionsCountermeasures: appendNumeric(ss, d.first, sourceUnit->emissionsCountermeasures); break;
+			case DataIndex::TACAN: appendNumeric(ss, d.first, sourceUnit->TACAN); break;
+			case DataIndex::radio: appendNumeric(ss, d.first, sourceUnit->radio); break;
+			case DataIndex::generalSettings: appendNumeric(ss, d.first, sourceUnit->generalSettings); break;
 			case DataIndex::ammo: appendVector(ss, d.first, ammo); break;
 			case DataIndex::contacts: appendVector(ss, d.first, contacts); break;
-			case DataIndex::activePath: appendList(ss, d.first, activePath); break;
+			case DataIndex::activePath: appendList(ss, d.first, sourceUnit->activePath); break;
 			}
 		}
 	}
 	ss.write((const char*)&endOfData, sizeof(endOfData));
+}
+
+void Unit::setAmmo(vector<DataTypes::Ammo> newValue) 
+{ 
+	if (ammo.size() == newValue.size()) {
+		bool equal = true;
+		for (int i = 0; i < ammo.size(); i++) {
+			if (ammo.at(i) != newValue.at(i))
+			{
+				equal = false;
+				break;
+			}
+		}
+		if (equal)
+			return;
+	}
+	ammo = newValue;
+	triggerUpdate(DataIndex::ammo);
+}
+
+void Unit::setContacts(vector<DataTypes::Contact> newValue) 
+{ 
+	if (contacts.size() == newValue.size()) {
+		bool equal = true;
+		for (int i = 0; i < ammo.size(); i++) {
+			if (contacts.at(i) != newValue.at(i))
+			{
+				equal = false;
+				break;
+			}
+		}
+		if (equal)
+			return;
+	}
+	contacts = newValue;
+	triggerUpdate(DataIndex::contacts);
 }
 
 void Unit::setActivePath(list<Coords> newPath)
