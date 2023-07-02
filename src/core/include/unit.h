@@ -162,43 +162,43 @@ public:
 	virtual void setActivePath(list<Coords> newValue);
 
 	/********** Getters **********/
-	virtual const string& getCategory() { return category; };
-	virtual const bool& getAlive() { return alive; }
-	virtual const bool& getHuman() { return human; }
-	virtual const bool& getControlled() { return controlled; }
-	virtual const unsigned char& getCoalition() { return coalition; }
-	virtual const unsigned char& getCountry() { return country; }
-	virtual const string& getName() { return name; }
-	virtual const string& getUnitName() { return unitName; }
-	virtual const string& getGroupName() { return groupName; }
-	virtual const unsigned char& getState() { return state; }
-	virtual const string& getTask() { return task; }
-	virtual const bool& getHasTask() { return hasTask; }
-	virtual const Coords& getPosition() { return position; }
-	virtual const double& getSpeed() { return speed; }
-	virtual const double& getHeading() { return heading; }
-	virtual const bool& getIsTanker() { return isTanker; }
-	virtual const bool& getIsAWACS() { return isAWACS; }
-	virtual const bool& getOnOff() { return onOff; };
-	virtual const bool& getFollowRoads() { return followRoads; };
-	virtual const unsigned short& getFuel() { return fuel; }
-	virtual const double& getDesiredSpeed() { return desiredSpeed; };
-	virtual const bool& getDesiredSpeedType() { return desiredSpeedType; };
-	virtual const double& getDesiredAltitude() { return desiredAltitude; };
-	virtual const bool& getDesiredAltitudeType() { return desiredAltitudeType; };
-	virtual const unsigned int& getLeaderID() { return leaderID; }
-	virtual const Offset& getFormationoffset() { return formationOffset; }
-	virtual const unsigned int& getTargetID() { return targetID; }
-	virtual const Coords& getTargetPosition() { return targetPosition; }
-	virtual const unsigned char& getROE() { return ROE; }
-	virtual const unsigned char& getReactionToThreat() { return reactionToThreat; }
-	virtual const unsigned char& getEmissionsCountermeasures() { return emissionsCountermeasures; };
-	virtual const DataTypes::TACAN& getTACAN() { return TACAN; }
-	virtual const DataTypes::Radio& getRadio() { return radio; }
-	virtual const DataTypes::GeneralSettings& getGeneralSettings() { return generalSettings; }
-	virtual const vector<DataTypes::Ammo>& getAmmo() { return ammo; }
-	virtual const vector<DataTypes::Contact>& getTargets() { return contacts; }
-	virtual const list<Coords>& getActivePath() { return activePath; }
+	virtual string getCategory() { return category; };
+	virtual bool getAlive() { return alive; }
+	virtual bool getHuman() { return human; }
+	virtual bool getControlled() { return controlled; }
+	virtual unsigned char getCoalition() { return coalition; }
+	virtual unsigned char getCountry() { return country; }
+	virtual string getName() { return name; }
+	virtual string getUnitName() { return unitName; }
+	virtual string getGroupName() { return groupName; }
+	virtual unsigned char getState() { return state; }
+	virtual string getTask() { return task; }
+	virtual bool getHasTask() { return hasTask; }
+	virtual Coords getPosition() { return position; }
+	virtual double getSpeed() { return speed; }
+	virtual double getHeading() { return heading; }
+	virtual bool getIsTanker() { return isTanker; }
+	virtual bool getIsAWACS() { return isAWACS; }
+	virtual bool getOnOff() { return onOff; };
+	virtual bool getFollowRoads() { return followRoads; };
+	virtual unsigned short getFuel() { return fuel; }
+	virtual double getDesiredSpeed() { return desiredSpeed; };
+	virtual bool getDesiredSpeedType() { return desiredSpeedType; };
+	virtual double getDesiredAltitude() { return desiredAltitude; };
+	virtual bool getDesiredAltitudeType() { return desiredAltitudeType; };
+	virtual unsigned int getLeaderID() { return leaderID; }
+	virtual Offset getFormationoffset() { return formationOffset; }
+	virtual unsigned int getTargetID() { return targetID; }
+	virtual Coords getTargetPosition() { return targetPosition; }
+	virtual unsigned char getROE() { return ROE; }
+	virtual unsigned char getReactionToThreat() { return reactionToThreat; }
+	virtual unsigned char getEmissionsCountermeasures() { return emissionsCountermeasures; };
+	virtual DataTypes::TACAN getTACAN() { return TACAN; }
+	virtual DataTypes::Radio getRadio() { return radio; }
+	virtual DataTypes::GeneralSettings getGeneralSettings() { return generalSettings; }
+	virtual vector<DataTypes::Ammo> getAmmo() { return ammo; }
+	virtual vector<DataTypes::Contact> getTargets() { return contacts; }
+	virtual list<Coords> getActivePath() { return activePath; }
 
 protected:
 	unsigned int ID;
@@ -220,7 +220,7 @@ protected:
 	double heading = NULL;
 	bool isTanker = false;
 	bool isAWACS = false;
-	bool onOff = false;
+	bool onOff = true;
 	bool followRoads = false;
 	unsigned short fuel = 0;
 	double desiredSpeed = 0;
@@ -265,7 +265,7 @@ protected:
 		if (newValue != value)
 		{
 			triggerUpdate(datumIndex);
-			*(&value) = newValue;
+			value = newValue;
 		}
 	}
 
@@ -280,7 +280,9 @@ protected:
 		const unsigned short size = datumValue.size();
 		ss.write((const char*)&datumIndex, sizeof(unsigned char));
 		ss.write((const char*)&size, sizeof(unsigned short));
-		ss.write((const char*)&datumValue, size * sizeof(T));
+
+		for (auto& el : datumValue)
+			ss.write((const char*)&el, sizeof(T));
 	}
 
 	template <typename T>

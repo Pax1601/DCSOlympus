@@ -1,4 +1,5 @@
 import { getUnitsManager } from "..";
+import { Ammo } from "../@types/unit";
 import { ConvertDDToDMS, rad2deg } from "../other/utils";
 import { aircraftDatabase } from "../units/aircraftdatabase";
 import { Unit } from "../units/unit";
@@ -77,10 +78,10 @@ export class UnitInfoPanel extends Panel {
                 const ammo = Object.values(unit.getData().ammo);
                 if (ammo.length > 0) {
                     items.replaceChildren(...Object.values(unit.getData().ammo).map(
-                        (ammo: any) => {
+                        (ammo: Ammo) => {
                             var el = document.createElement("div");
-                            el.dataset.qty = ammo.count;
-                            el.dataset.item = ammo.desc.displayName;
+                            el.dataset.qty = `${ammo.quantity}`;
+                            el.dataset.item = ammo.name;
                             return el;
                         }
                     ));

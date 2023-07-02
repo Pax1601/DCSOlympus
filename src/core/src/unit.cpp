@@ -128,7 +128,6 @@ void Unit::updateMissionData(json::value json)
 	if (json.has_object_field(L"ammo")) {	
 		vector<DataTypes::Ammo> ammo;
 		for (auto const& el : json[L"ammo"].as_object()) {
-			log(el.second.serialize());
 			DataTypes::Ammo ammoItem;
 			auto ammoJson = el.second;
 			ammoItem.quantity = ammoJson[L"count"].as_number().to_uint32();
@@ -156,12 +155,12 @@ void Unit::updateMissionData(json::value json)
 			contactItem.ID = contactJson[L"object"][L"id_"].as_number().to_uint32();
 	
 			string detectionMethod = to_string(contactJson[L"detectionMethod"]);
-			if		(detectionMethod.compare("VISUAL"))	contactItem.detectionMethod = 1;
-			else if (detectionMethod.compare("OPTIC"))	contactItem.detectionMethod = 2;
-			else if (detectionMethod.compare("RADAR"))	contactItem.detectionMethod = 4;
-			else if (detectionMethod.compare("IRST"))	contactItem.detectionMethod = 8;
-			else if (detectionMethod.compare("RWR"))	contactItem.detectionMethod = 16;
-			else if (detectionMethod.compare("DLINK"))	contactItem.detectionMethod = 32;
+			if		(detectionMethod.compare("VISUAL") == 0)	contactItem.detectionMethod = 1;
+			else if (detectionMethod.compare("OPTIC") == 0)		contactItem.detectionMethod = 2;
+			else if (detectionMethod.compare("RADAR") == 0)		contactItem.detectionMethod = 4;
+			else if (detectionMethod.compare("IRST") == 0)		contactItem.detectionMethod = 8;
+			else if (detectionMethod.compare("RWR") == 0)		contactItem.detectionMethod = 16;
+			else if (detectionMethod.compare("DLINK") == 0)		contactItem.detectionMethod = 32;
 			contacts.push_back(contactItem);
 		}
 		setContacts(contacts);
@@ -248,7 +247,7 @@ void Unit::setContacts(vector<DataTypes::Contact> newValue)
 { 
 	if (contacts.size() == newValue.size()) {
 		bool equal = true;
-		for (int i = 0; i < ammo.size(); i++) {
+		for (int i = 0; i < contacts.size(); i++) {
 			if (contacts.at(i) != newValue.at(i))
 			{
 				equal = false;

@@ -234,7 +234,7 @@ private:
 	const bool explosion;
 };
 
-/* Follow command */
+/* SetTask command */
 class SetTask : public Command
 {
 public:

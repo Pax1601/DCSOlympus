@@ -57,6 +57,7 @@ void Scheduler::handleRequest(string key, json::value value)
 	Command* command = nullptr;
 
 	log("Received request with ID: " + key);
+	log(value.serialize());
 	if (key.compare("setPath") == 0)
 	{
 		unsigned int ID = value[L"ID"].as_integer();
@@ -146,10 +147,10 @@ void Scheduler::handleRequest(string key, json::value value)
 	{
 		unsigned int ID = value[L"ID"].as_integer();
 		unitsManager->acquireControl(ID);
-		unsigned int leaderID = value[L"targetID"].as_integer();
-		unsigned int offsetX = value[L"offsetX"].as_integer();
-		unsigned int offsetY = value[L"offsetY"].as_integer();
-		unsigned int offsetZ = value[L"offsetZ"].as_integer();
+		unsigned int leaderID = value[L"targetID"].as_double();
+		double offsetX = value[L"offsetX"].as_double();
+		double offsetY = value[L"offsetY"].as_double();
+		double offsetZ = value[L"offsetZ"].as_double();
 
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		Unit* leader = unitsManager->getUnit(leaderID);

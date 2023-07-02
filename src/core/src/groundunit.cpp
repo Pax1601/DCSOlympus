@@ -65,6 +65,8 @@ void GroundUnit::setState(unsigned char newState)
 
 	log(unitName + " setting state from " + to_string(state) + " to " + to_string(newState));
 	state = newState;
+
+	triggerUpdate(DataIndex::state);
 }
 
 void GroundUnit::AIloop()

@@ -109,7 +109,7 @@ export class DataExtractor {
         for (let idx = 0; idx < size; idx++) {
             value.push({
                 quantity: this.extractUInt16(), 
-                name: this.extractString(32),
+                name: this.extractString(33),
                 guidance: this.extractUInt8(),
                 category: this.extractUInt8(),
                 missileCategory: this.extractUInt8()

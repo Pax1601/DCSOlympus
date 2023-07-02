@@ -35,7 +35,7 @@ export class Unit extends CustomMarker {
     #heading: number = 0;
     #isTanker: boolean = false;
     #isAWACS: boolean = false;
-    #onOff: boolean = false;
+    #onOff: boolean = true;
     #followRoads: boolean = false;
     #fuel: number = 0;
     #desiredSpeed: number = 0;
@@ -60,9 +60,9 @@ export class Unit extends CustomMarker {
         channel: 0
     };
     #radio: Radio = {
-        frequency: 0,
-        callsign: 0,
-        callsignNumber: 0
+        frequency: 124000000,
+        callsign: 1,
+        callsignNumber: 1
     };
     #generalSettings: GeneralSettings = {
         prohibitAA: false,
@@ -187,10 +187,10 @@ export class Unit extends CustomMarker {
             this.#updateMarker();
 
         // TODO dont delete the polylines of the detected units
-        this.#clearDetectedUnits();
+        this.#clearContacts();
         if (this.getSelected()) {
             this.#drawPath();
-            this.#drawDetectedUnits();
+            this.#drawContacts();
             this.#drawTarget();
         }
         else {
@@ -284,7 +284,7 @@ export class Unit extends CustomMarker {
             }
             else {
                 document.dispatchEvent(new CustomEvent("unitDeselection", { detail: this }));
-                this.#clearDetectedUnits();
+                this.#clearContacts();
                 this.#clearPath();
                 this.#clearTarget();
             }
@@ -607,8 +607,7 @@ export class Unit extends CustomMarker {
     onAdd(map: Map): this {
         super.onAdd(map);
         /* If this is the first time adding this unit to the map, remove the temporary marker */
-        if (getUnitsManager().getUnitByID(this.ID) == null)
-            getMap().removeTemporaryMarker(new LatLng(this.#position.lat, this.#position.lng));
+        getMap().removeTemporaryMarker(new LatLng(this.#position.lat, this.#position.lng));
         return this;
     }
 
@@ -798,13 +797,13 @@ export class Unit extends CustomMarker {
                 var newHasFox2 = false;
                 var newHasFox3 = false;
                 var newHasOtherAmmo = false;
-                Object.values(this.#ammo).forEach((ammo: any) => {
-                    if (ammo.desc.category == 1 && ammo.desc.missileCategory == 1) {
-                        if (ammo.desc.guidance == 4 || ammo.desc.guidance == 5)
+                Object.values(this.#ammo).forEach((ammo: Ammo) => {
+                    if (ammo.category == 1 && ammo.missileCategory == 1) {
+                        if (ammo.guidance == 4 || ammo.guidance == 5)
                             newHasFox1 = true;
-                        else if (ammo.desc.guidance == 2)
+                        else if (ammo.guidance == 2)
                             newHasFox2 = true;
-                        else if (ammo.desc.guidance == 3)
+                        else if (ammo.guidance == 3)
                             newHasFox3 = true;
                     }
                     else
@@ -870,31 +869,31 @@ export class Unit extends CustomMarker {
         this.#pathPolyline.setLatLngs([]);
     }
 
-    #drawDetectedUnits() {
+    #drawContacts() {
         for (let index in this.#contacts) {
-            var targetData = this.#contacts[index];
-            var target = getUnitsManager().getUnitByID(targetData.ID)
-            if (target != null) {
+            var contactData = this.#contacts[index];
+            var contact = getUnitsManager().getUnitByID(contactData.ID)
+            if (contact != null) {
                 var startLatLng = new LatLng(this.#position.lat, this.#position.lng)
-                var endLatLng = new LatLng(target.#position.lat, target.#position.lng)
+                var endLatLng = new LatLng(contact.#position.lat, contact.#position.lng)
 
                 var color;
-                if (targetData.detectionMethod === 1)
+                if (contactData.detectionMethod === 1)
                     color = "#FF00FF";
-                else if (targetData.detectionMethod === 4)
+                else if (contactData.detectionMethod === 4)
                     color = "#FFFF00";
-                else if (targetData.detectionMethod === 16)
+                else if (contactData.detectionMethod === 16)
                     color = "#00FF00";
                 else
                     color = "#FFFFFF";
-                var targetPolyline = new Polyline([startLatLng, endLatLng], { color: color, weight: 3, opacity: 0.4, smoothFactor: 1, dashArray: "4, 8" });
-                targetPolyline.addTo(getMap());
-                this.#contactsPolylines.push(targetPolyline)
+                var contactPolyline = new Polyline([startLatLng, endLatLng], { color: color, weight: 3, opacity: 0.4, smoothFactor: 1, dashArray: "4, 8" });
+                contactPolyline.addTo(getMap());
+                this.#contactsPolylines.push(contactPolyline)
             }
         }
     }
 
-    #clearDetectedUnits() {
+    #clearContacts() {
         for (let index in this.#contactsPolylines) {
             getMap().removeLayer(this.#contactsPolylines[index])
         }
