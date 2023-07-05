@@ -32,7 +32,7 @@ export class UnitsManager {
     getSelectableAircraft() {
         const units = this.getUnits();
         return Object.keys(units).reduce((acc: { [key: number]: Unit }, unitId: any) => {
-            if (units[unitId].getCategory() === "Aircraft" && units[unitId].getData().alive === true) {
+            if (units[unitId].getCategory() === "Aircraft" && units[unitId].getAlive() === true) {
                 acc[unitId] = units[unitId];
             }
             return acc;
@@ -51,7 +51,7 @@ export class UnitsManager {
     }
 
     getUnitsByHotgroup(hotgroup: number) {
-        return Object.values(this.#units).filter((unit: Unit) => { return unit.getData().alive && unit.getHotgroup() == hotgroup });
+        return Object.values(this.#units).filter((unit: Unit) => { return unit.getAlive() && unit.getHotgroup() == hotgroup });
     }
 
     addUnit(ID: number, category: string) {
@@ -114,7 +114,7 @@ export class UnitsManager {
         this.deselectAllUnits();
         for (let ID in this.#units) {
             if (this.#units[ID].getHidden() == false) {
-                var latlng = new LatLng(this.#units[ID].getData().position.lat, this.#units[ID].getData().position.lng);
+                var latlng = new LatLng(this.#units[ID].getPosition().lat, this.#units[ID].getPosition().lng);
                 if (bounds.contains(latlng)) {
                     this.#units[ID].setSelected(true);
                 }
@@ -131,11 +131,11 @@ export class UnitsManager {
         }
         if (options) {
             if (options.excludeHumans)
-                selectedUnits = selectedUnits.filter((unit: Unit) => { return !unit.getData().human });
+                selectedUnits = selectedUnits.filter((unit: Unit) => { return !unit.getHuman() });
             if (options.onlyOnePerGroup) {
                 var temp: Unit[] = [];
                 for (let unit of selectedUnits) {
-                    if (!temp.some((otherUnit: Unit) => unit.getData().groupName == otherUnit.getData().groupName))
+                    if (!temp.some((otherUnit: Unit) => unit.getGroupName() == otherUnit.getGroupName()))
                         temp.push(unit);
                 }
                 selectedUnits = temp;
@@ -180,7 +180,7 @@ export class UnitsManager {
         if (this.getSelectedUnits().length == 0)
             return undefined;
         return this.getSelectedUnits().map((unit: Unit) => {
-            return unit.getData().coalition
+            return unit.getCoalition()
         })?.reduce((a: any, b: any) => {
             return a == b ? a : undefined
         });
@@ -200,8 +200,8 @@ export class UnitsManager {
         for (let idx in selectedUnits) {
             const unit = selectedUnits[idx];
             /* If a unit is following another unit, and that unit is also selected, send the command to the followed unit */
-            if (unit.getData().state === "Follow") {
-                const leader = this.getUnitByID(unit.getData().leaderID)
+            if (unit.getState() === "Follow") {
+                const leader = this.getUnitByID(unit.getLeaderID())
                 if (leader && leader.getSelected())
                     leader.addDestination(latlng);
                 else
@@ -220,8 +220,8 @@ export class UnitsManager {
         var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
             const unit = selectedUnits[idx];
-            if (unit.getData().state === "Follow") {
-                const leader = this.getUnitByID(unit.getData().leaderID)
+            if (unit.getState() === "Follow") {
+                const leader = this.getUnitByID(unit.getLeaderID())
                 if (leader && leader.getSelected())
                     leader.clearDestinations();
                 else
@@ -332,13 +332,13 @@ export class UnitsManager {
         for (let idx in selectedUnits) {
             selectedUnits[idx].attackUnit(ID);
         }
-        this.#showActionMessage(selectedUnits, `attacking unit ${this.getUnitByID(ID)?.getData().unitName}`);
+        this.#showActionMessage(selectedUnits, `attacking unit ${this.getUnitByID(ID)?.getUnitName()}`);
     }
 
     selectedUnitsDelete(explosion: boolean = false) {
         var selectedUnits = this.getSelectedUnits(); /* Can be applied to humans too */
         const selectionContainsAHuman = selectedUnits.some( ( unit:Unit ) => {
-            return unit.getData().human === true;
+            return unit.getHuman() === true;
         });
 
         if (selectionContainsAHuman && !confirm( "Your selection includes a human player. Deleting humans causes their vehicle to crash.\n\nAre you sure you want to do this?" ) ) {
@@ -399,7 +399,7 @@ export class UnitsManager {
             }
             count++;
         }
-        this.#showActionMessage(selectedUnits, `following unit ${this.getUnitByID(ID)?.getData().unitName}`);
+        this.#showActionMessage(selectedUnits, `following unit ${this.getUnitByID(ID)?.getUnitName()}`);
     }
 
     selectedUnitsSetHotgroup(hotgroup: number) {
@@ -421,7 +421,7 @@ export class UnitsManager {
         /* Compute the center of the group */
         var center = { x: 0, y: 0 };
         selectedUnits.forEach((unit: Unit) => {
-            var mercator = latLngToMercator(unit.getData().position.lat, unit.getData().position.lng);
+            var mercator = latLngToMercator(unit.getPosition().lat, unit.getPosition().lng);
             center.x += mercator.x / selectedUnits.length;
             center.y += mercator.y / selectedUnits.length;
         });
@@ -429,7 +429,7 @@ export class UnitsManager {
         /* Compute the distances from the center of the group */
         var unitDestinations: { [key: number]: LatLng } = {};
         selectedUnits.forEach((unit: Unit) => {
-            var mercator = latLngToMercator(unit.getData().position.lat, unit.getData().position.lat);
+            var mercator = latLngToMercator(unit.getPosition().lat, unit.getPosition().lng);
             var distancesFromCenter = { dx: mercator.x - center.x, dy: mercator.y - center.y };
 
             /* Rotate the distance according to the group rotation */
@@ -559,8 +559,8 @@ export class UnitsManager {
 
     #showActionMessage(units: Unit[], message: string) {
         if (units.length == 1)
-            getInfoPopup().setText(`${units[0].getData().unitName} ${message}`);
+            getInfoPopup().setText(`${units[0].getUnitName()} ${message}`);
         else if (units.length > 1)
-            getInfoPopup().setText(`${units[0].getData().unitName} and ${units.length - 1} other units ${message}`);
+            getInfoPopup().setText(`${units[0].getUnitName()} and ${units.length - 1} other units ${message}`);
     }
 }

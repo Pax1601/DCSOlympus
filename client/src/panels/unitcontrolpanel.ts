@@ -99,13 +99,13 @@ export class UnitControlPanel extends Panel {
         if (units.length < 20) {
             this.getElement().querySelector("#selected-units-container")?.replaceChildren(...units.map((unit: Unit, index: number) => {
                 var button = document.createElement("button");
-                var callsign = unit.getData().unitName || "";
-                var label = unit.getDatabase()?.getByName(unit.getData().name)?.label || unit.getData().name;
+                var callsign = unit.getUnitName() || "";
+                var label = unit.getDatabase()?.getByName(unit.getName())?.label || unit.getName();
 
                 button.setAttribute("data-label", label);
                 button.setAttribute("data-callsign", callsign);
 
-                button.setAttribute("data-coalition", unit.getData().coalition);
+                button.setAttribute("data-coalition", unit.getCoalition());
                 button.classList.add("pill", "highlight-coalition")
 
                 button.addEventListener("click", () => {
@@ -140,12 +140,12 @@ export class UnitControlPanel extends Panel {
                 element.toggleAttribute("data-show-advanced-settings-button", units.length == 1);
                 
                 /* Flight controls */
-                var desiredAltitude: number | undefined = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getData().desiredAltitude});
-                var desiredAltitudeType = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getData().desiredAltitudeType});
-                var desiredSpeed = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getData().desiredSpeed});
-                var desiredSpeedType = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getData().desiredSpeedType});
-                var onOff = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getData().onOff});
-                var followRoads = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getData().followRoads});
+                var desiredAltitude: number | undefined = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredAltitude()});
+                var desiredAltitudeType = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredAltitudeType()});
+                var desiredSpeed = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredSpeed()});
+                var desiredSpeedType = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredSpeedType()});
+                var onOff = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getOnOff()});
+                var followRoads = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getFollowRoads()});
 
                 if (selectedUnitsTypes.length == 1) {
                     this.#altitudeTypeSwitch.setValue(desiredAltitudeType != undefined? desiredAltitudeType == "AGL": undefined, false);
@@ -171,15 +171,15 @@ export class UnitControlPanel extends Panel {
 
                 /* Option buttons */
                 this.#optionButtons["ROE"].forEach((button: HTMLButtonElement) => {
-                    button.classList.toggle("selected", units.every((unit: Unit) => unit.getData().ROE === button.value))
+                    button.classList.toggle("selected", units.every((unit: Unit) => unit.getROE() === button.value))
                 });
 
                 this.#optionButtons["reactionToThreat"].forEach((button: HTMLButtonElement) => {
-                    button.classList.toggle("selected", units.every((unit: Unit) => unit.getData().reactionToThreat === button.value))
+                    button.classList.toggle("selected", units.every((unit: Unit) => unit.getReactionToThreat() === button.value))
                 });
 
                 this.#optionButtons["emissionsCountermeasures"].forEach((button: HTMLButtonElement) => {
-                    button.classList.toggle("selected", units.every((unit: Unit) => unit.getData().emissionsCountermeasures === button.value))
+                    button.classList.toggle("selected", units.every((unit: Unit) => unit.getEmissionsCountermeasures() === button.value))
                 });
 
                 this.#onOffSwitch.setValue(onOff, false);
@@ -208,11 +208,11 @@ export class UnitControlPanel extends Panel {
             const radioCallsignNumberInput = this.#advancedSettingsDialog.querySelector("#radio-callsign-number")?.querySelector("input") as HTMLInputElement;
             
             const unit = units[0];
-            const roles = aircraftDatabase.getByName(unit.getData().name)?.loadouts.map((loadout) => {return loadout.roles})
+            const roles = aircraftDatabase.getByName(unit.getName())?.loadouts.map((loadout) => {return loadout.roles})
             const tanker = roles != undefined && Array.prototype.concat.apply([], roles)?.includes("Tanker");
             const AWACS = roles != undefined && Array.prototype.concat.apply([], roles)?.includes("AWACS");
-            const radioMHz = Math.floor(unit.getData().radio.frequency / 1000000);
-            const radioDecimals = (unit.getData().radio.frequency / 1000000 - radioMHz) * 1000;
+            const radioMHz = Math.floor(unit.getRadio().frequency / 1000000);
+            const radioDecimals = (unit.getRadio().frequency / 1000000 - radioMHz) * 1000;
 
             /* Activate the correct options depending on unit type */
             this.#advancedSettingsDialog.toggleAttribute("data-show-settings", !tanker && !AWACS);
@@ -224,28 +224,28 @@ export class UnitControlPanel extends Panel {
 
             /* Set common properties */
             // Name
-            unitNameEl.innerText = unit.getData().unitName;
+            unitNameEl.innerText = unit.getUnitName();
 
             // General settings
-            prohibitJettisonCheckbox.checked = unit.getData().generalSettings.prohibitJettison;
-            prohibitAfterburnerCheckbox.checked = unit.getData().generalSettings.prohibitAfterburner;
-            prohibitAACheckbox.checked = unit.getData().generalSettings.prohibitAA;
-            prohibitAGCheckbox.checked = unit.getData().generalSettings.prohibitAG;
-            prohibitAirWpnCheckbox.checked = unit.getData().generalSettings.prohibitAirWpn;
+            prohibitJettisonCheckbox.checked = unit.getGeneralSettings().prohibitJettison;
+            prohibitAfterburnerCheckbox.checked = unit.getGeneralSettings().prohibitAfterburner;
+            prohibitAACheckbox.checked = unit.getGeneralSettings().prohibitAA;
+            prohibitAGCheckbox.checked = unit.getGeneralSettings().prohibitAG;
+            prohibitAirWpnCheckbox.checked = unit.getGeneralSettings().prohibitAirWpn;
 
             // Tasking
-            tankerCheckbox.checked = unit.getData().isTanker;
-            AWACSCheckbox.checked = unit.getData().isAWACS;
+            tankerCheckbox.checked = unit.getIsTanker();
+            AWACSCheckbox.checked = unit.getIsAWACS();
 
             // TACAN
-            TACANCheckbox.checked = unit.getData().TACAN.isOn;
-            TACANChannelInput.value = String(unit.getData().TACAN.channel);
-            TACANCallsignInput.value = String(unit.getData().TACAN.callsign);
-            this.#TACANXYDropdown.setValue(unit.getData().TACAN.XY);
+            TACANCheckbox.checked = unit.getTACAN().isOn;
+            TACANChannelInput.value = String(unit.getTACAN().channel);
+            TACANCallsignInput.value = String(unit.getTACAN().callsign);
+            this.#TACANXYDropdown.setValue(unit.getTACAN().XY);
 
             // Radio
             radioMhzInput.value = String(radioMHz);
-            radioCallsignNumberInput.value = String(unit.getData().radio.callsignNumber);
+            radioCallsignNumberInput.value = String(unit.getRadio().callsignNumber);
             this.#radioDecimalsDropdown.setValue("." + radioDecimals);
                     
             if (tanker) /* Set tanker specific options */
@@ -256,7 +256,7 @@ export class UnitControlPanel extends Panel {
                 this.#radioCallsignDropdown.setOptions(["Enfield", "Springfield", "Uzi", "Colt", "Dodge", "Ford", "Chevy", "Pontiac"]);
 
             // This must be done after setting the options
-            if (!this.#radioCallsignDropdown.selectValue(unit.getData().radio.callsign - 1)) // Ensure the selected value is in the acceptable range
+            if (!this.#radioCallsignDropdown.selectValue(unit.getRadio().callsign - 1)) // Ensure the selected value is in the acceptable range
                 this.#radioCallsignDropdown.selectValue(0);
         }
     }

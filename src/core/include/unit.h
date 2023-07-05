@@ -53,6 +53,7 @@ namespace DataIndex {
 		ammo,
 		contacts,
 		activePath,
+		lastIndex,
 		endOfData = 255
 	};
 }
@@ -94,7 +95,7 @@ public:
 
 	unsigned int getDataPacket(char*& data);
 	unsigned int getID() { return ID; }
-	void getData(stringstream& ss, unsigned long long time, bool refresh);
+	void getData(stringstream& ss, unsigned long long time);
 	Coords getActiveDestination() { return activeDestination; }
 
 	virtual void changeSpeed(string change) {};
@@ -121,6 +122,9 @@ public:
 	void resetTaskFailedCounter();
 
 	void triggerUpdate(unsigned char datumIndex);
+
+	bool hasFreshData(unsigned long long time);
+	bool checkFreshness(unsigned char datumIndex, unsigned long long time);
 
 	/********** Setters **********/
 	virtual void setCategory(string newValue) { updateValue(category, newValue, DataIndex::category); }

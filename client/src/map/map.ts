@@ -16,7 +16,7 @@ import { layers as mapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_
 import { TargetMarker } from "./targetmarker";
 import { CoalitionArea } from "./coalitionarea";
 import { CoalitionAreaContextMenu } from "../controls/coalitionareacontextmenu";
-import { DrawingCursor } from "./drawingmarker";
+import { DrawingCursor } from "./drawingcursor";
 
 L.Map.addInitHook('addHandler', 'boxSelect', BoxSelect);
 
@@ -37,6 +37,8 @@ export class Map extends L.Map {
     #panUp: boolean = false;
     #panDown: boolean = false;
     #lastMousePosition: L.Point = new L.Point(0, 0);
+    #shiftKey: boolean = false;
+    #ctrlKey: boolean = false;
     #centerUnit: Unit | null = null;
     #miniMap: ClickableMiniMap | null = null;
     #miniMapLayerGroup: L.LayerGroup;
@@ -454,7 +456,7 @@ export class Map extends L.Map {
             if (!e.originalEvent.ctrlKey) {
                 getUnitsManager().selectedUnitsClearDestinations();
             }
-            getUnitsManager().selectedUnitsAddDestination(this.#computeDestinationRotation && this.#destinationRotationCenter != null ? this.#destinationRotationCenter : e.latlng, e.originalEvent.shiftKey, this.#destinationGroupRotation)
+            getUnitsManager().selectedUnitsAddDestination(this.#computeDestinationRotation && this.#destinationRotationCenter != null ? this.#destinationRotationCenter : e.latlng, this.#shiftKey, this.#destinationGroupRotation)
             this.#destinationGroupRotation = 0;
             this.#destinationRotationCenter = null;
             this.#computeDestinationRotation = false;
@@ -513,13 +515,13 @@ export class Map extends L.Map {
         this.#lastMousePosition.x = e.originalEvent.x;
         this.#lastMousePosition.y = e.originalEvent.y;
 
-        this.#updateCursor(e);
+        this.#updateCursor();
 
         if (this.#state === MOVE_UNIT) {
             /* Update the position of the destination cursors depeding on mouse rotation */
             if (this.#computeDestinationRotation && this.#destinationRotationCenter != null)
                 this.#destinationGroupRotation = -bearing(this.#destinationRotationCenter.lat, this.#destinationRotationCenter.lng, this.getMouseCoordinates().lat, this.getMouseCoordinates().lng);
-            this.#updateDestinationCursors(e);
+            this.#updateDestinationCursors();
         }
         else if ([BOMBING, CARPET_BOMBING, FIRE_AT_AREA].includes(this.#state)) {
             this.#targetCursor.setLatLng(this.getMouseCoordinates());
@@ -532,13 +534,17 @@ export class Map extends L.Map {
     }
 
     #onKeyDown(e: any) {
-        this.#updateDestinationCursors(e);
-        this.#updateCursor(e);
+        this.#shiftKey = e.originalEvent.shiftKey;
+        this.#ctrlKey = e.originalEvent.ctrlKey;
+        this.#updateCursor();
+        this.#updateDestinationCursors();
     }
 
     #onKeyUp(e: any) {
-        this.#updateDestinationCursors(e);
-        this.#updateCursor(e);
+        this.#shiftKey = e.originalEvent.shiftKey;
+        this.#ctrlKey = e.originalEvent.ctrlKey;
+        this.#updateCursor();
+        this.#updateDestinationCursors();
     }
 
     #onZoom(e: any) {
@@ -547,7 +553,7 @@ export class Map extends L.Map {
     }
 
     #panToUnit(unit: Unit) {
-        var unitPosition = new L.LatLng(unit.getData().position.lat, unit.getData().position.lng);
+        var unitPosition = new L.LatLng(unit.getPosition().lat, unit.getPosition().lng);
         this.setView(unitPosition, this.getZoom(), { animate: false });
     }
 
@@ -582,38 +588,41 @@ export class Map extends L.Map {
         document.getElementById(this.#ID)?.classList.add("hidden-cursor");
     }
 
-    #showDestinationCursors(singleCursor: boolean) {
-        /* Don't create the cursors if there already are the correct number of them available */
-        if (singleCursor || getUnitsManager().getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true }).length != this.#destinationPreviewCursors.length) {
-            /* Reset the cursors to start from a clean condition */
-            this.#hideDestinationCursors();
+    #showDestinationCursors() {
+        const singleCursor = !this.#shiftKey;
+        const selectedUnitsCount = getUnitsManager().getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true }).length;
+        if (selectedUnitsCount > 0) {
+            if (singleCursor && this.#destinationPreviewCursors.length != 1) {
+                this.#hideDestinationCursors();
+                var marker = new DestinationPreviewMarker(this.getMouseCoordinates(), { interactive: false });
+                marker.addTo(this);
+                this.#destinationPreviewCursors = [marker];
+            }
+            else if (!singleCursor) {
+                while (this.#destinationPreviewCursors.length > selectedUnitsCount) {
+                    this.removeLayer(this.#destinationPreviewCursors[0]);
+                    this.#destinationPreviewCursors.splice(0, 1);
+                }
 
-            if (getUnitsManager().getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true }).length > 0) {
-                if (singleCursor) {
-                    var marker = new DestinationPreviewMarker(this.getMouseCoordinates(), { interactive: false });
-                    marker.addTo(this);
-                    this.#destinationPreviewCursors = [marker];
+                while (this.#destinationPreviewCursors.length < selectedUnitsCount) {
+                    var cursor = new DestinationPreviewMarker(this.getMouseCoordinates(), { interactive: false });
+                    cursor.addTo(this);
+                    this.#destinationPreviewCursors.push(cursor);
                 }
-                else {
-                /* Create the cursors. If a group is selected only one cursor is shown for it, because you can't control single units in a group */
-                    this.#destinationPreviewCursors = getUnitsManager().getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true }).map((unit: Unit) => {
-                        var marker = new DestinationPreviewMarker(this.getMouseCoordinates(), { interactive: false });
-                        marker.addTo(this);
-                        return marker;
-                    });
-                }
+
+                this.#updateDestinationCursors();
             }
         }
     }
 
-    #updateDestinationCursors(e: any) {
+    #updateDestinationCursors() {
         const groupLatLng = this.#computeDestinationRotation && this.#destinationRotationCenter != null ? this.#destinationRotationCenter : this.getMouseCoordinates();
         if (this.#destinationPreviewCursors.length == 1)
             this.#destinationPreviewCursors[0].setLatLng(this.getMouseCoordinates());
         else {
             Object.values(getUnitsManager().selectedUnitsComputeGroupDestination(groupLatLng, this.#destinationGroupRotation)).forEach((latlng: L.LatLng, idx: number) => {
                 if (idx < this.#destinationPreviewCursors.length)
-                    this.#destinationPreviewCursors[idx].setLatLng(e.originalEvent.shiftKey ? latlng : this.getMouseCoordinates());
+                    this.#destinationPreviewCursors[idx].setLatLng(this.#shiftKey? latlng : this.getMouseCoordinates());
             })
         };
     }
@@ -653,9 +662,9 @@ export class Map extends L.Map {
             this.#drawingCursor.removeFrom(this);
     }
 
-    #updateCursor(e?: any) {
+    #updateCursor() {
         /* If the ctrl key is being pressed or we are performing an area selection, show the default cursor */
-        if (e?.originalEvent.ctrlKey || this.#selecting) {
+        if (this.#ctrlKey || this.#selecting) {
             /* Hide all non default cursors */
             this.#hideDestinationCursors();
             this.#hideTargetCursor();
@@ -671,7 +680,7 @@ export class Map extends L.Map {
 
             /* Show the active cursor depending on the active state */
             if (this.#state === IDLE || this.#state === COALITIONAREA_INTERACT) this.#showDefaultCursor();
-            else if (this.#state === MOVE_UNIT) this.#showDestinationCursors(e && e.originaleEvent && !e.originalEvent.shiftKey);
+            else if (this.#state === MOVE_UNIT) this.#showDestinationCursors();
             else if ([BOMBING, CARPET_BOMBING, FIRE_AT_AREA].includes(this.#state)) this.#showTargetCursor();
             else if (this.#state === COALITIONAREA_DRAW_POLYGON) this.#showDrawingCursor();
         }

@@ -170,56 +170,72 @@ void Unit::updateMissionData(json::value json)
 		setHasTask(json[L"hasTask"].as_bool());
 }
 
+bool Unit::checkFreshness(unsigned char datumIndex, unsigned long long time) {
+	auto it = updateTimeMap.find(datumIndex);
+	if (it == updateTimeMap.end())
+		return false;
+	else
+		return it->second > time;
+}
 
-void Unit::getData(stringstream& ss, unsigned long long time, bool refresh)
+bool Unit::hasFreshData(unsigned long long time) {
+	for (auto it : updateTimeMap)
+		if (it.second > time)
+			return true;
+	return false;
+}
+
+void Unit::getData(stringstream& ss, unsigned long long time)
 {
-	Unit* sourceUnit = this;
+	Unit* leader = this;
 	if (unitsManager->isUnitInGroup(this) && !unitsManager->isUnitGroupLeader(this))
-		sourceUnit = unitsManager->getGroupLeader(this);
+		leader = unitsManager->getGroupLeader(this);
+
+	if (!leader->hasFreshData(time)) return;
 
 	const unsigned char endOfData = DataIndex::endOfData;
 	ss.write((const char*)&ID, sizeof(ID));
-	for (auto d : updateTimeMap) {
-		if (d.second > time) {
-			switch (d.first) {
-			case DataIndex::category: appendString(ss, d.first, category); break;
-			case DataIndex::alive: appendNumeric(ss, d.first, alive); break;
-			case DataIndex::human: appendNumeric(ss, d.first, sourceUnit->human); break;
-			case DataIndex::controlled: appendNumeric(ss, d.first, sourceUnit->controlled); break;
-			case DataIndex::coalition: appendNumeric(ss, d.first, sourceUnit->coalition); break;
-			case DataIndex::country: appendNumeric(ss, d.first, sourceUnit->country); break;
-			case DataIndex::name: appendString(ss, d.first, name); break;
-			case DataIndex::unitName: appendString(ss, d.first, unitName); break;
-			case DataIndex::groupName: appendString(ss, d.first, sourceUnit->groupName); break;
-			case DataIndex::state: appendNumeric(ss, d.first, sourceUnit->state); break;
-			case DataIndex::task: appendString(ss, d.first, sourceUnit->task); break;
-			case DataIndex::hasTask: appendNumeric(ss, d.first, sourceUnit->hasTask); break;
-			case DataIndex::position: appendNumeric(ss, d.first, position); break;
-			case DataIndex::speed: appendNumeric(ss, d.first, speed); break;
-			case DataIndex::heading: appendNumeric(ss, d.first, heading); break;
-			case DataIndex::isTanker: appendNumeric(ss, d.first, sourceUnit->isTanker); break;
-			case DataIndex::isAWACS: appendNumeric(ss, d.first, sourceUnit->isAWACS); break;
-			case DataIndex::onOff: appendNumeric(ss, d.first, sourceUnit->onOff); break;
-			case DataIndex::followRoads: appendNumeric(ss, d.first, sourceUnit->followRoads); break;
-			case DataIndex::fuel: appendNumeric(ss, d.first, fuel); break;
-			case DataIndex::desiredSpeed: appendNumeric(ss, d.first, sourceUnit->desiredSpeed); break;
-			case DataIndex::desiredSpeedType: appendNumeric(ss, d.first, sourceUnit->desiredSpeedType); break;
-			case DataIndex::desiredAltitude: appendNumeric(ss, d.first, sourceUnit->desiredAltitude); break;
-			case DataIndex::desiredAltitudeType: appendNumeric(ss, d.first, sourceUnit->desiredAltitudeType); break;
-			case DataIndex::leaderID: appendNumeric(ss, d.first, sourceUnit->leaderID); break;
-			case DataIndex::formationOffset: appendNumeric(ss, d.first, sourceUnit->formationOffset); break;
-			case DataIndex::targetID: appendNumeric(ss, d.first, sourceUnit->targetID); break;
-			case DataIndex::targetPosition: appendNumeric(ss, d.first, sourceUnit->targetPosition); break;
-			case DataIndex::ROE: appendNumeric(ss, d.first, sourceUnit->ROE); break;
-			case DataIndex::reactionToThreat: appendNumeric(ss, d.first, sourceUnit->reactionToThreat); break;
-			case DataIndex::emissionsCountermeasures: appendNumeric(ss, d.first, sourceUnit->emissionsCountermeasures); break;
-			case DataIndex::TACAN: appendNumeric(ss, d.first, sourceUnit->TACAN); break;
-			case DataIndex::radio: appendNumeric(ss, d.first, sourceUnit->radio); break;
-			case DataIndex::generalSettings: appendNumeric(ss, d.first, sourceUnit->generalSettings); break;
-			case DataIndex::ammo: appendVector(ss, d.first, ammo); break;
-			case DataIndex::contacts: appendVector(ss, d.first, contacts); break;
-			case DataIndex::activePath: appendList(ss, d.first, sourceUnit->activePath); break;
-			}
+	for (unsigned char datumIndex = DataIndex::startOfData + 1; datumIndex < DataIndex::lastIndex; datumIndex++)
+	{
+		/* When units are in a group, most data comes from the group leader */
+		switch (datumIndex) {
+		case DataIndex::category:					if (checkFreshness(datumIndex, time)) appendString(ss, datumIndex, category); break;
+		case DataIndex::alive:						if (checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, alive); break;
+		case DataIndex::human:						if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->human); break;
+		case DataIndex::controlled:					if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->controlled); break;
+		case DataIndex::coalition:					if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->coalition); break;
+		case DataIndex::country:					if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->country); break;
+		case DataIndex::name:						if (checkFreshness(datumIndex, time)) appendString(ss, datumIndex, name); break;
+		case DataIndex::unitName:					if (checkFreshness(datumIndex, time)) appendString(ss, datumIndex, unitName); break;
+		case DataIndex::groupName:					if (leader->checkFreshness(datumIndex, time)) appendString(ss, datumIndex, leader->groupName); break;
+		case DataIndex::state:						if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->state); break;
+		case DataIndex::task:						if (leader->checkFreshness(datumIndex, time)) appendString(ss, datumIndex, leader->task); break;
+		case DataIndex::hasTask:					if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->hasTask); break;
+		case DataIndex::position:					if (checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, position); break;
+		case DataIndex::speed:						if (checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, speed); break;
+		case DataIndex::heading:					if (checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, heading); break;
+		case DataIndex::isTanker:					if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->isTanker); break;
+		case DataIndex::isAWACS:					if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->isAWACS); break;
+		case DataIndex::onOff:						if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->onOff); break;
+		case DataIndex::followRoads:				if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->followRoads); break;
+		case DataIndex::fuel:						if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, fuel); break;
+		case DataIndex::desiredSpeed:				if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->desiredSpeed); break;
+		case DataIndex::desiredSpeedType:			if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->desiredSpeedType); break;
+		case DataIndex::desiredAltitude:			if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->desiredAltitude); break;
+		case DataIndex::desiredAltitudeType:		if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->desiredAltitudeType); break;
+		case DataIndex::leaderID:					if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->leaderID); break;
+		case DataIndex::formationOffset:			if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->formationOffset); break;
+		case DataIndex::targetID:					if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->targetID); break;
+		case DataIndex::targetPosition:				if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->targetPosition); break;
+		case DataIndex::ROE:						if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->ROE); break;
+		case DataIndex::reactionToThreat:			if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->reactionToThreat); break;
+		case DataIndex::emissionsCountermeasures:	if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->emissionsCountermeasures); break;
+		case DataIndex::TACAN:						if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->TACAN); break;
+		case DataIndex::radio:						if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->radio); break;
+		case DataIndex::generalSettings:			if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->generalSettings); break;
+		case DataIndex::ammo:						if (checkFreshness(datumIndex, time)) appendVector(ss, datumIndex, ammo); break;
+		case DataIndex::contacts:					if (checkFreshness(datumIndex, time)) appendVector(ss, datumIndex, contacts); break;
+		case DataIndex::activePath:					if (leader->checkFreshness(datumIndex, time)) appendList(ss, datumIndex, leader->activePath); break;
 		}
 	}
 	ss.write((const char*)&endOfData, sizeof(endOfData));

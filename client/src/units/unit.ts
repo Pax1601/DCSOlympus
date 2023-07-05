@@ -73,7 +73,7 @@ export class Unit extends CustomMarker {
     };
     #ammo: Ammo[] = [];
     #contacts: Contact[] = [];
-    #activePath: LatLng[] = [];
+    #activePath: LatLng[] = []; 
 
     #selectable: boolean;
     #selected: boolean = false;
@@ -88,6 +88,43 @@ export class Unit extends CustomMarker {
     #targetPositionPolyline: Polyline;
     #timer: number = 0;
     #hotgroup: number | null = null;
+
+    getAlive() {return this.#alive};
+    getHuman() {return this.#human};
+    getControlled() {return this.#controlled};
+    getCoalition() {return this.#coalition};
+    getCountry() {return this.#country};
+    getName() {return this.#name};
+    getUnitName() {return this.#unitName};
+    getGroupName() {return this.#groupName};
+    getState() {return this.#state};
+    getTask() {return this.#task};
+    getHasTask() {return this.#hasTask};
+    getPosition() {return this.#position};
+    getSpeed() {return this.#speed};
+    getHeading() {return this.#heading};
+    getIsTanker() {return this.#isTanker};
+    getIsAWACS() {return this.#isAWACS};
+    getOnOff() {return this.#onOff};
+    getFollowRoads() {return this.#followRoads};
+    getFuel() {return this.#fuel};
+    getDesiredSpeed() {return this.#desiredSpeed};
+    getDesiredSpeedType() {return this.#desiredSpeedType};
+    getDesiredAltitude() {return this.#desiredAltitude};
+    getDesiredAltitudeType() {return this.#desiredAltitudeType};
+    getLeaderID() {return this.#leaderID};
+    getFormationOffset() {return this.#formationOffset};
+    getTargetID() {return this.#targetID};
+    getTargetPosition() {return this.#targetPosition};
+    getROE() {return this.#ROE};
+    getReactionToThreat() {return this.#reactionToThreat};
+    getEmissionsCountermeasures() {return this.#emissionsCountermeasures};
+    getTACAN() {return this.#TACAN};
+    getRadio() {return this.#radio};
+    getGeneralSettings() {return this.#generalSettings};
+    getAmmo() {return this.#ammo};
+    getContacts() {return this.#contacts};
+    getActivePath() {return this.#activePath};
 
     static getConstructor(type: string) {
         if (type === "GroundUnit") return GroundUnit;
@@ -242,10 +279,8 @@ export class Unit extends CustomMarker {
         }
     }
 
-    getMarkerCategory() {
-        // Overloaded by child classes
-        // TODO convert to use getMarkerCategoryByName 
-        return "";
+    getMarkerCategory(): string {
+        return getMarkerCategoryByName(this.getName());
     }
 
     getDatabase(): UnitDatabase | null {
@@ -737,8 +772,10 @@ export class Unit extends CustomMarker {
                 this.#miniMapMarker.bringToBack();
             }
             else {
-                this.#miniMapMarker.setLatLng(new LatLng(this.#position.lat, this.#position.lng));
-                this.#miniMapMarker.bringToBack();
+                if (this.#miniMapMarker.getLatLng().lat !== this.getPosition().lat && this.#miniMapMarker.getLatLng().lng !== this.getPosition().lng) {
+                    this.#miniMapMarker.setLatLng(new LatLng(this.#position.lat, this.#position.lng));
+                    this.#miniMapMarker.bringToBack();
+                }
             }
         }
         else {
@@ -750,7 +787,9 @@ export class Unit extends CustomMarker {
 
         /* Draw the marker */
         if (!this.getHidden()) {
-            this.setLatLng(new LatLng(this.#position.lat, this.#position.lng));
+            if (this.getLatLng().lat !== this.getPosition().lat && this.getLatLng().lng !== this.getPosition().lng) {
+                this.setLatLng(new LatLng(this.#position.lat, this.#position.lng));
+            }
 
             var element = this.getElement();
             if (element != null) {
@@ -904,7 +943,7 @@ export class Unit extends CustomMarker {
             this.#drawtargetPosition(this.#targetPosition);
         }
         else if (this.#targetID != 0 && getUnitsManager().getUnitByID(this.#targetID)) {
-            const position = getUnitsManager().getUnitByID(this.#targetID)?.getData().position;
+            const position = getUnitsManager().getUnitByID(this.#targetID)?.getPosition();
             if (position)
                 this.#drawtargetPosition(position);
         }
@@ -954,10 +993,6 @@ export class Aircraft extends AirUnit {
     getCategory() {
         return "Aircraft";
     }
-
-    getMarkerCategory() {
-        return "aircraft";
-    }
 }
 
 export class Helicopter extends AirUnit {
@@ -967,10 +1002,6 @@ export class Helicopter extends AirUnit {
 
     getCategory() {
         return "Helicopter";
-    }
-
-    getMarkerCategory() {
-        return "helicopter";
     }
 }
 
@@ -996,10 +1027,6 @@ export class GroundUnit extends Unit {
     getCategory() {
         return "GroundUnit";
     }
-
-    getMarkerCategory() {
-        return getMarkerCategoryByName(this.getData().name);
-    }
 }
 
 export class NavyUnit extends Unit {
@@ -1023,10 +1050,6 @@ export class NavyUnit extends Unit {
 
     getCategory() {
         return "NavyUnit";
-    }
-
-    getMarkerCategory() {
-        return "navyunit";
     }
 }
 

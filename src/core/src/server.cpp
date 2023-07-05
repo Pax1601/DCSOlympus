@@ -96,13 +96,11 @@ void Server::handle_get(http_request request)
                             time = 0;
                         }
                     }
-
-                    bool refresh = (time == 0);
                     unsigned long long updateTime = ms.count();
 
                     stringstream ss;
                     ss.write((char*)&updateTime, sizeof(updateTime));
-                    unitsManager->getUnitData(ss, time, refresh);
+                    unitsManager->getUnitData(ss, time);
                     response.set_body(concurrency::streams::bytestream::open_istream(ss.str()));
                 }
                 else {

@@ -20,7 +20,7 @@ public:
 	void updateExportData(lua_State* L, double dt = 0);
 	void updateMissionData(json::value missionData);
 	void runAILoop();
-	string getUnitData(stringstream &ss, unsigned long long time, bool refresh);
+	string getUnitData(stringstream &ss, unsigned long long time);
 	void deleteUnit(unsigned int ID, bool explosion);
 	void acquireControl(unsigned int ID);
 	
