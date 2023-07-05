@@ -40,22 +40,53 @@ export class AirbaseContextMenu extends ContextMenu {
 
         if ( runwaysContainer instanceof HTMLElement ) {
 
-            const runways = this.#airbase.getChartData().Runways;
+            const runways = this.#airbase.getChartData().runways;
 
-            for ( const runway in runways ) {
+            if ( runways.length === 0 ) {
+                runwaysContainer.innerText = "No data";
+            } else {
+                runways.forEach( runway => {
 
-                let r = runways[ runway ];
+                    let runwayDiv = document.createElement( "div" );
+                    runwayDiv.classList.add( "runway" );
 
-                let dt       = document.createElement( "dt" );
-                dt.innerText = `${runway} (${r["Mag Hdg"]}` + `º)`;
+                    runway.headings.forEach( headings => {
 
-                runwaysContainer.appendChild( dt );
+                        //*
+                        for ( const [ heading, data ] of Object.entries( headings ) ) {
+                            
+                            let headingDiv = document.createElement( "div" );
+                            headingDiv.classList.add( "heading" );
 
-                let dd       = document.createElement( "dd" );
-                dd.innerText = r.ILS ? `ILS: ${r.ILS}` : "-";
+                            let abbr       = document.createElement( "abbr" );
+                            abbr.title     = `Mag heading: ${data.magHeading}`;
+                            abbr.innerText = heading;
 
-                runwaysContainer.appendChild( dd );
+                            headingDiv.appendChild( abbr );
 
+                            runwayDiv.appendChild( headingDiv );
+
+                            if ( data.ILS ) {
+                                let ilsDiv = document.createElement( "div" );
+                                ilsDiv.classList.add( "ils" );
+
+                                abbr           = document.createElement( "abbr" );
+                                abbr.title     = data.ILS;
+                                abbr.innerText = "ILS";
+
+                                ilsDiv.appendChild( abbr );
+                                headingDiv.appendChild( ilsDiv );
+                            }
+        
+        
+                        }
+                        //*/
+
+                    });
+
+                    runwaysContainer.appendChild( runwayDiv );
+
+                });
             }
 
         }

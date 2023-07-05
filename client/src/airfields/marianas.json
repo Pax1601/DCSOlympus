@@ -2,169 +2,224 @@
   "airfields": {
     "Andersen_AFB": {
       "ICAO": "PGUA",
-      "Elevation": "606",
+      "elevation": "606",
       "TACAN": "54X",
-      "Runways:": {
-        "06L": {
-          "Mag Hdg": "066",
-          "Length": "10300",
-          "ILS": "109.30"
+      "runways": [
+        {
+          "headings": [
+            {
+              "06L": {
+                "magHeading": "066",
+                "ILS": "109.30"
+              },
+              "24R": {
+                "magHeading": "246",
+                "ILS": "109.35"
+              }
+            }
+          ],
+          "length": "10300"
         },
-        "24R": {
-          "Mag Hdg": "246",
-          "Length": "10300",
-          "ILS": "109.35"
-        },
-        "06R": {
-          "Mag Hdg": "066",
-          "Length": "10900",
-          "ILS": "110.10"
-        },
-        "24l": {
-          "Mag Hdg": "246",
-          "Length": "10900",
-          "ILS": "110.15"
+        {
+          "headings": [
+            {
+              "06R": {
+                "magHeading": "066",
+                "ILS": "110.10"
+              },
+              "24L": {
+                "magHeading": "246",
+                "ILS": "110.15"
+              }
+            }
+          ],
+          "length": "10900"
         }
-      }
+      ]
     },
     "Antonio_B._Won_Pat_Int_Airport": {
       "ICAO": "PGUM",
-      "Elevation": "255",
+      "elevation": "255",
       "TACAN": "105X",
-      "Runways:": {
-        "06L": {
-          "Mag Hdg": "066",
-          "Length": "10600",
-          "ILS": "110.30"
+      "runways": [
+        {
+          "headings": [
+            {
+              "06L": {
+                "magHeading": "066",
+                "ILS": "110.30"
+              },
+              "24R": {
+                "magHeading": "245",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "10600"
         },
-        "24R": {
-          "Mag Hdg": "245",
-          "Length": "10600",
-          "ILS": ""
-        },
-        "06R": {
-          "Mag Hdg": "066",
-          "Length": "8600",
-          "ILS": "110.90"
-        },
-        "24L": {
-          "Mag Hdg": "245",
-          "Length": "8600",
-          "ILS": ""
+        {
+          "headings": [
+            {
+              "06R": {
+                "magHeading": "066",
+                "ILS": "110.90"
+              },
+              "24L": {
+                "magHeading": "245",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "8600"
         }
-      }
+      ]
     },
     "North_West_Field": {
       "ICAO": "",
-      "Elevation": "522",
+      "elevation": "522",
       "TACAN": "",
-      "Runways:": {
-        "06": {
-          "Mag Hdg": "063",
-          "Length": "4500",
-          "ILS": ""
-        },
-        "24": {
-          "Mag Hdg": "243",
-          "Length": "4500",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "24": {
+                "magHeading": "243",
+                "ILS": ""
+              },
+              "06": {
+                "magHeading": "063",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "4500"
         }
-      }
+      ]
     },
     "Olf_Orote_Field": {
       "ICAO": "",
-      "Elevation": "94",
+      "elevation": "94",
       "TACAN": "",
-      "Runways:": {
-        "07": {
-          "Mag Hdg": "067",
-          "Length": "3500",
-          "ILS": ""
-        },
-        "25": {
-          "Mag Hdg": "247",
-          "Length": "3500",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "25": {
+                "magHeading": "247",
+                "ILS": ""
+              },
+              "07": {
+                "magHeading": "067",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "3500"
         }
-      }
+      ]
     },
     "Pagan_Airstrip": {
       "ICAO": "",
-      "Elevation": "49",
+      "elevation": "49",
       "TACAN": "",
-      "Runways:": {
-        "11": {
-          "Mag Hdg": "112",
-          "Length": "1800",
-          "ILS": ""
-        },
-        "29": {
-          "Mag Hdg": "292",
-          "Length": "1800",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "11": {
+                "magHeading": "112",
+                "ILS": ""
+              },
+              "29": {
+                "magHeading": "292",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "1800"
         }
-      }
+      ]
     },
     "Rota_Int": {
       "ICAO": "PGRO",
-      "Elevation": "569",
+      "elevation": "569",
       "TACAN": "",
-      "Runways:": {
-        "09": {
-          "Mag Hdg": "092",
-          "Length": "6600",
-          "ILS": ""
-        },
-        "27": {
-          "Mag Hdg": "272",
-          "Length": "6600",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "27": {
+                "magHeading": "272",
+                "ILS": ""
+              },
+              "09": {
+                "magHeading": "092",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "6600"
         }
-      }
+      ]
     },
     "Saipan_Int": {
       "ICAO": "PGSN",
-      "Elevation": "213",
+      "elevation": "213",
       "TACAN": "",
-      "Runways:": {
-        "06": {
-          "Mag Hdg": "068",
-          "Length": "6200",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "24": {
+                "magHeading": "248",
+                "ILS": ""
+              },
+              "06": {
+                "magHeading": "068",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "6200"
         },
-        "24": {
-          "Mag Hdg": "248",
-          "Length": "6200",
-          "ILS": ""
-        },
-        "07": {
-          "Mag Hdg": "068",
-          "Length": "10600",
-          "ILS": "109.90"
-        },
-        "25": {
-          "Mag Hdg": "248",
-          "Length": "10600",
-          "ILS": ""
+        {
+          "headings": [
+            {
+              "25": {
+                "magHeading": "248",
+                "ILS": ""
+              },
+              "07": {
+                "magHeading": "068",
+                "ILS": "109.90"
+              }
+            }
+          ],
+          "length": "10600"
         }
-      }
+      ]
     },
     "Tinian_Int": {
       "ICAO": "PGWT",
-      "Elevation": "284",
+      "elevation": "284",
       "TACAN": "",
-      "Runways:": {
-        "08": {
-          "Mag Hdg": "079",
-          "Length": "8200",
-          "ILS": ""
-        },
-        "26": {
-          "Mag Hdg": "259",
-          "Length": "8200",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "26": {
+                "magHeading": "259",
+                "ILS": ""
+              },
+              "08": {
+                "magHeading": "079",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "8200"
         }
-      }
+      ]
     }
   }
 }

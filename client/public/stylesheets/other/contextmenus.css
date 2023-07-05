@@ -279,6 +279,42 @@
     width: 16px;
 }
 
+
+/*  Airbase context menu  */
+#airbase-contextmenu #airbase-runways {
+    display:flex;
+    flex-direction: column;
+    row-gap:4px;
+}
+
+#airbase-contextmenu #airbase-runways > .runway {
+    border:1px solid #ccc;
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#airbase-contextmenu #airbase-runways > .runway abbr {
+    cursor:help;
+    text-decoration: none;
+}
+
+#airbase-contextmenu #airbase-runways > .runway > .heading {
+    align-items: center;
+    column-gap: 4px;
+    display:flex;
+    flex-direction: row;
+}
+
+#airbase-contextmenu #airbase-runways > .runway > .heading > abbr {
+    font-weight: var( --font-weight-bolder );
+    padding:4px;
+}
+
+#airbase-contextmenu #airbase-runways > .runway > .heading:last-of-type {
+    flex-direction: row-reverse;
+}
+
 #center-map::before {
     content: url("/resources/theme/images/icons/arrows-to-eye-solid.svg");
 }

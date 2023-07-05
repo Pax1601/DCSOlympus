@@ -10,26 +10,32 @@ export interface AirbaseOptions
 
 
 export interface AirbaseChartData {
-    Elevation: string,
+    elevation: string,
     ICAO: string,
     TACAN: string,
-    Runways: { [index: string]: AirbaseChartRunwayData }
+    runways: AirbaseChartRunwayData[]
 }
 
 export interface AirbaseChartRunwayData {
-    "Mag Hdg": string,
-    "Length": string,
-    "ILS": string
+    "headings": AirbaseChartRunwayHeadingData[],
+    "length": string
+}
+
+export interface AirbaseChartRunwayHeadingData {
+    [index: string]: {
+        "magHeading": string,
+        "ILS": string
+    }
 }
 
 export class Airbase extends CustomMarker
 {
     #name: string = "";
     #chartData: AirbaseChartData = {
-        Elevation: "",
+        elevation: "",
         ICAO: "",
         TACAN: "",
-        Runways: {}
+        runways: []
     };
     #coalition: string = "";
     #hasChartDataBeenSet:boolean = false;

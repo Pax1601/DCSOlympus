@@ -1,431 +1,558 @@
 {
   "airfields": {
-    
     "Beatty": {
       "ICAO": "KBTY",
-      "Elevation": "3173",
+      "elevation": "3173",
       "TACAN": "94X",
-      "Runways": {
-        "16": {
-          "Mag Hdg": "168",
-          "Length": "5500",
-          "ILS": ""
-        },
-        "34": {
-          "Mag Hdg": "348",
-          "Length": "5500",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "16": {
+                "magHeading": "168",
+                "ILS": ""
+              },
+              "34": {
+                "magHeading": "348",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "5500"
         }
-      }
+      ]
     },
-
     "Boulder City": {
       "ICAO": "KBVU",
-      "Elevation": "2205",
+      "elevation": "2205",
       "TACAN": "114X",
-      "Runways": {
-        "09": {
-          "Mag Hdg": "087",
-          "Length": "4400",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "15": {
+                "magHeading": "153",
+                "ILS": ""
+              },
+              "33": {
+                "magHeading": "333",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "3700"
         },
-        "27": {
-          "Mag Hdg": "267",
-          "Length": "4400",
-          "ILS": ""
-        },
-        "15": {
-          "Mag Hdg": "153",
-          "Length": "3700",
-          "ILS": ""
-        },
-        "33": {
-          "Mag Hdg": "333",
-          "Length": "3700",
-          "ILS": ""
+        {
+          "headings": [
+            {
+              "27": {
+                "magHeading": "267",
+                "ILS": ""
+              },
+              "09": {
+                "magHeading": "087",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "4400"
         }
-      }
+      ]
     },
-
     "Creech": {
       "ICAO": "KINS",
-      "Elevation": "3126",
+      "elevation": "3126",
       "TACAN": "87X",
-      "Runways": {
-        "08": {
-          "Mag Hdg": "080",
-          "Length": "8700",
-          "ILS": "108.70"
+      "runways": [
+        {
+          "headings": [
+            {
+              "13": {
+                "magHeading": "134",
+                "ILS": ""
+              },
+              "31": {
+                "magHeading": "314",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "4700"
         },
-        "26": {
-          "Mag Hdg": "260",
-          "Length": "8700",
-          "ILS": ""
-        },
-        "13": {
-          "Mag Hdg": "134",
-          "Length": "4700",
-          "ILS": ""
-        },
-        "31": {
-          "Mag Hdg": "314",
-          "Length": "4700",
-          "ILS": ""
+        {
+          "headings": [
+            {
+              "26": {
+                "magHeading": "260",
+                "ILS": ""
+              },
+              "08": {
+                "magHeading": "080",
+                "ILS": "108.70"
+              }
+            }
+          ],
+          "length": "8700"
         }
-      }
+      ]
     },
-
     "Echo Bay": {
       "ICAO": "0L9",
-      "Elevation": "1549",
+      "elevation": "1549",
       "TACAN": "",
-      "Runways": {
-        "06": {
-          "Mag Hdg": "066",
-          "Length": "3300",
-          "ILS": ""
-        },
-        "24": {
-          "Mag Hdg": "246",
-          "Length": "3300",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "24": {
+                "magHeading": "246",
+                "ILS": ""
+              },
+              "06": {
+                "magHeading": "066",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "3300"
         }
-      }
+      ]
     },
-
     "Groom Lake": {
       "ICAO": "KXTA",
-      "Elevation": "4495",
+      "elevation": "4495",
       "TACAN": "18X",
-      "Runways": {
-        "14L": {
-          "Mag Hdg": "145",
-          "Length": "11700",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "14L": {
+                "magHeading": "145",
+                "ILS": ""
+              },
+              "32R": {
+                "magHeading": "325",
+                "ILS": "109.30"
+              }
+            }
+          ],
+          "length": "11700"
         },
-        "32R": {
-          "Mag Hdg": "325",
-          "Length": "11700",
-          "ILS": "109.30"
-        },
-        "14R (CLOSED)": {
-          "Mag Hdg": "145",
-          "Length": "17800",
-          "ILS": ""
-        },
-        "32L (CLOSED)": {
-          "Mag Hdg": "325",
-          "Length": "17800",
-          "ILS": ""
+        {
+          "headings": [
+            {
+              "14R (CLOSED)": {
+                "magHeading": "145",
+                "ILS": ""
+              },
+              "32L (CLOSED)": {
+                "magHeading": "325",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "17800"
         }
-      }
+      ]
     },
-
     "Henderson Executive": {
       "ICAO": "KHND",
-      "Elevation": "2493",
+      "elevation": "2493",
       "TACAN": "",
-      "Runways": {
-        "17L": {
-          "Mag Hdg": "168",
-          "Length": "4600",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "17L": {
+                "magHeading": "168",
+                "ILS": ""
+              },
+              "35R": {
+                "magHeading": "348",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "4600"
         },
-        "35R": {
-          "Mag Hdg": "348",
-          "Length": "4600",
-          "ILS": ""
-        },
-        "17R": {
-          "Mag Hdg": "168",
-          "Length": "6100",
-          "ILS": ""
-        },
-        "35L": {
-          "Mag Hdg": "348",
-          "Length": "6100",
-          "ILS": ""
+        {
+          "headings": [
+            {
+              "17R": {
+                "magHeading": "168",
+                "ILS": ""
+              },
+              "35L": {
+                "magHeading": "348",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "6100"
         }
-      }
+      ]
     },
-
     "Jean": {
       "ICAO": "",
-      "Elevation": "2825",
+      "elevation": "2825",
       "TACAN": "",
-      "Runways": {
-        "02L": {
-          "Mag Hdg": "020",
-          "Length": "4500",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "02L": {
+                "magHeading": "020",
+                "ILS": ""
+              },
+              "20R": {
+                "magHeading": "200",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "4500"
         },
-        "20R": {
-          "Mag Hdg": "200",
-          "Length": "4500",
-          "ILS": ""
-        },
-        "02R": {
-          "Mag Hdg": "020",
-          "Length": "3600",
-          "ILS": ""
-        },
-        "20L": {
-          "Mag Hdg": "200",
-          "Length": "3600",
-          "ILS": ""
+        {
+          "headings": [
+            {
+              "02R": {
+                "magHeading": "020",
+                "ILS": ""
+              },
+              "20L": {
+                "magHeading": "200",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "3600"
         }
-      }
+      ]
     },
-
     "McCarran International": {
       "ICAO": "KLAS",
-      "Elevation": "2178",
+      "elevation": "2178",
       "TACAN": "116X",
-      "Runways": {
-        "01L": {
-          "Mag Hdg": "013",
-          "Length": "8000",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "01L": {
+                "magHeading": "013",
+                "ILS": ""
+              },
+              "19R": {
+                "magHeading": "193",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "8000"
         },
-        "19R": {
-          "Mag Hdg": "193",
-          "Length": "8000",
-          "ILS": ""
+        {
+          "headings": [
+            {
+              "01R": {
+                "magHeading": "013",
+                "ILS": ""
+              },
+              "19L": {
+                "magHeading": "193",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "8000"
         },
-        "01R": {
-          "Mag Hdg": "013",
-          "Length": "8000",
-          "ILS": ""
+        {
+          "headings": [
+            {
+              "07L": {
+                "magHeading": "078",
+                "ILS": ""
+              },
+              "25R": {
+                "magHeading": "258",
+                "ILS": "110.30"
+              }
+            }
+          ],
+          "length": "10600"
         },
-        "19L": {
-          "Mag Hdg": "193",
-          "Length": "8000",
-          "ILS": ""
-        },
-        "07L": {
-          "Mag Hdg": "078",
-          "Length": "10600",
-          "ILS": ""
-        },
-        "25R": {
-          "Mag Hdg": "258",
-          "Length": "10600",
-          "ILS": "110.30"
-        },
-        "07R": {
-          "Mag Hdg": "078",
-          "Length": "10100",
-          "ILS": ""
-        },
-        "25L": {
-          "Mag Hdg": "258",
-          "Length": "10100",
-          "ILS": ""
+        {
+          "headings": [
+            {
+              "07R": {
+                "magHeading": "078",
+                "ILS": ""
+              },
+              "25L": {
+                "magHeading": "258",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "10100"
         }
-      }
+      ]
     },
-
     "Laughlin": {
       "ICAO": "KIFP",
-      "Elevation": "673",
+      "elevation": "673",
       "TACAN": "",
-      "Runways": {
-        "16": {
-          "Mag Hdg": "164",
-          "Length": "7100",
-          "ILS": ""
-        },
-        "34": {
-          "Mag Hdg": "344",
-          "Length": "7100",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "16": {
+                "magHeading": "164",
+                "ILS": ""
+              },
+              "34": {
+                "magHeading": "344",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "7100"
         }
-      }
+      ]
     },
-
     "Lincoln County": {
       "ICAO": "",
-      "Elevation": "4816",
+      "elevation": "4816",
       "TACAN": "",
-      "Runways": {
-        "17": {
-          "Mag Hdg": "170",
-          "Length": "4500",
-          "ILS": ""
-        },
-        "35": {
-          "Mag Hdg": "350",
-          "Length": "4500",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "17": {
+                "magHeading": "170",
+                "ILS": ""
+              },
+              "35": {
+                "magHeading": "350",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "4500"
         }
-      }
+      ]
     },
-
     "Mesquite": {
       "ICAO": "67L",
-      "Elevation": "1859",
+      "elevation": "1859",
       "TACAN": "",
-      "Runways": {
-        "01": {
-          "Mag Hdg": "017",
-          "Length": "5000",
-          "ILS": ""
-        },
-        "19": {
-          "Mag Hdg": "197",
-          "Length": "5000",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "19": {
+                "magHeading": "197",
+                "ILS": ""
+              },
+              "01": {
+                "magHeading": "017",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "5000"
         }
-      }
+      ]
     },
-
     "Mina": {
       "ICAO": "",
-      "Elevation": "4560",
+      "elevation": "4560",
       "TACAN": "",
-      "Runways": {
-        "13": {
-          "Mag Hdg": "140",
-          "Length": "4100",
-          "ILS": ""
-        },
-        "31": {
-          "Mag Hdg": "320",
-          "Length": "4100",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "13": {
+                "magHeading": "140",
+                "ILS": ""
+              },
+              "31": {
+                "magHeading": "320",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "4100"
         }
-      }
+      ]
     },
-
     "Nellis": {
       "ICAO": "KLSV",
-      "Elevation": "1849",
+      "elevation": "1849",
       "TACAN": "12X",
-      "Runways": {
-        "03L": {
-          "Mag Hdg": "029",
-          "Length": "9800",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "03L": {
+                "magHeading": "029",
+                "ILS": ""
+              },
+              "21R": {
+                "magHeading": "209",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "9800"
         },
-        "21R": {
-          "Mag Hdg": "209",
-          "Length": "9800",
-          "ILS": ""
-        },
-        "03R": {
-          "Mag Hdg": "029",
-          "Length": "9800",
-          "ILS": ""
-        },
-        "21L": {
-          "Mag Hdg": "209",
-          "Length": "9800",
-          "ILS": "109.10"
+        {
+          "headings": [
+            {
+              "03R": {
+                "magHeading": "029",
+                "ILS": ""
+              },
+              "21L": {
+                "magHeading": "209",
+                "ILS": "109.10"
+              }
+            }
+          ],
+          "length": "9800"
         }
-      }
+      ]
     },
-
     "North Las Vegas": {
       "ICAO": "KVGT",
-      "Elevation": "2228",
+      "elevation": "2228",
       "TACAN": "",
-      "Runways": {
-        "07": {
-          "Mag Hdg": "076",
-          "Length": "4900",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "25": {
+                "magHeading": "256",
+                "ILS": ""
+              },
+              "07": {
+                "magHeading": "076",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "4900"
         },
-        "25": {
-          "Mag Hdg": "256",
-          "Length": "4900",
-          "ILS": ""
+        {
+          "headings": [
+            {
+              "12L": {
+                "magHeading": "122",
+                "ILS": "110.70"
+              },
+              "30R": {
+                "magHeading": "302",
+                "ILS": "109.10"
+              }
+            }
+          ],
+          "length": "3800"
         },
-        "12L": {
-          "Mag Hdg": "122",
-          "Length": "3800",
-          "ILS": "110.70"
-        },
-        "30R": {
-          "Mag Hdg": "302",
-          "Length": "3800",
-          "ILS": "109.10"
-        },
-        "12R": {
-          "Mag Hdg": "122",
-          "Length": "4600",
-          "ILS": ""
-        },
-        "30L": {
-          "Mag Hdg": "302",
-          "Length": "4600",
-          "ILS": ""
+        {
+          "headings": [
+            {
+              "12R": {
+                "magHeading": "122",
+                "ILS": ""
+              },
+              "30L": {
+                "magHeading": "302",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "4600"
         }
-      }
+      ]
     },
-
     "Pahute Mesa": {
       "ICAO": "",
-      "Elevation": "5059",
+      "elevation": "5059",
       "TACAN": "",
-      "Runways": {
-        "18": {
-          "Mag Hdg": "182",
-          "Length": "5500",
-          "ILS": ""
-        },
-        "36": {
-          "Mag Hdg": "002",
-          "Length": "5500",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "18": {
+                "magHeading": "182",
+                "ILS": ""
+              },
+              "36": {
+                "magHeading": "002",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "5500"
         }
-      }
+      ]
     },
-
     "Tonopah": {
       "ICAO": "KTPH",
-      "Elevation": "5390",
+      "elevation": "5390",
       "TACAN": "119X",
-      "Runways": {
-        "11": {
-          "Mag Hdg": "113",
-          "Length": "5600",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "11": {
+                "magHeading": "113",
+                "ILS": ""
+              },
+              "29": {
+                "magHeading": "293",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "5600"
         },
-        "29": {
-          "Mag Hdg": "293",
-          "Length": "5600",
-          "ILS": ""
-        },
-        "15": {
-          "Mag Hdg": "153",
-          "Length": "6800",
-          "ILS": ""
-        },
-        "33": {
-          "Mag Hdg": "333",
-          "Length": "6800",
-          "ILS": ""
+        {
+          "headings": [
+            {
+              "15": {
+                "magHeading": "153",
+                "ILS": ""
+              },
+              "33": {
+                "magHeading": "333",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "6800"
         }
-      }
+      ]
     },
-
     "Tonopah Test Range": {
       "ICAO": "KTNX",
-      "Elevation": "5535",
+      "elevation": "5535",
       "TACAN": "77X",
-      "Runways": {
-        "14": {
-          "Mag Hdg": "145",
-          "Length": "11700",
-          "ILS": "108.30"
-        },
-        "32": {
-          "Mag Hdg": "325",
-          "Length": "11700",
-          "ILS": "111.70"
+      "runways": [
+        {
+          "headings": [
+            {
+              "14": {
+                "magHeading": "145",
+                "ILS": "108.30"
+              },
+              "32": {
+                "magHeading": "325",
+                "ILS": "111.70"
+              }
+            }
+          ],
+          "length": "11700"
         }
-      }
+      ]
     }
-
   }
 }
