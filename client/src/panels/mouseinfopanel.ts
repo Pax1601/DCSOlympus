@@ -36,7 +36,7 @@ export class MouseInfoPanel extends Panel {
         var selectedUnitPosition = null;
         var selectedUnits = getUnitsManager().getSelectedUnits();
         if (selectedUnits && selectedUnits.length == 1)
-            selectedUnitPosition = new LatLng(selectedUnits[0].getFlightData().latitude, selectedUnits[0].getFlightData().longitude);
+            selectedUnitPosition = new LatLng(selectedUnits[0].getPosition().lat, selectedUnits[0].getPosition().lng);
 
         /* Draw measures from selected unit, from pin location, and from bullseyes */
         this.#drawMeasure("ref-measure-position", "measure-position", this.#measurePoint, mousePosition);

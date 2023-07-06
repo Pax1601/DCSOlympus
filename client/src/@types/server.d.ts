@@ -1,5 +1,5 @@
 interface UnitsData {
-    units: {[key: string]: UnitData},  
+    units: string,  
     sessionHash: string    
 }
 

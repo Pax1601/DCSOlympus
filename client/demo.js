@@ -1,641 +1,250 @@
+var enc = new TextEncoder();
 
 const DEMO_UNIT_DATA = {
-    ["1"]:{
-        baseData: {
-            AI: false,
-            name: "KC-135",
-            unitName: "Olympus 1-1 aka Mr. Very long name",
-            groupName: "Group 2",
-            alive: true,
-            category: "Aircraft",
-        },
-        flightData:  {
-            latitude: 37.20,
-            longitude: -115.80,
-            altitude: 2000,
-            heading: 0.5,
-            speed: 300
-        },
-        missionData:  {
-            fuel: 50,
-            flags: {Human: false},
-            ammo: [
-                {
-                    count: 4,
-                    desc: {
-                        displayName: "AIM-120"
-                    }
-                },
-                {
-                    count: 2,
-                    desc: {
-                        displayName: "AIM-7"
-                    }
-                }
-            ],
-            targets: [],
-            hasTask: true,
-            coalition: "blue"
-        },
-        formationData:  {
-            formation: "Echelon",
-            isLeader: false,
-            isWingman: false,
-            leaderID: null,
-            wingmen: [],
-            wingmenIDs: []
-        },
-        taskData: {
-            currentTask: "Holding",
-            currentState: "Idle",
-            activePath: undefined,
-            desiredSpeed: 400,
-            desiredSpeedType: "CAS",
-            desiredAltitude: 3000,
-            desiredAltitudeType: "ASL",
-            isTanker: false,
-
-        },
-        optionsData: {
-            ROE: "Designated",
-            reactionToThreat: "Abort",
-        }
+    ["1"]:{ alive: true, human: false, controlled: true, coalition: 2, country: 0, name: "KC-135", unitName: "Cool guy 1-1", groupName: "Cool group 1", state: 3, task: "Being cool!",
+        hasTask: true, position: { lat: 37, lng: -116, alt: 1000 }, speed: 200, heading: 45, isTanker: true, isAWACS: false, onOff: true, followRoads: false, fuel: 50, 
+        desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
+        formationOffset: { x: 0, y: 0, z: 0 },
+        targetID: 2,
+        targetPosition: { lat: 0, lng: 0, alt: 0 },
+        ROE: 2,
+        reactionToThreat: 1,
+        emissionsCountermeasures: 1,
+        TACAN: { isOn: false, XY: 'Y', callsign: 'TKR', channel: 40 },
+        radio: { frequency: 124000000, callsign: 1, callsignNumber: 1 },
+        generalSettings: { prohibitAA: false, prohibitAfterburner: false, prohibitAG: false, prohibitAirWpn: false, prohibitJettison: false },
+        ammo: [{ quantity: 2, name: "A cool missile", guidance: 0, category: 0, missileCategory: 0 } ],
+        contacts: [],
+        activePath: [ {lat: 38, lng: -115, alt: 0}, {lat: 38, lng: -114, alt: 0} ]
     },
-    ["2"]:{
-        baseData: {
-            AI: true,
-            name: "KC-135",
-            unitName: "Olympus 1-2",
-            groupName: "Group 3",
-            alive: true,
-            category: "Aircraft",
-        },
-        flightData:  {
-            latitude: 37.2,
-            longitude: -115.75,
-            altitude: 2000,
-            heading: 0.5,
-            speed: 300
-        },
-        missionData:  {
-            fuel: 0.5,
-            flags: {human: false},
-            ammo: [],
-            targets: [],
-            hasTask: true,
-            coalition: "red"
-        },
-        formationData:  {
-            formation: "Echelon",
-            isLeader: false,
-            isWingman: false,
-            leaderID: null,
-            wingmen: [],
-            wingmenIDs: []
-        },
-        taskData: {
-            currentTask: "Example task",
-            activePath: undefined,
-            desiredSpeed: 300,
-            desiredAltitude: 3000
-        },
-        optionsData: {
-            ROE: "Designated",
-            reactionToThreat: "Abort",
-        }
-    },
-    ["3"]:{
-        baseData: {
-            AI: true,
-            name: "M-60",
-            unitName: "Olympus 1-3",
-            groupName: "Group 4",
-            alive: true,
-            category: "GroundUnit",
-        },
-        flightData:  {
-            latitude: 37.175,
-            longitude: -115.8,
-            altitude: 2000,
-            heading: 0.5,
-            speed: 300
-        },
-        missionData:  {
-            fuel: 0.5,
-            flags: {human: false},
-            ammo: [],
-            targets: [],
-            hasTask: true,
-            coalition: "blue"
-        },
-        formationData:  {
-            formation: "Echelon",
-            isLeader: false,
-            isWingman: false,
-            leaderID: null,
-            wingmen: [],
-            wingmenIDs: []
-        },
-        taskData: {
-            currentTask: "Example task",
-            activePath: undefined,
-            desiredSpeed: 400,
-            desiredAltitude: 3000,
-            onOff: false
-        },
-        optionsData: {
-            ROE: "None",
-            reactionToThreat: "None",
-        }
-    },
-    ["4"]:{
-        baseData: {
-            AI: true,
-            name: "2S6 Tunguska",
-            unitName: "Olympus 1-4",
-            alive: true,
-            category: "GroundUnit",
-        },
-        flightData:  {
-            latitude: 37.175,
-            longitude: -115.75,
-            altitude: 2000,
-            heading: 0.5,
-            speed: 300
-        },
-        missionData:  {
-            fuel: 0.5,
-            flags: {human: false},
-            ammo: [],
-            targets: [],
-            hasTask: true,
-            coalition: "red"
-        },
-        formationData:  {
-            formation: "Echelon",
-            isLeader: false,
-            isWingman: false,
-            leaderID: null,
-            wingmen: [],
-            wingmenIDs: []
-        },
-        taskData: {
-            currentTask: "Example task",
-            activePath: undefined,
-            desiredSpeed: 400,
-            desiredAltitude: 3000
-        },
-        optionsData: {
-            ROE: "None",
-            reactionToThreat: "None",
-        }
-    },
-    ["5"]:{
-        baseData: {
-            AI: true,
-            name: "M-60",
-            unitName: "Olympus 1-3",
-            groupName: "Group 1",
-            alive: true,
-            category: "GroundUnit",
-        },
-        flightData:  {
-            latitude: 37.15,
-            longitude: -115.8,
-            altitude: 2000,
-            heading: 0.5,
-            speed: 300
-        },
-        missionData:  {
-            fuel: 0.5,
-            flags: {human: false},
-            ammo: [],
-            targets: [],
-            hasTask: true,
-            coalition: "blue"
-        },
-        formationData:  {
-            formation: "Echelon",
-            isLeader: false,
-            isWingman: false,
-            leaderID: null,
-            wingmen: [],
-            wingmenIDs: []
-        },
-        taskData: {
-            currentTask: "Example task",
-            activePath: undefined,
-            desiredSpeed: 400,
-            desiredAltitude: 3000
-        },
-        optionsData: {
-            ROE: "None",
-            reactionToThreat: "None",
-        }
-    },
-    ["6"]:{
-        baseData: {
-            AI: true,
-            name: "M-60",
-            unitName: "Olympus 1-4",
-            groupName: "Group 1",
-            alive: true,
-            category: "GroundUnit",
-        },
-        flightData:  {
-            latitude: 37.15,
-            longitude: -115.75,
-            altitude: 2000,
-            heading: 0.5,
-            speed: 300
-        },
-        missionData:  {
-            fuel: 0.5,
-            flags: {human: false},
-            ammo: [],
-            targets: [],
-            hasTask: true,
-            coalition: "red"
-        },
-        formationData:  {
-            formation: "Echelon",
-            isLeader: false,
-            isWingman: false,
-            leaderID: null,
-            wingmen: [],
-            wingmenIDs: []
-        },
-        taskData: {
-            currentTask: "Example task",
-            activePath: undefined,
-            desiredSpeed: 400,
-            desiredAltitude: 3000
-        },
-        optionsData: {
-            ROE: "None",
-            reactionToThreat: "None",
-        }
-    },
-    ["7"]:{
-        baseData: {
-            AI: true,
-            name: "CVN-75 Very long name",
-            unitName: "Olympus 1-7",
-            groupName: "Group 1",
-            alive: true,
-            category: "NavyUnit",
-        },
-        flightData:  {
-            latitude: 37.125,
-            longitude: -115.8,
-            altitude: 2000,
-            heading: 0.5,
-            speed: 300
-        },
-        missionData:  {
-            fuel: 0.5,
-            flags: {human: false},
-            ammo: [],
-            targets: [],
-            hasTask: true,
-            coalition: "blue"
-        },
-        formationData:  {
-            formation: "Echelon",
-            isLeader: false,
-            isWingman: false,
-            leaderID: null,
-            wingmen: [],
-            wingmenIDs: []
-        },
-        taskData: {
-            currentTask: "Example task",
-            activePath: undefined,
-            desiredSpeed: 400,
-            desiredAltitude: 3000
-        },
-        optionsData: {
-            ROE: "None",
-            reactionToThreat: "None",
-        }
-    },
-    ["8"]:{
-        baseData: {
-            AI: true,
-            name: "CVN-75",
-            unitName: "Olympus 1-8",
-            groupName: "Group 1",
-            alive: true,
-            category: "NavyUnit",
-        },
-        flightData:  {
-            latitude: 37.125,
-            longitude: -115.75,
-            altitude: 2000,
-            heading: 0.5,
-            speed: 300
-        },
-        missionData:  {
-            fuel: 0.5,
-            flags: {human: false},
-            ammo: [],
-            targets: [],
-            hasTask: true,
-            coalition: "red"
-        },
-        formationData:  {
-            formation: "Echelon",
-            isLeader: false,
-            isWingman: false,
-            leaderID: null,
-            wingmen: [],
-            wingmenIDs: []
-        },
-        taskData: {
-            currentTask: "Example task",
-            activePath: undefined,
-            desiredSpeed: 400,
-            desiredAltitude: 3000
-        },
-        optionsData: {
-            ROE: "None",
-            reactionToThreat: "None",
-        }
-    },
-    ["9"]:{
-        baseData: {
-            AI: true,
-            name: "CVN-75",
-            unitName: "Olympus 1-9",
-            groupName: "Group 1",
-            alive: true,
-            category: "Aircraft",
-        },
-        flightData:  {
-            latitude: 37.10,
-            longitude: -115.75,
-            altitude: 2000,
-            heading: 0.5,
-            speed: 300
-        },
-        missionData:  {
-            fuel: 0.5,
-            flags: {human: false},
-            ammo: [],
-            targets: [],
-            hasTask: true,
-            coalition: "red"
-        },
-        formationData:  {
-            formation: "Echelon",
-            isLeader: false,
-            isWingman: false,
-            leaderID: null,
-            wingmen: [],
-            wingmenIDs: []
-        },
-        taskData: {
-            currentTask: "Example task",
-            activePath: undefined,
-            desiredSpeed: 400,
-            desiredAltitude: 3000
-        },
-        optionsData: {
-            ROE: "None",
-            reactionToThreat: "None",
-        }
-    },
-    ["10"]:{
-        baseData: {
-            AI: true,
-            name: "CVN-75",
-            unitName: "Olympus 1-10",
-            groupName: "Group 1",
-            alive: true,
-            category: "Aircraft",
-        },
-        flightData:  {
-            latitude: 37.10,
-            longitude: -115.8,
-            altitude: 2000,
-            heading: 0.5,
-            speed: 300
-        },
-        missionData:  {
-            fuel: 0.5,
-            flags: {human: false},
-            ammo: [],
-            targets: [],
-            hasTask: true,
-            coalition: "blue"
-        },
-        formationData:  {
-            formation: "Echelon",
-            isLeader: false,
-            isWingman: false,
-            leaderID: null,
-            wingmen: [],
-            wingmenIDs: []
-        },
-        taskData: {
-            currentTask: "Example task",
-            activePath: undefined,
-            desiredSpeed: 400,
-            desiredAltitude: 3000
-        },
-        optionsData: {
-            ROE: "None",
-            reactionToThreat: "None",
-        }
-    },
-    ["11"]:{
-        baseData: {
-            AI: true,
-            name: "CVN-75",
-            unitName: "Olympus 1-11",
-            groupName: "Group 1",
-            alive: true,
-            category: "Missile",
-        },
-        flightData:  {
-            latitude: 37.075,
-            longitude: -115.80,
-            altitude: 2000,
-            heading: 0.5,
-            speed: 300
-        },
-        missionData:  {
-            fuel: 0.5,
-            flags: {human: false},
-            ammo: [],
-            targets: [],
-            hasTask: true,
-            coalition: "blue"
-        },
-        formationData:  {
-            formation: "Echelon",
-            isLeader: false,
-            isWingman: false,
-            leaderID: null,
-            wingmen: [],
-            wingmenIDs: []
-        },
-        taskData: {
-            currentTask: "Example task",
-            activePath: undefined,
-            desiredSpeed: 400,
-            desiredAltitude: 3000
-        },
-        optionsData: {
-            ROE: "None",
-            reactionToThreat: "None",
-        }
-    },
-    ["12"]:{
-        baseData: {
-            AI: true,
-            name: "CVN-75",
-            unitName: "Olympus 1-12",
-            groupName: "Group 1",
-            alive: true,
-            category: "Missile",
-        },
-        flightData:  {
-            latitude: 37.075,
-            longitude: -115.75,
-            altitude: 2000,
-            heading: 0.6,
-            speed: 300
-        },
-        missionData:  {
-            fuel: 0.5,
-            flags: {human: false},
-            ammo: [],
-            targets: [],
-            hasTask: true,
-            coalition: "red"
-        },
-        formationData:  {
-            formation: "Echelon",
-            isLeader: false,
-            isWingman: false,
-            leaderID: null,
-            wingmen: [],
-            wingmenIDs: []
-        },
-        taskData: {
-            currentTask: "Example task",
-            activePath: undefined,
-            desiredSpeed: 400,
-            desiredAltitude: 3000
-        },
-        optionsData: {
-            ROE: "None",
-            reactionToThreat: "None",
-        }
-    },
-    ["13"]:{
-        baseData: {
-            AI: true,
-            name: "CVN-75",
-            unitName: "Olympus 1-11",
-            groupName: "Group 1",
-            alive: true,
-            category: "Bomb",
-        },
-        flightData:  {
-            latitude: 37.05,
-            longitude: -115.8,
-            altitude: 2000,
-            heading: 0.5,
-            speed: 300
-        },
-        missionData:  {
-            fuel: 0.5,
-            flags: {human: false},
-            ammo: [],
-            targets: [],
-            hasTask: true,
-            coalition: "blue"
-        },
-        formationData:  {
-            formation: "Echelon",
-            isLeader: false,
-            isWingman: false,
-            leaderID: null,
-            wingmen: [],
-            wingmenIDs: []
-        },
-        taskData: {
-            currentTask: "Example task",
-            activePath: undefined,
-            desiredSpeed: 400,
-            desiredAltitude: 3000
-        },
-        optionsData: {
-            ROE: "None",
-            reactionToThreat: "None",
-        }
-    },
-    ["14"]:{
-        baseData: {
-            AI: true,
-            name: "CVN-75",
-            unitName: "Olympus 1-12",
-            groupName: "Group 1",
-            alive: true,
-            category: "Bomb",
-        },
-        flightData:  {
-            latitude: 37.05,
-            longitude: -115.75,
-            altitude: 2000,
-            heading: 0.6,
-            speed: 300
-        },
-        missionData:  {
-            fuel: 0.5,
-            flags: {human: false},
-            ammo: [],
-            targets: [],
-            hasTask: true,
-            coalition: "red"
-        },
-        formationData:  {
-            formation: "Echelon",
-            isLeader: false,
-            isWingman: false,
-            leaderID: null,
-            wingmen: [],
-            wingmenIDs: []
-        },
-        taskData: {
-            currentTask: "Example task",
-            activePath: undefined,
-            desiredSpeed: 400,
-            desiredAltitude: 3000
-        },
-        optionsData: {
-            ROE: "None",
-            reactionToThreat: "None",
-        }
+    ["2"]:{ alive: true, human: false, controlled: false, coalition: 1, country: 0, name: "KC-135", unitName: "Cool guy 1-2", groupName: "Cool group 2", state: 1, task: "Being cool",
+        hasTask: false, position: { lat: 36.9, lng: -116, alt: 1000 }, speed: 200, heading: 0, isTanker: false, isAWACS: false, onOff: true, followRoads: false, fuel: 50, 
+        desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
+        formationOffset: { x: 0, y: 0, z: 0 },
+        targetID: 0,
+        targetPosition: { lat: 38, lng: -117, alt: 1000 },
+        ROE: 2,
+        reactionToThreat: 1,
+        emissionsCountermeasures: 1,
+        TACAN: { isOn: false, XY: 'Y', callsign: 'TKR', channel: 40 },
+        radio: { frequency: 124000000, callsign: 1, callsignNumber: 1 },
+        generalSettings: { prohibitAA: false, prohibitAfterburner: false, prohibitAG: false, prohibitAirWpn: false, prohibitJettison: false },
+        ammo: [{ quantity: 2, name: "A cool missile", guidance: 0, category: 0, missileCategory: 0 } ],
+        contacts: [{ID: 1, detectionMethod: 4}],
+        activePath: [ {lat: 38, lng: -115, alt: 0}, {lat: 38, lng: -114, alt: 0} ]
     }
 }
 
 class DemoDataGenerator {
-    constructor(unitsNumber)
+    constructor()
     { 
-        this.demoUnits = this.generateRandomUnitsDemoData(unitsNumber);
+        
     }
     
     units(req, res){
-        var ret = this.demoUnits;
-        for (let ID in this.demoUnits["units"]){
-            this.demoUnits["units"][ID].flightData.latitude += 0.00001;
+        var array = new Uint8Array();
+        var time = Date.now();
+        array = this.concat(array, this.uint64ToByteArray(BigInt(time)));
+        for (let idx in DEMO_UNIT_DATA) {
+            const unit = DEMO_UNIT_DATA[idx];
+            array = this.concat(array, this.uint32ToByteArray(idx));
+            array = this.appendString(array, "Aircraft", 1);
+            array = this.appendUint8(array, unit.alive, 2);
+            array = this.appendUint8(array, unit.human, 3);
+            array = this.appendUint8(array, unit.controlled, 4);
+            array = this.appendUint16(array, unit.coalition, 5);
+            array = this.appendUint8(array, unit.country, 6);
+            array = this.appendString(array, unit.name, 7);
+            array = this.appendString(array, unit.unitName, 8);
+            array = this.appendString(array, unit.groupName, 9);
+            array = this.appendUint8(array, unit.state, 10);
+            array = this.appendString(array, unit.task, 11);
+            array = this.appendUint8(array, unit.hasTask, 12);
+            array = this.appendCoordinates(array, unit.position, 13);
+            array = this.appendDouble(array, unit.speed, 14);
+            array = this.appendDouble(array, unit.heading, 15);
+            array = this.appendUint8(array, unit.isTanker, 16);
+            array = this.appendUint8(array, unit.isAWACS, 17);
+            array = this.appendUint8(array, unit.onOff, 18);
+            array = this.appendUint8(array, unit.followRoads, 19);
+            array = this.appendUint16(array, unit.fuel, 20);
+            array = this.appendDouble(array, unit.desiredSpeed, 21);
+            array = this.appendUint8(array, unit.desiredSpeedType, 22);
+            array = this.appendDouble(array, unit.desiredAltitude, 23);
+            array = this.appendUint8(array, unit.desiredAltitudeType, 24);
+            array = this.appendUint32(array, unit.leaderID, 25);
+            array = this.appendOffset(array, unit.formationOffset, 26);
+            array = this.appendUint32(array, unit.targetID, 27);
+            array = this.appendCoordinates(array, unit.targetPosition, 28);
+            array = this.appendUint8(array, unit.ROE, 29);
+            array = this.appendUint8(array, unit.reactionToThreat, 30);
+            array = this.appendUint8(array, unit.emissionsCountermeasures, 31);
+            array = this.appendTACAN(array, unit.TACAN, 32);
+            array = this.appendRadio(array, unit.radio, 33);
+            array = this.appendRadio(array, unit.generalSettings, 34);
+            array = this.appendAmmo(array, unit.ammo, 35);
+            array = this.appendContacts(array, unit.contacts, 36);
+            array = this.appendActivePath(array, unit.activePath, 37);
+            array = this.concat(array, this.uint8ToByteArray(255));
         }
-        ret.time = Date.now();
-        res.send(JSON.stringify(ret));
+        res.end(Buffer.from(array, 'binary'));
     };
+
+    concat(array1, array2) {
+        var mergedArray = new Uint8Array(array1.length + array2.length);
+        mergedArray.set(array1);
+        mergedArray.set(array2, array1.length);
+        return mergedArray;
+    }
+    
+    uint8ToByteArray(number) {
+        var buffer = new ArrayBuffer(1);         
+        var longNum = new Uint8Array(buffer);  
+        longNum[0] = number;
+        return Array.from(new Uint8Array(buffer));
+    }
+    
+    uint16ToByteArray(number) {
+        var buffer = new ArrayBuffer(2);         
+        var longNum = new Uint16Array(buffer);  
+        longNum[0] = number;
+        return Array.from(new Uint8Array(buffer));
+    }
+    
+    uint32ToByteArray(number) {
+        var buffer = new ArrayBuffer(4);         
+        var longNum = new Uint32Array(buffer);  
+        longNum[0] = number;
+        return Array.from(new Uint8Array(buffer));
+    }
+    
+    uint64ToByteArray(number) {
+        var buffer = new ArrayBuffer(8);         
+        var longNum = new BigUint64Array(buffer);  
+        longNum[0] = number;
+        return Array.from(new Uint8Array(buffer));
+    }
+    
+    doubleToByteArray(number) {
+        var buffer = new ArrayBuffer(8);         
+        var longNum = new Float64Array(buffer);  
+        longNum[0] = number;
+        return Array.from(new Uint8Array(buffer));
+    }
+    
+    appendUint8(array, number, datumIndex) {
+        array = this.concat(array, this.uint8ToByteArray(datumIndex));
+        array = this.concat(array, this.uint8ToByteArray(number));
+        return array;
+    }
+    
+    appendUint16(array, number, datumIndex) {
+        array = this.concat(array, this.uint8ToByteArray(datumIndex));
+        array = this.concat(array, this.uint16ToByteArray(number));
+        return array;
+    }
+    
+    appendUint32(array, number, datumIndex) {
+        array = this.concat(array, this.uint8ToByteArray(datumIndex));
+        array = this.concat(array, this.uint32ToByteArray(number));
+        return array;
+    }
+    
+    appendDouble(array, number, datumIndex) {
+        array = this.concat(array, this.uint8ToByteArray(datumIndex));
+        array = this.concat(array, this.doubleToByteArray(number));
+        return array;
+    }
+    
+    appendCoordinates(array, coordinates, datumIndex) {
+        array = this.concat(array, this.uint8ToByteArray(datumIndex));
+        array = this.concat(array, this.doubleToByteArray(coordinates.lat));
+        array = this.concat(array, this.doubleToByteArray(coordinates.lng));
+        array = this.concat(array, this.doubleToByteArray(coordinates.alt));
+        return array;
+    }
+    
+    appendOffset(array, offset, datumIndex) {
+        array = this.concat(array, this.uint8ToByteArray(datumIndex));
+        array = this.concat(array, this.doubleToByteArray(offset.x));
+        array = this.concat(array, this.doubleToByteArray(offset.y));
+        array = this.concat(array, this.doubleToByteArray(offset.z));
+        return array;
+    }
+    
+    appendString(array, string, datumIndex) {
+        array = this.concat(array, this.uint8ToByteArray(datumIndex));
+        array = this.concat(array, this.uint16ToByteArray(string.length));
+        array = this.concat(array, enc.encode(string));
+        return array;
+    }
+
+    padString(string, length) {
+        while (string.length < length)
+            string += " ";
+        return string.substring(0, length);
+    }
+    
+    appendTACAN(array, TACAN, datumIndex) {
+        array = this.concat(array, this.uint8ToByteArray(datumIndex));
+        array = this.concat(array, this.uint8ToByteArray(TACAN.isOn));
+        array = this.concat(array, this.uint8ToByteArray(TACAN.channel));
+        array = this.concat(array, enc.encode(TACAN.XY));
+        array = this.concat(array, enc.encode(this.padString(TACAN.callsign, 4)));
+        return array;
+    }
+    
+    appendRadio(array, radio, datumIndex) {
+        array = this.concat(array, this.uint8ToByteArray(datumIndex));
+        array = this.concat(array, this.uint32ToByteArray(radio.frequency));
+        array = this.concat(array, this.uint8ToByteArray(radio.callsign));
+        array = this.concat(array, this.uint8ToByteArray(radio.callsignNumber));
+        return array;
+    }
+    
+    appendGeneralSettings(array, generalSettings, datumIndex) {
+        array = this.concat(array, this.uint8ToByteArray(datumIndex));
+        array = this.concat(array, this.uint8ToByteArray(generalSettings.prohibitAA));
+        array = this.concat(array, this.uint8ToByteArray(generalSettings.prohibitAfterburner));
+        array = this.concat(array, this.uint8ToByteArray(generalSettings.prohibitAG));
+        array = this.concat(array, this.uint8ToByteArray(generalSettings.prohibitAirWpn));
+        array = this.concat(array, this.uint8ToByteArray(generalSettings.prohibitJettison));
+        return array;
+    }
+
+    appendAmmo(array, ammo, datumIndex) {
+        array = this.concat(array, this.uint8ToByteArray(datumIndex));
+        array = this.concat(array, this.uint16ToByteArray(ammo.length));
+        ammo.forEach((element) => {
+            array = this.concat(array, this.uint16ToByteArray(element.quantity));
+            array = this.concat(array, enc.encode(this.padString(element.name, 33)));
+            array = this.concat(array, this.uint8ToByteArray(element.guidance));
+            array = this.concat(array, this.uint8ToByteArray(element.category));
+            array = this.concat(array, this.uint8ToByteArray(element.missileCategory));
+        })
+        return array;
+    }
+
+    appendContacts(array, contacts, datumIndex) {
+        array = this.concat(array, this.uint8ToByteArray(datumIndex));
+        array = this.concat(array, this.uint16ToByteArray(contacts.length));
+        contacts.forEach((element) => {
+            array = this.concat(array, this.uint32ToByteArray(element.ID));
+            array = this.concat(array, this.uint8ToByteArray(element.detectionMethod));
+        })
+        return array;
+    }
+
+    appendActivePath(array, activePath, datumIndex) {
+        array = this.concat(array, this.uint8ToByteArray(datumIndex));
+        array = this.concat(array, this.uint16ToByteArray(activePath.length));
+        activePath.forEach((element) => {
+            array = this.concat(array, this.doubleToByteArray(element.lat));
+            array = this.concat(array, this.doubleToByteArray(element.lng));
+            array = this.concat(array, this.doubleToByteArray(element.alt));
+        })
+        return array;
+    }
     
     logs(req, res){
         var ret = {logs: {}};
@@ -696,10 +305,6 @@ class DemoDataGenerator {
         res.send(JSON.stringify(ret));
     }
     
-    generateRandomUnitsDemoData(unitsNumber) 
-    {
-        return {"units": DEMO_UNIT_DATA};
-    }
 }
 
 module.exports = DemoDataGenerator;

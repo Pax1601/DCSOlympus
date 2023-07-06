@@ -11,12 +11,13 @@ import { ftToM } from "../other/utils";
 
 export interface SpawnOptions {
     role: string;
-    type: string;
+    name: string;
     latlng: LatLng;
     coalition: string;
-    loadout: string | null;
-    airbaseName: string | null;
-    altitude: number | null;
+    loadout?: string | null;
+    airbaseName?: string | null;
+    altitude?: number | null;
+    immediate?: boolean;
 }
 
 export class MapContextMenu extends ContextMenu {
@@ -27,12 +28,12 @@ export class MapContextMenu extends ContextMenu {
     #aircrafSpawnAltitudeSlider: Slider;
     #groundUnitRoleDropdown: Dropdown;
     #groundUnitTypeDropdown: Dropdown;
-    #spawnOptions: SpawnOptions = { role: "", type: "", latlng: new LatLng(0, 0), loadout: null, coalition: "blue", airbaseName: null, altitude: ftToM(20000) };
-    
+    #spawnOptions: SpawnOptions = { role: "", name: "", latlng: new LatLng(0, 0), loadout: null, coalition: "blue", airbaseName: null, altitude: ftToM(20000) };
+
     constructor(id: string) {
         super(id);
 
-        this.#coalitionSwitch = new Switch("coalition-switch", this.#onSwitchClick);
+        this.#coalitionSwitch = new Switch("coalition-switch", (value: boolean) => this.#onSwitchClick(value));
         this.#coalitionSwitch.setValue(false);
         this.#coalitionSwitch.getContainer()?.addEventListener("contextmenu", (e) => this.#onSwitchRightClick(e));
         this.#aircraftRoleDropdown = new Dropdown("aircraft-role-options", (role: string) => this.#setAircraftRole(role));
@@ -45,15 +46,18 @@ export class MapContextMenu extends ContextMenu {
         this.#groundUnitRoleDropdown = new Dropdown("ground-unit-role-options", (role: string) => this.#setGroundUnitRole(role));
         this.#groundUnitTypeDropdown = new Dropdown("ground-unit-type-options", (type: string) => this.#setGroundUnitType(type));
 
-        document.addEventListener("contextMenuShow", (e: any) => {
-            this.showSubMenu(e.detail.type);
+        document.addEventListener("mapContextMenuShow", (e: any) => {
+            if (this.getVisibleSubMenu() !== e.detail.type)
+                this.showSubMenu(e.detail.type);
+            else 
+                this.hideSubMenus();
         });
 
         document.addEventListener("contextMenuDeployAircraft", () => {
             this.hide();
             this.#spawnOptions.coalition = getActiveCoalition();
             if (this.#spawnOptions) {
-                getMap().addTemporaryMarker(this.#spawnOptions.latlng);
+                getMap().addTemporaryMarker(this.#spawnOptions);
                 spawnAircraft(this.#spawnOptions);
             }
         });
@@ -62,7 +66,7 @@ export class MapContextMenu extends ContextMenu {
             this.hide();
             this.#spawnOptions.coalition = getActiveCoalition();
             if (this.#spawnOptions) {
-                getMap().addTemporaryMarker(this.#spawnOptions.latlng);
+                getMap().addTemporaryMarker(this.#spawnOptions);
                 spawnGroundUnit(this.#spawnOptions);
             }
         });
@@ -92,7 +96,7 @@ export class MapContextMenu extends ContextMenu {
         this.getContainer()?.querySelector("#aircraft-spawn-menu")?.classList.toggle("hide", type !== "aircraft");
         this.getContainer()?.querySelector("#aircraft-spawn-button")?.classList.toggle("is-open", type === "aircraft");
         this.getContainer()?.querySelector("#ground-unit-spawn-menu")?.classList.toggle("hide", type !== "ground-unit");
-        this.getContainer()?.querySelector("#ground-unit-spawn-button")?.classList.toggle("is-open", type === "ground-unit");
+        this.getContainer()?.querySelector("#ground-ol-contexmenu-button")?.classList.toggle("is-open", type === "ground-unit");
         this.getContainer()?.querySelector("#smoke-spawn-menu")?.classList.toggle("hide", type !== "smoke");
         this.getContainer()?.querySelector("#smoke-spawn-button")?.classList.toggle("is-open", type === "smoke");
         this.getContainer()?.querySelector("#explosion-menu")?.classList.toggle("hide", type !== "explosion");
@@ -103,7 +107,29 @@ export class MapContextMenu extends ContextMenu {
         this.#resetGroundUnitRole();
         this.#resetGroundUnitType();
         this.clip();
+
+        this.setVisibleSubMenu(type);
     }
+
+    hideSubMenus() {
+        this.getContainer()?.querySelector("#aircraft-spawn-menu")?.classList.toggle("hide", true);
+        this.getContainer()?.querySelector("#aircraft-spawn-button")?.classList.toggle("is-open", false);
+        this.getContainer()?.querySelector("#ground-unit-spawn-menu")?.classList.toggle("hide", true);
+        this.getContainer()?.querySelector("#ground-ol-contexmenu-button")?.classList.toggle("is-open", false);
+        this.getContainer()?.querySelector("#smoke-spawn-menu")?.classList.toggle("hide", true);
+        this.getContainer()?.querySelector("#smoke-spawn-button")?.classList.toggle("is-open", false);
+        this.getContainer()?.querySelector("#explosion-menu")?.classList.toggle("hide", true);
+        this.getContainer()?.querySelector("#explosion-spawn-button")?.classList.toggle("is-open", false);
+
+        this.#resetAircraftRole();
+        this.#resetAircraftType();
+        this.#resetGroundUnitRole();
+        this.#resetGroundUnitType();
+        this.clip();
+
+        this.setVisibleSubMenu(null);
+    }
+
 
     showUpperBar() {
         this.getContainer()?.querySelector("#upper-bar")?.classList.toggle("hide", false);
@@ -123,6 +149,7 @@ export class MapContextMenu extends ContextMenu {
 
     #onSwitchClick(value: boolean) {
         value? setActiveCoalition("red"): setActiveCoalition("blue");
+        this.getContainer()?.querySelectorAll('[data-coalition]').forEach((element: any) => { element.setAttribute("data-coalition", getActiveCoalition()) });
     }
 
     #onSwitchRightClick(e: any) {
@@ -152,7 +179,7 @@ export class MapContextMenu extends ContextMenu {
         this.#resetAircraftType();
         var type = aircraftDatabase.getByLabel(label)?.name || null;
         if (type != null) {
-            this.#spawnOptions.type = type;
+            this.#spawnOptions.name = type;
             this.#aircraftLoadoutDropdown.setOptions(aircraftDatabase.getLoadoutNamesByRole(type, this.#spawnOptions.role));
             this.#aircraftLoadoutDropdown.selectValue(0);
             var image = (<HTMLImageElement>this.getContainer()?.querySelector("#unit-image"));
@@ -171,7 +198,7 @@ export class MapContextMenu extends ContextMenu {
     }
 
     #setAircraftLoadout(loadoutName: string) {
-        var loadout = aircraftDatabase.getLoadoutByName(this.#spawnOptions.type, loadoutName);
+        var loadout = aircraftDatabase.getLoadoutByName(this.#spawnOptions.name, loadoutName);
         if (loadout) {
             this.#spawnOptions.loadout = loadout.code;
             (<HTMLButtonElement>this.getContainer()?.querySelector("#aircraft-spawn-menu")?.querySelector(".deploy-unit-button")).disabled = false;
@@ -214,7 +241,7 @@ export class MapContextMenu extends ContextMenu {
         this.#resetGroundUnitType();
         var type = groundUnitsDatabase.getByLabel(label)?.name || null;
         if (type != null) {
-            this.#spawnOptions.type = type;
+            this.#spawnOptions.name = type;
             (<HTMLButtonElement>this.getContainer()?.querySelector("#ground-unit-spawn-menu")?.querySelector(".deploy-unit-button")).disabled = false;
         }
         this.clip();

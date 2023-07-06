@@ -32,10 +32,10 @@ void Logger::Close()
     m_Logfile.close();
 }
 
-void Logger::toJSON(json::value& json, int logsNumber)
+void Logger::toJSON(json::value& json, unsigned int logsNumber)
 {
     lock_guard<mutex> guard(mutexLock);
-    int i = 0;
+    unsigned int i = 0;
     for (auto itr = m_logs.end(); itr != m_logs.begin(); --itr)
     {
         json[to_wstring(m_logs.size() - 1 - i)] = json::value::string(to_wstring(*itr));

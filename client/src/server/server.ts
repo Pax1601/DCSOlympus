@@ -1,6 +1,8 @@
 import { LatLng } from 'leaflet';
 import { getConnectionStatusPanel, getInfoPopup, getMissionData, getUnitDataTable, getUnitsManager, setConnectionStatus } from '..';
 import { SpawnOptions } from '../controls/mapcontextmenu';
+import { GeneralSettings, Radio, TACAN } from '../@types/unit';
+import { ROEs, emissionsCountermeasures, reactionsToThreat } from '../constants/constants';
 
 var connected: boolean = false;
 var paused: boolean = false;
@@ -37,19 +39,21 @@ export function GET(callback: CallableFunction, uri: string, options?: { time?: 
     if (options?.time != undefined)
         optionsString = `time=${options.time}`;
 
-
     xmlHttp.open("GET", `${demoEnabled ? DEMO_ADDRESS : REST_ADDRESS}/${uri}${optionsString ? `?${optionsString}` : ''}`, true);
     if (credentials)
         xmlHttp.setRequestHeader("Authorization", "Basic " + credentials);
+
+    if (uri === UNITS_URI)
+        xmlHttp.responseType = "arraybuffer";
+
     xmlHttp.onload = function (e) {
         if (xmlHttp.status == 200) {
-            var data = JSON.parse(xmlHttp.responseText);
-            if (uri !== UNITS_URI || (options?.time == 0) || parseInt(data.time) > lastUpdateTime) {
+            setConnected(true);
+            if (xmlHttp.responseType == 'arraybuffer')
+                callback(xmlHttp.response);
+            else {
+                var data = JSON.parse(xmlHttp.responseText);
                 callback(data);
-                lastUpdateTime = parseInt(data.time);
-                if (isNaN(lastUpdateTime))
-                    lastUpdateTime = 0;
-                setConnected(true);
             }
         } else if (xmlHttp.status == 401) {
             console.error("Incorrect username/password");
@@ -95,6 +99,10 @@ export function setAddress(address: string, port: number) {
     console.log(`Setting REST address to ${REST_ADDRESS}`)
 }
 
+export function setLastUpdateTime(newLastUpdateTime: number) {
+    lastUpdateTime = newLastUpdateTime;
+}
+
 export function getAirbases(callback: CallableFunction) {
     GET(callback, AIRBASES_URI);
 }
@@ -134,13 +142,13 @@ export function spawnExplosion(intensity: number, latlng: LatLng) {
 }
 
 export function spawnGroundUnit(spawnOptions: SpawnOptions) {
-    var command = { "type": spawnOptions.type, "location": spawnOptions.latlng, "coalition": spawnOptions.coalition };
+    var command = { "type": spawnOptions.name, "location": spawnOptions.latlng, "coalition": spawnOptions.coalition, "immediate": spawnOptions.immediate? true: false };
     var data = { "spawnGround": command }
     POST(data, () => { });
 }
 
 export function spawnAircraft(spawnOptions: SpawnOptions) {
-    var command = { "type": spawnOptions.type, "location": spawnOptions.latlng, "coalition": spawnOptions.coalition, "altitude": spawnOptions.altitude, "payloadName": spawnOptions.loadout != null ? spawnOptions.loadout : "", "airbaseName": spawnOptions.airbaseName != null ? spawnOptions.airbaseName : "" };
+    var command = { "type": spawnOptions.name, "location": spawnOptions.latlng, "coalition": spawnOptions.coalition, "altitude": spawnOptions.altitude, "payloadName": spawnOptions.loadout != null ? spawnOptions.loadout : "", "airbaseName": spawnOptions.airbaseName != null ? spawnOptions.airbaseName : "", "immediate": spawnOptions.immediate? true: false };
     var data = { "spawnAir": command }
     POST(data, () => { });
 }
@@ -222,19 +230,19 @@ export function createFormation(ID: number, isLeader: boolean, wingmenIDs: numbe
 }
 
 export function setROE(ID: number, ROE: string) {
-    var command = { "ID": ID, "ROE": ROE }
+    var command = { "ID": ID, "ROE": ROEs.indexOf(ROE) }
     var data = { "setROE": command }
     POST(data, () => { });
 }
 
 export function setReactionToThreat(ID: number, reactionToThreat: string) {
-    var command = { "ID": ID, "reactionToThreat": reactionToThreat }
+    var command = { "ID": ID, "reactionToThreat": reactionsToThreat.indexOf(reactionToThreat) }
     var data = { "setReactionToThreat": command }
     POST(data, () => { });
 }
 
 export function setEmissionsCountermeasures(ID: number, emissionCountermeasure: string) {
-    var command = { "ID": ID, "emissionsCountermeasures": emissionCountermeasure }
+    var command = { "ID": ID, "emissionsCountermeasures": emissionsCountermeasures.indexOf(emissionCountermeasure) }
     var data = { "setEmissionsCountermeasures": command }
     POST(data, () => { });
 }
@@ -299,8 +307,11 @@ export function startUpdate() {
     /* On the first connection, force request of full data */
     getAirbases((data: AirbasesData) => getMissionData()?.update(data));
     getBullseye((data: BullseyesData) => getMissionData()?.update(data));
-    getMission((data: any) => { getMissionData()?.update(data) });
-    getUnits((data: UnitsData) => getUnitsManager()?.update(data), true /* Does a full refresh */);
+    getMission((data: any) => { 
+        getMissionData()?.update(data);
+        checkSessionHash(data.sessionHash);
+    });
+    getUnits((buffer: ArrayBuffer) => getUnitsManager()?.update(buffer), true /* Does a full refresh */);
 
     requestUpdate();
     requestRefresh();
@@ -308,10 +319,9 @@ export function startUpdate() {
 
 export function requestUpdate() {
     /* Main update rate = 250ms is minimum time, equal to server update time. */
-    getUnits((data: UnitsData) => {
+    getUnits((buffer: ArrayBuffer) => {
         if (!getPaused()) {
-            getUnitsManager()?.update(data);
-            checkSessionHash(data.sessionHash);
+            getUnitsManager()?.update(buffer);
         }
     }, false);
     window.setTimeout(() => requestUpdate(), getConnected() ? 250 : 1000);
@@ -321,22 +331,19 @@ export function requestUpdate() {
 
 export function requestRefresh() {
     /* Main refresh rate = 5000ms. */
-    getUnits((data: UnitsData) => {
-        if (!getPaused()) {
-            getUnitsManager()?.update(data);
-            getAirbases((data: AirbasesData) => getMissionData()?.update(data));
-            getBullseye((data: BullseyesData) => getMissionData()?.update(data));
-            getMission((data: any) => {
-                getMissionData()?.update(data)
-            });
-
-            // Update the list of existing units
-            getUnitDataTable()?.update();
-
+    
+    if (!getPaused()) {
+        getAirbases((data: AirbasesData) => getMissionData()?.update(data));
+        getBullseye((data: BullseyesData) => getMissionData()?.update(data));
+        getMission((data: any) => {
             checkSessionHash(data.sessionHash);
-        }
-    }, true);
-    window.setTimeout(() => requestRefresh(), 5000);
+            getMissionData()?.update(data)
+        });
+
+        // Update the list of existing units
+        getUnitDataTable()?.update();
+    }
+    window.setTimeout(() => requestRefresh(), 1000);
 }
 
 export function checkSessionHash(newSessionHash: string) {

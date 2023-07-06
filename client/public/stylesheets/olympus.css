@@ -38,6 +38,11 @@ body {
     cursor: none !important;
 }
 
+.hidden-cursor * {
+    cursor: none !important;
+    pointer-events: none !important;
+}
+
 a {
     text-decoration: none;
 }
@@ -408,7 +413,6 @@ nav.ol-panel> :last-child {
 
 .ol-panel .ol-group-button-toggle {
     align-items: center;
-    column-gap: 15px;
     display: flex;
     flex-wrap: nowrap;
     white-space: nowrap;
@@ -421,7 +425,7 @@ nav.ol-panel> :last-child {
     border: 0;
     display: flex;
     justify-items: left;
-    text-indent: 5px;
+    text-indent: 2px;
 }
 
 .ol-panel .ol-group-button-toggle button::before {
@@ -624,39 +628,39 @@ nav.ol-panel> :last-child {
     width: 28px;
 }
 
-#unit-visibility-control {
+.ol-navbar-buttons-group {
     align-items: center;
 }
 
-#unit-visibility-control button {
+.ol-navbar-buttons-group button {
     border: none;
     height: 32px;
     padding: 0px;
     width: 32px;
 }
 
-#unit-visibility-control button svg {
+.ol-navbar-buttons-group button svg {
     height: 16px;
     pointer-events: none;
     width: 16px;
 }
 
-#unit-visibility-control button {
+.ol-navbar-buttons-group button {
     background-color: white;
     border: 1px solid transparent;
 }
 
-#unit-visibility-control button.off {
+.ol-navbar-buttons-group button.off {
     background-color: transparent;
     border: 1px solid white;
 }
 
-#unit-visibility-control button.off svg * {
+.ol-navbar-buttons-group button.off svg * {
     fill: white !important;
     stroke: white !important;
 }
 
-#unit-visibility-control button svg * {
+.ol-navbar-buttons-group button svg * {
     fill: var(--background-steel) !important;
     stroke: var(--background-steel) !important;
 }
@@ -667,10 +671,9 @@ nav.ol-panel> :last-child {
     flex-direction: column;
 }
 
-#atc-navbar-control button {
-    background: #ffffff20;
-    border-radius: var(--border-radius-sm);
-    padding: 4px;
+#atc-navbar-control button svg {
+    height: 24px;
+    width: 24px;
 }
 
 #roe-buttons-container button,
@@ -875,6 +878,33 @@ nav.ol-panel> :last-child {
     pointer-events: none;
     width: 52px;
     z-index: 9999;
+}
+
+.ol-draw-icon {
+    background-image: url("/resources/theme/images/markers/draw.svg");
+    height: 24px;
+    pointer-events: none;
+    width: 24px;
+    z-index: 9999;
+}
+
+.ol-coalitionarea-handle-icon,
+.ol-coalitionarea-middle-handle-icon {
+    pointer-events: none;
+    z-index: 9999;
+    border-radius: 999px;
+}
+
+.ol-coalitionarea-handle-icon {
+    background-color: #FFFFFFEE;
+    width: 24px;
+    height: 24px;
+}
+
+.ol-coalitionarea-middle-handle-icon {
+    background-color: #FFFFFFAA;
+    width: 16px;
+    height: 16px;
 }
 
 dl.ol-data-grid {
@@ -1134,4 +1164,87 @@ input[type=number]::-webkit-outer-spin-button {
 
 .ol-switch[data-value="undefined"]>.ol-switch-fill::after {
 	transform: translateX(calc((var(--width) - var(--height)) * 0.5));
+}
+
+.ol-contexmenu-panel {
+    padding: 20px;
+}
+
+.ol-coalition-switch[data-value="false"]>.ol-switch-fill {
+	background-color: var(--primary-blue);
+}
+
+.ol-coalition-switch[data-value="true"]>.ol-switch-fill {
+	background-color: var(--primary-red);
+}
+
+.ol-coalition-switch[data-value="undefined"]>.ol-switch-fill {
+	background-color: var(--primary-neutral);
+}
+
+.ol-context-menu>div:nth-child(2) {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-right: 0px;
+}
+
+.ol-context-menu>ul {
+    max-height: 200px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.ol-context-menu .ol-panel {
+    border-radius: var(--border-radius-sm);
+    width: 100%;
+}
+
+.ol-context-menu ul {
+    margin: 0px;
+}
+
+.ol-context-menu>div:nth-child(n+3) {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    row-gap: 5px;
+}
+
+.ol-context-menu .ol-select-container {
+    align-self: stretch;
+    flex: 0 0 auto;
+    width: 100%;
+}
+
+
+.ol-contexmenu-button {
+    border: none;
+    border-radius: 0px;
+    height: 48px;
+    margin-bottom: -10px;
+    margin-top: -10px;
+    width: 48px;
+}
+
+.ol-contexmenu-button:last-of-type {
+    border-bottom-right-radius: var(--border-radius-sm);
+    border-top-right-radius: var(--border-radius-sm);
+}
+
+[data-coalition="blue"].ol-contexmenu-button:hover,
+[data-coalition="blue"].ol-contexmenu-button.is-open {
+    background-color: var(--primary-blue)
+}
+
+[data-coalition="red"].ol-contexmenu-button:hover,
+[data-coalition="red"].ol-contexmenu-button.is-open {
+    background-color: var(--primary-red)
+}
+
+[data-coalition="neutral"].ol-contexmenu-button:hover,
+[data-coalition="neutral"].ol-contexmenu-button.is-open {
+    background-color: var(--primary-neutral)
 }

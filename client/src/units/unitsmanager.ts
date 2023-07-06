@@ -1,9 +1,13 @@
 import { LatLng, LatLngBounds } from "leaflet";
-import { getHotgroupPanel, getInfoPopup, getMap, getUnitDataTable } from "..";
+import { getHotgroupPanel, getInfoPopup, getMap, getMissionHandler } from "..";
 import { Unit } from "./unit";
-import { cloneUnit } from "../server/server";
-import { deg2rad, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots } from "../other/utils";
-import { IDLE, MOVE_UNIT } from "../map/map";
+import { cloneUnit, setLastUpdateTime, spawnGroundUnit } from "../server/server";
+import { deg2rad, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots, polygonArea, randomPointInPoly, randomUnitBlueprintByRole } from "../other/utils";
+import { CoalitionArea } from "../map/coalitionarea";
+import { Airbase } from "../missionhandler/airbase";
+import { groundUnitsDatabase } from "./groundunitsdatabase";
+import { DataIndexes, IADSRoles, IDLE, MOVE_UNIT } from "../constants/constants";
+import { DataExtractor } from "./dataextractor";
 
 export class UnitsManager {
     #units: { [ID: number]: Unit };
@@ -28,8 +32,7 @@ export class UnitsManager {
     getSelectableAircraft() {
         const units = this.getUnits();
         return Object.keys(units).reduce((acc: { [key: number]: Unit }, unitId: any) => {
-            const baseData = units[unitId].getBaseData();
-            if (baseData.category === "Aircraft" && baseData.alive === true) {
+            if (units[unitId].getCategory() === "Aircraft" && units[unitId].getAlive() === true) {
                 acc[unitId] = units[unitId];
             }
             return acc;
@@ -48,15 +51,15 @@ export class UnitsManager {
     }
 
     getUnitsByHotgroup(hotgroup: number) {
-        return Object.values(this.#units).filter((unit: Unit) => { return unit.getBaseData().alive && unit.getHotgroup() == hotgroup });
+        return Object.values(this.#units).filter((unit: Unit) => { return unit.getAlive() && unit.getHotgroup() == hotgroup });
     }
 
-    addUnit(ID: number, data: UnitData) {
-        if (data.baseData && data.baseData.category){
-        /* The name of the unit category is exactly the same as the constructor name */
-            var constructor = Unit.getConstructor(data.baseData.category);
+    addUnit(ID: number, category: string) {
+        if (category){
+            /* The name of the unit category is exactly the same as the constructor name */
+            var constructor = Unit.getConstructor(category);
             if (constructor != undefined) {
-                this.#units[ID] = new constructor(ID, data);
+                this.#units[ID] = new constructor(ID);
             }
         }
     }
@@ -65,30 +68,26 @@ export class UnitsManager {
 
     }
 
-    update(data: UnitsData) {
-        var updatedUnits: Unit[] = [];
-        Object.keys(data.units)
-            .filter((ID: string) => !(ID in this.#units))
-            .reduce((timeout: number, ID: string) => {
-                window.setTimeout(() => {
-                    if (!(ID in this.#units))
-                        this.addUnit(parseInt(ID), data.units[ID]);
-                    this.#units[parseInt(ID)]?.setData(data.units[ID]);
-                }, timeout);
-                return timeout + 10;
-            }, 10);
+    update(buffer: ArrayBuffer) {
+        var dataExtractor = new DataExtractor(buffer);
+        var updateTime = Number(dataExtractor.extractUInt64());
 
-        Object.keys(data.units)
-            .filter((ID: string) => ID in this.#units)
-            .forEach((ID: string) => {
-                updatedUnits.push(this.#units[parseInt(ID)]);
-                this.#units[parseInt(ID)]?.setData(data.units[ID])
-            });
+        while (dataExtractor.getSeekPosition() < buffer.byteLength) {
+            const ID = dataExtractor.extractUInt32();
+            if (!(ID in this.#units)) {
+                const datumIndex = dataExtractor.extractUInt8();
+                if (datumIndex == DataIndexes.category) {
+                    const category = dataExtractor.extractString();
+                    this.addUnit(ID, category);
+                }
+                else {
+                    // TODO request a refresh since we must have missed some packets
+                }
+            }
+            this.#units[ID]?.setData(dataExtractor);
+        }
 
-        this.getSelectedUnits().forEach((unit: Unit) => {
-            if (!updatedUnits.includes(unit))
-                unit.setData({})
-        });
+        setLastUpdateTime(updateTime);
     }
 
     setHiddenType(key: string, value: boolean) {
@@ -115,7 +114,7 @@ export class UnitsManager {
         this.deselectAllUnits();
         for (let ID in this.#units) {
             if (this.#units[ID].getHidden() == false) {
-                var latlng = new LatLng(this.#units[ID].getFlightData().latitude, this.#units[ID].getFlightData().longitude);
+                var latlng = new LatLng(this.#units[ID].getPosition().lat, this.#units[ID].getPosition().lng);
                 if (bounds.contains(latlng)) {
                     this.#units[ID].setSelected(true);
                 }
@@ -132,11 +131,11 @@ export class UnitsManager {
         }
         if (options) {
             if (options.excludeHumans)
-                selectedUnits = selectedUnits.filter((unit: Unit) => { return !unit.getMissionData().flags.Human });
+                selectedUnits = selectedUnits.filter((unit: Unit) => { return !unit.getHuman() });
             if (options.onlyOnePerGroup) {
                 var temp: Unit[] = [];
                 for (let unit of selectedUnits) {
-                    if (!temp.some((otherUnit: Unit) => unit.getBaseData().groupName == otherUnit.getBaseData().groupName))
+                    if (!temp.some((otherUnit: Unit) => unit.getGroupName() == otherUnit.getGroupName()))
                         temp.push(unit);
                 }
                 selectedUnits = temp;
@@ -181,7 +180,7 @@ export class UnitsManager {
         if (this.getSelectedUnits().length == 0)
             return undefined;
         return this.getSelectedUnits().map((unit: Unit) => {
-            return unit.getMissionData().coalition
+            return unit.getCoalition()
         })?.reduce((a: any, b: any) => {
             return a == b ? a : undefined
         });
@@ -201,8 +200,8 @@ export class UnitsManager {
         for (let idx in selectedUnits) {
             const unit = selectedUnits[idx];
             /* If a unit is following another unit, and that unit is also selected, send the command to the followed unit */
-            if (unit.getTaskData().currentState === "Follow") {
-                const leader = this.getUnitByID(unit.getFormationData().leaderID)
+            if (unit.getState() === "Follow") {
+                const leader = this.getUnitByID(unit.getLeaderID())
                 if (leader && leader.getSelected())
                     leader.addDestination(latlng);
                 else
@@ -221,8 +220,8 @@ export class UnitsManager {
         var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
             const unit = selectedUnits[idx];
-            if (unit.getTaskData().currentState === "Follow") {
-                const leader = this.getUnitByID(unit.getFormationData().leaderID)
+            if (unit.getState() === "Follow") {
+                const leader = this.getUnitByID(unit.getLeaderID())
                 if (leader && leader.getSelected())
                     leader.clearDestinations();
                 else
@@ -333,13 +332,13 @@ export class UnitsManager {
         for (let idx in selectedUnits) {
             selectedUnits[idx].attackUnit(ID);
         }
-        this.#showActionMessage(selectedUnits, `attacking unit ${this.getUnitByID(ID)?.getBaseData().unitName}`);
+        this.#showActionMessage(selectedUnits, `attacking unit ${this.getUnitByID(ID)?.getUnitName()}`);
     }
 
     selectedUnitsDelete(explosion: boolean = false) {
         var selectedUnits = this.getSelectedUnits(); /* Can be applied to humans too */
         const selectionContainsAHuman = selectedUnits.some( ( unit:Unit ) => {
-            return unit.getMissionData().flags.Human === true;
+            return unit.getHuman() === true;
         });
 
         if (selectionContainsAHuman && !confirm( "Your selection includes a human player. Deleting humans causes their vehicle to crash.\n\nAre you sure you want to do this?" ) ) {
@@ -400,7 +399,7 @@ export class UnitsManager {
             }
             count++;
         }
-        this.#showActionMessage(selectedUnits, `following unit ${this.getUnitByID(ID)?.getBaseData().unitName}`);
+        this.#showActionMessage(selectedUnits, `following unit ${this.getUnitByID(ID)?.getUnitName()}`);
     }
 
     selectedUnitsSetHotgroup(hotgroup: number) {
@@ -422,7 +421,7 @@ export class UnitsManager {
         /* Compute the center of the group */
         var center = { x: 0, y: 0 };
         selectedUnits.forEach((unit: Unit) => {
-            var mercator = latLngToMercator(unit.getFlightData().latitude, unit.getFlightData().longitude);
+            var mercator = latLngToMercator(unit.getPosition().lat, unit.getPosition().lng);
             center.x += mercator.x / selectedUnits.length;
             center.y += mercator.y / selectedUnits.length;
         });
@@ -430,7 +429,7 @@ export class UnitsManager {
         /* Compute the distances from the center of the group */
         var unitDestinations: { [key: number]: LatLng } = {};
         selectedUnits.forEach((unit: Unit) => {
-            var mercator = latLngToMercator(unit.getFlightData().latitude, unit.getFlightData().longitude);
+            var mercator = latLngToMercator(unit.getPosition().lat, unit.getPosition().lng);
             var distancesFromCenter = { dx: mercator.x - center.x, dy: mercator.y - center.y };
 
             /* Rotate the distance according to the group rotation */
@@ -490,12 +489,37 @@ export class UnitsManager {
         if (!this.#pasteDisabled) {
             for (let idx in this.#copiedUnits) {
                 var unit = this.#copiedUnits[idx];
-                getMap().addTemporaryMarker(getMap().getMouseCoordinates());
+                //getMap().addTemporaryMarker(getMap().getMouseCoordinates());
                 cloneUnit(unit.ID, getMap().getMouseCoordinates());
                 this.#showActionMessage(this.#copiedUnits, `pasted`);
             }
             this.#pasteDisabled = true;
             window.setTimeout(() => this.#pasteDisabled = false, 250);
+        }
+    }
+
+    createIADS(coalitionArea: CoalitionArea, options: {[key: string]: boolean}, density: number) {
+        const activeRoles = Object.keys(options).filter((key: string) => { return options[key]; }); 
+        const airbases = getMissionHandler().getAirbases();
+        const pointsNumber = polygonArea(coalitionArea) / 1e7 * density / 100;
+        for (let i = 0; i < pointsNumber; i++) {
+            const latlng = randomPointInPoly(coalitionArea);
+            var minDistance: number = Infinity;
+            var maxDistance: number = 0;
+            Object.values(airbases).forEach((airbase: Airbase) => {
+                var distance = airbase.getLatLng().distanceTo(latlng);
+                if (distance < minDistance) minDistance = distance;
+                if (distance > maxDistance) maxDistance = distance;
+            });
+
+            const role = activeRoles[Math.floor(Math.random() * activeRoles.length)];
+            const probability = Math.pow(1 - minDistance / 50e3, 5) * IADSRoles[role];
+            if (Math.random() < probability){
+                const unitBlueprint = randomUnitBlueprintByRole(groundUnitsDatabase, role);
+                const spawnOptions = {role: role, latlng: latlng, name: unitBlueprint.name, coalition: coalitionArea.getCoalition(), immediate: true};
+                spawnGroundUnit(spawnOptions);
+                getMap().addTemporaryMarker(spawnOptions);
+            }
         }
     }
 
@@ -535,8 +559,8 @@ export class UnitsManager {
 
     #showActionMessage(units: Unit[], message: string) {
         if (units.length == 1)
-            getInfoPopup().setText(`${units[0].getBaseData().unitName} ${message}`);
+            getInfoPopup().setText(`${units[0].getUnitName()} ${message}`);
         else if (units.length > 1)
-            getInfoPopup().setText(`${units[0].getBaseData().unitName} and ${units.length - 1} other units ${message}`);
+            getInfoPopup().setText(`${units[0].getUnitName()} and ${units.length - 1} other units ${message}`);
     }
 }

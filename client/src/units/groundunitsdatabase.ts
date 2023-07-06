@@ -16,7 +16,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                         "items": [
                         ],
                         "roles": [
-                            "Template"
+                            "SAM Sites"
                         ],
                         "code": "",
                         "name": "Default"
@@ -35,7 +35,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                         "fuel": 1,
                         "items": [],
                         "roles": [
-                            "Template"
+                            "SAM Sites"
                         ],
                         "code": "",
                         "name": "Default"
@@ -54,7 +54,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                         "fuel": 1,
                         "items": [],
                         "roles": [
-                            "Template"
+                            "SAM Sites"
                         ],
                         "code": "",
                         "name": "Default"
@@ -73,7 +73,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                         "fuel": 1,
                         "items": [],
                         "roles": [
-                            "Template"
+                            "SAM Sites"
                         ],
                         "code": "",
                         "name": "Default"
@@ -92,7 +92,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                         "fuel": 1,
                         "items": [],
                         "roles": [
-                            "Template"
+                            "SAM Sites"
                         ],
                         "code": "",
                         "name": "Default"
@@ -111,7 +111,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                         "fuel": 1,
                         "items": [],
                         "roles": [
-                            "Template"
+                            "SAM Sites"
                         ],
                         "code": "",
                         "name": "Default"
@@ -130,7 +130,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                         "fuel": 1,
                         "items": [],
                         "roles": [
-                            "Template"
+                            "SAM Sites"
                         ],
                         "code": "",
                         "name": "Default"
@@ -1630,7 +1630,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             }
                         ],
                         "roles": [
-                            "SAM"
+                            "MANPADS"
                         ],
                         "code": "",
                         "name": "Default"
@@ -1655,7 +1655,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             }
                         ],
                         "roles": [
-                            "SAM"
+                            "MANPADS"
                         ],
                         "code": "",
                         "name": "Default"
@@ -1680,7 +1680,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             }
                         ],
                         "roles": [
-                            "SAM"
+                            "MANPADS"
                         ],
                         "code": "",
                         "name": "Default"
@@ -1989,7 +1989,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             }
                         ],
                         "roles": [
-                            "SAM"
+                            "MANPADS"
                         ],
                         "code": "",
                         "name": "Default"
@@ -2039,7 +2039,7 @@ export class GroundUnitsDatabase extends UnitDatabase {
                             }
                         ],
                         "roles": [
-                            "SAM"
+                            "MANPADS"
                         ],
                         "code": "",
                         "name": "Default"

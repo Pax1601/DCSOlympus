@@ -28,6 +28,6 @@ private:
 
     atomic<bool> runListener;
 
-    wstring password = L"";
+    string password = "";
 };
 

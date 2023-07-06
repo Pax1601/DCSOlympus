@@ -44,7 +44,18 @@ export class UnitDatabase {
             }
         }
         return unitswithrange;
-    }   
+    }
+
+    /* Gets a specific blueprint by type */
+    getByType(type: string) {
+        var units = [];
+        for (let unit in this.blueprints) {
+            if (this.blueprints[unit].type === type) {
+                units.push(this.blueprints[unit]);
+            }
+        }
+        return units;
+    }
 
     /* Get all blueprints by role */
     getByRole(role: string) {
