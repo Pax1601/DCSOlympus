@@ -15,6 +15,7 @@ interface LoadoutBlueprint {
 interface UnitBlueprint {
     name: string;
     era?: string[];
+    type?: string;
     label: string;
     shortLabel: string;
     range?: string;
