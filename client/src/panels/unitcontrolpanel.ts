@@ -34,7 +34,8 @@ export class UnitControlPanel extends Panel {
         this.#speedTypeSwitch = new Switch("speed-type-switch", (value: boolean) => { getUnitsManager().selectedUnitsSetSpeedType(value? "GS": "CAS"); });
 
         /* Option buttons */
-        this.#optionButtons["ROE"] = ROEs.map((option: string, index: number) => {
+        // Reversing the ROEs so that the least "aggressive" option is always on the left
+        this.#optionButtons["ROE"] = ROEs.slice(0).reverse().map((option: string, index: number) => {
             return this.#createOptionButton(option, `roe/${option.toLowerCase()}.svg`, ROEDescriptions[index], () => { getUnitsManager().selectedUnitsSetROE(option); });
         });
 

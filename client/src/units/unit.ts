@@ -199,7 +199,7 @@ export class Unit extends CustomMarker {
                 case DataIndexes.desiredSpeed: this.#desiredSpeed = dataExtractor.extractFloat64(); break;
                 case DataIndexes.desiredSpeedType: this.#desiredSpeedType = dataExtractor.extractBool() ? "GS" : "CAS"; break;
                 case DataIndexes.desiredAltitude: this.#desiredAltitude = dataExtractor.extractFloat64(); break;
-                case DataIndexes.desiredAltitudeType: this.#desiredAltitudeType = dataExtractor.extractFloat64() ? "AGL" : "ASL"; break;
+                case DataIndexes.desiredAltitudeType: this.#desiredAltitudeType = dataExtractor.extractBool() ? "AGL" : "ASL"; break;
                 case DataIndexes.leaderID: this.#leaderID = dataExtractor.extractUInt32(); break;
                 case DataIndexes.formationOffset: this.#formationOffset = dataExtractor.extractOffset(); break;
                 case DataIndexes.targetID: this.#targetID = dataExtractor.extractUInt32(); break;
@@ -216,7 +216,6 @@ export class Unit extends CustomMarker {
             }
         }
         
-
         /* Dead units can't be selected */
         this.setSelected(this.getSelected() && this.#alive && !this.getHidden())
 
@@ -772,7 +771,7 @@ export class Unit extends CustomMarker {
                 this.#miniMapMarker.bringToBack();
             }
             else {
-                if (this.#miniMapMarker.getLatLng().lat !== this.getPosition().lat && this.#miniMapMarker.getLatLng().lng !== this.getPosition().lng) {
+                if (this.#miniMapMarker.getLatLng().lat !== this.getPosition().lat || this.#miniMapMarker.getLatLng().lng !== this.getPosition().lng) {
                     this.#miniMapMarker.setLatLng(new LatLng(this.#position.lat, this.#position.lng));
                     this.#miniMapMarker.bringToBack();
                 }
@@ -787,7 +786,7 @@ export class Unit extends CustomMarker {
 
         /* Draw the marker */
         if (!this.getHidden()) {
-            if (this.getLatLng().lat !== this.getPosition().lat && this.getLatLng().lng !== this.getPosition().lng) {
+            if (this.getLatLng().lat !== this.#position.lat || this.getLatLng().lng !== this.#position.lng) {
                 this.setLatLng(new LatLng(this.#position.lat, this.#position.lng));
             }
 
