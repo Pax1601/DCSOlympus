@@ -1,4 +1,5 @@
 import { getUnitsManager } from "..";
+import { Ammo } from "../@types/unit";
 import { ConvertDDToDMS, rad2deg } from "../other/utils";
 import { aircraftDatabase } from "../units/aircraftdatabase";
 import { Unit } from "../units/unit";
@@ -51,21 +52,21 @@ export class UnitInfoPanel extends Panel {
     #onUnitUpdate(unit: Unit) {
         if (this.getElement() != null && this.getVisible() && unit.getSelected()) {
 
-            const baseData = unit.getBaseData();
+            const baseData = unit.getData();
 
             /* Set the unit info */
             this.#unitLabel.innerText = aircraftDatabase.getByName(baseData.name)?.label || baseData.name;
             this.#unitName.innerText = baseData.unitName;
-            if (unit.getMissionData().flags.Human)
+            if (unit.getHuman())
                 this.#unitControl.innerText = "Human";
             else if (baseData.controlled)
                 this.#unitControl.innerText = "Olympus controlled";
             else
                 this.#unitControl.innerText = "DCS Controlled";
-            this.#fuelBar.style.width = String(unit.getMissionData().fuel + "%");
-            this.#fuelPercentage.dataset.percentage = "" + unit.getMissionData().fuel;
-            this.#currentTask.dataset.currentTask = unit.getTaskData().currentTask !== "" ? unit.getTaskData().currentTask : "No task";
-            this.#currentTask.dataset.coalition = unit.getMissionData().coalition;
+            this.#fuelBar.style.width = String(unit.getFuel() + "%");
+            this.#fuelPercentage.dataset.percentage = "" + unit.getFuel();
+            this.#currentTask.dataset.currentTask = unit.getTask() !== "" ? unit.getTask() : "No task";
+            this.#currentTask.dataset.coalition = unit.getCoalition();
 
             this.#silhouette.src = `/images/units/${unit.getDatabase()?.getByName(baseData.name)?.filename}`;
             this.#silhouette.classList.toggle("hide", unit.getDatabase()?.getByName(baseData.name)?.filename == undefined || unit.getDatabase()?.getByName(baseData.name)?.filename == '');
@@ -74,13 +75,13 @@ export class UnitInfoPanel extends Panel {
             const items = <HTMLElement>this.#loadoutContainer.querySelector("#loadout-items");
 
             if (items) {
-                const ammo = Object.values(unit.getMissionData().ammo);
+                const ammo = Object.values(unit.getAmmo());
                 if (ammo.length > 0) {
-                    items.replaceChildren(...Object.values(unit.getMissionData().ammo).map(
-                        (ammo: any) => {
+                    items.replaceChildren(...Object.values(unit.getAmmo()).map(
+                        (ammo: Ammo) => {
                             var el = document.createElement("div");
-                            el.dataset.qty = ammo.count;
-                            el.dataset.item = ammo.desc.displayName;
+                            el.dataset.qty = `${ammo.quantity}`;
+                            el.dataset.item = ammo.name;
                             return el;
                         }
                     ));

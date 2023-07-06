@@ -7,10 +7,10 @@
 extern UnitsManager* unitsManager;
 
 /* Move command */
-wstring Move::getString(lua_State* L)
+string Move::getString(lua_State* L)
 {
 
-    std::wostringstream commandSS;
+    std::ostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.move, "
         << "\"" << groupName << "\"" << ", "
@@ -26,9 +26,9 @@ wstring Move::getString(lua_State* L)
 }
 
 /* Smoke command */
-wstring Smoke::getString(lua_State* L)
+string Smoke::getString(lua_State* L)
 {
-    std::wostringstream commandSS;
+    std::ostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.smoke, " 
         << "\"" << color << "\"" << ", "
@@ -38,9 +38,9 @@ wstring Smoke::getString(lua_State* L)
 }
 
 /* Spawn ground command */
-wstring SpawnGroundUnit::getString(lua_State* L)
+string SpawnGroundUnit::getString(lua_State* L)
 {
-    std::wostringstream commandSS;
+    std::ostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.spawnGroundUnit, " 
         << "\"" << coalition << "\"" << ", "
@@ -51,16 +51,16 @@ wstring SpawnGroundUnit::getString(lua_State* L)
 }
 
 /* Spawn air command */
-wstring SpawnAircraft::getString(lua_State* L)
+string SpawnAircraft::getString(lua_State* L)
 {
-    std::wostringstream optionsSS;
+    std::ostringstream optionsSS;
     optionsSS.precision(10);
     optionsSS << "{" 
         << "payloadName = \"" << payloadName << "\", "
         << "airbaseName = \"" << airbaseName << "\", "
         << "}";
 
-    std::wostringstream commandSS;
+    std::ostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.spawnAircraft, " 
         << "\"" << coalition << "\"" << ", "
@@ -73,12 +73,12 @@ wstring SpawnAircraft::getString(lua_State* L)
 }
 
 /* Clone unit command */
-wstring Clone::getString(lua_State* L)
+string Clone::getString(lua_State* L)
 {
     Unit* unit = unitsManager->getUnit(ID);
     if (unit != nullptr)
     {
-        std::wostringstream commandSS;
+        std::ostringstream commandSS;
         commandSS.precision(10);
         commandSS << "Olympus.clone, "
             << ID << ", "
@@ -89,14 +89,14 @@ wstring Clone::getString(lua_State* L)
     }
     else
     {
-        return L"";
+        return "";
     }
 }
 
 /* Delete unit command */
-wstring Delete::getString(lua_State* L)
+string Delete::getString(lua_State* L)
 {
-    std::wostringstream commandSS;
+    std::ostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.delete, "
         << ID << ", "
@@ -105,9 +105,9 @@ wstring Delete::getString(lua_State* L)
 }
 
 /* Set task command */
-wstring SetTask::getString(lua_State* L)
+string SetTask::getString(lua_State* L)
 {
-    std::wostringstream commandSS;
+    std::ostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.setTask, "
         << "\"" << groupName << "\"" << ", "
@@ -117,9 +117,9 @@ wstring SetTask::getString(lua_State* L)
 }
 
 /* Reset task command */
-wstring ResetTask::getString(lua_State* L)
+string ResetTask::getString(lua_State* L)
 {
-    std::wostringstream commandSS;
+    std::ostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.resetTask, "
         << "\"" << groupName << "\"";
@@ -128,9 +128,9 @@ wstring ResetTask::getString(lua_State* L)
 }
 
 /* Set command command */
-wstring SetCommand::getString(lua_State* L)
+string SetCommand::getString(lua_State* L)
 {
-    std::wostringstream commandSS;
+    std::ostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.setCommand, "
         << "\"" << groupName << "\"" << ", "
@@ -140,9 +140,9 @@ wstring SetCommand::getString(lua_State* L)
 }
 
 /* Set option command */
-wstring SetOption::getString(lua_State* L)
+string SetOption::getString(lua_State* L)
 {
-    std::wostringstream commandSS;
+    std::ostringstream commandSS;
     commandSS.precision(10);
 
     if (!isBoolean) {
@@ -160,9 +160,9 @@ wstring SetOption::getString(lua_State* L)
 }
 
 /* Set onOff command */
-wstring SetOnOff::getString(lua_State* L)
+string SetOnOff::getString(lua_State* L)
 {
-    std::wostringstream commandSS;
+    std::ostringstream commandSS;
     commandSS.precision(10);
 
     commandSS << "Olympus.setOnOff, "
@@ -173,9 +173,9 @@ wstring SetOnOff::getString(lua_State* L)
 }
 
 /* Explosion command */
-wstring Explosion::getString(lua_State* L)
+string Explosion::getString(lua_State* L)
 {
-    std::wostringstream commandSS;
+    std::ostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.explosion, "
         << intensity << ", "

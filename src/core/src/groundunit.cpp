@@ -13,16 +13,15 @@ extern Scheduler* scheduler;
 extern UnitsManager* unitsManager;
 
 /* Ground unit */
-GroundUnit::GroundUnit(json::value json, int ID) : Unit(json, ID)
+GroundUnit::GroundUnit(json::value json, unsigned int ID) : Unit(json, ID)
 {
 	log("New Ground Unit created with ID: " + to_string(ID));
-	addMeasure(L"category", json::value(getCategory()));
 
-	double desiredSpeed = 10;
-	setDesiredSpeed(desiredSpeed);
+	setCategory("GroundUnit");
+	setDesiredSpeed(10);
 };
 
-void GroundUnit::setState(int newState)
+void GroundUnit::setState(unsigned char newState)
 {
 	/************ Perform any action required when LEAVING a state ************/
 	if (newState != state) {
@@ -34,7 +33,7 @@ void GroundUnit::setState(int newState)
 			break;
 		}
 		case State::FIRE_AT_AREA: {
-			setTargetLocation(Coords(NULL));
+			setTargetPosition(Coords(NULL));
 			break;
 		}
 		default:
@@ -47,16 +46,13 @@ void GroundUnit::setState(int newState)
 	case State::IDLE: {
 		clearActivePath();
 		resetActiveDestination();
-		addMeasure(L"currentState", json::value(L"Idle"));
 		break;
 	}
 	case State::REACH_DESTINATION: {
 		resetActiveDestination();
-		addMeasure(L"currentState", json::value(L"Reach destination"));
 		break;
 	}
 	case State::FIRE_AT_AREA: {
-		addMeasure(L"currentState", json::value(L"Firing at area"));
 		clearActivePath();
 		resetActiveDestination();
 		break;
@@ -67,24 +63,26 @@ void GroundUnit::setState(int newState)
 
 	resetTask();
 
-	log(unitName + L" setting state from " + to_wstring(state) + L" to " + to_wstring(newState));
+	log(unitName + " setting state from " + to_string(state) + " to " + to_string(newState));
 	state = newState;
+
+	triggerUpdate(DataIndex::state);
 }
 
 void GroundUnit::AIloop()
 {
 	switch (state) {
 	case State::IDLE: {
-		currentTask = L"Idle";
+		setTask("Idle");
 		if (getHasTask())
 			resetTask();
 		break;
 	}
 	case State::REACH_DESTINATION: {
-		wstring enrouteTask = L"";
+		string enrouteTask = "";
 		bool looping = false;
 
-		std::wostringstream taskSS;
+		std::ostringstream taskSS;
 		taskSS << "{ id = 'FollowRoads', value = " << (getFollowRoads() ? "true" : "false") << " }";
 		enrouteTask = taskSS.str();
 
@@ -106,11 +104,11 @@ void GroundUnit::AIloop()
 		break;
 	}
 	case State::FIRE_AT_AREA: {
-		currentTask = L"Firing at area";
+		setTask("Firing at area");
 
 		if (!getHasTask()) {
-			std::wostringstream taskSS;
-			taskSS << "{id = 'FireAtPoint', lat = " << targetLocation.lat << ", lng = " << targetLocation.lng << ", radius = 1000}";
+			std::ostringstream taskSS;
+			taskSS << "{id = 'FireAtPoint', lat = " << targetPosition.lat << ", lng = " << targetPosition.lng << ", radius = 1000}";
 			Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str()));
 			scheduler->appendCommand(command);
 			setHasTask(true);
@@ -119,17 +117,15 @@ void GroundUnit::AIloop()
 	default:
 		break;
 	}
-
-	addMeasure(L"currentTask", json::value(currentTask));
 }
 
-void GroundUnit::changeSpeed(wstring change)
+void GroundUnit::changeSpeed(string change)
 {
-	if (change.compare(L"stop") == 0)
+	if (change.compare("stop") == 0)
 		setState(State::IDLE);
-	else if (change.compare(L"slow") == 0)
+	else if (change.compare("slow") == 0)
 		setDesiredSpeed(getDesiredSpeed() - knotsToMs(5));
-	else if (change.compare(L"fast") == 0)
+	else if (change.compare("fast") == 0)
 		setDesiredSpeed(getDesiredSpeed() + knotsToMs(5));
 
 	if (getDesiredSpeed() < 0)

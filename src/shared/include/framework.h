@@ -20,6 +20,7 @@
 #include <codecvt>
 #include <cpprest/http_listener.h>
 #include <cpprest/json.h>
+#include <cpprest/streams.h>
 #include <set>
 
 using namespace std;

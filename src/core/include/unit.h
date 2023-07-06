@@ -5,8 +5,58 @@
 #include "luatools.h"
 #include "measure.h"
 #include "logger.h"
+#include "commands.h"
+#include "datatypes.h"
+
+#include <chrono>
+using namespace std::chrono;
 
 #define TASK_CHECK_INIT_VALUE 10
+
+namespace DataIndex {
+	enum DataIndexes {
+		startOfData = 0,
+		category,
+		alive,
+		human,
+		controlled,
+		coalition,
+		country,
+		name,
+		unitName,
+		groupName,
+		state,
+		task,
+		hasTask,
+		position,
+		speed,
+		heading,
+		isTanker,
+		isAWACS,
+		onOff,
+		followRoads,
+		fuel,
+		desiredSpeed,
+		desiredSpeedType,
+		desiredAltitude,
+		desiredAltitudeType,
+		leaderID,
+		formationOffset,
+		targetID,
+		targetPosition,
+		ROE,
+		reactionToThreat,
+		emissionsCountermeasures,
+		TACAN,
+		radio,
+		generalSettings,
+		ammo,
+		contacts,
+		activePath,
+		lastIndex,
+		endOfData = 255
+	};
+}
 
 namespace State
 {
@@ -28,235 +78,224 @@ namespace State
 	};
 };
 
-namespace Options {
-	struct TACAN
-	{
-		bool isOn = false;
-		int channel = 40;
-		wstring XY = L"X";
-		wstring callsign = L"TKR";
-	};
-
-	struct Radio
-	{
-		int frequency = 124000000;	// MHz
-		int callsign = 1;
-		int callsignNumber = 1;
-	};
-
-	struct GeneralSettings
-	{
-		bool prohibitJettison = false;
-		bool prohibitAA = false;
-		bool prohibitAG = false;
-		bool prohibitAfterburner = false;
-		bool prohibitAirWpn = false;
-	};
-}
-
 class Unit
 {
 public:
-	Unit(json::value json, int ID);
+	Unit(json::value json, unsigned int ID);
 	~Unit();
 
-	/********** Public methods **********/
+	/********** Methods **********/
 	void initialize(json::value json);
 	void setDefaults(bool force = false);
-	int getID() { return ID; }
+
 	void runAILoop();
-	void updateExportData(json::value json);
+
+	void updateExportData(json::value json, double dt = 0);
 	void updateMissionData(json::value json);
-	json::value getData(long long time, bool getAll = false);
-	virtual wstring getCategory() { return L"No category"; };
 
-	/********** Base data **********/
-	void setControlled(bool newControlled) { controlled = newControlled; addMeasure(L"controlled", json::value(newControlled)); }
-	void setName(wstring newName) { name = newName; addMeasure(L"name", json::value(newName));}
-	void setUnitName(wstring newUnitName) { unitName = newUnitName; addMeasure(L"unitName", json::value(newUnitName));}
-	void setGroupName(wstring newGroupName) { groupName = newGroupName; addMeasure(L"groupName", json::value(newGroupName));}
-	void setAlive(bool newAlive) { alive = newAlive; addMeasure(L"alive", json::value(newAlive));}
-	void setType(json::value newType) { type = newType; addMeasure(L"type", newType);}
-	void setCountry(int newCountry) { country = newCountry; addMeasure(L"country", json::value(newCountry));}
-
-	bool getControlled() { return controlled; }
-	wstring getName() { return name; }
-	wstring getUnitName() { return unitName; }
-	wstring getGroupName() { return groupName; }
-	bool getAlive() { return alive; }
-	json::value getType() { return type; }
-	int getCountry() { return country; }
-
-	/********** Flight data **********/
-	void setLatitude(double newLatitude) {latitude = newLatitude; addMeasure(L"latitude", json::value(newLatitude));}
-	void setLongitude(double newLongitude) {longitude = newLongitude; addMeasure(L"longitude", json::value(newLongitude));}
-	void setAltitude(double newAltitude) {altitude = newAltitude; addMeasure(L"altitude", json::value(newAltitude));}
-	void setHeading(double newHeading) {heading = newHeading; addMeasure(L"heading", json::value(newHeading));}
-	void setSpeed(double newSpeed) {speed = newSpeed; addMeasure(L"speed", json::value(newSpeed));}
-
-	double getLatitude() { return latitude; }
-	double getLongitude() { return longitude; }
-	double getAltitude() { return altitude; }
-	double getHeading() { return heading; }
-	double getSpeed() { return speed; }
-
-	/********** Mission data **********/
-	void setFuel(double newFuel) { fuel = newFuel; addMeasure(L"fuel", json::value(newFuel));}
-	void setAmmo(json::value newAmmo) { ammo = newAmmo; addMeasure(L"ammo", json::value(newAmmo));}
-	void setContacts(json::value newContacts) {contacts = newContacts; addMeasure(L"contacts", json::value(newContacts));}
-	void setHasTask(bool newHasTask);
-	void setCoalitionID(int newCoalitionID);
-	void setFlags(json::value newFlags) { flags = newFlags; addMeasure(L"flags", json::value(newFlags));}
-
-	double getFuel() { return fuel; }
-	json::value getAmmo() { return ammo; }
-	json::value getTargets() { return contacts; }
-	bool getHasTask() { return hasTask; }
-	wstring getCoalition() { return coalition; }
-	int getCoalitionID();
-	json::value getFlags() { return flags; }
-
-	/********** Formation data **********/
-	void setLeaderID(int newLeaderID) { leaderID = newLeaderID; addMeasure(L"leaderID", json::value(newLeaderID)); }
-	void setFormationOffset(Offset formationOffset);
-
-	int getLeaderID() { return leaderID; }
-	Offset getFormationoffset() { return formationOffset; }
-	
-	/********** Task data **********/
-	void setCurrentTask(wstring newCurrentTask) { currentTask = newCurrentTask; addMeasure(L"currentTask", json::value(newCurrentTask)); } 
-	void setDesiredSpeed(double newDesiredSpeed);
-	void setDesiredAltitude(double newDesiredAltitude);
-	void setDesiredSpeedType(wstring newDesiredSpeedType);
-	void setDesiredAltitudeType(wstring newDesiredAltitudeType);
-	void setActiveDestination(Coords newActiveDestination) { activeDestination = newActiveDestination; addMeasure(L"activeDestination", json::value("")); } // TODO fix
-	void setActivePath(list<Coords> newActivePath);
-	void setTargetID(int newTargetID) { targetID = newTargetID; addMeasure(L"targetID", json::value(newTargetID));}
-	void setTargetLocation(Coords newTargetLocation);
-	void setIsTanker(bool newIsTanker);
-	void setIsAWACS(bool newIsAWACS);
-	virtual void setOnOff(bool newOnOff) { onOff = newOnOff; addMeasure(L"onOff", json::value(newOnOff));};
-	virtual void setFollowRoads(bool newFollowRoads) { followRoads = newFollowRoads; addMeasure(L"followRoads", json::value(newFollowRoads)); };
-	
-	wstring getCurrentTask() { return currentTask; }
-	virtual double getDesiredSpeed() { return desiredSpeed; };
-	virtual double getDesiredAltitude() { return desiredAltitude; };
-	virtual wstring getDesiredSpeedType() { return desiredSpeedType; };
-	virtual wstring getDesiredAltitudeType() { return desiredAltitudeType; };
+	unsigned int getDataPacket(char*& data);
+	unsigned int getID() { return ID; }
+	void getData(stringstream& ss, unsigned long long time);
 	Coords getActiveDestination() { return activeDestination; }
-	list<Coords> getActivePath() { return activePath; }
-	int getTargetID() { return targetID; }
-	Coords getTargetLocation() { return targetLocation; }
-	bool getIsTanker() { return isTanker; }
-	bool getIsAWACS() { return isAWACS; }
-	bool getOnOff() { return onOff; };
-	bool getFollowRoads() { return followRoads; };
 
-	/********** Options data **********/
-	void setROE(wstring newROE, bool force = false);
-	void setReactionToThreat(wstring newReactionToThreat, bool force = false);
-	void setEmissionsCountermeasures(wstring newEmissionsCountermeasures, bool force = false);
-	void setTACAN(Options::TACAN newTACAN, bool force = false);
-	void setRadio(Options::Radio newradio, bool force = false);
-	void setGeneralSettings(Options::GeneralSettings newGeneralSettings, bool force = false);
-	void setEPLRS(bool newEPLRS, bool force = false);
-
-	wstring getROE() { return ROE; }
-	wstring getReactionToThreat() { return reactionToThreat; }
-	wstring getEmissionsCountermeasures() { return emissionsCountermeasures; };
-	Options::TACAN getTACAN() { return TACAN; }
-	Options::Radio getRadio() { return radio; }
-	Options::GeneralSettings getGeneralSettings() { return generalSettings; }
-	bool getEPLRS() { return EPLRS; }
-
-	/********** Control functions **********/
-	void landAt(Coords loc);
-	virtual void changeSpeed(wstring change) {};
-	virtual void changeAltitude(wstring change) {};
+	virtual void changeSpeed(string change) {};
+	virtual void changeAltitude(string change) {};
+	bool setActiveDestination();
 	void resetActiveDestination();
-	virtual void setState(int newState) { state = newState; };
-	void resetTask();
+	void landAt(Coords loc);
+
+	bool updateActivePath(bool looping);
 	void clearActivePath();
 	void pushActivePathFront(Coords newActivePathFront);
 	void pushActivePathBack(Coords newActivePathBack);
 	void popActivePathFront();
+	void goToDestination(string enrouteTask = "nil");
+	bool isDestinationReached(double threshold);
+
+	string getTargetName();
+	string getLeaderName();
+	bool isTargetAlive();
+	bool isLeaderAlive();
+
+	void resetTask();
+	bool checkTaskFailed();
+	void resetTaskFailedCounter();
+
+	void triggerUpdate(unsigned char datumIndex);
+
+	bool hasFreshData(unsigned long long time);
+	bool checkFreshness(unsigned char datumIndex, unsigned long long time);
+
+	/********** Setters **********/
+	virtual void setCategory(string newValue) { updateValue(category, newValue, DataIndex::category); }
+	virtual void setAlive(bool newValue) { updateValue(alive, newValue, DataIndex::alive); }
+	virtual void setHuman(bool newValue) { updateValue(human, newValue, DataIndex::human); }
+	virtual void setControlled(bool newValue) { updateValue(controlled, newValue, DataIndex::controlled); }
+	virtual void setCoalition(unsigned char newValue) { updateValue(coalition, newValue, DataIndex::coalition); }
+	virtual void setCountry(unsigned char newValue) { updateValue(country, newValue, DataIndex::country); }
+	virtual void setName(string newValue) { updateValue(name, newValue, DataIndex::name); }
+	virtual void setUnitName(string newValue) { updateValue(unitName, newValue, DataIndex::unitName); }
+	virtual void setGroupName(string newValue) { updateValue(groupName, newValue, DataIndex::groupName); }
+	virtual void setState(unsigned char newValue) { updateValue(state, newValue, DataIndex::state); };
+	virtual void setTask(string newValue) { updateValue(task, newValue, DataIndex::task); }
+	virtual void setHasTask(bool newValue) { updateValue(hasTask, newValue, DataIndex::hasTask); }
+	virtual void setPosition(Coords newValue) { updateValue(position, newValue, DataIndex::position); }
+	virtual void setSpeed(double newValue) { updateValue(speed, newValue, DataIndex::speed); }
+	virtual void setHeading(double newValue) { updateValue(heading, newValue, DataIndex::heading); }
+	virtual void setIsTanker(bool newValue);
+	virtual void setIsAWACS(bool newValue);
+	virtual void setOnOff(bool newValue) { updateValue(onOff, newValue, DataIndex::onOff); };
+	virtual void setFollowRoads(bool newValue) { updateValue(followRoads, newValue, DataIndex::followRoads); };
+	virtual void setFuel(unsigned short newValue) { updateValue(fuel, newValue, DataIndex::fuel); }
+	virtual void setDesiredSpeed(double newValue);
+	virtual void setDesiredSpeedType(string newValue);
+	virtual void setDesiredAltitude(double newValue);
+	virtual void setDesiredAltitudeType(string newValue);
+	virtual void setLeaderID(unsigned int newValue) { updateValue(leaderID, newValue, DataIndex::leaderID); }
+	virtual void setFormationOffset(Offset formationOffset);
+	virtual void setTargetID(unsigned int newValue) { updateValue(targetID, newValue, DataIndex::targetID); }
+	virtual void setTargetPosition(Coords newValue) { updateValue(targetPosition, newValue, DataIndex::targetPosition); }
+	virtual void setROE(unsigned char newValue, bool force = false);
+	virtual void setReactionToThreat(unsigned char newValue, bool force = false);
+	virtual void setEmissionsCountermeasures(unsigned char newValue, bool force = false);
+	virtual void setTACAN(DataTypes::TACAN newValue, bool force = false);
+	virtual void setRadio(DataTypes::Radio newValue, bool force = false);
+	virtual void setGeneralSettings(DataTypes::GeneralSettings newValue, bool force = false);
+	virtual void setAmmo(vector<DataTypes::Ammo> newValue);
+	virtual void setContacts(vector<DataTypes::Contact> newValue);
+	virtual void setActivePath(list<Coords> newValue);
+
+	/********** Getters **********/
+	virtual string getCategory() { return category; };
+	virtual bool getAlive() { return alive; }
+	virtual bool getHuman() { return human; }
+	virtual bool getControlled() { return controlled; }
+	virtual unsigned char getCoalition() { return coalition; }
+	virtual unsigned char getCountry() { return country; }
+	virtual string getName() { return name; }
+	virtual string getUnitName() { return unitName; }
+	virtual string getGroupName() { return groupName; }
+	virtual unsigned char getState() { return state; }
+	virtual string getTask() { return task; }
+	virtual bool getHasTask() { return hasTask; }
+	virtual Coords getPosition() { return position; }
+	virtual double getSpeed() { return speed; }
+	virtual double getHeading() { return heading; }
+	virtual bool getIsTanker() { return isTanker; }
+	virtual bool getIsAWACS() { return isAWACS; }
+	virtual bool getOnOff() { return onOff; };
+	virtual bool getFollowRoads() { return followRoads; };
+	virtual unsigned short getFuel() { return fuel; }
+	virtual double getDesiredSpeed() { return desiredSpeed; };
+	virtual bool getDesiredSpeedType() { return desiredSpeedType; };
+	virtual double getDesiredAltitude() { return desiredAltitude; };
+	virtual bool getDesiredAltitudeType() { return desiredAltitudeType; };
+	virtual unsigned int getLeaderID() { return leaderID; }
+	virtual Offset getFormationoffset() { return formationOffset; }
+	virtual unsigned int getTargetID() { return targetID; }
+	virtual Coords getTargetPosition() { return targetPosition; }
+	virtual unsigned char getROE() { return ROE; }
+	virtual unsigned char getReactionToThreat() { return reactionToThreat; }
+	virtual unsigned char getEmissionsCountermeasures() { return emissionsCountermeasures; };
+	virtual DataTypes::TACAN getTACAN() { return TACAN; }
+	virtual DataTypes::Radio getRadio() { return radio; }
+	virtual DataTypes::GeneralSettings getGeneralSettings() { return generalSettings; }
+	virtual vector<DataTypes::Ammo> getAmmo() { return ammo; }
+	virtual vector<DataTypes::Contact> getTargets() { return contacts; }
+	virtual list<Coords> getActivePath() { return activePath; }
 
 protected:
-	int ID;
+	unsigned int ID;
 
-	map<wstring, Measure*> measures;
-	int taskCheckCounter = 0;
-
-	/********** Base data **********/
+	string category;
+	bool alive = false;
+	bool human = false;
 	bool controlled = false;
-	wstring name = L"undefined";
-	wstring unitName = L"undefined";
-	wstring groupName = L"undefined";
-	bool alive = true;
-	json::value type = json::value::null();
-	int country = NULL;
-
-	/********** Flight data **********/
-	double latitude = NULL;
-	double longitude = NULL;
-	double altitude = NULL;
+	unsigned char coalition = NULL;
+	unsigned char country = NULL;
+	string name = "";
+	string unitName = "";
+	string groupName = "";
+	unsigned char state = State::NONE;
+	string task = "";
+	bool hasTask = false;
+	Coords position = Coords(NULL);
 	double speed = NULL;
 	double heading = NULL;
-
-	/********** Mission data **********/
-	double fuel = 0;
-	double initialFuel = 0; // Used internally to detect refueling completed
-	json::value ammo = json::value::null();
-	json::value contacts = json::value::null();
-	bool hasTask = false;
-	wstring coalition = L"";
-	json::value flags = json::value::null();
-
-	/********** Formation data **********/
-	int leaderID = NULL;
-	Offset formationOffset = Offset(NULL);
-
-	/********** Task data **********/
-	wstring currentTask = L"";
-	double desiredSpeed = 0;
-	double desiredAltitude = 0;
-	wstring desiredSpeedType = L"GS";
-	wstring desiredAltitudeType = L"AGL";
-	list<Coords> activePath;
-	Coords activeDestination = Coords(NULL);
-	int targetID = NULL;
-	Coords targetLocation = Coords(NULL);
 	bool isTanker = false;
 	bool isAWACS = false;
 	bool onOff = true;
 	bool followRoads = false;
-	
-	/********** Options data **********/
-	wstring ROE = L"Designated";
-	wstring reactionToThreat = L"Evade";
-	wstring emissionsCountermeasures = L"Defend";
-	Options::TACAN TACAN;
-	Options::Radio radio;
-	Options::GeneralSettings generalSettings;
-	bool EPLRS = false;
-
-	/********** State machine **********/
-	int state = State::NONE;
+	unsigned short fuel = 0;
+	double desiredSpeed = 0;
+	bool desiredSpeedType = 1;
+	double desiredAltitude = 0;
+	bool desiredAltitudeType = 1;
+	unsigned int leaderID = NULL;
+	Offset formationOffset = Offset(NULL);
+	unsigned int targetID = NULL;
+	Coords targetPosition = Coords(NULL);
+	unsigned char ROE = ROE::OPEN_FIRE_WEAPON_FREE;
+	unsigned char reactionToThreat = ReactionToThreat::EVADE_FIRE;
+	unsigned char emissionsCountermeasures = EmissionCountermeasure::DEFEND;
+	DataTypes::TACAN TACAN;
+	DataTypes::Radio radio;
+	DataTypes::GeneralSettings generalSettings;
+	vector<DataTypes::Ammo> ammo;
+	vector<DataTypes::Contact> contacts;
+	list<Coords> activePath;
 
 	/********** Other **********/
-	Coords oldPosition = Coords(0); // Used to approximate speed
+	unsigned int taskCheckCounter = 0;
+	Coords activeDestination = Coords(NULL);
+	double initialFuel = 0;
+	Coords oldPosition = Coords(0);
+	map<unsigned char, unsigned long long> updateTimeMap;
 
-	/********** Functions **********/
-	wstring getTargetName();
-	wstring getLeaderName();
-	bool isTargetAlive();
-	bool isLeaderAlive();
+	/********** Private methods **********/
 	virtual void AIloop() = 0;
-	void addMeasure(wstring key, json::value value);
-	bool isDestinationReached(double threshold);
-	bool setActiveDestination();
-	bool updateActivePath(bool looping);
-	void goToDestination(wstring enrouteTask = L"nil");
-	bool checkTaskFailed();
-	void resetTaskFailedCounter();
+
+	void appendString(stringstream& ss, const unsigned char& datumIndex, const string& datumValue) {
+		const unsigned short size = datumValue.size();
+		ss.write((const char*)&datumIndex, sizeof(unsigned char));
+		ss.write((const char*)&size, sizeof(unsigned short));
+		ss << datumValue;
+	}
+
+	/********** Template methods **********/
+	template <typename T>
+	void updateValue(T& value, T& newValue, unsigned char datumIndex)
+	{
+		if (newValue != value)
+		{
+			triggerUpdate(datumIndex);
+			value = newValue;
+		}
+	}
+
+	template <typename T>
+	void appendNumeric(stringstream& ss, const unsigned char& datumIndex, T& datumValue) {
+		ss.write((const char*)&datumIndex, sizeof(unsigned char));
+		ss.write((const char*)&datumValue, sizeof(T));
+	}
+
+	template <typename T>
+	void appendVector(stringstream& ss, const unsigned char& datumIndex, vector<T>& datumValue) {
+		const unsigned short size = datumValue.size();
+		ss.write((const char*)&datumIndex, sizeof(unsigned char));
+		ss.write((const char*)&size, sizeof(unsigned short));
+
+		for (auto& el : datumValue)
+			ss.write((const char*)&el, sizeof(T));
+	}
+
+	template <typename T>
+	void appendList(stringstream& ss, const unsigned char& datumIndex, list<T>& datumValue) {
+		const unsigned short size = datumValue.size();
+		ss.write((const char*)&datumIndex, sizeof(unsigned char));
+		ss.write((const char*)&size, sizeof(unsigned short));
+
+		for (auto& el: datumValue)
+			ss.write((const char*)&el, sizeof(T));
+	}
 };

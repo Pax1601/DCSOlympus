@@ -1,12 +1,31 @@
 import { LatLng, LatLngBounds, TileLayer, tileLayer } from "leaflet";
 
-export const ROEs: string[] = ["Hold", "Return", "Designated", "Free"];
-export const reactionsToThreat: string[] = ["None", "Manoeuvre", "Passive", "Evade"];
-export const emissionsCountermeasures: string[] = ["Silent", "Attack", "Defend", "Free"];
+export const states: string[] = ["none", "idle", "reach-destination", "attack", "follow", "land", "refuel", "AWACS", "tanker", "bomb-point", "carpet-bomb", "bomb-building", "fire-at-area"];
+export const ROEs: string[] = ["free", "designated", "return", "hold"];
+export const reactionsToThreat: string[] = ["none", "manoeuvre", "passive", "evade"];
+export const emissionsCountermeasures: string[] = ["silent", "attack", "defend", "free"];
 
-export const ROEDescriptions: string[] = ["Hold (Never fire)", "Return (Only fire if fired upon)", "Designated (Attack the designated target only)", "Free (Attack anyone)"];
-export const reactionsToThreatDescriptions: string[] = ["None (No reaction)", "Manoeuvre (no countermeasures)", "Passive (Countermeasures only, no manoeuvre)", "Evade (Countermeasures and manoeuvers)"];
-export const emissionsCountermeasuresDescriptions: string[] = ["Silent (Radar OFF, no ECM)", "Attack (Radar only for targeting, ECM only if locked)", "Defend (Radar for searching, ECM if locked)", "Always on (Radar and ECM always on)"];
+export const ROEDescriptions: string[] = [
+    "Free (Attack anyone)",
+    "Designated (Attack the designated target only)",
+    "",
+    "Return (Only fire if fired upon)",
+    "Hold (Never fire)"
+];
+
+export const reactionsToThreatDescriptions: string[] = [
+    "None (No reaction)", 
+    "Manoeuvre (no countermeasures)", 
+    "Passive (Countermeasures only, no manoeuvre)", 
+    "Evade (Countermeasures and manoeuvers)"
+];
+
+export const emissionsCountermeasuresDescriptions: string[] = [
+    "Silent (Radar OFF, no ECM)", 
+    "Attack (Radar only for targeting, ECM only if locked)", 
+    "Defend (Radar for searching, ECM if locked)", 
+    "Always on (Radar and ECM always on)"
+];
 
 export const minSpeedValues: { [key: string]: number } = { Aircraft: 100, Helicopter: 0, NavyUnit: 0, GroundUnit: 0 };
 export const maxSpeedValues: { [key: string]: number } = { Aircraft: 800, Helicopter: 300, NavyUnit: 60, GroundUnit: 60 };
@@ -100,3 +119,58 @@ export const layers = {
         attribution: '<a href="https://github.com/cyclosm/cyclosm-cartocss-style/releases" title="CyclOSM - Open Bicycle render">CyclOSM</a> | Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }
 }
+
+/* Map constants */
+export const IDLE = "Idle";
+export const MOVE_UNIT = "Move unit";
+export const BOMBING = "Bombing";
+export const CARPET_BOMBING = "Carpet bombing";
+export const FIRE_AT_AREA = "Fire at area";
+export const COALITIONAREA_DRAW_POLYGON = "Draw Coalition Area";
+export const COALITIONAREA_INTERACT = "Interact with Coalition Areas"
+export const visibilityControls: string[] = ["human", "dcs", "aircraft", "groundunit-sam", "groundunit-other", "navyunit", "airbase"];
+export const visibilityControlsTootlips: string[] = ["Toggle human players visibility", "Toggle DCS controlled units visibility", "Toggle aircrafts visibility", "Toggle SAM units visibility", "Toggle ground units (not SAM) visibility", "Toggle navy units visibility", "Toggle airbases visibility"];
+
+export const IADSRoles: {[key: string]: number}= {"AAA": 0.8, "MANPADS": 0.3, "SAM Sites": 0.1, "Radar": 0.05};
+
+export enum DataIndexes {
+    startOfData = 0,
+    category,
+    alive,
+    human,
+    controlled,
+    coalition,
+    country,
+    name,
+    unitName,
+    groupName,
+    state,
+    task,
+    hasTask,
+    position,
+    speed,
+    heading,
+    isTanker,
+    isAWACS,
+    onOff,
+    followRoads,
+    fuel,
+    desiredSpeed,
+    desiredSpeedType,
+    desiredAltitude,
+    desiredAltitudeType,
+    leaderID,
+    formationOffset,
+    targetID,
+    targetPosition,
+    ROE,
+    reactionToThreat,
+    emissionsCountermeasures,
+    TACAN,
+    radio,
+    generalSettings,
+    ammo,
+    contacts,
+    activePath,
+    endOfData = 255
+};

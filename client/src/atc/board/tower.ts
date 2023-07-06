@@ -34,13 +34,13 @@ export class ATCBoardTower extends ATCBoard {
                 return;
             }
 
-            const flightData:FlightData = {
+            const flightData = {
                 latitude: -1,
                 longitude: -1,
                 altitude: -1,
                 heading: -1,
                 speed: -1,
-                ...( selectableUnits.hasOwnProperty( flight.unitId ) ? selectableUnits[flight.unitId].getFlightData() : {} )
+                ...( selectableUnits.hasOwnProperty( flight.unitId ) ? selectableUnits[flight.unitId].getData() : {} )
             };
 
             if ( !strip ) {

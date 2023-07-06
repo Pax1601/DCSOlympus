@@ -312,3 +312,7 @@
 [data-object|="unit-aircraft"][data-is-dead] .unit-summary .unit-callsign {
     display: block;
 }
+
+.ol-temporary-marker {
+    opacity: 0.5;
+}

@@ -10,6 +10,9 @@
 #include "commands.h"
 #include "scheduler.h"
 
+#include "base64.hpp"
+using namespace base64;
+
 extern Scheduler* scheduler;
 
 UnitsManager::UnitsManager(lua_State* L)
@@ -22,7 +25,7 @@ UnitsManager::~UnitsManager()
 
 }
 
-Unit* UnitsManager::getUnit(int ID)
+Unit* UnitsManager::getUnit(unsigned int ID)
 {
 	if (units.find(ID) == units.end()) {
 		return nullptr;
@@ -35,7 +38,7 @@ Unit* UnitsManager::getUnit(int ID)
 bool UnitsManager::isUnitInGroup(Unit* unit) 
 {
 	if (unit != nullptr) {
-		wstring groupName = unit->getGroupName();
+		string groupName = unit->getGroupName();
 		for (auto const& p : units)
 		{
 			if (p.second->getGroupName().compare(groupName) == 0 && p.second != unit)
@@ -57,26 +60,19 @@ bool UnitsManager::isUnitGroupLeader(Unit* unit)
 Unit* UnitsManager::getGroupLeader(Unit* unit) 
 {
 	if (unit != nullptr) {
-		wstring groupName = unit->getGroupName();
-
-		/* Get the unit IDs in order */
-		std::vector<int> keys;
-		for (auto const& p : units)
-			keys.push_back(p.first);
-		sort(keys.begin(), keys.end());
+		string groupName = unit->getGroupName();
 
 		/* Find the first unit that has the same groupName */
-		for (auto const& tempID : keys)
+		for (auto const& p : units)
 		{
-			Unit* tempUnit = getUnit(tempID);
-			if (tempUnit != nullptr && tempUnit->getGroupName().compare(groupName) == 0)
-				return tempUnit;
+			if (p.second->getGroupName().compare(groupName) == 0)
+				return p.second;
 		}
 	}
 	return nullptr;
 }
 
-vector<Unit*> UnitsManager::getGroupMembers(wstring groupName) 
+vector<Unit*> UnitsManager::getGroupMembers(string groupName) 
 {
 	vector<Unit*> members;
 	for (auto const& p : units)
@@ -87,20 +83,20 @@ vector<Unit*> UnitsManager::getGroupMembers(wstring groupName)
 	return members;
 }
 
-Unit* UnitsManager::getGroupLeader(int ID)
+Unit* UnitsManager::getGroupLeader(unsigned int ID)
 {
 	Unit* unit = getUnit(ID);
 	return getGroupLeader(unit);
 }
 
-void UnitsManager::updateExportData(lua_State* L)
+void UnitsManager::updateExportData(lua_State* L, double dt)
 {
-	map<int, json::value> unitJSONs = getAllUnits(L);
+	map<unsigned int, json::value> unitJSONs = getAllUnits(L);
 
 	/* Update all units, create them if needed TODO: move code to get constructor in dedicated function */
 	for (auto const& p : unitJSONs)
 	{
-		int ID = p.first;
+		unsigned int ID = p.first;
 		if (units.count(ID) == 0)
 		{
 			json::value type = static_cast<json::value>(p.second)[L"Type"];
@@ -132,15 +128,13 @@ void UnitsManager::updateExportData(lua_State* L)
 		else {
 			/* Update the unit if present*/
 			if (units.count(ID) != 0)
-				units[ID]->updateExportData(p.second);
+				units[ID]->updateExportData(p.second, dt);
 		}
 	}
 
 	/* Set the units that are not present in the JSON as dead (probably have been destroyed) */
 	for (auto const& unit : units)
-	{
 		unit.second->setAlive(unitJSONs.find(unit.first) != unitJSONs.end());		
-	}
 }
 
 void UnitsManager::updateMissionData(json::value missionData)
@@ -148,35 +142,26 @@ void UnitsManager::updateMissionData(json::value missionData)
 	/* Update all units */
 	for (auto const& p : units)
 	{
-		int ID = p.first;
+		unsigned int ID = p.first;
 		if (missionData.has_field(to_wstring(ID)))
-		{
 			p.second->updateMissionData(missionData[to_wstring(ID)]);
-		}
 	}
 }
 
 void UnitsManager::runAILoop() {
 	/* Run the AI Loop on all units */
 	for (auto const& unit : units)
-	{
 		unit.second->runAILoop();
-	}
 }
 
-void UnitsManager::getData(json::value& answer, long long time)
+string UnitsManager::getUnitData(stringstream &ss, unsigned long long time)
 {
-	auto unitsJson = json::value::object();
 	for (auto const& p : units)
-	{
-		auto unitJson = p.second->getData(time);
-		if (unitJson.size() > 0)
-			unitsJson[to_wstring(p.first)] = p.second->getData(time);
-	}
-	answer[L"units"] = unitsJson;
+		p.second->getData(ss, time);
+	return to_base64(ss.str());
 }
 
-void UnitsManager::deleteUnit(int ID, bool explosion)
+void UnitsManager::deleteUnit(unsigned int ID, bool explosion)
 {
 	if (getUnit(ID) != nullptr)
 	{
@@ -185,7 +170,7 @@ void UnitsManager::deleteUnit(int ID, bool explosion)
 	}
 }
 
-void UnitsManager::acquireControl(int ID) {
+void UnitsManager::acquireControl(unsigned int ID) {
 	Unit* unit = getUnit(ID);
 	if (unit != nullptr) {
 		for (auto const& groupMember : getGroupMembers(unit->getGroupName())) {

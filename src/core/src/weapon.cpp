@@ -13,21 +13,21 @@ extern Scheduler* scheduler;
 extern UnitsManager* unitsManager;
 
 /* Weapon */
-Weapon::Weapon(json::value json, int ID) : Unit(json, ID)
+Weapon::Weapon(json::value json, unsigned int ID) : Unit(json, ID)
 {
 
 };
 
 /* Missile */
-Missile::Missile(json::value json, int ID) : Weapon(json, ID)
+Missile::Missile(json::value json, unsigned int ID) : Weapon(json, ID)
 {
 	log("New Missile created with ID: " + to_string(ID));
-	addMeasure(L"category", json::value(getCategory()));
+	setCategory("Missile");
 };
 
 /* Bomb */
-Bomb::Bomb(json::value json, int ID) : Weapon(json, ID)
+Bomb::Bomb(json::value json, unsigned int ID) : Weapon(json, ID)
 {
 	log("New Bomb created with ID: " + to_string(ID));
-	addMeasure(L"category", json::value(getCategory()));
+	setCategory("Bomb");
 };

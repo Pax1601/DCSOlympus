@@ -42,7 +42,7 @@ void LogError(lua_State* L, string message)
     Log(L, message, errorLevel);
 }
 
-void Log(lua_State* L, string message, int level)
+void Log(lua_State* L, string message, unsigned int level)
 {
     STACK_INIT;
 
@@ -56,10 +56,10 @@ void Log(lua_State* L, string message, int level)
     STACK_CLEAN;
 }
 
-map<int, json::value> getAllUnits(lua_State* L)
+map<unsigned int, json::value> getAllUnits(lua_State* L)
 {
-    int res = 0;
-    map<int, json::value>  units;
+    unsigned int res = 0;
+    map<unsigned int, json::value>  units;
 
     STACK_INIT;
 
@@ -83,7 +83,8 @@ map<int, json::value> getAllUnits(lua_State* L)
         lua_pushnil(L);
         while (lua_next(L, 2) != 0)
         {
-            int ID = lua_tonumber(L, -2);
+            unsigned int ID = lua_tonumber(L, -2);
+            // TODO more efficient method can be used, converting all the lua data to a json object may be overkill
             units[ID] = luaTableToJSON(L, -1);
             STACK_POP(1)
         }
@@ -103,8 +104,8 @@ int dostring_in(lua_State* L, string target, string command)
     return lua_pcall(L, 2, 0, 0);
 }
 
-int TACANChannelToFrequency(int channel, wstring XY)
+unsigned int TACANChannelToFrequency(unsigned int channel, char XY)
 {
-    int basef = (XY == L"X" && channel > 63) || (XY == L"Y" && channel < 64) ? 1087: 961;
+    unsigned int basef = (XY == 'X' && channel > 63) || (XY == 'Y' && channel < 64) ? 1087 : 961;
     return (basef + channel) * 1000000;
 }

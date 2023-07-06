@@ -1,8 +1,11 @@
-import { DivIcon } from "leaflet";
+import { DivIcon, LatLngExpression, MarkerOptions } from "leaflet";
 import { CustomMarker } from "./custommarker";
 
 export class TargetMarker extends CustomMarker {
-    #interactive: boolean = false;
+    constructor(latlng: LatLngExpression, options?: MarkerOptions) {
+        super(latlng, options);
+        this.setZIndexOffset(9999);
+    }
 
     createIcon() {
         this.setIcon(new DivIcon({
@@ -12,7 +15,6 @@ export class TargetMarker extends CustomMarker {
         }));
         var el = document.createElement("div");
         el.classList.add("ol-target-icon");
-        el.classList.toggle("ol-target-icon-interactive", this.#interactive)
         this.getElement()?.appendChild(el);
     }
 }
