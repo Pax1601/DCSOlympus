@@ -1,5 +1,5 @@
 import { LatLng } from "leaflet";
-import { getInfoPopup, getMap } from "..";
+import { getInfoPopup, getMap, getUnitsManager } from "..";
 import { Airbase } from "./airbase";
 import { Bullseye } from "./bullseye";
 
@@ -71,6 +71,9 @@ export class MissionHandler {
                 getMap().setTheatre(this.#theatre);
                 getInfoPopup().setText("Map set to " + this.#theatre);
             }
+
+            if ("visibilityMode" in data.mission)
+                getUnitsManager().setVisibilityMode(data.mission.visibilityMode);
 
             if ("date" in data.mission)
                 this.#date = data.mission.date;

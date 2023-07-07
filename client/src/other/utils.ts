@@ -35,6 +35,16 @@ export function distance(lat1: number, lon1: number, lat2: number, lon2: number)
     return d;
 }
 
+export function coordinatesFromBearingAndDistance(lat1: number, lon1: number, brng: number, dist: number) {
+    const R = 6371e3; // metres
+    const φ1 = deg2rad(lat1); // φ, λ in radians
+    const λ1 = deg2rad(lon1);
+    const φ2 = Math.asin( Math.sin(φ1)*Math.cos(dist/R) + Math.cos(φ1)*Math.sin(dist/R)*Math.cos(brng) );
+    const λ2 = λ1 + Math.atan2(Math.sin(brng)*Math.sin(dist/R)*Math.cos(φ1), Math.cos(dist/R)-Math.sin(φ1)*Math.sin(φ2));
+
+    return {lat: rad2deg(φ2), lng: rad2deg(λ2)};
+}
+
 export function ConvertDDToDMS(D: number, lng: boolean) {
     var dir = D < 0 ? (lng ? "W" : "S") : lng ? "E" : "N";
     var deg = 0 | (D < 0 ? (D = -D) : D);

@@ -812,16 +812,16 @@ nav.ol-panel> :last-child {
     font-weight: bold;
 }
 
-#connection-status {
+#login-status {
     margin-bottom: 5px;
 }
 
-#connection-status[data-status="connecting"]::before {
+#login-status[data-status="connecting"]::before {
     animation: blinker 1s linear infinite;
     content: "Connecting...";
 }
 
-#connection-status[data-status="failed"]::before {
+#login-status[data-status="failed"]::before {
     color: var(--primary-red);
     content: "Incorrect username/password!";
 }
@@ -863,6 +863,19 @@ nav.ol-panel> :last-child {
 .hotgroup-selector>.unit-hotgroup {
     display: flex;
     translate: 0% -300%;
+}
+
+#visibiliy-mode {
+    font-size: 14px;
+    font-weight: bolder;
+}
+
+#visibiliy-mode[data-mode="Blue commander"] {
+    color: var(--primary-blue);
+}
+
+#visibiliy-mode[data-mode="Red commander"] {
+    color: var(--primary-red);
 }
 
 .ol-destination-preview-icon {

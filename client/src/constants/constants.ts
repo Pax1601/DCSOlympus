@@ -1,4 +1,16 @@
-import { LatLng, LatLngBounds, TileLayer, tileLayer } from "leaflet";
+import { LatLng, LatLngBounds } from "leaflet";
+
+export const HIDE_ALL = "Hide all";
+export const GAME_MASTER = "Game master";
+export const BLUE_COMMANDER = "Blue commander";
+export const RED_COMMANDER = "Red commander";
+
+export const VISUAL = 1;
+export const OPTIC  = 2;
+export const RADAR  = 4;
+export const IRST   = 8;
+export const RWR    = 16;
+export const DLINK  = 32;
 
 export const states: string[] = ["none", "idle", "reach-destination", "attack", "follow", "land", "refuel", "AWACS", "tanker", "bomb-point", "carpet-bomb", "bomb-building", "fire-at-area"];
 export const ROEs: string[] = ["free", "designated", "return", "hold"];

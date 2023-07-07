@@ -17,7 +17,8 @@ interface CustomEventMap {
     "groupCreation":                    CustomEvent<Unit[]>,
     "groupDeletion":                    CustomEvent<Unit[]>,
     "mapStateChanged":                  CustomEvent<string>,
-    "mapContextMenu":                   CustomEvent<>
+    "mapContextMenu":                   CustomEvent<>,
+    "visibilityModeChanged":            CustomEvent<string>,
 }
 
 declare global {

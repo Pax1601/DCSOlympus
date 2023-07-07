@@ -303,105 +303,105 @@ function Olympus.explosion(intensity, lat, lng)
 	trigger.action.explosion(mist.utils.makeVec3GL(coord.LLtoLO(lat, lng, 0)), intensity)
 end  
 
--- Spawns a single ground unit
-function Olympus.spawnGroundUnit(coalition, unitType, lat, lng)
-    Olympus.debug("Olympus.spawnGroundUnit " .. coalition .. " " .. unitType .. " (" .. lat .. ", " .. lng ..")", 2)
-	local spawnLocation = mist.utils.makeVec3GL(coord.LLtoLO(lat, lng, 0))
+-- Spawns a new unit or group
+function Olympus.spawnUnits(spawnTable) 
+	Olympus.debug("Olympus.spawnUnits " .. serializeTable(spawnTable), 2)
 
 	local unitTable = {}
+	local route = {}
+	local category = nil
 
-	if Olympus.hasKey(templates, unitType) then
-		for idx, value in pairs(templates[unitType].units) do
-			unitTable[#unitTable + 1] = {
-				["type"] = value.name,
-				["x"] = spawnLocation.x + value.dx,
-				["y"] = spawnLocation.z + value.dy,
-				["playerCanDrive"] = true,
-				["heading"] = 0,
-				["skill"] = "High"
-			}
-		end 
-	else
-		unitTable = 
-		{
-			[1] = 
-			{
-				["type"] = unitType,
-				["x"] = spawnLocation.x,
-				["y"] = spawnLocation.z,
-				["playerCanDrive"] = true,
-				["heading"] = 0,
-				["skill"] = "High"
-			},
-		} 
+	if spawnTable.category == 'Aircraft' then
+		unitTable = Olympus.generateAirUnitsTable(spawnTable.units)
+		route = Olympus.generateAirUnitsRoute(spawnTable)
+		category = 'airplane'
+	elseif spawnTable.category == 'GroundUnit' then
+		unitTable = Olympus.generateGroundUnitsTable(spawnTable.units)
+		category = 'vehicle'
 	end
 
-	local countryID = Olympus.getCountryIDByCoalition(coalition)
-	
+	local countryID = Olympus.getCountryIDByCoalition(spawnTable.coalition)
 	local vars = 
 	{
 		units = unitTable, 
 		country = countryID, 
-		category = 'vehicle',
-		name = "Ground-" .. Olympus.unitCounter,
+		category = category,
+		route = route,
+		name = "Olympus-" .. Olympus.unitCounter,
 	}
 	mist.dynAdd(vars)
+
 	Olympus.unitCounter = Olympus.unitCounter + 1
-	Olympus.debug("Olympus.spawnGround completed succesfully", 2)
-end  
+	Olympus.debug("Olympus.spawnUnits completed succesfully", 2)
+end
 
--- Spawns a single aircraft. Spawn options are:
--- payloadName: a string, one of the names defined in unitPayloads.lua. Must be compatible with the unitType
--- airbaseName: a string, if present the aircraft will spawn on the ground of the selected airbase
--- payload: a table, if present the unit will receive this specific payload. Overrides payloadName
-function Olympus.spawnAircraft(coalition, unitType, lat, lng, alt, spawnOptions)
-	local payloadName = spawnOptions["payloadName"]
-	local airbaseName = spawnOptions["airbaseName"]
-	local payload = spawnOptions["payload"]
-
-	Olympus.debug("Olympus.spawnAircraft " .. coalition .. " " .. unitType .. " (" .. lat .. ", " .. lng ..", " .. alt .. ")", 2)
-	local spawnLocation = mist.utils.makeVec3GL(coord.LLtoLO(lat, lng, 0))
-
-	if payload == nil then
-		if payloadName and payloadName ~= "" and Olympus.unitPayloads[unitType][payloadName] then
-			payload = Olympus.unitPayloads[unitType][payloadName]
+-- Generates ground units table, either single or from template
+function Olympus.generateGroundUnitsTable(units)
+	for idx, unit in pairs(units) do
+		local spawnLocation = mist.utils.makeVec3GL(coord.LLtoLO(unit.lat, unit.lng, 0))
+		local unitTable = {}
+		if Olympus.hasKey(templates, unit.unitType) then
+			for idx, value in pairs(templates[unit.unitType].units) do
+				unitTable[#unitTable + 1] = {
+					["type"] = value.name,
+					["x"] = spawnLocation.x + value.dx,
+					["y"] = spawnLocation.z + value.dy,
+					["playerCanDrive"] = true,
+					["heading"] = 0,
+					["skill"] = "High"
+				}
+			end 
 		else
-			payload = {}
+			unitTable[#unitTable + 1] = 
+			{
+				["type"] = unit.unitType,
+				["x"] = unit.x,
+				["y"] = unit.z,
+				["playerCanDrive"] = true,
+				["heading"] = 0,
+				["skill"] = "High"
+			}
 		end
 	end
-	
-	local countryID = Olympus.getCountryIDByCoalition(coalition)
 
-	local unitTable = 
-	{	
-		[1] = 
+	return unitTable
+end  
+
+-- Generates unit table for a air unit. 
+function Olympus.generateAirUnitsTable(units)
+	local unitTable = {}
+	for idx, unit in pairs(units) do
+		local payloadName = unit.payloadName	-- payloadName: a string, one of the names defined in unitPayloads.lua. Must be compatible with the unitType
+		local payload = unit.payload			-- payload: a table, if present the unit will receive this specific payload. Overrides payloadName
+
+		if payload == nil then
+			if payloadName and payloadName ~= "" and Olympus.unitPayloads[unit.unitType][payloadName] then
+				payload = Olympus.unitPayloads[unit.unitType][payloadName]
+			else
+				payload = {}
+			end
+		end
+		
+		local spawnLocation = mist.utils.makeVec3GL(coord.LLtoLO(unit.lat, unit.lng, 0))
+		unitTable[#unitTable + 1] = 
 		{
-			["type"] = unitType,
+			["type"] = unit.unitType,
 			["x"] = spawnLocation.x,
 			["y"] = spawnLocation.z,
-			["alt"] = alt,
-            ["alt_type"] = "BARO",
+			["alt"] = unit.alt,
+			["alt_type"] = "BARO",
 			["skill"] = "Excellent",
-			["payload"] = 
-			{
-				["pylons"] = payload, 
-				["fuel"] = 999999,
-				["flare"] = 60,
-				["ammo_type"] = 1,
-				["chaff"] = 60,
-				["gun"] = 100,
-			}, 
+			["payload"] = { ["pylons"] = payload, ["fuel"] = 999999, ["flare"] = 60, ["ammo_type"] = 1, ["chaff"] = 60, ["gun"] = 100, }, 
 			["heading"] = 0,
-			["callsign"] = 
-			{
-				[1] = 1,
-				[2] = 1,
-				[3] = 1,
-				["name"] = "Olympus" .. Olympus.unitCounter,
-			},
-			["name"] = "Olympus-" .. Olympus.unitCounter
-		},
-	}
+			["callsign"] = { [1] = 1, [2] = 1, [3] = 1, ["name"] = "Olympus" .. Olympus.unitCounter.. "-" .. #unitTable + 1 },
+			["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitTable + 1
+		}
+	end
+	return unitTable
+
+function Olympus.generateAirUnitsRoute(spawnTable)
+	local airbaseName = spawnTable.airbaseName	-- airbaseName: a string, if present the aircraft will spawn on the ground of the selected airbase
+	local spawnLocation = mist.utils.makeVec3GL(coord.LLtoLO(spawnTable.lat, spawnTable.lng, 0))
 
 	-- If a airbase is provided the first waypoint is set as a From runway takeoff.
 	local route = {}
@@ -416,10 +416,9 @@ function Olympus.spawnAircraft(coalition, unitType, lat, lng, alt, spawnOptions)
 					[1] = 
 					{
 						["action"] = "From Parking Area Hot",
-						["task"] = 
-						{
-							["id"] = "ComboTask",
-							["params"] = {["tasks"] = {},}, 
+						["tasks"] = {
+							[1] = {["number"] = 1, ["auto"] = true, ["id"] = "WrappedAction", ["enabled"] = true, ["params"] = {["action"] = {["id"] = "EPLRS", ["params"] = {["value"] = true}, }, }, },
+							[2] = {["number"] = 2, ["auto"] = false, ["id"] = "Orbit", ["enabled"] = true, ["params"] = {["pattern"] = "Circle"}, },
 						},
 						["type"] = "TakeOffParkingHot",
 						["ETA"] = 0,
@@ -442,69 +441,18 @@ function Olympus.spawnAircraft(coalition, unitType, lat, lng, alt, spawnOptions)
 					{
 						["alt"] = alt,
 						["alt_type"] = "BARO",
-						["task"] = 
-						{
-							["id"] = "ComboTask",
-							["params"] = 
-							{
-								["tasks"] = 
-								{
-									[1] = 
-									{
-										["number"] = 1,
-										["auto"] = true,
-										["id"] = "WrappedAction",
-										["enabled"] = true,
-										["params"] = 
-										{
-											["action"] = 
-											{
-												["id"] = "EPLRS",
-												["params"] = 
-												{
-													["value"] = true
-												}, 
-											}, 
-										}, 
-									},
-									[2] = 
-									{
-										["number"] = 2,
-										["auto"] = false,
-										["id"] = "Orbit",
-										["enabled"] = true,
-										["params"] = 
-										{
-											["pattern"] = "Circle"
-										}, 
-									},
-								}, 
-							}, 
-						}, 
+						["tasks"] = {
+							[1] = {["number"] = 1, ["auto"] = true, ["id"] = "WrappedAction", ["enabled"] = true, ["params"] = {["action"] = {["id"] = "EPLRS", ["params"] = {["value"] = true}, }, }, },
+							[2] = {["number"] = 2, ["auto"] = false, ["id"] = "Orbit", ["enabled"] = true, ["params"] = {["pattern"] = "Circle"}, },
+						},
 						["type"] = "Turning Point",
 						["x"] = spawnLocation.x,
 						["y"] = spawnLocation.z,
-					}, -- end of [1]
-				}, -- end of ["points"]
-			} -- end of ["route"]
+					},
+				}, 
+			} 
 	end
-
-	local vars = 
-	{
-		units = unitTable, 
-		country = countryID, 
-		category = 'airplane',
-		name = "Olympus-" .. Olympus.unitCounter,
-		route = route,
-		task = 'CAP',
-	}
-
-	local newGroup = mist.dynAdd(vars)
-
-	-- Save the payload to be reused in case the unit is cloned. TODO: save by ID not by name (it works but I like consistency)
-	Olympus.payloadRegistry[vars.name] = payload
-	Olympus.unitCounter = Olympus.unitCounter + 1
-	Olympus.debug("Olympus.spawnAir completed successfully", 2)
+	return route
 end
 
 -- Clones a unit by ID. Will clone the unit with the same original payload as the source unit. TODO: only works on Olympus unit not ME units.
@@ -513,15 +461,21 @@ function Olympus.clone(ID, lat, lng, category)
 	local unit = Olympus.getUnitByID(ID)
 	if unit then
 		local coalition = Olympus.getCoalitionByCoalitionID(unit:getCoalition())
-		
-		if category == "Aircraft" then 
-			local spawnOptions = {
-				payload = Olympus.payloadRegistry[unit:getName()]
+		-- TODO: understand category in this script
+		local spawnTable = {
+			coalition = coalition,
+			category = category,
+			units = {
+				[1] = {
+					lat = lat,
+					lng = lng,
+					alt = unit:getPoint().y,
+					unitType = unit:getTypeName(),
+					payload = Olympus.payloadRegistry[unit:getName()]
+				}
 			}
-			Olympus.spawnAircraft(coalition, unit:getTypeName(), lat, lng, unit:getPoint().y, spawnOptions)
-		elseif category == "GroundUnit" then
-			Olympus.spawnGroundUnit(coalition, unit:getTypeName(), lat, lng)
-		end
+		}
+		Olympus.spawnUnits(spawnTable)
 	end
 	Olympus.debug("Olympus.clone completed successfully", 2)
 end

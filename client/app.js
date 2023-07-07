@@ -3,7 +3,6 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var fs = require('fs');
-var basicAuth = require('express-basic-auth')
 
 var atcRouter       = require('./routes/api/atc');
 var airbasesRouter  = require('./routes/api/airbases');
@@ -37,15 +36,7 @@ if (config["server"] != undefined)
 module.exports = app;
 
 const DemoDataGenerator = require('./demo.js');
-var demoDataGenerator = new DemoDataGenerator(10);
-app.get('/demo/units', (req, res) => demoDataGenerator.units(req, res));
-app.get('/demo/logs', (req, res) => demoDataGenerator.logs(req, res));
-app.get('/demo/bullseyes', (req, res) => demoDataGenerator.bullseyes(req, res));
-app.get('/demo/airbases', (req, res) => demoDataGenerator.airbases(req, res));
-app.get('/demo/mission', (req, res) => demoDataGenerator.mission(req, res));
+var demoDataGenerator = new DemoDataGenerator(app);
 
-app.use('/demo', basicAuth({
-    users: { 'admin': 'socks' }
-}))
 
 

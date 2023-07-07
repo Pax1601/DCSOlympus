@@ -37,38 +37,52 @@ string Smoke::getString(lua_State* L)
     return commandSS.str();
 }
 
-/* Spawn ground command */
-string SpawnGroundUnit::getString(lua_State* L)
+/* Spawn ground units command */
+string SpawnGroundUnits::getString(lua_State* L)
 {
+    if (unitTypes.size() != locations.size()) return "";
+
+    std::ostringstream unitsSS;
+    unitsSS.precision(10);
+    for (int i = 0; i < unitTypes.size(); i++) {
+        unitsSS << "[" << i + 1 << "] = {" 
+            << "unitType = " << "\"" << unitTypes[i] << "\"" << ", "
+            << "lat = " << locations[i].lat << ", "
+            << "lng = " << locations[i].lng << "}";
+    }
+
     std::ostringstream commandSS;
     commandSS.precision(10);
-    commandSS << "Olympus.spawnGroundUnit, " 
-        << "\"" << coalition << "\"" << ", "
-        << "\"" << unitType << "\"" << ", "
-        << location.lat << ", " 
-        << location.lng;
+    commandSS << "Olympus.spawnUnits, {"
+        << "category = " << "\"" << "GroundUnit" << "\"" << ", "
+        << "coalition = " << "\"" << coalition << "\"" << ", "
+        << "units = " << "\"" << unitsSS.str() << "\"" << "}";
     return commandSS.str();
 }
 
-/* Spawn air command */
-string SpawnAircraft::getString(lua_State* L)
+/* Spawn aircrafts command */
+string SpawnAircrafts::getString(lua_State* L)
 {
-    std::ostringstream optionsSS;
-    optionsSS.precision(10);
-    optionsSS << "{" 
-        << "payloadName = \"" << payloadName << "\", "
-        << "airbaseName = \"" << airbaseName << "\", "
-        << "}";
+    if (unitTypes.size() != locations.size() || unitTypes.size() != payloadNames.size()) return "";
+
+    std::ostringstream unitsSS;
+    unitsSS.precision(10);
+    for (int i = 0; i < unitTypes.size(); i++) {
+        unitsSS << "[" << i + 1 << "] = {"
+            << "unitType = " << "\"" << unitTypes[i] << "\"" << ", "
+            << "lat = " << locations[i].lat << ", "
+            << "lng = " << locations[i].lng << ", "
+            << "alt = " << locations[i].alt << ", "
+            << "payloadName = \"" << payloadNames[i] << "\", " << "}";
+    }
 
     std::ostringstream commandSS;
     commandSS.precision(10);
-    commandSS << "Olympus.spawnAircraft, " 
-        << "\"" << coalition << "\"" << ", "
-        << "\"" << unitType << "\"" << ", "
-        << location.lat << ", " 
-        << location.lng << ", " 
-        << location.alt << ", "
-        << optionsSS.str();
+    commandSS << "Olympus.spawnUnits, {" 
+        << "category = " << "\"" << "Aircraft" << "\"" << ", "
+        << "coalition = " << "\"" << coalition << "\"" << ", "
+        << "airbaseName = \"" << airbaseName << "\", "
+        << "units = " << "\"" << unitsSS.str() << "\"" << "}";
     return commandSS.str();
 }
 

@@ -1,8 +1,3 @@
-interface UnitsData {
-    units: string,  
-    sessionHash: string    
-}
-
 interface AirbasesData {
     airbases: {[key: string]: any},
 }

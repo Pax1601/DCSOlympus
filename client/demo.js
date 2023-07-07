@@ -1,7 +1,8 @@
+var basicAuth = require('express-basic-auth')
 var enc = new TextEncoder();
 
 const DEMO_UNIT_DATA = {
-    ["1"]:{ alive: true, human: false, controlled: true, coalition: 2, country: 0, name: "KC-135", unitName: "Cool guy 1-1", groupName: "Cool group 1", state: 3, task: "Being cool!",
+    ["1"]:{ category: "Aircraft", alive: true, human: false, controlled: true, coalition: 2, country: 0, name: "KC-135", unitName: "Cool guy 1-1 who also has a very long name", groupName: "Cool group 1", state: 3, task: "Being cool!",
         hasTask: true, position: { lat: 37, lng: -116, alt: 1000 }, speed: 200, heading: 45, isTanker: true, isAWACS: false, onOff: true, followRoads: false, fuel: 50, 
         desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
         formationOffset: { x: 0, y: 0, z: 0 },
@@ -14,15 +15,15 @@ const DEMO_UNIT_DATA = {
         radio: { frequency: 124000000, callsign: 1, callsignNumber: 1 },
         generalSettings: { prohibitAA: false, prohibitAfterburner: false, prohibitAG: false, prohibitAirWpn: false, prohibitJettison: false },
         ammo: [{ quantity: 2, name: "A cool missile", guidance: 0, category: 0, missileCategory: 0 } ],
-        contacts: [],
-        activePath: [ {lat: 38, lng: -115, alt: 0}, {lat: 38, lng: -114, alt: 0} ]
+        contacts: [{ID: 2, detectionMethod: 1}],
+        activePath: [{lat: 38, lng: -115, alt: 0}, {lat: 38, lng: -114, alt: 0}]
     },
-    ["2"]:{ alive: true, human: false, controlled: false, coalition: 1, country: 0, name: "KC-135", unitName: "Cool guy 1-2", groupName: "Cool group 2", state: 1, task: "Being cool",
-        hasTask: false, position: { lat: 36.9, lng: -116, alt: 1000 }, speed: 200, heading: 0, isTanker: false, isAWACS: false, onOff: true, followRoads: false, fuel: 50, 
+    ["2"]:{ category: "Aircraft", alive: true, human: false, controlled: false, coalition: 1, country: 0, name: "FA-18C_hornet", unitName: "Cool guy 1-2", groupName: "Cool group 2", state: 1, task: "Being cool",
+        hasTask: false, position: { lat: 36.9, lng: -116, alt: 1000 }, speed: 200, heading: 315 * Math.PI / 180, isTanker: false, isAWACS: false, onOff: true, followRoads: false, fuel: 50, 
         desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
         formationOffset: { x: 0, y: 0, z: 0 },
         targetID: 0,
-        targetPosition: { lat: 38, lng: -117, alt: 1000 },
+        targetPosition: { lat: 0, lng: 0, alt: 0 },
         ROE: 2,
         reactionToThreat: 1,
         emissionsCountermeasures: 1,
@@ -30,15 +31,57 @@ const DEMO_UNIT_DATA = {
         radio: { frequency: 124000000, callsign: 1, callsignNumber: 1 },
         generalSettings: { prohibitAA: false, prohibitAfterburner: false, prohibitAG: false, prohibitAirWpn: false, prohibitJettison: false },
         ammo: [{ quantity: 2, name: "A cool missile", guidance: 0, category: 0, missileCategory: 0 } ],
-        contacts: [{ID: 1, detectionMethod: 4}],
-        activePath: [ {lat: 38, lng: -115, alt: 0}, {lat: 38, lng: -114, alt: 0} ]
+        contacts: [{ID: 1, detectionMethod: 16}],
+        activePath: [ ]
+    }, ["3"]:{ category: "GroundUnit", alive: true, human: false, controlled: false, coalition: 1, country: 0, name: "M-60", unitName: "Cool guy 1-3", groupName: "Cool group 3", state: 1, task: "Being cool",
+        hasTask: false, position: { lat: 37.1, lng: -116, alt: 1000 }, speed: 200, heading: 315 * Math.PI / 180, isTanker: false, isAWACS: false, onOff: true, followRoads: false, fuel: 50, 
+        desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
+        formationOffset: { x: 0, y: 0, z: 0 },
+        targetID: 0,
+        targetPosition: { lat: 0, lng: 0, alt: 0 },
+        ROE: 2,
+        reactionToThreat: 1,
+        emissionsCountermeasures: 1,
+        TACAN: { isOn: false, XY: 'Y', callsign: 'TKR', channel: 40 },
+        radio: { frequency: 124000000, callsign: 1, callsignNumber: 1 },
+        generalSettings: { prohibitAA: false, prohibitAfterburner: false, prohibitAG: false, prohibitAirWpn: false, prohibitJettison: false },
+        ammo: [{ quantity: 2, name: "A cool missile", guidance: 0, category: 0, missileCategory: 0 } ],
+        contacts: [{ID: 1, detectionMethod: 16}],
+        activePath: [ ]
+    }, ["4"]:{ category: "GroundUnit", alive: true, human: false, controlled: false, coalition: 1, country: 0, name: "M-60", unitName: "Cool guy 1-4", groupName: "Cool group 3", state: 1, task: "Being cool",
+        hasTask: false, position: { lat: 37.1, lng: -116.1, alt: 1000 }, speed: 200, heading: 315 * Math.PI / 180, isTanker: false, isAWACS: false, onOff: true, followRoads: false, fuel: 50, 
+        desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
+        formationOffset: { x: 0, y: 0, z: 0 },
+        targetID: 0,
+        targetPosition: { lat: 0, lng: 0, alt: 0 },
+        ROE: 2,
+        reactionToThreat: 1,
+        emissionsCountermeasures: 1,
+        TACAN: { isOn: false, XY: 'Y', callsign: 'TKR', channel: 40 },
+        radio: { frequency: 124000000, callsign: 1, callsignNumber: 1 },
+        generalSettings: { prohibitAA: false, prohibitAfterburner: false, prohibitAG: false, prohibitAirWpn: false, prohibitJettison: false },
+        ammo: [{ quantity: 2, name: "A cool missile", guidance: 0, category: 0, missileCategory: 0 } ],
+        contacts: [{ID: 1, detectionMethod: 16}],
+        activePath: [ ]
     }
 }
 
 class DemoDataGenerator {
-    constructor()
+    constructor(app)
     { 
-        
+        app.get('/demo/units', (req, res) => this.units(req, res));
+        app.get('/demo/logs', (req, res) => this.logs(req, res));
+        app.get('/demo/bullseyes', (req, res) => this.bullseyes(req, res));
+        app.get('/demo/airbases', (req, res) => this.airbases(req, res));
+        app.get('/demo/mission', (req, res) => this.mission(req, res));
+
+        app.use('/demo', basicAuth({
+            users: { 
+                'admin': 'socks',
+                'blue': 'bluesocks',
+                'red': 'redsocks'
+            },
+        }))
     }
     
     units(req, res){
@@ -48,7 +91,7 @@ class DemoDataGenerator {
         for (let idx in DEMO_UNIT_DATA) {
             const unit = DEMO_UNIT_DATA[idx];
             array = this.concat(array, this.uint32ToByteArray(idx));
-            array = this.appendString(array, "Aircraft", 1);
+            array = this.appendString(array, unit.category, 1);
             array = this.appendUint8(array, unit.alive, 2);
             array = this.appendUint8(array, unit.human, 3);
             array = this.appendUint8(array, unit.controlled, 4);
@@ -302,6 +345,21 @@ class DemoDataGenerator {
     mission(req, res){
         var ret = {mission: {theatre: "Nevada"}};
         ret.time = Date.now();
+        var auth = req.get("Authorization");
+        if (auth) {
+            var username = atob(auth.replace("Basic ", "")).split(":")[0];
+            switch (username) {
+                case "admin":
+                    ret.mission.visibilityMode = "Game master";
+                    break
+                case "blue": 
+                    ret.mission.visibilityMode = "Blue commander";
+                    break;
+                case "red": 
+                    ret.mission.visibilityMode = "Red commander";
+                    break;
+            }
+        }
         res.send(JSON.stringify(ret));
     }
     

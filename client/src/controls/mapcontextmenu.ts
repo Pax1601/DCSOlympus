@@ -1,6 +1,6 @@
 import { LatLng } from "leaflet";
 import { getActiveCoalition, getMap, setActiveCoalition } from "..";
-import { spawnAircraft, spawnExplosion, spawnGroundUnit, spawnSmoke } from "../server/server";
+import { spawnAircrafts, spawnExplosion, spawnGroundUnits, spawnSmoke } from "../server/server";
 import { aircraftDatabase } from "../units/aircraftdatabase";
 import { groundUnitsDatabase } from "../units/groundunitsdatabase";
 import { ContextMenu } from "./contextmenu";
@@ -8,17 +8,6 @@ import { Dropdown } from "./dropdown";
 import { Switch } from "./switch";
 import { Slider } from "./slider";
 import { ftToM } from "../other/utils";
-
-export interface SpawnOptions {
-    role: string;
-    name: string;
-    latlng: LatLng;
-    coalition: string;
-    loadout?: string | null;
-    airbaseName?: string | null;
-    altitude?: number | null;
-    immediate?: boolean;
-}
 
 export class MapContextMenu extends ContextMenu {
     #coalitionSwitch: Switch;
@@ -28,7 +17,7 @@ export class MapContextMenu extends ContextMenu {
     #aircrafSpawnAltitudeSlider: Slider;
     #groundUnitRoleDropdown: Dropdown;
     #groundUnitTypeDropdown: Dropdown;
-    #spawnOptions: SpawnOptions = { role: "", name: "", latlng: new LatLng(0, 0), loadout: null, coalition: "blue", airbaseName: null, altitude: ftToM(20000) };
+    #spawnOptions = { role: "", name: "", latlng: new LatLng(0, 0), coalition: "blue", loadout: "", airbaseName: "", altitude: ftToM(20000) };
 
     constructor(id: string) {
         super(id);
@@ -57,8 +46,8 @@ export class MapContextMenu extends ContextMenu {
             this.hide();
             this.#spawnOptions.coalition = getActiveCoalition();
             if (this.#spawnOptions) {
-                getMap().addTemporaryMarker(this.#spawnOptions);
-                spawnAircraft(this.#spawnOptions);
+                getMap().addTemporaryMarker(this.#spawnOptions.latlng, this.#spawnOptions.name, getActiveCoalition());
+                spawnAircrafts([{unitName: this.#spawnOptions.name, latlng: this.#spawnOptions.latlng, loadout: this.#spawnOptions.loadout}], getActiveCoalition(), this.#spawnOptions.airbaseName, false);
             }
         });
 
@@ -66,8 +55,8 @@ export class MapContextMenu extends ContextMenu {
             this.hide();
             this.#spawnOptions.coalition = getActiveCoalition();
             if (this.#spawnOptions) {
-                getMap().addTemporaryMarker(this.#spawnOptions);
-                spawnGroundUnit(this.#spawnOptions);
+                getMap().addTemporaryMarker(this.#spawnOptions.latlng, this.#spawnOptions.name, getActiveCoalition());
+                spawnGroundUnits([{unitName: this.#spawnOptions.name, latlng: this.#spawnOptions.latlng}], getActiveCoalition(), false);
             }
         });
 
@@ -86,7 +75,7 @@ export class MapContextMenu extends ContextMenu {
     }
 
     show(x: number, y: number, latlng: LatLng) {
-        this.#spawnOptions.airbaseName = null;
+        this.#spawnOptions.airbaseName = "";
         super.show(x, y, latlng);
         this.#spawnOptions.latlng = latlng;
         this.showUpperBar();
