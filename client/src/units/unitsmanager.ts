@@ -1,13 +1,14 @@
 import { LatLng, LatLngBounds } from "leaflet";
 import { getHotgroupPanel, getInfoPopup, getMap, getMissionHandler } from "..";
 import { Unit } from "./unit";
-import { cloneUnit, setLastUpdateTime, spawnGroundUnit } from "../server/server";
+import { cloneUnit, setLastUpdateTime, spawnGroundUnits } from "../server/server";
 import { deg2rad, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots, polygonArea, randomPointInPoly, randomUnitBlueprintByRole } from "../other/utils";
 import { CoalitionArea } from "../map/coalitionarea";
 import { Airbase } from "../missionhandler/airbase";
 import { groundUnitsDatabase } from "./groundunitsdatabase";
-import { DataIndexes, IADSRoles, IDLE, MOVE_UNIT } from "../constants/constants";
+import { DataIndexes, HIDE_ALL, IADSRoles, IDLE, MOVE_UNIT } from "../constants/constants";
 import { DataExtractor } from "./dataextractor";
+import { Contact } from "../@types/unit";
 
 export class UnitsManager {
     #units: { [ID: number]: Unit };
@@ -15,6 +16,7 @@ export class UnitsManager {
     #selectionEventDisabled: boolean = false;
     #pasteDisabled: boolean = false;
     #hiddenTypes: string[] = [];
+    #visibilityMode: string = HIDE_ALL;
 
     constructor() {
         this.#units = {};
@@ -27,6 +29,8 @@ export class UnitsManager {
         document.addEventListener('deleteSelectedUnits', () => this.selectedUnitsDelete());
         document.addEventListener('explodeSelectedUnits', () => this.selectedUnitsDelete(true));
         document.addEventListener('keyup', (event) => this.#onKeyUp(event));
+        document.addEventListener('exportToFile', () => this.exportToFile());
+        document.addEventListener('importFromFile', () => this.importFromFile());
     }
 
     getSelectableAircraft() {
@@ -87,6 +91,12 @@ export class UnitsManager {
             this.#units[ID]?.setData(dataExtractor);
         }
 
+        for (let ID in this.#units) {
+            var unit = this.#units[ID];
+            if (!unit.belongsToCommandedCoalition())
+                unit.setDetectionMethods(this.getUnitDetectedMethods(unit));
+        }
+
         setLastUpdateTime(updateTime);
     }
 
@@ -102,6 +112,24 @@ export class UnitsManager {
 
     getHiddenTypes() {
         return this.#hiddenTypes;
+    }
+
+    setVisibilityMode(newVisibilityMode: string) {
+        if (newVisibilityMode !== this.#visibilityMode) {
+            document.dispatchEvent(new CustomEvent("visibilityModeChanged", { detail: this }));
+            const el = document.getElementById("visibiliy-mode");
+            if (el) {
+                el.dataset.mode = newVisibilityMode;
+                el.textContent = newVisibilityMode.toUpperCase();
+            }
+            this.#visibilityMode = newVisibilityMode;
+            for (let ID in this.#units) 
+                this.#units[ID].updateVisibility();
+        }
+    }
+
+    getVisibilityMode() {
+        return this.#visibilityMode;
     }
 
     selectUnit(ID: number, deselectAllUnits: boolean = true) {
@@ -479,6 +507,20 @@ export class UnitsManager {
         this.#showActionMessage(selectedUnits, `unit bombing point`);
     }
 
+    getUnitDetectedMethods(unit: Unit) {
+        var detectionMethods: number[] = [];
+        for (let idx in this.#units) {
+            if (this.#units[idx].getCoalition() !== "neutral" && this.#units[idx].getCoalition() != unit.getCoalition())
+            {
+                this.#units[idx].getContacts().forEach((contact: Contact) => {
+                    if (contact.ID == unit.ID && !detectionMethods.includes(contact.detectionMethod)) 
+                        detectionMethods.push(contact.detectionMethod);
+                });
+            }
+        }
+        return detectionMethods;
+    }
+
     /***********************************************/
     copyUnits() {
         this.#copiedUnits = this.getSelectedUnits(); /* Can be applied to humans too */
@@ -516,11 +558,47 @@ export class UnitsManager {
             const probability = Math.pow(1 - minDistance / 50e3, 5) * IADSRoles[role];
             if (Math.random() < probability){
                 const unitBlueprint = randomUnitBlueprintByRole(groundUnitsDatabase, role);
-                const spawnOptions = {role: role, latlng: latlng, name: unitBlueprint.name, coalition: coalitionArea.getCoalition(), immediate: true};
-                spawnGroundUnit(spawnOptions);
-                getMap().addTemporaryMarker(spawnOptions);
+                spawnGroundUnits([{unitName: unitBlueprint.name, latlng: latlng}], coalitionArea.getCoalition(), true);
+                getMap().addTemporaryMarker(latlng, unitBlueprint.name, coalitionArea.getCoalition());
             }
         }
+    }
+
+    exportToFile() {
+        var unitsToExport: {[key: string]: any} = {};
+        for (let ID in this.#units) {
+            var unit = this.#units[ID];
+            if (!["Aircraft", "Helicopter"].includes(unit.getCategory())) {
+                if (unit.getGroupName() in unitsToExport)
+                    unitsToExport[unit.getGroupName()].push(unit.getData());
+                else 
+                    unitsToExport[unit.getGroupName()] = [unit.getData()];
+            }
+        }
+        var a = document.createElement("a");
+        var file = new Blob([JSON.stringify(unitsToExport)], {type: 'text/plain'});
+        a.href = URL.createObjectURL(file);
+        a.download = 'export.json';
+        a.click();
+    }
+
+    importFromFile() {
+        var input = document.createElement("input");
+        input.type = "file";
+        input.addEventListener("change", (e: any) => {
+            var file = e.target.files[0];
+            if (!file) {
+                return;
+            }
+            var reader = new FileReader();
+            reader.onload = function(e: any) {
+                var contents = e.target.result;
+                var groups = JSON.parse(contents);
+
+            };
+            reader.readAsText(file);
+        })
+        input.click();
     }
 
     /***********************************************/

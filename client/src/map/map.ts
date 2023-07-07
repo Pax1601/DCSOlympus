@@ -1,7 +1,7 @@
 import * as L from "leaflet"
 import { getUnitsManager } from "..";
 import { BoxSelect } from "./boxselect";
-import { MapContextMenu, SpawnOptions } from "../controls/mapcontextmenu";
+import { MapContextMenu } from "../controls/mapcontextmenu";
 import { UnitContextMenu } from "../controls/unitcontextmenu";
 import { AirbaseContextMenu } from "../controls/airbasecontextmenu";
 import { Dropdown } from "../controls/dropdown";
@@ -390,8 +390,8 @@ export class Map extends L.Map {
         }
     }
 
-    addTemporaryMarker(spawnOptions: SpawnOptions) {
-        var marker = new TemporaryUnitMarker(spawnOptions);
+    addTemporaryMarker(latlng: L.LatLng, name: string, coalition: string) {
+        var marker = new TemporaryUnitMarker(latlng, name, coalition);
         marker.addTo(this);
         this.#temporaryMarkers.push(marker);
     }

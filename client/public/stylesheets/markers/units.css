@@ -150,7 +150,7 @@
         1px -1px 0 #000,
         -1px 1px 0 #000,
         1px 1px 0 #000;
-    translate: -60px 0;
+    right: 100%;
     width: fit-content;
 }
 
@@ -171,7 +171,7 @@
     width: 80px;
 }
 
-[data-object|="unit"] .unit-summary .unit-callsign:hover {
+[data-object|="unit"]:hover  .unit-summary .unit-callsign{
     direction: rtl;
     overflow: visible;
 }

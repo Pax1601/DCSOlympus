@@ -92,30 +92,49 @@ void Scheduler::handleRequest(string key, json::value value)
 		Coords loc; loc.lat = lat; loc.lng = lng;
 		command = dynamic_cast<Command*>(new Smoke(color, loc));
 	}
-	else if (key.compare("spawnGround") == 0)
+	else if (key.compare("spawnGroundUnits") == 0)
 	{
 		bool immediate = value[L"immediate"].as_bool();
 		string coalition = to_string(value[L"coalition"]);
-		string type = to_string(value[L"type"]);
-		double lat = value[L"location"][L"lat"].as_double();
-		double lng = value[L"location"][L"lng"].as_double();
-		log("Spawning " + coalition + " ground unit of type " + type + " at (" + to_string(lat) + ", " + to_string(lng) + ")");
-		Coords loc; loc.lat = lat; loc.lng = lng;
-		command = dynamic_cast<Command*>(new SpawnGroundUnit(coalition, type, loc, immediate));
+
+		vector<string> unitTypes;
+		vector<Coords> locations;
+		for (auto unit : value[L"units"].as_array()) {
+			string unitType = to_string(unit[L"type"]);
+			double lat = unit[L"location"][L"lat"].as_double();
+			double lng = unit[L"location"][L"lng"].as_double();
+			Coords location; location.lat = lat; location.lng = lng;
+			log("Spawning " + coalition + " ground unit of type " + unitType + " at (" + to_string(lat) + ", " + to_string(lng) + ")");
+			unitTypes.push_back(unitType);
+			locations.push_back(location);
+		}
+
+		command = dynamic_cast<Command*>(new SpawnGroundUnits(coalition, unitTypes, locations, immediate));
 	}
-	else if (key.compare("spawnAir") == 0)
+	else if (key.compare("spawnAircrafts") == 0)
 	{
 		bool immediate = value[L"immediate"].as_bool();
 		string coalition = to_string(value[L"coalition"]);
-		string type = to_string(value[L"type"]);
-		double lat = value[L"location"][L"lat"].as_double();
-		double lng = value[L"location"][L"lng"].as_double();
-		double altitude = value[L"altitude"].as_double();
-		Coords loc; loc.lat = lat; loc.lng = lng; loc.alt = altitude;
-		string payloadName = to_string(value[L"payloadName"]);
 		string airbaseName = to_string(value[L"airbaseName"]);
-		log("Spawning " + coalition + " air unit of type " + type + " with payload " + payloadName + " at (" + to_string(lat) + ", " + to_string(lng) + " " + airbaseName + ")");
-		command = dynamic_cast<Command*>(new SpawnAircraft(coalition, type, loc, payloadName, airbaseName, immediate));
+
+		vector<string> unitTypes;
+		vector<Coords> locations;
+		vector<string> payloadNames;
+		for (auto unit : value[L"units"].as_array()) {
+			string unitType = to_string(unit[L"type"]);
+			double lat = unit[L"location"][L"lat"].as_double();
+			double lng = unit[L"location"][L"lng"].as_double();
+			double alt = value[L"altitude"].as_double();
+			Coords location; location.lat = lat; location.lng = lng; location.alt = alt;
+			string payloadName = to_string(value[L"payloadName"]);
+			
+			log("Spawning " + coalition + " air unit unit of type " + unitType + " at (" + to_string(lat) + ", " + to_string(lng) + ")");
+			unitTypes.push_back(unitType);
+			locations.push_back(location);
+			payloadNames.push_back(payloadName);
+		}
+		
+		command = dynamic_cast<Command*>(new SpawnAircrafts(coalition, unitTypes, locations, payloadNames, airbaseName, immediate));
 	}
 	else if (key.compare("attackUnit") == 0)
 	{
