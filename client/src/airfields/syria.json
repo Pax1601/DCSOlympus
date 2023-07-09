@@ -44,7 +44,6 @@
         }
       ]
     },
-
     "Akrotiri": {
       "ICAO": "LCRA",
       "elevation": "69",
@@ -111,7 +110,6 @@
         }
       ]
     },
-
     "Aleppo": {
       "ICAO": "OSAP",
       "elevation": "1254",
@@ -310,7 +308,6 @@
         }
       ]
     },
-
     "Ercan": {
       "ICAO": "LCEN",
       "elevation": "312",
@@ -355,7 +352,6 @@
         }
       ]
     },
-
     "Gaziantep": {
       "ICAO": "LTAJ",
       "elevation": "2290",
@@ -378,7 +374,6 @@
         }
       ]
     },
-
     "Gazipasa": {
       "ICAO": "LTFG",
       "elevation": "130",
@@ -401,7 +396,6 @@
         }
       ]
     },
-
     "Gecitkale": {
       "ICAO": "LCGK",
       "elevation": "148",
@@ -424,7 +418,6 @@
         }
       ]
     },
-
     "H3": {
       "ICAO": "",
       "elevation": "2583",
@@ -506,7 +499,6 @@
         }
       ]
     },
-
     "H4": {
       "ICAO": "OJHR",
       "elevation": "2257",
@@ -529,7 +521,6 @@
         }
       ]
     },
-
     "Haifa": {
       "ICAO": "LLHA",
       "elevation": "20",
@@ -552,7 +543,6 @@
         }
       ]
     },
-
     "Hama": {
       "ICAO": "OS58",
       "elevation": "984",
@@ -575,7 +565,6 @@
         }
       ]
     },
-
     "Hatay": {
       "ICAO": "LTDA",
       "elevation": "253",
@@ -598,7 +587,6 @@
         }
       ]
     },
-
     "Incirlik": {
       "ICAO": "LTAG",
       "elevation": "230",
@@ -621,7 +609,6 @@
         }
       ]
     },
-
     "Jirah": {
       "ICAO": "OS62",
       "elevation": "1173",
@@ -644,7 +631,6 @@
         }
       ]
     },
-
     "Khalkhalah": {
       "ICAO": "OS69",
       "elevation": "2418",
@@ -710,7 +696,6 @@
         }
       ]
     },
-
     "Kingsfield": {
       "ICAO": "LCRE",
       "elevation": "276",
@@ -755,7 +740,6 @@
         }
       ]
     },
-
     "Kuweires": {
       "ICAO": "OS66",
       "elevation": "1201",
@@ -778,14 +762,12 @@
         }
       ]
     },
-
     "Lakatamia": {
       "ICAO": "",
       "elevation": "758",
       "TACAN": "",
       "runways": []
     },
-
     "Larnaca": {
       "ICAO": "LCRE",
       "elevation": "16",
@@ -851,7 +833,6 @@
         }
       ]
     },
-
     "Megiddo": {
       "ICAO": "LLMG",
       "elevation": "180",
@@ -874,7 +855,6 @@
         }
       ]
     },
-
     "Mezzeh": {
       "ICAO": "OS67",
       "elevation": "2387",
@@ -897,7 +877,6 @@
         }
       ]
     },
-
     "Minakh": {
       "ICAO": "OS71",
       "elevation": "1614",
@@ -920,14 +899,12 @@
         }
       ]
     },
-
     "Naqoura": {
       "ICAO": "",
       "elevation": "381",
       "TACAN": "",
       "runways": []
     },
-
     "Palmyra": {
       "ICAO": "OSPR",
       "elevation": "1325",
@@ -950,7 +927,6 @@
         }
       ]
     },
-
     "Paphos": {
       "ICAO": "LCPH",
       "elevation": "40",
@@ -1112,7 +1088,6 @@
         }
       ]
     },
-
     "Ruwayshid": {
       "ICAO": "",
       "elevation": "2980",
@@ -1135,7 +1110,6 @@
         }
       ]
     },
-
     "Sanliurfa": {
       "ICAO": "LTCS",
       "elevation": "2703",
@@ -1158,7 +1132,6 @@
         }
       ]
     },
-
     "Sayqal": {
       "ICAO": "OS68",
       "elevation": "2274",
@@ -1196,7 +1169,6 @@
         }
       ]
     },
-
     "Shayrat": {
       "ICAO": "OS65",
       "elevation": "2638",
@@ -1219,7 +1191,6 @@
         }
       ]
     },
-
     "Tabqa": {
       "ICAO": "OS59",
       "elevation": "1099",
@@ -1242,7 +1213,6 @@
         }
       ]
     },
-
     "Taftanaz": {
       "ICAO": "",
       "elevation": "",
@@ -1255,7 +1225,7 @@
       "TACAN": "",
       "runways": []
     },
-    "thalah": {
+    "Tha'lah": {
       "ICAO": "OS60",
       "elevation": "2414",
       "TACAN": "",
@@ -1277,7 +1247,6 @@
         }
       ]
     },
-
     "Tiyas": {
       "ICAO": "OS72",
       "elevation": "1798",
