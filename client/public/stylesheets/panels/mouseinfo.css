@@ -6,11 +6,11 @@
 
 #mouse-info-panel dl {
 	margin-bottom: 4px;
-	row-gap: 8px;
+	row-gap: 5px;
 }
 
 #mouse-info-panel dt {
-	height: 20px;
+	height: fit-content;
 	width: 30%;
 }
 
@@ -30,20 +30,22 @@
 	width: 16px;
 }
 
-#mouse-info-panel dt#ref-unit-position::after {
-	background-image: url("/resources/theme/images/icons/ruler.svg");
-	background-position: 50% 50%;
-	background-repeat: no-repeat;
-	background-size: 16px 16px;
-	content: "";
+#mouse-info-panel #measuring-tool dt {
+	height: 24px;
+	width: 24px;
+	background-color: var(--background-offwhite);
+	border-radius: var(--border-radius-sm);
 }
 
-#mouse-info-panel dt#ref-measure-position::after {
-	background-image: url("/resources/theme/images/icons/pin.png");
-	background-position: 50% 50%;
-	background-repeat: no-repeat;
-	background-size: 16px 16px;
-	content: "";
+#mouse-info-panel #measuring-tool svg {
+	padding: 3px;
+	height: 100%;
+	width: 100%;
+}
+
+#mouse-info-panel #measuring-tool dt svg>* {
+	fill: black;
+	stroke: black;
 }
 
 #mouse-info-panel dt[data-label]::after {
@@ -72,4 +74,36 @@
 
 #mouse-info-panel dd {
 	width: 70%;
+}
+
+.br-info::after {
+    content: attr(data-bearing) '\00B0  / ' attr(data-distance) " " attr(data-distance-units);
+	font-weight: bold;
+	font-size: 13px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: var(--background-offwhite);
+}
+
+.br-info[data-coalition="blue"]::after {
+    color: var(--primary-blue)
+}
+
+.br-info[data-coalition="red"]::after {
+    color: var(--primary-red)
+}
+
+.br-info[data-message]::after {
+    content: attr(data-message);
+}
+
+.coordinates::after {
+    content: attr(data-value);
+	font-weight: bold;
+	font-size: 13px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: var(--background-offwhite);
 }

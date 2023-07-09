@@ -13,62 +13,50 @@ extern Scheduler* scheduler;
 extern UnitsManager* unitsManager;
 
 /* Helicopter */
-Helicopter::Helicopter(json::value json, int ID) : AirUnit(json, ID)
+Helicopter::Helicopter(json::value json, unsigned int ID) : AirUnit(json, ID)
 {
 	log("New Helicopter created with ID: " + to_string(ID));
-	addMeasure(L"category", json::value(getCategory()));
-	setTargetSpeed(targetSpeed);
-	setTargetAltitude(targetAltitude);
+
+	setCategory("Helicopter");
+	setDesiredSpeed(knotsToMs(100));
+	setDesiredAltitude(ftToM(5000));
 };
 
-void Helicopter::changeSpeed(wstring change)
+void Helicopter::changeSpeed(string change)
 {
-	if (change.compare(L"stop") == 0)
+	if (change.compare("stop") == 0)
 	{
 		/* Air units can't hold a position, so we can only set them to hold. At the moment, this will erase any other command. TODO: helicopters should be able to hover in place */
 		clearActivePath();
 	}
-	else if (change.compare(L"slow") == 0)
-		targetSpeed -= 10 / 1.94384;
-	else if (change.compare(L"fast") == 0)
-		targetSpeed += 10 / 1.94384;
-	if (targetSpeed < 0)
-		targetSpeed = 0;
+	else if (change.compare("slow") == 0)
+		desiredSpeed -= knotsToMs(10);
+	else if (change.compare("fast") == 0)
+		desiredSpeed += knotsToMs(10);
+	if (desiredSpeed < 0)
+		desiredSpeed = 0;
 
 	goToDestination();		/* Send the command to reach the destination */
 }
 
-void Helicopter::changeAltitude(wstring change)
+void Helicopter::changeAltitude(string change)
 {
-	if (change.compare(L"descend") == 0)
+	if (change.compare("descend") == 0)
 	{
-		if (targetAltitude > 100)
-			targetAltitude -= 100 / 3.28084;
-		else if (targetAltitude > 0)
-			targetAltitude -= 10 / 3.28084;
+		if (desiredAltitude > 100)
+			desiredAltitude -= ftToM(100);
+		else if (desiredAltitude > 0)
+			desiredAltitude -= ftToM(10);
 	}
-	else if (change.compare(L"climb") == 0)
+	else if (change.compare("climb") == 0)
 	{
-		if (targetAltitude > 100)
-			targetAltitude += 100 / 3.28084;
-		else if (targetAltitude >= 0)
-			targetAltitude += 10 / 3.28084;
+		if (desiredAltitude > 100)
+			desiredAltitude += ftToM(100);
+		else if (desiredAltitude >= 0)
+			desiredAltitude += ftToM(10);
 	}
-	if (targetAltitude < 0)
-		targetAltitude = 0;
+	if (desiredAltitude < 0)
+		desiredAltitude = 0;
 
 	goToDestination();		/* Send the command to reach the destination */
-}
-
-
-void Helicopter::setTargetSpeed(double newTargetSpeed) {
-	targetSpeed = newTargetSpeed;
-	addMeasure(L"targetSpeed", json::value(targetSpeed));
-	goToDestination();
-}
-
-void Helicopter::setTargetAltitude(double newTargetAltitude) {
-	targetAltitude = newTargetAltitude;
-	addMeasure(L"targetAltitude", json::value(targetAltitude));
-	goToDestination();
 }

@@ -31,7 +31,10 @@
 
     --secondary-dark-steel: #181e25;
     --secondary-gunmetal-grey: #2f2f2f;
+    --secondary-lighter-grey: #949ba7;
     --secondary-light-grey: #797e83;
+    --secondary-semitransparent-white: #FFFFFFAA;
+    --secondary-transparent-white: #FFFFFF30;
     --secondary-yellow: #ffd46893;
 
     --background-hover: #f2f2f333;

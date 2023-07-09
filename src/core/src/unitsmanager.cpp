@@ -10,6 +10,9 @@
 #include "commands.h"
 #include "scheduler.h"
 
+#include "base64.hpp"
+using namespace base64;
+
 extern Scheduler* scheduler;
 
 UnitsManager::UnitsManager(lua_State* L)
@@ -22,7 +25,7 @@ UnitsManager::~UnitsManager()
 
 }
 
-Unit* UnitsManager::getUnit(int ID)
+Unit* UnitsManager::getUnit(unsigned int ID)
 {
 	if (units.find(ID) == units.end()) {
 		return nullptr;
@@ -32,14 +35,68 @@ Unit* UnitsManager::getUnit(int ID)
 	}
 }
 
-void UnitsManager::updateExportData(lua_State* L)
+bool UnitsManager::isUnitInGroup(Unit* unit) 
 {
-	map<int, json::value> unitJSONs = getAllUnits(L);
+	if (unit != nullptr) {
+		string groupName = unit->getGroupName();
+		for (auto const& p : units)
+		{
+			if (p.second->getGroupName().compare(groupName) == 0 && p.second != unit)
+				return true;
+		}
+	}
+	return false;
+}
+
+bool UnitsManager::isUnitGroupLeader(Unit* unit) 
+{
+	if (unit != nullptr)
+		return unit == getGroupLeader(unit);
+	else
+		return false;
+}
+
+// The group leader is the unit with the lowest ID that is part of the group. This is different from DCS's concept of leader, which will change if the leader is destroyed
+Unit* UnitsManager::getGroupLeader(Unit* unit) 
+{
+	if (unit != nullptr) {
+		string groupName = unit->getGroupName();
+
+		/* Find the first unit that has the same groupName */
+		for (auto const& p : units)
+		{
+			if (p.second->getGroupName().compare(groupName) == 0)
+				return p.second;
+		}
+	}
+	return nullptr;
+}
+
+vector<Unit*> UnitsManager::getGroupMembers(string groupName) 
+{
+	vector<Unit*> members;
+	for (auto const& p : units)
+	{
+		if (p.second->getGroupName().compare(groupName) == 0)
+			members.push_back(p.second);
+	}
+	return members;
+}
+
+Unit* UnitsManager::getGroupLeader(unsigned int ID)
+{
+	Unit* unit = getUnit(ID);
+	return getGroupLeader(unit);
+}
+
+void UnitsManager::updateExportData(lua_State* L, double dt)
+{
+	map<unsigned int, json::value> unitJSONs = getAllUnits(L);
 
 	/* Update all units, create them if needed TODO: move code to get constructor in dedicated function */
 	for (auto const& p : unitJSONs)
 	{
-		int ID = p.first;
+		unsigned int ID = p.first;
 		if (units.count(ID) == 0)
 		{
 			json::value type = static_cast<json::value>(p.second)[L"Type"];
@@ -71,15 +128,13 @@ void UnitsManager::updateExportData(lua_State* L)
 		else {
 			/* Update the unit if present*/
 			if (units.count(ID) != 0)
-				units[ID]->updateExportData(p.second);
+				units[ID]->updateExportData(p.second, dt);
 		}
 	}
 
 	/* Set the units that are not present in the JSON as dead (probably have been destroyed) */
 	for (auto const& unit : units)
-	{
 		unit.second->setAlive(unitJSONs.find(unit.first) != unitJSONs.end());		
-	}
 }
 
 void UnitsManager::updateMissionData(json::value missionData)
@@ -87,32 +142,45 @@ void UnitsManager::updateMissionData(json::value missionData)
 	/* Update all units */
 	for (auto const& p : units)
 	{
-		int ID = p.first;
+		unsigned int ID = p.first;
 		if (missionData.has_field(to_wstring(ID)))
-		{
 			p.second->updateMissionData(missionData[to_wstring(ID)]);
-		}
 	}
 }
 
-void UnitsManager::getData(json::value& answer, long long time)
+void UnitsManager::runAILoop() {
+	/* Run the AI Loop on all units */
+	for (auto const& unit : units)
+		unit.second->runAILoop();
+}
+
+string UnitsManager::getUnitData(stringstream &ss, unsigned long long time)
 {
-	auto unitsJson = json::value::object();
 	for (auto const& p : units)
-	{
-		auto unitJson = p.second->getData(time);
-		if (unitJson.size() > 0)
-			unitsJson[to_wstring(p.first)] = p.second->getData(time);
-	}
-	answer[L"units"] = unitsJson;
+		p.second->getData(ss, time);
+	return to_base64(ss.str());
 }
 
-void UnitsManager::deleteUnit(int ID)
+void UnitsManager::deleteUnit(unsigned int ID, bool explosion)
 {
 	if (getUnit(ID) != nullptr)
 	{
-		Command* command = dynamic_cast<Command*>(new Delete(ID));
+		Command* command = dynamic_cast<Command*>(new Delete(ID, explosion));
 		scheduler->appendCommand(command);
 	}
+}
+
+void UnitsManager::acquireControl(unsigned int ID) {
+	Unit* unit = getUnit(ID);
+	if (unit != nullptr) {
+		for (auto const& groupMember : getGroupMembers(unit->getGroupName())) {
+			if (!groupMember->getControlled()) {
+				groupMember->setControlled(true);
+				groupMember->setState(State::IDLE);
+				groupMember->setDefaults(true);
+			}
+		}
+	}
+	
 }
 

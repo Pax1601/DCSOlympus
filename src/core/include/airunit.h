@@ -5,24 +5,18 @@
 #include "luatools.h"
 #include "Unit.h"
 
-#define AIR_DEST_DIST_THR 2000
+#define AIR_DEST_DIST_THR 2000	// Meters
 
 class AirUnit : public Unit
 {
 public:
-	AirUnit(json::value json, int ID);
+	AirUnit(json::value json, unsigned int ID);
 
-	virtual wstring getCategory() = 0;
-	virtual void changeSpeed(wstring change) {};
-	virtual void changeAltitude(wstring change) {};
-	virtual void setTargetSpeed(double newTargetSpeed) {};
-	virtual void setTargetAltitude(double newTargetAltitude) {};
+	virtual void setState(unsigned char newState);
 
+	virtual void changeSpeed(string change) = 0;
+	virtual void changeAltitude(string change) = 0;
+	
 protected:
 	virtual void AIloop();
-	virtual void setState(int newState);
-	bool isDestinationReached();
-	bool setActiveDestination();
-	bool updateActivePath(bool looping);
-	void goToDestination(wstring enrouteTask = L"nil");
 };

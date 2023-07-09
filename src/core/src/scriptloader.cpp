@@ -13,10 +13,12 @@ bool executeLuaScript(lua_State* L, string path)
     if (dostring_in(L, "server", str.c_str()) != 0)
     {
         log("Error registering " + path);
+        return false;
     }
     else
     {
         log(path + " registered successfully");
+        return true;
     }
 }
 

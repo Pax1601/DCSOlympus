@@ -48,6 +48,9 @@
     <ClInclude Include="include\measure.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\datatypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\aircraft.cpp">
@@ -90,6 +93,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\measure.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\datatypes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,63 +1,23 @@
-interface UpdateData {
-    [key: string]: any
+import { LatLng } from "leaflet"
+
+interface UnitIconOptions {
+    showState: boolean,
+    showVvi: boolean,
+    showHotgroup: boolean,
+    showUnitIcon: boolean,
+    showShortLabel: boolean,
+    showFuel: boolean,
+    showAmmo: boolean,
+    showSummary: boolean, 
+    rotateToHeading: boolean
 }
 
-interface BaseData {
-    AI: boolean;
-    name: string;
-    unitName: string;
-    groupName: string;
-    alive: boolean;
-    category: string;
-}
-
-interface FlightData {
-    latitude: number;
-    longitude: number;
-    altitude: number;
-    heading: number;
-    speed: number;
-}
-
-interface MissionData {
-    fuel: number;
-    flags: any;
-    ammo: any;
-    targets: any;
-    hasTask: boolean;
-    coalition: string;
-}
-
-interface FormationData {
-    leaderID: number;
-}
-
-interface TaskData {
-    currentState: string;
-    currentTask: string;
-    activePath: any;
-    targetSpeed: number;
-    targetAltitude: number;
-    isTanker: boolean;
-    isAWACS: boolean;
-}
-
-interface OptionsData {
-    ROE: string;
-    reactionToThreat: string;
-    emissionsCountermeasures: string;
-    TACAN: TACAN;
-    radio: Radio;
-    generalSettings: GeneralSettings;
-}
-
-interface UnitData {
-    baseData: BaseData;
-    flightData: FlightData;
-    missionData: MissionData;
-    formationData: FormationData;
-    taskData: TaskData;
-    optionsData: OptionsData;
+interface GeneralSettings {
+    prohibitJettison: boolean;
+    prohibitAA: boolean;
+    prohibitAG: boolean;
+    prohibitAfterburner: boolean;
+    prohibitAirWpn: boolean;
 }
 
 interface TACAN {
@@ -73,22 +33,21 @@ interface Radio {
     callsignNumber: number;
 }
 
-interface GeneralSettings {
-    prohibitJettison: boolean;
-    prohibitAA: boolean;
-    prohibitAG: boolean;
-    prohibitAfterburner: boolean;
-    prohibitAirWpn: boolean;
+interface Ammo {
+    quantity: number,
+    name: string,
+    guidance: number,
+    category: number,
+    missileCategory: number
 }
 
-interface UnitIconOptions {
-    showState: boolean,
-    showVvi: boolean,
-    showHotgroup: boolean,
-    showUnitIcon: boolean,
-    showShortLabel: boolean,
-    showFuel: boolean,
-    showAmmo: boolean,
-    showSummary: boolean, 
-    rotateToHeading: boolean
+interface Contact {
+    ID: number,
+    detectionMethod: number
+}
+
+interface Offset {
+    x: number, 
+    y: number, 
+    z: number
 }

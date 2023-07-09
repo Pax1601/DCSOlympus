@@ -115,15 +115,15 @@ export abstract class ATCBoard {
 
     addFlight( unit:Unit ) {
 
-        const baseData = unit.getBaseData();
+        const baseData = unit.getData();
 
         const unitCanBeAdded = () => {
 
-            if ( baseData.category !== "Aircraft" ) {
+            if ( unit.getCategory() !== "Aircraft" ) {
                 return false;
             }
 
-            if ( baseData.AI === true ) {
+            if ( baseData.controlled === true ) {
                 //  return false;
             }
 
@@ -345,7 +345,7 @@ export abstract class ATCBoard {
                 const results = Object.keys( units ).reduce( ( acc:Unit[], unitId:any ) => {
                     
                     const unit     = units[ unitId ];
-                    const baseData = unit.getBaseData();
+                    const baseData = unit.getData();
 
                     if ( !unitIdsBeingMonitored.includes( parseInt( unitId ) ) && baseData.unitName.toLowerCase().indexOf( searchString ) > -1 ) {
                         acc.push( unit );
@@ -359,7 +359,7 @@ export abstract class ATCBoard {
                 
                 results.forEach( unit => {
 
-                    const baseData = unit.getBaseData();
+                    const baseData = unit.getData();
 
                     const a     = document.createElement( "a" );
                     a.innerText = baseData.unitName;

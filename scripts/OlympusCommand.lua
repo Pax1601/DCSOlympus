@@ -1,6 +1,6 @@
-local version = "v0.2.1-alpha"
+local version = "v0.3.0-alpha"
 
-local debug = true
+local debug = FALSE
 
 Olympus.unitCounter = 1
 Olympus.payloadRegistry = {}
@@ -98,13 +98,14 @@ function Olympus.buildEnrouteTask(options)
 end
 
 -- Builds a valid task depending on the provided options
-function Olympus.buildTask(options)
+function Olympus.buildTask(groupName, options)
 	local task = nil
 
+	local group = Group.getByName(groupName)
 	if (Olympus.isArray(options)) then
 		local tasks = {}
 		for idx, subOptions in pairs(options) do
-			tasks[idx] = Olympus.buildTask(subOptions) or Olympus.buildEnrouteTask(subOptions)
+			tasks[idx] = Olympus.buildTask(groupName, subOptions) or Olympus.buildEnrouteTask(subOptions)
 		end
 		task = { 
 			id = 'ComboTask', 
@@ -139,29 +140,92 @@ function Olympus.buildTask(options)
 					pattern = options['pattern'] or "Circle"
 				} 
 			}
+			if options['altitude'] then
+				if options ['altitudeType'] then
+					if options ['altitudeType'] == "AGL" then
+						local groundHeight = 0
+						if group then
+							local groupPos = mist.getLeadPos(group)
+							groundHeight = land.getHeight({x = groupPos.x, y = groupPos.z})
+						end
+						task['params']['altitude'] = groundHeight + options['altitude']
+					else
+						task['params']['altitude'] = options['altitude']
+					end
+				else
+					task['params']['altitude'] = options['altitude']
+				end
+			end
+			if options['speed'] then
+				task['params']['speed'] = options['speed']
+			end
+		elseif options['id'] == 'Bombing' and options['lat'] and options['lng'] then
+			local point = coord.LLtoLO(options['lat'], options['lng'], 0)
+			task = {
+				id = 'Bombing', 
+				params = {
+					point = {x = point.x, y = point.z},
+					attackQty = 1
+				}   
+			}
+		elseif options['id'] == 'CarpetBombing' and options['lat'] and options['lng'] then
+			local point = coord.LLtoLO(options['lat'], options['lng'], 0)
+			task = {
+				id = 'CarpetBombing', 
+				params = {
+					x = point.x,
+					y = point.z,
+					carpetLength = 1000,
+					attackType = 'Carpet',
+					expend = "All",
+					attackQty = 1,
+					attackQtyLimit = true 
+				}   
+			}
+		elseif options['id'] == 'AttackMapObject' and options['lat'] and options['lng'] then
+			local point = coord.LLtoLO(options['lat'], options['lng'], 0)
+			task = {
+				id = 'AttackMapObject', 
+				params = {
+					point = {x = point.x, y = point.z}
+				}   
+			}
+		elseif options['id'] == 'FireAtPoint' and options['lat'] and options['lng'] and options['radius'] then
+			local point = coord.LLtoLO(options['lat'], options['lng'], 0)
+			task = {
+				id = 'FireAtPoint', 
+				params = {
+					point = {x = point.x, y = point.z},
+					radius = options['radius']
+				}   
+			}
 		end
 	end
 	return task
 end
 
 -- Move a unit. Since many tasks in DCS are Enroute tasks, this function is an important way to control the unit AI
-function Olympus.move(ID, lat, lng, altitude, speed, category, taskOptions)
-    Olympus.debug("Olympus.move " .. ID .. " (" .. lat .. ", " .. lng ..") " .. altitude .. "m " .. speed .. "m/s " .. category, 2)
-    local unit = Olympus.getUnitByID(ID)
-	if unit then
+function Olympus.move(groupName, lat, lng, altitude, altitudeType, speed, speedType, category, taskOptions)
+    Olympus.debug("Olympus.move " .. groupName .. " (" .. lat .. ", " .. lng ..") " .. altitude .. "m " .. altitudeType .. " ".. speed .. "m/s " .. category .. " " .. Olympus.serializeTable(taskOptions), 2)
+    local group = Group.getByName(groupName)
+	if group then
 		if category == "Aircraft" then
-			local startPoint = mist.getLeadPos(unit:getGroup())
+			local startPoint = mist.getLeadPos(group)
 			local endPoint = coord.LLtoLO(lat, lng, 0) 
+
+			if altitudeType == "AGL" then
+				altitude = land.getHeight({x = endPoint.x, y = endPoint.z}) + altitude
+			end
 
 			local path = {}
 			if taskOptions and taskOptions['id'] == 'Land' then
 				path = {
-					[1] = mist.fixedWing.buildWP(startPoint, flyOverPoint, speed, altitude, 'BARO'),
+					[1] = mist.fixedWing.buildWP(startPoint, turningPoint, speed, altitude, 'BARO'),
 					[2] = mist.fixedWing.buildWP(endPoint, landing, speed, 0, 'AGL')
 				} 
 			else
 				path = {
-					[1] = mist.fixedWing.buildWP(startPoint, flyOverPoint, speed, altitude, 'BARO'),
+					[1] = mist.fixedWing.buildWP(startPoint, turningPoint, speed, altitude, 'BARO'),
 					[2] = mist.fixedWing.buildWP(endPoint, turningPoint, speed, altitude, 'BARO')
 				}
 			end
@@ -184,7 +248,6 @@ function Olympus.move(ID, lat, lng, altitude, speed, category, taskOptions)
 					},
 				},
 			}
-			group = unit:getGroup()
 			local groupCon = group:getController()
 			if groupCon then
 				groupCon:setTask(missionTask)
@@ -193,20 +256,26 @@ function Olympus.move(ID, lat, lng, altitude, speed, category, taskOptions)
 		elseif category == "GroundUnit" then
 			vars = 
 				{
-					group = unit:getGroup(), 
+					group = group, 
 					point = coord.LLtoLO(lat, lng, 0),
-					form = "Off Road",
 					heading = 0,
-					speed = speed,
-					disableRoads = true
+					speed = speed
 				}
+
+			if taskOptions and taskOptions['id'] == 'FollowRoads' and taskOptions['value'] == true then
+				vars["disableRoads"] = false
+			else
+				vars["form"] = "Off Road"
+				vars["disableRoads"] = true
+			end
+
 			mist.groupToRandomPoint(vars)
 			Olympus.debug("Olympus.move executed succesfully on a ground unit", 2)
 		else
 			Olympus.debug("Olympus.move not implemented yet for " .. category, 2)
 		end
 	else
-        Olympus.debug("Error in Olympus.move " .. ID, 2)
+        Olympus.debug("Error in Olympus.move " .. groupName, 2)
 	end
 end  
 
@@ -226,6 +295,12 @@ function Olympus.smoke(color, lat, lng)
 		colorEnum = trigger.smokeColor.Blue
 	end
     trigger.action.smoke(mist.utils.makeVec3GL(coord.LLtoLO(lat, lng, 0)), colorEnum)
+end  
+
+-- Creates an explosion on the ground
+function Olympus.explosion(intensity, lat, lng)
+    Olympus.debug("Olympus.explosion " .. intensity .. " (" .. lat .. ", " .. lng ..")", 2)
+	trigger.action.explosion(mist.utils.makeVec3GL(coord.LLtoLO(lat, lng, 0)), intensity)
 end  
 
 -- Spawns a single ground unit
@@ -268,7 +343,7 @@ function Olympus.spawnGroundUnit(coalition, unitType, lat, lng)
 		units = unitTable, 
 		country = countryID, 
 		category = 'vehicle',
-		name = "Olympus-" .. Olympus.unitCounter,
+		name = "Ground-" .. Olympus.unitCounter,
 	}
 	mist.dynAdd(vars)
 	Olympus.unitCounter = Olympus.unitCounter + 1
@@ -279,12 +354,12 @@ end
 -- payloadName: a string, one of the names defined in unitPayloads.lua. Must be compatible with the unitType
 -- airbaseName: a string, if present the aircraft will spawn on the ground of the selected airbase
 -- payload: a table, if present the unit will receive this specific payload. Overrides payloadName
-function Olympus.spawnAircraft(coalition, unitType, lat, lng, spawnOptions)
+function Olympus.spawnAircraft(coalition, unitType, lat, lng, alt, spawnOptions)
 	local payloadName = spawnOptions["payloadName"]
 	local airbaseName = spawnOptions["airbaseName"]
 	local payload = spawnOptions["payload"]
 
-	Olympus.debug("Olympus.spawnAircraft " .. coalition .. " " .. unitType .. " (" .. lat .. ", " .. lng ..")", 2)
+	Olympus.debug("Olympus.spawnAircraft " .. coalition .. " " .. unitType .. " (" .. lat .. ", " .. lng ..", " .. alt .. ")", 2)
 	local spawnLocation = mist.utils.makeVec3GL(coord.LLtoLO(lat, lng, 0))
 
 	if payload == nil then
@@ -304,7 +379,7 @@ function Olympus.spawnAircraft(coalition, unitType, lat, lng, spawnOptions)
 			["type"] = unitType,
 			["x"] = spawnLocation.x,
 			["y"] = spawnLocation.z,
-			["alt"] = 20000 * 0.3048,
+			["alt"] = alt,
             ["alt_type"] = "BARO",
 			["skill"] = "Excellent",
 			["payload"] = 
@@ -359,8 +434,61 @@ function Olympus.spawnAircraft(coalition, unitType, lat, lng, spawnOptions)
 				}, 
 			} 			
 		end
+	else
+		route = {
+				["points"] = 
+				{
+					[1] = 
+					{
+						["alt"] = alt,
+						["alt_type"] = "BARO",
+						["task"] = 
+						{
+							["id"] = "ComboTask",
+							["params"] = 
+							{
+								["tasks"] = 
+								{
+									[1] = 
+									{
+										["number"] = 1,
+										["auto"] = true,
+										["id"] = "WrappedAction",
+										["enabled"] = true,
+										["params"] = 
+										{
+											["action"] = 
+											{
+												["id"] = "EPLRS",
+												["params"] = 
+												{
+													["value"] = true
+												}, 
+											}, 
+										}, 
+									},
+									[2] = 
+									{
+										["number"] = 2,
+										["auto"] = false,
+										["id"] = "Orbit",
+										["enabled"] = true,
+										["params"] = 
+										{
+											["pattern"] = "Circle"
+										}, 
+									},
+								}, 
+							}, 
+						}, 
+						["type"] = "Turning Point",
+						["x"] = spawnLocation.x,
+						["y"] = spawnLocation.z,
+					}, -- end of [1]
+				}, -- end of ["points"]
+			} -- end of ["route"]
 	end
-	
+
 	local vars = 
 	{
 		units = unitTable, 
@@ -390,7 +518,7 @@ function Olympus.clone(ID, lat, lng, category)
 			local spawnOptions = {
 				payload = Olympus.payloadRegistry[unit:getName()]
 			}
-			Olympus.spawnAircraft(coalition, unit:getTypeName(), lat, lng, spawnOptions)
+			Olympus.spawnAircraft(coalition, unit:getTypeName(), lat, lng, unit:getPoint().y, spawnOptions)
 		elseif category == "GroundUnit" then
 			Olympus.spawnGroundUnit(coalition, unit:getTypeName(), lat, lng)
 		end
@@ -398,11 +526,11 @@ function Olympus.clone(ID, lat, lng, category)
 	Olympus.debug("Olympus.clone completed successfully", 2)
 end
 
-function Olympus.delete(ID, lat, lng)
-	Olympus.debug("Olympus.delete " .. ID, 2)
+function Olympus.delete(ID, explosion)
+	Olympus.debug("Olympus.delete " .. ID .. " " .. tostring(explosion), 2)
 	local unit = Olympus.getUnitByID(ID)
 	if unit then
-		if unit:getPlayerName() then
+		if unit:getPlayerName() or explosion then
 			trigger.action.explosion(unit:getPoint() , 250 ) --consider replacing with forcibly deslotting the player, however this will work for now
 			Olympus.debug("Olympus.delete completed successfully", 2)
 		else
@@ -412,43 +540,52 @@ function Olympus.delete(ID, lat, lng)
 	end
 end
 
-function Olympus.setTask(ID, taskOptions)
-	Olympus.debug("Olympus.setTask " .. ID .. " " .. Olympus.serializeTable(taskOptions), 2)
-	local unit = Olympus.getUnitByID(ID)
-	if unit then
-		local task = Olympus.buildTask(taskOptions);
+function Olympus.setTask(groupName, taskOptions)
+	Olympus.debug("Olympus.setTask " .. groupName .. " " .. Olympus.serializeTable(taskOptions), 2)
+	local group = Group.getByName(groupName)
+	if group then
+		local task = Olympus.buildTask(groupName, taskOptions);
 		Olympus.debug("Olympus.setTask " .. Olympus.serializeTable(task), 20)
 		if task then
-			unit:getGroup():getController():setTask(task)
+			group:getController():setTask(task)
 			Olympus.debug("Olympus.setTask completed successfully", 2)
 		end
 	end
 end
 
-function Olympus.resetTask(ID)
-	Olympus.debug("Olympus.resetTask " .. ID, 2)
-	local unit = Olympus.getUnitByID(ID)
-	if unit then
-		unit:getGroup():getController():resetTask()
+function Olympus.resetTask(groupName)
+	Olympus.debug("Olympus.resetTask " .. groupName, 2)
+	local group = Group.getByName(groupName)
+	if group then
+		group:getController():resetTask()
 		Olympus.debug("Olympus.resetTask completed successfully", 2)
 	end
 end
 
-function Olympus.setCommand(ID, command)
-	Olympus.debug("Olympus.setCommand " .. ID .. " " .. Olympus.serializeTable(command), 2)
-	local unit = Olympus.getUnitByID(ID)
-	if unit then
-		unit:getGroup():getController():setCommand(command)
+function Olympus.setCommand(groupName, command)
+	Olympus.debug("Olympus.setCommand " .. groupName .. " " .. Olympus.serializeTable(command), 2)
+	local group = Group.getByName(groupName)
+	if group then
+		group:getController():setCommand(command)
 		Olympus.debug("Olympus.setCommand completed successfully", 2)
 	end
 end
 
-function Olympus.setOption(ID, optionID, optionValue)
-	Olympus.debug("Olympus.setOption " .. ID .. " " .. optionID .. " " .. tostring(optionValue), 2)
-	local unit = Olympus.getUnitByID(ID)
-	if unit then
-		unit:getGroup():getController():setOption(optionID, optionValue)
+function Olympus.setOption(groupName, optionID, optionValue)
+	Olympus.debug("Olympus.setOption " .. groupName .. " " .. optionID .. " " .. tostring(optionValue), 2)
+	local group = Group.getByName(groupName)
+	if group then
+		group:getController():setOption(optionID, optionValue)
 		Olympus.debug("Olympus.setOption completed successfully", 2)
+	end
+end
+
+function Olympus.setOnOff(groupName, onOff)
+	Olympus.debug("Olympus.setOnOff " .. groupName .. " " .. tostring(onOff), 2)
+	local group = Group.getByName(groupName)
+	if group then
+		group:getController():setOnOff(onOff)
+		Olympus.debug("Olympus.setOnOff completed successfully", 2)
 	end
 end
 
@@ -547,7 +684,7 @@ function Olympus.setMissionData(arg, time)
 						for index, unit in pairs(group:getUnits()) do
 							local unitController = unit:getController()
 							local table = {}
-							table["targets"] = {}
+							table["contacts"] = {}
 
 							for i, target in ipairs(controllerTargets) do
 								for det, enum in pairs(Controller.Detection) do
@@ -556,7 +693,7 @@ function Olympus.setMissionData(arg, time)
 
 										if detected then
 											target["detectionMethod"] = det
-											table["targets"][#table["targets"] + 1] = target
+											table["contacts"][#table["contacts"] + 1] = target
 										end
 									end
 								end

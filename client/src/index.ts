@@ -15,6 +15,7 @@ import { keyEventWasInInput } from "./other/utils";
 import { Popup } from "./popups/popup";
 import { Dropdown } from "./controls/dropdown";
 import { HotgroupPanel } from "./panels/hotgrouppanel";
+import { SVGInjector } from "@tanem/svg-injector";
 
 var map: Map;
 
@@ -195,6 +196,15 @@ function setupEvents() {
         location.reload();
     })
 
+    document.querySelectorAll("[inject-svg]").forEach((el: Element) => {
+        var img = el as HTMLImageElement;
+        var isLoaded = img.complete && img.naturalHeight !== 0;
+        if (isLoaded) 
+            SVGInjector(img);
+        else
+            img.onload = () => SVGInjector(img);
+    })
+
 }
 
 export function getMap() {
@@ -211,6 +221,10 @@ export function getUnitDataTable() {
 
 export function getUnitsManager() {
     return unitsManager;
+}
+
+export function getMissionHandler() {
+    return missionHandler;
 }
 
 export function getUnitInfoPanel() {
@@ -239,7 +253,6 @@ export function getHotgroupPanel() {
 
 export function setActiveCoalition(newActiveCoalition: string) {
     activeCoalition = newActiveCoalition;
-    document.querySelectorAll('[data-active-coalition]').forEach((element: any) => { element.setAttribute("data-active-coalition", activeCoalition) });
 }
 
 export function getActiveCoalition() {

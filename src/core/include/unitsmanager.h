@@ -10,14 +10,22 @@ public:
 	UnitsManager(lua_State* L);
 	~UnitsManager();
 
-	Unit* getUnit(int ID);
-	void updateExportData(lua_State* L);
+	map<unsigned int, Unit*>& getUnits() { return units; };
+	Unit* getUnit(unsigned int ID);
+	bool isUnitInGroup(Unit* unit);
+	bool isUnitGroupLeader(Unit* unit);
+	Unit* getGroupLeader(unsigned int ID);
+	Unit* getGroupLeader(Unit* unit);
+	vector<Unit*> getGroupMembers(string groupName);
+	void updateExportData(lua_State* L, double dt = 0);
 	void updateMissionData(json::value missionData);
-	void getData(json::value& answer, long long time);
-	void deleteUnit(int ID);
+	void runAILoop();
+	string getUnitData(stringstream &ss, unsigned long long time);
+	void deleteUnit(unsigned int ID, bool explosion);
+	void acquireControl(unsigned int ID);
 	
 private:
-	map<int, Unit*> units;
+	map<unsigned int, Unit*> units;
 	json::value missionDB;
 
 };

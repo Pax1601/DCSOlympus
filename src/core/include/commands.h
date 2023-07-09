@@ -5,7 +5,7 @@
 #include "logger.h"
 
 namespace CommandPriority {
-	enum CommandPriorities { LOW, MEDIUM, HIGH };
+	enum CommandPriorities { LOW, MEDIUM, HIGH, IMMEDIATE };
 };
 
 namespace SetCommandType {
@@ -54,6 +54,15 @@ namespace ReactionToThreat {
 	};
 }
 
+namespace EmissionCountermeasure {
+	enum ReactionsToThreat {
+		SILENT = 0,
+		ATTACK = 1,
+		DEFEND = 2,
+		FREE = 3
+	};
+}
+
 namespace RadarUse {
 	enum RadarUses {
 		NEVER = 0,
@@ -81,59 +90,63 @@ namespace ECMUse {
 	};
 }
 
-
-
 /* Base command class */
 class Command
 {
 public:
-	int getPriority() { return priority; }
-	virtual wstring getString(lua_State* L) = 0;
-	virtual int getLoad() = 0;
+	unsigned int getPriority() { return priority; }
+	virtual string getString(lua_State* L) = 0;
+	virtual unsigned int getLoad() = 0;
 
 protected:
-	int priority = CommandPriority::LOW;
+	unsigned int priority = CommandPriority::LOW;
 };
 
 /* Simple low priority move command (from user click) */
 class Move : public Command
 {
 public:
-	Move(int ID, Coords destination, double speed, double altitude, wstring taskOptions):
-		ID(ID),
+	Move(string groupName, Coords destination, double speed, string speedType, double altitude, string altitudeType, string taskOptions, string category):
+		groupName(groupName),
 		destination(destination),
 		speed(speed),
+		speedType(speedType),
 		altitude(altitude),
-		taskOptions(taskOptions)
+		altitudeType(altitudeType),
+		taskOptions(taskOptions),
+		category(category)
 	{ 
 		priority = CommandPriority::HIGH; 
 	};
-	virtual wstring getString(lua_State* L);
-	virtual int getLoad() { return 5; }
+	virtual string getString(lua_State* L);
+	virtual unsigned int getLoad() { return 5; }
 
 private:
-	const int ID;
+	const string groupName;
 	const Coords destination;
 	const double speed;
+	const string speedType;
 	const double altitude;
-	const wstring taskOptions;
+	const string altitudeType;
+	const string taskOptions;
+	const string category;
 };
 
 /* Smoke command */
 class Smoke : public Command
 {
 public:
-	Smoke(wstring color, Coords location) : 
+	Smoke(string color, Coords location) : 
 		color(color), 
 		location(location) 
 	{ 
 		priority = CommandPriority::LOW; 
 	};
-	virtual wstring getString(lua_State* L);
-	virtual int getLoad() { return 5; }
+	virtual string getString(lua_State* L);
+	virtual unsigned int getLoad() { return 5; }
 
 private:
-	const wstring color;
+	const string color;
 	const Coords location;
 };
 
@@ -141,61 +154,65 @@ private:
 class SpawnGroundUnit : public Command
 {
 public:
-	SpawnGroundUnit(wstring coalition, wstring unitType, Coords location) :  
+	SpawnGroundUnit(string coalition, string unitType, Coords location, bool immediate) :  
 		coalition(coalition), 
 		unitType(unitType), 
-		location(location) 
+		location(location),
+		immediate(immediate)
 	{ 
-		priority = CommandPriority::LOW; 
+		priority = immediate? CommandPriority::IMMEDIATE: CommandPriority::LOW;
 	};
-	virtual wstring getString(lua_State* L);
-	virtual int getLoad() { return 100; }
+	virtual string getString(lua_State* L);
+	virtual unsigned int getLoad() { return 100 * !immediate; }
 
 private:
-	const wstring coalition;
-	const wstring unitType;
+	const string coalition;
+	const string unitType;
 	const Coords location;
+	const bool immediate;
 };
 
 /* Spawn air unit command */
 class SpawnAircraft : public Command
 {
 public:
-	SpawnAircraft(wstring coalition, wstring unitType, Coords location, wstring payloadName, wstring airbaseName) :
+	SpawnAircraft(string coalition, string unitType, Coords location, string payloadName, string airbaseName, bool immediate) :
 		coalition(coalition), 
 		unitType(unitType), 
 		location(location),
 		payloadName(payloadName),
-		airbaseName(airbaseName)
+		airbaseName(airbaseName),
+		immediate(immediate)
 	{ 
-		priority = CommandPriority::LOW; 
+		priority = immediate ? CommandPriority::IMMEDIATE : CommandPriority::LOW;
 	};
-	virtual wstring getString(lua_State* L);
-	virtual int getLoad() { return 100; }
+	virtual string getString(lua_State* L);
+	virtual unsigned int getLoad() { return 100 * !immediate; }
 
 private:
-	const wstring coalition;
-	const wstring unitType;
+	const string coalition;
+	const string unitType;
 	const Coords location;
-	const wstring payloadName;
-	const wstring airbaseName;
+	const string payloadName;
+	const string airbaseName;
+	const bool immediate;
 };
 
 /* Clone unit command */
 class Clone : public Command
 {
 public:
-	Clone(int ID, Coords location) :
+	Clone(unsigned int ID, Coords location) :
 		ID(ID),
 		location(location)
 	{
 		priority = CommandPriority::LOW;
 	};
-	virtual wstring getString(lua_State* L);
-	virtual int getLoad() { return 100; }
+	virtual string getString(lua_State* L);
+	virtual unsigned int getLoad() { return 100; }
 
 private:
-	const int ID;
+	const unsigned int ID;
 	const Coords location;
 };
 
@@ -203,76 +220,78 @@ private:
 class Delete : public Command
 {
 public:
-	Delete(int ID) :
-		ID(ID)
+	Delete(unsigned int ID, bool explosion) :
+		ID(ID), 
+		explosion(explosion)
 	{
 		priority = CommandPriority::HIGH;
 	};
-	virtual wstring getString(lua_State* L);
-	virtual int getLoad() { return 20; }
+	virtual string getString(lua_State* L);
+	virtual unsigned int getLoad() { return 20; }
 
 private:
-	const int ID;
+	const unsigned int ID;
+	const bool explosion;
 };
 
-/* Follow command */
+/* SetTask command */
 class SetTask : public Command
 {
 public:
-	SetTask(int ID, wstring task) :
-		ID(ID),
+	SetTask(string groupName, string task) :
+		groupName(groupName),
 		task(task)
 	{
 		priority = CommandPriority::MEDIUM;
 	};
-	virtual wstring getString(lua_State* L);
-	virtual int getLoad() { return 10; }
+	virtual string getString(lua_State* L);
+	virtual unsigned int getLoad() { return 2; }
 
 private:
-	const int ID;
-	const wstring task;
+	const string groupName;
+	const string task;
 };
 
 /* Reset task command */
 class ResetTask : public Command
 {
 public:
-	ResetTask(int ID) :
-		ID(ID)
+	ResetTask(string groupName) :
+		groupName(groupName)
 	{
 		priority = CommandPriority::HIGH;
 	};
-	virtual wstring getString(lua_State* L);
-	virtual int getLoad() { return 10; }
+	virtual string getString(lua_State* L);
+	virtual unsigned int getLoad() { return 2; }
 
 private:
-	const int ID;
+	const string groupName;
 };
 
 /* Set command */
 class SetCommand : public Command
 {
 public:
-	SetCommand(int ID, wstring command) :
-		ID(ID),
+	SetCommand(string groupName, string command) :
+		groupName(groupName),
 		command(command)
 	{
 		priority = CommandPriority::HIGH;
 	};
-	virtual wstring getString(lua_State* L);
-	virtual int getLoad() { return 10; }
+	virtual string getString(lua_State* L);
+	virtual unsigned int getLoad() { return 2; }
 
 private:
-	const int ID;
-	const wstring command;
+	const string groupName;
+	const string command;
 };
 
 /* Set option command */
 class SetOption : public Command
 {
 public:
-	SetOption(int ID, int optionID, int optionValue) :
-		ID(ID),
+	SetOption(string groupName, unsigned int optionID, unsigned int optionValue) :
+		groupName(groupName),
 		optionID(optionID),
 		optionValue(optionValue),
 		optionBool(false),
@@ -281,8 +300,8 @@ public:
 		priority = CommandPriority::HIGH;
 	};
 
-	SetOption(int ID, int optionID, bool optionBool) :
-		ID(ID),
+	SetOption(string groupName, unsigned int optionID, bool optionBool) :
+		groupName(groupName),
 		optionID(optionID),
 		optionValue(0),
 		optionBool(optionBool),
@@ -290,13 +309,49 @@ public:
 	{
 		priority = CommandPriority::HIGH;
 	};
-	virtual wstring getString(lua_State* L);
-	virtual int getLoad() { return 10; }
+	virtual string getString(lua_State* L);
+	virtual unsigned int getLoad() { return 2; }
 
 private:
-	const int ID;
-	const int optionID;
-	const int optionValue;
+	const string groupName;
+	const unsigned int optionID;
+	const unsigned int optionValue;
 	const bool optionBool;
 	const bool isBoolean;
+};
+
+/* Set on off */
+class SetOnOff : public Command
+{
+public:
+	SetOnOff(string groupName, bool onOff) :
+		groupName(groupName),
+		onOff(onOff)
+	{
+		priority = CommandPriority::HIGH;
+	};
+	virtual string getString(lua_State* L);
+	virtual unsigned int getLoad() { return 2; }
+
+private:
+	const string groupName;
+	const bool onOff;
+};
+
+/* Make a ground explosion */
+class Explosion : public Command
+{
+public:
+	Explosion(unsigned int intensity, Coords location) :
+		location(location),
+		intensity(intensity)
+	{
+		priority = CommandPriority::MEDIUM;
+	};
+	virtual string getString(lua_State* L);
+	virtual unsigned int getLoad() { return 10; }
+
+private:
+	const Coords location;
+	const unsigned int intensity;
 };

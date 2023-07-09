@@ -1,3 +1,12 @@
+import { LatLng, Point, Polygon } from "leaflet";
+import * as turf from "@turf/turf";
+import { UnitDatabase } from "../units/unitdatabase";
+import { aircraftDatabase } from "../units/aircraftdatabase";
+import { helicopterDatabase } from "../units/helicopterdatabase";
+import { groundUnitsDatabase } from "../units/groundunitsdatabase";
+import { Buffer } from "buffer";
+import { ROEs, emissionsCountermeasures, reactionsToThreat, states } from "../constants/constants";
+
 export function bearing(lat1: number, lon1: number, lat2: number, lon2: number) {
     const φ1 = deg2rad(lat1); // φ, λ in radians
     const φ2 = deg2rad(lat2);
@@ -80,8 +89,8 @@ export function reciprocalHeading(heading: number): number {
     return heading > 180? heading - 180: heading + 180;
 }
 
-export const zeroAppend = function (num: number, places: number) {
-    var string = String(num);
+export const zeroAppend = function (num: number, places: number, decimal: boolean = false) {
+    var string = decimal? num.toFixed(2): String(num);
     while (string.length < places) {
         string = "0" + string;
     }
@@ -161,4 +170,125 @@ export function createDivWithClass(className: string) {
     var el = document.createElement("div");
     el.classList.add(className);
     return el;
+}
+
+export function knotsToMs(knots: number) {
+    return knots / 1.94384;
+}
+
+export function msToKnots(ms: number) {
+    return ms * 1.94384;
+}
+
+export function ftToM(ft: number) {
+    return ft * 0.3048;
+}
+
+export function mToFt(m: number) {
+    return m / 0.3048;
+}
+
+export function mToNm(m: number) {
+    return m * 0.000539957;
+}
+
+export function nmToFt(nm: number) {
+    return nm * 6076.12;
+}
+
+export function randomPointInPoly(polygon: Polygon): LatLng {
+    var bounds = polygon.getBounds(); 
+    var x_min  = bounds.getEast();
+    var x_max  = bounds.getWest();
+    var y_min  = bounds.getSouth();
+    var y_max  = bounds.getNorth();
+
+    var lat = y_min + (Math.random() * (y_max - y_min));
+    var lng = x_min + (Math.random() * (x_max - x_min));
+
+    var poly   = polygon.toGeoJSON();
+    var inside = turf.inside(turf.point([lng, lat]), poly);
+
+    if (inside) {
+        return new LatLng(lat, lng);
+    } else {
+        return randomPointInPoly(polygon);
+    }
+}
+
+export function polygonArea(polygon: Polygon) {
+    var poly   = polygon.toGeoJSON();
+    return turf.area(poly);
+}
+
+export function randomUnitBlueprintByRole(unitDatabse: UnitDatabase, role: string) {
+    const unitBlueprints = unitDatabse.getByRole(role);
+    var index = Math.floor(Math.random() * unitBlueprints.length);
+    return unitBlueprints[index];
+}
+
+export function getMarkerCategoryByName(name: string) {
+    if (aircraftDatabase.getByName(name) != null)
+        return "aircraft";
+    else if (helicopterDatabase.getByName(name) != null)
+        return "helicopter";
+    else if (groundUnitsDatabase.getByName(name) != null){
+        // TODO this is very messy
+        var role = groundUnitsDatabase.getByName(name)?.loadouts[0].roles[0];
+        return (role?.includes("SAM")) ? "groundunit-sam" : "groundunit-other";
+    }
+    else 
+        return ""; // TODO add other unit types  
+}
+
+export function getUnitDatabaseByCategory(category: string) {
+    if (category == "aircraft")
+        return aircraftDatabase;
+    else if (category == "helicopter")
+        return helicopterDatabase;
+    else if (category.includes("groundunit"))
+        return groundUnitsDatabase;
+    else
+        return null;
+}
+
+export function base64ToBytes(base64: string) {
+    return Buffer.from(base64, 'base64').buffer;
+}
+
+export function enumToState(state: number) {
+    if (state < states.length) 
+        return states[state];
+    else 
+        return states[0];
+}
+
+export function enumToROE(ROE: number) {
+    if (ROE < ROEs.length) 
+        return ROEs[ROE];
+    else 
+        return ROEs[0];
+}
+
+export function enumToReactionToThreat(reactionToThreat: number) {
+    if (reactionToThreat < reactionsToThreat.length) 
+        return reactionsToThreat[reactionToThreat];
+    else 
+        return reactionsToThreat[0];
+}
+
+export function enumToEmissioNCountermeasure(emissionCountermeasure: number) {
+    if (emissionCountermeasure < emissionsCountermeasures.length) 
+        return emissionsCountermeasures[emissionCountermeasure];
+    else 
+        return emissionsCountermeasures[0];
+}
+
+export function enumToCoalition(coalitionID: number) {
+    switch (coalitionID){
+        case 0: return "neutral";
+        case 1: return "red";
+        case 2: return "blue";
+    }
+    return "";
 }

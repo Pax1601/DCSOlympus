@@ -7,7 +7,7 @@
 
 extern UnitsManager* unitsManager;
 
-Scheduler::Scheduler(lua_State* L):
+Scheduler::Scheduler(lua_State* L) :
 	load(0)
 {
 	LogInfo(L, "Scheduler constructor called successfully");
@@ -25,109 +25,110 @@ void Scheduler::appendCommand(Command* command)
 
 void Scheduler::execute(lua_State* L)
 {
-	/* Decrease the active computation load. New commands can be sent only if the load has reached 0. 
+	/* Decrease the active computation load. New commands can be sent only if the load has reached 0.
 		This is needed to avoid server lag. */
 	if (load > 0) {
 		load--;
 		return;
 	}
 
-	int priority = CommandPriority::HIGH;
-	while (priority >= CommandPriority::LOW)
-	{
+	int priority = CommandPriority::IMMEDIATE;
+	while (priority >= CommandPriority::LOW) {
 		for (auto command : commands)
 		{
 			if (command->getPriority() == priority)
 			{
-				wstring commandString = L"Olympus.protectedCall(" + command->getString(L) + L")";
-				if (dostring_in(L, "server", to_string(commandString)))
-					log(L"Error executing command " + commandString);
+				string commandString = "Olympus.protectedCall(" + command->getString(L) + ")";
+				if (dostring_in(L, "server", (commandString)))
+					log("Error executing command " + commandString);
+				else
+					log("Command '" + commandString + "' executed correctly, current load " + to_string(load));
 				load = command->getLoad();
 				commands.remove(command);
 				return;
 			}
 		}
 		priority--;
-	}
+	};
 }
 
-void Scheduler::handleRequest(wstring key, json::value value)
+void Scheduler::handleRequest(string key, json::value value)
 {
 	Command* command = nullptr;
 
-	log(L"Received request with ID: " + key);
-	if (key.compare(L"setPath") == 0)
+	log("Received request with ID: " + key);
+	log(value.serialize());
+	if (key.compare("setPath") == 0)
 	{
-		int ID = value[L"ID"].as_integer();
-		Unit* unit = unitsManager->getUnit(ID);
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr)
 		{
-			wstring unitName = unit->getUnitName();
+			string unitName = unit->getUnitName();
 			json::value path = value[L"path"];
 			list<Coords> newPath;
-			for (int i = 1; i <= path.as_object().size(); i++)
+			for (unsigned int i = 0; i < path.as_array().size(); i++)
 			{
-				wstring WP = to_wstring(i);
-				double lat = path[WP][L"lat"].as_double();
-				double lng = path[WP][L"lng"].as_double();
-				log(unitName + L" set path destination " + WP + L" (" + to_wstring(lat) + L", " + to_wstring(lng) + L")");
+				string WP = to_string(i);
+				double lat = path[i][L"lat"].as_double();
+				double lng = path[i][L"lng"].as_double();
+				log(unitName + " set path destination " + WP + " (" + to_string(lat) + ", " + to_string(lng) + ")");
 				Coords dest; dest.lat = lat; dest.lng = lng;
 				newPath.push_back(dest);
 			}
 
-			Unit* unit = unitsManager->getUnit(ID);
-			if (unit != nullptr)
-			{
-				unit->setActivePath(newPath);
-				unit->setState(State::REACH_DESTINATION);
-				log(unitName + L" new path set successfully");
-			}
-			else
-				log(unitName + L" not found, request will be discarded");
+			unit->setActivePath(newPath);
+			unit->setState(State::REACH_DESTINATION);
+			log(unitName + " new path set successfully");
 		}
 	}
-	else if (key.compare(L"smoke") == 0)
+	else if (key.compare("smoke") == 0)
 	{
-		wstring color = value[L"color"].as_string();
+		string color = to_string(value[L"color"]);
 		double lat = value[L"location"][L"lat"].as_double();
 		double lng = value[L"location"][L"lng"].as_double();
-		log(L"Adding " + color + L" smoke at (" + to_wstring(lat) + L", " + to_wstring(lng) + L")");
+		log("Adding " + color + " smoke at (" + to_string(lat) + ", " + to_string(lng) + ")");
 		Coords loc; loc.lat = lat; loc.lng = lng;
 		command = dynamic_cast<Command*>(new Smoke(color, loc));
 	}
-	else if (key.compare(L"spawnGround") == 0)
+	else if (key.compare("spawnGround") == 0)
 	{
-		wstring coalition = value[L"coalition"].as_string();
-		wstring type = value[L"type"].as_string();
+		bool immediate = value[L"immediate"].as_bool();
+		string coalition = to_string(value[L"coalition"]);
+		string type = to_string(value[L"type"]);
 		double lat = value[L"location"][L"lat"].as_double();
 		double lng = value[L"location"][L"lng"].as_double();
-		log(L"Spawning " + coalition + L" ground unit of type " + type + L" at (" + to_wstring(lat) + L", " + to_wstring(lng) + L")");
+		log("Spawning " + coalition + " ground unit of type " + type + " at (" + to_string(lat) + ", " + to_string(lng) + ")");
 		Coords loc; loc.lat = lat; loc.lng = lng;
-		command = dynamic_cast<Command*>(new SpawnGroundUnit(coalition, type, loc));
+		command = dynamic_cast<Command*>(new SpawnGroundUnit(coalition, type, loc, immediate));
 	}
-	else if (key.compare(L"spawnAir") == 0)
+	else if (key.compare("spawnAir") == 0)
 	{
-		wstring coalition = value[L"coalition"].as_string();
-		wstring type = value[L"type"].as_string();
+		bool immediate = value[L"immediate"].as_bool();
+		string coalition = to_string(value[L"coalition"]);
+		string type = to_string(value[L"type"]);
 		double lat = value[L"location"][L"lat"].as_double();
 		double lng = value[L"location"][L"lng"].as_double();
-		Coords loc; loc.lat = lat; loc.lng = lng;
-		wstring payloadName = value[L"payloadName"].as_string();
-		wstring airbaseName = value[L"airbaseName"].as_string();
-		log(L"Spawning " + coalition + L" air unit of type " + type + L" with payload " + payloadName + L" at (" + to_wstring(lat) + L", " + to_wstring(lng) + L" " + airbaseName + L")");
-		command = dynamic_cast<Command*>(new SpawnAircraft(coalition, type, loc, payloadName, airbaseName));
+		double altitude = value[L"altitude"].as_double();
+		Coords loc; loc.lat = lat; loc.lng = lng; loc.alt = altitude;
+		string payloadName = to_string(value[L"payloadName"]);
+		string airbaseName = to_string(value[L"airbaseName"]);
+		log("Spawning " + coalition + " air unit of type " + type + " with payload " + payloadName + " at (" + to_string(lat) + ", " + to_string(lng) + " " + airbaseName + ")");
+		command = dynamic_cast<Command*>(new SpawnAircraft(coalition, type, loc, payloadName, airbaseName, immediate));
 	}
-	else if (key.compare(L"attackUnit") == 0)
+	else if (key.compare("attackUnit") == 0)
 	{
-		int ID = value[L"ID"].as_integer();
-		int targetID = value[L"targetID"].as_integer();
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		unsigned int targetID = value[L"targetID"].as_integer();
 
-		Unit* unit = unitsManager->getUnit(ID);
+		Unit* unit = unitsManager->getGroupLeader(ID);
 		Unit* target = unitsManager->getUnit(targetID);
 
-		wstring unitName;
-		wstring targetName;
-		
+		string unitName;
+		string targetName;
+
 		if (unit != nullptr)
 			unitName = unit->getUnitName();
 		else
@@ -138,23 +139,24 @@ void Scheduler::handleRequest(wstring key, json::value value)
 		else
 			return;
 
-		log(L"Unit " + unitName + L" attacking unit " + targetName);
+		log("Unit " + unitName + " attacking unit " + targetName);
 		unit->setTargetID(targetID);
 		unit->setState(State::ATTACK);
 	}
-	else if (key.compare(L"followUnit") == 0)
+	else if (key.compare("followUnit") == 0)
 	{
-		int ID = value[L"ID"].as_integer();
-		int leaderID = value[L"targetID"].as_integer();
-		int offsetX = value[L"offsetX"].as_integer();
-		int offsetY = value[L"offsetY"].as_integer();
-		int offsetZ = value[L"offsetZ"].as_integer();
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		unsigned int leaderID = value[L"targetID"].as_double();
+		double offsetX = value[L"offsetX"].as_double();
+		double offsetY = value[L"offsetY"].as_double();
+		double offsetZ = value[L"offsetZ"].as_double();
 
-		Unit* unit = unitsManager->getUnit(ID);
+		Unit* unit = unitsManager->getGroupLeader(ID);
 		Unit* leader = unitsManager->getUnit(leaderID);
 
-		wstring unitName;
-		wstring leaderName;
+		string unitName;
+		string leaderName;
 
 		if (unit != nullptr)
 			unitName = unit->getUnitName();
@@ -166,93 +168,120 @@ void Scheduler::handleRequest(wstring key, json::value value)
 		else
 			return;
 
-		log(L"Unit " + unitName + L" following unit " + leaderName);
+		log("Unit " + unitName + " following unit " + leaderName);
 		unit->setFormationOffset(Offset(offsetX, offsetY, offsetZ));
 		unit->setLeaderID(leaderID);
 		unit->setState(State::FOLLOW);
 	}
-	else if (key.compare(L"changeSpeed") == 0)
+	else if (key.compare("changeSpeed") == 0)
 	{
-		int ID = value[L"ID"].as_integer();
-		Unit* unit = unitsManager->getUnit(ID);
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr)
-			unit->changeSpeed(value[L"change"].as_string());
+			unit->changeSpeed(to_string(value[L"change"]));
 	}
-	else if (key.compare(L"changeAltitude") == 0)
+	else if (key.compare("changeAltitude") == 0)
 	{
-		int ID = value[L"ID"].as_integer();
-		Unit* unit = unitsManager->getUnit(ID);
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr)
-			unit->changeAltitude(value[L"change"].as_string());
+			unit->changeAltitude(to_string(value[L"change"]));
 	}
-	else if (key.compare(L"setSpeed") == 0)
+	else if (key.compare("setSpeed") == 0)
 	{
-		int ID = value[L"ID"].as_integer();
-		Unit* unit = unitsManager->getUnit(ID);
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr)
-			unit->setTargetSpeed(value[L"speed"].as_double());
+			unit->setDesiredSpeed(value[L"speed"].as_double());
 	}
-	else if (key.compare(L"setAltitude") == 0)
+	else if (key.compare("setSpeedType") == 0)
 	{
-		int ID = value[L"ID"].as_integer();
-		Unit* unit = unitsManager->getUnit(ID);
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr)
-			unit->setTargetAltitude(value[L"altitude"].as_double());
+			unit->setDesiredSpeedType(to_string(value[L"speedType"]));
 	}
-	else if (key.compare(L"cloneUnit") == 0)
+	else if (key.compare("setAltitude") == 0)
 	{
-		int ID = value[L"ID"].as_integer();
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		Unit* unit = unitsManager->getGroupLeader(ID);
+		if (unit != nullptr)
+			unit->setDesiredAltitude(value[L"altitude"].as_double());
+	}
+	else if (key.compare("setAltitudeType") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		Unit* unit = unitsManager->getGroupLeader(ID);
+		if (unit != nullptr)
+			unit->setDesiredAltitudeType(to_string(value[L"altitudeType"]));
+	}
+	else if (key.compare("cloneUnit") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
 		double lat = value[L"location"][L"lat"].as_double();
 		double lng = value[L"location"][L"lng"].as_double();
 		Coords loc; loc.lat = lat; loc.lng = lng;
 		command = dynamic_cast<Command*>(new Clone(ID, loc));
-		log(L"Cloning unit " + to_wstring(ID));
+		log("Cloning unit " + to_string(ID));
 	}
-	else if (key.compare(L"setROE") == 0)
+	else if (key.compare("setROE") == 0)
 	{
-		int ID = value[L"ID"].as_integer();
-		Unit* unit = unitsManager->getUnit(ID);
-		wstring ROE = value[L"ROE"].as_string();
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		Unit* unit = unitsManager->getGroupLeader(ID);
+		unsigned char ROE = value[L"ROE"].as_number().to_uint32();
 		unit->setROE(ROE);
 	}
-	else if (key.compare(L"setReactionToThreat") == 0)
+	else if (key.compare("setReactionToThreat") == 0)
 	{
-		int ID = value[L"ID"].as_integer();
-		Unit* unit = unitsManager->getUnit(ID);
-		wstring reactionToThreat = value[L"reactionToThreat"].as_string();
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		Unit* unit = unitsManager->getGroupLeader(ID);
+		unsigned char reactionToThreat = value[L"reactionToThreat"].as_number().to_uint32();
 		unit->setReactionToThreat(reactionToThreat);
 	}
-	else if (key.compare(L"setEmissionsCountermeasures") == 0)
+	else if (key.compare("setEmissionsCountermeasures") == 0)
 	{
-		int ID = value[L"ID"].as_integer();
-		Unit* unit = unitsManager->getUnit(ID);
-		wstring emissionsCountermeasures = value[L"emissionsCountermeasures"].as_string();
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		Unit* unit = unitsManager->getGroupLeader(ID);
+		unsigned char emissionsCountermeasures = value[L"emissionsCountermeasures"].as_number().to_uint32();
 		unit->setEmissionsCountermeasures(emissionsCountermeasures);
 	}
-	else if (key.compare(L"landAt") == 0)
+	else if (key.compare("landAt") == 0)
 	{
-		int ID = value[L"ID"].as_integer();
-		Unit* unit = unitsManager->getUnit(ID);
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		Unit* unit = unitsManager->getGroupLeader(ID);
 		double lat = value[L"location"][L"lat"].as_double();
 		double lng = value[L"location"][L"lng"].as_double();
 		Coords loc; loc.lat = lat; loc.lng = lng;
 		unit->landAt(loc);
 	}
-	else if (key.compare(L"deleteUnit") == 0)
+	else if (key.compare("deleteUnit") == 0)
 	{
-		int ID = value[L"ID"].as_integer();
-		unitsManager->deleteUnit(ID);
+		unsigned int ID = value[L"ID"].as_integer();
+		bool explosion = value[L"explosion"].as_bool();
+		unitsManager->deleteUnit(ID, explosion);
 	}
-	else if (key.compare(L"refuel") == 0)
+	else if (key.compare("refuel") == 0)
 	{
-		int ID = value[L"ID"].as_integer();
-		Unit* unit = unitsManager->getUnit(ID);
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		Unit* unit = unitsManager->getGroupLeader(ID);
 		unit->setState(State::REFUEL);
 	}
-	else if (key.compare(L"setAdvancedOptions") == 0)
+	else if (key.compare("setAdvancedOptions") == 0)
 	{
-		int ID = value[L"ID"].as_integer();
-		Unit* unit = unitsManager->getUnit(ID);
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr)
 		{
 			/* Advanced tasking */
@@ -260,18 +289,21 @@ void Scheduler::handleRequest(wstring key, json::value value)
 			unit->setIsAWACS(value[L"isAWACS"].as_bool());
 
 			/* TACAN Options */
-			auto TACAN = value[L"TACAN"];
-			unit->setTACAN({ TACAN[L"isOn"].as_bool(),
-				TACAN[L"channel"].as_number().to_int32(),
-				TACAN[L"XY"].as_string(),
-				TACAN[L"callsign"].as_string()
-				});
+			DataTypes::TACAN TACAN;
+			TACAN.isOn = value[L"TACAN"][L"isOn"].as_bool();
+			TACAN.channel = static_cast<unsigned char>(value[L"TACAN"][L"channel"].as_number().to_uint32());
+			TACAN.XY = to_string(value[L"TACAN"][L"XY"]).at(0);
+			string callsign = to_string(value[L"TACAN"][L"callsign"]);
+			if (callsign.length() > 3)
+				callsign = callsign.substr(0, 3);
+			strcpy_s(TACAN.callsign, 4, callsign.c_str());
+			unit->setTACAN(TACAN);
 
 			/* Radio Options */
 			auto radio = value[L"radio"];
-			unit->setRadio({ radio[L"frequency"].as_number().to_int32(),
-				radio[L"callsign"].as_number().to_int32(),
-				radio[L"callsignNumber"].as_number().to_int32()
+			unit->setRadio({ radio[L"frequency"].as_number().to_uint32(),
+				static_cast<unsigned char>(radio[L"callsign"].as_number().to_uint32()),
+				static_cast<unsigned char>(radio[L"callsignNumber"].as_number().to_uint32())
 				});
 
 			/* General Settings */
@@ -286,14 +318,84 @@ void Scheduler::handleRequest(wstring key, json::value value)
 			unit->resetActiveDestination();
 		}
 	}
+	else if (key.compare("setFollowRoads") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		bool followRoads = value[L"followRoads"].as_bool();
+		Unit* unit = unitsManager->getGroupLeader(ID);
+		unit->setFollowRoads(followRoads);
+	}
+	else if (key.compare("setOnOff") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		bool onOff = value[L"onOff"].as_bool();
+		Unit* unit = unitsManager->getGroupLeader(ID);
+		unit->setOnOff(onOff);
+	}
+	else if (key.compare("explosion") == 0)
+	{
+		unsigned int intensity = value[L"intensity"].as_integer();
+		double lat = value[L"location"][L"lat"].as_double();
+		double lng = value[L"location"][L"lng"].as_double();
+		log("Adding " + to_string(intensity) + " explosion at (" + to_string(lat) + ", " + to_string(lng) + ")");
+		Coords loc; loc.lat = lat; loc.lng = lng;
+		command = dynamic_cast<Command*>(new Explosion(intensity, loc));
+	}
+	else if (key.compare("bombPoint") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		double lat = value[L"location"][L"lat"].as_double();
+		double lng = value[L"location"][L"lng"].as_double();
+		Coords loc; loc.lat = lat; loc.lng = lng;
+		Unit* unit = unitsManager->getGroupLeader(ID);
+		unit->setState(State::BOMB_POINT);
+		unit->setTargetPosition(loc);
+	}
+	else if (key.compare("carpetBomb") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		double lat = value[L"location"][L"lat"].as_double();
+		double lng = value[L"location"][L"lng"].as_double();
+		Coords loc; loc.lat = lat; loc.lng = lng;
+		Unit* unit = unitsManager->getGroupLeader(ID);
+		unit->setState(State::CARPET_BOMB);
+		unit->setTargetPosition(loc);
+	}
+	else if (key.compare("bombBuilding") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		double lat = value[L"location"][L"lat"].as_double();
+		double lng = value[L"location"][L"lng"].as_double();
+		Coords loc; loc.lat = lat; loc.lng = lng;
+		Unit* unit = unitsManager->getGroupLeader(ID);
+		unit->setState(State::BOMB_BUILDING);
+		unit->setTargetPosition(loc);
+	}
+	else if (key.compare("fireAtArea") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		double lat = value[L"location"][L"lat"].as_double();
+		double lng = value[L"location"][L"lng"].as_double();
+		Coords loc; loc.lat = lat; loc.lng = lng;
+		Unit* unit = unitsManager->getGroupLeader(ID);
+		unit->setState(State::FIRE_AT_AREA);
+		unit->setTargetPosition(loc);
+	}
 	else
 	{
-		log(L"Unknown command: " + key);
+		log("Unknown command: " + key);
 	}
-	
+
 	if (command != nullptr)
 	{
 		appendCommand(command);
+		log("New command appended correctly to stack. Current server load: " + to_string(load));
 	}
 }
 

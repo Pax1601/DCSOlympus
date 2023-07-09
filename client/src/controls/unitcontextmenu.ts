@@ -1,4 +1,4 @@
-import { deg2rad } from "../other/utils";
+import { deg2rad, ftToM } from "../other/utils";
 import { ContextMenu } from "./contextmenu";
 
 export class UnitContextMenu extends ContextMenu {
@@ -19,8 +19,8 @@ export class UnitContextMenu extends ContextMenu {
                 }
                 var angleDeg = 360 - (clock - 1) * 45;
                 var angleRad = deg2rad(angleDeg);
-                var distance = parseInt((<HTMLInputElement>dialog.querySelector(`#distance`)?.querySelector("input")).value) * 0.3048;
-                var upDown = parseInt((<HTMLInputElement>dialog.querySelector(`#up-down`)?.querySelector("input")).value) * 0.3048;
+                var distance = ftToM(parseInt((<HTMLInputElement>dialog.querySelector(`#distance`)?.querySelector("input")).value));
+                var upDown = ftToM(parseInt((<HTMLInputElement>dialog.querySelector(`#up-down`)?.querySelector("input")).value));
 
                 // X: front-rear, positive front
                 // Y: top-bottom, positive top

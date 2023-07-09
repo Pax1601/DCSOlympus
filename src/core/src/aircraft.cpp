@@ -13,63 +13,56 @@ extern Scheduler* scheduler;
 extern UnitsManager* unitsManager;
 
 /* Aircraft */
-Aircraft::Aircraft(json::value json, int ID) : AirUnit(json, ID)
+Aircraft::Aircraft(json::value json, unsigned int ID) : AirUnit(json, ID)
 {
 	log("New Aircraft created with ID: " + to_string(ID));
-	addMeasure(L"category", json::value(getCategory()));
-	setTargetSpeed(targetSpeed);
-	setTargetAltitude(targetAltitude);
+
+	setCategory("Aircraft");
+	setDesiredSpeed(knotsToMs(300));
+	setDesiredAltitude(ftToM(20000));
+	
 };
 
-void Aircraft::changeSpeed(wstring change)
+void Aircraft::changeSpeed(string change)
 {
-	if (change.compare(L"stop") == 0)
-	{
+	if (change.compare("stop") == 0)
 		setState(State::IDLE);
-	}
-	else if (change.compare(L"slow") == 0)
-		setTargetSpeed(getTargetSpeed() - 25 / 1.94384);
-	else if (change.compare(L"fast") == 0)
-		setTargetSpeed(getTargetSpeed() + 25 / 1.94384);
+	else if (change.compare("slow") == 0)
+		setDesiredSpeed(getDesiredSpeed() - knotsToMs(25));
+	else if (change.compare("fast") == 0)
+		setDesiredSpeed(getDesiredSpeed() + knotsToMs(25));
 
-	if (getTargetSpeed() < 50 / 1.94384)
-		setTargetSpeed(50 / 1.94384);
+	if (getDesiredSpeed() < knotsToMs(50))
+		setDesiredSpeed(knotsToMs(50));
 
-	goToDestination();		/* Send the command to reach the destination */
+	if (state == State::IDLE)
+		resetTask();
+	else
+		goToDestination();		/* Send the command to reach the destination */
 }
 
-void Aircraft::changeAltitude(wstring change)
+void Aircraft::changeAltitude(string change)
 {
-	if (change.compare(L"descend") == 0)
+	if (change.compare("descend") == 0)
 	{
-		if (getTargetAltitude() > 5000)
-			setTargetAltitude(getTargetAltitude() - 2500 / 3.28084);
-		else if (getTargetAltitude() > 0)
-			setTargetAltitude(getTargetAltitude() - 500 / 3.28084);
+		if (getDesiredAltitude() > 5000)
+			setDesiredAltitude(getDesiredAltitude() - ftToM(2500));
+		else if (getDesiredAltitude() > 0)
+			setDesiredAltitude(getDesiredAltitude() - ftToM(500));
 	}
-	else if (change.compare(L"climb") == 0)
+	else if (change.compare("climb") == 0)
 	{
-		if (getTargetAltitude() > 5000)
-			setTargetAltitude(getTargetAltitude() + 2500 / 3.28084);
-		else if (getTargetAltitude() >= 0)
-				setTargetAltitude(getTargetAltitude() + 500 / 3.28084);
+		if (getDesiredAltitude() > 5000)
+			setDesiredAltitude(getDesiredAltitude() + ftToM(2500));
+		else if (getDesiredAltitude() >= 0)
+				setDesiredAltitude(getDesiredAltitude() + ftToM(500));
 	}
-	if (getTargetAltitude() < 0)
-		setTargetAltitude(0);
 
-	goToDestination();		/* Send the command to reach the destination */
-}
+	if (getDesiredAltitude() < 0)
+		setDesiredAltitude(0);
 
-void Aircraft::setTargetSpeed(double newTargetSpeed) {
-	targetSpeed = newTargetSpeed;
-	addMeasure(L"targetSpeed", json::value(targetSpeed));
-	if (activeDestination != NULL)
-		goToDestination();
-}
-
-void Aircraft::setTargetAltitude(double newTargetAltitude) {
-	targetAltitude = newTargetAltitude;
-	addMeasure(L"targetAltitude", json::value(targetAltitude));
-	if (activeDestination != NULL)
-		goToDestination();
+	if (state == State::IDLE)
+		resetTask();
+	else 
+		goToDestination();		/* Send the command to reach the destination */
 }

@@ -4,14 +4,9 @@
 class NavyUnit : public Unit
 {
 public:
-	NavyUnit(json::value json, int ID);
+	NavyUnit(json::value json, unsigned int ID);
 	virtual void AIloop();
 
-	virtual wstring getCategory() { return L"NavyUnit"; };
-	virtual void changeSpeed(wstring change);
-	virtual void changeAltitude(wstring change) {};
-	virtual double getTargetSpeed() { return targetSpeed; };
+	virtual void changeSpeed(string change);
 
-protected:
-	double targetSpeed = 10;
 };

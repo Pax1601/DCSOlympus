@@ -1,4 +1,4 @@
-<div id="unit-control-panel" class="ol-panel ol-panel-padding-lg" oncontextmenu="return false;"> 
+<div id="unit-control-panel" class="ol-panel ol-panel-padding-lg" oncontextmenu="return false;">
 
     <h3>Selected Units</h3>
 
@@ -6,66 +6,78 @@
 
         <div id="selected-units-container" class="ol-scrollable">
             <!-- This is where all the unit selection buttons will be shown-->
-            <!-- <button class="pill highlight-coalition" data-coalition="blue" data-short-label="18">Olympus 1-1</button> -->
-        </div>
-
-        <hr />
-
-        <div id="flight-data">
-            <h4>Flight controls</h4>
-            <div class="slider-container flight-control-slider" id="airspeed-slider">
-                <dl class="ol-data-grid">
-                    <dt>Speed</dt>
-                    <dd class="flight-control-value" id="value"></dd>
-                </dl>
-                <input type="range" min="0" max="100" value="0" class="slider">
-            </div>
-
-            <div class="slider-container flight-control-slider" id="altitude-slider">
-                <dl class="ol-data-grid">
-                    <dt>Altitude</dt>
-                    <dd class="flight-control-value" id="value"></dd>
-                </dl>
-                <input type="range" min="0" max="100" value="0" class="slider">
-            </div>
-            
-            <h5 id="categories-tooltip" class="hide">Multiple categories selected</h5>
+            <!-- <button class="pill highlight-coalition" data-coalition="blue" data-label="18">Olympus 1-1</button> -->
         </div>
     </div>
 
-    <!-- <h3>Formation</h3> -->
-    <!-- <div id="formation-buttons-container"> -->
-         <!-- This is where all the formation control buttons will be shown -->
-    <!-- </div> -->
+    <hr />
+
+    <div id="flight-data">
+        <h4>Controls</h4>
+        <div id="speed-slider" class="ol-slider-container flight-control-ol-slider">
+            <dl class="ol-data-grid">
+                <dt>Speed</dt>
+                <dd>
+                    <div class="ol-slider-value"></div>
+                    <div id="speed-type-switch" class="ol-switch"></div>
+                </dd>
+            </dl>
+            <input type="range" min="0" max="100" value="0" class="ol-slider">
+            <div class="ol-slider-min-max"></div>
+        </div>
+        <div id="altitude-slider" class="ol-slider-container flight-control-ol-slider">
+            <dl class="ol-data-grid">
+                <dt> Altitude
+                </dt>
+                <dd>
+                    <div class="ol-slider-value"></div>
+                    <div id="altitude-type-switch" class="ol-switch"></div>
+                </dd>
+            </dl>
+            <input type="range" min="0" max="100" value="0" class="ol-slider">
+            <div class="ol-slider-min-max"></div>
+        </div>
+        <h5 id="categories-tooltip">Multiple categories selected</h5>
+    </div>
 
     <div id="roe">
         <h4>Rules of engagement</h4>
         <div id="roe-buttons-container" class="ol-group ol-button-box ol-option-button">
-             <!-- This is where the roe buttons will be shown -->
+            <!-- This is where the roe buttons will be shown -->
         </div>
     </div>
 
     <div id="threat">
         <h4>Reaction to threat</h4>
         <div id="reaction-to-threat-buttons-container" class="ol-group ol-button-box ol-option-button">
-             <!-- This is where the reaction to threat buttons will be shown -->
+            <!-- This is where the reaction to threat buttons will be shown -->
         </div>
     </div>
 
     <div id="emissions-countermeasures">
         <h4>Radar & ECM</h4>
         <div id="emissions-countermeasures-buttons-container" class="ol-group ol-button-box ol-option-button">
-             <!-- This is where the emissions/countermeasures buttons will be shown -->
+            <!-- This is where the emissions/countermeasures buttons will be shown -->
         </div>
+    </div>
+
+    <div id="ai-on-off" class="switch-control">
+        <h4>Unit active</h4>
+        <div id="on-off-switch" class="ol-switch"></div>
+        <div>Toggling this disables unit AI completely. It will no longer move, react or emit radio waves.</div>
+    </div>
+
+    <div id="follow-roads" class="switch-control">
+        <h4>Follow roads</h4>
+        <div id="follow-roads-switch" class="ol-switch"></div>
     </div>
 
     <hr />
 
     <div id="advanced-settings-div">
-        <button id="advanced-settings-button" class="ol-button-settings" data-on-click="showAdvancedSettings">Adjust settings</button>
-        <hr />
+        <button id="advanced-settings-button" class="ol-button-settings" data-on-click="showAdvancedSettings">Settings</button>
+        <button class="ol-button-warning" data-on-click="deleteSelectedUnits"><img src="/resources/theme/images/icons/trash-can-regular.svg" inject-svg>Delete</button>
+        <button class="ol-button-warning" data-on-click="explodeSelectedUnits"><img src="/resources/theme/images/icons/explosion-solid.svg" inject-svg></button>
     </div>
-
-    <button class="ol-button-warning" data-on-click="deleteSelectedUnits">Delete unit</button>
-
+    
 </div>

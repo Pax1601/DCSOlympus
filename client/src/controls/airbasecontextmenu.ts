@@ -25,7 +25,7 @@ export class AirbaseContextMenu extends ContextMenu {
         this.setProperties(airbase.getProperties());
         //  this.setParkings(airbase.getParkings());
         this.setCoalition(airbase.getCoalition());
-        this.enableLandButton(getUnitsManager().getSelectedUnitsType() === "Aircraft" && (getUnitsManager().getSelectedUnitsCoalition() === airbase.getCoalition() || airbase.getCoalition() === "neutral"))
+        this.enableLandButton(getUnitsManager().getSelectedUnitsTypes().length == 1 && (getUnitsManager().getSelectedUnitsCoalition() === airbase.getCoalition() || airbase.getCoalition() === "neutral"))
 
         
         dataPointMap( <HTMLElement>this.getContainer(), {

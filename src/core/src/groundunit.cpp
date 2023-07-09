@@ -13,62 +13,134 @@ extern Scheduler* scheduler;
 extern UnitsManager* unitsManager;
 
 /* Ground unit */
-GroundUnit::GroundUnit(json::value json, int ID) : Unit(json, ID)
+GroundUnit::GroundUnit(json::value json, unsigned int ID) : Unit(json, ID)
 {
 	log("New Ground Unit created with ID: " + to_string(ID));
-	addMeasure(L"category", json::value(getCategory()));
-	setTargetSpeed(targetSpeed);
-	setTargetAltitude(targetAltitude);
+
+	setCategory("GroundUnit");
+	setDesiredSpeed(10);
 };
+
+void GroundUnit::setState(unsigned char newState)
+{
+	/************ Perform any action required when LEAVING a state ************/
+	if (newState != state) {
+		switch (state) {
+		case State::IDLE: {
+			break;
+		}
+		case State::REACH_DESTINATION: {
+			break;
+		}
+		case State::FIRE_AT_AREA: {
+			setTargetPosition(Coords(NULL));
+			break;
+		}
+		default:
+			break;
+		}
+	}
+
+	/************ Perform any action required when ENTERING a state ************/
+	switch (newState) {
+	case State::IDLE: {
+		clearActivePath();
+		resetActiveDestination();
+		break;
+	}
+	case State::REACH_DESTINATION: {
+		resetActiveDestination();
+		break;
+	}
+	case State::FIRE_AT_AREA: {
+		clearActivePath();
+		resetActiveDestination();
+		break;
+	}
+	default:
+		break;
+	}
+
+	resetTask();
+
+	log(unitName + " setting state from " + to_string(state) + " to " + to_string(newState));
+	state = newState;
+
+	triggerUpdate(DataIndex::state);
+}
 
 void GroundUnit::AIloop()
 {
-	/* Set the active destination to be always equal to the first point of the active path. This is in common with all AI units */
-	if (activePath.size() > 0)
-	{
-		if (activeDestination != activePath.front())
-		{
-			activeDestination = activePath.front();
-			Command* command = dynamic_cast<Command*>(new Move(ID, activeDestination, getTargetSpeed(), getTargetAltitude(), L"nil"));
-			scheduler->appendCommand(command);
-		}
+	switch (state) {
+	case State::IDLE: {
+		setTask("Idle");
+		if (getHasTask())
+			resetTask();
+		break;
 	}
-	else
-	{
-		if (activeDestination != NULL)
-		{
-			log(unitName + L" no more points in active path");
-			activeDestination = Coords(0); // Set the active path to NULL
-			currentTask = L"Idle";
-		}
-	}
+	case State::REACH_DESTINATION: {
+		string enrouteTask = "";
+		bool looping = false;
 
-	/* Ground unit AI Loop */
-	if (activeDestination != NULL)
-	{
-		double newDist = 0;
-		Geodesic::WGS84().Inverse(latitude, longitude, activeDestination.lat, activeDestination.lng, newDist);
-		if (newDist < GROUND_DEST_DIST_THR)
+		std::ostringstream taskSS;
+		taskSS << "{ id = 'FollowRoads', value = " << (getFollowRoads() ? "true" : "false") << " }";
+		enrouteTask = taskSS.str();
+
+		if (activeDestination == NULL || !getHasTask())
 		{
-			/* Destination reached */
-			popActivePathFront();
-			log(unitName + L" destination reached");
+			if (!setActiveDestination())
+				setState(State::IDLE);
+			else
+				goToDestination(enrouteTask);
 		}
+		else {
+			if (isDestinationReached(GROUND_DEST_DIST_THR)) {
+				if (updateActivePath(looping) && setActiveDestination())
+					goToDestination(enrouteTask);
+				else
+					setState(State::IDLE);
+			}
+		}
+		break;
+	}
+	case State::FIRE_AT_AREA: {
+		setTask("Firing at area");
+
+		if (!getHasTask()) {
+			std::ostringstream taskSS;
+			taskSS << "{id = 'FireAtPoint', lat = " << targetPosition.lat << ", lng = " << targetPosition.lng << ", radius = 1000}";
+			Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str()));
+			scheduler->appendCommand(command);
+			setHasTask(true);
+		}
+	}
+	default:
+		break;
 	}
 }
 
-void GroundUnit::changeSpeed(wstring change)
+void GroundUnit::changeSpeed(string change)
 {
-	if (change.compare(L"stop") == 0)
-	{
+	if (change.compare("stop") == 0)
+		setState(State::IDLE);
+	else if (change.compare("slow") == 0)
+		setDesiredSpeed(getDesiredSpeed() - knotsToMs(5));
+	else if (change.compare("fast") == 0)
+		setDesiredSpeed(getDesiredSpeed() + knotsToMs(5));
 
-	}
-	else if (change.compare(L"slow") == 0)
-	{
+	if (getDesiredSpeed() < 0)
+		setDesiredSpeed(0);
+}
 
-	}
-	else if (change.compare(L"fast") == 0)
-	{
+void GroundUnit::setOnOff(bool newOnOff) 
+{
+	Unit::setOnOff(newOnOff);
+	Command* command = dynamic_cast<Command*>(new SetOnOff(groupName, onOff));
+	scheduler->appendCommand(command);
+}
 
-	}
+void GroundUnit::setFollowRoads(bool newFollowRoads) 
+{
+	Unit::setFollowRoads(newFollowRoads);
+	resetActiveDestination(); /* Reset active destination to apply option*/
 }

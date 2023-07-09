@@ -19,14 +19,12 @@ export class Dropdown {
         }
 
         this.#value.addEventListener("click", (ev) => {
-            this.#element.classList.toggle("is-open");
-            this.#options.classList.toggle("scrollbar-visible", this.#options.scrollHeight > this.#options.clientHeight);
-            this.#clip();
+            this.#toggle();
         });
 
         document.addEventListener("click", (ev) => {
             if (!(this.#value.contains(ev.target as Node) || this.#options.contains(ev.target as Node) || this.#element.contains(ev.target as Node))) {
-                this.#element.classList.remove("is-open");
+                this.#close();
             }
         });
 
@@ -46,15 +44,19 @@ export class Dropdown {
 
             button.addEventListener("click", (e: MouseEvent) => {
                 e.stopPropagation();
-                this.#value = document.createElement("div");
-                this.#value.classList.add("ol-ellipsed");
-                this.#value.innerText = option;
-                this.#close();
-                this.#callback(option, e);
-                this.#index = idx;
+                this.selectValue(idx);
             });
             return div;
         }));
+    }
+
+    setOptionsElements(optionsElements: HTMLElement[]) {
+        this.#optionsList = [];
+        this.#options.replaceChildren(...optionsElements);
+    }
+
+    getOptionElements() {
+        return this.#options.children;
     }
 
     selectText(text: string) {
@@ -113,6 +115,8 @@ export class Dropdown {
 
     #open() {
         this.#element.classList.add("is-open");
+        this.#options.classList.toggle("scrollbar-visible", this.#options.scrollHeight > this.#options.clientHeight);
+        this.#clip();
     }
 
     #toggle() {

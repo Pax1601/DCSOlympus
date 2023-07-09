@@ -7,33 +7,28 @@
 extern UnitsManager* unitsManager;
 
 /* Move command */
-wstring Move::getString(lua_State* L)
+string Move::getString(lua_State* L)
 {
-    Unit* unit = unitsManager->getUnit(ID);
-    if (unit != nullptr)
-    {
-        std::wostringstream commandSS;
-        commandSS.precision(10);
-        commandSS << "Olympus.move, "
-            << ID << ", "
-            << destination.lat << ", "
-            << destination.lng << ", "
-            << altitude << ", "
-            << speed << ", "
-            << "\"" << unit->getCategory() << "\"" << ", "
-            << taskOptions;
-        return commandSS.str();
-    }
-    else 
-    {
-        return L"";
-    }
+
+    std::ostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.move, "
+        << "\"" << groupName << "\"" << ", "
+        << destination.lat << ", "
+        << destination.lng << ", "
+        << altitude << ", "
+        << "\"" << altitudeType << "\"" << ", "
+        << speed << ", "
+        << "\"" << speedType << "\"" << ", "
+        << "\"" << category << "\"" << ", "
+        << taskOptions;
+    return commandSS.str();
 }
 
 /* Smoke command */
-wstring Smoke::getString(lua_State* L)
+string Smoke::getString(lua_State* L)
 {
-    std::wostringstream commandSS;
+    std::ostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.smoke, " 
         << "\"" << color << "\"" << ", "
@@ -43,9 +38,9 @@ wstring Smoke::getString(lua_State* L)
 }
 
 /* Spawn ground command */
-wstring SpawnGroundUnit::getString(lua_State* L)
+string SpawnGroundUnit::getString(lua_State* L)
 {
-    std::wostringstream commandSS;
+    std::ostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.spawnGroundUnit, " 
         << "\"" << coalition << "\"" << ", "
@@ -56,33 +51,34 @@ wstring SpawnGroundUnit::getString(lua_State* L)
 }
 
 /* Spawn air command */
-wstring SpawnAircraft::getString(lua_State* L)
+string SpawnAircraft::getString(lua_State* L)
 {
-    std::wostringstream optionsSS;
+    std::ostringstream optionsSS;
     optionsSS.precision(10);
     optionsSS << "{" 
         << "payloadName = \"" << payloadName << "\", "
         << "airbaseName = \"" << airbaseName << "\", "
         << "}";
 
-    std::wostringstream commandSS;
+    std::ostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.spawnAircraft, " 
         << "\"" << coalition << "\"" << ", "
         << "\"" << unitType << "\"" << ", "
         << location.lat << ", " 
         << location.lng << ", " 
+        << location.alt << ", "
         << optionsSS.str();
     return commandSS.str();
 }
 
 /* Clone unit command */
-wstring Clone::getString(lua_State* L)
+string Clone::getString(lua_State* L)
 {
     Unit* unit = unitsManager->getUnit(ID);
     if (unit != nullptr)
     {
-        std::wostringstream commandSS;
+        std::ostringstream commandSS;
         commandSS.precision(10);
         commandSS << "Olympus.clone, "
             << ID << ", "
@@ -93,71 +89,97 @@ wstring Clone::getString(lua_State* L)
     }
     else
     {
-        return L"";
+        return "";
     }
 }
 
 /* Delete unit command */
-wstring Delete::getString(lua_State* L)
+string Delete::getString(lua_State* L)
 {
-    std::wostringstream commandSS;
+    std::ostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.delete, "
-        << ID;
+        << ID << ", "
+        << (explosion ? "true" : "false");
     return commandSS.str();
 }
 
 /* Set task command */
-wstring SetTask::getString(lua_State* L)
+string SetTask::getString(lua_State* L)
 {
-    std::wostringstream commandSS;
+    std::ostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.setTask, "
-        << ID << ", "
+        << "\"" << groupName << "\"" << ", "
         << task;
 
     return commandSS.str();
 }
 
 /* Reset task command */
-wstring ResetTask::getString(lua_State* L)
+string ResetTask::getString(lua_State* L)
 {
-    std::wostringstream commandSS;
+    std::ostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.resetTask, "
-        << ID;
+        << "\"" << groupName << "\"";
 
     return commandSS.str();
 }
 
 /* Set command command */
-wstring SetCommand::getString(lua_State* L)
+string SetCommand::getString(lua_State* L)
 {
-    std::wostringstream commandSS;
+    std::ostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.setCommand, "
-        << ID << ", "
+        << "\"" << groupName << "\"" << ", "
         << command;
 
     return commandSS.str();
 }
 
 /* Set option command */
-wstring SetOption::getString(lua_State* L)
+string SetOption::getString(lua_State* L)
 {
-    std::wostringstream commandSS;
+    std::ostringstream commandSS;
     commandSS.precision(10);
 
     if (!isBoolean) {
         commandSS << "Olympus.setOption, "
-            << ID << ", "
+            << "\"" << groupName << "\"" << ", "
             << optionID << ", "
             << optionValue;
     } else {
         commandSS << "Olympus.setOption, "
-            << ID << ", "
+            << "\"" << groupName << "\"" << ", "
             << optionID << ", "
             << (optionBool? "true": "false");
     }
+    return commandSS.str();
+}
+
+/* Set onOff command */
+string SetOnOff::getString(lua_State* L)
+{
+    std::ostringstream commandSS;
+    commandSS.precision(10);
+
+    commandSS << "Olympus.setOnOff, "
+        << "\"" << groupName << "\"" << ", "
+        << (onOff ? "true" : "false");
+ 
+    return commandSS.str();
+}
+
+/* Explosion command */
+string Explosion::getString(lua_State* L)
+{
+    std::ostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.explosion, "
+        << intensity << ", "
+        << location.lat << ", "
+        << location.lng;
     return commandSS.str();
 }

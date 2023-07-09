@@ -11,54 +11,22 @@ export class MissionHandler
     #airbaseCharts  : {[name: string]: AirbaseChartData } = {};
     #theatre        : string = "";
 
-    #airbaseData : { [name: string]: object } = {};
+    #airbaseData: { [name: string]: object } = {};
 
     //  Time
-    #date        : any;
-    #elapsedTime : any;
-    #startTime   : any;
-    #time        : any;
+    #date: any;
+    #elapsedTime: any;
+    #startTime: any;
+    #time: any;
 
-    #updateTime  : any;
+    #updateTime: any;
 
-    constructor()
-    {
+    constructor() {
 
     }
 
     update(data: BullseyesData | AirbasesData | any)
     {
-
-        if ("mission" in data && data.mission !== null)
-        {
-            if (data.mission != null && data.mission.theatre != this.#theatre) 
-            {
-                this.#theatre = data.mission.theatre;
-                getMap().setTheatre(this.#theatre);
-
-                getInfoPopup().setText("Map set to " + this.#theatre);
-
-                this.setAirbasesCharts( this.#theatre );
-            }
-
-            if ( "date" in data.mission ) {
-                this.#date = data.mission.date;
-            }
-
-            if ( "elapsedTime" in data.mission ) {
-                this.#elapsedTime = data.mission.elapsedTime;
-            }
-
-            if ( "startTime" in data.mission ) {
-                this.#startTime = data.mission.startTime;
-            }
-
-            if ( "time" in data.mission ) {
-                this.#time = data.mission.time;
-            }
-
-        }
-
         if ("bullseyes" in data)
         {
             for (let idx in data.bullseyes)
@@ -66,10 +34,9 @@ export class MissionHandler
                 const bullseye = data.bullseyes[idx];
                 if (!(idx in this.#bullseyes))
                     this.#bullseyes[idx] = new Bullseye([0, 0]).addTo(getMap());
-                    
-                if (bullseye.latitude && bullseye.longitude && bullseye.coalition)
-                {
-                    this.#bullseyes[idx].setLatLng(new LatLng(bullseye.latitude, bullseye.longitude)); 
+
+                if (bullseye.latitude && bullseye.longitude && bullseye.coalition) {
+                    this.#bullseyes[idx].setLatLng(new LatLng(bullseye.latitude, bullseye.longitude));
                     this.#bullseyes[idx].setCoalition(bullseye.coalition);
                 }
             }
@@ -78,14 +45,7 @@ export class MissionHandler
 
         if ("airbases" in data)
         {
-/*
-            console.log( Object.values( data.airbases ).sort( ( a:any, b:any ) => {
-                const aVal = a.callsign.toLowerCase();
-                const bVal = b.callsign.toLowerCase();
-                
-                return aVal > bVal ? 1 : -1;
-            }) );
-//*/
+
             for (let idx in data.airbases)
             {
                 var airbase = data.airbases[idx]
@@ -93,7 +53,7 @@ export class MissionHandler
                 if (this.#airbases[idx] === undefined)
                 {
                     this.#airbases[idx] = new Airbase({
-                        position: new LatLng(airbase.latitude, airbase.longitude), 
+                        position: new LatLng(airbase.latitude, airbase.longitude),
                         name: airbase.callsign
                     }).addTo(getMap());
                     this.#airbases[idx].on('contextmenu', (e) => this.#onAirbaseClick(e));
@@ -130,51 +90,49 @@ export class MissionHandler
         if ( "time" in data ) {
             this.#updateTime = data.time;
         }
-
     }
 
-    getBullseyes()
-    {
+    getBullseyes() {
         return this.#bullseyes;
+    }
+
+    getAirbases() {
+        return this.#airbases;
     }
 
     getDate() {
         return this.#date;
     }
 
-
     getNowDate() {
 
         const date = this.getDate();
         const time = this.getTime();
 
-        if ( !date ) {
+        if (!date) {
             return new Date();
         }
-        
-        let year  = date.Year;
+
+        let year = date.Year;
         let month = date.Month - 1;
 
-        if ( month < 0 ) {
+        if (month < 0) {
             month = 11;
             year--;
         }
 
-        return new Date( year, month, date.Day, time.h, time.m, time.s );
+        return new Date(year, month, date.Day, time.h, time.m, time.s);
     }
-
 
     getTime() {
         return this.#time;
     }
 
-
     getUpdateTime() {
         return this.#updateTime;
     }
 
-    #onAirbaseClick(e: any)
-    {
+    #onAirbaseClick(e: any) {
         getMap().showAirbaseContextMenu(e, e.sourceTarget);
     }
 

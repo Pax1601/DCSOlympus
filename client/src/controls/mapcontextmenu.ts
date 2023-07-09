@@ -1,48 +1,63 @@
 import { LatLng } from "leaflet";
 import { getActiveCoalition, getMap, setActiveCoalition } from "..";
-import { spawnAircraft, spawnGroundUnit, spawnSmoke } from "../server/server";
+import { spawnAircraft, spawnExplosion, spawnGroundUnit, spawnSmoke } from "../server/server";
 import { aircraftDatabase } from "../units/aircraftdatabase";
 import { groundUnitsDatabase } from "../units/groundunitsdatabase";
 import { ContextMenu } from "./contextmenu";
 import { Dropdown } from "./dropdown";
+import { Switch } from "./switch";
+import { Slider } from "./slider";
+import { ftToM } from "../other/utils";
 
 export interface SpawnOptions {
     role: string;
-    type: string;
+    name: string;
     latlng: LatLng;
     coalition: string;
-    loadout: string | null;
-    airbaseName: string | null;
+    loadout?: string | null;
+    airbaseName?: string | null;
+    altitude?: number | null;
+    immediate?: boolean;
 }
 
 export class MapContextMenu extends ContextMenu {
+    #coalitionSwitch: Switch;
     #aircraftRoleDropdown: Dropdown;
     #aircraftTypeDropdown: Dropdown;
     #aircraftLoadoutDropdown: Dropdown;
+    #aircrafSpawnAltitudeSlider: Slider;
     #groundUnitRoleDropdown: Dropdown;
     #groundUnitTypeDropdown: Dropdown;
-    #spawnOptions: SpawnOptions = { role: "", type: "", latlng: new LatLng(0, 0), loadout: null, coalition: "blue", airbaseName: null };
+    #spawnOptions: SpawnOptions = { role: "", name: "", latlng: new LatLng(0, 0), loadout: null, coalition: "blue", airbaseName: null, altitude: ftToM(20000) };
 
     constructor(id: string) {
         super(id);
-        this.getContainer()?.querySelector("#context-menu-switch")?.addEventListener('click', (e) => this.#onToggleLeftClick(e));
-        this.getContainer()?.querySelector("#context-menu-switch")?.addEventListener('contextmenu', (e) => this.#onToggleRightClick(e));
 
+        this.#coalitionSwitch = new Switch("coalition-switch", (value: boolean) => this.#onSwitchClick(value));
+        this.#coalitionSwitch.setValue(false);
+        this.#coalitionSwitch.getContainer()?.addEventListener("contextmenu", (e) => this.#onSwitchRightClick(e));
         this.#aircraftRoleDropdown = new Dropdown("aircraft-role-options", (role: string) => this.#setAircraftRole(role));
         this.#aircraftTypeDropdown = new Dropdown("aircraft-type-options", (type: string) => this.#setAircraftType(type));
         this.#aircraftLoadoutDropdown = new Dropdown("loadout-options", (loadout: string) => this.#setAircraftLoadout(loadout));
+        this.#aircrafSpawnAltitudeSlider = new Slider("aircraft-spawn-altitude-slider", 0, 50000, "ft", (value: number) => {this.#spawnOptions.altitude = ftToM(value);});
+        this.#aircrafSpawnAltitudeSlider.setIncrement(500);
+        this.#aircrafSpawnAltitudeSlider.setValue(20000);
+        this.#aircrafSpawnAltitudeSlider.setActive(true);
         this.#groundUnitRoleDropdown = new Dropdown("ground-unit-role-options", (role: string) => this.#setGroundUnitRole(role));
         this.#groundUnitTypeDropdown = new Dropdown("ground-unit-type-options", (type: string) => this.#setGroundUnitType(type));
 
-        document.addEventListener("contextMenuShow", (e: any) => {
-            this.showSubMenu(e.detail.type);
+        document.addEventListener("mapContextMenuShow", (e: any) => {
+            if (this.getVisibleSubMenu() !== e.detail.type)
+                this.showSubMenu(e.detail.type);
+            else 
+                this.hideSubMenus();
         });
 
         document.addEventListener("contextMenuDeployAircraft", () => {
             this.hide();
             this.#spawnOptions.coalition = getActiveCoalition();
             if (this.#spawnOptions) {
-                getMap().addTemporaryMarker(this.#spawnOptions.latlng);
+                getMap().addTemporaryMarker(this.#spawnOptions);
                 spawnAircraft(this.#spawnOptions);
             }
         });
@@ -51,7 +66,7 @@ export class MapContextMenu extends ContextMenu {
             this.hide();
             this.#spawnOptions.coalition = getActiveCoalition();
             if (this.#spawnOptions) {
-                getMap().addTemporaryMarker(this.#spawnOptions.latlng);
+                getMap().addTemporaryMarker(this.#spawnOptions);
                 spawnGroundUnit(this.#spawnOptions);
             }
         });
@@ -60,6 +75,12 @@ export class MapContextMenu extends ContextMenu {
             this.hide();
             spawnSmoke(e.detail.color, this.getLatLng());
         });
+
+        document.addEventListener("contextMenuExplosion", (e: any) => {
+            this.hide();
+            spawnExplosion(e.detail.strength, this.getLatLng());
+        });
+
 
         this.hide();
     }
@@ -75,16 +96,40 @@ export class MapContextMenu extends ContextMenu {
         this.getContainer()?.querySelector("#aircraft-spawn-menu")?.classList.toggle("hide", type !== "aircraft");
         this.getContainer()?.querySelector("#aircraft-spawn-button")?.classList.toggle("is-open", type === "aircraft");
         this.getContainer()?.querySelector("#ground-unit-spawn-menu")?.classList.toggle("hide", type !== "ground-unit");
-        this.getContainer()?.querySelector("#ground-unit-spawn-button")?.classList.toggle("is-open", type === "ground-unit");
+        this.getContainer()?.querySelector("#ground-ol-contexmenu-button")?.classList.toggle("is-open", type === "ground-unit");
         this.getContainer()?.querySelector("#smoke-spawn-menu")?.classList.toggle("hide", type !== "smoke");
         this.getContainer()?.querySelector("#smoke-spawn-button")?.classList.toggle("is-open", type === "smoke");
+        this.getContainer()?.querySelector("#explosion-menu")?.classList.toggle("hide", type !== "explosion");
+        this.getContainer()?.querySelector("#explosion-spawn-button")?.classList.toggle("is-open", type === "explosion");
 
         this.#resetAircraftRole();
         this.#resetAircraftType();
         this.#resetGroundUnitRole();
         this.#resetGroundUnitType();
         this.clip();
+
+        this.setVisibleSubMenu(type);
     }
+
+    hideSubMenus() {
+        this.getContainer()?.querySelector("#aircraft-spawn-menu")?.classList.toggle("hide", true);
+        this.getContainer()?.querySelector("#aircraft-spawn-button")?.classList.toggle("is-open", false);
+        this.getContainer()?.querySelector("#ground-unit-spawn-menu")?.classList.toggle("hide", true);
+        this.getContainer()?.querySelector("#ground-ol-contexmenu-button")?.classList.toggle("is-open", false);
+        this.getContainer()?.querySelector("#smoke-spawn-menu")?.classList.toggle("hide", true);
+        this.getContainer()?.querySelector("#smoke-spawn-button")?.classList.toggle("is-open", false);
+        this.getContainer()?.querySelector("#explosion-menu")?.classList.toggle("hide", true);
+        this.getContainer()?.querySelector("#explosion-spawn-button")?.classList.toggle("is-open", false);
+
+        this.#resetAircraftRole();
+        this.#resetAircraftType();
+        this.#resetGroundUnitRole();
+        this.#resetGroundUnitType();
+        this.clip();
+
+        this.setVisibleSubMenu(null);
+    }
+
 
     showUpperBar() {
         this.getContainer()?.querySelector("#upper-bar")?.classList.toggle("hide", false);
@@ -102,26 +147,14 @@ export class MapContextMenu extends ContextMenu {
         this.#spawnOptions.latlng = latlng;
     }
 
-    #onToggleLeftClick(e: any) {
-        if (this.getContainer() != null) {
-            if (e.srcElement.dataset.activeCoalition == "blue")
-                setActiveCoalition("neutral");
-            else if (e.srcElement.dataset.activeCoalition == "neutral")
-                setActiveCoalition("red");
-            else
-                setActiveCoalition("blue");
-        }
+    #onSwitchClick(value: boolean) {
+        value? setActiveCoalition("red"): setActiveCoalition("blue");
+        this.getContainer()?.querySelectorAll('[data-coalition]').forEach((element: any) => { element.setAttribute("data-coalition", getActiveCoalition()) });
     }
 
-    #onToggleRightClick(e: any) {
-        if (this.getContainer() != null) {
-            if (e.srcElement.dataset.activeCoalition == "red")
-                setActiveCoalition("neutral");
-            else if (e.srcElement.dataset.activeCoalition == "neutral")
-                setActiveCoalition("blue");
-            else
-                setActiveCoalition("red");
-        }
+    #onSwitchRightClick(e: any) {
+        this.#coalitionSwitch.setValue(undefined);
+        setActiveCoalition("neutral");
     }
 
     /********* Aircraft spawn menu *********/
@@ -146,7 +179,7 @@ export class MapContextMenu extends ContextMenu {
         this.#resetAircraftType();
         var type = aircraftDatabase.getByLabel(label)?.name || null;
         if (type != null) {
-            this.#spawnOptions.type = type;
+            this.#spawnOptions.name = type;
             this.#aircraftLoadoutDropdown.setOptions(aircraftDatabase.getLoadoutNamesByRole(type, this.#spawnOptions.role));
             this.#aircraftLoadoutDropdown.selectValue(0);
             var image = (<HTMLImageElement>this.getContainer()?.querySelector("#unit-image"));
@@ -165,7 +198,7 @@ export class MapContextMenu extends ContextMenu {
     }
 
     #setAircraftLoadout(loadoutName: string) {
-        var loadout = aircraftDatabase.getLoadoutByName(this.#spawnOptions.type, loadoutName);
+        var loadout = aircraftDatabase.getLoadoutByName(this.#spawnOptions.name, loadoutName);
         if (loadout) {
             this.#spawnOptions.loadout = loadout.code;
             (<HTMLButtonElement>this.getContainer()?.querySelector("#aircraft-spawn-menu")?.querySelector(".deploy-unit-button")).disabled = false;
@@ -208,7 +241,7 @@ export class MapContextMenu extends ContextMenu {
         this.#resetGroundUnitType();
         var type = groundUnitsDatabase.getByLabel(label)?.name || null;
         if (type != null) {
-            this.#spawnOptions.type = type;
+            this.#spawnOptions.name = type;
             (<HTMLButtonElement>this.getContainer()?.querySelector("#ground-unit-spawn-menu")?.querySelector(".deploy-unit-button")).disabled = false;
         }
         this.clip();

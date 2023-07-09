@@ -2456,8 +2456,8 @@ export class AircraftDatabase extends UnitDatabase {
             ],
             "filename": "kc-135.png"
          },
-         "KC-135MPRS": {
-            "name": "KC-135MPRS",
+         "KC135MPRS": {
+            "name": "KC135MPRS",
             "label": "KC-135 MPRS Stratotanker",
             "era": ["Early Cold War", "Mid Cold War", "Late Cold War", "Modern"],
             "shortLabel": "135M",
@@ -2475,6 +2475,26 @@ export class AircraftDatabase extends UnitDatabase {
                }
             ],
             "filename": "kc-135.png"
+         },
+         "S-3B Tanker": {
+            "name": "S-3B Tanker",
+            "label": "S-3B Tanker",
+            "era": ["Early Cold War", "Mid Cold War", "Late Cold War", "Modern"],
+            "shortLabel": "S3B",
+            "loadouts": [
+               {
+                  "fuel": 1,
+                  "items": [
+
+                  ],
+                  "roles": [
+                     "Tanker"
+                  ],
+                  "code": "",
+                  "name": "Default Tanker"
+               }
+            ],
+            "filename": "s-3.png"
          },
          "MiG-15bis": {
             "name": "MiG-15bis",
@@ -2603,7 +2623,7 @@ export class AircraftDatabase extends UnitDatabase {
                      }
                   ],
                   "roles": [
-                     "Recon"
+                     "Reconnaissance"
                   ],
                   "code": "R-60M*2",
                   "name": "Heavy / Fox 2 / Long Range"

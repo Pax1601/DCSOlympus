@@ -3,34 +3,23 @@ import { getUnitsManager } from "..";
 import { Dropdown } from "../controls/dropdown";
 import { Slider } from "../controls/slider";
 import { aircraftDatabase } from "../units/aircraftdatabase";
-import { groundUnitsDatabase } from "../units/groundunitsdatabase";
-import { Aircraft, GroundUnit, Unit } from "../units/unit";
-import { UnitDatabase } from "../units/unitdatabase";
+import { Unit } from "../units/unit";
 import { Panel } from "./panel";
-
-const ROEs: string[] = ["Hold", "Return", "Designated", "Free"];
-const reactionsToThreat: string[] = ["None", "Manoeuvre", "Passive", "Evade"];
-const emissionsCountermeasures: string[] = ["Silent", "Attack", "Defend", "Free"];
-
-const ROEDescriptions: string[] = ["Hold (Never fire)", "Return (Only fire if fired upon)", "Designated (Attack the designated target only)", "Free (Attack anyone)"];
-const reactionsToThreatDescriptions: string[] = ["None (No reaction)", "Manoeuvre (no countermeasures)", "Passive (Countermeasures only, no manoeuvre)", "Evade (Countermeasures and manoeuvers)"];
-const emissionsCountermeasuresDescriptions: string[] = ["Silent (Radar OFF, no ECM)", "Attack (Radar only for targeting, ECM only if locked)", "Defend (Radar for searching, ECM if locked)", "Always on (Radar and ECM always on)"];
-
-const minSpeedValues: { [key: string]: number } = { Aircraft: 100, Helicopter: 0, NavyUnit: 0, GroundUnit: 0 };
-const maxSpeedValues: { [key: string]: number } = { Aircraft: 800, Helicopter: 300, NavyUnit: 60, GroundUnit: 60 };
-const speedIncrements: { [key: string]: number } = { Aircraft: 25, Helicopter: 10, NavyUnit: 5, GroundUnit: 5 };
-const minAltitudeValues: { [key: string]: number } = { Aircraft: 0, Helicopter: 0 };
-const maxAltitudeValues: { [key: string]: number } = { Aircraft: 50000, Helicopter: 10000 };
-const altitudeIncrements: { [key: string]: number } = { Aircraft: 500, Helicopter: 100 };
+import { Switch } from "../controls/switch";
+import { ROEDescriptions, ROEs, altitudeIncrements, emissionsCountermeasures, emissionsCountermeasuresDescriptions, maxAltitudeValues, maxSpeedValues, minAltitudeValues, minSpeedValues, reactionsToThreat, reactionsToThreatDescriptions, speedIncrements } from "../constants/constants";
+import { ftToM, knotsToMs, mToFt, msToKnots } from "../other/utils";
+import { GeneralSettings, Radio, TACAN } from "../@types/unit";
 
 export class UnitControlPanel extends Panel {
     #altitudeSlider: Slider;
-    #airspeedSlider: Slider;
+    #altitudeTypeSwitch: Switch;
+    #speedSlider: Slider;
+    #speedTypeSwitch: Switch;
+    #onOffSwitch: Switch;
+    #followRoadsSwitch: Switch;
     #TACANXYDropdown: Dropdown;
     #radioDecimalsDropdown: Dropdown;
     #radioCallsignDropdown: Dropdown;
-    #expectedAltitude: number = -1;
-    #expectedSpeed: number = -1;
     #optionButtons: { [key: string]: HTMLButtonElement[] } = {}
     #advancedSettingsDialog: HTMLElement;
 
@@ -38,25 +27,15 @@ export class UnitControlPanel extends Panel {
         super(ID);
 
         /* Unit control sliders */
-        this.#altitudeSlider = new Slider("altitude-slider", 0, 100, "ft", (value: number) => {
-            this.#expectedAltitude = value;
-            getUnitsManager().selectedUnitsSetAltitude(value * 0.3048)
-        });
+        this.#altitudeSlider = new Slider("altitude-slider", 0, 100, "ft", (value: number) => { getUnitsManager().selectedUnitsSetAltitude(ftToM(value)); });
+        this.#altitudeTypeSwitch = new Switch("altitude-type-switch", (value: boolean) => { getUnitsManager().selectedUnitsSetAltitudeType(value? "AGL": "ASL"); });
 
-        this.#airspeedSlider = new Slider("airspeed-slider", 0, 100, "kts", (value: number) => {
-            this.#expectedSpeed = value;
-            getUnitsManager().selectedUnitsSetSpeed(value / 1.94384)
-        });
-
-        /* Advanced settings dropdowns */
-        this.#TACANXYDropdown = new Dropdown("TACAN-XY", () => {});
-        this.#TACANXYDropdown.setOptions(["X", "Y"]);
-        this.#radioDecimalsDropdown = new Dropdown("radio-decimals", () => {});
-        this.#radioDecimalsDropdown.setOptions([".000", ".250", ".500", ".750"]);
-        this.#radioCallsignDropdown = new Dropdown("radio-callsign", () => {});
+        this.#speedSlider = new Slider("speed-slider", 0, 100, "kts", (value: number) => { getUnitsManager().selectedUnitsSetSpeed(knotsToMs(value)); });
+        this.#speedTypeSwitch = new Switch("speed-type-switch", (value: boolean) => { getUnitsManager().selectedUnitsSetSpeedType(value? "GS": "CAS"); });
 
         /* Option buttons */
-        this.#optionButtons["ROE"] = ROEs.map((option: string, index: number) => {
+        // Reversing the ROEs so that the least "aggressive" option is always on the left
+        this.#optionButtons["ROE"] = ROEs.slice(0).reverse().map((option: string, index: number) => {
             return this.#createOptionButton(option, `roe/${option.toLowerCase()}.svg`, ROEDescriptions[index], () => { getUnitsManager().selectedUnitsSetROE(option); });
         });
 
@@ -72,8 +51,27 @@ export class UnitControlPanel extends Panel {
         this.getElement().querySelector("#reaction-to-threat-buttons-container")?.append(...this.#optionButtons["reactionToThreat"]);
         this.getElement().querySelector("#emissions-countermeasures-buttons-container")?.append(...this.#optionButtons["emissionsCountermeasures"]);
 
+        /* On off switch */
+        this.#onOffSwitch = new Switch("on-off-switch", (value: boolean) => {
+            getUnitsManager().selectedUnitsSetOnOff(value);
+        });
+
+        /* Follow roads switch */
+        this.#followRoadsSwitch = new Switch("follow-roads-switch", (value: boolean) => {
+            getUnitsManager().selectedUnitsSetFollowRoads(value);
+        });
+
+        /* Advanced settings dialog */
         this.#advancedSettingsDialog = <HTMLElement> document.querySelector("#advanced-settings-dialog");
 
+        /* Advanced settings dropdowns */
+        this.#TACANXYDropdown = new Dropdown("TACAN-XY", () => {});
+        this.#TACANXYDropdown.setOptions(["X", "Y"]);
+        this.#radioDecimalsDropdown = new Dropdown("radio-decimals", () => {});
+        this.#radioDecimalsDropdown.setOptions([".000", ".250", ".500", ".750"]);
+        this.#radioCallsignDropdown = new Dropdown("radio-callsign", () => {});
+
+        /* Events and timer */
         window.setInterval(() => {this.update();}, 25);
 
         document.addEventListener("unitsSelection", (e: CustomEvent<Unit[]>) => { this.show(); this.addButtons();});
@@ -82,38 +80,33 @@ export class UnitControlPanel extends Panel {
         document.addEventListener("showAdvancedSettings", () => {
             this.#updateAdvancedSettingsDialog(getUnitsManager().getSelectedUnits());
             this.#advancedSettingsDialog.classList.remove("hide");
-        })
+        });
 
         this.hide();
     }
 
-    //  Do this after panel is hidden (make sure there's a reset)
-    hide() {
-        super.hide();
-
-        this.#expectedAltitude = -1;
-        this.#expectedSpeed = -1;
+    show() {
+        super.show();
+        this.#speedTypeSwitch.resetExpectedValue();
+        this.#altitudeTypeSwitch.resetExpectedValue();
+        this.#onOffSwitch.resetExpectedValue();
+        this.#followRoadsSwitch.resetExpectedValue();
+        this.#altitudeSlider.resetExpectedValue();
+        this.#speedSlider.resetExpectedValue();
     }
 
     addButtons() {
         var units = getUnitsManager().getSelectedUnits();
         if (units.length < 20) {
             this.getElement().querySelector("#selected-units-container")?.replaceChildren(...units.map((unit: Unit, index: number) => {
-                let database: UnitDatabase | null;
-                if (unit instanceof Aircraft)
-                    database = aircraftDatabase;
-                else if (unit instanceof GroundUnit)
-                    database = groundUnitsDatabase;
-                else
-                    database = null; // TODO add databases for other unit types
-
                 var button = document.createElement("button");
-                var callsign = unit.getBaseData().unitName || "";
+                var callsign = unit.getUnitName() || "";
+                var label = unit.getDatabase()?.getByName(unit.getName())?.label || unit.getName();
 
-                button.setAttribute("data-short-label", database?.getByName(unit.getBaseData().name)?.shortLabel || unit.getBaseData().name);
+                button.setAttribute("data-label", label);
                 button.setAttribute("data-callsign", callsign);
 
-                button.setAttribute("data-coalition", unit.getMissionData().coalition);
+                button.setAttribute("data-coalition", unit.getCoalition());
                 button.classList.add("pill", "highlight-coalition")
 
                 button.addEventListener("click", () => {
@@ -131,88 +124,68 @@ export class UnitControlPanel extends Panel {
 
     update() {
         if (this.getVisible()){
-            var units = getUnitsManager().getSelectedUnits();
-            this.getElement().querySelector("#advanced-settings-div")?.classList.toggle("hide", units.length != 1);
-            if (this.getElement() != null && units.length > 0) {
-                this.#showFlightControlSliders(units);
+            const element = this.getElement();
+            const units = getUnitsManager().getSelectedUnits();
+            const selectedUnitsTypes = getUnitsManager().getSelectedUnitsTypes();
+                
+            if (element != null && units.length > 0) {
+                /* Toggle visibility of control elements */
+                element.toggleAttribute("data-show-categories-tooltip", selectedUnitsTypes.length > 1);
+                element.toggleAttribute("data-show-speed-slider", selectedUnitsTypes.length == 1);
+                element.toggleAttribute("data-show-altitude-slider", selectedUnitsTypes.length == 1 && (selectedUnitsTypes.includes("Aircraft") || selectedUnitsTypes.includes("Helicopter")));
+                element.toggleAttribute("data-show-roe", true);
+                element.toggleAttribute("data-show-threat", (selectedUnitsTypes.includes("Aircraft") || selectedUnitsTypes.includes("Helicopter")) && !(selectedUnitsTypes.includes("GroundUnit") || selectedUnitsTypes.includes("NavyUnit")));
+                element.toggleAttribute("data-show-emissions-countermeasures", (selectedUnitsTypes.includes("Aircraft") || selectedUnitsTypes.includes("Helicopter")) && !(selectedUnitsTypes.includes("GroundUnit") || selectedUnitsTypes.includes("NavyUnit")));
+                element.toggleAttribute("data-show-on-off", (selectedUnitsTypes.includes("GroundUnit") || selectedUnitsTypes.includes("NavyUnit")) && !(selectedUnitsTypes.includes("Aircraft") || selectedUnitsTypes.includes("Helicopter")));
+                element.toggleAttribute("data-show-follow-roads", (selectedUnitsTypes.length == 1 && selectedUnitsTypes.includes("GroundUnit")));
+                element.toggleAttribute("data-show-advanced-settings-button", units.length == 1);
+                
+                /* Flight controls */
+                var desiredAltitude: number | undefined = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredAltitude()});
+                var desiredAltitudeType = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredAltitudeType()});
+                var desiredSpeed = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredSpeed()});
+                var desiredSpeedType = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredSpeedType()});
+                var onOff = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getOnOff()});
+                var followRoads = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getFollowRoads()});
 
+                if (selectedUnitsTypes.length == 1) {
+                    this.#altitudeTypeSwitch.setValue(desiredAltitudeType != undefined? desiredAltitudeType == "AGL": undefined, false);
+                    this.#speedTypeSwitch.setValue(desiredSpeedType != undefined? desiredSpeedType == "GS": undefined, false);
+
+                    this.#speedSlider.setMinMax(minSpeedValues[selectedUnitsTypes[0]], maxSpeedValues[selectedUnitsTypes[0]]);
+                    this.#altitudeSlider.setMinMax(minAltitudeValues[selectedUnitsTypes[0]], maxAltitudeValues[selectedUnitsTypes[0]]);
+                    this.#speedSlider.setIncrement(speedIncrements[selectedUnitsTypes[0]]);
+                    this.#altitudeSlider.setIncrement(altitudeIncrements[selectedUnitsTypes[0]]);
+
+                    this.#speedSlider.setActive(desiredSpeed != undefined);
+                    if (desiredSpeed != undefined)
+                        this.#speedSlider.setValue(msToKnots(desiredSpeed), false);
+
+                    this.#altitudeSlider.setActive(desiredAltitude != undefined);
+                    if (desiredAltitude != undefined)
+                        this.#altitudeSlider.setValue(mToFt(desiredAltitude), false);
+                }
+                else {
+                    this.#speedSlider.setActive(false);
+                    this.#altitudeSlider.setActive(false);
+                }
+
+                /* Option buttons */
                 this.#optionButtons["ROE"].forEach((button: HTMLButtonElement) => {
-                    button.classList.toggle("selected", units.every((unit: Unit) => unit.getOptionsData().ROE === button.value))
+                    button.classList.toggle("selected", units.every((unit: Unit) => unit.getROE() === button.value))
                 });
 
                 this.#optionButtons["reactionToThreat"].forEach((button: HTMLButtonElement) => {
-                    button.classList.toggle("selected", units.every((unit: Unit) => unit.getOptionsData().reactionToThreat === button.value))
+                    button.classList.toggle("selected", units.every((unit: Unit) => unit.getReactionToThreat() === button.value))
                 });
 
                 this.#optionButtons["emissionsCountermeasures"].forEach((button: HTMLButtonElement) => {
-                    button.classList.toggle("selected", units.every((unit: Unit) => unit.getOptionsData().emissionsCountermeasures === button.value))
+                    button.classList.toggle("selected", units.every((unit: Unit) => unit.getEmissionsCountermeasures() === button.value))
                 });
+
+                this.#onOffSwitch.setValue(onOff, false);
+                this.#followRoadsSwitch.setValue(followRoads, false);
             }
-        }
-    }
-
-    /*  Update function will only be allowed to update the sliders once it's matched the expected value for the first time (due to lag of Ajax request) */
-    #updateCanSetAltitudeSlider(altitude: number) {
-        if (this.#expectedAltitude < 0 || altitude === this.#expectedAltitude) {
-            this.#expectedAltitude = -1;
-            return true;
-        }
-        return false;
-    }
-
-    #updateCanSetSpeedSlider(altitude: number) {
-        if (this.#expectedSpeed < 0 || altitude === this.#expectedSpeed) {
-            this.#expectedSpeed = -1;
-            return true;
-        }
-        return false;
-    }
-
-    #showFlightControlSliders(units: Unit[]) {
-        if (getUnitsManager().getSelectedUnitsType() !== undefined)
-            this.#airspeedSlider.show()
-        else
-            this.#airspeedSlider.hide();
-
-        if (getUnitsManager().getSelectedUnitsType() === "Aircraft" || getUnitsManager().getSelectedUnitsType() === "Helicopter")
-            this.#altitudeSlider.show()
-        else
-            this.#altitudeSlider.hide();
-
-        this.getElement().querySelector(`#categories-tooltip`)?.classList.toggle("hide", getUnitsManager().getSelectedUnitsType() !== undefined);
-
-        var unitsType = getUnitsManager().getSelectedUnitsType();
-        var targetAltitude = getUnitsManager().getSelectedUnitsTargetAltitude();
-        var targetSpeed = getUnitsManager().getSelectedUnitsTargetSpeed();
-
-        if (unitsType != undefined) {
-            if (["GroundUnit", "NavyUnit"].includes(unitsType))
-                this.#altitudeSlider.hide()
-
-            this.#airspeedSlider.setMinMax(minSpeedValues[unitsType], maxSpeedValues[unitsType]);
-            this.#altitudeSlider.setMinMax(minAltitudeValues[unitsType], maxAltitudeValues[unitsType]);
-            this.#airspeedSlider.setIncrement(speedIncrements[unitsType]);
-            this.#altitudeSlider.setIncrement(altitudeIncrements[unitsType]);
-
-            this.#airspeedSlider.setActive(targetSpeed != undefined);
-            if (targetSpeed != undefined) {
-                targetSpeed *= 1.94384;
-                if (this.#updateCanSetSpeedSlider(targetSpeed)) {
-                    this.#airspeedSlider.setValue(targetSpeed);
-                }
-            }
-
-            this.#altitudeSlider.setActive(targetAltitude != undefined);
-            if (targetAltitude != undefined) {
-                targetAltitude /= 0.3048;
-                if (this.#updateCanSetAltitudeSlider(targetAltitude)) {
-                    this.#altitudeSlider.setValue(targetAltitude);
-                }
-            }
-        }
-        else {
-            this.#airspeedSlider.setActive(false);
-            this.#altitudeSlider.setActive(false);
         }
     }
 
@@ -236,11 +209,11 @@ export class UnitControlPanel extends Panel {
             const radioCallsignNumberInput = this.#advancedSettingsDialog.querySelector("#radio-callsign-number")?.querySelector("input") as HTMLInputElement;
             
             const unit = units[0];
-            const roles = aircraftDatabase.getByName(unit.getBaseData().name)?.loadouts.map((loadout) => {return loadout.roles})
+            const roles = aircraftDatabase.getByName(unit.getName())?.loadouts.map((loadout) => {return loadout.roles})
             const tanker = roles != undefined && Array.prototype.concat.apply([], roles)?.includes("Tanker");
             const AWACS = roles != undefined && Array.prototype.concat.apply([], roles)?.includes("AWACS");
-            const radioMHz = Math.floor(unit.getOptionsData().radio.frequency / 1000000);
-            const radioDecimals = (unit.getOptionsData().radio.frequency / 1000000 - radioMHz) * 1000;
+            const radioMHz = Math.floor(unit.getRadio().frequency / 1000000);
+            const radioDecimals = (unit.getRadio().frequency / 1000000 - radioMHz) * 1000;
 
             /* Activate the correct options depending on unit type */
             this.#advancedSettingsDialog.toggleAttribute("data-show-settings", !tanker && !AWACS);
@@ -252,28 +225,28 @@ export class UnitControlPanel extends Panel {
 
             /* Set common properties */
             // Name
-            unitNameEl.innerText = unit.getBaseData().unitName;
+            unitNameEl.innerText = unit.getUnitName();
 
             // General settings
-            prohibitJettisonCheckbox.checked = unit.getOptionsData().generalSettings.prohibitJettison;
-            prohibitAfterburnerCheckbox.checked = unit.getOptionsData().generalSettings.prohibitAfterburner;
-            prohibitAACheckbox.checked = unit.getOptionsData().generalSettings.prohibitAA;
-            prohibitAGCheckbox.checked = unit.getOptionsData().generalSettings.prohibitAG;
-            prohibitAirWpnCheckbox.checked = unit.getOptionsData().generalSettings.prohibitAirWpn;
+            prohibitJettisonCheckbox.checked = unit.getGeneralSettings().prohibitJettison;
+            prohibitAfterburnerCheckbox.checked = unit.getGeneralSettings().prohibitAfterburner;
+            prohibitAACheckbox.checked = unit.getGeneralSettings().prohibitAA;
+            prohibitAGCheckbox.checked = unit.getGeneralSettings().prohibitAG;
+            prohibitAirWpnCheckbox.checked = unit.getGeneralSettings().prohibitAirWpn;
 
             // Tasking
-            tankerCheckbox.checked = unit.getTaskData().isTanker;
-            AWACSCheckbox.checked = unit.getTaskData().isAWACS;
+            tankerCheckbox.checked = unit.getIsTanker();
+            AWACSCheckbox.checked = unit.getIsAWACS();
 
             // TACAN
-            TACANCheckbox.checked = unit.getOptionsData().TACAN.isOn;
-            TACANChannelInput.value = String(unit.getOptionsData().TACAN.channel);
-            TACANCallsignInput.value = String(unit.getOptionsData().TACAN.callsign);
-            this.#TACANXYDropdown.setValue(unit.getOptionsData().TACAN.XY);
+            TACANCheckbox.checked = unit.getTACAN().isOn;
+            TACANChannelInput.value = String(unit.getTACAN().channel);
+            TACANCallsignInput.value = String(unit.getTACAN().callsign);
+            this.#TACANXYDropdown.setValue(unit.getTACAN().XY);
 
             // Radio
             radioMhzInput.value = String(radioMHz);
-            radioCallsignNumberInput.value = String(unit.getOptionsData().radio.callsignNumber);
+            radioCallsignNumberInput.value = String(unit.getRadio().callsignNumber);
             this.#radioDecimalsDropdown.setValue("." + radioDecimals);
                     
             if (tanker) /* Set tanker specific options */
@@ -284,7 +257,7 @@ export class UnitControlPanel extends Panel {
                 this.#radioCallsignDropdown.setOptions(["Enfield", "Springfield", "Uzi", "Colt", "Dodge", "Ford", "Chevy", "Pontiac"]);
 
             // This must be done after setting the options
-            if (!this.#radioCallsignDropdown.selectValue(unit.getOptionsData().radio.callsign - 1)) // Ensure the selected value is in the acceptable range
+            if (!this.#radioCallsignDropdown.selectValue(unit.getRadio().callsign - 1)) // Ensure the selected value is in the acceptable range
                 this.#radioCallsignDropdown.selectValue(0);
         }
     }
