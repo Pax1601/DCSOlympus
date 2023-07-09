@@ -247,7 +247,7 @@ export function getMarkerCategoryByName(name: string) {
         return (role?.includes("SAM")) ? "groundunit-sam" : "groundunit-other";
     }
     else 
-        return ""; // TODO add other unit types  
+        return "groundunit-other"; // TODO add other unit types  
 }
 
 export function getUnitDatabaseByCategory(category: string) {

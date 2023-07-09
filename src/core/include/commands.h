@@ -176,11 +176,11 @@ private:
 class SpawnAircrafts : public Command
 {
 public:
-	SpawnAircrafts(string coalition, vector<string> unitTypes, vector<Coords> locations, vector<string> payloadNames, string airbaseName, bool immediate) :
+	SpawnAircrafts(string coalition, vector<string> unitTypes, vector<Coords> locations, vector<string> loadouts, string airbaseName, bool immediate) :
 		coalition(coalition), 
 		unitTypes(unitTypes), 
 		locations(locations),
-		payloadNames(payloadNames),
+		loadouts(loadouts),
 		airbaseName(airbaseName),
 		immediate(immediate)
 	{ 
@@ -193,7 +193,7 @@ private:
 	const string coalition;
 	const vector<string> unitTypes;
 	const vector<Coords> locations;
-	const vector<string> payloadNames;
+	const vector<string> loadouts;
 	const string airbaseName;
 	const bool immediate;
 };

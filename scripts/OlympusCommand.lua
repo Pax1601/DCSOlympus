@@ -1,6 +1,6 @@
 local version = "v0.3.0-alpha"
 
-local debug = FALSE
+local debug = false
 
 Olympus.unitCounter = 1
 Olympus.payloadRegistry = {}
@@ -305,10 +305,10 @@ end
 
 -- Spawns a new unit or group
 function Olympus.spawnUnits(spawnTable) 
-	Olympus.debug("Olympus.spawnUnits " .. serializeTable(spawnTable), 2)
+	Olympus.debug("Olympus.spawnUnits " .. Olympus.serializeTable(spawnTable), 2)
 
-	local unitTable = {}
-	local route = {}
+	local unitTable = nil
+	local route = nil
 	local category = nil
 
 	if spawnTable.category == 'Aircraft' then
@@ -328,6 +328,7 @@ function Olympus.spawnUnits(spawnTable)
 		category = category,
 		route = route,
 		name = "Olympus-" .. Olympus.unitCounter,
+		task = 'CAP'
 	}
 	mist.dynAdd(vars)
 
@@ -337,16 +338,16 @@ end
 
 -- Generates ground units table, either single or from template
 function Olympus.generateGroundUnitsTable(units)
+	local unitTable = {}
 	for idx, unit in pairs(units) do
 		local spawnLocation = mist.utils.makeVec3GL(coord.LLtoLO(unit.lat, unit.lng, 0))
-		local unitTable = {}
 		if Olympus.hasKey(templates, unit.unitType) then
 			for idx, value in pairs(templates[unit.unitType].units) do
-				unitTable[#unitTable + 1] = {
+				unitTable[#unitTable + 1] = 
+				{
 					["type"] = value.name,
 					["x"] = spawnLocation.x + value.dx,
 					["y"] = spawnLocation.z + value.dy,
-					["playerCanDrive"] = true,
 					["heading"] = 0,
 					["skill"] = "High"
 				}
@@ -355,9 +356,8 @@ function Olympus.generateGroundUnitsTable(units)
 			unitTable[#unitTable + 1] = 
 			{
 				["type"] = unit.unitType,
-				["x"] = unit.x,
-				["y"] = unit.z,
-				["playerCanDrive"] = true,
+				["x"] = spawnLocation.x,
+				["y"] = spawnLocation.z,
 				["heading"] = 0,
 				["skill"] = "High"
 			}
@@ -371,12 +371,12 @@ end
 function Olympus.generateAirUnitsTable(units)
 	local unitTable = {}
 	for idx, unit in pairs(units) do
-		local payloadName = unit.payloadName	-- payloadName: a string, one of the names defined in unitPayloads.lua. Must be compatible with the unitType
-		local payload = unit.payload			-- payload: a table, if present the unit will receive this specific payload. Overrides payloadName
+		local loadout = unit.loadout			-- loadout: a string, one of the names defined in unitPayloads.lua. Must be compatible with the unitType
+		local payload = unit.payload			-- payload: a table, if present the unit will receive this specific payload. Overrides loadout
 
 		if payload == nil then
-			if payloadName and payloadName ~= "" and Olympus.unitPayloads[unit.unitType][payloadName] then
-				payload = Olympus.unitPayloads[unit.unitType][payloadName]
+			if loadout and loadout ~= "" and Olympus.unitPayloads[unit.unitType][loadout] then
+				payload = Olympus.unitPayloads[unit.unitType][loadout]
 			else
 				payload = {}
 			end
@@ -398,10 +398,11 @@ function Olympus.generateAirUnitsTable(units)
 		}
 	end
 	return unitTable
+end
 
 function Olympus.generateAirUnitsRoute(spawnTable)
 	local airbaseName = spawnTable.airbaseName	-- airbaseName: a string, if present the aircraft will spawn on the ground of the selected airbase
-	local spawnLocation = mist.utils.makeVec3GL(coord.LLtoLO(spawnTable.lat, spawnTable.lng, 0))
+	local spawnLocation = mist.utils.makeVec3GL(coord.LLtoLO(spawnTable.units[1].lat, spawnTable.units[1].lng, 0))
 
 	-- If a airbase is provided the first waypoint is set as a From runway takeoff.
 	local route = {}

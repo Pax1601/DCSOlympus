@@ -6,7 +6,7 @@ import { CustomMarker } from '../map/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
 import { UnitDatabase } from './unitdatabase';
 import { TargetMarker } from '../map/targetmarker';
-import { BLUE_COMMANDER, BOMBING, CARPET_BOMBING, DLINK, DataIndexes, FIRE_AT_AREA, HIDE_ALL, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, RED_COMMANDER, ROEs, RWR, VISUAL, emissionsCountermeasures, reactionsToThreat, states } from '../constants/constants';
+import { BLUE_COMMANDER, BOMBING, CARPET_BOMBING, DLINK, DataIndexes, FIRE_AT_AREA, GAME_MASTER, HIDE_ALL, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, RED_COMMANDER, ROEs, RWR, VISUAL, emissionsCountermeasures, reactionsToThreat, states } from '../constants/constants';
 import { Ammo, Contact, GeneralSettings, Offset, Radio, TACAN, UnitIconOptions } from '../@types/unit';
 import { DataExtractor } from './dataextractor';
 
@@ -223,6 +223,10 @@ export class Unit extends CustomMarker {
         if (updateMarker)
             this.#updateMarker();
 
+        document.dispatchEvent(new CustomEvent("unitUpdated", { detail: this }));
+    }
+
+    drawLines() {
         // TODO dont delete the polylines of the detected units
         this.#clearContacts();
         if (this.getSelected()) {
@@ -234,8 +238,6 @@ export class Unit extends CustomMarker {
             this.#clearPath();
             this.#clearTarget();
         }
-
-        document.dispatchEvent(new CustomEvent("unitUpdated", { detail: this }));
     }
 
     getData() {
@@ -365,11 +367,11 @@ export class Unit extends CustomMarker {
     }
 
     belongsToCommandedCoalition() {
-        if (getUnitsManager().getVisibilityMode() === HIDE_ALL)
+        if (getUnitsManager().getCommandMode() === HIDE_ALL)
             return false;
-        if (getUnitsManager().getVisibilityMode() === BLUE_COMMANDER && this.#coalition !== "blue")
+        if (getUnitsManager().getCommandMode() === BLUE_COMMANDER && this.#coalition !== "blue")
             return false;
-        if (getUnitsManager().getVisibilityMode() === RED_COMMANDER && this.#coalition !== "red")
+        if (getUnitsManager().getCommandMode() === RED_COMMANDER && this.#coalition !== "red")
             return false;
         return true;        
     }
@@ -486,7 +488,7 @@ export class Unit extends CustomMarker {
             hidden = true;
         if (hiddenUnits.includes(this.#coalition))
             hidden = true;
-        if (getUnitsManager().getVisibilityMode() === HIDE_ALL)
+        if (getUnitsManager().getCommandMode() === HIDE_ALL)
             hidden = true;
         if (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0) {
             hidden = true;
@@ -791,7 +793,8 @@ export class Unit extends CustomMarker {
         this.updateVisibility();
 
         /* Draw the minimap marker */
-        if (this.#alive) {
+        var drawMiniMapMarker = (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value)));
+        if (this.#alive && drawMiniMapMarker) {
             if (this.#miniMapMarker == null) {
                 this.#miniMapMarker = new CircleMarker(new LatLng(this.#position.lat, this.#position.lng), { radius: 0.5 });
                 if (this.#coalition == "neutral")
@@ -985,7 +988,7 @@ export class Unit extends CustomMarker {
         }
         else if (this.#targetID != 0) {
             const target = getUnitsManager().getUnitByID(this.#targetID);
-            if (target && getUnitsManager().getUnitDetectedMethods(target).some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))) {
+            if (target && (getUnitsManager().getCommandMode() == GAME_MASTER || (this.belongsToCommandedCoalition() && getUnitsManager().getUnitDetectedMethods(target).some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))))) {
                 this.#drawtargetPosition(target.getPosition());
             }
         }
@@ -1093,6 +1096,10 @@ export class NavyUnit extends Unit {
         };
     }
 
+    getMarkerCategory() {
+        return "navyunit";
+    }
+
     getCategory() {
         return "NavyUnit";
     }
@@ -1109,7 +1116,7 @@ export class Weapon extends Unit {
             showState: false,
             showVvi: false,
             showHotgroup: false,
-            showUnitIcon: this.belongsToCommandedCoalition(),
+            showUnitIcon: true,
             showShortLabel: false,
             showFuel: false,
             showAmmo: false,

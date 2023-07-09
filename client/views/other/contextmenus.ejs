@@ -38,6 +38,15 @@
                 </div>
             </div>
         </div>
+        <div class="ol-select-container contextmenu-options-container">
+            <div>Group members</div>
+            <div id="aircraft-count-options" class="ol-select">
+                <div class="ol-select-value"></div>
+                <div class="ol-select-options">
+                    <!-- This is where all the aircraft count buttons will be shown-->
+                </div>
+            </div>
+        </div>
         <div id="aircraft-spawn-altitude-slider" class="ol-slider-container flight-control-ol-slider">
             <dl class="ol-data-grid">
                 <dt> Spawn altitude
@@ -74,6 +83,15 @@
                 </div>
             </div>
         </div>
+        <div class="ol-select-container contextmenu-options-container">
+            <div>Group members</div>
+            <div id="ground-count-options" class="ol-select">
+                <div class="ol-select-value"></div>
+                <div class="ol-select-options">
+                    <!-- This is where all the groundunit count buttons will be shown-->
+                </div>
+            </div>
+        </div>
         <button class="deploy-unit-button" title="" data-coalition="blue" data-on-click="contextMenuDeployGroundUnit" disabled>Deploy unit</button>
     </div>
     <div id="smoke-spawn-menu" class="ol-panel ol-contexmenu-panel hide">
@@ -104,7 +122,7 @@
     <h4>Parking available:</h4> 
     <div id="airbase-parking"></div>
 
-    <button id="spawn-airbase-aircraft-button" data-coalition="red" title="Spawn aircraft" data-on-click="contextMenuSpawnAirbase" class="deploy-unit-button">Spawn</button>
+    <button id="spawn-airbase-aircraft-button" data-coalition="blue" title="Spawn aircraft" data-on-click="contextMenuSpawnAirbase" class="deploy-unit-button">Spawn</button>
     <button id="land-here-button" title="Land here" data-on-click="contextMenuLandAirbase" class="hide">Land here</button>
 </div>
 

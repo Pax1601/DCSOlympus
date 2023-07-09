@@ -1,7 +1,8 @@
 import { DomUtil, LatLng, LatLngExpression, Map, Point, Polygon, PolylineOptions } from "leaflet";
-import { getMap } from "..";
+import { getMap, getUnitsManager } from "..";
 import { CoalitionAreaHandle } from "./coalitionareahandle";
 import { CoalitionAreaMiddleHandle } from "./coalitionareamiddlehandle";
+import { BLUE_COMMANDER, RED_COMMANDER } from "../constants/constants";
 
 export class CoalitionArea extends Polygon {
     #coalition: string = "blue";
@@ -19,7 +20,11 @@ export class CoalitionArea extends Polygon {
         super(latlngs, options);
         this.#setColors();
         this.#registerCallbacks();
-        
+
+        if (getUnitsManager().getCommandMode() == BLUE_COMMANDER) 
+            this.setCoalition("blue");
+        else if (getUnitsManager().getCommandMode() == RED_COMMANDER) 
+            this.setCoalition("red");
     }
 
     setCoalition(coalition: string) {

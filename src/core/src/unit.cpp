@@ -84,7 +84,7 @@ void Unit::runAILoop() {
 	const bool isUnitLeaderOfAGroupWithOtherUnits = unitsManager->isUnitInGroup(this) && unitsManager->isUnitGroupLeader(this);
 	if (!(isUnitAlive || isUnitLeaderOfAGroupWithOtherUnits)) return;
 
-	if (checkTaskFailed() && state != State::IDLE && State::LAND)
+	if (checkTaskFailed() && state != State::IDLE && state != State::LAND)
 		setState(State::IDLE);
 
 	AIloop();
@@ -188,10 +188,10 @@ bool Unit::hasFreshData(unsigned long long time) {
 void Unit::getData(stringstream& ss, unsigned long long time)
 {
 	Unit* leader = this;
-	if (unitsManager->isUnitInGroup(this) && !unitsManager->isUnitGroupLeader(this))
+	if (unitsManager->isUnitInGroup(this) && !unitsManager->isUnitGroupLeader(this)) 
 		leader = unitsManager->getGroupLeader(this);
 
-	if (!leader->hasFreshData(time)) return;
+	if (leader == nullptr || (!leader->hasFreshData(time) && !hasFreshData(time))) return;
 
 	const unsigned char endOfData = DataIndex::endOfData;
 	ss.write((const char*)&ID, sizeof(ID));

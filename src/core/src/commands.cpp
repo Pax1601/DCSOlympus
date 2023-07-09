@@ -48,7 +48,7 @@ string SpawnGroundUnits::getString(lua_State* L)
         unitsSS << "[" << i + 1 << "] = {" 
             << "unitType = " << "\"" << unitTypes[i] << "\"" << ", "
             << "lat = " << locations[i].lat << ", "
-            << "lng = " << locations[i].lng << "}";
+            << "lng = " << locations[i].lng << "},";
     }
 
     std::ostringstream commandSS;
@@ -56,14 +56,14 @@ string SpawnGroundUnits::getString(lua_State* L)
     commandSS << "Olympus.spawnUnits, {"
         << "category = " << "\"" << "GroundUnit" << "\"" << ", "
         << "coalition = " << "\"" << coalition << "\"" << ", "
-        << "units = " << "\"" << unitsSS.str() << "\"" << "}";
+        << "units = " << "{" << unitsSS.str() << "}" << "}";
     return commandSS.str();
 }
 
 /* Spawn aircrafts command */
 string SpawnAircrafts::getString(lua_State* L)
 {
-    if (unitTypes.size() != locations.size() || unitTypes.size() != payloadNames.size()) return "";
+    if (unitTypes.size() != locations.size() || unitTypes.size() != loadouts.size()) return "";
 
     std::ostringstream unitsSS;
     unitsSS.precision(10);
@@ -73,7 +73,7 @@ string SpawnAircrafts::getString(lua_State* L)
             << "lat = " << locations[i].lat << ", "
             << "lng = " << locations[i].lng << ", "
             << "alt = " << locations[i].alt << ", "
-            << "payloadName = \"" << payloadNames[i] << "\", " << "}";
+            << "loadout = \"" << loadouts[i] << "\"" << "},";
     }
 
     std::ostringstream commandSS;
@@ -82,7 +82,7 @@ string SpawnAircrafts::getString(lua_State* L)
         << "category = " << "\"" << "Aircraft" << "\"" << ", "
         << "coalition = " << "\"" << coalition << "\"" << ", "
         << "airbaseName = \"" << airbaseName << "\", "
-        << "units = " << "\"" << unitsSS.str() << "\"" << "}";
+        << "units = " << "{" << unitsSS.str() << "}" << "}";
     return commandSS.str();
 }
 

@@ -16,7 +16,7 @@ export class UnitsManager {
     #selectionEventDisabled: boolean = false;
     #pasteDisabled: boolean = false;
     #hiddenTypes: string[] = [];
-    #visibilityMode: string = HIDE_ALL;
+    #commandMode: string = HIDE_ALL;
 
     constructor() {
         this.#units = {};
@@ -75,7 +75,7 @@ export class UnitsManager {
     update(buffer: ArrayBuffer) {
         var dataExtractor = new DataExtractor(buffer);
         var updateTime = Number(dataExtractor.extractUInt64());
-
+        var requestRefresh = false;
         while (dataExtractor.getSeekPosition() < buffer.byteLength) {
             const ID = dataExtractor.extractUInt32();
             if (!(ID in this.#units)) {
@@ -85,7 +85,7 @@ export class UnitsManager {
                     this.addUnit(ID, category);
                 }
                 else {
-                    // TODO request a refresh since we must have missed some packets
+                    requestRefresh = true;
                 }
             }
             this.#units[ID]?.setData(dataExtractor);
@@ -98,6 +98,10 @@ export class UnitsManager {
         }
 
         setLastUpdateTime(updateTime);
+
+        for (let ID in this.#units) {
+            this.#units[ID].drawLines();
+        };
     }
 
     setHiddenType(key: string, value: boolean) {
@@ -115,21 +119,21 @@ export class UnitsManager {
     }
 
     setVisibilityMode(newVisibilityMode: string) {
-        if (newVisibilityMode !== this.#visibilityMode) {
+        if (newVisibilityMode !== this.#commandMode) {
             document.dispatchEvent(new CustomEvent("visibilityModeChanged", { detail: this }));
             const el = document.getElementById("visibiliy-mode");
             if (el) {
                 el.dataset.mode = newVisibilityMode;
                 el.textContent = newVisibilityMode.toUpperCase();
             }
-            this.#visibilityMode = newVisibilityMode;
+            this.#commandMode = newVisibilityMode;
             for (let ID in this.#units) 
                 this.#units[ID].updateVisibility();
         }
     }
 
-    getVisibilityMode() {
-        return this.#visibilityMode;
+    getCommandMode() {
+        return this.#commandMode;
     }
 
     selectUnit(ID: number, deselectAllUnits: boolean = true) {
@@ -558,7 +562,7 @@ export class UnitsManager {
             const probability = Math.pow(1 - minDistance / 50e3, 5) * IADSRoles[role];
             if (Math.random() < probability){
                 const unitBlueprint = randomUnitBlueprintByRole(groundUnitsDatabase, role);
-                spawnGroundUnits([{unitName: unitBlueprint.name, latlng: latlng}], coalitionArea.getCoalition(), true);
+                spawnGroundUnits([{unitType: unitBlueprint.name, location: latlng}], coalitionArea.getCoalition(), true);
                 getMap().addTemporaryMarker(latlng, unitBlueprint.name, coalitionArea.getCoalition());
             }
         }
@@ -569,10 +573,12 @@ export class UnitsManager {
         for (let ID in this.#units) {
             var unit = this.#units[ID];
             if (!["Aircraft", "Helicopter"].includes(unit.getCategory())) {
+                var data: any = unit.getData();
+                data.category = unit.getCategory();
                 if (unit.getGroupName() in unitsToExport)
-                    unitsToExport[unit.getGroupName()].push(unit.getData());
+                    unitsToExport[unit.getGroupName()].push(data);
                 else 
-                    unitsToExport[unit.getGroupName()] = [unit.getData()];
+                    unitsToExport[unit.getGroupName()] = [data];
             }
         }
         var a = document.createElement("a");
@@ -594,7 +600,12 @@ export class UnitsManager {
             reader.onload = function(e: any) {
                 var contents = e.target.result;
                 var groups = JSON.parse(contents);
-
+                for (let groupName in groups) {
+                    if (groupName !== "" && groups[groupName].length > 0 && groups[groupName].every((unit: any) => {return unit.category == "GroundUnit";})) {
+                        var units = groups[groupName].map((unit: any) => {return {unitType: unit.name, location: unit.position}});
+                        spawnGroundUnits(units, groups[groupName][0].coalition, true);
+                    }
+                }
             };
             reader.readAsText(file);
         })

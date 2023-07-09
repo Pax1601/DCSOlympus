@@ -1,5 +1,6 @@
+import { LatLng } from "leaflet";
 import { getMap, getUnitsManager } from "..";
-import { IADSRoles } from "../constants/constants";
+import { GAME_MASTER, IADSRoles } from "../constants/constants";
 import { CoalitionArea } from "../map/coalitionarea";
 import { ContextMenu } from "./contextmenu";
 import { Dropdown } from "./dropdown";
@@ -75,6 +76,12 @@ export class CoalitionAreaContextMenu extends ContextMenu {
         this.hide();
     }
 
+    show(x: number, y: number, latlng: LatLng) {
+        super.show(x, y, latlng);
+        if (getUnitsManager().getCommandMode() !== GAME_MASTER)
+            this.#coalitionSwitch.hide()
+    }
+
     showSubMenu(type: string) {
         this.getContainer()?.querySelector("#iads-menu")?.classList.toggle("hide", type !== "iads");
         this.getContainer()?.querySelector("#iads-button")?.classList.toggle("is-open", type === "iads");
@@ -104,9 +111,11 @@ export class CoalitionAreaContextMenu extends ContextMenu {
     }
 
     #onSwitchClick(value: boolean) {
-        this.getCoalitionArea()?.setCoalition(value ? "red" : "blue");
-        this.getContainer()?.querySelectorAll('[data-coalition]').forEach((element: any) => {
-            element.setAttribute("data-coalition", this.getCoalitionArea()?.getCoalition())
-        });
+        if (getUnitsManager().getCommandMode() == GAME_MASTER) {
+            this.getCoalitionArea()?.setCoalition(value ? "red" : "blue");
+            this.getContainer()?.querySelectorAll('[data-coalition]').forEach((element: any) => {
+                element.setAttribute("data-coalition", this.getCoalitionArea()?.getCoalition())
+            });
+        }
     }
 }

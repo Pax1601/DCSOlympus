@@ -16,6 +16,7 @@ import { Popup } from "./popups/popup";
 import { Dropdown } from "./controls/dropdown";
 import { HotgroupPanel } from "./panels/hotgrouppanel";
 import { SVGInjector } from "@tanem/svg-injector";
+import { BLUE_COMMANDER, GAME_MASTER, RED_COMMANDER } from "./constants/constants";
 
 var map: Map;
 
@@ -44,8 +45,8 @@ function setup() {
     featureSwitches = new FeatureSwitches();
 
     /* Initialize base functionalitites */
-    map = new Map('map-container');
     unitsManager = new UnitsManager();
+    map = new Map('map-container');
     missionHandler = new MissionHandler();
 
     /* Panels */
@@ -252,11 +253,21 @@ export function getHotgroupPanel() {
 }
 
 export function setActiveCoalition(newActiveCoalition: string) {
-    activeCoalition = newActiveCoalition;
+    if (getUnitsManager().getCommandMode() == GAME_MASTER)
+        activeCoalition = newActiveCoalition;
 }
 
 export function getActiveCoalition() {
-    return activeCoalition;
+    if (getUnitsManager().getCommandMode() == GAME_MASTER)
+        return activeCoalition;
+    else {
+        if (getUnitsManager().getCommandMode() == BLUE_COMMANDER)
+            return "blue";
+        else if (getUnitsManager().getCommandMode() == RED_COMMANDER)
+            return "red";
+        else
+            return "neutral";
+    }
 }
 
 export function setLoginStatus(status: string) {

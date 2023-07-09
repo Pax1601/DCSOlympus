@@ -324,9 +324,7 @@ export function startUpdate() {
 export function requestUpdate() {
     /* Main update rate = 250ms is minimum time, equal to server update time. */
     if (!getPaused()) {
-        getUnits((buffer: ArrayBuffer) => {
-            getUnitsManager()?.update(buffer);
-        }, false);
+        getUnits((buffer: ArrayBuffer) => { getUnitsManager()?.update(buffer); }, false);
     }
     window.setTimeout(() => requestUpdate(), getConnected() ? 250 : 1000);
 
@@ -335,7 +333,6 @@ export function requestUpdate() {
 
 export function requestRefresh() {
     /* Main refresh rate = 5000ms. */
-    
     if (!getPaused()) {
         getAirbases((data: AirbasesData) => getMissionData()?.update(data));
         getBullseye((data: BullseyesData) => getMissionData()?.update(data));

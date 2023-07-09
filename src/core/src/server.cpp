@@ -221,9 +221,9 @@ string Server::extractPassword(http_request& request) {
             return "";
 
         string decoded = from_base64(authorization);
-        i = authorization.find(":");
-        if (i != std::string::npos)
-            decoded.erase(0, i);
+        i = decoded.find(":");
+        if (i != string::npos && i+1 < decoded.length())
+            decoded.erase(0, i+1);
         else
             return "";
 
@@ -255,12 +255,11 @@ void Server::task()
         else
             log("Error reading configuration file. Starting server on " + address);
 
-        if (config.is_object() && config.has_object_field(L"authentication") &&
-            config[L"authentication"].has_string_field(L"password"))
+        if (config.is_object() && config.has_object_field(L"authentication"))
         {
-            gameMasterPassword = to_string(config[L"authentication"][L"gameMasterPassword"]);
-            blueCommanderPassword = to_string(config[L"authentication"][L"blueCommanderPassword"]);
-            redCommanderPassword = to_string(config[L"authentication"][L"redCommanderPassword"]);
+            if (config[L"authentication"].has_string_field(L"gameMasterPassword")) gameMasterPassword = to_string(config[L"authentication"][L"gameMasterPassword"]);
+            if (config[L"authentication"].has_string_field(L"blueCommanderPassword")) blueCommanderPassword = to_string(config[L"authentication"][L"blueCommanderPassword"]);
+            if (config[L"authentication"].has_string_field(L"redCommanderPassword")) redCommanderPassword = to_string(config[L"authentication"][L"redCommanderPassword"]);
         }
         else
             log("Error reading configuration file. No password set.");
