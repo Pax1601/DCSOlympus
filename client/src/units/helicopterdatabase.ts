@@ -6,6 +6,7 @@ export class HelicopterDatabase extends UnitDatabase {
       this.blueprints = {
          "AH-64D_BLK_II": {
             "name": "AH-64D_BLK_II",
+            "era": ["Modern"],
             "label": "AH-64D Apache",
             "shortLabel": "AH64",
             "loadouts": [
@@ -57,6 +58,7 @@ export class HelicopterDatabase extends UnitDatabase {
          },
          "Ka-50_3": {
             "name": "Ka-50_3",
+            "era": ["Late Cold War"],
             "label": "Ka-50 Hokum A",
             "shortLabel": "K50",
             "loadouts": [
@@ -178,6 +180,7 @@ export class HelicopterDatabase extends UnitDatabase {
          },
          "Mi-24P": {
             "name": "Mi-24P",
+            "era": ["Mid Cold War"],
             "label": "Mi-24P Hind",
             "shortLabel": "Mi24",
             "loadouts": [
@@ -251,6 +254,7 @@ export class HelicopterDatabase extends UnitDatabase {
          },
          "SA342L": {
             "name": "SA342L",
+            "era": ["Mid Cold War"],
             "label": "SA342L Gazelle",
             "shortLabel": "342",
             "loadouts": [
@@ -277,6 +281,7 @@ export class HelicopterDatabase extends UnitDatabase {
          },
          "SA342M": {
             "name": "SA342M",
+            "era": ["Mid Cold War"],
             "label": "SA342M Gazelle",
             "shortLabel": "342",
             "loadouts": [
@@ -299,6 +304,7 @@ export class HelicopterDatabase extends UnitDatabase {
          },
          "SA342Mistral": {
             "name": "SA342Mistral",
+            "era": ["Mid Cold War"],
             "label": "SA342Mistral Gazelle",
             "shortLabel": "342",
             "loadouts": [
@@ -332,6 +338,7 @@ export class HelicopterDatabase extends UnitDatabase {
          },
          "AH-1W": {
             "name": "AH-1W",
+            "era": ["Mid Cold War"],
             "label": "AH-1W Cobra",
             "shortLabel": "AH1",
             "loadouts": [
@@ -383,6 +390,7 @@ export class HelicopterDatabase extends UnitDatabase {
          },
          "Mi-26": {
             "name": "Mi-26",
+            "era": ["Late Cold War"],
             "label": "Mi-26 Halo",
             "shortLabel": "M26",
             "loadouts": [
@@ -402,6 +410,7 @@ export class HelicopterDatabase extends UnitDatabase {
          },
          "Mi-28N": {
             "name": "Mi-28N",
+            "era": ["Modern"],
             "label": "Mi-28N Havoc",
             "shortLabel": "M28",
             "loadouts": [
@@ -439,6 +448,7 @@ export class HelicopterDatabase extends UnitDatabase {
          },
          "Mi-8MT": {
             "name": "Mi-8MT",
+            "era": ["Mid Cold War"],
             "label": "Mi-8MT Hip",
             "shortLabel": "Mi8",
             "loadouts": [
@@ -476,7 +486,8 @@ export class HelicopterDatabase extends UnitDatabase {
          },
          "SH-60B": {
             "name": "SH-60B",
-            "label": "SH-60B Blackhawk",
+            "era": ["Mid Cold War"],
+            "label": "SH-60B Seahawk",
             "shortLabel": "S60",
             "loadouts": [
                {
@@ -509,6 +520,7 @@ export class HelicopterDatabase extends UnitDatabase {
          },
          "UH-60A": {
             "name": "UH-60A",
+            "era": ["Mid Cold War"],
             "label": "UH-60A Blackhawk",
             "shortLabel": "U60",
             "loadouts": [
@@ -528,6 +540,7 @@ export class HelicopterDatabase extends UnitDatabase {
          },
          "UH-1H": {
             "name": "UH-1H",
+            "era": ["Early Cold War"],
             "label": "UH-1H Huey",
             "shortLabel": "UH1",
             "loadouts": [
