@@ -60,7 +60,7 @@ export class AirbaseContextMenu extends ContextMenu {
     showSpawnMenu() {
         if (this.#airbase != null) {
             setActiveCoalition(this.#airbase.getCoalition());
-            getMap().showMapContextMenu({ originalEvent: { x: this.getX(), y: this.getY(), latlng: this.getLatLng() } });
+            getMap().showMapContextMenu(this.getX(), this.getY(), this.getLatLng());
             getMap().getMapContextMenu().hideUpperBar();
             getMap().getMapContextMenu().hideAltitudeSlider();
             getMap().getMapContextMenu().showSubMenu("aircraft");

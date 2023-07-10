@@ -3,7 +3,7 @@ import * as turf from "@turf/turf";
 import { UnitDatabase } from "../units/unitdatabase";
 import { aircraftDatabase } from "../units/aircraftdatabase";
 import { helicopterDatabase } from "../units/helicopterdatabase";
-import { groundUnitsDatabase } from "../units/groundunitsdatabase";
+import { groundUnitDatabase } from "../units/groundunitdatabase";
 import { Buffer } from "buffer";
 import { ROEs, emissionsCountermeasures, reactionsToThreat, states } from "../constants/constants";
 
@@ -241,10 +241,10 @@ export function getMarkerCategoryByName(name: string) {
         return "aircraft";
     else if (helicopterDatabase.getByName(name) != null)
         return "helicopter";
-    else if (groundUnitsDatabase.getByName(name) != null){
+    else if (groundUnitDatabase.getByName(name) != null){
         // TODO this is very messy
-        var role = groundUnitsDatabase.getByName(name)?.loadouts[0].roles[0];
-        return (role?.includes("SAM")) ? "groundunit-sam" : "groundunit-other";
+        var type = groundUnitDatabase.getByName(name)?.type;
+        return (type?.includes("SAM")) ? "groundunit-sam" : "groundunit-other";
     }
     else 
         return "groundunit-other"; // TODO add other unit types  
@@ -256,7 +256,7 @@ export function getUnitDatabaseByCategory(category: string) {
     else if (category == "helicopter")
         return helicopterDatabase;
     else if (category.includes("groundunit"))
-        return groundUnitsDatabase;
+        return groundUnitDatabase;
     else
         return null;
 }

@@ -8,11 +8,10 @@
     z-index: 9999;
 }
 
-#aircraft-spawn-menu {
-    height: fit-content;
-}
-
-#ground-unit-spawn-menu {
+#aircraft-spawn-menu,
+#helicopter-spawn-menu,
+#groundunit-spawn-menu,
+#navyunit-spawn-menu {
     height: fit-content;
 }
 
@@ -35,35 +34,27 @@
     width: 50px;
 }
 
-#aircraft-spawn-menu .ol-select.is-open .ol-select-options {
+#aircraft-spawn-menu .ol-select.is-open .ol-select-options,
+#helicopter-spawn-menu .ol-select.is-open .ol-select-options {
     max-height: 300px;
 }
 
-#aircraft-spawn-menu>button,
-#ground-unit-spawn-menu>button,
-#iads-menu>button {
+.deploy-unit-button {
     text-align: center;
     width: 100%;
 }
 
-#aircraft-spawn-button {
-    background-image: url("/resources/theme/images/buttons/spawn/aircraft.svg");
-    background-size: 48px;
+.upper-bar svg>* {
+    fill: white;
 }
 
-#ground-ol-contexmenu-button {
-    background-image: url("/resources/theme/images/buttons/spawn/ground.svg");
-    background-size: 48px;
+.upper-bar svg {
+    width: 22px;
+    margin: 0px 5px;
 }
 
-#smoke-spawn-button {
-    background-image: url("/resources/theme/images/buttons/spawn/smoke.svg");
-    background-size: 48px;
-}
-
-#explosion-spawn-button {
-    background-image: url("/resources/theme/images/buttons/spawn/explosion.svg");
-    background-size: 48px;
+.upper-bar button:nth-child(2) {
+    margin-left: auto;
 }
 
 [data-coalition="blue"]#active-coalition-label,
@@ -117,7 +108,8 @@
     content: "Create neutral unit";
 }
 
-#loadout-preview {
+#aircraft-loadout-preview,
+#helicopter-loadout-preview {
     align-content: space-between;
     align-items: center;
     column-gap: 20px;
@@ -126,14 +118,16 @@
     width: 100%;
 }
 
-#loadout-list {
+#aircaft-loadout-list,
+#helicopter-loadout-list  {
     align-content: center;
     display: flex;
     flex-direction: column;
     height: 100%;
 }
 
-#unit-image {
+#aircraft-unit-image,
+#helicopter-unit-image  {
     filter: invert(100%);
     height: 100px;
     margin-bottom: 10px;
@@ -186,14 +180,16 @@
     background-color: orange;
 }
 
-#aircraft-spawn-menu .ol-slider-value {
+#aircraft-spawn-menu .ol-slider-value,
+#helicopter-spawn-menu .ol-slider-value {
 	color: var(--accent-light-blue);
 	cursor: pointer;
 	font-size: 14px;
 	font-weight: bold;
 }
 
-#aircraft-spawn-altitude-slider {
+#aircraft-spawn-altitude-slider,
+#helicopter-spawn-altitude-slider {
     padding: 0px 10px;
 }
 
@@ -369,26 +365,6 @@
     margin-right: 10px;
     height: 25px;
     width: 50px;
-}
-
-#iads-button {
-    background-image: url("/resources/theme/images/buttons/spawn/sam.svg");
-    background-size: 48px;
-}
-
-#cap-button {
-    background-image: url("/resources/theme/images/buttons/spawn/aircraft.svg");
-    background-size: 48px;
-}
-
-#coalitionarea-back-button {
-    background-image: url("/resources/theme/images/buttons/other/back.svg");
-    background-size: 48px;
-}
-
-#coalitionarea-delete-button {
-    background-image: url("/resources/theme/images/buttons/other/delete.svg");
-    background-size: 48px;
 }
 
 #coalition-area-contextmenu .ol-checkbox {

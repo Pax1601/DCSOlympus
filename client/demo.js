@@ -48,7 +48,7 @@ const DEMO_UNIT_DATA = {
         ammo: [{ quantity: 2, name: "A cool missile", guidance: 0, category: 0, missileCategory: 0 } ],
         contacts: [{ID: 1, detectionMethod: 16}],
         activePath: [ ]
-    }, ["4"]:{ category: "GroundUnit", alive: true, human: false, controlled: false, coalition: 1, country: 0, name: "M-60", unitName: "Cool guy 1-4", groupName: "Cool group 3", state: 1, task: "Being cool",
+    }, ["4"]:{ category: "Helicopter", alive: true, human: false, controlled: false, coalition: 1, country: 0, name: "AH-64D_BLK_II", unitName: "Cool guy 1-4", groupName: "Cool group 3", state: 1, task: "Being cool",
         hasTask: false, position: { lat: 37.1, lng: -116.1, alt: 1000 }, speed: 200, heading: 315 * Math.PI / 180, isTanker: false, isAWACS: false, onOff: true, followRoads: false, fuel: 50, 
         desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
         formationOffset: { x: 0, y: 0, z: 0 },

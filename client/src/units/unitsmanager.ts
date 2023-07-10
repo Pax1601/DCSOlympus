@@ -5,7 +5,7 @@ import { cloneUnit, setLastUpdateTime, spawnGroundUnits } from "../server/server
 import { deg2rad, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots, polygonArea, randomPointInPoly, randomUnitBlueprintByRole } from "../other/utils";
 import { CoalitionArea } from "../map/coalitionarea";
 import { Airbase } from "../missionhandler/airbase";
-import { groundUnitsDatabase } from "./groundunitsdatabase";
+import { groundUnitDatabase } from "./groundunitdatabase";
 import { DataIndexes, HIDE_ALL, IADSRoles, IDLE, MOVE_UNIT } from "../constants/constants";
 import { DataExtractor } from "./dataextractor";
 import { Contact } from "../@types/unit";
@@ -561,7 +561,7 @@ export class UnitsManager {
             const role = activeRoles[Math.floor(Math.random() * activeRoles.length)];
             const probability = Math.pow(1 - minDistance / 50e3, 5) * IADSRoles[role];
             if (Math.random() < probability){
-                const unitBlueprint = randomUnitBlueprintByRole(groundUnitsDatabase, role);
+                const unitBlueprint = randomUnitBlueprintByRole(groundUnitDatabase, role);
                 spawnGroundUnits([{unitType: unitBlueprint.name, location: latlng}], coalitionArea.getCoalition(), true);
                 getMap().addTemporaryMarker(latlng, unitBlueprint.name, coalitionArea.getCoalition());
             }

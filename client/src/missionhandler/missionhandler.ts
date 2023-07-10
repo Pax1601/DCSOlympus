@@ -130,6 +130,6 @@ export class MissionHandler {
     }
 
     #onAirbaseClick(e: any) {
-        getMap().showAirbaseContextMenu(e, e.sourceTarget);
+        getMap().showAirbaseContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng, e.sourceTarget);
     }
 }

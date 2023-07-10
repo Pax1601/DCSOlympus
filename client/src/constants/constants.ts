@@ -139,7 +139,6 @@ export const BOMBING = "Bombing";
 export const CARPET_BOMBING = "Carpet bombing";
 export const FIRE_AT_AREA = "Fire at area";
 export const COALITIONAREA_DRAW_POLYGON = "Draw Coalition Area";
-export const COALITIONAREA_INTERACT = "Interact with Coalition Areas"
 export const visibilityControls: string[] = ["human", "dcs", "aircraft", "groundunit-sam", "groundunit-other", "navyunit", "airbase"];
 export const visibilityControlsTootlips: string[] = ["Toggle human players visibility", "Toggle DCS controlled units visibility", "Toggle aircrafts visibility", "Toggle SAM units visibility", "Toggle ground units (not SAM) visibility", "Toggle navy units visibility", "Toggle airbases visibility"];
 

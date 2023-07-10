@@ -17,6 +17,8 @@ export class CoalitionArea extends Polygon {
             options = {};
 
         options.bubblingMouseEvents = false;
+        options.interactive = false;
+
         super(latlngs, options);
         this.#setColors();
         this.#registerCallbacks();
@@ -40,6 +42,7 @@ export class CoalitionArea extends Polygon {
         this.#selected = selected;
         this.#setColors();
         this.#setHandles();
+        this.setOpacity(selected? 1: 0.5);
         if (!this.getSelected() && this.getEditing()) {
             /* Remove the vertex we were working on */
             var latlngs = this.getLatLngs()[0] as LatLng[];
@@ -65,16 +68,6 @@ export class CoalitionArea extends Polygon {
 
     getEditing() {
         return this.#editing;
-    }
-
-    setInteractive(interactive: boolean) {
-        this.setOpacity(interactive? 1: 0.5);
-        this.options.interactive = interactive;
-
-        if (interactive) 
-            DomUtil.addClass(this.getElement() as HTMLElement, 'leaflet-interactive');
-        else 
-            DomUtil.removeClass(this.getElement() as HTMLElement, 'leaflet-interactive'); 
     }
 
     addTemporaryLatLng(latlng: LatLng) {
@@ -161,7 +154,6 @@ export class CoalitionArea extends Polygon {
             if (!this.getEditing()) {
                 getMap().deselectAllCoalitionAreas();
                 this.setSelected(true);
-                getMap().showCoalitionAreaContextMenu(e, this);
             }
             else
                 this.setEditing(false);

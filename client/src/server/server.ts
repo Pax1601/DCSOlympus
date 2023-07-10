@@ -145,15 +145,27 @@ export function spawnExplosion(intensity: number, latlng: LatLng) {
     POST(data, () => { });
 }
 
+export function spawnAircrafts(units: any, coalition: string, airbaseName: string, immediate: boolean) {
+    var command = { "units": units, "coalition": coalition, "airbaseName": airbaseName, "immediate": immediate };
+    var data = { "spawnAircrafts": command }
+    POST(data, () => { });
+}
+
+export function spawnHelicopters(units: any, coalition: string, airbaseName: string, immediate: boolean) {
+    var command = { "units": units, "coalition": coalition, "airbaseName": airbaseName, "immediate": immediate };
+    var data = { "spawnHelicopter": command }
+    POST(data, () => { });
+}
+
 export function spawnGroundUnits(units: any, coalition: string, immediate: boolean) {
     var command = { "units": units, "coalition": coalition, "immediate": immediate };
     var data = { "spawnGroundUnits": command }
     POST(data, () => { });
 }
 
-export function spawnAircrafts(units: any, coalition: string, airbaseName: string, immediate: boolean) {
-    var command = { "units": units, "coalition": coalition, "airbaseName": airbaseName, "immediate": immediate };
-    var data = { "spawnAircrafts": command }
+export function spawnNavyUnits(units: any, coalition: string, immediate: boolean) {
+    var command = { "units": units, "coalition": coalition, "immediate": immediate };
+    var data = { "spawnNavyUnits": command }
     POST(data, () => { });
 }
 

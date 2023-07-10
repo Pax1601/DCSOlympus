@@ -538,9 +538,13 @@ export class Unit extends CustomMarker {
         if (typeof (roles) === "string")
             roles = [roles];
 
-        return this.getDatabase()?.getByName(this.#name)?.loadouts.some((loadout: LoadoutBlueprint) => {
-            return (roles as string[]).some((role: string) => { return loadout.roles.includes(role) });
-        });
+        var loadouts = this.getDatabase()?.getByName(this.#name)?.loadouts;
+        if (loadouts) {
+            return loadouts.some((loadout: LoadoutBlueprint) => {
+                return (roles as string[]).some((role: string) => { return loadout.roles.includes(role) });
+            });
+        } else 
+            return false;
     }
 
     /********************** Unit commands *************************/
@@ -731,7 +735,7 @@ export class Unit extends CustomMarker {
         }
 
         if (Object.keys(options).length > 0) {
-            getMap().showUnitContextMenu(e);
+            getMap().showUnitContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng);
             getMap().getUnitContextMenu().setOptions(options, (option: string) => {
                 getMap().hideUnitContextMenu();
                 this.#executeAction(e, option);
@@ -774,7 +778,8 @@ export class Unit extends CustomMarker {
             getMap().hideUnitContextMenu();
             this.#applyFollowOptions(option);
         });
-        getMap().showUnitContextMenu(e);
+        
+        getMap().showUnitContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng);
     }
 
     #applyFollowOptions(action: string) {

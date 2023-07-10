@@ -2123,7 +2123,7 @@ export class AircraftDatabase extends UnitDatabase {
                      "AWACS"
                   ],
                   "code": "",
-                  "name": "Blue Naval AWACS"
+                  "name": "Blue Navy AWACS"
                }
             ],
             "filename": "e-2.png"
@@ -3484,7 +3484,7 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "Su-33": {
             "name": "Su-33",
-            "label": "Su-33 Naval Flanker",
+            "label": "Su-33 Navy Flanker",
             "era": ["Late Cold War", "Modern"],
             "shortLabel": "33",
             "loadouts": [
