@@ -14,11 +14,11 @@ interface LoadoutBlueprint {
 
 interface UnitBlueprint {
     name: string;
-    era?: string[];
-    type?: string;
+    era: string[];
     label: string;
     shortLabel: string;
+    type?: string;
     range?: string;
-    loadouts: LoadoutBlueprint[];
-    filename: string;
+    loadouts?: LoadoutBlueprint[];
+    filename?: string;
 }

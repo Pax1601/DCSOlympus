@@ -50,7 +50,7 @@ export class AirbaseContextMenu extends ContextMenu {
     }
 
     setCoalition(coalition: string) {
-        (<HTMLElement>this.getContainer()?.querySelector("#spawn-airbase-aircraft-button")).dataset.activeCoalition = coalition;
+        (<HTMLElement>this.getContainer()?.querySelector("#spawn-airbase-aircraft-button")).dataset.coalition = coalition;
     }
 
     enableLandButton(enableLandButton: boolean) {
@@ -60,8 +60,10 @@ export class AirbaseContextMenu extends ContextMenu {
     showSpawnMenu() {
         if (this.#airbase != null) {
             setActiveCoalition(this.#airbase.getCoalition());
-            getMap().showMapContextMenu({ originalEvent: { x: this.getX(), y: this.getY(), latlng: this.getLatLng() } });
+            getMap().showMapContextMenu(this.getX(), this.getY(), this.getLatLng());
             getMap().getMapContextMenu().hideUpperBar();
+            getMap().getMapContextMenu().hideLowerBar();
+            getMap().getMapContextMenu().hideAltitudeSlider();
             getMap().getMapContextMenu().showSubMenu("aircraft");
             getMap().getMapContextMenu().setAirbaseName(this.#airbase.getName());
             getMap().getMapContextMenu().setLatLng(this.#airbase.getLatLng());

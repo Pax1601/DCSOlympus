@@ -8,7 +8,8 @@ interface UnitIconOptions {
     showShortLabel: boolean,
     showFuel: boolean,
     showAmmo: boolean,
-    showSummary: boolean, 
+    showSummary: boolean,
+    showCallsign: boolean, 
     rotateToHeading: boolean
 }
 

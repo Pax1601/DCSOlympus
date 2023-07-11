@@ -1,5 +1,5 @@
 import { LatLng } from "leaflet";
-import { getInfoPopup, getMap } from "..";
+import { getInfoPopup, getMap, getUnitsManager } from "..";
 import { Airbase } from "./airbase";
 import { Bullseye } from "./bullseye";
 
@@ -72,6 +72,9 @@ export class MissionHandler {
                 getInfoPopup().setText("Map set to " + this.#theatre);
             }
 
+            if ("visibilityMode" in data.mission)
+                getUnitsManager().setVisibilityMode(data.mission.visibilityMode);
+
             if ("date" in data.mission)
                 this.#date = data.mission.date;
             if ("elapsedTime" in data.mission)
@@ -127,6 +130,6 @@ export class MissionHandler {
     }
 
     #onAirbaseClick(e: any) {
-        getMap().showAirbaseContextMenu(e, e.sourceTarget);
+        getMap().showAirbaseContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng, e.sourceTarget);
     }
 }

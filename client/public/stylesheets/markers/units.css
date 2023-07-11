@@ -14,11 +14,11 @@
     background: var(--secondary-gunmetal-grey);
     display: flex;
     justify-self: center;
-    padding-bottom: calc((var(--unit-aircraft-width) / 2) + var(--unit-stroke-width));
+    padding-bottom: calc((var(--unit-width) / 2) + var(--unit-stroke-width));
     position: absolute;
     transform-origin: bottom;
     translate: 0 -50%;
-    width: var(--unit-aircraft-vvi-width);
+    width: var(--unit-vvi-width);
 }
 
 .unit-hotgroup {
@@ -100,13 +100,13 @@
 /*** Fuel indicator ***/
 [data-object|="unit"] .unit-fuel {
     background: white;
-    border: var(--unit-aircraft-fuel-border-width) solid var(--secondary-dark-steel);
+    border: var(--unit-fuel-border-width) solid var(--secondary-dark-steel);
     border-radius: var(--border-radius-sm);
     display: none;
-    height: var(--unit-aircraft-fuel-height);
+    height: var(--unit-fuel-height);
     position: absolute;
-    translate: var(--unit-aircraft-fuel-x) var(--unit-aircraft-fuel-y);
-    width: var(--unit-aircraft-fuel-width);
+    translate: var(--unit-fuel-x) var(--unit-fuel-y);
+    width: var(--unit-fuel-width);
 }
 
 [data-object|="unit"] .unit-fuel-level {
@@ -117,19 +117,19 @@
 
 /*** Ammo indicator ***/
 [data-object|="unit"] .unit-ammo {
-    column-gap: var(--unit-aircraft-ammo-spacing);
+    column-gap: var(--unit-ammo-spacing);
     display: none;
     height: fit-content;
     position: absolute;
-    translate: var(--unit-aircraft-ammo-x) var(--unit-aircraft-ammo-y);
+    translate: var(--unit-ammo-x) var(--unit-ammo-y);
     width: fit-content;
 }
 
 [data-object|="unit"] .unit-ammo>* {
     background-color: white;
-    border: var(--unit-aircraft-ammo-border-width) solid var(--secondary-dark-steel);
+    border: var(--unit-ammo-border-width) solid var(--secondary-dark-steel);
     border-radius: 50%;
-    padding: var(--unit-aircraft-ammo-radius);
+    padding: var(--unit-ammo-radius);
 }
 
 /*** Unit summary ***/
@@ -150,7 +150,7 @@
         1px -1px 0 #000,
         -1px 1px 0 #000,
         1px 1px 0 #000;
-    translate: -60px 0;
+    right: 100%;
     width: fit-content;
 }
 
@@ -171,7 +171,7 @@
     width: 80px;
 }
 
-[data-object|="unit"] .unit-summary .unit-callsign:hover {
+[data-object|="unit"]:hover  .unit-summary .unit-callsign{
     direction: rtl;
     overflow: visible;
 }
@@ -292,24 +292,24 @@
 }
 
 /*** Dead unit ***/
-[data-object|="unit-aircraft"][data-is-dead] .unit-selected-spotlight,
-[data-object|="unit-aircraft"][data-is-dead] .unit-short-label,
-[data-object|="unit-aircraft"][data-is-dead] .unit-vvi,
-[data-object|="unit-aircraft"][data-is-dead] .unit-hotgroup,
-[data-object|="unit-aircraft"][data-is-dead] .unit-hotgroup-id,
-[data-object|="unit-aircraft"][data-is-dead] .unit-state,
-[data-object|="unit-aircraft"][data-is-dead] .unit-fuel,
-[data-object|="unit-aircraft"][data-is-dead] .unit-ammo,
-[data-object|="unit-aircraft"][data-is-dead]:hover .unit-fuel,
-[data-object|="unit-aircraft"][data-is-dead]:hover .unit-ammo {
+[data-object|="unit"][data-is-dead] .unit-selected-spotlight,
+[data-object|="unit"][data-is-dead] .unit-short-label,
+[data-object|="unit"][data-is-dead] .unit-vvi,
+[data-object|="unit"][data-is-dead] .unit-hotgroup,
+[data-object|="unit"][data-is-dead] .unit-hotgroup-id,
+[data-object|="unit"][data-is-dead] .unit-state,
+[data-object|="unit"][data-is-dead] .unit-fuel,
+[data-object|="unit"][data-is-dead] .unit-ammo,
+[data-object|="unit"][data-is-dead]:hover .unit-fuel,
+[data-object|="unit"][data-is-dead]:hover .unit-ammo {
     display: none;
 }
 
-[data-object|="unit-aircraft"][data-is-dead] .unit-summary>* {
+[data-object|="unit"][data-is-dead] .unit-summary>* {
     display: none;
 }
 
-[data-object|="unit-aircraft"][data-is-dead] .unit-summary .unit-callsign {
+[data-object|="unit"][data-is-dead] .unit-summary .unit-callsign {
     display: block;
 }
 

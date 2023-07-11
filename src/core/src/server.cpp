@@ -72,8 +72,9 @@ void Server::handle_get(http_request request)
     milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
 
     http_response response(status_codes::OK);
-    string authorization = to_base64("admin:" + password);
-    if (password.length() == 0 || (request.headers().has(L"Authorization") && request.headers().find(L"Authorization")->second.compare(L"Basic " + to_wstring(authorization)) == 0))
+    
+    string password = extractPassword(request);
+    if (password.compare(gameMasterPassword) == 0 || password.compare(blueCommanderPassword) == 0 || password.compare(redCommanderPassword) == 0)
     {
         std::exception_ptr eptr;
         try {
@@ -114,9 +115,15 @@ void Server::handle_get(http_request request)
                         answer[L"airbases"] = airbases;
                     else if (URI.compare(BULLSEYE_URI) == 0)
                         answer[L"bullseyes"] = bullseyes;
-                    else if (URI.compare(MISSION_URI) == 0)
+                    else if (URI.compare(MISSION_URI) == 0) {
+                        if (password.compare(gameMasterPassword) == 0)
+                            mission[L"visibilityMode"] = json::value(L"Game master");
+                        else if (password.compare(blueCommanderPassword) == 0) 
+                            mission[L"visibilityMode"] = json::value(L"Blue commander");
+                        else if (password.compare(redCommanderPassword) == 0)
+                            mission[L"visibilityMode"] = json::value(L"Red commander");
                         answer[L"mission"] = mission;
-
+                    }
                     
                     answer[L"time"] = json::value::string(to_wstring(ms.count()));
                     answer[L"sessionHash"] = json::value::string(to_wstring(sessionHash));
@@ -144,8 +151,10 @@ void Server::handle_get(http_request request)
 void Server::handle_request(http_request request, function<void(json::value const&, json::value&)> action)
 {
     http_response response(status_codes::OK);
-    string authorization = to_base64("admin:" + password);
-    if (password.length() == 0 || (request.headers().has(L"Authorization") && request.headers().find(L"Authorization")->second.compare(L"Basic " + to_wstring(authorization)) == 0))
+
+    //TODO: limit what a user can do depending on the password
+    string password = extractPassword(request);
+    if (password.compare(gameMasterPassword) == 0 || password.compare(blueCommanderPassword) == 0 || password.compare(redCommanderPassword) == 0)
     {
         auto answer = json::value::object();
         request.extract_json().then([&answer, &action](pplx::task<json::value> task)
@@ -200,6 +209,30 @@ void Server::handle_put(http_request request)
     });    
 }
 
+string Server::extractPassword(http_request& request) {
+    if (request.headers().has(L"Authorization")) {
+        string authorization = to_string(request.headers().find(L"Authorization")->second);
+        string s = "Basic ";
+        string::size_type i = authorization.find(s);
+
+        if (i != std::string::npos)
+            authorization.erase(i, s.length());
+        else
+            return "";
+
+        string decoded = from_base64(authorization);
+        i = decoded.find(":");
+        if (i != string::npos && i+1 < decoded.length())
+            decoded.erase(0, i+1);
+        else
+            return "";
+
+        return decoded;
+    }
+    else
+        return "";
+}
+
 void Server::task()
 {
     string address = REST_ADDRESS;
@@ -222,10 +255,11 @@ void Server::task()
         else
             log("Error reading configuration file. Starting server on " + address);
 
-        if (config.is_object() && config.has_object_field(L"authentication") &&
-            config[L"authentication"].has_string_field(L"password"))
+        if (config.is_object() && config.has_object_field(L"authentication"))
         {
-            password = to_string(config[L"authentication"][L"password"]);
+            if (config[L"authentication"].has_string_field(L"gameMasterPassword")) gameMasterPassword = to_string(config[L"authentication"][L"gameMasterPassword"]);
+            if (config[L"authentication"].has_string_field(L"blueCommanderPassword")) blueCommanderPassword = to_string(config[L"authentication"][L"blueCommanderPassword"]);
+            if (config[L"authentication"].has_string_field(L"redCommanderPassword")) redCommanderPassword = to_string(config[L"authentication"][L"redCommanderPassword"]);
         }
         else
             log("Error reading configuration file. No password set.");

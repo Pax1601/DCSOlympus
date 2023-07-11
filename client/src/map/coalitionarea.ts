@@ -1,7 +1,8 @@
 import { DomUtil, LatLng, LatLngExpression, Map, Point, Polygon, PolylineOptions } from "leaflet";
-import { getMap } from "..";
+import { getMap, getUnitsManager } from "..";
 import { CoalitionAreaHandle } from "./coalitionareahandle";
 import { CoalitionAreaMiddleHandle } from "./coalitionareamiddlehandle";
+import { BLUE_COMMANDER, RED_COMMANDER } from "../constants/constants";
 
 export class CoalitionArea extends Polygon {
     #coalition: string = "blue";
@@ -16,10 +17,17 @@ export class CoalitionArea extends Polygon {
             options = {};
 
         options.bubblingMouseEvents = false;
+        options.interactive = false;
+
         super(latlngs, options);
         this.#setColors();
         this.#registerCallbacks();
-        
+
+        if (getUnitsManager().getCommandMode() == BLUE_COMMANDER) 
+            this.setCoalition("blue");
+        else if (getUnitsManager().getCommandMode() == RED_COMMANDER) 
+            this.setCoalition("red");
+
     }
 
     setCoalition(coalition: string) {
@@ -35,6 +43,7 @@ export class CoalitionArea extends Polygon {
         this.#selected = selected;
         this.#setColors();
         this.#setHandles();
+        this.setOpacity(selected? 1: 0.5);
         if (!this.getSelected() && this.getEditing()) {
             /* Remove the vertex we were working on */
             var latlngs = this.getLatLngs()[0] as LatLng[];
@@ -62,16 +71,6 @@ export class CoalitionArea extends Polygon {
         return this.#editing;
     }
 
-    setInteractive(interactive: boolean) {
-        this.setOpacity(interactive? 1: 0.5);
-        this.options.interactive = interactive;
-
-        if (interactive) 
-            DomUtil.addClass(this.getElement() as HTMLElement, 'leaflet-interactive');
-        else 
-            DomUtil.removeClass(this.getElement() as HTMLElement, 'leaflet-interactive'); 
-    }
-
     addTemporaryLatLng(latlng: LatLng) {
         this.#activeIndex++;
         var latlngs = this.getLatLngs()[0] as LatLng[];
@@ -89,6 +88,12 @@ export class CoalitionArea extends Polygon {
 
     setOpacity(opacity: number) {
         this.setStyle({opacity: opacity, fillOpacity: opacity * 0.25});
+    }
+
+    onRemove(map: Map): this {
+        super.onRemove(map);
+        this.#handles.concat(this.#middleHandles).forEach((handle: CoalitionAreaHandle | CoalitionAreaMiddleHandle) => handle.removeFrom(getMap()));
+        return this;
     }
 
     #setColors() {
@@ -156,16 +161,9 @@ export class CoalitionArea extends Polygon {
             if (!this.getEditing()) {
                 getMap().deselectAllCoalitionAreas();
                 this.setSelected(true);
-                getMap().showCoalitionAreaContextMenu(e, this);
             }
             else
                 this.setEditing(false);
         });
-    }
-
-    onRemove(map: Map): this {
-        super.onRemove(map);
-        this.#handles.concat(this.#middleHandles).forEach((handle: CoalitionAreaHandle | CoalitionAreaMiddleHandle) => handle.removeFrom(getMap()));
-        return this;
     }
 }

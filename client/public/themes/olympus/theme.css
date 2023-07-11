@@ -65,18 +65,17 @@
     --unit-width: 50px;
 
     /***  Air units  ***/
-    --unit-aircraft-ammo-gap: calc(2px + var(--unit-stroke-width));
-    --unit-aircraft-ammo-border-radius: 50%;
-    --unit-aircraft-ammo-border-width: 2px;
-    --unit-aircraft-ammo-radius: 2px;
-    --unit-aircraft-ammo-spacing: 2px;
-    --unit-aircraft-ammo-x: 0px;
-    --unit-aircraft-ammo-y: 30px;
-    --unit-aircraft-fuel-border-width: 2px;
-    --unit-aircraft-fuel-height: 6px;
-    --unit-aircraft-fuel-width: 36px;
-    --unit-aircraft-fuel-x: 0px;
-    --unit-aircraft-fuel-y: 22px;
-    --unit-aircraft-height: 28px;
-    --unit-aircraft-vvi-width: 4px;
+    --unit-ammo-gap: calc(2px + var(--unit-stroke-width));
+    --unit-ammo-border-radius: 50%;
+    --unit-ammo-border-width: 2px;
+    --unit-ammo-radius: 2px;
+    --unit-ammo-spacing: 2px;
+    --unit-ammo-x: 0px;
+    --unit-ammo-y: 30px;
+    --unit-fuel-border-width: 2px;
+    --unit-fuel-height: 6px;
+    --unit-fuel-width: 36px;
+    --unit-fuel-x: 0px;
+    --unit-fuel-y: 22px;
+    --unit-vvi-width: 4px;
 }

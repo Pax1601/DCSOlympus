@@ -1,6 +1,5 @@
 import { LatLng } from 'leaflet';
-import { getConnectionStatusPanel, getInfoPopup, getMissionData, getUnitDataTable, getUnitsManager, setConnectionStatus } from '..';
-import { SpawnOptions } from '../controls/mapcontextmenu';
+import { getConnectionStatusPanel, getInfoPopup, getMissionData, getUnitDataTable, getUnitsManager, setLoginStatus } from '..';
 import { GeneralSettings, Radio, TACAN } from '../@types/unit';
 import { ROEs, emissionsCountermeasures, reactionsToThreat } from '../constants/constants';
 
@@ -16,7 +15,7 @@ const BULLSEYE_URI = "bullseyes";
 const MISSION_URI = "mission";
 
 var username = "";
-var credentials = "";
+var password = "";
 
 var sessionHash: string | null = null;
 var lastUpdateTime = 0;
@@ -26,12 +25,12 @@ export function toggleDemoEnabled() {
     demoEnabled = !demoEnabled;
 }
 
-export function setCredentials(newUsername: string, newCredentials: string) {
+export function setCredentials(newUsername: string, newPassword: string) {
     username = newUsername;
-    credentials = newCredentials;
+    password = newPassword;
 }
 
-export function GET(callback: CallableFunction, uri: string, options?: { time?: number }) {
+export function GET(callback: CallableFunction, uri: string, options?: { time?: number }, responseType?: string) {
     var xmlHttp = new XMLHttpRequest();
 
     /* Assemble the request options string */
@@ -39,26 +38,31 @@ export function GET(callback: CallableFunction, uri: string, options?: { time?: 
     if (options?.time != undefined)
         optionsString = `time=${options.time}`;
 
+    /* On the connection */
     xmlHttp.open("GET", `${demoEnabled ? DEMO_ADDRESS : REST_ADDRESS}/${uri}${optionsString ? `?${optionsString}` : ''}`, true);
-    if (credentials)
-        xmlHttp.setRequestHeader("Authorization", "Basic " + credentials);
 
-    if (uri === UNITS_URI)
-        xmlHttp.responseType = "arraybuffer";
+    /* If provided, set the credentials */
+    if (username && password)
+        xmlHttp.setRequestHeader("Authorization", "Basic " + btoa(`${username}:${password}`));
+
+    /* If specified, set the response type */
+    if (responseType)
+        xmlHttp.responseType = responseType as XMLHttpRequestResponseType;
 
     xmlHttp.onload = function (e) {
         if (xmlHttp.status == 200) {
+            /* Success */
             setConnected(true);
             if (xmlHttp.responseType == 'arraybuffer')
                 callback(xmlHttp.response);
-            else {
-                var data = JSON.parse(xmlHttp.responseText);
-                callback(data);
-            }
+            else 
+                callback(JSON.parse(xmlHttp.responseText));
         } else if (xmlHttp.status == 401) {
+            /* Bad credentials */
             console.error("Incorrect username/password");
-            setConnectionStatus("failed");
+            setLoginStatus("failed");
         } else {
+            /* Failure, probably disconnected */
             setConnected(false);
         }
     };
@@ -73,8 +77,8 @@ export function POST(request: object, callback: CallableFunction) {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open("PUT", demoEnabled ? DEMO_ADDRESS : REST_ADDRESS);
     xmlHttp.setRequestHeader("Content-Type", "application/json");
-    if (credentials)
-        xmlHttp.setRequestHeader("Authorization", "Basic " + credentials);
+    if (username && password)
+        xmlHttp.setRequestHeader("Authorization", "Basic " + btoa(`${username}:${password}`));
     xmlHttp.onreadystatechange = () => {
         callback();
     };
@@ -120,7 +124,7 @@ export function getMission(callback: CallableFunction) {
 }
 
 export function getUnits(callback: CallableFunction, refresh: boolean = false) {
-    GET(callback, `${UNITS_URI}`, { time: refresh ? 0 : lastUpdateTime });
+    GET(callback, `${UNITS_URI}`, { time: refresh ? 0 : lastUpdateTime }, 'arraybuffer');
 }
 
 export function addDestination(ID: number, path: any) {
@@ -141,15 +145,27 @@ export function spawnExplosion(intensity: number, latlng: LatLng) {
     POST(data, () => { });
 }
 
-export function spawnGroundUnit(spawnOptions: SpawnOptions) {
-    var command = { "type": spawnOptions.name, "location": spawnOptions.latlng, "coalition": spawnOptions.coalition, "immediate": spawnOptions.immediate? true: false };
-    var data = { "spawnGround": command }
+export function spawnAircrafts(units: any, coalition: string, airbaseName: string, immediate: boolean) {
+    var command = { "units": units, "coalition": coalition, "airbaseName": airbaseName, "immediate": immediate };
+    var data = { "spawnAircrafts": command }
     POST(data, () => { });
 }
 
-export function spawnAircraft(spawnOptions: SpawnOptions) {
-    var command = { "type": spawnOptions.name, "location": spawnOptions.latlng, "coalition": spawnOptions.coalition, "altitude": spawnOptions.altitude, "payloadName": spawnOptions.loadout != null ? spawnOptions.loadout : "", "airbaseName": spawnOptions.airbaseName != null ? spawnOptions.airbaseName : "", "immediate": spawnOptions.immediate? true: false };
-    var data = { "spawnAir": command }
+export function spawnHelicopters(units: any, coalition: string, airbaseName: string, immediate: boolean) {
+    var command = { "units": units, "coalition": coalition, "airbaseName": airbaseName, "immediate": immediate };
+    var data = { "spawnHelicopter": command }
+    POST(data, () => { });
+}
+
+export function spawnGroundUnits(units: any, coalition: string, immediate: boolean) {
+    var command = { "units": units, "coalition": coalition, "immediate": immediate };
+    var data = { "spawnGroundUnits": command }
+    POST(data, () => { });
+}
+
+export function spawnNavyUnits(units: any, coalition: string, immediate: boolean) {
+    var command = { "units": units, "coalition": coalition, "immediate": immediate };
+    var data = { "spawnNavyUnits": command }
     POST(data, () => { });
 }
 
@@ -319,11 +335,9 @@ export function startUpdate() {
 
 export function requestUpdate() {
     /* Main update rate = 250ms is minimum time, equal to server update time. */
-    getUnits((buffer: ArrayBuffer) => {
-        if (!getPaused()) {
-            getUnitsManager()?.update(buffer);
-        }
-    }, false);
+    if (!getPaused()) {
+        getUnits((buffer: ArrayBuffer) => { getUnitsManager()?.update(buffer); }, false);
+    }
     window.setTimeout(() => requestUpdate(), getConnected() ? 250 : 1000);
 
     getConnectionStatusPanel()?.update(getConnected());
@@ -331,7 +345,6 @@ export function requestUpdate() {
 
 export function requestRefresh() {
     /* Main refresh rate = 5000ms. */
-    
     if (!getPaused()) {
         getAirbases((data: AirbasesData) => getMissionData()?.update(data));
         getBullseye((data: BullseyesData) => getMissionData()?.update(data));

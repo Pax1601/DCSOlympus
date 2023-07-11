@@ -36,7 +36,7 @@ export class UnitControlPanel extends Panel {
         /* Option buttons */
         // Reversing the ROEs so that the least "aggressive" option is always on the left
         this.#optionButtons["ROE"] = ROEs.slice(0).reverse().map((option: string, index: number) => {
-            return this.#createOptionButton(option, `roe/${option.toLowerCase()}.svg`, ROEDescriptions[index], () => { getUnitsManager().selectedUnitsSetROE(option); });
+            return this.#createOptionButton(option, `roe/${option.toLowerCase()}.svg`, ROEDescriptions.slice(0).reverse()[index], () => { getUnitsManager().selectedUnitsSetROE(option); });
         });
 
         this.#optionButtons["reactionToThreat"] = reactionsToThreat.map((option: string, index: number) => {
@@ -209,7 +209,7 @@ export class UnitControlPanel extends Panel {
             const radioCallsignNumberInput = this.#advancedSettingsDialog.querySelector("#radio-callsign-number")?.querySelector("input") as HTMLInputElement;
             
             const unit = units[0];
-            const roles = aircraftDatabase.getByName(unit.getName())?.loadouts.map((loadout) => {return loadout.roles})
+            const roles = aircraftDatabase.getByName(unit.getName())?.loadouts?.map((loadout) => {return loadout.roles})
             const tanker = roles != undefined && Array.prototype.concat.apply([], roles)?.includes("Tanker");
             const AWACS = roles != undefined && Array.prototype.concat.apply([], roles)?.includes("AWACS");
             const radioMHz = Math.floor(unit.getRadio().frequency / 1000000);

@@ -1,4 +1,16 @@
-import { LatLng, LatLngBounds, TileLayer, tileLayer } from "leaflet";
+import { LatLng, LatLngBounds } from "leaflet";
+
+export const HIDE_ALL = "Hide all";
+export const GAME_MASTER = "Game master";
+export const BLUE_COMMANDER = "Blue commander";
+export const RED_COMMANDER = "Red commander";
+
+export const VISUAL = 1;
+export const OPTIC  = 2;
+export const RADAR  = 4;
+export const IRST   = 8;
+export const RWR    = 16;
+export const DLINK  = 32;
 
 export const states: string[] = ["none", "idle", "reach-destination", "attack", "follow", "land", "refuel", "AWACS", "tanker", "bomb-point", "carpet-bomb", "bomb-building", "fire-at-area"];
 export const ROEs: string[] = ["free", "designated", "return", "hold"];
@@ -127,11 +139,11 @@ export const BOMBING = "Bombing";
 export const CARPET_BOMBING = "Carpet bombing";
 export const FIRE_AT_AREA = "Fire at area";
 export const COALITIONAREA_DRAW_POLYGON = "Draw Coalition Area";
-export const COALITIONAREA_INTERACT = "Interact with Coalition Areas"
 export const visibilityControls: string[] = ["human", "dcs", "aircraft", "groundunit-sam", "groundunit-other", "navyunit", "airbase"];
 export const visibilityControlsTootlips: string[] = ["Toggle human players visibility", "Toggle DCS controlled units visibility", "Toggle aircrafts visibility", "Toggle SAM units visibility", "Toggle ground units (not SAM) visibility", "Toggle navy units visibility", "Toggle airbases visibility"];
 
-export const IADSRoles: {[key: string]: number}= {"AAA": 0.8, "MANPADS": 0.3, "SAM Sites": 0.1, "Radar": 0.05};
+export const IADSTypes = ["AAA", "MANPADS", "SAM Sites", "Radar"];
+export const IADSDensities: {[key: string]: number}= {"AAA": 0.8, "MANPADS": 0.3, "SAM Sites": 0.1, "Radar": 0.05};
 
 export enum DataIndexes {
     startOfData = 0,

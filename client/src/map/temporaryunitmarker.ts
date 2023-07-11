@@ -1,19 +1,20 @@
 import { CustomMarker } from "./custommarker";
-import { SpawnOptions } from "../controls/mapcontextmenu";
-import { DivIcon } from "leaflet";
+import { DivIcon, LatLng } from "leaflet";
 import { SVGInjector } from "@tanem/svg-injector";
 import { getMarkerCategoryByName, getUnitDatabaseByCategory } from "../other/utils";
 
 export class TemporaryUnitMarker extends CustomMarker {
-    #spawnOptions: SpawnOptions;
+    #name: string;
+    #coalition: string;
 
-    constructor(spawnOptions: SpawnOptions) {
-        super(spawnOptions.latlng, {interactive: false});
-        this.#spawnOptions = spawnOptions;
+    constructor(latlng: LatLng, name: string, coalition: string) {
+        super(latlng, {interactive: false});
+        this.#name = name;
+        this.#coalition = coalition;
     }
 
     createIcon() {
-        const category = getMarkerCategoryByName(this.#spawnOptions.name);
+        const category = getMarkerCategoryByName(this.#name);
 
         /* Set the icon */
         var icon = new DivIcon({
@@ -26,7 +27,7 @@ export class TemporaryUnitMarker extends CustomMarker {
         var el = document.createElement("div");
         el.classList.add("unit");
         el.setAttribute("data-object", `unit-${category}`);
-        el.setAttribute("data-coalition", this.#spawnOptions.coalition);
+        el.setAttribute("data-coalition", this.#coalition);
 
         // Main icon
         var unitIcon = document.createElement("div");
@@ -42,7 +43,7 @@ export class TemporaryUnitMarker extends CustomMarker {
         if (category == "aircraft" || category == "helicopter") {
             var shortLabel = document.createElement("div");
             shortLabel.classList.add("unit-short-label");
-            shortLabel.innerText = getUnitDatabaseByCategory(category)?.getByName(this.#spawnOptions.name)?.shortLabel || ""; 
+            shortLabel.innerText = getUnitDatabaseByCategory(category)?.getByName(this.#name)?.shortLabel || ""; 
             el.append(shortLabel);
         }
 

@@ -812,16 +812,16 @@ nav.ol-panel> :last-child {
     font-weight: bold;
 }
 
-#connection-status {
+#login-status {
     margin-bottom: 5px;
 }
 
-#connection-status[data-status="connecting"]::before {
+#login-status[data-status="connecting"]::before {
     animation: blinker 1s linear infinite;
     content: "Connecting...";
 }
 
-#connection-status[data-status="failed"]::before {
+#login-status[data-status="failed"]::before {
     color: var(--primary-red);
     content: "Incorrect username/password!";
 }
@@ -863,6 +863,19 @@ nav.ol-panel> :last-child {
 .hotgroup-selector>.unit-hotgroup {
     display: flex;
     translate: 0% -300%;
+}
+
+#visibiliy-mode {
+    font-size: 14px;
+    font-weight: bolder;
+}
+
+#visibiliy-mode[data-mode="Blue commander"] {
+    color: var(--primary-blue);
+}
+
+#visibiliy-mode[data-mode="Red commander"] {
+    color: var(--primary-red);
 }
 
 .ol-destination-preview-icon {
@@ -1182,14 +1195,6 @@ input[type=number]::-webkit-outer-spin-button {
 	background-color: var(--primary-neutral);
 }
 
-.ol-context-menu>div:nth-child(2) {
-    align-items: center;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    padding-right: 0px;
-}
-
 .ol-context-menu>ul {
     max-height: 200px;
     overflow-x: hidden;
@@ -1205,20 +1210,11 @@ input[type=number]::-webkit-outer-spin-button {
     margin: 0px;
 }
 
-.ol-context-menu>div:nth-child(n+3) {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    row-gap: 5px;
-}
-
 .ol-context-menu .ol-select-container {
     align-self: stretch;
     flex: 0 0 auto;
     width: 100%;
 }
-
 
 .ol-contexmenu-button {
     border: none;

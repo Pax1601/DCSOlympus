@@ -39,6 +39,7 @@ bool UnitsManager::isUnitInGroup(Unit* unit)
 {
 	if (unit != nullptr) {
 		string groupName = unit->getGroupName();
+		if (groupName.length() == 0) return false;
 		for (auto const& p : units)
 		{
 			if (p.second->getGroupName().compare(groupName) == 0 && p.second != unit)
@@ -50,8 +51,10 @@ bool UnitsManager::isUnitInGroup(Unit* unit)
 
 bool UnitsManager::isUnitGroupLeader(Unit* unit) 
 {
-	if (unit != nullptr)
-		return unit == getGroupLeader(unit);
+	if (unit != nullptr) {
+		Unit* leader = getGroupLeader(unit);
+		return leader == nullptr? false: unit == getGroupLeader(unit);
+	}
 	else
 		return false;
 }
@@ -61,7 +64,7 @@ Unit* UnitsManager::getGroupLeader(Unit* unit)
 {
 	if (unit != nullptr) {
 		string groupName = unit->getGroupName();
-
+		if (groupName.length() == 0) return nullptr;
 		/* Find the first unit that has the same groupName */
 		for (auto const& p : units)
 		{

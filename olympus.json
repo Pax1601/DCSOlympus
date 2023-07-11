@@ -4,6 +4,8 @@
 		"port": 30000
 	},
 	"authentication": {
-		"password": "password"
+		"gameMasterPassword": "password",
+		"blueCommanderPassword": "bluepassword",
+		"redCommanderPassword": "redpassword"
 	}
 }

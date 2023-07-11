@@ -151,13 +151,13 @@ private:
 };
 
 /* Spawn ground unit command */
-class SpawnGroundUnit : public Command
+class SpawnGroundUnits : public Command
 {
 public:
-	SpawnGroundUnit(string coalition, string unitType, Coords location, bool immediate) :  
+	SpawnGroundUnits(string coalition, vector<string> unitTypes, vector<Coords> locations, bool immediate) :
 		coalition(coalition), 
-		unitType(unitType), 
-		location(location),
+		unitTypes(unitTypes), 
+		locations(locations),
 		immediate(immediate)
 	{ 
 		priority = immediate? CommandPriority::IMMEDIATE: CommandPriority::LOW;
@@ -167,20 +167,20 @@ public:
 
 private:
 	const string coalition;
-	const string unitType;
-	const Coords location;
+	const vector<string> unitTypes;
+	const vector<Coords> locations;
 	const bool immediate;
 };
 
 /* Spawn air unit command */
-class SpawnAircraft : public Command
+class SpawnAircrafts : public Command
 {
 public:
-	SpawnAircraft(string coalition, string unitType, Coords location, string payloadName, string airbaseName, bool immediate) :
+	SpawnAircrafts(string coalition, vector<string> unitTypes, vector<Coords> locations, vector<string> loadouts, string airbaseName, bool immediate) :
 		coalition(coalition), 
-		unitType(unitType), 
-		location(location),
-		payloadName(payloadName),
+		unitTypes(unitTypes), 
+		locations(locations),
+		loadouts(loadouts),
 		airbaseName(airbaseName),
 		immediate(immediate)
 	{ 
@@ -191,9 +191,9 @@ public:
 
 private:
 	const string coalition;
-	const string unitType;
-	const Coords location;
-	const string payloadName;
+	const vector<string> unitTypes;
+	const vector<Coords> locations;
+	const vector<string> loadouts;
 	const string airbaseName;
 	const bool immediate;
 };

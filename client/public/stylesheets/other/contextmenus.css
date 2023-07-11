@@ -4,15 +4,38 @@
     height: fit-content;
     position: absolute;
     row-gap: 5px;
-    width: 280px;
+    width: 300px;
     z-index: 9999;
 }
 
-#aircraft-spawn-menu {
-    height: fit-content;
+#map-contextmenu>div:nth-child(2) {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-right: 0px;
 }
 
-#ground-unit-spawn-menu {
+#map-contextmenu>div:nth-child(3) {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-right: 0px;
+}
+
+#map-contextmenu>div:nth-child(n+4) {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    row-gap: 5px;
+}
+
+#aircraft-spawn-menu,
+#helicopter-spawn-menu,
+#groundunit-spawn-menu,
+#navyunit-spawn-menu {
     height: fit-content;
 }
 
@@ -35,35 +58,28 @@
     width: 50px;
 }
 
-#aircraft-spawn-menu .ol-select.is-open .ol-select-options {
+#aircraft-spawn-menu .ol-select.is-open .ol-select-options,
+#helicopter-spawn-menu .ol-select.is-open .ol-select-options {
     max-height: 300px;
 }
 
-#aircraft-spawn-menu>button,
-#ground-unit-spawn-menu>button,
-#iads-menu>button {
+.deploy-unit-button {
+    margin-top: 5px;
     text-align: center;
     width: 100%;
 }
 
-#aircraft-spawn-button {
-    background-image: url("/resources/theme/images/buttons/spawn/aircraft.svg");
-    background-size: 48px;
+.upper-bar svg>* {
+    fill: white;
 }
 
-#ground-ol-contexmenu-button {
-    background-image: url("/resources/theme/images/buttons/spawn/ground.svg");
-    background-size: 48px;
+.upper-bar svg {
+    width: 22px;
+    margin: 0px 5px;
 }
 
-#smoke-spawn-button {
-    background-image: url("/resources/theme/images/buttons/spawn/smoke.svg");
-    background-size: 48px;
-}
-
-#explosion-spawn-button {
-    background-image: url("/resources/theme/images/buttons/spawn/explosion.svg");
-    background-size: 48px;
+.upper-bar button:nth-child(2) {
+    margin-left: auto;
 }
 
 [data-coalition="blue"]#active-coalition-label,
@@ -117,7 +133,8 @@
     content: "Create neutral unit";
 }
 
-#loadout-preview {
+#aircraft-loadout-preview,
+#helicopter-loadout-preview {
     align-content: space-between;
     align-items: center;
     column-gap: 20px;
@@ -126,14 +143,16 @@
     width: 100%;
 }
 
-#loadout-list {
+#aircaft-loadout-list,
+#helicopter-loadout-list  {
     align-content: center;
     display: flex;
     flex-direction: column;
     height: 100%;
 }
 
-#unit-image {
+#aircraft-unit-image,
+#helicopter-unit-image  {
     filter: invert(100%);
     height: 100px;
     margin-bottom: 10px;
@@ -186,15 +205,26 @@
     background-color: orange;
 }
 
-#aircraft-spawn-menu .ol-slider-value {
+.ol-context-menu .ol-slider-value {
 	color: var(--accent-light-blue);
 	cursor: pointer;
 	font-size: 14px;
 	font-weight: bold;
 }
 
-#aircraft-spawn-altitude-slider {
+.ol-context-menu .ol-slider-container {
     padding: 0px 10px;
+}
+
+.contextmenu-options-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 10px;
+}
+
+.contextmenu-options-container>*:nth-child(2) {
+    width: 120px;
 }
 
 /* Unit context menu */
@@ -350,7 +380,7 @@
     height: fit-content;
     position: absolute;
     row-gap: 5px;
-    width: 250px;
+    width: 300px;
     z-index: 9999;
 }
 
@@ -360,28 +390,12 @@
     width: 50px;
 }
 
-#iads-button {
-    background-image: url("/resources/theme/images/buttons/spawn/sam.svg");
-    background-size: 48px;
-}
-
-#cap-button {
-    background-image: url("/resources/theme/images/buttons/spawn/aircraft.svg");
-    background-size: 48px;
-}
-
-#coalitionarea-back-button {
-    background-image: url("/resources/theme/images/buttons/other/back.svg");
-    background-size: 48px;
-}
-
-#coalitionarea-delete-button {
-    background-image: url("/resources/theme/images/buttons/other/delete.svg");
-    background-size: 48px;
-}
-
 #coalition-area-contextmenu .ol-checkbox {
     align-self: flex-start;
+}
+
+#coalition-units-checkbox {
+    padding: 10px 10px;
 }
 
 #iads-menu .ol-select-options>* {
@@ -403,4 +417,26 @@
 
 #iads-menu {
     row-gap: 10px;
+}
+
+#coalition-area-contextmenu>div:nth-child(2) {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-right: 0px;
+}
+
+#coalition-area-contextmenu>div:nth-child(n+3) {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    row-gap: 5px;
+}
+
+.create-iads-button {
+    margin-top: 5px;
+    text-align: center;
+    width: 100%;
 }

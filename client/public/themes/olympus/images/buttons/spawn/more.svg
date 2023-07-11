@@ -5,7 +5,7 @@
    viewBox="0 0 32 32"
    version="1.1"
    id="svg8"
-   sodipodi:docname="aircraft.svg"
+   sodipodi:docname="unit.svg"
    inkscape:version="1.2.2 (732a01da63, 2022-12-09)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -42,9 +42,9 @@
      inkscape:window-height="1017"
      id="namedview10"
      showgrid="false"
-     inkscape:zoom="18.782524"
-     inkscape:cx="26.114701"
-     inkscape:cy="15.493125"
+     inkscape:zoom="9.391262"
+     inkscape:cx="25.715394"
+     inkscape:cy="24.171405"
      inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
@@ -52,9 +52,19 @@
      inkscape:showpageshadow="2"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1" />
-  <path
-     d="m 25.924821,12.489287 c 1.68985,0 4.671853,1.44138 4.671853,3.180851 0,1.789275 -2.982003,3.180853 -4.671853,3.180853 h -5.81496 l -4.970125,8.747341 c -0.298273,0.496938 -0.845015,0.795212 -1.391577,0.795212 h -2.783336 c -0.546743,0 -0.944259,-0.496941 -0.795213,-0.994063 l 2.435441,-8.54849 H 7.5355007 L 5.348676,21.733567 C 5.1995608,21.932416 5.0007624,22.031842 4.7522572,22.031842 H 2.6648175 c -0.3976052,0 -0.6958054,-0.298275 -0.6958054,-0.695789 0,-0.04981 0,-0.09943 0,-0.149048 l 1.590426,-5.516867 -1.590426,-5.467065 c 0,-0.04981 0,-0.09943 0,-0.198849 0,-0.3478937 0.2982002,-0.6957888 0.6958054,-0.6957888 h 2.0874397 c 0.2485052,0 0.4473003,0.1490479 0.5964188,0.3478951 L 7.5355007,12.489287 H 12.605051 L 10.16961,3.9904523 C 10.020569,3.4934397 10.41808,2.9467331 10.964823,2.9467331 h 2.783336 c 0.546562,0 1.093304,0.3479124 1.391577,0.8449069 l 4.970125,8.697647 z"
-     fill="#202831"
-     id="path4"
-     style="fill-opacity:1;stroke-width:1.81764" />
+  <rect
+     id="rect894"
+     width="5.696785"
+     height="22.699497"
+     x="13.203763"
+     y="4.5254831"
+     ry="1.6436043" />
+  <rect
+     id="rect894-7"
+     width="5.696785"
+     height="22.699497"
+     x="12.751214"
+     y="-27.588247"
+     ry="1.6436043"
+     transform="rotate(90)" />
 </svg>

@@ -1,12 +1,12 @@
-import { Marker, LatLng, Polyline, Icon, DivIcon, CircleMarker, Map } from 'leaflet';
+import { Marker, LatLng, Polyline, Icon, DivIcon, CircleMarker, Map, Point } from 'leaflet';
 import { getMap, getUnitsManager } from '..';
-import { enumToCoalition, enumToEmissioNCountermeasure, getMarkerCategoryByName, enumToROE, enumToReactionToThreat, enumToState, getUnitDatabaseByCategory, mToFt, msToKnots, rad2deg } from '../other/utils';
-import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, getUnits, landAt, setAltitude, setReactionToThreat, setROE, setSpeed, refuel, setAdvacedOptions, followUnit, setEmissionsCountermeasures, setSpeedType, setAltitudeType, setOnOff, setFollowRoads, bombPoint, carpetBomb, bombBuilding, fireAtArea } from '../server/server';
+import { enumToCoalition, enumToEmissioNCountermeasure, getMarkerCategoryByName, enumToROE, enumToReactionToThreat, enumToState, getUnitDatabaseByCategory, mToFt, msToKnots, rad2deg, bearing, deg2rad } from '../other/utils';
+import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, landAt, setAltitude, setReactionToThreat, setROE, setSpeed, refuel, setAdvacedOptions, followUnit, setEmissionsCountermeasures, setSpeedType, setAltitudeType, setOnOff, setFollowRoads, bombPoint, carpetBomb, bombBuilding, fireAtArea } from '../server/server';
 import { CustomMarker } from '../map/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
 import { UnitDatabase } from './unitdatabase';
 import { TargetMarker } from '../map/targetmarker';
-import { BOMBING, CARPET_BOMBING, DataIndexes, FIRE_AT_AREA, IDLE, MOVE_UNIT, ROEs, emissionsCountermeasures, reactionsToThreat, states } from '../constants/constants';
+import { BLUE_COMMANDER, BOMBING, CARPET_BOMBING, DLINK, DataIndexes, FIRE_AT_AREA, GAME_MASTER, HIDE_ALL, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, RED_COMMANDER, ROEs, RWR, VISUAL, emissionsCountermeasures, reactionsToThreat, states } from '../constants/constants';
 import { Ammo, Contact, GeneralSettings, Offset, Radio, TACAN, UnitIconOptions } from '../@types/unit';
 import { DataExtractor } from './dataextractor';
 
@@ -88,6 +88,7 @@ export class Unit extends CustomMarker {
     #targetPositionPolyline: Polyline;
     #timer: number = 0;
     #hotgroup: number | null = null;
+    #detectionMethods: number[] = [];
 
     getAlive() {return this.#alive};
     getHuman() {return this.#human};
@@ -222,6 +223,10 @@ export class Unit extends CustomMarker {
         if (updateMarker)
             this.#updateMarker();
 
+        document.dispatchEvent(new CustomEvent("unitUpdated", { detail: this }));
+    }
+
+    drawLines() {
         // TODO dont delete the polylines of the detected units
         this.#clearContacts();
         if (this.getSelected()) {
@@ -233,8 +238,6 @@ export class Unit extends CustomMarker {
             this.#clearPath();
             this.#clearTarget();
         }
-
-        document.dispatchEvent(new CustomEvent("unitUpdated", { detail: this }));
     }
 
     getData() {
@@ -296,7 +299,8 @@ export class Unit extends CustomMarker {
             showShortLabel: false,
             showFuel: false,
             showAmmo: false,
-            showSummary: false,
+            showSummary: true,
+            showCallsign: true,
             rotateToHeading: false
         }
     }
@@ -309,7 +313,7 @@ export class Unit extends CustomMarker {
 
     setSelected(selected: boolean) {
         /* Only alive units can be selected. Some units are not selectable (weapons) */
-        if ((this.#alive || !selected) && this.getSelectable() && this.getSelected() != selected) {
+        if ((this.#alive || !selected) && this.getSelectable() && this.getSelected() != selected && this.belongsToCommandedCoalition()) {
             this.#selected = selected;
             this.getElement()?.querySelector(`[data-object|="unit"]`)?.toggleAttribute("data-is-selected", selected);
             if (selected) {
@@ -360,6 +364,16 @@ export class Unit extends CustomMarker {
 
     getGroupMembers() {
         return Object.values(getUnitsManager().getUnits()).filter((unit: Unit) => { return unit != this && unit.#groupName === this.#groupName; });
+    }
+
+    belongsToCommandedCoalition() {
+        if (getUnitsManager().getCommandMode() === HIDE_ALL)
+            return false;
+        if (getUnitsManager().getCommandMode() === BLUE_COMMANDER && this.#coalition !== "blue")
+            return false;
+        if (getUnitsManager().getCommandMode() === RED_COMMANDER && this.#coalition !== "red")
+            return false;
+        return true;        
     }
 
     /********************** Icon *************************/
@@ -453,7 +467,7 @@ export class Unit extends CustomMarker {
             altitude.classList.add("unit-altitude");
             var speed = document.createElement("div");
             speed.classList.add("unit-speed");
-            summary.appendChild(callsign);
+            if (this.getIconOptions().showCallsign) summary.appendChild(callsign);
             summary.appendChild(altitude);
             summary.appendChild(speed);
             el.appendChild(summary);
@@ -468,12 +482,17 @@ export class Unit extends CustomMarker {
         const hiddenUnits = getUnitsManager().getHiddenTypes();
         if (this.#human && hiddenUnits.includes("human"))
             hidden = true;
-        else if (this.#controlled == false && hiddenUnits.includes("dcs"))
+        if (this.#controlled == false && hiddenUnits.includes("dcs"))
             hidden = true;
-        else if (hiddenUnits.includes(this.getMarkerCategory()))
+        if (hiddenUnits.includes(this.getMarkerCategory()))
             hidden = true;
-        else if (hiddenUnits.includes(this.#coalition))
+        if (hiddenUnits.includes(this.#coalition))
             hidden = true;
+        if (getUnitsManager().getCommandMode() === HIDE_ALL)
+            hidden = true;
+        if (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0) {
+            hidden = true;
+        }
         this.setHidden(hidden || !this.#alive);
     }
 
@@ -495,6 +514,22 @@ export class Unit extends CustomMarker {
         return this.#hidden;
     }
 
+    setDetectionMethods(newDetectionMethods: number[]) {
+        if (!this.belongsToCommandedCoalition()) {
+            /* Check if the detection methods of this unit have changed */
+            if (this.#detectionMethods.length !== newDetectionMethods.length || this.getDetectionMethods().some(value => !newDetectionMethods.includes(value))) {
+                /* Force a redraw of the unit to reflect the new status of the detection methods */
+                this.setHidden(true);
+                this.#detectionMethods = newDetectionMethods;
+                this.updateVisibility();
+            }
+        }
+    }
+
+    getDetectionMethods() {
+        return this.#detectionMethods;
+    }
+
     getLeader() {
         return getUnitsManager().getUnitByID(this.#leaderID);
     }
@@ -503,9 +538,13 @@ export class Unit extends CustomMarker {
         if (typeof (roles) === "string")
             roles = [roles];
 
-        return this.getDatabase()?.getByName(this.#name)?.loadouts.some((loadout: LoadoutBlueprint) => {
-            return (roles as string[]).some((role: string) => { return loadout.roles.includes(role) });
-        });
+        var loadouts = this.getDatabase()?.getByName(this.#name)?.loadouts;
+        if (loadouts) {
+            return loadouts.some((loadout: LoadoutBlueprint) => {
+                return (roles as string[]).some((role: string) => { return loadout.roles.includes(role) });
+            });
+        } else 
+            return false;
     }
 
     /********************** Unit commands *************************/
@@ -696,7 +735,7 @@ export class Unit extends CustomMarker {
         }
 
         if (Object.keys(options).length > 0) {
-            getMap().showUnitContextMenu(e);
+            getMap().showUnitContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng);
             getMap().getUnitContextMenu().setOptions(options, (option: string) => {
                 getMap().hideUnitContextMenu();
                 this.#executeAction(e, option);
@@ -739,7 +778,8 @@ export class Unit extends CustomMarker {
             getMap().hideUnitContextMenu();
             this.#applyFollowOptions(option);
         });
-        getMap().showUnitContextMenu(e);
+        
+        getMap().showUnitContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng);
     }
 
     #applyFollowOptions(action: string) {
@@ -758,7 +798,8 @@ export class Unit extends CustomMarker {
         this.updateVisibility();
 
         /* Draw the minimap marker */
-        if (this.#alive) {
+        var drawMiniMapMarker = (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value)));
+        if (this.#alive && drawMiniMapMarker) {
             if (this.#miniMapMarker == null) {
                 this.#miniMapMarker = new CircleMarker(new LatLng(this.#position.lat, this.#position.lng), { radius: 0.5 });
                 if (this.#coalition == "neutral")
@@ -912,19 +953,28 @@ export class Unit extends CustomMarker {
             var contactData = this.#contacts[index];
             var contact = getUnitsManager().getUnitByID(contactData.ID)
             if (contact != null) {
-                var startLatLng = new LatLng(this.#position.lat, this.#position.lng)
-                var endLatLng = new LatLng(contact.#position.lat, contact.#position.lng)
+                var startLatLng = new LatLng(this.#position.lat, this.#position.lng);
+                var endLatLng: LatLng;
+                if (contactData.detectionMethod === RWR) {
+                    var bearingToContact = bearing(this.#position.lat, this.#position.lng, contact.#position.lat, contact.#position.lng);
+                    var startXY = getMap().latLngToContainerPoint(startLatLng);
+                    var endX = startXY.x + 80 * Math.sin(deg2rad(bearingToContact));
+                    var endY = startXY.y - 80 * Math.cos(deg2rad(bearingToContact));
+                    endLatLng = getMap().containerPointToLatLng(new Point(endX, endY));
+                }
+                else
+                    endLatLng = new LatLng(contact.#position.lat, contact.#position.lng);
 
                 var color;
-                if (contactData.detectionMethod === 1)
+                if (contactData.detectionMethod === VISUAL || contactData.detectionMethod === OPTIC)
                     color = "#FF00FF";
-                else if (contactData.detectionMethod === 4)
+                else if (contactData.detectionMethod === RADAR || contactData.detectionMethod === IRST)
                     color = "#FFFF00";
-                else if (contactData.detectionMethod === 16)
+                else if (contactData.detectionMethod === RWR)
                     color = "#00FF00";
                 else
                     color = "#FFFFFF";
-                var contactPolyline = new Polyline([startLatLng, endLatLng], { color: color, weight: 3, opacity: 0.4, smoothFactor: 1, dashArray: "4, 8" });
+                var contactPolyline = new Polyline([startLatLng, endLatLng], { color: color, weight: 3, opacity: 1, smoothFactor: 1, dashArray: "4, 8" });
                 contactPolyline.addTo(getMap());
                 this.#contactsPolylines.push(contactPolyline)
             }
@@ -941,10 +991,11 @@ export class Unit extends CustomMarker {
         if (this.#targetPosition.lat != 0 && this.#targetPosition.lng != 0) {
             this.#drawtargetPosition(this.#targetPosition);
         }
-        else if (this.#targetID != 0 && getUnitsManager().getUnitByID(this.#targetID)) {
-            const position = getUnitsManager().getUnitByID(this.#targetID)?.getPosition();
-            if (position)
-                this.#drawtargetPosition(position);
+        else if (this.#targetID != 0) {
+            const target = getUnitsManager().getUnitByID(this.#targetID);
+            if (target && (getUnitsManager().getCommandMode() == GAME_MASTER || (this.belongsToCommandedCoalition() && getUnitsManager().getUnitDetectedMethods(target).some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))))) {
+                this.#drawtargetPosition(target.getPosition());
+            }
         }
         else
             this.#clearTarget();
@@ -971,14 +1022,15 @@ export class Unit extends CustomMarker {
 export class AirUnit extends Unit {
     getIconOptions() {
         return {
-            showState: true,
-            showVvi: true,
-            showHotgroup: true,
-            showUnitIcon: true,
-            showShortLabel: true,
-            showFuel: true,
-            showAmmo: true,
-            showSummary: true,
+            showState: this.belongsToCommandedCoalition(),
+            showVvi: (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
+            showHotgroup: this.belongsToCommandedCoalition(),
+            showUnitIcon: (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
+            showShortLabel: (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC].includes(value))),
+            showFuel: this.belongsToCommandedCoalition(),
+            showAmmo: this.belongsToCommandedCoalition(),
+            showSummary: (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
+            showCallsign: this.belongsToCommandedCoalition(),
             rotateToHeading: false
         };
     }
@@ -1011,14 +1063,15 @@ export class GroundUnit extends Unit {
 
     getIconOptions() {
         return {
-            showState: true,
+            showState: this.belongsToCommandedCoalition(),
             showVvi: false,
-            showHotgroup: true,
-            showUnitIcon: true,
+            showHotgroup: this.belongsToCommandedCoalition(),
+            showUnitIcon: (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
             showShortLabel: false,
             showFuel: false,
             showAmmo: false,
             showSummary: false,
+            showCallsign: this.belongsToCommandedCoalition(),
             rotateToHeading: false
         };
     }
@@ -1035,16 +1088,21 @@ export class NavyUnit extends Unit {
 
     getIconOptions() {
         return {
-            showState: true,
+            showState: this.belongsToCommandedCoalition(),
             showVvi: false,
             showHotgroup: true,
-            showUnitIcon: true,
-            showShortLabel: true,
+            showUnitIcon: (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
+            showShortLabel: false,
             showFuel: false,
             showAmmo: false,
             showSummary: false,
+            showCallsign: this.belongsToCommandedCoalition(),
             rotateToHeading: false
         };
+    }
+
+    getMarkerCategory() {
+        return "navyunit";
     }
 
     getCategory() {
@@ -1068,6 +1126,7 @@ export class Weapon extends Unit {
             showFuel: false,
             showAmmo: false,
             showSummary: false,
+            showCallsign: false,
             rotateToHeading: true
         };
     }

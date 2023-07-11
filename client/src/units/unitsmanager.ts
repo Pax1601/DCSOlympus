@@ -1,13 +1,15 @@
 import { LatLng, LatLngBounds } from "leaflet";
 import { getHotgroupPanel, getInfoPopup, getMap, getMissionHandler } from "..";
 import { Unit } from "./unit";
-import { cloneUnit, setLastUpdateTime, spawnGroundUnit } from "../server/server";
-import { deg2rad, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots, polygonArea, randomPointInPoly, randomUnitBlueprintByRole } from "../other/utils";
+import { cloneUnit, setLastUpdateTime, spawnGroundUnits } from "../server/server";
+import { bearingAndDistanceToLatLng, deg2rad, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots, polyContains, polygonArea, randomPointInPoly, randomUnitBlueprint } from "../other/utils";
 import { CoalitionArea } from "../map/coalitionarea";
 import { Airbase } from "../missionhandler/airbase";
-import { groundUnitsDatabase } from "./groundunitsdatabase";
-import { DataIndexes, IADSRoles, IDLE, MOVE_UNIT } from "../constants/constants";
+import { groundUnitDatabase } from "./groundunitdatabase";
+import { DataIndexes, HIDE_ALL, IADSDensities, IDLE, MOVE_UNIT } from "../constants/constants";
 import { DataExtractor } from "./dataextractor";
+import { Contact } from "../@types/unit";
+import { citiesDatabase } from "./citiesDatabase";
 
 export class UnitsManager {
     #units: { [ID: number]: Unit };
@@ -15,6 +17,7 @@ export class UnitsManager {
     #selectionEventDisabled: boolean = false;
     #pasteDisabled: boolean = false;
     #hiddenTypes: string[] = [];
+    #commandMode: string = HIDE_ALL;
 
     constructor() {
         this.#units = {};
@@ -27,6 +30,8 @@ export class UnitsManager {
         document.addEventListener('deleteSelectedUnits', () => this.selectedUnitsDelete());
         document.addEventListener('explodeSelectedUnits', () => this.selectedUnitsDelete(true));
         document.addEventListener('keyup', (event) => this.#onKeyUp(event));
+        document.addEventListener('exportToFile', () => this.exportToFile());
+        document.addEventListener('importFromFile', () => this.importFromFile());
     }
 
     getSelectableAircraft() {
@@ -71,7 +76,7 @@ export class UnitsManager {
     update(buffer: ArrayBuffer) {
         var dataExtractor = new DataExtractor(buffer);
         var updateTime = Number(dataExtractor.extractUInt64());
-
+        var requestRefresh = false;
         while (dataExtractor.getSeekPosition() < buffer.byteLength) {
             const ID = dataExtractor.extractUInt32();
             if (!(ID in this.#units)) {
@@ -81,13 +86,23 @@ export class UnitsManager {
                     this.addUnit(ID, category);
                 }
                 else {
-                    // TODO request a refresh since we must have missed some packets
+                    requestRefresh = true;
                 }
             }
             this.#units[ID]?.setData(dataExtractor);
         }
 
+        for (let ID in this.#units) {
+            var unit = this.#units[ID];
+            if (!unit.belongsToCommandedCoalition())
+                unit.setDetectionMethods(this.getUnitDetectedMethods(unit));
+        }
+
         setLastUpdateTime(updateTime);
+
+        for (let ID in this.#units) {
+            this.#units[ID].drawLines();
+        };
     }
 
     setHiddenType(key: string, value: boolean) {
@@ -102,6 +117,24 @@ export class UnitsManager {
 
     getHiddenTypes() {
         return this.#hiddenTypes;
+    }
+
+    setVisibilityMode(newVisibilityMode: string) {
+        if (newVisibilityMode !== this.#commandMode) {
+            document.dispatchEvent(new CustomEvent("visibilityModeChanged", { detail: this }));
+            const el = document.getElementById("visibiliy-mode");
+            if (el) {
+                el.dataset.mode = newVisibilityMode;
+                el.textContent = newVisibilityMode.toUpperCase();
+            }
+            this.#commandMode = newVisibilityMode;
+            for (let ID in this.#units) 
+                this.#units[ID].updateVisibility();
+        }
+    }
+
+    getCommandMode() {
+        return this.#commandMode;
     }
 
     selectUnit(ID: number, deselectAllUnits: boolean = true) {
@@ -479,6 +512,20 @@ export class UnitsManager {
         this.#showActionMessage(selectedUnits, `unit bombing point`);
     }
 
+    getUnitDetectedMethods(unit: Unit) {
+        var detectionMethods: number[] = [];
+        for (let idx in this.#units) {
+            if (this.#units[idx].getCoalition() !== "neutral" && this.#units[idx].getCoalition() != unit.getCoalition())
+            {
+                this.#units[idx].getContacts().forEach((contact: Contact) => {
+                    if (contact.ID == unit.ID && !detectionMethods.includes(contact.detectionMethod)) 
+                        detectionMethods.push(contact.detectionMethod);
+                });
+            }
+        }
+        return detectionMethods;
+    }
+
     /***********************************************/
     copyUnits() {
         this.#copiedUnits = this.getSelectedUnits(); /* Can be applied to humans too */
@@ -498,29 +545,75 @@ export class UnitsManager {
         }
     }
 
-    createIADS(coalitionArea: CoalitionArea, options: {[key: string]: boolean}, density: number) {
-        const activeRoles = Object.keys(options).filter((key: string) => { return options[key]; }); 
-        const airbases = getMissionHandler().getAirbases();
-        const pointsNumber = polygonArea(coalitionArea) / 1e7 * density / 100;
-        for (let i = 0; i < pointsNumber; i++) {
-            const latlng = randomPointInPoly(coalitionArea);
-            var minDistance: number = Infinity;
-            var maxDistance: number = 0;
-            Object.values(airbases).forEach((airbase: Airbase) => {
-                var distance = airbase.getLatLng().distanceTo(latlng);
-                if (distance < minDistance) minDistance = distance;
-                if (distance > maxDistance) maxDistance = distance;
-            });
+    createIADS(coalitionArea: CoalitionArea, types: {[key: string]: boolean}, eras: {[key: string]: boolean}, ranges: {[key: string]: boolean}, density: number, distribution: number) {
+        const activeTypes = Object.keys(types).filter((key: string) => { return types[key]; }); 
+        const activeEras = Object.keys(eras).filter((key: string) => { return eras[key]; }); 
+        const activeRanges = Object.keys(ranges).filter((key: string) => { return ranges[key]; }); 
 
-            const role = activeRoles[Math.floor(Math.random() * activeRoles.length)];
-            const probability = Math.pow(1 - minDistance / 50e3, 5) * IADSRoles[role];
-            if (Math.random() < probability){
-                const unitBlueprint = randomUnitBlueprintByRole(groundUnitsDatabase, role);
-                const spawnOptions = {role: role, latlng: latlng, name: unitBlueprint.name, coalition: coalitionArea.getCoalition(), immediate: true};
-                spawnGroundUnit(spawnOptions);
-                getMap().addTemporaryMarker(spawnOptions);
+        citiesDatabase.forEach((city: {lat: number, lng: number, pop: number}) => {
+            if (polyContains(new LatLng(city.lat, city.lng), coalitionArea)) {
+                var pointsNumber = 2 + Math.pow(city.pop, 0.2) * density / 100;
+                for (let i = 0; i < pointsNumber; i++) {
+                    var bearing = Math.random() * 360;
+                    var distance = Math.random() * distribution * 100;
+                    const latlng = bearingAndDistanceToLatLng(city.lat, city.lng, bearing, distance);
+                    if (polyContains(latlng, coalitionArea)) {
+                        const type = activeTypes[Math.floor(Math.random() * activeTypes.length)];
+                        if (Math.random() < IADSDensities[type]) {
+                            const unitBlueprint = randomUnitBlueprint(groundUnitDatabase, {type: type, eras: activeEras, ranges: activeRanges});
+                            if (unitBlueprint) {
+                                spawnGroundUnits([{unitType: unitBlueprint.name, location: latlng}], coalitionArea.getCoalition(), true);
+                                getMap().addTemporaryMarker(latlng, unitBlueprint.name, coalitionArea.getCoalition());
+                            }
+                        }
+                    }
+                }
+            }
+        })
+    }
+
+    exportToFile() {
+        var unitsToExport: {[key: string]: any} = {};
+        for (let ID in this.#units) {
+            var unit = this.#units[ID];
+            if (!["Aircraft", "Helicopter"].includes(unit.getCategory())) {
+                var data: any = unit.getData();
+                data.category = unit.getCategory();
+                if (unit.getGroupName() in unitsToExport)
+                    unitsToExport[unit.getGroupName()].push(data);
+                else 
+                    unitsToExport[unit.getGroupName()] = [data];
             }
         }
+        var a = document.createElement("a");
+        var file = new Blob([JSON.stringify(unitsToExport)], {type: 'text/plain'});
+        a.href = URL.createObjectURL(file);
+        a.download = 'export.json';
+        a.click();
+    }
+
+    importFromFile() {
+        var input = document.createElement("input");
+        input.type = "file";
+        input.addEventListener("change", (e: any) => {
+            var file = e.target.files[0];
+            if (!file) {
+                return;
+            }
+            var reader = new FileReader();
+            reader.onload = function(e: any) {
+                var contents = e.target.result;
+                var groups = JSON.parse(contents);
+                for (let groupName in groups) {
+                    if (groupName !== "" && groups[groupName].length > 0 && groups[groupName].every((unit: any) => {return unit.category == "GroundUnit";})) {
+                        var units = groups[groupName].map((unit: any) => {return {unitType: unit.name, location: unit.position}});
+                        spawnGroundUnits(units, groups[groupName][0].coalition, true);
+                    }
+                }
+            };
+            reader.readAsText(file);
+        })
+        input.click();
     }
 
     /***********************************************/
