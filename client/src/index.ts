@@ -17,7 +17,6 @@ import { Dropdown } from "./controls/dropdown";
 import { HotgroupPanel } from "./panels/hotgrouppanel";
 import { SVGInjector } from "@tanem/svg-injector";
 import { BLUE_COMMANDER, GAME_MASTER, RED_COMMANDER } from "./constants/constants";
-import { NavyUnitDatabase, navyUnitDatabase } from "./units/navyunitdatabase";
 
 var map: Map;
 
@@ -206,7 +205,6 @@ function setupEvents() {
         else
             img.onload = () => SVGInjector(img);
     })
-
 }
 
 export function getMap() {

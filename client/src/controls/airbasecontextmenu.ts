@@ -62,6 +62,7 @@ export class AirbaseContextMenu extends ContextMenu {
             setActiveCoalition(this.#airbase.getCoalition());
             getMap().showMapContextMenu(this.getX(), this.getY(), this.getLatLng());
             getMap().getMapContextMenu().hideUpperBar();
+            getMap().getMapContextMenu().hideLowerBar();
             getMap().getMapContextMenu().hideAltitudeSlider();
             getMap().getMapContextMenu().showSubMenu("aircraft");
             getMap().getMapContextMenu().setAirbaseName(this.#airbase.getName());

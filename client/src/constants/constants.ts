@@ -142,7 +142,8 @@ export const COALITIONAREA_DRAW_POLYGON = "Draw Coalition Area";
 export const visibilityControls: string[] = ["human", "dcs", "aircraft", "groundunit-sam", "groundunit-other", "navyunit", "airbase"];
 export const visibilityControlsTootlips: string[] = ["Toggle human players visibility", "Toggle DCS controlled units visibility", "Toggle aircrafts visibility", "Toggle SAM units visibility", "Toggle ground units (not SAM) visibility", "Toggle navy units visibility", "Toggle airbases visibility"];
 
-export const IADSRoles: {[key: string]: number}= {"AAA": 0.8, "MANPADS": 0.3, "SAM Sites": 0.1, "Radar": 0.05};
+export const IADSTypes = ["AAA", "MANPADS", "SAM Sites", "Radar"];
+export const IADSDensities: {[key: string]: number}= {"AAA": 0.8, "MANPADS": 0.3, "SAM Sites": 0.1, "Radar": 0.05};
 
 export enum DataIndexes {
     startOfData = 0,

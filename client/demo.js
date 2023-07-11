@@ -343,7 +343,7 @@ class DemoDataGenerator {
     };
 
     mission(req, res){
-        var ret = {mission: {theatre: "Nevada"}};
+        var ret = {mission: {theatre: "Syria"}};
         ret.time = Date.now();
         var auth = req.get("Authorization");
         if (auth) {

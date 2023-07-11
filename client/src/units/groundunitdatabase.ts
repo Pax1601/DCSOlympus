@@ -233,6 +233,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Bunker": {
                 "name": "Bunker",
+                "era": ["Early Cold War", "Mid Cold War", "Late Cold War", "Modern"],
                 "label": "Bunker",
                 "shortLabel": "Bunker",
                 "filename": "",
@@ -370,6 +371,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Sandbox": {
                 "name": "Sandbox",
+                "era": ["Early Cold War", "Mid Cold War", "Late Cold War", "Modern"],
                 "label": "Sandbox",
                 "shortLabel": "Sandbox",
                 "filename": "",
@@ -1085,6 +1087,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "house1arm": {
                 "name": "house1arm",
+                "era": ["Early Cold War", "Mid Cold War", "Late Cold War", "Modern"],
                 "label": "house1arm",
                 "shortLabel": "house1arm",
                 "filename": "",
@@ -1092,6 +1095,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "house2arm": {
                 "name": "house2arm",
+                "era": ["Early Cold War", "Mid Cold War", "Late Cold War", "Modern"],
                 "label": "house2arm",
                 "shortLabel": "house2arm",
                 "filename": "",
@@ -1099,6 +1103,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "outpost_road": {
                 "name": "outpost_road",
+                "era": ["Early Cold War", "Mid Cold War", "Late Cold War", "Modern"],
                 "label": "outpost_road",
                 "shortLabel": "outpost_road",
                 "filename": "",
@@ -1106,6 +1111,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "outpost": {
                 "name": "outpost",
+                "era": ["Early Cold War", "Mid Cold War", "Late Cold War", "Modern"],
                 "label": "outpost",
                 "shortLabel": "outpost",
                 "filename": "",
@@ -1113,6 +1119,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "houseA_arm": {
                 "name": "houseA_arm",
+                "era": ["Early Cold War", "Mid Cold War", "Late Cold War", "Modern"],
                 "label": "houseA_arm",
                 "shortLabel": "houseA_arm",
                 "filename": "",

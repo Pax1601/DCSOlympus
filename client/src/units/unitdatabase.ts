@@ -5,6 +5,10 @@ export class UnitDatabase {
 
     }
 
+    getBlueprints() {
+        return this.blueprints;
+    }
+
     /* Returns a list of all possible roles in a database */
     getRoles() {
         var roles: string[] = [];
@@ -31,6 +35,32 @@ export class UnitDatabase {
                 types.push(type);
         }
         return types;
+    }
+
+    /* Returns a list of all possible periods in a database */
+    getEras() {
+        var eras: string[] = [];
+        for (let unit in this.blueprints) {
+            var unitEras = this.blueprints[unit].era;
+            if (unitEras) {
+                for (let era of unitEras) {
+                    if (era !== "" && !eras.includes(era))
+                        eras.push(era);
+                }
+            }
+        }
+        return eras;
+    }
+
+    /* Returns a list of all possible ranges in a database */
+    getRanges() {
+        var ranges: string[] = [];
+        for (let unit in this.blueprints) {
+            var range = this.blueprints[unit].range;
+            if (range && range !== "" && !ranges.includes(range))
+                ranges.push(range);
+        }
+        return ranges;
     }
 
     /* Gets a specific blueprint by name */

@@ -4,8 +4,32 @@
     height: fit-content;
     position: absolute;
     row-gap: 5px;
-    width: 280px;
+    width: 300px;
     z-index: 9999;
+}
+
+#map-contextmenu>div:nth-child(2) {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-right: 0px;
+}
+
+#map-contextmenu>div:nth-child(3) {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-right: 0px;
+}
+
+#map-contextmenu>div:nth-child(n+4) {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    row-gap: 5px;
 }
 
 #aircraft-spawn-menu,
@@ -40,6 +64,7 @@
 }
 
 .deploy-unit-button {
+    margin-top: 5px;
     text-align: center;
     width: 100%;
 }
@@ -180,16 +205,14 @@
     background-color: orange;
 }
 
-#aircraft-spawn-menu .ol-slider-value,
-#helicopter-spawn-menu .ol-slider-value {
+.ol-context-menu .ol-slider-value {
 	color: var(--accent-light-blue);
 	cursor: pointer;
 	font-size: 14px;
 	font-weight: bold;
 }
 
-#aircraft-spawn-altitude-slider,
-#helicopter-spawn-altitude-slider {
+.ol-context-menu .ol-slider-container {
     padding: 0px 10px;
 }
 
@@ -357,7 +380,7 @@
     height: fit-content;
     position: absolute;
     row-gap: 5px;
-    width: 250px;
+    width: 300px;
     z-index: 9999;
 }
 
@@ -369,6 +392,10 @@
 
 #coalition-area-contextmenu .ol-checkbox {
     align-self: flex-start;
+}
+
+#coalition-units-checkbox {
+    padding: 10px 10px;
 }
 
 #iads-menu .ol-select-options>* {
@@ -390,4 +417,26 @@
 
 #iads-menu {
     row-gap: 10px;
+}
+
+#coalition-area-contextmenu>div:nth-child(2) {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-right: 0px;
+}
+
+#coalition-area-contextmenu>div:nth-child(n+3) {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    row-gap: 5px;
+}
+
+.create-iads-button {
+    margin-top: 5px;
+    text-align: center;
+    width: 100%;
 }

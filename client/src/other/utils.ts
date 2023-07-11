@@ -35,14 +35,14 @@ export function distance(lat1: number, lon1: number, lat2: number, lon2: number)
     return d;
 }
 
-export function coordinatesFromBearingAndDistance(lat1: number, lon1: number, brng: number, dist: number) {
+export function bearingAndDistanceToLatLng(lat: number, lon: number, brng: number, dist: number) {
     const R = 6371e3; // metres
-    const φ1 = deg2rad(lat1); // φ, λ in radians
-    const λ1 = deg2rad(lon1);
+    const φ1 = deg2rad(lat); // φ, λ in radians
+    const λ1 = deg2rad(lon);
     const φ2 = Math.asin( Math.sin(φ1)*Math.cos(dist/R) + Math.cos(φ1)*Math.sin(dist/R)*Math.cos(brng) );
     const λ2 = λ1 + Math.atan2(Math.sin(brng)*Math.sin(dist/R)*Math.cos(φ1), Math.cos(dist/R)-Math.sin(φ1)*Math.sin(φ2));
 
-    return {lat: rad2deg(φ2), lng: rad2deg(λ2)};
+    return new LatLng(rad2deg(φ2), rad2deg(λ2));
 }
 
 export function ConvertDDToDMS(D: number, lng: boolean) {
@@ -205,6 +205,11 @@ export function nmToFt(nm: number) {
     return nm * 6076.12;
 }
 
+export function polyContains(latlng: LatLng, polygon: Polygon) {
+    var poly   = polygon.toGeoJSON();
+    return turf.inside(turf.point([latlng.lng, latlng.lat]), poly);
+}
+
 export function randomPointInPoly(polygon: Polygon): LatLng {
     var bounds = polygon.getBounds(); 
     var x_min  = bounds.getEast();
@@ -226,12 +231,45 @@ export function randomPointInPoly(polygon: Polygon): LatLng {
 }
 
 export function polygonArea(polygon: Polygon) {
-    var poly   = polygon.toGeoJSON();
+    var poly = polygon.toGeoJSON();
     return turf.area(poly);
 }
 
-export function randomUnitBlueprintByRole(unitDatabse: UnitDatabase, role: string) {
-    const unitBlueprints = unitDatabse.getByRole(role);
+export function randomUnitBlueprint(unitDatabase: UnitDatabase, options: {type?: string, role?: string, ranges?: string[], eras?: string[]} ) {
+    /* Start from all the unit blueprints in the database */
+    var unitBlueprints = Object.values(unitDatabase.getBlueprints());
+
+    /* If a specific type or role is provided, use only the blueprints of that type or role */
+    if (options.type && options.role) {
+        console.error("Can't create random unit if both type and role are provided. Either create by type or by role.")
+        return null;
+    }
+
+    if (options.type) {
+        unitBlueprints = unitDatabase.getByType(options.type);
+    }
+    else if (options.role) {
+        unitBlueprints = unitDatabase.getByType(options.role);
+    }
+
+    /* Keep only the units that have a range included in the requested values */
+    if (options.ranges) {
+        unitBlueprints = unitBlueprints.filter((unitBlueprint: UnitBlueprint) => { 
+            //@ts-ignore
+            return unitBlueprint.range? options.ranges.includes(unitBlueprint.range): true;
+        });
+    }
+
+    /* Keep only the units that have an era included in the requested values */
+    if (options.eras) {
+        unitBlueprints = unitBlueprints.filter((unitBlueprint: UnitBlueprint) => { 
+            //@ts-ignore
+            return options.eras.reduce((value, era) => { 
+                return value? value: unitBlueprint.era.includes(era); 
+            }, false);
+        });
+    }
+
     var index = Math.floor(Math.random() * unitBlueprints.length);
     return unitBlueprints[index];
 }

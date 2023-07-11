@@ -392,6 +392,12 @@ export class Map extends L.Map {
         return this.#coalitionAreas.find((area: CoalitionArea) => { return area.getSelected() });
     }
 
+    bringCoalitionAreaToBack(coalitionArea: CoalitionArea) {
+        coalitionArea.bringToBack();
+        this.#coalitionAreas.splice(this.#coalitionAreas.indexOf(coalitionArea), 1);
+        this.#coalitionAreas.unshift(coalitionArea);
+    }
+
     /* Event handlers */
     #onClick(e: any) {
         if (!this.#preventLeftClick) {
@@ -423,14 +429,18 @@ export class Map extends L.Map {
         if (this.#state === IDLE) {
             if (this.#state == IDLE) {
                 this.showMapContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng);
+                var clickedCoalitionArea = null;
+                /* Coalition areas are ordered in the #coalitionAreas array according to their zindex. Select the upper one */
                 for (let coalitionArea of this.#coalitionAreas) {
                     if (coalitionArea.getBounds().contains(e.latlng)) {
-                        if (coalitionArea.getSelected())
-                            this.showCoalitionAreaContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng, coalitionArea);
+                        if (coalitionArea.getSelected()) 
+                            clickedCoalitionArea = coalitionArea;
                         else
                             this.getMapContextMenu().setCoalitionArea(coalitionArea);
                     }
                 }
+                if (clickedCoalitionArea)
+                    this.showCoalitionAreaContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng, clickedCoalitionArea);
             }
         }
         else if (this.#state === MOVE_UNIT) {

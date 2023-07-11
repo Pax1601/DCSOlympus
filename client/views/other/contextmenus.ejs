@@ -1,21 +1,27 @@
 <div id="map-contextmenu" class="ol-context-menu" oncontextmenu="return false;">
     <div id="active-coalition-label" data-coalition="blue"></div>
     <div class="upper-bar ol-panel">
-        <div id="coalition-switch" class="ol-switch ol-coalition-switch"></div>
+        <div id="coalition-switch" class="ol-switch ol-coalition-switch"></div> 
         <button data-coalition="blue" id="aircraft-spawn-button" title="Spawn aircraft" data-on-click="mapContextMenuShow"
             data-on-click-params='{ "type": "aircraft" }' class="ol-contexmenu-button"><img src="/resources/theme/images/buttons/spawn/aircraft.svg" inject-svg></button>
         <button data-coalition="blue" id="helicopter-spawn-button" title="Spawn helicopter" data-on-click="mapContextMenuShow"
             data-on-click-params='{ "type": "helicopter" }' class="ol-contexmenu-button"><img src="/resources/theme/images/buttons/spawn/helicopter.svg" inject-svg></button>
         <button data-coalition="blue" id="groundunit-spawn-button" title="Spawn ground unit" data-on-click="mapContextMenuShow"
             data-on-click-params='{ "type": "groundunit" }' class="ol-contexmenu-button"><img src="/resources/theme/images/buttons/spawn/groundunit.svg" inject-svg></button>
-            <button data-coalition="blue" id="navyunit-spawn-button" title="Spawn navy unit" data-on-click="mapContextMenuShow"
+        <button data-coalition="blue" id="coalition-area-button" title="Edit coalition area" data-on-click="editCoalitionArea"
+            class="ol-contexmenu-button"><img src="/resources/theme/images/buttons/other/edit.svg" inject-svg></button>
+        <button data-coalition="blue" id="more-options-button" title="More options" data-on-click="mapContextMenuShow"
+            data-on-click-params='{ "type": "more" }' class="ol-contexmenu-button"><img src="/resources/theme/images/buttons/spawn/more.svg" inject-svg></button>
+    </div>
+    <div id="more-options-button-bar" class="upper-bar ol-panel hide">
+        <div id="coalition-switch" class="ol-switch ol-coalition-switch"></div>
+        
+        <button data-coalition="blue" id="navyunit-spawn-button" title="Spawn navy unit" data-on-click="mapContextMenuShow"
             data-on-click-params='{ "type": "navyunit" }' class="ol-contexmenu-button"><img src="/resources/theme/images/buttons/spawn/navyunit.svg" inject-svg></button>
         <button data-coalition="blue" id="smoke-spawn-button" title="Spawn smoke" data-on-click="mapContextMenuShow"
             data-on-click-params='{ "type": "smoke" }' class="ol-contexmenu-button"><img src="/resources/theme/images/buttons/spawn/smoke.svg" inject-svg></button>
         <button data-coalition="blue" id="explosion-spawn-button" title="Explosion" data-on-click="mapContextMenuShow"
             data-on-click-params='{ "type": "explosion" }' class="ol-contexmenu-button"><img src="/resources/theme/images/buttons/spawn/explosion.svg" inject-svg></button>
-        <button data-coalition="blue" id="coalition-area-button" title="Edit coalition area" data-on-click="editCoalitionArea"
-            class="ol-contexmenu-button"><img src="/resources/theme/images/buttons/other/edit.svg" inject-svg></button>
     </div>
     <div id="aircraft-spawn-menu" class="ol-contexmenu-panel ol-panel hide">
         <div class="ol-select-container">
@@ -229,36 +235,49 @@
              class="ol-contexmenu-button"><img src="/resources/theme/images/buttons/other/delete.svg" inject-svg></button>
     </div>
     <div id="iads-menu" class="ol-panel ol-contexmenu-panel hide">
-        <div id="iads-units-role-options" class="ol-select">
+        <div id="iads-units-type-options" class="ol-select">
             <div class="ol-select-value">Unit types</div>
             <div class="ol-select-options">
-                    <!-- This is where all the iads unit roles checkboxes will be shown-->
+                    <!-- This is where all the iads unit types checkboxes will be shown-->
             </div>
         </div>
-
-        <!--
         <div class="ol-select-container">
-            <div id="iads-period-options" class="ol-select">
-                <div class="ol-select-value">Units period</div>
+            <div id="iads-era-options" class="ol-select">
+                <div class="ol-select-value">Units eras</div>
                 <div class="ol-select-options">
-                    <!-- This is where all the iads unit period buttons will be shown--><!--
+                    <!-- This is where all the iads unit era buttons will be shown-->
                 </div>
             </div>
         </div>
-
+        <div class="ol-select-container">
+            <div id="iads-range-options" class="ol-select">
+                <div class="ol-select-value">Units ranges</div>
+                <div class="ol-select-options">
+                    <!-- This is where all the iads unit range buttons will be shown-->
+                </div>
+            </div>
+        </div>
+    
+        <!--
         <div id="coalition-units-checkbox" class="ol-checkbox">
             <label title="Use coalition specific units only (e.g. Patriot sites for blue coalition, SA-2s for red coalition)">
                 <input type="checkbox"/>
                 Coalition specific units
             </label>
         </div>
-    -->
+        -->
         
         <div id="iads-density-slider" class="ol-slider-container">
             <dl class="ol-data-grid">
                 <dt> IADS density </dt> <dd> <div class="ol-slider-value"></div> </dd>
             </dl>
-            <input type="range" min="0" max="100" value="0" class="ol-slider">
+            <input title="An high density value will cause more units to be deployed" type="range" min="0" max="100" value="0" class="ol-slider">
+        </div>
+        <div id="iads-distribution-slider" class="ol-slider-container">
+            <dl class="ol-data-grid">
+                <dt> IADS distribution </dt> <dd> <div class="ol-slider-value"></div> </dd>
+            </dl>
+            <input title="If distrubution is low units will be concentrated around towns, otherwise they will spread around the map more evenly" type="range" min="0" max="100" value="0" class="ol-slider">
         </div>
         <button class="create-iads-button" title="" data-coalition="blue" data-on-click="contextMenuCreateIads">Add units to IADS</button>
     </div>

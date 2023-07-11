@@ -2,13 +2,14 @@ import { LatLng, LatLngBounds } from "leaflet";
 import { getHotgroupPanel, getInfoPopup, getMap, getMissionHandler } from "..";
 import { Unit } from "./unit";
 import { cloneUnit, setLastUpdateTime, spawnGroundUnits } from "../server/server";
-import { deg2rad, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots, polygonArea, randomPointInPoly, randomUnitBlueprintByRole } from "../other/utils";
+import { bearingAndDistanceToLatLng, deg2rad, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots, polyContains, polygonArea, randomPointInPoly, randomUnitBlueprint } from "../other/utils";
 import { CoalitionArea } from "../map/coalitionarea";
 import { Airbase } from "../missionhandler/airbase";
 import { groundUnitDatabase } from "./groundunitdatabase";
-import { DataIndexes, HIDE_ALL, IADSRoles, IDLE, MOVE_UNIT } from "../constants/constants";
+import { DataIndexes, HIDE_ALL, IADSDensities, IDLE, MOVE_UNIT } from "../constants/constants";
 import { DataExtractor } from "./dataextractor";
 import { Contact } from "../@types/unit";
+import { citiesDatabase } from "./citiesDatabase";
 
 export class UnitsManager {
     #units: { [ID: number]: Unit };
@@ -544,28 +545,31 @@ export class UnitsManager {
         }
     }
 
-    createIADS(coalitionArea: CoalitionArea, options: {[key: string]: boolean}, density: number) {
-        const activeRoles = Object.keys(options).filter((key: string) => { return options[key]; }); 
-        const airbases = getMissionHandler().getAirbases();
-        const pointsNumber = polygonArea(coalitionArea) / 1e7 * density / 100;
-        for (let i = 0; i < pointsNumber; i++) {
-            const latlng = randomPointInPoly(coalitionArea);
-            var minDistance: number = Infinity;
-            var maxDistance: number = 0;
-            Object.values(airbases).forEach((airbase: Airbase) => {
-                var distance = airbase.getLatLng().distanceTo(latlng);
-                if (distance < minDistance) minDistance = distance;
-                if (distance > maxDistance) maxDistance = distance;
-            });
+    createIADS(coalitionArea: CoalitionArea, types: {[key: string]: boolean}, eras: {[key: string]: boolean}, ranges: {[key: string]: boolean}, density: number, distribution: number) {
+        const activeTypes = Object.keys(types).filter((key: string) => { return types[key]; }); 
+        const activeEras = Object.keys(eras).filter((key: string) => { return eras[key]; }); 
+        const activeRanges = Object.keys(ranges).filter((key: string) => { return ranges[key]; }); 
 
-            const role = activeRoles[Math.floor(Math.random() * activeRoles.length)];
-            const probability = Math.pow(1 - minDistance / 50e3, 5) * IADSRoles[role];
-            if (Math.random() < probability){
-                const unitBlueprint = randomUnitBlueprintByRole(groundUnitDatabase, role);
-                spawnGroundUnits([{unitType: unitBlueprint.name, location: latlng}], coalitionArea.getCoalition(), true);
-                getMap().addTemporaryMarker(latlng, unitBlueprint.name, coalitionArea.getCoalition());
+        citiesDatabase.forEach((city: {lat: number, lng: number, pop: number}) => {
+            if (polyContains(new LatLng(city.lat, city.lng), coalitionArea)) {
+                var pointsNumber = 2 + Math.pow(city.pop, 0.2) * density / 100;
+                for (let i = 0; i < pointsNumber; i++) {
+                    var bearing = Math.random() * 360;
+                    var distance = Math.random() * distribution * 100;
+                    const latlng = bearingAndDistanceToLatLng(city.lat, city.lng, bearing, distance);
+                    if (polyContains(latlng, coalitionArea)) {
+                        const type = activeTypes[Math.floor(Math.random() * activeTypes.length)];
+                        if (Math.random() < IADSDensities[type]) {
+                            const unitBlueprint = randomUnitBlueprint(groundUnitDatabase, {type: type, eras: activeEras, ranges: activeRanges});
+                            if (unitBlueprint) {
+                                spawnGroundUnits([{unitType: unitBlueprint.name, location: latlng}], coalitionArea.getCoalition(), true);
+                                getMap().addTemporaryMarker(latlng, unitBlueprint.name, coalitionArea.getCoalition());
+                            }
+                        }
+                    }
+                }
             }
-        }
+        })
     }
 
     exportToFile() {

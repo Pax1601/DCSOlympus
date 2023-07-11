@@ -86,7 +86,7 @@ export class MapContextMenu extends ContextMenu {
             if (this.getVisibleSubMenu() !== e.detail.type)
                 this.showSubMenu(e.detail.type);
             else 
-                this.hideSubMenus();
+                this.hideSubMenus(e.detail.type);
         });
 
         document.addEventListener("contextMenuDeployAircraft", () => {
@@ -191,6 +191,11 @@ export class MapContextMenu extends ContextMenu {
     }
 
     showSubMenu(type: string) {
+        if (type === "more")
+            this.getContainer()?.querySelector("#more-options-button-bar")?.classList.toggle("hide");
+        else if (["aircraft", "groundunit"].includes(type))
+            this.getContainer()?.querySelector("#more-options-button-bar")?.classList.toggle("hide", true);
+
         this.getContainer()?.querySelector("#aircraft-spawn-menu")?.classList.toggle("hide", type !== "aircraft");
         this.getContainer()?.querySelector("#aircraft-spawn-button")?.classList.toggle("is-open", type === "aircraft");
         this.getContainer()?.querySelector("#helicopter-spawn-menu")?.classList.toggle("hide", type !== "helicopter");
@@ -220,7 +225,8 @@ export class MapContextMenu extends ContextMenu {
         this.setVisibleSubMenu(type);
     }
 
-    hideSubMenus() {
+    hideSubMenus(type: string) {
+        this.getContainer()?.querySelector("#more-options-button-bar")?.classList.toggle("hide", ["aircraft", "groundunit"].includes(type));
         this.getContainer()?.querySelector("#aircraft-spawn-menu")?.classList.toggle("hide", true);
         this.getContainer()?.querySelector("#aircraft-spawn-button")?.classList.toggle("is-open", false);
         this.getContainer()?.querySelector("#helicopter-spawn-menu")?.classList.toggle("hide", true);
@@ -255,6 +261,14 @@ export class MapContextMenu extends ContextMenu {
 
     hideUpperBar() {
         this.getContainer()?.querySelector(".upper-bar")?.classList.toggle("hide", true);
+    }
+
+    showLowerBar() {
+        this.getContainer()?.querySelector("#more-options-button-bar")?.classList.toggle("hide", false);
+    }
+
+    hideLowerBar() {
+        this.getContainer()?.querySelector("#more-optionsbutton-bar")?.classList.toggle("hide", true);
     }
 
     showAltitudeSlider() {
@@ -430,8 +444,8 @@ export class MapContextMenu extends ContextMenu {
         this.#groundUnitTypeDropdown.reset();
         this.#groundUnitNameDropdown.reset();
 
-        const roles = groundUnitDatabase.getTypes();
-        this.#groundUnitTypeDropdown.setOptions(roles);
+        const types = groundUnitDatabase.getTypes();
+        this.#groundUnitTypeDropdown.setOptions(types);
         this.clip();
     }
 
@@ -470,8 +484,8 @@ export class MapContextMenu extends ContextMenu {
         this.#navyUnitTypeDropdown.reset();
         this.#navyUnitNameDropdown.reset();
 
-        const roles = navyUnitDatabase.getTypes();
-        this.#navyUnitTypeDropdown.setOptions(roles);
+        const types = navyUnitDatabase.getTypes();
+        this.#navyUnitTypeDropdown.setOptions(types);
         this.clip();
     }
 

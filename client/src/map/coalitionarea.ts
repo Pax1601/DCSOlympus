@@ -27,6 +27,7 @@ export class CoalitionArea extends Polygon {
             this.setCoalition("blue");
         else if (getUnitsManager().getCommandMode() == RED_COMMANDER) 
             this.setCoalition("red");
+
     }
 
     setCoalition(coalition: string) {
@@ -87,6 +88,12 @@ export class CoalitionArea extends Polygon {
 
     setOpacity(opacity: number) {
         this.setStyle({opacity: opacity, fillOpacity: opacity * 0.25});
+    }
+
+    onRemove(map: Map): this {
+        super.onRemove(map);
+        this.#handles.concat(this.#middleHandles).forEach((handle: CoalitionAreaHandle | CoalitionAreaMiddleHandle) => handle.removeFrom(getMap()));
+        return this;
     }
 
     #setColors() {
@@ -158,11 +165,5 @@ export class CoalitionArea extends Polygon {
             else
                 this.setEditing(false);
         });
-    }
-
-    onRemove(map: Map): this {
-        super.onRemove(map);
-        this.#handles.concat(this.#middleHandles).forEach((handle: CoalitionAreaHandle | CoalitionAreaMiddleHandle) => handle.removeFrom(getMap()));
-        return this;
     }
 }
