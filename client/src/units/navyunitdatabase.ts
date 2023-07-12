@@ -54,16 +54,6 @@ export class NavyUnitDatabase extends UnitDatabase {
                 "range": "",
                 "filename": ""
             },
-            "Akizuki": {
-                "name": "Akizuki",
-                "coalition": "",
-                "type": "Destroyer",
-                "era": "WW2",
-                "label": "Akizuki",
-                "shortLabel": "Akizuki",
-                "range": "",
-                "filename": ""
-            },
             "ARA Santa Fe S-21": {
                 "name": "ARA Santa Fe S-21",
                 "coalition": "",
@@ -164,7 +154,7 @@ export class NavyUnitDatabase extends UnitDatabase {
                 "range": "",
                 "filename": ""
             },
-            "CV Admiral Kuznetsov(2017)": {
+            "CV 1143.5 Admiral Kuznetsov(2017)": {
                 "name": "CV 1143.5 Admiral Kuznetsov(2017)",
                 "coalition": "Red",
                 "type": "Aircraft Carrier",
@@ -182,16 +172,6 @@ export class NavyUnitDatabase extends UnitDatabase {
                 "label": "CV-59 Forrestal",
                 "shortLabel": "CV-59 Forrestal",
                 "range": "Short",
-                "filename": ""
-            },
-            "CV6 USS Enterprise": {
-                "name": "CV6 USS Enterprise -The Grey Ghost-",
-                "coalition": "",
-                "type": "Aircraft Carrier",
-                "era": "WW2",
-                "label": "CV6 USS Enterprise Grey Ghost",
-                "shortLabel": "CV6 USS Enterprise",
-                "range": "",
                 "filename": ""
             },
             "CVN-71 Theodore Roosevelt": {
@@ -244,7 +224,7 @@ export class NavyUnitDatabase extends UnitDatabase {
                 "range": "Medium",
                 "filename": ""
             },
-            "HMS Leeds Castle (P-258)": {
+            "Castle Class": {
                 "name": "Castle Class",
                 "coalition": "Blue",
                 "type": "Patrol",
@@ -262,76 +242,6 @@ export class NavyUnitDatabase extends UnitDatabase {
                 "label": "DDG Arleigh Burke lla",
                 "shortLabel": "DDG Arleigh Burke",
                 "range": "Medium",
-                "filename": ""
-            },
-            "DKM Admiral Hipper": {
-                "name": "DKM Admiral Hipper",
-                "coalition": "",
-                "type": "Cruiser",
-                "era": "WW2",
-                "label": "DKM Admiral Hipper",
-                "shortLabel": "DKM Admiral Hipper",
-                "range": "",
-                "filename": ""
-            },
-            "DKM Admiral Scheer": {
-                "name": "DKM Admiral Scheer",
-                "coalition": "",
-                "type": "Cruiser",
-                "era": "WW2",
-                "label": "DKM Admiral Scheer",
-                "shortLabel": "DKM Admiral Scheer",
-                "range": "",
-                "filename": ""
-            },
-            "DKM Blucher": {
-                "name": "DKM Blucher",
-                "coalition": "",
-                "type": "Battleship",
-                "era": "WW2",
-                "label": "DKM Blucher",
-                "shortLabel": "DKM Blucher",
-                "range": "",
-                "filename": ""
-            },
-            "DKM Gneisenau": {
-                "name": "DKM Blucher",
-                "coalition": "",
-                "type": "Battleship",
-                "era": "WW2",
-                "label": "DKM Blucher",
-                "shortLabel": "DKM Blucher",
-                "range": "",
-                "filename": ""
-            },
-            "DKM Prinz Eugen": {
-                "name": "DKM Prinz Eugen",
-                "coalition": "",
-                "type": "Cruiser",
-                "era": "WW2",
-                "label": "DKM Prinz Eugen",
-                "shortLabel": "DKM Prinz Eugen",
-                "range": "",
-                "filename": ""
-            },
-            "DKM Scharnhorst": {
-                "name": "Scharnhorst",
-                "coalition": "",
-                "type": "Battleship",
-                "era": "WW2",
-                "label": "DKM Scharnhorst",
-                "shortLabel": "DKM Scharnhorst",
-                "range": "",
-                "filename": ""
-            },
-            "DKM Tirpiz": {
-                "name": "DKM Tirpiz",
-                "coalition": "",
-                "type": "Battleship",
-                "era": "WW2",
-                "label": "DKM Tirpiz",
-                "shortLabel": "DKM Tirpiz",
-                "range": "",
                 "filename": ""
             },
             "DKM Z39": {
@@ -591,256 +501,6 @@ export class NavyUnitDatabase extends UnitDatabase {
                 "era": "WW2",
                 "label": "U-boat VIIC U-flak",
                 "shortLabel": "U-boat VIIC U-flak",
-                "range": "",
-                "filename": ""
-            },
-            "USS Bell DD-587": {
-                "name": "USS Bell DD-587",
-                "coalition": "",
-                "type": "Destroyer",
-                "era": "WW2",
-                "label": "USS Bell DD-587",
-                "shortLabel": "USS Bell DD-587",
-                "range": "",
-                "filename": ""
-            },
-            "USS Cassin Young": {
-                "name": "USS Cassin Young",
-                "coalition": "",
-                "type": "Destroyer",
-                "era": "WW2",
-                "label": "USS Cassin Young",
-                "shortLabel": "USS Cassin Young",
-                "range": "",
-                "filename": ""
-            },
-            "USS Cotten DD-669": {
-                "name": "USS Cotten DD-669",
-                "coalition": "",
-                "type": "Destroyer",
-                "era": "WW2",
-                "label": "USS Cotten DD-669",
-                "shortLabel": "USS Cotten",
-                "range": "",
-                "filename": ""
-            },
-            "USS Enterprise": {
-                "name": "USS Enterprise",
-                "coalition": "",
-                "type": "Aircraft Carrier",
-                "era": "WW2",
-                "label": "CV-6 USS Enterprise",
-                "shortLabel": "USS Enterprise",
-                "range": "",
-                "filename": ""
-            },
-            "USS Fletcher": {
-                "name": "USS Fletcher",
-                "coalition": "",
-                "type": "Destroyer",
-                "era": "WW2",
-                "label": "USS Fletcher",
-                "shortLabel": "USS Fletcher",
-                "range": "",
-                "filename": ""
-            },
-            "USS Franklin -Big Ben-": {
-                "name": "USS Franklin -Big Ben-",
-                "coalition": "",
-                "type": "Aircraft Carrier",
-                "era": "WW2",
-                "label": "USS Franklin -Big Ben-",
-                "shortLabel": "USS Franklin",
-                "range": "",
-                "filename": ""
-            },
-            "USS Gregory DD-802": {
-                "name": "USS Gregory DD-802",
-                "coalition": "",
-                "type": "Destroyer",
-                "era": "WW2",
-                "label": "USS Gregory DD-802",
-                "shortLabel": "USS Gregory",
-                "range": "",
-                "filename": ""
-            },
-            "USS Hopewell DD-681": {
-                "name": "USS Hopewell DD-681",
-                "coalition": "",
-                "type": "Destroyer",
-                "era": "WW2",
-                "label": "USS Hopewell DD-681",
-                "shortLabel": "USS Hopewell",
-                "range": "",
-                "filename": ""
-            },
-            "USS Hornet (CV-8)": {
-                "name": "USS Hornet (CV-8)",
-                "coalition": "",
-                "type": "Aircraft Carrier",
-                "era": "WW2",
-                "label": "USS Hornet (CV-8)",
-                "shortLabel": "USS Hornet (CV-8)",
-                "range": "",
-                "filename": ""
-            },
-            "USS Illinois BB-65": {
-                "name": "USS Illinois BB-65",
-                "coalition": "",
-                "type": "Battleship",
-                "era": "WW2",
-                "label": "USS Illinois BB-65",
-                "shortLabel": "USS Illinois",
-                "range": "",
-                "filename": ""
-            },
-            "USS Iowa": {
-                "name": "USS Iowa",
-                "coalition": "",
-                "type": "Battleship",
-                "era": "WW2",
-                "label": "USS Iowa",
-                "shortLabel": "USS Iowa",
-                "range": "",
-                "filename": ""
-            },
-            "USS Johnson DD-557": {
-                "name": "USS Johnson DD-557",
-                "coalition": "",
-                "type": "Destoryer",
-                "era": "WW2",
-                "label": "USS Johnson DD-557",
-                "shortLabel": "USS Johnson",
-                "range": "",
-                "filename": ""
-            },
-            "USS Kentucky BB-66": {
-                "name": "USS Kentucky BB-66",
-                "coalition": "",
-                "type": "Battleship",
-                "era": "WW2",
-                "label": "USS Kentucky BB-66",
-                "shortLabel": "USS Kentucky",
-                "range": "",
-                "filename": ""
-            },
-            "USS La Vallette DD-448": {
-                "name": "USS La Vallette DD-448",
-                "coalition": "",
-                "type": "Destroyer",
-                "era": "WW2",
-                "label": "USS La Vallette DD-448",
-                "shortLabel": "USS La Vallette",
-                "range": "",
-                "filename": ""
-            },
-            "USS Missouri": {
-                "name": "USS Missouri",
-                "coalition": "",
-                "type": "Battleship",
-                "era": "WW2",
-                "label": "USS Missouri",
-                "shortLabel": "USS Missouri",
-                "range": "",
-                "filename": ""
-            },
-            "USS New Jersey": {
-                "name": "USS New Jersey",
-                "coalition": "",
-                "type": "Battleship",
-                "era": "WW2",
-                "label": "USS New Jersey",
-                "shortLabel": "USS New Jersey",
-                "range": "",
-                "filename": ""
-            },
-            "USS Radford DD-446": {
-                "name": "USS Radford DD-446",
-                "coalition": "",
-                "type": "Destroyer",
-                "era": "WW2",
-                "label": "USS Radford DD-446",
-                "shortLabel": "USS Radford",
-                "range": "",
-                "filename": ""
-            },
-            "USS Samuel Chase": {
-                "name": "USS Samuel Chase",
-                "coalition": "",
-                "type": "Transport",
-                "era": "WW2",
-                "label": "USS Samuel Chase",
-                "shortLabel": "USS Samuel Chase",
-                "range": "",
-                "filename": ""
-            },
-            "USS Winsconsin": {
-                "name": "Winsconsin",
-                "coalition": "",
-                "type": "Battleship",
-                "era": "WW2",
-                "label": "USS Winsconsin",
-                "shortLabel": "USS Winsconsin",
-                "range": "",
-                "filename": ""
-            },
-            "WW II USS Intrepid CV-11": {
-                "name": "WW II USS Intrepid CV-11",
-                "coalition": "",
-                "type": "Aircraft Carrier",
-                "era": "WW2",
-                "label": "WW II USS Intrepid CV-11",
-                "shortLabel": "USS Intrepid",
-                "range": "",
-                "filename": ""
-            },
-            "WWII Japanese Battleship Musashi": {
-                "name": "WWII Japanese Battleship Musashi",
-                "coalition": "",
-                "type": "Battleship",
-                "era": "WW2",
-                "label": "WWII Japanese Battleship Musashi",
-                "shortLabel": "Battleship Musashi",
-                "range": "",
-                "filename": ""
-            },
-            "WWII Japanese Battleship Yamato": {
-                "name": "WWII Japanese Battleship Yamato",
-                "coalition": "",
-                "type": "Battleship",
-                "era": "WW2",
-                "label": "WWII Japanese Battleship Yamato",
-                "shortLabel": "Battleship Yamato",
-                "range": "",
-                "filename": ""
-            },
-            "WWII USS Yorktown CV-5": {
-                "name": "WWII USS Yorktown CV-5",
-                "coalition": "",
-                "type": "Aircraft Carrier",
-                "era": "WW2",
-                "label": "WWII USS Yorktown CV-5",
-                "shortLabel": "USS Yorktown",
-                "range": "",
-                "filename": ""
-            },
-            "WWII USS Hornet CV-8": {
-                "name": "WWII USS Hornet CV-8",
-                "coalition": "",
-                "type": "Aircraft Carrier",
-                "era": "WW2",
-                "label": "WWII USS Hornet CV-8",
-                "shortLabel": "USS Hornet",
-                "range": "",
-                "filename": ""
-            },
-            "ZUIKAKU": {
-                "name": "ZUIKAKU",
-                "coalition": "",
-                "type": "Aircraft Carrier",
-                "era": "WW2",
-                "label": "ZUIKAKU",
-                "shortLabel": "ZUIKAKU",
                 "range": "",
                 "filename": ""
             },
