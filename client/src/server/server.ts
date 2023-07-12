@@ -153,7 +153,7 @@ export function spawnAircrafts(units: any, coalition: string, airbaseName: strin
 
 export function spawnHelicopters(units: any, coalition: string, airbaseName: string, immediate: boolean) {
     var command = { "units": units, "coalition": coalition, "airbaseName": airbaseName, "immediate": immediate };
-    var data = { "spawnHelicopter": command }
+    var data = { "spawnHelicopters": command }
     POST(data, () => { });
 }
 
@@ -191,8 +191,8 @@ export function cloneUnit(ID: number, latlng: LatLng) {
     POST(data, () => { });
 }
 
-export function deleteUnit(ID: number, explosion: boolean) {
-    var command = { "ID": ID, "explosion": explosion };
+export function deleteUnit(ID: number, explosion: boolean, immediate: boolean) {
+    var command = { "ID": ID, "explosion": explosion, "immediate": immediate };
     var data = { "deleteUnit": command }
     POST(data, () => { });
 }

@@ -4,8 +4,8 @@
         <div id="coalition-switch" class="ol-switch ol-coalition-switch"></div> 
         <button data-coalition="blue" id="aircraft-spawn-button" title="Spawn aircraft" data-on-click="mapContextMenuShow"
             data-on-click-params='{ "type": "aircraft" }' class="ol-contexmenu-button"><img src="/resources/theme/images/buttons/spawn/aircraft.svg" inject-svg></button>
-        <!--<button data-coalition="blue" id="helicopter-spawn-button" title="Spawn helicopter" data-on-click="mapContextMenuShow"
-            data-on-click-params='{ "type": "helicopter" }' class="ol-contexmenu-button"><img src="/resources/theme/images/buttons/spawn/helicopter.svg" inject-svg></button>-->
+        <button data-coalition="blue" id="helicopter-spawn-button" title="Spawn helicopter" data-on-click="mapContextMenuShow"
+            data-on-click-params='{ "type": "helicopter" }' class="ol-contexmenu-button"><img src="/resources/theme/images/buttons/spawn/helicopter.svg" inject-svg></button>
         <button data-coalition="blue" id="groundunit-spawn-button" title="Spawn ground unit" data-on-click="mapContextMenuShow"
             data-on-click-params='{ "type": "groundunit" }' class="ol-contexmenu-button"><img src="/resources/theme/images/buttons/spawn/groundunit.svg" inject-svg></button>
         <button data-coalition="blue" id="coalition-area-button" title="Edit coalition area" data-on-click="editCoalitionArea"
@@ -15,9 +15,10 @@
     </div>
     <div id="more-options-button-bar" class="upper-bar ol-panel hide">
         <div id="coalition-switch" class="ol-switch ol-coalition-switch"></div>
-        
-        <!-- <button data-coalition="blue" id="navyunit-spawn-button" title="Spawn navy unit" data-on-click="mapContextMenuShow"
-            data-on-click-params='{ "type": "navyunit" }' class="ol-contexmenu-button"><img src="/resources/theme/images/buttons/spawn/navyunit.svg" inject-svg></button> -->
+        <!--
+        <button data-coalition="blue" id="navyunit-spawn-button" title="Spawn navy unit" data-on-click="mapContextMenuShow"
+            data-on-click-params='{ "type": "navyunit" }' class="ol-contexmenu-button"><img src="/resources/theme/images/buttons/spawn/navyunit.svg" inject-svg></button> 
+        -->
         <button data-coalition="blue" id="smoke-spawn-button" title="Spawn smoke" data-on-click="mapContextMenuShow"
             data-on-click-params='{ "type": "smoke" }' class="ol-contexmenu-button"><img src="/resources/theme/images/buttons/spawn/smoke.svg" inject-svg></button>
         <button data-coalition="blue" id="explosion-spawn-button" title="Explosion" data-on-click="mapContextMenuShow"
@@ -75,7 +76,7 @@
             <div id="aircraft-loadout-list">
             </div>
         </div>
-        <button class="deploy-unit-button" title="" data-coalition="blue" data-on-click="contextMenuDeployAircraft" disabled>Deploy unit</button>
+        <button class="deploy-unit-button" title="" data-coalition="blue" data-on-click="contextMenuDeployAircrafts" disabled>Deploy unit</button>
     </div>
     <div id="helicopter-spawn-menu" class="ol-contexmenu-panel ol-panel hide">
         <div class="ol-select-container">
@@ -129,7 +130,7 @@
             <div id="helicopter-loadout-list">
             </div>
         </div>
-        <button class="deploy-unit-button" title="" data-coalition="blue" data-on-click="contextMenuDeployAircraft" disabled>Deploy unit</button>
+        <button class="deploy-unit-button" title="" data-coalition="blue" data-on-click="contextMenuDeployHelicopters" disabled>Deploy unit</button>
     </div>
     <div id="groundunit-spawn-menu" class="ol-panel ol-contexmenu-panel hide">
         <div class="ol-select-container">
@@ -158,7 +159,7 @@
                 </div>
             </div>
         </div>
-        <button class="deploy-unit-button" title="" data-coalition="blue" data-on-click="contextMenuDeployGroundUnit" disabled>Deploy unit</button>
+        <button class="deploy-unit-button" title="" data-coalition="blue" data-on-click="contextMenuDeployGroundUnits" disabled>Deploy unit</button>
     </div>
     <div id="navyunit-spawn-menu" class="ol-panel ol-contexmenu-panel hide">
         <div class="ol-select-container">
@@ -187,7 +188,7 @@
                 </div>
             </div>
         </div>
-        <button class="deploy-unit-button" title="" data-coalition="blue" data-on-click="contextMenuDeployNavyUnit" disabled>Deploy unit</button>
+        <button class="deploy-unit-button" title="" data-coalition="blue" data-on-click="contextMenuDeployNavyUnits" disabled>Deploy unit</button>
     </div>
     <div id="smoke-spawn-menu" class="ol-panel ol-contexmenu-panel hide">
         <button class="smoke-button" title="" data-smoke-color="white" data-on-click="contextMenuDeploySmoke" data-on-click-params='{ "color": "white" }'>White smoke</button>

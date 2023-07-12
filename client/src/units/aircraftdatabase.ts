@@ -3906,6 +3906,10 @@ export class AircraftDatabase extends UnitDatabase {
          }
       }
    }
+
+   getCategory() {
+      return "Aircraft";
+   }
 }
 
 export var aircraftDatabase = new AircraftDatabase();

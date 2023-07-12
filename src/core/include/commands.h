@@ -163,7 +163,7 @@ public:
 		priority = immediate? CommandPriority::IMMEDIATE: CommandPriority::LOW;
 	};
 	virtual string getString(lua_State* L);
-	virtual unsigned int getLoad() { return 100 * !immediate; }
+	virtual unsigned int getLoad() { return immediate? 1: 100; }
 
 private:
 	const string coalition;
@@ -172,7 +172,29 @@ private:
 	const bool immediate;
 };
 
-/* Spawn air unit command */
+/* Spawn navy unit command */
+class SpawnNavyUnits : public Command
+{
+public:
+	SpawnNavyUnits(string coalition, vector<string> unitTypes, vector<Coords> locations, bool immediate) :
+		coalition(coalition),
+		unitTypes(unitTypes),
+		locations(locations),
+		immediate(immediate)
+	{
+		priority = immediate ? CommandPriority::IMMEDIATE : CommandPriority::LOW;
+	};
+	virtual string getString(lua_State* L);
+	virtual unsigned int getLoad() { return immediate ? 1 : 100; }
+
+private:
+	const string coalition;
+	const vector<string> unitTypes;
+	const vector<Coords> locations;
+	const bool immediate;
+};
+
+/* Spawn aircraft command */
 class SpawnAircrafts : public Command
 {
 public:
@@ -187,7 +209,34 @@ public:
 		priority = immediate ? CommandPriority::IMMEDIATE : CommandPriority::LOW;
 	};
 	virtual string getString(lua_State* L);
-	virtual unsigned int getLoad() { return 100 * !immediate; }
+	virtual unsigned int getLoad() { return immediate ? 1 : 100; }
+
+private:
+	const string coalition;
+	const vector<string> unitTypes;
+	const vector<Coords> locations;
+	const vector<string> loadouts;
+	const string airbaseName;
+	const bool immediate;
+};
+
+
+/* Spawn helicopter command */
+class SpawnHelicopters : public Command
+{
+public:
+	SpawnHelicopters(string coalition, vector<string> unitTypes, vector<Coords> locations, vector<string> loadouts, string airbaseName, bool immediate) :
+		coalition(coalition),
+		unitTypes(unitTypes),
+		locations(locations),
+		loadouts(loadouts),
+		airbaseName(airbaseName),
+		immediate(immediate)
+	{
+		priority = immediate ? CommandPriority::IMMEDIATE : CommandPriority::LOW;
+	};
+	virtual string getString(lua_State* L);
+	virtual unsigned int getLoad() { return immediate ? 1 : 100; }
 
 private:
 	const string coalition;
@@ -220,18 +269,21 @@ private:
 class Delete : public Command
 {
 public:
-	Delete(unsigned int ID, bool explosion) :
+	Delete(unsigned int ID, bool explosion, bool immediate ) :
 		ID(ID), 
-		explosion(explosion)
+		explosion(explosion),
+		immediate(immediate)
 	{
 		priority = CommandPriority::HIGH;
+		immediate = immediate;
 	};
 	virtual string getString(lua_State* L);
-	virtual unsigned int getLoad() { return 20; }
+	virtual unsigned int getLoad() { return immediate? 1: 20; }
 
 private:
 	const unsigned int ID;
 	const bool explosion;
+	const bool immediate;
 };
 
 /* SetTask command */

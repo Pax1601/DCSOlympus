@@ -1537,6 +1537,10 @@ export class GroundUnitDatabase extends UnitDatabase {
             }
         }
     }
+
+    getCategory() {
+        return "GroundUnit";
+    }
 }
 
 export var groundUnitDatabase = new GroundUnitDatabase();

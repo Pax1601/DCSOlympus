@@ -23,6 +23,15 @@ void Scheduler::appendCommand(Command* command)
 	commands.push_back(command);
 }
 
+int Scheduler::getCurrentLoad() 
+{
+	int currentLoad = 0;
+	for (auto command : commands) {
+		currentLoad += command->getLoad();
+	}
+	return currentLoad;
+}
+
 void Scheduler::execute(lua_State* L)
 {
 	/* Decrease the active computation load. New commands can be sent only if the load has reached 0.
@@ -42,7 +51,7 @@ void Scheduler::execute(lua_State* L)
 				if (dostring_in(L, "server", (commandString)))
 					log("Error executing command " + commandString);
 				else
-					log("Command '" + commandString + "' executed correctly, current load " + to_string(load));
+					log("Command '" + commandString + "' executed correctly, current load " + to_string(getCurrentLoad()));
 				load = command->getLoad();
 				commands.remove(command);
 				return;
@@ -92,25 +101,6 @@ void Scheduler::handleRequest(string key, json::value value)
 		Coords loc; loc.lat = lat; loc.lng = lng;
 		command = dynamic_cast<Command*>(new Smoke(color, loc));
 	}
-	else if (key.compare("spawnGroundUnits") == 0)
-	{
-		bool immediate = value[L"immediate"].as_bool();
-		string coalition = to_string(value[L"coalition"]);
-
-		vector<string> unitTypes;
-		vector<Coords> locations;
-		for (auto unit : value[L"units"].as_array()) {
-			string unitType = to_string(unit[L"unitType"]);
-			double lat = unit[L"location"][L"lat"].as_double();
-			double lng = unit[L"location"][L"lng"].as_double();
-			Coords location; location.lat = lat; location.lng = lng;
-			log("Spawning " + coalition + " ground unit of type " + unitType + " at (" + to_string(lat) + ", " + to_string(lng) + ")");
-			unitTypes.push_back(unitType);
-			locations.push_back(location);
-		}
-
-		command = dynamic_cast<Command*>(new SpawnGroundUnits(coalition, unitTypes, locations, immediate));
-	}
 	else if (key.compare("spawnAircrafts") == 0)
 	{
 		bool immediate = value[L"immediate"].as_bool();
@@ -127,14 +117,77 @@ void Scheduler::handleRequest(string key, json::value value)
 			double alt = unit[L"altitude"].as_double();
 			Coords location; location.lat = lat; location.lng = lng; location.alt = alt;
 			string loadout = to_string(unit[L"loadout"]);
-			
-			log("Spawning " + coalition + " air unit unit of type " + unitType + " at (" + to_string(lat) + ", " + to_string(lng) + ")");
+
+			log("Spawning " + coalition + " aircraft of type " + unitType + " at (" + to_string(lat) + ", " + to_string(lng) + ")");
 			unitTypes.push_back(unitType);
 			locations.push_back(location);
 			loadouts.push_back(loadout);
 		}
-		
+
 		command = dynamic_cast<Command*>(new SpawnAircrafts(coalition, unitTypes, locations, loadouts, airbaseName, immediate));
+	}
+	else if (key.compare("spawnHelicopters") == 0)
+	{
+		bool immediate = value[L"immediate"].as_bool();
+		string coalition = to_string(value[L"coalition"]);
+		string airbaseName = to_string(value[L"airbaseName"]);
+
+		vector<string> unitTypes;
+		vector<Coords> locations;
+		vector<string> loadouts;
+		for (auto unit : value[L"units"].as_array()) {
+			string unitType = to_string(unit[L"unitType"]);
+			double lat = unit[L"location"][L"lat"].as_double();
+			double lng = unit[L"location"][L"lng"].as_double();
+			double alt = unit[L"altitude"].as_double();
+			Coords location; location.lat = lat; location.lng = lng; location.alt = alt;
+			string loadout = to_string(unit[L"loadout"]);
+
+			log("Spawning " + coalition + " helicopter of type " + unitType + " at (" + to_string(lat) + ", " + to_string(lng) + ")");
+			unitTypes.push_back(unitType);
+			locations.push_back(location);
+			loadouts.push_back(loadout);
+		}
+
+		command = dynamic_cast<Command*>(new SpawnHelicopters(coalition, unitTypes, locations, loadouts, airbaseName, immediate));
+	}
+	else if (key.compare("spawnGroundUnits") == 0)
+	{
+		bool immediate = value[L"immediate"].as_bool();
+		string coalition = to_string(value[L"coalition"]);
+
+		vector<string> unitTypes;
+		vector<Coords> locations;
+		for (auto unit : value[L"units"].as_array()) {
+			string unitType = to_string(unit[L"unitType"]);
+			double lat = unit[L"location"][L"lat"].as_double();
+			double lng = unit[L"location"][L"lng"].as_double();
+			Coords location; location.lat = lat; location.lng = lng;
+			log("Spawning " + coalition + " GroundUnit of type " + unitType + " at (" + to_string(lat) + ", " + to_string(lng) + ")");
+			unitTypes.push_back(unitType);
+			locations.push_back(location);
+		}
+
+		command = dynamic_cast<Command*>(new SpawnGroundUnits(coalition, unitTypes, locations, immediate));
+	}
+	else if (key.compare("spawnNavyUnits") == 0)
+	{
+		bool immediate = value[L"immediate"].as_bool();
+		string coalition = to_string(value[L"coalition"]);
+
+		vector<string> unitTypes;
+		vector<Coords> locations;
+		for (auto unit : value[L"units"].as_array()) {
+			string unitType = to_string(unit[L"unitType"]);
+			double lat = unit[L"location"][L"lat"].as_double();
+			double lng = unit[L"location"][L"lng"].as_double();
+			Coords location; location.lat = lat; location.lng = lng;
+			log("Spawning " + coalition + " NavyUnit of type " + unitType + " at (" + to_string(lat) + ", " + to_string(lng) + ")");
+			unitTypes.push_back(unitType);
+			locations.push_back(location);
+		}
+
+		command = dynamic_cast<Command*>(new SpawnNavyUnits(coalition, unitTypes, locations, immediate));
 	}
 	else if (key.compare("attackUnit") == 0)
 	{
@@ -287,7 +340,8 @@ void Scheduler::handleRequest(string key, json::value value)
 	{
 		unsigned int ID = value[L"ID"].as_integer();
 		bool explosion = value[L"explosion"].as_bool();
-		unitsManager->deleteUnit(ID, explosion);
+		bool immediate = value[L"immediate"].as_bool();
+		unitsManager->deleteUnit(ID, explosion, immediate);
 	}
 	else if (key.compare("refuel") == 0)
 	{
@@ -414,7 +468,7 @@ void Scheduler::handleRequest(string key, json::value value)
 	if (command != nullptr)
 	{
 		appendCommand(command);
-		log("New command appended correctly to stack. Current server load: " + to_string(load));
+		log("New command appended correctly to stack. Current server load: " + to_string(getCurrentLoad()));
 	}
 }
 

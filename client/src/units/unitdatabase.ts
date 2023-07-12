@@ -1,8 +1,15 @@
+import { LatLng } from "leaflet";
+import { getUnitsManager } from "..";
+
 export class UnitDatabase {
     blueprints: { [key: string]: UnitBlueprint } = {};
 
     constructor() {
 
+    }
+
+    getCategory() {
+        return "";
     }
 
     getBlueprints() {
@@ -142,5 +149,17 @@ export class UnitDatabase {
             }
         }
         return null;
+    }
+
+    generateTestGrid(initialPosition: LatLng) {
+        const step = 0.01;
+        var nUnits = Object.values(this.blueprints).length;
+        var gridSize = Math.ceil(Math.sqrt(nUnits));
+        Object.values(this.blueprints).forEach((unitBlueprint: UnitBlueprint, idx: number) => {
+            var row = Math.floor(idx / gridSize);
+            var col = idx - row * gridSize;
+            var location = new LatLng(initialPosition.lat + col * step, initialPosition.lng + row * step)
+            getUnitsManager().spawnUnit(this.getCategory(), [{unitType: unitBlueprint.name, location: location, altitude: 1000, loadout: ""}]);
+        })
     }
 }

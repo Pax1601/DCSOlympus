@@ -164,11 +164,11 @@ string UnitsManager::getUnitData(stringstream &ss, unsigned long long time)
 	return to_base64(ss.str());
 }
 
-void UnitsManager::deleteUnit(unsigned int ID, bool explosion)
+void UnitsManager::deleteUnit(unsigned int ID, bool explosion, bool immediate)
 {
 	if (getUnit(ID) != nullptr)
 	{
-		Command* command = dynamic_cast<Command*>(new Delete(ID, explosion));
+		Command* command = dynamic_cast<Command*>(new Delete(ID, explosion, immediate));
 		scheduler->appendCommand(command);
 	}
 }

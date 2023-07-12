@@ -21,7 +21,7 @@ public:
 	void updateMissionData(json::value missionData);
 	void runAILoop();
 	string getUnitData(stringstream &ss, unsigned long long time);
-	void deleteUnit(unsigned int ID, bool explosion);
+	void deleteUnit(unsigned int ID, bool explosion, bool immediate);
 	void acquireControl(unsigned int ID);
 	
 private:

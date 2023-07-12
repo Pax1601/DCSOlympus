@@ -1,6 +1,6 @@
-local version = "v0.3.0-alpha"
+local version = "v0.4.0-alpha"
 
-local debug = false
+local debug = true
 
 Olympus.unitCounter = 1
 Olympus.payloadRegistry = {}
@@ -10,6 +10,7 @@ Olympus.groupStep = 40
 Olympus.OlympusDLL = nil
 Olympus.DLLsloaded = false
 Olympus.OlympusModPath = os.getenv('DCSOLYMPUS_PATH')..'\\bin\\' 
+Olympus.log = mist.Logger:new("Olympus", 'info')
 
 function Olympus.debug(message, displayFor)
 	if debug == true then
@@ -252,7 +253,51 @@ function Olympus.move(groupName, lat, lng, altitude, altitudeType, speed, speedT
 			if groupCon then
 				groupCon:setTask(missionTask)
 			end
-			Olympus.debug("Olympus.move executed successfully on a Aircraft", 2)
+			Olympus.debug("Olympus.move executed successfully on Aircraft", 2)
+		elseif category == "Helicopter" then
+			local startPoint = mist.getLeadPos(group)
+			local endPoint = coord.LLtoLO(lat, lng, 0) 
+
+			if altitudeType == "AGL" then
+				altitude = land.getHeight({x = endPoint.x, y = endPoint.z}) + altitude
+			end
+
+			local path = {}
+			if taskOptions and taskOptions['id'] == 'Land' then
+				path = {
+					[1] = mist.heli.buildWP(startPoint, turningPoint, speed, altitude, 'BARO'),
+					[2] = mist.heli.buildWP(endPoint, landing, speed, 0, 'AGL')
+				} 
+			else
+				path = {
+					[1] = mist.heli.buildWP(startPoint, turningPoint, speed, altitude, 'BARO'),
+					[2] = mist.heli.buildWP(endPoint, turningPoint, speed, altitude, 'BARO')
+				}
+			end
+
+			-- If a task exists assign it to the controller
+			if taskOptions then
+				local task = Olympus.buildEnrouteTask(taskOptions)
+				if task then 
+					path[1].task = task
+					path[2].task = task
+				end
+			end
+			
+			-- Assign the mission task to the controller
+			local missionTask = {
+				id = 'Mission',
+				params = {
+					route = {
+						points = mist.utils.deepCopy(path),
+					},
+				},
+			}
+			local groupCon = group:getController()
+			if groupCon then
+				groupCon:setTask(missionTask)
+			end
+			Olympus.debug("Olympus.move executed successfully on Helicopter", 2)
 		elseif category == "GroundUnit" then
 			vars = 
 				{
@@ -270,7 +315,17 @@ function Olympus.move(groupName, lat, lng, altitude, altitudeType, speed, speedT
 			end
 
 			mist.groupToRandomPoint(vars)
-			Olympus.debug("Olympus.move executed succesfully on a ground unit", 2)
+			Olympus.debug("Olympus.move executed succesfully on GroundUnit", 2)
+		elseif category == "NavyUnit" then
+			vars = 
+				{
+					group = group, 
+					point = coord.LLtoLO(lat, lng, 0),
+					heading = 0,
+					speed = speed
+				}
+			mist.groupToRandomPoint(vars)
+			Olympus.debug("Olympus.move executed succesfully on NavyUnit", 2)
 		else
 			Olympus.debug("Olympus.move not implemented yet for " .. category, 2)
 		end
@@ -314,11 +369,20 @@ function Olympus.spawnUnits(spawnTable)
 	if spawnTable.category == 'Aircraft' then
 		unitTable = Olympus.generateAirUnitsTable(spawnTable.units)
 		route = Olympus.generateAirUnitsRoute(spawnTable)
-		category = 'airplane'
+		category = 'plane'
+	elseif spawnTable.category == 'Helicopter' then
+		unitTable = Olympus.generateAirUnitsTable(spawnTable.units)
+		route = Olympus.generateAirUnitsRoute(spawnTable)
+		category = 'helicopter'
 	elseif spawnTable.category == 'GroundUnit' then
 		unitTable = Olympus.generateGroundUnitsTable(spawnTable.units)
 		category = 'vehicle'
+	elseif spawnTable.category == 'NavyUnit' then
+		unitTable = Olympus.generateNavyUnitsTable(spawnTable.units)
+		category = 'ship'
 	end
+
+	Olympus.debug(Olympus.serializeTable(unitTable), 5)
 
 	local countryID = Olympus.getCountryIDByCoalition(spawnTable.coalition)
 	local vars = 
@@ -335,37 +399,6 @@ function Olympus.spawnUnits(spawnTable)
 	Olympus.unitCounter = Olympus.unitCounter + 1
 	Olympus.debug("Olympus.spawnUnits completed succesfully", 2)
 end
-
--- Generates ground units table, either single or from template
-function Olympus.generateGroundUnitsTable(units)
-	local unitTable = {}
-	for idx, unit in pairs(units) do
-		local spawnLocation = mist.utils.makeVec3GL(coord.LLtoLO(unit.lat, unit.lng, 0))
-		if Olympus.hasKey(templates, unit.unitType) then
-			for idx, value in pairs(templates[unit.unitType].units) do
-				unitTable[#unitTable + 1] = 
-				{
-					["type"] = value.name,
-					["x"] = spawnLocation.x + value.dx,
-					["y"] = spawnLocation.z + value.dy,
-					["heading"] = 0,
-					["skill"] = "High"
-				}
-			end 
-		else
-			unitTable[#unitTable + 1] = 
-			{
-				["type"] = unit.unitType,
-				["x"] = spawnLocation.x,
-				["y"] = spawnLocation.z,
-				["heading"] = 0,
-				["skill"] = "High"
-			}
-		end
-	end
-
-	return unitTable
-end  
 
 -- Generates unit table for a air unit. 
 function Olympus.generateAirUnitsTable(units)
@@ -455,6 +488,74 @@ function Olympus.generateAirUnitsRoute(spawnTable)
 	end
 	return route
 end
+
+-- Generates ground units table, either single or from template
+function Olympus.generateGroundUnitsTable(units)
+	local unitTable = {}
+	for idx, unit in pairs(units) do
+		local spawnLocation = mist.utils.makeVec3GL(coord.LLtoLO(unit.lat, unit.lng, 0))
+		if Olympus.hasKey(templates, unit.unitType) then
+			for idx, value in pairs(templates[unit.unitType].units) do
+				unitTable[#unitTable + 1] = 
+				{
+					["type"] = value.name,
+					["x"] = spawnLocation.x + value.dx,
+					["y"] = spawnLocation.z + value.dy,
+					["heading"] = 0,
+					["skill"] = "High",
+					["name"] = "GroundUnit-" .. Olympus.unitCounter .. "-" .. #unitTable + 1
+				}
+			end 
+		else
+			unitTable[#unitTable + 1] = 
+			{
+				["type"] = unit.unitType,
+				["x"] = spawnLocation.x,
+				["y"] = spawnLocation.z,
+				["heading"] = 0,
+				["skill"] = "High",
+				["name"] = "GroundUnit-" .. Olympus.unitCounter .. "-" .. #unitTable + 1
+			}
+		end
+	end
+
+	return unitTable
+end  
+
+-- Generates navy units table, either single or from template
+function Olympus.generateNavyUnitsTable(units)
+	local unitTable = {}
+	for idx, unit in pairs(units) do
+		local spawnLocation = mist.utils.makeVec3GL(coord.LLtoLO(unit.lat, unit.lng, 0))
+		if Olympus.hasKey(templates, unit.unitType) then
+			for idx, value in pairs(templates[unit.unitType].units) do
+				unitTable[#unitTable + 1] = 
+				{
+					["type"] = value.name,
+					["x"] = spawnLocation.x + value.dx,
+					["y"] = spawnLocation.z + value.dy,
+					["heading"] = 0,
+					["skill"] = "High",
+					["name"] = "NavyUnit-" .. Olympus.unitCounter .. "-" .. #unitTable + 1,
+					["transportable"] = { ["randomTransportable"] = false }
+				}
+			end 
+		else
+			unitTable[#unitTable + 1] = 
+			{
+				["type"] = unit.unitType,
+				["x"] = spawnLocation.x,
+				["y"] = spawnLocation.z,
+				["heading"] = 0,
+				["skill"] = "High",
+				["name"] = "NavyUnit-" .. Olympus.unitCounter .. "-" .. #unitTable + 1,
+				["transportable"] = { ["randomTransportable"] = false }
+			}
+		end
+	end
+
+	return unitTable
+end  
 
 -- Clones a unit by ID. Will clone the unit with the same original payload as the source unit. TODO: only works on Olympus unit not ME units.
 function Olympus.clone(ID, lat, lng, category)

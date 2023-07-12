@@ -31,7 +31,7 @@ export class MapContextMenu extends ContextMenu {
     #navyUnitTypeDropdown: Dropdown;
     #navyUnitNameDropdown: Dropdown;
     #navyUnitCountDropdown: Dropdown;
-    #spawnOptions = { role: "", name: "", latlng: new LatLng(0, 0), coalition: "blue", loadout: "", airbaseName: "", altitude: ftToM(20000), count: 1 };
+    #spawnOptions = { role: "", name: "", latlng: new LatLng(0, 0), coalition: "blue", loadout: "", airbaseName: "", altitude: 0, count: 1 };
     #coalitionArea: CoalitionArea | null = null;
 
     constructor(id: string) {
@@ -89,7 +89,7 @@ export class MapContextMenu extends ContextMenu {
                 this.hideSubMenus(e.detail.type);
         });
 
-        document.addEventListener("contextMenuDeployAircraft", () => {
+        document.addEventListener("contextMenuDeployAircrafts", () => {
             this.hide();
             this.#spawnOptions.coalition = getActiveCoalition();
             if (this.#spawnOptions) {
@@ -103,7 +103,7 @@ export class MapContextMenu extends ContextMenu {
             }
         });
 
-        document.addEventListener("contextMenuDeployHelicopter", () => {
+        document.addEventListener("contextMenuDeployHelicopters", () => {
             this.hide();
             this.#spawnOptions.coalition = getActiveCoalition();
             if (this.#spawnOptions) {
@@ -117,7 +117,7 @@ export class MapContextMenu extends ContextMenu {
             }
         });
 
-        document.addEventListener("contextMenuDeployGroundUnit", () => {
+        document.addEventListener("contextMenuDeployGroundUnits", () => {
             this.hide();
             this.#spawnOptions.coalition = getActiveCoalition();
             if (this.#spawnOptions) {
@@ -221,6 +221,13 @@ export class MapContextMenu extends ContextMenu {
         this.#helicopterCountDropdown.setValue("1");
         this.#groundUnitCountDropdown.setValue("1");
         this.clip();
+
+        if (type === "aircraft") {
+            this.#spawnOptions.altitude = ftToM(this.#aircraftSpawnAltitudeSlider.getValue());
+        }
+        else if (type === "helicopter") {
+            this.#spawnOptions.altitude = ftToM(this.#helicopterSpawnAltitudeSlider.getValue());
+        }
 
         this.setVisibleSubMenu(type);
     }

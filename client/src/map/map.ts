@@ -17,6 +17,8 @@ import { TargetMarker } from "./targetmarker";
 import { CoalitionArea } from "./coalitionarea";
 import { CoalitionAreaContextMenu } from "../controls/coalitionareacontextmenu";
 import { DrawingCursor } from "./drawingcursor";
+import { aircraftDatabase } from "../units/aircraftdatabase";
+import { groundUnitDatabase } from "../units/groundunitdatabase";
 
 L.Map.addInitHook('addHandler', 'boxSelect', BoxSelect);
 
@@ -422,6 +424,9 @@ export class Map extends L.Map {
 
     #onDoubleClick(e: any) {
         this.deselectAllCoalitionAreas();
+
+        var db = groundUnitDatabase;
+        db.generateTestGrid(this.getMouseCoordinates())
     }
 
     #onContextMenu(e: any) {

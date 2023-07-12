@@ -578,6 +578,10 @@ export class HelicopterDatabase extends UnitDatabase {
          }
       }
    }
+
+   getCategory() {
+      return "Helicopter";
+   }
 }
 
 export var helicopterDatabase = new HelicopterDatabase();

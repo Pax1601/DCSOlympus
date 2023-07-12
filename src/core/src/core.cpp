@@ -9,7 +9,8 @@
 #include <chrono>
 using namespace std::chrono;
 
-auto before = std::chrono::system_clock::now();
+auto lastUpdate = std::chrono::system_clock::now();
+auto lastExecution = std::chrono::system_clock::now();
 
 /* Singleton objects */
 UnitsManager* unitsManager = nullptr;
@@ -72,27 +73,33 @@ extern "C" DllExport int coreFrame(lua_State* L)
     frameCounter++;
 
     /* Slow down the update rate if the frameRate is very low since it means DCS is struggling to keep up */
-    const std::chrono::duration<double> duration = std::chrono::system_clock::now() - before;
-    if (duration.count() > UPDATE_TIME_INTERVAL * (60.0 / frameRate)) 
+    const std::chrono::duration<double> updateDuration = std::chrono::system_clock::now() - lastUpdate;
+    double updateTimeInterval = max(UPDATE_TIME_INTERVAL, UPDATE_TIME_INTERVAL * (60.0 / frameRate));
+    if (updateDuration.count() > updateTimeInterval)
     {
         /* Lock for thread safety */
         lock_guard<mutex> guard(mutexLock);
 
         milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
-        if (duration.count() > 0)
-            frameRate = frameCounter / duration.count();
+        if (updateDuration.count() > 0)
+            frameRate = frameCounter / updateDuration.count();
         frameCounter = 0;
 
         if (unitsManager != nullptr) {
-            unitsManager->updateExportData(L, duration.count());
+            unitsManager->updateExportData(L, updateDuration.count());
             unitsManager->runAILoop();
             
         }
-        before = std::chrono::system_clock::now();
+        lastUpdate = std::chrono::system_clock::now();
     }
 
-    if (scheduler != nullptr)
-        scheduler->execute(L);
+    const std::chrono::duration<double> executionDuration = std::chrono::system_clock::now() - lastExecution;
+    double executionTimeInterval = max(EXECUTION_TIME_INTERVAL, EXECUTION_TIME_INTERVAL * (60.0 / frameRate));
+    if (executionDuration.count() > executionTimeInterval) {
+        if (scheduler != nullptr)
+            scheduler->execute(L);
+        lastExecution = std::chrono::system_clock::now();
+    }
 
     return(0);
 }
@@ -104,28 +111,19 @@ extern "C" DllExport int coreMissionData(lua_State * L)
 
     /* Lock for thread safety */
     lock_guard<mutex> guard(mutexLock);
+    lua_getglobal(L, "Olympus");
+    lua_getfield(L, -1, "missionData");
+    json::value missionData = luaTableToJSON(L, -1);
 
-    try
-    {
-        lua_getglobal(L, "Olympus");
-        lua_getfield(L, -1, "missionData");
-        json::value missionData = luaTableToJSON(L, -1);
-
-        if (missionData.has_object_field(L"unitsData"))
-            unitsManager->updateMissionData(missionData[L"unitsData"]);
-        if (missionData.has_object_field(L"airbases"))
-            airbases = missionData[L"airbases"];
-        if (missionData.has_object_field(L"bullseyes"))
-            bullseyes = missionData[L"bullseyes"];
-        if (missionData.has_object_field(L"mission"))
-            mission = missionData[L"mission"];
+    if (missionData.has_object_field(L"unitsData")) {
+        unitsManager->updateMissionData(missionData[L"unitsData"]);
     }
-    catch (exception const& e)
-    {
-        log(e.what());
-    }
-
-    
+    if (missionData.has_object_field(L"airbases"))
+        airbases = missionData[L"airbases"];
+    if (missionData.has_object_field(L"bullseyes"))
+        bullseyes = missionData[L"bullseyes"];
+    if (missionData.has_object_field(L"mission"))
+        mission = missionData[L"mission"];
 
     return(0);
 }

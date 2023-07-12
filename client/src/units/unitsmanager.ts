@@ -1,15 +1,14 @@
 import { LatLng, LatLngBounds } from "leaflet";
-import { getHotgroupPanel, getInfoPopup, getMap, getMissionHandler } from "..";
+import { getHotgroupPanel, getInfoPopup, getMap } from "..";
 import { Unit } from "./unit";
-import { cloneUnit, setLastUpdateTime, spawnGroundUnits } from "../server/server";
+import { cloneUnit, setLastUpdateTime, spawnAircrafts, spawnGroundUnits } from "../server/server";
 import { bearingAndDistanceToLatLng, deg2rad, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots, polyContains, polygonArea, randomPointInPoly, randomUnitBlueprint } from "../other/utils";
 import { CoalitionArea } from "../map/coalitionarea";
-import { Airbase } from "../missionhandler/airbase";
 import { groundUnitDatabase } from "./groundunitdatabase";
 import { DataIndexes, HIDE_ALL, IADSDensities, IDLE, MOVE_UNIT } from "../constants/constants";
 import { DataExtractor } from "./dataextractor";
 import { Contact } from "../@types/unit";
-import { citiesDatabase } from "./citiesDatabase";
+import { citiesDatabase } from "./citiesdatabase";
 
 export class UnitsManager {
     #units: { [ID: number]: Unit };
@@ -378,8 +377,12 @@ export class UnitsManager {
             return;
         }
 
+        var immediate = false;
+        if (selectedUnits.length > 20)
+            immediate = confirm(`You are trying to delete ${selectedUnits.length} units, do you want to delete them immediately? This may cause lag for players.`)
+            
         for (let idx in selectedUnits) {
-            selectedUnits[idx].delete(explosion);
+            selectedUnits[idx].delete(explosion, immediate);
         }
         this.#showActionMessage(selectedUnits, `deleted`);
     }
@@ -518,7 +521,7 @@ export class UnitsManager {
             if (this.#units[idx].getCoalition() !== "neutral" && this.#units[idx].getCoalition() != unit.getCoalition())
             {
                 this.#units[idx].getContacts().forEach((contact: Contact) => {
-                    if (contact.ID == unit.ID && !detectionMethods.includes(contact.detectionMethod)) 
+                    if (this.#units[idx].getAlive() && contact.ID == unit.ID && !detectionMethods.includes(contact.detectionMethod)) 
                         detectionMethods.push(contact.detectionMethod);
                 });
             }
@@ -614,6 +617,14 @@ export class UnitsManager {
             reader.readAsText(file);
         })
         input.click();
+    }
+
+    spawnUnit(category: string, units: any, coalition: string = "blue", immediate: boolean = true) {
+        if (category === "Aircraft") {
+            spawnAircrafts(units, coalition, "", immediate);
+        } else if (category === "GroundUnit") {
+            spawnGroundUnits(units, coalition, immediate);
+        }
     }
 
     /***********************************************/

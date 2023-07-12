@@ -10,6 +10,7 @@ public:
 	~Scheduler();
 
 	void appendCommand(Command* command);
+	int getCurrentLoad();
 	void execute(lua_State* L);
 	void handleRequest(string key, json::value value);
 	

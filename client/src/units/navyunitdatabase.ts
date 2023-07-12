@@ -631,8 +631,8 @@ export class NavyUnitDatabase extends UnitDatabase {
                 "range": "",
                 "filename": ""
             },
-            "Ticonderoga": {
-                "name": "Ticonderoga",
+            "TICONDEROG": {
+                "name": "TICONDEROG",
                 "type": "Cruiser",
                 "era": [
                     "Late Cold War"
@@ -940,6 +940,10 @@ export class NavyUnitDatabase extends UnitDatabase {
                 "filename": ""
             }
         }
+    }
+
+    getCategory() {
+        return "NavyUnit";
     }
 }
 

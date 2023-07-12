@@ -646,8 +646,8 @@ export class Unit extends CustomMarker {
             setFollowRoads(this.ID, followRoads);
     }
 
-    delete(explosion: boolean) {
-        deleteUnit(this.ID, explosion);
+    delete(explosion: boolean, immediate: boolean) {
+        deleteUnit(this.ID, explosion, immediate);
     }
 
     refuel() {

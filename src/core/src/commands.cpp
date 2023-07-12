@@ -60,6 +60,30 @@ string SpawnGroundUnits::getString(lua_State* L)
     return commandSS.str();
 }
 
+
+/* Spawn ground units command */
+string SpawnNavyUnits::getString(lua_State* L)
+{
+    if (unitTypes.size() != locations.size()) return "";
+
+    std::ostringstream unitsSS;
+    unitsSS.precision(10);
+    for (int i = 0; i < unitTypes.size(); i++) {
+        unitsSS << "[" << i + 1 << "] = {"
+            << "unitType = " << "\"" << unitTypes[i] << "\"" << ", "
+            << "lat = " << locations[i].lat << ", "
+            << "lng = " << locations[i].lng << "},";
+    }
+
+    std::ostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.spawnUnits, {"
+        << "category = " << "\"" << "NavyUnit" << "\"" << ", "
+        << "coalition = " << "\"" << coalition << "\"" << ", "
+        << "units = " << "{" << unitsSS.str() << "}" << "}";
+    return commandSS.str();
+}
+
 /* Spawn aircrafts command */
 string SpawnAircrafts::getString(lua_State* L)
 {
@@ -85,6 +109,34 @@ string SpawnAircrafts::getString(lua_State* L)
         << "units = " << "{" << unitsSS.str() << "}" << "}";
     return commandSS.str();
 }
+
+
+/* Spawn helicopters command */
+string SpawnHelicopters::getString(lua_State* L)
+{
+    if (unitTypes.size() != locations.size() || unitTypes.size() != loadouts.size()) return "";
+
+    std::ostringstream unitsSS;
+    unitsSS.precision(10);
+    for (int i = 0; i < unitTypes.size(); i++) {
+        unitsSS << "[" << i + 1 << "] = {"
+            << "unitType = " << "\"" << unitTypes[i] << "\"" << ", "
+            << "lat = " << locations[i].lat << ", "
+            << "lng = " << locations[i].lng << ", "
+            << "alt = " << locations[i].alt << ", "
+            << "loadout = \"" << loadouts[i] << "\"" << "},";
+    }
+
+    std::ostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.spawnUnits, {"
+        << "category = " << "\"" << "Helicopter" << "\"" << ", "
+        << "coalition = " << "\"" << coalition << "\"" << ", "
+        << "airbaseName = \"" << airbaseName << "\", "
+        << "units = " << "{" << unitsSS.str() << "}" << "}";
+    return commandSS.str();
+}
+
 
 /* Clone unit command */
 string Clone::getString(lua_State* L)
