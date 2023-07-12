@@ -6,7 +6,8 @@ export class AircraftDatabase extends UnitDatabase {
       this.blueprints = {
          "A-10C_2": {
             "name": "A-10C_2",
-            "era": ["Late Cold War", "Modern"],
+            "coalition": "Blue",
+            "era": "Late Cold War",
             "label": "A-10C Warthog",
             "shortLabel": "10",
             "loadouts": [
@@ -108,8 +109,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "AJS37": {
             "name": "AJS37",
+            "coalition": "Blue",
             "label": "AJS37 Viggen",
-            "era": ["Mid Cold War", "Late Cold War"],
+            "era": "Mid Cold War",
             "shortLabel": "37",
             "loadouts": [
                {
@@ -190,8 +192,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "AV8BNA": {
             "name": "AV8BNA",
+            "coalition": "Blue",
             "label": "AV8BNA Harrier",
-            "era": ["Late Cold War", "Modern"],
+            "era": "Late Cold War",
             "shortLabel": "8",
             "loadouts": [
                {
@@ -258,8 +261,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "C-101CC": {
             "name": "C-101CC",
+            "coalition": "Blue",
             "label": "C-101CC",
-            "era": ["Late Cold War", "Modern"],
+            "era": "Late Cold War",
             "shortLabel": "101",
             "loadouts": [
                {
@@ -322,8 +326,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "H-6J": {
             "name": "H-6J",
+            "coalition": "Red",
             "label": "H-6J Badger",
-            "era": ["Mid Cold War, Late Cold War", "Modern"],
+            "era": "Mid Cold War",
             "shortLabel": "H6",
             "loadouts": [
                {
@@ -359,8 +364,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "J-11A": {
             "name": "J-11A",
+            "coalition": "Red",
             "label": "J-11A Flaming Dragon",
-            "era": ["Modern"],
+            "era": "Modern",
             "shortLabel": "11",
             "loadouts": [
                {
@@ -433,8 +439,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "JF-17": {
             "name": "JF-17",
+            "coalition": "Red",
             "label": "JF-17 Thunder",
-            "era": ["Modern"],
+            "era": "Modern",
             "shortLabel": "17",
             "loadouts": [
                {
@@ -527,8 +534,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "F-16C_50": {
             "name": "F-16C_50",
+            "coalition": "Blue",
             "label": "F-16C Viper",
-            "era": ["Late Cold War", "Modern"],
+            "era": "Late Cold War",
             "shortLabel": "16",
             "loadouts": [
                {
@@ -637,8 +645,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "F-5E-3": {
             "name": "F-5E-3",
+            "coalition": "Blue",
             "label": "F-5E Tiger",
-            "era": ["Mid Cold War", "Late Cold War"],
+            "era": "Mid Cold War",
             "shortLabel": "5",
             "loadouts": [
                {
@@ -697,8 +706,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "F-86F Sabre": {
             "name": "F-86F Sabre",
+            "coalition": "Blue",
             "label": "F-86F Sabre",
-            "era": ["Early Cold War, Mid Cold War"],
+            "era": "Early Cold War",
             "shortLabel": "86",
             "loadouts": [
                {
@@ -759,8 +769,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "F-14A-135-GR": {
             "name": "F-14A-135-GR",
+            "coalition": "Blue",
             "label": "F-14A-135-GR Tomcat",
-            "era": ["Mid Cold War", "Late Cold War", "Modern"],
+            "era": "Mid Cold War",
             "shortLabel": "14A",
             "loadouts": [
                {
@@ -857,8 +868,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "F-14B": {
             "name": "F-14B",
+            "coalition": "Blue",
             "label": "F-14B Tomcat",
-            "era": ["Late Cold War", "Modern"],
+            "era": "Late Cold War",
             "shortLabel": "14B",
             "loadouts": [
                {
@@ -955,7 +967,8 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "FA-18C_hornet": {
             "name": "FA-18C_hornet",
-            "era": ["Late Cold War", "Modern"],
+            "coalition": "Blue",
+            "era": "Late Cold War",
             "label": "F/A-18C",
             "shortLabel": "18",
             "loadouts": [
@@ -1101,8 +1114,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "I-16": {
             "name": "I-16",
+            "coalition": "",
             "label": "I-16",
-            "era": ["WW2"],
+            "era": "WW2",
             "shortLabel": "I16",
             "loadouts": [
                {
@@ -1121,8 +1135,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "L-39ZA": {
             "name": "L-39ZA",
+            "coalition": "Red",
             "label": "L-39ZA",
-            "era": ["Mid Cold War", "Late Cold War"],
+            "era": "Mid Cold War",
             "shortLabel": "39",
             "loadouts": [
                {
@@ -1183,8 +1198,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "M-2000C": {
             "name": "M-2000C",
+            "coalition": "Blue",
             "label": "M-2000C Mirage",
-            "era": ["Late Cold War", "Modern"],
+            "era": "Late Cold War",
             "shortLabel": "M2KC",
             "loadouts": [
                {
@@ -1273,8 +1289,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "MB-339A": {
             "name": "MB-339A",
+            "coalition": "Blue",
             "label": "MB-339A",
-            "era": ["Mid Cold War", "Late Cold War"],
+            "era": "Mid Cold War",
             "shortLabel": "339A",
             "loadouts": [
                {
@@ -1341,8 +1358,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "MiG-19P": {
             "name": "MiG-19P",
+            "coalition": "Red",
             "label": "MiG-19 Farmer",
-            "era": ["Early Cold War", "Mid Cold War"],
+            "era": "Early Cold War",
             "shortLabel": "19",
             "loadouts": [
                {
@@ -1411,8 +1429,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "MiG-21Bis": {
             "name": "MiG-21Bis",
+            "coalition": "Red",
             "label": "MiG-21 Fishbed",
-            "era": ["Mid Cold War", "Late Cold War"],
+            "era": "Mid Cold War",
             "shortLabel": "21",
             "loadouts": [
                {
@@ -1531,8 +1550,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "Mirage-F1EE": {
             "name": "Mirage-F1EE",
+            "coalition": "Blue",
             "label": "Mirage-F1EE",
-            "era": ["Mid Cold War", "Late Cold War"],
+            "era": "Mid Cold War",
             "shortLabel": "F1EE",
             "loadouts": [
                {
@@ -1591,8 +1611,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "A-20G": {
             "name": "A-20G",
+            "coalition": "",
             "label": "A-20G Havoc",
-            "era": ["WW2"],
+            "era": "WW2",
             "shortLabel": "A20",
             "loadouts": [
                {
@@ -1629,8 +1650,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "Bf-109K-4": {
             "name": "Bf-109K-4",
+            "coalition": "",
             "label": "Bf-109K-4 Fritz",
-            "era": ["WW2"],
+            "era": "WW2",
             "shortLabel": "109",
             "loadouts": [
                {
@@ -1678,8 +1700,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "FW-190A8": {
             "name": "FW-190A8",
+            "coalition": "",
             "label": "FW-190A8 Bosch",
-            "era": ["WW2"],
+            "era": "WW2",
             "shortLabel": "190A8",
             "loadouts": [
                {
@@ -1727,8 +1750,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "FW-190D9": {
             "name": "FW-190D9",
+            "coalition": "",
             "label": "FW-190D9 Jerry",
-            "era": ["WW2"],
+            "era": "WW2",
             "shortLabel": "190D9",
             "loadouts": [
                {
@@ -1776,8 +1800,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "MosquitoFBMkVI": {
             "name": "MosquitoFBMkVI",
+            "coalition": "",
             "label": "Mosquito FB MkVI",
-            "era": ["WW2"],
+            "era": "WW2",
             "shortLabel": "Mosquito",
             "loadouts": [
                {
@@ -1829,8 +1854,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "P-47D-40": {
             "name": "P-47D-40",
+            "coalition": "",
             "label": "P-47D Thunderbolt",
-            "era": ["WW2"],
+            "era": "WW2",
             "shortLabel": "P47",
             "loadouts": [
                {
@@ -1870,8 +1896,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "P-51D-30-NA": {
             "name": "P-51D-30-NA",
+            "coalition": "",
             "label": "P-51D Mustang",
-            "era": ["WW2", "Early Cold War"],
+            "era": "WW2",
             "shortLabel": "P51",
             "loadouts": [
                {
@@ -1911,8 +1938,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "A-50": {
             "name": "A-50",
+            "coalition": "Red",
             "label": "A-50 Mainstay",
-            "era": ["Late Cold War", "Modern"],
+            "era": "Late Cold War",
             "shortLabel": "A50",
             "loadouts": [
                {
@@ -1942,8 +1970,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "An-26B": {
             "name": "An-26B",
+            "coalition": "Red",
             "label": "An-26B Curl",
-            "era": ["Mid Cold War", "Late Cold War", "Modern"],
+            "era": "Mid Cold War",
             "shortLabel": "26",
             "loadouts": [
                {
@@ -1962,8 +1991,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "An-30M": {
             "name": "An-30M",
+            "coalition": "Red",
             "label": "An-30M Clank",
-            "era": ["Mid Cold War", "Late Cold War", "Modern"],
+            "era": "Mid Cold War",
             "shortLabel": "30",
             "loadouts": [
                {
@@ -1982,8 +2012,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "B-1B": {
             "name": "B-1B",
+            "coalition": "Blue",
             "label": "B-1B Lancer",
-            "era": ["Late Cold War", "Modern"],
+            "era": "Late Cold War",
             "shortLabel": "1",
             "loadouts": [
                {
@@ -2016,8 +2047,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "B-52H": {
             "name": "B-52H",
+            "coalition": "Blue",
             "label": "B-52H Stratofortress",
-            "era": ["Early Cold War", "Mid Cold War", "Late Cold War", "Modern"],
+            "era": "Early Cold War",
             "shortLabel": "52",
             "loadouts": [
                {
@@ -2050,8 +2082,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "C-130": {
             "name": "C-130",
+            "coalition": "Blue",
             "label": "C-130 Hercules",
-            "era": ["Early Cold War", "Mid Cold War", "Late Cold War", "Modern"],
+            "era": "Early Cold War",
             "shortLabel": "130",
             "loadouts": [
                {
@@ -2070,8 +2103,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "C-17A": {
             "name": "C-17A",
+            "coalition": "Blue",
             "label": "C-17A Globemaster",
-            "era": ["Modern"],
+            "era": "Modern",
             "shortLabel": "C17",
             "loadouts": [
                {
@@ -2090,8 +2124,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "E-3A": {
             "name": "E-3A",
+            "coalition": "Blue",
             "label": "E-3A Sentry",
-            "era": ["Mid Cold War", "Late Cold War", "Modern"],
+            "era": "Mid Cold War",
             "shortLabel": "E3",
             "loadouts": [
                {
@@ -2110,8 +2145,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "E-2C": {
             "name": "E-2C",
+            "coalition": "Blue",
             "label": "E-2C Hawkeye",
-            "era": ["Mid Cold War", "Late Cold War", "Modern"],
+            "era": "Mid Cold War",
             "shortLabel": "2C",
             "loadouts": [
                {
@@ -2130,8 +2166,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "F-117A": {
             "name": "F-117A",
+            "coalition": "Blue",
             "label": "F-117A Nighthawk",
-            "era": ["Late Cold War", "Modern"],
+            "era": "Late Cold War",
             "shortLabel": "117",
             "loadouts": [
                {
@@ -2164,8 +2201,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "F-15C": {
             "name": "F-15C",
+            "coalition": "Blue",
             "label": "F-15C Eagle",
-            "era": ["Late Cold War", "Modern"],
+            "era": "Late Cold War",
             "shortLabel": "15",
             "loadouts": [
                {
@@ -2228,8 +2266,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "F-15E": {
             "name": "F-15E",
+            "coalition": "Blue",
             "label": "F-15E Strike Eagle",
-            "era": ["Late Cold War", "Modern"],
+            "era": "Late Cold War",
             "shortLabel": "15",
             "loadouts": [
                {
@@ -2308,8 +2347,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "F-4E": {
             "name": "F-4E",
+            "coalition": "Blue",
             "label": "F-4E Phantom II",
-            "era": ["Mid Cold War", "Late Cold War"],
+            "era": "Mid Cold War",
             "shortLabel": "4",
             "loadouts": [
                {
@@ -2398,8 +2438,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "IL-76MD": {
             "name": "IL-76MD",
+            "coalition": "Red",
             "label": "IL-76MD Candid",
-            "era": ["Mid Cold War", "Late Cold War", "Modern"],
+            "era": "Mid Cold War",
             "shortLabel": "76",
             "loadouts": [
                {
@@ -2418,8 +2459,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "IL-78M": {
             "name": "IL-78M",
+            "coalition": "Red",
             "label": "IL-78M Midas",
-            "era": ["Late Cold War", "Modern"],
+            "era": "Late Cold War",
             "shortLabel": "78",
             "loadouts": [
                {
@@ -2438,8 +2480,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "KC-135": {
             "name": "KC-135",
+            "coalition": "Blue",
             "label": "KC-135 Stratotanker",
-            "era": ["Early Cold War", "Mid Cold War", "Late Cold War", "Modern"],
+            "era": "Early Cold War",
             "shortLabel": "135",
             "loadouts": [
                {
@@ -2458,8 +2501,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "KC135MPRS": {
             "name": "KC135MPRS",
+            "coalition": "Blue",
             "label": "KC-135 MPRS Stratotanker",
-            "era": ["Early Cold War", "Mid Cold War", "Late Cold War", "Modern"],
+            "era": "Early Cold War",
             "shortLabel": "135M",
             "loadouts": [
                {
@@ -2478,8 +2522,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "S-3B Tanker": {
             "name": "S-3B Tanker",
+            "coalition": "Blue",
             "label": "S-3B Tanker",
-            "era": ["Early Cold War", "Mid Cold War", "Late Cold War", "Modern"],
+            "era": "Early Cold War",
             "shortLabel": "S3B",
             "loadouts": [
                {
@@ -2498,8 +2543,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "MiG-15bis": {
             "name": "MiG-15bis",
+            "coalition": "Red",
             "label": "MiG-15 Fagot",
-            "era": ["Early Cold War", "Mid Cold War"],
+            "era": "Early Cold War",
             "shortLabel": "M15",
             "loadouts": [
                {
@@ -2546,8 +2592,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "MiG-23MLD": {
             "name": "MiG-23MLD",
+            "coalition": "Red",
             "label": "MiG-23 Flogger",
-            "era": ["Mid Cold War", "Late Cold War"],
+            "era": "Mid Cold War",
             "shortLabel": "23",
             "loadouts": [
                {
@@ -2610,8 +2657,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "MiG-25RBT": {
             "name": "MiG-25RBT",
+            "coalition": "Red",
             "label": "MiG-25RBT Foxbat",
-            "era": ["Mid Cold War", "Late Cold War"],
+            "era": "Mid Cold War",
             "shortLabel": "25",
             "loadouts": [
                {
@@ -2662,8 +2710,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "MiG-25PD": {
             "name": "MiG-25PD",
+            "coalition": "Red",
             "label": "MiG-25PD Foxbat",
-            "era": ["Mid Cold War", "Late Cold War"],
+            "era": "Mid Cold War",
             "shortLabel": "25",
             "loadouts": [
                {
@@ -2700,8 +2749,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "MiG-27K": {
             "name": "MiG-27K",
+            "coalition": "Red",
             "label": "MiG-27K Flogger-D",
-            "era": ["Mid Cold War", "Late Cold War"],
+            "era": "Mid Cold War",
             "shortLabel": "27",
             "loadouts": [
                {
@@ -2770,8 +2820,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "MiG-29A": {
             "name": "MiG-29A",
+            "coalition": "Red",
             "label": "MiG-29A Fulcrum",
-            "era": ["Late Cold War", "Modern"],
+            "era": "Late Cold War",
             "shortLabel": "29A",
             "loadouts": [
                {
@@ -2856,8 +2907,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "MiG-29S": {
             "name": "MiG-29S",
+            "coalition": "Red",
             "label": "MiG-29S Fulcrum",
-            "era": ["Late Cold War", "Modern"],
+            "era": "Late Cold War",
             "shortLabel": "29",
             "loadouts": [
                {
@@ -2964,8 +3016,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "MiG-31": {
             "name": "MiG-31",
+            "coalition": "Red",
             "label": "MiG-31 Foxhound",
-            "era": ["Late Cold War", "Modern"],
+            "era": "Late Cold War",
             "shortLabel": "31",
             "loadouts": [
                {
@@ -3002,8 +3055,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "MQ-9 Reaper": {
             "name": "MQ-9 Reaper",
+            "coalition": "Blue",
             "label": "MQ-9 Reaper",
-            "era": ["Modern"],
+            "era": "Modern",
             "shortLabel": "9",
             "loadouts": [
                {
@@ -3036,8 +3090,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "Su-17M4": {
             "name": "Su-17M4",
+            "coalition": "Red",
             "label": "Su-17M4 Fitter",
-            "era": ["Mid Cold War", "Late Cold War"],
+            "era": "Mid Cold War",
             "shortLabel": "17M4",
             "loadouts": [
                {
@@ -3078,8 +3133,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "Su-24M": {
             "name": "Su-24M",
+            "coalition": "Red",
             "label": "Su-24M Fencer",
-            "era": ["Mid Cold War", "Late Cold War", "Modern"],
+            "era": "Mid Cold War",
             "shortLabel": "24",
             "loadouts": [
                {
@@ -3116,8 +3172,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "Su-25": {
             "name": "Su-25",
+            "coalition": "Red",
             "label": "Su-25A Frogfoot",
-            "era": ["Late Cold War"],
+            "era": "Late Cold War",
             "shortLabel": "S25",
             "loadouts": [
                {
@@ -3188,8 +3245,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "Su-25T": {
             "name": "Su-25",
+            "coalition": "Red",
             "label": "Su-25T Frogfoot",
-            "era": ["Late Cold War", "Modern"],
+            "era": "Late Cold War",
             "shortLabel": "S25T",
             "loadouts": [
                {
@@ -3294,8 +3352,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "Su-27": {
             "name": "Su-27",
+            "coalition": "Red",
             "label": "Su-27 Flanker",
-            "era": ["Late Cold War", "Modern"],
+            "era": "Late Cold War",
             "shortLabel": "27",
             "loadouts": [
                {
@@ -3394,8 +3453,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "Su-30": {
             "name": "Su-30",
+            "coalition": "Red",
             "label": "Su-30 Super Flanker",
-            "era": ["Modern"],
+            "era": "Late Cold War",
             "shortLabel": "30",
             "loadouts": [
                {
@@ -3484,8 +3544,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "Su-33": {
             "name": "Su-33",
+            "coalition": "Red",
             "label": "Su-33 Navy Flanker",
-            "era": ["Late Cold War", "Modern"],
+            "era": "Late Cold War",
             "shortLabel": "33",
             "loadouts": [
                {
@@ -3574,8 +3635,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "Su-34": {
             "name": "Su-34",
+            "coalition": "Red",
             "label": "Su-34 Hellduck",
-            "era": ["Modern"],
+            "era": "Modern",
             "shortLabel": "34",
             "loadouts": [
                {
@@ -3620,8 +3682,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "Tornado IDS": {
             "name": "Tornado IDS",
+            "coalition": "Blue",
             "label": "Tornado IDS",
-            "era": ["Late Cold War", "Modern"],
+            "era": "Late Cold War",
             "shortLabel": "IDS",
             "loadouts": [
                {
@@ -3662,8 +3725,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "Tornado GR4": {
             "name": "Tornado GR4",
+            "coalition": "Blue",
             "label": "Tornado GR4",
-            "era": ["Late Cold War", "Modern"],
+            "era": "Late Cold War",
             "shortLabel": "GR4",
             "loadouts": [
                {
@@ -3756,8 +3820,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "Tu-142": {
             "name": "Tu-142",
+            "coalition": "Red",
             "label": "Tu-142 Bear",
-            "era": ["Mid Cold War", "Late Cold War", "Modern"],
+            "era": "Mid Cold War",
             "shortLabel": "142",
             "loadouts": [
                {
@@ -3790,8 +3855,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "Tu-160": {
             "name": "Tu-160",
+            "coalition": "Red",
             "label": "Tu-160 Blackjack",
-            "era": ["Late Cold War", "Modern"],
+            "era": "Late Cold War",
             "shortLabel": "160",
             "loadouts": [
                {
@@ -3824,8 +3890,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "Tu-22M3": {
             "name": "Tu-22M3",
+            "coalition": "Red",
             "label": "Tu-22M3 Backfire",
-            "era": ["Late Cold War", "Modern"],
+            "era": "Late Cold War",
             "shortLabel": "T22",
             "loadouts": [
                {
@@ -3872,8 +3939,9 @@ export class AircraftDatabase extends UnitDatabase {
          },
          "Tu-95MS": {
             "name": "Tu-95MS",
+            "coalition": "Red",
             "label": "Tu-95MS Bear",
-            "era": ["Mid Cold War", "Late Cold War", "Modern"],
+            "era": "Mid Cold War",
             "shortLabel": "95",
             "loadouts": [
                {
