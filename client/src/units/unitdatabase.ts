@@ -48,13 +48,9 @@ export class UnitDatabase {
     getEras() {
         var eras: string[] = [];
         for (let unit in this.blueprints) {
-            var unitEras = this.blueprints[unit].era;
-            if (unitEras) {
-                for (let era of unitEras) {
-                    if (era !== "" && !eras.includes(era))
-                        eras.push(era);
-                }
-            }
+            var era = this.blueprints[unit].era;
+            if (era && era !== "" && !eras.includes(era))
+                eras.push(era);
         }
         return eras;
     }
