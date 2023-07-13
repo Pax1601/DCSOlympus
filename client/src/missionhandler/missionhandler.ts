@@ -2,91 +2,74 @@ import { LatLng } from "leaflet";
 import { getInfoPopup, getMap, getUnitsManager } from "..";
 import { Airbase } from "./airbase";
 import { Bullseye } from "./bullseye";
+import { BLUE_COMMANDER, GAME_MASTER, RED_COMMANDER } from "../constants/constants";
 
 export class MissionHandler {
     #bullseyes: { [name: string]: Bullseye } = {};
     #airbases: { [name: string]: Airbase } = {};
     #theatre: string = "";
-
-    #airbaseData: { [name: string]: object } = {};
-
-    //  Time
-    #date: any;
-    #elapsedTime: any;
-    #startTime: any;
-    #time: any;
-
-    #updateTime: any;
+    #dateAndTime: DateAndTime = {date: {Year: 0, Month: 0, Day: 0}, time: {h: 0, m: 0, s: 0}, startTime: 0, elapsedTime: 0};
+    #RTSOptions: RTSOptions = {commandMode: "Hide all", restrictSpawns: false, restrictToCoalition: false, setupTime: Infinity, spawnPoints: {red: Infinity, blue: Infinity}, eras: []};
+    #remainingSetupTime: number = 0;
+    #spentSpawnPoint: number = 0;
 
     constructor() {
 
     }
 
-    update(data: BullseyesData | AirbasesData | any) {
-        if ("bullseyes" in data) {
-            for (let idx in data.bullseyes) {
-                const bullseye = data.bullseyes[idx];
-                if (!(idx in this.#bullseyes))
-                    this.#bullseyes[idx] = new Bullseye([0, 0]).addTo(getMap());
+    updateBullseyes(data: BullseyesData) {
+        for (let idx in data.bullseyes) {
+            const bullseye = data.bullseyes[idx];
+            if (!(idx in this.#bullseyes))
+                this.#bullseyes[idx] = new Bullseye([0, 0]).addTo(getMap());
 
-                if (bullseye.latitude && bullseye.longitude && bullseye.coalition) {
-                    this.#bullseyes[idx].setLatLng(new LatLng(bullseye.latitude, bullseye.longitude));
-                    this.#bullseyes[idx].setCoalition(bullseye.coalition);
-                }
+            if (bullseye.latitude && bullseye.longitude && bullseye.coalition) {
+                this.#bullseyes[idx].setLatLng(new LatLng(bullseye.latitude, bullseye.longitude));
+                this.#bullseyes[idx].setCoalition(bullseye.coalition);
             }
         }
+    }
 
-        if ("mission" in data) {
-            if (data.mission != null && data.mission.theatre != this.#theatre) {
-                this.#theatre = data.mission.theatre;
-                getMap().setTheatre(this.#theatre);
-
-                getInfoPopup().setText("Map set to " + this.#theatre);
-            }
-        }
-
-        if ("airbases" in data) {
-            for (let idx in data.airbases) {
-                var airbase = data.airbases[idx]
-                if (this.#airbases[idx] === undefined && airbase.callsign != '') {
-                    this.#airbases[idx] = new Airbase({
-                        position: new LatLng(airbase.latitude, airbase.longitude),
-                        name: airbase.callsign
-                    }).addTo(getMap());
-                    this.#airbases[idx].on('contextmenu', (e) => this.#onAirbaseClick(e));
-                }
-
-                if (this.#airbases[idx] != undefined && airbase.latitude && airbase.longitude && airbase.coalition) {
-                    this.#airbases[idx].setLatLng(new LatLng(airbase.latitude, airbase.longitude));
-                    this.#airbases[idx].setCoalition(airbase.coalition);
-                }
-                //this.#airbases[idx].setProperties(["Runway 1: 31L / 13R", "Runway 2: 31R / 13L", "TCN: 17X", "ILS: ---" ]);
-                //this.#airbases[idx].setParkings(["2x big", "5x small"]);
-            }
-        }
-
-        if ("mission" in data && data.mission != null) {
-            if (data.mission != null && data.mission.theatre != this.#theatre) {
-                this.#theatre = data.mission.theatre;
-                getMap().setTheatre(this.#theatre);
-                getInfoPopup().setText("Map set to " + this.#theatre);
+    updateAirbases(data: AirbasesData) {
+        for (let idx in data.airbases) {
+            var airbase = data.airbases[idx]
+            if (this.#airbases[idx] === undefined && airbase.callsign != '') {
+                this.#airbases[idx] = new Airbase({
+                    position: new LatLng(airbase.latitude, airbase.longitude),
+                    name: airbase.callsign
+                }).addTo(getMap());
+                this.#airbases[idx].on('contextmenu', (e) => this.#onAirbaseClick(e));
             }
 
-            if ("visibilityMode" in data.mission)
-                getUnitsManager().setVisibilityMode(data.mission.visibilityMode);
+            if (this.#airbases[idx] != undefined && airbase.latitude && airbase.longitude && airbase.coalition) {
+                this.#airbases[idx].setLatLng(new LatLng(airbase.latitude, airbase.longitude));
+                this.#airbases[idx].setCoalition(airbase.coalition);
+            }
+        }
+    }
 
-            if ("date" in data.mission)
-                this.#date = data.mission.date;
-            if ("elapsedTime" in data.mission)
-                this.#elapsedTime = data.mission.elapsedTime;
-            if ("startTime" in data.mission)
-                this.#startTime = data.mission.startTime;
-            if ("time" in data.mission)
-                this.#time = data.mission.time;
+    updateMission(data: MissionData) {
+        if (data.theatre != this.#theatre) {
+            this.#theatre = data.theatre;
+            getMap().setTheatre(this.#theatre);
+            getInfoPopup().setText("Map set to " + this.#theatre);
         }
 
-        if ("time" in data)
-            this.#updateTime = data.time;
+        this.#dateAndTime = data.dateAndTime;
+
+        this.#setRTSOptions(data.RTSOptions);
+        getUnitsManager().setCommandMode(this.#RTSOptions.commandMode);
+
+        this.#remainingSetupTime = this.#RTSOptions.setupTime - this.getDateAndTime().elapsedTime;
+        var RTSPhaseEl = document.querySelector("#rts-phase");
+        if (RTSPhaseEl) {
+            if (this.#remainingSetupTime > 0) {
+                var remainingTime = `Time to start: -${new Date(this.#remainingSetupTime * 1000).toISOString().substring(14, 19)}`;
+                RTSPhaseEl.textContent = remainingTime;
+            } else {
+                RTSPhaseEl.textContent = "FIGHT";
+            }
+        }
     }
 
     getBullseyes() {
@@ -97,36 +80,54 @@ export class MissionHandler {
         return this.#airbases;
     }
 
-    getDate() {
-        return this.#date;
+    getRTSOptions() {
+        return this.#RTSOptions;
     }
 
-    getNowDate() {
+    getDateAndTime() {
+        return this.#dateAndTime;
+    }
 
-        const date = this.getDate();
-        const time = this.getTime();
+    getRemainingSetupTime() {
+        return this.#remainingSetupTime;
+    }
 
-        if (!date) {
-            return new Date();
+    getAvailableSpawnPoints() {
+        if (getUnitsManager().getCommandMode() === GAME_MASTER)
+            return Infinity;
+        else if (getUnitsManager().getCommandMode() === BLUE_COMMANDER)
+            return this.getRTSOptions().spawnPoints.blue - this.#spentSpawnPoint;
+        else if (getUnitsManager().getCommandMode() === RED_COMMANDER)
+            return this.getRTSOptions().spawnPoints.red - this.#spentSpawnPoint;
+        else
+            return 0;
+    }
+
+    refreshSpawnPoints() {
+        var spawnPointsEl = document.querySelector("#spawn-points");
+        if (spawnPointsEl) {
+            spawnPointsEl.textContent = `${this.getAvailableSpawnPoints()}`;
         }
-
-        let year = date.Year;
-        let month = date.Month - 1;
-
-        if (month < 0) {
-            month = 11;
-            year--;
-        }
-
-        return new Date(year, month, date.Day, time.h, time.m, time.s);
     }
 
-    getTime() {
-        return this.#time;
+    setSpentSpawnPoints(spawnPoints: number) {
+        this.#spentSpawnPoint = spawnPoints;
+        this.refreshSpawnPoints();
     }
 
-    getUpdateTime() {
-        return this.#updateTime;
+    #setRTSOptions(RTSOptions: RTSOptions) {
+        var RTSOptionsChanged = (!RTSOptions.eras.every((value: string, idx: number) => {return value === this.#RTSOptions.eras[idx]}) || 
+                                RTSOptions.spawnPoints.red !== this.#RTSOptions.spawnPoints.red || 
+                                RTSOptions.spawnPoints.blue !== this.#RTSOptions.spawnPoints.blue ||
+                                RTSOptions.restrictSpawns !== this.#RTSOptions.restrictSpawns ||
+                                RTSOptions.restrictToCoalition !== this.#RTSOptions.restrictToCoalition);
+        
+        this.#RTSOptions = RTSOptions;
+        this.setSpentSpawnPoints(0);
+        this.refreshSpawnPoints();
+
+        if (RTSOptionsChanged)
+            document.dispatchEvent(new CustomEvent("RTSOptionsChanged", { detail: this }));
     }
 
     #onAirbaseClick(e: any) {

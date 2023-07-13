@@ -1,12 +1,15 @@
+import { getUnitsManager } from "..";
+import { GAME_MASTER } from "../constants/constants";
 import { UnitDatabase } from "./unitdatabase"
 
 export class GroundUnitDatabase extends UnitDatabase {
     constructor() {
         super();
+        
         this.blueprints = {
             "SA-2 SAM Battery": {
                 "name": "SA-2 SAM Battery",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Early Cold War",
                 "label": "SA-2 SAM Battery",
                 "shortLabel": "SA-2 SAM Battery",
@@ -16,7 +19,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "SA-3 SAM Battery": {
                 "name": "SA-3 SAM Battery",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Early Cold War",
                 "label": "SA-3 SAM Battery",
                 "shortLabel": "SA-3 SAM Battery",
@@ -26,7 +29,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "SA-6 SAM Battery": {
                 "name": "SA-6 SAM Battery",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Mid Cold War",
                 "label": "SA-6 SAM Battery",
                 "shortLabel": "SA-6 SAM Battery",
@@ -36,7 +39,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "SA-10 SAM Battery": {
                 "name": "SA-10 SAM Battery",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "SA-10 SAM Battery",
                 "shortLabel": "SA-10 SAM Battery",
@@ -46,7 +49,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "SA-11 SAM Battery": {
                 "name": "SA-11 SAM Battery",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "SA-11 SAM Battery",
                 "shortLabel": "SA-11 SAM Battery",
@@ -56,7 +59,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Patriot site": {
                 "name": "Patriot site",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Late Cold War",
                 "label": "Patriot site",
                 "shortLabel": "Patriot site",
@@ -66,7 +69,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Hawk SAM Battery": {
                 "name": "Hawk SAM Battery",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Early Cold War",
                 "label": "Hawk SAM Battery",
                 "shortLabel": "Hawk SAM Battery",
@@ -76,7 +79,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "2B11 mortar": {
                 "name": "2B11 mortar",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "2B11 mortar",
                 "shortLabel": "2B11 mortar",
@@ -85,7 +88,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "SAU Gvozdika": {
                 "name": "SAU Gvozdika",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Mid Cold War",
                 "label": "SAU Gvozdika",
                 "shortLabel": "SAU Gvozdika",
@@ -94,7 +97,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "SAU Msta": {
                 "name": "SAU Msta",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "SAU Msta",
                 "shortLabel": "SAU Msta",
@@ -103,7 +106,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "SAU Akatsia": {
                 "name": "SAU Akatsia",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Mid Cold War",
                 "label": "SAU Akatsia",
                 "shortLabel": "SAU Akatsia",
@@ -112,7 +115,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "SAU 2-C9": {
                 "name": "SAU 2-C9",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Mid Cold War",
                 "label": "SAU Nona",
                 "shortLabel": "SAU Nona",
@@ -121,7 +124,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "M-109": {
                 "name": "M-109",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Early Cold War",
                 "label": "M-109 Paladin",
                 "shortLabel": "M-109",
@@ -130,7 +133,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "AAV7": {
                 "name": "AAV7",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Mid Cold War",
                 "label": "AAV7",
                 "shortLabel": "AAV7",
@@ -139,7 +142,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "BMD-1": {
                 "name": "BMD-1",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Mid Cold War",
                 "label": "BMD-1",
                 "shortLabel": "BMD-1",
@@ -148,7 +151,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "BMP-1": {
                 "name": "BMP-1",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Mid Cold War",
                 "label": "BMP-1",
                 "shortLabel": "BMP-1",
@@ -157,7 +160,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "BMP-2": {
                 "name": "BMP-2",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Mid Cold War",
                 "label": "BMP-2",
                 "shortLabel": "BMP-2",
@@ -166,7 +169,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "BMP-3": {
                 "name": "BMP-3",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "BMP-3",
                 "shortLabel": "BMP-3",
@@ -175,7 +178,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Boman": {
                 "name": "Boman",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Late Cold War",
                 "label": "Grad Fire Direction Manager",
                 "shortLabel": "Boman",
@@ -184,7 +187,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "BRDM-2": {
                 "name": "BRDM-2",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Early Cold War",
                 "label": "BRDM-2",
                 "shortLabel": "BRDM-2",
@@ -193,7 +196,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "BTR-80": {
                 "name": "BTR-80",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "BTR-80",
                 "shortLabel": "BTR-80",
@@ -202,7 +205,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "BTR_D": {
                 "name": "BTR_D",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Mid Cold War",
                 "label": "BTR_D",
                 "shortLabel": "BTR_D",
@@ -220,7 +223,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Cobra": {
                 "name": "Cobra",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Modern",
                 "label": "Otokar Cobra",
                 "shortLabel": "Cobra",
@@ -229,7 +232,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "LAV-25": {
                 "name": "LAV-25",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Late Cold War",
                 "label": "LAV-25",
                 "shortLabel": "LAV-25",
@@ -238,7 +241,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "M1043 HMMWV Armament": {
                 "name": "M1043 HMMWV Armament",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Late Cold War",
                 "label": "HMMWV M2 Browning",
                 "shortLabel": "HMMWV M2",
@@ -247,7 +250,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "M1045 HMMWV TOW": {
                 "name": "M1045 HMMWV TOW",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "HMMWV TOW",
                 "shortLabel": "HMMWV TOW",
@@ -256,7 +259,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "M1126 Stryker ICV": {
                 "name": "M1126 Stryker ICV",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Modern",
                 "label": "Stryker MG",
                 "shortLabel": "Stryker MG",
@@ -265,7 +268,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "M-113": {
                 "name": "M-113",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Early Cold War",
                 "label": "M-113",
                 "shortLabel": "M-113",
@@ -274,7 +277,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "M1134 Stryker ATGM": {
                 "name": "M1134 Stryker ATGM",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Modern",
                 "label": "Stryker ATGM",
                 "shortLabel": "Stryker ATGM",
@@ -283,7 +286,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "M-2 Bradley": {
                 "name": "M-2 Bradley",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Late Cold War",
                 "label": "M-2A2 Bradley",
                 "shortLabel": "M-2 Bradley",
@@ -292,7 +295,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Marder": {
                 "name": "Marder",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Late Cold War",
                 "label": "Marder",
                 "shortLabel": "Marder",
@@ -301,7 +304,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "MCV-80": {
                 "name": "MCV-80",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Late Cold War",
                 "label": "Warrior IFV",
                 "shortLabel": "Warrior",
@@ -310,7 +313,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "MTLB": {
                 "name": "MTLB",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Mid Cold War",
                 "label": "MT-LB",
                 "shortLabel": "MT-LB",
@@ -319,7 +322,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Paratrooper RPG-16": {
                 "name": "Paratrooper RPG-16",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Modern",
                 "label": "Paratrooper RPG-16",
                 "shortLabel": "Paratrooper RPG-16",
@@ -328,7 +331,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Paratrooper AKS-74": {
                 "name": "Paratrooper AKS-74",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Modern",
                 "label": "Paratrooper AKS-74",
                 "shortLabel": "Paratrooper AKS-74",
@@ -346,7 +349,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Soldier AK": {
                 "name": "Soldier AK",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Early Cold War",
                 "label": "Soldier AK",
                 "shortLabel": "Soldier AK",
@@ -355,7 +358,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Infantry AK": {
                 "name": "Infantry AK",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Mid Cold War",
                 "label": "Infantry AK",
                 "shortLabel": "Infantry AK",
@@ -364,7 +367,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Soldier M249": {
                 "name": "Soldier M249",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Late Cold War",
                 "label": "Soldier M249",
                 "shortLabel": "Soldier M249",
@@ -373,7 +376,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Soldier M4": {
                 "name": "Soldier M4",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Mid Cold War",
                 "label": "Soldier M4",
                 "shortLabel": "Soldier M4",
@@ -382,7 +385,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Soldier M4 GRG": {
                 "name": "Soldier M4 GRG",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Mid Cold War",
                 "label": "Soldier M4 GRG",
                 "shortLabel": "Soldier M4 GRG",
@@ -391,7 +394,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Soldier RPG": {
                 "name": "Soldier RPG",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Mid Cold War",
                 "label": "Soldier RPG",
                 "shortLabel": "Soldier RPG",
@@ -400,7 +403,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "TPZ": {
                 "name": "TPZ",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Late Cold War",
                 "label": "TPz Fuchs",
                 "shortLabel": "TPz Fuchs",
@@ -409,7 +412,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Grad-URAL": {
                 "name": "Grad-URAL",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Mid Cold War",
                 "label": "Grad",
                 "shortLabel": "Grad",
@@ -418,7 +421,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Uragan_BM-27": {
                 "name": "Uragan_BM-27",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "Uragan",
                 "shortLabel": "Uragan",
@@ -427,7 +430,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Smerch": {
                 "name": "Smerch",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "Smerch",
                 "shortLabel": "Smerch",
@@ -436,7 +439,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "MLRS": {
                 "name": "MLRS",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Late Cold War",
                 "label": "M270",
                 "shortLabel": "M270",
@@ -445,7 +448,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "2S6 Tunguska": {
                 "name": "2S6 Tunguska",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "SA-19 Tunguska",
                 "shortLabel": "SA-19",
@@ -455,7 +458,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Kub 2P25 ln": {
                 "name": "Kub 2P25 ln",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "SA-6 Kub 2P25 ln",
                 "shortLabel": "Kub 2P25 ln",
@@ -465,7 +468,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "5p73 s-125 ln": {
                 "name": "5p73 s-125 ln",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Early Cold War",
                 "label": "SA-3 5p73 s-125 ln",
                 "shortLabel": "5p73 s-125 ln",
@@ -475,7 +478,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "S-300PS 5P85C ln": {
                 "name": "S-300PS 5P85C ln",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "SA-10 S-300PS 5P85C ln",
                 "shortLabel": "S-300PS 5P85C ln",
@@ -485,7 +488,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "S-300PS 5P85D ln": {
                 "name": "S-300PS 5P85D ln",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "SA-10 S-300PS 5P85D ln",
                 "shortLabel": "S-300PS 5P85D ln",
@@ -495,7 +498,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "SA-11 Buk LN 9A310M1": {
                 "name": "SA-11 Buk LN 9A310M1",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "SA-11 Buk LN 9A310M1",
                 "shortLabel": "SA-11 Buk LN 9A310M1",
@@ -505,7 +508,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Osa 9A33 ln": {
                 "name": "Osa 9A33 ln",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Mid Cold War",
                 "label": "SA-8 Osa 9A33 ln",
                 "shortLabel": "Osa 9A33 ln",
@@ -515,7 +518,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Tor 9A331": {
                 "name": "Tor 9A331",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "SA-15 Tor 9A331",
                 "shortLabel": "Tor 9A331",
@@ -525,7 +528,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Strela-10M3": {
                 "name": "Strela-10M3",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "SA-13 Strela-10M3",
                 "shortLabel": "Strela-10M3",
@@ -535,7 +538,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Strela-1 9P31": {
                 "name": "Strela-1 9P31",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "SA-9 Strela-1 9P31",
                 "shortLabel": "Strela-1 9P31",
@@ -545,7 +548,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "SA-11 Buk CC 9S470M1": {
                 "name": "SA-11 Buk CC 9S470M1",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "SA-11 Buk CC 9S470M1",
                 "shortLabel": "SA-11 Buk CC 9S470M1",
@@ -555,7 +558,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "SA-8 Osa LD 9T217": {
                 "name": "SA-8 Osa LD 9T217",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "SA-8 Osa LD 9T217",
                 "shortLabel": "SA-8 Osa LD 9T217",
@@ -565,7 +568,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Patriot AMG": {
                 "name": "Patriot AMG",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Modern",
                 "label": "Patriot AMG",
                 "shortLabel": "Patriot AMG",
@@ -575,7 +578,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Patriot ECS": {
                 "name": "Patriot ECS",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Modern",
                 "label": "Patriot ECS",
                 "shortLabel": "Patriot ECS",
@@ -585,7 +588,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Gepard": {
                 "name": "Gepard",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Late Cold War",
                 "label": "Gepard",
                 "shortLabel": "Gepard",
@@ -594,7 +597,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Hawk pcp": {
                 "name": "Hawk pcp",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Late Cold War",
                 "label": "Hawk pcp",
                 "shortLabel": "Hawk pcp",
@@ -604,7 +607,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "SA-18 Igla manpad": {
                 "name": "SA-18 Igla manpad",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "SA-18 Igla manpad",
                 "shortLabel": "SA-18 Igla manpad",
@@ -614,7 +617,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Igla manpad INS": {
                 "name": "Igla manpad INS",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "SA-18 Igla manpad INS",
                 "shortLabel": "Igla manpad INS",
@@ -624,7 +627,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "SA-18 Igla-S manpad": {
                 "name": "SA-18 Igla-S manpad",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "SA-18 Igla-S manpad",
                 "shortLabel": "SA-18 Igla-S manpad",
@@ -634,7 +637,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Vulcan": {
                 "name": "Vulcan",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Late Cold War",
                 "label": "Vulcan",
                 "shortLabel": "Vulcan",
@@ -643,7 +646,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Hawk ln": {
                 "name": "Hawk ln",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Late Cold War",
                 "label": "Hawk ln",
                 "shortLabel": "Hawk ln",
@@ -652,7 +655,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "M48 Chaparral": {
                 "name": "M48 Chaparral",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Late Cold War",
                 "label": "M48 Chaparral",
                 "shortLabel": "M48 Chaparral",
@@ -661,7 +664,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "M6 Linebacker": {
                 "name": "M6 Linebacker",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Late Cold War",
                 "label": "M6 Linebacker",
                 "shortLabel": "M6 Linebacker",
@@ -670,7 +673,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Patriot ln": {
                 "name": "Patriot ln",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Late Cold War",
                 "label": "Patriot ln",
                 "shortLabel": "Patriot ln",
@@ -680,7 +683,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "M1097 Avenger": {
                 "name": "M1097 Avenger",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Modern",
                 "label": "M1097 Avenger",
                 "shortLabel": "M1097 Avenger",
@@ -689,7 +692,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Patriot EPP": {
                 "name": "Patriot EPP",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Late Cold War",
                 "label": "Patriot EPP",
                 "shortLabel": "Patriot EPP",
@@ -699,7 +702,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Patriot cp": {
                 "name": "Patriot cp",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Late Cold War",
                 "label": "Patriot cp",
                 "shortLabel": "Patriot cp",
@@ -709,7 +712,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Roland ADS": {
                 "name": "Roland ADS",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Late Cold War",
                 "label": "Roland ADS",
                 "shortLabel": "Roland ADS",
@@ -718,7 +721,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "S-300PS 54K6 cp": {
                 "name": "S-300PS 54K6 cp",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "SA-10 S-300PS 54K6 cp",
                 "shortLabel": "S-300PS 54K6 cp",
@@ -728,7 +731,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Stinger manpad GRG": {
                 "name": "Stinger manpad GRG",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Late Cold War",
                 "label": "Stinger manpad GRG",
                 "shortLabel": "Stinger manpad GRG",
@@ -738,7 +741,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Stinger manpad dsr": {
                 "name": "Stinger manpad dsr",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Late Cold War",
                 "label": "Stinger manpad dsr",
                 "shortLabel": "Stinger manpad dsr",
@@ -748,7 +751,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Stinger comm dsr": {
                 "name": "Stinger comm dsr",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "Stinger comm dsr",
                 "shortLabel": "Stinger comm dsr",
@@ -758,7 +761,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Stinger manpad": {
                 "name": "Stinger manpad",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Late Cold War",
                 "label": "Stinger manpad",
                 "shortLabel": "Stinger manpad",
@@ -768,7 +771,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Stinger comm": {
                 "name": "Stinger comm",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Late Cold War",
                 "label": "Stinger comm",
                 "shortLabel": "Stinger comm",
@@ -778,7 +781,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "ZSU-23-4 Shilka": {
                 "name": "ZSU-23-4 Shilka",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "ZSU-23-4 Shilka",
                 "shortLabel": "ZSU-23-4 Shilka",
@@ -787,7 +790,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "ZU-23 Emplacement Closed": {
                 "name": "ZU-23 Emplacement Closed",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Early Cold War",
                 "label": "ZU-23 Emplacement Closed",
                 "shortLabel": "ZU-23 Emplacement Closed",
@@ -796,7 +799,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "ZU-23 Emplacement": {
                 "name": "ZU-23 Emplacement",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Early Cold War",
                 "label": "ZU-23 Emplacement",
                 "shortLabel": "ZU-23 Emplacement",
@@ -805,7 +808,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "ZU-23 Closed Insurgent": {
                 "name": "ZU-23 Closed Insurgent",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Early Cold War",
                 "label": "ZU-23 Closed Insurgent",
                 "shortLabel": "ZU-23 Closed Insurgent",
@@ -814,7 +817,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Ural-375 ZU-23 Insurgent": {
                 "name": "Ural-375 ZU-23 Insurgent",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Early Cold War",
                 "label": "Ural-375 ZU-23 Insurgent",
                 "shortLabel": "Ural-375 ZU-23 Insurgent",
@@ -823,7 +826,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "ZU-23 Insurgent": {
                 "name": "ZU-23 Insurgent",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Early Cold War",
                 "label": "ZU-23 Insurgent",
                 "shortLabel": "ZU-23 Insurgent",
@@ -832,7 +835,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Ural-375 ZU-23": {
                 "name": "Ural-375 ZU-23",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Early Cold War",
                 "label": "Ural-375 ZU-23",
                 "shortLabel": "Ural-375 ZU-23",
@@ -841,7 +844,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "1L13 EWR": {
                 "name": "1L13 EWR",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "1L13 EWR",
                 "shortLabel": "1L13 EWR",
@@ -850,7 +853,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Kub 1S91 str": {
                 "name": "Kub 1S91 str",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Mid Cold War",
                 "label": "SA-6 Kub 1S91 str",
                 "shortLabel": "Kub 1S91 str",
@@ -860,7 +863,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "S-300PS 40B6M tr": {
                 "name": "S-300PS 40B6M tr",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "SA-10 S-300PS 40B6M tr",
                 "shortLabel": "S-300PS 40B6M tr",
@@ -870,7 +873,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "S-300PS 40B6MD sr": {
                 "name": "S-300PS 40B6MD sr",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "SA-10 S-300PS 40B6MD sr",
                 "shortLabel": "S-300PS 40B6MD sr",
@@ -880,7 +883,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "55G6 EWR": {
                 "name": "55G6 EWR",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Early Cold War",
                 "label": "55G6 EWR",
                 "shortLabel": "55G6 EWR",
@@ -889,7 +892,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "S-300PS 64H6E sr": {
                 "name": "S-300PS 64H6E sr",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "SA-10 S-300PS 64H6E sr",
                 "shortLabel": "S-300PS 64H6E sr",
@@ -899,7 +902,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "SA-11 Buk SR 9S18M1": {
                 "name": "SA-11 Buk SR 9S18M1",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Mid Cold War",
                 "label": "SA-11 Buk SR 9S18M1",
                 "shortLabel": "SA-11 Buk SR 9S18M1",
@@ -909,7 +912,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Dog Ear radar": {
                 "name": "Dog Ear radar",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Mid Cold War",
                 "label": "Dog Ear radar",
                 "shortLabel": "Dog Ear radar",
@@ -918,7 +921,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Hawk tr": {
                 "name": "Hawk tr",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Early Cold War",
                 "label": "Hawk tr",
                 "shortLabel": "Hawk tr",
@@ -928,7 +931,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Hawk sr": {
                 "name": "Hawk sr",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Early Cold War",
                 "label": "Hawk sr",
                 "shortLabel": "Hawk sr",
@@ -938,7 +941,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Patriot str": {
                 "name": "Patriot str",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Late Cold War",
                 "label": "Patriot str",
                 "shortLabel": "Patriot str",
@@ -948,7 +951,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Hawk cwar": {
                 "name": "Hawk cwar",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Early Cold War",
                 "label": "Hawk cwar",
                 "shortLabel": "Hawk cwar",
@@ -958,7 +961,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "p-19 s-125 sr": {
                 "name": "p-19 s-125 sr",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Mid Cold War",
                 "label": "SA-3 p-19 s-125 sr",
                 "shortLabel": "p-19 s-125 sr",
@@ -967,7 +970,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Roland Radar": {
                 "name": "Roland Radar",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Mid Cold War",
                 "label": "Roland Radar",
                 "shortLabel": "Roland Radar",
@@ -976,7 +979,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "snr s-125 tr": {
                 "name": "snr s-125 tr",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Early Cold War",
                 "label": "SA-3 snr s-125 tr",
                 "shortLabel": "snr s-125 tr",
@@ -1031,7 +1034,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Challenger2": {
                 "name": "Challenger2",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Modern",
                 "label": "Challenger2",
                 "shortLabel": "Challenger2",
@@ -1040,7 +1043,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Leclerc": {
                 "name": "Leclerc",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Modern",
                 "label": "Leclerc",
                 "shortLabel": "Leclerc",
@@ -1049,7 +1052,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Leopard1A3": {
                 "name": "Leopard1A3",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Mid Cold War",
                 "label": "Leopard1A3",
                 "shortLabel": "Leopard1A3",
@@ -1058,7 +1061,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Leopard-2": {
                 "name": "Leopard-2",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Late Cold War",
                 "label": "Leopard-2",
                 "shortLabel": "Leopard-2",
@@ -1067,7 +1070,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "M-60": {
                 "name": "M-60",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Early Cold War",
                 "label": "M-60",
                 "shortLabel": "M-60",
@@ -1076,7 +1079,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "M1128 Stryker MGS": {
                 "name": "M1128 Stryker MGS",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Modern",
                 "label": "M1128 Stryker MGS",
                 "shortLabel": "M1128 Stryker MGS",
@@ -1085,7 +1088,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "M-1 Abrams": {
                 "name": "M-1 Abrams",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Late Cold War",
                 "label": "M-1 Abrams",
                 "shortLabel": "M-1 Abrams",
@@ -1094,7 +1097,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "T-55": {
                 "name": "T-55",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Early Cold War",
                 "label": "T-55",
                 "shortLabel": "T-55",
@@ -1103,7 +1106,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "T-72B": {
                 "name": "T-72B",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Mid Cold War",
                 "label": "T-72B",
                 "shortLabel": "T-72B",
@@ -1112,7 +1115,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "T-80UD": {
                 "name": "T-80UD",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Mid Cold War",
                 "label": "T-80UD",
                 "shortLabel": "T-80UD",
@@ -1121,7 +1124,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "T-90": {
                 "name": "T-90",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "T-90",
                 "shortLabel": "T-90",
@@ -1130,7 +1133,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Ural-4320 APA-5D": {
                 "name": "Ural-4320 APA-5D",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Early Cold War",
                 "label": "Ural-4320 APA-5D",
                 "shortLabel": "Ural-4320 APA-5D",
@@ -1139,7 +1142,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "ATMZ-5": {
                 "name": "ATMZ-5",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Early Cold War",
                 "label": "ATMZ-5",
                 "shortLabel": "ATMZ-5",
@@ -1148,7 +1151,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "ATZ-10": {
                 "name": "ATZ-10",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Early Cold War",
                 "label": "ATZ-10",
                 "shortLabel": "ATZ-10",
@@ -1157,7 +1160,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "GAZ-3307": {
                 "name": "GAZ-3307",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Early Cold War",
                 "label": "GAZ-3307",
                 "shortLabel": "GAZ-3307",
@@ -1166,7 +1169,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "GAZ-3308": {
                 "name": "GAZ-3308",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Early Cold War",
                 "label": "GAZ-3308",
                 "shortLabel": "GAZ-3308",
@@ -1175,7 +1178,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "GAZ-66": {
                 "name": "GAZ-66",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Early Cold War",
                 "label": "GAZ-66",
                 "shortLabel": "GAZ-66",
@@ -1184,7 +1187,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "M978 HEMTT Tanker": {
                 "name": "M978 HEMTT Tanker",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Mid Cold War",
                 "label": "M978 HEMTT Tanker",
                 "shortLabel": "M978 HEMTT Tanker",
@@ -1193,7 +1196,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "HEMTT TFFT": {
                 "name": "HEMTT TFFT",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Late Cold War",
                 "label": "HEMTT TFFT",
                 "shortLabel": "HEMTT TFFT",
@@ -1202,7 +1205,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "IKARUS Bus": {
                 "name": "IKARUS Bus",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Mid Cold War",
                 "label": "IKARUS Bus",
                 "shortLabel": "IKARUS Bus",
@@ -1211,7 +1214,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "KAMAZ Truck": {
                 "name": "KAMAZ Truck",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Mid Cold War",
                 "label": "KAMAZ Truck",
                 "shortLabel": "KAMAZ Truck",
@@ -1220,7 +1223,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "LAZ Bus": {
                 "name": "LAZ Bus",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Early Cold War",
                 "label": "LAZ Bus",
                 "shortLabel": "LAZ Bus",
@@ -1229,7 +1232,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Hummer": {
                 "name": "Hummer",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Mid Cold War",
                 "label": "Hummer",
                 "shortLabel": "Hummer",
@@ -1238,7 +1241,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "M 818": {
                 "name": "M 818",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Early Cold War",
                 "label": "M 818",
                 "shortLabel": "M 818",
@@ -1247,7 +1250,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "MAZ-6303": {
                 "name": "MAZ-6303",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Mid Cold War",
                 "label": "MAZ-6303",
                 "shortLabel": "MAZ-6303",
@@ -1256,7 +1259,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Predator GCS": {
                 "name": "Predator GCS",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Late Cold War",
                 "label": "Predator GCS",
                 "shortLabel": "Predator GCS",
@@ -1265,7 +1268,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Predator TrojanSpirit": {
                 "name": "Predator TrojanSpirit",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Late Cold War",
                 "label": "Predator TrojanSpirit",
                 "shortLabel": "Predator TrojanSpirit",
@@ -1283,7 +1286,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Tigr_233036": {
                 "name": "Tigr_233036",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "Tigr_233036",
                 "shortLabel": "Tigr_233036",
@@ -1292,7 +1295,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Trolley bus": {
                 "name": "Trolley bus",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Late Cold War",
                 "label": "Trolley bus",
                 "shortLabel": "Trolley bus",
@@ -1301,7 +1304,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "UAZ-469": {
                 "name": "UAZ-469",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Mid Cold War",
                 "label": "UAZ-469",
                 "shortLabel": "UAZ-469",
@@ -1310,7 +1313,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Ural ATsP-6": {
                 "name": "Ural ATsP-6",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Mid Cold War",
                 "label": "Ural ATsP-6",
                 "shortLabel": "Ural ATsP-6",
@@ -1319,7 +1322,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Ural-375 PBU": {
                 "name": "Ural-375 PBU",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Mid Cold War",
                 "label": "Ural-375 PBU",
                 "shortLabel": "Ural-375 PBU",
@@ -1328,7 +1331,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Ural-375": {
                 "name": "Ural-375",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Mid Cold War",
                 "label": "Ural-375",
                 "shortLabel": "Ural-375",
@@ -1337,7 +1340,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Ural-4320-31": {
                 "name": "Ural-4320-31",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "Ural-4320-31",
                 "shortLabel": "Ural-4320-31",
@@ -1346,7 +1349,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "Ural-4320T": {
                 "name": "Ural-4320T",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "Ural-4320T",
                 "shortLabel": "Ural-4320T",
@@ -1355,7 +1358,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "VAZ Car": {
                 "name": "VAZ Car",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Early Cold War",
                 "label": "VAZ Car",
                 "shortLabel": "VAZ Car",
@@ -1364,7 +1367,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "ZiL-131 APA-80": {
                 "name": "ZiL-131 APA-80",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Early Cold War",
                 "label": "ZiL-131 APA-80",
                 "shortLabel": "ZiL-131 APA-80",
@@ -1373,7 +1376,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "SKP-11": {
                 "name": "SKP-11",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Early Cold War",
                 "label": "SKP-11",
                 "shortLabel": "SKP-11",
@@ -1382,7 +1385,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "ZIL-131 KUNG": {
                 "name": "ZIL-131 KUNG",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Early Cold War",
                 "label": "ZIL-131 KUNG",
                 "shortLabel": "ZIL-131 KUNG",
@@ -1391,7 +1394,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             },
             "ZIL-4331": {
                 "name": "ZIL-4331",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Early Cold War",
                 "label": "ZIL-4331",
                 "shortLabel": "ZIL-4331",
@@ -1399,6 +1402,24 @@ export class GroundUnitDatabase extends UnitDatabase {
                 "type": "Unarmed"
             }
         }
+    }
+
+    getSpawnPointsByName(name: string) {
+        if (getUnitsManager().getCommandMode() == GAME_MASTER) 
+            return 0;
+
+        const blueprint = this.getByName(name);
+        if (blueprint?.era == "WW2")
+            return 20;
+        else if (blueprint?.era == "Early Cold War")
+            return 50;
+        else if (blueprint?.era == "Mid Cold War")
+            return 100;
+        else if (blueprint?.era == "Late Cold War")
+            return 200;
+        else if (blueprint?.era == "Modern")
+            return 400;
+        return 0;
     }
 
     getCategory() {

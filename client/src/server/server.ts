@@ -1,5 +1,5 @@
 import { LatLng } from 'leaflet';
-import { getConnectionStatusPanel, getInfoPopup, getMissionData, getUnitDataTable, getUnitsManager, setLoginStatus } from '..';
+import { getConnectionStatusPanel, getInfoPopup, getMissionHandler, getUnitDataTable, getUnitsManager, setLoginStatus } from '..';
 import { GeneralSettings, Radio, TACAN } from '../@types/unit';
 import { ROEs, emissionsCountermeasures, reactionsToThreat } from '../constants/constants';
 
@@ -145,26 +145,26 @@ export function spawnExplosion(intensity: number, latlng: LatLng) {
     POST(data, () => { });
 }
 
-export function spawnAircrafts(units: any, coalition: string, airbaseName: string, immediate: boolean) {
-    var command = { "units": units, "coalition": coalition, "airbaseName": airbaseName, "immediate": immediate };
+export function spawnAircrafts(units: any, coalition: string, airbaseName: string, immediate: boolean, spawnPoints: number) {
+    var command = { "units": units, "coalition": coalition, "airbaseName": airbaseName, "immediate": immediate, "spawnPoints": spawnPoints };
     var data = { "spawnAircrafts": command }
     POST(data, () => { });
 }
 
-export function spawnHelicopters(units: any, coalition: string, airbaseName: string, immediate: boolean) {
-    var command = { "units": units, "coalition": coalition, "airbaseName": airbaseName, "immediate": immediate };
+export function spawnHelicopters(units: any, coalition: string, airbaseName: string, immediate: boolean, spawnPoints: number) {
+    var command = { "units": units, "coalition": coalition, "airbaseName": airbaseName, "immediate": immediate, "spawnPoints": spawnPoints };
     var data = { "spawnHelicopters": command }
     POST(data, () => { });
 }
 
-export function spawnGroundUnits(units: any, coalition: string, immediate: boolean) {
-    var command = { "units": units, "coalition": coalition, "immediate": immediate };
+export function spawnGroundUnits(units: any, coalition: string, immediate: boolean, spawnPoints: number) {
+    var command = { "units": units, "coalition": coalition, "immediate": immediate, "spawnPoints": spawnPoints };;
     var data = { "spawnGroundUnits": command }
     POST(data, () => { });
 }
 
-export function spawnNavyUnits(units: any, coalition: string, immediate: boolean) {
-    var command = { "units": units, "coalition": coalition, "immediate": immediate };
+export function spawnNavyUnits(units: any, coalition: string, immediate: boolean, spawnPoints: number) {
+    var command = { "units": units, "coalition": coalition, "immediate": immediate, "spawnPoints": spawnPoints };
     var data = { "spawnNavyUnits": command }
     POST(data, () => { });
 }
@@ -320,13 +320,6 @@ export function setAdvacedOptions(ID: number, isTanker: boolean, isAWACS: boolea
 }
 
 export function startUpdate() {
-    /* On the first connection, force request of full data */
-    getAirbases((data: AirbasesData) => getMissionData()?.update(data));
-    getBullseye((data: BullseyesData) => getMissionData()?.update(data));
-    getMission((data: any) => { 
-        getMissionData()?.update(data);
-        checkSessionHash(data.sessionHash);
-    });
     getUnits((buffer: ArrayBuffer) => getUnitsManager()?.update(buffer), true /* Does a full refresh */);
 
     requestUpdate();
@@ -346,11 +339,17 @@ export function requestUpdate() {
 export function requestRefresh() {
     /* Main refresh rate = 5000ms. */
     if (!getPaused()) {
-        getAirbases((data: AirbasesData) => getMissionData()?.update(data));
-        getBullseye((data: BullseyesData) => getMissionData()?.update(data));
-        getMission((data: any) => {
+        getAirbases((data: AirbasesData) => {
             checkSessionHash(data.sessionHash);
-            getMissionData()?.update(data)
+            getMissionHandler()?.updateAirbases(data);
+        });
+        getBullseye((data: BullseyesData) => {
+            checkSessionHash(data.sessionHash);
+            getMissionHandler()?.updateBullseyes(data);
+        });
+        getMission((data: MissionData) => {
+            checkSessionHash(data.sessionHash);
+            getMissionHandler()?.updateMission(data);
         });
 
         // Update the list of existing units

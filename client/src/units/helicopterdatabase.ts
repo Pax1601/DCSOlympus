@@ -1,12 +1,15 @@
+import { getUnitsManager } from "..";
+import { GAME_MASTER } from "../constants/constants";
 import { UnitDatabase } from "./unitdatabase"
 
 export class HelicopterDatabase extends UnitDatabase {
     constructor() {
         super();
+        
         this.blueprints = {
             "AH-64D_BLK_II": {
                 "name": "AH-64D_BLK_II",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Modern",
                 "label": "AH-64D Apache",
                 "shortLabel": "AH64",
@@ -59,7 +62,7 @@ export class HelicopterDatabase extends UnitDatabase {
             },
             "Ka-50_3": {
                 "name": "Ka-50_3",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "Ka-50 Hokum A",
                 "shortLabel": "K50",
@@ -182,7 +185,7 @@ export class HelicopterDatabase extends UnitDatabase {
             },
             "Mi-24P": {
                 "name": "Mi-24P",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Mid Cold War",
                 "label": "Mi-24P Hind",
                 "shortLabel": "Mi24",
@@ -257,7 +260,7 @@ export class HelicopterDatabase extends UnitDatabase {
             },
             "SA342L": {
                 "name": "SA342L",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Mid Cold War",
                 "label": "SA342L Gazelle",
                 "shortLabel": "342",
@@ -285,7 +288,7 @@ export class HelicopterDatabase extends UnitDatabase {
             },
             "SA342M": {
                 "name": "SA342M",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Mid Cold War",
                 "label": "SA342M Gazelle",
                 "shortLabel": "342",
@@ -309,7 +312,7 @@ export class HelicopterDatabase extends UnitDatabase {
             },
             "SA342Mistral": {
                 "name": "SA342Mistral",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Mid Cold War",
                 "label": "SA342Mistral Gazelle",
                 "shortLabel": "342",
@@ -344,7 +347,7 @@ export class HelicopterDatabase extends UnitDatabase {
             },
             "AH-1W": {
                 "name": "AH-1W",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Mid Cold War",
                 "label": "AH-1W Cobra",
                 "shortLabel": "AH1",
@@ -397,7 +400,7 @@ export class HelicopterDatabase extends UnitDatabase {
             },
             "Mi-26": {
                 "name": "Mi-26",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Late Cold War",
                 "label": "Mi-26 Halo",
                 "shortLabel": "M26",
@@ -418,7 +421,7 @@ export class HelicopterDatabase extends UnitDatabase {
             },
             "Mi-28N": {
                 "name": "Mi-28N",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Modern",
                 "label": "Mi-28N Havoc",
                 "shortLabel": "M28",
@@ -457,7 +460,7 @@ export class HelicopterDatabase extends UnitDatabase {
             },
             "Mi-8MT": {
                 "name": "Mi-8MT",
-                "coalition": "Red",
+                "coalition": "red",
                 "era": "Mid Cold War",
                 "label": "Mi-8MT Hip",
                 "shortLabel": "Mi8",
@@ -496,7 +499,7 @@ export class HelicopterDatabase extends UnitDatabase {
             },
             "SH-60B": {
                 "name": "SH-60B",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Mid Cold War",
                 "label": "SH-60B Seahawk",
                 "shortLabel": "S60",
@@ -531,7 +534,7 @@ export class HelicopterDatabase extends UnitDatabase {
             },
             "UH-60A": {
                 "name": "UH-60A",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Mid Cold War",
                 "label": "UH-60A Blackhawk",
                 "shortLabel": "U60",
@@ -552,7 +555,7 @@ export class HelicopterDatabase extends UnitDatabase {
             },
             "UH-1H": {
                 "name": "UH-1H",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "era": "Early Cold War",
                 "label": "UH-1H Huey",
                 "shortLabel": "UH1",
@@ -589,6 +592,24 @@ export class HelicopterDatabase extends UnitDatabase {
                 "filename": "uh-1.png"
             }
         }
+    }
+
+    getSpawnPointsByName(name: string) {
+        if (getUnitsManager().getCommandMode() == GAME_MASTER) 
+            return 0;
+
+        const blueprint = this.getByName(name);
+        if (blueprint?.era == "WW2")
+            return 20;
+        else if (blueprint?.era == "Early Cold War")
+            return 50;
+        else if (blueprint?.era == "Mid Cold War")
+            return 100;
+        else if (blueprint?.era == "Late Cold War")
+            return 200;
+        else if (blueprint?.era == "Modern")
+            return 400;
+        return 0;
     }
 
 	getCategory() {

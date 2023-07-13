@@ -6,6 +6,7 @@ export class ContextMenu {
     #x: number = 0;
     #y: number = 0;
     #visibleSubMenu: string | null = null;
+    #hidden: boolean = true;
 
     constructor(id: string) {
         this.#container = document.getElementById(id);
@@ -18,10 +19,12 @@ export class ContextMenu {
         this.#x = x;
         this.#y = y;
         this.clip();
+        this.#hidden = false;
     }
 
     hide() {
         this.#container?.classList.toggle("hide", true);
+        this.#hidden = true;
     }
 
     getContainer() {
@@ -38,6 +41,10 @@ export class ContextMenu {
 
     getY() {
         return this.#y;
+    }
+
+    getHidden() {
+        return this.#hidden;
     }
 
     clip() {

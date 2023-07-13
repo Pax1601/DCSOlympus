@@ -17,7 +17,7 @@ export class ATCBoardGround extends ATCBoard {
         const flights    = this.sortFlights( Object.values( this.getATC().getDataHandler().getFlights( this.getBoardId() ) ) );
         const stripBoard = this.getStripBoardElement();
 
-        const missionTime = this.getATC().getMissionDateTime().getTime();
+        const missionTime = this.getATC().getMissionDate().getTime();
 
         for( const strip of stripBoard.children ) {
             strip.toggleAttribute( "data-updating", true );

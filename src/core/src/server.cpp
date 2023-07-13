@@ -116,12 +116,13 @@ void Server::handle_get(http_request request)
                     else if (URI.compare(BULLSEYE_URI) == 0)
                         answer[L"bullseyes"] = bullseyes;
                     else if (URI.compare(MISSION_URI) == 0) {
+                        mission[L"RTSOptions"] = json::value::object();
                         if (password.compare(gameMasterPassword) == 0)
-                            mission[L"visibilityMode"] = json::value(L"Game master");
+                            mission[L"RTSOptions"][L"commandMode"] = json::value(L"Game master");
                         else if (password.compare(blueCommanderPassword) == 0) 
-                            mission[L"visibilityMode"] = json::value(L"Blue commander");
+                            mission[L"RTSOptions"][L"commandMode"] = json::value(L"Blue commander");
                         else if (password.compare(redCommanderPassword) == 0)
-                            mission[L"visibilityMode"] = json::value(L"Red commander");
+                            mission[L"RTSOptions"][L"commandMode"] = json::value(L"Red commander");
                         answer[L"mission"] = mission;
                     }
                     

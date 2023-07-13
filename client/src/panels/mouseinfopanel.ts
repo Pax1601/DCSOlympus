@@ -1,5 +1,5 @@
 import { Icon, LatLng, Marker, Polyline } from "leaflet";
-import { getMap, getMissionData, getUnitsManager } from "..";
+import { getMap, getMissionHandler, getUnitsManager } from "..";
 import { distance, bearing, zeroAppend, mToNm, nmToFt } from "../other/utils";
 import { Unit } from "../units/unit";
 import { Panel } from "./panel";
@@ -44,7 +44,7 @@ export class MouseInfoPanel extends Panel {
 
         this.getElement().querySelector(`#measuring-tool`)?.classList.toggle("hide", this.#measurePoint === null && selectedUnitPosition === null);
 
-        var bullseyes = getMissionData().getBullseyes();
+        var bullseyes = getMissionHandler().getBullseyes();
         for (let idx in bullseyes)
             this.#drawMeasure(null, `bullseye-${idx}`, bullseyes[idx].getLatLng(), mousePosition);
 

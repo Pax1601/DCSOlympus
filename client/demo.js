@@ -69,6 +69,7 @@ const DEMO_UNIT_DATA = {
 class DemoDataGenerator {
     constructor(app)
     { 
+        this.startTime = Date.now();
         app.get('/demo/units', (req, res) => this.units(req, res));
         app.get('/demo/logs', (req, res) => this.logs(req, res));
         app.get('/demo/bullseyes', (req, res) => this.bullseyes(req, res));
@@ -343,20 +344,37 @@ class DemoDataGenerator {
     };
 
     mission(req, res){
-        var ret = {mission: {theatre: "Syria"}};
-        ret.time = Date.now();
+        var ret = {theatre: "Nevada"};
+        ret.dateAndTime = {
+            time: Date.now(),
+            date: "",
+            elapsedTime: (Date.now() - this.startTime) / 1000,
+            startTime: 0
+        }
+
+        ret.RTSOptions = {
+            restrictSpawns: true,
+            restrictToCoalition: true,
+            setupTime: 0,
+            spawnPoints: {
+                red: 1000,
+                blue: 500
+            }, 
+            eras: ["WW2", "Early Cold War", "Mid Cold War", "Late Cold War", "Modern"]
+        }
+
         var auth = req.get("Authorization");
         if (auth) {
             var username = atob(auth.replace("Basic ", "")).split(":")[0];
             switch (username) {
                 case "admin":
-                    ret.mission.visibilityMode = "Game master";
+                    ret.RTSOptions.commandMode = "Game master";
                     break
                 case "blue": 
-                    ret.mission.visibilityMode = "Blue commander";
+                    ret.RTSOptions.commandMode = "Blue commander";
                     break;
                 case "red": 
-                    ret.mission.visibilityMode = "Red commander";
+                    ret.RTSOptions.commandMode = "Red commander";
                     break;
             }
         }

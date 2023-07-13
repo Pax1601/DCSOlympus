@@ -1,14 +1,17 @@
 import { LatLng, LatLngBounds } from "leaflet";
-import { getHotgroupPanel, getInfoPopup, getMap } from "..";
+import { getHotgroupPanel, getInfoPopup, getMap, getMissionHandler, getUnitsManager } from "..";
 import { Unit } from "./unit";
-import { cloneUnit, setLastUpdateTime, spawnAircrafts, spawnGroundUnits } from "../server/server";
+import { cloneUnit, setLastUpdateTime, spawnAircrafts, spawnGroundUnits, spawnHelicopters, spawnNavyUnits } from "../server/server";
 import { bearingAndDistanceToLatLng, deg2rad, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots, polyContains, polygonArea, randomPointInPoly, randomUnitBlueprint } from "../other/utils";
 import { CoalitionArea } from "../map/coalitionarea";
 import { groundUnitDatabase } from "./groundunitdatabase";
-import { DataIndexes, HIDE_ALL, IADSDensities, IDLE, MOVE_UNIT } from "../constants/constants";
+import { BLUE_COMMANDER, DataIndexes, GAME_MASTER, HIDE_ALL, IADSDensities, IDLE, MOVE_UNIT, RED_COMMANDER } from "../constants/constants";
 import { DataExtractor } from "./dataextractor";
 import { Contact } from "../@types/unit";
 import { citiesDatabase } from "./citiesdatabase";
+import { aircraftDatabase } from "./aircraftdatabase";
+import { helicopterDatabase } from "./helicopterdatabase";
+import { navyUnitDatabase } from "./navyunitdatabase";
 
 export class UnitsManager {
     #units: { [ID: number]: Unit };
@@ -118,15 +121,15 @@ export class UnitsManager {
         return this.#hiddenTypes;
     }
 
-    setVisibilityMode(newVisibilityMode: string) {
-        if (newVisibilityMode !== this.#commandMode) {
-            document.dispatchEvent(new CustomEvent("visibilityModeChanged", { detail: this }));
-            const el = document.getElementById("visibiliy-mode");
+    setCommandMode(newCommandMode: string) {
+        if (newCommandMode !== this.#commandMode) {
+            document.dispatchEvent(new CustomEvent("commandModeChanged", { detail: this }));
+            const el = document.getElementById("command-mode");
             if (el) {
-                el.dataset.mode = newVisibilityMode;
-                el.textContent = newVisibilityMode.toUpperCase();
+                el.dataset.mode = newCommandMode;
+                el.textContent = newCommandMode.toUpperCase();
             }
-            this.#commandMode = newVisibilityMode;
+            this.#commandMode = newCommandMode;
             for (let ID in this.#units) 
                 this.#units[ID].updateVisibility();
         }
@@ -134,6 +137,15 @@ export class UnitsManager {
 
     getCommandMode() {
         return this.#commandMode;
+    }
+
+    getCommandedCoalition() {
+        if (this.getCommandMode() === BLUE_COMMANDER)
+            return "blue";
+        else if (this.getCommandMode() === RED_COMMANDER)
+            return "red";
+        else
+            return "all";
     }
 
     selectUnit(ID: number, deselectAllUnits: boolean = true) {
@@ -536,7 +548,7 @@ export class UnitsManager {
     }
 
     pasteUnits() {
-        if (!this.#pasteDisabled) {
+        if (!this.#pasteDisabled && getUnitsManager().getCommandMode() == GAME_MASTER) {
             for (let idx in this.#copiedUnits) {
                 var unit = this.#copiedUnits[idx];
                 //getMap().addTemporaryMarker(getMap().getMouseCoordinates());
@@ -545,6 +557,9 @@ export class UnitsManager {
             }
             this.#pasteDisabled = true;
             window.setTimeout(() => this.#pasteDisabled = false, 250);
+        }
+        else {
+            getInfoPopup().setText(`Unit cloning is disabled in ${getUnitsManager().getCommandMode()} mode`);
         }
     }
 
@@ -565,7 +580,7 @@ export class UnitsManager {
                         if (Math.random() < IADSDensities[type]) {
                             const unitBlueprint = randomUnitBlueprint(groundUnitDatabase, {type: type, eras: activeEras, ranges: activeRanges});
                             if (unitBlueprint) {
-                                spawnGroundUnits([{unitType: unitBlueprint.name, location: latlng}], coalitionArea.getCoalition(), true);
+                                this.spawnUnits("GroundUnit", [{unitType: unitBlueprint.name, location: latlng}], coalitionArea.getCoalition(), true);
                                 getMap().addTemporaryMarker(latlng, unitBlueprint.name, coalitionArea.getCoalition());
                             }
                         }
@@ -610,7 +625,7 @@ export class UnitsManager {
                 for (let groupName in groups) {
                     if (groupName !== "" && groups[groupName].length > 0 && groups[groupName].every((unit: any) => {return unit.category == "GroundUnit";})) {
                         var units = groups[groupName].map((unit: any) => {return {unitType: unit.name, location: unit.position}});
-                        spawnGroundUnits(units, groups[groupName][0].coalition, true);
+                        getUnitsManager().spawnUnits("GroundUnit", units, groups[groupName][0].coalition, true);
                     }
                 }
             };
@@ -619,11 +634,43 @@ export class UnitsManager {
         input.click();
     }
 
-    spawnUnit(category: string, units: any, coalition: string = "blue", immediate: boolean = true) {
+    spawnUnits(category: string, units: any, coalition: string = "blue", immediate: boolean = true, airbase: string = "") {
+        var spawnPoints = 0;
         if (category === "Aircraft") {
-            spawnAircrafts(units, coalition, "", immediate);
+            if (airbase == "" && getMissionHandler().getRemainingSetupTime() < 0) {
+                getInfoPopup().setText("Aircrafts can be air spawned during the SETUP phase only");
+                return false;
+            }
+            spawnPoints = units.reduce((points: number, unit: any) => {return points + aircraftDatabase.getSpawnPointsByName(unit.unitType)}, 0);
+            spawnAircrafts(units, coalition, airbase, immediate, spawnPoints);
+        } else if (category === "Helicopter") {
+            if (airbase == "" && getMissionHandler().getRemainingSetupTime() < 0) {
+                getInfoPopup().setText("Helicopters can be air spawned during the SETUP phase only");
+                return false;
+            }
+            spawnPoints = units.reduce((unit: any, points: number) => {return points + helicopterDatabase.getSpawnPointsByName(unit.unitType)}, 0);
+            spawnHelicopters(units, coalition, airbase, immediate, spawnPoints);
         } else if (category === "GroundUnit") {
-            spawnGroundUnits(units, coalition, immediate);
+            if (getMissionHandler().getRemainingSetupTime() < 0) {
+                getInfoPopup().setText("Ground units can be spawned during the SETUP phase only");
+                return false;
+            }
+            spawnPoints = units.reduce((unit: any, points: number) => {return points + groundUnitDatabase.getSpawnPointsByName(unit.unitType)}, 0);
+            spawnGroundUnits(units, coalition, immediate, spawnPoints);
+        } else if (category === "NavyUnit") {
+            if (getMissionHandler().getRemainingSetupTime() < 0) {
+                getInfoPopup().setText("Navy units can be spawned during the SETUP phase only");
+                return false;
+            }
+            spawnPoints = units.reduce((unit: any, points: number) => {return points + navyUnitDatabase.getSpawnPointsByName(unit.unitType)}, 0);
+            spawnNavyUnits(units, coalition, immediate, spawnPoints);
+        }
+        if (spawnPoints <= getMissionHandler().getAvailableSpawnPoints()) {
+            getMissionHandler().setSpentSpawnPoints(spawnPoints);
+            return true;
+        } else {
+            getInfoPopup().setText("Not enough spawn points available!");
+            return false;
         }
     }
 

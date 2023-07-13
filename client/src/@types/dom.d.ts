@@ -19,6 +19,7 @@ interface CustomEventMap {
     "mapStateChanged":                  CustomEvent<string>,
     "mapContextMenu":                   CustomEvent<>,
     "visibilityModeChanged":            CustomEvent<string>,
+    "RTSOptionsChanged":                CustomEvent<>,  
 }
 
 declare global {

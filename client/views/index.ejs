@@ -25,7 +25,11 @@
   <%- include('panels/mouseinfo.ejs') %>
   <%- include('panels/connectionstatus.ejs') %>
   <%- include('panels/hotgroup.ejs') %>
-  <%- include('panels/navbar.ejs') %>
+
+  <div id="toolbar-container">
+    <%- include('toolbars/primary.ejs') %>
+    <%- include('toolbars/rts.ejs') %>
+  </div>
 
   <%- include('other/dialogs.ejs') %>
   <%- include('other/popups.ejs') %>

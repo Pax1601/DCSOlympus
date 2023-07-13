@@ -2,7 +2,7 @@ import { Dropdown } from "../controls/dropdown";
 import { zeroAppend } from "../other/utils";
 import { ATC } from "./atc";
 import { Unit } from "../units/unit";
-import { getMissionData, getUnitsManager } from "..";
+import { getMissionHandler, getUnitsManager } from "..";
 import Sortable from "sortablejs";
 import { FlightInterface } from "./atc";
 import { getConnected } from "../server/server";
@@ -442,7 +442,7 @@ export abstract class ATCBoard {
 
     timeToGo( timestamp:number ) {
 
-        const timeData = this.calculateTimeToGo( this.getATC().getMissionDateTime().getTime(), timestamp );
+        const timeData = this.calculateTimeToGo( this.getATC().getMissionDate().getTime(), timestamp );
 
         return ( timestamp === -1 ) ? "-" : timeData.elapsedMarker + timeData.time;
 
@@ -455,8 +455,8 @@ export abstract class ATCBoard {
 
     updateClock() {
 
-        const missionTime   = this.#atc.getMissionDateTime().getTime();
-        const timeDiff      = new Date().getTime() - getMissionData().getUpdateTime();
+        const missionTime   = this.#atc.getMissionDate().getTime();
+        const timeDiff      = new Date().getTime() - getMissionHandler().getDateAndTime().elapsedTime;
 
         const nowDate = new Date( missionTime + timeDiff );
         

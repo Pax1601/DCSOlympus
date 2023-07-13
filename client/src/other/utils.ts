@@ -264,9 +264,7 @@ export function randomUnitBlueprint(unitDatabase: UnitDatabase, options: {type?:
     if (options.eras) {
         unitBlueprints = unitBlueprints.filter((unitBlueprint: UnitBlueprint) => { 
             //@ts-ignore
-            return options.eras.reduce((value, era) => { 
-                return value? value: unitBlueprint.era.includes(era); 
-            }, false);
+            return unitBlueprint.era? options.eras.includes(unitBlueprint.era): true;
         });
     }
 
@@ -338,4 +336,23 @@ export function enumToCoalition(coalitionID: number) {
         case 2: return "blue";
     }
     return "";
+}
+
+export function convertDateAndTimeToDate(dateAndTime: DateAndTime) {
+    const date = dateAndTime.date;
+    const time = dateAndTime.time;
+
+    if (!date) {
+        return new Date();
+    }
+
+    let year = date.Year;
+    let month = date.Month - 1;
+
+    if (month < 0) {
+        month = 11;
+        year--;
+    }
+
+    return new Date(year, month, date.Day, time.h, time.m, time.s);
 }

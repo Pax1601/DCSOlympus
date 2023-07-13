@@ -865,17 +865,37 @@ nav.ol-panel> :last-child {
     translate: 0% -300%;
 }
 
-#visibiliy-mode {
+#command-mode {
+    font-size: 14px;
+    font-weight: bolder;
+    padding-left: 10px;
+}
+
+#command-mode[data-mode="Blue commander"] {
+    color: var(--primary-blue);
+}
+
+#command-mode[data-mode="Red commander"] {
+    color: var(--primary-red);
+}
+
+#spawn-points-container {
     font-size: 14px;
     font-weight: bolder;
 }
 
-#visibiliy-mode[data-mode="Blue commander"] {
-    color: var(--primary-blue);
+#spawn-points {
+    background-color: var(--background-grey);
+    padding: 5px 15px;
+    margin: 5px;
+    border: 1px white solid;
+    font-size: 14px;
+    border-radius: var(--border-radius-sm);
 }
 
-#visibiliy-mode[data-mode="Red commander"] {
-    color: var(--primary-red);
+#rts-phase {
+    font-size: 14px;
+    font-weight: bolder;
 }
 
 .ol-destination-preview-icon {

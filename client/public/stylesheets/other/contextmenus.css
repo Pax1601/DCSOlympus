@@ -69,6 +69,10 @@
     width: 100%;
 }
 
+.deploy-unit-button[data-points]:not([data-points='']):not([data-points='0'])::after {
+    content: " (" attr(data-points) " points)";
+}
+
 .upper-bar svg>* {
     fill: white;
 }

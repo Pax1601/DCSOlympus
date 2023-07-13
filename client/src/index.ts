@@ -211,10 +211,6 @@ export function getMap() {
     return map;
 }
 
-export function getMissionData() {
-    return missionHandler;
-}
-
 export function getUnitDataTable() {
     return unitDataTable;
 }

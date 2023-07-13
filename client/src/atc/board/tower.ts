@@ -17,7 +17,7 @@ export class ATCBoardTower extends ATCBoard {
     update() {
         
         const flights         = this.sortFlights( Object.values( this.getATC().getDataHandler().getFlights( this.getBoardId() ) ) );
-        const missionTime     = this.getATC().getMissionDateTime().getTime();
+        const missionTime     = this.getATC().getMissionDate().getTime();
         const selectableUnits = getUnitsManager().getSelectableAircraft();
         const stripBoard      = this.getStripBoardElement();
 

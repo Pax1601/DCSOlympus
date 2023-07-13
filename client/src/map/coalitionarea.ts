@@ -23,11 +23,8 @@ export class CoalitionArea extends Polygon {
         this.#setColors();
         this.#registerCallbacks();
 
-        if (getUnitsManager().getCommandMode() == BLUE_COMMANDER) 
-            this.setCoalition("blue");
-        else if (getUnitsManager().getCommandMode() == RED_COMMANDER) 
-            this.setCoalition("red");
-
+        if ([BLUE_COMMANDER, RED_COMMANDER].includes(getUnitsManager().getCommandMode())) 
+            this.setCoalition(getUnitsManager().getCommandedCoalition());
     }
 
     setCoalition(coalition: string) {

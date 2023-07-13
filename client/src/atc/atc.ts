@@ -1,4 +1,5 @@
-import { getMissionData } from "..";
+import { getMissionHandler } from "..";
+import { convertDateAndTimeToDate } from "../other/utils";
 import { getConnected } from "../server/server";
 import { ATCBoard } from "./atcboard";
 import { ATCBoardGround } from "./board/ground";
@@ -140,10 +141,9 @@ export class ATC {
     }
 
 
-    getMissionDateTime() : Date {
-        return new Date( getMissionData().getNowDate() );
+    getMissionDate() : Date {
+        return convertDateAndTimeToDate(getMissionHandler().getDateAndTime());
     }
-
 
     lookForBoards() {
 

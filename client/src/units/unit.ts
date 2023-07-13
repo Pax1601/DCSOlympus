@@ -369,9 +369,7 @@ export class Unit extends CustomMarker {
     belongsToCommandedCoalition() {
         if (getUnitsManager().getCommandMode() === HIDE_ALL)
             return false;
-        if (getUnitsManager().getCommandMode() === BLUE_COMMANDER && this.#coalition !== "blue")
-            return false;
-        if (getUnitsManager().getCommandMode() === RED_COMMANDER && this.#coalition !== "red")
+        if (getUnitsManager().getCommandedCoalition() !== this.#coalition)
             return false;
         return true;        
     }

@@ -33,6 +33,10 @@ export class Dropdown {
 
     setOptions(optionsList: string[], sortAlphabetically: boolean = true) {
         this.#optionsList = optionsList.sort();
+        if (this.#optionsList.length == 0) {
+            optionsList = ["No options available"]
+            this.#value.innerText = "No options available";
+        }
         this.#options.replaceChildren(...optionsList.map((option: string, idx: number) => {
             var div = document.createElement("div");
             var button = document.createElement("button");

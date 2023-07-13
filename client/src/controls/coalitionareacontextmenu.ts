@@ -58,6 +58,11 @@ export class CoalitionAreaContextMenu extends ContextMenu {
             if (area)
                 getUnitsManager().createIADS(area, this.#getCheckboxOptions(this.#iadsTypesDropdown), this.#getCheckboxOptions(this.#iadsErasDropdown), this.#getCheckboxOptions(this.#iadsRangesDropdown), this.#iadsDensitySlider.getValue(), this.#iadsDistributionSlider.getValue());
         })
+        this.hide();
+    }
+
+    show(x: number, y: number, latlng: LatLng) {
+        super.show(x, y, latlng);
 
         /* Create the checkboxes to select the unit roles */
         this.#iadsTypesDropdown.setOptionsElements(IADSTypes.map((role: string) => {
@@ -75,11 +80,6 @@ export class CoalitionAreaContextMenu extends ContextMenu {
             return this.#createCheckboxOption(range);
         }));
 
-        this.hide();
-    }
-
-    show(x: number, y: number, latlng: LatLng) {
-        super.show(x, y, latlng);
         if (getUnitsManager().getCommandMode() !== GAME_MASTER)
             this.#coalitionSwitch.hide()
     }

@@ -1,12 +1,15 @@
+import { getUnitsManager } from "..";
+import { GAME_MASTER } from "../constants/constants";
 import { UnitDatabase } from "./unitdatabase"
 
 export class NavyUnitDatabase extends UnitDatabase {
     constructor() {
         super();
+        
         this.blueprints = {
             "Type_052B": {
                 "name": "Type_052B",
-                "coalition": "Red",
+                "coalition": "red",
                 "type": "Destroyer",
                 "era": "Modern",
                 "label": "052B DDG-168 Guangzhou",
@@ -16,7 +19,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "Type_052C": {
                 "name": "Type_052C",
-                "coalition": "Red",
+                "coalition": "red",
                 "type": "Destroyer",
                 "era": "Modern",
                 "label": "052C DDG-171 Haikou",
@@ -26,7 +29,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "Type_054A": {
                 "name": "",
-                "coalition": "Red",
+                "coalition": "red",
                 "type": "Frigate",
                 "era": "Modern",
                 "label": "054A FFG-538 Yantai",
@@ -36,7 +39,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "Type_071": {
                 "name": "Type_071",
-                "coalition": "Red",
+                "coalition": "red",
                 "type": "Transport",
                 "era": "Modern",
                 "label": "Type 071",
@@ -46,7 +49,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "Type_093": {
                 "name": "Type_093",
-                "coalition": "Red",
+                "coalition": "red",
                 "type": "Submarine",
                 "era": "Modern",
                 "label": "Type 093",
@@ -76,7 +79,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "kuznecow": {
                 "name": "kuznecow",
-                "coalition": "Red",
+                "coalition": "red",
                 "type": "Aircraft Carrier",
                 "era": "Late Cold War",
                 "label": "Admiral Kuznetsov",
@@ -86,7 +89,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "albatros": {
                 "name": "albatros",
-                "coalition": "Red",
+                "coalition": "red",
                 "type": "Aircraft Carrier",
                 "era": "Early Cold War",
                 "label": "Albatros (Grisha-5)",
@@ -116,7 +119,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "HandyWind": {
                 "name": "HandyWind",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "type": "Cargoship",
                 "era": "Late Cold War",
                 "label": "Bulker Handy Wind",
@@ -126,7 +129,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "CV_1143_5": {
                 "name": "CV_1143_5",
-                "coalition": "Red",
+                "coalition": "red",
                 "type": "Aircraft Carrier",
                 "era": "Modern",
                 "label": "CV Admiral Kuznetsov(2017)",
@@ -136,7 +139,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "CV_59": {
                 "name": "CV_59",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "type": "Aircraft Carrier",
                 "era": "Early Cold War",
                 "label": "CV-59 Forrestal",
@@ -146,7 +149,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "CVN_71": {
                 "name": "CVN_71",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "type": "Super Aircraft Carrier",
                 "era": "Late Cold War",
                 "label": "CVN-71 Theodore Roosevelt",
@@ -156,7 +159,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "CVN_72": {
                 "name": "CVN_72",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "type": "Super Aircraft Carrier",
                 "era": "Late Cold War",
                 "label": "CVN-72 Abraham Lincoln",
@@ -166,7 +169,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "CVN_73": {
                 "name": "CVN_73",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "type": "Super Aircraft Carrier",
                 "era": "Late Cold War",
                 "label": "CVN-73 George Washington",
@@ -176,7 +179,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "Stennis": {
                 "name": "Stennis",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "type": "Aircraft Carrier",
                 "era": "Late Cold War",
                 "label": "CVN-74 John C. Stennis",
@@ -186,7 +189,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "CVN_75": {
                 "name": "CVN_75",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "type": "Aircraft Carrier",
                 "era": "Late Cold War",
                 "label": "CVN-75 Harry S. Truman",
@@ -196,7 +199,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "CastleClass_01": {
                 "name": "CastleClass_01",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "type": "Patrol",
                 "era": "Mid Cold War",
                 "label": "HMS Leeds Castle (P-258)",
@@ -206,7 +209,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "USS_Arleigh_Burke_IIa": {
                 "name": "USS_Arleigh_Burke_IIa",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "type": "Destroyer",
                 "era": "Late Cold War",
                 "label": "DDG Arleigh Burke lla",
@@ -216,7 +219,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "barge-1": {
                 "name": "barge-1",
-                "coalition": "Red",
+                "coalition": "red",
                 "type": "Cargoship",
                 "era": "Late Cold War",
                 "label": "Dry cargo ship Ivanov",
@@ -226,7 +229,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "barge-2": {
                 "name": "barge-2",
-                "coalition": "Red",
+                "coalition": "red",
                 "type": "Cargoship",
                 "era": "Late Cold War",
                 "label": "Dry cargo ship Yakushev",
@@ -236,7 +239,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "elnya": {
                 "name": "elnya",
-                "coalition": "Red",
+                "coalition": "red",
                 "type": "Tanker",
                 "era": "Late Cold War",
                 "label": "Elnya tanker",
@@ -246,7 +249,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "La_Combattante_II": {
                 "name": "La_Combattante_II",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "type": "Fast Attack Craft",
                 "era": "Mid Cold War",
                 "label": "FAC La Combattante lla",
@@ -256,7 +259,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "leander-gun-achilles": {
                 "name": "leander-gun-achilles",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "type": "Frigate",
                 "era": "Mid Cold War",
                 "label": "HMS Achilles (F12)",
@@ -266,7 +269,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "leander-gun-andromeda": {
                 "name": "leander-gun-andromeda",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "type": "Frigate",
                 "era": "Mid Cold War",
                 "label": "HMS Andromeda (F57)",
@@ -276,7 +279,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "leander-gun-ariadne": {
                 "name": "leander-gun-ariadne",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "type": "Frigate",
                 "era": "Mid Cold War",
                 "label": "HMS Ariadne (F72)",
@@ -296,7 +299,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "hms_invincible": {
                 "name": "hms_invincible",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "type": "Aircraft Carrier",
                 "era": "Mid Cold War",
                 "label": "HMS Invincible (R05)",
@@ -316,7 +319,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "kilo_636": {
                 "name": "kilo_636",
-                "coalition": "Red",
+                "coalition": "red",
                 "type": "Submarine",
                 "era": "Late Cold War",
                 "label": "Project 636 Varshavyanka Improved",
@@ -326,7 +329,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "kilo": {
                 "name": "kilo",
-                "coalition": "Red",
+                "coalition": "red",
                 "type": "Submarine",
                 "era": "Late Cold War",
                 "label": "Project 636 Varshavyanka Basic",
@@ -336,7 +339,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "LHA_Tarawa": {
                 "name": "LHA_Tarawa",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "type": "Aircraft Carrier",
                 "era": "Mid Cold War",
                 "label": "LHA-1 Tarawa",
@@ -346,7 +349,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "BDK-775": {
                 "name": "BDK-775",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "type": "Landing Craft",
                 "era": "Mid Cold War",
                 "label": "LS Ropucha",
@@ -366,7 +369,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "moscow": {
                 "name": "moscow",
-                "coalition": "Red",
+                "coalition": "red",
                 "type": "Cruiser",
                 "era": "Late Cold War",
                 "label": "Moscow",
@@ -376,7 +379,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "neustrash": {
                 "name": "neustrash",
-                "coalition": "Red",
+                "coalition": "red",
                 "type": "Frigate",
                 "era": "Late Cold War",
                 "label": "Neustrashimy",
@@ -386,7 +389,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "perry": {
                 "name": "perry",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "type": "Frigate",
                 "era": "Mid Cold War",
                 "label": "Oliver H. Perry",
@@ -396,7 +399,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "piotr_velikiy": {
                 "name": "piotr_velikiy",
-                "coalition": "Red",
+                "coalition": "red",
                 "type": "Cruiser",
                 "era": "Late Cold War",
                 "label": "Pyotr Velikiy",
@@ -406,7 +409,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "rezky": {
                 "name": "Rezky (Krivak-2)",
-                "coalition": "Red",
+                "coalition": "red",
                 "type": "Frigate",
                 "era": "Early Cold War",
                 "label": "Rezky (Krivak-2)",
@@ -416,7 +419,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "Ship_Tilde_Supply": {
                 "name": "Ship_Tilde_Supply",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "type": "Transport",
                 "era": "Late Cold War",
                 "label": "Supply Ship MV Tilde",
@@ -426,7 +429,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "Seawise_Giant": {
                 "name": "Seawise_Giant",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "type": "Tanker",
                 "era": "Late Cold War",
                 "label": "Tanker Seawise Giant",
@@ -436,7 +439,7 @@ export class NavyUnitDatabase extends UnitDatabase {
             },
             "TICONDEROG": {
                 "name": "TICONDEROG",
-                "coalition": "Blue",
+                "coalition": "blue",
                 "type": "Cruiser",
                 "era": "Late Cold War",
                 "label": "Ticonderoga",
@@ -455,6 +458,24 @@ export class NavyUnitDatabase extends UnitDatabase {
                 "filename": ""
             }
         }
+    }
+
+    getSpawnPointsByName(name: string) {
+        if (getUnitsManager().getCommandMode() == GAME_MASTER) 
+            return 0;
+
+        const blueprint = this.getByName(name);
+        if (blueprint?.era == "WW2")
+            return 20;
+        else if (blueprint?.era == "Early Cold War")
+            return 50;
+        else if (blueprint?.era == "Mid Cold War")
+            return 100;
+        else if (blueprint?.era == "Late Cold War")
+            return 200;
+        else if (blueprint?.era == "Modern")
+            return 400;
+        return 0;
     }
 
     getCategory() {

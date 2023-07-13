@@ -1,4 +1,5 @@
 import { getMap, getUnitsManager, setActiveCoalition } from "..";
+import { BLUE_COMMANDER, GAME_MASTER, RED_COMMANDER } from "../constants/constants";
 import { Airbase } from "../missionhandler/airbase";
 import { ContextMenu } from "./contextmenu";
 
@@ -24,7 +25,8 @@ export class AirbaseContextMenu extends ContextMenu {
         this.setProperties(airbase.getProperties());
         this.setParkings(airbase.getParkings());
         this.setCoalition(airbase.getCoalition());
-        this.enableLandButton(getUnitsManager().getSelectedUnitsTypes().length == 1 && getUnitsManager().getSelectedUnitsTypes()[0] === "Aircraft" && (getUnitsManager().getSelectedUnitsCoalition() === airbase.getCoalition() || airbase.getCoalition() === "neutral"))
+        this.enableLandButton(getUnitsManager().getSelectedUnitsTypes().length == 1 && ["Aircraft", "Helicopter"].includes(getUnitsManager().getSelectedUnitsTypes()[0]) && (getUnitsManager().getSelectedUnitsCoalition() === airbase.getCoalition() || airbase.getCoalition() === "neutral"))
+        this.enableSpawnButton(getUnitsManager().getCommandMode() == GAME_MASTER || this.#airbase.getCoalition() == getUnitsManager().getCommandedCoalition());
     }
 
     setName(airbaseName: string) {
@@ -51,6 +53,10 @@ export class AirbaseContextMenu extends ContextMenu {
 
     setCoalition(coalition: string) {
         (<HTMLElement>this.getContainer()?.querySelector("#spawn-airbase-aircraft-button")).dataset.coalition = coalition;
+    }
+
+    enableSpawnButton(enableSpawnButton: boolean) {
+        this.getContainer()?.querySelector("#spawn-airbase-aircraft-button")?.classList.toggle("hide", !enableSpawnButton);
     }
 
     enableLandButton(enableLandButton: boolean) {

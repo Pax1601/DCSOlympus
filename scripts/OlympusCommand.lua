@@ -794,10 +794,12 @@ function Olympus.setMissionData(arg, time)
 
 	local mission = {}
 	mission.theatre = env.mission.theatre
-	mission.elapsedTime = DCS.getRealTime()
-	mission.time = mist.time.getDHMS(timer.getAbsTime())
-	mission.startTime = env.mission.start_time
-	mission.date = env.mission.date
+	mission.dateAndTime = {
+		["elapsedTime"] = DCS.getRealTime()
+		["time"] = mist.time.getDHMS(timer.getAbsTime())
+		["startTime"] = env.mission.start_time
+		["date"] = env.mission.date
+	}
 
 	-- Assemble missionData table
 	missionData["bullseyes"] = bullseyes

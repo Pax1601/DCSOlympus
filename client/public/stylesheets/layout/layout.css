@@ -5,13 +5,24 @@
 	width: 100%;
 }
 
-#primary-toolbar {
+#toolbar-container {
 	align-items: center;
 	display: flex;
 	left: 10px;
 	position: absolute;
 	top: 10px;
 	z-index: 9999;
+	column-gap: 10px;
+}
+
+#primary-toolbar {
+	align-items: center;
+	display: flex;
+}
+
+#rts-toolbar {
+	align-items: center;
+	display: flex;
 }
 
 #app-icon>.ol-select-options {
