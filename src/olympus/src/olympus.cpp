@@ -8,10 +8,12 @@ HINSTANCE hGetProcIDDLL = NULL;
 typedef int(__stdcall* f_coreInit)(lua_State* L);
 typedef int(__stdcall* f_coreDeinit)(lua_State* L);
 typedef int(__stdcall* f_coreFrame)(lua_State* L);
+typedef int(__stdcall* f_coreUnitsData)(lua_State* L);
 typedef int(__stdcall* f_coreMissionData)(lua_State* L);
 f_coreInit coreInit = nullptr;
 f_coreDeinit coreDeinit = nullptr;
 f_coreFrame coreFrame = nullptr;
+f_coreUnitsData coreUnitsData = nullptr;
 f_coreMissionData coreMissionData = nullptr;
 
 static int onSimulationStart(lua_State* L)
@@ -52,7 +54,7 @@ static int onSimulationStart(lua_State* L)
     }
 
     coreDeinit = (f_coreDeinit)GetProcAddress(hGetProcIDDLL, "coreDeinit");
-    if (!coreInit) 
+    if (!coreDeinit)
     {
         LogError(L, "Error getting coreDeinit ProcAddress from DLL");
         goto error;
@@ -65,8 +67,15 @@ static int onSimulationStart(lua_State* L)
         goto error;
     }
 
+    coreUnitsData = (f_coreFrame)GetProcAddress(hGetProcIDDLL, "coreUnitsData");
+    if (!coreUnitsData)
+    {
+        LogError(L, "Error getting coreUnitsData ProcAddress from DLL");
+        goto error;
+    }
+
     coreMissionData = (f_coreFrame)GetProcAddress(hGetProcIDDLL, "coreMissionData");
-    if (!coreFrame)
+    if (!coreMissionData)
     {
         LogError(L, "Error getting coreMissionData ProcAddress from DLL");
         goto error;
@@ -116,6 +125,7 @@ static int onSimulationStop(lua_State* L)
         coreInit = nullptr;
         coreDeinit = nullptr;
         coreFrame = nullptr;
+        coreUnitsData = nullptr;
         coreMissionData = nullptr;
     }
 
@@ -125,6 +135,15 @@ static int onSimulationStop(lua_State* L)
 
 error:
     LogError(L, "Error while unloading module, see Olympus.log in temporary folder for additional details.");
+    return 0;
+}
+
+static int setUnitsData(lua_State* L)
+{
+    if (coreUnitsData)
+    {
+        coreUnitsData(L);
+    }
     return 0;
 }
 
@@ -141,6 +160,7 @@ static const luaL_Reg Map[] = {
 	{"onSimulationStart", onSimulationStart},
     {"onSimulationFrame", onSimulationFrame},
     {"onSimulationStop", onSimulationStop},
+    {"setUnitsData", setUnitsData },
     {"setMissionData", setMissionData },
 	{NULL, NULL}
 };

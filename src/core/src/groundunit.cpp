@@ -21,6 +21,19 @@ GroundUnit::GroundUnit(json::value json, unsigned int ID) : Unit(json, ID)
 	setDesiredSpeed(10);
 };
 
+void GroundUnit::setDefaults(bool force)
+{
+	if (!getAlive() || !getControlled() || getHuman() || !getIsLeader()) return;
+
+	/* Set the default IDLE state */
+	setState(State::IDLE);
+
+	/* Set the default options */
+	setROE(ROE::OPEN_FIRE_WEAPON_FREE, force);
+	setOnOff(onOff, force);
+	setFollowRoads(followRoads, force);
+}
+
 void GroundUnit::setState(unsigned char newState)
 {
 	/************ Perform any action required when LEAVING a state ************/
@@ -61,7 +74,8 @@ void GroundUnit::setState(unsigned char newState)
 		break;
 	}
 
-	resetTask();
+	if (newState != state)
+		resetTask();
 
 	log(unitName + " setting state from " + to_string(state) + " to " + to_string(newState));
 	state = newState;
@@ -132,15 +146,19 @@ void GroundUnit::changeSpeed(string change)
 		setDesiredSpeed(0);
 }
 
-void GroundUnit::setOnOff(bool newOnOff) 
+void GroundUnit::setOnOff(bool newOnOff, bool force) 
 {
-	Unit::setOnOff(newOnOff);
-	Command* command = dynamic_cast<Command*>(new SetOnOff(groupName, onOff));
-	scheduler->appendCommand(command);
+	if (newOnOff != onOff || force) {
+		Unit::setOnOff(newOnOff, force);
+		Command* command = dynamic_cast<Command*>(new SetOnOff(groupName, onOff));
+		scheduler->appendCommand(command);
+	}
 }
 
-void GroundUnit::setFollowRoads(bool newFollowRoads) 
+void GroundUnit::setFollowRoads(bool newFollowRoads, bool force)
 {
-	Unit::setFollowRoads(newFollowRoads);
-	resetActiveDestination(); /* Reset active destination to apply option*/
+	if (newFollowRoads != followRoads || force) {
+		Unit::setFollowRoads(newFollowRoads, force);
+		resetActiveDestination(); /* Reset active destination to apply option*/
+	}
 }

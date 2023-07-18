@@ -1,7 +1,7 @@
 import { LatLng, LatLngBounds } from "leaflet";
 import { getHotgroupPanel, getInfoPopup, getMap } from "..";
 import { Unit } from "./unit";
-import { cloneUnit, setLastUpdateTime, spawnAircrafts, spawnGroundUnits } from "../server/server";
+import { cloneUnit, deleteUnit, spawnAircrafts, spawnGroundUnits } from "../server/server";
 import { bearingAndDistanceToLatLng, deg2rad, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots, polyContains, polygonArea, randomPointInPoly, randomUnitBlueprint } from "../other/utils";
 import { CoalitionArea } from "../map/coalitionarea";
 import { groundUnitDatabase } from "./groundunitdatabase";
@@ -12,11 +12,12 @@ import { citiesDatabase } from "./citiesdatabase";
 
 export class UnitsManager {
     #units: { [ID: number]: Unit };
-    #copiedUnits: Unit[];
+    #copiedUnits: any[];
     #selectionEventDisabled: boolean = false;
     #pasteDisabled: boolean = false;
     #hiddenTypes: string[] = [];
     #commandMode: string = HIDE_ALL;
+    #requestDetectionUpdate: boolean = false;
 
     constructor() {
         this.#units = {};
@@ -31,6 +32,7 @@ export class UnitsManager {
         document.addEventListener('keyup', (event) => this.#onKeyUp(event));
         document.addEventListener('exportToFile', () => this.exportToFile());
         document.addEventListener('importFromFile', () => this.importFromFile());
+        document.addEventListener('contactsUpdated', (e: CustomEvent) => {this.#requestDetectionUpdate = true});
     }
 
     getSelectableAircraft() {
@@ -91,17 +93,21 @@ export class UnitsManager {
             this.#units[ID]?.setData(dataExtractor);
         }
 
-        for (let ID in this.#units) {
-            var unit = this.#units[ID];
-            if (!unit.belongsToCommandedCoalition())
-                unit.setDetectionMethods(this.getUnitDetectedMethods(unit));
+        if (this.#requestDetectionUpdate) {
+            for (let ID in this.#units) {
+                var unit = this.#units[ID];
+                if (!unit.belongsToCommandedCoalition())
+                    unit.setDetectionMethods(this.getUnitDetectedMethods(unit));
+            }
+            this.#requestDetectionUpdate = false;
         }
 
-        setLastUpdateTime(updateTime);
-
         for (let ID in this.#units) {
-            this.#units[ID].drawLines();
+            if (this.#units[ID].getSelected())
+                this.#units[ID].drawLines();
         };
+
+        return updateTime;
     }
 
     setHiddenType(key: string, value: boolean) {
@@ -188,35 +194,58 @@ export class UnitsManager {
     }
 
     getSelectedUnitsTypes() {
-        if (this.getSelectedUnits().length == 0)
+        const selectedUnits = this.getSelectedUnits();
+        if (selectedUnits.length == 0)
             return [];
-        return this.getSelectedUnits().map((unit: Unit) => {
-            return unit.constructor.name
+        return selectedUnits.map((unit: Unit) => {
+            return unit.getCategory();
         })?.filter((value: any, index: any, array: string[]) => {
             return array.indexOf(value) === index;
         });
     };
 
+    /* Gets the value of a variable from the selected units. If all the units have the same value, returns the value, else returns undefined */
     getSelectedUnitsVariable(variableGetter: CallableFunction) {
-        if (this.getSelectedUnits().length == 0)
+        const selectedUnits = this.getSelectedUnits();
+        if (selectedUnits.length == 0)
             return undefined;
-        return this.getSelectedUnits().map((unit: Unit) => {
+        return selectedUnits.map((unit: Unit) => {
             return variableGetter(unit);
         })?.reduce((a: any, b: any) => {
-            return a == b ? a : undefined
+            return a === b ? a : undefined
         });
     };
 
-
     getSelectedUnitsCoalition() {
-        if (this.getSelectedUnits().length == 0)
+        const selectedUnits = this.getSelectedUnits();
+        if (selectedUnits.length == 0)
             return undefined;
-        return this.getSelectedUnits().map((unit: Unit) => {
+        return selectedUnits.map((unit: Unit) => {
             return unit.getCoalition()
         })?.reduce((a: any, b: any) => {
             return a == b ? a : undefined
         });
     };
+
+    getByType(type: string) {
+        Object.values(this.getUnits()).filter((unit: Unit) => {
+            return unit.getType() === type;
+        })
+    }
+
+    getUnitDetectedMethods(unit: Unit) {
+        var detectionMethods: number[] = [];
+        for (let idx in this.#units) {
+            if (this.#units[idx].getAlive() && this.#units[idx].getIsLeader() && this.#units[idx].getCoalition() !== "neutral" && this.#units[idx].getCoalition() != unit.getCoalition())
+            {
+                this.#units[idx].getContacts().forEach((contact: Contact) => {
+                    if (contact.ID == unit.ID && !detectionMethods.includes(contact.detectionMethod)) 
+                        detectionMethods.push(contact.detectionMethod);
+                });
+            }
+        }
+        return detectionMethods;
+    }
 
     /*********************** Actions on selected units ************************/
     selectedUnitsAddDestination(latlng: L.LatLng, mantainRelativePosition: boolean, rotation: number) {
@@ -227,7 +256,7 @@ export class UnitsManager {
         if (mantainRelativePosition)
             unitDestinations = this.selectedUnitsComputeGroupDestination(latlng, rotation);
         else
-            selectedUnits.forEach((unit: Unit) => { unitDestinations[unit.ID] = latlng });
+            selectedUnits.forEach((unit: Unit) => { unitDestinations[unit.ID] = latlng; });
 
         for (let idx in selectedUnits) {
             const unit = selectedUnits[idx];
@@ -515,36 +544,66 @@ export class UnitsManager {
         this.#showActionMessage(selectedUnits, `unit bombing point`);
     }
 
-    getUnitDetectedMethods(unit: Unit) {
-        var detectionMethods: number[] = [];
-        for (let idx in this.#units) {
-            if (this.#units[idx].getCoalition() !== "neutral" && this.#units[idx].getCoalition() != unit.getCoalition())
-            {
-                this.#units[idx].getContacts().forEach((contact: Contact) => {
-                    if (this.#units[idx].getAlive() && contact.ID == unit.ID && !detectionMethods.includes(contact.detectionMethod)) 
-                        detectionMethods.push(contact.detectionMethod);
-                });
-            }
+    // TODO add undo group
+    selectedUnitsCreateGroup() {
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: false });
+        var units = [];
+        var coalition = "neutral";
+        for (let idx in selectedUnits) {
+            var unit = selectedUnits[idx];
+            coalition = unit.getCoalition();
+            deleteUnit(unit.ID, false, true);
+            units.push({unitType: unit.getName(), location: unit.getPosition()});
         }
-        return detectionMethods;
+        const category = this.getSelectedUnitsTypes()[0];
+        this.spawnUnit(category, units, coalition, true);
     }
 
     /***********************************************/
     copyUnits() {
-        this.#copiedUnits = this.getSelectedUnits(); /* Can be applied to humans too */
-        this.#showActionMessage(this.#copiedUnits, `copied`);
+        this.#copiedUnits = JSON.parse(JSON.stringify(this.getSelectedUnits().map((unit: Unit) => {return unit.getData()}))); /* Can be applied to humans too */
+        getInfoPopup().setText(`${this.#copiedUnits.length} units copied`);
     }
 
     pasteUnits() {
         if (!this.#pasteDisabled) {
+            /* Compute the position of the center of the copied units */
+            var nUnits = this.#copiedUnits.length;
+            var avgLat = 0;
+            var avgLng = 0;
             for (let idx in this.#copiedUnits) {
                 var unit = this.#copiedUnits[idx];
-                //getMap().addTemporaryMarker(getMap().getMouseCoordinates());
-                cloneUnit(unit.ID, getMap().getMouseCoordinates());
-                this.#showActionMessage(this.#copiedUnits, `pasted`);
+                avgLat += unit.position.lat / nUnits;
+                avgLng += unit.position.lng / nUnits;
             }
-            this.#pasteDisabled = true;
-            window.setTimeout(() => this.#pasteDisabled = false, 250);
+
+            /* Organize the copied units in groups */
+            var groups: {[key: string]: any} = {};
+            this.#copiedUnits.forEach((unit: any) => {
+                if (!(unit.groupName in groups))
+                    groups[unit.groupName] = [];
+                groups[unit.groupName].push(unit);
+            });
+
+            for (let groupName in groups) {
+                /* Paste the units as groups. Only for ground and navy units because of loadouts, TODO: find a better solution so it works for them too*/
+                if (!["Aircraft", "Helicopter"].includes(groups[groupName][0].category)) {
+                    var units = groups[groupName].map((unit: any) => {
+                        var position = new LatLng(getMap().getMouseCoordinates().lat + unit.position.lat - avgLat, getMap().getMouseCoordinates().lng + unit.position.lng - avgLng);
+                        getMap().addTemporaryMarker(position, unit.name, unit.coalition);
+                        return {unitType: unit.name, location: position};
+                    });
+                    this.spawnUnit(groups[groupName][0].category, units, groups[groupName][0].coalition, true);
+                }
+                else {
+                    groups[groupName].forEach((unit: any) => {
+                        var position = new LatLng(getMap().getMouseCoordinates().lat + unit.position.lat - avgLat, getMap().getMouseCoordinates().lng + unit.position.lng - avgLng);
+                        getMap().addTemporaryMarker(position, unit.name, unit.coalition);
+                        cloneUnit(unit.ID, position);
+                    });
+                }
+            }
+            getInfoPopup().setText(`${this.#copiedUnits.length - 1} units pasted`);
         }
     }
 
@@ -581,7 +640,6 @@ export class UnitsManager {
             var unit = this.#units[ID];
             if (!["Aircraft", "Helicopter"].includes(unit.getCategory())) {
                 var data: any = unit.getData();
-                data.category = unit.getCategory();
                 if (unit.getGroupName() in unitsToExport)
                     unitsToExport[unit.getGroupName()].push(data);
                 else 
@@ -609,7 +667,7 @@ export class UnitsManager {
                 var groups = JSON.parse(contents);
                 for (let groupName in groups) {
                     if (groupName !== "" && groups[groupName].length > 0 && groups[groupName].every((unit: any) => {return unit.category == "GroundUnit";})) {
-                        var units = groups[groupName].map((unit: any) => {return {unitType: unit.name, location: unit.position}});
+                        var units = groups[groupName].filter((unit: any) => {return unit.alive}).map((unit: any) => {return {unitType: unit.name, location: unit.position}});
                         spawnGroundUnits(units, groups[groupName][0].coalition, true);
                     }
                 }
@@ -629,8 +687,11 @@ export class UnitsManager {
 
     /***********************************************/
     #onKeyUp(event: KeyboardEvent) {
-        if (!keyEventWasInInput(event) && event.key === "Delete" ) {
-            this.selectedUnitsDelete();
+        if (!keyEventWasInInput(event)) {
+            if (event.key === "Delete")
+                this.selectedUnitsDelete();
+            else if (event.key === "a" && event.ctrlKey)
+                Object.values(this.getUnits()).filter((unit: Unit) => {return !unit.getHidden()}).forEach((unit: Unit) => unit.setSelected(true));
         }
     }
 
@@ -661,7 +722,7 @@ export class UnitsManager {
             document.dispatchEvent(new CustomEvent("unitsDeselection", { detail: this.getSelectedUnits() }));
     }
 
-    #showActionMessage(units: Unit[], message: string) {
+    #showActionMessage(units: any[], message: string) {
         if (units.length == 1)
             getInfoPopup().setText(`${units[0].getUnitName()} ${message}`);
         else if (units.length > 1)

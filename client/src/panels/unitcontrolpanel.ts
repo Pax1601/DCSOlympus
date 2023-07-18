@@ -141,7 +141,7 @@ export class UnitControlPanel extends Panel {
                 element.toggleAttribute("data-show-advanced-settings-button", units.length == 1);
                 
                 /* Flight controls */
-                var desiredAltitude: number | undefined = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredAltitude()});
+                var desiredAltitude = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredAltitude()});
                 var desiredAltitudeType = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredAltitudeType()});
                 var desiredSpeed = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredSpeed()});
                 var desiredSpeedType = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredSpeedType()});

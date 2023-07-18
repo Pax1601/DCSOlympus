@@ -18,10 +18,8 @@ void stackClean(lua_State* L, int stackDepth)
     lua_pop(L, stackDepth);
 }
 
-json::value luaTableToJSON(lua_State* L, int index, bool logKeys)
+void luaTableToJSON(lua_State* L, int index, json::value& json, bool logKeys)
 {
-    auto json = json::value::object();
-
     if (lua_istable(L, index))
     {
         STACK_INIT;
@@ -38,7 +36,9 @@ json::value luaTableToJSON(lua_State* L, int index, bool logKeys)
             }
             if (lua_istable(L, -2))
             {
-                json[to_wstring(key)] = luaTableToJSON(L, -2, logKeys);
+                if (!json.has_object_field(to_wstring(key)))
+                    json[to_wstring(key)] = json::value::object();
+                luaTableToJSON(L, -2, json[to_wstring(key)], logKeys);
             }
             else if (lua_isnumber(L, -2))
             {
@@ -58,6 +58,5 @@ json::value luaTableToJSON(lua_State* L, int index, bool logKeys)
 
         STACK_CLEAN;
     }
-    return json;
 }
 

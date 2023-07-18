@@ -67,7 +67,7 @@ export class Map extends L.Map {
     constructor(ID: string) {
         /* Init the leaflet map */
         //@ts-ignore Needed because the boxSelect option is non-standard
-        super(ID, { doubleClickZoom: false, zoomControl: false, boxZoom: false, boxSelect: true, zoomAnimation: true, maxBoundsViscosity: 1.0, minZoom: 7, keyboard: true, keyboardPanDelta: 0 });
+        super(ID, { preferCanvas: true, doubleClickZoom: false, zoomControl: false, boxZoom: false, boxSelect: true, zoomAnimation: true, maxBoundsViscosity: 1.0, minZoom: 7, keyboard: true, keyboardPanDelta: 0 });
         this.setView([37.23, -115.8], 10);
 
         this.#ID = ID;
@@ -295,6 +295,10 @@ export class Map extends L.Map {
         }
     }
 
+    getCenterUnit() {
+        return this.#centerUnit;
+    }
+
     setTheatre(theatre: string) {
         var bounds = new L.LatLngBounds([-90, -180], [90, 180]);
         var miniMapZoom = 5;
@@ -424,9 +428,6 @@ export class Map extends L.Map {
 
     #onDoubleClick(e: any) {
         this.deselectAllCoalitionAreas();
-
-        var db = groundUnitDatabase;
-        db.generateTestGrid(this.getMouseCoordinates())
     }
 
     #onContextMenu(e: any) {

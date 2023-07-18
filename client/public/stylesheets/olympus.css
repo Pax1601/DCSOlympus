@@ -20,6 +20,7 @@
 
 html * {
     font-family: 'Open Sans', sans-serif !important;
+    user-select: none; 
 }
 
 body {

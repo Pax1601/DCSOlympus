@@ -42,33 +42,33 @@ bool UnitsManager::isUnitInGroup(Unit* unit)
 		if (groupName.length() == 0) return false;
 		for (auto const& p : units)
 		{
-			if (p.second->getGroupName().compare(groupName) == 0 && p.second != unit)
+			if (p.second->getGroupName().compare(groupName) == 0 && p.second != unit && p.second->getAlive())
 				return true;
 		}
 	}
 	return false;
 }
 
-bool UnitsManager::isUnitGroupLeader(Unit* unit) 
+/* Returns true if unit is group leader. Else, returns false, and leader will be equal to the group leader */
+bool UnitsManager::isUnitGroupLeader(Unit* unit, Unit*& leader) 
 {
 	if (unit != nullptr) {
-		Unit* leader = getGroupLeader(unit);
-		return leader == nullptr? false: unit == getGroupLeader(unit);
+		leader = getGroupLeader(unit);
+		return leader == nullptr? false: unit == leader;
 	}
 	else
 		return false;
 }
 
-// The group leader is the unit with the lowest ID that is part of the group. This is different from DCS's concept of leader, which will change if the leader is destroyed
 Unit* UnitsManager::getGroupLeader(Unit* unit) 
 {
 	if (unit != nullptr) {
 		string groupName = unit->getGroupName();
 		if (groupName.length() == 0) return nullptr;
-		/* Find the first unit that has the same groupName */
+		/* Find the first alive unit that has the same groupName */
 		for (auto const& p : units)
 		{
-			if (p.second->getGroupName().compare(groupName) == 0)
+			if (p.second->getAlive() && p.second->getGroupName().compare(groupName) == 0)
 				return p.second;
 		}
 	}
@@ -92,62 +92,41 @@ Unit* UnitsManager::getGroupLeader(unsigned int ID)
 	return getGroupLeader(unit);
 }
 
-void UnitsManager::updateExportData(lua_State* L, double dt)
+void UnitsManager::update(json::value& json, double dt)
 {
-	map<unsigned int, json::value> unitJSONs = getAllUnits(L);
-
-	/* Update all units, create them if needed TODO: move code to get constructor in dedicated function */
-	for (auto const& p : unitJSONs)
+	for (auto const& p : json.as_object())
 	{
-		unsigned int ID = p.first;
+		unsigned int ID = std::stoi(p.first);
 		if (units.count(ID) == 0)
 		{
-			json::value type = static_cast<json::value>(p.second)[L"Type"];
-			if (type.has_number_field(L"level1"))
-			{
-				if (type[L"level1"].as_number().to_int32() == 1)
-				{
-					if (type[L"level2"].as_number().to_int32() == 1)
-						units[ID] = dynamic_cast<Unit*>(new Aircraft(p.second, ID));
-					else if (type[L"level2"].as_number().to_int32() == 2)
-						units[ID] = dynamic_cast<Unit*>(new Helicopter(p.second, ID));
-				}
-				else if (type[L"level1"].as_number().to_int32() == 2)
+			json::value value = p.second;
+			if (value.has_string_field(L"category")) {
+				string category = to_string(value[L"category"].as_string());
+				if (category.compare("Aircraft") == 0)
+					units[ID] = dynamic_cast<Unit*>(new Aircraft(p.second, ID));
+				else if (category.compare("Helicopter") == 0)
+					units[ID] = dynamic_cast<Unit*>(new Helicopter(p.second, ID));
+				else if (category.compare("GroundUnit") == 0)
 					units[ID] = dynamic_cast<Unit*>(new GroundUnit(p.second, ID));
-				else if (type[L"level1"].as_number().to_int32() == 3)
+				else if (category.compare("NavyUnit") == 0)
 					units[ID] = dynamic_cast<Unit*>(new NavyUnit(p.second, ID));
-				else if (type[L"level1"].as_number().to_int32() == 4)
-				{
-					if (type[L"level2"].as_number().to_int32() == 4)
-						units[ID] = dynamic_cast<Unit*>(new Missile(p.second, ID));
-					else if (type[L"level2"].as_number().to_int32() == 5)
-						units[ID] = dynamic_cast<Unit*>(new Bomb(p.second, ID));
+				else if (category.compare("Missile") == 0)
+					units[ID] = dynamic_cast<Unit*>(new Missile(p.second, ID));
+				else if (category.compare("Bomb") == 0)
+					units[ID] = dynamic_cast<Unit*>(new Bomb(p.second, ID));
+
+				/* Initialize the unit if creation was successfull */
+				if (units.count(ID) != 0) {
+					units[ID]->update(p.second, dt);
+					units[ID]->initialize(p.second);
 				}
 			}
-			/* Initialize the unit if creation was successfull */
-			if (units.count(ID) != 0)
-				units[ID]->initialize(p.second);
 		}
 		else {
 			/* Update the unit if present*/
 			if (units.count(ID) != 0)
-				units[ID]->updateExportData(p.second, dt);
+				units[ID]->update(p.second, dt);
 		}
-	}
-
-	/* Set the units that are not present in the JSON as dead (probably have been destroyed) */
-	for (auto const& unit : units)
-		unit.second->setAlive(unitJSONs.find(unit.first) != unitJSONs.end());		
-}
-
-void UnitsManager::updateMissionData(json::value missionData)
-{
-	/* Update all units */
-	for (auto const& p : units)
-	{
-		unsigned int ID = p.first;
-		if (missionData.has_field(to_wstring(ID)))
-			p.second->updateMissionData(missionData[to_wstring(ID)]);
 	}
 }
 
@@ -157,11 +136,10 @@ void UnitsManager::runAILoop() {
 		unit.second->runAILoop();
 }
 
-string UnitsManager::getUnitData(stringstream &ss, unsigned long long time)
+void UnitsManager::getUnitData(stringstream &ss, unsigned long long time)
 {
 	for (auto const& p : units)
 		p.second->getData(ss, time);
-	return to_base64(ss.str());
 }
 
 void UnitsManager::deleteUnit(unsigned int ID, bool explosion, bool immediate)
@@ -174,16 +152,12 @@ void UnitsManager::deleteUnit(unsigned int ID, bool explosion, bool immediate)
 }
 
 void UnitsManager::acquireControl(unsigned int ID) {
-	Unit* unit = getUnit(ID);
-	if (unit != nullptr) {
-		for (auto const& groupMember : getGroupMembers(unit->getGroupName())) {
-			if (!groupMember->getControlled()) {
-				groupMember->setControlled(true);
-				groupMember->setState(State::IDLE);
-				groupMember->setDefaults(true);
-			}
+	Unit* leader = getGroupLeader(ID);
+	if (leader != nullptr) {
+		if (!leader->getControlled()) {
+			leader->setControlled(true);
+			leader->setDefaults(true);
 		}
-	}
-	
+	}	
 }
 

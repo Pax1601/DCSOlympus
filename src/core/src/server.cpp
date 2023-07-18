@@ -14,9 +14,7 @@ using namespace base64;
 
 extern UnitsManager* unitsManager; 
 extern Scheduler* scheduler;
-extern json::value airbases;
-extern json::value bullseyes;
-extern json::value mission;
+extern json::value missionData;
 extern mutex mutexLock;
 extern string sessionHash;
 
@@ -70,7 +68,6 @@ void Server::handle_get(http_request request)
     lock_guard<mutex> guard(mutexLock);
 
     milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
-
     http_response response(status_codes::OK);
     
     string password = extractPassword(request);
@@ -81,24 +78,25 @@ void Server::handle_get(http_request request)
             auto answer = json::value::object();
             auto path = uri::split_path(uri::decode(request.relative_uri().path()));
 
+            /* If present, extract the request reference time. This is used for updates, and it specifies the last time that request has been performed */
+            map<utility::string_t, utility::string_t> query = request.relative_uri().split_query(request.relative_uri().query());
+            unsigned long long time = 0;
+            if (query.find(L"time") != query.end())
+            {
+                try {
+                    time = stoull((*(query.find(L"time"))).second);
+                }
+                catch (const std::exception& e) {
+                    time = 0;
+                }
+            }
+
             if (path.size() > 0)
             {
                 string URI = to_string(path[0]);
                 if (URI.compare(UNITS_URI) == 0)
                 {
-                    map<utility::string_t, utility::string_t> query = request.relative_uri().split_query(request.relative_uri().query());
-                    long long time = 0;
-                    if (query.find(L"time") != query.end())
-                    {
-                        try {
-                            time = stoll((*(query.find(L"time"))).second);
-                        }
-                        catch (const std::exception& e) {
-                            time = 0;
-                        }
-                    }
                     unsigned long long updateTime = ms.count();
-
                     stringstream ss;
                     ss.write((char*)&updateTime, sizeof(updateTime));
                     unitsManager->getUnitData(ss, time);
@@ -108,25 +106,29 @@ void Server::handle_get(http_request request)
                     if (URI.compare(LOGS_URI) == 0)
                     {
                         auto logs = json::value::object();
-                        getLogsJSON(logs, 100);   // By reference, for thread safety. Get the last 100 log entries
+                        getLogsJSON(logs, time);   
                         answer[L"logs"] = logs;
                     }
-                    else if (URI.compare(AIRBASES_URI) == 0)
-                        answer[L"airbases"] = airbases;
-                    else if (URI.compare(BULLSEYE_URI) == 0)
-                        answer[L"bullseyes"] = bullseyes;
-                    else if (URI.compare(MISSION_URI) == 0) {
+                    else if (URI.compare(AIRBASES_URI) == 0 && missionData.has_object_field(L"airbases")) {
+                        answer[L"airbases"] = missionData[L"airbases"];
+                    }
+                    else if (URI.compare(BULLSEYE_URI) == 0 && missionData.has_object_field(L"bullseyes")) {
+                        answer[L"bullseyes"] = missionData[L"bullseyes"];
+                    }
+                    else if (URI.compare(MISSION_URI) == 0 && missionData.has_object_field(L"mission")) {
+                        answer[L"mission"] = missionData[L"mission"];
                         if (password.compare(gameMasterPassword) == 0)
-                            mission[L"visibilityMode"] = json::value(L"Game master");
+                            answer[L"mission"][L"visibilityMode"] = json::value(L"Game master");
                         else if (password.compare(blueCommanderPassword) == 0) 
-                            mission[L"visibilityMode"] = json::value(L"Blue commander");
+                            answer[L"mission"][L"visibilityMode"] = json::value(L"Blue commander");
                         else if (password.compare(redCommanderPassword) == 0)
-                            mission[L"visibilityMode"] = json::value(L"Red commander");
-                        answer[L"mission"] = mission;
+                            answer[L"mission"][L"visibilityMode"] = json::value(L"Red commander");
                     }
                     
                     answer[L"time"] = json::value::string(to_wstring(ms.count()));
                     answer[L"sessionHash"] = json::value::string(to_wstring(sessionHash));
+                    answer[L"load"] = scheduler->getLoad();
+                    answer[L"frameRate"] = scheduler->getFrameRate();
                     response.set_body(answer);
                 }
             }

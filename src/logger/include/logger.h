@@ -7,7 +7,7 @@ class Logger
 public:
     void log(const string& sMessage);
     void log(const wstring& sMessage);
-    void toJSON(json::value& json, unsigned int logsNumber = NULL);
+    void toJSON(json::value& json, unsigned long long time);
 
     static Logger* GetLogger();
 
@@ -19,7 +19,7 @@ private:
     static const string m_sFileName;
     static Logger* m_pThis;
     static ofstream m_Logfile;
-    static std::list<std::string> m_logs;
+    static std::map<unsigned long long, std::string> m_logs;
 
     mutex mutexLock;
 

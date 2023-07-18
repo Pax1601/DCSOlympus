@@ -13,14 +13,13 @@ public:
 	map<unsigned int, Unit*>& getUnits() { return units; };
 	Unit* getUnit(unsigned int ID);
 	bool isUnitInGroup(Unit* unit);
-	bool isUnitGroupLeader(Unit* unit);
+	bool isUnitGroupLeader(Unit* unit, Unit*& leader);
 	Unit* getGroupLeader(unsigned int ID);
 	Unit* getGroupLeader(Unit* unit);
 	vector<Unit*> getGroupMembers(string groupName);
-	void updateExportData(lua_State* L, double dt = 0);
-	void updateMissionData(json::value missionData);
+	void update(json::value& missionData, double dt);
 	void runAILoop();
-	string getUnitData(stringstream &ss, unsigned long long time);
+	void getUnitData(stringstream &ss, unsigned long long time);
 	void deleteUnit(unsigned int ID, bool explosion, bool immediate);
 	void acquireControl(unsigned int ID);
 	

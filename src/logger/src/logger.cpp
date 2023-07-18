@@ -1,11 +1,13 @@
 #include "logger.h"
 #include "utils.h"
 #include "defines.h"
+#include <chrono>
+using namespace std::chrono;
 
 const string Logger::m_sFileName = LOG_NAME;
 Logger* Logger::m_pThis = NULL;
 ofstream Logger::m_Logfile;
-std::list<std::string> Logger::m_logs;
+std::map<unsigned long long, std::string> Logger::m_logs;
 
 Logger::Logger()
 {
@@ -32,15 +34,18 @@ void Logger::Close()
     m_Logfile.close();
 }
 
-void Logger::toJSON(json::value& json, unsigned int logsNumber)
+void Logger::toJSON(json::value& json, unsigned long long time)
 {
     lock_guard<mutex> guard(mutexLock);
-    unsigned int i = 0;
-    for (auto itr = m_logs.end(); itr != m_logs.begin(); --itr)
+    json[L"requestTime"] = time;
+
+    /* Loop on the logs in reverse since we are usually only interested in the very last added logs */
+    auto itr = m_logs.end();
+    while (itr != m_logs.begin())
     {
-        json[to_wstring(m_logs.size() - 1 - i)] = json::value::string(to_wstring(*itr));
-        if (logsNumber != 0 && i > logsNumber)
-            break;
+        --itr;
+        if (itr->first < time) return;
+        json[to_wstring(itr->first)] = json::value::string(to_wstring(itr->second));
     }
 }
 
@@ -48,9 +53,10 @@ void Logger::log(const string& message)
 {
     lock_guard<mutex> guard(mutexLock);
     Open();
+    milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
     m_Logfile << CurrentDateTime() << ":\t";
     m_Logfile << message << "\n";
-    m_logs.push_back(CurrentDateTime() + ": " + message);
+    m_logs[static_cast<unsigned long long>(ms.count())] = CurrentDateTime() + ": " + message;
     Close();
 }
 
@@ -58,8 +64,9 @@ void Logger::log(const wstring& message)
 {
     lock_guard<mutex> guard(mutexLock);
     Open();
+    milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
     m_Logfile << CurrentDateTime() << ":\t";
     m_Logfile << to_string(message) << "\n";
-    m_logs.push_back(CurrentDateTime() + ": " + to_string(message));
+    m_logs[static_cast<unsigned long long>(ms.count())] = CurrentDateTime() + ": " + to_string(message);
     Close();
 }
