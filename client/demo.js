@@ -290,8 +290,10 @@ class DemoDataGenerator {
     }
     
     logs(req, res){
-        var ret = {logs: {}};
+        var ret = {logs: {"1": "I'm a log!", "2": "I'm a different log!"}};
         ret.time = Date.now();
+        ret.frameRate = 60;
+        ret.load = 0;
         res.send(JSON.stringify(ret));
     };
     

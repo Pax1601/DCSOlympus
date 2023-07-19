@@ -11,7 +11,7 @@
 }
 
 #connection-status-panel[data-is-connected] dt::before {
-	content: "Connected FPS: " attr(data-framerate) " Load: " attr(data-load);
+	content: "Connected";
 }
 
 #connection-status-panel[data-is-connected] dd::after {
