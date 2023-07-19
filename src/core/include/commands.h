@@ -95,7 +95,7 @@ class Command
 {
 public:
 	unsigned int getPriority() { return priority; }
-	virtual string getString(lua_State* L) = 0;
+	virtual string getString() = 0;
 	virtual unsigned int getLoad() = 0;
 
 protected:
@@ -118,7 +118,7 @@ public:
 	{ 
 		priority = CommandPriority::HIGH; 
 	};
-	virtual string getString(lua_State* L);
+	virtual string getString();
 	virtual unsigned int getLoad() { return 2; }
 
 private:
@@ -142,7 +142,7 @@ public:
 	{ 
 		priority = CommandPriority::LOW; 
 	};
-	virtual string getString(lua_State* L);
+	virtual string getString();
 	virtual unsigned int getLoad() { return 2; }
 
 private:
@@ -162,7 +162,7 @@ public:
 	{ 
 		priority = immediate? CommandPriority::IMMEDIATE: CommandPriority::LOW;
 	};
-	virtual string getString(lua_State* L);
+	virtual string getString();
 	virtual unsigned int getLoad() { return immediate? 1: 30; }
 
 private:
@@ -184,7 +184,7 @@ public:
 	{
 		priority = immediate ? CommandPriority::IMMEDIATE : CommandPriority::LOW;
 	};
-	virtual string getString(lua_State* L);
+	virtual string getString();
 	virtual unsigned int getLoad() { return immediate ? 1 : 30; }
 
 private:
@@ -208,7 +208,7 @@ public:
 	{ 
 		priority = immediate ? CommandPriority::IMMEDIATE : CommandPriority::LOW;
 	};
-	virtual string getString(lua_State* L);
+	virtual string getString();
 	virtual unsigned int getLoad() { return immediate ? 1 : 30; }
 
 private:
@@ -235,7 +235,7 @@ public:
 	{
 		priority = immediate ? CommandPriority::IMMEDIATE : CommandPriority::LOW;
 	};
-	virtual string getString(lua_State* L);
+	virtual string getString();
 	virtual unsigned int getLoad() { return immediate ? 1 : 30; }
 
 private:
@@ -257,7 +257,7 @@ public:
 	{
 		priority = CommandPriority::LOW;
 	};
-	virtual string getString(lua_State* L);
+	virtual string getString();
 	virtual unsigned int getLoad() { return 30; }
 
 private:
@@ -277,7 +277,7 @@ public:
 		priority = CommandPriority::HIGH;
 		immediate = immediate;
 	};
-	virtual string getString(lua_State* L);
+	virtual string getString();
 	virtual unsigned int getLoad() { return immediate? 1: 5; }
 
 private:
@@ -296,7 +296,7 @@ public:
 	{
 		priority = CommandPriority::MEDIUM;
 	};
-	virtual string getString(lua_State* L);
+	virtual string getString();
 	virtual unsigned int getLoad() { return 1; }
 
 private:
@@ -313,7 +313,7 @@ public:
 	{
 		priority = CommandPriority::HIGH;
 	};
-	virtual string getString(lua_State* L);
+	virtual string getString();
 	virtual unsigned int getLoad() { return 1; }
 
 private:
@@ -330,7 +330,7 @@ public:
 	{
 		priority = CommandPriority::HIGH;
 	};
-	virtual string getString(lua_State* L);
+	virtual string getString();
 	virtual unsigned int getLoad() { return 1; }
 
 private:
@@ -361,7 +361,7 @@ public:
 	{
 		priority = CommandPriority::HIGH;
 	};
-	virtual string getString(lua_State* L);
+	virtual string getString();
 	virtual unsigned int getLoad() { return 1; }
 
 private:
@@ -382,7 +382,7 @@ public:
 	{
 		priority = CommandPriority::HIGH;
 	};
-	virtual string getString(lua_State* L);
+	virtual string getString();
 	virtual unsigned int getLoad() { return 1; }
 
 private:
@@ -400,7 +400,7 @@ public:
 	{
 		priority = CommandPriority::MEDIUM;
 	};
-	virtual string getString(lua_State* L);
+	virtual string getString();
 	virtual unsigned int getLoad() { return 4; }
 
 private:

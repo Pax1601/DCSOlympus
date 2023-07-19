@@ -7,7 +7,7 @@
 extern UnitsManager* unitsManager;
 
 /* Move command */
-string Move::getString(lua_State* L)
+string Move::getString()
 {
 
     std::ostringstream commandSS;
@@ -26,7 +26,7 @@ string Move::getString(lua_State* L)
 }
 
 /* Smoke command */
-string Smoke::getString(lua_State* L)
+string Smoke::getString()
 {
     std::ostringstream commandSS;
     commandSS.precision(10);
@@ -38,7 +38,7 @@ string Smoke::getString(lua_State* L)
 }
 
 /* Spawn ground units command */
-string SpawnGroundUnits::getString(lua_State* L)
+string SpawnGroundUnits::getString()
 {
     if (unitTypes.size() != locations.size()) return "";
 
@@ -62,7 +62,7 @@ string SpawnGroundUnits::getString(lua_State* L)
 
 
 /* Spawn ground units command */
-string SpawnNavyUnits::getString(lua_State* L)
+string SpawnNavyUnits::getString()
 {
     if (unitTypes.size() != locations.size()) return "";
 
@@ -85,7 +85,7 @@ string SpawnNavyUnits::getString(lua_State* L)
 }
 
 /* Spawn aircrafts command */
-string SpawnAircrafts::getString(lua_State* L)
+string SpawnAircrafts::getString()
 {
     if (unitTypes.size() != locations.size() || unitTypes.size() != loadouts.size()) return "";
 
@@ -112,7 +112,7 @@ string SpawnAircrafts::getString(lua_State* L)
 
 
 /* Spawn helicopters command */
-string SpawnHelicopters::getString(lua_State* L)
+string SpawnHelicopters::getString()
 {
     if (unitTypes.size() != locations.size() || unitTypes.size() != loadouts.size()) return "";
 
@@ -139,7 +139,7 @@ string SpawnHelicopters::getString(lua_State* L)
 
 
 /* Clone unit command */
-string Clone::getString(lua_State* L)
+string Clone::getString()
 {
     Unit* unit = unitsManager->getUnit(ID);
     if (unit != nullptr)
@@ -160,7 +160,7 @@ string Clone::getString(lua_State* L)
 }
 
 /* Delete unit command */
-string Delete::getString(lua_State* L)
+string Delete::getString()
 {
     std::ostringstream commandSS;
     commandSS.precision(10);
@@ -171,7 +171,7 @@ string Delete::getString(lua_State* L)
 }
 
 /* Set task command */
-string SetTask::getString(lua_State* L)
+string SetTask::getString()
 {
     std::ostringstream commandSS;
     commandSS.precision(10);
@@ -183,7 +183,7 @@ string SetTask::getString(lua_State* L)
 }
 
 /* Reset task command */
-string ResetTask::getString(lua_State* L)
+string ResetTask::getString()
 {
     std::ostringstream commandSS;
     commandSS.precision(10);
@@ -194,7 +194,7 @@ string ResetTask::getString(lua_State* L)
 }
 
 /* Set command command */
-string SetCommand::getString(lua_State* L)
+string SetCommand::getString()
 {
     std::ostringstream commandSS;
     commandSS.precision(10);
@@ -206,7 +206,7 @@ string SetCommand::getString(lua_State* L)
 }
 
 /* Set option command */
-string SetOption::getString(lua_State* L)
+string SetOption::getString()
 {
     std::ostringstream commandSS;
     commandSS.precision(10);
@@ -226,7 +226,7 @@ string SetOption::getString(lua_State* L)
 }
 
 /* Set onOff command */
-string SetOnOff::getString(lua_State* L)
+string SetOnOff::getString()
 {
     std::ostringstream commandSS;
     commandSS.precision(10);
@@ -239,7 +239,7 @@ string SetOnOff::getString(lua_State* L)
 }
 
 /* Explosion command */
-string Explosion::getString(lua_State* L)
+string Explosion::getString()
 {
     std::ostringstream commandSS;
     commandSS.precision(10);

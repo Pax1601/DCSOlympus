@@ -506,7 +506,7 @@ function Olympus.generateGroundUnitsTable(units)
 					["y"] = spawnLocation.z + value.dy,
 					["heading"] = 0,
 					["skill"] = "High",
-					["name"] = "GroundUnit-" .. Olympus.unitCounter .. "-" .. #unitTable + 1
+					["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitTable + 1
 				}
 			end 
 		else
@@ -517,7 +517,7 @@ function Olympus.generateGroundUnitsTable(units)
 				["y"] = spawnLocation.z,
 				["heading"] = 0,
 				["skill"] = "High",
-				["name"] = "GroundUnit-" .. Olympus.unitCounter .. "-" .. #unitTable + 1
+				["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitTable + 1
 			}
 		end
 	end

@@ -59,7 +59,7 @@ export function GET(callback: CallableFunction, uri: string, options?: { time?: 
                 const result = JSON.parse(xmlHttp.responseText);
                 lastUpdateTimes[uri] = callback(result);
 
-                if (result.frameRate && result.load)
+                if (result.frameRate !== undefined && result.load !== undefined)
                     getServerStatusPanel().update(result.frameRate, result.load);
             }
         } else if (xmlHttp.status == 401) {

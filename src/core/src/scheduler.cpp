@@ -18,9 +18,13 @@ Scheduler::~Scheduler()
 
 }
 
-void Scheduler::appendCommand(Command* command)
+void Scheduler::appendCommand(Command* newCommand)
 {
-	commands.push_back(command);
+	for (auto command : commands) {
+		if (command->getString().compare(newCommand->getString()) == 0 && command->getPriority() == newCommand->getPriority())
+			return;
+	}
+	commands.push_back(newCommand);
 }
 
 int Scheduler::getLoad() 
@@ -47,13 +51,14 @@ void Scheduler::execute(lua_State* L)
 		{
 			if (command->getPriority() == priority)
 			{
-				string commandString = "Olympus.protectedCall(" + command->getString(L) + ")";
+				string commandString = "Olympus.protectedCall(" + command->getString() + ")";
 				if (dostring_in(L, "server", (commandString)))
 					log("Error executing command " + commandString);
 				else
 					log("Command '" + commandString + "' executed correctly, current load " + to_string(getLoad()));
 				load = command->getLoad();
 				commands.remove(command);
+				delete command;
 				return;
 			}
 		}
