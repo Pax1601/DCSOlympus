@@ -12,6 +12,7 @@ class AirUnit : public Unit
 public:
 	AirUnit(json::value json, unsigned int ID);
 
+	virtual void setDefaults(bool force = false);
 	virtual void setState(unsigned char newState);
 
 	virtual void changeSpeed(string change) = 0;

@@ -10,12 +10,16 @@ public:
 	~Scheduler();
 
 	void appendCommand(Command* command);
-	int getCurrentLoad();
 	void execute(lua_State* L);
 	void handleRequest(string key, json::value value);
+
+	int getLoad();
+	void setFrameRate(double newFrameRate) { frameRate = newFrameRate; }
+	int getFrameRate() { return frameRate; };
 	
 private:
 	list<Command*> commands;
 	unsigned int load;
+	double frameRate;
 };
 

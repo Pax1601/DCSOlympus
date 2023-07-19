@@ -278,9 +278,17 @@ export function getMarkerCategoryByName(name: string) {
     else if (helicopterDatabase.getByName(name) != null)
         return "helicopter";
     else if (groundUnitDatabase.getByName(name) != null){
-        // TODO this is very messy
         var type = groundUnitDatabase.getByName(name)?.type;
-        return (type?.includes("SAM")) ? "groundunit-sam" : "groundunit-other";
+        if (type === "SAM")
+            return "groundunit-sam";
+        else if (type === "SAM Search radar" || type === "SAM Track radar" || type === "SAM Search/Track radar")
+            return "groundunit-sam-radar";
+        else if (type === "SAM Launcher")
+            return "groundunit-sam-launcher";
+        else if (type === "Radar")
+            return "groundunit-ewr";
+        else
+            return "groundunit-other";
     }
     else 
         return "groundunit-other"; // TODO add other unit types  

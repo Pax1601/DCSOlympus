@@ -28,104 +28,58 @@ Unit::~Unit()
 
 void Unit::initialize(json::value json)
 {
-	if (json.has_string_field(L"Name"))
-		setName(to_string(json[L"Name"]));
-	if (json.has_string_field(L"UnitName"))
-		setUnitName(to_string(json[L"UnitName"]));
-	if (json.has_string_field(L"GroupName"))
-		setGroupName(to_string(json[L"GroupName"]));
-	if (json.has_number_field(L"Country"))
-		setCountry(json[L"Country"].as_number().to_int32());
-	if (json.has_number_field(L"CoalitionID"))
-		setCoalition(json[L"CoalitionID"].as_number().to_int32());
+	if (json.has_string_field(L"name"))
+		setName(to_string(json[L"name"]));
 
-	if (json.has_object_field(L"Flags"))
-		setHuman(json[L"Flags"][L"Human"].as_bool());
+	if (json.has_string_field(L"unitName"))
+		setUnitName(to_string(json[L"unitName"]));
+
+	if (json.has_string_field(L"groupName"))
+		setGroupName(to_string(json[L"groupName"]));
+
+	if (json.has_number_field(L"coalitionID"))
+		setCoalition(json[L"coalitionID"].as_number().to_int32());
+
+	//if (json.has_number_field(L"Country"))
+	//	setCountry(json[L"Country"].as_number().to_int32());
 
 	/* All units which contain the name "Olympus" are automatically under AI control */
 	if (getUnitName().find("Olympus") != string::npos)
 		setControlled(true);
 
-	updateExportData(json);
+	update(json, 0);
 	setDefaults();
 }
 
-void Unit::setDefaults(bool force)
+
+void Unit::update(json::value json, double dt)
 {
-	if (!getControlled()) return;
-	if (!unitsManager->isUnitGroupLeader(this)) return;
-	if (!(getAlive() || unitsManager->isUnitInGroup(this) && unitsManager->isUnitGroupLeader(this))) return;
-	if (getHuman()) return;
-
-	/* Set the default IDLE state */
-	setState(State::IDLE);
-
-	/* Set desired altitude to be equal to current altitude so the unit does not climb/descend after spawn */
-	setDesiredAltitude(position.alt);
-
-	/* Set the default options */
-	setROE(ROE::OPEN_FIRE_WEAPON_FREE, force);
-	setReactionToThreat(ReactionToThreat::EVADE_FIRE, force);
-	setEmissionsCountermeasures(EmissionCountermeasure::DEFEND, force);
-	strcpy_s(TACAN.callsign, 4, "TKR");
-	setTACAN(TACAN, force);
-	setRadio(radio, force);
-	setGeneralSettings(generalSettings, force);
-}
-
-void Unit::runAILoop() {
-	/* If the unit is alive, controlled and it is not a human, run the AI Loop that performs the requested commands and instructions (moving, attacking, etc) */
-	if (!getControlled()) return;
-	if (!unitsManager->isUnitGroupLeader(this)) return;
-	if (human) return;
-
-	/* Keep running the AI loop even if the unit is dead if it is the leader of a group which has other members in it */
-	const bool isUnitAlive = getAlive();
-	const bool isUnitLeaderOfAGroupWithOtherUnits = unitsManager->isUnitInGroup(this) && unitsManager->isUnitGroupLeader(this);
-	if (!(isUnitAlive || isUnitLeaderOfAGroupWithOtherUnits)) return;
-
-	if (checkTaskFailed() && state != State::IDLE && state != State::LAND)
-		setState(State::IDLE);
-
-	AIloop();
-}
-
-void Unit::updateExportData(json::value json, double dt)
-{
-	Coords newPosition = Coords(NULL);
-	double newHeading = 0;
-	double newSpeed = 0;
-
-	if (json.has_object_field(L"LatLongAlt"))
+	if (json.has_object_field(L"position"))
 	{
 		setPosition({
-			json[L"LatLongAlt"][L"Lat"].as_number().to_double(),
-			json[L"LatLongAlt"][L"Long"].as_number().to_double(),
-			json[L"LatLongAlt"][L"Alt"].as_number().to_double()
+			json[L"position"][L"lat"].as_number().to_double(),
+			json[L"position"][L"lng"].as_number().to_double(),
+			json[L"position"][L"alt"].as_number().to_double()
 			});
 	}
-	if (json.has_number_field(L"Heading"))
-		setHeading(json[L"Heading"].as_number().to_double());
 
-	/* Compute speed (loGetWorldObjects does not provide speed, we compute it for better performance instead of relying on many lua calls) */
-	if (oldPosition != NULL)
-	{
-		double dist = 0;
-		Geodesic::WGS84().Inverse(getPosition().lat, getPosition().lng, oldPosition.lat, oldPosition.lng, dist);
-		if (dt > 0)
-			setSpeed(getSpeed() * 0.95 + (dist / dt) * 0.05);
-	}
+	if (json.has_number_field(L"heading"))
+		setHeading(json[L"heading"].as_number().to_double());
 
-	oldPosition = position;
-}
+	if (json.has_number_field(L"speed"))
+		setSpeed(json[L"speed"].as_number().to_double());
 
-void Unit::updateMissionData(json::value json)
-{
+	if (json.has_boolean_field(L"isAlive"))
+		setAlive(json[L"isAlive"].as_bool());
+
+	if (json.has_object_field(L"isHuman"))
+		setHuman(json[L"isHuman"].as_bool());
+
 	if (json.has_number_field(L"fuel")) {
 		setFuel(short(json[L"fuel"].as_number().to_double() * 100));
 	}
-	
-	if (json.has_object_field(L"ammo")) {	
+
+	if (json.has_object_field(L"ammo")) {
 		vector<DataTypes::Ammo> ammo;
 		for (auto const& el : json[L"ammo"].as_object()) {
 			DataTypes::Ammo ammoItem;
@@ -146,16 +100,16 @@ void Unit::updateMissionData(json::value json)
 		}
 		setAmmo(ammo);
 	}
-		
+
 	if (json.has_object_field(L"contacts")) {
 		vector<DataTypes::Contact> contacts;
 		for (auto const& el : json[L"contacts"].as_object()) {
 			DataTypes::Contact contactItem;
 			auto contactJson = el.second;
 			contactItem.ID = contactJson[L"object"][L"id_"].as_number().to_uint32();
-	
+
 			string detectionMethod = to_string(contactJson[L"detectionMethod"]);
-			if		(detectionMethod.compare("VISUAL") == 0)	contactItem.detectionMethod = 1;
+			if (detectionMethod.compare("VISUAL") == 0)	contactItem.detectionMethod = 1;
 			else if (detectionMethod.compare("OPTIC") == 0)		contactItem.detectionMethod = 2;
 			else if (detectionMethod.compare("RADAR") == 0)		contactItem.detectionMethod = 4;
 			else if (detectionMethod.compare("IRST") == 0)		contactItem.detectionMethod = 8;
@@ -168,7 +122,67 @@ void Unit::updateMissionData(json::value json)
 
 	if (json.has_boolean_field(L"hasTask"))
 		setHasTask(json[L"hasTask"].as_bool());
+
+	runAILoop();
 }
+
+void Unit::setDefaults(bool force)
+{
+
+}
+
+void Unit::runAILoop() {
+	/* Set isLeader */
+	Unit* leader = nullptr;
+	setIsLeader(unitsManager->isUnitGroupLeader(this, leader));
+
+	/* When units are in a group, most data comes from the group leader. If new data is available, align it from the leader */
+	if (!getIsLeader()) {
+		if (leader != nullptr) {
+			for (unsigned char datumIndex = DataIndex::startOfData + 1; datumIndex < DataIndex::lastIndex; datumIndex++)
+			{
+				if (leader->checkFreshness(datumIndex, lastLoopTime)) {
+					switch (datumIndex) {
+					case DataIndex::controlled:					updateValue(controlled, leader->controlled, datumIndex); break;
+					case DataIndex::state:						updateValue(state, leader->state, datumIndex); break;
+					case DataIndex::task:						updateValue(task, leader->task, datumIndex); break;
+					case DataIndex::hasTask:					updateValue(hasTask, leader->hasTask, datumIndex); break;
+					case DataIndex::isTanker:					updateValue(isTanker, leader->isTanker, datumIndex); break;
+					case DataIndex::isAWACS:					updateValue(isAWACS, leader->isAWACS, datumIndex); break;
+					case DataIndex::onOff:						updateValue(onOff, leader->onOff, datumIndex); break;
+					case DataIndex::followRoads:				updateValue(followRoads, leader->followRoads, datumIndex); break;
+					case DataIndex::desiredSpeed:				updateValue(desiredSpeed, leader->desiredSpeed, datumIndex); break;
+					case DataIndex::desiredSpeedType:			updateValue(desiredSpeedType, leader->desiredSpeedType, datumIndex); break;
+					case DataIndex::desiredAltitude:			updateValue(desiredAltitude, leader->desiredAltitude, datumIndex); break;
+					case DataIndex::desiredAltitudeType:		updateValue(desiredAltitudeType, leader->desiredAltitudeType, datumIndex); break;
+					case DataIndex::leaderID:					updateValue(leaderID, leader->leaderID, datumIndex); break;
+					case DataIndex::formationOffset:			updateValue(formationOffset, leader->formationOffset, datumIndex); break;
+					case DataIndex::targetID:					updateValue(targetID, leader->targetID, datumIndex); break;
+					case DataIndex::targetPosition:				updateValue(targetPosition, leader->targetPosition, datumIndex); break;
+					case DataIndex::ROE:						updateValue(ROE, leader->ROE, datumIndex); break;
+					case DataIndex::reactionToThreat:			updateValue(reactionToThreat, leader->reactionToThreat, datumIndex); break;
+					case DataIndex::emissionsCountermeasures:	updateValue(emissionsCountermeasures, leader->emissionsCountermeasures, datumIndex); break;
+					case DataIndex::TACAN:						updateValue(TACAN, leader->TACAN, datumIndex); break;
+					case DataIndex::radio:						updateValue(radio, leader->radio, datumIndex); break;
+					case DataIndex::generalSettings:			updateValue(generalSettings, leader->generalSettings, datumIndex); break;
+					case DataIndex::activePath:					updateValue(activePath, leader->activePath, datumIndex); break;
+					}
+				}
+			}
+		}
+	}
+
+	/* If the unit is alive, controlled, is the leader of the group and it is not a human, run the AI Loop that performs the requested commands and instructions (moving, attacking, etc) */
+	if (getAlive() && getControlled() && !getHuman() && getIsLeader()) {
+		if (checkTaskFailed() && state != State::IDLE && state != State::LAND)
+			setState(State::IDLE);
+		AIloop();
+	}
+
+	milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
+	lastLoopTime = ms.count();
+}
+
 
 bool Unit::checkFreshness(unsigned char datumIndex, unsigned long long time) {
 	auto it = updateTimeMap.find(datumIndex);
@@ -187,55 +201,51 @@ bool Unit::hasFreshData(unsigned long long time) {
 
 void Unit::getData(stringstream& ss, unsigned long long time)
 {
-	Unit* leader = this;
-	if (unitsManager->isUnitInGroup(this) && !unitsManager->isUnitGroupLeader(this)) 
-		leader = unitsManager->getGroupLeader(this);
-
-	if (leader == nullptr || (!leader->hasFreshData(time) && !hasFreshData(time))) return;
-
 	const unsigned char endOfData = DataIndex::endOfData;
 	ss.write((const char*)&ID, sizeof(ID));
 	for (unsigned char datumIndex = DataIndex::startOfData + 1; datumIndex < DataIndex::lastIndex; datumIndex++)
 	{
-		/* When units are in a group, most data comes from the group leader */
-		switch (datumIndex) {
-		case DataIndex::category:					if (checkFreshness(datumIndex, time)) appendString(ss, datumIndex, category); break;
-		case DataIndex::alive:						if (checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, alive); break;
-		case DataIndex::human:						if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->human); break;
-		case DataIndex::controlled:					if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->controlled); break;
-		case DataIndex::coalition:					if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->coalition); break;
-		case DataIndex::country:					if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->country); break;
-		case DataIndex::name:						if (checkFreshness(datumIndex, time)) appendString(ss, datumIndex, name); break;
-		case DataIndex::unitName:					if (checkFreshness(datumIndex, time)) appendString(ss, datumIndex, unitName); break;
-		case DataIndex::groupName:					if (leader->checkFreshness(datumIndex, time)) appendString(ss, datumIndex, leader->groupName); break;
-		case DataIndex::state:						if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->state); break;
-		case DataIndex::task:						if (leader->checkFreshness(datumIndex, time)) appendString(ss, datumIndex, leader->task); break;
-		case DataIndex::hasTask:					if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->hasTask); break;
-		case DataIndex::position:					if (checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, position); break;
-		case DataIndex::speed:						if (checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, speed); break;
-		case DataIndex::heading:					if (checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, heading); break;
-		case DataIndex::isTanker:					if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->isTanker); break;
-		case DataIndex::isAWACS:					if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->isAWACS); break;
-		case DataIndex::onOff:						if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->onOff); break;
-		case DataIndex::followRoads:				if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->followRoads); break;
-		case DataIndex::fuel:						if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, fuel); break;
-		case DataIndex::desiredSpeed:				if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->desiredSpeed); break;
-		case DataIndex::desiredSpeedType:			if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->desiredSpeedType); break;
-		case DataIndex::desiredAltitude:			if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->desiredAltitude); break;
-		case DataIndex::desiredAltitudeType:		if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->desiredAltitudeType); break;
-		case DataIndex::leaderID:					if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->leaderID); break;
-		case DataIndex::formationOffset:			if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->formationOffset); break;
-		case DataIndex::targetID:					if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->targetID); break;
-		case DataIndex::targetPosition:				if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->targetPosition); break;
-		case DataIndex::ROE:						if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->ROE); break;
-		case DataIndex::reactionToThreat:			if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->reactionToThreat); break;
-		case DataIndex::emissionsCountermeasures:	if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->emissionsCountermeasures); break;
-		case DataIndex::TACAN:						if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->TACAN); break;
-		case DataIndex::radio:						if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->radio); break;
-		case DataIndex::generalSettings:			if (leader->checkFreshness(datumIndex, time)) appendNumeric(ss, datumIndex, leader->generalSettings); break;
-		case DataIndex::ammo:						if (checkFreshness(datumIndex, time)) appendVector(ss, datumIndex, ammo); break;
-		case DataIndex::contacts:					if (checkFreshness(datumIndex, time)) appendVector(ss, datumIndex, contacts); break;
-		case DataIndex::activePath:					if (leader->checkFreshness(datumIndex, time)) appendList(ss, datumIndex, leader->activePath); break;
+		if (checkFreshness(datumIndex, time)) {
+			switch (datumIndex) {
+			case DataIndex::category:					appendString(ss, datumIndex, category); break;
+			case DataIndex::alive:						appendNumeric(ss, datumIndex, alive); break;
+			case DataIndex::human:						appendNumeric(ss, datumIndex, human); break;
+			case DataIndex::controlled:					appendNumeric(ss, datumIndex, controlled); break;
+			case DataIndex::coalition:					appendNumeric(ss, datumIndex, coalition); break;
+			case DataIndex::country:					appendNumeric(ss, datumIndex, country); break;
+			case DataIndex::name:						appendString(ss, datumIndex, name); break;
+			case DataIndex::unitName:					appendString(ss, datumIndex, unitName); break;
+			case DataIndex::groupName:					appendString(ss, datumIndex, groupName); break;
+			case DataIndex::state:						appendNumeric(ss, datumIndex, state); break;
+			case DataIndex::task:						appendString(ss, datumIndex, task); break;
+			case DataIndex::hasTask:					appendNumeric(ss, datumIndex, hasTask); break;
+			case DataIndex::position:					appendNumeric(ss, datumIndex, position); break;
+			case DataIndex::speed:						appendNumeric(ss, datumIndex, speed); break;
+			case DataIndex::heading:					appendNumeric(ss, datumIndex, heading); break;
+			case DataIndex::isTanker:					appendNumeric(ss, datumIndex, isTanker); break;
+			case DataIndex::isAWACS:					appendNumeric(ss, datumIndex, isAWACS); break;
+			case DataIndex::onOff:						appendNumeric(ss, datumIndex, onOff); break;
+			case DataIndex::followRoads:				appendNumeric(ss, datumIndex, followRoads); break;
+			case DataIndex::fuel:						appendNumeric(ss, datumIndex, fuel); break;
+			case DataIndex::desiredSpeed:				appendNumeric(ss, datumIndex, desiredSpeed); break;
+			case DataIndex::desiredSpeedType:			appendNumeric(ss, datumIndex, desiredSpeedType); break;
+			case DataIndex::desiredAltitude:			appendNumeric(ss, datumIndex, desiredAltitude); break;
+			case DataIndex::desiredAltitudeType:		appendNumeric(ss, datumIndex, desiredAltitudeType); break;
+			case DataIndex::leaderID:					appendNumeric(ss, datumIndex, leaderID); break;
+			case DataIndex::formationOffset:			appendNumeric(ss, datumIndex, formationOffset); break;
+			case DataIndex::targetID:					appendNumeric(ss, datumIndex, targetID); break;
+			case DataIndex::targetPosition:				appendNumeric(ss, datumIndex, targetPosition); break;
+			case DataIndex::ROE:						appendNumeric(ss, datumIndex, ROE); break;
+			case DataIndex::reactionToThreat:			appendNumeric(ss, datumIndex, reactionToThreat); break;
+			case DataIndex::emissionsCountermeasures:	appendNumeric(ss, datumIndex, emissionsCountermeasures); break;
+			case DataIndex::TACAN:						appendNumeric(ss, datumIndex, TACAN); break;
+			case DataIndex::radio:						appendNumeric(ss, datumIndex, radio); break;
+			case DataIndex::generalSettings:			appendNumeric(ss, datumIndex, generalSettings); break;
+			case DataIndex::ammo:						appendVector(ss, datumIndex, ammo); break;
+			case DataIndex::contacts:					appendVector(ss, datumIndex, contacts); break;
+			case DataIndex::activePath:					appendList(ss, datumIndex, activePath); break;
+			case DataIndex::isLeader:					appendNumeric(ss, datumIndex, isLeader); break;
+			}
 		}
 	}
 	ss.write((const char*)&endOfData, sizeof(endOfData));
@@ -537,8 +547,8 @@ void Unit::setRadio(DataTypes::Radio newRadio, bool force)
 		commandSS << "{"
 			<< "id = 'SetCallsign',"
 			<< "params = {"
-			<< "callname = " << radio.callsign << ","
-			<< "number = " << radio.callsignNumber << ","
+			<< "callname = " << to_string(radio.callsign) << ","
+			<< "number = " << to_string(radio.callsignNumber) << ","
 			<< "}"
 			<< "}";
 		command = dynamic_cast<Command*>(new SetCommand(groupName, commandSS.str()));
@@ -572,46 +582,54 @@ void Unit::setGeneralSettings(DataTypes::GeneralSettings newGeneralSettings, boo
 
 void Unit::setDesiredSpeed(double newDesiredSpeed)
 {
-	desiredSpeed = newDesiredSpeed;
-	if (state == State::IDLE)
-		resetTask();
-	else
-		goToDestination();		/* Send the command to reach the destination */
+	if (desiredSpeed != newDesiredSpeed) {
+		desiredSpeed = newDesiredSpeed;
+		if (state == State::IDLE)
+			resetTask();
+		else
+			goToDestination();		/* Send the command to reach the destination */
 
-	triggerUpdate(DataIndex::desiredSpeed);
+		triggerUpdate(DataIndex::desiredSpeed);
+	}
 }
 
 void Unit::setDesiredAltitude(double newDesiredAltitude)
 {
-	desiredAltitude = newDesiredAltitude;
-	if (state == State::IDLE)
-		resetTask();
-	else
-		goToDestination();		/* Send the command to reach the destination */
+	if (desiredAltitude != newDesiredAltitude) {
+		desiredAltitude = newDesiredAltitude;
+		if (state == State::IDLE)
+			resetTask();
+		else
+			goToDestination();		/* Send the command to reach the destination */
 
-	triggerUpdate(DataIndex::desiredAltitude);
+		triggerUpdate(DataIndex::desiredAltitude);
+	}
 }
 
 void Unit::setDesiredSpeedType(string newDesiredSpeedType)
 {
-	desiredSpeedType = newDesiredSpeedType.compare("GS") == 0;
-	if (state == State::IDLE)
-		resetTask();
-	else
-		goToDestination();		/* Send the command to reach the destination */
+	if (desiredSpeedType != (newDesiredSpeedType.compare("GS") == 0)) {
+		desiredSpeedType = newDesiredSpeedType.compare("GS") == 0;
+		if (state == State::IDLE)
+			resetTask();
+		else
+			goToDestination();		/* Send the command to reach the destination */
 
-	triggerUpdate(DataIndex::desiredSpeedType);
+		triggerUpdate(DataIndex::desiredSpeedType);
+	}
 }
 
 void Unit::setDesiredAltitudeType(string newDesiredAltitudeType)
 {
-	desiredAltitudeType = newDesiredAltitudeType.compare("AGL") == 0;
-	if (state == State::IDLE)
-		resetTask();
-	else
-		goToDestination();		/* Send the command to reach the destination */
+	if (desiredAltitudeType != (newDesiredAltitudeType.compare("AGL") == 0)) {
+		desiredAltitudeType = newDesiredAltitudeType.compare("AGL") == 0;
+		if (state == State::IDLE)
+			resetTask();
+		else
+			goToDestination();		/* Send the command to reach the destination */
 
-	triggerUpdate(DataIndex::desiredAltitudeType);
+		triggerUpdate(DataIndex::desiredAltitudeType);
+	}
 }
 
 void Unit::goToDestination(string enrouteTask)

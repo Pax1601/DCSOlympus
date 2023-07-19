@@ -15,7 +15,7 @@ export class GroundUnitDatabase extends UnitDatabase {
                 "shortLabel": "SA-2 SAM Battery",
                 "range": "Long",
                 "filename": "",
-                "type": "SAM Sites"
+                "type": "SAM Site"
             },
             "SA-3 SAM Battery": {
                 "name": "SA-3 SAM Battery",
@@ -25,7 +25,7 @@ export class GroundUnitDatabase extends UnitDatabase {
                 "shortLabel": "SA-3 SAM Battery",
                 "range": "Medium",
                 "filename": "",
-                "type": "SAM Sites"
+                "type": "SAM Site"
             },
             "SA-6 SAM Battery": {
                 "name": "SA-6 SAM Battery",
@@ -35,7 +35,7 @@ export class GroundUnitDatabase extends UnitDatabase {
                 "shortLabel": "SA-6 SAM Battery",
                 "range": "Medium",
                 "filename": "",
-                "type": "SAM Sites"
+                "type": "SAM Site"
             },
             "SA-10 SAM Battery": {
                 "name": "SA-10 SAM Battery",
@@ -45,7 +45,7 @@ export class GroundUnitDatabase extends UnitDatabase {
                 "shortLabel": "SA-10 SAM Battery",
                 "range": "Long",
                 "filename": "",
-                "type": "SAM Sites"
+                "type": "SAM Site"
             },
             "SA-11 SAM Battery": {
                 "name": "SA-11 SAM Battery",
@@ -55,7 +55,17 @@ export class GroundUnitDatabase extends UnitDatabase {
                 "shortLabel": "SA-11 SAM Battery",
                 "range": "Medium",
                 "filename": "",
-                "type": "SAM Sites"
+                "type": "SAM Site"
+            },
+            "SA-5 SAM Battery": {
+                "name": "SA-5 SAM Battery",
+                "coalition": "Red",
+                "era": "Mid Cold War",
+                "label": "SA-5 SAM Battery",
+                "shortLabel": "SA-5 SAM Battery",
+                "range": "Long",
+                "filename": "",
+                "type": "SAM Site"
             },
             "Patriot site": {
                 "name": "Patriot site",
@@ -65,7 +75,7 @@ export class GroundUnitDatabase extends UnitDatabase {
                 "shortLabel": "Patriot site",
                 "range": "Long",
                 "filename": "",
-                "type": "SAM Sites"
+                "type": "SAM Site"
             },
             "Hawk SAM Battery": {
                 "name": "Hawk SAM Battery",
@@ -75,7 +85,25 @@ export class GroundUnitDatabase extends UnitDatabase {
                 "shortLabel": "Hawk SAM Battery",
                 "range": "Medium",
                 "filename": "",
-                "type": "SAM Sites"
+                "type": "SAM Site"
+            },
+            "SNR_75V": {
+                "name": "SNR_75V",
+                "coalition": "Red",
+                "era": "Early Cold War",
+                "label": "SA-2 Fan Song",
+                "shortLabel": "SNR 75V",
+                "filename": "",
+                "type": "SAM Track radar"
+            },
+            "S_75M_Volhov": {
+                "name": "S_75M_Volhov",
+                "coalition": "Red",
+                "era": "Early Cold War",
+                "label": "SA-2 Launcher",
+                "shortLabel": "S75M Volhov",
+                "filename": "",
+                "type": "SAM Launcher"
             },
             "2B11 mortar": {
                 "name": "2B11 mortar",
@@ -460,61 +488,61 @@ export class GroundUnitDatabase extends UnitDatabase {
                 "name": "Kub 2P25 ln",
                 "coalition": "red",
                 "era": "Late Cold War",
-                "label": "SA-6 Kub 2P25 ln",
+                "label": "SA-6 Launcher",
                 "shortLabel": "Kub 2P25 ln",
                 "range": "Medium",
                 "filename": "",
-                "type": "SAM"
+                "type": "SAM Launcher"
             },
             "5p73 s-125 ln": {
                 "name": "5p73 s-125 ln",
                 "coalition": "red",
                 "era": "Early Cold War",
-                "label": "SA-3 5p73 s-125 ln",
+                "label": "SA-3 Launcher",
                 "shortLabel": "5p73 s-125 ln",
                 "range": "Medium",
                 "filename": "",
-                "type": "SAM"
+                "type": "SAM Launcher"
             },
             "S-300PS 5P85C ln": {
                 "name": "S-300PS 5P85C ln",
                 "coalition": "red",
                 "era": "Late Cold War",
-                "label": "SA-10 S-300PS 5P85C ln",
+                "label": "SA-10 Launcher (5P85C)",
                 "shortLabel": "S-300PS 5P85C ln",
                 "range": "Long",
                 "filename": "",
-                "type": "SAM"
+                "type": "SAM Launcher"
             },
             "S-300PS 5P85D ln": {
                 "name": "S-300PS 5P85D ln",
                 "coalition": "red",
                 "era": "Late Cold War",
-                "label": "SA-10 S-300PS 5P85D ln",
+                "label": "SA-10 Launcher (5P85D)",
                 "shortLabel": "S-300PS 5P85D ln",
                 "range": "Long",
                 "filename": "",
-                "type": "SAM"
+                "type": "SAM Launcher"
             },
             "SA-11 Buk LN 9A310M1": {
                 "name": "SA-11 Buk LN 9A310M1",
                 "coalition": "red",
                 "era": "Late Cold War",
-                "label": "SA-11 Buk LN 9A310M1",
+                "label": "SA-11 Launcher",
                 "shortLabel": "SA-11 Buk LN 9A310M1",
                 "range": "Medium",
                 "filename": "",
-                "type": "SAM"
+                "type": "SAM Launcher"
             },
             "Osa 9A33 ln": {
                 "name": "Osa 9A33 ln",
                 "coalition": "red",
                 "era": "Mid Cold War",
-                "label": "SA-8 Osa 9A33 ln",
+                "label": "SA-8 Launcher",
                 "shortLabel": "Osa 9A33 ln",
                 "range": "Short",
                 "filename": "",
-                "type": "SAM"
+                "type": "SAM Launcher"
             },
             "Tor 9A331": {
                 "name": "Tor 9A331",
@@ -550,11 +578,11 @@ export class GroundUnitDatabase extends UnitDatabase {
                 "name": "SA-11 Buk CC 9S470M1",
                 "coalition": "red",
                 "era": "Late Cold War",
-                "label": "SA-11 Buk CC 9S470M1",
+                "label": "SA-11 Command Post",
                 "shortLabel": "SA-11 Buk CC 9S470M1",
                 "range": "Medium",
                 "filename": "",
-                "type": "SAM"
+                "type": "SAM Support vehicle"
             },
             "SA-8 Osa LD 9T217": {
                 "name": "SA-8 Osa LD 9T217",
@@ -570,21 +598,21 @@ export class GroundUnitDatabase extends UnitDatabase {
                 "name": "Patriot AMG",
                 "coalition": "blue",
                 "era": "Modern",
-                "label": "Patriot AMG",
+                "label": "Patriot Antenna Mast Group",
                 "shortLabel": "Patriot AMG",
                 "range": "Long",
                 "filename": "",
-                "type": "SAM"
+                "type": "SAM Support vehicle"
             },
             "Patriot ECS": {
                 "name": "Patriot ECS",
                 "coalition": "blue",
                 "era": "Modern",
-                "label": "Patriot ECS",
+                "label": "Patriot Engagement Control Station",
                 "shortLabel": "Patriot ECS",
                 "range": "Long",
                 "filename": "",
-                "type": "SAM"
+                "type": "SAM Support vehicle"
             },
             "Gepard": {
                 "name": "Gepard",
@@ -599,11 +627,11 @@ export class GroundUnitDatabase extends UnitDatabase {
                 "name": "Hawk pcp",
                 "coalition": "blue",
                 "era": "Late Cold War",
-                "label": "Hawk pcp",
+                "label": "Hawk Platoon Command Post",
                 "shortLabel": "Hawk pcp",
                 "range": "Medium",
                 "filename": "",
-                "type": "SAM"
+                "type": "SAM Support vehicle"
             },
             "SA-18 Igla manpad": {
                 "name": "SA-18 Igla manpad",
@@ -635,6 +663,36 @@ export class GroundUnitDatabase extends UnitDatabase {
                 "filename": "",
                 "type": "MANPADS"
             },
+            "RPC_5N62V": {
+                "name": "RPC_5N62V",
+                "coalition": "Red",
+                "era": "Mid Cold War",
+                "label": "SA-5 Square Pair",
+                "shortLabel": "RPC 5N62V",
+                "range": "Long",
+                "filename": "",
+                "type": "SAM Track radar"
+            },
+            "RLS_19J6": {
+                "name": "RLS_19J6",
+                "coalition": "Red",
+                "era": "Mid Cold War",
+                "label": "SA-5 Thin Shield",
+                "shortLabel": "RLS 19J6",
+                "range": "Long",
+                "filename": "",
+                "type": "SAM Search radar"
+            },
+            "S-200_Launcher": {
+                "name": "S-200_Launcher",
+                "coalition": "Red",
+                "era": "Mid Cold War",
+                "label": "SA-5 Launcher",
+                "shortLabel": "S-200 Launcher",
+                "range": "Long",
+                "filename": "",
+                "type": "SAM Launcher"
+            },
             "Vulcan": {
                 "name": "Vulcan",
                 "coalition": "blue",
@@ -648,10 +706,10 @@ export class GroundUnitDatabase extends UnitDatabase {
                 "name": "Hawk ln",
                 "coalition": "blue",
                 "era": "Late Cold War",
-                "label": "Hawk ln",
+                "label": "Hawk Launcher",
                 "shortLabel": "Hawk ln",
                 "filename": "",
-                "type": "SAM"
+                "type": "SAM Launcher"
             },
             "M48 Chaparral": {
                 "name": "M48 Chaparral",
@@ -675,11 +733,11 @@ export class GroundUnitDatabase extends UnitDatabase {
                 "name": "Patriot ln",
                 "coalition": "blue",
                 "era": "Late Cold War",
-                "label": "Patriot ln",
+                "label": "Patriot Launcher",
                 "shortLabel": "Patriot ln",
                 "range": "Long",
                 "filename": "",
-                "type": "SAM"
+                "type": "SAM Launcher"
             },
             "M1097 Avenger": {
                 "name": "M1097 Avenger",
@@ -694,21 +752,21 @@ export class GroundUnitDatabase extends UnitDatabase {
                 "name": "Patriot EPP",
                 "coalition": "blue",
                 "era": "Late Cold War",
-                "label": "Patriot EPP",
+                "label": "Patriot Electric Power Plant",
                 "shortLabel": "Patriot EPP",
                 "range": "Long",
                 "filename": "",
-                "type": "SAM"
+                "type": "SAM Support vehicle"
             },
             "Patriot cp": {
                 "name": "Patriot cp",
                 "coalition": "blue",
                 "era": "Late Cold War",
-                "label": "Patriot cp",
+                "label": "Patriot Command Post",
                 "shortLabel": "Patriot cp",
                 "range": "Long",
                 "filename": "",
-                "type": "SAM"
+                "type": "SAM Support vehicle"
             },
             "Roland ADS": {
                 "name": "Roland ADS",
@@ -723,11 +781,11 @@ export class GroundUnitDatabase extends UnitDatabase {
                 "name": "S-300PS 54K6 cp",
                 "coalition": "red",
                 "era": "Late Cold War",
-                "label": "SA-10 S-300PS 54K6 cp",
+                "label": "SA-10 Command Post",
                 "shortLabel": "S-300PS 54K6 cp",
                 "range": "Long",
                 "filename": "",
-                "type": "SAM"
+                "type": "SAM Support vehicle"
             },
             "Stinger manpad GRG": {
                 "name": "Stinger manpad GRG",
@@ -737,7 +795,7 @@ export class GroundUnitDatabase extends UnitDatabase {
                 "shortLabel": "Stinger manpad GRG",
                 "range": "Short",
                 "filename": "",
-                "type": "SAM"
+                "type": "MANPADS"
             },
             "Stinger manpad dsr": {
                 "name": "Stinger manpad dsr",
@@ -757,7 +815,7 @@ export class GroundUnitDatabase extends UnitDatabase {
                 "shortLabel": "Stinger comm dsr",
                 "range": "Short",
                 "filename": "",
-                "type": "SAM"
+                "type": "MANPADS"
             },
             "Stinger manpad": {
                 "name": "Stinger manpad",
@@ -777,7 +835,7 @@ export class GroundUnitDatabase extends UnitDatabase {
                 "shortLabel": "Stinger comm",
                 "range": "Short",
                 "filename": "",
-                "type": "SAM"
+                "type": "MANPADS"
             },
             "ZSU-23-4 Shilka": {
                 "name": "ZSU-23-4 Shilka",
@@ -846,7 +904,7 @@ export class GroundUnitDatabase extends UnitDatabase {
                 "name": "1L13 EWR",
                 "coalition": "red",
                 "era": "Late Cold War",
-                "label": "1L13 EWR",
+                "label": "Box Spring",
                 "shortLabel": "1L13 EWR",
                 "filename": "",
                 "type": "Radar"
@@ -855,37 +913,37 @@ export class GroundUnitDatabase extends UnitDatabase {
                 "name": "Kub 1S91 str",
                 "coalition": "red",
                 "era": "Mid Cold War",
-                "label": "SA-6 Kub 1S91 str",
+                "label": "SA-6 Straight flush",
                 "shortLabel": "Kub 1S91 str",
                 "range": "Medium",
                 "filename": "",
-                "type": "SAM"
+                "type": "SAM Search/Track radar"
             },
             "S-300PS 40B6M tr": {
                 "name": "S-300PS 40B6M tr",
                 "coalition": "red",
                 "era": "Late Cold War",
-                "label": "SA-10 S-300PS 40B6M tr",
+                "label": "SA-10 Tin Shield",
                 "shortLabel": "S-300PS 40B6M tr",
                 "range": "Long",
                 "filename": "",
-                "type": "SAM"
+                "type": "SAM Track radar"
             },
             "S-300PS 40B6MD sr": {
                 "name": "S-300PS 40B6MD sr",
                 "coalition": "red",
                 "era": "Late Cold War",
-                "label": "SA-10 S-300PS 40B6MD sr",
+                "label": "SA-10 Clam Shell",
                 "shortLabel": "S-300PS 40B6MD sr",
                 "range": "Long",
                 "filename": "",
-                "type": "SAM"
+                "type": "SAM Search radar"
             },
             "55G6 EWR": {
                 "name": "55G6 EWR",
                 "coalition": "red",
                 "era": "Early Cold War",
-                "label": "55G6 EWR",
+                "label": "Tall Rack",
                 "shortLabel": "55G6 EWR",
                 "filename": "",
                 "type": "Radar"
@@ -894,98 +952,98 @@ export class GroundUnitDatabase extends UnitDatabase {
                 "name": "S-300PS 64H6E sr",
                 "coalition": "red",
                 "era": "Late Cold War",
-                "label": "SA-10 S-300PS 64H6E sr",
+                "label": "SA-10 Big Bird",
                 "shortLabel": "S-300PS 64H6E sr",
                 "range": "Long",
                 "filename": "",
-                "type": "SAM"
+                "type": "SAM Search radar"
             },
             "SA-11 Buk SR 9S18M1": {
                 "name": "SA-11 Buk SR 9S18M1",
                 "coalition": "red",
                 "era": "Mid Cold War",
-                "label": "SA-11 Buk SR 9S18M1",
+                "label": "SA-11 Snown Drift",
                 "shortLabel": "SA-11 Buk SR 9S18M1",
                 "range": "Long",
                 "filename": "",
-                "type": "SAM"
+                "type": "SAM Search radar"
             },
             "Dog Ear radar": {
                 "name": "Dog Ear radar",
                 "coalition": "red",
                 "era": "Mid Cold War",
-                "label": "Dog Ear radar",
+                "label": "Dog Ear",
                 "shortLabel": "Dog Ear radar",
                 "filename": "",
-                "type": "SAM"
+                "type": "SAM Search radar"
             },
             "Hawk tr": {
                 "name": "Hawk tr",
                 "coalition": "blue",
                 "era": "Early Cold War",
-                "label": "Hawk tr",
+                "label": "Hawk Track radar",
                 "shortLabel": "Hawk tr",
                 "range": "Medium",
                 "filename": "",
-                "type": "SAM"
+                "type": "SAM Track radar"
             },
             "Hawk sr": {
                 "name": "Hawk sr",
                 "coalition": "blue",
                 "era": "Early Cold War",
-                "label": "Hawk sr",
+                "label": "Hawk Search radar",
                 "shortLabel": "Hawk sr",
                 "range": "Long",
                 "filename": "",
-                "type": "SAM"
+                "type": "SAM Search radar"
             },
             "Patriot str": {
                 "name": "Patriot str",
                 "coalition": "blue",
                 "era": "Late Cold War",
-                "label": "Patriot str",
+                "label": "Patriot Search/Track radar",
                 "shortLabel": "Patriot str",
                 "range": "Medium",
                 "filename": "",
-                "type": "SAM"
+                "type": "SAM Search/Track radar"
             },
             "Hawk cwar": {
                 "name": "Hawk cwar",
                 "coalition": "blue",
                 "era": "Early Cold War",
-                "label": "Hawk cwar",
+                "label": "Hawk Continous Wave Acquisition Radar",
                 "shortLabel": "Hawk cwar",
                 "range": "Long",
                 "filename": "",
-                "type": "SAM"
+                "type": "SAM Track radar"
             },
             "p-19 s-125 sr": {
                 "name": "p-19 s-125 sr",
                 "coalition": "red",
                 "era": "Mid Cold War",
-                "label": "SA-3 p-19 s-125 sr",
-                "shortLabel": "p-19 s-125 sr",
+                "label": "SA-3 Flat Face B",
+                "shortLabel": "Flat Face B",
                 "filename": "",
-                "type": "SAM"
+                "type": "SAM Search radar"
             },
             "Roland Radar": {
                 "name": "Roland Radar",
                 "coalition": "blue",
                 "era": "Mid Cold War",
-                "label": "Roland Radar",
+                "label": "Roland Search radar",
                 "shortLabel": "Roland Radar",
                 "filename": "",
-                "type": "SAM"
+                "type": "SAM Search radar"
             },
             "snr s-125 tr": {
                 "name": "snr s-125 tr",
                 "coalition": "red",
                 "era": "Early Cold War",
-                "label": "SA-3 snr s-125 tr",
+                "label": "SA-3 Low Blow",
                 "shortLabel": "snr s-125 tr",
                 "range": "Medium",
                 "filename": "",
-                "type": "SAM"
+                "type": "SAM Track radar"
             },
             "house1arm": {
                 "name": "house1arm",

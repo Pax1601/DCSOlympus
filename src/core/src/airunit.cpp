@@ -18,6 +18,26 @@ AirUnit::AirUnit(json::value json, unsigned int ID) : Unit(json, ID)
 	
 };
 
+void AirUnit::setDefaults(bool force)
+{
+	if (!getAlive() || !getControlled() || getHuman() || !getIsLeader()) return;
+	
+	/* Set the default IDLE state */
+	setState(State::IDLE);
+
+	/* Set desired altitude to be equal to current altitude so the unit does not climb/descend after spawn */
+	setDesiredAltitude(position.alt);
+
+	/* Set the default options */
+	setROE(ROE::OPEN_FIRE_WEAPON_FREE, force);
+	setReactionToThreat(ReactionToThreat::EVADE_FIRE, force);
+	setEmissionsCountermeasures(EmissionCountermeasure::DEFEND, force);
+	strcpy_s(TACAN.callsign, 4, "TKR");
+	setTACAN(TACAN, force);
+	setRadio(radio, force);
+	setGeneralSettings(generalSettings, force);
+}
+
 void AirUnit::setState(unsigned char newState)
 {
 	/************ Perform any action required when LEAVING a state ************/

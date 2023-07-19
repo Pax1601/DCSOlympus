@@ -23,7 +23,7 @@ void Scheduler::appendCommand(Command* command)
 	commands.push_back(command);
 }
 
-int Scheduler::getCurrentLoad() 
+int Scheduler::getLoad() 
 {
 	int currentLoad = 0;
 	for (auto command : commands) {
@@ -51,7 +51,7 @@ void Scheduler::execute(lua_State* L)
 				if (dostring_in(L, "server", (commandString)))
 					log("Error executing command " + commandString);
 				else
-					log("Command '" + commandString + "' executed correctly, current load " + to_string(getCurrentLoad()));
+					log("Command '" + commandString + "' executed correctly, current load " + to_string(getLoad()));
 				load = command->getLoad();
 				commands.remove(command);
 				return;
@@ -468,7 +468,7 @@ void Scheduler::handleRequest(string key, json::value value)
 	if (command != nullptr)
 	{
 		appendCommand(command);
-		log("New command appended correctly to stack. Current server load: " + to_string(getCurrentLoad()));
+		log("New command appended correctly to stack. Current server load: " + to_string(getLoad()));
 	}
 }
 

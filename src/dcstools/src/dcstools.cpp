@@ -56,10 +56,9 @@ void Log(lua_State* L, string message, unsigned int level)
     STACK_CLEAN;
 }
 
-map<unsigned int, json::value> getAllUnits(lua_State* L)
+void getAllUnits(lua_State* L, map<unsigned int, json::value>& unitJSONs)
 {
     unsigned int res = 0;
-    map<unsigned int, json::value>  units;
 
     STACK_INIT;
 
@@ -84,15 +83,16 @@ map<unsigned int, json::value> getAllUnits(lua_State* L)
         while (lua_next(L, 2) != 0)
         {
             unsigned int ID = lua_tonumber(L, -2);
-            // TODO more efficient method can be used, converting all the lua data to a json object may be overkill
-            units[ID] = luaTableToJSON(L, -1);
+            if (unitJSONs.find(ID) == unitJSONs.end())
+                unitJSONs[ID] = json::value::object();
+            luaTableToJSON(L, -1, unitJSONs[ID]);
             STACK_POP(1)
         }
     }
 
 exit:
     STACK_CLEAN;
-    return units;
+    return;
 }
 
 int dostring_in(lua_State* L, string target, string command)

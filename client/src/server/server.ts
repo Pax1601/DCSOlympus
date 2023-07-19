@@ -18,7 +18,7 @@ var username = "";
 var password = "";
 
 var sessionHash: string | null = null;
-var lastUpdateTime = 0;
+var lastUpdateTimes: {[key: string]: number} = {}
 var demoEnabled = false;
 
 export function toggleDemoEnabled() {
@@ -54,9 +54,14 @@ export function GET(callback: CallableFunction, uri: string, options?: { time?: 
             /* Success */
             setConnected(true);
             if (xmlHttp.responseType == 'arraybuffer')
-                callback(xmlHttp.response);
-            else 
-                callback(JSON.parse(xmlHttp.responseText));
+                lastUpdateTimes[uri] = callback(xmlHttp.response);
+            else {
+                const result = JSON.parse(xmlHttp.responseText);
+                lastUpdateTimes[uri] = callback(result);
+
+                if ("frameRate" in result && "load" in result)
+                    getConnectionStatusPanel().setMetrics(result.frameRate, result.load);
+            }
         } else if (xmlHttp.status == 401) {
             /* Bad credentials */
             console.error("Incorrect username/password");
@@ -103,10 +108,6 @@ export function setAddress(address: string, port: number) {
     console.log(`Setting REST address to ${REST_ADDRESS}`)
 }
 
-export function setLastUpdateTime(newLastUpdateTime: number) {
-    lastUpdateTime = newLastUpdateTime;
-}
-
 export function getAirbases(callback: CallableFunction) {
     GET(callback, AIRBASES_URI);
 }
@@ -115,8 +116,8 @@ export function getBullseye(callback: CallableFunction) {
     GET(callback, BULLSEYE_URI);
 }
 
-export function getLogs(callback: CallableFunction) {
-    GET(callback, LOGS_URI);
+export function getLogs(callback: CallableFunction, refresh: boolean = false) {
+    GET(callback, LOGS_URI, { time: refresh ? 0 : lastUpdateTimes[LOGS_URI]});
 }
 
 export function getMission(callback: CallableFunction) {
@@ -124,7 +125,7 @@ export function getMission(callback: CallableFunction) {
 }
 
 export function getUnits(callback: CallableFunction, refresh: boolean = false) {
-    GET(callback, `${UNITS_URI}`, { time: refresh ? 0 : lastUpdateTime }, 'arraybuffer');
+    GET(callback, UNITS_URI, { time: refresh ? 0 : lastUpdateTimes[UNITS_URI] }, 'arraybuffer');
 }
 
 export function addDestination(ID: number, path: any) {
@@ -320,7 +321,14 @@ export function setAdvacedOptions(ID: number, isTanker: boolean, isAWACS: boolea
 }
 
 export function startUpdate() {
-    getUnits((buffer: ArrayBuffer) => getUnitsManager()?.update(buffer), true /* Does a full refresh */);
+    /* On the first connection, force request of full data */
+    getAirbases((data: AirbasesData) => getMissionData()?.update(data));
+    getBullseye((data: BullseyesData) => getMissionData()?.update(data));
+    getMission((data: any) => { 
+        getMissionData()?.update(data);
+        checkSessionHash(data.sessionHash);
+    });
+    getUnits((buffer: ArrayBuffer) => {return getUnitsManager()?.update(buffer), true /* Does a full refresh */});
 
     requestUpdate();
     requestRefresh();
@@ -329,7 +337,7 @@ export function startUpdate() {
 export function requestUpdate() {
     /* Main update rate = 250ms is minimum time, equal to server update time. */
     if (!getPaused()) {
-        getUnits((buffer: ArrayBuffer) => { getUnitsManager()?.update(buffer); }, false);
+        getUnits((buffer: ArrayBuffer) => { return getUnitsManager()?.update(buffer); }, false);
     }
     window.setTimeout(() => requestUpdate(), getConnected() ? 250 : 1000);
 
@@ -350,6 +358,13 @@ export function requestRefresh() {
         getMission((data: MissionData) => {
             checkSessionHash(data.sessionHash);
             getMissionHandler()?.updateMission(data);
+        });
+		getLogs((data: any) => {
+            for (let key in data.logs) {
+                if (key != "requestTime")
+                    console.log(data.logs[key]);
+            }
+            return data.time;
         });
 
         // Update the list of existing units

@@ -53,6 +53,7 @@ namespace DataIndex {
 		ammo,
 		contacts,
 		activePath,
+		isLeader,
 		lastIndex,
 		endOfData = 255
 	};
@@ -86,14 +87,12 @@ public:
 
 	/********** Methods **********/
 	void initialize(json::value json);
-	void setDefaults(bool force = false);
+	virtual void setDefaults(bool force = false);
 
 	void runAILoop();
 
-	void updateExportData(json::value json, double dt = 0);
-	void updateMissionData(json::value json);
+	void update(json::value json, double dt);
 
-	unsigned int getDataPacket(char*& data);
 	unsigned int getID() { return ID; }
 	void getData(stringstream& ss, unsigned long long time);
 	Coords getActiveDestination() { return activeDestination; }
@@ -144,8 +143,8 @@ public:
 	virtual void setHeading(double newValue) { updateValue(heading, newValue, DataIndex::heading); }
 	virtual void setIsTanker(bool newValue);
 	virtual void setIsAWACS(bool newValue);
-	virtual void setOnOff(bool newValue) { updateValue(onOff, newValue, DataIndex::onOff); };
-	virtual void setFollowRoads(bool newValue) { updateValue(followRoads, newValue, DataIndex::followRoads); };
+	virtual void setOnOff(bool newValue, bool force = false) { updateValue(onOff, newValue, DataIndex::onOff); };
+	virtual void setFollowRoads(bool newValue, bool force = false) { updateValue(followRoads, newValue, DataIndex::followRoads); };
 	virtual void setFuel(unsigned short newValue) { updateValue(fuel, newValue, DataIndex::fuel); }
 	virtual void setDesiredSpeed(double newValue);
 	virtual void setDesiredSpeedType(string newValue);
@@ -164,6 +163,7 @@ public:
 	virtual void setAmmo(vector<DataTypes::Ammo> newValue);
 	virtual void setContacts(vector<DataTypes::Contact> newValue);
 	virtual void setActivePath(list<Coords> newValue);
+	virtual void setIsLeader(bool newValue) { updateValue(isLeader, newValue, DataIndex::isLeader); }
 
 	/********** Getters **********/
 	virtual string getCategory() { return category; };
@@ -191,7 +191,7 @@ public:
 	virtual double getDesiredAltitude() { return desiredAltitude; };
 	virtual bool getDesiredAltitudeType() { return desiredAltitudeType; };
 	virtual unsigned int getLeaderID() { return leaderID; }
-	virtual Offset getFormationoffset() { return formationOffset; }
+	virtual Offset getFormationOffset() { return formationOffset; }
 	virtual unsigned int getTargetID() { return targetID; }
 	virtual Coords getTargetPosition() { return targetPosition; }
 	virtual unsigned char getROE() { return ROE; }
@@ -203,6 +203,7 @@ public:
 	virtual vector<DataTypes::Ammo> getAmmo() { return ammo; }
 	virtual vector<DataTypes::Contact> getTargets() { return contacts; }
 	virtual list<Coords> getActivePath() { return activePath; }
+	virtual bool getIsLeader() { return isLeader; }
 
 protected:
 	unsigned int ID;
@@ -244,13 +245,14 @@ protected:
 	vector<DataTypes::Ammo> ammo;
 	vector<DataTypes::Contact> contacts;
 	list<Coords> activePath;
+	bool isLeader = false;
+	Coords activeDestination = Coords(NULL);
 
 	/********** Other **********/
 	unsigned int taskCheckCounter = 0;
-	Coords activeDestination = Coords(NULL);
 	double initialFuel = 0;
-	Coords oldPosition = Coords(0);
 	map<unsigned char, unsigned long long> updateTimeMap;
+	unsigned long long lastLoopTime = 0;
 
 	/********** Private methods **********/
 	virtual void AIloop() = 0;

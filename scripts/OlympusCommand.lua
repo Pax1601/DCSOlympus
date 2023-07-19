@@ -5,12 +5,15 @@ local debug = true
 Olympus.unitCounter = 1
 Olympus.payloadRegistry = {}
 Olympus.groupIndex = 0
-Olympus.groupStep = 40
+Olympus.groupStep = 5
   
 Olympus.OlympusDLL = nil
 Olympus.DLLsloaded = false
 Olympus.OlympusModPath = os.getenv('DCSOLYMPUS_PATH')..'\\bin\\' 
 Olympus.log = mist.Logger:new("Olympus", 'info')
+
+Olympus.missionData = {}
+Olympus.unitsData = {}
 
 function Olympus.debug(message, displayFor)
 	if debug == true then
@@ -706,22 +709,9 @@ function Olympus.hasKey(tab, key)
     return false
 end
 
-function Olympus.setMissionData(arg, time)
-	local missionData = {}
-
-	-- Bullseye data
-	local bullseyes = {}
-	for i = 0, 2 do
-		local bullseyeVec3 = coalition.getMainRefPoint(i)
-		local bullseyeLatitude, bullseyeLongitude, bullseyeAltitude = coord.LOtoLL(bullseyeVec3)
-		bullseyes[i] = {}
-		bullseyes[i]["latitude"] = bullseyeLatitude
-		bullseyes[i]["longitude"] = bullseyeLongitude
-		bullseyes[i]["coalition"] = Olympus.getCoalitionByCoalitionID(i) 
-	end
-
-	-- Units tactical data
-	local unitsData = {}
+function Olympus.setUnitsData(arg, time)
+	-- Units data
+	local units = {}
 	
 	local startIndex = Olympus.groupIndex
 	local endIndex = startIndex + Olympus.groupStep
@@ -736,31 +726,73 @@ function Olympus.setMissionData(arg, time)
 						-- Get the targets detected by the group controller
 						local controller = group:getController()
 						local controllerTargets = controller:getDetectedTargets()
+						local contacts = {}
+						for i, target in ipairs(controllerTargets) do
+							for det, enum in pairs(Controller.Detection) do
+								if target.object ~= nil then
+									target["detectionMethod"] = det
+									contacts[#contacts + 1] = target
+								end
+							end
+						end
 
+						-- Update the units position
 						for index, unit in pairs(group:getUnits()) do
 							local unitController = unit:getController()
 							local table = {}
-							table["contacts"] = {}
-
-							for i, target in ipairs(controllerTargets) do
-								for det, enum in pairs(Controller.Detection) do
-									if target.object ~= nil then
-										local detected = unitController:isTargetDetected(target.object, enum)
-
-										if detected then
-											target["detectionMethod"] = det
-											table["contacts"][#table["contacts"] + 1] = target
-										end
-									end
+							table["category"] = "None"
+							
+							-- Get the object category in Olympus name
+							local objectCategory = unit:getCategory()
+							if objectCategory == Object.Category.UNIT then
+								if unit:getDesc().category == Unit.Category.AIRPLANE then
+									table["category"] = "Aircraft"
+								elseif unit:getDesc().category == Unit.Category.HELICOPTER then
+									table["category"] = "Helicopter"
+								elseif unit:getDesc().category == Unit.Category.GROUND_UNIT then
+									table["category"] = "GroundUnit"
+								elseif unit:getDesc().category == Unit.Category.SHIP then
+									table["category"] = "NavyUnit"
+								end
+							elseif objectCategory == Object.Category.WEAPON then
+								if unit:getDesc().category == Weapon.Category.MISSILE then
+									table["category"] = "Missile"
+								elseif unit:getDesc().category == Weapon.Category.ROCKET then
+										table["category"] = "Missile"
+								elseif unit:getDesc().category == Unit.Category.BOMB then
+									table["category"] = "Bomb"
 								end
 							end
 
-							table["hasTask"] = controller:hasTask()
-							
-							table["ammo"] = unit:getAmmo()
-							table["fuel"] = unit:getFuel()
-							table["life"] = unit:getLife() / unit:getLife0()
-							unitsData[unit:getObjectID()] = table
+							-- If the category is handled by Olympus, get the data
+							if table["category"] ~= "None" then
+								-- Compute unit position and heading
+								local lat, lng, alt = coord.LOtoLL(unit:getPoint())
+								local position = unit:getPosition()
+								local heading = math.atan2( position.x.z, position.x.x )
+
+								-- Fill the data table
+								table["name"] = unit:getTypeName()
+								table["unitName"] = unit:getName()
+								table["groupName"] = group:getName()
+								table["isHuman"] = (unit:getPlayerName() ~= nil)
+								table["coalitionID"] = unit:getCoalition()
+								table["hasTask"] = controller:hasTask()
+								table["ammo"] = unit:getAmmo() --TODO remove a lot of stuff we don't really need
+								table["fuel"] = unit:getFuel()
+								table["life"] = unit:getLife() / unit:getLife0()
+								table["isAlive"] = (unit:getLife() > 1) and unit:isExist()
+								table["contacts"] = contacts
+								table["position"] = {}
+								table["position"]["lat"] = lat 
+								table["position"]["lng"] = lng 
+								table["position"]["alt"] = alt
+								table["speed"] = mist.vec.mag(unit:getVelocity())
+								table["heading"] = heading 
+								table["country"] = unit:getCountry()
+								
+								units[unit:getObjectID()] = table
+							end
 						end
 					end
 				end
@@ -774,6 +806,25 @@ function Olympus.setMissionData(arg, time)
 		else
 			Olympus.groupIndex = endIndex
 		end
+	end
+
+	-- Assemble unitsData table
+	Olympus.unitsData["units"] = units
+
+	Olympus.OlympusDLL.setUnitsData()
+	return time + 0.05
+end
+
+function Olympus.setMissionData(arg, time)
+	-- Bullseye data
+	local bullseyes = {}
+	for i = 0, 2 do
+		local bullseyeVec3 = coalition.getMainRefPoint(i)
+		local bullseyeLatitude, bullseyeLongitude, bullseyeAltitude = coord.LOtoLL(bullseyeVec3)
+		bullseyes[i] = {}
+		bullseyes[i]["latitude"] = bullseyeLatitude
+		bullseyes[i]["longitude"] = bullseyeLongitude
+		bullseyes[i]["coalition"] = Olympus.getCoalitionByCoalitionID(i) 
 	end
 
 	-- Airbases data
@@ -792,6 +843,7 @@ function Olympus.setMissionData(arg, time)
 		airbases[i] = info
 	end
 
+	-- Mission
 	local mission = {}
 	mission.theatre = env.mission.theatre
 	mission.dateAndTime = {
@@ -801,13 +853,11 @@ function Olympus.setMissionData(arg, time)
 		["date"] = env.mission.date
 	}
 
-	-- Assemble missionData table
-	missionData["bullseyes"] = bullseyes
-	missionData["unitsData"] = unitsData
-	missionData["airbases"] = airbases
-	missionData["mission"] = mission
+	-- Assemble table
+	Olympus.missionData["bullseyes"] = bullseyes
+	Olympus.missionData["airbases"] = airbases
+	Olympus.missionData["mission"] = mission
 
-	Olympus.missionData = missionData
 	Olympus.OlympusDLL.setMissionData()
 	return time + 1
 end
@@ -821,6 +871,7 @@ else
 	Olympus.notify('Failed to load '..OlympusName, 20)
 end
 
+timer.scheduleFunction(Olympus.setUnitsData, {}, timer.getTime() + 0.05)
 timer.scheduleFunction(Olympus.setMissionData, {}, timer.getTime() + 1)
 
 Olympus.notify("OlympusCommand script " .. version .. " loaded successfully", 2, true)
