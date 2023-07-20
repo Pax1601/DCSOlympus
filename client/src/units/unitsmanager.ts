@@ -5,7 +5,7 @@ import { cloneUnit, deleteUnit, spawnAircrafts, spawnGroundUnits } from "../serv
 import { bearingAndDistanceToLatLng, deg2rad, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots, polyContains, polygonArea, randomPointInPoly, randomUnitBlueprint } from "../other/utils";
 import { CoalitionArea } from "../map/coalitionarea";
 import { groundUnitDatabase } from "./groundunitdatabase";
-import { DataIndexes, HIDE_ALL, IADSDensities, IDLE, MOVE_UNIT } from "../constants/constants";
+import { DataIndexes, GAME_MASTER, IADSDensities, IDLE, MOVE_UNIT } from "../constants/constants";
 import { DataExtractor } from "./dataextractor";
 import { Contact } from "../@types/unit";
 import { citiesDatabase } from "./citiesdatabase";
@@ -16,7 +16,7 @@ export class UnitsManager {
     #selectionEventDisabled: boolean = false;
     #pasteDisabled: boolean = false;
     #hiddenTypes: string[] = [];
-    #commandMode: string = HIDE_ALL;
+    #commandMode: string = GAME_MASTER;
     #requestDetectionUpdate: boolean = false;
 
     constructor() {
@@ -93,7 +93,7 @@ export class UnitsManager {
             this.#units[ID]?.setData(dataExtractor);
         }
 
-        if (this.#requestDetectionUpdate) {
+        if (this.#requestDetectionUpdate && this.getCommandMode() != GAME_MASTER) {
             for (let ID in this.#units) {
                 var unit = this.#units[ID];
                 if (!unit.belongsToCommandedCoalition())

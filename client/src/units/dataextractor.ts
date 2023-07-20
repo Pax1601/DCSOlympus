@@ -64,9 +64,13 @@ export class DataExtractor {
     extractString(length?: number) {
         if (length === undefined)
             length = this.extractUInt16()
-        const value = this.#decoder.decode(this.#buffer.slice(this.#seekPosition, this.#seekPosition + length));
+        var stringBuffer = this.#buffer.slice(this.#seekPosition, this.#seekPosition + length);
+        var view = new Int8Array(stringBuffer);
+        var stringLength = length;
+        view.forEach((value: number, idx: number) => { if (value === 0) stringLength = idx; });
+        const value = this.#decoder.decode(stringBuffer);
         this.#seekPosition += length;
-        return value;
+        return value.substring(0, stringLength).trim();
     }
 
     extractChar() {

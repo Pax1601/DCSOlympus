@@ -1,6 +1,5 @@
 import { LatLng, LatLngBounds } from "leaflet";
 
-export const HIDE_ALL = "Hide all";
 export const GAME_MASTER = "Game master";
 export const BLUE_COMMANDER = "Blue commander";
 export const RED_COMMANDER = "Red commander";
