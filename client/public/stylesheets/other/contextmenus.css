@@ -69,7 +69,7 @@
     width: 100%;
 }
 
-.deploy-unit-button[data-points]:not([data-points='']):not([data-points='0'])::after {
+.deploy-unit-button[data-points]:not([data-points='']):not([data-points='0']):not([data-points='Infinity'])::after {
     content: " (" attr(data-points) " points)";
 }
 

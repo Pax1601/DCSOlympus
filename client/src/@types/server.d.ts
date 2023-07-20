@@ -10,6 +10,16 @@ interface BullseyesData {
     time: number;
 }
 
+interface MissionData {
+    mission: {
+        theatre: string,
+        dateAndTime: DateAndTime;
+        RTSOptions: RTSOptions;
+    }
+    time: number;
+    sessionHash: string;
+}
+
 interface RTSOptions {
     commandMode: string;
     restrictSpawns: boolean;
@@ -27,14 +37,6 @@ interface DateAndTime {
     time: {h: number, m: number, s: number};
     elapsedTime: number;
     startTime: number;
-}
-
-interface MissionData {
-    theatre: string,
-    dateAndTime: DateAndTime;
-    RTSOptions: RTSOptions;
-    time: number;
-    sessionHash: string;
 }
 
 interface LogData {

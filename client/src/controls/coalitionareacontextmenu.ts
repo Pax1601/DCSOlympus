@@ -7,6 +7,7 @@ import { Dropdown } from "./dropdown";
 import { Slider } from "./slider";
 import { Switch } from "./switch";
 import { groundUnitDatabase } from "../units/groundunitdatabase";
+import { createCheckboxOption, getCheckboxOptions } from "../other/utils";
 
 export class CoalitionAreaContextMenu extends ContextMenu {
     #coalitionSwitch: Switch;
@@ -56,7 +57,7 @@ export class CoalitionAreaContextMenu extends ContextMenu {
         document.addEventListener("contextMenuCreateIads", (e: any) => {
             const area = this.getCoalitionArea();
             if (area)
-                getUnitsManager().createIADS(area, this.#getCheckboxOptions(this.#iadsTypesDropdown), this.#getCheckboxOptions(this.#iadsErasDropdown), this.#getCheckboxOptions(this.#iadsRangesDropdown), this.#iadsDensitySlider.getValue(), this.#iadsDistributionSlider.getValue());
+                getUnitsManager().createIADS(area, getCheckboxOptions(this.#iadsTypesDropdown), getCheckboxOptions(this.#iadsErasDropdown), getCheckboxOptions(this.#iadsRangesDropdown), this.#iadsDensitySlider.getValue(), this.#iadsDistributionSlider.getValue());
         })
         this.hide();
     }
@@ -66,18 +67,18 @@ export class CoalitionAreaContextMenu extends ContextMenu {
 
         /* Create the checkboxes to select the unit roles */
         this.#iadsTypesDropdown.setOptionsElements(IADSTypes.map((role: string) => {
-            return this.#createCheckboxOption(role);
+            return createCheckboxOption(role, `Add ${role}s to the IADS` );
         }));
 
         
         /* Create the checkboxes to select the unit periods */
         this.#iadsErasDropdown.setOptionsElements(groundUnitDatabase.getEras().map((era: string) => {
-            return this.#createCheckboxOption(era);
+            return createCheckboxOption(era, `Add ${era} era units to the IADS`);
         }));
 
         /* Create the checkboxes to select the unit ranges */
         this.#iadsRangesDropdown.setOptionsElements(groundUnitDatabase.getRanges().map((range: string) => {
-            return this.#createCheckboxOption(range);
+            return createCheckboxOption(range, `Add ${range} units to the IADS`);
         }));
 
         if (getUnitsManager().getCommandMode() !== GAME_MASTER)
@@ -119,34 +120,5 @@ export class CoalitionAreaContextMenu extends ContextMenu {
                 element.setAttribute("data-coalition", this.getCoalitionArea()?.getCoalition())
             });
         }
-    }
-
-    #createCheckboxOption(text: string) {
-        var div = document.createElement("div");
-        div.classList.add("ol-checkbox");
-        var label = document.createElement("label");
-        label.title = `Add ${text}s to the IADS`;
-        var input = document.createElement("input");
-        input.type = "checkbox";
-        input.checked = true;
-        var span = document.createElement("span");
-        span.innerText = text;
-        label.appendChild(input);
-        label.appendChild(span);
-        div.appendChild(label);
-        return div as HTMLElement;
-    }
-
-    #getCheckboxOptions(dropdown: Dropdown) {
-        var values: { [key: string]: boolean } = {};
-        const element = dropdown.getOptionElements();
-        for (let idx = 0; idx < element.length; idx++) {
-            const option = element.item(idx) as HTMLElement;
-            const key = option.querySelector("span")?.innerText;
-            const value = option.querySelector("input")?.checked;
-            if (key !== undefined && value !== undefined)
-                values[key] = value;
-        }
-        return values;
     }
 }

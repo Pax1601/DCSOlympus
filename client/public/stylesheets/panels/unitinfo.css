@@ -27,7 +27,7 @@
 }
 
 #current-task {
-	border-radius: var(--border-radius-lg);
+	border-radius: var(--border-radius-md);
 	margin-top: auto;
 	padding: 6px 16px;
 }

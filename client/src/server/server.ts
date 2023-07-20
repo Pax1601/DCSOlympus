@@ -1,5 +1,5 @@
 import { LatLng } from 'leaflet';
-import { getConnectionStatusPanel, getInfoPopup, getMissionData, getServerStatusPanel, getUnitDataTable, getUnitsManager, setLoginStatus } from '..';
+import { getConnectionStatusPanel, getInfoPopup, getMissionHandler, getServerStatusPanel, getUnitDataTable, getUnitsManager, setLoginStatus } from '..';
 import { GeneralSettings, Radio, TACAN } from '../@types/unit';
 import { ROEs, emissionsCountermeasures, reactionsToThreat } from '../constants/constants';
 
@@ -320,13 +320,37 @@ export function setAdvacedOptions(ID: number, isTanker: boolean, isAWACS: boolea
     POST(data, () => { });
 }
 
+export function setRTSOptions(restrictSpawns: boolean, restrictToCoalition: boolean, spawnPoints: {blue: number, red: number}, eras: string[], setupTime: number) {
+    var command = {
+        "restrictSpawns": restrictSpawns,
+        "restrictToCoalition": restrictToCoalition,
+        "spawnPoints": spawnPoints,
+        "eras": eras,
+        "setupTime": setupTime
+    };
+
+    var data = { "setRTSOptions": command };
+    POST(data, () => { });
+}
+
 export function startUpdate() {
     /* On the first connection, force request of full data */
-    getAirbases((data: AirbasesData) => getMissionData()?.update(data));
-    getBullseye((data: BullseyesData) => getMissionData()?.update(data));
-    getMission((data: any) => { 
-        getMissionData()?.update(data);
+    getAirbases((data: AirbasesData) => {
         checkSessionHash(data.sessionHash);
+        getMissionHandler()?.updateAirbases(data);
+    });
+    getBullseye((data: BullseyesData) => {
+        checkSessionHash(data.sessionHash);
+        getMissionHandler()?.updateBullseyes(data);
+    });
+    getMission((data: MissionData) => {
+        checkSessionHash(data.sessionHash);
+        getMissionHandler()?.updateMission(data);
+    });
+    getLogs((data: any) => {
+        for (let key in data.logs) 
+            console.log(data.logs[key]);
+        return data.time;
     });
     getUnits((buffer: ArrayBuffer) => {return getUnitsManager()?.update(buffer), true /* Does a full refresh */});
 
@@ -360,10 +384,8 @@ export function requestRefresh() {
             getMissionHandler()?.updateMission(data);
         });
 		getLogs((data: any) => {
-            for (let key in data.logs) {
-                if (key != "requestTime")
-                    console.log(data.logs[key]);
-            }
+            for (let key in data.logs) 
+                console.log(data.logs[key]);
             return data.time;
         });
 

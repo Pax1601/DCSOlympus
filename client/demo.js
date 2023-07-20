@@ -114,6 +114,8 @@ class DemoDataGenerator {
                 'red': 'redsocks'
             },
         }))
+
+        this.startTime = Date.now();
     }
     
     units(req, res){
@@ -380,18 +382,37 @@ class DemoDataGenerator {
     mission(req, res){
         var ret = {mission: {theatre: "Nevada"}};
         ret.time = Date.now();
+
+        ret.mission.dateAndTime = {
+            time: Date.now(),
+            date: "",
+            elapsedTime: (Date.now() - this.startTime) / 1000,
+            startTime: 0
+        }
+
+        ret.mission.RTSOptions = {
+            restrictSpawns: true,
+            restrictToCoalition: true,
+            setupTime: 300,
+            spawnPoints: {
+                red: 1000,
+                blue: 400
+            }, 
+            eras: ["WW2", "Early Cold War", "Late Cold War", "Modern"]
+        }
+
         var auth = req.get("Authorization");
         if (auth) {
             var username = atob(auth.replace("Basic ", "")).split(":")[0];
             switch (username) {
                 case "admin":
-                    ret.mission.visibilityMode = "Game master";
+                    ret.mission.RTSOptions.commandMode = "Game master";
                     break
                 case "blue": 
-                    ret.mission.visibilityMode = "Blue commander";
+                    ret.mission.RTSOptions.commandMode = "Blue commander";
                     break;
                 case "red": 
-                    ret.mission.visibilityMode = "Red commander";
+                    ret.mission.RTSOptions.commandMode = "Red commander";
                     break;
             }
         }

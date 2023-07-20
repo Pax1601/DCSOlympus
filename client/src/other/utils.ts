@@ -6,6 +6,7 @@ import { helicopterDatabase } from "../units/helicopterdatabase";
 import { groundUnitDatabase } from "../units/groundunitdatabase";
 import { Buffer } from "buffer";
 import { ROEs, emissionsCountermeasures, reactionsToThreat, states } from "../constants/constants";
+import { Dropdown } from "../controls/dropdown";
 
 export function bearing(lat1: number, lon1: number, lat2: number, lon2: number) {
     const φ1 = deg2rad(lat1); // φ, λ in radians
@@ -363,4 +364,33 @@ export function convertDateAndTimeToDate(dateAndTime: DateAndTime) {
     }
 
     return new Date(year, month, date.Day, time.h, time.m, time.s);
+}
+
+export function createCheckboxOption(value: string, text: string, checked: boolean = true) {
+    var div = document.createElement("div");
+    div.classList.add("ol-checkbox");
+    var label = document.createElement("label");
+    label.title = text;
+    var input = document.createElement("input");
+    input.type = "checkbox";
+    input.checked = checked;
+    var span = document.createElement("span");
+    span.innerText = value;
+    label.appendChild(input);
+    label.appendChild(span);
+    div.appendChild(label);
+    return div as HTMLElement;
+}
+
+export function getCheckboxOptions(dropdown: Dropdown) {
+    var values: { [key: string]: boolean } = {};
+    const element = dropdown.getOptionElements();
+    for (let idx = 0; idx < element.length; idx++) {
+        const option = element.item(idx) as HTMLElement;
+        const key = option.querySelector("span")?.innerText;
+        const value = option.querySelector("input")?.checked;
+        if (key !== undefined && value !== undefined)
+            values[key] = value;
+    }
+    return values;
 }

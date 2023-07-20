@@ -1,5 +1,6 @@
 import { LatLng, LatLngBounds } from "leaflet";
 
+export const NONE = "None";
 export const GAME_MASTER = "Game master";
 export const BLUE_COMMANDER = "Blue commander";
 export const RED_COMMANDER = "Red commander";

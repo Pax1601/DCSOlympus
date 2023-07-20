@@ -117,11 +117,11 @@ void Server::handle_get(http_request request)
                     else if (URI.compare(MISSION_URI) == 0 && missionData.has_object_field(L"mission")) {
                         answer[L"mission"] = missionData[L"mission"];
                         if (password.compare(gameMasterPassword) == 0)
-                            answer[L"mission"][L"visibilityMode"] = json::value(L"Game master");
+                            answer[L"mission"][L"commandMode"] = json::value(L"Game master");
                         else if (password.compare(blueCommanderPassword) == 0) 
-                            answer[L"mission"][L"visibilityMode"] = json::value(L"Blue commander");
+                            answer[L"mission"][L"commandMode"] = json::value(L"Blue commander");
                         else if (password.compare(redCommanderPassword) == 0)
-                            answer[L"mission"][L"visibilityMode"] = json::value(L"Red commander");
+                            answer[L"mission"][L"commandMode"] = json::value(L"Red commander");
                     }
                     
                     answer[L"time"] = json::value::string(to_wstring(ms.count()));

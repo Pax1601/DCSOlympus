@@ -1336,7 +1336,7 @@ export class GroundUnitDatabase extends UnitDatabase {
             "Suidae": {
                 "name": "Suidae",
                 "coalition": "",
-                "era": "Prehistoric",
+                "era": "Modern",
                 "label": "Suidae",
                 "shortLabel": "Suidae",
                 "filename": "",

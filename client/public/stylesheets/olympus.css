@@ -131,7 +131,7 @@ form>div {
 
 .ol-panel {
     background-color: var(--background-steel);
-    border-radius: 15px;
+    border-radius: var(--border-radius-md);;
     box-shadow: 0px 2px 5px #000A;
     color: white;
     font-size: 12px;
@@ -704,7 +704,7 @@ nav.ol-panel> :last-child {
     background-image: url("/resources/theme/images/splash/1.png");
     background-position: 100% 50%;
     background-size: 60%;
-    border-radius: var(--border-radius-lg);
+    border-radius: var(--border-radius-md);
     overflow: hidden;
     width: 1200px;
     z-index: 99999;
@@ -868,36 +868,122 @@ nav.ol-panel> :last-child {
 }
 
 #command-mode {
+    display: flex;
     font-size: 14px;
     font-weight: bolder;
     padding-left: 10px;
+    margin-left: -11px;
+    margin-top: -0px;
+    margin-bottom: -0px;
+    height: 58px;
+    padding: 10px;
+    border-top-left-radius: var(--border-radius-md);
+    border-bottom-left-radius: var(--border-radius-md);
+    align-items: center;
+}
+
+#command-mode[data-mode="Game master"] {
+    background-color: lightgray;
+    color: var(--secondary-gunmetal-grey);
 }
 
 #command-mode[data-mode="Blue commander"] {
-    color: var(--primary-blue);
+    background-color: var(--primary-blue);
 }
 
 #command-mode[data-mode="Red commander"] {
-    color: var(--primary-red);
+    background-color: var(--primary-red);
 }
 
 #spawn-points-container {
     font-size: 14px;
-    font-weight: bolder;
 }
 
 #spawn-points {
     background-color: var(--background-grey);
     padding: 5px 15px;
-    margin: 5px;
+    margin-left: 15px;
     border: 1px white solid;
     font-size: 14px;
-    border-radius: var(--border-radius-sm);
+    border-radius: var(--border-radius-md);
 }
 
-#rts-phase {
+#spawn-points-container {
+    height: 100%;
+    border-right: 1px solid gray;
+    display: flex;
+    align-items: center;
+    padding-right: 20px;
+}
+
+#rts-phase::before {
+    content: "Time to start";
     font-size: 14px;
-    font-weight: bolder;
+}
+
+#rts-phase.setup-phase::after {
+    color: orange;
+    border: 1px solid orange;
+    border-radius: 999px;
+    padding: 5px 10px;
+    background-color: var(--background-grey);
+    margin-left: 15px;
+    content: attr(data-remaining-time);
+    font-size: 14px;
+}
+
+#rts-phase.game-commenced {
+    background-color: var(--background-grey);
+    color: lightgreen;
+    border: 1px solid lightgreen;
+    padding: 5px 15px;
+    border-radius: var(--border-radius-md);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#rts-phase.game-commenced::before {
+    content: "Game commenced";
+    font-weight: bold;
+}
+
+#rts-phase.game-commenced::after {
+    content: "Spawn restrictions are being enforced";
+    font-size: 10px; 
+}
+
+#rts-toolbar .ol-button {
+    border: 1px solid white;
+}
+
+#rts-toolbar .ol-button>svg {
+    width: 20px;
+    height: 20px;
+    fill: white;
+}
+
+#rts-settings-dialog {
+    width: 400px;
+}
+
+#rts-settings-dialog>.ol-dialog-content {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	margin-bottom: 10px;
+	margin-top: 10px;
+	row-gap: 10px;
+    width: 100%;
+}
+
+#rts-settings-dialog>.ol-dialog-content .ol-group {
+	justify-content: space-between;
+}
+
+#rts-settings-dialog h4 {
+    white-space: nowrap;
+    width: fit-content;
 }
 
 .ol-destination-preview-icon {

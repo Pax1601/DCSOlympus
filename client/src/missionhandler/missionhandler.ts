@@ -3,6 +3,13 @@ import { getInfoPopup, getMap, getUnitsManager } from "..";
 import { Airbase } from "./airbase";
 import { Bullseye } from "./bullseye";
 import { BLUE_COMMANDER, GAME_MASTER, RED_COMMANDER } from "../constants/constants";
+import { setRTSOptions } from "../server/server";
+import { Dropdown } from "../controls/dropdown";
+import { groundUnitDatabase } from "../units/groundunitdatabase";
+import { createCheckboxOption, getCheckboxOptions } from "../other/utils";
+import { aircraftDatabase } from "../units/aircraftdatabase";
+import { helicopterDatabase } from "../units/helicopterdatabase";
+import { navyUnitDatabase } from "../units/navyunitdatabase";
 
 export class MissionHandler {
     #bullseyes: { [name: string]: Bullseye } = {};
@@ -12,9 +19,17 @@ export class MissionHandler {
     #RTSOptions: RTSOptions = {commandMode: "Hide all", restrictSpawns: false, restrictToCoalition: false, setupTime: Infinity, spawnPoints: {red: Infinity, blue: Infinity}, eras: []};
     #remainingSetupTime: number = 0;
     #spentSpawnPoint: number = 0;
+    #RTSSettingsDialog: HTMLElement;
+    #rtsErasDropdown: Dropdown;
 
     constructor() {
+        document.addEventListener("showRTSSettingsDialog", () => this.showRTSSettingsDialog());
+        document.addEventListener("applyRTSOptions", () => this.#applyRTSOptions());
 
+        /* RTS settings dialog */
+        this.#RTSSettingsDialog = <HTMLElement> document.querySelector("#rts-settings-dialog");
+
+        this.#rtsErasDropdown = new Dropdown("rts-era-options", () => {});
     }
 
     updateBullseyes(data: BullseyesData) {
@@ -49,26 +64,27 @@ export class MissionHandler {
     }
 
     updateMission(data: MissionData) {
-        if (data.theatre != this.#theatre) {
-            this.#theatre = data.theatre;
+        if (data.mission.theatre != this.#theatre) {
+            this.#theatre = data.mission.theatre;
             getMap().setTheatre(this.#theatre);
             getInfoPopup().setText("Map set to " + this.#theatre);
         }
 
-        this.#dateAndTime = data.dateAndTime;
+        this.#dateAndTime = data.mission.dateAndTime;
 
-        this.#setRTSOptions(data.RTSOptions);
+        this.#setRTSOptions(data.mission.RTSOptions);
         getUnitsManager().setCommandMode(this.#RTSOptions.commandMode);
 
         this.#remainingSetupTime = this.#RTSOptions.setupTime - this.getDateAndTime().elapsedTime;
-        var RTSPhaseEl = document.querySelector("#rts-phase");
+        var RTSPhaseEl = document.querySelector("#rts-phase") as HTMLElement;
         if (RTSPhaseEl) {
             if (this.#remainingSetupTime > 0) {
-                var remainingTime = `Time to start: -${new Date(this.#remainingSetupTime * 1000).toISOString().substring(14, 19)}`;
-                RTSPhaseEl.textContent = remainingTime;
-            } else {
-                RTSPhaseEl.textContent = "FIGHT";
-            }
+                var remainingTime = `-${new Date(this.#remainingSetupTime * 1000).toISOString().substring(14, 19)}`;
+                RTSPhaseEl.dataset.remainingTime = remainingTime;
+            } 
+            
+            RTSPhaseEl.classList.toggle("setup-phase", this.#remainingSetupTime > 0);
+            RTSPhaseEl.classList.toggle("game-commenced", this.#remainingSetupTime <= 0);
         }
     }
 
@@ -104,6 +120,9 @@ export class MissionHandler {
     }
 
     refreshSpawnPoints() {
+        if (getUnitsManager().getCommandMode() === GAME_MASTER) 
+            document.querySelector("#spawn-points-container")?.classList.add("hide");
+            
         var spawnPointsEl = document.querySelector("#spawn-points");
         if (spawnPointsEl) {
             spawnPointsEl.textContent = `${this.getAvailableSpawnPoints()}`;
@@ -113,6 +132,44 @@ export class MissionHandler {
     setSpentSpawnPoints(spawnPoints: number) {
         this.#spentSpawnPoint = spawnPoints;
         this.refreshSpawnPoints();
+    }
+
+    showRTSSettingsDialog() {
+        /* Create the checkboxes to select the unit eras */
+        var eras = aircraftDatabase.getEras().concat(helicopterDatabase.getEras()).concat(groundUnitDatabase.getEras()).concat(navyUnitDatabase.getEras());
+        eras = eras.filter((item: string, index: number) => eras.indexOf(item) === index).sort();
+        this.#rtsErasDropdown.setOptionsElements(eras.map((era: string) => {
+            return createCheckboxOption(era, `Enable ${era} units spawns`, this.#RTSOptions.eras.includes(era));
+        }));
+
+        this.#RTSSettingsDialog.classList.remove("hide");
+
+        const restrictSpawnsCheckbox = this.#RTSSettingsDialog.querySelector("#restrict-spawns")?.querySelector("input") as HTMLInputElement;
+        const restrictToCoalitionCheckbox = this.#RTSSettingsDialog.querySelector("#restrict-to-coalition")?.querySelector("input") as HTMLInputElement;
+        const blueSpawnPointsInput = this.#RTSSettingsDialog.querySelector("#blue-spawn-points")?.querySelector("input") as HTMLInputElement;
+        const redSpawnPointsInput = this.#RTSSettingsDialog.querySelector("#red-spawn-points")?.querySelector("input") as HTMLInputElement;
+        const setupTimeInput = this.#RTSSettingsDialog.querySelector("#setup-time")?.querySelector("input") as HTMLInputElement;
+
+        restrictSpawnsCheckbox.checked = this.#RTSOptions.restrictSpawns;
+        restrictToCoalitionCheckbox.checked = this.#RTSOptions.restrictToCoalition;
+        blueSpawnPointsInput.value = String(this.#RTSOptions.spawnPoints.blue);
+        redSpawnPointsInput.value = String(this.#RTSOptions.spawnPoints.red);
+        setupTimeInput.value = String(Math.floor(this.#RTSOptions.setupTime / 60.0));
+    }
+
+    #applyRTSOptions() {
+        this.#RTSSettingsDialog.classList.add("hide");
+
+        const restrictSpawnsCheckbox = this.#RTSSettingsDialog.querySelector("#restrict-spawns")?.querySelector("input") as HTMLInputElement;
+        const restrictToCoalitionCheckbox = this.#RTSSettingsDialog.querySelector("#restrict-to-coalition")?.querySelector("input") as HTMLInputElement;
+        const blueSpawnPointsInput = this.#RTSSettingsDialog.querySelector("#blue-spawn-points")?.querySelector("input") as HTMLInputElement;
+        const redSpawnPointsInput = this.#RTSSettingsDialog.querySelector("#red-spawn-points")?.querySelector("input") as HTMLInputElement;
+        const setupTimeInput = this.#RTSSettingsDialog.querySelector("#setup-time")?.querySelector("input") as HTMLInputElement;
+
+        var eras: string[] = [];
+        const enabledEras = getCheckboxOptions(this.#rtsErasDropdown);
+        Object.keys(enabledEras).forEach((key: string) => {if (enabledEras[key]) eras.push(key)});
+        setRTSOptions(restrictSpawnsCheckbox.checked, restrictToCoalitionCheckbox.checked, {blue: parseInt(blueSpawnPointsInput.value), red: parseInt(redSpawnPointsInput.value)}, eras, parseInt(setupTimeInput.value) * 60);
     }
 
     #setRTSOptions(RTSOptions: RTSOptions) {
@@ -126,8 +183,16 @@ export class MissionHandler {
         this.setSpentSpawnPoints(0);
         this.refreshSpawnPoints();
 
-        if (RTSOptionsChanged)
+        if (RTSOptionsChanged) {
             document.dispatchEvent(new CustomEvent("RTSOptionsChanged", { detail: this }));
+
+            document.getElementById("rts-toolbar")?.classList.remove("hide");
+            const el = document.getElementById("command-mode");
+            if (el) {
+                el.dataset.mode = RTSOptions.commandMode;
+                el.textContent = RTSOptions.commandMode.toUpperCase();
+            }
+        }
     }
 
     #onAirbaseClick(e: any) {

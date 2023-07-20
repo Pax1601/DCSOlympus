@@ -6,7 +6,7 @@ import { CustomMarker } from '../map/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
 import { UnitDatabase } from './unitdatabase';
 import { TargetMarker } from '../map/targetmarker';
-import { BLUE_COMMANDER, BOMBING, CARPET_BOMBING, DLINK, DataIndexes, FIRE_AT_AREA, GAME_MASTER, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, RED_COMMANDER, ROEs, RWR, VISUAL, emissionsCountermeasures, reactionsToThreat, states } from '../constants/constants';
+import { BOMBING, CARPET_BOMBING, DLINK, DataIndexes, FIRE_AT_AREA, GAME_MASTER, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, ROEs, RWR, VISUAL, emissionsCountermeasures, reactionsToThreat, states } from '../constants/constants';
 import { Ammo, Contact, GeneralSettings, Offset, Radio, TACAN, UnitIconOptions } from '../@types/unit';
 import { DataExtractor } from './dataextractor';
 import { groundUnitDatabase } from './groundunitdatabase';
@@ -378,7 +378,7 @@ export class Unit extends CustomMarker {
     }
 
     belongsToCommandedCoalition() {
-        if (getUnitsManager().getCommandedCoalition() !== this.#coalition)
+        if (getUnitsManager().getCommandMode() !== GAME_MASTER && getUnitsManager().getCommandedCoalition() !== this.#coalition)
             return false;
         return true;        
     }

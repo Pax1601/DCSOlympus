@@ -90,7 +90,6 @@ export class MapContextMenu extends ContextMenu {
         });
 
         document.addEventListener("contextMenuDeployAircrafts", () => {
-            
             this.#spawnOptions.coalition = getActiveCoalition();
             if (this.#spawnOptions) {
                 var unitTable = {unitType: this.#spawnOptions.name, location: this.#spawnOptions.latlng, altitude: this.#spawnOptions.altitude, loadout: this.#spawnOptions.loadout};
@@ -218,6 +217,8 @@ export class MapContextMenu extends ContextMenu {
         this.getContainer()?.querySelector("#smoke-spawn-button")?.classList.toggle("is-open", type === "smoke");
         this.getContainer()?.querySelector("#explosion-menu")?.classList.toggle("hide", type !== "explosion");
         this.getContainer()?.querySelector("#explosion-spawn-button")?.classList.toggle("is-open", type === "explosion");
+
+        (this.getContainer()?.querySelectorAll(".deploy-unit-button"))?.forEach((element: Node) => {(element as HTMLButtonElement).disabled = true;})
 
         this.#resetAircraftRole();
         this.#resetAircraftLabel();

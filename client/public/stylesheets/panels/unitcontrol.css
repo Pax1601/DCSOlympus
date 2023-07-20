@@ -25,7 +25,7 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 
 #unit-control-panel #selected-units-container button {
 	align-items: center;
-	border-radius: var(--border-radius-lg);
+	border-radius: var(--border-radius-md);
 	display: flex;
 	font-size: 11px;
 	height: 32px;

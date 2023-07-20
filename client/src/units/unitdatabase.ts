@@ -188,10 +188,10 @@ export class UnitDatabase {
         if (blueprint)
             return this.getSpawnPointsByName(blueprint.name);
         else
-            return 0;
+            return Infinity;
     }
 
     getSpawnPointsByName(name: string) {
-        return 0;
+        return Infinity;
     }
 }
