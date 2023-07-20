@@ -46,6 +46,7 @@ export class Map extends L.Map {
     #miniMapLayerGroup: L.LayerGroup;
     #temporaryMarkers: TemporaryUnitMarker[] = [];
     #selecting: boolean = false;
+    #isZooming: boolean = false;
 
     #destinationGroupRotation: number = 0;
     #computeDestinationRotation: boolean = false;
@@ -67,7 +68,7 @@ export class Map extends L.Map {
     constructor(ID: string) {
         /* Init the leaflet map */
         //@ts-ignore Needed because the boxSelect option is non-standard
-        super(ID, { preferCanvas: true, doubleClickZoom: false, zoomControl: false, boxZoom: false, boxSelect: true, zoomAnimation: true, maxBoundsViscosity: 1.0, minZoom: 7, keyboard: true, keyboardPanDelta: 0 });
+        super(ID, { zoomSnap: 0, zoomDelta: 0.25, preferCanvas: true, doubleClickZoom: false, zoomControl: false, boxZoom: false, boxSelect: true, zoomAnimation: true, maxBoundsViscosity: 1.0, minZoom: 7, keyboard: true, keyboardPanDelta: 0 });
         this.setView([37.23, -115.8], 10);
 
         this.#ID = ID;
@@ -93,7 +94,8 @@ export class Map extends L.Map {
         /* Register event handles */
         this.on("click", (e: any) => this.#onClick(e));
         this.on("dblclick", (e: any) => this.#onDoubleClick(e));
-        this.on("zoomstart", (e: any) => this.#onZoom(e));
+        this.on("zoomstart", (e: any) => this.#onZoomStart(e));
+        this.on("zoomend", (e: any) => this.#onZoomEnd(e));
         this.on("drag", (e: any) => this.centerOnUnit(null));
         this.on("contextmenu", (e: any) => this.#onContextMenu(e));
         this.on('selectionstart', (e: any) => this.#onSelectionStart(e));
@@ -268,6 +270,10 @@ export class Map extends L.Map {
 
     hideCoalitionAreaContextMenu() {
         this.#coalitionAreaContextMenu.hide();
+    }
+
+    isZooming() {
+        return this.#isZooming;
     }
 
     /* Mouse coordinates */
@@ -544,10 +550,16 @@ export class Map extends L.Map {
         this.#updateDestinationCursors();
     }
 
-    #onZoom(e: any) {
+    #onZoomStart(e: any) {
         if (this.#centerUnit != null)
             this.#panToUnit(this.#centerUnit);
+        this.#isZooming = true;
     }
+
+    #onZoomEnd(e: any) {
+        this.#isZooming = false;
+    }
+
 
     #panToUnit(unit: Unit) {
         var unitPosition = new L.LatLng(unit.getPosition().lat, unit.getPosition().lng);

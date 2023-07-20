@@ -37,8 +37,6 @@ void Logger::Close()
 void Logger::toJSON(json::value& json, unsigned long long time)
 {
     lock_guard<mutex> guard(mutexLock);
-    json[L"requestTime"] = time;
-
     /* Loop on the logs in reverse since we are usually only interested in the very last added logs */
     auto itr = m_logs.end();
     while (itr != m_logs.begin())

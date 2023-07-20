@@ -17,6 +17,7 @@ import { Dropdown } from "./controls/dropdown";
 import { HotgroupPanel } from "./panels/hotgrouppanel";
 import { SVGInjector } from "@tanem/svg-injector";
 import { BLUE_COMMANDER, GAME_MASTER, RED_COMMANDER } from "./constants/constants";
+import { ServerStatusPanel } from "./panels/serverstatuspanel";
 
 var map: Map;
 
@@ -28,6 +29,7 @@ var atc: ATC;
 
 var unitInfoPanel: UnitInfoPanel;
 var connectionStatusPanel: ConnectionStatusPanel;
+var serverStatusPanel: ServerStatusPanel;
 var unitControlPanel: UnitControlPanel;
 var mouseInfoPanel: MouseInfoPanel;
 var logPanel: LogPanel;
@@ -53,9 +55,10 @@ function setup() {
     unitInfoPanel = new UnitInfoPanel("unit-info-panel");
     unitControlPanel = new UnitControlPanel("unit-control-panel");
     connectionStatusPanel = new ConnectionStatusPanel("connection-status-panel");
+    serverStatusPanel = new ServerStatusPanel("server-status-panel");
     mouseInfoPanel = new MouseInfoPanel("mouse-info-panel");
     hotgroupPanel = new HotgroupPanel("hotgroup-panel");
-    //logPanel = new LogPanel("log-panel");
+    
 
     /* Popups */
     infoPopup = new Popup("info-popup");
@@ -241,6 +244,10 @@ export function getLogPanel() {
 
 export function getConnectionStatusPanel() {
     return connectionStatusPanel;
+}
+
+export function getServerStatusPanel() {
+    return serverStatusPanel;
 }
 
 export function getHotgroupPanel() {

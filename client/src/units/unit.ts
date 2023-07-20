@@ -6,7 +6,7 @@ import { CustomMarker } from '../map/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
 import { UnitDatabase } from './unitdatabase';
 import { TargetMarker } from '../map/targetmarker';
-import { BLUE_COMMANDER, BOMBING, CARPET_BOMBING, DLINK, DataIndexes, FIRE_AT_AREA, GAME_MASTER, HIDE_ALL, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, RED_COMMANDER, ROEs, RWR, VISUAL, emissionsCountermeasures, reactionsToThreat, states } from '../constants/constants';
+import { BLUE_COMMANDER, BOMBING, CARPET_BOMBING, DLINK, DataIndexes, FIRE_AT_AREA, GAME_MASTER, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, RED_COMMANDER, ROEs, RWR, VISUAL, emissionsCountermeasures, reactionsToThreat, states } from '../constants/constants';
 import { Ammo, Contact, GeneralSettings, Offset, Radio, TACAN, UnitIconOptions } from '../@types/unit';
 import { DataExtractor } from './dataextractor';
 import { groundUnitDatabase } from './groundunitdatabase';
@@ -157,6 +157,7 @@ export class Unit extends CustomMarker {
         this.on('contextmenu', (e) => this.#onContextMenu(e));
         this.on('mouseover', () => { this.setHighlighted(true); })
         this.on('mouseout', () => { this.setHighlighted(false); })
+        getMap().on("zoomend", () => {this.#onZoom();})
 
         /* Deselect units if they are hidden */
         document.addEventListener("toggleCoalitionVisibility", (ev: CustomEventInit) => {
@@ -165,9 +166,7 @@ export class Unit extends CustomMarker {
 
         document.addEventListener("toggleUnitVisibility", (ev: CustomEventInit) => {
             window.setTimeout(() => { this.setSelected(this.getSelected() && !this.getHidden()) }, 300);
-        });
-
-        getMap().on("zoomend", () => {this.#onZoom();})
+        });        
     }
 
     getCategory() {
@@ -379,8 +378,6 @@ export class Unit extends CustomMarker {
     }
 
     belongsToCommandedCoalition() {
-        if (getUnitsManager().getCommandMode() === HIDE_ALL)
-            return false;
         if (getUnitsManager().getCommandedCoalition() !== this.#coalition)
             return false;
         return true;        
@@ -497,7 +494,6 @@ export class Unit extends CustomMarker {
                     (this.#controlled == false && hiddenUnits.includes("dcs")) ||
                     (hiddenUnits.includes(this.getMarkerCategory())) ||
                     (hiddenUnits.includes(this.#coalition)) ||
-                    (getUnitsManager().getCommandMode() === HIDE_ALL) ||
                     (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0)  ||
                     (!this.#isLeader && this.getCategory() == "GroundUnit" && getMap().getZoom() < 13)) && 
                     !(this.getSelected());
@@ -510,7 +506,10 @@ export class Unit extends CustomMarker {
 
         /* Add the marker if not present */
         if (!getMap().hasLayer(this) && !this.getHidden()) {
-            this.addTo(getMap());
+            if (getMap().isZooming()) 
+                this.once("zoomend", () => {this.addTo(getMap())})
+            else 
+                this.addTo(getMap());
         }
 
         /* Hide the marker if necessary*/

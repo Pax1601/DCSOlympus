@@ -1,5 +1,5 @@
 import { LatLng } from 'leaflet';
-import { getConnectionStatusPanel, getInfoPopup, getMissionHandler, getUnitDataTable, getUnitsManager, setLoginStatus } from '..';
+import { getConnectionStatusPanel, getInfoPopup, getMissionData, getServerStatusPanel, getUnitDataTable, getUnitsManager, setLoginStatus } from '..';
 import { GeneralSettings, Radio, TACAN } from '../@types/unit';
 import { ROEs, emissionsCountermeasures, reactionsToThreat } from '../constants/constants';
 
@@ -59,8 +59,8 @@ export function GET(callback: CallableFunction, uri: string, options?: { time?: 
                 const result = JSON.parse(xmlHttp.responseText);
                 lastUpdateTimes[uri] = callback(result);
 
-                if ("frameRate" in result && "load" in result)
-                    getConnectionStatusPanel().setMetrics(result.frameRate, result.load);
+                if (result.frameRate !== undefined && result.load !== undefined)
+                    getServerStatusPanel().update(result.frameRate, result.load);
             }
         } else if (xmlHttp.status == 401) {
             /* Bad credentials */

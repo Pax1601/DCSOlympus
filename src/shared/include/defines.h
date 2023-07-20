@@ -10,4 +10,4 @@
 #define BULLSEYE_URI "bullseyes"
 #define MISSION_URI "mission"
 
-#define EXECUTION_TIME_INTERVAL 0.05
+#define FRAMERATE_TIME_INTERVAL 0.05

@@ -70,18 +70,17 @@ extern "C" DllExport int coreFrame(lua_State* L)
     frameCounter++;
 
     const std::chrono::duration<double> executionDuration = std::chrono::system_clock::now() - lastExecution;
-    if (executionDuration.count() > EXECUTION_TIME_INTERVAL) {
-        if (scheduler != nullptr) {
-            scheduler->execute(L);
-
-            if (executionDuration.count() > 0) {
-                scheduler->setFrameRate(frameCounter / executionDuration.count());
-                frameCounter = 0;
-            }
-
-            lastExecution = std::chrono::system_clock::now();
+    if (executionDuration.count() > FRAMERATE_TIME_INTERVAL) {
+        if (executionDuration.count() > 0) {
+            scheduler->setFrameRate(frameCounter / executionDuration.count());
+            frameCounter = 0;
         }
+
+        lastExecution = std::chrono::system_clock::now();
     }
+
+    if (scheduler != nullptr) 
+        scheduler->execute(L);
 
     return(0);
 }
