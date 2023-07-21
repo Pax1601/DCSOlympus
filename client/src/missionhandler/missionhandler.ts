@@ -64,27 +64,29 @@ export class MissionHandler {
     }
 
     updateMission(data: MissionData) {
-        if (data.mission.theatre != this.#theatre) {
-            this.#theatre = data.mission.theatre;
-            getMap().setTheatre(this.#theatre);
-            getInfoPopup().setText("Map set to " + this.#theatre);
-        }
+        if (data.mission) {
+            if (data.mission.theatre != this.#theatre) {
+                this.#theatre = data.mission.theatre;
+                getMap().setTheatre(this.#theatre);
+                getInfoPopup().setText("Map set to " + this.#theatre);
+            }
 
-        this.#dateAndTime = data.mission.dateAndTime;
+            this.#dateAndTime = data.mission.dateAndTime;
 
-        this.#setRTSOptions(data.mission.RTSOptions);
-        getUnitsManager().setCommandMode(this.#RTSOptions.commandMode);
+            this.#setRTSOptions(data.mission.RTSOptions);
+            getUnitsManager().setCommandMode(this.#RTSOptions.commandMode);
 
-        this.#remainingSetupTime = this.#RTSOptions.setupTime - this.getDateAndTime().elapsedTime;
-        var RTSPhaseEl = document.querySelector("#rts-phase") as HTMLElement;
-        if (RTSPhaseEl) {
-            if (this.#remainingSetupTime > 0) {
-                var remainingTime = `-${new Date(this.#remainingSetupTime * 1000).toISOString().substring(14, 19)}`;
-                RTSPhaseEl.dataset.remainingTime = remainingTime;
-            } 
-            
-            RTSPhaseEl.classList.toggle("setup-phase", this.#remainingSetupTime > 0);
-            RTSPhaseEl.classList.toggle("game-commenced", this.#remainingSetupTime <= 0);
+            this.#remainingSetupTime = this.#RTSOptions.setupTime - this.getDateAndTime().elapsedTime;
+            var RTSPhaseEl = document.querySelector("#rts-phase") as HTMLElement;
+            if (RTSPhaseEl) {
+                if (this.#remainingSetupTime > 0) {
+                    var remainingTime = `-${new Date(this.#remainingSetupTime * 1000).toISOString().substring(14, 19)}`;
+                    RTSPhaseEl.dataset.remainingTime = remainingTime;
+                } 
+                
+                RTSPhaseEl.classList.toggle("setup-phase", this.#remainingSetupTime > 0);
+                RTSPhaseEl.classList.toggle("game-commenced", this.#remainingSetupTime <= 0);
+            }
         }
     }
 

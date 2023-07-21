@@ -11,6 +11,8 @@ Scheduler::Scheduler(lua_State* L) :
 	load(0)
 {
 	LogInfo(L, "Scheduler constructor called successfully");
+
+	
 }
 
 Scheduler::~Scheduler()

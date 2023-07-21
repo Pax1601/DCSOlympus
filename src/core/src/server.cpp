@@ -109,19 +109,31 @@ void Server::handle_get(http_request request)
                         getLogsJSON(logs, time);   
                         answer[L"logs"] = logs;
                     }
-
                     else if (URI.compare(AIRBASES_URI) == 0 && missionData.has_object_field(L"airbases")) 
                         answer[L"airbases"] = missionData[L"airbases"];
                     else if (URI.compare(BULLSEYE_URI) == 0 && missionData.has_object_field(L"bullseyes")) 
                         answer[L"bullseyes"] = missionData[L"bullseyes"];
                     else if (URI.compare(MISSION_URI) == 0 && missionData.has_object_field(L"mission")) {
                         answer[L"mission"] = missionData[L"mission"];
+                        answer[L"mission"][L"RTSOptions"] = json::value::object();
                         if (password.compare(gameMasterPassword) == 0)
-                            answer[L"mission"][L"commandMode"] = json::value(L"Game master");
+                            answer[L"mission"][L"RTSOptions"][L"commandMode"] = json::value(L"Game master");
                         else if (password.compare(blueCommanderPassword) == 0) 
-                            answer[L"mission"][L"commandMode"] = json::value(L"Blue commander");
+                            answer[L"mission"][L"RTSOptions"][L"commandMode"] = json::value(L"Blue commander");
                         else if (password.compare(redCommanderPassword) == 0)
-                            answer[L"mission"][L"commandMode"] = json::value(L"Red commander");
+                            answer[L"mission"][L"RTSOptions"][L"commandMode"] = json::value(L"Red commander");
+
+                        answer[L"mission"][L"RTSOptions"][L"restrictSpawns"] = json::value(scheduler->getRestrictSpawns());
+                        answer[L"mission"][L"RTSOptions"][L"restrictToCoalition"] = json::value(scheduler->getRestrictToCoalition());
+                        answer[L"mission"][L"RTSOptions"][L"setupTime"] = json::value(scheduler->getSetupTime());
+                        answer[L"mission"][L"RTSOptions"][L"spawnPoints"] = json::value::object();
+                        answer[L"mission"][L"RTSOptions"][L"spawnPoints"][L"blue"] = json::value(scheduler->getBlueSpawnPoints());
+                        answer[L"mission"][L"RTSOptions"][L"spawnPoints"][L"red"] = json::value(scheduler->getRedSpawnPoints());
+                        
+                        int idx = 0;
+                        answer[L"mission"][L"RTSOptions"][L"eras"] = json::value::array();
+                        for (string era : scheduler->getEras())
+                            answer[L"mission"][L"RTSOptions"][L"eras"].as_array()[idx++] = json::value(to_wstring(era));
                     }
                     
                     answer[L"time"] = json::value::string(to_wstring(ms.count()));
