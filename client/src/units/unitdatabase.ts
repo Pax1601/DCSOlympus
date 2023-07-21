@@ -36,7 +36,6 @@ export class UnitDatabase {
             var filteredBlueprints: { [key: string]: UnitBlueprint } = {};
             for (let unit in this.blueprints) {
                 const blueprint = this.blueprints[unit];
-                console.log(blueprint.era)
                 if (this.getSpawnPointsByName(blueprint.name) < getMissionHandler().getAvailableSpawnPoints() && 
                     getMissionHandler().getRTSOptions().eras.includes(blueprint.era) &&
                     (!getMissionHandler().getRTSOptions().restrictToCoalition || blueprint.coalition === getUnitsManager().getCommandedCoalition())) {

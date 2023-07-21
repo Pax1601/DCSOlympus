@@ -7,6 +7,7 @@
 @import url("panels/mouseinfo.css");
 @import url("panels/unitcontrol.css");
 @import url("panels/unitinfo.css");
+@import url("panels/logpanel.css");
 @import url("other/contextmenus.css");
 @import url("other/popup.css");
 @import url("markers/airbase.css");
@@ -1351,4 +1352,11 @@ input[type=number]::-webkit-outer-spin-button {
 [data-coalition="neutral"].ol-contexmenu-button:hover,
 [data-coalition="neutral"].ol-contexmenu-button.is-open {
     background-color: var(--primary-neutral)
+}
+
+#map-type svg,
+#map-visibility-options svg {
+    height: 20px;
+    width: 20px;
+    fill: lightgray;
 }

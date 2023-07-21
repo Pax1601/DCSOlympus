@@ -7,18 +7,16 @@ import { AirbaseContextMenu } from "../controls/airbasecontextmenu";
 import { Dropdown } from "../controls/dropdown";
 import { Airbase } from "../missionhandler/airbase";
 import { Unit } from "../units/unit";
-import { bearing } from "../other/utils";
+import { bearing, createCheckboxOption } from "../other/utils";
 import { DestinationPreviewMarker } from "./destinationpreviewmarker";
 import { TemporaryUnitMarker } from "./temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
 import { SVGInjector } from '@tanem/svg-injector'
-import { layers as mapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, visibilityControls, visibilityControlsTootlips, FIRE_AT_AREA, MOVE_UNIT, CARPET_BOMBING, BOMBING } from "../constants/constants";
+import { layers as mapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, visibilityControls, visibilityControlsTootlips, FIRE_AT_AREA, MOVE_UNIT, CARPET_BOMBING, BOMBING, SHOW_CONTACT_LINES, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS } from "../constants/constants";
 import { TargetMarker } from "./targetmarker";
 import { CoalitionArea } from "./coalitionarea";
 import { CoalitionAreaContextMenu } from "../controls/coalitionareacontextmenu";
 import { DrawingCursor } from "./drawingcursor";
-import { aircraftDatabase } from "../units/aircraftdatabase";
-import { groundUnitDatabase } from "../units/groundunitdatabase";
 
 L.Map.addInitHook('addHandler', 'boxSelect', BoxSelect);
 
@@ -47,7 +45,7 @@ export class Map extends L.Map {
     #temporaryMarkers: TemporaryUnitMarker[] = [];
     #selecting: boolean = false;
     #isZooming: boolean = false;
-
+    
     #destinationGroupRotation: number = 0;
     #computeDestinationRotation: boolean = false;
     #destinationRotationCenter: L.LatLng | null = null;
@@ -63,7 +61,9 @@ export class Map extends L.Map {
     #coalitionAreaContextMenu: CoalitionAreaContextMenu = new CoalitionAreaContextMenu("coalition-area-contextmenu");
 
     #mapSourceDropdown: Dropdown;
+    #mapVisibilityOptionsDropdown: Dropdown;
     #optionButtons: { [key: string]: HTMLButtonElement[] } = {}
+    #visibiityOptions: { [key: string]: boolean } = {}
 
     constructor(ID: string) {
         /* Init the leaflet map */
@@ -86,7 +86,10 @@ export class Map extends L.Map {
         L.control.scalenautic({ position: "topright", maxWidth: 300, nautic: true, metric: true, imperial: false }).addTo(this);
 
         /* Map source dropdown */
-        this.#mapSourceDropdown = new Dropdown("map-type", (layerName: string) => this.setLayer(layerName), this.getLayers())
+        this.#mapSourceDropdown = new Dropdown("map-type", (layerName: string) => this.setLayer(layerName), this.getLayers());
+
+        /* Visibility options dropdown */
+        this.#mapVisibilityOptionsDropdown = new Dropdown("map-visibility-options", () => {});
 
         /* Init the state machine */
         this.#state = IDLE;
@@ -123,9 +126,7 @@ export class Map extends L.Map {
    
 
         document.addEventListener("toggleCoalitionAreaDraw", (ev: CustomEventInit) => {
-            const el = ev.detail._element;
-            /* Add listener to set the button to off if the state changes */
-            document.addEventListener("mapStateChanged", () => el?.classList.toggle("off", !(this.getState() === COALITIONAREA_DRAW_POLYGON)));
+            this.getMapContextMenu().hide();
             this.deselectAllCoalitionAreas();
             if (ev.detail?.type == "polygon") {
                 if (this.getState() !== COALITIONAREA_DRAW_POLYGON)
@@ -152,6 +153,18 @@ export class Map extends L.Map {
             return this.#createOptionButton(option, `visibility/${option.toLowerCase()}.svg`, visibilityControlsTootlips[index], "toggleUnitVisibility", `{"type": "${option}"}`);
         });
         document.querySelector("#unit-visibility-control")?.append(...this.#optionButtons["visibility"]);
+
+        /* Create the checkboxes to select the advanced visibility options */
+
+        this.#visibiityOptions[SHOW_CONTACT_LINES] = false;
+        this.#visibiityOptions[HIDE_GROUP_MEMBERS] = true;
+        this.#visibiityOptions[SHOW_UNIT_PATHS] = true;
+        this.#visibiityOptions[SHOW_UNIT_TARGETS] = true;
+        this.#mapVisibilityOptionsDropdown.setOptionsElements(Object.keys(this.#visibiityOptions).map((option: string) => {
+            return createCheckboxOption(option, option, this.#visibiityOptions[option], (ev: any) => {
+                this.#setVisibilityOption(option, ev);
+            });
+        }));
     }
 
     setLayer(layerName: string) {
@@ -408,6 +421,10 @@ export class Map extends L.Map {
         coalitionArea.bringToBack();
         this.#coalitionAreas.splice(this.#coalitionAreas.indexOf(coalitionArea), 1);
         this.#coalitionAreas.unshift(coalitionArea);
+    }
+
+    getVisibilityOptions() {
+        return this.#visibiityOptions;
     }
 
     /* Event handlers */
@@ -693,6 +710,11 @@ export class Map extends L.Map {
             else if ([BOMBING, CARPET_BOMBING, FIRE_AT_AREA].includes(this.#state)) this.#showTargetCursor();
             else if (this.#state === COALITIONAREA_DRAW_POLYGON) this.#showDrawingCursor();
         }
+    }
+
+    #setVisibilityOption(option: string, ev: any) {
+        this.#visibiityOptions[option] = ev.currentTarget.checked;
+        document.dispatchEvent(new CustomEvent("mapVisibilityOptionsChanged"));
     }
 }
 

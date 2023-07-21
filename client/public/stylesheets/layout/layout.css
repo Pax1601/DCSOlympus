@@ -101,4 +101,17 @@
     left: 50%;
     translate: -50% 0%;
     z-index: 9999;
+	display: flex;
+	align-items: center;
+}
+
+#log-panel {
+	position: absolute;
+	right: 0px;
+	top: 220px;
+	width: 310px;
+	height: fit-content;
+	z-index: 9990;
+	overflow: hidden;
+	padding: 10px;
 }

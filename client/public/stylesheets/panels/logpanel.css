@@ -1,0 +1,28 @@
+#log-panel>div:first-child {
+	width: 100%;
+	height: 38px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+#log-panel svg {
+    pointer-events: none;
+}
+
+#log-panel>div:nth-child(2) {
+    display: none;
+	margin-top: 5px;
+	width: 100%;
+	height: calc(100% - 40px);
+	background-color: #00000055;
+}
+
+#log-panel.open {
+	height: 505px;
+}
+
+#log-panel.open>div:nth-child(2) {
+	display: block;
+}

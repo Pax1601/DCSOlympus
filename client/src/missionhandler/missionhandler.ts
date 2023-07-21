@@ -119,10 +119,7 @@ export class MissionHandler {
             return 0;
     }
 
-    refreshSpawnPoints() {
-        if (getUnitsManager().getCommandMode() === GAME_MASTER) 
-            document.querySelector("#spawn-points-container")?.classList.add("hide");
-            
+    refreshSpawnPoints() {            
         var spawnPointsEl = document.querySelector("#spawn-points");
         if (spawnPointsEl) {
             spawnPointsEl.textContent = `${this.getAvailableSpawnPoints()}`;
@@ -193,6 +190,9 @@ export class MissionHandler {
                 el.textContent = RTSOptions.commandMode.toUpperCase();
             }
         }
+
+        document.querySelector("#spawn-points-container")?.classList.toggle("hide", getUnitsManager().getCommandMode() === GAME_MASTER);
+        document.querySelector("#rts-settings-button")?.classList.toggle("hide", getUnitsManager().getCommandMode() !== GAME_MASTER);
     }
 
     #onAirbaseClick(e: any) {

@@ -26,12 +26,21 @@
         </div>
     </div>
 
-    <div id="map-type" class="ol-select">
-        <div class="ol-select-value map-source-dropdown">
-            <span>ArcGIS Satellite</span>
+    <div class="ol-group">
+        <div id="map-type" class="ol-select">
+            <div class="ol-select-value">
+                <img src="resources/theme/images/icons/map-source.svg" inject-svg> ArcGIS Satellite
+            </div>
+            <div class="ol-select-options">
+                <!-- Here the available map sources will be listed-->
+            </div>
         </div>
-        <div class="ol-select-options">
-            <!-- Here the available map sources will be listed-->
+
+        <div id="map-visibility-options" class="ol-select">
+            <div class="ol-select-value"><img src="resources/theme/images/icons/eye-solid.svg" inject-svg>Options</div>
+            <div class="ol-select-options">
+                <!-- This is where the advanced visibility options will be listed -->
+            </div>
         </div>
     </div>
 
@@ -56,6 +65,7 @@
         </div>
     </div>
 
+    <!--
     <div id="atc-navbar-control" class="ol-group-container ol-navbar-buttons-group" data-feature-switch="atc">
         <div class="ol-group">
             <button data-on-click="toggleElements"
@@ -63,13 +73,5 @@
             <button data-on-click="toggleElements"
                 data-on-click-params='{"selector": "#strip-board-tower"}' class="off"><img src="resources/theme/images/buttons/tools/tower.svg" inject-svg></button>
         </div>
-    </div>
-
-    <div id="map-tools" class="ol-group-container ol-navbar-buttons-group">
-        <div class="ol-group">
-            <button title="Draw Coalition Areas on the map" data-on-click="toggleCoalitionAreaDraw" data-on-click-params='{"type": "polygon"}' class="off">
-                <img src="resources/theme/images/buttons/tools/draw-polygon-solid.svg" inject-svg>
-            </button>
-        </div>
-    </div>
+    </div> -->
 </nav>

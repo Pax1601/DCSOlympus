@@ -393,7 +393,7 @@ class DemoDataGenerator {
         ret.mission.RTSOptions = {
             restrictSpawns: true,
             restrictToCoalition: true,
-            setupTime: 300,
+            setupTime: 0,
             spawnPoints: {
                 red: 1000,
                 blue: 400

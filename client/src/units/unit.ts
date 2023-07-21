@@ -6,7 +6,7 @@ import { CustomMarker } from '../map/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
 import { UnitDatabase } from './unitdatabase';
 import { TargetMarker } from '../map/targetmarker';
-import { BOMBING, CARPET_BOMBING, DLINK, DataIndexes, FIRE_AT_AREA, GAME_MASTER, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, ROEs, RWR, VISUAL, emissionsCountermeasures, reactionsToThreat, states } from '../constants/constants';
+import { BOMBING, CARPET_BOMBING, DLINK, DataIndexes, FIRE_AT_AREA, GAME_MASTER, HIDE_GROUP_MEMBERS, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, ROEs, RWR, SHOW_CONTACT_LINES, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, VISUAL, emissionsCountermeasures, reactionsToThreat, states } from '../constants/constants';
 import { Ammo, Contact, GeneralSettings, Offset, Radio, TACAN, UnitIconOptions } from '../@types/unit';
 import { DataExtractor } from './dataextractor';
 import { groundUnitDatabase } from './groundunitdatabase';
@@ -166,7 +166,13 @@ export class Unit extends CustomMarker {
 
         document.addEventListener("toggleUnitVisibility", (ev: CustomEventInit) => {
             window.setTimeout(() => { this.setSelected(this.getSelected() && !this.getHidden()) }, 300);
-        });        
+        });  
+        
+        document.addEventListener("mapVisibilityOptionsChanged", (ev: CustomEventInit) => {
+            this.#updateMarker();
+            if (this.getSelected())
+                this.drawLines();
+        }); 
     }
 
     getCategory() {
@@ -495,7 +501,7 @@ export class Unit extends CustomMarker {
                     (hiddenUnits.includes(this.getMarkerCategory())) ||
                     (hiddenUnits.includes(this.#coalition)) ||
                     (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0)  ||
-                    (!this.#isLeader && this.getCategory() == "GroundUnit" && getMap().getZoom() < 13)) && 
+                    (getMap().getVisibilityOptions()[HIDE_GROUP_MEMBERS] && !this.#isLeader && this.getCategory() == "GroundUnit" && getMap().getZoom() < 13)) && 
                     !(this.getSelected());
 
         this.setHidden(hidden || !this.#alive);
@@ -925,7 +931,7 @@ export class Unit extends CustomMarker {
     }
 
     #drawPath() {
-        if (this.#activePath != undefined) {
+        if (this.#activePath != undefined && getMap().getVisibilityOptions()[SHOW_UNIT_PATHS]) {
             var points = [];
             points.push(new LatLng(this.#position.lat, this.#position.lng));
 
@@ -952,6 +958,9 @@ export class Unit extends CustomMarker {
             if (points.length == 1)
                 this.#clearPath();
         }
+        else {
+            this.#clearPath();
+        }
     }
 
     #clearPath() {
@@ -964,34 +973,36 @@ export class Unit extends CustomMarker {
 
     #drawContacts() {
         this.#clearContacts();
-        for (let index in this.#contacts) {
-            var contactData = this.#contacts[index];
-            var contact = getUnitsManager().getUnitByID(contactData.ID)
-            if (contact != null && contact.getAlive()) {
-                var startLatLng = new LatLng(this.#position.lat, this.#position.lng);
-                var endLatLng: LatLng;
-                if (contactData.detectionMethod === RWR) {
-                    var bearingToContact = bearing(this.#position.lat, this.#position.lng, contact.#position.lat, contact.#position.lng);
-                    var startXY = getMap().latLngToContainerPoint(startLatLng);
-                    var endX = startXY.x + 80 * Math.sin(deg2rad(bearingToContact));
-                    var endY = startXY.y - 80 * Math.cos(deg2rad(bearingToContact));
-                    endLatLng = getMap().containerPointToLatLng(new Point(endX, endY));
-                }
-                else
-                    endLatLng = new LatLng(contact.#position.lat, contact.#position.lng);
+        if (getMap().getVisibilityOptions()[SHOW_CONTACT_LINES]) {
+            for (let index in this.#contacts) {
+                var contactData = this.#contacts[index];
+                var contact = getUnitsManager().getUnitByID(contactData.ID)
+                if (contact != null && contact.getAlive()) {
+                    var startLatLng = new LatLng(this.#position.lat, this.#position.lng);
+                    var endLatLng: LatLng;
+                    if (contactData.detectionMethod === RWR) {
+                        var bearingToContact = bearing(this.#position.lat, this.#position.lng, contact.#position.lat, contact.#position.lng);
+                        var startXY = getMap().latLngToContainerPoint(startLatLng);
+                        var endX = startXY.x + 80 * Math.sin(deg2rad(bearingToContact));
+                        var endY = startXY.y - 80 * Math.cos(deg2rad(bearingToContact));
+                        endLatLng = getMap().containerPointToLatLng(new Point(endX, endY));
+                    }
+                    else
+                        endLatLng = new LatLng(contact.#position.lat, contact.#position.lng);
 
-                var color;
-                if (contactData.detectionMethod === VISUAL || contactData.detectionMethod === OPTIC)
-                    color = "#FF00FF";
-                else if (contactData.detectionMethod === RADAR || contactData.detectionMethod === IRST)
-                    color = "#FFFF00";
-                else if (contactData.detectionMethod === RWR)
-                    color = "#00FF00";
-                else
-                    color = "#FFFFFF";
-                var contactPolyline = new Polyline([startLatLng, endLatLng], { color: color, weight: 3, opacity: 1, smoothFactor: 1, dashArray: "4, 8" });
-                contactPolyline.addTo(getMap());
-                this.#contactsPolylines.push(contactPolyline)
+                    var color;
+                    if (contactData.detectionMethod === VISUAL || contactData.detectionMethod === OPTIC)
+                        color = "#FF00FF";
+                    else if (contactData.detectionMethod === RADAR || contactData.detectionMethod === IRST)
+                        color = "#FFFF00";
+                    else if (contactData.detectionMethod === RWR)
+                        color = "#00FF00";
+                    else
+                        color = "#FFFFFF";
+                    var contactPolyline = new Polyline([startLatLng, endLatLng], { color: color, weight: 3, opacity: 1, smoothFactor: 1, dashArray: "4, 8" });
+                    contactPolyline.addTo(getMap());
+                    this.#contactsPolylines.push(contactPolyline)
+                }
             }
         }
     }
@@ -1003,20 +1014,20 @@ export class Unit extends CustomMarker {
     }
 
     #drawTarget() {
-        if (this.#targetPosition.lat != 0 && this.#targetPosition.lng != 0) {
-            this.#drawtargetPosition(this.#targetPosition);
+        if (this.#targetPosition.lat != 0 && this.#targetPosition.lng != 0 && getMap().getVisibilityOptions()[SHOW_UNIT_PATHS]) {
+            this.#drawTargetPosition(this.#targetPosition);
         }
-        else if (this.#targetID != 0) {
+        else if (this.#targetID != 0 && getMap().getVisibilityOptions()[SHOW_UNIT_TARGETS]) {
             const target = getUnitsManager().getUnitByID(this.#targetID);
             if (target && (getUnitsManager().getCommandMode() == GAME_MASTER || (this.belongsToCommandedCoalition() && getUnitsManager().getUnitDetectedMethods(target).some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))))) {
-                this.#drawtargetPosition(target.getPosition());
+                this.#drawTargetPosition(target.getPosition());
             }
         }
         else
             this.#clearTarget();
     }
 
-    #drawtargetPosition(targetPosition: LatLng) {
+    #drawTargetPosition(targetPosition: LatLng) {
         if (!getMap().hasLayer(this.#targetPositionMarker))
             this.#targetPositionMarker.addTo(getMap());
         if (!getMap().hasLayer(this.#targetPositionPolyline))

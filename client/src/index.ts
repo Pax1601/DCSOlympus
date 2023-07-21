@@ -58,8 +58,8 @@ function setup() {
     serverStatusPanel = new ServerStatusPanel("server-status-panel");
     mouseInfoPanel = new MouseInfoPanel("mouse-info-panel");
     hotgroupPanel = new HotgroupPanel("hotgroup-panel");
+    logPanel = new LogPanel("log-panel");
     
-
     /* Popups */
     infoPopup = new Popup("info-popup");
 

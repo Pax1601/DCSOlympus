@@ -145,6 +145,11 @@ export const visibilityControlsTootlips: string[] = ["Toggle human players visib
 export const IADSTypes = ["AAA", "MANPADS", "SAM Site", "Radar"];
 export const IADSDensities: {[key: string]: number}= {"AAA": 0.8, "MANPADS": 0.3, "SAM Site": 0.1, "Radar": 0.05};
 
+export const SHOW_CONTACT_LINES = "Show unit contact lines";
+export const HIDE_GROUP_MEMBERS = "Hide group members when zoomed out";
+export const SHOW_UNIT_PATHS = "Show unit paths";
+export const SHOW_UNIT_TARGETS = "Show unit targets";
+
 export enum DataIndexes {
     startOfData = 0,
     category,

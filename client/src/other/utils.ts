@@ -366,7 +366,7 @@ export function convertDateAndTimeToDate(dateAndTime: DateAndTime) {
     return new Date(year, month, date.Day, time.h, time.m, time.s);
 }
 
-export function createCheckboxOption(value: string, text: string, checked: boolean = true) {
+export function createCheckboxOption(value: string, text: string, checked: boolean = true, callback: CallableFunction = (ev: any) => {}) {
     var div = document.createElement("div");
     div.classList.add("ol-checkbox");
     var label = document.createElement("label");
@@ -379,6 +379,7 @@ export function createCheckboxOption(value: string, text: string, checked: boole
     label.appendChild(input);
     label.appendChild(span);
     div.appendChild(label);
+    input.onclick = (ev: any) => callback(ev);
     return div as HTMLElement;
 }
 

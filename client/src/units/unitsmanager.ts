@@ -701,21 +701,21 @@ export class UnitsManager {
                 getInfoPopup().setText("Helicopters can be air spawned during the SETUP phase only");
                 return false;
             }
-            spawnPoints = units.reduce((unit: any, points: number) => {return points + helicopterDatabase.getSpawnPointsByName(unit.unitType)}, 0);
+            spawnPoints = units.reduce((points: number, unit: any) => {return points + helicopterDatabase.getSpawnPointsByName(unit.unitType)}, 0);
             spawnHelicopters(units, coalition, airbase, immediate, spawnPoints);
         } else if (category === "GroundUnit") {
             if (getMissionHandler().getRemainingSetupTime() < 0 && this.getCommandMode() !== GAME_MASTER) {
                 getInfoPopup().setText("Ground units can be spawned during the SETUP phase only");
                 return false;
             }
-            spawnPoints = units.reduce((unit: any, points: number) => {return points + groundUnitDatabase.getSpawnPointsByName(unit.unitType)}, 0);
+            spawnPoints = units.reduce((points: number, unit: any) => {return points + groundUnitDatabase.getSpawnPointsByName(unit.unitType)}, 0);
             spawnGroundUnits(units, coalition, immediate, spawnPoints);
         } else if (category === "NavyUnit") {
             if (getMissionHandler().getRemainingSetupTime() < 0 && this.getCommandMode() !== GAME_MASTER) {
                 getInfoPopup().setText("Navy units can be spawned during the SETUP phase only");
                 return false;
             }
-            spawnPoints = units.reduce((unit: any, points: number) => {return points + navyUnitDatabase.getSpawnPointsByName(unit.unitType)}, 0);
+            spawnPoints = units.reduce((points: number, unit: any) => {return points + navyUnitDatabase.getSpawnPointsByName(unit.unitType)}, 0);
             spawnNavyUnits(units, coalition, immediate, spawnPoints);
         }
         if (spawnPoints <= getMissionHandler().getAvailableSpawnPoints()) {

@@ -1,5 +1,5 @@
 import { LatLng } from 'leaflet';
-import { getConnectionStatusPanel, getInfoPopup, getMissionHandler, getServerStatusPanel, getUnitDataTable, getUnitsManager, setLoginStatus } from '..';
+import { getConnectionStatusPanel, getInfoPopup, getLogPanel, getMissionHandler, getServerStatusPanel, getUnitDataTable, getUnitsManager, setLoginStatus } from '..';
 import { GeneralSettings, Radio, TACAN } from '../@types/unit';
 import { ROEs, emissionsCountermeasures, reactionsToThreat } from '../constants/constants';
 
@@ -338,18 +338,20 @@ export function startUpdate() {
     getAirbases((data: AirbasesData) => {
         checkSessionHash(data.sessionHash);
         getMissionHandler()?.updateAirbases(data);
+        return data.time;
     });
     getBullseye((data: BullseyesData) => {
         checkSessionHash(data.sessionHash);
         getMissionHandler()?.updateBullseyes(data);
+        return data.time;
     });
     getMission((data: MissionData) => {
         checkSessionHash(data.sessionHash);
         getMissionHandler()?.updateMission(data);
+        return data.time;
     });
     getLogs((data: any) => {
-        for (let key in data.logs) 
-            console.log(data.logs[key]);
+        getLogPanel().appendLogs(Object.values(data.logs))
         return data.time;
     });
     getUnits((buffer: ArrayBuffer) => {return getUnitsManager()?.update(buffer), true /* Does a full refresh */});
@@ -374,18 +376,20 @@ export function requestRefresh() {
         getAirbases((data: AirbasesData) => {
             checkSessionHash(data.sessionHash);
             getMissionHandler()?.updateAirbases(data);
+            return data.time;
         });
         getBullseye((data: BullseyesData) => {
             checkSessionHash(data.sessionHash);
             getMissionHandler()?.updateBullseyes(data);
+            return data.time;
         });
         getMission((data: MissionData) => {
             checkSessionHash(data.sessionHash);
             getMissionHandler()?.updateMission(data);
+            return data.time;
         });
 		getLogs((data: any) => {
-            for (let key in data.logs) 
-                console.log(data.logs[key]);
+            getLogPanel().appendLogs(Object.values(data.logs))
             return data.time;
         });
 

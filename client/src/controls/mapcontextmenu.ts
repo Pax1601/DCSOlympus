@@ -562,7 +562,7 @@ export class MapContextMenu extends ContextMenu {
     }
 
     #computeSpawnPoints() {
-        if (getMissionHandler()){
+        if (getMissionHandler() && getUnitsManager().getCommandMode() !== GAME_MASTER){
             var aircraftCount = parseInt(this.#aircraftCountDropdown.getValue());
             var aircraftSpawnPoints = aircraftCount * aircraftDatabase.getSpawnPointsByLabel(this.#aircraftLabelDropdown.getValue());
             (<HTMLButtonElement>this.getContainer()?.querySelector("#aircraft-spawn-menu")?.querySelector(".deploy-unit-button")).dataset.points = `${aircraftSpawnPoints}`;

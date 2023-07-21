@@ -15,15 +15,15 @@
     </div>
     <div id="more-options-button-bar" class="upper-bar ol-panel hide">
         <div id="coalition-switch" class="ol-switch ol-coalition-switch"></div>
-
         <button data-coalition="blue" id="navyunit-spawn-button" title="Spawn navy unit" data-on-click="mapContextMenuShow"
             data-on-click-params='{ "type": "navyunit" }' class="ol-contexmenu-button"><img src="/resources/theme/images/buttons/spawn/navyunit.svg" inject-svg></button> 
-        
         <button data-coalition="blue" id="smoke-spawn-button" title="Spawn smoke" data-on-click="mapContextMenuShow"
             data-on-click-params='{ "type": "smoke" }' class="ol-contexmenu-button"><img src="/resources/theme/images/buttons/spawn/smoke.svg" inject-svg></button>
         <button data-coalition="blue" id="explosion-spawn-button" title="Explosion" data-on-click="mapContextMenuShow"
             data-on-click-params='{ "type": "explosion" }' class="ol-contexmenu-button"><img src="/resources/theme/images/buttons/spawn/explosion.svg" inject-svg></button>
-    </div>
+        <button data-coalition="blue" id="polygon-draw-button" title="Enter polygon draw mode" data-on-click="toggleCoalitionAreaDraw" 
+            data-on-click-params='{"type": "polygon"}' class="ol-contexmenu-button"><img src="resources/theme/images/buttons/tools/draw-polygon-solid.svg" inject-svg></button>
+        </div>
     <div id="aircraft-spawn-menu" class="ol-contexmenu-panel ol-panel hide">
         <div class="ol-select-container">
             <div id="aircraft-role-options" class="ol-select">

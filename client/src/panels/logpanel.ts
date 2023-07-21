@@ -1,28 +1,65 @@
 import { Panel } from "./panel";
 
-export class LogPanel extends Panel
-{
-    #logs: String[];
+export class LogPanel extends Panel {
+    #open: boolean = false;
+    #queuedMessages: number = 0;
+    #scrolledDown: boolean = true;
 
-    constructor(ID: string)
-    {
+    constructor(ID: string) {
         super(ID);
-        this.#logs = [];
+
+        document.addEventListener("toggleLogPanel", () => {
+            this.getElement().classList.toggle("open");
+            this.#open = !this.#open;
+            this.#queuedMessages = 0;
+            this.#updateHeader();
+
+            if (this.#scrolledDown) 
+                this.#scrollDown();
+        });
+
+        const scrollEl = this.getElement().querySelector(".ol-scrollable");
+        if (scrollEl) {
+            scrollEl.addEventListener("scroll", () => {
+                this.#scrolledDown = Math.abs(scrollEl.scrollHeight - scrollEl.scrollTop - scrollEl.clientHeight) < 1
+            })
+        }
     }
 
-    update(data: any)
-    {
-        var logs = data["logs"];
-        for (let idx in logs)
-        {
-            if (parseInt(idx) >= this.#logs.length) {
-                this.#logs.push(logs[idx]);
-                var el = document.createElement("div");
-                el.innerText = logs[idx];
-                el.classList.add("js-log-element", "ol-log-element");
-                this.getElement().appendChild(el);
-                this.getElement().scrollTop = this.getElement().scrollHeight;
-            }
+    appendLogs(logs: string[]) {
+        logs.forEach((log: string) => this.appendLog(log));
+    }
+
+    appendLog(log: string) {
+        var el = document.createElement("div");
+        el.classList.add("ol-log-entry");
+        el.textContent = log;
+        this.getElement().querySelector(".ol-scrollable")?.appendChild(el);
+        console.log(log);
+
+        if (!this.#open)
+            this.#queuedMessages++;
+
+        this.#updateHeader();
+
+        if (this.#scrolledDown) 
+            this.#scrollDown();
+    }
+
+    #updateHeader() {
+        const headerEl = this.getElement().querySelector("#log-panel-header") as HTMLElement;
+        if (headerEl) {
+            if (this.#queuedMessages)
+                headerEl.innerText = `Server log (${this.#queuedMessages})`;
+            else
+                headerEl.innerText = `Server log`;
+        }
+    }
+
+    #scrollDown() {
+        const scrollEl = this.getElement().querySelector(".ol-scrollable");
+        if (scrollEl) {
+            scrollEl.scrollTop = scrollEl.scrollHeight - scrollEl.clientHeight;
         }
     }
 }
