@@ -1,5 +1,5 @@
 import { LatLng } from "leaflet";
-import { getMap, getUnitsManager } from "..";
+import { getMap, getMissionHandler, getUnitsManager } from "..";
 import { GAME_MASTER, IADSTypes } from "../constants/constants";
 import { CoalitionArea } from "../map/coalitionarea";
 import { ContextMenu } from "./contextmenu";
@@ -81,7 +81,7 @@ export class CoalitionAreaContextMenu extends ContextMenu {
             return createCheckboxOption(range, `Add ${range} units to the IADS`);
         }));
 
-        if (getUnitsManager().getCommandMode() !== GAME_MASTER)
+        if (getMissionHandler().getCommandModeOptions().commandMode !== GAME_MASTER)
             this.#coalitionSwitch.hide()
     }
 
@@ -114,7 +114,7 @@ export class CoalitionAreaContextMenu extends ContextMenu {
     }
 
     #onSwitchClick(value: boolean) {
-        if (getUnitsManager().getCommandMode() == GAME_MASTER) {
+        if (getMissionHandler().getCommandModeOptions().commandMode == GAME_MASTER) {
             this.getCoalitionArea()?.setCoalition(value ? "red" : "blue");
             this.getContainer()?.querySelectorAll('[data-coalition]').forEach((element: any) => {
                 element.setAttribute("data-coalition", this.getCoalitionArea()?.getCoalition())

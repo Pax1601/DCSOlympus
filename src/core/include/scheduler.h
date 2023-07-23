@@ -11,24 +11,27 @@ public:
 
 	void appendCommand(Command* command);
 	void execute(lua_State* L);
-	void handleRequest(string key, json::value value);
+	void handleRequest(string key, json::value value, string username);
+	bool checkSpawnPoints(int spawnPoints, string coalition);
 
 	void setFrameRate(double newFrameRate) { frameRate = newFrameRate; }
 	void setRestrictSpawns(bool newRestrictSpawns) { restrictSpawns = newRestrictSpawns; }
-	void setRestrictToCoalition(bool newRestrictToCoalition) { restrictSpawns = newRestrictToCoalition; }
+	void setRestrictToCoalition(bool newRestrictToCoalition) { restrictToCoalition = newRestrictToCoalition; }
 	void setSetupTime(unsigned int newSetupTime) { setupTime = newSetupTime; }
 	void setBlueSpawnPoints(unsigned int newBlueSpawnPoints) { blueSpawnPoints = newBlueSpawnPoints; }
 	void setRedSpawnPoints(unsigned int newRedSpawnPoints) { redSpawnPoints = newRedSpawnPoints; }
 	void setEras(vector<string> newEras) { eras = newEras; }
+	void setCommandModeOptions(json::value newOptions);
 
 	int getFrameRate() { return frameRate; };
 	int getLoad();
 	bool getRestrictSpawns() { return restrictSpawns; }
-	bool getRestrictToCoalition() { return restrictSpawns; }
+	bool getRestrictToCoalition() { return restrictToCoalition; }
 	unsigned int getSetupTime() { return setupTime; }
 	unsigned int getBlueSpawnPoints() { return blueSpawnPoints; }
 	unsigned int getRedSpawnPoints() { return redSpawnPoints; }
 	vector<string> getEras() { return eras; }
+	json::value getCommandModeOptions();
 
 private:
 	list<Command*> commands;

@@ -917,12 +917,12 @@ nav.ol-panel> :last-child {
     padding-right: 20px;
 }
 
-#rts-phase::before {
+#command-mode-phase::before {
     content: "Time to start";
     font-size: 14px;
 }
 
-#rts-phase.setup-phase::after {
+#command-mode-phase.setup-phase::after {
     color: orange;
     border: 1px solid orange;
     border-radius: 999px;
@@ -933,7 +933,7 @@ nav.ol-panel> :last-child {
     font-size: 14px;
 }
 
-#rts-phase.game-commenced {
+#command-mode-phase.game-commenced {
     background-color: var(--background-grey);
     color: lightgreen;
     border: 1px solid lightgreen;
@@ -944,31 +944,31 @@ nav.ol-panel> :last-child {
     align-items: center;
 }
 
-#rts-phase.game-commenced::before {
+#command-mode-phase.game-commenced::before {
     content: "Game commenced";
     font-weight: bold;
 }
 
-#rts-phase.game-commenced::after {
+#command-mode-phase.game-commenced::after {
     content: "Spawn restrictions are being enforced";
     font-size: 10px; 
 }
 
-#rts-toolbar .ol-button {
+#command-mode-toolbar .ol-button {
     border: 1px solid white;
 }
 
-#rts-toolbar .ol-button>svg {
+#command-mode-toolbar .ol-button>svg {
     width: 20px;
     height: 20px;
     fill: white;
 }
 
-#rts-settings-dialog {
+#command-mode-settings-dialog {
     width: 400px;
 }
 
-#rts-settings-dialog>.ol-dialog-content {
+#command-mode-settings-dialog>.ol-dialog-content {
 	display: flex;
 	flex-direction: column;
 	flex-wrap: nowrap;
@@ -978,11 +978,11 @@ nav.ol-panel> :last-child {
     width: 100%;
 }
 
-#rts-settings-dialog>.ol-dialog-content .ol-group {
+#command-mode-settings-dialog>.ol-dialog-content .ol-group {
 	justify-content: space-between;
 }
 
-#rts-settings-dialog h4 {
+#command-mode-settings-dialog h4 {
     white-space: nowrap;
     width: fit-content;
 }

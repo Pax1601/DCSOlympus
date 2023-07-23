@@ -94,6 +94,7 @@ void Server::handle_get(http_request request)
             if (path.size() > 0)
             {
                 string URI = to_string(path[0]);
+                /* Units data. This is the only binary format data transmitted, all others are transmitted as text json for simplicity */
                 if (URI.compare(UNITS_URI) == 0)
                 {
                     unsigned long long updateTime = ms.count();
@@ -103,39 +104,36 @@ void Server::handle_get(http_request request)
                     response.set_body(concurrency::streams::bytestream::open_istream(ss.str()));
                 }
                 else {
+                    /* Logs data*/
                     if (URI.compare(LOGS_URI) == 0)
                     {
                         auto logs = json::value::object();
                         getLogsJSON(logs, time);   
                         answer[L"logs"] = logs;
                     }
+                    /* Airbases data */
                     else if (URI.compare(AIRBASES_URI) == 0 && missionData.has_object_field(L"airbases")) 
                         answer[L"airbases"] = missionData[L"airbases"];
+                    /* Bullseyes data */
                     else if (URI.compare(BULLSEYE_URI) == 0 && missionData.has_object_field(L"bullseyes")) 
                         answer[L"bullseyes"] = missionData[L"bullseyes"];
+                    /* Mission data */
                     else if (URI.compare(MISSION_URI) == 0 && missionData.has_object_field(L"mission")) {
                         answer[L"mission"] = missionData[L"mission"];
-                        answer[L"mission"][L"RTSOptions"] = json::value::object();
-                        if (password.compare(gameMasterPassword) == 0)
-                            answer[L"mission"][L"RTSOptions"][L"commandMode"] = json::value(L"Game master");
-                        else if (password.compare(blueCommanderPassword) == 0) 
-                            answer[L"mission"][L"RTSOptions"][L"commandMode"] = json::value(L"Blue commander");
-                        else if (password.compare(redCommanderPassword) == 0)
-                            answer[L"mission"][L"RTSOptions"][L"commandMode"] = json::value(L"Red commander");
+                        answer[L"mission"][L"commandModeOptions"] = scheduler->getCommandModeOptions();
 
-                        answer[L"mission"][L"RTSOptions"][L"restrictSpawns"] = json::value(scheduler->getRestrictSpawns());
-                        answer[L"mission"][L"RTSOptions"][L"restrictToCoalition"] = json::value(scheduler->getRestrictToCoalition());
-                        answer[L"mission"][L"RTSOptions"][L"setupTime"] = json::value(scheduler->getSetupTime());
-                        answer[L"mission"][L"RTSOptions"][L"spawnPoints"] = json::value::object();
-                        answer[L"mission"][L"RTSOptions"][L"spawnPoints"][L"blue"] = json::value(scheduler->getBlueSpawnPoints());
-                        answer[L"mission"][L"RTSOptions"][L"spawnPoints"][L"red"] = json::value(scheduler->getRedSpawnPoints());
-                        
-                        int idx = 0;
-                        answer[L"mission"][L"RTSOptions"][L"eras"] = json::value::array();
-                        for (string era : scheduler->getEras())
-                            answer[L"mission"][L"RTSOptions"][L"eras"].as_array()[idx++] = json::value(to_wstring(era));
+                        /* The active mode is determined by the inserted password*/
+                        if (password.compare(gameMasterPassword) == 0)
+                            answer[L"mission"][L"commandModeOptions"][L"commandMode"] = json::value(L"Game master");
+                        else if (password.compare(blueCommanderPassword) == 0) 
+                            answer[L"mission"][L"commandModeOptions"][L"commandMode"] = json::value(L"Blue commander");
+                        else if (password.compare(redCommanderPassword) == 0)
+                            answer[L"mission"][L"commandModeOptions"][L"commandMode"] = json::value(L"Red commander");   
+                        else 
+                            answer[L"mission"][L"commandModeOptions"][L"commandMode"] = json::value(L"Observer");
                     }
                     
+                    /* Common data */
                     answer[L"time"] = json::value::string(to_wstring(ms.count()));
                     answer[L"sessionHash"] = json::value::string(to_wstring(sessionHash));
                     answer[L"load"] = scheduler->getLoad();
@@ -199,9 +197,10 @@ void Server::handle_request(http_request request, function<void(json::value cons
 
 void Server::handle_put(http_request request)
 {
+    string username = extractUsername(request);
     handle_request(
     request,
-    [](json::value const& jvalue, json::value& answer)
+    [username](json::value const& jvalue, json::value& answer)
     {
         /* Lock for thread safety */
         lock_guard<mutex> guard(mutexLock);
@@ -210,9 +209,10 @@ void Server::handle_put(http_request request)
         {
             auto key = e.first;
             auto value = e.second;
+            
             std::exception_ptr eptr;
             try {
-                scheduler->handleRequest(to_string(key), value);
+                scheduler->handleRequest(to_string(key), value, username);
             }
             catch (...) {
                 eptr = std::current_exception(); // capture
@@ -220,6 +220,30 @@ void Server::handle_put(http_request request)
             handle_eptr(eptr);
         }
     });    
+}
+
+string Server::extractUsername(http_request& request) {
+    if (request.headers().has(L"Authorization")) {
+        string authorization = to_string(request.headers().find(L"Authorization")->second);
+        string s = "Basic ";
+        string::size_type i = authorization.find(s);
+
+        if (i != std::string::npos)
+            authorization.erase(i, s.length());
+        else
+            return "";
+
+        string decoded = from_base64(authorization);
+        i = decoded.find(":");
+        if (i != string::npos && i <= decoded.length())
+            decoded.erase(i, decoded.length() - i);
+        else
+            return "";
+
+        return decoded;
+    }
+    else
+        return "";
 }
 
 string Server::extractPassword(http_request& request) {

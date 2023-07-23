@@ -169,7 +169,7 @@ export class MapContextMenu extends ContextMenu {
             }
         });
 
-        document.addEventListener("RTSOptionsChanged", (e: any) => {
+        document.addEventListener("commandModeOptionsChanged", (e: any) => {
             this.#refreshOptions();
         });
 
@@ -193,7 +193,7 @@ export class MapContextMenu extends ContextMenu {
         else
             this.#coalitionSwitch.setValue(undefined);
 
-        if (getUnitsManager().getCommandMode() !== GAME_MASTER)
+        if (getMissionHandler().getCommandModeOptions().commandMode !== GAME_MASTER)
             this.#coalitionSwitch.hide()
 
         this.getContainer()?.querySelector("#coalition-area-button")?.classList.toggle("hide", true);
@@ -562,26 +562,26 @@ export class MapContextMenu extends ContextMenu {
     }
 
     #computeSpawnPoints() {
-        if (getMissionHandler() && getUnitsManager().getCommandMode() !== GAME_MASTER){
+        if (getMissionHandler() && getMissionHandler().getCommandModeOptions().commandMode !== GAME_MASTER){
             var aircraftCount = parseInt(this.#aircraftCountDropdown.getValue());
             var aircraftSpawnPoints = aircraftCount * aircraftDatabase.getSpawnPointsByLabel(this.#aircraftLabelDropdown.getValue());
             (<HTMLButtonElement>this.getContainer()?.querySelector("#aircraft-spawn-menu")?.querySelector(".deploy-unit-button")).dataset.points = `${aircraftSpawnPoints}`;
-            (<HTMLButtonElement>this.getContainer()?.querySelector("#aircraft-spawn-menu")?.querySelector(".deploy-unit-button")).disabled = aircraftSpawnPoints > getMissionHandler().getAvailableSpawnPoints();
+            (<HTMLButtonElement>this.getContainer()?.querySelector("#aircraft-spawn-menu")?.querySelector(".deploy-unit-button")).disabled = aircraftSpawnPoints >= getMissionHandler().getAvailableSpawnPoints();
         
             var helicopterCount = parseInt(this.#helicopterCountDropdown.getValue());
             var helicopterSpawnPoints = helicopterCount * helicopterDatabase.getSpawnPointsByLabel(this.#helicopterLabelDropdown.getValue());
             (<HTMLButtonElement>this.getContainer()?.querySelector("#helicopter-spawn-menu")?.querySelector(".deploy-unit-button")).dataset.points = `${helicopterSpawnPoints}`;
-            (<HTMLButtonElement>this.getContainer()?.querySelector("#helicopter-spawn-menu")?.querySelector(".deploy-unit-button")).disabled = helicopterSpawnPoints > getMissionHandler().getAvailableSpawnPoints();
+            (<HTMLButtonElement>this.getContainer()?.querySelector("#helicopter-spawn-menu")?.querySelector(".deploy-unit-button")).disabled = helicopterSpawnPoints >= getMissionHandler().getAvailableSpawnPoints();
 
             var groundUnitCount = parseInt(this.#groundUnitCountDropdown.getValue());
             var groundUnitSpawnPoints = groundUnitCount * groundUnitDatabase.getSpawnPointsByLabel(this.#groundUnitLabelDropdown.getValue());
             (<HTMLButtonElement>this.getContainer()?.querySelector("#groundunit-spawn-menu")?.querySelector(".deploy-unit-button")).dataset.points = `${groundUnitSpawnPoints}`;
-            (<HTMLButtonElement>this.getContainer()?.querySelector("#groundunit-spawn-menu")?.querySelector(".deploy-unit-button")).disabled = groundUnitSpawnPoints > getMissionHandler().getAvailableSpawnPoints();
+            (<HTMLButtonElement>this.getContainer()?.querySelector("#groundunit-spawn-menu")?.querySelector(".deploy-unit-button")).disabled = groundUnitSpawnPoints >= getMissionHandler().getAvailableSpawnPoints();
 
             var navyUnitCount = parseInt(this.#navyUnitCountDropdown.getValue());
             var navyUnitSpawnPoints = navyUnitCount * navyUnitDatabase.getSpawnPointsByLabel(this.#navyUnitLabelDropdown.getValue());
             (<HTMLButtonElement>this.getContainer()?.querySelector("#navyunit-spawn-menu")?.querySelector(".deploy-unit-button")).dataset.points = `${navyUnitSpawnPoints}`;
-            (<HTMLButtonElement>this.getContainer()?.querySelector("#navyunit-spawn-menu")?.querySelector(".deploy-unit-button")).disabled = navyUnitSpawnPoints > getMissionHandler().getAvailableSpawnPoints();
+            (<HTMLButtonElement>this.getContainer()?.querySelector("#navyunit-spawn-menu")?.querySelector(".deploy-unit-button")).disabled = navyUnitSpawnPoints >= getMissionHandler().getAvailableSpawnPoints();
         }
     }
 }

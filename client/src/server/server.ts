@@ -320,7 +320,7 @@ export function setAdvacedOptions(ID: number, isTanker: boolean, isAWACS: boolea
     POST(data, () => { });
 }
 
-export function setRTSOptions(restrictSpawns: boolean, restrictToCoalition: boolean, spawnPoints: {blue: number, red: number}, eras: string[], setupTime: number) {
+export function setCommandModeOptions(restrictSpawns: boolean, restrictToCoalition: boolean, spawnPoints: {blue: number, red: number}, eras: string[], setupTime: number) {
     var command = {
         "restrictSpawns": restrictSpawns,
         "restrictToCoalition": restrictToCoalition,
@@ -329,7 +329,7 @@ export function setRTSOptions(restrictSpawns: boolean, restrictToCoalition: bool
         "setupTime": setupTime
     };
 
-    var data = { "setRTSOptions": command };
+    var data = { "setCommandModeOptions": command };
     POST(data, () => { });
 }
 
@@ -351,7 +351,7 @@ export function startUpdate() {
         return data.time;
     });
     getLogs((data: any) => {
-        getLogPanel().appendLogs(Object.values(data.logs))
+        getLogPanel().appendLogs(data.logs)
         return data.time;
     });
     getUnits((buffer: ArrayBuffer) => {return getUnitsManager()?.update(buffer), true /* Does a full refresh */});
@@ -389,7 +389,7 @@ export function requestRefresh() {
             return data.time;
         });
 		getLogs((data: any) => {
-            getLogPanel().appendLogs(Object.values(data.logs))
+            getLogPanel().appendLogs(data.logs)
             return data.time;
         });
 

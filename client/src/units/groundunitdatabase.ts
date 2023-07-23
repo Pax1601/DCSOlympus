@@ -1,4 +1,4 @@
-import { getUnitsManager } from "..";
+import { getMissionHandler} from "..";
 import { GAME_MASTER } from "../constants/constants";
 import { UnitDatabase } from "./unitdatabase"
 
@@ -1463,7 +1463,7 @@ export class GroundUnitDatabase extends UnitDatabase {
     }
 
     getSpawnPointsByName(name: string) {
-        if (getUnitsManager().getCommandMode() == GAME_MASTER) 
+        if (getMissionHandler().getCommandModeOptions().commandMode == GAME_MASTER || !getMissionHandler().getCommandModeOptions().restrictSpawns) 
             return 0;
 
         const blueprint = this.getByName(name);

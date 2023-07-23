@@ -4,14 +4,14 @@
 
 #define LOGGER Logger::GetLogger()
 
-void log(const string& message)
+void log(const string& message, bool addToJSON)
 {
-	LOGGER->log(message);
+	LOGGER->log(message, addToJSON);
 }
 
-void log(const wstring& message)
+void log(const wstring& message, bool addToJSON)
 {
-	LOGGER->log(message);
+	LOGGER->log(message, addToJSON);
 }
 
 void getLogsJSON(json::value& json, unsigned long long time)

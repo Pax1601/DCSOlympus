@@ -67,6 +67,9 @@ extern "C" DllExport int coreFrame(lua_State* L)
     if (!initialized)
         return (0);
 
+    /* Lock for thread safety */
+    lock_guard<mutex> guard(mutexLock);
+
     frameCounter++;
 
     const std::chrono::duration<double> executionDuration = std::chrono::system_clock::now() - lastExecution;
@@ -91,9 +94,9 @@ extern "C" DllExport int coreUnitsData(lua_State * L)
         return (0);
 
     /* Lock for thread safety */
-    json::value unitsData = json::value::object();
-
     lock_guard<mutex> guard(mutexLock);
+
+    json::value unitsData = json::value::object();
     lua_getglobal(L, "Olympus");
     lua_getfield(L, -1, "unitsData");
     luaTableToJSON(L, -1, unitsData);
@@ -115,6 +118,7 @@ extern "C" DllExport int coreMissionData(lua_State * L)
 
     /* Lock for thread safety */
     lock_guard<mutex> guard(mutexLock);
+
     lua_getglobal(L, "Olympus");
     lua_getfield(L, -1, "missionData");
     luaTableToJSON(L, -1, missionData);

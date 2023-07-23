@@ -5,7 +5,7 @@ import { MapContextMenu } from "../controls/mapcontextmenu";
 import { UnitContextMenu } from "../controls/unitcontextmenu";
 import { AirbaseContextMenu } from "../controls/airbasecontextmenu";
 import { Dropdown } from "../controls/dropdown";
-import { Airbase } from "../missionhandler/airbase";
+import { Airbase } from "../mission/airbase";
 import { Unit } from "../units/unit";
 import { bearing, createCheckboxOption } from "../other/utils";
 import { DestinationPreviewMarker } from "./destinationpreviewmarker";

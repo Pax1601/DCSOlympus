@@ -24,6 +24,7 @@ private:
     void handle_request(http_request request, function<void(json::value const&, json::value&)> action);
     void handle_put(http_request request);
 
+    string extractUsername(http_request& request);
     string extractPassword(http_request& request);
 
     void task();

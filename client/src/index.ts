@@ -2,7 +2,7 @@ import { Map } from "./map/map"
 import { UnitsManager } from "./units/unitsmanager";
 import { UnitInfoPanel } from "./panels/unitinfopanel";
 import { ConnectionStatusPanel } from "./panels/connectionstatuspanel";
-import { MissionHandler } from "./missionhandler/missionhandler";
+import { MissionHandler } from "./mission/missionhandler";
 import { UnitControlPanel } from "./panels/unitcontrolpanel";
 import { MouseInfoPanel } from "./panels/mouseinfopanel";
 import { AIC } from "./aic/aic";
@@ -255,17 +255,17 @@ export function getHotgroupPanel() {
 }
 
 export function setActiveCoalition(newActiveCoalition: string) {
-    if (getUnitsManager().getCommandMode() == GAME_MASTER)
+    if (getMissionHandler().getCommandModeOptions().commandMode == GAME_MASTER)
         activeCoalition = newActiveCoalition;
 }
 
 export function getActiveCoalition() {
-    if (getUnitsManager().getCommandMode() == GAME_MASTER)
+    if (getMissionHandler().getCommandModeOptions().commandMode == GAME_MASTER)
         return activeCoalition;
     else {
-        if (getUnitsManager().getCommandMode() == BLUE_COMMANDER)
+        if (getMissionHandler().getCommandModeOptions().commandMode == BLUE_COMMANDER)
             return "blue";
-        else if (getUnitsManager().getCommandMode() == RED_COMMANDER)
+        else if (getMissionHandler().getCommandModeOptions().commandMode == RED_COMMANDER)
             return "red";
         else
             return "neutral";

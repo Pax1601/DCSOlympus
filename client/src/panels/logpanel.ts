@@ -4,6 +4,7 @@ export class LogPanel extends Panel {
     #open: boolean = false;
     #queuedMessages: number = 0;
     #scrolledDown: boolean = true;
+    #logs: {[key: string]: string} = {};
 
     constructor(ID: string) {
         super(ID);
@@ -26,8 +27,13 @@ export class LogPanel extends Panel {
         }
     }
 
-    appendLogs(logs: string[]) {
-        logs.forEach((log: string) => this.appendLog(log));
+    appendLogs(logs: {[key: string]: string}) {
+        Object.keys(logs).forEach((key: string) => {
+            if (!(key in this.#logs)) {
+                this.#logs[key] = logs[key];
+                this.appendLog(logs[key]);
+            }
+        });
     }
 
     appendLog(log: string) {

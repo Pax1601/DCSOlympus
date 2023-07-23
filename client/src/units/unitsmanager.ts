@@ -5,7 +5,7 @@ import { cloneUnit, deleteUnit, spawnAircrafts, spawnGroundUnits, spawnHelicopte
 import { bearingAndDistanceToLatLng, deg2rad, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots, polyContains, polygonArea, randomPointInPoly, randomUnitBlueprint } from "../other/utils";
 import { CoalitionArea } from "../map/coalitionarea";
 import { groundUnitDatabase } from "./groundunitdatabase";
-import { BLUE_COMMANDER, DataIndexes, GAME_MASTER, IADSDensities, IDLE, MOVE_UNIT, NONE, RED_COMMANDER } from "../constants/constants";
+import { DataIndexes, GAME_MASTER, IADSDensities, IDLE, MOVE_UNIT, NONE } from "../constants/constants";
 import { DataExtractor } from "./dataextractor";
 import { Contact } from "../@types/unit";
 import { citiesDatabase } from "./citiesdatabase";
@@ -19,7 +19,6 @@ export class UnitsManager {
     #selectionEventDisabled: boolean = false;
     #pasteDisabled: boolean = false;
     #hiddenTypes: string[] = [];
-    #commandMode: string = NONE;
     #requestDetectionUpdate: boolean = false;
 
     constructor() {
@@ -36,6 +35,7 @@ export class UnitsManager {
         document.addEventListener('exportToFile', () => this.exportToFile());
         document.addEventListener('importFromFile', () => this.importFromFile());
         document.addEventListener('contactsUpdated', (e: CustomEvent) => {this.#requestDetectionUpdate = true});
+        document.addEventListener("commandModeOptionsChanged", () => {Object.values(this.#units).forEach((unit: Unit) => unit.updateVisibility())});
     }
 
     getSelectableAircraft() {
@@ -96,7 +96,7 @@ export class UnitsManager {
             this.#units[ID]?.setData(dataExtractor);
         }
 
-        if (this.#requestDetectionUpdate && this.getCommandMode() != GAME_MASTER) {
+        if (this.#requestDetectionUpdate && getMissionHandler().getCommandModeOptions().commandMode != GAME_MASTER) {
             for (let ID in this.#units) {
                 var unit = this.#units[ID];
                 if (!unit.belongsToCommandedCoalition())
@@ -125,28 +125,6 @@ export class UnitsManager {
 
     getHiddenTypes() {
         return this.#hiddenTypes;
-    }
-
-    setCommandMode(newCommandMode: string) {
-        if (newCommandMode !== this.#commandMode) {
-            document.dispatchEvent(new CustomEvent("commandModeChanged", { detail: this }));
-            this.#commandMode = newCommandMode;
-            for (let ID in this.#units) 
-                this.#units[ID].updateVisibility();
-        }
-    }
-
-    getCommandMode() {
-        return this.#commandMode;
-    }
-
-    getCommandedCoalition() {
-        if (this.getCommandMode() === BLUE_COMMANDER)
-            return "blue";
-        else if (this.getCommandMode() === RED_COMMANDER)
-            return "red";
-        else
-            return "all";
     }
 
     selectUnit(ID: number, deselectAllUnits: boolean = true) {
@@ -573,7 +551,7 @@ export class UnitsManager {
     }
 
     pasteUnits() {
-        if (!this.#pasteDisabled && getUnitsManager().getCommandMode() == GAME_MASTER) {
+        if (!this.#pasteDisabled && getMissionHandler().getCommandModeOptions().commandMode == GAME_MASTER) {
             /* Compute the position of the center of the copied units */
             var nUnits = this.#copiedUnits.length;
             var avgLat = 0;
@@ -613,7 +591,7 @@ export class UnitsManager {
             getInfoPopup().setText(`${this.#copiedUnits.length - 1} units pasted`);
         }
         else {
-            getInfoPopup().setText(`Unit cloning is disabled in ${getUnitsManager().getCommandMode()} mode`);
+            getInfoPopup().setText(`Unit cloning is disabled in ${getMissionHandler().getCommandModeOptions().commandMode} mode`);
         }
     }
 
@@ -690,34 +668,35 @@ export class UnitsManager {
     spawnUnits(category: string, units: any, coalition: string = "blue", immediate: boolean = true, airbase: string = "") {
         var spawnPoints = 0;
         if (category === "Aircraft") {
-            if (airbase == "" && getMissionHandler().getRemainingSetupTime() < 0 && this.getCommandMode() !== GAME_MASTER) {
+            if (airbase == "" && getMissionHandler().getRemainingSetupTime() < 0 && getMissionHandler().getCommandModeOptions().commandMode !== GAME_MASTER) {
                 getInfoPopup().setText("Aircrafts can be air spawned during the SETUP phase only");
                 return false;
             }
             spawnPoints = units.reduce((points: number, unit: any) => {return points + aircraftDatabase.getSpawnPointsByName(unit.unitType)}, 0);
             spawnAircrafts(units, coalition, airbase, immediate, spawnPoints);
         } else if (category === "Helicopter") {
-            if (airbase == "" && getMissionHandler().getRemainingSetupTime() < 0 && this.getCommandMode() !== GAME_MASTER) {
+            if (airbase == "" && getMissionHandler().getRemainingSetupTime() < 0 && getMissionHandler().getCommandModeOptions().commandMode !== GAME_MASTER) {
                 getInfoPopup().setText("Helicopters can be air spawned during the SETUP phase only");
                 return false;
             }
             spawnPoints = units.reduce((points: number, unit: any) => {return points + helicopterDatabase.getSpawnPointsByName(unit.unitType)}, 0);
             spawnHelicopters(units, coalition, airbase, immediate, spawnPoints);
         } else if (category === "GroundUnit") {
-            if (getMissionHandler().getRemainingSetupTime() < 0 && this.getCommandMode() !== GAME_MASTER) {
+            if (getMissionHandler().getRemainingSetupTime() < 0 && getMissionHandler().getCommandModeOptions().commandMode !== GAME_MASTER) {
                 getInfoPopup().setText("Ground units can be spawned during the SETUP phase only");
                 return false;
             }
             spawnPoints = units.reduce((points: number, unit: any) => {return points + groundUnitDatabase.getSpawnPointsByName(unit.unitType)}, 0);
             spawnGroundUnits(units, coalition, immediate, spawnPoints);
         } else if (category === "NavyUnit") {
-            if (getMissionHandler().getRemainingSetupTime() < 0 && this.getCommandMode() !== GAME_MASTER) {
+            if (getMissionHandler().getRemainingSetupTime() < 0 && getMissionHandler().getCommandModeOptions().commandMode !== GAME_MASTER) {
                 getInfoPopup().setText("Navy units can be spawned during the SETUP phase only");
                 return false;
             }
             spawnPoints = units.reduce((points: number, unit: any) => {return points + navyUnitDatabase.getSpawnPointsByName(unit.unitType)}, 0);
             spawnNavyUnits(units, coalition, immediate, spawnPoints);
         }
+        
         if (spawnPoints <= getMissionHandler().getAvailableSpawnPoints()) {
             getMissionHandler().setSpentSpawnPoints(spawnPoints);
             return true;

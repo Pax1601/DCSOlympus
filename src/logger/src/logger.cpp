@@ -47,24 +47,26 @@ void Logger::toJSON(json::value& json, unsigned long long time)
     }
 }
 
-void Logger::log(const string& message)
+void Logger::log(const string& message, bool addToJSON)
 {
     lock_guard<mutex> guard(mutexLock);
     Open();
     milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
     m_Logfile << CurrentDateTime() << ":\t";
     m_Logfile << message << "\n";
-    m_logs[static_cast<unsigned long long>(ms.count())] = CurrentDateTime() + ": " + message;
+    if (addToJSON)
+        m_logs[static_cast<unsigned long long>(ms.count())] = message;
     Close();
 }
 
-void Logger::log(const wstring& message)
+void Logger::log(const wstring& message, bool addToJSON)
 {
     lock_guard<mutex> guard(mutexLock);
     Open();
     milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
     m_Logfile << CurrentDateTime() << ":\t";
     m_Logfile << to_string(message) << "\n";
-    m_logs[static_cast<unsigned long long>(ms.count())] = CurrentDateTime() + ": " + to_string(message);
+    if (addToJSON)
+        m_logs[static_cast<unsigned long long>(ms.count())] = to_string(message);
     Close();
 }

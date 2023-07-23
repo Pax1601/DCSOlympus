@@ -30,15 +30,15 @@ export class UnitDatabase {
     }
 
     getBlueprints() {
-        if (getUnitsManager().getCommandMode() == GAME_MASTER || !getMissionHandler().getRTSOptions().restrictSpawns)
+        if (getMissionHandler().getCommandModeOptions().commandMode == GAME_MASTER || !getMissionHandler().getCommandModeOptions().restrictSpawns)
             return this.blueprints;
         else {
             var filteredBlueprints: { [key: string]: UnitBlueprint } = {};
             for (let unit in this.blueprints) {
                 const blueprint = this.blueprints[unit];
-                if (this.getSpawnPointsByName(blueprint.name) < getMissionHandler().getAvailableSpawnPoints() && 
-                    getMissionHandler().getRTSOptions().eras.includes(blueprint.era) &&
-                    (!getMissionHandler().getRTSOptions().restrictToCoalition || blueprint.coalition === getUnitsManager().getCommandedCoalition())) {
+                if (this.getSpawnPointsByName(blueprint.name) <= getMissionHandler().getAvailableSpawnPoints() && 
+                    getMissionHandler().getCommandModeOptions().eras.includes(blueprint.era) &&
+                    (!getMissionHandler().getCommandModeOptions().restrictToCoalition || blueprint.coalition === getMissionHandler().getCommandedCoalition())) {
                     filteredBlueprints[unit] = blueprint;
                 }
             }

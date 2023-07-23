@@ -1,5 +1,5 @@
 import { Marker, LatLng, Polyline, Icon, DivIcon, CircleMarker, Map, Point } from 'leaflet';
-import { getMap, getUnitsManager } from '..';
+import { getMap, getMissionHandler, getUnitsManager } from '..';
 import { enumToCoalition, enumToEmissioNCountermeasure, getMarkerCategoryByName, enumToROE, enumToReactionToThreat, enumToState, getUnitDatabaseByCategory, mToFt, msToKnots, rad2deg, bearing, deg2rad } from '../other/utils';
 import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, landAt, setAltitude, setReactionToThreat, setROE, setSpeed, refuel, setAdvacedOptions, followUnit, setEmissionsCountermeasures, setSpeedType, setAltitudeType, setOnOff, setFollowRoads, bombPoint, carpetBomb, bombBuilding, fireAtArea } from '../server/server';
 import { CustomMarker } from '../map/custommarker';
@@ -336,7 +336,7 @@ export class Unit extends CustomMarker {
             }
 
             this.getElement()?.querySelector(`.unit`)?.toggleAttribute("data-is-selected", selected);
-            if (getMap().getZoom() < 13) {
+            if (this.getCategory() === "GroundUnit" && getMap().getZoom() < 13) {
                 if (this.#isLeader)
                     this.getGroupMembers().forEach((unit: Unit) => unit.setSelected(selected));
                 else
@@ -384,7 +384,7 @@ export class Unit extends CustomMarker {
     }
 
     belongsToCommandedCoalition() {
-        if (getUnitsManager().getCommandMode() !== GAME_MASTER && getUnitsManager().getCommandedCoalition() !== this.#coalition)
+        if (getMissionHandler().getCommandModeOptions().commandMode !== GAME_MASTER && getMissionHandler().getCommandedCoalition() !== this.#coalition)
             return false;
         return true;        
     }
@@ -1019,7 +1019,7 @@ export class Unit extends CustomMarker {
         }
         else if (this.#targetID != 0 && getMap().getVisibilityOptions()[SHOW_UNIT_TARGETS]) {
             const target = getUnitsManager().getUnitByID(this.#targetID);
-            if (target && (getUnitsManager().getCommandMode() == GAME_MASTER || (this.belongsToCommandedCoalition() && getUnitsManager().getUnitDetectedMethods(target).some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))))) {
+            if (target && (getMissionHandler().getCommandModeOptions().commandMode == GAME_MASTER || (this.belongsToCommandedCoalition() && getUnitsManager().getUnitDetectedMethods(target).some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))))) {
                 this.#drawTargetPosition(target.getPosition());
             }
         }

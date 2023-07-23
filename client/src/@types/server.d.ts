@@ -14,13 +14,13 @@ interface MissionData {
     mission: {
         theatre: string,
         dateAndTime: DateAndTime;
-        RTSOptions: RTSOptions;
+        commandModeOptions: CommandModeOptions;
     }
     time: number;
     sessionHash: string;
 }
 
-interface RTSOptions {
+interface CommandModeOptions {
     commandMode: string;
     restrictSpawns: boolean;
     restrictToCoalition: boolean;

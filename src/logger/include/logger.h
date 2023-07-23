@@ -5,8 +5,8 @@
 class Logger
 {
 public:
-    void log(const string& sMessage);
-    void log(const wstring& sMessage);
+    void log(const string& sMessage, bool addToJSON);
+    void log(const wstring& sMessage, bool addToJSON);
     void toJSON(json::value& json, unsigned long long time);
 
     static Logger* GetLogger();

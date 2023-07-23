@@ -390,7 +390,7 @@ class DemoDataGenerator {
             startTime: 0
         }
 
-        ret.mission.RTSOptions = {
+        ret.mission.commandModeOptions = {
             restrictSpawns: true,
             restrictToCoalition: true,
             setupTime: 0,
@@ -406,13 +406,13 @@ class DemoDataGenerator {
             var username = atob(auth.replace("Basic ", "")).split(":")[0];
             switch (username) {
                 case "admin":
-                    ret.mission.RTSOptions.commandMode = "Game master";
+                    ret.mission.commandModeOptions.commandMode = "Game master";
                     break
                 case "blue": 
-                    ret.mission.RTSOptions.commandMode = "Blue commander";
+                    ret.mission.commandModeOptions.commandMode = "Blue commander";
                     break;
                 case "red": 
-                    ret.mission.RTSOptions.commandMode = "Red commander";
+                    ret.mission.commandModeOptions.commandMode = "Red commander";
                     break;
             }
         }
