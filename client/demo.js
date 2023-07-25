@@ -391,7 +391,7 @@ class DemoDataGenerator {
         }
 
         ret.mission.commandModeOptions = {
-            restrictSpawns: true,
+            restrictSpawns: false,
             restrictToCoalition: true,
             setupTime: 0,
             spawnPoints: {

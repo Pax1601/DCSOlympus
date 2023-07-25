@@ -334,30 +334,64 @@ export function setCommandModeOptions(restrictSpawns: boolean, restrictToCoaliti
 }
 
 export function startUpdate() {
-    /* On the first connection, force request of full data */
-    getAirbases((data: AirbasesData) => {
-        checkSessionHash(data.sessionHash);
-        getMissionHandler()?.updateAirbases(data);
-        return data.time;
-    });
-    getBullseye((data: BullseyesData) => {
-        checkSessionHash(data.sessionHash);
-        getMissionHandler()?.updateBullseyes(data);
-        return data.time;
-    });
-    getMission((data: MissionData) => {
-        checkSessionHash(data.sessionHash);
-        getMissionHandler()?.updateMission(data);
-        return data.time;
-    });
-    getLogs((data: any) => {
-        getLogPanel().appendLogs(data.logs)
-        return data.time;
-    });
-    getUnits((buffer: ArrayBuffer) => {return getUnitsManager()?.update(buffer), true /* Does a full refresh */});
+    window.setInterval(() => {
+        if (!getPaused()) {
+            getAirbases((data: AirbasesData) => {
+                checkSessionHash(data.sessionHash);
+                getMissionHandler()?.updateAirbases(data);
+                return data.time;
+            });
+        }
+    }, 10000);
 
-    requestUpdate();
-    requestRefresh();
+    window.setInterval(() => {
+        if (!getPaused()){
+            getBullseye((data: BullseyesData) => {
+                checkSessionHash(data.sessionHash);
+                getMissionHandler()?.updateBullseyes(data);
+                return data.time;
+            });
+        }
+    }, 10000);
+
+    window.setInterval(() => {
+        if (!getPaused()) {
+            getMission((data: MissionData) => {
+                checkSessionHash(data.sessionHash);
+                getMissionHandler()?.updateMission(data);
+                return data.time;
+            });
+        }
+    }, 1000);
+
+    window.setInterval(() => {
+        if (!getPaused()) {
+            getLogs((data: any) => {
+                checkSessionHash(data.sessionHash);
+                getLogPanel().appendLogs(data.logs)
+                return data.time;
+            });
+        }
+    }, 1000);
+
+    window.setInterval(() => {
+        if (!getPaused()) {
+            getUnits((buffer: ArrayBuffer) => {
+                var time = getUnitsManager()?.update(buffer); 
+                return time;
+            }, false);
+        }
+    }, 250);
+
+    window.setInterval(() => {
+        if (!getPaused()) {
+            getUnits((buffer: ArrayBuffer) => {
+                var time = getUnitsManager()?.update(buffer); 
+                return time;
+            }, false);
+            getConnectionStatusPanel()?.update(getConnected());
+        }
+    }, 5000);
 }
 
 export function requestUpdate() {
@@ -365,38 +399,7 @@ export function requestUpdate() {
     if (!getPaused()) {
         getUnits((buffer: ArrayBuffer) => { return getUnitsManager()?.update(buffer); }, false);
     }
-    window.setTimeout(() => requestUpdate(), getConnected() ? 250 : 1000);
-
-    getConnectionStatusPanel()?.update(getConnected());
-}
-
-export function requestRefresh() {
-    /* Main refresh rate = 5000ms. */
-    if (!getPaused()) {
-        getAirbases((data: AirbasesData) => {
-            checkSessionHash(data.sessionHash);
-            getMissionHandler()?.updateAirbases(data);
-            return data.time;
-        });
-        getBullseye((data: BullseyesData) => {
-            checkSessionHash(data.sessionHash);
-            getMissionHandler()?.updateBullseyes(data);
-            return data.time;
-        });
-        getMission((data: MissionData) => {
-            checkSessionHash(data.sessionHash);
-            getMissionHandler()?.updateMission(data);
-            return data.time;
-        });
-		getLogs((data: any) => {
-            getLogPanel().appendLogs(data.logs)
-            return data.time;
-        });
-
-        // Update the list of existing units
-        getUnitDataTable()?.update();
-    }
-    window.setTimeout(() => requestRefresh(), 1000);
+    window.setTimeout(() => requestUpdate(), getConnected() ? 250 : 1000);    
 }
 
 export function checkSessionHash(newSessionHash: string) {

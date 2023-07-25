@@ -954,6 +954,11 @@ nav.ol-panel> :last-child {
     font-size: 10px; 
 }
 
+#command-mode-phase.no-restrictions::after {
+    content: "No spawn restrictions";
+    font-size: 10px; 
+}
+
 #command-mode-toolbar .ol-button {
     border: 1px solid white;
 }
@@ -1359,4 +1364,12 @@ input[type=number]::-webkit-outer-spin-button {
     height: 20px;
     width: 20px;
     fill: lightgray;
+}
+
+.ol-log-entry:first-of-type {
+    border-top: 1px solid #FFFFFF44;
+}
+
+.ol-log-entry {
+    border-bottom: 1px solid #FFFFFF44;
 }
