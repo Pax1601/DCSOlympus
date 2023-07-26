@@ -136,12 +136,27 @@ void Unit::runAILoop() {
 	Unit* leader = nullptr;
 	setIsLeader(unitsManager->isUnitGroupLeader(this, leader));
 
+	/* If the unit is alive, controlled, is the leader of the group and it is not a human, run the AI Loop that performs the requested commands and instructions (moving, attacking, etc) */
+	if (getAlive() && getControlled() && !getHuman() && getIsLeader()) {
+		if (checkTaskFailed() && state != State::IDLE && state != State::LAND)
+			setState(State::IDLE);
+		AIloop();
+	}
+
+	refreshLeaderData(lastLoopTime);
+
+	milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
+	lastLoopTime = ms.count();
+}
+
+void Unit::refreshLeaderData(unsigned long long time) {
 	/* When units are in a group, most data comes from the group leader. If new data is available, align it from the leader */
 	if (!getIsLeader()) {
+		Unit* leader = unitsManager->getGroupLeader(this);
 		if (leader != nullptr) {
 			for (unsigned char datumIndex = DataIndex::startOfData + 1; datumIndex < DataIndex::lastIndex; datumIndex++)
 			{
-				if (leader->checkFreshness(datumIndex, lastLoopTime)) {
+				if (leader->checkFreshness(datumIndex, time)) {
 					switch (datumIndex) {
 					case DataIndex::controlled:					updateValue(controlled, leader->controlled, datumIndex); break;
 					case DataIndex::state:						updateValue(state, leader->state, datumIndex); break;
@@ -171,18 +186,7 @@ void Unit::runAILoop() {
 			}
 		}
 	}
-
-	/* If the unit is alive, controlled, is the leader of the group and it is not a human, run the AI Loop that performs the requested commands and instructions (moving, attacking, etc) */
-	if (getAlive() && getControlled() && !getHuman() && getIsLeader()) {
-		if (checkTaskFailed() && state != State::IDLE && state != State::LAND)
-			setState(State::IDLE);
-		AIloop();
-	}
-
-	milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
-	lastLoopTime = ms.count();
 }
-
 
 bool Unit::checkFreshness(unsigned char datumIndex, unsigned long long time) {
 	auto it = updateTimeMap.find(datumIndex);
@@ -201,6 +205,10 @@ bool Unit::hasFreshData(unsigned long long time) {
 
 void Unit::getData(stringstream& ss, unsigned long long time)
 {
+	/* When an update is requested, make sure data is refreshed */
+	if (time == 0)
+		refreshLeaderData(0);
+
 	const unsigned char endOfData = DataIndex::endOfData;
 	ss.write((const char*)&ID, sizeof(ID));
 	for (unsigned char datumIndex = DataIndex::startOfData + 1; datumIndex < DataIndex::lastIndex; datumIndex++)

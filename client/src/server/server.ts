@@ -388,7 +388,7 @@ export function startUpdate() {
             getUnits((buffer: ArrayBuffer) => {
                 var time = getUnitsManager()?.update(buffer); 
                 return time;
-            }, false);
+            }, true);
             getConnectionStatusPanel()?.update(getConnected());
         }
     }, 5000);

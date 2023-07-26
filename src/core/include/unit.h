@@ -92,6 +92,7 @@ public:
 	void runAILoop();
 
 	void update(json::value json, double dt);
+	void refreshLeaderData(unsigned long long time);
 
 	unsigned int getID() { return ID; }
 	void getData(stringstream& ss, unsigned long long time);

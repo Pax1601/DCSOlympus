@@ -1,6 +1,6 @@
 local version = "v0.4.0-alpha"
 
-local debug = true
+local debug = false
 
 Olympus.unitCounter = 1
 Olympus.payloadRegistry = {}
@@ -14,6 +14,9 @@ Olympus.log = mist.Logger:new("Olympus", 'info')
 
 Olympus.missionData = {}
 Olympus.unitsData = {}
+Olympus.unitNames = {}
+
+Olympus.missionStartTime = DCS.getRealTime()
 
 function Olympus.debug(message, displayFor)
 	if debug == true then
@@ -781,7 +784,6 @@ function Olympus.setUnitsData(arg, time)
 								table["ammo"] = unit:getAmmo() --TODO remove a lot of stuff we don't really need
 								table["fuel"] = unit:getFuel()
 								table["life"] = unit:getLife() / unit:getLife0()
-								table["isAlive"] = (unit:getLife() > 1) and unit:isExist()
 								table["contacts"] = contacts
 								table["position"] = {}
 								table["position"]["lat"] = lat 
@@ -790,8 +792,10 @@ function Olympus.setUnitsData(arg, time)
 								table["speed"] = mist.vec.mag(unit:getVelocity())
 								table["heading"] = heading 
 								table["country"] = unit:getCountry()
-								
+								table["isAlive"] = (unit:getLife() > 1) and unit:isExist()
+
 								units[unit:getObjectID()] = table
+								Olympus.unitNames[unit:getObjectID()] = unit:getName() -- Used to find what units are dead, since they will not be in mist.DBs.groupsByName
 							end
 						end
 					end
@@ -806,6 +810,15 @@ function Olympus.setUnitsData(arg, time)
 		else
 			Olympus.groupIndex = endIndex
 		end
+	end
+
+	-- All the units that can't be retrieved by getByName are dead
+	for ID, name in pairs(Olympus.unitNames) do
+		local unit = Unit.getByName(name)
+		if unit == nil then
+			units[ID] = {isAlive = false}	
+			Olympus.unitNames[ID] = nil
+		end				
 	end
 
 	-- Assemble unitsData table
@@ -847,7 +860,7 @@ function Olympus.setMissionData(arg, time)
 	local mission = {}
 	mission.theatre = env.mission.theatre
 	mission.dateAndTime = {
-		["elapsedTime"] = DCS.getRealTime() - env.mission.start_time,
+		["elapsedTime"] = DCS.getRealTime() - Olympus.missionStartTime,
 		["time"] = mist.time.getDHMS(timer.getAbsTime()),
 		["startTime"] = env.mission.start_time,
 		["date"] = env.mission.date
