@@ -1,5 +1,5 @@
 import { LatLng } from 'leaflet';
-import { getConnectionStatusPanel, getInfoPopup, getLogPanel, getMissionHandler, getServerStatusPanel, getUnitDataTable, getUnitsManager, setLoginStatus } from '..';
+import { getConnectionStatusPanel, getInfoPopup, getLogPanel, getMissionHandler, getServerStatusPanel, getUnitsManager, getWeaponsManager, setLoginStatus } from '..';
 import { GeneralSettings, Radio, TACAN } from '../@types/unit';
 import { ROEs, emissionsCountermeasures, reactionsToThreat } from '../constants/constants';
 
@@ -9,6 +9,7 @@ var paused: boolean = false;
 var REST_ADDRESS = "http://localhost:30000/olympus";
 var DEMO_ADDRESS = window.location.href + "demo";
 const UNITS_URI = "units";
+const WEAPONS_URI = "weapons";
 const LOGS_URI = "logs";
 const AIRBASES_URI = "airbases";
 const BULLSEYE_URI = "bullseyes";
@@ -126,6 +127,10 @@ export function getMission(callback: CallableFunction) {
 
 export function getUnits(callback: CallableFunction, refresh: boolean = false) {
     GET(callback, UNITS_URI, { time: refresh ? 0 : lastUpdateTimes[UNITS_URI] }, 'arraybuffer');
+}
+
+export function getWeapons(callback: CallableFunction, refresh: boolean = false) {
+    GET(callback, WEAPONS_URI, { time: refresh ? 0 : lastUpdateTimes[WEAPONS_URI] }, 'arraybuffer');
 }
 
 export function addDestination(ID: number, path: any) {
@@ -385,6 +390,15 @@ export function startUpdate() {
 
     window.setInterval(() => {
         if (!getPaused()) {
+            getWeapons((buffer: ArrayBuffer) => {
+                var time = getWeaponsManager()?.update(buffer); 
+                return time;
+            }, false);
+        }
+    }, 250);
+
+    window.setInterval(() => {
+        if (!getPaused()) {
             getUnits((buffer: ArrayBuffer) => {
                 var time = getUnitsManager()?.update(buffer); 
                 return time;
@@ -392,14 +406,6 @@ export function startUpdate() {
             getConnectionStatusPanel()?.update(getConnected());
         }
     }, 5000);
-}
-
-export function requestUpdate() {
-    /* Main update rate = 250ms is minimum time, equal to server update time. */
-    if (!getPaused()) {
-        getUnits((buffer: ArrayBuffer) => { return getUnitsManager()?.update(buffer); }, false);
-    }
-    window.setTimeout(() => requestUpdate(), getConnected() ? 250 : 1000);    
 }
 
 export function checkSessionHash(newSessionHash: string) {

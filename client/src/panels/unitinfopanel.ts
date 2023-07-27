@@ -1,8 +1,8 @@
 import { getUnitsManager } from "..";
 import { Ammo } from "../@types/unit";
 import { ConvertDDToDMS, rad2deg } from "../other/utils";
-import { aircraftDatabase } from "../units/aircraftdatabase";
-import { Unit } from "../units/unit";
+import { aircraftDatabase } from "../unit/aircraftdatabase";
+import { Unit } from "../unit/unit";
 import { Panel } from "./panel";
 
 export class UnitInfoPanel extends Panel {

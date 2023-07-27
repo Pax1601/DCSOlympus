@@ -1,6 +1,6 @@
 import { getUnitsManager } from "..";
 import { Panel } from "../panels/panel";
-import { Unit } from "../units/unit";
+import { Unit } from "../unit/unit";
 
 export class UnitDataTable extends Panel {
     constructor(id: string) {

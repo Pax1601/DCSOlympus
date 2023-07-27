@@ -5,11 +5,11 @@ import { Bullseye } from "./bullseye";
 import { BLUE_COMMANDER, GAME_MASTER, RED_COMMANDER } from "../constants/constants";
 import { setCommandModeOptions } from "../server/server";
 import { Dropdown } from "../controls/dropdown";
-import { groundUnitDatabase } from "../units/groundunitdatabase";
+import { groundUnitDatabase } from "../unit/groundunitdatabase";
 import { createCheckboxOption, getCheckboxOptions } from "../other/utils";
-import { aircraftDatabase } from "../units/aircraftdatabase";
-import { helicopterDatabase } from "../units/helicopterdatabase";
-import { navyUnitDatabase } from "../units/navyunitdatabase";
+import { aircraftDatabase } from "../unit/aircraftdatabase";
+import { helicopterDatabase } from "../unit/helicopterdatabase";
+import { navyUnitDatabase } from "../unit/navyunitdatabase";
 
 export class MissionHandler {
     #bullseyes: { [name: string]: Bullseye } = {};

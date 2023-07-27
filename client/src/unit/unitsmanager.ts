@@ -6,9 +6,9 @@ import { bearingAndDistanceToLatLng, deg2rad, keyEventWasInInput, latLngToMercat
 import { CoalitionArea } from "../map/coalitionarea";
 import { groundUnitDatabase } from "./groundunitdatabase";
 import { DataIndexes, GAME_MASTER, IADSDensities, IDLE, MOVE_UNIT, NONE } from "../constants/constants";
-import { DataExtractor } from "./dataextractor";
+import { DataExtractor } from "../server/dataextractor";
 import { Contact } from "../@types/unit";
-import { citiesDatabase } from "./citiesdatabase";
+import { citiesDatabase } from "./citiesDatabase";
 import { aircraftDatabase } from "./aircraftdatabase";
 import { helicopterDatabase } from "./helicopterdatabase";
 import { navyUnitDatabase } from "./navyunitdatabase";
@@ -71,10 +71,6 @@ export class UnitsManager {
                 this.#units[ID] = new constructor(ID);
             }
         }
-    }
-
-    removeUnit(ID: number) {
-
     }
 
     update(buffer: ArrayBuffer) {

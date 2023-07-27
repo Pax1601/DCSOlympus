@@ -1,9 +1,9 @@
 import { LatLng, Point, Polygon } from "leaflet";
 import * as turf from "@turf/turf";
-import { UnitDatabase } from "../units/unitdatabase";
-import { aircraftDatabase } from "../units/aircraftdatabase";
-import { helicopterDatabase } from "../units/helicopterdatabase";
-import { groundUnitDatabase } from "../units/groundunitdatabase";
+import { UnitDatabase } from "../unit/unitdatabase";
+import { aircraftDatabase } from "../unit/aircraftdatabase";
+import { helicopterDatabase } from "../unit/helicopterdatabase";
+import { groundUnitDatabase } from "../unit/groundunitdatabase";
 import { Buffer } from "buffer";
 import { ROEs, emissionsCountermeasures, reactionsToThreat, states } from "../constants/constants";
 import { Dropdown } from "../controls/dropdown";

@@ -1,16 +1,16 @@
 import { LatLng } from "leaflet";
 import { getActiveCoalition, getMap, getMissionHandler, getUnitsManager, setActiveCoalition } from "..";
 import { spawnExplosion, spawnSmoke } from "../server/server";
-import { aircraftDatabase } from "../units/aircraftdatabase";
-import { groundUnitDatabase } from "../units/groundunitdatabase";
-import { helicopterDatabase } from "../units/helicopterdatabase";
+import { aircraftDatabase } from "../unit/aircraftdatabase";
+import { groundUnitDatabase } from "../unit/groundunitdatabase";
+import { helicopterDatabase } from "../unit/helicopterdatabase";
 import { ContextMenu } from "./contextmenu";
 import { Dropdown } from "./dropdown";
 import { Switch } from "./switch";
 import { Slider } from "./slider";
 import { ftToM } from "../other/utils";
 import { GAME_MASTER } from "../constants/constants";
-import { navyUnitDatabase } from "../units/navyunitdatabase";
+import { navyUnitDatabase } from "../unit/navyunitdatabase";
 import { CoalitionArea } from "../map/coalitionarea";
 
 export class MapContextMenu extends ContextMenu {

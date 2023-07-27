@@ -17,7 +17,7 @@ extern Scheduler* scheduler;
 
 UnitsManager::UnitsManager(lua_State* L)
 {
-	LogInfo(L, "Units Factory constructor called successfully");
+	LogInfo(L, "Units Manager constructor called successfully");
 }
 
 UnitsManager::~UnitsManager()

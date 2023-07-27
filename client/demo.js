@@ -33,22 +33,7 @@ const DEMO_UNIT_DATA = {
         ammo: [{ quantity: 2, name: "A cool missile", guidance: 0, category: 0, missileCategory: 0 } ],
         contacts: [{ID: 1, detectionMethod: 16}],
         activePath: [ ]
-    }, ["3"]:{ category: "Missile", alive: true, human: false, controlled: false, coalition: 1, country: 0, name: "", unitName: "Cool guy 1-3", groupName: "Cool group 3", state: 1, task: "Being cool",
-        hasTask: false, position: { lat: 37.1, lng: -116, alt: 1000 }, speed: 200, heading: 315 * Math.PI / 180, isTanker: false, isAWACS: false, onOff: true, followRoads: false, fuel: 50, 
-        desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
-        formationOffset: { x: 0, y: 0, z: 0 },
-        targetID: 0,
-        targetPosition: { lat: 0, lng: 0, alt: 0 },
-        ROE: 2,
-        reactionToThreat: 1,
-        emissionsCountermeasures: 1,
-        TACAN: { isOn: false, XY: 'Y', callsign: 'TKR', channel: 40 },
-        radio: { frequency: 124000000, callsign: 1, callsignNumber: 1 },
-        generalSettings: { prohibitAA: false, prohibitAfterburner: false, prohibitAG: false, prohibitAirWpn: false, prohibitJettison: false },
-        ammo: [{ quantity: 2, name: "A cool missile", guidance: 0, category: 0, missileCategory: 0 } ],
-        contacts: [{ID: 1, detectionMethod: 16}],
-        activePath: [ ]
-    }, ["4"]:{ category: "Helicopter", alive: true, human: false, controlled: false, coalition: 1, country: 0, name: "AH-64D_BLK_II", unitName: "Cool guy 1-4", groupName: "Cool group 3", state: 1, task: "Being cool",
+    }, ["3"]:{ category: "Helicopter", alive: true, human: false, controlled: false, coalition: 1, country: 0, name: "AH-64D_BLK_II", unitName: "Cool guy 1-4", groupName: "Cool group 3", state: 1, task: "Being cool",
         hasTask: false, position: { lat: 37.1, lng: -116.1, alt: 1000 }, speed: 200, heading: 315 * Math.PI / 180, isTanker: false, isAWACS: false, onOff: true, followRoads: false, fuel: 50, 
         desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
         formationOffset: { x: 0, y: 0, z: 0 },
@@ -63,7 +48,7 @@ const DEMO_UNIT_DATA = {
         ammo: [{ quantity: 2, name: "A cool missile", guidance: 0, category: 0, missileCategory: 0 } ],
         contacts: [{ID: 1, detectionMethod: 16}],
         activePath: [ ]
-    }, ["5"]:{ category: "GroundUnit", alive: true, human: false, controlled: true, coalition: 1, country: 0, name: "Gepard", unitName: "Cool guy 2-1", groupName: "Cool group 4", state: 1, task: "Being cool",
+    }, ["4"]:{ category: "GroundUnit", alive: true, human: false, controlled: true, coalition: 1, country: 0, name: "Gepard", unitName: "Cool guy 2-1", groupName: "Cool group 4", state: 1, task: "Being cool",
         hasTask: false, position: { lat: 37.2, lng: -116.1, alt: 1000 }, speed: 200, heading: 315 * Math.PI / 180, isTanker: false, isAWACS: false, onOff: true, followRoads: false, fuel: 50, 
         desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
         formationOffset: { x: 0, y: 0, z: 0 },
@@ -76,10 +61,10 @@ const DEMO_UNIT_DATA = {
         radio: { frequency: 124000000, callsign: 1, callsignNumber: 1 },
         generalSettings: { prohibitAA: false, prohibitAfterburner: false, prohibitAG: false, prohibitAirWpn: false, prohibitJettison: false },
         ammo: [{ quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 } ],
-        contacts: [{ID: 1, detectionMethod: 16}],
+        contacts: [{ID: 1001, detectionMethod: 16}],
         activePath: [ ],
         isLeader: true
-    }, ["6"]:{ category: "GroundUnit", alive: true, human: false, controlled: true, coalition: 1, country: 0, name: "Gepard", unitName: "Cool guy 2-2", groupName: "Cool group 4", state: 1, task: "Being cool",
+    }, ["5"]:{ category: "GroundUnit", alive: true, human: false, controlled: true, coalition: 1, country: 0, name: "Gepard", unitName: "Cool guy 2-2", groupName: "Cool group 4", state: 1, task: "Being cool",
         hasTask: false, position: { lat: 37.21, lng: -116.1, alt: 1000 }, speed: 200, heading: 315 * Math.PI / 180, isTanker: false, isAWACS: false, onOff: true, followRoads: false, fuel: 50, 
         desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
         formationOffset: { x: 0, y: 0, z: 0 },
@@ -92,16 +77,21 @@ const DEMO_UNIT_DATA = {
         radio: { frequency: 124000000, callsign: 1, callsignNumber: 1 },
         generalSettings: { prohibitAA: false, prohibitAfterburner: false, prohibitAG: false, prohibitAirWpn: false, prohibitJettison: false },
         ammo: [{ quantity: 2, name: "A cool missile", guidance: 0, category: 0, missileCategory: 0 } ],
-        contacts: [{ID: 1, detectionMethod: 16}],
+        contacts: [],
         activePath: [ ],
         isLeader: false
     }
+}
+
+const DEMO_WEAPONS_DATA = {
+    ["1001"]:{ category: "Missile", alive: true, coalition: 2, name: "", position: { lat: 37.1, lng: -116, alt: 1000 }, speed: 200, heading: 45 * Math.PI / 180 },
 }
 
 class DemoDataGenerator {
     constructor(app)
     { 
         app.get('/demo/units', (req, res) => this.units(req, res));
+        app.get('/demo/weapons', (req, res) => this.weapons(req, res));
         app.get('/demo/logs', (req, res) => this.logs(req, res));
         app.get('/demo/bullseyes', (req, res) => this.bullseyes(req, res));
         app.get('/demo/airbases', (req, res) => this.airbases(req, res));
@@ -163,6 +153,25 @@ class DemoDataGenerator {
             array = this.appendContacts(array, unit.contacts, 36);
             array = this.appendActivePath(array, unit.activePath, 37);
             array = this.appendUint8(array, unit.isLeader, 38);
+            array = this.concat(array, this.uint8ToByteArray(255));
+        }
+        res.end(Buffer.from(array, 'binary'));
+    };
+
+    weapons(req, res){
+        var array = new Uint8Array();
+        var time = Date.now();
+        array = this.concat(array, this.uint64ToByteArray(BigInt(time)));
+        for (let idx in DEMO_WEAPONS_DATA) {
+            const weapon = DEMO_WEAPONS_DATA[idx];
+            array = this.concat(array, this.uint32ToByteArray(idx));
+            array = this.appendString(array, weapon.category, 1);
+            array = this.appendUint8(array, weapon.alive, 2);
+            array = this.appendUint16(array, weapon.coalition, 5);
+            array = this.appendString(array, weapon.name, 7);
+            array = this.appendCoordinates(array, weapon.position, 13);
+            array = this.appendDouble(array, weapon.speed, 14);
+            array = this.appendDouble(array, weapon.heading, 15);
             array = this.concat(array, this.uint8ToByteArray(255));
         }
         res.end(Buffer.from(array, 'binary'));
