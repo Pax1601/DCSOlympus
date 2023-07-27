@@ -5,6 +5,7 @@
 #define REST_ADDRESS "http://localhost:30000"
 #define REST_URI "olympus"
 #define UNITS_URI "units"
+#define WEAPONS_URI "weapons"
 #define LOGS_URI "logs"
 #define AIRBASES_URI "airbases"
 #define BULLSEYE_URI "bullseyes"

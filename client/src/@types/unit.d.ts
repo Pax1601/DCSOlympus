@@ -1,6 +1,6 @@
 import { LatLng } from "leaflet"
 
-interface UnitIconOptions {
+interface ObjectIconOptions {
     showState: boolean,
     showVvi: boolean,
     showHotgroup: boolean,

@@ -1,6 +1,73 @@
 #pragma once
 #include "framework.h"
 
+
+namespace DataIndex {
+	enum DataIndexes {
+		startOfData = 0,
+		category,
+		alive,
+		human,
+		controlled,
+		coalition,
+		country,
+		name,
+		unitName,
+		groupName,
+		state,
+		task,
+		hasTask,
+		position,
+		speed,
+		heading,
+		isTanker,
+		isAWACS,
+		onOff,
+		followRoads,
+		fuel,
+		desiredSpeed,
+		desiredSpeedType,
+		desiredAltitude,
+		desiredAltitudeType,
+		leaderID,
+		formationOffset,
+		targetID,
+		targetPosition,
+		ROE,
+		reactionToThreat,
+		emissionsCountermeasures,
+		TACAN,
+		radio,
+		generalSettings,
+		ammo,
+		contacts,
+		activePath,
+		isLeader,
+		lastIndex,
+		endOfData = 255
+	};
+}
+
+namespace State
+{
+	enum States
+	{
+		NONE = 0,
+		IDLE,
+		REACH_DESTINATION,
+		ATTACK,
+		FOLLOW,
+		LAND,
+		REFUEL,
+		AWACS,
+		TANKER,
+		BOMB_POINT,
+		CARPET_BOMB,
+		BOMB_BUILDING,
+		FIRE_AT_AREA
+	};
+};
+
 #pragma pack(push, 1)
 namespace DataTypes {
 	struct TACAN

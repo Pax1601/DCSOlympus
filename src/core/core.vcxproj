@@ -47,6 +47,7 @@
     <ClInclude Include="include\unit.h" />
     <ClInclude Include="include\unitsmanager.h" />
     <ClInclude Include="include\weapon.h" />
+    <ClInclude Include="include\weaponsmanager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\aircraft.cpp" />
@@ -64,6 +65,7 @@
     <ClCompile Include="src\unit.cpp" />
     <ClCompile Include="src\unitsmanager.cpp" />
     <ClCompile Include="src\weapon.cpp" />
+    <ClCompile Include="src\weaponsmanager.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

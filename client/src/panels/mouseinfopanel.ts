@@ -1,7 +1,7 @@
 import { Icon, LatLng, Marker, Polyline } from "leaflet";
 import { getMap, getMissionHandler, getUnitsManager } from "..";
 import { distance, bearing, zeroAppend, mToNm, nmToFt } from "../other/utils";
-import { Unit } from "../units/unit";
+import { Unit } from "../unit/unit";
 import { Panel } from "./panel";
 import formatcoords from "formatcoords";
 

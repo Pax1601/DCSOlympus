@@ -2,6 +2,7 @@
 #include "logger.h"
 #include "defines.h"
 #include "unitsManager.h"
+#include "weaponsManager.h"
 #include "server.h"
 #include "scheduler.h"
 #include "scriptLoader.h"
@@ -9,11 +10,13 @@
 #include <chrono>
 using namespace std::chrono;
 
-auto lastUpdate = std::chrono::system_clock::now();
+auto lastUnitsUpdate = std::chrono::system_clock::now();
+auto lastWeaponsUpdate = std::chrono::system_clock::now();
 auto lastExecution = std::chrono::system_clock::now();
 
 /* Singleton objects */
 UnitsManager* unitsManager = nullptr;
+WeaponsManager* weaponsManager = nullptr;
 Server* server = nullptr;
 Scheduler* scheduler = nullptr;
 
@@ -38,6 +41,7 @@ extern "C" DllExport int coreDeinit(lua_State* L)
     server->stop(L);
 
     delete unitsManager;
+    delete weaponsManager;
     delete server;
     delete scheduler;
 
@@ -51,6 +55,7 @@ extern "C" DllExport int coreInit(lua_State* L)
 {
     sessionHash = random_string(16);
     unitsManager = new UnitsManager(L);
+    weaponsManager = new WeaponsManager(L);
     server = new Server(L);
     scheduler = new Scheduler(L);
 
@@ -101,15 +106,36 @@ extern "C" DllExport int coreUnitsData(lua_State * L)
     lua_getfield(L, -1, "unitsData");
     luaTableToJSON(L, -1, unitsData);
 
-    const std::chrono::duration<double> updateDuration = std::chrono::system_clock::now() - lastUpdate;
+    const std::chrono::duration<double> updateDuration = std::chrono::system_clock::now() - lastUnitsUpdate;
     if (unitsData.has_object_field(L"units")) {
         unitsManager->update(unitsData[L"units"], updateDuration.count());
     }
-    lastUpdate = std::chrono::system_clock::now();
+    lastUnitsUpdate = std::chrono::system_clock::now();
 
     return(0);
 }
 
+extern "C" DllExport int coreWeaponsData(lua_State * L)
+{
+    if (!initialized)
+        return (0);
+
+    /* Lock for thread safety */
+    lock_guard<mutex> guard(mutexLock);
+
+    json::value weaponsData = json::value::object();
+    lua_getglobal(L, "Olympus");
+    lua_getfield(L, -1, "weaponsData");
+    luaTableToJSON(L, -1, weaponsData);
+
+    const std::chrono::duration<double> updateDuration = std::chrono::system_clock::now() - lastWeaponsUpdate;
+    if (weaponsData.has_object_field(L"weapons")) {
+        weaponsManager->update(weaponsData[L"weapons"], updateDuration.count());
+    }
+    lastWeaponsUpdate = std::chrono::system_clock::now();
+
+    return(0);
+}
 
 extern "C" DllExport int coreMissionData(lua_State * L)
 {

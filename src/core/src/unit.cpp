@@ -72,7 +72,7 @@ void Unit::update(json::value json, double dt)
 	if (json.has_boolean_field(L"isAlive"))
 		setAlive(json[L"isAlive"].as_bool());
 
-	if (json.has_object_field(L"isHuman"))
+	if (json.has_boolean_field(L"isHuman"))
 		setHuman(json[L"isHuman"].as_bool());
 
 	if (json.has_number_field(L"fuel")) {
@@ -109,7 +109,7 @@ void Unit::update(json::value json, double dt)
 			contactItem.ID = contactJson[L"object"][L"id_"].as_number().to_uint32();
 
 			string detectionMethod = to_string(contactJson[L"detectionMethod"]);
-			if (detectionMethod.compare("VISUAL") == 0)	contactItem.detectionMethod = 1;
+			if (detectionMethod.compare("VISUAL") == 0)			contactItem.detectionMethod = 1;
 			else if (detectionMethod.compare("OPTIC") == 0)		contactItem.detectionMethod = 2;
 			else if (detectionMethod.compare("RADAR") == 0)		contactItem.detectionMethod = 4;
 			else if (detectionMethod.compare("IRST") == 0)		contactItem.detectionMethod = 8;

@@ -7,8 +7,8 @@ import { SVGInjector } from '@tanem/svg-injector';
 import { UnitDatabase } from './unitdatabase';
 import { TargetMarker } from '../map/targetmarker';
 import { BOMBING, CARPET_BOMBING, DLINK, DataIndexes, FIRE_AT_AREA, GAME_MASTER, HIDE_GROUP_MEMBERS, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, ROEs, RWR, SHOW_CONTACT_LINES, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, VISUAL, emissionsCountermeasures, reactionsToThreat, states } from '../constants/constants';
-import { Ammo, Contact, GeneralSettings, Offset, Radio, TACAN, UnitIconOptions } from '../@types/unit';
-import { DataExtractor } from './dataextractor';
+import { Ammo, Contact, GeneralSettings, Offset, Radio, TACAN, ObjectIconOptions } from '../@types/unit';
+import { DataExtractor } from '../server/dataextractor';
 import { groundUnitDatabase } from './groundunitdatabase';
 import { navyUnitDatabase } from './navyunitdatabase';
 
@@ -135,8 +135,6 @@ export class Unit extends CustomMarker {
         if (type === "GroundUnit") return GroundUnit;
         if (type === "Aircraft") return Aircraft;
         if (type === "Helicopter") return Helicopter;
-        if (type === "Missile") return Missile;
-        if (type === "Bomb") return Bomb;
         if (type === "NavyUnit") return NavyUnit;
     }
 
@@ -297,7 +295,7 @@ export class Unit extends CustomMarker {
         return getUnitDatabaseByCategory(this.getMarkerCategory());
     }
 
-    getIconOptions(): UnitIconOptions {
+    getIconOptions(): ObjectIconOptions {
         // Default values, overloaded by child classes if needed
         return {
             showState: false,
@@ -976,7 +974,7 @@ export class Unit extends CustomMarker {
         if (getMap().getVisibilityOptions()[SHOW_CONTACT_LINES]) {
             for (let index in this.#contacts) {
                 var contactData = this.#contacts[index];
-                var contact = getUnitsManager().getUnitByID(contactData.ID)
+                var contact = getUnitsManager().getUnitByID(contactData.ID);
                 if (contact != null && contact.getAlive()) {
                     var startLatLng = new LatLng(this.#position.lat, this.#position.lng);
                     var endLatLng: LatLng;
@@ -1147,76 +1145,5 @@ export class NavyUnit extends Unit {
     getType() {
         var blueprint = navyUnitDatabase.getByName(this.getName());
         return blueprint?.type? blueprint.type: "";
-    }
-}
-
-export class Weapon extends Unit {
-    constructor(ID: number) {
-        super(ID);
-        this.setSelectable(false);
-    }
-}
-
-export class Missile extends Weapon {
-    constructor(ID: number) {
-        super(ID);
-    }
-
-    getCategory() {
-        return "Missile";
-    }
-
-    getMarkerCategory() {
-        if (this.belongsToCommandedCoalition() || this.getDetectionMethods().includes(VISUAL) || this.getDetectionMethods().includes(OPTIC))
-            return "missile";
-        else
-            return "aircraft";
-    }
-
-    getIconOptions() {
-        return {
-            showState: false,
-            showVvi: (!this.belongsToCommandedCoalition() && !this.getDetectionMethods().some(value => [VISUAL, OPTIC].includes(value)) && this.getDetectionMethods().some(value => [RADAR, IRST, DLINK].includes(value))),
-            showHotgroup: false,
-            showUnitIcon: (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
-            showShortLabel: false,
-            showFuel: false,
-            showAmmo: false,
-            showSummary: (!this.belongsToCommandedCoalition() && !this.getDetectionMethods().some(value => [VISUAL, OPTIC].includes(value)) && this.getDetectionMethods().some(value => [RADAR, IRST, DLINK].includes(value))),
-            showCallsign: false,
-            rotateToHeading: this.belongsToCommandedCoalition() || this.getDetectionMethods().includes(VISUAL) || this.getDetectionMethods().includes(OPTIC)
-        };
-    }
-}
-
-export class Bomb extends Weapon {
-    constructor(ID: number) {
-        super(ID);
-    }
-
-    getCategory() {
-        return "Bomb";
-    }
-
-    getMarkerCategory() {
-        if (this.belongsToCommandedCoalition() || this.getDetectionMethods().includes(VISUAL) || this.getDetectionMethods().includes(OPTIC))
-            return "bomb";
-        else
-            return "aircraft";
-    }
-
-    getIconOptions() {
-        return {
-            showState: false,
-            showVvi: (!this.belongsToCommandedCoalition() && !this.getDetectionMethods().some(value => [VISUAL, OPTIC].includes(value)) && this.getDetectionMethods().some(value => [RADAR, IRST, DLINK].includes(value))),
-            showHotgroup: false,
-            showUnitIcon: (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
-            showShortLabel: false,
-            showFuel: false,
-            showAmmo: false,
-            showSummary: (!this.belongsToCommandedCoalition() && !this.getDetectionMethods().some(value => [VISUAL, OPTIC].includes(value)) && this.getDetectionMethods().some(value => [RADAR, IRST, DLINK].includes(value))),
-            showCallsign: false,
-            rotateToHeading: this.belongsToCommandedCoalition() || this.getDetectionMethods().includes(VISUAL) || this.getDetectionMethods().includes(OPTIC)
-        };
     }
 }

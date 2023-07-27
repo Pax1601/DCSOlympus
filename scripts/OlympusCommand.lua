@@ -1,20 +1,27 @@
-local version = "v0.4.0-alpha"
+local version = "v0.4.1-alpha"
 
-local debug = false
+local debug = true
 
-Olympus.unitCounter = 1
-Olympus.payloadRegistry = {}
-Olympus.groupIndex = 0
-Olympus.groupStep = 5
   
 Olympus.OlympusDLL = nil
 Olympus.DLLsloaded = false
 Olympus.OlympusModPath = os.getenv('DCSOLYMPUS_PATH')..'\\bin\\' 
 Olympus.log = mist.Logger:new("Olympus", 'info')
 
+Olympus.unitCounter = 1
+Olympus.payloadRegistry = {}
+
 Olympus.missionData = {}
 Olympus.unitsData = {}
-Olympus.unitNames = {}
+Olympus.weaponsData = {}
+
+Olympus.unitIndex = 0
+Olympus.unitStep = 50
+Olympus.units = {}
+
+Olympus.weaponIndex = 0
+Olympus.weaponStep = 50
+Olympus.weapons = {}
 
 Olympus.missionStartTime = DCS.getRealTime()
 
@@ -43,13 +50,7 @@ end
 
 -- Gets a unit class reference from a given ObjectID (the ID used by Olympus for unit referencing)
 function Olympus.getUnitByID(ID)
-	for name, table in pairs(mist.DBs.unitsByName) do
-		local unit = Unit.getByName(name)
-		if unit and unit["getObjectID"] and unit:getObjectID() == ID then
-			return unit
-		end
-	end
-	return nil
+	return Olympus.units[ID];
 end
 
 function Olympus.getCountryIDByCoalition(coalition)
@@ -651,6 +652,237 @@ function Olympus.setOnOff(groupName, onOff)
 	end
 end
 
+function Olympus.setUnitsData(arg, time)
+	-- Units data
+	local units = {}
+	
+	local startIndex = Olympus.unitIndex
+	local endIndex = startIndex + Olympus.unitStep
+	local index = 0
+	for ID, unit in pairs(Olympus.units) do
+		index = index + 1
+		if index > startIndex then
+			if unit ~= nil then
+				local table = {}
+				table["category"] = "None"
+				
+				-- Get the object category in Olympus name
+				local objectCategory = unit:getCategory()
+				if objectCategory == Object.Category.UNIT then
+					if unit:getDesc().category == Unit.Category.AIRPLANE then
+						table["category"] = "Aircraft"
+					elseif unit:getDesc().category == Unit.Category.HELICOPTER then
+						table["category"] = "Helicopter"
+					elseif unit:getDesc().category == Unit.Category.GROUND_UNIT then
+						table["category"] = "GroundUnit"
+					elseif unit:getDesc().category == Unit.Category.SHIP then
+						table["category"] = "NavyUnit"
+					end
+				else
+					units[ID] = {isAlive = false}
+					Olympus.units[ID] = nil
+				end
+
+				-- If the category is handled by Olympus, get the data
+				if table["category"] ~= "None" then
+					-- Compute unit position and heading
+					local lat, lng, alt = coord.LOtoLL(unit:getPoint())
+					local position = unit:getPosition()
+					local heading = math.atan2( position.x.z, position.x.x )
+
+					-- Fill the data table
+					table["name"] = unit:getTypeName()
+					table["coalitionID"] = unit:getCoalition()
+					table["position"] = {}
+					table["position"]["lat"] = lat 
+					table["position"]["lng"] = lng 
+					table["position"]["alt"] = alt
+					table["speed"] = mist.vec.mag(unit:getVelocity())
+					table["heading"] = heading 
+					table["isAlive"] = unit:isExist()
+					
+					-- Get the targets detected by the group controller
+					local group = unit:getGroup()
+					local controller = group:getController()
+					
+					local contacts = {}
+					for det, enum in pairs(Controller.Detection) do
+						local controllerTargets = unit:getController():getDetectedTargets(enum)
+						for i, target in ipairs(controllerTargets) do
+							if target.object ~= nil and target.visible then
+								target["detectionMethod"] = det
+								contacts[#contacts + 1] = target
+							end
+						end
+					end
+					
+					table["country"] = unit:getCountry()
+					table["unitName"] = unit:getName()
+					table["groupName"] = group:getName()
+					table["isHuman"] = (unit:getPlayerName() ~= nil)
+					table["hasTask"] = controller:hasTask()
+					table["ammo"] = unit:getAmmo() --TODO remove a lot of stuff we don't really need
+					table["fuel"] = unit:getFuel()
+					table["life"] = unit:getLife() / unit:getLife0()
+					table["contacts"] = contacts
+
+					units[ID] = table
+				end
+			else
+				units[ID] = {isAlive = false}
+				Olympus.units[ID] = nil
+			end
+		end
+		if index >= endIndex then
+			break
+		end
+	end
+	if index ~= endIndex then 
+		Olympus.unitIndex = 0
+	else
+		Olympus.unitIndex = endIndex
+	end
+	
+	-- Assemble unitsData table
+	Olympus.unitsData["units"] = units
+
+	Olympus.OlympusDLL.setUnitsData()
+	return time + 0.05
+end
+
+function Olympus.setWeaponsData(arg, time)
+	-- Weapons data
+	local weapons = {}
+	
+	local startIndex = Olympus.weaponIndex
+	local endIndex = startIndex + Olympus.weaponStep
+	local index = 0
+	for ID, weapon in pairs(Olympus.weapons) do
+		index = index + 1
+		if index > startIndex then
+			if weapon ~= nil then
+				local table = {}
+				table["category"] = "None"
+				
+				-- Get the object category in Olympus name
+				local objectCategory = weapon:getCategory()
+				if objectCategory == Object.Category.WEAPON then
+					if weapon:getDesc().category == Weapon.Category.MISSILE then
+						table["category"] = "Missile"
+					elseif weapon:getDesc().category == Weapon.Category.ROCKET then
+						table["category"] = "Missile"
+					elseif weapon:getDesc().category == Weapon.Category.BOMB then
+						table["category"] = "Bomb"
+					end
+				else
+					weapons[ID] = {isAlive = false}
+					Olympus.weapons[ID] = nil
+				end
+
+				-- If the category is handled by Olympus, get the data
+				if table["category"] ~= "None" then
+					-- Compute weapon position and heading
+					local lat, lng, alt = coord.LOtoLL(weapon:getPoint())
+					local position = weapon:getPosition()
+					local heading = math.atan2( position.x.z, position.x.x )
+
+					-- Fill the data table
+					table["name"] = weapon:getTypeName()
+					table["coalitionID"] = weapon:getCoalition()
+					table["position"] = {}
+					table["position"]["lat"] = lat 
+					table["position"]["lng"] = lng 
+					table["position"]["alt"] = alt
+					table["speed"] = mist.vec.mag(weapon:getVelocity())
+					table["heading"] = heading 
+					table["isAlive"] = weapon:isExist()
+					
+					weapons[ID] = table
+				end
+			else
+				weapons[ID] = {isAlive = false}
+				Olympus.weapons[ID] = nil
+			end
+		end
+		if index >= endIndex then
+			break
+		end
+	end
+	if index ~= endIndex then 
+		Olympus.weaponIndex = 0
+	else
+		Olympus.weaponIndex = endIndex
+	end
+	
+	-- Assemble weaponsData table
+	Olympus.weaponsData["weapons"] = weapons
+
+	Olympus.OlympusDLL.setWeaponsData()
+	return time + 0.25
+end
+
+function Olympus.setMissionData(arg, time)
+	-- Bullseye data
+	local bullseyes = {}
+	for i = 0, 2 do
+		local bullseyeVec3 = coalition.getMainRefPoint(i)
+		local bullseyeLatitude, bullseyeLongitude, bullseyeAltitude = coord.LOtoLL(bullseyeVec3)
+		bullseyes[i] = {}
+		bullseyes[i]["latitude"] = bullseyeLatitude
+		bullseyes[i]["longitude"] = bullseyeLongitude
+		bullseyes[i]["coalition"] = Olympus.getCoalitionByCoalitionID(i) 
+	end
+
+	-- Airbases data
+	local base = world.getAirbases()
+	local airbases = {}
+	for i = 1, #base do
+		local info = {}
+		local latitude, longitude, altitude = coord.LOtoLL(Airbase.getPoint(base[i]))
+		info["callsign"] = Airbase.getCallsign(base[i])
+		info["coalition"] = Olympus.getCoalitionByCoalitionID(Airbase.getCoalition(base[i])) 
+		info["latitude"] =  latitude
+		info["longitude"] =  longitude
+		if Airbase.getUnit(base[i]) then
+			info["unitId"] = Airbase.getUnit(base[i]):getID()
+		end
+		airbases[i] = info
+	end
+
+	-- Mission
+	local mission = {}
+	mission.theatre = env.mission.theatre
+	mission.dateAndTime = {
+		["elapsedTime"] = DCS.getRealTime() - Olympus.missionStartTime,
+		["time"] = mist.time.getDHMS(timer.getAbsTime()),
+		["startTime"] = env.mission.start_time,
+		["date"] = env.mission.date
+	}
+
+	-- Assemble table
+	Olympus.missionData["bullseyes"] = bullseyes
+	Olympus.missionData["airbases"] = airbases
+	Olympus.missionData["mission"] = mission
+
+	Olympus.OlympusDLL.setMissionData()
+	return time + 1
+end
+
+function Olympus.initializeUnits() 
+	if mist and mist.DBs and mist.DBs.MEunitsById then
+		for id, unitTable in pairs(mist.DBs.MEunitsById) do
+			local unit = Unit.getByName(unitTable["unitName"])
+			if unit then
+				Olympus.units[unit["id_"]] = unit
+			end
+		end
+		Olympus.notify("Olympus units table initialized", 2)
+	else
+		Olympus.debug("MIST DBs not ready", 2)
+		timer.scheduleFunction(Olympus.initializeUnits, {}, timer.getTime() + 1)
+	end
+end
+
 function Olympus.serializeTable(val, name, skipnewlines, depth)
     skipnewlines = skipnewlines or false
     depth = depth or 0
@@ -712,171 +944,10 @@ function Olympus.hasKey(tab, key)
     return false
 end
 
-function Olympus.setUnitsData(arg, time)
-	-- Units data
-	local units = {}
-	
-	local startIndex = Olympus.groupIndex
-	local endIndex = startIndex + Olympus.groupStep
-	local index = 0
-	if mist ~= nil and mist.DBs ~= nil and mist.DBs.groupsByName ~= nil then
-		for groupName, gp in pairs(mist.DBs.groupsByName) do
-			index = index + 1
-			if index > startIndex then
-				if groupName ~= nil then
-					local group = Group.getByName(groupName)
-					if group ~= nil then
-						-- Get the targets detected by the group controller
-						local controller = group:getController()
-						local controllerTargets = controller:getDetectedTargets()
-						local contacts = {}
-						for i, target in ipairs(controllerTargets) do
-							for det, enum in pairs(Controller.Detection) do
-								if target.object ~= nil then
-									target["detectionMethod"] = det
-									contacts[#contacts + 1] = target
-								end
-							end
-						end
-
-						-- Update the units position
-						for index, unit in pairs(group:getUnits()) do
-							local unitController = unit:getController()
-							local table = {}
-							table["category"] = "None"
-							
-							-- Get the object category in Olympus name
-							local objectCategory = unit:getCategory()
-							if objectCategory == Object.Category.UNIT then
-								if unit:getDesc().category == Unit.Category.AIRPLANE then
-									table["category"] = "Aircraft"
-								elseif unit:getDesc().category == Unit.Category.HELICOPTER then
-									table["category"] = "Helicopter"
-								elseif unit:getDesc().category == Unit.Category.GROUND_UNIT then
-									table["category"] = "GroundUnit"
-								elseif unit:getDesc().category == Unit.Category.SHIP then
-									table["category"] = "NavyUnit"
-								end
-							elseif objectCategory == Object.Category.WEAPON then
-								if unit:getDesc().category == Weapon.Category.MISSILE then
-									table["category"] = "Missile"
-								elseif unit:getDesc().category == Weapon.Category.ROCKET then
-										table["category"] = "Missile"
-								elseif unit:getDesc().category == Unit.Category.BOMB then
-									table["category"] = "Bomb"
-								end
-							end
-
-							-- If the category is handled by Olympus, get the data
-							if table["category"] ~= "None" then
-								-- Compute unit position and heading
-								local lat, lng, alt = coord.LOtoLL(unit:getPoint())
-								local position = unit:getPosition()
-								local heading = math.atan2( position.x.z, position.x.x )
-
-								-- Fill the data table
-								table["name"] = unit:getTypeName()
-								table["unitName"] = unit:getName()
-								table["groupName"] = group:getName()
-								table["isHuman"] = (unit:getPlayerName() ~= nil)
-								table["coalitionID"] = unit:getCoalition()
-								table["hasTask"] = controller:hasTask()
-								table["ammo"] = unit:getAmmo() --TODO remove a lot of stuff we don't really need
-								table["fuel"] = unit:getFuel()
-								table["life"] = unit:getLife() / unit:getLife0()
-								table["contacts"] = contacts
-								table["position"] = {}
-								table["position"]["lat"] = lat 
-								table["position"]["lng"] = lng 
-								table["position"]["alt"] = alt
-								table["speed"] = mist.vec.mag(unit:getVelocity())
-								table["heading"] = heading 
-								table["country"] = unit:getCountry()
-								table["isAlive"] = (unit:getLife() > 1) and unit:isExist()
-
-								units[unit:getObjectID()] = table
-								Olympus.unitNames[unit:getObjectID()] = unit:getName() -- Used to find what units are dead, since they will not be in mist.DBs.groupsByName
-							end
-						end
-					end
-				end
-			end
-			if index >= endIndex then
-				break
-			end
-		end
-		if index ~= endIndex then 
-			Olympus.groupIndex = 0
-		else
-			Olympus.groupIndex = endIndex
-		end
-	end
-
-	-- All the units that can't be retrieved by getByName are dead
-	for ID, name in pairs(Olympus.unitNames) do
-		local unit = Unit.getByName(name)
-		if unit == nil then
-			units[ID] = {isAlive = false}	
-			Olympus.unitNames[ID] = nil
-		end				
-	end
-
-	-- Assemble unitsData table
-	Olympus.unitsData["units"] = units
-
-	Olympus.OlympusDLL.setUnitsData()
-	return time + 0.05
-end
-
-function Olympus.setMissionData(arg, time)
-	-- Bullseye data
-	local bullseyes = {}
-	for i = 0, 2 do
-		local bullseyeVec3 = coalition.getMainRefPoint(i)
-		local bullseyeLatitude, bullseyeLongitude, bullseyeAltitude = coord.LOtoLL(bullseyeVec3)
-		bullseyes[i] = {}
-		bullseyes[i]["latitude"] = bullseyeLatitude
-		bullseyes[i]["longitude"] = bullseyeLongitude
-		bullseyes[i]["coalition"] = Olympus.getCoalitionByCoalitionID(i) 
-	end
-
-	-- Airbases data
-	local base = world.getAirbases()
-	local airbases = {}
-	for i = 1, #base do
-		local info = {}
-		local latitude, longitude, altitude = coord.LOtoLL(Airbase.getPoint(base[i]))
-		info["callsign"] = Airbase.getCallsign(base[i])
-		info["coalition"] = Olympus.getCoalitionByCoalitionID(Airbase.getCoalition(base[i])) 
-		info["latitude"] =  latitude
-		info["longitude"] =  longitude
-		if Airbase.getUnit(base[i]) then
-			info["unitId"] = Airbase.getUnit(base[i]):getID()
-		end
-		airbases[i] = info
-	end
-
-	-- Mission
-	local mission = {}
-	mission.theatre = env.mission.theatre
-	mission.dateAndTime = {
-		["elapsedTime"] = DCS.getRealTime() - Olympus.missionStartTime,
-		["time"] = mist.time.getDHMS(timer.getAbsTime()),
-		["startTime"] = env.mission.start_time,
-		["date"] = env.mission.date
-	}
-
-	-- Assemble table
-	Olympus.missionData["bullseyes"] = bullseyes
-	Olympus.missionData["airbases"] = airbases
-	Olympus.missionData["mission"] = mission
-
-	Olympus.OlympusDLL.setMissionData()
-	return time + 1
-end
-
+------------------------------------------------------------------------------------------------------
+-- Olympus startup script
+------------------------------------------------------------------------------------------------------
 local OlympusName = 'Olympus ' .. version .. ' C++ module';
-isOlympusModuleInitialized=true;
 Olympus.DLLsloaded = Olympus.loadDLLs()
 if Olympus.DLLsloaded then
 	Olympus.notify(OlympusName..' successfully loaded.', 20)
@@ -884,7 +955,32 @@ else
 	Olympus.notify('Failed to load '..OlympusName, 20)
 end
 
+-- Create the handler to detect new units
+if handler ~= nil then
+	world.removeEventHandler(handler)
+	Olympus.debug("Olympus handler removed" , 2)
+end
+handler = {}
+function handler:onEvent(event)
+	if event.id == 1 then
+		local weapon = event.weapon
+		Olympus.weapons[weapon["id_"]] = weapon
+		Olympus.debug("New weapon created " .. weapon["id_"], 2)
+	elseif event.id == 15 then
+		local unit = event.initiator
+		Olympus.units[unit["id_"]] = unit
+		Olympus.debug("New unit created " .. unit["id_"], 2)
+	end
+end
+world.addEventHandler(handler)
+
+-- Start the periodic functions
 timer.scheduleFunction(Olympus.setUnitsData, {}, timer.getTime() + 0.05)
+timer.scheduleFunction(Olympus.setWeaponsData, {}, timer.getTime() + 0.25)
 timer.scheduleFunction(Olympus.setMissionData, {}, timer.getTime() + 1)
 
+-- Initialize the ME units
+Olympus.initializeUnits()
+
 Olympus.notify("OlympusCommand script " .. version .. " loaded successfully", 2, true)
+

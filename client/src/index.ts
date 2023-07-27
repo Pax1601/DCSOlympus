@@ -1,5 +1,5 @@
 import { Map } from "./map/map"
-import { UnitsManager } from "./units/unitsmanager";
+import { UnitsManager } from "./unit/unitsmanager";
 import { UnitInfoPanel } from "./panels/unitinfopanel";
 import { ConnectionStatusPanel } from "./panels/connectionstatuspanel";
 import { MissionHandler } from "./mission/missionhandler";
@@ -18,10 +18,12 @@ import { HotgroupPanel } from "./panels/hotgrouppanel";
 import { SVGInjector } from "@tanem/svg-injector";
 import { BLUE_COMMANDER, GAME_MASTER, RED_COMMANDER } from "./constants/constants";
 import { ServerStatusPanel } from "./panels/serverstatuspanel";
+import { WeaponsManager } from "./weapon/weaponsmanager";
 
 var map: Map;
 
 var unitsManager: UnitsManager;
+var weaponsManager: WeaponsManager;
 var missionHandler: MissionHandler;
 
 var aic: AIC;
@@ -48,6 +50,7 @@ function setup() {
 
     /* Initialize base functionalitites */
     unitsManager = new UnitsManager();
+    weaponsManager = new WeaponsManager();
     map = new Map('map-container');
     missionHandler = new MissionHandler();
 
@@ -221,6 +224,11 @@ export function getUnitDataTable() {
 export function getUnitsManager() {
     return unitsManager;
 }
+
+export function getWeaponsManager() {
+    return weaponsManager;
+}
+
 
 export function getMissionHandler() {
     return missionHandler;

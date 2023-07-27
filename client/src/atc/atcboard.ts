@@ -1,7 +1,7 @@
 import { Dropdown } from "../controls/dropdown";
 import { zeroAppend } from "../other/utils";
 import { ATC } from "./atc";
-import { Unit } from "../units/unit";
+import { Unit } from "../unit/unit";
 import { getMissionHandler, getUnitsManager } from "..";
 import Sortable from "sortablejs";
 import { FlightInterface } from "./atc";

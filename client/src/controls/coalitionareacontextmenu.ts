@@ -6,7 +6,7 @@ import { ContextMenu } from "./contextmenu";
 import { Dropdown } from "./dropdown";
 import { Slider } from "./slider";
 import { Switch } from "./switch";
-import { groundUnitDatabase } from "../units/groundunitdatabase";
+import { groundUnitDatabase } from "../unit/groundunitdatabase";
 import { createCheckboxOption, getCheckboxOptions } from "../other/utils";
 
 export class CoalitionAreaContextMenu extends ContextMenu {

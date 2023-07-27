@@ -2,6 +2,7 @@
 #include "logger.h"
 #include "defines.h"
 #include "unitsManager.h"
+#include "weaponsManager.h"
 #include "scheduler.h"
 #include "luatools.h"
 #include <exception>
@@ -13,6 +14,7 @@ using namespace std::chrono;
 using namespace base64;
 
 extern UnitsManager* unitsManager; 
+extern WeaponsManager* weaponsManager;
 extern Scheduler* scheduler;
 extern json::value missionData;
 extern mutex mutexLock;
@@ -94,7 +96,7 @@ void Server::handle_get(http_request request)
             if (path.size() > 0)
             {
                 string URI = to_string(path[0]);
-                /* Units data. This is the only binary format data transmitted, all others are transmitted as text json for simplicity */
+                /* Units data */
                 if (URI.compare(UNITS_URI) == 0)
                 {
                     unsigned long long updateTime = ms.count();
@@ -103,8 +105,16 @@ void Server::handle_get(http_request request)
                     unitsManager->getUnitData(ss, time);
                     response.set_body(concurrency::streams::bytestream::open_istream(ss.str()));
                 }
+                else if (URI.compare(WEAPONS_URI) == 0)
+                {
+                    unsigned long long updateTime = ms.count();
+                    stringstream ss;
+                    ss.write((char*)&updateTime, sizeof(updateTime));
+                    weaponsManager->getWeaponData(ss, time);
+                    response.set_body(concurrency::streams::bytestream::open_istream(ss.str()));
+                }
                 else {
-                    /* Logs data*/
+                    /* Logs data */
                     if (URI.compare(LOGS_URI) == 0)
                     {
                         auto logs = json::value::object();

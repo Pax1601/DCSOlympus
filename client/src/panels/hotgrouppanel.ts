@@ -1,5 +1,5 @@
 import { getUnitsManager } from "..";
-import { Unit } from "../units/unit";
+import { Unit } from "../unit/unit";
 import { Panel } from "./panel";
 
 export class HotgroupPanel extends Panel {
