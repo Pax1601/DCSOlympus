@@ -69,21 +69,21 @@ static int onSimulationStart(lua_State* L)
         goto error;
     }
 
-    coreUnitsData = (f_coreFrame)GetProcAddress(hGetProcIDDLL, "coreUnitsData");
+    coreUnitsData = (f_coreUnitsData)GetProcAddress(hGetProcIDDLL, "coreUnitsData");
     if (!coreUnitsData)
     {
         LogError(L, "Error getting coreUnitsData ProcAddress from DLL");
         goto error;
     }
 
-    coreWeaponsData = (f_coreFrame)GetProcAddress(hGetProcIDDLL, "coreWeaponsData");
+    coreWeaponsData = (f_coreWeaponsData)GetProcAddress(hGetProcIDDLL, "coreWeaponsData");
     if (!coreWeaponsData)
     {
         LogError(L, "Error getting coreWeaponsData ProcAddress from DLL");
         goto error;
     }
 
-    coreMissionData = (f_coreFrame)GetProcAddress(hGetProcIDDLL, "coreMissionData");
+    coreMissionData = (f_coreMissionData)GetProcAddress(hGetProcIDDLL, "coreMissionData");
     if (!coreMissionData)
     {
         LogError(L, "Error getting coreMissionData ProcAddress from DLL");

@@ -115,7 +115,7 @@ extern "C" DllExport int coreUnitsData(lua_State * L)
     return(0);
 }
 
-extern "C" DllExport int coreWeaponssData(lua_State * L)
+extern "C" DllExport int coreWeaponsData(lua_State * L)
 {
     if (!initialized)
         return (0);

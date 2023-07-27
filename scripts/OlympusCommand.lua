@@ -704,17 +704,18 @@ function Olympus.setUnitsData(arg, time)
 					-- Get the targets detected by the group controller
 					local group = unit:getGroup()
 					local controller = group:getController()
-					local controllerTargets = controller:getDetectedTargets()
+					
 					local contacts = {}
-					for i, target in ipairs(controllerTargets) do
-						for det, enum in pairs(Controller.Detection) do
-							if target.object ~= nil then
+					for det, enum in pairs(Controller.Detection) do
+						local controllerTargets = unit:getController():getDetectedTargets(enum)
+						for i, target in ipairs(controllerTargets) do
+							if target.object ~= nil and target.visible then
 								target["detectionMethod"] = det
 								contacts[#contacts + 1] = target
 							end
 						end
 					end
-
+					
 					table["country"] = unit:getCountry()
 					table["unitName"] = unit:getName()
 					table["groupName"] = group:getName()
@@ -756,7 +757,7 @@ function Olympus.setWeaponsData(arg, time)
 	local startIndex = Olympus.weaponIndex
 	local endIndex = startIndex + Olympus.weaponStep
 	local index = 0
-	for ID, unit in pairs(Olympus.weapons) do
+	for ID, weapon in pairs(Olympus.weapons) do
 		index = index + 1
 		if index > startIndex then
 			if weapon ~= nil then
@@ -817,7 +818,7 @@ function Olympus.setWeaponsData(arg, time)
 	Olympus.weaponsData["weapons"] = weapons
 
 	Olympus.OlympusDLL.setWeaponsData()
-	return time + 0.05
+	return time + 0.25
 end
 
 function Olympus.setMissionData(arg, time)
@@ -875,7 +876,7 @@ function Olympus.initializeUnits()
 				Olympus.units[unit["id_"]] = unit
 			end
 		end
-		Olympus.debug("Olympus units table initialized", 2)
+		Olympus.notify("Olympus units table initialized", 2)
 	else
 		Olympus.debug("MIST DBs not ready", 2)
 		timer.scheduleFunction(Olympus.initializeUnits, {}, timer.getTime() + 1)
@@ -946,7 +947,6 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Olympus startup script
 ------------------------------------------------------------------------------------------------------
-
 local OlympusName = 'Olympus ' .. version .. ' C++ module';
 Olympus.DLLsloaded = Olympus.loadDLLs()
 if Olympus.DLLsloaded then
@@ -962,7 +962,6 @@ if handler ~= nil then
 end
 handler = {}
 function handler:onEvent(event)
-	Olympus.debug(Olympus.serializeTable(event), 2)
 	if event.id == 1 then
 		local weapon = event.weapon
 		Olympus.weapons[weapon["id_"]] = weapon
@@ -977,6 +976,7 @@ world.addEventHandler(handler)
 
 -- Start the periodic functions
 timer.scheduleFunction(Olympus.setUnitsData, {}, timer.getTime() + 0.05)
+timer.scheduleFunction(Olympus.setWeaponsData, {}, timer.getTime() + 0.25)
 timer.scheduleFunction(Olympus.setMissionData, {}, timer.getTime() + 1)
 
 -- Initialize the ME units

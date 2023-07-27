@@ -110,10 +110,6 @@ void UnitsManager::update(json::value& json, double dt)
 					units[ID] = dynamic_cast<Unit*>(new GroundUnit(p.second, ID));
 				else if (category.compare("NavyUnit") == 0)
 					units[ID] = dynamic_cast<Unit*>(new NavyUnit(p.second, ID));
-				else if (category.compare("Missile") == 0)
-					units[ID] = dynamic_cast<Unit*>(new Missile(p.second, ID));
-				else if (category.compare("Bomb") == 0)
-					units[ID] = dynamic_cast<Unit*>(new Bomb(p.second, ID));
 
 				/* Initialize the unit if creation was successfull */
 				if (units.count(ID) != 0) {
