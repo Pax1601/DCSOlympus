@@ -95,7 +95,7 @@ export class UnitsManager {
         if (this.#requestDetectionUpdate && getMissionHandler().getCommandModeOptions().commandMode != GAME_MASTER) {
             for (let ID in this.#units) {
                 var unit = this.#units[ID];
-                if (!unit.belongsToCommandedCoalition())
+                if (unit.getAlive() && !unit.belongsToCommandedCoalition())
                     unit.setDetectionMethods(this.getUnitDetectedMethods(unit));
             }
             this.#requestDetectionUpdate = false;
@@ -651,7 +651,8 @@ export class UnitsManager {
                 var groups = JSON.parse(contents);
                 for (let groupName in groups) {
                     if (groupName !== "" && groups[groupName].length > 0 && groups[groupName].every((unit: any) => {return unit.category == "GroundUnit";})) {
-                        var units = groups[groupName].map((unit: any) => {return {unitType: unit.name, location: unit.position}});
+                        var aliveUnits = groups[groupName].filter((unit: any) => {return unit.alive});
+                        var units = aliveUnits.map((unit: any) => {return {unitType: unit.name, location: unit.position}});
                         getUnitsManager().spawnUnits("GroundUnit", units, groups[groupName][0].coalition, true);
                     }
                 }
@@ -714,9 +715,9 @@ export class UnitsManager {
 
     #onUnitSelection(unit: Unit) {
         if (this.getSelectedUnits().length > 0) {
-            getMap().setState(MOVE_UNIT);
             /* Disable the firing of the selection event for a certain amount of time. This avoids firing many events if many units are selected */
             if (!this.#selectionEventDisabled) {
+                getMap().setState(MOVE_UNIT);
                 window.setTimeout(() => {
                     document.dispatchEvent(new CustomEvent("unitsSelection", { detail: this.getSelectedUnits() }));
                     this.#selectionEventDisabled = false;

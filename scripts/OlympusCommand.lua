@@ -1,6 +1,6 @@
 local version = "v0.4.1-alpha"
 
-local debug = true
+local debug = false
 
   
 Olympus.OlympusDLL = nil
@@ -53,26 +53,33 @@ function Olympus.getUnitByID(ID)
 	return Olympus.units[ID];
 end
 
-function Olympus.getCountryIDByCoalition(coalition)
-	local countryID = 0
-	if coalition == 'red' then
-		countryID = country.id.CJTF_RED
-	elseif coalition == 'blue' then
-		countryID = country.id.CJTF_BLUE
-	else
-		countryID = country.id.UN_PEACEKEEPERS
+function Olympus.getCountryIDByCoalition(coalitionString)
+	for countryName, countryId in pairs(country.id) do
+		if coalition.getCountryCoalition(countryId) == Olympus.getCoalitionIDByCoalition(coalitionString) then
+			return countryId
+		end
 	end
-	return countryID
+	return 0
+end
+
+function Olympus.getCoalitionIDByCoalition(coalitionString)
+	local coalitionID = 0
+	if coalitionString == "red" then 
+		coalitionID = 1
+	elseif coalitionString == "blue" then
+		coalitionID = 2
+	end
+	return coalitionID
 end
 
 function Olympus.getCoalitionByCoalitionID(coalitionID)
-	local coalition = "neutral"
+	local coalitionString = "neutral"
 	if coalitionID == 1 then 
-		coalition = "red"
+		coalitionString = "red"
 	elseif coalitionID == 2 then
-		coalition = "blue"
+		coalitionString = "blue"
 	end
-	return coalition
+	return coalitionString
 end
 
 -- Builds a valid task depending on the provided options
@@ -569,10 +576,9 @@ function Olympus.clone(ID, lat, lng, category)
 	Olympus.debug("Olympus.clone " .. ID .. ", " .. category, 2)
 	local unit = Olympus.getUnitByID(ID)
 	if unit then
-		local coalition = Olympus.getCoalitionByCoalitionID(unit:getCoalition())
 		-- TODO: understand category in this script
 		local spawnTable = {
-			coalition = coalition,
+			coalition = Olympus.getCoalitionByCoalitionID(unit:getCoalition()),
 			category = category,
 			units = {
 				[1] = {
@@ -663,9 +669,7 @@ function Olympus.setUnitsData(arg, time)
 		index = index + 1
 		if index > startIndex then
 			if unit ~= nil then
-				local table = {}
-				table["category"] = "None"
-				
+				local table = {}		
 				-- Get the object category in Olympus name
 				local objectCategory = unit:getCategory()
 				if objectCategory == Object.Category.UNIT then
@@ -684,7 +688,7 @@ function Olympus.setUnitsData(arg, time)
 				end
 
 				-- If the category is handled by Olympus, get the data
-				if table["category"] ~= "None" then
+				if table["category"] ~= nil then
 					-- Compute unit position and heading
 					local lat, lng, alt = coord.LOtoLL(unit:getPoint())
 					local position = unit:getPosition()
@@ -699,34 +703,40 @@ function Olympus.setUnitsData(arg, time)
 					table["position"]["alt"] = alt
 					table["speed"] = mist.vec.mag(unit:getVelocity())
 					table["heading"] = heading 
-					table["isAlive"] = unit:isExist()
+					table["isAlive"] = unit:isExist() and unit:isActive() and unit:getLife() >= 1
 					
-					-- Get the targets detected by the group controller
 					local group = unit:getGroup()
-					local controller = group:getController()
-					
-					local contacts = {}
-					for det, enum in pairs(Controller.Detection) do
-						local controllerTargets = unit:getController():getDetectedTargets(enum)
-						for i, target in ipairs(controllerTargets) do
-							if target.object ~= nil and target.visible then
-								target["detectionMethod"] = det
-								contacts[#contacts + 1] = target
+					if group ~= nil then
+						local controller = group:getController()
+						if controller ~= nil then
+							-- Get the targets detected by the unit controller
+							local contacts = {}
+							local unitController = unit:getController()
+							if unitController ~= nil then
+								for det, enum in pairs(Controller.Detection) do
+									local controllerTargets = unitController:getDetectedTargets(enum)
+									for i, target in ipairs(controllerTargets) do
+										if target ~= nil and target.object ~= nil and target.visible then
+											target["detectionMethod"] = det
+											contacts[#contacts + 1] = target
+										end
+									end
+								end
 							end
+							
+							table["country"] = unit:getCountry()
+							table["unitName"] = unit:getName()
+							table["groupName"] = group:getName()
+							table["isHuman"] = (unit:getPlayerName() ~= nil)
+							table["hasTask"] = controller:hasTask()
+							table["ammo"] = unit:getAmmo() --TODO remove a lot of stuff we don't really need
+							table["fuel"] = unit:getFuel()
+							table["life"] = unit:getLife() / unit:getLife0()
+							table["contacts"] = contacts
+
+							units[ID] = table
 						end
 					end
-					
-					table["country"] = unit:getCountry()
-					table["unitName"] = unit:getName()
-					table["groupName"] = group:getName()
-					table["isHuman"] = (unit:getPlayerName() ~= nil)
-					table["hasTask"] = controller:hasTask()
-					table["ammo"] = unit:getAmmo() --TODO remove a lot of stuff we don't really need
-					table["fuel"] = unit:getFuel()
-					table["life"] = unit:getLife() / unit:getLife0()
-					table["contacts"] = contacts
-
-					units[ID] = table
 				end
 			else
 				units[ID] = {isAlive = false}
@@ -762,8 +772,7 @@ function Olympus.setWeaponsData(arg, time)
 		if index > startIndex then
 			if weapon ~= nil then
 				local table = {}
-				table["category"] = "None"
-				
+
 				-- Get the object category in Olympus name
 				local objectCategory = weapon:getCategory()
 				if objectCategory == Object.Category.WEAPON then
@@ -780,7 +789,7 @@ function Olympus.setWeaponsData(arg, time)
 				end
 
 				-- If the category is handled by Olympus, get the data
-				if table["category"] ~= "None" then
+				if table["category"] ~= nil then
 					-- Compute weapon position and heading
 					local lat, lng, alt = coord.LOtoLL(weapon:getPoint())
 					local position = weapon:getPosition()
@@ -964,12 +973,16 @@ handler = {}
 function handler:onEvent(event)
 	if event.id == 1 then
 		local weapon = event.weapon
-		Olympus.weapons[weapon["id_"]] = weapon
-		Olympus.debug("New weapon created " .. weapon["id_"], 2)
+		if Olympus ~= nil and Olympus.weapons ~= nil then
+			Olympus.weapons[weapon["id_"]] = weapon
+			Olympus.debug("New weapon created " .. weapon["id_"], 2)
+		end
 	elseif event.id == 15 then
 		local unit = event.initiator
-		Olympus.units[unit["id_"]] = unit
-		Olympus.debug("New unit created " .. unit["id_"], 2)
+		if Olympus ~= nil and Olympus.units ~= nil then
+			Olympus.units[unit["id_"]] = unit
+			Olympus.debug("New unit created " .. unit["id_"], 2)
+		end
 	end
 end
 world.addEventHandler(handler)

@@ -616,7 +616,7 @@ export class Map extends L.Map {
 
     #showDestinationCursors() {
         const singleCursor = !this.#shiftKey;
-        const selectedUnitsCount = getUnitsManager().getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true }).length;
+        const selectedUnitsCount = getUnitsManager().getSelectedUnits({ excludeHumans: false, onlyOnePerGroup: true }).length;
         if (selectedUnitsCount > 0) {
             if (singleCursor && this.#destinationPreviewCursors.length != 1) {
                 this.#hideDestinationCursors();

@@ -406,9 +406,11 @@ export class Unit extends CustomMarker {
         el.setAttribute("data-object", `unit-${this.getMarkerCategory()}`);
         el.setAttribute("data-coalition", this.#coalition);
 
+        var iconOptions = this.getIconOptions();
+
         // Generate and append elements depending on active options          
         // Velocity vector
-        if (this.getIconOptions().showVvi) {
+        if (iconOptions.showVvi) {
             var vvi = document.createElement("div");
             vvi.classList.add("unit-vvi");
             vvi.toggleAttribute("data-rotate-to-heading");
@@ -416,7 +418,7 @@ export class Unit extends CustomMarker {
         }
 
         // Hotgroup indicator
-        if (this.getIconOptions().showHotgroup) {
+        if (iconOptions.showHotgroup) {
             var hotgroup = document.createElement("div");
             hotgroup.classList.add("unit-hotgroup");
             var hotgroupId = document.createElement("div");
@@ -426,26 +428,26 @@ export class Unit extends CustomMarker {
         }
 
         // Main icon
-        if (this.getIconOptions().showUnitIcon) {
+        if (iconOptions.showUnitIcon) {
             var unitIcon = document.createElement("div");
             unitIcon.classList.add("unit-icon");
             var img = document.createElement("img");
             img.src = `/resources/theme/images/units/${this.getMarkerCategory()}.svg`;
             img.onload = () => SVGInjector(img);
             unitIcon.appendChild(img);
-            unitIcon.toggleAttribute("data-rotate-to-heading", this.getIconOptions().rotateToHeading);
+            unitIcon.toggleAttribute("data-rotate-to-heading", iconOptions.rotateToHeading);
             el.append(unitIcon);
         }
 
         // State icon
-        if (this.getIconOptions().showState) {
+        if (iconOptions.showState) {
             var state = document.createElement("div");
             state.classList.add("unit-state");
             el.appendChild(state);
         }
 
         // Short label
-        if (this.getIconOptions().showShortLabel) {
+        if (iconOptions.showShortLabel) {
             var shortLabel = document.createElement("div");
             shortLabel.classList.add("unit-short-label");
             shortLabel.innerText = getUnitDatabaseByCategory(this.getMarkerCategory())?.getByName(this.#name)?.shortLabel || "";
@@ -453,7 +455,7 @@ export class Unit extends CustomMarker {
         }
 
         // Fuel indicator
-        if (this.getIconOptions().showFuel) {
+        if (iconOptions.showFuel) {
             var fuelIndicator = document.createElement("div");
             fuelIndicator.classList.add("unit-fuel");
             var fuelLevel = document.createElement("div");
@@ -463,7 +465,7 @@ export class Unit extends CustomMarker {
         }
 
         // Ammo indicator
-        if (this.getIconOptions().showAmmo) {
+        if (iconOptions.showAmmo) {
             var ammoIndicator = document.createElement("div");
             ammoIndicator.classList.add("unit-ammo");
             for (let i = 0; i <= 3; i++)
@@ -472,7 +474,7 @@ export class Unit extends CustomMarker {
         }
 
         // Unit summary
-        if (this.getIconOptions().showSummary) {
+        if (iconOptions.showSummary) {
             var summary = document.createElement("div");
             summary.classList.add("unit-summary");
             var callsign = document.createElement("div");
@@ -482,7 +484,7 @@ export class Unit extends CustomMarker {
             altitude.classList.add("unit-altitude");
             var speed = document.createElement("div");
             speed.classList.add("unit-speed");
-            if (this.getIconOptions().showCallsign) summary.appendChild(callsign);
+            if (iconOptions.showCallsign) summary.appendChild(callsign);
             summary.appendChild(altitude);
             summary.appendChild(speed);
             el.appendChild(summary);
@@ -499,7 +501,7 @@ export class Unit extends CustomMarker {
                     (hiddenUnits.includes(this.getMarkerCategory())) ||
                     (hiddenUnits.includes(this.#coalition)) ||
                     (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0)  ||
-                    (getMap().getVisibilityOptions()[HIDE_GROUP_MEMBERS] && !this.#isLeader && this.getCategory() == "GroundUnit" && getMap().getZoom() < 13)) && 
+                    (getMap().getVisibilityOptions()[HIDE_GROUP_MEMBERS] && !this.#isLeader && this.getCategory() == "GroundUnit" && getMap().getZoom() < 13 && (this.belongsToCommandedCoalition() || (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0)))) && 
                     !(this.getSelected());
 
         this.setHidden(hidden || !this.#alive);

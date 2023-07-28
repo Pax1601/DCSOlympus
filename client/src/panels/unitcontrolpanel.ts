@@ -22,6 +22,8 @@ export class UnitControlPanel extends Panel {
     #radioCallsignDropdown: Dropdown;
     #optionButtons: { [key: string]: HTMLButtonElement[] } = {}
     #advancedSettingsDialog: HTMLElement;
+    #units: Unit[] = [];
+    #selectedUnitsTypes: string[] = [];
 
     constructor(ID: string) {
         super(ID);
@@ -96,9 +98,11 @@ export class UnitControlPanel extends Panel {
     }
 
     addButtons() {
-        var units = getUnitsManager().getSelectedUnits();
-        if (units.length < 20) {
-            this.getElement().querySelector("#selected-units-container")?.replaceChildren(...units.map((unit: Unit, index: number) => {
+        this.#units = getUnitsManager().getSelectedUnits();
+        this.#selectedUnitsTypes = getUnitsManager().getSelectedUnitsTypes();
+        
+        if (this.#units.length < 20) {
+            this.getElement().querySelector("#selected-units-container")?.replaceChildren(...this.#units.map((unit: Unit, index: number) => {
                 var button = document.createElement("button");
                 var callsign = unit.getUnitName() || "";
                 var label = unit.getDatabase()?.getByName(unit.getName())?.label || unit.getName();
@@ -125,37 +129,34 @@ export class UnitControlPanel extends Panel {
     update() {
         if (this.getVisible()){
             const element = this.getElement();
-            const units = getUnitsManager().getSelectedUnits();
-            const selectedUnitsTypes = getUnitsManager().getSelectedUnitsTypes();
-                
-            if (element != null && units.length > 0) {
+            if (element != null && this.#units.length > 0) {
                 /* Toggle visibility of control elements */
-                element.toggleAttribute("data-show-categories-tooltip", selectedUnitsTypes.length > 1);
-                element.toggleAttribute("data-show-speed-slider", selectedUnitsTypes.length == 1);
-                element.toggleAttribute("data-show-altitude-slider", selectedUnitsTypes.length == 1 && (selectedUnitsTypes.includes("Aircraft") || selectedUnitsTypes.includes("Helicopter")));
+                element.toggleAttribute("data-show-categories-tooltip", this.#selectedUnitsTypes.length > 1);
+                element.toggleAttribute("data-show-speed-slider", this.#selectedUnitsTypes.length == 1);
+                element.toggleAttribute("data-show-altitude-slider", this.#selectedUnitsTypes.length == 1 && (this.#selectedUnitsTypes.includes("Aircraft") || this.#selectedUnitsTypes.includes("Helicopter")));
                 element.toggleAttribute("data-show-roe", true);
-                element.toggleAttribute("data-show-threat", (selectedUnitsTypes.includes("Aircraft") || selectedUnitsTypes.includes("Helicopter")) && !(selectedUnitsTypes.includes("GroundUnit") || selectedUnitsTypes.includes("NavyUnit")));
-                element.toggleAttribute("data-show-emissions-countermeasures", (selectedUnitsTypes.includes("Aircraft") || selectedUnitsTypes.includes("Helicopter")) && !(selectedUnitsTypes.includes("GroundUnit") || selectedUnitsTypes.includes("NavyUnit")));
-                element.toggleAttribute("data-show-on-off", (selectedUnitsTypes.includes("GroundUnit") || selectedUnitsTypes.includes("NavyUnit")) && !(selectedUnitsTypes.includes("Aircraft") || selectedUnitsTypes.includes("Helicopter")));
-                element.toggleAttribute("data-show-follow-roads", (selectedUnitsTypes.length == 1 && selectedUnitsTypes.includes("GroundUnit")));
-                element.toggleAttribute("data-show-advanced-settings-button", units.length == 1);
+                element.toggleAttribute("data-show-threat", (this.#selectedUnitsTypes.includes("Aircraft") || this.#selectedUnitsTypes.includes("Helicopter")) && !(this.#selectedUnitsTypes.includes("GroundUnit") || this.#selectedUnitsTypes.includes("NavyUnit")));
+                element.toggleAttribute("data-show-emissions-countermeasures", (this.#selectedUnitsTypes.includes("Aircraft") || this.#selectedUnitsTypes.includes("Helicopter")) && !(this.#selectedUnitsTypes.includes("GroundUnit") || this.#selectedUnitsTypes.includes("NavyUnit")));
+                element.toggleAttribute("data-show-on-off", (this.#selectedUnitsTypes.includes("GroundUnit") || this.#selectedUnitsTypes.includes("NavyUnit")) && !(this.#selectedUnitsTypes.includes("Aircraft") || this.#selectedUnitsTypes.includes("Helicopter")));
+                element.toggleAttribute("data-show-follow-roads", (this.#selectedUnitsTypes.length == 1 && this.#selectedUnitsTypes.includes("GroundUnit")));
+                element.toggleAttribute("data-show-advanced-settings-button", this.#units.length == 1);
                 
-                /* Flight controls */
-                var desiredAltitude = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredAltitude()});
-                var desiredAltitudeType = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredAltitudeType()});
-                var desiredSpeed = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredSpeed()});
-                var desiredSpeedType = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredSpeedType()});
-                var onOff = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getOnOff()});
-                var followRoads = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getFollowRoads()});
-
-                if (selectedUnitsTypes.length == 1) {
+                if (this.#selectedUnitsTypes.length == 1) {
+                    /* Flight controls */
+                    var desiredAltitude = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredAltitude()});
+                    var desiredAltitudeType = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredAltitudeType()});
+                    var desiredSpeed = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredSpeed()});
+                    var desiredSpeedType = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredSpeedType()});
+                    var onOff = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getOnOff()});
+                    var followRoads = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getFollowRoads()});
+                    
                     this.#altitudeTypeSwitch.setValue(desiredAltitudeType != undefined? desiredAltitudeType == "AGL": undefined, false);
                     this.#speedTypeSwitch.setValue(desiredSpeedType != undefined? desiredSpeedType == "GS": undefined, false);
 
-                    this.#speedSlider.setMinMax(minSpeedValues[selectedUnitsTypes[0]], maxSpeedValues[selectedUnitsTypes[0]]);
-                    this.#altitudeSlider.setMinMax(minAltitudeValues[selectedUnitsTypes[0]], maxAltitudeValues[selectedUnitsTypes[0]]);
-                    this.#speedSlider.setIncrement(speedIncrements[selectedUnitsTypes[0]]);
-                    this.#altitudeSlider.setIncrement(altitudeIncrements[selectedUnitsTypes[0]]);
+                    this.#speedSlider.setMinMax(minSpeedValues[this.#selectedUnitsTypes[0]], maxSpeedValues[this.#selectedUnitsTypes[0]]);
+                    this.#altitudeSlider.setMinMax(minAltitudeValues[this.#selectedUnitsTypes[0]], maxAltitudeValues[this.#selectedUnitsTypes[0]]);
+                    this.#speedSlider.setIncrement(speedIncrements[this.#selectedUnitsTypes[0]]);
+                    this.#altitudeSlider.setIncrement(altitudeIncrements[this.#selectedUnitsTypes[0]]);
 
                     this.#speedSlider.setActive(desiredSpeed != undefined);
                     if (desiredSpeed != undefined)
@@ -172,15 +173,15 @@ export class UnitControlPanel extends Panel {
 
                 /* Option buttons */
                 this.#optionButtons["ROE"].forEach((button: HTMLButtonElement) => {
-                    button.classList.toggle("selected", units.every((unit: Unit) => unit.getROE() === button.value))
+                    button.classList.toggle("selected", this.#units.every((unit: Unit) => unit.getROE() === button.value))
                 });
 
                 this.#optionButtons["reactionToThreat"].forEach((button: HTMLButtonElement) => {
-                    button.classList.toggle("selected", units.every((unit: Unit) => unit.getReactionToThreat() === button.value))
+                    button.classList.toggle("selected", this.#units.every((unit: Unit) => unit.getReactionToThreat() === button.value))
                 });
 
                 this.#optionButtons["emissionsCountermeasures"].forEach((button: HTMLButtonElement) => {
-                    button.classList.toggle("selected", units.every((unit: Unit) => unit.getEmissionsCountermeasures() === button.value))
+                    button.classList.toggle("selected", this.#units.every((unit: Unit) => unit.getEmissionsCountermeasures() === button.value))
                 });
 
                 this.#onOffSwitch.setValue(onOff, false);

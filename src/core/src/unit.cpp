@@ -85,8 +85,9 @@ void Unit::update(json::value json, double dt)
 			DataTypes::Ammo ammoItem;
 			auto ammoJson = el.second;
 			ammoItem.quantity = ammoJson[L"count"].as_number().to_uint32();
-			string name = to_string(ammoJson[L"desc"][L"displayName"].as_string()).substr(0, sizeof(ammoItem.name) - 1);
-			strcpy_s(ammoItem.name, sizeof(ammoItem.name), name.c_str());
+			string name = to_string(ammoJson[L"desc"][L"displayName"].as_string());
+			name = name.substr(min(name.length(), sizeof(ammoItem.name) - 1));
+			strcpy_s(ammoItem.name, sizeof(ammoItem.name) - 1, name.c_str());
 
 			if (ammoJson[L"desc"].has_number_field(L"guidance"))
 				ammoItem.guidance = ammoJson[L"desc"][L"guidance"].as_number().to_uint32();
@@ -211,48 +212,53 @@ void Unit::getData(stringstream& ss, unsigned long long time)
 
 	const unsigned char endOfData = DataIndex::endOfData;
 	ss.write((const char*)&ID, sizeof(ID));
-	for (unsigned char datumIndex = DataIndex::startOfData + 1; datumIndex < DataIndex::lastIndex; datumIndex++)
-	{
-		if (checkFreshness(datumIndex, time)) {
-			switch (datumIndex) {
-			case DataIndex::category:					appendString(ss, datumIndex, category); break;
-			case DataIndex::alive:						appendNumeric(ss, datumIndex, alive); break;
-			case DataIndex::human:						appendNumeric(ss, datumIndex, human); break;
-			case DataIndex::controlled:					appendNumeric(ss, datumIndex, controlled); break;
-			case DataIndex::coalition:					appendNumeric(ss, datumIndex, coalition); break;
-			case DataIndex::country:					appendNumeric(ss, datumIndex, country); break;
-			case DataIndex::name:						appendString(ss, datumIndex, name); break;
-			case DataIndex::unitName:					appendString(ss, datumIndex, unitName); break;
-			case DataIndex::groupName:					appendString(ss, datumIndex, groupName); break;
-			case DataIndex::state:						appendNumeric(ss, datumIndex, state); break;
-			case DataIndex::task:						appendString(ss, datumIndex, task); break;
-			case DataIndex::hasTask:					appendNumeric(ss, datumIndex, hasTask); break;
-			case DataIndex::position:					appendNumeric(ss, datumIndex, position); break;
-			case DataIndex::speed:						appendNumeric(ss, datumIndex, speed); break;
-			case DataIndex::heading:					appendNumeric(ss, datumIndex, heading); break;
-			case DataIndex::isTanker:					appendNumeric(ss, datumIndex, isTanker); break;
-			case DataIndex::isAWACS:					appendNumeric(ss, datumIndex, isAWACS); break;
-			case DataIndex::onOff:						appendNumeric(ss, datumIndex, onOff); break;
-			case DataIndex::followRoads:				appendNumeric(ss, datumIndex, followRoads); break;
-			case DataIndex::fuel:						appendNumeric(ss, datumIndex, fuel); break;
-			case DataIndex::desiredSpeed:				appendNumeric(ss, datumIndex, desiredSpeed); break;
-			case DataIndex::desiredSpeedType:			appendNumeric(ss, datumIndex, desiredSpeedType); break;
-			case DataIndex::desiredAltitude:			appendNumeric(ss, datumIndex, desiredAltitude); break;
-			case DataIndex::desiredAltitudeType:		appendNumeric(ss, datumIndex, desiredAltitudeType); break;
-			case DataIndex::leaderID:					appendNumeric(ss, datumIndex, leaderID); break;
-			case DataIndex::formationOffset:			appendNumeric(ss, datumIndex, formationOffset); break;
-			case DataIndex::targetID:					appendNumeric(ss, datumIndex, targetID); break;
-			case DataIndex::targetPosition:				appendNumeric(ss, datumIndex, targetPosition); break;
-			case DataIndex::ROE:						appendNumeric(ss, datumIndex, ROE); break;
-			case DataIndex::reactionToThreat:			appendNumeric(ss, datumIndex, reactionToThreat); break;
-			case DataIndex::emissionsCountermeasures:	appendNumeric(ss, datumIndex, emissionsCountermeasures); break;
-			case DataIndex::TACAN:						appendNumeric(ss, datumIndex, TACAN); break;
-			case DataIndex::radio:						appendNumeric(ss, datumIndex, radio); break;
-			case DataIndex::generalSettings:			appendNumeric(ss, datumIndex, generalSettings); break;
-			case DataIndex::ammo:						appendVector(ss, datumIndex, ammo); break;
-			case DataIndex::contacts:					appendVector(ss, datumIndex, contacts); break;
-			case DataIndex::activePath:					appendList(ss, datumIndex, activePath); break;
-			case DataIndex::isLeader:					appendNumeric(ss, datumIndex, isLeader); break;
+	if (!alive) {
+		appendNumeric(ss, DataIndex::alive, alive);
+	}
+	else {
+		for (unsigned char datumIndex = DataIndex::startOfData + 1; datumIndex < DataIndex::lastIndex; datumIndex++)
+		{
+			if (checkFreshness(datumIndex, time)) {
+				switch (datumIndex) {
+				case DataIndex::category:					appendString(ss, datumIndex, category); break;
+				case DataIndex::alive:						appendNumeric(ss, datumIndex, alive); break;
+				case DataIndex::human:						appendNumeric(ss, datumIndex, human); break;
+				case DataIndex::controlled:					appendNumeric(ss, datumIndex, controlled); break;
+				case DataIndex::coalition:					appendNumeric(ss, datumIndex, coalition); break;
+				case DataIndex::country:					appendNumeric(ss, datumIndex, country); break;
+				case DataIndex::name:						appendString(ss, datumIndex, name); break;
+				case DataIndex::unitName:					appendString(ss, datumIndex, unitName); break;
+				case DataIndex::groupName:					appendString(ss, datumIndex, groupName); break;
+				case DataIndex::state:						appendNumeric(ss, datumIndex, state); break;
+				case DataIndex::task:						appendString(ss, datumIndex, task); break;
+				case DataIndex::hasTask:					appendNumeric(ss, datumIndex, hasTask); break;
+				case DataIndex::position:					appendNumeric(ss, datumIndex, position); break;
+				case DataIndex::speed:						appendNumeric(ss, datumIndex, speed); break;
+				case DataIndex::heading:					appendNumeric(ss, datumIndex, heading); break;
+				case DataIndex::isTanker:					appendNumeric(ss, datumIndex, isTanker); break;
+				case DataIndex::isAWACS:					appendNumeric(ss, datumIndex, isAWACS); break;
+				case DataIndex::onOff:						appendNumeric(ss, datumIndex, onOff); break;
+				case DataIndex::followRoads:				appendNumeric(ss, datumIndex, followRoads); break;
+				case DataIndex::fuel:						appendNumeric(ss, datumIndex, fuel); break;
+				case DataIndex::desiredSpeed:				appendNumeric(ss, datumIndex, desiredSpeed); break;
+				case DataIndex::desiredSpeedType:			appendNumeric(ss, datumIndex, desiredSpeedType); break;
+				case DataIndex::desiredAltitude:			appendNumeric(ss, datumIndex, desiredAltitude); break;
+				case DataIndex::desiredAltitudeType:		appendNumeric(ss, datumIndex, desiredAltitudeType); break;
+				case DataIndex::leaderID:					appendNumeric(ss, datumIndex, leaderID); break;
+				case DataIndex::formationOffset:			appendNumeric(ss, datumIndex, formationOffset); break;
+				case DataIndex::targetID:					appendNumeric(ss, datumIndex, targetID); break;
+				case DataIndex::targetPosition:				appendNumeric(ss, datumIndex, targetPosition); break;
+				case DataIndex::ROE:						appendNumeric(ss, datumIndex, ROE); break;
+				case DataIndex::reactionToThreat:			appendNumeric(ss, datumIndex, reactionToThreat); break;
+				case DataIndex::emissionsCountermeasures:	appendNumeric(ss, datumIndex, emissionsCountermeasures); break;
+				case DataIndex::TACAN:						appendNumeric(ss, datumIndex, TACAN); break;
+				case DataIndex::radio:						appendNumeric(ss, datumIndex, radio); break;
+				case DataIndex::generalSettings:			appendNumeric(ss, datumIndex, generalSettings); break;
+				case DataIndex::ammo:						appendVector(ss, datumIndex, ammo); break;
+				case DataIndex::contacts:					appendVector(ss, datumIndex, contacts); break;
+				case DataIndex::activePath:					appendList(ss, datumIndex, activePath); break;
+				case DataIndex::isLeader:					appendNumeric(ss, datumIndex, isLeader); break;
+				}
 			}
 		}
 	}

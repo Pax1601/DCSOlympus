@@ -1,7 +1,7 @@
 import { LatLng } from 'leaflet';
 import { getConnectionStatusPanel, getInfoPopup, getLogPanel, getMissionHandler, getServerStatusPanel, getUnitsManager, getWeaponsManager, setLoginStatus } from '..';
 import { GeneralSettings, Radio, TACAN } from '../@types/unit';
-import { ROEs, emissionsCountermeasures, reactionsToThreat } from '../constants/constants';
+import { NONE, ROEs, emissionsCountermeasures, reactionsToThreat } from '../constants/constants';
 
 var connected: boolean = false;
 var paused: boolean = false;
@@ -20,6 +20,13 @@ var password = "";
 
 var sessionHash: string | null = null;
 var lastUpdateTimes: {[key: string]: number} = {}
+lastUpdateTimes[UNITS_URI] = Date.now();
+lastUpdateTimes[WEAPONS_URI] = Date.now();
+lastUpdateTimes[LOGS_URI] = Date.now();
+lastUpdateTimes[AIRBASES_URI] = Date.now();
+lastUpdateTimes[BULLSEYE_URI] = Date.now();
+lastUpdateTimes[MISSION_URI] = Date.now();
+
 var demoEnabled = false;
 
 export function toggleDemoEnabled() {
@@ -341,26 +348,6 @@ export function setCommandModeOptions(restrictSpawns: boolean, restrictToCoaliti
 export function startUpdate() {
     window.setInterval(() => {
         if (!getPaused()) {
-            getAirbases((data: AirbasesData) => {
-                checkSessionHash(data.sessionHash);
-                getMissionHandler()?.updateAirbases(data);
-                return data.time;
-            });
-        }
-    }, 10000);
-
-    window.setInterval(() => {
-        if (!getPaused()){
-            getBullseye((data: BullseyesData) => {
-                checkSessionHash(data.sessionHash);
-                getMissionHandler()?.updateBullseyes(data);
-                return data.time;
-            });
-        }
-    }, 10000);
-
-    window.setInterval(() => {
-        if (!getPaused()) {
             getMission((data: MissionData) => {
                 checkSessionHash(data.sessionHash);
                 getMissionHandler()?.updateMission(data);
@@ -370,7 +357,27 @@ export function startUpdate() {
     }, 1000);
 
     window.setInterval(() => {
-        if (!getPaused()) {
+        if (!getPaused() && getMissionHandler().getCommandModeOptions().commandMode != NONE) {
+            getAirbases((data: AirbasesData) => {
+                checkSessionHash(data.sessionHash);
+                getMissionHandler()?.updateAirbases(data);
+                return data.time;
+            });
+        }
+    }, 10000);
+
+    window.setInterval(() => {
+        if (!getPaused() && getMissionHandler().getCommandModeOptions().commandMode != NONE){
+            getBullseye((data: BullseyesData) => {
+                checkSessionHash(data.sessionHash);
+                getMissionHandler()?.updateBullseyes(data);
+                return data.time;
+            });
+        }
+    }, 10000);
+
+    window.setInterval(() => {
+        if (!getPaused() && getMissionHandler().getCommandModeOptions().commandMode != NONE) {
             getLogs((data: any) => {
                 checkSessionHash(data.sessionHash);
                 getLogPanel().appendLogs(data.logs)
@@ -380,7 +387,7 @@ export function startUpdate() {
     }, 1000);
 
     window.setInterval(() => {
-        if (!getPaused()) {
+        if (!getPaused() && getMissionHandler().getCommandModeOptions().commandMode != NONE) {
             getUnits((buffer: ArrayBuffer) => {
                 var time = getUnitsManager()?.update(buffer); 
                 return time;
@@ -389,7 +396,7 @@ export function startUpdate() {
     }, 250);
 
     window.setInterval(() => {
-        if (!getPaused()) {
+        if (!getPaused() && getMissionHandler().getCommandModeOptions().commandMode != NONE) {
             getWeapons((buffer: ArrayBuffer) => {
                 var time = getWeaponsManager()?.update(buffer); 
                 return time;
@@ -398,7 +405,7 @@ export function startUpdate() {
     }, 250);
 
     window.setInterval(() => {
-        if (!getPaused()) {
+        if (!getPaused() && getMissionHandler().getCommandModeOptions().commandMode != NONE) {
             getUnits((buffer: ArrayBuffer) => {
                 var time = getUnitsManager()?.update(buffer); 
                 return time;
@@ -408,9 +415,39 @@ export function startUpdate() {
     }, 5000);
 }
 
+export function refreshAll() {
+    getAirbases((data: AirbasesData) => {
+        checkSessionHash(data.sessionHash);
+        getMissionHandler()?.updateAirbases(data);
+        return data.time;
+    });
+
+    getBullseye((data: BullseyesData) => {
+        checkSessionHash(data.sessionHash);
+        getMissionHandler()?.updateBullseyes(data);
+        return data.time;
+    });
+
+    getLogs((data: any) => {
+        checkSessionHash(data.sessionHash);
+        getLogPanel().appendLogs(data.logs)
+        return data.time;
+    });
+
+    getWeapons((buffer: ArrayBuffer) => {
+        var time = getWeaponsManager()?.update(buffer); 
+        return time;
+    }, false);
+
+    getUnits((buffer: ArrayBuffer) => {
+        var time = getUnitsManager()?.update(buffer); 
+        return time;
+    }, true);
+}
+
 export function checkSessionHash(newSessionHash: string) {
     if (sessionHash != null) {
-        if (newSessionHash != sessionHash)
+        if (newSessionHash !== sessionHash)
             location.reload();
     }
     else

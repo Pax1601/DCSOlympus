@@ -1,9 +1,9 @@
 import { LatLng } from "leaflet";
-import { getInfoPopup, getMap, getUnitsManager } from "..";
+import { getInfoPopup, getMap } from "..";
 import { Airbase } from "./airbase";
 import { Bullseye } from "./bullseye";
-import { BLUE_COMMANDER, GAME_MASTER, RED_COMMANDER } from "../constants/constants";
-import { setCommandModeOptions } from "../server/server";
+import { BLUE_COMMANDER, GAME_MASTER, NONE, RED_COMMANDER } from "../constants/constants";
+import { refreshAll, setCommandModeOptions } from "../server/server";
 import { Dropdown } from "../controls/dropdown";
 import { groundUnitDatabase } from "../unit/groundunitdatabase";
 import { createCheckboxOption, getCheckboxOptions } from "../other/utils";
@@ -16,7 +16,7 @@ export class MissionHandler {
     #airbases: { [name: string]: Airbase } = {};
     #theatre: string = "";
     #dateAndTime: DateAndTime = {date: {Year: 0, Month: 0, Day: 0}, time: {h: 0, m: 0, s: 0}, startTime: 0, elapsedTime: 0};
-    #commandModeOptions: CommandModeOptions = {commandMode: "Hide all", restrictSpawns: false, restrictToCoalition: false, setupTime: Infinity, spawnPoints: {red: Infinity, blue: Infinity}, eras: []};
+    #commandModeOptions: CommandModeOptions = {commandMode: NONE, restrictSpawns: false, restrictToCoalition: false, setupTime: Infinity, spawnPoints: {red: Infinity, blue: Infinity}, eras: []};
     #remainingSetupTime: number = 0;
     #spentSpawnPoint: number = 0;
     #commandModeDialog: HTMLElement;
@@ -183,6 +183,15 @@ export class MissionHandler {
     }
 
     #setcommandModeOptions(commandModeOptions: CommandModeOptions) {
+        /* Refresh all the data if we have exited the NONE state */ 
+        if (this.#commandModeOptions.commandMode === NONE && commandModeOptions.commandMode !== NONE)
+            refreshAll();
+
+        /* Refresh the page if we have lost Game Master priviledges */
+        if (this.#commandModeOptions.commandMode === GAME_MASTER && commandModeOptions.commandMode !== GAME_MASTER)
+            location.reload();
+
+        /* Check if any option has changed */
         var commandModeOptionsChanged = (!commandModeOptions.eras.every((value: string, idx: number) => {return value === this.getCommandModeOptions().eras[idx]}) || 
                                 commandModeOptions.spawnPoints.red !== this.getCommandModeOptions().spawnPoints.red || 
                                 commandModeOptions.spawnPoints.blue !== this.getCommandModeOptions().spawnPoints.blue ||
@@ -195,7 +204,6 @@ export class MissionHandler {
 
         if (commandModeOptionsChanged) {
             document.dispatchEvent(new CustomEvent("commandModeOptionsChanged", { detail: this }));
-
             document.getElementById("command-mode-toolbar")?.classList.remove("hide");
             const el = document.getElementById("command-mode");
             if (el) {
