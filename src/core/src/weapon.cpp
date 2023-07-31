@@ -72,17 +72,25 @@ void Weapon::getData(stringstream& ss, unsigned long long time)
 {
 	const unsigned char endOfData = DataIndex::endOfData;
 	ss.write((const char*)&ID, sizeof(ID));
-	for (unsigned char datumIndex = DataIndex::startOfData + 1; datumIndex < DataIndex::lastIndex; datumIndex++)
-	{
-		if (checkFreshness(datumIndex, time)) {
-			switch (datumIndex) {
-			case DataIndex::category:					appendString(ss, datumIndex, category); break;
-			case DataIndex::alive:						appendNumeric(ss, datumIndex, alive); break;
-			case DataIndex::coalition:					appendNumeric(ss, datumIndex, coalition); break;
-			case DataIndex::name:						appendString(ss, datumIndex, name); break;
-			case DataIndex::position:					appendNumeric(ss, datumIndex, position); break;
-			case DataIndex::speed:						appendNumeric(ss, datumIndex, speed); break;
-			case DataIndex::heading:					appendNumeric(ss, datumIndex, heading); break;
+	if (!alive && time == 0) {
+		unsigned char datumIndex = DataIndex::category;
+		appendString(ss, datumIndex, category);
+		datumIndex = DataIndex::alive;
+		appendNumeric(ss, datumIndex, alive);
+	}
+	else {
+		for (unsigned char datumIndex = DataIndex::startOfData + 1; datumIndex < DataIndex::lastIndex; datumIndex++)
+		{
+			if (checkFreshness(datumIndex, time)) {
+				switch (datumIndex) {
+				case DataIndex::category:					appendString(ss, datumIndex, category); break;
+				case DataIndex::alive:						appendNumeric(ss, datumIndex, alive); break;
+				case DataIndex::coalition:					appendNumeric(ss, datumIndex, coalition); break;
+				case DataIndex::name:						appendString(ss, datumIndex, name); break;
+				case DataIndex::position:					appendNumeric(ss, datumIndex, position); break;
+				case DataIndex::speed:						appendNumeric(ss, datumIndex, speed); break;
+				case DataIndex::heading:					appendNumeric(ss, datumIndex, heading); break;
+				}
 			}
 		}
 	}

@@ -39,7 +39,6 @@ export class WeaponsManager {
     update(buffer: ArrayBuffer) {
         var dataExtractor = new DataExtractor(buffer);
         var updateTime = Number(dataExtractor.extractUInt64());
-        var requestRefresh = false;
         while (dataExtractor.getSeekPosition() < buffer.byteLength) {
             const ID = dataExtractor.extractUInt32();
             if (!(ID in this.#weapons)) {
@@ -49,7 +48,8 @@ export class WeaponsManager {
                     this.addWeapon(ID, category);
                 }
                 else {
-                    requestRefresh = true;
+                    /* Inconsistent data, we need to wait for a refresh */
+                    return updateTime;
                 }
             }
             this.#weapons[ID]?.setData(dataExtractor);

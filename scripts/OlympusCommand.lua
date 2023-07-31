@@ -2,7 +2,6 @@ local version = "v0.4.1-alpha"
 
 local debug = false
 
-  
 Olympus.OlympusDLL = nil
 Olympus.DLLsloaded = false
 Olympus.OlympusModPath = os.getenv('DCSOLYMPUS_PATH')..'\\bin\\' 
@@ -227,7 +226,6 @@ function Olympus.move(groupName, lat, lng, altitude, altitudeType, speed, speedT
 		if category == "Aircraft" then
 			local startPoint = mist.getLeadPos(group)
 			local endPoint = coord.LLtoLO(lat, lng, 0) 
-
 			if altitudeType == "AGL" then
 				altitude = land.getHeight({x = endPoint.x, y = endPoint.z}) + altitude
 			end
@@ -313,11 +311,15 @@ function Olympus.move(groupName, lat, lng, altitude, altitudeType, speed, speedT
 			end
 			Olympus.debug("Olympus.move executed successfully on Helicopter", 2)
 		elseif category == "GroundUnit" then
+			local startPoint = mist.getLeadPos(group)
+			local endPoint = coord.LLtoLO(lat, lng, 0) 
+			local bearing = math.atan2(endPoint.z - startPoint.z, endPoint.x - startPoint.x)
+
 			vars = 
 				{
 					group = group, 
-					point = coord.LLtoLO(lat, lng, 0),
-					heading = 0,
+					point = endPoint,
+					heading = bearing,
 					speed = speed
 				}
 
@@ -331,11 +333,15 @@ function Olympus.move(groupName, lat, lng, altitude, altitudeType, speed, speedT
 			mist.groupToRandomPoint(vars)
 			Olympus.debug("Olympus.move executed succesfully on GroundUnit", 2)
 		elseif category == "NavyUnit" then
+			local startPoint = mist.getLeadPos(group)
+			local endPoint = coord.LLtoLO(lat, lng, 0) 
+			local bearing = math.atan2(endPoint.z - startPoint.z, endPoint.x - startPoint.x)
+			
 			vars = 
 				{
 					group = group, 
-					point = coord.LLtoLO(lat, lng, 0),
-					heading = 0,
+					point = endPoint,
+					heading = bearing,
 					speed = speed
 				}
 			mist.groupToRandomPoint(vars)
@@ -550,7 +556,7 @@ function Olympus.generateNavyUnitsTable(units)
 					["y"] = spawnLocation.z + value.dy,
 					["heading"] = 0,
 					["skill"] = "High",
-					["name"] = "NavyUnit-" .. Olympus.unitCounter .. "-" .. #unitTable + 1,
+					["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitTable + 1,
 					["transportable"] = { ["randomTransportable"] = false }
 				}
 			end 
@@ -562,7 +568,7 @@ function Olympus.generateNavyUnitsTable(units)
 				["y"] = spawnLocation.z,
 				["heading"] = 0,
 				["skill"] = "High",
-				["name"] = "NavyUnit-" .. Olympus.unitCounter .. "-" .. #unitTable + 1,
+				["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitTable + 1,
 				["transportable"] = { ["randomTransportable"] = false }
 			}
 		end

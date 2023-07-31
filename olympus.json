@@ -1,6 +1,6 @@
 {
 	"server": {
-		"address": "88.99.250.188",
+		"address": "localhost",
 		"port": 30000
 	},
 	"authentication": {

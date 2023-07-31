@@ -190,7 +190,7 @@ export class Unit extends CustomMarker {
                 case DataIndexes.alive: this.setAlive(dataExtractor.extractBool()); updateMarker = true; break;
                 case DataIndexes.human: this.#human = dataExtractor.extractBool(); break;
                 case DataIndexes.controlled: this.#controlled = dataExtractor.extractBool(); updateMarker = true; break;
-                case DataIndexes.coalition: this.#coalition = enumToCoalition(dataExtractor.extractUInt8()); break;
+                case DataIndexes.coalition: this.#coalition = enumToCoalition(dataExtractor.extractUInt8()); updateMarker = true; break;
                 case DataIndexes.country: this.#country = dataExtractor.extractUInt8(); break;
                 case DataIndexes.name: this.#name = dataExtractor.extractString(); break;
                 case DataIndexes.unitName: this.#unitName = dataExtractor.extractString(); break;
@@ -500,7 +500,7 @@ export class Unit extends CustomMarker {
                     (this.#controlled == false && hiddenUnits.includes("dcs")) ||
                     (hiddenUnits.includes(this.getMarkerCategory())) ||
                     (hiddenUnits.includes(this.#coalition)) ||
-                    (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0)  ||
+                    (!this.belongsToCommandedCoalition() && (this.#detectionMethods.length == 0 || (this.#detectionMethods.length == 1 && this.#detectionMethods[0] === RWR))) ||
                     (getMap().getVisibilityOptions()[HIDE_GROUP_MEMBERS] && !this.#isLeader && this.getCategory() == "GroundUnit" && getMap().getZoom() < 13 && (this.belongsToCommandedCoalition() || (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0)))) && 
                     !(this.getSelected());
 
@@ -745,6 +745,11 @@ export class Unit extends CustomMarker {
 
         if ((selectedUnits.length === 0 && this.getCategory() == "GroundUnit") || selectedUnitTypes.length === 1 && ["GroundUnit"].includes(selectedUnitTypes[0])) {
             if (selectedUnits.concat([this]).every((unit: Unit) => { return ["Gun Artillery", "Rocket Artillery", "Infantry", "IFV", "Tank"].includes(this.getType()) }))
+                options["fire-at-area"] = { text: "Fire at area", tooltip: "Fire at a large area" };
+        }
+
+        if ((selectedUnits.length === 0 && this.getCategory() == "NavyUnit") || selectedUnitTypes.length === 1 && ["NavyUnit"].includes(selectedUnitTypes[0])) {
+            if (selectedUnits.concat([this]).every((unit: Unit) => { return ["Cruiser", "Destroyer", "Frigate"].includes(this.getType()) }))
                 options["fire-at-area"] = { text: "Fire at area", tooltip: "Fire at a large area" };
         }
 

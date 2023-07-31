@@ -84,19 +84,26 @@ void Unit::update(json::value json, double dt)
 		for (auto const& el : json[L"ammo"].as_object()) {
 			DataTypes::Ammo ammoItem;
 			auto ammoJson = el.second;
-			ammoItem.quantity = ammoJson[L"count"].as_number().to_uint32();
-			string name = to_string(ammoJson[L"desc"][L"displayName"].as_string());
-			name = name.substr(min(name.length(), sizeof(ammoItem.name) - 1));
-			strcpy_s(ammoItem.name, sizeof(ammoItem.name) - 1, name.c_str());
 
-			if (ammoJson[L"desc"].has_number_field(L"guidance"))
-				ammoItem.guidance = ammoJson[L"desc"][L"guidance"].as_number().to_uint32();
+			if (ammoJson.has_number_field(L"count"))
+				ammoItem.quantity = ammoJson[L"count"].as_number().to_uint32();
 
-			if (ammoJson[L"desc"].has_number_field(L"category"))
-				ammoItem.category = ammoJson[L"desc"][L"category"].as_number().to_uint32();
+			if (ammoJson.has_object_field(L"desc")) {
+				if (ammoJson[L"desc"].has_string_field(L"displayName")) {
+					string name = to_string(ammoJson[L"desc"][L"displayName"].as_string());
+					name = name.substr(0, min(name.size(), sizeof(ammoItem.name) - 1));
+					strcpy_s(ammoItem.name, sizeof(ammoItem.name), name.c_str());
+				}
 
-			if (ammoJson[L"desc"].has_number_field(L"missileCategory"))
-				ammoItem.missileCategory = ammoJson[L"desc"][L"missileCategory"].as_number().to_uint32();
+				if (ammoJson[L"desc"].has_number_field(L"guidance"))
+					ammoItem.guidance = ammoJson[L"desc"][L"guidance"].as_number().to_uint32();
+
+				if (ammoJson[L"desc"].has_number_field(L"category"))
+					ammoItem.category = ammoJson[L"desc"][L"category"].as_number().to_uint32();
+
+				if (ammoJson[L"desc"].has_number_field(L"missileCategory"))
+					ammoItem.missileCategory = ammoJson[L"desc"][L"missileCategory"].as_number().to_uint32();
+			}
 			ammo.push_back(ammoItem);
 		}
 		setAmmo(ammo);
@@ -212,8 +219,11 @@ void Unit::getData(stringstream& ss, unsigned long long time)
 
 	const unsigned char endOfData = DataIndex::endOfData;
 	ss.write((const char*)&ID, sizeof(ID));
-	if (!alive) {
-		appendNumeric(ss, DataIndex::alive, alive);
+	if (!alive && time == 0) {
+		unsigned char datumIndex = DataIndex::category;
+		appendString(ss, datumIndex, category);
+		datumIndex = DataIndex::alive;
+		appendNumeric(ss, datumIndex, alive);
 	}
 	else {
 		for (unsigned char datumIndex = DataIndex::startOfData + 1; datumIndex < DataIndex::lastIndex; datumIndex++)

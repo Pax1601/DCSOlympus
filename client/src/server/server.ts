@@ -413,6 +413,15 @@ export function startUpdate() {
             getConnectionStatusPanel()?.update(getConnected());
         }
     }, 5000);
+
+    window.setInterval(() => {
+        if (!getPaused() && getMissionHandler().getCommandModeOptions().commandMode != NONE) {
+            getWeapons((buffer: ArrayBuffer) => {
+                var time = getWeaponsManager()?.update(buffer); 
+                return time;
+            }, false);
+        }
+    }, 5000);
 }
 
 export function refreshAll() {
@@ -437,7 +446,7 @@ export function refreshAll() {
     getWeapons((buffer: ArrayBuffer) => {
         var time = getWeaponsManager()?.update(buffer); 
         return time;
-    }, false);
+    }, true);
 
     getUnits((buffer: ArrayBuffer) => {
         var time = getUnitsManager()?.update(buffer); 

@@ -184,8 +184,9 @@ export class MissionHandler {
 
     #setcommandModeOptions(commandModeOptions: CommandModeOptions) {
         /* Refresh all the data if we have exited the NONE state */ 
+        var requestRefresh = false;
         if (this.#commandModeOptions.commandMode === NONE && commandModeOptions.commandMode !== NONE)
-            refreshAll();
+            requestRefresh = true;
 
         /* Refresh the page if we have lost Game Master priviledges */
         if (this.#commandModeOptions.commandMode === GAME_MASTER && commandModeOptions.commandMode !== GAME_MASTER)
@@ -214,6 +215,9 @@ export class MissionHandler {
 
         document.querySelector("#spawn-points-container")?.classList.toggle("hide", this.getCommandModeOptions().commandMode === GAME_MASTER || !this.getCommandModeOptions().restrictSpawns);
         document.querySelector("#command-mode-settings-button")?.classList.toggle("hide", this.getCommandModeOptions().commandMode !== GAME_MASTER);
+
+        if (requestRefresh)
+            refreshAll();
     }
 
     #onAirbaseClick(e: any) {

@@ -1,4 +1,4 @@
-local version = 'v0.4.0-alpha'
+local version = 'v0.4.1-alpha'
 
 Olympus = {}
 Olympus.OlympusDLL = nil

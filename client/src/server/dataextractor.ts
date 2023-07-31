@@ -13,6 +13,10 @@ export class DataExtractor {
         this.#decoder = new TextDecoder("utf-8");
     }
 
+    setSeekPosition(seekPosition: number) {
+        this.#seekPosition = seekPosition;
+    }
+
     getSeekPosition() {
         return this.#seekPosition;
     }
@@ -67,7 +71,13 @@ export class DataExtractor {
         var stringBuffer = this.#buffer.slice(this.#seekPosition, this.#seekPosition + length);
         var view = new Int8Array(stringBuffer);
         var stringLength = length;
-        view.forEach((value: number, idx: number) => { if (value === 0) stringLength = idx; });
+        view.every((value: number, idx: number) => { 
+            if (value === 0) {
+                stringLength = idx;
+                return false;
+            } else 
+                return true;
+            });
         const value = this.#decoder.decode(stringBuffer);
         this.#seekPosition += length;
         return value.substring(0, stringLength).trim();

@@ -1,7 +1,7 @@
 import { LatLng, LatLngBounds } from "leaflet";
 import { getHotgroupPanel, getInfoPopup, getMap, getMissionHandler, getUnitsManager } from "..";
 import { Unit } from "./unit";
-import { cloneUnit, deleteUnit, spawnAircrafts, spawnGroundUnits, spawnHelicopters, spawnNavyUnits } from "../server/server";
+import { cloneUnit, deleteUnit, refreshAll, spawnAircrafts, spawnGroundUnits, spawnHelicopters, spawnNavyUnits } from "../server/server";
 import { bearingAndDistanceToLatLng, deg2rad, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots, polyContains, polygonArea, randomPointInPoly, randomUnitBlueprint } from "../other/utils";
 import { CoalitionArea } from "../map/coalitionarea";
 import { groundUnitDatabase } from "./groundunitdatabase";
@@ -35,7 +35,7 @@ export class UnitsManager {
         document.addEventListener('exportToFile', () => this.exportToFile());
         document.addEventListener('importFromFile', () => this.importFromFile());
         document.addEventListener('contactsUpdated', (e: CustomEvent) => {this.#requestDetectionUpdate = true});
-        document.addEventListener("commandModeOptionsChanged", () => {Object.values(this.#units).forEach((unit: Unit) => unit.updateVisibility())});
+        document.addEventListener('commandModeOptionsChanged', () => {Object.values(this.#units).forEach((unit: Unit) => unit.updateVisibility())});
     }
 
     getSelectableAircraft() {
@@ -76,7 +76,6 @@ export class UnitsManager {
     update(buffer: ArrayBuffer) {
         var dataExtractor = new DataExtractor(buffer);
         var updateTime = Number(dataExtractor.extractUInt64());
-        var requestRefresh = false;
         while (dataExtractor.getSeekPosition() < buffer.byteLength) {
             const ID = dataExtractor.extractUInt32();
             if (!(ID in this.#units)) {
@@ -86,18 +85,40 @@ export class UnitsManager {
                     this.addUnit(ID, category);
                 }
                 else {
-                    requestRefresh = true;
+                    /* Inconsistent data, we need to wait for a refresh */
+                    return updateTime;
                 }
             }
-            this.#units[ID]?.setData(dataExtractor);
+            this.#units[ID]?.setData(dataExtractor); 
         }
 
         if (this.#requestDetectionUpdate && getMissionHandler().getCommandModeOptions().commandMode != GAME_MASTER) {
+            /* Create a dictionary of empty detection methods arrays */
+            var detectionMethods: {[key: string]: number[]} = {};
             for (let ID in this.#units) {
-                var unit = this.#units[ID];
-                if (unit.getAlive() && !unit.belongsToCommandedCoalition())
-                    unit.setDetectionMethods(this.getUnitDetectedMethods(unit));
+                const unit = this.#units[ID];
+                detectionMethods[ID] = [];
             }
+
+            /* Fill the array with the detection methods */
+            for (let ID in this.#units) {
+                const unit = this.#units[ID];
+                if (unit.getAlive() && unit.belongsToCommandedCoalition()){
+                    const contacts = unit.getContacts();
+                    contacts.forEach((contact: Contact) => {
+                        const contactID = contact.ID;
+                        if (!(detectionMethods[contactID].includes(contact.detectionMethod)))
+                            detectionMethods[contactID]?.push(contact.detectionMethod);
+                    })
+                }
+            }
+
+            /* Set the detection methods for every unit */
+            for (let ID in this.#units) {
+                const unit = this.#units[ID];
+                unit.setDetectionMethods(detectionMethods[ID]);
+            }
+
             this.#requestDetectionUpdate = false;
         }
 
@@ -650,10 +671,10 @@ export class UnitsManager {
                 var contents = e.target.result;
                 var groups = JSON.parse(contents);
                 for (let groupName in groups) {
-                    if (groupName !== "" && groups[groupName].length > 0 && groups[groupName].every((unit: any) => {return unit.category == "GroundUnit";})) {
+                    if (groupName !== "" && groups[groupName].length > 0 && (groups[groupName].every((unit: any) => {return unit.category == "GroundUnit";}) || groups[groupName].every((unit: any) => {return unit.category == "NavyUnit";}))) {
                         var aliveUnits = groups[groupName].filter((unit: any) => {return unit.alive});
                         var units = aliveUnits.map((unit: any) => {return {unitType: unit.name, location: unit.position}});
-                        getUnitsManager().spawnUnits("GroundUnit", units, groups[groupName][0].coalition, true);
+                        getUnitsManager().spawnUnits(groups[groupName][0].category, units, groups[groupName][0].coalition, true);
                     }
                 }
             };
