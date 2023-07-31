@@ -39,7 +39,7 @@ export class UnitControlPanel extends Panel {
         // Reversing the ROEs so that the least "aggressive" option is always on the left
         this.#optionButtons["ROE"] = ROEs.slice(0).reverse().map((option: string, index: number) => {
             return this.#createOptionButton(option, `roe/${option.toLowerCase()}.svg`, ROEDescriptions.slice(0).reverse()[index], () => { getUnitsManager().selectedUnitsSetROE(option); });
-        });
+        }).filter((button: HTMLButtonElement, index: number) => {return ROEs[index] !== "";});
 
         this.#optionButtons["reactionToThreat"] = reactionsToThreat.map((option: string, index: number) => {
             return this.#createOptionButton(option, `threat/${option.toLowerCase()}.svg`, reactionsToThreatDescriptions[index],() => { getUnitsManager().selectedUnitsSetReactionToThreat(option); });

@@ -150,7 +150,9 @@ export class Map extends L.Map {
 
         /* Option buttons */
         this.#optionButtons["visibility"] = visibilityControls.map((option: string, index: number) => {
-            return this.#createOptionButton(option, `visibility/${option.toLowerCase()}.svg`, visibilityControlsTootlips[index], "toggleUnitVisibility", `{"types": "${visibilityControlsTypes[index]}"}`);
+            var typesArrayString = `"${visibilityControlsTypes[index][0]}"`;
+            visibilityControlsTypes[index].forEach((type: string, idx: number) => {if (idx > 0) typesArrayString = `${typesArrayString}, "${type}"`});
+            return this.#createOptionButton(option, `visibility/${option.toLowerCase()}.svg`, visibilityControlsTootlips[index], "toggleUnitVisibility", `{"types": [${typesArrayString}]}`);
         });
         document.querySelector("#unit-visibility-control")?.append(...this.#optionButtons["visibility"]);
 

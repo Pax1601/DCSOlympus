@@ -8,7 +8,7 @@ const DEMO_UNIT_DATA = {
         formationOffset: { x: 0, y: 0, z: 0 },
         targetID: 2,
         targetPosition: { lat: 0, lng: 0, alt: 0 },
-        ROE: 2,
+        ROE: 1,
         reactionToThreat: 1,
         emissionsCountermeasures: 1,
         TACAN: { isOn: false, XY: 'Y', callsign: 'TKR', channel: 40 },
@@ -24,7 +24,7 @@ const DEMO_UNIT_DATA = {
         formationOffset: { x: 0, y: 0, z: 0 },
         targetID: 0,
         targetPosition: { lat: 0, lng: 0, alt: 0 },
-        ROE: 2,
+        ROE: 1,
         reactionToThreat: 1,
         emissionsCountermeasures: 1,
         TACAN: { isOn: false, XY: 'Y', callsign: 'TKR', channel: 40 },
@@ -39,7 +39,7 @@ const DEMO_UNIT_DATA = {
         formationOffset: { x: 0, y: 0, z: 0 },
         targetID: 0,
         targetPosition: { lat: 0, lng: 0, alt: 0 },
-        ROE: 2,
+        ROE: 1,
         reactionToThreat: 1,
         emissionsCountermeasures: 1,
         TACAN: { isOn: false, XY: 'Y', callsign: 'TKR', channel: 40 },
@@ -54,7 +54,7 @@ const DEMO_UNIT_DATA = {
         formationOffset: { x: 0, y: 0, z: 0 },
         targetID: 0,
         targetPosition: { lat: 0, lng: 0, alt: 0 },
-        ROE: 2,
+        ROE: 1,
         reactionToThreat: 1,
         emissionsCountermeasures: 1,
         TACAN: { isOn: false, XY: 'Y', callsign: 'TKR', channel: 40 },
@@ -64,13 +64,13 @@ const DEMO_UNIT_DATA = {
         contacts: [{ID: 1001, detectionMethod: 16}],
         activePath: [ ],
         isLeader: true
-    }, ["5"]:{ category: "GroundUnit", alive: true, human: false, controlled: true, coalition: 1, country: 0, name: "Gepard", unitName: "Cool guy 2-2", groupName: "Cool group 4", state: 1, task: "Being cool",
+    }, ["5"]:{ category: "GroundUnit", alive: true, human: false, controlled: true, coalition: 1, country: 0, name: "S_75M_Volhov", unitName: "Cool guy 2-2", groupName: "Cool group 4", state: 1, task: "Being cool",
         hasTask: false, position: { lat: 37.21, lng: -116.1, alt: 1000 }, speed: 200, heading: 315 * Math.PI / 180, isTanker: false, isAWACS: false, onOff: true, followRoads: false, fuel: 50, 
         desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
         formationOffset: { x: 0, y: 0, z: 0 },
         targetID: 0,
         targetPosition: { lat: 0, lng: 0, alt: 0 },
-        ROE: 2,
+        ROE: 1,
         reactionToThreat: 1,
         emissionsCountermeasures: 1,
         TACAN: { isOn: false, XY: 'Y', callsign: 'TKR', channel: 40 },
@@ -99,9 +99,9 @@ class DemoDataGenerator {
 
         app.use('/demo', basicAuth({
             users: { 
-                'admin': 'socks',
-                'blue': 'bluesocks',
-                'red': 'redsocks'
+                'admin': 'password',
+                'blue': 'bluepassword',
+                'red': 'redpassword'
             },
         }))
 
