@@ -21,6 +21,7 @@ export class MissionHandler {
     #spentSpawnPoint: number = 0;
     #commandModeDialog: HTMLElement;
     #commandModeErasDropdown: Dropdown;
+    #coalitions: {red: string[], blue: string[]} = {red: [], blue: []};
 
     constructor() {
         document.addEventListener("showCommandModeDialog", () => this.showCommandModeDialog());
@@ -75,6 +76,9 @@ export class MissionHandler {
             /* Set the date and time data */
             this.#dateAndTime = data.mission.dateAndTime;
 
+            /* Set the coalition countries */
+            this.#coalitions = data.mission.coalitions;
+
             /* Set the command mode options */
             this.#setcommandModeOptions(data.mission.commandModeOptions);
             this.#remainingSetupTime = this.getCommandModeOptions().setupTime - this.getDateAndTime().elapsedTime;
@@ -110,6 +114,10 @@ export class MissionHandler {
 
     getRemainingSetupTime() {
         return this.#remainingSetupTime;
+    }
+
+    getCoalitions() {
+        return this.#coalitions;
     }
 
     getAvailableSpawnPoints() {

@@ -399,6 +399,17 @@ class DemoDataGenerator {
             startTime: 0
         }
 
+        ret.mission.coalitions = {
+            red: [ 
+                'Russia',
+                'China'
+            ],
+            blue: [
+                'United States',
+                'Great Britain'
+            ]
+        }
+
         ret.mission.commandModeOptions = {
             restrictSpawns: false,
             restrictToCoalition: true,
