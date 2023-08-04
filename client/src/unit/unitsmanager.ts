@@ -36,6 +36,8 @@ export class UnitsManager {
         document.addEventListener('importFromFile', () => this.importFromFile());
         document.addEventListener('contactsUpdated', (e: CustomEvent) => {this.#requestDetectionUpdate = true});
         document.addEventListener('commandModeOptionsChanged', () => {Object.values(this.#units).forEach((unit: Unit) => unit.updateVisibility())});
+        document.addEventListener('selectedUnitsChangeSpeed', (e: any) => {this.selectedUnitsChangeSpeed(e.detail.type)});
+        document.addEventListener('selectedUnitsChangeAltitude', (e: any) => {this.selectedUnitsChangeAltitude(e.detail.type)});
     }
 
     getSelectableAircraft() {

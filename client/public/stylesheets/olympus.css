@@ -691,6 +691,11 @@ nav.ol-panel> :last-child {
     width: 30px;
 }
 
+#reaction-to-threat-buttons-container button:not(:first-child) svg {
+    width: 150%;
+    margin: -5px;
+}
+
 #unit-control-panel .ol-option-button button.selected {
     background-color: white;
     border-color: white;
@@ -698,6 +703,28 @@ nav.ol-panel> :last-child {
 
 #unit-control-panel .ol-option-button button.selected svg * {
     fill: var(--background-steel);
+}
+
+#rapid-controls {
+    display: flex;
+    flex-direction: column;
+    row-gap: 5px;
+    position: absolute;
+    height: fit-content;
+    width: fit-content;
+    left: calc(100% + 10px);
+    top: 0px;
+}
+
+#rapid-controls button {
+    padding: 4px;
+}
+
+#rapid-controls svg {
+    height: 25px;
+    width: 25px;
+    fill: white;
+    stroke: white;
 }
 
 /****************************************************************************************/
@@ -957,6 +984,10 @@ nav.ol-panel> :last-child {
 #command-mode-phase.no-restrictions::after {
     content: "No spawn restrictions";
     font-size: 10px; 
+}
+
+#command-mode-toolbar {
+    min-width: fit-content ;
 }
 
 #command-mode-toolbar .ol-button {

@@ -449,6 +449,9 @@ function Olympus.generateAirUnitsTable(units)
 			["callsign"] = { [1] = 1, [2] = 1, [3] = 1, ["name"] = "Olympus" .. Olympus.unitCounter.. "-" .. #unitTable + 1 },
 			["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitTable + 1
 		}
+
+		-- Add the payload to the registry, used for unit cloning
+		Olympus.payloadRegistry[unitTable[#unitTable].name] = payload
 	end
 	return unitTable
 end

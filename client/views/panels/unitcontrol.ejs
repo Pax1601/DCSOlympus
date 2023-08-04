@@ -79,5 +79,13 @@
         <button class="ol-button-warning" data-on-click="deleteSelectedUnits"><img src="/resources/theme/images/icons/trash-can-regular.svg" inject-svg>Delete</button>
         <button class="ol-button-warning" data-on-click="explodeSelectedUnits"><img src="/resources/theme/images/icons/explosion-solid.svg" inject-svg></button>
     </div>
+
+    <div id="rapid-controls" class="ol-panel">
+        <button title="Increase units altitude" class="ol-button" data-on-click="selectedUnitsChangeAltitude" data-on-click-params='{ "type": "climb" }'><img src="/resources/theme/images/icons/climb.svg" inject-svg></button>
+        <button title="Descrease units altitude" class="ol-button" data-on-click="selectedUnitsChangeAltitude" data-on-click-params='{ "type": "descent" }'><img src="/resources/theme/images/icons/descent.svg" inject-svg></button>
+        <button title="Increase units speed" class="ol-button" data-on-click="selectedUnitsChangeSpeed" data-on-click-params='{ "type": "fast" }'><img src="/resources/theme/images/icons/speed-increase.svg" inject-svg></button>
+        <button title="Decrease units speed" class="ol-button" data-on-click="selectedUnitsChangeSpeed" data-on-click-params='{ "type": "slow" }'><img src="/resources/theme/images/icons/speed-decrease.svg" inject-svg></button>
+        <button title="Stop unit and go back to idle state" class="ol-button" data-on-click="selectedUnitsChangeSpeed" data-on-click-params='{ "type": "stop" }'><img src="/resources/theme/images/icons/hand-solid.svg" inject-svg></button>
+    </div>
     
 </div>
