@@ -427,6 +427,10 @@ function Olympus.generateAirUnitsTable(units)
 		local loadout = unit.loadout			-- loadout: a string, one of the names defined in unitPayloads.lua. Must be compatible with the unitType
 		local payload = unit.payload			-- payload: a table, if present the unit will receive this specific payload. Overrides loadout
 
+		if unit.heading == nil then
+			unit.heading = 0
+		end
+
 		if payload == nil then
 			if loadout and loadout ~= "" and Olympus.unitPayloads[unit.unitType][loadout] then
 				payload = Olympus.unitPayloads[unit.unitType][loadout]
@@ -445,10 +449,13 @@ function Olympus.generateAirUnitsTable(units)
 			["alt_type"] = "BARO",
 			["skill"] = "Excellent",
 			["payload"] = { ["pylons"] = payload, ["fuel"] = 999999, ["flare"] = 60, ["ammo_type"] = 1, ["chaff"] = 60, ["gun"] = 100, }, 
-			["heading"] = 0,
+			["heading"] = unit.heading,
 			["callsign"] = { [1] = 1, [2] = 1, [3] = 1, ["name"] = "Olympus" .. Olympus.unitCounter.. "-" .. #unitTable + 1 },
 			["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitTable + 1
 		}
+
+		-- Add the payload to the registry, used for unit cloning
+		Olympus.payloadRegistry[unitTable[#unitTable].name] = payload
 	end
 	return unitTable
 end
@@ -532,7 +539,7 @@ function Olympus.generateGroundUnitsTable(units)
 				["type"] = unit.unitType,
 				["x"] = spawnLocation.x,
 				["y"] = spawnLocation.z,
-				["heading"] = 0,
+				["heading"] = unit.heading,
 				["skill"] = "High",
 				["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitTable + 1
 			}
@@ -566,7 +573,7 @@ function Olympus.generateNavyUnitsTable(units)
 				["type"] = unit.unitType,
 				["x"] = spawnLocation.x,
 				["y"] = spawnLocation.z,
-				["heading"] = 0,
+				["heading"] = unit.heading,
 				["skill"] = "High",
 				["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitTable + 1,
 				["transportable"] = { ["randomTransportable"] = false }
@@ -582,6 +589,9 @@ function Olympus.clone(ID, lat, lng, category)
 	Olympus.debug("Olympus.clone " .. ID .. ", " .. category, 2)
 	local unit = Olympus.getUnitByID(ID)
 	if unit then
+		local position = unit:getPosition()
+		local heading = math.atan2( position.x.z, position.x.x )
+		
 		-- TODO: understand category in this script
 		local spawnTable = {
 			coalition = Olympus.getCoalitionByCoalitionID(unit:getCoalition()),
@@ -591,6 +601,7 @@ function Olympus.clone(ID, lat, lng, category)
 					lat = lat,
 					lng = lng,
 					alt = unit:getPoint().y,
+					heading = heading,
 					unitType = unit:getTypeName(),
 					payload = Olympus.payloadRegistry[unit:getName()]
 				}
