@@ -2847,7 +2847,7 @@ export class AircraftDatabase extends UnitDatabase {
                         "roles": [
                             "CAP"
                         ],
-                        "code": "R-73*2,R-27R*2,Fuel-1500",
+                        "code": "R-73*4,R-27R*2,Fuel-1500",
                         "name": "Heavy / Fox 1, HOBS Fox 2 / Medium Range"
                     },
                     {
@@ -2935,7 +2935,7 @@ export class AircraftDatabase extends UnitDatabase {
                             "CAP"
                         ],
                         "code": "R-73*2,R-27R*2,Fuel-1500",
-                        "name": "Heavy / Fox 1 / Medium Range"
+                        "name": "Heavy / Fox 1, HOBS Fox 2 / Medium Range"
                     },
                     {
                         "fuel": 1,

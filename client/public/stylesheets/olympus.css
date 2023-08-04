@@ -721,8 +721,8 @@ nav.ol-panel> :last-child {
 }
 
 #rapid-controls svg {
-    height: 25px;
-    width: 25px;
+    height: 20px;
+    width: 20px;
     fill: white;
     stroke: white;
 }
