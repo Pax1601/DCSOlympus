@@ -202,7 +202,7 @@ export class Weapon extends CustomMarker {
                 /* Force a redraw of the unit to reflect the new status of the detection methods */
                 this.setHidden(true);
                 this.#detectionMethods = newDetectionMethods;
-                this.updateVisibility();
+                this.#updateMarker();
             }
         }
     }

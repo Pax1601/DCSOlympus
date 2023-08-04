@@ -1,5 +1,5 @@
 import { Marker, LatLng, Polyline, Icon, DivIcon, CircleMarker, Map, Point } from 'leaflet';
-import { getMap, getMissionHandler, getUnitsManager } from '..';
+import { getMap, getMissionHandler, getUnitsManager, getWeaponsManager } from '..';
 import { enumToCoalition, enumToEmissioNCountermeasure, getMarkerCategoryByName, enumToROE, enumToReactionToThreat, enumToState, getUnitDatabaseByCategory, mToFt, msToKnots, rad2deg, bearing, deg2rad } from '../other/utils';
 import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, landAt, setAltitude, setReactionToThreat, setROE, setSpeed, refuel, setAdvacedOptions, followUnit, setEmissionsCountermeasures, setSpeedType, setAltitudeType, setOnOff, setFollowRoads, bombPoint, carpetBomb, bombBuilding, fireAtArea } from '../server/server';
 import { CustomMarker } from '../map/custommarker';
@@ -11,6 +11,7 @@ import { Ammo, Contact, GeneralSettings, Offset, Radio, TACAN, ObjectIconOptions
 import { DataExtractor } from '../server/dataextractor';
 import { groundUnitDatabase } from './groundunitdatabase';
 import { navyUnitDatabase } from './navyunitdatabase';
+import { Weapon } from '../weapon/weapon';
 
 var pathIcon = new Icon({
     iconUrl: '/resources/theme/images/markers/marker-icon.png',
@@ -153,7 +154,7 @@ export class Unit extends CustomMarker {
         this.on('click', (e) => this.#onClick(e));
         this.on('dblclick', (e) => this.#onDoubleClick(e));
         this.on('contextmenu', (e) => this.#onContextMenu(e));
-        this.on('mouseover', () => { this.setHighlighted(true); })
+        this.on('mouseover', () => { if (this.belongsToCommandedCoalition()) this.setHighlighted(true); })
         this.on('mouseout', () => { this.setHighlighted(false); })
         getMap().on("zoomend", () => {this.#onZoom();})
 
@@ -535,7 +536,7 @@ export class Unit extends CustomMarker {
                 /* Force a redraw of the unit to reflect the new status of the detection methods */
                 this.setHidden(true);
                 this.#detectionMethods = newDetectionMethods;
-                this.updateVisibility();
+                this.#updateMarker();
             }
         }
     }
@@ -981,19 +982,25 @@ export class Unit extends CustomMarker {
         if (getMap().getVisibilityOptions()[SHOW_CONTACT_LINES]) {
             for (let index in this.#contacts) {
                 var contactData = this.#contacts[index];
-                var contact = getUnitsManager().getUnitByID(contactData.ID);
+                var contact: Unit | Weapon | null;
+
+                if (contactData.ID in getUnitsManager().getUnits())
+                    contact = getUnitsManager().getUnitByID(contactData.ID);
+                else
+                    contact = getWeaponsManager().getWeaponByID(contactData.ID);
+
                 if (contact != null && contact.getAlive()) {
                     var startLatLng = new LatLng(this.#position.lat, this.#position.lng);
                     var endLatLng: LatLng;
                     if (contactData.detectionMethod === RWR) {
-                        var bearingToContact = bearing(this.#position.lat, this.#position.lng, contact.#position.lat, contact.#position.lng);
+                        var bearingToContact = bearing(this.#position.lat, this.#position.lng, contact.getPosition().lat, contact.getPosition().lng);
                         var startXY = getMap().latLngToContainerPoint(startLatLng);
                         var endX = startXY.x + 80 * Math.sin(deg2rad(bearingToContact));
                         var endY = startXY.y - 80 * Math.cos(deg2rad(bearingToContact));
                         endLatLng = getMap().containerPointToLatLng(new Point(endX, endY));
                     }
                     else
-                        endLatLng = new LatLng(contact.#position.lat, contact.#position.lng);
+                        endLatLng = new LatLng(contact.getPosition().lat, contact.getPosition().lng);
 
                     var color;
                     if (contactData.detectionMethod === VISUAL || contactData.detectionMethod === OPTIC)

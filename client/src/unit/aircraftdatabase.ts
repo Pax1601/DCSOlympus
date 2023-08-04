@@ -2207,7 +2207,7 @@ export class AircraftDatabase extends UnitDatabase {
                 "coalition": "blue",
                 "label": "F-15C Eagle",
                 "era": "Late Cold War",
-                "shortLabel": "15",
+                "shortLabel": "15C",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -2272,7 +2272,7 @@ export class AircraftDatabase extends UnitDatabase {
                 "coalition": "blue",
                 "label": "F-15E Strike Eagle",
                 "era": "Late Cold War",
-                "shortLabel": "15",
+                "shortLabel": "15E",
                 "loadouts": [
                     {
                         "fuel": 1,
@@ -2345,6 +2345,16 @@ export class AircraftDatabase extends UnitDatabase {
                         "code": "",
                         "name": "Empty Loadout"
                     }
+                ],
+                "filename": "f-15.png"
+            },
+            "F-15ESE": {
+                "name": "F-15ESE",
+                "coalition": "blue",
+                "label": "F-15E Strike Eagle",
+                "era": "Late Cold War",
+                "shortLabel": "15E",
+                "loadouts": [
                 ],
                 "filename": "f-15.png"
             },

@@ -419,7 +419,7 @@ export function startUpdate() {
             getWeapons((buffer: ArrayBuffer) => {
                 var time = getWeaponsManager()?.update(buffer); 
                 return time;
-            }, false);
+            }, true);
         }
     }, 5000);
 }
