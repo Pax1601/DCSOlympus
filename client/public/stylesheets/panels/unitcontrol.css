@@ -100,6 +100,10 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	margin-top: 15px;
 }
 
+#advanced-settings-dialog .ol-text-input input {
+	height: 40px;
+}
+
 #general-settings-grid {
 	display: grid;
 	grid-template-columns: 1fr 1fr;

@@ -1,5 +1,5 @@
 import { LatLng, LatLngBounds } from "leaflet";
-import { getHotgroupPanel, getInfoPopup, getMap, getMissionHandler, getUnitsManager } from "..";
+import { getHotgroupPanel, getInfoPopup, getMap, getMissionHandler, getUnitsManager, getWeaponsManager } from "..";
 import { Unit } from "./unit";
 import { cloneUnit, deleteUnit, refreshAll, spawnAircrafts, spawnGroundUnits, spawnHelicopters, spawnNavyUnits } from "../server/server";
 import { bearingAndDistanceToLatLng, deg2rad, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots, polyContains, polygonArea, randomPointInPoly, randomUnitBlueprint } from "../other/utils";
@@ -36,6 +36,8 @@ export class UnitsManager {
         document.addEventListener('importFromFile', () => this.importFromFile());
         document.addEventListener('contactsUpdated', (e: CustomEvent) => {this.#requestDetectionUpdate = true});
         document.addEventListener('commandModeOptionsChanged', () => {Object.values(this.#units).forEach((unit: Unit) => unit.updateVisibility())});
+        document.addEventListener('selectedUnitsChangeSpeed', (e: any) => {this.selectedUnitsChangeSpeed(e.detail.type)});
+        document.addEventListener('selectedUnitsChangeAltitude', (e: any) => {this.selectedUnitsChangeAltitude(e.detail.type)});
     }
 
     getSelectableAircraft() {
@@ -95,11 +97,11 @@ export class UnitsManager {
         if (this.#requestDetectionUpdate && getMissionHandler().getCommandModeOptions().commandMode != GAME_MASTER) {
             /* Create a dictionary of empty detection methods arrays */
             var detectionMethods: {[key: string]: number[]} = {};
-            for (let ID in this.#units) {
-                const unit = this.#units[ID];
+            for (let ID in this.#units) 
                 detectionMethods[ID] = [];
-            }
-
+            for (let ID in getWeaponsManager().getWeapons()) 
+                detectionMethods[ID] = [];
+            
             /* Fill the array with the detection methods */
             for (let ID in this.#units) {
                 const unit = this.#units[ID];
@@ -107,7 +109,7 @@ export class UnitsManager {
                     const contacts = unit.getContacts();
                     contacts.forEach((contact: Contact) => {
                         const contactID = contact.ID;
-                        if (!(detectionMethods[contactID].includes(contact.detectionMethod)))
+                        if (contactID in detectionMethods && !(detectionMethods[contactID].includes(contact.detectionMethod)))
                             detectionMethods[contactID]?.push(contact.detectionMethod);
                     })
                 }
@@ -116,7 +118,11 @@ export class UnitsManager {
             /* Set the detection methods for every unit */
             for (let ID in this.#units) {
                 const unit = this.#units[ID];
-                unit.setDetectionMethods(detectionMethods[ID]);
+                unit?.setDetectionMethods(detectionMethods[ID]);
+            }
+            for (let ID in getWeaponsManager().getWeapons()) {
+                const weapon = getWeaponsManager().getWeaponByID(parseInt(ID));
+                weapon?.setDetectionMethods(detectionMethods[ID]);
             }
 
             this.#requestDetectionUpdate = false;

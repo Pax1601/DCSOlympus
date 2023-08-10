@@ -38,6 +38,7 @@ export class Airbase extends CustomMarker
         img.onload = () => SVGInjector(img);
         el.appendChild(img);
         this.getElement()?.appendChild(el);
+        el.dataset.coalition = this.#coalition;
     }
 
     setCoalition(coalition: string)

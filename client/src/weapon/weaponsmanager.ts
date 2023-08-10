@@ -6,13 +6,11 @@ import { Contact } from "../@types/unit";
 
 export class WeaponsManager {
     #weapons: { [ID: number]: Weapon };
-    #requestDetectionUpdate: boolean = false;
 
     constructor() {
         this.#weapons = {};
 
         document.addEventListener("commandModeOptionsChanged", () => {Object.values(this.#weapons).forEach((weapon: Weapon) => weapon.updateVisibility())});
-        document.addEventListener('contactsUpdated', (e: CustomEvent) => {this.#requestDetectionUpdate = true});
     }
 
     getWeapons() {
@@ -54,16 +52,6 @@ export class WeaponsManager {
             }
             this.#weapons[ID]?.setData(dataExtractor);
         }
-
-        if (this.#requestDetectionUpdate && getMissionHandler().getCommandModeOptions().commandMode != GAME_MASTER) {
-            for (let ID in this.#weapons) {
-                var weapon = this.#weapons[ID];
-                if (!weapon.belongsToCommandedCoalition())
-                    weapon.setDetectionMethods(this.getWeaponDetectedMethods(weapon));
-            }
-            this.#requestDetectionUpdate = false;
-        }
-
         return updateTime;
     }
 

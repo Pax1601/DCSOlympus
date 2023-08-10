@@ -205,11 +205,13 @@ function setupEvents() {
 
     document.querySelectorAll("[inject-svg]").forEach((el: Element) => {
         var img = el as HTMLImageElement;
-        var isLoaded = img.complete && img.naturalHeight !== 0;
+        var isLoaded = img.complete;
         if (isLoaded) 
             SVGInjector(img);
         else
-            img.onload = () => SVGInjector(img);
+            img.addEventListener("load", () => {
+                SVGInjector(img);
+            });
     })
 }
 

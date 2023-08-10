@@ -1,5 +1,5 @@
 import * as L from "leaflet"
-import { getUnitsManager } from "..";
+import { getMissionHandler, getUnitsManager } from "..";
 import { BoxSelect } from "./boxselect";
 import { MapContextMenu } from "../controls/mapcontextmenu";
 import { UnitContextMenu } from "../controls/unitcontextmenu";
@@ -117,11 +117,20 @@ export class Map extends L.Map {
             Object.values(getUnitsManager().getUnits()).forEach((unit: Unit) => unit.updateVisibility());
         });
 
-        document.addEventListener("toggleUnitVisibility", (ev: CustomEventInit) => {
+        document.addEventListener("toggleMarkerVisibility", (ev: CustomEventInit) => {
             const el = ev.detail._element;
             el?.classList.toggle("off");
             ev.detail.types.forEach((type: string) => getUnitsManager().setHiddenType(type, !el?.classList.contains("off")));
             Object.values(getUnitsManager().getUnits()).forEach((unit: Unit) => unit.updateVisibility());
+
+            if (ev.detail.types.includes("airbase")) {
+                Object.values(getMissionHandler().getAirbases()).forEach((airbase: Airbase) => {
+                    if (el?.classList.contains("off"))
+                        airbase.removeFrom(this);
+                    else
+                        airbase.addTo(this);
+                })
+            }
         });
    
 
@@ -150,7 +159,9 @@ export class Map extends L.Map {
 
         /* Option buttons */
         this.#optionButtons["visibility"] = visibilityControls.map((option: string, index: number) => {
-            return this.#createOptionButton(option, `visibility/${option.toLowerCase()}.svg`, visibilityControlsTootlips[index], "toggleUnitVisibility", `{"types": "${visibilityControlsTypes[index]}"}`);
+            var typesArrayString = `"${visibilityControlsTypes[index][0]}"`;
+            visibilityControlsTypes[index].forEach((type: string, idx: number) => {if (idx > 0) typesArrayString = `${typesArrayString}, "${type}"`});
+            return this.#createOptionButton(option, `visibility/${option.toLowerCase()}.svg`, visibilityControlsTootlips[index], "toggleMarkerVisibility", `{"types": [${typesArrayString}]}`);
         });
         document.querySelector("#unit-visibility-control")?.append(...this.#optionButtons["visibility"]);
 

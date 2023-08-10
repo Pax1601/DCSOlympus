@@ -1,3 +1,4 @@
+import { getMouseInfoPanel } from "..";
 import { Panel } from "./panel";
 
 export class LogPanel extends Panel {
@@ -23,8 +24,21 @@ export class LogPanel extends Panel {
         if (scrollEl) {
             scrollEl.addEventListener("scroll", () => {
                 this.#scrolledDown = Math.abs(scrollEl.scrollHeight - scrollEl.scrollTop - scrollEl.clientHeight) < 1
-            })
+            });
         }
+
+        window.addEventListener("resize", () => {
+            this.#calculateHeight();
+        });
+
+        
+        const mouseInfoPanel = getMouseInfoPanel();
+        new ResizeObserver(() => this.#calculateHeight()).observe(mouseInfoPanel.getElement())
+    }
+
+    show() {
+        super.show();
+        this.#calculateHeight();
     }
 
     appendLogs(logs: {[key: string]: string}) {
@@ -67,5 +81,10 @@ export class LogPanel extends Panel {
         if (scrollEl) {
             scrollEl.scrollTop = scrollEl.scrollHeight - scrollEl.clientHeight;
         }
+    }
+
+    #calculateHeight() {
+        const mouseInfoPanel = getMouseInfoPanel();
+        this.getElement().style.height = `${mouseInfoPanel.getElement().offsetTop - this.getElement().offsetTop - 10}px`;
     }
 }
