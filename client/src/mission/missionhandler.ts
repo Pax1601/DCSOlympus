@@ -77,7 +77,7 @@ export class MissionHandler {
             this.#dateAndTime = data.mission.dateAndTime;
 
             /* Set the coalition countries */
-            this.#coalitions = data.mission.coalitions;
+            //this.#coalitions = data.mission.coalitions;
 
             /* Set the command mode options */
             this.#setcommandModeOptions(data.mission.commandModeOptions);

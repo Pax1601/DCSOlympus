@@ -186,6 +186,7 @@ void Scheduler::handleRequest(string key, json::value value, string username)
 		vector<string> unitTypes;
 		vector<Coords> locations;
 		vector<string> loadouts;
+		vector<string> liveryIDs;
 		for (auto unit : value[L"units"].as_array()) {
 			string unitType = to_string(unit[L"unitType"]);
 			double lat = unit[L"location"][L"lat"].as_double();
@@ -193,14 +194,16 @@ void Scheduler::handleRequest(string key, json::value value, string username)
 			double alt = unit[L"altitude"].as_double();
 			Coords location; location.lat = lat; location.lng = lng; location.alt = alt;
 			string loadout = to_string(unit[L"loadout"]);
+			string liveryID = to_string(unit[L"liveryID"]);
 
 			unitTypes.push_back(unitType);
 			locations.push_back(location);
 			loadouts.push_back(loadout);
+			liveryIDs.push_back(liveryID);
 			log(username + " spawned a " + coalition + " " + unitType, true);
 		}
 
-		command = dynamic_cast<Command*>(new SpawnAircrafts(coalition, unitTypes, locations, loadouts, airbaseName, immediate));
+		command = dynamic_cast<Command*>(new SpawnAircrafts(coalition, unitTypes, locations, liveryIDs, loadouts, airbaseName, immediate));
 	}
 	else if (key.compare("spawnHelicopters") == 0)
 	{
@@ -214,6 +217,7 @@ void Scheduler::handleRequest(string key, json::value value, string username)
 		vector<string> unitTypes;
 		vector<Coords> locations;
 		vector<string> loadouts;
+		vector<string> liveryIDs;
 		for (auto unit : value[L"units"].as_array()) {
 			string unitType = to_string(unit[L"unitType"]);
 			double lat = unit[L"location"][L"lat"].as_double();
@@ -221,14 +225,16 @@ void Scheduler::handleRequest(string key, json::value value, string username)
 			double alt = unit[L"altitude"].as_double();
 			Coords location; location.lat = lat; location.lng = lng; location.alt = alt;
 			string loadout = to_string(unit[L"loadout"]);
+			string liveryID = to_string(unit[L"liveryID"]);
 
 			unitTypes.push_back(unitType);
 			locations.push_back(location);
 			loadouts.push_back(loadout);
+			liveryIDs.push_back(liveryID);
 			log(username + " spawned a " + coalition + " " + unitType, true);
 		}
 
-		command = dynamic_cast<Command*>(new SpawnHelicopters(coalition, unitTypes, locations, loadouts, airbaseName, immediate));
+		command = dynamic_cast<Command*>(new SpawnHelicopters(coalition, unitTypes, locations, loadouts, liveryIDs, airbaseName, immediate));
 	}
 	else if (key.compare("spawnGroundUnits") == 0)
 	{
@@ -240,18 +246,21 @@ void Scheduler::handleRequest(string key, json::value value, string username)
 
 		vector<string> unitTypes;
 		vector<Coords> locations;
+		vector<string> liveryIDs;
 		for (auto unit : value[L"units"].as_array()) {
 			string unitType = to_string(unit[L"unitType"]);
 			double lat = unit[L"location"][L"lat"].as_double();
 			double lng = unit[L"location"][L"lng"].as_double();
 			Coords location; location.lat = lat; location.lng = lng;
+			string liveryID = to_string(unit[L"liveryID"]);
 			
 			unitTypes.push_back(unitType);
 			locations.push_back(location);
+			liveryIDs.push_back(liveryID);
 			log(username + " spawned a " + coalition + " " + unitType, true);
 		}
 
-		command = dynamic_cast<Command*>(new SpawnGroundUnits(coalition, unitTypes, locations, immediate));
+		command = dynamic_cast<Command*>(new SpawnGroundUnits(coalition, unitTypes, locations, liveryIDs, immediate));
 	}
 	else if (key.compare("spawnNavyUnits") == 0)
 	{
@@ -263,18 +272,21 @@ void Scheduler::handleRequest(string key, json::value value, string username)
 
 		vector<string> unitTypes;
 		vector<Coords> locations;
+		vector<string> liveryIDs;
 		for (auto unit : value[L"units"].as_array()) {
 			string unitType = to_string(unit[L"unitType"]);
 			double lat = unit[L"location"][L"lat"].as_double();
 			double lng = unit[L"location"][L"lng"].as_double();
 			Coords location; location.lat = lat; location.lng = lng;
+			string liveryID = to_string(unit[L"liveryID"]);
 
 			unitTypes.push_back(unitType);
 			locations.push_back(location);
+			liveryIDs.push_back(liveryID);
 			log(username + " spawned a " + coalition + " " + unitType, true);
 		}
 
-		command = dynamic_cast<Command*>(new SpawnNavyUnits(coalition, unitTypes, locations, immediate));
+		command = dynamic_cast<Command*>(new SpawnNavyUnits(coalition, unitTypes, locations, liveryIDs, immediate));
 	}
 	else if (key.compare("attackUnit") == 0)
 	{

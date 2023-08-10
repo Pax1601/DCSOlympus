@@ -555,7 +555,7 @@ export class UnitsManager {
             var unit = selectedUnits[idx];
             coalition = unit.getCoalition();
             deleteUnit(unit.ID, false, true);
-            units.push({unitType: unit.getName(), location: unit.getPosition()});
+            units.push({unitType: unit.getName(), location: unit.getPosition(), liveryID: unit.getLiveryID()});
         }
         const category = this.getSelectedUnitsTypes()[0];
         this.spawnUnits(category, units, coalition, true);
@@ -593,7 +593,8 @@ export class UnitsManager {
                     var units = groups[groupName].map((unit: any) => {
                         var position = new LatLng(getMap().getMouseCoordinates().lat + unit.position.lat - avgLat, getMap().getMouseCoordinates().lng + unit.position.lng - avgLng);
                         getMap().addTemporaryMarker(position, unit.name, unit.coalition);
-                        return {unitType: unit.name, location: position};
+                        const liveryID = unit.getDatabase()?.getByName(unit.getName())?.liveryID;
+                        return {unitType: unit.name, location: position, liveryID: liveryID? liveryID: ""};
                     });
                     this.spawnUnits(groups[groupName][0].category, units, groups[groupName][0].coalition, true);
                 }
@@ -629,7 +630,8 @@ export class UnitsManager {
                         if (Math.random() < IADSDensities[type]) {
                             const unitBlueprint = randomUnitBlueprint(groundUnitDatabase, {type: type, eras: activeEras, ranges: activeRanges});
                             if (unitBlueprint) {
-                                this.spawnUnits("GroundUnit", [{unitType: unitBlueprint.name, location: latlng}], coalitionArea.getCoalition(), true);
+                                const liveryID = unitBlueprint.liveryID;
+                                this.spawnUnits("GroundUnit", [{unitType: unitBlueprint.name, location: latlng, liveryID: liveryID? liveryID: ""}], coalitionArea.getCoalition(), true);
                                 getMap().addTemporaryMarker(latlng, unitBlueprint.name, coalitionArea.getCoalition());
                             }
                         }
@@ -673,7 +675,10 @@ export class UnitsManager {
                 for (let groupName in groups) {
                     if (groupName !== "" && groups[groupName].length > 0 && (groups[groupName].every((unit: any) => {return unit.category == "GroundUnit";}) || groups[groupName].every((unit: any) => {return unit.category == "NavyUnit";}))) {
                         var aliveUnits = groups[groupName].filter((unit: any) => {return unit.alive});
-                        var units = aliveUnits.map((unit: any) => {return {unitType: unit.name, location: unit.position}});
+                        var units = aliveUnits.map((unit: any) => {
+                            const liveryID = unit.getDatabase()?.getByName(unit.getName())?.liveryID;
+                            return { unitType: unit.name, location: unit.position, liveryID: liveryID? liveryID: "" }
+                        });
                         getUnitsManager().spawnUnits(groups[groupName][0].category, units, groups[groupName][0].coalition, true);
                     }
                 }

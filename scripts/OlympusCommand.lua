@@ -447,7 +447,8 @@ function Olympus.generateAirUnitsTable(units)
 			["payload"] = { ["pylons"] = payload, ["fuel"] = 999999, ["flare"] = 60, ["ammo_type"] = 1, ["chaff"] = 60, ["gun"] = 100, }, 
 			["heading"] = 0,
 			["callsign"] = { [1] = 1, [2] = 1, [3] = 1, ["name"] = "Olympus" .. Olympus.unitCounter.. "-" .. #unitTable + 1 },
-			["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitTable + 1
+			["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitTable + 1,
+			["livery_id"] = unit.liveryID
 		}
 	end
 	return unitTable
@@ -534,7 +535,8 @@ function Olympus.generateGroundUnitsTable(units)
 				["y"] = spawnLocation.z,
 				["heading"] = 0,
 				["skill"] = "High",
-				["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitTable + 1
+				["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitTable + 1,
+				["livery_id"] = unit.liveryID
 			}
 		end
 	end
@@ -569,7 +571,8 @@ function Olympus.generateNavyUnitsTable(units)
 				["heading"] = 0,
 				["skill"] = "High",
 				["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitTable + 1,
-				["transportable"] = { ["randomTransportable"] = false }
+				["transportable"] = { ["randomTransportable"] = false },
+				["livery_id"] = unit.liveryID
 			}
 		end
 	end
