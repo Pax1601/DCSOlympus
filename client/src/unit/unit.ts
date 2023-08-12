@@ -567,6 +567,18 @@ export class Unit extends CustomMarker {
             return false;
     }
 
+    isInViewport() {
+
+        const mapBounds = getMap().getBounds();
+        const unitPos   = this.getPosition();
+
+        return ( unitPos.lng > mapBounds.getWest()
+                && unitPos.lng < mapBounds.getEast()
+                && unitPos.lat > mapBounds.getSouth()
+                && unitPos.lat < mapBounds.getNorth() );
+
+    }
+
     /********************** Unit commands *************************/
     addDestination(latlng: L.LatLng) {
         if (!this.#human) {
@@ -707,6 +719,7 @@ export class Unit extends CustomMarker {
     /***********************************************/
     #onClick(e: any) {
         if (!this.#preventClick) {
+            console.log( getMap().getState() );
             if (getMap().getState() === IDLE || getMap().getState() === MOVE_UNIT || e.originalEvent.ctrlKey) {
 
                 if (!e.originalEvent.ctrlKey) {
@@ -716,10 +729,10 @@ export class Unit extends CustomMarker {
                 const unitIsSelected = !this.getSelected();
 
                 this.setSelected( unitIsSelected );
-                                
-                
-                //  Tell everyone a unit (de-)selection has happened, usually a panel or something.
 
+
+                //  Tell everyone a unit (de-)selection has happened, usually a panel or something.
+                //
                 const detail = {
                     "detail": {
                         "unit": this
@@ -741,6 +754,18 @@ export class Unit extends CustomMarker {
     }
 
     #onDoubleClick(e: any) {
+
+        const unitsManager = getUnitsManager();
+
+        Object.values( unitsManager.getUnits() ).forEach( ( unit:Unit ) => {
+
+            if ( unit.getAlive() === true && unit.getControlled() && unit.getName() === this.getName() && unit.isInViewport() ) {
+                unitsManager.selectUnit( unit.ID, false );
+            }
+
+        });
+
+
         clearTimeout(this.#timer);
         this.#preventClick = true;
     }
