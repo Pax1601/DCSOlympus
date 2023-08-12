@@ -1,0 +1,153 @@
+{
+	"BMP-1": {
+		"name": "BMP-1",
+		"coalition": "red",
+		"era": "Mid Cold War",
+		"label": "BMP-1",
+		"shortLabel": "BMP-1",
+		"filename": "",
+		"type": "IFV",
+		"cost": 10, 
+		"liveryID": "desert"
+	},
+	"Hawk SAM Battery": {
+		"name": "Hawk SAM Battery",
+		"coalition": "blue",
+		"era": "Early Cold War",
+		"label": "Hawk SAM Battery",
+		"shortLabel": "Hawk SAM Battery",
+		"range": "Medium",
+		"filename": "",
+		"type": "SAM Site",
+		"cost": 500
+	},
+	"Infantry AK": {
+		"name": "Infantry AK",
+		"era": "Mid Cold War",
+		"label": "Infantry AK",
+		"shortLabel": "Infantry AK",
+		"filename": "",
+		"type": "Infantry",
+		"cost": 1
+	},
+	"M-113": {
+		"name": "M-113",
+		"coalition": "blue",
+		"era": "Early Cold War",
+		"label": "M-113",
+		"shortLabel": "M-113",
+		"filename": "",
+		"type": "APC",
+		"cost": 5
+	},
+	"M-60": {
+		"name": "M-60",
+		"coalition": "blue",
+		"era": "Early Cold War",
+		"label": "M-60",
+		"shortLabel": "M-60",
+		"filename": "",
+		"type": "Tank",
+		"cost": 10
+	},
+	"SA-2 SAM Battery": {
+		"name": "SA-2 SAM Battery",
+		"coalition": "red",
+		"era": "Early Cold War",
+		"label": "SA-2 SAM Battery",
+		"shortLabel": "SA-2 SAM Battery",
+		"range": "Long",
+		"filename": "",
+		"type": "SAM Site",
+		"cost": 500
+	},
+	"T-55": {
+		"name": "T-55",
+		"coalition": "red",
+		"era": "Early Cold War",
+		"label": "T-55",
+		"shortLabel": "T-55",
+		"filename": "",
+		"type": "Tank",
+		"cost": 10, 
+		"liveryID": "desert"
+	},
+	"T-72B": {
+		"name": "T-72B",
+		"coalition": "red",
+		"era": "Mid Cold War",
+		"label": "T-72B",
+		"shortLabel": "T-72B",
+		"filename": "",
+		"type": "Tank",
+		"cost": 20, 
+		"liveryID": "desert"
+	},
+	"ZSU-23-4 Shilka": {
+		"name": "ZSU-23-4 Shilka",
+		"era": "Late Cold War",
+		"label": "ZSU-23-4 Shilka",
+		"shortLabel": "ZSU-23-4 Shilka",
+		"filename": "",
+		"type": "AAA",
+		"cost": 100
+	},
+	"Ural-375 ZU-23": {
+		"name": "Ural-375 ZU-23",
+		"era": "Early Cold War",
+		"label": "Ural-375 ZU-23",
+		"shortLabel": "Ural-375 ZU-23",
+		"filename": "",
+		"type": "AAA",
+		"cost": 50
+	},
+	"SAU Gvozdika": {
+		"name": "SAU Gvozdika",
+		"coalition": "red",
+		"era": "Early Cold War",
+		"label": "SAU Gvozdika",
+		"shortLabel": "SAU Gvozdika",
+		"filename": "",
+		"type": "Gun Artillery",
+		"cost": 10, 
+		"liveryID": "desert"
+	},
+	"Grad-URAL": {
+		"name": "Grad-URAL",
+		"coalition": "blue",
+		"era": "Early Cold War",
+		"label": "BM-21",
+		"shortLabel": "BM-21",
+		"filename": "",
+		"type": "Rocket Artillery",
+		"cost": 10
+	},
+	"Chieftain_mk3": {
+		"name": "Chieftain_mk3",
+		"coalition": "blue",
+		"era": "Early Cold War",
+		"label": "Chieftain Mk3",
+		"shortLabel": "Chieftain Mk3",
+		"filename": "",
+		"type": "Tank",
+		"cost": 20
+	}, 
+	"Scud_B": {
+		"name": "Scud_B",
+		"era": "Early Cold War",
+		"label": "SCUD",
+		"shortLabel": "SCUD",
+		"filename": "",
+		"type": "Rocket Artillery",
+		"cost": 10
+	}, 
+	"tt_ZU-23": {
+		"name": "tt_ZU-23",
+		"era": "Early Cold War",
+		"label": "Technical ZSU-23",
+		"shortLabel": "Technical ZSU-23",
+		"filename": "",
+		"type": "AAA",
+		"cost": 25
+	}
+}

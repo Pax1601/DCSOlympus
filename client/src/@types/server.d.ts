@@ -15,6 +15,7 @@ interface MissionData {
         theatre: string,
         dateAndTime: DateAndTime;
         commandModeOptions: CommandModeOptions;
+        coalitions: {red: string[], blue: string[]} = {};
     }
     time: number;
     sessionHash: string;

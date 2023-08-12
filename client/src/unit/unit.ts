@@ -312,6 +312,11 @@ export class Unit extends CustomMarker {
         }
     }
 
+    getLiveryID(): string {
+        const liveryID = this.getDatabase()?.getByName(this.getName())?.liveryID;
+        return liveryID? liveryID: "";
+    }
+
     setAlive(newAlive: boolean) {
         if (newAlive != this.#alive)
             document.dispatchEvent(new CustomEvent("unitDeath", { detail: this }));

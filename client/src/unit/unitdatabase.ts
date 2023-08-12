@@ -5,8 +5,21 @@ import { GAME_MASTER } from "../constants/constants";
 export class UnitDatabase {
     blueprints: { [key: string]: UnitBlueprint } = {};
 
-    constructor() {
-
+    constructor(url: string = "") {
+        if (url !== "") {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.responseType = 'json';
+            xhr.onload = () => {
+            var status = xhr.status;
+                if (status === 200) {
+                    this.blueprints = xhr.response;
+                } else {
+                    console.error(`Error retrieving database from ${url}`)
+                }
+            };
+            xhr.send();
+        }
     }
 
     getCategory() {
@@ -38,7 +51,7 @@ export class UnitDatabase {
                 const blueprint = this.blueprints[unit];
                 if (this.getSpawnPointsByName(blueprint.name) <= getMissionHandler().getAvailableSpawnPoints() && 
                     getMissionHandler().getCommandModeOptions().eras.includes(blueprint.era) &&
-                    (!getMissionHandler().getCommandModeOptions().restrictToCoalition || blueprint.coalition === getMissionHandler().getCommandedCoalition())) {
+                    (!getMissionHandler().getCommandModeOptions().restrictToCoalition || blueprint.coalition === getMissionHandler().getCommandedCoalition() || blueprint.coalition === undefined)) {
                     filteredBlueprints[unit] = blueprint;
                 }
             }

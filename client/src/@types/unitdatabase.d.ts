@@ -22,4 +22,6 @@ interface UnitBlueprint {
     range?: string;
     loadouts?: LoadoutBlueprint[];
     filename?: string;
+    liveryID?: string;
+    cost?: number;
 }

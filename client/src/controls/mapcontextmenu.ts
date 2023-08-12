@@ -92,7 +92,8 @@ export class MapContextMenu extends ContextMenu {
         document.addEventListener("contextMenuDeployAircrafts", () => {
             this.#spawnOptions.coalition = getActiveCoalition();
             if (this.#spawnOptions) {
-                var unitTable = {unitType: this.#spawnOptions.name, location: this.#spawnOptions.latlng, altitude: this.#spawnOptions.altitude, loadout: this.#spawnOptions.loadout};
+                const liveryID = aircraftDatabase.getByName(this.#spawnOptions.name)?.liveryID;
+                var unitTable = {unitType: this.#spawnOptions.name, location: this.#spawnOptions.latlng, altitude: this.#spawnOptions.altitude, loadout: this.#spawnOptions.loadout, liveryID: liveryID? liveryID: ""};
                 var units = [];
                 for (let i = 1; i < parseInt(this.#aircraftCountDropdown.getValue()) + 1; i++) {
                     units.push(unitTable);
@@ -107,7 +108,8 @@ export class MapContextMenu extends ContextMenu {
         document.addEventListener("contextMenuDeployHelicopters", () => {
             this.#spawnOptions.coalition = getActiveCoalition();
             if (this.#spawnOptions) {
-                var unitTable = {unitType: this.#spawnOptions.name, location: this.#spawnOptions.latlng, altitude: this.#spawnOptions.altitude, loadout: this.#spawnOptions.loadout};
+                const liveryID = aircraftDatabase.getByName(this.#spawnOptions.name)?.liveryID;
+                var unitTable = {unitType: this.#spawnOptions.name, location: this.#spawnOptions.latlng, altitude: this.#spawnOptions.altitude, loadout: this.#spawnOptions.loadout, liveryID: liveryID? liveryID: ""};
                 var units = [];
                 for (let i = 1; i < parseInt(this.#helicopterCountDropdown.getValue()) + 1; i++) {
                     units.push(unitTable);
@@ -122,7 +124,8 @@ export class MapContextMenu extends ContextMenu {
         document.addEventListener("contextMenuDeployGroundUnits", () => {
             this.#spawnOptions.coalition = getActiveCoalition();
             if (this.#spawnOptions) {
-                var unitTable = {unitType: this.#spawnOptions.name, location: this.#spawnOptions.latlng};
+                const liveryID = aircraftDatabase.getByName(this.#spawnOptions.name)?.liveryID;
+                var unitTable = {unitType: this.#spawnOptions.name, location: this.#spawnOptions.latlng, liveryID: liveryID? liveryID: ""};
                 var units = [];
                 for (let i = 1; i < parseInt(this.#groundUnitCountDropdown.getValue()) + 1; i++) {
                     units.push(JSON.parse(JSON.stringify(unitTable)));
@@ -138,7 +141,8 @@ export class MapContextMenu extends ContextMenu {
         document.addEventListener("contextMenuDeployNavyUnits", () => {
             this.#spawnOptions.coalition = getActiveCoalition();
             if (this.#spawnOptions) {
-                var unitTable = {unitType: this.#spawnOptions.name, location: this.#spawnOptions.latlng};
+                const liveryID = aircraftDatabase.getByName(this.#spawnOptions.name)?.liveryID;
+                var unitTable = {unitType: this.#spawnOptions.name, location: this.#spawnOptions.latlng, liveryID: liveryID? liveryID: ""};
                 var units = [];
                 for (let i = 1; i < parseInt(this.#navyUnitCountDropdown.getValue()) + 1; i++) {
                     units.push(JSON.parse(JSON.stringify(unitTable)));
