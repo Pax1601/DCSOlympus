@@ -12,7 +12,7 @@ import { DestinationPreviewMarker } from "./destinationpreviewmarker";
 import { TemporaryUnitMarker } from "./temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
 import { SVGInjector } from '@tanem/svg-injector'
-import { layers as mapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, visibilityControls, visibilityControlsTootlips, FIRE_AT_AREA, MOVE_UNIT, CARPET_BOMBING, BOMBING, SHOW_CONTACT_LINES, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, visibilityControlsTypes } from "../constants/constants";
+import { layers as mapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, visibilityControls, visibilityControlsTooltips, FIRE_AT_AREA, MOVE_UNIT, CARPET_BOMBING, BOMBING, SHOW_CONTACT_LINES, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, visibilityControlsTypes } from "../constants/constants";
 import { TargetMarker } from "./targetmarker";
 import { CoalitionArea } from "./coalitionarea";
 import { CoalitionAreaContextMenu } from "../controls/coalitionareacontextmenu";
@@ -63,7 +63,7 @@ export class Map extends L.Map {
     #mapSourceDropdown: Dropdown;
     #mapVisibilityOptionsDropdown: Dropdown;
     #optionButtons: { [key: string]: HTMLButtonElement[] } = {}
-    #visibiityOptions: { [key: string]: boolean } = {}
+    #visibilityOptions: { [key: string]: boolean } = {}
 
     constructor(ID: string) {
         /* Init the leaflet map */
@@ -89,7 +89,7 @@ export class Map extends L.Map {
         this.#mapSourceDropdown = new Dropdown("map-type", (layerName: string) => this.setLayer(layerName), this.getLayers());
 
         /* Visibility options dropdown */
-        this.#mapVisibilityOptionsDropdown = new Dropdown("map-visibility-options", () => {});
+        this.#mapVisibilityOptionsDropdown = new Dropdown("map-visibility-options", ( value:string ) => {});
 
         /* Init the state machine */
         this.#state = IDLE;
@@ -161,18 +161,18 @@ export class Map extends L.Map {
         this.#optionButtons["visibility"] = visibilityControls.map((option: string, index: number) => {
             var typesArrayString = `"${visibilityControlsTypes[index][0]}"`;
             visibilityControlsTypes[index].forEach((type: string, idx: number) => {if (idx > 0) typesArrayString = `${typesArrayString}, "${type}"`});
-            return this.#createOptionButton(option, `visibility/${option.toLowerCase()}.svg`, visibilityControlsTootlips[index], "toggleMarkerVisibility", `{"types": [${typesArrayString}]}`);
+            return this.#createOptionButton(option, `visibility/${option.toLowerCase()}.svg`, visibilityControlsTooltips[index], "toggleMarkerVisibility", `{"types": [${typesArrayString}]}`);
         });
         document.querySelector("#unit-visibility-control")?.append(...this.#optionButtons["visibility"]);
 
         /* Create the checkboxes to select the advanced visibility options */
 
-        this.#visibiityOptions[SHOW_CONTACT_LINES] = false;
-        this.#visibiityOptions[HIDE_GROUP_MEMBERS] = true;
-        this.#visibiityOptions[SHOW_UNIT_PATHS] = true;
-        this.#visibiityOptions[SHOW_UNIT_TARGETS] = true;
-        this.#mapVisibilityOptionsDropdown.setOptionsElements(Object.keys(this.#visibiityOptions).map((option: string) => {
-            return createCheckboxOption(option, option, this.#visibiityOptions[option], (ev: any) => {
+        this.#visibilityOptions[SHOW_CONTACT_LINES] = false;
+        this.#visibilityOptions[HIDE_GROUP_MEMBERS] = true;
+        this.#visibilityOptions[SHOW_UNIT_PATHS]    = true;
+        this.#visibilityOptions[SHOW_UNIT_TARGETS]  = true;
+        this.#mapVisibilityOptionsDropdown.setOptionsElements(Object.keys(this.#visibilityOptions).map((option: string) => {
+            return createCheckboxOption(option, option, this.#visibilityOptions[option], (ev: any) => {
                 this.#setVisibilityOption(option, ev);
             });
         }));
@@ -435,7 +435,7 @@ export class Map extends L.Map {
     }
 
     getVisibilityOptions() {
-        return this.#visibiityOptions;
+        return this.#visibilityOptions;
     }
 
     /* Event handlers */
@@ -724,7 +724,7 @@ export class Map extends L.Map {
     }
 
     #setVisibilityOption(option: string, ev: any) {
-        this.#visibiityOptions[option] = ev.currentTarget.checked;
+        this.#visibilityOptions[option] = ev.currentTarget.checked;
         document.dispatchEvent(new CustomEvent("mapVisibilityOptionsChanged"));
     }
 }
