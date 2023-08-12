@@ -85,6 +85,12 @@ export class UnitControlPanel extends Panel {
         });
 
         this.hide();
+
+        //  This is for when a ctrl-click happens on the map for deselection and we need to remove the selected unit from the panel
+        document.addEventListener( "unitDeselected", ( ev:CustomEventInit ) => {
+            this.getElement().querySelector( `button[data-unit-id="${ev.detail.unit.ID}"]` )?.remove();
+        });
+
     }
 
     show() {
@@ -107,15 +113,26 @@ export class UnitControlPanel extends Panel {
                 var callsign = unit.getUnitName() || "";
                 var label = unit.getDatabase()?.getByName(unit.getName())?.label || unit.getName();
 
+                button.setAttribute("data-unit-id", "" + unit.ID );
                 button.setAttribute("data-label", label);
                 button.setAttribute("data-callsign", callsign);
 
                 button.setAttribute("data-coalition", unit.getCoalition());
                 button.classList.add("pill", "highlight-coalition")
 
-                button.addEventListener("click", () => {
-                    getUnitsManager().deselectAllUnits();
-                    getUnitsManager().selectUnit(unit.ID, true);
+                button.addEventListener("click", ( ev:MouseEventInit ) => {
+
+                    //  Ctrl-click deselection
+                    if ( ev.ctrlKey === true && ev.shiftKey === false && ev.altKey === false ) {
+                        getUnitsManager().deselectUnit( unit.ID );
+                        button.remove();
+
+                    //  Deselect all
+                    } else {
+                        getUnitsManager().deselectAllUnits();
+                        getUnitsManager().selectUnit(unit.ID, true);
+                    }
+
                 });
                 return (button);
             }));

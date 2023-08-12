@@ -196,6 +196,16 @@ export class UnitsManager {
         }
     }
 
+    deselectUnit( ID:number ) {
+
+        if ( this.#units.hasOwnProperty( ID ) ) {
+            this.#units[ID].setSelected(false);
+        } else {
+            console.error( `deselectUnit(): no unit found with ID "${ID}".` );
+        }
+
+    }
+
     selectUnitsByHotgroup(hotgroup: number) {
         this.deselectAllUnits();
         this.getUnitsByHotgroup(hotgroup).forEach((unit: Unit) => unit.setSelected(true))
