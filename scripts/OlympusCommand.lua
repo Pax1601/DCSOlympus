@@ -1,6 +1,6 @@
 local version = "v0.4.2-alpha"
 
-local debug = false
+local debug = true
 
 Olympus.OlympusDLL = nil
 Olympus.DLLsloaded = false
@@ -454,6 +454,8 @@ function Olympus.generateAirUnitsTable(units)
 			["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitTable + 1,
 			["livery_id"] = unit.liveryID
 		}
+
+		Olympus.debug(unit.liveryID, 5)
 
 		-- Add the payload to the registry, used for unit cloning
 		Olympus.payloadRegistry[unitTable[#unitTable].name] = payload

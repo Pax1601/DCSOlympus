@@ -16,6 +16,9 @@ export class AircraftDatabase extends UnitDatabase {
             return 0;
 
         const blueprint = this.getByName(name);
+        if (blueprint?.cost != undefined)
+            return blueprint?.cost; 
+            
         if (blueprint?.era == "WW2")
             return 20;
         else if (blueprint?.era == "Early Cold War")

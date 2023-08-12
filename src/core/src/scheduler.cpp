@@ -203,7 +203,7 @@ void Scheduler::handleRequest(string key, json::value value, string username)
 			log(username + " spawned a " + coalition + " " + unitType, true);
 		}
 
-		command = dynamic_cast<Command*>(new SpawnAircrafts(coalition, unitTypes, locations, liveryIDs, loadouts, airbaseName, immediate));
+		command = dynamic_cast<Command*>(new SpawnAircrafts(coalition, unitTypes, locations, loadouts, liveryIDs, airbaseName, immediate));
 	}
 	else if (key.compare("spawnHelicopters") == 0)
 	{

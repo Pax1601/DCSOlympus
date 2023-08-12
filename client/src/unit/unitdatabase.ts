@@ -51,7 +51,7 @@ export class UnitDatabase {
                 const blueprint = this.blueprints[unit];
                 if (this.getSpawnPointsByName(blueprint.name) <= getMissionHandler().getAvailableSpawnPoints() && 
                     getMissionHandler().getCommandModeOptions().eras.includes(blueprint.era) &&
-                    (!getMissionHandler().getCommandModeOptions().restrictToCoalition || blueprint.coalition === getMissionHandler().getCommandedCoalition())) {
+                    (!getMissionHandler().getCommandModeOptions().restrictToCoalition || blueprint.coalition === getMissionHandler().getCommandedCoalition() || blueprint.coalition === undefined)) {
                     filteredBlueprints[unit] = blueprint;
                 }
             }
