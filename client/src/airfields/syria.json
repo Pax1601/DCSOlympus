@@ -1,995 +1,1366 @@
 {
   "airfields": {
-    "Abu_al-Duhur": {
+    "Abu al-Duhur": {
       "ICAO": "OS57",
-      "Elevation": "820",
+      "elevation": "820",
       "TACAN": "",
-      "Runways:": {
-        "09": {
-          "Mag Hdg": "088",
-          "Length": "9200",
-          "ILS": ""
-        },
-        "27": {
-          "Mag Hdg": "268",
-          "Length": "9200",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "27": {
+                "magHeading": "268",
+                "ILS": ""
+              },
+              "09": {
+                "magHeading": "088",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "9200"
         }
-      }
+      ]
     },
-    "Adana": {
+    "Adana Sakirpasa": {
       "ICAO": "LTAF",
-      "Elevation": "56",
+      "elevation": "56",
       "TACAN": "",
-      "Runways": {
-        "05": {
-          "Mag Hdg": "050",
-          "Length": "8800",
-          "ILS": "108.70"
-        },
-        "23": {
-          "Mag Hdg": "230",
-          "Length": "8800",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "23": {
+                "magHeading": "230",
+                "ILS": ""
+              },
+              "05": {
+                "magHeading": "050",
+                "ILS": "108.70"
+              }
+            }
+          ],
+          "length": "8800"
         }
-      }
+      ]
     },
     "Akrotiri": {
       "ICAO": "LCRA",
-      "Elevation": "69",
+      "elevation": "69",
       "TACAN": "107X",
-      "Runways": {
-        "10": {
-          "Mag Hdg": "106",
-          "Length": "8800",
-          "ILS": ""
-        },
-        "28": {
-          "Mag Hdg": "286",
-          "Length": "8800",
-          "ILS": "109.70"
+      "runways": [
+        {
+          "headings": [
+            {
+              "10": {
+                "magHeading": "106",
+                "ILS": ""
+              },
+              "28": {
+                "magHeading": "286",
+                "ILS": "109.70"
+              }
+            }
+          ],
+          "length": "8800"
         }
-      }
+      ]
     },
-    "Al_Qusayr": {
+    "Al Qusayr": {
       "ICAO": "OS70",
-      "Elevation": "1729",
+      "elevation": "1729",
       "TACAN": "",
-      "Runways": {
-        "10": {
-          "Mag Hdg": "096",
-          "Length": "9500",
-          "ILS": ""
-        },
-        "28": {
-          "Mag Hdg": "276",
-          "Length": "9500",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "10": {
+                "magHeading": "096",
+                "ILS": ""
+              },
+              "28": {
+                "magHeading": "276",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "9500"
         }
-      }
+      ]
     },
-    "Dumayr": {
+    "Al-Dumayr": {
       "ICAO": "OS61",
-      "Elevation": "2067",
+      "elevation": "2067",
       "TACAN": "",
-      "Runways": {
-        "06": {
-          "Mag Hdg": "060",
-          "Length": "9500",
-          "ILS": ""
-        },
-        "24": {
-          "Mag Hdg": "240",
-          "Length": "9500",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "24": {
+                "magHeading": "240",
+                "ILS": ""
+              },
+              "06": {
+                "magHeading": "060",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "9500"
         }
-      }
+      ]
     },
     "Aleppo": {
       "ICAO": "OSAP",
-      "Elevation": "1254",
+      "elevation": "1254",
       "TACAN": "",
-      "Runways": {
-        "09": {
-          "Mag Hdg": "092",
-          "Length": "9200",
-          "ILS": ""
-        },
-        "27": {
-          "Mag Hdg": "272",
-          "Length": "9200",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "27": {
+                "magHeading": "272",
+                "ILS": ""
+              },
+              "09": {
+                "magHeading": "092",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "9200"
         }
-      }
+      ]
     },
-    "An_Nasiriyah": {
+    "An Nasiriyah": {
       "ICAO": "OSAP",
-      "Elevation": "1254",
+      "elevation": "1254",
       "TACAN": "",
-      "Runways": {
-        "09": {
-          "Mag Hdg": "092",
-          "Length": "9200",
-          "ILS": ""
-        },
-        "27": {
-          "Mag Hdg": "272",
-          "Length": "9200",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "27": {
+                "magHeading": "272",
+                "ILS": ""
+              },
+              "09": {
+                "magHeading": "092",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "9200"
         }
-      }
+      ]
     },
-    "At_Tanf": {
+    "At Tanf": {
       "ICAO": "",
-      "Elevation": "2329",
+      "elevation": "2329",
       "TACAN": "",
-      "Runways": ""
+      "runways": []
     },
-    "Bassel_Al-Assad": {
+    "Bassel Al-Assad": {
       "ICAO": "OSLK",
-      "Elevation": "92",
+      "elevation": "92",
       "TACAN": "",
-      "Runways": {
-        "17L": {
-          "Mag Hdg": "173",
-          "Length": "7900",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "17L": {
+                "magHeading": "173",
+                "ILS": ""
+              },
+              "35R": {
+                "magHeading": "353",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "7900"
         },
-        "35R": {
-          "Mag Hdg": "353",
-          "Length": "7900",
-          "ILS": ""
-        },
-        "17R": {
-          "Mag Hdg": "173",
-          "Length": "8900",
-          "ILS": "109.10"
-        },
-        "35L": {
-          "Mag Hdg": "353",
-          "Length": "8900",
-          "ILS": ""
+        {
+          "headings": [
+            {
+              "17R": {
+                "magHeading": "173",
+                "ILS": "109.10"
+              },
+              "35L": {
+                "magHeading": "353",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "8900"
         }
-      }
+      ]
     },
-    "Beirut": {
+    "Beirut-Rafic Hariri": {
       "ICAO": "OLBA",
-      "Elevation": "39",
+      "elevation": "39",
       "TACAN": "",
-      "Runways": {
-        "03": {
-          "Mag Hdg": "030",
-          "Length": "7000",
-          "ILS": "110.70"
+      "runways": [
+        {
+          "headings": [
+            {
+              "16": {
+                "magHeading": "164",
+                "ILS": "110.10"
+              },
+              "34": {
+                "magHeading": "344",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "10300"
         },
-        "21": {
-          "Mag Hdg": "210",
-          "Length": "7000",
-          "ILS": ""
+        {
+          "headings": [
+            {
+              "17": {
+                "magHeading": "174",
+                "ILS": "109.50"
+              },
+              "35": {
+                "magHeading": "354",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "7600"
         },
-        "16": {
-          "Mag Hdg": "164",
-          "Length": "10300",
-          "ILS": "110.10"
-        },
-        "34": {
-          "Mag Hdg": "344",
-          "Length": "10300",
-          "ILS": ""
-        },
-        "17": {
-          "Mag Hdg": "174",
-          "Length": "7600",
-          "ILS": "109.50"
-        },
-        "35": {
-          "Mag Hdg": "354",
-          "Length": "7600",
-          "ILS": ""
+        {
+          "headings": [
+            {
+              "21": {
+                "magHeading": "210",
+                "ILS": ""
+              },
+              "03": {
+                "magHeading": "030",
+                "ILS": "110.70"
+              }
+            }
+          ],
+          "length": "7000"
         }
-      }
+      ]
     },
     "Damascus": {
       "ICAO": "OSDI",
-      "Elevation": "2008",
+      "elevation": "2008",
       "TACAN": "",
-      "Runways": {
-        "05L": {
-          "Mag Hdg": "045",
-          "Length": "11600",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "05L": {
+                "magHeading": "045",
+                "ILS": ""
+              },
+              "23R": {
+                "magHeading": "225",
+                "ILS": "109.90"
+              }
+            }
+          ],
+          "length": "11600"
         },
-        "23R": {
-          "Mag Hdg": "225",
-          "Length": "11600",
-          "ILS": "109.90"
-        },
-        "05R": {
-          "Mag Hdg": "045",
-          "Length": "11600",
-          "ILS": "111.10"
-        },
-        "23L": {
-          "Mag Hdg": "225",
-          "Length": "11600",
-          "ILS": ""
+        {
+          "headings": [
+            {
+              "05R": {
+                "magHeading": "045",
+                "ILS": "111.10"
+              },
+              "23L": {
+                "magHeading": "225",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "11600"
         }
-      }
+      ]
     },
-    "Deir_ez_Zor": {
+    "Deir ez-Zor": {
       "ICAO": "OSDZ",
-      "Elevation": "713",
+      "elevation": "713",
       "TACAN": "",
-      "Runways": {
-        "10": {
-          "Mag Hdg": "104",
-          "Length": "9500",
-          "ILS": ""
-        },
-        "28": {
-          "Mag Hdg": "284",
-          "Length": "9500",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "10": {
+                "magHeading": "104",
+                "ILS": ""
+              },
+              "28": {
+                "magHeading": "284",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "9500"
         }
-      }
+      ]
     },
     "Ercan": {
       "ICAO": "LCEN",
-      "Elevation": "312",
+      "elevation": "312",
       "TACAN": "",
-      "Runways": {
-        "11": {
-          "Mag Hdg": "110",
-          "Length": "8700",
-          "ILS": ""
-        },
-        "29": {
-          "Mag Hdg": "290",
-          "Length": "8700",
-          "ILS": "108.30"
+      "runways": [
+        {
+          "headings": [
+            {
+              "11": {
+                "magHeading": "110",
+                "ILS": ""
+              },
+              "29": {
+                "magHeading": "290",
+                "ILS": "108.30"
+              }
+            }
+          ],
+          "length": "8700"
         }
-      }
+      ]
     },
-    "Eyn_Shemer": {
+    "Eyn Shemer": {
       "ICAO": "LLES",
-      "Elevation": "110",
+      "elevation": "110",
       "TACAN": "",
-      "Runways": {
-        "09": {
-          "Mag Hdg": "095",
-          "Length": "4000",
-          "ILS": ""
-        },
-        "27": {
-          "Mag Hdg": "2750",
-          "Length": "4000",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "27": {
+                "magHeading": "2750",
+                "ILS": ""
+              },
+              "09": {
+                "magHeading": "095",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "4000"
         }
-      }
+      ]
     },
     "Gaziantep": {
       "ICAO": "LTAJ",
-      "Elevation": "2290",
+      "elevation": "2290",
       "TACAN": "",
-      "Runways": {
-        "10": {
-          "Mag Hdg": "100",
-          "Length": "9100",
-          "ILS": ""
-        },
-        "28": {
-          "Mag Hdg": "280",
-          "Length": "9100",
-          "ILS": "109.10"
+      "runways": [
+        {
+          "headings": [
+            {
+              "10": {
+                "magHeading": "100",
+                "ILS": ""
+              },
+              "28": {
+                "magHeading": "280",
+                "ILS": "109.10"
+              }
+            }
+          ],
+          "length": "9100"
         }
-      }
+      ]
     },
     "Gazipasa": {
       "ICAO": "LTFG",
-      "Elevation": "130",
+      "elevation": "130",
       "TACAN": "",
-      "Runways": {
-        "08": {
-          "Mag Hdg": "080",
-          "Length": "7500",
-          "ILS": "108.50"
-        },
-        "26": {
-          "Mag Hdg": "260",
-          "Length": "7500",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "26": {
+                "magHeading": "260",
+                "ILS": ""
+              },
+              "08": {
+                "magHeading": "080",
+                "ILS": "108.50"
+              }
+            }
+          ],
+          "length": "7500"
         }
-      }
+      ]
     },
     "Gecitkale": {
       "ICAO": "LCGK",
-      "Elevation": "148",
+      "elevation": "148",
       "TACAN": "",
-      "Runways": {
-        "09": {
-          "Mag Hdg": "088",
-          "Length": "9100",
-          "ILS": "108.50"
-        },
-        "27": {
-          "Mag Hdg": "268",
-          "Length": "9100",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "27": {
+                "magHeading": "268",
+                "ILS": ""
+              },
+              "09": {
+                "magHeading": "088",
+                "ILS": "108.50"
+              }
+            }
+          ],
+          "length": "9100"
         }
-      }
+      ]
     },
     "H3": {
       "ICAO": "",
-      "Elevation": "2583",
+      "elevation": "2583",
       "TACAN": "",
-      "Runways": {
-        "06": {
-          "Mag Hdg": "059",
-          "Length": "9800",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "11": {
+                "magHeading": "107",
+                "ILS": ""
+              },
+              "29": {
+                "magHeading": "287",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "9500"
         },
-        "24": {
-          "Mag Hdg": "239",
-          "Length": "9800",
-          "ILS": ""
-        },
-        "11": {
-          "Mag Hdg": "107",
-          "Length": "9500",
-          "ILS": ""
-        },
-        "29": {
-          "Mag Hdg": "287",
-          "Length": "9500",
-          "ILS": ""
+        {
+          "headings": [
+            {
+              "24": {
+                "magHeading": "239",
+                "ILS": ""
+              },
+              "06": {
+                "magHeading": "059",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "9800"
         }
-      }
+      ]
     },
-    "H3_Northwest": {
+    "H3 Northwest": {
       "ICAO": "",
-      "Elevation": "2582",
+      "elevation": "2582",
       "TACAN": "",
-      "Runways": {
-        "12": {
-          "Mag Hdg": "117",
-          "Length": "8000",
-          "ILS": ""
-        },
-        "30": {
-          "Mag Hdg": "297",
-          "Length": "8000",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "12": {
+                "magHeading": "117",
+                "ILS": ""
+              },
+              "30": {
+                "magHeading": "297",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "8000"
         }
-      }
+      ]
     },
-    "H3_Southwest": {
+    "H3 Southwest": {
       "ICAO": "",
-      "Elevation": "2671",
+      "elevation": "2671",
       "TACAN": "",
-      "Runways": {
-        "12": {
-          "Mag Hdg": "116",
-          "Length": "8000",
-          "ILS": ""
-        },
-        "30": {
-          "Mag Hdg": "296",
-          "Length": "8000",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "12": {
+                "magHeading": "116",
+                "ILS": ""
+              },
+              "30": {
+                "magHeading": "296",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "8000"
         }
-      }
+      ]
     },
     "H4": {
       "ICAO": "OJHR",
-      "Elevation": "2257",
+      "elevation": "2257",
       "TACAN": "",
-      "Runways": {
-        "10": {
-          "Mag Hdg": "098",
-          "Length": "8000",
-          "ILS": ""
-        },
-        "28": {
-          "Mag Hdg": "278",
-          "Length": "8000",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "10": {
+                "magHeading": "098",
+                "ILS": ""
+              },
+              "28": {
+                "magHeading": "278",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "8000"
         }
-      }
+      ]
     },
     "Haifa": {
       "ICAO": "LLHA",
-      "Elevation": "20",
+      "elevation": "20",
       "TACAN": "",
-      "Runways": {
-        "16": {
-          "Mag Hdg": "157",
-          "Length": "3300",
-          "ILS": ""
-        },
-        "34": {
-          "Mag Hdg": "337",
-          "Length": "3300",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "16": {
+                "magHeading": "157",
+                "ILS": ""
+              },
+              "34": {
+                "magHeading": "337",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "3300"
         }
-      }
+      ]
     },
     "Hama": {
       "ICAO": "OS58",
-      "Elevation": "984",
+      "elevation": "984",
       "TACAN": "",
-      "Runways": {
-        "09": {
-          "Mag Hdg": "095",
-          "Length": "8600",
-          "ILS": ""
-        },
-        "27": {
-          "Mag Hdg": "275",
-          "Length": "8600",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "27": {
+                "magHeading": "275",
+                "ILS": ""
+              },
+              "09": {
+                "magHeading": "095",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "8600"
         }
-      }
+      ]
     },
     "Hatay": {
       "ICAO": "LTDA",
-      "Elevation": "253",
+      "elevation": "253",
       "TACAN": "",
-      "Runways": {
-        "04": {
-          "Mag Hdg": "039",
-          "Length": "9600",
-          "ILS": "108.90"
-        },
-        "22": {
-          "Mag Hdg": "219",
-          "Length": "9600",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "22": {
+                "magHeading": "219",
+                "ILS": ""
+              },
+              "04": {
+                "magHeading": "039",
+                "ILS": "108.90"
+              }
+            }
+          ],
+          "length": "9600"
         }
-      }
+      ]
     },
     "Incirlik": {
       "ICAO": "LTAG",
-      "Elevation": "230",
+      "elevation": "230",
       "TACAN": "21X",
-      "Runways": {
-        "05": {
-          "Mag Hdg": "049",
-          "Length": "9600",
-          "ILS": "109.30"
-        },
-        "23": {
-          "Mag Hdg": "229",
-          "Length": "9500",
-          "ILS": "111.70"
+      "runways": [
+        {
+          "headings": [
+            {
+              "23": {
+                "magHeading": "229",
+                "ILS": "111.70"
+              },
+              "05": {
+                "magHeading": "049",
+                "ILS": "109.30"
+              }
+            }
+          ],
+          "length": "9500"
         }
-      }
+      ]
     },
     "Jirah": {
       "ICAO": "OS62",
-      "Elevation": "1173",
+      "elevation": "1173",
       "TACAN": "",
-      "Runways": {
-        "10": {
-          "Mag Hdg": "095",
-          "Length": "9600",
-          "ILS": ""
-        },
-        "28": {
-          "Mag Hdg": "275",
-          "Length": "9600",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "10": {
+                "magHeading": "095",
+                "ILS": ""
+              },
+              "28": {
+                "magHeading": "275",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "9600"
         }
-      }
+      ]
     },
     "Khalkhalah": {
       "ICAO": "OS69",
-      "Elevation": "2418",
+      "elevation": "2418",
       "TACAN": "",
-      "Runways": {
-        "07": {
-          "Mag Hdg": "071",
-          "Length": "9500",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "15": {
+                "magHeading": "146",
+                "ILS": ""
+              },
+              "33": {
+                "magHeading": "326",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "8300"
         },
-        "25": {
-          "Mag Hdg": "251",
-          "Length": "9500",
-          "ILS": ""
-        },
-        "15": {
-          "Mag Hdg": "146",
-          "Length": "8300",
-          "ILS": ""
-        },
-        "33": {
-          "Mag Hdg": "326",
-          "Length": "8300",
-          "ILS": ""
+        {
+          "headings": [
+            {
+              "25": {
+                "magHeading": "251",
+                "ILS": ""
+              },
+              "07": {
+                "magHeading": "071",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "9500"
         }
-      }
+      ]
     },
-    "Kharab_Ishk": {
+    "Kharab Ishk": {
       "ICAO": "",
-      "Elevation": "1416",
+      "elevation": "1416",
       "TACAN": "",
-      "Runways": ""
+      "runways": []
     },
-    "King_Hussein": {
+    "King Hussein Air College": {
       "ICAO": "OJMF",
-      "Elevation": "2205",
+      "elevation": "2205",
       "TACAN": "",
-      "Runways": {
-        "13": {
-          "Mag Hdg": "127",
-          "Length": "9500",
-          "ILS": ""
-        },
-        "31": {
-          "Mag Hdg": "307",
-          "Length": "9500",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "13": {
+                "magHeading": "127",
+                "ILS": ""
+              },
+              "31": {
+                "magHeading": "307",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "9500"
         }
-      }
+      ]
     },
     "Kingsfield": {
       "ICAO": "LCRE",
-      "Elevation": "276",
+      "elevation": "276",
       "TACAN": "",
-      "Runways": {
-        "06": {
-          "Mag Hdg": "058",
-          "Length": "3300",
-          "ILS": ""
-        },
-        "24": {
-          "Mag Hdg": "238",
-          "Length": "3300",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "24": {
+                "magHeading": "238",
+                "ILS": ""
+              },
+              "06": {
+                "magHeading": "058",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "3300"
         }
-      }
+      ]
     },
-    "Kiryat_Shmona": {
+    "Kiryat Shmona": {
       "ICAO": "LLKS",
-      "Elevation": "360",
+      "elevation": "360",
       "TACAN": "",
-      "Runways": {
-        "03": {
-          "Mag Hdg": "033",
-          "Length": "3500",
-          "ILS": ""
-        },
-        "21": {
-          "Mag Hdg": "213",
-          "Length": "3500",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "21": {
+                "magHeading": "213",
+                "ILS": ""
+              },
+              "03": {
+                "magHeading": "033",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "3500"
         }
-      }
+      ]
     },
     "Kuweires": {
       "ICAO": "OS66",
-      "Elevation": "1201",
+      "elevation": "1201",
       "TACAN": "",
-      "Runways": {
-        "10": {
-          "Mag Hdg": "095",
-          "Length": "7700",
-          "ILS": ""
-        },
-        "28": {
-          "Mag Hdg": "275",
-          "Length": "7700",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "10": {
+                "magHeading": "095",
+                "ILS": ""
+              },
+              "28": {
+                "magHeading": "275",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "7700"
         }
-      }
+      ]
     },
     "Lakatamia": {
       "ICAO": "",
-      "Elevation": "758",
+      "elevation": "758",
       "TACAN": "",
-      "Runways": ""
+      "runways": []
     },
     "Larnaca": {
       "ICAO": "LCRE",
-      "Elevation": "16",
+      "elevation": "16",
       "TACAN": "",
-      "Runways": {
-        "04": {
-          "Mag Hdg": "043",
-          "Length": "8800",
-          "ILS": ""
-        },
-        "22": {
-          "Mag Hdg": "223",
-          "Length": "8800",
-          "ILS": "110.30"
+      "runways": [
+        {
+          "headings": [
+            {
+              "22": {
+                "magHeading": "223",
+                "ILS": "110.30"
+              },
+              "04": {
+                "magHeading": "043",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "8800"
         }
-      }
+      ]
     },
-    "Marj_Al_Sultan": {
+    "London": {
       "ICAO": "",
-      "Elevation": "2008",
+      "elevation": "",
       "TACAN": "",
-      "Runways": ""
+      "runways": []
     },
-    "Marj_Ruhayyil": {
-      "ICAO": "OS63",
-      "Elevation": "2161",
+    "Marj as Sultan North": {
+      "ICAO": "",
+      "elevation": "2008",
       "TACAN": "",
-      "Runways": {
-        "06L": {
-          "Mag Hdg": "059",
-          "Length": "9400",
-          "ILS": ""
+      "runways": []
+    },
+    "Marj as Sultan South": {
+      "ICAO": "",
+      "elevation": "2008",
+      "TACAN": "",
+      "runways": []
+    },
+    "Marj Ruhayyil": {
+      "ICAO": "OS63",
+      "elevation": "2161",
+      "TACAN": "",
+      "runways": [
+        {
+          "headings": [
+            {
+              "06L": {
+                "magHeading": "059",
+                "ILS": ""
+              },
+              "24R": {
+                "magHeading": "239",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "9400"
         },
-        "24R": {
-          "Mag Hdg": "239",
-          "Length": "9400",
-          "ILS": ""
-        },
-        "06R": {
-          "Mag Hdg": "059",
-          "Length": "8400",
-          "ILS": ""
-        },
-        "24L": {
-          "Mag Hdg": "239",
-          "Length": "8400",
-          "ILS": ""
+        {
+          "headings": [
+            {
+              "06R": {
+                "magHeading": "059",
+                "ILS": ""
+              },
+              "24L": {
+                "magHeading": "239",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "8400"
         }
-      }
+      ]
     },
     "Megiddo": {
       "ICAO": "LLMG",
-      "Elevation": "180",
+      "elevation": "180",
       "TACAN": "",
-      "Runways": {
-        "09": {
-          "Mag Hdg": "088",
-          "Length": "6200",
-          "ILS": ""
-        },
-        "27": {
-          "Mag Hdg": "268",
-          "Length": "6200",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "27": {
+                "magHeading": "268",
+                "ILS": ""
+              },
+              "09": {
+                "magHeading": "088",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "6200"
         }
-      }
+      ]
     },
     "Mezzeh": {
       "ICAO": "OS67",
-      "Elevation": "2387",
+      "elevation": "2387",
       "TACAN": "",
-      "Runways": {
-        "06": {
-          "Mag Hdg": "056",
-          "Length": "8800",
-          "ILS": ""
-        },
-        "24": {
-          "Mag Hdg": "236",
-          "Length": "8800",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "24": {
+                "magHeading": "236",
+                "ILS": ""
+              },
+              "06": {
+                "magHeading": "056",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "8800"
         }
-      }
+      ]
     },
     "Minakh": {
       "ICAO": "OS71",
-      "Elevation": "1614",
+      "elevation": "1614",
       "TACAN": "",
-      "Runways": {
-        "10": {
-          "Mag Hdg": "096",
-          "Length": "4500",
-          "ILS": ""
-        },
-        "28": {
-          "Mag Hdg": "276",
-          "Length": "4500",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "10": {
+                "magHeading": "096",
+                "ILS": ""
+              },
+              "28": {
+                "magHeading": "276",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "4500"
         }
-      }
+      ]
     },
     "Naqoura": {
       "ICAO": "",
-      "Elevation": "381",
+      "elevation": "381",
       "TACAN": "",
-      "Runways": ""
+      "runways": []
+    },
+    "Nicosia": {
+      "ICAO": "",
+      "elevation": "722",
+      "TACAN": "",
+      "runways": [
+        {
+            "headings": [
+                {
+                  "09": {
+                    "magHeading": "092",
+                    "ILS": ""
+                  },
+                  "27": {
+                    "magHeading": "272",
+                    "ILS": ""
+                  }
+                }
+            ],
+            "length": "5791"
+        },
+        {
+            "headings": [
+                {
+                  "14": {
+                    "magHeading": "148",
+                    "ILS": ""
+                  },
+                  "27": {
+                    "magHeading": "228",
+                    "ILS": ""
+                  }
+                }
+            ],
+            "length": "8385"
+        }
+      ]
     },
     "Palmyra": {
       "ICAO": "OSPR",
-      "Elevation": "1325",
+      "elevation": "1325",
       "TACAN": "",
-      "Runways": {
-        "08": {
-          "Mag Hdg": "079",
-          "Length": "9200",
-          "ILS": ""
-        },
-        "26": {
-          "Mag Hdg": "259",
-          "Length": "9200",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "26": {
+                "magHeading": "259",
+                "ILS": ""
+              },
+              "08": {
+                "magHeading": "079",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "9200"
         }
-      }
+      ]
     },
     "Paphos": {
       "ICAO": "LCPH",
-      "Elevation": "40",
+      "elevation": "40",
       "TACAN": "79X",
-      "Runways": {
-        "11": {
-          "Mag Hdg": "109",
-          "Length": "8600",
-          "ILS": ""
-        },
-        "29": {
-          "Mag Hdg": "289",
-          "Length": "8600",
-          "ILS": "108.90"
+      "runways": [
+        {
+          "headings": [
+            {
+              "11": {
+                "magHeading": "109",
+                "ILS": ""
+              },
+              "29": {
+                "magHeading": "289",
+                "ILS": "108.90"
+              }
+            }
+          ],
+          "length": "8600"
         }
-      }
+      ]
     },
-    "Qabr_al_Sitt": {
+    "Pinarbashi": {
       "ICAO": "",
-      "Elevation": "2135",
+      "elevation": "771",
       "TACAN": "",
-      "Runways": ""
-    },
-    "Ramat_David": {
-      "ICAO": "LLRD",
-      "Elevation": "146",
-      "TACAN": "84X",
-      "Runways": {
-        "09": {
-          "Mag Hdg": "084",
-          "Length": "7600",
-          "ILS": ""
-        },
-        "27": {
-          "Mag Hdg": "264",
-          "Length": "7600",
-          "ILS": ""
-        },
-        "11": {
-          "Mag Hdg": "105",
-          "Length": "7700",
-          "ILS": ""
-        },
-        "29": {
-          "Mag Hdg": "285",
-          "Length": "7700",
-          "ILS": ""
-        },
-        "15": {
-          "Mag Hdg": "141",
-          "Length": "7700",
-          "ILS": ""
-        },
-        "33": {
-          "Mag Hdg": "321",
-          "Length": "7700",
-          "ILS": "111.10"
+      "runways": [
+        {
+          "headings": [
+            {
+              "16": {
+                "magHeading": "167",
+                "ILS": ""
+              },
+              "34": {
+                "magHeading": "347",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "3577"
         }
-      }
+      ]
+    },
+    "Qabr as Sitt": {
+      "ICAO": "",
+      "elevation": "2135",
+      "TACAN": "",
+      "runways": []
+    },
+    "Ramat David": {
+      "ICAO": "LLRD",
+      "elevation": "146",
+      "TACAN": "84X",
+      "runways": [
+        {
+          "headings": [
+            {
+              "11": {
+                "magHeading": "105",
+                "ILS": ""
+              },
+              "29": {
+                "magHeading": "285",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "7700"
+        },
+        {
+          "headings": [
+            {
+              "15": {
+                "magHeading": "141",
+                "ILS": ""
+              },
+              "33": {
+                "magHeading": "321",
+                "ILS": "111.10"
+              }
+            }
+          ],
+          "length": "7700"
+        },
+        {
+          "headings": [
+            {
+              "27": {
+                "magHeading": "264",
+                "ILS": ""
+              },
+              "09": {
+                "magHeading": "084",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "7600"
+        }
+      ]
     },
     "Rayak": {
       "ICAO": "OLRA",
-      "Elevation": "3035",
+      "elevation": "3035",
       "TACAN": "",
-      "Runways": {
-        "04": {
-          "Mag Hdg": "042",
-          "Length": "9400",
-          "ILS": ""
-        },
-        "22": {
-          "Mag Hdg": "222",
-          "Length": "9400",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "22": {
+                "magHeading": "222",
+                "ILS": ""
+              },
+              "04": {
+                "magHeading": "042",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "9400"
         }
-      }
+      ]
     },
-    "Rene_Mouawad": {
+    "Rene Mouawad": {
       "ICAO": "OLKA",
-      "Elevation": "23",
+      "elevation": "23",
       "TACAN": "",
-      "Runways": {
-        "06": {
-          "Mag Hdg": "058",
-          "Length": "9000",
-          "ILS": ""
-        },
-        "24": {
-          "Mag Hdg": "238",
-          "Length": "9000",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "24": {
+                "magHeading": "238",
+                "ILS": ""
+              },
+              "06": {
+                "magHeading": "058",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "9000"
         }
-      }
+      ]
     },
-    "Rosh_Pina": {
+    "Rosh Pina": {
       "ICAO": "LLIB",
-      "Elevation": "914",
+      "elevation": "914",
       "TACAN": "",
-      "Runways": {
-        "05": {
-          "Mag Hdg": "049",
-          "Length": "3200",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "15": {
+                "magHeading": "147",
+                "ILS": ""
+              },
+              "33": {
+                "magHeading": "327",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "2900"
         },
-        "23": {
-          "Mag Hdg": "229",
-          "Length": "3200",
-          "ILS": ""
-        },
-        "15": {
-          "Mag Hdg": "147",
-          "Length": "2900",
-          "ILS": ""
-        },
-        "33": {
-          "Mag Hdg": "327",
-          "Length": "2900",
-          "ILS": ""
+        {
+          "headings": [
+            {
+              "23": {
+                "magHeading": "229",
+                "ILS": ""
+              },
+              "05": {
+                "magHeading": "049",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "3200"
         }
-      }
+      ]
     },
     "Ruwayshid": {
       "ICAO": "",
-      "Elevation": "2980",
+      "elevation": "2980",
       "TACAN": "",
-      "Runways": {
-        "09": {
-          "Mag Hdg": "091",
-          "Length": "7000",
-          "ILS": ""
-        },
-        "27": {
-          "Mag Hdg": "271",
-          "Length": "7000",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "27": {
+                "magHeading": "271",
+                "ILS": ""
+              },
+              "09": {
+                "magHeading": "091",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "7000"
         }
-      }
+      ]
     },
     "Sanliurfa": {
       "ICAO": "LTCS",
-      "Elevation": "2703",
+      "elevation": "2703",
       "TACAN": "",
-      "Runways": {
-        "04": {
-          "Mag Hdg": "036",
-          "Length": "12900",
-          "ILS": ""
-        },
-        "22": {
-          "Mag Hdg": "216",
-          "Length": "12900",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "22": {
+                "magHeading": "216",
+                "ILS": ""
+              },
+              "04": {
+                "magHeading": "036",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "12900"
         }
-      }
+      ]
     },
     "Sayqal": {
       "ICAO": "OS68",
-      "Elevation": "2274",
+      "elevation": "2274",
       "TACAN": "",
-      "Runways": {
-        "05": {
-          "Mag Hdg": "055",
-          "Length": "7600",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "23": {
+                "magHeading": "235",
+                "ILS": ""
+              },
+              "05": {
+                "magHeading": "055",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "7600"
         },
-        "23": {
-          "Mag Hdg": "235",
-          "Length": "7600",
-          "ILS": ""
-        },
-        "08": {
-          "Mag Hdg": "085",
-          "Length": "9500",
-          "ILS": ""
-        },
-        "26": {
-          "Mag Hdg": "265",
-          "Length": "9500",
-          "ILS": ""
+        {
+          "headings": [
+            {
+              "26": {
+                "magHeading": "265",
+                "ILS": ""
+              },
+              "08": {
+                "magHeading": "085",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "9500"
         }
-      }
+      ]
     },
     "Shayrat": {
       "ICAO": "OS65",
-      "Elevation": "2638",
+      "elevation": "2638",
       "TACAN": "",
-      "Runways": {
-        "11": {
-          "Mag Hdg": "107",
-          "Length": "9300",
-          "ILS": ""
-        },
-        "29": {
-          "Mag Hdg": "287",
-          "Length": "9300",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "11": {
+                "magHeading": "107",
+                "ILS": ""
+              },
+              "29": {
+                "magHeading": "287",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "9300"
         }
-      }
+      ]
     },
     "Tabqa": {
       "ICAO": "OS59",
-      "Elevation": "1099",
+      "elevation": "1099",
       "TACAN": "",
-      "Runways": {
-        "09": {
-          "Mag Hdg": "088",
-          "Length": "9300",
-          "ILS": ""
-        },
-        "27": {
-          "Mag Hdg": "268",
-          "Length": "9300",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "27": {
+                "magHeading": "268",
+                "ILS": ""
+              },
+              "09": {
+                "magHeading": "088",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "9300"
         }
-      }
+      ]
     },
     "Taftanaz": {
       "ICAO": "",
-      "Elevation": "",
+      "elevation": "",
       "TACAN": "",
-      "Runways": ""
+      "runways": []
     },
-    "Tal_Siman": {
+    "Tal Siman": {
       "ICAO": "",
-      "Elevation": "",
+      "elevation": "",
       "TACAN": "",
-      "Runways": ""
+      "runways": []
     },
-    "thalah": {
+    "Tha'lah": {
       "ICAO": "OS60",
-      "Elevation": "2414",
+      "elevation": "2414",
       "TACAN": "",
-      "Runways": {
-        "05": {
-          "Mag Hdg": "053",
-          "Length": "9500",
-          "ILS": ""
-        },
-        "23": {
-          "Mag Hdg": "233",
-          "Length": "9500",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "23": {
+                "magHeading": "233",
+                "ILS": ""
+              },
+              "05": {
+                "magHeading": "053",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "9500"
         }
-      }
+      ]
     },
     "Tiyas": {
       "ICAO": "OS72",
-      "Elevation": "1798",
+      "elevation": "1798",
       "TACAN": "",
-      "Runways": {
-        "09": {
-          "Mag Hdg": "085",
-          "Length": "9500",
-          "ILS": ""
-        },
-        "27": {
-          "Mag Hdg": "265",
-          "Length": "9500",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "27": {
+                "magHeading": "265",
+                "ILS": ""
+              },
+              "09": {
+                "magHeading": "085",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "9500"
         }
-      }
+      ]
     },
-    "Wujah_Al_Hajar": {
+    "Wujah Al Hajar": {
       "ICAO": "Z190",
-      "Elevation": "641",
+      "elevation": "641",
       "TACAN": "",
-      "Runways": {
-        "02": {
-          "Mag Hdg": "024",
-          "Length": "4800",
-          "ILS": ""
-        },
-        "20": {
-          "Mag Hdg": "204",
-          "Length": "4800",
-          "ILS": ""
+      "runways": [
+        {
+          "headings": [
+            {
+              "20": {
+                "magHeading": "204",
+                "ILS": ""
+              },
+              "02": {
+                "magHeading": "024",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "4800"
         }
-      }
+      ]
     }
   }
 }

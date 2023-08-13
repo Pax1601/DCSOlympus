@@ -1,6 +1,7 @@
 import { getMap, getMissionHandler, getUnitsManager, setActiveCoalition } from "..";
 import { BLUE_COMMANDER, GAME_MASTER, RED_COMMANDER } from "../constants/constants";
 import { Airbase } from "../mission/airbase";
+import { dataPointMap } from "../other/utils";
 import { ContextMenu } from "./contextmenu";
 
 export class AirbaseContextMenu extends ContextMenu {
@@ -27,6 +28,74 @@ export class AirbaseContextMenu extends ContextMenu {
         this.setCoalition(airbase.getCoalition());
         this.enableLandButton(getUnitsManager().getSelectedUnitsTypes().length == 1 && ["Aircraft", "Helicopter"].includes(getUnitsManager().getSelectedUnitsTypes()[0]) && (getUnitsManager().getSelectedUnitsCoalition() === airbase.getCoalition() || airbase.getCoalition() === "neutral"))
         this.enableSpawnButton(getMissionHandler().getCommandModeOptions().commandMode == GAME_MASTER || this.#airbase.getCoalition() == getMissionHandler().getCommandedCoalition());
+
+
+        dataPointMap( <HTMLElement>this.getContainer(), {
+            "coalition": airbase.getCoalition(),
+            "airbaseName": airbase.getName()
+        });
+        
+        dataPointMap( <HTMLElement>this.getContainer(), this.#airbase.getChartData() );
+        
+        const runwaysContainer     = <HTMLElement>this.getContainer()?.querySelector( "#airbase-runways" );
+        runwaysContainer.innerHTML = "";
+
+        if ( runwaysContainer instanceof HTMLElement ) {
+
+            const runways = this.#airbase.getChartData().runways;
+
+            if ( runways.length === 0 ) {
+                runwaysContainer.innerText = "No data";
+            } else {
+                runways.forEach( runway => {
+
+                    let runwayDiv = document.createElement( "div" );
+                    runwayDiv.classList.add( "runway" );
+
+                    runway.headings.forEach( headings => {
+
+                        //*
+                        for ( const [ heading, data ] of Object.entries( headings ) ) {
+                            
+                            let headingDiv = document.createElement( "div" );
+                            headingDiv.classList.add( "heading" );
+
+                            let abbr       = document.createElement( "abbr" );
+                            abbr.title     = `Mag heading: ${data.magHeading}`;
+                            abbr.innerText = heading;
+
+                            headingDiv.appendChild( abbr );
+
+                            runwayDiv.appendChild( headingDiv );
+
+                            if ( data.ILS ) {
+                                let ilsDiv = document.createElement( "div" );
+                                ilsDiv.classList.add( "ils" );
+
+                                abbr           = document.createElement( "abbr" );
+                                abbr.title     = data.ILS;
+                                abbr.innerText = "ILS";
+
+                                ilsDiv.appendChild( abbr );
+                                headingDiv.appendChild( ilsDiv );
+                            }
+        
+        
+                        }
+                        //*/
+
+                    });
+
+                    runwaysContainer.appendChild( runwayDiv );
+
+                });
+            }
+
+        }
+
+        this.clip();
+
+
     }
 
     setName(airbaseName: string) {

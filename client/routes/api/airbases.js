@@ -77,7 +77,8 @@ app.get( "/:theatreName/:airbaseName", ( req, res ) => {
 
 app.get( "/:theatreName", ( req, res ) => {
 
-    const airbases = getAirbasesData( req.params.theatreName );
+    const theatreName = req.params.theatreName.toLowerCase().replace( /\s*/g, "" );
+    const airbases    = getAirbasesData( theatreName );
 
     if ( !airbases ) {
         sendInvalidTheatre( res );

@@ -1,6 +1,6 @@
 import { LatLng } from "leaflet";
 import { getInfoPopup, getMap } from "..";
-import { Airbase } from "./airbase";
+import { Airbase, AirbaseChartData } from "./airbase";
 import { Bullseye } from "./bullseye";
 import { BLUE_COMMANDER, GAME_MASTER, NONE, RED_COMMANDER } from "../constants/constants";
 import { refreshAll, setCommandModeOptions } from "../server/server";
@@ -66,11 +66,14 @@ export class MissionHandler {
 
     updateMission(data: MissionData) {
         if (data.mission) {
+
             /* Set the mission theatre */
             if (data.mission.theatre != this.#theatre) {
                 this.#theatre = data.mission.theatre;
                 getMap().setTheatre(this.#theatre);
                 getInfoPopup().setText("Map set to " + this.#theatre);
+            
+                this.#loadAirbaseChartData();
             }
 
             /* Set the date and time data */
@@ -231,4 +234,38 @@ export class MissionHandler {
     #onAirbaseClick(e: any) {
         getMap().showAirbaseContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng, e.sourceTarget);
     }
+
+
+    #loadAirbaseChartData() {
+
+        if ( !this.#theatre ) {
+            return;
+        }
+        
+        fetch( '/api/airbases/' + this.#theatre , {
+            method: 'GET',      
+            headers: { 
+                'Accept': '*/*',
+                'Content-Type': 'application/json' 
+            }
+        })
+        .then( response => response.json() )
+        .then( data => {
+            
+            for ( const [ id, airbase ] of Object.entries( this.#airbases ) ) {
+
+                let airbaseName = airbase.getName();
+
+                if ( data.hasOwnProperty( airbaseName ) ) {
+                    airbase.setChartData( data[ airbaseName ] );
+                } else {
+                    console.error( `Airbase "${airbaseName}" not found in chart data.` );
+                }
+            }
+
+        });
+
+        
+    }
+    
 }

@@ -1,361 +1,466 @@
 {
-    "airfields": {
+  "airfields": {
       "Anapa-Vityazevo": {
         "ICAO": "URKA",
-        "Elevation": "141",
+        "elevation": "141",
         "TACAN": "",
-        "Runways:": {
-          "04": {
-            "Mag Hdg": "034",
-            "Length": "9000",
-            "ILS": ""
-          },
-          "22": {
-            "Mag Hdg": "214",
-            "Length": "9000",
-            "ILS": ""
+        "runways": [
+          {
+            "headings": [
+              {
+                "22": {
+                  "magHeading": "214",
+                  "ILS": ""
+                },
+                "04": {
+                  "magHeading": "034",
+                  "ILS": ""
+                }
+              }
+            ],
+            "length": "9000"
           }
-        }
+        ]
       },
       "Batumi": {
         "ICAO": "UGSB",
-        "Elevation": "33",
+        "elevation": "33",
         "TACAN": "16X",
-        "Runways": {
-          "13": {
-            "Mag Hdg": "119",
-            "Length": "7500",
-            "ILS": ""
-          },
-          "31": {
-            "Mag Hdg": "299",
-            "Length": "7500",
-            "ILS": ""
+        "runways": [
+          {
+            "headings": [
+              {
+                "13": {
+                  "magHeading": "119",
+                  "ILS": ""
+                },
+                "31": {
+                  "magHeading": "299",
+                  "ILS": ""
+                }
+              }
+            ],
+            "length": "7500"
           }
-        }
+        ]
       },
       "Beslan": {
         "ICAO": "URMO",
-        "Elevation": "1722",
+        "elevation": "1722",
         "TACAN": "",
-        "Runways": {
-          "10": {
-            "Mag Hdg": "086",
-            "Length": "9600",
-            "ILS": "110.50"
-          },
-          "28": {
-            "Mag Hdg": "266",
-            "Length": "9600",
-            "ILS": ""
+        "runways": [
+          {
+            "headings": [
+              {
+                "10": {
+                  "magHeading": "086",
+                  "ILS": "110.50"
+                },
+                "28": {
+                  "magHeading": "266",
+                  "ILS": ""
+                }
+              }
+            ],
+            "length": "9600"
           }
-        }
+        ]
       },
       "Gelendzhik": {
         "ICAO": "URKG",
-        "Elevation": "72",
+        "elevation": "72",
         "TACAN": "",
-        "Runways": {
-          "01": {
-            "Mag Hdg": "032",
-            "Length": "5400",
-            "ILS": ""
-          },
-          "19": {
-            "Mag Hdg": "212",
-            "Length": "5400",
-            "ILS": ""
+        "runways": [
+          {
+            "headings": [
+              {
+                "19": {
+                  "magHeading": "212",
+                  "ILS": ""
+                },
+                "01": {
+                  "magHeading": "032",
+                  "ILS": ""
+                }
+              }
+            ],
+            "length": "5400"
           }
-        }
+        ]
       },
       "Gudauta": {
         "ICAO": "UG23",
-        "Elevation": "69",
+        "elevation": "69",
         "TACAN": "",
-        "Runways": {
-          "15": {
-            "Mag Hdg": "144",
-            "Length": "7700",
-            "ILS": ""
-          },
-          "33": {
-            "Mag Hdg": "324",
-            "Length": "7700",
-            "ILS": ""
+        "runways": [
+          {
+            "headings": [
+              {
+                "15": {
+                  "magHeading": "144",
+                  "ILS": ""
+                },
+                "33": {
+                  "magHeading": "324",
+                  "ILS": ""
+                }
+              }
+            ],
+            "length": "7700"
           }
-        }
+        ]
       },
       "Kobuleti": {
         "ICAO": "UG5X",
-        "Elevation": "69",
+        "elevation": "69",
         "TACAN": "67X",
-        "Runways": {
-          "07": {
-            "Mag Hdg": "063",
-            "Length": "7400",
-            "ILS": "111.50"
-          },
-          "25": {
-            "Mag Hdg": "243",
-            "Length": "7400",
-            "ILS": ""
+        "runways": [
+          {
+            "headings": [
+              {
+                "25": {
+                  "magHeading": "243",
+                  "ILS": ""
+                },
+                "07": {
+                  "magHeading": "063",
+                  "ILS": "111.50"
+                }
+              }
+            ],
+            "length": "7400"
           }
-        }
+        ]
       },
       "Krasnodar-Center": {
         "ICAO": "URKL",
-        "Elevation": "98",
+        "elevation": "98",
         "TACAN": "",
-        "Runways": {
-          "09": {
-            "Mag Hdg": "079",
-            "Length": "7700",
-            "ILS": ""
-          },
-          "27": {
-            "Mag Hdg": "259",
-            "Length": "7700",
-            "ILS": ""
+        "runways": [
+          {
+            "headings": [
+              {
+                "27": {
+                  "magHeading": "259",
+                  "ILS": ""
+                },
+                "09": {
+                  "magHeading": "079",
+                  "ILS": ""
+                }
+              }
+            ],
+            "length": "7700"
           }
-        }
+        ]
       },
       "Krasnodar-Pashkovsky": {
         "ICAO": "URKK",
-        "Elevation": "112",
+        "elevation": "112",
         "TACAN": "",
-        "Runways": {
-          "05": {
-            "Mag Hdg": "039",
-            "Length": "9600",
-            "ILS": ""
-          },
-          "23": {
-            "Mag Hdg": "219",
-            "Length": "9600",
-            "ILS": ""
+        "runways": [
+          {
+            "headings": [
+              {
+                "23": {
+                  "magHeading": "219",
+                  "ILS": ""
+                },
+                "05": {
+                  "magHeading": "039",
+                  "ILS": ""
+                }
+              }
+            ],
+            "length": "9600"
           }
-        }
+        ]
       },
       "Krymsk": {
         "ICAO": "URKW",
-        "Elevation": "66",
+        "elevation": "66",
         "TACAN": "",
-        "Runways": {
-          "04": {
-            "Mag Hdg": "032",
-            "Length": "8000",
-            "ILS": ""
-          },
-          "22": {
-            "Mag Hdg": "212",
-            "Length": "8000",
-            "ILS": ""
+        "runways": [
+          {
+            "headings": [
+              {
+                "22": {
+                  "magHeading": "212",
+                  "ILS": ""
+                },
+                "04": {
+                  "magHeading": "032",
+                  "ILS": ""
+                }
+              }
+            ],
+            "length": "8000"
           }
-        }
+        ]
       },
       "Kutaisi": {
         "ICAO": "UGKO",
-        "Elevation": "148",
+        "elevation": "148",
         "TACAN": "44X",
-        "Runways": {
-          "07": {
-            "Mag Hdg": "067'",
-            "Length": "7700",
-            "ILS": "109.75"
-          },
-          "25": {
-            "Mag Hdg": "247",
-            "Length": "7700",
-            "ILS": ""
+        "runways": [
+          {
+            "headings": [
+              {
+                "25": {
+                  "magHeading": "247",
+                  "ILS": ""
+                },
+                "07": {
+                  "magHeading": "067'",
+                  "ILS": "109.75"
+                }
+              }
+            ],
+            "length": "7700"
           }
-        }
+        ]
       },
       "Maykop-Khanskaya": {
         "ICAO": "URKH",
-        "Elevation": "591",
+        "elevation": "591",
         "TACAN": "",
-        "Runways": {
-          "04": {
-            "Mag Hdg": "031",
-            "Length": "10100",
-            "ILS": ""
-          },
-          "22": {
-            "Mag Hdg": "211",
-            "Length": "10100",
-            "ILS": ""
+        "runways": [
+          {
+            "headings": [
+              {
+                "22": {
+                  "magHeading": "211",
+                  "ILS": ""
+                },
+                "04": {
+                  "magHeading": "031",
+                  "ILS": ""
+                }
+              }
+            ],
+            "length": "10100"
           }
-        }
+        ]
       },
       "Mineralnye Vody": {
         "ICAO": "URMM",
-        "Elevation": "1050",
+        "elevation": "1050",
         "TACAN": "",
-        "Runways": {
-          "12": {
-            "Mag Hdg": "108",
-            "Length": "12700",
-            "ILS": "111.70"
-          },
-          "30": {
-            "Mag Hdg": "288",
-            "Length": "12700",
-            "ILS": "109.30"
+        "runways": [
+          {
+            "headings": [
+              {
+                "12": {
+                  "magHeading": "108",
+                  "ILS": "111.70"
+                },
+                "30": {
+                  "magHeading": "288",
+                  "ILS": "109.30"
+                }
+              }
+            ],
+            "length": "12700"
           }
-        }
+        ]
       },
       "Mozdok": {
         "ICAO": "XRMF",
-        "Elevation": "507",
+        "elevation": "507",
         "TACAN": "",
-        "Runways": {
-          "08": {
-            "Mag Hdg": "075",
-            "Length": "9400",
-            "ILS": ""
-          },
-          "26": {
-            "Mag Hdg": "255",
-            "Length": "9400",
-            "ILS": ""
+        "runways": [
+          {
+            "headings": [
+              {
+                "26": {
+                  "magHeading": "255",
+                  "ILS": ""
+                },
+                "08": {
+                  "magHeading": "075",
+                  "ILS": ""
+                }
+              }
+            ],
+            "length": "9400"
           }
-        }
+        ]
       },
-      "Nalchick": {
+      "Nalchik": {
         "ICAO": "URMN",
-        "Elevation": "1411",
+        "elevation": "1411",
         "TACAN": "",
-        "Runways": {
-          "06": {
-            "Mag Hdg": "048'",
-            "Length": "7000",
-            "ILS": ""
-          },
-          "24": {
-            "Mag Hdg": "228",
-            "Length": "7000",
-            "ILS": "110.50"
+        "runways": [
+          {
+            "headings": [
+              {
+                "24": {
+                  "magHeading": "228",
+                  "ILS": "110.50"
+                },
+                "06": {
+                  "magHeading": "048'",
+                  "ILS": ""
+                }
+              }
+            ],
+            "length": "7000"
           }
-        }
+        ]
       },
       "Novorossiysk": {
         "ICAO": "URKN",
-        "Elevation": "131",
+        "elevation": "131",
         "TACAN": "",
-        "Runways": {
-          "04": {
-            "Mag Hdg": "034",
-            "Length": "5400",
-            "ILS": ""
-          },
-          "22": {
-            "Mag Hdg": "214",
-            "Length": "5400",
-            "ILS": ""
+        "runways": [
+          {
+            "headings": [
+              {
+                "22": {
+                  "magHeading": "214",
+                  "ILS": ""
+                },
+                "04": {
+                  "magHeading": "034",
+                  "ILS": ""
+                }
+              }
+            ],
+            "length": "5400"
           }
-        }
+        ]
       },
       "Senaki-Kolkhi": {
         "ICAO": "UGKS",
-        "Elevation": "43",
+        "elevation": "43",
         "TACAN": "31X",
-        "Runways": {
-          "09": {
-            "Mag Hdg": "088'",
-            "Length": "7400",
-            "ILS": "108.90"
-          },
-          "27": {
-            "Mag Hdg": "268",
-            "Length": "7400",
-            "ILS": ""
+        "runways": [
+          {
+            "headings": [
+              {
+                "27": {
+                  "magHeading": "268",
+                  "ILS": ""
+                },
+                "09": {
+                  "magHeading": "088'",
+                  "ILS": "108.90"
+                }
+              }
+            ],
+            "length": "7400"
           }
-        }
+        ]
       },
       "Sochi-Adler": {
         "ICAO": "URSS",
-        "Elevation": "98",
+        "elevation": "98",
         "TACAN": "",
-        "Runways": {
-          "06": {
-            "Mag Hdg": "055",
-            "Length": "9700",
-            "ILS": "111.10"
-          },
-          "27": {
-            "Mag Hdg": "235",
-            "Length": "9700",
-            "ILS": ""
+        "runways": [
+          {
+            "headings": [
+              {
+                "27": {
+                  "magHeading": "235",
+                  "ILS": ""
+                },
+                "06": {
+                  "magHeading": "055",
+                  "ILS": "111.10"
+                }
+              }
+            ],
+            "length": "9700"
           }
-        }
+        ]
       },
       "Tbilisi-Lochini": {
         "ICAO": "UGTB",
-        "Elevation": "1574",
+        "elevation": "1574",
         "TACAN": "25X",
-        "Runways": {
-          "13": {
-            "Mag Hdg": "121",
-            "Length": "9300",
-            "ILS": "110.30"
-          },
-          "31": {
-            "Mag Hdg": "301",
-            "Length": "9300",
-            "ILS": "108.90"
+        "runways": [
+          {
+            "headings": [
+              {
+                "13": {
+                  "magHeading": "121",
+                  "ILS": "110.30"
+                },
+                "31": {
+                  "magHeading": "301",
+                  "ILS": "108.90"
+                }
+              }
+            ],
+            "length": "9300"
           }
-        }
+        ]
       },
       "Soganlug": {
         "ICAO": "UG24",
-        "Elevation": "1500",
+        "elevation": "1500",
         "TACAN": "25X",
-        "Runways": {
-          "14": {
-            "Mag Hdg": "125",
-            "Length": "6500",
-            "ILS": ""
-          },
-          "32": {
-            "Mag Hdg": "305",
-            "Length": "6500",
-            "ILS": ""
+        "runways": [
+          {
+            "headings": [
+              {
+                "14": {
+                  "magHeading": "125",
+                  "ILS": ""
+                },
+                "32": {
+                  "magHeading": "305",
+                  "ILS": ""
+                }
+              }
+            ],
+            "length": "6500"
           }
-        }
+        ]
       },
       "Sukhumi-Babushara": {
         "ICAO": "UGSS",
-        "Elevation": "43",
+        "elevation": "43",
         "TACAN": "",
-        "Runways": {
-          "12": {
-            "Mag Hdg": "109",
-            "Length": "11400",
-            "ILS": ""
-          },
-          "30": {
-            "Mag Hdg": "289",
-            "Length": "11400",
-            "ILS": ""
+        "runways": [
+          {
+            "headings": [
+              {
+                "12": {
+                  "magHeading": "109",
+                  "ILS": ""
+                },
+                "30": {
+                  "magHeading": "289",
+                  "ILS": ""
+                }
+              }
+            ],
+            "length": "11400"
           }
-        }
+        ]
       },
       "Vaziani": {
         "ICAO": "UG27",
-        "Elevation": "1524",
+        "elevation": "1524",
         "TACAN": "22X",
-        "Runways": {
-          "13": {
-            "Mag Hdg": "129",
-            "Length": "7700",
-            "ILS": "108.75"
-          },
-          "31": {
-            "Mag Hdg": "309",
-            "Length": "7700",
-            "ILS": "108.75"
+        "runways": [
+          {
+            "headings": [
+              {
+                "13": {
+                  "magHeading": "129",
+                  "ILS": "108.75"
+                },
+                "31": {
+                  "magHeading": "309",
+                  "ILS": "108.75"
+                }
+              }
+            ],
+            "length": "7700"
           }
-        }
+        ]
       }
     }
 }
