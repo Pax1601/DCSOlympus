@@ -87,8 +87,8 @@ export class UnitControlPanel extends Panel {
         this.hide();
 
         //  This is for when a ctrl-click happens on the map for deselection and we need to remove the selected unit from the panel
-        document.addEventListener( "unitDeselected", ( ev:CustomEventInit ) => {
-            this.getElement().querySelector( `button[data-unit-id="${ev.detail.unit.ID}"]` )?.remove();
+        document.addEventListener( "unitDeselection", ( ev:CustomEventInit ) => {
+            this.getElement().querySelector( `button[data-unit-id="${ev.detail.ID}"]` )?.remove();
         });
 
     }

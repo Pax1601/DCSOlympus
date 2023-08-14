@@ -721,15 +721,13 @@ export class Unit extends CustomMarker {
                 //  Tell everyone a unit (de-)selection has happened, usually a panel or something.
 
                 const detail = {
-                    "detail": {
-                        "unit": this
-                    }
+                    "detail": this
                 };
 
                 if ( unitIsSelected ) {
-                    document.dispatchEvent( new CustomEvent( "unitSelected", detail ) );
+                    document.dispatchEvent( new CustomEvent( "unitSelection", detail ) );
                 } else {
-                    document.dispatchEvent( new CustomEvent( "unitDeselected", detail ) );
+                    document.dispatchEvent( new CustomEvent( "unitDeselection", detail ) );
                 }
 
             }
