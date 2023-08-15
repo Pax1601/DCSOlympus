@@ -9,7 +9,7 @@ interface ObjectIconOptions {
     showFuel: boolean,
     showAmmo: boolean,
     showSummary: boolean,
-    showCallsign: boolean, 
+    showCallsign: boolean,
     rotateToHeading: boolean
 }
 
@@ -48,7 +48,7 @@ interface Contact {
 }
 
 interface Offset {
-    x: number, 
-    y: number, 
+    x: number,
+    y: number,
     z: number
 }

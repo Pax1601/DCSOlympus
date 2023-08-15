@@ -344,7 +344,7 @@ class DemoDataGenerator {
     airbases(req, res){
         var ret = {airbases: {
             ["0"]: {
-                callsign: "Neutral",
+                callsign: "Nellis",
                 latitude: 37.3,
                 longitude: -115.8,
                 coalition: "neutral"

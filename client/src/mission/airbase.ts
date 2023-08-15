@@ -2,8 +2,7 @@ import { DivIcon } from 'leaflet';
 import { CustomMarker } from '../map/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
 
-export interface AirbaseOptions
-{
+export interface AirbaseOptions {
     name: string,
     position: L.LatLng
 }
@@ -28,8 +27,7 @@ export interface AirbaseChartRunwayHeadingData {
     }
 }
 
-export class Airbase extends CustomMarker
-{
+export class Airbase extends CustomMarker {
     #name: string = "";
     #chartData: AirbaseChartData = {
         elevation: "",
@@ -38,12 +36,11 @@ export class Airbase extends CustomMarker
         runways: []
     };
     #coalition: string = "";
-    #hasChartDataBeenSet:boolean = false;
+    #hasChartDataBeenSet: boolean = false;
     #properties: string[] = [];
     #parkings: string[] = [];
 
-    constructor(options: AirbaseOptions)
-    {
+    constructor(options: AirbaseOptions) {
         super(options.position, { riseOnHover: true });
 
         this.#name = options.name;
@@ -54,12 +51,12 @@ export class Airbase extends CustomMarker
     }
 
     createIcon() {
-        var icon = new DivIcon({ 
+        var icon = new DivIcon({
             className: 'leaflet-airbase-marker',
             iconSize: [40, 40],
             iconAnchor: [20, 20]
-            });   // Set the marker, className must be set to avoid white square
-        this.setIcon(icon); 
+        });   // Set the marker, className must be set to avoid white square
+        this.setIcon(icon);
 
         var el = document.createElement("div");
         el.classList.add("airbase-icon");
@@ -72,55 +69,45 @@ export class Airbase extends CustomMarker
         el.dataset.coalition = this.#coalition;
     }
 
-    setCoalition(coalition: string)
-    {
+    setCoalition(coalition: string) {
         this.#coalition = coalition;
-        (<HTMLElement> this.getElement()?.querySelector(".airbase-icon")).dataset.coalition = this.#coalition;
+        (<HTMLElement>this.getElement()?.querySelector(".airbase-icon")).dataset.coalition = this.#coalition;
     }
 
-    getChartData()
-    {
+    getChartData() {
         return this.#chartData;
     }
 
-    getCoalition()
-    {
+    getCoalition() {
         return this.#coalition;
     }
 
-    setName(name: string)
-    {
+    setName(name: string) {
         this.#name = name;
     }
 
-    getName()
-    {
+    getName() {
         return this.#name;
     }
 
-    setChartData( chartData:AirbaseChartData )
-    {
+    setChartData(chartData: AirbaseChartData) {
         this.#hasChartDataBeenSet = true;
-        this.#chartData           = chartData;
+        this.#chartData = chartData;
     }
 
-    setProperties(properties: string[])
-    {
+    setProperties(properties: string[]) {
         this.#properties = properties;
     }
 
-    getProperties()
-    {
+    getProperties() {
         return this.#properties;
     }
 
-    setParkings(parkings: string[])
-    {
+    setParkings(parkings: string[]) {
         this.#parkings = parkings;
     }
 
-    getParkings()
-    {
+    getParkings() {
         return this.#parkings;
     }
 }

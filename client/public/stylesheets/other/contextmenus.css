@@ -148,7 +148,7 @@
 }
 
 #aircaft-loadout-list,
-#helicopter-loadout-list  {
+#helicopter-loadout-list {
     align-content: center;
     display: flex;
     flex-direction: column;
@@ -156,7 +156,7 @@
 }
 
 #aircraft-unit-image,
-#helicopter-unit-image  {
+#helicopter-unit-image {
     filter: invert(100%);
     height: 100px;
     margin-bottom: 10px;
@@ -210,10 +210,10 @@
 }
 
 .ol-context-menu .ol-slider-value {
-	color: var(--accent-light-blue);
-	cursor: pointer;
-	font-size: 14px;
-	font-weight: bold;
+    color: var(--accent-light-blue);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
 }
 
 .ol-context-menu .ol-slider-container {
@@ -449,36 +449,41 @@
 }
 
 /*  Airbase context menu  */
-#airbase-contextmenu #airbase-runways {
-    display:flex;
-    flex-direction: column;
-    row-gap:4px;
+#airbase-chart-data dd {
+    width: 60%;
+    font-weight: bold;
 }
 
-#airbase-contextmenu #airbase-runways > .runway {
-    border:1px solid #ccc;
-    display:flex;
+#airbase-runways {
+    display: flex;
+    flex-direction: column;
+    row-gap: 4px;
+}
+
+#airbase-runways>.runway {
+    border: 1px solid #ccc;
+    display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
 
-#airbase-contextmenu #airbase-runways > .runway abbr {
-    cursor:help;
+#airbase-runways>.runway abbr {
+    cursor: help;
     text-decoration: none;
 }
 
-#airbase-contextmenu #airbase-runways > .runway > .heading {
+#airbase-runways>.runway>.heading {
     align-items: center;
     column-gap: 4px;
-    display:flex;
+    display: flex;
     flex-direction: row;
 }
 
-#airbase-contextmenu #airbase-runways > .runway > .heading > abbr {
-    font-weight: var( --font-weight-bolder );
-    padding:4px;
+#airbase-runways>.runway>.heading>abbr {
+    font-weight: var(--font-weight-bolder);
+    padding: 4px;
 }
 
-#airbase-contextmenu #airbase-runways > .runway > .heading:last-of-type {
+#airbase-runways>.runway>.heading:last-of-type {
     flex-direction: row-reverse;
 }
