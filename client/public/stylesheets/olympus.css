@@ -1074,10 +1074,6 @@ dl.ol-data-grid {
     row-gap: 4px;
 }
 
-dl.ol-data-grid dd {
-    width: fit-content;
-}
-
 dl.ol-data-grid dt.icon {
     text-indent: 10px;
 }
