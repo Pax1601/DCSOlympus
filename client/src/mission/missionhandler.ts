@@ -235,9 +235,7 @@ export class MissionHandler {
         getMap().showAirbaseContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng, e.sourceTarget);
     }
 
-
     #loadAirbaseChartData() {
-
         if ( !this.#theatre ) {
             return;
         }
@@ -264,8 +262,5 @@ export class MissionHandler {
             }
 
         });
-
-        
     }
-    
 }
