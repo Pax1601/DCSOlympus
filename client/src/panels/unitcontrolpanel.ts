@@ -121,18 +121,15 @@ export class UnitControlPanel extends Panel {
                 button.classList.add("pill", "highlight-coalition")
 
                 button.addEventListener("click", ( ev:MouseEventInit ) => {
-
                     //  Ctrl-click deselection
                     if ( ev.ctrlKey === true && ev.shiftKey === false && ev.altKey === false ) {
                         getUnitsManager().deselectUnit( unit.ID );
                         button.remove();
-
                     //  Deselect all
                     } else {
                         getUnitsManager().deselectAllUnits();
                         getUnitsManager().selectUnit(unit.ID, true);
                     }
-
                 });
                 return (button);
             }));
