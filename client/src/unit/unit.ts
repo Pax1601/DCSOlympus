@@ -708,9 +708,15 @@ export class Unit extends CustomMarker {
     #onClick(e: any) {
         if (!this.#preventClick) {
             if (getMap().getState() === IDLE || getMap().getState() === MOVE_UNIT || e.originalEvent.ctrlKey) {
-                if (!e.originalEvent.ctrlKey)
+                if (!e.originalEvent.ctrlKey) 
                     getUnitsManager().deselectAllUnits();
-                this.setSelected(!this.getSelected());
+                
+                this.setSelected( !this.getSelected() );
+                if ( this.getSelected() ) {
+                    document.dispatchEvent( new CustomEvent( "unitSelection", { "detail": this }));
+                } else {
+                    document.dispatchEvent( new CustomEvent( "unitDeselection", { "detail": this }));
+                }
             }
         }
 
