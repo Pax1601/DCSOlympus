@@ -1,6 +1,6 @@
 import { LatLng } from "leaflet";
 import { getInfoPopup, getMap } from "..";
-import { Airbase } from "./airbase";
+import { Airbase, AirbaseChartData } from "./airbase";
 import { Bullseye } from "./bullseye";
 import { BLUE_COMMANDER, GAME_MASTER, NONE, RED_COMMANDER } from "../constants/constants";
 import { refreshAll, setCommandModeOptions } from "../server/server";
@@ -49,23 +49,25 @@ export class MissionHandler {
     updateAirbases(data: AirbasesData) {
         for (let idx in data.airbases) {
             var airbase = data.airbases[idx]
-            if (this.#airbases[idx] === undefined && airbase.callsign != '') {
-                this.#airbases[idx] = new Airbase({
+            if (this.#airbases[airbase.callsign] === undefined && airbase.callsign != '') {
+                this.#airbases[airbase.callsign] = new Airbase({
                     position: new LatLng(airbase.latitude, airbase.longitude),
                     name: airbase.callsign
                 }).addTo(getMap());
-                this.#airbases[idx].on('contextmenu', (e) => this.#onAirbaseClick(e));
+                this.#airbases[airbase.callsign].on('contextmenu', (e) => this.#onAirbaseClick(e));
+                this.#loadAirbaseChartData(airbase.callsign);
             }
 
-            if (this.#airbases[idx] != undefined && airbase.latitude && airbase.longitude && airbase.coalition) {
-                this.#airbases[idx].setLatLng(new LatLng(airbase.latitude, airbase.longitude));
-                this.#airbases[idx].setCoalition(airbase.coalition);
+            if (this.#airbases[airbase.callsign] != undefined && airbase.latitude && airbase.longitude && airbase.coalition) {
+                this.#airbases[airbase.callsign].setLatLng(new LatLng(airbase.latitude, airbase.longitude));
+                this.#airbases[airbase.callsign].setCoalition(airbase.coalition);
             }
         }
     }
 
     updateMission(data: MissionData) {
         if (data.mission) {
+
             /* Set the mission theatre */
             if (data.mission.theatre != this.#theatre) {
                 this.#theatre = data.mission.theatre;
@@ -230,5 +232,25 @@ export class MissionHandler {
 
     #onAirbaseClick(e: any) {
         getMap().showAirbaseContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng, e.sourceTarget);
+    }
+
+    #loadAirbaseChartData(callsign: string) {
+        if ( !this.#theatre ) {
+            return;
+        }
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', `api/airbases/${this.#theatre.toLowerCase()}/${callsign}`, true);
+        xhr.responseType = 'json';
+        xhr.onload = () => {
+            var status = xhr.status;
+            if (status === 200) {
+                const data = xhr.response;
+                this.getAirbases()[callsign].setChartData(data);
+            } else {
+                console.error(`Error retrieving data for ${callsign} airbase`)
+            }
+        };
+        xhr.send();
     }
 }
