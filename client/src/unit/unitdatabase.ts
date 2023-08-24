@@ -170,6 +170,15 @@ export class UnitDatabase {
         return loadoutsByRole;
     }
 
+    /* Get the livery names for a specific unit */
+    getLiveryNamesByName(name: string) {
+        var liveries = this.blueprints[name].liveries;
+        if (liveries !== undefined)
+            return Object.values(liveries);
+        else
+            return [];
+    }
+
     /* Get the loadout content from the unit name and loadout name */
     getLoadoutByName(name: string, loadoutName: string) {
         var loadouts = this.blueprints[name].loadouts;

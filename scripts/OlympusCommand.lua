@@ -890,6 +890,16 @@ function Olympus.setMissionData(arg, time)
 		["date"] = env.mission.date
 	}
 
+	mission.coalitions = {
+		["red"] = {},
+		["blue"] = {},
+		["neutral"] = {}
+	}
+	for countryName, countryId in pairs(country["id"]) do
+		local coalitionName = Olympus.getCoalitionByCoalitionID(coalition.getCountryCoalition(countryId))
+		mission.coalitions[coalitionName][#mission.coalitions[coalitionName] + 1] = countryName 
+	end
+
 	-- Assemble table
 	Olympus.missionData["bullseyes"] = bullseyes
 	Olympus.missionData["airbases"] = airbases

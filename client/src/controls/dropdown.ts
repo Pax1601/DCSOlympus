@@ -24,7 +24,7 @@ export class Dropdown {
 
         document.addEventListener("click", (ev) => {
             if (!(this.#value.contains(ev.target as Node) || this.#options.contains(ev.target as Node) || this.#element.contains(ev.target as Node))) {
-                this.#close();
+                this.close();
             }
         });
 
@@ -79,7 +79,7 @@ export class Dropdown {
             this.#value.replaceChildren();
             this.#value.appendChild(el);
             this.#index = idx;
-            this.#close();
+            this.close();
             this.#callback(option);
             return true;
         }
@@ -102,32 +102,37 @@ export class Dropdown {
             this.selectValue(index);
     }
 
+    forceValue(value: string) {
+        var el = document.createElement("div");
+        el.classList.add("ol-ellipsed");
+        el.innerText = value;
+        this.#value.replaceChildren();
+        this.#value.appendChild(el);
+        this.close();
+    }
+
     getIndex() {
         return this.#index;
     }
 
-    #clip() {
+    clip() {
         const options = this.#options;
         const bounds = options.getBoundingClientRect();
         this.#element.dataset.position = (bounds.bottom > window.innerHeight) ? "top" : "";
     }
 
-    #close() {
+    close() {
         this.#element.classList.remove("is-open");
         this.#element.dataset.position = "";
     }
 
-    #open() {
+    open() {
         this.#element.classList.add("is-open");
         this.#options.classList.toggle("scrollbar-visible", this.#options.scrollHeight > this.#options.clientHeight);
-        this.#clip();
+        this.clip();
     }
 
     #toggle() {
-        if (this.#element.classList.contains("is-open")) {
-            this.#close();
-        } else {
-            this.#open();
-        }
+        this.#element.classList.contains("is-open")? this.close(): this.open();
     }
 }

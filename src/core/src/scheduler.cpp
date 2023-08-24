@@ -183,10 +183,7 @@ void Scheduler::handleRequest(string key, json::value value, string username)
 		int spawnPoints = value[L"spawnPoints"].as_number().to_int32();
 		if (!checkSpawnPoints(spawnPoints, coalition)) return;
 
-		vector<string> unitTypes;
-		vector<Coords> locations;
-		vector<string> loadouts;
-		vector<string> liveryIDs;
+		vector<SpawnOptions> spawnOptions;
 		for (auto unit : value[L"units"].as_array()) {
 			string unitType = to_string(unit[L"unitType"]);
 			double lat = unit[L"location"][L"lat"].as_double();
@@ -196,14 +193,11 @@ void Scheduler::handleRequest(string key, json::value value, string username)
 			string loadout = to_string(unit[L"loadout"]);
 			string liveryID = to_string(unit[L"liveryID"]);
 
-			unitTypes.push_back(unitType);
-			locations.push_back(location);
-			loadouts.push_back(loadout);
-			liveryIDs.push_back(liveryID);
+			spawnOptions.push_back({unitType, location, loadout, liveryID});
 			log(username + " spawned a " + coalition + " " + unitType, true);
 		}
 
-		command = dynamic_cast<Command*>(new SpawnAircrafts(coalition, unitTypes, locations, loadouts, liveryIDs, airbaseName, immediate));
+		command = dynamic_cast<Command*>(new SpawnAircrafts(coalition, spawnOptions, airbaseName, immediate));
 	}
 	else if (key.compare("spawnHelicopters") == 0)
 	{
@@ -214,10 +208,7 @@ void Scheduler::handleRequest(string key, json::value value, string username)
 		int spawnPoints = value[L"spawnPoints"].as_number().to_int32();
 		if (!checkSpawnPoints(spawnPoints, coalition)) return;
 
-		vector<string> unitTypes;
-		vector<Coords> locations;
-		vector<string> loadouts;
-		vector<string> liveryIDs;
+		vector<SpawnOptions> spawnOptions;
 		for (auto unit : value[L"units"].as_array()) {
 			string unitType = to_string(unit[L"unitType"]);
 			double lat = unit[L"location"][L"lat"].as_double();
@@ -227,14 +218,11 @@ void Scheduler::handleRequest(string key, json::value value, string username)
 			string loadout = to_string(unit[L"loadout"]);
 			string liveryID = to_string(unit[L"liveryID"]);
 
-			unitTypes.push_back(unitType);
-			locations.push_back(location);
-			loadouts.push_back(loadout);
-			liveryIDs.push_back(liveryID);
+			spawnOptions.push_back({ unitType, location, loadout, liveryID });
 			log(username + " spawned a " + coalition + " " + unitType, true);
 		}
 
-		command = dynamic_cast<Command*>(new SpawnHelicopters(coalition, unitTypes, locations, loadouts, liveryIDs, airbaseName, immediate));
+		command = dynamic_cast<Command*>(new SpawnHelicopters(coalition, spawnOptions, airbaseName, immediate));
 	}
 	else if (key.compare("spawnGroundUnits") == 0)
 	{
@@ -244,9 +232,7 @@ void Scheduler::handleRequest(string key, json::value value, string username)
 		int spawnPoints = value[L"spawnPoints"].as_number().to_int32();
 		if (!checkSpawnPoints(spawnPoints, coalition)) return;
 
-		vector<string> unitTypes;
-		vector<Coords> locations;
-		vector<string> liveryIDs;
+		vector<SpawnOptions> spawnOptions;
 		for (auto unit : value[L"units"].as_array()) {
 			string unitType = to_string(unit[L"unitType"]);
 			double lat = unit[L"location"][L"lat"].as_double();
@@ -254,13 +240,11 @@ void Scheduler::handleRequest(string key, json::value value, string username)
 			Coords location; location.lat = lat; location.lng = lng;
 			string liveryID = to_string(unit[L"liveryID"]);
 			
-			unitTypes.push_back(unitType);
-			locations.push_back(location);
-			liveryIDs.push_back(liveryID);
+			spawnOptions.push_back({ unitType, location, "", liveryID});
 			log(username + " spawned a " + coalition + " " + unitType, true);
 		}
 
-		command = dynamic_cast<Command*>(new SpawnGroundUnits(coalition, unitTypes, locations, liveryIDs, immediate));
+		command = dynamic_cast<Command*>(new SpawnGroundUnits(coalition, spawnOptions, immediate));
 	}
 	else if (key.compare("spawnNavyUnits") == 0)
 	{
@@ -270,9 +254,7 @@ void Scheduler::handleRequest(string key, json::value value, string username)
 		int spawnPoints = value[L"spawnPoints"].as_number().to_int32();
 		if (!checkSpawnPoints(spawnPoints, coalition)) return;
 
-		vector<string> unitTypes;
-		vector<Coords> locations;
-		vector<string> liveryIDs;
+		vector<SpawnOptions> spawnOptions;
 		for (auto unit : value[L"units"].as_array()) {
 			string unitType = to_string(unit[L"unitType"]);
 			double lat = unit[L"location"][L"lat"].as_double();
@@ -280,13 +262,11 @@ void Scheduler::handleRequest(string key, json::value value, string username)
 			Coords location; location.lat = lat; location.lng = lng;
 			string liveryID = to_string(unit[L"liveryID"]);
 
-			unitTypes.push_back(unitType);
-			locations.push_back(location);
-			liveryIDs.push_back(liveryID);
+			spawnOptions.push_back({ unitType, location, "", liveryID });
 			log(username + " spawned a " + coalition + " " + unitType, true);
 		}
 
-		command = dynamic_cast<Command*>(new SpawnNavyUnits(coalition, unitTypes, locations, liveryIDs, immediate));
+		command = dynamic_cast<Command*>(new SpawnNavyUnits(coalition, spawnOptions, immediate));
 	}
 	else if (key.compare("attackUnit") == 0)
 	{

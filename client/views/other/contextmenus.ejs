@@ -60,20 +60,43 @@
                 </div>
             </div>
         </div>
-        <div id="aircraft-spawn-altitude-slider" class="ol-slider-container flight-control-ol-slider">
-            <dl class="ol-data-grid">
-                <dt> Spawn altitude
-                </dt>
-                <dd>
-                    <div class="ol-slider-value"></div>
-                </dd>
-            </dl>
-            <input type="range" min="0" max="100" value="0" class="ol-slider">
-            
+        <div class="contextmenu-advanced-options-toggle" data-on-click="toggleAdvancedOptions" data-on-click-params='{"type": "aircraft"}'>
+            <div>Advanced options</div>
+            <hr>
         </div>
-        <div id="aircraft-loadout-preview">
-            <img id="aircraft-unit-image" class="hide">
-            <div id="aircraft-loadout-list">
+        <div id="aircraft-advanced-options" class="contextmenu-advanced-options hide">
+            <div class="ol-select-container">
+                <div id="aircraft-livery-options" class="ol-select">
+                    <div class="ol-select-value">Livery</div>
+                    <div class="ol-select-options">
+                        <div>Select type first</div>
+                        <!-- This is where all the aircraft livery buttons will be shown-->
+                    </div>
+                </div>
+            </div>
+            <div class="ol-select-container">
+                <div id="aircraft-nation-options" class="ol-select">
+                    <div class="ol-select-value">Nation</div>
+                    <div class="ol-select-options">
+                        <div>Select type first</div>
+                        <!-- This is where all the aircraft nation buttons will be shown-->
+                    </div>
+                </div>
+            </div>
+            <div id="aircraft-spawn-altitude-slider" class="ol-slider-container flight-control-ol-slider">
+                <dl class="ol-data-grid">
+                    <dt> Spawn altitude
+                    </dt>
+                    <dd>
+                        <div class="ol-slider-value"></div>
+                    </dd>
+                </dl>
+                <input type="range" min="0" max="100" value="0" class="ol-slider">
+            </div>
+            <div id="aircraft-loadout-preview">
+                <img id="aircraft-unit-image" class="hide">
+                <div id="aircraft-loadout-list">
+                </div>
             </div>
         </div>
         <button class="deploy-unit-button" title="" data-coalition="blue" data-on-click="contextMenuDeployAircrafts" disabled>Deploy unit</button>
@@ -114,20 +137,43 @@
                 </div>
             </div>
         </div>
-        <div id="helicopter-spawn-altitude-slider" class="ol-slider-container flight-control-ol-slider">
-            <dl class="ol-data-grid">
-                <dt> Spawn altitude
-                </dt>
-                <dd>
-                    <div class="ol-slider-value"></div>
-                </dd>
-            </dl>
-            <input type="range" min="0" max="100" value="0" class="ol-slider">
-            
+        <div class="contextmenu-advanced-options-toggle" data-on-click="toggleAdvancedOptions" data-on-click-params='{"type": "helicopter"}'>
+            <div>Advanced options</div>
+            <hr>
         </div>
-        <div id="helicopter-loadout-preview">
-            <img id="helicopter-unit-image" class="hide">
-            <div id="helicopter-loadout-list">
+        <div id="helicopter-advanced-options" class="contextmenu-advanced-options hide">
+            <div class="ol-select-container">
+                <div id="helicopter-livery-options" class="ol-select">
+                    <div class="ol-select-value">Livery</div>
+                    <div class="ol-select-options">
+                        <div>Select type first</div>
+                        <!-- This is where all the helicopter livery buttons will be shown-->
+                    </div>
+                </div>
+            </div>
+            <div class="ol-select-container">
+                <div id="helicopter-nation-options" class="ol-select">
+                    <div class="ol-select-value">Nation</div>
+                    <div class="ol-select-options">
+                        <div>Select type first</div>
+                        <!-- This is where all the helicopter nation buttons will be shown-->
+                    </div>
+                </div>
+            </div>
+            <div id="helicopter-spawn-altitude-slider" class="ol-slider-container flight-control-ol-slider">
+                <dl class="ol-data-grid">
+                    <dt> Spawn altitude
+                    </dt>
+                    <dd>
+                        <div class="ol-slider-value"></div>
+                    </dd>
+                </dl>
+                <input type="range" min="0" max="100" value="0" class="ol-slider">
+            </div>
+            <div id="helicopter-loadout-preview">
+                <img id="helicopter-unit-image" class="hide">
+                <div id="helicopter-loadout-list">
+                </div>
             </div>
         </div>
         <button class="deploy-unit-button" title="" data-coalition="blue" data-on-click="contextMenuDeployHelicopters" disabled>Deploy unit</button>

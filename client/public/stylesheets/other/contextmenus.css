@@ -32,6 +32,38 @@
     row-gap: 5px;
 }
 
+.contextmenu-advanced-options {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    row-gap: 5px;
+    width: 100%;
+}
+
+.contextmenu-advanced-options-toggle {
+    display: flex;
+    align-content: center;
+    text-align: left;
+    width: 100%;
+    margin: 5px;
+    column-gap: 5px;
+}
+
+.contextmenu-advanced-options-toggle:after {
+    content: url(/resources/theme/images/icons/chevron-down.svg);
+    margin: auto;
+}
+
+.contextmenu-advanced-options-toggle div:first-child {
+    width: fit-content;
+    white-space: nowrap;
+}
+
+.contextmenu-advanced-options>* {
+    width: 100%;
+}
+
 #aircraft-spawn-menu,
 #helicopter-spawn-menu,
 #groundunit-spawn-menu,
@@ -61,6 +93,29 @@
 #aircraft-spawn-menu .ol-select.is-open .ol-select-options,
 #helicopter-spawn-menu .ol-select.is-open .ol-select-options {
     max-height: 300px;
+}
+
+#aircraft-loadout-list,
+#helicopter-loadout-list {
+    min-width: 0;
+}
+
+#aircraft-loadout-list div,
+#helicopter-loadout-list div {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    background-color: var(--background-steel);
+    padding: 2px 5px 2px 5px;
+}
+
+#aircraft-loadout-list div:hover,
+#helicopter-loadout-list div:hover {
+    overflow: visible;
+    white-space: nowrap;
+    background-color: var(--background-steel);
+    width: fit-content;
+    border-radius: var(--border-radius-sm);
 }
 
 .deploy-unit-button {
@@ -141,7 +196,7 @@
 #helicopter-loadout-preview {
     align-content: space-between;
     align-items: center;
-    column-gap: 20px;
+    column-gap: 10px;
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -158,10 +213,10 @@
 #aircraft-unit-image,
 #helicopter-unit-image {
     filter: invert(100%);
-    height: 100px;
+    width: 25%;
     margin-bottom: 10px;
     margin-top: 10px;
-    width: 100px;
+    aspect-ratio: 1/1;
 }
 
 #smoke-spawn-menu {
@@ -264,9 +319,20 @@
     width: 16px;
 }
 
+.ol-select>.ol-select-options>div button.nation-dropdown-element {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    column-gap: 10px;
+    width: 100%;
+}
+
+.nation-dropdown-element img {
+    height: 20px;
+    aspect-ratio: initial;
+}
 
 /*  Buttons  */
-
 #center-map::before {
     content: url("/resources/theme/images/icons/arrows-to-eye-solid.svg");
 }
