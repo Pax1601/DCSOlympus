@@ -1,4 +1,4 @@
-local version = "v0.4.2-alpha"
+local version = "v0.4.3-alpha"
 
 local debug = false
 
