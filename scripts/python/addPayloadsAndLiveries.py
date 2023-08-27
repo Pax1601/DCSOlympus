@@ -16,9 +16,6 @@ from dcs.liveries.liveryscanner import LiveryScanner
 livery_scanner = LiveryScanner()
 livery_scanner.scan_dcs_installation(SEARCH_FOLDER)
 
-#print("Liveries found for units:")
-#[print(key) for key in livery_scanner.map.keys()]
-
 # Known id mismatches (because reasons, ask ED)
 mismatched_ids = {
     "A-10CII": "A-10C_2"
@@ -72,7 +69,7 @@ if len(sys.argv) > 1:
 
             database[unit_name]["liveries"] = {}
             for livery in liveries:
-                database[unit_name]["liveries"][livery.id] =  livery.name
+                database[unit_name]["liveries"][livery.id] = livery.name
 
             # Create the loadouts table and add the empty loadout for the default task
             database[unit_name]["loadouts"] = []

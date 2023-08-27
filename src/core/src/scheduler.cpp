@@ -179,6 +179,7 @@ void Scheduler::handleRequest(string key, json::value value, string username)
 		bool immediate = value[L"immediate"].as_bool();
 		string coalition = to_string(value[L"coalition"]);
 		string airbaseName = to_string(value[L"airbaseName"]);
+		string country = to_string(value[L"country"]);
 
 		int spawnPoints = value[L"spawnPoints"].as_number().to_int32();
 		if (!checkSpawnPoints(spawnPoints, coalition)) return;
@@ -197,13 +198,14 @@ void Scheduler::handleRequest(string key, json::value value, string username)
 			log(username + " spawned a " + coalition + " " + unitType, true);
 		}
 
-		command = dynamic_cast<Command*>(new SpawnAircrafts(coalition, spawnOptions, airbaseName, immediate));
+		command = dynamic_cast<Command*>(new SpawnAircrafts(coalition, spawnOptions, airbaseName, country, immediate));
 	}
 	else if (key.compare("spawnHelicopters") == 0)
 	{
 		bool immediate = value[L"immediate"].as_bool();
 		string coalition = to_string(value[L"coalition"]);
 		string airbaseName = to_string(value[L"airbaseName"]);
+		string country = to_string(value[L"country"]);
 
 		int spawnPoints = value[L"spawnPoints"].as_number().to_int32();
 		if (!checkSpawnPoints(spawnPoints, coalition)) return;
@@ -222,7 +224,7 @@ void Scheduler::handleRequest(string key, json::value value, string username)
 			log(username + " spawned a " + coalition + " " + unitType, true);
 		}
 
-		command = dynamic_cast<Command*>(new SpawnHelicopters(coalition, spawnOptions, airbaseName, immediate));
+		command = dynamic_cast<Command*>(new SpawnHelicopters(coalition, spawnOptions, airbaseName, country, immediate));
 	}
 	else if (key.compare("spawnGroundUnits") == 0)
 	{

@@ -319,7 +319,7 @@
     width: 16px;
 }
 
-.ol-select>.ol-select-options>div button.nation-dropdown-element {
+.ol-select>.ol-select-options>div button.country-dropdown-element {
     display: flex;
     flex-direction: row;
     align-content: center;
@@ -327,7 +327,7 @@
     width: 100%;
 }
 
-.nation-dropdown-element img {
+.country-dropdown-element img {
     height: 20px;
     aspect-ratio: initial;
 }

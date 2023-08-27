@@ -195,10 +195,11 @@ private:
 class SpawnAircrafts : public Command
 {
 public:
-	SpawnAircrafts(string coalition, vector<SpawnOptions> spawnOptions, string airbaseName, bool immediate) :
+	SpawnAircrafts(string coalition, vector<SpawnOptions> spawnOptions, string airbaseName, string country, bool immediate) :
 		coalition(coalition), 
 		spawnOptions(spawnOptions),
 		airbaseName(airbaseName),
+		country(country),
 		immediate(immediate)
 	{ 
 		priority = immediate ? CommandPriority::IMMEDIATE : CommandPriority::LOW;
@@ -210,6 +211,7 @@ private:
 	const string coalition;
 	const vector<SpawnOptions> spawnOptions;
 	const string airbaseName;
+	const string country;
 	const bool immediate;
 };
 
@@ -218,10 +220,11 @@ private:
 class SpawnHelicopters : public Command
 {
 public:
-	SpawnHelicopters(string coalition, vector<SpawnOptions> spawnOptions, string airbaseName, bool immediate) :
+	SpawnHelicopters(string coalition, vector<SpawnOptions> spawnOptions, string airbaseName, string country, bool immediate) :
 		coalition(coalition),
 		spawnOptions(spawnOptions),
 		airbaseName(airbaseName),
+		country(country),
 		immediate(immediate)
 	{
 		priority = immediate ? CommandPriority::IMMEDIATE : CommandPriority::LOW;
@@ -233,6 +236,7 @@ private:
 	const string coalition;
 	const vector<SpawnOptions> spawnOptions;
 	const string airbaseName;
+	const string country;
 	const bool immediate;
 };
 

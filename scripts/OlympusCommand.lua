@@ -1,6 +1,6 @@
 local version = "v0.4.2-alpha"
 
-local debug = false
+local debug = true
 
 Olympus.OlympusDLL = nil
 Olympus.DLLsloaded = false
@@ -404,7 +404,13 @@ function Olympus.spawnUnits(spawnTable)
 
 	Olympus.debug(Olympus.serializeTable(unitTable), 5)
 
-	local countryID = Olympus.getCountryIDByCoalition(spawnTable.coalition)
+	local countryID = 0
+	if spawnTable.country == nil or spawnTable.country == "" then
+		countryID = Olympus.getCountryIDByCoalition(spawnTable.coalition)
+	else
+		countryID = country.id[spawnTable.country]
+	end
+
 	local vars = 
 	{
 		units = unitTable, 

@@ -700,7 +700,7 @@ export class UnitsManager {
         input.click();
     }
 
-    spawnUnits(category: string, units: any, coalition: string = "blue", immediate: boolean = true, airbase: string = "") {
+    spawnUnits(category: string, units: any, coalition: string = "blue", immediate: boolean = true, airbase: string = "", country: string = "") {
         var spawnPoints = 0;
         if (category === "Aircraft") {
             if (airbase == "" && getMissionHandler().getCommandModeOptions().restrictSpawns && getMissionHandler().getRemainingSetupTime() < 0 && getMissionHandler().getCommandModeOptions().commandMode !== GAME_MASTER) {
@@ -708,14 +708,14 @@ export class UnitsManager {
                 return false;
             }
             spawnPoints = units.reduce((points: number, unit: any) => {return points + aircraftDatabase.getSpawnPointsByName(unit.unitType)}, 0);
-            spawnAircrafts(units, coalition, airbase, immediate, spawnPoints);
+            spawnAircrafts(units, coalition, airbase, country, immediate, spawnPoints);
         } else if (category === "Helicopter") {
             if (airbase == "" && getMissionHandler().getCommandModeOptions().restrictSpawns && getMissionHandler().getRemainingSetupTime() < 0 && getMissionHandler().getCommandModeOptions().commandMode !== GAME_MASTER) {
                 getInfoPopup().setText("Helicopters can be air spawned during the SETUP phase only");
                 return false;
             }
             spawnPoints = units.reduce((points: number, unit: any) => {return points + helicopterDatabase.getSpawnPointsByName(unit.unitType)}, 0);
-            spawnHelicopters(units, coalition, airbase, immediate, spawnPoints);
+            spawnHelicopters(units, coalition, airbase, country, immediate, spawnPoints);
         } else if (category === "GroundUnit") {
             if (getMissionHandler().getCommandModeOptions().restrictSpawns && getMissionHandler().getRemainingSetupTime() < 0 && getMissionHandler().getCommandModeOptions().commandMode !== GAME_MASTER) {
                 getInfoPopup().setText("Ground units can be spawned during the SETUP phase only");

@@ -103,6 +103,7 @@ string SpawnAircrafts::getString()
         << "category = " << "\"" << "Aircraft" << "\"" << ", "
         << "coalition = " << "\"" << coalition << "\"" << ", "
         << "airbaseName = \"" << airbaseName << "\", "
+        << "country = \"" << country << "\", "
         << "units = " << "{" << unitsSS.str() << "}" << "}";
     return commandSS.str();
 }
@@ -129,6 +130,7 @@ string SpawnHelicopters::getString()
         << "category = " << "\"" << "Helicopter" << "\"" << ", "
         << "coalition = " << "\"" << coalition << "\"" << ", "
         << "airbaseName = \"" << airbaseName << "\", "
+        << "country = \"" << country << "\", "
         << "units = " << "{" << unitsSS.str() << "}" << "}";
     return commandSS.str();
 }
