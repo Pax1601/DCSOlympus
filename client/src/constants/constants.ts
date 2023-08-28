@@ -135,9 +135,6 @@ export const layers = {
 /* Map constants */
 export const IDLE = "Idle";
 export const MOVE_UNIT = "Move unit";
-export const BOMBING = "Bombing";
-export const CARPET_BOMBING = "Carpet bombing";
-export const FIRE_AT_AREA = "Fire at area";
 export const COALITIONAREA_DRAW_POLYGON = "Draw Coalition Area";
 export const visibilityControls: string[] = ["human", "dcs", "aircraft", "groundunit-sam", "groundunit-other", "navyunit", "airbase"];
 export const visibilityControlsTypes: string[][] = [["human"], ["dcs"], ["aircraft"], ["groundunit-sam", "groundunit-sam-radar", "groundunit-sam-launcher"], ["groundunit-other", "groundunit-ewr"], ["navyunit"], ["airbase"]];
