@@ -4,7 +4,7 @@ import { UnitDatabase } from "./unitdatabase"
 
 export class HelicopterDatabase extends UnitDatabase {
     constructor() {
-        super('databases/helicopterdatabase.json');
+        super('databases/units/helicopterdatabase.json');
     }
 
     getSpawnPointsByName(name: string) {

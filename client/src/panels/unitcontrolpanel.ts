@@ -87,8 +87,8 @@ export class UnitControlPanel extends Panel {
         this.hide();
 
         //  This is for when a ctrl-click happens on the map for deselection and we need to remove the selected unit from the panel
-        document.addEventListener( "unitDeselected", ( ev:CustomEventInit ) => {
-            this.getElement().querySelector( `button[data-unit-id="${ev.detail.unit.ID}"]` )?.remove();
+        document.addEventListener( "unitDeselection", ( ev:CustomEventInit ) => {
+            this.getElement().querySelector( `button[data-unit-id="${ev.detail.ID}"]` )?.remove();
         });
 
     }
@@ -121,18 +121,15 @@ export class UnitControlPanel extends Panel {
                 button.classList.add("pill", "highlight-coalition")
 
                 button.addEventListener("click", ( ev:MouseEventInit ) => {
-
                     //  Ctrl-click deselection
                     if ( ev.ctrlKey === true && ev.shiftKey === false && ev.altKey === false ) {
                         getUnitsManager().deselectUnit( unit.ID );
                         button.remove();
-
                     //  Deselect all
                     } else {
                         getUnitsManager().deselectAllUnits();
                         getUnitsManager().selectUnit(unit.ID, true);
                     }
-
                 });
                 return (button);
             }));

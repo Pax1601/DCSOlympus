@@ -80,7 +80,23 @@ const DEMO_UNIT_DATA = {
         contacts: [],
         activePath: [ ],
         isLeader: false
-    }
+    },
+    ["6"]:{ category: "Aircraft", alive: true, human: false, controlled: false, coalition: 1, country: 0, name: "FA-18C_hornet", unitName: "Bad boi 1-2", groupName: "Bad group 1", state: 1, task: "Being bad",
+        hasTask: false, position: { lat: 36.8, lng: -116, alt: 1000 }, speed: 200, heading: 315 * Math.PI / 180, isTanker: false, isAWACS: false, onOff: true, followRoads: false, fuel: 50, 
+        desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
+        formationOffset: { x: 0, y: 0, z: 0 },
+        targetID: 0,
+        targetPosition: { lat: 0, lng: 0, alt: 0 },
+        ROE: 1,
+        reactionToThreat: 1,
+        emissionsCountermeasures: 1,
+        TACAN: { isOn: false, XY: 'Y', callsign: 'TKR', channel: 40 },
+        radio: { frequency: 124000000, callsign: 1, callsignNumber: 1 },
+        generalSettings: { prohibitAA: false, prohibitAfterburner: false, prohibitAG: false, prohibitAirWpn: false, prohibitJettison: false },
+        ammo: [{ quantity: 2, name: "A cool missile", guidance: 0, category: 0, missileCategory: 0 } ],
+        contacts: [{ID: 1, detectionMethod: 16}],
+        activePath: [ ]
+    },
 }
 
 const DEMO_WEAPONS_DATA = {
@@ -344,7 +360,7 @@ class DemoDataGenerator {
     airbases(req, res){
         var ret = {airbases: {
             ["0"]: {
-                callsign: "Neutral",
+                callsign: "Nellis",
                 latitude: 37.3,
                 longitude: -115.8,
                 coalition: "neutral"

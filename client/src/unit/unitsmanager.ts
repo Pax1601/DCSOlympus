@@ -197,13 +197,11 @@ export class UnitsManager {
     }
 
     deselectUnit( ID:number ) {
-
         if ( this.#units.hasOwnProperty( ID ) ) {
             this.#units[ID].setSelected(false);
         } else {
             console.error( `deselectUnit(): no unit found with ID "${ID}".` );
         }
-
     }
 
     selectUnitsByHotgroup(hotgroup: number) {

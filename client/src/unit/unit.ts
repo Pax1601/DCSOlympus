@@ -721,8 +721,7 @@ export class Unit extends CustomMarker {
         if (!this.#preventClick) {
             console.log( getMap().getState() );
             if (getMap().getState() === IDLE || getMap().getState() === MOVE_UNIT || e.originalEvent.ctrlKey) {
-
-                if (!e.originalEvent.ctrlKey) {
+                if (!e.originalEvent.ctrlKey) 
                     getUnitsManager().deselectAllUnits();
                 }
 
@@ -742,9 +741,8 @@ export class Unit extends CustomMarker {
                 if ( unitIsSelected ) {
                     document.dispatchEvent( new CustomEvent( "unitSelected", detail ) );
                 } else {
-                    document.dispatchEvent( new CustomEvent( "unitDeselected", detail ) );
+                    document.dispatchEvent( new CustomEvent( "unitDeselection", { "detail": this }));
                 }
-
             }
         }
 
