@@ -12,6 +12,7 @@ import { ftToM } from "../other/utils";
 import { GAME_MASTER } from "../constants/constants";
 import { navyUnitDatabase } from "../unit/navyunitdatabase";
 import { CoalitionArea } from "../map/coalitionarea";
+import { SmokeMarker } from "../map/smokemarker";
 
 export class MapContextMenu extends ContextMenu {
     #coalitionSwitch: Switch;
@@ -158,6 +159,8 @@ export class MapContextMenu extends ContextMenu {
         document.addEventListener("contextMenuDeploySmoke", (e: any) => {
             this.hide();
             spawnSmoke(e.detail.color, this.getLatLng());
+            var marker = new SmokeMarker(this.getLatLng(), e.detail.color);
+            marker.addTo(getMap());
         });
 
         document.addEventListener("contextMenuExplosion", (e: any) => {
