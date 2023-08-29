@@ -438,7 +438,15 @@ export class Unit extends CustomMarker {
             var unitIcon = document.createElement("div");
             unitIcon.classList.add("unit-icon");
             var img = document.createElement("img");
-            img.src = `/resources/theme/images/units/${this.getMarkerCategory()}.svg`;
+            var imgSrc;
+
+            /* If a unit does not belong to the commanded coalition or it is not visually detected, show it with the generic aircraft square */
+            if (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC].includes(value)))
+                imgSrc = this.getMarkerCategory();
+            else
+                imgSrc = "aircraft";
+
+            img.src = `/resources/theme/images/units/${imgSrc}.svg`;
             img.onload = () => SVGInjector(img);
             unitIcon.appendChild(img);
             unitIcon.toggleAttribute("data-rotate-to-heading", iconOptions.rotateToHeading);
@@ -1090,16 +1098,17 @@ export class Unit extends CustomMarker {
 
 export class AirUnit extends Unit {
     getIconOptions() {
+        var belongsToCommandedCoalition = this.belongsToCommandedCoalition();
         return {
-            showState: this.belongsToCommandedCoalition(),
-            showVvi: (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
-            showHotgroup: this.belongsToCommandedCoalition(),
-            showUnitIcon: (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
-            showShortLabel: (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC].includes(value))),
-            showFuel: this.belongsToCommandedCoalition(),
-            showAmmo: this.belongsToCommandedCoalition(),
-            showSummary: (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
-            showCallsign: this.belongsToCommandedCoalition(),
+            showState: belongsToCommandedCoalition,
+            showVvi: (belongsToCommandedCoalition || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
+            showHotgroup: belongsToCommandedCoalition,
+            showUnitIcon: (belongsToCommandedCoalition || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
+            showShortLabel: (belongsToCommandedCoalition || this.getDetectionMethods().some(value => [VISUAL, OPTIC].includes(value))),
+            showFuel: belongsToCommandedCoalition,
+            showAmmo: belongsToCommandedCoalition,
+            showSummary: (belongsToCommandedCoalition || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
+            showCallsign: belongsToCommandedCoalition,
             rotateToHeading: false
         };
     }
@@ -1131,16 +1140,17 @@ export class GroundUnit extends Unit {
     }
 
     getIconOptions() {
+        var belongsToCommandedCoalition = this.belongsToCommandedCoalition();
         return {
-            showState: this.belongsToCommandedCoalition(),
+            showState: belongsToCommandedCoalition,
             showVvi: false,
-            showHotgroup: this.belongsToCommandedCoalition(),
-            showUnitIcon: (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
+            showHotgroup: belongsToCommandedCoalition,
+            showUnitIcon: (belongsToCommandedCoalition || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
             showShortLabel: false,
             showFuel: false,
             showAmmo: false,
             showSummary: false,
-            showCallsign: this.belongsToCommandedCoalition(),
+            showCallsign: belongsToCommandedCoalition,
             rotateToHeading: false
         };
     }
@@ -1161,16 +1171,17 @@ export class NavyUnit extends Unit {
     }
 
     getIconOptions() {
+        var belongsToCommandedCoalition = this.belongsToCommandedCoalition();
         return {
-            showState: this.belongsToCommandedCoalition(),
+            showState: belongsToCommandedCoalition,
             showVvi: false,
             showHotgroup: true,
-            showUnitIcon: (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
+            showUnitIcon: (belongsToCommandedCoalition || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
             showShortLabel: false,
             showFuel: false,
             showAmmo: false,
             showSummary: false,
-            showCallsign: this.belongsToCommandedCoalition(),
+            showCallsign: belongsToCommandedCoalition,
             rotateToHeading: false
         };
     }
