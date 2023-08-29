@@ -16,7 +16,7 @@ import { CoalitionArea } from "../map/coalitionarea";
 export class MapContextMenu extends ContextMenu {
     #coalitionSwitch: Switch;
 
-    #aircraftNationDropdown: Dropdown;
+    #aircraftCountryDropdown: Dropdown;
     #aircraftRoleDropdown: Dropdown;
     #aircraftLabelDropdown: Dropdown;
     #aircraftCountDropdown: Dropdown;
@@ -24,7 +24,7 @@ export class MapContextMenu extends ContextMenu {
     #aircraftLiveryDropdown: Dropdown;
     #aircraftSpawnAltitudeSlider: Slider;
 
-    #helicopterNationDropdown: Dropdown;
+    #helicopterCountryDropdown: Dropdown;
     #helicopterRoleDropdown: Dropdown;
     #helicopterLabelDropdown: Dropdown;
     #helicopterCountDropdown: Dropdown;
@@ -42,7 +42,7 @@ export class MapContextMenu extends ContextMenu {
 
     #spawnOptions = { role: "", name: "", latlng: new LatLng(0, 0), coalition: "blue", loadout: "", airbaseName: "", liveryID: "", altitude: 0, count: 1, country: "" };
     #coalitionArea: CoalitionArea | null = null;
-    #nationCodes: any;
+    #countryCodes: any;
 
     constructor(id: string) {
         super(id);
@@ -55,7 +55,7 @@ export class MapContextMenu extends ContextMenu {
         for (let i = 1; i < 10; i++) count.push(String(i));
 
         /* Aircraft menu */
-        this.#aircraftNationDropdown = new Dropdown("aircraft-country-options", (country: string) => this.#setAircraftNation(country));
+        this.#aircraftCountryDropdown = new Dropdown("aircraft-country-options", () => { /* Custom button implementation */ });
         this.#aircraftRoleDropdown = new Dropdown("aircraft-role-options", (role: string) => this.#setAircraftRole(role));
         this.#aircraftLabelDropdown = new Dropdown("aircraft-label-options", (type: string) => this.#setAircraftLabel(type));
         this.#aircraftCountDropdown = new Dropdown("aircraft-count-options", (count: string) => this.#setAircraftCount(count));
@@ -69,7 +69,7 @@ export class MapContextMenu extends ContextMenu {
         this.#aircraftSpawnAltitudeSlider.setActive(true);
 
         /* Helicopter menu */
-        this.#helicopterNationDropdown = new Dropdown("helicopter-country-options", (country: string) => this.#setHelicopterNation(country));
+        this.#helicopterCountryDropdown = new Dropdown("helicopter-country-options", (country: string) => this.#setHelicopterCountry(country));
         this.#helicopterRoleDropdown = new Dropdown("helicopter-role-options", (role: string) => this.#setHelicopterRole(role));
         this.#helicopterLabelDropdown = new Dropdown("helicopter-label-options", (type: string) => this.#setHelicopterLabel(type));
         this.#helicopterCountDropdown = new Dropdown("helicopter-count-options", (count: string) => this.#setHelicopterCount(count));
@@ -217,12 +217,12 @@ export class MapContextMenu extends ContextMenu {
 
         /* Load the country codes from the public folder */
         var xhr = new XMLHttpRequest();
-        xhr.open('GET', 'images/nations/codes.json', true);
+        xhr.open('GET', 'images/countries/codes.json', true);
         xhr.responseType = 'json';
         xhr.onload = () => {
         var status = xhr.status;
             if (status === 200) {
-                this.#nationCodes = xhr.response;
+                this.#countryCodes = xhr.response;
             } else {
                 console.error(`Error retrieving country codes`)
             }
@@ -254,7 +254,7 @@ export class MapContextMenu extends ContextMenu {
 
         this.getContainer()?.querySelector("#coalition-area-button")?.classList.toggle("hide", true);
 
-        this.#setNations();
+        this.#setCountries();
     }
 
     showSubMenu(type: string) {
@@ -368,25 +368,27 @@ export class MapContextMenu extends ContextMenu {
         this.getContainer()?.querySelector("#coalition-area-button")?.classList.toggle("hide", false);
     }
 
-    #setNations() {
+    #setCountries() {
         var coalitions = getMissionHandler().getCoalitions();
-        var nations = coalitions[getActiveCoalition() as keyof typeof coalitions];
-        this.#aircraftNationDropdown.setOptionsElements(this.#createNationButtons(this.#aircraftNationDropdown, nations, (country: string) => {this.#spawnOptions.country = country;}));
-        this.#helicopterNationDropdown.setOptionsElements(this.#createNationButtons(this.#helicopterNationDropdown, nations, (country: string) => {this.#spawnOptions.country = country;}));
+        var countries = Object.values(coalitions[getActiveCoalition() as keyof typeof coalitions]);
+        this.#aircraftCountryDropdown.setOptionsElements(this.#createCountryButtons(this.#aircraftCountryDropdown, countries, (country: string) => {this.#setAircraftCountry(country)}));
+        this.#helicopterCountryDropdown.setOptionsElements(this.#createCountryButtons(this.#helicopterCountryDropdown, countries, (country: string) => {this.#setHelicopterCountry(country)}));
         
-        if (nations.length > 0) {
-            this.#aircraftNationDropdown.forceValue(nations[0]);
-            this.#helicopterNationDropdown.forceValue(nations[0]);
+        if (countries.length > 0 && !countries.includes(this.#spawnOptions.country)) {
+            this.#aircraftCountryDropdown.forceValue(countries[0]);
+            this.#setAircraftCountry(countries[0]);
+            this.#helicopterCountryDropdown.forceValue(countries[0]);
+            this.#setHelicopterCountry(countries[0]);
         }
     }
     
-    #createNationButtons(parent: Dropdown, nations: string[], callback: CallableFunction) {
-        return Object.values(nations).map((country: string) => {
+    #createCountryButtons(parent: Dropdown, countries: string[], callback: CallableFunction) {
+        return Object.values(countries).map((country: string) => {
             var el = document.createElement("div");
 
             var formattedCountry = "";
-            if (this.#nationCodes[country] !== undefined && this.#nationCodes[country].displayName !== undefined) 
-                formattedCountry = this.#nationCodes[country].displayName;
+            if (this.#countryCodes[country] !== undefined && this.#countryCodes[country].displayName !== undefined) 
+                formattedCountry = this.#countryCodes[country].displayName;
             else
                 formattedCountry = country.charAt(0).toUpperCase() + country.slice(1).toLowerCase();
             
@@ -399,11 +401,11 @@ export class MapContextMenu extends ContextMenu {
                 parent.close();
             });
 
-            if (this.#nationCodes[country] !== undefined) {
-                var code = this.#nationCodes[country].flagCode;
+            if (this.#countryCodes[country] !== undefined) {
+                var code = this.#countryCodes[country].flagCode;
                 if (code !== undefined) {
                     var img = document.createElement("img");
-                    img.src = `images/nations/${code.toLowerCase()}.svg`;
+                    img.src = `images/countries/${code.toLowerCase()}.svg`;
                     button.appendChild(img);
                 }
             }
@@ -422,14 +424,14 @@ export class MapContextMenu extends ContextMenu {
     #onSwitchClick(value: boolean) {
         value? setActiveCoalition("red"): setActiveCoalition("blue");
         this.getContainer()?.querySelectorAll('[data-coalition]').forEach((element: any) => { element.setAttribute("data-coalition", getActiveCoalition()) });
-        this.#setNations();
+        this.#setCountries();
     }
 
     #onSwitchRightClick(e: any) {
         this.#coalitionSwitch.setValue(undefined);
         setActiveCoalition("neutral");
         this.getContainer()?.querySelectorAll('[data-coalition]').forEach((element: any) => { element.setAttribute("data-coalition", getActiveCoalition()) });
-        this.#setNations();
+        this.#setCountries();
     }
 
     #refreshOptions() {
@@ -480,11 +482,11 @@ export class MapContextMenu extends ContextMenu {
             this.#spawnOptions.name = name;
             this.#aircraftLoadoutDropdown.setOptions(aircraftDatabase.getLoadoutNamesByRole(name, this.#spawnOptions.role));
             this.#aircraftLoadoutDropdown.selectValue(0);
-            this.#aircraftLiveryDropdown.setOptions(aircraftDatabase.getLiveryNamesByName(name));
-            this.#aircraftLiveryDropdown.selectValue(0);
             var image = (<HTMLImageElement>this.getContainer()?.querySelector("#aircraft-unit-image"));
             image.src = `images/units/${aircraftDatabase.getByLabel(label)?.filename}`;
             image.classList.toggle("hide", false);
+
+            this.#setAircraftLiveryOptions();
         }
         this.clip();
         this.#computeSpawnPoints();
@@ -527,14 +529,29 @@ export class MapContextMenu extends ContextMenu {
         var liveries = aircraftDatabase.getByName(this.#spawnOptions.name)?.liveries;
         if (liveries !== undefined) {
             for (let liveryID in liveries)
-                if (liveries[liveryID] === liveryName)
+                if (liveries[liveryID].name === liveryName)
                     this.#spawnOptions.liveryID = liveryID;
         }
         this.clip();
     }
 
-    #setAircraftNation(country: string) {
+    #setAircraftCountry(country: string) {
         this.#spawnOptions.country = country;
+        this.#setAircraftLiveryOptions();
+    }
+
+    #setAircraftLiveryOptions() {
+        if (this.#spawnOptions.name !== "" && this.#spawnOptions.country !== "") {
+            var liveries = aircraftDatabase.getLiveryNamesByName(this.#spawnOptions.name);
+            var countryLiveries: string[] = ["Default"];
+            liveries.forEach((livery: any) => {
+                var nationLiveryCodes = this.#countryCodes[this.#spawnOptions.country].liveryCodes;
+                if (livery.countries.some((country: string) => {return nationLiveryCodes.includes(country)})) 
+                    countryLiveries.push(livery.name);
+            });
+            this.#aircraftLiveryDropdown.setOptions(countryLiveries);
+            this.#aircraftLiveryDropdown.selectValue(0);
+        }
     }
 
     /********* Helicopter spawn menu *********/
@@ -563,7 +580,7 @@ export class MapContextMenu extends ContextMenu {
             this.#spawnOptions.name = name;
             this.#helicopterLoadoutDropdown.setOptions(helicopterDatabase.getLoadoutNamesByRole(name, this.#spawnOptions.role));
             this.#helicopterLoadoutDropdown.selectValue(0);
-            this.#helicopterLiveryDropdown.setOptions(helicopterDatabase.getLiveryNamesByName(name));
+            //this.#helicopterLiveryDropdown.setOptions(helicopterDatabase.getLiveryNamesByName(name));
             this.#helicopterLiveryDropdown.selectValue(0);
             var image = (<HTMLImageElement>this.getContainer()?.querySelector("#helicopter-unit-image"));
             image.src = `images/units/${helicopterDatabase.getByLabel(label)?.filename}`;
@@ -610,13 +627,13 @@ export class MapContextMenu extends ContextMenu {
         var liveries = helicopterDatabase.getByName(this.#spawnOptions.name)?.liveries;
         if (liveries !== undefined) {
             for (let liveryID in liveries)
-                if (liveries[liveryID] === liveryName)
+                if (liveries[liveryID].name === liveryName)
                     this.#spawnOptions.liveryID = liveryID;
         }
         this.clip();
     }
 
-    #setHelicopterNation(country: string) {
+    #setHelicopterCountry(country: string) {
         this.#spawnOptions.country = country;
     }
 

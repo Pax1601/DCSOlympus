@@ -2418,46 +2418,250 @@
     "filename": "a-10.png",
     "enabled": true,
     "liveries": {
-      "47th fs barksdale afb, louisiana (bd)": "47th FS Barksdale AFB, Louisiana (BD)",
-      "fictional spanish aga": "Fictional Spanish AGA",
-      "fictional spanish tritonal": "Fictional Spanish Tritonal",
-      "118th fs bradley angb, connecticut (ct) n621": "118th FS Bradley ANGB, Connecticut (CT) N621",
-      "fictional georgian grey": "Fictional Georgian Grey",
-      "355th fs eielson afb, alaska (ak)": "355th FS Eielson AFB, Alaska (AK)",
-      "fictional russian air force 2": "Fictional Russian Air Force 2",
-      "canada rcaf 442 snow scheme": "Fictional RCAF 442 Snow Scheme",
-      "australia notional raaf": "Australia Notional RAAF",
-      "haf fictional": "Hellenic Airforce (Fictional)",
-      "fictional ukraine air force 1": "Fictional Ukraine Air Force 1",
-      "357th fs davis monthan afb, arizona (dm)": "357th FS Davis Monthan AFB, Arizona (DM)",
-      "25th fs osan ab, korea (os)": "25th FS Osan AB, Korea (OS)",
-      "fictional france escadron de chasse 03.003 ardennes": "Fictional France Escadron de Chasse 03.003 ARDENNES",
-      "81st fs spangdahlem ab, germany (sp) 2": "81st FS Spangdahlem AB, Germany (SP) 2",
-      "canada rcaf 409 squadron": "Fictional RCAF 409 Squadron",
-      "104th fs maryland ang, baltimore (md)": "104th FS Maryland ANG, Baltimore (MD)",
-      "354th fs davis monthan afb, arizona (dm)": "354th FS Davis Monthan AFB, Arizona (DM)",
-      "66th ws nellis afb, nevada (wa)": "66th WS Nellis AFB, Nevada (WA)",
-      "fictional canadian air force pixel camo": "Fictional Canadian Air Force Pixel Camo",
-      "fictional georgian olive": "Fictional Georgian Olive",
-      "a-10 grey": "A-10 Grey",
-      "74th fs moody afb, georgia (ft)": "74th FS Moody AFB, Georgia (FT)",
-      "fictional italian am (23gruppo)": "AM (23Gruppo)",
-      "algerian af fictional grey": "Algerian AF Fictional Grey",
-      "422nd tes nellis afb, nevada (ot)": "422nd TES Nellis AFB, Nevada (OT)",
-      "23rd tfw england afb (el)": "23rd TFW England AFB (EL)",
-      "fictional royal norwegian air force": "Fictional Royal Norwegian Air Force",
-      "fictional german 3323": "Fictional German 3323",
-      "fictional spanish 12nd wing": "Fictional Spanish 12nd Wing",
-      "190th fs boise angb, idaho (id)": "190th FS Boise ANGB, Idaho (ID)",
-      "184th fs arkansas ang, fort smith (fs)": "184th FS Arkansas ANG, Fort Smith (FS)",
-      "fictional israel 115 sqn flying dragon": "Fictional Israel 115 Sqn Flying Dragon",
-      "172nd fs battle creek angb, michigan (bc)": "172nd FS Battle Creek ANGB, Michigan (BC)",
-      "fictional russian air force 1": "Fictional Russian Air Force 1",
-      "118th fs bradley angb, connecticut (ct)": "118th FS Bradley ANGB, Connecticut (CT)",
-      "81st fs spangdahlem ab, germany (sp) 1": "81st FS Spangdahlem AB, Germany (SP) 1",
-      "algerian af fictional desert": "Algerian AF Fictional Desert",
-      "358th fs davis monthan afb, arizona (dm)": "358th FS Davis Monthan AFB, Arizona (DM)",
-      "fictional german 3322": "Fictional German 3322"
+      "haf fictional": {
+        "name": "Hellenic Airforce (Fictional)",
+        "countries": [
+          "GRC"
+        ]
+      },
+      "fictional german 3322": {
+        "name": "Fictional German 3322",
+        "countries": [
+          "GER"
+        ]
+      },
+      "fictional russian air force 1": {
+        "name": "Fictional Russian Air Force 1",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "357th fs davis monthan afb, arizona (dm)": {
+        "name": "357th FS Davis Monthan AFB, Arizona (DM)",
+        "countries": [
+          "USA"
+        ]
+      },
+      "118th fs bradley angb, connecticut (ct)": {
+        "name": "118th FS Bradley ANGB, Connecticut (CT)",
+        "countries": [
+          "USA"
+        ]
+      },
+      "190th fs boise angb, idaho (id)": {
+        "name": "190th FS Boise ANGB, Idaho (ID)",
+        "countries": [
+          "USA"
+        ]
+      },
+      "66th ws nellis afb, nevada (wa)": {
+        "name": "66th WS Nellis AFB, Nevada (WA)",
+        "countries": [
+          "USA"
+        ]
+      },
+      "184th fs arkansas ang, fort smith (fs)": {
+        "name": "184th FS Arkansas ANG, Fort Smith (FS)",
+        "countries": [
+          "USA"
+        ]
+      },
+      "355th fs eielson afb, alaska (ak)": {
+        "name": "355th FS Eielson AFB, Alaska (AK)",
+        "countries": [
+          "USA"
+        ]
+      },
+      "fictional german 3323": {
+        "name": "Fictional German 3323",
+        "countries": [
+          "GER"
+        ]
+      },
+      "358th fs davis monthan afb, arizona (dm)": {
+        "name": "358th FS Davis Monthan AFB, Arizona (DM)",
+        "countries": [
+          "USA"
+        ]
+      },
+      "81st fs spangdahlem ab, germany (sp) 1": {
+        "name": "81st FS Spangdahlem AB, Germany (SP) 1",
+        "countries": [
+          "USA"
+        ]
+      },
+      "fictional georgian olive": {
+        "name": "Fictional Georgian Olive",
+        "countries": [
+          "GRG"
+        ]
+      },
+      "118th fs bradley angb, connecticut (ct) n621": {
+        "name": "118th FS Bradley ANGB, Connecticut (CT) N621",
+        "countries": [
+          "USA"
+        ]
+      },
+      "fictional royal norwegian air force": {
+        "name": "Fictional Royal Norwegian Air Force",
+        "countries": [
+          "NOR"
+        ]
+      },
+      "81st fs spangdahlem ab, germany (sp) 2": {
+        "name": "81st FS Spangdahlem AB, Germany (SP) 2",
+        "countries": [
+          "USA"
+        ]
+      },
+      "algerian af fictional grey": {
+        "name": "Algerian AF Fictional Grey",
+        "countries": [
+          "DZA"
+        ]
+      },
+      "canada rcaf 409 squadron": {
+        "name": "Fictional RCAF 409 Squadron",
+        "countries": [
+          "CAN"
+        ]
+      },
+      "fictional israel 115 sqn flying dragon": {
+        "name": "Fictional Israel 115 Sqn Flying Dragon",
+        "countries": [
+          "ISR"
+        ]
+      },
+      "fictional spanish tritonal": {
+        "name": "Fictional Spanish Tritonal",
+        "countries": [
+          "SPN"
+        ]
+      },
+      "fictional spanish aga": {
+        "name": "Fictional Spanish AGA",
+        "countries": [
+          "SPN"
+        ]
+      },
+      "74th fs moody afb, georgia (ft)": {
+        "name": "74th FS Moody AFB, Georgia (FT)",
+        "countries": [
+          "USA"
+        ]
+      },
+      "23rd tfw england afb (el)": {
+        "name": "23rd TFW England AFB (EL)",
+        "countries": [
+          "USA"
+        ]
+      },
+      "a-10 grey": {
+        "name": "A-10 Grey",
+        "countries": [
+          "UK",
+          "NETH",
+          "BEL",
+          "DEN",
+          "TUR"
+        ]
+      },
+      "104th fs maryland ang, baltimore (md)": {
+        "name": "104th FS Maryland ANG, Baltimore (MD)",
+        "countries": [
+          "USA"
+        ]
+      },
+      "25th fs osan ab, korea (os)": {
+        "name": "25th FS Osan AB, Korea (OS)",
+        "countries": [
+          "USA"
+        ]
+      },
+      "fictional georgian grey": {
+        "name": "Fictional Georgian Grey",
+        "countries": [
+          "GRG"
+        ]
+      },
+      "fictional france escadron de chasse 03.003 ardennes": {
+        "name": "Fictional France Escadron de Chasse 03.003 ARDENNES",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "fictional spanish 12nd wing": {
+        "name": "Fictional Spanish 12nd Wing",
+        "countries": [
+          "SPN"
+        ]
+      },
+      "canada rcaf 442 snow scheme": {
+        "name": "Fictional RCAF 442 Snow Scheme",
+        "countries": [
+          "CAN"
+        ]
+      },
+      "algerian af fictional desert": {
+        "name": "Algerian AF Fictional Desert",
+        "countries": [
+          "DZA"
+        ]
+      },
+      "422nd tes nellis afb, nevada (ot)": {
+        "name": "422nd TES Nellis AFB, Nevada (OT)",
+        "countries": [
+          "USA"
+        ]
+      },
+      "fictional canadian air force pixel camo": {
+        "name": "Fictional Canadian Air Force Pixel Camo",
+        "countries": [
+          "CAN"
+        ]
+      },
+      "fictional russian air force 2": {
+        "name": "Fictional Russian Air Force 2",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "354th fs davis monthan afb, arizona (dm)": {
+        "name": "354th FS Davis Monthan AFB, Arizona (DM)",
+        "countries": [
+          "USA"
+        ]
+      },
+      "fictional italian am (23gruppo)": {
+        "name": "AM (23Gruppo)",
+        "countries": [
+          "ITA"
+        ]
+      },
+      "fictional ukraine air force 1": {
+        "name": "Fictional Ukraine Air Force 1",
+        "countries": [
+          "UKR"
+        ]
+      },
+      "47th fs barksdale afb, louisiana (bd)": {
+        "name": "47th FS Barksdale AFB, Louisiana (BD)",
+        "countries": [
+          "USA"
+        ]
+      },
+      "australia notional raaf": {
+        "name": "Australia Notional RAAF",
+        "countries": [
+          "AUS"
+        ]
+      },
+      "172nd fs battle creek angb, michigan (bc)": {
+        "name": "172nd FS Battle Creek ANGB, Michigan (BC)",
+        "countries": [
+          "USA"
+        ]
+      }
     }
   },
   "A-20G": {
@@ -2497,11 +2701,38 @@
     "filename": "a-20.png",
     "enabled": true,
     "liveries": {
-      "107 sqn": "107 SQN",
-      "ussr 27 ape dd": "27th API DD",
-      "ussr 1st gmtap": "1st GMTAP",
-      "usaf 668th bs": "668th BS, 416th BG",
-      "usaf 645th bs": "645th BS, 410th BG, 9th AF"
+      "ussr 27 ape dd": {
+        "name": "27th API DD",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      },
+      "usaf 668th bs": {
+        "name": "668th BS, 416th BG",
+        "countries": [
+          "USA"
+        ]
+      },
+      "ussr 1st gmtap": {
+        "name": "1st GMTAP",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      },
+      "usaf 645th bs": {
+        "name": "645th BS, 410th BG, 9th AF",
+        "countries": [
+          "USA"
+        ]
+      },
+      "107 sqn": {
+        "name": "107 SQN",
+        "countries": [
+          "UK"
+        ]
+      }
     }
   },
   "A-50": {
@@ -2524,8 +2755,18 @@
     "filename": "a-50.png",
     "enabled": true,
     "liveries": {
-      "rf air force": "RF Air Force",
-      "rf air force new": "RF Air Force new"
+      "rf air force": {
+        "name": "RF Air Force",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "rf air force new": {
+        "name": "RF Air Force new",
+        "countries": [
+          "RUS"
+        ]
+      }
     }
   },
   "AJS37": {
@@ -3168,16 +3409,7 @@
     ],
     "filename": "viggen.png",
     "enabled": true,
-    "liveries": {
-      "se-dxn_v3": "SE-DXN v3 by 000rick000",
-      "37402": "#3 JA-37 F21 Akktu Stakki",
-      "f7 skaraborg": "#4 Splinter F7 Skaraborgs Flygflottilj 76",
-      "baremetal": "#2 Bare Metal F7 Skaraborgs Flygflottilj",
-      "se-dxnv4": "SE-DXN by Mach3DS",
-      "37": "#1 Splinter F21 Norrbottens Flygflottilj",
-      "sf-37 akktu stakki - f21": "SF-37 Akktu Stakki - F21",
-      "the show must go on": "SHOW MUST GO ON! by Bender & Mach3DS"
-    }
+    "liveries": {}
   },
   "AV8BNA": {
     "name": "AV8BNA",
@@ -4062,24 +4294,7 @@
     ],
     "filename": "av8bna.png",
     "enabled": true,
-    "liveries": {
-      "vma-211": "VMA-211",
-      "vma-513": "VMA-513",
-      "vma-214d": "VMA-214D",
-      "vma-211d": "VMA-211D",
-      "vma-231-1": "VMA-231-1",
-      "vma-231-2": "VMA-231-2",
-      "vma-311": "VMA-311",
-      "vma-311d": "VMA-311D",
-      "vma-542": "VMA-542",
-      "vma-223d": "VMA-223D",
-      "vma-214": "VMA-214",
-      "vmat-203": "VMAT-203",
-      "vma-231d": "VMA-231D",
-      "vmat-203s": "VMAT-203 Special",
-      "vma-513d": "VMA-513D",
-      "default": "default"
-    }
+    "liveries": {}
   },
   "An-26B": {
     "name": "An-26B",
@@ -4101,13 +4316,49 @@
     "filename": "an-26.png",
     "enabled": true,
     "liveries": {
-      "china plaaf": "China PLAAF",
-      "aeroflot": "Aeroflot",
-      "rf navy": "RF Navy",
-      "rf air force": "RF Air Force",
-      "abkhazian af": "Abkhazian AF",
-      "georgian af": "Georgian AF",
-      "ukraine af": "Ukraine AF"
+      "aeroflot": {
+        "name": "Aeroflot",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      },
+      "georgian af": {
+        "name": "Georgian AF",
+        "countries": [
+          "GRG"
+        ]
+      },
+      "rf navy": {
+        "name": "RF Navy",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "rf air force": {
+        "name": "RF Air Force",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "ukraine af": {
+        "name": "Ukraine AF",
+        "countries": [
+          "UKR"
+        ]
+      },
+      "abkhazian af": {
+        "name": "Abkhazian AF",
+        "countries": [
+          "ABH"
+        ]
+      },
+      "china plaaf": {
+        "name": "China PLAAF",
+        "countries": [
+          "CHN"
+        ]
+      }
     }
   },
   "An-30M": {
@@ -4130,9 +4381,24 @@
     "filename": "a-50.png",
     "enabled": true,
     "liveries": {
-      "15th transport ab": "15th Transport AB",
-      "rf air force": "RF Air Force",
-      "china caac": "China CAAC"
+      "china caac": {
+        "name": "China CAAC",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "15th transport ab": {
+        "name": "15th Transport AB",
+        "countries": [
+          "UKR"
+        ]
+      },
+      "rf air force": {
+        "name": "RF Air Force",
+        "countries": [
+          "RUS"
+        ]
+      }
     }
   },
   "B-1B": {
@@ -4310,7 +4576,12 @@
     "filename": "b-1.png",
     "enabled": true,
     "liveries": {
-      "usaf standard": "usaf standard"
+      "usaf standard": {
+        "name": "usaf standard",
+        "countries": [
+          "USA"
+        ]
+      }
     }
   },
   "B-52H": {
@@ -4414,7 +4685,12 @@
     "filename": "b-52.png",
     "enabled": true,
     "liveries": {
-      "usaf standard": "usaf standard"
+      "usaf standard": {
+        "name": "usaf standard",
+        "countries": [
+          "USA"
+        ]
+      }
     }
   },
   "Bf-109K-4": {
@@ -4487,33 +4763,143 @@
     "filename": "bf109.png",
     "enabled": true,
     "liveries": {
-      "bf-109 k4 jagdgeschwader 77": "Jagdgeschwader 77",
-      "bf-109 k4 legion condor spain 1939": "6-123 ESPA\u00d1A",
-      "bf-109 k4 red7 eads": "BF109G4 -red7- EADS -fondation messerschmitt V2",
-      "bf-109 k4 iiijg27": "III/JG27",
-      "bf-109 k4 9.jg27 (w10+i)": "9./JG27 (W10+I)",
-      "bf-109 k4 9.jg77": "9./JG77",
-      "bf-109 k4 us captured": "US Captured",
-      "bf-109 k4 335xxx batch": "335xxx batch",
-      "bf-109 k4 ussr green": "Green-trophy RKKA",
-      "bf-109 k4 dogfight blue": "BLUE",
-      "bf-109 k4 swiss e-3a j-374 1940": "Swiss E-3a J-374 1940 l'Seducteur",
-      "green": "Green",
-      "bf-109 k4 iaf s-199": "S-199 IDF by Ovenmit",
-      "bf-109 k4 iijg52": "II./JG52",
-      "bf-109 k4 croatia": "Croatia Air Force - 'Black 4'",
-      "bf-109 k4 g10 of tibor tobak rhaf": "BF109G10 RHAF Tibor Tobak by Reflected",
-      "bf-109 k4 334xxx batch": "334xxx batch",
-      "bf-109 k4 1.njg  11": "NJG 11",
-      "bf-109 k4 irmgard": "Bf-109K-4 Irmgard Captured",
-      "bf-109 k4 dogfight red": "RED",
-      "bf-109 k4 white 6, jg 4": "White 6, JG 4",
-      "bf-109 k4 330xxx batch": "330xxx batch",
-      "bf-109 k4 stab jg52": "Stab JG52",
-      "bf-109 k4 jagdgeschwader 53": " Jagdgeschwader 53",
-      "germany_standard": "Jagdgeschwader 27",
-      "bf-109 k4 1.njg  11 (white 5)": "1./NJG 11 (W5)",
-      "bf-109 k4 raf vd 358 e-2": "RAF VD 358 E-2 - UK Captured"
+      "bf-109 k4 iiijg27": {
+        "name": "III/JG27",
+        "countries": [
+          "GER",
+          "NZG"
+        ]
+      },
+      "bf-109 k4 white 6, jg 4": {
+        "name": "White 6, JG 4",
+        "countries": [
+          "GER",
+          "NZG"
+        ]
+      },
+      "bf-109 k4 1.njg  11 (white 5)": {
+        "name": "1./NJG 11 (W5)",
+        "countries": [
+          "GER",
+          "NZG"
+        ]
+      },
+      "bf-109 k4 legion condor spain 1939": {
+        "name": "6-123 ESPA\u00d1A",
+        "countries": [
+          "SPN"
+        ]
+      },
+      "bf-109 k4 330xxx batch": {
+        "name": "330xxx batch",
+        "countries": [
+          "GER",
+          "NZG"
+        ]
+      },
+      "germany_standard": {
+        "name": "Jagdgeschwader 27",
+        "countries": [
+          "GER",
+          "NZG"
+        ]
+      },
+      "bf-109 k4 9.jg77": {
+        "name": "9./JG77",
+        "countries": [
+          "GER",
+          "NZG"
+        ]
+      },
+      "bf-109 k4 croatia": {
+        "name": "Croatia Air Force - 'Black 4'",
+        "countries": [
+          "HRV",
+          "GER",
+          "NZG"
+        ]
+      },
+      "bf-109 k4 jagdgeschwader 77": {
+        "name": "Jagdgeschwader 77",
+        "countries": [
+          "GER",
+          "NZG"
+        ]
+      },
+      "bf-109 k4 1.njg  11": {
+        "name": "NJG 11",
+        "countries": [
+          "GER",
+          "NZG"
+        ]
+      },
+      "bf-109 k4 iijg52": {
+        "name": "II./JG52",
+        "countries": [
+          "GER",
+          "NZG"
+        ]
+      },
+      "bf-109 k4 iaf s-199": {
+        "name": "S-199 IDF by Ovenmit",
+        "countries": [
+          "ISR"
+        ]
+      },
+      "bf-109 k4 stab jg52": {
+        "name": "Stab JG52",
+        "countries": [
+          "GER",
+          "NZG"
+        ]
+      },
+      "bf-109 k4 us captured": {
+        "name": "US Captured",
+        "countries": [
+          "USA"
+        ]
+      },
+      "bf-109 k4 red7 eads": {
+        "name": "BF109G4 -red7- EADS -fondation messerschmitt V2",
+        "countries": [
+          "GER"
+        ]
+      },
+      "bf-109 k4 g10 of tibor tobak rhaf": {
+        "name": "BF109G10 RHAF Tibor Tobak by Reflected",
+        "countries": [
+          "NZG",
+          "GER",
+          "HUN"
+        ]
+      },
+      "bf-109 k4 jagdgeschwader 53": {
+        "name": " Jagdgeschwader 53",
+        "countries": [
+          "GER",
+          "NZG"
+        ]
+      },
+      "bf-109 k4 irmgard": {
+        "name": "Bf-109K-4 Irmgard Captured",
+        "countries": [
+          "USA"
+        ]
+      },
+      "bf-109 k4 9.jg27 (w10+i)": {
+        "name": "9./JG27 (W10+I)",
+        "countries": [
+          "GER",
+          "NZG"
+        ]
+      },
+      "bf-109 k4 ussr green": {
+        "name": "Green-trophy RKKA",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      }
     }
   },
   "C-101CC": {
@@ -4807,7 +5193,7 @@
             "quantity": 2
           },
           {
-            "name": null,
+            "name": "BR-250 - 250kg GP Bomb LD",
             "quantity": 2
           },
           {
@@ -4873,7 +5259,7 @@
             "quantity": 2
           },
           {
-            "name": null,
+            "name": "BR-500 - 500kg GP Bomb LD",
             "quantity": 2
           },
           {
@@ -5041,7 +5427,7 @@
             "quantity": 2
           },
           {
-            "name": null,
+            "name": "BR-250 - 250kg GP Bomb LD",
             "quantity": 2
           },
           {
@@ -5060,24 +5446,209 @@
     "filename": "c-101.png",
     "enabled": true,
     "liveries": {
-      "aviodev skin": "Aviodev Skin",
-      "i brigada aerea - chile early green n.1 a-36 halcon": "I Brigada Aerea - Chile Early Green",
-      "i brigada aerea - grupo de aviacion n.3  a-36 halcon": "I Brigada Aerea - Grupo de Aviacion N.3  A-36 HALCON",
-      "royal jordanian air force": "Royal jordanian Air Force ",
-      "russia combat fictional": "Russia Combat Fictional",
-      "usaf agressor fictional": "USAF Agressor Fictional",
-      "i brigada aerea - grupo de aviacion n.1 a-36 halcon": "I Brigada Aerea - Grupo de Aviacion N.1 A-36 HALCON",
-      "i brigada aerea - grupo de aviacion n.1 a-36 halcon desert skin": "I Brigada Aerea - Grupo de Aviacion N.1  A-36 HALCON Desert Skin",
-      "i brigada aerea - chile early grey n.1 a-36 halcon": "I Brigada Aerea - Chile Early Grey",
-      "georgia combat fictional green": "Georgia Combat Fictional Green",
-      "i brigada aerea - chile early agressor n\u00ba410 n.1 a-36 halcon": "I Brigada Aerea - Chile Early Agressor N\u00ba410 ",
-      "honduras - air force comayagua coronel jose enrique soto cano air base skin 2": "Honduras - Air Force Comayagua Coronel Jose Enrique Soto Cano Air Base Skin 2",
-      "georgia combat fictional spots": "Georgia Combat Fictional Spots",
-      "honduras - air force comayagua coronel jose enrique soto cano air base skin 1": "Honduras - Air Force Comayagua Coronel Jose Enrique Soto Cano Air Base Skin 1",
-      "i brigada aerea - chile early agressor n\u00ba411 n.1 a-36 halcon": "I Brigada Aerea - Chile Early Agressor N\u00ba411",
-      "claex green camu skin - centro logistico de armamento y experimentacion": "CLAEX Green Camu Skin - Centro Logistico de Armamento y Experimentacion",
-      "georgia combat fictional wolf": "Georgia Combat Fictional Wolf",
-      "claex desert camu skin - centro logistico de armamento y experimentacion": "CLAEX Desert Camu Skin - Centro Logistico de Armamento y Experimentacion"
+      "aviodev skin": {
+        "name": "Aviodev Skin",
+        "countries": [
+          "ISR",
+          "RED",
+          "SWE",
+          "CUB",
+          "RSA",
+          "MAR",
+          "UN",
+          "RSO",
+          "LBY",
+          "AUSAF",
+          "HND",
+          "ABH",
+          "UK",
+          "KOR",
+          "SYR",
+          "KWT",
+          "DEN",
+          "KAZ",
+          "SUN",
+          "EGY",
+          "QAT",
+          "YEM",
+          "CHN",
+          "GHA",
+          "IDN",
+          "BLR",
+          "CHL",
+          "ITA",
+          "NETH",
+          "BEL",
+          "RSI",
+          "GRC",
+          "USA",
+          "LBN",
+          "GER",
+          "AUT",
+          "AUS",
+          "ETH",
+          "RUS",
+          "BHR",
+          "PAK",
+          "ARE",
+          "BLUE",
+          "YUG",
+          "VEN",
+          "INS",
+          "PER",
+          "SRB",
+          "NZG",
+          "MEX",
+          "JOR",
+          "SVK",
+          "BRA",
+          "JPN",
+          "NGA",
+          "GDR",
+          "SDN",
+          "PRT",
+          "SPN",
+          "POL",
+          "PHL",
+          "ARG",
+          "HRV",
+          "DZA",
+          "SVN",
+          "HUN",
+          "BGR",
+          "MYS",
+          "OMN",
+          "IND",
+          "ROU",
+          "TUN",
+          "SAU",
+          "FRA",
+          "NOR",
+          "VNM",
+          "CAN",
+          "FIN",
+          "THA",
+          "UKR",
+          "CZE",
+          "TUR",
+          "IRQ",
+          "SUI",
+          "BOL",
+          "GRG",
+          "IRN",
+          "PRK",
+          "CYP"
+        ]
+      },
+      "i brigada aerea - chile early agressor n\u00ba411 n.1 a-36 halcon": {
+        "name": "I Brigada Aerea - Chile Early Agressor N\u00ba411",
+        "countries": [
+          "CHL"
+        ]
+      },
+      "i brigada aerea - chile early grey n.1 a-36 halcon": {
+        "name": "I Brigada Aerea - Chile Early Grey",
+        "countries": [
+          "CHL"
+        ]
+      },
+      "royal jordanian air force": {
+        "name": "Royal jordanian Air Force ",
+        "countries": [
+          "JOR"
+        ]
+      },
+      "usaf agressor fictional": {
+        "name": "USAF Agressor Fictional",
+        "countries": [
+          "BLUE",
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "i brigada aerea - grupo de aviacion n.3  a-36 halcon": {
+        "name": "I Brigada Aerea - Grupo de Aviacion N.3  A-36 HALCON",
+        "countries": [
+          "CHL"
+        ]
+      },
+      "georgia combat fictional green": {
+        "name": "Georgia Combat Fictional Green",
+        "countries": [
+          "GRG"
+        ]
+      },
+      "georgia combat fictional wolf": {
+        "name": "Georgia Combat Fictional Wolf",
+        "countries": [
+          "GRG"
+        ]
+      },
+      "honduras - air force comayagua coronel jose enrique soto cano air base skin 1": {
+        "name": "Honduras - Air Force Comayagua Coronel Jose Enrique Soto Cano Air Base Skin 1",
+        "countries": [
+          "HND"
+        ]
+      },
+      "i brigada aerea - chile early agressor n\u00ba410 n.1 a-36 halcon": {
+        "name": "I Brigada Aerea - Chile Early Agressor N\u00ba410 ",
+        "countries": [
+          "CHL"
+        ]
+      },
+      "honduras - air force comayagua coronel jose enrique soto cano air base skin 2": {
+        "name": "Honduras - Air Force Comayagua Coronel Jose Enrique Soto Cano Air Base Skin 2",
+        "countries": [
+          "HND"
+        ]
+      },
+      "i brigada aerea - grupo de aviacion n.1 a-36 halcon desert skin": {
+        "name": "I Brigada Aerea - Grupo de Aviacion N.1  A-36 HALCON Desert Skin",
+        "countries": [
+          "CHL"
+        ]
+      },
+      "i brigada aerea - chile early green n.1 a-36 halcon": {
+        "name": "I Brigada Aerea - Chile Early Green",
+        "countries": [
+          "CHL"
+        ]
+      },
+      "russia combat fictional": {
+        "name": "Russia Combat Fictional",
+        "countries": [
+          "RUS",
+          "RED"
+        ]
+      },
+      "i brigada aerea - grupo de aviacion n.1 a-36 halcon": {
+        "name": "I Brigada Aerea - Grupo de Aviacion N.1 A-36 HALCON",
+        "countries": [
+          "CHL"
+        ]
+      },
+      "claex green camu skin - centro logistico de armamento y experimentacion": {
+        "name": "CLAEX Green Camu Skin - Centro Logistico de Armamento y Experimentacion",
+        "countries": [
+          "BLUE",
+          "RED",
+          "SPN"
+        ]
+      },
+      "georgia combat fictional spots": {
+        "name": "Georgia Combat Fictional Spots",
+        "countries": [
+          "GRG"
+        ]
+      },
+      "claex desert camu skin - centro logistico de armamento y experimentacion": {
+        "name": "CLAEX Desert Camu Skin - Centro Logistico de Armamento y Experimentacion",
+        "countries": [
+          "BLUE",
+          "RED",
+          "SPN"
+        ]
+      }
     }
   },
   "C-130": {
@@ -5100,23 +5671,108 @@
     "filename": "c-130.png",
     "enabled": true,
     "liveries": {
-      "iriaf 5-8518": "IRIAF 5-8518",
-      "iriaf 5-8503": "IRIAF 5-8503",
-      "royal danish air force": "Royal Danish Air Force",
-      "canada's air force": "Canada's Air Force",
-      "royal netherlands air force": "Royal Netherlands Air Force",
-      "belgian air force": "Belgian Air Force",
-      "algerian af green": "Algerian AF Green",
-      "air algerie l-382 white": "Air Algerie L-382 White",
-      "israel defence force": "Israel Defence Force",
-      "algerian af h30 white": "Algerian AF H30 White",
-      "us air force": "US Air Force",
-      "spanish air force": "Spanish Air Force",
-      "french air force": "French Air Force",
-      "royal norwegian air force": "Royal Norwegian Air Force",
-      "haf gray": "Hellenic Airforce - Gray",
-      "turkish air force": "Turkish Air Force",
-      "royal air force": "Royal Air Force"
+      "royal danish air force": {
+        "name": "Royal Danish Air Force",
+        "countries": [
+          "DEN"
+        ]
+      },
+      "turkish air force": {
+        "name": "Turkish Air Force",
+        "countries": [
+          "TUR"
+        ]
+      },
+      "us air force": {
+        "name": "US Air Force",
+        "countries": [
+          "USA"
+        ]
+      },
+      "haf gray": {
+        "name": "Hellenic Airforce - Gray",
+        "countries": [
+          "GRC"
+        ]
+      },
+      "belgian air force": {
+        "name": "Belgian Air Force",
+        "countries": [
+          "BEL"
+        ]
+      },
+      "iriaf 5-8518": {
+        "name": "IRIAF 5-8518",
+        "countries": [
+          "IRN"
+        ]
+      },
+      "iriaf 5-8503": {
+        "name": "IRIAF 5-8503",
+        "countries": [
+          "IRN"
+        ]
+      },
+      "air algerie l-382 white": {
+        "name": "Air Algerie L-382 White",
+        "countries": [
+          "DZA"
+        ]
+      },
+      "israel defence force": {
+        "name": "Israel Defence Force",
+        "countries": [
+          "ISR"
+        ]
+      },
+      "royal air force": {
+        "name": "Royal Air Force",
+        "countries": [
+          "UK"
+        ]
+      },
+      "algerian af h30 white": {
+        "name": "Algerian AF H30 White",
+        "countries": [
+          "DZA"
+        ]
+      },
+      "royal netherlands air force": {
+        "name": "Royal Netherlands Air Force",
+        "countries": [
+          "NETH"
+        ]
+      },
+      "canada's air force": {
+        "name": "Canada's Air Force",
+        "countries": [
+          "CAN"
+        ]
+      },
+      "spanish air force": {
+        "name": "Spanish Air Force",
+        "countries": [
+          "SPN"
+        ]
+      },
+      "french air force": {
+        "name": "French Air Force",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "algerian af green": {
+        "name": "Algerian AF Green",
+        "countries": [
+          "DZA"
+        ]
+      },
+      "royal norwegian air force": {
+        "name": "Royal Norwegian Air Force",
+        "countries": [
+          "NOR"
+        ]
+      }
     }
   },
   "C-17A": {
@@ -5139,7 +5795,12 @@
     "filename": "c-17.png",
     "enabled": true,
     "liveries": {
-      "usaf standard": "usaf standard"
+      "usaf standard": {
+        "name": "usaf standard",
+        "countries": [
+          "USA"
+        ]
+      }
     }
   },
   "E-2C": {
@@ -5162,8 +5823,18 @@
     "filename": "e-2.png",
     "enabled": true,
     "liveries": {
-      "vaw-125 tigertails": "VAW-125 Tigertails",
-      "e-2d demo": "E-2D Demo"
+      "vaw-125 tigertails": {
+        "name": "VAW-125 Tigertails",
+        "countries": [
+          "USA"
+        ]
+      },
+      "e-2d demo": {
+        "name": "E-2D Demo",
+        "countries": [
+          "USA"
+        ]
+      }
     }
   },
   "E-3A": {
@@ -5186,8 +5857,20 @@
     "filename": "e-3.png",
     "enabled": true,
     "liveries": {
-      "nato": "nato",
-      "usaf standard": "usaf standard"
+      "nato": {
+        "name": "nato",
+        "countries": [
+          "FRA",
+          "UK",
+          "USA"
+        ]
+      },
+      "usaf standard": {
+        "name": "usaf standard",
+        "countries": [
+          "USA"
+        ]
+      }
     }
   },
   "F-117A": {
@@ -5252,7 +5935,12 @@
     "filename": "f-117.png",
     "enabled": true,
     "liveries": {
-      "usaf standard": "usaf standard"
+      "usaf standard": {
+        "name": "usaf standard",
+        "countries": [
+          "USA"
+        ]
+      }
     }
   },
   "F-14A-135-GR": {
@@ -6017,44 +6705,7 @@
     ],
     "filename": "f-14.png",
     "enabled": true,
-    "liveries": {
-      "vf-14 tophatters aj200 (1999) 80th aniversary": "VF-14 Tophatters AJ200 (1999) 80th Anniversary",
-      "vf-211 fighting checkmates 105": "VF-211 Fighting Checkmates 105",
-      "vf-1 wolfpack nk102 (1974)": "VF-1 Wolfpack NK102 (1974)",
-      "vf-1 wolfpack nk100 (1974)": "VF-1 Wolfpack NK100 (1974)",
-      "top gun 114": "Top Gun 114 Maverick and Goose",
-      "vf-11 ae103 1988": "VF-11 AE103 1988",
-      "vf-14 tophatters aj202 (1999 allied force)": "VF-14 Tophatters AJ202 (1999 Allied Force)",
-      "vf-301 nd113": "VF-301 ND113 by Mach3DS",
-      "vf-41 black aces aj101 (1999 allied force)": "VF-41 Black Aces AJ101 (1999 Allied Force)",
-      "rogue nation(top gun - maverick)": "Top Gun: Maverick - Rogue Nation",
-      "vf-1 wolfpack nk101 (1974)": "VF-1 Wolfpack NK101 (1974)",
-      "vf-21 freelancers 200": "VF-21 Freelancers 200",
-      "vf-41 black aces aj100 (1999 allied force)": "VF-41 Black Aces AJ100 (1999 Allied Force)",
-      "vf-301 nd111": "VF-301 ND111 by Mach3DS",
-      "vf-301 nd104": "VF-301 ND104 by Mach3DS",
-      "vf-33 starfighters ab201 (1988)": "VF-33 Starfighters AB201(Dale Snodgrass)",
-      "vf-32 swordsmen ab200 (1976)": "VF-32 Swordsmen AB200 (1976)",
-      "vf-31 1991 ae205": "VF-31 1991 AE205 by Mach3DS",
-      "vf-11 ae101 1988": "VF-11 AE101 1988",
-      "vf-41 black aces aj104 (1999 allied force)": "VF-41 Black Aces AJ104 (1999 Allied Force)",
-      "vf-1 wolfpack nk103 (1974)": "VF-1 Wolfpack NK103 (1974)",
-      "vf-11 ae106 1988": "VF-11 AE106 1988",
-      "vf-154 black knights 101": "00 - VF-154 Black Knights 101",
-      "vf-31 1991 ae200": "VF-31 1991 AE200 by Mach3DS",
-      "vf-31 ae200 1988": "VF-31 AE200 1988",
-      "vf-301 nd101 hivis": "VF-301 ND101 HiVis by Mach3DS",
-      "vf-14 tophatters aj201 (1999 allied force)": "VF-14 Tophatters AJ201 (1999 Allied Force)",
-      "vf-14 tophatters aj206 (1999 allied force)": "VF-14 Tophatters AJ206 (1999 Allied Force)",
-      "vf-111 sundowners 200": "VF-111 Sundowners 200",
-      "vf-14 tophatters ab100 (1976)": "VF-14 Tophatters AB100(1976)",
-      "vf-11 red rippers 106": "VF-11 Red Rippers 106",
-      "vf-211 fighting checkmates 100 (2001)": "VF-211 Fighting Checkmates 100 (2001)",
-      "vf-14 tophatters ab103 (1976)": "VF-14 Tophatters AB103(1976)",
-      "vf-31 ae204 1988": "VF-31 AE204 1988",
-      "vx-4 vandy one sad bunny (1992)": "VX-4 Vandy One Sad Bunny (1992)",
-      "vf-41 black aces aj102 (1999 allied force)": "VF-41 Black Aces AJ102 (1999 Allied Force)"
-    }
+    "liveries": {}
   },
   "F-14B": {
     "name": "F-14B",
@@ -7249,38 +7900,7 @@
     ],
     "filename": "f-14.png",
     "enabled": true,
-    "liveries": {
-      "vf-103 sluggers 207 (1991)": "VF-103 Sluggers 207 (1991)",
-      "vf-24 renegades": "VF-24 Renegades Low-Viz",
-      "vf-142 ghostriders": "VF-142 Ghostriders",
-      "vf-211 fighting checkmates": "VF-211 Fighting Checkmates",
-      "vf-31 tomcatters nk101 (2004)": "VF-31 Tomcatters NK101 (2004)",
-      "vf-143 pukin dogs low vis": "VF-143 Pukin Dogs Low Vis (1998)",
-      "vf-32 fighting swordsmen 100 (2000)": "VF-32 Fighting Swordsmen 100 (2000)",
-      "vf-32 fighting swordsmen 103": "VF-32 Fighting Swordsmen 103 (1998)",
-      "vx-4 xf-51 1988": "VX-4 XF-51 1988",
-      "rogue nation(top gun - maverick)": "Top Gun: Maverick - Rogue Nation",
-      "vf-74 bedevilers 1991": "VF-74 Be-Devilers 1991",
-      "vx-9 vandy 41 (1995)": "VX-9 Vandy 41 (1995)",
-      "vx-9 vampires xf240 white whale": "VX-9 Vampires XF240 White Whale",
-      "vf-101 dark": "VF-101 Dark",
-      "chromecat": "Fictional Chrome Cat ",
-      "top gun 114 hb weather": "Top Gun 114 Maverick and Goose",
-      "vf-32 fighting swordsmen 102": "VF-32 Fighting Swordsmen 102 (1998)",
-      "vf-101 grim reapers low vis": "VF-101 Grim Reapers Low Vis",
-      "vf-103 last ride": "VF-103 Last Ride",
-      "vf-103 sluggers 206 (1995)": "VF-103 Sluggers 206 (1995)",
-      "vf-143 pukin dogs cag": "VF-143 Pukin' Dogs CAG",
-      "vf-102 diamondbacks 102": "VF-102 Diamondbacks 102 (2000)",
-      "santa": "Fictional Christmas Livery",
-      "vf-74 adversary": "VF-74 Adversary",
-      "vf-11 red rippers (1997)": "VF-11 Red Rippers (1997)",
-      "vf-103 jolly rogers hi viz": "VF-103 Jolly Rogers Hi Viz",
-      "vf-143 pukin dogs low vis (1995)": "VF-143 Pukin Dogs Low Vis (1995)",
-      "vf-101 red": "VF-101 Red",
-      "vf-32 fighting swordsmen 101": "VF-32 Fighting Swordsmen 101 (1998)",
-      "vf-102 diamondbacks": "01 - VF-102 Diamondbacks 1996"
-    }
+    "liveries": {}
   },
   "F-15C": {
     "name": "F-15C",
@@ -7574,17 +8194,75 @@
     "filename": "f-15.png",
     "enabled": true,
     "liveries": {
-      "106th sqn (8th airbase)": "106th SQN (8th Airbase)",
-      "65th aggressor sqn (wa) super_flanker": "65th Aggressor SQN (WA) SUPER_Flanker",
-      "390th fighter sqn": "390th Fighter SQN",
-      "433rd weapons sqn (wa)": "433rd Weapons SQN (WA)",
-      "65th aggressor sqn (wa) mig": "65th Aggressor SQN (WA) MiG",
-      "ferris scheme": "Ferris Scheme",
-      "65th aggressor sqn (wa) flanker": "65th Aggressor SQN (WA) Flanker",
-      "493rd fighter sqn (ln)": "493rd Fighter SQN (LN)",
-      "12th fighter sqn (ak)": "12th Fighter SQN (AK)",
-      "haf aegean ghost": "Hellenic Airforece - Aegean Ghost (Fictional)",
-      "58th fighter sqn (eg)": "58th Fighter SQN (EG)"
+      "65th aggressor sqn (wa) super_flanker": {
+        "name": "65th Aggressor SQN (WA) SUPER_Flanker",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "493rd fighter sqn (ln)": {
+        "name": "493rd Fighter SQN (LN)",
+        "countries": [
+          "USA"
+        ]
+      },
+      "106th sqn (8th airbase)": {
+        "name": "106th SQN (8th Airbase)",
+        "countries": [
+          "ISR"
+        ]
+      },
+      "433rd weapons sqn (wa)": {
+        "name": "433rd Weapons SQN (WA)",
+        "countries": [
+          "USA"
+        ]
+      },
+      "12th fighter sqn (ak)": {
+        "name": "12th Fighter SQN (AK)",
+        "countries": [
+          "USA"
+        ]
+      },
+      "58th fighter sqn (eg)": {
+        "name": "58th Fighter SQN (EG)",
+        "countries": [
+          "USA"
+        ]
+      },
+      "390th fighter sqn": {
+        "name": "390th Fighter SQN",
+        "countries": [
+          "USA"
+        ]
+      },
+      "haf aegean ghost": {
+        "name": "Hellenic Airforece - Aegean Ghost (Fictional)",
+        "countries": [
+          "GRC"
+        ]
+      },
+      "65th aggressor sqn (wa) flanker": {
+        "name": "65th Aggressor SQN (WA) Flanker",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "ferris scheme": {
+        "name": "Ferris Scheme",
+        "countries": [
+          "USA"
+        ]
+      },
+      "65th aggressor sqn (wa) mig": {
+        "name": "65th Aggressor SQN (WA) MiG",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      }
     }
   },
   "F-15E": {
@@ -8540,9 +9218,24 @@
     "filename": "f-15.png",
     "enabled": true,
     "liveries": {
-      "492d fighter sqn (ln)": "492d Fighter SQN (LN)",
-      "335th fighter sqn (sj)": "335th Fighter SQN (SJ)",
-      "idf no 69 hammers squadron": "IDF No 69 Hammers Squadron"
+      "idf no 69 hammers squadron": {
+        "name": "IDF No 69 Hammers Squadron",
+        "countries": [
+          "ISR"
+        ]
+      },
+      "335th fighter sqn (sj)": {
+        "name": "335th Fighter SQN (SJ)",
+        "countries": [
+          "USA"
+        ]
+      },
+      "492d fighter sqn (ln)": {
+        "name": "492d Fighter SQN (LN)",
+        "countries": [
+          "USA"
+        ]
+      }
     }
   },
   "F-16C_50": {
@@ -10126,57 +10819,318 @@
     "filename": "f-16c.png",
     "enabled": true,
     "liveries": {
-      "chile air force 746": "Chile Air Force 746",
-      "haf_340_fox": "HAF 340 Fox Squadron",
-      "haf_336_olympus": "HAF 336 Olympus Squadron",
-      "chile air force 732": "Chile Air Force 732",
-      "polish af standard": "Polish AF standard",
-      "jasdf 8th tfs": "JASDF 8th TFS",
-      "usaf 64th aggressor sqn - shark": "USAF 64th Aggressor SQN - Shark",
-      "haf_337_ghost": "HAF 337 Ghost Squadron",
-      "18th agrs bdu splinter": "18th AGRS BDU Splinter",
-      "paf_no.29_aggressors": "PAF No.29 Aggressor",
-      "36th_fighter_squadron": "36th Fighter Squadron Osan Air Base",
-      "paf_no.9_griffins_1": "PAF No.9 Griffins (TRIBUTE TO WC NAUMAN)",
-      "22nd_fighter_squadron": "22nd Fighter Squadron 'Stingers'",
-      "dark_viper": "F-16C Dark Viper",
-      "ami, 5 stormo 23 gruppo": "Italian Air Force, 5\u00b0 Stormo, 23 Gruppo",
-      "paf_no.11_arrows": "PAF No.11 Arrows",
-      "80th_fighter_squadron": "80th Fighter Squadron, Kunsan AFB",
-      "179th_fighter_squadron": "179th Fighter Squadron 'Bulldogs'",
-      "522nd_fighter_squadron": "522nd Fighter Squadron 'Fireballs'",
-      "iaf_101st_squadron": "IAF 101st squadron",
-      "haf_343_star": "HAF 343 Star Squadron",
-      "79th_fighter_squadron": "79th Fighter Squadron 'Tigers'",
-      "iaf_110th_squadron": "IAF 110th squadron",
-      "haf_ 330_thunder": "HAF 330 Thunder Squadron",
-      "jasdf 6th tfs": "JASDF 6th TFS",
-      "13th_fighter_squadron": "13th Fighter Squadron 'Panthers'",
-      "chile air force 851": "Chile Air Force 851",
-      "haf_346_jason": "HAF 346 Jason Squadron",
-      "polish_af_31blt6th_tactical_sqn": "Polish AF 31.Blt 6th Tactical Sqn (Pozna\u0144-Krzesiny AB) - Tiger Meet",
-      "haf_347_perseus": "HAF 347S Perseus Squadron",
-      "iaf_115th_aggressors_squadron": "IAF 115th aggressors squadron",
-      "64th_aggressor_squadron_ghost": "64th Aggressor Squadron \u201cGhost",
-      "152nd_fighter_squadron": "152nd Fighter Squadron 'Las Vaqueros'",
-      "iaf_117th_squadron": "IAF 117th squadron",
-      "480th_fighter_squadron": "480th Fighter Squadron 'Warhawks'",
-      "usaf 64th aggressor sqn-splinter": "USAF 64th Aggressor SQN-Splinter",
-      "77th_fighter_squadron": "77th Fighter Squadron 'Gamblers' ",
-      "14th_fighter_squadron": "14th Fighter Squadron 'Samurais'",
-      "18th agrs arctic splinter": "18th AGRS Ar\u0441tic Splinter",
-      "55th_fighter_squadron": "55th Fighter Squadron 'Fifty Fifth'",
-      "thk_191_filo": "T\u00fcrk Hava Kuvvetleri, 191 Filo",
-      "174th_fighter_squadron": "174th Fighter Squadron ANG,Iowa AFB",
-      "132nd_wing _iowa_ang": "132nd Wing Iowa ANG, Des Moines AFB",
-      "18th agrs splinter": "18th AGRS Blue Splinter",
-      "23rd_fighter_squadron": "23rd Fighter Squadron 'Fighting Hawks'",
-      "haf_341_arrow": "HAF 341 Arrow Squadron",
-      "paf_no.9 griffins_2": "PAF No.9 Griffins",
-      "paf_no.5_falcons": "PAF No.5 Falcons",
-      "paf_no.19_sherdils": "PAF No.19 Sherdils",
-      "haf_335_tiger": "HAF 335 Tiger Squadron",
-      "default": "default livery"
+      "haf_340_fox": {
+        "name": "HAF 340 Fox Squadron",
+        "countries": [
+          "GRC"
+        ]
+      },
+      "18th agrs arctic splinter": {
+        "name": "18th AGRS Ar\u0441tic Splinter",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "22nd_fighter_squadron": {
+        "name": "22nd Fighter Squadron 'Stingers'",
+        "countries": [
+          "USA"
+        ]
+      },
+      "jasdf 6th tfs": {
+        "name": "JASDF 6th TFS",
+        "countries": [
+          "JPN"
+        ]
+      },
+      "174th_fighter_squadron": {
+        "name": "174th Fighter Squadron ANG,Iowa AFB",
+        "countries": [
+          "USA"
+        ]
+      },
+      "haf_ 330_thunder": {
+        "name": "HAF 330 Thunder Squadron",
+        "countries": [
+          "GRC"
+        ]
+      },
+      "iaf_110th_squadron": {
+        "name": "IAF 110th squadron",
+        "countries": [
+          "ISR"
+        ]
+      },
+      "64th_aggressor_squadron_ghost": {
+        "name": "64th Aggressor Squadron \u201cGhost",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "80th_fighter_squadron": {
+        "name": "80th Fighter Squadron, Kunsan AFB",
+        "countries": [
+          "USA"
+        ]
+      },
+      "480th_fighter_squadron": {
+        "name": "480th Fighter Squadron 'Warhawks'",
+        "countries": [
+          "USA"
+        ]
+      },
+      "55th_fighter_squadron": {
+        "name": "55th Fighter Squadron 'Fifty Fifth'",
+        "countries": [
+          "USA"
+        ]
+      },
+      "chile air force 746": {
+        "name": "Chile Air Force 746",
+        "countries": [
+          "CHL"
+        ]
+      },
+      "chile air force 851": {
+        "name": "Chile Air Force 851",
+        "countries": [
+          "CHL"
+        ]
+      },
+      "iaf_115th_aggressors_squadron": {
+        "name": "IAF 115th aggressors squadron",
+        "countries": [
+          "ISR"
+        ]
+      },
+      "jasdf 8th tfs": {
+        "name": "JASDF 8th TFS",
+        "countries": [
+          "JPN"
+        ]
+      },
+      "36th_fighter_squadron": {
+        "name": "36th Fighter Squadron Osan Air Base",
+        "countries": [
+          "USA"
+        ]
+      },
+      "132nd_wing _iowa_ang": {
+        "name": "132nd Wing Iowa ANG, Des Moines AFB",
+        "countries": [
+          "USA"
+        ]
+      },
+      "ami, 5 stormo 23 gruppo": {
+        "name": "Italian Air Force, 5\u00b0 Stormo, 23 Gruppo",
+        "countries": [
+          "ITA"
+        ]
+      },
+      "iaf_101st_squadron": {
+        "name": "IAF 101st squadron",
+        "countries": [
+          "ISR"
+        ]
+      },
+      "paf_no.29_aggressors": {
+        "name": "PAF No.29 Aggressor",
+        "countries": [
+          "PAK"
+        ]
+      },
+      "paf_no.9 griffins_2": {
+        "name": "PAF No.9 Griffins",
+        "countries": [
+          "PAK"
+        ]
+      },
+      "18th agrs splinter": {
+        "name": "18th AGRS Blue Splinter",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "79th_fighter_squadron": {
+        "name": "79th Fighter Squadron 'Tigers'",
+        "countries": [
+          "USA"
+        ]
+      },
+      "77th_fighter_squadron": {
+        "name": "77th Fighter Squadron 'Gamblers' ",
+        "countries": [
+          "USA"
+        ]
+      },
+      "default": {
+        "name": "default livery",
+        "countries": [
+          "USA"
+        ]
+      },
+      "13th_fighter_squadron": {
+        "name": "13th Fighter Squadron 'Panthers'",
+        "countries": [
+          "USA"
+        ]
+      },
+      "paf_no.5_falcons": {
+        "name": "PAF No.5 Falcons",
+        "countries": [
+          "PAK"
+        ]
+      },
+      "paf_no.9_griffins_1": {
+        "name": "PAF No.9 Griffins (TRIBUTE TO WC NAUMAN)",
+        "countries": [
+          "PAK"
+        ]
+      },
+      "usaf 64th aggressor sqn - shark": {
+        "name": "USAF 64th Aggressor SQN - Shark",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "usaf 64th aggressor sqn-splinter": {
+        "name": "USAF 64th Aggressor SQN-Splinter",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "haf_337_ghost": {
+        "name": "HAF 337 Ghost Squadron",
+        "countries": [
+          "GRC"
+        ]
+      },
+      "haf_335_tiger": {
+        "name": "HAF 335 Tiger Squadron",
+        "countries": [
+          "GRC"
+        ]
+      },
+      "paf_no.19_sherdils": {
+        "name": "PAF No.19 Sherdils",
+        "countries": [
+          "PAK"
+        ]
+      },
+      "polish af standard": {
+        "name": "Polish AF standard",
+        "countries": [
+          "POL"
+        ]
+      },
+      "dark_viper": {
+        "name": "F-16C Dark Viper",
+        "countries": [
+          "USA"
+        ]
+      },
+      "thk_191_filo": {
+        "name": "T\u00fcrk Hava Kuvvetleri, 191 Filo",
+        "countries": [
+          "TUR"
+        ]
+      },
+      "14th_fighter_squadron": {
+        "name": "14th Fighter Squadron 'Samurais'",
+        "countries": [
+          "USA"
+        ]
+      },
+      "chile air force 732": {
+        "name": "Chile Air Force 732",
+        "countries": [
+          "CHL"
+        ]
+      },
+      "152nd_fighter_squadron": {
+        "name": "152nd Fighter Squadron 'Las Vaqueros'",
+        "countries": [
+          "USA"
+        ]
+      },
+      "179th_fighter_squadron": {
+        "name": "179th Fighter Squadron 'Bulldogs'",
+        "countries": [
+          "USA"
+        ]
+      },
+      "polish_af_31blt6th_tactical_sqn": {
+        "name": "Polish AF 31.Blt 6th Tactical Sqn (Pozna\u0144-Krzesiny AB) - Tiger Meet",
+        "countries": [
+          "POL"
+        ]
+      },
+      "haf_347_perseus": {
+        "name": "HAF 347S Perseus Squadron",
+        "countries": [
+          "GRC"
+        ]
+      },
+      "haf_346_jason": {
+        "name": "HAF 346 Jason Squadron",
+        "countries": [
+          "GRC"
+        ]
+      },
+      "18th agrs bdu splinter": {
+        "name": "18th AGRS BDU Splinter",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "paf_no.11_arrows": {
+        "name": "PAF No.11 Arrows",
+        "countries": [
+          "PAK"
+        ]
+      },
+      "haf_336_olympus": {
+        "name": "HAF 336 Olympus Squadron",
+        "countries": [
+          "GRC"
+        ]
+      },
+      "haf_343_star": {
+        "name": "HAF 343 Star Squadron",
+        "countries": [
+          "GRC"
+        ]
+      },
+      "haf_341_arrow": {
+        "name": "HAF 341 Arrow Squadron",
+        "countries": [
+          "GRC"
+        ]
+      },
+      "23rd_fighter_squadron": {
+        "name": "23rd Fighter Squadron 'Fighting Hawks'",
+        "countries": [
+          "USA"
+        ]
+      },
+      "iaf_117th_squadron": {
+        "name": "IAF 117th squadron",
+        "countries": [
+          "ISR"
+        ]
+      },
+      "522nd_fighter_squadron": {
+        "name": "522nd Fighter Squadron 'Fireballs'",
+        "countries": [
+          "USA"
+        ]
+      }
     }
   },
   "F-4E": {
@@ -10559,9 +11513,24 @@
     "filename": "f-4.png",
     "enabled": true,
     "liveries": {
-      "haf aegean ghost": "Hellenic Airforce - Aegean Ghost",
-      "iriaf asia minor": "IRIAF Asia Minor",
-      "af standard": "af standard"
+      "haf aegean ghost": {
+        "name": "Hellenic Airforce - Aegean Ghost",
+        "countries": [
+          "GRC"
+        ]
+      },
+      "af standard": {
+        "name": "af standard",
+        "countries": [
+          "GER"
+        ]
+      },
+      "iriaf asia minor": {
+        "name": "IRIAF Asia Minor",
+        "countries": [
+          "IRN"
+        ]
+      }
     }
   },
   "F-5E-3": {
@@ -11299,66 +12268,439 @@
     "filename": "f-5.png",
     "enabled": true,
     "liveries": {
-      "us aggressor vfc-111 01": "Sundowners VFC-111 01",
-      "ir iriaf 43rd tfs": "IRIAF - 43rd TFS",
-      "aggressor snake scheme": "Aggressor Snake Scheme",
-      "usa standard": "Standard Gray",
-      "no 334 sqn ri-h": "RNoAF 334 sqn RI-H",
-      "us aggressor vfc-111 105 wwii b": "Sundowners VFC-111 105 WWII B",
-      "5th fs merzifon air base, turkey": "5th fs Merzifon air base, Turkish air force",
-      "ch j-3008": "J-3008 FlSt 08/19 February 2005",
-      "no 338 sqn 215": "RNoAF 338 sqn 215",
-      "ch j-3036": "J-3036 FlSt 01 1985",
-      "aggressor vfc-13 11": "Aggressor VFC-13 11",
-      "no 334 sqn 373": "RNoAF 334 sqn 373",
-      "ch patrouille suisse j-3088": "Patrouille Suisse J-3088",
-      "tw ngrc 5315": "NGRC 5thFG 5315",
-      "ch j-3038": "J-3038",
-      "kr rokaf 10th fighter wing": "ROKAF 10th FW KF-5E 10-584",
-      "ch j-3079": "J-3079",
-      "us aggressor vfc-111 115": "Sundowners VFC-115",
-      "us aggressor vfc-13 28 fict splinter": "Aggressor VFC-13 28 Fictional Splinter",
-      "us aggressor vmft-401 02 2011": "Aggressor VMFT-401 02 2011",
-      "sp spanish air force 21-51": "Ejercito del Aire Camo 21-51",
-      "us aggressor vfc-13 01": "Aggressor VFC-13 01",
-      "ch j-3001 variante 2000": "J-3001 FlSt 08 2000",
-      "us usaf grape 31": "USAF Grape 31",
-      "no 332 sqn ah-p": "RNoAF 332 sqn AH-P",
-      "aggressor vfc-13 21": "Aggressor VFC-13 21",
-      "ch j-3025": "J-3025 FlSt 11/18 January 2006",
-      "tr turkish stars": "Turkish Stars",
-      "fi 11th fs lapland air command": "FiAF 11th FS Lapland Air Command",
-      "br fab 4828": "2/1 GAvCa - FAB 4828",
-      "it aereonautica militare italiana": "Aereonautica Militare Italiana",
-      "3rd main jet base group command, turkey": "133 squadron, 3rd Main Jet Base Group Command, Turkey",
-      "ch swiss generic": "Swiss Generic two-tone skin",
-      "gr haf f-5e grey": "HAF F-5E Grey",
-      "no 336 sq": "336 Skvadron",
-      "rocaf 7th fighter group": "ROCAF 7th Fighter Group",
-      "usaf 'southeast asia'": "USAF 'Southeast Asia'",
-      "us aggressor vfc-13 40": "Aggressor VFC-13 40",
-      "ch j-3098": "J-3098",
-      "ch j-3036 2017": "J-3036 Sion 2017",
-      "ch j-3033_2017": "J-3033_2017",
-      "ir iriaf azarakhsh": "HESA Azarakhsh",
-      "ch j-3001 variante 1986": "J-3001 GRD Emmen 1986",
-      "br fab 4841": "FAB 4841 60th an",
-      "aggressor desert scheme": "Aggressor Desert Scheme",
-      "br fab 4834": "1/1 GAvCa - FAB 4834",
-      "ir iriaf camo": "IRIAF F-5E Standard",
-      "us aggressor vfc-111 116": "Sundowners VFC-116",
-      "ch j-3026": "J-3026 FlSt 11 approx. 1989",
-      "br fab 4846": "FAB 4846",
-      "aggressor marine scheme": "Aggressor Marine Scheme",
-      "tw rocaf 7thfg(m)": "ROCAF 7thFG(LV)",
-      "ch j-3073 2017": "J-3073_2017",
-      "ch j-3001 variante 1996": "J-3001 GRD Emmen 1996",
-      "gb no.29 squadron raf": "No.29 Squadron RAF (Fictional)",
-      "black 'mig-28'": "black 'Mig-28'",
-      "ch j-3074": "J-3074",
-      "sp spanish air force 464-48": "Ejercito del Aire 464-48",
-      "us aggressor vfc-13 25": "Aggressor VFC-13 25",
-      "sa royal saudi air force": "Royal Saudi Air Force"
+      "fi 11th fs lapland air command": {
+        "name": "FiAF 11th FS Lapland Air Command",
+        "countries": [
+          "FIN"
+        ]
+      },
+      "ch j-3001 variante 1986": {
+        "name": "J-3001 GRD Emmen 1986",
+        "countries": [
+          "SUI"
+        ]
+      },
+      "us aggressor vfc-111 105 wwii b": {
+        "name": "Sundowners VFC-111 105 WWII B",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "ch j-3026": {
+        "name": "J-3026 FlSt 11 approx. 1989",
+        "countries": [
+          "SUI"
+        ]
+      },
+      "ch j-3079": {
+        "name": "J-3079",
+        "countries": [
+          "SUI"
+        ]
+      },
+      "no 336 sq": {
+        "name": "336 Skvadron",
+        "countries": [
+          "NOR"
+        ]
+      },
+      "us usaf grape 31": {
+        "name": "USAF Grape 31",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "br fab 4846": {
+        "name": "FAB 4846",
+        "countries": [
+          "BRA"
+        ]
+      },
+      "us aggressor vfc-111 115": {
+        "name": "Sundowners VFC-115",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "usa standard": {
+        "name": "Standard Gray",
+        "countries": [
+          "EGY",
+          "ISR",
+          "HRV",
+          "BGR",
+          "HUN",
+          "SWE",
+          "MYS",
+          "CHN",
+          "INS",
+          "BLR",
+          "IND",
+          "RSO",
+          "ITA",
+          "SRB",
+          "ROU",
+          "AUSAF",
+          "BEL",
+          "NETH",
+          "SAU",
+          "TUN",
+          "FRA",
+          "NOR",
+          "GRC",
+          "USA",
+          "ABH",
+          "GER",
+          "MEX",
+          "JOR",
+          "SVK",
+          "BRA",
+          "AUT",
+          "UK",
+          "JPN",
+          "CAN",
+          "FIN",
+          "AUS",
+          "THA",
+          "UKR",
+          "CZE",
+          "RUS",
+          "TUR",
+          "IRQ",
+          "SDN",
+          "KOR",
+          "BHR",
+          "SUI",
+          "PAK",
+          "SYR",
+          "SPN",
+          "DEN",
+          "GRG",
+          "IRN",
+          "KAZ",
+          "PRK",
+          "POL"
+        ]
+      },
+      "ch j-3001 variante 1996": {
+        "name": "J-3001 GRD Emmen 1996",
+        "countries": [
+          "SUI"
+        ]
+      },
+      "ir iriaf azarakhsh": {
+        "name": "HESA Azarakhsh",
+        "countries": [
+          "IRN"
+        ]
+      },
+      "us aggressor vfc-13 25": {
+        "name": "Aggressor VFC-13 25",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "ch j-3008": {
+        "name": "J-3008 FlSt 08/19 February 2005",
+        "countries": [
+          "SUI"
+        ]
+      },
+      "aggressor snake scheme": {
+        "name": "Aggressor Snake Scheme",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "gr haf f-5e grey": {
+        "name": "HAF F-5E Grey",
+        "countries": [
+          "GRC"
+        ]
+      },
+      "aggressor marine scheme": {
+        "name": "Aggressor Marine Scheme",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "us aggressor vfc-13 01": {
+        "name": "Aggressor VFC-13 01",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "us aggressor vmft-401 02 2011": {
+        "name": "Aggressor VMFT-401 02 2011",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "ch j-3025": {
+        "name": "J-3025 FlSt 11/18 January 2006",
+        "countries": [
+          "SUI"
+        ]
+      },
+      "br fab 4828": {
+        "name": "2/1 GAvCa - FAB 4828",
+        "countries": [
+          "BRA"
+        ]
+      },
+      "no 338 sqn 215": {
+        "name": "RNoAF 338 sqn 215",
+        "countries": [
+          "NOR"
+        ]
+      },
+      "black 'mig-28'": {
+        "name": "black 'Mig-28'",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "ch j-3036": {
+        "name": "J-3036 FlSt 01 1985",
+        "countries": [
+          "SUI"
+        ]
+      },
+      "ch j-3038": {
+        "name": "J-3038",
+        "countries": [
+          "SUI"
+        ]
+      },
+      "ir iriaf 43rd tfs": {
+        "name": "IRIAF - 43rd TFS",
+        "countries": [
+          "IRN"
+        ]
+      },
+      "us aggressor vfc-13 28 fict splinter": {
+        "name": "Aggressor VFC-13 28 Fictional Splinter",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "no 334 sqn ri-h": {
+        "name": "RNoAF 334 sqn RI-H",
+        "countries": [
+          "NOR"
+        ]
+      },
+      "usaf 'southeast asia'": {
+        "name": "USAF 'Southeast Asia'",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "aggressor vfc-13 21": {
+        "name": "Aggressor VFC-13 21",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "ch j-3074": {
+        "name": "J-3074",
+        "countries": [
+          "SUI"
+        ]
+      },
+      "sp spanish air force 21-51": {
+        "name": "Ejercito del Aire Camo 21-51",
+        "countries": [
+          "SPN"
+        ]
+      },
+      "sa royal saudi air force": {
+        "name": "Royal Saudi Air Force",
+        "countries": [
+          "SAU"
+        ]
+      },
+      "ir iriaf camo": {
+        "name": "IRIAF F-5E Standard",
+        "countries": [
+          "IRN"
+        ]
+      },
+      "br fab 4841": {
+        "name": "FAB 4841 60th an",
+        "countries": [
+          "BRA"
+        ]
+      },
+      "us aggressor vfc-111 116": {
+        "name": "Sundowners VFC-116",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "ch swiss generic": {
+        "name": "Swiss Generic two-tone skin",
+        "countries": [
+          "SUI"
+        ]
+      },
+      "no 332 sqn ah-p": {
+        "name": "RNoAF 332 sqn AH-P",
+        "countries": [
+          "NOR"
+        ]
+      },
+      "ch j-3033_2017": {
+        "name": "J-3033_2017",
+        "countries": [
+          "SUI"
+        ]
+      },
+      "ch j-3073 2017": {
+        "name": "J-3073_2017",
+        "countries": [
+          "SUI"
+        ]
+      },
+      "no 334 sqn 373": {
+        "name": "RNoAF 334 sqn 373",
+        "countries": [
+          "NOR"
+        ]
+      },
+      "us aggressor vfc-13 40": {
+        "name": "Aggressor VFC-13 40",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "sp spanish air force 464-48": {
+        "name": "Ejercito del Aire 464-48",
+        "countries": [
+          "SPN"
+        ]
+      },
+      "ch patrouille suisse j-3088": {
+        "name": "Patrouille Suisse J-3088",
+        "countries": [
+          "SUI"
+        ]
+      },
+      "us aggressor vfc-111 01": {
+        "name": "Sundowners VFC-111 01",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "tr turkish stars": {
+        "name": "Turkish Stars",
+        "countries": [
+          "TUR"
+        ]
+      },
+      "tw ngrc 5315": {
+        "name": "NGRC 5thFG 5315",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "3rd main jet base group command, turkey": {
+        "name": "133 squadron, 3rd Main Jet Base Group Command, Turkey",
+        "countries": [
+          "TUR"
+        ]
+      },
+      "ch j-3098": {
+        "name": "J-3098",
+        "countries": [
+          "SUI"
+        ]
+      },
+      "it aereonautica militare italiana": {
+        "name": "Aereonautica Militare Italiana",
+        "countries": [
+          "ITA"
+        ]
+      },
+      "br fab 4834": {
+        "name": "1/1 GAvCa - FAB 4834",
+        "countries": [
+          "BRA"
+        ]
+      },
+      "rocaf 7th fighter group": {
+        "name": "ROCAF 7th Fighter Group",
+        "countries": [
+          "AUSAF"
+        ]
+      },
+      "tw rocaf 7thfg(m)": {
+        "name": "ROCAF 7thFG(LV)",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "kr rokaf 10th fighter wing": {
+        "name": "ROKAF 10th FW KF-5E 10-584",
+        "countries": [
+          "KOR"
+        ]
+      },
+      "aggressor vfc-13 11": {
+        "name": "Aggressor VFC-13 11",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "gb no.29 squadron raf": {
+        "name": "No.29 Squadron RAF (Fictional)",
+        "countries": [
+          "UK"
+        ]
+      },
+      "ch j-3001 variante 2000": {
+        "name": "J-3001 FlSt 08 2000",
+        "countries": [
+          "SUI"
+        ]
+      },
+      "5th fs merzifon air base, turkey": {
+        "name": "5th fs Merzifon air base, Turkish air force",
+        "countries": [
+          "TUR"
+        ]
+      },
+      "ch j-3036 2017": {
+        "name": "J-3036 Sion 2017",
+        "countries": [
+          "SUI"
+        ]
+      },
+      "aggressor desert scheme": {
+        "name": "Aggressor Desert Scheme",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      }
     }
   },
   "F-86F Sabre": {
@@ -11551,19 +12893,159 @@
     "filename": "f-5.png",
     "enabled": true,
     "liveries": {
-      "iiaf bare metall": "IIAF Bare Metal Weathered",
-      "haf 341sqn": "Hellenic Airforce 341sqn",
-      "us air force (ex-usaf f-86a sabre)": "US Air Force ex-USAF F-86A Sabre",
-      "us air force (skyblazers)": "US Air Force Jet Team Skyblazer",
-      "haf 342sqn": "Hellenic Airforce 342sqn",
-      "us air force (code fu-178)": "US Air Force FU-178",
-      "us air force (squadron 39)": "US Air Force (Squadron 39)",
-      "canada air force": "Canada Air Force",
-      "default livery": "default livery",
-      "japan air force": "Japan Air Force",
-      "us air force": "US Air Force",
-      "us air force (green)": "US Air Force (Green)",
-      "royal saudi air force": "RSAF"
+      "default livery": {
+        "name": "default livery",
+        "countries": [
+          "EGY",
+          "ISR",
+          "QAT",
+          "VEN",
+          "HRV",
+          "DZA",
+          "BGR",
+          "HUN",
+          "SWE",
+          "MYS",
+          "CHN",
+          "YEM",
+          "INS",
+          "IDN",
+          "CUB",
+          "BLR",
+          "CHL",
+          "SUN",
+          "MAR",
+          "OMN",
+          "RSA",
+          "RSO",
+          "ITA",
+          "IND",
+          "SRB",
+          "ROU",
+          "LBY",
+          "AUSAF",
+          "NETH",
+          "BEL",
+          "SAU",
+          "TUN",
+          "HND",
+          "NZG",
+          "FRA",
+          "NOR",
+          "RSI",
+          "GRC",
+          "USA",
+          "ABH",
+          "GER",
+          "MEX",
+          "VNM",
+          "SVK",
+          "JOR",
+          "BRA",
+          "AUT",
+          "UK",
+          "JPN",
+          "CAN",
+          "FIN",
+          "AUS",
+          "ETH",
+          "THA",
+          "UKR",
+          "CZE",
+          "RUS",
+          "TUR",
+          "IRQ",
+          "SDN",
+          "KOR",
+          "BHR",
+          "SUI",
+          "PAK",
+          "SYR",
+          "KWT",
+          "SPN",
+          "DEN",
+          "GRG",
+          "IRN",
+          "KAZ",
+          "PRK",
+          "ARE",
+          "POL",
+          "PHL",
+          "YUG"
+        ]
+      },
+      "us air force": {
+        "name": "US Air Force",
+        "countries": [
+          "USA"
+        ]
+      },
+      "japan air force": {
+        "name": "Japan Air Force",
+        "countries": [
+          "JPN"
+        ]
+      },
+      "us air force (code fu-178)": {
+        "name": "US Air Force FU-178",
+        "countries": [
+          "USA"
+        ]
+      },
+      "royal saudi air force": {
+        "name": "RSAF",
+        "countries": [
+          "SAU"
+        ]
+      },
+      "us air force (squadron 39)": {
+        "name": "US Air Force (Squadron 39)",
+        "countries": [
+          "USA"
+        ]
+      },
+      "haf 342sqn": {
+        "name": "Hellenic Airforce 342sqn",
+        "countries": [
+          "GRC"
+        ]
+      },
+      "canada air force": {
+        "name": "Canada Air Force",
+        "countries": [
+          "CAN"
+        ]
+      },
+      "us air force (green)": {
+        "name": "US Air Force (Green)",
+        "countries": [
+          "USA"
+        ]
+      },
+      "us air force (ex-usaf f-86a sabre)": {
+        "name": "US Air Force ex-USAF F-86A Sabre",
+        "countries": [
+          "USA"
+        ]
+      },
+      "iiaf bare metall": {
+        "name": "IIAF Bare Metal Weathered",
+        "countries": [
+          "IRN"
+        ]
+      },
+      "us air force (skyblazers)": {
+        "name": "US Air Force Jet Team Skyblazer",
+        "countries": [
+          "USA"
+        ]
+      },
+      "haf 341sqn": {
+        "name": "Hellenic Airforce 341sqn",
+        "countries": [
+          "GRC"
+        ]
+      }
     }
   },
   "FA-18C_hornet": {
@@ -12200,78 +13682,521 @@
     "filename": "fa-18c.png",
     "enabled": true,
     "liveries": {
-      "spain 151th escuadron c.15-24": "Spain 151_24 Escuadron C.15-24",
-      "fictional ukraine air force": "Fictional Ukraine Air Force",
-      "fictional turkey 162nd sq": "162nd Sqn Harpoon",
-      "spain 111th escuadron c.15-88": "Spain 111 Escuadron C.15-88",
-      "vmfa-232 high visibility": "VMFA-232 high visibility",
-      "vmfa-531": "VMFA-531",
-      "viper": "Viper",
-      "finland 31": "Finland",
-      "spain 121th escuadron c.15-60": "Spain 121 Escuadron C.15-60",
-      "vx-23": "VX-23",
-      "vfa-192": "VFA-192",
-      "canada 425th squadron": "Canada 425th Squadron",
-      "finland 21": "Finland",
-      "canada 150 demo jet": "Canada 150 Demo Jet",
-      "spain 121th escuadron c.15-45": "Spain 121 Escuadron C.15-45",
-      "spain 211th escuadron c.15-76": "Spain 211th Escuadron C.15-76",
-      "vfa-122": "VFA-122",
-      "vfc-12": "VFC-12",
-      "vx-9": "VX-9",
-      "vmfa-323": "VMFA-323",
-      "vmfa-251 high visibility": "VMFA-251 high visibility",
-      "maverick": "Maverick",
-      "iceman": "Iceman",
-      "vmfa-122": "VMFA-122",
-      "spain 151th escuadron c.15-23": "Spain 151_23 Escuadron C.15-23",
-      "switzerland": "Switzerland",
-      "vmfa-314": "VMFA-314",
-      "nsawc brown splinter": "NSAWC brown splinter",
-      "fictional russia air force": "Fictional Russia Air Force",
-      "vfa-83": "VFA-83",
-      "spain 121th escuadron c.15-50": "Spain 121 Escuadron C.15-50",
-      "canada norad 60 demo jet": "Canada NORAD 60 Demo Jet",
-      "vfa-87": "VFA-87",
-      "blue angels jet team": "Blue Angels Jet Team",
-      "australian 75th squadron": "Australian sqn 75",
-      "spain 151th escuadron c.15-14 tiger meet": "Spain 151th Escuadron C.15-14 Tiger Meet",
-      "spain 151th escuadron c.15-14": "Spain 151_14 Escuadron C.15-14",
-      "vmfa-251": "VMFA-251",
-      "vmfa-312": "VMFA-312",
-      "vmfat-101 high visibility 2005": "VMFAT-101 high visibility 2005",
-      "kuwait 25th squadron": "9th Squadron",
-      "vmfat-101": "VMFAT-101",
-      "australian 77th squadron": "Australian sqn 77",
-      "spain 121th escuadron c.15-34 50th anniversary": "Spain 121th Escuadron C.15-34 34th Anniversary",
-      "vfa-34": "VFA-34",
-      "vfa-106": "VFA-106",
-      "vmfa-232": "VMFA-232",
-      "vmfa-122 high visibility": "VMFA-122 high visibility",
-      "vmfa-312 high visibility": "VMFA-312 high visibility",
-      "canada 409th squadron": "Canada 409th Squadron",
-      "fictional israel air force": "Fictional Israel Air Force",
-      "vx-31 cona": "VX-31 CoNA",
-      "spain 111th escuadron c.15-73": "Spain 111 Escuadron C.15-73",
-      "kuwait 9th squadron": "9th Squadron",
-      "vfa-131": "VFA-131",
-      "nsawc blue": "NSAWC blue",
-      "vmfat-101 high visibility": "VMFAT-101 high visibility",
-      "vfa-106 high visibility": "VFA-106 high visibility",
-      "nawdc black": "NAWDC black",
-      "nsawc gray": "NSAWC gray",
-      "nawdc brown": "NAWDC brown",
-      "vfa-113": "VFA-113",
-      "nawdc blue": "NAWDC blue",
-      "default livery": "default livery",
-      "spain 151th escuadron c.15-18": "Spain 151_18 Escuadron C.15-18",
-      "spain 462th escuadron c.15-90": "Spain 462th Escuadron C.15-90",
-      "vmfa-323 high visibility": "VMFA-323_high visibility",
-      "spain 211th escuadron c.15-77": "Spain 211th Escuadron C.15-77",
-      "vfa-97": "VFA-97",
-      "fictional uk air force": "Fictional UK Air Force",
-      "vfa-37": "VFA-37",
-      "spain 462th escuadron c.15-79": "Spain 462th Escuadron C.15-79"
+      "nawdc blue": {
+        "name": "NAWDC blue",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "vmfat-101": {
+        "name": "VMFAT-101",
+        "countries": [
+          "USA"
+        ]
+      },
+      "vfa-113": {
+        "name": "VFA-113",
+        "countries": [
+          "USA"
+        ]
+      },
+      "nawdc black": {
+        "name": "NAWDC black",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "canada norad 60 demo jet": {
+        "name": "Canada NORAD 60 Demo Jet",
+        "countries": [
+          "CAN"
+        ]
+      },
+      "kuwait 9th squadron": {
+        "name": "9th Squadron",
+        "countries": [
+          "KWT"
+        ]
+      },
+      "vmfa-251": {
+        "name": "VMFA-251",
+        "countries": [
+          "USA"
+        ]
+      },
+      "spain 211th escuadron c.15-76": {
+        "name": "Spain 211th Escuadron C.15-76",
+        "countries": [
+          "SPN"
+        ]
+      },
+      "vmfa-232": {
+        "name": "VMFA-232",
+        "countries": [
+          "USA"
+        ]
+      },
+      "spain 211th escuadron c.15-77": {
+        "name": "Spain 211th Escuadron C.15-77",
+        "countries": [
+          "SPN"
+        ]
+      },
+      "vmfa-314": {
+        "name": "VMFA-314",
+        "countries": [
+          "USA"
+        ]
+      },
+      "spain 151th escuadron c.15-24": {
+        "name": "Spain 151_24 Escuadron C.15-24",
+        "countries": [
+          "SPN"
+        ]
+      },
+      "vmfa-323 high visibility": {
+        "name": "VMFA-323_high visibility",
+        "countries": [
+          "USA"
+        ]
+      },
+      "vx-9": {
+        "name": "VX-9",
+        "countries": [
+          "USA"
+        ]
+      },
+      "spain 151th escuadron c.15-18": {
+        "name": "Spain 151_18 Escuadron C.15-18",
+        "countries": [
+          "SPN"
+        ]
+      },
+      "spain 111th escuadron c.15-73": {
+        "name": "Spain 111 Escuadron C.15-73",
+        "countries": [
+          "SPN"
+        ]
+      },
+      "fictional russia air force": {
+        "name": "Fictional Russia Air Force",
+        "countries": [
+          "RUS",
+          "AUSAF"
+        ]
+      },
+      "vmfa-232 high visibility": {
+        "name": "VMFA-232 high visibility",
+        "countries": [
+          "USA"
+        ]
+      },
+      "finland 31": {
+        "name": "Finland",
+        "countries": [
+          "FIN"
+        ]
+      },
+      "spain 121th escuadron c.15-45": {
+        "name": "Spain 121 Escuadron C.15-45",
+        "countries": [
+          "SPN"
+        ]
+      },
+      "canada 409th squadron": {
+        "name": "Canada 409th Squadron",
+        "countries": [
+          "CAN"
+        ]
+      },
+      "vfa-34": {
+        "name": "VFA-34",
+        "countries": [
+          "USA"
+        ]
+      },
+      "switzerland": {
+        "name": "Switzerland",
+        "countries": [
+          "SUI"
+        ]
+      },
+      "viper": {
+        "name": "Viper",
+        "countries": [
+          "USA"
+        ]
+      },
+      "spain 121th escuadron c.15-60": {
+        "name": "Spain 121 Escuadron C.15-60",
+        "countries": [
+          "SPN"
+        ]
+      },
+      "vmfa-122": {
+        "name": "VMFA-122",
+        "countries": [
+          "USA"
+        ]
+      },
+      "australian 77th squadron": {
+        "name": "Australian sqn 77",
+        "countries": [
+          "AUS"
+        ]
+      },
+      "finland 21": {
+        "name": "Finland",
+        "countries": [
+          "FIN"
+        ]
+      },
+      "vfa-192": {
+        "name": "VFA-192",
+        "countries": [
+          "USA"
+        ]
+      },
+      "canada 150 demo jet": {
+        "name": "Canada 150 Demo Jet",
+        "countries": [
+          "CAN"
+        ]
+      },
+      "iceman": {
+        "name": "Iceman",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "vfa-122": {
+        "name": "VFA-122",
+        "countries": [
+          "USA"
+        ]
+      },
+      "vmfa-531": {
+        "name": "VMFA-531",
+        "countries": [
+          "USA"
+        ]
+      },
+      "spain 462th escuadron c.15-79": {
+        "name": "Spain 462th Escuadron C.15-79",
+        "countries": [
+          "SPN"
+        ]
+      },
+      "nsawc gray": {
+        "name": "NSAWC gray",
+        "countries": [
+          "USA"
+        ]
+      },
+      "vx-23": {
+        "name": "VX-23",
+        "countries": [
+          "USA"
+        ]
+      },
+      "fictional ukraine air force": {
+        "name": "Fictional Ukraine Air Force",
+        "countries": [
+          "UKR"
+        ]
+      },
+      "vmfa-312": {
+        "name": "VMFA-312",
+        "countries": [
+          "USA"
+        ]
+      },
+      "australian 75th squadron": {
+        "name": "Australian sqn 75",
+        "countries": [
+          "AUS"
+        ]
+      },
+      "default livery": {
+        "name": "default livery",
+        "countries": [
+          "EGY",
+          "ISR",
+          "QAT",
+          "VEN",
+          "HRV",
+          "DZA",
+          "BGR",
+          "HUN",
+          "SWE",
+          "MYS",
+          "CHN",
+          "YEM",
+          "INS",
+          "IDN",
+          "CUB",
+          "BLR",
+          "CHL",
+          "SUN",
+          "MAR",
+          "OMN",
+          "RSA",
+          "RSO",
+          "ITA",
+          "IND",
+          "SRB",
+          "ROU",
+          "LBY",
+          "AUSAF",
+          "NETH",
+          "BEL",
+          "SAU",
+          "TUN",
+          "HND",
+          "NZG",
+          "FRA",
+          "NOR",
+          "RSI",
+          "GRC",
+          "USA",
+          "ABH",
+          "GER",
+          "MEX",
+          "VNM",
+          "SVK",
+          "JOR",
+          "BRA",
+          "AUT",
+          "UK",
+          "JPN",
+          "CAN",
+          "FIN",
+          "AUS",
+          "ETH",
+          "THA",
+          "UKR",
+          "CZE",
+          "RUS",
+          "TUR",
+          "IRQ",
+          "SDN",
+          "KOR",
+          "BHR",
+          "SUI",
+          "PAK",
+          "SYR",
+          "KWT",
+          "SPN",
+          "DEN",
+          "GRG",
+          "IRN",
+          "KAZ",
+          "PRK",
+          "ARE",
+          "POL",
+          "PHL",
+          "YUG"
+        ]
+      },
+      "vfa-106 high visibility": {
+        "name": "VFA-106 high visibility",
+        "countries": [
+          "USA"
+        ]
+      },
+      "vfa-97": {
+        "name": "VFA-97",
+        "countries": [
+          "USA"
+        ]
+      },
+      "vmfa-323": {
+        "name": "VMFA-323",
+        "countries": [
+          "USA"
+        ]
+      },
+      "vmfat-101 high visibility 2005": {
+        "name": "VMFAT-101 high visibility 2005",
+        "countries": [
+          "USA"
+        ]
+      },
+      "vfc-12": {
+        "name": "VFC-12",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "vmfa-122 high visibility": {
+        "name": "VMFA-122 high visibility",
+        "countries": [
+          "USA"
+        ]
+      },
+      "spain 111th escuadron c.15-88": {
+        "name": "Spain 111 Escuadron C.15-88",
+        "countries": [
+          "SPN"
+        ]
+      },
+      "spain 151th escuadron c.15-14 tiger meet": {
+        "name": "Spain 151th Escuadron C.15-14 Tiger Meet",
+        "countries": [
+          "SPN"
+        ]
+      },
+      "vfa-37": {
+        "name": "VFA-37",
+        "countries": [
+          "USA"
+        ]
+      },
+      "spain 151th escuadron c.15-14": {
+        "name": "Spain 151_14 Escuadron C.15-14",
+        "countries": [
+          "SPN"
+        ]
+      },
+      "vfa-87": {
+        "name": "VFA-87",
+        "countries": [
+          "USA"
+        ]
+      },
+      "vx-31 cona": {
+        "name": "VX-31 CoNA",
+        "countries": [
+          "USA"
+        ]
+      },
+      "nawdc brown": {
+        "name": "NAWDC brown",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "nsawc brown splinter": {
+        "name": "NSAWC brown splinter",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "spain 121th escuadron c.15-50": {
+        "name": "Spain 121 Escuadron C.15-50",
+        "countries": [
+          "SPN"
+        ]
+      },
+      "vmfa-312 high visibility": {
+        "name": "VMFA-312 high visibility",
+        "countries": [
+          "USA"
+        ]
+      },
+      "fictional turkey 162nd sq": {
+        "name": "162nd Sqn Harpoon",
+        "countries": [
+          "TUR"
+        ]
+      },
+      "vfa-131": {
+        "name": "VFA-131",
+        "countries": [
+          "USA"
+        ]
+      },
+      "maverick": {
+        "name": "Maverick",
+        "countries": [
+          "USA"
+        ]
+      },
+      "nsawc blue": {
+        "name": "NSAWC blue",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "vfa-83": {
+        "name": "VFA-83",
+        "countries": [
+          "USA"
+        ]
+      },
+      "spain 151th escuadron c.15-23": {
+        "name": "Spain 151_23 Escuadron C.15-23",
+        "countries": [
+          "SPN"
+        ]
+      },
+      "canada 425th squadron": {
+        "name": "Canada 425th Squadron",
+        "countries": [
+          "CAN"
+        ]
+      },
+      "blue angels jet team": {
+        "name": "Blue Angels Jet Team",
+        "countries": [
+          "USA"
+        ]
+      },
+      "fictional israel air force": {
+        "name": "Fictional Israel Air Force",
+        "countries": [
+          "ISR"
+        ]
+      },
+      "spain 121th escuadron c.15-34 50th anniversary": {
+        "name": "Spain 121th Escuadron C.15-34 34th Anniversary",
+        "countries": [
+          "SPN"
+        ]
+      },
+      "spain 462th escuadron c.15-90": {
+        "name": "Spain 462th Escuadron C.15-90",
+        "countries": [
+          "SPN"
+        ]
+      },
+      "vfa-106": {
+        "name": "VFA-106",
+        "countries": [
+          "USA"
+        ]
+      },
+      "vmfat-101 high visibility": {
+        "name": "VMFAT-101 high visibility",
+        "countries": [
+          "USA"
+        ]
+      },
+      "kuwait 25th squadron": {
+        "name": "9th Squadron",
+        "countries": [
+          "KWT"
+        ]
+      },
+      "vmfa-251 high visibility": {
+        "name": "VMFA-251 high visibility",
+        "countries": [
+          "USA"
+        ]
+      },
+      "fictional uk air force": {
+        "name": "Fictional UK Air Force",
+        "countries": [
+          "UK"
+        ]
+      }
     }
   },
   "FW-190A8": {
@@ -12472,30 +14397,133 @@
     "filename": "fw190.png",
     "enabled": true,
     "liveries": {
-      "captured_ra": "Captured_RA",
-      "fw-190a8 jg26 priller": "Fw 190 A8 JG26 Priller",
-      "black 13 schwarze katze from jg1": "Fw190_JG1_Gen._'Schwarze Katze'_Win.",
-      "fictional ijn otu tsukuba tsu-102": "Fictional IJN OTU Tsukuba Tsu-102",
-      "fw190_ewald_preisz": "6.JG 300_Ewald Preisz",
-      "fictional ijn carrier akagi ai-151": "Fictional IJN Carrier Akagi AI-151",
-      "fw-190a8 yellow 4": "FW190A8 Yellow 4",
-      "fw-190a8_raf": "FW190A8/R-2 PE882, No. 1426 Flight RAF - Late",
-      "fw-190a8": "FW190A8",
-      "fw-190a8_2.jg 54_hans dortenmann": "2.JG 54_Hans Dortenmann",
-      "fw-190a8_2.jg 54": "2.JG 54",
-      "fw 190 a-8 czech avia s.90": "Fw 190 A-8 Czech Avia S.90",
-      "fictional ijn carrier akagi ai-103": "Fictional IJN Carrier Akagi AI-103",
-      "roaf-grupul7": "RoAF-Grupul7",
-      "fw190_fuselage_d_jg301": "JG 301",
-      "fw-190a8 jg3 maximowitz": "Fw 190 A8 JG3 Maximowitz",
-      "inspired by jg2 skin of early fw 190a": "Fw190A8 JG2 Generic",
-      "fictional ijn 256th kokutai rai-153": "Fictional IJN 256th Kokutai Rai-153",
-      "fictional ijn carrier soryu bi-112": "Fictional IJN Carrier Soryu BI-112",
-      "turkish air force, 5th fr (1942)": "Turkish Air Force, 5th FR (1942)",
-      "fw190_alfred_bindseil": "6.JG 1_Alfred Bindseil",
-      "fw-190a8 rhaf": "Fw 190 A8 RHAF",
-      "factory skin": "FW190A8 Luftwaffe",
-      "jg3 white nose wulf": "Fw190A8 'White nose Wulf'"
+      "fw190_alfred_bindseil": {
+        "name": "6.JG 1_Alfred Bindseil",
+        "countries": [
+          "GER",
+          "NZG"
+        ]
+      },
+      "fw-190a8_raf": {
+        "name": "FW190A8/R-2 PE882, No. 1426 Flight RAF - Late",
+        "countries": [
+          "UK"
+        ]
+      },
+      "captured_ra": {
+        "name": "Captured_RA",
+        "countries": [
+          "SUN"
+        ]
+      },
+      "fictional ijn carrier akagi ai-103": {
+        "name": "Fictional IJN Carrier Akagi AI-103",
+        "countries": [
+          "JPN"
+        ]
+      },
+      "fw-190a8 jg3 maximowitz": {
+        "name": "Fw 190 A8 JG3 Maximowitz",
+        "countries": [
+          "GER",
+          "HUN",
+          "NZG"
+        ]
+      },
+      "fictional ijn otu tsukuba tsu-102": {
+        "name": "Fictional IJN OTU Tsukuba Tsu-102",
+        "countries": [
+          "JPN"
+        ]
+      },
+      "fictional ijn 256th kokutai rai-153": {
+        "name": "Fictional IJN 256th Kokutai Rai-153",
+        "countries": [
+          "JPN"
+        ]
+      },
+      "jg3 white nose wulf": {
+        "name": "Fw190A8 'White nose Wulf'",
+        "countries": [
+          "GER",
+          "NZG"
+        ]
+      },
+      "turkish air force, 5th fr (1942)": {
+        "name": "Turkish Air Force, 5th FR (1942)",
+        "countries": [
+          "TUR",
+          "AUSAF"
+        ]
+      },
+      "roaf-grupul7": {
+        "name": "RoAF-Grupul7",
+        "countries": [
+          "ROU"
+        ]
+      },
+      "fw 190 a-8 czech avia s.90": {
+        "name": "Fw 190 A-8 Czech Avia S.90",
+        "countries": [
+          "CZE"
+        ]
+      },
+      "fw-190a8_2.jg 54": {
+        "name": "2.JG 54",
+        "countries": [
+          "GER",
+          "NZG"
+        ]
+      },
+      "inspired by jg2 skin of early fw 190a": {
+        "name": "Fw190A8 JG2 Generic",
+        "countries": [
+          "GER",
+          "NZG"
+        ]
+      },
+      "fw190_ewald_preisz": {
+        "name": "6.JG 300_Ewald Preisz",
+        "countries": [
+          "GER",
+          "NZG"
+        ]
+      },
+      "fictional ijn carrier akagi ai-151": {
+        "name": "Fictional IJN Carrier Akagi AI-151",
+        "countries": [
+          "JPN"
+        ]
+      },
+      "black 13 schwarze katze from jg1": {
+        "name": "Fw190_JG1_Gen._'Schwarze Katze'_Win.",
+        "countries": [
+          "GER",
+          "NZG"
+        ]
+      },
+      "fw-190a8 jg26 priller": {
+        "name": "Fw 190 A8 JG26 Priller",
+        "countries": [
+          "GER",
+          "HUN",
+          "NZG"
+        ]
+      },
+      "factory skin": {
+        "name": "FW190A8 Luftwaffe",
+        "countries": [
+          "GER",
+          "NZG"
+        ]
+      },
+      "fw-190a8 yellow 4": {
+        "name": "FW190A8 Yellow 4",
+        "countries": [
+          "GER",
+          "NZG"
+        ]
+      }
     }
   },
   "FW-190D9": {
@@ -12585,15 +14613,67 @@
     "filename": "fw190.png",
     "enabled": true,
     "liveries": {
-      "fw-190d9_usa": "FW-190_USA_Standard.1943",
-      "fw-190d9_iv.jg 26_hans dortenmann": " Oblt. Hans Dortenmann, IV./JG 26, 1945",
-      "fw-190d9_13.jg 51_heinz marquardt": " Heinz-Marquardt, 13./JG 51, 1945",
-      "fw-190d9_black 4 of stab iijg 6": "FW-190D9_Black <4 of Stab II/JG 6",
-      "fw-190d9_jg54": "FW-190D9_JG54.1945",
-      "fw-190d9_ussr": "FW-190 WNr 210251 USSR (Captured. 1943)",
-      "fw-190d9_red": "FW_190D9_Red.1945",
-      "fw-190d9_5jg301": "FW-190_5JG301.1945",
-      "fw-190d9_gb": "FW-190_GB_Standart.1943"
+      "fw-190d9_red": {
+        "name": "FW_190D9_Red.1945",
+        "countries": [
+          "GER",
+          "NZG"
+        ]
+      },
+      "fw-190d9_gb": {
+        "name": "FW-190_GB_Standart.1943",
+        "countries": [
+          "UK"
+        ]
+      },
+      "fw-190d9_5jg301": {
+        "name": "FW-190_5JG301.1945",
+        "countries": [
+          "GER",
+          "NZG"
+        ]
+      },
+      "fw-190d9_black 4 of stab iijg 6": {
+        "name": "FW-190D9_Black <4 of Stab II/JG 6",
+        "countries": [
+          "GER",
+          "NZG"
+        ]
+      },
+      "fw-190d9_usa": {
+        "name": "FW-190_USA_Standard.1943",
+        "countries": [
+          "USA"
+        ]
+      },
+      "fw-190d9_jg54": {
+        "name": "FW-190D9_JG54.1945",
+        "countries": [
+          "GER",
+          "NZG"
+        ]
+      },
+      "fw-190d9_13.jg 51_heinz marquardt": {
+        "name": " Heinz-Marquardt, 13./JG 51, 1945",
+        "countries": [
+          "GER",
+          "NZG"
+        ]
+      },
+      "fw-190d9_ussr": {
+        "name": "FW-190 WNr 210251 USSR (Captured. 1943)",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      },
+      "fw-190d9_iv.jg 26_hans dortenmann": {
+        "name": " Oblt. Hans Dortenmann, IV./JG 26, 1945",
+        "countries": [
+          "GER",
+          "NZG"
+        ]
+      }
     }
   },
   "H-6J": {
@@ -12790,7 +14870,12 @@
     "filename": "h-6.png",
     "enabled": true,
     "liveries": {
-      "planaf standard": "PLANAF Standard"
+      "planaf standard": {
+        "name": "PLANAF Standard",
+        "countries": [
+          "CHN"
+        ]
+      }
     }
   },
   "I-16": {
@@ -12897,17 +14982,13 @@
     "filename": "i-16.png",
     "enabled": true,
     "liveries": {
-      "red army winter": "Red Army Air Force winter",
-      "red five demo": "RED FIVE Aerobatic Team",
-      "clear": "Green unmarked",
-      "silver demo": "Silver paint scheme",
-      "red army standard": "1 Red Army Air Force Standard",
-      "red army camo": "Red Army Air Force Camouflage",
-      "spain nationalists": "Spain (Nationalists)",
-      "finnish af": "Finland, AFB Rompotti 1943",
-      "silver-black demo": "Silver-black paint scheme",
-      "spain republicans": "Spain (Republicans)",
-      "japan": "Japan (Captured), Manchuria 1939"
+      "spain republicans": {
+        "name": "Spain (Republicans)",
+        "countries": [
+          "SUN",
+          "SPN"
+        ]
+      }
     }
   },
   "IL-76MD": {
@@ -12930,14 +15011,54 @@
     "filename": "il-76.png",
     "enabled": true,
     "liveries": {
-      "algerian af il-76md": "Algerian AF IL-76MD",
-      "ukrainian af aeroflot": "Ukrainian AF aeroflot",
-      "china air force old": "China Air Force Old",
-      "rf air force": "RF Air Force",
-      "ukrainian af": "Ukrainian AF",
-      "fsb aeroflot": "FSB aeroflot",
-      "china air force new": "China Air Force New",
-      "mvd aeroflot": "MVD aeroflot"
+      "china air force old": {
+        "name": "China Air Force Old",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "fsb aeroflot": {
+        "name": "FSB aeroflot",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "china air force new": {
+        "name": "China Air Force New",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "algerian af il-76md": {
+        "name": "Algerian AF IL-76MD",
+        "countries": [
+          "DZA"
+        ]
+      },
+      "rf air force": {
+        "name": "RF Air Force",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "mvd aeroflot": {
+        "name": "MVD aeroflot",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "ukrainian af": {
+        "name": "Ukrainian AF",
+        "countries": [
+          "UKR"
+        ]
+      },
+      "ukrainian af aeroflot": {
+        "name": "Ukrainian AF aeroflot",
+        "countries": [
+          "UKR"
+        ]
+      }
     }
   },
   "IL-78M": {
@@ -12960,11 +15081,38 @@
     "filename": "il-76.png",
     "enabled": true,
     "liveries": {
-      "china air force": "China Air Force",
-      "rf air force aeroflot": "RF Air Force aeroflot",
-      "rf air force": "RF Air Force",
-      "rf air force new": "RF Air Force new",
-      "algerian af il-78m": "Algerian AF IL-78M"
+      "rf air force aeroflot": {
+        "name": "RF Air Force aeroflot",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      },
+      "china air force": {
+        "name": "China Air Force",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "algerian af il-78m": {
+        "name": "Algerian AF IL-78M",
+        "countries": [
+          "DZA"
+        ]
+      },
+      "rf air force": {
+        "name": "RF Air Force",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      },
+      "rf air force new": {
+        "name": "RF Air Force new",
+        "countries": [
+          "RUS"
+        ]
+      }
     }
   },
   "J-11A": {
@@ -13700,27 +15848,132 @@
     "filename": "su-27.png",
     "enabled": true,
     "liveries": {
-      "plaaf 14th ad (reworked)": "PLAAF 14th AD (Reworked)",
-      "plaaf ghost gray (fictional)": "PLAAF Ghost Gray (Fictional)",
-      "usaf 65th aggressor sqn 'desert' (fictional)": "65th Aggressor SQN 'Desert' (Fictional)",
-      "plaaf 2nd ad": "PLAAF 2nd AD",
-      "plaaf opfor 'jungle' (fictional)": "PLAAF OPFOR 'Jungle' (Fictional) ",
-      "plaaf 33th ad": "PLAAF 33th AD",
-      "usn aggressor vfc-13 'ferris' (fictional)": "Aggressor VFC-13 'Ferris' (Fictional)",
-      "plaaf 14th ad": "PLAAF 14th AD",
-      "plaaf 17th ab": "PLAAF 17th AB",
-      "plaaf 19th ad": "PLAAF 19th AD",
-      "plaaf 7th ad (reworked)": "PLAAF 7th AD (Reworked)",
-      "plaaf 7th ad": "PLAAF 7th AD",
-      "sky hunter": "Sky Hunter",
-      "plaaf 6th ad": "PLAAF 6th AD",
-      "plaaf 18th ad 'thunderclap wing' (fictional)": "PLAAF 18th AD 'Thunderclap Wing' (Fictional)",
-      "plaaf 19th ad (reworked)": "PLAAF 19th AD (Reworked)",
-      "plaaf 2nd ad (reworked)": "PLAAF 2nd AD (Reworked)",
-      "plaaf 33th ad (reworked)": "PLAAF 33th AD (Reworked)",
-      "usaf 65th aggressor sqn 'gray' (fictional)": "65th Aggressor SQN 'Gray' (Fictional)",
-      "plaaf opfor 'desert' (fictional)": "PLAAF OPFOR 'Desert' (Fictional)",
-      "plaaf 2nd ad (parade)": "PLAAF 2nd AD (Parade)"
+      "plaaf 2nd ad": {
+        "name": "PLAAF 2nd AD",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "plaaf 2nd ad (parade)": {
+        "name": "PLAAF 2nd AD (Parade)",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "plaaf opfor 'jungle' (fictional)": {
+        "name": "PLAAF OPFOR 'Jungle' (Fictional) ",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "plaaf 2nd ad (reworked)": {
+        "name": "PLAAF 2nd AD (Reworked)",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "plaaf 33th ad": {
+        "name": "PLAAF 33th AD",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "plaaf ghost gray (fictional)": {
+        "name": "PLAAF Ghost Gray (Fictional)",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "sky hunter": {
+        "name": "Sky Hunter",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "plaaf 7th ad (reworked)": {
+        "name": "PLAAF 7th AD (Reworked)",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "usn aggressor vfc-13 'ferris' (fictional)": {
+        "name": "Aggressor VFC-13 'Ferris' (Fictional)",
+        "countries": [
+          "AUSAF"
+        ]
+      },
+      "plaaf 14th ad": {
+        "name": "PLAAF 14th AD",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "plaaf 14th ad (reworked)": {
+        "name": "PLAAF 14th AD (Reworked)",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "plaaf 19th ad (reworked)": {
+        "name": "PLAAF 19th AD (Reworked)",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "usaf 65th aggressor sqn 'desert' (fictional)": {
+        "name": "65th Aggressor SQN 'Desert' (Fictional)",
+        "countries": [
+          "AUSAF"
+        ]
+      },
+      "plaaf 18th ad 'thunderclap wing' (fictional)": {
+        "name": "PLAAF 18th AD 'Thunderclap Wing' (Fictional)",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "plaaf 17th ab": {
+        "name": "PLAAF 17th AB",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "plaaf 7th ad": {
+        "name": "PLAAF 7th AD",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "plaaf 6th ad": {
+        "name": "PLAAF 6th AD",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "plaaf 33th ad (reworked)": {
+        "name": "PLAAF 33th AD (Reworked)",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "plaaf opfor 'desert' (fictional)": {
+        "name": "PLAAF OPFOR 'Desert' (Fictional)",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "usaf 65th aggressor sqn 'gray' (fictional)": {
+        "name": "65th Aggressor SQN 'Gray' (Fictional)",
+        "countries": [
+          "AUSAF"
+        ]
+      },
+      "plaaf 19th ad": {
+        "name": "PLAAF 19th AD",
+        "countries": [
+          "CHN"
+        ]
+      }
     }
   },
   "JF-17": {
@@ -15339,29 +17592,66 @@
     "filename": "jf-17.png",
     "enabled": true,
     "liveries": {
-      "paf black panthers (b2v1)": "Pakistan Air Force No.16 Sqn Black Panthers (Block2 Camo1)",
-      "paf ccs fierce fragons": "Pakistan Air Force CCS Sqn Fierce Dragons",
-      "paf minhasians": "Pakistan Air Force No.2 Sqn Minhasians",
-      "plaaf ghost gray camo (fictional)": "PLAAF \"Ghost Gray\" Camo (Fictional)",
-      "paf black spiders (default)": "Pakistan Air Force No.26 Sqn Black Spiders",
-      "paf black panthers": "Pakistan Air Force No.16 Sqn Black Panthers",
-      "plaaf 125th ab (fictional)": "PLAAF 125th AB (Fictional)",
-      "proto 06": "FC-1 Prototype 06",
-      "'chips' camo for blue side (fictional)": "USAF \"Chips\" Camo (Fictional)",
-      "naf 722": "Nigerian Air Force 722",
-      "plaaf 111th ab (fictional)": "PLAAF 111th AB (Fictional)",
-      "paf black spiders (web camo)": "Pakistan Air Force No.26 Sqn Black Spiders (Web Camo)",
-      "maf blue sea camo": "Myanmar Air Force Blue Sea Camo",
-      "paf 07-101 (overhauled)": "Pakistan Air Force 07-101 (Overhauled)",
-      "paf sharp shooters": "Pakistan Air Force No.18 Sqn Sharp Shooters",
-      "paf dark camo": "Pakistan Air Force Dark Camo",
-      "paf black panthers 07-101": "Pakistan Air Force No.16 Sqn Black Panthers 07-101",
-      "paf black panthers (reworked)": "Pakistan Air Force No.16 Sqn Black Panthers (Reworked)",
-      "'splinter' camo for blue side (fictional)": "\"Splinter\" Camo for Blue Side (Fictional)",
-      "paf black panthers (b2v2)": "Pakistan Air Force No.16 Sqn Black Panthers (Block2 Camo2)",
-      "paf phoenixes": "Pakistan Air Force No.28 Sqn Phoenixes",
-      "paf tail choppers": "Pakistan Air Force No.14 Sqn Tail Choppers",
-      "paf black spiders 07-101 (fictional)": "Pakistan Air Force No.26 Sqn Black Spiders 07-101 (Fictional)"
+      "paf black spiders (web camo)": {
+        "name": "Pakistan Air Force No.26 Sqn Black Spiders (Web Camo)",
+        "countries": [
+          "PAK"
+        ]
+      },
+      "paf black panthers (b2v1)": {
+        "name": "Pakistan Air Force No.16 Sqn Black Panthers (Block2 Camo1)",
+        "countries": [
+          "PAK"
+        ]
+      },
+      "paf phoenixes": {
+        "name": "Pakistan Air Force No.28 Sqn Phoenixes",
+        "countries": [
+          "PAK"
+        ]
+      },
+      "paf black spiders 07-101 (fictional)": {
+        "name": "Pakistan Air Force No.26 Sqn Black Spiders 07-101 (Fictional)",
+        "countries": [
+          "PAK"
+        ]
+      },
+      "paf black panthers (b2v2)": {
+        "name": "Pakistan Air Force No.16 Sqn Black Panthers (Block2 Camo2)",
+        "countries": [
+          "PAK"
+        ]
+      },
+      "paf minhasians": {
+        "name": "Pakistan Air Force No.2 Sqn Minhasians",
+        "countries": [
+          "PAK"
+        ]
+      },
+      "paf sharp shooters": {
+        "name": "Pakistan Air Force No.18 Sqn Sharp Shooters",
+        "countries": [
+          "PAK"
+        ]
+      },
+      "proto 06": {
+        "name": "FC-1 Prototype 06",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "paf dark camo": {
+        "name": "Pakistan Air Force Dark Camo",
+        "countries": [
+          "PAK"
+        ]
+      },
+      "paf ccs fierce fragons": {
+        "name": "Pakistan Air Force CCS Sqn Fierce Dragons",
+        "countries": [
+          "PAK"
+        ]
+      }
     }
   },
   "KC-135": {
@@ -15384,8 +17674,18 @@
     "filename": "kc-135.png",
     "enabled": true,
     "liveries": {
-      "standard usaf": "USAF Standard",
-      "turaf standard": "Turkish Air Force"
+      "turaf standard": {
+        "name": "Turkish Air Force",
+        "countries": [
+          "TUR"
+        ]
+      },
+      "standard usaf": {
+        "name": "USAF Standard",
+        "countries": [
+          "USA"
+        ]
+      }
     }
   },
   "KC135MPRS": {
@@ -15408,8 +17708,18 @@
     "filename": "kc-135.png",
     "enabled": true,
     "liveries": {
-      "22nd arw": "22nd ARW",
-      "100th arw": "100th ARW"
+      "100th arw": {
+        "name": "100th ARW",
+        "countries": [
+          "USA"
+        ]
+      },
+      "22nd arw": {
+        "name": "22nd ARW",
+        "countries": [
+          "USA"
+        ]
+      }
     }
   },
   "L-39ZA": {
@@ -15737,16 +18047,7 @@
     ],
     "filename": "l-39.png",
     "enabled": true,
-    "liveries": {
-      "algerian af nl-44": "Algerian AF NL-44",
-      "algerian af tiger nl-36": "Algerian AF Tiger NL-36",
-      "czech air force": "Czech Air Force",
-      "splinter camo woodland": "Splinter camo woodland",
-      "czechoslovakia air force": "Czechoslovakia_Air Force",
-      "splinter camo desert": "Splinter camo desert",
-      "slovak air force": "2nd SQN AFB Sliac",
-      "russian air force": "1 Russian Air Force"
-    }
+    "liveries": {}
   },
   "M-2000C": {
     "name": "M-2000C",
@@ -16136,18 +18437,96 @@
     "filename": "m2000.png",
     "enabled": true,
     "liveries": {
-      "ada chasse 2-5": "AdA Chasse 2/5",
-      "peru064": "Fuerza Aerea Peruana 064",
-      "2010 tigermeet": "NATO Tigermeet 2010",
-      "ada alsace lf-2": "Ada Alsace LF-2",
-      "uae air force": "UAE Air Defense Air Force",
-      "cambresis": "AdA Cambresis",
-      "peru052": "Fuerza Aerea Peruana 052",
-      "2003 tigermeet": "NATO Tigermeet 2003",
-      "2004 tigermeet": "NATO Tigermeet 2004",
-      "greek air force": "Polemikh Aeroporia (Greek Air Force)",
-      "brasilian air force": "Forca Aerea Brasileira (Brazilian Air Force)",
-      "mission accomplie": "2022 MISSION ACCOMPLIE by MALBAK"
+      "uae air force": {
+        "name": "UAE Air Defense Air Force",
+        "countries": [
+          "FRA",
+          "ARE"
+        ]
+      },
+      "peru064": {
+        "name": "Fuerza Aerea Peruana 064",
+        "countries": [
+          "PER",
+          "FRA"
+        ]
+      },
+      "2010 tigermeet": {
+        "name": "NATO Tigermeet 2010",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "peru052": {
+        "name": "Fuerza Aerea Peruana 052",
+        "countries": [
+          "PER",
+          "FRA"
+        ]
+      },
+      "cambresis": {
+        "name": "AdA Cambresis",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "2004 tigermeet": {
+        "name": "NATO Tigermeet 2004",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "greek air force": {
+        "name": "Polemikh Aeroporia (Greek Air Force)",
+        "countries": [
+          "FRA",
+          "GRC"
+        ]
+      },
+      "2003 tigermeet": {
+        "name": "NATO Tigermeet 2003",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "ada alsace lf-2": {
+        "name": "Ada Alsace LF-2",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "iaf silver 59": {
+        "name": "Israeli Air Force 101 Sqn 1967 scheme",
+        "countries": [
+          "ISR",
+          "RSO",
+          "ITA",
+          "NETH",
+          "BEL",
+          "FRA",
+          "NOR",
+          "USA",
+          "ABH",
+          "GER",
+          "UK",
+          "CAN",
+          "UKR",
+          "CZE",
+          "RUS",
+          "TUR",
+          "SPN",
+          "DEN",
+          "GRG",
+          "POL"
+        ]
+      },
+      "brasilian air force": {
+        "name": "Forca Aerea Brasileira (Brazilian Air Force)",
+        "countries": [
+          "BRA",
+          "FRA"
+        ]
+      }
     }
   },
   "MB-339A": {
@@ -16628,18 +19007,42 @@
     "filename": "c-101.png",
     "enabled": true,
     "liveries": {
-      "mb339a italian factory": "Italian Orange/White",
-      "mb339aa 'armada' - crippa": "ARMADA Argentina | Camo (Lt. Crippa's killmark)",
-      "mb339an 'nigeria'": "Nigerian Air Force | Camo (Low-Vis)",
-      "mb339aa 'armada' - yellow band": "ARMADA Argentina | Camo (Yellow Band)",
-      "mb339ap 'peru'": "Peruvian Air Force | Camo (Late)",
-      "mb339 'factory'": "Aermacchi Factory Scheme | S-001 I-NEUF",
-      "mb339am 'malaysia'": "Royal Malaysian Air Force | Camo (Low-Vis)",
-      "mb339ag 'ghana'": "Ghana Air Force | Camo (Low-Vis)",
-      "mb339a italian camo - late": "Italian Camo - Late",
-      "mb339a italian gray": "Italian Gray",
-      "mb339ad 'uae'": "UAE Air Force",
-      "mb339a italian camo - early": "Italian Camo - Early"
+      "mb339ag 'ghana'": {
+        "name": "Ghana Air Force | Camo (Low-Vis)",
+        "countries": [
+          "GHA"
+        ]
+      },
+      "mb339a italian factory": {
+        "name": "Italian Orange/White",
+        "countries": [
+          "ITA"
+        ]
+      },
+      "mb339aa 'armada' - crippa": {
+        "name": "ARMADA Argentina | Camo (Lt. Crippa's killmark)",
+        "countries": [
+          "ARG"
+        ]
+      },
+      "mb339a italian camo - late": {
+        "name": "Italian Camo - Late",
+        "countries": [
+          "ITA"
+        ]
+      },
+      "mb339ap 'peru'": {
+        "name": "Peruvian Air Force | Camo (Late)",
+        "countries": [
+          "PER"
+        ]
+      },
+      "mb339a italian camo - early": {
+        "name": "Italian Camo - Early",
+        "countries": [
+          "ITA"
+        ]
+      }
     }
   },
   "MQ-9 Reaper": {
@@ -16730,11 +19133,36 @@
     "filename": "i-16.png",
     "enabled": true,
     "liveries": {
-      "standard uk": "standard UK",
-      "'camo' scheme": "'camo' scheme",
-      "standard france": "standard France",
-      "standard italy": "standard Italy",
-      "standard": "standard"
+      "standard france": {
+        "name": "standard France",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "standard": {
+        "name": "standard",
+        "countries": [
+          "USA"
+        ]
+      },
+      "standard uk": {
+        "name": "standard UK",
+        "countries": [
+          "UK"
+        ]
+      },
+      "standard italy": {
+        "name": "standard Italy",
+        "countries": [
+          "ITA"
+        ]
+      },
+      "'camo' scheme": {
+        "name": "'camo' scheme",
+        "countries": [
+          "USA"
+        ]
+      }
     }
   },
   "MiG-15bis": {
@@ -16861,20 +19289,171 @@
     "filename": "mig-15.png",
     "enabled": true,
     "liveries": {
-      "ussr_red": "USSR Red",
-      "algerian af  1962": "Algerian AF 1962",
-      "north_korea_air force_major_ arkady_ boitsow": "North Korea - Major Arkady Boitsow",
-      "north_korea_air force": "Korean People's Air Force",
-      "ussr_air forces": "Air Forces of Soviet Union",
-      "default livery": "default livery",
-      "ussr_air forces old": "USSR Old",
-      "polish_air force": "Polish Air Force",
-      "czechoslovakia_air force": "Czechoslovak Air Force",
-      "haf fictional": "Hellenic Airforce - Fictional",
-      "china volunteer air force": "People's Volunteer Army Air Force",
-      "ussr_pepelyaev": "USSR Pepelyaev",
-      "gdr_air force": "Air Forces of the National People's Army",
-      "china_air force": "People's Liberation Army Air Force"
+      "default livery": {
+        "name": "default livery",
+        "countries": [
+          "EGY",
+          "ISR",
+          "QAT",
+          "VEN",
+          "HRV",
+          "DZA",
+          "BGR",
+          "HUN",
+          "SWE",
+          "MYS",
+          "CHN",
+          "YEM",
+          "INS",
+          "IDN",
+          "CUB",
+          "BLR",
+          "CHL",
+          "SUN",
+          "MAR",
+          "OMN",
+          "RSA",
+          "RSO",
+          "ITA",
+          "IND",
+          "SRB",
+          "ROU",
+          "LBY",
+          "AUSAF",
+          "NETH",
+          "BEL",
+          "SAU",
+          "TUN",
+          "HND",
+          "NZG",
+          "FRA",
+          "NOR",
+          "RSI",
+          "GRC",
+          "USA",
+          "ABH",
+          "GER",
+          "MEX",
+          "VNM",
+          "SVK",
+          "JOR",
+          "BRA",
+          "AUT",
+          "UK",
+          "JPN",
+          "CAN",
+          "FIN",
+          "AUS",
+          "ETH",
+          "THA",
+          "UKR",
+          "CZE",
+          "RUS",
+          "TUR",
+          "IRQ",
+          "SDN",
+          "KOR",
+          "BHR",
+          "SUI",
+          "PAK",
+          "SYR",
+          "KWT",
+          "SPN",
+          "DEN",
+          "GRG",
+          "IRN",
+          "KAZ",
+          "PRK",
+          "ARE",
+          "POL",
+          "PHL",
+          "YUG"
+        ]
+      },
+      "haf fictional": {
+        "name": "Hellenic Airforce - Fictional",
+        "countries": [
+          "GRC"
+        ]
+      },
+      "ussr_air forces old": {
+        "name": "USSR Old",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      },
+      "china_air force": {
+        "name": "People's Liberation Army Air Force",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "ussr_pepelyaev": {
+        "name": "USSR Pepelyaev",
+        "countries": [
+          "SUN",
+          "RUS",
+          "PRK"
+        ]
+      },
+      "gdr_air force": {
+        "name": "Air Forces of the National People's Army",
+        "countries": [
+          "GER"
+        ]
+      },
+      "north_korea_air force_major_ arkady_ boitsow": {
+        "name": "North Korea - Major Arkady Boitsow",
+        "countries": [
+          "RUS",
+          "PRK"
+        ]
+      },
+      "ussr_red": {
+        "name": "USSR Red",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      },
+      "algerian af  1962": {
+        "name": "Algerian AF 1962",
+        "countries": [
+          "DZA"
+        ]
+      },
+      "north_korea_air force": {
+        "name": "Korean People's Air Force",
+        "countries": [
+          "PRK"
+        ]
+      },
+      "polish_air force": {
+        "name": "Polish Air Force",
+        "countries": [
+          "POL"
+        ]
+      },
+      "china volunteer air force": {
+        "name": "People's Volunteer Army Air Force",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "czechoslovakia_air force": {
+        "name": "Czechoslovak Air Force",
+        "countries": [
+          "CZE"
+        ]
+      },
+      "ussr_air forces": {
+        "name": "Air Forces of Soviet Union",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      }
     }
   },
   "MiG-19P": {
@@ -17091,21 +19670,7 @@
     ],
     "filename": "mig-19.png",
     "enabled": true,
-    "liveries": {
-      "ddr - fictional": "Germany DDR camouflage (Fictional)",
-      "poland 62 plm": "62 PLM Squadron",
-      "ussr_2": "764th Fighter Aviation Regiment",
-      "iap": "234 Fighter Regiment (234 IAP)",
-      "plaaf": "112th Air Regiment",
-      "snow - fictional": "Snow Camouflage Fictional",
-      "plaaf camo": "PLAAF Snow Camo",
-      "bulgaria": "1st Squadron, 18th Fighter Regiment",
-      "poland 39 plm": "39 PLM Squadron",
-      "romania - 66th fighter division": "91st Fighter Regiment",
-      "czechoslovakia": "2nd Fighter-Bomber Regiment",
-      "cuba": " 211 Escuadron de Caza",
-      "default": "default"
-    }
+    "liveries": {}
   },
   "MiG-21Bis": {
     "name": "MiG-21Bis",
@@ -17806,83 +20371,7 @@
     ],
     "filename": "mig-21.png",
     "enabled": true,
-    "liveries": {
-      "iran - standard": "Iran - Standard",
-      "jasdf": "JASDF",
-      "vpaf - 921st sao do - 5040": "VPAF - 921st Sao Do",
-      "huaf grey": "HuAF Grey",
-      "afghanistan (2)": "Afghanistan (2)",
-      "northeria - 32nd fs": "Northeria - 32nd FG",
-      "croatia - 21st fs": "Croatia - 21st Fighter Squadron (Zagreb AB)",
-      "vpaf - 927th lam son - 6122": "VPAF - 927th Lam Son",
-      "india - 101st sqn (1)": "India - 101st Sqn Falcons",
-      "dprk - 2016 - 42": "DPRK - 2016 Nr.42",
-      "vvs - demonstrator": "VVS Demonstrator",
-      "egypt - grey 1982": "Egypt - Grey 1982",
-      "algeria": "Algeria FD-43",
-      "cuba - 1990s": "Cuba - 1990s",
-      "india - 101st sqn (2)": "India - 101st Sqn Falcons (2)",
-      "iraq - 17th sqn (1)": "Iraq - 17th Sqn (1)",
-      "sweden - m90": "Sweden - M90",
-      "libya - early": "Lybia - Early",
-      "ukraine (1)": "Ukraine 01",
-      "dprk - 2014 - 34": "DPRK - 2014 Nr.34",
-      "huaf 47th ab - 6115 (griff sqn)": "HunAF Griff Sqn. (47th AB) 6115",
-      "bulgaria - 1-3 iae (3)": "Bulgaria - 1/3 IAE (3)",
-      "romania - lancer a": "Romania - Lancer A",
-      "slovakia - 1998": "Slovakia - 1998",
-      "syria (1)": "Syria (1)",
-      "raf - 111th sqn": "RAF - 111th Sqn",
-      "romania - lancer c": "Romania - Lancer C",
-      "huaf 47th ab - early": "HunAF Griff Sqn. (47th AB) - Early ",
-      "angola - c314": "Angola - C314",
-      "afghanistan (1)": "Afghanistan (1)",
-      "bulgaria - 1-3 iae": "Bulgaria - 1/3 IAE",
-      "libya - 2017": "Lybia - 2017",
-      "sweden - 16th air wing": "Sweden - 16th Air Wing",
-      "vvs - 115 gviap": "VVS - 115 GvIAP (Kokaydy AB)",
-      "ukraine (2)": "Ukraine 02",
-      "draken international": "Draken International",
-      "yugoslavia - camo": "Yugoslavia - Camo",
-      "vvs - amt-11 grey": "VVS - AMT-11 Grey",
-      "romania - gray": "Romania - Gray",
-      "bare metal": "Bare Metal",
-      "cuba - um 5010 is": "Cuba - UM 5010 IS",
-      "huaf metal": "HuAF Metal",
-      "argentina (2)": "Argentina (2)",
-      "vvs - 116 cbp": "VVS - 116 CBP",
-      "angola - c41": "Angola - C41",
-      "argentina (1)": "Argentina (1)",
-      "raf - 11th sqn": "RAF - 11th Sqn",
-      "iraq - 9th sqn": "Iraq - 9th Sqn",
-      "huaf 47th ab (griff sqn)": "HunAF Griff Sqn. (47th AB)",
-      "india - 15th sqn": "India - 15 Sqn War Games",
-      "vvs - 234 gviap": "VVS - 234 GvIAP",
-      "poland - 1 dlmw": "Poland - 1 DLMW",
-      "huaf 31st ab (turul sqn)": "HunAF 1904 Capeti (51th AB)",
-      "bulgaria - 1-3 iae (2)": "Bulgaria - 1/3 IAE (2)",
-      "egypt - tan 1982": "Egypt - Tan 1982",
-      "poland - metal": "Poland - Lacquer Metal",
-      "southeria": "Southeria",
-      "serbia - 101st lae": "Serbia - 101st LAE",
-      "georgia (2)": "Georgia (2)",
-      "plaaf - white": "PLAAF - White",
-      "poland - 10 elt": "Poland - 10 ELT",
-      "syria (2)": "Syria (2)",
-      "vvs - metal": "VVS Metal",
-      "germany east - jg-8": "East Germany - JG-8",
-      "iran - 51st sqn": "Iran - 51st Sqn (Umidiyeh AB)",
-      "iraq - 17th sqn (2)": "Iraq - 17th Sqn (2)",
-      "georgia (1)": "Georgia (1)",
-      "finland - h\u00e4vllv 31": "Finland - HavLLv 31",
-      "vvs - 185th gviap": "VVS 185th GvIAP",
-      "yugoslavia - gray": "Yugoslavia - Grey",
-      "cuba - metal": "Cuba - Metal",
-      "croatia - 1st fs 1992": "Croatia - 1st FS 1992",
-      "plaaf - sky blue": "PLAAF - Sky Blue",
-      "plaaf - splinter": "PLAAF - Splinter",
-      "vpaf - 927th fighter regiment metal": "VPAF - 927th Fighter Regiment Metal"
-    }
+    "liveries": {}
   },
   "MiG-23MLD": {
     "name": "MiG-23MLD",
@@ -18162,11 +20651,40 @@
     "filename": "mig-23.png",
     "enabled": true,
     "liveries": {
-      "af standard": "af standard",
-      "af standard-1": "af standard-1",
-      "af standard-2": "af standard-2",
-      "af standard-3 (worn-out)": "af standard-3 (worn-out)",
-      "algerian air force": "Algerian Air Force"
+      "af standard-1": {
+        "name": "af standard-1",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      },
+      "af standard-3 (worn-out)": {
+        "name": "af standard-3 (worn-out)",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      },
+      "af standard": {
+        "name": "af standard",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      },
+      "algerian air force": {
+        "name": "Algerian Air Force",
+        "countries": [
+          "DZA"
+        ]
+      },
+      "af standard-2": {
+        "name": "af standard-2",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      }
     }
   },
   "MiG-25PD": {
@@ -18248,8 +20766,19 @@
     "filename": "mig-25.png",
     "enabled": true,
     "liveries": {
-      "algerian air force": "Algeria Air Force standard",
-      "af standard": "af standard"
+      "algerian air force": {
+        "name": "Algeria Air Force standard",
+        "countries": [
+          "DZA"
+        ]
+      },
+      "af standard": {
+        "name": "af standard",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      }
     }
   },
   "MiG-25RBT": {
@@ -18304,8 +20833,19 @@
     "filename": "mig-25.png",
     "enabled": true,
     "liveries": {
-      "algerian air force": "Algeria Air Force standard",
-      "af standard": "af standard"
+      "algerian air force": {
+        "name": "Algeria Air Force standard",
+        "countries": [
+          "DZA"
+        ]
+      },
+      "af standard": {
+        "name": "af standard",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      }
     }
   },
   "MiG-27K": {
@@ -18628,8 +21168,19 @@
     "filename": "mig-23.png",
     "enabled": true,
     "liveries": {
-      "algerian air force": "Algerian Air Force",
-      "af standard": "af standard"
+      "algerian air force": {
+        "name": "Algerian Air Force",
+        "countries": [
+          "DZA"
+        ]
+      },
+      "af standard": {
+        "name": "af standard",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      }
     }
   },
   "MiG-29A": {
@@ -19052,20 +21603,91 @@
     "filename": "mig-29.png",
     "enabled": true,
     "liveries": {
-      "kazakhstan kazaadf 2008": "KazAADF 600th Airbase 2008",
-      "strizhi (w)": "Strizhi 1992(W)",
-      "kazakhstan air defense forces": "KazAADF 600th Airbase 2015",
-      "syaaf": "Syrian Arab Air Force",
-      "iriaf blue-grey": "IRIAF blue-grey",
-      "vasylkiv 40th brta": "Vasylkiv - 40th Brigade of Tactical Aviation",
-      "air force ukraine standard": "Air Force (Standard)",
-      "domna 120th ar": "Domna - 120th Aviation Regiment",
-      "polish 41st sqn standard1": "41st Sqn Standard 1",
-      "air force standard": "Air Force (Standard)",
-      "polish 41st sqn standard2": "41st Sqn Standard 2",
-      "strizhi": "Strizhi 1992",
-      "mary-1 agressors": "Soviet Air Forces, a/b 1521 (Mary-1)",
-      "iriaf sand-blue": "IRIAF sand-blue"
+      "vasylkiv 40th brta": {
+        "name": "Vasylkiv - 40th Brigade of Tactical Aviation",
+        "countries": [
+          "UKR"
+        ]
+      },
+      "polish 41st sqn standard1": {
+        "name": "41st Sqn Standard 1",
+        "countries": [
+          "POL"
+        ]
+      },
+      "iriaf blue-grey": {
+        "name": "IRIAF blue-grey",
+        "countries": [
+          "IRN"
+        ]
+      },
+      "kazakhstan air defense forces": {
+        "name": "KazAADF 600th Airbase 2015",
+        "countries": [
+          "KAZ"
+        ]
+      },
+      "strizhi (w)": {
+        "name": "Strizhi 1992(W)",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "mary-1 agressors": {
+        "name": "Soviet Air Forces, a/b 1521 (Mary-1)",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "air force standard": {
+        "name": "Air Force (Standard)",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      },
+      "syaaf": {
+        "name": "Syrian Arab Air Force",
+        "countries": [
+          "SYR"
+        ]
+      },
+      "polish 41st sqn standard2": {
+        "name": "41st Sqn Standard 2",
+        "countries": [
+          "POL"
+        ]
+      },
+      "domna 120th ar": {
+        "name": "Domna - 120th Aviation Regiment",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "air force ukraine standard": {
+        "name": "Air Force (Standard)",
+        "countries": [
+          "UKR"
+        ]
+      },
+      "kazakhstan kazaadf 2008": {
+        "name": "KazAADF 600th Airbase 2008",
+        "countries": [
+          "KAZ"
+        ]
+      },
+      "iriaf sand-blue": {
+        "name": "IRIAF sand-blue",
+        "countries": [
+          "IRN"
+        ]
+      },
+      "strizhi": {
+        "name": "Strizhi 1992",
+        "countries": [
+          "RUS"
+        ]
+      }
     }
   },
   "MiG-29S": {
@@ -19562,23 +22184,108 @@
     "filename": "mig-29.png",
     "enabled": true,
     "liveries": {
-      "1521th air base_mary-1": "Mary-1 AFB, 1521st Air Force Base",
-      "115 gviap_termez": "Termez AFB, 115th Guards Aviation Regiment",
-      "kazaadf old (fictional)": "KazAADF old (fictional)",
-      "28 gviap_andreapol": "Andreapol AFB, 28th Guards Aviation Regiment",
-      "426th air group_erebuni": "Erebuni AFB, 426th Air Group",
-      "algerian af fc-16": "Algerian AF FC-16",
-      "swifts": "Swifts (Aerobatic team)",
-      "773 iap_damgarten": "Damgarten AFB, 773rd Aviation Regiment",
-      "kazaadf new (fictional digital)": "KazAADF new digital (fictional digital)",
-      "kazaadf new faded (fictional)": "KazAADF new faded (fictional)",
-      "falcons of russia": "Lipetsk, aerobatic group Falcons of Russia",
-      "air force ukraine standard": "Air Force (Standard)",
-      "air force standard": "Air Force (Standard)",
-      "belarusian air force": "Belarusian Air Force 61 FAB Baranavichy (2017)",
-      "kazaadf new (fictional)": "KazAADF new (fictional)",
-      "31 gviap_zernograd": "Zernograd AFB, 31st Guards Aviation Regiment",
-      "strizhi": "Strizhi 2003"
+      "426th air group_erebuni": {
+        "name": "Erebuni AFB, 426th Air Group",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "773 iap_damgarten": {
+        "name": "Damgarten AFB, 773rd Aviation Regiment",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "31 gviap_zernograd": {
+        "name": "Zernograd AFB, 31st Guards Aviation Regiment",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "kazaadf new (fictional digital)": {
+        "name": "KazAADF new digital (fictional digital)",
+        "countries": [
+          "KAZ"
+        ]
+      },
+      "air force ukraine standard": {
+        "name": "Air Force (Standard)",
+        "countries": [
+          "UKR"
+        ]
+      },
+      "air force standard": {
+        "name": "Air Force (Standard)",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "falcons of russia": {
+        "name": "Lipetsk, aerobatic group Falcons of Russia",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "kazaadf new faded (fictional)": {
+        "name": "KazAADF new faded (fictional)",
+        "countries": [
+          "KAZ"
+        ]
+      },
+      "belarusian air force": {
+        "name": "Belarusian Air Force 61 FAB Baranavichy (2017)",
+        "countries": [
+          "BLR"
+        ]
+      },
+      "kazaadf new (fictional)": {
+        "name": "KazAADF new (fictional)",
+        "countries": [
+          "KAZ"
+        ]
+      },
+      "kazaadf old (fictional)": {
+        "name": "KazAADF old (fictional)",
+        "countries": [
+          "KAZ"
+        ]
+      },
+      "28 gviap_andreapol": {
+        "name": "Andreapol AFB, 28th Guards Aviation Regiment",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "algerian af fc-16": {
+        "name": "Algerian AF FC-16",
+        "countries": [
+          "DZA"
+        ]
+      },
+      "115 gviap_termez": {
+        "name": "Termez AFB, 115th Guards Aviation Regiment",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "1521th air base_mary-1": {
+        "name": "Mary-1 AFB, 1521st Air Force Base",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "swifts": {
+        "name": "Swifts (Aerobatic team)",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "strizhi": {
+        "name": "Strizhi 2003",
+        "countries": [
+          "RUS"
+        ]
+      }
     }
   },
   "MiG-31": {
@@ -19689,9 +22396,25 @@
     "filename": "mig-23.png",
     "enabled": true,
     "liveries": {
-      "903_white": "Demo 903 White",
-      "174 gviap_boris safonov": "174 GvIAP Boris Safonov",
-      "af standard": "af standard"
+      "903_white": {
+        "name": "Demo 903 White",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "af standard": {
+        "name": "af standard",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      },
+      "174 gviap_boris safonov": {
+        "name": "174 GvIAP Boris Safonov",
+        "countries": [
+          "RUS"
+        ]
+      }
     }
   },
   "Mirage-F1EE": {
@@ -20200,35 +22923,447 @@
     "filename": "f-5.png",
     "enabled": true,
     "liveries": {
-      "er 233 savoie ba 118 mont de marsan dessert camu (fictional cr)": "ER 233 Savoie BA 118 Mont de Marsan Dessert Camu (FICTIONAL CR)",
-      "iriaf 3-6210 _ 2021 blue (eq variant)": "IRIAF 3-6210 _ 2021 Blue (EQ Variant)",
-      "ec 5 330 cote d'argent (fictional ct)": "EC 5/330 Cote d'Argent (FICTIONAL CT)",
-      "usa company grey (m-ee)": "USA Company Grey EE",
-      "iriaf 3-6215 _ 1990-2010s desert (eq variant)": "IRIAF 3-6215 _ 1990-2010s Desert (EQ Variant)",
-      "iriaf 3-6210 _ 2013 gray (eq variant)": "IRIAF 3-6210 _ 2013 Gray (EQ Variant)",
-      "iriaf 3-6210 _ 2017 blue (eq variant)": "IRIAF 3-6210 _ 2017 Blue (EQ Variant)",
-      "iriaf 3-6215 _ 2021 blue (eq variant)": "IRIAF 3-6215 _ 2021 Blue (EQ Variant)",
-      "iriaf 3-6209 _ 2010s blue_gray (eq variant)": "IRIAF 3-6209 _ 2010s Blue_Gray (EQ Variant)",
-      "aerges camo": "AERGES CAMO",
-      "iriaf 3-6212 _ col. naghdibake (eq variant)": "IRIAF 3-6212 _ Col. Naghdibake (EQ Variant)",
-      "ec 2 30 normandie niemen (fictional ct)": "EC 2/30 Normandie Niemen (FICTIONAL CT)",
-      "usa company skin 2 (m-ee)": "USA Company Skin 2 EE",
-      "ala 14 blue skin (ee) albacete": "ALA 14 Blue Skin (EE) Albacete",
-      "ec 3 33 lorraine ba 112 reims - champagne ardennes": "EC 333 Lorraine BA 112 Reims - Champagne Ardennes",
-      "ec 330 lorraine": "EC 330 Lorraine",
-      "aerges nato grey": "AERGES NATO GREY",
-      "er 233 savoie ba 118 mont de marsan (fictional cr)": "ER 2/33 Savoie BA 118 Mont de Marsan (FICTIONAL CR)",
-      "ec 1 5 vendee ba orange-cariat": "EC 1/5 Vendee BA 115 Orange-Cariat",
-      "iriaf 3-6214 _ 2021 blue (eq variant)": "IRIAF 3-6214 _ 2021 Blue (EQ Variant)",
-      "ala 46 sq 462 blue skin (ee) gando": "ALA 46 SQ 462 Blue Skin (EE) Gando",
-      "er 2 33 savoie 100 ans de reco (fictional cr)": "ER 233 Savoie 100 ans de reco (FICTIONAL CR)",
-      "ec 1 12 cambresis": "EC 112 BA 103 Cambrai-\u00c9pinoy",
-      "aerges blue": "AERGES BLUE",
-      "ala 46 blue skin (ee) gando": "ALA 46 Blue Skin (EE) Gando",
-      "usa company skin (m-ee)": "USA Company Skin EE",
-      "ec 212 picardie": "EC 212 Picardie",
-      "iriaf 3-6211 _ 2010s blue_gray (eq variant)": "IRIAF 3-6211 _ 2010s Blue_Gray (EQ Variant)",
-      "ala 14 nato skin 1 (ee)": "ALA 14 NATO Skin 1 (EE)"
+      "iriaf 3-6210 _ 2013 gray (eq variant)": {
+        "name": "IRIAF 3-6210 _ 2013 Gray (EQ Variant)",
+        "countries": [
+          "INS",
+          "IRN"
+        ]
+      },
+      "ec 3 33 lorraine ba 112 reims - champagne ardennes": {
+        "name": "EC 333 Lorraine BA 112 Reims - Champagne Ardennes",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "er 233 savoie ba 118 mont de marsan (fictional cr)": {
+        "name": "ER 2/33 Savoie BA 118 Mont de Marsan (FICTIONAL CR)",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "ec 1 5 vendee ba orange-cariat": {
+        "name": "EC 1/5 Vendee BA 115 Orange-Cariat",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "ec 1 12 cambresis": {
+        "name": "EC 112 BA 103 Cambrai-\u00c9pinoy",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "ala 46 sq 462 blue skin (ee) gando": {
+        "name": "ALA 46 SQ 462 Blue Skin (EE) Gando",
+        "countries": [
+          "SPN"
+        ]
+      },
+      "er 233 savoie ba 118 mont de marsan dessert camu (fictional cr)": {
+        "name": "ER 233 Savoie BA 118 Mont de Marsan Dessert Camu (FICTIONAL CR)",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "iriaf 3-6215 _ 2021 blue (eq variant)": {
+        "name": "IRIAF 3-6215 _ 2021 Blue (EQ Variant)",
+        "countries": [
+          "INS",
+          "IRN"
+        ]
+      },
+      "aerges nato grey": {
+        "name": "AERGES NATO GREY",
+        "countries": [
+          "ISR",
+          "SWE",
+          "CUB",
+          "RSA",
+          "MAR",
+          "RSO",
+          "LBY",
+          "AUSAF",
+          "HND",
+          "ABH",
+          "UK",
+          "KOR",
+          "SYR",
+          "KWT",
+          "DEN",
+          "KAZ",
+          "SUN",
+          "EGY",
+          "QAT",
+          "CHN",
+          "YEM",
+          "GHA",
+          "IDN",
+          "BLR",
+          "CHL",
+          "ITA",
+          "NETH",
+          "BEL",
+          "RSI",
+          "GRC",
+          "USA",
+          "LBN",
+          "GER",
+          "AUT",
+          "AUS",
+          "ETH",
+          "RUS",
+          "BHR",
+          "PAK",
+          "ECU",
+          "ARE",
+          "YUG",
+          "VEN",
+          "INS",
+          "PER",
+          "SRB",
+          "NZG",
+          "MEX",
+          "JOR",
+          "SVK",
+          "BRA",
+          "JPN",
+          "NGA",
+          "GDR",
+          "SDN",
+          "PRT",
+          "SPN",
+          "POL",
+          "PHL",
+          "ARG",
+          "HRV",
+          "DZA",
+          "SVN",
+          "BGR",
+          "HUN",
+          "MYS",
+          "OMN",
+          "IND",
+          "ROU",
+          "TUN",
+          "SAU",
+          "FRA",
+          "NOR",
+          "VNM",
+          "CAN",
+          "FIN",
+          "THA",
+          "UKR",
+          "CZE",
+          "TUR",
+          "IRQ",
+          "SUI",
+          "BOL",
+          "GRG",
+          "IRN",
+          "PRK"
+        ]
+      },
+      "usa company skin 2 (m-ee)": {
+        "name": "USA Company Skin 2 EE",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "ec 5 330 cote d'argent (fictional ct)": {
+        "name": "EC 5/330 Cote d'Argent (FICTIONAL CT)",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "iriaf 3-6210 _ 2021 blue (eq variant)": {
+        "name": "IRIAF 3-6210 _ 2021 Blue (EQ Variant)",
+        "countries": [
+          "INS",
+          "IRN"
+        ]
+      },
+      "ala 14 nato skin 1 (ee)": {
+        "name": "ALA 14 NATO Skin 1 (EE)",
+        "countries": [
+          "SPN"
+        ]
+      },
+      "iriaf 3-6209 _ 2010s blue_gray (eq variant)": {
+        "name": "IRIAF 3-6209 _ 2010s Blue_Gray (EQ Variant)",
+        "countries": [
+          "INS",
+          "IRN"
+        ]
+      },
+      "ala 46 blue skin (ee) gando": {
+        "name": "ALA 46 Blue Skin (EE) Gando",
+        "countries": [
+          "SPN"
+        ]
+      },
+      "er 2 33 savoie 100 ans de reco (fictional cr)": {
+        "name": "ER 233 Savoie 100 ans de reco (FICTIONAL CR)",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "ec 212 picardie": {
+        "name": "EC 212 Picardie",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "ec 330 lorraine": {
+        "name": "EC 330 Lorraine",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "iriaf 3-6210 _ 2017 blue (eq variant)": {
+        "name": "IRIAF 3-6210 _ 2017 Blue (EQ Variant)",
+        "countries": [
+          "INS",
+          "IRN"
+        ]
+      },
+      "aerges camo": {
+        "name": "AERGES CAMO",
+        "countries": [
+          "ISR",
+          "SWE",
+          "CUB",
+          "RSA",
+          "MAR",
+          "RSO",
+          "LBY",
+          "AUSAF",
+          "HND",
+          "ABH",
+          "UK",
+          "KOR",
+          "SYR",
+          "KWT",
+          "DEN",
+          "KAZ",
+          "SUN",
+          "EGY",
+          "QAT",
+          "CHN",
+          "YEM",
+          "GHA",
+          "IDN",
+          "BLR",
+          "CHL",
+          "ITA",
+          "NETH",
+          "BEL",
+          "RSI",
+          "GRC",
+          "USA",
+          "LBN",
+          "GER",
+          "AUT",
+          "AUS",
+          "ETH",
+          "RUS",
+          "BHR",
+          "PAK",
+          "ECU",
+          "ARE",
+          "YUG",
+          "VEN",
+          "INS",
+          "PER",
+          "SRB",
+          "NZG",
+          "MEX",
+          "JOR",
+          "SVK",
+          "BRA",
+          "JPN",
+          "NGA",
+          "GDR",
+          "SDN",
+          "PRT",
+          "SPN",
+          "POL",
+          "PHL",
+          "ARG",
+          "HRV",
+          "DZA",
+          "SVN",
+          "BGR",
+          "HUN",
+          "MYS",
+          "OMN",
+          "IND",
+          "ROU",
+          "TUN",
+          "SAU",
+          "FRA",
+          "NOR",
+          "VNM",
+          "CAN",
+          "FIN",
+          "THA",
+          "UKR",
+          "CZE",
+          "TUR",
+          "IRQ",
+          "SUI",
+          "BOL",
+          "GRG",
+          "IRN",
+          "PRK"
+        ]
+      },
+      "ec 2 30 normandie niemen (fictional ct)": {
+        "name": "EC 2/30 Normandie Niemen (FICTIONAL CT)",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "iriaf 3-6211 _ 2010s blue_gray (eq variant)": {
+        "name": "IRIAF 3-6211 _ 2010s Blue_Gray (EQ Variant)",
+        "countries": [
+          "INS",
+          "IRN"
+        ]
+      },
+      "usa company grey (m-ee)": {
+        "name": "USA Company Grey EE",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "iriaf 3-6215 _ 1990-2010s desert (eq variant)": {
+        "name": "IRIAF 3-6215 _ 1990-2010s Desert (EQ Variant)",
+        "countries": [
+          "INS",
+          "IRN"
+        ]
+      },
+      "ala 14 blue skin (ee) albacete": {
+        "name": "ALA 14 Blue Skin (EE) Albacete",
+        "countries": [
+          "SPN"
+        ]
+      },
+      "iriaf 3-6212 _ col. naghdibake (eq variant)": {
+        "name": "IRIAF 3-6212 _ Col. Naghdibake (EQ Variant)",
+        "countries": [
+          "INS",
+          "IRN"
+        ]
+      },
+      "usa company skin (m-ee)": {
+        "name": "USA Company Skin EE",
+        "countries": [
+          "USA",
+          "AUSAF"
+        ]
+      },
+      "aerges blue": {
+        "name": "AERGES BLUE",
+        "countries": [
+          "ISR",
+          "SWE",
+          "CUB",
+          "RSA",
+          "MAR",
+          "RSO",
+          "LBY",
+          "AUSAF",
+          "HND",
+          "ABH",
+          "UK",
+          "KOR",
+          "SYR",
+          "KWT",
+          "DEN",
+          "KAZ",
+          "SUN",
+          "EGY",
+          "QAT",
+          "CHN",
+          "YEM",
+          "GHA",
+          "IDN",
+          "BLR",
+          "CHL",
+          "ITA",
+          "NETH",
+          "BEL",
+          "RSI",
+          "GRC",
+          "USA",
+          "LBN",
+          "GER",
+          "AUT",
+          "AUS",
+          "ETH",
+          "RUS",
+          "BHR",
+          "PAK",
+          "ECU",
+          "ARE",
+          "YUG",
+          "VEN",
+          "INS",
+          "PER",
+          "SRB",
+          "NZG",
+          "MEX",
+          "JOR",
+          "SVK",
+          "BRA",
+          "JPN",
+          "NGA",
+          "GDR",
+          "SDN",
+          "PRT",
+          "SPN",
+          "POL",
+          "PHL",
+          "ARG",
+          "HRV",
+          "DZA",
+          "SVN",
+          "BGR",
+          "HUN",
+          "MYS",
+          "OMN",
+          "IND",
+          "ROU",
+          "TUN",
+          "SAU",
+          "FRA",
+          "NOR",
+          "VNM",
+          "CAN",
+          "FIN",
+          "THA",
+          "UKR",
+          "CZE",
+          "TUR",
+          "IRQ",
+          "SUI",
+          "BOL",
+          "GRG",
+          "IRN",
+          "PRK"
+        ]
+      },
+      "iriaf 3-6214 _ 2021 blue (eq variant)": {
+        "name": "IRIAF 3-6214 _ 2021 Blue (EQ Variant)",
+        "countries": [
+          "INS",
+          "IRN"
+        ]
+      }
     }
   },
   "MosquitoFBMkVI": {
@@ -20377,9 +23512,24 @@
     "filename": "mosquito.png",
     "enabled": true,
     "liveries": {
-      "l-3 pz474 1945": "L-3 PZ474 1945",
-      "raf": "RAF 1944",
-      "no. 235 squadron raf 1944": "No. 235 Squadron RAF 1944"
+      "l-3 pz474 1945": {
+        "name": "L-3 PZ474 1945",
+        "countries": []
+      },
+      "no. 613 squadron raf june 1944": {
+        "name": "No. 613 Squadron RAF, June 1944",
+        "countries": [
+          "UK"
+        ]
+      },
+      "no. 235 squadron raf 1944": {
+        "name": "No. 235 Squadron RAF 1944",
+        "countries": []
+      },
+      "ussr air force": {
+        "name": "USSR Air Force",
+        "countries": []
+      }
     }
   },
   "P-47D-40": {
@@ -20506,25 +23656,24 @@
     "filename": "p-47.png",
     "enabled": true,
     "liveries": {
-      "warchief": "WarChief",
-      "eagle dynamics commemorative": "Eagle Dynamics Commemorative",
-      "53rd_fs_9th_air_force": "53rd Fighter Squadron",
-      "usaf standard": "USAF standard",
-      "usaaf 509th fs, 405th fg, eto 1944, chief ski-u-mah d40": "509th FS 405th FG \"Chief Ski-U-Mah\"",
-      "lt_col_gabreski_1944": "Lt.Col. Gabby Gabreski, 61st FS, July 1944",
-      "79thfg 86thfs the trojan warhorse": "79thFG 86thFS The Trojan Warhorse",
-      "tony 5th emergency rescue squadron": "TONY 5th Emergency Rescue Squadron",
-      "1st brazilian ftr sq-jambock a1-menezes": "1st Brazilian Ftr Sq-Jambock A1-Menezes",
-      "maj_howard_park_1945": "Maj. Howard Park, 513th FS, France 1945",
-      "lt_col_benjamin_mayo": "Lt.Col. Benjamin Mayo",
-      "61st_fs_d_day": "61st FS, D-day",
-      "lend-lease": "Lend-Lease",
-      "61st_fs_8th_af_hvz": "61st FS 8th Air Force HV-Z (Capt. Witold Lanowski)",
-      "raf thunderbolt": "RAF Thunderbolt",
-      "usaaf 509th fs, 405th fg, eto 1944, chief ski-u-mah d28": "509th FS 405th FG \"Chief Ski-U-Mah\" for D-30 (Early) ",
-      "ussr-blue-scheme": "USSR - blue",
-      "lt_col_gabreski_d_day": "Lt.Col. Gabby Gabreski, 61st FS, D-day",
-      "61st_fs_1944": "61st FS, July 1944"
+      "79thfg 86thfs the trojan warhorse": {
+        "name": "79thFG 86thFS The Trojan Warhorse",
+        "countries": [
+          "USA"
+        ]
+      },
+      "61st_fs_d_day": {
+        "name": "61st FS, D-day",
+        "countries": [
+          "USA"
+        ]
+      },
+      "lt_col_benjamin_mayo": {
+        "name": "Lt.Col. Benjamin Mayo",
+        "countries": [
+          "USA"
+        ]
+      }
     }
   },
   "P-51D-30-NA": {
@@ -20664,25 +23813,24 @@
     "filename": "p-51.png",
     "enabled": true,
     "liveries": {
-      "warchief": "WarChief",
-      "eagle dynamics commemorative": "Eagle Dynamics Commemorative",
-      "53rd_fs_9th_air_force": "53rd Fighter Squadron",
-      "usaf standard": "USAF standard",
-      "usaaf 509th fs, 405th fg, eto 1944, chief ski-u-mah d40": "509th FS 405th FG \"Chief Ski-U-Mah\"",
-      "lt_col_gabreski_1944": "Lt.Col. Gabby Gabreski, 61st FS, July 1944",
-      "79thfg 86thfs the trojan warhorse": "79thFG 86thFS The Trojan Warhorse",
-      "tony 5th emergency rescue squadron": "TONY 5th Emergency Rescue Squadron",
-      "1st brazilian ftr sq-jambock a1-menezes": "1st Brazilian Ftr Sq-Jambock A1-Menezes",
-      "maj_howard_park_1945": "Maj. Howard Park, 513th FS, France 1945",
-      "lt_col_benjamin_mayo": "Lt.Col. Benjamin Mayo",
-      "61st_fs_d_day": "61st FS, D-day",
-      "lend-lease": "Lend-Lease",
-      "61st_fs_8th_af_hvz": "61st FS 8th Air Force HV-Z (Capt. Witold Lanowski)",
-      "raf thunderbolt": "RAF Thunderbolt",
-      "usaaf 509th fs, 405th fg, eto 1944, chief ski-u-mah d28": "509th FS 405th FG \"Chief Ski-U-Mah\" for D-30 (Early) ",
-      "ussr-blue-scheme": "USSR - blue",
-      "lt_col_gabreski_d_day": "Lt.Col. Gabby Gabreski, 61st FS, D-day",
-      "61st_fs_1944": "61st FS, July 1944"
+      "79thfg 86thfs the trojan warhorse": {
+        "name": "79thFG 86thFS The Trojan Warhorse",
+        "countries": [
+          "USA"
+        ]
+      },
+      "61st_fs_d_day": {
+        "name": "61st FS, D-day",
+        "countries": [
+          "USA"
+        ]
+      },
+      "lt_col_benjamin_mayo": {
+        "name": "Lt.Col. Benjamin Mayo",
+        "countries": [
+          "USA"
+        ]
+      }
     }
   },
   "S-3B Tanker": {
@@ -20705,7 +23853,12 @@
     "filename": "s-3.png",
     "enabled": true,
     "liveries": {
-      "usaf standard": "NAVY Standard"
+      "usaf standard": {
+        "name": "NAVY Standard",
+        "countries": [
+          "USA"
+        ]
+      }
     }
   },
   "Su-17M4": {
@@ -21135,11 +24288,37 @@
     "filename": "su-17.png",
     "enabled": true,
     "liveries": {
-      "af standard": "af standard",
-      "af standard (rus)": "af standard",
-      "af standard (worn-out)": "af standard (worn-out)",
-      "af standard (worn-out) (rus)": "af standard (worn-out)",
-      "shap limanskoye ab": "shap limanskoye ab"
+      "af standard (worn-out) (rus)": {
+        "name": "af standard (worn-out)",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "af standard (worn-out)": {
+        "name": "af standard (worn-out)",
+        "countries": [
+          "UKR"
+        ]
+      },
+      "af standard": {
+        "name": "af standard",
+        "countries": [
+          "UKR"
+        ]
+      },
+      "af standard (rus)": {
+        "name": "af standard",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      },
+      "shap limanskoye ab": {
+        "name": "shap limanskoye ab",
+        "countries": [
+          "UKR"
+        ]
+      }
     }
   },
   "Su-24M": {
@@ -21761,12 +24940,43 @@
     "filename": "su-24.png",
     "enabled": true,
     "liveries": {
-      "ukrainian air force standard": "Ukrainian Air Force",
-      "af standard": "af standard",
-      "algerian af kx-12": "Algerian AF KX-12",
-      "syrian air force": "Syrian Air Force",
-      "iran air force": "Iran Air Force",
-      "kazakhstan air force": "600th Airbase Kazakhstan"
+      "ukrainian air force standard": {
+        "name": "Ukrainian Air Force",
+        "countries": [
+          "UKR"
+        ]
+      },
+      "iran air force": {
+        "name": "Iran Air Force",
+        "countries": [
+          "IRN"
+        ]
+      },
+      "af standard": {
+        "name": "af standard",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      },
+      "syrian air force": {
+        "name": "Syrian Air Force",
+        "countries": [
+          "SYR"
+        ]
+      },
+      "kazakhstan air force": {
+        "name": "600th Airbase Kazakhstan",
+        "countries": [
+          "KAZ"
+        ]
+      },
+      "algerian af kx-12": {
+        "name": "Algerian AF KX-12",
+        "countries": [
+          "DZA"
+        ]
+      }
     }
   },
   "Su-25": {
@@ -22471,21 +25681,97 @@
     "filename": "su-25.png",
     "enabled": true,
     "liveries": {
-      "petal camo scheme #2 (native). 299th brigade": "petal camo scheme #2 (native). 299th brigade.",
-      "field camo scheme #1 (native)01": "field camo scheme #1 (native)",
-      "field camo scheme #3 (worn-out). 960th shap": "field camo scheme #3 (worn-out). 960th shap.",
-      "field camo scheme #2 (native). 960th shap": "field camo scheme #2 (native). 960th shap.",
-      "abkhazian air force": "Abkhazian Air Force",
-      "forest camo scheme #1 (native)": "forest camo scheme #1 (native)",
-      "field camo scheme #1 (native)": "field camo scheme #1 (native)",
-      "`scorpion` demo scheme (native)": "`scorpion` demo scheme (native)",
-      "haf camo": "Hellenic Airforce - Camo (Fictional)",
-      "algerian af desert fictional": "Algerian AF Desert Fictional",
-      "haf aegean ghost": "Hellenic Airforce - Aegean Ghost (Fictional)",
-      "irgc 54": "IRGC 54",
-      "broken camo scheme #1 (native). 299th oshap": "broken camo scheme #1 (native). 299th oshap.",
-      "petal camo scheme #1 (native). 299th brigade": "petal camo scheme #1 (native). 299th brigade.",
-      "broken camo scheme #2 (native). 452th shap": "broken camo scheme #2 (native). 452th shap."
+      "field camo scheme #3 (worn-out). 960th shap": {
+        "name": "field camo scheme #3 (worn-out). 960th shap.",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "`scorpion` demo scheme (native)": {
+        "name": "`scorpion` demo scheme (native)",
+        "countries": [
+          "GRG"
+        ]
+      },
+      "abkhazian air force": {
+        "name": "Abkhazian Air Force",
+        "countries": [
+          "ABH"
+        ]
+      },
+      "petal camo scheme #1 (native). 299th brigade": {
+        "name": "petal camo scheme #1 (native). 299th brigade.",
+        "countries": [
+          "UKR"
+        ]
+      },
+      "algerian af desert fictional": {
+        "name": "Algerian AF Desert Fictional",
+        "countries": [
+          "DZA"
+        ]
+      },
+      "broken camo scheme #2 (native). 452th shap": {
+        "name": "broken camo scheme #2 (native). 452th shap.",
+        "countries": [
+          "UKR"
+        ]
+      },
+      "irgc 54": {
+        "name": "IRGC 54",
+        "countries": [
+          "IRN"
+        ]
+      },
+      "haf aegean ghost": {
+        "name": "Hellenic Airforce - Aegean Ghost (Fictional)",
+        "countries": [
+          "GRC"
+        ]
+      },
+      "petal camo scheme #2 (native). 299th brigade": {
+        "name": "petal camo scheme #2 (native). 299th brigade.",
+        "countries": [
+          "UKR"
+        ]
+      },
+      "haf camo": {
+        "name": "Hellenic Airforce - Camo (Fictional)",
+        "countries": [
+          "GRC"
+        ]
+      },
+      "forest camo scheme #1 (native)": {
+        "name": "forest camo scheme #1 (native)",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "field camo scheme #1 (native)": {
+        "name": "field camo scheme #1 (native)",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      },
+      "broken camo scheme #1 (native). 299th oshap": {
+        "name": "broken camo scheme #1 (native). 299th oshap.",
+        "countries": [
+          "UKR"
+        ]
+      },
+      "field camo scheme #1 (native)01": {
+        "name": "field camo scheme #1 (native)",
+        "countries": [
+          "GRG"
+        ]
+      },
+      "field camo scheme #2 (native). 960th shap": {
+        "name": "field camo scheme #2 (native). 960th shap.",
+        "countries": [
+          "RUS"
+        ]
+      }
     }
   },
   "Su-25T": {
@@ -23370,16 +26656,68 @@
     "filename": "su-25.png",
     "enabled": true,
     "liveries": {
-      "algerian af trainer ku-04": "Algerian AF Trainer KU-04",
-      "af standard": "af standard",
-      "algerian af grey ku-01": "Algerian AF Grey KU-01",
-      "af standard 101": "af standard 1",
-      "af standard 2": "af standard 2",
-      "haf - fictional": "Hellenic Airforce (Fictional)",
-      "algerian af grey ku-02": "Algerian AF Grey KU-02",
-      "algerian af desert ku-03": "Algerian AF Desert KU-03",
-      "su-25t test scheme": "su-25t test scheme",
-      "af standard 1": "af standard 1"
+      "algerian af trainer ku-04": {
+        "name": "Algerian AF Trainer KU-04",
+        "countries": [
+          "DZA"
+        ]
+      },
+      "af standard 101": {
+        "name": "af standard 1",
+        "countries": [
+          "GRG"
+        ]
+      },
+      "algerian af desert ku-03": {
+        "name": "Algerian AF Desert KU-03",
+        "countries": [
+          "DZA"
+        ]
+      },
+      "haf - fictional": {
+        "name": "Hellenic Airforce (Fictional)",
+        "countries": [
+          "GRC"
+        ]
+      },
+      "af standard 2": {
+        "name": "af standard 2",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      },
+      "af standard 1": {
+        "name": "af standard 1",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      },
+      "af standard": {
+        "name": "af standard",
+        "countries": [
+          "GRG"
+        ]
+      },
+      "algerian af grey ku-01": {
+        "name": "Algerian AF Grey KU-01",
+        "countries": [
+          "DZA"
+        ]
+      },
+      "algerian af grey ku-02": {
+        "name": "Algerian AF Grey KU-02",
+        "countries": [
+          "DZA"
+        ]
+      },
+      "su-25t test scheme": {
+        "name": "su-25t test scheme",
+        "countries": [
+          "RUS"
+        ]
+      }
     }
   },
   "Su-27": {
@@ -24076,36 +27414,189 @@
     "filename": "su-27.png",
     "enabled": true,
     "liveries": {
-      "algerian af grey 04": "Algerian AF GREY 04",
-      "besovets afb 2 squadron": "Besovets AFB 2 squadron",
-      "air force standard old": "Air Force Standard old",
-      "chkalovsk afb (689 gviap)": "Chkalovsk AFB (689 GvIAP)",
-      "m gromov fri": "M Gromov FRI",
-      "plaaf k2s new": "PLAAF K2S new",
-      "lodeynoye pole afb (177 iap)": "Lodeynoye pole AFB (177 IAP)",
-      "besovets afb": "Besovets AFB",
-      "lypetsk afb (shark)": "Lypetsk AFB (Shark)",
-      "plaaf k1s old": "PLAAF K1S old",
-      "plaaf k33s": "PLAAF K33S",
-      "air force standard": "Air Force Standard",
-      "hotilovo afb": "Hotilovo AFB",
-      "air force ukraine standard early": "Air Force Ukraine Standard Early",
-      "ozerne afb (9th brigade)": "Ozerne AFB (9th brigade)",
-      "algerian af blue 02": "Algerian AF Blue 02",
-      "haf aegean ghost": "Hellenic Airforce - Aegean Ghost (Fictional)",
-      "mirgorod afb (831th brigade)": "Mirgorod AFB (831th brigade)",
-      "kubinka afb (russian knights)": "Kubinka AFB (Russian Knights)",
-      "plaaf k2s new parade": "PLAAF K2S new parade",
-      "kilpyavr afb (maresyev)": "Kilpyavr AFB (Maresyev)",
-      "kazakhstan air defense forces": "Kazakhstan Air Defense Forces",
-      "mirgorod afb (digital camo)": "Mirgorod AFB (Digital camo)",
-      "plaaf standard": "PLAAF Standard",
-      "lypetsk afb (falcons of russia)": "Lypetsk AFB (Falcons of Russia)",
-      "kubinka afb (russian knights old)": "Kubinka AFB (Russian Knights Old)",
-      "air force ukraine standard": "Air Force Ukraine Standard",
-      "plaaf k2s old": "PLAAF K2S old",
-      "air force standard early": "Air Force Standard Early",
-      "planaf hh8s": "PLANAF HH8S"
+      "hotilovo afb": {
+        "name": "Hotilovo AFB",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "besovets afb 2 squadron": {
+        "name": "Besovets AFB 2 squadron",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "lypetsk afb (shark)": {
+        "name": "Lypetsk AFB (Shark)",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "besovets afb": {
+        "name": "Besovets AFB",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "ozerne afb (9th brigade)": {
+        "name": "Ozerne AFB (9th brigade)",
+        "countries": [
+          "UKR"
+        ]
+      },
+      "plaaf k33s": {
+        "name": "PLAAF K33S",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "air force standard early": {
+        "name": "Air Force Standard Early",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      },
+      "mirgorod afb (831th brigade)": {
+        "name": "Mirgorod AFB (831th brigade)",
+        "countries": [
+          "UKR"
+        ]
+      },
+      "haf aegean ghost": {
+        "name": "Hellenic Airforce - Aegean Ghost (Fictional)",
+        "countries": [
+          "GRC"
+        ]
+      },
+      "kubinka afb (russian knights)": {
+        "name": "Kubinka AFB (Russian Knights)",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "air force standard old": {
+        "name": "Air Force Standard old",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      },
+      "kazakhstan air defense forces": {
+        "name": "Kazakhstan Air Defense Forces",
+        "countries": [
+          "KAZ"
+        ]
+      },
+      "algerian af grey 04": {
+        "name": "Algerian AF GREY 04",
+        "countries": [
+          "DZA"
+        ]
+      },
+      "mirgorod afb (digital camo)": {
+        "name": "Mirgorod AFB (Digital camo)",
+        "countries": [
+          "UKR"
+        ]
+      },
+      "plaaf standard": {
+        "name": "PLAAF Standard",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "plaaf k1s old": {
+        "name": "PLAAF K1S old",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "air force standard": {
+        "name": "Air Force Standard",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      },
+      "algerian af blue 02": {
+        "name": "Algerian AF Blue 02",
+        "countries": [
+          "DZA"
+        ]
+      },
+      "lypetsk afb (falcons of russia)": {
+        "name": "Lypetsk AFB (Falcons of Russia)",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "m gromov fri": {
+        "name": "M Gromov FRI",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "air force ukraine standard": {
+        "name": "Air Force Ukraine Standard",
+        "countries": [
+          "UKR"
+        ]
+      },
+      "air force ukraine standard early": {
+        "name": "Air Force Ukraine Standard Early",
+        "countries": [
+          "UKR"
+        ]
+      },
+      "plaaf k2s new parade": {
+        "name": "PLAAF K2S new parade",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "planaf hh8s": {
+        "name": "PLANAF HH8S",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "chkalovsk afb (689 gviap)": {
+        "name": "Chkalovsk AFB (689 GvIAP)",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "lodeynoye pole afb (177 iap)": {
+        "name": "Lodeynoye pole AFB (177 IAP)",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "plaaf k2s old": {
+        "name": "PLAAF K2S old",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "kubinka afb (russian knights old)": {
+        "name": "Kubinka AFB (Russian Knights Old)",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "kilpyavr afb (maresyev)": {
+        "name": "Kilpyavr AFB (Maresyev)",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "plaaf k2s new": {
+        "name": "PLAAF K2S new",
+        "countries": [
+          "CHN"
+        ]
+      }
     }
   },
   "Su-30": {
@@ -24982,16 +28473,67 @@
     "filename": "su-34.png",
     "enabled": true,
     "liveries": {
-      "af standard early (worn-out)": "af standard early (worn-out)",
-      "`russian knights` team #25": "`russian knights` team #25",
-      "af standard": "af standard",
-      "`test-pilots` team #597": "`test-pilots` team #597",
-      "af standard last": "af standard last",
-      "`snow` test paint scheme": "`snow` test paint scheme",
-      "adf 148th ctc savasleyka ab": "adf 148th ctc savasleyka ab",
-      "af standard last (worn-out)": "af standard last (worn-out)",
-      "af standard early": "af standard early",
-      "`desert` test paint scheme": "`desert` test paint scheme"
+      "af standard early (worn-out)": {
+        "name": "af standard early (worn-out)",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "`russian knights` team #25": {
+        "name": "`russian knights` team #25",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "af standard last": {
+        "name": "af standard last",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "adf 148th ctc savasleyka ab": {
+        "name": "adf 148th ctc savasleyka ab",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "af standard": {
+        "name": "af standard",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "af standard early": {
+        "name": "af standard early",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      },
+      "`desert` test paint scheme": {
+        "name": "`desert` test paint scheme",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "`snow` test paint scheme": {
+        "name": "`snow` test paint scheme",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "`test-pilots` team #597": {
+        "name": "`test-pilots` team #597",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "af standard last (worn-out)": {
+        "name": "af standard last (worn-out)",
+        "countries": [
+          "RUS"
+        ]
+      }
     }
   },
   "Su-33": {
@@ -25607,17 +29149,60 @@
     "filename": "su-34.png",
     "enabled": true,
     "liveries": {
-      "t-10k-1 test paint scheme": "t-10k-1 test paint scheme",
-      "279th kiap 1st squad syria 2017": "Syria 2017, 279th kiap, 1st squad",
-      "279th kiap 2nd squad navy": "Navy, 279th kiap, 2nd squad",
-      "279th kiap 1st squad navy": "Navy, 279th kiap, 1st squad",
-      "aaf grey 12": "Algerian AF GREY No 12",
-      "haf - aegean ghost": "Hellenic Airforce - Aegean Ghost (Fictional)",
-      "t-10k-9 test paint scheme": "t-10k-9 test paint scheme",
-      "t-10k-5 test paint scheme": "t-10k-5 test paint scheme",
-      "aaf blue 68": "Algerian AF BLUE No 68",
-      "279th kiap 2nd squad syria 2017": "Syria 2017, 279th kiap, 2nd squad",
-      "plan carrier air wings j-15": "PLAN Carrier Air Wings J-15"
+      "aaf blue 68": {
+        "name": "Algerian AF BLUE No 68",
+        "countries": [
+          "DZA"
+        ]
+      },
+      "279th kiap 1st squad navy": {
+        "name": "Navy, 279th kiap, 1st squad",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "haf - aegean ghost": {
+        "name": "Hellenic Airforce - Aegean Ghost (Fictional)",
+        "countries": [
+          "GRC"
+        ]
+      },
+      "t-10k-5 test paint scheme": {
+        "name": "t-10k-5 test paint scheme",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "279th kiap 2nd squad navy": {
+        "name": "Navy, 279th kiap, 2nd squad",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "279th kiap 2nd squad syria 2017": {
+        "name": "Syria 2017, 279th kiap, 2nd squad",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "279th kiap 1st squad syria 2017": {
+        "name": "Syria 2017, 279th kiap, 1st squad",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "aaf grey 12": {
+        "name": "Algerian AF GREY No 12",
+        "countries": [
+          "DZA"
+        ]
+      },
+      "t-10k-9 test paint scheme": {
+        "name": "t-10k-9 test paint scheme",
+        "countries": [
+          "RUS"
+        ]
+      }
     }
   },
   "Su-34": {
@@ -26216,8 +29801,18 @@
     "filename": "su-34.png",
     "enabled": true,
     "liveries": {
-      "russian air force": "1 Russian Air Force",
-      "russian air force old": "Russian Air Force Old"
+      "russian air force": {
+        "name": "1 Russian Air Force",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "russian air force old": {
+        "name": "Russian Air Force Old",
+        "countries": [
+          "RUS"
+        ]
+      }
     }
   },
   "Tornado GR4": {
@@ -26384,12 +29979,42 @@
     "filename": "tornado.png",
     "enabled": true,
     "liveries": {
-      "no. 12 squadron raf lossiemouth ab (morayshire)": "no. 12 squadron raf lossiemouth ab (morayshire)",
-      "no. 14 squadron raf lossiemouth ab (morayshire)": "no. 14 squadron raf lossiemouth ab (morayshire)",
-      "bb of 14 squadron raf lossiemouth": "bb of 14 squadron raf lossiemouth",
-      "no. 9 squadron raf marham ab (norfolk)": "no. 9 squadron raf marham ab (norfolk)",
-      "no. 617 squadron raf lossiemouth ab (morayshire)": "no. 617 squadron raf lossiemouth ab (morayshire)",
-      "o of ii (ac) squadron raf marham": "o of ii (ac) squadron raf marham"
+      "no. 9 squadron raf marham ab (norfolk)": {
+        "name": "no. 9 squadron raf marham ab (norfolk)",
+        "countries": [
+          "UK"
+        ]
+      },
+      "no. 617 squadron raf lossiemouth ab (morayshire)": {
+        "name": "no. 617 squadron raf lossiemouth ab (morayshire)",
+        "countries": [
+          "UK"
+        ]
+      },
+      "no. 14 squadron raf lossiemouth ab (morayshire)": {
+        "name": "no. 14 squadron raf lossiemouth ab (morayshire)",
+        "countries": [
+          "UK"
+        ]
+      },
+      "o of ii (ac) squadron raf marham": {
+        "name": "o of ii (ac) squadron raf marham",
+        "countries": [
+          "UK"
+        ]
+      },
+      "bb of 14 squadron raf lossiemouth": {
+        "name": "bb of 14 squadron raf lossiemouth",
+        "countries": [
+          "UK"
+        ]
+      },
+      "no. 12 squadron raf lossiemouth ab (morayshire)": {
+        "name": "no. 12 squadron raf lossiemouth ab (morayshire)",
+        "countries": [
+          "UK"
+        ]
+      }
     }
   },
   "Tornado IDS": {
@@ -26612,15 +30237,60 @@
     "filename": "tornado.png",
     "enabled": true,
     "liveries": {
-      "ita tornado black": "Tornado Black",
-      "jagdbombergeschwader 33 buchel ab no. 43+19 experimental scheme": "jagdbombergeschwader 33 buchel ab no. 43+19 experimental scheme",
-      "ita tornado mm7042": "Tornado MM7042",
-      "aufklarungsgeschwader 51 `immelmann` jagel ab luftwaffe": "aufklarungsgeschwader 51 `immelmann` jagel ab luftwaffe",
-      "ita tornado (sesto stormo diavoli rossi)": "Tornado (Sesto Stormo Diavoli Rossi)",
-      "marinefliegergeschwader 2 eggebek ab marineflieger": "marinefliegergeschwader 2 eggebek ab marineflieger",
-      "jagdbombergeschwader 31 `boelcke` norvenich ab luftwaffe": "jagdbombergeschwader 31 `boelcke` norvenich ab luftwaffe",
-      "jagdbombergeschwader 32 lechfeld ab luftwaffe": "jagdbombergeschwader 32 lechfeld ab luftwaffe",
-      "ita tornado mm55004": "Tornado MM55004"
+      "ita tornado black": {
+        "name": "Tornado Black",
+        "countries": [
+          "ITA"
+        ]
+      },
+      "ita tornado mm7042": {
+        "name": "Tornado MM7042",
+        "countries": [
+          "ITA"
+        ]
+      },
+      "ita tornado (sesto stormo diavoli rossi)": {
+        "name": "Tornado (Sesto Stormo Diavoli Rossi)",
+        "countries": [
+          "ITA"
+        ]
+      },
+      "jagdbombergeschwader 32 lechfeld ab luftwaffe": {
+        "name": "jagdbombergeschwader 32 lechfeld ab luftwaffe",
+        "countries": [
+          "GER"
+        ]
+      },
+      "jagdbombergeschwader 31 `boelcke` norvenich ab luftwaffe": {
+        "name": "jagdbombergeschwader 31 `boelcke` norvenich ab luftwaffe",
+        "countries": [
+          "GER"
+        ]
+      },
+      "jagdbombergeschwader 33 buchel ab no. 43+19 experimental scheme": {
+        "name": "jagdbombergeschwader 33 buchel ab no. 43+19 experimental scheme",
+        "countries": [
+          "GER"
+        ]
+      },
+      "ita tornado mm55004": {
+        "name": "Tornado MM55004",
+        "countries": [
+          "ITA"
+        ]
+      },
+      "aufklarungsgeschwader 51 `immelmann` jagel ab luftwaffe": {
+        "name": "aufklarungsgeschwader 51 `immelmann` jagel ab luftwaffe",
+        "countries": [
+          "GER"
+        ]
+      },
+      "marinefliegergeschwader 2 eggebek ab marineflieger": {
+        "name": "marinefliegergeschwader 2 eggebek ab marineflieger",
+        "countries": [
+          "GER"
+        ]
+      }
     }
   },
   "Tu-142": {
@@ -26657,7 +30327,12 @@
     "filename": "tu-95.png",
     "enabled": true,
     "liveries": {
-      "af standard": "af standard"
+      "af standard": {
+        "name": "af standard",
+        "countries": [
+          "RUS"
+        ]
+      }
     }
   },
   "Tu-160": {
@@ -26694,7 +30369,12 @@
     "filename": "tu-160.png",
     "enabled": true,
     "liveries": {
-      "af standard": "af standard"
+      "af standard": {
+        "name": "af standard",
+        "countries": [
+          "RUS"
+        ]
+      }
     }
   },
   "Tu-22M3": {
@@ -26813,7 +30493,13 @@
     "filename": "tu-22.png",
     "enabled": true,
     "liveries": {
-      "af standard": "af standard"
+      "af standard": {
+        "name": "af standard",
+        "countries": [
+          "RUS",
+          "UKR"
+        ]
+      }
     }
   },
   "Tu-95MS": {
@@ -26850,7 +30536,13 @@
     "filename": "tu-95.png",
     "enabled": true,
     "liveries": {
-      "af standard": "af standard"
+      "af standard": {
+        "name": "af standard",
+        "countries": [
+          "RUS",
+          "UKR"
+        ]
+      }
     }
   }
 }

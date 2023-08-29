@@ -69,7 +69,10 @@ if len(sys.argv) > 1:
 
             database[unit_name]["liveries"] = {}
             for livery in liveries:
-                database[unit_name]["liveries"][livery.id] = livery.name
+                database[unit_name]["liveries"][livery.id] = {
+                    "name": livery.name,
+                    "countries": [country for country in livery.countries]
+                }
 
             # Create the loadouts table and add the empty loadout for the default task
             database[unit_name]["loadouts"] = []

@@ -22,6 +22,6 @@ interface UnitBlueprint {
     range?: string;
     loadouts?: LoadoutBlueprint[];
     filename?: string;
-    liveries?: {[key: string]: string};
+    liveries?: {[key: string]: {name: string, countries: string[]}};
     cost?: number;
 }
