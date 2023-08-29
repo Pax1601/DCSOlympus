@@ -148,7 +148,7 @@ export const IADSDensities: {[key: string]: number}= {"AAA": 0.8, "MANPADS": 0.3
 
 export const SHOW_CONTACT_LINES = "Show unit contact lines";
 export const HIDE_GROUP_MEMBERS = "Hide group members when zoomed out";
-export const SHOW_UNIT_LABELS   = "Show unit labels (L)";
+export const SHOW_UNIT_LABELS   = "Show unit labels";
 export const SHOW_UNIT_PATHS    = "Show unit paths";
 export const SHOW_UNIT_TARGETS  = "Show unit targets";
 

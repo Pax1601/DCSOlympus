@@ -19,7 +19,7 @@ interface CustomEventMap {
     "mapStateChanged":                  CustomEvent<string>,
     "mapContextMenu":                   CustomEvent<>,
     "mapVisibilityOptionsChanged":      CustomEvent<>,
-    "commandModeOptionsChanged":                CustomEvent<>,  
+    "commandModeOptionsChanged":        CustomEvent<>,  
     "contactsUpdated":                  CustomEvent<Unit>,
 }
 
