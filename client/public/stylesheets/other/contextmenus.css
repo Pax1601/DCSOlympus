@@ -30,6 +30,11 @@
     flex-direction: column;
     justify-content: space-between;
     row-gap: 5px;
+    padding: 20px;
+}
+
+#map-contextmenu>div:nth-child(n+4)>div {
+    width: 100%;
 }
 
 .contextmenu-advanced-options {
@@ -192,8 +197,7 @@
     content: "Create neutral unit";
 }
 
-#aircraft-loadout-preview,
-#helicopter-loadout-preview {
+.unit-loadout-preview {
     align-content: space-between;
     align-items: center;
     column-gap: 10px;
@@ -202,16 +206,14 @@
     width: 100%;
 }
 
-#aircaft-loadout-list,
-#helicopter-loadout-list {
+.unit-loadout-list {
     align-content: center;
     display: flex;
     flex-direction: column;
     height: 100%;
 }
 
-#aircraft-unit-image,
-#helicopter-unit-image {
+.unit-image {
     filter: invert(100%);
     width: 25%;
     margin-bottom: 10px;

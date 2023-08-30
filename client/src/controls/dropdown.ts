@@ -7,10 +7,14 @@ export class Dropdown {
     #optionsList: string[] = [];
     #index: number = 0;
 
-    constructor(ID: string, callback: CallableFunction, options: string[] | null = null) {
-        this.#element = <HTMLElement>document.getElementById(ID);
-        this.#options = <HTMLElement>this.#element.querySelector(".ol-select-options");
-        this.#value = <HTMLElement>this.#element.querySelector(".ol-select-value");
+    constructor(element: string | HTMLElement, callback: CallableFunction, options: string[] | null = null) {
+        if (typeof element === 'string')
+            this.#element = document.getElementById(element) as HTMLElement;
+        else
+            this.#element = element;
+
+        this.#options = this.#element.querySelector(".ol-select-options") as HTMLElement;
+        this.#value = this.#element.querySelector(".ol-select-value") as HTMLElement;
         this.#defaultValue = this.#value.innerText;
         this.#callback = callback;
 
@@ -18,9 +22,7 @@ export class Dropdown {
             this.setOptions(options);
         }
 
-        this.#value.addEventListener("click", (ev) => {
-            this.#toggle();
-        });
+        this.#value.addEventListener("click", (ev) => { this.#toggle(); });
 
         document.addEventListener("click", (ev) => {
             if (!(this.#value.contains(ev.target as Node) || this.#options.contains(ev.target as Node) || this.#element.contains(ev.target as Node))) {

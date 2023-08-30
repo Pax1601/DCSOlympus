@@ -1304,10 +1304,6 @@ input[type=number]::-webkit-outer-spin-button {
 	transform: translateX(calc((var(--width) - var(--height)) * 0.5));
 }
 
-.ol-contexmenu-panel {
-    padding: 20px;
-}
-
 .ol-coalition-switch[data-value="false"]>.ol-switch-fill {
 	background-color: var(--primary-blue);
 }

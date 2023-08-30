@@ -25,216 +25,16 @@
             data-on-click-params='{"type": "polygon"}' class="ol-contexmenu-button"><img src="resources/theme/images/buttons/tools/draw-polygon-solid.svg" inject-svg></button>
         </div>
     <div id="aircraft-spawn-menu" class="ol-contexmenu-panel ol-panel hide">
-        <div class="ol-select-container">
-            <div id="aircraft-role-options" class="ol-select">
-                <div class="ol-select-value">Aircraft role</div>
-                <div class="ol-select-options">
-                    <!-- This is where all the aircraft roles buttons will be shown-->
-                </div>
-            </div>
-        </div>
-        <div class="ol-select-container">
-            <div id="aircraft-label-options" class="ol-select">
-                <div class="ol-select-value">Aircraft name</div>
-                <div class="ol-select-options">
-                    <div>Select role first</div>
-                    <!-- This is where all the aircraft types buttons will be shown-->
-                </div>
-            </div>
-        </div>
-        <div class="ol-select-container">
-            <div id="aircraft-loadout-options" class="ol-select">
-                <div class="ol-select-value">Loadout</div>
-                <div class="ol-select-options">
-                    <div>Select type first</div>
-                    <!-- This is where all the aircraft loadouts buttons will be shown-->
-                </div>
-            </div>
-        </div>
-        <div class="ol-select-container contextmenu-options-container">
-            <div>Group members</div>
-            <div id="aircraft-count-options" class="ol-select">
-                <div class="ol-select-value"></div>
-                <div class="ol-select-options">
-                    <!-- This is where all the aircraft count buttons will be shown-->
-                </div>
-            </div>
-        </div>
-        <div class="contextmenu-advanced-options-toggle" data-on-click="toggleAdvancedOptions" data-on-click-params='{"type": "aircraft"}'>
-            <div>Advanced options</div>
-            <hr>
-        </div>
-        <div id="aircraft-advanced-options" class="contextmenu-advanced-options hide">
-            <div class="ol-select-container">
-                <div id="aircraft-country-options" class="ol-select">
-                    <div class="ol-select-value">Country</div>
-                    <div class="ol-select-options">
-                        <div>Select type first</div>
-                        <!-- This is where all the aircraft country buttons will be shown-->
-                    </div>
-                </div>
-            </div>
-            <div class="ol-select-container">
-                <div id="aircraft-livery-options" class="ol-select">
-                    <div class="ol-select-value">Livery</div>
-                    <div class="ol-select-options">
-                        <div>Select type first</div>
-                        <!-- This is where all the aircraft livery buttons will be shown-->
-                    </div>
-                </div>
-            </div>
-            <div id="aircraft-spawn-altitude-slider" class="ol-slider-container flight-control-ol-slider">
-                <dl class="ol-data-grid">
-                    <dt> Spawn altitude
-                    </dt>
-                    <dd>
-                        <div class="ol-slider-value"></div>
-                    </dd>
-                </dl>
-                <input type="range" min="0" max="100" value="0" class="ol-slider">
-            </div>
-            <div id="aircraft-loadout-preview">
-                <img id="aircraft-unit-image" class="hide">
-                <div id="aircraft-loadout-list">
-                </div>
-            </div>
-        </div>
-        <button class="deploy-unit-button" title="" data-coalition="blue" data-on-click="contextMenuDeployAircrafts" disabled>Deploy unit</button>
+        <!-- Here the aircraft spawn menu will be shown -->
     </div>
     <div id="helicopter-spawn-menu" class="ol-contexmenu-panel ol-panel hide">
-        <div class="ol-select-container">
-            <div id="helicopter-role-options" class="ol-select">
-                <div class="ol-select-value">Helicopter role</div>
-                <div class="ol-select-options">
-                    <!-- This is where all the helicopter roles buttons will be shown-->
-                </div>
-            </div>
-        </div>
-        <div class="ol-select-container">
-            <div id="helicopter-label-options" class="ol-select">
-                <div class="ol-select-value">Helicopter name</div>
-                <div class="ol-select-options">
-                    <div>Select role first</div>
-                    <!-- This is where all the helicopter types buttons will be shown-->
-                </div>
-            </div>
-        </div>
-        <div class="ol-select-container">
-            <div id="helicopter-loadout-options" class="ol-select">
-                <div class="ol-select-value">Loadout</div>
-                <div class="ol-select-options">
-                    <div>Select type first</div>
-                    <!-- This is where all the helicopter loadouts buttons will be shown-->
-                </div>
-            </div>
-        </div>
-        <div class="ol-select-container contextmenu-options-container">
-            <div>Group members</div>
-            <div id="helicopter-count-options" class="ol-select">
-                <div class="ol-select-value"></div>
-                <div class="ol-select-options">
-                    <!-- This is where all the helicopter count buttons will be shown-->
-                </div>
-            </div>
-        </div>
-        <div class="contextmenu-advanced-options-toggle" data-on-click="toggleAdvancedOptions" data-on-click-params='{"type": "helicopter"}'>
-            <div>Advanced options</div>
-            <hr>
-        </div>
-        <div id="helicopter-advanced-options" class="contextmenu-advanced-options hide">
-            <div class="ol-select-container">
-                <div id="helicopter-country-options" class="ol-select">
-                    <div class="ol-select-value">Country</div>
-                    <div class="ol-select-options">
-                        <div>Select type first</div>
-                        <!-- This is where all the helicopter country buttons will be shown-->
-                    </div>
-                </div>
-            </div>
-            <div class="ol-select-container">
-                <div id="helicopter-livery-options" class="ol-select">
-                    <div class="ol-select-value">Livery</div>
-                    <div class="ol-select-options">
-                        <div>Select type first</div>
-                        <!-- This is where all the helicopter livery buttons will be shown-->
-                    </div>
-                </div>
-            </div>
-            <div id="helicopter-spawn-altitude-slider" class="ol-slider-container flight-control-ol-slider">
-                <dl class="ol-data-grid">
-                    <dt> Spawn altitude
-                    </dt>
-                    <dd>
-                        <div class="ol-slider-value"></div>
-                    </dd>
-                </dl>
-                <input type="range" min="0" max="100" value="0" class="ol-slider">
-            </div>
-            <div id="helicopter-loadout-preview">
-                <img id="helicopter-unit-image" class="hide">
-                <div id="helicopter-loadout-list">
-                </div>
-            </div>
-        </div>
-        <button class="deploy-unit-button" title="" data-coalition="blue" data-on-click="contextMenuDeployHelicopters" disabled>Deploy unit</button>
+        <!-- Here the helicopter spawn menu will be shown -->
     </div>
     <div id="groundunit-spawn-menu" class="ol-panel ol-contexmenu-panel hide">
-        <div class="ol-select-container">
-            <div id="groundunit-type-options" class="ol-select">
-                <div class="ol-select-value">Ground unit type</div>
-                <div class="ol-select-options">
-                    <!-- This is where all the groundunit roles buttons will be shown-->
-                </div>
-            </div>
-        </div>
-        <div class="ol-select-container">
-            <div id="groundunit-label-options" class="ol-select">
-                <div class="ol-select-value">Ground unit name</div>
-                <div class="ol-select-options">
-                    <div>Select role first</div>
-                    <!-- This is where all the groundunit types buttons will be shown-->
-                </div>
-            </div>
-        </div>
-        <div class="ol-select-container contextmenu-options-container">
-            <div>Group members</div>
-            <div id="groundunit-count-options" class="ol-select">
-                <div class="ol-select-value"></div>
-                <div class="ol-select-options">
-                    <!-- This is where all the groundunit count buttons will be shown-->
-                </div>
-            </div>
-        </div>
-        <button class="deploy-unit-button" title="" data-coalition="blue" data-on-click="contextMenuDeployGroundUnits" disabled>Deploy unit</button>
+        <!-- Here the ground units spawn menu will be shown -->
     </div>
     <div id="navyunit-spawn-menu" class="ol-panel ol-contexmenu-panel hide">
-        <div class="ol-select-container">
-            <div id="navyunit-type-options" class="ol-select">
-                <div class="ol-select-value">Navy unit type</div>
-                <div class="ol-select-options">
-                    <!-- This is where all the navyunit roles buttons will be shown-->
-                </div>
-            </div>
-        </div>
-        <div class="ol-select-container">
-            <div id="navyunit-label-options" class="ol-select">
-                <div class="ol-select-value">Navy unit name</div>
-                <div class="ol-select-options">
-                    <div>Select role first</div>
-                    <!-- This is where all the navyunit types buttons will be shown-->
-                </div>
-            </div>
-        </div>
-        <div class="ol-select-container contextmenu-options-container">
-            <div>Group members</div>
-            <div id="navyunit-count-options" class="ol-select">
-                <div class="ol-select-value"></div>
-                <div class="ol-select-options">
-                    <!-- This is where all the navyunit count buttons will be shown-->
-                </div>
-            </div>
-        </div>
-        <button class="deploy-unit-button" title="" data-coalition="blue" data-on-click="contextMenuDeployNavyUnits" disabled>Deploy unit</button>
+        <!-- Here the navy units spawn menu will be shown -->
     </div>
     <div id="smoke-spawn-menu" class="ol-panel ol-contexmenu-panel hide">
         <button class="smoke-button" title="" data-smoke-color="white" data-on-click="contextMenuDeploySmoke" data-on-click-params='{ "color": "white" }'>White smoke</button>
@@ -273,8 +73,7 @@
     <div id="airbase-runways">
     </div>
     
-    <hr />
-
+    <hr/>
     <button id="spawn-airbase-aircraft-button" data-coalition="blue" title="Spawn aircraft" data-on-click="contextMenuSpawnAirbase" class="deploy-unit-button">Spawn</button>
     <button id="land-here-button" title="Land here" data-on-click="contextMenuLandAirbase" class="hide">Land here</button>
 </div>
