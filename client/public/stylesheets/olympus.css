@@ -1031,11 +1031,39 @@ nav.ol-panel> :last-child {
 }
 
 .ol-target-icon {
-    background-image: url("/resources/theme/images/markers/target.svg");
     height: 52px;
     pointer-events: none;
     width: 52px;
     z-index: 9999;
+}
+
+.ol-smoke-icon {
+    background-image: url("/resources/theme/images/markers/smoke.svg");
+    height: 52px;
+    pointer-events: none;
+    width: 52px;
+    z-index: 9999;
+    opacity: 0.8;
+}
+
+.ol-smoke-icon[data-color="white"] {
+    fill: white;
+}
+
+.ol-smoke-icon[data-color="blue"] {
+    fill: blue;
+}
+
+.ol-smoke-icon[data-color="red"] {
+    fill: red;
+}
+
+.ol-smoke-icon[data-color="green"] {
+    fill: green;
+}
+
+.ol-smoke-icon[data-color="orange"] {
+    fill: orange;
 }
 
 .ol-draw-icon {
