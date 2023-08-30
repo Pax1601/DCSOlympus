@@ -6,7 +6,7 @@ import { CustomMarker } from '../map/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
 import { UnitDatabase } from './unitdatabase';
 import { TargetMarker } from '../map/targetmarker';
-import { BOMBING, CARPET_BOMBING, DLINK, DataIndexes, FIRE_AT_AREA, GAME_MASTER, HIDE_GROUP_MEMBERS, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, ROEs, RWR, SHOW_CONTACT_LINES, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, VISUAL, emissionsCountermeasures, reactionsToThreat, states } from '../constants/constants';
+import { DLINK, DataIndexes, GAME_MASTER, HIDE_GROUP_MEMBERS, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, ROEs, RWR, SHOW_CONTACT_LINES, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, VISUAL, emissionsCountermeasures, reactionsToThreat, states } from '../constants/constants';
 import { Ammo, Contact, GeneralSettings, Offset, Radio, TACAN, ObjectIconOptions } from '../@types/unit';
 import { DataExtractor } from '../server/dataextractor';
 import { groundUnitDatabase } from './groundunitdatabase';
@@ -772,24 +772,7 @@ export class Unit extends CustomMarker {
             }
         }
 
-        if ((selectedUnits.length === 0 && this.getCategory() == "Aircraft") || (selectedUnitTypes.length === 1 && ["Aircraft"].includes(selectedUnitTypes[0]))) {
-            if (selectedUnits.concat([this]).every((unit: Unit) => { return unit.canFulfillRole(["CAS", "Strike"]) })) {
-                options["bomb"] = { text: "Precision bombing", tooltip: "Precision bombing of a specific point" };
-                options["carpet-bomb"] = { text: "Carpet bombing", tooltip: "Carpet bombing close to a point" };
-            }
-        }
-
-        if ((selectedUnits.length === 0 && this.getCategory() == "GroundUnit") || selectedUnitTypes.length === 1 && ["GroundUnit"].includes(selectedUnitTypes[0])) {
-            if (selectedUnits.concat([this]).every((unit: Unit) => { return ["Gun Artillery", "Rocket Artillery", "Infantry", "IFV", "Tank"].includes(this.getType()) }))
-                options["fire-at-area"] = { text: "Fire at area", tooltip: "Fire at a large area" };
-        }
-
-        if ((selectedUnits.length === 0 && this.getCategory() == "NavyUnit") || selectedUnitTypes.length === 1 && ["NavyUnit"].includes(selectedUnitTypes[0])) {
-            if (selectedUnits.concat([this]).every((unit: Unit) => { return ["Cruiser", "Destroyer", "Frigate"].includes(this.getType()) }))
-                options["fire-at-area"] = { text: "Fire at area", tooltip: "Fire at a large area" };
-        }
-
-        if (selectedUnitTypes.length === 1 && ["NavyUnit", "GroundUnit"].includes(selectedUnitTypes[0]) && getUnitsManager().getSelectedUnitsVariable((unit: Unit) => { return unit.getCoalition() }) !== undefined)
+        if (selectedUnitTypes.length === 1 && ["NavyUnit", "GroundUnit"].includes(selectedUnitTypes[0]) && getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getCoalition()}) !== undefined) 
             options["group"] = { text: "Create group", tooltip: "Create a group from the selected units." };
 
         if (Object.keys(options).length > 0) {
@@ -811,14 +794,7 @@ export class Unit extends CustomMarker {
         else if (action === "group")
             getUnitsManager().selectedUnitsCreateGroup();
         else if (action === "follow")
-            this.#showFollowOptions(e);
-        else if (action === "bomb")
-            getMap().setState(BOMBING);
-        else if (action === "carpet-bomb")
-            getMap().setState(CARPET_BOMBING);
-        else if (action === "fire-at-area")
-            getMap().setState(FIRE_AT_AREA);
-
+            this.#showFollowOptions(e);        
     }
 
     #showFollowOptions(e: any) {
