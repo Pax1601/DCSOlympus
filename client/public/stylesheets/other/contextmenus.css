@@ -53,6 +53,7 @@
     width: 100%;
     margin: 5px;
     column-gap: 5px;
+    cursor: pointer;
 }
 
 .contextmenu-advanced-options-toggle:after {
@@ -69,10 +70,7 @@
     width: 100%;
 }
 
-#aircraft-spawn-menu,
-#helicopter-spawn-menu,
-#groundunit-spawn-menu,
-#navyunit-spawn-menu {
+.unit-spawn-menu {
     height: fit-content;
 }
 
@@ -95,18 +93,15 @@
     width: 50px;
 }
 
-#aircraft-spawn-menu .ol-select.is-open .ol-select-options,
-#helicopter-spawn-menu .ol-select.is-open .ol-select-options {
+.unit-spawn-menu .ol-select.is-open .ol-select-options {
     max-height: 300px;
 }
 
-#aircraft-loadout-list,
-#helicopter-loadout-list {
+.unit-loadout-list {
     min-width: 0;
 }
 
-#aircraft-loadout-list div,
-#helicopter-loadout-list div {
+.unit-loadout-list div {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -114,8 +109,7 @@
     padding: 2px 5px 2px 5px;
 }
 
-#aircraft-loadout-list div:hover,
-#helicopter-loadout-list div:hover {
+.unit-loadout-list div:hover {
     overflow: visible;
     white-space: nowrap;
     background-color: var(--background-steel);
@@ -195,6 +189,22 @@
 
 [data-coalition="neutral"]#active-coalition-label::after {
     content: "Create neutral unit";
+}
+
+.unit-label-count-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    column-gap: 5px;
+}
+
+.unit-label-count-container>div:nth-child(1) {
+    width: 100%;
+    min-width: 0;
+}
+
+.unit-label-count-container>div:nth-child(2) {
+    font-size: large;
 }
 
 .unit-loadout-preview {

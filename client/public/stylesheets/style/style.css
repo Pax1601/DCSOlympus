@@ -175,8 +175,8 @@ form>div {
     padding-left: 20px;
     padding-right: 30px;
     text-overflow: ellipsis;
-
-    width: calc(100%);
+    max-width: initial;
+    width: 100%;
 }
 
 .ol-select.narrow:not(.ol-select-image)>.ol-select-value {

@@ -12,6 +12,7 @@ import { DataExtractor } from '../server/dataextractor';
 import { groundUnitDatabase } from './groundunitdatabase';
 import { navyUnitDatabase } from './navyunitdatabase';
 import { Weapon } from '../weapon/weapon';
+import { LoadoutBlueprint } from '../@types/unitdatabase';
 
 var pathIcon = new Icon({
     iconUrl: '/resources/theme/images/markers/marker-icon.png',

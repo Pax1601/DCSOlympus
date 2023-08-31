@@ -13,10 +13,14 @@ import { GAME_MASTER } from "../constants/constants";
 import { navyUnitDatabase } from "../unit/navyunitdatabase";
 import { CoalitionArea } from "../map/coalitionarea";
 import { UnitSpawnMenu } from "./unitspawnmenu";
+import { Airbase } from "../mission/airbase";
 
 export class MapContextMenu extends ContextMenu {
     #coalitionSwitch: Switch;
     #aircraftSpawnMenu: UnitSpawnMenu;
+    #helicopterSpawnMenu: UnitSpawnMenu;
+    #groundUnitSpawnMenu: UnitSpawnMenu;
+    #navyUnitSpawnMenu: UnitSpawnMenu;
 
     #coalitionArea: CoalitionArea | null = null;
     
@@ -28,28 +32,15 @@ export class MapContextMenu extends ContextMenu {
         this.#coalitionSwitch.getContainer()?.addEventListener("contextmenu", (e) => this.#onSwitchRightClick(e));
 
         this.#aircraftSpawnMenu = new UnitSpawnMenu("aircraft-spawn-menu", aircraftDatabase);
+        this.#helicopterSpawnMenu = new UnitSpawnMenu("helicopter-spawn-menu", helicopterDatabase);
+        this.#groundUnitSpawnMenu = new UnitSpawnMenu("groundunit-spawn-menu", groundUnitDatabase, {orderByRole: false, maxUnitCount: 20, showLoadout: false, showAltitudeSlider: false});
+        this.#navyUnitSpawnMenu = new UnitSpawnMenu("navyunit-spawn-menu", navyUnitDatabase, {orderByRole: false,  maxUnitCount: 4, showLoadout: false, showAltitudeSlider: false});
 
         document.addEventListener("mapContextMenuShow", (e: any) => {
             if (this.getVisibleSubMenu() !== e.detail.type)
                 this.showSubMenu(e.detail.type);
             else 
                 this.hideSubMenus(e.detail.type);
-        });
-
-        document.addEventListener("contextMenuDeployAircrafts", () => {
-
-        });
-
-        document.addEventListener("contextMenuDeployHelicopters", () => {
-
-        });
-
-        document.addEventListener("contextMenuDeployGroundUnits", () => {
-
-        });
-
-        document.addEventListener("contextMenuDeployNavyUnits", () => {
-
         });
 
         document.addEventListener("contextMenuDeploySmoke", (e: any) => {
@@ -82,7 +73,11 @@ export class MapContextMenu extends ContextMenu {
             this.clip();
         });
 
-    
+        this.#aircraftSpawnMenu.getContainer().addEventListener("resize", () => this.clip());
+        this.#helicopterSpawnMenu.getContainer().addEventListener("resize", () => this.clip());
+        this.#groundUnitSpawnMenu.getContainer().addEventListener("resize", () => this.clip());
+        this.#navyUnitSpawnMenu.getContainer().addEventListener("resize", () => this.clip());
+
         this.hide();
     }
 
@@ -92,8 +87,12 @@ export class MapContextMenu extends ContextMenu {
 
         this.showAltitudeSlider();
 
-        //this.#spawnOptions.airbaseName = "";
-        //this.#spawnOptions.latlng = latlng;
+        this.#aircraftSpawnMenu.setAirbase(undefined);
+        this.#aircraftSpawnMenu.setLatLng(latlng);
+        this.#helicopterSpawnMenu.setAirbase(undefined);
+        this.#helicopterSpawnMenu.setLatLng(latlng);
+        this.#groundUnitSpawnMenu.setLatLng(latlng);
+        this.#navyUnitSpawnMenu.setLatLng(latlng);
 
         this.getContainer()?.querySelectorAll('[data-coalition]').forEach((element: any) => { element.setAttribute("data-coalition", getActiveCoalition()) });
         if (getActiveCoalition() == "blue")
@@ -108,7 +107,10 @@ export class MapContextMenu extends ContextMenu {
 
         this.getContainer()?.querySelector("#coalition-area-button")?.classList.toggle("hide", true);
 
-        //this.#setCountries();
+        this.#aircraftSpawnMenu.setCountries();
+        this.#helicopterSpawnMenu.setCountries();
+        this.#groundUnitSpawnMenu.setCountries();
+        this.#navyUnitSpawnMenu.setCountries();
     }
 
     showSubMenu(type: string) {
@@ -132,20 +134,17 @@ export class MapContextMenu extends ContextMenu {
 
         (this.getContainer()?.querySelectorAll(".deploy-unit-button"))?.forEach((element: Node) => {(element as HTMLButtonElement).disabled = true;})
 
-        this.#aircraftSpawnMenu.resetUnitRole();
-        this.#aircraftSpawnMenu.resetUnitLabel();
+        this.#aircraftSpawnMenu.reset();
         this.#aircraftSpawnMenu.setCountries();
-        
-        this.clip();
-
-        //if (type === "aircraft") {
-        //    this.#spawnOptions.altitude = ftToM(this.#aircraftSpawnAltitudeSlider.getValue());
-        //}
-        //else if (type === "helicopter") {
-        //    this.#spawnOptions.altitude = ftToM(this.#helicopterSpawnAltitudeSlider.getValue());
-        //}
-
+        this.#helicopterSpawnMenu.reset();
+        this.#helicopterSpawnMenu.setCountries();
+        this.#groundUnitSpawnMenu.reset();
+        this.#groundUnitSpawnMenu.setCountries();
+        this.#navyUnitSpawnMenu.reset();
+        this.#navyUnitSpawnMenu.setCountries();
+                
         this.setVisibleSubMenu(type);
+        this.clip();
     }
 
     hideSubMenus(type: string) {
@@ -163,12 +162,13 @@ export class MapContextMenu extends ContextMenu {
         this.getContainer()?.querySelector("#explosion-menu")?.classList.toggle("hide", true);
         this.getContainer()?.querySelector("#explosion-spawn-button")?.classList.toggle("is-open", false);
 
-        this.#aircraftSpawnMenu.resetUnitRole();
-        this.#aircraftSpawnMenu.resetUnitLabel();
-
-        this.clip();
+        this.#aircraftSpawnMenu.reset();
+        this.#helicopterSpawnMenu.reset();
+        this.#groundUnitSpawnMenu.reset();
+        this.#navyUnitSpawnMenu.reset();
 
         this.setVisibleSubMenu(null);
+        this.clip();
     }
 
     showUpperBar() {
@@ -195,12 +195,16 @@ export class MapContextMenu extends ContextMenu {
         this.getContainer()?.querySelector("#aircraft-spawn-altitude-slider")?.classList.toggle("hide", true);
     }
 
-    setAirbaseName(airbaseName: string) {
-        //this.#spawnOptions.airbaseName = airbaseName;
+    setAirbase(airbase: Airbase) {
+        this.#aircraftSpawnMenu.setAirbase(airbase);
+        this.#helicopterSpawnMenu.setAirbase(airbase);
     }
 
     setLatLng(latlng: LatLng) {
-        //this.#spawnOptions.latlng = latlng;
+        this.#aircraftSpawnMenu.setLatLng(latlng);
+        this.#helicopterSpawnMenu.setLatLng(latlng);
+        this.#groundUnitSpawnMenu.setLatLng(latlng);
+        this.#navyUnitSpawnMenu.setLatLng(latlng);
     }
 
     setCoalitionArea(coalitionArea: CoalitionArea) {
@@ -211,13 +215,19 @@ export class MapContextMenu extends ContextMenu {
     #onSwitchClick(value: boolean) {
         value? setActiveCoalition("red"): setActiveCoalition("blue");
         this.getContainer()?.querySelectorAll('[data-coalition]').forEach((element: any) => { element.setAttribute("data-coalition", getActiveCoalition()) });
-        //this.#setCountries();
+        this.#aircraftSpawnMenu.setCountries();
+        this.#helicopterSpawnMenu.setCountries();
+        this.#groundUnitSpawnMenu.setCountries();
+        this.#navyUnitSpawnMenu.setCountries();
     }
 
     #onSwitchRightClick(e: any) {
         this.#coalitionSwitch.setValue(undefined);
         setActiveCoalition("neutral");
         this.getContainer()?.querySelectorAll('[data-coalition]').forEach((element: any) => { element.setAttribute("data-coalition", getActiveCoalition()) });
-        //this.#setCountries();
+        this.#aircraftSpawnMenu.setCountries();
+        this.#helicopterSpawnMenu.setCountries();
+        this.#groundUnitSpawnMenu.setCountries();
+        this.#navyUnitSpawnMenu.setCountries();
     }
 }

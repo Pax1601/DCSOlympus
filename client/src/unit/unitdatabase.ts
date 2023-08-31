@@ -1,6 +1,7 @@
 import { LatLng } from "leaflet";
 import { getMissionHandler, getUnitsManager } from "..";
 import { GAME_MASTER } from "../constants/constants";
+import { UnitBlueprint } from "../@types/unitdatabase";
 
 export class UnitDatabase {
     blueprints: { [key: string]: UnitBlueprint } = {};
