@@ -6,88 +6,74 @@ import { getActiveCoalition, getMap, getMissionHandler, getUnitsManager } from "
 import { GAME_MASTER } from "../constants/constants";
 import { UnitSpawnOptions } from "../@types/unitdatabase";
 import { Airbase } from "../mission/airbase";
+import { ftToM } from "../other/utils";
+import { aircraftDatabase } from "../unit/aircraftdatabase";
+import { helicopterDatabase } from "../unit/helicopterdatabase";
+import { groundUnitDatabase } from "../unit/groundunitdatabase";
+import { navyUnitDatabase } from "../unit/navyunitdatabase";
 
 export class UnitSpawnMenu {
+    #container: HTMLElement;
+    #unitDatabase: UnitDatabase;
+    #countryCodes: any;
+    #orderByRole: boolean;
+    #spawnOptions: UnitSpawnOptions = { 
+        roleType: "", 
+        name: "", 
+        latlng: new LatLng(0, 0), 
+        coalition: "blue", 
+        count: 1, 
+        country: "", 
+        loadout: undefined, 
+        airbase: undefined, 
+        liveryID: undefined, 
+        altitude: undefined
+     };
+
+    /* Controls */
     #unitRoleTypeDropdown: Dropdown;
     #unitLabelDropdown: Dropdown;
     #unitCountDropdown: Dropdown;
-    #unitLoadoutDropdown: Dropdown | null = null;
+    #unitLoadoutDropdown: Dropdown;
     #unitCountryDropdown: Dropdown;
     #unitLiveryDropdown: Dropdown;
-    //#unitSpawnAltitudeSlider: Slider;
+    #unitSpawnAltitudeSlider: Slider;
 
-    #unitRoleTypeDropdownEl: HTMLDivElement;
-    #unitLabelDropdownEl: HTMLDivElement;
-    #unitLoadoutDropdownEl: HTMLDivElement | null = null;
-    #unitCountDropdownEl: HTMLDivElement;
-    #unitCountryDropdownEl: HTMLDivElement;
-    #unitLiveryDropdownEl: HTMLDivElement;
+    /* HTML Elements */
     #deployUnitButtonEl: HTMLButtonElement;
-    #unitLoadoutPreviewEl: HTMLDivElement | null = null;
-    #unitImageEl: HTMLImageElement | null = null;
-    #unitLoadoutListEl: HTMLDivElement | null = null;
+    #unitLoadoutPreviewEl: HTMLDivElement;
+    #unitImageEl: HTMLImageElement;
+    #unitLoadoutListEl: HTMLDivElement;
 
-    #container: HTMLElement;
-    #options = {orderByRole: true, maxUnitCount: 4, showLoadout: true, showAltitudeSlider: true};
-    #spawnOptions: UnitSpawnOptions = { roleType: "", name: "", latlng: new LatLng(0, 0), coalition: "blue", count: 1, country: "", loadout: undefined, airbase: undefined, liveryID: undefined, altitude: undefined };
-    #unitDatabase: UnitDatabase;
-    #countryCodes: any;
-
-    constructor(id: string, unitDatabase: UnitDatabase, options?: {orderByRole: boolean, maxUnitCount: number, showLoadout: boolean, showAltitudeSlider: boolean}) {
-        this.#container = document.getElementById(id) as HTMLElement;
+    constructor(ID: string, unitDatabase: UnitDatabase, orderByRole: boolean) {
+        this.#container = document.getElementById(ID) as HTMLElement;
         this.#unitDatabase = unitDatabase;
+        this.#orderByRole = orderByRole;
 
-        if (options !== undefined)
-            this.#options = options;
+        /* Create the dropdowns and the altitude slider */
+        this.#unitRoleTypeDropdown = new Dropdown(null, (roleType: string) => this.#setUnitRoleType(roleType), undefined, "Unit type");
+        this.#unitLabelDropdown = new Dropdown(null, (label: string) => this.#setUnitLabel(label), undefined, "Unit label");
+        this.#unitLoadoutDropdown = new Dropdown(null, (loadout: string) => this.#setUnitLoadout(loadout), undefined, "Unit loadout");
+        this.#unitCountDropdown = new Dropdown(null, (count: string) => this.#setUnitCount(count), undefined, "Unit count");
+        this.#unitCountryDropdown = new Dropdown(null, () => { /* Custom button implementation */ }, undefined, "Unit country");
+        this.#unitLiveryDropdown = new Dropdown(null, (livery: string) => this.#setUnitLivery(livery), undefined, "Unit livery");
+        this.#unitSpawnAltitudeSlider = new Slider(null, 0, 1000, "ft", (value: number) => { this.#spawnOptions.altitude = ftToM(value); }, { title: "Spawn altitude" });
 
-        /* Create the HTML elements for the dropdowns */
-        if (this.#options.orderByRole)
-            this.#unitRoleTypeDropdownEl = this.#addDropdown("Unit role");
-        else
-            this.#unitRoleTypeDropdownEl = this.#addDropdown("Unit type");
-        this.#unitLabelDropdownEl = this.#addDropdown("Unit label");
-        if (this.#options.showLoadout)
-            this.#unitLoadoutDropdownEl = this.#addDropdown("Unit loadout");
-        this.#unitCountDropdownEl = this.#addDropdown("Unit count");
-        this.#unitCountryDropdownEl = this.#addDropdown("Unit country");
-        this.#unitLiveryDropdownEl = this.#addDropdown("Unit livery");
-
+        /* The unit label and unit count are in the same "row" for clarity and compactness */
         var unitLabelCountContainerEl = document.createElement("div");
         unitLabelCountContainerEl.classList.add("unit-label-count-container");
         var divider = document.createElement("div");
         divider.innerText = "x";
-        unitLabelCountContainerEl.append(this.#unitLabelDropdownEl, divider, this.#unitCountDropdownEl);
-
-        /* Create the dropdowns and the altitude slider */
-        this.#unitRoleTypeDropdown = new Dropdown(this.#unitRoleTypeDropdownEl, (roleType: string) => this.#setUnitRoleType(roleType));
-        this.#unitLabelDropdown = new Dropdown(this.#unitLabelDropdownEl, (label: string) => this.#setUnitLabel(label));
-        if (this.#unitLoadoutDropdownEl !== null)
-            this.#unitLoadoutDropdown = new Dropdown(this.#unitLoadoutDropdownEl, (loadout: string) => this.#setUnitLoadout(loadout)); 
-        this.#unitCountDropdown = new Dropdown(this.#unitCountDropdownEl, (count: string) => this.#setUnitCount(count));
-        this.#unitCountryDropdown = new Dropdown(this.#unitCountryDropdownEl, () => { /* Custom button implementation */ });
-        this.#unitLiveryDropdown = new Dropdown(this.#unitLiveryDropdownEl, (livery: string) => this.#setUnitLivery(livery));
-        //this.#unitSpawnAltitudeSlider = new Slider("unit-spawn-altitude-slider", 0, 50000, "ft", (value: number) => {this.#spawnOptions.altitude = ftToM(value);});
-        
-        var countOptions: string[] = [];
-        for (let i = 1; i <= this.#options.maxUnitCount; i++) 
-            countOptions.push(i.toString());
-        this.#unitCountDropdown.setOptions(countOptions);
-        this.#unitCountDropdown.selectValue(0);
-        
-        //this.#unitSpawnAltitudeSlider.setIncrement(500);
-        //this.#unitSpawnAltitudeSlider.setValue(20000);
-        //this.#unitSpawnAltitudeSlider.setActive(true);
+        unitLabelCountContainerEl.append(this.#unitLabelDropdown.getContainer(), divider, this.#unitCountDropdown.getContainer());
 
         /* Create the unit image and loadout elements */
-        if (this.#options.showLoadout) {
-            this.#unitLoadoutPreviewEl = document.createElement("div");
-            this.#unitLoadoutPreviewEl.classList.add("unit-loadout-preview");
-            this.#unitImageEl = document.createElement("img");
-            this.#unitImageEl.classList.add("unit-image", "hide");
-            this.#unitLoadoutListEl = document.createElement("div");
-            this.#unitLoadoutListEl.classList.add("unit-loadout-list");
-            this.#unitLoadoutPreviewEl.append(this.#unitImageEl, this.#unitLoadoutListEl);
-        }
+        this.#unitLoadoutPreviewEl = document.createElement("div");
+        this.#unitLoadoutPreviewEl.classList.add("unit-loadout-preview");
+        this.#unitImageEl = document.createElement("img");
+        this.#unitImageEl.classList.add("unit-image", "hide");
+        this.#unitLoadoutListEl = document.createElement("div");
+        this.#unitLoadoutListEl.classList.add("unit-loadout-list");
+        this.#unitLoadoutPreviewEl.append(this.#unitImageEl, this.#unitLoadoutListEl);
 
         /* Create the divider and the advanced options collapsible div */
         var advancedOptionsDiv = document.createElement("div");
@@ -98,10 +84,9 @@ export class UnitSpawnMenu {
         advancedOptionsText.innerText = "Advanced options";
         var advancedOptionsHr = document.createElement("hr");
         advancedOptionsToggle.append(advancedOptionsText, advancedOptionsHr);
-        advancedOptionsToggle.addEventListener("click", () => {advancedOptionsDiv.classList.toggle("hide")});       
-        advancedOptionsDiv.append(this.#unitCountryDropdownEl, this.#unitLiveryDropdownEl);
-        if (this.#unitLoadoutPreviewEl !== null)
-            advancedOptionsDiv.append(this.#unitLoadoutPreviewEl)
+        advancedOptionsToggle.addEventListener("click", () => { advancedOptionsDiv.classList.toggle("hide") });
+        advancedOptionsDiv.append(this.#unitCountryDropdown.getContainer(), this.#unitLiveryDropdown.getContainer(),
+            this.#unitLoadoutPreviewEl, this.#unitSpawnAltitudeSlider.getContainer() as HTMLElement);
 
         /* Create the unit deploy button */
         this.#deployUnitButtonEl = document.createElement("button");
@@ -112,40 +97,38 @@ export class UnitSpawnMenu {
         this.#deployUnitButtonEl.addEventListener("click", () => { this.#deployUnits(); });
 
         /* Assemble all components */
-        this.#container.append(this.#unitRoleTypeDropdownEl, unitLabelCountContainerEl)
-        if (this.#unitLoadoutDropdownEl !== null)
-            this.#container.append(this.#unitLoadoutDropdownEl)
-        this.#container.append(advancedOptionsToggle, advancedOptionsDiv, this.#deployUnitButtonEl);
+        this.#container.append(this.#unitRoleTypeDropdown.getContainer(), unitLabelCountContainerEl, this.#unitLoadoutDropdown.getContainer(),
+            advancedOptionsToggle, advancedOptionsDiv, this.#deployUnitButtonEl);
 
         /* Load the country codes from the public folder */
         var xhr = new XMLHttpRequest();
         xhr.open('GET', 'images/countries/codes.json', true);
         xhr.responseType = 'json';
         xhr.onload = () => {
-        var status = xhr.status;
-            if (status === 200) {
+            var status = xhr.status;
+            if (status === 200) 
                 this.#countryCodes = xhr.response;
-            } else {
-                console.error(`Error retrieving country codes`)
-            }
+            else 
+                console.error(`Error retrieving country codes`) 
         };
         xhr.send();
 
+        /* Event listeners */
         this.#container.addEventListener("unitRoleTypeChanged", () => {
             this.#unitLabelDropdown.reset();
             if (this.#unitLoadoutListEl !== null)
-            this.#unitLoadoutListEl.replaceChildren();
+                this.#unitLoadoutListEl.replaceChildren();
             if (this.#unitLoadoutDropdown !== null)
                 this.#unitLoadoutDropdown.reset();
             if (this.#unitImageEl !== null)
                 this.#unitImageEl.classList.toggle("hide", true);
             this.#unitLiveryDropdown.reset();
-            
-            if (this.#options.orderByRole)
+
+            if (this.#orderByRole)
                 this.#unitLabelDropdown.setOptions(this.#unitDatabase.getByRole(this.#spawnOptions.roleType).map((blueprint) => { return blueprint.label }));
             else
                 this.#unitLabelDropdown.setOptions(this.#unitDatabase.getByType(this.#spawnOptions.roleType).map((blueprint) => { return blueprint.label }));
-            this.#container.dispatchEvent(new Event("resize")); 
+            this.#container.dispatchEvent(new Event("resize"));
             this.#computeSpawnPoints();
         })
 
@@ -160,9 +143,9 @@ export class UnitSpawnMenu {
             }
             this.#setUnitLiveryOptions();
 
-            this.#container.dispatchEvent(new Event("resize")); 
+            this.#container.dispatchEvent(new Event("resize"));
             this.#computeSpawnPoints();
-        })    
+        })
 
         this.#container.addEventListener("unitLoadoutChanged", () => {
             this.#deployUnitButtonEl.disabled = false;
@@ -177,17 +160,17 @@ export class UnitSpawnMenu {
                     })
                 );
             }
-        
-            this.#container.dispatchEvent(new Event("resize")); 
+
+            this.#container.dispatchEvent(new Event("resize"));
         })
 
         this.#container.addEventListener("unitCountChanged", () => {
             this.#computeSpawnPoints();
-        })    
+        })
 
         this.#container.addEventListener("unitCountryChanged", () => {
             this.#setUnitLiveryOptions();
-        }) 
+        })
 
         this.#container.addEventListener("unitLiveryChanged", () => {
 
@@ -203,7 +186,7 @@ export class UnitSpawnMenu {
         this.#unitRoleTypeDropdown.reset();
         this.#unitLabelDropdown.reset();
         this.#unitLiveryDropdown.reset();
-        if (this.#options.orderByRole)
+        if (this.#orderByRole)
             this.#unitRoleTypeDropdown.setOptions(this.#unitDatabase.getRoles());
         else
             this.#unitRoleTypeDropdown.setOptions(this.#unitDatabase.getTypes());
@@ -216,13 +199,13 @@ export class UnitSpawnMenu {
             this.#unitImageEl.classList.toggle("hide", true);
 
         this.setCountries();
-        this.#container.dispatchEvent(new Event("resize")); 
+        this.#container.dispatchEvent(new Event("resize"));
     }
 
     setCountries() {
         var coalitions = getMissionHandler().getCoalitions();
         var countries = Object.values(coalitions[getActiveCoalition() as keyof typeof coalitions]);
-        this.#unitCountryDropdown.setOptionsElements(this.#createCountryButtons(this.#unitCountryDropdown, countries, (country: string) => {this.#setUnitCountry(country)}));
+        this.#unitCountryDropdown.setOptionsElements(this.#createCountryButtons(this.#unitCountryDropdown, countries, (country: string) => { this.#setUnitCountry(country) }));
 
         if (countries.length > 0 && !countries.includes(this.#spawnOptions.country)) {
             this.#unitCountryDropdown.forceValue(countries[0]);
@@ -245,6 +228,47 @@ export class UnitSpawnMenu {
         this.#spawnOptions.latlng = latlng;
     }
 
+    setMaxUnitCount(maxUnitCount: number) {
+        /* Create the unit count options */
+        var countOptions: string[] = [];
+        for (let i = 1; i <= maxUnitCount; i++)
+            countOptions.push(i.toString());
+        this.#unitCountDropdown.setOptions(countOptions);
+        this.#unitCountDropdown.selectValue(0);
+    }
+
+    getRoleTypeDrodown() {
+        return this.#unitRoleTypeDropdown;
+    }
+
+    getLabelDropdown() {
+        return this.#unitLabelDropdown;
+    }
+
+    getCountDropdown() {
+        return this.#unitCountDropdown;
+    }
+
+    getLoadoutDropdown() {
+        return this.#unitLoadoutDropdown;
+    }
+
+    getCountryDropdown() {
+        return this.#unitCountDropdown;
+    }
+
+    getLiveryDropdown() {
+        return this.#unitLiveryDropdown;
+    }
+
+    getLoadoutPreview() {
+        return this.#unitLoadoutPreviewEl;
+    }
+
+    getAltitudeSlider() {
+        return this.#unitSpawnAltitudeSlider;
+    }
+
     #setUnitRoleType(roleType: string) {
         this.#spawnOptions.roleType = roleType;
         this.#container.dispatchEvent(new Event("unitRoleTypeChanged"));
@@ -252,16 +276,16 @@ export class UnitSpawnMenu {
 
     #setUnitLabel(label: string) {
         var name = this.#unitDatabase.getByLabel(label)?.name || null;
-        if (name != null) 
+        if (name != null)
             this.#spawnOptions.name = name;
         this.#container.dispatchEvent(new Event("unitLabelChanged"));
     }
 
     #setUnitLoadout(loadoutName: string) {
         var loadout = this.#unitDatabase.getLoadoutByName(this.#spawnOptions.name, loadoutName);
-        if (loadout) 
-            this.#spawnOptions.loadout = loadout;  
-        this.#container.dispatchEvent(new Event("unitLoadoutChanged"));  
+        if (loadout)
+            this.#spawnOptions.loadout = loadout;
+        this.#container.dispatchEvent(new Event("unitLoadoutChanged"));
     }
 
     #setUnitCount(count: string) {
@@ -284,28 +308,13 @@ export class UnitSpawnMenu {
         this.#container.dispatchEvent(new Event("unitLiveryChanged"));
     }
 
-    #addDropdown(defaultText: string) {
-        var div = document.createElement("div");
-        div.classList.add("ol-select");
-        
-        var value = document.createElement("div");
-        value.classList.add("ol-select-value");
-        value.innerText = defaultText;
-        
-        var options = document.createElement("div");
-        options.classList.add("ol-select-options");
-
-        div.append(value, options);
-        return div;
-    }
-
     #setUnitLiveryOptions() {
         if (this.#spawnOptions.name !== "" && this.#spawnOptions.country !== "") {
             var liveries = this.#unitDatabase.getLiveryNamesByName(this.#spawnOptions.name);
             var countryLiveries: string[] = ["Default"];
             liveries.forEach((livery: any) => {
                 var nationLiveryCodes = this.#countryCodes[this.#spawnOptions.country].liveryCodes;
-                if (livery.countries.some((country: string) => {return nationLiveryCodes.includes(country)})) 
+                if (livery.countries.some((country: string) => { return nationLiveryCodes.includes(country) }))
                     countryLiveries.push(livery.name);
             });
             this.#unitLiveryDropdown.setOptions(countryLiveries);
@@ -317,17 +326,17 @@ export class UnitSpawnMenu {
         this.#spawnOptions.coalition = getActiveCoalition();
         if (this.#spawnOptions) {
             var unitTable = {
-                unitType: this.#spawnOptions.name, 
-                location: this.#spawnOptions.latlng, 
-                altitude: this.#spawnOptions.altitude, 
-                loadout: this.#spawnOptions.loadout, 
+                unitType: this.#spawnOptions.name,
+                location: this.#spawnOptions.latlng,
+                altitude: this.#spawnOptions.altitude,
+                loadout: this.#spawnOptions.loadout,
                 liveryID: this.#spawnOptions.liveryID
             };
             var units = [];
             for (let i = 1; i < parseInt(this.#unitCountDropdown.getValue()) + 1; i++) {
                 units.push(unitTable);
             }
-            if (getUnitsManager().spawnUnits("Unit", units, getActiveCoalition(), false, this.#spawnOptions.airbase? this.#spawnOptions.airbase.getName(): "", this.#spawnOptions.country)) {
+            if (getUnitsManager().spawnUnits("Unit", units, getActiveCoalition(), false, this.#spawnOptions.airbase ? this.#spawnOptions.airbase.getName() : "", this.#spawnOptions.country)) {
                 getMap().addTemporaryMarker(this.#spawnOptions.latlng, this.#spawnOptions.name, getActiveCoalition());
                 getMap().getMapContextMenu().hide();
             }
@@ -339,11 +348,11 @@ export class UnitSpawnMenu {
             var el = document.createElement("div");
 
             var formattedCountry = "";
-            if (this.#countryCodes[country] !== undefined && this.#countryCodes[country].displayName !== undefined) 
+            if (this.#countryCodes[country] !== undefined && this.#countryCodes[country].displayName !== undefined)
                 formattedCountry = this.#countryCodes[country].displayName;
             else
                 formattedCountry = country.charAt(0).toUpperCase() + country.slice(1).toLowerCase();
-            
+
             var button = document.createElement("button");
             button.classList.add("country-dropdown-element");
             el.appendChild(button);
@@ -371,11 +380,67 @@ export class UnitSpawnMenu {
     }
 
     #computeSpawnPoints() {
-        if (getMissionHandler() && getMissionHandler().getCommandModeOptions().commandMode !== GAME_MASTER){
+        if (getMissionHandler() && getMissionHandler().getCommandModeOptions().commandMode !== GAME_MASTER) {
             var unitCount = parseInt(this.#unitCountDropdown.getValue());
             var unitSpawnPoints = unitCount * this.#unitDatabase.getSpawnPointsByLabel(this.#unitLabelDropdown.getValue());
             this.#deployUnitButtonEl.dataset.points = `${unitSpawnPoints}`;
             this.#deployUnitButtonEl.disabled = unitSpawnPoints >= getMissionHandler().getAvailableSpawnPoints();
         }
+    }
+}
+
+export class AircraftSpawnMenu extends UnitSpawnMenu {
+    /**
+     * 
+     * @param ID - the ID of the HTML element which will contain the context menu
+     */
+    constructor(ID: string){
+        super(ID, aircraftDatabase, true);
+        this.setMaxUnitCount(4);
+        this.getAltitudeSlider().setMinMax(0, 50000);
+        this.getAltitudeSlider().setIncrement(500);
+        this.getAltitudeSlider().setValue(20000);
+    }
+}
+
+export class HelicopterSpawnMenu extends UnitSpawnMenu {
+    /**
+     * 
+     * @param ID - the ID of the HTML element which will contain the context menu
+     */
+    constructor(ID: string){
+        super(ID, helicopterDatabase, true);
+        this.setMaxUnitCount(4);
+        this.getAltitudeSlider().setMinMax(0, 10000);
+        this.getAltitudeSlider().setIncrement(100);
+        this.getAltitudeSlider().setValue(5000);
+    }
+}
+
+export class GroundUnitSpawnMenu extends UnitSpawnMenu {
+    /**
+     * 
+     * @param ID - the ID of the HTML element which will contain the context menu
+     */
+    constructor(ID: string){
+        super(ID, groundUnitDatabase, false);
+        this.setMaxUnitCount(20);
+        this.getAltitudeSlider().hide();
+        this.getLoadoutDropdown().hide();
+        this.getLoadoutPreview().classList.add("hide");
+    }
+}
+
+export class NavyUnitSpawnMenu extends UnitSpawnMenu {
+    /**
+     * 
+     * @param ID - the ID of the HTML element which will contain the context menu
+     */
+    constructor(ID: string){
+        super(ID, navyUnitDatabase, false);
+        this.setMaxUnitCount(4);
+        this.getAltitudeSlider().hide();
+        this.getLoadoutDropdown().hide();
+        this.getLoadoutPreview().classList.add("hide");
     }
 }

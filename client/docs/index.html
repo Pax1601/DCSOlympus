@@ -1,0 +1,130 @@
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>DCSOlympus</title><meta name="description" content="Documentation for DCSOlympus"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/search.js" id="tsd-search-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container">
+<div class="table-cell" id="tsd-search" data-base=".">
+<div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
+<div class="field">
+<div id="tsd-toolbar-links"></div></div>
+<ul class="results">
+<li class="state loading">Preparing search index...</li>
+<li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">DCSOlympus</a></div>
+<div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="7" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="11" width="14" height="2" fill="var(--color-text)"></rect></svg></a></div></div></header>
+<div class="container container-main">
+<div class="col-content">
+<div class="tsd-page-title">
+<h2>DCSOlympus</h2></div>
+<div class="tsd-panel tsd-typography"><a id="md:important-note-dcs-olympus-is-in-alpha-state-no-official-release-has-been-produced-yet-the-first-public-version-is-planned-for-q4-2023" class="tsd-anchor"></a><h1><a href="#md:important-note-dcs-olympus-is-in-alpha-state-no-official-release-has-been-produced-yet-the-first-public-version-is-planned-for-q4-2023">Important note: DCS Olympus is in alpha state. No official release has been produced yet. The first public version is planned for Q4 2023.</a></h1><a id="md:dcs-olympus" class="tsd-anchor"></a><h1><a href="#md:dcs-olympus">DCS Olympus</a></h1><p><em>A real-time web interface to spawn and control units in DCS World</em></p>
+<p><img src="https://github.com/Pax1601/DCSOlympus/blob/main/client/sample.png?raw=true" alt="alt text"></p>
+<a id="md:what-is-this" class="tsd-anchor"></a><h3><a href="#md:what-is-this">What is this?</a></h3><p>DCS Olympus is a mod for DCS World. It allows users to spawn, control, task, group, and remove units from a DCS World server using a real-time map interface, similarly to Real Time Strategy games. The user interface also provides useful informations units, like loadouts, fuel, tasking, and so on. In the future, more features for DCS World GCI and JTAC will be available.</p>
+<a id="md:features-and-how-to-use-it" class="tsd-anchor"></a><h3><a href="#md:features-and-how-to-use-it">Features and how to use it</a></h3><ul>
+<li>Spawn air and ground units, with preset loadouts<ul>
+<li>Double click on the map to spawn a blue and red units, both in the air and in the ground, with preset loadouts for air-to-air or air-to-ground tasks;</li>
+</ul>
+</li>
+<li>Control units<ul>
+<li>Select one ore more units to move them around. Hold down ctrl and click to create a route for the unit to follow;</li>
+</ul>
+</li>
+<li>Attack other units<ul>
+<li>After selecting one ore more units, double click on another unit and select &quot;Attack&quot; to attack it, depending on the available weapons.</li>
+</ul>
+</li>
+</ul>
+<a id="md:installing-dcs-olympus" class="tsd-anchor"></a><h3><a href="#md:installing-dcs-olympus">Installing DCS Olympus</a></h3><p>A prebuilt installer will soon be released and available here</p>
+<a id="md:building-dcs-olympus" class="tsd-anchor"></a><h3><a href="#md:building-dcs-olympus">Building DCS Olympus</a></h3><p>DCS Olympus is comprised of two modules:</p>
+<p>A &quot;core&quot; c++ .dll module, which is run by DCS and exposes all the necessary data, and provides endpoints for commands from a REST server. A Visual Studio 2017/2019/2022 solution is provided, and requires no additional configuration. The core dll solution has two dependencies, both can be installed using vcpkg (<a href="https://vcpkg.io/en/getting-started.html">https://vcpkg.io/en/getting-started.html</a>):</p>
+<ul>
+<li>cpprestsdk: <code>vcpkg install cpprestsdk:x64-windows</code></li>
+<li>geographiclib: <code>vcpkg install geographiclib:x64-windows</code></li>
+</ul>
+<p>A &quot;client&quot; node.js typescript web app, which can be hosted on the server using express.js. A Visual Studio Code configuration is provided for debugging. The client requires node.js to be installed for building (<a href="https://nodejs.org/en/">https://nodejs.org/en/</a>). After installing node.js, move in the client folder and run the following commands:</p>
+<ul>
+<li><code>npm install</code></li>
+<li><code>npm -g install</code></li>
+</ul>
+<p> After installing all the necessary dependencies you can start a development server executing the <em>client/debug.bat</em> batch file, and visiting http:\localhost:3000 with any modern browser (tested with updated Chrome, Firefox and Edge). However, it is highly suggested to simply run the <code>Launch Chrome against localhost</code> debug configuration in Visual Studio Code.</p>
+</div></div>
+<div class="col-sidebar">
+<div class="page-menu">
+<div class="tsd-navigation settings">
+<details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)" id="icon-chevronDown"></path></svg>Settings</h3></summary>
+<div class="tsd-accordion-details">
+<div class="tsd-filter-visibility">
+<h4 class="uppercase">Member Visibility</h4><form>
+<ul id="tsd-filter-options">
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-private" name="private"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Private</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></form></div>
+<div class="tsd-theme-toggle">
+<h4 class="uppercase">Theme</h4><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
+<details open class="tsd-index-accordion tsd-page-navigation"><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><use href="#icon-chevronDown"></use></svg>On This Page</h3></summary>
+<div class="tsd-accordion-details">
+<ul>
+<li>
+<ul>
+<li><a href="#md:important-note-dcs-olympus-is-in-alpha-state-no-official-release-has-been-produced-yet-the-first-public-version-is-planned-for-q4-2023"><span>Important note: DCS <wbr/>Olympus is in alpha state. <wbr/>No official release has been produced yet. <wbr/>The first public version is planned for <wbr/>Q4 2023.</span></a></li>
+<li><a href="#md:dcs-olympus"><span>DCS <wbr/>Olympus</span></a></li>
+<li>
+<ul>
+<li><a href="#md:what-is-this"><span>What is this?</span></a></li>
+<li>
+<ul>
+<li><a href="#md:features-and-how-to-use-it"><span>Features and how to use it</span></a></li>
+<li><a href="#md:installing-dcs-olympus"><span>Installing DCS <wbr/>Olympus</span></a></li>
+<li><a href="#md:building-dcs-olympus"><span>Building DCS <wbr/>Olympus</span></a></li></ul></li></ul></li></ul></li></ul></div></details></div>
+<div class="site-menu">
+<nav class="tsd-navigation"><a href="index.html" class="current"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-4"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-namespace)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M9.33 16V7.24H10.77L13.446 14.74C13.43 14.54 13.41 14.296 13.386 14.008C13.37 13.712 13.354 13.404 13.338 13.084C13.33 12.756 13.326 12.448 13.326 12.16V7.24H14.37V16H12.93L10.266 8.5C10.282 8.692 10.298 8.936 10.314 9.232C10.33 9.52 10.342 9.828 10.35 10.156C10.366 10.476 10.374 10.784 10.374 11.08V16H9.33Z" fill="var(--color-text)"></path></g></svg><span>DCSOlympus</span></a>
+<ul class="tsd-small-nested-navigation">
+<li><a href="modules/contextmenus_airbasecontextmenu.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>contextmenus/airbasecontextmenu</span></a></li>
+<li><a href="modules/contextmenus_airbasespawnmenu.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>contextmenus/airbasespawnmenu</span></a></li>
+<li><a href="modules/contextmenus_coalitionareacontextmenu.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>contextmenus/coalitionareacontextmenu</span></a></li>
+<li><a href="modules/contextmenus_contextmenu.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>contextmenus/contextmenu</span></a></li>
+<li><a href="modules/contextmenus_mapcontextmenu.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>contextmenus/mapcontextmenu</span></a></li>
+<li><a href="modules/contextmenus_unitcontextmenu.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>contextmenus/unitcontextmenu</span></a></li>
+<li><a href="modules/controls_control.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>controls/control</span></a></li>
+<li><a href="modules/controls_dropdown.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>controls/dropdown</span></a></li>
+<li><a href="modules/controls_slider.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>controls/slider</span></a></li>
+<li><a href="modules/controls_switch.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>controls/switch</span></a></li>
+<li><a href="modules/controls_unitspawnmenu.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>controls/unitspawnmenu</span></a></li>
+<li><a href="modules/index.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>index</span></a></li>
+<li><a href="modules/map_boxselect.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>map/boxselect</span></a></li>
+<li><a href="modules/map_clickableminimap.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>map/clickableminimap</span></a></li>
+<li><a href="modules/map_coalitionarea.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>map/coalitionarea</span></a></li>
+<li><a href="modules/map_coalitionareahandle.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>map/coalitionareahandle</span></a></li>
+<li><a href="modules/map_coalitionareamiddlehandle.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>map/coalitionareamiddlehandle</span></a></li>
+<li><a href="modules/map_custommarker.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>map/custommarker</span></a></li>
+<li><a href="modules/map_destinationpreviewmarker.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>map/destinationpreviewmarker</span></a></li>
+<li><a href="modules/map_drawingcursor.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>map/drawingcursor</span></a></li>
+<li><a href="modules/map_map.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>map/map</span></a></li>
+<li><a href="modules/map_targetmarker.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>map/targetmarker</span></a></li>
+<li><a href="modules/map_temporaryunitmarker.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>map/temporaryunitmarker</span></a></li>
+<li><a href="modules/mission_airbase.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>mission/airbase</span></a></li>
+<li><a href="modules/mission_bullseye.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>mission/bullseye</span></a></li>
+<li><a href="modules/mission_missionhandler.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>mission/missionhandler</span></a></li>
+<li><a href="modules/other_utils.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>other/utils</span></a></li>
+<li><a href="modules/panels_connectionstatuspanel.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>panels/connectionstatuspanel</span></a></li>
+<li><a href="modules/panels_hotgrouppanel.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>panels/hotgrouppanel</span></a></li>
+<li><a href="modules/panels_logpanel.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>panels/logpanel</span></a></li>
+<li><a href="modules/panels_mouseinfopanel.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>panels/mouseinfopanel</span></a></li>
+<li><a href="modules/panels_panel.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>panels/panel</span></a></li>
+<li><a href="modules/panels_serverstatuspanel.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>panels/serverstatuspanel</span></a></li>
+<li><a href="modules/panels_unitcontrolpanel.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>panels/unitcontrolpanel</span></a></li>
+<li><a href="modules/panels_unitinfopanel.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>panels/unitinfopanel</span></a></li>
+<li><a href="modules/popups_popup.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>popups/popup</span></a></li>
+<li><a href="modules/server_dataextractor.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>server/dataextractor</span></a></li>
+<li><a href="modules/server_server.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>server/server</span></a></li>
+<li><a href="modules/unit_aircraftdatabase.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>unit/aircraftdatabase</span></a></li>
+<li><a href="modules/unit_citiesDatabase.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>unit/cities<wbr/>Database</span></a></li>
+<li><a href="modules/unit_groundunitdatabase.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>unit/groundunitdatabase</span></a></li>
+<li><a href="modules/unit_helicopterdatabase.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>unit/helicopterdatabase</span></a></li>
+<li><a href="modules/unit_navyunitdatabase.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>unit/navyunitdatabase</span></a></li>
+<li><a href="modules/unit_unit.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>unit/unit</span></a></li>
+<li><a href="modules/unit_unitdatabase.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>unit/unitdatabase</span></a></li>
+<li><a href="modules/unit_unitsmanager.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>unit/unitsmanager</span></a></li>
+<li><a href="modules/weapon_weapon.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>weapon/weapon</span></a></li>
+<li><a href="modules/weapon_weaponsmanager.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>weapon/weaponsmanager</span></a></li></ul></nav></div></div></div>
+<div class="tsd-generator">
+<p>Generated using <a href="https://typedoc.org/" rel="noopener" target="_blank">TypeDoc</a></p></div>
+<div class="overlay"></div></body></html>

@@ -22,7 +22,11 @@ export class UnitInfoPanel extends Panel {
     #unitLabel: HTMLElement;
     #unitName: HTMLElement;
 
-    constructor(ID: string) {
+    /**
+     * 
+     * @param ID - the ID of the HTML element which will contain the context menu
+     */
+    constructor(ID: string){
         super(ID);
 
         this.#altitude = (this.getElement().querySelector("#altitude")) as HTMLElement;

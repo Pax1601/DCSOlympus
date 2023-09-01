@@ -231,7 +231,6 @@ export function getWeaponsManager() {
     return weaponsManager;
 }
 
-
 export function getMissionHandler() {
     return missionHandler;
 }

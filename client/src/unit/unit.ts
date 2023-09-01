@@ -1,6 +1,6 @@
 import { Marker, LatLng, Polyline, Icon, DivIcon, CircleMarker, Map, Point } from 'leaflet';
 import { getMap, getMissionHandler, getUnitsManager, getWeaponsManager } from '..';
-import { enumToCoalition, enumToEmissioNCountermeasure, getMarkerCategoryByName, enumToROE, enumToReactionToThreat, enumToState, getUnitDatabaseByCategory, mToFt, msToKnots, rad2deg, bearing, deg2rad } from '../other/utils';
+import { enumToCoalition, enumToEmissioNCountermeasure, getMarkerCategoryByName, enumToROE, enumToReactionToThreat, enumToState, getUnitDatabaseByCategory, mToFt, msToKnots, rad2deg, bearing, deg2rad, ftToM } from '../other/utils';
 import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, landAt, setAltitude, setReactionToThreat, setROE, setSpeed, refuel, setAdvacedOptions, followUnit, setEmissionsCountermeasures, setSpeedType, setAltitudeType, setOnOff, setFollowRoads, bombPoint, carpetBomb, bombBuilding, fireAtArea } from '../server/server';
 import { CustomMarker } from '../map/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
@@ -818,9 +818,31 @@ export class Unit extends CustomMarker {
     #applyFollowOptions(action: string) {
         if (action === "custom") {
             document.getElementById("custom-formation-dialog")?.classList.remove("hide");
-            getMap().getUnitContextMenu().setCustomFormationCallback((offset: { x: number, y: number, z: number }) => {
-                getUnitsManager().selectedUnitsFollowUnit(this.ID, offset);
-            })
+            document.addEventListener("applyCustomFormation", () => {
+                var dialog = document.getElementById("custom-formation-dialog");
+                if (dialog) {
+                    dialog.classList.add("hide");
+                    var clock = 1;
+                    while (clock < 8) {
+                        if ((<HTMLInputElement>dialog.querySelector(`#formation-${clock}`)).checked)
+                            break
+                        clock++;
+                    }
+                    var angleDeg = 360 - (clock - 1) * 45;
+                    var angleRad = deg2rad(angleDeg);
+                    var distance = ftToM(parseInt((<HTMLInputElement>dialog.querySelector(`#distance`)?.querySelector("input")).value));
+                    var upDown = ftToM(parseInt((<HTMLInputElement>dialog.querySelector(`#up-down`)?.querySelector("input")).value));
+    
+                    // X: front-rear, positive front
+                    // Y: top-bottom, positive top
+                    // Z: left-right, positive right
+                    var x = distance * Math.cos(angleRad);
+                    var y = upDown;
+                    var z = distance * Math.sin(angleRad);
+    
+                    getUnitsManager().selectedUnitsFollowUnit(this.ID, { "x": x, "y": y, "z": z });
+                }
+            });
         }
         else {
             getUnitsManager().selectedUnitsFollowUnit(this.ID, undefined, action);

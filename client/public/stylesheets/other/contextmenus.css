@@ -136,7 +136,7 @@
     margin: 0px 5px;
 }
 
-.upper-bar button:nth-child(2) {
+.upper-bar button:first-of-type {
     margin-left: auto;
 }
 
@@ -564,4 +564,36 @@
 
 #airbase-runways>.runway>.heading:last-of-type {
     flex-direction: row-reverse;
+}
+
+/* Airbase spawn menu */
+#airbase-spawn-contextmenu {
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    position: absolute;
+    row-gap: 5px;
+    width: 300px;
+    z-index: 9999;
+}
+
+#airbase-spawn-contextmenu>div:nth-child(2) {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    padding-right: 0px;
+}
+
+#airbase-spawn-contextmenu >div:nth-child(n+3) {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    row-gap: 5px;
+    padding: 20px;
+}
+
+#airbase-spawn-contextmenu>div:nth-child(n+3)>div {
+    width: 100%;
 }

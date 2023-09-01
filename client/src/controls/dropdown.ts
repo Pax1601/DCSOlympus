@@ -1,5 +1,5 @@
 export class Dropdown {
-    #element: HTMLElement;
+    #container: HTMLElement;
     #options: HTMLElement;
     #value: HTMLElement;
     #callback: CallableFunction;
@@ -7,14 +7,14 @@ export class Dropdown {
     #optionsList: string[] = [];
     #index: number = 0;
 
-    constructor(element: string | HTMLElement, callback: CallableFunction, options: string[] | null = null) {
-        if (typeof element === 'string')
-            this.#element = document.getElementById(element) as HTMLElement;
+    constructor(ID: string | null, callback: CallableFunction, options: string[] | null = null, defaultText?: string) {
+        if (ID === null)
+            this.#container = this.#createElement(defaultText);
         else
-            this.#element = element;
+            this.#container = document.getElementById(ID) as HTMLElement;
 
-        this.#options = this.#element.querySelector(".ol-select-options") as HTMLElement;
-        this.#value = this.#element.querySelector(".ol-select-value") as HTMLElement;
+        this.#options = this.#container.querySelector(".ol-select-options") as HTMLElement;
+        this.#value = this.#container.querySelector(".ol-select-value") as HTMLElement;
         this.#defaultValue = this.#value.innerText;
         this.#callback = callback;
 
@@ -25,12 +25,16 @@ export class Dropdown {
         this.#value.addEventListener("click", (ev) => { this.#toggle(); });
 
         document.addEventListener("click", (ev) => {
-            if (!(this.#value.contains(ev.target as Node) || this.#options.contains(ev.target as Node) || this.#element.contains(ev.target as Node))) {
+            if (!(this.#value.contains(ev.target as Node) || this.#options.contains(ev.target as Node) || this.#container.contains(ev.target as Node))) {
                 this.close();
             }
         });
 
         this.#options.classList.add("ol-scrollable");
+    }
+
+    getContainer() {
+        return this.#container;
     }
 
     setOptions(optionsList: string[], sortAlphabetically: boolean = true) {
@@ -120,21 +124,44 @@ export class Dropdown {
     clip() {
         const options = this.#options;
         const bounds = options.getBoundingClientRect();
-        this.#element.dataset.position = (bounds.bottom > window.innerHeight) ? "top" : "";
+        this.#container.dataset.position = (bounds.bottom > window.innerHeight) ? "top" : "";
     }
 
     close() {
-        this.#element.classList.remove("is-open");
-        this.#element.dataset.position = "";
+        this.#container.classList.remove("is-open");
+        this.#container.dataset.position = "";
     }
 
     open() {
-        this.#element.classList.add("is-open");
+        this.#container.classList.add("is-open");
         this.#options.classList.toggle("scrollbar-visible", this.#options.scrollHeight > this.#options.clientHeight);
         this.clip();
     }
 
+    show() {
+        this.#container.classList.add("show");
+    }
+
+    hide() {
+        this.#container.classList.add("hide");
+    }
+
     #toggle() {
-        this.#element.classList.contains("is-open")? this.close(): this.open();
+        this.#container.classList.contains("is-open")? this.close(): this.open();
+    }
+
+    #createElement(defaultText: string | undefined) {
+        var div = document.createElement("div");
+        div.classList.add("ol-select");
+        
+        var value = document.createElement("div");
+        value.classList.add("ol-select-value");
+        value.innerText = defaultText? defaultText: "";
+        
+        var options = document.createElement("div");
+        options.classList.add("ol-select-options");
+
+        div.append(value, options);
+        return div;
     }
 }

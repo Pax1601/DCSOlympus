@@ -3,8 +3,12 @@ import { Panel } from "../panels/panel";
 import { Unit } from "../unit/unit";
 
 export class UnitDataTable extends Panel {
-    constructor(id: string) {
-        super(id);
+    /**
+     * 
+     * @param ID - the ID of the HTML element which will contain the context menu
+     */
+    constructor(ID: string){
+        super(ID);
         this.hide();
     }
 

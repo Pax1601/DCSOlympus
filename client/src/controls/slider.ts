@@ -13,8 +13,9 @@ export class Slider extends Control {
     #dragged: boolean = false;
     #value: number = 0;
 
-    constructor(ID: string, minValue: number, maxValue: number, unitOfMeasure: string, callback: CallableFunction) {
-        super(ID);
+    constructor(ID: string | null, minValue: number, maxValue: number, unitOfMeasure: string, callback: CallableFunction, options?: any) {
+        super(ID, options);
+
         this.#callback = callback;     
         this.#unitOfMeasure = unitOfMeasure;
         this.#slider = this.getContainer()?.querySelector("input") as HTMLInputElement;
@@ -119,5 +120,32 @@ export class Slider extends Control {
                 this.setExpectedValue(this.getValue());
             }
         }
+    }
+
+    createElement(options?: any): HTMLElement | null {
+        var containerEl = document.createElement("div");
+        containerEl.classList.add("ol-slider-container", "flight-control-ol-slider");
+
+        var dl = document.createElement("dl");
+        dl.classList.add("ol-data-grid");
+
+        var dt = document.createElement("dt");
+        dt.innerText = (options !== undefined && options.title !== undefined)? options.title: "";
+
+        var dd = document.createElement("dd");
+        var sliderEl = document.createElement("div");
+        sliderEl.classList.add("ol-slider-value");
+        dd.append(sliderEl);
+        dl.append(dt, dd);
+
+        var input = document.createElement("input") as HTMLInputElement;
+        input.type = "range";
+        input.min = "0";
+        input.max = "100";
+        input.value = "0"
+        input.classList.add("ol-slider");
+        containerEl.append(dl, input);
+
+        return containerEl;
     }
 }
