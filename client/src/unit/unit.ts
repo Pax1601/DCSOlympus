@@ -6,7 +6,7 @@ import { CustomMarker } from '../map/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
 import { UnitDatabase } from './unitdatabase';
 import { TargetMarker } from '../map/targetmarker';
-import { BOMBING, CARPET_BOMBING, DLINK, DataIndexes, FIRE_AT_AREA, GAME_MASTER, HIDE_GROUP_MEMBERS, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, ROEs, RWR, SHOW_CONTACT_LINES, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, VISUAL, emissionsCountermeasures, reactionsToThreat, states } from '../constants/constants';
+import { DLINK, DataIndexes, GAME_MASTER, HIDE_GROUP_MEMBERS, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, ROEs, RWR, SHOW_CONTACT_LINES, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, VISUAL, emissionsCountermeasures, reactionsToThreat, states } from '../constants/constants';
 import { Ammo, Contact, GeneralSettings, Offset, Radio, TACAN, ObjectIconOptions } from '../@types/unit';
 import { DataExtractor } from '../server/dataextractor';
 import { groundUnitDatabase } from './groundunitdatabase';
@@ -77,7 +77,7 @@ export class Unit extends CustomMarker {
     };
     #ammo: Ammo[] = [];
     #contacts: Contact[] = [];
-    #activePath: LatLng[] = []; 
+    #activePath: LatLng[] = [];
     #isLeader: boolean = false;
 
     #selectable: boolean;
@@ -95,43 +95,43 @@ export class Unit extends CustomMarker {
     #hotgroup: number | null = null;
     #detectionMethods: number[] = [];
 
-    getAlive() {return this.#alive};
-    getHuman() {return this.#human};
-    getControlled() {return this.#controlled};
-    getCoalition() {return this.#coalition};
-    getCountry() {return this.#country};
-    getName() {return this.#name};
-    getUnitName() {return this.#unitName};
-    getGroupName() {return this.#groupName};
-    getState() {return this.#state};
-    getTask() {return this.#task};
-    getHasTask() {return this.#hasTask};
-    getPosition() {return this.#position};
-    getSpeed() {return this.#speed};
-    getHeading() {return this.#heading};
-    getIsTanker() {return this.#isTanker};
-    getIsAWACS() {return this.#isAWACS};
-    getOnOff() {return this.#onOff};
-    getFollowRoads() {return this.#followRoads};
-    getFuel() {return this.#fuel};
-    getDesiredSpeed() {return this.#desiredSpeed};
-    getDesiredSpeedType() {return this.#desiredSpeedType};
-    getDesiredAltitude() {return this.#desiredAltitude};
-    getDesiredAltitudeType() {return this.#desiredAltitudeType};
-    getLeaderID() {return this.#leaderID};
-    getFormationOffset() {return this.#formationOffset};
-    getTargetID() {return this.#targetID};
-    getTargetPosition() {return this.#targetPosition};
-    getROE() {return this.#ROE};
-    getReactionToThreat() {return this.#reactionToThreat};
-    getEmissionsCountermeasures() {return this.#emissionsCountermeasures};
-    getTACAN() {return this.#TACAN};
-    getRadio() {return this.#radio};
-    getGeneralSettings() {return this.#generalSettings};
-    getAmmo() {return this.#ammo};
-    getContacts() {return this.#contacts};
-    getActivePath() {return this.#activePath};
-    getIsLeader() {return this.#isLeader};
+    getAlive() { return this.#alive };
+    getHuman() { return this.#human };
+    getControlled() { return this.#controlled };
+    getCoalition() { return this.#coalition };
+    getCountry() { return this.#country };
+    getName() { return this.#name };
+    getUnitName() { return this.#unitName };
+    getGroupName() { return this.#groupName };
+    getState() { return this.#state };
+    getTask() { return this.#task };
+    getHasTask() { return this.#hasTask };
+    getPosition() { return this.#position };
+    getSpeed() { return this.#speed };
+    getHeading() { return this.#heading };
+    getIsTanker() { return this.#isTanker };
+    getIsAWACS() { return this.#isAWACS };
+    getOnOff() { return this.#onOff };
+    getFollowRoads() { return this.#followRoads };
+    getFuel() { return this.#fuel };
+    getDesiredSpeed() { return this.#desiredSpeed };
+    getDesiredSpeedType() { return this.#desiredSpeedType };
+    getDesiredAltitude() { return this.#desiredAltitude };
+    getDesiredAltitudeType() { return this.#desiredAltitudeType };
+    getLeaderID() { return this.#leaderID };
+    getFormationOffset() { return this.#formationOffset };
+    getTargetID() { return this.#targetID };
+    getTargetPosition() { return this.#targetPosition };
+    getROE() { return this.#ROE };
+    getReactionToThreat() { return this.#reactionToThreat };
+    getEmissionsCountermeasures() { return this.#emissionsCountermeasures };
+    getTACAN() { return this.#TACAN };
+    getRadio() { return this.#radio };
+    getGeneralSettings() { return this.#generalSettings };
+    getAmmo() { return this.#ammo };
+    getContacts() { return this.#contacts };
+    getActivePath() { return this.#activePath };
+    getIsLeader() { return this.#isLeader };
 
     static getConstructor(type: string) {
         if (type === "GroundUnit") return GroundUnit;
@@ -157,7 +157,7 @@ export class Unit extends CustomMarker {
         this.on('contextmenu', (e) => this.#onContextMenu(e));
         this.on('mouseover', () => { if (this.belongsToCommandedCoalition()) this.setHighlighted(true); })
         this.on('mouseout', () => { this.setHighlighted(false); })
-        getMap().on("zoomend", () => {this.#onZoom();})
+        getMap().on("zoomend", () => { this.#onZoom(); })
 
         /* Deselect units if they are hidden */
         document.addEventListener("toggleCoalitionVisibility", (ev: CustomEventInit) => {
@@ -166,13 +166,13 @@ export class Unit extends CustomMarker {
 
         document.addEventListener("toggleUnitVisibility", (ev: CustomEventInit) => {
             window.setTimeout(() => { this.setSelected(this.getSelected() && !this.getHidden()) }, 300);
-        });  
-        
+        });
+
         document.addEventListener("mapVisibilityOptionsChanged", (ev: CustomEventInit) => {
             this.#updateMarker();
             if (this.getSelected())
                 this.drawLines();
-        }); 
+        });
     }
 
     getCategory() {
@@ -223,12 +223,12 @@ export class Unit extends CustomMarker {
                 case DataIndexes.radio: this.#radio = dataExtractor.extractRadio(); break;
                 case DataIndexes.generalSettings: this.#generalSettings = dataExtractor.extractGeneralSettings(); break;
                 case DataIndexes.ammo: this.#ammo = dataExtractor.extractAmmo(); break;
-                case DataIndexes.contacts: this.#contacts = dataExtractor.extractContacts(); document.dispatchEvent(new CustomEvent("contactsUpdated", {detail: this})); break;
+                case DataIndexes.contacts: this.#contacts = dataExtractor.extractContacts(); document.dispatchEvent(new CustomEvent("contactsUpdated", { detail: this })); break;
                 case DataIndexes.activePath: this.#activePath = dataExtractor.extractActivePath(); break;
                 case DataIndexes.isLeader: this.#isLeader = dataExtractor.extractBool(); break;
             }
         }
-        
+
         /* Dead units can't be selected */
         this.setSelected(this.getSelected() && this.#alive && !this.getHidden())
 
@@ -323,7 +323,7 @@ export class Unit extends CustomMarker {
         /* Only alive units can be selected. Some units are not selectable (weapons) */
         if ((this.#alive || !selected) && this.getSelectable() && this.getSelected() != selected && this.belongsToCommandedCoalition()) {
             this.#selected = selected;
-           
+
             if (selected) {
                 document.dispatchEvent(new CustomEvent("unitSelection", { detail: this }));
                 this.#updateMarker();
@@ -342,7 +342,7 @@ export class Unit extends CustomMarker {
                 else
                     this.#updateMarker();
             }
-            
+
         }
     }
 
@@ -386,7 +386,7 @@ export class Unit extends CustomMarker {
     belongsToCommandedCoalition() {
         if (getMissionHandler().getCommandModeOptions().commandMode !== GAME_MASTER && getMissionHandler().getCommandedCoalition() !== this.#coalition)
             return false;
-        return true;        
+        return true;
     }
 
     getType() {
@@ -434,7 +434,15 @@ export class Unit extends CustomMarker {
             var unitIcon = document.createElement("div");
             unitIcon.classList.add("unit-icon");
             var img = document.createElement("img");
-            img.src = `/resources/theme/images/units/${this.getMarkerCategory()}.svg`;
+            var imgSrc;
+
+            /* If a unit does not belong to the commanded coalition or it is not visually detected, show it with the generic aircraft square */
+            if (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC].includes(value)))
+                imgSrc = this.getMarkerCategory();
+            else
+                imgSrc = "aircraft";
+
+            img.src = `/resources/theme/images/units/${imgSrc}.svg`;
             img.onload = () => SVGInjector(img);
             unitIcon.appendChild(img);
             unitIcon.toggleAttribute("data-rotate-to-heading", iconOptions.rotateToHeading);
@@ -499,12 +507,12 @@ export class Unit extends CustomMarker {
     updateVisibility() {
         const hiddenUnits = getUnitsManager().getHiddenTypes();
         var hidden = ((this.#human && hiddenUnits.includes("human")) ||
-                    (this.#controlled == false && hiddenUnits.includes("dcs")) ||
-                    (hiddenUnits.includes(this.getMarkerCategory())) ||
-                    (hiddenUnits.includes(this.#coalition)) ||
-                    (!this.belongsToCommandedCoalition() && (this.#detectionMethods.length == 0 || (this.#detectionMethods.length == 1 && this.#detectionMethods[0] === RWR))) ||
-                    (getMap().getVisibilityOptions()[HIDE_GROUP_MEMBERS] && !this.#isLeader && this.getCategory() == "GroundUnit" && getMap().getZoom() < 13 && (this.belongsToCommandedCoalition() || (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0)))) && 
-                    !(this.getSelected());
+            (this.#controlled == false && hiddenUnits.includes("dcs")) ||
+            (hiddenUnits.includes(this.getMarkerCategory())) ||
+            (hiddenUnits.includes(this.#coalition)) ||
+            (!this.belongsToCommandedCoalition() && (this.#detectionMethods.length == 0 || (this.#detectionMethods.length == 1 && this.#detectionMethods[0] === RWR))) ||
+            (getMap().getVisibilityOptions()[HIDE_GROUP_MEMBERS] && !this.#isLeader && this.getCategory() == "GroundUnit" && getMap().getZoom() < 13 && (this.belongsToCommandedCoalition() || (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0)))) &&
+            !(this.getSelected());
 
         this.setHidden(hidden || !this.#alive);
     }
@@ -514,9 +522,9 @@ export class Unit extends CustomMarker {
 
         /* Add the marker if not present */
         if (!getMap().hasLayer(this) && !this.getHidden()) {
-            if (getMap().isZooming()) 
-                this.once("zoomend", () => {this.addTo(getMap())})
-            else 
+            if (getMap().isZooming())
+                this.once("zoomend", () => { this.addTo(getMap()) })
+            else
                 this.addTo(getMap());
         }
 
@@ -559,8 +567,20 @@ export class Unit extends CustomMarker {
             return loadouts.some((loadout: LoadoutBlueprint) => {
                 return (roles as string[]).some((role: string) => { return loadout.roles.includes(role) });
             });
-        } else 
+        } else
             return false;
+    }
+
+    isInViewport() {
+
+        const mapBounds = getMap().getBounds();
+        const unitPos = this.getPosition();
+
+        return (unitPos.lng > mapBounds.getWest()
+            && unitPos.lng < mapBounds.getEast()
+            && unitPos.lat > mapBounds.getSouth()
+            && unitPos.lat < mapBounds.getNorth());
+
     }
 
     /********************** Unit commands *************************/
@@ -704,24 +724,28 @@ export class Unit extends CustomMarker {
     #onClick(e: any) {
         if (!this.#preventClick) {
             if (getMap().getState() === IDLE || getMap().getState() === MOVE_UNIT || e.originalEvent.ctrlKey) {
-                if (!e.originalEvent.ctrlKey) 
+                if (!e.originalEvent.ctrlKey)
                     getUnitsManager().deselectAllUnits();
-                
-                this.setSelected( !this.getSelected() );
-                if ( this.getSelected() ) {
-                    document.dispatchEvent( new CustomEvent( "unitSelection", { "detail": this }));
-                } else {
-                    document.dispatchEvent( new CustomEvent( "unitDeselection", { "detail": this }));
-                }
+
+                this.setSelected(!this.getSelected());
+                const detail = { "detail": { "unit": this } };
+                if (this.getSelected())
+                    document.dispatchEvent(new CustomEvent("unitSelected", detail));
+                else
+                    document.dispatchEvent(new CustomEvent("unitDeselection", { "detail": this }));
             }
         }
 
-        this.#timer = window.setTimeout(() => {
-            this.#preventClick = false;
-        }, 200);
+        this.#timer = window.setTimeout(() => { this.#preventClick = false; }, 200);
     }
 
     #onDoubleClick(e: any) {
+        const unitsManager = getUnitsManager();
+        Object.values(unitsManager.getUnits()).forEach((unit: Unit) => {
+            if (unit.getAlive() === true && unit.getName() === this.getName() && unit.isInViewport())
+                unitsManager.selectUnit(unit.ID, false);
+        });
+
         clearTimeout(this.#timer);
         this.#preventClick = true;
     }
@@ -742,23 +766,6 @@ export class Unit extends CustomMarker {
             if (this.getCategory() == "Aircraft") {
                 options["refuel"] = { text: "Air to air refuel", tooltip: "Refuel units at the nearest AAR Tanker. If no tanker is available the unit will RTB." }; // TODO Add some way of knowing which aircraft can AAR
             }
-        }
-
-        if ((selectedUnits.length === 0 && this.getCategory() == "Aircraft") || (selectedUnitTypes.length === 1 && ["Aircraft"].includes(selectedUnitTypes[0]))) {
-            if (selectedUnits.concat([this]).every((unit: Unit) => { return unit.canFulfillRole(["CAS", "Strike"]) })) {
-                options["bomb"] = { text: "Precision bombing", tooltip: "Precision bombing of a specific point" };
-                options["carpet-bomb"] = { text: "Carpet bombing", tooltip: "Carpet bombing close to a point" };
-            }
-        }
-
-        if ((selectedUnits.length === 0 && this.getCategory() == "GroundUnit") || selectedUnitTypes.length === 1 && ["GroundUnit"].includes(selectedUnitTypes[0])) {
-            if (selectedUnits.concat([this]).every((unit: Unit) => { return ["Gun Artillery", "Rocket Artillery", "Infantry", "IFV", "Tank"].includes(this.getType()) }))
-                options["fire-at-area"] = { text: "Fire at area", tooltip: "Fire at a large area" };
-        }
-
-        if ((selectedUnits.length === 0 && this.getCategory() == "NavyUnit") || selectedUnitTypes.length === 1 && ["NavyUnit"].includes(selectedUnitTypes[0])) {
-            if (selectedUnits.concat([this]).every((unit: Unit) => { return ["Cruiser", "Destroyer", "Frigate"].includes(this.getType()) }))
-                options["fire-at-area"] = { text: "Fire at area", tooltip: "Fire at a large area" };
         }
 
         if (selectedUnitTypes.length === 1 && ["NavyUnit", "GroundUnit"].includes(selectedUnitTypes[0]) && getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getCoalition()}) !== undefined) 
@@ -783,14 +790,7 @@ export class Unit extends CustomMarker {
         else if (action === "group")
             getUnitsManager().selectedUnitsCreateGroup();
         else if (action === "follow")
-            this.#showFollowOptions(e);
-        else if (action === "bomb")
-            getMap().setState(BOMBING);
-        else if (action === "carpet-bomb")
-            getMap().setState(CARPET_BOMBING);
-        else if (action === "fire-at-area")
-            getMap().setState(FIRE_AT_AREA);
-        
+            this.#showFollowOptions(e);        
     }
 
     #showFollowOptions(e: any) {
@@ -811,7 +811,7 @@ export class Unit extends CustomMarker {
             getMap().hideUnitContextMenu();
             this.#applyFollowOptions(option);
         });
-        
+
         getMap().showUnitContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng);
     }
 
@@ -1092,16 +1092,17 @@ export class Unit extends CustomMarker {
 
 export class AirUnit extends Unit {
     getIconOptions() {
+        var belongsToCommandedCoalition = this.belongsToCommandedCoalition();
         return {
-            showState: this.belongsToCommandedCoalition(),
-            showVvi: (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
-            showHotgroup: this.belongsToCommandedCoalition(),
-            showUnitIcon: (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
-            showShortLabel: (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC].includes(value))),
-            showFuel: this.belongsToCommandedCoalition(),
-            showAmmo: this.belongsToCommandedCoalition(),
-            showSummary: (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
-            showCallsign: this.belongsToCommandedCoalition(),
+            showState: belongsToCommandedCoalition,
+            showVvi: (belongsToCommandedCoalition || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
+            showHotgroup: belongsToCommandedCoalition,
+            showUnitIcon: (belongsToCommandedCoalition || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
+            showShortLabel: (belongsToCommandedCoalition || this.getDetectionMethods().some(value => [VISUAL, OPTIC].includes(value))),
+            showFuel: belongsToCommandedCoalition,
+            showAmmo: belongsToCommandedCoalition,
+            showSummary: (belongsToCommandedCoalition || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
+            showCallsign: belongsToCommandedCoalition,
             rotateToHeading: false
         };
     }
@@ -1133,16 +1134,17 @@ export class GroundUnit extends Unit {
     }
 
     getIconOptions() {
+        var belongsToCommandedCoalition = this.belongsToCommandedCoalition();
         return {
-            showState: this.belongsToCommandedCoalition(),
+            showState: belongsToCommandedCoalition,
             showVvi: false,
-            showHotgroup: this.belongsToCommandedCoalition(),
-            showUnitIcon: (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
+            showHotgroup: belongsToCommandedCoalition,
+            showUnitIcon: (belongsToCommandedCoalition || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
             showShortLabel: false,
             showFuel: false,
             showAmmo: false,
             showSummary: false,
-            showCallsign: this.belongsToCommandedCoalition(),
+            showCallsign: belongsToCommandedCoalition,
             rotateToHeading: false
         };
     }
@@ -1153,7 +1155,7 @@ export class GroundUnit extends Unit {
 
     getType() {
         var blueprint = groundUnitDatabase.getByName(this.getName());
-        return blueprint?.type? blueprint.type: "";
+        return blueprint?.type ? blueprint.type : "";
     }
 }
 
@@ -1163,16 +1165,17 @@ export class NavyUnit extends Unit {
     }
 
     getIconOptions() {
+        var belongsToCommandedCoalition = this.belongsToCommandedCoalition();
         return {
-            showState: this.belongsToCommandedCoalition(),
+            showState: belongsToCommandedCoalition,
             showVvi: false,
             showHotgroup: true,
-            showUnitIcon: (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
+            showUnitIcon: (belongsToCommandedCoalition || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
             showShortLabel: false,
             showFuel: false,
             showAmmo: false,
             showSummary: false,
-            showCallsign: this.belongsToCommandedCoalition(),
+            showCallsign: belongsToCommandedCoalition,
             rotateToHeading: false
         };
     }
@@ -1187,6 +1190,6 @@ export class NavyUnit extends Unit {
 
     getType() {
         var blueprint = navyUnitDatabase.getByName(this.getName());
-        return blueprint?.type? blueprint.type: "";
+        return blueprint?.type ? blueprint.type : "";
     }
 }

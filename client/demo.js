@@ -15,7 +15,7 @@ const DEMO_UNIT_DATA = {
         radio: { frequency: 124000000, callsign: 1, callsignNumber: 1 },
         generalSettings: { prohibitAA: false, prohibitAfterburner: false, prohibitAG: false, prohibitAirWpn: false, prohibitJettison: false },
         ammo: [{ quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 } ],
-        contacts: [{ID: 2, detectionMethod: 1}, {ID: 3, detectionMethod: 4}],
+        contacts: [{ID: 2, detectionMethod: 1}, {ID: 3, detectionMethod: 4}, {ID: 5, detectionMethod: 4}],
         activePath: [{lat: 38, lng: -115, alt: 0}, {lat: 38, lng: -114, alt: 0}]
     },
     ["2"]:{ category: "Aircraft", alive: true, human: false, controlled: false, coalition: 1, country: 0, name: "FA-18C_hornet", unitName: "Cool guy 1-2", groupName: "Cool group 2", state: 1, task: "Being cool",

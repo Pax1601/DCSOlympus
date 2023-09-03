@@ -19,9 +19,7 @@ export class Dropdown {
         this.#defaultValue = this.#value.innerText;
         this.#callback = callback;
 
-        if (options != null) {
-            this.setOptions(options);
-        }
+        if (options != null) this.setOptions(options);
 
         this.#value.addEventListener("click", (ev) => { this.#toggle(); });
 

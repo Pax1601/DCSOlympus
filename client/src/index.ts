@@ -137,9 +137,6 @@ function setupEvents() {
             return;
         }
         switch (ev.code) {
-            case "KeyL":
-                document.body.toggleAttribute("data-hide-labels");
-                break;
             case "KeyT":
                 toggleDemoEnabled();
                 break;

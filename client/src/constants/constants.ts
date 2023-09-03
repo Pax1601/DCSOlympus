@@ -135,21 +135,19 @@ export const layers = {
 /* Map constants */
 export const IDLE = "Idle";
 export const MOVE_UNIT = "Move unit";
-export const BOMBING = "Bombing";
-export const CARPET_BOMBING = "Carpet bombing";
-export const FIRE_AT_AREA = "Fire at area";
 export const COALITIONAREA_DRAW_POLYGON = "Draw Coalition Area";
 export const visibilityControls: string[] = ["human", "dcs", "aircraft", "groundunit-sam", "groundunit-other", "navyunit", "airbase"];
 export const visibilityControlsTypes: string[][] = [["human"], ["dcs"], ["aircraft"], ["groundunit-sam", "groundunit-sam-radar", "groundunit-sam-launcher"], ["groundunit-other", "groundunit-ewr"], ["navyunit"], ["airbase"]];
-export const visibilityControlsTootlips: string[] = ["Toggle human players visibility", "Toggle DCS controlled units visibility", "Toggle aircrafts visibility", "Toggle SAM units visibility", "Toggle ground units (not SAM) visibility", "Toggle navy units visibility", "Toggle airbases visibility"];
+export const visibilityControlsTooltips: string[] = ["Toggle human players visibility", "Toggle DCS controlled units visibility", "Toggle aircrafts visibility", "Toggle SAM units visibility", "Toggle ground units (not SAM) visibility", "Toggle navy units visibility", "Toggle airbases visibility"];
 
 export const IADSTypes = ["AAA", "MANPADS", "SAM Site", "Radar"];
 export const IADSDensities: {[key: string]: number}= {"AAA": 0.8, "MANPADS": 0.3, "SAM Site": 0.1, "Radar": 0.05};
 
 export const SHOW_CONTACT_LINES = "Show unit contact lines";
 export const HIDE_GROUP_MEMBERS = "Hide group members when zoomed out";
-export const SHOW_UNIT_PATHS = "Show unit paths";
-export const SHOW_UNIT_TARGETS = "Show unit targets";
+export const SHOW_UNIT_LABELS   = "Show unit labels";
+export const SHOW_UNIT_PATHS    = "Show unit paths";
+export const SHOW_UNIT_TARGETS  = "Show unit targets";
 
 export enum DataIndexes {
     startOfData = 0,
