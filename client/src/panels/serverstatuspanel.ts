@@ -2,7 +2,7 @@ import { Panel } from "./panel";
 
 export class ServerStatusPanel extends Panel {
     constructor(ID: string) {
-        super(ID);
+        super( ID );
     }
 
     update(frameRate: number, load: number) {

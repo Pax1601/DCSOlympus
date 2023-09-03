@@ -4,7 +4,7 @@ import { Panel } from "./panel";
 
 export class HotgroupPanel extends Panel {
     constructor(ID: string) {
-        super(ID);
+        super( ID );
         document.addEventListener("unitDeath", () => this.refreshHotgroups());
     }
 

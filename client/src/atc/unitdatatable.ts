@@ -4,7 +4,7 @@ import { Unit } from "../unit/unit";
 
 export class UnitDataTable extends Panel {
     constructor(id: string) {
-        super(id);
+        super( id );
         this.hide();
     }
 

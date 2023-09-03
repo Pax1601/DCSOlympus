@@ -8,7 +8,7 @@ export class LogPanel extends Panel {
     #logs: {[key: string]: string} = {};
 
     constructor(ID: string) {
-        super(ID);
+        super( ID );
 
         document.addEventListener("toggleLogPanel", () => {
             this.getElement().classList.toggle("open");

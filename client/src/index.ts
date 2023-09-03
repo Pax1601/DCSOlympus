@@ -19,6 +19,7 @@ import { SVGInjector } from "@tanem/svg-injector";
 import { BLUE_COMMANDER, GAME_MASTER, RED_COMMANDER } from "./constants/constants";
 import { ServerStatusPanel } from "./panels/serverstatuspanel";
 import { WeaponsManager } from "./weapon/weaponsmanager";
+import { IndexApp } from "./indexapp";
 
 var map: Map;
 
@@ -90,6 +91,32 @@ function setup() {
 
     /* Load the config file */
     getConfig(readConfig);
+
+    /*
+        This is done like this for now as a way to make it work in the new and old world.
+        Over time/at some point, we'll need to start migrating the pre-existing code to an "app" format
+    */
+
+    const indexApp = new IndexApp({
+        "featureSwitches": featureSwitches,
+        "map": map,
+        "missionHandler": missionHandler,
+        "panels": {
+            "connectionStatus": connectionStatusPanel,
+            "hotgroup": hotgroupPanel,
+            "infoPopup": infoPopup,
+            "log": logPanel,
+            "mouseInfo": mouseInfoPanel,
+            "serverStatus": serverStatusPanel,
+            "unitControl": unitControlPanel,
+            "unitInfo": unitInfoPanel
+        },
+        "unitDataTable": unitDataTable,
+        "unitsManager": unitsManager
+    });
+    
+    indexApp.start();
+
 }
 
 function readConfig(config: any) {

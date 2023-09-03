@@ -1,6 +1,4 @@
-import { getUnitsManager } from "..";
 import { Ammo } from "../@types/unit";
-import { ConvertDDToDMS, rad2deg } from "../other/utils";
 import { aircraftDatabase } from "../unit/aircraftdatabase";
 import { Unit } from "../unit/unit";
 import { Panel } from "./panel";
@@ -23,7 +21,7 @@ export class UnitInfoPanel extends Panel {
     #unitName: HTMLElement;
 
     constructor(ID: string) {
-        super(ID);
+        super( ID );
 
         this.#altitude = (this.getElement().querySelector("#altitude")) as HTMLElement;
         this.#currentTask = (this.getElement().querySelector("#current-task")) as HTMLElement;

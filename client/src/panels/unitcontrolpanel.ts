@@ -26,7 +26,7 @@ export class UnitControlPanel extends Panel {
     #selectedUnitsTypes: string[] = [];
 
     constructor(ID: string) {
-        super(ID);
+        super( ID );
 
         /* Unit control sliders */
         this.#altitudeSlider = new Slider("altitude-slider", 0, 100, "ft", (value: number) => { getUnitsManager().selectedUnitsSetAltitude(ftToM(value)); });

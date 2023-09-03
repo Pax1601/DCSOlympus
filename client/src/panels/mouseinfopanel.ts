@@ -13,7 +13,7 @@ export class MouseInfoPanel extends Panel {
     #measureBox: HTMLElement;
 
     constructor(ID: string) {
-        super(ID);
+        super( ID );
 
         this.#measureIcon = new Icon({ iconUrl: 'resources/theme/images/icons/pin.svg', iconAnchor: [16, 32] });
         this.#measureMarker = new Marker([0, 0], { icon: this.#measureIcon, interactive: false });

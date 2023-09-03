@@ -2,7 +2,7 @@ import { Panel } from "./panel";
 
 export class ConnectionStatusPanel extends Panel {
     constructor(ID: string) {
-        super(ID);
+        super( ID );
     }
 
     update(connected: boolean) {

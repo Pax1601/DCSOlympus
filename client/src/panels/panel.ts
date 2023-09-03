@@ -1,6 +1,11 @@
-export class Panel {
+import { OlympusApp } from "../olympusapp";
+import { PanelEventsManager } from "./paneleventsmanager";
+
+export abstract class Panel {
+
     #element: HTMLElement
-    #visible: boolean = true;
+    #eventsManager!: PanelEventsManager;
+    #olympusApp!: OlympusApp;
 
     constructor(ID: string) {
         this.#element = <HTMLElement>document.getElementById(ID);
@@ -8,17 +13,17 @@ export class Panel {
 
     show() {
         this.#element.classList.toggle("hide", false);
-        this.#visible = true;
+        this.getEventsManager()?.trigger( "show", {} );
     }
 
     hide() {
         this.#element.classList.toggle("hide", true);
-        this.#visible = false;
+        this.getEventsManager()?.trigger( "hide", {} );
     }
 
     toggle() {
         // Simple way to track if currently visible
-        if (this.#visible)
+        if (this.getVisible())
             this.hide();
         else 
             this.show();
@@ -29,6 +34,20 @@ export class Panel {
     }
 
     getVisible(){
-        return this.#visible;
+        return (!this.getElement().classList.contains( "hide" ) );
     }
+
+    getEventsManager() {
+        return this.#eventsManager;
+    }
+
+    getOlympusApp() {
+        return this.#olympusApp;
+    }
+
+    setOlympusApp( olympusApp:OlympusApp ) {
+        this.#olympusApp   = olympusApp;
+        this.#eventsManager = new PanelEventsManager( this.getOlympusApp() );
+    }
+
 }
