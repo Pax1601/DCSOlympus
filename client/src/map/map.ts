@@ -1,9 +1,9 @@
 import * as L from "leaflet"
 import { getInfoPopup, getMissionHandler, getUnitsManager } from "..";
 import { BoxSelect } from "./boxselect";
-import { MapContextMenu } from "../controls/mapcontextmenu";
-import { UnitContextMenu } from "../controls/unitcontextmenu";
-import { AirbaseContextMenu } from "../controls/airbasecontextmenu";
+import { MapContextMenu } from "../contextmenus/mapcontextmenu";
+import { UnitContextMenu } from "../contextmenus/unitcontextmenu";
+import { AirbaseContextMenu } from "../contextmenus/airbasecontextmenu";
 import { Dropdown } from "../controls/dropdown";
 import { Airbase } from "../mission/airbase";
 import { Unit } from "../unit/unit";
@@ -15,8 +15,9 @@ import { SVGInjector } from '@tanem/svg-injector'
 import { layers as mapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, visibilityControls, visibilityControlsTootlips, MOVE_UNIT, SHOW_CONTACT_LINES, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, visibilityControlsTypes, SHOW_UNIT_LABELS } from "../constants/constants";
 import { TargetMarker } from "./targetmarker";
 import { CoalitionArea } from "./coalitionarea";
-import { CoalitionAreaContextMenu } from "../controls/coalitionareacontextmenu";
+import { CoalitionAreaContextMenu } from "../contextmenus/coalitionareacontextmenu";
 import { DrawingCursor } from "./drawingcursor";
+import { AirbaseSpawnContextMenu } from "../contextmenus/airbasespawnmenu";
 
 L.Map.addInitHook('addHandler', 'boxSelect', BoxSelect);
 
@@ -60,6 +61,7 @@ export class Map extends L.Map {
     #mapContextMenu: MapContextMenu = new MapContextMenu("map-contextmenu");
     #unitContextMenu: UnitContextMenu = new UnitContextMenu("unit-contextmenu");
     #airbaseContextMenu: AirbaseContextMenu = new AirbaseContextMenu("airbase-contextmenu");
+    #airbaseSpawnMenu: AirbaseSpawnContextMenu = new AirbaseSpawnContextMenu("airbase-spawn-contextmenu");
     #coalitionAreaContextMenu: CoalitionAreaContextMenu = new CoalitionAreaContextMenu("coalition-area-contextmenu");
 
     #mapSourceDropdown: Dropdown;
@@ -67,7 +69,11 @@ export class Map extends L.Map {
     #optionButtons: { [key: string]: HTMLButtonElement[] } = {}
     #visibilityOptions: { [key: string]: boolean } = {}
 
-    constructor(ID: string) {
+    /**
+     * 
+     * @param ID - the ID of the HTML element which will contain the context menu
+     */
+    constructor(ID: string){
         /* Init the leaflet map */
         //@ts-ignore Needed because the boxSelect option is non-standard
         super(ID, { zoomSnap: 0, zoomDelta: 0.25, preferCanvas: true, doubleClickZoom: false, zoomControl: false, boxZoom: false, boxSelect: true, zoomAnimation: true, maxBoundsViscosity: 1.0, minZoom: 7, keyboard: true, keyboardPanDelta: 0 });
@@ -242,6 +248,7 @@ export class Map extends L.Map {
         this.hideMapContextMenu();
         this.hideUnitContextMenu();
         this.hideAirbaseContextMenu();
+        this.hideAirbaseSpawnMenu();
         this.hideCoalitionAreaContextMenu();
     }
 
@@ -285,6 +292,20 @@ export class Map extends L.Map {
 
     hideAirbaseContextMenu() {
         this.#airbaseContextMenu.hide();
+    }
+
+    showAirbaseSpawnMenu(x: number, y: number, latlng: L.LatLng, airbase: Airbase) {
+        this.hideAllContextMenus();
+        this.#airbaseSpawnMenu.show(x, y);
+        this.#airbaseSpawnMenu.setAirbase(airbase);
+    }
+
+    getAirbaseSpawnMenu() {
+        return this.#airbaseSpawnMenu;
+    }
+
+    hideAirbaseSpawnMenu() {
+        this.#airbaseSpawnMenu.hide();
     }
 
     showCoalitionAreaContextMenu(x: number, y: number, latlng: L.LatLng, coalitionArea: CoalitionArea) {

@@ -1,7 +1,11 @@
 import { Panel } from "./panel";
 
 export class ConnectionStatusPanel extends Panel {
-    constructor(ID: string) {
+    /**
+     * 
+     * @param ID - the ID of the HTML element which will contain the context menu
+     */
+    constructor(ID: string){
         super(ID);
     }
 

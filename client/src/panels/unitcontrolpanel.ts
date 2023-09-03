@@ -25,7 +25,11 @@ export class UnitControlPanel extends Panel {
     #units: Unit[] = [];
     #selectedUnitsTypes: string[] = [];
 
-    constructor(ID: string) {
+    /**
+     * 
+     * @param ID - the ID of the HTML element which will contain the context menu
+     */
+    constructor(ID: string){
         super(ID);
 
         /* Unit control sliders */

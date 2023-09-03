@@ -12,7 +12,11 @@ export class MouseInfoPanel extends Panel {
     #measureLine: Polyline = new Polyline([], { color: '#2d3e50', weight: 3, opacity: 0.5, smoothFactor: 1, interactive: false });
     #measureBox: HTMLElement;
 
-    constructor(ID: string) {
+    /**
+     * 
+     * @param ID - the ID of the HTML element which will contain the context menu
+     */
+    constructor(ID: string){
         super(ID);
 
         this.#measureIcon = new Icon({ iconUrl: 'resources/theme/images/icons/pin.svg', iconAnchor: [16, 32] });
@@ -124,9 +128,9 @@ export class MouseInfoPanel extends Panel {
         this.#drawMeasureLine();
     }
 
-    #drawMeasure(imgId: string | null, textId: string, value: LatLng | null, mousePosition: LatLng) {
-        var el = this.getElement().querySelector(`#${textId}`) as HTMLElement;
-        var img = imgId != null ? this.getElement().querySelector(`#${imgId}`) as HTMLElement : null;
+    #drawMeasure(imgID: string | null, textID: string, value: LatLng | null, mousePosition: LatLng) {
+        var el = this.getElement().querySelector(`#${textID}`) as HTMLElement;
+        var img = imgID != null ? this.getElement().querySelector(`#${imgID}`) as HTMLElement : null;
         if (value) {
             if (el != null) {
                 el.classList.remove("hide");
@@ -156,9 +160,9 @@ export class MouseInfoPanel extends Panel {
         }
     }
 
-    #drawCoordinates(imgId: string, textId: string, value: string) {
-        const el = this.getElement().querySelector(`#${textId}`) as HTMLElement;
-        const img = this.getElement().querySelector(`#${imgId}`) as HTMLElement;
+    #drawCoordinates(imgID: string, textID: string, value: string) {
+        const el = this.getElement().querySelector(`#${textID}`) as HTMLElement;
+        const img = this.getElement().querySelector(`#${imgID}`) as HTMLElement;
         if (img && el) {
             el.dataset.value = value.substring(1);
             img.dataset.label = value[0];

@@ -2,7 +2,11 @@ export class Panel {
     #element: HTMLElement
     #visible: boolean = true;
 
-    constructor(ID: string) {
+    /**
+     * 
+     * @param ID - the ID of the HTML element which will contain the context menu
+     */
+    constructor(ID: string){
         this.#element = <HTMLElement>document.getElementById(ID);
     }
 

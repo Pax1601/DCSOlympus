@@ -1,6 +1,6 @@
 local version = "v0.4.3-alpha"
 
-local debug = false
+local debug = true
 
 Olympus.OlympusDLL = nil
 Olympus.DLLsloaded = false
@@ -404,7 +404,13 @@ function Olympus.spawnUnits(spawnTable)
 
 	Olympus.debug(Olympus.serializeTable(unitTable), 5)
 
-	local countryID = Olympus.getCountryIDByCoalition(spawnTable.coalition)
+	local countryID = 0
+	if spawnTable.country == nil or spawnTable.country == "" then
+		countryID = Olympus.getCountryIDByCoalition(spawnTable.coalition)
+	else
+		countryID = country.id[spawnTable.country]
+	end
+
 	local vars = 
 	{
 		units = unitTable, 
@@ -454,8 +460,6 @@ function Olympus.generateAirUnitsTable(units)
 			["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitTable + 1,
 			["livery_id"] = unit.liveryID
 		}
-
-		Olympus.debug(unit.liveryID, 5)
 
 		-- Add the payload to the registry, used for unit cloning
 		Olympus.payloadRegistry[unitTable[#unitTable].name] = payload
@@ -889,6 +893,16 @@ function Olympus.setMissionData(arg, time)
 		["startTime"] = env.mission.start_time,
 		["date"] = env.mission.date
 	}
+
+	mission.coalitions = {
+		["red"] = {},
+		["blue"] = {},
+		["neutral"] = {}
+	}
+	for countryName, countryId in pairs(country["id"]) do
+		local coalitionName = Olympus.getCoalitionByCoalitionID(coalition.getCountryCoalition(countryId))
+		mission.coalitions[coalitionName][#mission.coalitions[coalitionName] + 1] = countryName 
+	end
 
 	-- Assemble table
 	Olympus.missionData["bullseyes"] = bullseyes

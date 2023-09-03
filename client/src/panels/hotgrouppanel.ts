@@ -3,7 +3,11 @@ import { Unit } from "../unit/unit";
 import { Panel } from "./panel";
 
 export class HotgroupPanel extends Panel {
-    constructor(ID: string) {
+    /**
+     * 
+     * @param ID - the ID of the HTML element which will contain the context menu
+     */
+    constructor(ID: string){
         super(ID);
         document.addEventListener("unitDeath", () => this.refreshHotgroups());
     }

@@ -1,6 +1,6 @@
 import { LatLng } from "leaflet";
 import { getInfoPopup, getMap } from "..";
-import { Airbase, AirbaseChartData } from "./airbase";
+import { Airbase } from "./airbase";
 import { Bullseye } from "./bullseye";
 import { BLUE_COMMANDER, GAME_MASTER, NONE, RED_COMMANDER } from "../constants/constants";
 import { refreshAll, setCommandModeOptions } from "../server/server";
@@ -79,7 +79,7 @@ export class MissionHandler {
             this.#dateAndTime = data.mission.dateAndTime;
 
             /* Set the coalition countries */
-            //this.#coalitions = data.mission.coalitions;
+            this.#coalitions = data.mission.coalitions;
 
             /* Set the command mode options */
             this.#setcommandModeOptions(data.mission.commandModeOptions);

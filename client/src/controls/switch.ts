@@ -4,6 +4,7 @@ export class Switch extends Control {
     #value: boolean | undefined = false;
     #callback: CallableFunction | null = null;
 
+    // TODO: allow for null ID so that the element is created automatically
     constructor(ID: string, callback: CallableFunction, initialValue?: boolean) {
         super(ID);
         this.getContainer()?.addEventListener('click', (e) => this.#onToggle());

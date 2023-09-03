@@ -417,12 +417,15 @@ class DemoDataGenerator {
 
         ret.mission.coalitions = {
             red: [ 
-                'Russia',
-                'China'
+                'RUSSIA',
+                'CHINA'
             ],
             blue: [
-                'United States',
-                'Great Britain'
+                'UK',
+                'USA'
+            ],
+            neutral: [
+                'ITALY'
             ]
         }
 

@@ -7,6 +7,7 @@ import { groundUnitDatabase } from "../unit/groundunitdatabase";
 import { Buffer } from "buffer";
 import { ROEs, emissionsCountermeasures, reactionsToThreat, states } from "../constants/constants";
 import { Dropdown } from "../controls/dropdown";
+import { UnitBlueprint } from "../@types/unitdatabase";
 
 export function bearing(lat1: number, lon1: number, lat2: number, lon2: number) {
     const φ1 = deg2rad(lat1); // φ, λ in radians

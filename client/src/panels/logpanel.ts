@@ -7,7 +7,11 @@ export class LogPanel extends Panel {
     #scrolledDown: boolean = true;
     #logs: {[key: string]: string} = {};
 
-    constructor(ID: string) {
+    /**
+     * 
+     * @param ID - the ID of the HTML element which will contain the context menu
+     */
+    constructor(ID: string){
         super(ID);
 
         document.addEventListener("toggleLogPanel", () => {
