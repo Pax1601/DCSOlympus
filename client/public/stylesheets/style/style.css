@@ -200,7 +200,7 @@ form>div {
     max-height: 0;
     overflow: hidden;
     position: absolute;
-    z-index: 9999;
+    z-index: 99999;
 }
 
 .ol-select-options.scrollbar-visible {
@@ -218,7 +218,7 @@ form>div {
     overflow: visible;
     overflow-y: auto;
     translate: 0px 5px;
-    z-index: 9999;
+    z-index: 99999;
 }
 
 .ol-select.is-open[data-position="top"]>.ol-select-options {

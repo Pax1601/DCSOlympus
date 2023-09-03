@@ -562,7 +562,7 @@ export class Map extends L.Map {
         }
 
         this.#longPressTimer = window.setTimeout(() => {
-            if (e.originalEvent.button != 2)
+            if (e.originalEvent.button != 2 || e.originalEvent.ctrlKey)
                 return;
                 
             this.hideMapContextMenu();

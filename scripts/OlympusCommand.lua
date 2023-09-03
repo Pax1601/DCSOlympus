@@ -1,6 +1,6 @@
 local version = "v0.4.4-alpha"
 
-local debug = true
+local debug = false
 
 Olympus.OlympusDLL = nil
 Olympus.DLLsloaded = false
