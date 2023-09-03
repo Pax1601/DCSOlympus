@@ -1,3 +1,4 @@
+
 * {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -175,8 +176,8 @@ form>div {
     padding-left: 20px;
     padding-right: 30px;
     text-overflow: ellipsis;
-    max-width: initial;
-    width: 100%;
+
+    width: calc(100%);
 }
 
 .ol-select.narrow:not(.ol-select-image)>.ol-select-value {
@@ -1015,11 +1016,39 @@ nav.ol-panel> :last-child {
 }
 
 .ol-target-icon {
-    background-image: url("/resources/theme/images/markers/target.svg");
     height: 52px;
     pointer-events: none;
     width: 52px;
     z-index: 9999;
+}
+
+.ol-smoke-icon {
+    background-image: url("/resources/theme/images/markers/smoke.svg");
+    height: 52px;
+    pointer-events: none;
+    width: 52px;
+    z-index: 9999;
+    opacity: 0.8;
+}
+
+.ol-smoke-icon[data-color="white"] {
+    fill: white;
+}
+
+.ol-smoke-icon[data-color="blue"] {
+    fill: blue;
+}
+
+.ol-smoke-icon[data-color="red"] {
+    fill: red;
+}
+
+.ol-smoke-icon[data-color="green"] {
+    fill: green;
+}
+
+.ol-smoke-icon[data-color="orange"] {
+    fill: orange;
 }
 
 .ol-draw-icon {
@@ -1302,6 +1331,10 @@ input[type=number]::-webkit-outer-spin-button {
 
 .ol-switch[data-value="undefined"]>.ol-switch-fill::after {
 	transform: translateX(calc((var(--width) - var(--height)) * 0.5));
+}
+
+.ol-contexmenu-panel {
+    padding: 20px;
 }
 
 .ol-coalition-switch[data-value="false"]>.ol-switch-fill {
