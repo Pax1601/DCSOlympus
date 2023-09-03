@@ -7,6 +7,7 @@ import { GAME_MASTER } from "../constants/constants";
 import { CoalitionArea } from "../map/coalitionarea";
 import { AircraftSpawnMenu, GroundUnitSpawnMenu, HelicopterSpawnMenu, NavyUnitSpawnMenu } from "../controls/unitspawnmenu";
 import { Airbase } from "../mission/airbase";
+import { SmokeMarker } from "../map/smokemarker";
 
 /** The MapContextMenu is the main contextmenu shown to the user whenever it rightclicks on the map. It is the primary interaction method for the user.
  * It allows to spawn units, create explosions and smoke, and edit CoalitionAreas.
@@ -48,6 +49,8 @@ export class MapContextMenu extends ContextMenu {
         document.addEventListener("contextMenuDeploySmoke", (e: any) => {
             this.hide();
             spawnSmoke(e.detail.color, this.getLatLng());
+            var marker = new SmokeMarker(this.getLatLng(), e.detail.color);
+            marker.addTo(getMap());
         });
 
         document.addEventListener("contextMenuExplosion", (e: any) => {
