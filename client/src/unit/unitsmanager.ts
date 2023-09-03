@@ -722,14 +722,14 @@ export class UnitsManager {
                 return false;
             }
             spawnPoints = units.reduce((points: number, unit: any) => {return points + groundUnitDatabase.getSpawnPointsByName(unit.unitType)}, 0);
-            spawnGroundUnits(units, coalition, immediate, spawnPoints);
+            spawnGroundUnits(units, coalition, country, immediate, spawnPoints);
         } else if (category === "NavyUnit") {
             if (getMissionHandler().getCommandModeOptions().restrictSpawns && getMissionHandler().getRemainingSetupTime() < 0 && getMissionHandler().getCommandModeOptions().commandMode !== GAME_MASTER) {
                 getInfoPopup().setText("Navy units can be spawned during the SETUP phase only");
                 return false;
             }
             spawnPoints = units.reduce((points: number, unit: any) => {return points + navyUnitDatabase.getSpawnPointsByName(unit.unitType)}, 0);
-            spawnNavyUnits(units, coalition, immediate, spawnPoints);
+            spawnNavyUnits(units, coalition, country, immediate, spawnPoints);
         }
         
         if (spawnPoints <= getMissionHandler().getAvailableSpawnPoints()) {

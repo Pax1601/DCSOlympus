@@ -155,9 +155,10 @@ private:
 class SpawnGroundUnits : public Command
 {
 public:
-	SpawnGroundUnits(string coalition, vector<SpawnOptions> spawnOptions, bool immediate) :
+	SpawnGroundUnits(string coalition, vector<SpawnOptions> spawnOptions, string country, bool immediate) :
 		coalition(coalition), 
 		spawnOptions(spawnOptions),
+		country(country),
 		immediate(immediate)
 	{ 
 		priority = immediate? CommandPriority::IMMEDIATE: CommandPriority::LOW;
@@ -168,6 +169,7 @@ public:
 private:
 	const string coalition;
 	const vector<SpawnOptions> spawnOptions;
+	const string country;
 	const bool immediate;
 };
 
@@ -175,9 +177,10 @@ private:
 class SpawnNavyUnits : public Command
 {
 public:
-	SpawnNavyUnits(string coalition, vector<SpawnOptions> spawnOptions, bool immediate) :
+	SpawnNavyUnits(string coalition, vector<SpawnOptions> spawnOptions, string country, bool immediate) :
 		coalition(coalition),
 		spawnOptions(spawnOptions),
+		country(country),
 		immediate(immediate)
 	{
 		priority = immediate ? CommandPriority::IMMEDIATE : CommandPriority::LOW;
@@ -188,6 +191,7 @@ public:
 private:
 	const string coalition;
 	const vector<SpawnOptions> spawnOptions;
+	const string country;
 	const bool immediate;
 };
 

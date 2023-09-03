@@ -55,6 +55,7 @@ string SpawnGroundUnits::getString()
     commandSS << "Olympus.spawnUnits, {"
         << "category = " << "\"" << "GroundUnit" << "\"" << ", "
         << "coalition = " << "\"" << coalition << "\"" << ", "
+        << "country = \"" << country << "\", "
         << "units = " << "{" << unitsSS.str() << "}" << "}";
     return commandSS.str();
 }
@@ -78,6 +79,7 @@ string SpawnNavyUnits::getString()
     commandSS << "Olympus.spawnUnits, {"
         << "category = " << "\"" << "NavyUnit" << "\"" << ", "
         << "coalition = " << "\"" << coalition << "\"" << ", "
+        << "country = \"" << country << "\", "
         << "units = " << "{" << unitsSS.str() << "}" << "}";
     return commandSS.str();
 }

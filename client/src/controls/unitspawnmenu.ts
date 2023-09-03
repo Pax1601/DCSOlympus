@@ -84,7 +84,10 @@ export class UnitSpawnMenu {
         advancedOptionsText.innerText = "Advanced options";
         var advancedOptionsHr = document.createElement("hr");
         advancedOptionsToggle.append(advancedOptionsText, advancedOptionsHr);
-        advancedOptionsToggle.addEventListener("click", () => { advancedOptionsDiv.classList.toggle("hide") });
+        advancedOptionsToggle.addEventListener("click", () => { 
+            advancedOptionsDiv.classList.toggle("hide");
+            this.#container.dispatchEvent(new Event("resize"));
+        });
         advancedOptionsDiv.append(this.#unitCountryDropdown.getContainer(), this.#unitLiveryDropdown.getContainer(),
             this.#unitLoadoutPreviewEl, this.#unitSpawnAltitudeSlider.getContainer() as HTMLElement);
 
@@ -94,7 +97,9 @@ export class UnitSpawnMenu {
         this.#deployUnitButtonEl.disabled = true;
         this.#deployUnitButtonEl.innerText = "Deploy unit";
         this.#deployUnitButtonEl.setAttribute("data-coalition", "blue");
-        this.#deployUnitButtonEl.addEventListener("click", () => { this.#deployUnits(); });
+        this.#deployUnitButtonEl.addEventListener("click", () => { 
+            this.deployUnits(this.#spawnOptions, parseInt(this.#unitCountDropdown.getValue()));
+         });
 
         /* Assemble all components */
         this.#container.append(this.#unitRoleTypeDropdown.getContainer(), unitLabelCountContainerEl, this.#unitLoadoutDropdown.getContainer(),
@@ -115,13 +120,11 @@ export class UnitSpawnMenu {
 
         /* Event listeners */
         this.#container.addEventListener("unitRoleTypeChanged", () => {
+            this.#deployUnitButtonEl.disabled = true;
             this.#unitLabelDropdown.reset();
-            if (this.#unitLoadoutListEl !== null)
-                this.#unitLoadoutListEl.replaceChildren();
-            if (this.#unitLoadoutDropdown !== null)
-                this.#unitLoadoutDropdown.reset();
-            if (this.#unitImageEl !== null)
-                this.#unitImageEl.classList.toggle("hide", true);
+            this.#unitLoadoutListEl.replaceChildren();
+            this.#unitLoadoutDropdown.reset();
+            this.#unitImageEl.classList.toggle("hide", true);
             this.#unitLiveryDropdown.reset();
 
             if (this.#orderByRole)
@@ -129,18 +132,24 @@ export class UnitSpawnMenu {
             else
                 this.#unitLabelDropdown.setOptions(this.#unitDatabase.getByType(this.#spawnOptions.roleType).map((blueprint) => { return blueprint.label }));
             this.#container.dispatchEvent(new Event("resize"));
+
+            this.#spawnOptions.name = "";
+            this.#spawnOptions.loadout = undefined;
+            this.#spawnOptions.liveryID = undefined;
+
             this.#computeSpawnPoints();
         })
 
         this.#container.addEventListener("unitLabelChanged", () => {
-            if (this.#unitLoadoutDropdown !== null) {
+            this.#deployUnitButtonEl.disabled = false;
+            if (!this.#unitLoadoutDropdown.isHidden()) {
                 this.#unitLoadoutDropdown.setOptions(this.#unitDatabase.getLoadoutNamesByRole(this.#spawnOptions.name, this.#spawnOptions.roleType));
                 this.#unitLoadoutDropdown.selectValue(0);
             }
-            if (this.#unitImageEl !== null) {
-                this.#unitImageEl.src = `images/units/${this.#unitDatabase.getByName(this.#spawnOptions.name)?.filename}`;
-                this.#unitImageEl.classList.toggle("hide", false);
-            }
+
+            this.#unitImageEl.src = `images/units/${this.#unitDatabase.getByName(this.#spawnOptions.name)?.filename}`;
+            this.#unitImageEl.classList.toggle("hide", false);
+            
             this.#setUnitLiveryOptions();
 
             this.#container.dispatchEvent(new Event("resize"));
@@ -148,9 +157,8 @@ export class UnitSpawnMenu {
         })
 
         this.#container.addEventListener("unitLoadoutChanged", () => {
-            this.#deployUnitButtonEl.disabled = false;
             var items = this.#spawnOptions.loadout?.items.map((item: any) => { return `${item.quantity}x ${item.name}`; });
-            if (items != undefined && this.#unitLoadoutListEl !== null) {
+            if (items != undefined) {
                 items.length == 0 ? items.push("Empty loadout") : "";
                 this.#unitLoadoutListEl.replaceChildren(
                     ...items.map((item: any) => {
@@ -191,12 +199,9 @@ export class UnitSpawnMenu {
         else
             this.#unitRoleTypeDropdown.setOptions(this.#unitDatabase.getTypes());
 
-        if (this.#unitLoadoutListEl !== null)
-            this.#unitLoadoutListEl.replaceChildren();
-        if (this.#unitLoadoutDropdown !== null)
-            this.#unitLoadoutDropdown.reset();
-        if (this.#unitImageEl !== null)
-            this.#unitImageEl.classList.toggle("hide", true);
+        this.#unitLoadoutListEl.replaceChildren();
+        this.#unitLoadoutDropdown.reset();
+        this.#unitImageEl.classList.toggle("hide", true);
 
         this.setCountries();
         this.#container.dispatchEvent(new Event("resize"));
@@ -208,7 +213,7 @@ export class UnitSpawnMenu {
         this.#unitCountryDropdown.setOptionsElements(this.#createCountryButtons(this.#unitCountryDropdown, countries, (country: string) => { this.#setUnitCountry(country) }));
 
         if (countries.length > 0 && !countries.includes(this.#spawnOptions.country)) {
-            this.#unitCountryDropdown.forceValue(countries[0]);
+            this.#unitCountryDropdown.forceValue(this.#getFormattedCountry(countries[0]));
             this.#setUnitCountry(countries[0]);
         }
     }
@@ -300,10 +305,15 @@ export class UnitSpawnMenu {
 
     #setUnitLivery(liveryName: string) {
         var liveries = this.#unitDatabase.getByName(this.#spawnOptions.name)?.liveries;
-        if (liveries !== undefined) {
-            for (let liveryID in liveries)
-                if (liveries[liveryID].name === liveryName)
-                    this.#spawnOptions.liveryID = liveryID;
+        if (liveryName === "Default") {
+            this.#spawnOptions.liveryID = "";
+        }
+        else {
+            if (liveries !== undefined) {
+                for (let liveryID in liveries)
+                    if (liveries[liveryID].name === liveryName)
+                        this.#spawnOptions.liveryID = liveryID;
+            }
         }
         this.#container.dispatchEvent(new Event("unitLiveryChanged"));
     }
@@ -314,7 +324,7 @@ export class UnitSpawnMenu {
             var countryLiveries: string[] = ["Default"];
             liveries.forEach((livery: any) => {
                 var nationLiveryCodes = this.#countryCodes[this.#spawnOptions.country].liveryCodes;
-                if (livery.countries.some((country: string) => { return nationLiveryCodes.includes(country) }))
+                if (livery.countries === "All" || livery.countries.some((country: string) => { return nationLiveryCodes.includes(country) }))
                     countryLiveries.push(livery.name);
             });
             this.#unitLiveryDropdown.setOptions(countryLiveries);
@@ -322,43 +332,20 @@ export class UnitSpawnMenu {
         }
     }
 
-    #deployUnits() {
-        this.#spawnOptions.coalition = getActiveCoalition();
-        if (this.#spawnOptions) {
-            var unitTable = {
-                unitType: this.#spawnOptions.name,
-                location: this.#spawnOptions.latlng,
-                altitude: this.#spawnOptions.altitude,
-                loadout: this.#spawnOptions.loadout,
-                liveryID: this.#spawnOptions.liveryID
-            };
-            var units = [];
-            for (let i = 1; i < parseInt(this.#unitCountDropdown.getValue()) + 1; i++) {
-                units.push(unitTable);
-            }
-            if (getUnitsManager().spawnUnits("Unit", units, getActiveCoalition(), false, this.#spawnOptions.airbase ? this.#spawnOptions.airbase.getName() : "", this.#spawnOptions.country)) {
-                getMap().addTemporaryMarker(this.#spawnOptions.latlng, this.#spawnOptions.name, getActiveCoalition());
-                getMap().getMapContextMenu().hide();
-            }
-        }
+    deployUnits(spawnOptions: UnitSpawnOptions, unitsCount: number) {
+        /* Virtual function must be overloaded by inheriting classes */
     }
 
     #createCountryButtons(parent: Dropdown, countries: string[], callback: CallableFunction) {
         return Object.values(countries).map((country: string) => {
             var el = document.createElement("div");
 
-            var formattedCountry = "";
-            if (this.#countryCodes[country] !== undefined && this.#countryCodes[country].displayName !== undefined)
-                formattedCountry = this.#countryCodes[country].displayName;
-            else
-                formattedCountry = country.charAt(0).toUpperCase() + country.slice(1).toLowerCase();
-
             var button = document.createElement("button");
             button.classList.add("country-dropdown-element");
             el.appendChild(button);
             button.addEventListener("click", () => {
                 callback(country);
-                parent.forceValue(formattedCountry);
+                parent.forceValue(this.#getFormattedCountry(country));
                 parent.close();
             });
             if (this.#countryCodes[country] !== undefined) {
@@ -373,10 +360,19 @@ export class UnitSpawnMenu {
                 console.log("Unknown country " + country);
             }
             var text = document.createElement("div");
-            text.innerText = formattedCountry;
+            text.innerText = this.#getFormattedCountry(country);
             button.appendChild(text);
             return el;
         });
+    }
+
+    #getFormattedCountry(country: string) {
+        var formattedCountry = "";
+        if (this.#countryCodes[country] !== undefined && this.#countryCodes[country].displayName !== undefined)
+            formattedCountry = this.#countryCodes[country].displayName;
+        else
+            formattedCountry = country.charAt(0).toUpperCase() + country.slice(1).toLowerCase();
+        return formattedCountry;
     }
 
     #computeSpawnPoints() {
@@ -401,6 +397,27 @@ export class AircraftSpawnMenu extends UnitSpawnMenu {
         this.getAltitudeSlider().setIncrement(500);
         this.getAltitudeSlider().setValue(20000);
     }
+
+    deployUnits(spawnOptions: UnitSpawnOptions, unitsCount: number) {
+        spawnOptions.coalition = getActiveCoalition();
+        if (spawnOptions) {
+            var unitTable = {
+                unitType: spawnOptions.name,
+                location: spawnOptions.latlng,
+                altitude: spawnOptions.altitude? spawnOptions.altitude: 0,
+                loadout: spawnOptions.loadout? spawnOptions.loadout.name: "",
+                liveryID: spawnOptions.liveryID? spawnOptions.liveryID: ""
+            };
+            var units = [];
+            for (let i = 1; i < unitsCount + 1; i++) {
+                units.push(unitTable);
+            }
+            if (getUnitsManager().spawnUnits("Aircraft", units, getActiveCoalition(), false, spawnOptions.airbase ? spawnOptions.airbase.getName() : "", spawnOptions.country)) {
+                getMap().addTemporaryMarker(spawnOptions.latlng, spawnOptions.name, getActiveCoalition());
+                getMap().getMapContextMenu().hide();
+            }
+        }
+    }
 }
 
 export class HelicopterSpawnMenu extends UnitSpawnMenu {
@@ -414,6 +431,27 @@ export class HelicopterSpawnMenu extends UnitSpawnMenu {
         this.getAltitudeSlider().setMinMax(0, 10000);
         this.getAltitudeSlider().setIncrement(100);
         this.getAltitudeSlider().setValue(5000);
+    }
+
+    deployUnits(spawnOptions: UnitSpawnOptions, unitsCount: number) {
+        spawnOptions.coalition = getActiveCoalition();
+        if (spawnOptions) {
+            var unitTable = {
+                unitType: spawnOptions.name,
+                location: spawnOptions.latlng,
+                altitude: spawnOptions.altitude? spawnOptions.altitude: 0,
+                loadout: spawnOptions.loadout? spawnOptions.loadout.name: "",
+                liveryID: spawnOptions.liveryID? spawnOptions.liveryID: ""
+            };
+            var units = [];
+            for (let i = 1; i < unitsCount + 1; i++) {
+                units.push(unitTable);
+            }
+            if (getUnitsManager().spawnUnits("Helicopter", units, getActiveCoalition(), false, spawnOptions.airbase ? spawnOptions.airbase.getName() : "", spawnOptions.country)) {
+                getMap().addTemporaryMarker(spawnOptions.latlng, spawnOptions.name, getActiveCoalition());
+                getMap().getMapContextMenu().hide();
+            }
+        }
     }
 }
 
@@ -429,6 +467,26 @@ export class GroundUnitSpawnMenu extends UnitSpawnMenu {
         this.getLoadoutDropdown().hide();
         this.getLoadoutPreview().classList.add("hide");
     }
+
+    deployUnits(spawnOptions: UnitSpawnOptions, unitsCount: number) {
+        spawnOptions.coalition = getActiveCoalition();
+        if (spawnOptions) {
+            var unitTable = {
+                unitType: spawnOptions.name,
+                location: spawnOptions.latlng,
+                liveryID: spawnOptions.liveryID? spawnOptions.liveryID: ""
+            };
+            var units = [];
+            for (let i = 1; i < unitsCount + 1; i++) {
+                units.push(JSON.parse(JSON.stringify(unitTable)));
+                unitTable.location.lat += 0.0001;
+            }
+            if (getUnitsManager().spawnUnits("GroundUnit", units, getActiveCoalition(), false, spawnOptions.airbase ? spawnOptions.airbase.getName() : "", spawnOptions.country)) {
+                getMap().addTemporaryMarker(spawnOptions.latlng, spawnOptions.name, getActiveCoalition());
+                getMap().getMapContextMenu().hide();
+            }
+        }
+    }
 }
 
 export class NavyUnitSpawnMenu extends UnitSpawnMenu {
@@ -442,5 +500,25 @@ export class NavyUnitSpawnMenu extends UnitSpawnMenu {
         this.getAltitudeSlider().hide();
         this.getLoadoutDropdown().hide();
         this.getLoadoutPreview().classList.add("hide");
+    }
+
+    deployUnits(spawnOptions: UnitSpawnOptions, unitsCount: number) {
+        spawnOptions.coalition = getActiveCoalition();
+        if (spawnOptions) {
+            var unitTable = {
+                unitType: spawnOptions.name,
+                location: spawnOptions.latlng,
+                liveryID: spawnOptions.liveryID? spawnOptions.liveryID: ""
+            };
+            var units = [];
+            for (let i = 1; i < unitsCount + 1; i++) {
+                units.push(JSON.parse(JSON.stringify(unitTable)));
+                unitTable.location.lat += 0.0001;
+            }
+            if (getUnitsManager().spawnUnits("NavyUnit", units, getActiveCoalition(), false, spawnOptions.airbase ? spawnOptions.airbase.getName() : "", spawnOptions.country)) {
+                getMap().addTemporaryMarker(spawnOptions.latlng, spawnOptions.name, getActiveCoalition());
+                getMap().getMapContextMenu().hide();
+            }
+        }
     }
 }

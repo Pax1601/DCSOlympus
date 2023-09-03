@@ -63,7 +63,12 @@ export class Slider extends Control {
 
     setValue(newValue: number, ignoreExpectedValue: boolean = true) {
         if (!this.getDragged() && (ignoreExpectedValue || this.checkExpectedValue(newValue))) {
-            this.#value = newValue;
+            if (this.#value !== newValue) {
+                this.#value = newValue;
+                if (this.#callback) 
+                    this.#callback(this.getValue());
+            }
+            
             if (this.#slider != null)
                 this.#slider.value = String((newValue - this.#minValue) / (this.#maxValue - this.#minValue) * parseFloat(this.#slider.max));
             this.#update();

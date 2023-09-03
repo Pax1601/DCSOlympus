@@ -11,7 +11,7 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "justMyCode": true,
-            "args": ["C:\\Users\\dpass\\Documents\\DCSOlympus\\client\\public\\databases\\units\\aircraftdatabase.json"]
+            "args": ["groundunit"]
         }
     ]
 }

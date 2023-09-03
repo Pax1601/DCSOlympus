@@ -6,6 +6,7 @@ export class Dropdown {
     #defaultValue: string;
     #optionsList: string[] = [];
     #index: number = 0;
+    #hidden: boolean = false;
 
     constructor(ID: string | null, callback: CallableFunction, options: string[] | null = null, defaultText?: string) {
         if (ID === null)
@@ -139,11 +140,17 @@ export class Dropdown {
     }
 
     show() {
-        this.#container.classList.add("show");
+        this.#container.classList.remove("hide");
+        this.#hidden = false;
     }
 
     hide() {
         this.#container.classList.add("hide");
+        this.#hidden = true;
+    }
+
+    isHidden() {
+        return this.#hidden;
     }
 
     #toggle() {

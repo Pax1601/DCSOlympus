@@ -303,11 +303,37 @@
       "Antiship Strike"
     ],
     "liveries": {
-      "usa x black": "Black",
-      "standard": "Standard",
-      "usa marines": "Marines",
-      "turkey 2": "Turkey 2",
-      "turkey 1": "Turkey"
+      "usa marines": {
+        "name": "Marines",
+        "countries": [
+          "USA"
+        ]
+      },
+      "turkey 1": {
+        "name": "Turkey",
+        "countries": [
+          "TUR"
+        ]
+      },
+      "standard": {
+        "name": "Standard",
+        "countries": [
+          "ISR",
+          "USA"
+        ]
+      },
+      "usa x black": {
+        "name": "Black",
+        "countries": [
+          "USA"
+        ]
+      },
+      "turkey 2": {
+        "name": "Turkey 2",
+        "countries": [
+          "TUR"
+        ]
+      }
     }
   },
   "AH-64D_BLK_II": {
@@ -517,37 +543,190 @@
       "Antiship Strike"
     ],
     "liveries": {
-      "south carolina national guard": "Ghostriders, 1-151st ATKHB SCNG - Gray TADS",
-      "saudi arabian national guard": "Saudi Arabian National Guard",
-      "default": "default livery",
-      "silver spurs 3-17 cav": "A Troop, Silver Spurs, 3-17 CAV",
-      "uae armed forces - od": "UAE Armed Forces - Olive Drab",
-      "apache iaf grey": "Indian Air Force - Gray",
-      "egypt air force": "Egyptian Air Force",
-      "korea air force": "Republic of Korea Army",
-      "avengers 1-227th arb": "A Company, Avengers, 1-227th ARB",
-      "1st_bat_greek_pegasus_es1008": "Pegasus Display Team - ES1008, Hellenic Army Aviation",
-      "slayers 4-2 arb": "C Company, Slayers, 4-2 ARB",
-      "south carolina national guard - drab tads": "Ghostriders, 1-151st ATKHB SCNG - Drab TADS",
-      "664 squadron 9 regiment uk": "664 Squadron 9 Regiment AAC UK",
-      "south carolina national guard - 40332": "Ghostriders, 1-151st ATKHB SCNG - 40332",
-      "indonesian army - 11th squadron by dendi wirson": "Indonesian Army - 11th Squadron/Serbu by Dendi Wirson",
-      "gunslingers 2-159th arb": "C Company, Gunslingers, 2-159th ARB",
-      "the air pirates 1-211th arb": "A Company, The Air Pirates, 1-211th ARB UTNG",
-      "devils 1-1 arb": "A Company, Devils, 1-1 ARB",
-      "archangel 4-2 arb": "A Company, Archangel, 4-2 ARB",
-      "jgsdf\u2014\u20141st_combat_helicopter_unit": "1st Combat Helicopter Unit, Japanese Ground SDF",
-      "wolfpack 1-82 arb": "Wolfpack, 1-82 ARB",
-      "killer bees 1-130th arb ncng": "B Company, Killer Bees, 1-130th ARB NCNG",
-      "grim reapers 4-2 arb": "B Company, Grim Reapers, 4-2 ARB",
-      "south carolina national guard - 40331": "Ghostriders, 1-151st ATKHB SCNG - 40331",
-      "662 squadron 3 regiment zj171 uk": "662 Squadron 3 Regiment AAC UK - ZJ171",
-      "25th_combat_aviation_brigade_by_lee1hy": "2-6 CAV, 25th Combat Aviation Brigade",
-      "1st attack helicopter battalion greece": "1st Attack Helicopter Battalion, Hellenic Army Aviation",
-      "12th combat aviation brigade griffins": "12th Combat Aviation Brigade Griffins",
-      "iaf 113th hornet squadron": "IAF 113th Hornet Squadron",
-      "301 squadron redskins netherlands": "301 Squadron Redskins, Royal Netherlands Air Force",
-      "qatar qeaf": "Qatar Emiri Air Force"
+      "avengers 1-227th arb": {
+        "name": "A Company, Avengers, 1-227th ARB",
+        "countries": [
+          "USA"
+        ]
+      },
+      "devils 1-1 arb": {
+        "name": "A Company, Devils, 1-1 ARB",
+        "countries": [
+          "USA"
+        ]
+      },
+      "egypt air force": {
+        "name": "Egyptian Air Force",
+        "countries": [
+          "EGY"
+        ]
+      },
+      "indonesian army - 11th squadron by dendi wirson": {
+        "name": "Indonesian Army - 11th Squadron/Serbu by Dendi Wirson",
+        "countries": "All"
+      },
+      "south carolina national guard - 40332": {
+        "name": "Ghostriders, 1-151st ATKHB SCNG - 40332",
+        "countries": [
+          "USA"
+        ]
+      },
+      "301 squadron redskins netherlands": {
+        "name": "301 Squadron Redskins, Royal Netherlands Air Force",
+        "countries": [
+          "NETH"
+        ]
+      },
+      "korea air force": {
+        "name": "Republic of Korea Army",
+        "countries": [
+          "KOR"
+        ]
+      },
+      "south carolina national guard - 40331": {
+        "name": "Ghostriders, 1-151st ATKHB SCNG - 40331",
+        "countries": [
+          "USA"
+        ]
+      },
+      "saudi arabian national guard": {
+        "name": "Saudi Arabian National Guard",
+        "countries": [
+          "SAU"
+        ]
+      },
+      "south carolina national guard": {
+        "name": "Ghostriders, 1-151st ATKHB SCNG - Gray TADS",
+        "countries": [
+          "USA"
+        ]
+      },
+      "664 squadron 9 regiment uk": {
+        "name": "664 Squadron 9 Regiment AAC UK",
+        "countries": [
+          "UK"
+        ]
+      },
+      "uae armed forces - od": {
+        "name": "UAE Armed Forces - Olive Drab",
+        "countries": [
+          "ARE"
+        ]
+      },
+      "grim reapers 4-2 arb": {
+        "name": "B Company, Grim Reapers, 4-2 ARB",
+        "countries": [
+          "USA"
+        ]
+      },
+      "default": {
+        "name": "default livery",
+        "countries": [
+          "USA"
+        ]
+      },
+      "662 squadron 3 regiment zj171 uk": {
+        "name": "662 Squadron 3 Regiment AAC UK - ZJ171",
+        "countries": [
+          "UK"
+        ]
+      },
+      "12th combat aviation brigade griffins": {
+        "name": "12th Combat Aviation Brigade Griffins",
+        "countries": [
+          "USA"
+        ]
+      },
+      "silver spurs 3-17 cav": {
+        "name": "A Troop, Silver Spurs, 3-17 CAV",
+        "countries": [
+          "USA"
+        ]
+      },
+      "qatar qeaf": {
+        "name": "Qatar Emiri Air Force",
+        "countries": [
+          "QAT"
+        ]
+      },
+      "south carolina national guard - drab tads": {
+        "name": "Ghostriders, 1-151st ATKHB SCNG - Drab TADS",
+        "countries": [
+          "USA"
+        ]
+      },
+      "archangel 4-2 arb": {
+        "name": "A Company, Archangel, 4-2 ARB",
+        "countries": [
+          "USA"
+        ]
+      },
+      "killer bees 1-130th arb ncng": {
+        "name": "B Company, Killer Bees, 1-130th ARB NCNG",
+        "countries": [
+          "USA"
+        ]
+      },
+      "wolfpack 1-82 arb": {
+        "name": "Wolfpack, 1-82 ARB",
+        "countries": [
+          "USA"
+        ]
+      },
+      "gunslingers 2-159th arb": {
+        "name": "C Company, Gunslingers, 2-159th ARB",
+        "countries": [
+          "USA"
+        ]
+      },
+      "the air pirates 1-211th arb": {
+        "name": "A Company, The Air Pirates, 1-211th ARB UTNG",
+        "countries": [
+          "USA"
+        ]
+      },
+      "25th_combat_aviation_brigade_by_lee1hy": {
+        "name": "2-6 CAV, 25th Combat Aviation Brigade",
+        "countries": [
+          "USA"
+        ]
+      },
+      "apache iaf grey": {
+        "name": "Indian Air Force - Gray",
+        "countries": [
+          "IND"
+        ]
+      },
+      "jgsdf\u2014\u20141st_combat_helicopter_unit": {
+        "name": "1st Combat Helicopter Unit, Japanese Ground SDF",
+        "countries": [
+          "JPN"
+        ]
+      },
+      "slayers 4-2 arb": {
+        "name": "C Company, Slayers, 4-2 ARB",
+        "countries": [
+          "USA"
+        ]
+      },
+      "iaf 113th hornet squadron": {
+        "name": "IAF 113th Hornet Squadron",
+        "countries": [
+          "ISR"
+        ]
+      },
+      "1st attack helicopter battalion greece": {
+        "name": "1st Attack Helicopter Battalion, Hellenic Army Aviation",
+        "countries": [
+          "GRC"
+        ]
+      },
+      "1st_bat_greek_pegasus_es1008": {
+        "name": "Pegasus Display Team - ES1008, Hellenic Army Aviation",
+        "countries": [
+          "GRC"
+        ]
+      }
     }
   },
   "Ka-50_3": {
@@ -883,15 +1062,210 @@
       "Antiship Strike"
     ],
     "liveries": {
-      "ka-50_desert_blackshark": "Desert camo #018 Zhukovsky 1997 Black Shark",
-      "ka-50_black_h347_blackshark": "Black H347 Le Bourget 1997 Black Shark",
-      "default": "Standart camo Russian Air Force",
-      "ka-50_camo_chechnya_ussr": "Standart camo n/a 2000-2001 Chechnya",
-      "ka-50_desert_werewolf": "Desert camo #018 Zhukovsky 1995 Werewolf",
-      "ka-50_blackshark_torzhok": "344th Center for Combat Employment Torzhok city Shark 1997",
-      "ka-50_black_neutral": "Black neutral n/a",
-      "ka-50_black_werewolf": "Black #020 Farnborough 1992 Werewolf",
-      "ka-50_standart_black_russianairforce": "Standart black Russian Air Force"
+      "ka-50_camo_chechnya_ussr": {
+        "name": "Standart camo n/a 2000-2001 Chechnya",
+        "countries": [
+          "RSI",
+          "GRC",
+          "EGY",
+          "ITA",
+          "CHN",
+          "INS",
+          "SUI",
+          "AUT",
+          "SVK",
+          "AUSAF",
+          "MAR",
+          "CUB",
+          "NZG",
+          "UKR",
+          "RUS",
+          "DZA",
+          "ARE",
+          "BGR",
+          "POL",
+          "HUN",
+          "MYS",
+          "PHL",
+          "QAT",
+          "SYR",
+          "CAN",
+          "BEL",
+          "ABH",
+          "OMN",
+          "ROU",
+          "ETH",
+          "UK",
+          "BHR",
+          "USA",
+          "DEN",
+          "TUR",
+          "VEN",
+          "JOR",
+          "YUG",
+          "THA",
+          "SWE",
+          "JPN",
+          "BLR",
+          "HND",
+          "CHL",
+          "BRA",
+          "SRB",
+          "FRA",
+          "GRG",
+          "NETH",
+          "KAZ",
+          "MEX",
+          "PAK",
+          "ISR",
+          "KOR",
+          "SDN",
+          "FIN",
+          "SPN",
+          "RSO",
+          "CZE",
+          "SUN",
+          "YEM",
+          "PRK",
+          "LBY",
+          "NOR",
+          "VNM",
+          "IDN",
+          "GER",
+          "IND",
+          "IRN",
+          "HRV",
+          "KWT",
+          "TUN",
+          "IRQ",
+          "SAU",
+          "RSA",
+          "AUS"
+        ]
+      },
+      "default": {
+        "name": "Standart camo Russian Air Force",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "ka-50_desert_blackshark": {
+        "name": "Desert camo #018 Zhukovsky 1997 Black Shark",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "ka-50_standart_black_russianairforce": {
+        "name": "Standart black Russian Air Force",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "ka-50_black_neutral": {
+        "name": "Black neutral n/a",
+        "countries": [
+          "RSI",
+          "GRC",
+          "EGY",
+          "ITA",
+          "CHN",
+          "INS",
+          "SUI",
+          "AUT",
+          "SVK",
+          "AUSAF",
+          "MAR",
+          "CUB",
+          "NZG",
+          "UKR",
+          "RUS",
+          "DZA",
+          "ARE",
+          "BGR",
+          "POL",
+          "HUN",
+          "MYS",
+          "PHL",
+          "QAT",
+          "SYR",
+          "CAN",
+          "BEL",
+          "ABH",
+          "OMN",
+          "ROU",
+          "ETH",
+          "UK",
+          "BHR",
+          "USA",
+          "DEN",
+          "TUR",
+          "VEN",
+          "JOR",
+          "YUG",
+          "THA",
+          "SWE",
+          "JPN",
+          "BLR",
+          "HND",
+          "CHL",
+          "BRA",
+          "SRB",
+          "FRA",
+          "GRG",
+          "NETH",
+          "KAZ",
+          "MEX",
+          "PAK",
+          "ISR",
+          "KOR",
+          "SDN",
+          "FIN",
+          "SPN",
+          "RSO",
+          "CZE",
+          "SUN",
+          "YEM",
+          "PRK",
+          "LBY",
+          "NOR",
+          "VNM",
+          "IDN",
+          "GER",
+          "IND",
+          "IRN",
+          "HRV",
+          "KWT",
+          "TUN",
+          "IRQ",
+          "SAU",
+          "RSA",
+          "AUS"
+        ]
+      },
+      "ka-50_desert_werewolf": {
+        "name": "Desert camo #018 Zhukovsky 1995 Werewolf",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "ka-50_blackshark_torzhok": {
+        "name": "344th Center for Combat Employment Torzhok city Shark 1997",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "ka-50_black_werewolf": {
+        "name": "Black #020 Farnborough 1992 Werewolf",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "ka-50_black_h347_blackshark": {
+        "name": "Black H347 Le Bourget 1997 Black Shark",
+        "countries": [
+          "RUS"
+        ]
+      }
     }
   },
   "Mi-24P": {
@@ -1296,17 +1670,81 @@
       "Antiship Strike"
     ],
     "liveries": {
-      "af standard3 old": "RF Air Force (weathered) type3",
-      "af syzran afb": "RF Air Force, Syzran AFB",
-      "ukrainian army aviation": "Ukrainian Army Aviation",
-      "syaaf": "Syrian Air Force",
-      "iqaf": "Iraqi Army Air Corps",
-      "united nations": "United Nations ",
-      "af 440 ovp": "RF Air Force, 440th Helicopter Regiment",
-      "af ussr": "USSR Air Force",
-      "russian air force": "RF Air Force Standard",
-      "georgian air force": "Georgian Air Force",
-      "af torzhok afb": "RF Air Force, aerobatics team 'Berkuts'"
+      "af torzhok afb": {
+        "name": "RF Air Force, aerobatics team 'Berkuts'",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      },
+      "georgian air force": {
+        "name": "Georgian Air Force",
+        "countries": [
+          "GRG"
+        ]
+      },
+      "united nations": {
+        "name": "United Nations ",
+        "countries": [
+          "UN",
+          "GRG",
+          "UKR",
+          "RUS"
+        ]
+      },
+      "iqaf": {
+        "name": "Iraqi Army Air Corps",
+        "countries": [
+          "IRQ"
+        ]
+      },
+      "russian air force": {
+        "name": "RF Air Force Standard",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      },
+      "af 440 ovp": {
+        "name": "RF Air Force, 440th Helicopter Regiment",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      },
+      "syaaf": {
+        "name": "Syrian Air Force",
+        "countries": [
+          "SYR"
+        ]
+      },
+      "af syzran afb": {
+        "name": "RF Air Force, Syzran AFB",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      },
+      "af ussr": {
+        "name": "USSR Air Force",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      },
+      "ukrainian army aviation": {
+        "name": "Ukrainian Army Aviation",
+        "countries": [
+          "UKR"
+        ]
+      },
+      "af standard3 old": {
+        "name": "RF Air Force (weathered) type3",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      }
     }
   },
   "Mi-26": {
@@ -1332,13 +1770,47 @@
       "Transport"
     ],
     "liveries": {
-      "7th separate brigade of aa (kalinov)": "7th Separate Brigade of AA (Kalinov)",
-      "algerian air force sl-22": "Algerian AF SL-22 ",
-      "united nations": "United Nations",
-      "russia_mvd": "Russia_MVD",
-      "russia_fsb": "Russia_FSB",
-      "china flying dragon aviation": "China Flying Dragon Aviation",
-      "rf air force": "RF Air Force"
+      "united nations": {
+        "name": "United Nations",
+        "countries": "All"
+      },
+      "rf air force": {
+        "name": "RF Air Force",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      },
+      "7th separate brigade of aa (kalinov)": {
+        "name": "7th Separate Brigade of AA (Kalinov)",
+        "countries": [
+          "UKR"
+        ]
+      },
+      "china flying dragon aviation": {
+        "name": "China Flying Dragon Aviation",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "russia_fsb": {
+        "name": "Russia_FSB",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "russia_mvd": {
+        "name": "Russia_MVD",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "algerian air force sl-22": {
+        "name": "Algerian AF SL-22 ",
+        "countries": [
+          "DZA"
+        ]
+      }
     }
   },
   "Mi-28N": {
@@ -1820,10 +2292,30 @@
       "Antiship Strike"
     ],
     "liveries": {
-      "aaf sc-12": "Algerian AF Desert SC-12",
-      "aaf sc-11": "Algerian AF Desert SC-11",
-      "night": "Night",
-      "standard": "Standard"
+      "aaf sc-12": {
+        "name": "Algerian AF Desert SC-12",
+        "countries": [
+          "DZA"
+        ]
+      },
+      "night": {
+        "name": "Night",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "aaf sc-11": {
+        "name": "Algerian AF Desert SC-11",
+        "countries": [
+          "DZA"
+        ]
+      },
+      "standard": {
+        "name": "Standard",
+        "countries": [
+          "RUS"
+        ]
+      }
     }
   },
   "Mi-8MT": {
@@ -1971,64 +2463,369 @@
       "Antiship Strike"
     ],
     "liveries": {
-      "ir afagir sand": "AFAGIR Sand",
-      "czech air force dark camo": "Czech Air Force ID-9XXX",
-      "ir afagir blue": "AFAGIR Blue",
-      "netherlands navy": "Fictional NAVY",
-      "ukraine": "Standard",
-      "belgium": "Fictional Olive",
-      "china plaaa camo": "PLA Army Aviation Camo",
-      "hellenic airforce sar": "Hellenic Airforce - Search and Rescue (Fictional)",
-      "hellenic army aviation": "Hellenic Army Aviation (Fictional)",
-      "russia_lii_gromov ra-25546": "Civil Lii Gromov RA-25546",
-      "china plaaa white": "PLA Army Aviation White",
-      "south ossetia": "Fictional RSO",
-      "georgia": "Georgian Standard",
-      "algerian af green evsan": "Algerian AF Green EVSAN",
-      "netherlands army": "Fictional ARMY",
-      "usa_afg": "438th Air Expeditionary Wing",
-      "russia_vertolety_russia": "Civil Vertolety RUSSIA",
-      "australia": "Fictional ARMY",
-      "russia_utair": "Civil Russia UTair",
-      "russia_gazprom": "Civil Gazprom Avia",
-      "russia_pf_ambulance": "Russia Ambulance (PF)",
-      "russia_vvs_grey": "RF Army Gray",
-      "russia_mvd_mozdok": "RF MVD Mozdok",
-      "russia_vvs_standard_2": "RF Army Standart",
-      "russia_fsb": "RF FSB Standard",
-      "russia_naryan-mar": "Civil_Russia Naryan-Mar",
-      "russia_vvs_ma": "RF Navy",
-      "france army": "Fictional ARMY",
-      "algerian af green": "Algerian AF Green",
-      "ir iranian special police forces": "NAJA",
-      "russia_army_weather": "Russia Army Weather",
-      "italy army": "Fictional ARMY",
-      "algerian af vip": "Algerian AF VIP",
-      "denmark": "Fictional Olive",
-      "russia_police": "Civil Russia Police",
-      "russia_mvd_standard": "RF MVD Standard",
-      "russia_un": "RF UN",
-      "russia_vvs_grey_2": "RF Army Gray",
-      "russia_vvs_standard": " RF Army Standard",
-      "germany": "Germany ARMY",
-      "algerian af old desert": "Algerian AF Old Desert",
-      "norway": "Fictional NAVY",
-      "russia_kazanvz": "Civil KazanVZ",
-      "spain": "Fictional Spain AF",
-      "turkey": "JANDARMA",
-      "abkhazia": "Abkhazia",
-      "algerian af new desert": "Algerian AF New Desert",
-      "canada": "Canada_Afghanistan",
-      "insurgents": "Standard",
-      "russia_vertolety_russia_2": "Civil Vertolety RUSSIA 22880",
-      "standard": "Standard",
-      "italy navy": "Fictional NAVY",
-      "israel": "Fictional ARMY",
-      "china un": "PLA Army Aviation United Nations",
-      "russia_aeroflot": "Civil AEROFLOT",
-      "bulgarian af": "Bulgarian Air Force",
-      "united kingdom": "Project curium",
-      "france navy": "Fictional NAVY"
+      "algerian af green": {
+        "name": "Algerian AF Green",
+        "countries": [
+          "DZA"
+        ]
+      },
+      "russia_mvd_mozdok": {
+        "name": "RF MVD Mozdok",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "south ossetia": {
+        "name": "Fictional RSO",
+        "countries": [
+          "RSO"
+        ]
+      },
+      "united kingdom": {
+        "name": "Project curium",
+        "countries": [
+          "UK"
+        ]
+      },
+      "russia_kazanvz": {
+        "name": "Civil KazanVZ",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "germany": {
+        "name": "Germany ARMY",
+        "countries": [
+          "GER"
+        ]
+      },
+      "china plaaa camo": {
+        "name": "PLA Army Aviation Camo",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "russia_vvs_grey_2": {
+        "name": "RF Army Gray",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "algerian af new desert": {
+        "name": "Algerian AF New Desert",
+        "countries": [
+          "DZA"
+        ]
+      },
+      "denmark": {
+        "name": "Fictional Olive",
+        "countries": [
+          "DEN"
+        ]
+      },
+      "russia_vvs_grey": {
+        "name": "RF Army Gray",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "russia_aeroflot": {
+        "name": "Civil AEROFLOT",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      },
+      "russia_fsb": {
+        "name": "RF FSB Standard",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "china plaaa white": {
+        "name": "PLA Army Aviation White",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "ir afagir blue": {
+        "name": "AFAGIR Blue",
+        "countries": [
+          "IRN"
+        ]
+      },
+      "usa_afg": {
+        "name": "438th Air Expeditionary Wing",
+        "countries": [
+          "USA"
+        ]
+      },
+      "spain": {
+        "name": "Fictional Spain AF",
+        "countries": [
+          "SPN"
+        ]
+      },
+      "italy navy": {
+        "name": "Fictional NAVY",
+        "countries": [
+          "ITA"
+        ]
+      },
+      "russia_pf_ambulance": {
+        "name": "Russia Ambulance (PF)",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "georgia": {
+        "name": "Georgian Standard",
+        "countries": [
+          "GRG"
+        ]
+      },
+      "russia_vertolety_russia_2": {
+        "name": "Civil Vertolety RUSSIA 22880",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "ukraine": {
+        "name": "Standard",
+        "countries": [
+          "UKR"
+        ]
+      },
+      "russia_gazprom": {
+        "name": "Civil Gazprom Avia",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "russia_utair": {
+        "name": "Civil Russia UTair",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "russia_vvs_ma": {
+        "name": "RF Navy",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "russia_vvs_standard_2": {
+        "name": "RF Army Standart",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "hellenic army aviation": {
+        "name": "Hellenic Army Aviation (Fictional)",
+        "countries": [
+          "GRC"
+        ]
+      },
+      "belgium": {
+        "name": "Fictional Olive",
+        "countries": [
+          "BEL"
+        ]
+      },
+      "insurgents": {
+        "name": "Standard",
+        "countries": [
+          "INS"
+        ]
+      },
+      "ir afagir sand": {
+        "name": "AFAGIR Sand",
+        "countries": [
+          "IRN"
+        ]
+      },
+      "ir iranian special police forces": {
+        "name": "NAJA",
+        "countries": [
+          "IRN"
+        ]
+      },
+      "russia_lii_gromov ra-25546": {
+        "name": "Civil Lii Gromov RA-25546",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "russia_naryan-mar": {
+        "name": "Civil_Russia Naryan-Mar",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "algerian af vip": {
+        "name": "Algerian AF VIP",
+        "countries": [
+          "DZA"
+        ]
+      },
+      "russia_vvs_standard": {
+        "name": " RF Army Standard",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "russia_mvd_standard": {
+        "name": "RF MVD Standard",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "israel": {
+        "name": "Fictional ARMY",
+        "countries": [
+          "ISR"
+        ]
+      },
+      "china un": {
+        "name": "PLA Army Aviation United Nations",
+        "countries": [
+          "CHN"
+        ]
+      },
+      "algerian af green evsan": {
+        "name": "Algerian AF Green EVSAN",
+        "countries": [
+          "DZA"
+        ]
+      },
+      "algerian af old desert": {
+        "name": "Algerian AF Old Desert",
+        "countries": [
+          "DZA"
+        ]
+      },
+      "italy army": {
+        "name": "Fictional ARMY",
+        "countries": [
+          "ITA"
+        ]
+      },
+      "france army": {
+        "name": "Fictional ARMY",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "abkhazia": {
+        "name": "Abkhazia",
+        "countries": [
+          "ABH"
+        ]
+      },
+      "czech air force dark camo": {
+        "name": "Czech Air Force ID-9XXX",
+        "countries": [
+          "CZE"
+        ]
+      },
+      "norway": {
+        "name": "Fictional NAVY",
+        "countries": [
+          "NOR"
+        ]
+      },
+      "netherlands navy": {
+        "name": "Fictional NAVY",
+        "countries": [
+          "NETH"
+        ]
+      },
+      "russia_un": {
+        "name": "RF UN",
+        "countries": [
+          "UN",
+          "RUS"
+        ]
+      },
+      "hellenic airforce sar": {
+        "name": "Hellenic Airforce - Search and Rescue (Fictional)",
+        "countries": [
+          "GRC"
+        ]
+      },
+      "canada": {
+        "name": "Canada_Afghanistan",
+        "countries": [
+          "CAN"
+        ]
+      },
+      "russia_army_weather": {
+        "name": "Russia Army Weather",
+        "countries": [
+          "SUN",
+          "RUS"
+        ]
+      },
+      "russia_vertolety_russia": {
+        "name": "Civil Vertolety RUSSIA",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "turkey": {
+        "name": "JANDARMA",
+        "countries": [
+          "TUR"
+        ]
+      },
+      "france navy": {
+        "name": "Fictional NAVY",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "netherlands army": {
+        "name": "Fictional ARMY",
+        "countries": [
+          "NETH"
+        ]
+      },
+      "standard": {
+        "name": "Standard",
+        "countries": [
+          "SPN",
+          "ITA",
+          "INS",
+          "CAN",
+          "FRA",
+          "NETH",
+          "NOR",
+          "GER",
+          "UK",
+          "USA",
+          "ISR",
+          "TUR",
+          "AUS"
+        ]
+      },
+      "australia": {
+        "name": "Fictional ARMY",
+        "countries": [
+          "AUS"
+        ]
+      },
+      "bulgarian af": {
+        "name": "Bulgarian Air Force",
+        "countries": [
+          "BGR"
+        ]
+      },
+      "russia_police": {
+        "name": "Civil Russia Police",
+        "countries": [
+          "RUS"
+        ]
+      }
     }
   },
   "SA342L": {
@@ -2112,24 +2909,150 @@
       "Reconnaissance"
     ],
     "liveries": {
-      "tiger meet": "Tiger Meet",
-      "uk fictional": "UK Fictional",
-      "yugoslav fictional": "Yugoslav Fictional",
-      "combat sable": "Combat desert",
-      "serbia fictional": "Serbia Fictional",
-      "israel fictional": "Israel Fictional",
-      "tiger meet 2": "Tiger Meet 2",
-      "training ealat": "Training EALAT",
-      "dutch fictional": "RNLAF fictional",
-      "syria fictional": "Syria Fictional",
-      "us marines fictional": "US Marines Fictional",
-      "germany fictional": "Germany Fictional",
-      "cyprus air force": "Cyprus air force",
-      "greece cyprus fictional desert": "Greece Cyprus Fictional Desert",
-      "training": "Training",
-      "combat": "Combat",
-      "russia fictional": "Russia Fictional",
-      "portuguese modern fictional": "Portuguese modern Fictional"
+      "portuguese modern fictional": {
+        "name": "Portuguese modern Fictional",
+        "countries": [
+          "",
+          "FRA",
+          "PRT"
+        ]
+      },
+      "uk fictional": {
+        "name": "UK Fictional",
+        "countries": [
+          "UK"
+        ]
+      },
+      "fr green armee hri daguet": {
+        "name": "Armee HRI Daguet",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "israel fictional": {
+        "name": "Israel Fictional",
+        "countries": [
+          "ISR"
+        ]
+      },
+      "training ealat": {
+        "name": "Training EALAT",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "lebanon": {
+        "name": "Lebanon",
+        "countries": "All"
+      },
+      "nato_drab_us": {
+        "name": "US Army Olive Drab",
+        "countries": "All"
+      },
+      "nato_drab_nl": {
+        "name": "RNLAF Olive Drab",
+        "countries": "All"
+      },
+      "training": {
+        "name": "Training",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "combat": {
+        "name": "Combat",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "combat sable": {
+        "name": "Combat desert",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "dutch fictional": {
+        "name": "RNLAF fictional",
+        "countries": [
+          "",
+          "NETH"
+        ]
+      },
+      "yugoslav fictional": {
+        "name": "Yugoslav Fictional",
+        "countries": [
+          "SRB"
+        ]
+      },
+      "us marines fictional": {
+        "name": "US Marines Fictional",
+        "countries": [
+          "USA"
+        ]
+      },
+      "nato_drab_hel": {
+        "name": "Hellenic Airforce Olive Drab",
+        "countries": "All"
+      },
+      "nato_drab_uk": {
+        "name": "Army Air Corps Olive Drab",
+        "countries": "All"
+      },
+      "tiger meet": {
+        "name": "Tiger Meet",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "cyprus air force": {
+        "name": "Cyprus air force",
+        "countries": [
+          "",
+          "CYP"
+        ]
+      },
+      "russia fictional": {
+        "name": "Russia Fictional",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "greece cyprus fictional desert": {
+        "name": "Greece Cyprus Fictional Desert",
+        "countries": [
+          "GRC"
+        ]
+      },
+      "fr green armee hri": {
+        "name": "Armee HRI",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "tiger meet 2": {
+        "name": "Tiger Meet 2",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "germany fictional": {
+        "name": "Germany Fictional",
+        "countries": [
+          "GER"
+        ]
+      },
+      "syria fictional": {
+        "name": "Syria Fictional",
+        "countries": [
+          "SYR"
+        ]
+      },
+      "serbia fictional": {
+        "name": "Serbia Fictional",
+        "countries": [
+          "SRB"
+        ]
+      }
     }
   },
   "SA342M": {
@@ -2259,24 +3182,134 @@
       "Reconnaissance"
     ],
     "liveries": {
-      "tiger meet": "Tiger Meet",
-      "uk fictional": "UK Fictional",
-      "yugoslav fictional": "Yugoslav Fictional",
-      "combat sable": "Combat desert",
-      "serbia fictional": "Serbia Fictional",
-      "israel fictional": "Israel Fictional",
-      "tiger meet 2": "Tiger Meet 2",
-      "training ealat": "Training EALAT",
-      "dutch fictional": "RNLAF fictional",
-      "syria fictional": "Syria Fictional",
-      "us marines fictional": "US Marines Fictional",
-      "germany fictional": "Germany Fictional",
-      "cyprus air force": "Cyprus air force",
-      "greece cyprus fictional desert": "Greece Cyprus Fictional Desert",
-      "training": "Training",
-      "combat": "Combat",
-      "russia fictional": "Russia Fictional",
-      "portuguese modern fictional": "Portuguese modern Fictional"
+      "portuguese modern fictional": {
+        "name": "Portuguese modern Fictional",
+        "countries": [
+          "",
+          "FRA",
+          "PRT"
+        ]
+      },
+      "uk fictional": {
+        "name": "UK Fictional",
+        "countries": [
+          "UK"
+        ]
+      },
+      "training ealat": {
+        "name": "Training EALAT",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "israel fictional": {
+        "name": "Israel Fictional",
+        "countries": [
+          "ISR"
+        ]
+      },
+      "nato_drab_us": {
+        "name": "US Army Olive Drab",
+        "countries": "All"
+      },
+      "nato_drab_nl": {
+        "name": "RNLAF Olive Drab",
+        "countries": "All"
+      },
+      "training": {
+        "name": "Training",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "combat": {
+        "name": "Combat",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "combat sable": {
+        "name": "Combat desert",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "dutch fictional": {
+        "name": "RNLAF fictional",
+        "countries": [
+          "",
+          "NETH"
+        ]
+      },
+      "yugoslav fictional": {
+        "name": "Yugoslav Fictional",
+        "countries": [
+          "SRB"
+        ]
+      },
+      "us marines fictional": {
+        "name": "US Marines Fictional",
+        "countries": [
+          "USA"
+        ]
+      },
+      "nato_drab_hel": {
+        "name": "Hellenic Airforce Olive Drab",
+        "countries": "All"
+      },
+      "nato_drab_uk": {
+        "name": "Army Air Corps Olive Drab",
+        "countries": "All"
+      },
+      "tiger meet": {
+        "name": "Tiger Meet",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "cyprus air force": {
+        "name": "Cyprus air force",
+        "countries": [
+          "",
+          "CYP"
+        ]
+      },
+      "russia fictional": {
+        "name": "Russia Fictional",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "greece cyprus fictional desert": {
+        "name": "Greece Cyprus Fictional Desert",
+        "countries": [
+          "GRC"
+        ]
+      },
+      "tiger meet 2": {
+        "name": "Tiger Meet 2",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "germany fictional": {
+        "name": "Germany Fictional",
+        "countries": [
+          "GER"
+        ]
+      },
+      "syria fictional": {
+        "name": "Syria Fictional",
+        "countries": [
+          "SYR"
+        ]
+      },
+      "serbia fictional": {
+        "name": "Serbia Fictional",
+        "countries": [
+          "SRB"
+        ]
+      }
     }
   },
   "SA342Mistral": {
@@ -2358,24 +3391,118 @@
       "Reconnaissance"
     ],
     "liveries": {
-      "tiger meet": "Tiger Meet",
-      "uk fictional": "UK Fictional",
-      "yugoslav fictional": "Yugoslav Fictional",
-      "combat sable": "Combat desert",
-      "serbia fictional": "Serbia Fictional",
-      "israel fictional": "Israel Fictional",
-      "tiger meet 2": "Tiger Meet 2",
-      "training ealat": "Training EALAT",
-      "dutch fictional": "RNLAF fictional",
-      "syria fictional": "Syria Fictional",
-      "us marines fictional": "US Marines Fictional",
-      "germany fictional": "Germany Fictional",
-      "cyprus air force": "Cyprus air force",
-      "greece cyprus fictional desert": "Greece Cyprus Fictional Desert",
-      "training": "Training",
-      "combat": "Combat",
-      "russia fictional": "Russia Fictional",
-      "portuguese modern fictional": "Portuguese modern Fictional"
+      "portuguese modern fictional": {
+        "name": "Portuguese modern Fictional",
+        "countries": [
+          "",
+          "FRA",
+          "PRT"
+        ]
+      },
+      "greece cyprus fictional desert": {
+        "name": "Greece Cyprus Fictional Desert",
+        "countries": [
+          "GRC"
+        ]
+      },
+      "russia fictional": {
+        "name": "Russia Fictional",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "training ealat": {
+        "name": "Training EALAT",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "tiger meet 2": {
+        "name": "Tiger Meet 2",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "combat sable": {
+        "name": "Combat desert",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "germany fictional": {
+        "name": "Germany Fictional",
+        "countries": [
+          "GER"
+        ]
+      },
+      "tiger meet": {
+        "name": "Tiger Meet",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "uk fictional": {
+        "name": "UK Fictional",
+        "countries": [
+          "UK"
+        ]
+      },
+      "syria fictional": {
+        "name": "Syria Fictional",
+        "countries": [
+          "SYR"
+        ]
+      },
+      "dutch fictional": {
+        "name": "RNLAF fictional",
+        "countries": [
+          "",
+          "NETH"
+        ]
+      },
+      "yugoslav fictional": {
+        "name": "Yugoslav Fictional",
+        "countries": [
+          "SRB"
+        ]
+      },
+      "us marines fictional": {
+        "name": "US Marines Fictional",
+        "countries": [
+          "USA"
+        ]
+      },
+      "israel fictional": {
+        "name": "Israel Fictional",
+        "countries": [
+          "ISR"
+        ]
+      },
+      "training": {
+        "name": "Training",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "combat": {
+        "name": "Combat",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "serbia fictional": {
+        "name": "Serbia Fictional",
+        "countries": [
+          "SRB"
+        ]
+      },
+      "cyprus air force": {
+        "name": "Cyprus air force",
+        "countries": [
+          "",
+          "CYP"
+        ]
+      }
     }
   },
   "SH-60B": {
@@ -2416,8 +3543,18 @@
       "Transport"
     ],
     "liveries": {
-      "hellenic navy": "Hellenic Navy",
-      "standard": "standard"
+      "standard": {
+        "name": "standard",
+        "countries": [
+          "USA"
+        ]
+      },
+      "hellenic navy": {
+        "name": "Hellenic Navy",
+        "countries": [
+          "GRC"
+        ]
+      }
     }
   },
   "UH-1H": {
@@ -2470,43 +3607,238 @@
       "Transport"
     ],
     "liveries": {
-      "french army": "French Army",
-      "rf air force broken": "RF Air Force Broken",
-      "luftwaffe": "Luftwaffe",
-      "australia raaf 171 sqn": "RAAF 171 Sqn",
-      "us navy": "US NAVY",
-      "italy 15b stormo s.a.r -soccorso": "15\u0412\u00b0 Stormo S.A.R -Soccorso",
-      "us ft. rucker": "US Ft. Rucker",
-      "army standard": "Army Standard",
-      "italy marina militare s.n. 80951 7-20": "Marina Militare s.n. 80951 7-20",
-      "[civilian] standard": "Olive drab",
-      "australia raaf 1968": "RAAF 1968",
-      "hellenic airforce sar": "Hellenic Airforce - S.A.R.",
-      "turkish air force": "Turkish Air Force",
-      "xw-pfj air america": "XW-PFJ Air America",
-      "israel army": "Israel Army",
-      "spanish army": "Spanish Army",
-      "georgian af camo": "Georgian AF Camo",
-      "algerian af bv-32": "Algerian AF BV-32",
-      "royal netherlands af": "Royal Netherlands AF",
-      "us army 1972": "US ARMY 1972",
-      "[civilian] vip": "[Civilian] VIP",
-      "spanish un": "Spanish UN",
-      "norwegian coast guard (235)": "Norwegian Coast Guard (235)",
-      "greek army aviation medic": "Greek Army Aviation Medic",
-      "[civilian] medical": "[Civilian] Medical",
-      "usa un": "USA UN",
-      "greek army aviation": "Greek Army Aviation",
-      "italy e.i. 4b regg. altair": "E.I. 4\u0412\u00b0 Regg. ALTAIR",
-      "canadian force": "Canadian Force",
-      "norwegian un": "Norwegian UN",
-      "rf air force grey": "RF Air Force Grey",
-      "ukrainian army": "Ukrainian Army",
-      "australia royal navy": "Royal Australian Navy",
-      "[civilian] nasa": "[Civilian] NASA",
-      "georgian air force": "Georgian Air Force",
-      "usa red flag": "USA Red Flag",
-      "us dos": "US DOS"
+      "[civilian] nasa": {
+        "name": "[Civilian] NASA",
+        "countries": [
+          "USA"
+        ]
+      },
+      "norwegian coast guard (235)": {
+        "name": "Norwegian Coast Guard (235)",
+        "countries": [
+          "NOR"
+        ]
+      },
+      "australia royal navy": {
+        "name": "Royal Australian Navy",
+        "countries": [
+          "AUS"
+        ]
+      },
+      "australia raaf 171 sqn": {
+        "name": "RAAF 171 Sqn",
+        "countries": [
+          "AUS"
+        ]
+      },
+      "spanish un": {
+        "name": "Spanish UN",
+        "countries": [
+          "UN",
+          "SPN"
+        ]
+      },
+      "xw-pfj air america": {
+        "name": "XW-PFJ Air America",
+        "countries": [
+          "USA"
+        ]
+      },
+      "rf air force broken": {
+        "name": "RF Air Force Broken",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "[civilian] standard": {
+        "name": "Olive drab",
+        "countries": [
+          "RSO",
+          "INS",
+          "BEL",
+          "ABH",
+          "NOR",
+          "UK",
+          "DEN",
+          "USA"
+        ]
+      },
+      "greek army aviation": {
+        "name": "Greek Army Aviation",
+        "countries": [
+          "GRC"
+        ]
+      },
+      "greek army aviation medic": {
+        "name": "Greek Army Aviation Medic",
+        "countries": [
+          "GRC"
+        ]
+      },
+      "italy marina militare s.n. 80951 7-20": {
+        "name": "Marina Militare s.n. 80951 7-20",
+        "countries": [
+          "ITA"
+        ]
+      },
+      "us navy": {
+        "name": "US NAVY",
+        "countries": [
+          "USA"
+        ]
+      },
+      "australia raaf 1968": {
+        "name": "RAAF 1968",
+        "countries": [
+          "AUS"
+        ]
+      },
+      "ukrainian army": {
+        "name": "Ukrainian Army",
+        "countries": [
+          "UKR"
+        ]
+      },
+      "[civilian] vip": {
+        "name": "[Civilian] VIP",
+        "countries": [
+          "USA"
+        ]
+      },
+      "usa un": {
+        "name": "USA UN",
+        "countries": [
+          "USA",
+          "UN"
+        ]
+      },
+      "royal netherlands af": {
+        "name": "Royal Netherlands AF",
+        "countries": [
+          "NETH"
+        ]
+      },
+      "turkish air force": {
+        "name": "Turkish Air Force",
+        "countries": [
+          "TUR"
+        ]
+      },
+      "israel army": {
+        "name": "Israel Army",
+        "countries": [
+          "ISR"
+        ]
+      },
+      "[civilian] medical": {
+        "name": "[Civilian] Medical",
+        "countries": [
+          "USA"
+        ]
+      },
+      "luftwaffe": {
+        "name": "Luftwaffe",
+        "countries": [
+          "GER"
+        ]
+      },
+      "usa red flag": {
+        "name": "USA Red Flag",
+        "countries": [
+          "USA"
+        ]
+      },
+      "canadian force": {
+        "name": "Canadian Force",
+        "countries": [
+          "CAN"
+        ]
+      },
+      "italy e.i. 4b regg. altair": {
+        "name": "E.I. 4\u0412\u00b0 Regg. ALTAIR",
+        "countries": [
+          "ITA"
+        ]
+      },
+      "georgian af camo": {
+        "name": "Georgian AF Camo",
+        "countries": [
+          "GRG"
+        ]
+      },
+      "us army 1972": {
+        "name": "US ARMY 1972",
+        "countries": [
+          "USA"
+        ]
+      },
+      "georgian air force": {
+        "name": "Georgian Air Force",
+        "countries": [
+          "GRG"
+        ]
+      },
+      "french army": {
+        "name": "French Army",
+        "countries": [
+          "FRA"
+        ]
+      },
+      "algerian af bv-32": {
+        "name": "Algerian AF BV-32",
+        "countries": [
+          "DZA"
+        ]
+      },
+      "hellenic airforce sar": {
+        "name": "Hellenic Airforce - S.A.R.",
+        "countries": [
+          "GRC"
+        ]
+      },
+      "italy 15b stormo s.a.r -soccorso": {
+        "name": "15\u0412\u00b0 Stormo S.A.R -Soccorso",
+        "countries": [
+          "ITA"
+        ]
+      },
+      "rf air force grey": {
+        "name": "RF Air Force Grey",
+        "countries": [
+          "RUS"
+        ]
+      },
+      "spanish army": {
+        "name": "Spanish Army",
+        "countries": [
+          "SPN"
+        ]
+      },
+      "norwegian un": {
+        "name": "Norwegian UN",
+        "countries": [
+          "UN",
+          "NOR"
+        ]
+      },
+      "us dos": {
+        "name": "US DOS",
+        "countries": [
+          "USA"
+        ]
+      },
+      "army standard": {
+        "name": "Army Standard",
+        "countries": [
+          "USA"
+        ]
+      },
+      "us ft. rucker": {
+        "name": "US Ft. Rucker",
+        "countries": [
+          "USA"
+        ]
+      }
     }
   },
   "UH-60A": {
@@ -2532,8 +3864,36 @@
       "Transport"
     ],
     "liveries": {
-      "israil_un": "ISRAIL_UN",
-      "standard": "standard"
+      "israil_un": {
+        "name": "ISRAIL_UN",
+        "countries": [
+          "ISR",
+          "UN"
+        ]
+      },
+      "standard": {
+        "name": "standard",
+        "countries": [
+          "SPN",
+          "RSO",
+          "ITA",
+          "BEL",
+          "CAN",
+          "FRA",
+          "GRG",
+          "NETH",
+          "NOR",
+          "ABH",
+          "GER",
+          "UK",
+          "USA",
+          "UKR",
+          "DEN",
+          "RUS",
+          "ISR",
+          "TUR"
+        ]
+      }
     }
   }
 }
