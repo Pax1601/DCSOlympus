@@ -60,6 +60,7 @@ void Scheduler::execute(lua_State* L)
 					log("Command '" + commandString + "' executed correctly, current load " + to_string(getLoad()));
 				load = command->getLoad();
 				commands.remove(command);
+				executedCommandsHashes.push_back(command->getHash());
 				delete command;
 				return;
 			}
@@ -134,7 +135,7 @@ bool Scheduler::checkSpawnPoints(int spawnPoints, string coalition)
 	}
 }
 
-void Scheduler::handleRequest(string key, json::value value, string username)
+void Scheduler::handleRequest(string key, json::value value, string username, json::value& answer)
 {
 	Command* command = nullptr;
 
@@ -565,6 +566,7 @@ void Scheduler::handleRequest(string key, json::value value, string username)
 	{
 		appendCommand(command);
 		log("New command appended correctly to stack. Current server load: " + to_string(getLoad()));
+		answer[L"commandHash"] = json::value(to_wstring(command->getHash()));
 	}
 }
 

@@ -142,6 +142,9 @@ void Server::handle_get(http_request request)
                         else 
                             answer[L"mission"][L"commandModeOptions"][L"commandMode"] = json::value(L"Observer");
                     }
+                    else if (URI.compare(COMMANDS_URI) && query.find(L"commandHash") != query.end()) {
+                        answer[L"commandExectued"] = json::value(scheduler->isCommandExecuted(to_string(query[L"commandHash"])));
+                    }
                     
                     /* Common data */
                     answer[L"time"] = json::value::string(to_wstring(ms.count()));
@@ -222,7 +225,7 @@ void Server::handle_put(http_request request)
             
             std::exception_ptr eptr;
             try {
-                scheduler->handleRequest(to_string(key), value, username);
+                scheduler->handleRequest(to_string(key), value, username, answer);
             }
             catch (...) {
                 eptr = std::current_exception(); // capture

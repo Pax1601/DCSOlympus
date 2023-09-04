@@ -10,5 +10,6 @@
 #define AIRBASES_URI "airbases"
 #define BULLSEYE_URI "bullseyes"
 #define MISSION_URI "mission"
+#define COMMANDS_URI "commands"
 
 #define FRAMERATE_TIME_INTERVAL 0.05

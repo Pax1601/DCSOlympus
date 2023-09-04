@@ -1,5 +1,13 @@
 import { LatLng, LatLngBounds } from "leaflet";
 
+export const UNITS_URI = "units";
+export const WEAPONS_URI = "weapons";
+export const LOGS_URI = "logs";
+export const AIRBASES_URI = "airbases";
+export const BULLSEYE_URI = "bullseyes";
+export const MISSION_URI = "mission";
+export const COMMANDS_URI = "commands";
+
 export const NONE = "None";
 export const GAME_MASTER = "Game master";
 export const BLUE_COMMANDER = "Blue commander";
