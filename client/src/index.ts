@@ -20,6 +20,9 @@ import { BLUE_COMMANDER, GAME_MASTER, RED_COMMANDER } from "./constants/constant
 import { ServerStatusPanel } from "./panels/serverstatuspanel";
 import { WeaponsManager } from "./weapon/weaponsmanager";
 import { IndexApp } from "./indexapp";
+import { ShortcutKeyboard } from "./shortcut/shortcut";
+import { ShortcutManager } from "./shortcut/shortcutmanager";
+import { OlympusApp } from "./olympusapp";
 
 var map: Map;
 
@@ -86,9 +89,6 @@ function setup() {
         atc.startUpdates();
     }
 
-    /* Setup event handlers */
-    setupEvents();
-
     /* Load the config file */
     getConfig(readConfig);
 
@@ -114,8 +114,9 @@ function setup() {
         "unitDataTable": unitDataTable,
         "unitsManager": unitsManager
     });
-    
-    indexApp.start();
+
+    /* Setup event handlers */
+    setupEvents( indexApp );
 
 }
 
@@ -131,7 +132,7 @@ function readConfig(config: any) {
     }
 }
 
-function setupEvents() {
+function setupEvents( indexApp:OlympusApp ) {
 
     /* Generic clicks */
     document.addEventListener("click", (ev) => {
@@ -158,48 +159,69 @@ function setupEvents() {
         }
     });
 
-    /* Keyup events */
-    document.addEventListener("keyup", ev => {
-        if (keyEventWasInInput(ev)) {
-            return;
-        }
-        switch (ev.code) {
-            case "KeyT":
+
+    const shortcutManager = indexApp.getShortcutManager();
+
+    shortcutManager .add( "toggleDemo", new ShortcutKeyboard({
+            "callback": () => {
                 toggleDemoEnabled();
-                break;
-            case "Quote":
+            },
+            "code": "KeyT"
+        })
+    )
+    .add( "toggleUnitDataTable", new ShortcutKeyboard({
+            "callback": () => {
                 unitDataTable.toggle();
-                break
-            case "Space":
+            },
+            "code": "Quote"
+        })
+    )
+    .add( "togglePause", new ShortcutKeyboard({
+            "callback": () => {
                 setPaused(!getPaused());
-                break;
-            case "KeyW": case "KeyA": case "KeyS": case "KeyD":
-            case "ArrowLeft":  case "ArrowRight": case "ArrowUp": case "ArrowDown":
+            },
+            "code": "space"
+        })
+    );
+
+    [ "KeyW", "KeyA", "KeyS", "KeyD", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown" ].forEach( code => {
+        shortcutManager.add( `pan${code}keydown`, new ShortcutKeyboard({
+            "callback": ( ev:KeyboardEvent ) => {
                 getMap().handleMapPanning(ev);
-                break;
-            case "Digit1": case "Digit2": case "Digit3": case "Digit4": case "Digit5": case "Digit6": case "Digit7": case "Digit8": case "Digit9":     
-                // Using the substring because the key will be invalid when pressing the Shift key
+            },
+            "code": code,
+            "event": "keydown"
+        }));
+    });
+    
+    [ "KeyW", "KeyA", "KeyS", "KeyD", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown" ].forEach( code => {
+        shortcutManager.add( `pan${code}keyup`, new ShortcutKeyboard({
+            "callback": ( ev:KeyboardEvent ) => {
+                getMap().handleMapPanning(ev);
+            },
+            "code": code
+        }));
+    });
+
+    [ "Digit1", "Digit2", "Digit3", "Digit4", "Digit5", "Digit6", "Digit7", "Digit8", "Digit9" ].forEach( code => {
+        shortcutManager.add( `hotgroup${code}`, new ShortcutKeyboard({
+            "callback": ( ev:KeyboardEvent ) => {
                 if (ev.ctrlKey && ev.shiftKey)
                     getUnitsManager().selectedUnitsAddToHotgroup(parseInt(ev.code.substring(5)));
                 else if (ev.ctrlKey && !ev.shiftKey)
                     getUnitsManager().selectedUnitsSetHotgroup(parseInt(ev.code.substring(5)));
                 else
                     getUnitsManager().selectUnitsByHotgroup(parseInt(ev.code.substring(5)));
-                break;
-        }
+            },
+            "code": code
+        }));
     });
 
+    /* Keyup events */
+
+
     /* Keydown events */
-    document.addEventListener("keydown", ev => {
-        if (keyEventWasInInput(ev)) {
-            return;
-        }
-        switch (ev.code) {
-            case "KeyW": case "KeyA": case "KeyS": case "KeyD": case "ArrowLeft": case "ArrowRight": case "ArrowUp": case "ArrowDown":
-                getMap().handleMapPanning(ev);
-                break;
-        }
-    });
+
 
     document.addEventListener("closeDialog", (ev: CustomEventInit) => {
         ev.detail._element.closest(".ol-dialog").classList.add("hide");

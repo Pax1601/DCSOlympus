@@ -1,12 +1,11 @@
 import { OlympusApp } from "../olympusapp";
-
-export interface PluginInterface {
-}
+const templateParser = require( "ejs" );
 
 export abstract class Plugin {
 
     #olympusApp!:OlympusApp;
     protected name = "";
+    #templateParser:any;
 
     constructor( olympusApp:OlympusApp, pluginName:string ) {
 
@@ -16,8 +15,9 @@ export abstract class Plugin {
             throw new Error( `Plugin names must match regex: ${regex}` );
         }
 
-        this.name        = pluginName;
-        this.#olympusApp = olympusApp;
+        this.name            = pluginName;
+        this.#olympusApp     = olympusApp;
+        this.#templateParser = templateParser;
 
     }
 
@@ -27,6 +27,10 @@ export abstract class Plugin {
 
     getOlympusApp() {
         return this.#olympusApp;
+    }
+
+    getTemplateParser() {
+        return this.#templateParser;
     }
 
 }

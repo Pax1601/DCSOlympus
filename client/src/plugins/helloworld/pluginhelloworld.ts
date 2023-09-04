@@ -1,8 +1,8 @@
 import { OlympusApp } from "../../olympusapp";
-import { Plugin, PluginInterface } from "../../plugin/plugin";
+import { Plugin } from "../../plugin/plugin";
 
 
-export class PluginHelloWorld extends Plugin implements PluginInterface {
+export class PluginHelloWorld extends Plugin {
 
     constructor( olympusApp:OlympusApp ) {
         
@@ -23,7 +23,13 @@ export class PluginHelloWorld extends Plugin implements PluginInterface {
             }
         });
 
-        //const tpl = new ejs
+        const tpl = `
+            <div id="hello-world">
+                Hello world!
+            </div>
+        `;
+
+        panel.getElement().innerHTML = this.getTemplateParser().render( tpl );
 
     }
 }

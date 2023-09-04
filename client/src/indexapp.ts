@@ -45,13 +45,14 @@ export class IndexApp extends OlympusApp {
         // this.setMap( config.map );
 
         //  Panels
-        this.getPanelsManager().add( "connectionStatus", config.panels.connectionStatus );
-        this.getPanelsManager().add( "hotgroup", config.panels.hotgroup );
-        this.getPanelsManager().add( "log", config.panels.log );
-        this.getPanelsManager().add( "mouseInfo", config.panels.mouseInfo );
-        this.getPanelsManager().add( "serverStatus", config.panels.serverStatus );
-        this.getPanelsManager().add( "unitControl", config.panels.unitControl );
-        this.getPanelsManager().add( "unitInfo", config.panels.unitInfo );
+        this.getPanelsManager()
+            .add( "connectionStatus", config.panels.connectionStatus )
+            .add( "hotgroup", config.panels.hotgroup )
+            .add( "log", config.panels.log )
+            .add( "mouseInfo", config.panels.mouseInfo )
+            .add( "serverStatus", config.panels.serverStatus )
+            .add( "unitControl", config.panels.unitControl )
+            .add( "unitInfo", config.panels.unitInfo );
         
         //  Popup
         this.getPanelsManager().add( "unitPopup", config.panels.infoPopup );

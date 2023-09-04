@@ -29,6 +29,8 @@ export abstract class Manager {
 
         this.#items[ name ] = item;
 
+        return this;
+
     }
 
     get( name:string ) {
