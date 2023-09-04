@@ -142,8 +142,8 @@ void Server::handle_get(http_request request)
                         else 
                             answer[L"mission"][L"commandModeOptions"][L"commandMode"] = json::value(L"Observer");
                     }
-                    else if (URI.compare(COMMANDS_URI) && query.find(L"commandHash") != query.end()) {
-                        answer[L"commandExectued"] = json::value(scheduler->isCommandExecuted(to_string(query[L"commandHash"])));
+                    else if (URI.compare(COMMANDS_URI) == 0 && query.find(L"commandHash") != query.end()) {
+                        answer[L"commandExecuted"] = json::value(scheduler->isCommandExecuted(to_string(query[L"commandHash"])));
                     }
                     
                     /* Common data */

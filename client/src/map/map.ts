@@ -431,25 +431,6 @@ export class Map extends L.Map {
         this.#temporaryMarkers.push(marker);
     }
 
-    removeTemporaryMarker(latlng: L.LatLng) {
-        // TODO something more refined than this
-        var dist: number | null = null;
-        var closest: L.Marker | null = null;
-        var i: number = 0;
-        this.#temporaryMarkers.forEach((marker: L.Marker, idx: number) => {
-            var t = latlng.distanceTo(marker.getLatLng());
-            if (dist == null || t < dist) {
-                dist = t;
-                closest = marker;
-                i = idx;
-            }
-        });
-        if (closest && dist != null && dist < 100) {
-            this.removeLayer(closest);
-            this.#temporaryMarkers.splice(i, 1);
-        }
-    }
-
     getSelectedCoalitionArea() {
         return this.#coalitionAreas.find((area: CoalitionArea) => { return area.getSelected() });
     }

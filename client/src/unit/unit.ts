@@ -715,8 +715,6 @@ export class Unit extends CustomMarker {
     /***********************************************/
     onAdd(map: Map): this {
         super.onAdd(map);
-        /* If this is the first time adding this unit to the map, remove the temporary marker */
-        getMap().removeTemporaryMarker(new LatLng(this.#position.lat, this.#position.lng));
         return this;
     }
 
