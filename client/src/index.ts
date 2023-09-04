@@ -162,7 +162,8 @@ function setupEvents( indexApp:OlympusApp ) {
 
     const shortcutManager = indexApp.getShortcutManager();
 
-    shortcutManager .add( "toggleDemo", new ShortcutKeyboard({
+    
+    shortcutManager.add( "toggleDemo", new ShortcutKeyboard({
             "callback": () => {
                 toggleDemoEnabled();
             },
@@ -217,10 +218,6 @@ function setupEvents( indexApp:OlympusApp ) {
         }));
     });
 
-    /* Keyup events */
-
-
-    /* Keydown events */
 
 
     document.addEventListener("closeDialog", (ev: CustomEventInit) => {

@@ -8,6 +8,7 @@ import { UnitsManager } from "./unit/unitsmanager";
 
 export interface IOlympusApp {
     featureSwitches: FeatureSwitches;
+    map: Map,
     missionHandler: MissionHandler;
     unitDataTable: UnitDataTable;
     unitsManager: UnitsManager;
@@ -16,7 +17,7 @@ export interface IOlympusApp {
 export abstract class OlympusApp {
 
     #featureSwitches: FeatureSwitches;
-    #map!: Map;
+    #map: Map;
     #missionHandler: MissionHandler;
     #panelsManager: PanelsManager = new PanelsManager( this );
     #shortcutManager: ShortcutManager = new ShortcutManager( this );
@@ -26,6 +27,7 @@ export abstract class OlympusApp {
     constructor( config:IOlympusApp ) {
 
         this.#featureSwitches = config.featureSwitches;
+        this.#map             = config.map;
         this.#missionHandler  = config.missionHandler;
         this.#unitDataTable   = config.unitDataTable;
         this.#unitsManager    = config.unitsManager;
@@ -62,10 +64,6 @@ export abstract class OlympusApp {
 
     getWeaponsManager() {
         return this.getWeaponsManager;
-    }
-
-    setMap( map:Map ) {
-        this.#map = map;
     }
 
     start() {

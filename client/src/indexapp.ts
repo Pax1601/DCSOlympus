@@ -17,7 +17,6 @@ import { UnitsManager } from "./unit/unitsmanager";
 
 export interface IIndexApp extends IOlympusApp {
     "featureSwitches": FeatureSwitches,
-    "map": Map,
     "missionHandler": MissionHandler,
     "panels": IIndexAppPanels,
     "unitsManager": UnitsManager
@@ -42,8 +41,6 @@ export class IndexApp extends OlympusApp {
         
         super( config );
 
-        // this.setMap( config.map );
-
         //  Panels
         this.getPanelsManager()
             .add( "connectionStatus", config.panels.connectionStatus )
@@ -66,7 +63,9 @@ export class IndexApp extends OlympusApp {
         this.#pluginManager = new PluginManager( this );
 
         //  Manual loading for now
-        this.#pluginManager.add( "helloWorld", new PluginHelloWorld( this ) );
+        this.getMap().whenReady( () => {
+            this.#pluginManager.add( "helloWorld", new PluginHelloWorld( this ) );
+        });
     }
 
 
