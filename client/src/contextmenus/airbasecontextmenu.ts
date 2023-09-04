@@ -2,6 +2,7 @@ import { getMap, getMissionHandler, getUnitsManager, setActiveCoalition } from "
 import { GAME_MASTER } from "../constants/constants";
 import { Airbase } from "../mission/airbase";
 import { dataPointMap } from "../other/utils";
+import { Unit } from "../unit/unit";
 import { ContextMenu } from "./contextmenu";
 
 /** This context menu is shown to the user when the airbase marker is right clicked on the map. 
@@ -38,7 +39,7 @@ export class AirbaseContextMenu extends ContextMenu {
         this.#setProperties(this.#airbase.getProperties());
         this.#setParkings(this.#airbase.getParkings());
         this.#setCoalition(this.#airbase.getCoalition());
-        this.#showLandButton(getUnitsManager().getSelectedUnitsTypes().length == 1 && ["Aircraft", "Helicopter"].includes(getUnitsManager().getSelectedUnitsTypes()[0]) && (getUnitsManager().getSelectedUnitsCoalition() === this.#airbase.getCoalition() || this.#airbase.getCoalition() === "neutral"))
+        this.#showLandButton(getUnitsManager().getSelectedUnitsTypes().length == 1 && ["Aircraft", "Helicopter"].includes(getUnitsManager().getSelectedUnitsTypes()[0]) && (getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getCoalition()}) === this.#airbase.getCoalition() || this.#airbase.getCoalition() === "neutral"))
         this.#showSpawnButton(getMissionHandler().getCommandModeOptions().commandMode == GAME_MASTER || this.#airbase.getCoalition() == getMissionHandler().getCommandedCoalition());
         this.#setAirbaseData();
         

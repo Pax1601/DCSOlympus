@@ -121,3 +121,8 @@ struct SpawnOptions {
 	string loadout;
 	string liveryID;
 };
+
+struct CloneOptions {
+	unsigned int ID;
+	Coords location;
+};

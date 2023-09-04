@@ -1,7 +1,7 @@
 import { LatLng, LatLngBounds } from "leaflet";
 import { getHotgroupPanel, getInfoPopup, getMap, getMissionHandler, getUnitsManager, getWeaponsManager } from "..";
 import { Unit } from "./unit";
-import { cloneUnit, deleteUnit, refreshAll, spawnAircrafts, spawnGroundUnits, spawnHelicopters, spawnNavyUnits } from "../server/server";
+import { cloneUnits, deleteUnit, spawnAircrafts, spawnGroundUnits, spawnHelicopters, spawnNavyUnits } from "../server/server";
 import { bearingAndDistanceToLatLng, deg2rad, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots, polyContains, polygonArea, randomPointInPoly, randomUnitBlueprint } from "../other/utils";
 import { CoalitionArea } from "../map/coalitionarea";
 import { groundUnitDatabase } from "./groundunitdatabase";
@@ -34,10 +34,10 @@ export class UnitsManager {
         document.addEventListener('keyup', (event) => this.#onKeyUp(event));
         document.addEventListener('exportToFile', () => this.exportToFile());
         document.addEventListener('importFromFile', () => this.importFromFile());
-        document.addEventListener('contactsUpdated', (e: CustomEvent) => {this.#requestDetectionUpdate = true});
-        document.addEventListener('commandModeOptionsChanged', () => {Object.values(this.#units).forEach((unit: Unit) => unit.updateVisibility())});
-        document.addEventListener('selectedUnitsChangeSpeed', (e: any) => {this.selectedUnitsChangeSpeed(e.detail.type)});
-        document.addEventListener('selectedUnitsChangeAltitude', (e: any) => {this.selectedUnitsChangeAltitude(e.detail.type)});
+        document.addEventListener('contactsUpdated', (e: CustomEvent) => { this.#requestDetectionUpdate = true });
+        document.addEventListener('commandModeOptionsChanged', () => { Object.values(this.#units).forEach((unit: Unit) => unit.updateVisibility()) });
+        document.addEventListener('selectedUnitsChangeSpeed', (e: any) => { this.selectedUnitsChangeSpeed(e.detail.type) });
+        document.addEventListener('selectedUnitsChangeAltitude', (e: any) => { this.selectedUnitsChangeAltitude(e.detail.type) });
     }
 
     getSelectableAircraft() {
@@ -66,7 +66,7 @@ export class UnitsManager {
     }
 
     addUnit(ID: number, category: string) {
-        if (category){
+        if (category) {
             /* The name of the unit category is exactly the same as the constructor name */
             var constructor = Unit.getConstructor(category);
             if (constructor != undefined) {
@@ -91,21 +91,21 @@ export class UnitsManager {
                     return updateTime;
                 }
             }
-            this.#units[ID]?.setData(dataExtractor); 
+            this.#units[ID]?.setData(dataExtractor);
         }
 
         if (this.#requestDetectionUpdate && getMissionHandler().getCommandModeOptions().commandMode != GAME_MASTER) {
             /* Create a dictionary of empty detection methods arrays */
-            var detectionMethods: {[key: string]: number[]} = {};
-            for (let ID in this.#units) 
+            var detectionMethods: { [key: string]: number[] } = {};
+            for (let ID in this.#units)
                 detectionMethods[ID] = [];
-            for (let ID in getWeaponsManager().getWeapons()) 
+            for (let ID in getWeaponsManager().getWeapons())
                 detectionMethods[ID] = [];
-            
+
             /* Fill the array with the detection methods */
             for (let ID in this.#units) {
                 const unit = this.#units[ID];
-                if (unit.getAlive() && unit.belongsToCommandedCoalition()){
+                if (unit.getAlive() && unit.belongsToCommandedCoalition()) {
                     const contacts = unit.getContacts();
                     contacts.forEach((contact: Contact) => {
                         const contactID = contact.ID;
@@ -196,11 +196,11 @@ export class UnitsManager {
         }
     }
 
-    deselectUnit( ID:number ) {
-        if ( this.#units.hasOwnProperty( ID ) ) {
+    deselectUnit(ID: number) {
+        if (this.#units.hasOwnProperty(ID)) {
             this.#units[ID].setSelected(false);
         } else {
-            console.error( `deselectUnit(): no unit found with ID "${ID}".` );
+            console.error(`deselectUnit(): no unit found with ID "${ID}".`);
         }
     }
 
@@ -209,38 +209,33 @@ export class UnitsManager {
         this.getUnitsByHotgroup(hotgroup).forEach((unit: Unit) => unit.setSelected(true))
     }
 
-    getSelectedUnitsTypes() {
-        const selectedUnits = this.getSelectedUnits();
-        if (selectedUnits.length == 0)
+    getUnitsTypes(units: Unit[]) {
+        if (units.length == 0)
             return [];
-        return selectedUnits.map((unit: Unit) => {
+        return units.map((unit: Unit) => {
             return unit.getCategory();
         })?.filter((value: any, index: any, array: string[]) => {
             return array.indexOf(value) === index;
         });
-    };
+    }
 
-    /* Gets the value of a variable from the selected units. If all the units have the same value, returns the value, else returns undefined */
-    getSelectedUnitsVariable(variableGetter: CallableFunction) {
-        const selectedUnits = this.getSelectedUnits();
-        if (selectedUnits.length == 0)
+    /* Gets the value of a variable from the units. If all the units have the same value, returns the value, else returns undefined */
+    getUnitsVariable(variableGetter: CallableFunction, units: Unit[]) {
+        if (units.length == 0)
             return undefined;
-        return selectedUnits.map((unit: Unit) => {
+        return units.map((unit: Unit) => {
             return variableGetter(unit);
         })?.reduce((a: any, b: any) => {
             return a === b ? a : undefined
         });
     };
 
-    getSelectedUnitsCoalition() {
-        const selectedUnits = this.getSelectedUnits();
-        if (selectedUnits.length == 0)
-            return undefined;
-        return selectedUnits.map((unit: Unit) => {
-            return unit.getCoalition()
-        })?.reduce((a: any, b: any) => {
-            return a == b ? a : undefined
-        });
+    getSelectedUnitsTypes() {
+        return this.getUnitsTypes(this.getSelectedUnits());
+    };
+
+    getSelectedUnitsVariable(variableGetter: CallableFunction) {
+        return this.getUnitsVariable(variableGetter, this.getSelectedUnits());
     };
 
     getByType(type: string) {
@@ -252,10 +247,9 @@ export class UnitsManager {
     getUnitDetectedMethods(unit: Unit) {
         var detectionMethods: number[] = [];
         for (let idx in this.#units) {
-            if (this.#units[idx].getAlive() && this.#units[idx].getIsLeader() && this.#units[idx].getCoalition() !== "neutral" && this.#units[idx].getCoalition() != unit.getCoalition())
-            {
+            if (this.#units[idx].getAlive() && this.#units[idx].getIsLeader() && this.#units[idx].getCoalition() !== "neutral" && this.#units[idx].getCoalition() != unit.getCoalition()) {
                 this.#units[idx].getContacts().forEach((contact: Contact) => {
-                    if (contact.ID == unit.ID && !detectionMethods.includes(contact.detectionMethod)) 
+                    if (contact.ID == unit.ID && !detectionMethods.includes(contact.detectionMethod))
                         detectionMethods.push(contact.detectionMethod);
                 });
             }
@@ -414,18 +408,18 @@ export class UnitsManager {
 
     selectedUnitsDelete(explosion: boolean = false) {
         var selectedUnits = this.getSelectedUnits(); /* Can be applied to humans too */
-        const selectionContainsAHuman = selectedUnits.some( ( unit:Unit ) => {
+        const selectionContainsAHuman = selectedUnits.some((unit: Unit) => {
             return unit.getHuman() === true;
         });
 
-        if (selectionContainsAHuman && !confirm( "Your selection includes a human player. Deleting humans causes their vehicle to crash.\n\nAre you sure you want to do this?" ) ) {
+        if (selectionContainsAHuman && !confirm("Your selection includes a human player. Deleting humans causes their vehicle to crash.\n\nAre you sure you want to do this?")) {
             return;
         }
 
         var immediate = false;
         if (selectedUnits.length > 20)
             immediate = confirm(`You are trying to delete ${selectedUnits.length} units, do you want to delete them immediately? This may cause lag for players.`)
-            
+
         for (let idx in selectedUnits) {
             selectedUnits[idx].delete(explosion, immediate);
         }
@@ -568,22 +562,22 @@ export class UnitsManager {
         for (let idx in selectedUnits) {
             var unit = selectedUnits[idx];
             coalition = unit.getCoalition();
-            deleteUnit(unit.ID, false, true);
-            units.push({unitType: unit.getName(), location: unit.getPosition()});
+            units.push({ ID: unit.ID, location: unit.getPosition() });
         }
-        const category = this.getSelectedUnitsTypes()[0];
-        this.spawnUnits(category, units, coalition, true);
+        cloneUnits(units);
+
+        
     }
 
     /***********************************************/
     copyUnits() {
-        this.#copiedUnits = JSON.parse(JSON.stringify(this.getSelectedUnits().map((unit: Unit) => {return unit.getData()}))); /* Can be applied to humans too */
+        this.#copiedUnits = JSON.parse(JSON.stringify(this.getSelectedUnits().map((unit: Unit) => { return unit.getData() }))); /* Can be applied to humans too */
         getInfoPopup().setText(`${this.#copiedUnits.length} units copied`);
     }
 
     // TODO handle from lua
     pasteUnits() {
-        if (!this.#pasteDisabled && getMissionHandler().getCommandModeOptions().commandMode == GAME_MASTER) {
+        if (this.#copiedUnits.length > 0 && !this.#pasteDisabled && getMissionHandler().getCommandModeOptions().commandMode == GAME_MASTER) {
             /* Compute the position of the center of the copied units */
             var nUnits = this.#copiedUnits.length;
             var avgLat = 0;
@@ -595,30 +589,22 @@ export class UnitsManager {
             }
 
             /* Organize the copied units in groups */
-            var groups: {[key: string]: any} = {};
+            var groups: { [key: string]: any } = {};
             this.#copiedUnits.forEach((unit: any) => {
                 if (!(unit.groupName in groups))
                     groups[unit.groupName] = [];
                 groups[unit.groupName].push(unit);
             });
 
+            /* Clone the units in groups */
+            var units: { ID: number, location: LatLng }[] = [];
             for (let groupName in groups) {
-                /* Paste the units as groups. Only for ground and navy units because of loadouts, TODO: find a better solution so it works for them too*/
-                if (!["Aircraft", "Helicopter"].includes(groups[groupName][0].category)) {
-                    var units = groups[groupName].map((unit: any) => {
-                        var position = new LatLng(getMap().getMouseCoordinates().lat + unit.position.lat - avgLat, getMap().getMouseCoordinates().lng + unit.position.lng - avgLng);
-                        getMap().addTemporaryMarker(position, unit.name, unit.coalition);
-                        return {unitType: unit.name, location: position, liveryID: ""};
-                    });
-                    this.spawnUnits(groups[groupName][0].category, units, groups[groupName][0].coalition, true);
-                }
-                else {
-                    groups[groupName].forEach((unit: any) => {
-                        var position = new LatLng(getMap().getMouseCoordinates().lat + unit.position.lat - avgLat, getMap().getMouseCoordinates().lng + unit.position.lng - avgLng);
-                        getMap().addTemporaryMarker(position, unit.name, unit.coalition);
-                        cloneUnit(unit.ID, position);
-                    });
-                }
+                groups[groupName].forEach((unit: any) => {
+                    var position = new LatLng(getMap().getMouseCoordinates().lat + unit.position.lat - avgLat, getMap().getMouseCoordinates().lng + unit.position.lng - avgLng);
+                    getMap().addTemporaryMarker(position, unit.name, unit.coalition);
+                    units.push({ ID: unit.ID, location: position });
+                });
+                cloneUnits(units);
             }
             getInfoPopup().setText(`${this.#copiedUnits.length - 1} units pasted`);
         }
@@ -627,12 +613,12 @@ export class UnitsManager {
         }
     }
 
-    createIADS(coalitionArea: CoalitionArea, types: {[key: string]: boolean}, eras: {[key: string]: boolean}, ranges: {[key: string]: boolean}, density: number, distribution: number) {
-        const activeTypes = Object.keys(types).filter((key: string) => { return types[key]; }); 
-        const activeEras = Object.keys(eras).filter((key: string) => { return eras[key]; }); 
-        const activeRanges = Object.keys(ranges).filter((key: string) => { return ranges[key]; }); 
+    createIADS(coalitionArea: CoalitionArea, types: { [key: string]: boolean }, eras: { [key: string]: boolean }, ranges: { [key: string]: boolean }, density: number, distribution: number) {
+        const activeTypes = Object.keys(types).filter((key: string) => { return types[key]; });
+        const activeEras = Object.keys(eras).filter((key: string) => { return eras[key]; });
+        const activeRanges = Object.keys(ranges).filter((key: string) => { return ranges[key]; });
 
-        citiesDatabase.forEach((city: {lat: number, lng: number, pop: number}) => {
+        citiesDatabase.forEach((city: { lat: number, lng: number, pop: number }) => {
             if (polyContains(new LatLng(city.lat, city.lng), coalitionArea)) {
                 var pointsNumber = 2 + Math.pow(city.pop, 0.2) * density / 100;
                 for (let i = 0; i < pointsNumber; i++) {
@@ -642,9 +628,9 @@ export class UnitsManager {
                     if (polyContains(latlng, coalitionArea)) {
                         const type = activeTypes[Math.floor(Math.random() * activeTypes.length)];
                         if (Math.random() < IADSDensities[type]) {
-                            const unitBlueprint = randomUnitBlueprint(groundUnitDatabase, {type: type, eras: activeEras, ranges: activeRanges});
+                            const unitBlueprint = randomUnitBlueprint(groundUnitDatabase, { type: type, eras: activeEras, ranges: activeRanges });
                             if (unitBlueprint) {
-                                this.spawnUnits("GroundUnit", [{unitType: unitBlueprint.name, location: latlng, liveryID: ""}], coalitionArea.getCoalition(), true);
+                                this.spawnUnits("GroundUnit", [{ unitType: unitBlueprint.name, location: latlng, liveryID: "" }], coalitionArea.getCoalition(), true);
                                 getMap().addTemporaryMarker(latlng, unitBlueprint.name, coalitionArea.getCoalition());
                             }
                         }
@@ -655,19 +641,19 @@ export class UnitsManager {
     }
 
     exportToFile() {
-        var unitsToExport: {[key: string]: any} = {};
+        var unitsToExport: { [key: string]: any } = {};
         for (let ID in this.#units) {
             var unit = this.#units[ID];
             if (!["Aircraft", "Helicopter"].includes(unit.getCategory())) {
                 var data: any = unit.getData();
                 if (unit.getGroupName() in unitsToExport)
                     unitsToExport[unit.getGroupName()].push(data);
-                else 
+                else
                     unitsToExport[unit.getGroupName()] = [data];
             }
         }
         var a = document.createElement("a");
-        var file = new Blob([JSON.stringify(unitsToExport)], {type: 'text/plain'});
+        var file = new Blob([JSON.stringify(unitsToExport)], { type: 'text/plain' });
         a.href = URL.createObjectURL(file);
         a.download = 'export.json';
         a.click();
@@ -682,12 +668,12 @@ export class UnitsManager {
                 return;
             }
             var reader = new FileReader();
-            reader.onload = function(e: any) {
+            reader.onload = function (e: any) {
                 var contents = e.target.result;
                 var groups = JSON.parse(contents);
                 for (let groupName in groups) {
-                    if (groupName !== "" && groups[groupName].length > 0 && (groups[groupName].every((unit: any) => {return unit.category == "GroundUnit";}) || groups[groupName].every((unit: any) => {return unit.category == "NavyUnit";}))) {
-                        var aliveUnits = groups[groupName].filter((unit: any) => {return unit.alive});
+                    if (groupName !== "" && groups[groupName].length > 0 && (groups[groupName].every((unit: any) => { return unit.category == "GroundUnit"; }) || groups[groupName].every((unit: any) => { return unit.category == "NavyUnit"; }))) {
+                        var aliveUnits = groups[groupName].filter((unit: any) => { return unit.alive });
                         var units = aliveUnits.map((unit: any) => {
                             return { unitType: unit.name, location: unit.position, liveryID: "" }
                         });
@@ -707,31 +693,31 @@ export class UnitsManager {
                 getInfoPopup().setText("Aircrafts can be air spawned during the SETUP phase only");
                 return false;
             }
-            spawnPoints = units.reduce((points: number, unit: any) => {return points + aircraftDatabase.getSpawnPointsByName(unit.unitType)}, 0);
+            spawnPoints = units.reduce((points: number, unit: any) => { return points + aircraftDatabase.getSpawnPointsByName(unit.unitType) }, 0);
             spawnAircrafts(units, coalition, airbase, country, immediate, spawnPoints);
         } else if (category === "Helicopter") {
             if (airbase == "" && getMissionHandler().getCommandModeOptions().restrictSpawns && getMissionHandler().getRemainingSetupTime() < 0 && getMissionHandler().getCommandModeOptions().commandMode !== GAME_MASTER) {
                 getInfoPopup().setText("Helicopters can be air spawned during the SETUP phase only");
                 return false;
             }
-            spawnPoints = units.reduce((points: number, unit: any) => {return points + helicopterDatabase.getSpawnPointsByName(unit.unitType)}, 0);
+            spawnPoints = units.reduce((points: number, unit: any) => { return points + helicopterDatabase.getSpawnPointsByName(unit.unitType) }, 0);
             spawnHelicopters(units, coalition, airbase, country, immediate, spawnPoints);
         } else if (category === "GroundUnit") {
             if (getMissionHandler().getCommandModeOptions().restrictSpawns && getMissionHandler().getRemainingSetupTime() < 0 && getMissionHandler().getCommandModeOptions().commandMode !== GAME_MASTER) {
                 getInfoPopup().setText("Ground units can be spawned during the SETUP phase only");
                 return false;
             }
-            spawnPoints = units.reduce((points: number, unit: any) => {return points + groundUnitDatabase.getSpawnPointsByName(unit.unitType)}, 0);
+            spawnPoints = units.reduce((points: number, unit: any) => { return points + groundUnitDatabase.getSpawnPointsByName(unit.unitType) }, 0);
             spawnGroundUnits(units, coalition, country, immediate, spawnPoints);
         } else if (category === "NavyUnit") {
             if (getMissionHandler().getCommandModeOptions().restrictSpawns && getMissionHandler().getRemainingSetupTime() < 0 && getMissionHandler().getCommandModeOptions().commandMode !== GAME_MASTER) {
                 getInfoPopup().setText("Navy units can be spawned during the SETUP phase only");
                 return false;
             }
-            spawnPoints = units.reduce((points: number, unit: any) => {return points + navyUnitDatabase.getSpawnPointsByName(unit.unitType)}, 0);
+            spawnPoints = units.reduce((points: number, unit: any) => { return points + navyUnitDatabase.getSpawnPointsByName(unit.unitType) }, 0);
             spawnNavyUnits(units, coalition, country, immediate, spawnPoints);
         }
-        
+
         if (spawnPoints <= getMissionHandler().getAvailableSpawnPoints()) {
             getMissionHandler().setSpentSpawnPoints(spawnPoints);
             return true;
@@ -747,7 +733,7 @@ export class UnitsManager {
             if (event.key === "Delete")
                 this.selectedUnitsDelete();
             else if (event.key === "a" && event.ctrlKey)
-                Object.values(this.getUnits()).filter((unit: Unit) => {return !unit.getHidden()}).forEach((unit: Unit) => unit.setSelected(true));
+                Object.values(this.getUnits()).filter((unit: Unit) => { return !unit.getHidden() }).forEach((unit: Unit) => unit.setSelected(true));
         }
     }
 

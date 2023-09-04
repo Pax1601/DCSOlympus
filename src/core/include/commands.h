@@ -248,9 +248,8 @@ private:
 class Clone : public Command
 {
 public:
-	Clone(unsigned int ID, Coords location) :
-		ID(ID),
-		location(location)
+	Clone(vector<CloneOptions> cloneOptions) :
+		cloneOptions(cloneOptions)
 	{
 		priority = CommandPriority::LOW;
 	};
@@ -258,8 +257,7 @@ public:
 	virtual unsigned int getLoad() { return 30; }
 
 private:
-	const unsigned int ID;
-	const Coords location;
+	const vector<CloneOptions> cloneOptions;
 };
 
 /* Delete unit command */

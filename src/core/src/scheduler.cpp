@@ -376,13 +376,20 @@ void Scheduler::handleRequest(string key, json::value value, string username)
 		if (unit != nullptr)
 			unit->setDesiredAltitudeType(to_string(value[L"altitudeType"]));
 	}
-	else if (key.compare("cloneUnit") == 0)
+	else if (key.compare("cloneUnits") == 0)
 	{
-		unsigned int ID = value[L"ID"].as_integer();
-		double lat = value[L"location"][L"lat"].as_double();
-		double lng = value[L"location"][L"lng"].as_double();
-		Coords loc; loc.lat = lat; loc.lng = lng;
-		command = dynamic_cast<Command*>(new Clone(ID, loc));
+		vector<CloneOptions> cloneOptions;
+
+		for (auto unit : value[L"units"].as_array()) {
+			unsigned int ID = unit[L"ID"].as_integer();
+			double lat = unit[L"location"][L"lat"].as_double();
+			double lng = unit[L"location"][L"lng"].as_double();
+			
+			Coords location; location.lat = lat; location.lng = lng;
+			cloneOptions.push_back({ ID, location });
+		}
+
+		command = dynamic_cast<Command*>(new Clone(cloneOptions));
 	}
 	else if (key.compare("setROE") == 0)
 	{

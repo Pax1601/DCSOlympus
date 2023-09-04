@@ -140,22 +140,21 @@ string SpawnHelicopters::getString()
 /* Clone unit command */
 string Clone::getString()
 {
-    Unit* unit = unitsManager->getUnit(ID);
-    if (unit != nullptr)
-    {
-        std::ostringstream commandSS;
-        commandSS.precision(10);
-        commandSS << "Olympus.clone, "
-            << ID << ", "
-            << location.lat << ", "
-            << location.lng << ", "
-            << "\"" << unit->getCategory() << "\"";
-        return commandSS.str();
+    std::ostringstream unitsSS;
+    unitsSS.precision(10);
+    for (int i = 0; i < cloneOptions.size(); i++) {
+        unitsSS << "[" << i + 1 << "] = {"
+            << "ID = " << cloneOptions[i].ID << ", "
+            << "lat = " << cloneOptions[i].location.lat << ", "
+            << "lng = " << cloneOptions[i].location.lng << " }, ";
     }
-    else
-    {
-        return "";
-    }
+
+    std::ostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.clone, "
+        << "{" << unitsSS.str() << "}";
+    return commandSS.str();
+
 }
 
 /* Delete unit command */

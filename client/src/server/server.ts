@@ -198,8 +198,8 @@ export function followUnit(ID: number, targetID: number, offset: { "x": number, 
     POST(data, () => { });
 }
 
-export function cloneUnit(ID: number, latlng: LatLng) {
-    var command = { "ID": ID, "location": latlng };
+export function cloneUnits(units: {ID: number, location: LatLng}[]) {
+    var command = { "units": units };
     var data = { "cloneUnit": command }
     POST(data, () => { });
 }

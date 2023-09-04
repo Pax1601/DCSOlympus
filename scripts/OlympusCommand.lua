@@ -8,7 +8,7 @@ Olympus.OlympusModPath = os.getenv('DCSOLYMPUS_PATH')..'\\bin\\'
 Olympus.log = mist.Logger:new("Olympus", 'info')
 
 Olympus.unitCounter = 1
-Olympus.payloadRegistry = {}
+Olympus.spawnDatabase = {}
 
 Olympus.missionData = {}
 Olympus.unitsData = {}
@@ -382,27 +382,25 @@ end
 function Olympus.spawnUnits(spawnTable) 
 	Olympus.debug("Olympus.spawnUnits " .. Olympus.serializeTable(spawnTable), 2)
 
-	local unitTable = nil
+	local unitsTable = nil
 	local route = nil
 	local category = nil
 
 	if spawnTable.category == 'Aircraft' then
-		unitTable = Olympus.generateAirUnitsTable(spawnTable.units)
+		unitsTable = Olympus.generateAirUnitsTable(spawnTable.units)
 		route = Olympus.generateAirUnitsRoute(spawnTable)
 		category = 'plane'
 	elseif spawnTable.category == 'Helicopter' then
-		unitTable = Olympus.generateAirUnitsTable(spawnTable.units)
+		unitsTable = Olympus.generateAirUnitsTable(spawnTable.units)
 		route = Olympus.generateAirUnitsRoute(spawnTable)
 		category = 'helicopter'
 	elseif spawnTable.category == 'GroundUnit' then
-		unitTable = Olympus.generateGroundUnitsTable(spawnTable.units)
+		unitsTable = Olympus.generateGroundUnitsTable(spawnTable.units)
 		category = 'vehicle'
 	elseif spawnTable.category == 'NavyUnit' then
-		unitTable = Olympus.generateNavyUnitsTable(spawnTable.units)
+		unitsTable = Olympus.generateNavyUnitsTable(spawnTable.units)
 		category = 'ship'
 	end
-
-	Olympus.debug(Olympus.serializeTable(unitTable), 5)
 
 	local countryID = 0
 	if spawnTable.country == nil or spawnTable.country == "" then
@@ -411,9 +409,14 @@ function Olympus.spawnUnits(spawnTable)
 		countryID = country.id[spawnTable.country]
 	end
 
+	-- Save the units in the database, for cloning
+	for idx, unitTable in pairs(unitTable) do
+		Olympus.addToDatabase(unitTable)
+	end
+
 	local vars = 
 	{
-		units = unitTable, 
+		units = unitsTable, 
 		country = countryID, 
 		category = category,
 		route = route,
@@ -428,7 +431,7 @@ end
 
 -- Generates unit table for a air unit. 
 function Olympus.generateAirUnitsTable(units)
-	local unitTable = {}
+	local unitsTable = {}
 	for idx, unit in pairs(units) do
 		local loadout = unit.loadout			-- loadout: a string, one of the names defined in unitPayloads.lua. Must be compatible with the unitType
 		local payload = unit.payload			-- payload: a table, if present the unit will receive this specific payload. Overrides loadout
@@ -446,7 +449,7 @@ function Olympus.generateAirUnitsTable(units)
 		end
 		
 		local spawnLocation = mist.utils.makeVec3GL(coord.LLtoLO(unit.lat, unit.lng, 0))
-		unitTable[#unitTable + 1] = 
+		unitsTable[#unitsTable + 1] = 
 		{
 			["type"] = unit.unitType,
 			["x"] = spawnLocation.x,
@@ -456,15 +459,12 @@ function Olympus.generateAirUnitsTable(units)
 			["skill"] = "Excellent",
 			["payload"] = { ["pylons"] = payload, ["fuel"] = 999999, ["flare"] = 60, ["ammo_type"] = 1, ["chaff"] = 60, ["gun"] = 100, }, 
 			["heading"] = unit.heading,
-			["callsign"] = { [1] = 1, [2] = 1, [3] = 1, ["name"] = "Olympus" .. Olympus.unitCounter.. "-" .. #unitTable + 1 },
-			["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitTable + 1,
+			["callsign"] = { [1] = 1, [2] = 1, [3] = 1, ["name"] = "Olympus" .. Olympus.unitCounter.. "-" .. #unitsTable + 1 },
+			["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitsTable + 1,
 			["livery_id"] = unit.liveryID
 		}
-
-		-- Add the payload to the registry, used for unit cloning
-		Olympus.payloadRegistry[unitTable[#unitTable].name] = payload
 	end
-	return unitTable
+	return unitsTable
 end
 
 function Olympus.generateAirUnitsRoute(spawnTable)
@@ -525,99 +525,119 @@ end
 
 -- Generates ground units table, either single or from template
 function Olympus.generateGroundUnitsTable(units)
-	local unitTable = {}
+	local unitsTable = {}
 	for idx, unit in pairs(units) do
 		local spawnLocation = mist.utils.makeVec3GL(coord.LLtoLO(unit.lat, unit.lng, 0))
 		if Olympus.hasKey(templates, unit.unitType) then
 			for idx, value in pairs(templates[unit.unitType].units) do
-				unitTable[#unitTable + 1] = 
+				unitsTable[#unitsTable + 1] = 
 				{
 					["type"] = value.name,
 					["x"] = spawnLocation.x + value.dx,
 					["y"] = spawnLocation.z + value.dy,
 					["heading"] = 0,
 					["skill"] = "High",
-					["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitTable + 1
+					["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitsTable + 1
 				}
 			end 
 		else
-			unitTable[#unitTable + 1] = 
+			unitsTable[#unitsTable + 1] = 
 			{
 				["type"] = unit.unitType,
 				["x"] = spawnLocation.x,
 				["y"] = spawnLocation.z,
 				["heading"] = unit.heading,
 				["skill"] = "High",
-				["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitTable + 1,
+				["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitsTable + 1,
 				["livery_id"] = unit.liveryID
 			}
 		end
 	end
 
-	return unitTable
+	return unitsTable
 end  
 
 -- Generates navy units table, either single or from template
 function Olympus.generateNavyUnitsTable(units)
-	local unitTable = {}
+	local unitsTable = {}
 	for idx, unit in pairs(units) do
 		local spawnLocation = mist.utils.makeVec3GL(coord.LLtoLO(unit.lat, unit.lng, 0))
 		if Olympus.hasKey(templates, unit.unitType) then
 			for idx, value in pairs(templates[unit.unitType].units) do
-				unitTable[#unitTable + 1] = 
+				unitsTable[#unitsTable + 1] = 
 				{
 					["type"] = value.name,
 					["x"] = spawnLocation.x + value.dx,
 					["y"] = spawnLocation.z + value.dy,
 					["heading"] = 0,
 					["skill"] = "High",
-					["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitTable + 1,
+					["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitsTable + 1,
 					["transportable"] = { ["randomTransportable"] = false }
 				}
 			end 
 		else
-			unitTable[#unitTable + 1] = 
+			unitsTable[#unitsTable + 1] = 
 			{
 				["type"] = unit.unitType,
 				["x"] = spawnLocation.x,
 				["y"] = spawnLocation.z,
 				["heading"] = unit.heading,
 				["skill"] = "High",
-				["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitTable + 1,
+				["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitsTable + 1,
 				["transportable"] = { ["randomTransportable"] = false },
 				["livery_id"] = unit.liveryID
 			}
 		end
 	end
 
-	return unitTable
+	return unitsTable
 end  
 
--- Clones a unit by ID. Will clone the unit with the same original payload as the source unit. TODO: only works on Olympus unit not ME units.
-function Olympus.clone(ID, lat, lng, category)
-	Olympus.debug("Olympus.clone " .. ID .. ", " .. category, 2)
-	local unit = Olympus.getUnitByID(ID)
-	if unit then
-		local position = unit:getPosition()
-		local heading = math.atan2( position.x.z, position.x.x )
-		
-		-- TODO: understand category in this script
-		local spawnTable = {
+function Olympus.addToDatabase(unitTable)
+	-- Add the unit data to the database, used for unit cloning
+	Olympus.spawnDatabase[unitTable.name] = unitTable
+end
+
+-- Clones a unit by ID. Will clone the unit with the same original payload as the source unit. TODO: only works on Olympus unit not ME units (TO BE VERIFIED).
+function Olympus.clone(cloneTable)
+	Olympus.debug("Olympus.clone " .. cloneTable, 2)
+
+	local unitsTable = {}
+	local coalition = nil
+	local category = nil
+
+	for cloneData, idx in pairs(cloneTable) do
+		local ID = cloneData.ID
+		local unit = Olympus.getUnitByID(ID)
+
+		if unit then
+			local position = unit:getPosition()
+			local heading = math.atan2( position.x.z, position.x.x )
+			
+			-- Update the data of the cloned unit
+			local unitTable = Olympus.spawnDatabase[unit:getName()]
+
+			if unitTable then
+				unitTable["lat"] = lat
+				unitTable["lng"] = lng
+				unitTable["alt"] = unit:getPoint().y
+				unitTable["heading"] = heading
+			end
+
 			coalition = Olympus.getCoalitionByCoalitionID(unit:getCoalition()),
-			category = category,
-			units = {
-				[1] = {
-					lat = lat,
-					lng = lng,
-					alt = unit:getPoint().y,
-					heading = heading,
-					unitType = unit:getTypeName(),
-					payload = Olympus.payloadRegistry[unit:getName()]
-				}
-			}
-		}
-		Olympus.spawnUnits(spawnTable)
+			category = unit:getDesc().category,
+
+			unitsTable[#unitsTable + 1] = unitTable
+		end
 	end
+	
+	local spawnTable = {
+		coalition = coalition,
+		category = category,
+		units = unitsTable
+	}
+	Olympus.spawnUnits(spawnTable)
+
 	Olympus.debug("Olympus.clone completed successfully", 2)
 end
 
@@ -915,8 +935,8 @@ end
 
 function Olympus.initializeUnits() 
 	if mist and mist.DBs and mist.DBs.MEunitsById then
-		for id, unitTable in pairs(mist.DBs.MEunitsById) do
-			local unit = Unit.getByName(unitTable["unitName"])
+		for id, unitsTable in pairs(mist.DBs.MEunitsById) do
+			local unit = Unit.getByName(unitsTable["unitName"])
 			if unit then
 				Olympus.units[unit["id_"]] = unit
 			end
