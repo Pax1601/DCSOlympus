@@ -98,18 +98,17 @@ export class MapContextMenu extends ContextMenu {
         this.#navyUnitSpawnMenu.setCountries();
 
         /* Only a Game Master can choose the coalition of a new unit */
-        if (getMissionHandler().getCommandModeOptions().commandMode !== GAME_MASTER) {
+        if (getMissionHandler().getCommandModeOptions().commandMode !== GAME_MASTER) 
             this.#coalitionSwitch.hide()
-        } else {
-            this.getContainer()?.querySelectorAll('[data-coalition]').forEach((element: any) => { element.setAttribute("data-coalition", getActiveCoalition()) });
-            if (getActiveCoalition() == "blue")
-                this.#coalitionSwitch.setValue(false);
-            else if (getActiveCoalition() == "red")
-                this.#coalitionSwitch.setValue(true);
-            else
-                this.#coalitionSwitch.setValue(undefined);
-        }
 
+        this.getContainer()?.querySelectorAll('[data-coalition]').forEach((element: any) => { element.setAttribute("data-coalition", getActiveCoalition()) });
+        if (getActiveCoalition() == "blue")
+            this.#coalitionSwitch.setValue(false);
+        else if (getActiveCoalition() == "red")
+            this.#coalitionSwitch.setValue(true);
+        else
+            this.#coalitionSwitch.setValue(undefined);
+        
         /* Hide the coalition area button. It will be visible if a coalition area is set */
         this.getContainer()?.querySelector("#coalition-area-button")?.classList.toggle("hide", true);
     }
