@@ -557,14 +557,18 @@ export class UnitsManager {
     // TODO handle from lua
     selectedUnitsCreateGroup() {
         var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: false });
-        var units = [];
+        var units: { ID: number, location: LatLng }[] = [];
         var coalition = "neutral";
         for (let idx in selectedUnits) {
             var unit = selectedUnits[idx];
             coalition = unit.getCoalition();
             units.push({ ID: unit.ID, location: unit.getPosition() });
         }
-        cloneUnits(units);
+        cloneUnits(units, () => {
+            units.forEach((unit: any) => {
+                deleteUnit(unit.ID, false, false);
+            });
+        });
 
         
     }
@@ -597,8 +601,8 @@ export class UnitsManager {
             });
 
             /* Clone the units in groups */
-            var units: { ID: number, location: LatLng }[] = [];
             for (let groupName in groups) {
+                var units: { ID: number, location: LatLng }[] = [];
                 groups[groupName].forEach((unit: any) => {
                     var position = new LatLng(getMap().getMouseCoordinates().lat + unit.position.lat - avgLat, getMap().getMouseCoordinates().lng + unit.position.lng - avgLng);
                     getMap().addTemporaryMarker(position, unit.name, unit.coalition);
@@ -606,7 +610,7 @@ export class UnitsManager {
                 });
                 cloneUnits(units);
             }
-            getInfoPopup().setText(`${this.#copiedUnits.length - 1} units pasted`);
+            getInfoPopup().setText(`${this.#copiedUnits.length} units pasted`);
         }
         else {
             getInfoPopup().setText(`Unit cloning is disabled in ${getMissionHandler().getCommandModeOptions().commandMode} mode`);

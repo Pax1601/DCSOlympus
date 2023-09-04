@@ -1,6 +1,6 @@
 local version = "v0.4.4-alpha"
 
-local debug = false
+local debug = true
 
 Olympus.OlympusDLL = nil
 Olympus.DLLsloaded = false
@@ -410,7 +410,7 @@ function Olympus.spawnUnits(spawnTable)
 	end
 
 	-- Save the units in the database, for cloning
-	for idx, unitTable in pairs(unitTable) do
+	for idx, unitTable in pairs(unitsTable) do
 		Olympus.addToDatabase(unitTable)
 	end
 
@@ -600,13 +600,14 @@ end
 
 -- Clones a unit by ID. Will clone the unit with the same original payload as the source unit. TODO: only works on Olympus unit not ME units (TO BE VERIFIED).
 function Olympus.clone(cloneTable)
-	Olympus.debug("Olympus.clone " .. cloneTable, 2)
+	Olympus.debug("Olympus.clone " .. Olympus.serializeTable(cloneTable), 2)
 
 	local unitsTable = {}
-	local coalition = nil
+	local countryID = nil
 	local category = nil
+	local route = {}
 
-	for cloneData, idx in pairs(cloneTable) do
+	for idx, cloneData in pairs(cloneTable) do
 		local ID = cloneData.ID
 		local unit = Olympus.getUnitByID(ID)
 
@@ -617,26 +618,78 @@ function Olympus.clone(cloneTable)
 			-- Update the data of the cloned unit
 			local unitTable = Olympus.spawnDatabase[unit:getName()]
 
+			local point = coord.LLtoLO(cloneData['lat'], cloneData['lng'], 0)
 			if unitTable then
-				unitTable["lat"] = lat
-				unitTable["lng"] = lng
+				unitTable["x"] = point.x
+				unitTable["y"] = point.z
 				unitTable["alt"] = unit:getPoint().y
 				unitTable["heading"] = heading
+				unitTable["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitsTable + 1
 			end
 
-			coalition = Olympus.getCoalitionByCoalitionID(unit:getCoalition()),
-			category = unit:getDesc().category,
+			if countryID == nil and category == nil then
+				countryID = unit:getCountry()
+				if unit:getDesc().category == Unit.Category.AIRPLANE then
+					category = 'plane'
+					route = {
+						["points"] = 
+						{
+							[1] = 
+							{
+								["alt"] = alt,
+								["alt_type"] = "BARO",
+								["tasks"] = {
+									[1] = {["number"] = 1, ["auto"] = true, ["id"] = "WrappedAction", ["enabled"] = true, ["params"] = {["action"] = {["id"] = "EPLRS", ["params"] = {["value"] = true}, }, }, },
+									[2] = {["number"] = 2, ["auto"] = false, ["id"] = "Orbit", ["enabled"] = true, ["params"] = {["pattern"] = "Circle"}, },
+								},
+								["type"] = "Turning Point",
+								["x"] = point.x,
+								["y"] = point.z,
+							},
+						}, 
+					}
+				elseif unit:getDesc().category == Unit.Category.HELICOPTER then
+					category = 'helicopter'
+					route = {
+						["points"] = 
+						{
+							[1] = 
+							{
+								["alt"] = alt,
+								["alt_type"] = "BARO",
+								["tasks"] = {
+									[1] = {["number"] = 1, ["auto"] = true, ["id"] = "WrappedAction", ["enabled"] = true, ["params"] = {["action"] = {["id"] = "EPLRS", ["params"] = {["value"] = true}, }, }, },
+									[2] = {["number"] = 2, ["auto"] = false, ["id"] = "Orbit", ["enabled"] = true, ["params"] = {["pattern"] = "Circle"}, },
+								},
+								["type"] = "Turning Point",
+								["x"] = point.x,
+								["y"] = point.z,
+							},
+						}, 
+					}
+				elseif unit:getDesc().category == Unit.Category.GROUND_UNIT then
+					category = 'vehicle'
+				elseif unit:getDesc().category == Unit.Category.SHIP then
+					category = 'ship'
+				end
+			end
 
 			unitsTable[#unitsTable + 1] = unitTable
 		end
 	end
-	
-	local spawnTable = {
-		coalition = coalition,
+
+	local vars = 
+	{
+		units = unitsTable, 
+		country = countryID, 
 		category = category,
-		units = unitsTable
+		route = route,
+		name = "Olympus-" .. Olympus.unitCounter,
+		task = 'CAP'
 	}
-	Olympus.spawnUnits(spawnTable)
+
+	mist.dynAdd(vars)
+	Olympus.unitCounter = Olympus.unitCounter + 1
 
 	Olympus.debug("Olympus.clone completed successfully", 2)
 end
