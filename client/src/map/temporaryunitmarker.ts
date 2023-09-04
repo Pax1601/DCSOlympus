@@ -2,15 +2,33 @@ import { CustomMarker } from "./custommarker";
 import { DivIcon, LatLng } from "leaflet";
 import { SVGInjector } from "@tanem/svg-injector";
 import { getMarkerCategoryByName, getUnitDatabaseByCategory } from "../other/utils";
+import { isCommandExecuted } from "../server/server";
+import { getMap } from "..";
 
 export class TemporaryUnitMarker extends CustomMarker {
     #name: string;
     #coalition: string;
+    #commandHash: string|undefined = undefined;
+    #timer: number = 0;
 
-    constructor(latlng: LatLng, name: string, coalition: string) {
+    constructor(latlng: LatLng, name: string, coalition: string, commandHash?: string) {
         super(latlng, {interactive: false});
         this.#name = name;
         this.#coalition = coalition;
+        this.#commandHash = commandHash;
+
+        if (this.#commandHash !== undefined) {
+            this.#timer = window.setInterval(() => { 
+                if (this.#commandHash !== undefined)  {
+                    isCommandExecuted((res: any) => {
+                        if (res.commandExecuted) {
+                            this.removeFrom(getMap());
+                            window.clearInterval(this.#timer);
+                        }
+                    }, this.#commandHash)
+                }
+            }, 1000);
+        }
     }
 
     createIcon() {

@@ -425,8 +425,8 @@ export class Map extends L.Map {
         }
     }
 
-    addTemporaryMarker(latlng: L.LatLng, name: string, coalition: string) {
-        var marker = new TemporaryUnitMarker(latlng, name, coalition);
+    addTemporaryMarker(latlng: L.LatLng, name: string, coalition: string, commandHash?: string) {
+        var marker = new TemporaryUnitMarker(latlng, name, coalition, commandHash);
         marker.addTo(this);
         this.#temporaryMarkers.push(marker);
     }

@@ -98,9 +98,11 @@ public:
 	unsigned int getPriority() { return priority; }
 	virtual string getString() = 0;
 	virtual unsigned int getLoad() = 0;
+	const string getHash() { return hash; }
 
 protected:
 	unsigned int priority = CommandPriority::LOW;
+	const string hash = random_string(16);
 };
 
 /* Simple low priority move command (from user click) */

@@ -686,40 +686,46 @@ export class UnitsManager {
         input.click();
     }
 
-    spawnUnits(category: string, units: any, coalition: string = "blue", immediate: boolean = true, airbase: string = "", country: string = "") {
+    spawnUnits(category: string, units: any, coalition: string = "blue", immediate: boolean = true, airbase: string = "", country: string = "", callback: CallableFunction = () => {}) {
         var spawnPoints = 0;
+        var spawnFunction = () => {}; 
+        var spawnsRestricted = getMissionHandler().getCommandModeOptions().restrictSpawns && getMissionHandler().getRemainingSetupTime() < 0 && getMissionHandler().getCommandModeOptions().commandMode !== GAME_MASTER;
+        
         if (category === "Aircraft") {
-            if (airbase == "" && getMissionHandler().getCommandModeOptions().restrictSpawns && getMissionHandler().getRemainingSetupTime() < 0 && getMissionHandler().getCommandModeOptions().commandMode !== GAME_MASTER) {
+            if (airbase == "" && spawnsRestricted) {
                 getInfoPopup().setText("Aircrafts can be air spawned during the SETUP phase only");
                 return false;
             }
-            spawnPoints = units.reduce((points: number, unit: any) => { return points + aircraftDatabase.getSpawnPointsByName(unit.unitType) }, 0);
-            spawnAircrafts(units, coalition, airbase, country, immediate, spawnPoints);
+            spawnPoints = units.reduce((points: number, unit: any) => {return points + aircraftDatabase.getSpawnPointsByName(unit.unitType)}, 0);
+            spawnFunction = () => spawnAircrafts(units, coalition, airbase, country, immediate, spawnPoints, callback);
         } else if (category === "Helicopter") {
-            if (airbase == "" && getMissionHandler().getCommandModeOptions().restrictSpawns && getMissionHandler().getRemainingSetupTime() < 0 && getMissionHandler().getCommandModeOptions().commandMode !== GAME_MASTER) {
+            if (airbase == "" && spawnsRestricted) {
                 getInfoPopup().setText("Helicopters can be air spawned during the SETUP phase only");
                 return false;
             }
-            spawnPoints = units.reduce((points: number, unit: any) => { return points + helicopterDatabase.getSpawnPointsByName(unit.unitType) }, 0);
-            spawnHelicopters(units, coalition, airbase, country, immediate, spawnPoints);
+            spawnPoints = units.reduce((points: number, unit: any) => {return points + helicopterDatabase.getSpawnPointsByName(unit.unitType)}, 0);
+            spawnFunction = () => spawnHelicopters(units, coalition, airbase, country, immediate, spawnPoints, callback);
+
         } else if (category === "GroundUnit") {
-            if (getMissionHandler().getCommandModeOptions().restrictSpawns && getMissionHandler().getRemainingSetupTime() < 0 && getMissionHandler().getCommandModeOptions().commandMode !== GAME_MASTER) {
+            if (spawnsRestricted) {
                 getInfoPopup().setText("Ground units can be spawned during the SETUP phase only");
                 return false;
             }
-            spawnPoints = units.reduce((points: number, unit: any) => { return points + groundUnitDatabase.getSpawnPointsByName(unit.unitType) }, 0);
-            spawnGroundUnits(units, coalition, country, immediate, spawnPoints);
+            spawnPoints = units.reduce((points: number, unit: any) => {return points + groundUnitDatabase.getSpawnPointsByName(unit.unitType)}, 0);
+            spawnFunction = () => spawnGroundUnits(units, coalition, country, immediate, spawnPoints, callback);
+
         } else if (category === "NavyUnit") {
-            if (getMissionHandler().getCommandModeOptions().restrictSpawns && getMissionHandler().getRemainingSetupTime() < 0 && getMissionHandler().getCommandModeOptions().commandMode !== GAME_MASTER) {
+            if (spawnsRestricted) {
                 getInfoPopup().setText("Navy units can be spawned during the SETUP phase only");
                 return false;
             }
-            spawnPoints = units.reduce((points: number, unit: any) => { return points + navyUnitDatabase.getSpawnPointsByName(unit.unitType) }, 0);
-            spawnNavyUnits(units, coalition, country, immediate, spawnPoints);
+            spawnPoints = units.reduce((points: number, unit: any) => {return points + navyUnitDatabase.getSpawnPointsByName(unit.unitType)}, 0);
+            spawnFunction = () => spawnNavyUnits(units, coalition, country, immediate, spawnPoints, callback);
         }
 
         if (spawnPoints <= getMissionHandler().getAvailableSpawnPoints()) {
             getMissionHandler().setSpentSpawnPoints(spawnPoints);
+            spawnFunction();
             return true;
         } else {
             getInfoPopup().setText("Not enough spawn points available!");
