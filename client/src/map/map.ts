@@ -163,7 +163,7 @@ export class Map extends L.Map {
 
         /* Pan interval */
         this.#panInterval = window.setInterval(() => {
-            if (this.#panLeft || this.#panDown || this.#panRight || this.#panLeft)
+            if (this.#panUp || this.#panDown || this.#panRight || this.#panLeft)
                 this.panBy(new L.Point(((this.#panLeft ? -1 : 0) + (this.#panRight ? 1 : 0)) * this.#deafultPanDelta,
                     ((this.#panUp ? -1 : 0) + (this.#panDown ? 1 : 0)) * this.#deafultPanDelta));
         }, 20);
