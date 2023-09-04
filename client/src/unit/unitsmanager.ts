@@ -690,8 +690,8 @@ export class UnitsManager {
                     if (groupName !== "" && groups[groupName].length > 0 && (groups[groupName].every((unit: any) => {return unit.category == "GroundUnit";}) || groups[groupName].every((unit: any) => {return unit.category == "NavyUnit";}))) {
                         var aliveUnits = groups[groupName].filter((unit: any) => {return unit.alive});
                         var units = aliveUnits.map((unit: any) => {
-                            const liveryID = unit.getDatabase()?.getByName(unit.getName())?.liveryID;
-                            return { unitType: unit.name, location: unit.position, liveryID: liveryID? liveryID: "" }
+                            //const liveryID = unit.getDatabase()?.getByName(unit.getName())?.liveryID;
+                            return { unitType: unit.name, location: unit.position, liveryID: "" }
                         });
                         getUnitsManager().spawnUnits(groups[groupName][0].category, units, groups[groupName][0].coalition, true);
                     }
