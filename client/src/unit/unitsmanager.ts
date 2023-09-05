@@ -12,6 +12,7 @@ import { citiesDatabase } from "./citiesDatabase";
 import { aircraftDatabase } from "./aircraftdatabase";
 import { helicopterDatabase } from "./helicopterdatabase";
 import { navyUnitDatabase } from "./navyunitdatabase";
+import { TemporaryUnitMarker } from "../map/temporaryunitmarker";
 
 export class UnitsManager {
     #units: { [ID: number]: Unit };
@@ -603,12 +604,20 @@ export class UnitsManager {
             /* Clone the units in groups */
             for (let groupName in groups) {
                 var units: { ID: number, location: LatLng }[] = [];
+                var markers: TemporaryUnitMarker[] = [];
                 groups[groupName].forEach((unit: any) => {
                     var position = new LatLng(getMap().getMouseCoordinates().lat + unit.position.lat - avgLat, getMap().getMouseCoordinates().lng + unit.position.lng - avgLng);
-                    getMap().addTemporaryMarker(position, unit.name, unit.coalition);
+                    markers.push(getMap().addTemporaryMarker(position, unit.name, unit.coalition));
                     units.push({ ID: unit.ID, location: position });
                 });
-                cloneUnits(units);
+                
+                cloneUnits(units, (res: any) => {
+                    if (res.commandHash !== undefined) {
+                        markers.forEach((marker: TemporaryUnitMarker) => {
+                            marker.setCommandHash(res.commandHash);
+                        })
+                    }
+                });
             }
             getInfoPopup().setText(`${this.#copiedUnits.length} units pasted`);
         }
@@ -635,7 +644,6 @@ export class UnitsManager {
                             const unitBlueprint = randomUnitBlueprint(groundUnitDatabase, { type: type, eras: activeEras, ranges: activeRanges });
                             if (unitBlueprint) {
                                 this.spawnUnits("GroundUnit", [{ unitType: unitBlueprint.name, location: latlng, liveryID: "" }], coalitionArea.getCoalition(), true);
-                                getMap().addTemporaryMarker(latlng, unitBlueprint.name, coalitionArea.getCoalition());
                             }
                         }
                     }
