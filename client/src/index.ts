@@ -187,10 +187,12 @@ function setupEvents( indexApp:OlympusApp ) {
 
     [ "KeyW", "KeyA", "KeyS", "KeyD", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown" ].forEach( code => {
         shortcutManager.add( `pan${code}keydown`, new ShortcutKeyboard({
+            "altKey": false,
             "callback": ( ev:KeyboardEvent ) => {
                 getMap().handleMapPanning(ev);
             },
             "code": code,
+            "ctrlKey": false,
             "event": "keydown"
         }));
     });
