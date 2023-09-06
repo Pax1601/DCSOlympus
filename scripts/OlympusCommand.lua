@@ -616,7 +616,7 @@ function Olympus.clone(cloneTable)
 			local heading = math.atan2( position.x.z, position.x.x )
 			
 			-- Update the data of the cloned unit
-			local unitTable = Olympus.spawnDatabase[unit:getName()]
+			local unitTable = mist.utils.deepCopy(Olympus.spawnDatabase[unit:getName()])
 
 			local point = coord.LLtoLO(cloneData['lat'], cloneData['lng'], 0)
 			if unitTable then
@@ -674,7 +674,7 @@ function Olympus.clone(cloneTable)
 				end
 			end
 
-			unitsTable[#unitsTable + 1] = unitTable
+			unitsTable[#unitsTable + 1] = mist.utils.deepCopy(unitTable)
 		end
 	end
 
@@ -687,6 +687,13 @@ function Olympus.clone(cloneTable)
 		name = "Olympus-" .. Olympus.unitCounter,
 		task = 'CAP'
 	}
+
+	Olympus.debug(Olympus.serializeTable(vars), 1)
+
+	-- Save the units in the database, for cloning
+	for idx, unitTable in pairs(unitsTable) do
+		Olympus.addToDatabase(unitTable)
+	end
 
 	mist.dynAdd(vars)
 	Olympus.unitCounter = Olympus.unitCounter + 1

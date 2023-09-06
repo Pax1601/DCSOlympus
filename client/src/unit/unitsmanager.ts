@@ -559,10 +559,8 @@ export class UnitsManager {
     selectedUnitsCreateGroup() {
         var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: false });
         var units: { ID: number, location: LatLng }[] = [];
-        var coalition = "neutral";
         for (let idx in selectedUnits) {
             var unit = selectedUnits[idx];
-            coalition = unit.getCoalition();
             units.push({ ID: unit.ID, location: unit.getPosition() });
         }
         cloneUnits(units, () => {
@@ -580,7 +578,6 @@ export class UnitsManager {
         getInfoPopup().setText(`${this.#copiedUnits.length} units copied`);
     }
 
-    // TODO handle from lua
     pasteUnits() {
         if (this.#copiedUnits.length > 0 && !this.#pasteDisabled && getMissionHandler().getCommandModeOptions().commandMode == GAME_MASTER) {
             /* Compute the position of the center of the copied units */
@@ -604,7 +601,7 @@ export class UnitsManager {
             /* Clone the units in groups */
             for (let groupName in groups) {
                 var units: { ID: number, location: LatLng }[] = [];
-                var markers: TemporaryUnitMarker[] = [];
+                let markers: TemporaryUnitMarker[] = [];
                 groups[groupName].forEach((unit: any) => {
                     var position = new LatLng(getMap().getMouseCoordinates().lat + unit.position.lat - avgLat, getMap().getMouseCoordinates().lng + unit.position.lng - avgLng);
                     markers.push(getMap().addTemporaryMarker(position, unit.name, unit.coalition));
