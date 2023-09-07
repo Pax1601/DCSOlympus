@@ -152,7 +152,8 @@ string Clone::getString()
     std::ostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.clone, "
-        << "{" << unitsSS.str() << "}";
+        << "{" << unitsSS.str() << "}" << ", "
+        << (deleteOriginal ? "true" : "false");
     return commandSS.str();
 
 }

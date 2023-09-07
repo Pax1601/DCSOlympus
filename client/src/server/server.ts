@@ -199,8 +199,8 @@ export function followUnit(ID: number, targetID: number, offset: { "x": number, 
     POST(data, callback);
 }
 
-export function cloneUnits(units: {ID: number, location: LatLng}[], callback: CallableFunction = () => {}) {
-    var command = { "units": units };
+export function cloneUnits(units: {ID: number, location: LatLng}[], deleteOriginal: boolean, callback: CallableFunction = () => {}) {
+    var command = { "units": units, "deleteOriginal": deleteOriginal };
     var data = { "cloneUnits": command }
     POST(data, callback);
 }

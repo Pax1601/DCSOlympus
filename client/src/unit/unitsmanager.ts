@@ -555,7 +555,6 @@ export class UnitsManager {
         this.#showActionMessage(selectedUnits, `unit bombing point`);
     }
 
-    // TODO handle from lua
     selectedUnitsCreateGroup() {
         var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: false });
         var units: { ID: number, location: LatLng }[] = [];
@@ -563,13 +562,11 @@ export class UnitsManager {
             var unit = selectedUnits[idx];
             units.push({ ID: unit.ID, location: unit.getPosition() });
         }
-        cloneUnits(units, () => {
+        cloneUnits(units, true, () => {
             units.forEach((unit: any) => {
                 deleteUnit(unit.ID, false, false);
             });
-        });
-
-        
+        }); 
     }
 
     /***********************************************/
@@ -608,7 +605,7 @@ export class UnitsManager {
                     units.push({ ID: unit.ID, location: position });
                 });
                 
-                cloneUnits(units, (res: any) => {
+                cloneUnits(units, false, (res: any) => {
                     if (res.commandHash !== undefined) {
                         markers.forEach((marker: TemporaryUnitMarker) => {
                             marker.setCommandHash(res.commandHash);

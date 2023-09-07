@@ -250,8 +250,9 @@ private:
 class Clone : public Command
 {
 public:
-	Clone(vector<CloneOptions> cloneOptions) :
-		cloneOptions(cloneOptions)
+	Clone(vector<CloneOptions> cloneOptions, bool deleteOriginal) :
+		cloneOptions(cloneOptions),
+		deleteOriginal(deleteOriginal)
 	{
 		priority = CommandPriority::LOW;
 	};
@@ -260,6 +261,7 @@ public:
 
 private:
 	const vector<CloneOptions> cloneOptions;
+	const bool deleteOriginal;
 };
 
 /* Delete unit command */
