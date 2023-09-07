@@ -60,6 +60,7 @@ void Scheduler::execute(lua_State* L)
 					log("Command '" + commandString + "' executed correctly, current load " + to_string(getLoad()));
 				load = command->getLoad();
 				commands.remove(command);
+				executedCommandsHashes.push_back(command->getHash());
 				delete command;
 				return;
 			}
@@ -134,7 +135,7 @@ bool Scheduler::checkSpawnPoints(int spawnPoints, string coalition)
 	}
 }
 
-void Scheduler::handleRequest(string key, json::value value, string username)
+void Scheduler::handleRequest(string key, json::value value, string username, json::value& answer)
 {
 	Command* command = nullptr;
 
@@ -376,13 +377,21 @@ void Scheduler::handleRequest(string key, json::value value, string username)
 		if (unit != nullptr)
 			unit->setDesiredAltitudeType(to_string(value[L"altitudeType"]));
 	}
-	else if (key.compare("cloneUnit") == 0)
+	else if (key.compare("cloneUnits") == 0)
 	{
-		unsigned int ID = value[L"ID"].as_integer();
-		double lat = value[L"location"][L"lat"].as_double();
-		double lng = value[L"location"][L"lng"].as_double();
-		Coords loc; loc.lat = lat; loc.lng = lng;
-		command = dynamic_cast<Command*>(new Clone(ID, loc));
+		vector<CloneOptions> cloneOptions;
+		bool deleteOriginal = value[L"deleteOriginal"].as_bool();
+
+		for (auto unit : value[L"units"].as_array()) {
+			unsigned int ID = unit[L"ID"].as_integer();
+			double lat = unit[L"location"][L"lat"].as_double();
+			double lng = unit[L"location"][L"lng"].as_double();
+			
+			Coords location; location.lat = lat; location.lng = lng;
+			cloneOptions.push_back({ ID, location });
+		}
+
+		command = dynamic_cast<Command*>(new Clone(cloneOptions, deleteOriginal));
 	}
 	else if (key.compare("setROE") == 0)
 	{
@@ -565,6 +574,7 @@ void Scheduler::handleRequest(string key, json::value value, string username)
 	{
 		appendCommand(command);
 		log("New command appended correctly to stack. Current server load: " + to_string(getLoad()));
+		answer[L"commandHash"] = json::value(to_wstring(command->getHash()));
 	}
 }
 

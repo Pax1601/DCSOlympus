@@ -98,9 +98,11 @@ public:
 	unsigned int getPriority() { return priority; }
 	virtual string getString() = 0;
 	virtual unsigned int getLoad() = 0;
+	const string getHash() { return hash; }
 
 protected:
 	unsigned int priority = CommandPriority::LOW;
+	const string hash = random_string(16);
 };
 
 /* Simple low priority move command (from user click) */
@@ -248,9 +250,9 @@ private:
 class Clone : public Command
 {
 public:
-	Clone(unsigned int ID, Coords location) :
-		ID(ID),
-		location(location)
+	Clone(vector<CloneOptions> cloneOptions, bool deleteOriginal) :
+		cloneOptions(cloneOptions),
+		deleteOriginal(deleteOriginal)
 	{
 		priority = CommandPriority::LOW;
 	};
@@ -258,8 +260,8 @@ public:
 	virtual unsigned int getLoad() { return 30; }
 
 private:
-	const unsigned int ID;
-	const Coords location;
+	const vector<CloneOptions> cloneOptions;
+	const bool deleteOriginal;
 };
 
 /* Delete unit command */

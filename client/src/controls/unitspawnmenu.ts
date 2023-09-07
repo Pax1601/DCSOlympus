@@ -412,10 +412,13 @@ export class AircraftSpawnMenu extends UnitSpawnMenu {
             for (let i = 1; i < unitsCount + 1; i++) {
                 units.push(unitTable);
             }
-            if (getUnitsManager().spawnUnits("Aircraft", units, getActiveCoalition(), false, spawnOptions.airbase ? spawnOptions.airbase.getName() : "", spawnOptions.country)) {
-                getMap().addTemporaryMarker(spawnOptions.latlng, spawnOptions.name, getActiveCoalition());
-                getMap().getMapContextMenu().hide();
-            }
+
+            getUnitsManager().spawnUnits("Aircraft", units, getActiveCoalition(), false, spawnOptions.airbase ? spawnOptions.airbase.getName() : "", spawnOptions.country, (res: any) => {
+                if (res.commandHash !== undefined)
+                    getMap().addTemporaryMarker(spawnOptions.latlng, spawnOptions.name, getActiveCoalition(), res.commandHash);
+            });
+                
+            getMap().getMapContextMenu().hide();
         }
     }
 }
@@ -447,10 +450,13 @@ export class HelicopterSpawnMenu extends UnitSpawnMenu {
             for (let i = 1; i < unitsCount + 1; i++) {
                 units.push(unitTable);
             }
-            if (getUnitsManager().spawnUnits("Helicopter", units, getActiveCoalition(), false, spawnOptions.airbase ? spawnOptions.airbase.getName() : "", spawnOptions.country)) {
-                getMap().addTemporaryMarker(spawnOptions.latlng, spawnOptions.name, getActiveCoalition());
-                getMap().getMapContextMenu().hide();
-            }
+            
+            getUnitsManager().spawnUnits("Helicopter", units, getActiveCoalition(), false, spawnOptions.airbase ? spawnOptions.airbase.getName() : "", spawnOptions.country, (res: any) => {
+                if (res.commandHash !== undefined)
+                    getMap().addTemporaryMarker(spawnOptions.latlng, spawnOptions.name, getActiveCoalition(), res.commandHash);
+            });
+                
+            getMap().getMapContextMenu().hide();
         }
     }
 }
@@ -481,10 +487,13 @@ export class GroundUnitSpawnMenu extends UnitSpawnMenu {
                 units.push(JSON.parse(JSON.stringify(unitTable)));
                 unitTable.location.lat += 0.0001;
             }
-            if (getUnitsManager().spawnUnits("GroundUnit", units, getActiveCoalition(), false, spawnOptions.airbase ? spawnOptions.airbase.getName() : "", spawnOptions.country)) {
-                getMap().addTemporaryMarker(spawnOptions.latlng, spawnOptions.name, getActiveCoalition());
-                getMap().getMapContextMenu().hide();
-            }
+
+            getUnitsManager().spawnUnits("GroundUnit", units, getActiveCoalition(), false, spawnOptions.airbase ? spawnOptions.airbase.getName() : "", spawnOptions.country, (res: any) => {
+                if (res.commandHash !== undefined)
+                    getMap().addTemporaryMarker(spawnOptions.latlng, spawnOptions.name, getActiveCoalition(), res.commandHash);
+            });
+                
+            getMap().getMapContextMenu().hide();
         }
     }
 }
@@ -515,10 +524,13 @@ export class NavyUnitSpawnMenu extends UnitSpawnMenu {
                 units.push(JSON.parse(JSON.stringify(unitTable)));
                 unitTable.location.lat += 0.0001;
             }
-            if (getUnitsManager().spawnUnits("NavyUnit", units, getActiveCoalition(), false, spawnOptions.airbase ? spawnOptions.airbase.getName() : "", spawnOptions.country)) {
-                getMap().addTemporaryMarker(spawnOptions.latlng, spawnOptions.name, getActiveCoalition());
-                getMap().getMapContextMenu().hide();
-            }
+            
+            getUnitsManager().spawnUnits("NavyUnit", units, getActiveCoalition(), false, spawnOptions.airbase ? spawnOptions.airbase.getName() : "", spawnOptions.country, (res: any) => {
+                if (res.commandHash !== undefined)
+                    getMap().addTemporaryMarker(spawnOptions.latlng, spawnOptions.name, getActiveCoalition(), res.commandHash);
+            });
+                
+            getMap().getMapContextMenu().hide();
         }
     }
 }

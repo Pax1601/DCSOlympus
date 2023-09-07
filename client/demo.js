@@ -112,6 +112,8 @@ class DemoDataGenerator {
         app.get('/demo/bullseyes', (req, res) => this.bullseyes(req, res));
         app.get('/demo/airbases', (req, res) => this.airbases(req, res));
         app.get('/demo/mission', (req, res) => this.mission(req, res));
+        app.get('/demo/commands', (req, res) => this.command(req, res));
+        app.put('/demo', (req, res) => this.put(req, res));
 
         app.use('/demo', basicAuth({
             users: { 
@@ -457,7 +459,17 @@ class DemoDataGenerator {
         }
         res.send(JSON.stringify(ret));
     }
+
+    command(req, res) {
+        var ret = {commandExecuted: Math.random() > 0.5};
+        res.send(JSON.stringify(ret));
+    }
     
+    put(req, res) {
+        var ret = {commandHash: Math.random().toString(36).slice(2, 19)}
+        res.send(JSON.stringify(ret));
+    }
+
 }
 
 module.exports = DemoDataGenerator;

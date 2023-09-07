@@ -1,19 +1,13 @@
 import { LatLng } from 'leaflet';
 import { getConnectionStatusPanel, getInfoPopup, getLogPanel, getMissionHandler, getServerStatusPanel, getUnitsManager, getWeaponsManager, setLoginStatus } from '..';
 import { GeneralSettings, Radio, TACAN } from '../@types/unit';
-import { NONE, ROEs, emissionsCountermeasures, reactionsToThreat } from '../constants/constants';
+import { AIRBASES_URI, BULLSEYE_URI, COMMANDS_URI, LOGS_URI, MISSION_URI, NONE, ROEs, UNITS_URI, WEAPONS_URI, emissionsCountermeasures, reactionsToThreat } from '../constants/constants';
 
 var connected: boolean = false;
 var paused: boolean = false;
 
 var REST_ADDRESS = "http://localhost:30000/olympus";
 var DEMO_ADDRESS = window.location.href + "demo";
-const UNITS_URI = "units";
-const WEAPONS_URI = "weapons";
-const LOGS_URI = "logs";
-const AIRBASES_URI = "airbases";
-const BULLSEYE_URI = "bullseyes";
-const MISSION_URI = "mission";
 
 var username = "";
 var password = "";
@@ -38,13 +32,15 @@ export function setCredentials(newUsername: string, newPassword: string) {
     password = newPassword;
 }
 
-export function GET(callback: CallableFunction, uri: string, options?: { time?: number }, responseType?: string) {
+export function GET(callback: CallableFunction, uri: string, options?: ServerRequestOptions, responseType?: string) {
     var xmlHttp = new XMLHttpRequest();
 
     /* Assemble the request options string */
     var optionsString = '';
     if (options?.time != undefined)
         optionsString = `time=${options.time}`;
+    if (options?.commandHash != undefined)
+        optionsString = `commandHash=${options.commandHash}`;
 
     /* On the connection */
     xmlHttp.open("GET", `${demoEnabled ? DEMO_ADDRESS : REST_ADDRESS}/${uri}${optionsString ? `?${optionsString}` : ''}`, true);
@@ -92,8 +88,9 @@ export function POST(request: object, callback: CallableFunction) {
     xmlHttp.setRequestHeader("Content-Type", "application/json");
     if (username && password)
         xmlHttp.setRequestHeader("Authorization", "Basic " + btoa(`${username}:${password}`));
-    xmlHttp.onreadystatechange = () => {
-        callback();
+    xmlHttp.onload = (res: any) => {
+        var res = JSON.parse(xmlHttp.responseText);
+        callback(res);
     };
     xmlHttp.send(JSON.stringify(request));
 }
@@ -140,185 +137,189 @@ export function getWeapons(callback: CallableFunction, refresh: boolean = false)
     GET(callback, WEAPONS_URI, { time: refresh ? 0 : lastUpdateTimes[WEAPONS_URI] }, 'arraybuffer');
 }
 
-export function addDestination(ID: number, path: any) {
+export function isCommandExecuted(callback: CallableFunction, commandHash: string) {
+    GET(callback, COMMANDS_URI, { commandHash: commandHash});
+}
+
+export function addDestination(ID: number, path: any, callback: CallableFunction = () => {}) {
     var command = { "ID": ID, "path": path }
     var data = { "setPath": command }
-    POST(data, () => { });
+    POST(data, callback);
 }
 
-export function spawnSmoke(color: string, latlng: LatLng) {
+export function spawnSmoke(color: string, latlng: LatLng, callback: CallableFunction = () => {}) {
     var command = { "color": color, "location": latlng };
     var data = { "smoke": command }
-    POST(data, () => { });
+    POST(data, callback);
 }
 
-export function spawnExplosion(intensity: number, latlng: LatLng) {
+export function spawnExplosion(intensity: number, latlng: LatLng, callback: CallableFunction = () => {}) {
     var command = { "intensity": intensity, "location": latlng };
     var data = { "explosion": command }
-    POST(data, () => { });
+    POST(data, callback);
 }
 
-export function spawnAircrafts(units: any, coalition: string, airbaseName: string, country: string, immediate: boolean, spawnPoints: number) {
+export function spawnAircrafts(units: any, coalition: string, airbaseName: string, country: string, immediate: boolean, spawnPoints: number, callback: CallableFunction = () => {}) {
     var command = { "units": units, "coalition": coalition, "airbaseName": airbaseName, "country": country, "immediate": immediate, "spawnPoints": spawnPoints };
     var data = { "spawnAircrafts": command }
-    POST(data, () => { });
+    POST(data, callback);
 }
 
-export function spawnHelicopters(units: any, coalition: string, airbaseName: string, country: string, immediate: boolean, spawnPoints: number) {
+export function spawnHelicopters(units: any, coalition: string, airbaseName: string, country: string, immediate: boolean, spawnPoints: number, callback: CallableFunction = () => {}) {
     var command = { "units": units, "coalition": coalition, "airbaseName": airbaseName, "country": country, "immediate": immediate, "spawnPoints": spawnPoints };
     var data = { "spawnHelicopters": command }
-    POST(data, () => { });
+    POST(data, callback);
 }
 
-export function spawnGroundUnits(units: any, coalition: string, country: string, immediate: boolean, spawnPoints: number) {
+export function spawnGroundUnits(units: any, coalition: string, country: string, immediate: boolean, spawnPoints: number, callback: CallableFunction = () => {}) {
     var command = { "units": units, "coalition": coalition, "country": country, "immediate": immediate, "spawnPoints": spawnPoints };;
     var data = { "spawnGroundUnits": command }
-    POST(data, () => { });
+    POST(data, callback);
 }
 
-export function spawnNavyUnits(units: any, coalition: string, country: string, immediate: boolean, spawnPoints: number) {
+export function spawnNavyUnits(units: any, coalition: string, country: string, immediate: boolean, spawnPoints: number, callback: CallableFunction = () => {}) {
     var command = { "units": units, "coalition": coalition, "country": country, "immediate": immediate, "spawnPoints": spawnPoints };
     var data = { "spawnNavyUnits": command }
-    POST(data, () => { });
+    POST(data, callback);
 }
 
-export function attackUnit(ID: number, targetID: number) {
+export function attackUnit(ID: number, targetID: number, callback: CallableFunction = () => {}) {
     var command = { "ID": ID, "targetID": targetID };
     var data = { "attackUnit": command }
-    POST(data, () => { });
+    POST(data, callback);
 }
 
-export function followUnit(ID: number, targetID: number, offset: { "x": number, "y": number, "z": number }) {
+export function followUnit(ID: number, targetID: number, offset: { "x": number, "y": number, "z": number }, callback: CallableFunction = () => {}) {
     // X: front-rear, positive front
     // Y: top-bottom, positive bottom
     // Z: left-right, positive right
 
     var command = { "ID": ID, "targetID": targetID, "offsetX": offset["x"], "offsetY": offset["y"], "offsetZ": offset["z"] };
     var data = { "followUnit": command }
-    POST(data, () => { });
+    POST(data, callback);
 }
 
-export function cloneUnit(ID: number, latlng: LatLng) {
-    var command = { "ID": ID, "location": latlng };
-    var data = { "cloneUnit": command }
-    POST(data, () => { });
+export function cloneUnits(units: {ID: number, location: LatLng}[], deleteOriginal: boolean, callback: CallableFunction = () => {}) {
+    var command = { "units": units, "deleteOriginal": deleteOriginal };
+    var data = { "cloneUnits": command }
+    POST(data, callback);
 }
 
-export function deleteUnit(ID: number, explosion: boolean, immediate: boolean) {
+export function deleteUnit(ID: number, explosion: boolean, immediate: boolean, callback: CallableFunction = () => {}) {
     var command = { "ID": ID, "explosion": explosion, "immediate": immediate };
     var data = { "deleteUnit": command }
-    POST(data, () => { });
+    POST(data, callback);
 }
 
-export function landAt(ID: number, latlng: LatLng) {
+export function landAt(ID: number, latlng: LatLng, callback: CallableFunction = () => {}) {
     var command = { "ID": ID, "location": latlng };
     var data = { "landAt": command }
-    POST(data, () => { });
+    POST(data, callback);
 }
 
-export function changeSpeed(ID: number, speedChange: string) {
+export function changeSpeed(ID: number, speedChange: string, callback: CallableFunction = () => {}) {
     var command = { "ID": ID, "change": speedChange }
     var data = { "changeSpeed": command }
-    POST(data, () => { });
+    POST(data, callback);
 }
 
-export function setSpeed(ID: number, speed: number) {
+export function setSpeed(ID: number, speed: number, callback: CallableFunction = () => {}) {
     var command = { "ID": ID, "speed": speed }
     var data = { "setSpeed": command }
-    POST(data, () => { });
+    POST(data, callback);
 }
 
-export function setSpeedType(ID: number, speedType: string) {
+export function setSpeedType(ID: number, speedType: string, callback: CallableFunction = () => {}) {
     var command = { "ID": ID, "speedType": speedType }
     var data = { "setSpeedType": command }
-    POST(data, () => { });
+    POST(data, callback);
 }
 
-export function changeAltitude(ID: number, altitudeChange: string) {
+export function changeAltitude(ID: number, altitudeChange: string, callback: CallableFunction = () => {}) {
     var command = { "ID": ID, "change": altitudeChange }
     var data = { "changeAltitude": command }
-    POST(data, () => { });
+    POST(data, callback);
 }
 
-export function setAltitudeType(ID: number, altitudeType: string) {
+export function setAltitudeType(ID: number, altitudeType: string, callback: CallableFunction = () => {}) {
     var command = { "ID": ID, "altitudeType": altitudeType }
     var data = { "setAltitudeType": command }
-    POST(data, () => { });
+    POST(data, callback);
 }
 
-export function setAltitude(ID: number, altitude: number) {
+export function setAltitude(ID: number, altitude: number, callback: CallableFunction = () => {}) {
     var command = { "ID": ID, "altitude": altitude }
     var data = { "setAltitude": command }
-    POST(data, () => { });
+    POST(data, callback);
 }
 
-export function createFormation(ID: number, isLeader: boolean, wingmenIDs: number[]) {
+export function createFormation(ID: number, isLeader: boolean, wingmenIDs: number[], callback: CallableFunction = () => {}) {
     var command = { "ID": ID, "wingmenIDs": wingmenIDs, "isLeader": isLeader }
     var data = { "setLeader": command }
-    POST(data, () => { });
+    POST(data, callback);
 }
 
-export function setROE(ID: number, ROE: string) {
+export function setROE(ID: number, ROE: string, callback: CallableFunction = () => {}) {
     var command = { "ID": ID, "ROE": ROEs.indexOf(ROE) }
     var data = { "setROE": command }
-    POST(data, () => { });
+    POST(data, callback);
 }
 
-export function setReactionToThreat(ID: number, reactionToThreat: string) {
+export function setReactionToThreat(ID: number, reactionToThreat: string, callback: CallableFunction = () => {}) {
     var command = { "ID": ID, "reactionToThreat": reactionsToThreat.indexOf(reactionToThreat) }
     var data = { "setReactionToThreat": command }
-    POST(data, () => { });
+    POST(data, callback);
 }
 
-export function setEmissionsCountermeasures(ID: number, emissionCountermeasure: string) {
+export function setEmissionsCountermeasures(ID: number, emissionCountermeasure: string, callback: CallableFunction = () => {}) {
     var command = { "ID": ID, "emissionsCountermeasures": emissionsCountermeasures.indexOf(emissionCountermeasure) }
     var data = { "setEmissionsCountermeasures": command }
-    POST(data, () => { });
+    POST(data, callback);
 }
 
-export function setOnOff(ID: number, onOff: boolean) {
+export function setOnOff(ID: number, onOff: boolean, callback: CallableFunction = () => {}) {
     var command = { "ID": ID, "onOff": onOff }
     var data = { "setOnOff": command }
-    POST(data, () => { });
+    POST(data, callback);
 }
 
-export function setFollowRoads(ID: number, followRoads: boolean) {
+export function setFollowRoads(ID: number, followRoads: boolean, callback: CallableFunction = () => {}) {
     var command = { "ID": ID, "followRoads": followRoads }
     var data = { "setFollowRoads": command }
-    POST(data, () => { });
+    POST(data, callback);
 }
 
-export function refuel(ID: number) {
+export function refuel(ID: number, callback: CallableFunction = () => {}) {
     var command = { "ID": ID };
     var data = { "refuel": command }
-    POST(data, () => { });
+    POST(data, callback);
 }
 
-export function bombPoint(ID: number, latlng: LatLng) {
+export function bombPoint(ID: number, latlng: LatLng, callback: CallableFunction = () => {}) {
     var command = { "ID": ID, "location": latlng }
     var data = { "bombPoint": command }
-    POST(data, () => { });
+    POST(data, callback);
 }
 
-export function carpetBomb(ID: number, latlng: LatLng) {
+export function carpetBomb(ID: number, latlng: LatLng, callback: CallableFunction = () => {}) {
     var command = { "ID": ID, "location": latlng }
     var data = { "carpetBomb": command }
-    POST(data, () => { });
+    POST(data, callback);
 }
 
-export function bombBuilding(ID: number, latlng: LatLng) {
+export function bombBuilding(ID: number, latlng: LatLng, callback: CallableFunction = () => {}) {
     var command = { "ID": ID, "location": latlng }
     var data = { "bombBuilding": command }
-    POST(data, () => { });
+    POST(data, callback);
 }
 
-export function fireAtArea(ID: number, latlng: LatLng) {
+export function fireAtArea(ID: number, latlng: LatLng, callback: CallableFunction = () => {}) {
     var command = { "ID": ID, "location": latlng }
     var data = { "fireAtArea": command }
-    POST(data, () => { });
+    POST(data, callback);
 }
 
-export function setAdvacedOptions(ID: number, isTanker: boolean, isAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings) {
+export function setAdvacedOptions(ID: number, isTanker: boolean, isAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings, callback: CallableFunction = () => {}) {
     var command = {
         "ID": ID,
         "isTanker": isTanker,
@@ -329,10 +330,10 @@ export function setAdvacedOptions(ID: number, isTanker: boolean, isAWACS: boolea
     };
 
     var data = { "setAdvancedOptions": command };
-    POST(data, () => { });
+    POST(data, callback);
 }
 
-export function setCommandModeOptions(restrictSpawns: boolean, restrictToCoalition: boolean, spawnPoints: {blue: number, red: number}, eras: string[], setupTime: number) {
+export function setCommandModeOptions(restrictSpawns: boolean, restrictToCoalition: boolean, spawnPoints: {blue: number, red: number}, eras: string[], setupTime: number, callback: CallableFunction = () => {}) {
     var command = {
         "restrictSpawns": restrictSpawns,
         "restrictToCoalition": restrictToCoalition,
@@ -342,7 +343,7 @@ export function setCommandModeOptions(restrictSpawns: boolean, restrictToCoaliti
     };
 
     var data = { "setCommandModeOptions": command };
-    POST(data, () => { });
+    POST(data, callback);
 }
 
 export function startUpdate() {

@@ -1,39 +1,50 @@
 local version = "v0.4.4-alpha"
 
-local debug = false
+local debug = true				-- True enables debug printing using DCS messages
 
+-- .dll related variables
 Olympus.OlympusDLL = nil
 Olympus.DLLsloaded = false
 Olympus.OlympusModPath = os.getenv('DCSOLYMPUS_PATH')..'\\bin\\' 
+
+-- Logger reference
 Olympus.log = mist.Logger:new("Olympus", 'info')
 
-Olympus.unitCounter = 1
-Olympus.payloadRegistry = {}
-
+-- Data structures for transfer to .dll
 Olympus.missionData = {}
 Olympus.unitsData = {}
 Olympus.weaponsData = {}
 
-Olympus.unitIndex = 0
-Olympus.unitStep = 50
-Olympus.units = {}
+-- Units data structures
+Olympus.unitCounter = 1			-- Counter to generate unique names
+Olympus.spawnDatabase = {}		-- Database of spawn options, used for units cloning
+Olympus.unitIndex = 0			-- Counter used to spread the computational load of data retrievial from DCS
+Olympus.unitStep = 50			-- Max number of units that get updated each cycle
+Olympus.units = {}				-- Table holding references to all the currently existing units
 
-Olympus.weaponIndex = 0
-Olympus.weaponStep = 50
-Olympus.weapons = {}
+Olympus.weaponIndex = 0			-- Counter used to spread the computational load of data retrievial from DCS			
+Olympus.weaponStep = 50			-- Max number of weapons that get updated each cycle
+Olympus.weapons = {}			-- Table holding references to all the currently existing weapons
 
+-- Miscellaneous initializations
 Olympus.missionStartTime = DCS.getRealTime()
 
+------------------------------------------------------------------------------------------------------
+-- Olympus functions
+------------------------------------------------------------------------------------------------------
+-- Print a debug message if the debug option is true
 function Olympus.debug(message, displayFor)
 	if debug == true then
     	trigger.action.outText(message, displayFor)
 	end
 end
 
+-- Print a notify message
 function Olympus.notify(message, displayFor)
     trigger.action.outText(message, displayFor)
 end
 
+-- Loads the olympus .dll
 function Olympus.loadDLLs()
 	-- Add the .dll paths
 	package.cpath = package.cpath..';'..Olympus.OlympusModPath..'?.dll;'
@@ -52,6 +63,7 @@ function Olympus.getUnitByID(ID)
 	return Olympus.units[ID];
 end
 
+-- Gets the ID of the first country that belongs to a coalition
 function Olympus.getCountryIDByCoalition(coalitionString)
 	for countryName, countryId in pairs(country.id) do
 		if coalition.getCountryCoalition(countryId) == Olympus.getCoalitionIDByCoalition(coalitionString) then
@@ -61,6 +73,7 @@ function Olympus.getCountryIDByCoalition(coalitionString)
 	return 0
 end
 
+-- Gets the coalition ID of a coalition
 function Olympus.getCoalitionIDByCoalition(coalitionString)
 	local coalitionID = 0
 	if coalitionString == "red" then 
@@ -71,6 +84,7 @@ function Olympus.getCoalitionIDByCoalition(coalitionString)
 	return coalitionID
 end
 
+-- Gets the coalition name from the coalition ID
 function Olympus.getCoalitionByCoalitionID(coalitionID)
 	local coalitionString = "neutral"
 	if coalitionID == 1 then 
@@ -81,7 +95,7 @@ function Olympus.getCoalitionByCoalitionID(coalitionID)
 	return coalitionString
 end
 
--- Builds a valid task depending on the provided options
+-- Builds a valid enroute task depending on the provided options
 function Olympus.buildEnrouteTask(options)
 	local task = nil
 	-- Engage specific target by ID. Checks if target exists.
@@ -111,11 +125,13 @@ function Olympus.buildEnrouteTask(options)
 	return task
 end
 
--- Builds a valid task depending on the provided options
+-- Builds a valid main task depending on the provided options
 function Olympus.buildTask(groupName, options)
 	local task = nil
 
 	local group = Group.getByName(groupName)
+
+	-- Combo tasks require nested tables
 	if (Olympus.isArray(options)) then
 		local tasks = {}
 		for idx, subOptions in pairs(options) do
@@ -129,6 +145,7 @@ function Olympus.buildTask(groupName, options)
 		} 
 		Olympus.debug(Olympus.serializeTable(task), 30)
 	else 
+		-- Follow a unit in formation with a given offset
 		if options['id'] == 'FollowUnit' and options['leaderID'] and options['offset'] then
 			local leader = Olympus.getUnitByID(options['leaderID'])
 			if leader and leader:isExist() then
@@ -142,11 +159,13 @@ function Olympus.buildTask(groupName, options)
 					}    
 				}
 			end
+		-- Go refuel to the nearest tanker. If the unit can't refuel it will RTB
 		elseif options['id'] == 'Refuel' then
 			task = {
 				id = 'Refueling', 
 				params = {}   
 			}
+		-- Orbit in place at a given altitude and with a given pattern
 		elseif options['id'] == 'Orbit' then
 			task = { 
 				id = 'Orbit', 
@@ -173,6 +192,7 @@ function Olympus.buildTask(groupName, options)
 			if options['speed'] then
 				task['params']['speed'] = options['speed']
 			end
+		-- Bomb a specific location
 		elseif options['id'] == 'Bombing' and options['lat'] and options['lng'] then
 			local point = coord.LLtoLO(options['lat'], options['lng'], 0)
 			task = {
@@ -182,6 +202,7 @@ function Olympus.buildTask(groupName, options)
 					attackQty = 1
 				}   
 			}
+		-- Perform carpet bombing at a specific location
 		elseif options['id'] == 'CarpetBombing' and options['lat'] and options['lng'] then
 			local point = coord.LLtoLO(options['lat'], options['lng'], 0)
 			task = {
@@ -196,14 +217,7 @@ function Olympus.buildTask(groupName, options)
 					attackQtyLimit = true 
 				}   
 			}
-		elseif options['id'] == 'AttackMapObject' and options['lat'] and options['lng'] then
-			local point = coord.LLtoLO(options['lat'], options['lng'], 0)
-			task = {
-				id = 'AttackMapObject', 
-				params = {
-					point = {x = point.x, y = point.z}
-				}   
-			}
+		-- Fire at a specific point
 		elseif options['id'] == 'FireAtPoint' and options['lat'] and options['lng'] and options['radius'] then
 			local point = coord.LLtoLO(options['lat'], options['lng'], 0)
 			task = {
@@ -226,22 +240,17 @@ function Olympus.move(groupName, lat, lng, altitude, altitudeType, speed, speedT
 		if category == "Aircraft" then
 			local startPoint = mist.getLeadPos(group)
 			local endPoint = coord.LLtoLO(lat, lng, 0) 
+
+			-- 'AGL' mode does not appear to work in the buildWP function. This is a crude approximation
 			if altitudeType == "AGL" then
 				altitude = land.getHeight({x = endPoint.x, y = endPoint.z}) + altitude
 			end
 
-			local path = {}
-			if taskOptions and taskOptions['id'] == 'Land' then
-				path = {
-					[1] = mist.fixedWing.buildWP(startPoint, turningPoint, speed, altitude, 'BARO'),
-					[2] = mist.fixedWing.buildWP(endPoint, landing, speed, 0, 'AGL')
-				} 
-			else
-				path = {
-					[1] = mist.fixedWing.buildWP(startPoint, turningPoint, speed, altitude, 'BARO'),
-					[2] = mist.fixedWing.buildWP(endPoint, turningPoint, speed, altitude, 'BARO')
-				}
-			end
+			-- Create the path
+			local path = {
+				[1] = mist.fixedWing.buildWP(startPoint, turningPoint, speed, altitude, 'BARO'),
+				[2] = mist.fixedWing.buildWP(endPoint, turningPoint, speed, altitude, 'BARO')
+			}
 
 			-- If a task exists assign it to the controller
 			if taskOptions then
@@ -270,22 +279,16 @@ function Olympus.move(groupName, lat, lng, altitude, altitudeType, speed, speedT
 			local startPoint = mist.getLeadPos(group)
 			local endPoint = coord.LLtoLO(lat, lng, 0) 
 
+			-- 'AGL' mode does not appear to work in the buildWP function. This is a crude approximation
 			if altitudeType == "AGL" then
 				altitude = land.getHeight({x = endPoint.x, y = endPoint.z}) + altitude
 			end
 
-			local path = {}
-			if taskOptions and taskOptions['id'] == 'Land' then
-				path = {
-					[1] = mist.heli.buildWP(startPoint, turningPoint, speed, altitude, 'BARO'),
-					[2] = mist.heli.buildWP(endPoint, landing, speed, 0, 'AGL')
-				} 
-			else
-				path = {
-					[1] = mist.heli.buildWP(startPoint, turningPoint, speed, altitude, 'BARO'),
-					[2] = mist.heli.buildWP(endPoint, turningPoint, speed, altitude, 'BARO')
-				}
-			end
+			-- Create the path
+			local path = {
+				[1] = mist.heli.buildWP(startPoint, turningPoint, speed, altitude, 'BARO'),
+				[2] = mist.heli.buildWP(endPoint, turningPoint, speed, altitude, 'BARO')
+			}
 
 			-- If a task exists assign it to the controller
 			if taskOptions then
@@ -315,13 +318,12 @@ function Olympus.move(groupName, lat, lng, altitude, altitudeType, speed, speedT
 			local endPoint = coord.LLtoLO(lat, lng, 0) 
 			local bearing = math.atan2(endPoint.z - startPoint.z, endPoint.x - startPoint.x)
 
-			vars = 
-				{
-					group = group, 
-					point = endPoint,
-					heading = bearing,
-					speed = speed
-				}
+			vars = {
+				group = group, 
+				point = endPoint,
+				heading = bearing,
+				speed = speed
+			}
 
 			if taskOptions and taskOptions['id'] == 'FollowRoads' and taskOptions['value'] == true then
 				vars["disableRoads"] = false
@@ -331,21 +333,20 @@ function Olympus.move(groupName, lat, lng, altitude, altitudeType, speed, speedT
 			end
 
 			mist.groupToRandomPoint(vars)
-			Olympus.debug("Olympus.move executed succesfully on GroundUnit", 2)
+			Olympus.debug("Olympus.move executed successfully on GroundUnit", 2)
 		elseif category == "NavyUnit" then
 			local startPoint = mist.getLeadPos(group)
 			local endPoint = coord.LLtoLO(lat, lng, 0) 
 			local bearing = math.atan2(endPoint.z - startPoint.z, endPoint.x - startPoint.x)
 			
-			vars = 
-				{
-					group = group, 
-					point = endPoint,
-					heading = bearing,
-					speed = speed
-				}
+			vars = {
+				group = group, 
+				point = endPoint,
+				heading = bearing,
+				speed = speed
+			}
 			mist.groupToRandomPoint(vars)
-			Olympus.debug("Olympus.move executed succesfully on NavyUnit", 2)
+			Olympus.debug("Olympus.move executed successfully on NavyUnit", 2)
 		else
 			Olympus.debug("Olympus.move not implemented yet for " .. category, 2)
 		end
@@ -379,31 +380,44 @@ function Olympus.explosion(intensity, lat, lng)
 end  
 
 -- Spawns a new unit or group
+-- Spawn table contains the following parameters
+-- category: (string), either Aircraft, Helicopter, GroundUnit or NavyUnit
+-- coalition: (string)
+-- country: (string)
+-- airbaseName: (string, optional) only for air units
+-- units: (array) Array of units to spawn. All units will be in the same group. Each unit element must contain:
+	-- unitType: (string) DCS Name of the unit
+	-- lat: (number)
+	-- lng: (number)
+	-- alt: (number, optional) only for air units
+	-- loadout: (string, optional) only for air units, must be one of the loadouts defined in unitPayloads.lua
+	-- payload: (table, optional) overrides loadout, specifies directly the loadout of the unit
+	-- liveryID: (string, optional)
 function Olympus.spawnUnits(spawnTable) 
 	Olympus.debug("Olympus.spawnUnits " .. Olympus.serializeTable(spawnTable), 2)
 
-	local unitTable = nil
+	local unitsTable = nil
 	local route = nil
 	local category = nil
 
+	-- Generate the units table and rout as per DCS requirements
 	if spawnTable.category == 'Aircraft' then
-		unitTable = Olympus.generateAirUnitsTable(spawnTable.units)
+		unitsTable = Olympus.generateAirUnitsTable(spawnTable.units)
 		route = Olympus.generateAirUnitsRoute(spawnTable)
 		category = 'plane'
 	elseif spawnTable.category == 'Helicopter' then
-		unitTable = Olympus.generateAirUnitsTable(spawnTable.units)
+		unitsTable = Olympus.generateAirUnitsTable(spawnTable.units)
 		route = Olympus.generateAirUnitsRoute(spawnTable)
 		category = 'helicopter'
 	elseif spawnTable.category == 'GroundUnit' then
-		unitTable = Olympus.generateGroundUnitsTable(spawnTable.units)
+		unitsTable = Olympus.generateGroundUnitsTable(spawnTable.units)
 		category = 'vehicle'
 	elseif spawnTable.category == 'NavyUnit' then
-		unitTable = Olympus.generateNavyUnitsTable(spawnTable.units)
+		unitsTable = Olympus.generateNavyUnitsTable(spawnTable.units)
 		category = 'ship'
 	end
 
-	Olympus.debug(Olympus.serializeTable(unitTable), 5)
-
+	-- It the unit country is not specified, get a country that belongs to the coalition
 	local countryID = 0
 	if spawnTable.country == nil or spawnTable.country == "" then
 		countryID = Olympus.getCountryIDByCoalition(spawnTable.coalition)
@@ -411,9 +425,15 @@ function Olympus.spawnUnits(spawnTable)
 		countryID = country.id[spawnTable.country]
 	end
 
+	-- Save the units in the database, for cloning
+	for idx, unitTable in pairs(unitsTable) do
+		Olympus.addToDatabase(unitTable)
+	end
+
+	-- Spawn the new group
 	local vars = 
 	{
-		units = unitTable, 
+		units = unitsTable, 
 		country = countryID, 
 		category = category,
 		route = route,
@@ -426,9 +446,9 @@ function Olympus.spawnUnits(spawnTable)
 	Olympus.debug("Olympus.spawnUnits completed succesfully", 2)
 end
 
--- Generates unit table for a air unit. 
+-- Generates unit table for air units 
 function Olympus.generateAirUnitsTable(units)
-	local unitTable = {}
+	local unitsTable = {}
 	for idx, unit in pairs(units) do
 		local loadout = unit.loadout			-- loadout: a string, one of the names defined in unitPayloads.lua. Must be compatible with the unitType
 		local payload = unit.payload			-- payload: a table, if present the unit will receive this specific payload. Overrides loadout
@@ -437,6 +457,7 @@ function Olympus.generateAirUnitsTable(units)
 			unit.heading = 0
 		end
 
+		-- Define the loadout
 		if payload == nil then
 			if loadout and loadout ~= "" and Olympus.unitPayloads[unit.unitType][loadout] then
 				payload = Olympus.unitPayloads[unit.unitType][loadout]
@@ -445,8 +466,9 @@ function Olympus.generateAirUnitsTable(units)
 			end
 		end
 		
+		-- Generate the unit table
 		local spawnLocation = mist.utils.makeVec3GL(coord.LLtoLO(unit.lat, unit.lng, 0))
-		unitTable[#unitTable + 1] = 
+		unitsTable[#unitsTable + 1] = 
 		{
 			["type"] = unit.unitType,
 			["x"] = spawnLocation.x,
@@ -456,15 +478,12 @@ function Olympus.generateAirUnitsTable(units)
 			["skill"] = "Excellent",
 			["payload"] = { ["pylons"] = payload, ["fuel"] = 999999, ["flare"] = 60, ["ammo_type"] = 1, ["chaff"] = 60, ["gun"] = 100, }, 
 			["heading"] = unit.heading,
-			["callsign"] = { [1] = 1, [2] = 1, [3] = 1, ["name"] = "Olympus" .. Olympus.unitCounter.. "-" .. #unitTable + 1 },
-			["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitTable + 1,
+			["callsign"] = { [1] = 1, [2] = 1, [3] = 1, ["name"] = "Olympus" .. Olympus.unitCounter.. "-" .. #unitsTable + 1 },
+			["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitsTable + 1,
 			["livery_id"] = unit.liveryID
 		}
-
-		-- Add the payload to the registry, used for unit cloning
-		Olympus.payloadRegistry[unitTable[#unitTable].name] = payload
 	end
-	return unitTable
+	return unitsTable
 end
 
 function Olympus.generateAirUnitsRoute(spawnTable)
@@ -525,102 +544,192 @@ end
 
 -- Generates ground units table, either single or from template
 function Olympus.generateGroundUnitsTable(units)
-	local unitTable = {}
+	local unitsTable = {}
 	for idx, unit in pairs(units) do
 		local spawnLocation = mist.utils.makeVec3GL(coord.LLtoLO(unit.lat, unit.lng, 0))
 		if Olympus.hasKey(templates, unit.unitType) then
 			for idx, value in pairs(templates[unit.unitType].units) do
-				unitTable[#unitTable + 1] = 
+				unitsTable[#unitsTable + 1] = 
 				{
 					["type"] = value.name,
 					["x"] = spawnLocation.x + value.dx,
 					["y"] = spawnLocation.z + value.dy,
 					["heading"] = 0,
 					["skill"] = "High",
-					["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitTable + 1
+					["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitsTable + 1
 				}
 			end 
 		else
-			unitTable[#unitTable + 1] = 
+			unitsTable[#unitsTable + 1] = 
 			{
 				["type"] = unit.unitType,
 				["x"] = spawnLocation.x,
 				["y"] = spawnLocation.z,
 				["heading"] = unit.heading,
 				["skill"] = "High",
-				["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitTable + 1,
+				["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitsTable + 1,
 				["livery_id"] = unit.liveryID
 			}
 		end
 	end
 
-	return unitTable
+	return unitsTable
 end  
 
 -- Generates navy units table, either single or from template
 function Olympus.generateNavyUnitsTable(units)
-	local unitTable = {}
+	local unitsTable = {}
 	for idx, unit in pairs(units) do
 		local spawnLocation = mist.utils.makeVec3GL(coord.LLtoLO(unit.lat, unit.lng, 0))
 		if Olympus.hasKey(templates, unit.unitType) then
 			for idx, value in pairs(templates[unit.unitType].units) do
-				unitTable[#unitTable + 1] = 
+				unitsTable[#unitsTable + 1] = 
 				{
 					["type"] = value.name,
 					["x"] = spawnLocation.x + value.dx,
 					["y"] = spawnLocation.z + value.dy,
 					["heading"] = 0,
 					["skill"] = "High",
-					["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitTable + 1,
+					["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitsTable + 1,
 					["transportable"] = { ["randomTransportable"] = false }
 				}
 			end 
 		else
-			unitTable[#unitTable + 1] = 
+			unitsTable[#unitsTable + 1] = 
 			{
 				["type"] = unit.unitType,
 				["x"] = spawnLocation.x,
 				["y"] = spawnLocation.z,
 				["heading"] = unit.heading,
 				["skill"] = "High",
-				["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitTable + 1,
+				["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitsTable + 1,
 				["transportable"] = { ["randomTransportable"] = false },
 				["livery_id"] = unit.liveryID
 			}
 		end
 	end
 
-	return unitTable
+	return unitsTable
 end  
 
--- Clones a unit by ID. Will clone the unit with the same original payload as the source unit. TODO: only works on Olympus unit not ME units.
-function Olympus.clone(ID, lat, lng, category)
-	Olympus.debug("Olympus.clone " .. ID .. ", " .. category, 2)
-	local unit = Olympus.getUnitByID(ID)
-	if unit then
-		local position = unit:getPosition()
-		local heading = math.atan2( position.x.z, position.x.x )
-		
-		-- TODO: understand category in this script
-		local spawnTable = {
-			coalition = Olympus.getCoalitionByCoalitionID(unit:getCoalition()),
-			category = category,
-			units = {
-				[1] = {
-					lat = lat,
-					lng = lng,
-					alt = unit:getPoint().y,
-					heading = heading,
-					unitType = unit:getTypeName(),
-					payload = Olympus.payloadRegistry[unit:getName()]
-				}
-			}
-		}
-		Olympus.spawnUnits(spawnTable)
+-- Add the unit data to the database, used for unit cloning
+function Olympus.addToDatabase(unitTable)
+	Olympus.spawnDatabase[unitTable.name] = unitTable
+end
+
+-- Clones a unit by ID. Will clone the unit with the same original payload as the source unit. TODO: only works on Olympus unit not ME units (TO BE VERIFIED).
+-- cloneTable is an array of element, each of which contains
+	-- ID: (number) ID of the unit to clone
+	-- lat: (number)
+	-- lng: (number)
+function Olympus.clone(cloneTable, deleteOriginal)
+	Olympus.debug("Olympus.clone " .. Olympus.serializeTable(cloneTable), 2)
+
+	local unitsTable = {}
+	local countryID = nil
+	local category = nil
+	local route = {}
+
+	-- All the units in the table will be cloned in a single group
+	for idx, cloneData in pairs(cloneTable) do
+		local ID = cloneData.ID
+		local unit = Olympus.getUnitByID(ID)
+
+		if unit then
+			local position = unit:getPosition()
+			local heading = math.atan2( position.x.z, position.x.x )
+			
+			-- Update the data of the cloned unit
+			local unitTable = mist.utils.deepCopy(Olympus.spawnDatabase[unit:getName()])
+
+			local point = coord.LLtoLO(cloneData['lat'], cloneData['lng'], 0)
+			if unitTable then
+				unitTable["x"] = point.x
+				unitTable["y"] = point.z
+				unitTable["alt"] = unit:getPoint().y
+				unitTable["heading"] = heading
+				unitTable["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitsTable + 1
+			end
+
+			if countryID == nil and category == nil then
+				countryID = unit:getCountry()
+				if unit:getDesc().category == Unit.Category.AIRPLANE then
+					category = 'plane'
+					route = {
+						["points"] = 
+						{
+							[1] = 
+							{
+								["alt"] = alt,
+								["alt_type"] = "BARO",
+								["tasks"] = {
+									[1] = {["number"] = 1, ["auto"] = true, ["id"] = "WrappedAction", ["enabled"] = true, ["params"] = {["action"] = {["id"] = "EPLRS", ["params"] = {["value"] = true}, }, }, },
+									[2] = {["number"] = 2, ["auto"] = false, ["id"] = "Orbit", ["enabled"] = true, ["params"] = {["pattern"] = "Circle"}, },
+								},
+								["type"] = "Turning Point",
+								["x"] = point.x,
+								["y"] = point.z,
+							},
+						}, 
+					}
+				elseif unit:getDesc().category == Unit.Category.HELICOPTER then
+					category = 'helicopter'
+					route = {
+						["points"] = 
+						{
+							[1] = 
+							{
+								["alt"] = alt,
+								["alt_type"] = "BARO",
+								["tasks"] = {
+									[1] = {["number"] = 1, ["auto"] = true, ["id"] = "WrappedAction", ["enabled"] = true, ["params"] = {["action"] = {["id"] = "EPLRS", ["params"] = {["value"] = true}, }, }, },
+									[2] = {["number"] = 2, ["auto"] = false, ["id"] = "Orbit", ["enabled"] = true, ["params"] = {["pattern"] = "Circle"}, },
+								},
+								["type"] = "Turning Point",
+								["x"] = point.x,
+								["y"] = point.z,
+							},
+						}, 
+					}
+				elseif unit:getDesc().category == Unit.Category.GROUND_UNIT then
+					category = 'vehicle'
+				elseif unit:getDesc().category == Unit.Category.SHIP then
+					category = 'ship'
+				end
+			end
+
+			unitsTable[#unitsTable + 1] = mist.utils.deepCopy(unitTable)
+		end
+
+		if deleteOriginal then
+			Olympus.delete(ID, false)
+		end
 	end
+
+	local vars = 
+	{
+		units = unitsTable, 
+		country = countryID, 
+		category = category,
+		route = route,
+		name = "Olympus-" .. Olympus.unitCounter,
+		task = 'CAP'
+	}
+
+	Olympus.debug(Olympus.serializeTable(vars), 1)
+
+	-- Save the units in the database, for cloning
+	for idx, unitTable in pairs(unitsTable) do
+		Olympus.addToDatabase(unitTable)
+	end
+
+	mist.dynAdd(vars)
+	Olympus.unitCounter = Olympus.unitCounter + 1
+
 	Olympus.debug("Olympus.clone completed successfully", 2)
 end
 
+-- Delete a unit by ID, optionally use an explosion
 function Olympus.delete(ID, explosion)
 	Olympus.debug("Olympus.delete " .. ID .. " " .. tostring(explosion), 2)
 	local unit = Olympus.getUnitByID(ID)
@@ -635,6 +744,7 @@ function Olympus.delete(ID, explosion)
 	end
 end
 
+-- Set a DCS main task to a group
 function Olympus.setTask(groupName, taskOptions)
 	Olympus.debug("Olympus.setTask " .. groupName .. " " .. Olympus.serializeTable(taskOptions), 2)
 	local group = Group.getByName(groupName)
@@ -648,6 +758,7 @@ function Olympus.setTask(groupName, taskOptions)
 	end
 end
 
+-- Reset the dask of a group
 function Olympus.resetTask(groupName)
 	Olympus.debug("Olympus.resetTask " .. groupName, 2)
 	local group = Group.getByName(groupName)
@@ -657,6 +768,7 @@ function Olympus.resetTask(groupName)
 	end
 end
 
+-- Give a group a command
 function Olympus.setCommand(groupName, command)
 	Olympus.debug("Olympus.setCommand " .. groupName .. " " .. Olympus.serializeTable(command), 2)
 	local group = Group.getByName(groupName)
@@ -666,6 +778,7 @@ function Olympus.setCommand(groupName, command)
 	end
 end
 
+-- Set an option of a group
 function Olympus.setOption(groupName, optionID, optionValue)
 	Olympus.debug("Olympus.setOption " .. groupName .. " " .. optionID .. " " .. tostring(optionValue), 2)
 	local group = Group.getByName(groupName)
@@ -675,6 +788,7 @@ function Olympus.setOption(groupName, optionID, optionValue)
 	end
 end
 
+-- Disable the AI of a group on or off entirely
 function Olympus.setOnOff(groupName, onOff)
 	Olympus.debug("Olympus.setOnOff " .. groupName .. " " .. tostring(onOff), 2)
 	local group = Group.getByName(groupName)
@@ -684,6 +798,7 @@ function Olympus.setOnOff(groupName, onOff)
 	end
 end
 
+-- This function is periodically called to collect the data of all the existing units in the mission to be transmitted to the olympus.dll
 function Olympus.setUnitsData(arg, time)
 	-- Units data
 	local units = {}
@@ -693,9 +808,11 @@ function Olympus.setUnitsData(arg, time)
 	local index = 0
 	for ID, unit in pairs(Olympus.units) do
 		index = index + 1
+		-- Only the indexes between startIndex and endIndex are handled. This is a simple way to spread the update load over many cycles
 		if index > startIndex then
 			if unit ~= nil then
-				local table = {}		
+				local table = {}	
+
 				-- Get the object category in Olympus name
 				local objectCategory = unit:getCategory()
 				if objectCategory == Object.Category.UNIT then
@@ -765,6 +882,7 @@ function Olympus.setUnitsData(arg, time)
 					end
 				end
 			else
+				-- If the unit reference is nil it means the unit no longer exits
 				units[ID] = {isAlive = false}
 				Olympus.units[ID] = nil
 			end
@@ -773,6 +891,8 @@ function Olympus.setUnitsData(arg, time)
 			break
 		end
 	end
+
+	-- Reset the counter 
 	if index ~= endIndex then 
 		Olympus.unitIndex = 0
 	else
@@ -786,6 +906,7 @@ function Olympus.setUnitsData(arg, time)
 	return time + 0.05
 end
 
+-- This function is periodically called to collect the data of all the existing weapons in the mission to be transmitted to the olympus.dll
 function Olympus.setWeaponsData(arg, time)
 	-- Weapons data
 	local weapons = {}
@@ -795,6 +916,8 @@ function Olympus.setWeaponsData(arg, time)
 	local index = 0
 	for ID, weapon in pairs(Olympus.weapons) do
 		index = index + 1
+
+		-- Only the indexes between startIndex and endIndex are handled. This is a simple way to spread the update load over many cycles
 		if index > startIndex then
 			if weapon ~= nil then
 				local table = {}
@@ -835,6 +958,7 @@ function Olympus.setWeaponsData(arg, time)
 					weapons[ID] = table
 				end
 			else
+				-- If the weapon reference is nil it means the unit no longer exits
 				weapons[ID] = {isAlive = false}
 				Olympus.weapons[ID] = nil
 			end
@@ -843,6 +967,8 @@ function Olympus.setWeaponsData(arg, time)
 			break
 		end
 	end
+
+	-- Reset the counter 
 	if index ~= endIndex then 
 		Olympus.weaponIndex = 0
 	else
@@ -910,13 +1036,14 @@ function Olympus.setMissionData(arg, time)
 	Olympus.missionData["mission"] = mission
 
 	Olympus.OlympusDLL.setMissionData()
-	return time + 1
+	return time + 1	-- For perfomance reasons weapons are updated once every second
 end
 
+-- Initializes the units table with all the existing ME units
 function Olympus.initializeUnits() 
 	if mist and mist.DBs and mist.DBs.MEunitsById then
-		for id, unitTable in pairs(mist.DBs.MEunitsById) do
-			local unit = Unit.getByName(unitTable["unitName"])
+		for id, unitsTable in pairs(mist.DBs.MEunitsById) do
+			local unit = Unit.getByName(unitsTable["unitName"])
 			if unit then
 				Olympus.units[unit["id_"]] = unit
 			end
@@ -928,6 +1055,9 @@ function Olympus.initializeUnits()
 	end
 end
 
+------------------------------------------------------------------------------------------------------
+-- Olympus utility functions
+------------------------------------------------------------------------------------------------------
 function Olympus.serializeTable(val, name, skipnewlines, depth)
     skipnewlines = skipnewlines or false
     depth = depth or 0
