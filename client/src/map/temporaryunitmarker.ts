@@ -17,18 +17,22 @@ export class TemporaryUnitMarker extends CustomMarker {
         this.#coalition = coalition;
         this.#commandHash = commandHash;
 
-        if (this.#commandHash !== undefined) {
-            this.#timer = window.setInterval(() => { 
-                if (this.#commandHash !== undefined)  {
-                    isCommandExecuted((res: any) => {
-                        if (res.commandExecuted) {
-                            this.removeFrom(getMap());
-                            window.clearInterval(this.#timer);
-                        }
-                    }, this.#commandHash)
-                }
-            }, 1000);
-        }
+        if (commandHash !== undefined) 
+            this.setCommandHash(commandHash)
+    }
+
+    setCommandHash(commandHash: string) {
+        this.#commandHash = commandHash;
+        this.#timer = window.setInterval(() => { 
+            if (this.#commandHash !== undefined)  {
+                isCommandExecuted((res: any) => {
+                    if (res.commandExecuted) {
+                        this.removeFrom(getMap());
+                        window.clearInterval(this.#timer);
+                    }
+                }, this.#commandHash)
+            }
+        }, 1000);
     }
 
     createIcon() {

@@ -12,6 +12,7 @@ import { citiesDatabase } from "./citiesDatabase";
 import { aircraftDatabase } from "./aircraftdatabase";
 import { helicopterDatabase } from "./helicopterdatabase";
 import { navyUnitDatabase } from "./navyunitdatabase";
+import { TemporaryUnitMarker } from "../map/temporaryunitmarker";
 
 export class UnitsManager {
     #units: { [ID: number]: Unit };
@@ -554,23 +555,18 @@ export class UnitsManager {
         this.#showActionMessage(selectedUnits, `unit bombing point`);
     }
 
-    // TODO handle from lua
     selectedUnitsCreateGroup() {
         var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: false });
         var units: { ID: number, location: LatLng }[] = [];
-        var coalition = "neutral";
         for (let idx in selectedUnits) {
             var unit = selectedUnits[idx];
-            coalition = unit.getCoalition();
             units.push({ ID: unit.ID, location: unit.getPosition() });
         }
-        cloneUnits(units, () => {
+        cloneUnits(units, true, () => {
             units.forEach((unit: any) => {
                 deleteUnit(unit.ID, false, false);
             });
-        });
-
-        
+        }); 
     }
 
     /***********************************************/
@@ -579,7 +575,6 @@ export class UnitsManager {
         getInfoPopup().setText(`${this.#copiedUnits.length} units copied`);
     }
 
-    // TODO handle from lua
     pasteUnits() {
         if (this.#copiedUnits.length > 0 && !this.#pasteDisabled && getMissionHandler().getCommandModeOptions().commandMode == GAME_MASTER) {
             /* Compute the position of the center of the copied units */
@@ -603,12 +598,20 @@ export class UnitsManager {
             /* Clone the units in groups */
             for (let groupName in groups) {
                 var units: { ID: number, location: LatLng }[] = [];
+                let markers: TemporaryUnitMarker[] = [];
                 groups[groupName].forEach((unit: any) => {
                     var position = new LatLng(getMap().getMouseCoordinates().lat + unit.position.lat - avgLat, getMap().getMouseCoordinates().lng + unit.position.lng - avgLng);
-                    getMap().addTemporaryMarker(position, unit.name, unit.coalition);
+                    markers.push(getMap().addTemporaryMarker(position, unit.name, unit.coalition));
                     units.push({ ID: unit.ID, location: position });
                 });
-                cloneUnits(units);
+                
+                cloneUnits(units, false, (res: any) => {
+                    if (res.commandHash !== undefined) {
+                        markers.forEach((marker: TemporaryUnitMarker) => {
+                            marker.setCommandHash(res.commandHash);
+                        })
+                    }
+                });
             }
             getInfoPopup().setText(`${this.#copiedUnits.length} units pasted`);
         }
@@ -635,7 +638,6 @@ export class UnitsManager {
                             const unitBlueprint = randomUnitBlueprint(groundUnitDatabase, { type: type, eras: activeEras, ranges: activeRanges });
                             if (unitBlueprint) {
                                 this.spawnUnits("GroundUnit", [{ unitType: unitBlueprint.name, location: latlng, liveryID: "" }], coalitionArea.getCoalition(), true);
-                                getMap().addTemporaryMarker(latlng, unitBlueprint.name, coalitionArea.getCoalition());
                             }
                         }
                     }

@@ -380,6 +380,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 	else if (key.compare("cloneUnits") == 0)
 	{
 		vector<CloneOptions> cloneOptions;
+		bool deleteOriginal = value[L"deleteOriginal"].as_bool();
 
 		for (auto unit : value[L"units"].as_array()) {
 			unsigned int ID = unit[L"ID"].as_integer();
@@ -390,7 +391,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			cloneOptions.push_back({ ID, location });
 		}
 
-		command = dynamic_cast<Command*>(new Clone(cloneOptions));
+		command = dynamic_cast<Command*>(new Clone(cloneOptions, deleteOriginal));
 	}
 	else if (key.compare("setROE") == 0)
 	{

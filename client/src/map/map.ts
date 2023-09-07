@@ -429,6 +429,7 @@ export class Map extends L.Map {
         var marker = new TemporaryUnitMarker(latlng, name, coalition, commandHash);
         marker.addTo(this);
         this.#temporaryMarkers.push(marker);
+        return marker;
     }
 
     getSelectedCoalitionArea() {
