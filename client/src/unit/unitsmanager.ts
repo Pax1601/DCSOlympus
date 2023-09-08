@@ -2,12 +2,12 @@ import { LatLng, LatLngBounds } from "leaflet";
 import { getHotgroupPanel, getInfoPopup, getMap, getMissionHandler, getUnitsManager, getWeaponsManager } from "..";
 import { Unit } from "./unit";
 import { cloneUnits, deleteUnit, spawnAircrafts, spawnGroundUnits, spawnHelicopters, spawnNavyUnits } from "../server/server";
-import { bearingAndDistanceToLatLng, deg2rad, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots, polyContains, polygonArea, randomPointInPoly, randomUnitBlueprint } from "../other/utils";
+import { bearingAndDistanceToLatLng, deg2rad, getUnitDatabaseByCategory, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots, polyContains, polygonArea, randomPointInPoly, randomUnitBlueprint } from "../other/utils";
 import { CoalitionArea } from "../map/coalitionarea";
 import { groundUnitDatabase } from "./groundunitdatabase";
 import { DataIndexes, GAME_MASTER, IADSDensities, IDLE, MOVE_UNIT, NONE } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
-import { Contact } from "../@types/unit";
+import { Contact, UnitData } from "../@types/unit";
 import { citiesDatabase } from "./citiesDatabase";
 import { aircraftDatabase } from "./aircraftdatabase";
 import { helicopterDatabase } from "./helicopterdatabase";
@@ -16,9 +16,8 @@ import { TemporaryUnitMarker } from "../map/temporaryunitmarker";
 
 export class UnitsManager {
     #units: { [ID: number]: Unit };
-    #copiedUnits: any[];
+    #copiedUnits: UnitData[];
     #selectionEventDisabled: boolean = false;
-    #pasteDisabled: boolean = false;
     #hiddenTypes: string[] = [];
     #requestDetectionUpdate: boolean = false;
 
@@ -562,7 +561,7 @@ export class UnitsManager {
             var unit = selectedUnits[idx];
             units.push({ ID: unit.ID, location: unit.getPosition() });
         }
-        cloneUnits(units, true, () => {
+        cloneUnits(units, true, 0 /* No spawn points, we delete the original units */, () => {
             units.forEach((unit: any) => {
                 deleteUnit(unit.ID, false, false);
             });
@@ -576,7 +575,28 @@ export class UnitsManager {
     }
 
     pasteUnits() {
-        if (this.#copiedUnits.length > 0 && !this.#pasteDisabled && getMissionHandler().getCommandModeOptions().commandMode == GAME_MASTER) {
+        let spawnPoints = 0;
+
+        /* If spawns are restricted, check that the user has the necessary spawn points */
+        if (getMissionHandler().getCommandModeOptions().commandMode != GAME_MASTER) {
+            if (getMissionHandler().getCommandModeOptions().restrictSpawns && getMissionHandler().getRemainingSetupTime() < 0) {
+                getInfoPopup().setText(`Units can be pasted only during SETUP phase`);
+                return false;
+            }
+
+            this.#copiedUnits.forEach((unit: UnitData) => {
+                let unitSpawnPoints = getUnitDatabaseByCategory(unit.category)?.getSpawnPointsByName(unit.name);
+                if (unitSpawnPoints !== undefined)
+                    spawnPoints += unitSpawnPoints;
+            })
+            
+            if (spawnPoints > getMissionHandler().getAvailableSpawnPoints()) {
+                getInfoPopup().setText("Not enough spawn points available!");
+                return false;
+            }
+        }
+
+        if (this.#copiedUnits.length > 0) {
             /* Compute the position of the center of the copied units */
             var nUnits = this.#copiedUnits.length;
             var avgLat = 0;
@@ -588,8 +608,8 @@ export class UnitsManager {
             }
 
             /* Organize the copied units in groups */
-            var groups: { [key: string]: any } = {};
-            this.#copiedUnits.forEach((unit: any) => {
+            var groups: { [key: string]: UnitData[] } = {};
+            this.#copiedUnits.forEach((unit: UnitData) => {
                 if (!(unit.groupName in groups))
                     groups[unit.groupName] = [];
                 groups[unit.groupName].push(unit);
@@ -599,13 +619,13 @@ export class UnitsManager {
             for (let groupName in groups) {
                 var units: { ID: number, location: LatLng }[] = [];
                 let markers: TemporaryUnitMarker[] = [];
-                groups[groupName].forEach((unit: any) => {
+                groups[groupName].forEach((unit: UnitData) => {
                     var position = new LatLng(getMap().getMouseCoordinates().lat + unit.position.lat - avgLat, getMap().getMouseCoordinates().lng + unit.position.lng - avgLng);
                     markers.push(getMap().addTemporaryMarker(position, unit.name, unit.coalition));
                     units.push({ ID: unit.ID, location: position });
                 });
                 
-                cloneUnits(units, false, (res: any) => {
+                cloneUnits(units, false, spawnPoints, (res: any) => {
                     if (res.commandHash !== undefined) {
                         markers.forEach((marker: TemporaryUnitMarker) => {
                             marker.setCommandHash(res.commandHash);
@@ -616,7 +636,7 @@ export class UnitsManager {
             getInfoPopup().setText(`${this.#copiedUnits.length} units pasted`);
         }
         else {
-            getInfoPopup().setText(`Unit cloning is disabled in ${getMissionHandler().getCommandModeOptions().commandMode} mode`);
+            getInfoPopup().setText("No units copied!");
         }
     }
 

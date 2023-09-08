@@ -432,11 +432,11 @@ class DemoDataGenerator {
         }
 
         ret.mission.commandModeOptions = {
-            restrictSpawns: false,
+            restrictSpawns: true,
             restrictToCoalition: true,
             setupTime: 0,
             spawnPoints: {
-                red: 1000,
+                red: 400,
                 blue: 400
             }, 
             eras: ["WW2", "Early Cold War", "Late Cold War", "Modern"]

@@ -8,6 +8,7 @@ import { Buffer } from "buffer";
 import { ROEs, emissionsCountermeasures, reactionsToThreat, states } from "../constants/constants";
 import { Dropdown } from "../controls/dropdown";
 import { UnitBlueprint } from "../@types/unitdatabase";
+import { navyUnitDatabase } from "../unit/navyunitdatabase";
 
 export function bearing(lat1: number, lon1: number, lat2: number, lon2: number) {
     const φ1 = deg2rad(lat1); // φ, λ in radians
@@ -297,12 +298,14 @@ export function getMarkerCategoryByName(name: string) {
 }
 
 export function getUnitDatabaseByCategory(category: string) {
-    if (category == "aircraft")
+    if (category.toLowerCase() == "aircraft")
         return aircraftDatabase;
-    else if (category == "helicopter")
+    else if (category.toLowerCase() == "helicopter")
         return helicopterDatabase;
-    else if (category.includes("groundunit"))
+    else if (category.toLowerCase().includes("groundunit"))
         return groundUnitDatabase;
+    else if (category.toLowerCase().includes("navyunit"))
+        return navyUnitDatabase;
     else
         return null;
 }
