@@ -35,6 +35,9 @@ export class AirbaseSpawnContextMenu extends ContextMenu {
         this.#aircraftSpawnMenu.getContainer().addEventListener("resize", () => this.clip());
         this.#helicopterSpawnMenu.getContainer().addEventListener("resize", () => this.clip());
 
+        this.#aircraftSpawnMenu.getContainer().addEventListener("hide", () => this.hide());
+        this.#helicopterSpawnMenu.getContainer().addEventListener("hide", () => this.hide());
+
         this.hide();
     }
 

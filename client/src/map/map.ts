@@ -8,15 +8,15 @@ import { Dropdown } from "../controls/dropdown";
 import { Airbase } from "../mission/airbase";
 import { Unit } from "../unit/unit";
 import { bearing, createCheckboxOption } from "../other/utils";
-import { DestinationPreviewMarker } from "./destinationpreviewmarker";
-import { TemporaryUnitMarker } from "./temporaryunitmarker";
+import { DestinationPreviewMarker } from "./markers/destinationpreviewmarker";
+import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
 import { SVGInjector } from '@tanem/svg-injector'
 import { layers as mapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, visibilityControls, visibilityControlsTooltips, MOVE_UNIT, SHOW_CONTACT_LINES, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, visibilityControlsTypes, SHOW_UNIT_LABELS } from "../constants/constants";
-import { TargetMarker } from "./targetmarker";
-import { CoalitionArea } from "./coalitionarea";
+import { TargetMarker } from "./markers/targetmarker";
+import { CoalitionArea } from "./coalitionarea/coalitionarea";
 import { CoalitionAreaContextMenu } from "../contextmenus/coalitionareacontextmenu";
-import { DrawingCursor } from "./drawingcursor";
+import { DrawingCursor } from "./coalitionarea/drawingcursor";
 import { AirbaseSpawnContextMenu } from "../contextmenus/airbasespawnmenu";
 
 L.Map.addInitHook('addHandler', 'boxSelect', BoxSelect);

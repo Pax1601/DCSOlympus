@@ -2,7 +2,7 @@ import { SVGInjector } from "@tanem/svg-injector";
 import { getUnitsManager } from "..";
 import { Dropdown } from "../controls/dropdown";
 import { Slider } from "../controls/slider";
-import { aircraftDatabase } from "../unit/aircraftdatabase";
+import { aircraftDatabase } from "../unit/databases/aircraftdatabase";
 import { Unit } from "../unit/unit";
 import { Panel } from "./panel";
 import { Switch } from "../controls/switch";

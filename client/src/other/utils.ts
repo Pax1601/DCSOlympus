@@ -1,14 +1,14 @@
 import { LatLng, Point, Polygon } from "leaflet";
 import * as turf from "@turf/turf";
-import { UnitDatabase } from "../unit/unitdatabase";
-import { aircraftDatabase } from "../unit/aircraftdatabase";
-import { helicopterDatabase } from "../unit/helicopterdatabase";
-import { groundUnitDatabase } from "../unit/groundunitdatabase";
+import { UnitDatabase } from "../unit/databases/unitdatabase";
+import { aircraftDatabase } from "../unit/databases/aircraftdatabase";
+import { helicopterDatabase } from "../unit/databases/helicopterdatabase";
+import { groundUnitDatabase } from "../unit/databases/groundunitdatabase";
 import { Buffer } from "buffer";
 import { ROEs, emissionsCountermeasures, reactionsToThreat, states } from "../constants/constants";
 import { Dropdown } from "../controls/dropdown";
 import { UnitBlueprint } from "../@types/unitdatabase";
-import { navyUnitDatabase } from "../unit/navyunitdatabase";
+import { navyUnitDatabase } from "../unit/databases/navyunitdatabase";
 
 export function bearing(lat1: number, lon1: number, lat2: number, lon2: number) {
     const φ1 = deg2rad(lat1); // φ, λ in radians

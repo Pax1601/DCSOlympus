@@ -1,9 +1,9 @@
 import { CustomMarker } from "./custommarker";
 import { DivIcon, LatLng } from "leaflet";
 import { SVGInjector } from "@tanem/svg-injector";
-import { getMarkerCategoryByName, getUnitDatabaseByCategory } from "../other/utils";
-import { isCommandExecuted } from "../server/server";
-import { getMap } from "..";
+import { getMarkerCategoryByName, getUnitDatabaseByCategory } from "../../other/utils";
+import { isCommandExecuted } from "../../server/server";
+import { getMap } from "../..";
 
 export class TemporaryUnitMarker extends CustomMarker {
     #name: string;

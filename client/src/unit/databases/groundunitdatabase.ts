@@ -1,14 +1,10 @@
-import { getMissionHandler } from "..";
-import { GAME_MASTER } from "../constants/constants";
+import { getMissionHandler } from "../..";
+import { GAME_MASTER } from "../../constants/constants";
 import { UnitDatabase } from "./unitdatabase"
 
-export class AircraftDatabase extends UnitDatabase {
+export class GroundUnitDatabase extends UnitDatabase {
     constructor() {
-        super('databases/units/aircraftdatabase.json');
-    }
-
-	getCategory() {
-		return "Aircraft";
+        super('databases/units/groundunitdatabase.json');
     }
 
     getSpawnPointsByName(name: string) {
@@ -31,7 +27,10 @@ export class AircraftDatabase extends UnitDatabase {
             return 400;
         return 0;
     }
+
+    getCategory() {
+        return "GroundUnit";
+    }
 }
 
-export var aircraftDatabase = new AircraftDatabase();
-
+export var groundUnitDatabase = new GroundUnitDatabase();

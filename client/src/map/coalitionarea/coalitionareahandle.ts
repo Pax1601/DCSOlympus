@@ -1,5 +1,5 @@
 import { DivIcon, LatLng } from "leaflet";
-import { CustomMarker } from "./custommarker";
+import { CustomMarker } from "../markers/custommarker";
 
 export class CoalitionAreaHandle extends CustomMarker {
     constructor(latlng: LatLng) {

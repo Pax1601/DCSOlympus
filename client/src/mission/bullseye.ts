@@ -1,5 +1,5 @@
 import { DivIcon } from "leaflet";
-import { CustomMarker } from "../map/custommarker";
+import { CustomMarker } from "../map/markers/custommarker";
 import { SVGInjector } from "@tanem/svg-injector";
 
 export class Bullseye extends CustomMarker {

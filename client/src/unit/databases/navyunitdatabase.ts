@@ -1,5 +1,5 @@
-import { getMissionHandler } from "..";
-import { GAME_MASTER } from "../constants/constants";
+import { getMissionHandler } from "../..";
+import { GAME_MASTER } from "../../constants/constants";
 import { UnitDatabase } from "./unitdatabase"
 
 export class NavyUnitDatabase extends UnitDatabase {

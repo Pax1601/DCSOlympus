@@ -1,10 +1,14 @@
-import { getMissionHandler } from "..";
-import { GAME_MASTER } from "../constants/constants";
+import { getMissionHandler } from "../..";
+import { GAME_MASTER } from "../../constants/constants";
 import { UnitDatabase } from "./unitdatabase"
 
-export class HelicopterDatabase extends UnitDatabase {
+export class AircraftDatabase extends UnitDatabase {
     constructor() {
-        super('databases/units/helicopterdatabase.json');
+        super('databases/units/aircraftdatabase.json');
+    }
+
+	getCategory() {
+		return "Aircraft";
     }
 
     getSpawnPointsByName(name: string) {
@@ -27,11 +31,7 @@ export class HelicopterDatabase extends UnitDatabase {
             return 400;
         return 0;
     }
-
-	getCategory() {
-		return "Helicopter";
-	}
 }
 
-export var helicopterDatabase = new HelicopterDatabase();
+export var aircraftDatabase = new AircraftDatabase();
 

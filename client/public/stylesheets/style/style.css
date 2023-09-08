@@ -1,4 +1,3 @@
-
 * {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -7,7 +6,7 @@
 
 html * {
     font-family: 'Open Sans', sans-serif !important;
-    user-select: none; 
+    user-select: none;
 }
 
 body {
@@ -117,7 +116,8 @@ form>div {
 
 .ol-panel {
     background-color: var(--background-steel);
-    border-radius: var(--border-radius-md);;
+    border-radius: var(--border-radius-md);
+    ;
     box-shadow: 0px 2px 5px #000A;
     color: white;
     font-size: 12px;
@@ -963,16 +963,16 @@ nav.ol-panel> :last-child {
 
 #command-mode-phase.game-commenced::after {
     content: "Spawn restrictions are being enforced";
-    font-size: 10px; 
+    font-size: 10px;
 }
 
 #command-mode-phase.no-restrictions::after {
     content: "No spawn restrictions";
-    font-size: 10px; 
+    font-size: 10px;
 }
 
 #command-mode-toolbar {
-    min-width: fit-content ;
+    min-width: fit-content;
 }
 
 #command-mode-toolbar .ol-button {
@@ -990,17 +990,17 @@ nav.ol-panel> :last-child {
 }
 
 #command-mode-settings-dialog>.ol-dialog-content {
-	display: flex;
-	flex-direction: column;
-	flex-wrap: nowrap;
-	margin-bottom: 10px;
-	margin-top: 10px;
-	row-gap: 10px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    row-gap: 10px;
     width: 100%;
 }
 
 #command-mode-settings-dialog>.ol-dialog-content .ol-group {
-	justify-content: space-between;
+    justify-content: space-between;
 }
 
 #command-mode-settings-dialog h4 {
@@ -1292,11 +1292,11 @@ input[type=number]::-webkit-outer-spin-button {
     position: relative;
     transition: background-color 0.2s;
     height: var(--height);
-	width: var(--width);
+    width: var(--width);
 }
 
 .ol-switch-fill::after {
-    aspect-ratio : 1 / 1;
+    aspect-ratio: 1 / 1;
     background-clip: content-box;
     background-color: #ffffff;
     border-radius: 999px;
@@ -1310,15 +1310,15 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .ol-switch-fill::before {
-	align-items: center;
-	box-sizing: border-box;
-	color: white;
-	display: flex;
-	font-size: 11px;
-	height: 100%;
-	padding: 0px 7px;
-	position: absolute;
-	transition: transform 0.2s;
+    align-items: center;
+    box-sizing: border-box;
+    color: white;
+    display: flex;
+    font-size: 11px;
+    height: 100%;
+    padding: 0px 7px;
+    position: absolute;
+    transition: transform 0.2s;
 }
 
 .ol-switch[data-value="false"]>.ol-switch-fill::before {
@@ -1326,11 +1326,11 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .ol-switch[data-value="true"]>.ol-switch-fill::after {
-	transform: translateX(calc(var(--width) - var(--height)));
+    transform: translateX(calc(var(--width) - var(--height)));
 }
 
 .ol-switch[data-value="undefined"]>.ol-switch-fill::after {
-	transform: translateX(calc((var(--width) - var(--height)) * 0.5));
+    transform: translateX(calc((var(--width) - var(--height)) * 0.5));
 }
 
 .ol-contexmenu-panel {
@@ -1338,15 +1338,15 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .ol-coalition-switch[data-value="false"]>.ol-switch-fill {
-	background-color: var(--primary-blue);
+    background-color: var(--primary-blue);
 }
 
 .ol-coalition-switch[data-value="true"]>.ol-switch-fill {
-	background-color: var(--primary-red);
+    background-color: var(--primary-red);
 }
 
 .ol-coalition-switch[data-value="undefined"]>.ol-switch-fill {
-	background-color: var(--primary-neutral);
+    background-color: var(--primary-neutral);
 }
 
 .ol-context-menu>ul {

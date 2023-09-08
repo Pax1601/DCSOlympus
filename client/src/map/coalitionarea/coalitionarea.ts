@@ -1,8 +1,8 @@
 import { DomUtil, LatLng, LatLngExpression, Map, Point, Polygon, PolylineOptions } from "leaflet";
-import { getMap, getMissionHandler, getUnitsManager } from "..";
+import { getMap, getMissionHandler, getUnitsManager } from "../..";
 import { CoalitionAreaHandle } from "./coalitionareahandle";
 import { CoalitionAreaMiddleHandle } from "./coalitionareamiddlehandle";
-import { BLUE_COMMANDER, RED_COMMANDER } from "../constants/constants";
+import { BLUE_COMMANDER, RED_COMMANDER } from "../../constants/constants";
 
 export class CoalitionArea extends Polygon {
     #coalition: string = "blue";

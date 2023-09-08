@@ -1,7 +1,7 @@
 import { DivIcon, LatLngExpression, MarkerOptions } from "leaflet";
 import { CustomMarker } from "./custommarker";
 import { SVGInjector } from "@tanem/svg-injector";
-import { getMap } from "..";
+import { getMap } from "../..";
 
 export class SmokeMarker extends CustomMarker {
     #color: string;

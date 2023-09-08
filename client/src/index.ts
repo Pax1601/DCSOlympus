@@ -15,6 +15,8 @@ import { BLUE_COMMANDER, GAME_MASTER, RED_COMMANDER } from "./constants/constant
 import { ServerStatusPanel } from "./panels/serverstatuspanel";
 import { WeaponsManager } from "./weapon/weaponsmanager";
 import { ConfigParameters } from "./@types/dom";
+import { CommandModeToolbar } from "./toolbars/commandmodetoolbar";
+import { PrimaryToolbar } from "./toolbars/primaryToolbar";
 
 /* Global data */
 var activeCoalition: string = "blue";
@@ -36,10 +38,15 @@ var mouseInfoPanel: MouseInfoPanel;
 var logPanel: LogPanel;
 var hotgroupPanel: HotgroupPanel;
 
+/* UI Toolbars */
+var primaryToolbar: PrimaryToolbar;
+var commandModeToolbar: CommandModeToolbar;
+
 /* Popups */
 var infoPopup: Popup;
 
 function setup() {
+
     /* Initialize base functionalitites */
     map = new Map('map-container');
 
@@ -56,6 +63,10 @@ function setup() {
     hotgroupPanel = new HotgroupPanel("hotgroup-panel");
     logPanel = new LogPanel("log-panel");
     
+    /* Toolbars */
+    primaryToolbar = new PrimaryToolbar("primary-toolbar");
+    commandModeToolbar = new CommandModeToolbar("command-mode-toolbar");
+
     /* Popups */
     infoPopup = new Popup("info-popup");
 

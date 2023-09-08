@@ -1,16 +1,16 @@
 import { LatLng } from "leaflet";
 import { Dropdown } from "./dropdown";
 import { Slider } from "./slider";
-import { UnitDatabase } from "../unit/unitdatabase";
+import { UnitDatabase } from "../unit/databases/unitdatabase";
 import { getActiveCoalition, getMap, getMissionHandler, getUnitsManager } from "..";
 import { GAME_MASTER } from "../constants/constants";
 import { UnitSpawnOptions } from "../@types/unitdatabase";
 import { Airbase } from "../mission/airbase";
 import { ftToM } from "../other/utils";
-import { aircraftDatabase } from "../unit/aircraftdatabase";
-import { helicopterDatabase } from "../unit/helicopterdatabase";
-import { groundUnitDatabase } from "../unit/groundunitdatabase";
-import { navyUnitDatabase } from "../unit/navyunitdatabase";
+import { aircraftDatabase } from "../unit/databases/aircraftdatabase";
+import { helicopterDatabase } from "../unit/databases/helicopterdatabase";
+import { groundUnitDatabase } from "../unit/databases/groundunitdatabase";
+import { navyUnitDatabase } from "../unit/databases/navyunitdatabase";
 
 export class UnitSpawnMenu {
     #container: HTMLElement;
@@ -418,7 +418,7 @@ export class AircraftSpawnMenu extends UnitSpawnMenu {
                     getMap().addTemporaryMarker(spawnOptions.latlng, spawnOptions.name, getActiveCoalition(), res.commandHash);
             });
                 
-            getMap().getMapContextMenu().hide();
+            this.getContainer().dispatchEvent(new Event("hide"));
         }
     }
 }
@@ -456,7 +456,7 @@ export class HelicopterSpawnMenu extends UnitSpawnMenu {
                     getMap().addTemporaryMarker(spawnOptions.latlng, spawnOptions.name, getActiveCoalition(), res.commandHash);
             });
                 
-            getMap().getMapContextMenu().hide();
+            this.getContainer().dispatchEvent(new Event("hide"));
         }
     }
 }
@@ -493,7 +493,7 @@ export class GroundUnitSpawnMenu extends UnitSpawnMenu {
                     getMap().addTemporaryMarker(spawnOptions.latlng, spawnOptions.name, getActiveCoalition(), res.commandHash);
             });
                 
-            getMap().getMapContextMenu().hide();
+            this.getContainer().dispatchEvent(new Event("hide"));
         }
     }
 }
@@ -530,7 +530,7 @@ export class NavyUnitSpawnMenu extends UnitSpawnMenu {
                     getMap().addTemporaryMarker(spawnOptions.latlng, spawnOptions.name, getActiveCoalition(), res.commandHash);
             });
                 
-            getMap().getMapContextMenu().hide();
+            this.getContainer().dispatchEvent(new Event("hide"));
         }
     }
 }
