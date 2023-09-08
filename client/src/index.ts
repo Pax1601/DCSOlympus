@@ -2,33 +2,32 @@ import { Map } from "./map/map"
 import { UnitsManager } from "./unit/unitsmanager";
 import { UnitInfoPanel } from "./panels/unitinfopanel";
 import { ConnectionStatusPanel } from "./panels/connectionstatuspanel";
-import { MissionHandler } from "./mission/missionhandler";
+import { MissionManager } from "./mission/missionhandler";
 import { UnitControlPanel } from "./panels/unitcontrolpanel";
 import { MouseInfoPanel } from "./panels/mouseinfopanel";
-import { AIC } from "./aic/aic";
-import { ATC } from "./atc/atc";
-import { FeatureSwitches } from "./features/featureswitches";
 import { LogPanel } from "./panels/logpanel";
 import { getConfig, getPaused, setAddress, setCredentials, setPaused, startUpdate, toggleDemoEnabled } from "./server/server";
-import { UnitDataTable } from "./atc/unitdatatable";
 import { keyEventWasInInput } from "./other/utils";
 import { Popup } from "./popups/popup";
-import { Dropdown } from "./controls/dropdown";
 import { HotgroupPanel } from "./panels/hotgrouppanel";
 import { SVGInjector } from "@tanem/svg-injector";
 import { BLUE_COMMANDER, GAME_MASTER, RED_COMMANDER } from "./constants/constants";
 import { ServerStatusPanel } from "./panels/serverstatuspanel";
 import { WeaponsManager } from "./weapon/weaponsmanager";
+import { ConfigParameters } from "./@types/dom";
 
+/* Global data */
+var activeCoalition: string = "blue";
+
+/* Main leaflet map, extended by custom methods */
 var map: Map;
 
+/* Managers */
 var unitsManager: UnitsManager;
 var weaponsManager: WeaponsManager;
-var missionHandler: MissionHandler;
+var missionHandler: MissionManager;
 
-var aic: AIC;
-var atc: ATC;
-
+/* UI Panels */
 var unitInfoPanel: UnitInfoPanel;
 var connectionStatusPanel: ConnectionStatusPanel;
 var serverStatusPanel: ServerStatusPanel;
@@ -37,22 +36,16 @@ var mouseInfoPanel: MouseInfoPanel;
 var logPanel: LogPanel;
 var hotgroupPanel: HotgroupPanel;
 
+/* Popups */
 var infoPopup: Popup;
 
-var activeCoalition: string = "blue";
-
-var unitDataTable: UnitDataTable;
-
-var featureSwitches;
-
 function setup() {
-    featureSwitches = new FeatureSwitches();
-
     /* Initialize base functionalitites */
+    map = new Map('map-container');
+
     unitsManager = new UnitsManager();
     weaponsManager = new WeaponsManager();
-    map = new Map('map-container');
-    missionHandler = new MissionHandler();
+    missionHandler = new MissionManager();
 
     /* Panels */
     unitInfoPanel = new UnitInfoPanel("unit-info-panel");
@@ -66,36 +59,21 @@ function setup() {
     /* Popups */
     infoPopup = new Popup("info-popup");
 
-    /* Controls */
-    new Dropdown("app-icon", () => { });
-
-    /* Unit data table */
-    unitDataTable = new UnitDataTable("unit-data-table");
-
-    /* AIC */
-    let aicFeatureSwitch = featureSwitches.getSwitch("aic");
-    if (aicFeatureSwitch?.isEnabled()) {
-        aic = new AIC();
-    }
-
-    /* ATC */
-    let atcFeatureSwitch = featureSwitches.getSwitch("atc");
-    if (atcFeatureSwitch?.isEnabled()) {
-        atc = new ATC();
-        atc.startUpdates();
-    }
-
     /* Setup event handlers */
     setupEvents();
 
-    /* Load the config file */
-    getConfig(readConfig);
+    /* Load the config file from the app server*/
+    getConfig((config: ConfigParameters) => readConfig(config));
 }
 
-function readConfig(config: any) {
-    if (config && config["address"] != undefined && config["port"] != undefined) {
-        const address = config["address"];
-        const port = config["port"];
+/** Loads the configuration parameters
+ * 
+ * @param config ConfigParameters, defines the address and port of the Olympus REST server
+ */
+function readConfig(config: ConfigParameters) {
+    if (config && config.address != undefined && config.port != undefined) {
+        const address = config.address;
+        const port = config.port;
         if (typeof address === 'string' && typeof port == 'number')
             setAddress(address == "*" ? window.location.hostname : address, <number>port);
     }
@@ -104,9 +82,14 @@ function readConfig(config: any) {
     }
 }
 
-function setupEvents() {
 
-    /* Generic clicks */
+/** Setup the global window events
+ * 
+ */
+function setupEvents() {
+    /* Generic clicks. The "data-on-click" html parameter is used to call a generic callback from the html code. 
+    It is used by all the statically defined elements of the UI. Dynamically generated elements should directly generate the events instead.
+    */
     document.addEventListener("click", (ev) => {
         if (ev instanceof MouseEvent && ev.target instanceof HTMLElement) {
             const target = ev.target;
@@ -140,9 +123,6 @@ function setupEvents() {
             case "KeyT":
                 toggleDemoEnabled();
                 break;
-            case "Quote":
-                unitDataTable.toggle();
-                break
             case "Space":
                 setPaused(!getPaused());
                 break;
@@ -151,7 +131,7 @@ function setupEvents() {
                 getMap().handleMapPanning(ev);
                 break;
             case "Digit1": case "Digit2": case "Digit3": case "Digit4": case "Digit5": case "Digit6": case "Digit7": case "Digit8": case "Digit9":     
-                // Using the substring because the key will be invalid when pressing the Shift key
+                /* Using the substring because the key will be invalid when pressing the Shift key */
                 if (ev.ctrlKey && ev.shiftKey)
                     getUnitsManager().selectedUnitsAddToHotgroup(parseInt(ev.code.substring(5)));
                 else if (ev.ctrlKey && !ev.shiftKey)
@@ -174,20 +154,18 @@ function setupEvents() {
         }
     });
 
+    // TODO: move from here in dedicated class
     document.addEventListener("closeDialog", (ev: CustomEventInit) => {
         ev.detail._element.closest(".ol-dialog").classList.add("hide");
     });
 
-    document.addEventListener("toggleElements", (ev: CustomEventInit) => {
-        document.querySelectorAll(ev.detail.selector).forEach(el => {
-            el.classList.toggle("hide");
-        })
-    });
-
+    /* Try and connect with the Olympus REST server */
     document.addEventListener("tryConnection", () => {
         const form = document.querySelector("#splash-content")?.querySelector("#authentication-form");
-        const username = (<HTMLInputElement>(form?.querySelector("#username"))).value;
-        const password = (<HTMLInputElement>(form?.querySelector("#password"))).value;
+        const username = (form?.querySelector("#username") as HTMLInputElement).value;
+        const password = (form?.querySelector("#password") as HTMLInputElement).value;
+
+        /* Update the user credentials */
         setCredentials(username, password);
 
         /* Start periodically requesting updates */
@@ -196,10 +174,12 @@ function setupEvents() {
         setLoginStatus("connecting");
     })
 
+    /* Reload the page, used to mimic a restart of the app */
     document.addEventListener("reloadPage", () => {
         location.reload();
     })
 
+    /* Inject the svgs with the corresponding svg code. This allows to dynamically manipulate the svg, like changing colors */
     document.querySelectorAll("[inject-svg]").forEach((el: Element) => {
         var img = el as HTMLImageElement;
         var isLoaded = img.complete;
@@ -212,12 +192,9 @@ function setupEvents() {
     })
 }
 
+/* Getters */
 export function getMap() {
     return map;
-}
-
-export function getUnitDataTable() {
-    return unitDataTable;
 }
 
 export function getUnitsManager() {
@@ -260,11 +237,23 @@ export function getHotgroupPanel() {
     return hotgroupPanel;
 }
 
+export function getInfoPopup() {
+    return infoPopup;
+}
+
+/** Set the active coalition, i.e. the currently controlled coalition. A game master can change the active coalition, while a commander is bound to his/her coalition 
+ * 
+ * @param newActiveCoalition 
+ */
 export function setActiveCoalition(newActiveCoalition: string) {
     if (getMissionHandler().getCommandModeOptions().commandMode == GAME_MASTER)
         activeCoalition = newActiveCoalition;
 }
 
+/**
+ * 
+ * @returns The active coalition
+ */
 export function getActiveCoalition() {
     if (getMissionHandler().getCommandModeOptions().commandMode == GAME_MASTER)
         return activeCoalition;
@@ -278,14 +267,14 @@ export function getActiveCoalition() {
     }
 }
 
+/** Set a message in the login splash screen
+ * 
+ * @param status The message to show in the login splash screen
+ */
 export function setLoginStatus(status: string) {
     const el = document.querySelector("#login-status") as HTMLElement;
     if (el)
         el.dataset["status"] = status;
-}
-
-export function getInfoPopup() {
-    return infoPopup;
 }
 
 window.onload = setup;

@@ -5,7 +5,7 @@ import { cloneUnits, deleteUnit, spawnAircrafts, spawnGroundUnits, spawnHelicopt
 import { bearingAndDistanceToLatLng, deg2rad, getUnitDatabaseByCategory, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots, polyContains, polygonArea, randomPointInPoly, randomUnitBlueprint } from "../other/utils";
 import { CoalitionArea } from "../map/coalitionarea";
 import { groundUnitDatabase } from "./groundunitdatabase";
-import { DataIndexes, GAME_MASTER, IADSDensities, IDLE, MOVE_UNIT, NONE } from "../constants/constants";
+import { DataIndexes, GAME_MASTER, IADSDensities, IDLE, MOVE_UNIT } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
 import { Contact, UnitData } from "../@types/unit";
 import { citiesDatabase } from "./citiesDatabase";
@@ -14,6 +14,10 @@ import { helicopterDatabase } from "./helicopterdatabase";
 import { navyUnitDatabase } from "./navyunitdatabase";
 import { TemporaryUnitMarker } from "../map/temporaryunitmarker";
 
+/** The UnitsManager handles the creation, update, and control of units. Data is strictly updated by the server ONLY. This means that any interaction from the user will always and only
+ * result in a command to the server, executed by means of a REST PUT request. Any subsequent change in data will be reflected only when the new data is sent back by the server. This strategy allows
+ * to avoid client/server and client/client inconsistencies.
+ */
 export class UnitsManager {
     #units: { [ID: number]: Unit };
     #copiedUnits: UnitData[];
@@ -40,20 +44,19 @@ export class UnitsManager {
         document.addEventListener('selectedUnitsChangeAltitude', (e: any) => { this.selectedUnitsChangeAltitude(e.detail.type) });
     }
 
-    getSelectableAircraft() {
-        const units = this.getUnits();
-        return Object.keys(units).reduce((acc: { [key: number]: Unit }, unitId: any) => {
-            if (units[unitId].getCategory() === "Aircraft" && units[unitId].getAlive() === true) {
-                acc[unitId] = units[unitId];
-            }
-            return acc;
-        }, {});
-    }
-
+    /**
+     * 
+     * @returns All the existing units, both alive and dead
+     */
     getUnits() {
         return this.#units;
     }
 
+    /** Get a specific unit by ID
+     * 
+     * @param ID ID of the unit. The ID shall be the same as the unit ID in DCS.
+     * @returns Unit object, or null if no unit with said ID exists.
+     */
     getUnitByID(ID: number) {
         if (ID in this.#units)
             return this.#units[ID];
@@ -61,13 +64,23 @@ export class UnitsManager {
             return null;
     }
 
+    /** Returns all the units that belong to a hotgroup
+     * 
+     * @param hotgroup Hotgroup number
+     * @returns Array of units that belong to hotgroup
+     */
     getUnitsByHotgroup(hotgroup: number) {
         return Object.values(this.#units).filter((unit: Unit) => { return unit.getAlive() && unit.getHotgroup() == hotgroup });
     }
 
+    /** Add a new unit to the manager
+     * 
+     * @param ID ID of the new unit
+     * @param category Either "Aircraft", "Helicopter", "GroundUnit", or "NavyUnit". Determines what class will be used to create the new unit accordingly.
+     */
     addUnit(ID: number, category: string) {
         if (category) {
-            /* The name of the unit category is exactly the same as the constructor name */
+            /* Get the constructor from the unit category */
             var constructor = Unit.getConstructor(category);
             if (constructor != undefined) {
                 this.#units[ID] = new constructor(ID);
@@ -75,11 +88,25 @@ export class UnitsManager {
         }
     }
 
+    /** Update the data of all the units. The data is directly decoded from the binary buffer received from the REST Server. This is necessary for performance and bandwidth reasons.
+     * 
+     * @param buffer The arraybuffer, encoded according to the ICD defined in: TODO Add reference to ICD
+     * @returns The decoded updateTime of the data update.
+     */
     update(buffer: ArrayBuffer) {
+        /* Extract the data from the arraybuffer. Since data is encoded dynamically (not all data is always present, but rather only the data that was actually updated since the last request).
+        No a prori casting can be performed. On the contrary, the array is decoded incrementally, depending on the DataIndexes of the data. The actual data decoding is performed by the Unit class directly. 
+        Every time a piece of data is decoded the decoder seeker is incremented. */
         var dataExtractor = new DataExtractor(buffer);
+
         var updateTime = Number(dataExtractor.extractUInt64());
+
+        /* Run until all data is extracted or an error occurs */
         while (dataExtractor.getSeekPosition() < buffer.byteLength) {
+            /* Extract the unit ID */
             const ID = dataExtractor.extractUInt32();
+
+            /* If the ID of the unit does not yet exist, create the unit, if the category is known. If it isn't, some data must have been lost and we need to wait for another update */
             if (!(ID in this.#units)) {
                 const datumIndex = dataExtractor.extractUInt8();
                 if (datumIndex == DataIndexes.category) {
@@ -91,9 +118,13 @@ export class UnitsManager {
                     return updateTime;
                 }
             }
+            /* Update the data of the unit */
             this.#units[ID]?.setData(dataExtractor);
         }
 
+        /* If we are not in Game Master mode, visibility of units by the user is determined by the detections of the units themselves. This is performed here.
+        This operation is computationally expensive, therefore it is only performed when #requestDetectionUpdate is true. This happens whenever a change in the detectionUpdates is detected 
+        */
         if (this.#requestDetectionUpdate && getMissionHandler().getCommandModeOptions().commandMode != GAME_MASTER) {
             /* Create a dictionary of empty detection methods arrays */
             var detectionMethods: { [key: string]: number[] } = {};
@@ -120,6 +151,8 @@ export class UnitsManager {
                 const unit = this.#units[ID];
                 unit?.setDetectionMethods(detectionMethods[ID]);
             }
+
+            /* Set the detection methods for every weapon (weapons must be detected too) */
             for (let ID in getWeaponsManager().getWeapons()) {
                 const weapon = getWeaponsManager().getWeaponByID(parseInt(ID));
                 weapon?.setDetectionMethods(detectionMethods[ID]);
@@ -128,6 +161,7 @@ export class UnitsManager {
             this.#requestDetectionUpdate = false;
         }
 
+        /* Update the detection lines of all the units. This code is handled by the UnitsManager since it must be run both when the detected OR the detecting unit is updated */
         for (let ID in this.#units) {
             if (this.#units[ID].getSelected())
                 this.#units[ID].drawLines();
