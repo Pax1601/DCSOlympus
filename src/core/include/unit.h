@@ -164,9 +164,9 @@ protected:
 	bool followRoads = false;
 	unsigned short fuel = 0;
 	double desiredSpeed = 0;
-	bool desiredSpeedType = 1;
-	double desiredAltitude = 0;
-	bool desiredAltitudeType = 1;
+	bool desiredSpeedType = 0;	/* CAS */
+	double desiredAltitude = 1;
+	bool desiredAltitudeType = 0; /* ASL */
 	unsigned int leaderID = NULL;
 	Offset formationOffset = Offset(NULL);
 	unsigned int targetID = NULL;

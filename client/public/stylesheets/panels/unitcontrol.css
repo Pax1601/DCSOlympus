@@ -136,19 +136,19 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 }
 
 #altitude-type-switch[data-value="true"]>.ol-switch-fill::before {
-	content: "AGL";
-}
-
-#altitude-type-switch[data-value="false"]>.ol-switch-fill::before {
 	content: "ASL";
 }
 
+#altitude-type-switch[data-value="false"]>.ol-switch-fill::before {
+	content: "AGL";
+}
+
 #speed-type-switch[data-value="true"]>.ol-switch-fill::before {
-	content: "GS";
+	content: "CAS";
 }
 
 #speed-type-switch[data-value="false"]>.ol-switch-fill::before {
-	content: "CAS";
+	content: "GS";
 }
 
 #unit-control-panel .ol-slider-value {

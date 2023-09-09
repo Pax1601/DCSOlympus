@@ -1016,6 +1016,7 @@ nav.ol-panel> :last-child {
 }
 
 .ol-target-icon {
+    background-image: url("/resources/theme/images/markers/target.svg");
     height: 52px;
     pointer-events: none;
     width: 52px;

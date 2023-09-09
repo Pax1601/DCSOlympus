@@ -16,7 +16,7 @@ import { ServerStatusPanel } from "./panels/serverstatuspanel";
 import { WeaponsManager } from "./weapon/weaponsmanager";
 import { ConfigParameters } from "./@types/dom";
 import { CommandModeToolbar } from "./toolbars/commandmodetoolbar";
-import { PrimaryToolbar } from "./toolbars/primaryToolbar";
+import { PrimaryToolbar } from "./toolbars/primarytoolbar";
 
 /* Global data */
 var activeCoalition: string = "blue";

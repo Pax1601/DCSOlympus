@@ -43,9 +43,9 @@ export class Unit extends CustomMarker {
     #followRoads: boolean = false;
     #fuel: number = 0;
     #desiredSpeed: number = 0;
-    #desiredSpeedType: string = "GS";
+    #desiredSpeedType: string = "CAS";
     #desiredAltitude: number = 0;
-    #desiredAltitudeType: string = "AGL";
+    #desiredAltitudeType: string = "ASL";
     #leaderID: number = 0;
     #formationOffset: Offset = {
         x: 0,
