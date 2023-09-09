@@ -19,6 +19,7 @@ export class LogPanel extends Panel {
             this.#open = !this.#open;
             this.#queuedMessages = 0;
             this.#updateHeader();
+            this.#calculateHeight();
 
             if (this.#scrolledDown) 
                 this.#scrollDown();
@@ -89,6 +90,9 @@ export class LogPanel extends Panel {
 
     #calculateHeight() {
         const mouseInfoPanel = getMouseInfoPanel();
-        this.getElement().style.height = `${mouseInfoPanel.getElement().offsetTop - this.getElement().offsetTop - 10}px`;
+        if (this.#open)
+            this.getElement().style.height = `${mouseInfoPanel.getElement().offsetTop - this.getElement().offsetTop - 10}px`;
+        else 
+            this.getElement().style.height = "fit-content";
     }
 }

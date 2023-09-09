@@ -173,6 +173,8 @@ function Olympus.buildTask(groupName, options)
 					pattern = options['pattern'] or "Circle"
 				} 
 			}
+
+			-- Compute the altitude depending on the altitude type 
 			if options['altitude'] then
 				if options ['altitudeType'] then
 					if options ['altitudeType'] == "AGL" then
@@ -189,8 +191,15 @@ function Olympus.buildTask(groupName, options)
 					task['params']['altitude'] = options['altitude']
 				end
 			end
+
+			-- Compute the speed depending on the speed type. CAS calculation is only available if the altitude is also available 
 			if options['speed'] then
-				task['params']['speed'] = options['speed']
+				-- Simplified formula to compute CAS from GS
+				local speed = options['speed']
+				if options['speedType'] and options['speedType'] == "CAS" and task['params']['altitude'] then
+					speed = speed * (1 + 0.02 * task['params']['altitude'] / 0.3048 / 1000)
+				end
+				task['params']['speed'] = speed
 			end
 		-- Bomb a specific location
 		elseif options['id'] == 'Bombing' and options['lat'] and options['lng'] then
@@ -246,6 +255,11 @@ function Olympus.move(groupName, lat, lng, altitude, altitudeType, speed, speedT
 				altitude = land.getHeight({x = endPoint.x, y = endPoint.z}) + altitude
 			end
 
+			-- Simplified formula to compute CAS from GS
+			if speedType == "CAS" then
+				speed = speed * (1 + 0.02 * altitude / 0.3048 / 1000)
+			end
+
 			-- Create the path
 			local path = {
 				[1] = mist.fixedWing.buildWP(startPoint, turningPoint, speed, altitude, 'BARO'),
@@ -282,6 +296,11 @@ function Olympus.move(groupName, lat, lng, altitude, altitudeType, speed, speedT
 			-- 'AGL' mode does not appear to work in the buildWP function. This is a crude approximation
 			if altitudeType == "AGL" then
 				altitude = land.getHeight({x = endPoint.x, y = endPoint.z}) + altitude
+			end
+
+			-- Simplified formula to compute CAS from GS
+			if speedType == "CAS" then
+				speed = speed * (1 + 0.02 * altitude / 0.3048 / 1000)
 			end
 
 			-- Create the path

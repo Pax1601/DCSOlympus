@@ -7,7 +7,7 @@ export class Panel {
      * @param ID - the ID of the HTML element which will contain the context menu
      */
     constructor(ID: string){
-        this.#element = <HTMLElement>document.getElementById(ID);
+        this.#element = document.getElementById(ID) as HTMLElement;
     }
 
     show() {

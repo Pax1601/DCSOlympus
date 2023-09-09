@@ -4,10 +4,10 @@ import { spawnExplosion, spawnSmoke } from "../server/server";
 import { ContextMenu } from "./contextmenu";
 import { Switch } from "../controls/switch";
 import { GAME_MASTER } from "../constants/constants";
-import { CoalitionArea } from "../map/coalitionarea";
+import { CoalitionArea } from "../map/coalitionarea/coalitionarea";
 import { AircraftSpawnMenu, GroundUnitSpawnMenu, HelicopterSpawnMenu, NavyUnitSpawnMenu } from "../controls/unitspawnmenu";
 import { Airbase } from "../mission/airbase";
-import { SmokeMarker } from "../map/smokemarker";
+import { SmokeMarker } from "../map/markers/smokemarker";
 
 /** The MapContextMenu is the main contextmenu shown to the user whenever it rightclicks on the map. It is the primary interaction method for the user.
  * It allows to spawn units, create explosions and smoke, and edit CoalitionAreas.
@@ -74,6 +74,11 @@ export class MapContextMenu extends ContextMenu {
         this.#helicopterSpawnMenu.getContainer().addEventListener("resize", () => this.clip());
         this.#groundUnitSpawnMenu.getContainer().addEventListener("resize", () => this.clip());
         this.#navyUnitSpawnMenu.getContainer().addEventListener("resize", () => this.clip());
+
+        this.#aircraftSpawnMenu.getContainer().addEventListener("hide", () => this.hide());
+        this.#helicopterSpawnMenu.getContainer().addEventListener("hide", () => this.hide());
+        this.#groundUnitSpawnMenu.getContainer().addEventListener("hide", () => this.hide());
+        this.#navyUnitSpawnMenu.getContainer().addEventListener("hide", () => this.hide());
 
         this.hide();
     }

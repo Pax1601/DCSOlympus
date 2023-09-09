@@ -31,6 +31,11 @@ declare global {
     }
 }
 
+export interface ConfigParameters {
+    port: number;
+    address: string;
+}
+
 export interface ContextMenuOption {
     tooltip: string;
     src: string;

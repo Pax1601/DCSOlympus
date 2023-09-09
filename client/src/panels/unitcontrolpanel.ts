@@ -2,7 +2,7 @@ import { SVGInjector } from "@tanem/svg-injector";
 import { getUnitsManager } from "..";
 import { Dropdown } from "../controls/dropdown";
 import { Slider } from "../controls/slider";
-import { aircraftDatabase } from "../unit/aircraftdatabase";
+import { aircraftDatabase } from "../unit/databases/aircraftdatabase";
 import { Unit } from "../unit/unit";
 import { Panel } from "./panel";
 import { Switch } from "../controls/switch";
@@ -34,10 +34,10 @@ export class UnitControlPanel extends Panel {
 
         /* Unit control sliders */
         this.#altitudeSlider = new Slider("altitude-slider", 0, 100, "ft", (value: number) => { getUnitsManager().selectedUnitsSetAltitude(ftToM(value)); });
-        this.#altitudeTypeSwitch = new Switch("altitude-type-switch", (value: boolean) => { getUnitsManager().selectedUnitsSetAltitudeType(value? "AGL": "ASL"); });
+        this.#altitudeTypeSwitch = new Switch("altitude-type-switch", (value: boolean) => { getUnitsManager().selectedUnitsSetAltitudeType(value? "ASL": "AGL"); });
 
         this.#speedSlider = new Slider("speed-slider", 0, 100, "kts", (value: number) => { getUnitsManager().selectedUnitsSetSpeed(knotsToMs(value)); });
-        this.#speedTypeSwitch = new Switch("speed-type-switch", (value: boolean) => { getUnitsManager().selectedUnitsSetSpeedType(value? "GS": "CAS"); });
+        this.#speedTypeSwitch = new Switch("speed-type-switch", (value: boolean) => { getUnitsManager().selectedUnitsSetSpeedType(value? "CAS": "GS"); });
 
         /* Option buttons */
         // Reversing the ROEs so that the least "aggressive" option is always on the left
@@ -168,8 +168,8 @@ export class UnitControlPanel extends Panel {
                     var onOff = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getOnOff()});
                     var followRoads = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getFollowRoads()});
                     
-                    this.#altitudeTypeSwitch.setValue(desiredAltitudeType != undefined? desiredAltitudeType == "AGL": undefined, false);
-                    this.#speedTypeSwitch.setValue(desiredSpeedType != undefined? desiredSpeedType == "GS": undefined, false);
+                    this.#altitudeTypeSwitch.setValue(desiredAltitudeType != undefined? desiredAltitudeType == "ASL": undefined, false);
+                    this.#speedTypeSwitch.setValue(desiredSpeedType != undefined? desiredSpeedType == "CAS": undefined, false);
 
                     this.#speedSlider.setMinMax(minSpeedValues[this.#selectedUnitsTypes[0]], maxSpeedValues[this.#selectedUnitsTypes[0]]);
                     this.#altitudeSlider.setMinMax(minAltitudeValues[this.#selectedUnitsTypes[0]], maxAltitudeValues[this.#selectedUnitsTypes[0]]);

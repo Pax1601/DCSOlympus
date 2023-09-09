@@ -1,21 +1,12 @@
-import { getUnitsManager } from "..";
 import { Ammo } from "../@types/unit";
-import { ConvertDDToDMS, rad2deg } from "../other/utils";
-import { aircraftDatabase } from "../unit/aircraftdatabase";
+import { aircraftDatabase } from "../unit/databases/aircraftdatabase";
 import { Unit } from "../unit/unit";
 import { Panel } from "./panel";
 
 export class UnitInfoPanel extends Panel {
-    #altitude: HTMLElement;
     #currentTask: HTMLElement;
     #fuelBar: HTMLElement;
     #fuelPercentage: HTMLElement;
-    #groundSpeed: HTMLElement;
-    #groupName: HTMLElement;
-    #heading: HTMLElement;
-    #name: HTMLElement;
-    #latitude: HTMLElement;
-    #longitude: HTMLElement;
     #loadoutContainer: HTMLElement;
     #silhouette: HTMLImageElement;
     #unitControl: HTMLElement;
@@ -29,17 +20,10 @@ export class UnitInfoPanel extends Panel {
     constructor(ID: string){
         super(ID);
 
-        this.#altitude = (this.getElement().querySelector("#altitude")) as HTMLElement;
         this.#currentTask = (this.getElement().querySelector("#current-task")) as HTMLElement;
-        this.#groundSpeed = (this.getElement().querySelector("#ground-speed")) as HTMLElement;
         this.#fuelBar = (this.getElement().querySelector("#fuel-bar")) as HTMLElement;
         this.#fuelPercentage = (this.getElement().querySelector("#fuel-percentage")) as HTMLElement;
-        this.#groupName = (this.getElement().querySelector("#group-name")) as HTMLElement;
-        this.#heading = (this.getElement().querySelector("#heading")) as HTMLElement;
-        this.#name = (this.getElement().querySelector("#name")) as HTMLElement;
-        this.#latitude = (this.getElement().querySelector("#latitude")) as HTMLElement;
         this.#loadoutContainer = (this.getElement().querySelector("#loadout-container")) as HTMLElement;
-        this.#longitude = (this.getElement().querySelector("#longitude")) as HTMLElement;
         this.#silhouette = (this.getElement().querySelector("#loadout-silhouette")) as HTMLImageElement;
         this.#unitControl = (this.getElement().querySelector("#unit-control")) as HTMLElement;
         this.#unitLabel = (this.getElement().querySelector("#unit-label")) as HTMLElement;
@@ -56,14 +40,12 @@ export class UnitInfoPanel extends Panel {
     #onUnitUpdate(unit: Unit) {
         if (this.getElement() != null && this.getVisible() && unit.getSelected()) {
 
-            const baseData = unit.getData();
-
             /* Set the unit info */
-            this.#unitLabel.innerText = aircraftDatabase.getByName(baseData.name)?.label || baseData.name;
-            this.#unitName.innerText = baseData.unitName;
+            this.#unitLabel.innerText = aircraftDatabase.getByName(unit.getName())?.label || unit.getName();
+            this.#unitName.innerText = unit.getUnitName();
             if (unit.getHuman())
                 this.#unitControl.innerText = "Human";
-            else if (baseData.controlled)
+            else if (unit.getControlled())
                 this.#unitControl.innerText = "Olympus controlled";
             else
                 this.#unitControl.innerText = "DCS Controlled";
@@ -72,11 +54,11 @@ export class UnitInfoPanel extends Panel {
             this.#currentTask.dataset.currentTask = unit.getTask() !== "" ? unit.getTask() : "No task";
             this.#currentTask.dataset.coalition = unit.getCoalition();
 
-            this.#silhouette.src = `/images/units/${unit.getDatabase()?.getByName(baseData.name)?.filename}`;
-            this.#silhouette.classList.toggle("hide", unit.getDatabase()?.getByName(baseData.name)?.filename == undefined || unit.getDatabase()?.getByName(baseData.name)?.filename == '');
+            this.#silhouette.src = `/images/units/${unit.getDatabase()?.getByName(unit.getName())?.filename}`;
+            this.#silhouette.classList.toggle("hide", unit.getDatabase()?.getByName(unit.getName())?.filename == undefined || unit.getDatabase()?.getByName(unit.getName())?.filename == '');
 
             /* Add the loadout elements */
-            const items = <HTMLElement>this.#loadoutContainer.querySelector("#loadout-items");
+            const items = this.#loadoutContainer.querySelector("#loadout-items") as HTMLElement;
 
             if (items) {
                 const ammo = Object.values(unit.getAmmo());

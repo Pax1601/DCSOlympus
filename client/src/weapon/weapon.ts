@@ -1,7 +1,7 @@
 import { LatLng, DivIcon, Map } from 'leaflet';
 import { getMap, getMissionHandler, getUnitsManager } from '..';
 import { enumToCoalition, mToFt, msToKnots, rad2deg } from '../other/utils';
-import { CustomMarker } from '../map/custommarker';
+import { CustomMarker } from '../map/markers/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
 import { DLINK, DataIndexes, GAME_MASTER, IRST, OPTIC, RADAR, VISUAL } from '../constants/constants';
 import { ObjectIconOptions } from '../@types/unit';

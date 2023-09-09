@@ -1,12 +1,12 @@
 import { LatLng } from "leaflet";
 import { getMap, getMissionHandler, getUnitsManager } from "..";
 import { GAME_MASTER, IADSTypes } from "../constants/constants";
-import { CoalitionArea } from "../map/coalitionarea";
+import { CoalitionArea } from "../map/coalitionarea/coalitionarea";
 import { ContextMenu } from "./contextmenu";
 import { Dropdown } from "../controls/dropdown";
 import { Slider } from "../controls/slider";
 import { Switch } from "../controls/switch";
-import { groundUnitDatabase } from "../unit/groundunitdatabase";
+import { groundUnitDatabase } from "../unit/databases/groundunitdatabase";
 import { createCheckboxOption, getCheckboxOptions } from "../other/utils";
 
 /** This context menu allows the user to edit or delete a CoalitionArea. Moreover, it allows the user to create a IADS automatically using the CoalitionArea as bounds. */

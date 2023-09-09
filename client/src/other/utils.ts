@@ -1,13 +1,14 @@
 import { LatLng, Point, Polygon } from "leaflet";
 import * as turf from "@turf/turf";
-import { UnitDatabase } from "../unit/unitdatabase";
-import { aircraftDatabase } from "../unit/aircraftdatabase";
-import { helicopterDatabase } from "../unit/helicopterdatabase";
-import { groundUnitDatabase } from "../unit/groundunitdatabase";
+import { UnitDatabase } from "../unit/databases/unitdatabase";
+import { aircraftDatabase } from "../unit/databases/aircraftdatabase";
+import { helicopterDatabase } from "../unit/databases/helicopterdatabase";
+import { groundUnitDatabase } from "../unit/databases/groundunitdatabase";
 import { Buffer } from "buffer";
 import { ROEs, emissionsCountermeasures, reactionsToThreat, states } from "../constants/constants";
 import { Dropdown } from "../controls/dropdown";
 import { UnitBlueprint } from "../@types/unitdatabase";
+import { navyUnitDatabase } from "../unit/databases/navyunitdatabase";
 
 export function bearing(lat1: number, lon1: number, lat2: number, lon2: number) {
     const φ1 = deg2rad(lat1); // φ, λ in radians
@@ -297,12 +298,14 @@ export function getMarkerCategoryByName(name: string) {
 }
 
 export function getUnitDatabaseByCategory(category: string) {
-    if (category == "aircraft")
+    if (category.toLowerCase() == "aircraft")
         return aircraftDatabase;
-    else if (category == "helicopter")
+    else if (category.toLowerCase() == "helicopter")
         return helicopterDatabase;
-    else if (category.includes("groundunit"))
+    else if (category.toLowerCase().includes("groundunit"))
         return groundUnitDatabase;
+    else if (category.toLowerCase().includes("navyunit"))
+        return navyUnitDatabase;
     else
         return null;
 }

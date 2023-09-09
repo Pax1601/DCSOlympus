@@ -2,15 +2,15 @@ import { Marker, LatLng, Polyline, Icon, DivIcon, CircleMarker, Map, Point } fro
 import { getMap, getMissionHandler, getUnitsManager, getWeaponsManager } from '..';
 import { enumToCoalition, enumToEmissioNCountermeasure, getMarkerCategoryByName, enumToROE, enumToReactionToThreat, enumToState, getUnitDatabaseByCategory, mToFt, msToKnots, rad2deg, bearing, deg2rad, ftToM } from '../other/utils';
 import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, landAt, setAltitude, setReactionToThreat, setROE, setSpeed, refuel, setAdvacedOptions, followUnit, setEmissionsCountermeasures, setSpeedType, setAltitudeType, setOnOff, setFollowRoads, bombPoint, carpetBomb, bombBuilding, fireAtArea } from '../server/server';
-import { CustomMarker } from '../map/custommarker';
+import { CustomMarker } from '../map/markers/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
-import { UnitDatabase } from './unitdatabase';
-import { TargetMarker } from '../map/targetmarker';
+import { UnitDatabase } from './databases/unitdatabase';
+import { TargetMarker } from '../map/markers/targetmarker';
 import { DLINK, DataIndexes, GAME_MASTER, HIDE_GROUP_MEMBERS, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, ROEs, RWR, SHOW_CONTACT_LINES, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, VISUAL, emissionsCountermeasures, reactionsToThreat, states } from '../constants/constants';
-import { Ammo, Contact, GeneralSettings, Offset, Radio, TACAN, ObjectIconOptions } from '../@types/unit';
+import { Ammo, Contact, GeneralSettings, Offset, Radio, TACAN, ObjectIconOptions, UnitData } from '../@types/unit';
 import { DataExtractor } from '../server/dataextractor';
-import { groundUnitDatabase } from './groundunitdatabase';
-import { navyUnitDatabase } from './navyunitdatabase';
+import { groundUnitDatabase } from './databases/groundunitdatabase';
+import { navyUnitDatabase } from './databases/navyunitdatabase';
 import { Weapon } from '../weapon/weapon';
 import { LoadoutBlueprint } from '../@types/unitdatabase';
 
@@ -43,9 +43,9 @@ export class Unit extends CustomMarker {
     #followRoads: boolean = false;
     #fuel: number = 0;
     #desiredSpeed: number = 0;
-    #desiredSpeedType: string = "GS";
+    #desiredSpeedType: string = "CAS";
     #desiredAltitude: number = 0;
-    #desiredAltitudeType: string = "AGL";
+    #desiredAltitudeType: string = "ASL";
     #leaderID: number = 0;
     #formationOffset: Offset = {
         x: 0,
@@ -245,7 +245,7 @@ export class Unit extends CustomMarker {
         this.#drawTarget();
     }
 
-    getData() {
+    getData(): UnitData {
         return {
             category: this.getCategory(),
             ID: this.ID,
@@ -392,6 +392,11 @@ export class Unit extends CustomMarker {
     getType() {
         return "";
     }
+
+    getSpawnPoints() {
+        return this.getDatabase()?.getSpawnPointsByName(this.getName());
+    }
+
 
     /********************** Icon *************************/
     createIcon(): void {
