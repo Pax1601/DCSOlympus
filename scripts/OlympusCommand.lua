@@ -1,6 +1,6 @@
 local version = "v0.4.4-alpha"
 
-local debug = true				-- True enables debug printing using DCS messages
+local debug = false				-- True enables debug printing using DCS messages
 
 -- .dll related variables
 Olympus.OlympusDLL = nil
@@ -478,7 +478,7 @@ function Olympus.generateAirUnitsTable(units)
 
 		-- Define the loadout
 		if payload == nil then
-			if loadout and loadout ~= "" and Olympus.unitPayloads[unit.unitType][loadout] then
+			if loadout and loadout ~= "" and Olympus.unitPayloads[unit.unitType] and Olympus.unitPayloads[unit.unitType][loadout] then
 				payload = Olympus.unitPayloads[unit.unitType][loadout]
 			else
 				payload = {}

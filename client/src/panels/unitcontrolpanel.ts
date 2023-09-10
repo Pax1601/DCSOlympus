@@ -229,7 +229,7 @@ export class UnitControlPanel extends Panel {
             
             const unit = units[0];
             const roles = aircraftDatabase.getByName(unit.getName())?.loadouts?.map((loadout) => {return loadout.roles})
-            const tanker = roles != undefined && Array.prototype.concat.apply([], roles)?.includes("Tanker");
+            const tanker = roles != undefined && Array.prototype.concat.apply([], roles)?.includes("Refueling");
             const AWACS = roles != undefined && Array.prototype.concat.apply([], roles)?.includes("AWACS");
             const radioMHz = Math.floor(unit.getRadio().frequency / 1000000);
             const radioDecimals = (unit.getRadio().frequency / 1000000 - radioMHz) * 1000;

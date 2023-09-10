@@ -16,12 +16,18 @@
 <li><a href="../modules/unit_unitsmanager.html">unit/unitsmanager</a></li>
 <li><a href="unit_unitsmanager.UnitsManager.html">UnitsManager</a></li></ul>
 <h1>Class UnitsManager</h1></div>
+<section class="tsd-panel tsd-comment">
+<div class="tsd-comment tsd-typography"><p>The UnitsManager handles the creation, update, and control of units. Data is strictly updated by the server ONLY. This means that any interaction from the user will always and only
+result in a command to the server, executed by means of a REST PUT request. Any subsequent change in data will be reflected only when the new data is sent back by the server. This strategy allows
+to avoid client/server and client/client inconsistencies.</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></section>
 <section class="tsd-panel tsd-hierarchy">
 <h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
 <li><span class="target">UnitsManager</span></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L17">src/unit/unitsmanager.ts:17</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L21">src/unit/unitsmanager.ts:21</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -53,7 +59,6 @@
 <a href="unit_unitsmanager.UnitsManager.html#exportToFile" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>export<wbr/>To<wbr/>File</span></a>
 <a href="unit_unitsmanager.UnitsManager.html#getByType" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>By<wbr/>Type</span></a>
 <a href="unit_unitsmanager.UnitsManager.html#getHiddenTypes" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Hidden<wbr/>Types</span></a>
-<a href="unit_unitsmanager.UnitsManager.html#getSelectableAircraft" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Selectable<wbr/>Aircraft</span></a>
 <a href="unit_unitsmanager.UnitsManager.html#getSelectedUnits" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Selected<wbr/>Units</span></a>
 <a href="unit_unitsmanager.UnitsManager.html#getSelectedUnitsTypes" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Selected<wbr/>Units<wbr/>Types</span></a>
 <a href="unit_unitsmanager.UnitsManager.html#getSelectedUnitsVariable" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Selected<wbr/>Units<wbr/>Variable</span></a>
@@ -107,29 +112,29 @@
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <a href="unit_unitsmanager.UnitsManager.html" class="tsd-signature-type tsd-kind-class">UnitsManager</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L24">src/unit/unitsmanager.ts:24</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L28">src/unit/unitsmanager.ts:28</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="_copiedUnits" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>#copied<wbr/>Units</span><a href="#_copiedUnits" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">#copied<wbr/>Units</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type ">UnitData</span><span class="tsd-signature-symbol">[]</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L19">src/unit/unitsmanager.ts:19</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L23">src/unit/unitsmanager.ts:23</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="_hiddenTypes" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>#hidden<wbr/>Types</span><a href="#_hiddenTypes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">#hidden<wbr/>Types</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = []</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L21">src/unit/unitsmanager.ts:21</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L25">src/unit/unitsmanager.ts:25</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="_requestDetectionUpdate" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>#request<wbr/>Detection<wbr/>Update</span><a href="#_requestDetectionUpdate" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">#request<wbr/>Detection<wbr/>Update</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L22">src/unit/unitsmanager.ts:22</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L26">src/unit/unitsmanager.ts:26</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="_selectionEventDisabled" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>#selection<wbr/>Event<wbr/>Disabled</span><a href="#_selectionEventDisabled" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">#selection<wbr/>Event<wbr/>Disabled</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L20">src/unit/unitsmanager.ts:20</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L24">src/unit/unitsmanager.ts:24</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="_units" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>#units</span><a href="#_units" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">#units</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span><br/><span>    </span>[<span class="tsd-kind-index-signature">ID</span>: <span class="tsd-signature-type">number</span>]<span class="tsd-signature-symbol">: </span><a href="unit_unit.Unit.html" class="tsd-signature-type tsd-kind-class">Unit</a><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span></div>
@@ -139,7 +144,7 @@
 <li class="tsd-parameter-index-signature">
 <h5><span class="tsd-signature-symbol">[</span><span class="tsd-kind-parameter">ID</span>: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]: </span><a href="unit_unit.Unit.html" class="tsd-signature-type tsd-kind-class">Unit</a></h5></li></ul></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L18">src/unit/unitsmanager.ts:18</a></li></ul></aside></section></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L22">src/unit/unitsmanager.ts:22</a></li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="_onKeyUp" class="tsd-anchor"></a>
@@ -157,7 +162,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L763">src/unit/unitsmanager.ts:763</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L793">src/unit/unitsmanager.ts:793</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="_onUnitDeselection" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>#on<wbr/>Unit<wbr/>Deselection</span><a href="#_onUnitDeselection" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -170,7 +175,7 @@
 <h5><span class="tsd-kind-parameter">unit</span>: <a href="unit_unit.Unit.html" class="tsd-signature-type tsd-kind-class">Unit</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L790">src/unit/unitsmanager.ts:790</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L820">src/unit/unitsmanager.ts:820</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="_onUnitSelection" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>#on<wbr/>Unit<wbr/>Selection</span><a href="#_onUnitSelection" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -183,7 +188,7 @@
 <h5><span class="tsd-kind-parameter">unit</span>: <a href="unit_unit.Unit.html" class="tsd-signature-type tsd-kind-class">Unit</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L772">src/unit/unitsmanager.ts:772</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L802">src/unit/unitsmanager.ts:802</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="_showActionMessage" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>#show<wbr/>Action<wbr/>Message</span><a href="#_showActionMessage" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -198,22 +203,31 @@
 <h5><span class="tsd-kind-parameter">message</span>: <span class="tsd-signature-type">string</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L799">src/unit/unitsmanager.ts:799</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L829">src/unit/unitsmanager.ts:829</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="addUnit" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>add<wbr/>Unit</span><a href="#addUnit" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
 <li class="tsd-signature tsd-anchor-link" id="addUnit.addUnit-1"><span class="tsd-kind-call-signature">add<wbr/>Unit</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">ID</span>, <span class="tsd-kind-parameter">category</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#addUnit.addUnit-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Add a new unit to the manager</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">ID</span>: <span class="tsd-signature-type">number</span></h5></li>
+<h5><span class="tsd-kind-parameter">ID</span>: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>ID of the new unit</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li>
 <li>
-<h5><span class="tsd-kind-parameter">category</span>: <span class="tsd-signature-type">string</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
+<h5><span class="tsd-kind-parameter">category</span>: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>Either &quot;Aircraft&quot;, &quot;Helicopter&quot;, &quot;GroundUnit&quot;, or &quot;NavyUnit&quot;. Determines what class will be used to create the new unit accordingly.</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L68">src/unit/unitsmanager.ts:68</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L81">src/unit/unitsmanager.ts:81</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="copyUnits" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>copy<wbr/>Units</span><a href="#copyUnits" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -224,7 +238,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L572">src/unit/unitsmanager.ts:572</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L602">src/unit/unitsmanager.ts:602</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="createIADS" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>createIADS</span><a href="#createIADS" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -234,7 +248,7 @@
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">coalitionArea</span>: <a href="map_coalitionarea.CoalitionArea.html" class="tsd-signature-type tsd-kind-class">CoalitionArea</a></h5></li>
+<h5><span class="tsd-kind-parameter">coalitionArea</span>: <span class="tsd-signature-type ">CoalitionArea</span></h5></li>
 <li>
 <h5><span class="tsd-kind-parameter">types</span>: <span class="tsd-signature-symbol">{ </span><br/><span>    </span>[<span class="tsd-kind-index-signature">key</span>: <span class="tsd-signature-type">string</span>]<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span></h5>
 <ul class="tsd-parameters">
@@ -256,7 +270,7 @@
 <h5><span class="tsd-kind-parameter">distribution</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L643">src/unit/unitsmanager.ts:643</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L673">src/unit/unitsmanager.ts:673</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="deselectAllUnits" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>deselect<wbr/>All<wbr/>Units</span><a href="#deselectAllUnits" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -264,7 +278,7 @@
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L193">src/unit/unitsmanager.ts:193</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L227">src/unit/unitsmanager.ts:227</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="deselectUnit" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>deselect<wbr/>Unit</span><a href="#deselectUnit" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -277,7 +291,7 @@
 <h5><span class="tsd-kind-parameter">ID</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L199">src/unit/unitsmanager.ts:199</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L233">src/unit/unitsmanager.ts:233</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="exportToFile" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>export<wbr/>To<wbr/>File</span><a href="#exportToFile" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -285,7 +299,7 @@
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L669">src/unit/unitsmanager.ts:669</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L699">src/unit/unitsmanager.ts:699</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getByType" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>By<wbr/>Type</span><a href="#getByType" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -298,7 +312,7 @@
 <h5><span class="tsd-kind-parameter">type</span>: <span class="tsd-signature-type">string</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L241">src/unit/unitsmanager.ts:241</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L275">src/unit/unitsmanager.ts:275</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getHiddenTypes" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Hidden<wbr/>Types</span><a href="#getHiddenTypes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -306,18 +320,7 @@
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L149">src/unit/unitsmanager.ts:149</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member"><a id="getSelectableAircraft" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>get<wbr/>Selectable<wbr/>Aircraft</span><a href="#getSelectableAircraft" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
-<ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="getSelectableAircraft.getSelectableAircraft-1"><span class="tsd-kind-call-signature">get<wbr/>Selectable<wbr/>Aircraft</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span><br/><span>    </span>[<span class="tsd-kind-index-signature">key</span>: <span class="tsd-signature-type">number</span>]<span class="tsd-signature-symbol">: </span><a href="unit_unit.Unit.html" class="tsd-signature-type tsd-kind-class">Unit</a><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span><a href="#getSelectableAircraft.getSelectableAircraft-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
-<li class="tsd-description">
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">{ </span><br/><span>    </span>[<span class="tsd-kind-index-signature">key</span>: <span class="tsd-signature-type">number</span>]<span class="tsd-signature-symbol">: </span><a href="unit_unit.Unit.html" class="tsd-signature-type tsd-kind-class">Unit</a><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span></h4>
-<ul class="tsd-parameters">
-<li class="tsd-parameter-index-signature">
-<h5><span class="tsd-signature-symbol">[</span><span class="tsd-kind-parameter">key</span>: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]: </span><a href="unit_unit.Unit.html" class="tsd-signature-type tsd-kind-class">Unit</a></h5></li></ul><aside class="tsd-sources">
-<ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L43">src/unit/unitsmanager.ts:43</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L183">src/unit/unitsmanager.ts:183</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getSelectedUnits" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Selected<wbr/>Units</span><a href="#getSelectedUnits" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -335,7 +338,7 @@
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-property">only<wbr/>One<wbr/>Per<wbr/>Group</span><span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span></h5></li></ul></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="unit_unit.Unit.html" class="tsd-signature-type tsd-kind-class">Unit</a><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L171">src/unit/unitsmanager.ts:171</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L205">src/unit/unitsmanager.ts:205</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getSelectedUnitsTypes" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Selected<wbr/>Units<wbr/>Types</span><a href="#getSelectedUnitsTypes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -343,7 +346,7 @@
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L233">src/unit/unitsmanager.ts:233</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L267">src/unit/unitsmanager.ts:267</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getSelectedUnitsVariable" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Selected<wbr/>Units<wbr/>Variable</span><a href="#getSelectedUnitsVariable" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -356,20 +359,27 @@
 <h5><span class="tsd-kind-parameter">variableGetter</span>: <span class="tsd-signature-type ">CallableFunction</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L237">src/unit/unitsmanager.ts:237</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L271">src/unit/unitsmanager.ts:271</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getUnitByID" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Unit<wbr/>ByID</span><a href="#getUnitByID" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
 <li class="tsd-signature tsd-anchor-link" id="getUnitByID.getUnitByID-1"><span class="tsd-kind-call-signature">get<wbr/>Unit<wbr/>ByID</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">ID</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="unit_unit.Unit.html" class="tsd-signature-type tsd-kind-class">Unit</a><a href="#getUnitByID.getUnitByID-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Get a specific unit by ID</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">ID</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="unit_unit.Unit.html" class="tsd-signature-type tsd-kind-class">Unit</a></h4><aside class="tsd-sources">
+<h5><span class="tsd-kind-parameter">ID</span>: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>ID of the unit. The ID shall be the same as the unit ID in DCS.</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="unit_unit.Unit.html" class="tsd-signature-type tsd-kind-class">Unit</a></h4><p>Unit object, or null if no unit with said ID exists.</p>
+
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L57">src/unit/unitsmanager.ts:57</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L60">src/unit/unitsmanager.ts:60</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getUnitDetectedMethods" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Unit<wbr/>Detected<wbr/>Methods</span><a href="#getUnitDetectedMethods" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -382,31 +392,40 @@
 <h5><span class="tsd-kind-parameter">unit</span>: <a href="unit_unit.Unit.html" class="tsd-signature-type tsd-kind-class">Unit</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L247">src/unit/unitsmanager.ts:247</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L281">src/unit/unitsmanager.ts:281</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getUnits" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Units</span><a href="#getUnits" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
 <li class="tsd-signature tsd-anchor-link" id="getUnits.getUnits-1"><span class="tsd-kind-call-signature">get<wbr/>Units</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span><br/><span>    </span>[<span class="tsd-kind-index-signature">ID</span>: <span class="tsd-signature-type">number</span>]<span class="tsd-signature-symbol">: </span><a href="unit_unit.Unit.html" class="tsd-signature-type tsd-kind-class">Unit</a><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span><a href="#getUnits.getUnits-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">{ </span><br/><span>    </span>[<span class="tsd-kind-index-signature">ID</span>: <span class="tsd-signature-type">number</span>]<span class="tsd-signature-symbol">: </span><a href="unit_unit.Unit.html" class="tsd-signature-type tsd-kind-class">Unit</a><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span></h4>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">{ </span><br/><span>    </span>[<span class="tsd-kind-index-signature">ID</span>: <span class="tsd-signature-type">number</span>]<span class="tsd-signature-symbol">: </span><a href="unit_unit.Unit.html" class="tsd-signature-type tsd-kind-class">Unit</a><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span></h4><p>All the existing units, both alive and dead</p>
+
 <ul class="tsd-parameters">
 <li class="tsd-parameter-index-signature">
-<h5><span class="tsd-signature-symbol">[</span><span class="tsd-kind-parameter">ID</span>: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]: </span><a href="unit_unit.Unit.html" class="tsd-signature-type tsd-kind-class">Unit</a></h5></li></ul><aside class="tsd-sources">
+<h5><span class="tsd-signature-symbol">[</span><span class="tsd-kind-parameter">ID</span>: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]: </span><a href="unit_unit.Unit.html" class="tsd-signature-type tsd-kind-class">Unit</a></h5></li></ul>
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L53">src/unit/unitsmanager.ts:53</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L51">src/unit/unitsmanager.ts:51</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getUnitsByHotgroup" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Units<wbr/>By<wbr/>Hotgroup</span><a href="#getUnitsByHotgroup" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
 <li class="tsd-signature tsd-anchor-link" id="getUnitsByHotgroup.getUnitsByHotgroup-1"><span class="tsd-kind-call-signature">get<wbr/>Units<wbr/>By<wbr/>Hotgroup</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">hotgroup</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="unit_unit.Unit.html" class="tsd-signature-type tsd-kind-class">Unit</a><span class="tsd-signature-symbol">[]</span><a href="#getUnitsByHotgroup.getUnitsByHotgroup-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Returns all the units that belong to a hotgroup</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">hotgroup</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="unit_unit.Unit.html" class="tsd-signature-type tsd-kind-class">Unit</a><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
+<h5><span class="tsd-kind-parameter">hotgroup</span>: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>Hotgroup number</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="unit_unit.Unit.html" class="tsd-signature-type tsd-kind-class">Unit</a><span class="tsd-signature-symbol">[]</span></h4><p>Array of units that belong to hotgroup</p>
+
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L64">src/unit/unitsmanager.ts:64</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L72">src/unit/unitsmanager.ts:72</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getUnitsTypes" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Units<wbr/>Types</span><a href="#getUnitsTypes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -419,7 +438,7 @@
 <h5><span class="tsd-kind-parameter">units</span>: <a href="unit_unit.Unit.html" class="tsd-signature-type tsd-kind-class">Unit</a><span class="tsd-signature-symbol">[]</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L212">src/unit/unitsmanager.ts:212</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L246">src/unit/unitsmanager.ts:246</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getUnitsVariable" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Units<wbr/>Variable</span><a href="#getUnitsVariable" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -434,7 +453,7 @@
 <h5><span class="tsd-kind-parameter">units</span>: <a href="unit_unit.Unit.html" class="tsd-signature-type tsd-kind-class">Unit</a><span class="tsd-signature-symbol">[]</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L223">src/unit/unitsmanager.ts:223</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L257">src/unit/unitsmanager.ts:257</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="importFromFile" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>import<wbr/>From<wbr/>File</span><a href="#importFromFile" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -442,7 +461,7 @@
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L688">src/unit/unitsmanager.ts:688</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L718">src/unit/unitsmanager.ts:718</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="pasteUnits" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>paste<wbr/>Units</span><a href="#pasteUnits" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -450,7 +469,7 @@
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L577">src/unit/unitsmanager.ts:577</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L607">src/unit/unitsmanager.ts:607</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="selectFromBounds" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>select<wbr/>From<wbr/>Bounds</span><a href="#selectFromBounds" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -463,7 +482,7 @@
 <h5><span class="tsd-kind-parameter">bounds</span>: <span class="tsd-signature-type ">LatLngBounds</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L159">src/unit/unitsmanager.ts:159</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L193">src/unit/unitsmanager.ts:193</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="selectUnit" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>select<wbr/>Unit</span><a href="#selectUnit" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -478,7 +497,7 @@
 <h5><span class="tsd-kind-parameter">deselectAllUnits</span>: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = true</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L153">src/unit/unitsmanager.ts:153</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L187">src/unit/unitsmanager.ts:187</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="selectUnitsByHotgroup" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>select<wbr/>Units<wbr/>By<wbr/>Hotgroup</span><a href="#selectUnitsByHotgroup" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -491,7 +510,7 @@
 <h5><span class="tsd-kind-parameter">hotgroup</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L207">src/unit/unitsmanager.ts:207</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L241">src/unit/unitsmanager.ts:241</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="selectedUnitsAddDestination" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>selected<wbr/>Units<wbr/>Add<wbr/>Destination</span><a href="#selectedUnitsAddDestination" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -511,7 +530,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L261">src/unit/unitsmanager.ts:261</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L295">src/unit/unitsmanager.ts:295</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="selectedUnitsAddToHotgroup" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>selected<wbr/>Units<wbr/>Add<wbr/>To<wbr/>Hotgroup</span><a href="#selectedUnitsAddToHotgroup" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -524,7 +543,7 @@
 <h5><span class="tsd-kind-parameter">hotgroup</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L485">src/unit/unitsmanager.ts:485</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L519">src/unit/unitsmanager.ts:519</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="selectedUnitsAttackUnit" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>selected<wbr/>Units<wbr/>Attack<wbr/>Unit</span><a href="#selectedUnitsAttackUnit" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -537,7 +556,7 @@
 <h5><span class="tsd-kind-parameter">ID</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L401">src/unit/unitsmanager.ts:401</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L435">src/unit/unitsmanager.ts:435</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="selectedUnitsBombBuilding" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>selected<wbr/>Units<wbr/>Bomb<wbr/>Building</span><a href="#selectedUnitsBombBuilding" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -550,7 +569,7 @@
 <h5><span class="tsd-kind-parameter">mouseCoordinates</span>: <span class="tsd-signature-type ">LatLng</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L541">src/unit/unitsmanager.ts:541</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L575">src/unit/unitsmanager.ts:575</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="selectedUnitsBombPoint" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>selected<wbr/>Units<wbr/>Bomb<wbr/>Point</span><a href="#selectedUnitsBombPoint" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -563,7 +582,7 @@
 <h5><span class="tsd-kind-parameter">mouseCoordinates</span>: <span class="tsd-signature-type ">LatLng</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L525">src/unit/unitsmanager.ts:525</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L559">src/unit/unitsmanager.ts:559</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="selectedUnitsCarpetBomb" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>selected<wbr/>Units<wbr/>Carpet<wbr/>Bomb</span><a href="#selectedUnitsCarpetBomb" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -576,7 +595,7 @@
 <h5><span class="tsd-kind-parameter">mouseCoordinates</span>: <span class="tsd-signature-type ">LatLng</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L533">src/unit/unitsmanager.ts:533</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L567">src/unit/unitsmanager.ts:567</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="selectedUnitsChangeAltitude" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>selected<wbr/>Units<wbr/>Change<wbr/>Altitude</span><a href="#selectedUnitsChangeAltitude" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -589,7 +608,7 @@
 <h5><span class="tsd-kind-parameter">altitudeChange</span>: <span class="tsd-signature-type">string</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L321">src/unit/unitsmanager.ts:321</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L355">src/unit/unitsmanager.ts:355</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="selectedUnitsChangeSpeed" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>selected<wbr/>Units<wbr/>Change<wbr/>Speed</span><a href="#selectedUnitsChangeSpeed" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -602,7 +621,7 @@
 <h5><span class="tsd-kind-parameter">speedChange</span>: <span class="tsd-signature-type">string</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L314">src/unit/unitsmanager.ts:314</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L348">src/unit/unitsmanager.ts:348</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="selectedUnitsClearDestinations" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>selected<wbr/>Units<wbr/>Clear<wbr/>Destinations</span><a href="#selectedUnitsClearDestinations" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -610,7 +629,7 @@
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L290">src/unit/unitsmanager.ts:290</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L324">src/unit/unitsmanager.ts:324</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="selectedUnitsComputeGroupDestination" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>selected<wbr/>Units<wbr/>Compute<wbr/>Group<wbr/>Destination</span><a href="#selectedUnitsComputeGroupDestination" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -628,7 +647,7 @@
 <li class="tsd-parameter-index-signature">
 <h5><span class="tsd-signature-symbol">[</span><span class="tsd-kind-parameter">key</span>: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type ">LatLng</span></h5></li></ul><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L494">src/unit/unitsmanager.ts:494</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L528">src/unit/unitsmanager.ts:528</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="selectedUnitsCreateGroup" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>selected<wbr/>Units<wbr/>Create<wbr/>Group</span><a href="#selectedUnitsCreateGroup" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -636,7 +655,7 @@
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L557">src/unit/unitsmanager.ts:557</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L591">src/unit/unitsmanager.ts:591</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="selectedUnitsDelete" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>selected<wbr/>Units<wbr/>Delete</span><a href="#selectedUnitsDelete" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -649,7 +668,7 @@
 <h5><span class="tsd-kind-parameter">explosion</span>: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L409">src/unit/unitsmanager.ts:409</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L443">src/unit/unitsmanager.ts:443</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="selectedUnitsFireAtArea" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>selected<wbr/>Units<wbr/>Fire<wbr/>At<wbr/>Area</span><a href="#selectedUnitsFireAtArea" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -662,7 +681,7 @@
 <h5><span class="tsd-kind-parameter">mouseCoordinates</span>: <span class="tsd-signature-type ">LatLng</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L549">src/unit/unitsmanager.ts:549</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L583">src/unit/unitsmanager.ts:583</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="selectedUnitsFollowUnit" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>selected<wbr/>Units<wbr/>Follow<wbr/>Unit</span><a href="#selectedUnitsFollowUnit" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -686,7 +705,7 @@
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">formation</span>: <span class="tsd-signature-type">string</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L437">src/unit/unitsmanager.ts:437</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L471">src/unit/unitsmanager.ts:471</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="selectedUnitsLandAt" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>selected<wbr/>Units<wbr/>Land<wbr/>At</span><a href="#selectedUnitsLandAt" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -699,7 +718,7 @@
 <h5><span class="tsd-kind-parameter">latlng</span>: <span class="tsd-signature-type ">LatLng</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L306">src/unit/unitsmanager.ts:306</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L340">src/unit/unitsmanager.ts:340</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="selectedUnitsRefuel" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>selected<wbr/>Units<wbr/>Refuel</span><a href="#selectedUnitsRefuel" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -707,7 +726,7 @@
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L429">src/unit/unitsmanager.ts:429</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L463">src/unit/unitsmanager.ts:463</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="selectedUnitsSetAltitude" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>selected<wbr/>Units<wbr/>Set<wbr/>Altitude</span><a href="#selectedUnitsSetAltitude" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -720,7 +739,7 @@
 <h5><span class="tsd-kind-parameter">altitude</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L344">src/unit/unitsmanager.ts:344</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L378">src/unit/unitsmanager.ts:378</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="selectedUnitsSetAltitudeType" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>selected<wbr/>Units<wbr/>Set<wbr/>Altitude<wbr/>Type</span><a href="#selectedUnitsSetAltitudeType" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -733,7 +752,7 @@
 <h5><span class="tsd-kind-parameter">altitudeType</span>: <span class="tsd-signature-type">string</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L352">src/unit/unitsmanager.ts:352</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L386">src/unit/unitsmanager.ts:386</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="selectedUnitsSetEmissionsCountermeasures" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>selected<wbr/>Units<wbr/>Set<wbr/>Emissions<wbr/>Countermeasures</span><a href="#selectedUnitsSetEmissionsCountermeasures" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -746,7 +765,7 @@
 <h5><span class="tsd-kind-parameter">emissionCountermeasure</span>: <span class="tsd-signature-type">string</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L376">src/unit/unitsmanager.ts:376</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L410">src/unit/unitsmanager.ts:410</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="selectedUnitsSetFollowRoads" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>selected<wbr/>Units<wbr/>Set<wbr/>Follow<wbr/>Roads</span><a href="#selectedUnitsSetFollowRoads" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -759,7 +778,7 @@
 <h5><span class="tsd-kind-parameter">followRoads</span>: <span class="tsd-signature-type">boolean</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L392">src/unit/unitsmanager.ts:392</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L426">src/unit/unitsmanager.ts:426</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="selectedUnitsSetHotgroup" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>selected<wbr/>Units<wbr/>Set<wbr/>Hotgroup</span><a href="#selectedUnitsSetHotgroup" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -772,7 +791,7 @@
 <h5><span class="tsd-kind-parameter">hotgroup</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L480">src/unit/unitsmanager.ts:480</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L514">src/unit/unitsmanager.ts:514</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="selectedUnitsSetOnOff" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>selected<wbr/>Units<wbr/>Set<wbr/>On<wbr/>Off</span><a href="#selectedUnitsSetOnOff" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -785,7 +804,7 @@
 <h5><span class="tsd-kind-parameter">onOff</span>: <span class="tsd-signature-type">boolean</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L384">src/unit/unitsmanager.ts:384</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L418">src/unit/unitsmanager.ts:418</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="selectedUnitsSetROE" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>selected<wbr/>Units<wbr/>SetROE</span><a href="#selectedUnitsSetROE" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -798,7 +817,7 @@
 <h5><span class="tsd-kind-parameter">ROE</span>: <span class="tsd-signature-type">string</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L360">src/unit/unitsmanager.ts:360</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L394">src/unit/unitsmanager.ts:394</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="selectedUnitsSetReactionToThreat" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>selected<wbr/>Units<wbr/>Set<wbr/>Reaction<wbr/>To<wbr/>Threat</span><a href="#selectedUnitsSetReactionToThreat" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -811,7 +830,7 @@
 <h5><span class="tsd-kind-parameter">reactionToThreat</span>: <span class="tsd-signature-type">string</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L368">src/unit/unitsmanager.ts:368</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L402">src/unit/unitsmanager.ts:402</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="selectedUnitsSetSpeed" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>selected<wbr/>Units<wbr/>Set<wbr/>Speed</span><a href="#selectedUnitsSetSpeed" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -824,7 +843,7 @@
 <h5><span class="tsd-kind-parameter">speed</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L328">src/unit/unitsmanager.ts:328</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L362">src/unit/unitsmanager.ts:362</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="selectedUnitsSetSpeedType" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>selected<wbr/>Units<wbr/>Set<wbr/>Speed<wbr/>Type</span><a href="#selectedUnitsSetSpeedType" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -837,7 +856,7 @@
 <h5><span class="tsd-kind-parameter">speedType</span>: <span class="tsd-signature-type">string</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L336">src/unit/unitsmanager.ts:336</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L370">src/unit/unitsmanager.ts:370</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="setHiddenType" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>Hidden<wbr/>Type</span><a href="#setHiddenType" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -852,7 +871,7 @@
 <h5><span class="tsd-kind-parameter">value</span>: <span class="tsd-signature-type">boolean</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L139">src/unit/unitsmanager.ts:139</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L173">src/unit/unitsmanager.ts:173</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="spawnUnits" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>spawn<wbr/>Units</span><a href="#spawnUnits" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -877,20 +896,27 @@
 <h5><span class="tsd-kind-parameter">callback</span>: <span class="tsd-signature-type ">CallableFunction</span><span class="tsd-signature-symbol"> = ...</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L715">src/unit/unitsmanager.ts:715</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L745">src/unit/unitsmanager.ts:745</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="update" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>update</span><a href="#update" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
 <li class="tsd-signature tsd-anchor-link" id="update.update-1"><span class="tsd-kind-call-signature">update</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">buffer</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><a href="#update.update-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Update the data of all the units. The data is directly decoded from the binary buffer received from the REST Server. This is necessary for performance and bandwidth reasons.</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">buffer</span>: <span class="tsd-signature-type ">ArrayBuffer</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
+<h5><span class="tsd-kind-parameter">buffer</span>: <span class="tsd-signature-type ">ArrayBuffer</span></h5>
+<div class="tsd-comment tsd-typography"><p>The arraybuffer, encoded according to the ICD defined in: TODO Add reference to ICD</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><p>The decoded updateTime of the data update.</p>
+
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/744adee/client/src/unit/unitsmanager.ts#L78">src/unit/unitsmanager.ts:78</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/Pax1601/DCSOlympus/blob/c735d10/client/src/unit/unitsmanager.ts#L96">src/unit/unitsmanager.ts:96</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -928,7 +954,6 @@
 <li><a href="#exportToFile" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>export<wbr/>To<wbr/>File</span></a></li>
 <li><a href="#getByType" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>By<wbr/>Type</span></a></li>
 <li><a href="#getHiddenTypes" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Hidden<wbr/>Types</span></a></li>
-<li><a href="#getSelectableAircraft" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Selectable<wbr/>Aircraft</span></a></li>
 <li><a href="#getSelectedUnits" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Selected<wbr/>Units</span></a></li>
 <li><a href="#getSelectedUnitsTypes" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Selected<wbr/>Units<wbr/>Types</span></a></li>
 <li><a href="#getSelectedUnitsVariable" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Selected<wbr/>Units<wbr/>Variable</span></a></li>
@@ -989,16 +1014,7 @@
 <li><a href="../modules/index.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>index</span></a></li>
 <li><a href="../modules/map_boxselect.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>map/boxselect</span></a></li>
 <li><a href="../modules/map_clickableminimap.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>map/clickableminimap</span></a></li>
-<li><a href="../modules/map_coalitionarea.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>map/coalitionarea</span></a></li>
-<li><a href="../modules/map_coalitionareahandle.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>map/coalitionareahandle</span></a></li>
-<li><a href="../modules/map_coalitionareamiddlehandle.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>map/coalitionareamiddlehandle</span></a></li>
-<li><a href="../modules/map_custommarker.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>map/custommarker</span></a></li>
-<li><a href="../modules/map_destinationpreviewmarker.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>map/destinationpreviewmarker</span></a></li>
-<li><a href="../modules/map_drawingcursor.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>map/drawingcursor</span></a></li>
 <li><a href="../modules/map_map.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>map/map</span></a></li>
-<li><a href="../modules/map_smokemarker.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>map/smokemarker</span></a></li>
-<li><a href="../modules/map_targetmarker.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>map/targetmarker</span></a></li>
-<li><a href="../modules/map_temporaryunitmarker.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>map/temporaryunitmarker</span></a></li>
 <li><a href="../modules/mission_airbase.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>mission/airbase</span></a></li>
 <li><a href="../modules/mission_bullseye.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>mission/bullseye</span></a></li>
 <li><a href="../modules/mission_missionhandler.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>mission/missionhandler</span></a></li>
@@ -1014,13 +1030,8 @@
 <li><a href="../modules/popups_popup.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>popups/popup</span></a></li>
 <li><a href="../modules/server_dataextractor.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>server/dataextractor</span></a></li>
 <li><a href="../modules/server_server.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>server/server</span></a></li>
-<li><a href="../modules/unit_aircraftdatabase.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>unit/aircraftdatabase</span></a></li>
 <li><a href="../modules/unit_citiesDatabase.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>unit/cities<wbr/>Database</span></a></li>
-<li><a href="../modules/unit_groundunitdatabase.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>unit/groundunitdatabase</span></a></li>
-<li><a href="../modules/unit_helicopterdatabase.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>unit/helicopterdatabase</span></a></li>
-<li><a href="../modules/unit_navyunitdatabase.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>unit/navyunitdatabase</span></a></li>
 <li><a href="../modules/unit_unit.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>unit/unit</span></a></li>
-<li><a href="../modules/unit_unitdatabase.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>unit/unitdatabase</span></a></li>
 <li>
 <details class="tsd-index-accordion" open data-key="unit/unitsmanager"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><use href="#icon-chevronDown"></use></svg><a href="../modules/unit_unitsmanager.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>unit/unitsmanager</span></a></summary>
 <div class="tsd-accordion-details">
