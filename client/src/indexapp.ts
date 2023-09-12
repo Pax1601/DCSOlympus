@@ -1,5 +1,4 @@
 import { FeatureSwitches } from "./features/featureswitches";
-import { Map } from "./map/map";
 import { MissionHandler } from "./mission/missionhandler";
 import { IOlympusApp, OlympusApp } from "./olympusapp";
 import { ConnectionStatusPanel } from "./panels/connectionstatuspanel";
@@ -10,8 +9,6 @@ import { Panel } from "./panels/panel";
 import { ServerStatusPanel } from "./panels/serverstatuspanel";
 import { UnitControlPanel } from "./panels/unitcontrolpanel";
 import { UnitInfoPanel } from "./panels/unitinfopanel";
-import { PluginManager } from "./plugin/pluginmanager";
-import { PluginHelloWorld } from "./plugins/helloworld/pluginhelloworld";
 import { Popup } from "./popups/popup";
 import { UnitsManager } from "./unit/unitsmanager";
 
@@ -35,8 +32,6 @@ export interface IIndexAppPanels {
 
 export class IndexApp extends OlympusApp {
 
-    #pluginManager!: PluginManager;
-
     constructor( config:IIndexApp ) {
         
         super( config );
@@ -57,14 +52,6 @@ export class IndexApp extends OlympusApp {
         //  Retrofitting
         Object.values( this.getPanelsManager().getAll() ).forEach( ( panel:Panel ) => {
             panel.setOlympusApp( this );
-        });
-
-        //  Plugins
-        this.#pluginManager = new PluginManager( this );
-
-        //  Manual loading for now
-        this.getMap().whenReady( () => {
-            this.#pluginManager.add( "helloWorld", new PluginHelloWorld( this ) );
         });
     }
 

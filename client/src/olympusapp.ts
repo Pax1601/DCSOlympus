@@ -6,6 +6,7 @@ import { PanelsManager } from "./panels/panelsmanager";
 import { ShortcutManager } from "./shortcut/shortcutmanager";
 import { UnitsManager } from "./unit/unitsmanager";
 
+
 export interface IOlympusApp {
     featureSwitches: FeatureSwitches;
     map: Map,

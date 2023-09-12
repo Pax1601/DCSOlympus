@@ -11,7 +11,6 @@ import { FeatureSwitches } from "./features/featureswitches";
 import { LogPanel } from "./panels/logpanel";
 import { getConfig, getPaused, setAddress, setCredentials, setPaused, startUpdate, toggleDemoEnabled } from "./server/server";
 import { UnitDataTable } from "./atc/unitdatatable";
-import { keyEventWasInInput } from "./other/utils";
 import { Popup } from "./popups/popup";
 import { Dropdown } from "./controls/dropdown";
 import { HotgroupPanel } from "./panels/hotgrouppanel";
@@ -21,8 +20,8 @@ import { ServerStatusPanel } from "./panels/serverstatuspanel";
 import { WeaponsManager } from "./weapon/weaponsmanager";
 import { IndexApp } from "./indexapp";
 import { ShortcutKeyboard } from "./shortcut/shortcut";
-import { ShortcutManager } from "./shortcut/shortcutmanager";
 import { OlympusApp } from "./olympusapp";
+
 
 var map: Map;
 
@@ -117,6 +116,8 @@ function setup() {
 
     /* Setup event handlers */
     setupEvents( indexApp );
+
+    indexApp.start();
 
 }
 
