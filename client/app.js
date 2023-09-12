@@ -19,10 +19,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-if ( !fs.existsSync( "./src/_importedplugins" ) ) {
-    fs.mkdirSync( "./src/_importedplugins" );
-}
-
 app.use('/', indexRouter);
 app.use('/api/atc', atcRouter);
 app.use('/api/airbases', airbasesRouter);
