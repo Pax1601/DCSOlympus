@@ -11,6 +11,7 @@ import { aircraftDatabase } from "../unit/databases/aircraftdatabase";
 import { helicopterDatabase } from "../unit/databases/helicopterdatabase";
 import { groundUnitDatabase } from "../unit/databases/groundunitdatabase";
 import { navyUnitDatabase } from "../unit/databases/navyunitdatabase";
+import { UnitSpawnTable } from "../@types/unit";
 
 export class UnitSpawnMenu {
     #container: HTMLElement;
@@ -401,7 +402,7 @@ export class AircraftSpawnMenu extends UnitSpawnMenu {
     deployUnits(spawnOptions: UnitSpawnOptions, unitsCount: number) {
         spawnOptions.coalition = getActiveCoalition();
         if (spawnOptions) {
-            var unitTable = {
+            var unitTable: UnitSpawnTable = {
                 unitType: spawnOptions.name,
                 location: spawnOptions.latlng,
                 altitude: spawnOptions.altitude? spawnOptions.altitude: 0,
@@ -439,7 +440,7 @@ export class HelicopterSpawnMenu extends UnitSpawnMenu {
     deployUnits(spawnOptions: UnitSpawnOptions, unitsCount: number) {
         spawnOptions.coalition = getActiveCoalition();
         if (spawnOptions) {
-            var unitTable = {
+            var unitTable: UnitSpawnTable = {
                 unitType: spawnOptions.name,
                 location: spawnOptions.latlng,
                 altitude: spawnOptions.altitude? spawnOptions.altitude: 0,
@@ -477,7 +478,7 @@ export class GroundUnitSpawnMenu extends UnitSpawnMenu {
     deployUnits(spawnOptions: UnitSpawnOptions, unitsCount: number) {
         spawnOptions.coalition = getActiveCoalition();
         if (spawnOptions) {
-            var unitTable = {
+            var unitTable: UnitSpawnTable = {
                 unitType: spawnOptions.name,
                 location: spawnOptions.latlng,
                 liveryID: spawnOptions.liveryID? spawnOptions.liveryID: ""
@@ -515,7 +516,7 @@ export class NavyUnitSpawnMenu extends UnitSpawnMenu {
     deployUnits(spawnOptions: UnitSpawnOptions, unitsCount: number) {
         spawnOptions.coalition = getActiveCoalition();
         if (spawnOptions) {
-            var unitTable = {
+            var unitTable: UnitSpawnTable = {
                 unitType: spawnOptions.name,
                 location: spawnOptions.latlng,
                 liveryID: spawnOptions.liveryID? spawnOptions.liveryID: ""

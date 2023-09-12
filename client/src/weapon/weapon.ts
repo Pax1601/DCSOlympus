@@ -166,7 +166,7 @@ export class Weapon extends CustomMarker {
 
     /********************** Visibility *************************/
     updateVisibility() {
-        const hiddenUnits = getUnitsManager().getHiddenTypes();
+        const hiddenUnits = getMap().getHiddenTypes();
         var hidden = (hiddenUnits.includes(this.getMarkerCategory())) ||
                     (hiddenUnits.includes(this.#coalition)) ||
                     (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0);

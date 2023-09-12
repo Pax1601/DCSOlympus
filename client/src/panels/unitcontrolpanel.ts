@@ -109,7 +109,7 @@ export class UnitControlPanel extends Panel {
 
     addButtons() {
         this.#units = getUnitsManager().getSelectedUnits();
-        this.#selectedUnitsTypes = getUnitsManager().getSelectedUnitsTypes();
+        this.#selectedUnitsTypes = getUnitsManager().getSelectedUnitsCategories();
         
         if (this.#units.length < 20) {
             this.getElement().querySelector("#selected-units-container")?.replaceChildren(...this.#units.map((unit: Unit, index: number) => {

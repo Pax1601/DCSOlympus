@@ -1,5 +1,13 @@
 import { LatLng } from "leaflet"
 
+interface UnitSpawnTable {
+    unitType: string,
+    location: latlng,
+    altitude?: number,
+    loadout?: string,
+    liveryID: string
+}
+
 interface ObjectIconOptions {
     showState: boolean,
     showVvi: boolean,

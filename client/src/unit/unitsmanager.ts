@@ -7,7 +7,7 @@ import { CoalitionArea } from "../map/coalitionarea/coalitionarea";
 import { groundUnitDatabase } from "./databases/groundunitdatabase";
 import { DataIndexes, GAME_MASTER, IADSDensities, IDLE, MOVE_UNIT } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
-import { Contact, UnitData } from "../@types/unit";
+import { Contact, UnitData, UnitSpawnTable } from "../@types/unit";
 import { citiesDatabase } from "./citiesDatabase";
 import { aircraftDatabase } from "./databases/aircraftdatabase";
 import { helicopterDatabase } from "./databases/helicopterdatabase";
@@ -22,14 +22,13 @@ export class UnitsManager {
     #units: { [ID: number]: Unit };
     #copiedUnits: UnitData[];
     #selectionEventDisabled: boolean = false;
-    #hiddenTypes: string[] = [];
     #requestDetectionUpdate: boolean = false;
 
     constructor() {
         this.#units = {};
         this.#copiedUnits = [];
 
-        document.addEventListener('copy', () => this.copyUnits());
+        document.addEventListener('copy', () => this.selectedUnitsCopy());
         document.addEventListener('paste', () => this.pasteUnits());
         document.addEventListener('unitSelection', (e: CustomEvent) => this.#onUnitSelection(e.detail));
         document.addEventListener('unitDeselection', (e: CustomEvent) => this.#onUnitDeselection(e.detail));
@@ -170,26 +169,21 @@ export class UnitsManager {
         return updateTime;
     }
 
-    setHiddenType(key: string, value: boolean) {
-        if (value) {
-            if (this.#hiddenTypes.includes(key))
-                delete this.#hiddenTypes[this.#hiddenTypes.indexOf(key)];
-        }
-        else
-            this.#hiddenTypes.push(key);
-        Object.values(this.getUnits()).forEach((unit: Unit) => unit.updateVisibility());
-    }
-
-    getHiddenTypes() {
-        return this.#hiddenTypes;
-    }
-
+    /** Set a unit as "selected", which will allow to perform operations on it, like giving it a destination, setting it to attack a target, and so on
+     * 
+     * @param ID The ID of the unit to select
+     * @param deselectAllUnits If true, the unit will be the only selected unit
+     */
     selectUnit(ID: number, deselectAllUnits: boolean = true) {
         if (deselectAllUnits)
             this.getSelectedUnits().filter((unit: Unit) => unit.ID !== ID).forEach((unit: Unit) => unit.setSelected(false));
         this.#units[ID]?.setSelected(true);
     }
 
+    /** Select all visible units inside a bounding rectangle
+     * 
+     * @param bounds Leaflet bounds object defining the selection area
+     */
     selectFromBounds(bounds: LatLngBounds) {
         this.deselectAllUnits();
         for (let ID in this.#units) {
@@ -202,6 +196,20 @@ export class UnitsManager {
         }
     }
 
+    /** Select units by hotgroup. A hotgroup can be created to quickly select multiple units using keyboard bindings
+     * 
+     * @param hotgroup The hotgroup number
+     */
+    selectUnitsByHotgroup(hotgroup: number) {
+        this.deselectAllUnits();
+        this.getUnitsByHotgroup(hotgroup).forEach((unit: Unit) => unit.setSelected(true))
+    }
+
+    /** Get all the currently selected units
+     * 
+     * @param options Selection options
+     * @returns Array of selected units
+     */
     getSelectedUnits(options?: { excludeHumans?: boolean, onlyOnePerGroup?: boolean }) {
         var selectedUnits = [];
         for (let ID in this.#units) {
@@ -224,36 +232,46 @@ export class UnitsManager {
         return selectedUnits;
     }
 
+    /** Deselects all currently selected units
+     * 
+     */
     deselectAllUnits() {
         for (let ID in this.#units) {
             this.#units[ID].setSelected(false);
         }
     }
 
+    /** Deselect a specific unit
+     * 
+     * @param ID ID of the unit to deselect
+     */
     deselectUnit(ID: number) {
-        if (this.#units.hasOwnProperty(ID)) {
-            this.#units[ID].setSelected(false);
-        } else {
-            console.error(`deselectUnit(): no unit found with ID "${ID}".`);
-        }
+        this.#units[ID]?.setSelected(false);
     }
 
-    selectUnitsByHotgroup(hotgroup: number) {
-        this.deselectAllUnits();
-        this.getUnitsByHotgroup(hotgroup).forEach((unit: Unit) => unit.setSelected(true))
-    }
-
-    getUnitsTypes(units: Unit[]) {
+    /** This function allows to quickly determine the categories (Aircraft, Helicopter, GroundUnit, NavyUnit) of an array units. This allows to enable/disable specific controls which can only be applied
+     * to specific categories.
+     * 
+     * @param units Array of units of which to retrieve the categories
+     * @returns Array of categories. Each category is present only once.
+     */
+    getUnitsCategories(units: Unit[]) {
         if (units.length == 0)
             return [];
         return units.map((unit: Unit) => {
             return unit.getCategory();
-        })?.filter((value: any, index: any, array: string[]) => {
+        })?.filter((value: any, index: number, array: string[]) => {
             return array.indexOf(value) === index;
         });
     }
 
-    /* Gets the value of a variable from the units. If all the units have the same value, returns the value, else returns undefined */
+    /**  This function returns the value of a variable for each of the units in the input array. If all the units have the same value, returns the value, else returns undefined. This function is useful to 
+     * present units data in the control panel, which will print a specific value only if it is the same for all the units. If the values are different, the control panel will show a "mixed values" value, or similar. 
+     * 
+     * @param variableGetter CallableFunction that returns the requested variable. Example: getUnitsVariable((unit: Unit) => unit.getName(), foo) will return a string value if all the units have the same name, otherwise it will return undefined.
+     * @param units Array of units of which to retrieve the variable
+     * @returns The value of the variable if all units have the same value, else undefined
+     */
     getUnitsVariable(variableGetter: CallableFunction, units: Unit[]) {
         if (units.length == 0)
             return undefined;
@@ -264,20 +282,12 @@ export class UnitsManager {
         });
     };
 
-    getSelectedUnitsTypes() {
-        return this.getUnitsTypes(this.getSelectedUnits());
-    };
-
-    getSelectedUnitsVariable(variableGetter: CallableFunction) {
-        return this.getUnitsVariable(variableGetter, this.getSelectedUnits());
-    };
-
-    getByType(type: string) {
-        Object.values(this.getUnits()).filter((unit: Unit) => {
-            return unit.getType() === type;
-        })
-    }
-
+    /** For a given unit, it returns if and how it is being detected by other units. NOTE: this function will return how a unit is being detected, i.e. how other units are detecting it. It will not return
+     * what the unit is detecting.
+     * 
+     * @param unit The unit of which to retrieve the "detected" methods.
+     * @returns Array of detection methods
+     */
     getUnitDetectedMethods(unit: Unit) {
         var detectionMethods: number[] = [];
         for (let idx in this.#units) {
@@ -291,11 +301,17 @@ export class UnitsManager {
         return detectionMethods;
     }
 
-    /*********************** Actions on selected units ************************/
+    /*********************** Unit actions on selected units ************************/
+    /** Give a new destination to the selected units
+     * 
+     * @param latlng Position of the new destination
+     * @param mantainRelativePosition If true, the selected units will mantain their relative positions when reaching the target. This is useful to maintain a formation for groun/navy units
+     * @param rotation Rotation in radians by which the formation will be rigidly rotated. E.g. a ( V ) formation will look like this ( < ) if rotated pi/4 radians (90 degrees)
+     */
     selectedUnitsAddDestination(latlng: L.LatLng, mantainRelativePosition: boolean, rotation: number) {
         var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
 
-        /* Compute the destination for each unit. If mantainRelativePosition is true, compute the destination so to hold the relative distances */
+        /* Compute the destination for each unit. If mantainRelativePosition is true, compute the destination so to hold the relative positions */
         var unitDestinations: { [key: number]: LatLng } = {};
         if (mantainRelativePosition)
             unitDestinations = this.selectedUnitsComputeGroupDestination(latlng, rotation);
@@ -304,7 +320,8 @@ export class UnitsManager {
 
         for (let idx in selectedUnits) {
             const unit = selectedUnits[idx];
-            /* If a unit is following another unit, and that unit is also selected, send the command to the followed unit */
+
+            /* If a unit is following another unit, and that unit is also selected, send the command to the followed ("leader") unit */
             if (unit.getState() === "Follow") {
                 const leader = this.getUnitByID(unit.getLeaderID())
                 if (leader && leader.getSelected())
@@ -321,6 +338,9 @@ export class UnitsManager {
         this.#showActionMessage(selectedUnits, " new destination added");
     }
 
+    /** Clear the destinations of all the selected units
+     * 
+     */
     selectedUnitsClearDestinations() {
         var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
@@ -337,6 +357,10 @@ export class UnitsManager {
         }
     }
 
+    /** Instruct all the selected units to land at a specific location
+     * 
+     * @param latlng Location where to land at
+     */
     selectedUnitsLandAt(latlng: LatLng) {
         var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
@@ -345,6 +369,10 @@ export class UnitsManager {
         this.#showActionMessage(selectedUnits, " landing");
     }
 
+    /** Instruct all the selected units to change their speed
+     * 
+     * @param speedChange Speed change, either "stop", "slow", or "fast". The specific value depends on the unit category
+     */
     selectedUnitsChangeSpeed(speedChange: string) {
         var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
@@ -352,6 +380,10 @@ export class UnitsManager {
         }
     }
 
+    /** Instruct all the selected units to change their altitude
+     * 
+     * @param altitudeChange Altitude change, either "climb" or "descend". The specific value depends on the unit category
+     */
     selectedUnitsChangeAltitude(altitudeChange: string) {
         var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
@@ -359,6 +391,10 @@ export class UnitsManager {
         }
     }
 
+    /** Set a specific speed to all the selected units
+     * 
+     * @param speed Value to set, in m/s
+     */
     selectedUnitsSetSpeed(speed: number) {
         var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
@@ -367,6 +403,10 @@ export class UnitsManager {
         this.#showActionMessage(selectedUnits, `setting speed to ${msToKnots(speed)} kts`);
     }
 
+    /** Set a specific speed type to all the selected units
+     * 
+     * @param speedType Value to set, either "CAS" or "GS". If "CAS" is selected, the unit will try to maintain the selected Calibrated Air Speed, but DCS will still only maintain a Ground Speed value so errors may arise depending on wind.
+     */
     selectedUnitsSetSpeedType(speedType: string) {
         var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
@@ -375,6 +415,10 @@ export class UnitsManager {
         this.#showActionMessage(selectedUnits, `setting speed type to ${speedType}`);
     }
 
+    /** Set a specific altitude to all the selected units
+     * 
+     * @param altitude Value to set, in m
+     */
     selectedUnitsSetAltitude(altitude: number) {
         var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
@@ -383,6 +427,10 @@ export class UnitsManager {
         this.#showActionMessage(selectedUnits, `setting altitude to ${mToFt(altitude)} ft`);
     }
 
+    /** Set a specific altitude type to all the selected units
+     * 
+     * @param altitudeType Value to set, either "ASL" or "AGL". If "AGL" is selected, the unit will try to maintain the selected Above Ground Level altitude. Due to a DCS bug, this will only be true at the final position.
+     */
     selectedUnitsSetAltitudeType(altitudeType: string) {
         var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
@@ -391,6 +439,10 @@ export class UnitsManager {
         this.#showActionMessage(selectedUnits, `setting altitude type to ${altitudeType}`);
     }
 
+    /** Set a specific ROE to all the selected units
+     * 
+     * @param ROE Value to set, see constants for acceptable values
+     */
     selectedUnitsSetROE(ROE: string) {
         var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
@@ -399,6 +451,10 @@ export class UnitsManager {
         this.#showActionMessage(selectedUnits, `ROE set to ${ROE}`);
     }
 
+    /** Set a specific reaction to threat to all the selected units
+     * 
+     * @param reactionToThreat Value to set, see constants for acceptable values
+     */
     selectedUnitsSetReactionToThreat(reactionToThreat: string) {
         var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
@@ -407,6 +463,10 @@ export class UnitsManager {
         this.#showActionMessage(selectedUnits, `reaction to threat set to ${reactionToThreat}`);
     }
 
+    /** Set a specific emissions & countermeasures to all the selected units
+     * 
+     * @param emissionCountermeasure Value to set, see constants for acceptable values
+     */
     selectedUnitsSetEmissionsCountermeasures(emissionCountermeasure: string) {
         var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
@@ -415,6 +475,10 @@ export class UnitsManager {
         this.#showActionMessage(selectedUnits, `emissions & countermeasures set to ${emissionCountermeasure}`);
     }
 
+    /** Turn selected units on or off, only works on ground and navy units
+     * 
+     * @param onOff If true, the unit will be turned on
+     */
     selectedUnitsSetOnOff(onOff: boolean) {
         var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
@@ -423,6 +487,10 @@ export class UnitsManager {
         this.#showActionMessage(selectedUnits, `unit active set to ${onOff}`);
     }
 
+    /** Instruct the selected units to follow roads, only works on ground units
+     * 
+     * @param followRoads If true, units will follow roads
+     */
     selectedUnitsSetFollowRoads(followRoads: boolean) {
         var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
@@ -431,7 +499,10 @@ export class UnitsManager {
         this.#showActionMessage(selectedUnits, `follow roads set to ${followRoads}`);
     }
 
-
+    /** Instruct units to attack a specific unit
+     * 
+     * @param ID ID of the unit to attack
+     */
     selectedUnitsAttackUnit(ID: number) {
         var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
@@ -440,26 +511,9 @@ export class UnitsManager {
         this.#showActionMessage(selectedUnits, `attacking unit ${this.getUnitByID(ID)?.getUnitName()}`);
     }
 
-    selectedUnitsDelete(explosion: boolean = false) {
-        var selectedUnits = this.getSelectedUnits(); /* Can be applied to humans too */
-        const selectionContainsAHuman = selectedUnits.some((unit: Unit) => {
-            return unit.getHuman() === true;
-        });
-
-        if (selectionContainsAHuman && !confirm("Your selection includes a human player. Deleting humans causes their vehicle to crash.\n\nAre you sure you want to do this?")) {
-            return;
-        }
-
-        var immediate = false;
-        if (selectedUnits.length > 20)
-            immediate = confirm(`You are trying to delete ${selectedUnits.length} units, do you want to delete them immediately? This may cause lag for players.`)
-
-        for (let idx in selectedUnits) {
-            selectedUnits[idx].delete(explosion, immediate);
-        }
-        this.#showActionMessage(selectedUnits, `deleted`);
-    }
-
+    /** Instruct units to refuel at the nearest tanker, if possible. Else units will RTB
+     * 
+     */
     selectedUnitsRefuel() {
         var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
@@ -468,21 +522,25 @@ export class UnitsManager {
         this.#showActionMessage(selectedUnits, `sent to nearest tanker`);
     }
 
+    /** Instruct the selected units to follow another unit in a formation. Only works for aircrafts and helicopters.
+     * 
+     * @param ID ID of the unit to follow
+     * @param offset Optional parameter, defines a static offset. X: front-rear, positive front, Y: top-bottom, positive top, Z: left-right, positive right
+     * @param formation Optional parameter, defines a predefined formation type. Values are: "trail", "echelon-lh", "echelon-rh", "line-abreast-lh", "line-abreast-rh", "front", "diamond"
+     */
     selectedUnitsFollowUnit(ID: number, offset?: { "x": number, "y": number, "z": number }, formation?: string) {
         if (offset == undefined) {
             /* Simple formations with fixed offsets */
-            // X: front-rear, positive front
-            // Y: top-bottom, positive top
-            // Z: left-right, positive right
             offset = { "x": 0, "y": 0, "z": 0 };
             if (formation === "trail") { offset.x = -50; offset.y = -30; offset.z = 0; }
             else if (formation === "echelon-lh") { offset.x = -50; offset.y = -10; offset.z = -50; }
             else if (formation === "echelon-rh") { offset.x = -50; offset.y = -10; offset.z = 50; }
-            else if (formation === "line-abreast-rh") { offset.x = 0; offset.y = 0; offset.z = 50; }
             else if (formation === "line-abreast-lh") { offset.x = 0; offset.y = 0; offset.z = -50; }
+            else if (formation === "line-abreast-rh") { offset.x = 0; offset.y = 0; offset.z = 50; }
             else if (formation === "front") { offset.x = 100; offset.y = 0; offset.z = 0; }
             else offset = undefined;
         }
+
         var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         var count = 1;
         var xr = 0; var yr = 1; var zr = -1;
@@ -511,11 +569,90 @@ export class UnitsManager {
         this.#showActionMessage(selectedUnits, `following unit ${this.getUnitByID(ID)?.getUnitName()}`);
     }
 
+    /** Instruct the selected units to perform precision bombing of specific coordinates
+     * 
+     * @param latlng Location to bomb
+     */
+    selectedUnitsBombPoint(latlng: LatLng) {
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        for (let idx in selectedUnits) {
+            selectedUnits[idx].bombPoint(latlng);
+        }
+        this.#showActionMessage(selectedUnits, `unit bombing point`);
+    }
+
+    /** Instruct the selected units to perform carpet bombing of specific coordinates
+     * 
+     * @param latlng Location to bomb
+     */
+    selectedUnitsCarpetBomb(latlng: LatLng) {
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        for (let idx in selectedUnits) {
+            selectedUnits[idx].carpetBomb(latlng);
+        }
+        this.#showActionMessage(selectedUnits, `unit bombing point`);
+    }
+
+    /** Instruct the selected units to fire at specific coordinates
+     * 
+     * @param latlng Location to fire at
+     */
+    selectedUnitsFireAtArea(latlng: LatLng) {
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        for (let idx in selectedUnits) {
+            selectedUnits[idx].fireAtArea(latlng);
+        }
+        this.#showActionMessage(selectedUnits, `unit bombing point`);
+    }
+
+    /*********************** Control operations on selected units ************************/
+    /**  See getUnitsCategories for more info
+     * 
+     * @returns Category array of the selected units.
+     */
+    getSelectedUnitsCategories() {
+        return this.getUnitsCategories(this.getSelectedUnits());
+    };
+
+    /**  See getUnitsVariable for more info
+     * 
+     * @param variableGetter CallableFunction that returns the requested variable. Example: getUnitsVariable((unit: Unit) => unit.getName(), foo) will return a string value if all the units have the same name, otherwise it will return undefined.
+     * @returns The value of the variable if all units have the same value, else undefined
+     */
+    getSelectedUnitsVariable(variableGetter: CallableFunction) {
+        return this.getUnitsVariable(variableGetter, this.getSelectedUnits());
+    };
+
+    /** Groups the selected units in a single (DCS) group, if all the units have the same category 
+     * 
+     */
+    selectedUnitsCreateGroup() {
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: false });
+        if (this.getUnitsCategories(selectedUnits).length == 1) {
+            var units: { ID: number, location: LatLng }[] = [];
+            for (let idx in selectedUnits) {
+                var unit = selectedUnits[idx];
+                units.push({ ID: unit.ID, location: unit.getPosition() });
+            }
+            cloneUnits(units, true, 0 /* No spawn points, we delete the original units */); 
+        } else {
+            getInfoPopup().setText(`Groups can only be created from units of the same category`);
+        }
+    }
+
+    /** Set the hotgroup for the selected units. It will be the only hotgroup of the unit
+     * 
+     * @param hotgroup Hotgroup number
+     */
     selectedUnitsSetHotgroup(hotgroup: number) {
         this.getUnitsByHotgroup(hotgroup).forEach((unit: Unit) => unit.setHotgroup(null));
         this.selectedUnitsAddToHotgroup(hotgroup);
     }
 
+    /** Add the selected units to a hotgroup. Units can be in multiple hotgroups at the same type
+     * 
+     * @param hotgroup Hotgroup number
+     */
     selectedUnitsAddToHotgroup(hotgroup: number) {
         var selectedUnits = this.getSelectedUnits();
         for (let idx in selectedUnits) {
@@ -525,6 +662,37 @@ export class UnitsManager {
         getHotgroupPanel().refreshHotgroups();
     }
 
+    /** Delete the selected units
+     * 
+     * @param explosion If true, the unit will be deleted using an explosion
+     * @returns 
+     */
+    selectedUnitsDelete(explosion: boolean = false) {
+        var selectedUnits = this.getSelectedUnits(); /* Can be applied to humans too */
+        const selectionContainsAHuman = selectedUnits.some((unit: Unit) => {
+            return unit.getHuman() === true;
+        });
+
+        if (selectionContainsAHuman && !confirm("Your selection includes a human player. Deleting humans causes their vehicle to crash.\n\nAre you sure you want to do this?")) {
+            return;
+        }
+
+        var immediate = false;
+        if (selectedUnits.length > 20)
+            immediate = confirm(`You are trying to delete ${selectedUnits.length} units, do you want to delete them immediately? This may cause lag for players.`)
+
+        for (let idx in selectedUnits) {
+            selectedUnits[idx].delete(explosion, immediate);
+        }
+        this.#showActionMessage(selectedUnits, `deleted`);
+    }
+
+    /** Compute the destinations of every unit in the selected units. This function preserves the relative positions of the units, and rotates the whole formation by rotation.
+     * 
+     * @param latlng Center of the group after the translation
+     * @param rotation Rotation of the group, in radians
+     * @returns Array of positions for each unit, in order
+     */
     selectedUnitsComputeGroupDestination(latlng: LatLng, rotation: number) {
         var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         /* Compute the center of the group */
@@ -556,54 +724,20 @@ export class UnitsManager {
         return unitDestinations;
     }
 
-    selectedUnitsBombPoint(mouseCoordinates: LatLng) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
-        for (let idx in selectedUnits) {
-            selectedUnits[idx].bombPoint(mouseCoordinates);
-        }
-        this.#showActionMessage(selectedUnits, `unit bombing point`);
-    }
-
-    selectedUnitsCarpetBomb(mouseCoordinates: LatLng) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
-        for (let idx in selectedUnits) {
-            selectedUnits[idx].carpetBomb(mouseCoordinates);
-        }
-        this.#showActionMessage(selectedUnits, `unit bombing point`);
-    }
-
-    selectedUnitsBombBuilding(mouseCoordinates: LatLng) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
-        for (let idx in selectedUnits) {
-            selectedUnits[idx].bombBuilding(mouseCoordinates);
-        }
-        this.#showActionMessage(selectedUnits, `unit bombing point`);
-    }
-
-    selectedUnitsFireAtArea(mouseCoordinates: LatLng) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
-        for (let idx in selectedUnits) {
-            selectedUnits[idx].fireAtArea(mouseCoordinates);
-        }
-        this.#showActionMessage(selectedUnits, `unit bombing point`);
-    }
-
-    selectedUnitsCreateGroup() {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: false });
-        var units: { ID: number, location: LatLng }[] = [];
-        for (let idx in selectedUnits) {
-            var unit = selectedUnits[idx];
-            units.push({ ID: unit.ID, location: unit.getPosition() });
-        }
-        cloneUnits(units, true, 0 /* No spawn points, we delete the original units */); 
-    }
-
-    /***********************************************/
-    copyUnits() {
+    /** Copy the selected units and store their properties in memory
+     * 
+     */
+    selectedUnitsCopy() {
+        /* A JSON is used to deepcopy the units, creating a "snapshot" of their properties at the time of the copy */
         this.#copiedUnits = JSON.parse(JSON.stringify(this.getSelectedUnits().map((unit: Unit) => { return unit.getData() }))); /* Can be applied to humans too */
         getInfoPopup().setText(`${this.#copiedUnits.length} units copied`);
     }
-
+    
+    /*********************** Unit manipulation functions  ************************/
+    /** Paste the copied units
+     * 
+     * @returns True if units were pasted successfully
+     */
     pasteUnits() {
         let spawnPoints = 0;
 
@@ -670,25 +804,40 @@ export class UnitsManager {
         }
     }
 
+    /** Automatically create an Integrated Air Defence System from a CoalitionArea object. The units will be mostly focused around big cities. The bigger the city, the larger the amount of units created next to it.
+     * If the CoalitionArea does not contain any city, no units will be created
+     * 
+     * @param coalitionArea Boundaries of the IADS
+     * @param types Array of unit types to add to the IADS, e.g. AAA, SAM, flak, MANPADS
+     * @param eras Array of eras to which the units added to the IADS can belong
+     * @param ranges Array of weapon ranges the units can have 
+     * @param density Value between 0 and 100, controls the amout of units created
+     * @param distribution Value between 0 and 100, controls how "scattered" the units will be
+     */
     createIADS(coalitionArea: CoalitionArea, types: { [key: string]: boolean }, eras: { [key: string]: boolean }, ranges: { [key: string]: boolean }, density: number, distribution: number) {
         const activeTypes = Object.keys(types).filter((key: string) => { return types[key]; });
         const activeEras = Object.keys(eras).filter((key: string) => { return eras[key]; });
         const activeRanges = Object.keys(ranges).filter((key: string) => { return ranges[key]; });
 
         citiesDatabase.forEach((city: { lat: number, lng: number, pop: number }) => {
+            /* Check if the city is inside the coalition area */
             if (polyContains(new LatLng(city.lat, city.lng), coalitionArea)) {
+                /* Arbitrary formula to obtain a number of units depending on the city population */
                 var pointsNumber = 2 + Math.pow(city.pop, 0.2) * density / 100;
                 for (let i = 0; i < pointsNumber; i++) {
+                    /* Place the unit nearby the city, depending on the distribution parameter */
                     var bearing = Math.random() * 360;
                     var distance = Math.random() * distribution * 100;
                     const latlng = bearingAndDistanceToLatLng(city.lat, city.lng, bearing, distance);
+
+                    /* Make sure the unit is still inside the coalition area */
                     if (polyContains(latlng, coalitionArea)) {
                         const type = activeTypes[Math.floor(Math.random() * activeTypes.length)];
                         if (Math.random() < IADSDensities[type]) {
+                            /* Get a random blueprint depending on the selected parameters and spawn the unit */
                             const unitBlueprint = randomUnitBlueprint(groundUnitDatabase, { type: type, eras: activeEras, ranges: activeRanges });
-                            if (unitBlueprint) {
+                            if (unitBlueprint) 
                                 this.spawnUnits("GroundUnit", [{ unitType: unitBlueprint.name, location: latlng, liveryID: "" }], coalitionArea.getCoalition(), true);
-                            }
                         }
                     }
                 }
@@ -696,6 +845,9 @@ export class UnitsManager {
         })
     }
 
+    /** Export all the ground and navy units to file. Does not work on Aircraft and Helicopter units.
+     *  TODO: Extend to aircraft and helicopters
+     */
     exportToFile() {
         var unitsToExport: { [key: string]: any } = {};
         for (let ID in this.#units) {
@@ -715,6 +867,9 @@ export class UnitsManager {
         a.click();
     }
 
+    /** Import ground and navy units from file
+     * TODO: extend to support aircraft and helicopters
+     */
     importFromFile() {
         var input = document.createElement("input");
         input.type = "file";
@@ -728,9 +883,9 @@ export class UnitsManager {
                 var contents = e.target.result;
                 var groups = JSON.parse(contents);
                 for (let groupName in groups) {
-                    if (groupName !== "" && groups[groupName].length > 0 && (groups[groupName].every((unit: any) => { return unit.category == "GroundUnit"; }) || groups[groupName].every((unit: any) => { return unit.category == "NavyUnit"; }))) {
-                        var aliveUnits = groups[groupName].filter((unit: any) => { return unit.alive });
-                        var units = aliveUnits.map((unit: any) => {
+                    if (groupName !== "" && groups[groupName].length > 0 && (groups[groupName].every((unit: UnitData) => { return unit.category == "GroundUnit"; }) || groups[groupName].every((unit: any) => { return unit.category == "NavyUnit"; }))) {
+                        var aliveUnits = groups[groupName].filter((unit: UnitData) => { return unit.alive });
+                        var units = aliveUnits.map((unit: UnitData) => {
                             return { unitType: unit.name, location: unit.position, liveryID: "" }
                         });
                         getUnitsManager().spawnUnits(groups[groupName][0].category, units, groups[groupName][0].coalition, true);
@@ -742,7 +897,18 @@ export class UnitsManager {
         input.click();
     }
 
-    spawnUnits(category: string, units: any, coalition: string = "blue", immediate: boolean = true, airbase: string = "", country: string = "", callback: CallableFunction = () => {}) {
+    /** Spawn a new group of units
+     * 
+     * @param category Category of the new units
+     * @param units Array of unit tables 
+     * @param coalition Coalition to which the new units will belong
+     * @param immediate If true the command will be performed immediately, but this may cause lag on the server
+     * @param airbase If true, the location of the units will be ignored and the units will spawn at the given airbase. Only works for aircrafts and helicopters
+     * @param country Set the country of the units. If empty string, the country will be assigned automatically
+     * @param callback CallableFunction called when the command is received by the server
+     * @returns True if the spawn command was successfully sent
+     */
+    spawnUnits(category: string, units: UnitSpawnTable[], coalition: string = "blue", immediate: boolean = true, airbase: string = "", country: string = "", callback: CallableFunction = () => {}) {
         var spawnPoints = 0;
         var spawnFunction = () => {}; 
         var spawnsRestricted = getMissionHandler().getCommandModeOptions().restrictSpawns && getMissionHandler().getRemainingSetupTime() < 0 && getMissionHandler().getCommandModeOptions().commandMode !== GAME_MASTER;
@@ -752,14 +918,14 @@ export class UnitsManager {
                 getInfoPopup().setText("Aircrafts can be air spawned during the SETUP phase only");
                 return false;
             }
-            spawnPoints = units.reduce((points: number, unit: any) => {return points + aircraftDatabase.getSpawnPointsByName(unit.unitType)}, 0);
+            spawnPoints = units.reduce((points: number, unit: UnitSpawnTable) => {return points + aircraftDatabase.getSpawnPointsByName(unit.unitType)}, 0);
             spawnFunction = () => spawnAircrafts(units, coalition, airbase, country, immediate, spawnPoints, callback);
         } else if (category === "Helicopter") {
             if (airbase == "" && spawnsRestricted) {
                 getInfoPopup().setText("Helicopters can be air spawned during the SETUP phase only");
                 return false;
             }
-            spawnPoints = units.reduce((points: number, unit: any) => {return points + helicopterDatabase.getSpawnPointsByName(unit.unitType)}, 0);
+            spawnPoints = units.reduce((points: number, unit: UnitSpawnTable) => {return points + helicopterDatabase.getSpawnPointsByName(unit.unitType)}, 0);
             spawnFunction = () => spawnHelicopters(units, coalition, airbase, country, immediate, spawnPoints, callback);
 
         } else if (category === "GroundUnit") {
@@ -767,7 +933,7 @@ export class UnitsManager {
                 getInfoPopup().setText("Ground units can be spawned during the SETUP phase only");
                 return false;
             }
-            spawnPoints = units.reduce((points: number, unit: any) => {return points + groundUnitDatabase.getSpawnPointsByName(unit.unitType)}, 0);
+            spawnPoints = units.reduce((points: number, unit: UnitSpawnTable) => {return points + groundUnitDatabase.getSpawnPointsByName(unit.unitType)}, 0);
             spawnFunction = () => spawnGroundUnits(units, coalition, country, immediate, spawnPoints, callback);
 
         } else if (category === "NavyUnit") {
@@ -775,7 +941,7 @@ export class UnitsManager {
                 getInfoPopup().setText("Navy units can be spawned during the SETUP phase only");
                 return false;
             }
-            spawnPoints = units.reduce((points: number, unit: any) => {return points + navyUnitDatabase.getSpawnPointsByName(unit.unitType)}, 0);
+            spawnPoints = units.reduce((points: number, unit: UnitSpawnTable) => {return points + navyUnitDatabase.getSpawnPointsByName(unit.unitType)}, 0);
             spawnFunction = () => spawnNavyUnits(units, coalition, country, immediate, spawnPoints, callback);
         }
 
@@ -826,7 +992,7 @@ export class UnitsManager {
             document.dispatchEvent(new CustomEvent("unitsDeselection", { detail: this.getSelectedUnits() }));
     }
 
-    #showActionMessage(units: any[], message: string) {
+    #showActionMessage(units: Unit[], message: string) {
         if (units.length == 1)
             getInfoPopup().setText(`${units[0].getUnitName()} ${message}`);
         else if (units.length > 1)

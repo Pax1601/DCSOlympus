@@ -510,7 +510,7 @@ export class Unit extends CustomMarker {
 
     /********************** Visibility *************************/
     updateVisibility() {
-        const hiddenUnits = getUnitsManager().getHiddenTypes();
+        const hiddenUnits = getMap().getHiddenTypes();
         var hidden = ((this.#human && hiddenUnits.includes("human")) ||
             (this.#controlled == false && hiddenUnits.includes("dcs")) ||
             (hiddenUnits.includes(this.getMarkerCategory())) ||
@@ -756,13 +756,13 @@ export class Unit extends CustomMarker {
     #onContextMenu(e: any) {
         var options: { [key: string]: { text: string, tooltip: string } } = {};
         const selectedUnits = getUnitsManager().getSelectedUnits();
-        const selectedUnitTypes = getUnitsManager().getSelectedUnitsTypes();
+        const selectedUnitTypes = getUnitsManager().getSelectedUnitsCategories();
 
         options["center-map"] = { text: "Center map", tooltip: "Center the map on the unit and follow it" };
 
         if (selectedUnits.length > 0 && !(selectedUnits.length == 1 && (selectedUnits.includes(this)))) {
             options["attack"] = { text: "Attack", tooltip: "Attack the unit using A/A or A/G weapons" };
-            if (getUnitsManager().getSelectedUnitsTypes().length == 1 && getUnitsManager().getSelectedUnitsTypes()[0] === "Aircraft")
+            if (getUnitsManager().getSelectedUnitsCategories().length == 1 && getUnitsManager().getSelectedUnitsCategories()[0] === "Aircraft")
                 options["follow"] = { text: "Follow", tooltip: "Follow the unit at a user defined distance and position" };;
         }
         else if ((selectedUnits.length > 0 && (selectedUnits.includes(this))) || selectedUnits.length == 0) {

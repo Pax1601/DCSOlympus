@@ -11,6 +11,7 @@ import { aircraftDatabase } from "../unit/databases/aircraftdatabase";
 import { helicopterDatabase } from "../unit/databases/helicopterdatabase";
 import { navyUnitDatabase } from "../unit/databases/navyunitdatabase";
 
+/** The MissionManager  */
 export class MissionManager {
     #bullseyes: { [name: string]: Bullseye } = {};
     #airbases: { [name: string]: Airbase } = {};

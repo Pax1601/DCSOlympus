@@ -68,6 +68,7 @@ export class Map extends L.Map {
     #mapVisibilityOptionsDropdown: Dropdown;
     #optionButtons: { [key: string]: HTMLButtonElement[] } = {}
     #visibilityOptions: { [key: string]: boolean } = {}
+    #hiddenTypes: string[] = [];
 
     /**
      * 
@@ -121,14 +122,14 @@ export class Map extends L.Map {
         document.addEventListener("toggleCoalitionVisibility", (ev: CustomEventInit) => {
             const el = ev.detail._element;
             el?.classList.toggle("off");
-            getUnitsManager().setHiddenType(ev.detail.coalition, !el?.classList.contains("off"));
+            this.setHiddenType(ev.detail.coalition, !el?.classList.contains("off"));
             Object.values(getUnitsManager().getUnits()).forEach((unit: Unit) => unit.updateVisibility());
         });
 
         document.addEventListener("toggleMarkerVisibility", (ev: CustomEventInit) => {
             const el = ev.detail._element;
             el?.classList.toggle("off");
-            ev.detail.types.forEach((type: string) => getUnitsManager().setHiddenType(type, !el?.classList.contains("off")));
+            ev.detail.types.forEach((type: string) => this.setHiddenType(type, !el?.classList.contains("off")));
             Object.values(getUnitsManager().getUnits()).forEach((unit: Unit) => unit.updateVisibility());
 
             if (ev.detail.types.includes("airbase")) {
@@ -241,6 +242,21 @@ export class Map extends L.Map {
             this.#coalitionAreas.splice(this.#coalitionAreas.indexOf(coalitionArea), 1);
         if (this.hasLayer(coalitionArea))
             this.removeLayer(coalitionArea);
+    }
+
+    setHiddenType(key: string, value: boolean) {
+        if (value) {
+            if (this.#hiddenTypes.includes(key))
+                delete this.#hiddenTypes[this.#hiddenTypes.indexOf(key)];
+        }
+        else {
+            this.#hiddenTypes.push(key);
+        }
+        Object.values(getUnitsManager().getUnits()).forEach((unit: Unit) => unit.updateVisibility());
+    }
+
+    getHiddenTypes() {
+        return this.#hiddenTypes;
     }
 
     /* Context Menus */
@@ -552,7 +568,7 @@ export class Map extends L.Map {
 
             var options: { [key: string]: { text: string, tooltip: string } } = {};
             const selectedUnits = getUnitsManager().getSelectedUnits();
-            const selectedUnitTypes = getUnitsManager().getSelectedUnitsTypes();
+            const selectedUnitTypes = getUnitsManager().getSelectedUnitsCategories();
 
             if (selectedUnitTypes.length === 1 && ["Aircraft", "Helicopter"].includes(selectedUnitTypes[0])) {
                 if (selectedUnits.every((unit: Unit) => { return unit.canFulfillRole(["CAS", "Strike"]) })) {

@@ -39,7 +39,7 @@ export class AirbaseContextMenu extends ContextMenu {
         this.#setProperties(this.#airbase.getProperties());
         this.#setParkings(this.#airbase.getParkings());
         this.#setCoalition(this.#airbase.getCoalition());
-        this.#showLandButton(getUnitsManager().getSelectedUnitsTypes().length == 1 && ["Aircraft", "Helicopter"].includes(getUnitsManager().getSelectedUnitsTypes()[0]) && (getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getCoalition()}) === this.#airbase.getCoalition() || this.#airbase.getCoalition() === "neutral"))
+        this.#showLandButton(getUnitsManager().getSelectedUnitsCategories().length == 1 && ["Aircraft", "Helicopter"].includes(getUnitsManager().getSelectedUnitsCategories()[0]) && (getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getCoalition()}) === this.#airbase.getCoalition() || this.#airbase.getCoalition() === "neutral"))
         this.#showSpawnButton(getMissionHandler().getCommandModeOptions().commandMode == GAME_MASTER || this.#airbase.getCoalition() == getMissionHandler().getCommandedCoalition());
         this.#setAirbaseData();
         

@@ -2,7 +2,7 @@ import { Map } from "./map/map"
 import { UnitsManager } from "./unit/unitsmanager";
 import { UnitInfoPanel } from "./panels/unitinfopanel";
 import { ConnectionStatusPanel } from "./panels/connectionstatuspanel";
-import { MissionManager } from "./mission/missionhandler";
+import { MissionManager } from "./mission/missionmanager";
 import { UnitControlPanel } from "./panels/unitcontrolpanel";
 import { MouseInfoPanel } from "./panels/mouseinfopanel";
 import { LogPanel } from "./panels/logpanel";
@@ -27,7 +27,7 @@ var map: Map;
 /* Managers */
 var unitsManager: UnitsManager;
 var weaponsManager: WeaponsManager;
-var missionHandler: MissionManager;
+var missionManager: MissionManager;
 
 /* UI Panels */
 var unitInfoPanel: UnitInfoPanel;
@@ -52,7 +52,7 @@ function setup() {
 
     unitsManager = new UnitsManager();
     weaponsManager = new WeaponsManager();
-    missionHandler = new MissionManager();
+    missionManager = new MissionManager();
 
     /* Panels */
     unitInfoPanel = new UnitInfoPanel("unit-info-panel");
@@ -217,7 +217,7 @@ export function getWeaponsManager() {
 }
 
 export function getMissionHandler() {
-    return missionHandler;
+    return missionManager;
 }
 
 export function getUnitInfoPanel() {
