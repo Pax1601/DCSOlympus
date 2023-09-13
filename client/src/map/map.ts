@@ -584,7 +584,7 @@ export class Map extends L.Map {
                 else 
                     getInfoPopup().setText(`Selected units can not perform point actions.`);
             }
-            else {
+            else if(selectedUnitTypes.length > 1) {
                 getInfoPopup().setText(`Multiple unit types selected, no common actions available.`);
             }
 
