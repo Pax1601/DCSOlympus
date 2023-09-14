@@ -45,3 +45,8 @@ interface LogData {
     sessionHash: string;
     time: number;
 }
+
+interface ServerRequestOptions {
+    time?: number;
+    commandHash?: string;
+}

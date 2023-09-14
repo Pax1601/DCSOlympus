@@ -1,7 +1,7 @@
 import { LatLng, DivIcon, Map } from 'leaflet';
 import { getMap, getMissionHandler, getUnitsManager } from '..';
 import { enumToCoalition, mToFt, msToKnots, rad2deg } from '../other/utils';
-import { CustomMarker } from '../map/custommarker';
+import { CustomMarker } from '../map/markers/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
 import { DLINK, DataIndexes, GAME_MASTER, IRST, OPTIC, RADAR, VISUAL } from '../constants/constants';
 import { ObjectIconOptions } from '../@types/unit';
@@ -166,7 +166,7 @@ export class Weapon extends CustomMarker {
 
     /********************** Visibility *************************/
     updateVisibility() {
-        const hiddenUnits = getUnitsManager().getHiddenTypes();
+        const hiddenUnits = getMap().getHiddenTypes();
         var hidden = (hiddenUnits.includes(this.getMarkerCategory())) ||
                     (hiddenUnits.includes(this.#coalition)) ||
                     (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0);
@@ -214,8 +214,6 @@ export class Weapon extends CustomMarker {
     /***********************************************/
     onAdd(map: Map): this {
         super.onAdd(map);
-        /* If this is the first time adding this unit to the map, remove the temporary marker */
-        getMap().removeTemporaryMarker(new LatLng(this.#position.lat, this.#position.lng));
         return this;
     }
 

@@ -1,0 +1,7322 @@
+{
+  "A-10A": {
+    "MK-84*2 , LAU-68*2 , AGM-65K*2": {
+      "1": 32,
+      "2": 31
+    },
+    "LAU-68-MK5*6": {
+      "1": 32,
+      "2": 31
+    },
+    "AGM-65K*2,Mk20*6,AIM-9*2,ECM": {
+      "1": 31
+    },
+    "Mk-82*6,AIM-9*2,ECM": {
+      "1": 32
+    },
+    "Mk20*6,AIM-9*2,ECM": {
+      "1": 31
+    },
+    "AGM-65D*4,AIM-9*2,ECM": {
+      "1": 31
+    },
+    "AGM-65K, AGM-65D": {
+      "1": 32,
+      "2": 31
+    },
+    "ECM": {
+      "1": 16
+    },
+    "Mk-82*6, Mk-84*2": {
+      "1": 32
+    },
+    "Mk20*8": {
+      "1": 31
+    },
+    "AGM-65K*2,Mk-84*2,AIM-9*2,ECM": {
+      "1": 31
+    },
+    "AGM-65K*2,Mk-82*6,AIM-9*2,ECM": {
+      "1": 31
+    },
+    "Mk-84*2,AIM-9*2,ECM": {
+      "1": 32
+    },
+    "AGM-65K*2,Mk84*2,Mk82*4,AIM-9M*2,ECM": {
+      "1": 30
+    },
+    "AGM-65H*6,Mk82*10,AIM-9M*2,ECM": {
+      "1": 30
+    }
+  },
+  "A-10C": {
+    "LAU-68 42 rkt M156 WP, AIM-9*2, ECM": {
+      "1": 16
+    },
+    "AGM-65D*4, CBU-97*2, CBU-87*2, TGP, ECM, AIM-9*2": {
+      "1": 31
+    },
+    "LAU-131 98 rkt M156 WP, AIM-9*2,ECM": {
+      "1": 16
+    },
+    "SUU-25*9,AIM-9*2,ECM": {
+      "1": 16
+    },
+    "AGM-65D*4, CBU-97*4,TGP, ECM, AIM-9*2": {
+      "1": 31
+    },
+    "Mk-82AIR*8,AIM-9*2,ECM": {
+      "1": 34
+    },
+    "MK-84*2,LAU-68*2,AGM-65K*2": {
+      "1": 32
+    },
+    "BDU-33*6, TGM-65H, TGM-65D, TGP, BDU-50LGB*2, CAP-9*1": {
+      "1": 31
+    },
+    "Mk-82*6,Mk-84*2,AIM-9*2,ECM": {
+      "1": 32
+    },
+    "Mk-84*4,AIM-9*2,ECM": {
+      "1": 32
+    },
+    "Mk-82*8,AIM-9*2,ECM": {
+      "1": 32
+    },
+    "BDU-33*12, TGP, CAP-9*1": {
+      "1": 31
+    },
+    "AGM-65D*4,Mk-82AIR*2,CBU-87*2,AIM-9M*2,ECM,TGP": {
+      "1": 31
+    },
+    "AGM-65D*4,GBU-12*2,GBU-38,Mk-82,AIM-9,TGP,ECM": {
+      "1": 31
+    },
+    "AGM-65D*2, AGM-65H*2, CBU-97*2, CBU-87*2, TGP, ECM, AIM-9*2": {
+      "1": 31
+    },
+    "BDU-50HD*6,Mk1*7,TGP, CAP-9*1": {
+      "1": 31
+    },
+    "AGM-65H*4, CBU-97*4,TGP, ECM, AIM-9*2": {
+      "1": 31
+    },
+    "AGM-65D*2,AGM-65H*2,Mk-82AIR*2,CBU-87*2,AIM-9M*2,ECM,TGP": {
+      "1": 31
+    },
+    "AGM-65K*2,GBU-38*4,AIM-9*2,TGP,ECM": {
+      "1": 31,
+      "2": 32
+    },
+    "BDU-33*6, TGP, CAP-9*1": {
+      "1": 31,
+      "2": 32
+    },
+    "AGM-65D*2,AGM-65H*2,GBU-12*2,GBU-38*2,AIM-9*2,TGP,ECM,MK151*7": {
+      "1": 31
+    },
+    "TGP": {
+      "1": 31
+    },
+    "BDU-33*6, TGP, CAP-9*1, BDU-50LD*2": {
+      "1": 31
+    },
+    "GBU-12*6,GBU-10*2,TGP, AIM-9*2": {
+      "1": 31
+    },
+    "TGP, CBU-87*3, M151*28, AIM-9*2, ECM": {
+      "1": 31
+    },
+    "AGM-65D*4,Mk-82*6,CBU-87*2,TGP,AIM-9*2,Mk151*7": {
+      "1": 31
+    },
+    "PGM- GBU-10*2,GBU-12*4,AIM-9*2,TGP,ECM": {
+      "1": 31,
+      "2": 32
+    },
+    "AGM-65D*4,TGP, ECM, AIM-9*2": {
+      "1": 31
+    },
+    "TGP, CAP-9*1, CATM-65K*1, TGM-65G*1": {
+      "1": 31
+    },
+    "AGM-65G*2,GBU-31*2,AIM-9*2,TGP,ECM": {
+      "1": 31
+    },
+    "TGP, M151*14, Mk-82*2, Mk-82AIR*2, AIM-9*2, ECM": {
+      "1": 31
+    },
+    "PGM- GBU-10*4, AGM-65K*2,AIM-9*2,TGP,ECM": {
+      "1": 31
+    },
+    "AGM-65D*2,AGM-65H*2,Mk-82AIR*6,CBU-87*2,Mk151*7,AIM-9*2,TGP,ECM": {
+      "1": 31
+    },
+    "GBU-31*2,GBU-38*2, AGM-65H*2, AIM-9*2,TGP, ECM": {
+      "1": 31
+    },
+    "CBU-103*4, M151*14, AIM-9*2, ECM": {
+      "1": 31
+    },
+    "CBU-87*4, M151*42, AIM-9*2, ECM": {
+      "1": 31
+    },
+    "AGM-65D*6, CBU-97*4,TGP, ECM, AIM-9*2": {
+      "1": 31
+    },
+    "CBU-87*2, M151*14, MK-82AIR*6, AIM-9*2,ECM": {
+      "1": 31
+    },
+    "AGM-65D*4, CBU-105*4,TGP, ECM, AIM-9*2": {
+      "1": 31
+    },
+    "BDU-50HD*2,BDU-50LGB*2,TGP, CAP-9*1": {
+      "1": 31,
+      "2": 32
+    },
+    "CBU-87*4, M151*28, AIM-9*2,ECM": {
+      "1": 31
+    },
+    "M151*98, Mk-82*2,AIM-9*2,ECM": {
+      "1": 31,
+      "2": 32
+    },
+    "AGM-65D*2,AGM-65H*2,GBU-12,GBU-38,MK82*3,MK82AIR*3,MK5*7,TGP,AM-9*2": {
+      "1": 31
+    },
+    "TGP, M151*42, Mk-82*6, Mk-82AIR*6, AIM-9*2, ECM": {
+      "1": 31
+    },
+    "TGP, M151*84, Mk-82*2,AIM-9*2, ECM": {
+      "1": 31
+    },
+    "BDU-50LD*2, BDU-50HD*2,CATM-65K, TGM-65G, TGP, CAP-9*1": {
+      "1": 31
+    },
+    "TGP, M151*49, Mk-82*2, CBU-87*2, AIM-9*2, ECM": {
+      "1": 31
+    },
+    "TGP, CAP-9*1, BDU-50LGB*4": {
+      "1": 31
+    },
+    "GBU-12*14,TGP, AIM-9*2": {
+      "1": 31
+    },
+    "AGM-65D*3, AGM-65H*3, CBU-97*4,TGP, ECM, AIM-9*2": {
+      "1": 31
+    },
+    "AGM-65D*2,AGM-65H*2,Mk-82AIR*2,CBU-97*2,AIM-9M*2,TGP,ECM": {
+      "1": 31
+    },
+    "AGM-65D*4, CBU-105*2,CBU-97*2, TGP, ECM, AIM-9*2": {
+      "1": 31
+    },
+    "AGM-65D*2,Mk-82*6,AIM-9*2,ECM": {
+      "1": 31
+    },
+    "AGM-65D*2,AGM-65H*2,TGP, ECM, AIM-9*2": {
+      "1": 31
+    },
+    "GBU-38*4,GBU-31*2,TGP, AIM-9*2": {
+      "1": 31
+    },
+    "AGM-65D*4,GBU-12*2,GBU-38*2,AIM-9*2,TGP,ECM,MK5*7": {
+      "1": 31
+    },
+    "AGM-65G,AGM-65K,GBU-10*2,AIM-9*2,TGP,ECM": {
+      "1": 31,
+      "2": 32
+    },
+    "AGM-65G,AGM-65D,Mk-82*7,AIM-9*2,ECM": {
+      "1": 34
+    },
+    "GBU-31*2,GBU-38*4,AIM-9*2,TGP,ECM, AIM-9*2": {
+      "1": 31,
+      "2": 32
+    },
+    "AGM-65K*2,GBU-12*8,AIM-9M*2.ECM,TGP": {
+      "1": 30
+    },
+    "AGM-65D*6,GBU-12*4,AIM-9M*2,ECM,TGP": {
+      "1": 30
+    }
+  },
+  "A-10C_2": {
+    "LAU-68 42 rkt M156 WP, AIM-9*2, ECM": {
+      "1": 16
+    },
+    "AGM-65D*4, CBU-97*2, CBU-87*2, TGP, ECM, AIM-9*2": {
+      "1": 31
+    },
+    "LAU-131 98 rkt M156 WP, AIM-9*2,ECM": {
+      "1": 16
+    },
+    "SUU-25*9,AIM-9*2,ECM": {
+      "1": 16
+    },
+    "AGM-65D*4, CBU-97*4,TGP, ECM, AIM-9*2": {
+      "1": 31
+    },
+    "Mk-82AIR*8,AIM-9*2,ECM": {
+      "1": 34
+    },
+    "MK-84*2,LAU-68*2,AGM-65K*2": {
+      "1": 32
+    },
+    "BDU-33*6, TGM-65H, TGM-65D, TGP, BDU-50LGB*2, CAP-9*1": {
+      "1": 31
+    },
+    "Mk-82*6,Mk-84*2,AIM-9*2,ECM": {
+      "1": 32
+    },
+    "Mk-84*4,AIM-9*2,ECM": {
+      "1": 32
+    },
+    "Mk-82*8,AIM-9*2,ECM": {
+      "1": 32
+    },
+    "BDU-33*12, TGP, CAP-9*1": {
+      "1": 31
+    },
+    "AGM-65D*4,Mk-82AIR*2,CBU-87*2,AIM-9M*2,ECM,TGP": {
+      "1": 31
+    },
+    "AGM-65D*4,GBU-12*2,GBU-38,Mk-82,AIM-9,TGP,ECM": {
+      "1": 31
+    },
+    "AGM-65D*2, AGM-65H*2, CBU-97*2, CBU-87*2, TGP, ECM, AIM-9*2": {
+      "1": 31
+    },
+    "BDU-50HD*6,Mk1*7,TGP, CAP-9*1": {
+      "1": 31
+    },
+    "AGM-65H*4, CBU-97*4,TGP, ECM, AIM-9*2": {
+      "1": 31
+    },
+    "AGM-65D*2,AGM-65H*2,Mk-82AIR*2,CBU-87*2,AIM-9M*2,ECM,TGP": {
+      "1": 31
+    },
+    "AGM-65K*2,GBU-38*4,AIM-9*2,TGP,ECM": {
+      "1": 31,
+      "2": 32
+    },
+    "BDU-33*6, TGP, CAP-9*1": {
+      "1": 31,
+      "2": 32
+    },
+    "AGM-65D*2,AGM-65H*2,GBU-12*2,GBU-38*2,AIM-9*2,TGP,ECM,MK151*7": {
+      "1": 31
+    },
+    "TGP": {
+      "1": 31
+    },
+    "BDU-33*6, TGP, CAP-9*1, BDU-50LD*2": {
+      "1": 31
+    },
+    "GBU-12*6,GBU-10*2,TGP, AIM-9*2": {
+      "1": 31
+    },
+    "TGP, CBU-87*3, M151*28, AIM-9*2, ECM": {
+      "1": 31
+    },
+    "AGM-65D*4,Mk-82*6,CBU-87*2,TGP,AIM-9*2,Mk151*7": {
+      "1": 31
+    },
+    "PGM- GBU-10*2,GBU-12*4,AIM-9*2,TGP,ECM": {
+      "1": 31,
+      "2": 32
+    },
+    "AGM-65D*4,TGP, ECM, AIM-9*2": {
+      "1": 31
+    },
+    "TGP, CAP-9*1, CATM-65K*1, TGM-65G*1": {
+      "1": 31
+    },
+    "AGM-65G*2,GBU-31*2,AIM-9*2,TGP,ECM": {
+      "1": 31
+    },
+    "TGP, M151*14, Mk-82*2, Mk-82AIR*2, AIM-9*2, ECM": {
+      "1": 31
+    },
+    "PGM- GBU-10*4, AGM-65K*2,AIM-9*2,TGP,ECM": {
+      "1": 31
+    },
+    "AGM-65D*2,AGM-65H*2,Mk-82AIR*6,CBU-87*2,Mk151*7,AIM-9*2,TGP,ECM": {
+      "1": 31
+    },
+    "GBU-31*2,GBU-38*2, AGM-65H*2, AIM-9*2,TGP, ECM": {
+      "1": 31
+    },
+    "CBU-103*4, M151*14, AIM-9*2, ECM": {
+      "1": 31
+    },
+    "CBU-87*4, M151*42, AIM-9*2, ECM": {
+      "1": 31
+    },
+    "AGM-65D*6, CBU-97*4,TGP, ECM, AIM-9*2": {
+      "1": 31
+    },
+    "CBU-87*2, M151*14, MK-82AIR*6, AIM-9*2,ECM": {
+      "1": 31
+    },
+    "AGM-65D*4, CBU-105*4,TGP, ECM, AIM-9*2": {
+      "1": 31
+    },
+    "BDU-50HD*2,BDU-50LGB*2,TGP, CAP-9*1": {
+      "1": 31,
+      "2": 32
+    },
+    "CBU-87*4, M151*28, AIM-9*2,ECM": {
+      "1": 31
+    },
+    "M151*98, Mk-82*2,AIM-9*2,ECM": {
+      "1": 31,
+      "2": 32
+    },
+    "AGM-65D*2,AGM-65H*2,GBU-12,GBU-38,MK82*3,MK82AIR*3,MK5*7,TGP,AM-9*2": {
+      "1": 31
+    },
+    "TGP, M151*42, Mk-82*6, Mk-82AIR*6, AIM-9*2, ECM": {
+      "1": 31
+    },
+    "TGP, M151*84, Mk-82*2,AIM-9*2, ECM": {
+      "1": 31
+    },
+    "BDU-50LD*2, BDU-50HD*2,CATM-65K, TGM-65G, TGP, CAP-9*1": {
+      "1": 31
+    },
+    "TGP, M151*49, Mk-82*2, CBU-87*2, AIM-9*2, ECM": {
+      "1": 31
+    },
+    "TGP, CAP-9*1, BDU-50LGB*4": {
+      "1": 31
+    },
+    "GBU-12*14,TGP, AIM-9*2": {
+      "1": 31
+    },
+    "AGM-65D*3, AGM-65H*3, CBU-97*4,TGP, ECM, AIM-9*2": {
+      "1": 31
+    },
+    "AGM-65D*2,AGM-65H*2,Mk-82AIR*2,CBU-97*2,AIM-9M*2,TGP,ECM": {
+      "1": 31
+    },
+    "AGM-65D*4, CBU-105*2,CBU-97*2, TGP, ECM, AIM-9*2": {
+      "1": 31
+    },
+    "AGM-65D*2,Mk-82*6,AIM-9*2,ECM": {
+      "1": 31
+    },
+    "AGM-65D*2,AGM-65H*2,TGP, ECM, AIM-9*2": {
+      "1": 31
+    },
+    "GBU-38*4,GBU-31*2,TGP, AIM-9*2": {
+      "1": 31
+    },
+    "AGM-65D*4,GBU-12*2,GBU-38*2,AIM-9*2,TGP,ECM,MK5*7": {
+      "1": 31
+    },
+    "AGM-65G,AGM-65K,GBU-10*2,AIM-9*2,TGP,ECM": {
+      "1": 31,
+      "2": 32
+    },
+    "AGM-65G,AGM-65D,Mk-82*7,AIM-9*2,ECM": {
+      "1": 34
+    },
+    "GBU-31*2,GBU-38*4,AIM-9*2,TGP,ECM, AIM-9*2": {
+      "1": 31,
+      "2": 32
+    },
+    "AGM-65K*2,GBU-12*8,AIM-9M*2.ECM,TGP": {
+      "1": 30
+    },
+    "AGM-65D*6,GBU-12*4,AIM-9M*2,ECM,TGP": {
+      "1": 30
+    },
+    "AGM-65E*2,Mk-82AIR*2,CBU-97*2,AIM-9M*2,ECM,TGP": {
+      "1": 31
+    },
+    "AGM-65E*2,CBU-97*4,AIM-9M*2,ECM,TGP": {
+      "1": 31
+    },
+    "AGM-65E*2,CBU-97*4,AIM-9M*2,ECM,M151 APKWS*7,TGP": {
+      "1": 31
+    },
+    "AGM-65E*2,CBU-105*4,AIM-9M*2,ECM,M151 APKWS*7,TGP": {
+      "1": 31
+    },
+    "Mk-82*4,Mk-8AIR*4,AIM-9*2,ECM": {
+      "1": 32
+    },
+    "Mk-82*20,AIM-9*2,ECM": {
+      "1": 32
+    },
+    "Mk-82*6,AIM-9*2,TGP,ECM": {
+      "1": 32
+    },
+    "Mk-84*6,AIM-9*2,TGP,ECM": {
+      "1": 32
+    },
+    "Mk-82AIR*6,Mk-8AIR*4,M151*1,TGP,AIM-9*2,ECM": {
+      "1": 32
+    },
+    "GBU-38*4,M151 APKWS*7,AGM-65D*1,AGM-65H*1,TGP,AIM-9*2,ECM": {
+      "1": 32
+    },
+    "GBU-38*4,M151 APKWS*7,AGM-65E*2,TGP,AIM-9*2,ECM": {
+      "1": 32
+    },
+    "GBU-12*4,M151 APKWS*7,AGM-65E*2,TGP,AIM-9*2,ECM": {
+      "1": 32
+    },
+    "GBU-12*2,GBU-38*2,M151 APKWS*7,AGM-65E*2,TGP,AIM-9*2,ECM": {
+      "1": 32
+    },
+    "GBU-10*2,M151 APKWS*7,AGM-65E*2,TGP,AIM-9*2,ECM": {
+      "1": 32
+    },
+    "GBU-31*2,M151 APKWS*7,AGM-65E*2,TGP,AIM-9*2,ECM": {
+      "1": 32
+    },
+    "GBU-54*4,M151 APKWS*7,AGM-65E*2,TGP,AIM-9*2,ECM": {
+      "1": 32
+    },
+    "GBU-54*4,M151 APKWS*7,AGM-65D*4,TGP,AIM-9*2,ECM": {
+      "1": 32
+    }
+  },
+  "AH-64D_BLK_II": {
+    "4 * Fuel Tank 230 gal": {
+      "1": 16,
+      "2": 30,
+      "3": 31,
+      "4": 18,
+      "5": 32
+    },
+    "2 * M261: M151 (6PD), 2 * Hellfire station: 4*AGM-114K": {
+      "1": 16,
+      "2": 30,
+      "3": 31,
+      "4": 18,
+      "5": 32
+    },
+    "4 * Hellfire station: 4*AGM-114K": {
+      "1": 16,
+      "2": 30,
+      "3": 31,
+      "4": 18,
+      "5": 32
+    },
+    "4 * M261: M151 (6PD)": {
+      "1": 16,
+      "2": 30,
+      "3": 31,
+      "4": 18,
+      "5": 32
+    },
+    "2 * M261: M151 (6PD), 2 * Fuel Tank 230 gal": {
+      "1": 16,
+      "2": 30,
+      "3": 31,
+      "4": 18,
+      "5": 32
+    },
+    "2 * Fuel Tank 230 gal, 2 * Hellfire station: 4*AGM-114K": {
+      "1": 16,
+      "2": 30,
+      "3": 31,
+      "4": 18,
+      "5": 32
+    },
+    "2 * M261: A/B - M151 (6PD), E - M274 (6SK), 2 * Hellfire station: 4*AGM-114K": {
+      "1": 16,
+      "2": 30,
+      "3": 31,
+      "4": 18,
+      "5": 32
+    },
+    "2 * M261: A/B - M151 (6PD), E - M257 (6IL), 2 * Hellfire station: 4*AGM-114K": {
+      "1": 16,
+      "2": 30,
+      "3": 31,
+      "4": 18,
+      "5": 32
+    },
+    "2 * M261: C - M257 (6IL), D/E - M151 (6PD), 2 * Hellfire station: 4*AGM-114K": {
+      "1": 16,
+      "2": 30,
+      "3": 31,
+      "4": 18,
+      "5": 32
+    },
+    "2 * M261: C - M274 (6SK), D/E - M151 (6PD), 2 * Hellfire station: 4*AGM-114K": {
+      "1": 16,
+      "2": 30,
+      "3": 31,
+      "4": 18,
+      "5": 32
+    }
+  },
+  "AJS37": {
+    "Battlefield Air Interdiction: RB-75*4, RB-24J*2, XT": {
+      "1": 32
+    },
+    "Anti-ship: RB-04E*2, RB-74*2, XT": {
+      "1": 30
+    },
+    "Anti-ship (Heavy Mav): RB-75T*4, XT": {
+      "1": 30
+    },
+    "Hard Target (Countermeasures): RB-05, XT, KB, U22": {
+      "1": 32
+    },
+    "Hard Target (MAV): RB-75T*2, RB-74*2, XT": {
+      "1": 32
+    },
+    "Ferry Flight: XT": {
+      "1": 32
+    },
+    "CAS (75 GUN): RB-75*2, AKAN": {
+      "1": 31
+    },
+    "CAP: RB-74*4, XT": {
+      "1": 11
+    },
+    "Countermeasures Escort: U/22A, KB": {
+      "1": 32
+    },
+    "Strike: BK90 (MJ1)*2, RB-74*2, XT": {
+      "1": 32
+    },
+    "CAS: AKAN, RB-05A": {
+      "1": 31
+    },
+    "CAP (6 AAM): RB-74*4, RB-24J*2, XT": {
+      "1": 11
+    },
+    "Rocket Half Load HE: ARAK HE*2, RB-74*2, XT": {
+      "1": 32
+    },
+    "CAP / Intecept: RB-05A*2, RB-74*2, XT": {
+      "1": 11
+    },
+    "Bombs Low-drag: SB71LD*16, RB-24J*2, XT": {
+      "1": 32
+    },
+    "SEAD: RB-75T*2, U22/A, KB, XT": {
+      "1": 32
+    },
+    "Anti-Ship (Modern): RB-15F*2, RB-74*2, XT": {
+      "1": 30
+    },
+    "New Payload": {},
+    "CAP (AJ37): RB-24J*2": {
+      "1": 11
+    },
+    "ECM Escort Anti-ship: RB-04E, KB, RB-74*2, XT": {
+      "1": 30
+    },
+    "Bombs High-drag: SB71HD*16, XT, RB-24J": {
+      "1": 32
+    },
+    "Anti-ship (Light Mav): RB-75*4, XT": {
+      "1": 30
+    },
+    "Rocket Full Load HE:  ARAK HE*4, RB-24J, XT": {
+      "1": 32
+    },
+    "Illumination: LYSB*8, XT": {
+      "1": 32
+    },
+    "Anti-ship (RB05): RB-05A*2, RB-74*2, XT": {
+      "1": 30
+    },
+    "CAP (Gun): AKAN*2, RB-74*2, XT": {
+      "1": 11
+    },
+    "Hard Target: RB-05A*2, RB-74*2, XT": {
+      "1": 32
+    },
+    "RB-05*2, XT": {
+      "1": 32
+    },
+    "CAS: ARAK M70 HE*4, XT": {
+      "1": 31
+    },
+    "Runway Strike: SB71HD*16, RB-24J, XT": {
+      "1": 34
+    }
+  },
+  "AV8BNA": {
+    "H-L-H: Mk-82SEx6, GAU-12": {
+      "1": 31
+    },
+    "AFAC: AIM-9Mx2, SUU-25x2, LAU-68 (7 WP Tkts)x2, TPOD": {
+      "1": 16
+    },
+    "AS: AGM-122, AIM-9M, GBU-12, GBU-16x2, TPOD, Jammer Pod, GAU-12": {
+      "1": 30
+    },
+    "H-M-H: AIM-9M, AGM-122, GBU-38x4, Fuel Tankx2": {
+      "1": 31
+    },
+    "Interdiction (H-H-H-H): AIM-9Mx2, Mk-83LDx6, Jammer Pod, GAU-12": {
+      "1": 32
+    },
+    "Interdiction (H-H-H-H): AIM-9Mx2, Mk-83LDx4, Jammer Pod, GAU-12, Fuel Tankx2": {
+      "1": 32
+    },
+    "AFAC: AIM-9m, AGM-122, SUU-25x2, LAU-68 (7 WP Tkts)x2, Jammer Pod": {
+      "1": 16
+    },
+    "Interdiction (H-L-L-H): AIM-9Mx2, Mk-82SEx8, Jammer Pod, GAU-12": {
+      "1": 32
+    },
+    "H-M-H: Mk-82LDx6, GAU-12": {
+      "1": 31
+    },
+    "PGM (H-H-H-H): GBU-12x4, TPOD, Fuel Tankx2": {
+      "1": 33
+    },
+    "L-L-L: Mk-82SEx10, Jammer Pod, GAU-12": {
+      "1": 31
+    },
+    "AFAC: AIM-9Mx2, SUU-25x2, LAU-68 LAU-68 (7 WP Tkts)x2, GAU-12": {
+      "1": 16
+    },
+    "H-M-H: Mk-82LDx10, GAU-12": {
+      "1": 31
+    },
+    "Area Suppression: Mk-20x10, GAU-12": {
+      "1": 31
+    },
+    "Rockets: LAU-10 (4 HE Rkts)x2, LAU-68 (7 HE Rkts)x2": {
+      "1": 31
+    },
+    "AS: AIM-9M, AGM-122, AGM-65Fx2, GBU-12, TPOD, Jammer Pod, GAU-12": {
+      "1": 30
+    },
+    "Helo Escort: AIM-9Mx4, Jammer Pod, GAU-12": {
+      "1": 18
+    },
+    "PGM (H-H-H-H): GBU-12x5, TPOD, Jammer POd, GAU-12": {
+      "1": 33
+    },
+    "Helo Escort: AIM-9Mx4, Jammer Pod, GAU-12, Fuel Tankx2": {
+      "1": 18
+    },
+    "PGM (H-H-H-H): AIM-9Mx2, GBU-16x4, TPOD, GAU-12": {
+      "1": 33
+    },
+    "Anti Armor: AIM-9Mx2, AGM-65Fx4, GAU-12": {
+      "1": 33
+    },
+    "RA (H-M-M-H): AIM-9M, AGM-122, Mk-83LDx6, Jammer Pod, GAU-12": {
+      "1": 34
+    },
+    "Stand Off: AIM-9M, AGM-122, AGM-65Fx4, Jammer Pod, GAU-12": {
+      "1": 29
+    },
+    "Stand Off: AIM-9M, AGM-122x3, AGM-65Fx2, Jammer Pod, GAU-12": {
+      "1": 29
+    },
+    "Stand Off: AIM-9Mx2, AGM-122x2, AGM-65Fx2, Jammer Pod, GAU-12": {
+      "1": 29
+    },
+    "Iron Hand: AIM-9Mx1, AGM-122x3, LAU-68 (7 HE Rkts)x2, Jammer Pod, GAU-12": {
+      "1": 29
+    },
+    "Iron Hand: AIM-9M, AGM-122x3, Mk-20x4, Jammer Pod, GAU-12": {
+      "1": 29
+    },
+    "AS: AIM-9M, AGM-122, AGM-65E2x2, GBU-12, TPOD, Jammer Pod, GAU-12": {
+      "1": 30
+    },
+    "PGM: AIM-9M, AGM-122, AGM-65E2x4, TPOD": {
+      "1": 33
+    },
+    "PGM: AIM-9M, AGM-122, APKWSIIx4, TPOD": {
+      "1": 33
+    }
+  },
+  "C-101CC": {
+    "2*AIM-9P, DEFA 553 CANNON (I)": {
+      "1": 11
+    },
+    "2*AIM-9M, DEFA 553 CANNON (I)": {
+      "1": 11
+    },
+    "2*AIM-9P, DEFA 533 CANNON (II)": {
+      "1": 18
+    },
+    "2*AIM-9P, AN-M3 CANNON (IV)": {
+      "1": 17
+    },
+    "2*R.550 MAGIC, DEFA 553 CANNON": {
+      "1": 19
+    },
+    "2*AIM-9M, AN-M3 CANNON (III)": {
+      "1": 10
+    },
+    "2*AIM-9P, DEFA 553 CANNON": {
+      "1": 19
+    },
+    "2*R.550 MAGIC, DEFA 553 CANNON (III)": {
+      "1": 10
+    },
+    "2*AIM-9P, 2*BELOUGA, DEFA 553 CANNON": {
+      "1": 31
+    },
+    "2*AIM9-P, 2*SEA EAGLE, DEFA-553 CANNON": {
+      "1": 30
+    },
+    "2*AIM-9M 2*SEA EAGLE, AN-M3 CANNON": {
+      "1": 30
+    },
+    "2*AIM-9M, AN-M3 CANNON": {
+      "1": 19
+    },
+    "2*BELOUGA,2*BDU-33, DEFA-553 CANNON": {
+      "1": 32
+    },
+    "2* SEA EAGLE, DEFA-553 CANNON": {
+      "1": 30
+    },
+    "2*AIM-9P, 2*BR-250,2*MK-82, DEFA 553 CANNON": {
+      "1": 31
+    },
+    "2*R.550 MAGIC, 2*SEA EAGLE , DEFA-553 CANNON": {
+      "1": 30
+    },
+    "2*R.550 MAGIC, DEFA 553 CANNON (IV)": {
+      "1": 17
+    },
+    "2*BELOUGA, 2*BR-500, DEFA 553 CANNON": {
+      "1": 34
+    },
+    "2*AIM-9M, DEFA 553 CANNON (IV)": {
+      "1": 17
+    },
+    "2*R.550 MAGIC, AN-M3 CANNON (II)": {
+      "1": 18
+    },
+    "2*R550 Magic, DEFA 553 CANNON (I)": {
+      "1": 11
+    },
+    "2*AIM-9M ,2*BELOUGA,2*BIN-200, AN-M3 CANNON": {
+      "1": 31
+    },
+    "2*AIM-9M, 2*LAU 68, 2*MK-82, DEFA 553 CANNON": {
+      "1": 31
+    },
+    "2*AIM-9P, AN-M3 CANNON (III)": {
+      "1": 10
+    },
+    "2*AIM-9M, DEFA 533 CANNON (II)": {
+      "1": 18
+    },
+    "2*R.550 MAGIC, 2*BR-250, 2*BDU-33, DEFA 553 CANNON": {
+      "1": 31
+    }
+  },
+  "C-101EB": {
+    "Smoke System: White Smoke": {
+      "1": 17
+    },
+    "Smoke System: White Smoke+Red Colorant": {
+      "1": 17
+    },
+    "Smoke System: White Smoke+Yellow Colorant": {
+      "1": 17
+    }
+  },
+  "H-6J": {
+    "YJ-12 x 2": {
+      "1": 30
+    },
+    "YJ-12 x 4": {
+      "1": 30
+    },
+    "YJ-83K x 6": {
+      "1": 30
+    },
+    "250-2 HD Bomb x 12 in Bay": {
+      "1": 32
+    },
+    "250-2 HD Bomb x 24 in Bay": {
+      "1": 32
+    },
+    "250-3 LD Bomb x 36": {
+      "1": 32
+    },
+    "KD-63 x 4": {
+      "1": 33
+    },
+    "KD-20 x 6": {
+      "1": 33
+    },
+    "KD-20 x 4": {
+      "1": 33
+    },
+    "KD-63 x 2, KD-20 x 4": {
+      "1": 33
+    },
+    "KD-63 x 2, KD-20 x 2": {
+      "1": 33
+    }
+  },
+  "J-11A": {
+    "FAB-100x36,R-73x2,ECM": {
+      "1": 32
+    },
+    "FAB-250x8,R-73x2,ECM": {
+      "1": 32
+    },
+    "FAB-500x8,R-73x2,ECM": {
+      "1": 32
+    },
+    "S-8KOMx80,FAB-250x4,R-73x2,ECM": {
+      "1": 32
+    },
+    "S-13x20,FAB-250x4,R-73x2,ECM": {
+      "1": 32
+    },
+    "S-25x4,FAB-500x4,R-73x2,ECM": {
+      "1": 32,
+      "2": 30
+    },
+    "R-27ERx4,R-27ETx2,R-73x2,ECM": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "R-77x6,R-73x2,ECM": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "R-27ERx6,R-73x2,ECM": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "R-77x4,R-27ETx2,R-73x2,ECM": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "R-77x4,R-27ERx2,R-73x2,ECM": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "BetAB-500ShPx6,R-73x2,ECM": {
+      "1": 34
+    },
+    "R-73x4,ECM": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "R-77x2,R-27ETx2,R-73x2,ECM": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "R-77x6,R-73x4": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "R-77x2,R-27ETx2,R-27ERx2,R-73x2,ECM": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "R-27ETx2,R-27ERx4,R-73x2,ECM": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "S-8TsMx80,FAB-250x4,R-73x2,ECM": {
+      "1": 32
+    },
+    "S-8OFP2x80,FAB-250x4,R-73x2,ECM": {
+      "1": 32
+    },
+    "FAB-250x18,R-73x2,ECM": {
+      "1": 32
+    },
+    "2*S8-KOMx2, R-73x2, ECM": {
+      "1": 31
+    },
+    "2*S8-OFP2x2, R-73x2, ECM": {
+      "1": 31
+    },
+    "FAB-250x4, 2*FAB-500x2, R-73x2": {
+      "1": 31
+    },
+    "FAB-250x4, 2*FAB-250x2, R-73x2": {
+      "1": 31
+    },
+    "RBK-250 HEAT/APx2, RBK-250 HE/Fragx2, R-73x2": {
+      "1": 31
+    }
+  },
+  "JF-17": {
+    "PL-5Ex2, C802AKx2, 800L Tank": {
+      "1": "tAntiShip"
+    },
+    "PL-5Ex2, C-701 IRx2, 1100L Tank, 800L Tank": {
+      "1": "tGndAttack"
+    },
+    "PL-5Ex2, SD-10x2, 1100L Tankx2, WMD7": {
+      "1": "tAFAC"
+    },
+    "PL-5Ex2, LD-10x2, 1100L Tankx2, WMD7": {
+      "1": "tAFAC"
+    },
+    "PL-5Ex2, 800L Tank, WMD7": {
+      "1": "tRecon"
+    },
+    "PL-5Ex2, GBU-10x2, WMD7": {
+      "1": "tGndAttack"
+    },
+    "PL-5Ex2, 2*GBU-12x2, 800L Tank, WMD7": {
+      "1": "tGndAttack"
+    },
+    "PL-5Ex2, 2*Mk-82x2, Mk-83x2, 800L Tank": {
+      "1": "tRwyAttack"
+    },
+    "PL-5Ex2, 1100L Tankx2, 800L Tank": {
+      "1": "tCAP"
+    },
+    "PL-5Ex2, WMD7, CM802AKGx2, 800L Tank, DL": {
+      "1": "tGndAttack"
+    },
+    "PL-5Ex2, C-701 CCDx2, 1100L Tank, 800L Tank": {
+      "1": "tGndAttack"
+    },
+    "PL-5Ex2, GBU-12x2, 1100L Tank, WMD7": {
+      "1": "tGndAttack"
+    },
+    "PL-5Ex2, 2*GBU-12x2, GBU-16x2, WMD7": {
+      "1": "tCAS",
+      "2": "tGndAttack",
+      "3": "tAFAC"
+    },
+    "PL-5Ex2, 1100L Tankx2, WMD7": {
+      "1": "tRecon"
+    },
+    "PL-5Ex2, WMD7, 800L Tankx2, SPJ, 2*LD-10": {
+      "1": "tRecon"
+    },
+    "PL-5Ex2, LS-6x2, 1100L Tankx2, WMD7": {
+      "1": "tAFAC"
+    },
+    "PL-5Ex2, C-701 IRx2, 1100L Tankx2, WMD7": {
+      "1": "tCAS"
+    },
+    "PL-5Ex2, GBU-12x2, 1100L Tankx2, WMD7": {
+      "1": "tAFAC"
+    },
+    "PL-5Ex2, 2*LD-10x2, 1100L Tankx2, SPJ": {
+      "1": "tSEAD"
+    },
+    "PL-5Ex2, LD-10x2, 1100L Tankx2, SPJ": {
+      "1": "tSEAD"
+    },
+    "PL-5Ex2, 2*LD-10x2, LS-6x2, SPJ": {
+      "1": "tSEAD"
+    },
+    "PL-5Ex2, 2*LD-10x2, GB-6-HEx2, SPJ": {
+      "1": "tSEAD"
+    },
+    "PL-5Ex2, C-701 IRx2, 800L Tankx2, WMD7": {
+      "1": "tCAS"
+    },
+    "PL-5Ex2, C-701 CCDx2, 1100L Tankx2, WMD7": {
+      "1": "tCAS"
+    },
+    "PL-5Ex2, C-701 CCDx2, 800L Tankx2, WMD7": {
+      "1": "tCAS"
+    },
+    "PL-5Ex2, 2*GBU-12x2, 1100L Tank, WMD7": {
+      "1": "tPinpntStrike"
+    },
+    "PL-5Ex2, C-701 IRx2, 1100L Tank, WMD7": {
+      "1": "tPinpntStrike"
+    },
+    "PL-5Ex2, C-701 IRx2, 800L Tank, WMD7": {
+      "1": "tPinpntStrike"
+    },
+    "PL-5Ex2, C-701 CCDx2, 1100L Tank, WMD7": {
+      "1": "tPinpntStrike"
+    },
+    "PL-5Ex2, C-701 CCDx2, 800L Tank, WMD7": {
+      "1": "tPinpntStrike"
+    },
+    "PL-5Ex2, C-701 IRx2, LS-6x2, 800L Tank": {
+      "1": "tPinpntStrike"
+    },
+    "PL-5Ex2, C-701 IR/CCD, GB-6-HEx2, 800L Tank": {
+      "1": "tPinpntStrike"
+    },
+    "PL-5Ex2, C-701 IR/CCD, GB-6-SFWx2, 800L Tank": {
+      "1": "tPinpntStrike"
+    },
+    "PL-5Ex2, WMD7, GB-6-SFWx2, 800L Tank, BRM1": {
+      "1": "tCAS"
+    },
+    "PL-5Ex2, WMD7, GB-6-SFWx2, 800L Tank, GBU-12": {
+      "1": "tCAS"
+    },
+    "PL-5Ex2, 2*Mk-82SEx2, Mk-83x3": {
+      "1": "tRwyAttack"
+    },
+    "PL-5Ex2, Mk-84x3": {
+      "1": "tRwyAttack"
+    },
+    "PL-5Ex2, 2*Mk5x2, 800L Tank": {
+      "1": "tGndAttack"
+    },
+    "PL-5Ex2, Unguided 90mmx2, 800L Tank": {
+      "1": "tGndAttack"
+    },
+    "PL-5Ex2, 2*Mk5x2, Mk-83x3": {
+      "1": "tGndAttack"
+    },
+    "PL-5Ex2, BRM1x2, 1100L Tank, WMD7": {
+      "1": "tGndAttack"
+    },
+    "PL-5Ex2, 2x1100L Tank": {
+      "1": "tIntercept",
+      "2": "tCAP",
+      "3": "tFighterSweep"
+    },
+    "PL-5Ex2, SD-10x2, 2x1100L Tank": {
+      "1": "tIntercept",
+      "2": "tCAP",
+      "3": "tFighterSweep"
+    },
+    "PL-5Ex2, 2*SD-10x2, 2x1100L Tank": {
+      "1": "tIntercept",
+      "2": "tCAP",
+      "3": "tFighterSweep"
+    },
+    "PL-5Ex2, 800L Tank": {
+      "1": "tIntercept",
+      "2": "tCAP",
+      "3": "tFighterSweep"
+    },
+    "PL-5Ex2, SD-10x2, 800L Tank": {
+      "1": "tIntercept",
+      "2": "tCAP",
+      "3": "tFighterSweep"
+    },
+    "PL-5Ex2, 2*SD-10x2, 800L Tank": {
+      "1": "tIntercept",
+      "2": "tCAP",
+      "3": "tFighterSweep"
+    },
+    "PL-5Ex2, SD-10x2, SPJ": {
+      "1": "tFighterSweep"
+    },
+    "PL-5Ex2, SPJ": {
+      "1": "tFighterSweep"
+    },
+    "PL-5Ex2, 2*SD-10x2, SPJ": {
+      "1": "tFighterSweep"
+    },
+    "PL-5Ex2": {
+      "1": "tFighterSweep"
+    },
+    "PL-5Ex2, SD-10x2": {
+      "1": "tFighterSweep"
+    },
+    "PL-5Ex2, 2*SD-10": {
+      "1": "tFighterSweep"
+    },
+    "PL-5Ex2, SD-10x2, SPJ, 1100L Tankx2": {
+      "1": "tIntercept",
+      "2": "tCAP",
+      "3": "tFighterSweep"
+    },
+    "PL-5Ex2, 2*SD-10x2, 1100L Tankx2, 800L Tank": {
+      "1": "tIntercept",
+      "2": "tCAP",
+      "3": "tFighterSweep"
+    },
+    "PL-5Ex2, SD-10x2, 1100L Tankx2, 800L Tank": {
+      "1": "tCAP",
+      "2": "tEscort"
+    },
+    "PL-5Ex2, GBU-16x2, BRM1x2, WMD7": {
+      "1": "tAFAC",
+      "2": "tCAS",
+      "3": "tGndAttack"
+    },
+    "PL-5Ex2, WMD7": {
+      "1": "tRecon"
+    },
+    "PL-5Ex2, 2*LD-10, GB-6x2, 2*SD-10, SPJ": {
+      "1": "tSEAD"
+    },
+    "PL-5Ex2, C-701 CCDx2, SPJ": {
+      "1": "tSEAD"
+    },
+    "PL-5Ex2, 2*LD-10, CM802AKGx2, 2*SD-10, DL": {
+      "1": "tSEAD"
+    },
+    "PL-5Ex2, 2*MK-82x2, MK-83x2, MK-84": {
+      "1": "tCAS",
+      "2": "tGndAttack"
+    },
+    "PL-5Ex2, LS-6x2, GB-6x2, 800L Tank": {
+      "1": "tPinpntStrike",
+      "2": "tRwyAttack"
+    },
+    "PL-5Ex2, 2*GBU-12x2, LS-6x2, WMD7": {
+      "1": "tPinpntStrike"
+    },
+    "PL-5Ex2, 2*GBU-12x2, GB-6x2, WMD7": {
+      "1": "tPinpntStrike"
+    },
+    "PL-5Ex2, 2*Type-200Ax2": {
+      "1": "tRwyAttack"
+    },
+    "PL-5Ex2, Type-200Ax2": {
+      "1": "tRwyAttack"
+    },
+    "PL-5Ex2, 2*LS6-250x2, 800L Tankx2, WMD7": {
+      "1": "tGndAttack"
+    },
+    "PL-5Ex2, 2*LS6-250x2, 800L Tank, 1100L Tankx2": {
+      "1": "tGndAttack"
+    },
+    "PL-5Ex2, 2*LS6-100x2, 1100L Tankx2, WMD7": {
+      "1": "tCAS"
+    },
+    "PL-5Ex2, 2*LS6-100x2, 800L Tankx2, WMD7": {
+      "1": "tCAS"
+    }
+  },
+  "WingLoong-I": {
+    "AKD-10 x 2": {
+      "1": 31,
+      "2": 32
+    }
+  },
+  "Christen Eagle II": {
+    "Smoke - white": {
+      "1": 15,
+      "2": 35,
+      "3": 17
+    }
+  },
+  "F-16C_50": {
+    "AIM-120B*2, AIM-9M*4, FUEL*3": {
+      "1": 11
+    },
+    "AIM-120B*4, AIM-9M*2, FUEL*3": {
+      "1": 11
+    },
+    "AIM-120B*6, FUEL*3": {
+      "1": 11
+    },
+    "AIM-120C*2, AIM-9X*4, FUEL*2": {
+      "1": 11
+    },
+    "AIM-120C*4, AIM-9X*2, FUEL*3": {
+      "1": 11
+    },
+    "AIM-120C*4, AIM-9X*2, FUEL*3, TGP": {
+      "1": 11
+    },
+    "AIM-120C*4, AIM-9X*2, FUEL*2": {
+      "1": 11
+    },
+    "AIM-120C*6, FUEL*3": {
+      "1": 11
+    },
+    "AIM-120C*4, AIM-9X*2, FUEL*2, ECM": {
+      "1": 18,
+      "2": 19,
+      "3": 10,
+      "4": 11
+    },
+    "AIM-120C*4, AIM-9X*2, FUEL*2, ECM, TGP": {
+      "1": 18,
+      "2": 19,
+      "3": 10,
+      "4": 11
+    },
+    "AIM-120C*6, FUEL*2, ECM": {
+      "1": 18,
+      "2": 19,
+      "3": 10,
+      "4": 11
+    },
+    "AIM-120C*6, FUEL*2, ECM, TGP": {
+      "1": 18,
+      "2": 19,
+      "3": 10,
+      "4": 11
+    },
+    "AIM-120C*6, FUEL*2": {
+      "1": 18
+    },
+    "AIM-120C*6, FUEL*3, TGP": {
+      "1": 18
+    },
+    "AIM-120C*2, AIM-9X*2, AGM-65D*2, FUEL*2, ECM, TGP": {
+      "1": 31,
+      "2": 32
+    },
+    "AIM-120C*2, AIM-9X*2, AGM-65H*2, FUEL*2, ECM, TGP": {
+      "1": 30,
+      "2": 31,
+      "3": 32
+    },
+    "AIM-120C*2, AIM-9X*2, AGM-65H*4, FUEL*2, ECM, TGP": {
+      "1": 30,
+      "2": 31,
+      "3": 32,
+      "4": 34
+    },
+    "AIM-120C*2, AIM-9X*2, AGM-65D*4, FUEL*2, ECM, TGP": {
+      "1": 30,
+      "2": 31,
+      "3": 32,
+      "4": 34
+    },
+    "AIM-120C*2, AIM-9X*2, CBU-97*4, FUEL*2, ECM, TGP": {
+      "1": 30,
+      "2": 31,
+      "3": 32,
+      "4": 34
+    },
+    "AIM-120C*2, AIM-9X*2, MK-82*4, FUEL*2, ECM, TGP": {
+      "1": 30,
+      "2": 31,
+      "3": 32,
+      "4": 34
+    },
+    "AIM-120C*2, AIM-9X*2, CBU-87*4, FUEL*2, ECM, TGP": {
+      "1": 30,
+      "2": 31,
+      "3": 32,
+      "4": 34
+    },
+    "AIM-120C*2, AIM-9X*2, MK-82HD*4, FUEL*2, ECM, TGP": {
+      "1": 30,
+      "2": 31,
+      "3": 32,
+      "4": 34
+    },
+    "AIM-120C*2, AIM-9X*2, CBU-103*4, FUEL*2, ECM, TGP": {
+      "1": 30,
+      "2": 31,
+      "3": 32,
+      "4": 34
+    },
+    "AIM-120C*2, AIM-9X*2, CBU-105*4, FUEL*2, ECM, TGP": {
+      "1": 30,
+      "2": 31,
+      "3": 32,
+      "4": 34
+    },
+    "AIM-120C*2, AIM-9X*2, MK-82*6, FUEL*2, ECM, TGP": {
+      "1": 30,
+      "2": 31,
+      "3": 32,
+      "4": 34
+    },
+    "AIM-120C*2, AIM-9X*2, MK-82HD*6, FUEL*2, ECM, TGP": {
+      "1": 30,
+      "2": 31,
+      "3": 32,
+      "4": 34
+    },
+    "AIM-120*2, AIM-9X*2, MK-82SE*4, FUEL*2, ECM, TGP": {
+      "1": 34
+    },
+    "AIM-120*2, AIM-9X*2, MK-82SE*6, FUEL*2, ECM, TGP": {
+      "1": 34
+    },
+    "AIM-120C*2, AIM-9X*2, MK-84*2, FUEL*2, ECM, TGP": {
+      "1": 32
+    },
+    "AIM-120C*2, AIM-9X*2, MK-82P*4, FUEL*2, ECM, TGP": {
+      "1": 32
+    },
+    "AIM-120C*2, AIM-9X*2, GBU-12*2, FUEL*2, ECM, TGP": {
+      "1": 33
+    },
+    "AIM-120C*2, AIM-9X*2, GBU-12*4, FUEL*2, ECM, TGP": {
+      "1": 33
+    },
+    "AIM-120C*2, AIM-9X*2, GBU-10*2, FUEL*2, ECM, TGP": {
+      "1": 33
+    },
+    "AIM-120C*2, AIM-9X*2, GBU-24*2, FUEL*2, ECM, TGP": {
+      "1": 33
+    },
+    "AIM-120C*2, AIM-9X*2, GBU-31-1B*2, FUEL*2, ECM, TGP": {
+      "1": 33
+    },
+    "AIM-120C*2, AIM-9X*2, GBU-31-3B*2, FUEL*2, ECM, TGP": {
+      "1": 33
+    },
+    "AIM-120C*2, AIM-9X*2, GBU-38*2, FUEL*2, ECM, TGP": {
+      "1": 33
+    },
+    "AIM-120C*2, AIM-9X*2, GBU-38*4, FUEL*2, ECM, TGP": {
+      "1": 33
+    },
+    "AIM-120C*2, AIM-9X*2, AGM-65K*2, FUEL*2, ECM, TGP": {
+      "1": 33
+    },
+    "AIM-120C*2, AIM-9X*2, AGM-65G*2, FUEL*2, ECM, TGP": {
+      "1": 33
+    },
+    "AIM-120C*2, AIM-9X*2, AGM-65G, AGM-65K, FUEL*2, ECM, TGP": {
+      "1": 33
+    },
+    "AIM-120C*2, AIM-9X*2, AGM-88C*2, FUEL*3, TGP, HTS": {
+      "1": 29
+    },
+    "AIM-120C*2, AIM-9X*2, AGM-88C*2, FUEL*2, ECM, TGP, HTS": {
+      "1": 29
+    },
+    "AIM-120C*2, AIM-9X*2, AGM-88C*4, ECM, TGP, HTS": {
+      "1": 29
+    },
+    "AIM-120C*4, AGM-88C*2, FUEL*3, TGP, HTS": {
+      "1": 29
+    },
+    "AIM-120C*4, AGM-88C*2, FUEL*2, ECM, TGP, HTS": {
+      "1": 29
+    },
+    "AIM-120C*4, AGM-88C*4, ECM, TGP, HTS": {
+      "1": 29
+    },
+    "AIM-120C*2, AIM-9X*2, MK-61*2, FUEL*2, ECM, TGP": {
+      "1": 16
+    }
+  },
+  "F-5E-3": {
+    "Mk-82LD*4,AIM-9P*2,Fuel 275": {
+      "1": 31,
+      "2": 32
+    },
+    "AIM-9P*2, Fuel 275*3": {
+      "1": 11,
+      "2": 18,
+      "3": 19
+    },
+    "AIM-9P5*2, Fuel 275*3": {
+      "1": 11,
+      "2": 18,
+      "3": 19
+    },
+    "AIM-9P*2, Fuel 150*3": {
+      "1": 11,
+      "2": 18,
+      "3": 19
+    },
+    "AIM-9P5*2, Fuel 150*3": {
+      "1": 11,
+      "2": 18,
+      "3": 19
+    },
+    "Mk-82SE*4,AIM-9P*2,Fuel 275": {
+      "1": 31,
+      "2": 32
+    },
+    "CBU-52B*4,AIM-9P*2,Fuel 275": {
+      "1": 31,
+      "2": 32
+    },
+    "LAU-3 HE*4,AIM-9P*2,Fuel 275": {
+      "1": 31,
+      "2": 32
+    },
+    "LAU-3 HEAT*4,AIM-9P*2,Fuel 275": {
+      "1": 31,
+      "2": 32
+    },
+    "LAU-68 HE*4,AIM-9P*2,Fuel 275": {
+      "1": 31,
+      "2": 32
+    },
+    "LAU-68 HEAT*4,AIM-9P*2,Fuel 275": {
+      "1": 31,
+      "2": 32
+    },
+    "M-117*4,AIM-9P*2,Fuel 275": {
+      "1": 31,
+      "2": 32
+    },
+    "GBU-12*4,AIM-9P*2,Fuel 275": {
+      "1": 31,
+      "2": 32
+    },
+    "CBU-52B*5,AIM-9*2": {
+      "1": 31,
+      "2": 32
+    },
+    "Mk-82LD*5,AIM-9*2": {
+      "1": 31,
+      "2": 32
+    },
+    "Mk-82SE*5,AIM-9*2": {
+      "1": 31,
+      "2": 32
+    },
+    "Mk-82LD*7,AIM-9P*2, Fuel 275*2": {
+      "1": 31,
+      "2": 32
+    },
+    "Mk-82SE*7,AIM-9P*2, Fuel 275*2": {
+      "1": 31,
+      "2": 32
+    },
+    "LAU-3 HE*2,Mk-82LD,AIM-9P*2,Fuel 275*2": {
+      "1": 31,
+      "2": 32
+    },
+    "LAU-68 HE*2,Mk-82LD,AIM-9P*2,Fuel 275*2": {
+      "1": 31,
+      "2": 32
+    },
+    "M-117*5,AIM-9*2": {
+      "1": 31,
+      "2": 32
+    },
+    "AIM-9P*2, Fuel 275": {
+      "1": 10,
+      "2": 19
+    },
+    "AIM-9P*2, Fuel 150": {
+      "1": 10,
+      "2": 19
+    },
+    "AIM-9P5*2, Fuel 275": {
+      "1": 10,
+      "2": 19
+    },
+    "AIM-9P5*2, Fuel 150": {
+      "1": 10,
+      "2": 19
+    },
+    "AIM-9B*2, Fuel 275": {
+      "1": 10,
+      "2": 19
+    },
+    "AIM-9B*2, Fuel 150": {
+      "1": 10,
+      "2": 19
+    },
+    "AIM-9B*2, Fuel 275*3": {
+      "1": 11,
+      "2": 18,
+      "3": 19
+    },
+    "AIM-9B*2, Fuel 150*3": {
+      "1": 11,
+      "2": 18,
+      "3": 19
+    },
+    "AN/ASQ-T50, AIM-9P, Fuel 150": {},
+    "AIM-9B*2": {
+      "1": 10,
+      "2": 19
+    },
+    "AIM-9P*2": {
+      "1": 10,
+      "2": 19
+    },
+    "AIM-9P5*2": {
+      "1": 10,
+      "2": 19
+    },
+    "Antiship Mk82": {
+      "1": 30
+    }
+  },
+  "F-5E": {
+    "Mk-82LD*4,AIM-9P*2,Fuel 275": {
+      "1": 31,
+      "2": 32
+    },
+    "AIM-9P*2, Fuel 275*3": {
+      "1": 11,
+      "2": 18,
+      "3": 19
+    },
+    "AIM-9P5*2, Fuel 275*3": {
+      "1": 11,
+      "2": 18,
+      "3": 19
+    },
+    "AIM-9P*2, Fuel 150*3": {
+      "1": 11,
+      "2": 18,
+      "3": 19
+    },
+    "AIM-9P5*2, Fuel 150*3": {
+      "1": 11,
+      "2": 18,
+      "3": 19
+    },
+    "Mk-82SE*4,AIM-9P*2,Fuel 275": {
+      "1": 31,
+      "2": 32
+    },
+    "CBU-52B*4,AIM-9P*2,Fuel 275": {
+      "1": 31,
+      "2": 32
+    },
+    "LAU-3 HE*4,AIM-9P*2,Fuel 275": {
+      "1": 31,
+      "2": 32
+    },
+    "LAU-3 HEAT*4,AIM-9P*2,Fuel 275": {
+      "1": 31,
+      "2": 32
+    },
+    "LAU-68 HE*4,AIM-9P*2,Fuel 275": {
+      "1": 31,
+      "2": 32
+    },
+    "LAU-68 HEAT*4,AIM-9P*2,Fuel 275": {
+      "1": 31,
+      "2": 32
+    },
+    "M-117*4,AIM-9P*2,Fuel 275": {
+      "1": 31,
+      "2": 32
+    },
+    "GBU-12*4,AIM-9P*2,Fuel 275": {
+      "1": 31,
+      "2": 32
+    },
+    "CBU-52B*5,AIM-9*2": {
+      "1": 31,
+      "2": 32
+    },
+    "Mk-82LD*5,AIM-9*2": {
+      "1": 31,
+      "2": 32
+    },
+    "Mk-82SE*5,AIM-9*2": {
+      "1": 31,
+      "2": 32
+    },
+    "Mk-82LD*7,AIM-9P*2, Fuel 275*2": {
+      "1": 31,
+      "2": 32
+    },
+    "Mk-82SE*7,AIM-9P*2, Fuel 275*2": {
+      "1": 31,
+      "2": 32
+    },
+    "LAU-3 HE*2,Mk-82LD,AIM-9P*2,Fuel 275*2": {
+      "1": 31,
+      "2": 32
+    },
+    "LAU-68 HE*2,Mk-82LD,AIM-9P*2,Fuel 275*2": {
+      "1": 31,
+      "2": 32
+    },
+    "M-117*5,AIM-9*2": {
+      "1": 31,
+      "2": 32
+    },
+    "AIM-9P*2, Fuel 275": {
+      "1": 10,
+      "2": 19
+    },
+    "AIM-9P*2, Fuel 150": {
+      "1": 10,
+      "2": 19
+    },
+    "AIM-9P5*2, Fuel 275": {
+      "1": 10,
+      "2": 19
+    },
+    "AIM-9P5*2, Fuel 150": {
+      "1": 10,
+      "2": 19
+    },
+    "AIM-9B*2, Fuel 275": {
+      "1": 10,
+      "2": 19
+    },
+    "AIM-9B*2, Fuel 150": {
+      "1": 10,
+      "2": 19
+    },
+    "AIM-9B*2, Fuel 275*3": {
+      "1": 11,
+      "2": 18,
+      "3": 19
+    },
+    "AIM-9B*2, Fuel 150*3": {
+      "1": 11,
+      "2": 18,
+      "3": 19
+    },
+    "AN/ASQ-T50, AIM-9P, Fuel 150": {},
+    "AIM-9B*2": {
+      "1": 10,
+      "2": 19
+    },
+    "AIM-9P*2": {
+      "1": 10,
+      "2": 19
+    },
+    "AIM-9P5*2": {
+      "1": 10,
+      "2": 19
+    }
+  },
+  "F-86F Sabre": {
+    "120gal Fuel*2": {
+      "1": 11
+    },
+    "200gal Fuel*2": {
+      "1": 11
+    },
+    "120gal Fuel*2, 200gal Fuel*2": {
+      "1": 11
+    },
+    "GAR-8*2": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "120gal Fuel*2, GAR-8*2": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "HVAR*16": {
+      "1": 32,
+      "2": 31,
+      "3": 30
+    },
+    "200gal Fuel*2, HVARx2*4": {
+      "1": 31,
+      "2": 32
+    },
+    "AN-M64*2": {
+      "1": 31,
+      "2": 32,
+      "3": 30
+    },
+    "200gal Fuel*2, AN-M64*2": {
+      "1": 31,
+      "2": 32
+    },
+    "M117*2": {
+      "1": 31,
+      "2": 32,
+      "3": 30
+    }
+  },
+  "F-14A-135-GR": {
+    "XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*6, AIM-9L*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-7F*6, AIM-9L*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*4, AIM-7F*2, AIM-9L*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*2, AIM-7F*1, AIM-9L*4, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*4, AIM-9L*4, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*4, AIM-9M*4, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK60*4, AIM-9M*4, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-7F*4, AIM-9L*4, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "BDU-33*14": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "BDU-33*12": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "GBU-10*2": {
+      "1": "GroundAttack",
+      "2": "PinpointStrike",
+      "3": "RunwayAttack"
+    },
+    "GBU-12*4": {
+      "1": "GroundAttack",
+      "2": "PinpointStrike"
+    },
+    "GBU-16*4": {
+      "1": "GroundAttack",
+      "2": "PinpointStrike"
+    },
+    "GBU-24*2": {
+      "1": "GroundAttack",
+      "2": "PinpointStrike",
+      "3": "RunwayAttack"
+    },
+    "Mk-84*4": {
+      "1": "GroundAttack",
+      "2": "RunwayAttack"
+    },
+    "Mk-83*4": {
+      "1": "GroundAttack",
+      "2": "RunwayAttack"
+    },
+    "Mk-82*4": {
+      "1": "GroundAttack"
+    },
+    "Mk-82*14": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "Mk-81*14": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "Mk-20*4": {
+      "1": "GroundAttack"
+    },
+    "Mk-82AIR*4": {
+      "1": "GroundAttack"
+    },
+    "Zuni*12": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "Zuni*28": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "LUU-2*24": {
+      "1": "GroundAttack",
+      "2": "CAS",
+      "3": "RunwayAttack",
+      "4": "PinpointStrike"
+    },
+    "AIM-54A-MK60*1, AIM-7F*1, AIM-9L*2, XT*2, Mk-82*2": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "AIM-54A-MK60*1, AIM-7F*1, AIM-9L*2, XT*2, Mk-82*1": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "AIM-54A-MK60*1, AIM-7F*1, AIM-9L*2, XT*2, Mk-20*2": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "AIM-7M*1, AIM-9M*2, XT*2, GBU-12*2, LANTIRN": {
+      "1": "GroundAttack",
+      "2": "CAS",
+      "3": "RunwayAttack",
+      "4": "PinpointStrike"
+    },
+    "AIM-7M*1, AIM-9M*2, XT*2, GBU-24*1, LANTIRN": {
+      "1": "GroundAttack",
+      "2": "CAS",
+      "3": "RunwayAttack",
+      "4": "PinpointStrike"
+    },
+    "AIM-54A-MK60*1, AIM-7M*1, AIM-9M*2, XT*2, Mk-82*2, LANTIRN": {
+      "1": "GroundAttack",
+      "2": "CAS",
+      "3": "RunwayAttack",
+      "4": "PinpointStrike"
+    },
+    "AIM-54A-MK60*1, AIM-7M*1, AIM-9M*2, XT*2, Mk-20*2, LANTIRN": {
+      "1": "GroundAttack",
+      "2": "CAS",
+      "3": "RunwayAttack",
+      "4": "PinpointStrike"
+    }
+  },
+  "F-14A-95-GR": {
+    "AIM-54A-MK47*6, AIM-9L*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK60*6, AIM-9L*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-7F*6, AIM-9L*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*4, AIM-7F*2, AIM-9L*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK60*4, AIM-7F*2, AIM-9L*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*2, AIM-7F*1, AIM-9L*4": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK60*2, AIM-7F*1, AIM-9L*4": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*4, AIM-9L*4": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK60*4, AIM-9L*4": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-7F*4, AIM-9L*4": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*2, AIM-7F*3, AIM-9L*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK60*2, AIM-7F*3, AIM-9L*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "BDU-33*14": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "BDU-33*12": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "GBU-10*2": {
+      "1": "GroundAttack",
+      "2": "PinpointStrike",
+      "3": "RunwayAttack"
+    },
+    "GBU-12*4": {
+      "1": "GroundAttack",
+      "2": "PinpointStrike"
+    },
+    "GBU-16*4": {
+      "1": "GroundAttack",
+      "2": "PinpointStrike"
+    },
+    "GBU-24*2": {
+      "1": "GroundAttack",
+      "2": "PinpointStrike",
+      "3": "RunwayAttack"
+    },
+    "Mk-84*4": {
+      "1": "GroundAttack",
+      "2": "RunwayAttack"
+    },
+    "Mk-83*4": {
+      "1": "GroundAttack",
+      "2": "RunwayAttack"
+    },
+    "Mk-82*4": {
+      "1": "GroundAttack"
+    },
+    "Mk-82*14": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "Mk-81*14": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "Mk-20*4": {
+      "1": "GroundAttack"
+    },
+    "Mk-82AIR*4": {
+      "1": "GroundAttack"
+    },
+    "Zuni*12": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "Zuni*28": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "LUU-2*24": {
+      "1": "GroundAttack",
+      "2": "CAS",
+      "3": "RunwayAttack",
+      "4": "PinpointStrike"
+    },
+    "AIM-54A-MK60*1, AIM-7F*1, AIM-9L*2, Mk-82*2": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "AIM-54A-MK60*1, AIM-7F*1, AIM-9L*2, Mk-82*1": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "AIM-54A-MK60*1, AIM-7F*1, AIM-9L*2, Mk-20*2": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    }
+  },
+  "F-14B": {
+    "XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*6, AIM-9M*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*6, AIM-9L*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK60*6, AIM-9M*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54C-MK47*6, AIM-9M*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-7M*6, AIM-9M*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-7M*6, AIM-9L*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*4, AIM-7M*2, AIM-9M*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*4, AIM-7M*2, AIM-9L*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK60*4, AIM-7M*2, AIM-9M*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54C-MK47*4, AIM-7M*2, AIM-9M*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*2, AIM-7M*1, AIM-9M*2, AIM-9L*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*2, AIM-7M*1, AIM-9M*4, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK60*2, AIM-7M*1, AIM-9M*4, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54C-MK47*2, AIM-7M*1, AIM-9M*4, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*4, AIM-9M*2, AIM-9L*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*4, AIM-9M*4, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK60*4, AIM-9M*4, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54C-MK47*4, AIM-9M*4, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-7M*4, AIM-9M*2, AIM-9L*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-7M*4, AIM-9L*4, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*2, AIM-7M*3, AIM-9M*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK60*2, AIM-7M*3, AIM-9M*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54C-MK47*2, AIM-7M*3, AIM-9M*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "BDU-33*14": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "BDU-33*12": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "GBU-10*2": {
+      "1": "GroundAttack",
+      "2": "PinpointStrike",
+      "3": "RunwayAttack"
+    },
+    "GBU-12*4": {
+      "1": "GroundAttack",
+      "2": "PinpointStrike"
+    },
+    "GBU-16*4": {
+      "1": "GroundAttack",
+      "2": "PinpointStrike"
+    },
+    "GBU-24*2": {
+      "1": "GroundAttack",
+      "2": "PinpointStrike",
+      "3": "RunwayAttack"
+    },
+    "Mk-84*4": {
+      "1": "GroundAttack",
+      "2": "RunwayAttack"
+    },
+    "Mk-83*4": {
+      "1": "GroundAttack",
+      "2": "RunwayAttack"
+    },
+    "Mk-82*4": {
+      "1": "GroundAttack"
+    },
+    "Mk-82*14": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "Mk-81*14": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "Mk-20*4": {
+      "1": "GroundAttack"
+    },
+    "Mk-82AIR*4": {
+      "1": "GroundAttack"
+    },
+    "Zuni*12": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "Zuni*28": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "LUU-2*24": {
+      "1": "GroundAttack",
+      "2": "CAS",
+      "3": "RunwayAttack",
+      "4": "PinpointStrike"
+    },
+    "AIM-54A-MK60*1, AIM-7M*1, AIM-9M*2, XT*2, Mk-82*2": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "AIM-54A-MK60*1, AIM-7M*1, AIM-9M*2, XT*2, Mk-82*1": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "AIM-54A-MK60*1, AIM-7M*1, AIM-9M*2, XT*2, Mk-20*2": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "AIM-7M*1, AIM-9M*2, XT*2, GBU-12*2, LANTIRN": {
+      "1": "GroundAttack",
+      "2": "CAS",
+      "3": "RunwayAttack",
+      "4": "PinpointStrike"
+    },
+    "AIM-7M*1, AIM-9M*2, XT*2, GBU-24*1, LANTIRN": {
+      "1": "GroundAttack",
+      "2": "CAS",
+      "3": "RunwayAttack",
+      "4": "PinpointStrike"
+    },
+    "AIM-54A-MK60*1, AIM-7M*1, AIM-9M*2, XT*2, Mk-82*2, LANTIRN": {
+      "1": "GroundAttack",
+      "2": "CAS",
+      "3": "RunwayAttack",
+      "4": "PinpointStrike"
+    },
+    "AIM-54A-MK60*1, AIM-7M*1, AIM-9M*2, XT*2, Mk-20*2, LANTIRN": {
+      "1": "GroundAttack",
+      "2": "CAS",
+      "3": "RunwayAttack",
+      "4": "PinpointStrike"
+    }
+  },
+  "FA-18C_hornet": {
+    "AIM-9M*6, AIM-7M*2, FUEL*3": {
+      "1": 11
+    },
+    "AIM-9M*6, AIM-7M*2, FUEL*2": {
+      "1": 19
+    },
+    "AIM-9M*2, MK-84*2, FUEL*2": {
+      "1": 32
+    },
+    "AIM-9M*2, MK-83*4, FUEL*2": {
+      "1": 32
+    },
+    "Carrier Landing": {},
+    "AIM-9M*2, AIM-7M*4, FUEL*3": {
+      "1": 11
+    },
+    "AIM-9M*2, CBU-99*4, FUEL*2": {
+      "1": 31
+    },
+    "AIM-9M*2, MK-82SE*4, FUEL*2": {
+      "1": 31
+    },
+    "AIM-9M*2, MK-20*4, FUEL*2": {
+      "1": 31
+    },
+    "AIM-9M*2, MK-82*4, FUEL*2": {
+      "1": 31
+    },
+    "AIM-9M*2, AIM-7M*2, FUEL*2": {
+      "1": 18
+    },
+    "AIM-9M*2, MK-83*2, FUEL*2": {
+      "1": 32
+    },
+    "AIM-9M*2, ZUNI*4, FUEL*2": {
+      "1": 32
+    },
+    "AIM-9M*2, LAU-61*4, FUEL*2": {
+      "1": 32
+    },
+    "AIM-9M*2, LAU-68*4, FUEL*2": {
+      "1": 32
+    },
+    "AIM-9M*2, AIM-7M*2, FUEL*1": {
+      "1": 10
+    },
+    "AIM-9X*2, AIM-120C-5*1, GBU-31*4, ATFLIR, FUEL": {
+      "1": 34
+    },
+    "AIM-9X*2, AIM-120C-5*6, FUEL*3": {
+      "1": 11,
+      "2": 10,
+      "3": 19
+    },
+    "AIM-9X*2, AIM-120C-5*1, AGM-65D*4, ATFLIR, FUEL": {
+      "1": 31
+    },
+    "AIM-9X*2, AIM-120C-5*2, AGM-88C*2, FUEL": {
+      "1": 29
+    },
+    "AIM-9X*2, AIM-120C-5*1, GBU-38*4, GBU-12*4, ATFLIR, FUEL": {
+      "1": 32
+    },
+    "AIM-9X*2, AIM-120C-5*1, AGM-84E*2, DATALINK, ATFLIR, FUEL*2": {
+      "1": 33
+    },
+    "AIM-9M*2, AIM-120C-5*1, AGM-84D*4, ATFLIR, FUEL": {
+      "1": 30
+    },
+    "AIM-9M*2, ATFLIR, FUEL": {
+      "1": 16
+    },
+    "AIM-9M*2, ATFLIR, FUEL*2": {
+      "1": 17
+    }
+  },
+  "I-16": {
+    "6xRS-82": {
+      "1": 31,
+      "2": 32
+    },
+    "2xFAB-100": {
+      "1": 31,
+      "2": 32
+    },
+    "6xRS-82, 2xFAB-100": {
+      "1": 31,
+      "2": 32
+    },
+    "6xRS-82, 2xDropTank-93L": {
+      "1": 31,
+      "2": 32
+    },
+    "2xDropTank-93L": {
+      "1": 11,
+      "2": 17,
+      "3": 18
+    }
+  },
+  "Ka-50": {
+    "4xFAB-500": {
+      "1": 32
+    },
+    "2xFuel tank, 2xKMGU AP": {
+      "1": 32
+    },
+    "80xS-8 TsM": {
+      "1": 16
+    },
+    "2xFuel tank, 40xS-8": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "80xS-8": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "4xKMGU AT": {
+      "1": 32
+    },
+    "2xKMGU AP": {
+      "1": 32
+    },
+    "2xFuel tank, 12x9A4172": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "2xFuel tank, 2xUPK-23": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "12x9A4172, 40xS-8": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "12x9A4172, 2xKMGU AT": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "4xKMGU AP": {
+      "1": 32
+    },
+    "2xFAB-250, 2xFuel tank": {
+      "1": 32
+    },
+    "12x9A4172, 2xFAB-500": {
+      "1": 32
+    },
+    "20xS-13": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "40xS-8": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "12x9A4172, 2xUPK-23": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "2xKMGU AT": {
+      "1": 32
+    },
+    "6x9A4172": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "2xFuel tank, 2xKMGU AT": {
+      "1": 32
+    },
+    "4xFuel tank": {
+      "1": 15
+    },
+    "2xKMGU AP, 12x9A4172": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "12x9A4172": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "2xFuel tank": {
+      "1": 15
+    },
+    "40xS-8 TsM, 12x9A4172": {
+      "1": 16
+    },
+    "2xFAB-500": {
+      "1": 32
+    },
+    "40xS-8 TsM, 2xFuel tank": {
+      "1": 16
+    },
+    "4xUPK-23": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "10xS-13": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "40xS-8 TsM": {
+      "1": 16
+    },
+    "12x9A4172, 10xS-13": {
+      "1": 31,
+      "2": 32,
+      "3": 18,
+      "4": 30
+    },
+    "2xFuel tank, 2xFAB-500": {
+      "1": 32
+    },
+    "2xFAB-250": {
+      "1": 32
+    },
+    "4xFAB-250": {
+      "1": 32
+    },
+    "2xFuel tank, 10xS-13": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "2xFAB-250, 12x9A4172": {
+      "1": 32
+    },
+    "2xUPK-23": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    }
+  },
+  "Ka-50_3": {
+    "4xIgla": {
+      "1": 31
+    },
+    "2xKh-25ML, 10xS-13, 4xIgla": {
+      "1": 30
+    },
+    "12x9A4172, 40xS-8KOM, 4xIgla": {
+      "1": 31,
+      "2": 18
+    },
+    "12x9A4172, 40xS-8OFP, 4xIgla": {
+      "1": 31,
+      "2": 32
+    },
+    "12x9A4172, 40xS-13, 4xIgla": {
+      "1": 31,
+      "2": 32
+    },
+    "80xS-8KOM, 4xIgla": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "80xS-8OFP, 4xIgla": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "20xS-20, 4xIgla": {
+      "1": 31,
+      "2": 32
+    },
+    "4xUPK-23, 4xIgla": {
+      "1": 31
+    },
+    "10xS-13, 2xFAB-500, 4xIgla": {
+      "1": 32
+    },
+    "10xS-13, 2xFAB-250, 4xIgla": {
+      "1": 32
+    },
+    "80xS-8OM, 4xIgla": {
+      "1": 16
+    },
+    "80xS-8TsM, 4xIgla": {
+      "1": 16
+    },
+    "40xS-8OFP, 2xFuel, 4xIgla": {
+      "1": 18
+    },
+    "12x9A4172, 2xFuel, 4xIgla": {
+      "1": 18
+    }
+  },
+  "L-39C": {
+    "SAB-100x2": {
+      "1": 16
+    },
+    "R-3Sx2": {
+      "1": 11
+    },
+    "Smokes": {},
+    "Central Smoke": {},
+    "FAB-100x2": {
+      "1": 31,
+      "2": 30,
+      "3": 32,
+      "4": 34
+    },
+    "S-5KOx32": {
+      "1": 31,
+      "2": 30,
+      "3": 32,
+      "4": 34
+    }
+  },
+  "L-39ZA": {
+    "S-5KOx32": {
+      "1": 31,
+      "2": 32
+    },
+    "S-5KOx64": {
+      "1": 31,
+      "2": 32
+    },
+    "S-5KOx32, PTB-150x2": {
+      "1": 31,
+      "2": 32
+    },
+    "S-5KOx32, PTB-350x2": {
+      "1": 31,
+      "2": 32
+    },
+    "S-5KOx32, FAB-100x2": {
+      "1": 31,
+      "2": 32
+    },
+    "OFAB-100 Jupiter x4, FAB-100x2": {
+      "1": 31,
+      "2": 32,
+      "3": 34
+    },
+    "FAB-100x2": {
+      "1": 30,
+      "2": 31,
+      "3": 32
+    },
+    "FAB-100x4": {
+      "1": 30,
+      "2": 31,
+      "3": 32,
+      "4": 34
+    },
+    "OFAB-100 Jupiter x8": {
+      "1": 31,
+      "2": 32,
+      "3": 34
+    },
+    "FAB-100x2, PTB-150x2": {
+      "1": 30,
+      "2": 31,
+      "3": 32
+    },
+    "FAB-100x2, PTB-350x2": {
+      "1": 30,
+      "2": 31,
+      "3": 32
+    },
+    "PK-3x4": {
+      "1": 31
+    },
+    "PK-3x2, PTB-150x2": {
+      "1": 31
+    },
+    "R-60Mx2": {
+      "1": 11
+    },
+    "SAB-100x4": {
+      "1": 16
+    },
+    "R-3Sx2": {
+      "1": 11
+    },
+    "R-3Sx2, PK-3x2": {
+      "1": 11
+    },
+    "R-60Mx2, PK-3x2": {
+      "1": 11
+    }
+  },
+  "M-2000C": {
+    "Fox": {
+      "1": 11
+    },
+    "Fox / Magic (QRA)": {
+      "1": 11
+    },
+    "Alpha / S530D": {
+      "1": 11
+    },
+    "Fox / S530D / Magic": {
+      "1": 11
+    },
+    "Fox / S530D / Magic / Eclair": {
+      "1": 11
+    },
+    "Bravo": {
+      "1": 11
+    },
+    "Bravo / Magic": {
+      "1": 11
+    },
+    "Kilo": {
+      "1": 11
+    },
+    "Kilo / Magic": {
+      "1": 11
+    },
+    "Bravo / 4xMk-82 / Magic": {
+      "1": 32
+    },
+    "Bravo / GBU-12 / Magic": {
+      "1": 32
+    },
+    "Bravo / 2xGBU-12 / Magic": {
+      "1": 32
+    },
+    "Bravo / GBU-16 / Magic": {
+      "1": 32
+    },
+    "Bravo / GBU-24 / Magic": {
+      "1": 32
+    },
+    "Bravo / BAP-100 / Magic": {
+      "1": 11
+    },
+    "Bravo / 4xSnakeEye / Magic": {
+      "1": 11
+    },
+    "Fox / 4xMk-82 / Magic": {
+      "1": 32
+    },
+    "Kilo / 4xMk-82 / Magic": {
+      "1": 32
+    }
+  },
+  "MB-339A": {
+    "A - 2*320L TipTanks + 2*DEFA-553 GunPods + 2*Mk.83 + 2*Mk.81 ": {
+      "1": 32
+    },
+    "A - 2*320L TipTanks [Clean]": {
+      "1": 35
+    },
+    "Recon": {
+      "1": 17
+    },
+    "Training": {},
+    "AA - 2*320L TipTanks + 2*DEFA-553 GunPods + 2*LAU-10(Zuni Rockets) [ARMADA]": {
+      "1": 30
+    },
+    "AM - 2*320L TipTanks + 2*AN/M3 GunPods + 2*330L Tanks + 2*LAU-3 (Hydra rockets)": {
+      "1": 31
+    },
+    "A - 2*500L TipTanks + 2*330L Tanks + Luggage Container  [Ferry Long Range]": {
+      "1": 15,
+      "2": 35
+    },
+    "A - 2*500L TipTanks + 4*Mk.82HD + 2*LR-25 (API Rockets)": {
+      "1": 32
+    },
+    "A - 2*320L TipTanks + 2*330L Tanks [Ferry Medium Range]": {
+      "1": 35
+    },
+    "A - 2*500L TipTanks + 2*AN/M3 GunPods + 2*Matra 155 + 2* Belouga": {
+      "1": 32
+    },
+    "Runway Interdiction": {
+      "1": 34
+    },
+    "A - 2*500L TipTanks + 2*DEFA-553 GunPods + 2*Mk.82LD + 2*LR-25 (API Rockets)": {},
+    "A - 2*320L TipTanks + 2*DEFA-553 GunPods + 2*Mk.82LD Bombs + 2*LR-25(API Rockets)": {
+      "1": 31
+    },
+    "A - 2*320L TipTanks + 2*DEFA-553 GunPods + 2*Mk.82LD + 2*LR-25 (HEI Rockets)": {
+      "1": 32
+    },
+    "A - 2*320L TipTanks + 6*Mk.82LD": {
+      "1": 15,
+      "2": 32
+    },
+    "Runway Interdiction (36*BAP-100)": {
+      "1": 34
+    },
+    "Anti - Light Armoured Vehicle (36*BAT-120 ABL)": {
+      "1": 32
+    },
+    "AP - 2*320L TipTanks + 2*DEFA-553 GunPods + 2*330L Tanks + 2*Matra 155 (SNEB rockets)": {
+      "1": 31
+    }
+  },
+  "MB-339APAN": {
+    "PAN - Smoke White": {
+      "1": 17
+    },
+    "PAN - Smoke White and Color Red": {
+      "1": 17
+    },
+    "PAN - Fuel External [RED SMOKE]": {
+      "1": 17
+    },
+    "PAN - Full Payload [RED SMOKE] + 2*320L TipTanks": {
+      "1": 17
+    },
+    "PAN - Full Payload [GREEN SMOKE] + 2*320L TipTanks": {
+      "1": 17
+    },
+    "PAN - Fuel External [GREEN SMOKE]": {
+      "1": 17
+    },
+    "PAN - Full Payload [RED SMOKE] + 2*500L TipTanks": {
+      "1": 17
+    },
+    "PAN - Smoke White and Color Green": {
+      "1": 17
+    },
+    "PAN - Full Payload [GREEN SMOKE] + 2*500L TipTanks": {
+      "1": 17
+    }
+  },
+  "Mi-24P": {
+    "2xB8V20 (S-8KOM)+8xATGM 9M114": {
+      "1": 31,
+      "2": 32
+    },
+    "2xB8V20 ( S-8KOM)+4xATGM 9M114": {
+      "1": 31,
+      "2": 18
+    },
+    "4xB8V20 (S-8KOM)+4xATGM 9M114": {
+      "1": 31
+    },
+    "2xB8V20 (S-8KOM)+2xBombs-250+4xATGM 9M114": {
+      "1": 31
+    },
+    "2xB8V20 (S-8OFP2)+4xATGM 9M114": {
+      "1": 31
+    },
+    "4xUB-32A (S-5KO)+4xATGM 9M114": {
+      "1": 31
+    },
+    "4xGUV-1 AP30+4xATGM 9M114": {
+      "1": 31
+    },
+    "2xGUV-1 AP30+4xATGM 9M114": {
+      "1": 31
+    },
+    "2xGUV-1 (GUN 12.7+2x7.62) +4xATGM 9M114": {
+      "1": 31,
+      "2": 18
+    },
+    "2xKMGU (96 AO 2.5RT)+8xATGM 9M114": {
+      "1": 31,
+      "2": 32
+    },
+    "2xB-13L+4xATGM 9M114": {
+      "1": 31,
+      "2": 30,
+      "3": 32
+    },
+    "2xS-24B+4xATGM 9M114": {
+      "1": 31,
+      "2": 30,
+      "3": 32
+    },
+    "4xS-24B+4xATGM 9M114": {
+      "1": 31,
+      "2": 30,
+      "3": 32
+    },
+    "2xBombs-500+4xATGM 9M114": {
+      "1": 31
+    },
+    "4xBombs-250+4ATGM 9M114": {
+      "1": 31
+    },
+    "2xRBK-500 (PTAB-1M)+4xATGM 9M114": {
+      "1": 31
+    },
+    "2xRBK-500U (OAB 2.5RT)+4xATGM 9M114": {
+      "1": 31
+    },
+    "4xRBK-250 (42 PTAB 2.5M) +4ATGM 9M114": {
+      "1": 31
+    },
+    "4xRBK-250-275 (150 AO-1SCh)+4ATGM 9M114": {
+      "1": 31
+    },
+    "4xPTB-450 Fuel tank": {
+      "1": 31
+    }
+  },
+  "MiG-19P": {
+    "PTB-760 x 2": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "K-13A x 2, PTB-760 x 2": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "K-13A x 2": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "K-13A x 2, ORO-57K x 2, PTB-760 x 2": {
+      "1": 31,
+      "2": 32
+    },
+    "ORO-57K x 2, PTB-760 x 2": {
+      "1": 31,
+      "2": 32
+    },
+    "ORO-57K x 4": {
+      "1": 31,
+      "2": 32
+    },
+    "ORO-57K x 2": {
+      "1": 31,
+      "2": 32
+    },
+    "FAB-100M x 2, ORO-57K x 2": {
+      "1": 31,
+      "2": 32
+    },
+    "FAB-250 x 2, ORO-57K x 2": {
+      "1": 31,
+      "2": 32
+    },
+    "FAB-100M x 2": {
+      "1": 31,
+      "2": 32
+    },
+    "FAB-250 x 2": {
+      "1": 31,
+      "2": 32
+    }
+  },
+  "MiG-21Bis": {
+    "Patrol, long range": {
+      "1": 11
+    },
+    "Patrol, medium range": {
+      "1": 11
+    },
+    "Patrol, short range": {
+      "1": 11
+    },
+    "Hard targets, BOMBS": {
+      "1": 31
+    },
+    "Unknown or mixed targets, BOMBS + ROCKETS": {
+      "1": 31
+    },
+    "Soft targets, CLUSTERS + ROCKETS": {
+      "1": 31
+    },
+    "Soft targets, CLUSTERS": {
+      "1": 31
+    },
+    "Soft targets, scattered": {
+      "1": 31
+    },
+    "Few big targets, GROM + BOMBS": {
+      "1": 32
+    },
+    "Very hard target, PENETRATION": {
+      "1": 32
+    },
+    "Aerial attack, hard targets, CLUSTERS": {
+      "1": 32
+    },
+    "Hard targets, ROCKETS, PENETRATION": {
+      "1": 32
+    },
+    "Soft targets, ROCKETS, BLAST-FRAGMENTS": {
+      "1": 32
+    },
+    "Long range, MIX": {
+      "1": 10
+    },
+    "Long range, RADAR GUIDED MISSILES": {
+      "1": 10
+    },
+    "Long range, INFRA RED MISSILES": {
+      "1": 10
+    },
+    "Escort": {
+      "1": 18
+    },
+    "Escort, JAMMER": {
+      "1": 18
+    },
+    "Night, ILLUMINATOR": {
+      "1": 31
+    },
+    "Long range, JAMMER": {
+      "1": 10
+    },
+    "Soft targets, UPK + ROCKETS": {
+      "1": 31
+    },
+    "Soft targets, UPK + CLUSTERS": {
+      "1": 32
+    },
+    "Patrol, JAMMER": {
+      "1": 11
+    },
+    "NUCLEAR A": {
+      "1": 32
+    },
+    "NUCLEAR B": {
+      "1": 32
+    },
+    "Short range": {
+      "1": 10
+    },
+    "AEROBATIC": {}
+  },
+  "Mirage-F1B": {
+    "2*R550 Magic I, 2*R530IR, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I, 2*R530EM, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I, 1*R530IR": {
+      "1": 10
+    },
+    "2*R550 Magic I, 1*R530IR, 2*Fuel Tank": {
+      "1": 11
+    },
+    "2*R550 Magic I, 2*MATRA F4 SNEB251 (HE), 2*R530IR, 1*Fuel Tank": {
+      "1": 19
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 LD": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 HD": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 2*SAMP 250 HD, 2 MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 8*SAMP 250 HD": {
+      "1": 32
+    },
+    "2*R550_Magic_1, 8*SAMP 400 LD": {
+      "1": 32,
+      "2": 34
+    },
+    "2*R550_Magic_1, 8*BLU107 Durandal": {
+      "1": 32,
+      "2": 34
+    }
+  },
+  "Mirage-F1BD": {
+    "2*R550 Magic I, 2*S530F, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I": {
+      "1": 10
+    },
+    "2*R550 Magic I, 2*Fuel Tank": {
+      "1": 11
+    },
+    "2*R550 Magic I, 2*MATRA F4 SNEB251 (HE), 2*S530F, 1*Fuel Tank": {
+      "1": 19
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 LD": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 HD": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 2*SAMP 250 HD, 2 MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 8*SAMP 250 HD": {
+      "1": 32
+    },
+    "2*R550_Magic_1, 8*SAMP 400 LD": {
+      "1": 32,
+      "2": 34
+    },
+    "2*R550_Magic_1, 8*BLU107 Durandal": {
+      "1": 32,
+      "2": 34
+    }
+  },
+  "Mirage-F1BE": {
+    "2*AIM9-JULI, 2*R530IR, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I, 2*R530IR, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I, 2*R530EM, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*AIM9-JULI, 1*R530IR": {
+      "1": 10
+    },
+    "2*R550 Magic I, 1*R530EM": {
+      "1": 10
+    },
+    "2*AIM9-JULI, 1*R530IR, 2*Fuel Tank": {
+      "1": 11
+    },
+    "2*R550 Magic I, 1*R530IR, 2*Fuel Tank": {
+      "1": 11
+    },
+    "2*AIM9-J, 2*MATRA F4 SNEB251 (HE), 2*R530IR, 1*Fuel Tank": {
+      "1": 19
+    },
+    "2*AIM-9J, 2*Fuel Tank, 4*SAMP 400 LD": {
+      "1": 31
+    },
+    "2*AIM-9J, 2*Fuel Tank, 4*SAMP 400 HD": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 2*SAMP 250 HD, 2 MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*AIM-9JULI, 8*SAMP 250 HD": {
+      "1": 32
+    },
+    "2*AIM-9JULI, 8*SAMP 400 LD": {
+      "1": 32,
+      "2": 34
+    },
+    "2*AIM-9JULI, 8*BLU107 Durandal": {
+      "1": 32,
+      "2": 34
+    },
+    "2*AIM9-JULI, 2*S530F, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I, 2*S530F, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    }
+  },
+  "Mirage-F1BQ": {
+    "2*R550 Magic I, 2*S530F, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I": {
+      "1": 10
+    },
+    "2*R550 Magic I, 2*Fuel Tank": {
+      "1": 11
+    },
+    "2*R550 Magic I, 2*MATRA F4 SNEB251 (HE), 2*S530F, 1*Fuel Tank": {
+      "1": 19
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 LD": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 HD": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 2*SAMP 250 HD, 2 MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 8*SAMP 250 HD": {
+      "1": 32
+    },
+    "2*R550_Magic_1, 8*SAMP 400 LD": {
+      "1": 32,
+      "2": 34
+    },
+    "2*R550_Magic_1, 8*BLU107 Durandal": {
+      "1": 32,
+      "2": 34
+    }
+  },
+  "Mirage-F1C-200": {
+    "2*R550 Magic I, 2*R530IR, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I, 2*R530EM, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I, 1*R530IR": {
+      "1": 10
+    },
+    "2*R550 Magic I, 1*R530IR, 2*Fuel Tank": {
+      "1": 11
+    },
+    "2*R550 Magic I, 2*MATRA F4 SNEB251 (HE), 2*R530IR, 1*Fuel Tank": {
+      "1": 19
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 LD": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 HD": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 2*SAMP 250 HD, 2 MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 8*SAMP 250 HD": {
+      "1": 32
+    },
+    "2*R550_Magic_1, 8*SAMP 400 LD": {
+      "1": 32,
+      "2": 34
+    },
+    "2*R550_Magic_1, 8*BLU107 Durandal": {
+      "1": 32,
+      "2": 34
+    }
+  },
+  "Mirage-F1C": {
+    "2*R550 Magic I, 2*R530IR, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I, 2*R530EM, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I, 1*R530IR": {
+      "1": 10
+    },
+    "2*R550 Magic I, 1*R530IR, 2*Fuel Tank": {
+      "1": 11
+    },
+    "2*R550 Magic I, 2*MATRA F4 SNEB251 (HE), 2*R530IR, 1*Fuel Tank": {
+      "1": 19
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 LD": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 HD": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 2*SAMP 250 HD, 2 MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 8*SAMP 250 HD": {
+      "1": 32
+    },
+    "2*R550_Magic_1, 8*SAMP 400 LD": {
+      "1": 32,
+      "2": 34
+    },
+    "2*R550_Magic_1, 8*BLU107 Durandal": {
+      "1": 32,
+      "2": 34
+    }
+  },
+  "Mirage-F1CE": {
+    "2*AIM9-JULI, 2*R530IR, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I, 2*R530IR, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I, 2*R530EM, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*AIM9-JULI, 1*R530IR": {
+      "1": 10
+    },
+    "2*R550 Magic I, 1*R530EM": {
+      "1": 10
+    },
+    "2*AIM9-JULI, 1*R530IR, 2*Fuel Tank": {
+      "1": 11
+    },
+    "2*R550 Magic I, 1*R530IR, 2*Fuel Tank": {
+      "1": 11
+    },
+    "2*AIM9-J, 2*MATRA F4 SNEB251 (HE), 2*R530IR, 1*Fuel Tank": {
+      "1": 19
+    },
+    "2*AIM-9J, 2*Fuel Tank, 4*SAMP 400 LD": {
+      "1": 31
+    },
+    "2*AIM-9J, 2*Fuel Tank, 4*SAMP 400 HD": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 2*SAMP 250 HD, 2 MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*AIM-9JULI, 8*SAMP 250 HD": {
+      "1": 32
+    },
+    "2*AIM-9JULI, 8*SAMP 400 LD": {
+      "1": 32,
+      "2": 34
+    },
+    "2*AIM-9JULI, 8*BLU107 Durandal": {
+      "1": 32,
+      "2": 34
+    },
+    "2*AIM9-JULI, 2*S530F, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I, 2*S530F, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    }
+  },
+  "Mirage-F1CG": {
+    "2*AIM-9 JULI, 2*R530IR, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "4*AIM-9 JULI, 2*R530IR, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*AIM-9 JULI, 2*R530EM, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*AIM-9 JULI, 1*R530IR": {
+      "1": 10
+    },
+    "2*AIM-9 JULI, 1*R530IR, 2*Fuel Tank": {
+      "1": 11
+    },
+    "2*AIM-9 JULI, 2*MATRA F4 SNEB251 (HE), 2*R530IR, 1*Fuel Tank": {
+      "1": 19
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 LD": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 HD": {
+      "1": 31
+    },
+    "2*AIM-9 JULI, 4*MATRA F1 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*AIM-9 JULI, 4*MATRA F4 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*AIM-9 JULI, 4*MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*AIM-9 JULI, 4*MATRA F4 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*AIM-9 JULI, 2*SAMP 250 HD, 2 MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 8*SAMP 250 HD": {
+      "1": 32
+    },
+    "2*R550_Magic_1, 8*SAMP 400 LD": {
+      "1": 32,
+      "2": 34
+    },
+    "2*R550_Magic_1, 8*BLU107 Durandal": {
+      "1": 32,
+      "2": 34
+    }
+  },
+  "Mirage-F1CH": {
+    "2*R550 Magic I, 2*R530IR, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I, 2*R530EM, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I, 1*R530IR": {
+      "1": 10
+    },
+    "2*R550 Magic I, 1*R530IR, 2*Fuel Tank": {
+      "1": 11
+    },
+    "2*R550 Magic I, 2*MATRA F4 SNEB251 (HE), 2*R530IR, 1*Fuel Tank": {
+      "1": 19
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 LD": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 HD": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 2*SAMP 250 HD, 2 MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 8*SAMP 250 HD": {
+      "1": 32
+    },
+    "2*R550_Magic_1, 8*SAMP 400 LD": {
+      "1": 32,
+      "2": 34
+    },
+    "2*R550_Magic_1, 8*BLU107 Durandal": {
+      "1": 32,
+      "2": 34
+    }
+  },
+  "Mirage-F1CJ": {
+    "2*R550 Magic I, 2*R530IR, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I, 2*R530EM, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I, 1*R530IR": {
+      "1": 10
+    },
+    "2*R550 Magic I, 1*R530IR, 2*Fuel Tank": {
+      "1": 11
+    },
+    "2*R550 Magic I, 2*MATRA F4 SNEB251 (HE), 2*R530IR, 1*Fuel Tank": {
+      "1": 19
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 LD": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 HD": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 2*SAMP 250 HD, 2 MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 8*SAMP 250 HD": {
+      "1": 32
+    },
+    "2*R550_Magic_1, 8*SAMP 400 LD": {
+      "1": 32,
+      "2": 34
+    },
+    "2*R550_Magic_1, 8*BLU107 Durandal": {
+      "1": 32,
+      "2": 34
+    }
+  },
+  "Mirage-F1CK": {
+    "2*R550 Magic I, 2*R530IR, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I, 2*R530EM, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I, 1*R530IR": {
+      "1": 10
+    },
+    "2*R550 Magic I, 1*R530IR, 2*Fuel Tank": {
+      "1": 11
+    },
+    "2*R550 Magic I, 2*MATRA F4 SNEB251 (HE), 2*R530IR, 1*Fuel Tank": {
+      "1": 19
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 LD": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 HD": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 2*SAMP 250 HD, 2 MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 8*SAMP 250 HD": {
+      "1": 32
+    },
+    "2*R550_Magic_1, 8*SAMP 400 LD": {
+      "1": 32,
+      "2": 34
+    },
+    "2*R550_Magic_1, 8*BLU107 Durandal": {
+      "1": 32,
+      "2": 34
+    }
+  },
+  "Mirage-F1CR": {
+    "2*R550 Magic I": {
+      "1": 10
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 LD": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 HD": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 2*SAMP 250 HD, 2 MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 8*SAMP 250 HD": {
+      "1": 32
+    },
+    "2*R550_Magic_1, 8*SAMP 400 LD": {
+      "1": 32,
+      "2": 34
+    },
+    "2*R550_Magic_1, 8*BLU107 Durandal": {
+      "1": 32,
+      "2": 34
+    }
+  },
+  "Mirage-F1CT": {
+    "2*R550 Magic I, 2*S530F, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I": {
+      "1": 10
+    },
+    "2*R550 Magic I, 2*Fuel Tank": {
+      "1": 11
+    },
+    "2*R550 Magic I, 2*MATRA F4 SNEB251 (HE), 2*S530F, 1*Fuel Tank": {
+      "1": 19
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 LD": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 HD": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 2*SAMP 250 HD, 2 MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 8*SAMP 250 HD": {
+      "1": 32
+    },
+    "2*R550_Magic_1, 8*SAMP 400 LD": {
+      "1": 32,
+      "2": 34
+    },
+    "2*R550_Magic_1, 8*BLU107 Durandal": {
+      "1": 32,
+      "2": 34
+    }
+  },
+  "Mirage-F1CZ": {
+    "2*R550 Magic I, 2*R530IR, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I, 2*R530EM, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I, 1*R530IR": {
+      "1": 10
+    },
+    "2*R550 Magic I, 1*R530IR, 2*Fuel Tank": {
+      "1": 11
+    },
+    "2*R550 Magic I, 2*MATRA F4 SNEB251 (HE), 2*R530IR, 1*Fuel Tank": {
+      "1": 19
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 LD": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 HD": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 2*SAMP 250 HD, 2 MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 8*SAMP 250 HD": {
+      "1": 32
+    },
+    "2*R550_Magic_1, 8*SAMP 400 LD": {
+      "1": 32,
+      "2": 34
+    },
+    "2*R550_Magic_1, 8*BLU107 Durandal": {
+      "1": 32,
+      "2": 34
+    }
+  },
+  "Mirage-F1DDA": {
+    "2*R550 Magic I, 2*S530F, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I": {
+      "1": 10
+    },
+    "2*R550 Magic I, 2*Fuel Tank": {
+      "1": 11
+    },
+    "2*R550 Magic I, 2*MATRA F4 SNEB251 (HE), 2*S530F, 1*Fuel Tank": {
+      "1": 19
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 LD": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 HD": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 2*SAMP 250 HD, 2 MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 8*SAMP 250 HD": {
+      "1": 32
+    },
+    "2*R550_Magic_1, 8*SAMP 400 LD": {
+      "1": 32,
+      "2": 34
+    },
+    "2*R550_Magic_1, 8*BLU107 Durandal": {
+      "1": 32,
+      "2": 34
+    }
+  },
+  "Mirage-F1ED": {
+    "2*R550 Magic II, 2*S530F, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic II": {
+      "1": 10
+    },
+    "2*R550 Magic II, 2*Fuel Tank": {
+      "1": 11
+    },
+    "2*R550 Magic II, 2*MATRA F4 SNEB251 (HE), 2*S530F, 1*Fuel Tank": {
+      "1": 19
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 LD": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 HD": {
+      "1": 31
+    },
+    "2*R550 Magic II, 4*MATRA F1 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic II, 4*MATRA F4 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic II, 4*MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic II, 4*MATRA F4 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic II, 2*SAMP 250 HD, 2 MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 8*SAMP 250 HD": {
+      "1": 32
+    },
+    "2*R550_Magic_1, 8*SAMP 400 LD": {
+      "1": 32,
+      "2": 34
+    },
+    "2*R550_Magic_1, 8*BLU107 Durandal": {
+      "1": 32,
+      "2": 34
+    }
+  },
+  "Mirage-F1EDA": {
+    "2*R550 Magic I, 2*S530F, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I": {
+      "1": 10
+    },
+    "2*R550 Magic I, 2*Fuel Tank": {
+      "1": 11
+    },
+    "2*R550 Magic I, 2*MATRA F4 SNEB251 (HE), 2*S530F, 1*Fuel Tank": {
+      "1": 19
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 LD": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 HD": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 2*SAMP 250 HD, 2 MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 8*SAMP 250 HD": {
+      "1": 32
+    },
+    "2*R550_Magic_1, 8*SAMP 400 LD": {
+      "1": 32,
+      "2": 34
+    },
+    "2*R550_Magic_1, 8*BLU107 Durandal": {
+      "1": 32,
+      "2": 34
+    }
+  },
+  "Mirage-F1EE": {
+    "2*AIM9-JULI, 2*R530IR, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*AIM9-JULI, 2*R530EM, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I, 2*R530IR, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*AIM9-JULI, 1*R530EM": {
+      "1": 10
+    },
+    "2*R550 Magic I, 1*R530IR": {
+      "1": 10
+    },
+    "2*AIM9-JULI, 1*R530IR, 2*Fuel Tank": {
+      "1": 11
+    },
+    "2*R550 Magic I, 1*R530IR, 2*Fuel Tank": {
+      "1": 11
+    },
+    "2*AIM9-J, 2*MATRA F4 SNEB251 (HE), 2*R530IR, 1*Fuel Tank": {
+      "1": 19
+    },
+    "2*AIM-9J, 2*Fuel Tank, 4*SAMP 400 LD": {
+      "1": 31
+    },
+    "2*AIM-9J, 2*Fuel Tank, 4*SAMP 400 HD": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 2*SAMP 250 HD, 2 MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*AIM-9JULI, 8*SAMP 250 HD": {
+      "1": 32
+    },
+    "2*AIM-9JULI, 8*SAMP 400 LD": {
+      "1": 32,
+      "2": 34
+    },
+    "2*AIM-9JULI, 8*BLU107 Durandal": {
+      "1": 32,
+      "2": 34
+    },
+    "2*AIM9-JULI, 2*S530F, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I, 2*S530F, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I, 2*S530F, 1*Fuel Tank, 1*BARAX ECM Pod": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    }
+  },
+  "Mirage-F1EH": {
+    "2*R550 Magic I, 2*R530IR, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I, 2*R530EM, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I, 1*R530IR": {
+      "1": 10
+    },
+    "2*R550 Magic I, 1*R530IR, 2*Fuel Tank": {
+      "1": 11
+    },
+    "2*R550 Magic I, 2*MATRA F4 SNEB251 (HE), 2*R530IR, 1*Fuel Tank": {
+      "1": 19
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 LD": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 HD": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 2*SAMP 250 HD, 2 MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 8*SAMP 250 HD": {
+      "1": 32
+    },
+    "2*R550_Magic_1, 8*SAMP 400 LD": {
+      "1": 32,
+      "2": 34
+    },
+    "2*R550_Magic_1, 8*BLU107 Durandal": {
+      "1": 32,
+      "2": 34
+    }
+  },
+  "Mirage-F1EQ": {
+    "2*R550 Magic I, 2*S530F, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I": {
+      "1": 10
+    },
+    "2*R550 Magic I, 2*Fuel Tank": {
+      "1": 11
+    },
+    "2*R550 Magic I, 2*MATRA F4 SNEB251 (HE), 2*S530F, 1*Fuel Tank": {
+      "1": 19
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 LD": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 HD": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 2*SAMP 250 HD, 2 MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 8*SAMP 250 HD": {
+      "1": 32
+    },
+    "2*R550_Magic_1, 8*SAMP 400 LD": {
+      "1": 32,
+      "2": 34
+    },
+    "2*R550_Magic_1, 8*BLU107 Durandal": {
+      "1": 32,
+      "2": 34
+    }
+  },
+  "Mirage-F1JA": {
+    "2*R550 Magic I, 2*Python III, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I, 2*Python III, 2*MATRA F4 SNEB251 (HE)": {
+      "1": 19
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 LD": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 2*Fuel Tank, 4*SAMP 400 HD": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 2*Python III, 2 MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 2*SAMP 250 HD, 2 MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550_Magic_1, 8*SAMP 250 HD": {
+      "1": 32
+    },
+    "2*R550_Magic_1, 8*SAMP 400 LD": {
+      "1": 32,
+      "2": 34
+    },
+    "2*R550_Magic_1, 8*BLU107 Durandal": {
+      "1": 32,
+      "2": 34
+    }
+  },
+  "Mirage-F1M-CE": {
+    "2*AIM9-JULI, 2*R530IR, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I, 2*R530IR, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*AIM9-JULI, 1*R530IR": {
+      "1": 10
+    },
+    "2*R550 Magic I, 1*R530IR": {
+      "1": 10
+    },
+    "2*AIM9-JULI, 1*R530IR, 2*Fuel Tank": {
+      "1": 11
+    },
+    "2*R550 Magic I, 1*R530IR, 2*Fuel Tank": {
+      "1": 11
+    },
+    "2*AIM9-J, 2*MATRA F4 SNEB251 (HE), 2*R530IR, 1*Fuel Tank": {
+      "1": 19
+    },
+    "2*AIM-9J, 2*Fuel Tank, 4*SAMP 400 LD": {
+      "1": 31
+    },
+    "2*AIM-9J, 2*Fuel Tank, 4*SAMP 400 HD": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 2*SAMP 250 HD, 2 MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*AIM-9JULI, 8*SAMP 250 HD": {
+      "1": 32
+    },
+    "2*AIM-9JULI, 8*SAMP 400 LD": {
+      "1": 32,
+      "2": 34
+    },
+    "2*AIM-9JULI, 8*BLU107 Durandal": {
+      "1": 32,
+      "2": 34
+    },
+    "2*AIM9-JULI, 2*S530F, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I, 2*S530F, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    }
+  },
+  "Mirage-F1M-EE": {
+    "2*AIM9-JULI, 2*R530IR, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I, 2*R530IR, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*AIM9-JULI, 1*R530IR": {
+      "1": 10
+    },
+    "2*R550 Magic I, 1*R530IR": {
+      "1": 10
+    },
+    "2*AIM9-JULI, 1*R530IR, 2*Fuel Tank": {
+      "1": 11
+    },
+    "2*R550 Magic I, 1*R530IR, 2*Fuel Tank": {
+      "1": 11
+    },
+    "2*AIM9-J, 2*MATRA F4 SNEB251 (HE), 2*R530IR, 1*Fuel Tank": {
+      "1": 19
+    },
+    "2*AIM-9J, 2*Fuel Tank, 4*SAMP 400 LD": {
+      "1": 31
+    },
+    "2*AIM-9J, 2*Fuel Tank, 4*SAMP 400 HD": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB253 (Shaped Charge), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 4*MATRA F4 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*R550 Magic I, 2*SAMP 250 HD, 2 MATRA F1 SNEB256 (AP), 1*Fuel Tank": {
+      "1": 31
+    },
+    "2*AIM-9JULI, 8*SAMP 250 HD": {
+      "1": 32
+    },
+    "2*AIM-9JULI, 8*SAMP 400 LD": {
+      "1": 32,
+      "2": 34
+    },
+    "2*AIM-9JULI, 8*BLU107 Durandal": {
+      "1": 32,
+      "2": 34
+    },
+    "2*AIM9-JULI, 2*S530F, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    },
+    "2*R550 Magic I, 2*S530F, 1*Fuel Tank": {
+      "1": 10,
+      "2": 11,
+      "3": 18,
+      "4": 19
+    }
+  },
+  "SA342L": {
+    "M621, 8xSNEB68 EAP": {
+      "1": 31
+    },
+    "M621, 8xSNEB68 EAP, IR Deflector": {
+      "1": 31
+    },
+    "M621, 8xSNEB68 EAP, IR Deflector, Sand Filter": {
+      "1": 31
+    }
+  },
+  "SA342M": {
+    "HOT3x4": {
+      "1": 31
+    },
+    "IR Deflector": {
+      "1": 31
+    },
+    "Hot3x4, FAS, IR Deflector": {
+      "1": 31
+    },
+    "HOT3x2": {
+      "1": 31
+    },
+    "Hot3x4, IR Deflector": {
+      "1": 31
+    },
+    "Hot3x2, IR Deflector": {
+      "1": 31
+    }
+  },
+  "SA342Minigun": {
+    "IR Deflector": {
+      "1": 31
+    },
+    "IR Deflector, Sand Filter": {
+      "1": 31
+    }
+  },
+  "SA342Mistral": {
+    "Mistral x 4": {
+      "1": 18
+    },
+    "Mistral x 4, IR Deflector": {
+      "1": 18
+    },
+    "Mistral x 4, IR Deflector, Sand Filter": {
+      "1": 18
+    }
+  },
+  "A-20G": {
+    "500 lb GP bomb LD*4": {
+      "1": 31,
+      "2": 32,
+      "3": 34,
+      "4": 30
+    }
+  },
+  "Bf-109K-4": {
+    "Fuel Tank": {
+      "1": 11,
+      "2": 16,
+      "3": 18
+    },
+    "SC250": {
+      "1": 34,
+      "2": 31,
+      "3": 30,
+      "4": 32
+    },
+    "SC500": {
+      "1": 34,
+      "2": 31,
+      "3": 30,
+      "4": 32
+    }
+  },
+  "FW-190A8": {
+    "Without pylon": {},
+    "SC 50 * 4": {
+      "1": 32
+    },
+    "AB 250 (w/ SD 10A)": {
+      "1": 32
+    },
+    "AB 250 (w/ SD 2)": {
+      "1": 32
+    },
+    "AB 500 (w/ SD 10A)": {
+      "1": 32
+    },
+    "SC 250 L2": {
+      "1": 32
+    },
+    "SC 250 J": {
+      "1": 32
+    },
+    "SC 500 J": {
+      "1": 32
+    },
+    "SC 500 L2": {
+      "1": 32
+    },
+    "SD 250 Stg": {
+      "1": 32
+    },
+    "SD 500 A": {
+      "1": 32
+    },
+    "Fuel Tank 300 liters": {
+      "1": 32
+    },
+    "BR 21": {}
+  },
+  "FW-190D9": {
+    "SC500": {
+      "1": 34,
+      "2": 31,
+      "3": 30,
+      "4": 32
+    },
+    "Fuel Tank": {
+      "1": 11,
+      "2": 16,
+      "3": 18
+    },
+    "R4M": {
+      "1": 11,
+      "2": 10,
+      "3": 32,
+      "4": 31
+    },
+    "BR 21": {
+      "1": 11,
+      "2": 10,
+      "3": 32,
+      "4": 31
+    }
+  },
+  "MosquitoFBMkVI": {
+    "250 lb S.A.P*2; 500 lb S.A.P.*2": {
+      "1": 11,
+      "2": 32
+    },
+    "500 lb GP Mk.V*2, 500 lb GP Short tail*2": {
+      "1": 11,
+      "2": 32,
+      "3": 31,
+      "4": 34
+    },
+    "100 gal Drop tank*2, 500 lb MC Short tail*2": {
+      "1": 11,
+      "2": 32
+    },
+    "RP-3 60lb SAP No2 Mk.I*8, 250 lb A.A.P.*2": {
+      "1": 11,
+      "2": 30,
+      "3": 31,
+      "4": 32
+    },
+    "100 gal. Drop tank*2, 250 lb MC Mk.II, RP-3 60lb F No1 Mk.I*4": {
+      "1": 11,
+      "2": 30,
+      "3": 31,
+      "4": 32
+    },
+    "500 lb GP Short tail*4": {
+      "1": 11,
+      "2": 32,
+      "3": 31,
+      "4": 34
+    }
+  },
+  "P-47D-30": {
+    "AN-M65*2": {
+      "1": 34
+    },
+    "Fuel150*2": {
+      "1": 18,
+      "2": 11
+    },
+    "AN-M64*2, Fuel110": {
+      "1": 32
+    },
+    "AN-M57*3": {
+      "1": 32,
+      "2": 31
+    }
+  },
+  "P-47D-30bl1": {
+    "AN-M57*2": {
+      "1": 31
+    },
+    "AN-M64*2, Fuel110": {}
+  },
+  "P-47D-40": {
+    "AN-M65*2": {
+      "1": 34
+    },
+    "Fuel150*2": {
+      "1": 18,
+      "2": 11
+    },
+    "AN-M57*3": {
+      "1": 32,
+      "2": 31
+    },
+    "AN-M64*2, Fuel110": {
+      "1": 32
+    },
+    "M8*6, AN-M57*2, Fuel110": {
+      "1": 32,
+      "2": 31
+    },
+    "HVAR*10, Fuel110": {
+      "1": 32,
+      "2": 31
+    }
+  },
+  "P-51D-30-NA": {
+    "Fuel75*2": {
+      "1": 11,
+      "2": 19,
+      "3": 16
+    },
+    "HVAR*6,Fuel75*2": {
+      "1": 16
+    },
+    "HVAR*6,M64*2": {
+      "1": 31,
+      "2": 32,
+      "3": 30
+    },
+    "HVAR*6": {
+      "1": 31,
+      "2": 32,
+      "3": 30,
+      "4": 16
+    },
+    "M64*2": {
+      "1": 32,
+      "2": 30,
+      "3": 31,
+      "4": 34
+    },
+    "HVAR*10": {
+      "1": 31,
+      "2": 32,
+      "3": 34,
+      "4": 30
+    },
+    "Smokes": {}
+  },
+  "P-51D": {
+    "Fuel75*2": {
+      "1": 11,
+      "2": 19,
+      "3": 16
+    },
+    "HVAR*6,Fuel75*2": {
+      "1": 16
+    },
+    "HVAR*6,M64*2": {
+      "1": 31,
+      "2": 32,
+      "3": 30
+    },
+    "HVAR*6": {
+      "1": 31,
+      "2": 32,
+      "3": 30,
+      "4": 16
+    },
+    "M64*2": {
+      "1": 32,
+      "2": 30,
+      "3": 31,
+      "4": 34
+    },
+    "HVAR*10": {
+      "1": 31,
+      "2": 32,
+      "3": 34,
+      "4": 30
+    },
+    "Smokes": {}
+  },
+  "A-50": {},
+  "AH-1W": {
+    "14xHYDRA-70 WP": {
+      "1": 16
+    },
+    "38xHYDRA-70 WP": {
+      "1": 16
+    },
+    "8xBGM-71, 14xHYDRA-70": {
+      "1": 18,
+      "2": 31,
+      "3": 32
+    },
+    "8xBGM-71, 14xHYDRA-70 WP": {
+      "1": 16
+    },
+    "8xBGM-71, 38xHYDRA-70 WP": {
+      "1": 16
+    },
+    "14xHYDRA-70": {
+      "1": 18,
+      "2": 31,
+      "3": 32
+    },
+    "38xHYDRA-70": {
+      "1": 18,
+      "2": 31,
+      "3": 32
+    },
+    "8xAGM-114": {
+      "1": 18,
+      "2": 31,
+      "3": 32
+    },
+    "28xHYDRA-70": {
+      "1": 18,
+      "2": 31,
+      "3": 32
+    },
+    "8xBGM-71, 38xHYDRA-70": {
+      "1": 18,
+      "2": 31,
+      "3": 32
+    },
+    "8xAGM-114, 38xHYDRA-70 WP": {
+      "1": 16
+    },
+    "8xBGM-71": {
+      "1": 18,
+      "2": 31,
+      "3": 32
+    },
+    "8xAGM-114, 14xHYDRA-70 WP": {
+      "1": 16
+    },
+    "76xHYDRA-70": {
+      "1": 18,
+      "2": 31,
+      "3": 32
+    },
+    "8xAGM-114, 38xHYDRA-70": {
+      "1": 18,
+      "2": 31,
+      "3": 32,
+      "4": 30
+    },
+    "8xAGM-114, 14xHYDRA-70": {
+      "1": 18,
+      "2": 31,
+      "3": 32
+    }
+  },
+  "AH-64A": {
+    "8xAGM-114": {
+      "1": 18,
+      "2": 31,
+      "3": 32
+    },
+    "38xHYDRA-70 WP": {
+      "1": 16
+    },
+    "76xHYDRA-70": {
+      "1": 18,
+      "2": 31,
+      "3": 32
+    },
+    "8xAGM-114, 38xHYDRA-70 WP": {
+      "1": 16
+    },
+    "38xHYDRA-70": {
+      "1": 18,
+      "2": 31,
+      "3": 32
+    },
+    "8xAGM-114, 38xHYDRA-70": {
+      "1": 18,
+      "2": 31,
+      "3": 32
+    },
+    "AGM-114K*16": {
+      "1": 18,
+      "2": 31,
+      "3": 32,
+      "4": 30
+    }
+  },
+  "AH-64D": {
+    "76xHYDRA-70": {
+      "1": 18,
+      "2": 31,
+      "3": 32
+    },
+    "38xHYDRA-70": {
+      "1": 18,
+      "2": 31,
+      "3": 32
+    },
+    "38xHYDRA-70 WP": {
+      "1": 16
+    },
+    "8xAGM-114": {
+      "1": 18,
+      "2": 31,
+      "3": 32
+    },
+    "8xAGM-114, 38xHYDRA-70 WP": {
+      "1": 16
+    },
+    "8xAGM-114, 38xHYDRA-70": {
+      "1": 18,
+      "2": 31,
+      "3": 32
+    },
+    "AGM-114K*16": {
+      "1": 18,
+      "2": 31,
+      "3": 32,
+      "4": 30
+    }
+  },
+  "An-26B": {},
+  "An-30M": {},
+  "B-1B": {
+    "Mk-82*84": {
+      "1": 34,
+      "2": 32
+    },
+    "AGM-154*12": {
+      "1": 33
+    },
+    "GBU-38*48": {
+      "1": 31,
+      "2": 32,
+      "3": 33
+    },
+    "CBU-87*30": {
+      "1": 31
+    },
+    "CBU-97*30": {
+      "1": 31
+    },
+    "GBU-38*16, CBU-97*20": {
+      "1": 31
+    },
+    "Mk-84*24": {
+      "1": 34,
+      "2": 32
+    },
+    "GBU-31*24": {
+      "1": 32,
+      "2": 33
+    },
+    "GBU-31(V)3/B*24": {
+      "1": 32,
+      "2": 33
+    },
+    "GBU-31*8, GBU-38*32": {
+      "1": 32,
+      "2": 33
+    }
+  },
+  "B-52H": {
+    "Mk-84*18": {
+      "1": 32,
+      "2": 34
+    },
+    "Mk 82*51": {
+      "1": 32,
+      "2": 34
+    },
+    "Mk20*18": {
+      "1": 32,
+      "2": 34
+    },
+    "AGM-86C*20": {
+      "1": 33
+    },
+    "AGM-84A*8": {
+      "1": 30
+    }
+  },
+  "C-130": {},
+  "C-17A": {},
+  "CH-47D": {},
+  "CH-53E": {},
+  "E-2C": {},
+  "E-3A": {},
+  "F-117A": {
+    "GBU-12*2": {
+      "1": 33
+    },
+    "GBU-10*2": {
+      "1": 33
+    },
+    "GBU-27*2": {
+      "1": 33
+    }
+  },
+  "F-14A": {
+    "AIM-9*2": {
+      "1": 17
+    },
+    "AIM-54C*6,AIM-9*2": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "AIM-54C*4,AIM-9*2,AIM-7*2": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    }
+  },
+  "F-15C": {
+    "AIM-120B*4, AIM-7M*2, AIM-9M*2, Fuel*3": {
+      "1": 11
+    },
+    "AIM-9*2,AIM-120*6,Fuel": {
+      "1": 10
+    },
+    "AIM-9*4,AIM-120*4,Fuel*3": {
+      "1": 18,
+      "2": 19,
+      "3": 11
+    },
+    "AIM-9*4,AIM-120*4,Fuel": {
+      "1": 10
+    },
+    "AIM-9*2,AIM-120*2,AIM-7*4,Fuel*3": {
+      "1": 18,
+      "2": 19,
+      "3": 11
+    },
+    "AIM-9*2,AIM-120*6,Fuel*3": {
+      "1": 18,
+      "2": 19,
+      "3": 11
+    },
+    "AIM-9*4,AIM-7*4,Fuel": {
+      "1": 10
+    },
+    "AIM-120*8,Fuel": {
+      "1": 10
+    },
+    "AIM-9*4,AIM-7*4,Fuel*3": {
+      "1": 18,
+      "2": 19,
+      "3": 11
+    },
+    "AIM-120*8,Fuel*3": {
+      "1": 18,
+      "2": 19,
+      "3": 11
+    },
+    "AIM-9*2,AIM-120*2,AIM-7*4,Fuel": {
+      "1": 10
+    }
+  },
+  "F-15E": {
+    "AIM-120B*2,AIM-9M*2,FUEL*3,CBU-87*6,Mk-82AIR*6": {
+      "1": 32
+    },
+    "AIM-120B*2,AIM-9M*2,FUEL*3,CBU-97*12": {
+      "1": 32
+    },
+    "AIM-120B*2,AIM-9M*2,FUEL*3,Mk-82*12": {
+      "1": 32
+    },
+    "AIM-120B*4,AIM-120C*4,FUEL*3": {
+      "1": 18,
+      "2": 19,
+      "3": 10,
+      "4": 11
+    },
+    "AIM-120B*2,AIM-9M*2,FUEL,GBU-31*4,AGM-65H,AGM-65D": {
+      "1": 31,
+      "2": 33
+    },
+    "AIM-120B*2,AIM-9M*2,FUEL,CBU-103*2,GBU-12,GBU-38,AGM-154C*2": {
+      "1": 31
+    },
+    "AIM-120B*4,AIM-9M*4,FUEL*3": {
+      "1": 18,
+      "2": 19,
+      "3": 10,
+      "4": 11
+    },
+    "AIM-120B*2,AIM-9M*2,AIM-120C*2,AIM-7M*2,FUEL*3": {
+      "1": 18,
+      "2": 19,
+      "3": 10,
+      "4": 11
+    },
+    "AIM-120B*2,AIM-9M*2,FUEL,GBU-12*4,GBU-38*4,AGM-154C*2": {
+      "1": 31
+    },
+    "AIM-120B*2,AIM-9M*2,FUEL,GBU-31*4,AGM-154C*2": {
+      "1": 31,
+      "2": 33
+    },
+    "AIM-120B*2,AIM-9M*2,AIM-7M*4,FUEL*3": {
+      "1": 18,
+      "2": 19,
+      "3": 10,
+      "4": 11
+    },
+    "AIM-120B*2,AIM-9M*2,FUEL*3,Mk-84*8": {
+      "1": 32,
+      "2": 34
+    },
+    "AIM-120B*2,AIM-9M*2,FUEL,AGM-154C*2": {
+      "1": 31
+    },
+    "AIM-120B*2,AIM-9M*2,FUEL,GBU-12*4,GBU-38*4,AGM-65D*2": {
+      "1": 31
+    },
+    "AIM-120B*2,AIM-9M*2,FUEL,GBU-12*4,GBU-38*4,AGM-65K*2": {
+      "1": 31
+    },
+    "AIM-120C*2,AIM-9M*4,AIM-7M*2,FUEL*3": {
+      "1": 18,
+      "2": 19,
+      "3": 10,
+      "4": 11
+    },
+    "AIM-9M*4,AIM-7M*4,FUEL*3": {
+      "1": 18,
+      "2": 19,
+      "3": 10,
+      "4": 11
+    },
+    "AIM-120C*2,AIM-9M*2,FUEL*3": {
+      "1": 17
+    },
+    "AIM-120B*2,AIM-9M*2,FUEL,Mk-84*8,AGM-154C*2": {
+      "1": 34
+    },
+    "AIM-120B*2,AIM-9M*2,FUEL*3,Mk-82AIR*12": {
+      "1": 32,
+      "2": 34
+    },
+    "AIM-120B*2,AIM-9M*2,FUEL,GBU-12*2,GBU-38*2,AGM-154C*2": {
+      "1": 31
+    },
+    "AIM-120B*2,AIM-9M*2,FUEL,GBU-12*2,GBU-38*2,AGM-65H,AGM-65D": {
+      "1": 31
+    },
+    "AIM-120B*2,AIM-120C*4,AIM-9M*2,FUEL*3": {
+      "1": 18,
+      "2": 19,
+      "3": 10,
+      "4": 11
+    },
+    "AIM-120B*2,AIM-9M*2,FUEL*3,Mk-82*6,Mk-82AIR*6": {
+      "1": 32
+    },
+    "AIM-120B*2,AIM-9M*2,FUEL,CBU-103*2,GBU-12,GBU-38,AGM-65H*2": {
+      "1": 31
+    },
+    "AIM-120B*2,AIM-9M*2,FUEL,AGM-65D*2": {
+      "1": 31
+    },
+    "AIM-120B*2,AIM-9M*2,FUEL*2,SUU-25*2,GBU-12,GBU-38": {
+      "1": 16
+    },
+    "AIM-120B*6,AIM-9M*2,FUEL*3": {
+      "1": 18,
+      "2": 19,
+      "3": 10,
+      "4": 11
+    },
+    "AIM-120B*2,AIM-9M*2,FUEL,Mk-82AIR*12,AGM-154C*2": {
+      "1": 34
+    },
+    "AIM-120C*6,AIM-9M*2,FUEL*3": {
+      "1": 18,
+      "2": 19,
+      "3": 10,
+      "4": 11
+    },
+    "GBU-31(V)3/B*5, AIM-120C*2, AIM-9M*2": {
+      "1": 33
+    }
+  },
+  "F-16A MLU": {
+    "Fuel*3": {
+      "1": 16
+    },
+    "AGM-88*2, AGM-65D*2, AIM-120B*2, ECM": {
+      "1": 29
+    },
+    "Mk-82*6,AIM-120*2,ECM,Fuel*2": {
+      "1": 32,
+      "2": 34
+    },
+    "Mk-82*2,AIM-120*2,AIM-9*2,ECM,Fuel*2": {
+      "1": 32,
+      "2": 34
+    },
+    "AGM88*2,AGM-65D*6,AIM-120*2,AIM-9*2,ECM": {
+      "1": 29
+    },
+    "AIM-120*2,GBU-10*2,ECM,Lantirn ,Fuel*2": {
+      "1": 33
+    },
+    "AIM-9*4,ECM": {
+      "1": 10
+    },
+    "Mk20*4,AIM-9*2,ECM,Fuel*2": {
+      "1": 31
+    },
+    "AIM-120*6,ECM": {
+      "1": 10
+    },
+    "AIM-120*4,AIM-9*2,ECM": {
+      "1": 10
+    },
+    "AGM88, AGM-65D, AIM-120*2,Fuel*2,ECM": {
+      "1": 29
+    },
+    "AGM-65D*2,AIM-120*2,ECM,Lantirn ,Fuel*2": {
+      "1": 31
+    },
+    "AIM-9*4,ECM,Fuel*2": {
+      "1": 18,
+      "2": 19,
+      "3": 11
+    },
+    "AIM-120*4,AIM-9*2,ECM,Fuel*2": {
+      "1": 18,
+      "2": 19,
+      "3": 11
+    },
+    "AGM-88*2,AIM-120*2,AIM-9*2,ECM,Fuel*2": {
+      "1": 29
+    },
+    "Mk-84*2,AIM-9*2,ECM,Fuel*2": {
+      "1": 32,
+      "2": 34
+    },
+    "AIM-120*6,ECM,Fuel*2": {
+      "1": 18,
+      "2": 19,
+      "3": 11
+    },
+    "AGM-154*2,AIM-120*2,ECM,Lantirn ,Fuel*2": {
+      "1": 33
+    },
+    "AGM-88*2,AGM-65D*2,AIM-120B*2,AIM-9M*2,ECM": {
+      "1": 29
+    },
+    "Mk20*2,AIM-120*2,ECM,Fuel*2": {
+      "1": 31
+    },
+    "AIM-120*2,AIM-9*2,GBU-12*2,ECM,Lantirn ,Fuel*2": {
+      "1": 33
+    },
+    "AGM-65K*2,AIM-120*2,ECM,Lantirn ,Fuel*2": {
+      "1": 31
+    },
+    "AIM-120B*2_AIM-9M*2_AGM-119*4_ALQ-131": {
+      "1": 30
+    }
+  },
+  "F-16A": {
+    "AGM-88*2,AIM-120*2,AIM-9*2,ECM,Fuel*2": {
+      "1": 29
+    },
+    "Mk20*4,AIM-9*2,ECM,Fuel*2": {
+      "1": 31
+    },
+    "AIM-9*4,ECM,Fuel*2": {
+      "1": 18,
+      "2": 19,
+      "3": 11
+    },
+    "AGM-65D*2,AIM-120*2,ECM,Lantirn ,Fuel*2": {
+      "1": 31
+    },
+    "AIM-120*4,AIM-9*2,ECM,Fuel*2": {
+      "1": 18,
+      "2": 19,
+      "3": 11
+    },
+    "AGM88*2_AGM-65D*6_AIM-120*2_AIM-9*2_ECM": {
+      "1": 29
+    },
+    "AGM-65K*2,AIM-120*2,ECM,Lantirn ,Fuel*2": {
+      "1": 31
+    },
+    "AIM-120*2,AIM-9*2,GBU-12*2,ECM,Lantirn ,Fuel*2": {
+      "1": 33
+    },
+    "AIM-120*2,GBU-10*2,ECM,Lantirn ,Fuel*2": {
+      "1": 33
+    },
+    "AIM-120*6,ECM,Fuel*2": {
+      "1": 18,
+      "2": 19,
+      "3": 11
+    },
+    "AIM-120*6,ECM": {
+      "1": 10
+    },
+    "AIM-9*4,ECM": {
+      "1": 10
+    },
+    "Fuel*3": {
+      "1": 16
+    },
+    "Mk-84*2,AIM-9*2,ECM,Fuel*2": {
+      "1": 32,
+      "2": 34
+    },
+    "AIM-120*4,AIM-9*2,ECM": {
+      "1": 10
+    },
+    "Mk-82*6,AIM-120*2,ECM,Fuel*2": {
+      "1": 32,
+      "2": 34
+    },
+    "Mk-82*2,AIM-120*2,AIM-9*2,ECM,Fuel*2": {
+      "1": 32,
+      "2": 34
+    },
+    "AGM-154*2,AIM-120*2,ECM,Lantirn ,Fuel*2": {
+      "1": 33
+    },
+    "Mk20*2,AIM-120*2,ECM,Fuel*2": {
+      "1": 31
+    },
+    "AGM-119*2,AIM-120B*2,AIM-9M*2,ALQ-184,Fuel*2": {
+      "1": 30
+    }
+  },
+  "F-16C bl.50": {
+    "AIM-120B*4, AIM-9M*2, Fuel": {
+      "1": 18,
+      "2": 11,
+      "3": 10,
+      "4": 19
+    },
+    "AIM-120C*4, AIM-9M*2, Fuel": {
+      "1": 18,
+      "2": 11,
+      "3": 10,
+      "4": 19
+    },
+    "AGM-65G*2, AIM-120C*2, AIM-9M*2, Fuel, ECM": {
+      "1": 30
+    },
+    "AGM-65D*6, AIM-120B*2, AIM-9M*2, ECM, Fuel": {
+      "1": 31
+    },
+    "Mk86*6, AIM-9M*4, ECM, Fuel": {
+      "1": 31
+    },
+    "CBU-97*4, AIM-9M*4,  Fuel": {
+      "1": 31
+    },
+    "CBU-87*4, AIM-9M*4,  Fuel": {
+      "1": 31
+    },
+    "AGM-65D*2, CBU-87*2, AIM-9M*4,  Fuel": {
+      "1": 31
+    },
+    "AGM-65D*2, CBU-97*2, AIM-9M*4,  Fuel": {
+      "1": 31
+    },
+    "Mk84*2, AIM-9M*4, ECM, Fuel": {
+      "1": 32
+    },
+    "GBU-31v1*2, AIM-9M*4, ECM, Fuel": {
+      "1": 32,
+      "2": 33
+    },
+    "GBU-31v3*2, AIM-9M*4, ECM, Fuel": {
+      "1": 32,
+      "2": 33
+    },
+    "GBU-31v1*2, Mk82*6, AIM-9M*4, Fuel": {
+      "1": 32
+    },
+    "Mk84*4, AIM-9M*4, Fuel": {
+      "1": 32,
+      "2": 34
+    },
+    "Mk82*12, AIM-9M*4, Fuel": {
+      "1": 32,
+      "2": 34
+    },
+    "AGM-154C*2, AIM-9M*4, ECM, Fuel": {
+      "1": 32,
+      "2": 33
+    }
+  },
+  "F-16C bl.52d": {
+    "AGM-88*2, AGM-65D*2, AIM-120B*2, ECM,LIGHTNING": {
+      "1": 29
+    },
+    "Mk-82*6,AIM-120*2,ECM,Fuel*2,LIGHTNING": {
+      "1": 32,
+      "2": 34
+    },
+    "AGM88*2,AGM-65D*6,AIM-120*2,AIM-9*2,ECM,LIGHTNING": {
+      "1": 29
+    },
+    "AGM-65D*4,AIM-120*2,ECM,Fuel*2,LIGHTNING": {
+      "1": 31
+    },
+    "AIM-120*2,GBU-31*2,ECM,Fuel*2,LIGHTNING": {
+      "1": 33
+    },
+    "AIM-120*2,GBU-31(v)*2,ECM,Fuel*2,LIGHTNING": {
+      "1": 33
+    },
+    "AGM-88*2,AIM-120*2,AIM-9*2,ECM,Fuel*2,LIGHTNING": {
+      "1": 29
+    },
+    "Copy AIM-120*2,GBU-38*2,ECM,Fuel*2,LIGHTNING": {
+      "1": 33
+    },
+    "AIM-120*2,GBU-10*2,ECM,Fuel*2,LIGHTNING": {
+      "1": 33
+    },
+    "Mk-84*2,AIM-120*2,ECM,Fuel*2,LIGHTNING": {
+      "1": 32,
+      "2": 34
+    },
+    "AGM-154*2,AIM-120*2,ECM,Fuel*2,LIGHTNING": {
+      "1": 33
+    },
+    "Mk-82AIR*6,AIM-120*2,ECM,Fuel*2,LITENING": {
+      "1": 32,
+      "2": 34
+    },
+    "CBU97*4,AIM120*2,ECM,Fuel*2,LITENING": {
+      "1": 31
+    },
+    "AGM-88*2,AGM-65D*2,AIM-120B*2,AIM-9M*2,ECM,LITENING": {
+      "1": 29
+    },
+    "CBU87*2,AIM-120*2,ECM,Fuel*2,LITENING": {
+      "1": 31
+    },
+    "AGM88, AGM-65D, AIM-120*2,Fuel*2,ECM,LITENING": {
+      "1": 29
+    },
+    "AIM-120*2,GBU-12*2,ECM,Fuel*2,LITENING": {
+      "1": 33
+    },
+    "AGM-65K*2,AIM-120*2,ECM,Lantirn ,Fuel*2,LITENING": {
+      "1": 31
+    },
+    "AGM-65G*4,AIM-120C*2,AIM-9M*2,ECM": {
+      "1": 30
+    },
+    "AIM-120C*4,AIM-9M*2,ECM,Fuel*2": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "AIM-120B*4,AIM-9M*2,ECM,Fuel*2": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "AIM-9M*4,Fuel*2": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "AIM-120C*2,AIM-120B*2,AIM-9M*2,Fuel*3": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "AIM-9P*4": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "AIM-9M*2,ECM": {
+      "1": 17
+    }
+  },
+  "F-4E": {
+    "AIM-9*4,AIM-7*4": {
+      "1": 10
+    },
+    "AGM45*2_AGM-65D*4_AIM7*2_ECM": {
+      "1": 29
+    },
+    "AGM-45*2,AIM-7*2,Fuel*2,ECM": {
+      "1": 29
+    },
+    "Mk-82*18,AIM-7*2,ECM": {
+      "1": 32
+    },
+    "GBU-12*2,AIM-7*2,Fuel*2,ECM": {
+      "1": 33
+    },
+    "Mk20*12,AIM-7*2,ECM": {
+      "1": 31
+    },
+    "Mk-82*6,AIM-7*2,Fuel*2,ECM": {
+      "1": 32
+    },
+    "GBU-10*2,AIM-7*2,Fuel*2,ECM": {
+      "1": 33
+    },
+    "Mk20*6,AIM-7*2,Fuel*2,ECM": {
+      "1": 31
+    },
+    "AGM-45*4,AIM-7*2,ECM": {
+      "1": 29
+    },
+    "AGM-65K*4,AIM-7*2,Fuel*2,ECM": {
+      "1": 31
+    },
+    "Fuel*3": {
+      "1": 16
+    },
+    "AIM-9*4,AIM-7*4,Fuel*2": {
+      "1": 18,
+      "2": 19,
+      "3": 11
+    },
+    "Mk-84*2,AIM-7*2,ECM": {
+      "1": 32
+    },
+    "AGM-65K*4,AIM-7M*4,Fuel*3": {
+      "1": 30
+    }
+  },
+  "F/A-18A": {
+    "GBU-16*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 33
+    },
+    "AIM-9*6,Fuel": {
+      "1": 10
+    },
+    "Mk-84*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 32,
+      "2": 34
+    },
+    "AGM-65D*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 31
+    },
+    "AGM88*4_AIM9*2_AIM7_FLIR Pod_Fuel": {
+      "1": 29
+    },
+    "AIM-9*4,Fuel*3": {
+      "1": 19,
+      "2": 11,
+      "3": 18
+    },
+    "LAU-10*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 32,
+      "2": 34
+    },
+    "AGM-88*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 29
+    },
+    "MK-82*8,AIM-9*2,AIM-7,FLIR Pod,Fuel": {
+      "1": 32,
+      "2": 34
+    },
+    "MK-82*4,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 32,
+      "2": 34
+    },
+    "AIM-9*4,AIM-7*2,Fuel*3": {
+      "1": 19,
+      "2": 11,
+      "3": 18
+    },
+    "AGM-65K*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 31
+    },
+    "Fuel*3": {
+      "1": 16
+    },
+    "AGM88*2_AGM65D*2_AIM9*2_AIM7_FLIR Pod_Fuel": {
+      "1": 29
+    },
+    "GBU-12*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 33
+    },
+    "AIM-9*4,AIM-7*4,Fuel": {
+      "1": 10
+    },
+    "Mk20*4,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 31
+    },
+    "GBU-10*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 33
+    },
+    "AGM-84A*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 30
+    }
+  },
+  "F/A-18C": {
+    "AGM-62*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 33
+    },
+    "GBU-10*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 33
+    },
+    "GBU-12*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 33
+    },
+    "Fuel*3": {
+      "1": 16
+    },
+    "Mk-84*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 32,
+      "2": 34
+    },
+    "GBU-16*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 33
+    },
+    "AGM-154*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 33
+    },
+    "AIM-120*4,AIM-9*2,Fuel*3": {
+      "1": 19,
+      "2": 11,
+      "3": 18
+    },
+    "AGM-65D*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 31
+    },
+    "AGM88*2_AGM65D*2_AIM9*2_AIM7_FLIR Pod_Fuel": {
+      "1": 29
+    },
+    "AGM88*4_AIM9*2_AIM7_FLIR Pod_Fuel": {
+      "1": 29
+    },
+    "AIM-9*2,AIM-7*6,Fuel": {
+      "1": 10
+    },
+    "Mk20*4,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 31
+    },
+    "AIM-120*6,AIM-9*2,Fuel": {
+      "1": 10
+    },
+    "LAU-10*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 32,
+      "2": 34
+    },
+    "AIM-9*2,AIM-7*4,Fuel*3": {
+      "1": 19,
+      "2": 11,
+      "3": 18
+    },
+    "MK-82*8,AIM-9*2,AIM-7,FLIR Pod,Fuel": {
+      "1": 32,
+      "2": 34
+    },
+    "AIM-120*2,AIM-9*2,AIM-7*2,Fuel*3": {
+      "1": 19,
+      "2": 11,
+      "3": 18
+    },
+    "AGM-88*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 29
+    },
+    "AGM-84E*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 33
+    },
+    "MK-82*4,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 32,
+      "2": 34
+    },
+    "AGM-84A*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 30
+    },
+    "AIM-9M*2,AGM-65D*2,Mk-82*4,FLIR Pod,Fuel": {
+      "1": 31
+    },
+    "AIM-120*4,AIM-9*2,AIM-7*2,Fuel": {
+      "1": 10
+    },
+    "AGM-65K*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 31
+    }
+  },
+  "IL-76MD": {},
+  "IL-78M": {},
+  "Ka-27": {},
+  "Ka-52": {
+    "APU-6 Vikhr-M*2, Kh-25ML*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 18
+    },
+    "APU-6 Vikhr-M*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 18
+    },
+    "B-8*4": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 18
+    },
+    "KMGU-2 (AO-2.5RT)*4": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "B-8*2, APU-6 Vikhr-M*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 18
+    },
+    "FAB-500*2": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "UB-13*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 18
+    },
+    "FAB-250*4": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "Kh-25ML*2, R-73*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 18
+    }
+  },
+  "KC-10A": {},
+  "KC-135": {},
+  "Mi-24V": {
+    "2xFAB-500": {
+      "1": 32
+    },
+    "10xS-13": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "2xFAB-250": {
+      "1": 32
+    },
+    "4x9M114, 2xFuel tank": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "128xS-5": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "80xS-8 TsM": {
+      "1": 16
+    },
+    "4x9M114, 40xS-8 TsM": {
+      "1": 16
+    },
+    "64xS-5": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "8x9M114": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "4x9M114, 80xS-8": {
+      "1": 31,
+      "2": 32,
+      "3": 18,
+      "4": 30
+    },
+    "4x9M114, 128xS-5": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "2xKMGU AP": {
+      "1": 32
+    },
+    "4xFuel tank": {
+      "1": 15
+    },
+    "4xUPK-23": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "4x9M114, 10xS-13": {
+      "1": 31,
+      "2": 32,
+      "3": 18,
+      "4": 30
+    },
+    "4x9M114, 80xS-8 TsM": {
+      "1": 16
+    },
+    "4x9M114": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "80xS-8": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "40xS-8 TsM": {
+      "1": 16
+    },
+    "8x9M114, 40xS-8 TsM": {
+      "1": 16
+    },
+    "8x9M114, 10xS-13": {
+      "1": 31,
+      "2": 32,
+      "3": 18,
+      "4": 30
+    },
+    "2xFuel tank": {
+      "1": 15
+    },
+    "4x9M114, 4xUPK-23": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "2xUPK-23": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "8x9M114, 64xS-5": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "8x9M114, 40xS-8": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "20xS-13": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "40xS-8": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "8x9M114, 2xUPK-23": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    }
+  },
+  "Mi-26": {},
+  "Mi-28N": {
+    "2xFAB-250": {
+      "1": 32
+    },
+    "4xFuel tank": {
+      "1": 15
+    },
+    "80xS-8": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "4xKMGU AP": {
+      "1": 32
+    },
+    "4xUPK-23": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "16x9M114, 10xS-13": {
+      "1": 31,
+      "2": 32,
+      "3": 18,
+      "4": 30
+    },
+    "4xFAB-500": {
+      "1": 32
+    },
+    "16x9M114, 2xFAB-500": {
+      "1": 32
+    },
+    "40xS-8": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "40xS-8 TsM": {
+      "1": 16
+    },
+    "2xKMGU AP": {
+      "1": 32
+    },
+    "2xUPK-23": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "16x9M114, 2xUPK-23": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "2xFAB-500": {
+      "1": 32
+    },
+    "16x9M114, 40xS-8": {
+      "1": 31,
+      "2": 32,
+      "3": 18,
+      "4": 30
+    },
+    "16x9M114": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "20xS-13": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "16x9M114, 2xKMGU AP": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "4xFAB-250": {
+      "1": 32
+    },
+    "4xKMGU AT": {
+      "1": 32
+    },
+    "16x9M114, 40xS-8 TsM": {
+      "1": 16
+    },
+    "80xS-8 TsM": {
+      "1": 16
+    },
+    "2xKMGU AT": {
+      "1": 32
+    },
+    "9x9M114": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "2xFuel tank": {
+      "1": 15
+    },
+    "10xS-13": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "2xFAB-250, 16x9M114": {
+      "1": 32
+    },
+    "16x9M114, 2xKMGU AT": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    }
+  },
+  "Mi-8MT": {
+    "4 x B8": {
+      "1": 32
+    },
+    "4 x B8 + 2GUV_AP-30 (GrL 30mm)": {
+      "1": 32
+    },
+    "2 x UPK +2 x B8": {
+      "1": 31
+    },
+    "2 xB8 + 2GUV_YaKB (MG-12.7+7.62)+ 2GUV_AP-30 (GrL 30mm)": {
+      "1": 32
+    },
+    "6 x FAB-100": {
+      "1": 32
+    },
+    "2 x B8 + 2 x UPK-23-250": {
+      "1": 32
+    },
+    "2 x UPK--23-250": {
+      "1": 32
+    }
+  },
+  "MiG-15bis": {
+    "2*FAB-50": {
+      "1": 31,
+      "2": 32
+    },
+    "2*FAB-100M": {
+      "1": 31,
+      "2": 32
+    },
+    "2*300L": {
+      "1": 11
+    },
+    "2*400L": {
+      "1": 11
+    },
+    "2*600L": {
+      "1": 11
+    },
+    "Fuel tank 300": {
+      "1": 18,
+      "2": 19,
+      "3": 10
+    },
+    "Fuel tank 400": {
+      "1": 18,
+      "2": 19,
+      "3": 10
+    }
+  },
+  "MiG-23MLD": {
+    "R-60M*4": {
+      "1": 10
+    },
+    "B-8*2,R-60M*2,Fuel-800": {
+      "1": 32
+    },
+    "UB-32*2,R-60M*2,Fuel-800": {
+      "1": 32
+    },
+    "R-24R*2,R-60M*4,Fuel-800": {
+      "1": 18,
+      "2": 19,
+      "3": 11
+    },
+    "R-24R,R-24T,R-60M*4,Fuel-800": {
+      "1": 18,
+      "2": 19,
+      "3": 11
+    },
+    "R-60M*4,Fuel-800": {
+      "1": 18,
+      "2": 19,
+      "3": 11
+    },
+    "FAB-500*2,R-60M*2,Fuel-800": {
+      "1": 32
+    },
+    "R-24R*2,R-60M*4": {
+      "1": 10
+    },
+    "FAB-250*2,R-60M*2,Fuel-800": {
+      "1": 32
+    },
+    "RBK-250*2,R-60M*2,Fuel-800": {
+      "1": 31
+    },
+    "RBK-500*2,R-60M*2,Fuel-800": {
+      "1": 31
+    },
+    "R-24R,R-24T,R-60M*4": {
+      "1": 10
+    }
+  },
+  "MiG-25PD": {
+    "R-40R*2,R-40T*2": {
+      "1": 11,
+      "2": 10,
+      "3": 18,
+      "4": 19
+    },
+    "R-40R*4": {
+      "1": 11,
+      "2": 10,
+      "3": 18,
+      "4": 19
+    },
+    "R-40R*2,R-60M*2": {
+      "1": 11,
+      "2": 10,
+      "3": 18,
+      "4": 19
+    }
+  },
+  "MiG-25RBT": {
+    "FAB-500x2_60x2": {
+      "1": 32
+    },
+    "R-60M*2": {
+      "1": 17
+    }
+  },
+  "MiG-27K": {
+    "FAB-250*6,R-60M*2,Fuel": {
+      "1": 32
+    },
+    "BetAB-500ShP*2,FAB-250*2,R-60*2": {
+      "1": 34
+    },
+    "Kh-25MR*2,R-60M*2,Fuel": {
+      "1": 31
+    },
+    "Kh-29L*2,R-60M*2,Fuel": {
+      "1": 33
+    },
+    "B-8*4": {
+      "1": 32
+    },
+    "BetAB-500*2,FAB-500*2,R-60*2": {
+      "1": 34
+    },
+    "Kh-25MPU*2,R-60M*2,Fuel": {
+      "1": 29
+    },
+    "Kh-29T*2,R-60M*2,Fuel": {
+      "1": 33
+    },
+    "FAB-500*2,FAB-250*2,R-60M*2,Fuel": {
+      "1": 32
+    },
+    "Kh-25ML*2,R-60M*2,Fuel": {
+      "1": 31
+    },
+    "KAB-500*2,R-60M*2,Fuel": {
+      "1": 33
+    },
+    "RBK-500AO*2,RBK-250*2,R-60M*2": {
+      "1": 31
+    },
+    "UB-32*4": {
+      "1": 32
+    },
+    "Kh-29L*2,R-60*2,Fuel": {
+      "1": 30
+    }
+  },
+  "MiG-29A": {
+    "Fuel-1150*2,Fuel-1500": {
+      "1": 16
+    },
+    "RBK-500AO*4,R-73*2,Fuel": {
+      "1": 31
+    },
+    "FAB-250*4,R-73*2,Fuel": {
+      "1": 32
+    },
+    "B-8*4,R-73*2,Fuel": {
+      "1": 32
+    },
+    "R-60M*4,R-27R*2": {
+      "1": 10
+    },
+    "R-73*4,R-27R*2,Fuel-1500": {
+      "1": 19,
+      "2": 11,
+      "3": 18
+    },
+    "R-73*6,Fuel-1500": {
+      "1": 19,
+      "2": 11,
+      "3": 18
+    },
+    "R-60M*6,Fuel-1500": {
+      "1": 19,
+      "2": 11,
+      "3": 18
+    },
+    "S-24*4,R-73*2,Fuel": {
+      "1": 32
+    },
+    "FAB-500*4,R-73*2,Fuel": {
+      "1": 32
+    },
+    "R-60M*6": {
+      "1": 10
+    },
+    "BetAB-500*4,R-73*2,Fuel": {
+      "1": 34
+    },
+    "R-73*6": {
+      "1": 10
+    },
+    "R-73*2,R-60M*2,R-27R*2,Fuel-1500": {
+      "1": 19,
+      "2": 11,
+      "3": 18
+    },
+    "R-60M*4,R-27R*2,Fuel-1500": {
+      "1": 19,
+      "2": 11,
+      "3": 18
+    },
+    "RBK-250*4,R-73*2,Fuel": {
+      "1": 31
+    },
+    "R-73*4,R-27R*2": {
+      "1": 10
+    },
+    "R-73*2,R-60M*2,R-27R*2": {
+      "1": 10
+    },
+    "S-24*2,FAB-500*2,R-73*2,Fuel": {
+      "1": 30
+    }
+  },
+  "MiG-29G": {
+    "R-73*6,Fuel-1500": {
+      "1": 18,
+      "2": 11,
+      "3": 19
+    },
+    "R-73*4,R-27R*2,Fuel-1500": {
+      "1": 18,
+      "2": 11,
+      "3": 19
+    },
+    "R-73*2,R-60M*2,R-27R*2": {
+      "1": 10
+    },
+    "R-60M*4,R-27R*2,Fuel-1500": {
+      "1": 18,
+      "2": 11,
+      "3": 19
+    },
+    "R-73*6": {
+      "1": 10
+    },
+    "R-60M*4,R-27R*2": {
+      "1": 10
+    },
+    "R-73*4,R-27R*2": {
+      "1": 10
+    },
+    "Fuel-1150*2,Fuel-1500": {
+      "1": 16
+    },
+    "R-60M*6": {
+      "1": 10
+    },
+    "R-60M*6,Fuel-1500": {
+      "1": 18,
+      "2": 11,
+      "3": 19
+    },
+    "R-73*2,R-60M*2,R-27R*2,Fuel-1500": {
+      "1": 18,
+      "2": 11,
+      "3": 19
+    }
+  },
+  "MiG-29S": {
+    "R-73*2,R-60M*2,R-27R*2": {
+      "1": 10
+    },
+    "R-73*4,R-27R*2,Fuel-1500": {
+      "1": 19,
+      "2": 11,
+      "3": 18
+    },
+    "R-73*6,Fuel-1500": {
+      "1": 19,
+      "2": 11,
+      "3": 18
+    },
+    "R-60M*6,Fuel-1500": {
+      "1": 19,
+      "2": 11,
+      "3": 18
+    },
+    "S-24*4,R-73*2,Fuel": {
+      "1": 32
+    },
+    "FAB-500*4,R-73*2,Fuel": {
+      "1": 32
+    },
+    "BetAB-500*4,R-73*2,Fuel": {
+      "1": 34
+    },
+    "RBK-500AO*4,R-73*2,Fuel": {
+      "1": 31
+    },
+    "R-73*2,R-60M*2,R-27R*2,Fuel-1500": {
+      "1": 19,
+      "2": 11,
+      "3": 18
+    },
+    "R-77*2,R-73*2,Fuel-1500,Fuel-1150*2": {
+      "1": 19,
+      "2": 10,
+      "3": 11
+    },
+    "B-8*4,R-73*2,Fuel": {
+      "1": 32
+    },
+    "RBK-250*4,R-73*2,Fuel": {
+      "1": 31
+    },
+    "R-73*6": {
+      "1": 10
+    },
+    "Fuel-1150*2,Fuel-1500": {
+      "1": 16
+    },
+    "R-60M*6": {
+      "1": 10
+    },
+    "R-60M*4,R-27R*2": {
+      "1": 10
+    },
+    "R-73*4,R-27R*2": {
+      "1": 10
+    },
+    "R-77*4,R-73*2": {
+      "1": 10
+    },
+    "FAB-250*4,R-73*2,Fuel": {
+      "1": 32
+    },
+    "R-60M*4,R-27R*2,Fuel-1500": {
+      "1": 19,
+      "2": 11,
+      "3": 18
+    },
+    "R-77*4,R-73*2,Fuel-1500": {
+      "1": 19,
+      "2": 11,
+      "3": 18
+    },
+    "S-24*2,FAB-500*2,R-73*2,Fuel": {
+      "1": 30
+    }
+  },
+  "MiG-31": {
+    "R-40T*2,R-33*4": {
+      "1": 11,
+      "2": 10,
+      "3": 18,
+      "4": 19
+    },
+    "R-40T,R-33*4,R-40R": {
+      "1": 11,
+      "2": 10,
+      "3": 18,
+      "4": 19
+    },
+    "R-40R*2,R-33*4": {
+      "1": 11,
+      "2": 10,
+      "3": 18,
+      "4": 19
+    },
+    "R-60M*4,R-33*4": {
+      "1": 11,
+      "2": 10,
+      "3": 18,
+      "4": 19
+    }
+  },
+  "Mirage 2000-5": {
+    "R 550*2,MICA IR*4": {
+      "1": 18,
+      "2": 19,
+      "3": 11
+    },
+    "R 550*2,MICA IR*2,MICA AR*2,Fuel*3": {
+      "1": 11,
+      "2": 10,
+      "3": 18,
+      "4": 19
+    },
+    "R 550*2,MICA AR*4,Fuel*3": {
+      "1": 10
+    },
+    "R 550*2,SUPER 530F*2,Fuel": {
+      "1": 10
+    },
+    "Fuel*3": {
+      "1": 16
+    },
+    "R 550*2,MICA IR*4,Fuel*3": {
+      "1": 10
+    },
+    "R 550*2,MICA AR*4": {
+      "1": 18,
+      "2": 19,
+      "3": 11
+    },
+    "R 550*2,SUPER 530F*2": {
+      "1": 18,
+      "2": 19,
+      "3": 11
+    }
+  },
+  "MQ-9 Reaper": {
+    "GBU-12*4": {
+      "1": 31,
+      "2": 32
+    },
+    "GBU-38*4": {
+      "1": 31,
+      "2": 32
+    },
+    "AGM-114K*8,GBU-38*2": {
+      "1": 31,
+      "2": 32
+    },
+    "AGM-114K*12": {
+      "1": 31,
+      "2": 32
+    }
+  },
+  "OH-58D": {
+    "2xAGM-114, 7xHYDRA-70": {
+      "1": 18,
+      "2": 31,
+      "3": 32
+    },
+    "4xAGM-114": {
+      "1": 18,
+      "2": 31,
+      "3": 32
+    },
+    "M-3, 7xHYDRA-70": {
+      "1": 18,
+      "2": 31,
+      "3": 32
+    },
+    "2xAGM-114, M-3": {
+      "1": 18,
+      "2": 31,
+      "3": 32
+    },
+    "14xHYDRA-70": {
+      "1": 18,
+      "2": 31,
+      "3": 32
+    },
+    "14xHYDRA-70 WP": {
+      "1": 16
+    }
+  },
+  "RQ-1A Predator": {
+    "AGM-114K*2": {
+      "1": 32
+    }
+  },
+  "S-3B": {
+    "AGM-84A*2, Mk-82*2": {
+      "1": 30
+    },
+    "AGM-84E*2": {
+      "1": 33
+    },
+    "AGM-65D, AGM-65K, Mk20*4": {
+      "1": 32
+    },
+    "AGM-65D, AGM-65K, Mk82*4": {
+      "1": 32
+    },
+    "Mk82*10": {
+      "1": 32
+    },
+    "Mk84*2, Mk82*4": {
+      "1": 32
+    },
+    "ZUNI Mk71*8, Mk20*4": {
+      "1": 32
+    }
+  },
+  "SH-3W": {},
+  "SH-60B": {
+    "AGM-119": {
+      "1": 30
+    }
+  },
+  "Su-17M4": {
+    "UB-32*4,R-60M*2,FAB-250*4": {
+      "1": 32
+    },
+    "FAB-100*24,R-60M*2": {
+      "1": 32
+    },
+    "UB-32*4,R-60M*2,Fuel*2": {
+      "1": 32
+    },
+    "B-8*4,R-60M*2,FAB-250*4": {
+      "1": 32
+    },
+    "Kh-29L*2,R-60M*2,Fuel*2": {
+      "1": 33
+    },
+    "B-8*4,R-60M*2,Fuel*2": {
+      "1": 32
+    },
+    "Kh-29T*2,R-60M*2,Fuel*2": {
+      "1": 33
+    },
+    "BetAB-500*6,R-60M*2": {
+      "1": 34
+    },
+    "Kh-25MR*4,R-60M*2,Fuel*2": {
+      "1": 31
+    },
+    "S-24*4,R-60M*2,Fuel*2": {
+      "1": 32
+    },
+    "Kh25MPU*2_Kh25ML*2_,R60M*2_Fuel*2": {
+      "1": 29
+    },
+    "Kh58*2_Kh25MPU*2_R60M*2_Fuel*2": {
+      "1": 29
+    },
+    "FAB-250*16,R-60M*2": {
+      "1": 32
+    },
+    "Kh-25ML*4,R-60M*2,Fuel*2": {
+      "1": 31
+    },
+    "RBK-500AO*4,SPPU-22*2,R-60M*2": {
+      "1": 31,
+      "2": 32
+    },
+    "S-24*4,R-60M*2,FAB-250*4": {
+      "1": 32
+    },
+    "Fuel*4": {
+      "1": 16
+    },
+    "FAB-500*6,R-60M*2": {
+      "1": 32
+    },
+    "Kh-25ML*2,Kh-29L*2,R-60*2": {
+      "1": 30
+    }
+  },
+  "Su-24M": {
+    "UB-13*4,FAB-500*2": {
+      "1": 32
+    },
+    "Kh-31A*2,R-60M*2,Fuel": {
+      "1": 30
+    },
+    "UB-13*4": {
+      "1": 32
+    },
+    "KAB-500*4,R-60M*2": {
+      "1": 33
+    },
+    "S-25*2,Fuel*3": {
+      "1": 32
+    },
+    "Kh31P*2_Kh25ML*2_L-081": {
+      "1": 29,
+      "2": 30
+    },
+    "B-8*2,Fuel*3": {
+      "1": 32
+    },
+    "FAB-1500*2,R-60M*2": {
+      "1": 32
+    },
+    "S-24*4": {
+      "1": 32
+    },
+    "BetAB-500*4,R-60M*2": {
+      "1": 34
+    },
+    "Kh-25ML*4": {
+      "1": 31
+    },
+    "Kh-25MR*4": {
+      "1": 31
+    },
+    "FAB-100*24": {
+      "1": 32
+    },
+    "Kh-31A*2,R-60M*2": {
+      "1": 30
+    },
+    "UB-13*2,Fuel*3": {
+      "1": 32
+    },
+    "B-8*2,Fuel*2": {
+      "1": 32
+    },
+    "Kh58*2_Kh25ML*2_L-081": {
+      "1": 29
+    },
+    "RBK-250*8": {
+      "1": 31
+    },
+    "UB-32*4": {
+      "1": 32
+    },
+    "Kh-29L*2,R-60M*2": {
+      "1": 33
+    },
+    "S-24*2,Fuel*3": {
+      "1": 32
+    },
+    "Kh25MPU*2_Kh25ML*2_L-081": {
+      "1": 29
+    },
+    "FAB-500*4,R-60M*2": {
+      "1": 32
+    },
+    "FAB-250*8": {
+      "1": 32
+    },
+    "Fuel*3": {
+      "1": 16
+    },
+    "RBK-500AO*4,R-60M*2": {
+      "1": 31
+    },
+    "KAB-1500*2,R-60M*2,Fuel": {
+      "1": 33
+    },
+    "UB-32*4,FAB-250*4": {
+      "1": 32
+    },
+    "Kh-29T*2,R-60M*2": {
+      "1": 33
+    },
+    "UB-32*2,Fuel*3": {
+      "1": 32
+    },
+    "Kh-59M*2,R-60M*2,Fuel": {
+      "1": 33
+    },
+    "S-25*4": {
+      "1": 32
+    },
+    "B-8*6": {
+      "1": 32
+    }
+  },
+  "Su-24MR": {
+    "SHPIL,ETHER,R-60M*2": {
+      "1": 17
+    },
+    "Fuel*2": {
+      "1": 16
+    },
+    "TANGAZH,ETHER,R-60M*2,Fuel*2": {
+      "1": 17
+    },
+    "TANGAZH,ETHER,R-60M*2": {
+      "1": 17
+    },
+    "SHPIL,ETHER,R-60M*2,Fuel*2": {
+      "1": 17
+    }
+  },
+  "Su-25": {
+    "RBK-250*2,S-8KOM*80,R-60M*2,Fuel*2": {
+      "1": 31
+    },
+    "FAB-250*4,UB-13*2,R-60M*2,SPPU-22*2": {
+      "1": 32
+    },
+    "S-25L*6,UB-13*2,R-60M*2": {
+      "1": 31,
+      "2": 32
+    },
+    "S-25*6,SPPU-22*2,R-60M*2": {
+      "1": 31,
+      "2": 32
+    },
+    "2-25L*2, KH-25ML*2, RBK-500*2, B-8MI*2, R-60M*2": {
+      "1": 31
+    },
+    "S-8KOM*120,R-60M*2,Fuel*2": {
+      "1": 32
+    },
+    "FAB-250*4,S-25*2,R-60M*2,Fuel*2": {
+      "1": 32
+    },
+    "RBK-500AO*4,S-8KOM*40,R-60M*2,Fuel*2": {
+      "1": 31
+    },
+    "FAB-250*2,SPPU-22*2,SAB-100*4,R-60M*2": {
+      "1": 32
+    },
+    "RBK-500AO*6,R-60M*2,Fuel*2": {
+      "1": 31
+    },
+    "RBK-250*8,R-60M*2": {
+      "1": 31
+    },
+    "Kh-29L*2,Kh-25ML*4,R-60M*2": {
+      "1": 33
+    },
+    "RBK-250*4,S-8KOM*80,R-60M*2": {
+      "1": 31
+    },
+    "FAB-250*4,UB-13*2,R-60M*2,Fuel*2": {
+      "1": 32
+    },
+    "S-8TsM*160,R-60*2": {
+      "1": 16
+    },
+    "Kh-25ML*4,R-60M*2,Fuel*2": {
+      "1": 33
+    },
+    "BetAB-500ShP*8,R-60M*2": {
+      "1": 34
+    },
+    "SAB-100*8,R-60*2": {
+      "1": 16
+    },
+    "Kh-29L*2,Kh-25ML*4,S-25L*2,R-60M*2": {
+      "1": 33
+    },
+    "FAB-500*6,R-60M*2,Fuel*2": {
+      "1": 32
+    },
+    "Kh-29L*2,Kh-25ML*2,R-60M*2,Fuel*2": {
+      "1": 33
+    },
+    "Kh-29L*2,R-60M*2,Fuel*2": {
+      "1": 33
+    },
+    "FAB-100*32,R-60M*2": {
+      "1": 32
+    },
+    "FAB-100*16,R-60M*2,Fuel*2": {
+      "1": 32
+    },
+    "FAB-250*6,R-60M*2,Fuel*2": {
+      "1": 32
+    },
+    "BetAB-500*6,R-60M*2,Fuel*2": {
+      "1": 34
+    },
+    "S-25*6,R-60M*2,Fuel*2": {
+      "1": 32
+    },
+    "UB-13*6,R-60M*2,Fuel*2": {
+      "1": 32
+    },
+    "Kh-25*4,Kh-29T*2,R-60*2": {
+      "1": 30
+    },
+    "S-25L*6,R-60*2,Fuel*2": {
+      "1": 30
+    }
+  },
+  "Su-25T": {
+    "FAB-250*4,SPPU-22*2,SAB-100*2,R-60M*2": {
+      "1": 32
+    },
+    "Kh-29L*2,Kh-25ML*4,R-73*2,Mercury LLTV Pod,MPS-410": {
+      "1": 33
+    },
+    "KAB-500Kr*2,Kh-25ML*2,R-73*2,MPS-410,Fuel*2": {
+      "1": 33
+    },
+    "RBK-500AO*4,UB-32*2,R-60M*2,Fuel*2": {
+      "1": 31
+    },
+    "BetAB-500ShP*8,R-60M*2": {
+      "1": 34
+    },
+    "UB-13*6,R-60M*2,Fuel*2": {
+      "1": 32
+    },
+    "Kh-29T*2,R-73*2,Fuel*2,MPS-410": {
+      "1": 33
+    },
+    "Kh58*2_Kh25ML*4_R73*2_L-081_MPS-410": {
+      "1": 29
+    },
+    "FAB-250*4,UB-13*2,R-60M*2,Fuel*2": {
+      "1": 32
+    },
+    "KH-29T*2, VIKHR*2, ECM": {
+      "1": 31
+    },
+    "Kh-29T*2,Kh-25ML*4,R-73*2,MPS-410": {
+      "1": 33
+    },
+    "FAB-250*4,UB-13*2,R-60M*2,SPPU-22*2": {
+      "1": 32
+    },
+    "FAB-500*6,R-60M*2,Fuel*2": {
+      "1": 32
+    },
+    "Fuel*4": {
+      "1": 16
+    },
+    "APU-8 Vikhr-M*2,Kh-25ML,R-73*2,SPPU-22*2,Mercury LLTV Pod,MPS-410": {
+      "1": 31
+    },
+    "S-8KOM*120,R-60M*2,Fuel*2": {
+      "1": 32
+    },
+    "KMGU-2 (PTAB-2.5KO)*8,R-60M*2": {
+      "1": 31,
+      "2": 32
+    },
+    "FAB-250*6,R-60M*2,Fuel*2": {
+      "1": 32
+    },
+    "Kh-29L*2,R-73*2,Fuel*2,Mercury LLTV Pod,MPS-410": {
+      "1": 33
+    },
+    "FAB-100*32,R-60M*2": {
+      "1": 32
+    },
+    "RBK-250*8,R-60M*2": {
+      "1": 31
+    },
+    "S-25L*6,UB-13*2,R-60M*2": {
+      "1": 31,
+      "2": 32
+    },
+    "FAB-250*4,S-25*2,R-60M*2,Fuel*2": {
+      "1": 32
+    },
+    "S-25*2,SPPU-22*4,R-60M*2,R-73*2": {
+      "1": 31,
+      "2": 32
+    },
+    "KMGU-2 (AO-2.5RT)*8,R-60M*2": {
+      "1": 31,
+      "2": 32
+    },
+    "APU-8 Vikhr-M*2,S-25L*2,R-73*2,SPPU-22*2,Mercury LLTV Pod,MPS-410": {
+      "1": 31
+    },
+    "S-25*6,R-60M*2,Fuel*2": {
+      "1": 32
+    },
+    "RBK-500AO*6,R-60M*2,Fuel*2": {
+      "1": 31
+    },
+    "Kh58*2_Kh25MPU*2_Kh25ML*2_R73*2_L-081_MPS-410": {
+      "1": 29
+    },
+    "RBK-250*4,UB-32*4,R-60M*2": {
+      "1": 31
+    },
+    "Kh25MPU*4_R73*2_Fuel*2_L-081_MPS-410": {
+      "1": 29
+    },
+    "BetAB-500*6,R-60M*2,Fuel*2": {
+      "1": 34
+    },
+    "RBK-250*2,UB-32*4,R-60M*2,Fuel*2": {
+      "1": 31
+    },
+    "FAB-100*16,R-60M*2,Fuel*2": {
+      "1": 32
+    },
+    "Kh-29L*2,Kh-25ML*4,R-73*2,ECM": {
+      "1": 30
+    }
+  },
+  "Su-25TM": {
+    "BetAB-500ShP*6,R-73*2,ECM": {
+      "1": 34
+    },
+    "APU-8 Vikhr-M*2,R-60M*2,R-73*2,SPPU-22*2,Mercury LLTV Pod": {
+      "1": 31
+    },
+    "Kh-29T*2,Kh-25ML*2,R-73*2,Fuel*2,ECM": {
+      "1": 33
+    },
+    "Kh-58*2,Kh-25MPU*4,R-73*2,ECM": {
+      "1": 29
+    },
+    "S-25L*6,UB-13*2,R-60M*2": {
+      "1": 31,
+      "2": 32
+    },
+    "Kh-35*2,R-73*2,Fuel*2,RadarPod,ECM": {
+      "1": 30
+    },
+    "Kh-31A*2,R-73*2,Fuel*2,RadarPod,ECM": {
+      "1": 30
+    },
+    "Fuel*4": {
+      "1": 16
+    },
+    "BetAB-500*6,R-60M*2,Fuel*2": {
+      "1": 34
+    },
+    "KAB-500Kr*2,Kh-25ML*2,R-73*2,Fuel*2,ECM": {
+      "1": 33
+    },
+    "Kh-29L*2,R-73*2,Fuel*2,Mercury LLTV Pod,ECM": {
+      "1": 33
+    },
+    "UB-13*6,R-60M*2,Fuel*2": {
+      "1": 32
+    },
+    "S-25*2,SPPU-22*4,R-60M*2,R-73*2": {
+      "1": 31,
+      "2": 32
+    },
+    "Kh-31P*2,Kh-25ML*4,R-73*2,ECM": {
+      "1": 29
+    },
+    "UB-32*6,R-60M*2,Fuel*2": {
+      "1": 32
+    },
+    "FAB-100*16,R-60M*2,Fuel*2": {
+      "1": 32
+    },
+    "FAB-250*6,R-60M*2,Fuel*2": {
+      "1": 32
+    },
+    "FAB-500*6,R-60M*2,Fuel*2": {
+      "1": 32
+    },
+    "Kh-25MPU*4,R-73*2,Fuel*2,ECM": {
+      "1": 29
+    },
+    "S-25*6,R-60M*2,Fuel*2": {
+      "1": 32
+    },
+    "RBK-500AO*4,UB-32*2,R-60M*2,Fuel*2": {
+      "1": 31
+    },
+    "FAB-250*4,UB-13*2,R-60M*2,SPPU-22*2": {
+      "1": 32
+    },
+    "Kh-31P*2,Kh-25MPU*4,R-73*2,ECM": {
+      "1": 29
+    },
+    "RBK-500AO*6,R-60M*2,Fuel*2": {
+      "1": 31
+    },
+    "FAB-100*32,R-60M*2": {
+      "1": 32
+    },
+    "RBK-250*2,UB-32*4,R-60M*2,Fuel*2": {
+      "1": 31
+    },
+    "RBK-250*8,R-60M*2": {
+      "1": 31
+    },
+    "APU-8 Vikhr-M*2,R-73*2,SPPU-22*2,Mercury LLTV Pod,ECM": {
+      "1": 31
+    },
+    "RBK-250*4,UB-32*4,R-60M*2": {
+      "1": 31
+    },
+    "FAB-250*4,SPPU-22*2,SAB-100*2,R-60M*2": {
+      "1": 32
+    },
+    "FAB-250*4,S-25*2,R-60M*2,Fuel*2": {
+      "1": 32
+    },
+    "FAB-250*4,UB-13*2,R-60M*2,Fuel*2": {
+      "1": 32
+    }
+  },
+  "Su-27": {
+    "R-73*4,R-27ER*4,R-27ET*2": {
+      "1": 18,
+      "2": 19,
+      "3": 10,
+      "4": 11
+    },
+    "KMGU-2 (AO-2.5RT)*5,R-73*2,ECM": {
+      "1": 32
+    },
+    "BetAB-500ShP*6,R-73*2,ECM": {
+      "1": 34
+    },
+    "KMGU-2 (PTAB-2.5KO)*5,R-73*2,ECM": {
+      "1": 32
+    },
+    "R-73*2,R-27ER*6,ECM": {
+      "1": 18,
+      "2": 19,
+      "3": 10,
+      "4": 11
+    },
+    "R-73*6": {
+      "1": 18,
+      "2": 19,
+      "3": 10,
+      "4": 11
+    },
+    "S-13*10,RBK-500AO*2,FAB-500*2,R-73*2,ECM": {
+      "1": 32
+    },
+    "R-73*4,R-27ER*6": {
+      "1": 18,
+      "2": 19,
+      "3": 10,
+      "4": 11
+    },
+    "R-73*2,R-27ER*4,R-27ET*2,ECM": {
+      "1": 18,
+      "2": 19,
+      "3": 10,
+      "4": 11
+    },
+    "R-73*4,ECM": {
+      "1": 18,
+      "2": 19,
+      "3": 10,
+      "4": 11
+    },
+    "ECM": {
+      "1": 16
+    },
+    "FAB-500*6,R-73*2,ECM": {
+      "1": 32
+    },
+    "S-25*2,FAB-500*4,R-73*4": {
+      "1": 30
+    },
+    "S-25*4, FAB-500*4, R-73*2, ECM": {
+      "1": 30
+    },
+    "CAS S-8KOM Rockets + RBK-500 PTAB1": {
+      "1": 31
+    },
+    "CAS S-8OFP Rockets + FAB-500 Bombs": {
+      "1": 31
+    },
+    "CAS S-8OFP Rockets": {
+      "1": 31
+    },
+    "CAS S-8OFP Rockets + FAB-100 Bombs": {
+      "1": 31
+    },
+    "CAS S-8KOM Rockets + FAB-100 Bombs": {
+      "1": 31
+    },
+    "CAS S-13 Rockets": {
+      "1": 31
+    },
+    "CAS S-8KOM Rockets + FAB-250 Bombs": {
+      "1": 31
+    },
+    "CAS S-8KOM Rockets + RBK-250 PTAB2.5": {
+      "1": 31
+    },
+    "CAS S-8KOM Rockets": {
+      "1": 31
+    },
+    "CAS S-8KOM Rockets + FAB-500 Bombs": {
+      "1": 31
+    },
+    "CAS S-8KOM Rockets + RBK-500 PTAB10": {
+      "1": 31
+    },
+    "CAS S-8KOM Rockets + KMGU PTAB": {
+      "1": 31
+    },
+    " CAS S-25 Rockets": {
+      "1": 31
+    },
+    "CAS S-25 Rockets + FAB-500 Bombs": {
+      "1": 31
+    }
+  },
+  "Su-30": {
+    "R-73*2,R-77*6,ECM": {
+      "1": 18,
+      "2": 11,
+      "3": 10,
+      "4": 19
+    },
+    "R-73*2,R-27T*2,R-27R*4": {
+      "1": 18,
+      "2": 11,
+      "3": 10,
+      "4": 19
+    },
+    "RBK-500AO*6,R-73*2,ECM": {
+      "1": 31
+    },
+    "Kh-31P*2,Kh-31A*2,R-73*2,R-77*2,ECM": {
+      "1": 30,
+      "2": 30
+    },
+    "R-73*4,R-27T*2,R-27R*4": {
+      "1": 18,
+      "2": 11,
+      "3": 10,
+      "4": 19
+    },
+    "R-73*2,R-77*2,Kh-35*2,ECM": {
+      "1": 30
+    },
+    "Kh-35*2,Kh-31P*2,R-73*2,R-77*2,ECM": {
+      "1": 30
+    },
+    "FAB-250*4,B-8*2,R-73*2,ECM": {
+      "1": 32
+    },
+    "ECM": {
+      "1": 16
+    },
+    "KAB-1500*2,R-73*2,R-77*2,ECM": {
+      "1": 33
+    },
+    "RBK-250*6,R-73*2,ECM": {
+      "1": 31
+    },
+    "R-73*4,R-77*6": {
+      "1": 18,
+      "2": 11,
+      "3": 10,
+      "4": 19
+    },
+    "FAB-250*4,S-25*2,R-73*2,ECM": {
+      "1": 32
+    },
+    "R-73*2,R-27R*2,R-27ER*4,ECM": {
+      "1": 18,
+      "2": 11,
+      "3": 10,
+      "4": 19
+    },
+    "R-73*2,R-27T*2,R-27ER*2,R-77*2,ECM": {
+      "1": 18,
+      "2": 11,
+      "3": 10,
+      "4": 19
+    },
+    "FAB-1500*2,R-73*2,R-77*2,ECM": {
+      "1": 32
+    },
+    "R-73*4,R-27T*2,R-27ER*2,R-77*2": {
+      "1": 18,
+      "2": 11,
+      "3": 10,
+      "4": 19
+    },
+    "Kh-59M*2,R-73*2,R-77*2,ECM": {
+      "1": 33
+    },
+    "FAB-500*6,R-73*2,ECM": {
+      "1": 32
+    },
+    "R-73*4,R-27R*2,R-27ER*4": {
+      "1": 18,
+      "2": 11,
+      "3": 10,
+      "4": 19
+    },
+    "Kh-29L*4,R-73*2,R-77*2,ECM": {
+      "1": 33
+    },
+    "BetAB-500*6,R-73*2,ECM": {
+      "1": 34
+    },
+    "R-73*4": {
+      "1": 18,
+      "2": 11,
+      "3": 10,
+      "4": 19
+    },
+    "FAB-250*4,UB-13*2,R-73*2,ECM": {
+      "1": 32
+    },
+    "R-73*2,R-77*4,R-27ER*2,ECM": {
+      "1": 18,
+      "2": 11,
+      "3": 10,
+      "4": 19
+    },
+    "KAB-500*4,R-73*2,R-77*2,ECM": {
+      "1": 33
+    },
+    "FAB-250*6,R-73*2,ECM": {
+      "1": 32
+    },
+    "R-73*4,R-77*4,R-27ER*2": {
+      "1": 18,
+      "2": 11,
+      "3": 10,
+      "4": 19
+    },
+    "Kh-29T*4,R-73*2,R-77*2,ECM": {
+      "1": 33
+    },
+    "Kh-31P*4,R-73*2,R-77*2,ECM": {
+      "1": 29
+    }
+  },
+  "Su-33": {
+    "RBK-250*6,R-73*2,R-27R*2,ECM": {
+      "1": 31
+    },
+    "R-73*4": {
+      "1": 19,
+      "2": 18,
+      "3": 11,
+      "4": 10
+    },
+    "R-73*4,R-27R*2,R-27ER*6": {
+      "1": 19,
+      "2": 18,
+      "3": 11,
+      "4": 10
+    },
+    "R-73*2,R-27ET*2,R-27ER*6,ECM": {
+      "1": 19,
+      "2": 18,
+      "3": 11,
+      "4": 10
+    },
+    "R-73*4,R-27ET*2,R-27ER*6": {
+      "1": 19,
+      "2": 18,
+      "3": 11,
+      "4": 10
+    },
+    "FAB-250*6,R-73*2,R-27R*2,ECM": {
+      "1": 32
+    },
+    "R-73*2,R-27R*2,R-27ER*6,ECM": {
+      "1": 19,
+      "2": 18,
+      "3": 11,
+      "4": 10
+    },
+    "ECM": {
+      "1": 16
+    },
+    "BetAB-500*6,R-73*2,R-27R*2,ECM": {
+      "1": 34
+    },
+    "RBK-500AO*6,R-73*2,R-27R*2,ECM": {
+      "1": 31
+    },
+    "UB-13*4,FAB-250*4,R-73*2,ECM": {
+      "1": 32
+    },
+    "S-25*4,FAB-250*4,R-73*2,ECM": {
+      "1": 32
+    },
+    "FAB-500*6,R-73*2,R-27R*2,ECM": {
+      "1": 32
+    },
+    "B-8*4,FAB-250*4,R-73*2,ECM": {
+      "1": 32
+    },
+    "S-25*4,FAB-500*4,R-73*4": {
+      "1": 30
+    },
+    "CAS S-8KOM rockets + FAB500": {
+      "1": 31
+    },
+    "CAS S-8OFP rockets + FAB500": {
+      "1": 31
+    },
+    "CAS S-13 Rockets + FAB500": {
+      "1": 31
+    },
+    "CAS S-13 Rockets + FAB100": {
+      "1": 31
+    },
+    "CAS S-8KOM rockets + FAB250": {
+      "1": 31
+    },
+    "CAS S-25 Rockets + FAB500": {
+      "1": 31
+    },
+    "CAS S-8KOM rockets + RBK500 PTAB10": {
+      "1": 31
+    },
+    "CAS S-8KOM rockets + RBK500 PTAB1": {
+      "1": 31
+    }
+  },
+  "Su-34": {
+    "UB-13*4,FAB-250*4,R-73*2,ECM": {
+      "1": 32
+    },
+    "FAB-100*28,R-73*2,ECM": {
+      "1": 32
+    },
+    "BetAB-500*8,R-73*2,ECM": {
+      "1": 34
+    },
+    "Kh-29L*4,R-73*2,R-77*2,ECM": {
+      "1": 33
+    },
+    "KAB-500*4,R-73*2,R-77*2,ECM": {
+      "1": 33
+    },
+    "RBK-250 PTAB-2.5M*8,R-73*2,ECM": {
+      "1": 31
+    },
+    "FAB-250*8,R-73*2,ECM": {
+      "1": 32
+    },
+    "ECM": {
+      "1": 16
+    },
+    "Kh-29T*4,R-73*2,R-77*2,ECM": {
+      "1": 33
+    },
+    "RBK-500 PTAB-10-5*8,R-73*2,ECM": {
+      "1": 31
+    },
+    "FAB-1500*3,R-73*2,R-77*2,ECM": {
+      "1": 32
+    },
+    "Kh-59M*2,R-73*2,R-77*2,ECM": {
+      "1": 33
+    },
+    "B-8*6,R-73*2,R-27R*2,ECM": {
+      "1": 32
+    },
+    "FAB-500*8,R-73*2,ECM": {
+      "1": 32
+    },
+    "KAB-1500*2,R-73*2,R-77*2,ECM": {
+      "1": 33
+    },
+    "Kh-29T*4,R-73*2,R-27R*2,ECM": {
+      "1": 31
+    },
+    "Kh-31A*4,Kh-31P*2,R-73*2,R-27R*2,ECM": {
+      "1": 30
+    },
+    "Kh-31A*6,R-73*2,R-27R*2,ECM": {
+      "1": 30
+    },
+    "Kh-31P*4,R-73*2,R-27R*2,ECM": {
+      "1": 29
+    },
+    "Kh-29L*4,R-73*2,R-27R*2,ECM": {
+      "1": 31
+    }
+  },
+  "Tornado GR4": {
+    "AIM-9M*2, Fuel*2, ECM": {
+      "1": 17
+    },
+    "ALARM*4, Fuel*2, ECM": {
+      "1": 29
+    },
+    "GBU-16*2, AIM-9M*2, Fuel*2, ECM": {
+      "1": 32,
+      "2": 16,
+      "3": 33
+    },
+    "BL755*4, AIM-9M*2, Fuel*2, ECM": {
+      "1": 32
+    },
+    "Sea Eagle*2, AIM-9M*2, Fuel*2, ECM": {
+      "1": 30
+    }
+  },
+  "Tornado IDS": {
+    "Kormoran*2,AIM-9*2,Fuel*2": {
+      "1": 30
+    },
+    "GBU-16*2,AIM-9*2,Fuel*2": {
+      "1": 33
+    },
+    "Fuel*2": {
+      "1": 16
+    },
+    "AGM-88*4,AIM-9*2,ECM": {
+      "1": 29
+    },
+    "AGM-88*2,AIM-9*2,Fuel*2,ECM": {
+      "1": 29
+    },
+    "Kormoran*4,AIM-9*2": {
+      "1": 30
+    },
+    "Kormoran*2,AIM-9*2,AGM-88*2": {
+      "1": 30
+    },
+    "Mk-82*4,AIM-9*2,Fuel*2": {
+      "1": 32
+    }
+  },
+  "Tu-142": {
+    "Kh-35*6": {
+      "1": 30
+    }
+  },
+  "Tu-160": {
+    "Kh-65*12": {
+      "1": 33
+    }
+  },
+  "Tu-22M3": {
+    "Kh-22N": {
+      "1": 30
+    },
+    "Kh-22N*2": {
+      "1": 30
+    },
+    "FAB-250*69": {
+      "1": 32,
+      "2": 34
+    },
+    "FAB-500*33": {
+      "1": 32,
+      "2": 34
+    },
+    "FAB-500*33, FAB-250*36": {
+      "1": 32,
+      "2": 34
+    },
+    "FAB-250*33": {
+      "1": 32,
+      "2": 34
+    }
+  },
+  "Tu-95MS": {
+    "Kh-65*6": {
+      "1": 33
+    }
+  },
+  "UH-1H": {
+    "M134 Minigun*2, XM158*2": {
+      "1": 32,
+      "2": 31,
+      "3": 35,
+      "4": 16
+    }
+  },
+  "UH-60A": {}
+}

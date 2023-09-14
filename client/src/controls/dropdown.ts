@@ -1,16 +1,21 @@
 export class Dropdown {
-    #element: HTMLElement;
+    #container: HTMLElement;
     #options: HTMLElement;
     #value: HTMLElement;
     #callback: CallableFunction;
     #defaultValue: string;
     #optionsList: string[] = [];
     #index: number = 0;
+    #hidden: boolean = false;
 
-    constructor(ID: string, callback: CallableFunction, options: string[] | null = null) {
-        this.#element = <HTMLElement>document.getElementById(ID);
-        this.#options = <HTMLElement>this.#element.querySelector(".ol-select-options");
-        this.#value = <HTMLElement>this.#element.querySelector(".ol-select-value");
+    constructor(ID: string | null, callback: CallableFunction, options: string[] | null = null, defaultText?: string) {
+        if (ID === null)
+            this.#container = this.#createElement(defaultText);
+        else
+            this.#container = document.getElementById(ID) as HTMLElement;
+
+        this.#options = this.#container.querySelector(".ol-select-options") as HTMLElement;
+        this.#value = this.#container.querySelector(".ol-select-value") as HTMLElement;
         this.#defaultValue = this.#value.innerText;
         this.#callback = callback;
 
@@ -19,12 +24,16 @@ export class Dropdown {
         this.#value.addEventListener("click", (ev) => { this.#toggle(); });
 
         document.addEventListener("click", (ev) => {
-            if (!(this.#value.contains(ev.target as Node) || this.#options.contains(ev.target as Node) || this.#element.contains(ev.target as Node))) {
-                this.#close();
+            if (!(this.#value.contains(ev.target as Node) || this.#options.contains(ev.target as Node) || this.#container.contains(ev.target as Node))) {
+                this.close();
             }
         });
 
         this.#options.classList.add("ol-scrollable");
+    }
+
+    getContainer() {
+        return this.#container;
     }
 
     setOptions(optionsList: string[], sortAlphabetically: boolean = true) {
@@ -75,7 +84,7 @@ export class Dropdown {
             this.#value.replaceChildren();
             this.#value.appendChild(el);
             this.#index = idx;
-            this.#close();
+            this.close();
             this.#callback(option);
             return true;
         }
@@ -98,32 +107,66 @@ export class Dropdown {
             this.selectValue(index);
     }
 
+    forceValue(value: string) {
+        var el = document.createElement("div");
+        el.classList.add("ol-ellipsed");
+        el.innerText = value;
+        this.#value.replaceChildren();
+        this.#value.appendChild(el);
+        this.close();
+    }
+
     getIndex() {
         return this.#index;
     }
 
-    #clip() {
+    clip() {
         const options = this.#options;
         const bounds = options.getBoundingClientRect();
-        this.#element.dataset.position = (bounds.bottom > window.innerHeight) ? "top" : "";
+        this.#container.dataset.position = (bounds.bottom > window.innerHeight) ? "top" : "";
     }
 
-    #close() {
-        this.#element.classList.remove("is-open");
-        this.#element.dataset.position = "";
+    close() {
+        this.#container.classList.remove("is-open");
+        this.#container.dataset.position = "";
     }
 
-    #open() {
-        this.#element.classList.add("is-open");
+    open() {
+        this.#container.classList.add("is-open");
         this.#options.classList.toggle("scrollbar-visible", this.#options.scrollHeight > this.#options.clientHeight);
-        this.#clip();
+        this.clip();
+    }
+
+    show() {
+        this.#container.classList.remove("hide");
+        this.#hidden = false;
+    }
+
+    hide() {
+        this.#container.classList.add("hide");
+        this.#hidden = true;
+    }
+
+    isHidden() {
+        return this.#hidden;
     }
 
     #toggle() {
-        if (this.#element.classList.contains("is-open")) {
-            this.#close();
-        } else {
-            this.#open();
-        }
+        this.#container.classList.contains("is-open")? this.close(): this.open();
+    }
+
+    #createElement(defaultText: string | undefined) {
+        var div = document.createElement("div");
+        div.classList.add("ol-select");
+        
+        var value = document.createElement("div");
+        value.classList.add("ol-select-value");
+        value.innerText = defaultText? defaultText: "";
+        
+        var options = document.createElement("div");
+        options.classList.add("ol-select-options");
+
+        div.append(value, options);
+        return div;
     }
 }

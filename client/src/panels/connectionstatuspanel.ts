@@ -5,6 +5,7 @@ export class ConnectionStatusPanel extends Panel {
         super( ID );
     }
 
+    
     update(connected: boolean) {
         this.getElement().toggleAttribute( "data-is-connected", connected );
     }

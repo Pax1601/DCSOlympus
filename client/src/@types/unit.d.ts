@@ -1,5 +1,13 @@
 import { LatLng } from "leaflet"
 
+interface UnitSpawnTable {
+    unitType: string,
+    location: latlng,
+    altitude?: number,
+    loadout?: string,
+    liveryID: string
+}
+
 interface ObjectIconOptions {
     showState: boolean,
     showVvi: boolean,
@@ -51,4 +59,46 @@ interface Offset {
     x: number,
     y: number,
     z: number
+}
+
+interface UnitData {
+    category: string,
+    ID: number;
+    alive: boolean;
+    human: boolean;
+    controlled: boolean;
+    coalition: string;
+    country: number;
+    name: string;
+    unitName: string;
+    groupName: string;
+    state: string;
+    task: string;
+    hasTask: boolean;
+    position: LatLng;
+    speed: number;
+    heading: number;
+    isTanker: boolean;
+    isAWACS: boolean;
+    onOff: boolean;
+    followRoads: boolean;
+    fuel: number;
+    desiredSpeed: number;
+    desiredSpeedType: string;
+    desiredAltitude: number;
+    desiredAltitudeType: string;
+    leaderID: number;
+    formationOffset: Offset;
+    targetID: number;
+    targetPosition: LatLng;
+    ROE: string;
+    reactionToThreat: string;
+    emissionsCountermeasures: string;
+    TACAN: TACAN;
+    radio: Radio;
+    generalSettings: GeneralSettings;
+    ammo: Ammo[];
+    contacts: Contact[];
+    activePath: LatLng[];
+    isLeader: boolean;
 }

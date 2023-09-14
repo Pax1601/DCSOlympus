@@ -3,6 +3,7 @@
 #include "luatools.h"
 #include "utils.h"
 #include "logger.h"
+#include "datatypes.h"
 
 namespace CommandPriority {
 	enum CommandPriorities { LOW, MEDIUM, HIGH, IMMEDIATE };
@@ -97,9 +98,11 @@ public:
 	unsigned int getPriority() { return priority; }
 	virtual string getString() = 0;
 	virtual unsigned int getLoad() = 0;
+	const string getHash() { return hash; }
 
 protected:
 	unsigned int priority = CommandPriority::LOW;
+	const string hash = random_string(16);
 };
 
 /* Simple low priority move command (from user click) */
@@ -154,11 +157,10 @@ private:
 class SpawnGroundUnits : public Command
 {
 public:
-	SpawnGroundUnits(string coalition, vector<string> unitTypes, vector<Coords> locations, vector<string> liveryIDs, bool immediate) :
+	SpawnGroundUnits(string coalition, vector<SpawnOptions> spawnOptions, string country, bool immediate) :
 		coalition(coalition), 
-		unitTypes(unitTypes), 
-		locations(locations),
-		liveryIDs(liveryIDs),
+		spawnOptions(spawnOptions),
+		country(country),
 		immediate(immediate)
 	{ 
 		priority = immediate? CommandPriority::IMMEDIATE: CommandPriority::LOW;
@@ -168,9 +170,8 @@ public:
 
 private:
 	const string coalition;
-	const vector<string> unitTypes;
-	const vector<Coords> locations;
-	const vector<string> liveryIDs;
+	const vector<SpawnOptions> spawnOptions;
+	const string country;
 	const bool immediate;
 };
 
@@ -178,11 +179,10 @@ private:
 class SpawnNavyUnits : public Command
 {
 public:
-	SpawnNavyUnits(string coalition, vector<string> unitTypes, vector<Coords> locations, vector<string> liveryIDs, bool immediate) :
+	SpawnNavyUnits(string coalition, vector<SpawnOptions> spawnOptions, string country, bool immediate) :
 		coalition(coalition),
-		unitTypes(unitTypes),
-		locations(locations),
-		liveryIDs(liveryIDs),
+		spawnOptions(spawnOptions),
+		country(country),
 		immediate(immediate)
 	{
 		priority = immediate ? CommandPriority::IMMEDIATE : CommandPriority::LOW;
@@ -192,9 +192,8 @@ public:
 
 private:
 	const string coalition;
-	const vector<string> unitTypes;
-	const vector<Coords> locations;
-	const vector<string> liveryIDs;
+	const vector<SpawnOptions> spawnOptions;
+	const string country;
 	const bool immediate;
 };
 
@@ -202,13 +201,11 @@ private:
 class SpawnAircrafts : public Command
 {
 public:
-	SpawnAircrafts(string coalition, vector<string> unitTypes, vector<Coords> locations, vector<string> loadouts, vector<string> liveryIDs, string airbaseName, bool immediate) :
+	SpawnAircrafts(string coalition, vector<SpawnOptions> spawnOptions, string airbaseName, string country, bool immediate) :
 		coalition(coalition), 
-		unitTypes(unitTypes), 
-		locations(locations),
-		loadouts(loadouts),
-		liveryIDs(liveryIDs),
+		spawnOptions(spawnOptions),
 		airbaseName(airbaseName),
+		country(country),
 		immediate(immediate)
 	{ 
 		priority = immediate ? CommandPriority::IMMEDIATE : CommandPriority::LOW;
@@ -218,11 +215,9 @@ public:
 
 private:
 	const string coalition;
-	const vector<string> unitTypes;
-	const vector<Coords> locations;
-	const vector<string> loadouts;
-	const vector<string> liveryIDs;
+	const vector<SpawnOptions> spawnOptions;
 	const string airbaseName;
+	const string country;
 	const bool immediate;
 };
 
@@ -231,13 +226,11 @@ private:
 class SpawnHelicopters : public Command
 {
 public:
-	SpawnHelicopters(string coalition, vector<string> unitTypes, vector<Coords> locations, vector<string> loadouts, vector<string> liveryIDs, string airbaseName, bool immediate) :
+	SpawnHelicopters(string coalition, vector<SpawnOptions> spawnOptions, string airbaseName, string country, bool immediate) :
 		coalition(coalition),
-		unitTypes(unitTypes),
-		locations(locations),
-		loadouts(loadouts),
-		liveryIDs(liveryIDs),
+		spawnOptions(spawnOptions),
 		airbaseName(airbaseName),
+		country(country),
 		immediate(immediate)
 	{
 		priority = immediate ? CommandPriority::IMMEDIATE : CommandPriority::LOW;
@@ -247,11 +240,9 @@ public:
 
 private:
 	const string coalition;
-	const vector<string> unitTypes;
-	const vector<Coords> locations;
-	const vector<string> loadouts;
-	const vector<string> liveryIDs;
+	const vector<SpawnOptions> spawnOptions;
 	const string airbaseName;
+	const string country;
 	const bool immediate;
 };
 
@@ -259,9 +250,9 @@ private:
 class Clone : public Command
 {
 public:
-	Clone(unsigned int ID, Coords location) :
-		ID(ID),
-		location(location)
+	Clone(vector<CloneOptions> cloneOptions, bool deleteOriginal) :
+		cloneOptions(cloneOptions),
+		deleteOriginal(deleteOriginal)
 	{
 		priority = CommandPriority::LOW;
 	};
@@ -269,8 +260,8 @@ public:
 	virtual unsigned int getLoad() { return 30; }
 
 private:
-	const unsigned int ID;
-	const Coords location;
+	const vector<CloneOptions> cloneOptions;
+	const bool deleteOriginal;
 };
 
 /* Delete unit command */

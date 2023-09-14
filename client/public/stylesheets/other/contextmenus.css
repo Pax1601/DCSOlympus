@@ -30,12 +30,47 @@
     flex-direction: column;
     justify-content: space-between;
     row-gap: 5px;
+    padding: 20px;
 }
 
-#aircraft-spawn-menu,
-#helicopter-spawn-menu,
-#groundunit-spawn-menu,
-#navyunit-spawn-menu {
+#map-contextmenu>div:nth-child(n+4)>div {
+    width: 100%;
+}
+
+.contextmenu-advanced-options {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    row-gap: 5px;
+    width: 100%;
+}
+
+.contextmenu-advanced-options-toggle {
+    display: flex;
+    align-content: center;
+    text-align: left;
+    width: 100%;
+    margin: 5px;
+    column-gap: 5px;
+    cursor: pointer;
+}
+
+.contextmenu-advanced-options-toggle:after {
+    content: url(/resources/theme/images/icons/chevron-down.svg);
+    margin: auto;
+}
+
+.contextmenu-advanced-options-toggle div:first-child {
+    width: fit-content;
+    white-space: nowrap;
+}
+
+.contextmenu-advanced-options>* {
+    width: 100%;
+}
+
+.unit-spawn-menu {
     height: fit-content;
 }
 
@@ -58,9 +93,28 @@
     width: 50px;
 }
 
-#aircraft-spawn-menu .ol-select.is-open .ol-select-options,
-#helicopter-spawn-menu .ol-select.is-open .ol-select-options {
+.unit-spawn-menu .ol-select.is-open .ol-select-options {
     max-height: 300px;
+}
+
+.unit-loadout-list {
+    min-width: 0;
+}
+
+.unit-loadout-list div {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    background-color: var(--background-steel);
+    padding: 2px 5px 2px 5px;
+}
+
+.unit-loadout-list div:hover {
+    overflow: visible;
+    white-space: nowrap;
+    background-color: var(--background-steel);
+    width: fit-content;
+    border-radius: var(--border-radius-sm);
 }
 
 .deploy-unit-button {
@@ -82,7 +136,7 @@
     margin: 0px 5px;
 }
 
-.upper-bar button:nth-child(2) {
+.upper-bar button:first-of-type {
     margin-left: auto;
 }
 
@@ -137,31 +191,44 @@
     content: "Create neutral unit";
 }
 
-#aircraft-loadout-preview,
-#helicopter-loadout-preview {
+.unit-label-count-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    column-gap: 5px;
+}
+
+.unit-label-count-container>div:nth-child(1) {
+    width: 100%;
+    min-width: 0;
+}
+
+.unit-label-count-container>div:nth-child(2) {
+    font-size: large;
+}
+
+.unit-loadout-preview {
     align-content: space-between;
     align-items: center;
-    column-gap: 20px;
+    column-gap: 10px;
     display: flex;
     flex-direction: row;
     width: 100%;
 }
 
-#aircaft-loadout-list,
-#helicopter-loadout-list {
+.unit-loadout-list {
     align-content: center;
     display: flex;
     flex-direction: column;
     height: 100%;
 }
 
-#aircraft-unit-image,
-#helicopter-unit-image {
+.unit-image {
     filter: invert(100%);
-    height: 100px;
+    width: 25%;
     margin-bottom: 10px;
     margin-top: 10px;
-    width: 100px;
+    aspect-ratio: 1/1;
 }
 
 #smoke-spawn-menu {
@@ -264,9 +331,20 @@
     width: 16px;
 }
 
+.ol-select>.ol-select-options>div button.country-dropdown-element {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    column-gap: 10px;
+    width: 100%;
+}
+
+.country-dropdown-element img {
+    height: 20px;
+    aspect-ratio: initial;
+}
 
 /*  Buttons  */
-
 #center-map::before {
     content: url("/resources/theme/images/icons/arrows-to-eye-solid.svg");
 }
@@ -486,4 +564,36 @@
 
 #airbase-runways>.runway>.heading:last-of-type {
     flex-direction: row-reverse;
+}
+
+/* Airbase spawn menu */
+#airbase-spawn-contextmenu {
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    position: absolute;
+    row-gap: 5px;
+    width: 300px;
+    z-index: 9999;
+}
+
+#airbase-spawn-contextmenu>div:nth-child(2) {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    padding-right: 0px;
+}
+
+#airbase-spawn-contextmenu >div:nth-child(n+3) {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    row-gap: 5px;
+    padding: 20px;
+}
+
+#airbase-spawn-contextmenu>div:nth-child(n+3)>div {
+    width: 100%;
 }

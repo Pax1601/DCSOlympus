@@ -7,14 +7,19 @@ export class LogPanel extends Panel {
     #scrolledDown: boolean = true;
     #logs: {[key: string]: string} = {};
 
-    constructor(ID: string) {
-        super( ID );
+    /**
+     * 
+     * @param ID - the ID of the HTML element which will contain the context menu
+     */
+    constructor(ID: string){
+        super(ID);
 
         document.addEventListener("toggleLogPanel", () => {
             this.getElement().classList.toggle("open");
             this.#open = !this.#open;
             this.#queuedMessages = 0;
             this.#updateHeader();
+            this.#calculateHeight();
 
             if (this.#scrolledDown) 
                 this.#scrollDown();
@@ -85,6 +90,9 @@ export class LogPanel extends Panel {
 
     #calculateHeight() {
         const mouseInfoPanel = getMouseInfoPanel();
-        this.getElement().style.height = `${mouseInfoPanel.getElement().offsetTop - this.getElement().offsetTop - 10}px`;
+        if (this.#open)
+            this.getElement().style.height = `${mouseInfoPanel.getElement().offsetTop - this.getElement().offsetTop - 10}px`;
+        else 
+            this.getElement().style.height = "fit-content";
     }
 }

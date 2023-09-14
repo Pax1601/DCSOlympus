@@ -1,7 +1,10 @@
 from slpp import slpp as lua
+import sys
 import os
 import json
 import logging
+
+sys.path.append("..\..\..\dcs-master\dcs-master")
 
 SEARCH_FOLDER = "D:\\Eagle Dynamics\\DCS World OpenBeta"
 
@@ -39,6 +42,7 @@ for filename in list(filenames):
 
 names = {}
 payloads = {}
+roles = {}
 for filename in filenames:
     with open(os.path.join(os.getcwd(), filename), 'r') as f: # open in readonly mode
         try:
@@ -53,9 +57,11 @@ for filename in filenames:
                 src = tmp['payloads']
             
             names[tmp['unitType']] = []
+            roles[tmp['unitType']] = {}
             payloads[tmp['unitType']] = {}
             for payload in src:
                 names[tmp['unitType']].append(payload['name'])
+                roles[tmp['unitType']][payload['name']] = payload['tasks']
                 if type(payload['pylons']) == dict:
                     payloads[tmp['unitType']][payload['name']] = {payload['pylons'][key]['num']: {"CLSID" : payload['pylons'][key]['CLSID']} for key in payload['pylons']}
                 else:
@@ -63,11 +69,10 @@ for filename in filenames:
         except:
             pass
             
-with open('payloadNames.js', 'w') as f:
-    f.write("payloadNames = ")
-    json.dump(names, f, ensure_ascii = False)
+with open('payloadRoles.json', 'w') as f:
+    json.dump(roles, f, ensure_ascii = False, indent = 2)
 
-with open('unitPayloads.lua', 'w') as f:
+with open('../unitPayloads.lua', 'w') as f:
     f.write("Olympus.unitPayloads = " + dump_lua(payloads))
     
     

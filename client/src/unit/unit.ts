@@ -1,17 +1,18 @@
 import { Marker, LatLng, Polyline, Icon, DivIcon, CircleMarker, Map, Point } from 'leaflet';
 import { getMap, getMissionHandler, getUnitsManager, getWeaponsManager } from '..';
-import { enumToCoalition, enumToEmissioNCountermeasure, getMarkerCategoryByName, enumToROE, enumToReactionToThreat, enumToState, getUnitDatabaseByCategory, mToFt, msToKnots, rad2deg, bearing, deg2rad } from '../other/utils';
+import { enumToCoalition, enumToEmissioNCountermeasure, getMarkerCategoryByName, enumToROE, enumToReactionToThreat, enumToState, getUnitDatabaseByCategory, mToFt, msToKnots, rad2deg, bearing, deg2rad, ftToM } from '../other/utils';
 import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, landAt, setAltitude, setReactionToThreat, setROE, setSpeed, refuel, setAdvacedOptions, followUnit, setEmissionsCountermeasures, setSpeedType, setAltitudeType, setOnOff, setFollowRoads, bombPoint, carpetBomb, bombBuilding, fireAtArea } from '../server/server';
-import { CustomMarker } from '../map/custommarker';
+import { CustomMarker } from '../map/markers/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
-import { UnitDatabase } from './unitdatabase';
-import { TargetMarker } from '../map/targetmarker';
+import { UnitDatabase } from './databases/unitdatabase';
+import { TargetMarker } from '../map/markers/targetmarker';
 import { DLINK, DataIndexes, GAME_MASTER, HIDE_GROUP_MEMBERS, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, ROEs, RWR, SHOW_CONTACT_LINES, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, VISUAL, emissionsCountermeasures, reactionsToThreat, states } from '../constants/constants';
-import { Ammo, Contact, GeneralSettings, Offset, Radio, TACAN, ObjectIconOptions } from '../@types/unit';
+import { Ammo, Contact, GeneralSettings, Offset, Radio, TACAN, ObjectIconOptions, UnitData } from '../@types/unit';
 import { DataExtractor } from '../server/dataextractor';
-import { groundUnitDatabase } from './groundunitdatabase';
-import { navyUnitDatabase } from './navyunitdatabase';
+import { groundUnitDatabase } from './databases/groundunitdatabase';
+import { navyUnitDatabase } from './databases/navyunitdatabase';
 import { Weapon } from '../weapon/weapon';
+import { LoadoutBlueprint } from '../@types/unitdatabase';
 
 var pathIcon = new Icon({
     iconUrl: '/resources/theme/images/markers/marker-icon.png',
@@ -42,9 +43,9 @@ export class Unit extends CustomMarker {
     #followRoads: boolean = false;
     #fuel: number = 0;
     #desiredSpeed: number = 0;
-    #desiredSpeedType: string = "GS";
+    #desiredSpeedType: string = "CAS";
     #desiredAltitude: number = 0;
-    #desiredAltitudeType: string = "AGL";
+    #desiredAltitudeType: string = "ASL";
     #leaderID: number = 0;
     #formationOffset: Offset = {
         x: 0,
@@ -252,7 +253,7 @@ export class Unit extends CustomMarker {
         this.#drawTarget();
     }
 
-    getData() {
+    getData(): UnitData {
         return {
             category: this.getCategory(),
             ID: this.ID,
@@ -318,11 +319,6 @@ export class Unit extends CustomMarker {
             showCallsign: true,
             rotateToHeading: false
         }
-    }
-
-    getLiveryID(): string {
-        const liveryID = this.getDatabase()?.getByName(this.getName())?.liveryID;
-        return liveryID ? liveryID : "";
     }
 
     setAlive(newAlive: boolean) {
@@ -409,6 +405,11 @@ export class Unit extends CustomMarker {
     getType() {
         return "";
     }
+
+    getSpawnPoints() {
+        return this.getDatabase()?.getSpawnPointsByName(this.getName());
+    }
+
 
     /********************** Icon *************************/
     createIcon(): void {
@@ -522,7 +523,7 @@ export class Unit extends CustomMarker {
 
     /********************** Visibility *************************/
     updateVisibility() {
-        const hiddenUnits = getUnitsManager().getHiddenTypes();
+        const hiddenUnits = getMap().getHiddenTypes();
         var hidden = ((this.#human && hiddenUnits.includes("human")) ||
             (this.#controlled == false && hiddenUnits.includes("dcs")) ||
             (hiddenUnits.includes(this.getMarkerCategory())) ||
@@ -732,8 +733,6 @@ export class Unit extends CustomMarker {
     /***********************************************/
     onAdd(map: Map): this {
         super.onAdd(map);
-        /* If this is the first time adding this unit to the map, remove the temporary marker */
-        getMap().removeTemporaryMarker(new LatLng(this.#position.lat, this.#position.lng));
         return this;
     }
 
@@ -770,13 +769,13 @@ export class Unit extends CustomMarker {
     #onContextMenu(e: any) {
         var options: { [key: string]: { text: string, tooltip: string } } = {};
         const selectedUnits = getUnitsManager().getSelectedUnits();
-        const selectedUnitTypes = getUnitsManager().getSelectedUnitsTypes();
+        const selectedUnitTypes = getUnitsManager().getSelectedUnitsCategories();
 
         options["center-map"] = { text: "Center map", tooltip: "Center the map on the unit and follow it" };
 
         if (selectedUnits.length > 0 && !(selectedUnits.length == 1 && (selectedUnits.includes(this)))) {
             options["attack"] = { text: "Attack", tooltip: "Attack the unit using A/A or A/G weapons" };
-            if (getUnitsManager().getSelectedUnitsTypes().length == 1 && getUnitsManager().getSelectedUnitsTypes()[0] === "Aircraft")
+            if (getUnitsManager().getSelectedUnitsCategories().length == 1 && getUnitsManager().getSelectedUnitsCategories()[0] === "Aircraft")
                 options["follow"] = { text: "Follow", tooltip: "Follow the unit at a user defined distance and position" };;
         }
         else if ((selectedUnits.length > 0 && (selectedUnits.includes(this))) || selectedUnits.length == 0) {
@@ -835,9 +834,31 @@ export class Unit extends CustomMarker {
     #applyFollowOptions(action: string) {
         if (action === "custom") {
             document.getElementById("custom-formation-dialog")?.classList.remove("hide");
-            getMap().getUnitContextMenu().setCustomFormationCallback((offset: { x: number, y: number, z: number }) => {
-                getUnitsManager().selectedUnitsFollowUnit(this.ID, offset);
-            })
+            document.addEventListener("applyCustomFormation", () => {
+                var dialog = document.getElementById("custom-formation-dialog");
+                if (dialog) {
+                    dialog.classList.add("hide");
+                    var clock = 1;
+                    while (clock < 8) {
+                        if ((<HTMLInputElement>dialog.querySelector(`#formation-${clock}`)).checked)
+                            break
+                        clock++;
+                    }
+                    var angleDeg = 360 - (clock - 1) * 45;
+                    var angleRad = deg2rad(angleDeg);
+                    var distance = ftToM(parseInt((<HTMLInputElement>dialog.querySelector(`#distance`)?.querySelector("input")).value));
+                    var upDown = ftToM(parseInt((<HTMLInputElement>dialog.querySelector(`#up-down`)?.querySelector("input")).value));
+    
+                    // X: front-rear, positive front
+                    // Y: top-bottom, positive top
+                    // Z: left-right, positive right
+                    var x = distance * Math.cos(angleRad);
+                    var y = upDown;
+                    var z = distance * Math.sin(angleRad);
+    
+                    getUnitsManager().selectedUnitsFollowUnit(this.ID, { "x": x, "y": y, "z": z });
+                }
+            });
         }
         else {
             getUnitsManager().selectedUnitsFollowUnit(this.ID, undefined, action);

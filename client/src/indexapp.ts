@@ -1,5 +1,4 @@
 import { FeatureSwitches } from "./features/featureswitches";
-import { MissionHandler } from "./mission/missionhandler";
 import { IOlympusApp, OlympusApp } from "./olympusapp";
 import { ConnectionStatusPanel } from "./panels/connectionstatuspanel";
 import { HotgroupPanel } from "./panels/hotgrouppanel";
@@ -15,7 +14,6 @@ import { UnitsManager } from "./unit/unitsmanager";
 
 export interface IIndexApp extends IOlympusApp {
     "featureSwitches": FeatureSwitches,
-    "missionHandler": MissionHandler,
     "panels": IIndexAppPanels,
     "unitsManager": UnitsManager
 }

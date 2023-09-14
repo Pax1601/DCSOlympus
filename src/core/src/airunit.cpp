@@ -148,13 +148,19 @@ void AirUnit::AIloop()
 			{
 				std::ostringstream taskSS;
 				if (isTanker) {
-					taskSS << "{ [1] = { id = 'Tanker' }, [2] = { id = 'Orbit', pattern = 'Race-Track', altitude = " << desiredAltitude << ", speed = " << desiredSpeed << ", altitudeType = '" << desiredAltitudeType << "' } }";
+					taskSS << "{ [1] = { id = 'Tanker' }, [2] = { id = 'Orbit', pattern = 'Race-Track', altitude = " << 
+						desiredAltitude << ", speed = " << desiredSpeed << ", altitudeType = '" << 
+						(desiredAltitudeType ? "AGL" : "ASL") << "', speedType = '" << (desiredSpeedType ? "GS" : "CAS") << "' }}";
 				}
 				else if (isAWACS) {
-					taskSS << "{ [1] = { id = 'AWACS' }, [2] = { id = 'Orbit', pattern = 'Circle', altitude = " << desiredAltitude << ", speed = " << desiredSpeed << ", altitudeType = '" << desiredAltitudeType << "' } }";
+					taskSS << "{ [1] = { id = 'AWACS' }, [2] = { id = 'Orbit', pattern = 'Circle', altitude = " << 
+						desiredAltitude << ", speed = " << desiredSpeed << ", altitudeType = '" << 
+						(desiredAltitudeType ? "AGL" : "ASL") << "', speedType = '" << (desiredSpeedType ? "GS" : "CAS") << "' }}";
 				}
 				else {
-					taskSS << "{ id = 'Orbit', pattern = 'Circle', altitude = " << desiredAltitude << ", speed = " << desiredSpeed << ", altitudeType = '" << desiredAltitudeType << "' }";
+					taskSS << "{ id = 'Orbit', pattern = 'Circle', altitude = " << 
+						desiredAltitude << ", speed = " << desiredSpeed << ", altitudeType = '" << 
+						(desiredAltitudeType ? "AGL" : "ASL") << "', speedType = '" << (desiredSpeedType ? "GS" : "CAS") << "'}";
 				}
 				Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str()));
 				scheduler->appendCommand(command);

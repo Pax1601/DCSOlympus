@@ -13,12 +13,16 @@
 </head>
 
 <body>
+  <!-- Main leaflet map -->
   <div id="map-container"></div>
-  
-  <%- include('aic/aic.ejs') %>
 
-  <%- include('atc/atc.ejs') %>
-  <%- include('atc/unitdatatable.ejs') %>
+  <!-- Toolbars -->
+  <div id="toolbar-container">
+    <%- include('toolbars/primary.ejs') %>
+    <%- include('toolbars/commandmode.ejs') %>
+  </div>
+  
+  <!-- Panels -->
 
   <%- include('other/controltips.ejs') %>
   
@@ -30,16 +34,19 @@
   <%- include('panels/hotgroup.ejs') %>
   <%- include('panels/logpanel.ejs') %>
 
-  <div id="toolbar-container">
-    <%- include('toolbars/primary.ejs') %>
-    <%- include('toolbars/commandmode.ejs') %>
-  </div>
+  <!-- Context menus -->
+  <%- include('contextmenus/airbase.ejs') %>
+  <%- include('contextmenus/airbasespawn.ejs') %>
+  <%- include('contextmenus/coalitionarea.ejs') %>
+  <%- include('contextmenus/map.ejs') %>
+  <%- include('contextmenus/unit.ejs') %>
 
+  <!-- Other -->
   <%- include('other/dialogs.ejs') %>
   <%- include('other/popups.ejs') %>
-  <%- include('other/contextmenus.ejs') %>
 
-  <div id="gray-out"></div> <!-- Used to provide grayout effect of the background when login prompt is visible -->
+  <!-- Grayout effect of the background when login prompt is visible -->
+  <div id="gray-out"></div> 
   
   <script src="javascripts/bundle.js"></script>
 </body>

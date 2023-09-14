@@ -1,3 +1,6 @@
+import { LatLng } from "leaflet";
+import { Airbase } from "../mission/airbase";
+
 interface LoadoutItemBlueprint {
     name: string;
     quantity: number;
@@ -22,6 +25,19 @@ interface UnitBlueprint {
     range?: string;
     loadouts?: LoadoutBlueprint[];
     filename?: string;
-    liveryID?: string;
+    liveries?: {[key: string]: {name: string, countries: string[]}};
     cost?: number;
+}
+
+interface UnitSpawnOptions {
+    roleType: string;
+    name: string;
+    latlng: LatLng;
+    coalition: string;
+    count: number;
+    country: string;
+    loadout: LoadoutBlueprint | undefined; 
+    airbase: Airbase | undefined; 
+    liveryID: string | undefined;
+    altitude: number | undefined;
 }

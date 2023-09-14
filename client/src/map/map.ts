@@ -1,22 +1,23 @@
 import * as L from "leaflet"
 import { getInfoPopup, getMissionHandler, getUnitsManager } from "..";
 import { BoxSelect } from "./boxselect";
-import { MapContextMenu } from "../controls/mapcontextmenu";
-import { UnitContextMenu } from "../controls/unitcontextmenu";
-import { AirbaseContextMenu } from "../controls/airbasecontextmenu";
+import { MapContextMenu } from "../contextmenus/mapcontextmenu";
+import { UnitContextMenu } from "../contextmenus/unitcontextmenu";
+import { AirbaseContextMenu } from "../contextmenus/airbasecontextmenu";
 import { Dropdown } from "../controls/dropdown";
 import { Airbase } from "../mission/airbase";
 import { Unit } from "../unit/unit";
 import { bearing, createCheckboxOption } from "../other/utils";
-import { DestinationPreviewMarker } from "./destinationpreviewmarker";
-import { TemporaryUnitMarker } from "./temporaryunitmarker";
+import { DestinationPreviewMarker } from "./markers/destinationpreviewmarker";
+import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
 import { SVGInjector } from '@tanem/svg-injector'
 import { layers as mapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, visibilityControls, visibilityControlsTooltips, MOVE_UNIT, SHOW_CONTACT_LINES, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, visibilityControlsTypes, SHOW_UNIT_LABELS, SHOW_CONTROL_TIPS } from "../constants/constants";
-import { TargetMarker } from "./targetmarker";
-import { CoalitionArea } from "./coalitionarea";
-import { CoalitionAreaContextMenu } from "../controls/coalitionareacontextmenu";
-import { DrawingCursor } from "./drawingcursor";
+import { TargetMarker } from "./markers/targetmarker";
+import { CoalitionArea } from "./coalitionarea/coalitionarea";
+import { CoalitionAreaContextMenu } from "../contextmenus/coalitionareacontextmenu";
+import { DrawingCursor } from "./coalitionarea/drawingcursor";
+import { AirbaseSpawnContextMenu } from "../contextmenus/airbasespawnmenu";
 import { OlympusApp } from "../olympusapp";
 
 L.Map.addInitHook('addHandler', 'boxSelect', BoxSelect);
@@ -61,16 +62,22 @@ export class Map extends L.Map {
     #mapContextMenu: MapContextMenu = new MapContextMenu("map-contextmenu");
     #unitContextMenu: UnitContextMenu = new UnitContextMenu("unit-contextmenu");
     #airbaseContextMenu: AirbaseContextMenu = new AirbaseContextMenu("airbase-contextmenu");
+    #airbaseSpawnMenu: AirbaseSpawnContextMenu = new AirbaseSpawnContextMenu("airbase-spawn-contextmenu");
     #coalitionAreaContextMenu: CoalitionAreaContextMenu = new CoalitionAreaContextMenu("coalition-area-contextmenu");
 
     #mapSourceDropdown: Dropdown;
     #mapVisibilityOptionsDropdown: Dropdown;
     #optionButtons: { [key: string]: HTMLButtonElement[] } = {}
     #visibilityOptions: { [key: string]: boolean } = {}
+    #hiddenTypes: string[] = [];
 
     #olympusApp!:OlympusApp;
 
-    constructor(ID: string) {
+    /**
+     * 
+     * @param ID - the ID of the HTML element which will contain the context menu
+     */
+    constructor(ID: string){
         /* Init the leaflet map */
         //@ts-ignore Needed because the boxSelect option is non-standard
         super(ID, { zoomSnap: 0, zoomDelta: 0.25, preferCanvas: true, doubleClickZoom: false, zoomControl: false, boxZoom: false, boxSelect: true, zoomAnimation: true, maxBoundsViscosity: 1.0, minZoom: 7, keyboard: true, keyboardPanDelta: 0 });
@@ -118,14 +125,14 @@ export class Map extends L.Map {
         document.addEventListener("toggleCoalitionVisibility", (ev: CustomEventInit) => {
             const el = ev.detail._element;
             el?.classList.toggle("off");
-            getUnitsManager().setHiddenType(ev.detail.coalition, !el?.classList.contains("off"));
+            this.setHiddenType(ev.detail.coalition, !el?.classList.contains("off"));
             Object.values(getUnitsManager().getUnits()).forEach((unit: Unit) => unit.updateVisibility());
         });
 
         document.addEventListener("toggleMarkerVisibility", (ev: CustomEventInit) => {
             const el = ev.detail._element;
             el?.classList.toggle("off");
-            ev.detail.types.forEach((type: string) => getUnitsManager().setHiddenType(type, !el?.classList.contains("off")));
+            ev.detail.types.forEach((type: string) => this.setHiddenType(type, !el?.classList.contains("off")));
             Object.values(getUnitsManager().getUnits()).forEach((unit: Unit) => unit.updateVisibility());
 
             if (ev.detail.types.includes("airbase")) {
@@ -245,11 +252,27 @@ export class Map extends L.Map {
             this.removeLayer(coalitionArea);
     }
 
+    setHiddenType(key: string, value: boolean) {
+        if (value) {
+            if (this.#hiddenTypes.includes(key))
+                delete this.#hiddenTypes[this.#hiddenTypes.indexOf(key)];
+        }
+        else {
+            this.#hiddenTypes.push(key);
+        }
+        Object.values(getUnitsManager().getUnits()).forEach((unit: Unit) => unit.updateVisibility());
+    }
+
+    getHiddenTypes() {
+        return this.#hiddenTypes;
+    }
+
     /* Context Menus */
     hideAllContextMenus() {
         this.hideMapContextMenu();
         this.hideUnitContextMenu();
         this.hideAirbaseContextMenu();
+        this.hideAirbaseSpawnMenu();
         this.hideCoalitionAreaContextMenu();
     }
 
@@ -293,6 +316,20 @@ export class Map extends L.Map {
 
     hideAirbaseContextMenu() {
         this.#airbaseContextMenu.hide();
+    }
+
+    showAirbaseSpawnMenu(x: number, y: number, latlng: L.LatLng, airbase: Airbase) {
+        this.hideAllContextMenus();
+        this.#airbaseSpawnMenu.show(x, y);
+        this.#airbaseSpawnMenu.setAirbase(airbase);
+    }
+
+    getAirbaseSpawnMenu() {
+        return this.#airbaseSpawnMenu;
+    }
+
+    hideAirbaseSpawnMenu() {
+        this.#airbaseSpawnMenu.hide();
     }
 
     showCoalitionAreaContextMenu(x: number, y: number, latlng: L.LatLng, coalitionArea: CoalitionArea) {
@@ -412,29 +449,11 @@ export class Map extends L.Map {
         }
     }
 
-    addTemporaryMarker(latlng: L.LatLng, name: string, coalition: string) {
-        var marker = new TemporaryUnitMarker(latlng, name, coalition);
+    addTemporaryMarker(latlng: L.LatLng, name: string, coalition: string, commandHash?: string) {
+        var marker = new TemporaryUnitMarker(latlng, name, coalition, commandHash);
         marker.addTo(this);
         this.#temporaryMarkers.push(marker);
-    }
-
-    removeTemporaryMarker(latlng: L.LatLng) {
-        // TODO something more refined than this
-        var dist: number | null = null;
-        var closest: L.Marker | null = null;
-        var i: number = 0;
-        this.#temporaryMarkers.forEach((marker: L.Marker, idx: number) => {
-            var t = latlng.distanceTo(marker.getLatLng());
-            if (dist == null || t < dist) {
-                dist = t;
-                closest = marker;
-                i = idx;
-            }
-        });
-        if (closest && dist != null && dist < 100) {
-            this.removeLayer(closest);
-            this.#temporaryMarkers.splice(i, 1);
-        }
+        return marker;
     }
 
     getSelectedCoalitionArea() {
@@ -549,7 +568,7 @@ export class Map extends L.Map {
         }
 
         this.#longPressTimer = window.setTimeout(() => {
-            if (e.originalEvent.button != 2)
+            if (e.originalEvent.button != 2 || e.originalEvent.ctrlKey)
                 return;
                 
             this.hideMapContextMenu();
@@ -557,7 +576,7 @@ export class Map extends L.Map {
 
             var options: { [key: string]: { text: string, tooltip: string } } = {};
             const selectedUnits = getUnitsManager().getSelectedUnits();
-            const selectedUnitTypes = getUnitsManager().getSelectedUnitsTypes();
+            const selectedUnitTypes = getUnitsManager().getSelectedUnitsCategories();
 
             if (selectedUnitTypes.length === 1 && ["Aircraft", "Helicopter"].includes(selectedUnitTypes[0])) {
                 if (selectedUnits.every((unit: Unit) => { return unit.canFulfillRole(["CAS", "Strike"]) })) {
@@ -573,7 +592,7 @@ export class Map extends L.Map {
                 else 
                     getInfoPopup().setText(`Selected units can not perform point actions.`);
             }
-            else {
+            else if(selectedUnitTypes.length > 1) {
                 getInfoPopup().setText(`Multiple unit types selected, no common actions available.`);
             }
 

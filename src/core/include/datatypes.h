@@ -1,6 +1,6 @@
 #pragma once
 #include "framework.h"
-
+#include "utils.h"
 
 namespace DataIndex {
 	enum DataIndexes {
@@ -114,3 +114,15 @@ bool operator==(const DataTypes::Radio& lhs, const DataTypes::Radio& rhs);
 bool operator==(const DataTypes::GeneralSettings& lhs, const DataTypes::GeneralSettings& rhs);
 bool operator==(const DataTypes::Ammo& lhs, const DataTypes::Ammo& rhs);
 bool operator==(const DataTypes::Contact& lhs, const DataTypes::Contact& rhs);
+
+struct SpawnOptions {
+	string unitType;
+	Coords location;
+	string loadout;
+	string liveryID;
+};
+
+struct CloneOptions {
+	unsigned int ID;
+	Coords location;
+};
