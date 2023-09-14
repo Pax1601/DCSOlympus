@@ -66,6 +66,12 @@ export class Airbase extends CustomMarker {
         img.onload = () => SVGInjector(img);
         el.appendChild(img);
         this.getElement()?.appendChild(el);
+        el.addEventListener( "mouseover", ( ev ) => {
+            document.dispatchEvent( new CustomEvent( "airbaseMouseover", { detail: this }));
+        });
+        el.addEventListener( "mouseout", ( ev ) => {
+            document.dispatchEvent( new CustomEvent( "airbaseMouseout", { detail: this }));
+        });
         el.dataset.coalition = this.#coalition;
     }
 

@@ -7,6 +7,7 @@ export class ControlTips {
 
     #element:HTMLElement;
     #cursorIsHoveringOverUnit:boolean = false;
+    #cursorIsHoveringOverAirbase:boolean = false;
     #olympusApp:OlympusApp;
     #shortcutManager:ShortcutManager;
 
@@ -24,6 +25,16 @@ export class ControlTips {
 
         this.#shortcutManager.onKeyUp( () => {
             this.#updateTips()
+        });
+
+        document.addEventListener( "airbaseMouseover", ( ev:CustomEventInit ) => {
+            this.#cursorIsHoveringOverAirbase = true;
+            this.#updateTips();
+        });
+
+        document.addEventListener( "airbaseMouseout", ( ev:CustomEventInit ) => {
+            this.#cursorIsHoveringOverAirbase = false;
+            this.#updateTips();
         });
 
         document.addEventListener( "unitDeselection", ( ev:CustomEvent ) => {
@@ -68,13 +79,10 @@ export class ControlTips {
                 "keys": [],
                 "tips": [
                     {
-                        "key": `W/A/S/D`,
-                        "action": `Pan map`,
-                        "showIfUnitSelected": false
-                    },
-                    {
                         "key": `SHIFT`,
                         "action": `Box select`,
+                        "showIfHoveringOverAirbase": false,
+                        "showIfHoveringOverUnit": false,
                         "showIfUnitSelected": false
                     },
                     {
@@ -85,27 +93,73 @@ export class ControlTips {
                     {
                         "key": `Mouse1+drag`,
                         "action": `Move map`,
+                        "showIfHoveringOverAirbase": false,
+                        "showIfHoveringOverUnit": false,
                         "showIfUnitSelected": false
                     },
                     {
                         "key": `Mouse2`,
                         "action": `Spawn menu`,
-                        "showIfUnitSelected": false
+                        "showIfUnitSelected": false,
+                        "showIfHoveringOverAirbase": false,
+                        "showIfHoveringOverUnit": false
+                    },
+                    {
+                        "key": `Mouse2`,
+                        "action": `Quick options`,
+                        "showIfUnitSelected": false,
+                        "showIfHoveringOverAirbase": false,
+                        "showIfHoveringOverUnit": true
+                    },
+                    {
+                        "key": `Mouse2`,
+                        "action": `Airbase menu`,
+                        "showIfUnitSelected": false,
+                        "showIfHoveringOverAirbase": true,
+                        "showIfHoveringOverUnit": false
                     },
                     {
                         "key": `Mouse2`,
                         "action": `Set first waypoint`,
+                        "showIfHoveringOverAirbase": false,
                         "showIfUnitSelected": true,
+                        "unitsMustBeControlled": true
+                    },
+                    {
+                        "key": "CTRL+Mouse2",
+                        "action": "Add waypoint",
+                        "showIfUnitSelected": true,
+                        "showIfHoveringOverAirbase": false,
+                        "unitsMustBeControlled": true
+                    },
+                    {
+                        "key": `Mouse2 (hold)`,
+                        "action": `Point operations`,
+                        "showIfUnitSelected": true,
+                        "showIfHoveringOverAirbase": false,
+                        "showIfHoveringOverUnit": false,
+                        "unitsMustBeControlled": true
+                    },
+                    {
+                        "key": "CTRL",
+                        "action": " Pin tool",
+                        "showIfUnitSelected": false,
+                        "showIfHoveringOverAirbase": false,
+                        "showIfHoveringOverUnit": false,
+                        "unitsMustBeControlled": true
+                    },
+                    {
+                        "key": "CTRL+Mouse2",
+                        "action": " Airbase menu",
+                        "showIfUnitSelected": true,
+                        "showIfHoveringOverAirbase": true,
                         "unitsMustBeControlled": true
                     },
                     {
                         "key": `Delete`,
                         "action": `Delete unit`,
+                        "showIfHoveringOverAirbase": false,
                         "showIfUnitSelected": true
-                    },
-                    {
-                        "key": "CTRL",
-                        "action": " (more...)"
                     }
                 ]
             },
@@ -116,18 +170,22 @@ export class ControlTips {
                         "key": `Mouse1`,
                         "action": "Toggle pin",
                         "showIfUnitSelected": false,
+                        "showIfHoveringOverAirbase": false,
                         "showIfHoveringOverUnit": false
                     },
                     {
                         "key": `Mouse1`,
                         "action": "Toggle selection",
                         "showIfUnitSelected": true,
+                        "showIfHoveringOverAirbase": false,
                         "showIfHoveringOverUnit": true
                     },
                     {
                         "key": `Mouse2`,
                         "action": `Add waypoint`,
-                        "showIfUnitSelected": true
+                        "showIfHoveringOverAirbase": false,
+                        "showIfUnitSelected": true,
+                        "unitsMustBeControlled": true
                     }
                 ]
             },
@@ -176,17 +234,22 @@ export class ControlTips {
                 return;
             }
 
-           // console.log( tip.action, "state:", this.#cursorIsHoveringOverUnit, "typeof", typeof tip.showIfHoveringOverUnit, "logic", tip.showIfHoveringOverUnit !== this.#cursorIsHoveringOverUnit );
+            if ( typeof tip.showIfHoveringOverAirbase === "boolean" ) {
+                if ( tip.showIfHoveringOverAirbase !== this.#cursorIsHoveringOverAirbase ) {
+                    return;
+                }
+            }
 
-            if ( typeof tip.showIfHoveringOverUnit === "boolean" && tip.showIfHoveringOverUnit !== this.#cursorIsHoveringOverUnit ) {
-                return;
+            if ( typeof tip.showIfHoveringOverUnit === "boolean" ) {
+                if ( tip.showIfHoveringOverUnit !== this.#cursorIsHoveringOverUnit ) {
+                    return;
+                }
             }
 
             element.innerHTML += `<div><span class="key">${tip.key}</span><span class="action">${tip.action}</span></div>`
 
         });
-        
-        //  console.log( "----" );
+    
 
     }
 

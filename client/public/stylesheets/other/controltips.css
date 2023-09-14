@@ -20,14 +20,14 @@
     column-gap: 8px;
     display:flex;
     justify-items: right;
-    opacity: .85;
+    opacity: .9;
     padding:5px;
     width:fit-content;
 }
 
 #control-tips-panel > * > .key {
-    background-color: white;
+    background-color: var( --background-grey );
     border-radius: var( --border-radius-sm );
-    color: var( --background-steel );
+    color: white;
     padding:1px 4px;
 }
