@@ -45,7 +45,7 @@ class FeatureSwitch {
     }
 
 
-    isEnabled() {
+    isEnabled():boolean {
 
         if ( this.forceState === 0 ) {
             return false;
@@ -81,9 +81,16 @@ export class FeatureSwitches {
 
         new FeatureSwitch({
             "defaultEnabled": false,
-            "forceState": 1,
+            "forceState": -1,
             "label": "ATC",
             "name": "atc"
+        }),
+
+        new FeatureSwitch({
+            "defaultEnabled": false,
+            "forceState": -1,
+            "label": "Control tips",
+            "name": "controlTips"
         }),
 
         new FeatureSwitch({
@@ -144,6 +151,18 @@ export class FeatureSwitches {
 
         for (const featureSwitch of this.#featureSwitches) {
             preferences[featureSwitch.name] = featureSwitch.isEnabled();
+        }
+
+        localStorage.setItem("featureSwitches", JSON.stringify(preferences));
+
+    }
+
+    savePreference( featureSwitchName:string, value:boolean ) {
+
+        const preferences = JSON.parse( localStorage.getItem( "featureSwitches" ) || "{}" );
+
+        if ( preferences.hasOwnProperty( featureSwitchName ) ) {
+            preferences[ featureSwitchName ] = value;
         }
 
         localStorage.setItem("featureSwitches", JSON.stringify(preferences));

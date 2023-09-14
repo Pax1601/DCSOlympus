@@ -10,6 +10,7 @@ import { ServerStatusPanel } from "./panels/serverstatuspanel";
 import { UnitControlPanel } from "./panels/unitcontrolpanel";
 import { UnitInfoPanel } from "./panels/unitinfopanel";
 import { Popup } from "./popups/popup";
+import { ControlTips } from "./shortcut/controltips";
 import { UnitsManager } from "./unit/unitsmanager";
 
 export interface IIndexApp extends IOlympusApp {
@@ -59,6 +60,8 @@ export class IndexApp extends OlympusApp {
     start() {
 
         super.start();
+
+        new ControlTips( "control-tips-panel", this );
 
     }
     

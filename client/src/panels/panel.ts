@@ -7,8 +7,12 @@ export abstract class Panel {
     #eventsManager!: PanelEventsManager;
     #olympusApp!: OlympusApp;
 
-    constructor(ID: string) {
+    constructor(ID: string, olympusApp?:OlympusApp ) {
         this.#element = <HTMLElement>document.getElementById(ID);
+        
+        if ( olympusApp ) {
+            this.setOlympusApp( olympusApp );
+        }
     }
 
     show() {
@@ -46,7 +50,7 @@ export abstract class Panel {
     }
 
     setOlympusApp( olympusApp:OlympusApp ) {
-        this.#olympusApp   = olympusApp;
+        this.#olympusApp    = olympusApp;
         this.#eventsManager = new PanelEventsManager( this.getOlympusApp() );
     }
 

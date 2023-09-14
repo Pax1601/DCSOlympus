@@ -3,6 +3,7 @@ import { FeatureSwitches } from "./features/featureswitches";
 import { Map } from "./map/map";
 import { MissionHandler } from "./mission/missionhandler";
 import { PanelsManager } from "./panels/panelsmanager";
+import { ControlTips } from "./shortcut/controltips";
 import { ShortcutManager } from "./shortcut/shortcutmanager";
 import { UnitsManager } from "./unit/unitsmanager";
 
@@ -17,6 +18,7 @@ export interface IOlympusApp {
 
 export abstract class OlympusApp {
 
+    #controlTips: ControlTips;
     #featureSwitches: FeatureSwitches;
     #map: Map;
     #missionHandler: MissionHandler;
@@ -27,12 +29,19 @@ export abstract class OlympusApp {
 
     constructor( config:IOlympusApp ) {
 
+        this.#controlTips     = new ControlTips( "control-tips-panel", this );
         this.#featureSwitches = config.featureSwitches;
         this.#map             = config.map;
         this.#missionHandler  = config.missionHandler;
         this.#unitDataTable   = config.unitDataTable;
         this.#unitsManager    = config.unitsManager;
 
+        this.getMap().setOlympusApp( this );
+
+    }
+
+    getControlTips() {
+        return this.#controlTips;
     }
 
     getFeatureSwitches() {
@@ -70,6 +79,7 @@ export abstract class OlympusApp {
     start() {
 
         //  Start the app
+
 
     }
 

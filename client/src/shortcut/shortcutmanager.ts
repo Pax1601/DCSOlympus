@@ -35,6 +35,18 @@ export class ShortcutManager extends Manager {
         return this.#keysBeingHeld;
     }
 
+    keyComboMatches( combo:string[] ) {
+
+        const heldKeys = this.getKeysBeingHeld();
+
+        if ( combo.length !== heldKeys.length ) {
+            return false;
+        }
+
+        return combo.every( key => heldKeys.indexOf( key ) > -1 );
+
+    }
+
     onKeyDown( callback:CallableFunction ) {
         this.#keyDownCallbacks.push( callback );
     }

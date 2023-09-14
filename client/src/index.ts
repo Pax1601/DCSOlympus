@@ -179,10 +179,12 @@ function setupEvents( indexApp:OlympusApp ) {
         })
     )
     .add( "togglePause", new ShortcutKeyboard({
+            "altKey": false,
             "callback": () => {
                 setPaused(!getPaused());
             },
-            "code": "space"
+            "code": "Space",
+            "ctrlKey": false
         })
     );
 

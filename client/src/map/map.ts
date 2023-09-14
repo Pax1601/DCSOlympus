@@ -12,11 +12,12 @@ import { DestinationPreviewMarker } from "./destinationpreviewmarker";
 import { TemporaryUnitMarker } from "./temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
 import { SVGInjector } from '@tanem/svg-injector'
-import { layers as mapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, visibilityControls, visibilityControlsTooltips, MOVE_UNIT, SHOW_CONTACT_LINES, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, visibilityControlsTypes, SHOW_UNIT_LABELS } from "../constants/constants";
+import { layers as mapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, visibilityControls, visibilityControlsTooltips, MOVE_UNIT, SHOW_CONTACT_LINES, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, visibilityControlsTypes, SHOW_UNIT_LABELS, SHOW_CONTROL_TIPS } from "../constants/constants";
 import { TargetMarker } from "./targetmarker";
 import { CoalitionArea } from "./coalitionarea";
 import { CoalitionAreaContextMenu } from "../controls/coalitionareacontextmenu";
 import { DrawingCursor } from "./drawingcursor";
+import { OlympusApp } from "../olympusapp";
 
 L.Map.addInitHook('addHandler', 'boxSelect', BoxSelect);
 
@@ -66,6 +67,8 @@ export class Map extends L.Map {
     #mapVisibilityOptionsDropdown: Dropdown;
     #optionButtons: { [key: string]: HTMLButtonElement[] } = {}
     #visibilityOptions: { [key: string]: boolean } = {}
+
+    #olympusApp!:OlympusApp;
 
     constructor(ID: string) {
         /* Init the leaflet map */
@@ -153,6 +156,7 @@ export class Map extends L.Map {
 
         document.addEventListener("mapVisibilityOptionsChanged", () => {
             this.getContainer().toggleAttribute("data-hide-labels", !this.getVisibilityOptions()[SHOW_UNIT_LABELS]);
+            this.getOlympusApp().getControlTips().toggle( !this.getVisibilityOptions()[SHOW_CONTROL_TIPS] );
         });
 
         /* Pan interval */
@@ -176,6 +180,10 @@ export class Map extends L.Map {
         this.#visibilityOptions[SHOW_UNIT_PATHS] = true;
         this.#visibilityOptions[SHOW_UNIT_TARGETS] = true;
         this.#visibilityOptions[SHOW_UNIT_LABELS] = true;
+        
+        //  Manual until we use the OlympusApp approach
+        this.#visibilityOptions[SHOW_CONTROL_TIPS] = JSON.parse( localStorage.getItem( "featureSwitches" ) || "{}" )?.controlTips || true;
+
         this.#mapVisibilityOptionsDropdown.setOptionsElements(Object.keys(this.#visibilityOptions).map((option: string) => {
             return createCheckboxOption(option, option, this.#visibilityOptions[option], (ev: any) => {
                 this.#setVisibilityOption(option, ev);
@@ -775,6 +783,27 @@ export class Map extends L.Map {
     #setVisibilityOption(option: string, ev: any) {
         this.#visibilityOptions[option] = ev.currentTarget.checked;
         document.dispatchEvent(new CustomEvent("mapVisibilityOptionsChanged"));
+    }
+
+    getOlympusApp() {
+        return this.#olympusApp;
+    }
+
+    setOlympusApp( olympusApp:OlympusApp ) {
+        
+        this.#olympusApp = olympusApp;
+
+
+        //  Bit crappy until we move to a more structured set of code
+
+        let controlTipsBoolean = this.getOlympusApp().getFeatureSwitches().getSwitch( "controlTips" )?.isEnabled();
+
+        controlTipsBoolean = ( typeof controlTipsBoolean === "boolean" ) ? controlTipsBoolean : true;
+
+        this.#visibilityOptions[SHOW_CONTROL_TIPS] = controlTipsBoolean;
+
+        document.dispatchEvent(new CustomEvent("mapVisibilityOptionsChanged"));
+
     }
 }
 

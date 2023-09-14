@@ -154,8 +154,16 @@ export class Unit extends CustomMarker {
         this.on('click', (e) => this.#onClick(e));
         this.on('dblclick', (e) => this.#onDoubleClick(e));
         this.on('contextmenu', (e) => this.#onContextMenu(e));
-        this.on('mouseover', () => { if (this.belongsToCommandedCoalition()) this.setHighlighted(true); })
-        this.on('mouseout', () => { this.setHighlighted(false); })
+        this.on('mouseover', () => {
+            if (this.belongsToCommandedCoalition()) {
+                this.setHighlighted(true);
+                document.dispatchEvent(new CustomEvent("unitMouseover", { detail: this }));
+            }
+        });
+        this.on('mouseout', () => {
+            this.setHighlighted(false);
+            document.dispatchEvent(new CustomEvent("unitMouseout", { detail: this }));
+        });
         getMap().on("zoomend", () => { this.#onZoom(); })
 
         /* Deselect units if they are hidden */
@@ -329,11 +337,9 @@ export class Unit extends CustomMarker {
             this.#selected = selected;
 
             if (selected) {
-                document.dispatchEvent(new CustomEvent("unitSelection", { detail: this }));
                 this.#updateMarker();
             }
             else {
-                document.dispatchEvent(new CustomEvent("unitDeselection", { detail: this }));
                 this.#clearContacts();
                 this.#clearPath();
                 this.#clearTarget();
@@ -345,6 +351,13 @@ export class Unit extends CustomMarker {
                     this.getGroupMembers().forEach((unit: Unit) => unit.setSelected(selected));
                 else
                     this.#updateMarker();
+            }
+
+            //  Trigger events after all (de-)selecting has been done
+            if (selected) {
+                document.dispatchEvent(new CustomEvent("unitSelection", { detail: this }));
+            } else {
+                document.dispatchEvent(new CustomEvent("unitDeselection", { detail: this }));
             }
 
         }

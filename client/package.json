@@ -43,6 +43,7 @@
     "requirejs": "^2.3.6",
     "sortablejs": "^1.15.0",
     "tsify": "^5.0.4",
+    "tslib": "latest",
     "typescript": "^4.9.4",
     "watchify": "^4.0.0"
   }
