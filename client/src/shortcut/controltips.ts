@@ -186,6 +186,13 @@ export class ControlTips {
                         "showIfHoveringOverAirbase": false,
                         "showIfUnitSelected": true,
                         "unitsMustBeControlled": true
+                    },
+                    {
+                        "key": `Mouse2`,
+                        "action": `Airbase menu`,
+                        "showIfHoveringOverAirbase": true,
+                        "showIfUnitSelected": true,
+                        "unitsMustBeControlled": true
                     }
                 ]
             },

@@ -812,17 +812,6 @@ export class Map extends L.Map {
         
         this.#olympusApp = olympusApp;
 
-
-        //  Bit crappy until we move to a more structured set of code
-
-        let controlTipsBoolean = this.getOlympusApp().getFeatureSwitches().getSwitch( "controlTips" )?.isEnabled();
-
-        controlTipsBoolean = ( typeof controlTipsBoolean === "boolean" ) ? controlTipsBoolean : true;
-
-        this.#visibilityOptions[SHOW_CONTROL_TIPS] = controlTipsBoolean;
-
-        document.dispatchEvent(new CustomEvent("mapVisibilityOptionsChanged"));
-
     }
 }
 
