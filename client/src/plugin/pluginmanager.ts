@@ -2,6 +2,11 @@ import path from "path";
 import { Manager } from "../other/manager";
 import { getApp } from "..";
 
+/** The plugins manager is responsible for loading and initializing all the plugins. Plugins are located in the public/plugins folder. 
+ * Each plugin must be comprised of a single folder containing a index.js file. Each plugin must set the globalThis.getOlympusPlugin variable to
+ * return a valid class implementing the OlympusPlugin interface.
+  */
+
 export class PluginsManager extends Manager {
     constructor() {
         super();
@@ -36,15 +41,28 @@ export class PluginsManager extends Manager {
                     document.getElementsByTagName("head")[0].appendChild(link);
 
                     /* Evaluate the plugin javascript */
-                    eval(xhr.response);
-                    const plugin = globalThis.getOlympusPlugin() as OlympusPlugin;
-                    console.log(plugin.getName() + " loaded correctly");
-                    
-                    if (plugin.initialize(getApp())) {
-                        console.log(plugin.getName() + " initialized correctly");
-                        this.add(pluginName, plugin);
+                    var plugin: OlympusPlugin | null = null;
+                    try {
+                        eval(xhr.response);
+                        plugin = globalThis.getOlympusPlugin() as OlympusPlugin;
+                        console.log(plugin.getName() + " loaded correctly");
+                    } catch (error: any) {
+                        console.log("An error occured while loading a plugin from " + pluginName);
+                        console.log(error);
                     }
-
+                     
+                    /* If the plugin was loaded, try to initialize it */
+                    if (plugin != null) {
+                        try {
+                            if (plugin.initialize(getApp())) {
+                                console.log(plugin.getName() + " initialized correctly");
+                                this.add(pluginName, plugin);
+                            }
+                        } catch (error: any) {
+                            console.log("An error occured while initializing a plugin from " + pluginName);
+                            console.log(error);
+                        }
+                    }
                 } else {
                     console.error(`Error retrieving plugin from ${pluginName}`)
                 }

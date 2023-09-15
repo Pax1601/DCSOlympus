@@ -12,7 +12,7 @@ import { DestinationPreviewMarker } from "./markers/destinationpreviewmarker";
 import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
 import { SVGInjector } from '@tanem/svg-injector'
-import { layers as mapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, visibilityControls, visibilityControlsTooltips, MOVE_UNIT, SHOW_CONTACT_LINES, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, visibilityControlsTypes, SHOW_UNIT_LABELS, SHOW_CONTROL_TIPS } from "../constants/constants";
+import { layers as mapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, visibilityControls, visibilityControlsTooltips, MOVE_UNIT, SHOW_CONTACT_LINES, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, visibilityControlsTypes, SHOW_UNIT_LABELS } from "../constants/constants";
 import { TargetMarker } from "./markers/targetmarker";
 import { CoalitionArea } from "./coalitionarea/coalitionarea";
 import { CoalitionAreaContextMenu } from "../contextmenus/coalitionareacontextmenu";
@@ -161,7 +161,6 @@ export class Map extends L.Map {
 
         document.addEventListener("mapVisibilityOptionsChanged", () => {
             this.getContainer().toggleAttribute("data-hide-labels", !this.getVisibilityOptions()[SHOW_UNIT_LABELS]);
-            // TODO this.getControlTips().toggle( !this.getVisibilityOptions()[SHOW_CONTROL_TIPS] );
         });
 
         /* Pan interval */
@@ -180,20 +179,16 @@ export class Map extends L.Map {
         document.querySelector("#unit-visibility-control")?.append(...this.#optionButtons["visibility"]);
 
         /* Create the checkboxes to select the advanced visibility options */
-        this.#visibilityOptions[SHOW_CONTACT_LINES] = false;
-        this.#visibilityOptions[HIDE_GROUP_MEMBERS] = true;
-        this.#visibilityOptions[SHOW_UNIT_PATHS] = true;
-        this.#visibilityOptions[SHOW_UNIT_TARGETS] = true;
-        this.#visibilityOptions[SHOW_UNIT_LABELS] = true;
-        
-        //  Manual until we use the App approach
-        this.#visibilityOptions[SHOW_CONTROL_TIPS] = JSON.parse( localStorage.getItem( "featureSwitches" ) || "{}" )?.controlTips || true;
+        this.addVisibilityOption(SHOW_CONTACT_LINES, false);
+        this.addVisibilityOption(HIDE_GROUP_MEMBERS, true);
+        this.addVisibilityOption(SHOW_UNIT_PATHS, true);
+        this.addVisibilityOption(SHOW_UNIT_TARGETS, true);
+        this.addVisibilityOption(SHOW_UNIT_LABELS, true);
+    }
 
-        this.#mapVisibilityOptionsDropdown.setOptionsElements(Object.keys(this.#visibilityOptions).map((option: string) => {
-            return createCheckboxOption(option, option, this.#visibilityOptions[option], (ev: any) => {
-                this.#setVisibilityOption(option, ev);
-            });
-        }));
+    addVisibilityOption(option: string, defaultValue: boolean) {
+        this.#visibilityOptions[option] = defaultValue;
+        this.#mapVisibilityOptionsDropdown.addOptionElement(createCheckboxOption(option, option, defaultValue, (ev: any) => { this.#setVisibilityOption(option, ev); }));
     }
 
     setLayer(layerName: string) {

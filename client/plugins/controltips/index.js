@@ -11,68 +11,72 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _ControlTips_instances, _ControlTips_element, _ControlTips_app, _ControlTips_shortcutManager, _ControlTips_cursorIsHoveringOverUnit, _ControlTips_cursorIsHoveringOverAirbase, _ControlTips_updateTips;
+var _ControlTipsPlugin_instances, _ControlTipsPlugin_element, _ControlTipsPlugin_app, _ControlTipsPlugin_shortcutManager, _ControlTipsPlugin_cursorIsHoveringOverUnit, _ControlTipsPlugin_cursorIsHoveringOverAirbase, _ControlTipsPlugin_updateTips;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ControlTips = void 0;
-class ControlTips {
+exports.ControlTipsPlugin = void 0;
+const SHOW_CONTROL_TIPS = "Show control tips";
+class ControlTipsPlugin {
     constructor() {
-        _ControlTips_instances.add(this);
-        _ControlTips_element.set(this, void 0);
-        _ControlTips_app.set(this, void 0);
-        _ControlTips_shortcutManager.set(this, void 0);
-        _ControlTips_cursorIsHoveringOverUnit.set(this, false);
-        _ControlTips_cursorIsHoveringOverAirbase.set(this, false);
-        __classPrivateFieldSet(this, _ControlTips_element, document.createElement("div"), "f");
-        __classPrivateFieldGet(this, _ControlTips_element, "f").id = "control-tips-panel";
-        document.body.appendChild(__classPrivateFieldGet(this, _ControlTips_element, "f"));
-        console.log("HELLO");
+        _ControlTipsPlugin_instances.add(this);
+        _ControlTipsPlugin_element.set(this, void 0);
+        _ControlTipsPlugin_app.set(this, void 0);
+        _ControlTipsPlugin_shortcutManager.set(this, void 0);
+        _ControlTipsPlugin_cursorIsHoveringOverUnit.set(this, false);
+        _ControlTipsPlugin_cursorIsHoveringOverAirbase.set(this, false);
+        __classPrivateFieldSet(this, _ControlTipsPlugin_element, document.createElement("div"), "f");
+        __classPrivateFieldGet(this, _ControlTipsPlugin_element, "f").id = "control-tips-panel";
+        document.body.appendChild(__classPrivateFieldGet(this, _ControlTipsPlugin_element, "f"));
     }
     getName() {
         return "Control Tips Plugin";
     }
     initialize(app) {
-        __classPrivateFieldSet(this, _ControlTips_app, app, "f");
-        __classPrivateFieldSet(this, _ControlTips_shortcutManager, __classPrivateFieldGet(this, _ControlTips_app, "f").getShortcutManager(), "f");
-        __classPrivateFieldGet(this, _ControlTips_shortcutManager, "f").onKeyDown(() => {
-            __classPrivateFieldGet(this, _ControlTips_instances, "m", _ControlTips_updateTips).call(this);
+        __classPrivateFieldSet(this, _ControlTipsPlugin_app, app, "f");
+        __classPrivateFieldSet(this, _ControlTipsPlugin_shortcutManager, __classPrivateFieldGet(this, _ControlTipsPlugin_app, "f").getShortcutManager(), "f");
+        __classPrivateFieldGet(this, _ControlTipsPlugin_shortcutManager, "f").onKeyDown(() => {
+            __classPrivateFieldGet(this, _ControlTipsPlugin_instances, "m", _ControlTipsPlugin_updateTips).call(this);
         });
-        __classPrivateFieldGet(this, _ControlTips_shortcutManager, "f").onKeyUp(() => {
-            __classPrivateFieldGet(this, _ControlTips_instances, "m", _ControlTips_updateTips).call(this);
+        __classPrivateFieldGet(this, _ControlTipsPlugin_shortcutManager, "f").onKeyUp(() => {
+            __classPrivateFieldGet(this, _ControlTipsPlugin_instances, "m", _ControlTipsPlugin_updateTips).call(this);
         });
         document.addEventListener("airbaseMouseover", (ev) => {
-            __classPrivateFieldSet(this, _ControlTips_cursorIsHoveringOverAirbase, true, "f");
-            __classPrivateFieldGet(this, _ControlTips_instances, "m", _ControlTips_updateTips).call(this);
+            __classPrivateFieldSet(this, _ControlTipsPlugin_cursorIsHoveringOverAirbase, true, "f");
+            __classPrivateFieldGet(this, _ControlTipsPlugin_instances, "m", _ControlTipsPlugin_updateTips).call(this);
         });
         document.addEventListener("airbaseMouseout", (ev) => {
-            __classPrivateFieldSet(this, _ControlTips_cursorIsHoveringOverAirbase, false, "f");
-            __classPrivateFieldGet(this, _ControlTips_instances, "m", _ControlTips_updateTips).call(this);
+            __classPrivateFieldSet(this, _ControlTipsPlugin_cursorIsHoveringOverAirbase, false, "f");
+            __classPrivateFieldGet(this, _ControlTipsPlugin_instances, "m", _ControlTipsPlugin_updateTips).call(this);
         });
-        //document.addEventListener("unitDeselection", (ev: CustomEvent) => {
-        //    this.#updateTips();
-        //});
+        document.addEventListener("unitDeselection", (ev) => {
+            __classPrivateFieldGet(this, _ControlTipsPlugin_instances, "m", _ControlTipsPlugin_updateTips).call(this);
+        });
         document.addEventListener("unitMouseover", (ev) => {
-            __classPrivateFieldSet(this, _ControlTips_cursorIsHoveringOverUnit, true, "f");
-            __classPrivateFieldGet(this, _ControlTips_instances, "m", _ControlTips_updateTips).call(this);
+            __classPrivateFieldSet(this, _ControlTipsPlugin_cursorIsHoveringOverUnit, true, "f");
+            __classPrivateFieldGet(this, _ControlTipsPlugin_instances, "m", _ControlTipsPlugin_updateTips).call(this);
         });
         document.addEventListener("unitMouseout", (ev) => {
-            __classPrivateFieldSet(this, _ControlTips_cursorIsHoveringOverUnit, false, "f");
-            __classPrivateFieldGet(this, _ControlTips_instances, "m", _ControlTips_updateTips).call(this);
+            __classPrivateFieldSet(this, _ControlTipsPlugin_cursorIsHoveringOverUnit, false, "f");
+            __classPrivateFieldGet(this, _ControlTipsPlugin_instances, "m", _ControlTipsPlugin_updateTips).call(this);
         });
-        //document.addEventListener("unitSelection", (ev: CustomEvent) => {
-        //    this.#updateTips()
-        //});
-        __classPrivateFieldGet(this, _ControlTips_instances, "m", _ControlTips_updateTips).call(this);
+        document.addEventListener("unitSelection", (ev) => {
+            __classPrivateFieldGet(this, _ControlTipsPlugin_instances, "m", _ControlTipsPlugin_updateTips).call(this);
+        });
+        document.addEventListener("mapVisibilityOptionsChanged", () => {
+            this.toggle(!__classPrivateFieldGet(this, _ControlTipsPlugin_app, "f").getMap().getVisibilityOptions()[SHOW_CONTROL_TIPS]);
+        });
+        __classPrivateFieldGet(this, _ControlTipsPlugin_instances, "m", _ControlTipsPlugin_updateTips).call(this);
+        __classPrivateFieldGet(this, _ControlTipsPlugin_app, "f").getMap().addVisibilityOption(SHOW_CONTROL_TIPS, true);
         return true;
     }
     getElement() {
-        return __classPrivateFieldGet(this, _ControlTips_element, "f");
+        return __classPrivateFieldGet(this, _ControlTipsPlugin_element, "f");
     }
     toggle(bool) {
         this.getElement().classList.toggle("hide", bool);
     }
 }
-exports.ControlTips = ControlTips;
-_ControlTips_element = new WeakMap(), _ControlTips_app = new WeakMap(), _ControlTips_shortcutManager = new WeakMap(), _ControlTips_cursorIsHoveringOverUnit = new WeakMap(), _ControlTips_cursorIsHoveringOverAirbase = new WeakMap(), _ControlTips_instances = new WeakSet(), _ControlTips_updateTips = function _ControlTips_updateTips() {
+exports.ControlTipsPlugin = ControlTipsPlugin;
+_ControlTipsPlugin_element = new WeakMap(), _ControlTipsPlugin_app = new WeakMap(), _ControlTipsPlugin_shortcutManager = new WeakMap(), _ControlTipsPlugin_cursorIsHoveringOverUnit = new WeakMap(), _ControlTipsPlugin_cursorIsHoveringOverAirbase = new WeakMap(), _ControlTipsPlugin_instances = new WeakSet(), _ControlTipsPlugin_updateTips = function _ControlTipsPlugin_updateTips() {
     const combos = [
         {
             "keys": [],
@@ -205,13 +209,13 @@ _ControlTips_element = new WeakMap(), _ControlTips_app = new WeakMap(), _Control
             ]
         }
     ];
-    const currentCombo = combos.find((combo) => __classPrivateFieldGet(this, _ControlTips_shortcutManager, "f").keyComboMatches(combo.keys)) || combos[0];
+    const currentCombo = combos.find((combo) => __classPrivateFieldGet(this, _ControlTipsPlugin_shortcutManager, "f").keyComboMatches(combo.keys)) || combos[0];
     const element = this.getElement();
     element.innerHTML = "";
     let numSelectedUnits = 0;
     let unitSelectionContainsControlled = false;
-    if (__classPrivateFieldGet(this, _ControlTips_app, "f").getUnitsManager()) {
-        let selectedUnits = Object.values(__classPrivateFieldGet(this, _ControlTips_app, "f").getUnitsManager().getSelectedUnits());
+    if (__classPrivateFieldGet(this, _ControlTipsPlugin_app, "f").getUnitsManager()) {
+        let selectedUnits = Object.values(__classPrivateFieldGet(this, _ControlTipsPlugin_app, "f").getUnitsManager().getSelectedUnits());
         numSelectedUnits = selectedUnits.length;
         unitSelectionContainsControlled = selectedUnits.some((unit) => unit.getControlled());
     }
@@ -228,12 +232,12 @@ _ControlTips_element = new WeakMap(), _ControlTips_app = new WeakMap(), _Control
             return;
         }
         if (typeof tip.showIfHoveringOverAirbase === "boolean") {
-            if (tip.showIfHoveringOverAirbase !== __classPrivateFieldGet(this, _ControlTips_cursorIsHoveringOverAirbase, "f")) {
+            if (tip.showIfHoveringOverAirbase !== __classPrivateFieldGet(this, _ControlTipsPlugin_cursorIsHoveringOverAirbase, "f")) {
                 return;
             }
         }
         if (typeof tip.showIfHoveringOverUnit === "boolean") {
-            if (tip.showIfHoveringOverUnit !== __classPrivateFieldGet(this, _ControlTips_cursorIsHoveringOverUnit, "f")) {
+            if (tip.showIfHoveringOverUnit !== __classPrivateFieldGet(this, _ControlTipsPlugin_cursorIsHoveringOverUnit, "f")) {
                 return;
             }
         }
@@ -246,7 +250,7 @@ _ControlTips_element = new WeakMap(), _ControlTips_app = new WeakMap(), _Control
 Object.defineProperty(exports, "__esModule", { value: true });
 const controltips_1 = require("./controltips");
 globalThis.getOlympusPlugin = () => {
-    return new controltips_1.ControlTips();
+    return new controltips_1.ControlTipsPlugin();
 };
 
 },{"./controltips":1}]},{},[2]);

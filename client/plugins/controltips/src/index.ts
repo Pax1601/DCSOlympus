@@ -1,4 +1,4 @@
-import { ControlTipsPlugin } from "./controltips";
+import { ControlTipsPlugin } from "./controltipsplugin";
 
 globalThis.getOlympusPlugin = () => {
     return new ControlTipsPlugin();

@@ -17,6 +17,9 @@ import { WeaponsManager } from "./weapon/weaponsmanager";
 
 import { BLUE_COMMANDER, GAME_MASTER, RED_COMMANDER } from "./constants/constants";
 import { Manager } from "./other/manager";
+import { ShortcutKeyboard } from "./shortcut/shortcut";
+import { getPaused, setCredentials, setPaused, startUpdate, toggleDemoEnabled } from "./server/server";
+import { SVGInjector } from "@tanem/svg-injector";
 
 export class OlympusApp {
     /* Global data */
@@ -36,11 +39,11 @@ export class OlympusApp {
     #shortcutManager: ShortcutManager | null = null;
 
     /* UI Toolbars */
-    #primaryToolbar: PrimaryToolbar| null = null;
-    #commandModeToolbar: CommandModeToolbar| null = null;
+    #primaryToolbar: PrimaryToolbar | null = null;
+    #commandModeToolbar: CommandModeToolbar | null = null;
 
     constructor() {
-        
+
     }
 
     getMap() {
@@ -122,7 +125,7 @@ export class OlympusApp {
         this.#unitsManager = new UnitsManager();
         this.#weaponsManager = new WeaponsManager();
         this.#missionManager = new MissionManager();
-    
+
         this.#shortcutManager = new ShortcutManager();
 
         this.#panelsManager = new Manager();
@@ -136,16 +139,130 @@ export class OlympusApp {
             .add("mouseInfo", new MouseInfoPanel("mouse-info-panel"))
             .add("log", new LogPanel("log-panel"))
             .add("serverStatus", new ServerStatusPanel("server-status-panel"))
-            .add("unitControl",  new UnitControlPanel("unit-control-panel"))
+            .add("unitControl", new UnitControlPanel("unit-control-panel"))
             .add("unitInfo", new UnitInfoPanel("unit-info-panel"))
-        
+
         // Popups
         this.getPopupsManager().add("infoPopup", new Popup("info-popup"));
 
         // Toolbars
         this.getToolbarsManager().add("primaryToolbar", new PrimaryToolbar("primary-toolbar"))
-        .add("commandModeToolbar", new PrimaryToolbar("command-mode-toolbar"));
+            .add("commandModeToolbar", new PrimaryToolbar("command-mode-toolbar"));
 
         this.#pluginsManager = new PluginsManager();
+
+        this.#setupEvents();
+    }
+
+    #setupEvents() {
+        /* Generic clicks */
+        document.addEventListener("click", (ev) => {
+            if (ev instanceof MouseEvent && ev.target instanceof HTMLElement) {
+                const target = ev.target;
+
+                if (target.classList.contains("olympus-dialog-close")) {
+                    target.closest("div.olympus-dialog")?.classList.add("hide");
+                }
+
+                const triggerElement = target.closest("[data-on-click]");
+
+                if (triggerElement instanceof HTMLElement) {
+                    const eventName: string = triggerElement.dataset.onClick || "";
+                    let params = JSON.parse(triggerElement.dataset.onClickParams || "{}");
+                    params._element = triggerElement;
+
+                    if (eventName) {
+                        document.dispatchEvent(new CustomEvent(eventName, {
+                            detail: params
+                        }));
+                    }
+                }
+            }
+        });
+
+        const shortcutManager = this.getShortcutManager();
+        shortcutManager.add("toggleDemo", new ShortcutKeyboard({
+            "callback": () => {
+                toggleDemoEnabled();
+            },
+            "code": "KeyT"
+        })).add("togglePause", new ShortcutKeyboard({
+            "altKey": false,
+            "callback": () => {
+                setPaused(!getPaused());
+            },
+            "code": "Space",
+            "ctrlKey": false
+        }));
+
+        ["KeyW", "KeyA", "KeyS", "KeyD", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].forEach(code => {
+            shortcutManager.add(`pan${code}keydown`, new ShortcutKeyboard({
+                "altKey": false,
+                "callback": (ev: KeyboardEvent) => {
+                    this.getMap().handleMapPanning(ev);
+                },
+                "code": code,
+                "ctrlKey": false,
+                "event": "keydown"
+            }));
+        });
+
+        ["KeyW", "KeyA", "KeyS", "KeyD", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].forEach(code => {
+            shortcutManager.add(`pan${code}keyup`, new ShortcutKeyboard({
+                "callback": (ev: KeyboardEvent) => {
+                    this.getMap().handleMapPanning(ev);
+                },
+                "code": code
+            }));
+        });
+
+        ["Digit1", "Digit2", "Digit3", "Digit4", "Digit5", "Digit6", "Digit7", "Digit8", "Digit9"].forEach(code => {
+            shortcutManager.add(`hotgroup${code}`, new ShortcutKeyboard({
+                "callback": (ev: KeyboardEvent) => {
+                    if (ev.ctrlKey && ev.shiftKey)
+                        this.getUnitsManager().selectedUnitsAddToHotgroup(parseInt(ev.code.substring(5)));
+                    else if (ev.ctrlKey && !ev.shiftKey)
+                        this.getUnitsManager().selectedUnitsSetHotgroup(parseInt(ev.code.substring(5)));
+                    else
+                        this.getUnitsManager().selectUnitsByHotgroup(parseInt(ev.code.substring(5)));
+                },
+                "code": code
+            }));
+        });
+
+        // TODO: move from here in dedicated class
+        document.addEventListener("closeDialog", (ev: CustomEventInit) => {
+            ev.detail._element.closest(".ol-dialog").classList.add("hide");
+        });
+
+        /* Try and connect with the Olympus REST server */
+        document.addEventListener("tryConnection", () => {
+            const form = document.querySelector("#splash-content")?.querySelector("#authentication-form");
+            const username = (form?.querySelector("#username") as HTMLInputElement).value;
+            const password = (form?.querySelector("#password") as HTMLInputElement).value;
+
+            /* Update the user credentials */
+            setCredentials(username, password);
+
+            /* Start periodically requesting updates */
+            startUpdate();
+
+            this.setLoginStatus("connecting");
+        })
+
+        /* Reload the page, used to mimic a restart of the app */
+        document.addEventListener("reloadPage", () => {
+            location.reload();
+        })
+
+        /* Inject the svgs with the corresponding svg code. This allows to dynamically manipulate the svg, like changing colors */
+        document.querySelectorAll("[inject-svg]").forEach((el: Element) => {
+            var img = el as HTMLImageElement;
+            var isLoaded = img.complete;
+            if (isLoaded)
+                SVGInjector(img);
+            else
+                img.addEventListener("load", () => { SVGInjector(img); });
+        })
     }
 }

@@ -1,3 +1,5 @@
+const SHOW_CONTROL_TIPS = "Show control tips"
+
 export class ControlTipsPlugin implements OlympusPlugin {
     #element: HTMLElement;
     #app: any;
@@ -9,8 +11,6 @@ export class ControlTipsPlugin implements OlympusPlugin {
         this.#element = document.createElement("div");
         this.#element.id = "control-tips-panel";
         document.body.appendChild(this.#element);
-
-        console.log("HELLO")
     }
 
     getName() {
@@ -40,9 +40,9 @@ export class ControlTipsPlugin implements OlympusPlugin {
             this.#updateTips();
         });
 
-        //document.addEventListener("unitDeselection", (ev: CustomEvent) => {
-        //    this.#updateTips();
-        //});
+        document.addEventListener("unitDeselection", (ev: CustomEvent) => {
+            this.#updateTips();
+        });
 
         document.addEventListener("unitMouseover", (ev: CustomEventInit) => {
             this.#cursorIsHoveringOverUnit = true;
@@ -54,11 +54,17 @@ export class ControlTipsPlugin implements OlympusPlugin {
             this.#updateTips();
         });
 
-        //document.addEventListener("unitSelection", (ev: CustomEvent) => {
-        //    this.#updateTips()
-        //});
+        document.addEventListener("unitSelection", (ev: CustomEvent) => {
+            this.#updateTips()
+        });
+
+        document.addEventListener("mapVisibilityOptionsChanged", () => {
+            this.toggle( !this.#app.getMap().getVisibilityOptions()[SHOW_CONTROL_TIPS] );
+        });
 
         this.#updateTips();
+
+        this.#app.getMap().addVisibilityOption(SHOW_CONTROL_TIPS, true);
 
         return true;
     }
@@ -72,7 +78,6 @@ export class ControlTipsPlugin implements OlympusPlugin {
     }
 
     #updateTips() {
-
         const combos: Array<object> = [
             {
                 "keys": [],
@@ -249,7 +254,6 @@ export class ControlTipsPlugin implements OlympusPlugin {
             }
 
             element.innerHTML += `<div><span class="key">${tip.key}</span><span class="action">${tip.action}</span></div>`
-
         });
     }
 }

@@ -1,7 +1,6 @@
 @import url("layout/layout.css");
 @import url("style/style.css");
 
-@import url("other/controltips.css");
 @import url("panels/connectionstatus.css");
 @import url("panels/serverstatus.css");
 @import url("panels/mouseinfo.css");

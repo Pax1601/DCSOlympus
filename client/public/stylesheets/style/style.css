@@ -653,17 +653,6 @@ nav.ol-panel> :last-child {
     stroke: var(--background-steel) !important;
 }
 
-#atc-navbar-control {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-}
-
-#atc-navbar-control button svg {
-    height: 24px;
-    width: 24px;
-}
-
 #roe-buttons-container button,
 #reaction-to-threat-buttons-container button,
 #emissions-countermeasures-buttons-container button {
