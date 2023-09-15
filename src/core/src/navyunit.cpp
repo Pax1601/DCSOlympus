@@ -49,6 +49,10 @@ void NavyUnit::setState(unsigned char newState)
 			setTargetPosition(Coords(NULL));
 			break;
 		}
+		case State::SIMULATE_FIRE_FIGHT: {
+			setTargetPosition(Coords(NULL));
+			break;
+		}
 		default:
 			break;
 		}
@@ -68,6 +72,13 @@ void NavyUnit::setState(unsigned char newState)
 	case State::FIRE_AT_AREA: {
 		clearActivePath();
 		resetActiveDestination();
+		resetTask();
+		break;
+	}
+	case State::SIMULATE_FIRE_FIGHT: {
+		clearActivePath();
+		resetActiveDestination();
+		resetTask();
 		break;
 	}
 	default:
@@ -118,8 +129,23 @@ void NavyUnit::AIloop()
 
 		if (!getHasTask()) {
 			std::ostringstream taskSS;
+			taskSS.precision(10);
+
 			taskSS << "{id = 'FireAtPoint', lat = " << targetPosition.lat << ", lng = " << targetPosition.lng << ", radius = 1000}";
-			Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str()));
+			Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
+			scheduler->appendCommand(command);
+			setHasTask(true);
+		}
+	}
+	case State::SIMULATE_FIRE_FIGHT: {
+		setTask("Simulating fire fight");
+
+		if (!getHasTask()) {
+			std::ostringstream taskSS;
+			taskSS.precision(10);
+
+			taskSS << "{id = 'FireAtPoint', lat = " << targetPosition.lat << ", lng = " << targetPosition.lng << ", radius = 1}";
+			Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
 			scheduler->appendCommand(command);
 			setHasTask(true);
 		}

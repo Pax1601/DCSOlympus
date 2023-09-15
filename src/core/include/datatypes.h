@@ -64,7 +64,8 @@ namespace State
 		BOMB_POINT,
 		CARPET_BOMB,
 		BOMB_BUILDING,
-		FIRE_AT_AREA
+		FIRE_AT_AREA,
+		SIMULATE_FIRE_FIGHT
 	};
 };
 
@@ -125,4 +126,9 @@ struct SpawnOptions {
 struct CloneOptions {
 	unsigned int ID;
 	Coords location;
+};
+
+struct GunDataItem {
+	double barrelHeight;
+	double muzzleVelocity;
 };

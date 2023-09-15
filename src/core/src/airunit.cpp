@@ -162,7 +162,7 @@ void AirUnit::AIloop()
 						desiredAltitude << ", speed = " << desiredSpeed << ", altitudeType = '" << 
 						(desiredAltitudeType ? "AGL" : "ASL") << "', speedType = '" << (desiredSpeedType ? "GS" : "CAS") << "'}";
 				}
-				Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str()));
+				Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
 				scheduler->appendCommand(command);
 				setHasTask(true);
 			}
@@ -267,7 +267,7 @@ void AirUnit::AIloop()
 						<< "z = " << formationOffset.z 
 						<< "},"
 						<< "}";
-					Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str()));
+					Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
 					scheduler->appendCommand(command);
 					setHasTask(true);
 				}
@@ -283,7 +283,7 @@ void AirUnit::AIloop()
 					taskSS << "{"
 						<< "id = 'Refuel'"
 						<< "}";
-					Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str()));
+					Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
 					scheduler->appendCommand(command);
 					setHasTask(true);
 				}
@@ -297,8 +297,10 @@ void AirUnit::AIloop()
 
 			if (!getHasTask()) {
 				std::ostringstream taskSS;
+				taskSS.precision(10);
+
 				taskSS << "{id = 'Bombing', lat = " << targetPosition.lat << ", lng = " << targetPosition.lng << "}";
-				Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str()));
+				Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
 				scheduler->appendCommand(command);
 				setHasTask(true);
 			}
@@ -308,8 +310,10 @@ void AirUnit::AIloop()
 
 			if (!getHasTask()) {
 				std::ostringstream taskSS;
+				taskSS.precision(10);
+
 				taskSS << "{id = 'CarpetBombing', lat = " << targetPosition.lat << ", lng = " << targetPosition.lng << "}";
-				Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str()));
+				Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
 				scheduler->appendCommand(command);
 				setHasTask(true);
 			}
@@ -320,8 +324,10 @@ void AirUnit::AIloop()
 
 			if (!getHasTask()) {
 				std::ostringstream taskSS;
+				taskSS.precision(10);
+
 				taskSS << "{id = 'AttackMapObject', lat = " << targetPosition.lat << ", lng = " << targetPosition.lng << "}";
-				Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str()));
+				Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
 				scheduler->appendCommand(command);
 				setHasTask(true);
 			}

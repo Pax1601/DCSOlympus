@@ -369,6 +369,10 @@
     content: url("/resources/theme/images/icons/crosshairs-solid.svg");
 }
 
+#simulate-fire-fight::before {
+    content: url("/resources/theme/images/icons/crosshairs-solid.svg");
+}
+
 #follow::before {
     content: url("/resources/theme/images/icons/follow.svg");
 }

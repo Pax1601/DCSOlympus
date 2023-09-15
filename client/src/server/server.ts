@@ -319,6 +319,12 @@ export function fireAtArea(ID: number, latlng: LatLng, callback: CallableFunctio
     POST(data, callback);
 }
 
+export function simulateFireFight(ID: number, latlng: LatLng, callback: CallableFunction = () => {}) {
+    var command = { "ID": ID, "location": latlng }
+    var data = { "simulateFireFight": command }
+    POST(data, callback);
+}
+
 export function setAdvacedOptions(ID: number, isTanker: boolean, isAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings, callback: CallableFunction = () => {}) {
     var command = {
         "ID": ID,

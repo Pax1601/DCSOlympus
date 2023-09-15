@@ -605,6 +605,18 @@ export class UnitsManager {
         this.#showActionMessage(selectedUnits, `unit bombing point`);
     }
 
+    /** Instruct the selected units to simulate a fire fight at specific coordinates
+     * 
+     * @param latlng Location to fire at
+     */
+    selectedUnitsSimulateFireFight(latlng: LatLng) {
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        for (let idx in selectedUnits) {
+            selectedUnits[idx].simulateFireFight(latlng);
+        }
+        this.#showActionMessage(selectedUnits, `unit simulating fire fight`);
+    }
+
     /*********************** Control operations on selected units ************************/
     /**  See getUnitsCategories for more info
      * 

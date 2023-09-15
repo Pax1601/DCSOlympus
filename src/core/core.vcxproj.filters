@@ -54,6 +54,9 @@
     <ClInclude Include="include\weaponsmanager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\gundata.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\aircraft.cpp">

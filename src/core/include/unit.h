@@ -54,6 +54,7 @@ public:
 	void resetTask();
 	bool checkTaskFailed();
 	void resetTaskFailedCounter();
+	void setHasTaskAssigned(bool newHasTaskAssigned);
 
 	void triggerUpdate(unsigned char datumIndex);
 
@@ -185,6 +186,7 @@ protected:
 
 	/********** Other **********/
 	unsigned int taskCheckCounter = 0;
+	bool hasTaskAssigned = false;
 	double initialFuel = 0;
 	map<unsigned char, unsigned long long> updateTimeMap;
 	unsigned long long lastLoopTime = 0;
