@@ -1,7 +1,10 @@
 import { LatLng } from 'leaflet';
-import { getConnectionStatusPanel, getInfoPopup, getLogPanel, getMissionHandler, getServerStatusPanel, getUnitsManager, getWeaponsManager, setLoginStatus } from '..';
-import { GeneralSettings, Radio, TACAN } from '../@types/unit';
+import { getApp } from '..';
 import { AIRBASES_URI, BULLSEYE_URI, COMMANDS_URI, LOGS_URI, MISSION_URI, NONE, ROEs, UNITS_URI, WEAPONS_URI, emissionsCountermeasures, reactionsToThreat } from '../constants/constants';
+import { ServerStatusPanel } from '../panels/serverstatuspanel';
+import { LogPanel } from '../panels/logpanel';
+import { Popup } from '../popups/popup';
+import { ConnectionStatusPanel } from '../panels/connectionstatuspanel';
 
 var connected: boolean = false;
 var paused: boolean = false;
@@ -64,12 +67,12 @@ export function GET(callback: CallableFunction, uri: string, options?: ServerReq
                 lastUpdateTimes[uri] = callback(result);
 
                 if (result.frameRate !== undefined && result.load !== undefined)
-                    getServerStatusPanel().update(result.frameRate, result.load);
+                    (getApp().getPanelsManager().get("serverStatus") as ServerStatusPanel).update(result.frameRate, result.load);
             }
         } else if (xmlHttp.status == 401) {
             /* Bad credentials */
             console.error("Incorrect username/password");
-            setLoginStatus("failed");
+            getApp().setLoginStatus("failed");
         } else {
             /* Failure, probably disconnected */
             setConnected(false);
@@ -351,74 +354,74 @@ export function startUpdate() {
         if (!getPaused()) {
             getMission((data: MissionData) => {
                 checkSessionHash(data.sessionHash);
-                getMissionHandler()?.updateMission(data);
+                getApp().getMissionManager()?.updateMission(data);
                 return data.time;
             });
         }
     }, 1000);
 
     window.setInterval(() => {
-        if (!getPaused() && getMissionHandler().getCommandModeOptions().commandMode != NONE) {
+        if (!getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
             getAirbases((data: AirbasesData) => {
                 checkSessionHash(data.sessionHash);
-                getMissionHandler()?.updateAirbases(data);
+                getApp().getMissionManager()?.updateAirbases(data);
                 return data.time;
             });
         }
     }, 10000);
 
     window.setInterval(() => {
-        if (!getPaused() && getMissionHandler().getCommandModeOptions().commandMode != NONE){
+        if (!getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE){
             getBullseye((data: BullseyesData) => {
                 checkSessionHash(data.sessionHash);
-                getMissionHandler()?.updateBullseyes(data);
+                getApp().getMissionManager()?.updateBullseyes(data);
                 return data.time;
             });
         }
     }, 10000);
 
     window.setInterval(() => {
-        if (!getPaused() && getMissionHandler().getCommandModeOptions().commandMode != NONE) {
+        if (!getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
             getLogs((data: any) => {
                 checkSessionHash(data.sessionHash);
-                getLogPanel().appendLogs(data.logs)
+                (getApp().getPanelsManager().get("log") as LogPanel).appendLogs(data.logs)
                 return data.time;
             });
         }
     }, 1000);
 
     window.setInterval(() => {
-        if (!getPaused() && getMissionHandler().getCommandModeOptions().commandMode != NONE) {
+        if (!getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
             getUnits((buffer: ArrayBuffer) => {
-                var time = getUnitsManager()?.update(buffer); 
+                var time = getApp().getUnitsManager()?.update(buffer); 
                 return time;
             }, false);
         }
     }, 250);
 
     window.setInterval(() => {
-        if (!getPaused() && getMissionHandler().getCommandModeOptions().commandMode != NONE) {
+        if (!getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
             getWeapons((buffer: ArrayBuffer) => {
-                var time = getWeaponsManager()?.update(buffer); 
+                var time = getApp().getWeaponsManager()?.update(buffer); 
                 return time;
             }, false);
         }
     }, 250);
 
     window.setInterval(() => {
-        if (!getPaused() && getMissionHandler().getCommandModeOptions().commandMode != NONE) {
+        if (!getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
             getUnits((buffer: ArrayBuffer) => {
-                var time = getUnitsManager()?.update(buffer); 
+                var time = getApp().getUnitsManager()?.update(buffer); 
                 return time;
             }, true);
-            getConnectionStatusPanel()?.update(getConnected());
+            (getApp().getPanelsManager().get("connectionStatus") as ConnectionStatusPanel).update(getConnected());
         }
     }, 5000);
 
     window.setInterval(() => {
-        if (!getPaused() && getMissionHandler().getCommandModeOptions().commandMode != NONE) {
+        if (!getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
             getWeapons((buffer: ArrayBuffer) => {
-                var time = getWeaponsManager()?.update(buffer); 
+                var time = getApp().getWeaponsManager()?.update(buffer); 
                 return time;
             }, true);
         }
@@ -428,29 +431,29 @@ export function startUpdate() {
 export function refreshAll() {
     getAirbases((data: AirbasesData) => {
         checkSessionHash(data.sessionHash);
-        getMissionHandler()?.updateAirbases(data);
+        getApp().getMissionManager()?.updateAirbases(data);
         return data.time;
     });
 
     getBullseye((data: BullseyesData) => {
         checkSessionHash(data.sessionHash);
-        getMissionHandler()?.updateBullseyes(data);
+        getApp().getMissionManager()?.updateBullseyes(data);
         return data.time;
     });
 
     getLogs((data: any) => {
         checkSessionHash(data.sessionHash);
-        getLogPanel().appendLogs(data.logs)
+        (getApp().getPanelsManager().get("log") as LogPanel).appendLogs(data.logs)
         return data.time;
     });
 
     getWeapons((buffer: ArrayBuffer) => {
-        var time = getWeaponsManager()?.update(buffer); 
+        var time = getApp().getWeaponsManager()?.update(buffer); 
         return time;
     }, true);
 
     getUnits((buffer: ArrayBuffer) => {
-        var time = getUnitsManager()?.update(buffer); 
+        var time = getApp().getUnitsManager()?.update(buffer); 
         return time;
     }, true);
 }
@@ -466,7 +469,7 @@ export function checkSessionHash(newSessionHash: string) {
 
 export function setConnected(newConnected: boolean) {
     if (connected != newConnected)
-        newConnected ? getInfoPopup().setText("Connected to DCS Olympus server") : getInfoPopup().setText("Disconnected from DCS Olympus server");
+        newConnected ? (getApp().getPopupsManager().get("infoPopup") as Popup).setText("Connected to DCS Olympus server") : (getApp().getPopupsManager().get("infoPopup") as Popup).setText("Disconnected from DCS Olympus server");
     connected = newConnected;
 
     if (connected) {
@@ -481,7 +484,7 @@ export function getConnected() {
 
 export function setPaused(newPaused: boolean) {
     paused = newPaused;
-    paused ? getInfoPopup().setText("View paused") : getInfoPopup().setText("View unpaused");
+    paused ? (getApp().getPopupsManager().get("infoPopup") as Popup).setText("View paused") : (getApp().getPopupsManager().get("infoPopup") as Popup).setText("View unpaused");
 }
 
 export function getPaused() {

@@ -1,80 +1,79 @@
-import { OlympusApp } from "../olympusapp";
-import { ShortcutManager } from "../shortcut/shortcutmanager";
-import { Unit } from "../unit/unit";
+export class ControlTipsPlugin implements OlympusPlugin {
+    #element: HTMLElement;
+    #app: any;
+    #shortcutManager: any;
+    #cursorIsHoveringOverUnit: boolean = false;
+    #cursorIsHoveringOverAirbase: boolean = false;
+    
+    constructor() {
+        this.#element = document.createElement("div");
+        this.#element.id = "control-tips-panel";
+        document.body.appendChild(this.#element);
 
+        console.log("HELLO")
+    }
 
-export class ControlTips {
+    getName() {
+        return "Control Tips Plugin"
+    }
 
-    #element:HTMLElement;
-    #cursorIsHoveringOverUnit:boolean = false;
-    #cursorIsHoveringOverAirbase:boolean = false;
-    #olympusApp:OlympusApp;
-    #shortcutManager:ShortcutManager;
+    initialize(app: any) {
+        this.#app = app;
 
-    constructor( ID:string, olympusApp:OlympusApp ) {
+        this.#shortcutManager = this.#app.getShortcutManager();
 
-        this.#element = <HTMLElement>document.getElementById( ID );
-
-        this.#olympusApp = olympusApp;
-
-        this.#shortcutManager = this.#olympusApp.getShortcutManager();
-
-        this.#shortcutManager.onKeyDown( () => {
-            this.#updateTips()
+        this.#shortcutManager.onKeyDown(() => {
+           this.#updateTips()
         });
 
-        this.#shortcutManager.onKeyUp( () => {
-            this.#updateTips()
+        this.#shortcutManager.onKeyUp(() => {
+           this.#updateTips()
         });
 
-        document.addEventListener( "airbaseMouseover", ( ev:CustomEventInit ) => {
+        document.addEventListener("airbaseMouseover", (ev: CustomEventInit) => {
             this.#cursorIsHoveringOverAirbase = true;
             this.#updateTips();
         });
 
-        document.addEventListener( "airbaseMouseout", ( ev:CustomEventInit ) => {
+        document.addEventListener("airbaseMouseout", (ev: CustomEventInit) => {
             this.#cursorIsHoveringOverAirbase = false;
             this.#updateTips();
         });
 
-        document.addEventListener( "unitDeselection", ( ev:CustomEvent ) => {
-            this.#updateTips();
-        });
+        //document.addEventListener("unitDeselection", (ev: CustomEvent) => {
+        //    this.#updateTips();
+        //});
 
-        document.addEventListener( "unitMouseover", ( ev:CustomEventInit ) => {
+        document.addEventListener("unitMouseover", (ev: CustomEventInit) => {
             this.#cursorIsHoveringOverUnit = true;
             this.#updateTips();
         });
 
-        document.addEventListener( "unitMouseout", ( ev:CustomEventInit ) => {
+        document.addEventListener("unitMouseout", (ev: CustomEventInit) => {
             this.#cursorIsHoveringOverUnit = false;
             this.#updateTips();
         });
 
-        document.addEventListener( "unitSelection", ( ev:CustomEvent ) => {
-            this.#updateTips()
-        });
+        //document.addEventListener("unitSelection", (ev: CustomEvent) => {
+        //    this.#updateTips()
+        //});
 
         this.#updateTips();
 
+        return true;
     }
 
     getElement() {
         return this.#element;
     }
 
-    #getOlympusApp() {
-        return this.#olympusApp;
-    }
-
-    toggle( bool?:boolean ) {
-        this.getElement().classList.toggle( "hide", bool );
-        this.#olympusApp.getFeatureSwitches().savePreference( "controlTips", !this.getElement().classList.contains( "hide" ) );
+    toggle(bool?: boolean) {
+        this.getElement().classList.toggle("hide", bool);
     }
 
     #updateTips() {
 
-        const combos:Array<object> = [
+        const combos: Array<object> = [
             {
                 "keys": [],
                 "tips": [
@@ -164,7 +163,7 @@ export class ControlTips {
                 ]
             },
             {
-                "keys": [ "ControlLeft" ],
+                "keys": ["ControlLeft"],
                 "tips": [
                     {
                         "key": `Mouse1`,
@@ -197,7 +196,7 @@ export class ControlTips {
                 ]
             },
             {
-                "keys": [ "ShiftLeft" ],
+                "keys": ["ShiftLeft"],
                 "tips": [
                     {
                         "key": `mouse1+drag`,
@@ -207,48 +206,44 @@ export class ControlTips {
             }
         ];
 
-        const currentCombo:any = combos.find( (combo:any) => this.#shortcutManager.keyComboMatches( combo.keys ) ) || combos[0];
+        const currentCombo: any = combos.find((combo: any) => this.#shortcutManager.keyComboMatches(combo.keys)) || combos[0];
 
         const element = this.getElement();
 
         element.innerHTML = "";
 
-        const a = this.#getOlympusApp();
-
         let numSelectedUnits = 0;
         let unitSelectionContainsControlled = false;
 
-        if ( this.#getOlympusApp().getUnitsManager() ) {
-            let selectedUnits = Object.values( this.#getOlympusApp().getUnitsManager().getSelectedUnits() );
+        if (this.#app.getUnitsManager()) {
+            let selectedUnits = Object.values(this.#app.getUnitsManager().getSelectedUnits());
             numSelectedUnits = selectedUnits.length;
-            unitSelectionContainsControlled = selectedUnits.some( (unit:Unit) => unit.getControlled() );
+            unitSelectionContainsControlled = selectedUnits.some((unit: any) => unit.getControlled());
         }
 
-
-        currentCombo.tips.forEach( ( tip:any ) => {
-
-            if ( numSelectedUnits > 0 ) {
-                if ( tip.showIfUnitSelected === false ) {
+        currentCombo.tips.forEach((tip: any) => {
+            if (numSelectedUnits > 0) {
+                if (tip.showIfUnitSelected === false) {
                     return;
                 }
 
-                if ( tip.unitsMustBeControlled === true && unitSelectionContainsControlled === false ) {
+                if (tip.unitsMustBeControlled === true && unitSelectionContainsControlled === false) {
                     return;
                 }
             }
 
-            if ( numSelectedUnits === 0 && tip.showIfUnitSelected === true ) {
+            if (numSelectedUnits === 0 && tip.showIfUnitSelected === true) {
                 return;
             }
 
-            if ( typeof tip.showIfHoveringOverAirbase === "boolean" ) {
-                if ( tip.showIfHoveringOverAirbase !== this.#cursorIsHoveringOverAirbase ) {
+            if (typeof tip.showIfHoveringOverAirbase === "boolean") {
+                if (tip.showIfHoveringOverAirbase !== this.#cursorIsHoveringOverAirbase) {
                     return;
                 }
             }
 
-            if ( typeof tip.showIfHoveringOverUnit === "boolean" ) {
-                if ( tip.showIfHoveringOverUnit !== this.#cursorIsHoveringOverUnit ) {
+            if (typeof tip.showIfHoveringOverUnit === "boolean") {
+                if (tip.showIfHoveringOverUnit !== this.#cursorIsHoveringOverUnit) {
                     return;
                 }
             }
@@ -256,8 +251,5 @@ export class ControlTips {
             element.innerHTML += `<div><span class="key">${tip.key}</span><span class="action">${tip.action}</span></div>`
 
         });
-    
-
     }
-
 }

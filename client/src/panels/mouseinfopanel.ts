@@ -1,5 +1,5 @@
 import { Icon, LatLng, Marker, Polyline } from "leaflet";
-import { getMap, getMissionHandler, getUnitsManager } from "..";
+import { getApp } from "..";
 import { distance, bearing, zeroAppend, mToNm, nmToFt } from "../other/utils";
 import { Unit } from "../unit/unit";
 import { Panel } from "./panel";
@@ -22,19 +22,19 @@ export class MouseInfoPanel extends Panel {
         this.#measureBox.classList.add("ol-measure-box", "hide");
         document.body.appendChild(this.#measureBox);
 
-        getMap()?.on("click", (e: any) => this.#onMapClick(e));
-        getMap()?.on('zoom', (e: any) => this.#onZoom(e));
-        getMap()?.on('mousemove', (e: any) => this.#onMouseMove(e));
+        getApp().getMap()?.on("click", (e: any) => this.#onMapClick(e));
+        getApp().getMap()?.on('zoom', (e: any) => this.#onZoom(e));
+        getApp().getMap()?.on('mousemove', (e: any) => this.#onMouseMove(e));
 
         document.addEventListener('unitsSelection', (e: CustomEvent<Unit[]>) => this.#update());
         document.addEventListener('clearSelection', () => this.#update());
     }
 
     #update() {
-        const mousePosition = getMap().getMouseCoordinates();
+        const mousePosition = getApp().getMap().getMouseCoordinates();
 
         var selectedUnitPosition = null;
-        var selectedUnits = getUnitsManager().getSelectedUnits();
+        var selectedUnits = getApp().getUnitsManager().getSelectedUnits();
         if (selectedUnits && selectedUnits.length == 1)
             selectedUnitPosition = new LatLng(selectedUnits[0].getPosition().lat, selectedUnits[0].getPosition().lng);
 
@@ -44,7 +44,7 @@ export class MouseInfoPanel extends Panel {
 
         this.getElement().querySelector(`#measuring-tool`)?.classList.toggle("hide", this.#measurePoint === null && selectedUnitPosition === null);
 
-        var bullseyes = getMissionHandler().getBullseyes();
+        var bullseyes = getApp().getMissionManager().getBullseyes();
         for (let idx in bullseyes)
             this.#drawMeasure(null, `bullseye-${idx}`, bullseyes[idx].getLatLng(), mousePosition);
 
@@ -61,19 +61,19 @@ export class MouseInfoPanel extends Panel {
                 this.#measureBox.classList.toggle("hide", false);
                 this.#measurePoint = e.latlng;
                 this.#measureMarker.setLatLng(e.latlng);
-                this.#measureMarker.addTo(getMap());
-                if (!getMap().hasLayer(this.#measureLine))
-                    this.#measureLine.addTo(getMap());
+                this.#measureMarker.addTo(getApp().getMap());
+                if (!getApp().getMap().hasLayer(this.#measureLine))
+                    this.#measureLine.addTo(getApp().getMap());
             }
             else {
                 this.#measureBox.classList.toggle("hide", true);
                 this.#measurePoint = null;
-                if (getMap().hasLayer(this.#measureMarker))
-                    getMap().removeLayer(this.#measureMarker);
+                if (getApp().getMap().hasLayer(this.#measureMarker))
+                    getApp().getMap().removeLayer(this.#measureMarker);
 
                 this.#measureLine.setLatLngs([]);
-                if (getMap().hasLayer(this.#measureLine))
-                    getMap().removeLayer(this.#measureLine);
+                if (getApp().getMap().hasLayer(this.#measureLine))
+                    getApp().getMap().removeLayer(this.#measureLine);
             }
         }
 
@@ -81,15 +81,15 @@ export class MouseInfoPanel extends Panel {
     }
 
     #drawMeasureLine() {
-        var mouseLatLng = getMap().containerPointToLatLng(getMap().getMousePosition());
+        var mouseLatLng = getApp().getMap().containerPointToLatLng(getApp().getMap().getMousePosition());
         if (this.#measurePoint != null) {
             var points = [this.#measurePoint, mouseLatLng];
             this.#measureLine.setLatLngs(points);
             var dist = distance(this.#measurePoint.lat, this.#measurePoint.lng, mouseLatLng.lat, mouseLatLng.lng);
             var bear = bearing(this.#measurePoint.lat, this.#measurePoint.lng, mouseLatLng.lat, mouseLatLng.lng);
-            var startXY = getMap().latLngToContainerPoint(this.#measurePoint);
-            var dx = (getMap().getMousePosition().x - startXY.x);
-            var dy = (getMap().getMousePosition().y - startXY.y);
+            var startXY = getApp().getMap().latLngToContainerPoint(this.#measurePoint);
+            var dx = (getApp().getMap().getMousePosition().x - startXY.x);
+            var dy = (getApp().getMap().getMousePosition().y - startXY.y);
 
             var angle = Math.atan2(dy, dx);
             if (angle > Math.PI / 2)
@@ -108,8 +108,8 @@ export class MouseInfoPanel extends Panel {
             let data = [`${bng}°`, `${str} ${unit}`];
 
             this.#measureBox.innerText = data.join(" / ");
-            this.#measureBox.style.left = (getMap().getMousePosition().x + startXY.x) / 2 - this.#measureBox.offsetWidth / 2 + "px";
-            this.#measureBox.style.top = (getMap().getMousePosition().y + startXY.y) / 2 - this.#measureBox.offsetHeight / 2 + "px";
+            this.#measureBox.style.left = (getApp().getMap().getMousePosition().x + startXY.x) / 2 - this.#measureBox.offsetWidth / 2 + "px";
+            this.#measureBox.style.top = (getApp().getMap().getMousePosition().y + startXY.y) / 2 - this.#measureBox.offsetHeight / 2 + "px";
             this.#measureBox.style.rotate = angle + "rad";
         }
     }

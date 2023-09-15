@@ -1,5 +1,5 @@
 import { LatLng } from "leaflet";
-import { getInfoPopup, getMap } from "..";
+import { getApp } from "..";
 import { Airbase } from "./airbase";
 import { Bullseye } from "./bullseye";
 import { BLUE_COMMANDER, GAME_MASTER, NONE, RED_COMMANDER } from "../constants/constants";
@@ -10,6 +10,7 @@ import { createCheckboxOption, getCheckboxOptions } from "../other/utils";
 import { aircraftDatabase } from "../unit/databases/aircraftdatabase";
 import { helicopterDatabase } from "../unit/databases/helicopterdatabase";
 import { navyUnitDatabase } from "../unit/databases/navyunitdatabase";
+import { Popup } from "../popups/popup";
 
 /** The MissionManager  */
 export class MissionManager {
@@ -38,7 +39,7 @@ export class MissionManager {
         for (let idx in data.bullseyes) {
             const bullseye = data.bullseyes[idx];
             if (!(idx in this.#bullseyes))
-                this.#bullseyes[idx] = new Bullseye([0, 0]).addTo(getMap());
+                this.#bullseyes[idx] = new Bullseye([0, 0]).addTo(getApp().getMap());
 
             if (bullseye.latitude && bullseye.longitude && bullseye.coalition) {
                 this.#bullseyes[idx].setLatLng(new LatLng(bullseye.latitude, bullseye.longitude));
@@ -54,7 +55,7 @@ export class MissionManager {
                 this.#airbases[airbase.callsign] = new Airbase({
                     position: new LatLng(airbase.latitude, airbase.longitude),
                     name: airbase.callsign
-                }).addTo(getMap());
+                }).addTo(getApp().getMap());
                 this.#airbases[airbase.callsign].on('contextmenu', (e) => this.#onAirbaseClick(e));
                 this.#loadAirbaseChartData(airbase.callsign);
             }
@@ -72,8 +73,8 @@ export class MissionManager {
             /* Set the mission theatre */
             if (data.mission.theatre != this.#theatre) {
                 this.#theatre = data.mission.theatre;
-                getMap().setTheatre(this.#theatre);
-                getInfoPopup().setText("Map set to " + this.#theatre);
+                getApp().getMap().setTheatre(this.#theatre);
+                (getApp().getPopupsManager().get("infoPopup") as Popup).setText("Map set to " + this.#theatre);
             }
 
             /* Set the date and time data */
@@ -232,7 +233,7 @@ export class MissionManager {
     }
 
     #onAirbaseClick(e: any) {
-        getMap().showAirbaseContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng, e.sourceTarget);
+        getApp().getMap().showAirbaseContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng, e.sourceTarget);
     }
 
     #loadAirbaseChartData(callsign: string) {

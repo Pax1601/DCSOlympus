@@ -1,50 +1,29 @@
-import { OlympusApp } from "../olympusapp";
 import { EventsManager } from "../other/eventsmanager";
 
-interface IListener {
-    callback: CallableFunction;
-    name?: string
-}
-
 export class PanelEventsManager extends EventsManager {
-
-    constructor( olympusApp:OlympusApp ) {
+    constructor() {
+        super();
         
-        super( olympusApp );
-
-        this.add( "hide", [] );
-        this.add( "show", [] );
-
+        this.add("hide", []);
+        this.add("show", []);
     }
 
-    on( eventName:string, listener:IListener ) {
-
-        const event = this.get( eventName );
-
-        if ( !event ) {
-            throw new Error( `Event name "${eventName}" is not valid.` );
+    on(eventName: string, listener: Listener) {
+        const event = this.get(eventName);
+        if (!event) {
+            throw new Error(`Event name "${eventName}" is not valid.`);
         }
-
-        this.get( eventName ).push({
+        this.get(eventName).push({
             "callback": listener.callback
         });
-
     }
 
-    trigger( eventName:string, contextData:object ) {
-
-        const listeners = this.get( eventName );
-
-        if ( listeners ) {
-
-            listeners.forEach( ( listener:IListener ) => {
-
-                listener.callback( contextData );
-
+    trigger(eventName: string, contextData: object) {
+        const listeners = this.get(eventName);
+        if (listeners) {
+            listeners.forEach((listener: Listener) => {
+                listener.callback(contextData);
             });
-
         }
-
     }
-
 }

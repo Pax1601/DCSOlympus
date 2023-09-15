@@ -1,4 +1,4 @@
-import { getMap, getMissionHandler, getUnitsManager, setActiveCoalition } from "..";
+import { getApp } from "..";
 import { GAME_MASTER } from "../constants/constants";
 import { Airbase } from "../mission/airbase";
 import { dataPointMap } from "../other/utils";
@@ -23,7 +23,7 @@ export class AirbaseContextMenu extends ContextMenu {
 
         document.addEventListener("contextMenuLandAirbase", (e: any) => {
             if (this.#airbase)
-                getUnitsManager().selectedUnitsLandAt(this.#airbase.getLatLng());
+                getApp().getUnitsManager().selectedUnitsLandAt(this.#airbase.getLatLng());
             this.hide();
         })
     }
@@ -39,8 +39,8 @@ export class AirbaseContextMenu extends ContextMenu {
         this.#setProperties(this.#airbase.getProperties());
         this.#setParkings(this.#airbase.getParkings());
         this.#setCoalition(this.#airbase.getCoalition());
-        this.#showLandButton(getUnitsManager().getSelectedUnitsCategories().length == 1 && ["Aircraft", "Helicopter"].includes(getUnitsManager().getSelectedUnitsCategories()[0]) && (getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getCoalition()}) === this.#airbase.getCoalition() || this.#airbase.getCoalition() === "neutral"))
-        this.#showSpawnButton(getMissionHandler().getCommandModeOptions().commandMode == GAME_MASTER || this.#airbase.getCoalition() == getMissionHandler().getCommandedCoalition());
+        this.#showLandButton(getApp().getUnitsManager().getSelectedUnitsCategories().length == 1 && ["Aircraft", "Helicopter"].includes(getApp().getUnitsManager().getSelectedUnitsCategories()[0]) && (getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getCoalition()}) === this.#airbase.getCoalition() || this.#airbase.getCoalition() === "neutral"))
+        this.#showSpawnButton(getApp().getMissionManager().getCommandModeOptions().commandMode == GAME_MASTER || this.#airbase.getCoalition() == getApp().getMissionManager().getCommandedCoalition());
         this.#setAirbaseData();
         
         this.clip();
@@ -109,8 +109,8 @@ export class AirbaseContextMenu extends ContextMenu {
      */
     #showSpawnMenu() {
         if (this.#airbase != null) {
-            setActiveCoalition(this.#airbase.getCoalition());
-            getMap().showAirbaseSpawnMenu(this.getX(), this.getY(), this.getLatLng(), this.#airbase);
+            getApp().setActiveCoalition(this.#airbase.getCoalition());
+            getApp().getMap().showAirbaseSpawnMenu(this.getX(), this.getY(), this.getLatLng(), this.#airbase);
         }
     }
 
@@ -135,11 +135,11 @@ export class AirbaseContextMenu extends ContextMenu {
                 if ( runways.length === 0 ) {
                     runwaysContainer.innerText = "No data";
                 } else {
-                    runways.forEach( runway => {
+                    runways.forEach( (runway: AirbaseChartRunwayData) => {
                         let runwayDiv = document.createElement( "div" );
                         runwayDiv.classList.add( "runway" );
 
-                        runway.headings.forEach( headings => {
+                        runway.headings.forEach( (headings: AirbaseChartRunwayHeadingData) => {
                             for ( const [ heading, data ] of Object.entries( headings ) ) {
                                 
                                 let headingDiv = document.createElement( "div" );

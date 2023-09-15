@@ -7,7 +7,6 @@ import { groundUnitDatabase } from "../unit/databases/groundunitdatabase";
 import { Buffer } from "buffer";
 import { ROEs, emissionsCountermeasures, reactionsToThreat, states } from "../constants/constants";
 import { Dropdown } from "../controls/dropdown";
-import { UnitBlueprint } from "../@types/unitdatabase";
 import { navyUnitDatabase } from "../unit/databases/navyunitdatabase";
 
 export function bearing(lat1: number, lon1: number, lat2: number, lon2: number) {

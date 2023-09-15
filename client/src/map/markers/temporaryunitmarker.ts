@@ -3,7 +3,7 @@ import { DivIcon, LatLng } from "leaflet";
 import { SVGInjector } from "@tanem/svg-injector";
 import { getMarkerCategoryByName, getUnitDatabaseByCategory } from "../../other/utils";
 import { isCommandExecuted } from "../../server/server";
-import { getMap } from "../..";
+import { getApp } from "../..";
 
 export class TemporaryUnitMarker extends CustomMarker {
     #name: string;
@@ -27,7 +27,7 @@ export class TemporaryUnitMarker extends CustomMarker {
             if (this.#commandHash !== undefined)  {
                 isCommandExecuted((res: any) => {
                     if (res.commandExecuted) {
-                        this.removeFrom(getMap());
+                        this.removeFrom(getApp().getMap());
                         window.clearInterval(this.#timer);
                     }
                 }, this.#commandHash)

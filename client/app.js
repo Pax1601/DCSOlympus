@@ -10,6 +10,7 @@ var indexRouter     = require('./routes/index');
 var uikitRouter     = require('./routes/uikit');
 var usersRouter     = require('./routes/users');
 var resourcesRouter = require('./routes/resources');
+var pluginsRouter   = require('./routes/plugins');
 
 var app = express();
 
@@ -22,6 +23,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/api/atc', atcRouter);
 app.use('/api/airbases', airbasesRouter);
+app.use('/plugins', pluginsRouter)
 app.use('/users', usersRouter);
 app.use('/uikit', uikitRouter);
 app.use('/resources', resourcesRouter);

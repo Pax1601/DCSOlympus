@@ -1,7 +1,6 @@
 import { LatLng } from "leaflet";
-import { getMissionHandler, getUnitsManager } from "../..";
+import { getApp } from "../..";
 import { GAME_MASTER } from "../../constants/constants";
-import { UnitBlueprint } from "../../@types/unitdatabase";
 
 export class UnitDatabase {
     blueprints: { [key: string]: UnitBlueprint } = {};
@@ -44,15 +43,15 @@ export class UnitDatabase {
     }
 
     getBlueprints() {
-        if (getMissionHandler().getCommandModeOptions().commandMode == GAME_MASTER || !getMissionHandler().getCommandModeOptions().restrictSpawns)
+        if (getApp().getMissionManager().getCommandModeOptions().commandMode == GAME_MASTER || !getApp().getMissionManager().getCommandModeOptions().restrictSpawns)
             return this.blueprints;
         else {
             var filteredBlueprints: { [key: string]: UnitBlueprint } = {};
             for (let unit in this.blueprints) {
                 const blueprint = this.blueprints[unit];
-                if (this.getSpawnPointsByName(blueprint.name) <= getMissionHandler().getAvailableSpawnPoints() && 
-                    getMissionHandler().getCommandModeOptions().eras.includes(blueprint.era) &&
-                    (!getMissionHandler().getCommandModeOptions().restrictToCoalition || blueprint.coalition === getMissionHandler().getCommandedCoalition() || blueprint.coalition === undefined)) {
+                if (this.getSpawnPointsByName(blueprint.name) <= getApp().getMissionManager().getAvailableSpawnPoints() && 
+                    getApp().getMissionManager().getCommandModeOptions().eras.includes(blueprint.era) &&
+                    (!getApp().getMissionManager().getCommandModeOptions().restrictToCoalition || blueprint.coalition === getApp().getMissionManager().getCommandedCoalition() || blueprint.coalition === undefined)) {
                     filteredBlueprints[unit] = blueprint;
                 }
             }
@@ -201,7 +200,7 @@ export class UnitDatabase {
             var row = Math.floor(idx / gridSize);
             var col = idx - row * gridSize;
             var location = new LatLng(initialPosition.lat + col * step, initialPosition.lng + row * step)
-            getUnitsManager().spawnUnits(this.getCategory(), [{unitType: unitBlueprint.name, location: location, altitude: 1000, loadout: "", liveryID: ""}]);
+            getApp().getUnitsManager().spawnUnits(this.getCategory(), [{unitType: unitBlueprint.name, location: location, altitude: 1000, loadout: "", liveryID: ""}]);
         })
     }
 

@@ -11,23 +11,23 @@
     z-index: 999;
 }
 
-#control-tips-panel > * {
+#control-tips-panel>* {
     align-items: center;
     align-self: end;
-    background-color: var( --background-steel );
+    background-color: var(--background-steel);
     border-radius: var(--border-radius-md);
     color: white;
     column-gap: 8px;
-    display:flex;
+    display: flex;
     justify-items: right;
     opacity: .9;
-    padding:5px;
-    width:fit-content;
+    padding: 5px;
+    width: fit-content;
 }
 
-#control-tips-panel > * > .key {
-    background-color: var( --background-grey );
-    border-radius: var( --border-radius-sm );
+#control-tips-panel>*>.key {
+    background-color: var(--background-grey);
+    border-radius: var(--border-radius-sm);
     color: white;
-    padding:1px 4px;
+    padding: 1px 4px;
 }
