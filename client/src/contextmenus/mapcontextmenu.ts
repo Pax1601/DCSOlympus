@@ -1,6 +1,5 @@
 import { LatLng } from "leaflet";
 import { getApp } from "..";
-import { spawnExplosion, spawnSmoke } from "../server/server";
 import { ContextMenu } from "./contextmenu";
 import { Switch } from "../controls/switch";
 import { GAME_MASTER } from "../constants/constants";
@@ -48,14 +47,14 @@ export class MapContextMenu extends ContextMenu {
 
         document.addEventListener("contextMenuDeploySmoke", (e: any) => {
             this.hide();
-            spawnSmoke(e.detail.color, this.getLatLng());
+            getApp().getServerManager().spawnSmoke(e.detail.color, this.getLatLng());
             var marker = new SmokeMarker(this.getLatLng(), e.detail.color);
             marker.addTo(getApp().getMap());
         });
 
         document.addEventListener("contextMenuExplosion", (e: any) => {
             this.hide();
-            spawnExplosion(e.detail.strength, this.getLatLng());
+            getApp().getServerManager().spawnExplosion(e.detail.strength, this.getLatLng());
         });
 
         document.addEventListener("editCoalitionArea", (e: any) => {

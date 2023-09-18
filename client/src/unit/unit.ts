@@ -1,7 +1,6 @@
 import { Marker, LatLng, Polyline, Icon, DivIcon, CircleMarker, Map, Point } from 'leaflet';
 import { getApp } from '..';
 import { enumToCoalition, enumToEmissioNCountermeasure, getMarkerCategoryByName, enumToROE, enumToReactionToThreat, enumToState, getUnitDatabaseByCategory, mToFt, msToKnots, rad2deg, bearing, deg2rad, ftToM } from '../other/utils';
-import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, landAt, setAltitude, setReactionToThreat, setROE, setSpeed, refuel, setAdvacedOptions, followUnit, setEmissionsCountermeasures, setSpeedType, setAltitudeType, setOnOff, setFollowRoads, bombPoint, carpetBomb, bombBuilding, fireAtArea } from '../server/server';
 import { CustomMarker } from '../map/markers/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
 import { UnitDatabase } from './databases/unitdatabase';
@@ -610,7 +609,7 @@ export class Unit extends CustomMarker {
             else {
                 path = [latlng];
             }
-            addDestination(this.ID, path);
+            getApp().getServerManager().addDestination(this.ID, path);
         }
     }
 
@@ -623,109 +622,104 @@ export class Unit extends CustomMarker {
         /* Units can't attack themselves */
         if (!this.#human)
             if (this.ID != targetID)
-                attackUnit(this.ID, targetID);
+                getApp().getServerManager().attackUnit(this.ID, targetID);
     }
 
     followUnit(targetID: number, offset: { "x": number, "y": number, "z": number }) {
         /* Units can't follow themselves */
         if (!this.#human)
             if (this.ID != targetID)
-                followUnit(this.ID, targetID, offset);
+                getApp().getServerManager().followUnit(this.ID, targetID, offset);
     }
 
     landAt(latlng: LatLng) {
         if (!this.#human)
-            landAt(this.ID, latlng);
+            getApp().getServerManager().landAt(this.ID, latlng);
     }
 
     changeSpeed(speedChange: string) {
         if (!this.#human)
-            changeSpeed(this.ID, speedChange);
+            getApp().getServerManager().changeSpeed(this.ID, speedChange);
     }
 
     changeAltitude(altitudeChange: string) {
         if (!this.#human)
-            changeAltitude(this.ID, altitudeChange);
+            getApp().getServerManager().changeAltitude(this.ID, altitudeChange);
     }
 
     setSpeed(speed: number) {
         if (!this.#human)
-            setSpeed(this.ID, speed);
+            getApp().getServerManager().setSpeed(this.ID, speed);
     }
 
     setSpeedType(speedType: string) {
         if (!this.#human)
-            setSpeedType(this.ID, speedType);
+            getApp().getServerManager().setSpeedType(this.ID, speedType);
     }
 
     setAltitude(altitude: number) {
         if (!this.#human)
-            setAltitude(this.ID, altitude);
+            getApp().getServerManager().setAltitude(this.ID, altitude);
     }
 
     setAltitudeType(altitudeType: string) {
         if (!this.#human)
-            setAltitudeType(this.ID, altitudeType);
+            getApp().getServerManager().setAltitudeType(this.ID, altitudeType);
     }
 
     setROE(ROE: string) {
         if (!this.#human)
-            setROE(this.ID, ROE);
+            getApp().getServerManager().setROE(this.ID, ROE);
     }
 
     setReactionToThreat(reactionToThreat: string) {
         if (!this.#human)
-            setReactionToThreat(this.ID, reactionToThreat);
+            getApp().getServerManager().setReactionToThreat(this.ID, reactionToThreat);
     }
 
     setEmissionsCountermeasures(emissionCountermeasure: string) {
         if (!this.#human)
-            setEmissionsCountermeasures(this.ID, emissionCountermeasure);
-    }
-
-    setLeader(isLeader: boolean, wingmenIDs: number[] = []) {
-        if (!this.#human)
-            setLeader(this.ID, isLeader, wingmenIDs);
+            getApp().getServerManager().setEmissionsCountermeasures(this.ID, emissionCountermeasure);
     }
 
     setOnOff(onOff: boolean) {
         if (!this.#human)
-            setOnOff(this.ID, onOff);
+            getApp().getServerManager().setOnOff(this.ID, onOff);
     }
 
     setFollowRoads(followRoads: boolean) {
         if (!this.#human)
-            setFollowRoads(this.ID, followRoads);
+            getApp().getServerManager().setFollowRoads(this.ID, followRoads);
     }
 
     delete(explosion: boolean, immediate: boolean) {
-        deleteUnit(this.ID, explosion, immediate);
+        getApp().getServerManager().deleteUnit(this.ID, explosion, immediate);
     }
 
     refuel() {
         if (!this.#human)
-            refuel(this.ID);
+            getApp().getServerManager().refuel(this.ID);
     }
 
     setAdvancedOptions(isTanker: boolean, isAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings) {
         if (!this.#human)
-            setAdvacedOptions(this.ID, isTanker, isAWACS, TACAN, radio, generalSettings);
+            getApp().getServerManager().setAdvacedOptions(this.ID, isTanker, isAWACS, TACAN, radio, generalSettings);
     }
 
     bombPoint(latlng: LatLng) {
-        bombPoint(this.ID, latlng);
+        getApp().getServerManager().bombPoint(this.ID, latlng);
     }
 
     carpetBomb(latlng: LatLng) {
-        carpetBomb(this.ID, latlng);
+        getApp().getServerManager().carpetBomb(this.ID, latlng);
     }
 
     bombBuilding(latlng: LatLng) {
-        bombBuilding(this.ID, latlng);
+        getApp().getServerManager().bombBuilding(this.ID, latlng);
     }
 
     fireAtArea(latlng: LatLng) {
-        fireAtArea(this.ID, latlng);
+        getApp().getServerManager().fireAtArea(this.ID, latlng);
     }
 
     /***********************************************/

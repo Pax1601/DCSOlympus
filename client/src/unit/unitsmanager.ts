@@ -1,7 +1,6 @@
 import { LatLng, LatLngBounds } from "leaflet";
 import { getApp } from "..";
 import { Unit } from "./unit";
-import { cloneUnits, spawnAircrafts, spawnGroundUnits, spawnHelicopters, spawnNavyUnits } from "../server/server";
 import { bearingAndDistanceToLatLng, deg2rad, getUnitDatabaseByCategory, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots, polyContains, polygonArea, randomPointInPoly, randomUnitBlueprint } from "../other/utils";
 import { CoalitionArea } from "../map/coalitionarea/coalitionarea";
 import { groundUnitDatabase } from "./databases/groundunitdatabase";
@@ -635,7 +634,7 @@ export class UnitsManager {
                 var unit = selectedUnits[idx];
                 units.push({ ID: unit.ID, location: unit.getPosition() });
             }
-            cloneUnits(units, true, 0 /* No spawn points, we delete the original units */); 
+            getApp().getServerManager().cloneUnits(units, true, 0 /* No spawn points, we delete the original units */); 
         } else {
             (getApp().getPopupsManager().get("infoPopup") as Popup).setText(`Groups can only be created from units of the same category`);
         }
@@ -790,7 +789,7 @@ export class UnitsManager {
                     units.push({ ID: unit.ID, location: position });
                 });
                 
-                cloneUnits(units, false, spawnPoints, (res: any) => {
+                getApp().getServerManager().cloneUnits(units, false, spawnPoints, (res: any) => {
                     if (res.commandHash !== undefined) {
                         markers.forEach((marker: TemporaryUnitMarker) => {
                             marker.setCommandHash(res.commandHash);
@@ -920,14 +919,14 @@ export class UnitsManager {
                 return false;
             }
             spawnPoints = units.reduce((points: number, unit: UnitSpawnTable) => {return points + aircraftDatabase.getSpawnPointsByName(unit.unitType)}, 0);
-            spawnFunction = () => spawnAircrafts(units, coalition, airbase, country, immediate, spawnPoints, callback);
+            spawnFunction = () => getApp().getServerManager().spawnAircrafts(units, coalition, airbase, country, immediate, spawnPoints, callback);
         } else if (category === "Helicopter") {
             if (airbase == "" && spawnsRestricted) {
                 (getApp().getPopupsManager().get("infoPopup") as Popup).setText("Helicopters can be air spawned during the SETUP phase only");
                 return false;
             }
             spawnPoints = units.reduce((points: number, unit: UnitSpawnTable) => {return points + helicopterDatabase.getSpawnPointsByName(unit.unitType)}, 0);
-            spawnFunction = () => spawnHelicopters(units, coalition, airbase, country, immediate, spawnPoints, callback);
+            spawnFunction = () => getApp().getServerManager().spawnHelicopters(units, coalition, airbase, country, immediate, spawnPoints, callback);
 
         } else if (category === "GroundUnit") {
             if (spawnsRestricted) {
@@ -935,7 +934,7 @@ export class UnitsManager {
                 return false;
             }
             spawnPoints = units.reduce((points: number, unit: UnitSpawnTable) => {return points + groundUnitDatabase.getSpawnPointsByName(unit.unitType)}, 0);
-            spawnFunction = () => spawnGroundUnits(units, coalition, country, immediate, spawnPoints, callback);
+            spawnFunction = () => getApp().getServerManager().spawnGroundUnits(units, coalition, country, immediate, spawnPoints, callback);
 
         } else if (category === "NavyUnit") {
             if (spawnsRestricted) {
@@ -943,7 +942,7 @@ export class UnitsManager {
                 return false;
             }
             spawnPoints = units.reduce((points: number, unit: UnitSpawnTable) => {return points + navyUnitDatabase.getSpawnPointsByName(unit.unitType)}, 0);
-            spawnFunction = () => spawnNavyUnits(units, coalition, country, immediate, spawnPoints, callback);
+            spawnFunction = () => getApp().getServerManager().spawnNavyUnits(units, coalition, country, immediate, spawnPoints, callback);
         }
 
         if (spawnPoints <= getApp().getMissionManager().getAvailableSpawnPoints()) {

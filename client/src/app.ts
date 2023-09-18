@@ -14,12 +14,12 @@ import { CommandModeToolbar } from "./toolbars/commandmodetoolbar";
 import { PrimaryToolbar } from "./toolbars/primarytoolbar";
 import { UnitsManager } from "./unit/unitsmanager";
 import { WeaponsManager } from "./weapon/weaponsmanager";
-
-import { BLUE_COMMANDER, GAME_MASTER, RED_COMMANDER } from "./constants/constants";
 import { Manager } from "./other/manager";
 import { ShortcutKeyboard } from "./shortcut/shortcut";
-import { getPaused, setCredentials, setPaused, startUpdate, toggleDemoEnabled } from "./server/server";
 import { SVGInjector } from "@tanem/svg-injector";
+import { ServerManager } from "./server/servermanager";
+
+import { BLUE_COMMANDER, GAME_MASTER, RED_COMMANDER } from "./constants/constants";
 
 export class OlympusApp {
     /* Global data */
@@ -29,6 +29,7 @@ export class OlympusApp {
     #map: Map | null = null;
 
     /* Managers */
+    #serverManager: ServerManager | null = null;
     #unitsManager: UnitsManager | null = null;
     #weaponsManager: WeaponsManager | null = null;
     #missionManager: MissionManager | null = null;
@@ -46,8 +47,13 @@ export class OlympusApp {
 
     }
 
+    // TODO add checks on null
     getMap() {
         return this.#map as Map;
+    }
+
+    getServerManager() {
+        return this.#serverManager as ServerManager;
     }
 
     getPanelsManager() {
@@ -122,6 +128,7 @@ export class OlympusApp {
         /* Initialize base functionalitites */
         this.#map = new Map('map-container');
 
+        this.#serverManager = new ServerManager();
         this.#unitsManager = new UnitsManager();
         this.#weaponsManager = new WeaponsManager();
         this.#missionManager = new MissionManager();
@@ -151,6 +158,21 @@ export class OlympusApp {
 
         this.#pluginsManager = new PluginsManager();
 
+        /* Load the config file from the app server*/
+        this.getServerManager().getConfig((config: ConfigurationOptions) => {
+            if (config && config.address != undefined && config.port != undefined) {
+                const address = config.address;
+                const port = config.port;
+                if (typeof address === 'string' && typeof port == 'number') { 
+                    this.getServerManager().setAddress(address == "*" ? window.location.hostname : address, port);                    
+                }
+            }
+            else {
+                throw new Error('Could not read configuration file');
+            }
+        });
+
+        /* Setup all global events */
         this.#setupEvents();
     }
 
@@ -183,13 +205,13 @@ export class OlympusApp {
         const shortcutManager = this.getShortcutManager();
         shortcutManager.add("toggleDemo", new ShortcutKeyboard({
             "callback": () => {
-                toggleDemoEnabled();
+                this.getServerManager().toggleDemoEnabled();
             },
             "code": "KeyT"
         })).add("togglePause", new ShortcutKeyboard({
             "altKey": false,
             "callback": () => {
-                setPaused(!getPaused());
+                this.getServerManager().setPaused(!this.getServerManager().getPaused());
             },
             "code": "Space",
             "ctrlKey": false
@@ -242,10 +264,10 @@ export class OlympusApp {
             const password = (form?.querySelector("#password") as HTMLInputElement).value;
 
             /* Update the user credentials */
-            setCredentials(username, password);
+            this.getServerManager().setCredentials(username, password);
 
             /* Start periodically requesting updates */
-            startUpdate();
+            this.getServerManager().startUpdate();
 
             this.setLoginStatus("connecting");
         })

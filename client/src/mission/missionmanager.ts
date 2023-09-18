@@ -3,7 +3,6 @@ import { getApp } from "..";
 import { Airbase } from "./airbase";
 import { Bullseye } from "./bullseye";
 import { BLUE_COMMANDER, GAME_MASTER, NONE, RED_COMMANDER } from "../constants/constants";
-import { refreshAll, setCommandModeOptions } from "../server/server";
 import { Dropdown } from "../controls/dropdown";
 import { groundUnitDatabase } from "../unit/databases/groundunitdatabase";
 import { createCheckboxOption, getCheckboxOptions } from "../other/utils";
@@ -30,7 +29,7 @@ export class MissionManager {
         document.addEventListener("applycommandModeOptions", () => this.#applycommandModeOptions());
 
         /* command-mode settings dialog */
-        this.#commandModeDialog = <HTMLElement> document.querySelector("#command-mode-settings-dialog");
+        this.#commandModeDialog = document.querySelector("#command-mode-settings-dialog") as HTMLElement;
 
         this.#commandModeErasDropdown = new Dropdown("command-mode-era-options", () => {});
     }
@@ -191,7 +190,7 @@ export class MissionManager {
         var eras: string[] = [];
         const enabledEras = getCheckboxOptions(this.#commandModeErasDropdown);
         Object.keys(enabledEras).forEach((key: string) => {if (enabledEras[key]) eras.push(key)});
-        setCommandModeOptions(restrictSpawnsCheckbox.checked, restrictToCoalitionCheckbox.checked, {blue: parseInt(blueSpawnPointsInput.value), red: parseInt(redSpawnPointsInput.value)}, eras, parseInt(setupTimeInput.value) * 60);
+        getApp().getServerManager().setCommandModeOptions(restrictSpawnsCheckbox.checked, restrictToCoalitionCheckbox.checked, {blue: parseInt(blueSpawnPointsInput.value), red: parseInt(redSpawnPointsInput.value)}, eras, parseInt(setupTimeInput.value) * 60);
     }
 
     #setcommandModeOptions(commandModeOptions: CommandModeOptions) {
@@ -229,7 +228,7 @@ export class MissionManager {
         document.querySelector("#command-mode-settings-button")?.classList.toggle("hide", this.getCommandModeOptions().commandMode !== GAME_MASTER);
 
         if (requestRefresh)
-            refreshAll();
+            getApp().getServerManager().refreshAll();
     }
 
     #onAirbaseClick(e: any) {
