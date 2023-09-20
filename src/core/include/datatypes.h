@@ -127,8 +127,3 @@ struct CloneOptions {
 	unsigned int ID;
 	Coords location;
 };
-
-struct GunDataItem {
-	double barrelHeight;
-	double muzzleVelocity;
-};

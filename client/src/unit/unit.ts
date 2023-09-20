@@ -723,7 +723,7 @@ export class Unit extends CustomMarker {
     }
 
     simulateFireFight(latlng: LatLng) {
-        simulateFireFight(this.ID, latlng);
+        getApp().getServerManager().simulateFireFight(this.ID, latlng);
     }
 
     /***********************************************/

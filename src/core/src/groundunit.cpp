@@ -5,13 +5,32 @@
 #include "scheduler.h"
 #include "defines.h"
 #include "unitsmanager.h"
-#include "gundata.h"
 
 #include <GeographicLib/Geodesic.hpp>
 using namespace GeographicLib;
 
 extern Scheduler* scheduler;
 extern UnitsManager* unitsManager;
+json::value GroundUnit::database = json::value();
+
+void GroundUnit::loadDatabase(string path) {
+	char* buf = nullptr;
+	size_t sz = 0;
+	if (_dupenv_s(&buf, &sz, "DCSOLYMPUS_PATH") == 0 && buf != nullptr)
+	{
+		std::ifstream ifstream(string(buf) + path);
+		std::stringstream ss;
+		ss << ifstream.rdbuf();
+		std::error_code errorCode;
+		database = json::value::parse(ss.str(), errorCode);
+		if (database.is_object())
+			log("Ground Units database loaded correctly");
+		else
+			log("Error reading Ground Units database file");
+
+		free(buf);
+	}
+}
 
 /* Ground unit */
 GroundUnit::GroundUnit(json::value json, unsigned int ID) : Unit(json, ID)
@@ -151,16 +170,20 @@ void GroundUnit::AIloop()
 			/* Default gun values */
 			double barrelHeight = 1.0; /* m */
 			double muzzleVelocity = 860; /* m/s */
-			if (gunData.find(name) != gunData.end()) {
-				barrelHeight = gunData[name].barrelHeight;
-				muzzleVelocity = gunData[name].muzzleVelocity;
+			if (database.has_object_field(to_wstring(name))) { 
+				json::value databaseEntry = database[to_wstring(name)];
+				if (databaseEntry.has_number_field(L"barrelHeight") && databaseEntry.has_number_field(L"muzzleVelocity")) {
+					barrelHeight = databaseEntry[L"barrelHeight"].as_number().to_double();
+					muzzleVelocity = databaseEntry[L"muzzleVelocity"].as_number().to_double();
+					log(to_string(barrelHeight) + " " + to_string(muzzleVelocity));
+				}
 			}
 
 			double barrelElevation = r * (9.81 * dist / (2 * muzzleVelocity * muzzleVelocity) - barrelHeight / dist);	/* m */
 			
 			double lat = 0;
 			double lng = 0;
-			double randomBearing = bearing1 + (((double)(rand()) / (double)(RAND_MAX) - 0.5) * 2) * 45;
+			double randomBearing = bearing1 + (((double)(rand()) / (double)(RAND_MAX) - 0.5) * 2) * 15;
 			Geodesic::WGS84().Direct(position.lat, position.lng, randomBearing, r, lat, lng);
 
 			std::ostringstream taskSS;

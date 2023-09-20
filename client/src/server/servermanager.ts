@@ -322,6 +322,12 @@ export class ServerManager {
         this.POST(data, callback);
     }
 
+    simulateFireFight(ID: number, latlng: LatLng, callback: CallableFunction = () => {}) {
+        var command = { "ID": ID, "location": latlng }
+        var data = { "simulateFireFight": command }
+        this.POST(data, callback);
+    }
+
     setAdvacedOptions(ID: number, isTanker: boolean, isAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings, callback: CallableFunction = () => {}) {
         var command = {
             "ID": ID,

@@ -2074,7 +2074,9 @@
     "shortLabel": "Infantry AK",
     "filename": "",
     "type": "Infantry",
-    "enabled": true
+    "enabled": true,
+    "muzzleVelocity": 860,
+    "barrelHeight": 0.9
   },
   "KAMAZ Truck": {
     "name": "KAMAZ Truck",

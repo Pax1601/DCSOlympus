@@ -37,7 +37,6 @@
     <ClInclude Include="include\airunit.h" />
     <ClInclude Include="include\commands.h" />
     <ClInclude Include="include\datatypes.h" />
-    <ClInclude Include="include\gundata.h" />
     <ClInclude Include="include\measure.h" />
     <ClInclude Include="include\groundunit.h" />
     <ClInclude Include="include\helicopter.h" />
