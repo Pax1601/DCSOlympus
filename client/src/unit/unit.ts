@@ -1,18 +1,15 @@
 import { Marker, LatLng, Polyline, Icon, DivIcon, CircleMarker, Map, Point } from 'leaflet';
-import { getMap, getMissionHandler, getUnitsManager, getWeaponsManager } from '..';
+import { getApp } from '..';
 import { enumToCoalition, enumToEmissioNCountermeasure, getMarkerCategoryByName, enumToROE, enumToReactionToThreat, enumToState, getUnitDatabaseByCategory, mToFt, msToKnots, rad2deg, bearing, deg2rad, ftToM } from '../other/utils';
-import { addDestination, attackUnit, changeAltitude, changeSpeed, createFormation as setLeader, deleteUnit, landAt, setAltitude, setReactionToThreat, setROE, setSpeed, refuel, setAdvacedOptions, followUnit, setEmissionsCountermeasures, setSpeedType, setAltitudeType, setOnOff, setFollowRoads, bombPoint, carpetBomb, bombBuilding, fireAtArea, simulateFireFight } from '../server/server';
 import { CustomMarker } from '../map/markers/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
 import { UnitDatabase } from './databases/unitdatabase';
 import { TargetMarker } from '../map/markers/targetmarker';
 import { DLINK, DataIndexes, GAME_MASTER, HIDE_GROUP_MEMBERS, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, ROEs, RWR, SHOW_CONTACT_LINES, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, VISUAL, emissionsCountermeasures, reactionsToThreat, states } from '../constants/constants';
-import { Ammo, Contact, GeneralSettings, Offset, Radio, TACAN, ObjectIconOptions, UnitData } from '../@types/unit';
 import { DataExtractor } from '../server/dataextractor';
 import { groundUnitDatabase } from './databases/groundunitdatabase';
 import { navyUnitDatabase } from './databases/navyunitdatabase';
 import { Weapon } from '../weapon/weapon';
-import { LoadoutBlueprint } from '../@types/unitdatabase';
 
 var pathIcon = new Icon({
     iconUrl: '/resources/theme/images/markers/marker-icon.png',
@@ -147,7 +144,7 @@ export class Unit extends CustomMarker {
         this.#selectable = true;
 
         this.#pathPolyline = new Polyline([], { color: '#2d3e50', weight: 3, opacity: 0.5, smoothFactor: 1 });
-        this.#pathPolyline.addTo(getMap());
+        this.#pathPolyline.addTo(getApp().getMap());
         this.#contactsPolylines = [];
         this.#targetPositionMarker = new TargetMarker(new LatLng(0, 0));
         this.#targetPositionPolyline = new Polyline([], { color: '#FF0000', weight: 3, opacity: 0.5, smoothFactor: 1 });
@@ -155,9 +152,17 @@ export class Unit extends CustomMarker {
         this.on('click', (e) => this.#onClick(e));
         this.on('dblclick', (e) => this.#onDoubleClick(e));
         this.on('contextmenu', (e) => this.#onContextMenu(e));
-        this.on('mouseover', () => { if (this.belongsToCommandedCoalition()) this.setHighlighted(true); })
-        this.on('mouseout', () => { this.setHighlighted(false); })
-        getMap().on("zoomend", () => { this.#onZoom(); })
+        this.on('mouseover', () => {
+            if (this.belongsToCommandedCoalition()) {
+                this.setHighlighted(true);
+                document.dispatchEvent(new CustomEvent("unitMouseover", { detail: this }));
+            }
+        });
+        this.on('mouseout', () => {
+            this.setHighlighted(false);
+            document.dispatchEvent(new CustomEvent("unitMouseout", { detail: this }));
+        });
+        getApp().getMap().on("zoomend", () => { this.#onZoom(); })
 
         /* Deselect units if they are hidden */
         document.addEventListener("toggleCoalitionVisibility", (ev: CustomEventInit) => {
@@ -182,7 +187,7 @@ export class Unit extends CustomMarker {
 
     /********************** Unit data *************************/
     setData(dataExtractor: DataExtractor) {
-        var updateMarker = !getMap().hasLayer(this);
+        var updateMarker = !getApp().getMap().hasLayer(this);
 
         var datumIndex = 0;
         while (datumIndex != DataIndexes.endOfData) {
@@ -235,7 +240,7 @@ export class Unit extends CustomMarker {
         if (updateMarker)
             this.#updateMarker();
 
-        if (this.getSelected() || getMap().getCenterUnit() === this)
+        if (this.getSelected() || getApp().getMap().getCenterUnit() === this)
             document.dispatchEvent(new CustomEvent("unitUpdated", { detail: this }));
     }
 
@@ -325,22 +330,27 @@ export class Unit extends CustomMarker {
             this.#selected = selected;
 
             if (selected) {
-                document.dispatchEvent(new CustomEvent("unitSelection", { detail: this }));
                 this.#updateMarker();
             }
             else {
-                document.dispatchEvent(new CustomEvent("unitDeselection", { detail: this }));
                 this.#clearContacts();
                 this.#clearPath();
                 this.#clearTarget();
             }
 
             this.getElement()?.querySelector(`.unit`)?.toggleAttribute("data-is-selected", selected);
-            if (this.getCategory() === "GroundUnit" && getMap().getZoom() < 13) {
+            if (this.getCategory() === "GroundUnit" && getApp().getMap().getZoom() < 13) {
                 if (this.#isLeader)
                     this.getGroupMembers().forEach((unit: Unit) => unit.setSelected(selected));
                 else
                     this.#updateMarker();
+            }
+
+            //  Trigger events after all (de-)selecting has been done
+            if (selected) {
+                document.dispatchEvent(new CustomEvent("unitSelection", { detail: this }));
+            } else {
+                document.dispatchEvent(new CustomEvent("unitDeselection", { detail: this }));
             }
 
         }
@@ -380,11 +390,11 @@ export class Unit extends CustomMarker {
     }
 
     getGroupMembers() {
-        return Object.values(getUnitsManager().getUnits()).filter((unit: Unit) => { return unit != this && unit.#groupName === this.#groupName; });
+        return Object.values(getApp().getUnitsManager().getUnits()).filter((unit: Unit) => { return unit != this && unit.#groupName === this.#groupName; });
     }
 
     belongsToCommandedCoalition() {
-        if (getMissionHandler().getCommandModeOptions().commandMode !== GAME_MASTER && getMissionHandler().getCommandedCoalition() !== this.#coalition)
+        if (getApp().getMissionManager().getCommandModeOptions().commandMode !== GAME_MASTER && getApp().getMissionManager().getCommandedCoalition() !== this.#coalition)
             return false;
         return true;
     }
@@ -510,13 +520,13 @@ export class Unit extends CustomMarker {
 
     /********************** Visibility *************************/
     updateVisibility() {
-        const hiddenUnits = getMap().getHiddenTypes();
+        const hiddenUnits = getApp().getMap().getHiddenTypes();
         var hidden = ((this.#human && hiddenUnits.includes("human")) ||
             (this.#controlled == false && hiddenUnits.includes("dcs")) ||
             (hiddenUnits.includes(this.getMarkerCategory())) ||
             (hiddenUnits.includes(this.#coalition)) ||
             (!this.belongsToCommandedCoalition() && (this.#detectionMethods.length == 0 || (this.#detectionMethods.length == 1 && this.#detectionMethods[0] === RWR))) ||
-            (getMap().getVisibilityOptions()[HIDE_GROUP_MEMBERS] && !this.#isLeader && this.getCategory() == "GroundUnit" && getMap().getZoom() < 13 && (this.belongsToCommandedCoalition() || (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0)))) &&
+            (getApp().getMap().getVisibilityOptions()[HIDE_GROUP_MEMBERS] && !this.#isLeader && this.getCategory() == "GroundUnit" && getApp().getMap().getZoom() < 13 && (this.belongsToCommandedCoalition() || (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0)))) &&
             !(this.getSelected());
 
         this.setHidden(hidden || !this.#alive);
@@ -526,16 +536,16 @@ export class Unit extends CustomMarker {
         this.#hidden = hidden;
 
         /* Add the marker if not present */
-        if (!getMap().hasLayer(this) && !this.getHidden()) {
-            if (getMap().isZooming())
-                this.once("zoomend", () => { this.addTo(getMap()) })
+        if (!getApp().getMap().hasLayer(this) && !this.getHidden()) {
+            if (getApp().getMap().isZooming())
+                this.once("zoomend", () => { this.addTo(getApp().getMap()) })
             else
-                this.addTo(getMap());
+                this.addTo(getApp().getMap());
         }
 
         /* Hide the marker if necessary*/
-        if (getMap().hasLayer(this) && this.getHidden()) {
-            getMap().removeLayer(this);
+        if (getApp().getMap().hasLayer(this) && this.getHidden()) {
+            getApp().getMap().removeLayer(this);
         }
     }
 
@@ -560,7 +570,7 @@ export class Unit extends CustomMarker {
     }
 
     getLeader() {
-        return getUnitsManager().getUnitByID(this.#leaderID);
+        return getApp().getUnitsManager().getUnitByID(this.#leaderID);
     }
 
     canFulfillRole(roles: string | string[]) {
@@ -578,7 +588,7 @@ export class Unit extends CustomMarker {
 
     isInViewport() {
 
-        const mapBounds = getMap().getBounds();
+        const mapBounds = getApp().getMap().getBounds();
         const unitPos = this.getPosition();
 
         return (unitPos.lng > mapBounds.getWest()
@@ -599,7 +609,7 @@ export class Unit extends CustomMarker {
             else {
                 path = [latlng];
             }
-            addDestination(this.ID, path);
+            getApp().getServerManager().addDestination(this.ID, path);
         }
     }
 
@@ -612,109 +622,104 @@ export class Unit extends CustomMarker {
         /* Units can't attack themselves */
         if (!this.#human)
             if (this.ID != targetID)
-                attackUnit(this.ID, targetID);
+                getApp().getServerManager().attackUnit(this.ID, targetID);
     }
 
     followUnit(targetID: number, offset: { "x": number, "y": number, "z": number }) {
         /* Units can't follow themselves */
         if (!this.#human)
             if (this.ID != targetID)
-                followUnit(this.ID, targetID, offset);
+                getApp().getServerManager().followUnit(this.ID, targetID, offset);
     }
 
     landAt(latlng: LatLng) {
         if (!this.#human)
-            landAt(this.ID, latlng);
+            getApp().getServerManager().landAt(this.ID, latlng);
     }
 
     changeSpeed(speedChange: string) {
         if (!this.#human)
-            changeSpeed(this.ID, speedChange);
+            getApp().getServerManager().changeSpeed(this.ID, speedChange);
     }
 
     changeAltitude(altitudeChange: string) {
         if (!this.#human)
-            changeAltitude(this.ID, altitudeChange);
+            getApp().getServerManager().changeAltitude(this.ID, altitudeChange);
     }
 
     setSpeed(speed: number) {
         if (!this.#human)
-            setSpeed(this.ID, speed);
+            getApp().getServerManager().setSpeed(this.ID, speed);
     }
 
     setSpeedType(speedType: string) {
         if (!this.#human)
-            setSpeedType(this.ID, speedType);
+            getApp().getServerManager().setSpeedType(this.ID, speedType);
     }
 
     setAltitude(altitude: number) {
         if (!this.#human)
-            setAltitude(this.ID, altitude);
+            getApp().getServerManager().setAltitude(this.ID, altitude);
     }
 
     setAltitudeType(altitudeType: string) {
         if (!this.#human)
-            setAltitudeType(this.ID, altitudeType);
+            getApp().getServerManager().setAltitudeType(this.ID, altitudeType);
     }
 
     setROE(ROE: string) {
         if (!this.#human)
-            setROE(this.ID, ROE);
+            getApp().getServerManager().setROE(this.ID, ROE);
     }
 
     setReactionToThreat(reactionToThreat: string) {
         if (!this.#human)
-            setReactionToThreat(this.ID, reactionToThreat);
+            getApp().getServerManager().setReactionToThreat(this.ID, reactionToThreat);
     }
 
     setEmissionsCountermeasures(emissionCountermeasure: string) {
         if (!this.#human)
-            setEmissionsCountermeasures(this.ID, emissionCountermeasure);
-    }
-
-    setLeader(isLeader: boolean, wingmenIDs: number[] = []) {
-        if (!this.#human)
-            setLeader(this.ID, isLeader, wingmenIDs);
+            getApp().getServerManager().setEmissionsCountermeasures(this.ID, emissionCountermeasure);
     }
 
     setOnOff(onOff: boolean) {
         if (!this.#human)
-            setOnOff(this.ID, onOff);
+            getApp().getServerManager().setOnOff(this.ID, onOff);
     }
 
     setFollowRoads(followRoads: boolean) {
         if (!this.#human)
-            setFollowRoads(this.ID, followRoads);
+            getApp().getServerManager().setFollowRoads(this.ID, followRoads);
     }
 
     delete(explosion: boolean, immediate: boolean) {
-        deleteUnit(this.ID, explosion, immediate);
+        getApp().getServerManager().deleteUnit(this.ID, explosion, immediate);
     }
 
     refuel() {
         if (!this.#human)
-            refuel(this.ID);
+            getApp().getServerManager().refuel(this.ID);
     }
 
     setAdvancedOptions(isTanker: boolean, isAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings) {
         if (!this.#human)
-            setAdvacedOptions(this.ID, isTanker, isAWACS, TACAN, radio, generalSettings);
+            getApp().getServerManager().setAdvacedOptions(this.ID, isTanker, isAWACS, TACAN, radio, generalSettings);
     }
 
     bombPoint(latlng: LatLng) {
-        bombPoint(this.ID, latlng);
+        getApp().getServerManager().bombPoint(this.ID, latlng);
     }
 
     carpetBomb(latlng: LatLng) {
-        carpetBomb(this.ID, latlng);
+        getApp().getServerManager().carpetBomb(this.ID, latlng);
     }
 
     bombBuilding(latlng: LatLng) {
-        bombBuilding(this.ID, latlng);
+        getApp().getServerManager().bombBuilding(this.ID, latlng);
     }
 
     fireAtArea(latlng: LatLng) {
-        fireAtArea(this.ID, latlng);
+        getApp().getServerManager().fireAtArea(this.ID, latlng);
     }
 
     simulateFireFight(latlng: LatLng) {
@@ -730,9 +735,9 @@ export class Unit extends CustomMarker {
     /***********************************************/
     #onClick(e: any) {
         if (!this.#preventClick) {
-            if (getMap().getState() === IDLE || getMap().getState() === MOVE_UNIT || e.originalEvent.ctrlKey) {
+            if (getApp().getMap().getState() === IDLE || getApp().getMap().getState() === MOVE_UNIT || e.originalEvent.ctrlKey) {
                 if (!e.originalEvent.ctrlKey)
-                    getUnitsManager().deselectAllUnits();
+                    getApp().getUnitsManager().deselectAllUnits();
 
                 this.setSelected(!this.getSelected());
                 const detail = { "detail": { "unit": this } };
@@ -747,7 +752,7 @@ export class Unit extends CustomMarker {
     }
 
     #onDoubleClick(e: any) {
-        const unitsManager = getUnitsManager();
+        const unitsManager = getApp().getUnitsManager();
         Object.values(unitsManager.getUnits()).forEach((unit: Unit) => {
             if (unit.getAlive() === true && unit.getName() === this.getName() && unit.isInViewport())
                 unitsManager.selectUnit(unit.ID, false);
@@ -759,14 +764,14 @@ export class Unit extends CustomMarker {
 
     #onContextMenu(e: any) {
         var options: { [key: string]: { text: string, tooltip: string } } = {};
-        const selectedUnits = getUnitsManager().getSelectedUnits();
-        const selectedUnitTypes = getUnitsManager().getSelectedUnitsCategories();
+        const selectedUnits = getApp().getUnitsManager().getSelectedUnits();
+        const selectedUnitTypes = getApp().getUnitsManager().getSelectedUnitsCategories();
 
         options["center-map"] = { text: "Center map", tooltip: "Center the map on the unit and follow it" };
 
         if (selectedUnits.length > 0 && !(selectedUnits.length == 1 && (selectedUnits.includes(this)))) {
             options["attack"] = { text: "Attack", tooltip: "Attack the unit using A/A or A/G weapons" };
-            if (getUnitsManager().getSelectedUnitsCategories().length == 1 && getUnitsManager().getSelectedUnitsCategories()[0] === "Aircraft")
+            if (getApp().getUnitsManager().getSelectedUnitsCategories().length == 1 && getApp().getUnitsManager().getSelectedUnitsCategories()[0] === "Aircraft")
                 options["follow"] = { text: "Follow", tooltip: "Follow the unit at a user defined distance and position" };;
         }
         else if ((selectedUnits.length > 0 && (selectedUnits.includes(this))) || selectedUnits.length == 0) {
@@ -775,13 +780,13 @@ export class Unit extends CustomMarker {
             }
         }
 
-        if (selectedUnitTypes.length === 1 && ["NavyUnit", "GroundUnit"].includes(selectedUnitTypes[0]) && getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getCoalition()}) !== undefined) 
+        if (selectedUnitTypes.length === 1 && ["NavyUnit", "GroundUnit"].includes(selectedUnitTypes[0]) && getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getCoalition()}) !== undefined) 
             options["group"] = { text: "Create group", tooltip: "Create a group from the selected units." };
 
         if (Object.keys(options).length > 0) {
-            getMap().showUnitContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng);
-            getMap().getUnitContextMenu().setOptions(options, (option: string) => {
-                getMap().hideUnitContextMenu();
+            getApp().getMap().showUnitContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng);
+            getApp().getMap().getUnitContextMenu().setOptions(options, (option: string) => {
+                getApp().getMap().hideUnitContextMenu();
                 this.#executeAction(e, option);
             });
         }
@@ -789,13 +794,13 @@ export class Unit extends CustomMarker {
 
     #executeAction(e: any, action: string) {
         if (action === "center-map")
-            getMap().centerOnUnit(this.ID);
+            getApp().getMap().centerOnUnit(this.ID);
         if (action === "attack")
-            getUnitsManager().selectedUnitsAttackUnit(this.ID);
+            getApp().getUnitsManager().selectedUnitsAttackUnit(this.ID);
         else if (action === "refuel")
-            getUnitsManager().selectedUnitsRefuel();
+            getApp().getUnitsManager().selectedUnitsRefuel();
         else if (action === "group")
-            getUnitsManager().selectedUnitsCreateGroup();
+            getApp().getUnitsManager().selectedUnitsCreateGroup();
         else if (action === "follow")
             this.#showFollowOptions(e);        
     }
@@ -814,12 +819,12 @@ export class Unit extends CustomMarker {
             'custom': { text: "Custom", tooltip: "Set a custom formation position" },
         }
 
-        getMap().getUnitContextMenu().setOptions(options, (option: string) => {
-            getMap().hideUnitContextMenu();
+        getApp().getMap().getUnitContextMenu().setOptions(options, (option: string) => {
+            getApp().getMap().hideUnitContextMenu();
             this.#applyFollowOptions(option);
         });
 
-        getMap().showUnitContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng);
+        getApp().getMap().showUnitContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng);
     }
 
     #applyFollowOptions(action: string) {
@@ -847,12 +852,12 @@ export class Unit extends CustomMarker {
                     var y = upDown;
                     var z = distance * Math.sin(angleRad);
     
-                    getUnitsManager().selectedUnitsFollowUnit(this.ID, { "x": x, "y": y, "z": z });
+                    getApp().getUnitsManager().selectedUnitsFollowUnit(this.ID, { "x": x, "y": y, "z": z });
                 }
             });
         }
         else {
-            getUnitsManager().selectedUnitsFollowUnit(this.ID, undefined, action);
+            getApp().getUnitsManager().selectedUnitsFollowUnit(this.ID, undefined, action);
         }
     }
 
@@ -870,7 +875,7 @@ export class Unit extends CustomMarker {
                     this.#miniMapMarker.setStyle({ color: "#ff5858" });
                 else
                     this.#miniMapMarker.setStyle({ color: "#247be2" });
-                this.#miniMapMarker.addTo(getMap().getMiniMapLayerGroup());
+                this.#miniMapMarker.addTo(getApp().getMap().getMiniMapLayerGroup());
                 this.#miniMapMarker.bringToBack();
             }
             else {
@@ -881,8 +886,8 @@ export class Unit extends CustomMarker {
             }
         }
         else {
-            if (this.#miniMapMarker != null && getMap().getMiniMapLayerGroup().hasLayer(this.#miniMapMarker)) {
-                getMap().getMiniMapLayerGroup().removeLayer(this.#miniMapMarker);
+            if (this.#miniMapMarker != null && getApp().getMap().getMiniMapLayerGroup().hasLayer(this.#miniMapMarker)) {
+                getApp().getMap().getMiniMapLayerGroup().removeLayer(this.#miniMapMarker);
                 this.#miniMapMarker = null;
             }
         }
@@ -967,25 +972,25 @@ export class Unit extends CustomMarker {
             }
 
             /* Set vertical offset for altitude stacking */
-            var pos = getMap().latLngToLayerPoint(this.getLatLng()).round();
+            var pos = getApp().getMap().latLngToLayerPoint(this.getLatLng()).round();
             this.setZIndexOffset(1000 + Math.floor(this.#position.alt as number) - pos.y + (this.#highlighted || this.#selected ? 5000 : 0));
         }
     }
 
     #drawPath() {
-        if (this.#activePath != undefined && getMap().getVisibilityOptions()[SHOW_UNIT_PATHS]) {
+        if (this.#activePath != undefined && getApp().getMap().getVisibilityOptions()[SHOW_UNIT_PATHS]) {
             var points = [];
             points.push(new LatLng(this.#position.lat, this.#position.lng));
 
             /* Add markers if missing */
             while (this.#pathMarkers.length < Object.keys(this.#activePath).length) {
-                var marker = new Marker([0, 0], { icon: pathIcon }).addTo(getMap());
+                var marker = new Marker([0, 0], { icon: pathIcon }).addTo(getApp().getMap());
                 this.#pathMarkers.push(marker);
             }
 
             /* Remove markers if too many */
             while (this.#pathMarkers.length > Object.keys(this.#activePath).length) {
-                getMap().removeLayer(this.#pathMarkers[this.#pathMarkers.length - 1]);
+                getApp().getMap().removeLayer(this.#pathMarkers[this.#pathMarkers.length - 1]);
                 this.#pathMarkers.splice(this.#pathMarkers.length - 1, 1)
             }
 
@@ -1007,7 +1012,7 @@ export class Unit extends CustomMarker {
 
     #clearPath() {
         for (let WP in this.#pathMarkers) {
-            getMap().removeLayer(this.#pathMarkers[WP]);
+            getApp().getMap().removeLayer(this.#pathMarkers[WP]);
         }
         this.#pathMarkers = [];
         this.#pathPolyline.setLatLngs([]);
@@ -1015,25 +1020,25 @@ export class Unit extends CustomMarker {
 
     #drawContacts() {
         this.#clearContacts();
-        if (getMap().getVisibilityOptions()[SHOW_CONTACT_LINES]) {
+        if (getApp().getMap().getVisibilityOptions()[SHOW_CONTACT_LINES]) {
             for (let index in this.#contacts) {
                 var contactData = this.#contacts[index];
                 var contact: Unit | Weapon | null;
 
-                if (contactData.ID in getUnitsManager().getUnits())
-                    contact = getUnitsManager().getUnitByID(contactData.ID);
+                if (contactData.ID in getApp().getUnitsManager().getUnits())
+                    contact = getApp().getUnitsManager().getUnitByID(contactData.ID);
                 else
-                    contact = getWeaponsManager().getWeaponByID(contactData.ID);
+                    contact = getApp().getWeaponsManager().getWeaponByID(contactData.ID);
 
                 if (contact != null && contact.getAlive()) {
                     var startLatLng = new LatLng(this.#position.lat, this.#position.lng);
                     var endLatLng: LatLng;
                     if (contactData.detectionMethod === RWR) {
                         var bearingToContact = bearing(this.#position.lat, this.#position.lng, contact.getPosition().lat, contact.getPosition().lng);
-                        var startXY = getMap().latLngToContainerPoint(startLatLng);
+                        var startXY = getApp().getMap().latLngToContainerPoint(startLatLng);
                         var endX = startXY.x + 80 * Math.sin(deg2rad(bearingToContact));
                         var endY = startXY.y - 80 * Math.cos(deg2rad(bearingToContact));
-                        endLatLng = getMap().containerPointToLatLng(new Point(endX, endY));
+                        endLatLng = getApp().getMap().containerPointToLatLng(new Point(endX, endY));
                     }
                     else
                         endLatLng = new LatLng(contact.getPosition().lat, contact.getPosition().lng);
@@ -1048,7 +1053,7 @@ export class Unit extends CustomMarker {
                     else
                         color = "#FFFFFF";
                     var contactPolyline = new Polyline([startLatLng, endLatLng], { color: color, weight: 3, opacity: 1, smoothFactor: 1, dashArray: "4, 8" });
-                    contactPolyline.addTo(getMap());
+                    contactPolyline.addTo(getApp().getMap());
                     this.#contactsPolylines.push(contactPolyline)
                 }
             }
@@ -1057,17 +1062,17 @@ export class Unit extends CustomMarker {
 
     #clearContacts() {
         for (let index in this.#contactsPolylines) {
-            getMap().removeLayer(this.#contactsPolylines[index])
+            getApp().getMap().removeLayer(this.#contactsPolylines[index])
         }
     }
 
     #drawTarget() {
-        if (this.#targetPosition.lat != 0 && this.#targetPosition.lng != 0 && getMap().getVisibilityOptions()[SHOW_UNIT_PATHS]) {
+        if (this.#targetPosition.lat != 0 && this.#targetPosition.lng != 0 && getApp().getMap().getVisibilityOptions()[SHOW_UNIT_PATHS]) {
             this.#drawTargetPosition(this.#targetPosition);
         }
-        else if (this.#targetID != 0 && getMap().getVisibilityOptions()[SHOW_UNIT_TARGETS]) {
-            const target = getUnitsManager().getUnitByID(this.#targetID);
-            if (target && (getMissionHandler().getCommandModeOptions().commandMode == GAME_MASTER || (this.belongsToCommandedCoalition() && getUnitsManager().getUnitDetectedMethods(target).some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))))) {
+        else if (this.#targetID != 0 && getApp().getMap().getVisibilityOptions()[SHOW_UNIT_TARGETS]) {
+            const target = getApp().getUnitsManager().getUnitByID(this.#targetID);
+            if (target && (getApp().getMissionManager().getCommandModeOptions().commandMode == GAME_MASTER || (this.belongsToCommandedCoalition() && getApp().getUnitsManager().getUnitDetectedMethods(target).some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))))) {
                 this.#drawTargetPosition(target.getPosition());
             }
         }
@@ -1076,20 +1081,20 @@ export class Unit extends CustomMarker {
     }
 
     #drawTargetPosition(targetPosition: LatLng) {
-        if (!getMap().hasLayer(this.#targetPositionMarker))
-            this.#targetPositionMarker.addTo(getMap());
-        if (!getMap().hasLayer(this.#targetPositionPolyline))
-            this.#targetPositionPolyline.addTo(getMap());
+        if (!getApp().getMap().hasLayer(this.#targetPositionMarker))
+            this.#targetPositionMarker.addTo(getApp().getMap());
+        if (!getApp().getMap().hasLayer(this.#targetPositionPolyline))
+            this.#targetPositionPolyline.addTo(getApp().getMap());
         this.#targetPositionMarker.setLatLng(new LatLng(targetPosition.lat, targetPosition.lng));
         this.#targetPositionPolyline.setLatLngs([new LatLng(this.#position.lat, this.#position.lng), new LatLng(targetPosition.lat, targetPosition.lng)])
     }
 
     #clearTarget() {
-        if (getMap().hasLayer(this.#targetPositionMarker))
-            this.#targetPositionMarker.removeFrom(getMap());
+        if (getApp().getMap().hasLayer(this.#targetPositionMarker))
+            this.#targetPositionMarker.removeFrom(getApp().getMap());
 
-        if (getMap().hasLayer(this.#targetPositionPolyline))
-            this.#targetPositionPolyline.removeFrom(getMap());
+        if (getApp().getMap().hasLayer(this.#targetPositionPolyline))
+            this.#targetPositionPolyline.removeFrom(getApp().getMap());
     }
 
     #onZoom() {

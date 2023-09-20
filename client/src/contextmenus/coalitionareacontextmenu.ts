@@ -1,5 +1,5 @@
 import { LatLng } from "leaflet";
-import { getMap, getMissionHandler, getUnitsManager } from "..";
+import { getApp } from "..";
 import { GAME_MASTER, IADSTypes } from "../constants/constants";
 import { CoalitionArea } from "../map/coalitionarea/coalitionarea";
 import { ContextMenu } from "./contextmenu";
@@ -54,20 +54,20 @@ export class CoalitionAreaContextMenu extends ContextMenu {
 
         document.addEventListener("coalitionAreaBringToBack", (e: any) => {
             if (this.#coalitionArea)
-                getMap().bringCoalitionAreaToBack(this.#coalitionArea);
-            getMap().hideCoalitionAreaContextMenu();
+                getApp().getMap().bringCoalitionAreaToBack(this.#coalitionArea);
+            getApp().getMap().hideCoalitionAreaContextMenu();
         });
 
         document.addEventListener("coalitionAreaDelete", (e: any) => {
             if (this.#coalitionArea)
-                getMap().deleteCoalitionArea(this.#coalitionArea);
-            getMap().hideCoalitionAreaContextMenu();
+                getApp().getMap().deleteCoalitionArea(this.#coalitionArea);
+            getApp().getMap().hideCoalitionAreaContextMenu();
         });
 
         document.addEventListener("contextMenuCreateIads", (e: any) => {
             const area = this.getCoalitionArea();
             if (area)
-                getUnitsManager().createIADS(area, getCheckboxOptions(this.#iadsTypesDropdown), getCheckboxOptions(this.#iadsErasDropdown), getCheckboxOptions(this.#iadsRangesDropdown), this.#iadsDensitySlider.getValue(), this.#iadsDistributionSlider.getValue());
+                getApp().getUnitsManager().createIADS(area, getCheckboxOptions(this.#iadsTypesDropdown), getCheckboxOptions(this.#iadsErasDropdown), getCheckboxOptions(this.#iadsRangesDropdown), this.#iadsDensitySlider.getValue(), this.#iadsDistributionSlider.getValue());
         })
         this.hide();
     }
@@ -97,7 +97,7 @@ export class CoalitionAreaContextMenu extends ContextMenu {
             return createCheckboxOption(range, `Add ${range} units to the IADS`);
         }));
 
-        if (getMissionHandler().getCommandModeOptions().commandMode !== GAME_MASTER)
+        if (getApp().getMissionManager().getCommandModeOptions().commandMode !== GAME_MASTER)
             this.#coalitionSwitch.hide()
     }
 
@@ -149,7 +149,7 @@ export class CoalitionAreaContextMenu extends ContextMenu {
      * @param value Switch position (false: blue, true: red)
      */
     #onSwitchClick(value: boolean) {
-        if (getMissionHandler().getCommandModeOptions().commandMode == GAME_MASTER) {
+        if (getApp().getMissionManager().getCommandModeOptions().commandMode == GAME_MASTER) {
             this.getCoalitionArea()?.setCoalition(value ? "red" : "blue");
             this.getContainer()?.querySelectorAll('[data-coalition]').forEach((element: any) => {
                 element.setAttribute("data-coalition", this.getCoalitionArea()?.getCoalition())

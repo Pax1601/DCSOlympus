@@ -1,7 +1,7 @@
 import { DivIcon, LatLngExpression, MarkerOptions } from "leaflet";
 import { CustomMarker } from "./custommarker";
 import { SVGInjector } from "@tanem/svg-injector";
-import { getMap } from "../..";
+import { getApp } from "../..";
 
 export class SmokeMarker extends CustomMarker {
     #color: string;
@@ -10,7 +10,7 @@ export class SmokeMarker extends CustomMarker {
         super(latlng, options);
         this.setZIndexOffset(9999);
         this.#color = color;
-        window.setTimeout(() => { this.removeFrom(getMap()); }, 300000) /* Remove the smoke after 5 minutes */
+        window.setTimeout(() => { this.removeFrom(getApp().getMap()); }, 300000) /* Remove the smoke after 5 minutes */
     }
 
     createIcon() {

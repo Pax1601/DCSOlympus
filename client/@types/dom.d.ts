@@ -29,17 +29,8 @@ declare global {
            listener: (this: Document, ev: CustomEventMap[K]) => void): void;
         dispatchEvent<K extends keyof CustomEventMap>(ev: CustomEventMap[K]): void;
     }
-}
 
-export interface ConfigParameters {
-    port: number;
-    address: string;
-}
-
-export interface ContextMenuOption {
-    tooltip: string;
-    src: string;
-    callback: CallableFunction;
+    function getOlympusPlugin(): OlympusPlugin;
 }
 
 export { }; 

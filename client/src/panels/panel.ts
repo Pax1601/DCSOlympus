@@ -1,30 +1,31 @@
-export class Panel {
-    #element: HTMLElement
-    #visible: boolean = true;
+import { PanelEventsManager } from "./paneleventsmanager";
 
-    /**
-     * 
-     * @param ID - the ID of the HTML element which will contain the context menu
-     */
-    constructor(ID: string){
-        this.#element = document.getElementById(ID) as HTMLElement;
+export abstract class Panel {
+
+    #element: HTMLElement
+    #eventsManager!: PanelEventsManager;
+
+    constructor(ID: string) {
+        this.#element = <HTMLElement>document.getElementById(ID);
+
+        this.#eventsManager = new PanelEventsManager();
     }
 
     show() {
         this.#element.classList.toggle("hide", false);
-        this.#visible = true;
+        this.getEventsManager()?.trigger("show", {});
     }
 
     hide() {
         this.#element.classList.toggle("hide", true);
-        this.#visible = false;
+        this.getEventsManager()?.trigger("hide", {});
     }
 
     toggle() {
         // Simple way to track if currently visible
-        if (this.#visible)
+        if (this.getVisible())
             this.hide();
-        else 
+        else
             this.show();
     }
 
@@ -32,7 +33,11 @@ export class Panel {
         return this.#element;
     }
 
-    getVisible(){
-        return this.#visible;
+    getVisible() {
+        return (!this.getElement().classList.contains("hide"));
+    }
+
+    getEventsManager() {
+        return this.#eventsManager;
     }
 }

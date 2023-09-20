@@ -68,6 +68,10 @@ export class Dropdown {
         return this.#options.children;
     }
 
+    addOptionElement(optionElement: HTMLElement) {
+        this.#options.appendChild(optionElement);
+    }
+
     selectText(text: string) {
         const index = [].slice.call(this.#options.children).findIndex((opt: Element) => opt.querySelector("button")?.innerText === text);
         if (index > -1) {

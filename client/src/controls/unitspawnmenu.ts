@@ -2,16 +2,14 @@ import { LatLng } from "leaflet";
 import { Dropdown } from "./dropdown";
 import { Slider } from "./slider";
 import { UnitDatabase } from "../unit/databases/unitdatabase";
-import { getActiveCoalition, getMap, getMissionHandler, getUnitsManager } from "..";
+import { getApp } from "..";
 import { GAME_MASTER } from "../constants/constants";
-import { UnitSpawnOptions } from "../@types/unitdatabase";
 import { Airbase } from "../mission/airbase";
 import { ftToM } from "../other/utils";
 import { aircraftDatabase } from "../unit/databases/aircraftdatabase";
 import { helicopterDatabase } from "../unit/databases/helicopterdatabase";
 import { groundUnitDatabase } from "../unit/databases/groundunitdatabase";
 import { navyUnitDatabase } from "../unit/databases/navyunitdatabase";
-import { UnitSpawnTable } from "../@types/unit";
 
 export class UnitSpawnMenu {
     #container: HTMLElement;
@@ -209,8 +207,8 @@ export class UnitSpawnMenu {
     }
 
     setCountries() {
-        var coalitions = getMissionHandler().getCoalitions();
-        var countries = Object.values(coalitions[getActiveCoalition() as keyof typeof coalitions]);
+        var coalitions = getApp().getMissionManager().getCoalitions();
+        var countries = Object.values(coalitions[getApp().getActiveCoalition() as keyof typeof coalitions]);
         this.#unitCountryDropdown.setOptionsElements(this.#createCountryButtons(this.#unitCountryDropdown, countries, (country: string) => { this.#setUnitCountry(country) }));
 
         if (countries.length > 0 && !countries.includes(this.#spawnOptions.country)) {
@@ -377,11 +375,11 @@ export class UnitSpawnMenu {
     }
 
     #computeSpawnPoints() {
-        if (getMissionHandler() && getMissionHandler().getCommandModeOptions().commandMode !== GAME_MASTER) {
+        if (getApp().getMissionManager() && getApp().getMissionManager().getCommandModeOptions().commandMode !== GAME_MASTER) {
             var unitCount = parseInt(this.#unitCountDropdown.getValue());
             var unitSpawnPoints = unitCount * this.#unitDatabase.getSpawnPointsByLabel(this.#unitLabelDropdown.getValue());
             this.#deployUnitButtonEl.dataset.points = `${unitSpawnPoints}`;
-            this.#deployUnitButtonEl.disabled = unitSpawnPoints >= getMissionHandler().getAvailableSpawnPoints();
+            this.#deployUnitButtonEl.disabled = unitSpawnPoints >= getApp().getMissionManager().getAvailableSpawnPoints();
         }
     }
 }
@@ -400,7 +398,7 @@ export class AircraftSpawnMenu extends UnitSpawnMenu {
     }
 
     deployUnits(spawnOptions: UnitSpawnOptions, unitsCount: number) {
-        spawnOptions.coalition = getActiveCoalition();
+        spawnOptions.coalition = getApp().getActiveCoalition();
         if (spawnOptions) {
             var unitTable: UnitSpawnTable = {
                 unitType: spawnOptions.name,
@@ -414,9 +412,9 @@ export class AircraftSpawnMenu extends UnitSpawnMenu {
                 units.push(unitTable);
             }
 
-            getUnitsManager().spawnUnits("Aircraft", units, getActiveCoalition(), false, spawnOptions.airbase ? spawnOptions.airbase.getName() : "", spawnOptions.country, (res: any) => {
+            getApp().getUnitsManager().spawnUnits("Aircraft", units, getApp().getActiveCoalition(), false, spawnOptions.airbase ? spawnOptions.airbase.getName() : "", spawnOptions.country, (res: any) => {
                 if (res.commandHash !== undefined)
-                    getMap().addTemporaryMarker(spawnOptions.latlng, spawnOptions.name, getActiveCoalition(), res.commandHash);
+                    getApp().getMap().addTemporaryMarker(spawnOptions.latlng, spawnOptions.name, getApp().getActiveCoalition(), res.commandHash);
             });
                 
             this.getContainer().dispatchEvent(new Event("hide"));
@@ -438,7 +436,7 @@ export class HelicopterSpawnMenu extends UnitSpawnMenu {
     }
 
     deployUnits(spawnOptions: UnitSpawnOptions, unitsCount: number) {
-        spawnOptions.coalition = getActiveCoalition();
+        spawnOptions.coalition = getApp().getActiveCoalition();
         if (spawnOptions) {
             var unitTable: UnitSpawnTable = {
                 unitType: spawnOptions.name,
@@ -452,9 +450,9 @@ export class HelicopterSpawnMenu extends UnitSpawnMenu {
                 units.push(unitTable);
             }
             
-            getUnitsManager().spawnUnits("Helicopter", units, getActiveCoalition(), false, spawnOptions.airbase ? spawnOptions.airbase.getName() : "", spawnOptions.country, (res: any) => {
+            getApp().getUnitsManager().spawnUnits("Helicopter", units, getApp().getActiveCoalition(), false, spawnOptions.airbase ? spawnOptions.airbase.getName() : "", spawnOptions.country, (res: any) => {
                 if (res.commandHash !== undefined)
-                    getMap().addTemporaryMarker(spawnOptions.latlng, spawnOptions.name, getActiveCoalition(), res.commandHash);
+                    getApp().getMap().addTemporaryMarker(spawnOptions.latlng, spawnOptions.name, getApp().getActiveCoalition(), res.commandHash);
             });
                 
             this.getContainer().dispatchEvent(new Event("hide"));
@@ -476,7 +474,7 @@ export class GroundUnitSpawnMenu extends UnitSpawnMenu {
     }
 
     deployUnits(spawnOptions: UnitSpawnOptions, unitsCount: number) {
-        spawnOptions.coalition = getActiveCoalition();
+        spawnOptions.coalition = getApp().getActiveCoalition();
         if (spawnOptions) {
             var unitTable: UnitSpawnTable = {
                 unitType: spawnOptions.name,
@@ -490,9 +488,9 @@ export class GroundUnitSpawnMenu extends UnitSpawnMenu {
                 unitTable.location.lat += i > 0? 0.0001: 0;
             }
 
-            getUnitsManager().spawnUnits("GroundUnit", units, getActiveCoalition(), false, spawnOptions.airbase ? spawnOptions.airbase.getName() : "", spawnOptions.country, (res: any) => {
+            getApp().getUnitsManager().spawnUnits("GroundUnit", units, getApp().getActiveCoalition(), false, spawnOptions.airbase ? spawnOptions.airbase.getName() : "", spawnOptions.country, (res: any) => {
                 if (res.commandHash !== undefined)
-                    getMap().addTemporaryMarker(spawnOptions.latlng, spawnOptions.name, getActiveCoalition(), res.commandHash);
+                    getApp().getMap().addTemporaryMarker(spawnOptions.latlng, spawnOptions.name, getApp().getActiveCoalition(), res.commandHash);
             });
                 
             this.getContainer().dispatchEvent(new Event("hide"));
@@ -514,7 +512,7 @@ export class NavyUnitSpawnMenu extends UnitSpawnMenu {
     }
 
     deployUnits(spawnOptions: UnitSpawnOptions, unitsCount: number) {
-        spawnOptions.coalition = getActiveCoalition();
+        spawnOptions.coalition = getApp().getActiveCoalition();
         if (spawnOptions) {
             var unitTable: UnitSpawnTable = {
                 unitType: spawnOptions.name,
@@ -528,9 +526,9 @@ export class NavyUnitSpawnMenu extends UnitSpawnMenu {
                 unitTable.location.lat += i > 0? 0.0001: 0;
             }
             
-            getUnitsManager().spawnUnits("NavyUnit", units, getActiveCoalition(), false, spawnOptions.airbase ? spawnOptions.airbase.getName() : "", spawnOptions.country, (res: any) => {
+            getApp().getUnitsManager().spawnUnits("NavyUnit", units, getApp().getActiveCoalition(), false, spawnOptions.airbase ? spawnOptions.airbase.getName() : "", spawnOptions.country, (res: any) => {
                 if (res.commandHash !== undefined)
-                    getMap().addTemporaryMarker(spawnOptions.latlng, spawnOptions.name, getActiveCoalition(), res.commandHash);
+                    getApp().getMap().addTemporaryMarker(spawnOptions.latlng, spawnOptions.name, getApp().getActiveCoalition(), res.commandHash);
             });
                 
             this.getContainer().dispatchEvent(new Event("hide"));

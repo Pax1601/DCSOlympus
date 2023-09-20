@@ -1,5 +1,5 @@
 import { SVGInjector } from "@tanem/svg-injector";
-import { getUnitsManager } from "..";
+import { getApp } from "..";
 import { Dropdown } from "../controls/dropdown";
 import { Slider } from "../controls/slider";
 import { aircraftDatabase } from "../unit/databases/aircraftdatabase";
@@ -8,7 +8,6 @@ import { Panel } from "./panel";
 import { Switch } from "../controls/switch";
 import { ROEDescriptions, ROEs, altitudeIncrements, emissionsCountermeasures, emissionsCountermeasuresDescriptions, maxAltitudeValues, maxSpeedValues, minAltitudeValues, minSpeedValues, reactionsToThreat, reactionsToThreatDescriptions, speedIncrements } from "../constants/constants";
 import { ftToM, knotsToMs, mToFt, msToKnots } from "../other/utils";
-import { GeneralSettings, Radio, TACAN } from "../@types/unit";
 
 export class UnitControlPanel extends Panel {
     #altitudeSlider: Slider;
@@ -33,24 +32,24 @@ export class UnitControlPanel extends Panel {
         super(ID);
 
         /* Unit control sliders */
-        this.#altitudeSlider = new Slider("altitude-slider", 0, 100, "ft", (value: number) => { getUnitsManager().selectedUnitsSetAltitude(ftToM(value)); });
-        this.#altitudeTypeSwitch = new Switch("altitude-type-switch", (value: boolean) => { getUnitsManager().selectedUnitsSetAltitudeType(value? "ASL": "AGL"); });
+        this.#altitudeSlider = new Slider("altitude-slider", 0, 100, "ft", (value: number) => { getApp().getUnitsManager().selectedUnitsSetAltitude(ftToM(value)); });
+        this.#altitudeTypeSwitch = new Switch("altitude-type-switch", (value: boolean) => { getApp().getUnitsManager().selectedUnitsSetAltitudeType(value? "ASL": "AGL"); });
 
-        this.#speedSlider = new Slider("speed-slider", 0, 100, "kts", (value: number) => { getUnitsManager().selectedUnitsSetSpeed(knotsToMs(value)); });
-        this.#speedTypeSwitch = new Switch("speed-type-switch", (value: boolean) => { getUnitsManager().selectedUnitsSetSpeedType(value? "CAS": "GS"); });
+        this.#speedSlider = new Slider("speed-slider", 0, 100, "kts", (value: number) => { getApp().getUnitsManager().selectedUnitsSetSpeed(knotsToMs(value)); });
+        this.#speedTypeSwitch = new Switch("speed-type-switch", (value: boolean) => { getApp().getUnitsManager().selectedUnitsSetSpeedType(value? "CAS": "GS"); });
 
         /* Option buttons */
         // Reversing the ROEs so that the least "aggressive" option is always on the left
         this.#optionButtons["ROE"] = ROEs.slice(0).reverse().map((option: string, index: number) => {
-            return this.#createOptionButton(option, `roe/${option.toLowerCase()}.svg`, ROEDescriptions.slice(0).reverse()[index], () => { getUnitsManager().selectedUnitsSetROE(option); });
+            return this.#createOptionButton(option, `roe/${option.toLowerCase()}.svg`, ROEDescriptions.slice(0).reverse()[index], () => { getApp().getUnitsManager().selectedUnitsSetROE(option); });
         }).filter((button: HTMLButtonElement, index: number) => {return ROEs[index] !== "";});
 
         this.#optionButtons["reactionToThreat"] = reactionsToThreat.map((option: string, index: number) => {
-            return this.#createOptionButton(option, `threat/${option.toLowerCase()}.svg`, reactionsToThreatDescriptions[index],() => { getUnitsManager().selectedUnitsSetReactionToThreat(option); });
+            return this.#createOptionButton(option, `threat/${option.toLowerCase()}.svg`, reactionsToThreatDescriptions[index],() => { getApp().getUnitsManager().selectedUnitsSetReactionToThreat(option); });
         });
 
         this.#optionButtons["emissionsCountermeasures"] = emissionsCountermeasures.map((option: string, index: number) => {
-            return this.#createOptionButton(option, `emissions/${option.toLowerCase()}.svg`, emissionsCountermeasuresDescriptions[index],() => { getUnitsManager().selectedUnitsSetEmissionsCountermeasures(option); });
+            return this.#createOptionButton(option, `emissions/${option.toLowerCase()}.svg`, emissionsCountermeasuresDescriptions[index],() => { getApp().getUnitsManager().selectedUnitsSetEmissionsCountermeasures(option); });
         });
 
         this.getElement().querySelector("#roe-buttons-container")?.append(...this.#optionButtons["ROE"]);
@@ -59,12 +58,12 @@ export class UnitControlPanel extends Panel {
 
         /* On off switch */
         this.#onOffSwitch = new Switch("on-off-switch", (value: boolean) => {
-            getUnitsManager().selectedUnitsSetOnOff(value);
+            getApp().getUnitsManager().selectedUnitsSetOnOff(value);
         });
 
         /* Follow roads switch */
         this.#followRoadsSwitch = new Switch("follow-roads-switch", (value: boolean) => {
-            getUnitsManager().selectedUnitsSetFollowRoads(value);
+            getApp().getUnitsManager().selectedUnitsSetFollowRoads(value);
         });
 
         /* Advanced settings dialog */
@@ -84,7 +83,7 @@ export class UnitControlPanel extends Panel {
         document.addEventListener("clearSelection", () => { this.hide() });
         document.addEventListener("applyAdvancedSettings", () => {this.#applyAdvancedSettings();})
         document.addEventListener("showAdvancedSettings", () => {
-            this.#updateAdvancedSettingsDialog(getUnitsManager().getSelectedUnits());
+            this.#updateAdvancedSettingsDialog(getApp().getUnitsManager().getSelectedUnits());
             this.#advancedSettingsDialog.classList.remove("hide");
         });
 
@@ -108,8 +107,8 @@ export class UnitControlPanel extends Panel {
     }
 
     addButtons() {
-        this.#units = getUnitsManager().getSelectedUnits();
-        this.#selectedUnitsTypes = getUnitsManager().getSelectedUnitsCategories();
+        this.#units = getApp().getUnitsManager().getSelectedUnits();
+        this.#selectedUnitsTypes = getApp().getUnitsManager().getSelectedUnitsCategories();
         
         if (this.#units.length < 20) {
             this.getElement().querySelector("#selected-units-container")?.replaceChildren(...this.#units.map((unit: Unit, index: number) => {
@@ -127,12 +126,12 @@ export class UnitControlPanel extends Panel {
                 button.addEventListener("click", ( ev:MouseEventInit ) => {
                     //  Ctrl-click deselection
                     if ( ev.ctrlKey === true && ev.shiftKey === false && ev.altKey === false ) {
-                        getUnitsManager().deselectUnit( unit.ID );
+                        getApp().getUnitsManager().deselectUnit( unit.ID );
                         button.remove();
                     //  Deselect all
                     } else {
-                        getUnitsManager().deselectAllUnits();
-                        getUnitsManager().selectUnit(unit.ID, true);
+                        getApp().getUnitsManager().deselectAllUnits();
+                        getApp().getUnitsManager().selectUnit(unit.ID, true);
                     }
                 });
                 return (button);
@@ -161,12 +160,12 @@ export class UnitControlPanel extends Panel {
                 
                 if (this.#selectedUnitsTypes.length == 1) {
                     /* Flight controls */
-                    var desiredAltitude = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredAltitude()});
-                    var desiredAltitudeType = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredAltitudeType()});
-                    var desiredSpeed = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredSpeed()});
-                    var desiredSpeedType = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredSpeedType()});
-                    var onOff = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getOnOff()});
-                    var followRoads = getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getFollowRoads()});
+                    var desiredAltitude = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredAltitude()});
+                    var desiredAltitudeType = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredAltitudeType()});
+                    var desiredSpeed = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredSpeed()});
+                    var desiredSpeedType = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredSpeedType()});
+                    var onOff = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getOnOff()});
+                    var followRoads = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getFollowRoads()});
                     
                     this.#altitudeTypeSwitch.setValue(desiredAltitudeType != undefined? desiredAltitudeType == "ASL": undefined, false);
                     this.#speedTypeSwitch.setValue(desiredSpeedType != undefined? desiredSpeedType == "CAS": undefined, false);
@@ -328,7 +327,7 @@ export class UnitControlPanel extends Panel {
         }
         
         /* Send command and close */
-        var units = getUnitsManager().getSelectedUnits();
+        var units = getApp().getUnitsManager().getSelectedUnits();
         if (units.length > 0)
             units[0].setAdvancedOptions(isTanker, isAWACS, TACAN, radio, generalSettings);
 

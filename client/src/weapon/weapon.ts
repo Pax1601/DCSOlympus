@@ -1,10 +1,9 @@
 import { LatLng, DivIcon, Map } from 'leaflet';
-import { getMap, getMissionHandler, getUnitsManager } from '..';
+import { getApp } from '..';
 import { enumToCoalition, mToFt, msToKnots, rad2deg } from '../other/utils';
 import { CustomMarker } from '../map/markers/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
 import { DLINK, DataIndexes, GAME_MASTER, IRST, OPTIC, RADAR, VISUAL } from '../constants/constants';
-import { ObjectIconOptions } from '../@types/unit';
 import { DataExtractor } from '../server/dataextractor';
 
 export class Weapon extends CustomMarker {
@@ -58,7 +57,7 @@ export class Weapon extends CustomMarker {
 
     /********************** Unit data *************************/
     setData(dataExtractor: DataExtractor) {
-        var updateMarker = !getMap().hasLayer(this);
+        var updateMarker = !getApp().getMap().hasLayer(this);
 
         var datumIndex = 0;
         while (datumIndex != DataIndexes.endOfData) {
@@ -116,7 +115,7 @@ export class Weapon extends CustomMarker {
     }
 
     belongsToCommandedCoalition() {
-        if (getMissionHandler().getCommandModeOptions().commandMode !== GAME_MASTER && getMissionHandler().getCommandedCoalition() !== this.#coalition)
+        if (getApp().getMissionManager().getCommandModeOptions().commandMode !== GAME_MASTER && getApp().getMissionManager().getCommandedCoalition() !== this.#coalition)
             return false;
         return true;        
     }
@@ -166,7 +165,7 @@ export class Weapon extends CustomMarker {
 
     /********************** Visibility *************************/
     updateVisibility() {
-        const hiddenUnits = getMap().getHiddenTypes();
+        const hiddenUnits = getApp().getMap().getHiddenTypes();
         var hidden = (hiddenUnits.includes(this.getMarkerCategory())) ||
                     (hiddenUnits.includes(this.#coalition)) ||
                     (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0);
@@ -178,16 +177,16 @@ export class Weapon extends CustomMarker {
         this.#hidden = hidden;
 
         /* Add the marker if not present */
-        if (!getMap().hasLayer(this) && !this.getHidden()) {
-            if (getMap().isZooming()) 
-                this.once("zoomend", () => {this.addTo(getMap())})
+        if (!getApp().getMap().hasLayer(this) && !this.getHidden()) {
+            if (getApp().getMap().isZooming()) 
+                this.once("zoomend", () => {this.addTo(getApp().getMap())})
             else 
-                this.addTo(getMap());
+                this.addTo(getApp().getMap());
         }
 
         /* Hide the marker if necessary*/
-        if (getMap().hasLayer(this) && this.getHidden()) {
-            getMap().removeLayer(this);
+        if (getApp().getMap().hasLayer(this) && this.getHidden()) {
+            getApp().getMap().removeLayer(this);
         }
     }
 
@@ -250,7 +249,7 @@ export class Weapon extends CustomMarker {
             }
 
             /* Set vertical offset for altitude stacking */
-            var pos = getMap().latLngToLayerPoint(this.getLatLng()).round();
+            var pos = getApp().getMap().latLngToLayerPoint(this.getLatLng()).round();
             this.setZIndexOffset(1000 + Math.floor(this.#position.alt as number) - pos.y);
         }
     }

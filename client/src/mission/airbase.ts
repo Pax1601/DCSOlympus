@@ -2,30 +2,6 @@ import { DivIcon } from 'leaflet';
 import { CustomMarker } from '../map/markers/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
 
-export interface AirbaseOptions {
-    name: string,
-    position: L.LatLng
-}
-
-
-export interface AirbaseChartData {
-    elevation: string,
-    ICAO: string,
-    TACAN: string,
-    runways: AirbaseChartRunwayData[]
-}
-
-export interface AirbaseChartRunwayData {
-    "headings": AirbaseChartRunwayHeadingData[],
-    "length": string
-}
-
-export interface AirbaseChartRunwayHeadingData {
-    [index: string]: {
-        "magHeading": string,
-        "ILS": string
-    }
-}
 
 export class Airbase extends CustomMarker {
     #name: string = "";
@@ -66,6 +42,12 @@ export class Airbase extends CustomMarker {
         img.onload = () => SVGInjector(img);
         el.appendChild(img);
         this.getElement()?.appendChild(el);
+        el.addEventListener( "mouseover", ( ev ) => {
+            document.dispatchEvent( new CustomEvent( "airbaseMouseover", { detail: this }));
+        });
+        el.addEventListener( "mouseout", ( ev ) => {
+            document.dispatchEvent( new CustomEvent( "airbaseMouseout", { detail: this }));
+        });
         el.dataset.coalition = this.#coalition;
     }
 

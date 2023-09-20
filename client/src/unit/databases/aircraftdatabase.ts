@@ -1,4 +1,4 @@
-import { getMissionHandler } from "../..";
+import { getApp } from "../..";
 import { GAME_MASTER } from "../../constants/constants";
 import { UnitDatabase } from "./unitdatabase"
 
@@ -12,7 +12,7 @@ export class AircraftDatabase extends UnitDatabase {
     }
 
     getSpawnPointsByName(name: string) {
-        if (getMissionHandler().getCommandModeOptions().commandMode == GAME_MASTER || !getMissionHandler().getCommandModeOptions().restrictSpawns) 
+        if (getApp().getMissionManager().getCommandModeOptions().commandMode == GAME_MASTER || !getApp().getMissionManager().getCommandModeOptions().restrictSpawns) 
             return 0;
 
         const blueprint = this.getByName(name);

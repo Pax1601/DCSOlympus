@@ -1,6 +1,11 @@
 import { Panel } from "../panels/panel";
 
 export class Popup extends Panel {
+
+    constructor( elementId:string ) {
+        super( elementId );
+    }
+
     #fadeTime: number = 2000; // Milliseconds
     #hideTimer: number | undefined = undefined;
     #visibilityTimer: number | undefined = undefined;

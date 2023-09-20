@@ -1,8 +1,8 @@
 import { LatLng } from "leaflet";
-import { getActiveCoalition } from "..";
 import { ContextMenu } from "./contextmenu";
 import { AircraftSpawnMenu, HelicopterSpawnMenu } from "../controls/unitspawnmenu";
 import { Airbase } from "../mission/airbase";
+import { getApp } from "..";
 
 /** This context menu is shown when the user wants to spawn a new aircraft or helicopter from the ground at an airbase. 
  * It is shown by clicking on the "spawn" button of a AirbaseContextMenu. */
@@ -54,7 +54,7 @@ export class AirbaseSpawnContextMenu extends ContextMenu {
         this.#aircraftSpawnMenu.setCountries();
         this.#helicopterSpawnMenu.setCountries();
 
-        this.getContainer()?.querySelectorAll('[data-coalition]').forEach((element: any) => { element.setAttribute("data-coalition", getActiveCoalition()) });
+        this.getContainer()?.querySelectorAll('[data-coalition]').forEach((element: any) => { element.setAttribute("data-coalition", getApp().getActiveCoalition()) });
     }
 
     /** Sets the airbase at which the new unit will be spawned

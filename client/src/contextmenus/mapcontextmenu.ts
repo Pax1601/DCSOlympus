@@ -1,6 +1,5 @@
 import { LatLng } from "leaflet";
-import { getActiveCoalition, getMap, getMissionHandler, setActiveCoalition } from "..";
-import { spawnExplosion, spawnSmoke } from "../server/server";
+import { getApp } from "..";
 import { ContextMenu } from "./contextmenu";
 import { Switch } from "../controls/switch";
 import { GAME_MASTER } from "../constants/constants";
@@ -48,20 +47,20 @@ export class MapContextMenu extends ContextMenu {
 
         document.addEventListener("contextMenuDeploySmoke", (e: any) => {
             this.hide();
-            spawnSmoke(e.detail.color, this.getLatLng());
+            getApp().getServerManager().spawnSmoke(e.detail.color, this.getLatLng());
             var marker = new SmokeMarker(this.getLatLng(), e.detail.color);
-            marker.addTo(getMap());
+            marker.addTo(getApp().getMap());
         });
 
         document.addEventListener("contextMenuExplosion", (e: any) => {
             this.hide();
-            spawnExplosion(e.detail.strength, this.getLatLng());
+            getApp().getServerManager().spawnExplosion(e.detail.strength, this.getLatLng());
         });
 
         document.addEventListener("editCoalitionArea", (e: any) => {
             this.hide();
             if (this.#coalitionArea) {
-                getMap().deselectAllCoalitionAreas();
+                getApp().getMap().deselectAllCoalitionAreas();
                 this.#coalitionArea.setSelected(true);
             }
         });
@@ -103,13 +102,13 @@ export class MapContextMenu extends ContextMenu {
         this.#navyUnitSpawnMenu.setCountries();
 
         /* Only a Game Master can choose the coalition of a new unit */
-        if (getMissionHandler().getCommandModeOptions().commandMode !== GAME_MASTER) 
+        if (getApp().getMissionManager().getCommandModeOptions().commandMode !== GAME_MASTER) 
             this.#coalitionSwitch.hide()
 
-        this.getContainer()?.querySelectorAll('[data-coalition]').forEach((element: any) => { element.setAttribute("data-coalition", getActiveCoalition()) });
-        if (getActiveCoalition() == "blue")
+        this.getContainer()?.querySelectorAll('[data-coalition]').forEach((element: any) => { element.setAttribute("data-coalition", getApp().getActiveCoalition()) });
+        if (getApp().getActiveCoalition() == "blue")
             this.#coalitionSwitch.setValue(false);
-        else if (getActiveCoalition() == "red")
+        else if (getApp().getActiveCoalition() == "red")
             this.#coalitionSwitch.setValue(true);
         else
             this.#coalitionSwitch.setValue(undefined);
@@ -199,8 +198,8 @@ export class MapContextMenu extends ContextMenu {
      * @param value Switch position (false: "blue", true: "red")
      */
     #onSwitchClick(value: boolean) {
-        value ? setActiveCoalition("red") : setActiveCoalition("blue");
-        this.getContainer()?.querySelectorAll('[data-coalition]').forEach((element: any) => { element.setAttribute("data-coalition", getActiveCoalition()) });
+        value ? getApp().setActiveCoalition("red") : getApp().setActiveCoalition("blue");
+        this.getContainer()?.querySelectorAll('[data-coalition]').forEach((element: any) => { element.setAttribute("data-coalition", getApp().getActiveCoalition()) });
         this.#aircraftSpawnMenu.setCountries();
         this.#helicopterSpawnMenu.setCountries();
         this.#groundUnitSpawnMenu.setCountries();
@@ -212,8 +211,8 @@ export class MapContextMenu extends ContextMenu {
      */
     #onSwitchRightClick() {
         this.#coalitionSwitch.setValue(undefined);
-        setActiveCoalition("neutral");
-        this.getContainer()?.querySelectorAll('[data-coalition]').forEach((element: any) => { element.setAttribute("data-coalition", getActiveCoalition()) });
+        getApp().setActiveCoalition("neutral");
+        this.getContainer()?.querySelectorAll('[data-coalition]').forEach((element: any) => { element.setAttribute("data-coalition", getApp().getActiveCoalition()) });
         this.#aircraftSpawnMenu.setCountries();
         this.#helicopterSpawnMenu.setCountries();
         this.#groundUnitSpawnMenu.setCountries();

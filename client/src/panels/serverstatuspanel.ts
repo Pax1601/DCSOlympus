@@ -1,12 +1,8 @@
 import { Panel } from "./panel";
 
 export class ServerStatusPanel extends Panel {
-    /**
-     * 
-     * @param ID - the ID of the HTML element which will contain the context menu
-     */
-    constructor(ID: string){
-        super(ID);
+    constructor(ID: string) {
+        super( ID );
     }
 
     update(frameRate: number, load: number) {

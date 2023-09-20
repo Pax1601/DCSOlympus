@@ -444,7 +444,7 @@ class DemoDataGenerator {
 
         var auth = req.get("Authorization");
         if (auth) {
-            var username = atob(auth.replace("Basic ", "")).split(":")[0];
+            var username = Buffer.from(auth.replace("Basic ", ""), 'base64').toString('binary').split(":")[0];
             switch (username) {
                 case "admin":
                     ret.mission.commandModeOptions.commandMode = "Game master";

@@ -1,4 +1,3 @@
-import { Ammo } from "../@types/unit";
 import { aircraftDatabase } from "../unit/databases/aircraftdatabase";
 import { Unit } from "../unit/unit";
 import { Panel } from "./panel";
@@ -13,12 +12,8 @@ export class UnitInfoPanel extends Panel {
     #unitLabel: HTMLElement;
     #unitName: HTMLElement;
 
-    /**
-     * 
-     * @param ID - the ID of the HTML element which will contain the context menu
-     */
-    constructor(ID: string){
-        super(ID);
+    constructor(ID: string) {
+        super( ID );
 
         this.#currentTask = (this.getElement().querySelector("#current-task")) as HTMLElement;
         this.#fuelBar = (this.getElement().querySelector("#fuel-bar")) as HTMLElement;

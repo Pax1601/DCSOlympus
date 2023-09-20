@@ -1,0 +1,10 @@
+{
+  "name": "ControlTipsPlugin",
+  "version": "v0.0.1",
+  "private": true,
+  "scripts": {
+    "build": "browserify ./src/index.ts -p [ tsify --noImplicitAny] > index.js && copy.bat"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
