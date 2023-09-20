@@ -530,7 +530,7 @@ nav.ol-panel> :last-child {
 }
 
 .active .ol-slider::-webkit-slider-thumb {
-    background: radial-gradient(circle at center, var(--accent-light-blue), var(--accent-light-blue) 40%, color-mix(in srgb, var(--accent-light-blue), transparent 66%) 50%);
+    background: radial-gradient(circle at center, var(--accent-light-blue), var(--accent-light-blue) 40%, var(--transparent-accent-light-blue) 50%);
 }
 
 .ol-slider::-moz-range-thumb {
@@ -545,7 +545,7 @@ nav.ol-panel> :last-child {
 
 .active .ol-slider::-moz-range-thumb {
     -moz-appearance: none;
-    background: radial-gradient(circle at center, var(--accent-light-blue), var(--accent-light-blue) 40%, color-mix(in srgb, var(--accent-light-blue), transparent 66%) 50%);
+    background: radial-gradient(circle at center, var(--accent-light-blue), var(--accent-light-blue) 40%, var(--transparent-accent-light-blue) 50%);
 }
 
 .ol-slider-min-max {
