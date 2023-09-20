@@ -1,8 +1,7 @@
-import { getMissionHandler, getUnitsManager } from "..";
+import { getApp } from "..";
 import { Weapon } from "./weapon";
 import { DataIndexes, GAME_MASTER } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
-import { Contact } from "../@types/unit";
 
 /** The WeaponsManager handles the creation and update of weapons. Data is strictly updated by the server ONLY. */
 export class WeaponsManager {
@@ -93,7 +92,7 @@ export class WeaponsManager {
      */
     getWeaponDetectedMethods(weapon: Weapon) {
         var detectionMethods: number[] = [];
-        var units = getUnitsManager().getUnits();
+        var units = getApp().getUnitsManager().getUnits();
         for (let idx in units) {
             if (units[idx].getAlive() && units[idx].getIsLeader() && units[idx].getCoalition() !== "neutral" && units[idx].getCoalition() != weapon.getCoalition())
             {

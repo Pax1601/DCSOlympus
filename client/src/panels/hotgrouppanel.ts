@@ -1,4 +1,4 @@
-import { getUnitsManager } from "..";
+import { getApp } from "..";
 import { Unit } from "../unit/unit";
 import { Panel } from "./panel";
 
@@ -15,7 +15,7 @@ export class HotgroupPanel extends Panel {
     refreshHotgroups() {
         for (let hotgroup = 1; hotgroup <= 9; hotgroup++){
             this.removeHotgroup(hotgroup);
-            if (getUnitsManager().getUnitsByHotgroup(hotgroup).length > 0) 
+            if (getApp().getUnitsManager().getUnitsByHotgroup(hotgroup).length > 0) 
                 this.addHotgroup(hotgroup);
             
         }
@@ -32,7 +32,7 @@ export class HotgroupPanel extends Panel {
 
         // Hotgroup unit count
         var countDiv = document.createElement("div");
-        countDiv.innerText = `x${getUnitsManager().getUnitsByHotgroup(hotgroup).length}`;
+        countDiv.innerText = `x${getApp().getUnitsManager().getUnitsByHotgroup(hotgroup).length}`;
 
         var el = document.createElement("div");
         el.appendChild(hotgroupDiv);
@@ -43,15 +43,15 @@ export class HotgroupPanel extends Panel {
         this.getElement().appendChild(el);
 
         el.addEventListener("click", () => {
-            getUnitsManager().selectUnitsByHotgroup(hotgroup);
+            getApp().getUnitsManager().selectUnitsByHotgroup(hotgroup);
         });
 
         el.addEventListener("mouseover", () => {
-            getUnitsManager().getUnitsByHotgroup(hotgroup).forEach((unit: Unit) => unit.setHighlighted(true));
+            getApp().getUnitsManager().getUnitsByHotgroup(hotgroup).forEach((unit: Unit) => unit.setHighlighted(true));
         });
 
         el.addEventListener("mouseout", () => {
-            getUnitsManager().getUnitsByHotgroup(hotgroup).forEach((unit: Unit) => unit.setHighlighted(false));
+            getApp().getUnitsManager().getUnitsByHotgroup(hotgroup).forEach((unit: Unit) => unit.setHighlighted(false));
         });
     }
 

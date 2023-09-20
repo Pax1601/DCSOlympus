@@ -1,4 +1,5 @@
-import { getMouseInfoPanel } from "..";
+import { getApp } from "..";
+import { MouseInfoPanel } from "./mouseinfopanel";
 import { Panel } from "./panel";
 
 export class LogPanel extends Panel {
@@ -37,7 +38,7 @@ export class LogPanel extends Panel {
         });
 
         
-        const mouseInfoPanel = getMouseInfoPanel();
+        const mouseInfoPanel = getApp().getPanelsManager().get("mouseInfo") as MouseInfoPanel;
         new ResizeObserver(() => this.#calculateHeight()).observe(mouseInfoPanel.getElement())
     }
 
@@ -89,7 +90,7 @@ export class LogPanel extends Panel {
     }
 
     #calculateHeight() {
-        const mouseInfoPanel = getMouseInfoPanel();
+        const mouseInfoPanel = getApp().getPanelsManager().get("mouseInfo");
         if (this.#open)
             this.getElement().style.height = `${mouseInfoPanel.getElement().offsetTop - this.getElement().offsetTop - 10}px`;
         else 

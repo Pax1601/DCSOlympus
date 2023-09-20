@@ -1,18 +1,18 @@
 import { LatLng, LatLngBounds } from "leaflet";
-import { getHotgroupPanel, getInfoPopup, getMap, getMissionHandler, getUnitsManager, getWeaponsManager } from "..";
+import { getApp } from "..";
 import { Unit } from "./unit";
-import { cloneUnits, deleteUnit, spawnAircrafts, spawnGroundUnits, spawnHelicopters, spawnNavyUnits } from "../server/server";
 import { bearingAndDistanceToLatLng, deg2rad, getUnitDatabaseByCategory, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots, polyContains, polygonArea, randomPointInPoly, randomUnitBlueprint } from "../other/utils";
 import { CoalitionArea } from "../map/coalitionarea/coalitionarea";
 import { groundUnitDatabase } from "./databases/groundunitdatabase";
 import { DataIndexes, GAME_MASTER, IADSDensities, IDLE, MOVE_UNIT } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
-import { Contact, UnitData, UnitSpawnTable } from "../@types/unit";
 import { citiesDatabase } from "./citiesDatabase";
 import { aircraftDatabase } from "./databases/aircraftdatabase";
 import { helicopterDatabase } from "./databases/helicopterdatabase";
 import { navyUnitDatabase } from "./databases/navyunitdatabase";
 import { TemporaryUnitMarker } from "../map/markers/temporaryunitmarker";
+import { Popup } from "../popups/popup";
+import { HotgroupPanel } from "../panels/hotgrouppanel";
 
 /** The UnitsManager handles the creation, update, and control of units. Data is strictly updated by the server ONLY. This means that any interaction from the user will always and only
  * result in a command to the server, executed by means of a REST PUT request. Any subsequent change in data will be reflected only when the new data is sent back by the server. This strategy allows
@@ -124,12 +124,12 @@ export class UnitsManager {
         /* If we are not in Game Master mode, visibility of units by the user is determined by the detections of the units themselves. This is performed here.
         This operation is computationally expensive, therefore it is only performed when #requestDetectionUpdate is true. This happens whenever a change in the detectionUpdates is detected 
         */
-        if (this.#requestDetectionUpdate && getMissionHandler().getCommandModeOptions().commandMode != GAME_MASTER) {
+        if (this.#requestDetectionUpdate && getApp().getMissionManager().getCommandModeOptions().commandMode != GAME_MASTER) {
             /* Create a dictionary of empty detection methods arrays */
             var detectionMethods: { [key: string]: number[] } = {};
             for (let ID in this.#units)
                 detectionMethods[ID] = [];
-            for (let ID in getWeaponsManager().getWeapons())
+            for (let ID in getApp().getWeaponsManager().getWeapons())
                 detectionMethods[ID] = [];
 
             /* Fill the array with the detection methods */
@@ -152,8 +152,8 @@ export class UnitsManager {
             }
 
             /* Set the detection methods for every weapon (weapons must be detected too) */
-            for (let ID in getWeaponsManager().getWeapons()) {
-                const weapon = getWeaponsManager().getWeaponByID(parseInt(ID));
+            for (let ID in getApp().getWeaponsManager().getWeapons()) {
+                const weapon = getApp().getWeaponsManager().getWeaponByID(parseInt(ID));
                 weapon?.setDetectionMethods(detectionMethods[ID]);
             }
 
@@ -634,9 +634,9 @@ export class UnitsManager {
                 var unit = selectedUnits[idx];
                 units.push({ ID: unit.ID, location: unit.getPosition() });
             }
-            cloneUnits(units, true, 0 /* No spawn points, we delete the original units */); 
+            getApp().getServerManager().cloneUnits(units, true, 0 /* No spawn points, we delete the original units */); 
         } else {
-            getInfoPopup().setText(`Groups can only be created from units of the same category`);
+            (getApp().getPopupsManager().get("infoPopup") as Popup).setText(`Groups can only be created from units of the same category`);
         }
     }
 
@@ -659,7 +659,7 @@ export class UnitsManager {
             selectedUnits[idx].setHotgroup(hotgroup);
         }
         this.#showActionMessage(selectedUnits, `added to hotgroup ${hotgroup}`);
-        getHotgroupPanel().refreshHotgroups();
+        (getApp().getPanelsManager().get("hotgroup") as HotgroupPanel).refreshHotgroups();
     }
 
     /** Delete the selected units
@@ -730,7 +730,7 @@ export class UnitsManager {
     selectedUnitsCopy() {
         /* A JSON is used to deepcopy the units, creating a "snapshot" of their properties at the time of the copy */
         this.#copiedUnits = JSON.parse(JSON.stringify(this.getSelectedUnits().map((unit: Unit) => { return unit.getData() }))); /* Can be applied to humans too */
-        getInfoPopup().setText(`${this.#copiedUnits.length} units copied`);
+        (getApp().getPopupsManager().get("infoPopup") as Popup).setText(`${this.#copiedUnits.length} units copied`);
     }
     
     /*********************** Unit manipulation functions  ************************/
@@ -742,9 +742,9 @@ export class UnitsManager {
         let spawnPoints = 0;
 
         /* If spawns are restricted, check that the user has the necessary spawn points */
-        if (getMissionHandler().getCommandModeOptions().commandMode != GAME_MASTER) {
-            if (getMissionHandler().getCommandModeOptions().restrictSpawns && getMissionHandler().getRemainingSetupTime() < 0) {
-                getInfoPopup().setText(`Units can be pasted only during SETUP phase`);
+        if (getApp().getMissionManager().getCommandModeOptions().commandMode != GAME_MASTER) {
+            if (getApp().getMissionManager().getCommandModeOptions().restrictSpawns && getApp().getMissionManager().getRemainingSetupTime() < 0) {
+                (getApp().getPopupsManager().get("infoPopup") as Popup).setText(`Units can be pasted only during SETUP phase`);
                 return false;
             }
 
@@ -754,8 +754,8 @@ export class UnitsManager {
                     spawnPoints += unitSpawnPoints;
             })
             
-            if (spawnPoints > getMissionHandler().getAvailableSpawnPoints()) {
-                getInfoPopup().setText("Not enough spawn points available!");
+            if (spawnPoints > getApp().getMissionManager().getAvailableSpawnPoints()) {
+                (getApp().getPopupsManager().get("infoPopup") as Popup).setText("Not enough spawn points available!");
                 return false;
             }
         }
@@ -784,12 +784,12 @@ export class UnitsManager {
                 var units: { ID: number, location: LatLng }[] = [];
                 let markers: TemporaryUnitMarker[] = [];
                 groups[groupName].forEach((unit: UnitData) => {
-                    var position = new LatLng(getMap().getMouseCoordinates().lat + unit.position.lat - avgLat, getMap().getMouseCoordinates().lng + unit.position.lng - avgLng);
-                    markers.push(getMap().addTemporaryMarker(position, unit.name, unit.coalition));
+                    var position = new LatLng(getApp().getMap().getMouseCoordinates().lat + unit.position.lat - avgLat, getApp().getMap().getMouseCoordinates().lng + unit.position.lng - avgLng);
+                    markers.push(getApp().getMap().addTemporaryMarker(position, unit.name, unit.coalition));
                     units.push({ ID: unit.ID, location: position });
                 });
                 
-                cloneUnits(units, false, spawnPoints, (res: any) => {
+                getApp().getServerManager().cloneUnits(units, false, spawnPoints, (res: any) => {
                     if (res.commandHash !== undefined) {
                         markers.forEach((marker: TemporaryUnitMarker) => {
                             marker.setCommandHash(res.commandHash);
@@ -797,10 +797,10 @@ export class UnitsManager {
                     }
                 });
             }
-            getInfoPopup().setText(`${this.#copiedUnits.length} units pasted`);
+            (getApp().getPopupsManager().get("infoPopup") as Popup).setText(`${this.#copiedUnits.length} units pasted`);
         }
         else {
-            getInfoPopup().setText("No units copied!");
+            (getApp().getPopupsManager().get("infoPopup") as Popup).setText("No units copied!");
         }
     }
 
@@ -888,7 +888,7 @@ export class UnitsManager {
                         var units = aliveUnits.map((unit: UnitData) => {
                             return { unitType: unit.name, location: unit.position, liveryID: "" }
                         });
-                        getUnitsManager().spawnUnits(groups[groupName][0].category, units, groups[groupName][0].coalition, true);
+                        getApp().getUnitsManager().spawnUnits(groups[groupName][0].category, units, groups[groupName][0].coalition, true);
                     }
                 }
             };
@@ -911,46 +911,46 @@ export class UnitsManager {
     spawnUnits(category: string, units: UnitSpawnTable[], coalition: string = "blue", immediate: boolean = true, airbase: string = "", country: string = "", callback: CallableFunction = () => {}) {
         var spawnPoints = 0;
         var spawnFunction = () => {}; 
-        var spawnsRestricted = getMissionHandler().getCommandModeOptions().restrictSpawns && getMissionHandler().getRemainingSetupTime() < 0 && getMissionHandler().getCommandModeOptions().commandMode !== GAME_MASTER;
+        var spawnsRestricted = getApp().getMissionManager().getCommandModeOptions().restrictSpawns && getApp().getMissionManager().getRemainingSetupTime() < 0 && getApp().getMissionManager().getCommandModeOptions().commandMode !== GAME_MASTER;
         
         if (category === "Aircraft") {
             if (airbase == "" && spawnsRestricted) {
-                getInfoPopup().setText("Aircrafts can be air spawned during the SETUP phase only");
+                (getApp().getPopupsManager().get("infoPopup") as Popup).setText("Aircrafts can be air spawned during the SETUP phase only");
                 return false;
             }
             spawnPoints = units.reduce((points: number, unit: UnitSpawnTable) => {return points + aircraftDatabase.getSpawnPointsByName(unit.unitType)}, 0);
-            spawnFunction = () => spawnAircrafts(units, coalition, airbase, country, immediate, spawnPoints, callback);
+            spawnFunction = () => getApp().getServerManager().spawnAircrafts(units, coalition, airbase, country, immediate, spawnPoints, callback);
         } else if (category === "Helicopter") {
             if (airbase == "" && spawnsRestricted) {
-                getInfoPopup().setText("Helicopters can be air spawned during the SETUP phase only");
+                (getApp().getPopupsManager().get("infoPopup") as Popup).setText("Helicopters can be air spawned during the SETUP phase only");
                 return false;
             }
             spawnPoints = units.reduce((points: number, unit: UnitSpawnTable) => {return points + helicopterDatabase.getSpawnPointsByName(unit.unitType)}, 0);
-            spawnFunction = () => spawnHelicopters(units, coalition, airbase, country, immediate, spawnPoints, callback);
+            spawnFunction = () => getApp().getServerManager().spawnHelicopters(units, coalition, airbase, country, immediate, spawnPoints, callback);
 
         } else if (category === "GroundUnit") {
             if (spawnsRestricted) {
-                getInfoPopup().setText("Ground units can be spawned during the SETUP phase only");
+                (getApp().getPopupsManager().get("infoPopup") as Popup).setText("Ground units can be spawned during the SETUP phase only");
                 return false;
             }
             spawnPoints = units.reduce((points: number, unit: UnitSpawnTable) => {return points + groundUnitDatabase.getSpawnPointsByName(unit.unitType)}, 0);
-            spawnFunction = () => spawnGroundUnits(units, coalition, country, immediate, spawnPoints, callback);
+            spawnFunction = () => getApp().getServerManager().spawnGroundUnits(units, coalition, country, immediate, spawnPoints, callback);
 
         } else if (category === "NavyUnit") {
             if (spawnsRestricted) {
-                getInfoPopup().setText("Navy units can be spawned during the SETUP phase only");
+                (getApp().getPopupsManager().get("infoPopup") as Popup).setText("Navy units can be spawned during the SETUP phase only");
                 return false;
             }
             spawnPoints = units.reduce((points: number, unit: UnitSpawnTable) => {return points + navyUnitDatabase.getSpawnPointsByName(unit.unitType)}, 0);
-            spawnFunction = () => spawnNavyUnits(units, coalition, country, immediate, spawnPoints, callback);
+            spawnFunction = () => getApp().getServerManager().spawnNavyUnits(units, coalition, country, immediate, spawnPoints, callback);
         }
 
-        if (spawnPoints <= getMissionHandler().getAvailableSpawnPoints()) {
-            getMissionHandler().setSpentSpawnPoints(spawnPoints);
+        if (spawnPoints <= getApp().getMissionManager().getAvailableSpawnPoints()) {
+            getApp().getMissionManager().setSpentSpawnPoints(spawnPoints);
             spawnFunction();
             return true;
         } else {
-            getInfoPopup().setText("Not enough spawn points available!");
+            (getApp().getPopupsManager().get("infoPopup") as Popup).setText("Not enough spawn points available!");
             return false;
         }
     }
@@ -969,7 +969,7 @@ export class UnitsManager {
         if (this.getSelectedUnits().length > 0) {
             /* Disable the firing of the selection event for a certain amount of time. This avoids firing many events if many units are selected */
             if (!this.#selectionEventDisabled) {
-                getMap().setState(MOVE_UNIT);
+                getApp().getMap().setState(MOVE_UNIT);
                 window.setTimeout(() => {
                     document.dispatchEvent(new CustomEvent("unitsSelection", { detail: this.getSelectedUnits() }));
                     this.#selectionEventDisabled = false;
@@ -978,14 +978,14 @@ export class UnitsManager {
             }
         }
         else {
-            getMap().setState(IDLE);
+            getApp().getMap().setState(IDLE);
             document.dispatchEvent(new CustomEvent("clearSelection"));
         }
     }
 
     #onUnitDeselection(unit: Unit) {
         if (this.getSelectedUnits().length == 0) {
-            getMap().setState(IDLE);
+            getApp().getMap().setState(IDLE);
             document.dispatchEvent(new CustomEvent("clearSelection"));
         }
         else
@@ -994,8 +994,8 @@ export class UnitsManager {
 
     #showActionMessage(units: Unit[], message: string) {
         if (units.length == 1)
-            getInfoPopup().setText(`${units[0].getUnitName()} ${message}`);
+            (getApp().getPopupsManager().get("infoPopup") as Popup).setText(`${units[0].getUnitName()} ${message}`);
         else if (units.length > 1)
-            getInfoPopup().setText(`${units[0].getUnitName()} and ${units.length - 1} other units ${message}`);
+            (getApp().getPopupsManager().get("infoPopup") as Popup).setText(`${units[0].getUnitName()} and ${units.length - 1} other units ${message}`);
     }
 }
