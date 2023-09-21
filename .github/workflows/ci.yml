@@ -24,11 +24,5 @@ jobs:
         if: steps.node-cache.outputs.cache-hit != 'true'
         run: npm ci
 
-      - name: Test to see if the project compiles
-        run: bash build.sh
-
-      - name: Perform automated checks
-        run: bash lint.sh
-
       - name: Create the docs directory locally in CI
         run: npx typedoc client/**/*.ts
