@@ -30,6 +30,8 @@ jobs:
         working-directory: ./client
 
   deploy:
+    needs: [ build_docs ]
+    if: ${{ always() && !cancelled() && needs.build_docs.result == 'success' }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
