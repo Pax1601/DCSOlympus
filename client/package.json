@@ -16,7 +16,8 @@
     "express": "~4.16.1",
     "express-basic-auth": "^1.2.1",
     "morgan": "~1.9.1",
-    "save": "^2.9.0"
+    "save": "^2.9.0",
+    "srtm-elevation": "^2.1.2"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.21.4",

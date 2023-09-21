@@ -12,7 +12,7 @@ import { DestinationPreviewMarker } from "./markers/destinationpreviewmarker";
 import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
 import { SVGInjector } from '@tanem/svg-injector'
-import { layers as mapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, visibilityControls, visibilityControlsTooltips, MOVE_UNIT, SHOW_CONTACT_LINES, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, visibilityControlsTypes, SHOW_UNIT_LABELS } from "../constants/constants";
+import { mapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, visibilityControls, visibilityControlsTooltips, MOVE_UNIT, SHOW_CONTACT_LINES, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, visibilityControlsTypes, SHOW_UNIT_LABELS } from "../constants/constants";
 import { TargetMarker } from "./markers/targetmarker";
 import { CoalitionArea } from "./coalitionarea/coalitionarea";
 import { CoalitionAreaContextMenu } from "../contextmenus/coalitionareacontextmenu";
@@ -631,6 +631,18 @@ export class Map extends L.Map {
             /* Update the polygon being drawn with the current position of the mouse cursor */
             this.getSelectedCoalitionArea()?.moveActiveVertex(e.latlng);
         }
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', `api/elevation/${this.getMouseCoordinates().lat}/${this.getMouseCoordinates().lng}`, true);
+        xhr.responseType = 'json';
+        xhr.onload = () => {
+            var status = xhr.status;
+            if (status === 200) 
+                console.log(xhr.response);
+            else 
+                console.error(`Error retrieving country codes`) 
+        };
+        xhr.send();
     }
 
     #onKeyDown(e: any) {
