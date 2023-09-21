@@ -71,9 +71,6 @@ class ControlTipsPlugin {
             }
             __classPrivateFieldGet(this, _ControlTipsPlugin_instances, "m", _ControlTipsPlugin_updateTips).call(this);
         });
-        document.addEventListener("mouseup", (ev) => {
-            __classPrivateFieldGet(this, _ControlTipsPlugin_instances, "m", _ControlTipsPlugin_updateTips).call(this);
-        });
         __classPrivateFieldGet(this, _ControlTipsPlugin_instances, "m", _ControlTipsPlugin_updateTips).call(this);
         __classPrivateFieldGet(this, _ControlTipsPlugin_app, "f").getMap().addVisibilityOption(SHOW_CONTROL_TIPS, true);
         return true;
@@ -139,24 +136,18 @@ _ControlTipsPlugin_element = new WeakMap(), _ControlTipsPlugin_app = new WeakMap
                     "unitsMustBeControlled": true
                 },
                 {
-                    "key": `Mouse2 (hold)`,
-                    "action": `Interact (ground)`,
+                    "key": "CTRL+Mouse2",
+                    "action": "Add waypoint",
                     "showIfUnitSelected": true,
                     "showIfHoveringOverAirbase": false,
-                    "showIfHoveringOverUnit": false,
                     "unitsMustBeControlled": true
                 },
                 {
-                    "key": `Shift`,
-                    "action": "<em>  in formation...</em>",
-                    "showIfUnitSelected": true,
-                    "minSelectedUnits": 2
-                },
-                {
-                    "key": "CTRL",
-                    "action": "<em>  ... more</em>",
+                    "key": `Mouse2 (hold)`,
+                    "action": `Point operations`,
                     "showIfUnitSelected": true,
                     "showIfHoveringOverAirbase": false,
+                    "showIfHoveringOverUnit": false,
                     "unitsMustBeControlled": true
                 },
                 {
@@ -175,12 +166,18 @@ _ControlTipsPlugin_element = new WeakMap(), _ControlTipsPlugin_app = new WeakMap
                     "unitsMustBeControlled": true
                 },
                 {
-                    "key": `Mouse1`,
+                    "key": `Delete`,
+                    "action": `Delete unit`,
+                    "showIfHoveringOverAirbase": false,
+                    "showIfUnitSelected": true
+                },
+                {
+                    "key": `mouse1`,
                     "action": "Toggle Blue/Red",
                     "mouseoverSelector": "#coalition-switch .ol-switch-fill"
                 },
                 {
-                    "key": `Mouse2`,
+                    "key": `mouse2`,
                     "action": "Set Neutral",
                     "mouseoverSelector": "#coalition-switch .ol-switch-fill"
                 }
@@ -207,30 +204,15 @@ _ControlTipsPlugin_element = new WeakMap(), _ControlTipsPlugin_app = new WeakMap
                     "key": `Mouse2`,
                     "action": `Add waypoint`,
                     "showIfHoveringOverAirbase": false,
-                    "showIfHoveringOverUnit": false,
                     "showIfUnitSelected": true,
                     "unitsMustBeControlled": true
                 },
                 {
                     "key": `Mouse2`,
-                    "action": `Interact (airbase)`,
+                    "action": `Airbase menu`,
                     "showIfHoveringOverAirbase": true,
                     "showIfUnitSelected": true,
                     "unitsMustBeControlled": true
-                },
-                {
-                    "key": `Mouse2`,
-                    "action": `Interact (unit)`,
-                    "showIfHoveringOverAirbase": false,
-                    "showIfHoveringOverUnit": true,
-                    "showIfUnitSelected": true,
-                    "unitsMustBeControlled": true
-                },
-                {
-                    "key": `Shift`,
-                    "action": "<em>  in formation...</em>",
-                    "showIfUnitSelected": true,
-                    "minSelectedUnits": 2
                 }
             ]
         },
@@ -238,35 +220,8 @@ _ControlTipsPlugin_element = new WeakMap(), _ControlTipsPlugin_app = new WeakMap
             "keys": ["ShiftLeft"],
             "tips": [
                 {
-                    "key": `Mouse1+drag`,
-                    "action": "Box select",
-                    "showIfUnitSelected": false
-                },
-                {
-                    "key": `Mouse2`,
-                    "action": "Set first formation waypoint",
-                    "showIfUnitSelected": true,
-                    "minSelectedUnits": 2
-                },
-                {
-                    "key": "CTRL",
-                    "action": "<em>  ... more</em>",
-                    "minSelectedUnits": 2,
-                    "showIfUnitSelected": true,
-                    "showIfHoveringOverAirbase": false,
-                    "unitsMustBeControlled": true
-                },
-            ]
-        },
-        {
-            "keys": ["ControlLeft", "ShiftLeft"],
-            "tips": [
-                {
-                    "key": `Mouse2`,
-                    "action": "Add formation waypoint",
-                    "showIfUnitSelected": true,
-                    "minSelectedUnits": 2,
-                    "unitsMustBeControlled": true
+                    "key": `mouse1+drag`,
+                    "action": "Box select"
                 }
             ]
         }
@@ -275,13 +230,11 @@ _ControlTipsPlugin_element = new WeakMap(), _ControlTipsPlugin_app = new WeakMap
     const element = this.getElement();
     element.innerHTML = "";
     let numSelectedUnits = 0;
-    let numSelectedControlledUnits = 0;
     let unitSelectionContainsControlled = false;
     if (__classPrivateFieldGet(this, _ControlTipsPlugin_app, "f").getUnitsManager()) {
         let selectedUnits = Object.values(__classPrivateFieldGet(this, _ControlTipsPlugin_app, "f").getUnitsManager().getSelectedUnits());
         numSelectedUnits = selectedUnits.length;
-        numSelectedControlledUnits = selectedUnits.filter((unit) => unit.getControlled()).length;
-        unitSelectionContainsControlled = numSelectedControlledUnits > 0;
+        unitSelectionContainsControlled = selectedUnits.some((unit) => unit.getControlled());
     }
     const tipsIncludesActiveMouseover = (currentCombo.tips.some((tip) => {
         if (!tip.mouseoverSelector) {
@@ -301,9 +254,6 @@ _ControlTipsPlugin_element = new WeakMap(), _ControlTipsPlugin_app = new WeakMap
                 return false;
             }
             if (tip.unitsMustBeControlled === true && unitSelectionContainsControlled === false) {
-                return false;
-            }
-            if (typeof tip.minSelectedUnits === "number" && numSelectedControlledUnits < tip.minSelectedUnits) {
                 return false;
             }
         }
@@ -326,6 +276,8 @@ _ControlTipsPlugin_element = new WeakMap(), _ControlTipsPlugin_app = new WeakMap
         if (!tipsIncludesActiveMouseover && typeof tip.mouseoverSelector === "string") {
             return false;
         }
+        return true;
+    }).forEach((tip) => {
         element.innerHTML += `<div><span class="key">${tip.key}</span><span class="action">${tip.action}</span></div>`;
     });
 };

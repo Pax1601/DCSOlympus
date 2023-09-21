@@ -1,0 +1,33 @@
+# ci.yml file for GitHub Actions
+name: CI
+
+on: [push]
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build_docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./client
+
+      - name: Create the docs directory locally in CI
+        run: npx typedoc --out ../docs/client @types/*.d.ts src/*.ts src/contextmenus/*.ts src/controls/*.ts src/map/*.ts src/mission/*.ts src/other/*.ts src/panels/*.ts src/popups/*.ts src/server/*.ts src/unit/*.ts src/weapon/*.ts
+        working-directory: ./client
+        
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: docs 

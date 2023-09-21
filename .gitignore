@@ -11,3 +11,4 @@ node_modules
 /client/public/javascripts/bundle.js
 !client/bin
 /client/public/plugins
+/client/plugins/controltips/index.js
