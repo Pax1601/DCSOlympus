@@ -1,7 +1,7 @@
 # ci.yml file for GitHub Actions
 name: CI
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   build_and_lint:
@@ -31,10 +31,4 @@ jobs:
         run: bash lint.sh
 
       - name: Create the docs directory locally in CI
-        run: npx typedoc typedoc --out docs client/**/*.ts
-
-      - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@4.1.4
-        with:
-          branch: main
-          folder: docs
+        run: npx typedoc client/**/*.ts

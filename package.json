@@ -1,26 +1,5 @@
 {
-  "name": "document",
-  "version": "1.0.0",
-  "description": "*A real-time web interface to spawn and control units in DCS World*",
-  "main": "index.js",
-  "directories": {
-    "doc": "docs"
-  },
   "dependencies": {
     "typedoc": "^0.25.1"
-  },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Pax1601/DCSOlympus.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Pax1601/DCSOlympus/issues"
-  },
-  "homepage": "https://github.com/Pax1601/DCSOlympus#readme"
+  }
 }
