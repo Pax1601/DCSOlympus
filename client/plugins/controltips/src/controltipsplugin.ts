@@ -234,6 +234,11 @@ export class ControlTipsPlugin implements OlympusPlugin {
                         "action": "<em>  in formation...</em>",
                         "showIfUnitSelected": true,
                         "minSelectedUnits": 2
+                    },
+                    {
+                        "key": `[Num 1-9]`,
+                        "action": "Set hotgroup",
+                        "showIfUnitSelected": true
                     }
                 ]
             },
@@ -258,7 +263,7 @@ export class ControlTipsPlugin implements OlympusPlugin {
                         "showIfUnitSelected": true,
                         "showIfHoveringOverAirbase": false,
                         "unitsMustBeControlled": true
-                    },
+                    }
                 ]
             },
             {
