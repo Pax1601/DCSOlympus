@@ -6,6 +6,7 @@ export class ControlTipsPlugin implements OlympusPlugin {
     #shortcutManager: any;
     #cursorIsHoveringOverUnit: boolean = false;
     #cursorIsHoveringOverAirbase: boolean = false;
+    #mouseoverElement!: HTMLElement;
     
     constructor() {
         this.#element = document.createElement("div");
@@ -55,11 +56,18 @@ export class ControlTipsPlugin implements OlympusPlugin {
         });
 
         document.addEventListener("unitSelection", (ev: CustomEvent) => {
-            this.#updateTips()
+            this.#updateTips();
         });
 
         document.addEventListener("mapVisibilityOptionsChanged", () => {
             this.toggle( !this.#app.getMap().getVisibilityOptions()[SHOW_CONTROL_TIPS] );
+        });
+
+        document.addEventListener( "mouseover", ( ev: MouseEvent ) => {
+            if ( ev.target instanceof HTMLElement ) {
+                this.#mouseoverElement = <HTMLElement>ev.target;
+            }
+            this.#updateTips();
         });
 
         this.#updateTips();
@@ -164,6 +172,16 @@ export class ControlTipsPlugin implements OlympusPlugin {
                         "action": `Delete unit`,
                         "showIfHoveringOverAirbase": false,
                         "showIfUnitSelected": true
+                    },
+                    {
+                        "key": `mouse1`,
+                        "action": "Toggle Blue/Red",
+                        "mouseoverSelector": "#coalition-switch .ol-switch-fill"
+                    },
+                    {
+                        "key": `mouse2`,
+                        "action": "Set Neutral",
+                        "mouseoverSelector": "#coalition-switch .ol-switch-fill"
                     }
                 ]
             },
@@ -226,33 +244,60 @@ export class ControlTipsPlugin implements OlympusPlugin {
             unitSelectionContainsControlled = selectedUnits.some((unit: any) => unit.getControlled());
         }
 
-        currentCombo.tips.forEach((tip: any) => {
+        const tipsIncludesActiveMouseover = ( currentCombo.tips.some( ( tip:any ) => {
+            if ( !tip.mouseoverSelector ) {
+                return false;
+            }
+
+            if ( this.#mouseoverElement instanceof HTMLElement === false ) {
+                return false;
+            }
+
+            if ( !this.#mouseoverElement.matches( tip.mouseoverSelector ) ) {
+                return false;
+            }
+
+            return true;
+        }));
+
+        currentCombo.tips.filter((tip: any) => {
             if (numSelectedUnits > 0) {
                 if (tip.showIfUnitSelected === false) {
-                    return;
+                    return false;
                 }
 
                 if (tip.unitsMustBeControlled === true && unitSelectionContainsControlled === false) {
-                    return;
+                    return false;
                 }
             }
 
             if (numSelectedUnits === 0 && tip.showIfUnitSelected === true) {
-                return;
+                return false;
             }
 
             if (typeof tip.showIfHoveringOverAirbase === "boolean") {
                 if (tip.showIfHoveringOverAirbase !== this.#cursorIsHoveringOverAirbase) {
-                    return;
+                    return false;
                 }
             }
 
             if (typeof tip.showIfHoveringOverUnit === "boolean") {
                 if (tip.showIfHoveringOverUnit !== this.#cursorIsHoveringOverUnit) {
-                    return;
+                    return false;
                 }
             }
 
+            if ( tipsIncludesActiveMouseover && typeof tip.mouseoverSelector !== "string" && !this.#mouseoverElement.matches( tip.mouseoverSelector ) ) {
+                return false;
+            }
+
+            if ( !tipsIncludesActiveMouseover && typeof tip.mouseoverSelector === "string" ) {
+                return false;
+            }
+
+            return true;
+
+        }).forEach( (tip:any) => {
             element.innerHTML += `<div><span class="key">${tip.key}</span><span class="action">${tip.action}</span></div>`
         });
     }
