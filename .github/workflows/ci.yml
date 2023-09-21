@@ -8,12 +8,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
+        working-directory: ./client
         uses: actions/checkout@v2
-
+        
       - name: Setup Node.js
+        working-directory: ./client
         uses: actions/setup-node@v2
 
       - name: Retrieve the cached "node_modules" directory (if present)
+        working-directory: ./client
         uses: actions/cache@v2
         id: node-cache
         with:
@@ -21,8 +24,10 @@ jobs:
           key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
       - name: Install dependencies (if the cached directory was not found)
+        working-directory: ./client
         if: steps.node-cache.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Create the docs directory locally in CI
-        run: npx typedoc client/**/*.ts
+        working-directory: ./client
+        run: npx typedoc --out ../docs src/index.ts src/contextmenus/*.ts src/controls/*.ts src/map/*.ts src/mission/*.ts src/other/*.ts src/panels/*.ts src/popups/*.ts src/server/*.ts src/unit/*.ts src/weapon/*.ts
