@@ -81,14 +81,14 @@ export class Unit extends CustomMarker {
     #selected: boolean = false;
     #hidden: boolean = false;
     #highlighted: boolean = false;
-    #preventClick: boolean = false;
+    #waitingForDoubleClick: boolean = false;
     #pathMarkers: Marker[] = [];
     #pathPolyline: Polyline;
     #contactsPolylines: Polyline[];
     #miniMapMarker: CircleMarker | null = null;
     #targetPositionMarker: TargetMarker;
     #targetPositionPolyline: Polyline;
-    #timer: number = 0;
+    #doubleClickTimer: number = 0;
     #hotgroup: number | null = null;
     #detectionMethods: number[] = [];
 
@@ -730,32 +730,49 @@ export class Unit extends CustomMarker {
 
     /***********************************************/
     #onClick(e: any) {
-        if (!this.#preventClick) {
-            if (getApp().getMap().getState() === IDLE || getApp().getMap().getState() === MOVE_UNIT || e.originalEvent.ctrlKey) {
-                if (!e.originalEvent.ctrlKey)
-                    getApp().getUnitsManager().deselectAllUnits();
 
-                this.setSelected(!this.getSelected());
-                const detail = { "detail": { "unit": this } };
-                if (this.getSelected())
-                    document.dispatchEvent(new CustomEvent("unitSelected", detail));
-                else
-                    document.dispatchEvent(new CustomEvent("unitDeselection", { "detail": this }));
-            }
+        //  Exit if we were waiting for a doubleclick
+        if (this.#waitingForDoubleClick) {
+            return;
         }
+        
+        //  We'll wait for a doubleclick
+        this.#waitingForDoubleClick = true;
 
-        this.#timer = window.setTimeout(() => { this.#preventClick = false; }, 200);
+        this.#doubleClickTimer = window.setTimeout(() => { 
+
+            //  Still waiting so no doubleclick; do the click action
+            if (this.#waitingForDoubleClick) {
+                if (getApp().getMap().getState() === IDLE || getApp().getMap().getState() === MOVE_UNIT || e.originalEvent.ctrlKey) {
+                    if (!e.originalEvent.ctrlKey)
+                        getApp().getUnitsManager().deselectAllUnits();
+    
+                    this.setSelected(!this.getSelected());
+                    const detail = { "detail": { "unit": this } };
+                    if (this.getSelected())
+                        document.dispatchEvent(new CustomEvent("unitSelected", detail));
+                    else
+                        document.dispatchEvent(new CustomEvent("unitDeselection", { "detail": this }));
+                }
+            }
+
+            //  No longer waiting for a doubleclick
+            this.#waitingForDoubleClick = false;
+        }, 200);
     }
 
     #onDoubleClick(e: any) {
+
+        //  Let single clicks work again
+        this.#waitingForDoubleClick = false;
+        clearTimeout(this.#doubleClickTimer);
+
+        //  Select all matching units in the viewport
         const unitsManager = getApp().getUnitsManager();
         Object.values(unitsManager.getUnits()).forEach((unit: Unit) => {
             if (unit.getAlive() === true && unit.getName() === this.getName() && unit.isInViewport())
                 unitsManager.selectUnit(unit.ID, false);
         });
-
-        clearTimeout(this.#timer);
-        this.#preventClick = true;
     }
 
     #onContextMenu(e: any) {
