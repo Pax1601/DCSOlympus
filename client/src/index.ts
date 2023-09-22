@@ -1,4 +1,4 @@
-import { OlympusApp } from "./app";
+import { OlympusApp } from "./olympusapp";
 
 var app: OlympusApp;
 

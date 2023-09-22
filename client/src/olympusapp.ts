@@ -20,6 +20,10 @@ import { SVGInjector } from "@tanem/svg-injector";
 import { ServerManager } from "./server/servermanager";
 
 import { BLUE_COMMANDER, GAME_MASTER, RED_COMMANDER } from "./constants/constants";
+import { aircraftDatabase } from "./unit/databases/aircraftdatabase";
+import { helicopterDatabase } from "./unit/databases/helicopterdatabase";
+import { groundUnitDatabase } from "./unit/databases/groundunitdatabase";
+import { navyUnitDatabase } from "./unit/databases/navyunitdatabase";
 
 export class OlympusApp {
     /* Global data */
@@ -112,6 +116,38 @@ export class OlympusApp {
             else
                 return "neutral";
         }
+    }
+
+    /**
+     * 
+     * @returns The aircraft database
+     */
+    getAircraftDatabase() {
+        return aircraftDatabase;
+    }
+
+    /**
+     * 
+     * @returns The helicopter database
+     */
+    getHelicopterDatabase() {
+        return helicopterDatabase;
+    }
+
+    /**
+     * 
+     * @returns The ground unit database
+     */
+    getGroundUnitDatabase() {
+        return groundUnitDatabase;
+    }
+
+    /**
+     * 
+     * @returns The navy unit database
+     */
+    getNavyUnitDatabase() {
+        return navyUnitDatabase;
     }
 
     /** Set a message in the login splash screen

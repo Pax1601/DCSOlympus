@@ -1,0 +1,37 @@
+#database-control-panel {
+    display: flex;
+    flex-direction: row;
+}
+
+.dc-scroll-container {
+    overflow-y: scroll;
+    max-height: 600px;
+    width: 300px;
+    margin: 10px;
+    color: black;
+    font-weight: bold;
+}
+
+.dc-scroll-container>div:nth-child(even) {
+    background-color: gainsboro;
+}
+
+.dc-scroll-container>div:nth-child(odd) {
+    background-color: white;
+}
+
+.dc-scroll-container>div:hover{
+    background-color: var(--secondary-blue-text);
+    color: white;
+    cursor: pointer;
+}
+
+.dc-content-container {
+    width: 300px;
+    margin: 10px;
+}
+
+.dc-content-container>dd>input {
+    width: 100%;
+    font-weight: bold;
+}
