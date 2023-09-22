@@ -398,3 +398,18 @@ export function getCheckboxOptions(dropdown: Dropdown) {
     }
     return values;
 }
+
+export function getGroundElevation(latlng: LatLng, callback: CallableFunction) {
+    /* Get the ground elevation from the server endpoint */
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', `api/elevation/${latlng.lat}/${latlng.lng}`, true);
+    xhr.timeout = 500; // ms
+    xhr.responseType = 'json';
+    xhr.onload = () => {
+        var status = xhr?.status;
+        if (status === 200) {
+            callback(xhr.response)
+        }
+    };
+    xhr.send();
+}

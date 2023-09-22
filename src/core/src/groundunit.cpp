@@ -179,7 +179,7 @@ void GroundUnit::AIloop()
 				}
 			}
 
-			double barrelElevation = r * (9.81 * dist / (2 * muzzleVelocity * muzzleVelocity) - barrelHeight / dist);	/* m */
+			double barrelElevation = r * (9.81 * dist / (2 * muzzleVelocity * muzzleVelocity) + (targetPosition.alt - (position.alt + barrelHeight)) / dist);	/* m */
 			
 			double lat = 0;
 			double lng = 0;

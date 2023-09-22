@@ -1,7 +1,7 @@
 import { LatLng, LatLngBounds } from "leaflet";
 import { getApp } from "..";
 import { Unit } from "./unit";
-import { bearingAndDistanceToLatLng, deg2rad, getUnitDatabaseByCategory, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots, polyContains, polygonArea, randomPointInPoly, randomUnitBlueprint } from "../other/utils";
+import { bearingAndDistanceToLatLng, deg2rad, getGroundElevation, getUnitDatabaseByCategory, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots, polyContains, polygonArea, randomPointInPoly, randomUnitBlueprint } from "../other/utils";
 import { CoalitionArea } from "../map/coalitionarea/coalitionarea";
 import { groundUnitDatabase } from "./databases/groundunitdatabase";
 import { DataIndexes, GAME_MASTER, IADSDensities, IDLE, MOVE_UNIT } from "../constants/constants";
@@ -590,7 +590,7 @@ export class UnitsManager {
         for (let idx in selectedUnits) {
             selectedUnits[idx].carpetBomb(latlng);
         }
-        this.#showActionMessage(selectedUnits, `unit bombing point`);
+        this.#showActionMessage(selectedUnits, `unit carpet bombing point`);
     }
 
     /** Instruct the selected units to fire at specific coordinates
@@ -602,7 +602,7 @@ export class UnitsManager {
         for (let idx in selectedUnits) {
             selectedUnits[idx].fireAtArea(latlng);
         }
-        this.#showActionMessage(selectedUnits, `unit bombing point`);
+        this.#showActionMessage(selectedUnits, `unit firing at area`);
     }
 
     /** Instruct the selected units to simulate a fire fight at specific coordinates
@@ -611,9 +611,17 @@ export class UnitsManager {
      */
     selectedUnitsSimulateFireFight(latlng: LatLng) {
         var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
-        for (let idx in selectedUnits) {
-            selectedUnits[idx].simulateFireFight(latlng);
-        }
+        getGroundElevation(latlng, (response: string) => {
+            var groundElevation: number | null = null;
+            try {
+                groundElevation = parseFloat(response);
+            } catch {
+                console.log("Simulate fire fight: could not retrieve ground elevation")
+            }
+            for (let idx in selectedUnits) {
+                selectedUnits[idx].simulateFireFight(latlng, groundElevation);
+            }
+        });
         this.#showActionMessage(selectedUnits, `unit simulating fire fight`);
     }
 

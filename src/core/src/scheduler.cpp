@@ -568,7 +568,8 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		unitsManager->acquireControl(ID);
 		double lat = value[L"location"][L"lat"].as_double();
 		double lng = value[L"location"][L"lng"].as_double();
-		Coords loc; loc.lat = lat; loc.lng = lng;
+		double alt = value[L"altitude"].as_double();
+		Coords loc; loc.lat = lat; loc.lng = lng; loc.alt = alt;
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		unit->setState(State::SIMULATE_FIRE_FIGHT);
 		unit->setTargetPosition(loc);

@@ -608,8 +608,8 @@ export class Map extends L.Map {
                         getApp().getUnitsManager().selectedUnitsFireAtArea(this.getMouseCoordinates());
                     }
                     else if (option === "simulate-fire-fight") {
-                        getUnitsManager().getSelectedUnits().length > 0 ? this.setState(MOVE_UNIT) : this.setState(IDLE);
-                        getUnitsManager().selectedUnitsSimulateFireFight(this.getMouseCoordinates());
+                        getApp().getUnitsManager().getSelectedUnits().length > 0 ? this.setState(MOVE_UNIT) : this.setState(IDLE);
+                        getApp().getUnitsManager().selectedUnitsSimulateFireFight(this.getMouseCoordinates());
                     }
                 });
             }
