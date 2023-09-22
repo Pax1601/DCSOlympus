@@ -12,3 +12,5 @@ node_modules
 !client/bin
 /client/public/plugins
 /client/plugins/controltips/index.js
+*.hgt
+/scripts/python/hgt

@@ -6,6 +6,7 @@ var fs = require('fs');
 
 var atcRouter       = require('./routes/api/atc');
 var airbasesRouter  = require('./routes/api/airbases');
+var elevationRouter = require('./routes/api/elevation');
 var indexRouter     = require('./routes/index');
 var uikitRouter     = require('./routes/uikit');
 var usersRouter     = require('./routes/users');
@@ -23,6 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/api/atc', atcRouter);
 app.use('/api/airbases', airbasesRouter);
+app.use('/api/elevation', elevationRouter);
 app.use('/plugins', pluginsRouter)
 app.use('/users', usersRouter);
 app.use('/uikit', uikitRouter);

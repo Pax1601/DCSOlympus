@@ -107,3 +107,13 @@
 	white-space: nowrap;
 	color: var(--background-offwhite);
 }
+
+.elevation::after {
+    content: attr(data-value);
+	font-weight: bold;
+	font-size: 13px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: var(--background-offwhite);
+}

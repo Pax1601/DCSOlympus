@@ -1,6 +1,6 @@
 import { Icon, LatLng, Marker, Polyline } from "leaflet";
 import { getApp } from "..";
-import { distance, bearing, zeroAppend, mToNm, nmToFt } from "../other/utils";
+import { distance, bearing, zeroAppend, mToNm, nmToFt, mToFt } from "../other/utils";
 import { Unit } from "../unit/unit";
 import { Panel } from "./panel";
 import formatcoords from "formatcoords";
@@ -11,6 +11,7 @@ export class MouseInfoPanel extends Panel {
     #measureIcon: Icon;
     #measureLine: Polyline = new Polyline([], { color: '#2d3e50', weight: 3, opacity: 0.5, smoothFactor: 1, interactive: false });
     #measureBox: HTMLElement;
+    #elevationRequest: XMLHttpRequest | null = null;
 
     constructor(ID: string) {
         super( ID );
@@ -53,6 +54,30 @@ export class MouseInfoPanel extends Panel {
         var coordString = coords.format('XDDMMss', {decimalPlaces: 4});
         this.#drawCoordinates("ref-mouse-position-latitude", "mouse-position-latitude", coordString.split(" ")[0]);
         this.#drawCoordinates("ref-mouse-position-longitude", "mouse-position-longitude", coordString.split(" ")[1]);
+
+        /* Get the ground elevation from the server endpoint */
+        if (this.#elevationRequest == null) {
+            this.#elevationRequest = new XMLHttpRequest();
+            this.#elevationRequest.open('GET', `api/elevation/${mousePosition.lat}/${mousePosition.lng}`, true);
+            this.#elevationRequest.timeout = 500; // ms
+            this.#elevationRequest.responseType = 'json';
+            this.#elevationRequest.onload = () => {
+                var status = this.#elevationRequest?.status;
+                if (status === 200) {
+                    const el = this.getElement().querySelector(`#mouse-position-elevation`) as HTMLElement;
+                    try {
+                        el.dataset.value = `${Math.floor(mToFt(parseFloat(this.#elevationRequest?.response)))} ft`;
+                    } catch {
+                        el.dataset.value = `N/A`;
+                    }
+                }
+                this.#elevationRequest = null;
+            };
+            this.#elevationRequest.ontimeout = () => {this.#elevationRequest = null;}
+            this.#elevationRequest.onerror = () => {this.#elevationRequest = null;}
+            this.#elevationRequest.onabort = () => {this.#elevationRequest = null;}
+            this.#elevationRequest.send();
+        }
     }
 
     #onMapClick(e: any) {
@@ -115,7 +140,6 @@ export class MouseInfoPanel extends Panel {
     }
 
     #onMouseMove(e: any) {
-
         this.#update();
         this.#drawMeasureLine();
     }
