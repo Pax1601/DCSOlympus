@@ -101,7 +101,7 @@ export const mapBounds = {
     // TODO "Falklands"
 }
 
-export const layers = {
+export const mapLayers = {
     "ArcGIS Satellite": {
         urlTemplate: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
         maxZoom: 20,

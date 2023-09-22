@@ -16,7 +16,6 @@ function listDirectories(source) {
 
 router.get('/list', function (req, res) {
     var directories = listDirectories(pluginsDirectory);
-    console.log(directories)
     res.send(directories.filter(directory => fs.existsSync(path.join(pluginsDirectory, directory))));
 });
 

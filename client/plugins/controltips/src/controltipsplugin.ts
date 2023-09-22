@@ -6,6 +6,7 @@ export class ControlTipsPlugin implements OlympusPlugin {
     #shortcutManager: any;
     #cursorIsHoveringOverUnit: boolean = false;
     #cursorIsHoveringOverAirbase: boolean = false;
+    #mouseoverElement!: HTMLElement;
     
     constructor() {
         this.#element = document.createElement("div");
@@ -55,11 +56,22 @@ export class ControlTipsPlugin implements OlympusPlugin {
         });
 
         document.addEventListener("unitSelection", (ev: CustomEvent) => {
-            this.#updateTips()
+            this.#updateTips();
         });
 
         document.addEventListener("mapVisibilityOptionsChanged", () => {
             this.toggle( !this.#app.getMap().getVisibilityOptions()[SHOW_CONTROL_TIPS] );
+        });
+
+        document.addEventListener( "mouseover", ( ev: MouseEvent ) => {
+            if ( ev.target instanceof HTMLElement ) {
+                this.#mouseoverElement = <HTMLElement>ev.target;
+            }
+            this.#updateTips();
+        });
+
+        document.addEventListener( "mouseup", ( ev: MouseEvent ) => {
+            this.#updateTips();
         });
 
         this.#updateTips();
@@ -130,18 +142,24 @@ export class ControlTipsPlugin implements OlympusPlugin {
                         "unitsMustBeControlled": true
                     },
                     {
-                        "key": "CTRL+Mouse2",
-                        "action": "Add waypoint",
-                        "showIfUnitSelected": true,
-                        "showIfHoveringOverAirbase": false,
-                        "unitsMustBeControlled": true
-                    },
-                    {
                         "key": `Mouse2 (hold)`,
-                        "action": `Point operations`,
+                        "action": `Interact (ground)`,
                         "showIfUnitSelected": true,
                         "showIfHoveringOverAirbase": false,
                         "showIfHoveringOverUnit": false,
+                        "unitsMustBeControlled": true
+                    },
+                    {
+                        "key": `Shift`,
+                        "action": "<em>  in formation...</em>",
+                        "showIfUnitSelected": true,
+                        "minSelectedUnits": 2
+                    },
+                    {
+                        "key": "CTRL",
+                        "action": "<em>  ... more</em>",
+                        "showIfUnitSelected": true,
+                        "showIfHoveringOverAirbase": false,
                         "unitsMustBeControlled": true
                     },
                     {
@@ -160,10 +178,14 @@ export class ControlTipsPlugin implements OlympusPlugin {
                         "unitsMustBeControlled": true
                     },
                     {
-                        "key": `Delete`,
-                        "action": `Delete unit`,
-                        "showIfHoveringOverAirbase": false,
-                        "showIfUnitSelected": true
+                        "key": `Mouse1`,
+                        "action": "Toggle Blue/Red",
+                        "mouseoverSelector": "#coalition-switch .ol-switch-fill"
+                    },
+                    {
+                        "key": `Mouse2`,
+                        "action": "Set Neutral",
+                        "mouseoverSelector": "#coalition-switch .ol-switch-fill"
                     }
                 ]
             },
@@ -188,15 +210,35 @@ export class ControlTipsPlugin implements OlympusPlugin {
                         "key": `Mouse2`,
                         "action": `Add waypoint`,
                         "showIfHoveringOverAirbase": false,
+                        "showIfHoveringOverUnit": false,
                         "showIfUnitSelected": true,
                         "unitsMustBeControlled": true
                     },
                     {
                         "key": `Mouse2`,
-                        "action": `Airbase menu`,
+                        "action": `Interact (airbase)`,
                         "showIfHoveringOverAirbase": true,
                         "showIfUnitSelected": true,
                         "unitsMustBeControlled": true
+                    },
+                    {
+                        "key": `Mouse2`,
+                        "action": `Interact (unit)`,
+                        "showIfHoveringOverAirbase": false,
+                        "showIfHoveringOverUnit": true,
+                        "showIfUnitSelected": true,
+                        "unitsMustBeControlled": true
+                    },
+                    {
+                        "key": `Shift`,
+                        "action": "<em>  in formation...</em>",
+                        "showIfUnitSelected": true,
+                        "minSelectedUnits": 2
+                    },
+                    {
+                        "key": `[Num 1-9]`,
+                        "action": "Set hotgroup",
+                        "showIfUnitSelected": true
                     }
                 ]
             },
@@ -204,8 +246,35 @@ export class ControlTipsPlugin implements OlympusPlugin {
                 "keys": ["ShiftLeft"],
                 "tips": [
                     {
-                        "key": `mouse1+drag`,
-                        "action": "Box select"
+                        "key": `Mouse1+drag`,
+                        "action": "Box select",
+                        "showIfUnitSelected": false
+                    },
+                    {
+                        "key": `Mouse2`,
+                        "action": "Set first formation waypoint",
+                        "showIfUnitSelected": true,
+                        "minSelectedUnits": 2
+                    },
+                    {
+                        "key": "CTRL",
+                        "action": "<em>  ... more</em>",
+                        "minSelectedUnits": 2,
+                        "showIfUnitSelected": true,
+                        "showIfHoveringOverAirbase": false,
+                        "unitsMustBeControlled": true
+                    }
+                ]
+            },
+            {
+                "keys": ["ControlLeft", "ShiftLeft"],
+                "tips": [
+                    {
+                        "key": `Mouse2`,
+                        "action": "Add formation waypoint",
+                        "showIfUnitSelected": true,
+                        "minSelectedUnits": 2,
+                        "unitsMustBeControlled": true
                     }
                 ]
             }
@@ -218,42 +287,73 @@ export class ControlTipsPlugin implements OlympusPlugin {
         element.innerHTML = "";
 
         let numSelectedUnits = 0;
+        let numSelectedControlledUnits = 0;
         let unitSelectionContainsControlled = false;
 
         if (this.#app.getUnitsManager()) {
             let selectedUnits = Object.values(this.#app.getUnitsManager().getSelectedUnits());
-            numSelectedUnits = selectedUnits.length;
-            unitSelectionContainsControlled = selectedUnits.some((unit: any) => unit.getControlled());
+            numSelectedUnits                = selectedUnits.length;
+            numSelectedControlledUnits      = selectedUnits.filter((unit: any) => unit.getControlled()).length;
+            unitSelectionContainsControlled = numSelectedControlledUnits > 0;
         }
 
-        currentCombo.tips.forEach((tip: any) => {
+        const tipsIncludesActiveMouseover = ( currentCombo.tips.some( ( tip:any ) => {
+            if ( !tip.mouseoverSelector ) {
+                return false;
+            }
+
+            if ( this.#mouseoverElement instanceof HTMLElement === false ) {
+                return false;
+            }
+
+            if ( !this.#mouseoverElement.matches( tip.mouseoverSelector ) ) {
+                return false;
+            }
+
+            return true;
+        }));
+
+        currentCombo.tips.filter((tip: any) => {
             if (numSelectedUnits > 0) {
                 if (tip.showIfUnitSelected === false) {
-                    return;
+                    return false;
                 }
 
                 if (tip.unitsMustBeControlled === true && unitSelectionContainsControlled === false) {
-                    return;
+                    return false;
+                }
+
+                if ( typeof tip.minSelectedUnits === "number" && numSelectedControlledUnits < tip.minSelectedUnits ) {
+                    return false;
                 }
             }
 
             if (numSelectedUnits === 0 && tip.showIfUnitSelected === true) {
-                return;
+                return false;
             }
 
             if (typeof tip.showIfHoveringOverAirbase === "boolean") {
                 if (tip.showIfHoveringOverAirbase !== this.#cursorIsHoveringOverAirbase) {
-                    return;
+                    return false;
                 }
             }
 
             if (typeof tip.showIfHoveringOverUnit === "boolean") {
                 if (tip.showIfHoveringOverUnit !== this.#cursorIsHoveringOverUnit) {
-                    return;
+                    return false;
                 }
             }
 
-            element.innerHTML += `<div><span class="key">${tip.key}</span><span class="action">${tip.action}</span></div>`
+            if ( tipsIncludesActiveMouseover && typeof tip.mouseoverSelector !== "string" && !this.#mouseoverElement.matches( tip.mouseoverSelector ) ) {
+                return false;
+            }
+
+            if ( !tipsIncludesActiveMouseover && typeof tip.mouseoverSelector === "string" ) {
+                return false;
+            }
+
+            element.innerHTML += `<div><span class="key">${tip.key}</span><span class="action">${tip.action}</span></div>`;
+
         });
     }
 }

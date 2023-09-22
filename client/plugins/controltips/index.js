@@ -11,7 +11,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _ControlTipsPlugin_instances, _ControlTipsPlugin_element, _ControlTipsPlugin_app, _ControlTipsPlugin_shortcutManager, _ControlTipsPlugin_cursorIsHoveringOverUnit, _ControlTipsPlugin_cursorIsHoveringOverAirbase, _ControlTipsPlugin_updateTips;
+var _ControlTipsPlugin_instances, _ControlTipsPlugin_element, _ControlTipsPlugin_app, _ControlTipsPlugin_shortcutManager, _ControlTipsPlugin_cursorIsHoveringOverUnit, _ControlTipsPlugin_cursorIsHoveringOverAirbase, _ControlTipsPlugin_mouseoverElement, _ControlTipsPlugin_updateTips;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ControlTipsPlugin = void 0;
 const SHOW_CONTROL_TIPS = "Show control tips";
@@ -23,6 +23,7 @@ class ControlTipsPlugin {
         _ControlTipsPlugin_shortcutManager.set(this, void 0);
         _ControlTipsPlugin_cursorIsHoveringOverUnit.set(this, false);
         _ControlTipsPlugin_cursorIsHoveringOverAirbase.set(this, false);
+        _ControlTipsPlugin_mouseoverElement.set(this, void 0);
         __classPrivateFieldSet(this, _ControlTipsPlugin_element, document.createElement("div"), "f");
         __classPrivateFieldGet(this, _ControlTipsPlugin_element, "f").id = "control-tips-panel";
         document.body.appendChild(__classPrivateFieldGet(this, _ControlTipsPlugin_element, "f"));
@@ -64,6 +65,15 @@ class ControlTipsPlugin {
         document.addEventListener("mapVisibilityOptionsChanged", () => {
             this.toggle(!__classPrivateFieldGet(this, _ControlTipsPlugin_app, "f").getMap().getVisibilityOptions()[SHOW_CONTROL_TIPS]);
         });
+        document.addEventListener("mouseover", (ev) => {
+            if (ev.target instanceof HTMLElement) {
+                __classPrivateFieldSet(this, _ControlTipsPlugin_mouseoverElement, ev.target, "f");
+            }
+            __classPrivateFieldGet(this, _ControlTipsPlugin_instances, "m", _ControlTipsPlugin_updateTips).call(this);
+        });
+        document.addEventListener("mouseup", (ev) => {
+            __classPrivateFieldGet(this, _ControlTipsPlugin_instances, "m", _ControlTipsPlugin_updateTips).call(this);
+        });
         __classPrivateFieldGet(this, _ControlTipsPlugin_instances, "m", _ControlTipsPlugin_updateTips).call(this);
         __classPrivateFieldGet(this, _ControlTipsPlugin_app, "f").getMap().addVisibilityOption(SHOW_CONTROL_TIPS, true);
         return true;
@@ -76,7 +86,7 @@ class ControlTipsPlugin {
     }
 }
 exports.ControlTipsPlugin = ControlTipsPlugin;
-_ControlTipsPlugin_element = new WeakMap(), _ControlTipsPlugin_app = new WeakMap(), _ControlTipsPlugin_shortcutManager = new WeakMap(), _ControlTipsPlugin_cursorIsHoveringOverUnit = new WeakMap(), _ControlTipsPlugin_cursorIsHoveringOverAirbase = new WeakMap(), _ControlTipsPlugin_instances = new WeakSet(), _ControlTipsPlugin_updateTips = function _ControlTipsPlugin_updateTips() {
+_ControlTipsPlugin_element = new WeakMap(), _ControlTipsPlugin_app = new WeakMap(), _ControlTipsPlugin_shortcutManager = new WeakMap(), _ControlTipsPlugin_cursorIsHoveringOverUnit = new WeakMap(), _ControlTipsPlugin_cursorIsHoveringOverAirbase = new WeakMap(), _ControlTipsPlugin_mouseoverElement = new WeakMap(), _ControlTipsPlugin_instances = new WeakSet(), _ControlTipsPlugin_updateTips = function _ControlTipsPlugin_updateTips() {
     const combos = [
         {
             "keys": [],
@@ -129,18 +139,24 @@ _ControlTipsPlugin_element = new WeakMap(), _ControlTipsPlugin_app = new WeakMap
                     "unitsMustBeControlled": true
                 },
                 {
-                    "key": "CTRL+Mouse2",
-                    "action": "Add waypoint",
-                    "showIfUnitSelected": true,
-                    "showIfHoveringOverAirbase": false,
-                    "unitsMustBeControlled": true
-                },
-                {
                     "key": `Mouse2 (hold)`,
-                    "action": `Point operations`,
+                    "action": `Interact (ground)`,
                     "showIfUnitSelected": true,
                     "showIfHoveringOverAirbase": false,
                     "showIfHoveringOverUnit": false,
+                    "unitsMustBeControlled": true
+                },
+                {
+                    "key": `Shift`,
+                    "action": "<em>  in formation...</em>",
+                    "showIfUnitSelected": true,
+                    "minSelectedUnits": 2
+                },
+                {
+                    "key": "CTRL",
+                    "action": "<em>  ... more</em>",
+                    "showIfUnitSelected": true,
+                    "showIfHoveringOverAirbase": false,
                     "unitsMustBeControlled": true
                 },
                 {
@@ -159,10 +175,14 @@ _ControlTipsPlugin_element = new WeakMap(), _ControlTipsPlugin_app = new WeakMap
                     "unitsMustBeControlled": true
                 },
                 {
-                    "key": `Delete`,
-                    "action": `Delete unit`,
-                    "showIfHoveringOverAirbase": false,
-                    "showIfUnitSelected": true
+                    "key": `Mouse1`,
+                    "action": "Toggle Blue/Red",
+                    "mouseoverSelector": "#coalition-switch .ol-switch-fill"
+                },
+                {
+                    "key": `Mouse2`,
+                    "action": "Set Neutral",
+                    "mouseoverSelector": "#coalition-switch .ol-switch-fill"
                 }
             ]
         },
@@ -187,15 +207,35 @@ _ControlTipsPlugin_element = new WeakMap(), _ControlTipsPlugin_app = new WeakMap
                     "key": `Mouse2`,
                     "action": `Add waypoint`,
                     "showIfHoveringOverAirbase": false,
+                    "showIfHoveringOverUnit": false,
                     "showIfUnitSelected": true,
                     "unitsMustBeControlled": true
                 },
                 {
                     "key": `Mouse2`,
-                    "action": `Airbase menu`,
+                    "action": `Interact (airbase)`,
                     "showIfHoveringOverAirbase": true,
                     "showIfUnitSelected": true,
                     "unitsMustBeControlled": true
+                },
+                {
+                    "key": `Mouse2`,
+                    "action": `Interact (unit)`,
+                    "showIfHoveringOverAirbase": false,
+                    "showIfHoveringOverUnit": true,
+                    "showIfUnitSelected": true,
+                    "unitsMustBeControlled": true
+                },
+                {
+                    "key": `Shift`,
+                    "action": "<em>  in formation...</em>",
+                    "showIfUnitSelected": true,
+                    "minSelectedUnits": 2
+                },
+                {
+                    "key": `[Num 1-9]`,
+                    "action": "Set hotgroup",
+                    "showIfUnitSelected": true
                 }
             ]
         },
@@ -203,8 +243,35 @@ _ControlTipsPlugin_element = new WeakMap(), _ControlTipsPlugin_app = new WeakMap
             "keys": ["ShiftLeft"],
             "tips": [
                 {
-                    "key": `mouse1+drag`,
-                    "action": "Box select"
+                    "key": `Mouse1+drag`,
+                    "action": "Box select",
+                    "showIfUnitSelected": false
+                },
+                {
+                    "key": `Mouse2`,
+                    "action": "Set first formation waypoint",
+                    "showIfUnitSelected": true,
+                    "minSelectedUnits": 2
+                },
+                {
+                    "key": "CTRL",
+                    "action": "<em>  ... more</em>",
+                    "minSelectedUnits": 2,
+                    "showIfUnitSelected": true,
+                    "showIfHoveringOverAirbase": false,
+                    "unitsMustBeControlled": true
+                }
+            ]
+        },
+        {
+            "keys": ["ControlLeft", "ShiftLeft"],
+            "tips": [
+                {
+                    "key": `Mouse2`,
+                    "action": "Add formation waypoint",
+                    "showIfUnitSelected": true,
+                    "minSelectedUnits": 2,
+                    "unitsMustBeControlled": true
                 }
             ]
         }
@@ -213,33 +280,56 @@ _ControlTipsPlugin_element = new WeakMap(), _ControlTipsPlugin_app = new WeakMap
     const element = this.getElement();
     element.innerHTML = "";
     let numSelectedUnits = 0;
+    let numSelectedControlledUnits = 0;
     let unitSelectionContainsControlled = false;
     if (__classPrivateFieldGet(this, _ControlTipsPlugin_app, "f").getUnitsManager()) {
         let selectedUnits = Object.values(__classPrivateFieldGet(this, _ControlTipsPlugin_app, "f").getUnitsManager().getSelectedUnits());
         numSelectedUnits = selectedUnits.length;
-        unitSelectionContainsControlled = selectedUnits.some((unit) => unit.getControlled());
+        numSelectedControlledUnits = selectedUnits.filter((unit) => unit.getControlled()).length;
+        unitSelectionContainsControlled = numSelectedControlledUnits > 0;
     }
-    currentCombo.tips.forEach((tip) => {
+    const tipsIncludesActiveMouseover = (currentCombo.tips.some((tip) => {
+        if (!tip.mouseoverSelector) {
+            return false;
+        }
+        if (__classPrivateFieldGet(this, _ControlTipsPlugin_mouseoverElement, "f") instanceof HTMLElement === false) {
+            return false;
+        }
+        if (!__classPrivateFieldGet(this, _ControlTipsPlugin_mouseoverElement, "f").matches(tip.mouseoverSelector)) {
+            return false;
+        }
+        return true;
+    }));
+    currentCombo.tips.filter((tip) => {
         if (numSelectedUnits > 0) {
             if (tip.showIfUnitSelected === false) {
-                return;
+                return false;
             }
             if (tip.unitsMustBeControlled === true && unitSelectionContainsControlled === false) {
-                return;
+                return false;
+            }
+            if (typeof tip.minSelectedUnits === "number" && numSelectedControlledUnits < tip.minSelectedUnits) {
+                return false;
             }
         }
         if (numSelectedUnits === 0 && tip.showIfUnitSelected === true) {
-            return;
+            return false;
         }
         if (typeof tip.showIfHoveringOverAirbase === "boolean") {
             if (tip.showIfHoveringOverAirbase !== __classPrivateFieldGet(this, _ControlTipsPlugin_cursorIsHoveringOverAirbase, "f")) {
-                return;
+                return false;
             }
         }
         if (typeof tip.showIfHoveringOverUnit === "boolean") {
             if (tip.showIfHoveringOverUnit !== __classPrivateFieldGet(this, _ControlTipsPlugin_cursorIsHoveringOverUnit, "f")) {
-                return;
+                return false;
             }
+        }
+        if (tipsIncludesActiveMouseover && typeof tip.mouseoverSelector !== "string" && !__classPrivateFieldGet(this, _ControlTipsPlugin_mouseoverElement, "f").matches(tip.mouseoverSelector)) {
+            return false;
+        }
+        if (!tipsIncludesActiveMouseover && typeof tip.mouseoverSelector === "string") {
+            return false;
         }
         element.innerHTML += `<div><span class="key">${tip.key}</span><span class="action">${tip.action}</span></div>`;
     });
@@ -248,9 +338,9 @@ _ControlTipsPlugin_element = new WeakMap(), _ControlTipsPlugin_app = new WeakMap
 },{}],2:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const controltips_1 = require("./controltips");
+const controltipsplugin_1 = require("./controltipsplugin");
 globalThis.getOlympusPlugin = () => {
-    return new controltips_1.ControlTipsPlugin();
+    return new controltipsplugin_1.ControlTipsPlugin();
 };
 
-},{"./controltips":1}]},{},[2]);
+},{"./controltipsplugin":1}]},{},[2]);

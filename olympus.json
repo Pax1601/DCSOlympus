@@ -7,5 +7,12 @@
 		"gameMasterPassword": "password",
 		"blueCommanderPassword": "bluepassword",
 		"redCommanderPassword": "redpassword"
+	}, 
+	"client": {
+		"elevationProvider": {
+			"provider": "https://srtm.fasma.org/{lat}{lng}.SRTMGL3S.hgt.zip",
+			"username": null,
+			"password": null
+		}
 	}
 }
