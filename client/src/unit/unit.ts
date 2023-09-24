@@ -10,6 +10,7 @@ import { DataExtractor } from '../server/dataextractor';
 import { groundUnitDatabase } from './databases/groundunitdatabase';
 import { navyUnitDatabase } from './databases/navyunitdatabase';
 import { Weapon } from '../weapon/weapon';
+import { Ammo, Contact, GeneralSettings, LoadoutBlueprint, ObjectIconOptions, Offset, Radio, TACAN, UnitData } from '../interfaces';
 
 var pathIcon = new Icon({
     iconUrl: '/resources/theme/images/markers/marker-icon.png',

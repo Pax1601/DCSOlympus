@@ -20,6 +20,7 @@ import { SVGInjector } from "@tanem/svg-injector";
 import { ServerManager } from "./server/servermanager";
 
 import { BLUE_COMMANDER, GAME_MASTER, RED_COMMANDER } from "./constants/constants";
+import { ConfigurationOptions } from "./interfaces";
 
 export class OlympusApp {
     /* Global data */

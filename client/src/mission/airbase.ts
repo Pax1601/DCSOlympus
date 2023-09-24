@@ -1,6 +1,7 @@
 import { DivIcon } from 'leaflet';
 import { CustomMarker } from '../map/markers/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
+import { AirbaseChartData, AirbaseOptions } from '../interfaces';
 
 
 export class Airbase extends CustomMarker {

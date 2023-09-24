@@ -10,6 +10,7 @@ import { aircraftDatabase } from "../unit/databases/aircraftdatabase";
 import { helicopterDatabase } from "../unit/databases/helicopterdatabase";
 import { groundUnitDatabase } from "../unit/databases/groundunitdatabase";
 import { navyUnitDatabase } from "../unit/databases/navyunitdatabase";
+import { UnitSpawnOptions, UnitSpawnTable } from "../interfaces";
 
 export class UnitSpawnMenu {
     #container: HTMLElement;
