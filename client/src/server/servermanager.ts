@@ -5,6 +5,7 @@ import { ServerStatusPanel } from '../panels/serverstatuspanel';
 import { LogPanel } from '../panels/logpanel';
 import { Popup } from '../popups/popup';
 import { ConnectionStatusPanel } from '../panels/connectionstatuspanel';
+import { AirbasesData, BullseyesData, GeneralSettings, MissionData, Radio, ServerRequestOptions, TACAN } from '../interfaces';
 
 export class ServerManager {
     #connected: boolean = false;

@@ -1,3 +1,4 @@
+import { KeyboardShortcutOptions, MouseShortcutOptions, ShortcutOptions } from "../interfaces";
 import { keyEventWasInInput } from "../other/utils";
 
 export abstract class Shortcut {

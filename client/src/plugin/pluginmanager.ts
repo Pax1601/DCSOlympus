@@ -1,6 +1,7 @@
 import path from "path";
 import { Manager } from "../other/manager";
 import { getApp } from "..";
+import { OlympusPlugin } from "../interfaces";
 
 /** The plugins manager is responsible for loading and initializing all the plugins. Plugins are located in the public/plugins folder. 
  * Each plugin must be comprised of a single folder containing a index.js file. Each plugin must set the globalThis.getOlympusPlugin variable to

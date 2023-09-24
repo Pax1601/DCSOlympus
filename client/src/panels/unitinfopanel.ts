@@ -1,3 +1,4 @@
+import { Ammo } from "../interfaces";
 import { aircraftDatabase } from "../unit/databases/aircraftdatabase";
 import { Unit } from "../unit/unit";
 import { Panel } from "./panel";

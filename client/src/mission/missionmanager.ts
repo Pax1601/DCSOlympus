@@ -10,6 +10,7 @@ import { aircraftDatabase } from "../unit/databases/aircraftdatabase";
 import { helicopterDatabase } from "../unit/databases/helicopterdatabase";
 import { navyUnitDatabase } from "../unit/databases/navyunitdatabase";
 import { Popup } from "../popups/popup";
+import { AirbasesData, BullseyesData, CommandModeOptions, DateAndTime, MissionData } from "../interfaces";
 
 /** The MissionManager  */
 export class MissionManager {

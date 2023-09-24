@@ -24,6 +24,7 @@ import { aircraftDatabase } from "./unit/databases/aircraftdatabase";
 import { helicopterDatabase } from "./unit/databases/helicopterdatabase";
 import { groundUnitDatabase } from "./unit/databases/groundunitdatabase";
 import { navyUnitDatabase } from "./unit/databases/navyunitdatabase";
+import { ConfigurationOptions } from "./interfaces";
 
 export class OlympusApp {
     /* Global data */

@@ -1,4 +1,5 @@
 import { LatLng } from "leaflet";
+import { Ammo, Contact, GeneralSettings, Offset, Radio, TACAN } from "../interfaces";
 
 export class DataExtractor {
     #seekPosition = 0;

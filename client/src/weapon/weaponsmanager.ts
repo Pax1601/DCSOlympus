@@ -1,7 +1,8 @@
 import { getApp } from "..";
 import { Weapon } from "./weapon";
-import { DataIndexes, GAME_MASTER } from "../constants/constants";
+import { DataIndexes } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
+import { Contact } from "../interfaces";
 
 /** The WeaponsManager handles the creation and update of weapons. Data is strictly updated by the server ONLY. */
 export class WeaponsManager {

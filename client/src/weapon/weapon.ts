@@ -5,6 +5,7 @@ import { CustomMarker } from '../map/markers/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
 import { DLINK, DataIndexes, GAME_MASTER, IRST, OPTIC, RADAR, VISUAL } from '../constants/constants';
 import { DataExtractor } from '../server/dataextractor';
+import { ObjectIconOptions } from '../interfaces';
 
 export class Weapon extends CustomMarker {
     ID: number;

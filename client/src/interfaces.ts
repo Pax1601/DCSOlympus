@@ -1,47 +1,51 @@
-interface OlympusPlugin {
+import { LatLng } from "leaflet";
+import { OlympusApp } from "./app";
+import { Airbase } from "./mission/airbase";
+
+export interface OlympusPlugin {
     getName: () => string;
-    initialize: (any) => boolean;
+    initialize: (app: OlympusApp) => boolean;
 }
 
 declare global {
     function getOlympusPlugin(): OlympusPlugin;
 }
 
-interface ConfigurationOptions {
+export interface ConfigurationOptions {
     port: number;
     address: string;
 }
 
-interface ContextMenuOption {
+export interface ContextMenuOption {
     tooltip: string;
     src: string;
     callback: CallableFunction;
 }
 
-interface AirbasesData {
+export interface AirbasesData {
     airbases: { [key: string]: any },
     sessionHash: string;
     time: number;
 }
 
-interface BullseyesData {
+export interface BullseyesData {
     bullseyes: { [key: string]: { latitude: number, longitude: number, coalition: string } },
     sessionHash: string;
     time: number;
 }
 
-interface MissionData {
+export interface MissionData {
     mission: {
         theatre: string,
         dateAndTime: DateAndTime;
         commandModeOptions: CommandModeOptions;
-        coalitions: { red: string[], blue: string[] } = { };
+        coalitions: { red: string[], blue: string[] };
     }
     time: number;
     sessionHash: string;
 }
 
-interface CommandModeOptions {
+export interface CommandModeOptions {
     commandMode: string;
     restrictSpawns: boolean;
     restrictToCoalition: boolean;
@@ -53,33 +57,33 @@ interface CommandModeOptions {
     eras: string[]
 }
 
-interface DateAndTime {
+export interface DateAndTime {
     date: { Year: number, Month: number, Day: number };
     time: { h: number, m: number, s: number };
     elapsedTime: number;
     startTime: number;
 }
 
-interface LogData {
+export interface LogData {
     logs: { [key: string]: string },
     sessionHash: string;
     time: number;
 }
 
-interface ServerRequestOptions {
+export interface ServerRequestOptions {
     time?: number;
     commandHash?: string;
 }
 
-interface UnitSpawnTable {
+export interface UnitSpawnTable {
     unitType: string,
-    location: latlng,
+    location: LatLng,
     altitude?: number,
     loadout?: string,
     liveryID: string
 }
 
-interface ObjectIconOptions {
+export interface ObjectIconOptions {
     showState: boolean,
     showVvi: boolean,
     showHotgroup: boolean,
@@ -92,7 +96,7 @@ interface ObjectIconOptions {
     rotateToHeading: boolean
 }
 
-interface GeneralSettings {
+export interface GeneralSettings {
     prohibitJettison: boolean;
     prohibitAA: boolean;
     prohibitAG: boolean;
@@ -100,20 +104,20 @@ interface GeneralSettings {
     prohibitAirWpn: boolean;
 }
 
-interface TACAN {
+export interface TACAN {
     isOn: boolean;
     channel: number;
     XY: string;
     callsign: string;
 }
 
-interface Radio {
+export interface Radio {
     frequency: number;
     callsign: number;
     callsignNumber: number;
 }
 
-interface Ammo {
+export interface Ammo {
     quantity: number,
     name: string,
     guidance: number,
@@ -121,18 +125,18 @@ interface Ammo {
     missileCategory: number
 }
 
-interface Contact {
+export interface Contact {
     ID: number,
     detectionMethod: number
 }
 
-interface Offset {
+export interface Offset {
     x: number,
     y: number,
     z: number
 }
 
-interface UnitData {
+export interface UnitData {
     category: string,
     ID: number;
     alive: boolean;
@@ -174,13 +178,13 @@ interface UnitData {
     isLeader: boolean;
 }
 
-interface LoadoutItemBlueprint {
+export interface LoadoutItemBlueprint {
     name: string;
     quantity: number;
     effectiveAgainst?: string;
 }
 
-interface LoadoutBlueprint {
+export interface LoadoutBlueprint {
     fuel: number;
     items: LoadoutItemBlueprint[];
     roles: string[];
@@ -188,7 +192,7 @@ interface LoadoutBlueprint {
     name: string;
 }
 
-interface UnitBlueprint {
+export interface UnitBlueprint {
     name: string;
     coalition: string;
     era: string;
@@ -202,7 +206,7 @@ interface UnitBlueprint {
     cost?: number;
 }
 
-interface UnitSpawnOptions {
+export interface UnitSpawnOptions {
     roleType: string;
     name: string;
     latlng: LatLng;
@@ -215,36 +219,36 @@ interface UnitSpawnOptions {
     altitude: number | undefined;
 }
 
-interface AirbaseOptions {
+export interface AirbaseOptions {
     name: string,
     position: L.LatLng
 }
 
-interface AirbaseChartData {
+export interface AirbaseChartData {
     elevation: string,
     ICAO: string,
     TACAN: string,
     runways: AirbaseChartRunwayData[]
 }
 
-interface AirbaseChartRunwayData {
-    headings: AirbaseChartRunwayHeadingData[],
-    length: string
-}
-
-interface AirbaseChartRunwayHeadingData {
+export interface AirbaseChartRunwayHeadingData {
     [index: string]: {
         magHeading: string,
         ILS: string
     }
 }
 
-interface Listener {
+export interface AirbaseChartRunwayData {
+    headings: AirbaseChartRunwayHeadingData[],
+    length: string
+}
+
+export interface Listener {
     callback: CallableFunction;
     name?: string
 }
 
-interface ShortcutOptions {
+export interface ShortcutOptions {
     altKey?: boolean;
     callback: CallableFunction;
     ctrlKey?: boolean;
@@ -252,16 +256,16 @@ interface ShortcutOptions {
     shiftKey?: boolean;
 }
 
-interface KeyboardShortcutOptions extends ShortcutOptions {
+export interface KeyboardShortcutOptions extends ShortcutOptions {
     code: string;
     event?: "keydown" | "keyup";
 }
 
-interface MouseShortcutOptions extends ShortcutOptions {
+export interface MouseShortcutOptions extends ShortcutOptions {
     button: number;
     event: "mousedown" | "mouseup";
 }
 
-interface Manager {
+export interface Manager {
     add: CallableFunction;
 }

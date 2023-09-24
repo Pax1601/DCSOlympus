@@ -1,3 +1,4 @@
+import { Listener } from "../interfaces";
 import { EventsManager } from "../other/eventsmanager";
 
 export class PanelEventsManager extends EventsManager {

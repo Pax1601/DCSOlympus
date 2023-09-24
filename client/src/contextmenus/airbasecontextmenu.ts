@@ -1,5 +1,6 @@
 import { getApp } from "..";
 import { GAME_MASTER } from "../constants/constants";
+import { AirbaseChartRunwayData, AirbaseChartRunwayHeadingData } from "../interfaces";
 import { Airbase } from "../mission/airbase";
 import { dataPointMap } from "../other/utils";
 import { Unit } from "../unit/unit";

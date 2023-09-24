@@ -8,6 +8,7 @@ import { Panel } from "./panel";
 import { Switch } from "../controls/switch";
 import { ROEDescriptions, ROEs, altitudeIncrements, emissionsCountermeasures, emissionsCountermeasuresDescriptions, maxAltitudeValues, maxSpeedValues, minAltitudeValues, minSpeedValues, reactionsToThreat, reactionsToThreatDescriptions, speedIncrements } from "../constants/constants";
 import { ftToM, knotsToMs, mToFt, msToKnots } from "../other/utils";
+import { GeneralSettings, Radio, TACAN } from "../interfaces";
 
 export class UnitControlPanel extends Panel {
     #altitudeSlider: Slider;

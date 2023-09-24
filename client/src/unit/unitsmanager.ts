@@ -13,6 +13,7 @@ import { navyUnitDatabase } from "./databases/navyunitdatabase";
 import { TemporaryUnitMarker } from "../map/markers/temporaryunitmarker";
 import { Popup } from "../popups/popup";
 import { HotgroupPanel } from "../panels/hotgrouppanel";
+import { Contact, UnitData, UnitSpawnTable } from "../interfaces";
 
 /** The UnitsManager handles the creation, update, and control of units. Data is strictly updated by the server ONLY. This means that any interaction from the user will always and only
  * result in a command to the server, executed by means of a REST PUT request. Any subsequent change in data will be reflected only when the new data is sent back by the server. This strategy allows
