@@ -1,7 +1,3 @@
-declare module "index" {
-    import { OlympusApp } from "app";
-    export function getApp(): OlympusApp;
-}
 declare module "map/boxselect" {
     export var BoxSelect: (new (...args: any[]) => any) & typeof import("leaflet").Class;
 }
@@ -338,7 +334,7 @@ declare module "mission/airbase" {
 }
 declare module "interfaces" {
     import { LatLng } from "leaflet";
-    import { OlympusApp } from "app";
+    import { OlympusApp } from "olympusapp";
     import { Airbase } from "mission/airbase";
     export interface OlympusPlugin {
         getName: () => string;
@@ -1947,7 +1943,7 @@ declare module "server/servermanager" {
         getPaused(): boolean;
     }
 }
-declare module "app" {
+declare module "olympusapp" {
     import { Map } from "map/map";
     import { MissionManager } from "mission/missionmanager";
     import { PluginsManager } from "plugin/pluginmanager";
@@ -1979,6 +1975,26 @@ declare module "app" {
          * @returns The active coalition
          */
         getActiveCoalition(): string;
+        /**
+         *
+         * @returns The aircraft database
+         */
+        getAircraftDatabase(): import("unit/databases/aircraftdatabase").AircraftDatabase;
+        /**
+         *
+         * @returns The helicopter database
+         */
+        getHelicopterDatabase(): import("unit/databases/helicopterdatabase").HelicopterDatabase;
+        /**
+         *
+         * @returns The ground unit database
+         */
+        getGroundUnitDatabase(): import("unit/databases/groundunitdatabase").GroundUnitDatabase;
+        /**
+         *
+         * @returns The navy unit database
+         */
+        getNavyUnitDatabase(): import("unit/databases/navyunitdatabase").NavyUnitDatabase;
         /** Set a message in the login splash screen
          *
          * @param status The message to show in the login splash screen
@@ -1986,4 +2002,8 @@ declare module "app" {
         setLoginStatus(status: string): void;
         start(): void;
     }
+}
+declare module "index" {
+    import { OlympusApp } from "olympusapp";
+    export function getApp(): OlympusApp;
 }

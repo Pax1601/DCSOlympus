@@ -1,10 +1,16 @@
-const SHOW_CONTROL_TIPS = "Show control tips"
+import { OlympusPlugin } from "interfaces";
+import { AirUnitEditor } from "./airuniteditor";
+import { OlympusApp } from "olympusapp";
 
 export class DatabaseManagerPlugin implements OlympusPlugin {
+    #app: OlympusApp | null = null;
+
     #element: HTMLElement;
-    #app: any;
     #scrollDiv: HTMLElement;
-    #contentDiv: HTMLElement;
+    #contentDiv1: HTMLElement;
+    #contentDiv2: HTMLElement;
+
+    #aircraftEditor: AirUnitEditor;
         
     constructor() {
         this.#element = document.createElement("div");
@@ -17,9 +23,15 @@ export class DatabaseManagerPlugin implements OlympusPlugin {
         this.#scrollDiv.classList.add("dc-scroll-container");
         this.#element.appendChild(this.#scrollDiv);
 
-        this.#contentDiv = document.createElement("div");
-        this.#contentDiv.classList.add("dc-content-container");
-        this.#element.appendChild(this.#contentDiv);
+        this.#contentDiv1 = document.createElement("div");
+        this.#contentDiv1.classList.add("dc-content-container");
+        this.#element.appendChild(this.#contentDiv1);
+
+        this.#contentDiv2 = document.createElement("div");
+        this.#contentDiv2.classList.add("dc-content-container");
+        this.#element.appendChild(this.#contentDiv2);
+
+        this.#aircraftEditor = new AirUnitEditor(this.#scrollDiv, this.#contentDiv1, this.#contentDiv2);
     }
 
     getName() {
@@ -29,15 +41,11 @@ export class DatabaseManagerPlugin implements OlympusPlugin {
     initialize(app: any) {
         this.#app = app;
         
-        var aircraftDatabase = this.#app.getAircraftDatabase();
-        var blueprints: {[key: string]: UnitBlueprint} = aircraftDatabase.getBlueprints();
-
-        for (let key in blueprints) {
-            var div = document.createElement("div");
-            this.#scrollDiv.appendChild(div);
-            div.textContent = key;
-            div.onclick = () => this.#setContent(blueprints[key]);
-        }      
+        var aircraftDatabase = this.#app?.getAircraftDatabase();
+        if (aircraftDatabase != null) {
+            this.#aircraftEditor.setDatabase(aircraftDatabase);
+            this.#aircraftEditor.show();
+        }
 
         return true;
     }
@@ -48,24 +56,5 @@ export class DatabaseManagerPlugin implements OlympusPlugin {
 
     toggle(bool?: boolean) {
         this.getElement().classList.toggle("hide", bool);
-    }
-
-    #setContent(blueprint: UnitBlueprint) {
-        this.#contentDiv.replaceChildren();
-        
-        for (var key in blueprint) {
-            if (typeof blueprint[key as keyof UnitBlueprint] === "string")
-            {
-                var dt = document.createElement("dt");
-                var dd = document.createElement("dd");
-                dt.innerText = key;
-                var input = document.createElement("input");
-                input.value = blueprint[key as keyof UnitBlueprint] as string;
-                input.textContent = blueprint[key as keyof UnitBlueprint] as string;
-                dd.appendChild(input);
-                this.#contentDiv.appendChild(dt);
-                this.#contentDiv.appendChild(dd);
-            }
-        }
     }
 }

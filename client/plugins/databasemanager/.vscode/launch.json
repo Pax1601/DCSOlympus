@@ -5,16 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Attach to Chrome",
+            "port": 9222,
+            "urlFilter": "http://localhost:3000/*",
+            "request": "attach",
             "type": "chrome",
-            "request": "launch",
-            "name": "Launch Chrome against localhost",
-            "url": "http://localhost:3000",
-            "webRoot": "${workspaceFolder}/public/",
+            "webRoot": "${workspaceFolder}../../public/",
             "sourceMapPathOverrides": {
-                "src/*": "${workspaceFolder}/src/*"
+                "src/*": "src/*"
             },
-            "preLaunchTask": "server",
-            "port": 9222
+            "preLaunchTask": "start"
         }
     ]
 }

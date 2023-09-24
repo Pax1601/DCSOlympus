@@ -5,6 +5,7 @@
   "version": "v0.4.4-alpha",
   "private": true,
   "scripts": {
+    "emit-declarations": "tsc --project tsconfig.json --declaration --emitDeclarationOnly --outfile ./@types/olympus/index.d.ts",
     "copy": "copy.bat",
     "start": "npm run copy & concurrently --kill-others \"npm run watch\" \"nodemon ./bin/www\"",
     "watch": "watchify .\\src\\index.ts --debug -o .\\public\\javascripts\\bundle.js -t [ babelify --global true --presets [ @babel/preset-env ] --extensions '.js'] -p [ tsify --noImplicitAny ]"

@@ -3,7 +3,10 @@
   "version": "v0.0.1",
   "private": true,
   "scripts": {
-    "build": "browserify ./src/index.ts -p [ tsify --noImplicitAny] > index.js && copy.bat"
+    "build": "browserify ./src/index.ts -p [ tsify --noImplicitAny] > index.js && copy.bat",
+    "start": "npm run copy & concurrently --kill-others \"npm run watch\"",
+    "copy": "copy.bat",
+    "watch": "watchify ./src/index.ts --debug -o ../../public/plugins/databasemanager/index.js -t [ babelify --global true --presets [ @babel/preset-env ] --extensions '.js'] -p [ tsify --noImplicitAny ]"
   },
   "dependencies": {},
   "devDependencies": {}

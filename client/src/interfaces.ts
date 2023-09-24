@@ -1,5 +1,5 @@
 import { LatLng } from "leaflet";
-import { OlympusApp } from "./app";
+import { OlympusApp } from "./olympusapp";
 import { Airbase } from "./mission/airbase";
 
 export interface OlympusPlugin {
