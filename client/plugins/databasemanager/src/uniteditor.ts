@@ -1,65 +1,47 @@
 import { LoadoutBlueprint, UnitBlueprint } from "interfaces";
 import { UnitDatabase } from "unit/databases/unitdatabase";
+import { addBlueprintsScroll, addNewElementInput } from "./utils";
 
 export abstract class UnitEditor {
-    database: UnitDatabase | null = null;
-    scrollDiv: HTMLElement;
+    database: {blueprints: {[key: string]: UnitBlueprint}} | null = null;
     contentDiv1: HTMLElement;
     contentDiv2: HTMLElement;
+    contentDiv3: HTMLElement;
 
-    constructor(scrollDiv: HTMLElement, contentDiv1: HTMLElement, contentDiv2: HTMLElement) {
-        this.scrollDiv = scrollDiv;
+    constructor(contentDiv1: HTMLElement, contentDiv2: HTMLElement, contentDiv3: HTMLElement) {
         this.contentDiv1 = contentDiv1;
         this.contentDiv2 = contentDiv2;
+        this.contentDiv3 = contentDiv3;
+        this.contentDiv1.addEventListener("refresh", () => { this.show(); })
     }
 
-    setDatabase(database: any) {
-        this.database = database;
+    setDatabase(database: UnitDatabase) {
+        this.database = JSON.parse(JSON.stringify(database));
     }
 
     show() {
-        if (this.database !== null) {
-            var blueprints: {[key: string]: UnitBlueprint} = this.database.getBlueprints();
+        this.contentDiv1.replaceChildren();
+        this.contentDiv2.replaceChildren();
+        this.contentDiv3.replaceChildren();
 
-            for (let key in blueprints) {
-                var div = document.createElement("div");
-                this.scrollDiv.appendChild(div);
-                div.textContent = key;
-                div.onclick = () => this.setContent(blueprints[key]);
-            }      
+        if (this.database != null) {
+            addBlueprintsScroll(this.contentDiv1, this.database, (key: string) => {
+                if (this.database != null) 
+                    this.setBlueprint(this.database.blueprints[key])
+            })
+            addNewElementInput(this.contentDiv1, (ev: MouseEvent, input: HTMLInputElement) => {
+                if (input.value != "")
+                    this.addBlueprint((input).value);
+            });
         }
     }
 
-    addStringInput(key: string, value: string, type?: string) {
-        var dt = document.createElement("dt");
-        var dd = document.createElement("dd");
-        dt.innerText = key;
-        var input = document.createElement("input");
-        input.value = value;
-        input.textContent = value;
-        input.type = type?? "text";
-        dd.appendChild(input);
-        this.contentDiv1.appendChild(dt);
-        this.contentDiv1.appendChild(dd);
+    hide() {
+        this.contentDiv1.replaceChildren();
+        this.contentDiv2.replaceChildren();
+        this.contentDiv3.replaceChildren();
     }
 
-    addDropdownInput(key: string, value: string, options: string[]) {
-        var dt = document.createElement("dt");
-        var dd = document.createElement("dd");
-        dt.innerText = key;
-        var select = document.createElement("select");
-        options.forEach((option: string) => {
-            var el = document.createElement("option");
-            el.value = option;
-            el.innerText = option;
-            select.appendChild(el);
-        });
-        select.value = value;
-        dd.appendChild(select);
-        this.contentDiv1.appendChild(dt);
-        this.contentDiv1.appendChild(dd);
-    }
-
-    abstract setContent(blueprint: UnitBlueprint): void;
-    
+    abstract setBlueprint(blueprint: UnitBlueprint): void;
+    abstract addBlueprint(key: string): void;
 }

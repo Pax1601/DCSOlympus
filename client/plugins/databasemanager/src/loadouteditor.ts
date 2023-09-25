@@ -1,4 +1,5 @@
 import { LoadoutBlueprint, LoadoutItemBlueprint } from "interfaces";
+import { addLoadoutItemsEditor, addStringInput } from "./utils";
 
 export class LoadoutEditor {
     #contentDiv: HTMLElement;
@@ -6,6 +7,7 @@ export class LoadoutEditor {
 
     constructor(contentDiv: HTMLElement) {
         this.#contentDiv = contentDiv;
+        this.#contentDiv.addEventListener("refresh", () => { this.show(); })
     }
 
     setLoadout(loadout: LoadoutBlueprint) {
@@ -16,30 +18,14 @@ export class LoadoutEditor {
         this.#contentDiv.replaceChildren();
 
         if (this.#loadout) {
-            this.addStringInput("Name", this.#loadout.name);
-            this.addStringInput("Code", this.#loadout.code);
-
-            var itemsEl = document.createElement("div");
-            itemsEl.classList.add("dc-scroll-container", "dc-items-container");
-            this.#loadout.items.forEach((item: LoadoutItemBlueprint) => {
-                var div = document.createElement("div");
-                itemsEl.appendChild(div);
-                div.textContent = item.name;
-            })
-            this.#contentDiv.appendChild(itemsEl);
+            var laodout = this.#loadout;
+            addStringInput(this.#contentDiv, "Name", laodout.name, "text", (value: string) => {laodout.name = value; this.#contentDiv.dispatchEvent(new Event("refresh"));});
+            addStringInput(this.#contentDiv, "Code", laodout.code, "text", (value: string) => {laodout.code = value; });
+            addLoadoutItemsEditor(this.#contentDiv, this.#loadout);
         }
     }
 
-    addStringInput(key: string, value: string, type?: string) {
-        var dt = document.createElement("dt");
-        var dd = document.createElement("dd");
-        dt.innerText = key;
-        var input = document.createElement("input");
-        input.value = value;
-        input.textContent = value;
-        input.type = type?? "text";
-        dd.appendChild(input);
-        this.#contentDiv.appendChild(dt);
-        this.#contentDiv.appendChild(dd);
+    hide() {
+        this.#contentDiv.replaceChildren();
     }
 }
