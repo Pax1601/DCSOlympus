@@ -40,7 +40,7 @@ export function addDropdownInput(div: HTMLElement, key: string, value: string, o
 
 export function addLoadoutItemsEditor(div: HTMLElement, loadout: LoadoutBlueprint) {
     var itemsEl = document.createElement("div");
-    itemsEl.classList.add("dc-scroll-container", "dc-items-container");
+    itemsEl.classList.add("dm-scroll-container", "dm-items-container");
     loadout.items.forEach((item: LoadoutItemBlueprint, index: number) => {
         var rowDiv = document.createElement("div");
 
@@ -79,7 +79,7 @@ export function addLoadoutItemsEditor(div: HTMLElement, loadout: LoadoutBlueprin
     div.appendChild(itemsEl);
 
     var inputDiv = document.createElement("div");
-    inputDiv.classList.add("dc-new-item-input");
+    inputDiv.classList.add("dm-new-item-input");
     var button = document.createElement("button");
     button.innerText = "Add";
     inputDiv.appendChild(button);
@@ -96,7 +96,7 @@ export function addLoadoutItemsEditor(div: HTMLElement, loadout: LoadoutBlueprin
 
 export function addNewElementInput(div: HTMLElement, callback: CallableFunction) {
     var inputDiv = document.createElement("div");
-    inputDiv.classList.add("dc-new-element-input");
+    inputDiv.classList.add("dm-new-element-input");
     var input = document.createElement("input");
     inputDiv.appendChild(input);
     var button = document.createElement("button");
@@ -108,7 +108,7 @@ export function addNewElementInput(div: HTMLElement, callback: CallableFunction)
 
 export function addBlueprintsScroll(div: HTMLElement, database: {blueprints: {[key: string]: UnitBlueprint}}, callback: CallableFunction) {
     var scrollDiv = document.createElement("div");
-    scrollDiv.classList.add("dc-scroll-container");
+    scrollDiv.classList.add("dm-scroll-container");
     if (database !== null) {
         var blueprints: {[key: string]: UnitBlueprint} = database.blueprints;
 
@@ -135,7 +135,7 @@ export function addBlueprintsScroll(div: HTMLElement, database: {blueprints: {[k
 
 export function addLoadoutsScroll(div: HTMLElement, loadouts: LoadoutBlueprint[], callback: CallableFunction) {
     var loadoutsEl = document.createElement("div");
-    loadoutsEl.classList.add("dc-scroll-container", "dc-loadout-container")
+    loadoutsEl.classList.add("dm-scroll-container", "dm-loadout-container")
     
     loadouts.forEach((loadout: LoadoutBlueprint, index: number) => {
         var rowDiv = document.createElement("div");

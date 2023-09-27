@@ -1,89 +1,100 @@
-#database-control-panel {
+#database-manager-panel {
     display: flex;
     flex-direction: column;
     width: 80%;
     height: 80%;
     padding: 10px;
+    border-radius: 5px;
 }
 
-#database-control-panel * {
+#database-manager-panel * {
     font-size: 13;
     font-weight: bold;
 }
 
-#database-control-panel>div:first-child {
+#database-manager-panel>div:first-child {
     display: flex;
-    column-gap: 2px;
     align-items: center;
 }
 
-.dc-container {
+#database-manager-panel>div:last-child {
+    display: flex;
+    column-gap: 5px;
+    align-items: center;
+    justify-content: end;
+    justify-items: end;
+    margin-top: 5px;
+}
+
+.dm-container {
+    background-color: #555555;
+    border: 2px solid #777777;
+    position: relative;
     display: flex;
     flex-direction: row;
     width: 100%;
-    height: 100%;
-    padding: 10px;
+    padding: 5px;
+    height: calc(100% - 64px - 5px);
+    border-radius: 0px 5px 5px 5px;
 }
 
-.dc-container>div {
-    min-width: 200px;
-    width: fit-content;
-    margin: 10px;
-}
-
-.dc-container>div:nth-child(3) {
+.dm-container>div:nth-child(3) {
     flex: 1;
 }
 
-.dc-scroll-container {
+.dm-content-container {
+    position: relative;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 5px;
+    height: calc(100% - 20px);
+    min-width: 200px;
+    width: fit-content;
+}
+
+.dm-scroll-container {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    max-height: 600px;
+    max-height: 100%;
     color: black;
     font-weight: bold;
 }
 
-.dc-scroll-container>* {
+.dm-scroll-container>* {
     padding: 2px;
 }
 
-.dc-scroll-container>div:nth-child(even) {
+.dm-scroll-container>div:nth-child(even) {
     background-color: gainsboro;
 }
 
-.dc-scroll-container>div:nth-child(odd) {
+.dm-scroll-container>div:nth-child(odd) {
     background-color: white;
 }
 
-.dc-scroll-container>div *:nth-child(1) {
+.dm-scroll-container>div *:nth-child(1) {
     height: 100%;
     width: 100%;
 }
 
-.dc-scroll-container>div *:nth-child(1):hover{
+.dm-scroll-container>div *:nth-child(1):hover{
     background-color: var(--secondary-blue-text);
     color: white;
     cursor: pointer;
 }
 
-.dc-scroll-container>div {
+.dm-scroll-container>div {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.dc-scroll-container>div>button {
+.dm-scroll-container>div>button {
     height: 20px;
     width: 20px;
     padding: 0px;
-}
-
-.dc-content-container {
-    margin: 10px;
-    display: flex;
-    flex-direction: column;
-    row-gap: 5px;
 }
 
 .input-row {
@@ -104,35 +115,35 @@
     width: 100%;
 }
 
-.dc-loadout-container {
+.dm-loadout-container {
     max-height: 100%;
     width: 400px;
 }
 
-.dc-items-container {
+.dm-items-container {
     max-height: 100%;
     height: fit-content;
 }
 
-.dc-items-container>div {
+.dm-items-container>div {
     display: flex;
     align-items: center;
     column-gap: 2px;
 }
 
-.dc-items-container>div>label {
+.dm-items-container>div>label {
     width: 80px !important;
 }
 
-.dc-items-container div>input:nth-of-type(1) {
+.dm-items-container div>input:nth-of-type(1) {
     width: 100%;
 }
 
-.dc-items-container div>input:nth-of-type(2) {
+.dm-items-container div>input:nth-of-type(2) {
     width: 40px;
 }
 
-.dc-new-element-input {
+.dm-new-element-input {
     display: flex;
     flex-direction: row;
     column-gap: 2px;
@@ -140,19 +151,43 @@
     align-items: center;
 }
 
-.dc-new-element-input>input {
+.dm-new-element-input>input {
     width: 100%;
 }
 
-.dc-new-element-input>button {
+.dm-new-element-input>button {
     width: 60px;
 }
 
-.dc-new-item-input {
+.dm-new-item-input {
     display: flex;
     justify-content: end;
 }
 
-.dc-new-item-input>button {
+.dm-new-item-input>button {
     width: 60px;
+}
+
+.tab-button {
+    transform: translateY(+3px);
+    background-color: #333333;
+    border-radius: 0;
+    border-bottom: 2px solid transparent;
+    border-top: 2px solid #777777;
+    border-left: 2px solid #777777;
+    border-right: 0px solid #777777;
+}
+
+.tab-button.selected {
+    background-color: #555555;
+    z-index: 10;
+}
+
+.tab-button:first-of-type {
+    border-top-left-radius: 5px;
+}
+
+.tab-button:last-of-type {
+    border-top-right-radius: 5px;
+    border-right: 2px solid #777777;
 }

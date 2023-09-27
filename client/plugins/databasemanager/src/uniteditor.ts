@@ -4,6 +4,7 @@ import { addBlueprintsScroll, addNewElementInput } from "./utils";
 
 export abstract class UnitEditor {
     database: {blueprints: {[key: string]: UnitBlueprint}} | null = null;
+    visible: boolean = false;
     contentDiv1: HTMLElement;
     contentDiv2: HTMLElement;
     contentDiv3: HTMLElement;
@@ -12,7 +13,10 @@ export abstract class UnitEditor {
         this.contentDiv1 = contentDiv1;
         this.contentDiv2 = contentDiv2;
         this.contentDiv3 = contentDiv3;
-        this.contentDiv1.addEventListener("refresh", () => { this.show(); })
+        this.contentDiv1.addEventListener("refresh", () => { 
+            if (this.visible)
+                this.show(); 
+        })
     }
 
     setDatabase(database: UnitDatabase) {
@@ -20,6 +24,7 @@ export abstract class UnitEditor {
     }
 
     show() {
+        this.visible = true;
         this.contentDiv1.replaceChildren();
         this.contentDiv2.replaceChildren();
         this.contentDiv3.replaceChildren();
@@ -37,6 +42,7 @@ export abstract class UnitEditor {
     }
 
     hide() {
+        this.visible = false;
         this.contentDiv1.replaceChildren();
         this.contentDiv2.replaceChildren();
         this.contentDiv3.replaceChildren();

@@ -1526,9 +1526,12 @@ declare module "toolbars/commandmodetoolbar" {
     }
 }
 declare module "toolbars/primarytoolbar" {
+    import { Dropdown } from "controls/dropdown";
     import { Toolbar } from "toolbars/toolbar";
     export class PrimaryToolbar extends Toolbar {
+        #private;
         constructor(ID: string);
+        getMainDropdown(): Dropdown;
     }
 }
 declare module "unit/citiesDatabase" {

@@ -4,10 +4,15 @@ import { addLoadoutItemsEditor, addStringInput } from "./utils";
 export class LoadoutEditor {
     #contentDiv: HTMLElement;
     #loadout: LoadoutBlueprint | null = null;
+    #visible: boolean = false;
 
     constructor(contentDiv: HTMLElement) {
+        
         this.#contentDiv = contentDiv;
-        this.#contentDiv.addEventListener("refresh", () => { this.show(); })
+        this.#contentDiv.addEventListener("refresh", () => { 
+            if (this.#visible)
+                this.show(); 
+        })
     }
 
     setLoadout(loadout: LoadoutBlueprint) {
@@ -15,6 +20,7 @@ export class LoadoutEditor {
     }
 
     show() {
+        this.#visible = true;
         this.#contentDiv.replaceChildren();
 
         if (this.#loadout) {
@@ -26,6 +32,7 @@ export class LoadoutEditor {
     }
 
     hide() {
+        this.#visible = false;
         this.#contentDiv.replaceChildren();
     }
 }

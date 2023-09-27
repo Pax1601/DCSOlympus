@@ -40,15 +40,15 @@ class DatabaseManagerPlugin {
         _DatabaseManagerPlugin_contentDiv.set(this, void 0);
         _DatabaseManagerPlugin_aircraftEditor.set(this, void 0);
         __classPrivateFieldSet(this, _DatabaseManagerPlugin_element, document.createElement("div"), "f");
-        __classPrivateFieldGet(this, _DatabaseManagerPlugin_element, "f").id = "database-control-panel";
+        __classPrivateFieldGet(this, _DatabaseManagerPlugin_element, "f").id = "database-manager-panel";
         __classPrivateFieldGet(this, _DatabaseManagerPlugin_element, "f").oncontextmenu = () => { return false; };
         __classPrivateFieldGet(this, _DatabaseManagerPlugin_element, "f").classList.add("ol-dialog");
         document.body.appendChild(__classPrivateFieldGet(this, _DatabaseManagerPlugin_element, "f"));
         __classPrivateFieldSet(this, _DatabaseManagerPlugin_scrollDiv, document.createElement("div"), "f");
-        __classPrivateFieldGet(this, _DatabaseManagerPlugin_scrollDiv, "f").classList.add("dc-scroll-container");
+        __classPrivateFieldGet(this, _DatabaseManagerPlugin_scrollDiv, "f").classList.add("dm-scroll-container");
         __classPrivateFieldGet(this, _DatabaseManagerPlugin_element, "f").appendChild(__classPrivateFieldGet(this, _DatabaseManagerPlugin_scrollDiv, "f"));
         __classPrivateFieldSet(this, _DatabaseManagerPlugin_contentDiv, document.createElement("div"), "f");
-        __classPrivateFieldGet(this, _DatabaseManagerPlugin_contentDiv, "f").classList.add("dc-content-container");
+        __classPrivateFieldGet(this, _DatabaseManagerPlugin_contentDiv, "f").classList.add("dm-content-container");
         __classPrivateFieldGet(this, _DatabaseManagerPlugin_element, "f").appendChild(__classPrivateFieldGet(this, _DatabaseManagerPlugin_contentDiv, "f"));
         __classPrivateFieldSet(this, _DatabaseManagerPlugin_aircraftEditor, new airuniteditor_1.AirUnitEditor(__classPrivateFieldGet(this, _DatabaseManagerPlugin_scrollDiv, "f"), __classPrivateFieldGet(this, _DatabaseManagerPlugin_contentDiv, "f")), "f");
     }

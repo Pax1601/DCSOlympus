@@ -191,7 +191,7 @@ export class OlympusApp {
 
         // Toolbars
         this.getToolbarsManager().add("primaryToolbar", new PrimaryToolbar("primary-toolbar"))
-            .add("commandModeToolbar", new PrimaryToolbar("command-mode-toolbar"));
+            .add("commandModeToolbar", new CommandModeToolbar("command-mode-toolbar"));
 
         this.#pluginsManager = new PluginsManager();
 
