@@ -48,6 +48,10 @@ export abstract class UnitEditor {
         this.contentDiv3.replaceChildren();
     }
 
+    getDatabase() {
+        return this.database;
+    }
+
     abstract setBlueprint(blueprint: UnitBlueprint): void;
     abstract addBlueprint(key: string): void;
 }

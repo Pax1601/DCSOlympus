@@ -1,4 +1,4 @@
-import { OlympusPlugin } from "interfaces";
+import { OlympusPlugin, UnitBlueprint } from "interfaces";
 import { AirUnitEditor } from "./airuniteditor";
 import { OlympusApp } from "olympusapp";
 import { GroundUnitEditor } from "./grounduniteditor";
@@ -88,7 +88,19 @@ export class DatabaseManagerPlugin implements OlympusPlugin {
         this.#button5 = document.createElement("button");
         this.#button5.textContent = "Save";
         this.#button5.title = "Save the changes on the server"
-        this.#button5.onclick = () => { };
+        this.#button5.onclick = () => { 
+            var aircraftDatabase = this.#aircraftEditor.getDatabase();
+            if (aircraftDatabase)
+                this.uploadDatabase(aircraftDatabase, "aircraftdatabase");
+
+            var helicopterDatabase = this.#helicopterEditor.getDatabase();
+            if (helicopterDatabase)
+                this.uploadDatabase(helicopterDatabase, "helicopterDatabase");
+
+            var groundUnitDatabase = this.#groundUnitEditor.getDatabase();
+            if (groundUnitDatabase)
+                this.uploadDatabase(groundUnitDatabase, "groundUnitDatabase");
+        };
         bottomButtonContainer.appendChild(this.#button5);
 
         this.#button6 = document.createElement("button");
@@ -128,7 +140,10 @@ export class DatabaseManagerPlugin implements OlympusPlugin {
         var arr = Array.prototype.slice.call(elements);
         arr.splice(arr.length - 1, 0, mainButtonDiv);
         toolbar.getMainDropdown().setOptionsElements(arr);
-        mainButton.onclick = () => { this.toggle(); }
+        mainButton.onclick = () => {
+            toolbar.getMainDropdown().close(); 
+            this.toggle(); 
+        }
 
         return true;
     }
@@ -171,5 +186,19 @@ export class DatabaseManagerPlugin implements OlympusPlugin {
         this.#button2.classList.remove("selected");
         this.#button3.classList.remove("selected");
         this.#button4.classList.remove("selected");
+    }
+
+    uploadDatabase(database: {blueprints: {[key: string]: UnitBlueprint}}, databaseName: string) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("PUT", "/api/databases/units/" + databaseName);
+        xmlHttp.setRequestHeader("Content-Type", "application/json");
+        xmlHttp.onload = (res: any) => {
+            this.#app?.getPopupsManager().get("infoPopup")?.setText(databaseName + " saved successfully");
+        };
+        xmlHttp.onerror = (res: any) => {
+            this.#app?.getPopupsManager().get("infoPopup")?.setText("An error has occurring saving the database: " + databaseName)
+            console.log(res);
+        }
+        xmlHttp.send(JSON.stringify(database));
     }
 }

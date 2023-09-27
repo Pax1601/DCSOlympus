@@ -100,7 +100,7 @@
     top: 100px;
     left: 50%;
     translate: -50% 0%;
-    z-index: 9999;
+    z-index: 999999;
 	display: flex;
 	align-items: center;
 }

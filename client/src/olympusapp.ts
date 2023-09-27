@@ -44,10 +44,6 @@ export class OlympusApp {
     #toolbarsManager: Manager | null = null;
     #shortcutManager: ShortcutManager | null = null;
 
-    /* UI Toolbars */
-    #primaryToolbar: PrimaryToolbar | null = null;
-    #commandModeToolbar: CommandModeToolbar | null = null;
-
     constructor() {
 
     }

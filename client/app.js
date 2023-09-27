@@ -3,6 +3,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var fs = require('fs');
+var bodyParser = require('body-parser');
 
 var atcRouter       = require('./routes/api/atc');
 var airbasesRouter  = require('./routes/api/airbases');
@@ -12,12 +13,13 @@ var uikitRouter     = require('./routes/uikit');
 var usersRouter     = require('./routes/users');
 var resourcesRouter = require('./routes/resources');
 var pluginsRouter   = require('./routes/plugins');
+var databasesRouter = require('./routes/databases');
 
 var app = express();
 
 app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -25,6 +27,7 @@ app.use('/', indexRouter);
 app.use('/api/atc', atcRouter);
 app.use('/api/airbases', airbasesRouter);
 app.use('/api/elevation', elevationRouter);
+app.use('/api/databases', databasesRouter);
 app.use('/plugins', pluginsRouter)
 app.use('/users', usersRouter);
 app.use('/uikit', uikitRouter);
