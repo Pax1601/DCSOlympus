@@ -580,8 +580,10 @@ export class Map extends L.Map {
                 }
             }
             else if (selectedUnitTypes.length === 1 && ["GroundUnit", "NavyUnit"].includes(selectedUnitTypes[0])) {
-                if (selectedUnits.every((unit: Unit) => { return ["Gun Artillery", "Rocket Artillery", "Infantry", "IFV", "Tank", "Cruiser", "Destroyer", "Frigate"].includes(unit.getType()) })) 
+                if (selectedUnits.every((unit: Unit) => { return ["Gun Artillery", "Rocket Artillery", "Infantry", "IFV", "Tank", "Cruiser", "Destroyer", "Frigate"].includes(unit.getType()) })) {
                     options["fire-at-area"] = { text: "Fire at area", tooltip: "Fire at a large area" };
+                    options["simulate-fire-fight"] = { text: "Simulate fire fight", tooltip: "Simulate a fire fight by shooting randomly in a certain large area" };
+                }
                 else 
                     (getApp().getPopupsManager().get("infoPopup") as Popup).setText(`Selected units can not perform point actions.`);
             }
@@ -604,6 +606,10 @@ export class Map extends L.Map {
                     else if (option === "fire-at-area") {
                         getApp().getUnitsManager().getSelectedUnits().length > 0 ? this.setState(MOVE_UNIT) : this.setState(IDLE);
                         getApp().getUnitsManager().selectedUnitsFireAtArea(this.getMouseCoordinates());
+                    }
+                    else if (option === "simulate-fire-fight") {
+                        getApp().getUnitsManager().getSelectedUnits().length > 0 ? this.setState(MOVE_UNIT) : this.setState(IDLE);
+                        getApp().getUnitsManager().selectedUnitsSimulateFireFight(this.getMouseCoordinates());
                     }
                 });
             }

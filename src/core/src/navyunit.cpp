@@ -11,6 +11,26 @@ using namespace GeographicLib;
 
 extern Scheduler* scheduler;
 extern UnitsManager* unitsManager;
+json::value NavyUnit::database = json::value();
+
+void NavyUnit::loadDatabase(string path) {
+	char* buf = nullptr;
+	size_t sz = 0;
+	if (_dupenv_s(&buf, &sz, "DCSOLYMPUS_PATH") == 0 && buf != nullptr)
+	{
+		std::ifstream ifstream(string(buf) + path);
+		std::stringstream ss;
+		ss << ifstream.rdbuf();
+		std::error_code errorCode;
+		database = json::value::parse(ss.str(), errorCode);
+		if (database.is_object())
+			log("Navy Units database loaded correctly");
+		else
+			log("Error reading Navy Units database file");
+
+		free(buf);
+	}
+}
 
 /* Navy Unit */
 NavyUnit::NavyUnit(json::value json, unsigned int ID) : Unit(json, ID)
@@ -49,6 +69,10 @@ void NavyUnit::setState(unsigned char newState)
 			setTargetPosition(Coords(NULL));
 			break;
 		}
+		case State::SIMULATE_FIRE_FIGHT: {
+			setTargetPosition(Coords(NULL));
+			break;
+		}
 		default:
 			break;
 		}
@@ -68,6 +92,13 @@ void NavyUnit::setState(unsigned char newState)
 	case State::FIRE_AT_AREA: {
 		clearActivePath();
 		resetActiveDestination();
+		resetTask();
+		break;
+	}
+	case State::SIMULATE_FIRE_FIGHT: {
+		clearActivePath();
+		resetActiveDestination();
+		resetTask();
 		break;
 	}
 	default:
@@ -118,8 +149,23 @@ void NavyUnit::AIloop()
 
 		if (!getHasTask()) {
 			std::ostringstream taskSS;
+			taskSS.precision(10);
+
 			taskSS << "{id = 'FireAtPoint', lat = " << targetPosition.lat << ", lng = " << targetPosition.lng << ", radius = 1000}";
-			Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str()));
+			Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
+			scheduler->appendCommand(command);
+			setHasTask(true);
+		}
+	}
+	case State::SIMULATE_FIRE_FIGHT: {
+		setTask("Simulating fire fight");
+
+		if (!getHasTask()) {
+			std::ostringstream taskSS;
+			taskSS.precision(10);
+
+			taskSS << "{id = 'FireAtPoint', lat = " << targetPosition.lat << ", lng = " << targetPosition.lng << ", radius = 1}";
+			Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
 			scheduler->appendCommand(command);
 			setHasTask(true);
 		}

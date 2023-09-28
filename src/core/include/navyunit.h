@@ -8,6 +8,8 @@ class NavyUnit : public Unit
 public:
 	NavyUnit(json::value json, unsigned int ID);
 
+	static void loadDatabase(string path);
+
 	virtual void setState(unsigned char newState);
 	virtual void setDefaults(bool force = false);
 
@@ -16,5 +18,5 @@ public:
 
 protected:
 	virtual void AIloop();
-
+	static json::value database;
 };

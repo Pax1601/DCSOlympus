@@ -64,7 +64,8 @@ namespace State
 		BOMB_POINT,
 		CARPET_BOMB,
 		BOMB_BUILDING,
-		FIRE_AT_AREA
+		FIRE_AT_AREA,
+		SIMULATE_FIRE_FIGHT
 	};
 };
 
