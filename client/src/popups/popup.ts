@@ -28,16 +28,16 @@ export class PopupMessage {
 }
 
 export class Popup extends Panel {
+    #fadeTime: number = 2000; // Milliseconds
     #messages: PopupMessage[] = [];
     #stackAfter: number;
 
-    constructor(ID: string, stackAfter: number = 5) {
+    constructor(ID: string, stackAfter: number = 3) {
         super(ID);
         this.show();
         this.#stackAfter = stackAfter;
     }
 
-    #fadeTime: number = 2000; // Milliseconds
     setFadeTime(fadeTime: number) {
         this.#fadeTime = fadeTime;
     }
@@ -52,7 +52,7 @@ export class Popup extends Panel {
         this.getElement().appendChild(message.getElement());
         this.#messages.push(message);
         if (this.#messages.length > this.#stackAfter) {
-            this.#messages[this.#messages.length - this.#stackAfter].getElement().classList.add("ol-popup-stack");
+            this.#messages[this.#messages.length - this.#stackAfter - 1].getElement().classList.add("ol-popup-stack");
         }
     }
 }

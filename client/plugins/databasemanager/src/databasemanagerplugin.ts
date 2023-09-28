@@ -3,6 +3,7 @@ import { AirUnitEditor } from "./airuniteditor";
 import { OlympusApp } from "olympusapp";
 import { GroundUnitEditor } from "./grounduniteditor";
 import { PrimaryToolbar } from "toolbars/primarytoolbar";
+import { NavyUnitEditor } from "./navyuniteditor";
 
 export class DatabaseManagerPlugin implements OlympusPlugin {
     #app: OlympusApp | null = null;
@@ -26,6 +27,7 @@ export class DatabaseManagerPlugin implements OlympusPlugin {
     #aircraftEditor: AirUnitEditor;
     #helicopterEditor: AirUnitEditor;
     #groundUnitEditor: GroundUnitEditor;
+    #navyUnitEditor: NavyUnitEditor;
 
     constructor() {
         this.#element = document.createElement("div");
@@ -59,6 +61,7 @@ export class DatabaseManagerPlugin implements OlympusPlugin {
         this.#button4 = document.createElement("button");
         this.#button4.classList.add("tab-button");
         this.#button4.textContent = "Navy Unit database";
+        this.#button4.onclick = () => { this.hideAll(); this.#navyUnitEditor.show(); this.#button4.classList.add("selected"); };
         topButtonContainer.appendChild(this.#button4);
 
         this.#element.appendChild(topButtonContainer);
@@ -82,6 +85,7 @@ export class DatabaseManagerPlugin implements OlympusPlugin {
         this.#aircraftEditor = new AirUnitEditor(this.#contentDiv1, this.#contentDiv2, this.#contentDiv3);
         this.#helicopterEditor = new AirUnitEditor(this.#contentDiv1, this.#contentDiv2, this.#contentDiv3);
         this.#groundUnitEditor = new GroundUnitEditor(this.#contentDiv1, this.#contentDiv2, this.#contentDiv3);
+        this.#navyUnitEditor = new NavyUnitEditor(this.#contentDiv1, this.#contentDiv2, this.#contentDiv3);
 
         let bottomButtonContainer = document.createElement("div");
 
@@ -100,6 +104,10 @@ export class DatabaseManagerPlugin implements OlympusPlugin {
             var groundUnitDatabase = this.#groundUnitEditor.getDatabase();
             if (groundUnitDatabase)
                 this.uploadDatabase(groundUnitDatabase, "groundUnitDatabase");
+
+            var navyUnitDatabase = this.#navyUnitEditor.getDatabase();
+            if (navyUnitDatabase)
+                this.uploadDatabase(navyUnitDatabase, "navyUnitDatabase");
         };
         bottomButtonContainer.appendChild(this.#button5);
 
@@ -160,6 +168,10 @@ export class DatabaseManagerPlugin implements OlympusPlugin {
         var groundUnitDatabase = this.#app?.getGroundUnitDatabase();
         if (groundUnitDatabase != null)
             this.#groundUnitEditor.setDatabase(groundUnitDatabase);
+
+        var navyUnitDatabase = this.#app?.getNavyUnitDatabase();
+        if (navyUnitDatabase != null)
+            this.#navyUnitEditor.setDatabase(navyUnitDatabase);
 
         this.hideAll();
         this.#aircraftEditor.show();

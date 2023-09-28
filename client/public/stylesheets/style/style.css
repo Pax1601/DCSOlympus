@@ -13,6 +13,7 @@ body {
     display: grid;
     margin: 0;
     padding: 0;
+    position: fixed;
 }
 
 html,
@@ -303,29 +304,6 @@ form>div {
 
 .ol-panel-list.sortable>.sortable-item>.handle img {
     max-width: 16px;
-}
-
-.ol-panel-board {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-}
-
-.ol-panel-board>.panel-section {
-    border-right: 1px solid #555;
-    padding: 0 30px;
-}
-
-.ol-panel-board>.panel-section:first-child {
-    padding-left: 0px;
-}
-
-.ol-panel-board>.panel-section:last-child {
-    padding-right: 0px;
-}
-
-.ol-panel-board>.panel-section:last-of-type {
-    border-right-width: 0;
 }
 
 h1,
@@ -702,13 +680,19 @@ nav.ol-panel> :last-child {
 
 /****************************************************************************************/
 #splash-screen {
-    background-image: url("/resources/theme/images/splash/1.png");
-    background-position: 100% 50%;
-    background-size: 60%;
     border-radius: var(--border-radius-md);
     overflow: hidden;
-    width: 1200px;
+    width: 70%;
+    max-width: 1200px;
     z-index: 99999;
+}
+
+@media (min-width: 1700px) {
+    #splash-screen {
+        background-image: url("/resources/theme/images/splash/1.png");
+        background-position: 100% 50%;
+        background-size: contain;
+    }
 }
 
 #splash-content {
@@ -721,6 +705,12 @@ nav.ol-panel> :last-child {
     width: 50%;
 }
 
+@media (max-width: 1700px) {
+    #splash-content {
+        width: auto;
+    }
+}
+  
 #splash-content::after {
     background-color: var(--background-steel);
     content: "";
@@ -760,6 +750,10 @@ nav.ol-panel> :last-child {
     font-size: 11px;
 }
 
+#splash-content #legal-stuff {
+    width: 100%;
+}
+
 #splash-content #legal-stuff h5 {
     text-transform: uppercase;
 }
@@ -770,12 +764,14 @@ nav.ol-panel> :last-child {
     width: 120%;
 }
 
-#splash-content.ol-dialog-content {
-    margin: 0px;
+@media (max-width: 1700px) {
+    #splash-content #legal-stuff p {
+        width: 100%;
+    }
 }
 
-.feature-splashScreen #splash-screen {
-    display: flex;
+#splash-content.ol-dialog-content {
+    margin: 0px;
 }
 
 #gray-out {
@@ -794,6 +790,8 @@ nav.ol-panel> :last-child {
     display: flex;
     flex-direction: row;
     margin: 10px 0px;
+    flex-wrap: wrap;
+    width: 100%;
 }
 
 #authentication-form>div {

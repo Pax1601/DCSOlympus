@@ -19,7 +19,8 @@
 }
 
 .ol-popup-stack {
-    transform: translateY(+80%);
+    margin-bottom: -20px;
+    z-index: -1;
 }
 
 .visible {

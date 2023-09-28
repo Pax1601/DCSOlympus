@@ -542,6 +542,8 @@ declare module "interfaces" {
             };
         };
         cost?: number;
+        barrelHeight?: number;
+        muzzleVelocity?: number;
     }
     export interface UnitSpawnOptions {
         roleType: string;
@@ -722,6 +724,7 @@ declare module "other/utils" {
     export function getCheckboxOptions(dropdown: Dropdown): {
         [key: string]: boolean;
     };
+    export function getGroundElevation(latlng: LatLng, callback: CallableFunction): void;
 }
 declare module "controls/slider" {
     import { Control } from "controls/control";
@@ -1080,6 +1083,7 @@ declare module "unit/unit" {
         carpetBomb(latlng: LatLng): void;
         bombBuilding(latlng: LatLng): void;
         fireAtArea(latlng: LatLng): void;
+        simulateFireFight(latlng: LatLng, groundElevation: number | null): void;
         /***********************************************/
         onAdd(map: Map): this;
     }
@@ -1289,9 +1293,14 @@ declare module "panels/panel" {
 }
 declare module "popups/popup" {
     import { Panel } from "panels/panel";
+    export class PopupMessage {
+        #private;
+        constructor(text: string, fateTime: number);
+        getElement(): HTMLDivElement;
+    }
     export class Popup extends Panel {
         #private;
-        constructor(elementId: string);
+        constructor(ID: string, stackAfter?: number);
         setFadeTime(fadeTime: number): void;
         setText(text: string): void;
     }
@@ -1747,6 +1756,11 @@ declare module "unit/unitsmanager" {
          * @param latlng Location to fire at
          */
         selectedUnitsFireAtArea(latlng: LatLng): void;
+        /** Instruct the selected units to simulate a fire fight at specific coordinates
+         *
+         * @param latlng Location to fire at
+         */
+        selectedUnitsSimulateFireFight(latlng: LatLng): void;
         /*********************** Control operations on selected units ************************/
         /**  See getUnitsCategories for more info
          *
@@ -1886,7 +1900,7 @@ declare module "server/servermanager" {
         toggleDemoEnabled(): void;
         setCredentials(newUsername: string, newPassword: string): void;
         GET(callback: CallableFunction, uri: string, options?: ServerRequestOptions, responseType?: string): void;
-        POST(request: object, callback: CallableFunction): void;
+        PUT(request: object, callback: CallableFunction): void;
         getConfig(callback: CallableFunction): void;
         setAddress(address: string, port: number): void;
         getAirbases(callback: CallableFunction): void;
@@ -1932,6 +1946,7 @@ declare module "server/servermanager" {
         carpetBomb(ID: number, latlng: LatLng, callback?: CallableFunction): void;
         bombBuilding(ID: number, latlng: LatLng, callback?: CallableFunction): void;
         fireAtArea(ID: number, latlng: LatLng, callback?: CallableFunction): void;
+        simulateFireFight(ID: number, latlng: LatLng, altitude: number, callback?: CallableFunction): void;
         setAdvacedOptions(ID: number, isTanker: boolean, isAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings, callback?: CallableFunction): void;
         setCommandModeOptions(restrictSpawns: boolean, restrictToCoalition: boolean, spawnPoints: {
             blue: number;

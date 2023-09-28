@@ -204,6 +204,8 @@ export interface UnitBlueprint {
     filename?: string;
     liveries?: { [key: string]: { name: string, countries: string[] } };
     cost?: number;
+    barrelHeight?: number;
+    muzzleVelocity?: number;
 }
 
 export interface UnitSpawnOptions {

@@ -19,8 +19,19 @@ import { CoalitionAreaContextMenu } from "../contextmenus/coalitionareacontextme
 import { DrawingCursor } from "./coalitionarea/drawingcursor";
 import { AirbaseSpawnContextMenu } from "../contextmenus/airbasespawnmenu";
 import { Popup } from "../popups/popup";
+import { GestureHandling } from "leaflet-gesture-handling";
+import { TouchBoxSelect } from "./touchboxselect";
 
-L.Map.addInitHook('addHandler', 'boxSelect', BoxSelect);
+var hasTouchScreen = false;
+if ("maxTouchPoints" in navigator) 
+    hasTouchScreen = navigator.maxTouchPoints > 0;
+
+if (hasTouchScreen) 
+    L.Map.addInitHook('addHandler', 'boxSelect', TouchBoxSelect);
+else 
+    L.Map.addInitHook('addHandler', 'boxSelect', BoxSelect);
+
+L.Map.addInitHook("addHandler", "gestureHandling", GestureHandling);
 
 // TODO would be nice to convert to ts - yes
 require("../../public/javascripts/leaflet.nauticscale.js")
@@ -77,8 +88,22 @@ export class Map extends L.Map {
      */
     constructor(ID: string){
         /* Init the leaflet map */
-        //@ts-ignore Needed because the boxSelect option is non-standard
-        super(ID, { zoomSnap: 0, zoomDelta: 0.25, preferCanvas: true, doubleClickZoom: false, zoomControl: false, boxZoom: false, boxSelect: true, zoomAnimation: true, maxBoundsViscosity: 1.0, minZoom: 7, keyboard: true, keyboardPanDelta: 0 });
+        super(ID, { 
+            zoomSnap: 0, 
+            zoomDelta: 0.25, 
+            preferCanvas: true, 
+            doubleClickZoom: false, 
+            zoomControl: false, 
+            boxZoom: false, 
+            //@ts-ignore Needed because the boxSelect option is non-standard
+            boxSelect: true, 
+            zoomAnimation: true, 
+            maxBoundsViscosity: 1.0,
+            minZoom: 7, 
+            keyboard: true,
+            keyboardPanDelta: 0,
+            gestureHandling: hasTouchScreen 
+        });
         this.setView([37.23, -115.8], 10);
 
         this.#ID = ID;
@@ -486,7 +511,7 @@ export class Map extends L.Map {
     }
 
     #onDoubleClick(e: any) {
-        this.deselectAllCoalitionAreas();
+
     }
 
     #onContextMenu(e: any) {

@@ -91,8 +91,8 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	justify-content: space-between;
 }
 
-#advanced-settings-dialog h4 {
-	white-space: nowrap;
+#advanced-settings-dialog>.ol-dialog-content>div input[type="number"] {
+    width: 60px;
 }
 
 #advanced-settings-dialog hr {
@@ -102,6 +102,12 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 
 #advanced-settings-dialog .ol-text-input input {
 	height: 40px;
+	width: fit-content;
+}
+
+#advanced-settings-dialog h4 {
+	width: fit-content;
+	text-wrap: nowrap;
 }
 
 #general-settings-grid {
