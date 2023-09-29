@@ -1,4 +1,4 @@
-import { KeyboardShortcutOptions, MouseShortcutOptions, ShortcutOptions } from "../interfaces";
+import { ShortcutKeyboardOptions, ShortcutMouseOptions, ShortcutOptions } from "../interfaces";
 import { keyEventWasInInput } from "../other/utils";
 
 export abstract class Shortcut {
@@ -14,7 +14,7 @@ export abstract class Shortcut {
 }
 
 export class ShortcutKeyboard extends Shortcut {
-    constructor(config: KeyboardShortcutOptions) {
+    constructor(config: ShortcutKeyboardOptions) {
         config.event = config.event || "keyup";
         super(config);
 
@@ -37,7 +37,7 @@ export class ShortcutKeyboard extends Shortcut {
 }
 
 export class ShortcutMouse extends Shortcut {
-    constructor(config: MouseShortcutOptions) {
+    constructor(config: ShortcutMouseOptions) {
         super(config);
     }
 }
