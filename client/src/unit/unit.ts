@@ -723,6 +723,10 @@ export class Unit extends CustomMarker {
         getApp().getServerManager().fireAtArea(this.ID, latlng);
     }
 
+    simulateFireFight(latlng: LatLng, groundElevation: number | null) {
+        getApp().getServerManager().simulateFireFight(this.ID, latlng, groundElevation?? 0);
+    }
+
     /***********************************************/
     onAdd(map: Map): this {
         super.onAdd(map);

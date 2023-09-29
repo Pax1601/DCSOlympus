@@ -13,11 +13,30 @@
 	top: 10px;
 	z-index: 99999;
 	column-gap: 10px;
+	margin-right: 320px;
+	height: fit-content;
+}
+
+@media (max-width: 1820px) {
+    #toolbar-container {
+        flex-direction: column;
+		align-items: start;
+		row-gap: 10px;
+    }
 }
 
 #primary-toolbar {
 	align-items: center;
 	display: flex;
+	height: fit-content;
+	min-width: 650px;
+}
+
+@media (max-width: 1820px) {
+    #primary-toolbar {
+        row-gap: 10px;
+		flex-wrap: wrap;
+    }
 }
 
 #command-mode-toolbar {
@@ -83,6 +102,18 @@
 	z-index: 9999;
 }
 
+@media (max-width: 1820px) {
+    #unit-control-panel {
+        top: 150px;
+    }
+}
+
+@media (max-width: 1350px) {
+    #unit-control-panel {
+        top: 190px;
+    }
+}
+
 #unit-info-panel {
 	bottom: 20px;
 	font-size: 12px;
@@ -91,6 +122,15 @@
 	width: fit-content;
 	z-index: 9999;
 	padding: 24px 30px;
+	display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+@media (max-width: 1525px) {
+    #unit-info-panel {
+		flex-direction: column;
+    }
 }
 
 #info-popup {
@@ -100,7 +140,7 @@
     top: 100px;
     left: 50%;
     translate: -50% 0%;
-    z-index: 9999;
+    z-index: 9999999999;
 	display: flex;
 	align-items: center;
 }

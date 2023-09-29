@@ -1,0 +1,239 @@
+#database-manager-panel {
+    flex-direction: column;
+    display: flex;
+    width: 80%;
+    height: 80%;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: var(--background-steel) !important;
+    z-index: 9999999;
+}
+
+@media (orientation: landscape) {
+    .dm-container {
+      flex-direction: row;
+    }
+}
+  
+@media (orientation: portrait) {
+    .dm-container {
+        flex-direction: column;
+    }
+}
+
+#database-manager-panel * {
+    font-size: 13;
+    font-family: 'Open Sans', sans-serif !important;
+    user-select: none;
+}
+
+#database-manager-panel>div:first-child {
+    display: flex;
+    align-items: center;
+}
+
+#database-manager-panel>div:last-child {
+    display: flex;
+    column-gap: 5px;
+    align-items: center;
+    justify-content: end;
+    justify-items: end;
+    margin-top: 5px;
+}
+
+#database-manager-panel>div:last-child>button {
+    border: 1px solid white;
+}
+
+.dm-container {
+    background-color: var(--background-grey);
+    border: 2px solid #777777;
+    position: relative;
+    display: flex;
+    width: 100%;
+    padding: 5px;
+    height: calc(100% - 64px - 5px);
+    border-radius: 0px 5px 5px 5px;
+}
+
+.dm-container>div:nth-child(2) {
+    width: 500px;
+}
+
+.dm-container>div:nth-child(3) {
+    flex: 1;
+}
+
+.dm-content-container {
+    position: relative;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 5px;
+}
+
+@media (orientation: landscape) {
+    .dm-content-container {
+        height: calc(100% - 20px);
+        min-width: 200px;
+        width: fit-content;
+    }
+}
+  
+@media (orientation: portrait) {
+    .dm-content-container {
+        width: 100% - calc(20px);
+        height: 30%;
+    }
+}
+
+.dm-content-container>label {
+    font-size: 18px !important;
+    font-weight: bold;
+}
+
+.dm-scroll-container {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    max-height: 100%;
+    color: black;
+    font-weight: bold;
+}
+
+.dm-scroll-container>div:nth-child(even) {
+    background-color: gainsboro;
+}
+
+.dm-scroll-container>div:nth-child(odd) {
+    background-color: white;
+}
+
+.dm-scroll-container>div *:nth-child(1) {
+    height: 100%;
+    width: calc(100% - 25px);
+    padding: 2px;
+    text-wrap: wrap;
+    word-wrap: break-word;
+}
+
+.dm-scroll-container>div *:nth-child(1):hover {
+    background-color: var(--secondary-blue-text);
+    color: white;
+    cursor: pointer;
+}
+
+.dm-scroll-container>div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.dm-scroll-container>div>button {
+    height: 20px;
+    width: 20px;
+    padding: 0px;
+}
+
+.input-row {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.input-row>dt {
+    width: 250px;
+}
+
+.input-row>dd {
+    width: 100%;
+}
+
+.input-row>dd>* {
+    width: 100%;
+    font-weight: bold;
+}
+
+.dm-loadout-container {
+    max-height: 100%;
+    max-width: 500px;
+    width: 100%;
+}
+
+.dm-items-container {
+    max-height: 100%;
+    height: fit-content;
+}
+
+.dm-items-container>div {
+    display: flex;
+    align-items: center;
+    column-gap: 2px;
+}
+
+.dm-items-container>div>label {
+    width: 80px !important;
+}
+
+.dm-items-container div>input:nth-of-type(1) {
+    flex: 1;
+    font-weight: bold;
+}
+
+.dm-items-container div>input:nth-of-type(2) {
+    width: 40px;
+    font-weight: bold;
+}
+
+.dm-new-element-input {
+    display: flex;
+    flex-direction: row;
+    column-gap: 2px;
+    width: 100%;
+    align-items: center;
+}
+
+.dm-new-element-input>input {
+    width: 100%;
+}
+
+.dm-new-element-input>button {
+    width: 60px;
+}
+
+.dm-new-item-input {
+    display: flex;
+    justify-content: end;
+}
+
+.dm-new-item-input>button {
+    width: 60px;
+}
+
+.tab-button {
+    transform: translateY(+3px);
+    background-color: var(--background-steel);
+    border-radius: 0;
+    border-bottom: 2px solid transparent !important;
+    border-top: 2px solid #777777 !important;
+    border-left: 2px solid #777777 !important;
+    border-right: 0px solid #777777 !important;
+}
+
+.tab-button.selected {
+    background-color: var(--background-grey);
+    z-index: 10;
+}
+
+.tab-button:first-of-type {
+    border-top-left-radius: 5px;
+}
+
+.tab-button:last-of-type {
+    border-top-right-radius: 5px;
+    border-right: 2px solid #777777 !important;
+}
+
+#database-manager-panel button :not(.dm-scroll-container>div) {
+    border: 1px solid white;
+}

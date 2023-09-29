@@ -146,8 +146,10 @@ void Unit::runAILoop() {
 
 	/* If the unit is alive, controlled, is the leader of the group and it is not a human, run the AI Loop that performs the requested commands and instructions (moving, attacking, etc) */
 	if (getAlive() && getControlled() && !getHuman() && getIsLeader()) {
-		if (checkTaskFailed() && state != State::IDLE && state != State::LAND)
+		if (checkTaskFailed() && state != State::IDLE && state != State::LAND) {
+			log(unitName + " has no task, switching to IDLE state");
 			setState(State::IDLE);
+		}
 		AIloop();
 	}
 
@@ -397,7 +399,7 @@ void Unit::resetActiveDestination()
 
 void Unit::resetTask()
 {
-	Command* command = dynamic_cast<Command*>(new ResetTask(groupName));
+	Command* command = dynamic_cast<Command*>(new ResetTask(groupName, [this]() { this->setHasTaskAssigned(false); }));
 	scheduler->appendCommand(command);
 	setHasTask(false);
 	resetTaskFailedCounter();
@@ -660,7 +662,7 @@ void Unit::goToDestination(string enrouteTask)
 {
 	if (activeDestination != NULL)
 	{
-		Command* command = dynamic_cast<Command*>(new Move(groupName, activeDestination, getDesiredSpeed(), getDesiredSpeedType() ? "GS" : "CAS", getDesiredAltitude(), getDesiredAltitudeType() ? "AGL" : "ASL", enrouteTask, getCategory()));
+		Command* command = dynamic_cast<Command*>(new Move(groupName, activeDestination, getDesiredSpeed(), getDesiredSpeedType() ? "GS" : "CAS", getDesiredAltitude(), getDesiredAltitudeType() ? "AGL" : "ASL", enrouteTask, getCategory(), [this]() { this->setHasTaskAssigned(true); }));
 		scheduler->appendCommand(command);
 		setHasTask(true);
 	}
@@ -732,13 +734,21 @@ bool Unit::checkTaskFailed()
 		return false;
 	else {
 		if (taskCheckCounter > 0)
-			taskCheckCounter--;
+			taskCheckCounter -= hasTaskAssigned;
 		return taskCheckCounter == 0;
 	}
 }
 
 void Unit::resetTaskFailedCounter() {
 	taskCheckCounter = TASK_CHECK_INIT_VALUE;
+}
+
+void Unit::setHasTaskAssigned(bool newHasTaskAssigned) {
+	hasTaskAssigned = newHasTaskAssigned;
+	if (hasTaskAssigned)
+		log(unitName + " was assigned a new task");
+	else
+		log(unitName + " no task assigned");
 }
 
 void Unit::triggerUpdate(unsigned char datumIndex) {

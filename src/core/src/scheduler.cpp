@@ -61,6 +61,7 @@ void Scheduler::execute(lua_State* L)
 				load = command->getLoad();
 				commands.remove(command);
 				executedCommandsHashes.push_back(command->getHash());
+				command->executeCallback(); /* Execute the command callback (this is a lambda function that can be used to execute a function when the command is run) */
 				delete command;
 				return;
 			}
@@ -560,6 +561,19 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		unit->setState(State::FIRE_AT_AREA);
 		unit->setTargetPosition(loc);
 		log(username + " tasked unit " + unit->getName() + " to fire at area", true);
+	}
+	else if (key.compare("simulateFireFight") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		double lat = value[L"location"][L"lat"].as_double();
+		double lng = value[L"location"][L"lng"].as_double();
+		double alt = value[L"altitude"].as_double();
+		Coords loc; loc.lat = lat; loc.lng = lng; loc.alt = alt;
+		Unit* unit = unitsManager->getGroupLeader(ID);
+		unit->setState(State::SIMULATE_FIRE_FIGHT);
+		unit->setTargetPosition(loc);
+		log(username + " tasked unit " + unit->getName() + " to simulate a fire fight", true);
 	}
 	else if (key.compare("setCommandModeOptions") == 0) {
 		setCommandModeOptions(value);

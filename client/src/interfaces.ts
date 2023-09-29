@@ -1,5 +1,5 @@
 import { LatLng } from "leaflet";
-import { OlympusApp } from "./app";
+import { OlympusApp } from "./olympusapp";
 import { Airbase } from "./mission/airbase";
 
 export interface OlympusPlugin {
@@ -204,6 +204,8 @@ export interface UnitBlueprint {
     filename?: string;
     liveries?: { [key: string]: { name: string, countries: string[] } };
     cost?: number;
+    barrelHeight?: number;
+    muzzleVelocity?: number;
 }
 
 export interface UnitSpawnOptions {

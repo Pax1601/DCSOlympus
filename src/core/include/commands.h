@@ -95,21 +95,26 @@ namespace ECMUse {
 class Command
 {
 public:
+	Command(function<void(void)> callback) : callback(callback) {};
 	unsigned int getPriority() { return priority; }
 	virtual string getString() = 0;
 	virtual unsigned int getLoad() = 0;
 	const string getHash() { return hash; }
+	void executeCallback() { callback(); }
 
 protected:
 	unsigned int priority = CommandPriority::LOW;
 	const string hash = random_string(16);
+	function<void(void)> callback;
 };
 
 /* Simple low priority move command (from user click) */
 class Move : public Command
 {
 public:
-	Move(string groupName, Coords destination, double speed, string speedType, double altitude, string altitudeType, string taskOptions, string category):
+	Move(string groupName, Coords destination, double speed, string speedType, double altitude, 
+		string altitudeType, string taskOptions, string category, function<void(void)> callback = []() {}) :
+		Command(callback),
 		groupName(groupName),
 		destination(destination),
 		speed(speed),
@@ -139,7 +144,8 @@ private:
 class Smoke : public Command
 {
 public:
-	Smoke(string color, Coords location) : 
+	Smoke(string color, Coords location, function<void(void)> callback = [](){}) :
+		Command(callback),
 		color(color), 
 		location(location) 
 	{ 
@@ -157,7 +163,8 @@ private:
 class SpawnGroundUnits : public Command
 {
 public:
-	SpawnGroundUnits(string coalition, vector<SpawnOptions> spawnOptions, string country, bool immediate) :
+	SpawnGroundUnits(string coalition, vector<SpawnOptions> spawnOptions, string country, bool immediate, function<void(void)> callback = [](){}) :
+		Command(callback),
 		coalition(coalition), 
 		spawnOptions(spawnOptions),
 		country(country),
@@ -179,7 +186,8 @@ private:
 class SpawnNavyUnits : public Command
 {
 public:
-	SpawnNavyUnits(string coalition, vector<SpawnOptions> spawnOptions, string country, bool immediate) :
+	SpawnNavyUnits(string coalition, vector<SpawnOptions> spawnOptions, string country, bool immediate, function<void(void)> callback = [](){}) :
+		Command(callback),
 		coalition(coalition),
 		spawnOptions(spawnOptions),
 		country(country),
@@ -201,7 +209,8 @@ private:
 class SpawnAircrafts : public Command
 {
 public:
-	SpawnAircrafts(string coalition, vector<SpawnOptions> spawnOptions, string airbaseName, string country, bool immediate) :
+	SpawnAircrafts(string coalition, vector<SpawnOptions> spawnOptions, string airbaseName, string country, bool immediate, function<void(void)> callback = [](){}) :
+		Command(callback),
 		coalition(coalition), 
 		spawnOptions(spawnOptions),
 		airbaseName(airbaseName),
@@ -221,12 +230,12 @@ private:
 	const bool immediate;
 };
 
-
 /* Spawn helicopter command */
 class SpawnHelicopters : public Command
 {
 public:
-	SpawnHelicopters(string coalition, vector<SpawnOptions> spawnOptions, string airbaseName, string country, bool immediate) :
+	SpawnHelicopters(string coalition, vector<SpawnOptions> spawnOptions, string airbaseName, string country, bool immediate, function<void(void)> callback = [](){}) :
+		Command(callback),
 		coalition(coalition),
 		spawnOptions(spawnOptions),
 		airbaseName(airbaseName),
@@ -250,7 +259,8 @@ private:
 class Clone : public Command
 {
 public:
-	Clone(vector<CloneOptions> cloneOptions, bool deleteOriginal) :
+	Clone(vector<CloneOptions> cloneOptions, bool deleteOriginal, function<void(void)> callback = [](){}) :
+		Command(callback),
 		cloneOptions(cloneOptions),
 		deleteOriginal(deleteOriginal)
 	{
@@ -268,7 +278,8 @@ private:
 class Delete : public Command
 {
 public:
-	Delete(unsigned int ID, bool explosion, bool immediate ) :
+	Delete(unsigned int ID, bool explosion, bool immediate, function<void(void)> callback = [](){}) :
+		Command(callback),
 		ID(ID), 
 		explosion(explosion),
 		immediate(immediate)
@@ -289,7 +300,8 @@ private:
 class SetTask : public Command
 {
 public:
-	SetTask(string groupName, string task) :
+	SetTask(string groupName, string task, function<void(void)> callback = [](){}) :
+		Command(callback),
 		groupName(groupName),
 		task(task)
 	{
@@ -307,7 +319,8 @@ private:
 class ResetTask : public Command
 {
 public:
-	ResetTask(string groupName) :
+	ResetTask(string groupName, function<void(void)> callback = [](){}) :
+		Command(callback),
 		groupName(groupName)
 	{
 		priority = CommandPriority::HIGH;
@@ -323,7 +336,8 @@ private:
 class SetCommand : public Command
 {
 public:
-	SetCommand(string groupName, string command) :
+	SetCommand(string groupName, string command, function<void(void)> callback = [](){}) :
+		Command(callback),
 		groupName(groupName),
 		command(command)
 	{
@@ -341,7 +355,8 @@ private:
 class SetOption : public Command
 {
 public:
-	SetOption(string groupName, unsigned int optionID, unsigned int optionValue) :
+	SetOption(string groupName, unsigned int optionID, unsigned int optionValue, function<void(void)> callback = [](){}) :
+		Command(callback),
 		groupName(groupName),
 		optionID(optionID),
 		optionValue(optionValue),
@@ -351,7 +366,8 @@ public:
 		priority = CommandPriority::HIGH;
 	};
 
-	SetOption(string groupName, unsigned int optionID, bool optionBool) :
+	SetOption(string groupName, unsigned int optionID, bool optionBool, function<void(void)> callback = [](){}) :
+		Command(callback),
 		groupName(groupName),
 		optionID(optionID),
 		optionValue(0),
@@ -375,7 +391,8 @@ private:
 class SetOnOff : public Command
 {
 public:
-	SetOnOff(string groupName, bool onOff) :
+	SetOnOff(string groupName, bool onOff, function<void(void)> callback = [](){}) :
+		Command(callback),
 		groupName(groupName),
 		onOff(onOff)
 	{
@@ -393,7 +410,8 @@ private:
 class Explosion : public Command
 {
 public:
-	Explosion(unsigned int intensity, Coords location) :
+	Explosion(unsigned int intensity, Coords location, function<void(void)> callback = [](){}) :
+		Command(callback),
 		location(location),
 		intensity(intensity)
 	{

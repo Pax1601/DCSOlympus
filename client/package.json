@@ -5,16 +5,19 @@
   "version": "v0.4.4-alpha",
   "private": true,
   "scripts": {
+    "emit-declarations": "tsc --project tsconfig.json --declaration --emitDeclarationOnly --outfile ./@types/olympus/index.d.ts",
     "copy": "copy.bat",
-    "start": "npm run copy & concurrently --kill-others \"npm run watch\" \"nodemon ./bin/www\"",
+    "start": "npm run copy & concurrently --kill-others \"npm run watch\" \"nodemon --ignore ./public/databases/ ./bin/www\"",
     "watch": "watchify .\\src\\index.ts --debug -o .\\public\\javascripts\\bundle.js -t [ babelify --global true --presets [ @babel/preset-env ] --extensions '.js'] -p [ tsify --noImplicitAny ]"
   },
   "dependencies": {
+    "body-parser": "^1.20.2",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "ejs": "^3.1.8",
     "express": "~4.16.1",
     "express-basic-auth": "^1.2.1",
+    "leaflet-gesture-handling": "^1.2.2",
     "morgan": "~1.9.1",
     "save": "^2.9.0",
     "srtm-elevation": "^2.1.2"

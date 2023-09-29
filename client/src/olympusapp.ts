@@ -20,6 +20,10 @@ import { SVGInjector } from "@tanem/svg-injector";
 import { ServerManager } from "./server/servermanager";
 
 import { BLUE_COMMANDER, GAME_MASTER, RED_COMMANDER } from "./constants/constants";
+import { aircraftDatabase } from "./unit/databases/aircraftdatabase";
+import { helicopterDatabase } from "./unit/databases/helicopterdatabase";
+import { groundUnitDatabase } from "./unit/databases/groundunitdatabase";
+import { navyUnitDatabase } from "./unit/databases/navyunitdatabase";
 import { ConfigurationOptions } from "./interfaces";
 
 export class OlympusApp {
@@ -39,10 +43,6 @@ export class OlympusApp {
     #popupsManager: Manager | null = null;
     #toolbarsManager: Manager | null = null;
     #shortcutManager: ShortcutManager | null = null;
-
-    /* UI Toolbars */
-    #primaryToolbar: PrimaryToolbar | null = null;
-    #commandModeToolbar: CommandModeToolbar | null = null;
 
     constructor() {
 
@@ -115,6 +115,38 @@ export class OlympusApp {
         }
     }
 
+    /**
+     * 
+     * @returns The aircraft database
+     */
+    getAircraftDatabase() {
+        return aircraftDatabase;
+    }
+
+    /**
+     * 
+     * @returns The helicopter database
+     */
+    getHelicopterDatabase() {
+        return helicopterDatabase;
+    }
+
+    /**
+     * 
+     * @returns The ground unit database
+     */
+    getGroundUnitDatabase() {
+        return groundUnitDatabase;
+    }
+
+    /**
+     * 
+     * @returns The navy unit database
+     */
+    getNavyUnitDatabase() {
+        return navyUnitDatabase;
+    }
+
     /** Set a message in the login splash screen
      * 
      * @param status The message to show in the login splash screen
@@ -155,7 +187,7 @@ export class OlympusApp {
 
         // Toolbars
         this.getToolbarsManager().add("primaryToolbar", new PrimaryToolbar("primary-toolbar"))
-            .add("commandModeToolbar", new PrimaryToolbar("command-mode-toolbar"));
+            .add("commandModeToolbar", new CommandModeToolbar("command-mode-toolbar"));
 
         this.#pluginsManager = new PluginsManager();
 

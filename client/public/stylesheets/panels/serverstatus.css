@@ -9,10 +9,26 @@
     width: 100%;
 }
 
-#server-status-panel .ol-data-grid:first-of-type {
-    border-right: 1px solid gray;
-    padding-right: 10px;
+@media (min-width: 1525px) {
+    #server-status-panel .ol-data-grid:first-of-type {
+        border-right: 1px solid gray;
+        padding-right: 10px;
+    }
 }
+
+@media (max-width: 1525px) {
+	#server-status-panel {
+        flex-direction: column;
+        row-gap: 10px;
+        width: 180px;
+    }
+
+    #server-status-panel .ol-data-grid:first-of-type {
+        border-bottom: 1px solid gray;
+        padding-bottom: 10px;
+    }
+}
+
 
 #server-status-panel dd {
     font-weight: bold;

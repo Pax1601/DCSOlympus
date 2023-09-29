@@ -13,3 +13,4 @@ node_modules
 /client/public/plugins
 /client/plugins/controltips/index.js
 hgt
+/client/public/databases/units/old

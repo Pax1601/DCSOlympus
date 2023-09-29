@@ -291,7 +291,7 @@ void Server::task()
     size_t sz = 0;
     if (_dupenv_s(&buf, &sz, "DCSOLYMPUS_PATH") == 0 && buf != nullptr)
     {
-        std::ifstream ifstream(string(buf) + "\\olympus.json");
+        std::ifstream ifstream(string(buf) + OLYMPUS_JSON_PATH);
         std::stringstream ss;
         ss << ifstream.rdbuf();
         std::error_code errorCode;

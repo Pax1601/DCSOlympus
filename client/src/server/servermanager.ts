@@ -86,7 +86,7 @@ export class ServerManager {
         xmlHttp.send(null);
     }
 
-    POST(request: object, callback: CallableFunction) {
+    PUT(request: object, callback: CallableFunction) {
         var xmlHttp = new XMLHttpRequest();
         xmlHttp.open("PUT", this.#demoEnabled ? this.#DEMO_ADDRESS : this.#REST_ADDRESS);
         xmlHttp.setRequestHeader("Content-Type", "application/json");
@@ -148,49 +148,49 @@ export class ServerManager {
     addDestination(ID: number, path: any, callback: CallableFunction = () => {}) {
         var command = { "ID": ID, "path": path }
         var data = { "setPath": command }
-        this.POST(data, callback);
+        this.PUT(data, callback);
     }
 
     spawnSmoke(color: string, latlng: LatLng, callback: CallableFunction = () => {}) {
         var command = { "color": color, "location": latlng };
         var data = { "smoke": command }
-        this.POST(data, callback);
+        this.PUT(data, callback);
     }
 
     spawnExplosion(intensity: number, latlng: LatLng, callback: CallableFunction = () => {}) {
         var command = { "intensity": intensity, "location": latlng };
         var data = { "explosion": command }
-        this.POST(data, callback);
+        this.PUT(data, callback);
     }
 
     spawnAircrafts(units: any, coalition: string, airbaseName: string, country: string, immediate: boolean, spawnPoints: number, callback: CallableFunction = () => {}) {
         var command = { "units": units, "coalition": coalition, "airbaseName": airbaseName, "country": country, "immediate": immediate, "spawnPoints": spawnPoints };
         var data = { "spawnAircrafts": command }
-        this.POST(data, callback);
+        this.PUT(data, callback);
     }
 
     spawnHelicopters(units: any, coalition: string, airbaseName: string, country: string, immediate: boolean, spawnPoints: number, callback: CallableFunction = () => {}) {
         var command = { "units": units, "coalition": coalition, "airbaseName": airbaseName, "country": country, "immediate": immediate, "spawnPoints": spawnPoints };
         var data = { "spawnHelicopters": command }
-        this.POST(data, callback);
+        this.PUT(data, callback);
     }
 
     spawnGroundUnits(units: any, coalition: string, country: string, immediate: boolean, spawnPoints: number, callback: CallableFunction = () => {}) {
         var command = { "units": units, "coalition": coalition, "country": country, "immediate": immediate, "spawnPoints": spawnPoints };;
         var data = { "spawnGroundUnits": command }
-        this.POST(data, callback);
+        this.PUT(data, callback);
     }
 
     spawnNavyUnits(units: any, coalition: string, country: string, immediate: boolean, spawnPoints: number, callback: CallableFunction = () => {}) {
         var command = { "units": units, "coalition": coalition, "country": country, "immediate": immediate, "spawnPoints": spawnPoints };
         var data = { "spawnNavyUnits": command }
-        this.POST(data, callback);
+        this.PUT(data, callback);
     }
 
     attackUnit(ID: number, targetID: number, callback: CallableFunction = () => {}) {
         var command = { "ID": ID, "targetID": targetID };
         var data = { "attackUnit": command }
-        this.POST(data, callback);
+        this.PUT(data, callback);
     }
 
     followUnit(ID: number, targetID: number, offset: { "x": number, "y": number, "z": number }, callback: CallableFunction = () => {}) {
@@ -200,127 +200,133 @@ export class ServerManager {
 
         var command = { "ID": ID, "targetID": targetID, "offsetX": offset["x"], "offsetY": offset["y"], "offsetZ": offset["z"] };
         var data = { "followUnit": command }
-        this.POST(data, callback);
+        this.PUT(data, callback);
     }
 
     cloneUnits(units: {ID: number, location: LatLng}[], deleteOriginal: boolean, spawnPoints: number, callback: CallableFunction = () => {}) {
         var command = { "units": units, "deleteOriginal": deleteOriginal, "spawnPoints": spawnPoints };
         var data = { "cloneUnits": command }
-        this.POST(data, callback);
+        this.PUT(data, callback);
     }
 
     deleteUnit(ID: number, explosion: boolean, immediate: boolean, callback: CallableFunction = () => {}) {
         var command = { "ID": ID, "explosion": explosion, "immediate": immediate };
         var data = { "deleteUnit": command }
-        this.POST(data, callback);
+        this.PUT(data, callback);
     }
 
     landAt(ID: number, latlng: LatLng, callback: CallableFunction = () => {}) {
         var command = { "ID": ID, "location": latlng };
         var data = { "landAt": command }
-        this.POST(data, callback);
+        this.PUT(data, callback);
     }
 
     changeSpeed(ID: number, speedChange: string, callback: CallableFunction = () => {}) {
         var command = { "ID": ID, "change": speedChange }
         var data = { "changeSpeed": command }
-        this.POST(data, callback);
+        this.PUT(data, callback);
     }
 
     setSpeed(ID: number, speed: number, callback: CallableFunction = () => {}) {
         var command = { "ID": ID, "speed": speed }
         var data = { "setSpeed": command }
-        this.POST(data, callback);
+        this.PUT(data, callback);
     }
 
     setSpeedType(ID: number, speedType: string, callback: CallableFunction = () => {}) {
         var command = { "ID": ID, "speedType": speedType }
         var data = { "setSpeedType": command }
-        this.POST(data, callback);
+        this.PUT(data, callback);
     }
 
     changeAltitude(ID: number, altitudeChange: string, callback: CallableFunction = () => {}) {
         var command = { "ID": ID, "change": altitudeChange }
         var data = { "changeAltitude": command }
-        this.POST(data, callback);
+        this.PUT(data, callback);
     }
 
     setAltitudeType(ID: number, altitudeType: string, callback: CallableFunction = () => {}) {
         var command = { "ID": ID, "altitudeType": altitudeType }
         var data = { "setAltitudeType": command }
-        this.POST(data, callback);
+        this.PUT(data, callback);
     }
 
     setAltitude(ID: number, altitude: number, callback: CallableFunction = () => {}) {
         var command = { "ID": ID, "altitude": altitude }
         var data = { "setAltitude": command }
-        this.POST(data, callback);
+        this.PUT(data, callback);
     }
 
     createFormation(ID: number, isLeader: boolean, wingmenIDs: number[], callback: CallableFunction = () => {}) {
         var command = { "ID": ID, "wingmenIDs": wingmenIDs, "isLeader": isLeader }
         var data = { "setLeader": command }
-        this.POST(data, callback);
+        this.PUT(data, callback);
     }
 
     setROE(ID: number, ROE: string, callback: CallableFunction = () => {}) {
         var command = { "ID": ID, "ROE": ROEs.indexOf(ROE) }
         var data = { "setROE": command }
-        this.POST(data, callback);
+        this.PUT(data, callback);
     }
 
     setReactionToThreat(ID: number, reactionToThreat: string, callback: CallableFunction = () => {}) {
         var command = { "ID": ID, "reactionToThreat": reactionsToThreat.indexOf(reactionToThreat) }
         var data = { "setReactionToThreat": command }
-        this.POST(data, callback);
+        this.PUT(data, callback);
     }
 
     setEmissionsCountermeasures(ID: number, emissionCountermeasure: string, callback: CallableFunction = () => {}) {
         var command = { "ID": ID, "emissionsCountermeasures": emissionsCountermeasures.indexOf(emissionCountermeasure) }
         var data = { "setEmissionsCountermeasures": command }
-        this.POST(data, callback);
+        this.PUT(data, callback);
     }
 
     setOnOff(ID: number, onOff: boolean, callback: CallableFunction = () => {}) {
         var command = { "ID": ID, "onOff": onOff }
         var data = { "setOnOff": command }
-        this.POST(data, callback);
+        this.PUT(data, callback);
     }
 
     setFollowRoads(ID: number, followRoads: boolean, callback: CallableFunction = () => {}) {
         var command = { "ID": ID, "followRoads": followRoads }
         var data = { "setFollowRoads": command }
-        this.POST(data, callback);
+        this.PUT(data, callback);
     }
 
     refuel(ID: number, callback: CallableFunction = () => {}) {
         var command = { "ID": ID };
         var data = { "refuel": command }
-        this.POST(data, callback);
+        this.PUT(data, callback);
     }
 
     bombPoint(ID: number, latlng: LatLng, callback: CallableFunction = () => {}) {
         var command = { "ID": ID, "location": latlng }
         var data = { "bombPoint": command }
-        this.POST(data, callback);
+        this.PUT(data, callback);
     }
 
     carpetBomb(ID: number, latlng: LatLng, callback: CallableFunction = () => {}) {
         var command = { "ID": ID, "location": latlng }
         var data = { "carpetBomb": command }
-        this.POST(data, callback);
+        this.PUT(data, callback);
     }
 
     bombBuilding(ID: number, latlng: LatLng, callback: CallableFunction = () => {}) {
         var command = { "ID": ID, "location": latlng }
         var data = { "bombBuilding": command }
-        this.POST(data, callback);
+        this.PUT(data, callback);
     }
 
     fireAtArea(ID: number, latlng: LatLng, callback: CallableFunction = () => {}) {
         var command = { "ID": ID, "location": latlng }
         var data = { "fireAtArea": command }
-        this.POST(data, callback);
+        this.PUT(data, callback);
+    }
+
+    simulateFireFight(ID: number, latlng: LatLng, altitude: number, callback: CallableFunction = () => {}) {
+        var command = { "ID": ID, "location": latlng, "altitude": altitude }
+        var data = { "simulateFireFight": command }
+        this.PUT(data, callback);
     }
 
     setAdvacedOptions(ID: number, isTanker: boolean, isAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings, callback: CallableFunction = () => {}) {
@@ -334,7 +340,7 @@ export class ServerManager {
         };
 
         var data = { "setAdvancedOptions": command };
-        this.POST(data, callback);
+        this.PUT(data, callback);
     }
 
     setCommandModeOptions(restrictSpawns: boolean, restrictToCoalition: boolean, spawnPoints: {blue: number, red: number}, eras: string[], setupTime: number, callback: CallableFunction = () => {}) {
@@ -347,7 +353,7 @@ export class ServerManager {
         };
 
         var data = { "setCommandModeOptions": command };
-        this.POST(data, callback);
+        this.PUT(data, callback);
     }
 
     startUpdate() {
