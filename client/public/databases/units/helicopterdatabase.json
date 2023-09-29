@@ -58,9 +58,9 @@
 				"code": "8xBGM-71, 14xHYDRA-70",
 				"name": "8xBGM-71, 14xHYDRA-70",
 				"roles": [
-					"Escort",
+					"CAP",
 					"CAS",
-					"Ground Attack"
+					"Strike"
 				]
 			},
 			{
@@ -110,9 +110,9 @@
 				"code": "14xHYDRA-70",
 				"name": "14xHYDRA-70",
 				"roles": [
-					"Escort",
+					"CAP",
 					"CAS",
-					"Ground Attack"
+					"Strike"
 				]
 			},
 			{
@@ -126,9 +126,9 @@
 				"code": "38xHYDRA-70",
 				"name": "38xHYDRA-70",
 				"roles": [
-					"Escort",
+					"CAP",
 					"CAS",
-					"Ground Attack"
+					"Strike"
 				]
 			},
 			{
@@ -142,9 +142,9 @@
 				"code": "8xAGM-114",
 				"name": "8xAGM-114",
 				"roles": [
-					"Escort",
+					"CAP",
 					"CAS",
-					"Ground Attack"
+					"Strike"
 				]
 			},
 			{
@@ -158,9 +158,9 @@
 				"code": "28xHYDRA-70",
 				"name": "28xHYDRA-70",
 				"roles": [
-					"Escort",
+					"CAP",
 					"CAS",
-					"Ground Attack"
+					"Strike"
 				]
 			},
 			{
@@ -178,9 +178,9 @@
 				"code": "8xBGM-71, 38xHYDRA-70",
 				"name": "8xBGM-71, 38xHYDRA-70",
 				"roles": [
-					"Escort",
+					"CAP",
 					"CAS",
-					"Ground Attack"
+					"Strike"
 				]
 			},
 			{
@@ -212,9 +212,9 @@
 				"code": "8xBGM-71",
 				"name": "8xBGM-71",
 				"roles": [
-					"Escort",
+					"CAP",
 					"CAS",
-					"Ground Attack"
+					"Strike"
 				]
 			},
 			{
@@ -246,9 +246,9 @@
 				"code": "76xHYDRA-70",
 				"name": "76xHYDRA-70",
 				"roles": [
-					"Escort",
+					"CAP",
 					"CAS",
-					"Ground Attack"
+					"Strike"
 				]
 			},
 			{
@@ -266,9 +266,9 @@
 				"code": "8xAGM-114, 38xHYDRA-70",
 				"name": "8xAGM-114, 38xHYDRA-70",
 				"roles": [
-					"Escort",
+					"CAP",
 					"CAS",
-					"Ground Attack",
+					"Strike",
 					"Antiship Strike"
 				]
 			},
@@ -287,9 +287,9 @@
 				"code": "8xAGM-114, 14xHYDRA-70",
 				"name": "8xAGM-114, 14xHYDRA-70",
 				"roles": [
-					"Escort",
+					"CAP",
 					"CAS",
-					"Ground Attack"
+					"Strike"
 				]
 			}
 		],
@@ -297,8 +297,8 @@
 		"enabled": true,
 		"roles": [
 			"CAS",
-			"Ground Attack",
-			"Escort",
+			"Strike",
+			"CAP",
 			"AFAC",
 			"Antiship Strike"
 		],
@@ -366,8 +366,8 @@
 					"AFAC",
 					"Antiship Strike",
 					"CAS",
-					"Escort",
-					"Ground Attack"
+					"CAP",
+					"Strike"
 				]
 			},
 			{
@@ -384,8 +384,8 @@
 					"AFAC",
 					"Antiship Strike",
 					"CAS",
-					"Escort",
-					"Ground Attack"
+					"CAP",
+					"Strike"
 				]
 			},
 			{
@@ -402,8 +402,8 @@
 					"AFAC",
 					"Antiship Strike",
 					"CAS",
-					"Escort",
-					"Ground Attack"
+					"CAP",
+					"Strike"
 				]
 			},
 			{
@@ -420,8 +420,8 @@
 					"AFAC",
 					"Antiship Strike",
 					"CAS",
-					"Escort",
-					"Ground Attack"
+					"CAP",
+					"Strike"
 				]
 			},
 			{
@@ -438,8 +438,8 @@
 					"AFAC",
 					"Antiship Strike",
 					"CAS",
-					"Escort",
-					"Ground Attack"
+					"CAP",
+					"Strike"
 				]
 			},
 			{
@@ -456,8 +456,8 @@
 					"AFAC",
 					"Antiship Strike",
 					"CAS",
-					"Escort",
-					"Ground Attack"
+					"CAP",
+					"Strike"
 				]
 			},
 			{
@@ -474,8 +474,8 @@
 					"AFAC",
 					"Antiship Strike",
 					"CAS",
-					"Escort",
-					"Ground Attack"
+					"CAP",
+					"Strike"
 				]
 			},
 			{
@@ -492,8 +492,8 @@
 					"AFAC",
 					"Antiship Strike",
 					"CAS",
-					"Escort",
-					"Ground Attack"
+					"CAP",
+					"Strike"
 				]
 			},
 			{
@@ -510,8 +510,8 @@
 					"AFAC",
 					"Antiship Strike",
 					"CAS",
-					"Escort",
-					"Ground Attack"
+					"CAP",
+					"Strike"
 				]
 			},
 			{
@@ -528,8 +528,8 @@
 					"AFAC",
 					"Antiship Strike",
 					"CAS",
-					"Escort",
-					"Ground Attack"
+					"CAP",
+					"Strike"
 				]
 			}
 		],
@@ -537,8 +537,8 @@
 		"enabled": true,
 		"roles": [
 			"CAS",
-			"Ground Attack",
-			"Escort",
+			"Strike",
+			"CAP",
 			"AFAC",
 			"Antiship Strike"
 		],
@@ -801,7 +801,7 @@
 				"name": "12x9A4172, 40xS-8KOM, 4xIgla",
 				"roles": [
 					"CAS",
-					"Escort"
+					"CAP"
 				]
 			},
 			{
@@ -824,7 +824,7 @@
 				"name": "12x9A4172, 40xS-8OFP, 4xIgla",
 				"roles": [
 					"CAS",
-					"Ground Attack"
+					"Strike"
 				]
 			},
 			{
@@ -847,7 +847,7 @@
 				"name": "12x9A4172, 40xS-13, 4xIgla",
 				"roles": [
 					"CAS",
-					"Ground Attack"
+					"Strike"
 				]
 			},
 			{
@@ -866,8 +866,8 @@
 				"name": "80xS-8KOM, 4xIgla",
 				"roles": [
 					"CAS",
-					"Ground Attack",
-					"Escort"
+					"Strike",
+					"CAP"
 				]
 			},
 			{
@@ -886,8 +886,8 @@
 				"name": "80xS-8OFP, 4xIgla",
 				"roles": [
 					"CAS",
-					"Ground Attack",
-					"Escort"
+					"Strike",
+					"CAP"
 				]
 			},
 			{
@@ -906,7 +906,7 @@
 				"name": "20xS-20, 4xIgla",
 				"roles": [
 					"CAS",
-					"Ground Attack"
+					"Strike"
 				]
 			},
 			{
@@ -946,7 +946,7 @@
 				"code": "10xS-13, 2xFAB-500, 4xIgla",
 				"name": "10xS-13, 2xFAB-500, 4xIgla",
 				"roles": [
-					"Ground Attack"
+					"Strike"
 				]
 			},
 			{
@@ -968,7 +968,7 @@
 				"code": "10xS-13, 2xFAB-250, 4xIgla",
 				"name": "10xS-13, 2xFAB-250, 4xIgla",
 				"roles": [
-					"Ground Attack"
+					"Strike"
 				]
 			},
 			{
@@ -1026,7 +1026,7 @@
 				"code": "40xS-8OFP, 2xFuel, 4xIgla",
 				"name": "40xS-8OFP, 2xFuel, 4xIgla",
 				"roles": [
-					"Escort"
+					"CAP"
 				]
 			},
 			{
@@ -1048,7 +1048,7 @@
 				"code": "12x9A4172, 2xFuel, 4xIgla",
 				"name": "12x9A4172, 2xFuel, 4xIgla",
 				"roles": [
-					"Escort"
+					"CAP"
 				]
 			}
 		],
@@ -1056,8 +1056,8 @@
 		"enabled": true,
 		"roles": [
 			"CAS",
-			"Ground Attack",
-			"Escort",
+			"Strike",
+			"CAP",
 			"AFAC",
 			"Antiship Strike"
 		],
@@ -1300,7 +1300,7 @@
 				"name": "2xB8V20 (S-8KOM)+8xATGM 9M114",
 				"roles": [
 					"CAS",
-					"Ground Attack"
+					"Strike"
 				]
 			},
 			{
@@ -1319,7 +1319,7 @@
 				"name": "2xB8V20 ( S-8KOM)+4xATGM 9M114",
 				"roles": [
 					"CAS",
-					"Escort"
+					"CAP"
 				]
 			},
 			{
@@ -1450,7 +1450,7 @@
 				"name": "2xGUV-1 (GUN 12.7+2x7.62) +4xATGM 9M114",
 				"roles": [
 					"CAS",
-					"Escort"
+					"CAP"
 				]
 			},
 			{
@@ -1469,7 +1469,7 @@
 				"name": "2xKMGU (96 AO 2.5RT)+8xATGM 9M114",
 				"roles": [
 					"CAS",
-					"Ground Attack"
+					"Strike"
 				]
 			},
 			{
@@ -1489,7 +1489,7 @@
 				"roles": [
 					"CAS",
 					"Antiship Strike",
-					"Ground Attack"
+					"Strike"
 				]
 			},
 			{
@@ -1509,7 +1509,7 @@
 				"roles": [
 					"CAS",
 					"Antiship Strike",
-					"Ground Attack"
+					"Strike"
 				]
 			},
 			{
@@ -1529,7 +1529,7 @@
 				"roles": [
 					"CAS",
 					"Antiship Strike",
-					"Ground Attack"
+					"Strike"
 				]
 			},
 			{
@@ -1663,8 +1663,8 @@
 		"enabled": true,
 		"roles": [
 			"CAS",
-			"Ground Attack",
-			"Escort",
+			"Strike",
+			"CAP",
 			"Transport",
 			"AFAC",
 			"Antiship Strike"
@@ -1840,21 +1840,7 @@
 				"code": "2xFAB-250",
 				"name": "2xFAB-250",
 				"roles": [
-					"Ground Attack"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "Fuel tank PTB-450",
-						"quantity": 4
-					}
-				],
-				"enabled": true,
-				"code": "4xFuel tank",
-				"name": "4xFuel tank",
-				"roles": [
-					"Nothing"
+					"Strike"
 				]
 			},
 			{
@@ -1869,8 +1855,8 @@
 				"name": "80xS-8",
 				"roles": [
 					"CAS",
-					"Ground Attack",
-					"Escort"
+					"Strike",
+					"CAP"
 				]
 			},
 			{
@@ -1884,7 +1870,7 @@
 				"code": "4xKMGU AP",
 				"name": "4xKMGU AP",
 				"roles": [
-					"Ground Attack"
+					"Strike"
 				]
 			},
 			{
@@ -1899,8 +1885,8 @@
 				"name": "4xUPK-23",
 				"roles": [
 					"CAS",
-					"Ground Attack",
-					"Escort"
+					"Strike",
+					"CAP"
 				]
 			},
 			{
@@ -1919,8 +1905,8 @@
 				"name": "16x9M114, 10xS-13",
 				"roles": [
 					"CAS",
-					"Ground Attack",
-					"Escort",
+					"Strike",
+					"CAP",
 					"Antiship Strike"
 				]
 			},
@@ -1935,7 +1921,7 @@
 				"code": "4xFAB-500",
 				"name": "4xFAB-500",
 				"roles": [
-					"Ground Attack"
+					"Strike"
 				]
 			},
 			{
@@ -1953,7 +1939,7 @@
 				"code": "16x9M114, 2xFAB-500",
 				"name": "16x9M114, 2xFAB-500",
 				"roles": [
-					"Ground Attack"
+					"Strike"
 				]
 			},
 			{
@@ -1968,8 +1954,8 @@
 				"name": "40xS-8",
 				"roles": [
 					"CAS",
-					"Ground Attack",
-					"Escort"
+					"Strike",
+					"CAP"
 				]
 			},
 			{
@@ -1997,7 +1983,7 @@
 				"code": "2xKMGU AP",
 				"name": "2xKMGU AP",
 				"roles": [
-					"Ground Attack"
+					"Strike"
 				]
 			},
 			{
@@ -2012,8 +1998,8 @@
 				"name": "2xUPK-23",
 				"roles": [
 					"CAS",
-					"Ground Attack",
-					"Escort"
+					"Strike",
+					"CAP"
 				]
 			},
 			{
@@ -2032,8 +2018,8 @@
 				"name": "16x9M114, 2xUPK-23",
 				"roles": [
 					"CAS",
-					"Ground Attack",
-					"Escort"
+					"Strike",
+					"CAP"
 				]
 			},
 			{
@@ -2047,7 +2033,7 @@
 				"code": "2xFAB-500",
 				"name": "2xFAB-500",
 				"roles": [
-					"Ground Attack"
+					"Strike"
 				]
 			},
 			{
@@ -2066,8 +2052,8 @@
 				"name": "16x9M114, 40xS-8",
 				"roles": [
 					"CAS",
-					"Ground Attack",
-					"Escort",
+					"Strike",
+					"CAP",
 					"Antiship Strike"
 				]
 			},
@@ -2083,8 +2069,8 @@
 				"name": "16x9M114",
 				"roles": [
 					"CAS",
-					"Ground Attack",
-					"Escort"
+					"Strike",
+					"CAP"
 				]
 			},
 			{
@@ -2099,8 +2085,8 @@
 				"name": "20xS-13",
 				"roles": [
 					"CAS",
-					"Ground Attack",
-					"Escort"
+					"Strike",
+					"CAP"
 				]
 			},
 			{
@@ -2119,8 +2105,8 @@
 				"name": "16x9M114, 2xKMGU AP",
 				"roles": [
 					"CAS",
-					"Ground Attack",
-					"Escort"
+					"Strike",
+					"CAP"
 				]
 			},
 			{
@@ -2134,7 +2120,7 @@
 				"code": "4xFAB-250",
 				"name": "4xFAB-250",
 				"roles": [
-					"Ground Attack"
+					"Strike"
 				]
 			},
 			{
@@ -2148,7 +2134,7 @@
 				"code": "4xKMGU AT",
 				"name": "4xKMGU AT",
 				"roles": [
-					"Ground Attack"
+					"Strike"
 				]
 			},
 			{
@@ -2194,7 +2180,7 @@
 				"code": "2xKMGU AT",
 				"name": "2xKMGU AT",
 				"roles": [
-					"Ground Attack"
+					"Strike"
 				]
 			},
 			{
@@ -2209,22 +2195,8 @@
 				"name": "9x9M114",
 				"roles": [
 					"CAS",
-					"Ground Attack",
-					"Escort"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "Fuel tank PTB-450",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "2xFuel tank",
-				"name": "2xFuel tank",
-				"roles": [
-					"Nothing"
+					"Strike",
+					"CAP"
 				]
 			},
 			{
@@ -2239,8 +2211,8 @@
 				"name": "10xS-13",
 				"roles": [
 					"CAS",
-					"Ground Attack",
-					"Escort"
+					"Strike",
+					"CAP"
 				]
 			},
 			{
@@ -2258,7 +2230,7 @@
 				"code": "2xFAB-250, 16x9M114",
 				"name": "2xFAB-250, 16x9M114",
 				"roles": [
-					"Ground Attack"
+					"Strike"
 				]
 			},
 			{
@@ -2277,8 +2249,8 @@
 				"name": "16x9M114, 2xKMGU AT",
 				"roles": [
 					"CAS",
-					"Ground Attack",
-					"Escort"
+					"Strike",
+					"CAP"
 				]
 			}
 		],
@@ -2286,8 +2258,8 @@
 		"enabled": true,
 		"roles": [
 			"CAS",
-			"Ground Attack",
-			"Escort",
+			"Strike",
+			"CAP",
 			"AFAC",
 			"Antiship Strike"
 		],
@@ -2345,7 +2317,7 @@
 				"code": "4 x B8",
 				"name": "4 x B8",
 				"roles": [
-					"Ground Attack"
+					"Strike"
 				]
 			},
 			{
@@ -2363,7 +2335,7 @@
 				"code": "4 x B8 + 2GUV_AP-30 (GrL 30mm)",
 				"name": "4 x B8 + 2GUV_AP-30 (GrL 30mm)",
 				"roles": [
-					"Ground Attack"
+					"Strike"
 				]
 			},
 			{
@@ -2403,7 +2375,7 @@
 				"code": "2 xB8 + 2GUV_YaKB (MG-12.7+7.62)+ 2GUV_AP-30 (GrL 30mm)",
 				"name": "2 xB8 + 2GUV_YaKB (MG-12.7+7.62)+ 2GUV_AP-30 (GrL 30mm)",
 				"roles": [
-					"Ground Attack"
+					"Strike"
 				]
 			},
 			{
@@ -2417,7 +2389,7 @@
 				"code": "6 x FAB-100",
 				"name": "6 x FAB-100",
 				"roles": [
-					"Ground Attack"
+					"Strike"
 				]
 			},
 			{
@@ -2435,7 +2407,7 @@
 				"code": "2 x B8 + 2 x UPK-23-250",
 				"name": "2 x B8 + 2 x UPK-23-250",
 				"roles": [
-					"Ground Attack"
+					"Strike"
 				]
 			},
 			{
@@ -2449,7 +2421,7 @@
 				"code": "2 x UPK--23-250",
 				"name": "2 x UPK--23-250",
 				"roles": [
-					"Ground Attack"
+					"Strike"
 				]
 			}
 		],
@@ -2457,7 +2429,7 @@
 		"enabled": true,
 		"roles": [
 			"CAS",
-			"Ground Attack",
+			"Strike",
 			"Transport",
 			"AFAC",
 			"Antiship Strike"
@@ -2903,9 +2875,9 @@
 		"enabled": true,
 		"roles": [
 			"CAS",
-			"Ground Attack",
+			"Strike",
 			"AFAC",
-			"Escort",
+			"CAP",
 			"Reconnaissance"
 		],
 		"liveries": {
@@ -3176,9 +3148,9 @@
 		"enabled": true,
 		"roles": [
 			"CAS",
-			"Ground Attack",
+			"Strike",
 			"AFAC",
-			"Escort",
+			"CAP",
 			"Reconnaissance"
 		],
 		"liveries": {
@@ -3325,7 +3297,7 @@
 				"code": "",
 				"name": "Empty loadout",
 				"roles": [
-					"Escort"
+					"CAP"
 				]
 			},
 			{
@@ -3339,7 +3311,7 @@
 				"code": "Mistral x 4",
 				"name": "Mistral x 4",
 				"roles": [
-					"Escort"
+					"CAP"
 				]
 			},
 			{
@@ -3357,7 +3329,7 @@
 				"code": "Mistral x 4, IR Deflector",
 				"name": "Mistral x 4, IR Deflector",
 				"roles": [
-					"Escort"
+					"CAP"
 				]
 			},
 			{
@@ -3379,7 +3351,7 @@
 				"code": "Mistral x 4, IR Deflector, Sand Filter",
 				"name": "Mistral x 4, IR Deflector, Sand Filter",
 				"roles": [
-					"Escort"
+					"CAP"
 				]
 			}
 		],
@@ -3387,7 +3359,7 @@
 		"enabled": true,
 		"roles": [
 			"AFAC",
-			"Escort",
+			"CAP",
 			"Reconnaissance"
 		],
 		"liveries": {
@@ -3592,7 +3564,7 @@
 				"code": "M134 Minigun*2, XM158*2",
 				"name": "M134 Minigun*2, XM158*2",
 				"roles": [
-					"Ground Attack",
+					"Strike",
 					"CAS",
 					"Transport",
 					"AFAC"
@@ -3603,7 +3575,7 @@
 		"enabled": true,
 		"roles": [
 			"CAS",
-			"Ground Attack",
+			"Strike",
 			"Transport"
 		],
 		"liveries": {
