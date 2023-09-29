@@ -8,12 +8,12 @@ var bodyParser = require('body-parser');
 var atcRouter       = require('./routes/api/atc');
 var airbasesRouter  = require('./routes/api/airbases');
 var elevationRouter = require('./routes/api/elevation');
+var databasesRouter = require('./routes/api/databases');
 var indexRouter     = require('./routes/index');
 var uikitRouter     = require('./routes/uikit');
 var usersRouter     = require('./routes/users');
 var resourcesRouter = require('./routes/resources');
 var pluginsRouter   = require('./routes/plugins');
-var databasesRouter = require('./routes/databases');
 
 var app = express();
 

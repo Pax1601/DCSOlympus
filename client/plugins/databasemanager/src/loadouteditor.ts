@@ -1,13 +1,15 @@
-import { LoadoutBlueprint, LoadoutItemBlueprint } from "interfaces";
+import { LoadoutBlueprint } from "interfaces";
 import { addLoadoutItemsEditor, addStringInput } from "./utils";
 
+/** The LoadoutEditor allows the user to edit a loadout
+ * 
+ */
 export class LoadoutEditor {
     #contentDiv: HTMLElement;
     #loadout: LoadoutBlueprint | null = null;
     #visible: boolean = false;
 
     constructor(contentDiv: HTMLElement) {
-        
         this.#contentDiv = contentDiv;
         this.#contentDiv.addEventListener("refresh", () => { 
             if (this.#visible)
@@ -15,13 +17,24 @@ export class LoadoutEditor {
         })
     }
 
+    /** Set the loadout to edit
+     * 
+     * @param loadout The loadout to edit
+     */
     setLoadout(loadout: LoadoutBlueprint) {
         this.#loadout = loadout;
     }
 
+    /** Show the editor
+     * 
+     */
     show() {
         this.#visible = true;
         this.#contentDiv.replaceChildren();
+
+        var title = document.createElement("label");
+        title.innerText = "Loadout properties";
+        this.#contentDiv.appendChild(title);
 
         if (this.#loadout) {
             var laodout = this.#loadout;
@@ -31,6 +44,9 @@ export class LoadoutEditor {
         }
     }
 
+    /** Hide the editor
+     * 
+     */
     hide() {
         this.#visible = false;
         this.#contentDiv.replaceChildren();

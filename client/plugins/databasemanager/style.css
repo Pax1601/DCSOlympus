@@ -41,6 +41,10 @@
     margin-top: 5px;
 }
 
+#database-manager-panel>div:last-child>button {
+    border: 1px solid white;
+}
+
 .dm-container {
     background-color: var(--background-grey);
     border: 2px solid #777777;
@@ -50,6 +54,10 @@
     padding: 5px;
     height: calc(100% - 64px - 5px);
     border-radius: 0px 5px 5px 5px;
+}
+
+.dm-container>div:nth-child(2) {
+    width: 500px;
 }
 
 .dm-container>div:nth-child(3) {
@@ -79,6 +87,11 @@
     }
 }
 
+.dm-content-container>label {
+    font-size: 18px !important;
+    font-weight: bold;
+}
+
 .dm-scroll-container {
     display: flex;
     flex-direction: column;
@@ -98,8 +111,10 @@
 
 .dm-scroll-container>div *:nth-child(1) {
     height: 100%;
-    width: 100%;
+    width: calc(100% - 25px);
     padding: 2px;
+    text-wrap: wrap;
+    word-wrap: break-word;
 }
 
 .dm-scroll-container>div *:nth-child(1):hover {
@@ -141,6 +156,7 @@
 
 .dm-loadout-container {
     max-height: 100%;
+    max-width: 500px;
     width: 100%;
 }
 

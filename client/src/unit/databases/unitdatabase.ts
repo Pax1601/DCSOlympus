@@ -5,18 +5,26 @@ import { UnitBlueprint } from "../../interfaces";
 
 export class UnitDatabase {
     blueprints: { [key: string]: UnitBlueprint } = {};
+    #url: string;
 
     constructor(url: string = "") {
-        if (url !== "") {
+        this.#url = url;
+        this.load(() => {});
+    }
+
+    load(callback: CallableFunction) {
+        if (this.#url !== "") {
             var xhr = new XMLHttpRequest();
-            xhr.open('GET', url, true);
+            xhr.open('GET', this.#url, true);
+            xhr.setRequestHeader("Cache-Control", "no-cache, no-store, max-age=0");
             xhr.responseType = 'json';
             xhr.onload = () => {
             var status = xhr.status;
                 if (status === 200) {
                     this.blueprints = xhr.response;
+                    callback();
                 } else {
-                    console.error(`Error retrieving database from ${url}`)
+                    console.error(`Error retrieving database from ${this.#url}`)
                 }
             };
             xhr.send();

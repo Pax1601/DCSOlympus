@@ -604,10 +604,12 @@ declare module "unit/databases/unitdatabase" {
     import { LatLng } from "leaflet";
     import { UnitBlueprint } from "interfaces";
     export class UnitDatabase {
+        #private;
         blueprints: {
             [key: string]: UnitBlueprint;
         };
         constructor(url?: string);
+        load(callback: CallableFunction): void;
         getCategory(): string;
         getByName(name: string): UnitBlueprint | null;
         getByLabel(label: string): UnitBlueprint | null;
@@ -1304,6 +1306,9 @@ declare module "popups/popup" {
         setFadeTime(fadeTime: number): void;
         setText(text: string): void;
     }
+}
+declare module "map/touchboxselect" {
+    export var TouchBoxSelect: (new (...args: any[]) => any) & typeof import("leaflet").Class;
 }
 declare module "map/map" {
     import * as L from "leaflet";

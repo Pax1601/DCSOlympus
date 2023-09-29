@@ -1,5 +1,18 @@
 import { LoadoutBlueprint, LoadoutItemBlueprint, UnitBlueprint } from "interfaces";
 
+/** This file contains a set of utility functions that are reused in the various editors and allows to declutter the classes
+ * 
+ */
+
+/** Add a string input in the form of String: [ value ]
+ * 
+ * @param div The HTMLElement that will contain the input
+ * @param key The key of the input, which will be used as label
+ * @param value The initial value of the input
+ * @param type The type of the input, e.g. "Text" or "Number" as per html standard
+ * @param callback Callback called when the user enters a new value
+ * @param disabled If true, the input will be disabled and read only
+ */
 export function addStringInput(div: HTMLElement, key: string, value: string, type: string, callback: CallableFunction, disabled?: boolean) {
     var row = document.createElement("div");
     var dt = document.createElement("dt");
@@ -18,6 +31,13 @@ export function addStringInput(div: HTMLElement, key: string, value: string, typ
     div.appendChild(row);
 }
 
+/** Add a dropdown (select) input
+ * 
+ * @param div The HTMLElement that will contain the input
+ * @param key The key of the input, which will be used as label
+ * @param value The initial value of the input
+ * @param options The dropdown options
+ */
 export function addDropdownInput(div: HTMLElement, key: string, value: string, options: string[]) {
     var row = document.createElement("div");
     var dt = document.createElement("dt");
@@ -38,9 +58,16 @@ export function addDropdownInput(div: HTMLElement, key: string, value: string, o
     div.appendChild(row);
 }
 
+/** Create a loadout items editor. This editor allows to add or remove loadout items, as well as changing their name and quantity
+ * 
+ * @param div The HTMLElement that will contain the editor
+ * @param loadout The loadout to edit
+ */
 export function addLoadoutItemsEditor(div: HTMLElement, loadout: LoadoutBlueprint) {
     var itemsEl = document.createElement("div");
     itemsEl.classList.add("dm-scroll-container", "dm-items-container");
+
+    /* Create a row for each loadout item to allow and change the name and quantity of the item itself */
     loadout.items.forEach((item: LoadoutItemBlueprint, index: number) => {
         var rowDiv = document.createElement("div");
 
@@ -66,6 +93,7 @@ export function addLoadoutItemsEditor(div: HTMLElement, loadout: LoadoutBlueprin
         quantityInput.step = "1";
         quantityInput.onchange = () => { loadout.items[index].quantity = parseInt(quantityInput.value); }
 
+        /* This button allows to remove the item */
         var button = document.createElement("button");
         button.innerText = "X";
         button.onclick = () => {
@@ -78,6 +106,7 @@ export function addLoadoutItemsEditor(div: HTMLElement, loadout: LoadoutBlueprin
     })
     div.appendChild(itemsEl);
 
+    /* Button to add a new item to the loadout */
     var inputDiv = document.createElement("div");
     inputDiv.classList.add("dm-new-item-input");
     var button = document.createElement("button");
@@ -94,11 +123,18 @@ export function addLoadoutItemsEditor(div: HTMLElement, loadout: LoadoutBlueprin
     });
 }
 
+/** Add a input and button to create a new element in a list. It uses a generic callback to actually add the element.
+ * 
+ * @param div The HTMLElement that will contain the input and button
+ * @param callback Callback called when the user clicks on "Add"
+ */
 export function addNewElementInput(div: HTMLElement, callback: CallableFunction) {
     var inputDiv = document.createElement("div");
     inputDiv.classList.add("dm-new-element-input");
+
     var input = document.createElement("input");
     inputDiv.appendChild(input);
+
     var button = document.createElement("button");
     button.innerText = "Add";
     button.addEventListener("click", (ev: MouseEvent) => callback(ev, input));
@@ -106,6 +142,12 @@ export function addNewElementInput(div: HTMLElement, callback: CallableFunction)
     div.appendChild(inputDiv);
 }
 
+/** Add a scrollable list of blueprints
+ * 
+ * @param div The HTMLElement that will contain the list
+ * @param database The database that will be used to fill the list of blueprints
+ * @param callback Callback called when the user clicks on one of the elements
+ */
 export function addBlueprintsScroll(div: HTMLElement, database: {blueprints: {[key: string]: UnitBlueprint}}, callback: CallableFunction) {
     var scrollDiv = document.createElement("div");
     scrollDiv.classList.add("dm-scroll-container");
@@ -121,6 +163,7 @@ export function addBlueprintsScroll(div: HTMLElement, database: {blueprints: {[k
             text.onclick = () => callback(key);
             rowDiv.appendChild(text);
 
+            /* This button allows to remove an element from the list. It requires a refresh. */
             var button = document.createElement("button");
             button.innerText = "X";
             button.onclick = () => {
@@ -133,6 +176,12 @@ export function addBlueprintsScroll(div: HTMLElement, database: {blueprints: {[k
     div.appendChild(scrollDiv);
 }
 
+/** Add a scrollable list of loadouts
+ * 
+ * @param div The HTMLElement that will contain the list
+ * @param loadouts The loadouts that will be used to fill the list
+ * @param callback Callback called when the user clicks on one of the elements
+ */
 export function addLoadoutsScroll(div: HTMLElement, loadouts: LoadoutBlueprint[], callback: CallableFunction) {
     var loadoutsEl = document.createElement("div");
     loadoutsEl.classList.add("dm-scroll-container", "dm-loadout-container")
@@ -146,7 +195,9 @@ export function addLoadoutsScroll(div: HTMLElement, loadouts: LoadoutBlueprint[]
         text.onclick = () => { callback(loadout) };
         rowDiv.appendChild(text);
 
+        /* The "Empty loadout" can not be removed */
         if (loadout.name !== "Empty loadout") {
+             /* This button allows to remove an element from the list. It requires a refresh. */
             var button = document.createElement("button");
             button.innerText = "X";
             button.onclick = () => {
