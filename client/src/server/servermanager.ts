@@ -356,6 +356,11 @@ export class ServerManager {
         this.PUT(data, callback);
     }
 
+    reloadDatabases(callback: CallableFunction = () => {}) {
+        var data = { "reloadDatabases": {} };
+        this.PUT(data, callback);
+    }
+
     startUpdate() {
         window.setInterval(() => {
             if (!this.getPaused()) {

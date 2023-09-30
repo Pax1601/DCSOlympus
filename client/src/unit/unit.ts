@@ -1,6 +1,6 @@
 import { Marker, LatLng, Polyline, Icon, DivIcon, CircleMarker, Map, Point } from 'leaflet';
 import { getApp } from '..';
-import { enumToCoalition, enumToEmissioNCountermeasure, getMarkerCategoryByName, enumToROE, enumToReactionToThreat, enumToState, getUnitDatabaseByCategory, mToFt, msToKnots, rad2deg, bearing, deg2rad, ftToM } from '../other/utils';
+import { enumToCoalition, enumToEmissioNCountermeasure, getMarkerCategoryByName, enumToROE, enumToReactionToThreat, enumToState, getUnitDatabaseByCategory, mToFt, msToKnots, rad2deg, bearing, deg2rad, ftToM, getGroundElevation } from '../other/utils';
 import { CustomMarker } from '../map/markers/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
 import { UnitDatabase } from './databases/unitdatabase';
@@ -723,8 +723,20 @@ export class Unit extends CustomMarker {
         getApp().getServerManager().fireAtArea(this.ID, latlng);
     }
 
-    simulateFireFight(latlng: LatLng, groundElevation: number | null) {
-        getApp().getServerManager().simulateFireFight(this.ID, latlng, groundElevation?? 0);
+    simulateFireFight(latlng: LatLng, targetGroundElevation: number | null) {
+        getGroundElevation(this.getPosition(), (response: string) => {
+            var unitGroundElevation: number | null = null;
+            try {
+                unitGroundElevation = parseFloat(response);
+            } catch {
+                console.log("Simulate fire fight: could not retrieve ground elevation")
+            }
+
+            /* DCS and SRTM altitude data is not exactly the same so to minimize error we use SRTM only to compute relative elevation difference */
+            var altitude = this.getPosition().alt;
+            if (altitude !== undefined && targetGroundElevation !== null && unitGroundElevation !== null)
+                getApp().getServerManager().simulateFireFight(this.ID, latlng, altitude + targetGroundElevation - unitGroundElevation);
+        });
     }
 
     /***********************************************/

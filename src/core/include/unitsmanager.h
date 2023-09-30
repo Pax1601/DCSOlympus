@@ -22,6 +22,7 @@ public:
 	void getUnitData(stringstream &ss, unsigned long long time);
 	void deleteUnit(unsigned int ID, bool explosion, bool immediate);
 	void acquireControl(unsigned int ID);
+	void loadDatabases();
 	
 private:
 	map<unsigned int, Unit*> units;

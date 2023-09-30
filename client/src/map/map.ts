@@ -605,7 +605,7 @@ export class Map extends L.Map {
                 }
             }
             else if (selectedUnitTypes.length === 1 && ["GroundUnit", "NavyUnit"].includes(selectedUnitTypes[0])) {
-                if (selectedUnits.every((unit: Unit) => { return ["Gun Artillery", "Rocket Artillery", "Infantry", "IFV", "Tank", "Cruiser", "Destroyer", "Frigate"].includes(unit.getType()) })) {
+                if (selectedUnits.every((unit: Unit) => { return ["AAA", "Gun Artillery", "Rocket Artillery", "Infantry", "IFV", "Tank", "Cruiser", "Destroyer", "Frigate"].includes(unit.getType()) })) {
                     options["fire-at-area"] = { text: "Fire at area", tooltip: "Fire at a large area" };
                     options["simulate-fire-fight"] = { text: "Simulate fire fight", tooltip: "Simulate a fire fight by shooting randomly in a certain large area" };
                 }

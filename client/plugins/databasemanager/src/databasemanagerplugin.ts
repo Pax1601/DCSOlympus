@@ -258,6 +258,10 @@ export class DatabaseManagerPlugin implements OlympusPlugin {
                                         this.#app?.getHelicopterDatabase().load(() => {});
                                         this.#app?.getGroundUnitDatabase().load(() => {});
                                         this.#app?.getNavyUnitDatabase().load(() => {});
+
+                                        this.#app?.getServerManager().reloadDatabases(() => {
+                                            this.#app?.getPopupsManager().get("infoPopup")?.setText("Olympus core databases reloaded");
+                                        })
                                     });
                                 }
                             });
@@ -281,6 +285,10 @@ export class DatabaseManagerPlugin implements OlympusPlugin {
                                 this.#resetToDefaultDatabase("navyunitdatabase", "Navy Unit database", () => {
                                     this.#app?.getNavyUnitDatabase().load(() => {
                                         this.#loadDatabases();
+
+                                        this.#app?.getServerManager().reloadDatabases(() => {
+                                            this.#app?.getPopupsManager().get("infoPopup")?.setText("Olympus core databases reloaded");
+                                        })
 
                                         this.#hideAll();
                                         this.#aircraftEditor.show();
@@ -308,6 +316,10 @@ export class DatabaseManagerPlugin implements OlympusPlugin {
                                 this.#restoreToPreviousDatabase("navyunitdatabase", "Navy Unit database", () => {
                                     this.#app?.getNavyUnitDatabase().load(() => {
                                         this.#loadDatabases();
+
+                                        this.#app?.getServerManager().reloadDatabases(() => {
+                                            this.#app?.getPopupsManager().get("infoPopup")?.setText("Olympus core databases reloaded");
+                                        })
 
                                         this.#hideAll();
                                         this.#aircraftEditor.show();

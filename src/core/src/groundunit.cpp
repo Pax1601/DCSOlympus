@@ -160,13 +160,13 @@ void GroundUnit::AIloop()
 	case State::SIMULATE_FIRE_FIGHT: {
 		setTask("Simulating fire fight");
 
-		if (!getHasTask() || ((double)(rand()) / (double)(RAND_MAX)) < 0.01) {
+		if (!getHasTask() || 0 * (((double)(rand()) / (double)(RAND_MAX)) < 0.01)) {
 			double dist;
 			double bearing1;
 			double bearing2;
 			Geodesic::WGS84().Inverse(position.lat, position.lng, targetPosition.lat, targetPosition.lng, dist, bearing1, bearing2);
 
-			double r = 5; /* m */
+			double r = 15; /* m */
 			/* Default gun values */
 			double barrelHeight = 1.0; /* m */
 			double muzzleVelocity = 860; /* m/s */
@@ -183,12 +183,12 @@ void GroundUnit::AIloop()
 			
 			double lat = 0;
 			double lng = 0;
-			double randomBearing = bearing1 + (((double)(rand()) / (double)(RAND_MAX) - 0.5) * 2) * 15;
+			double randomBearing = bearing1 + 0 * (((double)(rand()) / (double)(RAND_MAX) - 0.5) * 2) * 15;
 			Geodesic::WGS84().Direct(position.lat, position.lng, randomBearing, r, lat, lng);
 
 			std::ostringstream taskSS;
 			taskSS.precision(10);
-			taskSS << "{id = 'FireAtPoint', lat = " << lat << ", lng = " << lng << ", alt = " << barrelElevation + barrelHeight << ", radius = 0.001}";
+			taskSS << "{id = 'FireAtPoint', lat = " << lat << ", lng = " << lng << ", alt = " << position.alt + barrelElevation + barrelHeight << ", radius = 0.001}";
 			Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
 			scheduler->appendCommand(command);
 			setHasTask(true);
