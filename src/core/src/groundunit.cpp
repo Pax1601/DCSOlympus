@@ -160,7 +160,7 @@ void GroundUnit::AIloop()
 	case State::SIMULATE_FIRE_FIGHT: {
 		setTask("Simulating fire fight");
 
-		if (!getHasTask() || 0 * (((double)(rand()) / (double)(RAND_MAX)) < 0.01)) {
+		if (!getHasTask() || (((double)(rand()) / (double)(RAND_MAX)) < 0.002)) {
 			double dist;
 			double bearing1;
 			double bearing2;
@@ -183,7 +183,7 @@ void GroundUnit::AIloop()
 			
 			double lat = 0;
 			double lng = 0;
-			double randomBearing = bearing1 + 0 * (((double)(rand()) / (double)(RAND_MAX) - 0.5) * 2) * 15;
+			double randomBearing = bearing1 + (((double)(rand()) / (double)(RAND_MAX) - 0.5) * 2) * 15;
 			Geodesic::WGS84().Direct(position.lat, position.lng, randomBearing, r, lat, lng);
 
 			std::ostringstream taskSS;
