@@ -275,7 +275,9 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"barrelHeight": 1.25,
+		"muzzleVelocity": 900
 	},
 	"BMP-1": {
 		"name": "BMP-1",
@@ -451,7 +453,9 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"barrelHeight": 1.95,
+		"muzzleVelocity": 970
 	},
 	"BMP-3": {
 		"name": "BMP-3",
@@ -901,7 +905,9 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"barrelHeight": 2.35,
+		"muzzleVelocity": 1440
 	},
 	"Grad-URAL": {
 		"name": "Grad-URAL",
@@ -2075,7 +2081,7 @@
 		"filename": "",
 		"type": "Infantry",
 		"enabled": true,
-		"muzzleVelocity": 860,
+		"muzzleVelocity": 900,
 		"barrelHeight": 0.9
 	},
 	"KAMAZ Truck": {
@@ -4521,7 +4527,9 @@
 				"name": "GRC_Winter",
 				"countries": "All"
 			}
-		}
+		},
+		"muzzleVelocity": 900,
+		"barrelHeight": 0.9
 	},
 	"Soldier M249": {
 		"name": "Soldier M249",

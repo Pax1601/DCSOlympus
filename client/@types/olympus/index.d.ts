@@ -1957,6 +1957,7 @@ declare module "server/servermanager" {
             blue: number;
             red: number;
         }, eras: string[], setupTime: number, callback?: CallableFunction): void;
+        reloadDatabases(callback?: CallableFunction): void;
         startUpdate(): void;
         refreshAll(): void;
         checkSessionHash(newSessionHash: string): void;

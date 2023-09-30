@@ -235,7 +235,8 @@ function Olympus.buildTask(groupName, options)
 					params = {
 						point = {x = point.x, y = point.z},
 						radius = options['radius'],
-						altitude = options['alt']
+						altitude = options['alt'],
+						alt_type = 0 -- ASL
 					}   
 				}
 			else

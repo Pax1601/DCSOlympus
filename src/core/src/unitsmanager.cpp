@@ -9,6 +9,7 @@
 #include "weapon.h"
 #include "commands.h"
 #include "scheduler.h"
+#include "defines.h"
 
 #include "base64.hpp"
 using namespace base64;
@@ -157,3 +158,9 @@ void UnitsManager::acquireControl(unsigned int ID) {
 	}	
 }
 
+void UnitsManager::loadDatabases() {
+	Aircraft::loadDatabase(AIRCRAFT_DATABASE_PATH);
+	Helicopter::loadDatabase(HELICOPTER_DATABASE_PATH);
+	GroundUnit::loadDatabase(GROUNDUNIT_DATABASE_PATH);
+	NavyUnit::loadDatabase(NAVYUNIT_DATABASE_PATH);
+}

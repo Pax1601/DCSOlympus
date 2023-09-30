@@ -579,6 +579,9 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		setCommandModeOptions(value);
 		log(username + " updated the Command Mode Options", true);
 	}
+	else if (key.compare("reloadDatabases") == 0) {
+		unitsManager->loadDatabases();
+	}
 	else
 	{
 		log("Unknown command: " + key);

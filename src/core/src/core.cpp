@@ -7,10 +7,6 @@
 #include "scheduler.h"
 #include "scriptLoader.h"
 #include "luatools.h"
-#include "aircraft.h"
-#include "helicopter.h"
-#include "groundunit.h"
-#include "navyunit.h"
 #include <chrono>
 using namespace std::chrono;
 
@@ -63,14 +59,11 @@ extern "C" DllExport int coreInit(lua_State* L)
     server = new Server(L);
     scheduler = new Scheduler(L);
 
-    Aircraft::loadDatabase(AIRCRAFT_DATABASE_PATH);
-    Helicopter::loadDatabase(HELICOPTER_DATABASE_PATH);
-    GroundUnit::loadDatabase(GROUNDUNIT_DATABASE_PATH);
-    NavyUnit::loadDatabase(NAVYUNIT_DATABASE_PATH);
-
     registerLuaFunctions(L);
 
     server->start(L);
+
+    unitsManager->loadDatabases();
 
     initialized = true;
     return(0);
