@@ -1085,7 +1085,7 @@ declare module "unit/unit" {
         carpetBomb(latlng: LatLng): void;
         bombBuilding(latlng: LatLng): void;
         fireAtArea(latlng: LatLng): void;
-        simulateFireFight(latlng: LatLng, groundElevation: number | null): void;
+        simulateFireFight(latlng: LatLng, targetGroundElevation: number | null): void;
         /***********************************************/
         onAdd(map: Map): this;
     }
@@ -1965,6 +1965,19 @@ declare module "server/servermanager" {
         getConnected(): boolean;
         setPaused(newPaused: boolean): void;
         getPaused(): boolean;
+    }
+}
+declare module "panels/unitlistpanel" {
+    import { OlympusApp } from "olympusapp";
+    import { Panel } from "panels/panel";
+    export class UnitListPanel extends Panel {
+        #private;
+        constructor(olympusApp: OlympusApp, panelElement: string, contentElement: string);
+        doUpdate(): void;
+        getContentElement(): HTMLElement;
+        startUpdates(): void;
+        stopUpdates(): void;
+        toggle(): void;
     }
 }
 declare module "olympusapp" {
