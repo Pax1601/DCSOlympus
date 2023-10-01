@@ -68,7 +68,7 @@ export class UnitListPanel extends Panel {
             "callback": () => {
                 this.toggle()
             },
-            "code": "Quote"
+            "code": "KeyU"
         });
 
         this.startUpdates();
@@ -86,12 +86,16 @@ export class UnitListPanel extends Panel {
         this.#units = Object.values( this.#olympusApp.getUnitsManager().getUnits() );
 
         
-        if ( this.#currentSortAlgorithm === "unitName" ) {
-            this.#sortUnitsByUnitName();
+        if ( this.#currentSortAlgorithm === "coalition" ) {
+            this.#sortUnitsByCoalition();
         }
         
         if ( this.#currentSortAlgorithm === "name" ) {
             this.#sortUnitsByName();
+        }
+
+        if ( this.#currentSortAlgorithm === "unitName" ) {
+            this.#sortUnitsByUnitName();
         }
 
 
@@ -138,6 +142,28 @@ export class UnitListPanel extends Panel {
             const str2 = unit2.getUnitName().toLowerCase();
             
             return this.#sortStringsCompare( str1, str2 );
+        });
+
+    }
+
+    #sortUnitsByCoalition() {
+
+        this.#units.sort( ( unit1:Unit, unit2:Unit ) => {
+
+            let str1 = unit1.getCoalition();
+            let str2 = unit2.getCoalition();
+
+            let cmp = this.#sortStringsCompare( str1, str2 );
+
+            if ( cmp !== 0 ) {
+                return cmp;
+            }
+
+            str1 = unit1.getUnitName().toLowerCase();
+            str2 = unit2.getUnitName().toLowerCase();
+
+            return this.#sortStringsCompare( str1, str2 );
+            
         });
 
     }
