@@ -248,6 +248,11 @@ export class OlympusApp {
             },
             "code": "Space",
             "ctrlKey": false
+        }).addKeyboardShortcut( "deselectAll", {
+            "callback": ( ev:KeyboardEvent ) => {
+                this.getUnitsManager().deselectAllUnits();
+            },
+            "code": "Escape"
         });
 
         ["KeyW", "KeyA", "KeyS", "KeyD", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].forEach(code => {
@@ -260,9 +265,7 @@ export class OlympusApp {
                 "ctrlKey": false,
                 "event": "keydown"
             });
-        });
 
-        ["KeyW", "KeyA", "KeyS", "KeyD", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].forEach(code => {
             shortcutManager.addKeyboardShortcut(`pan${code}keyup`, {
                 "callback": (ev: KeyboardEvent) => {
                     this.getMap().handleMapPanning(ev);
@@ -271,17 +274,28 @@ export class OlympusApp {
             });
         });
 
-        ["Digit1", "Digit2", "Digit3", "Digit4", "Digit5", "Digit6", "Digit7", "Digit8", "Digit9"].forEach(code => {
+        const digits = ["Digit1", "Digit2", "Digit3", "Digit4", "Digit5", "Digit6", "Digit7", "Digit8", "Digit9"];
+        
+        digits.forEach(code => {
             shortcutManager.addKeyboardShortcut(`hotgroup${code}`, {
                 "callback": (ev: KeyboardEvent) => {
                     if (ev.ctrlKey && ev.shiftKey)
                         this.getUnitsManager().selectedUnitsAddToHotgroup(parseInt(ev.code.substring(5)));
-                    else if (ev.ctrlKey && !ev.shiftKey)
+                    else if (ev.ctrlKey && !ev.shiftKey) 
                         this.getUnitsManager().selectedUnitsSetHotgroup(parseInt(ev.code.substring(5)));
                     else
                         this.getUnitsManager().selectUnitsByHotgroup(parseInt(ev.code.substring(5)));
                 },
                 "code": code
+            });
+        });
+        
+        //  Stop hotgroup controls sending the browser to another tab
+        digits.forEach( code => {
+            document.addEventListener( "keydown", ( ev:KeyboardEvent ) => {
+                if ( ev.code === code && ev.ctrlKey === true && ev.altKey === false && ev.shiftKey === false ) {
+                    ev.preventDefault();
+                }
             });
         });
 
