@@ -278,11 +278,14 @@ export class OlympusApp {
         
         digits.forEach(code => {
             shortcutManager.addKeyboardShortcut(`hotgroup${code}`, {
+                "altKey": false,
                 "callback": (ev: KeyboardEvent) => {
                     if (ev.ctrlKey && ev.shiftKey)
                         this.getUnitsManager().selectedUnitsAddToHotgroup(parseInt(ev.code.substring(5)));
                     else if (ev.ctrlKey && !ev.shiftKey) 
                         this.getUnitsManager().selectedUnitsSetHotgroup(parseInt(ev.code.substring(5)));
+                    else if (!ev.ctrlKey && ev.shiftKey)
+                        this.getUnitsManager().selectUnitsByHotgroup(parseInt(ev.code.substring(5)), false);
                     else
                         this.getUnitsManager().selectUnitsByHotgroup(parseInt(ev.code.substring(5)));
                 },
