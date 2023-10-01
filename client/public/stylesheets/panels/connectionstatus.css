@@ -17,3 +17,24 @@
 #connection-status-panel[data-is-connected] dd::after {
 	background: var(--accent-green);
 }
+
+#connection-status-panel[data-is-paused] dt::before {
+	content: "Server paused";
+}
+
+#connection-status-panel[data-is-paused] dd {
+	animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+#connection-status-panel[data-is-paused] dd::after {
+	background: var(--accent-amber);
+}

@@ -20,6 +20,7 @@
     --unit-background-red: #FF5858;
 
     /*** UI Colours **/
+    --accent-amber: #ffd828;
     --accent-green: #8bff63;
     --accent-light-blue: #5ca7ff;
     --transparent-accent-light-blue: rgba(92, 167, 255, .33);
