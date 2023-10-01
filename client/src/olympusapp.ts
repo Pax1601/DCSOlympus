@@ -235,6 +235,7 @@ export class OlympusApp {
             }
         });
 
+        
         const shortcutManager = this.getShortcutManager();
         shortcutManager.add("toggleDemo", new ShortcutKeyboard({
             "callback": () => {
@@ -271,18 +272,29 @@ export class OlympusApp {
             }));
         });
 
-        ["Digit1", "Digit2", "Digit3", "Digit4", "Digit5", "Digit6", "Digit7", "Digit8", "Digit9"].forEach(code => {
+        const digits = ["Digit1", "Digit2", "Digit3", "Digit4", "Digit5", "Digit6", "Digit7", "Digit8", "Digit9"];
+        
+        digits.forEach(code => {
             shortcutManager.add(`hotgroup${code}`, new ShortcutKeyboard({
                 "callback": (ev: KeyboardEvent) => {
                     if (ev.ctrlKey && ev.shiftKey)
                         this.getUnitsManager().selectedUnitsAddToHotgroup(parseInt(ev.code.substring(5)));
-                    else if (ev.ctrlKey && !ev.shiftKey)
+                    else if (ev.ctrlKey && !ev.shiftKey) 
                         this.getUnitsManager().selectedUnitsSetHotgroup(parseInt(ev.code.substring(5)));
                     else
                         this.getUnitsManager().selectUnitsByHotgroup(parseInt(ev.code.substring(5)));
                 },
                 "code": code
             }));
+        });
+        
+        //  Stop hotgroup controls sending the browser to another tab
+        digits.forEach( code => {
+            document.addEventListener( "keydown", ( ev:KeyboardEvent ) => {
+                if ( ev.code === code && ev.ctrlKey === true && ev.altKey === false && ev.shiftKey === false ) {
+                    ev.preventDefault();
+                }
+            });
         });
 
         // TODO: move from here in dedicated class
