@@ -625,6 +625,26 @@ export class UnitsManager {
         });
         this.#showActionMessage(selectedUnits, `unit simulating fire fight`);
     }
+    
+    /** Instruct units to enter into scenic AAA mode. Units will shoot in the air without aiming
+     * 
+     */
+    selectedUnitsScenicAAA() {
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        for (let idx in selectedUnits) {
+            selectedUnits[idx].scenicAAA();
+        }
+    }
+
+    /** Instruct units to enter into miss on purpose mode. Units will aim to the nearest enemy unit but not precisely.
+     * 
+     */
+    selectedUnitsMissOnPurpose() {
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        for (let idx in selectedUnits) {
+            selectedUnits[idx].missOnPurpose();
+        }
+    }
 
     /*********************** Control operations on selected units ************************/
     /**  See getUnitsCategories for more info

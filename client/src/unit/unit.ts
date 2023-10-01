@@ -739,6 +739,15 @@ export class Unit extends CustomMarker {
         });
     }
 
+    scenicAAA() {
+        getApp().getServerManager().scenicAAA(this.ID);
+    }
+
+    missOnPurpose() {
+        getApp().getServerManager().missOnPurpose(this.ID);
+    }
+
+
     /***********************************************/
     onAdd(map: Map): this {
         super.onAdd(map);
@@ -802,7 +811,7 @@ export class Unit extends CustomMarker {
         if (selectedUnits.length > 0 && !(selectedUnits.length == 1 && (selectedUnits.includes(this)))) {
             options["attack"] = { text: "Attack", tooltip: "Attack the unit using A/A or A/G weapons" };
             if (getApp().getUnitsManager().getSelectedUnitsCategories().length == 1 && getApp().getUnitsManager().getSelectedUnitsCategories()[0] === "Aircraft")
-                options["follow"] = { text: "Follow", tooltip: "Follow the unit at a user defined distance and position" };;
+                options["follow"] = { text: "Follow", tooltip: "Follow the unit at a user defined distance and position" };
         }
         else if ((selectedUnits.length > 0 && (selectedUnits.includes(this))) || selectedUnits.length == 0) {
             if (this.getCategory() == "Aircraft") {
@@ -812,6 +821,11 @@ export class Unit extends CustomMarker {
 
         if (selectedUnitTypes.length === 1 && ["NavyUnit", "GroundUnit"].includes(selectedUnitTypes[0]) && getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getCoalition()}) !== undefined) 
             options["group"] = { text: "Create group", tooltip: "Create a group from the selected units." };
+
+        if (selectedUnitTypes.length === 1 && ["GroundUnit"].includes(selectedUnitTypes[0]) && selectedUnits.every((unit: Unit) => { return ["AAA"].includes(unit.getType())})) {
+            options["scenic-aaa"] = { text: "Scenic AAA", tooltip: "Shoot AAA in the air without aiming at any target" };
+            options["miss-aaa"] = { text: "Miss on purpose AAA", tooltip: "Shoot AAA towards the closes enemy, but don't aim precisely" };
+        }
 
         if (Object.keys(options).length > 0) {
             getApp().getMap().showUnitContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng);
@@ -831,6 +845,10 @@ export class Unit extends CustomMarker {
             getApp().getUnitsManager().selectedUnitsRefuel();
         else if (action === "group")
             getApp().getUnitsManager().selectedUnitsCreateGroup();
+        else if (action === "scenic-aaa")
+            getApp().getUnitsManager().selectedUnitsScenicAAA();
+        else if (action === "miss-aaa")
+            getApp().getUnitsManager().selectedUnitsMissOnPurpose();
         else if (action === "follow")
             this.#showFollowOptions(e);        
     }

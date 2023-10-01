@@ -11,6 +11,9 @@
 #include "scheduler.h"
 #include "defines.h"
 
+#include <GeographicLib/Geodesic.hpp>
+using namespace GeographicLib;
+
 #include "base64.hpp"
 using namespace base64;
 
@@ -146,6 +149,48 @@ void UnitsManager::deleteUnit(unsigned int ID, bool explosion, bool immediate)
 		Command* command = dynamic_cast<Command*>(new Delete(ID, explosion, immediate));
 		scheduler->appendCommand(command);
 	}
+}
+
+Unit* UnitsManager::getClosestUnit(Unit* unit, unsigned char coalition, vector<string> categories, double &distance) {
+	Unit* closestUnit = nullptr;
+	distance = 0;
+
+	for (auto const& p : units) {
+		/* Check if the units category is of the correct type */
+		bool requestedCategory = false;
+		for (auto const& category : categories) {
+			if (p.second->getCategory().compare(category) == 0) {
+				requestedCategory = true;
+				break;
+			}
+		}
+
+		/* Check if the unit belongs to the desired coalition, is alive, and is of the category requested */
+		if (requestedCategory && p.second->getCoalition() == coalition && p.second->getAlive()) {
+			/* Compute the distance from the unit to the tested unit */
+			double dist;
+			double bearing1;
+			double bearing2;
+			Geodesic::WGS84().Inverse(unit->getPosition().lat, unit->getPosition().lng, p.second->getPosition().lat, p.second->getPosition().lng, dist, bearing1, bearing2);
+
+			/* If the closest unit has not been assigned yet, assign it to this unit */
+			if (closestUnit == nullptr)
+			{
+				closestUnit = p.second;
+				distance = dist;
+			
+			}
+			else {
+				/* Check if the unit is closer than the one already selected */
+				if (dist < distance) {
+					closestUnit = p.second;
+					distance = dist;
+				}
+			}
+		}
+	}
+
+	return closestUnit;
 }
 
 void UnitsManager::acquireControl(unsigned int ID) {

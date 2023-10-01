@@ -1,6 +1,6 @@
 local version = "v0.4.4-alpha"
 
-local debug = true				-- True enables debug printing using DCS messages
+local debug = false				-- True enables debug printing using DCS messages
 
 -- .dll related variables
 Olympus.OlympusDLL = nil

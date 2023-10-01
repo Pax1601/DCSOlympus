@@ -329,6 +329,18 @@ export class ServerManager {
         this.PUT(data, callback);
     }
 
+    scenicAAA(ID: number, callback: CallableFunction = () => {}) {
+        var command = { "ID": ID }
+        var data = { "scenicAAA": command }
+        this.PUT(data, callback);
+    }
+
+    missOnPurpose(ID: number, callback: CallableFunction = () => {}) {
+        var command = { "ID": ID }
+        var data = { "missOnPurpose": command }
+        this.PUT(data, callback);
+    }
+
     setAdvacedOptions(ID: number, isTanker: boolean, isAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings, callback: CallableFunction = () => {}) {
         var command = {
             "ID": ID,
