@@ -253,6 +253,17 @@ export class OlympusApp {
                 this.getUnitsManager().deselectAllUnits();
             },
             "code": "Escape"
+        }).addKeyboardShortcut( "toggleUnitLabels", {
+            "altKey": false,
+            "callback": () => {
+                const chk = document.querySelector( `label[title="Show unit labels"] input[type="checkbox"]` );
+                if ( chk instanceof HTMLElement ) {
+                    chk.click();
+                }
+            },
+            "code": "KeyL",
+            "ctrlKey": false,
+            "shiftKey": false
         });
 
         ["KeyW", "KeyA", "KeyS", "KeyD", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].forEach(code => {
