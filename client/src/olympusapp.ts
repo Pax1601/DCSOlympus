@@ -25,6 +25,7 @@ import { helicopterDatabase } from "./unit/databases/helicopterdatabase";
 import { groundUnitDatabase } from "./unit/databases/groundunitdatabase";
 import { navyUnitDatabase } from "./unit/databases/navyunitdatabase";
 import { ConfigurationOptions } from "./interfaces";
+import { UnitListPanel } from "./panels/unitlistpanel";
 
 export class OlympusApp {
     /* Global data */
@@ -181,6 +182,7 @@ export class OlympusApp {
             .add("serverStatus", new ServerStatusPanel("server-status-panel"))
             .add("unitControl", new UnitControlPanel("unit-control-panel"))
             .add("unitInfo", new UnitInfoPanel("unit-info-panel"))
+            .add("unitList", new UnitListPanel( this, "unit-list-panel", "unit-list-panel-content" ) )
 
         // Popups
         this.getPopupsManager().add("infoPopup", new Popup("info-popup"));
