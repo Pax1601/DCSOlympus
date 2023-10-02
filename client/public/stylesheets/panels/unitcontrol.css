@@ -231,6 +231,7 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 #advanced-settings-dialog:not([data-show-tanker]) #tanker-checkbox,
 #advanced-settings-dialog:not([data-show-AWACS]) #AWACS-checkbox,
 #advanced-settings-dialog:not([data-show-TACAN]) #TACAN-options,
-#advanced-settings-dialog:not([data-show-radio]) #radio-options {
+#advanced-settings-dialog:not([data-show-radio]) #radio-options,
+#advanced-settings-dialog:not([data-show-air-unit-checkboxes]) .air-unit-checkbox {
 	display: none;
 }

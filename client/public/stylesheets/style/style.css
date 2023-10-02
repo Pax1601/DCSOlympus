@@ -1047,7 +1047,9 @@ nav.ol-panel> :last-child {
 }
 
 .ol-coalitionarea-handle-icon,
-.ol-coalitionarea-middle-handle-icon {
+.ol-coalitionarea-middle-handle-icon,
+.ol-destination-preview-icon,
+.ol-destination-preview-handle-icon {
     pointer-events: none;
     z-index: 9999;
     border-radius: 999px;
@@ -1063,6 +1065,13 @@ nav.ol-panel> :last-child {
     background-color: #FFFFFFAA;
     width: 16px;
     height: 16px;
+}
+
+.ol-destination-preview-handle-icon {
+    background-color: #247be2;
+    border: 2px solid white;
+    width: 18px;
+    height: 18px;
 }
 
 dl.ol-data-grid {
