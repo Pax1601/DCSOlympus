@@ -1,3 +1,5 @@
+import { OlympusPlugin } from "interfaces";
+
 const SHOW_CONTROL_TIPS = "Show control tips"
 
 export class ControlTipsPlugin implements OlympusPlugin {
@@ -41,7 +43,7 @@ export class ControlTipsPlugin implements OlympusPlugin {
             this.#updateTips();
         });
 
-        document.addEventListener("unitDeselection", (ev: CustomEvent) => {
+        document.addEventListener("unitDeselection", (ev: CustomEventInit ) => {
             this.#updateTips();
         });
 
@@ -55,7 +57,7 @@ export class ControlTipsPlugin implements OlympusPlugin {
             this.#updateTips();
         });
 
-        document.addEventListener("unitSelection", (ev: CustomEvent) => {
+        document.addEventListener("unitSelection", (ev: CustomEventInit ) => {
             this.#updateTips();
         });
 
