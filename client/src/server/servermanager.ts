@@ -17,6 +17,8 @@ export class ServerManager {
     #sessionHash: string | null = null;
     #lastUpdateTimes: {[key: string]: number} = {}
     #demoEnabled = false;
+    #previousMissionElapsedTime:number = 0;  //  Track if mission elapsed time is increasing (i.e. is the server paused)
+    #serverIsPaused: boolean = false;
 
     constructor() {
         this.#lastUpdateTimes[UNITS_URI] = Date.now();
@@ -426,9 +428,25 @@ export class ServerManager {
                     var time = getApp().getUnitsManager()?.update(buffer); 
                     return time;
                 }, true);
-                (getApp().getPanelsManager().get("connectionStatus") as ConnectionStatusPanel).update(this.getConnected());
+
+                const elapsedMissionTime         = getApp().getMissionManager().getDateAndTime().elapsedTime;
+                this.#serverIsPaused             = ( elapsedMissionTime === this.#previousMissionElapsedTime );
+                this.#previousMissionElapsedTime = elapsedMissionTime;
+
+                const csp = (getApp().getPanelsManager().get("connectionStatus") as ConnectionStatusPanel);
+
+                if ( this.getConnected() ) {
+                    if ( this.getServerIsPaused() ) {
+                        csp.showServerPaused();
+                    } else {
+                        csp.showConnected();
+                    }
+                } else {
+                    csp.showDisconnected();
+                }
+
             }
-        }, 5000);
+        }, ( this.getServerIsPaused() ? 500 : 5000 ));
 
         window.setInterval(() => {
             if (!this.getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
@@ -501,5 +519,9 @@ export class ServerManager {
 
     getPaused() {
         return this.#paused;
+    }
+
+    getServerIsPaused() {
+        return this.#serverIsPaused;
     }
 }
