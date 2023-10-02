@@ -212,7 +212,7 @@ void GroundUnit::AIloop()
 		}
 
 		if (internalCounter == 0)
-			internalCounter = 20 * scheduler->getFrameRate(); /* 20 seconds */
+			internalCounter = 20 / 0.05;
 		internalCounter--;
 
 		break;
@@ -238,7 +238,7 @@ void GroundUnit::AIloop()
 		}
 
 		if (internalCounter == 0)
-			internalCounter = 20 * scheduler->getFrameRate(); /* 20 seconds */
+			internalCounter = 20 / 0.05;
 		internalCounter--;
 
 		break;
@@ -253,13 +253,35 @@ void GroundUnit::AIloop()
 
 			/* Only do if we have a valid target close enough for AAA */
 			if (target != nullptr && distance < 10000 /* m */) {
-				double aimTime = 10; /* s TODO: add to database */
+				/* Default gun values */
+				double barrelHeight = 1.0; /* m */
+				double muzzleVelocity = 860; /* m/s */
+				double aimTime = 10; /* s */
+				unsigned int shotsToFire = 10;
+
+				if (database.has_object_field(to_wstring(name))) {
+					json::value databaseEntry = database[to_wstring(name)];
+					if (databaseEntry.has_number_field(L"barrelHeight"))
+						barrelHeight = databaseEntry[L"barrelHeight"].as_number().to_double();
+					if (databaseEntry.has_number_field(L"muzzleVelocity"))
+						muzzleVelocity = databaseEntry[L"muzzleVelocity"].as_number().to_double();
+					if (databaseEntry.has_number_field(L"aimTime"))
+						aimTime = databaseEntry[L"aimTime"].as_number().to_double();
+					if (databaseEntry.has_number_field(L"shotsToFire"))
+						shotsToFire = databaseEntry[L"shotsToFire"].as_number().to_uint32();
+				}
+
+				/* Approximate the flight time */
+				if (muzzleVelocity != 0)
+					aimTime += distance / muzzleVelocity; 
+
+				internalCounter = (aimTime + 2) / 0.05;
 
 				/* Compute where the target will be in aimTime seconds. We don't consider vertical velocity atm, since after all we are not really tring to hit */
 				double aimDistance = target->getSpeed() * aimTime;
 				double aimLat = 0;
 				double aimLng = 0;
-				Geodesic::WGS84().Direct(target->getPosition().lat, target->getPosition().lng, target->getHeading(), aimDistance, aimLat, aimLng);
+				Geodesic::WGS84().Direct(target->getPosition().lat, target->getPosition().lng, target->getHeading() * 57.29577, aimDistance, aimLat, aimLng); /* TODO make util function */
 
 				/* Compute distance to the aim point */
 				double dist;
@@ -267,24 +289,15 @@ void GroundUnit::AIloop()
 				double bearing2;
 				Geodesic::WGS84().Inverse(position.lat, position.lng, aimLat, aimLng, dist, bearing1, bearing2);
 
-				/* Default gun values */
-				double barrelHeight = 1.0; /* m */
-				double muzzleVelocity = 860; /* m/s */
-				if (database.has_object_field(to_wstring(name))) {
-					json::value databaseEntry = database[to_wstring(name)];
-					if (databaseEntry.has_number_field(L"barrelHeight") && databaseEntry.has_number_field(L"muzzleVelocity")) {
-						barrelHeight = databaseEntry[L"barrelHeight"].as_number().to_double();
-						muzzleVelocity = databaseEntry[L"muzzleVelocity"].as_number().to_double();
-					}
-				}
-
 				/* Send the command */
 				std::ostringstream taskSS;
 				taskSS.precision(10);
-				taskSS << "{id = 'FireAtPoint', lat = " << aimLat << ", lng = " << aimLng << ", alt = " << target->getPosition().alt + 0.5 * 9.81 * (dist * dist) / (muzzleVelocity * muzzleVelocity) << ", radius = 0.001}";
+				taskSS << "{id = 'FireAtPoint', lat = " << aimLat << ", lng = " << aimLng << ", alt = " << target->getPosition().alt << ", radius = 0.001, expendQty = " << shotsToFire << " }";
 				Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
 				scheduler->appendCommand(command);
 				setHasTask(true);
+
+				setTargetPosition(Coords(aimLat, aimLng, target->getPosition().alt));
 			}	
 			else {
 				if (getHasTask())
@@ -293,7 +306,7 @@ void GroundUnit::AIloop()
 		}
 
 		if (internalCounter == 0)
-			internalCounter = 5 * scheduler->getFrameRate();
+			internalCounter = 5 / 0.05;
 		internalCounter--;
 
 		break;
