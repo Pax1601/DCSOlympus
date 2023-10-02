@@ -182,7 +182,7 @@ export class OlympusApp {
             .add("serverStatus", new ServerStatusPanel("server-status-panel"))
             .add("unitControl", new UnitControlPanel("unit-control-panel"))
             .add("unitInfo", new UnitInfoPanel("unit-info-panel"))
-            .add("unitList", new UnitListPanel( this, "unit-list-panel", "unit-list-panel-content" ) )
+            .add("unitList", new UnitListPanel("unit-list-panel", "unit-list-panel-content"))
 
         // Popups
         this.getPopupsManager().add("infoPopup", new Popup("info-popup"));
@@ -198,8 +198,8 @@ export class OlympusApp {
             if (config && config.address != undefined && config.port != undefined) {
                 const address = config.address;
                 const port = config.port;
-                if (typeof address === 'string' && typeof port == 'number') { 
-                    this.getServerManager().setAddress(address == "*" ? window.location.hostname : address, port);                    
+                if (typeof address === 'string' && typeof port == 'number') {
+                    this.getServerManager().setAddress(address == "*" ? window.location.hostname : address, port);
                 }
             }
             else {
@@ -250,16 +250,16 @@ export class OlympusApp {
             },
             "code": "Space",
             "ctrlKey": false
-        }).addKeyboardShortcut( "deselectAll", {
-            "callback": ( ev:KeyboardEvent ) => {
+        }).addKeyboardShortcut("deselectAll", {
+            "callback": (ev: KeyboardEvent) => {
                 this.getUnitsManager().deselectAllUnits();
             },
             "code": "Escape"
-        }).addKeyboardShortcut( "toggleUnitLabels", {
+        }).addKeyboardShortcut("toggleUnitLabels", {
             "altKey": false,
             "callback": () => {
-                const chk = document.querySelector( `label[title="Show unit labels"] input[type="checkbox"]` );
-                if ( chk instanceof HTMLElement ) {
+                const chk = document.querySelector(`label[title="Show unit labels"] input[type="checkbox"]`);
+                if (chk instanceof HTMLElement) {
                     chk.click();
                 }
             },
@@ -288,14 +288,14 @@ export class OlympusApp {
         });
 
         const digits = ["Digit1", "Digit2", "Digit3", "Digit4", "Digit5", "Digit6", "Digit7", "Digit8", "Digit9"];
-        
+
         digits.forEach(code => {
             shortcutManager.addKeyboardShortcut(`hotgroup${code}`, {
                 "altKey": false,
                 "callback": (ev: KeyboardEvent) => {
                     if (ev.ctrlKey && ev.shiftKey)
                         this.getUnitsManager().selectedUnitsAddToHotgroup(parseInt(ev.code.substring(5)));
-                    else if (ev.ctrlKey && !ev.shiftKey) 
+                    else if (ev.ctrlKey && !ev.shiftKey)
                         this.getUnitsManager().selectedUnitsSetHotgroup(parseInt(ev.code.substring(5)));
                     else if (!ev.ctrlKey && ev.shiftKey)
                         this.getUnitsManager().selectUnitsByHotgroup(parseInt(ev.code.substring(5)), false);
@@ -305,11 +305,11 @@ export class OlympusApp {
                 "code": code
             });
         });
-        
+
         //  Stop hotgroup controls sending the browser to another tab
-        digits.forEach( code => {
-            document.addEventListener( "keydown", ( ev:KeyboardEvent ) => {
-                if ( ev.code === code && ev.ctrlKey === true && ev.altKey === false && ev.shiftKey === false ) {
+        digits.forEach(code => {
+            document.addEventListener("keydown", (ev: KeyboardEvent) => {
+                if (ev.code === code && ev.ctrlKey === true && ev.altKey === false && ev.shiftKey === false) {
                     ev.preventDefault();
                 }
             });
