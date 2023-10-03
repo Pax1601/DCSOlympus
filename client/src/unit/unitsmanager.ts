@@ -629,21 +629,23 @@ export class UnitsManager {
     /** Instruct units to enter into scenic AAA mode. Units will shoot in the air without aiming
      * 
      */
-    selectedUnitsScenicAAA() {
+    selectedUnitsScenicAAA(coalition: string) {
         var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
-            selectedUnits[idx].scenicAAA();
+            selectedUnits[idx].scenicAAA(coalition);
         }
+        this.#showActionMessage(selectedUnits, `unit set to perform scenic AAA against ${coalition} units`);
     }
 
     /** Instruct units to enter into miss on purpose mode. Units will aim to the nearest enemy unit but not precisely.
      * 
      */
-    selectedUnitsMissOnPurpose() {
+    selectedUnitsMissOnPurpose(coalition: string) {
         var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
-            selectedUnits[idx].missOnPurpose();
+            selectedUnits[idx].missOnPurpose(coalition);
         }
+        this.#showActionMessage(selectedUnits, `unit set to perform miss on purpose AAA against ${coalition} units`);
     }
 
     /*********************** Control operations on selected units ************************/

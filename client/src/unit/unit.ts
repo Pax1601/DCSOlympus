@@ -588,15 +588,7 @@ export class Unit extends CustomMarker {
     }
 
     isInViewport() {
-
-        const mapBounds = getApp().getMap().getBounds();
-        const unitPos = this.getPosition();
-
-        return (unitPos.lng > mapBounds.getWest()
-            && unitPos.lng < mapBounds.getEast()
-            && unitPos.lat > mapBounds.getSouth()
-            && unitPos.lat < mapBounds.getNorth());
-
+        return getApp().getMap().getBounds().contains(this.getPosition());
     }
 
     /********************** Unit commands *************************/
@@ -739,14 +731,40 @@ export class Unit extends CustomMarker {
         });
     }
 
-    scenicAAA() {
-        getApp().getServerManager().scenicAAA(this.ID);
+    scenicAAA(coalition: string) {
+        getApp().getServerManager().scenicAAA(this.ID, coalition);
     }
 
-    missOnPurpose() {
-        getApp().getServerManager().missOnPurpose(this.ID);
+    missOnPurpose(coalition: string) {
+        getApp().getServerManager().missOnPurpose(this.ID, coalition);
     }
 
+    /***********************************************/
+    getActions():  { [key: string]: { text: string, tooltip: string, type: string } } {
+        /* To be implemented by child classes */ // TODO make Unit an abstract class
+        return {};
+    }
+
+    executeAction(e: any, action: string) {
+        if (action === "center-map")
+            getApp().getMap().centerOnUnit(this.ID);
+        if (action === "attack")
+            getApp().getUnitsManager().selectedUnitsAttackUnit(this.ID);
+        else if (action === "refuel")
+            getApp().getUnitsManager().selectedUnitsRefuel();
+        else if (action === "group-ground" || action === "group-navy")
+            getApp().getUnitsManager().selectedUnitsCreateGroup();
+        else if (action === "scenic-aaa-red")
+            getApp().getUnitsManager().selectedUnitsScenicAAA("red");
+        else if (action === "scenic-aaa-blue")
+            getApp().getUnitsManager().selectedUnitsScenicAAA("blue");
+        else if (action === "miss-aaa-red")
+            getApp().getUnitsManager().selectedUnitsMissOnPurpose("red");
+        else if (action === "miss-aaa-blue")
+            getApp().getUnitsManager().selectedUnitsMissOnPurpose("blue");
+        else if (action === "follow")
+            this.#showFollowOptions(e);
+    }
 
     /***********************************************/
     onAdd(map: Map): this {
@@ -761,18 +779,18 @@ export class Unit extends CustomMarker {
         if (this.#waitingForDoubleClick) {
             return;
         }
-        
+
         //  We'll wait for a doubleclick
         this.#waitingForDoubleClick = true;
 
-        this.#doubleClickTimer = window.setTimeout(() => { 
+        this.#doubleClickTimer = window.setTimeout(() => {
 
             //  Still waiting so no doubleclick; do the click action
             if (this.#waitingForDoubleClick) {
                 if (getApp().getMap().getState() === IDLE || getApp().getMap().getState() === MOVE_UNIT || e.originalEvent.ctrlKey) {
                     if (!e.originalEvent.ctrlKey)
                         getApp().getUnitsManager().deselectAllUnits();
-    
+
                     this.setSelected(!this.getSelected());
                     const detail = { "detail": { "unit": this } };
                     if (this.getSelected())
@@ -788,7 +806,6 @@ export class Unit extends CustomMarker {
     }
 
     #onDoubleClick(e: any) {
-
         //  Let single clicks work again
         this.#waitingForDoubleClick = false;
         clearTimeout(this.#doubleClickTimer);
@@ -801,56 +818,47 @@ export class Unit extends CustomMarker {
         });
     }
 
-    #onContextMenu(e: any) {
-        var options: { [key: string]: { text: string, tooltip: string } } = {};
-        const selectedUnits = getApp().getUnitsManager().getSelectedUnits();
-        const selectedUnitTypes = getApp().getUnitsManager().getSelectedUnitsCategories();
+    getActionOptions() {
+        var options: { [key: string]: { text: string, tooltip: string, type: string } } | null = null;
 
-        options["center-map"] = { text: "Center map", tooltip: "Center the map on the unit and follow it" };
+        var units = getApp().getUnitsManager().getSelectedUnits();
+        units.push(this);
 
-        if (selectedUnits.length > 0 && !(selectedUnits.length == 1 && (selectedUnits.includes(this)))) {
-            options["attack"] = { text: "Attack", tooltip: "Attack the unit using A/A or A/G weapons" };
-            if (getApp().getUnitsManager().getSelectedUnitsCategories().length == 1 && getApp().getUnitsManager().getSelectedUnitsCategories()[0] === "Aircraft")
-                options["follow"] = { text: "Follow", tooltip: "Follow the unit at a user defined distance and position" };
-        }
-        else if ((selectedUnits.length > 0 && (selectedUnits.includes(this))) || selectedUnits.length == 0) {
-            if (this.getCategory() == "Aircraft") {
-                options["refuel"] = { text: "Air to air refuel", tooltip: "Refuel units at the nearest AAR Tanker. If no tanker is available the unit will RTB." }; // TODO Add some way of knowing which aircraft can AAR
+        /* Keep only the common "or" options or any "and" option */
+        units.forEach((unit: Unit) => {
+            var unitOptions = unit.getActions();
+            if (options === null) {
+                options = unitOptions;
+            } else {
+                /* Options of "or" type get shown if any one unit has it*/
+                for (let optionKey in unitOptions) {
+                    if (unitOptions[optionKey].type == "or") {
+                        options[optionKey] = unitOptions[optionKey];
+                    }
+                }
+
+                /* Options of "and" type get shown if ALL units have it */
+                for (let optionKey in options) {
+                    if (!(optionKey in unitOptions)) {
+                        delete options[optionKey];
+                    }
+                }
             }
-        }
+        });
 
-        if (selectedUnitTypes.length === 1 && ["NavyUnit", "GroundUnit"].includes(selectedUnitTypes[0]) && getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getCoalition()}) !== undefined) 
-            options["group"] = { text: "Create group", tooltip: "Create a group from the selected units." };
+        return options ?? {};
+    }
 
-        if (selectedUnitTypes.length === 1 && ["GroundUnit"].includes(selectedUnitTypes[0]) && selectedUnits.every((unit: Unit) => { return ["AAA"].includes(unit.getType())})) {
-            options["scenic-aaa"] = { text: "Scenic AAA", tooltip: "Shoot AAA in the air without aiming at any target" };
-            options["miss-aaa"] = { text: "Miss on purpose AAA", tooltip: "Shoot AAA towards the closes enemy, but don't aim precisely" };
-        }
+    #onContextMenu(e: any) {
+        var options = this.getActionOptions();
 
         if (Object.keys(options).length > 0) {
             getApp().getMap().showUnitContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng);
             getApp().getMap().getUnitContextMenu().setOptions(options, (option: string) => {
                 getApp().getMap().hideUnitContextMenu();
-                this.#executeAction(e, option);
+                this.executeAction(e, option);
             });
         }
-    }
-
-    #executeAction(e: any, action: string) {
-        if (action === "center-map")
-            getApp().getMap().centerOnUnit(this.ID);
-        if (action === "attack")
-            getApp().getUnitsManager().selectedUnitsAttackUnit(this.ID);
-        else if (action === "refuel")
-            getApp().getUnitsManager().selectedUnitsRefuel();
-        else if (action === "group")
-            getApp().getUnitsManager().selectedUnitsCreateGroup();
-        else if (action === "scenic-aaa")
-            getApp().getUnitsManager().selectedUnitsScenicAAA();
-        else if (action === "miss-aaa")
-            getApp().getUnitsManager().selectedUnitsMissOnPurpose();
-        else if (action === "follow")
-            this.#showFollowOptions(e);        
     }
 
     #showFollowOptions(e: any) {
@@ -892,14 +900,14 @@ export class Unit extends CustomMarker {
                     var angleRad = deg2rad(angleDeg);
                     var distance = ftToM(parseInt((<HTMLInputElement>dialog.querySelector(`#distance`)?.querySelector("input")).value));
                     var upDown = ftToM(parseInt((<HTMLInputElement>dialog.querySelector(`#up-down`)?.querySelector("input")).value));
-    
+
                     // X: front-rear, positive front
                     // Y: top-bottom, positive top
                     // Z: left-right, positive right
                     var x = distance * Math.cos(angleRad);
                     var y = upDown;
                     var z = distance * Math.sin(angleRad);
-    
+
                     getApp().getUnitsManager().selectedUnitsFollowUnit(this.ID, { "x": x, "y": y, "z": z });
                 }
             });
@@ -1166,6 +1174,37 @@ export class AirUnit extends Unit {
             rotateToHeading: false
         };
     }
+
+    getActions() {
+        var options: { [key: string]: { text: string, tooltip: string, type: string } } = {};
+
+        /* Options if this unit is not selected */
+        if (!this.getSelected()) {
+            /* Someone else is selected */
+            if (getApp().getUnitsManager().getSelectedUnits().length > 0) {
+                options["attack"] = { text: "Attack", tooltip: "Attack the unit using A/A or A/G weapons", type: "or" };
+                options["follow"] = { text: "Follow", tooltip: "Follow the unit at a user defined distance and position", type: "or" };
+            } else {
+                options["center-map"] = { text: "Center map", tooltip: "Center the map on the unit and follow it", type: "and" };
+            }
+        }
+        /* Options if this unit is selected*/
+        else if (this.getSelected()) {
+            /* This is the only selected unit */
+            if (getApp().getUnitsManager().getSelectedUnits().length == 1) {
+                options["center-map"] = { text: "Center map", tooltip: "Center the map on the unit and follow it", type: "and" };
+            } else {
+                /* Provision */
+            }
+
+            options["refuel"] = { text: "Air to air refuel", tooltip: "Refuel units at the nearest AAR Tanker. If no tanker is available the unit will RTB.", type: "and" }; // TODO Add some way of knowing which aircraft can AAR
+        }
+        /* All other options */
+        else {
+            /* Provision */
+        }
+        return options;
+    }
 }
 
 export class Aircraft extends AirUnit {
@@ -1209,6 +1248,41 @@ export class GroundUnit extends Unit {
         };
     }
 
+    getActions() {
+        var options: { [key: string]: { text: string, tooltip: string, type: string } } = {};
+
+        /* Options if this unit is not selected */
+        if (!this.getSelected()) {
+            /* Someone else is selected */
+            if (getApp().getUnitsManager().getSelectedUnits().length > 0) {
+                options["attack"] = { text: "Attack", tooltip: "Attack the unit using A/A or A/G weapons", type: "or" };
+            } else {
+                options["center-map"] = { text: "Center map", tooltip: "Center the map on the unit and follow it", type: "and" };
+            }
+        }
+        /* Options if this unit is selected*/
+        else if (this.getSelected()) {
+            /* This is the only selected unit */
+            if (getApp().getUnitsManager().getSelectedUnits().length == 1) {
+                options["center-map"] = { text: "Center map", tooltip: "Center the map on the unit and follow it", type: "and" };
+            } else {
+                options["group-ground"] = { text: "Create group", tooltip: "Create a group from the selected units", type: "and" };
+            }
+
+            if (["AAA", "flak"].includes(this.getType())) {
+                options["scenic-aaa-red"] = { text: "Scenic AAA (red)", tooltip: "Shoot AAA in the air without aiming at any target, when a red air unit gets close enough", type: "and" };
+                options["scenic-aaa-blue"] = { text: "Scenic AAA (blue)", tooltip: "Shoot AAA in the air without aiming at any target, when a blue air unit gets close enough", type: "and" };
+                options["miss-aaa-red"] = { text: "Miss on purpose AAA (red)", tooltip: "Shoot AAA towards the closest red air unit, but don't aim precisely", type: "and" };
+                options["miss-aaa-blue"] = { text: "Miss on purpose AAA (blue)", tooltip: "Shoot AAA towards the closest blue air unit, but don't aim precisely", type: "and" };
+            }
+        }
+        /* All other options */
+        else {
+            /* Provision */
+        }
+        return options;
+    }
+
     getCategory() {
         return "GroundUnit";
     }
@@ -1238,6 +1312,34 @@ export class NavyUnit extends Unit {
             showCallsign: belongsToCommandedCoalition,
             rotateToHeading: false
         };
+    }
+
+    getActions() {
+        var options: { [key: string]: { text: string, tooltip: string, type: string } } = {};
+
+        /* Options if this unit is not selected */
+        if (!this.getSelected()) {
+            /* Someone else is selected */
+            if (getApp().getUnitsManager().getSelectedUnits().length > 0) {
+                options["attack"] = { text: "Attack", tooltip: "Attack the unit using A/A or A/G weapons", type: "or" };
+            } else {
+                options["center-map"] = { text: "Center map", tooltip: "Center the map on the unit and follow it", type: "and" };
+            }
+        }
+        /* Options if this unit is selected */
+        else if (this.getSelected()) {
+            /* This is the only selected unit */
+            if (getApp().getUnitsManager().getSelectedUnits().length == 1) {
+                options["center-map"] = { text: "Center map", tooltip: "Center the map on the unit and follow it", type: "and" };
+            } else {
+                options["group-navy"] = { text: "Create group", tooltip: "Create a group from the selected units", type: "and" };
+            }
+        }
+        /* All other options */
+        else {
+            /* Provision */
+        }
+        return options;
     }
 
     getMarkerCategory() {

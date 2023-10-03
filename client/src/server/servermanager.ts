@@ -329,14 +329,14 @@ export class ServerManager {
         this.PUT(data, callback);
     }
 
-    scenicAAA(ID: number, callback: CallableFunction = () => {}) {
-        var command = { "ID": ID }
+    scenicAAA(ID: number, coalition: string, callback: CallableFunction = () => {}) {
+        var command = { "ID": ID, "coalition": coalition }
         var data = { "scenicAAA": command }
         this.PUT(data, callback);
     }
 
-    missOnPurpose(ID: number, callback: CallableFunction = () => {}) {
-        var command = { "ID": ID }
+    missOnPurpose(ID: number, coalition: string, callback: CallableFunction = () => {}) {
+        var command = { "ID": ID, "coalition": coalition }
         var data = { "missOnPurpose": command }
         this.PUT(data, callback);
     }

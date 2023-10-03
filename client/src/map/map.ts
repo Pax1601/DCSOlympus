@@ -688,7 +688,6 @@ export class Map extends L.Map {
         this.#isZooming = false;
     }
 
-
     #panToUnit(unit: Unit) {
         var unitPosition = new L.LatLng(unit.getPosition().lat, unit.getPosition().lng);
         this.setView(unitPosition, this.getZoom(), { animate: false });
