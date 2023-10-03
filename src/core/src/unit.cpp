@@ -191,6 +191,7 @@ void Unit::refreshLeaderData(unsigned long long time) {
 					case DataIndex::radio:						updateValue(radio, leader->radio, datumIndex); break;
 					case DataIndex::generalSettings:			updateValue(generalSettings, leader->generalSettings, datumIndex); break;
 					case DataIndex::activePath:					updateValue(activePath, leader->activePath, datumIndex); break;
+					case DataIndex::operateAs:					updateValue(operateAs, leader->operateAs, datumIndex); break;
 					}
 				}
 			}
@@ -270,6 +271,7 @@ void Unit::getData(stringstream& ss, unsigned long long time)
 				case DataIndex::contacts:					appendVector(ss, datumIndex, contacts); break;
 				case DataIndex::activePath:					appendList(ss, datumIndex, activePath); break;
 				case DataIndex::isLeader:					appendNumeric(ss, datumIndex, isLeader); break;
+				case DataIndex::operateAs:					appendNumeric(ss, datumIndex, operateAs); break;
 				}
 			}
 		}

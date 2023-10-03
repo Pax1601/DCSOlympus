@@ -197,5 +197,6 @@ export enum DataIndexes {
     contacts,
     activePath,
     isLeader,
+    operateAs,
     endOfData = 255
 };

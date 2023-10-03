@@ -377,20 +377,12 @@
     content: url("/resources/theme/images/icons/follow.svg");
 }
 
-#scenic-aaa-red::before {
-    content: url("/resources/theme/images/icons/scenic-red.svg");
+#scenic-aaa::before {
+    content: url("/resources/theme/images/icons/scenic.svg");
 }
 
-#scenic-aaa-blue::before {
-    content: url("/resources/theme/images/icons/scenic-blue.svg");
-}
-
-#miss-aaa-red::before {
-    content: url("/resources/theme/images/icons/miss-red.svg");
-}
-
-#miss-aaa-blue::before {
-    content: url("/resources/theme/images/icons/miss-blue.svg");
+#miss-aaa::before {
+    content: url("/resources/theme/images/icons/miss.svg");
 }
 
 #group-ground::before {

@@ -351,6 +351,16 @@ export function enumToCoalition(coalitionID: number) {
     return "";
 }
 
+export function coalitionToEnum(coalition: string) {
+    switch (coalition){
+        case "neutral": return 0;
+        case "red": return 1;
+        case "blue": return 2;
+    }
+    return 0;
+}
+
+
 export function convertDateAndTimeToDate(dateAndTime: DateAndTime) {
     const date = dateAndTime.date;
     const time = dateAndTime.time;

@@ -1,6 +1,6 @@
 import { Marker, LatLng, Polyline, Icon, DivIcon, CircleMarker, Map, Point } from 'leaflet';
 import { getApp } from '..';
-import { enumToCoalition, enumToEmissioNCountermeasure, getMarkerCategoryByName, enumToROE, enumToReactionToThreat, enumToState, getUnitDatabaseByCategory, mToFt, msToKnots, rad2deg, bearing, deg2rad, ftToM, getGroundElevation } from '../other/utils';
+import { enumToCoalition, enumToEmissioNCountermeasure, getMarkerCategoryByName, enumToROE, enumToReactionToThreat, enumToState, getUnitDatabaseByCategory, mToFt, msToKnots, rad2deg, bearing, deg2rad, ftToM, getGroundElevation, coalitionToEnum } from '../other/utils';
 import { CustomMarker } from '../map/markers/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
 import { UnitDatabase } from './databases/unitdatabase';
@@ -77,6 +77,7 @@ export class Unit extends CustomMarker {
     #contacts: Contact[] = [];
     #activePath: LatLng[] = [];
     #isLeader: boolean = false;
+    #operateAs: string = "blue";
 
     #selectable: boolean;
     #selected: boolean = false;
@@ -130,6 +131,7 @@ export class Unit extends CustomMarker {
     getContacts() { return this.#contacts };
     getActivePath() { return this.#activePath };
     getIsLeader() { return this.#isLeader };
+    getOperateAs() { return this.#operateAs };
 
     static getConstructor(type: string) {
         if (type === "GroundUnit") return GroundUnit;
@@ -232,6 +234,7 @@ export class Unit extends CustomMarker {
                 case DataIndexes.contacts: this.#contacts = dataExtractor.extractContacts(); document.dispatchEvent(new CustomEvent("contactsUpdated", { detail: this })); break;
                 case DataIndexes.activePath: this.#activePath = dataExtractor.extractActivePath(); break;
                 case DataIndexes.isLeader: this.#isLeader = dataExtractor.extractBool(); break;
+                case DataIndexes.operateAs: this.#operateAs = enumToCoalition(dataExtractor.extractUInt8()); break;
             }
         }
 
@@ -291,7 +294,8 @@ export class Unit extends CustomMarker {
             ammo: this.#ammo,
             contacts: this.#contacts,
             activePath: this.#activePath,
-            isLeader: this.#isLeader
+            isLeader: this.#isLeader,
+            operateAs: this.#operateAs
         }
     }
 
@@ -685,6 +689,11 @@ export class Unit extends CustomMarker {
             getApp().getServerManager().setFollowRoads(this.ID, followRoads);
     }
 
+    setOperateAs(operateAs: string) {
+        if (!this.#human)
+            getApp().getServerManager().setOperateAs(this.ID, coalitionToEnum(operateAs));
+    }
+
     delete(explosion: boolean, immediate: boolean) {
         getApp().getServerManager().deleteUnit(this.ID, explosion, immediate);
     }
@@ -731,11 +740,23 @@ export class Unit extends CustomMarker {
         });
     }
 
-    scenicAAA(coalition: string) {
+    scenicAAA() {
+        var coalition = "neutral";
+        if (this.getCoalition() === "red")
+            coalition = "blue";
+        else if (this.getCoalition() == "blue")
+            coalition = "red";
+        //TODO
         getApp().getServerManager().scenicAAA(this.ID, coalition);
     }
 
-    missOnPurpose(coalition: string) {
+    missOnPurpose() {
+        var coalition = "neutral";
+        if (this.getCoalition() === "red")
+            coalition = "blue";
+        else if (this.getCoalition() == "blue")
+            coalition = "red";
+        //TODO
         getApp().getServerManager().missOnPurpose(this.ID, coalition);
     }
 
@@ -754,14 +775,10 @@ export class Unit extends CustomMarker {
             getApp().getUnitsManager().selectedUnitsRefuel();
         else if (action === "group-ground" || action === "group-navy")
             getApp().getUnitsManager().selectedUnitsCreateGroup();
-        else if (action === "scenic-aaa-red")
-            getApp().getUnitsManager().selectedUnitsScenicAAA("red");
-        else if (action === "scenic-aaa-blue")
-            getApp().getUnitsManager().selectedUnitsScenicAAA("blue");
-        else if (action === "miss-aaa-red")
-            getApp().getUnitsManager().selectedUnitsMissOnPurpose("red");
-        else if (action === "miss-aaa-blue")
-            getApp().getUnitsManager().selectedUnitsMissOnPurpose("blue");
+        else if (action === "scenic-aaa")
+            getApp().getUnitsManager().selectedUnitsScenicAAA();
+        else if (action === "miss-aaa")
+            getApp().getUnitsManager().selectedUnitsMissOnPurpose();
         else if (action === "follow")
             this.#showFollowOptions(e);
     }
@@ -1270,10 +1287,8 @@ export class GroundUnit extends Unit {
             }
 
             if (["AAA", "flak"].includes(this.getType())) {
-                options["scenic-aaa-red"] = { text: "Scenic AAA (red)", tooltip: "Shoot AAA in the air without aiming at any target, when a red air unit gets close enough", type: "and" };
-                options["scenic-aaa-blue"] = { text: "Scenic AAA (blue)", tooltip: "Shoot AAA in the air without aiming at any target, when a blue air unit gets close enough", type: "and" };
-                options["miss-aaa-red"] = { text: "Miss on purpose AAA (red)", tooltip: "Shoot AAA towards the closest red air unit, but don't aim precisely", type: "and" };
-                options["miss-aaa-blue"] = { text: "Miss on purpose AAA (blue)", tooltip: "Shoot AAA towards the closest blue air unit, but don't aim precisely", type: "and" };
+                options["scenic-aaa"] = { text: "Scenic AAA", tooltip: "Shoot AAA in the air without aiming at any target, when a enemy unit gets close enough. WARNING: works correctly only on neutral units, blue or red units will aim", type: "and" };
+                options["miss-aaa"] = { text: "Miss on purpose AAA", tooltip: "Shoot AAA towards the closest enemy unit, but don't aim precisely. WARNING: works correctly only on neutral units, blue or red units will aim", type: "and" };
             }
         }
         /* All other options */

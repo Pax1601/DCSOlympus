@@ -592,7 +592,16 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		unit->setState(State::MISS_ON_PURPOSE);
 		log(username + " tasked unit " + unit->getName() + " to enter Miss On Purpose state", true);
 	}
-	else if (key.compare("setCommandModeOptions") == 0) {
+	else if (key.compare("setOperateAs") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		unsigned char operateAs = value[L"operateAs"].as_number().to_uint32();
+		Unit* unit = unitsManager->getGroupLeader(ID);
+		unit->setOperateAs(operateAs);
+	}
+	else if (key.compare("setCommandModeOptions") == 0) 
+	{
 		setCommandModeOptions(value);
 		log(username + " updated the Command Mode Options", true);
 	}

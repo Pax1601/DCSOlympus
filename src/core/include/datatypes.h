@@ -43,6 +43,7 @@ namespace DataIndex {
 		contacts,
 		activePath,
 		isLeader,
+		operateAs,
 		lastIndex,
 		endOfData = 255
 	};

@@ -176,6 +176,7 @@ export interface UnitData {
     contacts: Contact[];
     activePath: LatLng[];
     isLeader: boolean;
+    operateAs: string;
 }
 
 export interface LoadoutItemBlueprint {

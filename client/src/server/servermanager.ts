@@ -293,6 +293,13 @@ export class ServerManager {
         this.PUT(data, callback);
     }
 
+    setOperateAs(ID: number, operateAs: number, callback: CallableFunction = () => {}) {
+        var command = { "ID": ID, "operateAs": operateAs }
+        var data = { "setOperateAs": command }
+        this.PUT(data, callback);
+    }
+
+
     refuel(ID: number, callback: CallableFunction = () => {}) {
         var command = { "ID": ID };
         var data = { "refuel": command }

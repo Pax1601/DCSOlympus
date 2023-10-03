@@ -17,7 +17,7 @@ export class UnitControlPanel extends Panel {
     #speedTypeSwitch: Switch;
     #onOffSwitch: Switch;
     #followRoadsSwitch: Switch;
-    #operateAs: Switch;
+    #operateAsSwitch: Switch;
     #TACANXYDropdown: Dropdown;
     #radioDecimalsDropdown: Dropdown;
     #radioCallsignDropdown: Dropdown;
@@ -69,8 +69,8 @@ export class UnitControlPanel extends Panel {
         });
 
         /* Operate as */
-        this.#operateAs = new Switch("operate-as-switch", (value: boolean) => {
-            //getApp().getUnitsManager().selectedUnitsSetFollowRoads(value);
+        this.#operateAsSwitch = new Switch("operate-as-switch", (value: boolean) => {
+            getApp().getUnitsManager().selectedUnitsSetOperateAs(value);
         });
 
         /* Advanced settings dialog */
@@ -181,6 +181,7 @@ export class UnitControlPanel extends Panel {
                     var desiredSpeedType = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredSpeedType()});
                     var onOff = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getOnOff()});
                     var followRoads = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getFollowRoads()});
+                    var operateAs = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getOperateAs()});
                     
                     this.#altitudeTypeSwitch.setValue(desiredAltitudeType != undefined? desiredAltitudeType == "ASL": undefined, false);
                     this.#speedTypeSwitch.setValue(desiredSpeedType != undefined? desiredSpeedType == "CAS": undefined, false);
@@ -218,6 +219,7 @@ export class UnitControlPanel extends Panel {
 
                 this.#onOffSwitch.setValue(onOff, false);
                 this.#followRoadsSwitch.setValue(followRoads, false);
+                this.#operateAsSwitch.setValue(operateAs? operateAs === "blue": undefined, false);
             }
         }
     }

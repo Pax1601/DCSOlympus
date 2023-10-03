@@ -220,21 +220,28 @@ void GroundUnit::AIloop()
 	case State::SCENIC_AAA: {
 		setTask("Scenic AAA");
 
-		if (!getHasTask() || internalCounter == 0) {
-			double r = 15; /* m */
-			double barrelElevation = r * tan(acos(((double)(rand()) / (double)(RAND_MAX))));
+		if ((!getHasTask() || internalCounter == 0) && getOperateAs() > 0) {
+			double distance = 0;
+			unsigned char targetCoalition = getOperateAs() == 2 ? 1 : 2;
+			Unit* target = unitsManager->getClosestUnit(this, targetCoalition, { "Aircraft", "Helicopter" }, distance);
 
-			double lat = 0;
-			double lng = 0;
-			double randomBearing = ((double)(rand()) / (double)(RAND_MAX)) * 360;
-			Geodesic::WGS84().Direct(position.lat, position.lng, randomBearing, r, lat, lng);
+			/* Only run if an enemy air unit is closer than 20km to avoid useless load */
+			if (distance < 20000 /* m */) {
+				double r = 15; /* m */
+				double barrelElevation = r * tan(acos(((double)(rand()) / (double)(RAND_MAX))));
 
-			std::ostringstream taskSS;
-			taskSS.precision(10);
-			taskSS << "{id = 'FireAtPoint', lat = " << lat << ", lng = " << lng << ", alt = " << position.alt + barrelElevation << ", radius = 0.001}";
-			Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
-			scheduler->appendCommand(command);
-			setHasTask(true);
+				double lat = 0;
+				double lng = 0;
+				double randomBearing = ((double)(rand()) / (double)(RAND_MAX)) * 360;
+				Geodesic::WGS84().Direct(position.lat, position.lng, randomBearing, r, lat, lng);
+
+				std::ostringstream taskSS;
+				taskSS.precision(10);
+				taskSS << "{id = 'FireAtPoint', lat = " << lat << ", lng = " << lng << ", alt = " << position.alt + barrelElevation << ", radius = 0.001}";
+				Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
+				scheduler->appendCommand(command);
+				setHasTask(true);
+			}
 		}
 
 		if (internalCounter == 0)
@@ -247,9 +254,10 @@ void GroundUnit::AIloop()
 		setTask("Missing on purpose");
 
 		/* Only run this when the internal counter reaches 0 to avoid excessive computations when no nearby target */
-		if (internalCounter == 0) {
+		if (internalCounter == 0 && getOperateAs() > 0) {
 			double distance = 0;
-			Unit* target = unitsManager->getClosestUnit(this, 1, { "Aircraft", "Helicopter" }, distance); /* Red, TODO make assignable */
+			unsigned char targetCoalition = getOperateAs() == 2 ? 1 : 2;
+			Unit* target = unitsManager->getClosestUnit(this, targetCoalition, {"Aircraft", "Helicopter"}, distance);
 
 			/* Only do if we have a valid target close enough for AAA */
 			if (target != nullptr && distance < 10000 /* m */) {

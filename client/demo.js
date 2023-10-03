@@ -63,7 +63,8 @@ const DEMO_UNIT_DATA = {
         ammo: [{ quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 } ],
         contacts: [{ID: 1001, detectionMethod: 16}],
         activePath: [ ],
-        isLeader: true
+        isLeader: true,
+        operateAs: 2
     }, ["5"]:{ category: "GroundUnit", alive: true, human: false, controlled: true, coalition: 0, country: 0, name: "Gepard", unitName: "Cool guy 2-2", groupName: "Cool group 4", state: 1, task: "Being cool",
         hasTask: false, position: { lat: 37.21, lng: -116.1, alt: 1000 }, speed: 200, heading: 315 * Math.PI / 180, isTanker: false, isAWACS: false, onOff: true, followRoads: false, fuel: 50, 
         desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
@@ -79,7 +80,8 @@ const DEMO_UNIT_DATA = {
         ammo: [{ quantity: 2, name: "A cool missile", guidance: 0, category: 0, missileCategory: 0 } ],
         contacts: [],
         activePath: [ ],
-        isLeader: false
+        isLeader: false,
+        operateAs: 2
     },
     ["6"]:{ category: "Aircraft", alive: true, human: false, controlled: false, coalition: 1, country: 0, name: "FA-18C_hornet", unitName: "Bad boi 1-2", groupName: "Bad group 1", state: 1, task: "Being bad",
         hasTask: false, position: { lat: 36.8, lng: -116, alt: 1000 }, speed: 200, heading: 315 * Math.PI / 180, isTanker: false, isAWACS: false, onOff: true, followRoads: false, fuel: 50, 
@@ -187,6 +189,7 @@ class DemoDataGenerator {
             array = this.appendContacts(array, unit.contacts, 36);
             array = this.appendActivePath(array, unit.activePath, 37);
             array = this.appendUint8(array, unit.isLeader, 38);
+            array = this.appendUint8(array, unit.operateAs, 39);
             array = this.concat(array, this.uint8ToByteArray(255));
         }
         res.end(Buffer.from(array, 'binary'));
