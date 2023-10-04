@@ -23,7 +23,7 @@ export class ControlTipsPlugin implements OlympusPlugin {
 
     initialize(app: any) {
         this.#app = app;
-debugger;
+
         this.#shortcutManager = this.#app.getShortcutManager();
 
         this.#shortcutManager.onKeyDown(() => {
