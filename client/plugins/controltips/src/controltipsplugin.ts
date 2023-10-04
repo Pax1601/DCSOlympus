@@ -1,5 +1,6 @@
 import { OlympusPlugin } from "interfaces";
 
+
 const SHOW_CONTROL_TIPS = "Show control tips"
 
 export class ControlTipsPlugin implements OlympusPlugin {
@@ -22,7 +23,7 @@ export class ControlTipsPlugin implements OlympusPlugin {
 
     initialize(app: any) {
         this.#app = app;
-
+debugger;
         this.#shortcutManager = this.#app.getShortcutManager();
 
         this.#shortcutManager.onKeyDown(() => {

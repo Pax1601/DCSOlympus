@@ -33,6 +33,7 @@ class ControlTipsPlugin {
     }
     initialize(app) {
         __classPrivateFieldSet(this, _ControlTipsPlugin_app, app, "f");
+        debugger;
         __classPrivateFieldSet(this, _ControlTipsPlugin_shortcutManager, __classPrivateFieldGet(this, _ControlTipsPlugin_app, "f").getShortcutManager(), "f");
         __classPrivateFieldGet(this, _ControlTipsPlugin_shortcutManager, "f").onKeyDown(() => {
             __classPrivateFieldGet(this, _ControlTipsPlugin_instances, "m", _ControlTipsPlugin_updateTips).call(this);

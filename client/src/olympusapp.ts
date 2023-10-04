@@ -15,7 +15,6 @@ import { PrimaryToolbar } from "./toolbars/primarytoolbar";
 import { UnitsManager } from "./unit/unitsmanager";
 import { WeaponsManager } from "./weapon/weaponsmanager";
 import { Manager } from "./other/manager";
-import { ShortcutKeyboard } from "./shortcut/shortcut";
 import { SVGInjector } from "@tanem/svg-injector";
 import { ServerManager } from "./server/servermanager";
 

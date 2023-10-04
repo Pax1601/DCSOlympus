@@ -1,5 +1,22 @@
 <div id="log-panel" oncontextmenu="return false;">
-    <div class="ol-panel" data-on-click="toggleLogPanel"><div id="log-panel-header">Server log</div><img src="/resources/theme/images/icons/chevron-down.svg" inject-svg></div>
+    <div class="ol-panel" data-on-click="toggleLogPanel">
+        <div id="log-panel-header">Server log</div>
+        
+        <div id="log-panel-header-right">
+            <div id="server-status-panel" oncontextmenu="return false;">
+                <dl>
+                    <dt><abbr title="Server frame rate (approx)">FPS</abbr>:</dt>
+                    <dd id="server-frame-rate"></dd>
+                </dl>
+                <dl>
+                    <dt><abbr title="Server load">Load</abbr>:</dt>
+                    <dd id="server-load"></dd>
+                </dl>
+            </div>
+            <img src="/resources/theme/images/icons/chevron-down.svg" inject-svg>  
+        </div>
+
+    </div>
     <div class="ol-panel ol-scrollable closed">
     </div>
 </div>
