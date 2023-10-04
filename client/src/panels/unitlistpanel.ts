@@ -8,6 +8,7 @@ export class UnitListPanel extends Panel {
     #currentSortAlgorithm: string = "unitName";
     #currentSortDirection: string = "ASC";
     #units: Unit[] = [];
+    #unitNameCache: {[key:string]: string} = {};
     #updatesInterval!: ReturnType<typeof setInterval>;
 
     constructor(panelElement: string, contentElement: string) {
@@ -42,9 +43,14 @@ export class UnitListPanel extends Panel {
         //  Dynamically listen for clicks in order to do stuff with units
         this.getElement().addEventListener("click", (ev: MouseEvent) => {
             const t = ev.target;
+
             if (t instanceof HTMLElement) {
-                let id: number = Number(t.getAttribute("data-unit-id") || 0);
-                getApp().getUnitsManager().selectUnit(id);
+                const el = t.closest( "[data-unit-id]");
+
+                if (el instanceof HTMLElement) {
+                    let id: number = Number(el.getAttribute("data-unit-id") || 0);
+                    getApp().getUnitsManager().selectUnit(id);
+                }
             }
         });
 
@@ -78,10 +84,18 @@ export class UnitListPanel extends Panel {
             if (!unit.getAlive()) {
                 return;
             }
+
+            const name = unit.getName();
+
+            if ( this.#unitNameCache.hasOwnProperty( name ) === false ) {
+                this.#unitNameCache[name] = unit.getDatabase()?.getByName(unit.getName())?.label || unit.getName();
+            }
+
             this.#contentElement.innerHTML += `
-                <div class="unit-list-unit" data-value-unitName="${unit.getUnitName()}" data-value-name="${unit.getName()}" data-value-coalition="${unit.getCoalition()}" data-value-human="${unit.getHuman() ? "Human" : "AI"}">
-                    <div data-unit-id="${unit.ID}">${unit.getUnitName()}</div>
-                    <div>${unit.getName()}</div>
+                <div class="unit-list-unit" data-unit-id="${unit.ID}" data-value-unitName="${unit.getUnitName()}" data-value-name="${unit.getName()}" data-value-coalition="${unit.getCoalition()}" data-value-human="${unit.getHuman() ? "Human" : "AI"}">
+                    <div><span>${unit.getUnitName()}</span></div>
+                    <div>${this.#unitNameCache[name]}</div>
+                    <div>${unit.getCategory()}</div>
                     <div>${unit.getCoalition()}</div>
                     <div>${unit.getHuman() ? "Human" : "AI"}</div>
                 </div>`;
@@ -107,6 +121,23 @@ export class UnitListPanel extends Panel {
 
             const str1 = unit1.getUnitName().toLowerCase();
             const str2 = unit2.getUnitName().toLowerCase();
+
+            return this.#sortStringsCompare(str1, str2);
+        });
+    }
+
+    #sortUnitsByCategory() {
+        this.#units.sort((unit1: Unit, unit2: Unit) => {
+            let str1 = unit1.getCategory();
+            let str2 = unit2.getCategory();
+
+            let cmp = this.#sortStringsCompare(str1, str2);
+
+            if (cmp !== 0) 
+                return cmp;
+            
+            str1 = unit1.getUnitName().toLowerCase();
+            str2 = unit2.getUnitName().toLowerCase();
 
             return this.#sortStringsCompare(str1, str2);
         });
@@ -142,7 +173,7 @@ export class UnitListPanel extends Panel {
 
         this.#updatesInterval = setInterval(() => {
             this.doUpdate();
-        }, 2000);
+        }, 4000);
     }
 
     stopUpdates() {
