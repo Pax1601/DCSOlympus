@@ -1,5 +1,6 @@
+import { ShortcutKeyboardOptions, ShortcutMouseOptions } from "../interfaces";
 import { Manager } from "../other/manager";
-import { Shortcut } from "./shortcut";
+import { ShortcutKeyboard, ShortcutMouse } from "./shortcut";
 
 export class ShortcutManager extends Manager {
 
@@ -25,8 +26,18 @@ export class ShortcutManager extends Manager {
 
     }
 
-    add(name: string, shortcut: Shortcut) {
-        super.add(name, shortcut);
+    add( name: string, shortcut:any ) {
+        console.error( "ShortcutManager:add() cannot be used.  Use addKeyboardShortcut or addMouseShortcut." );
+        return this;
+    }
+
+    addKeyboardShortcut( name:string, shortcutKeyboardOptions:ShortcutKeyboardOptions ) {
+        super.add( name, new ShortcutKeyboard( shortcutKeyboardOptions ) );
+        return this;
+    }
+
+    addMouseShortcut( name:string, shortcutMouseOptions:ShortcutMouseOptions ) {
+        super.add( name, new ShortcutMouse( shortcutMouseOptions ) );
         return this;
     }
 

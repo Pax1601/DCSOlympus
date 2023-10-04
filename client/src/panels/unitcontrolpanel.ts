@@ -295,7 +295,7 @@ export class UnitControlPanel extends Panel {
             const TACANCallsignInput = this.#advancedSettingsDialog.querySelector("#tacan-callsign")?.querySelector("input") as HTMLInputElement;
             const radioMhzInput = this.#advancedSettingsDialog.querySelector("#radio-mhz")?.querySelector("input") as HTMLInputElement;
             const radioCallsignNumberInput = this.#advancedSettingsDialog.querySelector("#radio-callsign-number")?.querySelector("input") as HTMLInputElement;
-            
+           
             const unit = units[0];
             const roles = aircraftDatabase.getByName(unit.getName())?.loadouts?.map((loadout) => {return loadout.roles})
             const tanker = roles != undefined && Array.prototype.concat.apply([], roles)?.includes("Refueling");
@@ -305,6 +305,7 @@ export class UnitControlPanel extends Panel {
 
             /* Activate the correct options depending on unit type */
             this.#advancedSettingsDialog.toggleAttribute("data-show-settings", !tanker && !AWACS);
+            this.#advancedSettingsDialog.toggleAttribute("data-show-air-unit-checkboxes", ["Aircraft", "Helicopter"].includes(units[0].getCategory()));
             this.#advancedSettingsDialog.toggleAttribute("data-show-tasking", tanker || AWACS);
             this.#advancedSettingsDialog.toggleAttribute("data-show-tanker", tanker);
             this.#advancedSettingsDialog.toggleAttribute("data-show-AWACS", AWACS);

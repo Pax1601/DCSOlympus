@@ -259,12 +259,12 @@ export interface ShortcutOptions {
     shiftKey?: boolean;
 }
 
-export interface KeyboardShortcutOptions extends ShortcutOptions {
+export interface ShortcutKeyboardOptions extends ShortcutOptions {
     code: string;
     event?: "keydown" | "keyup";
 }
 
-export interface MouseShortcutOptions extends ShortcutOptions {
+export interface ShortcutMouseOptions extends ShortcutOptions {
     button: number;
     event: "mousedown" | "mouseup";
 }

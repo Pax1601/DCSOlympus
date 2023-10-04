@@ -21,6 +21,7 @@ import { AirbaseSpawnContextMenu } from "../contextmenus/airbasespawnmenu";
 import { Popup } from "../popups/popup";
 import { GestureHandling } from "leaflet-gesture-handling";
 import { TouchBoxSelect } from "./touchboxselect";
+import { DestinationPreviewHandle } from "./markers/destinationpreviewHandle";
 
 var hasTouchScreen = false;
 if ("maxTouchPoints" in navigator) 
@@ -67,6 +68,8 @@ export class Map extends L.Map {
     #targetCursor: TargetMarker = new TargetMarker(new L.LatLng(0, 0), { interactive: false });
     #destinationPreviewCursors: DestinationPreviewMarker[] = [];
     #drawingCursor: DrawingCursor = new DrawingCursor();
+    #destinationPreviewHandle: DestinationPreviewHandle = new DestinationPreviewHandle(new L.LatLng(0, 0));
+    #destinationPreviewHandleLine: L.Polyline = new L.Polyline([], { color: "#000000", weight: 3, opacity: 0.5, smoothFactor: 1, dashArray: "4, 8" });
     #longPressHandled: boolean = false;
     #longPressTimer: number = 0;
 
@@ -133,6 +136,7 @@ export class Map extends L.Map {
         this.on("click", (e: any) => this.#onClick(e));
         this.on("dblclick", (e: any) => this.#onDoubleClick(e));
         this.on("zoomstart", (e: any) => this.#onZoomStart(e));
+        this.on("zoom", (e: any) => this.#onZoom(e));
         this.on("zoomend", (e: any) => this.#onZoomEnd(e));
         this.on("drag", (e: any) => this.centerOnUnit(null));
         this.on("contextmenu", (e: any) => this.#onContextMenu(e));
@@ -141,6 +145,7 @@ export class Map extends L.Map {
         this.on('mousedown', (e: any) => this.#onMouseDown(e));
         this.on('mouseup', (e: any) => this.#onMouseUp(e));
         this.on('mousemove', (e: any) => this.#onMouseMove(e));
+        this.on('drag', (e: any) => this.#onMouseMove(e));
         this.on('keydown', (e: any) => this.#onKeyDown(e));
         this.on('keyup', (e: any) => this.#onKeyUp(e));
 
@@ -523,36 +528,38 @@ export class Map extends L.Map {
         }
 
         this.hideMapContextMenu();
-        if (this.#state === IDLE) {
-            if (this.#state == IDLE) {
-                this.showMapContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng);
-                var clickedCoalitionArea = null;
+        if (!this.#shiftKey) {
+            if (this.#state === IDLE) {
+                if (this.#state == IDLE) {
+                    this.showMapContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng);
+                    var clickedCoalitionArea = null;
 
-                /* Coalition areas are ordered in the #coalitionAreas array according to their zindex. Select the upper one */
-                for (let coalitionArea of this.#coalitionAreas) {
-                    if (coalitionArea.getBounds().contains(e.latlng)) {
-                        if (coalitionArea.getSelected())
-                            clickedCoalitionArea = coalitionArea;
-                        else
-                            this.getMapContextMenu().setCoalitionArea(coalitionArea);
+                    /* Coalition areas are ordered in the #coalitionAreas array according to their zindex. Select the upper one */
+                    for (let coalitionArea of this.#coalitionAreas) {
+                        if (coalitionArea.getBounds().contains(e.latlng)) {
+                            if (coalitionArea.getSelected())
+                                clickedCoalitionArea = coalitionArea;
+                            else
+                                this.getMapContextMenu().setCoalitionArea(coalitionArea);
+                        }
                     }
+                    if (clickedCoalitionArea)
+                        this.showCoalitionAreaContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng, clickedCoalitionArea);
                 }
-                if (clickedCoalitionArea)
-                    this.showCoalitionAreaContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng, clickedCoalitionArea);
             }
-        }
-        else if (this.#state === MOVE_UNIT) {
-            if (!e.originalEvent.ctrlKey) {
-                getApp().getUnitsManager().selectedUnitsClearDestinations();
+            else if (this.#state === MOVE_UNIT) {
+                if (!e.originalEvent.ctrlKey) {
+                    getApp().getUnitsManager().selectedUnitsClearDestinations();
+                }
+                getApp().getUnitsManager().selectedUnitsAddDestination(this.#computeDestinationRotation && this.#destinationRotationCenter != null ? this.#destinationRotationCenter : e.latlng, this.#shiftKey, this.#destinationGroupRotation)
+                
+                this.#destinationGroupRotation = 0;
+                this.#destinationRotationCenter = null;
+                this.#computeDestinationRotation = false;
             }
-            getApp().getUnitsManager().selectedUnitsAddDestination(this.#computeDestinationRotation && this.#destinationRotationCenter != null ? this.#destinationRotationCenter : e.latlng, this.#shiftKey, this.#destinationGroupRotation)
-            
-            this.#destinationGroupRotation = 0;
-            this.#destinationRotationCenter = null;
-            this.#computeDestinationRotation = false;
-        }
-        else {
-            this.setState(IDLE);
+            else {
+                this.setState(IDLE);
+            }
         }
     }
 
@@ -586,7 +593,7 @@ export class Map extends L.Map {
         }
 
         this.#longPressTimer = window.setTimeout(() => {
-            if (e.originalEvent.button != 2 || e.originalEvent.ctrlKey)
+            if (e.originalEvent.button != 2 || e.originalEvent.ctrlKey || e.originalEvent.shiftKey)
                 return;
                 
             this.hideMapContextMenu();
@@ -684,6 +691,11 @@ export class Map extends L.Map {
         this.#isZooming = true;
     }
 
+    #onZoom(e: any) {
+        if (this.#centerUnit != null)
+            this.#panToUnit(this.#centerUnit);
+    }
+
     #onZoomEnd(e: any) {
         this.#isZooming = false;
     }
@@ -726,7 +738,7 @@ export class Map extends L.Map {
 
     #showDestinationCursors() {
         const singleCursor = !this.#shiftKey;
-        const selectedUnitsCount = getApp().getUnitsManager().getSelectedUnits({ excludeHumans: false, onlyOnePerGroup: true }).length;
+        const selectedUnitsCount = getApp().getUnitsManager().getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true }).length;
         if (selectedUnitsCount > 0) {
             if (singleCursor && this.#destinationPreviewCursors.length != 1) {
                 this.#hideDestinationCursors();
@@ -739,6 +751,9 @@ export class Map extends L.Map {
                     this.removeLayer(this.#destinationPreviewCursors[0]);
                     this.#destinationPreviewCursors.splice(0, 1);
                 }
+
+                this.#destinationPreviewHandleLine.addTo(this);
+                this.#destinationPreviewHandle.addTo(this);
 
                 while (this.#destinationPreviewCursors.length < selectedUnitsCount) {
                     var cursor = new DestinationPreviewMarker(this.getMouseCoordinates(), { interactive: false });
@@ -761,6 +776,9 @@ export class Map extends L.Map {
                     this.#destinationPreviewCursors[idx].setLatLng(this.#shiftKey ? latlng : this.getMouseCoordinates());
             })
         };
+
+        this.#destinationPreviewHandleLine.setLatLngs([groupLatLng, this.getMouseCoordinates()]);
+        this.#destinationPreviewHandle.setLatLng(this.getMouseCoordinates());
     }
 
     #hideDestinationCursors() {
@@ -770,20 +788,13 @@ export class Map extends L.Map {
         })
         this.#destinationPreviewCursors = [];
 
+        this.#destinationPreviewHandleLine.removeFrom(this);
+        this.#destinationPreviewHandle.removeFrom(this);
+
         /* Reset the variables used to compute the rotation of the group cursors */
         this.#destinationGroupRotation = 0;
         this.#computeDestinationRotation = false;
         this.#destinationRotationCenter = null;
-    }
-
-    #showTargetCursor() {
-        this.#hideTargetCursor();
-        this.#targetCursor.addTo(this);
-    }
-
-    #hideTargetCursor() {
-        this.#targetCursor.setLatLng(new L.LatLng(0, 0));
-        this.removeLayer(this.#targetCursor);
     }
 
     #showDrawingCursor() {
@@ -803,7 +814,6 @@ export class Map extends L.Map {
         if (this.#ctrlKey || this.#selecting) {
             /* Hide all non default cursors */
             this.#hideDestinationCursors();
-            this.#hideTargetCursor();
             this.#hideDrawingCursor();
 
             this.#showDefaultCursor();
@@ -811,13 +821,11 @@ export class Map extends L.Map {
             /* Hide all the unnecessary cursors depending on the active state */
             if (this.#state !== IDLE) this.#hideDefaultCursor();
             if (this.#state !== MOVE_UNIT) this.#hideDestinationCursors();
-            //if (![BOMBING, CARPET_BOMBING, FIRE_AT_AREA].includes(this.#state)) this.#hideTargetCursor();
             if (this.#state !== COALITIONAREA_DRAW_POLYGON) this.#hideDrawingCursor();
 
             /* Show the active cursor depending on the active state */
             if (this.#state === IDLE) this.#showDefaultCursor();
             else if (this.#state === MOVE_UNIT) this.#showDestinationCursors();
-            //else if ([BOMBING, CARPET_BOMBING, FIRE_AT_AREA].includes(this.#state)) this.#showTargetCursor();
             else if (this.#state === COALITIONAREA_DRAW_POLYGON) this.#showDrawingCursor();
         }
     }

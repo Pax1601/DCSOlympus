@@ -588,11 +588,11 @@ declare module "interfaces" {
         name?: string;
         shiftKey?: boolean;
     }
-    export interface KeyboardShortcutOptions extends ShortcutOptions {
+    export interface ShortcutKeyboardOptions extends ShortcutOptions {
         code: string;
         event?: "keydown" | "keyup";
     }
-    export interface MouseShortcutOptions extends ShortcutOptions {
+    export interface ShortcutMouseOptions extends ShortcutOptions {
         button: number;
         event: "mousedown" | "mouseup";
     }
@@ -1085,7 +1085,7 @@ declare module "unit/unit" {
         carpetBomb(latlng: LatLng): void;
         bombBuilding(latlng: LatLng): void;
         fireAtArea(latlng: LatLng): void;
-        simulateFireFight(latlng: LatLng, groundElevation: number | null): void;
+        simulateFireFight(latlng: LatLng, targetGroundElevation: number | null): void;
         /***********************************************/
         onAdd(map: Map): this;
     }
@@ -1493,26 +1493,28 @@ declare module "plugin/pluginmanager" {
     }
 }
 declare module "shortcut/shortcut" {
-    import { KeyboardShortcutOptions, MouseShortcutOptions, ShortcutOptions } from "interfaces";
+    import { ShortcutKeyboardOptions, ShortcutMouseOptions, ShortcutOptions } from "interfaces";
     export abstract class Shortcut {
         #private;
         constructor(config: ShortcutOptions);
         getConfig(): ShortcutOptions;
     }
     export class ShortcutKeyboard extends Shortcut {
-        constructor(config: KeyboardShortcutOptions);
+        constructor(config: ShortcutKeyboardOptions);
     }
     export class ShortcutMouse extends Shortcut {
-        constructor(config: MouseShortcutOptions);
+        constructor(config: ShortcutMouseOptions);
     }
 }
 declare module "shortcut/shortcutmanager" {
+    import { ShortcutKeyboardOptions, ShortcutMouseOptions } from "interfaces";
     import { Manager } from "other/manager";
-    import { Shortcut } from "shortcut/shortcut";
     export class ShortcutManager extends Manager {
         #private;
         constructor();
-        add(name: string, shortcut: Shortcut): this;
+        add(name: string, shortcut: any): this;
+        addKeyboardShortcut(name: string, shortcutKeyboardOptions: ShortcutKeyboardOptions): this;
+        addMouseShortcut(name: string, shortcutMouseOptions: ShortcutMouseOptions): this;
         getKeysBeingHeld(): string[];
         keyComboMatches(combo: string[]): boolean;
         onKeyDown(callback: CallableFunction): void;
@@ -1965,6 +1967,19 @@ declare module "server/servermanager" {
         getConnected(): boolean;
         setPaused(newPaused: boolean): void;
         getPaused(): boolean;
+    }
+}
+declare module "panels/unitlistpanel" {
+    import { OlympusApp } from "olympusapp";
+    import { Panel } from "panels/panel";
+    export class UnitListPanel extends Panel {
+        #private;
+        constructor(olympusApp: OlympusApp, panelElement: string, contentElement: string);
+        doUpdate(): void;
+        getContentElement(): HTMLElement;
+        startUpdates(): void;
+        stopUpdates(): void;
+        toggle(): void;
     }
 }
 declare module "olympusapp" {

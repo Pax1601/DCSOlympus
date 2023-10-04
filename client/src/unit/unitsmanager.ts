@@ -201,8 +201,12 @@ export class UnitsManager {
      * 
      * @param hotgroup The hotgroup number
      */
-    selectUnitsByHotgroup(hotgroup: number) {
-        this.deselectAllUnits();
+    selectUnitsByHotgroup(hotgroup: number, deselectAllUnits: boolean = true ) {
+
+        if ( deselectAllUnits ) {
+            this.deselectAllUnits();
+        }
+
         this.getUnitsByHotgroup(hotgroup).forEach((unit: Unit) => unit.setSelected(true))
     }
 

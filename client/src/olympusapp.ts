@@ -25,6 +25,7 @@ import { helicopterDatabase } from "./unit/databases/helicopterdatabase";
 import { groundUnitDatabase } from "./unit/databases/groundunitdatabase";
 import { navyUnitDatabase } from "./unit/databases/navyunitdatabase";
 import { ConfigurationOptions } from "./interfaces";
+import { UnitListPanel } from "./panels/unitlistpanel";
 
 export class OlympusApp {
     /* Global data */
@@ -181,6 +182,7 @@ export class OlympusApp {
             .add("serverStatus", new ServerStatusPanel("server-status-panel"))
             .add("unitControl", new UnitControlPanel("unit-control-panel"))
             .add("unitInfo", new UnitInfoPanel("unit-info-panel"))
+            .add("unitList", new UnitListPanel("unit-list-panel", "unit-list-panel-content"))
 
         // Popups
         this.getPopupsManager().add("infoPopup", new Popup("info-popup"));
@@ -196,8 +198,8 @@ export class OlympusApp {
             if (config && config.address != undefined && config.port != undefined) {
                 const address = config.address;
                 const port = config.port;
-                if (typeof address === 'string' && typeof port == 'number') { 
-                    this.getServerManager().setAddress(address == "*" ? window.location.hostname : address, port);                    
+                if (typeof address === 'string' && typeof port == 'number') {
+                    this.getServerManager().setAddress(address == "*" ? window.location.hostname : address, port);
                 }
             }
             else {
@@ -236,22 +238,38 @@ export class OlympusApp {
         });
 
         const shortcutManager = this.getShortcutManager();
-        shortcutManager.add("toggleDemo", new ShortcutKeyboard({
+        shortcutManager.addKeyboardShortcut("toggleDemo", {
             "callback": () => {
                 this.getServerManager().toggleDemoEnabled();
             },
             "code": "KeyT"
-        })).add("togglePause", new ShortcutKeyboard({
+        }).addKeyboardShortcut("togglePause", {
             "altKey": false,
             "callback": () => {
                 this.getServerManager().setPaused(!this.getServerManager().getPaused());
             },
             "code": "Space",
             "ctrlKey": false
-        }));
+        }).addKeyboardShortcut("deselectAll", {
+            "callback": (ev: KeyboardEvent) => {
+                this.getUnitsManager().deselectAllUnits();
+            },
+            "code": "Escape"
+        }).addKeyboardShortcut("toggleUnitLabels", {
+            "altKey": false,
+            "callback": () => {
+                const chk = document.querySelector(`label[title="Show unit labels"] input[type="checkbox"]`);
+                if (chk instanceof HTMLElement) {
+                    chk.click();
+                }
+            },
+            "code": "KeyL",
+            "ctrlKey": false,
+            "shiftKey": false
+        });
 
         ["KeyW", "KeyA", "KeyS", "KeyD", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].forEach(code => {
-            shortcutManager.add(`pan${code}keydown`, new ShortcutKeyboard({
+            shortcutManager.addKeyboardShortcut(`pan${code}keydown`, {
                 "altKey": false,
                 "callback": (ev: KeyboardEvent) => {
                     this.getMap().handleMapPanning(ev);
@@ -259,30 +277,42 @@ export class OlympusApp {
                 "code": code,
                 "ctrlKey": false,
                 "event": "keydown"
-            }));
-        });
+            });
 
-        ["KeyW", "KeyA", "KeyS", "KeyD", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].forEach(code => {
-            shortcutManager.add(`pan${code}keyup`, new ShortcutKeyboard({
+            shortcutManager.addKeyboardShortcut(`pan${code}keyup`, {
                 "callback": (ev: KeyboardEvent) => {
                     this.getMap().handleMapPanning(ev);
                 },
                 "code": code
-            }));
+            });
         });
 
-        ["Digit1", "Digit2", "Digit3", "Digit4", "Digit5", "Digit6", "Digit7", "Digit8", "Digit9"].forEach(code => {
-            shortcutManager.add(`hotgroup${code}`, new ShortcutKeyboard({
+        const digits = ["Digit1", "Digit2", "Digit3", "Digit4", "Digit5", "Digit6", "Digit7", "Digit8", "Digit9"];
+
+        digits.forEach(code => {
+            shortcutManager.addKeyboardShortcut(`hotgroup${code}`, {
+                "altKey": false,
                 "callback": (ev: KeyboardEvent) => {
                     if (ev.ctrlKey && ev.shiftKey)
                         this.getUnitsManager().selectedUnitsAddToHotgroup(parseInt(ev.code.substring(5)));
                     else if (ev.ctrlKey && !ev.shiftKey)
                         this.getUnitsManager().selectedUnitsSetHotgroup(parseInt(ev.code.substring(5)));
+                    else if (!ev.ctrlKey && ev.shiftKey)
+                        this.getUnitsManager().selectUnitsByHotgroup(parseInt(ev.code.substring(5)), false);
                     else
                         this.getUnitsManager().selectUnitsByHotgroup(parseInt(ev.code.substring(5)));
                 },
                 "code": code
-            }));
+            });
+        });
+
+        //  Stop hotgroup controls sending the browser to another tab
+        digits.forEach(code => {
+            document.addEventListener("keydown", (ev: KeyboardEvent) => {
+                if (ev.code === code && ev.ctrlKey === true && ev.altKey === false && ev.shiftKey === false) {
+                    ev.preventDefault();
+                }
+            });
         });
 
         // TODO: move from here in dedicated class

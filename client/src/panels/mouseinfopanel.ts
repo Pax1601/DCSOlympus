@@ -26,6 +26,7 @@ export class MouseInfoPanel extends Panel {
         getApp().getMap()?.on("click", (e: any) => this.#onMapClick(e));
         getApp().getMap()?.on('zoom', (e: any) => this.#onZoom(e));
         getApp().getMap()?.on('mousemove', (e: any) => this.#onMouseMove(e));
+        getApp().getMap()?.on('drag', (e: any) => this.#onMouseMove(e));
 
         document.addEventListener('unitsSelection', (e: CustomEvent<Unit[]>) => this.#update());
         document.addEventListener('clearSelection', () => this.#update());
@@ -107,14 +108,15 @@ export class MouseInfoPanel extends Panel {
 
     #drawMeasureLine() {
         var mouseLatLng = getApp().getMap().containerPointToLatLng(getApp().getMap().getMousePosition());
+        const mousePosition = getApp().getMap().getMousePosition();
         if (this.#measurePoint != null) {
             var points = [this.#measurePoint, mouseLatLng];
             this.#measureLine.setLatLngs(points);
             var dist = distance(this.#measurePoint.lat, this.#measurePoint.lng, mouseLatLng.lat, mouseLatLng.lng);
             var bear = bearing(this.#measurePoint.lat, this.#measurePoint.lng, mouseLatLng.lat, mouseLatLng.lng);
             var startXY = getApp().getMap().latLngToContainerPoint(this.#measurePoint);
-            var dx = (getApp().getMap().getMousePosition().x - startXY.x);
-            var dy = (getApp().getMap().getMousePosition().y - startXY.y);
+            var dx = mousePosition.x - startXY.x;
+            var dy = mousePosition.y - startXY.y;
 
             var angle = Math.atan2(dy, dx);
             if (angle > Math.PI / 2)
@@ -133,8 +135,8 @@ export class MouseInfoPanel extends Panel {
             let data = [`${bng}°`, `${str} ${unit}`];
 
             this.#measureBox.innerText = data.join(" / ");
-            this.#measureBox.style.left = (getApp().getMap().getMousePosition().x + startXY.x) / 2 - this.#measureBox.offsetWidth / 2 + "px";
-            this.#measureBox.style.top = (getApp().getMap().getMousePosition().y + startXY.y) / 2 - this.#measureBox.offsetHeight / 2 + "px";
+            this.#measureBox.style.left = (mousePosition.x + startXY.x) / 2 - this.#measureBox.offsetWidth / 2 + "px";
+            this.#measureBox.style.top = (mousePosition.y + startXY.y) / 2 - this.#measureBox.offsetHeight / 2 + "px";
             this.#measureBox.style.rotate = angle + "rad";
         }
     }
