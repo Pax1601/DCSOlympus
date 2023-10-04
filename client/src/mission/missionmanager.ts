@@ -36,8 +36,16 @@ export class MissionManager {
     }
 
     updateBullseyes(data: BullseyesData) {
+        const commandMode = getApp().getMissionManager().getCommandModeOptions().commandMode;
         for (let idx in data.bullseyes) {
             const bullseye = data.bullseyes[idx];
+
+            //  Prevent Red and Blue coalitions seeing each other's bulleye(s)
+            if ((bullseye.coalition === "red" && commandMode === BLUE_COMMANDER)
+                || (bullseye.coalition === "blue" && commandMode === RED_COMMANDER)) {
+                continue;
+            }
+
             if (!(idx in this.#bullseyes))
                 this.#bullseyes[idx] = new Bullseye([0, 0]).addTo(getApp().getMap());
 
