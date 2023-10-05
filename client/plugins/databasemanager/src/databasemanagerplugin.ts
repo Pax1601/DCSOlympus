@@ -157,7 +157,7 @@ export class DatabaseManagerPlugin implements OlympusPlugin {
      */
     initialize(app: any) {
         this.#app = app;
-
+    
         /* Load the databases and initialize the editors */
         this.#loadDatabases();
 
@@ -173,9 +173,10 @@ export class DatabaseManagerPlugin implements OlympusPlugin {
         toolbar.getMainDropdown().setOptionsElements(arr);
         mainButton.onclick = () => {
             toolbar.getMainDropdown().close();
-            this.toggle();
+            if (this.#app?.getMissionManager().getCommandModeOptions().commandMode === "Game master") 
+                this.toggle();
         }
-
+    
         return true;
     }
 

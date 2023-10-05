@@ -115,7 +115,7 @@ export class UnitDatabase {
         var filteredBlueprints = this.getBlueprints();
         var ranges: string[] = [];
         for (let unit in filteredBlueprints) {
-            var range = filteredBlueprints[unit].range;
+            var range = filteredBlueprints[unit].rangeType;
             if (range && range !== "" && !ranges.includes(range))
                 ranges.push(range);
         }
@@ -127,7 +127,7 @@ export class UnitDatabase {
         var filteredBlueprints = this.getBlueprints();
         var unitswithrange = [];
         for (let unit in filteredBlueprints) {
-            if (filteredBlueprints[unit].range === range) {
+            if (filteredBlueprints[unit].rangeType === range) {
                 unitswithrange.push(filteredBlueprints[unit]);
             }
         }

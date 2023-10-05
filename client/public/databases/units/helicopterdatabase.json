@@ -3485,7 +3485,24 @@
 		"shortLabel": "S60",
 		"loadouts": [
 			{
-				"items": [],
+				"items": [
+					{
+						"name": "",
+						"quantity": 1
+					},
+					{
+						"name": "",
+						"quantity": 1
+					},
+					{
+						"name": "",
+						"quantity": 1
+					},
+					{
+						"name": "",
+						"quantity": 1
+					}
+				],
 				"enabled": true,
 				"code": "",
 				"name": "Empty loadout",
@@ -3498,6 +3515,30 @@
 					{
 						"name": "AGM-119B Penguin ASM",
 						"quantity": 1
+					},
+					{
+						"name": "",
+						"quantity": 1
+					},
+					{
+						"name": "",
+						"quantity": 1
+					},
+					{
+						"name": "",
+						"quantity": 1
+					},
+					{
+						"name": "",
+						"quantity": 1
+					},
+					{
+						"name": "",
+						"quantity": 1
+					},
+					{
+						"name": "",
+						"quantity": 1
 					}
 				],
 				"enabled": true,
@@ -3506,6 +3547,20 @@
 				"roles": [
 					"Antiship Strike"
 				]
+			},
+			{
+				"name": "asd",
+				"code": "",
+				"fuel": 1,
+				"items": [],
+				"roles": []
+			},
+			{
+				"name": "asd",
+				"code": "",
+				"fuel": 1,
+				"items": [],
+				"roles": []
 			}
 		],
 		"filename": "uh-60.png",

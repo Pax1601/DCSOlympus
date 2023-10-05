@@ -241,6 +241,7 @@ declare module "constants/constants" {
         contacts = 36,
         activePath = 37,
         isLeader = 38,
+        operateAs = 39,
         endOfData = 255
     }
 }
@@ -512,6 +513,7 @@ declare module "interfaces" {
         contacts: Contact[];
         activePath: LatLng[];
         isLeader: boolean;
+        operateAs: string;
     }
     export interface LoadoutItemBlueprint {
         name: string;
@@ -532,7 +534,7 @@ declare module "interfaces" {
         label: string;
         shortLabel: string;
         type?: string;
-        range?: string;
+        rangeType?: string;
         loadouts?: LoadoutBlueprint[];
         filename?: string;
         liveries?: {
@@ -544,6 +546,14 @@ declare module "interfaces" {
         cost?: number;
         barrelHeight?: number;
         muzzleVelocity?: number;
+        aimTime?: number;
+        shotsToFire?: number;
+        description?: string;
+        abilities?: string;
+        acquisitionRange?: number;
+        engagementRange?: number;
+        refuelsFrom?: string;
+        refuelingType?: string;
     }
     export interface UnitSpawnOptions {
         roleType: string;
@@ -721,6 +731,7 @@ declare module "other/utils" {
     export function enumToReactionToThreat(reactionToThreat: number): string;
     export function enumToEmissioNCountermeasure(emissionCountermeasure: number): string;
     export function enumToCoalition(coalitionID: number): "" | "blue" | "red" | "neutral";
+    export function coalitionToEnum(coalition: string): 0 | 1 | 2;
     export function convertDateAndTimeToDate(dateAndTime: DateAndTime): Date;
     export function createCheckboxOption(value: string, text: string, checked?: boolean, callback?: CallableFunction): HTMLElement;
     export function getCheckboxOptions(dropdown: Dropdown): {
@@ -752,6 +763,7 @@ declare module "controls/unitspawnmenu" {
     import { UnitSpawnOptions } from "interfaces";
     export class UnitSpawnMenu {
         #private;
+        spawnOptions: UnitSpawnOptions;
         constructor(ID: string, unitDatabase: UnitDatabase, orderByRole: boolean);
         getContainer(): HTMLElement;
         reset(): void;
@@ -1023,6 +1035,7 @@ declare module "unit/unit" {
         getContacts(): Contact[];
         getActivePath(): LatLng[];
         getIsLeader(): boolean;
+        getOperateAs(): string;
         static getConstructor(type: string): typeof GroundUnit | undefined;
         constructor(ID: number);
         getCategory(): string;
@@ -1078,6 +1091,7 @@ declare module "unit/unit" {
         setEmissionsCountermeasures(emissionCountermeasure: string): void;
         setOnOff(onOff: boolean): void;
         setFollowRoads(followRoads: boolean): void;
+        setOperateAs(operateAs: string): void;
         delete(explosion: boolean, immediate: boolean): void;
         refuel(): void;
         setAdvancedOptions(isTanker: boolean, isAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings): void;
@@ -1086,8 +1100,20 @@ declare module "unit/unit" {
         bombBuilding(latlng: LatLng): void;
         fireAtArea(latlng: LatLng): void;
         simulateFireFight(latlng: LatLng, targetGroundElevation: number | null): void;
+        scenicAAA(): void;
+        missOnPurpose(): void;
+        /***********************************************/
+        getActions(): {
+            [key: string]: {
+                text: string;
+                tooltip: string;
+                type: string;
+            };
+        };
+        executeAction(e: any, action: string): void;
         /***********************************************/
         onAdd(map: Map): this;
+        getActionOptions(): {};
     }
     export class AirUnit extends Unit {
         getIconOptions(): {
@@ -1101,6 +1127,13 @@ declare module "unit/unit" {
             showSummary: boolean;
             showCallsign: boolean;
             rotateToHeading: boolean;
+        };
+        getActions(): {
+            [key: string]: {
+                text: string;
+                tooltip: string;
+                type: string;
+            };
         };
     }
     export class Aircraft extends AirUnit {
@@ -1125,6 +1158,13 @@ declare module "unit/unit" {
             showCallsign: boolean;
             rotateToHeading: boolean;
         };
+        getActions(): {
+            [key: string]: {
+                text: string;
+                tooltip: string;
+                type: string;
+            };
+        };
         getCategory(): string;
         getType(): string;
     }
@@ -1141,6 +1181,13 @@ declare module "unit/unit" {
             showSummary: boolean;
             showCallsign: boolean;
             rotateToHeading: boolean;
+        };
+        getActions(): {
+            [key: string]: {
+                text: string;
+                tooltip: string;
+                type: string;
+            };
         };
         getMarkerCategory(): string;
         getCategory(): string;
@@ -1310,6 +1357,14 @@ declare module "popups/popup" {
 declare module "map/touchboxselect" {
     export var TouchBoxSelect: (new (...args: any[]) => any) & typeof import("leaflet").Class;
 }
+declare module "map/markers/destinationpreviewHandle" {
+    import { LatLng } from "leaflet";
+    import { CustomMarker } from "map/markers/custommarker";
+    export class DestinationPreviewHandle extends CustomMarker {
+        constructor(latlng: LatLng);
+        createIcon(): void;
+    }
+}
 declare module "map/map" {
     import * as L from "leaflet";
     import { MapContextMenu } from "contextmenus/mapcontextmenu";
@@ -1414,7 +1469,9 @@ declare module "panels/connectionstatuspanel" {
     import { Panel } from "panels/panel";
     export class ConnectionStatusPanel extends Panel {
         constructor(ID: string);
-        update(connected: boolean): void;
+        showDisconnected(): void;
+        showConnected(): void;
+        showServerPaused(): void;
     }
 }
 declare module "panels/hotgrouppanel" {
@@ -1615,7 +1672,7 @@ declare module "unit/unitsmanager" {
          *
          * @param hotgroup The hotgroup number
          */
-        selectUnitsByHotgroup(hotgroup: number): void;
+        selectUnitsByHotgroup(hotgroup: number, deselectAllUnits?: boolean): void;
         /** Get all the currently selected units
          *
          * @param options Selection options
@@ -1728,6 +1785,11 @@ declare module "unit/unitsmanager" {
          * @param followRoads If true, units will follow roads
          */
         selectedUnitsSetFollowRoads(followRoads: boolean): void;
+        /** Instruct selected units to operate as a certain coalition
+         *
+         * @param operateAsBool If true, units will operate as blue
+         */
+        selectedUnitsSetOperateAs(operateAsBool: boolean): void;
         /** Instruct units to attack a specific unit
          *
          * @param ID ID of the unit to attack
@@ -1768,6 +1830,14 @@ declare module "unit/unitsmanager" {
          * @param latlng Location to fire at
          */
         selectedUnitsSimulateFireFight(latlng: LatLng): void;
+        /** Instruct units to enter into scenic AAA mode. Units will shoot in the air without aiming
+         *
+         */
+        selectedUnitsScenicAAA(): void;
+        /** Instruct units to enter into miss on purpose mode. Units will aim to the nearest enemy unit but not precisely.
+         *
+         */
+        selectedUnitsMissOnPurpose(): void;
         /*********************** Control operations on selected units ************************/
         /**  See getUnitsCategories for more info
          *
@@ -1948,12 +2018,15 @@ declare module "server/servermanager" {
         setEmissionsCountermeasures(ID: number, emissionCountermeasure: string, callback?: CallableFunction): void;
         setOnOff(ID: number, onOff: boolean, callback?: CallableFunction): void;
         setFollowRoads(ID: number, followRoads: boolean, callback?: CallableFunction): void;
+        setOperateAs(ID: number, operateAs: number, callback?: CallableFunction): void;
         refuel(ID: number, callback?: CallableFunction): void;
         bombPoint(ID: number, latlng: LatLng, callback?: CallableFunction): void;
         carpetBomb(ID: number, latlng: LatLng, callback?: CallableFunction): void;
         bombBuilding(ID: number, latlng: LatLng, callback?: CallableFunction): void;
         fireAtArea(ID: number, latlng: LatLng, callback?: CallableFunction): void;
         simulateFireFight(ID: number, latlng: LatLng, altitude: number, callback?: CallableFunction): void;
+        scenicAAA(ID: number, coalition: string, callback?: CallableFunction): void;
+        missOnPurpose(ID: number, coalition: string, callback?: CallableFunction): void;
         setAdvacedOptions(ID: number, isTanker: boolean, isAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings, callback?: CallableFunction): void;
         setCommandModeOptions(restrictSpawns: boolean, restrictToCoalition: boolean, spawnPoints: {
             blue: number;
@@ -1967,14 +2040,14 @@ declare module "server/servermanager" {
         getConnected(): boolean;
         setPaused(newPaused: boolean): void;
         getPaused(): boolean;
+        getServerIsPaused(): boolean;
     }
 }
 declare module "panels/unitlistpanel" {
-    import { OlympusApp } from "olympusapp";
     import { Panel } from "panels/panel";
     export class UnitListPanel extends Panel {
         #private;
-        constructor(olympusApp: OlympusApp, panelElement: string, contentElement: string);
+        constructor(panelElement: string, contentElement: string);
         doUpdate(): void;
         getContentElement(): HTMLElement;
         startUpdates(): void;

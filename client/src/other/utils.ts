@@ -259,7 +259,7 @@ export function randomUnitBlueprint(unitDatabase: UnitDatabase, options: {type?:
     if (options.ranges) {
         unitBlueprints = unitBlueprints.filter((unitBlueprint: UnitBlueprint) => { 
             //@ts-ignore
-            return unitBlueprint.range? options.ranges.includes(unitBlueprint.range): true;
+            return unitBlueprint.rangeType? options.ranges.includes(unitBlueprint.rangeType): true;
         });
     }
 

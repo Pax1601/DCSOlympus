@@ -44,6 +44,8 @@ export class AirUnitEditor extends UnitEditor {
             addDropdownInput(this.contentDiv2, "Era", blueprint.era, ["WW2", "Early Cold War", "Mid Cold War", "Late Cold War", "Modern"]);
             addStringInput(this.contentDiv2, "Filename", blueprint.filename ?? "", "text", (value: string) => { blueprint.filename = value; });
             addStringInput(this.contentDiv2, "Cost", String(blueprint.cost) ?? "", "number", (value: string) => { blueprint.cost = parseFloat(value); });
+            addStringInput(this.contentDiv2, "Rufels from", String(blueprint.refuelsFrom) ?? "", "text", (value: string) => { blueprint.refuelsFrom = value; });
+            addStringInput(this.contentDiv2, "Refueling type", String(blueprint.refuelingType) ?? "", "text", (value: string) => { blueprint.refuelingType = value; });
 
             /* Add a scrollable list of loadouts that the user can edit */
             var title = document.createElement("label");
