@@ -121,7 +121,7 @@ export class Map extends L.Map {
 
         /* Scale */
         //@ts-ignore TODO more hacking because the module is provided as a pure javascript module only
-        L.control.scalenautic({ position: "topright", maxWidth: 300, nautic: true, metric: true, imperial: false }).addTo(this);
+        //L.control.scalenautic({ position: "topright", maxWidth: 300, nautic: true, metric: true, imperial: false }).addTo(this);
 
         /* Map source dropdown */
         this.#mapSourceDropdown = new Dropdown("map-type", (layerName: string) => this.setLayer(layerName), this.getLayers());

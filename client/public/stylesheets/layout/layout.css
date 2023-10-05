@@ -72,15 +72,6 @@
 	z-index: 9999;
 }
 
-#server-status-panel {
-	bottom: 20px;
-	font-size: 12px;
-	position: absolute;
-	right: 200px;
-	width: 300px;
-	z-index: 9999;
-}
-
 #mouse-info-panel {
 	bottom: 60px;
 	display: flex;
@@ -148,7 +139,7 @@
 #log-panel {
 	position: absolute;
 	right: 0px;
-	top: 220px;
+	top: 170px;
 	width: 310px;
 	height: fit-content;
 	z-index: 9990;
