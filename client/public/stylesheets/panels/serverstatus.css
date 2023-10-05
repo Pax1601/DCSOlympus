@@ -5,30 +5,25 @@
     column-gap: 10px;
 }
 
-#server-status-panel .ol-data-grid {
-    width: 100%;
+
+#log-panel-header-right {
+    align-items: center;
+    column-gap: 16px;
+    display:flex;
+    flex-flow: row nowrap;
 }
 
-@media (min-width: 1525px) {
-    #server-status-panel .ol-data-grid:first-of-type {
-        border-right: 1px solid gray;
-        padding-right: 10px;
-    }
+#server-status-panel dl {
+    column-gap: 4px;
+    display:flex;
+    flex-direction: row;
+    width:fit-content;
 }
 
-@media (max-width: 1525px) {
-	#server-status-panel {
-        flex-direction: column;
-        row-gap: 10px;
-        width: 180px;
-    }
-
-    #server-status-panel .ol-data-grid:first-of-type {
-        border-bottom: 1px solid gray;
-        padding-bottom: 10px;
-    }
+#server-status-panel dl > * {
+    margin:0;
+    width:fit-content;
 }
-
 
 #server-status-panel dd {
     font-weight: bold;

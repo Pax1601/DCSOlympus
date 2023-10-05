@@ -99,6 +99,6 @@
     },
     "include": [ 
         "src/*.ts",
-        "../../@types/*.d.ts"
+        "../../@types/olympus/*.d.ts"
     ]
 }

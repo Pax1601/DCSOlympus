@@ -1,5 +1,6 @@
 import { OlympusPlugin } from "interfaces";
 
+
 const SHOW_CONTROL_TIPS = "Show control tips"
 
 export class ControlTipsPlugin implements OlympusPlugin {
