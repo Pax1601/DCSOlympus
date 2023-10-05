@@ -61,6 +61,12 @@
         </div>
     </div>
 
+    <div id="operate-as" class="switch-control">
+        <h4>Operate as</h4>
+        <div id="operate-as-switch" class="ol-switch"></div>
+        <div>Determines if the unit will target red or blue units when performing scenic tasks.</div>
+    </div>
+
     <div id="ai-on-off" class="switch-control">
         <h4>Unit active</h4>
         <div id="on-off-switch" class="ol-switch"></div>
@@ -81,11 +87,11 @@
     </div>
 
     <div id="rapid-controls" class="ol-panel">
-        <button title="Increase altitude" class="ol-button" data-on-click="selectedUnitsChangeAltitude" data-on-click-params='{ "type": "climb" }'><img src="/resources/theme/images/icons/climb.svg" inject-svg></button>
-        <button title="Decrease altitude" class="ol-button" data-on-click="selectedUnitsChangeAltitude" data-on-click-params='{ "type": "descend" }'><img src="/resources/theme/images/icons/descent.svg" inject-svg></button>
-        <button title="Increase speed" class="ol-button" data-on-click="selectedUnitsChangeSpeed" data-on-click-params='{ "type": "fast" }'><img src="/resources/theme/images/icons/speed-increase.svg" inject-svg></button>
-        <button title="Decrease speed" class="ol-button" data-on-click="selectedUnitsChangeSpeed" data-on-click-params='{ "type": "slow" }'><img src="/resources/theme/images/icons/speed-decrease.svg" inject-svg></button>
-        <button title="Stop unit and go back to idle state" class="ol-button" data-on-click="selectedUnitsChangeSpeed" data-on-click-params='{ "type": "stop" }'><img src="/resources/theme/images/icons/hand-solid.svg" inject-svg></button>
+        <button id="climb" title="Increase units altitude" class="ol-button" data-on-click="selectedUnitsChangeAltitude" data-on-click-params='{ "type": "climb" }'><img src="/resources/theme/images/icons/climb.svg" inject-svg></button>
+        <button id="descend" title="Descrease units altitude" class="ol-button" data-on-click="selectedUnitsChangeAltitude" data-on-click-params='{ "type": "descend" }'><img src="/resources/theme/images/icons/descent.svg" inject-svg></button>
+        <button id="fast" title="Increase units speed" class="ol-button" data-on-click="selectedUnitsChangeSpeed" data-on-click-params='{ "type": "fast" }'><img src="/resources/theme/images/icons/speed-increase.svg" inject-svg></button>
+        <button id="slow" title="Decrease units speed" class="ol-button" data-on-click="selectedUnitsChangeSpeed" data-on-click-params='{ "type": "slow" }'><img src="/resources/theme/images/icons/speed-decrease.svg" inject-svg></button>
+        <button id="stop" title="Stop unit and go back to idle state" class="ol-button" data-on-click="selectedUnitsChangeSpeed" data-on-click-params='{ "type": "stop" }'><img src="/resources/theme/images/icons/hand-solid.svg" inject-svg></button>
     </div>
     
 </div>

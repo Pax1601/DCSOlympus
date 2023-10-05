@@ -176,6 +176,7 @@ export interface UnitData {
     contacts: Contact[];
     activePath: LatLng[];
     isLeader: boolean;
+    operateAs: string;
 }
 
 export interface LoadoutItemBlueprint {
@@ -199,13 +200,21 @@ export interface UnitBlueprint {
     label: string;
     shortLabel: string;
     type?: string;
-    range?: string;
+    rangeType?: string;
     loadouts?: LoadoutBlueprint[];
     filename?: string;
     liveries?: { [key: string]: { name: string, countries: string[] } };
     cost?: number;
     barrelHeight?: number;
     muzzleVelocity?: number;
+    aimTime?: number;
+    shotsToFire?: number;
+    description?: string;
+    abilities?: string;
+    acquisitionRange?: number;
+    engagementRange?: number;
+    refuelsFrom?: string;
+    refuelingType?: string;
 }
 
 export interface UnitSpawnOptions {

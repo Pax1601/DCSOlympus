@@ -203,6 +203,22 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	content: "NO";
 }
 
+#operate-as-switch[data-value="true"] .ol-switch-fill {
+	background-color: var(--accent-light-blue);
+}
+
+#operate-as-switch[data-value="false"] .ol-switch-fill {
+	background-color: var(--primary-red);
+}
+
+#operate-as-switch[data-value="true"]>.ol-switch-fill::before {
+	content: "BLUE" !important;
+}
+
+#operate-as-switch[data-value="false"]>.ol-switch-fill::before {
+	content: "RED" !important;
+}
+
 #advanced-settings-div {
 	column-gap: 5px;
 	display: flex;
@@ -225,6 +241,7 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 #unit-control-panel:not([data-show-emissions-countermeasures]) #emissions-countermeasures,
 #unit-control-panel:not([data-show-on-off]) #ai-on-off,
 #unit-control-panel:not([data-show-follow-roads]) #follow-roads,
+#unit-control-panel:not([data-show-operate-as]) #operate-as,
 #unit-control-panel:not([data-show-advanced-settings-button]) #advanced-settings-button,
 #advanced-settings-dialog:not([data-show-settings]) #general-settings,
 #advanced-settings-dialog:not([data-show-tasking]) #tasking,

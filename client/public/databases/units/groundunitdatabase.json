@@ -681,16 +681,6 @@
 			}
 		}
 	},
-	"Boman": {
-		"name": "Boman",
-		"coalition": "blue",
-		"era": "Late Cold War",
-		"label": "Grad Fire Direction Manager",
-		"shortLabel": "Boman",
-		"filename": "",
-		"type": "Reconnaissance",
-		"enabled": true
-	},
 	"Bunker": {
 		"name": "Bunker",
 		"coalition": "",
@@ -4160,17 +4150,6 @@
 		"type": "SAM Site",
 		"enabled": true
 	},
-	"SA-8 Osa LD 9T217": {
-		"name": "SA-8 Osa LD 9T217",
-		"coalition": "red",
-		"era": "Late Cold War",
-		"label": "SA-8 Osa LD 9T217",
-		"shortLabel": "SA-8 Osa LD 9T217",
-		"range": "Short",
-		"filename": "",
-		"type": "SAM",
-		"enabled": true
-	},
 	"SAU 2-C9": {
 		"name": "SAU 2-C9",
 		"coalition": "red",
@@ -4765,93 +4744,6 @@
 			},
 			"multicam": {
 				"name": "multicam",
-				"countries": "All"
-			},
-			"grc_winter": {
-				"name": "GRC_Winter",
-				"countries": "All"
-			}
-		}
-	},
-	"Stinger manpad GRG": {
-		"name": "Stinger manpad GRG",
-		"coalition": "blue",
-		"era": "Late Cold War",
-		"label": "Stinger manpad GRG",
-		"shortLabel": "Stinger manpad GRG",
-		"range": "Short",
-		"filename": "",
-		"type": "MANPADS",
-		"enabled": true,
-		"liveries": {
-			"grc_spring": {
-				"name": "GRC_Spring",
-				"countries": "All"
-			},
-			"grc_summer": {
-				"name": "GRC_Summer",
-				"countries": "All"
-			},
-			"grc_autumn": {
-				"name": "GRC_Autumn",
-				"countries": "All"
-			},
-			"grc_winter": {
-				"name": "GRC_Winter",
-				"countries": "All"
-			}
-		}
-	},
-	"Stinger manpad dsr": {
-		"name": "Stinger manpad dsr",
-		"coalition": "blue",
-		"era": "Late Cold War",
-		"label": "Stinger manpad dsr",
-		"shortLabel": "Stinger manpad dsr",
-		"range": "Short",
-		"filename": "",
-		"type": "MANPADS",
-		"enabled": true,
-		"liveries": {
-			"grc_spring": {
-				"name": "GRC_Spring",
-				"countries": "All"
-			},
-			"grc_summer": {
-				"name": "GRC_Summer",
-				"countries": "All"
-			},
-			"grc_autumn": {
-				"name": "GRC_Autumn",
-				"countries": "All"
-			},
-			"grc_winter": {
-				"name": "GRC_Winter",
-				"countries": "All"
-			}
-		}
-	},
-	"Stinger manpad": {
-		"name": "Stinger manpad",
-		"coalition": "blue",
-		"era": "Late Cold War",
-		"label": "Stinger manpad",
-		"shortLabel": "Stinger manpad",
-		"range": "Short",
-		"filename": "",
-		"type": "MANPADS",
-		"enabled": true,
-		"liveries": {
-			"grc_spring": {
-				"name": "GRC_Spring",
-				"countries": "All"
-			},
-			"grc_summer": {
-				"name": "GRC_Summer",
-				"countries": "All"
-			},
-			"grc_autumn": {
-				"name": "GRC_Autumn",
 				"countries": "All"
 			},
 			"grc_winter": {
@@ -5991,5 +5883,1445 @@
 				"countries": "All"
 			}
 		}
+	},
+	"SpGH_Dana": {
+		"name": "SpGH_Dana",
+		"coalition": "",
+		"era": "",
+		"label": "SPH Dana vz77 152mm",
+		"shortLabel": "SPH Dana vz77 152mm",
+		"type": "Artillery",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Grad_FDDM": {
+		"name": "Grad_FDDM",
+		"coalition": "",
+		"era": "",
+		"label": "Grad MRL FDDM (FC)",
+		"shortLabel": "Grad MRL FDDM (FC)",
+		"type": "Artillery",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Infantry AK Ins": {
+		"name": "Infantry AK Ins",
+		"coalition": "",
+		"era": "",
+		"label": "Insurgent AK-74",
+		"shortLabel": "Insurgent AK-74",
+		"type": "Infantry",
+		"enabled": true,
+		"liveries": {}
+	},
+	"MLRS FDDM": {
+		"name": "MLRS FDDM",
+		"coalition": "",
+		"era": "",
+		"label": "MRLS FDDM (FC)",
+		"shortLabel": "MRLS FDDM (FC)",
+		"type": "Artillery",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Infantry AK ver2": {
+		"name": "Infantry AK ver2",
+		"coalition": "",
+		"era": "",
+		"label": "Infantry AK-74 Rus ver2",
+		"shortLabel": "Infantry AK-74 Rus ver2",
+		"type": "Infantry",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Infantry AK ver3": {
+		"name": "Infantry AK ver3",
+		"coalition": "",
+		"era": "",
+		"label": "Infantry AK-74 Rus ver3",
+		"shortLabel": "Infantry AK-74 Rus ver3",
+		"type": "Infantry",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Smerch_HE": {
+		"name": "Smerch_HE",
+		"coalition": "",
+		"era": "",
+		"label": "MLRS 9A52 Smerch HE 300mm",
+		"shortLabel": "MLRS 9A52 Smerch HE 300mm",
+		"type": "Artillery",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Soldier stinger": {
+		"name": "Soldier stinger",
+		"coalition": "",
+		"era": "",
+		"label": "MANPADS Stinger",
+		"shortLabel": "MANPADS Stinger",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"SA-18 Igla comm": {
+		"name": "SA-18 Igla comm",
+		"coalition": "",
+		"era": "",
+		"label": "MANPADS SA-18 Igla \"Grouse\" C2",
+		"shortLabel": "MANPADS SA-18 Igla \"Grouse\" C2",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"SA-18 Igla-S comm": {
+		"name": "SA-18 Igla-S comm",
+		"coalition": "",
+		"era": "",
+		"label": "MANPADS SA-18 Igla-S \"Grouse\" C2",
+		"shortLabel": "MANPADS SA-18 Igla-S \"Grouse\" C2",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"TACAN_beacon": {
+		"name": "TACAN_beacon",
+		"coalition": "",
+		"era": "",
+		"label": "Beacon TACAN Portable TTS 3030",
+		"shortLabel": "Beacon TACAN Portable TTS 3030",
+		"type": "Fortification",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Merkava_Mk4": {
+		"name": "Merkava_Mk4",
+		"coalition": "",
+		"era": "",
+		"label": "MBT Merkava IV",
+		"shortLabel": "MBT Merkava IV",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"LiAZ Bus": {
+		"name": "LiAZ Bus",
+		"coalition": "",
+		"era": "",
+		"label": "Bus LiAZ-677",
+		"shortLabel": "Bus LiAZ-677",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {}
+	},
+	"KrAZ6322": {
+		"name": "KrAZ6322",
+		"coalition": "",
+		"era": "",
+		"label": "Truck KrAZ-6322 6x6",
+		"shortLabel": "Truck KrAZ-6322 6x6",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {}
+	},
+	"JTAC": {
+		"name": "JTAC",
+		"coalition": "",
+		"era": "",
+		"label": "JTAC",
+		"shortLabel": "JTAC",
+		"type": "Infantry",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Infantry Animated": {
+		"name": "Infantry Animated",
+		"coalition": "",
+		"era": "",
+		"label": "Infantry",
+		"shortLabel": "Infantry",
+		"type": "Infantry",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Electric locomotive": {
+		"name": "Electric locomotive",
+		"coalition": "",
+		"era": "",
+		"label": "Loco VL80 Electric",
+		"shortLabel": "Loco VL80 Electric",
+		"type": "Locomotive",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Locomotive": {
+		"name": "Locomotive",
+		"coalition": "",
+		"era": "",
+		"label": "Loco CHME3T",
+		"shortLabel": "Loco CHME3T",
+		"type": "Locomotive",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Coach cargo": {
+		"name": "Coach cargo",
+		"coalition": "",
+		"era": "",
+		"label": "Freight Van",
+		"shortLabel": "Freight Van",
+		"type": "Carriage",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Coach cargo open": {
+		"name": "Coach cargo open",
+		"coalition": "",
+		"era": "",
+		"label": "Open Wagon",
+		"shortLabel": "Open Wagon",
+		"type": "Carriage",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Coach a tank blue": {
+		"name": "Coach a tank blue",
+		"coalition": "",
+		"era": "",
+		"label": "Tank Car blue",
+		"shortLabel": "Tank Car blue",
+		"type": "Carriage",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Coach a tank yellow": {
+		"name": "Coach a tank yellow",
+		"coalition": "",
+		"era": "",
+		"label": "Tank Car yellow",
+		"shortLabel": "Tank Car yellow",
+		"type": "Carriage",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Coach a passenger": {
+		"name": "Coach a passenger",
+		"coalition": "",
+		"era": "",
+		"label": "Passenger Car",
+		"shortLabel": "Passenger Car",
+		"type": "Carriage",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Coach a platform": {
+		"name": "Coach a platform",
+		"coalition": "",
+		"era": "",
+		"label": "Coach Platform",
+		"shortLabel": "Coach Platform",
+		"type": "Carriage",
+		"enabled": true,
+		"liveries": {}
+	},
+	"tacr2a": {
+		"name": "tacr2a",
+		"coalition": "",
+		"era": "",
+		"label": "RAF Rescue",
+		"shortLabel": "RAF Rescue",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {}
+	},
+	"LARC-V": {
+		"name": "LARC-V",
+		"coalition": "",
+		"era": "",
+		"label": "LARC-V",
+		"shortLabel": "LARC-V",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {}
+	},
+	"KS-19": {
+		"name": "KS-19",
+		"coalition": "",
+		"era": "",
+		"label": "AAA KS-19 100mm",
+		"shortLabel": "AAA KS-19 100mm",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"SON_9": {
+		"name": "SON_9",
+		"coalition": "",
+		"era": "",
+		"label": "AAA Fire Can SON-9",
+		"shortLabel": "AAA Fire Can SON-9",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Scud_B": {
+		"name": "Scud_B",
+		"coalition": "",
+		"era": "",
+		"label": "SSM SS-1C Scud-B",
+		"shortLabel": "SSM SS-1C Scud-B",
+		"type": "MissilesSS",
+		"enabled": true,
+		"liveries": {}
+	},
+	"HL_DSHK": {
+		"name": "HL_DSHK",
+		"coalition": "",
+		"era": "",
+		"label": "Scout HL with DSHK 12.7mm",
+		"shortLabel": "Scout HL with DSHK 12.7mm",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"HL_KORD": {
+		"name": "HL_KORD",
+		"coalition": "",
+		"era": "",
+		"label": "Scout HL with KORD 12.7mm",
+		"shortLabel": "Scout HL with KORD 12.7mm",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"tt_DSHK": {
+		"name": "tt_DSHK",
+		"coalition": "",
+		"era": "",
+		"label": "Scout LC with DSHK 12.7mm",
+		"shortLabel": "Scout LC with DSHK 12.7mm",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"tt_KORD": {
+		"name": "tt_KORD",
+		"coalition": "",
+		"era": "",
+		"label": "Scout LC with KORD 12.7mm",
+		"shortLabel": "Scout LC with KORD 12.7mm",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"HL_ZU-23": {
+		"name": "HL_ZU-23",
+		"coalition": "",
+		"era": "",
+		"label": "SPAAA HL with ZU-23",
+		"shortLabel": "SPAAA HL with ZU-23",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"tt_ZU-23": {
+		"name": "tt_ZU-23",
+		"coalition": "",
+		"era": "",
+		"label": "SPAAA LC with ZU-23",
+		"shortLabel": "SPAAA LC with ZU-23",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"HL_B8M1": {
+		"name": "HL_B8M1",
+		"coalition": "",
+		"era": "",
+		"label": "MLRS HL with B8M1 80mm",
+		"shortLabel": "MLRS HL with B8M1 80mm",
+		"type": "Artillery",
+		"enabled": true,
+		"liveries": {}
+	},
+	"tt_B8M1": {
+		"name": "tt_B8M1",
+		"coalition": "",
+		"era": "",
+		"label": "MLRS LC with B8M1 80mm",
+		"shortLabel": "MLRS LC with B8M1 80mm",
+		"type": "Artillery",
+		"enabled": true,
+		"liveries": {}
+	},
+	"NASAMS_Radar_MPQ64F1": {
+		"name": "NASAMS_Radar_MPQ64F1",
+		"coalition": "",
+		"era": "",
+		"label": "SAM NASAMS SR MPQ64F1",
+		"shortLabel": "SAM NASAMS SR MPQ64F1",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"NASAMS_Command_Post": {
+		"name": "NASAMS_Command_Post",
+		"coalition": "",
+		"era": "",
+		"label": "SAM NASAMS C2",
+		"shortLabel": "SAM NASAMS C2",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"NASAMS_LN_B": {
+		"name": "NASAMS_LN_B",
+		"coalition": "",
+		"era": "",
+		"label": "SAM NASAMS LN AIM-120B",
+		"shortLabel": "SAM NASAMS LN AIM-120B",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"NASAMS_LN_C": {
+		"name": "NASAMS_LN_C",
+		"coalition": "",
+		"era": "",
+		"label": "SAM NASAMS LN AIM-120C",
+		"shortLabel": "SAM NASAMS LN AIM-120C",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"M4_Sherman": {
+		"name": "M4_Sherman",
+		"coalition": "",
+		"era": "",
+		"label": "Tk M4 Sherman",
+		"shortLabel": "Tk M4 Sherman",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"M2A1_halftrack": {
+		"name": "M2A1_halftrack",
+		"coalition": "",
+		"era": "",
+		"label": "APC M2A1 Halftrack",
+		"shortLabel": "APC M2A1 Halftrack",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"FPS-117 Dome": {
+		"name": "FPS-117 Dome",
+		"coalition": "",
+		"era": "",
+		"label": "EWR AN/FPS-117 Radar (domed)",
+		"shortLabel": "EWR AN/FPS-117 Radar (domed)",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"FPS-117 ECS": {
+		"name": "FPS-117 ECS",
+		"coalition": "",
+		"era": "",
+		"label": "EWR AN/FPS-117 ECS",
+		"shortLabel": "EWR AN/FPS-117 ECS",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"FPS-117": {
+		"name": "FPS-117",
+		"coalition": "",
+		"era": "",
+		"label": "EWR AN/FPS-117 Radar",
+		"shortLabel": "EWR AN/FPS-117 Radar",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"RD_75": {
+		"name": "RD_75",
+		"coalition": "",
+		"era": "",
+		"label": "SAM SA-2 S-75 RD-75 Amazonka RF",
+		"shortLabel": "SAM SA-2 S-75 RD-75 Amazonka RF",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"ZSU_57_2": {
+		"name": "ZSU_57_2",
+		"coalition": "",
+		"era": "",
+		"label": "SPAAA ZSU-57-2",
+		"shortLabel": "SPAAA ZSU-57-2",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"S-60_Type59_Artillery": {
+		"name": "S-60_Type59_Artillery",
+		"coalition": "",
+		"era": "",
+		"label": "AAA S-60 57mm",
+		"shortLabel": "AAA S-60 57mm",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"generator_5i57": {
+		"name": "generator_5i57",
+		"coalition": "",
+		"era": "",
+		"label": "Diesel Power Station 5I57A",
+		"shortLabel": "Diesel Power Station 5I57A",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"T-72B3": {
+		"name": "T-72B3",
+		"coalition": "",
+		"era": "",
+		"label": "MBT T-72B3",
+		"shortLabel": "MBT T-72B3",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"PT_76": {
+		"name": "PT_76",
+		"coalition": "",
+		"era": "",
+		"label": "LT PT-76",
+		"shortLabel": "LT PT-76",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"BTR-82A": {
+		"name": "BTR-82A",
+		"coalition": "",
+		"era": "",
+		"label": "IFV BTR-82A",
+		"shortLabel": "IFV BTR-82A",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"ATZ-5": {
+		"name": "ATZ-5",
+		"coalition": "",
+		"era": "",
+		"label": "Refueler ATZ-5",
+		"shortLabel": "Refueler ATZ-5",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {}
+	},
+	"AA8": {
+		"name": "AA8",
+		"coalition": "",
+		"era": "",
+		"label": "Firefighter Vehicle AA-7.2/60",
+		"shortLabel": "Firefighter Vehicle AA-7.2/60",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {}
+	},
+	"TZ-22_KrAZ": {
+		"name": "TZ-22_KrAZ",
+		"coalition": "",
+		"era": "",
+		"label": "Refueler TZ-22 Tractor (KrAZ-258B1)",
+		"shortLabel": "Refueler TZ-22 Tractor (KrAZ-258B1)",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {}
+	},
+	"ATZ-60_Maz": {
+		"name": "ATZ-60_Maz",
+		"coalition": "",
+		"era": "",
+		"label": "Refueler ATZ-60 Tractor (MAZ-7410)",
+		"shortLabel": "Refueler ATZ-60 Tractor (MAZ-7410)",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {}
+	},
+	"ZIL-135": {
+		"name": "ZIL-135",
+		"coalition": "",
+		"era": "",
+		"label": "Truck ZIL-135",
+		"shortLabel": "Truck ZIL-135",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {}
+	},
+	"S_75_ZIL": {
+		"name": "S_75_ZIL",
+		"coalition": "",
+		"era": "",
+		"label": "S-75 Tractor (ZIL-131)",
+		"shortLabel": "S-75 Tractor (ZIL-131)",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {}
+	},
+	"rapier_fsa_launcher": {
+		"name": "rapier_fsa_launcher",
+		"coalition": "",
+		"era": "",
+		"label": "SAM Rapier LN",
+		"shortLabel": "SAM Rapier LN",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"rapier_fsa_optical_tracker_unit": {
+		"name": "rapier_fsa_optical_tracker_unit",
+		"coalition": "",
+		"era": "",
+		"label": "SAM Rapier Tracker",
+		"shortLabel": "SAM Rapier Tracker",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"rapier_fsa_blindfire_radar": {
+		"name": "rapier_fsa_blindfire_radar",
+		"coalition": "",
+		"era": "",
+		"label": "SAM Rapier Blindfire TR",
+		"shortLabel": "SAM Rapier Blindfire TR",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"bofors40": {
+		"name": "bofors40",
+		"coalition": "",
+		"era": "",
+		"label": "AAA Bofors 40mm",
+		"shortLabel": "AAA Bofors 40mm",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Chieftain_mk3": {
+		"name": "Chieftain_mk3",
+		"coalition": "",
+		"era": "",
+		"label": "MBT Chieftain Mk.3",
+		"shortLabel": "MBT Chieftain Mk.3",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Bedford_MWD": {
+		"name": "Bedford_MWD",
+		"coalition": "",
+		"era": "",
+		"label": "Truck Bedford",
+		"shortLabel": "Truck Bedford",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Land_Rover_101_FC": {
+		"name": "Land_Rover_101_FC",
+		"coalition": "",
+		"era": "",
+		"label": "Truck Land Rover 101 FC",
+		"shortLabel": "Truck Land Rover 101 FC",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Land_Rover_109_S3": {
+		"name": "Land_Rover_109_S3",
+		"coalition": "",
+		"era": "",
+		"label": "LUV Land Rover 109",
+		"shortLabel": "LUV Land Rover 109",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {}
+	},
+	"hy_launcher": {
+		"name": "hy_launcher",
+		"coalition": "",
+		"era": "",
+		"label": "AShM SS-N-2 Silkworm",
+		"shortLabel": "AShM SS-N-2 Silkworm",
+		"type": "MissilesSS",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Silkworm_SR": {
+		"name": "Silkworm_SR",
+		"coalition": "",
+		"era": "",
+		"label": "AShM Silkworm SR",
+		"shortLabel": "AShM Silkworm SR",
+		"type": "MissilesSS",
+		"enabled": true,
+		"liveries": {}
+	},
+	"ES44AH": {
+		"name": "ES44AH",
+		"coalition": "",
+		"era": "",
+		"label": "Loco ES44AH",
+		"shortLabel": "Loco ES44AH",
+		"type": "Locomotive",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Boxcartrinity": {
+		"name": "Boxcartrinity",
+		"coalition": "",
+		"era": "",
+		"label": "Flatcar",
+		"shortLabel": "Flatcar",
+		"type": "Carriage",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Tankcartrinity": {
+		"name": "Tankcartrinity",
+		"coalition": "",
+		"era": "",
+		"label": "Tank Cartrinity",
+		"shortLabel": "Tank Cartrinity",
+		"type": "Carriage",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Wellcarnsc": {
+		"name": "Wellcarnsc",
+		"coalition": "",
+		"era": "",
+		"label": "Well Car",
+		"shortLabel": "Well Car",
+		"type": "Carriage",
+		"enabled": true,
+		"liveries": {}
+	},
+	"flak18": {
+		"name": "flak18",
+		"coalition": "",
+		"era": "",
+		"label": "AAA 8,8cm Flak 18",
+		"shortLabel": "AAA 8,8cm Flak 18",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Pz_IV_H": {
+		"name": "Pz_IV_H",
+		"coalition": "",
+		"era": "",
+		"label": "Tk PzIV H",
+		"shortLabel": "Tk PzIV H",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Leopard-2A5": {
+		"name": "Leopard-2A5",
+		"coalition": "",
+		"era": "",
+		"label": "MBT Leopard-2A5",
+		"shortLabel": "MBT Leopard-2A5",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"leopard-2A4": {
+		"name": "leopard-2A4",
+		"coalition": "",
+		"era": "",
+		"label": "MBT Leopard-2A4",
+		"shortLabel": "MBT Leopard-2A4",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"leopard-2A4_trs": {
+		"name": "leopard-2A4_trs",
+		"coalition": "",
+		"era": "",
+		"label": "MBT Leopard-2A4 Trs",
+		"shortLabel": "MBT Leopard-2A4 Trs",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Sd_Kfz_251": {
+		"name": "Sd_Kfz_251",
+		"coalition": "",
+		"era": "",
+		"label": "APC Sd.Kfz.251 Halftrack",
+		"shortLabel": "APC Sd.Kfz.251 Halftrack",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Blitz_36-6700A": {
+		"name": "Blitz_36-6700A",
+		"coalition": "",
+		"era": "",
+		"label": "Truck Opel Blitz",
+		"shortLabel": "Truck Opel Blitz",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {}
+	},
+	"T155_Firtina": {
+		"name": "T155_Firtina",
+		"coalition": "",
+		"era": "",
+		"label": "SPH T155 Firtina 155mm",
+		"shortLabel": "SPH T155 Firtina 155mm",
+		"type": "Artillery",
+		"enabled": true,
+		"liveries": {}
+	},
+	"VAB_Mephisto": {
+		"name": "VAB_Mephisto",
+		"coalition": "",
+		"era": "",
+		"label": "ATGM VAB Mephisto",
+		"shortLabel": "ATGM VAB Mephisto",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"ZTZ96B": {
+		"name": "ZTZ96B",
+		"coalition": "",
+		"era": "",
+		"label": "ZTZ-96B",
+		"shortLabel": "ZTZ-96B",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"ZBD04A": {
+		"name": "ZBD04A",
+		"coalition": "",
+		"era": "",
+		"label": "ZBD-04A",
+		"shortLabel": "ZBD-04A",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"HQ-7_LN_SP": {
+		"name": "HQ-7_LN_SP",
+		"coalition": "",
+		"era": "",
+		"label": "HQ-7 Self-Propelled LN",
+		"shortLabel": "HQ-7 Self-Propelled LN",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"HQ-7_LN_EO": {
+		"name": "HQ-7_LN_EO",
+		"coalition": "",
+		"era": "",
+		"label": "HQ-7 LN Electro-Optics",
+		"shortLabel": "HQ-7 LN Electro-Optics",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"HQ-7_STR_SP": {
+		"name": "HQ-7_STR_SP",
+		"coalition": "",
+		"era": "",
+		"label": "HQ-7 Self-Propelled STR",
+		"shortLabel": "HQ-7 Self-Propelled STR",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"PLZ05": {
+		"name": "PLZ05",
+		"coalition": "",
+		"era": "",
+		"label": "PLZ-05",
+		"shortLabel": "PLZ-05",
+		"type": "Artillery",
+		"enabled": true,
+		"liveries": {}
+	},
+	"TYPE-59": {
+		"name": "TYPE-59",
+		"coalition": "",
+		"era": "",
+		"label": "MT Type 59",
+		"shortLabel": "MT Type 59",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Kubelwagen_82": {
+		"name": "Kubelwagen_82",
+		"coalition": "",
+		"era": "",
+		"label": "LUV Kubelwagen Jeep",
+		"shortLabel": "LUV Kubelwagen Jeep",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Sd_Kfz_2": {
+		"name": "Sd_Kfz_2",
+		"coalition": "",
+		"era": "",
+		"label": "LUV Kettenrad",
+		"shortLabel": "LUV Kettenrad",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Sd_Kfz_7": {
+		"name": "Sd_Kfz_7",
+		"coalition": "",
+		"era": "",
+		"label": "Tractor Sd.Kfz.7 Art'y Tractor",
+		"shortLabel": "Tractor Sd.Kfz.7 Art'y Tractor",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Horch_901_typ_40_kfz_21": {
+		"name": "Horch_901_typ_40_kfz_21",
+		"coalition": "",
+		"era": "",
+		"label": "LUV Horch 901 Staff Car",
+		"shortLabel": "LUV Horch 901 Staff Car",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Tiger_I": {
+		"name": "Tiger_I",
+		"coalition": "",
+		"era": "",
+		"label": "Tk Tiger 1",
+		"shortLabel": "Tk Tiger 1",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Tiger_II_H": {
+		"name": "Tiger_II_H",
+		"coalition": "",
+		"era": "",
+		"label": "Tk Tiger II",
+		"shortLabel": "Tk Tiger II",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Pz_V_Panther_G": {
+		"name": "Pz_V_Panther_G",
+		"coalition": "",
+		"era": "",
+		"label": "Tk Panther G (Pz V)",
+		"shortLabel": "Tk Panther G (Pz V)",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Jagdpanther_G1": {
+		"name": "Jagdpanther_G1",
+		"coalition": "",
+		"era": "",
+		"label": "SPG Jagdpanther TD",
+		"shortLabel": "SPG Jagdpanther TD",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"JagdPz_IV": {
+		"name": "JagdPz_IV",
+		"coalition": "",
+		"era": "",
+		"label": "SPG Jagdpanzer IV TD",
+		"shortLabel": "SPG Jagdpanzer IV TD",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Stug_IV": {
+		"name": "Stug_IV",
+		"coalition": "",
+		"era": "",
+		"label": "SPG StuG IV AG",
+		"shortLabel": "SPG StuG IV AG",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"SturmPzIV": {
+		"name": "SturmPzIV",
+		"coalition": "",
+		"era": "",
+		"label": "SPG Brummbaer AG",
+		"shortLabel": "SPG Brummbaer AG",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Wespe124": {
+		"name": "Wespe124",
+		"coalition": "",
+		"era": "",
+		"label": "SPH Sd.Kfz.124 Wespe 105mm",
+		"shortLabel": "SPH Sd.Kfz.124 Wespe 105mm",
+		"type": "Artillery",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Sd_Kfz_234_2_Puma": {
+		"name": "Sd_Kfz_234_2_Puma",
+		"coalition": "",
+		"era": "",
+		"label": "Scout Puma AC",
+		"shortLabel": "Scout Puma AC",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"flak30": {
+		"name": "flak30",
+		"coalition": "",
+		"era": "",
+		"label": "AAA Flak 38 20mm",
+		"shortLabel": "AAA Flak 38 20mm",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"flak36": {
+		"name": "flak36",
+		"coalition": "",
+		"era": "",
+		"label": "AAA 8,8cm Flak 36",
+		"shortLabel": "AAA 8,8cm Flak 36",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"flak37": {
+		"name": "flak37",
+		"coalition": "",
+		"era": "",
+		"label": "AAA 8,8cm Flak 37",
+		"shortLabel": "AAA 8,8cm Flak 37",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"flak38": {
+		"name": "flak38",
+		"coalition": "",
+		"era": "",
+		"label": "AAA Flak-Vierling 38 Quad 20mm",
+		"shortLabel": "AAA Flak-Vierling 38 Quad 20mm",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"KDO_Mod40": {
+		"name": "KDO_Mod40",
+		"coalition": "",
+		"era": "",
+		"label": "AAA Kdo.G.40",
+		"shortLabel": "AAA Kdo.G.40",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Flakscheinwerfer_37": {
+		"name": "Flakscheinwerfer_37",
+		"coalition": "",
+		"era": "",
+		"label": "SL Flakscheinwerfer 37",
+		"shortLabel": "SL Flakscheinwerfer 37",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Maschinensatz_33": {
+		"name": "Maschinensatz_33",
+		"coalition": "",
+		"era": "",
+		"label": "Maschinensatz 33 Gen",
+		"shortLabel": "Maschinensatz 33 Gen",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"soldier_mauser98": {
+		"name": "soldier_mauser98",
+		"coalition": "",
+		"era": "",
+		"label": "Infantry Mauser 98",
+		"shortLabel": "Infantry Mauser 98",
+		"type": "Infantry",
+		"enabled": true,
+		"liveries": {}
+	},
+	"SK_C_28_naval_gun": {
+		"name": "SK_C_28_naval_gun",
+		"coalition": "",
+		"era": "",
+		"label": "Gun 15cm SK C/28 Naval in Bunker",
+		"shortLabel": "Gun 15cm SK C/28 Naval in Bunker",
+		"type": "Fortification",
+		"enabled": true,
+		"liveries": {}
+	},
+	"fire_control": {
+		"name": "fire_control",
+		"coalition": "",
+		"era": "",
+		"label": "Bunker with Fire Control Center",
+		"shortLabel": "Bunker with Fire Control Center",
+		"type": "Fortification",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Stug_III": {
+		"name": "Stug_III",
+		"coalition": "",
+		"era": "",
+		"label": "SPG StuG III G AG",
+		"shortLabel": "SPG StuG III G AG",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Elefant_SdKfz_184": {
+		"name": "Elefant_SdKfz_184",
+		"coalition": "",
+		"era": "",
+		"label": "SPG Elefant TD",
+		"shortLabel": "SPG Elefant TD",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"flak41": {
+		"name": "flak41",
+		"coalition": "",
+		"era": "",
+		"label": "AAA 8,8cm Flak 41",
+		"shortLabel": "AAA 8,8cm Flak 41",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"v1_launcher": {
+		"name": "v1_launcher",
+		"coalition": "",
+		"era": "",
+		"label": "V-1 Launch Ramp",
+		"shortLabel": "V-1 Launch Ramp",
+		"type": "MissilesSS",
+		"enabled": true,
+		"liveries": {}
+	},
+	"FuMG-401": {
+		"name": "FuMG-401",
+		"coalition": "",
+		"era": "",
+		"label": "EWR FuMG-401 Freya LZ",
+		"shortLabel": "EWR FuMG-401 Freya LZ",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"FuSe-65": {
+		"name": "FuSe-65",
+		"coalition": "",
+		"era": "",
+		"label": "EWR FuSe-65 Würzburg-Riese",
+		"shortLabel": "EWR FuSe-65 Würzburg-Riese",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Pak40": {
+		"name": "Pak40",
+		"coalition": "",
+		"era": "",
+		"label": "FH Pak 40 75mm",
+		"shortLabel": "FH Pak 40 75mm",
+		"type": "Artillery",
+		"enabled": true,
+		"liveries": {}
+	},
+	"LeFH_18-40-105": {
+		"name": "LeFH_18-40-105",
+		"coalition": "",
+		"era": "",
+		"label": "FH LeFH-18 105mm",
+		"shortLabel": "FH LeFH-18 105mm",
+		"type": "Artillery",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Cromwell_IV": {
+		"name": "Cromwell_IV",
+		"coalition": "",
+		"era": "",
+		"label": "Tk Cromwell IV",
+		"shortLabel": "Tk Cromwell IV",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"M4A4_Sherman_FF": {
+		"name": "M4A4_Sherman_FF",
+		"coalition": "",
+		"era": "",
+		"label": "Tk M4A4 Sherman Firefly",
+		"shortLabel": "Tk M4A4 Sherman Firefly",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"soldier_wwii_br_01": {
+		"name": "soldier_wwii_br_01",
+		"coalition": "",
+		"era": "",
+		"label": "Infantry SMLE No.4 Mk-1",
+		"shortLabel": "Infantry SMLE No.4 Mk-1",
+		"type": "Infantry",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Centaur_IV": {
+		"name": "Centaur_IV",
+		"coalition": "",
+		"era": "",
+		"label": "Tk Centaur IV CS",
+		"shortLabel": "Tk Centaur IV CS",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Churchill_VII": {
+		"name": "Churchill_VII",
+		"coalition": "",
+		"era": "",
+		"label": "Tk Churchill VII",
+		"shortLabel": "Tk Churchill VII",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Daimler_AC": {
+		"name": "Daimler_AC",
+		"coalition": "",
+		"era": "",
+		"label": "Car Daimler Armored",
+		"shortLabel": "Car Daimler Armored",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Tetrarch": {
+		"name": "Tetrarch",
+		"coalition": "",
+		"era": "",
+		"label": "Tk Tetrach",
+		"shortLabel": "Tk Tetrach",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"QF_37_AA": {
+		"name": "QF_37_AA",
+		"coalition": "",
+		"era": "",
+		"label": "AAA QF 3.7\"",
+		"shortLabel": "AAA QF 3.7\"",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Allies_Director": {
+		"name": "Allies_Director",
+		"coalition": "",
+		"era": "",
+		"label": "Allies Rangefinder (DRT)",
+		"shortLabel": "Allies Rangefinder (DRT)",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"CCKW_353": {
+		"name": "CCKW_353",
+		"coalition": "",
+		"era": "",
+		"label": "Truck GMC \"Jimmy\" 6x6",
+		"shortLabel": "Truck GMC \"Jimmy\" 6x6",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Willys_MB": {
+		"name": "Willys_MB",
+		"coalition": "",
+		"era": "",
+		"label": "Car Willys Jeep",
+		"shortLabel": "Car Willys Jeep",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {}
+	},
+	"M12_GMC": {
+		"name": "M12_GMC",
+		"coalition": "",
+		"era": "",
+		"label": "SPH M12 GMC 155mm",
+		"shortLabel": "SPH M12 GMC 155mm",
+		"type": "Artillery",
+		"enabled": true,
+		"liveries": {}
+	},
+	"M30_CC": {
+		"name": "M30_CC",
+		"coalition": "",
+		"era": "",
+		"label": "Ammo M30 Cargo Carrier",
+		"shortLabel": "Ammo M30 Cargo Carrier",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {}
+	},
+	"soldier_wwii_us": {
+		"name": "soldier_wwii_us",
+		"coalition": "",
+		"era": "",
+		"label": "Infantry M1 Garand",
+		"shortLabel": "Infantry M1 Garand",
+		"type": "Infantry",
+		"enabled": true,
+		"liveries": {}
+	},
+	"M10_GMC": {
+		"name": "M10_GMC",
+		"coalition": "",
+		"era": "",
+		"label": "SPG M10 GMC TD",
+		"shortLabel": "SPG M10 GMC TD",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"M8_Greyhound": {
+		"name": "M8_Greyhound",
+		"coalition": "",
+		"era": "",
+		"label": "Scout M8 Greyhound AC",
+		"shortLabel": "Scout M8 Greyhound AC",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"M2A1-105": {
+		"name": "M2A1-105",
+		"coalition": "",
+		"era": "",
+		"label": "FH M2A1 105mm",
+		"shortLabel": "FH M2A1 105mm",
+		"type": "Artillery",
+		"enabled": true,
+		"liveries": {}
+	},
+	"M4_Tractor": {
+		"name": "M4_Tractor",
+		"coalition": "",
+		"era": "",
+		"label": "Tractor M4 High Speed",
+		"shortLabel": "Tractor M4 High Speed",
+		"type": "Armor",
+		"enabled": true,
+		"liveries": {}
+	},
+	"M45_Quadmount": {
+		"name": "M45_Quadmount",
+		"coalition": "",
+		"era": "",
+		"label": "AAA M45 Quadmount HB 12.7mm",
+		"shortLabel": "AAA M45 Quadmount HB 12.7mm",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"M1_37mm": {
+		"name": "M1_37mm",
+		"coalition": "",
+		"era": "",
+		"label": "AAA M1 37mm",
+		"shortLabel": "AAA M1 37mm",
+		"type": "AirDefence",
+		"enabled": true,
+		"liveries": {}
+	},
+	"DR_50Ton_Flat_Wagon": {
+		"name": "DR_50Ton_Flat_Wagon",
+		"coalition": "",
+		"era": "",
+		"label": "DR 50-ton flat wagon",
+		"shortLabel": "DR 50-ton flat wagon",
+		"type": "Carriage",
+		"enabled": true,
+		"liveries": {}
+	},
+	"DRG_Class_86": {
+		"name": "DRG_Class_86",
+		"coalition": "",
+		"era": "",
+		"label": "Loco DRG Class 86",
+		"shortLabel": "Loco DRG Class 86",
+		"type": "Locomotive",
+		"enabled": true,
+		"liveries": {}
+	},
+	"German_covered_wagon_G10": {
+		"name": "German_covered_wagon_G10",
+		"coalition": "",
+		"era": "",
+		"label": "Wagon G10 (Germany)",
+		"shortLabel": "Wagon G10 (Germany)",
+		"type": "Carriage",
+		"enabled": true,
+		"liveries": {}
+	},
+	"German_tank_wagon": {
+		"name": "German_tank_wagon",
+		"coalition": "",
+		"era": "",
+		"label": "Tank Car (Germany)",
+		"shortLabel": "Tank Car (Germany)",
+		"type": "Carriage",
+		"enabled": true,
+		"liveries": {}
 	}
 }

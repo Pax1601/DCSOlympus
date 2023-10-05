@@ -17,6 +17,7 @@ export class UnitControlPanel extends Panel {
     #speedTypeSwitch: Switch;
     #onOffSwitch: Switch;
     #followRoadsSwitch: Switch;
+    #operateAsSwitch: Switch;
     #TACANXYDropdown: Dropdown;
     #radioDecimalsDropdown: Dropdown;
     #radioCallsignDropdown: Dropdown;
@@ -67,6 +68,11 @@ export class UnitControlPanel extends Panel {
             getApp().getUnitsManager().selectedUnitsSetFollowRoads(value);
         });
 
+        /* Operate as */
+        this.#operateAsSwitch = new Switch("operate-as-switch", (value: boolean) => {
+            getApp().getUnitsManager().selectedUnitsSetOperateAs(value);
+        });
+
         /* Advanced settings dialog */
         this.#advancedSettingsDialog = <HTMLElement> document.querySelector("#advanced-settings-dialog");
 
@@ -80,21 +86,28 @@ export class UnitControlPanel extends Panel {
         /* Events and timer */
         window.setInterval(() => {this.update();}, 25);
 
-        document.addEventListener("unitsSelection", (e: CustomEvent<Unit[]>) => { this.show(); this.addButtons();});
-        document.addEventListener("clearSelection", () => { this.hide() });
+        document.addEventListener("unitsSelection", (e: CustomEvent<Unit[]>) => { 
+            this.show(); 
+            this.addButtons();
+            this.#updateRapidControls();            
+        });
+        document.addEventListener("clearSelection", () => { 
+            this.hide();
+            this.#updateRapidControls();  
+        });
         document.addEventListener("applyAdvancedSettings", () => {this.#applyAdvancedSettings();})
         document.addEventListener("showAdvancedSettings", () => {
             this.#updateAdvancedSettingsDialog(getApp().getUnitsManager().getSelectedUnits());
             this.#advancedSettingsDialog.classList.remove("hide");
         });
-
-        this.hide();
-
-        //  This is for when a ctrl-click happens on the map for deselection and we need to remove the selected unit from the panel
+        /*  This is for when a ctrl-click happens on the map for deselection and we need to remove the selected unit from the panel */
         document.addEventListener( "unitDeselection", ( ev:CustomEventInit ) => {
             this.getElement().querySelector( `button[data-unit-id="${ev.detail.ID}"]` )?.remove();
+            this.#updateRapidControls();  
         });
 
+        
+        this.hide();
     }
 
     show() {
@@ -157,6 +170,7 @@ export class UnitControlPanel extends Panel {
                 element.toggleAttribute("data-show-emissions-countermeasures", (this.#selectedUnitsTypes.includes("Aircraft") || this.#selectedUnitsTypes.includes("Helicopter")) && !(this.#selectedUnitsTypes.includes("GroundUnit") || this.#selectedUnitsTypes.includes("NavyUnit")));
                 element.toggleAttribute("data-show-on-off", (this.#selectedUnitsTypes.includes("GroundUnit") || this.#selectedUnitsTypes.includes("NavyUnit")) && !(this.#selectedUnitsTypes.includes("Aircraft") || this.#selectedUnitsTypes.includes("Helicopter")));
                 element.toggleAttribute("data-show-follow-roads", (this.#selectedUnitsTypes.length == 1 && this.#selectedUnitsTypes.includes("GroundUnit")));
+                element.toggleAttribute("data-show-operate-as", getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getCoalition()}) === "neutral");
                 element.toggleAttribute("data-show-advanced-settings-button", this.#units.length == 1);
                 
                 if (this.#selectedUnitsTypes.length == 1) {
@@ -167,6 +181,7 @@ export class UnitControlPanel extends Panel {
                     var desiredSpeedType = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredSpeedType()});
                     var onOff = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getOnOff()});
                     var followRoads = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getFollowRoads()});
+                    var operateAs = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getOperateAs()});
                     
                     this.#altitudeTypeSwitch.setValue(desiredAltitudeType != undefined? desiredAltitudeType == "ASL": undefined, false);
                     this.#speedTypeSwitch.setValue(desiredSpeedType != undefined? desiredSpeedType == "CAS": undefined, false);
@@ -204,6 +219,60 @@ export class UnitControlPanel extends Panel {
 
                 this.#onOffSwitch.setValue(onOff, false);
                 this.#followRoadsSwitch.setValue(followRoads, false);
+                this.#operateAsSwitch.setValue(operateAs? operateAs === "blue": undefined, false);
+            }
+        }
+    }
+
+    #updateRapidControls() {
+        var options: { [key: string]: { text: string, tooltip: string, type: string } } | null = null;
+
+        var selectedUnits = getApp().getUnitsManager().getSelectedUnits();
+
+        var showAltitudeChange = selectedUnits.some((unit: Unit) => {return ["Aircraft", "Helicopter"].includes(unit.getCategory());});
+        this.getElement().querySelector("#climb")?.classList.toggle("hide", !showAltitudeChange); 
+        this.getElement().querySelector("#descend")?.classList.toggle("hide", !showAltitudeChange);
+
+        /* Keep only the common "and" options, unless a single unit is selected */
+        selectedUnits.forEach((unit: Unit) => {
+            var unitOptions = unit.getActions();
+            if (options === null) {
+                options = unitOptions;
+            } else {
+                /* Delete all the "or" type options */
+                for (let optionKey in options) {
+                    if (options[optionKey].type == "or") {
+                        delete options[optionKey];
+                    }
+                }
+            
+                /* Options of "and" type get shown if ALL units have it */
+                for (let optionKey in options) {
+                    if (!(optionKey in unitOptions)) {
+                        delete options[optionKey];
+                    }
+                }
+            }
+        });
+
+        options = options ?? {};
+
+        const rapidControlsContainer = this.getElement().querySelector("#rapid-controls") as HTMLElement;
+        const unitActionButtons = rapidControlsContainer.querySelectorAll(".unit-action-button");
+        for (let button of unitActionButtons) {
+            rapidControlsContainer.removeChild(button);
+        }
+    
+        for (let option in options) {
+            let button = document.createElement("button");
+            button.title = options[option].tooltip;
+            button.classList.add("ol-button", "unit-action-button");
+            button.id = option;
+            rapidControlsContainer.appendChild(button);
+            button.onclick = () => {
+                /* Since only common actions are shown in the rapid controls, we execute it only on the first unit */
+                if (selectedUnits.length > 0)
+                    selectedUnits[0].executeAction(null, option);
             }
         }
     }

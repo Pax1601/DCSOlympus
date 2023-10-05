@@ -390,6 +390,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			
 			Coords location; location.lat = lat; location.lng = lng;
 			cloneOptions.push_back({ ID, location });
+			log(username + " cloning unit with ID " + to_string(ID), true);
 		}
 
 		command = dynamic_cast<Command*>(new Clone(cloneOptions, deleteOriginal));
@@ -575,7 +576,32 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		unit->setTargetPosition(loc);
 		log(username + " tasked unit " + unit->getName() + " to simulate a fire fight", true);
 	}
-	else if (key.compare("setCommandModeOptions") == 0) {
+	else if (key.compare("scenicAAA") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		Unit* unit = unitsManager->getGroupLeader(ID);
+		unit->setState(State::SCENIC_AAA);
+		log(username + " tasked unit " + unit->getName() + " to enter scenic AAA state", true);
+	}
+	else if (key.compare("missOnPurpose") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		Unit* unit = unitsManager->getGroupLeader(ID);
+		unit->setState(State::MISS_ON_PURPOSE);
+		log(username + " tasked unit " + unit->getName() + " to enter Miss On Purpose state", true);
+	}
+	else if (key.compare("setOperateAs") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		unsigned char operateAs = value[L"operateAs"].as_number().to_uint32();
+		Unit* unit = unitsManager->getGroupLeader(ID);
+		unit->setOperateAs(operateAs);
+	}
+	else if (key.compare("setCommandModeOptions") == 0) 
+	{
 		setCommandModeOptions(value);
 		log(username + " updated the Command Mode Options", true);
 	}

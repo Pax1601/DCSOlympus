@@ -295,6 +295,13 @@ export class ServerManager {
         this.PUT(data, callback);
     }
 
+    setOperateAs(ID: number, operateAs: number, callback: CallableFunction = () => {}) {
+        var command = { "ID": ID, "operateAs": operateAs }
+        var data = { "setOperateAs": command }
+        this.PUT(data, callback);
+    }
+
+
     refuel(ID: number, callback: CallableFunction = () => {}) {
         var command = { "ID": ID };
         var data = { "refuel": command }
@@ -328,6 +335,18 @@ export class ServerManager {
     simulateFireFight(ID: number, latlng: LatLng, altitude: number, callback: CallableFunction = () => {}) {
         var command = { "ID": ID, "location": latlng, "altitude": altitude }
         var data = { "simulateFireFight": command }
+        this.PUT(data, callback);
+    }
+
+    scenicAAA(ID: number, coalition: string, callback: CallableFunction = () => {}) {
+        var command = { "ID": ID, "coalition": coalition }
+        var data = { "scenicAAA": command }
+        this.PUT(data, callback);
+    }
+
+    missOnPurpose(ID: number, coalition: string, callback: CallableFunction = () => {}) {
+        var command = { "ID": ID, "coalition": coalition }
+        var data = { "missOnPurpose": command }
         this.PUT(data, callback);
     }
 

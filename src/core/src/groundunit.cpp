@@ -73,6 +73,12 @@ void GroundUnit::setState(unsigned char newState)
 			setTargetPosition(Coords(NULL));
 			break;
 		}
+		case State::SCENIC_AAA: {
+			break;
+		}
+		case State::MISS_ON_PURPOSE: {
+			break;
+		}
 		default:
 			break;
 		}
@@ -95,6 +101,16 @@ void GroundUnit::setState(unsigned char newState)
 		break;
 	}
 	case State::SIMULATE_FIRE_FIGHT: {
+		clearActivePath();
+		resetActiveDestination();
+		break;
+	}
+	case State::SCENIC_AAA: {
+		clearActivePath();
+		resetActiveDestination();
+		break;
+	}
+	case State::MISS_ON_PURPOSE: {
 		clearActivePath();
 		resetActiveDestination();
 		break;
@@ -156,11 +172,13 @@ void GroundUnit::AIloop()
 			scheduler->appendCommand(command);
 			setHasTask(true);
 		}
+
+		break;
 	}
 	case State::SIMULATE_FIRE_FIGHT: {
 		setTask("Simulating fire fight");
 
-		if (!getHasTask() || (((double)(rand()) / (double)(RAND_MAX)) < 0.002)) {
+		if (!getHasTask() || internalCounter == 0) {
 			double dist;
 			double bearing1;
 			double bearing2;
@@ -175,7 +193,6 @@ void GroundUnit::AIloop()
 				if (databaseEntry.has_number_field(L"barrelHeight") && databaseEntry.has_number_field(L"muzzleVelocity")) {
 					barrelHeight = databaseEntry[L"barrelHeight"].as_number().to_double();
 					muzzleVelocity = databaseEntry[L"muzzleVelocity"].as_number().to_double();
-					log(to_string(barrelHeight) + " " + to_string(muzzleVelocity));
 				}
 			}
 
@@ -193,6 +210,114 @@ void GroundUnit::AIloop()
 			scheduler->appendCommand(command);
 			setHasTask(true);
 		}
+
+		if (internalCounter == 0)
+			internalCounter = 20 / 0.05;
+		internalCounter--;
+
+		break;
+	}
+	case State::SCENIC_AAA: {
+		setTask("Scenic AAA");
+
+		if ((!getHasTask() || internalCounter == 0) && getOperateAs() > 0) {
+			double distance = 0;
+			unsigned char targetCoalition = getOperateAs() == 2 ? 1 : 2;
+			Unit* target = unitsManager->getClosestUnit(this, targetCoalition, { "Aircraft", "Helicopter" }, distance);
+
+			/* Only run if an enemy air unit is closer than 20km to avoid useless load */
+			if (distance < 20000 /* m */) {
+				double r = 15; /* m */
+				double barrelElevation = r * tan(acos(((double)(rand()) / (double)(RAND_MAX))));
+
+				double lat = 0;
+				double lng = 0;
+				double randomBearing = ((double)(rand()) / (double)(RAND_MAX)) * 360;
+				Geodesic::WGS84().Direct(position.lat, position.lng, randomBearing, r, lat, lng);
+
+				std::ostringstream taskSS;
+				taskSS.precision(10);
+				taskSS << "{id = 'FireAtPoint', lat = " << lat << ", lng = " << lng << ", alt = " << position.alt + barrelElevation << ", radius = 0.001}";
+				Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
+				scheduler->appendCommand(command);
+				setHasTask(true);
+			}
+		}
+
+		if (internalCounter == 0)
+			internalCounter = 20 / 0.05;
+		internalCounter--;
+
+		break;
+	}
+	case State::MISS_ON_PURPOSE: {
+		setTask("Missing on purpose");
+
+		/* Only run this when the internal counter reaches 0 to avoid excessive computations when no nearby target */
+		if (internalCounter == 0 && getOperateAs() > 0) {
+			double distance = 0;
+			unsigned char targetCoalition = getOperateAs() == 2 ? 1 : 2;
+			Unit* target = unitsManager->getClosestUnit(this, targetCoalition, {"Aircraft", "Helicopter"}, distance);
+
+			/* Only do if we have a valid target close enough for AAA */
+			if (target != nullptr && distance < 10000 /* m */) {
+				/* Default gun values */
+				double barrelHeight = 1.0; /* m */
+				double muzzleVelocity = 860; /* m/s */
+				double aimTime = 10; /* s */
+				unsigned int shotsToFire = 10;
+
+				if (database.has_object_field(to_wstring(name))) {
+					json::value databaseEntry = database[to_wstring(name)];
+					if (databaseEntry.has_number_field(L"barrelHeight"))
+						barrelHeight = databaseEntry[L"barrelHeight"].as_number().to_double();
+					if (databaseEntry.has_number_field(L"muzzleVelocity"))
+						muzzleVelocity = databaseEntry[L"muzzleVelocity"].as_number().to_double();
+					if (databaseEntry.has_number_field(L"aimTime"))
+						aimTime = databaseEntry[L"aimTime"].as_number().to_double();
+					if (databaseEntry.has_number_field(L"shotsToFire"))
+						shotsToFire = databaseEntry[L"shotsToFire"].as_number().to_uint32();
+				}
+
+				/* Approximate the flight time */
+				if (muzzleVelocity != 0)
+					aimTime += distance / muzzleVelocity; 
+
+				internalCounter = (aimTime + 2) / 0.05;
+
+				/* Compute where the target will be in aimTime seconds. We don't consider vertical velocity atm, since after all we are not really tring to hit */
+				double aimDistance = target->getSpeed() * aimTime;
+				double aimLat = 0;
+				double aimLng = 0;
+				Geodesic::WGS84().Direct(target->getPosition().lat, target->getPosition().lng, target->getHeading() * 57.29577, aimDistance, aimLat, aimLng); /* TODO make util function */
+
+				/* Compute distance to the aim point */
+				double dist;
+				double bearing1;
+				double bearing2;
+				Geodesic::WGS84().Inverse(position.lat, position.lng, aimLat, aimLng, dist, bearing1, bearing2);
+
+				/* Send the command */
+				std::ostringstream taskSS;
+				taskSS.precision(10);
+				taskSS << "{id = 'FireAtPoint', lat = " << aimLat << ", lng = " << aimLng << ", alt = " << target->getPosition().alt << ", radius = 0.001, expendQty = " << shotsToFire << " }";
+				Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
+				scheduler->appendCommand(command);
+				setHasTask(true);
+
+				setTargetPosition(Coords(aimLat, aimLng, target->getPosition().alt));
+			}	
+			else {
+				if (getHasTask())
+					resetTask();
+			}
+		}
+
+		if (internalCounter == 0)
+			internalCounter = 5 / 0.05;
+		internalCounter--;
+
+		break;
 	}
 	default:
 		break;

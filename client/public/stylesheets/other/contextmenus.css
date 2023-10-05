@@ -326,9 +326,9 @@
 #unit-contextmenu div:before {
     display: inline-block;
     filter: invert(100%);
-    height: 16px;
+    height: 20px;
     margin-right: 15px;
-    width: 16px;
+    width: 20px;
 }
 
 .ol-select>.ol-select-options>div button.country-dropdown-element {
@@ -375,6 +375,22 @@
 
 #follow::before {
     content: url("/resources/theme/images/icons/follow.svg");
+}
+
+#scenic-aaa::before {
+    content: url("/resources/theme/images/icons/scenic.svg");
+}
+
+#miss-aaa::before {
+    content: url("/resources/theme/images/icons/miss.svg");
+}
+
+#group-ground::before {
+    content: url("/resources/theme/images/icons/group-ground.svg");
+}
+
+#group-navy::before {
+    content: url("/resources/theme/images/icons/group-navy.svg");
 }
 
 #trail::before {

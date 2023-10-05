@@ -100,6 +100,7 @@ public:
 	virtual void setContacts(vector<DataTypes::Contact> newValue);
 	virtual void setActivePath(list<Coords> newValue);
 	virtual void setIsLeader(bool newValue) { updateValue(isLeader, newValue, DataIndex::isLeader); }
+	virtual void setOperateAs(unsigned char newValue) { updateValue(operateAs, newValue, DataIndex::operateAs); }
 
 	/********** Getters **********/
 	virtual string getCategory() { return category; };
@@ -140,6 +141,7 @@ public:
 	virtual vector<DataTypes::Contact> getTargets() { return contacts; }
 	virtual list<Coords> getActivePath() { return activePath; }
 	virtual bool getIsLeader() { return isLeader; }
+	virtual unsigned char getOperateAs() { return operateAs;  }
 
 protected:
 	unsigned int ID;
@@ -182,10 +184,12 @@ protected:
 	vector<DataTypes::Contact> contacts;
 	list<Coords> activePath;
 	bool isLeader = false;
+	unsigned char operateAs = 2;
 	Coords activeDestination = Coords(NULL);
 
 	/********** Other **********/
 	unsigned int taskCheckCounter = 0;
+	unsigned int internalCounter = 0;
 	bool hasTaskAssigned = false;
 	double initialFuel = 0;
 	map<unsigned char, unsigned long long> updateTimeMap;

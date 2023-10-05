@@ -43,6 +43,7 @@ namespace DataIndex {
 		contacts,
 		activePath,
 		isLeader,
+		operateAs,
 		lastIndex,
 		endOfData = 255
 	};
@@ -65,7 +66,9 @@ namespace State
 		CARPET_BOMB,
 		BOMB_BUILDING,
 		FIRE_AT_AREA,
-		SIMULATE_FIRE_FIGHT
+		SIMULATE_FIRE_FIGHT,
+		SCENIC_AAA,
+		MISS_ON_PURPOSE
 	};
 };
 

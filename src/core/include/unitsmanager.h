@@ -23,7 +23,8 @@ public:
 	void deleteUnit(unsigned int ID, bool explosion, bool immediate);
 	void acquireControl(unsigned int ID);
 	void loadDatabases();
-	
+	Unit* getClosestUnit(Unit* unit, unsigned char coalition, vector<string> categories, double &distance);
+
 private:
 	map<unsigned int, Unit*> units;
 	json::value missionDB;

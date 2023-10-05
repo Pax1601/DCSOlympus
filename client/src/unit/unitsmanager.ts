@@ -504,6 +504,19 @@ export class UnitsManager {
         this.#showActionMessage(selectedUnits, `follow roads set to ${followRoads}`);
     }
 
+    /** Instruct selected units to operate as a certain coalition
+     * 
+     * @param operateAsBool If true, units will operate as blue
+     */
+    selectedUnitsSetOperateAs(operateAsBool: boolean) {
+        var operateAs = operateAsBool? "blue": "red";
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        for (let idx in selectedUnits) {
+            selectedUnits[idx].setOperateAs(operateAs);
+        }
+        this.#showActionMessage(selectedUnits, `operate as set to ${operateAs}`);
+    }
+
     /** Instruct units to attack a specific unit
      * 
      * @param ID ID of the unit to attack
@@ -628,6 +641,28 @@ export class UnitsManager {
             }
         });
         this.#showActionMessage(selectedUnits, `unit simulating fire fight`);
+    }
+    
+    /** Instruct units to enter into scenic AAA mode. Units will shoot in the air without aiming
+     * 
+     */
+    selectedUnitsScenicAAA() {
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        for (let idx in selectedUnits) {
+            selectedUnits[idx].scenicAAA();
+        }
+        this.#showActionMessage(selectedUnits, `unit set to perform scenic AAA`);
+    }
+
+    /** Instruct units to enter into miss on purpose mode. Units will aim to the nearest enemy unit but not precisely.
+     * 
+     */
+    selectedUnitsMissOnPurpose() {
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        for (let idx in selectedUnits) {
+            selectedUnits[idx].missOnPurpose();
+        }
+        this.#showActionMessage(selectedUnits, `unit set to perform miss on purpose AAA`);
     }
 
     /*********************** Control operations on selected units ************************/

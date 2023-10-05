@@ -1,6 +1,6 @@
 local version = "v0.4.4-alpha"
 
-local debug = true				-- True enables debug printing using DCS messages
+local debug = false				-- True enables debug printing using DCS messages
 
 -- .dll related variables
 Olympus.OlympusDLL = nil
@@ -229,6 +229,14 @@ function Olympus.buildTask(groupName, options)
 		-- Fire at a specific point
 		elseif options['id'] == 'FireAtPoint' and options['lat'] and options['lng'] and options['radius'] then
 			local point = coord.LLtoLO(options['lat'], options['lng'], 0)
+			local expendQtyEnabled = false
+			local expendQty = 0
+
+			if options['expendQty'] then
+				expendQtyEnabled = true
+				expendQty = options['expendQty']
+			end
+
 			if options['alt'] then
 				task = {
 					id = 'FireAtPoint', 
@@ -236,7 +244,9 @@ function Olympus.buildTask(groupName, options)
 						point = {x = point.x, y = point.z},
 						radius = options['radius'],
 						altitude = options['alt'],
-						alt_type = 0 -- ASL
+						alt_type = 0, -- ASL
+						expendQtyEnabled = expendQtyEnabled,
+						expendQty = expendQty
 					}   
 				}
 			else
@@ -244,7 +254,9 @@ function Olympus.buildTask(groupName, options)
 					id = 'FireAtPoint', 
 					params = {
 						point = {x = point.x, y = point.z},
-						radius = options['radius']
+						radius = options['radius'],
+						expendQtyEnabled = expendQtyEnabled,
+						expendQty = expendQty
 					}   
 				}
 			end

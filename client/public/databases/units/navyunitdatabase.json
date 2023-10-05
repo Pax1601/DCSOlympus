@@ -10,17 +10,6 @@
 		"filename": "",
 		"enabled": true
 	},
-	"Boat Armed Hi-Speed": {
-		"name": "Boat Armed Hi-Speed",
-		"coalition": "",
-		"type": "Fast Attack Craft",
-		"era": "Mid Cold War",
-		"label": "Boat Armed Hi-Speed",
-		"shortLabel": "Boat Armed Hi-Speed",
-		"range": "",
-		"filename": "",
-		"enabled": true
-	},
 	"CVN_71": {
 		"name": "CVN_71",
 		"coalition": "blue",
@@ -95,17 +84,6 @@
 		"label": "CV Admiral Kuznetsov(2017)",
 		"shortLabel": "Admiral Kuznetsov(2017)",
 		"range": "Medium",
-		"filename": "",
-		"enabled": true
-	},
-	"CV_59": {
-		"name": "CV_59",
-		"coalition": "blue",
-		"type": "Aircraft Carrier",
-		"era": "Early Cold War",
-		"label": "CV-59 Forrestal",
-		"shortLabel": "CV-59",
-		"range": "Short",
 		"filename": "",
 		"enabled": true
 	},
@@ -966,55 +944,6 @@
 			}
 		}
 	},
-	"albatros": {
-		"name": "albatros",
-		"coalition": "red",
-		"type": "Aircraft Carrier",
-		"era": "Early Cold War",
-		"label": "Albatros (Grisha-5)",
-		"shortLabel": "Albatros",
-		"range": "",
-		"filename": "",
-		"enabled": true,
-		"liveries": {
-			"141": {
-				"name": "141",
-				"countries": "All"
-			},
-			"142": {
-				"name": "142",
-				"countries": "All"
-			},
-			"143": {
-				"name": "143",
-				"countries": "All"
-			},
-			"144": {
-				"name": "144",
-				"countries": "All"
-			},
-			"145": {
-				"name": "145",
-				"countries": "All"
-			},
-			"146": {
-				"name": "146",
-				"countries": "All"
-			},
-			"147": {
-				"name": "147",
-				"countries": "All"
-			},
-			"148": {
-				"name": "148",
-				"countries": "All"
-			},
-			"149": {
-				"name": "149",
-				"countries": "All"
-			}
-		}
-	},
 	"ara_vdm": {
 		"name": "ara_vdm",
 		"coalition": "",
@@ -1026,53 +955,6 @@
 		"filename": "",
 		"enabled": true
 	},
-	"barge-1": {
-		"name": "barge-1",
-		"coalition": "red",
-		"type": "Cargoship",
-		"era": "Late Cold War",
-		"label": "Dry cargo ship Ivanov",
-		"shortLabel": "Dry cargo ship Ivanov",
-		"range": "",
-		"filename": "",
-		"enabled": true
-	},
-	"barge-2": {
-		"name": "barge-2",
-		"coalition": "red",
-		"type": "Cargoship",
-		"era": "Late Cold War",
-		"label": "Dry cargo ship Yakushev",
-		"shortLabel": "Dry cargo ship Yakushev",
-		"range": "",
-		"filename": "",
-		"enabled": true
-	},
-	"elnya": {
-		"name": "elnya",
-		"coalition": "red",
-		"type": "Tanker",
-		"era": "Late Cold War",
-		"label": "Elnya tanker",
-		"shortLabel": "Elnya tanker",
-		"range": "",
-		"filename": "",
-		"enabled": true,
-		"liveries": {
-			"952": {
-				"name": "952",
-				"countries": "All"
-			},
-			"953": {
-				"name": "953",
-				"countries": "All"
-			},
-			"954": {
-				"name": "954",
-				"countries": "All"
-			}
-		}
-	},
 	"hms_invincible": {
 		"name": "hms_invincible",
 		"coalition": "blue",
@@ -1081,39 +963,6 @@
 		"label": "HMS Invincible (R05)",
 		"shortLabel": "HMS Invincible",
 		"range": "",
-		"filename": "",
-		"enabled": true
-	},
-	"kilo": {
-		"name": "kilo",
-		"coalition": "red",
-		"type": "Submarine",
-		"era": "Late Cold War",
-		"label": "Project 636 Varshavyanka Basic",
-		"shortLabel": "Varshavyanka Basic",
-		"range": "Medium",
-		"filename": "",
-		"enabled": true
-	},
-	"kilo_636": {
-		"name": "kilo_636",
-		"coalition": "red",
-		"type": "Submarine",
-		"era": "Late Cold War",
-		"label": "Project 636 Varshavyanka Improved",
-		"shortLabel": "Varshavyanka Improved",
-		"range": "Medium",
-		"filename": "",
-		"enabled": true
-	},
-	"kuznecow": {
-		"name": "kuznecow",
-		"coalition": "red",
-		"type": "Aircraft Carrier",
-		"era": "Late Cold War",
-		"label": "Admiral Kuznetsov",
-		"shortLabel": "Admiral Kuznetsov",
-		"range": "Medium",
 		"filename": "",
 		"enabled": true
 	},
@@ -1172,72 +1021,38 @@
 		"filename": "",
 		"enabled": true
 	},
-	"molniya": {
-		"name": "molniya",
+	"santafe": {
+		"name": "santafe",
 		"coalition": "",
-		"type": "Fast Attack Craft",
-		"era": "Late Cold War",
-		"label": "Molniya (Tarantul-3)",
-		"shortLabel": "Molniya",
-		"range": "Short",
-		"filename": "",
-		"enabled": true,
-		"liveries": {
-			"952": {
-				"name": "952",
-				"countries": "All"
-			},
-			"953": {
-				"name": "953",
-				"countries": "All"
-			},
-			"954": {
-				"name": "954",
-				"countries": "All"
-			}
-		}
-	},
-	"moscow": {
-		"name": "moscow",
-		"coalition": "red",
-		"type": "Cruiser",
-		"era": "Late Cold War",
-		"label": "Moscow",
-		"shortLabel": "Moscow",
-		"range": "Medium",
-		"filename": "",
-		"enabled": true,
-		"liveries": {
-			"default": {
-				"name": "default",
-				"countries": "All"
-			},
-			"cow1": {
-				"name": "cow1",
-				"countries": "All"
-			},
-			"cow3": {
-				"name": "cow3",
-				"countries": "All"
-			},
-			"cow2": {
-				"name": "cow2",
-				"countries": "All"
-			}
-		}
-	},
-	"neustrash": {
-		"name": "neustrash",
-		"coalition": "red",
-		"type": "Frigate",
-		"era": "Late Cold War",
-		"label": "Neustrashimy",
-		"shortLabel": "Neustrashimy",
-		"range": "Short",
+		"type": "Submarine",
+		"era": "Early Cold War",
+		"label": "ARA Santa Fe S-21",
+		"shortLabel": "ARA Santa",
+		"range": "",
 		"filename": "",
 		"enabled": true
 	},
-	"perry": {
+	"speedboat": {
+		"name": "speedboat",
+		"coalition": "",
+		"era": "",
+		"label": "Boat Armed Hi-speed",
+		"shortLabel": "Boat Armed Hi-speed",
+		"type": "Speedboat",
+		"enabled": true,
+		"liveries": {}
+	},
+	"VINSON": {
+		"name": "VINSON",
+		"coalition": "",
+		"era": "",
+		"label": "CVN-70 Carl Vinson",
+		"shortLabel": "CVN-70 Carl Vinson",
+		"type": "Aircraft Carrier",
+		"enabled": true,
+		"liveries": {}
+	},
+	"PERRY": {
 		"name": "perry",
 		"coalition": "blue",
 		"type": "Frigate",
@@ -1290,18 +1105,142 @@
 			}
 		}
 	},
-	"piotr_velikiy": {
-		"name": "piotr_velikiy",
+	"ALBATROS": {
+		"name": "albatros",
 		"coalition": "red",
-		"type": "Cruiser",
+		"type": "Frigade",
+		"era": "Early Cold War",
+		"label": "Albatros (Grisha-5)",
+		"shortLabel": "Albatros",
+		"range": "",
+		"filename": "",
+		"enabled": true,
+		"liveries": {
+			"141": {
+				"name": "141",
+				"countries": "All"
+			},
+			"142": {
+				"name": "142",
+				"countries": "All"
+			},
+			"143": {
+				"name": "143",
+				"countries": "All"
+			},
+			"144": {
+				"name": "144",
+				"countries": "All"
+			},
+			"145": {
+				"name": "145",
+				"countries": "All"
+			},
+			"146": {
+				"name": "146",
+				"countries": "All"
+			},
+			"147": {
+				"name": "147",
+				"countries": "All"
+			},
+			"148": {
+				"name": "148",
+				"countries": "All"
+			},
+			"149": {
+				"name": "149",
+				"countries": "All"
+			}
+		}
+	},
+	"KUZNECOW": {
+		"name": "kuznecow",
+		"coalition": "red",
+		"type": "Aircraft Carrier",
 		"era": "Late Cold War",
-		"label": "Pyotr Velikiy",
-		"shortLabel": "Pyotr Velikiy",
+		"label": "Admiral Kuznetsov",
+		"shortLabel": "Admiral Kuznetsov",
 		"range": "Medium",
 		"filename": "",
 		"enabled": true
 	},
-	"rezky": {
+	"MOLNIYA": {
+		"name": "molniya",
+		"coalition": "",
+		"type": "Corvette",
+		"era": "Late Cold War",
+		"label": "Molniya (Tarantul-3)",
+		"shortLabel": "Molniya",
+		"range": "Short",
+		"filename": "",
+		"enabled": true,
+		"liveries": {
+			"952": {
+				"name": "952",
+				"countries": "All"
+			},
+			"953": {
+				"name": "953",
+				"countries": "All"
+			},
+			"954": {
+				"name": "954",
+				"countries": "All"
+			}
+		}
+	},
+	"MOSCOW": {
+		"name": "moscow",
+		"coalition": "red",
+		"type": "Cruiser",
+		"era": "Late Cold War",
+		"label": "Moscow",
+		"shortLabel": "Moscow",
+		"range": "Medium",
+		"filename": "",
+		"enabled": true,
+		"liveries": {
+			"default": {
+				"name": "default",
+				"countries": "All"
+			},
+			"cow1": {
+				"name": "cow1",
+				"countries": "All"
+			},
+			"cow3": {
+				"name": "cow3",
+				"countries": "All"
+			},
+			"cow2": {
+				"name": "cow2",
+				"countries": "All"
+			}
+		}
+	},
+	"NEUSTRASH": {
+		"name": "neustrash",
+		"coalition": "red",
+		"type": "Frigate",
+		"era": "Late Cold War",
+		"label": "Neustrashimy",
+		"shortLabel": "Neustrashimy",
+		"range": "Short",
+		"filename": "",
+		"enabled": true
+	},
+	"PIOTR": {
+		"name": "PIOTR",
+		"coalition": "",
+		"era": "",
+		"label": "Battlecruiser 1144.2 Pyotr Velikiy",
+		"shortLabel": "Battlecruiser 1144.2 Pyotr Velikiy",
+		"type": "Cruiser",
+		"enabled": true,
+		"liveries": {}
+	},
+	"REZKY": {
 		"name": "Rezky (Krivak-2)",
 		"coalition": "red",
 		"type": "Frigate",
@@ -1312,18 +1251,52 @@
 		"filename": "",
 		"enabled": true
 	},
-	"santafe": {
-		"name": "santafe",
-		"coalition": "",
-		"type": "Submarine",
-		"era": "Early Cold War",
-		"label": "ARA Santa Fe S-21",
-		"shortLabel": "ARA Santa",
+	"ELNYA": {
+		"name": "elnya",
+		"coalition": "red",
+		"type": "Tanker",
+		"era": "Late Cold War",
+		"label": "Elnya tanker",
+		"shortLabel": "Elnya tanker",
 		"range": "",
 		"filename": "",
-		"enabled": true
+		"enabled": true,
+		"liveries": {
+			"952": {
+				"name": "952",
+				"countries": "All"
+			},
+			"953": {
+				"name": "953",
+				"countries": "All"
+			},
+			"954": {
+				"name": "954",
+				"countries": "All"
+			}
+		}
 	},
-	"zwezdny": {
+	"Dry-cargo ship-2": {
+		"name": "Dry-cargo ship-2",
+		"coalition": "",
+		"era": "",
+		"label": "Cargo Ivanov",
+		"shortLabel": "Cargo Ivanov",
+		"type": "Cargo",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Dry-cargo ship-1": {
+		"name": "Dry-cargo ship-1",
+		"coalition": "",
+		"era": "",
+		"label": "Bulker Yakushev",
+		"shortLabel": "Bulker Yakushev",
+		"type": "Cargo",
+		"enabled": true,
+		"liveries": {}
+	},
+	"ZWEZDNY": {
 		"name": "zwezdny",
 		"coalition": "",
 		"type": "Civilian Boat",
@@ -1333,5 +1306,96 @@
 		"range": "",
 		"filename": "",
 		"enabled": true
+	},
+	"KILO": {
+		"name": "kilo",
+		"coalition": "red",
+		"type": "Submarine",
+		"era": "Late Cold War",
+		"label": "Project 636 Varshavyanka Basic",
+		"shortLabel": "Varshavyanka Basic",
+		"range": "Medium",
+		"filename": "",
+		"enabled": true
+	},
+	"IMPROVED_KILO": {
+		"name": "IMPROVED_KILO",
+		"coalition": "",
+		"era": "",
+		"label": "SSK 636 Improved Kilo",
+		"shortLabel": "SSK 636 Improved Kilo",
+		"type": "Submarine",
+		"enabled": true,
+		"liveries": {}
+	},
+	"SOM": {
+		"name": "SOM",
+		"coalition": "",
+		"era": "",
+		"label": "SSK 641B Tango",
+		"shortLabel": "SSK 641B Tango",
+		"type": "SOM",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Forrestal": {
+		"name": "Forrestal",
+		"coalition": "",
+		"era": "",
+		"label": "CV-59 Forrestal",
+		"shortLabel": "CV-59 Forrestal",
+		"type": "Forrestal",
+		"enabled": true,
+		"liveries": {}
+	},
+	"LST_Mk2": {
+		"name": "LST_Mk2",
+		"coalition": "",
+		"era": "",
+		"label": "LST Mk.II",
+		"shortLabel": "LST Mk.II",
+		"type": "LST_Mk2",
+		"enabled": true,
+		"liveries": {}
+	},
+	"USS_Samuel_Chase": {
+		"name": "USS_Samuel_Chase",
+		"coalition": "",
+		"era": "",
+		"label": "LS Samuel Chase",
+		"shortLabel": "LS Samuel Chase",
+		"type": "USS_Samuel_Chase",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Higgins_boat": {
+		"name": "Higgins_boat",
+		"coalition": "",
+		"era": "",
+		"label": "Boat LCVP Higgins",
+		"shortLabel": "Boat LCVP Higgins",
+		"type": "Higgins_boat",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Uboat_VIIC": {
+		"name": "Uboat_VIIC",
+		"coalition": "",
+		"era": "",
+		"label": "U-boat VIIC U-flak",
+		"shortLabel": "U-boat VIIC U-flak",
+		"type": "Uboat_VIIC",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Schnellboot_type_S130": {
+		"name": "Schnellboot_type_S130",
+		"coalition": "",
+		"era": "",
+		"label": "Boat Schnellboot type S130",
+		"shortLabel": "Boat Schnellboot type S130",
+		"type": "Schnellboot_type_S130",
+		"enabled": true,
+		"liveries": {}
 	}
 }
