@@ -12,7 +12,7 @@ import { DestinationPreviewMarker } from "./markers/destinationpreviewmarker";
 import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
 import { SVGInjector } from '@tanem/svg-injector'
-import { mapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, visibilityControls, visibilityControlsTooltips, MOVE_UNIT, SHOW_CONTACT_LINES, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, visibilityControlsTypes, SHOW_UNIT_LABELS } from "../constants/constants";
+import { mapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, visibilityControls, visibilityControlsTooltips, MOVE_UNIT, SHOW_UNIT_CONTACTS, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, visibilityControlsTypes, SHOW_UNIT_LABELS } from "../constants/constants";
 import { TargetMarker } from "./markers/targetmarker";
 import { CoalitionArea } from "./coalitionarea/coalitionarea";
 import { CoalitionAreaContextMenu } from "../contextmenus/coalitionareacontextmenu";
@@ -209,7 +209,7 @@ export class Map extends L.Map {
         document.querySelector("#unit-visibility-control")?.append(...this.#optionButtons["visibility"]);
 
         /* Create the checkboxes to select the advanced visibility options */
-        this.addVisibilityOption(SHOW_CONTACT_LINES, false);
+        this.addVisibilityOption(SHOW_UNIT_CONTACTS, false);
         this.addVisibilityOption(HIDE_GROUP_MEMBERS, true);
         this.addVisibilityOption(SHOW_UNIT_PATHS, true);
         this.addVisibilityOption(SHOW_UNIT_TARGETS, true);
@@ -528,39 +528,38 @@ export class Map extends L.Map {
         }
 
         this.hideMapContextMenu();
-        if (!this.#shiftKey) {
-            if (this.#state === IDLE) {
-                if (this.#state == IDLE) {
-                    this.showMapContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng);
-                    var clickedCoalitionArea = null;
+        if (this.#state === IDLE) {
+            if (this.#state == IDLE) {
+                this.showMapContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng);
+                var clickedCoalitionArea = null;
 
-                    /* Coalition areas are ordered in the #coalitionAreas array according to their zindex. Select the upper one */
-                    for (let coalitionArea of this.#coalitionAreas) {
-                        if (coalitionArea.getBounds().contains(e.latlng)) {
-                            if (coalitionArea.getSelected())
-                                clickedCoalitionArea = coalitionArea;
-                            else
-                                this.getMapContextMenu().setCoalitionArea(coalitionArea);
-                        }
+                /* Coalition areas are ordered in the #coalitionAreas array according to their zindex. Select the upper one */
+                for (let coalitionArea of this.#coalitionAreas) {
+                    if (coalitionArea.getBounds().contains(e.latlng)) {
+                        if (coalitionArea.getSelected())
+                            clickedCoalitionArea = coalitionArea;
+                        else
+                            this.getMapContextMenu().setCoalitionArea(coalitionArea);
                     }
-                    if (clickedCoalitionArea)
-                        this.showCoalitionAreaContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng, clickedCoalitionArea);
                 }
-            }
-            else if (this.#state === MOVE_UNIT) {
-                if (!e.originalEvent.ctrlKey) {
-                    getApp().getUnitsManager().selectedUnitsClearDestinations();
-                }
-                getApp().getUnitsManager().selectedUnitsAddDestination(this.#computeDestinationRotation && this.#destinationRotationCenter != null ? this.#destinationRotationCenter : e.latlng, this.#shiftKey, this.#destinationGroupRotation)
-                
-                this.#destinationGroupRotation = 0;
-                this.#destinationRotationCenter = null;
-                this.#computeDestinationRotation = false;
-            }
-            else {
-                this.setState(IDLE);
+                if (clickedCoalitionArea)
+                    this.showCoalitionAreaContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng, clickedCoalitionArea);
             }
         }
+        else if (this.#state === MOVE_UNIT) {
+            if (!e.originalEvent.ctrlKey) {
+                getApp().getUnitsManager().selectedUnitsClearDestinations();
+            }
+            getApp().getUnitsManager().selectedUnitsAddDestination(this.#computeDestinationRotation && this.#destinationRotationCenter != null ? this.#destinationRotationCenter : e.latlng, this.#shiftKey, this.#destinationGroupRotation)
+            
+            this.#destinationGroupRotation = 0;
+            this.#destinationRotationCenter = null;
+            this.#computeDestinationRotation = false;
+        }
+        else {
+            this.setState(IDLE);
+        }
+       
     }
 
     #onSelectionStart(e: any) {
@@ -593,11 +592,11 @@ export class Map extends L.Map {
         }
 
         this.#longPressTimer = window.setTimeout(() => {
-            if (e.originalEvent.button != 2 || e.originalEvent.ctrlKey || e.originalEvent.shiftKey)
-                return;
-                
             this.hideMapContextMenu();
             this.#longPressHandled = true;
+
+            if (e.originalEvent.button != 2 || e.originalEvent.ctrlKey || e.originalEvent.shiftKey)
+                return;
 
             var options: { [key: string]: { text: string, tooltip: string } } = {};
             const selectedUnits = getApp().getUnitsManager().getSelectedUnits();

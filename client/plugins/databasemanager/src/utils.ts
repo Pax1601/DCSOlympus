@@ -68,6 +68,7 @@ export function addLoadoutItemsEditor(div: HTMLElement, loadout: LoadoutBlueprin
     itemsEl.classList.add("dm-scroll-container", "dm-items-container");
 
     /* Create a row for each loadout item to allow and change the name and quantity of the item itself */
+    loadout.items.sort((a: LoadoutItemBlueprint, b: LoadoutItemBlueprint) => a.name.localeCompare(b.name, undefined, {sensitivity: 'base'}));
     loadout.items.forEach((item: LoadoutItemBlueprint, index: number) => {
         var rowDiv = document.createElement("div");
 
@@ -154,7 +155,7 @@ export function addBlueprintsScroll(div: HTMLElement, database: {blueprints: {[k
     if (database !== null) {
         var blueprints: {[key: string]: UnitBlueprint} = database.blueprints;
 
-        for (let key in blueprints) {
+        for (let key of Object.keys(blueprints).sort((a, b) => a.localeCompare(b, undefined, {sensitivity: 'base'}))) {
             var rowDiv = document.createElement("div");
             scrollDiv.appendChild(rowDiv);
 
@@ -186,6 +187,7 @@ export function addLoadoutsScroll(div: HTMLElement, loadouts: LoadoutBlueprint[]
     var loadoutsEl = document.createElement("div");
     loadoutsEl.classList.add("dm-scroll-container", "dm-loadout-container")
     
+    loadouts.sort((a: LoadoutBlueprint, b: LoadoutBlueprint) => a.name.localeCompare(b.name, undefined, {sensitivity: 'base'}));
     loadouts.forEach((loadout: LoadoutBlueprint, index: number) => {
         var rowDiv = document.createElement("div");
         loadoutsEl.appendChild(rowDiv);

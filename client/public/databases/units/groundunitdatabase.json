@@ -6230,7 +6230,7 @@
 		"era": "",
 		"label": "SPAAA LC with ZU-23",
 		"shortLabel": "SPAAA LC with ZU-23",
-		"type": "AirDefence",
+		"type": "AAA",
 		"enabled": true,
 		"liveries": {}
 	},
@@ -6510,7 +6510,7 @@
 		"era": "",
 		"label": "AAA Bofors 40mm",
 		"shortLabel": "AAA Bofors 40mm",
-		"type": "AirDefence",
+		"type": "AAA",
 		"enabled": true,
 		"liveries": {}
 	},
@@ -6620,9 +6620,11 @@
 		"era": "",
 		"label": "AAA 8,8cm Flak 18",
 		"shortLabel": "AAA 8,8cm Flak 18",
-		"type": "AirDefence",
+		"type": "AAA",
 		"enabled": true,
-		"liveries": {}
+		"liveries": {},
+		"aimTime": 20,
+		"shotsToFire": 1
 	},
 	"Pz_IV_H": {
 		"name": "Pz_IV_H",
@@ -6904,46 +6906,6 @@
 		"enabled": true,
 		"liveries": {}
 	},
-	"flak30": {
-		"name": "flak30",
-		"coalition": "",
-		"era": "",
-		"label": "AAA Flak 38 20mm",
-		"shortLabel": "AAA Flak 38 20mm",
-		"type": "AirDefence",
-		"enabled": true,
-		"liveries": {}
-	},
-	"flak36": {
-		"name": "flak36",
-		"coalition": "",
-		"era": "",
-		"label": "AAA 8,8cm Flak 36",
-		"shortLabel": "AAA 8,8cm Flak 36",
-		"type": "AirDefence",
-		"enabled": true,
-		"liveries": {}
-	},
-	"flak37": {
-		"name": "flak37",
-		"coalition": "",
-		"era": "",
-		"label": "AAA 8,8cm Flak 37",
-		"shortLabel": "AAA 8,8cm Flak 37",
-		"type": "AirDefence",
-		"enabled": true,
-		"liveries": {}
-	},
-	"flak38": {
-		"name": "flak38",
-		"coalition": "",
-		"era": "",
-		"label": "AAA Flak-Vierling 38 Quad 20mm",
-		"shortLabel": "AAA Flak-Vierling 38 Quad 20mm",
-		"type": "AirDefence",
-		"enabled": true,
-		"liveries": {}
-	},
 	"KDO_Mod40": {
 		"name": "KDO_Mod40",
 		"coalition": "",
@@ -6960,7 +6922,7 @@
 		"era": "",
 		"label": "SL Flakscheinwerfer 37",
 		"shortLabel": "SL Flakscheinwerfer 37",
-		"type": "AirDefence",
+		"type": "AAA",
 		"enabled": true,
 		"liveries": {}
 	},
@@ -6970,7 +6932,7 @@
 		"era": "",
 		"label": "Maschinensatz 33 Gen",
 		"shortLabel": "Maschinensatz 33 Gen",
-		"type": "AirDefence",
+		"type": "AAA",
 		"enabled": true,
 		"liveries": {}
 	},
@@ -7021,16 +6983,6 @@
 		"label": "SPG Elefant TD",
 		"shortLabel": "SPG Elefant TD",
 		"type": "Armor",
-		"enabled": true,
-		"liveries": {}
-	},
-	"flak41": {
-		"name": "flak41",
-		"coalition": "",
-		"era": "",
-		"label": "AAA 8,8cm Flak 41",
-		"shortLabel": "AAA 8,8cm Flak 41",
-		"type": "AirDefence",
 		"enabled": true,
 		"liveries": {}
 	},
@@ -7160,7 +7112,7 @@
 		"era": "",
 		"label": "AAA QF 3.7\"",
 		"shortLabel": "AAA QF 3.7\"",
-		"type": "AirDefence",
+		"type": "AAA",
 		"enabled": true,
 		"liveries": {}
 	},
@@ -7270,7 +7222,7 @@
 		"era": "",
 		"label": "AAA M45 Quadmount HB 12.7mm",
 		"shortLabel": "AAA M45 Quadmount HB 12.7mm",
-		"type": "AirDefence",
+		"type": "AAA",
 		"enabled": true,
 		"liveries": {}
 	},
@@ -7280,7 +7232,7 @@
 		"era": "",
 		"label": "AAA M1 37mm",
 		"shortLabel": "AAA M1 37mm",
-		"type": "AirDefence",
+		"type": "AAA",
 		"enabled": true,
 		"liveries": {}
 	},

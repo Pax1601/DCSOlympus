@@ -1,11 +1,11 @@
-import { Marker, LatLng, Polyline, Icon, DivIcon, CircleMarker, Map, Point } from 'leaflet';
+import { Marker, LatLng, Polyline, Icon, DivIcon, CircleMarker, Map, Point, Circle } from 'leaflet';
 import { getApp } from '..';
-import { enumToCoalition, enumToEmissioNCountermeasure, getMarkerCategoryByName, enumToROE, enumToReactionToThreat, enumToState, getUnitDatabaseByCategory, mToFt, msToKnots, rad2deg, bearing, deg2rad, ftToM, getGroundElevation, coalitionToEnum } from '../other/utils';
+import { enumToCoalition, enumToEmissioNCountermeasure, getMarkerCategoryByName, enumToROE, enumToReactionToThreat, enumToState, getUnitDatabaseByCategory, mToFt, msToKnots, rad2deg, bearing, deg2rad, ftToM, getGroundElevation, coalitionToEnum, nmToFt, nmToM } from '../other/utils';
 import { CustomMarker } from '../map/markers/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
 import { UnitDatabase } from './databases/unitdatabase';
 import { TargetMarker } from '../map/markers/targetmarker';
-import { DLINK, DataIndexes, GAME_MASTER, HIDE_GROUP_MEMBERS, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, ROEs, RWR, SHOW_CONTACT_LINES, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, VISUAL, emissionsCountermeasures, reactionsToThreat, states } from '../constants/constants';
+import { DLINK, DataIndexes, GAME_MASTER, HIDE_GROUP_MEMBERS, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, ROEs, RWR, SHOW_UNIT_CONTACTS, SHOW_UNITS_RINGS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, VISUAL, emissionsCountermeasures, reactionsToThreat, states } from '../constants/constants';
 import { DataExtractor } from '../server/dataextractor';
 import { groundUnitDatabase } from './databases/groundunitdatabase';
 import { navyUnitDatabase } from './databases/navyunitdatabase';
@@ -86,7 +86,8 @@ export class Unit extends CustomMarker {
     #waitingForDoubleClick: boolean = false;
     #pathMarkers: Marker[] = [];
     #pathPolyline: Polyline;
-    #contactsPolylines: Polyline[];
+    #contactsPolylines: Polyline[] = [];
+    #rangeRingCircles: Circle[] = [];
     #miniMapMarker: CircleMarker | null = null;
     #targetPositionMarker: TargetMarker;
     #targetPositionPolyline: Polyline;
@@ -148,7 +149,6 @@ export class Unit extends CustomMarker {
 
         this.#pathPolyline = new Polyline([], { color: '#2d3e50', weight: 3, opacity: 0.5, smoothFactor: 1 });
         this.#pathPolyline.addTo(getApp().getMap());
-        this.#contactsPolylines = [];
         this.#targetPositionMarker = new TargetMarker(new LatLng(0, 0));
         this.#targetPositionPolyline = new Polyline([], { color: '#FF0000', weight: 3, opacity: 0.5, smoothFactor: 1 });
 
@@ -251,6 +251,7 @@ export class Unit extends CustomMarker {
     drawLines() {
         this.#drawPath();
         this.#drawContacts();
+        this.#drawRanges();
         this.#drawTarget();
     }
 
@@ -1093,7 +1094,7 @@ export class Unit extends CustomMarker {
 
     #drawContacts() {
         this.#clearContacts();
-        if (getApp().getMap().getVisibilityOptions()[SHOW_CONTACT_LINES]) {
+        if (getApp().getMap().getVisibilityOptions()[SHOW_UNIT_CONTACTS]) {
             for (let index in this.#contacts) {
                 var contactData = this.#contacts[index];
                 var contact: Unit | Weapon | null;
@@ -1133,9 +1134,28 @@ export class Unit extends CustomMarker {
         }
     }
 
+    #drawRanges() {
+        this.#clearRanges();
+        if (getApp().getMap().getVisibilityOptions()[SHOW_UNITS_RINGS]) {
+            var engagementRange = this.getDatabase()?.getByName(this.getName())?.engagementRange;
+            var acquisitionRange = this.getDatabase()?.getByName(this.getName())?.acquisitionRange
+            if (engagementRange) {
+                var rangeCircle = new Circle(this.getPosition(), { radius: nmToM(engagementRange), color: "#FF0000", weight: 3, opacity: 1 });
+                rangeCircle.addTo(getApp().getMap());
+                this.#rangeRingCircles.push(rangeCircle)
+            }
+        }
+    }
+
     #clearContacts() {
         for (let index in this.#contactsPolylines) {
             getApp().getMap().removeLayer(this.#contactsPolylines[index])
+        }
+    }
+
+    #clearRanges() {
+        for (let index in this.#rangeRingCircles) {
+            getApp().getMap().removeLayer(this.#rangeRingCircles[index])
         }
     }
 
