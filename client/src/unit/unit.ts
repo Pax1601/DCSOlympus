@@ -87,7 +87,8 @@ export class Unit extends CustomMarker {
     #pathMarkers: Marker[] = [];
     #pathPolyline: Polyline;
     #contactsPolylines: Polyline[] = [];
-    #rangeRingCircles: Circle[] = [];
+    #engagementCircle: Circle;
+    #acquisitionCircle: Circle;
     #miniMapMarker: CircleMarker | null = null;
     #targetPositionMarker: TargetMarker;
     #targetPositionPolyline: Polyline;
@@ -151,6 +152,8 @@ export class Unit extends CustomMarker {
         this.#pathPolyline.addTo(getApp().getMap());
         this.#targetPositionMarker = new TargetMarker(new LatLng(0, 0));
         this.#targetPositionPolyline = new Polyline([], { color: '#FF0000', weight: 3, opacity: 0.5, smoothFactor: 1 });
+        this.#engagementCircle = new Circle(this.getPosition(), { radius: 0, weight: 4, opacity: 0.5, fillOpacity: 0, dashArray: "4 8" });
+        this.#acquisitionCircle = new Circle(this.getPosition(), { radius: 0, weight: 1, opacity: 0.5, fillOpacity: 0, dashArray: "8 4 2 4 2 4" });
 
         this.on('click', (e) => this.#onClick(e));
         this.on('dblclick', (e) => this.#onDoubleClick(e));
@@ -178,8 +181,12 @@ export class Unit extends CustomMarker {
 
         document.addEventListener("mapVisibilityOptionsChanged", (ev: CustomEventInit) => {
             this.#updateMarker();
-            if (this.getSelected())
+            if (this.getSelected()) {
                 this.drawLines();
+                this.#drawRanges();
+            } else {
+                this.#clearRanges();
+            }
         });
     }
 
@@ -249,10 +256,12 @@ export class Unit extends CustomMarker {
     }
 
     drawLines() {
-        this.#drawPath();
-        this.#drawContacts();
-        this.#drawRanges();
-        this.#drawTarget();
+        /* Leaflet does not like it when you change coordinates when the map is zooming */
+        if (!getApp().getMap().isZooming()) {
+            this.#drawPath();
+            this.#drawContacts();
+            this.#drawTarget();
+        }
     }
 
     getData(): UnitData {
@@ -340,6 +349,7 @@ export class Unit extends CustomMarker {
             }
             else {
                 this.#clearContacts();
+                this.#clearRanges();
                 this.#clearPath();
                 this.#clearTarget();
             }
@@ -1048,6 +1058,41 @@ export class Unit extends CustomMarker {
             /* Set vertical offset for altitude stacking */
             var pos = getApp().getMap().latLngToLayerPoint(this.getLatLng()).round();
             this.setZIndexOffset(1000 + Math.floor(this.#position.alt as number) - pos.y + (this.#highlighted || this.#selected ? 5000 : 0));
+
+            /* Circles don't like to be updated when the map is zooming */
+            if (!getApp().getMap().isZooming()) {
+                var engagementRange = 0;
+                var acquisitionRange = 0;
+
+                /* Get the acquisition and engagement ranges of the entire group, not for each unit */
+                if (this.getIsLeader()) {
+                    var engagementRange = this.getDatabase()?.getByName(this.getName())?.engagementRange?? 0;
+                    var acquisitionRange = this.getDatabase()?.getByName(this.getName())?.acquisitionRange?? 0;
+
+                    this.getGroupMembers().forEach((unit: Unit) => {
+                        let unitEngagementRange = unit.getDatabase()?.getByName(unit.getName())?.engagementRange?? 0;
+                        let unitAcquisitionRange = unit.getDatabase()?.getByName(unit.getName())?.acquisitionRange?? 0;
+
+                        if (unitEngagementRange > engagementRange)
+                            engagementRange = unitEngagementRange;
+
+                        if (unitAcquisitionRange > acquisitionRange)
+                            acquisitionRange = unitAcquisitionRange;
+                    })
+                }
+   
+                if (engagementRange !== this.#engagementCircle.getRadius())
+                    this.#engagementCircle.setRadius(engagementRange);
+
+                if (acquisitionRange !== this.#acquisitionCircle.getRadius())
+                    this.#acquisitionCircle.setRadius(acquisitionRange);
+                
+                
+                if (this.getSelected())
+                    this.#drawRanges();
+                else
+                    this.#clearRanges();
+            }
         }
     }
 
@@ -1134,29 +1179,39 @@ export class Unit extends CustomMarker {
         }
     }
 
-    #drawRanges() {
-        this.#clearRanges();
-        if (getApp().getMap().getVisibilityOptions()[SHOW_UNITS_RINGS]) {
-            var engagementRange = this.getDatabase()?.getByName(this.getName())?.engagementRange;
-            var acquisitionRange = this.getDatabase()?.getByName(this.getName())?.acquisitionRange
-            if (engagementRange) {
-                var rangeCircle = new Circle(this.getPosition(), { radius: nmToM(engagementRange), color: "#FF0000", weight: 3, opacity: 1 });
-                rangeCircle.addTo(getApp().getMap());
-                this.#rangeRingCircles.push(rangeCircle)
-            }
-        }
-    }
-
     #clearContacts() {
         for (let index in this.#contactsPolylines) {
             getApp().getMap().removeLayer(this.#contactsPolylines[index])
         }
     }
 
-    #clearRanges() {
-        for (let index in this.#rangeRingCircles) {
-            getApp().getMap().removeLayer(this.#rangeRingCircles[index])
+    #drawRanges() {
+        if (getApp().getMap().getVisibilityOptions()[SHOW_UNITS_RINGS] && this.getIsLeader()) {
+            if (!getApp().getMap().hasLayer(this.#acquisitionCircle)) {
+                this.#acquisitionCircle.addTo(getApp().getMap());
+                this.#acquisitionCircle.options.color = this.getCoalition() == "red" ? "#FFAAAA": "#AAAAFF";
+            }
+            
+            this.#acquisitionCircle.setLatLng(this.getPosition());
+
+            if (!getApp().getMap().hasLayer(this.#engagementCircle)) {
+                this.#engagementCircle.addTo(getApp().getMap());
+                this.#engagementCircle.options.color = this.getCoalition();
+            }
+            
+            this.#engagementCircle.setLatLng(this.getPosition());
         }
+        else {
+            this.#clearRanges();
+        }
+    }
+
+    #clearRanges() {
+        if (getApp().getMap().hasLayer(this.#acquisitionCircle))
+            this.#acquisitionCircle.removeFrom(getApp().getMap());
+
+        if (getApp().getMap().hasLayer(this.#engagementCircle))
+            this.#engagementCircle.removeFrom(getApp().getMap());
     }
 
     #drawTarget() {

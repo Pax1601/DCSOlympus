@@ -8,7 +8,8 @@ SEARCH_FOLDER = "D:\\Eagle Dynamics\\DCS World OpenBeta"
 
 sys.path.append("..\..\..\dcs-master\dcs-master")
 
-from dcs.weapons_data import Weapons
+from dcs.vehicles import *
+from dcs.ships import *
 from dcs.planes import *
 from dcs.helicopters import *
         
@@ -26,8 +27,6 @@ if len(sys.argv) > 1:
     # Loads the database 
     with open(filename) as f:
         database = json.load(f)
-        for unit_name in database:
-            database[unit_name]["enabled"] = True
     
     # Loop on all the units in the database
     for unit_name in database:
@@ -49,6 +48,9 @@ if len(sys.argv) > 1:
             else:
                 print(f"Warning, could not find {unit_name} in classes list. Skipping...")
                 continue
+
+            database[unit_name]["acquisitionRange"] = unitmap[found_name].detection_range
+            database[unit_name]["engagementRange"] = unitmap[found_name].threat_range
 
         except Exception as e:
             print(f"Could not find data for aircraft of type {unit_name}: {e}, skipping...")
