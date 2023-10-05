@@ -87,6 +87,7 @@ export class MissionManager {
 
             /* Set the date and time data */
             this.#dateAndTime = data.mission.dateAndTime;
+            data.mission.dateAndTime.time.s -= 1;  //  ED has seconds 1-60 and not 0-59?!
 
             /* Set the coalition countries */
             this.#coalitions = data.mission.coalitions;

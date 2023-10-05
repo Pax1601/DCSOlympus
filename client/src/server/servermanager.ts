@@ -6,6 +6,7 @@ import { LogPanel } from '../panels/logpanel';
 import { Popup } from '../popups/popup';
 import { ConnectionStatusPanel } from '../panels/connectionstatuspanel';
 import { AirbasesData, BullseyesData, GeneralSettings, MissionData, Radio, ServerRequestOptions, TACAN } from '../interfaces';
+import { zeroAppend } from '../other/utils';
 
 export class ServerManager {
     #connected: boolean = false;
@@ -466,6 +467,23 @@ export class ServerManager {
 
             }
         }, ( this.getServerIsPaused() ? 500 : 5000 ));
+
+        //  Mission clock and elapsed time
+        window.setInterval( () => {
+            
+            if ( !this.getConnected() || this.#serverIsPaused ) {
+                return;
+            }
+
+            const elapsedMissionTime = getApp().getMissionManager().getDateAndTime().elapsedTime;
+
+            const csp = (getApp().getPanelsManager().get("connectionStatus") as ConnectionStatusPanel);
+            const mt  = getApp().getMissionManager().getDateAndTime().time;
+
+            csp.setMissionTime( [ mt.h, mt.m, mt.s ].map( n => zeroAppend( n, 2 )).join( ":" ) );
+            csp.setElapsedTime( new Date( elapsedMissionTime * 1000 ).toISOString().substring( 11, 19 ) );
+
+        }, 1000 );
 
         window.setInterval(() => {
             if (!this.getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
