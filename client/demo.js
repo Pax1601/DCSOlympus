@@ -430,7 +430,7 @@ class DemoDataGenerator {
         ret.time = Date.now();
 
         ret.mission.dateAndTime = {
-            time: Date.now(),
+            time: { h: 10, m: 15, s: 34 },
             date: "",
             elapsedTime: (Date.now() - this.startTime) / 1000,
             startTime: 0
