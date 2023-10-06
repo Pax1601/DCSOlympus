@@ -214,7 +214,7 @@ export interface UnitBlueprint {
     acquisitionRange?: number;
     engagementRange?: number;
     refuelsFrom?: string;
-    refuelingType?: string;
+    refuellingType?: string;
 }
 
 export interface UnitSpawnOptions {
