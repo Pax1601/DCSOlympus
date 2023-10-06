@@ -1,4 +1,4 @@
-import { LatLng } from "leaflet";
+import { Circle, LatLng } from "leaflet";
 import { Dropdown } from "./dropdown";
 import { Slider } from "./slider";
 import { UnitDatabase } from "../unit/databases/unitdatabase";
@@ -44,6 +44,10 @@ export class UnitSpawnMenu {
     #unitLoadoutPreviewEl: HTMLDivElement;
     #unitImageEl: HTMLImageElement;
     #unitLoadoutListEl: HTMLDivElement;
+
+    /* Range circle previews */
+    #engagementCircle: Circle;
+    #acquisitionCircle: Circle;
 
     constructor(ID: string, unitDatabase: UnitDatabase, orderByRole: boolean) {
         this.#container = document.getElementById(ID) as HTMLElement;
@@ -154,6 +158,8 @@ export class UnitSpawnMenu {
 
             this.#container.dispatchEvent(new Event("resize"));
             this.#computeSpawnPoints();
+
+            this.showCirclesPreviews();
         })
 
         this.#container.addEventListener("unitLoadoutChanged", () => {
@@ -183,6 +189,13 @@ export class UnitSpawnMenu {
         this.#container.addEventListener("unitLiveryChanged", () => {
 
         })
+
+        document.addEventListener('activeCoalitionChanged', () => {
+            this.showCirclesPreviews();
+        });
+
+        this.#engagementCircle = new Circle(this.spawnOptions.latlng, { radius: 0, weight: 4, opacity: 0.8, fillOpacity: 0, dashArray: "4 8" });
+        this.#acquisitionCircle = new Circle(this.spawnOptions.latlng, { radius: 0, weight: 2, opacity: 0.8, fillOpacity: 0, dashArray: "8 12" });
     }
 
     getContainer() {
@@ -205,6 +218,8 @@ export class UnitSpawnMenu {
 
         this.setCountries();
         this.#container.dispatchEvent(new Event("resize"));
+
+        this.clearCirclesPreviews();
     }
 
     setCountries() {
@@ -225,12 +240,61 @@ export class UnitSpawnMenu {
         //    this.resetUnitLabel();
     }
 
+    showCirclesPreviews() {
+        this.clearCirclesPreviews();
+        
+        var acquisitionRange = this.#unitDatabase.getByName(this.spawnOptions.name)?.acquisitionRange ?? 0;
+        var engagementRange = this.#unitDatabase.getByName(this.spawnOptions.name)?.engagementRange ?? 0;
+
+        this.#acquisitionCircle.setRadius(acquisitionRange);
+        this.#engagementCircle.setRadius(engagementRange);
+        this.#acquisitionCircle.setLatLng(this.spawnOptions.latlng);
+        this.#engagementCircle.setLatLng(this.spawnOptions.latlng);
+
+        switch (getApp().getActiveCoalition()) {
+            case "red":
+                this.#acquisitionCircle.options.color = "#D42121";
+                break;
+            case "blue":
+                this.#acquisitionCircle.options.color = "#017DC1";
+                break;
+            default:
+                this.#acquisitionCircle.options.color = "#111111"
+                break;
+        }
+
+        switch (getApp().getActiveCoalition()) {
+            case "red":
+                this.#engagementCircle.options.color = "#FF5858";
+                break;
+            case "blue":
+                this.#engagementCircle.options.color = "#3BB9FF";
+                break;
+            default:
+                this.#engagementCircle.options.color = "#CFD9E8"
+                break;
+        }
+
+        if (engagementRange > 0)
+            this.#engagementCircle.addTo(getApp().getMap());
+
+        if (acquisitionRange > 0)
+            this.#acquisitionCircle.addTo(getApp().getMap());
+    }
+
+    clearCirclesPreviews() {
+        this.#engagementCircle.removeFrom(getApp().getMap());
+        this.#acquisitionCircle.removeFrom(getApp().getMap());
+    }
+
     setAirbase(airbase: Airbase | undefined) {
         this.spawnOptions.airbase = airbase;
     }
 
     setLatLng(latlng: LatLng) {
         this.spawnOptions.latlng = latlng;
+
+        this.showCirclesPreviews();
     }
 
     setMaxUnitCount(maxUnitCount: number) {

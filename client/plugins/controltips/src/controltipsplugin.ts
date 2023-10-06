@@ -58,7 +58,7 @@ export class ControlTipsPlugin implements OlympusPlugin {
             this.#updateTips();
         });
 
-        document.addEventListener("unitSelection", (ev: CustomEventInit ) => {
+        document.addEventListener("unitsSelection", (ev: CustomEventInit ) => {
             this.#updateTips();
         });
 

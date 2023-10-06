@@ -74,9 +74,11 @@ void GroundUnit::setState(unsigned char newState)
 			break;
 		}
 		case State::SCENIC_AAA: {
+			setTargetPosition(Coords(NULL));
 			break;
 		}
 		case State::MISS_ON_PURPOSE: {
+			setTargetPosition(Coords(NULL));
 			break;
 		}
 		default:

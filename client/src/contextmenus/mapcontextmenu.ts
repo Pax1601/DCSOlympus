@@ -79,7 +79,15 @@ export class MapContextMenu extends ContextMenu {
         this.#groundUnitSpawnMenu.getContainer().addEventListener("hide", () => this.hide());
         this.#navyUnitSpawnMenu.getContainer().addEventListener("hide", () => this.hide());
 
-        this.hide();
+        this.getContainer()?.addEventListener("show", () => this.#aircraftSpawnMenu.showCirclesPreviews());
+        this.getContainer()?.addEventListener("show", () => this.#helicopterSpawnMenu.showCirclesPreviews());
+        this.getContainer()?.addEventListener("show", () => this.#groundUnitSpawnMenu.showCirclesPreviews());
+        this.getContainer()?.addEventListener("show", () => this.#navyUnitSpawnMenu.showCirclesPreviews());
+
+        this.getContainer()?.addEventListener("hide", () => this.#aircraftSpawnMenu.clearCirclesPreviews());
+        this.getContainer()?.addEventListener("hide", () => this.#helicopterSpawnMenu.clearCirclesPreviews());
+        this.getContainer()?.addEventListener("hide", () => this.#groundUnitSpawnMenu.clearCirclesPreviews());
+        this.getContainer()?.addEventListener("hide", () => this.#navyUnitSpawnMenu.clearCirclesPreviews());
     }
 
     /** Show the contextmenu on top of the map, usually at the location where the user has clicked on it.
@@ -188,6 +196,11 @@ export class MapContextMenu extends ContextMenu {
         this.#helicopterSpawnMenu.reset();
         this.#groundUnitSpawnMenu.reset();
         this.#navyUnitSpawnMenu.reset();
+
+        this.#aircraftSpawnMenu.clearCirclesPreviews();
+        this.#helicopterSpawnMenu.clearCirclesPreviews();
+        this.#groundUnitSpawnMenu.clearCirclesPreviews();
+        this.#navyUnitSpawnMenu.clearCirclesPreviews();
 
         this.setVisibleSubMenu(null);
         this.clip();

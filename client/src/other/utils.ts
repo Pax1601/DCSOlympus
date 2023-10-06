@@ -204,6 +204,10 @@ export function mToNm(m: number) {
     return m * 0.000539957;
 }
 
+export function nmToM(nm: number) {
+    return nm / 0.000539957;
+}
+
 export function nmToFt(nm: number) {
     return nm * 6076.12;
 }
