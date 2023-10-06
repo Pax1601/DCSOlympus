@@ -34,8 +34,8 @@ export class GroundUnitEditor extends UnitEditor {
             addDropdownInput(this.contentDiv2, "Era", blueprint.era, ["WW2", "Early Cold War", "Mid Cold War", "Late Cold War", "Modern"]);
             //addStringInput(this.contentDiv2, "Filename", blueprint.filename?? "", "text", (value: string) => {blueprint.filename = value; });
             addStringInput(this.contentDiv2, "Cost", String(blueprint.cost)?? "", "number", (value: string) => {blueprint.cost = parseFloat(value); });
-            addStringInput(this.contentDiv2, "Acquisition range [NM]", String(blueprint.acquisitionRange)?? "", "number", (value: string) => {blueprint.acquisitionRange = parseFloat(value); });
-            addStringInput(this.contentDiv2, "Engagement range [NM]", String(blueprint.engagementRange)?? "", "number", (value: string) => {blueprint.engagementRange = parseFloat(value); });
+            addStringInput(this.contentDiv2, "Acquisition range [m]", String(blueprint.acquisitionRange)?? "", "number", (value: string) => {blueprint.acquisitionRange = parseFloat(value); });
+            addStringInput(this.contentDiv2, "Engagement range [m]", String(blueprint.engagementRange)?? "", "number", (value: string) => {blueprint.engagementRange = parseFloat(value); });
             addStringInput(this.contentDiv2, "Barrel height [m]", String(blueprint.barrelHeight)?? "", "number", (value: string) => {blueprint.barrelHeight = parseFloat(value); });
             addStringInput(this.contentDiv2, "Muzzle velocity [m/s]", String(blueprint.muzzleVelocity)?? "", "number", (value: string) => {blueprint.muzzleVelocity = parseFloat(value); });
             addStringInput(this.contentDiv2, "Aim time [s]", String(blueprint.aimTime)?? "", "number", (value: string) => {blueprint.aimTime = parseFloat(value); });

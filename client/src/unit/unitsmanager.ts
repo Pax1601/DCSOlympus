@@ -23,6 +23,7 @@ export class UnitsManager {
     #units: { [ID: number]: Unit };
     #copiedUnits: UnitData[];
     #selectionEventDisabled: boolean = false;
+    #deselectionEventDisabled: boolean = false;
     #requestDetectionUpdate: boolean = false;
 
     constructor() {
@@ -1048,8 +1049,16 @@ export class UnitsManager {
             getApp().getMap().setState(IDLE);
             document.dispatchEvent(new CustomEvent("clearSelection"));
         }
-        else
-            document.dispatchEvent(new CustomEvent("unitsDeselection", { detail: this.getSelectedUnits() }));
+        else {
+            /* Disable the firing of the selection event for a certain amount of time. This avoids firing many events if many units are selected */
+            if (!this.#deselectionEventDisabled) {
+                window.setTimeout(() => {
+                    document.dispatchEvent(new CustomEvent("unitsDeselection", { detail: this.getSelectedUnits() }));
+                    this.#deselectionEventDisabled = false;
+                }, 100);
+                this.#deselectionEventDisabled = true;
+            }
+        }
     }
 
     #showActionMessage(units: Unit[], message: string) {

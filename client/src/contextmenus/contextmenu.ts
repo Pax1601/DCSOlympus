@@ -29,6 +29,7 @@ export class ContextMenu {
         this.#x = x;
         this.#y = y;
         this.clip();
+        this.getContainer()?.dispatchEvent(new Event("show"));
     }
 
     /** Hide the contextmenu
@@ -36,6 +37,7 @@ export class ContextMenu {
      */
     hide() {
         this.#container?.classList.toggle("hide", true);
+        this.getContainer()?.dispatchEvent(new Event("hide"));
     }
 
     /**

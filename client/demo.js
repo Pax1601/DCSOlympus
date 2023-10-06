@@ -15,7 +15,7 @@ const DEMO_UNIT_DATA = {
         radio: { frequency: 124000000, callsign: 1, callsignNumber: 1 },
         generalSettings: { prohibitAA: false, prohibitAfterburner: false, prohibitAG: false, prohibitAirWpn: false, prohibitJettison: false },
         ammo: [{ quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 }, { quantity: 2, name: "A cool missile with a longer name\0Ciao", guidance: 0, category: 0, missileCategory: 0 }, { quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 } , { quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 } ,  { quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 } , { quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 } , { quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 } , { quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 } , { quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 }   ],
-        contacts: [{ID: 2, detectionMethod: 1}, {ID: 3, detectionMethod: 4}, {ID: 5, detectionMethod: 4}],
+        contacts: [{ID: 2, detectionMethod: 1}, {ID: 3, detectionMethod: 4}, {ID: 4, detectionMethod: 1}],
         activePath: [{lat: 38, lng: -115, alt: 0}, {lat: 38, lng: -114, alt: 0}]
     },
     ["2"]:{ category: "Aircraft", alive: true, human: false, controlled: false, coalition: 1, country: 0, name: "B-52H", unitName: "Cool guy 1-2", groupName: "Cool group 2", state: 1, task: "Being cool",
@@ -31,7 +31,7 @@ const DEMO_UNIT_DATA = {
         radio: { frequency: 124000000, callsign: 1, callsignNumber: 1 },
         generalSettings: { prohibitAA: false, prohibitAfterburner: false, prohibitAG: false, prohibitAirWpn: false, prohibitJettison: false },
         ammo: [{ quantity: 2, name: "A cool missile", guidance: 0, category: 0, missileCategory: 0 } ],
-        contacts: [{ID: 1, detectionMethod: 16}],
+        contacts: [{ID: 4, detectionMethod: 1}],
         activePath: [ ]
     }, ["3"]:{ category: "Helicopter", alive: true, human: false, controlled: false, coalition: 1, country: 0, name: "AH-64D_BLK_II", unitName: "Cool guy 1-4", groupName: "Cool group 3", state: 1, task: "Being cool",
         hasTask: false, position: { lat: 37.1, lng: -116.1, alt: 1000 }, speed: 200, heading: 315 * Math.PI / 180, isTanker: false, isAWACS: false, onOff: true, followRoads: false, fuel: 50, 
@@ -48,7 +48,7 @@ const DEMO_UNIT_DATA = {
         ammo: [{ quantity: 2, name: "A cool missile", guidance: 0, category: 0, missileCategory: 0 } ],
         contacts: [{ID: 1, detectionMethod: 16}],
         activePath: [ ]
-    }, ["4"]:{ category: "GroundUnit", alive: true, human: false, controlled: true, coalition: 0, country: 0, name: "Gepard", unitName: "Cool guy 2-1", groupName: "Cool group 4", state: 1, task: "Being cool",
+    }, ["4"]:{ category: "GroundUnit", alive: true, human: false, controlled: true, coalition: 2, country: 0, name: "Tor 9A331", unitName: "Cool guy 2-1", groupName: "Cool group 4", state: 1, task: "Being cool",
         hasTask: false, position: { lat: 37.2, lng: -116.1, alt: 1000 }, speed: 200, heading: 315 * Math.PI / 180, isTanker: false, isAWACS: false, onOff: true, followRoads: false, fuel: 50, 
         desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
         formationOffset: { x: 0, y: 0, z: 0 },
@@ -65,7 +65,7 @@ const DEMO_UNIT_DATA = {
         activePath: [ ],
         isLeader: true,
         operateAs: 2
-    }, ["5"]:{ category: "GroundUnit", alive: true, human: false, controlled: true, coalition: 0, country: 0, name: "Gepard", unitName: "Cool guy 2-2", groupName: "Cool group 4", state: 1, task: "Being cool",
+    }, ["5"]:{ category: "GroundUnit", alive: true, human: false, controlled: true, coalition: 2, country: 0, name: "Gepard", unitName: "Cool guy 2-2", groupName: "Cool group 4", state: 1, task: "Being cool",
         hasTask: false, position: { lat: 37.21, lng: -116.1, alt: 1000 }, speed: 200, heading: 315 * Math.PI / 180, isTanker: false, isAWACS: false, onOff: true, followRoads: false, fuel: 50, 
         desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
         formationOffset: { x: 0, y: 0, z: 0 },
@@ -98,7 +98,7 @@ const DEMO_UNIT_DATA = {
         ammo: [{ quantity: 2, name: "A cool missile", guidance: 0, category: 0, missileCategory: 0 } ],
         contacts: [{ID: 1, detectionMethod: 16}],
         activePath: [ ]
-    }, ["7"]:{ category: "GroundUnit", alive: true, human: false, controlled: true, coalition: 1, country: 0, name: "T-55", unitName: "Cool guy 2-1", groupName: "Cool group 10", state: 1, task: "Being cool",
+    }, ["7"]:{ category: "GroundUnit", alive: true, human: false, controlled: true, coalition: 1, country: 0, name: "Tor 9A331", unitName: "Cool guy 2-1", groupName: "Cool group 10", state: 1, task: "Being cool",
         hasTask: false, position: { lat: 37.2, lng: -116.2, alt: 1000 }, speed: 200, heading: 315 * Math.PI / 180, isTanker: false, isAWACS: false, onOff: true, followRoads: false, fuel: 50, 
         desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
         formationOffset: { x: 0, y: 0, z: 0 },

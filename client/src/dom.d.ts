@@ -21,6 +21,7 @@ interface CustomEventMap {
     "mapVisibilityOptionsChanged":      CustomEvent<>,
     "commandModeOptionsChanged":        CustomEvent<>,  
     "contactsUpdated":                  CustomEvent<Unit>,
+    "activeCoalitionChanged":           CustomEvent<>
 }
 
 declare global {

@@ -5,7 +5,7 @@ import { CustomMarker } from '../map/markers/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
 import { UnitDatabase } from './databases/unitdatabase';
 import { TargetMarker } from '../map/markers/targetmarker';
-import { DLINK, DataIndexes, GAME_MASTER, HIDE_GROUP_MEMBERS, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, ROEs, RWR, SHOW_UNIT_CONTACTS, SHOW_UNITS_RINGS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, VISUAL, emissionsCountermeasures, reactionsToThreat, states } from '../constants/constants';
+import { DLINK, DataIndexes, GAME_MASTER, HIDE_GROUP_MEMBERS, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, ROEs, RWR, SHOW_UNIT_CONTACTS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, VISUAL, emissionsCountermeasures, reactionsToThreat, states, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS } from '../constants/constants';
 import { DataExtractor } from '../server/dataextractor';
 import { groundUnitDatabase } from './databases/groundunitdatabase';
 import { navyUnitDatabase } from './databases/navyunitdatabase';
@@ -152,8 +152,8 @@ export class Unit extends CustomMarker {
         this.#pathPolyline.addTo(getApp().getMap());
         this.#targetPositionMarker = new TargetMarker(new LatLng(0, 0));
         this.#targetPositionPolyline = new Polyline([], { color: '#FF0000', weight: 3, opacity: 0.5, smoothFactor: 1 });
-        this.#engagementCircle = new Circle(this.getPosition(), { radius: 0, weight: 4, opacity: 0.5, fillOpacity: 0, dashArray: "4 8" });
-        this.#acquisitionCircle = new Circle(this.getPosition(), { radius: 0, weight: 1, opacity: 0.5, fillOpacity: 0, dashArray: "8 4 2 4 2 4" });
+        this.#engagementCircle = new Circle(this.getPosition(), { radius: 0, weight: 4, opacity: 1, fillOpacity: 0, dashArray: "4 8" });
+        this.#acquisitionCircle = new Circle(this.getPosition(), { radius: 0, weight: 2, opacity: 1, fillOpacity: 0, dashArray: "8 12" });
 
         this.on('click', (e) => this.#onClick(e));
         this.on('dblclick', (e) => this.#onDoubleClick(e));
@@ -181,12 +181,10 @@ export class Unit extends CustomMarker {
 
         document.addEventListener("mapVisibilityOptionsChanged", (ev: CustomEventInit) => {
             this.#updateMarker();
-            if (this.getSelected()) {
+            this.#drawRanges();
+
+            if (this.getSelected())
                 this.drawLines();
-                this.#drawRanges();
-            } else {
-                this.#clearRanges();
-            }
         });
     }
 
@@ -211,7 +209,7 @@ export class Unit extends CustomMarker {
                 case DataIndexes.country: this.#country = dataExtractor.extractUInt8(); break;
                 case DataIndexes.name: this.#name = dataExtractor.extractString(); break;
                 case DataIndexes.unitName: this.#unitName = dataExtractor.extractString(); break;
-                case DataIndexes.groupName: this.#groupName = dataExtractor.extractString(); break;
+                case DataIndexes.groupName: this.#groupName = dataExtractor.extractString(); updateMarker = true; break;
                 case DataIndexes.state: this.#state = enumToState(dataExtractor.extractUInt8()); updateMarker = true; break;
                 case DataIndexes.task: this.#task = dataExtractor.extractString(); break;
                 case DataIndexes.hasTask: this.#hasTask = dataExtractor.extractBool(); break;
@@ -240,7 +238,7 @@ export class Unit extends CustomMarker {
                 case DataIndexes.ammo: this.#ammo = dataExtractor.extractAmmo(); break;
                 case DataIndexes.contacts: this.#contacts = dataExtractor.extractContacts(); document.dispatchEvent(new CustomEvent("contactsUpdated", { detail: this })); break;
                 case DataIndexes.activePath: this.#activePath = dataExtractor.extractActivePath(); break;
-                case DataIndexes.isLeader: this.#isLeader = dataExtractor.extractBool(); break;
+                case DataIndexes.isLeader: this.#isLeader = dataExtractor.extractBool(); updateMarker = true; break;
                 case DataIndexes.operateAs: this.#operateAs = enumToCoalition(dataExtractor.extractUInt8()); break;
             }
         }
@@ -349,7 +347,6 @@ export class Unit extends CustomMarker {
             }
             else {
                 this.#clearContacts();
-                this.#clearRanges();
                 this.#clearPath();
                 this.#clearTarget();
             }
@@ -406,7 +403,7 @@ export class Unit extends CustomMarker {
     }
 
     getGroupMembers() {
-        return Object.values(getApp().getUnitsManager().getUnits()).filter((unit: Unit) => { return unit != this && unit.#groupName === this.#groupName; });
+        return Object.values(getApp().getUnitsManager().getUnits()).filter((unit: Unit) => { return unit != this && unit.getGroupName() === this.getGroupName(); });
     }
 
     belongsToCommandedCoalition() {
@@ -532,6 +529,8 @@ export class Unit extends CustomMarker {
         }
 
         this.getElement()?.appendChild(el);
+
+        this.#drawRanges();
     }
 
     /********************** Visibility *************************/
@@ -562,6 +561,12 @@ export class Unit extends CustomMarker {
         /* Hide the marker if necessary*/
         if (getApp().getMap().hasLayer(this) && this.getHidden()) {
             getApp().getMap().removeLayer(this);
+        }
+
+        if (!this.getHidden()) {
+            this.#drawRanges();
+        } else {
+            this.#clearRanges();
         }
     }
 
@@ -757,7 +762,6 @@ export class Unit extends CustomMarker {
             coalition = "blue";
         else if (this.getCoalition() == "blue")
             coalition = "red";
-        //TODO
         getApp().getServerManager().scenicAAA(this.ID, coalition);
     }
 
@@ -767,7 +771,6 @@ export class Unit extends CustomMarker {
             coalition = "blue";
         else if (this.getCoalition() == "blue")
             coalition = "red";
-        //TODO
         getApp().getServerManager().missOnPurpose(this.ID, coalition);
     }
 
@@ -820,11 +823,6 @@ export class Unit extends CustomMarker {
                         getApp().getUnitsManager().deselectAllUnits();
 
                     this.setSelected(!this.getSelected());
-                    const detail = { "detail": { "unit": this } };
-                    if (this.getSelected())
-                        document.dispatchEvent(new CustomEvent("unitSelected", detail));
-                    else
-                        document.dispatchEvent(new CustomEvent("unitDeselection", { "detail": this }));
                 }
             }
 
@@ -893,14 +891,14 @@ export class Unit extends CustomMarker {
         var options: { [key: string]: { text: string, tooltip: string } } = {};
 
         options = {
-            'trail': { text: "Trail", tooltip: "Follow unit in trail formation" },
-            'echelon-lh': { text: "Echelon (LH)", tooltip: "Follow unit in echelon left formation" },
-            'echelon-rh': { text: "Echelon (RH)", tooltip: "Follow unit in echelon right formation" },
-            'line-abreast-lh': { text: "Line abreast (LH)", tooltip: "Follow unit in line abreast left formation" },
-            'line-abreast-rh': { text: "Line abreast (RH)", tooltip: "Follow unit in line abreast right formation" },
-            'front': { text: "Front", tooltip: "Fly in front of unit" },
-            'diamond': { text: "Diamond", tooltip: "Follow unit in diamond formation" },
-            'custom': { text: "Custom", tooltip: "Set a custom formation position" },
+            'trail':            { text: "Trail",                tooltip: "Follow unit in trail formation" },
+            'echelon-lh':       { text: "Echelon (LH)",         tooltip: "Follow unit in echelon left formation" },
+            'echelon-rh':       { text: "Echelon (RH)",         tooltip: "Follow unit in echelon right formation" },
+            'line-abreast-lh':  { text: "Line abreast (LH)",    tooltip: "Follow unit in line abreast left formation" },
+            'line-abreast-rh':  { text: "Line abreast (RH)",    tooltip: "Follow unit in line abreast right formation" },
+            'front':            { text: "Front",                tooltip: "Fly in front of unit" },
+            'diamond':          { text: "Diamond",              tooltip: "Follow unit in diamond formation" },
+            'custom':           { text: "Custom",               tooltip: "Set a custom formation position" },
         }
 
         getApp().getMap().getUnitContextMenu().setOptions(options, (option: string) => {
@@ -995,9 +993,9 @@ export class Unit extends CustomMarker {
                 element.querySelector(".unit")?.toggleAttribute("data-is-dead", !this.#alive);
 
                 /* Set current unit state */
-                if (this.#human)                       // Unit is human
+                if (this.#human)                                // Unit is human
                     element.querySelector(".unit")?.setAttribute("data-state", "human");
-                else if (!this.#controlled)            // Unit is under DCS control (not Olympus)
+                else if (!this.#controlled)                     // Unit is under DCS control (not Olympus)
                     element.querySelector(".unit")?.setAttribute("data-state", "dcs");
                 else if ((this.getCategory() == "Aircraft" || this.getCategory() == "Helicopter") && !this.#hasTask)
                     element.querySelector(".unit")?.setAttribute("data-state", "no-task");
@@ -1052,7 +1050,6 @@ export class Unit extends CustomMarker {
                     if (hotgroupEl)
                         hotgroupEl.innerText = String(this.#hotgroup);
                 }
-
             }
 
             /* Set vertical offset for altitude stacking */
@@ -1061,37 +1058,7 @@ export class Unit extends CustomMarker {
 
             /* Circles don't like to be updated when the map is zooming */
             if (!getApp().getMap().isZooming()) {
-                var engagementRange = 0;
-                var acquisitionRange = 0;
-
-                /* Get the acquisition and engagement ranges of the entire group, not for each unit */
-                if (this.getIsLeader()) {
-                    var engagementRange = this.getDatabase()?.getByName(this.getName())?.engagementRange?? 0;
-                    var acquisitionRange = this.getDatabase()?.getByName(this.getName())?.acquisitionRange?? 0;
-
-                    this.getGroupMembers().forEach((unit: Unit) => {
-                        let unitEngagementRange = unit.getDatabase()?.getByName(unit.getName())?.engagementRange?? 0;
-                        let unitAcquisitionRange = unit.getDatabase()?.getByName(unit.getName())?.acquisitionRange?? 0;
-
-                        if (unitEngagementRange > engagementRange)
-                            engagementRange = unitEngagementRange;
-
-                        if (unitAcquisitionRange > acquisitionRange)
-                            acquisitionRange = unitAcquisitionRange;
-                    })
-                }
-   
-                if (engagementRange !== this.#engagementCircle.getRadius())
-                    this.#engagementCircle.setRadius(engagementRange);
-
-                if (acquisitionRange !== this.#acquisitionCircle.getRadius())
-                    this.#acquisitionCircle.setRadius(acquisitionRange);
-                
-                
-                if (this.getSelected())
-                    this.#drawRanges();
-                else
-                    this.#clearRanges();
+                this.#drawRanges();
             }
         }
     }
@@ -1186,23 +1153,83 @@ export class Unit extends CustomMarker {
     }
 
     #drawRanges() {
-        if (getApp().getMap().getVisibilityOptions()[SHOW_UNITS_RINGS] && this.getIsLeader()) {
-            if (!getApp().getMap().hasLayer(this.#acquisitionCircle)) {
-                this.#acquisitionCircle.addTo(getApp().getMap());
-                this.#acquisitionCircle.options.color = this.getCoalition() == "red" ? "#FFAAAA": "#AAAAFF";
-            }
-            
-            this.#acquisitionCircle.setLatLng(this.getPosition());
+        var engagementRange = 0;
+        var acquisitionRange = 0;
 
-            if (!getApp().getMap().hasLayer(this.#engagementCircle)) {
-                this.#engagementCircle.addTo(getApp().getMap());
-                this.#engagementCircle.options.color = this.getCoalition();
+        /* Get the acquisition and engagement ranges of the entire group, not for each unit */
+        if (this.getIsLeader()) {
+            var engagementRange = this.getDatabase()?.getByName(this.getName())?.engagementRange?? 0;
+            var acquisitionRange = this.getDatabase()?.getByName(this.getName())?.acquisitionRange?? 0;
+
+            this.getGroupMembers().forEach((unit: Unit) => {
+                if (unit.getAlive()) {
+                    let unitEngagementRange = unit.getDatabase()?.getByName(unit.getName())?.engagementRange?? 0;
+                    let unitAcquisitionRange = unit.getDatabase()?.getByName(unit.getName())?.acquisitionRange?? 0;
+
+                    if (unitEngagementRange > engagementRange)
+                        engagementRange = unitEngagementRange;
+
+                    if (unitAcquisitionRange > acquisitionRange)
+                        acquisitionRange = unitAcquisitionRange;
+                }
+            })
+
+            if (acquisitionRange !== this.#acquisitionCircle.getRadius())
+                this.#acquisitionCircle.setRadius(acquisitionRange); 
+
+            if (engagementRange !== this.#engagementCircle.getRadius())
+                this.#engagementCircle.setRadius(engagementRange);
+
+            this.#engagementCircle.options.fillOpacity = this.getSelected()? 0.3: 0;
+
+            /* Acquisition circles */
+            var shortRangeCheck = (engagementRange > nmToM(3) && acquisitionRange > nmToM(3) || !getApp().getMap().getVisibilityOptions()[HIDE_UNITS_SHORT_RANGE_RINGS]);
+
+            if (getApp().getMap().getVisibilityOptions()[SHOW_UNITS_ACQUISITION_RINGS] && shortRangeCheck && (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, IRST, RWR].includes(value)))) {
+                if (!getApp().getMap().hasLayer(this.#acquisitionCircle)) {
+                    this.#acquisitionCircle.addTo(getApp().getMap());
+                    switch (this.getCoalition()) {
+                        case "red":
+                            this.#acquisitionCircle.options.color = "#D42121";
+                            break;
+                        case "blue":
+                            this.#acquisitionCircle.options.color = "#017DC1";
+                            break;
+                        default:
+                            this.#acquisitionCircle.options.color = "#111111"
+                            break;
+                    }
+                }
+                this.#acquisitionCircle.setLatLng(this.getPosition());
+            }
+            else {
+                if (getApp().getMap().hasLayer(this.#acquisitionCircle))
+                    this.#acquisitionCircle.removeFrom(getApp().getMap());
             }
             
-            this.#engagementCircle.setLatLng(this.getPosition());
-        }
-        else {
-            this.#clearRanges();
+            /* Engagement circles */
+            if (getApp().getMap().getVisibilityOptions()[SHOW_UNITS_ENGAGEMENT_RINGS] && shortRangeCheck && (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, IRST, RWR].includes(value)))) {
+                if (!getApp().getMap().hasLayer(this.#engagementCircle)) {
+                    this.#engagementCircle.addTo(getApp().getMap());
+                    switch (this.getCoalition()) {
+                        case "red":
+                            this.#engagementCircle.options.color = "#FF5858";
+                            break;
+                        case "blue":
+                            this.#engagementCircle.options.color = "#3BB9FF";
+                            break;
+                        default:
+                            this.#engagementCircle.options.color = "#CFD9E8"
+                            break;
+                    }
+                }
+                this.#engagementCircle.setLatLng(this.getPosition());
+            }
+            else {
+                if (getApp().getMap().hasLayer(this.#engagementCircle))
+                    this.#engagementCircle.removeFrom(getApp().getMap());
+            }
+        
         }
     }
 

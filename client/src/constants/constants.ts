@@ -144,19 +144,21 @@ export const mapLayers = {
 export const IDLE = "Idle";
 export const MOVE_UNIT = "Move unit";
 export const COALITIONAREA_DRAW_POLYGON = "Draw Coalition Area";
-export const visibilityControls: string[] = ["human", "dcs", "aircraft", "groundunit-sam", "groundunit-other", "navyunit", "airbase"];
-export const visibilityControlsTypes: string[][] = [["human"], ["dcs"], ["aircraft"], ["groundunit-sam", "groundunit-sam-radar", "groundunit-sam-launcher"], ["groundunit-other", "groundunit-ewr"], ["navyunit"], ["airbase"]];
-export const visibilityControlsTooltips: string[] = ["Toggle human players visibility", "Toggle DCS controlled units visibility", "Toggle aircrafts visibility", "Toggle SAM units visibility", "Toggle ground units (not SAM) visibility", "Toggle navy units visibility", "Toggle airbases visibility"];
+export const visibilityControls: string[] = ["human", "dcs", "aircraft", "helicopter", "groundunit-sam", "groundunit-other", "navyunit", "airbase"];
+export const visibilityControlsTypes: string[][] = [["human"], ["dcs"], ["aircraft"], ["helicopter"], ["groundunit-sam", "groundunit-sam-radar", "groundunit-sam-launcher"], ["groundunit-other", "groundunit-ewr"], ["navyunit"], ["airbase"]];
+export const visibilityControlsTooltips: string[] = ["Toggle human players visibility", "Toggle DCS controlled units visibility", "Toggle aircrafts visibility", "Toggle helicopter visibility", "Toggle SAM units visibility", "Toggle ground units (not SAM) visibility", "Toggle navy units visibility", "Toggle airbases visibility"];
 
 export const IADSTypes = ["AAA", "MANPADS", "SAM Site", "Radar"];
 export const IADSDensities: {[key: string]: number}= {"AAA": 0.8, "MANPADS": 0.3, "SAM Site": 0.1, "Radar": 0.05};
 
-export const HIDE_GROUP_MEMBERS = "Hide group members when zoomed out";
-export const SHOW_UNIT_LABELS   = "Show unit labels";
-export const SHOW_UNIT_CONTACTS = "Show selected units contact lines";
-export const SHOW_UNITS_RINGS   = "Show selected units threat range rings";
-export const SHOW_UNIT_PATHS    = "Show selected unit paths";
-export const SHOW_UNIT_TARGETS  = "Show selected unit targets";
+export const HIDE_GROUP_MEMBERS             = "Hide group members when zoomed out";
+export const SHOW_UNIT_LABELS               = "Show unit labels (L)";
+export const SHOW_UNITS_ENGAGEMENT_RINGS    = "Show units threat range rings (Q)";
+export const HIDE_UNITS_SHORT_RANGE_RINGS   = "Hide short range units threat range rings (R)";
+export const SHOW_UNITS_ACQUISITION_RINGS   = "Show units detection range rings (E)";
+export const SHOW_UNIT_CONTACTS             = "Show selected units contact lines";
+export const SHOW_UNIT_PATHS                = "Show selected unit paths";
+export const SHOW_UNIT_TARGETS              = "Show selected unit targets";
 
 export enum DataIndexes {
     startOfData = 0,
