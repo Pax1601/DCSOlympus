@@ -203,3 +203,9 @@ export enum DataIndexes {
     operateAs,
     endOfData = 255
 };
+
+export const MGRS_PRECISION_10KM = 2;
+export const MGRS_PRECISION_1KM  = 3;
+export const MGRS_PRECISION_100M = 4;
+export const MGRS_PRECISION_10M  = 5;
+export const MGRS_PRECISION_1M   = 6;

@@ -22,6 +22,7 @@
 }
 
 #connection-status-panel .time-display {
+	cursor:pointer;
 	display:none;
 	font-weight: bold;
 	text-decoration: none;

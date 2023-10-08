@@ -10,6 +10,9 @@ import { Dropdown } from "../controls/dropdown";
 import { navyUnitDatabase } from "../unit/databases/navyunitdatabase";
 import { DateAndTime, UnitBlueprint } from "../interfaces";
 
+// comment
+const usng = require( "usng.js" );
+
 export function bearing(lat1: number, lon1: number, lat2: number, lon2: number) {
     const φ1 = deg2rad(lat1); // φ, λ in radians
     const φ2 = deg2rad(lat2);
@@ -156,6 +159,49 @@ export function editDistance(s1: string, s2: string) {
             costs[s2.length] = lastValue;
     }
     return costs[s2.length];
+}
+
+export type MGRS = {
+    bandLetter: string,
+    columnLetter: string,
+    easting: string,
+    groups: string[],
+    northing: string,
+    precision: number,
+    rowLetter: string,
+    string: string,
+    zoneNumber: string
+}
+
+export function latLngToMGRS( lat:number, lng:number, precision:number = 4 ): MGRS | false {
+
+    if ( precision < 0 || precision > 6 ) {
+        console.error( "latLngToMGRS: precision must be a number >= 0 and <= 6.  Given precision: " + precision );
+        return false;
+    }
+    
+    const mgrs     = new usng.Converter().LLtoMGRS( lat, lng, precision );
+    const match    = mgrs.match( new RegExp( `^(\\d{2})([A-Z])([A-Z])([A-Z])(\\d+)$` ) );
+    const easting  = match[5].substr(0,match[5].length/2);
+    const northing = match[5].substr(match[5].length/2);
+
+    let output:MGRS = {
+        bandLetter: match[2],
+        columnLetter: match[3],
+        groups: [ match[1] + match[2], match[3] + match[4], easting, northing ],
+        easting: easting,
+        northing: northing,
+        precision: precision,
+        rowLetter: match[4],
+        string: match[0],
+        zoneNumber: match[1]
+    }
+    
+    return output;
+}
+
+export function latLngToUTM( lat:number, lng:number ) {
+    return new usng.Converter().LLtoUTM( lat, lng );
 }
 
 export function latLngToMercator(lat: number, lng: number): {x: number, y: number} {

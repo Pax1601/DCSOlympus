@@ -1,9 +1,116 @@
-#mouse-info-panel>* {
+#mouse-info-panel .mouse-tool {
 	background-color: var(--background-grey);
 	border-radius: var(--border-radius-sm);
+	display:flex;
+	flex-flow:column wrap;
+	row-gap: 4px;
 	padding: 6px;
 }
 
+#mouse-info-panel .mouse-tool .mouse-tool-item {
+	align-items: center;
+	display:flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
+}
+
+
+#mouse-info-panel svg {
+	padding: 3px;
+	height: 100%;
+	width: 100%;
+}
+
+#mouse-info-panel svg > * {
+	fill: black;
+	stroke: black;
+}
+
+#mouse-info-panel .mouse-tool .mouse-tool-item > * {
+	width:fit-content;
+}
+
+#mouse-info-panel .mouse-tool .mouse-tool-item > *:last-child {
+	text-align: right;
+	width:100%;
+}
+
+#mouse-info-panel .svg-icon, #mouse-info-panel .mouse-tool .mouse-tool-item :first-child {
+	align-items: center;
+	background-color: white;
+	border-radius: var(--border-radius-sm);
+	color: var(--background-steel);
+	display: flex;
+	font-size: 15.6px;
+	font-weight: bolder;
+	height: 22px;
+	justify-content: center;
+	text-transform: uppercase;
+	width: 22px;
+}
+
+#mouse-info-panel .mouse-tool .mouse-tool-item [data-label]::after {
+	border-radius: var(--border-radius-sm);
+	content: attr(data-label);
+}
+
+
+#mouse-info-panel .mouse-tool .mouse-tool-item :last-child {
+	color: var(--background-offwhite);
+	font-weight: bold;
+	font-size: 13px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	width:fit-content;
+}
+
+
+/*  Bullseye info  */
+
+#mouse-info-panel .mouse-tool .mouse-tool-item [data-label][data-coalition="blue"] {
+	background-color: var(--primary-blue);
+}
+
+#mouse-info-panel .mouse-tool .mouse-tool-item [data-label][data-coalition="red"] {
+	background-color: var(--primary-red);
+}
+
+.br-info::after {
+    content: attr(data-bearing) '\00B0  / ' attr(data-distance) " " attr(data-distance-units);
+}
+
+.br-info[data-coalition="blue"]::after {
+    color: var(--primary-blue)
+}
+
+.br-info[data-coalition="red"]::after {
+    color: var(--primary-red)
+}
+
+.br-info[data-message]::after {
+    content: attr(data-message);
+}
+
+
+/*  Coordinates  */
+#coordinates-tool .elevation::after {
+	content: attr(data-value)
+}
+
+#coordinates-tool[data-location-system] [data-location-system] {
+	cursor:pointer;
+	display:none;
+}
+
+#coordinates-tool[data-location-system="LatLng"] [data-location-system="LatLng"],
+#coordinates-tool[data-location-system="MGRS"] [data-location-system="MGRS"],
+#coordinates-tool[data-location-system="UTM"] [data-location-system="UTM"] {
+	display:flex;
+}
+
+
+/* 
 #mouse-info-panel dl {
 	margin-bottom: 4px;
 	row-gap: 5px;
@@ -14,7 +121,7 @@
 	width: 30%;
 }
 
-#mouse-info-panel dt::after {
+#mouse-info-panel dt::after, #coordinates-tool [data-label] {
 	align-items: center;
 	background-color: white;
 	border-radius: var(--border-radius-sm);
@@ -28,6 +135,11 @@
 	padding: 4px;
 	text-transform: uppercase;
 	width: 16px;
+}
+
+#coordinates-tool [data-label] {
+	height:24px;
+	width:24px;
 }
 
 #mouse-info-panel #measuring-tool dt {
@@ -48,7 +160,7 @@
 	stroke: black;
 }
 
-#mouse-info-panel dt[data-label]::after {
+#mouse-info-panel [data-label]::after {
 	content: attr(data-label);
 }
 
@@ -60,7 +172,7 @@
 	background-color: var(--primary-red);
 }
 
-#mouse-info-panel dt[data-tooltip]:hover::before {
+#mouse-info-panel [data-tooltip]:hover::before {
 	background-color: var(--background-grey);
 	border-radius: 5px;
 	content: attr(data-tooltip);
@@ -72,8 +184,30 @@
 	white-space: nowrap;
 }
 
-#mouse-info-panel dd {
-	width: 70%;
+#coordinates-tool[data-location-system] [data-location-system] {
+	display:none;
+	flex-direction: column;
+}
+
+#coordinates-tool[data-location-system="LatLng"] [data-location-system="LatLng"],
+#coordinates-tool[data-location-system="MGRS"] [data-location-system="MGRS"] {
+	display:flex;
+}
+
+#coordinates-tool > * > * {
+	align-items: center;
+	display:flex;
+	flex-flow: row nowrap;
+}
+
+#coordinates-tool > * > * > * {
+	display:table-cell;
+	width:fit-content;
+}
+
+#coordinates-tool > * > * > :last-child {
+	text-align: right;
+	width:100%;
 }
 
 .br-info::after {
@@ -116,4 +250,4 @@
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	color: var(--background-offwhite);
-}
+} */
