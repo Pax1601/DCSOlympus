@@ -45,7 +45,7 @@ export class AirUnitEditor extends UnitEditor {
             addStringInput(this.contentDiv2, "Filename", blueprint.filename ?? "", "text", (value: string) => { blueprint.filename = value; });
             addStringInput(this.contentDiv2, "Cost", String(blueprint.cost) ?? "", "number", (value: string) => { blueprint.cost = parseFloat(value); });
             addStringInput(this.contentDiv2, "Rufels from", String(blueprint.refuelsFrom) ?? "", "text", (value: string) => { blueprint.refuelsFrom = value; });
-            addStringInput(this.contentDiv2, "Refueling type", String(blueprint.refuelingType) ?? "", "text", (value: string) => { blueprint.refuelingType = value; });
+            addStringInput(this.contentDiv2, "Refuelling type", String(blueprint.refuellingType) ?? "", "text", (value: string) => { blueprint.refuellingType = value; });
 
             /* Add a scrollable list of loadouts that the user can edit */
             var title = document.createElement("label");

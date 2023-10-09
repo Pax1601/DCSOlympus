@@ -53,7 +53,7 @@ class AirUnitEditor extends uniteditor_1.UnitEditor {
             (0, utils_1.addStringInput)(this.contentDiv2, "Filename", (_a = blueprint.filename) !== null && _a !== void 0 ? _a : "", "text", (value) => { blueprint.filename = value; });
             (0, utils_1.addStringInput)(this.contentDiv2, "Cost", (_b = String(blueprint.cost)) !== null && _b !== void 0 ? _b : "", "number", (value) => { blueprint.cost = parseFloat(value); });
             (0, utils_1.addStringInput)(this.contentDiv2, "Rufels from", (_c = String(blueprint.refuelsFrom)) !== null && _c !== void 0 ? _c : "", "text", (value) => { blueprint.refuelsFrom = value; });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Refueling type", (_d = String(blueprint.refuelingType)) !== null && _d !== void 0 ? _d : "", "text", (value) => { blueprint.refuelingType = value; });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Refuelling type", (_d = String(blueprint.refuellingType)) !== null && _d !== void 0 ? _d : "", "text", (value) => { blueprint.refuellingType = value; });
             /* Add a scrollable list of loadouts that the user can edit */
             var title = document.createElement("label");
             title.innerText = "Loadouts";

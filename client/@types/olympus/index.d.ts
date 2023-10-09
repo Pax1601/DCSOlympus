@@ -553,7 +553,7 @@ declare module "interfaces" {
         acquisitionRange?: number;
         engagementRange?: number;
         refuelsFrom?: string;
-        refuelingType?: string;
+        refuellingType?: string;
     }
     export interface UnitSpawnOptions {
         roleType: string;
