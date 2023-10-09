@@ -1,3 +1,7 @@
+:root {
+	--right-panel-width:190px;
+}
+
 /* Page style */
 #map-container {
 	height: 100%;
@@ -68,7 +72,7 @@
 	font-size: 12px;
 	position: absolute;
 	right: 10px;
-	width: 180px;
+	width: var( --right-panel-width );
 	z-index: 9999;
 }
 
@@ -80,7 +84,7 @@
 	position: absolute;
 	right: 10px;
 	row-gap: 10px;
-	width: 180px;
+	width: var( --right-panel-width );
 	z-index: 9999;
 }
 

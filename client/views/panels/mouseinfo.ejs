@@ -1,36 +1,63 @@
 <div id="mouse-info-panel" class="ol-panel" oncontextmenu="return false;">
 
-    <div id="measuring-tool" class="hide">
-        <dl class="ol-data-grid">
-            <dt id="ref-measure-position" data-tooltip="CTRL-click on the map to activate the measuring tool">
-                <img src="/resources/theme/images/icons/pin.svg" inject-svg>
-            </dt>
-            <dd id="measure-position" class="br-info" data-bearing="---" data-distance="---" data-distance-units="NM"></dd>
-            <dt id="ref-unit-position" data-tooltip="Bearing/range from selected unit">
-                <img src="/resources/theme/images/icons/plane.svg" inject-svg>
-            </dt>
-            <dd id="unit-position" class="br-info" data-bearing="---" data-distance="---" data-distance-units="NM"></dd>
-        </dl>
+    <div id="measuring-tool" class="mouse-tool hide">
+        <div class="mouse-tool-item">
+            <div id="ref-measure-position" class="svg-icon"><img src="/resources/theme/images/icons/pin.svg" inject-svg></div>
+            <div id="measure-position" class="br-info" data-bearing="---" data-distance="---" data-distance-units="NM"></div>
+        </div>
     </div>
 
-    <div id="bullseyes-tool">
-        <dl class="ol-data-grid">
-            <dt id="ref-bullseye-2" data-tooltip="Bearing/range from this bullseye" data-label="BE" data-coalition="blue"></dt>
-            <dd id="bullseye-2" class="br-info" data-coalition="blue" data-bearing="---" data-distance="---" data-distance-units="NM"></dd>
-            <dt id="ref-bullseye-1" data-tooltip="Bearing/range from this bullseye" data-label="BE" data-coalition="red"></dt>
-            <dd id="bullseye-1" class="br-info" data-coalition="red" data-bearing="---" data-distance="---" data-distance-units="NM"></dd>
-        </dl>
+    <div id="unit-bullseye-tool" class="mouse-tool hide">
+        <div class="mouse-tool-item">
+            <div id="ref-unit-position" class="svg-icon" data-tooltip="Bearing/range from selected unit"><img src="/resources/theme/images/icons/plane.svg" inject-svg></div>
+            <div id="unit-position" class="br-info" data-bearing="---" data-distance="---" data-distance-units="NM"></div>
+        </div>
+    </div>
+
+    <div id="bullseyes-tool" class="mouse-tool">
+        <div class="mouse-tool-item">
+            <div id="ref-bullseye-2" data-tooltip="Bearing/range from this bullseye" data-label="BE" data-coalition="blue"></div>
+            <div id="bullseye-2" class="br-info" data-coalition="blue" data-bearing="---" data-distance="---" data-distance-units="NM"></div>
+        </div>
+        <div class="mouse-tool-item">
+            <div id="ref-bullseye-1" data-tooltip="Bearing/range from this bullseye" data-label="BE" data-coalition="red"></div>
+            <div id="bullseye-1" class="br-info" data-coalition="red" data-bearing="---" data-distance="---" data-distance-units="NM"></div>
+        </div>
     </div>
  
-    <div id="coordinates-tool">
-        <dl class="ol-data-grid">
-            <dt id="ref-mouse-position-latitude" data-label="?"></dt>
-            <dd id="mouse-position-latitude" class="coordinates"></dd>
-            <dt id="ref-mouse-position-longitude" data-label="?"></dt>
-            <dd id="mouse-position-longitude" class="coordinates"></dd>
-            <dt id="ref-mouse-position-elevation" data-label="H"></dt>
-            <dd id="mouse-position-elevation" class="elevation" data-value="---"></dd>
-        </dl>
+    <div id="coordinates-tool" class="mouse-tool" data-location-system="LatLng">
+
+        <div class="mouse-tool-item" data-location-system="MGRS">
+            <div id="ref-mouse-position-mgrs"></div>
+            <div id="mouse-position-mgrs" class="coordinates"></div>
+        </div>
+
+        <div class="mouse-tool-item" data-location-system="LatLng">
+            <div id="ref-mouse-position-latitude" data-location-system="LatLng"></div>
+            <div id="mouse-position-latitude" class="coordinates" data-location-system="LatLng"></div>
+        </div>
+
+        <div class="mouse-tool-item" data-location-system="LatLng">
+            <div id="ref-mouse-position-longitude" data-location-system="LatLng"></div>
+            <div id="mouse-position-longitude" class="coordinates" data-location-system="LatLng"></div>
+        </div>
+
+        <div class="mouse-tool-item" data-location-system="UTM">
+            <div id="ref-mouse-position-utm-northing" data-location-system="UTM"></div>
+            <div id="mouse-position-utm-northing" class="coordinates" data-location-system="UTM"></div>
+        </div>
+
+        <div class="mouse-tool-item" data-location-system="UTM">
+            <div id="ref-mouse-position-utm-easting" data-location-system="UTM"></div>
+            <div id="mouse-position-utm-easting" class="coordinates" data-location-system="UTM"></div>
+        </div>
+
+        <div>
+            <div class="mouse-tool-item">
+                <div id="ref-mouse-position-elevation" data-label="H"></div>
+                <div id="mouse-position-elevation" class="elevation" data-value="---"></div>
+            </div>
+        </div>
     </div>
 
 </div>

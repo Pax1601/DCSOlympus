@@ -59,7 +59,7 @@ class ControlTipsPlugin {
             __classPrivateFieldSet(this, _ControlTipsPlugin_cursorIsHoveringOverUnit, false, "f");
             __classPrivateFieldGet(this, _ControlTipsPlugin_instances, "m", _ControlTipsPlugin_updateTips).call(this);
         });
-        document.addEventListener("unitSelection", (ev) => {
+        document.addEventListener("unitsSelection", (ev) => {
             __classPrivateFieldGet(this, _ControlTipsPlugin_instances, "m", _ControlTipsPlugin_updateTips).call(this);
         });
         document.addEventListener("mapVisibilityOptionsChanged", () => {
@@ -183,6 +183,26 @@ _ControlTipsPlugin_element = new WeakMap(), _ControlTipsPlugin_app = new WeakMap
                     "key": `Mouse2`,
                     "action": "Set Neutral",
                     "mouseoverSelector": "#coalition-switch .ol-switch-fill"
+                },
+                {
+                    "key": `Mouse1`,
+                    "action": "Toggle time display",
+                    "mouseoverSelector": "#connection-status-panel[data-is-connected] #connection-status-message abbr"
+                },
+                {
+                    "key": `Mouse1 or Z`,
+                    "action": "Change location system",
+                    "mouseoverSelector": "#coordinates-tool, #coordinates-tool *"
+                },
+                {
+                    "key": `Comma`,
+                    "action": "Decrease precision",
+                    "mouseoverSelector": `#coordinates-tool[data-location-system="MGRS"], #coordinates-tool[data-location-system="MGRS"] *`
+                },
+                {
+                    "key": `Period`,
+                    "action": "Increase precision",
+                    "mouseoverSelector": `#coordinates-tool[data-location-system="MGRS"], #coordinates-tool[data-location-system="MGRS"] *`
                 }
             ]
         },
@@ -325,7 +345,7 @@ _ControlTipsPlugin_element = new WeakMap(), _ControlTipsPlugin_app = new WeakMap
                 return false;
             }
         }
-        if (tipsIncludesActiveMouseover && typeof tip.mouseoverSelector !== "string" && !__classPrivateFieldGet(this, _ControlTipsPlugin_mouseoverElement, "f").matches(tip.mouseoverSelector)) {
+        if (tipsIncludesActiveMouseover && (typeof tip.mouseoverSelector !== "string" || !__classPrivateFieldGet(this, _ControlTipsPlugin_mouseoverElement, "f").matches(tip.mouseoverSelector))) {
             return false;
         }
         if (!tipsIncludesActiveMouseover && typeof tip.mouseoverSelector === "string") {

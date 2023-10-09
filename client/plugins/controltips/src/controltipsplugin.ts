@@ -189,6 +189,26 @@ export class ControlTipsPlugin implements OlympusPlugin {
                         "key": `Mouse2`,
                         "action": "Set Neutral",
                         "mouseoverSelector": "#coalition-switch .ol-switch-fill"
+                    },
+                    {
+                        "key": `Mouse1`,
+                        "action": "Toggle time display",
+                        "mouseoverSelector": "#connection-status-panel[data-is-connected] #connection-status-message abbr"
+                    },
+                    {
+                        "key": `Mouse1 or Z`,
+                        "action": "Change location system",
+                        "mouseoverSelector": "#coordinates-tool, #coordinates-tool *"
+                    },
+                    {
+                        "key": `Comma`,
+                        "action": "Decrease precision",
+                        "mouseoverSelector": `#coordinates-tool[data-location-system="MGRS"], #coordinates-tool[data-location-system="MGRS"] *`
+                    },
+                    {
+                        "key": `Period`,
+                        "action": "Increase precision",
+                        "mouseoverSelector": `#coordinates-tool[data-location-system="MGRS"], #coordinates-tool[data-location-system="MGRS"] *`
                     }
                 ]
             },
@@ -347,7 +367,7 @@ export class ControlTipsPlugin implements OlympusPlugin {
                 }
             }
 
-            if ( tipsIncludesActiveMouseover && typeof tip.mouseoverSelector !== "string" && !this.#mouseoverElement.matches( tip.mouseoverSelector ) ) {
+            if ( tipsIncludesActiveMouseover && ( typeof tip.mouseoverSelector !== "string" || !this.#mouseoverElement.matches( tip.mouseoverSelector ) ) ) {
                 return false;
             }
 

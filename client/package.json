@@ -28,7 +28,6 @@
     "@turf/turf": "^6.5.0",
     "@types/formatcoords": "^1.1.0",
     "@types/geojson": "^7946.0.10",
-    "@types/gtag.js": "^0.0.12",
     "@types/leaflet": "^1.9.0",
     "@types/node": "^18.16.1",
     "@types/sortablejs": "^1.15.0",
@@ -39,6 +38,7 @@
     "cp": "^0.2.0",
     "esmify": "^2.1.1",
     "formatcoords": "^1.1.3",
+    "geodesy": "^1.1.2",
     "leaflet": "^1.9.3",
     "leaflet-control-mini-map": "^0.4.0",
     "leaflet-path-drag": "*",
@@ -51,6 +51,7 @@
     "typedoc": "^0.24.8",
     "typedoc-umlclass": "^0.7.1",
     "typescript": "^4.9.4",
+    "usng.js": "^0.4.5",
     "watchify": "^4.0.0"
   }
 }
