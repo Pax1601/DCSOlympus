@@ -35,10 +35,8 @@ if len(sys.argv) > 1:
         filename = '..\\..\\client\\public\\databases\\units\\navyunitdatabase.json' 
 
     # Loads the database 
-    with open(filename) as f:
+    with open(filename, encoding="utf-8") as f:
         database = json.load(f)
-        for unit_name in database:
-            database[unit_name]["enabled"] = True
     
     # Loop on all the units in the database
     for unit_name in database:
