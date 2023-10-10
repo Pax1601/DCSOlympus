@@ -308,8 +308,8 @@ export class UnitControlPanel extends Panel {
             this.#advancedSettingsDialog.toggleAttribute("data-show-tasking", tanker || AWACS);
             this.#advancedSettingsDialog.toggleAttribute("data-show-tanker", tanker);
             this.#advancedSettingsDialog.toggleAttribute("data-show-AWACS", AWACS);
-            this.#advancedSettingsDialog.toggleAttribute("data-show-TACAN", tanker);
-            this.#advancedSettingsDialog.toggleAttribute("data-show-radio", tanker || AWACS);
+            this.#advancedSettingsDialog.toggleAttribute("data-show-TACAN", tanker || ["Aircraft Carrier", "Super Aircraft Carrier"].includes(units[0].getType()));
+            this.#advancedSettingsDialog.toggleAttribute("data-show-radio", tanker || AWACS || ["Aircraft Carrier", "Super Aircraft Carrier"].includes(units[0].getType()));
 
             /* Set common properties */
             // Name
