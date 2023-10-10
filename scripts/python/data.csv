@@ -1,0 +1,424 @@
+Name,Enabled,Database,Type,Label,Short label,Coalition,Era,Acquisition range [m],Engagement range [m],Description,Abilities (comma separate values),Notes,ChatGPT description
+A-10C_2,yes,Aircraft,Aircraft,A-10C Warthog,10,blue,Late Cold War,,,"2 jet engine, straight wing, 1 crew, attack aircraft. Warthog",Boom AAR,"Fox 2, gun, Dumb bombs, smart bombs, rockets, ATGMs, can AAR, subsonic,",
+A-20G,yes,Aircraft,Aircraft,A-20G Havoc,A20,,WW2,,,"2 propeller, straight wing, 3 crew, medium attack bomber. Havoc",,"Dumb bomb, gun, subsonic,",
+A-50,yes,Aircraft,Aircraft,A-50 Mainstay,A50,red,Late Cold War,,,"4 jet engine, swept wing, 15 crew. NATO reporting name: Mainstay",Airbourne early warning,"Airbourne early warning, subsonic,",
+AJS37,yes,Aircraft,Aircraft,AJS37 Viggen,37,blue,Mid Cold War,,,"Single jet engine, delta wing, 1 crew, attack aircraft. Viggen",,"Fox 2, dumb bombs, rockets and ATGMs, antiship, supersonic",
+AV8BNA,yes,Aircraft,Aircraft,AV8BNA Harrier,8,blue,Late Cold War,,,"Single jet engine, swept wing, 1 crew, all weather, VTOL attack aircraft. Harrier",Drogue AAR,"Fox 2 and gunpod, Dumb and smart bombs, ATGMs, SEAD, can AAR, transonic,",
+An-26B,yes,Aircraft,Aircraft,An-26B Curl,26,red,Mid Cold War,,,"2 turboprop, straight wing, 5 crew, cargo and passenger aircraft. NATO reporting name: Curl",,"Subsonic,",
+An-30M,yes,Aircraft,Aircraft,An-30M Clank,30,red,Mid Cold War,,,"2 turboprop, straight wing, 7 crew, weather reseach aircraft. NATO reporting name: Clank",,"Subsonic,",
+B-1B,yes,Aircraft,Aircraft,B-1B Lancer,1,blue,Late Cold War,,,"4 jet engine, swing wing, 2 crew bomber. Lancer",,"dumb and smart bombs, supersonic,",
+B-52H,yes,Aircraft,Aircraft,B-52H Stratofortress,52,blue,Early Cold War,,,"8 jet engine, swept wing, 6 crew bomber. Stratofortress",,"Dumb and smart bombs, subsonic,",
+Bf-109K-4,yes,Aircraft,Aircraft,Bf-109K-4 Fritz,109,,WW2,,,"Single propeller, straight wing, 1 crew. 109",,"Guns, Subsonic,",
+C-101CC,yes,Aircraft,Aircraft,C-101CC,101,blue,Late Cold War,,,"Single jet engine, swept wing, 2 crew, light attack trainer. Aviojet",,"Fox 2, Dumb bombs, rockets, gunpod, subsonic,",
+C-130,yes,Aircraft,Aircraft,C-130 Hercules,130,blue,Early Cold War,,,"4 turboprop, stright wing, 3 crew. Hercules",,Subsonic,
+C-17A,yes,Aircraft,Aircraft,C-17A Globemaster,C17,blue,Modern,,,"4 jet engine, swept wing, 3 crew. Globemaster",,Subsonic,
+E-2C,yes,Aircraft,Aircraft,E-2C Hawkeye,2C,blue,Mid Cold War,,,"2 turboprop, straight wing, 5 crew. Hawkeye",Airbourne early warning,Subsonic,
+E-3A,yes,Aircraft,Aircraft,E-3A Sentry,E3,blue,Mid Cold War,,,"4 jet engine, swept wing, 17 crew. Sentry",Airbourne early warning,Subsonic,
+F-117A,yes,Aircraft,Aircraft,F-117A Nighthawk,117,blue,Late Cold War,,,"2 jet engine, delta wing, 1 crew. Nighthawk",,"Smart bombs, Subsonic",
+F-14A-135-GR,yes,Aircraft,Aircraft,F-14A-135-GR Tomcat,14A,blue,Mid Cold War,,,"2 Jet engine, swing wing, 2 crew. Tomcat",Drogue AAR,"Fox 1,2,3, Gun, Dumb bombs, laser bombs and rockets, Can AAR, supersonic",
+F-14B,yes,Aircraft,Aircraft,F-14B Tomcat,14B,blue,Late Cold War,,,"2 Jet engine, swing wing, 2 crew. Tomcat",Drogue AAR,"Fox 1,2,3, Gun, Dumb bombs, laser bombs and rockets, Can AAR, supersonic",
+F-15C,yes,Aircraft,Aircraft,F-15C Eagle,15,blue,Late Cold War,,,"2 Jet engine, swept wing, 2 crew, all weather fighter. Eagle.",Boom AAR,"Fox 1,2,3, Gun, Can AAR, supersonic",
+F-15E,yes,Aircraft,Aircraft,F-15E Strike Eagle,15,blue,Late Cold War,,,"2 Jet engine, swept wing, 2 crew, all weather fighter and strike. Strike Eagle.",Boom AAR,"Fox 1,2,3, Gun, Dumb bombs, smart bombs, standoff, Can AAR, supersonic",
+F-16C_50,yes,Aircraft,Aircraft,F-16C Viper,16,blue,Late Cold War,,,"Single jet engine, swept wing, 1 crew, all weather fighter and strike. Viper.",Boom AAR,"Fox 2, 3 and gun, Dumb and smart bombs, rockets and ATGMs, standoff, Can AAR, supersonic,",
+F-4E,yes,Aircraft,Aircraft,F-4E Phantom II,4,blue,Mid Cold War,,,"2 Jet engine, swept wing, 2 crew. Phantom",Drogue AAR,"Fox 1,2, and Gun, Dumb bombs, laser bombs and rockets, Can AAR, supersonic",
+F-5E-3,yes,Aircraft,Aircraft,F-5E Tiger,5,blue,Mid Cold War,,,"2 Jet engine, swept wing, single crew. Tiger",,"Fox 1,2, and Gun, Dumb bombs, laser bombs and rockets, supersonic",
+F-86F Sabre,yes,Aircraft,Aircraft,F-86F Sabre,86,blue,Early Cold War,,,"Single engine, swept wing, 1 crew. Sabre",,"Fox 2 and Gun, Dumb bombs and rockets, Transonic",
+FA-18C_hornet,yes,Aircraft,Aircraft,F/A-18C,18,blue,Late Cold War,,,"2 Jet engine, swept wing, 1 crew, fighter and strike. Hornet",Drogue AAR,"Fox 1,2,3, Gun, Dumb bombs and smart bombs, rockets and ATGMs, antiship, SEAD, standoff, Can AAR, Supersonic",
+FW-190A8,yes,Aircraft,Aircraft,FW-190A8 Bosch,190A8,,WW2,,,"Single propellor, straight wing, 1 crew. Shrike",,"Guns, dumb bombs and rockets, Subsonic",
+FW-190D9,yes,Aircraft,Aircraft,FW-190D9 Jerry,190D9,,WW2,,,"Single propellor, straight wing, 1 crew. Shrike",,"Guns, dumb bombs and rockets, Subsonic",
+H-6J,yes,Aircraft,Aircraft,H-6J Badger,H6,red,Mid Cold War,,,"2 jet engine, swept wing, 4 crew bomber. Badger",,"Dumb bombs, standoff, antiship, Subsonic",
+I-16,yes,Aircraft,Aircraft,I-16,I16,,WW2,,,"Single propellor, straight wing, 1 crew. Ishak",,"Guns, dumb bombs and rockets, Subsonic",
+IL-76MD,yes,Aircraft,Aircraft,IL-76MD Candid,76,red,Mid Cold War,,,"4 jet engine, swept wing, 5 crew. Cargo and passenger aircraft. NATO reporting name: Candid",,Subsonic,
+IL-78M,yes,Aircraft,Aircraft,IL-78M Midas,78,red,Late Cold War,,,"4 jet engine, swept wing, 6 crew. Tanker aircraft. NATO reporting name: Midas","Tanker, Drogue AAR","Droge tanker, Subsonic",
+J-11A,yes,Aircraft,Aircraft,J-11A Flaming Dragon,11,red,Modern,,,"2 Jet engine, swept wing, 1 crew, fighter and strike. NATO reporting name: Flanker",,"Fox 1, 2, 3, and Gun, Dumb bombs and rockets, Supersonic",
+JF-17,yes,Aircraft,Aircraft,JF-17 Thunder,17,red,Modern,,,"Single jet engine, swept wing, 1 crew, fighter and strike. Geoff",Drogue AAR,"Fox 1,2,3, Gun, Dumb bombs and smart bombs, rockets and ATGMs, antiship, SEAD, standoff, Can AAR, Supersonic",
+KC-135,yes,Aircraft,Aircraft,KC-135 Stratotanker,35,blue,Early Cold War,,,"4 jet engine, swept wing, 3 crew. Tanker aircraft. Stratotanker","Tanker, Boom AAR","Boom tanker, Subsonic",
+KC135MPRS,yes,Aircraft,Aircraft,KC-135 MPRS Stratotanker,35M,blue,Early Cold War,,,"4 jet engine, swept wing, 3 crew. Tanker aircraft. Stratotanker","Tanker, Drogue AAR","Droge tanker, Subsonic",
+L-39ZA,yes,Aircraft,Aircraft,L-39ZA,39,red,Mid Cold War,,,"Single jet engine, swept wing, 2 crew, light attack trainer. Aviojet",,"Fox 2, Dumb bombs, rockets, gunpod, subsonic,",
+M-2000C,yes,Aircraft,Aircraft,M-2000C Mirage,M2,blue,Late Cold War,,,"Single jet engine, swept wing, 1 crew, fighter and strike.",Drogue AAR,"Fox 1, 2, gun, Dumb bombs and laser bombs, Can AAR Supersonic",
+MB-339A,yes,Aircraft,Aircraft,MB-339A,39,blue,Mid Cold War,,,"Single jet engine, swept wing, 2 crew, light attack trainer. Aviojet",,"Fox 2, Dumb bombs, rockets, gunpod, subsonic,",
+MQ-9 Reaper,yes,Aircraft,Aircraft,MQ-9 Reaper,9,blue,Modern,,,"Single turboprop, straight wing, attack aircraft. Reaper",,"Laser bombs, smart bombs, ATGMs, subsonic",
+MiG-15bis,yes,Aircraft,Aircraft,MiG-15 Fagot,M15,red,Early Cold War,,,"Single jet engine, swept wing, 1 crew. Fagot",,"Gun, Dumb bombs, Transonic",
+MiG-19P,yes,Aircraft,Aircraft,MiG-19 Farmer,19,red,Early Cold War,,,"Single jet engine, swept wing, 1 crew. Farmer",,"Fox 2, gun, Dumb bombs and rockets, Supersonic",
+MiG-21Bis,yes,Aircraft,Aircraft,MiG-21 Fishbed,21,red,Mid Cold War,,,"Single jet engine, swept wing, 1 crew. Fishbed",,"Fox 1, fox 2, gun, Dumb bombs, nukes, ATGMs, and rockets, Supersonic",
+MiG-23MLD,yes,Aircraft,Aircraft,MiG-23 Flogger,23,red,Mid Cold War,,,"Single jet engine, swing wing, 1 crew. Flogger",,"Fox1, fox 2, gun, Dumb bombs and rockets, Supersonic",
+MiG-25PD,yes,Aircraft,Aircraft,MiG-25PD Foxbat,25,red,Mid Cold War,,,"2 jet engine, swept wing, 1 crew. Foxbat",,"Fox1, fox 2, Supersonic",
+MiG-25RBT,yes,Aircraft,Aircraft,MiG-25RBT Foxbat,25,red,Mid Cold War,,,"2 jet engine, swept wing, 1 crew. Foxbat",,"Fox 2, Dumb bombs, Supersonic",
+MiG-27K,yes,Aircraft,Aircraft,MiG-27K Flogger-D,27,red,Mid Cold War,,,"Single jet engine, swing wing, 1 crew. Flogger",,"Fox 2 and gun, Dumb bombs and laser bombs, ATGMs, SEAD, Rockets, Supersonic",
+MiG-29A,yes,Aircraft,Aircraft,MiG-29A Fulcrum,29A,red,Late Cold War,,,"2 jet engine, swept wing, 1 crew. Flanker",Drogue AAR,"Fox 1 and fox 2, Gun, Dumb bombs, Rockets, Can AAR, Supersonic",
+MiG-29S,yes,Aircraft,Aircraft,MiG-29S Fulcrum,29S,red,Late Cold War,,,"2 jet engine, swept wing, 1 crew. Flanker",Drogue AAR,"Fox 1 and fox 2, Gun, Dumb bombs, Rockets, Can AAR, Supersonic",
+MiG-31,yes,Aircraft,Aircraft,MiG-31 Foxhound,31,red,Late Cold War,,,"2 jet engine, swept wing, 2 crew. Foxhound",Drogue AAR,"Fox 1 and fox 2, Gun, Can AAR, Supersonic",
+Mirage-F1EE,yes,Aircraft,Aircraft,Mirage-F1EE,F1EE,blue,Mid Cold War,,,"Single Jet engine, swept wing, 1 crew.",Drogue AAR,"Fox 1, fox 2, and gun, Dumb and laser bombs, and rockets, Can AAR, Supersonic",
+MosquitoFBMkVI,yes,Aircraft,Aircraft,Mosquito FB MkVI,Mo,,WW2,,,"2 propeller, straight wing, 2 crew. Mosquito.",,"Gun, dumb bomb, and rockets, Subsonic",
+P-47D-40,yes,Aircraft,Aircraft,P-47D Thunderbolt,P47,,WW2,,,"Single propellor, straight wing, 1 crew. Thunderbolt",,"Gun, dumb bomb, and rockets, Subsonic",
+P-51D-30-NA,yes,Aircraft,Aircraft,P-51D Mustang,P51,,WW2,,,"Single propellor, straight wing, 1 crew. Mustang",,"Gun, dumb bomb, and rockets, Subsonic",
+S-3B Tanker,yes,Aircraft,Aircraft,S-3B Tanker,S3B,blue,Early Cold War,,,"2 jet engine, straight wing, 4 crew. Viking","Tanker, Drogue AAR",Subsonic,
+Su-17M4,yes,Aircraft,Aircraft,Su-17M4 Fitter,17M,red,Mid Cold War,,,"Single jet engine, swept wing, 1 crew. Fitter",,"Fox 2 and gun, dumb bombs and rockets, Transonic",
+Su-24M,yes,Aircraft,Aircraft,Su-24M Fencer,24,red,Mid Cold War,,,"2 jet engine, swing wing, 2 crew. Fencer",,"Fox 2 and gun, Dumb and laser bombs, and rockets, Supersonic",
+Su-25,yes,Aircraft,Aircraft,Su-25A Frogfoot,S25,red,Late Cold War,,,"2 jet engine, swept wing, 1 crew. Frogfoot",,"Fox 2 and gun, Dumb bombs, rockets, and ATGMs, Subsonic",
+Su-25,yes,Aircraft,Aircraft,Su-25T Frogfoot,S25,red,Late Cold War,,,"2 jet engine, swept wing, 1 crew. Frogfoot",,"Fox 2 and gun, Dumb bombs, rockets, SEAD and ATGMs, Subsonic",
+Su-27,yes,Aircraft,Aircraft,Su-27 Flanker,27,red,Late Cold War,,,"2 jet engine, swept wing, 1 crew. Flanker",Drogue AAR,"Fox 1 and fox 2, Gun, Dumb bombs, Rockets, Can AAR, Supersonic",
+Su-30,yes,Aircraft,Aircraft,Su-30 Super Flanker,30,red,Late Cold War,,,"2 jet engine, swept wing, 1 crew. Flanker",Drogue AAR,"Fox 1,2,3, Gun, Dumb bombs, smart bombs, ATGMS, anti-ship and SEAD, Can AAR, supersonic",
+Su-33,yes,Aircraft,Aircraft,Su-33 Navy Flanker,33,red,Late Cold War,,,"2 jet engine, swept wing, 1 crew. Flanker",Drogue AAR,"Fox 1 and fox 2, Gun, Dumb bombs, Rockets, Can AAR, Supersonic",
+Su-34,yes,Aircraft,Aircraft,Su-34 Hellduck,34,red,Modern,,,"2 Jet engine, swept wing, 2 crew, all weather fighter and strike. Fullback",Drogue AAR,"Fox 1,2,3, Gun, Dumb bombs, smart bombs, anti-ship, SEAD, Can AAR, supersonic",
+Tornado GR4,yes,Aircraft,Aircraft,Tornado GR4,GR4,blue,Late Cold War,,,"2 jet engine, swing wing, 2 crew, all weather strike.",Drogue AAR,"Fox 2 and gun, Dumb and laser bombs, Anti-ship and SEAD, Can AAR",
+Tornado IDS,yes,Aircraft,Aircraft,Tornado IDS,IDS,blue,Late Cold War,,,"2 jet engine, swing wing, 2 crew, all weather strike.",Drogue AAR,"Fox 2 and gun, Dumb and laser bombs, Anti-ship and SEAD, Can AAR",
+Tu-142,yes,Aircraft,Aircraft,Tu-142 Bear,142,red,Mid Cold War,,,"4 turboprop, swept wing, 11 crew, bomber. Bear",,"Anti-ship missiles, Subsonic",
+Tu-160,yes,Aircraft,Aircraft,Tu-160 Blackjack,160,red,Late Cold War,,,"4 jet engine, swing wing, 4 crew bomber. Blackjack",,"Anti-ship missiles, Supersonic",
+Tu-22M3,yes,Aircraft,Aircraft,Tu-22M3 Backfire,T22,red,Late Cold War,,,"2 jet engine, swing wing, 4 crew bomber. Backfire",,"Dumb bombs and anti-ship missiles, Supersonic",
+Tu-95MS,yes,Aircraft,Aircraft,Tu-95MS Bear,95,red,Mid Cold War,,,"4 turboprop, swept wing, 6 crew, bomber. Bear",,"Anti-ship missiles, Subsonic",
+AH-1W,yes,Helicopter,Helicopter,AH-1W Cobra,AH1,blue,Mid Cold War,,,"2 engine, 2 crew attack helicopter. Cobra",,"Gun, rockets and ATGMs",
+AH-64D_BLK_II,yes,Helicopter,Helicopter,AH-64D Apache,AH64,blue,Modern,,,"2 engine, 2 crew attack helicopter. Apache",,"Gun, rockets and ATGMs",
+Ka-50_3,yes,Helicopter,Helicopter,Ka-50 Hokum A,K50,red,Late Cold War,,,"2 engine, 1 crew attack helicopter. Blackshark",,"Fox 2 and gun, Rockets and ATGMs",
+Mi-24P,yes,Helicopter,Helicopter,Mi-24P Hind,Mi24,red,Mid Cold War,,,"2 engine, 2 crew attack helicopter. Hind",,"Fox 2 and gun, Rockets and ATGMs",
+Mi-26,yes,Helicopter,Helicopter,Mi-26 Halo,M26,red,Late Cold War,,,"2 engine, 5 crew transport helicopter. Halo",,,
+Mi-28N,yes,Helicopter,Helicopter,Mi-28N Havoc,M28,red,Modern,,,"2 engine, 2 crew attack helicopter. Havoc",,"Gun, Rockets and ATGMs",
+Mi-8MT,yes,Helicopter,Helicopter,Mi-8MT Hip,Mi8,red,Mid Cold War,,,"2 engine, 3 crew transport helicopter. Hip",,"Gun and rockets,",
+SA342L,yes,Helicopter,Helicopter,SA342L Gazelle,342,blue,Mid Cold War,,,"1 engine, 2 crew scout helicopter. Gazelle",,"Fox 2 and gun, Rockets and ATGMs",
+SA342M,yes,Helicopter,Helicopter,SA342M Gazelle,342,blue,Mid Cold War,,,"1 engine, 2 crew scout helicopter. Gazelle",,ATGMs,
+SA342Mistral,yes,Helicopter,Helicopter,SA342Mistral Gazelle,342,blue,Mid Cold War,,,"1 engine, 2 crew scout helicopter. Gazelle",,Fox 2,
+SH-60B,yes,Helicopter,Helicopter,SH-60B Seahawk,S60,blue,Mid Cold War,,,"2 engine, 3 crew transport helicopter. Seahawk",,,
+UH-1H,yes,Helicopter,Helicopter,UH-1H Huey,UH1,blue,Early Cold War,,,"2 engine, 2 crew transport helicopter. Huey",,"Gun and rockets,",
+UH-60A,yes,Helicopter,Helicopter,UH-60A Blackhawk,U60,blue,Mid Cold War,,,"2 engine, 3 crew transport helicopter. Blackhawk",,,
+1L13 EWR,yes,Ground Unit,EW Radar,Box Spring,1L13 EWR,red,Late Cold War,300000,0,EWR built on a truck trailer,,"500km range, 40km altitude",Box Spring: Mobile electronic warfare system designed to disrupt enemy communication and radar systems.
+2B11 mortar,yes,Ground Unit,Artillery,2B11 mortar,2B11 mortar,red,Late Cold War,0,7000,Man portable 120mm mortar,,"0,5km-7km 12-15 rpm","2B11 mortar: Soviet 120mm towed mortar, known for its portability and effective indirect fire support."
+2S6 Tunguska,yes,Ground Unit,AAA,SA-19 Tunguska,SA-19,red,Late Cold War,18000,8000,2K22 Tunguska. Tracked self-propelled anti-aircraft 30mm guns and missiles,,"Can move, Radar gun, optical missiles, 5nm/12,000ft","SA-19 Tunguska: Russian self-propelled anti-aircraft weapon system, combining both guns and missiles for air defense."
+55G6 EWR,yes,Ground Unit,EW Radar,Tall Rack,55G6 EWR,red,Early Cold War,400000,0,EWR built on a truck trailer,,"500km range, 40km altitude",Tall Rack: Naval electronic warfare system designed for electronic countermeasures.
+5p73 s-125 ln,yes,Ground Unit,SAM Launcher,SA-3 Launcher,5p73 s-125 ln,red,Early Cold War,0,18000,4 SA-3 missiles on a static emplacement. Requires grouping with SA-3 components,,10nm range,"SA-3 Launcher: Soviet surface-to-air missile launcher, part of the SA-3 Goa air defense system."
+AAV7,yes,Ground Unit,APC,AAV7,AAV7,blue,Mid Cold War,0,1200,Amphibious assault vehicle. Tracked,,"12,7mm machine gun, 64 km/h road, 13,5 km/h water",AAV7: Amphibious Assault Vehicle used by the United States Marine Corps for troop transport.
+ATMZ-5,yes,Ground Unit,Unarmed,ATMZ-5,ATMZ-5,red,Early Cold War,0,0,Refueler truck. Wheeled,,"unarmed, 75 km/h on road",ATMZ-5: Soviet pontoon bridge and ferry system used for river crossings.
+ATZ-10,yes,Ground Unit,Unarmed,ATZ-10,ATZ-10,red,Early Cold War,0,0,Refueler truck. Wheeled,,"unarmed, 75 km/h on road",ATZ-10: Soviet military refueling vehicle used to refuel tanks and other military vehicles.
+BMD-1,yes,Ground Unit,IFV,BMD-1,BMD-1,red,Mid Cold War,0,3000,Infantry fighting vehicle. Tracked. Amphibious,,"73mm gun, 7,62 gun, 70 km/h road, 10 km/h water",BMD-1: Airborne infantry fighting vehicle with amphibious capabilities used by the Soviet Union.
+BMP-1,yes,Ground Unit,IFV,BMP-1,BMP-1,red,Mid Cold War,0,3000,Infantry fighting vehicle. Tracked. Amphibious,,"ATGM, 73mm gun, 7,62 gun, 65 km/h road, 7 km/h water","BMP-1: Soviet infantry fighting vehicle, a pioneer in combining heavy firepower with troop transport."
+BMP-2,yes,Ground Unit,IFV,BMP-2,BMP-2,red,Mid Cold War,0,3000,Infantry fighting vehicle. Tracked. Amphibious,,"ATGM, 30mm gun, 7,62 gun, 65 km/h road, 7 km/h water","BMP-2: Upgraded version of the BMP-1, featuring enhanced weaponry and protection."
+BMP-3,yes,Ground Unit,IFV,BMP-3,BMP-3,red,Late Cold War,0,4000,Infantry fighting vehicle. Tracked. Amphibious,,"ATGM, 100mm gun, 30mm gun, 7,62 gun, 65 km/h road, 7 km/h water",BMP-3: Modern Russian infantry fighting vehicle with significant improvements in firepower and mobility.
+BRDM-2,yes,Ground Unit,Armoured Car,BRDM-2,BRDM-2,red,Early Cold War,0,1600,Scout car. Wheeled. Amphibious,,"14,5mm gun, 7,62mm gun, 100 km/h road, 10 km/h water",BRDM-2: Amphibious armored reconnaissance vehicle used by various countries.
+BTR-80,yes,Ground Unit,APC,BTR-80,BTR-80,red,Late Cold War,0,1600,Armoured persononel carrier. Wheeled. Amphibious,,"14,5mm gun, 7,62mm gun, 80 km/h road, 10 km/h water",BTR-80: 8x8 wheeled armored personnel carrier known for its versatility and mobility.
+BTR_D,yes,Ground Unit,APC,BTR_D,BTR_D,red,Mid Cold War,0,3000,Armoured persononel carrier. Tracked.,,"ATGM, 7,62mm gun, 61 km/h road",BTR-D: Soviet airborne multi-purpose tracked vehicle designed for troop transport.
+Bunker,yes,Ground Unit,Static Defence,Bunker,Bunker,,,0,800,Concrete bunker. Structure. Fixed Position.,,"12,7 mm machine gun,",Bunker: Fortified military structure providing protection and strategic position.
+Challenger2,yes,Ground Unit,Tank,Challenger2,Challenger2,blue,Modern,0,3500,Main battle tank. Tracked. Modern and heavily armoured.,,"120mm gun, 7,62 mm gun x 2, 59 km/h road, 40 km/h off,",Challenger 2: British main battle tank known for its armor protection and firepower.
+Cobra,yes,Ground Unit,Armoured Car,Otokar Cobra,Cobra,blue,Modern,0,1200,"Armoured car, MRAP. Wheeled.",,"12,7 mm machine gun,","Otokar Cobra: Turkish armored vehicle used for reconnaissance, patrol, and security missions."
+Dog Ear radar,yes,Ground Unit,Track Radar,Dog Ear,Dog Ear radar,red,Mid Cold War,35000,0,9S80-1 Sborka Mobile. Tracked fire control radar that can integrate with missile and gun systems.,,"90 km detection range, 35 km tracking range,",Dog Ear: Mobile radar system used for early warning and target acquisition.
+GAZ-3307,yes,Ground Unit,Unarmed,GAZ-3307,GAZ-3307,red,Early Cold War,0,0,"Civilian truck, single axle, wheeled",,56 mph,GAZ-3307: Soviet/Russian military truck used for various logistics purposes.
+GAZ-3308,yes,Ground Unit,Unarmed,GAZ-3308,GAZ-3308,red,Early Cold War,0,0,"Military truck, single axle, canvas covered cargo bay. wheeled",,"Rearms ground units of same coaltion, 56 mph","GAZ-3308: Military version of the GAZ-3307, widely used for transportation."
+GAZ-66,yes,Ground Unit,Unarmed,GAZ-66,GAZ-66,red,Early Cold War,0,0,"Military truck, single axle, open cargo bay. wheeled",,90 km/h,GAZ-66: Soviet/Russian military truck known for its off-road capabilities.
+Gepard,yes,Ground Unit,AAA,Gepard,Gepard,blue,Late Cold War,15000,4000,Tracked self-propelled anti-aircraft 35mm guns,,"65 km/h road, Range 3km",Gepard: German anti-aircraft tank designed to protect armored formations.
+Grad-URAL,yes,Ground Unit,Unarmed,Grad,Grad,red,Mid Cold War,0,19000,"Military truck, single axle, open cargo bay. wheeled",,"80 km/h, Rearms ground units of same coaltion?",Grad: Multiple rocket launcher system capable of delivering devastating firepower.
+HEMTT TFFT,yes,Ground Unit,Unarmed,HEMTT TFFT,HEMTT TFFT,blue,Late Cold War,0,0,"Military truck, 2 axle, firefigther. wheeled",,40kn on road,HEMTT TFFT: Heavy Expanded Mobility Tactical Truck used for transport and logistics.
+Hawk SAM Battery,yes,Ground Unit,Radar SAM,Hawk SAM Battery,Hawk SAM Battery,blue,Early Cold War,90000,0,Multiple unit SAM site,,"25nm range, >50,000ft alititude",Hawk SAM Battery: Surface-to-air missile system providing air defense capabilities.
+Hawk cwar,yes,Ground Unit,SAM Search Radar,Hawk Continous Wave Acquisition Radar,Hawk cwar,blue,Early Cold War,70000,0,Hawk site Aquisition radar,,70km range,"Hawk Continuous Wave Acquisition Radar: Part of the Hawk air defense system, used for target acquisition."
+Hawk ln,yes,Ground Unit,SAM Launcher,Hawk Launcher,Hawk ln,blue,Late Cold War,0,45000,Hawk site missile laucher. 3 missiles. Needs rest of site to fuction,,,Hawk Launcher: Mobile launcher for the Hawk surface-to-air missile system.
+Hawk pcp,yes,Ground Unit,SAM Support vehicle,Hawk Platoon Command Post,Hawk pcp,blue,Late Cold War,0,0,Hawk site command post. Medium sized trailer.,,,Hawk Platoon Command Post: Command and control center for the Hawk air defense system.
+Hawk sr,yes,Ground Unit,SAM Search Radar,Hawk Search radar,Hawk sr,blue,Early Cold War,90000,0,Hawk site search radar. Medium sized trailer,,,Hawk Search radar: Radar system used in conjunction with the Hawk air defense system.
+Hawk tr,yes,Ground Unit,SAM Track radar,Hawk Track radar,Hawk tr,blue,Early Cold War,90000,0,Hawk site track radar. Medium sized trailer,,,Hawk Track radar: Radar system used for tracking targets in the Hawk air defense system.
+Hummer,yes,Ground Unit,Armoured Car,Hummer,Hummer,blue,Mid Cold War,0,0,"Military car, single axle, wheeled",,113 km/h road,"Hummer: Versatile military vehicle used for various purposes, including transport and reconnaissance."
+IKARUS Bus,yes,Ground Unit,Unarmed,IKARUS Bus,IKARUS Bus,red,Mid Cold War,0,0,Civilian Bus. Yellow. Bendy bus,,80km/h road,IKARUS Bus: Military transport bus used for troop movement.
+Igla manpad INS,yes,Ground Unit,MANPADS,SA-18 Igla manpad INS,Igla manpad INS,red,Late Cold War,5000,5200,9K38/SA-18 Man portable air defence. Heatseaker,,"5,2km range, 3,5km altitude","SA-18 Igla manpad INS: Portable, man-portable air defense system designed for infantry use."
+Infantry AK,yes,Ground Unit,Infantry,Infantry AK,Infantry AK,red,Mid Cold War,0,500,Single infantry carrying AK-74,,8kn max speed,"Infantry AK: Standard issue assault rifle for infantry, known for its reliability and firepower."
+KAMAZ Truck,yes,Ground Unit,Unarmed,KAMAZ Truck,KAMAZ Truck,red,Mid Cold War,0,0,"Military truck, 2 axle, wheeled",,"Rearms ground units of same coaltion, 85 km/h on road,",KAMAZ Truck: Russian military truck used for various logistical purposes.
+Kub 1S91 str,yes,Ground Unit,SAM Search/Track Radar,SA-6 Straight flush,Kub 1S91 str,red,Mid Cold War,70000,0,"SA-6/Kub search and track radar, tracked.",,"75km detection, 28km tracking, 44 km/h on road",SA-6 Straight flush: Soviet mobile surface-to-air missile system with radar guidance.
+Kub 2P25 ln,yes,Ground Unit,SAM Launcher,SA-6 Launcher,Kub 2P25 ln,red,Late Cold War,0,25000,SA-6/Kub launcher. 3 missiles. Tracked. Needs rest of site to function,,"24km range 14km altitude, 44 km/h on road",SA-6 Launcher: Mobile launcher for the SA-6 Straight flush surface-to-air missile system.
+LAV-25,yes,Ground Unit,IFV,LAV-25,LAV-25,blue,Late Cold War,0,2500,Infantry fighter vehicle. Wheeled. Amphibious,,"25mm gun, 7,62 gun, 100 km/h road, 9,6 km/h water",LAV-25: Light armored vehicle used for reconnaissance and security missions.
+LAZ Bus,yes,Ground Unit,Unarmed,LAZ Bus,LAZ Bus,red,Early Cold War,0,0,Civilian bus. Single Axle. Wheeled,,80 km/h road,LAZ Bus: Military transport bus used for troop movement.
+Leclerc,yes,Ground Unit,Tank,Leclerc,Leclerc,blue,Modern,0,3500,Main battle tank. Tracked. Modern and heavily armoured.,,"120mm gun, 12,7mm gun, 72 km/h road",Leclerc: French main battle tank known for its advanced features and firepower.
+Leopard-2,yes,Ground Unit,Tank,Leopard-2,Leopard-2,blue,Late Cold War,0,3500,Main battle tank. Tracked. Modern and heavily armoured.,,"120mm gun, 7,62 mm gun x 2, 72 km/h road",Leopard-2: German main battle tank recognized for its high level of protection and mobility.
+Leopard1A3,yes,Ground Unit,Tank,Leopard1A3,Leopard1A3,blue,Mid Cold War,0,2500,Main battle tank. Tracked. Heavily armoured.,,"105mm gun, 7,62 mm gun x 2, 65 km/h road",Leopard1A3: Earlier version of the German Leopard main battle tank series.
+M 818,yes,Ground Unit,Unarmed,M 818,M 818,blue,Early Cold War,0,0,???,,,M 818: Military truck used for various logistical purposes.
+M-1 Abrams,yes,Ground Unit,Tank,M-1 Abrams,M-1 Abrams,blue,Late Cold War,0,3500,Main battle tank. Tracked. Modern and heavily armoured.,,"120mm gun, 12,7mm gun, 7,62 mm gun x 2, 66,7 km/h road","M-1 Abrams: Iconic U.S. main battle tank, known for its firepower and armor."
+M-109,yes,Ground Unit,Artillery,M-109 Paladin,M-109,blue,Early Cold War,0,22000,???,,,M-109 Paladin: Self-propelled howitzer used for artillery support.
+M-113,yes,Ground Unit,APC,M-113,M-113,blue,Early Cold War,0,1200,Armoured personnel carrier. Tracked. Amphibious,,"12,7mm gun, 60,7 km/h road, 5,8 km/h water",M-113: Armored personnel carrier used by various armed forces.
+M-2 Bradley,yes,Ground Unit,IFV,M-2A2 Bradley,M-2 Bradley,blue,Late Cold War,0,3800,Infantry fighting vehicle. Tracked.,,"ATGM, 100mm gun, 25mm gun, 7,62 gun, 66 km/h road",M-2A2 Bradley: Infantry fighting vehicle used by the U.S. Army.
+M-60,yes,Ground Unit,Tank,M-60,M-60,blue,Early Cold War,0,8000,Main battle tank. Tracked. Heavily armoured.,,"105mm gun, 12,7mm gun, 7,62 mm gun, 48 km/h road, 19 km/h off,",M-60: Main battle tank used by the United States and other countries.
+M1043 HMMWV Armament,yes,Ground Unit,Armoured Car,HMMWV M2 Browning,HMMWV M2,blue,Late Cold War,0,1200,"Military car, single axle, wheeled",,"12,7mm gun, 113 km/h road",HMMWV M2 Browning: Humvee variant equipped with a heavy machine gun for firepower.
+M1045 HMMWV TOW,yes,Ground Unit,Armoured Car,HMMWV TOW,HMMWV TOW,red,Late Cold War,0,3800,"Military car, single axle, wheeled",,"ATGM, 113 km/h road",HMMWV TOW: Humvee variant equipped with TOW anti-tank missiles.
+M1097 Avenger,yes,Ground Unit,SAM,M1097 Avenger,M1097 Avenger,blue,Modern,5200,4500,"Military car, single axle, wheeled",,"Stinger SAM, 12,7mm gun, 113 km/h road",M1097 Avenger: Mobile air defense system based on the HMMWV platform.
+M1126 Stryker ICV,yes,Ground Unit,APC,Stryker MG,Stryker MG,blue,Modern,0,1200,Armoured personnel carrier. Wheeled.,,"12,7mm gun, 96 km/h road",Stryker MG: Infantry carrier vehicle with a mounted machine gun for support.
+M1128 Stryker MGS,yes,Ground Unit,SPG,M1128 Stryker MGS,M1128 Stryker MGS,blue,Modern,0,4000,Self propelled gun. Wheeled.,,"105mm gun, 7,62mm gun, 96 km/h road",M1128 Stryker MGS: Mobile gun system variant of the Stryker used for fire support.
+M1134 Stryker ATGM,yes,Ground Unit,APC,Stryker ATGM,Stryker ATGM,blue,Modern,0,3800,Armoured personnel carrier. Wheeled.,,"ATGM, 12,7mm gun, 96 km/h road",Stryker ATGM: Stryker variant equipped with anti-tank guided missiles.
+M48 Chaparral,yes,Ground Unit,SAM,M48 Chaparral,M48 Chaparral,blue,Late Cold War,10000,8500,,,,M48 Chaparral: Surface-to-air missile system mounted on a tracked vehicle.
+M6 Linebacker,yes,Ground Unit,SAM,M6 Linebacker,M6 Linebacker,blue,Late Cold War,8000,4500,,,,M6 Linebacker: Anti-aircraft variant of the M2 Bradley infantry fighting vehicle.
+M978 HEMTT Tanker,yes,Ground Unit,Unarmed,M978 HEMTT Tanker,M978 HEMTT Tanker,blue,Mid Cold War,0,0,,,,M978 HEMTT Tanker: Heavy Expanded Mobility Tactical Truck used for fuel transportation.
+MAZ-6303,yes,Ground Unit,Unarmed,MAZ-6303,MAZ-6303,red,Mid Cold War,0,0,,,,MAZ-6303: Soviet/Russian military truck used for various logistical purposes.
+MCV-80,yes,Ground Unit,IFV,Warrior IFV,Warrior,blue,Late Cold War,0,2500,,,,Warrior IFV: British infantry fighting vehicle known for its versatility and protection.
+MLRS,yes,Ground Unit,Rocket Artillery,M270,M270,blue,Late Cold War,0,32000,,,,M270: Multiple rocket launcher system capable of launching various types of rockets.
+MTLB,yes,Ground Unit,APC,MT-LB,MT-LB,red,Mid Cold War,0,1000,,,,MT-LB: Soviet multi-purpose tracked vehicle used for troop transport and logistics.
+Marder,yes,Ground Unit,IFV,Marder,Marder,blue,Late Cold War,0,1500,,,,Marder: German infantry fighting vehicle used by the German Army.
+Osa 9A33 ln,yes,Ground Unit,SAM Launcher,SA-8 Launcher,Osa 9A33 ln,red,Mid Cold War,30000,10300,,,,SA-8 Launcher: Mobile launcher for the SA-8 Gecko surface-to-air missile system.
+Paratrooper AKS-74,yes,Ground Unit,Infantry,Paratrooper AKS-74,Paratrooper AKS-74,red,Modern,0,500,,,,Paratrooper AKS-74: Modified version of the AK-74 for use by airborne forces.
+Paratrooper RPG-16,yes,Ground Unit,Infantry,Paratrooper RPG-16,Paratrooper RPG-16,red,Modern,0,500,,,,Paratrooper RPG-16: Anti-tank rocket launcher used by airborne forces.
+Patriot AMG,yes,Ground Unit,SAM Support vehicle,Patriot Antenna Mast Group,Patriot AMG,blue,Modern,0,0,,,,"Patriot Antenna Mast Group: Part of the Patriot missile system, used for communication."
+Patriot ECS,yes,Ground Unit,SAM Support vehicle,Patriot Engagement Control Station,Patriot ECS,blue,Modern,0,0,,,,Patriot Engagement Control Station: Command and control center for the Patriot missile system.
+Patriot EPP,yes,Ground Unit,SAM Support vehicle,Patriot Electric Power Plant,Patriot EPP,blue,Late Cold War,0,0,,,,Patriot Electric Power Plant: Power generation unit for the Patriot missile system.
+Patriot cp,yes,Ground Unit,SAM Support vehicle,Patriot Command Post,Patriot cp,blue,Late Cold War,0,0,,,,Patriot Command Post: Mobile command post for the Patriot missile system.
+Patriot ln,yes,Ground Unit,SAM Launcher,Patriot Launcher,Patriot ln,blue,Late Cold War,0,100000,,,,Patriot Launcher: Mobile launcher for the Patriot surface-to-air missile system.
+Patriot site,yes,Ground Unit,SAM Site,Patriot site,Patriot site,blue,Late Cold War,160000,0,,,,Patriot site: Operational site for the Patriot missile system.
+Patriot str,yes,Ground Unit,SAM Search/Track radar,Patriot Search/Track radar,Patriot str,blue,Late Cold War,160000,0,,,,Patriot Search/Track radar: Radar system used for target tracking in the Patriot missile system.
+Predator GCS,yes,Ground Unit,Unarmed,Predator GCS,Predator GCS,blue,Late Cold War,0,0,,,,Predator GCS: Ground Control Station for the MQ-1 Predator unmanned aerial vehicle.
+Predator TrojanSpirit,yes,Ground Unit,Unarmed,Predator TrojanSpirit,Predator TrojanSpirit,blue,Late Cold War,0,0,,,,Predator TrojanSpirit: Electronic warfare system used for intelligence and reconnaissance.
+RLS_19J6,yes,Ground Unit,SAM Search radar,SA-5 Thin Shield,RLS 19J6,Red,Mid Cold War,150000,0,,,,SA-5 Thin Shield: Soviet long-range surface-to-air missile system.
+RPC_5N62V,yes,Ground Unit,SAM Track radar,SA-5 Square Pair,RPC 5N62V,Red,Mid Cold War,400000,0,,,,SA-5 Square Pair: Mobile launcher for the SA-5 Thin Shield surface-to-air missile system.
+Roland ADS,yes,Ground Unit,SAM,Roland ADS,Roland ADS,blue,Late Cold War,12000,8000,,,,Roland ADS: Mobile short-range air defense system.
+Roland Radar,yes,Ground Unit,SAM Search radar,Roland Search radar,Roland Radar,blue,Mid Cold War,35000,0,,,,Roland Search radar: Radar system used in conjunction with the Roland air defense system.
+S-200_Launcher,yes,Ground Unit,SAM Launcher,SA-5 Launcher,S-200 Launcher,Red,Mid Cold War,0,255000,,,,SA-5 Launcher: Mobile launcher for the SA-5 Thin Shield surface-to-air missile system.
+S-300PS 40B6M tr,yes,Ground Unit,SAM Track radar,SA-10 Tin Shield,S-300PS 40B6M tr,red,Late Cold War,160000,0,,,,SA-10 Tin Shield: Radar system used in conjunction with the SA-10 Grumble air defense system.
+S-300PS 40B6MD sr,yes,Ground Unit,SAM Search radar,SA-10 Clam Shell,S-300PS 40B6MD sr,red,Late Cold War,60000,0,,,,SA-10 Clam Shell: Mobile launcher for the SA-10 Grumble surface-to-air missile system.
+S-300PS 54K6 cp,yes,Ground Unit,SAM Support vehicle,SA-10 Command Post,S-300PS 54K6 cp,red,Late Cold War,0,0,,,,SA-10 Command Post: Command and control center for the SA-10 Grumble air defense system.
+S-300PS 5P85C ln,yes,Ground Unit,SAM Launcher,SA-10 Launcher (5P85C),S-300PS 5P85C ln,red,Late Cold War,0,120000,,,,SA-10 Launcher (5P85C): Mobile launcher for the SA-10 Grumble surface-to-air missile system.
+S-300PS 5P85D ln,yes,Ground Unit,SAM Launcher,SA-10 Launcher (5P85D),S-300PS 5P85D ln,red,Late Cold War,0,120000,,,,SA-10 Launcher (5P85D): Mobile launcher for the SA-10 Grumble surface-to-air missile system.
+S-300PS 64H6E sr,yes,Ground Unit,SAM Search radar,SA-10 Big Bird,S-300PS 64H6E sr,red,Late Cold War,160000,0,,,,SA-10 Big Bird: Early warning radar system used in conjunction with the SA-10 Grumble system.
+SA-10 SAM Battery,yes,Ground Unit,SAM Site,SA-10 SAM Battery,SA-10 SAM Battery,red,Late Cold War,,,,,,SA-10 SAM Battery: Operational site for the SA-10 Grumble air defense system.
+SA-11 Buk CC 9S470M1,yes,Ground Unit,SAM Support vehicle,SA-11 Command Post,SA-11 Buk CC 9S470M1,red,Late Cold War,0,0,,,,SA-11 Command Post: Command and control center for the SA-11 Gadfly air defense system.
+SA-11 Buk LN 9A310M1,yes,Ground Unit,SAM Launcher,SA-11 Launcher,SA-11 Buk LN 9A310M1,red,Late Cold War,50000,35000,,,,SA-11 Launcher: Mobile launcher for the SA-11 Gadfly surface-to-air missile system.
+SA-11 Buk SR 9S18M1,yes,Ground Unit,SAM Search radar,SA-11 Snown Drift,SA-11 Buk SR 9S18M1,red,Mid Cold War,100000,0,,,,SA-11 Snown Drift: Early warning radar system used in conjunction with the SA-11 Gadfly system.
+SA-11 SAM Battery,yes,Ground Unit,SAM Site,SA-11 SAM Battery,SA-11 SAM Battery,red,Late Cold War,,,,,,SA-11 SAM Battery: Operational site for the SA-11 Gadfly air defense system.
+SA-18 Igla manpad,yes,Ground Unit,MANPADS,SA-18 Igla manpad,SA-18 Igla manpad,red,Late Cold War,5000,5200,,,,"SA-18 Igla manpad: Portable, man-portable air defense system designed for infantry use."
+SA-18 Igla-S manpad,yes,Ground Unit,MANPADS,SA-18 Igla-S manpad,SA-18 Igla-S manpad,red,Late Cold War,5000,5200,,,,SA-18 Igla-S manpad: Upgraded version of the SA-18 Igla manpad with improved capabilities.
+SA-2 SAM Battery,yes,Ground Unit,SAM Site,SA-2 SAM Battery,SA-2 SAM Battery,red,Early Cold War,,,,,,SA-2 SAM Battery: Operational site for the SA-2 Guideline surface-to-air missile system.
+SA-3 SAM Battery,yes,Ground Unit,SAM Site,SA-3 SAM Battery,SA-3 SAM Battery,red,Early Cold War,,,,,,SA-3 SAM Battery: Operational site for the SA-3 Goa surface-to-air missile system.
+SA-5 SAM Battery,yes,Ground Unit,SAM Site,SA-5 SAM Battery,SA-5 SAM Battery,Red,Mid Cold War,,,,,,SA-5 SAM Battery: Operational site for the SA-5 Gammon surface-to-air missile system.
+SA-6 SAM Battery,yes,Ground Unit,SAM Site,SA-6 SAM Battery,SA-6 SAM Battery,red,Mid Cold War,,,"2K12 Kub. Tracked self propelled straight fush Radars, and TELs. 3 missiles per TEL.",,"Can move, Semi Active Radar guided, 22nm/26,000ft",SA-6 SAM Battery: Operational site for the SA-6 Gainful surface-to-air missile system.
+SAU 2-C9,yes,Ground Unit,Artillery,SAU Nona,SAU Nona,red,Mid Cold War,0,7000,,,,SAU Nona: Self-propelled artillery system featuring a 120mm smoothbore mortar.
+SAU Akatsia,yes,Ground Unit,Artillery,SAU Akatsia,SAU Akatsia,red,Mid Cold War,0,17000,,,,SAU Akatsia: Soviet self-propelled howitzer with a 152mm gun.
+SAU Gvozdika,yes,Ground Unit,Artillery,SAU Gvozdika,SAU Gvozdika,red,Mid Cold War,0,15000,,,,SAU Gvozdika: Self-propelled artillery system with a 122mm gun.
+SAU Msta,yes,Ground Unit,Artillery,SAU Msta,SAU Msta,red,Late Cold War,0,23500,,,,SAU Msta: Russian self-propelled howitzer featuring a 152mm gun.
+SKP-11,yes,Ground Unit,Unarmed,SKP-11,SKP-11,red,Early Cold War,0,0,,,,SKP-11: Mobile radar system used for target acquisition and tracking.
+SNR_75V,yes,Ground Unit,SAM Track radar,SA-2 Fan Song,SNR 75V,Red,Early Cold War,100000,0,,,,SA-2 Fan Song: Radar system used in conjunction with the SA-2 Guideline surface-to-air missile system.
+S_75M_Volhov,yes,Ground Unit,SAM Launcher,SA-2 Launcher,S75M Volhov,Red,Early Cold War,0,43000,,,,SA-2 Launcher: Mobile launcher for the SA-2 Guideline surface-to-air missile system.
+Sandbox,yes,Ground Unit,Static,Sandbox,Sandbox,,,0,800,,,,Sandbox: Mobile radar system used for tracking and fire control.
+Smerch,yes,Ground Unit,Rocket Artillery,Smerch,Smerch,red,Late Cold War,0,70000,,,,Smerch: Multiple rocket launcher system capable of launching large-caliber rockets.
+Soldier AK,yes,Ground Unit,Infantry,Soldier AK,Soldier AK,red,Early Cold War,0,500,,,,"Soldier AK: Standard issue assault rifle for infantry, known for its reliability and firepower."
+Soldier M249,yes,Ground Unit,Infantry,Soldier M249,Soldier M249,blue,Late Cold War,0,700,,,,Soldier M249: Light machine gun used by infantry for sustained firepower.
+Soldier M4 GRG,yes,Ground Unit,Infantry,Soldier M4 GRG,Soldier M4 GRG,blue,Mid Cold War,0,500,,,,"Soldier M4 GRG: Grenadier variant of the M4 carbine, equipped for grenade launching."
+Soldier M4,yes,Ground Unit,Infantry,Soldier M4,Soldier M4,blue,Mid Cold War,0,500,,,,Soldier M4: Standard issue carbine used by infantry.
+Soldier RPG,yes,Ground Unit,Infantry,Soldier RPG,Soldier RPG,red,Mid Cold War,0,500,,,,Soldier RPG: Portable rocket launcher used for anti-armor purposes.
+Stinger comm dsr,yes,Ground Unit,MANPADS,Stinger comm dsr,Stinger comm dsr,red,Late Cold War,5000,0,,,,Stinger comm dsr: Ground-based air defense system with a MANPADS launcher.
+Stinger comm,yes,Ground Unit,MANPADS,Stinger comm,Stinger comm,blue,Late Cold War,5000,0,,,,Stinger comm: Mobile communication system used in conjunction with Stinger air defense.
+Strela-1 9P31,yes,Ground Unit,SAM,SA-9 Strela-1 9P31,Strela-1 9P31,red,Late Cold War,5000,4200,,,,SA-9 Strela-1 9P31: Mobile short-range air defense system with infrared homing missiles.
+Strela-10M3,yes,Ground Unit,SAM,SA-13 Strela-10M3,Strela-10M3,red,Late Cold War,8000,5000,,,,SA-13 Strela-10M3: Mobile short-range air defense system with infrared homing missiles.
+Suidae,yes,Ground Unit,Unarmed,Suidae,Suidae,,Modern,0,0,,,,Suidae: Chinese 6x6 wheeled armored personnel carrier.
+T-55,yes,Ground Unit,Tank,T-55,T-55,red,Early Cold War,0,2500,,,,"T-55: Soviet main battle tank with a 100mm gun, widely used during the Cold War."
+T-72B,yes,Ground Unit,Tank,T-72B,T-72B,red,Mid Cold War,0,4000,,,,"T-72B: Soviet main battle tank with various upgrades, including composite armor."
+T-80UD,yes,Ground Unit,Tank,T-80UD,T-80UD,red,Mid Cold War,0,5000,,,,T-80UD: Ukrainian main battle tank known for its mobility and firepower.
+T-90,yes,Ground Unit,Tank,T-90,T-90,red,Late Cold War,0,5000,,,,"T-90: Russian main battle tank, an upgraded version of the T-72 series."
+TPZ,yes,Ground Unit,APC,TPz Fuchs,TPz Fuchs,blue,Late Cold War,0,1000,,,,TPz Fuchs: German 6x6 wheeled armored personnel carrier.
+Tigr_233036,yes,Ground Unit,Unarmed,Tigr_233036,Tigr_233036,red,Late Cold War,0,0,,,,Tigr_233036: Russian 4x4 wheeled armored vehicle used for various purposes.
+Tor 9A331,yes,Ground Unit,SAM,SA-15 Tor 9A331,Tor 9A331,red,Late Cold War,25000,12000,,,,SA-15 Tor 9A331: Russian short-range air defense system with radar guidance.
+Trolley bus,yes,Ground Unit,Unarmed,Trolley bus,Trolley bus,blue,Late Cold War,0,0,,,,"Trolley bus: Electric bus powered by overhead wires, used for public transport."
+UAZ-469,yes,Ground Unit,Unarmed,UAZ-469,UAZ-469,red,Mid Cold War,0,0,,,,UAZ-469: Soviet/Russian light utility vehicle used for reconnaissance and transport.
+Uragan_BM-27,yes,Ground Unit,Rocket Artillery,Uragan,Uragan,red,Late Cold War,0,35800,,,,Uragan: Soviet multiple rocket launcher system with a 220mm caliber.
+Ural ATsP-6,yes,Ground Unit,Unarmed,Ural ATsP-6,Ural ATsP-6,red,Mid Cold War,0,0,,,,Ural ATsP-6: Mobile command post based on the Ural truck platform.
+Ural-375 PBU,yes,Ground Unit,Unarmed,Ural-375 PBU,Ural-375 PBU,red,Mid Cold War,0,0,,,,Ural-375 PBU: Mobile communication vehicle based on the Ural truck platform.
+Ural-375 ZU-23 Insurgent,yes,Ground Unit,AAA,Ural-375 ZU-23 Insurgent,Ural-375 ZU-23 Insurgent,red,Early Cold War,5000,2500,,,,Ural-375 ZU-23 Insurgent: Improvised anti-aircraft vehicle based on the Ural truck platform.
+Ural-375 ZU-23,yes,Ground Unit,AAA,Ural-375 ZU-23,Ural-375 ZU-23,red,Early Cold War,5000,2500,,,,Ural-375 ZU-23: Anti-aircraft vehicle based on the Ural truck platform.
+Ural-375,yes,Ground Unit,Unarmed,Ural-375,Ural-375,red,Mid Cold War,0,0,,,,Ural-375: Soviet/Russian military truck used for various logistical purposes.
+Ural-4320 APA-5D,yes,Ground Unit,Unarmed,Ural-4320 APA-5D,Ural-4320 APA-5D,red,Early Cold War,0,0,Lightly armoured,,"Rearms ground units of same coaltion,",Ural-4320 APA-5D: Mobile power station based on the Ural truck platform.
+Ural-4320-31,yes,Ground Unit,Unarmed,Ural-4320-31,Ural-4320-31,red,Late Cold War,0,0,,,"Rearms ground units of same coaltion,",Ural-4320-31: Military truck used for various logistical purposes.
+Ural-4320T,yes,Ground Unit,Unarmed,Ural-4320T,Ural-4320T,red,Late Cold War,0,0,,,"Rearms ground units of same coaltion,",Ural-4320T: Military truck used for troop transport and logistics.
+VAZ Car,yes,Ground Unit,Unarmed,VAZ Car,VAZ Car,red,Early Cold War,0,0,,,,VAZ Car: Russian military staff car based on the Lada Niva platform.
+Vulcan,yes,Ground Unit,AAA,Vulcan,Vulcan,blue,Late Cold War,5000,2000,,,,Vulcan: Self-propelled anti-aircraft gun system featuring the M61 Vulcan cannon.
+ZIL-131 KUNG,yes,Ground Unit,Unarmed,ZIL-131 KUNG,ZIL-131 KUNG,red,Early Cold War,0,0,,,,ZIL-131 KUNG: Military truck with a covered cargo area based on the ZIL-131 platform.
+ZIL-4331,yes,Ground Unit,Unarmed,ZIL-4331,ZIL-4331,red,Early Cold War,0,0,,,,ZIL-4331: Soviet/Russian military truck used for various logistical purposes.
+ZSU-23-4 Shilka,yes,Ground Unit,AAA,ZSU-23-4 Shilka,ZSU-23-4 Shilka,red,Late Cold War,5000,2500,Ship,,"2nm 7,000ft range",ZSU-23-4 Shilka: Soviet self-propelled anti-aircraft gun system with four 23mm autocannons.
+ZU-23 Closed Insurgent,yes,Ground Unit,AAA,ZU-23 Closed Insurgent,ZU-23 Closed Insurgent,red,Early Cold War,5000,2500,,,,ZU-23 Closed Insurgent: Improvised anti-aircraft vehicle with ZU-23 autocannons.
+ZU-23 Emplacement Closed,yes,Ground Unit,AAA,ZU-23 Emplacement Closed,ZU-23 Emplacement Closed,red,Early Cold War,5000,2500,,,,ZU-23 Emplacement Closed: Fixed emplacement with ZU-23 autocannons.
+ZU-23 Emplacement,yes,Ground Unit,AAA,ZU-23 Emplacement,ZU-23 Emplacement,red,Early Cold War,5000,2500,,,,ZU-23 Emplacement: Fixed emplacement with ZU-23 autocannons.
+ZU-23 Insurgent,yes,Ground Unit,AAA,ZU-23 Insurgent,ZU-23 Insurgent,red,Early Cold War,5000,2500,,,,ZU-23 Insurgent: Improvised anti-aircraft vehicle with ZU-23 autocannons.
+ZiL-131 APA-80,yes,Ground Unit,Unarmed,ZiL-131 APA-80,ZiL-131 APA-80,red,Early Cold War,0,0,,,,ZiL-131 APA-80: Mobile power station based on the ZiL-131 truck platform.
+house1arm,yes,Ground Unit,Structure,house1arm,house1arm,,,0,800,,,,house1arm: Fortified building with additional armor.
+house2arm,yes,Ground Unit,Structure,house2arm,house2arm,,,0,800,,,,house2arm: Fortified building with additional armor.
+houseA_arm,yes,Ground Unit,Structure,houseA_arm,houseA_arm,,,0,800,,,,houseA_arm: Fortified building with additional armor.
+outpost,yes,Ground Unit,Structure,outpost,outpost,,,0,800,,,,outpost: Military outpost for surveillance and control.
+outpost_road,yes,Ground Unit,Structure,outpost_road,outpost_road,,,0,800,,,,outpost_road: Military outpost with a roadblock.
+p-19 s-125 sr,yes,Ground Unit,SAM Search radar,SA-3 Flat Face B,Flat Face B,red,Mid Cold War,160000,0,,,,SA-3 Flat Face B: Mobile radar system used in conjunction with the SA-3 Goa air defense system.
+snr s-125 tr,yes,Ground Unit,SAM Track radar,SA-3 Low Blow,snr s-125 tr,red,Early Cold War,100000,0,,,,SA-3 Low Blow: Mobile launcher for the SA-3 Goa surface-to-air missile system.
+SpGH_Dana,yes,Ground Unit,Artillery,SPH Dana vz77 152mm,SPH Dana vz77 152mm,,,0,18700,,,,SPH Dana vz77 152mm: Self-propelled howitzer with a 152mm gun used by the Czech military.
+Grad_FDDM,yes,Ground Unit,Artillery,Grad MRL FDDM (FC),Grad MRL FDDM (FC),,,0,1000,,,,Grad MRL FDDM (FC): Multiple rocket launcher system with fire direction and control module.
+Infantry AK Ins,yes,Ground Unit,Infantry,Insurgent AK-74,Insurgent AK-74,,,0,500,,,,Insurgent AK-74: Variant of the AK-74 rifle used by insurgent forces.
+MLRS FDDM,yes,Ground Unit,Artillery,MRLS FDDM (FC),MRLS FDDM (FC),,,0,1200,,,,MRLS FDDM (FC): Multiple rocket launcher system with fire direction and control module.
+Infantry AK ver2,yes,Ground Unit,Infantry,Infantry AK-74 Rus ver2,Infantry AK-74 Rus ver2,,,0,500,,,,Infantry AK-74 Rus ver2: Variant of the AK-74 rifle used by Russian infantry.
+Infantry AK ver3,yes,Ground Unit,Infantry,Infantry AK-74 Rus ver3,Infantry AK-74 Rus ver3,,,0,500,,,,Infantry AK-74 Rus ver3: Variant of the AK-74 rifle used by Russian infantry.
+Smerch_HE,yes,Ground Unit,Artillery,MLRS 9A52 Smerch HE 300mm,MLRS 9A52 Smerch HE 300mm,,,0,70000,,,,MLRS 9A52 Smerch HE 300mm: Heavy multiple rocket launcher system with a 300mm caliber.
+Soldier stinger,yes,Ground Unit,MANPAD,MANPADS Stinger,MANPADS Stinger,,,5000,4500,,,,"MANPADS Stinger: Portable, man-portable air defense system designed for infantry use."
+SA-18 Igla comm,yes,Ground Unit,MANPAD,"MANPADS SA-18 Igla ""Grouse"" C2","MANPADS SA-18 Igla ""Grouse"" C2",,,5000,0,,,,"MANPADS SA-18 Igla ""Grouse"" C2: Portable, man-portable air defense system with command and control."
+SA-18 Igla-S comm,yes,Ground Unit,MANPAD,"MANPADS SA-18 Igla-S ""Grouse"" C2","MANPADS SA-18 Igla-S ""Grouse"" C2",,,5000,0,,,,"MANPADS SA-18 Igla-S ""Grouse"" C2: Upgraded version of the SA-18 Igla manpad with command and control."
+TACAN_beacon,yes,Ground Unit,Fortification,Beacon TACAN Portable TTS 3030,Beacon TACAN Portable TTS 3030,,,0,0,,,,Beacon TACAN Portable TTS 3030: Portable TACAN (Tactical Air Navigation) beacon for navigation.
+Merkava_Mk4,yes,Ground Unit,Tank,Tank Merkava IV,Tank Merkava IV,,,0,3500,,,,Tank Merkava IV: Israeli main battle tank known for its advanced features and protection.
+LiAZ Bus,yes,Ground Unit,Unarmed,Bus LiAZ-677,Bus LiAZ-677,,,0,0,,,,Bus LiAZ-677: Military transport bus used for troop movement.
+KrAZ6322,yes,Ground Unit,Unarmed,Truck KrAZ-6322 6x6,Truck KrAZ-6322 6x6,,,0,0,,,,Truck KrAZ-6322 6x6: Ukrainian military truck used for various logistical purposes.
+JTAC,yes,Ground Unit,Infantry,JTAC,JTAC,,,0,0,,,,JTAC: Joint Terminal Attack Controller responsible for coordinating air support.
+Infantry Animated,yes,Ground Unit,Infantry,Infantry,Infantry,,,0,500,,,,Infantry: Standard infantry equipped for ground combat.
+Electric locomotive,yes,Ground Unit,Locomotive,Loco VL80 Electric,Loco VL80 Electric,,,0,0,,,,Loco VL80 Electric: Electric locomotive used for transportation.
+Locomotive,yes,Ground Unit,Locomotive,Loco CHME3T,Loco CHME3T,,,0,0,,,,Loco CHME3T: Diesel-electric shunting locomotive.
+Coach cargo,yes,Ground Unit,Carriage,Freight Van,Freight Van,,,0,0,,,,Freight Van: Railway wagon used for transporting goods.
+Coach cargo open,yes,Ground Unit,Carriage,Open Wagon,Open Wagon,,,0,0,,,,Open Wagon: Open railway wagon for bulk cargo.
+Coach a tank blue,yes,Ground Unit,Carriage,Tank Car blue,Tank Car blue,,,0,0,,,,Tank Car blue: Railway tank car used for transporting liquids.
+Coach a tank yellow,yes,Ground Unit,Carriage,Tank Car yellow,Tank Car yellow,,,0,0,,,,Tank Car yellow: Railway tank car used for transporting liquids.
+Coach a passenger,yes,Ground Unit,Carriage,Passenger Car,Passenger Car,,,0,0,,,,Passenger Car: Railway carriage for passenger transport.
+Coach a platform,yes,Ground Unit,Carriage,Coach Platform,Coach Platform,,,0,0,,,,Coach Platform: Railway wagon with a flat platform for transporting heavy equipment.
+tacr2a,yes,Ground Unit,Unarmed,RAF Rescue,RAF Rescue,,,0,0,,,,RAF Rescue: Search and rescue helicopter used by the Royal Air Force.
+LARC-V,yes,Ground Unit,Unarmed,LARC-V,LARC-V,,,500,0,,,,"LARC-V: Lighter Amphibious Resupply Cargo, amphibious cargo vehicle."
+KS-19,yes,Ground Unit,AAA,AAA KS-19 100mm,AAA KS-19 100mm,,,0,20000,,,,AAA KS-19 100mm: Soviet towed anti-aircraft gun with a 100mm caliber.
+SON_9,yes,Ground Unit,AAA,AAA Fire Can SON-9,AAA Fire Can SON-9,,,55000,0,,,,AAA Fire Can SON-9: Mobile anti-aircraft radar system.
+Scud_B,yes,Ground Unit,Missile system,SSM SS-1C Scud-B,SSM SS-1C Scud-B,,,0,320000,,,,SSM SS-1C Scud-B: Tactical ballistic missile system used for ground attack.
+HL_DSHK,yes,Ground Unit,Armoured Car,Scout HL with DSHK 12.7mm,Scout HL with DSHK 12.7mm,,,5000,1200,,,,Scout HL with DSHK 12.7mm: Scout vehicle with a mounted DShK heavy machine gun.
+HL_KORD,yes,Ground Unit,Armoured Car,Scout HL with KORD 12.7mm,Scout HL with KORD 12.7mm,,,5000,1200,,,,Scout HL with KORD 12.7mm: Scout vehicle with a mounted KORD heavy machine gun.
+tt_DSHK,yes,Ground Unit,Armoured Car,Scout LC with DSHK 12.7mm,Scout LC with DSHK 12.7mm,,,5000,1200,,,,Scout LC with DSHK 12.7mm: Armored reconnaissance vehicle with a mounted DShK heavy machine gun.
+tt_KORD,yes,Ground Unit,Armoured Car,Scout LC with KORD 12.7mm,Scout LC with KORD 12.7mm,,,5000,1200,,,,Scout LC with KORD 12.7mm: Armored reconnaissance vehicle with a mounted KORD heavy machine gun.
+HL_ZU-23,yes,Ground Unit,AAA,SPAAA HL with ZU-23,SPAAA HL with ZU-23,,,5000,2500,,,,SPAAA HL with ZU-23: Self-propelled anti-aircraft artillery with dual ZU-23 autocannons.
+tt_ZU-23,yes,Ground Unit,AAA,SPAAA LC with ZU-23,SPAAA LC with ZU-23,,,0,2500,,,,SPAAA LC with ZU-23: Light armored anti-aircraft vehicle with dual ZU-23 autocannons.
+HL_B8M1,yes,Ground Unit,Artillery,MLRS HL with B8M1 80mm,MLRS HL with B8M1 80mm,,,5000,5000,,,,MLRS HL with B8M1 80mm: Self-propelled multiple rocket launcher system with 80mm rockets.
+tt_B8M1,yes,Ground Unit,Artillery,MLRS LC with B8M1 80mm,MLRS LC with B8M1 80mm,,,5000,5000,,,,MLRS LC with B8M1 80mm: Light multiple rocket launcher system with 80mm rockets.
+NASAMS_Radar_MPQ64F1,yes,Ground Unit,SAM Search Radar,SAM NASAMS SR MPQ64F1,SAM NASAMS SR MPQ64F1,,,50000,0,,,,SAM NASAMS SR MPQ64F1: Surface-to-air missile system with radar guidance.
+NASAMS_Command_Post,yes,Ground Unit,SAM Support vehicle,SAM NASAMS C2,SAM NASAMS C2,,,0,0,,,,SAM NASAMS C2: Command and control system for the NASAMS surface-to-air missile system.
+NASAMS_LN_B,yes,Ground Unit,SAM Launcher,SAM NASAMS LN AIM-120B,SAM NASAMS LN AIM-120B,,,0,15000,,,,SAM NASAMS LN AIM-120B: Launcher unit for the NASAMS surface-to-air missile system with AIM-120B missiles.
+NASAMS_LN_C,yes,Ground Unit,SAM LAuncher,SAM NASAMS LN AIM-120C,SAM NASAMS LN AIM-120C,,,0,15000,,,,SAM NASAMS LN AIM-120C: Launcher unit for the NASAMS surface-to-air missile system with AIM-120C missiles.
+M4_Sherman,yes,Ground Unit,Armor,Tk M4 Sherman,Tk M4 Sherman,,,0,3000,,,,Tk M4 Sherman: American medium tank used during World War II.
+M2A1_halftrack,yes,Ground Unit,Armor,APC M2A1 Halftrack,APC M2A1 Halftrack,,,0,1200,,,,APC M2A1 Halftrack: Armored personnel carrier with both tracks and wheels.
+FPS-117 Dome,yes,Ground Unit,EW Radar,EWR AN/FPS-117 Radar (domed),EWR AN/FPS-117 Radar (domed),,,400000,0,,,,EWR AN/FPS-117 Radar (domed): Early warning radar system with a domed radome.
+FPS-117 ECS,yes,Ground Unit,EW Radar,EWR AN/FPS-117 ECS,EWR AN/FPS-117 ECS,,,0,0,,,,EWR AN/FPS-117 ECS: Early warning radar system with an environmental control system.
+FPS-117,yes,Ground Unit,EW Radar,EWR AN/FPS-117 Radar,EWR AN/FPS-117 Radar,,,463000,0,,,,EWR AN/FPS-117 Radar: Early warning radar system used for surveillance.
+RD_75,yes,Ground Unit,EW Radar,SAM SA-2 S-75 RD-75 Amazonka RF,SAM SA-2 S-75 RD-75 Amazonka RF,,,100000,0,,,,SAM SA-2 S-75 RD-75 Amazonka RF: Soviet surface-to-air missile system with Amazonka RF radar.
+ZSU_57_2,yes,Ground Unit,AAA,SPAAA ZSU-57-2,SPAAA ZSU-57-2,,,5000,7000,,,,SPAAA ZSU-57-2: Self-propelled anti-aircraft gun with dual 57mm autocannons.
+S-60_Type59_Artillery,yes,Ground Unit,AAA,AAA S-60 57mm,AAA S-60 57mm,,,5000,6000,,,,AAA S-60 57mm: Soviet towed anti-aircraft gun with a 57mm caliber.
+generator_5i57,yes,Ground Unit,Unarmed,Diesel Power Station 5I57A,Diesel Power Station 5I57A,,,0,0,,,,Diesel Power Station 5I57A: Mobile diesel power station used for electricity generation.
+T-72B3,yes,Ground Unit,Tank,Tank T-72B3,Tank T-72B3,,,0,4000,,,,Tank T-72B3: Modernized version of the Soviet T-72B main battle tank.
+PT_76,yes,Ground Unit,Tank,LT PT-76,LT PT-76,,,0,2000,,,,LT PT-76: Soviet amphibious light tank used for reconnaissance.
+BTR-82A,yes,Ground Unit,IFV,IFV BTR-82A,IFV BTR-82A,,,0,2000,,,,IFV BTR-82A: Russian infantry fighting vehicle known for its versatility.
+ATZ-5,yes,Ground Unit,Unarmed,Refueler ATZ-5,Refueler ATZ-5,,,0,0,,,,Refueler ATZ-5: Mobile refueling vehicle used for fueling military vehicles.
+AA8,yes,Ground Unit,Unarmed,Firefighter Vehicle AA-7.2/60,Firefighter Vehicle AA-7.2/60,,,0,0,,,,Firefighter Vehicle AA-7.2/60: Firefighting vehicle equipped with a 7.2m telescopic ladder.
+TZ-22_KrAZ,yes,Ground Unit,Unarmed,Refueler TZ-22 Tractor (KrAZ-258B1),Refueler TZ-22 Tractor (KrAZ-258B1),,,0,0,,,,Refueler TZ-22 Tractor (KrAZ-258B1): Military refueling tractor used for aircraft refueling.
+ATZ-60_Maz,yes,Ground Unit,Unarmed,Refueler ATZ-60 Tractor (MAZ-7410),Refueler ATZ-60 Tractor (MAZ-7410),,,0,0,,,,Refueler ATZ-60 Tractor (MAZ-7410): Military refueling tractor used for ground vehicle refueling.
+ZIL-135,yes,Ground Unit,Unarmed,Truck ZIL-135,Truck ZIL-135,,,0,0,,,,Truck ZIL-135: Soviet military truck used for various logistical purposes.
+S_75_ZIL,yes,Ground Unit,Unarmed,S-75 Tractor (ZIL-131),S-75 Tractor (ZIL-131),,,0,0,,,,S-75 Tractor (ZIL-131): Tractor used for transporting components of the S-75 surface-to-air missile system.
+rapier_fsa_launcher,yes,Ground Unit,SAM Launcher,SAM Rapier LN,SAM Rapier LN,,,30000,6800,,,,SAM Rapier LN: Self-propelled anti-aircraft missile system with radar guidance.
+rapier_fsa_optical_tracker_unit,yes,Ground Unit,SAM Track radar,SAM Rapier Tracker,SAM Rapier Tracker,,,20000,0,,,,SAM Rapier Tracker: Vehicle used for tracking targets in the Rapier air defense system.
+rapier_fsa_blindfire_radar,yes,Ground Unit,SAM Track radar,SAM Rapier Blindfire TR,SAM Rapier Blindfire TR,,,30000,0,,,,SAM Rapier Blindfire TR: Vehicle used for target acquisition in the Rapier air defense system.
+bofors40,yes,Ground Unit,AAA,AAA Bofors 40mm,AAA Bofors 40mm,,,0,4000,,,,AAA Bofors 40mm: Swedish-designed anti-aircraft gun with a 40mm caliber.
+Chieftain_mk3,yes,Ground Unit,Tank,Tank Chieftain Mk.3,Tank Chieftain Mk.3,,,0,3500,,,,Tank Chieftain Mk.3: British main battle tank known for its heavy armor.
+Bedford_MWD,yes,Ground Unit,Unarmed,Truck Bedford,Truck Bedford,,,0,0,,,,Truck Bedford: British military truck used for various logistical purposes.
+Land_Rover_101_FC,yes,Ground Unit,Unarmed,Truck Land Rover 101 FC,Truck Land Rover 101 FC,,,0,0,,,,Truck Land Rover 101 FC: Military truck based on the Land Rover platform.
+Land_Rover_109_S3,yes,Ground Unit,Unarmed,LUV Land Rover 109,LUV Land Rover 109,,,0,0,,,,LUV Land Rover 109: Light utility vehicle based on the Land Rover platform.
+hy_launcher,yes,Ground Unit,Missile system,AShM SS-N-2 Silkworm,AShM SS-N-2 Silkworm,,,100000,100000,,,,AShM SS-N-2 Silkworm: Soviet anti-ship missile system.
+Silkworm_SR,yes,Ground Unit,Missile system,AShM Silkworm SR,AShM Silkworm SR,,,200000,0,,,,AShM Silkworm SR: Mobile launcher for the SS-N-2 Silkworm anti-ship missile.
+ES44AH,yes,Ground Unit,Locomotive,Loco ES44AH,Loco ES44AH,,,0,0,,,,Loco ES44AH: Diesel-electric locomotive used for freight transportation.
+Boxcartrinity,yes,Ground Unit,Carriage,Flatcar,Flatcar,,,0,0,,,,Flatcar: Railway wagon with a flat platform for transporting heavy equipment.
+Tankcartrinity,yes,Ground Unit,Carriage,Tank Cartrinity,Tank Cartrinity,,,0,0,,,,Tank Cartrinity: Railway tank car used for transporting liquids.
+Wellcarnsc,yes,Ground Unit,Carriage,Well Car,Well Car,,,0,0,,,,Well Car: Railway car designed to transport intermodal containers.
+flak18,yes,Ground Unit,AAA,"AAA 8,8cm Flak 18","AAA 8,8cm Flak 18",,,0,5000,,,,"AAA 8,8cm Flak 18: German anti-aircraft gun with an 88mm caliber."
+Pz_IV_H,yes,Ground Unit,Tank,Tk PzIV H,Tk PzIV H,,,0,3000,,,,Tk PzIV H: German medium tank used during World War II.
+Leopard-2A5,yes,Ground Unit,Tank,Tank Leopard-2A5,Tank Leopard-2A5,,,0,3500,,,,Tank Leopard-2A5: Upgraded version of the German Leopard 2 main battle tank.
+leopard-2A4,yes,Ground Unit,Tank,Tank Leopard-2A4,Tank Leopard-2A4,,,0,3500,,,,Tank Leopard-2A4: Earlier version of the German Leopard 2 main battle tank.
+leopard-2A4_trs,yes,Ground Unit,Tank,Tank Leopard-2A4 Trs,Tank Leopard-2A4 Trs,,,0,3500,,,,Tank Leopard-2A4 Trs: Leopard 2 main battle tank with additional armor.
+Sd_Kfz_251,yes,Ground Unit,APC,APC Sd.Kfz.251 Halftrack,APC Sd.Kfz.251 Halftrack,,,0,1100,,,,APC Sd.Kfz.251 Halftrack: German armored personnel carrier with tracks and wheels.
+Blitz_36-6700A,yes,Ground Unit,Unarmed,Truck Opel Blitz,Truck Opel Blitz,,,0,0,,,,Truck Opel Blitz: German military truck used during World War II.
+T155_Firtina,yes,Ground Unit,Artillery,SPH T155 Firtina 155mm,SPH T155 Firtina 155mm,,,0,41000,,,,SPH T155 Firtina 155mm: Turkish self-propelled howitzer with a 155mm gun.
+VAB_Mephisto,yes,Ground Unit,Armoured Car,ATGM VAB Mephisto,ATGM VAB Mephisto,,,0,3800,,,,ATGM VAB Mephisto: French armored vehicle equipped with anti-tank guided missiles.
+ZTZ96B,yes,Ground Unit,Tank,ZTZ-96B,ZTZ-96B,,,0,5000,,,,ZTZ-96B: Chinese main battle tank with a 125mm smoothbore gun.
+ZBD04A,yes,Ground Unit,IFV,ZBD-04A,ZBD-04A,,,0,4800,,,,ZBD-04A: Chinese amphibious infantry fighting vehicle.
+HQ-7_LN_SP,yes,Ground Unit,SAM Launcher,HQ-7 Self-Propelled LN,HQ-7 Self-Propelled LN,,,15000,15000,,,,HQ-7 Self-Propelled LN: Chinese self-propelled air defense system.
+HQ-7_LN_EO,yes,Ground Unit,SAM Track radar,HQ-7 LN Electro-Optics,HQ-7 LN Electro-Optics,,,8000,12000,,,,HQ-7 LN Electro-Optics: Chinese air defense system with electro-optical tracking.
+HQ-7_STR_SP,yes,Ground Unit,SAM Track radar,HQ-7 Self-Propelled STR,HQ-7 Self-Propelled STR,,,30000,0,,,,HQ-7 Self-Propelled STR: Chinese air defense system with radar tracking.
+PLZ05,yes,Ground Unit,Artillery,PLZ-05,PLZ-05,,,0,23500,,,,PLZ-05: Chinese self-propelled howitzer with a 155mm gun.
+TYPE-59,yes,Ground Unit,Tank,MT Type 59,MT Type 59,,,0,2500,,,,MT Type 59: Chinese medium tank based on the Soviet T-54.
+Kubelwagen_82,yes,Ground Unit,Unarmed,LUV Kubelwagen Jeep,LUV Kubelwagen Jeep,,,0,0,,,,LUV Kubelwagen Jeep: German military vehicle used for reconnaissance.
+Sd_Kfz_2,yes,Ground Unit,Unarmed,LUV Kettenrad,LUV Kettenrad,,,0,0,,,,LUV Kettenrad: German tracked motorcycle used for reconnaissance.
+Sd_Kfz_7,yes,Ground Unit,Unarmed,Tractor Sd.Kfz.7 Art'y Tractor,Tractor Sd.Kfz.7 Art'y Tractor,,,0,0,,,,Tractor Sd.Kfz.7 Art'y Tractor: German half-track used for towing artillery.
+Horch_901_typ_40_kfz_21,yes,Ground Unit,Unarmed,LUV Horch 901 Staff Car,LUV Horch 901 Staff Car,,,0,0,,,,LUV Horch 901 Staff Car: German military staff car.
+Tiger_I,no,Ground Unit,Tank,Tk Tiger 1,Tk Tiger 1,,,0,3000,,,,Tk Tiger 1: German heavy tank used during World War II.
+Tiger_II_H,no,Ground Unit,Tank,Tk Tiger II,Tk Tiger II,,,0,6000,,,,"Tk Tiger II: German heavy tank, also known as King Tiger."
+Pz_V_Panther_G,no,Ground Unit,Tank,Tk Panther G (Pz V),Tk Panther G (Pz V),,,0,3000,,,,Tk Panther G (Pz V): German medium tank used during World War II.
+Jagdpanther_G1,no,Ground Unit,Tank,SPG Jagdpanther TD,SPG Jagdpanther TD,,,0,5000,,,,SPG Jagdpanther TD: German tank destroyer based on the Panther chassis.
+JagdPz_IV,no,Ground Unit,Tank,SPG Jagdpanzer IV TD,SPG Jagdpanzer IV TD,,,0,3000,,,,SPG Jagdpanzer IV TD: German tank destroyer based on the Panzer IV chassis.
+Stug_IV,no,Ground Unit,Tank,SPG StuG IV AG,SPG StuG IV AG,,,0,3000,,,,SPG StuG IV AG: German assault gun based on the Panzer IV chassis.
+SturmPzIV,no,Ground Unit,Tank,SPG Brummbaer AG,SPG Brummbaer AG,,,0,4500,,,,SPG Brummbaer AG: German assault gun with a 150mm gun.
+Wespe124,no,Ground Unit,Artillery,SPH Sd.Kfz.124 Wespe 105mm,SPH Sd.Kfz.124 Wespe 105mm,,,0,10500,,,,SPH Sd.Kfz.124 Wespe 105mm: German self-propelled howitzer used during World War II.
+Sd_Kfz_234_2_Puma,no,Ground Unit,Armoured Car,Scout Puma AC,Scout Puma AC,,,0,2000,,,,Scout Puma AC: German armored reconnaissance vehicle.
+KDO_Mod40,no,Ground Unit,AAA,AAA Kdo.G.40,AAA Kdo.G.40,,,30000,0,,,,AAA Kdo.G.40: German mobile anti-aircraft command vehicle.
+Flakscheinwerfer_37,no,Ground Unit,AAA,SL Flakscheinwerfer 37,SL Flakscheinwerfer 37,,,15000,15000,,,,SL Flakscheinwerfer 37: German searchlight used for anti-aircraft defense.
+Maschinensatz_33,no,Ground Unit,AAA,Maschinensatz 33 Gen,Maschinensatz 33 Gen,,,0,0,,,,Maschinensatz 33 Gen: German power generator.
+soldier_mauser98,no,Ground Unit,Infantry,Infantry Mauser 98,Infantry Mauser 98,,,0,500,,,,Infantry Mauser 98: German bolt-action rifle used during World War II.
+SK_C_28_naval_gun,no,Ground Unit,Fortification,Gun 15cm SK C/28 Naval in Bunker,Gun 15cm SK C/28 Naval in Bunker,,,0,20000,,,,Gun 15cm SK C/28 Naval in Bunker: Naval gun emplaced in a bunker for coastal defense.
+fire_control,no,Ground Unit,Fortification,Bunker with Fire Control Center,Bunker with Fire Control Center,,,0,1100,,,,Bunker with Fire Control Center: Fortified bunker with integrated fire control.
+Stug_III,no,Ground Unit,Tank,SPG StuG III G AG,SPG StuG III G AG,,,0,3000,,,,SPG StuG III G AG: German assault gun based on the Sturmgeschütz III chassis.
+Elefant_SdKfz_184,no,Ground Unit,Tank,SPG Elefant TD,SPG Elefant TD,,,0,6000,,,,SPG Elefant TD: German tank destroyer with heavy armor.
+v1_launcher,no,Ground Unit,Missile System,V-1 Launch Ramp,V-1 Launch Ramp,,,0,0,,,,V-1 Launch Ramp: Launch ramp for the German V-1 flying bomb.
+FuMG-401,no,Ground Unit,EW Radar,EWR FuMG-401 Freya LZ,EWR FuMG-401 Freya LZ,,,160000,0,,,,EWR FuMG-401 Freya LZ: German early warning radar system.
+FuSe-65,no,Ground Unit,EW Radar,EWR FuSe-65 Würzburg-Riese,EWR FuSe-65 Würzburg-Riese,,,60000,0,,,,EWR FuSe-65 Würzburg-Riese: German radar system used for target acquisition.
+Pak40,no,Ground Unit,Artillery,FH Pak 40 75mm,FH Pak 40 75mm,,,0,3000,,,,FH Pak 40 75mm: German towed anti-tank gun with a 75mm caliber.
+LeFH_18-40-105,no,Ground Unit,Artillery,FH LeFH-18 105mm,FH LeFH-18 105mm,,,0,10500,,,,FH LeFH-18 105mm: German towed field howitzer with a 105mm caliber.
+Cromwell_IV,no,Ground Unit,Tank,Tk Cromwell IV,Tk Cromwell IV,,,0,3000,,,,Tk Cromwell IV: British cruiser tank used during World War II.
+M4A4_Sherman_FF,no,Ground Unit,Tank,Tk M4A4 Sherman Firefly,Tk M4A4 Sherman Firefly,,,0,3000,,,,Tk M4A4 Sherman Firefly: British modified version of the M4 Sherman tank with a 17-pounder gun.
+soldier_wwii_br_01,no,Ground Unit,Infantry,Infantry SMLE No.4 Mk-1,Infantry SMLE No.4 Mk-1,,,0,500,,,,Infantry SMLE No.4 Mk-1: British bolt-action rifle used during World War II.
+Centaur_IV,no,Ground Unit,Tank,Tk Centaur IV CS,Tk Centaur IV CS,,,0,6000,,,,Tk Centaur IV CS: British cruiser tank variant with close support modifications.
+Churchill_VII,no,Ground Unit,Tank,Tk Churchill VII,Tk Churchill VII,,,0,3000,,,,Tk Churchill VII: British infantry tank known for its heavy armor.
+Daimler_AC,no,Ground Unit,Armoured Car,Car Daimler Armored,Car Daimler Armored,,,0,2000,,,,Car Daimler Armored: British armored car used for reconnaissance.
+Tetrarch,no,Ground Unit,Armoured Car,Tk Tetrach,Tk Tetrach,,,0,2000,,,,Tk Tetrach: British light tank used during World War II.
+QF_37_AA,no,Ground Unit,AAA,"AAA QF 3.7""","AAA QF 3.7""",,,0,9000,,,,"AAA QF 3.7"": British anti-aircraft gun with a 3.7-inch caliber."
+Allies_Director,no,Ground Unit,Unarmed,Allies Rangefinder (DRT),Allies Rangefinder (DRT),,,30000,0,,,,Allies Rangefinder (DRT): Allied artillery rangefinder for accurate target distance measurement.
+CCKW_353,no,Ground Unit,Unarmed,"Truck GMC ""Jimmy"" 6x6","Truck GMC ""Jimmy"" 6x6",,,0,0,,,,"Truck GMC ""Jimmy"" 6x6: American military truck used for various logistical purposes."
+Willys_MB,no,Ground Unit,Unarmed,Car Willys Jeep,Car Willys Jeep,,,0,0,,,,Car Willys Jeep: Iconic American military jeep used for reconnaissance and transport.
+M12_GMC,no,Ground Unit,Artillery,SPH M12 GMC 155mm,SPH M12 GMC 155mm,,,0,18300,,,,SPH M12 GMC 155mm: American self-propelled howitzer with a 155mm gun.
+M30_CC,no,Ground Unit,Unarmed,Ammo M30 Cargo Carrier,Ammo M30 Cargo Carrier,,,0,1200,,,,Ammo M30 Cargo Carrier: Ammunition carrier used for transporting artillery ammunition.
+soldier_wwii_us,no,Ground Unit,Infantry,Infantry M1 Garand,Infantry M1 Garand,,,0,500,,,,Infantry M1 Garand: Standard issue semi-automatic rifle used by the U.S. military.
+M10_GMC,no,Ground Unit,Tank,SPG M10 GMC TD,SPG M10 GMC TD,,,0,6000,,,,SPG M10 GMC TD: American tank destroyer based on the M4 Sherman chassis.
+M8_Greyhound,no,Ground Unit,Armoured Car,Scout M8 Greyhound AC,Scout M8 Greyhound AC,,,0,2000,,,,Scout M8 Greyhound AC: American armored car used for reconnaissance.
+M2A1-105,no,Ground Unit,Artillery,FH M2A1 105mm,FH M2A1 105mm,,,0,11500,,,,FH M2A1 105mm: American towed field howitzer with a 105mm caliber.
+M4_Tractor,no,Ground Unit,Unarmed,Tractor M4 High Speed,Tractor M4 High Speed,,,0,1200,,,,Tractor M4 High Speed: American high-speed tractor used for towing artillery.
+M45_Quadmount,no,Ground Unit,AAA,AAA M45 Quadmount HB 12.7mm,AAA M45 Quadmount HB 12.7mm,,,0,1500,,,,AAA M45 Quadmount HB 12.7mm: American anti-aircraft weapon with four 12.7mm machine guns.
+M1_37mm,no,Ground Unit,AAA,AAA M1 37mm,AAA M1 37mm,,,0,5700,,,,AAA M1 37mm: American towed anti-aircraft gun with a 37mm caliber.
+DR_50Ton_Flat_Wagon,no,Ground Unit,Carriage,DR 50-ton flat wagon,DR 50-ton flat wagon,,,0,0,,,,DR 50-ton flat wagon: Railway flat wagon with a capacity for heavy loads.
+DRG_Class_86,no,Ground Unit,Locomotive,Loco DRG Class 86,Loco DRG Class 86,,,0,0,,,,Loco DRG Class 86: German steam locomotive used for transportation.
+German_covered_wagon_G10,no,Ground Unit,Carriage,Wagon G10 (Germany),Wagon G10 (Germany),,,0,0,,,,Wagon G10 (Germany): German railway wagon for transporting goods.
+German_tank_wagon,no,Ground Unit,Carriage,Tank Car (Germany),Tank Car (Germany),,,0,0,,,,Tank Car (Germany): German railway tank car for transporting liquids.
+BDK-775,yes,Navy Unit,Landing Ship,LS Ropucha,LS Ropucha,blue,Mid Cold War,25000,6000,Landing ship Ropucha,,"2 57mm gun, rockets, Strela SAM, 8nm, 9,000ft range",LS Ropucha: Ropucha-class landing ship designed for transporting and landing amphibious forces.
+CVN_71,yes,Navy Unit,Super Aircraft Carrier,CVN-71 Theodore Roosevelt,CVN-71,blue,Late Cold War,50000,25000,Ship,,"6nm 16,000ft range",CVN-71 Theodore Roosevelt: Nimitz-class aircraft carrier serving as a flagship with a focus on power projection.
+CVN_72,yes,Navy Unit,Super Aircraft Carrier,CVN-72 Abraham Lincoln,CVN-72,blue,Late Cold War,50000,25000,Ship,,"6nm 16,000ft range","CVN-72 Abraham Lincoln: Nimitz-class aircraft carrier, a key component of naval force projection and air superiority."
+CVN_73,yes,Navy Unit,Super Aircraft Carrier,CVN-73 George Washington,CVN-73,blue,Late Cold War,50000,25000,Ship,,"6nm 16,000ft range",CVN-73 George Washington: Nimitz-class aircraft carrier providing strategic naval capabilities and air support.
+CVN_75,yes,Navy Unit,Aircraft Carrier,CVN-75 Harry S. Truman,CVN-75,blue,Late Cold War,50000,25000,Ship,,"6nm 16,000ft range",CVN-75 Harry S. Truman: Nimitz-class aircraft carrier playing a crucial role in power projection and global security.
+CV_1143_5,yes,Navy Unit,Aircraft Carrier,CV Admiral Kuznetsov(2017),Admiral Kuznetsov(2017),red,Modern,25000,12000,Admiral Kuznetsov. Conventional STOBAR carrier,,"12 granit anti ship missiles, kynshal & Kashtan SAM, 30mm gun x 6, 9nm 20,000ft range, 29kn","CV Admiral Kuznetsov(2017): Russian aircraft carrier Admiral Kuznetsov, serving as a mobile airbase for naval aviation."
+CastleClass_01,yes,Navy Unit,Patrol,HMS Leeds Castle (P-258),HMS Leeds Castle (P-258),blue,Mid Cold War,25000,3000,HMS Leeds Castle. Smaller. Patrol craft,,"20mm gun, 12,7mm gun x 4, 3nm 4,000ft range",HMS Leeds Castle (P-258): Castle-class patrol vessel used for offshore patrol duties and maritime security.
+HandyWind,yes,Navy Unit,Cargoship,Bulker Handy Wind,Bulker Handy Wind,blue,Late Cold War,0,0,,,,"Bulker Handy Wind: Bulk carrier ship designed for transporting unpackaged cargo, such as grains or minerals."
+HarborTug,yes,Navy Unit,Tug,Harbor Tug,Harbor Tug,,Mid Cold War,0,0,,,,"Harbor Tug: Tugboat specialized in maneuvering ships in harbors, assisting in docking and undocking."
+LHA_Tarawa,yes,Navy Unit,Aircraft Carrier,LHA-1 Tarawa,LHA-1 Tarawa,blue,Mid Cold War,150000,20000,Ship,,"8nm 13,000ft range",LHA-1 Tarawa: Wasp-class amphibious assault ship capable of deploying Marines and their equipment.
+La_Combattante_II,yes,Navy Unit,Fast Attack Craft,FAC La Combattante lla,FAC La Combattante,blue,Mid Cold War,19000,4000,,,,FAC La Combattante lla: Fast Attack Craft designed for high-speed naval operations and coastal defense.
+Seawise_Giant,yes,Navy Unit,Tanker,Tanker Seawise Giant,Seawise Giant,blue,Late Cold War,0,0,,,,"Tanker Seawise Giant: Supertanker Seawise Giant, one of the largest ships ever built, used for transporting crude oil."
+Ship_Tilde_Supply,yes,Navy Unit,Transport,Supply Ship MV Tilde,Supply Ship Tilde,blue,Late Cold War,0,0,,,,"Supply Ship MV Tilde: Supply ship MV Tilde designed to replenish naval vessels at sea with fuel, ammunition, and supplies."
+Stennis,yes,Navy Unit,Aircraft Carrier,CVN-74 John C. Stennis,CVN-74,blue,Late Cold War,50000,25000,,,,"CVN-74 John C. Stennis: Nimitz-class aircraft carrier, a vital element in power projection and global stability."
+TICONDEROG,yes,Navy Unit,Cruiser,Ticonderoga,Ticonderoga,blue,Late Cold War,150000,100000,Ship,,"55nm >50,000ft range",Ticonderoga: Ticonderoga-class cruiser equipped with advanced radar and missile systems for air defense.
+Type_052B,yes,Navy Unit,Destroyer,052B DDG-168 Guangzhou,Type 52B,red,Modern,100000,30000,Ship,,"27nm 48,000ft range","052B DDG-168 Guangzhou: Luyang I-class destroyer Guangzhou, part of the People's Liberation Army Navy."
+Type_052C,yes,Navy Unit,Destroyer,052C DDG-171 Haikou,Type 52C,red,Modern,260000,100000,Ship,,"64nm >50,000ft range","052C DDG-171 Haikou: Luyang II-class destroyer Haikou, featuring advanced air defense and anti-submarine capabilities."
+,yes,Navy Unit,Frigate,054A FFG-538 Yantai,Type 54A,red,Modern,160000,45000,Ship,,"35nm >50,000ft range","054A FFG-538 Yantai: Jiangkai I-class frigate Yantai, serving as a versatile and multi-role surface combatant."
+Type_071,yes,Navy Unit,Transport,Type 071,Type 071,red,Modern,300000,150000,Ship,,"4nm 9,000ft range","Type 071: Amphibious transport dock ship designed for carrying troops, vehicles, and helicopters."
+Type_093,yes,Navy Unit,Submarine,Type 093,Type 093,red,Modern,40000,40000,,,,Type 093: Chinese nuclear-powered attack submarine providing strategic underwater capabilities.
+USS_Arleigh_Burke_IIa,yes,Navy Unit,Destroyer,DDG Arleigh Burke lla,DDG Arleigh Burke,blue,Late Cold War,150000,100000,,,"57nm >50,000ft range",DDG Arleigh Burke lla: Arleigh Burke-class destroyer equipped with advanced anti-aircraft and anti-submarine systems.
+ara_vdm,yes,Navy Unit,Aircraft Carrier,ARA Vienticinco de Mayo,ARA Vienticinco de Mayo,,Mid Cold War,18000,5000,ARA Vienticinco de Mayo. Conventional CATOBAR carrier,,"24kn, 9x40mm AA gun, 3nm range 9,000ft","ARA Vienticinco de Mayo: Aircraft carrier Vienticinco de Mayo, serving the Argentine Navy."
+hms_invincible,yes,Navy Unit,Aircraft Carrier,HMS Invincible (R05),HMS Invincible,blue,Mid Cold War,100000,74000,Ship,,"46nm >50,000ft range","HMS Invincible (R05): Invincible-class aircraft carrier, a key asset in the Royal Navy's fleet."
+leander-gun-achilles,yes,Navy Unit,Frigate,HMS Achilles (F12),HMS Achilles,blue,Mid Cold War,180000,8000,Ship,,"7nm 6,000ft range","HMS Achilles (F12): Leander-class frigate HMS Achilles, providing anti-submarine and anti-air capabilities."
+leander-gun-andromeda,yes,Navy Unit,Frigate,HMS Andromeda (F57),HMS Andromeda,blue,Mid Cold War,180000,140000,Ship,,"7nm 6,000ft range","HMS Andromeda (F57): Leander-class frigate HMS Andromeda, serving in anti-submarine and anti-air roles."
+leander-gun-ariadne,yes,Navy Unit,Frigate,HMS Ariadne (F72),HMS Ariadne,blue,Mid Cold War,150000,100000,Ship,,"7nm 6,000ft range","HMS Ariadne (F72): Leander-class frigate HMS Ariadne, contributing to the Royal Navy's anti-submarine capabilities."
+leander-gun-condell,yes,Navy Unit,Frigate,Almirante Condell PFG-06,Almirante Condell,,Mid Cold War,150000,100000,Ship,,"7nm 6,000ft range","Almirante Condell PFG-06: Condell-class frigate, part of the Chilean Navy, with anti-submarine and anti-ship capabilities."
+leander-gun-lynch,yes,Navy Unit,Frigate,CNS Almirante Lynch (PFG-07),CNS Almirante Lynch,,Mid Cold War,180000,140000,Ship,,"7nm 6,000ft range","CNS Almirante Lynch (PFG-07): Lynch-class frigate, enhancing the naval capabilities of the Chilean Navy."
+santafe,yes,Navy Unit,Submarine,ARA Santa Fe S-21,ARA Santa,,Early Cold War,0,0,,,,"ARA Santa Fe S-21: Santa Fe-class submarine, a conventional diesel-electric submarine in service with the Argentine Navy."
+speedboat,yes,Navy Unit,Speedboat,Boat Armed Hi-speed,Boat Armed Hi-speed,,,5000,1000,,,,Boat Armed Hi-speed: High-speed armed patrol boat designed for coastal defense and interception.
+VINSON,yes,Navy Unit,Aircraft Carrier,CVN-70 Carl Vinson,CVN-70 Carl Vinson,,,30000,15000,,,,CVN-70 Carl Vinson: Nimitz-class aircraft carrier with a focus on power projection and naval air operations.
+perry,yes,Navy Unit,Frigate,Oliver H. Perry,Oliver H. Perry,blue,Mid Cold War,150000,100000,,,,"Oliver H. Perry: Oliver Hazard Perry-class frigate, providing anti-submarine and anti-air capabilities."
+albatros,yes,Navy Unit,Frigade,Albatros (Grisha-5),Albatros,red,Early Cold War,30000,16000,,,,"Albatros (Grisha-5): Grisha-class corvette Albatros, designed for anti-submarine warfare and patrol duties."
+kuznecow,yes,Navy Unit,Aircraft Carrier,Admiral Kuznetsov,Admiral Kuznetsov,red,Late Cold War,25000,12000,,,,"Admiral Kuznetsov: Russian aircraft carrier Admiral Kuznetsov, a key element of Russia's naval aviation."
+molniya,yes,Navy Unit,Corvette,Molniya (Tarantul-3),Molniya,,Late Cold War,21000,2000,,,,"Molniya (Tarantul-3): Tarantul-class corvette Molniya, a fast attack craft specializing in anti-ship warfare."
+moscow,yes,Navy Unit,Cruiser,Moscow,Moscow,red,Late Cold War,160000,75000,,,,"Moscow: Slava-class cruiser Moscow, serving as a guided missile cruiser with anti-ship and anti-air capabilities."
+neustrash,yes,Navy Unit,Frigate,Neustrashimy,Neustrashimy,red,Late Cold War,27000,12000,,,,"Neustrashimy: Neustrashimy-class frigate, designed for anti-submarine warfare and escort missions."
+PIOTR,yes,Navy Unit,Cruiser,Battlecruiser 1144.2 Pyotr Velikiy,Battlecruiser 1144.2 Pyotr Velikiy,,,250000,190000,,,,"Battlecruiser 1144.2 Pyotr Velikiy: Kirov-class battlecruiser Pyotr Velikiy, a heavily armed surface warfare vessel."
+Rezky (Krivak-2),yes,Navy Unit,Frigate,Rezky (Krivak-2),Rezky,red,Early Cold War,30000,16000,,,,"Rezky (Krivak-2): Krivak II-class frigate Rezky, providing anti-submarine and anti-surface capabilities."
+elnya,yes,Navy Unit,Tanker,Elnya tanker,Elnya tanker,red,Late Cold War,0,0,,,,"Elnya tanker: Elnya-class tanker, supporting naval operations by providing fuel replenishment."
+Dry-cargo ship-2,yes,Navy Unit,Cargo,Cargo Ivanov,Cargo Ivanov,,,0,0,,,,Cargo Ivanov: Ivanov-class cargo ship designed for transporting goods and equipment.
+Dry-cargo ship-1,yes,Navy Unit,Cargo,Bulker Yakushev,Bulker Yakushev,,,0,0,,,,"Bulker Yakushev: Bulk carrier ship Yakushev, specializing in the transport of dry bulk cargo."
+zwezdny,yes,Navy Unit,Civilian Boat,Zwezdny,Zwezdny,,Modern,0,0,,,,"Zwezdny: Zwezdny-class transport ship, supporting naval operations with cargo and troop transport."
+kilo,yes,Navy Unit,Submarine,Project 636 Varshavyanka Basic,Varshavyanka Basic,red,Late Cold War,0,0,,,,Project 636 Varshavyanka Basic: Improved Kilo-class submarine designed for stealth and anti-submarine warfare.
+IMPROVED_KILO,yes,Navy Unit,Submarine,SSK 636 Improved Kilo,SSK 636 Improved Kilo,,,0,0,,,,"SSK 636 Improved Kilo: Upgraded version of the Kilo-class submarine, known for its stealth capabilities."
+SOM,yes,Navy Unit,Submarine,SSK 641B Tango,SSK 641B Tango,,,0,0,,,,"SSK 641B Tango: Tango-class submarine, a diesel-electric attack submarine used for various roles."
+Forrestal,yes,Navy Unit,Aircraft Carrier,CV-59 Forrestal,CV-59 Forrestal,,,50000,25000,,,,"CV-59 Forrestal: Forrestal-class aircraft carrier, a historic vessel with a significant role in naval aviation."
+LST_Mk2,yes,Navy Unit,Landing Ship,LST Mk.II,LST Mk.II,,,0,4000,,,,"LST Mk.II: Landing Ship, Tank (LST) Mk.II, designed for transporting tanks and vehicles for amphibious assaults."
+USS_Samuel_Chase,yes,Navy Unit,Landing SHip,LS Samuel Chase,LS Samuel Chase,,,0,7000,,,,"LS Samuel Chase: Samuel Chase-class landing ship, a vessel used for amphibious warfare and logistics support."
+Higgins_boat,yes,Navy Unit,Landing Ship,Boat LCVP Higgins,Boat LCVP Higgins,,,3000,1000,,,,"Boat LCVP Higgins: Landing Craft, Vehicle, Personnel (LCVP) Higgins, designed for troop and vehicle transport."
+Uboat_VIIC,yes,Navy Unit,Submarine,U-boat VIIC U-flak,U-boat VIIC U-flak,,,20000,4000,,,,"U-boat VIIC U-flak: German U-boat Type VIIC, a World War II submarine designed for naval warfare."
+Schnellboot_type_S130,yes,Navy Unit,Torpedo Boat,Boat Schnellboot type S130,Boat Schnellboot type S130,,,10000,4000,,,,"Boat Schnellboot type S130: Schnellboot-type torpedo boat S130, a high-speed vessel used for fast attack and patrol."

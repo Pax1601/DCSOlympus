@@ -2,7 +2,7 @@
   "BDK-775": {
     "name": "BDK-775",
     "coalition": "blue",
-    "type": "Landing Craft",
+    "type": "Landing Ship",
     "era": "Mid Cold War",
     "label": "LS Ropucha",
     "shortLabel": "LS Ropucha",
@@ -10,7 +10,9 @@
     "filename": "",
     "enabled": true,
     "acquisitionRange": 25000,
-    "engagementRange": 6000
+    "engagementRange": 6000,
+    "description": "Landing ship Ropucha",
+    "abilities": ""
   },
   "CVN_71": {
     "name": "CVN_71",
@@ -23,7 +25,9 @@
     "filename": "",
     "enabled": true,
     "acquisitionRange": 50000,
-    "engagementRange": 25000
+    "engagementRange": 25000,
+    "description": "Ship",
+    "abilities": ""
   },
   "CVN_72": {
     "name": "CVN_72",
@@ -36,7 +40,9 @@
     "filename": "",
     "enabled": true,
     "acquisitionRange": 50000,
-    "engagementRange": 25000
+    "engagementRange": 25000,
+    "description": "Ship",
+    "abilities": ""
   },
   "CVN_73": {
     "name": "CVN_73",
@@ -49,7 +55,9 @@
     "filename": "",
     "enabled": true,
     "acquisitionRange": 50000,
-    "engagementRange": 25000
+    "engagementRange": 25000,
+    "description": "Ship",
+    "abilities": ""
   },
   "CVN_75": {
     "name": "CVN_75",
@@ -84,7 +92,9 @@
       }
     },
     "acquisitionRange": 50000,
-    "engagementRange": 25000
+    "engagementRange": 25000,
+    "description": "Ship",
+    "abilities": ""
   },
   "CV_1143_5": {
     "name": "CV_1143_5",
@@ -97,7 +107,9 @@
     "filename": "",
     "enabled": true,
     "acquisitionRange": 25000,
-    "engagementRange": 12000
+    "engagementRange": 12000,
+    "description": "Admiral Kuznetsov. Conventional STOBAR carrier",
+    "abilities": ""
   },
   "CastleClass_01": {
     "name": "CastleClass_01",
@@ -116,7 +128,9 @@
       }
     },
     "acquisitionRange": 25000,
-    "engagementRange": 3000
+    "engagementRange": 3000,
+    "description": "HMS Leeds Castle. Smaller. Patrol craft",
+    "abilities": ""
   },
   "HandyWind": {
     "name": "HandyWind",
@@ -147,7 +161,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "HarborTug": {
     "name": "HarborTug",
@@ -178,7 +194,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "LHA_Tarawa": {
     "name": "LHA_Tarawa",
@@ -191,7 +209,9 @@
     "filename": "",
     "enabled": true,
     "acquisitionRange": 150000,
-    "engagementRange": 20000
+    "engagementRange": 20000,
+    "description": "Ship",
+    "abilities": ""
   },
   "La_Combattante_II": {
     "name": "La_Combattante_II",
@@ -440,7 +460,9 @@
       }
     },
     "acquisitionRange": 19000,
-    "engagementRange": 4000
+    "engagementRange": 4000,
+    "description": "",
+    "abilities": ""
   },
   "Seawise_Giant": {
     "name": "Seawise_Giant",
@@ -453,7 +475,9 @@
     "filename": "",
     "enabled": true,
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Ship_Tilde_Supply": {
     "name": "Ship_Tilde_Supply",
@@ -466,7 +490,9 @@
     "filename": "",
     "enabled": true,
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Stennis": {
     "name": "Stennis",
@@ -479,7 +505,9 @@
     "filename": "",
     "enabled": true,
     "acquisitionRange": 50000,
-    "engagementRange": 25000
+    "engagementRange": 25000,
+    "description": "",
+    "abilities": ""
   },
   "TICONDEROG": {
     "name": "TICONDEROG",
@@ -554,7 +582,9 @@
       }
     },
     "acquisitionRange": 150000,
-    "engagementRange": 100000
+    "engagementRange": 100000,
+    "description": "Ship",
+    "abilities": ""
   },
   "Type_052B": {
     "name": "Type_052B",
@@ -585,7 +615,9 @@
       }
     },
     "acquisitionRange": 100000,
-    "engagementRange": 30000
+    "engagementRange": 30000,
+    "description": "Ship",
+    "abilities": ""
   },
   "Type_052C": {
     "name": "Type_052C",
@@ -640,7 +672,9 @@
       }
     },
     "acquisitionRange": 260000,
-    "engagementRange": 100000
+    "engagementRange": 100000,
+    "description": "Ship",
+    "abilities": ""
   },
   "Type_054A": {
     "name": "",
@@ -803,7 +837,9 @@
       }
     },
     "acquisitionRange": 160000,
-    "engagementRange": 45000
+    "engagementRange": 45000,
+    "description": "Ship",
+    "abilities": "35nm >50,000ft range"
   },
   "Type_071": {
     "name": "Type_071",
@@ -854,7 +890,9 @@
       }
     },
     "acquisitionRange": 300000,
-    "engagementRange": 150000
+    "engagementRange": 150000,
+    "description": "Ship",
+    "abilities": ""
   },
   "Type_093": {
     "name": "Type_093",
@@ -873,7 +911,9 @@
       }
     },
     "acquisitionRange": 40000,
-    "engagementRange": 40000
+    "engagementRange": 40000,
+    "description": "",
+    "abilities": ""
   },
   "USS_Arleigh_Burke_IIa": {
     "name": "USS_Arleigh_Burke_IIa",
@@ -984,7 +1024,9 @@
       }
     },
     "acquisitionRange": 150000,
-    "engagementRange": 100000
+    "engagementRange": 100000,
+    "abilities": "",
+    "description": ""
   },
   "ara_vdm": {
     "name": "ara_vdm",
@@ -997,7 +1039,9 @@
     "filename": "",
     "enabled": true,
     "acquisitionRange": 18000,
-    "engagementRange": 5000
+    "engagementRange": 5000,
+    "description": "ARA Vienticinco de Mayo. Conventional CATOBAR carrier",
+    "abilities": ""
   },
   "hms_invincible": {
     "name": "hms_invincible",
@@ -1010,7 +1054,9 @@
     "filename": "",
     "enabled": true,
     "acquisitionRange": 100000,
-    "engagementRange": 74000
+    "engagementRange": 74000,
+    "description": "Ship",
+    "abilities": ""
   },
   "leander-gun-achilles": {
     "name": "leander-gun-achilles",
@@ -1023,7 +1069,9 @@
     "filename": "",
     "enabled": true,
     "acquisitionRange": 180000,
-    "engagementRange": 8000
+    "engagementRange": 8000,
+    "description": "Ship",
+    "abilities": ""
   },
   "leander-gun-andromeda": {
     "name": "leander-gun-andromeda",
@@ -1036,7 +1084,9 @@
     "filename": "",
     "enabled": true,
     "acquisitionRange": 180000,
-    "engagementRange": 140000
+    "engagementRange": 140000,
+    "description": "Ship",
+    "abilities": ""
   },
   "leander-gun-ariadne": {
     "name": "leander-gun-ariadne",
@@ -1049,7 +1099,9 @@
     "filename": "",
     "enabled": true,
     "acquisitionRange": 150000,
-    "engagementRange": 100000
+    "engagementRange": 100000,
+    "description": "Ship",
+    "abilities": ""
   },
   "leander-gun-condell": {
     "name": "leander-gun-condell",
@@ -1062,7 +1114,9 @@
     "filename": "",
     "enabled": true,
     "acquisitionRange": 150000,
-    "engagementRange": 100000
+    "engagementRange": 100000,
+    "description": "Ship",
+    "abilities": ""
   },
   "leander-gun-lynch": {
     "name": "leander-gun-lynch",
@@ -1075,7 +1129,9 @@
     "filename": "",
     "enabled": true,
     "acquisitionRange": 180000,
-    "engagementRange": 140000
+    "engagementRange": 140000,
+    "description": "Ship",
+    "abilities": ""
   },
   "santafe": {
     "name": "santafe",
@@ -1088,7 +1144,9 @@
     "filename": "",
     "enabled": true,
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "speedboat": {
     "name": "speedboat",
@@ -1100,7 +1158,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 5000,
-    "engagementRange": 1000
+    "engagementRange": 1000,
+    "description": "",
+    "abilities": ""
   },
   "VINSON": {
     "name": "VINSON",
@@ -1112,7 +1172,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 30000,
-    "engagementRange": 15000
+    "engagementRange": 15000,
+    "description": "",
+    "abilities": ""
   },
   "PERRY": {
     "name": "perry",
@@ -1314,7 +1376,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 250000,
-    "engagementRange": 190000
+    "engagementRange": 190000,
+    "description": "",
+    "abilities": ""
   },
   "REZKY": {
     "name": "Rezky (Krivak-2)",
@@ -1366,7 +1430,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Dry-cargo ship-1": {
     "name": "Dry-cargo ship-1",
@@ -1378,7 +1444,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "ZWEZDNY": {
     "name": "zwezdny",
@@ -1416,7 +1484,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "SOM": {
     "name": "SOM",
@@ -1424,11 +1494,13 @@
     "era": "",
     "label": "SSK 641B Tango",
     "shortLabel": "SSK 641B Tango",
-    "type": "SOM",
+    "type": "Submarine",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Forrestal": {
     "name": "Forrestal",
@@ -1436,11 +1508,13 @@
     "era": "",
     "label": "CV-59 Forrestal",
     "shortLabel": "CV-59 Forrestal",
-    "type": "Forrestal",
+    "type": "Aircraft Carrier",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 50000,
-    "engagementRange": 25000
+    "engagementRange": 25000,
+    "description": "",
+    "abilities": ""
   },
   "LST_Mk2": {
     "name": "LST_Mk2",
@@ -1448,11 +1522,13 @@
     "era": "",
     "label": "LST Mk.II",
     "shortLabel": "LST Mk.II",
-    "type": "LST_Mk2",
+    "type": "Landing Ship",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 4000
+    "engagementRange": 4000,
+    "description": "",
+    "abilities": ""
   },
   "USS_Samuel_Chase": {
     "name": "USS_Samuel_Chase",
@@ -1460,11 +1536,13 @@
     "era": "",
     "label": "LS Samuel Chase",
     "shortLabel": "LS Samuel Chase",
-    "type": "USS_Samuel_Chase",
+    "type": "Landing SHip",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 7000
+    "engagementRange": 7000,
+    "description": "",
+    "abilities": ""
   },
   "Higgins_boat": {
     "name": "Higgins_boat",
@@ -1472,11 +1550,13 @@
     "era": "",
     "label": "Boat LCVP Higgins",
     "shortLabel": "Boat LCVP Higgins",
-    "type": "Higgins_boat",
+    "type": "Landing Ship",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 3000,
-    "engagementRange": 1000
+    "engagementRange": 1000,
+    "description": "",
+    "abilities": ""
   },
   "Uboat_VIIC": {
     "name": "Uboat_VIIC",
@@ -1484,11 +1564,13 @@
     "era": "",
     "label": "U-boat VIIC U-flak",
     "shortLabel": "U-boat VIIC U-flak",
-    "type": "Uboat_VIIC",
+    "type": "Submarine",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 20000,
-    "engagementRange": 4000
+    "engagementRange": 4000,
+    "description": "",
+    "abilities": ""
   },
   "Schnellboot_type_S130": {
     "name": "Schnellboot_type_S130",
@@ -1496,10 +1578,12 @@
     "era": "",
     "label": "Boat Schnellboot type S130",
     "shortLabel": "Boat Schnellboot type S130",
-    "type": "Schnellboot_type_S130",
+    "type": "Torpedo Boat",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 10000,
-    "engagementRange": 4000
+    "engagementRange": 4000,
+    "description": "",
+    "abilities": ""
   }
 }

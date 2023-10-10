@@ -156,6 +156,7 @@ export const SHOW_UNIT_LABELS               = "Show unit labels (L)";
 export const SHOW_UNITS_ENGAGEMENT_RINGS    = "Show units threat range rings (Q)";
 export const HIDE_UNITS_SHORT_RANGE_RINGS   = "Hide short range units threat range rings (R)";
 export const SHOW_UNITS_ACQUISITION_RINGS   = "Show units detection range rings (E)";
+export const FILL_SELECTED_RING             = "Fill the threat range rings of selected units (F)";
 export const SHOW_UNIT_CONTACTS             = "Show selected units contact lines";
 export const SHOW_UNIT_PATHS                = "Show selected unit paths";
 export const SHOW_UNIT_TARGETS              = "Show selected unit targets";
