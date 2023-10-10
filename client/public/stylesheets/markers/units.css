@@ -265,9 +265,9 @@
 }
 
 [data-object|="unit"][data-state="attack"] .unit-state,
-[data-object|="unit"][data-state="bombing point"] .unit-state,
-[data-object|="unit"][data-state="carpet bombing"] .unit-state,
-[data-object|="unit"][data-state="firing at area"] .unit-state {
+[data-object|="unit"][data-state="bomb-point"] .unit-state,
+[data-object|="unit"][data-state="carpet-bombing"] .unit-state,
+[data-object|="unit"][data-state="fire-at-area"] .unit-state {
     background-image: url("/resources/theme/images/states/attack.svg");
 }
 
@@ -285,6 +285,10 @@
 
 [data-object|="unit"][data-state="dcs"] .unit-state {
     background-image: url("/resources/theme/images/states/dcs.svg");
+}
+
+[data-object|="unit"][data-state="land-at-point"] .unit-state {
+    background-image: url("/resources/theme/images/states/land-at-point.svg");
 }
 
 [data-object|="unit"][data-state="no-task"] .unit-state {

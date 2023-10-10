@@ -779,6 +779,10 @@ export class Unit extends CustomMarker {
         getApp().getServerManager().missOnPurpose(this.ID, coalition);
     }
 
+    landAtPoint(latlng: LatLng) {
+        getApp().getServerManager().landAtPoint(this.ID, latlng);
+    }
+
     /***********************************************/
     getActions():  { [key: string]: { text: string, tooltip: string, type: string } } {
         /* To be implemented by child classes */ // TODO make Unit an abstract class

@@ -69,6 +69,9 @@ void AirUnit::setState(unsigned char newState)
 			setTargetPosition(Coords(NULL));
 			break;
 		}
+		case State::LAND_AT_POINT: {
+			break;
+		}
 		default:
 			break;
 		}
@@ -122,6 +125,10 @@ void AirUnit::setState(unsigned char newState)
 	}
 	case State::BOMB_BUILDING: {
 		clearActivePath();
+		resetActiveDestination();
+		break;
+	}
+	case State::LAND_AT_POINT:  {
 		resetActiveDestination();
 		break;
 	}
@@ -334,6 +341,24 @@ void AirUnit::AIloop()
 				taskSS.precision(10);
 
 				taskSS << "{id = 'AttackMapObject', lat = " << targetPosition.lat << ", lng = " << targetPosition.lng << "}";
+				Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
+				scheduler->appendCommand(command);
+				setHasTask(true);
+			}
+			break;
+		}
+		case State::LAND_AT_POINT: {
+			setTask("Landing at point");
+
+			if (!getHasTask()) {
+				setActiveDestination();
+				std::ostringstream taskSS;
+				taskSS.precision(10),
+				taskSS << "{"
+					<< "id = 'LandAtPoint', "
+					<< "lat = " << activeDestination.lat << ", "
+					<< "lng = " << activeDestination.lng 
+					<< "}";
 				Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
 				scheduler->appendCommand(command);
 				setHasTask(true);

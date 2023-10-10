@@ -666,6 +666,19 @@ export class UnitsManager {
         this.#showActionMessage(selectedUnits, `unit set to perform miss on purpose AAA`);
     }
 
+    /** Instruct units to land at specific point
+     * 
+     * @param latlng Point where to land
+     */
+    selectedUnitsLandAtPoint(latlng: LatLng) {
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+
+        for (let idx in selectedUnits) {
+            selectedUnits[idx].landAtPoint(latlng);
+        }
+        this.#showActionMessage(selectedUnits, `unit simulating fire fight`);
+    }
+
     /*********************** Control operations on selected units ************************/
     /**  See getUnitsCategories for more info
      * 
