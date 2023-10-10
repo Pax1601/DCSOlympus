@@ -351,6 +351,12 @@ export class ServerManager {
         this.PUT(data, callback);
     }
 
+    landAtPoint(ID: number, latlng: LatLng, callback: CallableFunction = () => {}) {
+        var command = { "ID": ID, "location": latlng }
+        var data = { "landAtPoint": command }
+        this.PUT(data, callback);
+    }
+
     setAdvacedOptions(ID: number, isTanker: boolean, isAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings, callback: CallableFunction = () => {}) {
         var command = {
             "ID": ID,

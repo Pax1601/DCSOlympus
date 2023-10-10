@@ -20,7 +20,7 @@ export const IRST   = 8;
 export const RWR    = 16;
 export const DLINK  = 32;
 
-export const states: string[] = ["none", "idle", "reach-destination", "attack", "follow", "land", "refuel", "AWACS", "tanker", "bomb-point", "carpet-bomb", "bomb-building", "fire-at-area", "simulate-fire-fight"];
+export const states: string[] = ["none", "idle", "reach-destination", "attack", "follow", "land", "refuel", "AWACS", "tanker", "bomb-point", "carpet-bomb", "bomb-building", "fire-at-area", "simulate-fire-fight", "scenic-aaa", "miss-on-purpose", "land-at-point"];
 export const ROEs: string[] = ["free", "designated", "", "return", "hold"];
 export const reactionsToThreat: string[] = ["none", "manoeuvre", "passive", "evade"];
 export const emissionsCountermeasures: string[] = ["silent", "attack", "defend", "free"];

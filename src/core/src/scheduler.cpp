@@ -600,6 +600,22 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		unit->setOperateAs(operateAs);
 	}
+	else if (key.compare("landAtPoint") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		double lat = value[L"location"][L"lat"].as_double();
+		double lng = value[L"location"][L"lng"].as_double();
+		Coords loc; loc.lat = lat; loc.lng = lng;
+		Unit* unit = unitsManager->getGroupLeader(ID);
+
+		list<Coords> newPath;
+		newPath.push_back(loc);
+		unit->setActivePath(newPath);
+		unit->setState(State::LAND_AT_POINT);
+		
+		log(username + " tasked unit " + unit->getName() + " to land at point", true);
+	}
 	else if (key.compare("setCommandModeOptions") == 0) 
 	{
 		setCommandModeOptions(value);

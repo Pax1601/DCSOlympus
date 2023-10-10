@@ -24,8 +24,8 @@ import { TouchBoxSelect } from "./touchboxselect";
 import { DestinationPreviewHandle } from "./markers/destinationpreviewHandle";
 
 var hasTouchScreen = false;
-if ("maxTouchPoints" in navigator) 
-    hasTouchScreen = navigator.maxTouchPoints > 0;
+//if ("maxTouchPoints" in navigator) 
+//    hasTouchScreen = navigator.maxTouchPoints > 0;
 
 if (hasTouchScreen) 
     L.Map.addInitHook('addHandler', 'boxSelect', TouchBoxSelect);
@@ -607,6 +607,10 @@ export class Map extends L.Map {
             const selectedUnitTypes = getApp().getUnitsManager().getSelectedUnitsCategories();
 
             if (selectedUnitTypes.length === 1 && ["Aircraft", "Helicopter"].includes(selectedUnitTypes[0])) {
+                if (selectedUnitTypes[0] === "Helicopter") {
+                    options["land-at-point"] = { text: "Land here", tooltip: "Land at this precise location" };
+                }
+
                 if (selectedUnits.every((unit: Unit) => { return unit.canFulfillRole(["CAS", "Strike"]) })) {
                     options["bomb"] = { text: "Precision bombing", tooltip: "Precision bombing of a specific point" };
                     options["carpet-bomb"] = { text: "Carpet bombing", tooltip: "Carpet bombing close to a point" };
@@ -645,6 +649,10 @@ export class Map extends L.Map {
                     else if (option === "simulate-fire-fight") {
                         getApp().getUnitsManager().getSelectedUnits().length > 0 ? this.setState(MOVE_UNIT) : this.setState(IDLE);
                         getApp().getUnitsManager().selectedUnitsSimulateFireFight(this.getMouseCoordinates());
+                    }
+                    else if (option === "land-at-point") {
+                        getApp().getUnitsManager().getSelectedUnits().length > 0 ? this.setState(MOVE_UNIT) : this.setState(IDLE);
+                        getApp().getUnitsManager().selectedUnitsLandAtPoint(this.getMouseCoordinates());
                     }
                 });
             }

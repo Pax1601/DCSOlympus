@@ -1,6 +1,6 @@
 local version = "v0.4.4-alpha"
 
-local debug = false				-- True enables debug printing using DCS messages
+local debug = true				-- True enables debug printing using DCS messages
 
 -- .dll related variables
 Olympus.OlympusDLL = nil
@@ -260,6 +260,15 @@ function Olympus.buildTask(groupName, options)
 					}   
 				}
 			end
+		-- Land at a specific point
+		elseif options['id'] == 'LandAtPoint' then
+			local point = coord.LLtoLO(options['lat'], options['lng'], 0)
+			task = {
+				id = 'Land', 
+				params = {
+					point = {x = point.x, y = point.z},
+				}   
+			}
 		end
 	end
 	return task

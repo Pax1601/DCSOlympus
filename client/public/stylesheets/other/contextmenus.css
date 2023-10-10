@@ -420,6 +420,10 @@
     content: url("/resources/theme/images/icons/group-navy.svg");
 }
 
+#land-at-point::before {
+    content: url("/resources/theme/images/icons/land-at-point.svg");
+}
+
 #trail::before {
     content: url("/resources/theme/images/icons/trail.svg");
 }
