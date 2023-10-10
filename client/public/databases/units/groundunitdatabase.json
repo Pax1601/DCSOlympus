@@ -6,7 +6,7 @@
     "label": "Box Spring",
     "shortLabel": "1L13 EWR",
     "filename": "",
-    "type": "Radar",
+    "type": "EW Radar",
     "enabled": true,
     "liveries": {
       "desert": {
@@ -15,7 +15,9 @@
       }
     },
     "acquisitionRange": 300000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "EWR built on a truck trailer",
+    "abilities": ""
   },
   "2B11 mortar": {
     "name": "2B11 mortar",
@@ -24,7 +26,7 @@
     "label": "2B11 mortar",
     "shortLabel": "2B11 mortar",
     "filename": "",
-    "type": "Gun Artillery",
+    "type": "Artillery",
     "enabled": true,
     "liveries": {
       "winter": {
@@ -49,7 +51,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 7000
+    "engagementRange": 7000,
+    "description": "Man portable 120mm mortar",
+    "abilities": ""
   },
   "2S6 Tunguska": {
     "name": "2S6 Tunguska",
@@ -59,7 +63,7 @@
     "shortLabel": "SA-19",
     "range": "Short",
     "filename": "",
-    "type": "AAA/SAM",
+    "type": "AAA",
     "enabled": true,
     "liveries": {
       "winter": {
@@ -100,7 +104,9 @@
       }
     },
     "acquisitionRange": 18000,
-    "engagementRange": 8000
+    "engagementRange": 8000,
+    "description": "2K22 Tunguska. Tracked self-propelled anti-aircraft 30mm guns and missiles",
+    "abilities": ""
   },
   "55G6 EWR": {
     "name": "55G6 EWR",
@@ -109,7 +115,7 @@
     "label": "Tall Rack",
     "shortLabel": "55G6 EWR",
     "filename": "",
-    "type": "Radar",
+    "type": "EW Radar",
     "enabled": true,
     "liveries": {
       "desert": {
@@ -118,7 +124,9 @@
       }
     },
     "acquisitionRange": 400000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "EWR built on a truck trailer",
+    "abilities": ""
   },
   "5p73 s-125 ln": {
     "name": "5p73 s-125 ln",
@@ -169,7 +177,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 18000
+    "engagementRange": 18000,
+    "description": "4 SA-3 missiles on a static emplacement. Requires grouping with SA-3 components",
+    "abilities": ""
   },
   "AAV7": {
     "name": "AAV7",
@@ -203,7 +213,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 1200
+    "engagementRange": 1200,
+    "description": "Amphibious assault vehicle. Tracked",
+    "abilities": ""
   },
   "ATMZ-5": {
     "name": "ATMZ-5",
@@ -221,7 +233,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "Refueler truck. Wheeled",
+    "abilities": ""
   },
   "ATZ-10": {
     "name": "ATZ-10",
@@ -239,7 +253,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "Refueler truck. Wheeled",
+    "abilities": ""
   },
   "BMD-1": {
     "name": "BMD-1",
@@ -295,7 +311,9 @@
     "barrelHeight": 1.25,
     "muzzleVelocity": 900,
     "acquisitionRange": 0,
-    "engagementRange": 3000
+    "engagementRange": 3000,
+    "description": "Infantry fighting vehicle. Tracked. Amphibious",
+    "abilities": ""
   },
   "BMP-1": {
     "name": "BMP-1",
@@ -393,7 +411,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 3000
+    "engagementRange": 3000,
+    "description": "Infantry fighting vehicle. Tracked. Amphibious",
+    "abilities": ""
   },
   "BMP-2": {
     "name": "BMP-2",
@@ -477,7 +497,9 @@
     "barrelHeight": 1.95,
     "muzzleVelocity": 970,
     "acquisitionRange": 0,
-    "engagementRange": 3000
+    "engagementRange": 3000,
+    "description": "Infantry fighting vehicle. Tracked. Amphibious",
+    "abilities": ""
   },
   "BMP-3": {
     "name": "BMP-3",
@@ -527,7 +549,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 4000
+    "engagementRange": 4000,
+    "description": "Infantry fighting vehicle. Tracked. Amphibious",
+    "abilities": ""
   },
   "BRDM-2": {
     "name": "BRDM-2",
@@ -536,7 +560,7 @@
     "label": "BRDM-2",
     "shortLabel": "BRDM-2",
     "filename": "",
-    "type": "Reconnaissance",
+    "type": "Armoured Car",
     "enabled": true,
     "liveries": {
       "winter": {
@@ -577,7 +601,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 1600
+    "engagementRange": 1600,
+    "description": "Scout car. Wheeled. Amphibious",
+    "abilities": ""
   },
   "BTR-80": {
     "name": "BTR-80",
@@ -659,7 +685,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 1600
+    "engagementRange": 1600,
+    "description": "Armoured persononel carrier. Wheeled. Amphibious",
+    "abilities": ""
   },
   "BTR_D": {
     "name": "BTR_D",
@@ -709,7 +737,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 3000
+    "engagementRange": 3000,
+    "description": "Armoured persononel carrier. Tracked.",
+    "abilities": ""
   },
   "Bunker": {
     "name": "Bunker",
@@ -718,10 +748,12 @@
     "label": "Bunker",
     "shortLabel": "Bunker",
     "filename": "",
-    "type": "Static",
+    "type": "Static Defence",
     "enabled": true,
     "acquisitionRange": 0,
-    "engagementRange": 800
+    "engagementRange": 800,
+    "description": "Concrete bunker. Structure. Fixed Position.",
+    "abilities": ""
   },
   "Challenger2": {
     "name": "Challenger2",
@@ -743,7 +775,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 3500
+    "engagementRange": 3500,
+    "description": "Main battle tank. Tracked. Modern and heavily armoured.",
+    "abilities": ""
   },
   "Cobra": {
     "name": "Cobra",
@@ -752,10 +786,12 @@
     "label": "Otokar Cobra",
     "shortLabel": "Cobra",
     "filename": "",
-    "type": "Reconnaissance",
+    "type": "Armoured Car",
     "enabled": true,
     "acquisitionRange": 0,
-    "engagementRange": 1200
+    "engagementRange": 1200,
+    "description": "Armoured car, MRAP. Wheeled.",
+    "abilities": ""
   },
   "Dog Ear radar": {
     "name": "Dog Ear radar",
@@ -764,7 +800,7 @@
     "label": "Dog Ear",
     "shortLabel": "Dog Ear radar",
     "filename": "",
-    "type": "SAM Search radar",
+    "type": "Track Radar",
     "enabled": true,
     "liveries": {
       "ukr_summer": {
@@ -821,7 +857,9 @@
       }
     },
     "acquisitionRange": 35000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "9S80-1 Sborka Mobile. Tracked fire control radar that can integrate with missile and gun systems.",
+    "abilities": ""
   },
   "GAZ-3307": {
     "name": "GAZ-3307",
@@ -839,7 +877,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "Civilian truck, single axle, wheeled",
+    "abilities": ""
   },
   "GAZ-3308": {
     "name": "GAZ-3308",
@@ -857,7 +897,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "Military truck, single axle, canvas covered cargo bay. wheeled",
+    "abilities": ""
   },
   "GAZ-66": {
     "name": "GAZ-66",
@@ -907,7 +949,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "Military truck, single axle, open cargo bay. wheeled",
+    "abilities": ""
   },
   "Gepard": {
     "name": "Gepard",
@@ -943,7 +987,9 @@
     "barrelHeight": 2.35,
     "muzzleVelocity": 1440,
     "acquisitionRange": 15000,
-    "engagementRange": 4000
+    "engagementRange": 4000,
+    "description": "Tracked self-propelled anti-aircraft 35mm guns",
+    "abilities": ""
   },
   "Grad-URAL": {
     "name": "Grad-URAL",
@@ -952,10 +998,12 @@
     "label": "Grad",
     "shortLabel": "Grad",
     "filename": "",
-    "type": "Rocket Artillery",
+    "type": "Unarmed",
     "enabled": true,
     "acquisitionRange": 0,
-    "engagementRange": 19000
+    "engagementRange": 19000,
+    "description": "Military truck, single axle, open cargo bay. wheeled",
+    "abilities": ""
   },
   "HEMTT TFFT": {
     "name": "HEMTT TFFT",
@@ -973,7 +1021,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "Military truck, 2 axle, firefigther. wheeled",
+    "abilities": ""
   },
   "Hawk SAM Battery": {
     "name": "Hawk SAM Battery",
@@ -983,10 +1033,12 @@
     "shortLabel": "Hawk SAM Battery",
     "range": "Medium",
     "filename": "",
-    "type": "SAM Site",
+    "type": "Radar SAM",
     "enabled": true,
     "acquisitionRange": 90000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "Multiple unit SAM site",
+    "abilities": ""
   },
   "Hawk cwar": {
     "name": "Hawk cwar",
@@ -996,7 +1048,7 @@
     "shortLabel": "Hawk cwar",
     "range": "Long",
     "filename": "",
-    "type": "SAM Track radar",
+    "type": "SAM Search Radar",
     "enabled": true,
     "liveries": {
       "winter": {
@@ -1013,7 +1065,9 @@
       }
     },
     "acquisitionRange": 70000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "Hawk site Aquisition radar",
+    "abilities": ""
   },
   "Hawk ln": {
     "name": "Hawk ln",
@@ -1344,7 +1398,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 45000
+    "engagementRange": 45000,
+    "description": "Hawk site missile laucher. 3 missiles. Needs rest of site to fuction",
+    "abilities": ""
   },
   "Hawk pcp": {
     "name": "Hawk pcp",
@@ -1371,7 +1427,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "Hawk site command post. Medium sized trailer.",
+    "abilities": ""
   },
   "Hawk sr": {
     "name": "Hawk sr",
@@ -1381,7 +1439,7 @@
     "shortLabel": "Hawk sr",
     "range": "Long",
     "filename": "",
-    "type": "SAM Search radar",
+    "type": "SAM Search Radar",
     "enabled": true,
     "liveries": {
       "xx337 - 92 sqn blue tail": {
@@ -1703,7 +1761,9 @@
       }
     },
     "acquisitionRange": 90000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "Hawk site search radar. Medium sized trailer",
+    "abilities": ""
   },
   "Hawk tr": {
     "name": "Hawk tr",
@@ -2035,7 +2095,9 @@
       }
     },
     "acquisitionRange": 90000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "Hawk site track radar. Medium sized trailer",
+    "abilities": ""
   },
   "Hummer": {
     "name": "Hummer",
@@ -2044,7 +2106,7 @@
     "label": "Hummer",
     "shortLabel": "Hummer",
     "filename": "",
-    "type": "Unarmed",
+    "type": "Armoured Car",
     "enabled": true,
     "liveries": {
       "winter": {
@@ -2085,7 +2147,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "Military car, single axle, wheeled",
+    "abilities": ""
   },
   "IKARUS Bus": {
     "name": "IKARUS Bus",
@@ -2097,7 +2161,9 @@
     "type": "Unarmed",
     "enabled": true,
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "Civilian Bus. Yellow. Bendy bus",
+    "abilities": ""
   },
   "Igla manpad INS": {
     "name": "Igla manpad INS",
@@ -2128,7 +2194,9 @@
       }
     },
     "acquisitionRange": 5000,
-    "engagementRange": 5200
+    "engagementRange": 5200,
+    "description": "9K38/SA-18 Man portable air defence. Heatseaker",
+    "abilities": ""
   },
   "Infantry AK": {
     "name": "Infantry AK",
@@ -2142,7 +2210,9 @@
     "muzzleVelocity": 900,
     "barrelHeight": 0.9,
     "acquisitionRange": 0,
-    "engagementRange": 500
+    "engagementRange": 500,
+    "description": "Single infantry carrying AK-74",
+    "abilities": ""
   },
   "KAMAZ Truck": {
     "name": "KAMAZ Truck",
@@ -2192,7 +2262,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "Military truck, 2 axle, wheeled",
+    "abilities": ""
   },
   "Kub 1S91 str": {
     "name": "Kub 1S91 str",
@@ -2202,7 +2274,7 @@
     "shortLabel": "Kub 1S91 str",
     "range": "Medium",
     "filename": "",
-    "type": "SAM Search/Track radar",
+    "type": "SAM Search/Track Radar",
     "enabled": true,
     "liveries": {
       "winter": {
@@ -2227,7 +2299,9 @@
       }
     },
     "acquisitionRange": 70000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "SA-6/Kub search and track radar, tracked.",
+    "abilities": ""
   },
   "Kub 2P25 ln": {
     "name": "Kub 2P25 ln",
@@ -2262,7 +2336,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 25000
+    "engagementRange": 25000,
+    "description": "SA-6/Kub launcher. 3 missiles. Tracked. Needs rest of site to function",
+    "abilities": ""
   },
   "LAV-25": {
     "name": "LAV-25",
@@ -2312,7 +2388,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 2500
+    "engagementRange": 2500,
+    "description": "Infantry fighter vehicle. Wheeled. Amphibious",
+    "abilities": ""
   },
   "LAZ Bus": {
     "name": "LAZ Bus",
@@ -2324,7 +2402,9 @@
     "type": "Unarmed",
     "enabled": true,
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "Civilian bus. Single Axle. Wheeled",
+    "abilities": ""
   },
   "Leclerc": {
     "name": "Leclerc",
@@ -2342,7 +2422,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 3500
+    "engagementRange": 3500,
+    "description": "Main battle tank. Tracked. Modern and heavily armoured.",
+    "abilities": ""
   },
   "Leopard-2": {
     "name": "Leopard-2",
@@ -2504,7 +2586,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 3500
+    "engagementRange": 3500,
+    "description": "Main battle tank. Tracked. Modern and heavily armoured.",
+    "abilities": ""
   },
   "Leopard1A3": {
     "name": "Leopard1A3",
@@ -2554,7 +2638,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 2500
+    "engagementRange": 2500,
+    "description": "Main battle tank. Tracked. Heavily armoured.",
+    "abilities": ""
   },
   "M 818": {
     "name": "M 818",
@@ -2584,7 +2670,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "???",
+    "abilities": ""
   },
   "M-1 Abrams": {
     "name": "M-1 Abrams",
@@ -2618,7 +2706,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 3500
+    "engagementRange": 3500,
+    "description": "Main battle tank. Tracked. Modern and heavily armoured.",
+    "abilities": ""
   },
   "M-109": {
     "name": "M-109",
@@ -2627,7 +2717,7 @@
     "label": "M-109 Paladin",
     "shortLabel": "M-109",
     "filename": "",
-    "type": "Gun Artillery",
+    "type": "Artillery",
     "enabled": true,
     "liveries": {
       "winter": {
@@ -2668,7 +2758,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 22000
+    "engagementRange": 22000,
+    "description": "???",
+    "abilities": ""
   },
   "M-113": {
     "name": "M-113",
@@ -2762,7 +2854,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 1200
+    "engagementRange": 1200,
+    "description": "Armoured personnel carrier. Tracked. Amphibious",
+    "abilities": ""
   },
   "M-2 Bradley": {
     "name": "M-2 Bradley",
@@ -2796,7 +2890,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 3800
+    "engagementRange": 3800,
+    "description": "Infantry fighting vehicle. Tracked.",
+    "abilities": ""
   },
   "M-60": {
     "name": "M-60",
@@ -2830,7 +2926,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 8000
+    "engagementRange": 8000,
+    "description": "Main battle tank. Tracked. Heavily armoured.",
+    "abilities": ""
   },
   "M1043 HMMWV Armament": {
     "name": "M1043 HMMWV Armament",
@@ -2839,7 +2937,7 @@
     "label": "HMMWV M2 Browning",
     "shortLabel": "HMMWV M2",
     "filename": "",
-    "type": "Reconnaissance",
+    "type": "Armoured Car",
     "enabled": true,
     "liveries": {
       "winter": {
@@ -2880,7 +2978,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 1200
+    "engagementRange": 1200,
+    "description": "Military car, single axle, wheeled",
+    "abilities": ""
   },
   "M1045 HMMWV TOW": {
     "name": "M1045 HMMWV TOW",
@@ -2889,7 +2989,7 @@
     "label": "HMMWV TOW",
     "shortLabel": "HMMWV TOW",
     "filename": "",
-    "type": "Reconnaissance",
+    "type": "Armoured Car",
     "enabled": true,
     "liveries": {
       "winter": {
@@ -2930,7 +3030,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 3800
+    "engagementRange": 3800,
+    "description": "Military car, single axle, wheeled",
+    "abilities": ""
   },
   "M1097 Avenger": {
     "name": "M1097 Avenger",
@@ -2942,7 +3044,9 @@
     "type": "SAM",
     "enabled": true,
     "acquisitionRange": 5200,
-    "engagementRange": 4500
+    "engagementRange": 4500,
+    "description": "Military car, single axle, wheeled",
+    "abilities": ""
   },
   "M1126 Stryker ICV": {
     "name": "M1126 Stryker ICV",
@@ -2954,7 +3058,9 @@
     "type": "APC",
     "enabled": true,
     "acquisitionRange": 0,
-    "engagementRange": 1200
+    "engagementRange": 1200,
+    "description": "Armoured personnel carrier. Wheeled.",
+    "abilities": ""
   },
   "M1128 Stryker MGS": {
     "name": "M1128 Stryker MGS",
@@ -2966,7 +3072,9 @@
     "type": "SPG",
     "enabled": true,
     "acquisitionRange": 0,
-    "engagementRange": 4000
+    "engagementRange": 4000,
+    "description": "Self propelled gun. Wheeled.",
+    "abilities": ""
   },
   "M1134 Stryker ATGM": {
     "name": "M1134 Stryker ATGM",
@@ -2975,10 +3083,12 @@
     "label": "Stryker ATGM",
     "shortLabel": "Stryker ATGM",
     "filename": "",
-    "type": "IFV",
+    "type": "APC",
     "enabled": true,
     "acquisitionRange": 0,
-    "engagementRange": 3800
+    "engagementRange": 3800,
+    "description": "Armoured personnel carrier. Wheeled.",
+    "abilities": ""
   },
   "M48 Chaparral": {
     "name": "M48 Chaparral",
@@ -3044,7 +3154,9 @@
       }
     },
     "acquisitionRange": 10000,
-    "engagementRange": 8500
+    "engagementRange": 8500,
+    "description": "",
+    "abilities": ""
   },
   "M6 Linebacker": {
     "name": "M6 Linebacker",
@@ -3078,7 +3190,9 @@
       }
     },
     "acquisitionRange": 8000,
-    "engagementRange": 4500
+    "engagementRange": 4500,
+    "description": "",
+    "abilities": ""
   },
   "M978 HEMTT Tanker": {
     "name": "M978 HEMTT Tanker",
@@ -3112,7 +3226,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "MAZ-6303": {
     "name": "MAZ-6303",
@@ -3146,7 +3262,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "MCV-80": {
     "name": "MCV-80",
@@ -3180,7 +3298,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 2500
+    "engagementRange": 2500,
+    "description": "",
+    "abilities": ""
   },
   "MLRS": {
     "name": "MLRS",
@@ -3230,7 +3350,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 32000
+    "engagementRange": 32000,
+    "description": "",
+    "abilities": ""
   },
   "MTLB": {
     "name": "MTLB",
@@ -3280,7 +3402,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 1000
+    "engagementRange": 1000,
+    "description": "",
+    "abilities": ""
   },
   "Marder": {
     "name": "Marder",
@@ -3314,7 +3438,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 1500
+    "engagementRange": 1500,
+    "description": "",
+    "abilities": ""
   },
   "Osa 9A33 ln": {
     "name": "Osa 9A33 ln",
@@ -3349,7 +3475,9 @@
       }
     },
     "acquisitionRange": 30000,
-    "engagementRange": 10300
+    "engagementRange": 10300,
+    "description": "",
+    "abilities": ""
   },
   "Paratrooper AKS-74": {
     "name": "Paratrooper AKS-74",
@@ -3361,7 +3489,9 @@
     "type": "Infantry",
     "enabled": true,
     "acquisitionRange": 0,
-    "engagementRange": 500
+    "engagementRange": 500,
+    "description": "",
+    "abilities": ""
   },
   "Paratrooper RPG-16": {
     "name": "Paratrooper RPG-16",
@@ -3373,7 +3503,9 @@
     "type": "Infantry",
     "enabled": true,
     "acquisitionRange": 0,
-    "engagementRange": 500
+    "engagementRange": 500,
+    "description": "",
+    "abilities": ""
   },
   "Patriot AMG": {
     "name": "Patriot AMG",
@@ -3408,7 +3540,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Patriot ECS": {
     "name": "Patriot ECS",
@@ -3443,7 +3577,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Patriot EPP": {
     "name": "Patriot EPP",
@@ -3478,7 +3614,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Patriot cp": {
     "name": "Patriot cp",
@@ -3513,7 +3651,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Patriot ln": {
     "name": "Patriot ln",
@@ -3548,7 +3688,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 100000
+    "engagementRange": 100000,
+    "description": "",
+    "abilities": ""
   },
   "Patriot site": {
     "name": "Patriot site",
@@ -3583,7 +3725,9 @@
       }
     },
     "acquisitionRange": 160000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Patriot str": {
     "name": "Patriot str",
@@ -3618,7 +3762,9 @@
       }
     },
     "acquisitionRange": 160000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Predator GCS": {
     "name": "Predator GCS",
@@ -3638,7 +3784,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Predator TrojanSpirit": {
     "name": "Predator TrojanSpirit",
@@ -3650,7 +3798,9 @@
     "type": "Unarmed",
     "enabled": true,
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "RLS_19J6": {
     "name": "RLS_19J6",
@@ -3681,7 +3831,9 @@
       }
     },
     "acquisitionRange": 150000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "RPC_5N62V": {
     "name": "RPC_5N62V",
@@ -3760,7 +3912,9 @@
       }
     },
     "acquisitionRange": 400000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Roland ADS": {
     "name": "Roland ADS",
@@ -3778,7 +3932,9 @@
       }
     },
     "acquisitionRange": 12000,
-    "engagementRange": 8000
+    "engagementRange": 8000,
+    "description": "",
+    "abilities": ""
   },
   "Roland Radar": {
     "name": "Roland Radar",
@@ -3796,7 +3952,9 @@
       }
     },
     "acquisitionRange": 35000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "S-200_Launcher": {
     "name": "S-200_Launcher",
@@ -3875,7 +4033,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 255000
+    "engagementRange": 255000,
+    "description": "",
+    "abilities": ""
   },
   "S-300PS 40B6M tr": {
     "name": "S-300PS 40B6M tr",
@@ -3910,7 +4070,9 @@
       }
     },
     "acquisitionRange": 160000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "S-300PS 40B6MD sr": {
     "name": "S-300PS 40B6MD sr",
@@ -3945,7 +4107,9 @@
       }
     },
     "acquisitionRange": 60000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "S-300PS 54K6 cp": {
     "name": "S-300PS 54K6 cp",
@@ -3980,7 +4144,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "S-300PS 5P85C ln": {
     "name": "S-300PS 5P85C ln",
@@ -4015,7 +4181,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 120000
+    "engagementRange": 120000,
+    "description": "",
+    "abilities": ""
   },
   "S-300PS 5P85D ln": {
     "name": "S-300PS 5P85D ln",
@@ -4050,7 +4218,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 120000
+    "engagementRange": 120000,
+    "description": "",
+    "abilities": ""
   },
   "S-300PS 64H6E sr": {
     "name": "S-300PS 64H6E sr",
@@ -4085,7 +4255,9 @@
       }
     },
     "acquisitionRange": 160000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "SA-10 SAM Battery": {
     "name": "SA-10 SAM Battery",
@@ -4096,7 +4268,11 @@
     "range": "Long",
     "filename": "",
     "type": "SAM Site",
-    "enabled": true
+    "enabled": true,
+    "acquisitionRange": "",
+    "engagementRange": "",
+    "description": "",
+    "abilities": ""
   },
   "SA-11 Buk CC 9S470M1": {
     "name": "SA-11 Buk CC 9S470M1",
@@ -4163,7 +4339,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "SA-11 Buk LN 9A310M1": {
     "name": "SA-11 Buk LN 9A310M1",
@@ -4182,7 +4360,9 @@
       }
     },
     "acquisitionRange": 50000,
-    "engagementRange": 35000
+    "engagementRange": 35000,
+    "description": "",
+    "abilities": ""
   },
   "SA-11 Buk SR 9S18M1": {
     "name": "SA-11 Buk SR 9S18M1",
@@ -4249,7 +4429,9 @@
       }
     },
     "acquisitionRange": 100000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "SA-11 SAM Battery": {
     "name": "SA-11 SAM Battery",
@@ -4260,7 +4442,11 @@
     "range": "Medium",
     "filename": "",
     "type": "SAM Site",
-    "enabled": true
+    "enabled": true,
+    "acquisitionRange": "",
+    "engagementRange": "",
+    "description": "",
+    "abilities": ""
   },
   "SA-18 Igla manpad": {
     "name": "SA-18 Igla manpad",
@@ -4273,7 +4459,9 @@
     "type": "MANPADS",
     "enabled": true,
     "acquisitionRange": 5000,
-    "engagementRange": 5200
+    "engagementRange": 5200,
+    "description": "",
+    "abilities": ""
   },
   "SA-18 Igla-S manpad": {
     "name": "SA-18 Igla-S manpad",
@@ -4286,7 +4474,9 @@
     "type": "MANPADS",
     "enabled": true,
     "acquisitionRange": 5000,
-    "engagementRange": 5200
+    "engagementRange": 5200,
+    "description": "",
+    "abilities": ""
   },
   "SA-2 SAM Battery": {
     "name": "SA-2 SAM Battery",
@@ -4297,7 +4487,11 @@
     "range": "Long",
     "filename": "",
     "type": "SAM Site",
-    "enabled": true
+    "enabled": true,
+    "acquisitionRange": "",
+    "engagementRange": "",
+    "description": "",
+    "abilities": ""
   },
   "SA-3 SAM Battery": {
     "name": "SA-3 SAM Battery",
@@ -4308,7 +4502,11 @@
     "range": "Medium",
     "filename": "",
     "type": "SAM Site",
-    "enabled": true
+    "enabled": true,
+    "acquisitionRange": "",
+    "engagementRange": "",
+    "description": "",
+    "abilities": ""
   },
   "SA-5 SAM Battery": {
     "name": "SA-5 SAM Battery",
@@ -4319,7 +4517,11 @@
     "range": "Long",
     "filename": "",
     "type": "SAM Site",
-    "enabled": true
+    "enabled": true,
+    "acquisitionRange": "",
+    "engagementRange": "",
+    "description": "",
+    "abilities": ""
   },
   "SA-6 SAM Battery": {
     "name": "SA-6 SAM Battery",
@@ -4330,7 +4532,11 @@
     "range": "Medium",
     "filename": "",
     "type": "SAM Site",
-    "enabled": true
+    "enabled": true,
+    "description": "2K12 Kub. Tracked self propelled straight fush Radars, and TELs. 3 missiles per TEL.",
+    "abilities": "",
+    "acquisitionRange": "",
+    "engagementRange": ""
   },
   "SAU 2-C9": {
     "name": "SAU 2-C9",
@@ -4339,7 +4545,7 @@
     "label": "SAU Nona",
     "shortLabel": "SAU Nona",
     "filename": "",
-    "type": "Gun Artillery",
+    "type": "Artillery",
     "enabled": true,
     "liveries": {
       "winter": {
@@ -4380,7 +4586,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 7000
+    "engagementRange": 7000,
+    "description": "",
+    "abilities": ""
   },
   "SAU Akatsia": {
     "name": "SAU Akatsia",
@@ -4389,7 +4597,7 @@
     "label": "SAU Akatsia",
     "shortLabel": "SAU Akatsia",
     "filename": "",
-    "type": "Gun Artillery",
+    "type": "Artillery",
     "enabled": true,
     "liveries": {
       "winter": {
@@ -4430,7 +4638,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 17000
+    "engagementRange": 17000,
+    "description": "",
+    "abilities": ""
   },
   "SAU Gvozdika": {
     "name": "SAU Gvozdika",
@@ -4439,7 +4649,7 @@
     "label": "SAU Gvozdika",
     "shortLabel": "SAU Gvozdika",
     "filename": "",
-    "type": "Gun Artillery",
+    "type": "Artillery",
     "enabled": true,
     "liveries": {
       "winter": {
@@ -4480,7 +4690,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 15000
+    "engagementRange": 15000,
+    "description": "",
+    "abilities": ""
   },
   "SAU Msta": {
     "name": "SAU Msta",
@@ -4489,7 +4701,7 @@
     "label": "SAU Msta",
     "shortLabel": "SAU Msta",
     "filename": "",
-    "type": "Gun Artillery",
+    "type": "Artillery",
     "enabled": true,
     "liveries": {
       "winter": {
@@ -4530,7 +4742,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 23500
+    "engagementRange": 23500,
+    "description": "",
+    "abilities": ""
   },
   "SKP-11": {
     "name": "SKP-11",
@@ -4548,7 +4762,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "SNR_75V": {
     "name": "SNR_75V",
@@ -4582,7 +4798,9 @@
       }
     },
     "acquisitionRange": 100000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "S_75M_Volhov": {
     "name": "S_75M_Volhov",
@@ -4616,7 +4834,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 43000
+    "engagementRange": 43000,
+    "description": "",
+    "abilities": ""
   },
   "Sandbox": {
     "name": "Sandbox",
@@ -4628,7 +4848,9 @@
     "type": "Static",
     "enabled": true,
     "acquisitionRange": 0,
-    "engagementRange": 800
+    "engagementRange": 800,
+    "description": "",
+    "abilities": ""
   },
   "Smerch": {
     "name": "Smerch",
@@ -4662,7 +4884,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 70000
+    "engagementRange": 70000,
+    "description": "",
+    "abilities": ""
   },
   "Soldier AK": {
     "name": "Soldier AK",
@@ -4710,7 +4934,9 @@
     "muzzleVelocity": 900,
     "barrelHeight": 0.9,
     "acquisitionRange": 0,
-    "engagementRange": 500
+    "engagementRange": 500,
+    "description": "",
+    "abilities": ""
   },
   "Soldier M249": {
     "name": "Soldier M249",
@@ -4756,7 +4982,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 700
+    "engagementRange": 700,
+    "description": "",
+    "abilities": ""
   },
   "Soldier M4 GRG": {
     "name": "Soldier M4 GRG",
@@ -4802,7 +5030,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 500
+    "engagementRange": 500,
+    "description": "",
+    "abilities": ""
   },
   "Soldier M4": {
     "name": "Soldier M4",
@@ -4848,7 +5078,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 500
+    "engagementRange": 500,
+    "description": "",
+    "abilities": ""
   },
   "Soldier RPG": {
     "name": "Soldier RPG",
@@ -4894,7 +5126,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 500
+    "engagementRange": 500,
+    "description": "",
+    "abilities": ""
   },
   "Stinger comm dsr": {
     "name": "Stinger comm dsr",
@@ -4929,7 +5163,9 @@
       }
     },
     "acquisitionRange": 5000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Stinger comm": {
     "name": "Stinger comm",
@@ -4964,7 +5200,9 @@
       }
     },
     "acquisitionRange": 5000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Strela-1 9P31": {
     "name": "Strela-1 9P31",
@@ -5015,7 +5253,9 @@
       }
     },
     "acquisitionRange": 5000,
-    "engagementRange": 4200
+    "engagementRange": 4200,
+    "description": "",
+    "abilities": ""
   },
   "Strela-10M3": {
     "name": "Strela-10M3",
@@ -5066,7 +5306,9 @@
       }
     },
     "acquisitionRange": 8000,
-    "engagementRange": 5000
+    "engagementRange": 5000,
+    "description": "",
+    "abilities": ""
   },
   "Suidae": {
     "name": "Suidae",
@@ -5078,7 +5320,9 @@
     "type": "Unarmed",
     "enabled": true,
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "T-55": {
     "name": "T-55",
@@ -5128,7 +5372,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 2500
+    "engagementRange": 2500,
+    "description": "",
+    "abilities": ""
   },
   "T-72B": {
     "name": "T-72B",
@@ -5146,7 +5392,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 4000
+    "engagementRange": 4000,
+    "description": "",
+    "abilities": ""
   },
   "T-80UD": {
     "name": "T-80UD",
@@ -5204,7 +5452,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 5000
+    "engagementRange": 5000,
+    "description": "",
+    "abilities": ""
   },
   "T-90": {
     "name": "T-90",
@@ -5254,7 +5504,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 5000
+    "engagementRange": 5000,
+    "description": "",
+    "abilities": ""
   },
   "TPZ": {
     "name": "TPZ",
@@ -5266,7 +5518,9 @@
     "type": "APC",
     "enabled": true,
     "acquisitionRange": 0,
-    "engagementRange": 1000
+    "engagementRange": 1000,
+    "description": "",
+    "abilities": ""
   },
   "Tigr_233036": {
     "name": "Tigr_233036",
@@ -5284,7 +5538,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Tor 9A331": {
     "name": "Tor 9A331",
@@ -5351,7 +5607,9 @@
       }
     },
     "acquisitionRange": 25000,
-    "engagementRange": 12000
+    "engagementRange": 12000,
+    "description": "",
+    "abilities": ""
   },
   "Trolley bus": {
     "name": "Trolley bus",
@@ -5363,7 +5621,9 @@
     "type": "Unarmed",
     "enabled": true,
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "UAZ-469": {
     "name": "UAZ-469",
@@ -5425,7 +5685,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Uragan_BM-27": {
     "name": "Uragan_BM-27",
@@ -5491,7 +5753,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 35800
+    "engagementRange": 35800,
+    "description": "",
+    "abilities": ""
   },
   "Ural ATsP-6": {
     "name": "Ural ATsP-6",
@@ -5503,7 +5767,9 @@
     "type": "Unarmed",
     "enabled": true,
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Ural-375 PBU": {
     "name": "Ural-375 PBU",
@@ -5521,7 +5787,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Ural-375 ZU-23 Insurgent": {
     "name": "Ural-375 ZU-23 Insurgent",
@@ -5539,7 +5807,9 @@
       }
     },
     "acquisitionRange": 5000,
-    "engagementRange": 2500
+    "engagementRange": 2500,
+    "description": "",
+    "abilities": ""
   },
   "Ural-375 ZU-23": {
     "name": "Ural-375 ZU-23",
@@ -5557,7 +5827,9 @@
       }
     },
     "acquisitionRange": 5000,
-    "engagementRange": 2500
+    "engagementRange": 2500,
+    "description": "",
+    "abilities": ""
   },
   "Ural-375": {
     "name": "Ural-375",
@@ -5575,7 +5847,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Ural-4320 APA-5D": {
     "name": "Ural-4320 APA-5D",
@@ -5593,7 +5867,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "Lightly armoured",
+    "abilities": ""
   },
   "Ural-4320-31": {
     "name": "Ural-4320-31",
@@ -5611,7 +5887,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "abilities": "",
+    "description": ""
   },
   "Ural-4320T": {
     "name": "Ural-4320T",
@@ -5629,7 +5907,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "abilities": "",
+    "description": ""
   },
   "VAZ Car": {
     "name": "VAZ Car",
@@ -5641,7 +5921,9 @@
     "type": "Unarmed",
     "enabled": true,
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Vulcan": {
     "name": "Vulcan",
@@ -5707,7 +5989,9 @@
       }
     },
     "acquisitionRange": 5000,
-    "engagementRange": 2000
+    "engagementRange": 2000,
+    "description": "",
+    "abilities": ""
   },
   "ZIL-131 KUNG": {
     "name": "ZIL-131 KUNG",
@@ -5757,7 +6041,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "ZIL-4331": {
     "name": "ZIL-4331",
@@ -5807,7 +6093,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "ZSU-23-4 Shilka": {
     "name": "ZSU-23-4 Shilka",
@@ -5889,7 +6177,9 @@
       }
     },
     "acquisitionRange": 5000,
-    "engagementRange": 2500
+    "engagementRange": 2500,
+    "description": "Ship",
+    "abilities": ""
   },
   "ZU-23 Closed Insurgent": {
     "name": "ZU-23 Closed Insurgent",
@@ -5907,7 +6197,9 @@
       }
     },
     "acquisitionRange": 5000,
-    "engagementRange": 2500
+    "engagementRange": 2500,
+    "description": "",
+    "abilities": ""
   },
   "ZU-23 Emplacement Closed": {
     "name": "ZU-23 Emplacement Closed",
@@ -5941,7 +6233,9 @@
       }
     },
     "acquisitionRange": 5000,
-    "engagementRange": 2500
+    "engagementRange": 2500,
+    "description": "",
+    "abilities": ""
   },
   "ZU-23 Emplacement": {
     "name": "ZU-23 Emplacement",
@@ -5975,7 +6269,9 @@
       }
     },
     "acquisitionRange": 5000,
-    "engagementRange": 2500
+    "engagementRange": 2500,
+    "description": "",
+    "abilities": ""
   },
   "ZU-23 Insurgent": {
     "name": "ZU-23 Insurgent",
@@ -5993,7 +6289,9 @@
       }
     },
     "acquisitionRange": 5000,
-    "engagementRange": 2500
+    "engagementRange": 2500,
+    "description": "",
+    "abilities": ""
   },
   "ZiL-131 APA-80": {
     "name": "ZiL-131 APA-80",
@@ -6011,7 +6309,9 @@
       }
     },
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "house1arm": {
     "name": "house1arm",
@@ -6023,7 +6323,9 @@
     "type": "Structure",
     "enabled": true,
     "acquisitionRange": 0,
-    "engagementRange": 800
+    "engagementRange": 800,
+    "description": "",
+    "abilities": ""
   },
   "house2arm": {
     "name": "house2arm",
@@ -6035,7 +6337,9 @@
     "type": "Structure",
     "enabled": true,
     "acquisitionRange": 0,
-    "engagementRange": 800
+    "engagementRange": 800,
+    "description": "",
+    "abilities": ""
   },
   "houseA_arm": {
     "name": "houseA_arm",
@@ -6047,7 +6351,9 @@
     "type": "Structure",
     "enabled": true,
     "acquisitionRange": 0,
-    "engagementRange": 800
+    "engagementRange": 800,
+    "description": "",
+    "abilities": ""
   },
   "outpost": {
     "name": "outpost",
@@ -6059,7 +6365,9 @@
     "type": "Structure",
     "enabled": true,
     "acquisitionRange": 0,
-    "engagementRange": 800
+    "engagementRange": 800,
+    "description": "",
+    "abilities": ""
   },
   "outpost_road": {
     "name": "outpost_road",
@@ -6071,7 +6379,9 @@
     "type": "Structure",
     "enabled": true,
     "acquisitionRange": 0,
-    "engagementRange": 800
+    "engagementRange": 800,
+    "description": "",
+    "abilities": ""
   },
   "p-19 s-125 sr": {
     "name": "p-19 s-125 sr",
@@ -6121,7 +6431,9 @@
       }
     },
     "acquisitionRange": 160000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "snr s-125 tr": {
     "name": "snr s-125 tr",
@@ -6172,7 +6484,9 @@
       }
     },
     "acquisitionRange": 100000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "SpGH_Dana": {
     "name": "SpGH_Dana",
@@ -6184,7 +6498,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 18700
+    "engagementRange": 18700,
+    "description": "",
+    "abilities": ""
   },
   "Grad_FDDM": {
     "name": "Grad_FDDM",
@@ -6196,7 +6512,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 1000
+    "engagementRange": 1000,
+    "description": "",
+    "abilities": ""
   },
   "Infantry AK Ins": {
     "name": "Infantry AK Ins",
@@ -6208,7 +6526,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 500
+    "engagementRange": 500,
+    "description": "",
+    "abilities": ""
   },
   "MLRS FDDM": {
     "name": "MLRS FDDM",
@@ -6220,7 +6540,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 1200
+    "engagementRange": 1200,
+    "description": "",
+    "abilities": ""
   },
   "Infantry AK ver2": {
     "name": "Infantry AK ver2",
@@ -6232,7 +6554,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 500
+    "engagementRange": 500,
+    "description": "",
+    "abilities": ""
   },
   "Infantry AK ver3": {
     "name": "Infantry AK ver3",
@@ -6244,7 +6568,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 500
+    "engagementRange": 500,
+    "description": "",
+    "abilities": ""
   },
   "Smerch_HE": {
     "name": "Smerch_HE",
@@ -6256,7 +6582,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 70000
+    "engagementRange": 70000,
+    "description": "",
+    "abilities": ""
   },
   "Soldier stinger": {
     "name": "Soldier stinger",
@@ -6264,11 +6592,13 @@
     "era": "",
     "label": "MANPADS Stinger",
     "shortLabel": "MANPADS Stinger",
-    "type": "AirDefence",
+    "type": "MANPAD",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 5000,
-    "engagementRange": 4500
+    "engagementRange": 4500,
+    "description": "",
+    "abilities": ""
   },
   "SA-18 Igla comm": {
     "name": "SA-18 Igla comm",
@@ -6276,11 +6606,13 @@
     "era": "",
     "label": "MANPADS SA-18 Igla \"Grouse\" C2",
     "shortLabel": "MANPADS SA-18 Igla \"Grouse\" C2",
-    "type": "AirDefence",
+    "type": "MANPAD",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 5000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "SA-18 Igla-S comm": {
     "name": "SA-18 Igla-S comm",
@@ -6288,11 +6620,13 @@
     "era": "",
     "label": "MANPADS SA-18 Igla-S \"Grouse\" C2",
     "shortLabel": "MANPADS SA-18 Igla-S \"Grouse\" C2",
-    "type": "AirDefence",
+    "type": "MANPAD",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 5000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "TACAN_beacon": {
     "name": "TACAN_beacon",
@@ -6304,19 +6638,23 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Merkava_Mk4": {
     "name": "Merkava_Mk4",
     "coalition": "",
     "era": "",
-    "label": "MBT Merkava IV",
-    "shortLabel": "MBT Merkava IV",
-    "type": "Armor",
+    "label": "Tank Merkava IV",
+    "shortLabel": "Tank Merkava IV",
+    "type": "Tank",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 3500
+    "engagementRange": 3500,
+    "description": "",
+    "abilities": ""
   },
   "LiAZ Bus": {
     "name": "LiAZ Bus",
@@ -6328,7 +6666,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "KrAZ6322": {
     "name": "KrAZ6322",
@@ -6340,7 +6680,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "JTAC": {
     "name": "JTAC",
@@ -6352,7 +6694,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Infantry Animated": {
     "name": "Infantry Animated",
@@ -6364,7 +6708,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 500
+    "engagementRange": 500,
+    "description": "",
+    "abilities": ""
   },
   "Electric locomotive": {
     "name": "Electric locomotive",
@@ -6376,7 +6722,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Locomotive": {
     "name": "Locomotive",
@@ -6388,7 +6736,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Coach cargo": {
     "name": "Coach cargo",
@@ -6400,7 +6750,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Coach cargo open": {
     "name": "Coach cargo open",
@@ -6412,7 +6764,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Coach a tank blue": {
     "name": "Coach a tank blue",
@@ -6424,7 +6778,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Coach a tank yellow": {
     "name": "Coach a tank yellow",
@@ -6436,7 +6792,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Coach a passenger": {
     "name": "Coach a passenger",
@@ -6448,7 +6806,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Coach a platform": {
     "name": "Coach a platform",
@@ -6460,7 +6820,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "tacr2a": {
     "name": "tacr2a",
@@ -6472,7 +6834,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "LARC-V": {
     "name": "LARC-V",
@@ -6484,7 +6848,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 500,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "KS-19": {
     "name": "KS-19",
@@ -6492,11 +6858,13 @@
     "era": "",
     "label": "AAA KS-19 100mm",
     "shortLabel": "AAA KS-19 100mm",
-    "type": "AirDefence",
+    "type": "AAA",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 20000
+    "engagementRange": 20000,
+    "description": "",
+    "abilities": ""
   },
   "SON_9": {
     "name": "SON_9",
@@ -6504,11 +6872,13 @@
     "era": "",
     "label": "AAA Fire Can SON-9",
     "shortLabel": "AAA Fire Can SON-9",
-    "type": "AirDefence",
+    "type": "AAA",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 55000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Scud_B": {
     "name": "Scud_B",
@@ -6516,11 +6886,13 @@
     "era": "",
     "label": "SSM SS-1C Scud-B",
     "shortLabel": "SSM SS-1C Scud-B",
-    "type": "MissilesSS",
+    "type": "Missile system",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 320000
+    "engagementRange": 320000,
+    "description": "",
+    "abilities": ""
   },
   "HL_DSHK": {
     "name": "HL_DSHK",
@@ -6528,11 +6900,13 @@
     "era": "",
     "label": "Scout HL with DSHK 12.7mm",
     "shortLabel": "Scout HL with DSHK 12.7mm",
-    "type": "Armor",
+    "type": "Armoured Car",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 5000,
-    "engagementRange": 1200
+    "engagementRange": 1200,
+    "description": "",
+    "abilities": ""
   },
   "HL_KORD": {
     "name": "HL_KORD",
@@ -6540,11 +6914,13 @@
     "era": "",
     "label": "Scout HL with KORD 12.7mm",
     "shortLabel": "Scout HL with KORD 12.7mm",
-    "type": "Armor",
+    "type": "Armoured Car",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 5000,
-    "engagementRange": 1200
+    "engagementRange": 1200,
+    "description": "",
+    "abilities": ""
   },
   "tt_DSHK": {
     "name": "tt_DSHK",
@@ -6552,11 +6928,13 @@
     "era": "",
     "label": "Scout LC with DSHK 12.7mm",
     "shortLabel": "Scout LC with DSHK 12.7mm",
-    "type": "Armor",
+    "type": "Armoured Car",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 5000,
-    "engagementRange": 1200
+    "engagementRange": 1200,
+    "description": "",
+    "abilities": ""
   },
   "tt_KORD": {
     "name": "tt_KORD",
@@ -6564,11 +6942,13 @@
     "era": "",
     "label": "Scout LC with KORD 12.7mm",
     "shortLabel": "Scout LC with KORD 12.7mm",
-    "type": "Armor",
+    "type": "Armoured Car",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 5000,
-    "engagementRange": 1200
+    "engagementRange": 1200,
+    "description": "",
+    "abilities": ""
   },
   "HL_ZU-23": {
     "name": "HL_ZU-23",
@@ -6576,11 +6956,13 @@
     "era": "",
     "label": "SPAAA HL with ZU-23",
     "shortLabel": "SPAAA HL with ZU-23",
-    "type": "AirDefence",
+    "type": "AAA",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 5000,
-    "engagementRange": 2500
+    "engagementRange": 2500,
+    "description": "",
+    "abilities": ""
   },
   "tt_ZU-23": {
     "name": "tt_ZU-23",
@@ -6592,7 +6974,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 2500
+    "engagementRange": 2500,
+    "description": "",
+    "abilities": ""
   },
   "HL_B8M1": {
     "name": "HL_B8M1",
@@ -6604,7 +6988,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 5000,
-    "engagementRange": 5000
+    "engagementRange": 5000,
+    "description": "",
+    "abilities": ""
   },
   "tt_B8M1": {
     "name": "tt_B8M1",
@@ -6616,7 +7002,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 5000,
-    "engagementRange": 5000
+    "engagementRange": 5000,
+    "description": "",
+    "abilities": ""
   },
   "NASAMS_Radar_MPQ64F1": {
     "name": "NASAMS_Radar_MPQ64F1",
@@ -6624,11 +7012,13 @@
     "era": "",
     "label": "SAM NASAMS SR MPQ64F1",
     "shortLabel": "SAM NASAMS SR MPQ64F1",
-    "type": "AirDefence",
+    "type": "SAM Search Radar",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 50000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "NASAMS_Command_Post": {
     "name": "NASAMS_Command_Post",
@@ -6636,11 +7026,13 @@
     "era": "",
     "label": "SAM NASAMS C2",
     "shortLabel": "SAM NASAMS C2",
-    "type": "AirDefence",
+    "type": "SAM Support vehicle",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "NASAMS_LN_B": {
     "name": "NASAMS_LN_B",
@@ -6648,11 +7040,13 @@
     "era": "",
     "label": "SAM NASAMS LN AIM-120B",
     "shortLabel": "SAM NASAMS LN AIM-120B",
-    "type": "AirDefence",
+    "type": "SAM Launcher",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 15000
+    "engagementRange": 15000,
+    "description": "",
+    "abilities": ""
   },
   "NASAMS_LN_C": {
     "name": "NASAMS_LN_C",
@@ -6660,11 +7054,13 @@
     "era": "",
     "label": "SAM NASAMS LN AIM-120C",
     "shortLabel": "SAM NASAMS LN AIM-120C",
-    "type": "AirDefence",
+    "type": "SAM LAuncher",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 15000
+    "engagementRange": 15000,
+    "description": "",
+    "abilities": ""
   },
   "M4_Sherman": {
     "name": "M4_Sherman",
@@ -6676,7 +7072,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 3000
+    "engagementRange": 3000,
+    "description": "",
+    "abilities": ""
   },
   "M2A1_halftrack": {
     "name": "M2A1_halftrack",
@@ -6688,7 +7086,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 1200
+    "engagementRange": 1200,
+    "description": "",
+    "abilities": ""
   },
   "FPS-117 Dome": {
     "name": "FPS-117 Dome",
@@ -6696,11 +7096,13 @@
     "era": "",
     "label": "EWR AN/FPS-117 Radar (domed)",
     "shortLabel": "EWR AN/FPS-117 Radar (domed)",
-    "type": "AirDefence",
+    "type": "EW Radar",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 400000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "FPS-117 ECS": {
     "name": "FPS-117 ECS",
@@ -6708,11 +7110,13 @@
     "era": "",
     "label": "EWR AN/FPS-117 ECS",
     "shortLabel": "EWR AN/FPS-117 ECS",
-    "type": "AirDefence",
+    "type": "EW Radar",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "FPS-117": {
     "name": "FPS-117",
@@ -6720,11 +7124,13 @@
     "era": "",
     "label": "EWR AN/FPS-117 Radar",
     "shortLabel": "EWR AN/FPS-117 Radar",
-    "type": "AirDefence",
+    "type": "EW Radar",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 463000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "RD_75": {
     "name": "RD_75",
@@ -6732,11 +7138,13 @@
     "era": "",
     "label": "SAM SA-2 S-75 RD-75 Amazonka RF",
     "shortLabel": "SAM SA-2 S-75 RD-75 Amazonka RF",
-    "type": "AirDefence",
+    "type": "EW Radar",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 100000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "ZSU_57_2": {
     "name": "ZSU_57_2",
@@ -6744,11 +7152,13 @@
     "era": "",
     "label": "SPAAA ZSU-57-2",
     "shortLabel": "SPAAA ZSU-57-2",
-    "type": "AirDefence",
+    "type": "AAA",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 5000,
-    "engagementRange": 7000
+    "engagementRange": 7000,
+    "description": "",
+    "abilities": ""
   },
   "S-60_Type59_Artillery": {
     "name": "S-60_Type59_Artillery",
@@ -6756,11 +7166,13 @@
     "era": "",
     "label": "AAA S-60 57mm",
     "shortLabel": "AAA S-60 57mm",
-    "type": "AirDefence",
+    "type": "AAA",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 5000,
-    "engagementRange": 6000
+    "engagementRange": 6000,
+    "description": "",
+    "abilities": ""
   },
   "generator_5i57": {
     "name": "generator_5i57",
@@ -6768,23 +7180,27 @@
     "era": "",
     "label": "Diesel Power Station 5I57A",
     "shortLabel": "Diesel Power Station 5I57A",
-    "type": "AirDefence",
+    "type": "Unarmed",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "T-72B3": {
     "name": "T-72B3",
     "coalition": "",
     "era": "",
-    "label": "MBT T-72B3",
-    "shortLabel": "MBT T-72B3",
-    "type": "Armor",
+    "label": "Tank T-72B3",
+    "shortLabel": "Tank T-72B3",
+    "type": "Tank",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 4000
+    "engagementRange": 4000,
+    "description": "",
+    "abilities": ""
   },
   "PT_76": {
     "name": "PT_76",
@@ -6792,11 +7208,13 @@
     "era": "",
     "label": "LT PT-76",
     "shortLabel": "LT PT-76",
-    "type": "Armor",
+    "type": "Tank",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 2000
+    "engagementRange": 2000,
+    "description": "",
+    "abilities": ""
   },
   "BTR-82A": {
     "name": "BTR-82A",
@@ -6804,11 +7222,13 @@
     "era": "",
     "label": "IFV BTR-82A",
     "shortLabel": "IFV BTR-82A",
-    "type": "Armor",
+    "type": "IFV",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 2000
+    "engagementRange": 2000,
+    "description": "",
+    "abilities": ""
   },
   "ATZ-5": {
     "name": "ATZ-5",
@@ -6820,7 +7240,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "AA8": {
     "name": "AA8",
@@ -6832,7 +7254,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "TZ-22_KrAZ": {
     "name": "TZ-22_KrAZ",
@@ -6844,7 +7268,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "ATZ-60_Maz": {
     "name": "ATZ-60_Maz",
@@ -6856,7 +7282,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "ZIL-135": {
     "name": "ZIL-135",
@@ -6868,7 +7296,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "S_75_ZIL": {
     "name": "S_75_ZIL",
@@ -6880,7 +7310,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "rapier_fsa_launcher": {
     "name": "rapier_fsa_launcher",
@@ -6888,11 +7320,13 @@
     "era": "",
     "label": "SAM Rapier LN",
     "shortLabel": "SAM Rapier LN",
-    "type": "AirDefence",
+    "type": "SAM Launcher",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 30000,
-    "engagementRange": 6800
+    "engagementRange": 6800,
+    "description": "",
+    "abilities": ""
   },
   "rapier_fsa_optical_tracker_unit": {
     "name": "rapier_fsa_optical_tracker_unit",
@@ -6900,11 +7334,13 @@
     "era": "",
     "label": "SAM Rapier Tracker",
     "shortLabel": "SAM Rapier Tracker",
-    "type": "AirDefence",
+    "type": "SAM Track radar",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 20000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "rapier_fsa_blindfire_radar": {
     "name": "rapier_fsa_blindfire_radar",
@@ -6912,11 +7348,13 @@
     "era": "",
     "label": "SAM Rapier Blindfire TR",
     "shortLabel": "SAM Rapier Blindfire TR",
-    "type": "AirDefence",
+    "type": "SAM Track radar",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 30000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "bofors40": {
     "name": "bofors40",
@@ -6928,19 +7366,23 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 4000
+    "engagementRange": 4000,
+    "description": "",
+    "abilities": ""
   },
   "Chieftain_mk3": {
     "name": "Chieftain_mk3",
     "coalition": "",
     "era": "",
-    "label": "MBT Chieftain Mk.3",
-    "shortLabel": "MBT Chieftain Mk.3",
-    "type": "Armor",
+    "label": "Tank Chieftain Mk.3",
+    "shortLabel": "Tank Chieftain Mk.3",
+    "type": "Tank",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 3500
+    "engagementRange": 3500,
+    "description": "",
+    "abilities": ""
   },
   "Bedford_MWD": {
     "name": "Bedford_MWD",
@@ -6952,7 +7394,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Land_Rover_101_FC": {
     "name": "Land_Rover_101_FC",
@@ -6964,7 +7408,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Land_Rover_109_S3": {
     "name": "Land_Rover_109_S3",
@@ -6976,7 +7422,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "hy_launcher": {
     "name": "hy_launcher",
@@ -6984,11 +7432,13 @@
     "era": "",
     "label": "AShM SS-N-2 Silkworm",
     "shortLabel": "AShM SS-N-2 Silkworm",
-    "type": "MissilesSS",
+    "type": "Missile system",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 100000,
-    "engagementRange": 100000
+    "engagementRange": 100000,
+    "description": "",
+    "abilities": ""
   },
   "Silkworm_SR": {
     "name": "Silkworm_SR",
@@ -6996,11 +7446,13 @@
     "era": "",
     "label": "AShM Silkworm SR",
     "shortLabel": "AShM Silkworm SR",
-    "type": "MissilesSS",
+    "type": "Missile system",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 200000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "ES44AH": {
     "name": "ES44AH",
@@ -7012,7 +7464,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Boxcartrinity": {
     "name": "Boxcartrinity",
@@ -7024,7 +7478,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Tankcartrinity": {
     "name": "Tankcartrinity",
@@ -7036,7 +7492,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Wellcarnsc": {
     "name": "Wellcarnsc",
@@ -7048,7 +7506,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "flak18": {
     "name": "flak18",
@@ -7062,7 +7522,9 @@
     "aimTime": 20,
     "shotsToFire": 1,
     "acquisitionRange": 0,
-    "engagementRange": 5000
+    "engagementRange": 5000,
+    "description": "",
+    "abilities": ""
   },
   "Pz_IV_H": {
     "name": "Pz_IV_H",
@@ -7070,47 +7532,55 @@
     "era": "",
     "label": "Tk PzIV H",
     "shortLabel": "Tk PzIV H",
-    "type": "Armor",
+    "type": "Tank",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 3000
+    "engagementRange": 3000,
+    "description": "",
+    "abilities": ""
   },
   "Leopard-2A5": {
     "name": "Leopard-2A5",
     "coalition": "",
     "era": "",
-    "label": "MBT Leopard-2A5",
-    "shortLabel": "MBT Leopard-2A5",
-    "type": "Armor",
+    "label": "Tank Leopard-2A5",
+    "shortLabel": "Tank Leopard-2A5",
+    "type": "Tank",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 3500
+    "engagementRange": 3500,
+    "description": "",
+    "abilities": ""
   },
   "leopard-2A4": {
     "name": "leopard-2A4",
     "coalition": "",
     "era": "",
-    "label": "MBT Leopard-2A4",
-    "shortLabel": "MBT Leopard-2A4",
-    "type": "Armor",
+    "label": "Tank Leopard-2A4",
+    "shortLabel": "Tank Leopard-2A4",
+    "type": "Tank",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 3500
+    "engagementRange": 3500,
+    "description": "",
+    "abilities": ""
   },
   "leopard-2A4_trs": {
     "name": "leopard-2A4_trs",
     "coalition": "",
     "era": "",
-    "label": "MBT Leopard-2A4 Trs",
-    "shortLabel": "MBT Leopard-2A4 Trs",
-    "type": "Armor",
+    "label": "Tank Leopard-2A4 Trs",
+    "shortLabel": "Tank Leopard-2A4 Trs",
+    "type": "Tank",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 3500
+    "engagementRange": 3500,
+    "description": "",
+    "abilities": ""
   },
   "Sd_Kfz_251": {
     "name": "Sd_Kfz_251",
@@ -7118,11 +7588,13 @@
     "era": "",
     "label": "APC Sd.Kfz.251 Halftrack",
     "shortLabel": "APC Sd.Kfz.251 Halftrack",
-    "type": "Armor",
+    "type": "APC",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 1100
+    "engagementRange": 1100,
+    "description": "",
+    "abilities": ""
   },
   "Blitz_36-6700A": {
     "name": "Blitz_36-6700A",
@@ -7134,7 +7606,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "T155_Firtina": {
     "name": "T155_Firtina",
@@ -7146,7 +7620,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 41000
+    "engagementRange": 41000,
+    "description": "",
+    "abilities": ""
   },
   "VAB_Mephisto": {
     "name": "VAB_Mephisto",
@@ -7154,11 +7630,13 @@
     "era": "",
     "label": "ATGM VAB Mephisto",
     "shortLabel": "ATGM VAB Mephisto",
-    "type": "Armor",
+    "type": "Armoured Car",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 3800
+    "engagementRange": 3800,
+    "description": "",
+    "abilities": ""
   },
   "ZTZ96B": {
     "name": "ZTZ96B",
@@ -7166,11 +7644,13 @@
     "era": "",
     "label": "ZTZ-96B",
     "shortLabel": "ZTZ-96B",
-    "type": "Armor",
+    "type": "Tank",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 5000
+    "engagementRange": 5000,
+    "description": "",
+    "abilities": ""
   },
   "ZBD04A": {
     "name": "ZBD04A",
@@ -7178,11 +7658,13 @@
     "era": "",
     "label": "ZBD-04A",
     "shortLabel": "ZBD-04A",
-    "type": "Armor",
+    "type": "IFV",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 4800
+    "engagementRange": 4800,
+    "description": "",
+    "abilities": ""
   },
   "HQ-7_LN_SP": {
     "name": "HQ-7_LN_SP",
@@ -7190,11 +7672,13 @@
     "era": "",
     "label": "HQ-7 Self-Propelled LN",
     "shortLabel": "HQ-7 Self-Propelled LN",
-    "type": "AirDefence",
+    "type": "SAM Launcher",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 15000,
-    "engagementRange": 15000
+    "engagementRange": 15000,
+    "description": "",
+    "abilities": ""
   },
   "HQ-7_LN_EO": {
     "name": "HQ-7_LN_EO",
@@ -7202,11 +7686,13 @@
     "era": "",
     "label": "HQ-7 LN Electro-Optics",
     "shortLabel": "HQ-7 LN Electro-Optics",
-    "type": "AirDefence",
+    "type": "SAM Track radar",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 8000,
-    "engagementRange": 12000
+    "engagementRange": 12000,
+    "description": "",
+    "abilities": ""
   },
   "HQ-7_STR_SP": {
     "name": "HQ-7_STR_SP",
@@ -7214,11 +7700,13 @@
     "era": "",
     "label": "HQ-7 Self-Propelled STR",
     "shortLabel": "HQ-7 Self-Propelled STR",
-    "type": "AirDefence",
+    "type": "SAM Track radar",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 30000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "PLZ05": {
     "name": "PLZ05",
@@ -7230,7 +7718,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 23500
+    "engagementRange": 23500,
+    "description": "",
+    "abilities": ""
   },
   "TYPE-59": {
     "name": "TYPE-59",
@@ -7238,11 +7728,13 @@
     "era": "",
     "label": "MT Type 59",
     "shortLabel": "MT Type 59",
-    "type": "Armor",
+    "type": "Tank",
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 2500
+    "engagementRange": 2500,
+    "description": "",
+    "abilities": ""
   },
   "Kubelwagen_82": {
     "name": "Kubelwagen_82",
@@ -7254,7 +7746,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Sd_Kfz_2": {
     "name": "Sd_Kfz_2",
@@ -7266,7 +7760,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Sd_Kfz_7": {
     "name": "Sd_Kfz_7",
@@ -7278,7 +7774,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Horch_901_typ_40_kfz_21": {
     "name": "Horch_901_typ_40_kfz_21",
@@ -7290,7 +7788,9 @@
     "enabled": true,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Tiger_I": {
     "name": "Tiger_I",
@@ -7298,11 +7798,13 @@
     "era": "",
     "label": "Tk Tiger 1",
     "shortLabel": "Tk Tiger 1",
-    "type": "Armor",
-    "enabled": true,
+    "type": "Tank",
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 3000
+    "engagementRange": 3000,
+    "description": "",
+    "abilities": ""
   },
   "Tiger_II_H": {
     "name": "Tiger_II_H",
@@ -7310,11 +7812,13 @@
     "era": "",
     "label": "Tk Tiger II",
     "shortLabel": "Tk Tiger II",
-    "type": "Armor",
-    "enabled": true,
+    "type": "Tank",
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 6000
+    "engagementRange": 6000,
+    "description": "",
+    "abilities": ""
   },
   "Pz_V_Panther_G": {
     "name": "Pz_V_Panther_G",
@@ -7322,11 +7826,13 @@
     "era": "",
     "label": "Tk Panther G (Pz V)",
     "shortLabel": "Tk Panther G (Pz V)",
-    "type": "Armor",
-    "enabled": true,
+    "type": "Tank",
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 3000
+    "engagementRange": 3000,
+    "description": "",
+    "abilities": ""
   },
   "Jagdpanther_G1": {
     "name": "Jagdpanther_G1",
@@ -7334,11 +7840,13 @@
     "era": "",
     "label": "SPG Jagdpanther TD",
     "shortLabel": "SPG Jagdpanther TD",
-    "type": "Armor",
-    "enabled": true,
+    "type": "Tank",
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 5000
+    "engagementRange": 5000,
+    "description": "",
+    "abilities": ""
   },
   "JagdPz_IV": {
     "name": "JagdPz_IV",
@@ -7346,11 +7854,13 @@
     "era": "",
     "label": "SPG Jagdpanzer IV TD",
     "shortLabel": "SPG Jagdpanzer IV TD",
-    "type": "Armor",
-    "enabled": true,
+    "type": "Tank",
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 3000
+    "engagementRange": 3000,
+    "description": "",
+    "abilities": ""
   },
   "Stug_IV": {
     "name": "Stug_IV",
@@ -7358,11 +7868,13 @@
     "era": "",
     "label": "SPG StuG IV AG",
     "shortLabel": "SPG StuG IV AG",
-    "type": "Armor",
-    "enabled": true,
+    "type": "Tank",
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 3000
+    "engagementRange": 3000,
+    "description": "",
+    "abilities": ""
   },
   "SturmPzIV": {
     "name": "SturmPzIV",
@@ -7370,11 +7882,13 @@
     "era": "",
     "label": "SPG Brummbaer AG",
     "shortLabel": "SPG Brummbaer AG",
-    "type": "Armor",
-    "enabled": true,
+    "type": "Tank",
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 4500
+    "engagementRange": 4500,
+    "description": "",
+    "abilities": ""
   },
   "Wespe124": {
     "name": "Wespe124",
@@ -7383,10 +7897,12 @@
     "label": "SPH Sd.Kfz.124 Wespe 105mm",
     "shortLabel": "SPH Sd.Kfz.124 Wespe 105mm",
     "type": "Artillery",
-    "enabled": true,
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 10500
+    "engagementRange": 10500,
+    "description": "",
+    "abilities": ""
   },
   "Sd_Kfz_234_2_Puma": {
     "name": "Sd_Kfz_234_2_Puma",
@@ -7394,11 +7910,13 @@
     "era": "",
     "label": "Scout Puma AC",
     "shortLabel": "Scout Puma AC",
-    "type": "Armor",
-    "enabled": true,
+    "type": "Armoured Car",
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 2000
+    "engagementRange": 2000,
+    "description": "",
+    "abilities": ""
   },
   "KDO_Mod40": {
     "name": "KDO_Mod40",
@@ -7406,11 +7924,13 @@
     "era": "",
     "label": "AAA Kdo.G.40",
     "shortLabel": "AAA Kdo.G.40",
-    "type": "AirDefence",
-    "enabled": true,
+    "type": "AAA",
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 30000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Flakscheinwerfer_37": {
     "name": "Flakscheinwerfer_37",
@@ -7419,10 +7939,12 @@
     "label": "SL Flakscheinwerfer 37",
     "shortLabel": "SL Flakscheinwerfer 37",
     "type": "AAA",
-    "enabled": true,
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 15000,
-    "engagementRange": 15000
+    "engagementRange": 15000,
+    "description": "",
+    "abilities": ""
   },
   "Maschinensatz_33": {
     "name": "Maschinensatz_33",
@@ -7431,10 +7953,12 @@
     "label": "Maschinensatz 33 Gen",
     "shortLabel": "Maschinensatz 33 Gen",
     "type": "AAA",
-    "enabled": true,
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "soldier_mauser98": {
     "name": "soldier_mauser98",
@@ -7443,10 +7967,12 @@
     "label": "Infantry Mauser 98",
     "shortLabel": "Infantry Mauser 98",
     "type": "Infantry",
-    "enabled": true,
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 500
+    "engagementRange": 500,
+    "description": "",
+    "abilities": ""
   },
   "SK_C_28_naval_gun": {
     "name": "SK_C_28_naval_gun",
@@ -7455,10 +7981,12 @@
     "label": "Gun 15cm SK C/28 Naval in Bunker",
     "shortLabel": "Gun 15cm SK C/28 Naval in Bunker",
     "type": "Fortification",
-    "enabled": true,
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 20000
+    "engagementRange": 20000,
+    "description": "",
+    "abilities": ""
   },
   "fire_control": {
     "name": "fire_control",
@@ -7467,10 +7995,12 @@
     "label": "Bunker with Fire Control Center",
     "shortLabel": "Bunker with Fire Control Center",
     "type": "Fortification",
-    "enabled": true,
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 1100
+    "engagementRange": 1100,
+    "description": "",
+    "abilities": ""
   },
   "Stug_III": {
     "name": "Stug_III",
@@ -7478,11 +8008,13 @@
     "era": "",
     "label": "SPG StuG III G AG",
     "shortLabel": "SPG StuG III G AG",
-    "type": "Armor",
-    "enabled": true,
+    "type": "Tank",
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 3000
+    "engagementRange": 3000,
+    "description": "",
+    "abilities": ""
   },
   "Elefant_SdKfz_184": {
     "name": "Elefant_SdKfz_184",
@@ -7490,11 +8022,13 @@
     "era": "",
     "label": "SPG Elefant TD",
     "shortLabel": "SPG Elefant TD",
-    "type": "Armor",
-    "enabled": true,
+    "type": "Tank",
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 6000
+    "engagementRange": 6000,
+    "description": "",
+    "abilities": ""
   },
   "v1_launcher": {
     "name": "v1_launcher",
@@ -7502,11 +8036,13 @@
     "era": "",
     "label": "V-1 Launch Ramp",
     "shortLabel": "V-1 Launch Ramp",
-    "type": "MissilesSS",
-    "enabled": true,
+    "type": "Missile System",
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "FuMG-401": {
     "name": "FuMG-401",
@@ -7514,11 +8050,13 @@
     "era": "",
     "label": "EWR FuMG-401 Freya LZ",
     "shortLabel": "EWR FuMG-401 Freya LZ",
-    "type": "AirDefence",
-    "enabled": true,
+    "type": "EW Radar",
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 160000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "FuSe-65": {
     "name": "FuSe-65",
@@ -7526,11 +8064,13 @@
     "era": "",
     "label": "EWR FuSe-65 W\u00c3\u00bcrzburg-Riese",
     "shortLabel": "EWR FuSe-65 W\u00c3\u00bcrzburg-Riese",
-    "type": "AirDefence",
-    "enabled": true,
+    "type": "EW Radar",
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 60000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Pak40": {
     "name": "Pak40",
@@ -7539,10 +8079,12 @@
     "label": "FH Pak 40 75mm",
     "shortLabel": "FH Pak 40 75mm",
     "type": "Artillery",
-    "enabled": true,
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 3000
+    "engagementRange": 3000,
+    "description": "",
+    "abilities": ""
   },
   "LeFH_18-40-105": {
     "name": "LeFH_18-40-105",
@@ -7551,10 +8093,12 @@
     "label": "FH LeFH-18 105mm",
     "shortLabel": "FH LeFH-18 105mm",
     "type": "Artillery",
-    "enabled": true,
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 10500
+    "engagementRange": 10500,
+    "description": "",
+    "abilities": ""
   },
   "Cromwell_IV": {
     "name": "Cromwell_IV",
@@ -7562,11 +8106,13 @@
     "era": "",
     "label": "Tk Cromwell IV",
     "shortLabel": "Tk Cromwell IV",
-    "type": "Armor",
-    "enabled": true,
+    "type": "Tank",
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 3000
+    "engagementRange": 3000,
+    "description": "",
+    "abilities": ""
   },
   "M4A4_Sherman_FF": {
     "name": "M4A4_Sherman_FF",
@@ -7574,11 +8120,13 @@
     "era": "",
     "label": "Tk M4A4 Sherman Firefly",
     "shortLabel": "Tk M4A4 Sherman Firefly",
-    "type": "Armor",
-    "enabled": true,
+    "type": "Tank",
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 3000
+    "engagementRange": 3000,
+    "description": "",
+    "abilities": ""
   },
   "soldier_wwii_br_01": {
     "name": "soldier_wwii_br_01",
@@ -7587,10 +8135,12 @@
     "label": "Infantry SMLE No.4 Mk-1",
     "shortLabel": "Infantry SMLE No.4 Mk-1",
     "type": "Infantry",
-    "enabled": true,
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 500
+    "engagementRange": 500,
+    "description": "",
+    "abilities": ""
   },
   "Centaur_IV": {
     "name": "Centaur_IV",
@@ -7598,11 +8148,13 @@
     "era": "",
     "label": "Tk Centaur IV CS",
     "shortLabel": "Tk Centaur IV CS",
-    "type": "Armor",
-    "enabled": true,
+    "type": "Tank",
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 6000
+    "engagementRange": 6000,
+    "description": "",
+    "abilities": ""
   },
   "Churchill_VII": {
     "name": "Churchill_VII",
@@ -7610,11 +8162,13 @@
     "era": "",
     "label": "Tk Churchill VII",
     "shortLabel": "Tk Churchill VII",
-    "type": "Armor",
-    "enabled": true,
+    "type": "Tank",
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 3000
+    "engagementRange": 3000,
+    "description": "",
+    "abilities": ""
   },
   "Daimler_AC": {
     "name": "Daimler_AC",
@@ -7622,11 +8176,13 @@
     "era": "",
     "label": "Car Daimler Armored",
     "shortLabel": "Car Daimler Armored",
-    "type": "Armor",
-    "enabled": true,
+    "type": "Armoured Car",
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 2000
+    "engagementRange": 2000,
+    "description": "",
+    "abilities": ""
   },
   "Tetrarch": {
     "name": "Tetrarch",
@@ -7634,11 +8190,13 @@
     "era": "",
     "label": "Tk Tetrach",
     "shortLabel": "Tk Tetrach",
-    "type": "Armor",
-    "enabled": true,
+    "type": "Armoured Car",
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 2000
+    "engagementRange": 2000,
+    "description": "",
+    "abilities": ""
   },
   "QF_37_AA": {
     "name": "QF_37_AA",
@@ -7647,10 +8205,12 @@
     "label": "AAA QF 3.7\"",
     "shortLabel": "AAA QF 3.7\"",
     "type": "AAA",
-    "enabled": true,
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 9000
+    "engagementRange": 9000,
+    "description": "",
+    "abilities": ""
   },
   "Allies_Director": {
     "name": "Allies_Director",
@@ -7658,11 +8218,13 @@
     "era": "",
     "label": "Allies Rangefinder (DRT)",
     "shortLabel": "Allies Rangefinder (DRT)",
-    "type": "AirDefence",
-    "enabled": true,
+    "type": "Unarmed",
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 30000,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "CCKW_353": {
     "name": "CCKW_353",
@@ -7671,10 +8233,12 @@
     "label": "Truck GMC \"Jimmy\" 6x6",
     "shortLabel": "Truck GMC \"Jimmy\" 6x6",
     "type": "Unarmed",
-    "enabled": true,
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "Willys_MB": {
     "name": "Willys_MB",
@@ -7683,10 +8247,12 @@
     "label": "Car Willys Jeep",
     "shortLabel": "Car Willys Jeep",
     "type": "Unarmed",
-    "enabled": true,
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "M12_GMC": {
     "name": "M12_GMC",
@@ -7695,10 +8261,12 @@
     "label": "SPH M12 GMC 155mm",
     "shortLabel": "SPH M12 GMC 155mm",
     "type": "Artillery",
-    "enabled": true,
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 18300
+    "engagementRange": 18300,
+    "description": "",
+    "abilities": ""
   },
   "M30_CC": {
     "name": "M30_CC",
@@ -7707,10 +8275,12 @@
     "label": "Ammo M30 Cargo Carrier",
     "shortLabel": "Ammo M30 Cargo Carrier",
     "type": "Unarmed",
-    "enabled": true,
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 1200
+    "engagementRange": 1200,
+    "description": "",
+    "abilities": ""
   },
   "soldier_wwii_us": {
     "name": "soldier_wwii_us",
@@ -7719,10 +8289,12 @@
     "label": "Infantry M1 Garand",
     "shortLabel": "Infantry M1 Garand",
     "type": "Infantry",
-    "enabled": true,
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 500
+    "engagementRange": 500,
+    "description": "",
+    "abilities": ""
   },
   "M10_GMC": {
     "name": "M10_GMC",
@@ -7730,11 +8302,13 @@
     "era": "",
     "label": "SPG M10 GMC TD",
     "shortLabel": "SPG M10 GMC TD",
-    "type": "Armor",
-    "enabled": true,
+    "type": "Tank",
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 6000
+    "engagementRange": 6000,
+    "description": "",
+    "abilities": ""
   },
   "M8_Greyhound": {
     "name": "M8_Greyhound",
@@ -7742,11 +8316,13 @@
     "era": "",
     "label": "Scout M8 Greyhound AC",
     "shortLabel": "Scout M8 Greyhound AC",
-    "type": "Armor",
-    "enabled": true,
+    "type": "Armoured Car",
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 2000
+    "engagementRange": 2000,
+    "description": "",
+    "abilities": ""
   },
   "M2A1-105": {
     "name": "M2A1-105",
@@ -7755,10 +8331,12 @@
     "label": "FH M2A1 105mm",
     "shortLabel": "FH M2A1 105mm",
     "type": "Artillery",
-    "enabled": true,
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 11500
+    "engagementRange": 11500,
+    "description": "",
+    "abilities": ""
   },
   "M4_Tractor": {
     "name": "M4_Tractor",
@@ -7766,11 +8344,13 @@
     "era": "",
     "label": "Tractor M4 High Speed",
     "shortLabel": "Tractor M4 High Speed",
-    "type": "Armor",
-    "enabled": true,
+    "type": "Unarmed",
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 1200
+    "engagementRange": 1200,
+    "description": "",
+    "abilities": ""
   },
   "M45_Quadmount": {
     "name": "M45_Quadmount",
@@ -7779,10 +8359,12 @@
     "label": "AAA M45 Quadmount HB 12.7mm",
     "shortLabel": "AAA M45 Quadmount HB 12.7mm",
     "type": "AAA",
-    "enabled": true,
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 1500
+    "engagementRange": 1500,
+    "description": "",
+    "abilities": ""
   },
   "M1_37mm": {
     "name": "M1_37mm",
@@ -7791,10 +8373,12 @@
     "label": "AAA M1 37mm",
     "shortLabel": "AAA M1 37mm",
     "type": "AAA",
-    "enabled": true,
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 5700
+    "engagementRange": 5700,
+    "description": "",
+    "abilities": ""
   },
   "DR_50Ton_Flat_Wagon": {
     "name": "DR_50Ton_Flat_Wagon",
@@ -7803,10 +8387,12 @@
     "label": "DR 50-ton flat wagon",
     "shortLabel": "DR 50-ton flat wagon",
     "type": "Carriage",
-    "enabled": true,
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "DRG_Class_86": {
     "name": "DRG_Class_86",
@@ -7815,10 +8401,12 @@
     "label": "Loco DRG Class 86",
     "shortLabel": "Loco DRG Class 86",
     "type": "Locomotive",
-    "enabled": true,
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "German_covered_wagon_G10": {
     "name": "German_covered_wagon_G10",
@@ -7827,10 +8415,12 @@
     "label": "Wagon G10 (Germany)",
     "shortLabel": "Wagon G10 (Germany)",
     "type": "Carriage",
-    "enabled": true,
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   },
   "German_tank_wagon": {
     "name": "German_tank_wagon",
@@ -7839,9 +8429,11 @@
     "label": "Tank Car (Germany)",
     "shortLabel": "Tank Car (Germany)",
     "type": "Carriage",
-    "enabled": true,
+    "enabled": false,
     "liveries": {},
     "acquisitionRange": 0,
-    "engagementRange": 0
+    "engagementRange": 0,
+    "description": "",
+    "abilities": ""
   }
 }

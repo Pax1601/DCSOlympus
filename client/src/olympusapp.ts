@@ -18,7 +18,7 @@ import { Manager } from "./other/manager";
 import { SVGInjector } from "@tanem/svg-injector";
 import { ServerManager } from "./server/servermanager";
 
-import { BLUE_COMMANDER, GAME_MASTER, HIDE_UNITS_SHORT_RANGE_RINGS, RED_COMMANDER, SHOW_UNITS_ACQUISITION_RINGS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNIT_LABELS } from "./constants/constants";
+import { BLUE_COMMANDER, FILL_SELECTED_RING, GAME_MASTER, HIDE_UNITS_SHORT_RANGE_RINGS, RED_COMMANDER, SHOW_UNITS_ACQUISITION_RINGS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNIT_LABELS } from "./constants/constants";
 import { aircraftDatabase } from "./unit/databases/aircraftdatabase";
 import { helicopterDatabase } from "./unit/databases/helicopterdatabase";
 import { groundUnitDatabase } from "./unit/databases/groundunitdatabase";
@@ -298,6 +298,17 @@ export class OlympusApp {
                 }
             },
             "code": "KeyR",
+            "ctrlKey": false,
+            "shiftKey": false
+        }).addKeyboardShortcut("toggleFillEngagementRings", {
+            "altKey": false,
+            "callback": () => {
+                const chk = document.querySelector(`label[title="${FILL_SELECTED_RING}"] input[type="checkbox"]`);
+                if (chk instanceof HTMLElement) {
+                    chk.click();
+                }
+            },
+            "code": "KeyF",
             "ctrlKey": false,
             "shiftKey": false
         });

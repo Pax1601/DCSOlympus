@@ -44,6 +44,8 @@ export class UnitSpawnMenu {
     #unitLoadoutPreviewEl: HTMLDivElement;
     #unitImageEl: HTMLImageElement;
     #unitLoadoutListEl: HTMLDivElement;
+    #descriptionDiv: HTMLDivElement;
+    #abilitiesDiv: HTMLDivElement;
 
     /* Range circle previews */
     #engagementCircle: Circle;
@@ -69,12 +71,12 @@ export class UnitSpawnMenu {
         var divider = document.createElement("div");
         divider.innerText = "x";
         unitLabelCountContainerEl.append(this.#unitLabelDropdown.getContainer(), divider, this.#unitCountDropdown.getContainer());
-
+        
         /* Create the unit image and loadout elements */
-        this.#unitLoadoutPreviewEl = document.createElement("div");
-        this.#unitLoadoutPreviewEl.classList.add("unit-loadout-preview");
         this.#unitImageEl = document.createElement("img");
         this.#unitImageEl.classList.add("unit-image", "hide");
+        this.#unitLoadoutPreviewEl = document.createElement("div");
+        this.#unitLoadoutPreviewEl.classList.add("unit-loadout-preview");
         this.#unitLoadoutListEl = document.createElement("div");
         this.#unitLoadoutListEl.classList.add("unit-loadout-list");
         this.#unitLoadoutPreviewEl.append(this.#unitImageEl, this.#unitLoadoutListEl);
@@ -93,7 +95,24 @@ export class UnitSpawnMenu {
             this.#container.dispatchEvent(new Event("resize"));
         });
         advancedOptionsDiv.append(this.#unitCountryDropdown.getContainer(), this.#unitLiveryDropdown.getContainer(),
-            this.#unitLoadoutPreviewEl, this.#unitSpawnAltitudeSlider.getContainer() as HTMLElement);
+            this.#unitSpawnAltitudeSlider.getContainer() as HTMLElement);
+
+        /* Create the divider and the metadata collapsible div */
+        var metadataDiv = document.createElement("div");
+        metadataDiv.classList.add("contextmenu-metadata", "hide");
+        var metadataToggle = document.createElement("div");
+        metadataToggle.classList.add("contextmenu-metadata-toggle");
+        var metadataText = document.createElement("div");
+        metadataText.innerText = "Info";
+        var metadataHr = document.createElement("hr");
+        metadataToggle.append(metadataText, metadataHr);
+        metadataToggle.addEventListener("click", () => { 
+            metadataDiv.classList.toggle("hide");
+            this.#container.dispatchEvent(new Event("resize"));
+        });
+        this.#descriptionDiv = document.createElement("div"); 
+        this.#abilitiesDiv = document.createElement("div");
+        metadataDiv.append(this.#descriptionDiv, this.#abilitiesDiv);
 
         /* Create the unit deploy button */
         this.#deployUnitButtonEl = document.createElement("button");
@@ -107,7 +126,7 @@ export class UnitSpawnMenu {
 
         /* Assemble all components */
         this.#container.append(this.#unitRoleTypeDropdown.getContainer(), unitLabelCountContainerEl, this.#unitLoadoutDropdown.getContainer(),
-            advancedOptionsToggle, advancedOptionsDiv, this.#deployUnitButtonEl);
+        this.#unitLoadoutPreviewEl, advancedOptionsToggle, advancedOptionsDiv, metadataToggle, metadataDiv, this.#deployUnitButtonEl);
 
         /* Load the country codes from the public folder */
         var xhr = new XMLHttpRequest();
@@ -151,13 +170,36 @@ export class UnitSpawnMenu {
                 this.#unitLoadoutDropdown.selectValue(0);
             }
 
-            this.#unitImageEl.src = `images/units/${this.#unitDatabase.getByName(this.spawnOptions.name)?.filename}`;
-            this.#unitImageEl.classList.toggle("hide", false);
+            var blueprint = this.#unitDatabase.getByName(this.spawnOptions.name);
+
+
+            this.#unitImageEl.src = `images/units/${blueprint?.filename}`;
+            this.#unitImageEl.classList.toggle("hide", !(blueprint?.filename !== undefined));
             
             this.#setUnitLiveryOptions();
 
             this.#container.dispatchEvent(new Event("resize"));
             this.#computeSpawnPoints();
+
+            this.#descriptionDiv.replaceChildren();
+            this.#abilitiesDiv.replaceChildren();
+
+            if (blueprint?.description)
+                this.#descriptionDiv.textContent = blueprint.description;
+            
+            if (blueprint?.abilities) {
+                var abilities = blueprint.abilities.split(",");
+                this.#abilitiesDiv.replaceChildren();
+                for (let ability of abilities) {
+                    if (ability !== "") {
+                        ability = ability.trimStart();
+                        var div = document.createElement("div");
+                        div.textContent = ability.charAt(0).toUpperCase() + ability.slice(1);
+                        this.#abilitiesDiv.append(div);
+                        div.classList.add("pill-light");
+                    }
+                }
+            }
 
             this.showCirclesPreviews();
         })
@@ -215,6 +257,8 @@ export class UnitSpawnMenu {
         this.#unitLoadoutListEl.replaceChildren();
         this.#unitLoadoutDropdown.reset();
         this.#unitImageEl.classList.toggle("hide", true);
+        this.#descriptionDiv.replaceChildren();
+        this.#abilitiesDiv.replaceChildren();
 
         this.setCountries();
         this.#container.dispatchEvent(new Event("resize"));

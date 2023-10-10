@@ -5,7 +5,7 @@ import { CustomMarker } from '../map/markers/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
 import { UnitDatabase } from './databases/unitdatabase';
 import { TargetMarker } from '../map/markers/targetmarker';
-import { DLINK, DataIndexes, GAME_MASTER, HIDE_GROUP_MEMBERS, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, ROEs, RWR, SHOW_UNIT_CONTACTS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, VISUAL, emissionsCountermeasures, reactionsToThreat, states, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS } from '../constants/constants';
+import { DLINK, DataIndexes, GAME_MASTER, HIDE_GROUP_MEMBERS, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, ROEs, RWR, SHOW_UNIT_CONTACTS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, VISUAL, emissionsCountermeasures, reactionsToThreat, states, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING } from '../constants/constants';
 import { DataExtractor } from '../server/dataextractor';
 import { groundUnitDatabase } from './databases/groundunitdatabase';
 import { navyUnitDatabase } from './databases/navyunitdatabase';
@@ -341,6 +341,11 @@ export class Unit extends CustomMarker {
         /* Only alive units can be selected. Some units are not selectable (weapons) */
         if ((this.#alive || !selected) && this.getSelectable() && this.getSelected() != selected && this.belongsToCommandedCoalition()) {
             this.#selected = selected;
+
+            /* Circles don't like to be updated when the map is zooming */
+            if (!getApp().getMap().isZooming()) {
+                this.#drawRanges();
+            }
 
             if (selected) {
                 this.#updateMarker();
@@ -1055,11 +1060,6 @@ export class Unit extends CustomMarker {
             /* Set vertical offset for altitude stacking */
             var pos = getApp().getMap().latLngToLayerPoint(this.getLatLng()).round();
             this.setZIndexOffset(1000 + Math.floor(this.#position.alt as number) - pos.y + (this.#highlighted || this.#selected ? 5000 : 0));
-
-            /* Circles don't like to be updated when the map is zooming */
-            if (!getApp().getMap().isZooming()) {
-                this.#drawRanges();
-            }
         }
     }
 
@@ -1180,12 +1180,12 @@ export class Unit extends CustomMarker {
             if (engagementRange !== this.#engagementCircle.getRadius())
                 this.#engagementCircle.setRadius(engagementRange);
 
-            this.#engagementCircle.options.fillOpacity = this.getSelected()? 0.3: 0;
+            this.#engagementCircle.options.fillOpacity = this.getSelected() && getApp().getMap().getVisibilityOptions()[FILL_SELECTED_RING]? 0.3: 0;
 
             /* Acquisition circles */
-            var shortRangeCheck = (engagementRange > nmToM(3) && acquisitionRange > nmToM(3) || !getApp().getMap().getVisibilityOptions()[HIDE_UNITS_SHORT_RANGE_RINGS]);
+            var shortAcquisitionRangeCheck = (acquisitionRange > nmToM(3) || !getApp().getMap().getVisibilityOptions()[HIDE_UNITS_SHORT_RANGE_RINGS]);
 
-            if (getApp().getMap().getVisibilityOptions()[SHOW_UNITS_ACQUISITION_RINGS] && shortRangeCheck && (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, IRST, RWR].includes(value)))) {
+            if (getApp().getMap().getVisibilityOptions()[SHOW_UNITS_ACQUISITION_RINGS] && shortAcquisitionRangeCheck && (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, IRST, RWR].includes(value)))) {
                 if (!getApp().getMap().hasLayer(this.#acquisitionCircle)) {
                     this.#acquisitionCircle.addTo(getApp().getMap());
                     switch (this.getCoalition()) {
@@ -1208,7 +1208,8 @@ export class Unit extends CustomMarker {
             }
             
             /* Engagement circles */
-            if (getApp().getMap().getVisibilityOptions()[SHOW_UNITS_ENGAGEMENT_RINGS] && shortRangeCheck && (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, IRST, RWR].includes(value)))) {
+            var shortEngagementRangeCheck = (engagementRange > nmToM(3) || !getApp().getMap().getVisibilityOptions()[HIDE_UNITS_SHORT_RANGE_RINGS]);
+            if (getApp().getMap().getVisibilityOptions()[SHOW_UNITS_ENGAGEMENT_RINGS] && shortEngagementRangeCheck && (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, IRST, RWR].includes(value)))) {
                 if (!getApp().getMap().hasLayer(this.#engagementCircle)) {
                     this.#engagementCircle.addTo(getApp().getMap());
                     switch (this.getCoalition()) {

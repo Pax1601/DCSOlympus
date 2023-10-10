@@ -51,14 +51,21 @@ export class UnitDatabase {
         return null;
     }
 
-    getBlueprints() {
-        if (getApp().getMissionManager().getCommandModeOptions().commandMode == GAME_MASTER || !getApp().getMissionManager().getCommandModeOptions().restrictSpawns)
-            return this.blueprints;
+    getBlueprints(includeDisabled: boolean = false) {
+        if (getApp().getMissionManager().getCommandModeOptions().commandMode == GAME_MASTER || !getApp().getMissionManager().getCommandModeOptions().restrictSpawns) {
+            var filteredBlueprints: { [key: string]: UnitBlueprint } = {};
+            for (let unit in this.blueprints) {
+                const blueprint = this.blueprints[unit];
+                if (blueprint.enabled || includeDisabled) 
+                    filteredBlueprints[unit] = blueprint;
+            }
+            return filteredBlueprints;
+        }
         else {
             var filteredBlueprints: { [key: string]: UnitBlueprint } = {};
             for (let unit in this.blueprints) {
                 const blueprint = this.blueprints[unit];
-                if (this.getSpawnPointsByName(blueprint.name) <= getApp().getMissionManager().getAvailableSpawnPoints() && 
+                if ((blueprint.enabled || includeDisabled) && this.getSpawnPointsByName(blueprint.name) <= getApp().getMissionManager().getAvailableSpawnPoints() && 
                     getApp().getMissionManager().getCommandModeOptions().eras.includes(blueprint.era) &&
                     (!getApp().getMissionManager().getCommandModeOptions().restrictToCoalition || blueprint.coalition === getApp().getMissionManager().getCommandedCoalition() || blueprint.coalition === undefined)) {
                     filteredBlueprints[unit] = blueprint;

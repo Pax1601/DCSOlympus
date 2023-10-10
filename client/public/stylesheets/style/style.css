@@ -77,9 +77,17 @@ form>div {
 }
 
 .pill {
-    background-color: var(--background-dark-steel);
-    border-radius: var(--border-radius-sm);
+    background-color: var(--background-steel);
+    border-radius: 999px;
     padding: 4px 8px;
+    width: fit-content;
+    font-weight: bold;
+}
+
+.pill-light {
+    background-color: var(--background-grey);
+    border-radius: var(--border-radius-md);
+    padding: 3px 6px;
     width: fit-content;
 }
 

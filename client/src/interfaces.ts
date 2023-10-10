@@ -195,6 +195,7 @@ export interface LoadoutBlueprint {
 
 export interface UnitBlueprint {
     name: string;
+    enabled: boolean;
     coalition: string;
     era: string;
     label: string;
