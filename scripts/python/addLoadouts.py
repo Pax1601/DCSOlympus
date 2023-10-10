@@ -12,6 +12,22 @@ from dcs.weapons_data import Weapons
 from dcs.planes import *
 from dcs.helicopters import *
 
+def rename_task(task_name):
+    task_map = {
+        "AFAC": "FAC-A",
+        "Fighter Sweep": "CAP",
+        "Ground Attack": "Strike",
+        "Intercept": "CAP",
+        "Pinpoint Strike": "Strike",
+        "Refueling": "Tanker",
+        "Nothing": "No task"
+    }
+
+    if task_name in task_map:
+        return task_map[task_name]
+    else:
+        return task_name
+
 # Known id mismatches (because reasons, ask ED)
 mismatched_ids = {
     "A-10CII": "A-10C_2"
@@ -38,10 +54,8 @@ if len(sys.argv) > 1:
         filename = '..\\..\\client\\public\\databases\\units\\navyunitdatabase.json' 
 
     # Loads the database 
-    with open(filename) as f:
+    with open(filename, encoding="utf-8") as f:
         database = json.load(f)
-        for unit_name in database:
-            database[unit_name]["enabled"] = True
 
     # Loads the loadout names
     with open('../unitPayloads.lua') as f:
@@ -80,7 +94,7 @@ if len(sys.argv) > 1:
                 "enabled": True,
                 "code": "",
                 "name": "Empty loadout",
-                "roles": [cls.task_default.name]
+                "roles": ["No task", rename_task(cls.task_default.name)]
             }
             database[unit_name]["loadouts"].append(empty_loadout)
 
@@ -103,12 +117,12 @@ if len(sys.argv) > 1:
                         for name, obj in inspect.getmembers(task):
                             if inspect.isclass(obj) and issubclass(obj, task.MainTask):
                                 if (obj.id == role):
-                                    payload_roles.append(obj.name)
+                                    payload_roles.append(rename_task(obj.name))
                     else:
                         for name, obj in inspect.getmembers(task):
                             if inspect.isclass(obj) and issubclass(obj, task.MainTask):
                                 if (name == role):
-                                    payload_roles.append(obj.name)
+                                    payload_roles.append(rename_task(obj.name))
 
                 # Create the loadout structure and append it to the table
                 new_payload = {

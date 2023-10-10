@@ -142,7 +142,12 @@ void AirUnit::AIloop()
 	/* State machine */
 	switch (state) {
 		case State::IDLE: {
-			setTask("Idle");
+			if (isTanker)
+				setTask("Tanker racetrack");
+			else if (isAWACS)
+				setTask("AWACS racetrack");
+			else
+				setTask("Idle");
 			
 			if (!getHasTask())
 			{
@@ -291,6 +296,7 @@ void AirUnit::AIloop()
 					setState(State::IDLE);
 				}
 			}
+			break;
 		}
 		case State::BOMB_POINT: {
 			setTask("Bombing point");
@@ -304,6 +310,7 @@ void AirUnit::AIloop()
 				scheduler->appendCommand(command);
 				setHasTask(true);
 			}
+			break;
 		}
 		case State::CARPET_BOMB: {
 			setTask("Carpet bombing");

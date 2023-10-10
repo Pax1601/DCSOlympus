@@ -485,7 +485,7 @@
     }
   },
   "AH-64D_BLK_II": {
-    "4 * Fuel Tank 230 gal": {
+    "2 * Fuel Tank 230 gal": {
       "1": 16,
       "2": 30,
       "3": 31,
@@ -549,6 +549,55 @@
       "5": 32
     },
     "2 * M261: C - M274 (6SK), D/E - M151 (6PD), 2 * Hellfire station: 4*AGM-114K": {
+      "1": 16,
+      "2": 30,
+      "3": 31,
+      "4": 18,
+      "5": 32
+    },
+    "2 * M261: M151 (6PD), 2 * Hellfire station: 4*AGM-114L": {
+      "1": 16,
+      "2": 30,
+      "3": 31,
+      "4": 18,
+      "5": 32
+    },
+    "4 * Hellfire station: 4*AGM-114L": {
+      "1": 16,
+      "2": 30,
+      "3": 31,
+      "4": 18,
+      "5": 32
+    },
+    "2 * Fuel Tank 230 gal, 2 * Hellfire station: 4*AGM-114L": {
+      "1": 16,
+      "2": 30,
+      "3": 31,
+      "4": 18,
+      "5": 32
+    },
+    "2 * M261: A/B - M151 (6PD), E - M274 (6SK), 2 * Hellfire station: 4*AGM-114L": {
+      "1": 16,
+      "2": 30,
+      "3": 31,
+      "4": 18,
+      "5": 32
+    },
+    "2 * M261: A/B - M151 (6PD), E - M257 (6IL), 2 * Hellfire station: 4*AGM-114L": {
+      "1": 16,
+      "2": 30,
+      "3": 31,
+      "4": 18,
+      "5": 32
+    },
+    "2 * M261: C - M257 (6IL), D/E - M151 (6PD), 2 * Hellfire station: 4*AGM-114L": {
+      "1": 16,
+      "2": 30,
+      "3": 31,
+      "4": 18,
+      "5": 32
+    },
+    "2 * M261: C - M274 (6SK), D/E - M151 (6PD), 2 * Hellfire station: 4*AGM-114L": {
       "1": 16,
       "2": 30,
       "3": 31,
@@ -1223,6 +1272,63 @@
       "3": 17
     }
   },
+  "F-15ESE": {
+    "AIM-120C x 2, AIM-9M x 2, BLU-107 x 12, TGP, NVP, Fuel Tank": {
+      "1": 34
+    },
+    "AIM-120C x 4, AIM-9M x4, TGP, NVP, FUel Tank x 2": {
+      "1": 17
+    },
+    "AIM-9M x 4, CBU-87 x 6, TGP, Fuel Tank x 2": {
+      "1": 31
+    },
+    "AIM-120Cx4, AIM-9Mx4, Fuel Tanks x 2": {
+      "1": 11
+    },
+    "AIM-9M x 4, TGP, NVP, Fuel Tanks x 2": {
+      "1": 11
+    },
+    "AIM-9M x 4, Mk-84 x 2, Mk-82 x 6, CBU-87 x 3, TGP, NVP": {
+      "1": 31
+    },
+    "CATM-9M x 3, AIM-120B": {
+      "1": 11
+    },
+    "AIM-9M x 4, AIM-120B x 4, TGP, NVP, Fuel Tanks x 2": {
+      "1": 11
+    },
+    "CATM-9M, CAIM-120": {
+      "1": 11
+    },
+    " AIM-120C x 2, CATM-9M, GBU-12 x 4,  TGP, NVP": {
+      "1": 32
+    },
+    "AIM-120C x 2, AIM-9M x 2, GBU-12 x 9, TGP, NVP, FUel Tank x 2": {
+      "1": 32
+    },
+    " AIM-9M x 4, MK-82 x 12, TGP, Fuel Tank x 2": {
+      "1": 31
+    },
+    "AIM-9M x 4, AIM-120C x 2, CBU-87 x 6, TGP": {
+      "1": 31
+    },
+    "AIM-120C x 2, AIM-9M x 2, GBU-12 x 4, GBU-10 x 2, TGP, NVP, FUel Tank x 2": {
+      "1": 32
+    },
+    "Clean": {},
+    "AIM-9M x 4, Mk-20 x 12, NVP, Fuel Tanks x 2": {
+      "1": 32,
+      "2": 31
+    },
+    "AIM-9M x 4, AIM-7M x 2, Mk-20 x 2, NVP, Fuel Tanks x 2": {
+      "1": 32,
+      "2": 31
+    },
+    "AIM-120C x2, AIM-9M x 2, Mk-84 x 3, Mk-82AIR x 12": {
+      "1": 32,
+      "2": 31
+    }
+  },
   "F-16C_50": {
     "AIM-120B*2, AIM-9M*4, FUEL*3": {
       "1": 11
@@ -1892,6 +1998,9 @@
       "2": "CAS",
       "3": "RunwayAttack",
       "4": "PinpointStrike"
+    },
+    "ADM-141a*4, Aim-7M*2, Aim-9M*2, XT 300 GAL*2": {
+      "1": 29
     }
   },
   "F-14A-95-GR": {
@@ -2290,6 +2399,163 @@
       "2": "CAS",
       "3": "RunwayAttack",
       "4": "PinpointStrike"
+    },
+    "ADM-141a*4, Aim-7M*2, Aim-9M*2, XT 300 GAL*2": {
+      "1": 29
+    }
+  },
+  "F/A-18A": {
+    "GBU-16*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 33
+    },
+    "AIM-9*6,Fuel": {
+      "1": 10
+    },
+    "Mk-84*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 32,
+      "2": 34
+    },
+    "AGM-65D*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 31
+    },
+    "AGM88*4_AIM9*2_AIM7_FLIR Pod_Fuel": {
+      "1": 29
+    },
+    "AIM-9*4,Fuel*3": {
+      "1": 19,
+      "2": 11,
+      "3": 18
+    },
+    "LAU-10*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 32,
+      "2": 34
+    },
+    "AGM-88*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 29
+    },
+    "MK-82*8,AIM-9*2,AIM-7,FLIR Pod,Fuel": {
+      "1": 32,
+      "2": 34
+    },
+    "MK-82*4,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 32,
+      "2": 34
+    },
+    "AIM-9*4,AIM-7*2,Fuel*3": {
+      "1": 19,
+      "2": 11,
+      "3": 18
+    },
+    "AGM-65K*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 31
+    },
+    "Fuel*3": {
+      "1": 16
+    },
+    "AGM88*2_AGM65D*2_AIM9*2_AIM7_FLIR Pod_Fuel": {
+      "1": 29
+    },
+    "GBU-12*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 33
+    },
+    "AIM-9*4,AIM-7*4,Fuel": {
+      "1": 10
+    },
+    "Mk20*4,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 31
+    },
+    "GBU-10*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 33
+    },
+    "AGM-84A*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 30
+    }
+  },
+  "F/A-18C": {
+    "AGM-62*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 33
+    },
+    "GBU-10*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 33
+    },
+    "GBU-12*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 33
+    },
+    "Fuel*3": {
+      "1": 16
+    },
+    "Mk-84*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 32,
+      "2": 34
+    },
+    "GBU-16*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 33
+    },
+    "AGM-154*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 33
+    },
+    "AIM-120*4,AIM-9*2,Fuel*3": {
+      "1": 19,
+      "2": 11,
+      "3": 18
+    },
+    "AGM-65D*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 31
+    },
+    "AGM88*2_AGM65D*2_AIM9*2_AIM7_FLIR Pod_Fuel": {
+      "1": 29
+    },
+    "AGM88*4_AIM9*2_AIM7_FLIR Pod_Fuel": {
+      "1": 29
+    },
+    "AIM-9*2,AIM-7*6,Fuel": {
+      "1": 10
+    },
+    "Mk20*4,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 31
+    },
+    "AIM-120*6,AIM-9*2,Fuel": {
+      "1": 10
+    },
+    "LAU-10*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 32,
+      "2": 34
+    },
+    "AIM-9*2,AIM-7*4,Fuel*3": {
+      "1": 19,
+      "2": 11,
+      "3": 18
+    },
+    "MK-82*8,AIM-9*2,AIM-7,FLIR Pod,Fuel": {
+      "1": 32,
+      "2": 34
+    },
+    "AIM-120*2,AIM-9*2,AIM-7*2,Fuel*3": {
+      "1": 19,
+      "2": 11,
+      "3": 18
+    },
+    "AGM-88*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 29
+    },
+    "AGM-84E*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 33
+    },
+    "MK-82*4,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 32,
+      "2": 34
+    },
+    "AGM-84A*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 30
+    },
+    "AIM-9M*2,AGM-65D*2,Mk-82*4,FLIR Pod,Fuel": {
+      "1": 31
+    },
+    "AIM-120*4,AIM-9*2,AIM-7*2,Fuel": {
+      "1": 10
+    },
+    "AGM-65K*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
+      "1": 31
     }
   },
   "FA-18C_hornet": {
@@ -4352,41 +4618,41 @@
     }
   },
   "SA342L": {
-    "M621, 8xSNEB68 EAP": {
+    "M621, 8x SNEB68 EAP, IR Deflector, Sand Filter": {
       "1": 31
     },
-    "M621, 8xSNEB68 EAP, IR Deflector": {
+    "2x HMP400, IR Deflector, Sand Filter": {
       "1": 31
     },
-    "M621, 8xSNEB68 EAP, IR Deflector, Sand Filter": {
+    "4x HOT3, IR Deflector, Sand Filter": {
+      "1": 31
+    },
+    "4x Mistral, IR Deflector, Sand Filter": {
+      "1": 31
+    },
+    "2x Mistral, IR Deflector, Sand Filter": {
+      "1": 31
+    },
+    "Display Team Smoke, Red & Blue": {
       "1": 31
     }
   },
   "SA342M": {
-    "HOT3x4": {
+    "4x HOT3, IR Deflector, Sand Filter": {
       "1": 31
     },
-    "IR Deflector": {
+    "2x HOT3, IR Deflector, Sand Filter": {
       "1": 31
     },
-    "Hot3x4, FAS, IR Deflector": {
-      "1": 31
-    },
-    "HOT3x2": {
-      "1": 31
-    },
-    "Hot3x4, IR Deflector": {
-      "1": 31
-    },
-    "Hot3x2, IR Deflector": {
+    "Display Team Smoke, Red & Blue": {
       "1": 31
     }
   },
   "SA342Minigun": {
-    "IR Deflector": {
+    "IR Deflector, Sand Filter": {
       "1": 31
     },
-    "IR Deflector, Sand Filter": {
+    "Display Team Smoke, Red & Blue": {
       "1": 31
     }
   },
@@ -5398,160 +5664,6 @@
     },
     "AGM-65K*4,AIM-7M*4,Fuel*3": {
       "1": 30
-    }
-  },
-  "F/A-18A": {
-    "GBU-16*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
-      "1": 33
-    },
-    "AIM-9*6,Fuel": {
-      "1": 10
-    },
-    "Mk-84*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
-      "1": 32,
-      "2": 34
-    },
-    "AGM-65D*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
-      "1": 31
-    },
-    "AGM88*4_AIM9*2_AIM7_FLIR Pod_Fuel": {
-      "1": 29
-    },
-    "AIM-9*4,Fuel*3": {
-      "1": 19,
-      "2": 11,
-      "3": 18
-    },
-    "LAU-10*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
-      "1": 32,
-      "2": 34
-    },
-    "AGM-88*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
-      "1": 29
-    },
-    "MK-82*8,AIM-9*2,AIM-7,FLIR Pod,Fuel": {
-      "1": 32,
-      "2": 34
-    },
-    "MK-82*4,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
-      "1": 32,
-      "2": 34
-    },
-    "AIM-9*4,AIM-7*2,Fuel*3": {
-      "1": 19,
-      "2": 11,
-      "3": 18
-    },
-    "AGM-65K*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
-      "1": 31
-    },
-    "Fuel*3": {
-      "1": 16
-    },
-    "AGM88*2_AGM65D*2_AIM9*2_AIM7_FLIR Pod_Fuel": {
-      "1": 29
-    },
-    "GBU-12*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
-      "1": 33
-    },
-    "AIM-9*4,AIM-7*4,Fuel": {
-      "1": 10
-    },
-    "Mk20*4,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
-      "1": 31
-    },
-    "GBU-10*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
-      "1": 33
-    },
-    "AGM-84A*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
-      "1": 30
-    }
-  },
-  "F/A-18C": {
-    "AGM-62*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
-      "1": 33
-    },
-    "GBU-10*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
-      "1": 33
-    },
-    "GBU-12*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
-      "1": 33
-    },
-    "Fuel*3": {
-      "1": 16
-    },
-    "Mk-84*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
-      "1": 32,
-      "2": 34
-    },
-    "GBU-16*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
-      "1": 33
-    },
-    "AGM-154*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
-      "1": 33
-    },
-    "AIM-120*4,AIM-9*2,Fuel*3": {
-      "1": 19,
-      "2": 11,
-      "3": 18
-    },
-    "AGM-65D*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
-      "1": 31
-    },
-    "AGM88*2_AGM65D*2_AIM9*2_AIM7_FLIR Pod_Fuel": {
-      "1": 29
-    },
-    "AGM88*4_AIM9*2_AIM7_FLIR Pod_Fuel": {
-      "1": 29
-    },
-    "AIM-9*2,AIM-7*6,Fuel": {
-      "1": 10
-    },
-    "Mk20*4,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
-      "1": 31
-    },
-    "AIM-120*6,AIM-9*2,Fuel": {
-      "1": 10
-    },
-    "LAU-10*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
-      "1": 32,
-      "2": 34
-    },
-    "AIM-9*2,AIM-7*4,Fuel*3": {
-      "1": 19,
-      "2": 11,
-      "3": 18
-    },
-    "MK-82*8,AIM-9*2,AIM-7,FLIR Pod,Fuel": {
-      "1": 32,
-      "2": 34
-    },
-    "AIM-120*2,AIM-9*2,AIM-7*2,Fuel*3": {
-      "1": 19,
-      "2": 11,
-      "3": 18
-    },
-    "AGM-88*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
-      "1": 29
-    },
-    "AGM-84E*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
-      "1": 33
-    },
-    "MK-82*4,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
-      "1": 32,
-      "2": 34
-    },
-    "AGM-84A*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
-      "1": 30
-    },
-    "AIM-9M*2,AGM-65D*2,Mk-82*4,FLIR Pod,Fuel": {
-      "1": 31
-    },
-    "AIM-120*4,AIM-9*2,AIM-7*2,Fuel": {
-      "1": 10
-    },
-    "AGM-65K*2,AIM-9*2,AIM-7,FLIR Pod,Fuel*3": {
-      "1": 31
     }
   },
   "IL-76MD": {},
