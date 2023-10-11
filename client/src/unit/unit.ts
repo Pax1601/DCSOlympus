@@ -1015,6 +1015,8 @@ export class Unit extends CustomMarker {
                     if (this.#onOff) {
                         if (this.#isTanker)
                             element.querySelector(".unit")?.setAttribute("data-state", "tanker");
+                        else if (this.#isAWACS)
+                            element.querySelector(".unit")?.setAttribute("data-state", "AWACS");
                         else
                             element.querySelector(".unit")?.setAttribute("data-state", this.#state.toLowerCase());
                     }

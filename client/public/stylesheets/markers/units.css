@@ -299,9 +299,12 @@
     background-image: url("/resources/theme/images/states/off.svg");
 }
 
-
 [data-object|="unit"][data-state="tanker"] .unit-state {
     background-image: url("/resources/theme/images/states/tanker.svg");
+}
+
+[data-object|="unit"][data-state="AWACS"] .unit-state {
+    background-image: url("/resources/theme/images/states/awacs.svg");
 }
 
 
