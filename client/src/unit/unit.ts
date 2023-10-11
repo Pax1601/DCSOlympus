@@ -1002,14 +1002,28 @@ export class Unit extends CustomMarker {
                 element.querySelector(".unit")?.toggleAttribute("data-is-dead", !this.#alive);
 
                 /* Set current unit state */
-                if (this.#human)                                // Unit is human
+                if (this.#human) {                                // Unit is human
                     element.querySelector(".unit")?.setAttribute("data-state", "human");
-                else if (!this.#controlled)                     // Unit is under DCS control (not Olympus)
+                }
+                else if (!this.#controlled) {                     // Unit is under DCS control (not Olympus)
                     element.querySelector(".unit")?.setAttribute("data-state", "dcs");
-                else if ((this.getCategory() == "Aircraft" || this.getCategory() == "Helicopter") && !this.#hasTask)
+                }
+                else if ((this.getCategory() == "Aircraft" || this.getCategory() == "Helicopter") && !this.#hasTask){
                     element.querySelector(".unit")?.setAttribute("data-state", "no-task");
-                else                                            // Unit is under Olympus control
-                    element.querySelector(".unit")?.setAttribute("data-state", this.#state.toLowerCase());
+                }
+                else {                                           // Unit is under Olympus control
+                    if (this.#onOff) {
+                        if (this.#isTanker)
+                            element.querySelector(".unit")?.setAttribute("data-state", "tanker");
+                        else if (this.#isAWACS)
+                            element.querySelector(".unit")?.setAttribute("data-state", "AWACS");
+                        else
+                            element.querySelector(".unit")?.setAttribute("data-state", this.#state.toLowerCase());
+                    }
+                    else {
+                        element.querySelector(".unit")?.setAttribute("data-state", "off");
+                    }
+                }
 
                 /* Set altitude and speed */
                 if (element.querySelector(".unit-altitude"))

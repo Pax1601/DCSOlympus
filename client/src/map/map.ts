@@ -751,11 +751,16 @@ export class Map extends L.Map {
         const singleCursor = !this.#shiftKey;
         const selectedUnitsCount = getApp().getUnitsManager().getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true }).length;
         if (selectedUnitsCount > 0) {
-            if (singleCursor && this.#destinationPreviewCursors.length != 1) {
-                this.#hideDestinationCursors();
-                var marker = new DestinationPreviewMarker(this.getMouseCoordinates(), { interactive: false });
-                marker.addTo(this);
-                this.#destinationPreviewCursors = [marker];
+            if (singleCursor) {
+                if ( this.#destinationPreviewCursors.length != 1) {
+                    this.#hideDestinationCursors();
+                    var marker = new DestinationPreviewMarker(this.getMouseCoordinates(), { interactive: false });
+                    marker.addTo(this);
+                    this.#destinationPreviewCursors = [marker];
+                }
+
+                this.#destinationPreviewHandleLine.removeFrom(this);
+                this.#destinationPreviewHandle.removeFrom(this);
             }
             else if (!singleCursor) {
                 while (this.#destinationPreviewCursors.length > selectedUnitsCount) {

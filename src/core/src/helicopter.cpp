@@ -45,10 +45,7 @@ Helicopter::Helicopter(json::value json, unsigned int ID) : AirUnit(json, ID)
 void Helicopter::changeSpeed(string change)
 {
 	if (change.compare("stop") == 0)
-	{
-		/* Air units can't hold a position, so we can only set them to hold. At the moment, this will erase any other command. TODO: helicopters should be able to hover in place */
-		clearActivePath();
-	}
+		setState(State::IDLE);
 	else if (change.compare("slow") == 0)
 		desiredSpeed -= knotsToMs(10);
 	else if (change.compare("fast") == 0)

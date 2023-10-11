@@ -2,11 +2,11 @@ var basicAuth = require('express-basic-auth')
 var enc = new TextEncoder();
 
 const DEMO_UNIT_DATA = {
-    ["1"]:{ category: "Aircraft", alive: true, human: false, controlled: true, coalition: 2, country: 0, name: "KC-135", unitName: "Cool guy 1-1 who also has a very long name", groupName: "Cool group 1", state: 3, task: "Being cool!",
+    ["1"]:{ category: "Aircraft", alive: true, human: false, controlled: true, coalition: 2, country: 0, name: "KC-135", unitName: "Cool guy 1-1 who also has a very long name", groupName: "Cool group 1", state: 1, task: "Being cool!",
         hasTask: true, position: { lat: 37, lng: -116, alt: 1000 }, speed: 200, heading: 45, isTanker: true, isAWACS: false, onOff: true, followRoads: false, fuel: 50, 
         desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
         formationOffset: { x: 0, y: 0, z: 0 },
-        targetID: 2,
+        targetID: 0,
         targetPosition: { lat: 0, lng: 0, alt: 0 },
         ROE: 1,
         reactionToThreat: 1,
@@ -18,8 +18,8 @@ const DEMO_UNIT_DATA = {
         contacts: [{ID: 2, detectionMethod: 1}, {ID: 3, detectionMethod: 4}, {ID: 4, detectionMethod: 1}],
         activePath: [{lat: 38, lng: -115, alt: 0}, {lat: 38, lng: -114, alt: 0}]
     },
-    ["2"]:{ category: "Aircraft", alive: true, human: false, controlled: false, coalition: 1, country: 0, name: "B-52H", unitName: "Cool guy 1-2", groupName: "Cool group 2", state: 1, task: "Being cool",
-        hasTask: false, position: { lat: 36.9, lng: -116, alt: 1000 }, speed: 200, heading: 315 * Math.PI / 180, isTanker: false, isAWACS: false, onOff: true, followRoads: false, fuel: 50, 
+    ["2"]:{ category: "Aircraft", alive: true, human: false, controlled: true, coalition: 1, country: 0, name: "E-3A", unitName: "Cool guy 1-2", groupName: "Cool group 2", state: 1, task: "Being cool",
+        hasTask: true, position: { lat: 36.9, lng: -116, alt: 1000 }, speed: 200, heading: 315 * Math.PI / 180, isTanker: false, isAWACS: true, onOff: true, followRoads: false, fuel: 50, 
         desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
         formationOffset: { x: 0, y: 0, z: 0 },
         targetID: 0,
@@ -49,7 +49,7 @@ const DEMO_UNIT_DATA = {
         contacts: [{ID: 1, detectionMethod: 16}],
         activePath: [ ]
     }, ["4"]:{ category: "GroundUnit", alive: true, human: false, controlled: true, coalition: 2, country: 0, name: "Tor 9A331", unitName: "Cool guy 2-1", groupName: "Cool group 4", state: 1, task: "Being cool",
-        hasTask: false, position: { lat: 37.2, lng: -116.1, alt: 1000 }, speed: 200, heading: 315 * Math.PI / 180, isTanker: false, isAWACS: false, onOff: true, followRoads: false, fuel: 50, 
+        hasTask: false, position: { lat: 37.2, lng: -116.1, alt: 1000 }, speed: 200, heading: 315 * Math.PI / 180, isTanker: false, isAWACS: false, onOff: false, followRoads: false, fuel: 50, 
         desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
         formationOffset: { x: 0, y: 0, z: 0 },
         targetID: 0,
@@ -66,7 +66,7 @@ const DEMO_UNIT_DATA = {
         isLeader: true,
         operateAs: 2
     }, ["5"]:{ category: "GroundUnit", alive: true, human: false, controlled: true, coalition: 2, country: 0, name: "Gepard", unitName: "Cool guy 2-2", groupName: "Cool group 4", state: 1, task: "Being cool",
-        hasTask: false, position: { lat: 37.21, lng: -116.1, alt: 1000 }, speed: 200, heading: 315 * Math.PI / 180, isTanker: false, isAWACS: false, onOff: true, followRoads: false, fuel: 50, 
+        hasTask: false, position: { lat: 37.21, lng: -116.1, alt: 1000 }, speed: 200, heading: 315 * Math.PI / 180, isTanker: false, isAWACS: false, onOff: false, followRoads: false, fuel: 50, 
         desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
         formationOffset: { x: 0, y: 0, z: 0 },
         targetID: 0,
