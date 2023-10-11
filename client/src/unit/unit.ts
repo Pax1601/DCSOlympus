@@ -616,6 +616,14 @@ export class Unit extends CustomMarker {
         return getApp().getMap().getBounds().contains(this.getPosition());
     }
 
+    canTargetPoint() {
+        return this.getDatabase()?.getByName(this.#name)?.canTargetPoint === true;
+    }
+
+    canRearm() {
+        return this.getDatabase()?.getByName(this.#name)?.canRearm === true;
+    }
+
     /********************** Unit commands *************************/
     addDestination(latlng: L.LatLng) {
         if (!this.#human) {

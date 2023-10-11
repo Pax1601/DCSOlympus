@@ -2668,25 +2668,17 @@
     "description": "2 jet engine, straight wing, 1 crew, attack aircraft. Warthog",
     "abilities": "Boom AAR",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "A-20G": {
     "name": "A-20G",
-    "coalition": "",
+    "coalition": "blue",
     "label": "A-20G Havoc",
     "era": "WW2",
     "shortLabel": "A20",
     "loadouts": [
-      {
-        "items": [],
-        "enabled": true,
-        "code": "",
-        "name": "Empty loadout",
-        "roles": [
-          "No task",
-          "CAS"
-        ]
-      },
       {
         "items": [
           {
@@ -2702,6 +2694,16 @@
           "Strike",
           "Runway Attack",
           "Antiship Strike"
+        ]
+      },
+      {
+        "items": [],
+        "enabled": true,
+        "code": "",
+        "name": "Empty loadout",
+        "roles": [
+          "No task",
+          "CAS"
         ]
       }
     ],
@@ -2745,7 +2747,9 @@
     "description": "2 propeller, straight wing, 3 crew, medium attack bomber. Havoc",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "A-50": {
     "name": "A-50",
@@ -2785,7 +2789,9 @@
     "description": "4 jet engine, swept wing, 15 crew. NATO reporting name: Mainstay",
     "abilities": "Airbourne early warning",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": false,
+    "canRearm": false
   },
   "AJS37": {
     "name": "AJS37",
@@ -2795,13 +2801,21 @@
     "shortLabel": "37",
     "loadouts": [
       {
-        "items": [],
+        "items": [
+          {
+            "name": "Rb-75T (AGM-65A Maverick) (TV ASM Lg HE Whd)",
+            "quantity": 4
+          },
+          {
+            "name": "AJS External-tank 1013kg fuel",
+            "quantity": 1
+          }
+        ],
         "enabled": true,
-        "code": "",
-        "name": "Empty loadout",
+        "code": "Anti-ship (Heavy Mav): RB-75T*4, XT",
+        "name": "Anti-ship (Heavy Mav): RB-75T*4, XT",
         "roles": [
-          "No task",
-          "Strike"
+          "Antiship Strike"
         ]
       },
       {
@@ -2811,7 +2825,25 @@
             "quantity": 4
           },
           {
-            "name": "Rb-24J (AIM-9P) Sidewinder IR AAM",
+            "name": "AJS External-tank 1013kg fuel",
+            "quantity": 1
+          }
+        ],
+        "enabled": true,
+        "code": "Anti-ship (Light Mav): RB-75*4, XT",
+        "name": "Anti-ship (Light Mav): RB-75*4, XT",
+        "roles": [
+          "Antiship Strike"
+        ]
+      },
+      {
+        "items": [
+          {
+            "name": "Rb-15F Programmable Anti-ship Missile",
+            "quantity": 2
+          },
+          {
+            "name": "Rb-74 (AIM-9L) Sidewinder IR AAM",
             "quantity": 2
           },
           {
@@ -2820,10 +2852,32 @@
           }
         ],
         "enabled": true,
-        "code": "Battlefield Air Interdiction: RB-75*4, RB-24J*2, XT",
-        "name": "Battlefield Air Interdiction: RB-75*4, RB-24J*2, XT",
+        "code": "Anti-Ship (Modern): RB-15F*2, RB-74*2, XT",
+        "name": "Anti-Ship (Modern): RB-15F*2, RB-74*2, XT",
         "roles": [
-          "Strike"
+          "Antiship Strike"
+        ]
+      },
+      {
+        "items": [
+          {
+            "name": "AJS External-tank 1013kg fuel",
+            "quantity": 1
+          },
+          {
+            "name": "Rb-05A MCLOS ASM/AShM/AAM",
+            "quantity": 2
+          },
+          {
+            "name": "Rb-74 (AIM-9L) Sidewinder IR AAM",
+            "quantity": 2
+          }
+        ],
+        "enabled": true,
+        "code": "Anti-ship (RB05): RB-05A*2, RB-74*2, XT",
+        "name": "Anti-ship (RB05): RB-05A*2, RB-74*2, XT",
+        "roles": [
+          "Antiship Strike"
         ]
       },
       {
@@ -2851,7 +2905,95 @@
       {
         "items": [
           {
-            "name": "Rb-75T (AGM-65A Maverick) (TV ASM Lg HE Whd)",
+            "name": "Rb-75A (AGM-65A Maverick) (TV ASM)",
+            "quantity": 4
+          },
+          {
+            "name": "Rb-24J (AIM-9P) Sidewinder IR AAM",
+            "quantity": 2
+          },
+          {
+            "name": "AJS External-tank 1013kg fuel",
+            "quantity": 1
+          }
+        ],
+        "enabled": true,
+        "code": "Battlefield Air Interdiction: RB-75*4, RB-24J*2, XT",
+        "name": "Battlefield Air Interdiction: RB-75*4, RB-24J*2, XT",
+        "roles": [
+          "Strike"
+        ]
+      },
+      {
+        "items": [
+          {
+            "name": "4x SB M/71 120kg GP Bomb High-drag",
+            "quantity": 4
+          },
+          {
+            "name": "AJS External-tank 1013kg fuel",
+            "quantity": 1
+          },
+          {
+            "name": "Rb-24J (AIM-9P) Sidewinder IR AAM",
+            "quantity": 2
+          }
+        ],
+        "enabled": true,
+        "code": "Bombs High-drag: SB71HD*16, XT, RB-24J",
+        "name": "Bombs High-drag: SB71HD*16, XT, RB-24J",
+        "roles": [
+          "Strike"
+        ]
+      },
+      {
+        "items": [
+          {
+            "name": "4x SB M/71 120kg GP Bomb Low-drag",
+            "quantity": 4
+          },
+          {
+            "name": "AJS External-tank 1013kg fuel",
+            "quantity": 1
+          },
+          {
+            "name": "Rb-24J (AIM-9P) Sidewinder IR AAM",
+            "quantity": 2
+          }
+        ],
+        "enabled": true,
+        "code": "Bombs Low-drag: SB71LD*16, RB-24J*2, XT",
+        "name": "Bombs Low-drag: SB71LD*16, RB-24J*2, XT",
+        "roles": [
+          "Strike"
+        ]
+      },
+      {
+        "items": [
+          {
+            "name": "Rb-74 (AIM-9L) Sidewinder IR AAM",
+            "quantity": 4
+          },
+          {
+            "name": "AJS External-tank 1013kg fuel",
+            "quantity": 1
+          },
+          {
+            "name": "Rb-24J (AIM-9P) Sidewinder IR AAM",
+            "quantity": 2
+          }
+        ],
+        "enabled": true,
+        "code": "CAP (6 AAM): RB-74*4, RB-24J*2, XT",
+        "name": "CAP (6 AAM): RB-74*4, RB-24J*2, XT",
+        "roles": [
+          "CAP"
+        ]
+      },
+      {
+        "items": [
+          {
+            "name": "Rb-24J (AIM-9P) Sidewinder IR AAM",
             "quantity": 4
           },
           {
@@ -2860,10 +3002,202 @@
           }
         ],
         "enabled": true,
-        "code": "Anti-ship (Heavy Mav): RB-75T*4, XT",
-        "name": "Anti-ship (Heavy Mav): RB-75T*4, XT",
+        "code": "CAP (AJ37): RB-24J*2",
+        "name": "CAP (AJ37): RB-24J*2",
+        "roles": [
+          "CAP"
+        ]
+      },
+      {
+        "items": [
+          {
+            "name": "Rb-74 (AIM-9L) Sidewinder IR AAM",
+            "quantity": 2
+          },
+          {
+            "name": "AKAN M/55 Gunpod, 150 rnds MINGR55-HE",
+            "quantity": 2
+          },
+          {
+            "name": "AJS External-tank 1013kg fuel",
+            "quantity": 1
+          }
+        ],
+        "enabled": true,
+        "code": "CAP (Gun): AKAN*2, RB-74*2, XT",
+        "name": "CAP (Gun): AKAN*2, RB-74*2, XT",
+        "roles": [
+          "CAP"
+        ]
+      },
+      {
+        "items": [
+          {
+            "name": "Rb-05A MCLOS ASM/AShM/AAM",
+            "quantity": 2
+          },
+          {
+            "name": "Rb-74 (AIM-9L) Sidewinder IR AAM",
+            "quantity": 2
+          },
+          {
+            "name": "AJS External-tank 1013kg fuel",
+            "quantity": 1
+          }
+        ],
+        "enabled": true,
+        "code": "CAP / Intecept: RB-05A*2, RB-74*2, XT",
+        "name": "CAP / Intecept: RB-05A*2, RB-74*2, XT",
+        "roles": [
+          "CAP"
+        ]
+      },
+      {
+        "items": [
+          {
+            "name": "Rb-74 (AIM-9L) Sidewinder IR AAM",
+            "quantity": 4
+          },
+          {
+            "name": "AJS External-tank 1013kg fuel",
+            "quantity": 1
+          }
+        ],
+        "enabled": true,
+        "code": "CAP: RB-74*4, XT",
+        "name": "CAP: RB-74*4, XT",
+        "roles": [
+          "CAP"
+        ]
+      },
+      {
+        "items": [
+          {
+            "name": "Rb-75A (AGM-65A Maverick) (TV ASM)",
+            "quantity": 2
+          },
+          {
+            "name": "AKAN M/55 Gunpod, 150 rnds MINGR55-HE",
+            "quantity": 2
+          }
+        ],
+        "enabled": true,
+        "code": "CAS (75 GUN): RB-75*2, AKAN",
+        "name": "CAS (75 GUN): RB-75*2, AKAN",
+        "roles": [
+          "CAS"
+        ]
+      },
+      {
+        "items": [
+          {
+            "name": "Rb-05A MCLOS ASM/AShM/AAM",
+            "quantity": 2
+          },
+          {
+            "name": "AKAN M/55 Gunpod, 150 rnds MINGR55-HE",
+            "quantity": 2
+          }
+        ],
+        "enabled": true,
+        "code": "CAS: AKAN, RB-05A",
+        "name": "CAS: AKAN, RB-05A",
+        "roles": [
+          "CAS"
+        ]
+      },
+      {
+        "items": [
+          {
+            "name": "ARAK M/70B HE 6x 135mm UnGd Rkts, Shu70 HE/FRAG",
+            "quantity": 4
+          },
+          {
+            "name": "AJS External-tank 1013kg fuel",
+            "quantity": 1
+          }
+        ],
+        "enabled": true,
+        "code": "CAS: ARAK M70 HE*4, XT",
+        "name": "CAS: ARAK M70 HE*4, XT",
+        "roles": [
+          "CAS"
+        ]
+      },
+      {
+        "items": [
+          {
+            "name": "U22/A Jammer",
+            "quantity": 1
+          },
+          {
+            "name": "KB Flare/Chaff dispenser pod",
+            "quantity": 1
+          },
+          {
+            "name": "AJS External-tank 1013kg fuel",
+            "quantity": 1
+          },
+          {
+            "name": "Rb-74 (AIM-9L) Sidewinder IR AAM",
+            "quantity": 2
+          }
+        ],
+        "enabled": true,
+        "code": "Countermeasures Escort: U/22A, KB",
+        "name": "Countermeasures Escort: U/22A, KB",
+        "roles": [
+          "Strike"
+        ]
+      },
+      {
+        "items": [
+          {
+            "name": "KB Flare/Chaff dispenser pod",
+            "quantity": 1
+          },
+          {
+            "name": "Rb-04E Anti-ship Missile",
+            "quantity": 1
+          },
+          {
+            "name": "AJS External-tank 1013kg fuel",
+            "quantity": 1
+          },
+          {
+            "name": "Rb-74 (AIM-9L) Sidewinder IR AAM",
+            "quantity": 2
+          }
+        ],
+        "enabled": true,
+        "code": "ECM Escort Anti-ship: RB-04E, KB, RB-74*2, XT",
+        "name": "ECM Escort Anti-ship: RB-04E, KB, RB-74*2, XT",
         "roles": [
           "Antiship Strike"
+        ]
+      },
+      {
+        "items": [],
+        "enabled": true,
+        "code": "",
+        "name": "Empty loadout",
+        "roles": [
+          "No task",
+          "Strike"
+        ]
+      },
+      {
+        "items": [
+          {
+            "name": "AJS External-tank 1013kg fuel",
+            "quantity": 1
+          }
+        ],
+        "enabled": true,
+        "code": "Ferry Flight: XT",
+        "name": "Ferry Flight: XT",
+        "roles": [
+          "Strike"
         ]
       },
       {
@@ -2921,13 +3255,21 @@
       {
         "items": [
           {
+            "name": "Rb-05A MCLOS ASM/AShM/AAM",
+            "quantity": 2
+          },
+          {
             "name": "AJS External-tank 1013kg fuel",
             "quantity": 1
+          },
+          {
+            "name": "Rb-74 (AIM-9L) Sidewinder IR AAM",
+            "quantity": 2
           }
         ],
         "enabled": true,
-        "code": "Ferry Flight: XT",
-        "name": "Ferry Flight: XT",
+        "code": "Hard Target: RB-05A*2, RB-74*2, XT",
+        "name": "Hard Target: RB-05A*2, RB-74*2, XT",
         "roles": [
           "Strike"
         ]
@@ -2935,25 +3277,7 @@
       {
         "items": [
           {
-            "name": "Rb-75A (AGM-65A Maverick) (TV ASM)",
-            "quantity": 2
-          },
-          {
-            "name": "AKAN M/55 Gunpod, 150 rnds MINGR55-HE",
-            "quantity": 2
-          }
-        ],
-        "enabled": true,
-        "code": "CAS (75 GUN): RB-75*2, AKAN",
-        "name": "CAS (75 GUN): RB-75*2, AKAN",
-        "roles": [
-          "CAS"
-        ]
-      },
-      {
-        "items": [
-          {
-            "name": "Rb-74 (AIM-9L) Sidewinder IR AAM",
+            "name": "2x 80kg LYSB-71 Illumination Bomb",
             "quantity": 4
           },
           {
@@ -2962,82 +3286,41 @@
           }
         ],
         "enabled": true,
-        "code": "CAP: RB-74*4, XT",
-        "name": "CAP: RB-74*4, XT",
-        "roles": [
-          "CAP"
-        ]
-      },
-      {
-        "items": [
-          {
-            "name": "U22/A Jammer",
-            "quantity": 1
-          },
-          {
-            "name": "KB Flare/Chaff dispenser pod",
-            "quantity": 1
-          },
-          {
-            "name": "AJS External-tank 1013kg fuel",
-            "quantity": 1
-          },
-          {
-            "name": "Rb-74 (AIM-9L) Sidewinder IR AAM",
-            "quantity": 2
-          }
-        ],
-        "enabled": true,
-        "code": "Countermeasures Escort: U/22A, KB",
-        "name": "Countermeasures Escort: U/22A, KB",
+        "code": "Illumination: LYSB*8, XT",
+        "name": "Illumination: LYSB*8, XT",
         "roles": [
           "Strike"
         ]
       },
       {
+        "items": [],
+        "enabled": true,
+        "code": "New Payload",
+        "name": "New Payload",
+        "roles": []
+      },
+      {
         "items": [
-          {
-            "name": "BK-90 MJ1 (72 x MJ1 HE-FRAG Bomblets)",
-            "quantity": 2
-          },
           {
             "name": "AJS External-tank 1013kg fuel",
             "quantity": 1
           },
-          {
-            "name": "Rb-74 (AIM-9L) Sidewinder IR AAM",
-            "quantity": 2
-          }
-        ],
-        "enabled": true,
-        "code": "Strike: BK90 (MJ1)*2, RB-74*2, XT",
-        "name": "Strike: BK90 (MJ1)*2, RB-74*2, XT",
-        "roles": [
-          "Strike"
-        ]
-      },
-      {
-        "items": [
           {
             "name": "Rb-05A MCLOS ASM/AShM/AAM",
             "quantity": 2
-          },
-          {
-            "name": "AKAN M/55 Gunpod, 150 rnds MINGR55-HE",
-            "quantity": 2
           }
         ],
         "enabled": true,
-        "code": "CAS: AKAN, RB-05A",
-        "name": "CAS: AKAN, RB-05A",
+        "code": "RB-05*2, XT",
+        "name": "RB-05*2, XT",
         "roles": [
-          "CAS"
+          "Strike"
         ]
       },
       {
         "items": [
           {
-            "name": "Rb-74 (AIM-9L) Sidewinder IR AAM",
+            "name": "ARAK M/70B HE 6x 135mm UnGd Rkts, Shu70 HE/FRAG",
             "quantity": 4
           },
           {
@@ -3050,10 +3333,10 @@
           }
         ],
         "enabled": true,
-        "code": "CAP (6 AAM): RB-74*4, RB-24J*2, XT",
-        "name": "CAP (6 AAM): RB-74*4, RB-24J*2, XT",
+        "code": "Rocket Full Load HE:  ARAK HE*4, RB-24J, XT",
+        "name": "Rocket Full Load HE:  ARAK HE*4, RB-24J, XT",
         "roles": [
-          "CAP"
+          "Strike"
         ]
       },
       {
@@ -3081,34 +3364,12 @@
       {
         "items": [
           {
-            "name": "Rb-05A MCLOS ASM/AShM/AAM",
-            "quantity": 2
-          },
-          {
-            "name": "Rb-74 (AIM-9L) Sidewinder IR AAM",
-            "quantity": 2
-          },
-          {
             "name": "AJS External-tank 1013kg fuel",
             "quantity": 1
-          }
-        ],
-        "enabled": true,
-        "code": "CAP / Intecept: RB-05A*2, RB-74*2, XT",
-        "name": "CAP / Intecept: RB-05A*2, RB-74*2, XT",
-        "roles": [
-          "CAP"
-        ]
-      },
-      {
-        "items": [
+          },
           {
-            "name": "4x SB M/71 120kg GP Bomb Low-drag",
+            "name": "4x SB M/71 120kg GP Bomb High-drag",
             "quantity": 4
-          },
-          {
-            "name": "AJS External-tank 1013kg fuel",
-            "quantity": 1
           },
           {
             "name": "Rb-24J (AIM-9P) Sidewinder IR AAM",
@@ -3116,10 +3377,10 @@
           }
         ],
         "enabled": true,
-        "code": "Bombs Low-drag: SB71LD*16, RB-24J*2, XT",
-        "name": "Bombs Low-drag: SB71LD*16, RB-24J*2, XT",
+        "code": "Runway Strike: SB71HD*16, RB-24J, XT",
+        "name": "Runway Strike: SB71HD*16, RB-24J, XT",
         "roles": [
-          "Strike"
+          "Runway Attack"
         ]
       },
       {
@@ -3151,204 +3412,7 @@
       {
         "items": [
           {
-            "name": "Rb-15F Programmable Anti-ship Missile",
-            "quantity": 2
-          },
-          {
-            "name": "Rb-74 (AIM-9L) Sidewinder IR AAM",
-            "quantity": 2
-          },
-          {
-            "name": "AJS External-tank 1013kg fuel",
-            "quantity": 1
-          }
-        ],
-        "enabled": true,
-        "code": "Anti-Ship (Modern): RB-15F*2, RB-74*2, XT",
-        "name": "Anti-Ship (Modern): RB-15F*2, RB-74*2, XT",
-        "roles": [
-          "Antiship Strike"
-        ]
-      },
-      {
-        "items": [],
-        "enabled": true,
-        "code": "New Payload",
-        "name": "New Payload",
-        "roles": []
-      },
-      {
-        "items": [
-          {
-            "name": "Rb-24J (AIM-9P) Sidewinder IR AAM",
-            "quantity": 4
-          },
-          {
-            "name": "AJS External-tank 1013kg fuel",
-            "quantity": 1
-          }
-        ],
-        "enabled": true,
-        "code": "CAP (AJ37): RB-24J*2",
-        "name": "CAP (AJ37): RB-24J*2",
-        "roles": [
-          "CAP"
-        ]
-      },
-      {
-        "items": [
-          {
-            "name": "KB Flare/Chaff dispenser pod",
-            "quantity": 1
-          },
-          {
-            "name": "Rb-04E Anti-ship Missile",
-            "quantity": 1
-          },
-          {
-            "name": "AJS External-tank 1013kg fuel",
-            "quantity": 1
-          },
-          {
-            "name": "Rb-74 (AIM-9L) Sidewinder IR AAM",
-            "quantity": 2
-          }
-        ],
-        "enabled": true,
-        "code": "ECM Escort Anti-ship: RB-04E, KB, RB-74*2, XT",
-        "name": "ECM Escort Anti-ship: RB-04E, KB, RB-74*2, XT",
-        "roles": [
-          "Antiship Strike"
-        ]
-      },
-      {
-        "items": [
-          {
-            "name": "4x SB M/71 120kg GP Bomb High-drag",
-            "quantity": 4
-          },
-          {
-            "name": "AJS External-tank 1013kg fuel",
-            "quantity": 1
-          },
-          {
-            "name": "Rb-24J (AIM-9P) Sidewinder IR AAM",
-            "quantity": 2
-          }
-        ],
-        "enabled": true,
-        "code": "Bombs High-drag: SB71HD*16, XT, RB-24J",
-        "name": "Bombs High-drag: SB71HD*16, XT, RB-24J",
-        "roles": [
-          "Strike"
-        ]
-      },
-      {
-        "items": [
-          {
-            "name": "Rb-75A (AGM-65A Maverick) (TV ASM)",
-            "quantity": 4
-          },
-          {
-            "name": "AJS External-tank 1013kg fuel",
-            "quantity": 1
-          }
-        ],
-        "enabled": true,
-        "code": "Anti-ship (Light Mav): RB-75*4, XT",
-        "name": "Anti-ship (Light Mav): RB-75*4, XT",
-        "roles": [
-          "Antiship Strike"
-        ]
-      },
-      {
-        "items": [
-          {
-            "name": "ARAK M/70B HE 6x 135mm UnGd Rkts, Shu70 HE/FRAG",
-            "quantity": 4
-          },
-          {
-            "name": "AJS External-tank 1013kg fuel",
-            "quantity": 1
-          },
-          {
-            "name": "Rb-24J (AIM-9P) Sidewinder IR AAM",
-            "quantity": 2
-          }
-        ],
-        "enabled": true,
-        "code": "Rocket Full Load HE:  ARAK HE*4, RB-24J, XT",
-        "name": "Rocket Full Load HE:  ARAK HE*4, RB-24J, XT",
-        "roles": [
-          "Strike"
-        ]
-      },
-      {
-        "items": [
-          {
-            "name": "2x 80kg LYSB-71 Illumination Bomb",
-            "quantity": 4
-          },
-          {
-            "name": "AJS External-tank 1013kg fuel",
-            "quantity": 1
-          }
-        ],
-        "enabled": true,
-        "code": "Illumination: LYSB*8, XT",
-        "name": "Illumination: LYSB*8, XT",
-        "roles": [
-          "Strike"
-        ]
-      },
-      {
-        "items": [
-          {
-            "name": "AJS External-tank 1013kg fuel",
-            "quantity": 1
-          },
-          {
-            "name": "Rb-05A MCLOS ASM/AShM/AAM",
-            "quantity": 2
-          },
-          {
-            "name": "Rb-74 (AIM-9L) Sidewinder IR AAM",
-            "quantity": 2
-          }
-        ],
-        "enabled": true,
-        "code": "Anti-ship (RB05): RB-05A*2, RB-74*2, XT",
-        "name": "Anti-ship (RB05): RB-05A*2, RB-74*2, XT",
-        "roles": [
-          "Antiship Strike"
-        ]
-      },
-      {
-        "items": [
-          {
-            "name": "Rb-74 (AIM-9L) Sidewinder IR AAM",
-            "quantity": 2
-          },
-          {
-            "name": "AKAN M/55 Gunpod, 150 rnds MINGR55-HE",
-            "quantity": 2
-          },
-          {
-            "name": "AJS External-tank 1013kg fuel",
-            "quantity": 1
-          }
-        ],
-        "enabled": true,
-        "code": "CAP (Gun): AKAN*2, RB-74*2, XT",
-        "name": "CAP (Gun): AKAN*2, RB-74*2, XT",
-        "roles": [
-          "CAP"
-        ]
-      },
-      {
-        "items": [
-          {
-            "name": "Rb-05A MCLOS ASM/AShM/AAM",
+            "name": "BK-90 MJ1 (72 x MJ1 HE-FRAG Bomblets)",
             "quantity": 2
           },
           {
@@ -3361,68 +3425,10 @@
           }
         ],
         "enabled": true,
-        "code": "Hard Target: RB-05A*2, RB-74*2, XT",
-        "name": "Hard Target: RB-05A*2, RB-74*2, XT",
+        "code": "Strike: BK90 (MJ1)*2, RB-74*2, XT",
+        "name": "Strike: BK90 (MJ1)*2, RB-74*2, XT",
         "roles": [
           "Strike"
-        ]
-      },
-      {
-        "items": [
-          {
-            "name": "AJS External-tank 1013kg fuel",
-            "quantity": 1
-          },
-          {
-            "name": "Rb-05A MCLOS ASM/AShM/AAM",
-            "quantity": 2
-          }
-        ],
-        "enabled": true,
-        "code": "RB-05*2, XT",
-        "name": "RB-05*2, XT",
-        "roles": [
-          "Strike"
-        ]
-      },
-      {
-        "items": [
-          {
-            "name": "ARAK M/70B HE 6x 135mm UnGd Rkts, Shu70 HE/FRAG",
-            "quantity": 4
-          },
-          {
-            "name": "AJS External-tank 1013kg fuel",
-            "quantity": 1
-          }
-        ],
-        "enabled": true,
-        "code": "CAS: ARAK M70 HE*4, XT",
-        "name": "CAS: ARAK M70 HE*4, XT",
-        "roles": [
-          "CAS"
-        ]
-      },
-      {
-        "items": [
-          {
-            "name": "AJS External-tank 1013kg fuel",
-            "quantity": 1
-          },
-          {
-            "name": "4x SB M/71 120kg GP Bomb High-drag",
-            "quantity": 4
-          },
-          {
-            "name": "Rb-24J (AIM-9P) Sidewinder IR AAM",
-            "quantity": 2
-          }
-        ],
-        "enabled": true,
-        "code": "Runway Strike: SB71HD*16, RB-24J, XT",
-        "name": "Runway Strike: SB71HD*16, RB-24J, XT",
-        "roles": [
-          "Runway Attack"
         ]
       }
     ],
@@ -3462,7 +3468,9 @@
     "description": "Single jet engine, delta wing, 1 crew, attack aircraft. Viggen",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "AV8BNA": {
     "name": "AV8BNA",
@@ -4418,7 +4426,9 @@
     "description": "Single jet engine, swept wing, 1 crew, all weather, VTOL attack aircraft. Harrier",
     "abilities": "Drogue AAR",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "An-26B": {
     "name": "An-26B",
@@ -4489,7 +4499,9 @@
     "description": "2 turboprop, straight wing, 5 crew, cargo and passenger aircraft. NATO reporting name: Curl",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": false,
+    "canRearm": false
   },
   "An-30M": {
     "name": "An-30M",
@@ -4535,7 +4547,9 @@
     "description": "2 turboprop, straight wing, 7 crew, weather reseach aircraft. NATO reporting name: Clank",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": false,
+    "canRearm": false
   },
   "B-1B": {
     "name": "B-1B",
@@ -4724,7 +4738,9 @@
     "description": "4 jet engine, swing wing, 2 crew bomber. Lancer",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "B-52H": {
     "name": "B-52H",
@@ -4839,11 +4855,13 @@
     "description": "8 jet engine, swept wing, 6 crew bomber. Stratofortress",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "Bf-109K-4": {
     "name": "Bf-109K-4",
-    "coalition": "",
+    "coalition": "red",
     "label": "Bf-109K-4 Fritz",
     "era": "WW2",
     "shortLabel": "109",
@@ -5092,7 +5110,9 @@
     "description": "Single propeller, straight wing, 1 crew. 109",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "C-101CC": {
     "name": "C-101CC",
@@ -5847,7 +5867,9 @@
     "description": "Single jet engine, swept wing, 2 crew, light attack trainer. Aviojet",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "C-130": {
     "name": "C-130",
@@ -5977,7 +5999,9 @@
     "description": "4 turboprop, stright wing, 3 crew. Hercules",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": false,
+    "canRearm": false
   },
   "C-17A": {
     "name": "C-17A",
@@ -6011,7 +6035,9 @@
     "description": "4 jet engine, swept wing, 3 crew. Globemaster",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": false,
+    "canRearm": false
   },
   "E-2C": {
     "name": "E-2C",
@@ -6051,7 +6077,9 @@
     "description": "2 turboprop, straight wing, 5 crew. Hawkeye",
     "abilities": "Airbourne early warning",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": false,
+    "canRearm": false
   },
   "E-3A": {
     "name": "E-3A",
@@ -6093,7 +6121,9 @@
     "description": "4 jet engine, swept wing, 17 crew. Sentry",
     "abilities": "Airbourne early warning",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": false,
+    "canRearm": false
   },
   "F-117A": {
     "name": "F-117A",
@@ -6169,7 +6199,9 @@
     "description": "2 jet engine, delta wing, 1 crew. Nighthawk",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "F-14A-135-GR": {
     "name": "F-14A-135-GR",
@@ -7112,7 +7144,9 @@
     "description": "2 Jet engine, swing wing, 2 crew. Tomcat",
     "abilities": "Drogue AAR",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "F-14B": {
     "name": "F-14B",
@@ -8462,7 +8496,9 @@
     "description": "2 Jet engine, swing wing, 2 crew. Tomcat",
     "abilities": "Drogue AAR",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "F-15C": {
     "name": "F-15C",
@@ -8831,7 +8867,9 @@
     "description": "2 Jet engine, swept wing, 2 crew, all weather fighter. Eagle.",
     "abilities": "Boom AAR",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "F-16C_50": {
     "name": "F-16C_50",
@@ -10732,7 +10770,9 @@
     "description": "Single jet engine, swept wing, 1 crew, all weather fighter and strike. Viper.",
     "abilities": "Boom AAR",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "F-4E": {
     "name": "F-4E",
@@ -11138,7 +11178,9 @@
     "description": "2 Jet engine, swept wing, 2 crew. Phantom",
     "abilities": "Drogue AAR",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "F-5E-3": {
     "name": "F-5E-3",
@@ -12314,7 +12356,9 @@
     "description": "2 Jet engine, swept wing, single crew. Tiger",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "F-86F Sabre": {
     "name": "F-86F Sabre",
@@ -12665,7 +12709,9 @@
     "description": "Single engine, swept wing, 1 crew. Sabre",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "FA-18C_hornet": {
     "name": "FA-18C_hornet",
@@ -13822,11 +13868,13 @@
     "description": "2 Jet engine, swept wing, 1 crew, fighter and strike. Hornet",
     "abilities": "Drogue AAR",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "FW-190A8": {
     "name": "FW-190A8",
-    "coalition": "",
+    "coalition": "red",
     "label": "FW-190A8 Bosch",
     "era": "WW2",
     "shortLabel": "190A8",
@@ -14185,11 +14233,13 @@
     "description": "Single propellor, straight wing, 1 crew. Shrike",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "FW-190D9": {
     "name": "FW-190D9",
-    "coalition": "",
+    "coalition": "red",
     "label": "FW-190D9 Jerry",
     "era": "WW2",
     "shortLabel": "190D9",
@@ -14341,7 +14391,9 @@
     "description": "Single propellor, straight wing, 1 crew. Shrike",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "H-6J": {
     "name": "H-6J",
@@ -14549,11 +14601,13 @@
     "description": "2 jet engine, swept wing, 4 crew bomber. Badger",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "I-16": {
     "name": "I-16",
-    "coalition": "",
+    "coalition": "red",
     "label": "I-16",
     "era": "WW2",
     "shortLabel": "I16",
@@ -14735,7 +14789,9 @@
     "description": "Single propellor, straight wing, 1 crew. Ishak",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "IL-76MD": {
     "name": "IL-76MD",
@@ -14811,7 +14867,9 @@
     "description": "4 jet engine, swept wing, 5 crew. Cargo and passenger aircraft. NATO reporting name: Candid",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": false,
+    "canRearm": false
   },
   "IL-78M": {
     "name": "IL-78M",
@@ -14871,7 +14929,9 @@
     "description": "4 jet engine, swept wing, 6 crew. Tanker aircraft. NATO reporting name: Midas",
     "abilities": "Tanker, Drogue AAR",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": false,
+    "canRearm": false
   },
   "J-11A": {
     "name": "J-11A",
@@ -15738,7 +15798,9 @@
     "description": "2 Jet engine, swept wing, 1 crew, fighter and strike. NATO reporting name: Flanker",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "JF-17": {
     "name": "JF-17",
@@ -17496,7 +17558,9 @@
     "description": "Single jet engine, swept wing, 1 crew, fighter and strike. Geoff",
     "abilities": "Drogue AAR",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "KC-135": {
     "name": "KC-135",
@@ -17536,7 +17600,9 @@
     "description": "4 jet engine, swept wing, 3 crew. Tanker aircraft. Stratotanker",
     "abilities": "Tanker, Boom AAR",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": false,
+    "canRearm": false
   },
   "KC135MPRS": {
     "name": "KC135MPRS",
@@ -17576,7 +17642,9 @@
     "description": "4 jet engine, swept wing, 3 crew. Tanker aircraft. Stratotanker",
     "abilities": "Tanker, Drogue AAR",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": false,
+    "canRearm": false
   },
   "L-39ZA": {
     "name": "L-39ZA",
@@ -17954,7 +18022,9 @@
     "description": "Single jet engine, swept wing, 2 crew, light attack trainer. Aviojet",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "M-2000C": {
     "name": "M-2000C",
@@ -18450,7 +18520,9 @@
     "description": "Single jet engine, swept wing, 1 crew, fighter and strike.",
     "abilities": "Drogue AAR",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "MB-339A": {
     "name": "MB-339A",
@@ -19006,7 +19078,9 @@
     "description": "Single jet engine, swept wing, 2 crew, light attack trainer. Aviojet",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "MQ-9 Reaper": {
     "name": "MQ-9 Reaper",
@@ -19132,7 +19206,9 @@
     "description": "Single turboprop, straight wing, attack aircraft. Reaper",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "MiG-15bis": {
     "name": "MiG-15bis",
@@ -19429,7 +19505,9 @@
     "description": "Single jet engine, swept wing, 1 crew. Fagot",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "MiG-19P": {
     "name": "MiG-19P",
@@ -19723,7 +19801,9 @@
     "description": "Single jet engine, swept wing, 1 crew. Farmer",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "MiG-21Bis": {
     "name": "MiG-21Bis",
@@ -20731,7 +20811,9 @@
     "description": "Single jet engine, swept wing, 1 crew. Fishbed",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "MiG-23MLD": {
     "name": "MiG-23MLD",
@@ -21051,7 +21133,9 @@
     "description": "Single jet engine, swing wing, 1 crew. Flogger",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "MiG-25PD": {
     "name": "MiG-25PD",
@@ -21151,7 +21235,9 @@
     "description": "2 jet engine, swept wing, 1 crew. Foxbat",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "MiG-25RBT": {
     "name": "MiG-25RBT",
@@ -21224,7 +21310,9 @@
     "description": "2 jet engine, swept wing, 1 crew. Foxbat",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "MiG-27K": {
     "name": "MiG-27K",
@@ -21565,7 +21653,9 @@
     "description": "Single jet engine, swing wing, 1 crew. Flogger",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "MiG-29A": {
     "name": "MiG-29A",
@@ -22078,7 +22168,9 @@
     "description": "2 jet engine, swept wing, 1 crew. Flanker",
     "abilities": "Drogue AAR",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "MiG-29S": {
     "name": "MiG-29S",
@@ -22682,7 +22774,9 @@
     "description": "2 jet engine, swept wing, 1 crew. Flanker",
     "abilities": "Drogue AAR",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "MiG-31": {
     "name": "MiG-31",
@@ -22817,7 +22911,9 @@
     "description": "2 jet engine, swept wing, 2 crew. Foxhound",
     "abilities": "Drogue AAR",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "Mirage-F1EE": {
     "name": "Mirage-F1EE",
@@ -23772,11 +23868,13 @@
     "description": "Single Jet engine, swept wing, 1 crew.",
     "abilities": "Drogue AAR",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "MosquitoFBMkVI": {
     "name": "MosquitoFBMkVI",
-    "coalition": "",
+    "coalition": "blue",
     "label": "Mosquito FB MkVI",
     "era": "WW2",
     "shortLabel": "Mo",
@@ -24006,11 +24104,13 @@
     "description": "2 propeller, straight wing, 2 crew. Mosquito.",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "P-47D-40": {
     "name": "P-47D-40",
-    "coalition": "",
+    "coalition": "blue",
     "label": "P-47D Thunderbolt",
     "era": "WW2",
     "shortLabel": "P47",
@@ -24247,11 +24347,13 @@
     "description": "Single propellor, straight wing, 1 crew. Thunderbolt",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "P-51D-30-NA": {
     "name": "P-51D-30-NA",
-    "coalition": "",
+    "coalition": "blue",
     "label": "P-51D Mustang",
     "era": "WW2",
     "shortLabel": "P51",
@@ -24501,7 +24603,9 @@
     "description": "Single propellor, straight wing, 1 crew. Mustang",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "S-3B Tanker": {
     "name": "S-3B Tanker",
@@ -24535,7 +24639,9 @@
     "description": "2 jet engine, straight wing, 4 crew. Viking",
     "abilities": "Tanker, Drogue AAR",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": false,
+    "canRearm": false
   },
   "Su-17M4": {
     "name": "Su-17M4",
@@ -25001,7 +25107,9 @@
     "description": "Single jet engine, swept wing, 1 crew. Fitter",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "Su-24M": {
     "name": "Su-24M",
@@ -25665,7 +25773,9 @@
     "description": "2 jet engine, swing wing, 2 crew. Fencer",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "Su-25": {
     "name": "Su-25",
@@ -26466,7 +26576,9 @@
     "description": "2 jet engine, swept wing, 1 crew. Frogfoot",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "Su-25T": {
     "name": "Su-25",
@@ -28301,7 +28413,9 @@
     "description": "2 jet engine, swept wing, 1 crew. Flanker",
     "abilities": "Drogue AAR",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "Su-30": {
     "name": "Su-30",
@@ -29244,7 +29358,9 @@
     "description": "2 jet engine, swept wing, 1 crew. Flanker",
     "abilities": "Drogue AAR",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "Su-33": {
     "name": "Su-33",
@@ -29930,7 +30046,9 @@
     "description": "2 jet engine, swept wing, 1 crew. Flanker",
     "abilities": "Drogue AAR",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "Su-34": {
     "name": "Su-34",
@@ -30546,7 +30664,9 @@
     "description": "2 Jet engine, swept wing, 2 crew, all weather fighter and strike. Fullback",
     "abilities": "Drogue AAR",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "Tornado GR4": {
     "name": "Tornado GR4",
@@ -30754,7 +30874,9 @@
     "description": "2 jet engine, swing wing, 2 crew, all weather strike.",
     "abilities": "Drogue AAR",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "Tornado IDS": {
     "name": "Tornado IDS",
@@ -31036,7 +31158,9 @@
     "description": "2 jet engine, swing wing, 2 crew, all weather strike.",
     "abilities": "Drogue AAR",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "Tu-142": {
     "name": "Tu-142",
@@ -31084,7 +31208,9 @@
     "description": "4 turboprop, swept wing, 11 crew, bomber. Bear",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "Tu-160": {
     "name": "Tu-160",
@@ -31132,7 +31258,9 @@
     "description": "4 jet engine, swing wing, 4 crew bomber. Blackjack",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "Tu-22M3": {
     "name": "Tu-22M3",
@@ -31263,7 +31391,9 @@
     "description": "2 jet engine, swing wing, 4 crew bomber. Backfire",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "Tu-95MS": {
     "name": "Tu-95MS",
@@ -31312,7 +31442,9 @@
     "description": "4 turboprop, swept wing, 6 crew, bomber. Bear",
     "abilities": "",
     "acquisitionRange": "",
-    "engagementRange": ""
+    "engagementRange": "",
+    "canTargetPoint": true,
+    "canRearm": false
   },
   "F-15ESE": {
     "name": "F-15ESE",

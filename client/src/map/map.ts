@@ -611,7 +611,7 @@ export class Map extends L.Map {
                     options["land-at-point"] = { text: "Land here", tooltip: "Land at this precise location" };
                 }
 
-                if (selectedUnits.every((unit: Unit) => { return unit.canFulfillRole(["CAS", "Strike"]) })) {
+                if (selectedUnits.every((unit: Unit) => { return unit.canTargetPoint()})) {
                     options["bomb"] = { text: "Precision bombing", tooltip: "Precision bombing of a specific point" };
                     options["carpet-bomb"] = { text: "Carpet bombing", tooltip: "Carpet bombing close to a point" };
                 } else {
@@ -619,7 +619,7 @@ export class Map extends L.Map {
                 }
             }
             else if (selectedUnitTypes.length === 1 && ["GroundUnit", "NavyUnit"].includes(selectedUnitTypes[0])) {
-                if (selectedUnits.every((unit: Unit) => { return ["AAA", "APC", "Gun Artillery", "Rocket Artillery", "Infantry", "IFV", "Tank", "Cruiser", "Destroyer", "Frigate"].includes(unit.getType()) })) {
+                if (selectedUnits.every((unit: Unit) => { return unit.canTargetPoint() })) {
                     options["fire-at-area"] = { text: "Fire at area", tooltip: "Fire at a large area" };
                     options["simulate-fire-fight"] = { text: "Simulate fire fight", tooltip: "Simulate a fire fight by shooting randomly in a certain large area" };
                 }

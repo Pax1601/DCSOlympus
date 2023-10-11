@@ -38,7 +38,7 @@ export function addStringInput(div: HTMLElement, key: string, value: string, typ
  * @param value The initial value of the input
  * @param options The dropdown options
  */
-export function addDropdownInput(div: HTMLElement, key: string, value: string, options: string[]) {
+export function addDropdownInput(div: HTMLElement, key: string, value: string, options: string[], callback: CallableFunction) {
     var row = document.createElement("div");
     var dt = document.createElement("dt");
     var dd = document.createElement("dd");
@@ -51,6 +51,7 @@ export function addDropdownInput(div: HTMLElement, key: string, value: string, o
         select.appendChild(el);
     });
     select.value = value;
+    select.onchange = () => callback(select.value);
     dd.appendChild(select);
     row.appendChild(dt);
     row.appendChild(dd);
@@ -164,6 +165,15 @@ export function addBlueprintsScroll(div: HTMLElement, database: {blueprints: {[k
             text.onclick = () => callback(key);
             rowDiv.appendChild(text);
 
+            let checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.checked = blueprints[key].enabled;
+            checkbox.onclick = () => {
+                console.log(checkbox.checked);
+                blueprints[key].enabled = checkbox.checked;
+            }
+            rowDiv.appendChild(checkbox);
+
             /* This button allows to remove an element from the list. It requires a refresh. */
             var button = document.createElement("button");
             button.innerText = "X";
@@ -199,7 +209,16 @@ export function addLoadoutsScroll(div: HTMLElement, loadouts: LoadoutBlueprint[]
 
         /* The "Empty loadout" can not be removed */
         if (loadout.name !== "Empty loadout") {
-             /* This button allows to remove an element from the list. It requires a refresh. */
+            let checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.checked = loadout.enabled;
+            checkbox.onclick = () => {
+                console.log(checkbox.checked);
+                loadout.enabled = checkbox.checked;
+            }
+            rowDiv.appendChild(checkbox);
+
+            /* This button allows to remove an element from the list. It requires a refresh. */
             var button = document.createElement("button");
             button.innerText = "X";
             button.onclick = () => {

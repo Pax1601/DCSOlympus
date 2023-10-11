@@ -196,11 +196,15 @@ declare module "constants/constants" {
     export const IADSDensities: {
         [key: string]: number;
     };
-    export const SHOW_CONTACT_LINES = "Show unit contact lines";
     export const HIDE_GROUP_MEMBERS = "Hide group members when zoomed out";
-    export const SHOW_UNIT_LABELS = "Show unit labels";
-    export const SHOW_UNIT_PATHS = "Show unit paths";
-    export const SHOW_UNIT_TARGETS = "Show unit targets";
+    export const SHOW_UNIT_LABELS = "Show unit labels (L)";
+    export const SHOW_UNITS_ENGAGEMENT_RINGS = "Show units threat range rings (Q)";
+    export const HIDE_UNITS_SHORT_RANGE_RINGS = "Hide short range units threat range rings (R)";
+    export const SHOW_UNITS_ACQUISITION_RINGS = "Show units detection range rings (E)";
+    export const FILL_SELECTED_RING = "Fill the threat range rings of selected units (F)";
+    export const SHOW_UNIT_CONTACTS = "Show selected units contact lines";
+    export const SHOW_UNIT_PATHS = "Show selected unit paths";
+    export const SHOW_UNIT_TARGETS = "Show selected unit targets";
     export enum DataIndexes {
         startOfData = 0,
         category = 1,
@@ -244,6 +248,11 @@ declare module "constants/constants" {
         operateAs = 39,
         endOfData = 255
     }
+    export const MGRS_PRECISION_10KM = 2;
+    export const MGRS_PRECISION_1KM = 3;
+    export const MGRS_PRECISION_100M = 4;
+    export const MGRS_PRECISION_10M = 5;
+    export const MGRS_PRECISION_1M = 6;
 }
 declare module "map/markers/custommarker" {
     import { Map, Marker } from "leaflet";
@@ -526,9 +535,11 @@ declare module "interfaces" {
         roles: string[];
         code: string;
         name: string;
+        enabled: boolean;
     }
     export interface UnitBlueprint {
         name: string;
+        enabled: boolean;
         coalition: string;
         era: string;
         label: string;
@@ -623,7 +634,7 @@ declare module "unit/databases/unitdatabase" {
         getCategory(): string;
         getByName(name: string): UnitBlueprint | null;
         getByLabel(label: string): UnitBlueprint | null;
-        getBlueprints(): {
+        getBlueprints(includeDisabled?: boolean): {
             [key: string]: UnitBlueprint;
         };
         getRoles(): string[];
@@ -699,6 +710,19 @@ declare module "other/utils" {
     export const zeroPad: (num: number, places: number) => string;
     export function similarity(s1: string, s2: string): number;
     export function editDistance(s1: string, s2: string): any;
+    export type MGRS = {
+        bandLetter: string;
+        columnLetter: string;
+        easting: string;
+        groups: string[];
+        northing: string;
+        precision: number;
+        rowLetter: string;
+        string: string;
+        zoneNumber: string;
+    };
+    export function latLngToMGRS(lat: number, lng: number, precision?: number): MGRS | false;
+    export function latLngToUTM(lat: number, lng: number): any;
     export function latLngToMercator(lat: number, lng: number): {
         x: number;
         y: number;
@@ -713,6 +737,7 @@ declare module "other/utils" {
     export function ftToM(ft: number): number;
     export function mToFt(m: number): number;
     export function mToNm(m: number): number;
+    export function nmToM(nm: number): number;
     export function nmToFt(nm: number): number;
     export function polyContains(latlng: LatLng, polygon: Polygon): boolean;
     export function randomPointInPoly(polygon: Polygon): LatLng;
@@ -723,7 +748,7 @@ declare module "other/utils" {
         ranges?: string[];
         eras?: string[];
     }): UnitBlueprint | null;
-    export function getMarkerCategoryByName(name: string): "aircraft" | "groundunit-sam" | "groundunit-other" | "groundunit-sam-radar" | "groundunit-sam-launcher" | "groundunit-ewr" | "helicopter";
+    export function getMarkerCategoryByName(name: string): "aircraft" | "helicopter" | "groundunit-sam" | "groundunit-other" | "groundunit-sam-radar" | "groundunit-sam-launcher" | "groundunit-ewr";
     export function getUnitDatabaseByCategory(category: string): import("unit/databases/aircraftdatabase").AircraftDatabase | import("unit/databases/helicopterdatabase").HelicopterDatabase | import("unit/databases/groundunitdatabase").GroundUnitDatabase | import("unit/databases/navyunitdatabase").NavyUnitDatabase | null;
     export function base64ToBytes(base64: string): ArrayBufferLike;
     export function enumToState(state: number): string;
@@ -769,6 +794,8 @@ declare module "controls/unitspawnmenu" {
         reset(): void;
         setCountries(): void;
         refreshOptions(): void;
+        showCirclesPreviews(): void;
+        clearCirclesPreviews(): void;
         setAirbase(airbase: Airbase | undefined): void;
         setLatLng(latlng: LatLng): void;
         setMaxUnitCount(maxUnitCount: number): void;
@@ -1102,6 +1129,7 @@ declare module "unit/unit" {
         simulateFireFight(latlng: LatLng, targetGroundElevation: number | null): void;
         scenicAAA(): void;
         missOnPurpose(): void;
+        landAtPoint(latlng: LatLng): void;
         /***********************************************/
         getActions(): {
             [key: string]: {
@@ -1468,7 +1496,10 @@ declare module "mission/missionmanager" {
 declare module "panels/connectionstatuspanel" {
     import { Panel } from "panels/panel";
     export class ConnectionStatusPanel extends Panel {
+        #private;
         constructor(ID: string);
+        setElapsedTime(time: string): void;
+        setMissionTime(time: string): void;
         showDisconnected(): void;
         showConnected(): void;
         showServerPaused(): void;
@@ -1838,6 +1869,11 @@ declare module "unit/unitsmanager" {
          *
          */
         selectedUnitsMissOnPurpose(): void;
+        /** Instruct units to land at specific point
+         *
+         * @param latlng Point where to land
+         */
+        selectedUnitsLandAtPoint(latlng: LatLng): void;
         /*********************** Control operations on selected units ************************/
         /**  See getUnitsCategories for more info
          *
@@ -2027,6 +2063,7 @@ declare module "server/servermanager" {
         simulateFireFight(ID: number, latlng: LatLng, altitude: number, callback?: CallableFunction): void;
         scenicAAA(ID: number, coalition: string, callback?: CallableFunction): void;
         missOnPurpose(ID: number, coalition: string, callback?: CallableFunction): void;
+        landAtPoint(ID: number, latlng: LatLng, callback?: CallableFunction): void;
         setAdvacedOptions(ID: number, isTanker: boolean, isAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings, callback?: CallableFunction): void;
         setCommandModeOptions(restrictSpawns: boolean, restrictToCoalition: boolean, spawnPoints: {
             blue: number;

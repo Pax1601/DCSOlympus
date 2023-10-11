@@ -117,25 +117,32 @@ export class UnitDatabase {
         return eras;
     }
 
-    /* Returns a list of all possible ranges in a database */
-    getRanges() {
-        var filteredBlueprints = this.getBlueprints();
-        var ranges: string[] = [];
-        for (let unit in filteredBlueprints) {
-            var range = filteredBlueprints[unit].rangeType;
-            if (range && range !== "" && !ranges.includes(range))
-                ranges.push(range);
-        }
-        return ranges;
-    }
-
     /* Get all blueprints by range */
     getByRange(range: string) {
         var filteredBlueprints = this.getBlueprints();
         var unitswithrange = [];
+        var minRange = 0;
+        var maxRange = 0;
+
+        if (range === "Short range") {
+            minRange = 0;
+            maxRange = 10000;
+        }
+        else if (range === "Medium range") {
+            minRange = 10000;
+            maxRange = 100000;
+        }
+        else {
+            minRange = 100000;
+            maxRange = 999999;
+        }
+
         for (let unit in filteredBlueprints) {
-            if (filteredBlueprints[unit].rangeType === range) {
-                unitswithrange.push(filteredBlueprints[unit]);
+            var engagementRange = filteredBlueprints[unit].engagementRange;
+            if (engagementRange !== undefined) {
+                if (engagementRange >= minRange && engagementRange < maxRange) {
+                    unitswithrange.push(filteredBlueprints[unit]);
+                }
             }
         }
         return unitswithrange;
