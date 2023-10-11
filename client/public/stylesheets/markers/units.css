@@ -295,6 +295,16 @@
     background-image: url("/resources/theme/images/states/no-task.svg");
 }
 
+[data-object|="unit"][data-state="off"] .unit-state {
+    background-image: url("/resources/theme/images/states/off.svg");
+}
+
+
+[data-object|="unit"][data-state="tanker"] .unit-state {
+    background-image: url("/resources/theme/images/states/tanker.svg");
+}
+
+
 /*** Dead unit ***/
 [data-object|="unit"][data-is-dead] .unit-selected-spotlight,
 [data-object|="unit"][data-is-dead] .unit-short-label,
