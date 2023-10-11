@@ -93,7 +93,7 @@ export class CoalitionAreaContextMenu extends ContextMenu {
         }));
 
         /* Create the checkboxes to select the unit ranges */
-        this.#iadsRangesDropdown.setOptionsElements(groundUnitDatabase.getRanges().map((range: string) => {
+        this.#iadsRangesDropdown.setOptionsElements(["Short range", "Medium range", "Long range"].map((range: string) => {
             return createCheckboxOption(range, `Add ${range} units to the IADS`);
         }));
 

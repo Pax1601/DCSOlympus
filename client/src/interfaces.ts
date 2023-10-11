@@ -202,7 +202,6 @@ export interface UnitBlueprint {
     label: string;
     shortLabel: string;
     type?: string;
-    rangeType?: string;
     loadouts?: LoadoutBlueprint[];
     filename?: string;
     liveries?: { [key: string]: { name: string, countries: string[] } };
@@ -215,8 +214,8 @@ export interface UnitBlueprint {
     abilities?: string;
     acquisitionRange?: number;
     engagementRange?: number;
-    refuelsFrom?: string;
-    refuellingType?: string;
+    canTargetPoint?: boolean;
+    canRearm?: boolean;
 }
 
 export interface UnitSpawnOptions {

@@ -308,16 +308,24 @@ export function randomUnitBlueprint(unitDatabase: UnitDatabase, options: {type?:
     /* Keep only the units that have a range included in the requested values */
     if (options.ranges) {
         unitBlueprints = unitBlueprints.filter((unitBlueprint: UnitBlueprint) => { 
-            //@ts-ignore
-            return unitBlueprint.rangeType? options.ranges.includes(unitBlueprint.rangeType): true;
+            var rangeType = "";
+            var range = unitBlueprint.acquisitionRange ;
+            if (range !== undefined) {
+                if (range >= 0 && range < 10000) 
+                    rangeType = "Short range";
+                else if (range >= 10000 && range < 100000) 
+                    rangeType = "Medium range";
+                else if (range >= 100000 && range < 999999)
+                    rangeType = "Long range";
+            }
+            return options.ranges?.includes(rangeType);
         });
     }
 
     /* Keep only the units that have an era included in the requested values */
     if (options.eras) {
         unitBlueprints = unitBlueprints.filter((unitBlueprint: UnitBlueprint) => { 
-            //@ts-ignore
-            return unitBlueprint.era? options.eras.includes(unitBlueprint.era): true;
+            return unitBlueprint.era? options.eras?.includes(unitBlueprint.era): true;
         });
     }
 

@@ -161,12 +161,16 @@ export class MapContextMenu extends ContextMenu {
 
         this.#aircraftSpawnMenu.reset();
         this.#aircraftSpawnMenu.setCountries();
+        this.#aircraftSpawnMenu.clearCirclesPreviews();
         this.#helicopterSpawnMenu.reset();
         this.#helicopterSpawnMenu.setCountries();
+        this.#helicopterSpawnMenu.clearCirclesPreviews();
         this.#groundUnitSpawnMenu.reset();
         this.#groundUnitSpawnMenu.setCountries();
+        this.#groundUnitSpawnMenu.clearCirclesPreviews();
         this.#navyUnitSpawnMenu.reset();
         this.#navyUnitSpawnMenu.setCountries();
+        this.#navyUnitSpawnMenu.clearCirclesPreviews();
 
         this.setVisibleSubMenu(type);
         this.clip();

@@ -32,14 +32,24 @@ for filename in filenames:
             database[name]["coalition"] = row[6]
             database[name]["era"] = row[7]
 
-            if row[8] != "":
-                database[name]["acquisitionRange"] = int(row[8])
+            if row[8] == "yes":
+                database[name]["canTargetPoint"] = True 
+            else:
+                database[name]["canTargetPoint"] = False
 
-            if row[9] != "":
-                database[name]["engagementRange"] = int(row[9])
+            if row[9] == "yes":
+                database[name]["canRearm"] = True 
+            else:
+                database[name]["canRearm"] = False
+
+            if row[10] != "":
+                database[name]["acquisitionRange"] = int(row[10])
+
+            if row[11] != "":
+                database[name]["engagementRange"] = int(row[11])
                 
-            database[name]["description"] = row[10]
-            database[name]["abilities"] = row[11]
+            database[name]["description"] = row[12]
+            database[name]["abilities"] = row[13]
 
     # Dump everything in the database
     with open(filename, "w") as f:
