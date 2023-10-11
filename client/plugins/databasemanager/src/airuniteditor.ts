@@ -40,8 +40,8 @@ export class AirUnitEditor extends UnitEditor {
             addStringInput(this.contentDiv2, "Name", blueprint.name, "text", (value: string) => { blueprint.name = value; }, true);
             addStringInput(this.contentDiv2, "Label", blueprint.label, "text", (value: string) => { blueprint.label = value; });
             addStringInput(this.contentDiv2, "Short label", blueprint.shortLabel, "text", (value: string) => { blueprint.shortLabel = value; });
-            addDropdownInput(this.contentDiv2, "Coalition", blueprint.coalition, ["", "blue", "red"],);
-            addDropdownInput(this.contentDiv2, "Era", blueprint.era, ["WW2", "Early Cold War", "Mid Cold War", "Late Cold War", "Modern"]);
+            addDropdownInput(this.contentDiv2, "Coalition", blueprint.coalition, ["", "blue", "red"], (value: string) => {blueprint.coalition = value; });
+            addDropdownInput(this.contentDiv2, "Era", blueprint.era, ["WW2", "Early Cold War", "Mid Cold War", "Late Cold War", "Modern"], (value: string) => {blueprint.era = value; });
             addStringInput(this.contentDiv2, "Filename", blueprint.filename ?? "", "text", (value: string) => { blueprint.filename = value; });
             addStringInput(this.contentDiv2, "Cost", String(blueprint.cost) ?? "", "number", (value: string) => { blueprint.cost = parseFloat(value); });
             addStringInput(this.contentDiv2, "Rufels from", String(blueprint.refuelsFrom) ?? "", "text", (value: string) => { blueprint.refuelsFrom = value; });
@@ -73,7 +73,8 @@ export class AirUnitEditor extends UnitEditor {
                 label: "",
                 shortLabel: "",
                 era: "",
-                loadouts: []
+                loadouts: [],
+                enabled: true
             }
             this.show();
             this.setBlueprint(this.database.blueprints[key]);
@@ -91,7 +92,8 @@ export class AirUnitEditor extends UnitEditor {
                 code: "",
                 fuel: 1,
                 items: [],
-                roles: []
+                roles: [],
+                enabled: true
             })
             this.setBlueprint(this.blueprint);
         }

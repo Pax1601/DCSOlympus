@@ -45,7 +45,7 @@ export abstract class UnitEditor {
      * @param database The database that the editor will operate on
      */
     setDatabase(database: UnitDatabase) {
-        this.database = JSON.parse(JSON.stringify(database));
+        this.database = JSON.parse(JSON.stringify({blueprints: database.getBlueprints(true)}));
     }
 
     /** Show the editor

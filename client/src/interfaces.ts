@@ -191,6 +191,7 @@ export interface LoadoutBlueprint {
     roles: string[];
     code: string;
     name: string;
+    enabled: boolean;
 }
 
 export interface UnitBlueprint {
