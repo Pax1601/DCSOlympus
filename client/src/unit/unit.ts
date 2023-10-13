@@ -152,8 +152,8 @@ export class Unit extends CustomMarker {
         this.#pathPolyline.addTo(getApp().getMap());
         this.#targetPositionMarker = new TargetMarker(new LatLng(0, 0));
         this.#targetPositionPolyline = new Polyline([], { color: '#FF0000', weight: 3, opacity: 0.5, smoothFactor: 1 });
-        this.#engagementCircle = new Circle(this.getPosition(), { radius: 0, weight: 4, opacity: 1, fillOpacity: 0, dashArray: "4 8" });
-        this.#acquisitionCircle = new Circle(this.getPosition(), { radius: 0, weight: 2, opacity: 1, fillOpacity: 0, dashArray: "8 12" });
+        this.#engagementCircle = new Circle(this.getPosition(), { radius: 0, weight: 4, opacity: 1, fillOpacity: 0, dashArray: "4 8", interactive: false, bubblingMouseEvents: false });
+        this.#acquisitionCircle = new Circle(this.getPosition(), { radius: 0, weight: 2, opacity: 1, fillOpacity: 0, dashArray: "8 12", interactive: false, bubblingMouseEvents: false });
 
         this.on('click', (e) => this.#onClick(e));
         this.on('dblclick', (e) => this.#onDoubleClick(e));
@@ -181,7 +181,12 @@ export class Unit extends CustomMarker {
 
         document.addEventListener("mapVisibilityOptionsChanged", (ev: CustomEventInit) => {
             this.#updateMarker();
-            this.#drawRanges();
+
+            /* Circles don't like to be updated when the map is zooming */
+            if (!getApp().getMap().isZooming()) 
+                this.#drawRanges();
+            else 
+                this.once("zoomend", () => { this.#drawRanges(); })
 
             if (this.getSelected())
                 this.drawLines();
@@ -205,7 +210,7 @@ export class Unit extends CustomMarker {
                 case DataIndexes.alive: this.setAlive(dataExtractor.extractBool()); updateMarker = true; break;
                 case DataIndexes.human: this.#human = dataExtractor.extractBool(); break;
                 case DataIndexes.controlled: this.#controlled = dataExtractor.extractBool(); updateMarker = true; break;
-                case DataIndexes.coalition: this.#coalition = enumToCoalition(dataExtractor.extractUInt8()); updateMarker = true; break;
+                case DataIndexes.coalition: this.#coalition = enumToCoalition(dataExtractor.extractUInt8()); updateMarker = true; this.#clearRanges(); break;
                 case DataIndexes.country: this.#country = dataExtractor.extractUInt8(); break;
                 case DataIndexes.name: this.#name = dataExtractor.extractString(); break;
                 case DataIndexes.unitName: this.#unitName = dataExtractor.extractString(); break;
@@ -343,9 +348,10 @@ export class Unit extends CustomMarker {
             this.#selected = selected;
 
             /* Circles don't like to be updated when the map is zooming */
-            if (!getApp().getMap().isZooming()) {
+            if (!getApp().getMap().isZooming()) 
                 this.#drawRanges();
-            }
+            else 
+                this.once("zoomend", () => { this.#drawRanges(); })
 
             if (selected) {
                 this.#updateMarker();
@@ -535,7 +541,11 @@ export class Unit extends CustomMarker {
 
         this.getElement()?.appendChild(el);
 
-        this.#drawRanges();
+        /* Circles don't like to be updated when the map is zooming */
+        if (!getApp().getMap().isZooming()) 
+            this.#drawRanges();
+        else 
+            this.once("zoomend", () => { this.#drawRanges(); })
     }
 
     /********************** Visibility *************************/
@@ -569,7 +579,11 @@ export class Unit extends CustomMarker {
         }
 
         if (!this.getHidden()) {
-            this.#drawRanges();
+            /* Circles don't like to be updated when the map is zooming */
+            if (!getApp().getMap().isZooming()) 
+                this.#drawRanges();
+            else 
+                this.once("zoomend", () => { this.#drawRanges(); })
         } else {
             this.#clearRanges();
         }

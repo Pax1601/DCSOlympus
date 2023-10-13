@@ -236,8 +236,8 @@ export class UnitSpawnMenu {
             this.showCirclesPreviews();
         });
 
-        this.#engagementCircle = new Circle(this.spawnOptions.latlng, { radius: 0, weight: 4, opacity: 0.8, fillOpacity: 0, dashArray: "4 8" });
-        this.#acquisitionCircle = new Circle(this.spawnOptions.latlng, { radius: 0, weight: 2, opacity: 0.8, fillOpacity: 0, dashArray: "8 12" });
+        this.#engagementCircle = new Circle(this.spawnOptions.latlng, { radius: 0, weight: 4, opacity: 0.8, fillOpacity: 0, dashArray: "4 8", interactive: false, bubblingMouseEvents: false });
+        this.#acquisitionCircle = new Circle(this.spawnOptions.latlng, { radius: 0, weight: 2, opacity: 0.8, fillOpacity: 0, dashArray: "8 12", interactive: false, bubblingMouseEvents: false });
     }
 
     getContainer() {

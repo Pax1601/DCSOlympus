@@ -2,7 +2,7 @@ const { random } = require('@turf/turf');
 var basicAuth = require('express-basic-auth')
 var enc = new TextEncoder();
 
-var DEMO_UNIT_DATA = {
+const DEMO_UNIT_DATA = {
     ["1"]:{ category: "Aircraft", alive: true, human: false, controlled: true, coalition: 2, country: 0, name: "KC-135", unitName: "Cool guy 1-1 who also has a very long name", groupName: "Cool group 1", state: 1, task: "Being cool!",
         hasTask: true, position: { lat: 37, lng: -116, alt: 1000 }, speed: 200, heading: 45, isTanker: true, isAWACS: false, onOff: true, followRoads: false, fuel: 50, 
         desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
@@ -142,25 +142,25 @@ class DemoDataGenerator {
             },
         }))
 
-        for (let i = 8; i < 100; i++) {
-            var randomUnit = { category: "Aircraft", alive: true, human: false, controlled: true, coalition: 2, country: 0, name: "KC-135", unitName: "Cool guy 1-1 who also has a very long name", groupName: "Cool group 1", state: 1, task: "Being cool!",
-                hasTask: true, position: { lat: 37 + Math.random(), lng: -116 + Math.random(), alt: 1000 }, speed: 200, heading: 45, isTanker: true, isAWACS: false, onOff: true, followRoads: false, fuel: 50, 
-                desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
-                formationOffset: { x: 0, y: 0, z: 0 },
-                targetID: 0,
-                targetPosition: { lat: 0, lng: 0, alt: 0 },
-                ROE: 1,
-                reactionToThreat: 1,
-                emissionsCountermeasures: 1,
-                TACAN: { isOn: false, XY: 'Y', callsign: 'TKR', channel: 40 },
-                radio: { frequency: 124000000, callsign: 1, callsignNumber: 1 },
-                generalSettings: { prohibitAA: false, prohibitAfterburner: false, prohibitAG: false, prohibitAirWpn: false, prohibitJettison: false },
-                ammo: [{ quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 }, { quantity: 2, name: "A cool missile with a longer name\0Ciao", guidance: 0, category: 0, missileCategory: 0 }, { quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 } , { quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 } ,  { quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 } , { quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 } , { quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 } , { quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 } , { quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 }   ],
-                contacts: [{ID: 2, detectionMethod: 1}, {ID: 3, detectionMethod: 4}, {ID: 4, detectionMethod: 1}],
-                activePath: []
-            }
-            DEMO_UNIT_DATA[i.toString()] = randomUnit;
-        }
+        //for (let i = 8; i < 100; i++) {
+        //    var randomUnit = { category: "Aircraft", alive: true, human: false, controlled: true, coalition: 2, country: 0, name: "KC-135", unitName: "Cool guy 1-1 who also has a very long name", groupName: "Cool group 1", state: 1, task: "Being cool!",
+        //        hasTask: true, position: { lat: 37 + Math.random(), lng: -116 + Math.random(), alt: 1000 }, speed: 200, heading: 45, isTanker: true, isAWACS: false, onOff: true, followRoads: false, fuel: 50, 
+        //        desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
+        //        formationOffset: { x: 0, y: 0, z: 0 },
+        //        targetID: 0,
+        //        targetPosition: { lat: 0, lng: 0, alt: 0 },
+        //        ROE: 1,
+        //        reactionToThreat: 1,
+        //        emissionsCountermeasures: 1,
+        //        TACAN: { isOn: false, XY: 'Y', callsign: 'TKR', channel: 40 },
+        //        radio: { frequency: 124000000, callsign: 1, callsignNumber: 1 },
+        //        generalSettings: { prohibitAA: false, prohibitAfterburner: false, prohibitAG: false, prohibitAirWpn: false, prohibitJettison: false },
+        //        ammo: [{ quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 }, { quantity: 2, name: "A cool missile with a longer name\0Ciao", guidance: 0, category: 0, missileCategory: 0 }, { quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 } , { quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 } ,  { quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 } , { quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 } , { quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 } , { quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 } , { quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 }   ],
+        //        contacts: [{ID: 2, detectionMethod: 1}, {ID: 3, detectionMethod: 4}, {ID: 4, detectionMethod: 1}],
+        //        activePath: []
+        //    }
+        //    DEMO_UNIT_DATA[i.toString()] = randomUnit;
+        //}
 
 
         this.startTime = Date.now();
