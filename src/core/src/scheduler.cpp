@@ -458,8 +458,8 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		if (unit != nullptr)
 		{
 			/* Advanced tasking */
-			unit->setIsTanker(value[L"isTanker"].as_bool());
-			unit->setIsAWACS(value[L"isAWACS"].as_bool());
+			unit->setIsActiveTanker(value[L"isActiveTanker"].as_bool());
+			unit->setIsActiveAWACS(value[L"isActiveAWACS"].as_bool());
 
 			/* TACAN Options */
 			DataTypes::TACAN TACAN;

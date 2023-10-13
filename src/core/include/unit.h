@@ -77,8 +77,8 @@ public:
 	virtual void setPosition(Coords newValue) { updateValue(position, newValue, DataIndex::position); }
 	virtual void setSpeed(double newValue) { updateValue(speed, newValue, DataIndex::speed); }
 	virtual void setHeading(double newValue) { updateValue(heading, newValue, DataIndex::heading); }
-	virtual void setIsTanker(bool newValue);
-	virtual void setIsAWACS(bool newValue);
+	virtual void setIsActiveTanker(bool newValue);
+	virtual void setIsActiveAWACS(bool newValue);
 	virtual void setOnOff(bool newValue, bool force = false) { updateValue(onOff, newValue, DataIndex::onOff); };
 	virtual void setFollowRoads(bool newValue, bool force = false) { updateValue(followRoads, newValue, DataIndex::followRoads); };
 	virtual void setFuel(unsigned short newValue) { updateValue(fuel, newValue, DataIndex::fuel); }
@@ -118,8 +118,8 @@ public:
 	virtual Coords getPosition() { return position; }
 	virtual double getSpeed() { return speed; }
 	virtual double getHeading() { return heading; }
-	virtual bool getIsTanker() { return isTanker; }
-	virtual bool getIsAWACS() { return isAWACS; }
+	virtual bool getIsActiveTanker() { return isActiveTanker; }
+	virtual bool getIsActiveAWACS() { return isActiveAWACS; }
 	virtual bool getOnOff() { return onOff; };
 	virtual bool getFollowRoads() { return followRoads; };
 	virtual unsigned short getFuel() { return fuel; }
@@ -161,8 +161,8 @@ protected:
 	Coords position = Coords(NULL);
 	double speed = NULL;
 	double heading = NULL;
-	bool isTanker = false;
-	bool isAWACS = false;
+	bool isActiveTanker = false;
+	bool isActiveAWACS = false;
 	bool onOff = true;
 	bool followRoads = false;
 	unsigned short fuel = 0;

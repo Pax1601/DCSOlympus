@@ -65,7 +65,7 @@ export class UnitControlPanel extends Panel {
             // TODO: split setAdvancedOptions into setIsTanker, setIsAWACS, setAdvancedOptions
             var selectedUnits = getApp().getUnitsManager().getSelectedUnits();
             selectedUnits.forEach((unit: Unit) => {
-                unit.setAdvancedOptions(value, unit.getIsAWACS(), unit.getTACAN(), unit.getRadio(), unit.getGeneralSettings());
+                unit.setAdvancedOptions(value, unit.getIsActiveAWACS(), unit.getTACAN(), unit.getRadio(), unit.getGeneralSettings());
             });
         });
 
@@ -74,7 +74,7 @@ export class UnitControlPanel extends Panel {
             // TODO: split setAdvancedOptions into setIsTanker, setIsAWACS, setAdvancedOptions
             var selectedUnits = getApp().getUnitsManager().getSelectedUnits();
             selectedUnits.forEach((unit: Unit) => {
-                unit.setAdvancedOptions(unit.getIsTanker(), value, unit.getTACAN(), unit.getRadio(), unit.getGeneralSettings());
+                unit.setAdvancedOptions(unit.getIsActiveTanker(), value, unit.getTACAN(), unit.getRadio(), unit.getGeneralSettings());
             });
         });
 
@@ -184,28 +184,28 @@ export class UnitControlPanel extends Panel {
             const element = this.getElement();
             if (element != null && this.#units.length > 0) {
                 /* Toggle visibility of control elements */
-                var tanker = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.canFulfillRole("Tanker")});
-                var AWACS = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.canFulfillRole("AWACS")});
-                var isTanker = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getIsTanker()});
-                var isAWACS = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getIsAWACS()});
+                var isTanker = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.isTanker();});
+                var isAWACS = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.isAWACS();});
+                var isActiveTanker = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getIsActiveTanker()});
+                var isActiveAWACAS = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getIsActiveAWACS()});
 
                 element.toggleAttribute("data-show-categories-tooltip", this.#selectedUnitsTypes.length > 1);
                 element.toggleAttribute("data-show-speed-slider", this.#selectedUnitsTypes.length == 1);
                 element.toggleAttribute("data-show-altitude-slider", this.#selectedUnitsTypes.length == 1 && (this.#selectedUnitsTypes.includes("Aircraft") || this.#selectedUnitsTypes.includes("Helicopter")));
-                element.toggleAttribute("data-show-roe", !tanker && !AWACS);
+                element.toggleAttribute("data-show-roe", !isTanker && !isAWACS);
                 element.toggleAttribute("data-show-threat", (this.#selectedUnitsTypes.includes("Aircraft") || this.#selectedUnitsTypes.includes("Helicopter")) && !(this.#selectedUnitsTypes.includes("GroundUnit") || this.#selectedUnitsTypes.includes("NavyUnit")));
                 element.toggleAttribute("data-show-emissions-countermeasures", (this.#selectedUnitsTypes.includes("Aircraft") || this.#selectedUnitsTypes.includes("Helicopter")) && !(this.#selectedUnitsTypes.includes("GroundUnit") || this.#selectedUnitsTypes.includes("NavyUnit")));
-                element.toggleAttribute("data-show-tanker-button", getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.canFulfillRole("Tanker")}) === true);
-                element.toggleAttribute("data-show-AWACS-button", getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.canFulfillRole("AWACS")}) === true);
+                element.toggleAttribute("data-show-tanker-button", getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.isTanker();}) === true);
+                element.toggleAttribute("data-show-AWACS-button", getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.isAWACS();}) === true);
                 element.toggleAttribute("data-show-on-off", (this.#selectedUnitsTypes.includes("GroundUnit") || this.#selectedUnitsTypes.includes("NavyUnit")) && !(this.#selectedUnitsTypes.includes("Aircraft") || this.#selectedUnitsTypes.includes("Helicopter")));
                 element.toggleAttribute("data-show-follow-roads", (this.#selectedUnitsTypes.length == 1 && this.#selectedUnitsTypes.includes("GroundUnit")));
                 element.toggleAttribute("data-show-operate-as", getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getCoalition()}) === "neutral");
 
                 if (this.#units.length == 1) {
-                    if (AWACS) 
-                        element.toggleAttribute("data-show-advanced-settings-button", isAWACS);
-                    else if (tanker) 
-                        element.toggleAttribute("data-show-advanced-settings-button", isTanker);
+                    if (isAWACS) 
+                        element.toggleAttribute("data-show-advanced-settings-button", isActiveAWACAS);
+                    else if (isTanker) 
+                        element.toggleAttribute("data-show-advanced-settings-button", isActiveTanker);
                     else 
                         element.toggleAttribute("data-show-advanced-settings-button", true);
                 }
@@ -216,8 +216,8 @@ export class UnitControlPanel extends Panel {
                     var desiredAltitudeType = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredAltitudeType()});
                     var desiredSpeed = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredSpeed()});
                     var desiredSpeedType = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredSpeedType()});
-                    var isTanker = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getIsTanker()});
-                    var isAWACS = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getIsAWACS()});
+                    var isActiveTanker = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getIsActiveTanker()});
+                    var isActiveAWACAS = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getIsActiveAWACS()});
                     var onOff = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getOnOff()});
                     var followRoads = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getFollowRoads()});
                     var operateAs = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getOperateAs()});
@@ -256,8 +256,8 @@ export class UnitControlPanel extends Panel {
                     button.classList.toggle("selected", this.#units.every((unit: Unit) => unit.getEmissionsCountermeasures() === button.value))
                 });
 
-                this.#tankerSwitch.setValue(isTanker, false);
-                this.#AWACSSwitch.setValue(isAWACS, false);
+                this.#tankerSwitch.setValue(isActiveTanker, false);
+                this.#AWACSSwitch.setValue(isActiveAWACAS, false);
                 this.#onOffSwitch.setValue(onOff, false);
                 this.#followRoadsSwitch.setValue(followRoads, false);
                 this.#operateAsSwitch.setValue(operateAs? operateAs === "blue": undefined, false);
@@ -329,8 +329,6 @@ export class UnitControlPanel extends Panel {
             const prohibitAACheckbox = this.#advancedSettingsDialog.querySelector("#prohibit-AA-checkbox")?.querySelector("input") as HTMLInputElement;
             const prohibitAGCheckbox = this.#advancedSettingsDialog.querySelector("#prohibit-AG-checkbox")?.querySelector("input") as HTMLInputElement;
             const prohibitAirWpnCheckbox = this.#advancedSettingsDialog.querySelector("#prohibit-air-wpn-checkbox")?.querySelector("input") as HTMLInputElement;
-            //const tankerCheckbox = this.#advancedSettingsDialog.querySelector("#tanker-checkbox")?.querySelector("input") as HTMLInputElement;
-            //const AWACSCheckbox = this.#advancedSettingsDialog.querySelector("#AWACS-checkbox")?.querySelector("input") as HTMLInputElement;
             const TACANCheckbox = this.#advancedSettingsDialog.querySelector("#TACAN-checkbox")?.querySelector("input") as HTMLInputElement;
             const TACANChannelInput = this.#advancedSettingsDialog.querySelector("#TACAN-channel")?.querySelector("input") as HTMLInputElement;
             const TACANCallsignInput = this.#advancedSettingsDialog.querySelector("#tacan-callsign")?.querySelector("input") as HTMLInputElement;
@@ -338,19 +336,19 @@ export class UnitControlPanel extends Panel {
             const radioCallsignNumberInput = this.#advancedSettingsDialog.querySelector("#radio-callsign-number")?.querySelector("input") as HTMLInputElement;
            
             const unit = units[0];
-            const tanker = unit.canFulfillRole("Tanker");
-            const AWACS = unit.canFulfillRole("AWACS");
+            const isTanker = unit.isTanker();
+            const isAWACS = unit.isAWACS();
             const radioMHz = Math.floor(unit.getRadio().frequency / 1000000);
             const radioDecimals = (unit.getRadio().frequency / 1000000 - radioMHz) * 1000;
 
             /* Activate the correct options depending on unit type */
-            this.#advancedSettingsDialog.toggleAttribute("data-show-settings", !tanker && !AWACS);
+            this.#advancedSettingsDialog.toggleAttribute("data-show-settings", !isTanker && !isAWACS);
             this.#advancedSettingsDialog.toggleAttribute("data-show-air-unit-checkboxes", ["Aircraft", "Helicopter"].includes(units[0].getCategory()));
-            this.#advancedSettingsDialog.toggleAttribute("data-show-tasking", tanker || AWACS);
-            this.#advancedSettingsDialog.toggleAttribute("data-show-tanker", tanker);
-            this.#advancedSettingsDialog.toggleAttribute("data-show-AWACS", AWACS);
-            this.#advancedSettingsDialog.toggleAttribute("data-show-TACAN", tanker || ["Aircraft Carrier", "Super Aircraft Carrier"].includes(units[0].getType()));
-            this.#advancedSettingsDialog.toggleAttribute("data-show-radio", tanker || AWACS || ["Aircraft Carrier", "Super Aircraft Carrier"].includes(units[0].getType()));
+            this.#advancedSettingsDialog.toggleAttribute("data-show-tasking", isTanker || isAWACS);
+            this.#advancedSettingsDialog.toggleAttribute("data-show-tanker", isTanker);
+            this.#advancedSettingsDialog.toggleAttribute("data-show-AWACS", isAWACS);
+            this.#advancedSettingsDialog.toggleAttribute("data-show-TACAN", isTanker || ["Aircraft Carrier", "Super Aircraft Carrier"].includes(units[0].getType()));
+            this.#advancedSettingsDialog.toggleAttribute("data-show-radio", isTanker || isAWACS || ["Aircraft Carrier", "Super Aircraft Carrier"].includes(units[0].getType()));
 
             /* Set common properties */
             // Name
@@ -363,10 +361,6 @@ export class UnitControlPanel extends Panel {
             prohibitAGCheckbox.checked = unit.getGeneralSettings().prohibitAG;
             prohibitAirWpnCheckbox.checked = unit.getGeneralSettings().prohibitAirWpn;
 
-            // Tasking
-            //tankerCheckbox.checked = unit.getIsTanker();
-            //AWACSCheckbox.checked = unit.getIsAWACS();
-
             // TACAN
             TACANCheckbox.checked = unit.getTACAN().isOn;
             TACANChannelInput.value = String(unit.getTACAN().channel);
@@ -378,9 +372,9 @@ export class UnitControlPanel extends Panel {
             radioCallsignNumberInput.value = String(unit.getRadio().callsignNumber);
             this.#radioDecimalsDropdown.setValue("." + radioDecimals);
                     
-            if (tanker) /* Set tanker specific options */
+            if (isTanker) /* Set tanker specific options */
                 this.#radioCallsignDropdown.setOptions(["Texaco", "Arco", "Shell"]);
-            else if (AWACS) /* Set AWACS specific options */
+            else if (isAWACS) /* Set AWACS specific options */
                 this.#radioCallsignDropdown.setOptions(["Overlord", "Magic", "Wizard", "Focus", "Darkstar"]);
             else
                 this.#radioCallsignDropdown.setOptions(["Enfield", "Springfield", "Uzi", "Colt", "Dodge", "Ford", "Chevy", "Pontiac"]);
@@ -399,17 +393,12 @@ export class UnitControlPanel extends Panel {
         const prohibitAACheckbox = this.#advancedSettingsDialog.querySelector("#prohibit-AA-checkbox")?.querySelector("input") as HTMLInputElement;
         const prohibitAGCheckbox = this.#advancedSettingsDialog.querySelector("#prohibit-AG-checkbox")?.querySelector("input") as HTMLInputElement;
         const prohibitAirWpnCheckbox = this.#advancedSettingsDialog.querySelector("#prohibit-air-wpn-checkbox")?.querySelector("input") as HTMLInputElement;
-        //const tankerCheckbox = this.#advancedSettingsDialog.querySelector("#tanker-checkbox")?.querySelector("input") as HTMLInputElement;
-        //const AWACSCheckbox = this.#advancedSettingsDialog.querySelector("#AWACS-checkbox")?.querySelector("input") as HTMLInputElement;
         const TACANCheckbox = this.#advancedSettingsDialog.querySelector("#TACAN-checkbox")?.querySelector("input") as HTMLInputElement;
         const TACANChannelInput = this.#advancedSettingsDialog.querySelector("#TACAN-channel")?.querySelector("input") as HTMLInputElement;
         const TACANCallsignInput = this.#advancedSettingsDialog.querySelector("#tacan-callsign")?.querySelector("input") as HTMLInputElement;
         const radioMhzInput = this.#advancedSettingsDialog.querySelector("#radio-mhz")?.querySelector("input") as HTMLInputElement;
         const radioCallsignNumberInput = this.#advancedSettingsDialog.querySelector("#radio-callsign-number")?.querySelector("input") as HTMLInputElement;
 
-        /* Tasking */
-        //const isTanker = tankerCheckbox.checked? true: false;
-        //const isAWACS = AWACSCheckbox.checked? true: false;
 
         /* TACAN */
         const TACAN: TACAN = {
@@ -441,7 +430,7 @@ export class UnitControlPanel extends Panel {
         var units = getApp().getUnitsManager().getSelectedUnits();
         // TODO: split setAdvancedOptions into setIsTanker, setIsAWACS, setAdvancedOptions
         if (units.length > 0)
-            units[0].setAdvancedOptions(units[0].getIsTanker(), units[0].getIsAWACS(), TACAN, radio, generalSettings);
+            units[0].setAdvancedOptions(units[0].getIsActiveTanker(), units[0].getIsActiveAWACS(), TACAN, radio, generalSettings);
 
         this.#advancedSettingsDialog.classList.add("hide");
     }

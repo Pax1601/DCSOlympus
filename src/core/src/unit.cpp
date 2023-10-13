@@ -172,8 +172,8 @@ void Unit::refreshLeaderData(unsigned long long time) {
 					case DataIndex::state:						updateValue(state, leader->state, datumIndex); break;
 					case DataIndex::task:						updateValue(task, leader->task, datumIndex); break;
 					case DataIndex::hasTask:					updateValue(hasTask, leader->hasTask, datumIndex); break;
-					case DataIndex::isTanker:					updateValue(isTanker, leader->isTanker, datumIndex); break;
-					case DataIndex::isAWACS:					updateValue(isAWACS, leader->isAWACS, datumIndex); break;
+					case DataIndex::isActiveTanker:				updateValue(isActiveTanker, leader->isActiveTanker, datumIndex); break;
+					case DataIndex::isActiveAWACS:				updateValue(isActiveAWACS, leader->isActiveAWACS, datumIndex); break;
 					case DataIndex::onOff:						updateValue(onOff, leader->onOff, datumIndex); break;
 					case DataIndex::followRoads:				updateValue(followRoads, leader->followRoads, datumIndex); break;
 					case DataIndex::desiredSpeed:				updateValue(desiredSpeed, leader->desiredSpeed, datumIndex); break;
@@ -248,8 +248,8 @@ void Unit::getData(stringstream& ss, unsigned long long time)
 				case DataIndex::position:					appendNumeric(ss, datumIndex, position); break;
 				case DataIndex::speed:						appendNumeric(ss, datumIndex, speed); break;
 				case DataIndex::heading:					appendNumeric(ss, datumIndex, heading); break;
-				case DataIndex::isTanker:					appendNumeric(ss, datumIndex, isTanker); break;
-				case DataIndex::isAWACS:					appendNumeric(ss, datumIndex, isAWACS); break;
+				case DataIndex::isActiveTanker:					appendNumeric(ss, datumIndex, isActiveTanker); break;
+				case DataIndex::isActiveAWACS:					appendNumeric(ss, datumIndex, isActiveAWACS); break;
 				case DataIndex::onOff:						appendNumeric(ss, datumIndex, onOff); break;
 				case DataIndex::followRoads:				appendNumeric(ss, datumIndex, followRoads); break;
 				case DataIndex::fuel:						appendNumeric(ss, datumIndex, fuel); break;
@@ -495,23 +495,23 @@ void Unit::landAt(Coords loc)
 	setState(State::LAND);
 }
 
-void Unit::setIsTanker(bool newIsTanker)
+void Unit::setIsActiveTanker(bool newIsActiveTanker)
 {
-	if (isTanker != newIsTanker) {
-		isTanker = newIsTanker;
+	if (isActiveTanker != newIsActiveTanker) {
+		isActiveTanker = newIsActiveTanker;
 		resetTask();
 
-		triggerUpdate(DataIndex::isTanker);
+		triggerUpdate(DataIndex::isActiveTanker);
 	}
 }
 
-void Unit::setIsAWACS(bool newIsAWACS)
+void Unit::setIsActiveAWACS(bool newIsActiveAWACS)
 {
-	if (isAWACS != newIsAWACS) {
-		isAWACS = newIsAWACS;
+	if (isActiveAWACS != newIsActiveAWACS) {
+		isActiveAWACS = newIsActiveAWACS;
 		resetTask();
 
-		triggerUpdate(DataIndex::isAWACS);
+		triggerUpdate(DataIndex::isActiveAWACS);
 	}
 }
 
