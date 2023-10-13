@@ -149,9 +149,9 @@ void AirUnit::AIloop()
 	/* State machine */
 	switch (state) {
 		case State::IDLE: {
-			if (isTanker)
+			if (isActiveTanker)
 				setTask("Tanker racetrack");
-			else if (isAWACS)
+			else if (isActiveAWACS)
 				setTask("AWACS racetrack");
 			else
 				setTask("Idle");
@@ -159,12 +159,12 @@ void AirUnit::AIloop()
 			if (!getHasTask())
 			{
 				std::ostringstream taskSS;
-				if (isTanker) {
+				if (isActiveTanker) {
 					taskSS << "{ [1] = { id = 'Tanker' }, [2] = { id = 'Orbit', pattern = 'Race-Track', altitude = " << 
 						desiredAltitude << ", speed = " << desiredSpeed << ", altitudeType = '" << 
 						(desiredAltitudeType ? "AGL" : "ASL") << "', speedType = '" << (desiredSpeedType ? "GS" : "CAS") << "' }}";
 				}
-				else if (isAWACS) {
+				else if (isActiveAWACS) {
 					taskSS << "{ [1] = { id = 'AWACS' }, [2] = { id = 'Orbit', pattern = 'Circle', altitude = " << 
 						desiredAltitude << ", speed = " << desiredSpeed << ", altitudeType = '" << 
 						(desiredAltitudeType ? "AGL" : "ASL") << "', speedType = '" << (desiredSpeedType ? "GS" : "CAS") << "' }}";
@@ -184,12 +184,12 @@ void AirUnit::AIloop()
 			string enrouteTask = "";
 			bool looping = false;
 
-			if (isTanker)
+			if (isActiveTanker)
 			{
 				enrouteTask = "{ id = 'Tanker' }";
 				setTask("Tanker");
 			}
-			else if (isAWACS)
+			else if (isActiveAWACS)
 			{
 				enrouteTask = "{ id = 'AWACS' }";
 				setTask("AWACS");

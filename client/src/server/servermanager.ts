@@ -357,11 +357,11 @@ export class ServerManager {
         this.PUT(data, callback);
     }
 
-    setAdvacedOptions(ID: number, isTanker: boolean, isAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings, callback: CallableFunction = () => {}) {
+    setAdvacedOptions(ID: number, isActiveTanker: boolean, isActiveAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings, callback: CallableFunction = () => {}) {
         var command = {
             "ID": ID,
-            "isTanker": isTanker,
-            "isAWACS": isAWACS,
+            "isActiveTanker": isActiveTanker,
+            "isActiveAWACS": isActiveAWACS,
             "TACAN": TACAN,
             "radio": radio,
             "generalSettings": generalSettings

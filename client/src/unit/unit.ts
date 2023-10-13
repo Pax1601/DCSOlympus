@@ -35,8 +35,8 @@ export class Unit extends CustomMarker {
     #position: LatLng = new LatLng(0, 0, 0);
     #speed: number = 0;
     #heading: number = 0;
-    #isTanker: boolean = false;
-    #isAWACS: boolean = false;
+    #isActiveTanker: boolean = false;
+    #isActiveAWACS: boolean = false;
     #onOff: boolean = true;
     #followRoads: boolean = false;
     #fuel: number = 0;
@@ -110,8 +110,8 @@ export class Unit extends CustomMarker {
     getPosition() { return this.#position };
     getSpeed() { return this.#speed };
     getHeading() { return this.#heading };
-    getIsTanker() { return this.#isTanker };
-    getIsAWACS() { return this.#isAWACS };
+    getIsActiveTanker() { return this.#isActiveTanker };
+    getIsActiveAWACS() { return this.#isActiveAWACS };
     getOnOff() { return this.#onOff };
     getFollowRoads() { return this.#followRoads };
     getFuel() { return this.#fuel };
@@ -221,8 +221,8 @@ export class Unit extends CustomMarker {
                 case DataIndexes.position: this.#position = dataExtractor.extractLatLng(); updateMarker = true; break;
                 case DataIndexes.speed: this.#speed = dataExtractor.extractFloat64(); updateMarker = true; break;
                 case DataIndexes.heading: this.#heading = dataExtractor.extractFloat64(); updateMarker = true; break;
-                case DataIndexes.isTanker: this.#isTanker = dataExtractor.extractBool(); break;
-                case DataIndexes.isAWACS: this.#isAWACS = dataExtractor.extractBool(); break;
+                case DataIndexes.isActiveTanker: this.#isActiveTanker = dataExtractor.extractBool(); break;
+                case DataIndexes.isActiveAWACS: this.#isActiveAWACS = dataExtractor.extractBool(); break;
                 case DataIndexes.onOff: this.#onOff = dataExtractor.extractBool(); break;
                 case DataIndexes.followRoads: this.#followRoads = dataExtractor.extractBool(); break;
                 case DataIndexes.fuel: this.#fuel = dataExtractor.extractUInt16(); break;
@@ -285,8 +285,8 @@ export class Unit extends CustomMarker {
             position: this.#position,
             speed: this.#speed,
             heading: this.#heading,
-            isTanker: this.#isTanker,
-            isAWACS: this.#isAWACS,
+            isActiveTanker: this.#isActiveTanker,
+            isActiveAWACS: this.#isActiveAWACS,
             onOff: this.#onOff,
             followRoads: this.#followRoads,
             fuel: this.#fuel,
@@ -638,6 +638,14 @@ export class Unit extends CustomMarker {
         return this.getDatabase()?.getByName(this.#name)?.canRearm === true;
     }
 
+    isTanker() {
+        return this.canFulfillRole("Tanker");
+    }
+
+    isAWACS() {
+        return this.canFulfillRole("AWACS");
+    }
+
     /********************** Unit commands *************************/
     addDestination(latlng: L.LatLng) {
         if (!this.#human) {
@@ -746,9 +754,9 @@ export class Unit extends CustomMarker {
             getApp().getServerManager().refuel(this.ID);
     }
 
-    setAdvancedOptions(isTanker: boolean, isAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings) {
+    setAdvancedOptions(isActiveTanker: boolean, isActiveAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings) {
         if (!this.#human)
-            getApp().getServerManager().setAdvacedOptions(this.ID, isTanker, isAWACS, TACAN, radio, generalSettings);
+            getApp().getServerManager().setAdvacedOptions(this.ID, isActiveTanker, isActiveAWACS, TACAN, radio, generalSettings);
     }
 
     bombPoint(latlng: LatLng) {
@@ -1035,9 +1043,9 @@ export class Unit extends CustomMarker {
                 }
                 else {                                           // Unit is under Olympus control
                     if (this.#onOff) {
-                        if (this.#isTanker)
+                        if (this.#isActiveTanker)
                             element.querySelector(".unit")?.setAttribute("data-state", "tanker");
-                        else if (this.#isAWACS)
+                        else if (this.#isActiveAWACS)
                             element.querySelector(".unit")?.setAttribute("data-state", "AWACS");
                         else
                             element.querySelector(".unit")?.setAttribute("data-state", this.#state.toLowerCase());
@@ -1270,7 +1278,6 @@ export class Unit extends CustomMarker {
                 if (getApp().getMap().hasLayer(this.#engagementCircle))
                     this.#engagementCircle.removeFrom(getApp().getMap());
             }
-        
         }
     }
 

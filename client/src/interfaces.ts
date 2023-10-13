@@ -153,8 +153,8 @@ export interface UnitData {
     position: LatLng;
     speed: number;
     heading: number;
-    isTanker: boolean;
-    isAWACS: boolean;
+    isActiveTanker: boolean;
+    isActiveAWACS: boolean;
     onOff: boolean;
     followRoads: boolean;
     fuel: number;
