@@ -94,7 +94,7 @@ export class Map extends L.Map {
         super(ID, { 
             zoomSnap: 0, 
             zoomDelta: 0.25, 
-            preferCanvas: true, 
+            preferCanvas: false, 
             doubleClickZoom: false, 
             zoomControl: false, 
             boxZoom: false, 

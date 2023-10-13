@@ -1,6 +1,6 @@
 import { UnitBlueprint } from "interfaces";
 import { UnitEditor } from "./uniteditor";
-import { addDropdownInput, addStringInput } from "./utils";
+import { addCheckboxInput, addDropdownInput, addStringInput } from "./utils";
 
 /** Database editor for ground units
  * 
@@ -40,6 +40,10 @@ export class GroundUnitEditor extends UnitEditor {
             addStringInput(this.contentDiv2, "Muzzle velocity [m/s]", String(blueprint.muzzleVelocity)?? "", "number", (value: string) => {blueprint.muzzleVelocity = parseFloat(value); });
             addStringInput(this.contentDiv2, "Aim time [s]", String(blueprint.aimTime)?? "", "number", (value: string) => {blueprint.aimTime = parseFloat(value); });
             addStringInput(this.contentDiv2, "Burst quantity", String(blueprint.shotsToFire)?? "", "number", (value: string) => {blueprint.shotsToFire = Math.round(parseFloat(value)); });
+            addCheckboxInput(this.contentDiv2, "Can target point", blueprint.canTargetPoint ?? false, (value: boolean) => {blueprint.canTargetPoint = value;})
+            addCheckboxInput(this.contentDiv2, "Can rearm", blueprint.canRearm ?? false, (value: boolean) => {blueprint.canRearm = value;})
+            addStringInput(this.contentDiv2, "Description", blueprint.description ?? "", "text", (value: string) => {blueprint.description = value; });
+            addStringInput(this.contentDiv2, "Abilities", blueprint.abilities ?? "", "text", (value: string) => {blueprint.abilities = value; });
         }
     }
 

@@ -545,7 +545,6 @@ declare module "interfaces" {
         label: string;
         shortLabel: string;
         type?: string;
-        rangeType?: string;
         loadouts?: LoadoutBlueprint[];
         filename?: string;
         liveries?: {
@@ -563,8 +562,8 @@ declare module "interfaces" {
         abilities?: string;
         acquisitionRange?: number;
         engagementRange?: number;
-        refuelsFrom?: string;
-        refuellingType?: string;
+        canTargetPoint?: boolean;
+        canRearm?: boolean;
     }
     export interface UnitSpawnOptions {
         roleType: string;
@@ -640,7 +639,6 @@ declare module "unit/databases/unitdatabase" {
         getRoles(): string[];
         getTypes(): string[];
         getEras(): string[];
-        getRanges(): string[];
         getByRange(range: string): UnitBlueprint[];
         getByType(type: string): UnitBlueprint[];
         getByRole(role: string): UnitBlueprint[];
@@ -1097,6 +1095,8 @@ declare module "unit/unit" {
         getLeader(): Unit | null;
         canFulfillRole(roles: string | string[]): boolean;
         isInViewport(): boolean;
+        canTargetPoint(): boolean;
+        canRearm(): boolean;
         /********************** Unit commands *************************/
         addDestination(latlng: L.LatLng): void;
         clearDestinations(): void;
