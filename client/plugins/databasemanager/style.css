@@ -169,10 +169,16 @@
 
 .input-row>dd {
     width: 100%;
+    text-align: right;
 }
 
 .input-row>dd>* {
     width: 100%;
+    font-weight: bold;
+}
+
+.input-row>dd>*[type="checkbox"] {
+    width: 20px;
     font-weight: bold;
 }
 

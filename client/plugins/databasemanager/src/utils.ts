@@ -38,7 +38,7 @@ export function addStringInput(div: HTMLElement, key: string, value: string, typ
  * @param value The initial value of the input
  * @param options The dropdown options
  */
-export function addDropdownInput(div: HTMLElement, key: string, value: string, options: string[], callback: CallableFunction) {
+export function addDropdownInput(div: HTMLElement, key: string, value: string, options: string[], callback: CallableFunction, disabled?: boolean) {
     var row = document.createElement("div");
     var dt = document.createElement("dt");
     var dd = document.createElement("dd");
@@ -51,8 +51,34 @@ export function addDropdownInput(div: HTMLElement, key: string, value: string, o
         select.appendChild(el);
     });
     select.value = value;
+    select.disabled = disabled?? false;
     select.onchange = () => callback(select.value);
     dd.appendChild(select);
+    row.appendChild(dt);
+    row.appendChild(dd);
+    row.classList.add("input-row");
+    div.appendChild(row);
+}
+
+/** Add a checkbox input in the form of String: [ value ]
+ * 
+ * @param div The HTMLElement that will contain the input
+ * @param key The key of the input, which will be used as label
+ * @param value The initial value of the input
+ * @param callback Callback called when the user enters a new value
+ * @param disabled If true, the input will be disabled and read only
+ */
+export function addCheckboxInput(div: HTMLElement, key: string, value: boolean, callback: CallableFunction, disabled?: boolean) {
+    var row = document.createElement("div");
+    var dt = document.createElement("dt");
+    var dd = document.createElement("dd");
+    dt.innerText = key;
+    var input = document.createElement("input");
+    input.checked = value;
+    input.type = "checkbox";
+    input.disabled = disabled?? false;
+    input.onchange = () => callback(input.checked);
+    dd.appendChild(input);
     row.appendChild(dt);
     row.appendChild(dd);
     row.classList.add("input-row");
@@ -230,4 +256,32 @@ export function addLoadoutsScroll(div: HTMLElement, loadouts: LoadoutBlueprint[]
     });
 
     div.appendChild(loadoutsEl);
+}
+
+/** Converts an array of string into a single string like [val1, val2, val3]
+ * 
+ * @param array The input array of strings
+ * @returns The string
+ */
+export function arrayToString(array: string[]) {
+    var value = "[";
+    var firstRole = true;
+    array.forEach((role: string) => {
+        value += firstRole? "": ", ";
+        firstRole = false; 
+        value += role;
+    })
+    value += "]";
+    return value;
+}
+
+
+export function stringToArray(input: string) {
+    input = input.replace("[", "").replace("]", "");
+    var values = input.split(",");
+    var result: string[] = [];
+    values.forEach((value: string) => {
+        result.push(value.trim());
+    })
+    return result;
 }

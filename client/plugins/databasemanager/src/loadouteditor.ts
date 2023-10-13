@@ -1,5 +1,5 @@
 import { LoadoutBlueprint } from "interfaces";
-import { addLoadoutItemsEditor, addStringInput } from "./utils";
+import { addLoadoutItemsEditor, addStringInput, arrayToString, stringToArray } from "./utils";
 
 /** The LoadoutEditor allows the user to edit a loadout
  * 
@@ -40,6 +40,7 @@ export class LoadoutEditor {
             var laodout = this.#loadout;
             addStringInput(this.#contentDiv, "Name", laodout.name, "text", (value: string) => {laodout.name = value; this.#contentDiv.dispatchEvent(new Event("refresh"));});
             addStringInput(this.#contentDiv, "Code", laodout.code, "text", (value: string) => {laodout.code = value; });
+            addStringInput(this.#contentDiv, "Roles", arrayToString(laodout.roles), "text", (value: string) => {laodout.roles = stringToArray(value);});
             addLoadoutItemsEditor(this.#contentDiv, this.#loadout);
         }
     }

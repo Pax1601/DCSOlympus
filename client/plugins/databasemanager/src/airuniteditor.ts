@@ -1,7 +1,7 @@
 import { LoadoutBlueprint, UnitBlueprint } from "interfaces";
 import { UnitEditor } from "./uniteditor";
 import { LoadoutEditor } from "./loadouteditor";
-import { addDropdownInput, addLoadoutsScroll, addNewElementInput, addStringInput } from "./utils";
+import { addCheckboxInput, addDropdownInput, addLoadoutsScroll, addNewElementInput, addStringInput } from "./utils";
 
 /** Database editor for Air Units, both Aircraft and Helicopter since they are identical in terms of datbase entries.
  * 
@@ -44,8 +44,9 @@ export class AirUnitEditor extends UnitEditor {
             addDropdownInput(this.contentDiv2, "Era", blueprint.era, ["WW2", "Early Cold War", "Mid Cold War", "Late Cold War", "Modern"], (value: string) => {blueprint.era = value; });
             addStringInput(this.contentDiv2, "Filename", blueprint.filename ?? "", "text", (value: string) => { blueprint.filename = value; });
             addStringInput(this.contentDiv2, "Cost", String(blueprint.cost) ?? "", "number", (value: string) => { blueprint.cost = parseFloat(value); });
-            addStringInput(this.contentDiv2, "Rufels from", String(blueprint.refuelsFrom) ?? "", "text", (value: string) => { blueprint.refuelsFrom = value; });
-            addStringInput(this.contentDiv2, "Refuelling type", String(blueprint.refuellingType) ?? "", "text", (value: string) => { blueprint.refuellingType = value; });
+            addCheckboxInput(this.contentDiv2, "Can target point", blueprint.canTargetPoint ?? false, (value: boolean) => {blueprint.canTargetPoint = value;})
+            addStringInput(this.contentDiv2, "Description", blueprint.description ?? "", "text", (value: string) => {blueprint.description = value; });
+            addStringInput(this.contentDiv2, "Abilities", blueprint.abilities ?? "", "text", (value: string) => {blueprint.abilities = value; });
 
             /* Add a scrollable list of loadouts that the user can edit */
             var title = document.createElement("label");
