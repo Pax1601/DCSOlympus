@@ -151,8 +151,8 @@ declare module "constants/constants" {
     export const mapLayers: {
         "ArcGIS Satellite": {
             urlTemplate: string;
-            maxZoom: number;
             minZoom: number;
+            maxZoom: number;
             attribution: string;
         };
         "USGS Topo": {
@@ -222,8 +222,8 @@ declare module "constants/constants" {
         position = 13,
         speed = 14,
         heading = 15,
-        isTanker = 16,
-        isAWACS = 17,
+        isActiveTanker = 16,
+        isActiveAWACS = 17,
         onOff = 18,
         followRoads = 19,
         fuel = 20,
@@ -499,8 +499,8 @@ declare module "interfaces" {
         position: LatLng;
         speed: number;
         heading: number;
-        isTanker: boolean;
-        isAWACS: boolean;
+        isActiveTanker: boolean;
+        isActiveAWACS: boolean;
         onOff: boolean;
         followRoads: boolean;
         fuel: number;
@@ -1037,8 +1037,8 @@ declare module "unit/unit" {
         getPosition(): LatLng;
         getSpeed(): number;
         getHeading(): number;
-        getIsTanker(): boolean;
-        getIsAWACS(): boolean;
+        getIsActiveTanker(): boolean;
+        getIsActiveAWACS(): boolean;
         getOnOff(): boolean;
         getFollowRoads(): boolean;
         getFuel(): number;
@@ -1097,6 +1097,8 @@ declare module "unit/unit" {
         isInViewport(): boolean;
         canTargetPoint(): boolean;
         canRearm(): boolean;
+        isTanker(): boolean;
+        isAWACS(): boolean;
         /********************** Unit commands *************************/
         addDestination(latlng: L.LatLng): void;
         clearDestinations(): void;
@@ -1121,7 +1123,7 @@ declare module "unit/unit" {
         setOperateAs(operateAs: string): void;
         delete(explosion: boolean, immediate: boolean): void;
         refuel(): void;
-        setAdvancedOptions(isTanker: boolean, isAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings): void;
+        setAdvancedOptions(isActiveTanker: boolean, isActiveAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings): void;
         bombPoint(latlng: LatLng): void;
         carpetBomb(latlng: LatLng): void;
         bombBuilding(latlng: LatLng): void;
@@ -2064,7 +2066,7 @@ declare module "server/servermanager" {
         scenicAAA(ID: number, coalition: string, callback?: CallableFunction): void;
         missOnPurpose(ID: number, coalition: string, callback?: CallableFunction): void;
         landAtPoint(ID: number, latlng: LatLng, callback?: CallableFunction): void;
-        setAdvacedOptions(ID: number, isTanker: boolean, isAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings, callback?: CallableFunction): void;
+        setAdvacedOptions(ID: number, isActiveTanker: boolean, isActiveAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings, callback?: CallableFunction): void;
         setCommandModeOptions(restrictSpawns: boolean, restrictToCoalition: boolean, spawnPoints: {
             blue: number;
             red: number;
