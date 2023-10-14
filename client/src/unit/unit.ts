@@ -1361,7 +1361,7 @@ export class AirUnit extends Unit {
             if (getApp().getUnitsManager().getSelectedUnits().length == 1) {
                 options["center-map"] = { text: "Center map", tooltip: "Center the map on the unit and follow it", type: "and" };
             } else {
-                /* Provision */
+                options["follow"] = { text: "Follow", tooltip: "Follow the unit at a user defined distance and position", type: "or" };
             }
 
             options["refuel"] = { text: "Air to air refuel", tooltip: "Refuel units at the nearest AAR Tanker. If no tanker is available the unit will RTB.", type: "and" }; // TODO Add some way of knowing which aircraft can AAR

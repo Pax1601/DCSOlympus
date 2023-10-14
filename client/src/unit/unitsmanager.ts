@@ -328,7 +328,7 @@ export class UnitsManager {
             const unit = selectedUnits[idx];
 
             /* If a unit is following another unit, and that unit is also selected, send the command to the followed ("leader") unit */
-            if (unit.getState() === "Follow") {
+            if (unit.getState() === "follow") {
                 const leader = this.getUnitByID(unit.getLeaderID())
                 if (leader && leader.getSelected())
                     leader.addDestination(latlng);
@@ -351,7 +351,7 @@ export class UnitsManager {
         var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
             const unit = selectedUnits[idx];
-            if (unit.getState() === "Follow") {
+            if (unit.getState() === "follow") {
                 const leader = this.getUnitByID(unit.getLeaderID())
                 if (leader && leader.getSelected())
                     leader.clearDestinations();
@@ -561,29 +561,32 @@ export class UnitsManager {
         }
 
         var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+
         var count = 1;
         var xr = 0; var yr = 1; var zr = -1;
         var layer = 1;
         for (let idx in selectedUnits) {
             var unit = selectedUnits[idx];
-            if (offset != undefined)
-                /* Offset is set, apply it */
-                unit.followUnit(ID, { "x": offset.x * count, "y": offset.y * count, "z": offset.z * count });
-            else {
-                /* More complex formations with variable offsets */
-                if (formation === "diamond") {
-                    var xl = xr * Math.cos(Math.PI / 4) - yr * Math.sin(Math.PI / 4);
-                    var yl = xr * Math.sin(Math.PI / 4) + yr * Math.cos(Math.PI / 4);
-                    unit.followUnit(ID, { "x": -yl * 50, "y": zr * 10, "z": xl * 50 });
+            if (unit.ID !== ID) {
+                if (offset != undefined)
+                    /* Offset is set, apply it */
+                    unit.followUnit(ID, { "x": offset.x * count, "y": offset.y * count, "z": offset.z * count });
+                else {
+                    /* More complex formations with variable offsets */
+                    if (formation === "diamond") {
+                        var xl = xr * Math.cos(Math.PI / 4) - yr * Math.sin(Math.PI / 4);
+                        var yl = xr * Math.sin(Math.PI / 4) + yr * Math.cos(Math.PI / 4);
+                        unit.followUnit(ID, { "x": -yl * 50, "y": zr * 10, "z": xl * 50 });
 
-                    if (yr == 0) { layer++; xr = 0; yr = layer; zr = -layer; }
-                    else {
-                        if (xr < layer) { xr++; zr--; }
-                        else { yr--; zr++; }
+                        if (yr == 0) { layer++; xr = 0; yr = layer; zr = -layer; }
+                        else {
+                            if (xr < layer) { xr++; zr--; }
+                            else { yr--; zr++; }
+                        }
                     }
                 }
+                count++;
             }
-            count++;
         }
         this.#showActionMessage(selectedUnits, `following unit ${this.getUnitByID(ID)?.getUnitName()}`);
     }

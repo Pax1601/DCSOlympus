@@ -6,14 +6,20 @@
 		"label": "Box Spring",
 		"shortLabel": "1L13 EWR",
 		"filename": "",
-		"type": "Radar",
+		"type": "EW Radar",
 		"enabled": true,
 		"liveries": {
 			"desert": {
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 300000,
+		"engagementRange": 0,
+		"description": "EWR built on a truck trailer",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"2B11 mortar": {
 		"name": "2B11 mortar",
@@ -22,7 +28,7 @@
 		"label": "2B11 mortar",
 		"shortLabel": "2B11 mortar",
 		"filename": "",
-		"type": "Gun Artillery",
+		"type": "Artillery",
 		"enabled": true,
 		"liveries": {
 			"winter": {
@@ -45,7 +51,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 7000,
+		"description": "Man portable 120mm mortar",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"2S6 Tunguska": {
 		"name": "2S6 Tunguska",
@@ -55,7 +67,7 @@
 		"shortLabel": "SA-19",
 		"range": "Short",
 		"filename": "",
-		"type": "AAA/SAM",
+		"type": "AAA",
 		"enabled": true,
 		"liveries": {
 			"winter": {
@@ -94,7 +106,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 18000,
+		"engagementRange": 8000,
+		"description": "2K22 Tunguska. Tracked self-propelled anti-aircraft 30mm guns and missiles",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"55G6 EWR": {
 		"name": "55G6 EWR",
@@ -103,14 +121,20 @@
 		"label": "Tall Rack",
 		"shortLabel": "55G6 EWR",
 		"filename": "",
-		"type": "Radar",
+		"type": "EW Radar",
 		"enabled": true,
 		"liveries": {
 			"desert": {
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 400000,
+		"engagementRange": 0,
+		"description": "EWR built on a truck trailer",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"5p73 s-125 ln": {
 		"name": "5p73 s-125 ln",
@@ -159,7 +183,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 18000,
+		"description": "4 SA-3 missiles on a static emplacement. Requires grouping with SA-3 components",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"AAV7": {
 		"name": "AAV7",
@@ -168,7 +198,7 @@
 		"label": "AAV7",
 		"shortLabel": "AAV7",
 		"filename": "",
-		"type": "APC",
+		"type": "Armoured Personnel Carrier",
 		"enabled": true,
 		"liveries": {
 			"winter": {
@@ -191,7 +221,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 1200,
+		"description": "Amphibious assault vehicle. Tracked",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"ATMZ-5": {
 		"name": "ATMZ-5",
@@ -207,7 +243,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "Refueler truck. Wheeled",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"ATZ-10": {
 		"name": "ATZ-10",
@@ -223,7 +265,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "Refueler truck. Wheeled",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"BMD-1": {
 		"name": "BMD-1",
@@ -232,7 +280,7 @@
 		"label": "BMD-1",
 		"shortLabel": "BMD-1",
 		"filename": "",
-		"type": "IFV",
+		"type": "Infantry Fighting Vehicle",
 		"enabled": true,
 		"liveries": {
 			"winter": {
@@ -275,7 +323,15 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"barrelHeight": 1.25,
+		"muzzleVelocity": 900,
+		"acquisitionRange": 0,
+		"engagementRange": 3000,
+		"description": "Infantry fighting vehicle. Tracked. Amphibious",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"BMP-1": {
 		"name": "BMP-1",
@@ -284,7 +340,7 @@
 		"label": "BMP-1",
 		"shortLabel": "BMP-1",
 		"filename": "",
-		"type": "IFV",
+		"type": "Infantry Fighting Vehicle",
 		"enabled": true,
 		"liveries": {
 			"winter": {
@@ -371,7 +427,13 @@
 				"name": "RUS_Spring",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 3000,
+		"description": "Infantry fighting vehicle. Tracked. Amphibious",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"BMP-2": {
 		"name": "BMP-2",
@@ -380,7 +442,7 @@
 		"label": "BMP-2",
 		"shortLabel": "BMP-2",
 		"filename": "",
-		"type": "IFV",
+		"type": "Infantry Fighting Vehicle",
 		"enabled": true,
 		"liveries": {
 			"ukr_summer": {
@@ -451,7 +513,15 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"barrelHeight": 1.95,
+		"muzzleVelocity": 970,
+		"acquisitionRange": 0,
+		"engagementRange": 3000,
+		"description": "Infantry fighting vehicle. Tracked. Amphibious",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"BMP-3": {
 		"name": "BMP-3",
@@ -460,7 +530,7 @@
 		"label": "BMP-3",
 		"shortLabel": "BMP-3",
 		"filename": "",
-		"type": "IFV",
+		"type": "Infantry Fighting Vehicle",
 		"enabled": true,
 		"liveries": {
 			"winter": {
@@ -499,7 +569,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 4000,
+		"description": "Infantry fighting vehicle. Tracked. Amphibious",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"BRDM-2": {
 		"name": "BRDM-2",
@@ -508,7 +584,7 @@
 		"label": "BRDM-2",
 		"shortLabel": "BRDM-2",
 		"filename": "",
-		"type": "Reconnaissance",
+		"type": "Armoured Car",
 		"enabled": true,
 		"liveries": {
 			"winter": {
@@ -547,7 +623,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 1600,
+		"description": "Scout car. Wheeled. Amphibious",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"BTR-80": {
 		"name": "BTR-80",
@@ -556,7 +638,7 @@
 		"label": "BTR-80",
 		"shortLabel": "BTR-80",
 		"filename": "",
-		"type": "APC",
+		"type": "Armoured Personnel Carrier",
 		"enabled": true,
 		"liveries": {
 			"winter": {
@@ -627,7 +709,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 1600,
+		"description": "Armoured persononel carrier. Wheeled. Amphibious",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"BTR_D": {
 		"name": "BTR_D",
@@ -636,7 +724,7 @@
 		"label": "BTR_D",
 		"shortLabel": "BTR_D",
 		"filename": "",
-		"type": "APC",
+		"type": "Armoured Personnel Carrier",
 		"enabled": true,
 		"liveries": {
 			"winter": {
@@ -675,17 +763,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
-	},
-	"Boman": {
-		"name": "Boman",
-		"coalition": "blue",
-		"era": "Late Cold War",
-		"label": "Grad Fire Direction Manager",
-		"shortLabel": "Boman",
-		"filename": "",
-		"type": "Reconnaissance",
-		"enabled": true
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 3000,
+		"description": "Armoured persononel carrier. Tracked.",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"Bunker": {
 		"name": "Bunker",
@@ -694,8 +778,14 @@
 		"label": "Bunker",
 		"shortLabel": "Bunker",
 		"filename": "",
-		"type": "Static",
-		"enabled": true
+		"type": "Structure",
+		"enabled": true,
+		"acquisitionRange": 0,
+		"engagementRange": 800,
+		"description": "Concrete bunker. Structure. Fixed Position.",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Challenger2": {
 		"name": "Challenger2",
@@ -715,7 +805,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 3500,
+		"description": "Main battle tank. Tracked. Modern and heavily armoured.",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"Cobra": {
 		"name": "Cobra",
@@ -724,17 +820,23 @@
 		"label": "Otokar Cobra",
 		"shortLabel": "Cobra",
 		"filename": "",
-		"type": "Reconnaissance",
-		"enabled": true
+		"type": "Armoured Car",
+		"enabled": true,
+		"acquisitionRange": 0,
+		"engagementRange": 1200,
+		"description": "Armoured car, MRAP. Wheeled.",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"Dog Ear radar": {
 		"name": "Dog Ear radar",
 		"coalition": "red",
 		"era": "Mid Cold War",
 		"label": "Dog Ear",
-		"shortLabel": "Dog Ear radar",
+		"shortLabel": "Dog Ear Radar",
 		"filename": "",
-		"type": "SAM Search radar",
+		"type": "SAM Track Radar",
 		"enabled": true,
 		"liveries": {
 			"ukr_summer": {
@@ -789,7 +891,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 35000,
+		"engagementRange": 0,
+		"description": "9S80-1 Sborka Mobile. Tracked fire control Radar that can integrate with missile and gun systems.",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"GAZ-3307": {
 		"name": "GAZ-3307",
@@ -805,7 +913,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "Civilian truck, single axle, wheeled",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"GAZ-3308": {
 		"name": "GAZ-3308",
@@ -821,7 +935,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "Military truck, single axle, canvas covered cargo bay. wheeled",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": true
 	},
 	"GAZ-66": {
 		"name": "GAZ-66",
@@ -869,7 +989,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "Military truck, single axle, open cargo bay. wheeled",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": true
 	},
 	"Gepard": {
 		"name": "Gepard",
@@ -901,7 +1027,15 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"barrelHeight": 2.35,
+		"muzzleVelocity": 1440,
+		"acquisitionRange": 15000,
+		"engagementRange": 4000,
+		"description": "Tracked self-propelled anti-aircraft 35mm guns",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"Grad-URAL": {
 		"name": "Grad-URAL",
@@ -910,8 +1044,14 @@
 		"label": "Grad",
 		"shortLabel": "Grad",
 		"filename": "",
-		"type": "Rocket Artillery",
-		"enabled": true
+		"type": "Unarmed",
+		"enabled": true,
+		"acquisitionRange": 0,
+		"engagementRange": 19000,
+		"description": "Military truck, single axle, open cargo bay. wheeled",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"HEMTT TFFT": {
 		"name": "HEMTT TFFT",
@@ -927,7 +1067,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "Military truck, 2 axle, firefigther. wheeled",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Hawk SAM Battery": {
 		"name": "Hawk SAM Battery",
@@ -938,7 +1084,13 @@
 		"range": "Medium",
 		"filename": "",
 		"type": "SAM Site",
-		"enabled": true
+		"enabled": true,
+		"acquisitionRange": 90000,
+		"engagementRange": 0,
+		"description": "Multiple unit SAM site",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Hawk cwar": {
 		"name": "Hawk cwar",
@@ -948,7 +1100,7 @@
 		"shortLabel": "Hawk cwar",
 		"range": "Long",
 		"filename": "",
-		"type": "SAM Track radar",
+		"type": "SAM Search Radar",
 		"enabled": true,
 		"liveries": {
 			"winter": {
@@ -963,7 +1115,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 70000,
+		"engagementRange": 0,
+		"description": "Hawk site Aquisition Radar",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Hawk ln": {
 		"name": "Hawk ln",
@@ -1292,7 +1450,13 @@
 					"ITA"
 				]
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 45000,
+		"description": "Hawk site missile laucher. 3 missiles. Needs rest of site to fuction",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Hawk pcp": {
 		"name": "Hawk pcp",
@@ -1317,17 +1481,23 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "Hawk site command post. Medium sized trailer.",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Hawk sr": {
 		"name": "Hawk sr",
 		"coalition": "blue",
 		"era": "Early Cold War",
-		"label": "Hawk Search radar",
+		"label": "Hawk Search Radar",
 		"shortLabel": "Hawk sr",
 		"range": "Long",
 		"filename": "",
-		"type": "SAM Search radar",
+		"type": "SAM Search Radar",
 		"enabled": true,
 		"liveries": {
 			"xx337 - 92 sqn blue tail": {
@@ -1647,17 +1817,23 @@
 					"ITA"
 				]
 			}
-		}
+		},
+		"acquisitionRange": 90000,
+		"engagementRange": 0,
+		"description": "Hawk site search Radar. Medium sized trailer",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Hawk tr": {
 		"name": "Hawk tr",
 		"coalition": "blue",
 		"era": "Early Cold War",
-		"label": "Hawk Track radar",
+		"label": "Hawk Track Radar",
 		"shortLabel": "Hawk tr",
 		"range": "Medium",
 		"filename": "",
-		"type": "SAM Track radar",
+		"type": "SAM Track Radar",
 		"enabled": true,
 		"liveries": {
 			"xx337 - 92 sqn blue tail": {
@@ -1977,7 +2153,13 @@
 					"ITA"
 				]
 			}
-		}
+		},
+		"acquisitionRange": 90000,
+		"engagementRange": 0,
+		"description": "Hawk site track Radar. Medium sized trailer",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Hummer": {
 		"name": "Hummer",
@@ -1986,7 +2168,7 @@
 		"label": "Hummer",
 		"shortLabel": "Hummer",
 		"filename": "",
-		"type": "Unarmed",
+		"type": "Armoured Car",
 		"enabled": true,
 		"liveries": {
 			"winter": {
@@ -2025,7 +2207,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "Military car, single axle, wheeled",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"IKARUS Bus": {
 		"name": "IKARUS Bus",
@@ -2035,7 +2223,13 @@
 		"shortLabel": "IKARUS Bus",
 		"filename": "",
 		"type": "Unarmed",
-		"enabled": true
+		"enabled": true,
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "Civilian Bus. Yellow. Bendy bus",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Igla manpad INS": {
 		"name": "Igla manpad INS",
@@ -2064,7 +2258,13 @@
 				"name": "GRC_Winter",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 5000,
+		"engagementRange": 5200,
+		"description": "9K38/SA-18 Man portable air defence. Heatseaker",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Infantry AK": {
 		"name": "Infantry AK",
@@ -2075,8 +2275,14 @@
 		"filename": "",
 		"type": "Infantry",
 		"enabled": true,
-		"muzzleVelocity": 860,
-		"barrelHeight": 0.9
+		"muzzleVelocity": 900,
+		"barrelHeight": 0.9,
+		"acquisitionRange": 0,
+		"engagementRange": 500,
+		"description": "Single infantry carrying AK-74",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"KAMAZ Truck": {
 		"name": "KAMAZ Truck",
@@ -2124,7 +2330,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "Military truck, 2 axle, wheeled",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": true
 	},
 	"Kub 1S91 str": {
 		"name": "Kub 1S91 str",
@@ -2134,7 +2346,7 @@
 		"shortLabel": "Kub 1S91 str",
 		"range": "Medium",
 		"filename": "",
-		"type": "SAM Search/Track radar",
+		"type": "SAM Search/Track Radar",
 		"enabled": true,
 		"liveries": {
 			"winter": {
@@ -2157,7 +2369,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 70000,
+		"engagementRange": 0,
+		"description": "SA-6/Kub search and track Radar, tracked.",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Kub 2P25 ln": {
 		"name": "Kub 2P25 ln",
@@ -2190,7 +2408,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 25000,
+		"description": "SA-6/Kub launcher. 3 missiles. Tracked. Needs rest of site to function",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"LAV-25": {
 		"name": "LAV-25",
@@ -2199,7 +2423,7 @@
 		"label": "LAV-25",
 		"shortLabel": "LAV-25",
 		"filename": "",
-		"type": "IFV",
+		"type": "Infantry Fighting Vehicle",
 		"enabled": true,
 		"liveries": {
 			"winter": {
@@ -2238,7 +2462,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 2500,
+		"description": "Infantry fighter vehicle. Wheeled. Amphibious",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"LAZ Bus": {
 		"name": "LAZ Bus",
@@ -2248,7 +2478,13 @@
 		"shortLabel": "LAZ Bus",
 		"filename": "",
 		"type": "Unarmed",
-		"enabled": true
+		"enabled": true,
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "Civilian bus. Single Axle. Wheeled",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Leclerc": {
 		"name": "Leclerc",
@@ -2264,7 +2500,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 3500,
+		"description": "Main battle tank. Tracked. Modern and heavily armoured.",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"Leopard-2": {
 		"name": "Leopard-2",
@@ -2424,7 +2666,13 @@
 				"name": "FIN_autumn",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 3500,
+		"description": "Main battle tank. Tracked. Modern and heavily armoured.",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"Leopard1A3": {
 		"name": "Leopard1A3",
@@ -2472,7 +2720,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 2500,
+		"description": "Main battle tank. Tracked. Heavily armoured.",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"M 818": {
 		"name": "M 818",
@@ -2500,7 +2754,13 @@
 				"name": "summer",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "???",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": true
 	},
 	"M-1 Abrams": {
 		"name": "M-1 Abrams",
@@ -2532,7 +2792,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 3500,
+		"description": "Main battle tank. Tracked. Modern and heavily armoured.",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"M-109": {
 		"name": "M-109",
@@ -2541,7 +2807,7 @@
 		"label": "M-109 Paladin",
 		"shortLabel": "M-109",
 		"filename": "",
-		"type": "Gun Artillery",
+		"type": "Artillery",
 		"enabled": true,
 		"liveries": {
 			"winter": {
@@ -2580,7 +2846,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 22000,
+		"description": "???",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"M-113": {
 		"name": "M-113",
@@ -2589,7 +2861,7 @@
 		"label": "M-113",
 		"shortLabel": "M-113",
 		"filename": "",
-		"type": "APC",
+		"type": "Armoured Personnel Carrier",
 		"enabled": true,
 		"liveries": {
 			"winter": {
@@ -2672,7 +2944,13 @@
 				"name": "summer",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 1200,
+		"description": "Armoured personnel carrier. Tracked. Amphibious",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"M-2 Bradley": {
 		"name": "M-2 Bradley",
@@ -2681,7 +2959,7 @@
 		"label": "M-2A2 Bradley",
 		"shortLabel": "M-2 Bradley",
 		"filename": "",
-		"type": "IFV",
+		"type": "Infantry Fighting Vehicle",
 		"enabled": true,
 		"liveries": {
 			"winter": {
@@ -2704,7 +2982,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 3800,
+		"description": "Infantry fighting vehicle. Tracked.",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"M-60": {
 		"name": "M-60",
@@ -2736,7 +3020,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 8000,
+		"description": "Main battle tank. Tracked. Heavily armoured.",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"M1043 HMMWV Armament": {
 		"name": "M1043 HMMWV Armament",
@@ -2745,7 +3035,7 @@
 		"label": "HMMWV M2 Browning",
 		"shortLabel": "HMMWV M2",
 		"filename": "",
-		"type": "Reconnaissance",
+		"type": "Armoured Car",
 		"enabled": true,
 		"liveries": {
 			"winter": {
@@ -2784,7 +3074,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 1200,
+		"description": "Military car, single axle, wheeled",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"M1045 HMMWV TOW": {
 		"name": "M1045 HMMWV TOW",
@@ -2793,7 +3089,7 @@
 		"label": "HMMWV TOW",
 		"shortLabel": "HMMWV TOW",
 		"filename": "",
-		"type": "Reconnaissance",
+		"type": "Armoured Car",
 		"enabled": true,
 		"liveries": {
 			"winter": {
@@ -2832,7 +3128,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 3800,
+		"description": "Military car, single axle, wheeled",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"M1097 Avenger": {
 		"name": "M1097 Avenger",
@@ -2842,7 +3144,13 @@
 		"shortLabel": "M1097 Avenger",
 		"filename": "",
 		"type": "SAM",
-		"enabled": true
+		"enabled": true,
+		"acquisitionRange": 5200,
+		"engagementRange": 4500,
+		"description": "Military car, single axle, wheeled",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"M1126 Stryker ICV": {
 		"name": "M1126 Stryker ICV",
@@ -2851,8 +3159,14 @@
 		"label": "Stryker MG",
 		"shortLabel": "Stryker MG",
 		"filename": "",
-		"type": "APC",
-		"enabled": true
+		"type": "Armoured Personnel Carrier",
+		"enabled": true,
+		"acquisitionRange": 0,
+		"engagementRange": 1200,
+		"description": "Armoured personnel carrier. Wheeled.",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"M1128 Stryker MGS": {
 		"name": "M1128 Stryker MGS",
@@ -2861,8 +3175,14 @@
 		"label": "M1128 Stryker MGS",
 		"shortLabel": "M1128 Stryker MGS",
 		"filename": "",
-		"type": "SPG",
-		"enabled": true
+		"type": "Self Propelled Gun",
+		"enabled": true,
+		"acquisitionRange": 0,
+		"engagementRange": 4000,
+		"description": "Self propelled gun. Wheeled.",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"M1134 Stryker ATGM": {
 		"name": "M1134 Stryker ATGM",
@@ -2871,8 +3191,14 @@
 		"label": "Stryker ATGM",
 		"shortLabel": "Stryker ATGM",
 		"filename": "",
-		"type": "IFV",
-		"enabled": true
+		"type": "Armoured Personnel Carrier",
+		"enabled": true,
+		"acquisitionRange": 0,
+		"engagementRange": 3800,
+		"description": "Armoured personnel carrier. Wheeled.",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"M48 Chaparral": {
 		"name": "M48 Chaparral",
@@ -2936,7 +3262,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 10000,
+		"engagementRange": 8500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"M6 Linebacker": {
 		"name": "M6 Linebacker",
@@ -2968,7 +3300,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 8000,
+		"engagementRange": 4500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"M978 HEMTT Tanker": {
 		"name": "M978 HEMTT Tanker",
@@ -3000,7 +3338,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"MAZ-6303": {
 		"name": "MAZ-6303",
@@ -3032,16 +3376,22 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"MCV-80": {
 		"name": "MCV-80",
 		"coalition": "blue",
 		"era": "Late Cold War",
-		"label": "Warrior IFV",
+		"label": "Warrior Infantry Fighting Vehicle",
 		"shortLabel": "Warrior",
 		"filename": "",
-		"type": "IFV",
+		"type": "Infantry Fighting Vehicle",
 		"enabled": true,
 		"liveries": {
 			"winter": {
@@ -3064,7 +3414,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 2500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"MLRS": {
 		"name": "MLRS",
@@ -3112,7 +3468,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 32000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"MTLB": {
 		"name": "MTLB",
@@ -3121,7 +3483,7 @@
 		"label": "MT-LB",
 		"shortLabel": "MT-LB",
 		"filename": "",
-		"type": "APC",
+		"type": "Armoured Personnel Carrier",
 		"enabled": true,
 		"liveries": {
 			"winter": {
@@ -3160,7 +3522,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 1000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"Marder": {
 		"name": "Marder",
@@ -3169,7 +3537,7 @@
 		"label": "Marder",
 		"shortLabel": "Marder",
 		"filename": "",
-		"type": "IFV",
+		"type": "Infantry Fighting Vehicle",
 		"enabled": true,
 		"liveries": {
 			"winter": {
@@ -3192,7 +3560,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 1500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"Osa 9A33 ln": {
 		"name": "Osa 9A33 ln",
@@ -3225,7 +3599,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 30000,
+		"engagementRange": 10300,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Paratrooper AKS-74": {
 		"name": "Paratrooper AKS-74",
@@ -3235,7 +3615,13 @@
 		"shortLabel": "Paratrooper AKS-74",
 		"filename": "",
 		"type": "Infantry",
-		"enabled": true
+		"enabled": true,
+		"acquisitionRange": 0,
+		"engagementRange": 500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"Paratrooper RPG-16": {
 		"name": "Paratrooper RPG-16",
@@ -3245,7 +3631,13 @@
 		"shortLabel": "Paratrooper RPG-16",
 		"filename": "",
 		"type": "Infantry",
-		"enabled": true
+		"enabled": true,
+		"acquisitionRange": 0,
+		"engagementRange": 500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"Patriot AMG": {
 		"name": "Patriot AMG",
@@ -3278,7 +3670,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Patriot ECS": {
 		"name": "Patriot ECS",
@@ -3311,7 +3709,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Patriot EPP": {
 		"name": "Patriot EPP",
@@ -3344,7 +3748,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Patriot cp": {
 		"name": "Patriot cp",
@@ -3377,7 +3787,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Patriot ln": {
 		"name": "Patriot ln",
@@ -3410,7 +3826,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 100000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Patriot site": {
 		"name": "Patriot site",
@@ -3443,17 +3865,23 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 160000,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Patriot str": {
 		"name": "Patriot str",
 		"coalition": "blue",
 		"era": "Late Cold War",
-		"label": "Patriot Search/Track radar",
+		"label": "Patriot Search/Track Radar",
 		"shortLabel": "Patriot str",
 		"range": "Medium",
 		"filename": "",
-		"type": "SAM Search/Track radar",
+		"type": "SAM Search/Track Radar",
 		"enabled": true,
 		"liveries": {
 			"grc_summer": {
@@ -3476,7 +3904,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 160000,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Predator GCS": {
 		"name": "Predator GCS",
@@ -3494,7 +3928,13 @@
 					"USA"
 				]
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Predator TrojanSpirit": {
 		"name": "Predator TrojanSpirit",
@@ -3504,7 +3944,13 @@
 		"shortLabel": "Predator TrojanSpirit",
 		"filename": "",
 		"type": "Unarmed",
-		"enabled": true
+		"enabled": true,
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"RLS_19J6": {
 		"name": "RLS_19J6",
@@ -3514,7 +3960,7 @@
 		"shortLabel": "RLS 19J6",
 		"range": "Long",
 		"filename": "",
-		"type": "SAM Search radar",
+		"type": "SAM Search Radar",
 		"enabled": true,
 		"liveries": {
 			"spring": {
@@ -3533,7 +3979,13 @@
 				"name": "summer",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 150000,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"RPC_5N62V": {
 		"name": "RPC_5N62V",
@@ -3543,7 +3995,7 @@
 		"shortLabel": "RPC 5N62V",
 		"range": "Long",
 		"filename": "",
-		"type": "SAM Track radar",
+		"type": "SAM Track Radar",
 		"enabled": true,
 		"liveries": {
 			"desert_spring": {
@@ -3610,7 +4062,13 @@
 				"name": "S-200_Radar_Cam_Winter",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 400000,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Roland ADS": {
 		"name": "Roland ADS",
@@ -3626,23 +4084,35 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 12000,
+		"engagementRange": 8000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Roland Radar": {
 		"name": "Roland Radar",
 		"coalition": "blue",
 		"era": "Mid Cold War",
-		"label": "Roland Search radar",
+		"label": "Roland Search Radar",
 		"shortLabel": "Roland Radar",
 		"filename": "",
-		"type": "SAM Search radar",
+		"type": "SAM Search Radar",
 		"enabled": true,
 		"liveries": {
 			"desert": {
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 35000,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": "no",
+		"canRearm": "no"
 	},
 	"S-200_Launcher": {
 		"name": "S-200_Launcher",
@@ -3719,7 +4189,13 @@
 				"name": "S-200_Launcher_Cam_Winter",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 255000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"S-300PS 40B6M tr": {
 		"name": "S-300PS 40B6M tr",
@@ -3729,7 +4205,7 @@
 		"shortLabel": "S-300PS 40B6M tr",
 		"range": "Long",
 		"filename": "",
-		"type": "SAM Track radar",
+		"type": "SAM Track Radar",
 		"enabled": true,
 		"liveries": {
 			"grc_summer": {
@@ -3752,7 +4228,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 160000,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"S-300PS 40B6MD sr": {
 		"name": "S-300PS 40B6MD sr",
@@ -3762,7 +4244,7 @@
 		"shortLabel": "S-300PS 40B6MD sr",
 		"range": "Long",
 		"filename": "",
-		"type": "SAM Search radar",
+		"type": "SAM Search Radar",
 		"enabled": true,
 		"liveries": {
 			"grc_summer": {
@@ -3785,7 +4267,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 60000,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"S-300PS 54K6 cp": {
 		"name": "S-300PS 54K6 cp",
@@ -3818,7 +4306,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"S-300PS 5P85C ln": {
 		"name": "S-300PS 5P85C ln",
@@ -3851,7 +4345,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 120000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"S-300PS 5P85D ln": {
 		"name": "S-300PS 5P85D ln",
@@ -3884,7 +4384,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 120000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"S-300PS 64H6E sr": {
 		"name": "S-300PS 64H6E sr",
@@ -3894,7 +4400,7 @@
 		"shortLabel": "S-300PS 64H6E sr",
 		"range": "Long",
 		"filename": "",
-		"type": "SAM Search radar",
+		"type": "SAM Search Radar",
 		"enabled": true,
 		"liveries": {
 			"grc_summer": {
@@ -3917,7 +4423,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 160000,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"SA-10 SAM Battery": {
 		"name": "SA-10 SAM Battery",
@@ -3928,7 +4440,13 @@
 		"range": "Long",
 		"filename": "",
 		"type": "SAM Site",
-		"enabled": true
+		"enabled": true,
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"SA-11 Buk CC 9S470M1": {
 		"name": "SA-11 Buk CC 9S470M1",
@@ -3993,7 +4511,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"SA-11 Buk LN 9A310M1": {
 		"name": "SA-11 Buk LN 9A310M1",
@@ -4010,7 +4534,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 50000,
+		"engagementRange": 35000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"SA-11 Buk SR 9S18M1": {
 		"name": "SA-11 Buk SR 9S18M1",
@@ -4020,7 +4550,7 @@
 		"shortLabel": "SA-11 Buk SR 9S18M1",
 		"range": "Long",
 		"filename": "",
-		"type": "SAM Search radar",
+		"type": "SAM Search Radar",
 		"enabled": true,
 		"liveries": {
 			"ukr_summer": {
@@ -4075,7 +4605,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 100000,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"SA-11 SAM Battery": {
 		"name": "SA-11 SAM Battery",
@@ -4086,7 +4622,13 @@
 		"range": "Medium",
 		"filename": "",
 		"type": "SAM Site",
-		"enabled": true
+		"enabled": true,
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"SA-18 Igla manpad": {
 		"name": "SA-18 Igla manpad",
@@ -4097,7 +4639,13 @@
 		"range": "Short",
 		"filename": "",
 		"type": "MANPADS",
-		"enabled": true
+		"enabled": true,
+		"acquisitionRange": 5000,
+		"engagementRange": 5200,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"SA-18 Igla-S manpad": {
 		"name": "SA-18 Igla-S manpad",
@@ -4108,7 +4656,13 @@
 		"range": "Short",
 		"filename": "",
 		"type": "MANPADS",
-		"enabled": true
+		"enabled": true,
+		"acquisitionRange": 5000,
+		"engagementRange": 5200,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"SA-2 SAM Battery": {
 		"name": "SA-2 SAM Battery",
@@ -4119,7 +4673,13 @@
 		"range": "Long",
 		"filename": "",
 		"type": "SAM Site",
-		"enabled": true
+		"enabled": true,
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"SA-3 SAM Battery": {
 		"name": "SA-3 SAM Battery",
@@ -4130,7 +4690,13 @@
 		"range": "Medium",
 		"filename": "",
 		"type": "SAM Site",
-		"enabled": true
+		"enabled": true,
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"SA-5 SAM Battery": {
 		"name": "SA-5 SAM Battery",
@@ -4141,7 +4707,13 @@
 		"range": "Long",
 		"filename": "",
 		"type": "SAM Site",
-		"enabled": true
+		"enabled": true,
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"SA-6 SAM Battery": {
 		"name": "SA-6 SAM Battery",
@@ -4152,18 +4724,13 @@
 		"range": "Medium",
 		"filename": "",
 		"type": "SAM Site",
-		"enabled": true
-	},
-	"SA-8 Osa LD 9T217": {
-		"name": "SA-8 Osa LD 9T217",
-		"coalition": "red",
-		"era": "Late Cold War",
-		"label": "SA-8 Osa LD 9T217",
-		"shortLabel": "SA-8 Osa LD 9T217",
-		"range": "Short",
-		"filename": "",
-		"type": "SAM",
-		"enabled": true
+		"enabled": true,
+		"description": "2K12 Kub. Tracked self propelled straight fush Radars, and TELs. 3 missiles per TEL.",
+		"abilities": "",
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"SAU 2-C9": {
 		"name": "SAU 2-C9",
@@ -4172,7 +4739,7 @@
 		"label": "SAU Nona",
 		"shortLabel": "SAU Nona",
 		"filename": "",
-		"type": "Gun Artillery",
+		"type": "Artillery",
 		"enabled": true,
 		"liveries": {
 			"winter": {
@@ -4211,7 +4778,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 7000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"SAU Akatsia": {
 		"name": "SAU Akatsia",
@@ -4220,7 +4793,7 @@
 		"label": "SAU Akatsia",
 		"shortLabel": "SAU Akatsia",
 		"filename": "",
-		"type": "Gun Artillery",
+		"type": "Artillery",
 		"enabled": true,
 		"liveries": {
 			"winter": {
@@ -4259,7 +4832,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 17000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"SAU Gvozdika": {
 		"name": "SAU Gvozdika",
@@ -4268,7 +4847,7 @@
 		"label": "SAU Gvozdika",
 		"shortLabel": "SAU Gvozdika",
 		"filename": "",
-		"type": "Gun Artillery",
+		"type": "Artillery",
 		"enabled": true,
 		"liveries": {
 			"winter": {
@@ -4307,7 +4886,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 15000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"SAU Msta": {
 		"name": "SAU Msta",
@@ -4316,7 +4901,7 @@
 		"label": "SAU Msta",
 		"shortLabel": "SAU Msta",
 		"filename": "",
-		"type": "Gun Artillery",
+		"type": "Artillery",
 		"enabled": true,
 		"liveries": {
 			"winter": {
@@ -4355,7 +4940,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 23500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"SKP-11": {
 		"name": "SKP-11",
@@ -4371,7 +4962,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"SNR_75V": {
 		"name": "SNR_75V",
@@ -4380,7 +4977,7 @@
 		"label": "SA-2 Fan Song",
 		"shortLabel": "SNR 75V",
 		"filename": "",
-		"type": "SAM Track radar",
+		"type": "SAM Track Radar",
 		"enabled": true,
 		"liveries": {
 			"winter": {
@@ -4403,7 +5000,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 100000,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"S_75M_Volhov": {
 		"name": "S_75M_Volhov",
@@ -4435,7 +5038,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 43000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Sandbox": {
 		"name": "Sandbox",
@@ -4444,8 +5053,14 @@
 		"label": "Sandbox",
 		"shortLabel": "Sandbox",
 		"filename": "",
-		"type": "Static",
-		"enabled": true
+		"type": "Structure",
+		"enabled": true,
+		"acquisitionRange": 0,
+		"engagementRange": 800,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Smerch": {
 		"name": "Smerch",
@@ -4477,7 +5092,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 70000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"Soldier AK": {
 		"name": "Soldier AK",
@@ -4521,7 +5142,15 @@
 				"name": "GRC_Winter",
 				"countries": "All"
 			}
-		}
+		},
+		"muzzleVelocity": 900,
+		"barrelHeight": 0.9,
+		"acquisitionRange": 0,
+		"engagementRange": 500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"Soldier M249": {
 		"name": "Soldier M249",
@@ -4565,7 +5194,13 @@
 				"name": "GRC_Winter",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 700,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"Soldier M4 GRG": {
 		"name": "Soldier M4 GRG",
@@ -4609,7 +5244,13 @@
 				"name": "GRC_Winter",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"Soldier M4": {
 		"name": "Soldier M4",
@@ -4653,7 +5294,13 @@
 				"name": "GRC_Winter",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"Soldier RPG": {
 		"name": "Soldier RPG",
@@ -4697,7 +5344,13 @@
 				"name": "GRC_Winter",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"Stinger comm dsr": {
 		"name": "Stinger comm dsr",
@@ -4730,7 +5383,13 @@
 				"name": "GRC_Winter",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 5000,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Stinger comm": {
 		"name": "Stinger comm",
@@ -4763,94 +5422,13 @@
 				"name": "GRC_Winter",
 				"countries": "All"
 			}
-		}
-	},
-	"Stinger manpad GRG": {
-		"name": "Stinger manpad GRG",
-		"coalition": "blue",
-		"era": "Late Cold War",
-		"label": "Stinger manpad GRG",
-		"shortLabel": "Stinger manpad GRG",
-		"range": "Short",
-		"filename": "",
-		"type": "MANPADS",
-		"enabled": true,
-		"liveries": {
-			"grc_spring": {
-				"name": "GRC_Spring",
-				"countries": "All"
-			},
-			"grc_summer": {
-				"name": "GRC_Summer",
-				"countries": "All"
-			},
-			"grc_autumn": {
-				"name": "GRC_Autumn",
-				"countries": "All"
-			},
-			"grc_winter": {
-				"name": "GRC_Winter",
-				"countries": "All"
-			}
-		}
-	},
-	"Stinger manpad dsr": {
-		"name": "Stinger manpad dsr",
-		"coalition": "blue",
-		"era": "Late Cold War",
-		"label": "Stinger manpad dsr",
-		"shortLabel": "Stinger manpad dsr",
-		"range": "Short",
-		"filename": "",
-		"type": "MANPADS",
-		"enabled": true,
-		"liveries": {
-			"grc_spring": {
-				"name": "GRC_Spring",
-				"countries": "All"
-			},
-			"grc_summer": {
-				"name": "GRC_Summer",
-				"countries": "All"
-			},
-			"grc_autumn": {
-				"name": "GRC_Autumn",
-				"countries": "All"
-			},
-			"grc_winter": {
-				"name": "GRC_Winter",
-				"countries": "All"
-			}
-		}
-	},
-	"Stinger manpad": {
-		"name": "Stinger manpad",
-		"coalition": "blue",
-		"era": "Late Cold War",
-		"label": "Stinger manpad",
-		"shortLabel": "Stinger manpad",
-		"range": "Short",
-		"filename": "",
-		"type": "MANPADS",
-		"enabled": true,
-		"liveries": {
-			"grc_spring": {
-				"name": "GRC_Spring",
-				"countries": "All"
-			},
-			"grc_summer": {
-				"name": "GRC_Summer",
-				"countries": "All"
-			},
-			"grc_autumn": {
-				"name": "GRC_Autumn",
-				"countries": "All"
-			},
-			"grc_winter": {
-				"name": "GRC_Winter",
-				"countries": "All"
-			}
-		}
+		},
+		"acquisitionRange": 5000,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Strela-1 9P31": {
 		"name": "Strela-1 9P31",
@@ -4899,7 +5477,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 5000,
+		"engagementRange": 4200,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Strela-10M3": {
 		"name": "Strela-10M3",
@@ -4948,7 +5532,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 8000,
+		"engagementRange": 5000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Suidae": {
 		"name": "Suidae",
@@ -4958,7 +5548,13 @@
 		"shortLabel": "Suidae",
 		"filename": "",
 		"type": "Unarmed",
-		"enabled": true
+		"enabled": true,
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"T-55": {
 		"name": "T-55",
@@ -5006,7 +5602,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 2500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"T-72B": {
 		"name": "T-72B",
@@ -5022,7 +5624,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 4000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"T-80UD": {
 		"name": "T-80UD",
@@ -5078,7 +5686,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 5000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"T-90": {
 		"name": "T-90",
@@ -5126,7 +5740,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 5000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"TPZ": {
 		"name": "TPZ",
@@ -5135,8 +5755,14 @@
 		"label": "TPz Fuchs",
 		"shortLabel": "TPz Fuchs",
 		"filename": "",
-		"type": "APC",
-		"enabled": true
+		"type": "Armoured Personnel Carrier",
+		"enabled": true,
+		"acquisitionRange": 0,
+		"engagementRange": 1000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"Tigr_233036": {
 		"name": "Tigr_233036",
@@ -5152,7 +5778,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Tor 9A331": {
 		"name": "Tor 9A331",
@@ -5217,7 +5849,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 25000,
+		"engagementRange": 12000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Trolley bus": {
 		"name": "Trolley bus",
@@ -5227,7 +5865,13 @@
 		"shortLabel": "Trolley bus",
 		"filename": "",
 		"type": "Unarmed",
-		"enabled": true
+		"enabled": true,
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"UAZ-469": {
 		"name": "UAZ-469",
@@ -5287,7 +5931,13 @@
 				"name": "ORANGE_Winter",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Uragan_BM-27": {
 		"name": "Uragan_BM-27",
@@ -5351,7 +6001,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 35800,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"Ural ATsP-6": {
 		"name": "Ural ATsP-6",
@@ -5361,7 +6017,13 @@
 		"shortLabel": "Ural ATsP-6",
 		"filename": "",
 		"type": "Unarmed",
-		"enabled": true
+		"enabled": true,
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Ural-375 PBU": {
 		"name": "Ural-375 PBU",
@@ -5377,7 +6039,13 @@
 				"name": "desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Ural-375 ZU-23 Insurgent": {
 		"name": "Ural-375 ZU-23 Insurgent",
@@ -5393,7 +6061,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 5000,
+		"engagementRange": 2500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"Ural-375 ZU-23": {
 		"name": "Ural-375 ZU-23",
@@ -5409,7 +6083,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 5000,
+		"engagementRange": 2500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"Ural-375": {
 		"name": "Ural-375",
@@ -5425,7 +6105,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": true
 	},
 	"Ural-4320 APA-5D": {
 		"name": "Ural-4320 APA-5D",
@@ -5441,7 +6127,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "Lightly armoured",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": true
 	},
 	"Ural-4320-31": {
 		"name": "Ural-4320-31",
@@ -5457,7 +6149,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"abilities": "",
+		"description": "",
+		"canTargetPoint": false,
+		"canRearm": true
 	},
 	"Ural-4320T": {
 		"name": "Ural-4320T",
@@ -5473,7 +6171,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"abilities": "",
+		"description": "",
+		"canTargetPoint": false,
+		"canRearm": true
 	},
 	"VAZ Car": {
 		"name": "VAZ Car",
@@ -5483,7 +6187,13 @@
 		"shortLabel": "VAZ Car",
 		"filename": "",
 		"type": "Unarmed",
-		"enabled": true
+		"enabled": true,
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Vulcan": {
 		"name": "Vulcan",
@@ -5547,7 +6257,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 5000,
+		"engagementRange": 2000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"ZIL-131 KUNG": {
 		"name": "ZIL-131 KUNG",
@@ -5595,7 +6311,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"ZIL-4331": {
 		"name": "ZIL-4331",
@@ -5643,7 +6365,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"ZSU-23-4 Shilka": {
 		"name": "ZSU-23-4 Shilka",
@@ -5723,7 +6451,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 5000,
+		"engagementRange": 2500,
+		"description": "Ship",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"ZU-23 Closed Insurgent": {
 		"name": "ZU-23 Closed Insurgent",
@@ -5739,7 +6473,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 5000,
+		"engagementRange": 2500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"ZU-23 Emplacement Closed": {
 		"name": "ZU-23 Emplacement Closed",
@@ -5771,7 +6511,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 5000,
+		"engagementRange": 2500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"ZU-23 Emplacement": {
 		"name": "ZU-23 Emplacement",
@@ -5803,7 +6549,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 5000,
+		"engagementRange": 2500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"ZU-23 Insurgent": {
 		"name": "ZU-23 Insurgent",
@@ -5819,7 +6571,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 5000,
+		"engagementRange": 2500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"ZiL-131 APA-80": {
 		"name": "ZiL-131 APA-80",
@@ -5835,7 +6593,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"house1arm": {
 		"name": "house1arm",
@@ -5845,7 +6609,13 @@
 		"shortLabel": "house1arm",
 		"filename": "",
 		"type": "Structure",
-		"enabled": true
+		"enabled": true,
+		"acquisitionRange": 0,
+		"engagementRange": 800,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"house2arm": {
 		"name": "house2arm",
@@ -5855,7 +6625,13 @@
 		"shortLabel": "house2arm",
 		"filename": "",
 		"type": "Structure",
-		"enabled": true
+		"enabled": true,
+		"acquisitionRange": 0,
+		"engagementRange": 800,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"houseA_arm": {
 		"name": "houseA_arm",
@@ -5865,7 +6641,13 @@
 		"shortLabel": "houseA_arm",
 		"filename": "",
 		"type": "Structure",
-		"enabled": true
+		"enabled": true,
+		"acquisitionRange": 0,
+		"engagementRange": 800,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"outpost": {
 		"name": "outpost",
@@ -5875,7 +6657,13 @@
 		"shortLabel": "outpost",
 		"filename": "",
 		"type": "Structure",
-		"enabled": true
+		"enabled": true,
+		"acquisitionRange": 0,
+		"engagementRange": 800,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"outpost_road": {
 		"name": "outpost_road",
@@ -5885,7 +6673,13 @@
 		"shortLabel": "outpost_road",
 		"filename": "",
 		"type": "Structure",
-		"enabled": true
+		"enabled": true,
+		"acquisitionRange": 0,
+		"engagementRange": 800,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"p-19 s-125 sr": {
 		"name": "p-19 s-125 sr",
@@ -5894,7 +6688,7 @@
 		"label": "SA-3 Flat Face B",
 		"shortLabel": "Flat Face B",
 		"filename": "",
-		"type": "SAM Search radar",
+		"type": "SAM Search Radar",
 		"enabled": true,
 		"liveries": {
 			"winter": {
@@ -5933,7 +6727,13 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 160000,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"snr s-125 tr": {
 		"name": "snr s-125 tr",
@@ -5943,7 +6743,7 @@
 		"shortLabel": "snr s-125 tr",
 		"range": "Medium",
 		"filename": "",
-		"type": "SAM Track radar",
+		"type": "SAM Track Radar",
 		"enabled": true,
 		"liveries": {
 			"winter": {
@@ -5982,6 +6782,2236 @@
 				"name": "Desert",
 				"countries": "All"
 			}
-		}
+		},
+		"acquisitionRange": 100000,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"SpGH_Dana": {
+		"name": "SpGH_Dana",
+		"coalition": "",
+		"era": "",
+		"label": "SPH Dana vz77 152mm",
+		"shortLabel": "SPH Dana vz77 152mm",
+		"type": "Artillery",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 18700,
+		"description": "",
+		"abilities": ""
+	},
+	"Grad_FDDM": {
+		"name": "Grad_FDDM",
+		"coalition": "",
+		"era": "",
+		"label": "Grad MRL FDDM (FC)",
+		"shortLabel": "Grad MRL FDDM (FC)",
+		"type": "Artillery",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 1000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Infantry AK Ins": {
+		"name": "Infantry AK Ins",
+		"coalition": "",
+		"era": "",
+		"label": "Insurgent AK-74",
+		"shortLabel": "Insurgent AK-74",
+		"type": "Infantry",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"MLRS FDDM": {
+		"name": "MLRS FDDM",
+		"coalition": "",
+		"era": "",
+		"label": "MRLS FDDM (FC)",
+		"shortLabel": "MRLS FDDM (FC)",
+		"type": "Artillery",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 1200,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Infantry AK ver2": {
+		"name": "Infantry AK ver2",
+		"coalition": "",
+		"era": "",
+		"label": "Infantry AK-74 Rus ver2",
+		"shortLabel": "Infantry AK-74 Rus ver2",
+		"type": "Infantry",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Infantry AK ver3": {
+		"name": "Infantry AK ver3",
+		"coalition": "",
+		"era": "",
+		"label": "Infantry AK-74 Rus ver3",
+		"shortLabel": "Infantry AK-74 Rus ver3",
+		"type": "Infantry",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Smerch_HE": {
+		"name": "Smerch_HE",
+		"coalition": "",
+		"era": "",
+		"label": "MLRS 9A52 Smerch HE 300mm",
+		"shortLabel": "MLRS 9A52 Smerch HE 300mm",
+		"type": "Artillery",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 70000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Soldier stinger": {
+		"name": "Soldier stinger",
+		"coalition": "",
+		"era": "",
+		"label": "MANPADS Stinger",
+		"shortLabel": "MANPADS Stinger",
+		"type": "MANPADS",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 5000,
+		"engagementRange": 4500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"SA-18 Igla comm": {
+		"name": "SA-18 Igla comm",
+		"coalition": "",
+		"era": "",
+		"label": "MANPADS SA-18 Igla \"Grouse\" C2",
+		"shortLabel": "MANPADS SA-18 Igla \"Grouse\" C2",
+		"type": "MANPADS",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 5000,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"SA-18 Igla-S comm": {
+		"name": "SA-18 Igla-S comm",
+		"coalition": "",
+		"era": "",
+		"label": "MANPADS SA-18 Igla-S \"Grouse\" C2",
+		"shortLabel": "MANPADS SA-18 Igla-S \"Grouse\" C2",
+		"type": "MANPADS",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 5000,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"TACAN_beacon": {
+		"name": "TACAN_beacon",
+		"coalition": "",
+		"era": "",
+		"label": "Beacon TACAN Portable TTS 3030",
+		"shortLabel": "Beacon TACAN Portable TTS 3030",
+		"type": "Structure",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"Merkava_Mk4": {
+		"name": "Merkava_Mk4",
+		"coalition": "",
+		"era": "",
+		"label": "Tank Merkava IV",
+		"shortLabel": "Tank Merkava IV",
+		"type": "Tank",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 3500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"LiAZ Bus": {
+		"name": "LiAZ Bus",
+		"coalition": "",
+		"era": "",
+		"label": "Bus LiAZ-677",
+		"shortLabel": "Bus LiAZ-677",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"KrAZ6322": {
+		"name": "KrAZ6322",
+		"coalition": "",
+		"era": "",
+		"label": "Truck KrAZ-6322 6x6",
+		"shortLabel": "Truck KrAZ-6322 6x6",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": true
+	},
+	"JTAC": {
+		"name": "JTAC",
+		"coalition": "",
+		"era": "",
+		"label": "JTAC",
+		"shortLabel": "JTAC",
+		"type": "Infantry",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"Infantry Animated": {
+		"name": "Infantry Animated",
+		"coalition": "",
+		"era": "",
+		"label": "Infantry",
+		"shortLabel": "Infantry",
+		"type": "Infantry",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Electric locomotive": {
+		"name": "Electric locomotive",
+		"coalition": "",
+		"era": "",
+		"label": "Loco VL80 Electric",
+		"shortLabel": "Loco VL80 Electric",
+		"type": "Locomotive",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"Locomotive": {
+		"name": "Locomotive",
+		"coalition": "",
+		"era": "",
+		"label": "Loco CHME3T",
+		"shortLabel": "Loco CHME3T",
+		"type": "Locomotive",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"Coach cargo": {
+		"name": "Coach cargo",
+		"coalition": "",
+		"era": "",
+		"label": "Freight Van",
+		"shortLabel": "Freight Van",
+		"type": "Carriage",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"Coach cargo open": {
+		"name": "Coach cargo open",
+		"coalition": "",
+		"era": "",
+		"label": "Open Wagon",
+		"shortLabel": "Open Wagon",
+		"type": "Carriage",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"Coach a tank blue": {
+		"name": "Coach a tank blue",
+		"coalition": "",
+		"era": "",
+		"label": "Tank Car blue",
+		"shortLabel": "Tank Car blue",
+		"type": "Carriage",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"Coach a tank yellow": {
+		"name": "Coach a tank yellow",
+		"coalition": "",
+		"era": "",
+		"label": "Tank Car yellow",
+		"shortLabel": "Tank Car yellow",
+		"type": "Carriage",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"Coach a passenger": {
+		"name": "Coach a passenger",
+		"coalition": "",
+		"era": "",
+		"label": "Passenger Car",
+		"shortLabel": "Passenger Car",
+		"type": "Carriage",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"Coach a platform": {
+		"name": "Coach a platform",
+		"coalition": "",
+		"era": "",
+		"label": "Coach Platform",
+		"shortLabel": "Coach Platform",
+		"type": "Carriage",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"tacr2a": {
+		"name": "tacr2a",
+		"coalition": "",
+		"era": "",
+		"label": "RAF Rescue",
+		"shortLabel": "RAF Rescue",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"LARC-V": {
+		"name": "LARC-V",
+		"coalition": "",
+		"era": "",
+		"label": "LARC-V",
+		"shortLabel": "LARC-V",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 500,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"KS-19": {
+		"name": "KS-19",
+		"coalition": "",
+		"era": "",
+		"label": "AAA KS-19 100mm",
+		"shortLabel": "AAA KS-19 100mm",
+		"type": "AAA",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 20000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"SON_9": {
+		"name": "SON_9",
+		"coalition": "",
+		"era": "",
+		"label": "AAA Fire Can SON-9",
+		"shortLabel": "AAA Fire Can SON-9",
+		"type": "AAA",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 55000,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Scud_B": {
+		"name": "Scud_B",
+		"coalition": "",
+		"era": "",
+		"label": "SSM SS-1C Scud-B",
+		"shortLabel": "SSM SS-1C Scud-B",
+		"type": "Missile system",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 320000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"HL_DSHK": {
+		"name": "HL_DSHK",
+		"coalition": "",
+		"era": "",
+		"label": "Scout HL with DSHK 12.7mm",
+		"shortLabel": "Scout HL with DSHK 12.7mm",
+		"type": "Armoured Car",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 5000,
+		"engagementRange": 1200,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"HL_KORD": {
+		"name": "HL_KORD",
+		"coalition": "",
+		"era": "",
+		"label": "Scout HL with KORD 12.7mm",
+		"shortLabel": "Scout HL with KORD 12.7mm",
+		"type": "Armoured Car",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 5000,
+		"engagementRange": 1200,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"tt_DSHK": {
+		"name": "tt_DSHK",
+		"coalition": "",
+		"era": "",
+		"label": "Scout LC with DSHK 12.7mm",
+		"shortLabel": "Scout LC with DSHK 12.7mm",
+		"type": "Armoured Car",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 5000,
+		"engagementRange": 1200,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"tt_KORD": {
+		"name": "tt_KORD",
+		"coalition": "",
+		"era": "",
+		"label": "Scout LC with KORD 12.7mm",
+		"shortLabel": "Scout LC with KORD 12.7mm",
+		"type": "Armoured Car",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 5000,
+		"engagementRange": 1200,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"HL_ZU-23": {
+		"name": "HL_ZU-23",
+		"coalition": "",
+		"era": "",
+		"label": "SPAAA HL with ZU-23",
+		"shortLabel": "SPAAA HL with ZU-23",
+		"type": "AAA",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 5000,
+		"engagementRange": 2500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"tt_ZU-23": {
+		"name": "tt_ZU-23",
+		"coalition": "",
+		"era": "",
+		"label": "SPAAA LC with ZU-23",
+		"shortLabel": "SPAAA LC with ZU-23",
+		"type": "AAA",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 2500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"HL_B8M1": {
+		"name": "HL_B8M1",
+		"coalition": "",
+		"era": "",
+		"label": "MLRS HL with B8M1 80mm",
+		"shortLabel": "MLRS HL with B8M1 80mm",
+		"type": "Artillery",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 5000,
+		"engagementRange": 5000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"tt_B8M1": {
+		"name": "tt_B8M1",
+		"coalition": "",
+		"era": "",
+		"label": "MLRS LC with B8M1 80mm",
+		"shortLabel": "MLRS LC with B8M1 80mm",
+		"type": "Artillery",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 5000,
+		"engagementRange": 5000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"NASAMS_Radar_MPQ64F1": {
+		"name": "NASAMS_Radar_MPQ64F1",
+		"coalition": "",
+		"era": "",
+		"label": "SAM NASAMS SR MPQ64F1",
+		"shortLabel": "SAM NASAMS SR MPQ64F1",
+		"type": "SAM Search Radar",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 50000,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": "no",
+		"canRearm": "no"
+	},
+	"NASAMS_Command_Post": {
+		"name": "NASAMS_Command_Post",
+		"coalition": "",
+		"era": "",
+		"label": "SAM NASAMS C2",
+		"shortLabel": "SAM NASAMS C2",
+		"type": "SAM Support vehicle",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"NASAMS_LN_B": {
+		"name": "NASAMS_LN_B",
+		"coalition": "",
+		"era": "",
+		"label": "SAM NASAMS LN AIM-120B",
+		"shortLabel": "SAM NASAMS LN AIM-120B",
+		"type": "SAM Launcher",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 15000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"NASAMS_LN_C": {
+		"name": "NASAMS_LN_C",
+		"coalition": "",
+		"era": "",
+		"label": "SAM NASAMS LN AIM-120C",
+		"shortLabel": "SAM NASAMS LN AIM-120C",
+		"type": "SAM Launcher",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 15000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"M4_Sherman": {
+		"name": "M4_Sherman",
+		"coalition": "",
+		"era": "",
+		"label": "Tk M4 Sherman",
+		"shortLabel": "Tk M4 Sherman",
+		"type": "Tank",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 3000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"M2A1_halftrack": {
+		"name": "M2A1_halftrack",
+		"coalition": "",
+		"era": "",
+		"label": "Armoured Personnel Carrier M2A1 Halftrack",
+		"shortLabel": "Armoured Personnel Carrier M2A1 Halftrack",
+		"type": "Armoured Personnel Carrier",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 1200,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"FPS-117 Dome": {
+		"name": "FPS-117 Dome",
+		"coalition": "",
+		"era": "",
+		"label": "EWR AN/FPS-117 Radar (domed)",
+		"shortLabel": "EWR AN/FPS-117 Radar (domed)",
+		"type": "EW Radar",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 400000,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"FPS-117 ECS": {
+		"name": "FPS-117 ECS",
+		"coalition": "",
+		"era": "",
+		"label": "EWR AN/FPS-117 ECS",
+		"shortLabel": "EWR AN/FPS-117 ECS",
+		"type": "EW Radar",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"FPS-117": {
+		"name": "FPS-117",
+		"coalition": "",
+		"era": "",
+		"label": "EW Radar",
+		"shortLabel": "EWR AN/FPS-117 Radar",
+		"type": "EW Radar",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 463000,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"RD_75": {
+		"name": "RD_75",
+		"coalition": "",
+		"era": "",
+		"label": "SAM SA-2 S-75 RD-75 Amazonka RF",
+		"shortLabel": "SAM SA-2 S-75 RD-75 Amazonka RF",
+		"type": "EW Radar",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 100000,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"ZSU_57_2": {
+		"name": "ZSU_57_2",
+		"coalition": "",
+		"era": "",
+		"label": "SPAAA ZSU-57-2",
+		"shortLabel": "SPAAA ZSU-57-2",
+		"type": "AAA",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 5000,
+		"engagementRange": 7000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"S-60_Type59_Artillery": {
+		"name": "S-60_Type59_Artillery",
+		"coalition": "",
+		"era": "",
+		"label": "AAA S-60 57mm",
+		"shortLabel": "AAA S-60 57mm",
+		"type": "AAA",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 5000,
+		"engagementRange": 6000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"generator_5i57": {
+		"name": "generator_5i57",
+		"coalition": "",
+		"era": "",
+		"label": "Diesel Power Station 5I57A",
+		"shortLabel": "Diesel Power Station 5I57A",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"T-72B3": {
+		"name": "T-72B3",
+		"coalition": "",
+		"era": "",
+		"label": "Tank T-72B3",
+		"shortLabel": "Tank T-72B3",
+		"type": "Tank",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 4000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"PT_76": {
+		"name": "PT_76",
+		"coalition": "",
+		"era": "",
+		"label": "LT PT-76",
+		"shortLabel": "LT PT-76",
+		"type": "Tank",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 2000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"BTR-82A": {
+		"name": "BTR-82A",
+		"coalition": "",
+		"era": "",
+		"label": "Infantry Fighting Vehicle BTR-82A",
+		"shortLabel": "Infantry Fighting Vehicle BTR-82A",
+		"type": "Infantry Fighting Vehicle",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 2000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"ATZ-5": {
+		"name": "ATZ-5",
+		"coalition": "",
+		"era": "",
+		"label": "Refueler ATZ-5",
+		"shortLabel": "Refueler ATZ-5",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"AA8": {
+		"name": "AA8",
+		"coalition": "",
+		"era": "",
+		"label": "Firefighter Vehicle AA-7.2/60",
+		"shortLabel": "Firefighter Vehicle AA-7.2/60",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"TZ-22_KrAZ": {
+		"name": "TZ-22_KrAZ",
+		"coalition": "",
+		"era": "",
+		"label": "Refueler TZ-22 Tractor (KrAZ-258B1)",
+		"shortLabel": "Refueler TZ-22 Tractor (KrAZ-258B1)",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"ATZ-60_Maz": {
+		"name": "ATZ-60_Maz",
+		"coalition": "",
+		"era": "",
+		"label": "Refueler ATZ-60 Tractor (MAZ-7410)",
+		"shortLabel": "Refueler ATZ-60 Tractor (MAZ-7410)",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"ZIL-135": {
+		"name": "ZIL-135",
+		"coalition": "",
+		"era": "",
+		"label": "Truck ZIL-135",
+		"shortLabel": "Truck ZIL-135",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"S_75_ZIL": {
+		"name": "S_75_ZIL",
+		"coalition": "",
+		"era": "",
+		"label": "S-75 Tractor (ZIL-131)",
+		"shortLabel": "S-75 Tractor (ZIL-131)",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"rapier_fsa_launcher": {
+		"name": "rapier_fsa_launcher",
+		"coalition": "",
+		"era": "",
+		"label": "SAM Rapier LN",
+		"shortLabel": "SAM Rapier LN",
+		"type": "SAM Launcher",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 30000,
+		"engagementRange": 6800,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"rapier_fsa_optical_tracker_unit": {
+		"name": "rapier_fsa_optical_tracker_unit",
+		"coalition": "",
+		"era": "",
+		"label": "SAM Rapier Tracker",
+		"shortLabel": "SAM Rapier Tracker",
+		"type": "SAM Track Radar",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 20000,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"rapier_fsa_blindfire_radar": {
+		"name": "rapier_fsa_blindfire_radar",
+		"coalition": "",
+		"era": "",
+		"label": "SAM Rapier Blindfire TR",
+		"shortLabel": "SAM Rapier Blindfire TR",
+		"type": "SAM Track Radar",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 30000,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"bofors40": {
+		"name": "bofors40",
+		"coalition": "",
+		"era": "",
+		"label": "AAA Bofors 40mm",
+		"shortLabel": "AAA Bofors 40mm",
+		"type": "AAA",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 4000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Chieftain_mk3": {
+		"name": "Chieftain_mk3",
+		"coalition": "",
+		"era": "",
+		"label": "Tank Chieftain Mk.3",
+		"shortLabel": "Tank Chieftain Mk.3",
+		"type": "Tank",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 3500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Bedford_MWD": {
+		"name": "Bedford_MWD",
+		"coalition": "",
+		"era": "",
+		"label": "Truck Bedford",
+		"shortLabel": "Truck Bedford",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"Land_Rover_101_FC": {
+		"name": "Land_Rover_101_FC",
+		"coalition": "",
+		"era": "",
+		"label": "Truck Land Rover 101 FC",
+		"shortLabel": "Truck Land Rover 101 FC",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"Land_Rover_109_S3": {
+		"name": "Land_Rover_109_S3",
+		"coalition": "",
+		"era": "",
+		"label": "LUV Land Rover 109",
+		"shortLabel": "LUV Land Rover 109",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"hy_launcher": {
+		"name": "hy_launcher",
+		"coalition": "",
+		"era": "",
+		"label": "AShM SS-N-2 Silkworm",
+		"shortLabel": "AShM SS-N-2 Silkworm",
+		"type": "Missile system",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 100000,
+		"engagementRange": 100000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Silkworm_SR": {
+		"name": "Silkworm_SR",
+		"coalition": "",
+		"era": "",
+		"label": "AShM Silkworm SR",
+		"shortLabel": "AShM Silkworm SR",
+		"type": "Missile system",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 200000,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"ES44AH": {
+		"name": "ES44AH",
+		"coalition": "",
+		"era": "",
+		"label": "Loco ES44AH",
+		"shortLabel": "Loco ES44AH",
+		"type": "Locomotive",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"Boxcartrinity": {
+		"name": "Boxcartrinity",
+		"coalition": "",
+		"era": "",
+		"label": "Flatcar",
+		"shortLabel": "Flatcar",
+		"type": "Carriage",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"Tankcartrinity": {
+		"name": "Tankcartrinity",
+		"coalition": "",
+		"era": "",
+		"label": "Tank Cartrinity",
+		"shortLabel": "Tank Cartrinity",
+		"type": "Carriage",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"Wellcarnsc": {
+		"name": "Wellcarnsc",
+		"coalition": "",
+		"era": "",
+		"label": "Well Car",
+		"shortLabel": "Well Car",
+		"type": "Carriage",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"flak18": {
+		"name": "flak18",
+		"coalition": "",
+		"era": "",
+		"label": "AAA 8,8cm Flak 18",
+		"shortLabel": "AAA 8,8cm Flak 18",
+		"type": "AAA",
+		"enabled": true,
+		"liveries": {},
+		"aimTime": 20,
+		"shotsToFire": 1,
+		"acquisitionRange": 0,
+		"engagementRange": 5000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Pz_IV_H": {
+		"name": "Pz_IV_H",
+		"coalition": "",
+		"era": "",
+		"label": "Tk PzIV H",
+		"shortLabel": "Tk PzIV H",
+		"type": "Tank",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 3000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Leopard-2A5": {
+		"name": "Leopard-2A5",
+		"coalition": "",
+		"era": "",
+		"label": "Tank Leopard-2A5",
+		"shortLabel": "Tank Leopard-2A5",
+		"type": "Tank",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 3500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"leopard-2A4": {
+		"name": "leopard-2A4",
+		"coalition": "",
+		"era": "",
+		"label": "Tank Leopard-2A4",
+		"shortLabel": "Tank Leopard-2A4",
+		"type": "Tank",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 3500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"leopard-2A4_trs": {
+		"name": "leopard-2A4_trs",
+		"coalition": "",
+		"era": "",
+		"label": "Tank Leopard-2A4 Trs",
+		"shortLabel": "Tank Leopard-2A4 Trs",
+		"type": "Tank",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 3500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Sd_Kfz_251": {
+		"name": "Sd_Kfz_251",
+		"coalition": "",
+		"era": "",
+		"label": "Armoured Personnel Carrier Sd.Kfz.251 Halftrack",
+		"shortLabel": "Armoured Personnel Carrier Sd.Kfz.251 Halftrack",
+		"type": "Armoured Personnel Carrier",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 1100,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Blitz_36-6700A": {
+		"name": "Blitz_36-6700A",
+		"coalition": "",
+		"era": "",
+		"label": "Truck Opel Blitz",
+		"shortLabel": "Truck Opel Blitz",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": true
+	},
+	"T155_Firtina": {
+		"name": "T155_Firtina",
+		"coalition": "",
+		"era": "",
+		"label": "SPH T155 Firtina 155mm",
+		"shortLabel": "SPH T155 Firtina 155mm",
+		"type": "Artillery",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 41000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"VAB_Mephisto": {
+		"name": "VAB_Mephisto",
+		"coalition": "",
+		"era": "",
+		"label": "ATGM VAB Mephisto",
+		"shortLabel": "ATGM VAB Mephisto",
+		"type": "Armoured Car",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 3800,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"ZTZ96B": {
+		"name": "ZTZ96B",
+		"coalition": "",
+		"era": "",
+		"label": "ZTZ-96B",
+		"shortLabel": "ZTZ-96B",
+		"type": "Tank",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 5000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"ZBD04A": {
+		"name": "ZBD04A",
+		"coalition": "",
+		"era": "",
+		"label": "ZBD-04A",
+		"shortLabel": "ZBD-04A",
+		"type": "Infantry Fighting Vehicle",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 4800,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"HQ-7_LN_SP": {
+		"name": "HQ-7_LN_SP",
+		"coalition": "",
+		"era": "",
+		"label": "HQ-7 Self-Propelled LN",
+		"shortLabel": "HQ-7 Self-Propelled LN",
+		"type": "SAM Launcher",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 15000,
+		"engagementRange": 15000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"HQ-7_LN_EO": {
+		"name": "HQ-7_LN_EO",
+		"coalition": "",
+		"era": "",
+		"label": "HQ-7 LN Electro-Optics",
+		"shortLabel": "HQ-7 LN Electro-Optics",
+		"type": "SAM Track Radar",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 8000,
+		"engagementRange": 12000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"HQ-7_STR_SP": {
+		"name": "HQ-7_STR_SP",
+		"coalition": "",
+		"era": "",
+		"label": "HQ-7 Self-Propelled STR",
+		"shortLabel": "HQ-7 Self-Propelled STR",
+		"type": "SAM Track Radar",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 30000,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"PLZ05": {
+		"name": "PLZ05",
+		"coalition": "",
+		"era": "",
+		"label": "PLZ-05",
+		"shortLabel": "PLZ-05",
+		"type": "Artillery",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 23500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"TYPE-59": {
+		"name": "TYPE-59",
+		"coalition": "",
+		"era": "",
+		"label": "MT Type 59",
+		"shortLabel": "MT Type 59",
+		"type": "Tank",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 2500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Kubelwagen_82": {
+		"name": "Kubelwagen_82",
+		"coalition": "",
+		"era": "",
+		"label": "LUV Kubelwagen Jeep",
+		"shortLabel": "LUV Kubelwagen Jeep",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"Sd_Kfz_2": {
+		"name": "Sd_Kfz_2",
+		"coalition": "",
+		"era": "",
+		"label": "LUV Kettenrad",
+		"shortLabel": "LUV Kettenrad",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"Sd_Kfz_7": {
+		"name": "Sd_Kfz_7",
+		"coalition": "",
+		"era": "",
+		"label": "Tractor Sd.Kfz.7 Art'y Tractor",
+		"shortLabel": "Tractor Sd.Kfz.7 Art'y Tractor",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"Horch_901_typ_40_kfz_21": {
+		"name": "Horch_901_typ_40_kfz_21",
+		"coalition": "",
+		"era": "",
+		"label": "LUV Horch 901 Staff Car",
+		"shortLabel": "LUV Horch 901 Staff Car",
+		"type": "Unarmed",
+		"enabled": true,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"Tiger_I": {
+		"name": "Tiger_I",
+		"coalition": "",
+		"era": "",
+		"label": "Tk Tiger 1",
+		"shortLabel": "Tk Tiger 1",
+		"type": "Tank",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 3000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Tiger_II_H": {
+		"name": "Tiger_II_H",
+		"coalition": "",
+		"era": "",
+		"label": "Tk Tiger II",
+		"shortLabel": "Tk Tiger II",
+		"type": "Tank",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 6000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Pz_V_Panther_G": {
+		"name": "Pz_V_Panther_G",
+		"coalition": "",
+		"era": "",
+		"label": "Tk Panther G (Pz V)",
+		"shortLabel": "Tk Panther G (Pz V)",
+		"type": "Tank",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 3000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Jagdpanther_G1": {
+		"name": "Jagdpanther_G1",
+		"coalition": "",
+		"era": "",
+		"label": "Self Propelled Gun Jagdpanther TD",
+		"shortLabel": "Self Propelled Gun Jagdpanther TD",
+		"type": "Tank",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 5000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"JagdPz_IV": {
+		"name": "JagdPz_IV",
+		"coalition": "",
+		"era": "",
+		"label": "Self Propelled Gun Jagdpanzer IV TD",
+		"shortLabel": "Self Propelled Gun Jagdpanzer IV TD",
+		"type": "Tank",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 3000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Stug_IV": {
+		"name": "Stug_IV",
+		"coalition": "",
+		"era": "",
+		"label": "Self Propelled Gun StuG IV AG",
+		"shortLabel": "Self Propelled Gun StuG IV AG",
+		"type": "Tank",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 3000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"SturmPzIV": {
+		"name": "SturmPzIV",
+		"coalition": "",
+		"era": "",
+		"label": "Self Propelled Gun Brummbaer AG",
+		"shortLabel": "Self Propelled Gun Brummbaer AG",
+		"type": "Tank",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 4500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Wespe124": {
+		"name": "Wespe124",
+		"coalition": "",
+		"era": "",
+		"label": "SPH Sd.Kfz.124 Wespe 105mm",
+		"shortLabel": "SPH Sd.Kfz.124 Wespe 105mm",
+		"type": "Artillery",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 10500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Sd_Kfz_234_2_Puma": {
+		"name": "Sd_Kfz_234_2_Puma",
+		"coalition": "",
+		"era": "",
+		"label": "Scout Puma AC",
+		"shortLabel": "Scout Puma AC",
+		"type": "Armoured Car",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 2000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"KDO_Mod40": {
+		"name": "KDO_Mod40",
+		"coalition": "",
+		"era": "",
+		"label": "AAA Kdo.G.40",
+		"shortLabel": "AAA Kdo.G.40",
+		"type": "AAA",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 30000,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Flakscheinwerfer_37": {
+		"name": "Flakscheinwerfer_37",
+		"coalition": "",
+		"era": "",
+		"label": "SL Flakscheinwerfer 37",
+		"shortLabel": "SL Flakscheinwerfer 37",
+		"type": "AAA",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 15000,
+		"engagementRange": 15000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Maschinensatz_33": {
+		"name": "Maschinensatz_33",
+		"coalition": "",
+		"era": "",
+		"label": "Maschinensatz 33 Gen",
+		"shortLabel": "Maschinensatz 33 Gen",
+		"type": "AAA",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"soldier_mauser98": {
+		"name": "soldier_mauser98",
+		"coalition": "",
+		"era": "",
+		"label": "Infantry Mauser 98",
+		"shortLabel": "Infantry Mauser 98",
+		"type": "Infantry",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"SK_C_28_naval_gun": {
+		"name": "SK_C_28_naval_gun",
+		"coalition": "",
+		"era": "",
+		"label": "Gun 15cm SK C/28 Naval in Bunker",
+		"shortLabel": "Gun 15cm SK C/28 Naval in Bunker",
+		"type": "Artillery",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 20000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"fire_control": {
+		"name": "fire_control",
+		"coalition": "",
+		"era": "",
+		"label": "Bunker with Fire Control Center",
+		"shortLabel": "Bunker with Fire Control Center",
+		"type": "Structure",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 1100,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"Stug_III": {
+		"name": "Stug_III",
+		"coalition": "",
+		"era": "",
+		"label": "Self Propelled Gun StuG III G AG",
+		"shortLabel": "Self Propelled Gun StuG III G AG",
+		"type": "Tank",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 3000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Elefant_SdKfz_184": {
+		"name": "Elefant_SdKfz_184",
+		"coalition": "",
+		"era": "",
+		"label": "Self Propelled Gun Elefant TD",
+		"shortLabel": "Self Propelled Gun Elefant TD",
+		"type": "Tank",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 6000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"v1_launcher": {
+		"name": "v1_launcher",
+		"coalition": "",
+		"era": "",
+		"label": "V-1 Launch Ramp",
+		"shortLabel": "V-1 Launch Ramp",
+		"type": "Missile System",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"FuMG-401": {
+		"name": "FuMG-401",
+		"coalition": "",
+		"era": "",
+		"label": "EWR FuMG-401 Freya LZ",
+		"shortLabel": "EWR FuMG-401 Freya LZ",
+		"type": "EW Radar",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 160000,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"FuSe-65": {
+		"name": "FuSe-65",
+		"coalition": "",
+		"era": "",
+		"label": "EWR FuSe-65 WÃ¼rzburg-Riese",
+		"shortLabel": "EWR FuSe-65 WÃ¼rzburg-Riese",
+		"type": "EW Radar",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 60000,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"Pak40": {
+		"name": "Pak40",
+		"coalition": "",
+		"era": "",
+		"label": "FH Pak 40 75mm",
+		"shortLabel": "FH Pak 40 75mm",
+		"type": "Artillery",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 3000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"LeFH_18-40-105": {
+		"name": "LeFH_18-40-105",
+		"coalition": "",
+		"era": "",
+		"label": "FH LeFH-18 105mm",
+		"shortLabel": "FH LeFH-18 105mm",
+		"type": "Artillery",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 10500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Cromwell_IV": {
+		"name": "Cromwell_IV",
+		"coalition": "",
+		"era": "",
+		"label": "Tk Cromwell IV",
+		"shortLabel": "Tk Cromwell IV",
+		"type": "Tank",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 3000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"M4A4_Sherman_FF": {
+		"name": "M4A4_Sherman_FF",
+		"coalition": "",
+		"era": "",
+		"label": "Tk M4A4 Sherman Firefly",
+		"shortLabel": "Tk M4A4 Sherman Firefly",
+		"type": "Tank",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 3000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"soldier_wwii_br_01": {
+		"name": "soldier_wwii_br_01",
+		"coalition": "",
+		"era": "",
+		"label": "Infantry SMLE No.4 Mk-1",
+		"shortLabel": "Infantry SMLE No.4 Mk-1",
+		"type": "Infantry",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Centaur_IV": {
+		"name": "Centaur_IV",
+		"coalition": "",
+		"era": "",
+		"label": "Tk Centaur IV CS",
+		"shortLabel": "Tk Centaur IV CS",
+		"type": "Tank",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 6000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Churchill_VII": {
+		"name": "Churchill_VII",
+		"coalition": "",
+		"era": "",
+		"label": "Tk Churchill VII",
+		"shortLabel": "Tk Churchill VII",
+		"type": "Tank",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 3000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Daimler_AC": {
+		"name": "Daimler_AC",
+		"coalition": "",
+		"era": "",
+		"label": "Car Daimler Armored",
+		"shortLabel": "Car Daimler Armored",
+		"type": "Armoured Car",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 2000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Tetrarch": {
+		"name": "Tetrarch",
+		"coalition": "",
+		"era": "",
+		"label": "Tk Tetrach",
+		"shortLabel": "Tk Tetrach",
+		"type": "Armoured Car",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 2000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"QF_37_AA": {
+		"name": "QF_37_AA",
+		"coalition": "",
+		"era": "",
+		"label": "AAA QF 3.7\"",
+		"shortLabel": "AAA QF 3.7\"",
+		"type": "AAA",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 9000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Allies_Director": {
+		"name": "Allies_Director",
+		"coalition": "",
+		"era": "",
+		"label": "Allies Rangefinder (DRT)",
+		"shortLabel": "Allies Rangefinder (DRT)",
+		"type": "Unarmed",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 30000,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"CCKW_353": {
+		"name": "CCKW_353",
+		"coalition": "",
+		"era": "",
+		"label": "Truck GMC \"Jimmy\" 6x6",
+		"shortLabel": "Truck GMC \"Jimmy\" 6x6",
+		"type": "Unarmed",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"Willys_MB": {
+		"name": "Willys_MB",
+		"coalition": "",
+		"era": "",
+		"label": "Car Willys Jeep",
+		"shortLabel": "Car Willys Jeep",
+		"type": "Unarmed",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"M12_GMC": {
+		"name": "M12_GMC",
+		"coalition": "",
+		"era": "",
+		"label": "SPH M12 GMC 155mm",
+		"shortLabel": "SPH M12 GMC 155mm",
+		"type": "Artillery",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 18300,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"M30_CC": {
+		"name": "M30_CC",
+		"coalition": "",
+		"era": "",
+		"label": "Ammo M30 Cargo Carrier",
+		"shortLabel": "Ammo M30 Cargo Carrier",
+		"type": "Unarmed",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 1200,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"soldier_wwii_us": {
+		"name": "soldier_wwii_us",
+		"coalition": "",
+		"era": "",
+		"label": "Infantry M1 Garand",
+		"shortLabel": "Infantry M1 Garand",
+		"type": "Infantry",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"M10_GMC": {
+		"name": "M10_GMC",
+		"coalition": "",
+		"era": "",
+		"label": "Self Propelled Gun M10 GMC TD",
+		"shortLabel": "Self Propelled Gun M10 GMC TD",
+		"type": "Tank",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 6000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"M8_Greyhound": {
+		"name": "M8_Greyhound",
+		"coalition": "",
+		"era": "",
+		"label": "Scout M8 Greyhound AC",
+		"shortLabel": "Scout M8 Greyhound AC",
+		"type": "Armoured Car",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 2000,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"M2A1-105": {
+		"name": "M2A1-105",
+		"coalition": "",
+		"era": "",
+		"label": "FH M2A1 105mm",
+		"shortLabel": "FH M2A1 105mm",
+		"type": "Artillery",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 11500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"M4_Tractor": {
+		"name": "M4_Tractor",
+		"coalition": "",
+		"era": "",
+		"label": "Tractor M4 High Speed",
+		"shortLabel": "Tractor M4 High Speed",
+		"type": "Unarmed",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 1200,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"M45_Quadmount": {
+		"name": "M45_Quadmount",
+		"coalition": "",
+		"era": "",
+		"label": "AAA M45 Quadmount HB 12.7mm",
+		"shortLabel": "AAA M45 Quadmount HB 12.7mm",
+		"type": "AAA",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 1500,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"M1_37mm": {
+		"name": "M1_37mm",
+		"coalition": "",
+		"era": "",
+		"label": "AAA M1 37mm",
+		"shortLabel": "AAA M1 37mm",
+		"type": "AAA",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 5700,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"DR_50Ton_Flat_Wagon": {
+		"name": "DR_50Ton_Flat_Wagon",
+		"coalition": "",
+		"era": "",
+		"label": "DR 50-ton flat wagon",
+		"shortLabel": "DR 50-ton flat wagon",
+		"type": "Carriage",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"DRG_Class_86": {
+		"name": "DRG_Class_86",
+		"coalition": "",
+		"era": "",
+		"label": "Loco DRG Class 86",
+		"shortLabel": "Loco DRG Class 86",
+		"type": "Locomotive",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"German_covered_wagon_G10": {
+		"name": "German_covered_wagon_G10",
+		"coalition": "",
+		"era": "",
+		"label": "Wagon G10 (Germany)",
+		"shortLabel": "Wagon G10 (Germany)",
+		"type": "Carriage",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"German_tank_wagon": {
+		"name": "German_tank_wagon",
+		"coalition": "",
+		"era": "",
+		"label": "Tank Car (Germany)",
+		"shortLabel": "Tank Car (Germany)",
+		"type": "Carriage",
+		"enabled": false,
+		"liveries": {},
+		"acquisitionRange": 0,
+		"engagementRange": 0,
+		"description": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	}
 }
