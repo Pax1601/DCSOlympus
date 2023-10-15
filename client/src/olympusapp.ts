@@ -254,14 +254,14 @@ export class OlympusApp {
 
         const shortcutManager = this.getShortcutManager();
         shortcutManager.addKeyboardShortcut("toggleDemo", {
-            "altKey": true,
+            "altKey": false,
             "callback": () => {
                 this.getServerManager().toggleDemoEnabled();
             },
             "code": "KeyT",
             "context": "olympus",
             "ctrlKey": false,
-            "shiftKey": true
+            "shiftKey": false
         }).addKeyboardShortcut("togglePause", {
             "altKey": false,
             "callback": () => {
