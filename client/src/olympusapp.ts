@@ -25,6 +25,8 @@ import { groundUnitDatabase } from "./unit/databases/groundunitdatabase";
 import { navyUnitDatabase } from "./unit/databases/navyunitdatabase";
 import { ConfigurationOptions } from "./interfaces";
 import { UnitListPanel } from "./panels/unitlistpanel";
+import { ContextManager } from "./context/contextmanager";
+import { Context } from "./context/context";
 
 export class OlympusApp {
     /* Global data */
@@ -34,15 +36,16 @@ export class OlympusApp {
     #map: Map | null = null;
 
     /* Managers */
+    #contextManager!: ContextManager;
+    #missionManager: MissionManager | null = null;
+    #panelsManager: Manager | null = null;
+    #pluginsManager: PluginsManager | null = null;
+    #popupsManager: Manager | null = null;
     #serverManager: ServerManager | null = null;
+    #shortcutManager!: ShortcutManager;
+    #toolbarsManager: Manager | null = null;
     #unitsManager: UnitsManager | null = null;
     #weaponsManager: WeaponsManager | null = null;
-    #missionManager: MissionManager | null = null;
-    #pluginsManager: PluginsManager | null = null;
-    #panelsManager: Manager | null = null;
-    #popupsManager: Manager | null = null;
-    #toolbarsManager: Manager | null = null;
-    #shortcutManager: ShortcutManager | null = null;
 
     constructor() {
 
@@ -51,6 +54,14 @@ export class OlympusApp {
     // TODO add checks on null
     getMap() {
         return this.#map as Map;
+    }
+
+    getCurrentContext() {
+        return this.getContextManager().getCurrentContext() as Context;
+    }
+
+    getContextManager() {
+        return this.#contextManager as ContextManager;
     }
 
     getServerManager() {
@@ -161,6 +172,11 @@ export class OlympusApp {
 
     start() {
         /* Initialize base functionalitites */
+
+        this.#contextManager = new ContextManager();
+        this.#contextManager.add( "olympus", {} );
+        this.#contextManager.add( "secondary", {} );
+
         this.#map = new Map('map-container');
 
         this.#serverManager = new ServerManager();
@@ -168,10 +184,9 @@ export class OlympusApp {
         this.#weaponsManager = new WeaponsManager();
         this.#missionManager = new MissionManager();
 
-        this.#shortcutManager = new ShortcutManager();
-
         this.#panelsManager = new Manager();
         this.#popupsManager = new Manager();
+        this.#shortcutManager = new ShortcutManager();
         this.#toolbarsManager = new Manager();
 
         // Panels
@@ -240,22 +255,28 @@ export class OlympusApp {
 
         const shortcutManager = this.getShortcutManager();
         shortcutManager.addKeyboardShortcut("toggleDemo", {
+            "altKey": true,
             "callback": () => {
                 this.getServerManager().toggleDemoEnabled();
             },
-            "code": "KeyT"
+            "code": "KeyT",
+            "context": "olympus",
+            "ctrlKey": false,
+            "shiftKey": true
         }).addKeyboardShortcut("togglePause", {
             "altKey": false,
             "callback": () => {
                 this.getServerManager().setPaused(!this.getServerManager().getPaused());
             },
             "code": "Space",
+            "context": "olympus",
             "ctrlKey": false
         }).addKeyboardShortcut("deselectAll", {
             "callback": (ev: KeyboardEvent) => {
                 this.getUnitsManager().deselectAllUnits();
             },
-            "code": "Escape"
+            "code": "Escape",
+            "context": "olympus"
         }).addKeyboardShortcut("toggleUnitLabels", {
             "altKey": false,
             "callback": () => {
@@ -265,6 +286,7 @@ export class OlympusApp {
                 }
             },
             "code": "KeyL",
+            "context": "olympus",
             "ctrlKey": false,
             "shiftKey": false
         }).addKeyboardShortcut("toggleAcquisitionRings", {
@@ -276,6 +298,7 @@ export class OlympusApp {
                 }
             },
             "code": "KeyE",
+            "context": "olympus",
             "ctrlKey": false,
             "shiftKey": false
         }).addKeyboardShortcut("toggleEngagementRings", {
@@ -287,6 +310,7 @@ export class OlympusApp {
                 }
             },
             "code": "KeyQ",
+            "context": "olympus",
             "ctrlKey": false,
             "shiftKey": false
         }).addKeyboardShortcut("toggleHideShortEngagementRings", {
@@ -298,6 +322,7 @@ export class OlympusApp {
                 }
             },
             "code": "KeyR",
+            "context": "olympus",
             "ctrlKey": false,
             "shiftKey": false
         }).addKeyboardShortcut("toggleFillEngagementRings", {
@@ -309,6 +334,7 @@ export class OlympusApp {
                 }
             },
             "code": "KeyF",
+            "context": "olympus",
             "ctrlKey": false,
             "shiftKey": false
         });
@@ -320,6 +346,7 @@ export class OlympusApp {
                     this.getMap().handleMapPanning(ev);
                 },
                 "code": code,
+                "context": "olympus",
                 "ctrlKey": false,
                 "event": "keydown"
             });
@@ -328,7 +355,8 @@ export class OlympusApp {
                 "callback": (ev: KeyboardEvent) => {
                     this.getMap().handleMapPanning(ev);
                 },
-                "code": code
+                "code": code,
+                "context": "olympus"
             });
         });
 
@@ -349,10 +377,8 @@ export class OlympusApp {
                 },
                 "code": code
             });
-        });
 
-        //  Stop hotgroup controls sending the browser to another tab
-        digits.forEach(code => {
+            //  Stop hotgroup controls sending the browser to another tab
             document.addEventListener("keydown", (ev: KeyboardEvent) => {
                 if (ev.code === code && ev.ctrlKey === true && ev.altKey === false && ev.shiftKey === false) {
                     ev.preventDefault();
