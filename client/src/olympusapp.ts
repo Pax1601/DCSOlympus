@@ -175,7 +175,6 @@ export class OlympusApp {
 
         this.#contextManager = new ContextManager();
         this.#contextManager.add( "olympus", {} );
-        this.#contextManager.add( "secondary", {} );
 
         this.#map = new Map('map-container');
 
