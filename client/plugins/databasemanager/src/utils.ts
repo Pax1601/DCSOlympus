@@ -264,24 +264,10 @@ export function addLoadoutsScroll(div: HTMLElement, loadouts: LoadoutBlueprint[]
  * @returns The string
  */
 export function arrayToString(array: string[]) {
-    var value = "[";
-    var firstRole = true;
-    array.forEach((role: string) => {
-        value += firstRole? "": ", ";
-        firstRole = false; 
-        value += role;
-    })
-    value += "]";
-    return value;
+    return "[" + array.join( ", " ) + "]";
 }
 
 
 export function stringToArray(input: string) {
-    input = input.replace("[", "").replace("]", "");
-    var values = input.split(",");
-    var result: string[] = [];
-    values.forEach((value: string) => {
-        result.push(value.trim());
-    })
-    return result;
+    return input.match( /([\w])+/g );
 }
