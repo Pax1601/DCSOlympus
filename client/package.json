@@ -8,10 +8,12 @@
 	  "build": "browserify .\\src\\index.ts --debug -o .\\public\\javascripts\\bundle.js -t [ babelify --global true --presets [ @babel/preset-env ] --extensions '.js'] -p [ tsify --noImplicitAny ] && copy.bat",
     "emit-declarations": "tsc --project tsconfig.json --declaration --emitDeclarationOnly --outfile ./@types/olympus/index.d.ts",
     "copy": "copy.bat",
-    "start": "npm run copy & concurrently --kill-others \"npm run watch\" \"nodemon --ignore ./public/databases/ ./bin/www\"",
+    "start": "node ./bin/www",
+    "debug": "npm run copy & concurrently --kill-others \"npm run watch\" \"nodemon --ignore ./public/databases/ ./bin/www\"",
     "watch": "watchify .\\src\\index.ts --debug -o .\\public\\javascripts\\bundle.js -t [ babelify --global true --presets [ @babel/preset-env ] --extensions '.js'] -p [ tsify --noImplicitAny ]"
   },
   "dependencies": {
+    "@turf/turf": "^6.5.0",
     "body-parser": "^1.20.2",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
@@ -26,7 +28,6 @@
   "devDependencies": {
     "@babel/preset-env": "^7.21.4",
     "@tanem/svg-injector": "^10.1.55",
-    "@turf/turf": "^6.5.0",
     "@types/formatcoords": "^1.1.0",
     "@types/geojson": "^7946.0.10",
     "@types/leaflet": "^1.9.0",
