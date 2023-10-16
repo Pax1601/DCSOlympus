@@ -1,4 +1,6 @@
 import { OlympusPlugin } from "interfaces";
+import { OlympusApp } from "olympusapp";
+import { Unit } from "unit/unit";
 
 
 const SHOW_CONTROL_TIPS = "Show control tips"
@@ -280,6 +282,11 @@ export class ControlTipsPlugin implements OlympusPlugin {
                         "minSelectedUnits": 2
                     },
                     {
+                        "key": `[Num 1-9]`,
+                        "action": "Add to hotgroup",
+                        "showIfUnitSelected": true
+                    },
+                    {
                         "key": "CTRL",
                         "action": "<em>  ... more</em>",
                         "minSelectedUnits": 2,
@@ -298,6 +305,16 @@ export class ControlTipsPlugin implements OlympusPlugin {
                         "showIfUnitSelected": true,
                         "minSelectedUnits": 2,
                         "unitsMustBeControlled": true
+                    }, {
+                        "key": `[Num 1-9]`,
+                        "action": "Add hotgroup to selection",
+                        "callback": ( tip:object ) => {
+                            return (Object.values<Unit>( this.#app.getUnitsManager().getUnits() ).some( ( unit:Unit ) => {
+                                return unit.getHotgroup();
+                            }));
+                        },
+                        "showIfUnitSelected": true,
+                        "minSelectedUnits": 1
                     }
                 ]
             }
@@ -372,6 +389,10 @@ export class ControlTipsPlugin implements OlympusPlugin {
             }
 
             if ( !tipsIncludesActiveMouseover && typeof tip.mouseoverSelector === "string" ) {
+                return false;
+            }
+
+            if ( typeof tip.callback === "function" && !tip.callback( tip ) ) {
                 return false;
             }
 
