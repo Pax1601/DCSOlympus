@@ -290,6 +290,10 @@ export class UnitSpawnMenu {
         var acquisitionRange = this.#unitDatabase.getByName(this.spawnOptions.name)?.acquisitionRange ?? 0;
         var engagementRange = this.#unitDatabase.getByName(this.spawnOptions.name)?.engagementRange ?? 0;
 
+        if ( engagementRange === 0 && acquisitionRange === 0 ) {
+            return;
+        }
+
         this.#acquisitionCircle.setRadius(acquisitionRange);
         this.#engagementCircle.setRadius(engagementRange);
         this.#acquisitionCircle.setLatLng(this.spawnOptions.latlng);

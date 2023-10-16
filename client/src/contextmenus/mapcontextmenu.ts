@@ -65,9 +65,9 @@ export class MapContextMenu extends ContextMenu {
             }
         });
 
-        document.addEventListener("commandModeOptionsChanged", (e: any) => {
-            //this.#refreshOptions();
-        });
+        // document.addEventListener("commandModeOptionsChanged", (e: any) => {
+        //     //this.#refreshOptions();
+        // });
 
         this.#aircraftSpawnMenu.getContainer().addEventListener("resize", () => this.clip());
         this.#helicopterSpawnMenu.getContainer().addEventListener("resize", () => this.clip());
