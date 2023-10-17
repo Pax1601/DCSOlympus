@@ -310,7 +310,7 @@ export class ControlTipsPlugin implements OlympusPlugin {
                         "action": "Add hotgroup to selection",
                         "callback": ( tip:object ) => {
                             return (Object.values<Unit>( this.#app.getUnitsManager().getUnits() ).some( ( unit:Unit ) => {
-                                return unit.getHotgroup();
+                                return unit.getAlive() && unit.getControlled() && unit.getHotgroup();
                             }));
                         },
                         "showIfUnitSelected": true,
