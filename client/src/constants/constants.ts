@@ -210,3 +210,5 @@ export const MGRS_PRECISION_1KM  = 3;
 export const MGRS_PRECISION_100M = 4;
 export const MGRS_PRECISION_10M  = 5;
 export const MGRS_PRECISION_1M   = 6;
+
+export const DELETE_SLOW_THRESHOLD = 20;

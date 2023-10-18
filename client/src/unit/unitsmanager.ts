@@ -4,7 +4,7 @@ import { Unit } from "./unit";
 import { bearingAndDistanceToLatLng, deg2rad, getGroundElevation, getUnitDatabaseByCategory, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots, polyContains, polygonArea, randomPointInPoly, randomUnitBlueprint } from "../other/utils";
 import { CoalitionArea } from "../map/coalitionarea/coalitionarea";
 import { groundUnitDatabase } from "./databases/groundunitdatabase";
-import { DataIndexes, GAME_MASTER, IADSDensities, IDLE, MOVE_UNIT } from "../constants/constants";
+import { DELETE_SLOW_THRESHOLD, DataIndexes, GAME_MASTER, IADSDensities, IDLE, MOVE_UNIT } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
 import { citiesDatabase } from "./citiesDatabase";
 import { aircraftDatabase } from "./databases/aircraftdatabase";
@@ -750,16 +750,14 @@ export class UnitsManager {
             return unit.getHuman() === true;
         });
 
-        if (selectionContainsAHuman && !confirm("Your selection includes a human player. Deleting humans causes their vehicle to crash.\n\nAre you sure you want to do this?")) {
+        if (selectionContainsAHuman && !confirm("Your selection includes a human player. Deleting humans may cause their DCS game to crash.\n\nAre you sure you want to do this?"))
             return;
-        }
 
-        var immediate = false;
-        if (selectedUnits.length > 20)
-            immediate = confirm(`You are trying to delete ${selectedUnits.length} units, do you want to delete them immediately? This may cause lag for players.`)
+        if (selectedUnits.length > DELETE_SLOW_THRESHOLD && !confirm(`You are trying to delete ${selectedUnits.length} units. This may cause lag for players.`))
+            return;
 
         for (let idx in selectedUnits) {
-            selectedUnits[idx].delete(explosion, immediate);
+            selectedUnits[idx].delete(explosion, (selectedUnits.length > DELETE_SLOW_THRESHOLD) );
         }
         this.#showActionMessage(selectedUnits, `deleted`);
     }
