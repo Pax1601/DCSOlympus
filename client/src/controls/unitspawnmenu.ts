@@ -296,8 +296,8 @@ export class UnitSpawnMenu {
             return;
         }
         
-        var acquisitionRange = this.#unitDatabase.getByName(this.spawnOptions.name)?.acquisitionRange ?? 0;
-        var engagementRange = this.#unitDatabase.getByName(this.spawnOptions.name)?.engagementRange ?? 0;
+        let acquisitionRange = this.#unitDatabase.getByName(this.spawnOptions.name)?.acquisitionRange ?? 0;
+        let engagementRange = this.#unitDatabase.getByName(this.spawnOptions.name)?.engagementRange ?? 0;
 
         if ( acquisitionRange === 0 && engagementRange === 0 ) {
             return;
