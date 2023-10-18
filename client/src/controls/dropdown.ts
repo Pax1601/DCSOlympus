@@ -36,8 +36,21 @@ export class Dropdown {
         return this.#container;
     }
 
-    setOptions(optionsList: string[], sortAlphabetically: boolean = true) {
-        this.#optionsList = optionsList.sort();
+    setOptions(optionsList: string[], sort:""|"string"|"number" = "string") {
+        
+        if ( sort === "number" ) {
+            this.#optionsList = optionsList.sort( (optionA:string, optionB:string) => {
+                const a = parseInt( optionA );
+                const b = parseInt( optionB );
+                if ( a > b )
+                    return 1;
+                else
+                    return ( b > a ) ? -1 : 0;
+            });
+        } else if ( sort === "string" ) {
+            this.#optionsList = optionsList.sort();
+        }
+
         if (this.#optionsList.length == 0) {
             optionsList = ["No options available"]
             this.#value.innerText = "No options available";

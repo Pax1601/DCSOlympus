@@ -346,7 +346,7 @@ export class UnitSpawnMenu {
         var countOptions: string[] = [];
         for (let i = 1; i <= maxUnitCount; i++)
             countOptions.push(i.toString());
-        this.#unitCountDropdown.setOptions(countOptions);
+        this.#unitCountDropdown.setOptions(countOptions, "number");
         this.#unitCountDropdown.selectValue(0);
     }
 
