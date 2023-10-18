@@ -101,9 +101,8 @@
 	column-gap: 8px;
 	display: flex;
 	flex-flow: column nowrap;
-	margin-right: 20px;
 	max-height: 110px;
-	padding-right:20px;
+	padding-right:40px;
 	row-gap: 6px;
 }
 
