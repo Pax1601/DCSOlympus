@@ -334,7 +334,14 @@
 					"TUR"
 				]
 			}
-		}
+		},
+		"type": "Helicopter",
+		"description": "2 engine, 2 crew attack helicopter. Cobra",
+		"abilities": "",
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"AH-64D_BLK_II": {
 		"name": "AH-64D_BLK_II",
@@ -727,7 +734,14 @@
 					"GRC"
 				]
 			}
-		}
+		},
+		"type": "Helicopter",
+		"description": "2 engine, 2 crew attack helicopter. Apache",
+		"abilities": "",
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"Ka-50_3": {
 		"name": "Ka-50_3",
@@ -1266,7 +1280,14 @@
 					"RUS"
 				]
 			}
-		}
+		},
+		"type": "Helicopter",
+		"description": "2 engine, 1 crew attack helicopter. Blackshark",
+		"abilities": "",
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"Mi-24P": {
 		"name": "Mi-24P",
@@ -1745,7 +1766,14 @@
 					"RUS"
 				]
 			}
-		}
+		},
+		"type": "Helicopter",
+		"description": "2 engine, 2 crew attack helicopter. Hind",
+		"abilities": "",
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"Mi-26": {
 		"name": "Mi-26",
@@ -1811,7 +1839,14 @@
 					"DZA"
 				]
 			}
-		}
+		},
+		"type": "Helicopter",
+		"description": "2 engine, 5 crew transport helicopter. Halo",
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"Mi-28N": {
 		"name": "Mi-28N",
@@ -2288,7 +2323,14 @@
 					"RUS"
 				]
 			}
-		}
+		},
+		"type": "Helicopter",
+		"description": "2 engine, 2 crew attack helicopter. Havoc",
+		"abilities": "",
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	},
 	"Mi-8MT": {
 		"name": "Mi-8MT",
@@ -2798,7 +2840,14 @@
 					"RUS"
 				]
 			}
-		}
+		},
+		"type": "Helicopter",
+		"description": "2 engine, 3 crew transport helicopter. Hip",
+		"abilities": "",
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"SA342L": {
 		"name": "SA342L",
@@ -3025,7 +3074,14 @@
 					"SRB"
 				]
 			}
-		}
+		},
+		"type": "Helicopter",
+		"description": "1 engine, 2 crew scout helicopter. Gazelle",
+		"abilities": "",
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"SA342M": {
 		"name": "SA342M",
@@ -3282,7 +3338,14 @@
 					"SRB"
 				]
 			}
-		}
+		},
+		"type": "Helicopter",
+		"description": "1 engine, 2 crew scout helicopter. Gazelle",
+		"abilities": "",
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"SA342Mistral": {
 		"name": "SA342Mistral",
@@ -3475,7 +3538,14 @@
 					"CYP"
 				]
 			}
-		}
+		},
+		"type": "Helicopter",
+		"description": "1 engine, 2 crew scout helicopter. Gazelle",
+		"abilities": "",
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"SH-60B": {
 		"name": "SH-60B",
@@ -3485,7 +3555,24 @@
 		"shortLabel": "S60",
 		"loadouts": [
 			{
-				"items": [],
+				"items": [
+					{
+						"name": "",
+						"quantity": 1
+					},
+					{
+						"name": "",
+						"quantity": 1
+					},
+					{
+						"name": "",
+						"quantity": 1
+					},
+					{
+						"name": "",
+						"quantity": 1
+					}
+				],
 				"enabled": true,
 				"code": "",
 				"name": "Empty loadout",
@@ -3498,6 +3585,30 @@
 					{
 						"name": "AGM-119B Penguin ASM",
 						"quantity": 1
+					},
+					{
+						"name": "",
+						"quantity": 1
+					},
+					{
+						"name": "",
+						"quantity": 1
+					},
+					{
+						"name": "",
+						"quantity": 1
+					},
+					{
+						"name": "",
+						"quantity": 1
+					},
+					{
+						"name": "",
+						"quantity": 1
+					},
+					{
+						"name": "",
+						"quantity": 1
 					}
 				],
 				"enabled": true,
@@ -3506,6 +3617,20 @@
 				"roles": [
 					"Antiship Strike"
 				]
+			},
+			{
+				"name": "asd",
+				"code": "",
+				"fuel": 1,
+				"items": [],
+				"roles": []
+			},
+			{
+				"name": "asd",
+				"code": "",
+				"fuel": 1,
+				"items": [],
+				"roles": []
 			}
 		],
 		"filename": "uh-60.png",
@@ -3527,7 +3652,14 @@
 					"GRC"
 				]
 			}
-		}
+		},
+		"type": "Helicopter",
+		"description": "2 engine, 3 crew transport helicopter. Seahawk",
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"UH-1H": {
 		"name": "UH-1H",
@@ -3811,7 +3943,14 @@
 					"USA"
 				]
 			}
-		}
+		},
+		"type": "Helicopter",
+		"description": "2 engine, 2 crew transport helicopter. Huey",
+		"abilities": "",
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"UH-60A": {
 		"name": "UH-60A",
@@ -3866,6 +4005,13 @@
 					"TUR"
 				]
 			}
-		}
+		},
+		"type": "Helicopter",
+		"description": "2 engine, 3 crew transport helicopter. Blackhawk",
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"abilities": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	}
 }

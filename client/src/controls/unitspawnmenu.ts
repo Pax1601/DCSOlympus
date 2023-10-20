@@ -343,10 +343,7 @@ export class UnitSpawnMenu {
 
     setMaxUnitCount(maxUnitCount: number) {
         /* Create the unit count options */
-        var countOptions: string[] = [];
-        for (let i = 1; i <= maxUnitCount; i++)
-            countOptions.push(i.toString());
-        this.#unitCountDropdown.setOptions(countOptions);
+        this.#unitCountDropdown.setOptions( [...Array(maxUnitCount).keys()].map( n => (n+1).toString() ), "number");
         this.#unitCountDropdown.selectValue(0);
     }
 

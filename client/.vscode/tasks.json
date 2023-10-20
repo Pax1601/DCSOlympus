@@ -6,7 +6,7 @@
         {
             "label": "server",
             "type": "shell",
-            "command": "npm run start",
+            "command": "npm run debug",
             "isBackground": true
         }
     ]

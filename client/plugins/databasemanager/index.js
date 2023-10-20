@@ -38,7 +38,7 @@ class AirUnitEditor extends uniteditor_1.UnitEditor {
      * @param blueprint The blueprint to edit
      */
     setBlueprint(blueprint) {
-        var _a, _b, _c, _d, _e, _f;
+        var _a, _b, _c, _d, _e, _f, _g;
         this.blueprint = blueprint;
         if (this.blueprint !== null) {
             this.contentDiv2.replaceChildren();
@@ -48,23 +48,24 @@ class AirUnitEditor extends uniteditor_1.UnitEditor {
             (0, utils_1.addStringInput)(this.contentDiv2, "Name", blueprint.name, "text", (value) => { blueprint.name = value; }, true);
             (0, utils_1.addStringInput)(this.contentDiv2, "Label", blueprint.label, "text", (value) => { blueprint.label = value; });
             (0, utils_1.addStringInput)(this.contentDiv2, "Short label", blueprint.shortLabel, "text", (value) => { blueprint.shortLabel = value; });
-            (0, utils_1.addDropdownInput)(this.contentDiv2, "Coalition", blueprint.coalition, ["", "blue", "red"]);
-            (0, utils_1.addDropdownInput)(this.contentDiv2, "Era", blueprint.era, ["WW2", "Early Cold War", "Mid Cold War", "Late Cold War", "Modern"]);
+            (0, utils_1.addDropdownInput)(this.contentDiv2, "Coalition", blueprint.coalition, ["", "blue", "red"], (value) => { blueprint.coalition = value; });
+            (0, utils_1.addDropdownInput)(this.contentDiv2, "Era", blueprint.era, ["WW2", "Early Cold War", "Mid Cold War", "Late Cold War", "Modern"], (value) => { blueprint.era = value; });
             (0, utils_1.addStringInput)(this.contentDiv2, "Filename", (_a = blueprint.filename) !== null && _a !== void 0 ? _a : "", "text", (value) => { blueprint.filename = value; });
             (0, utils_1.addStringInput)(this.contentDiv2, "Cost", (_b = String(blueprint.cost)) !== null && _b !== void 0 ? _b : "", "number", (value) => { blueprint.cost = parseFloat(value); });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Rufels from", (_c = String(blueprint.refuelsFrom)) !== null && _c !== void 0 ? _c : "", "text", (value) => { blueprint.refuelsFrom = value; });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Refuelling type", (_d = String(blueprint.refuellingType)) !== null && _d !== void 0 ? _d : "", "text", (value) => { blueprint.refuellingType = value; });
+            (0, utils_1.addCheckboxInput)(this.contentDiv2, "Can target point", (_c = blueprint.canTargetPoint) !== null && _c !== void 0 ? _c : false, (value) => { blueprint.canTargetPoint = value; });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Description", (_d = blueprint.description) !== null && _d !== void 0 ? _d : "", "text", (value) => { blueprint.description = value; });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Abilities", (_e = blueprint.abilities) !== null && _e !== void 0 ? _e : "", "text", (value) => { blueprint.abilities = value; });
             /* Add a scrollable list of loadouts that the user can edit */
             var title = document.createElement("label");
             title.innerText = "Loadouts";
             this.contentDiv2.appendChild(title);
-            (0, utils_1.addLoadoutsScroll)(this.contentDiv2, (_e = blueprint.loadouts) !== null && _e !== void 0 ? _e : [], (loadout) => {
+            (0, utils_1.addLoadoutsScroll)(this.contentDiv2, (_f = blueprint.loadouts) !== null && _f !== void 0 ? _f : [], (loadout) => {
                 var _a, _b;
                 (_a = __classPrivateFieldGet(this, _AirUnitEditor_loadoutEditor, "f")) === null || _a === void 0 ? void 0 : _a.setLoadout(loadout);
                 (_b = __classPrivateFieldGet(this, _AirUnitEditor_loadoutEditor, "f")) === null || _b === void 0 ? void 0 : _b.show();
             });
             (0, utils_1.addNewElementInput)(this.contentDiv2, (ev, input) => { this.addLoadout(input.value); });
-            (_f = __classPrivateFieldGet(this, _AirUnitEditor_loadoutEditor, "f")) === null || _f === void 0 ? void 0 : _f.hide();
+            (_g = __classPrivateFieldGet(this, _AirUnitEditor_loadoutEditor, "f")) === null || _g === void 0 ? void 0 : _g.hide();
         }
     }
     /** Add a new empty blueprint
@@ -79,7 +80,8 @@ class AirUnitEditor extends uniteditor_1.UnitEditor {
                 label: "",
                 shortLabel: "",
                 era: "",
-                loadouts: []
+                loadouts: [],
+                enabled: true
             };
             this.show();
             this.setBlueprint(this.database.blueprints[key]);
@@ -97,7 +99,8 @@ class AirUnitEditor extends uniteditor_1.UnitEditor {
                 code: "",
                 fuel: 1,
                 items: [],
-                roles: []
+                roles: [],
+                enabled: true
             });
             this.setBlueprint(this.blueprint);
         }
@@ -505,7 +508,7 @@ class GroundUnitEditor extends uniteditor_1.UnitEditor {
      * @param blueprint The blueprint to edit
      */
     setBlueprint(blueprint) {
-        var _a, _b, _c, _d, _e, _f, _g, _h;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
         __classPrivateFieldSet(this, _GroundUnitEditor_blueprint, blueprint, "f");
         if (__classPrivateFieldGet(this, _GroundUnitEditor_blueprint, "f") !== null) {
             this.contentDiv2.replaceChildren();
@@ -516,16 +519,20 @@ class GroundUnitEditor extends uniteditor_1.UnitEditor {
             (0, utils_1.addStringInput)(this.contentDiv2, "Label", blueprint.label, "text", (value) => { blueprint.label = value; });
             (0, utils_1.addStringInput)(this.contentDiv2, "Short label", blueprint.shortLabel, "text", (value) => { blueprint.shortLabel = value; });
             (0, utils_1.addStringInput)(this.contentDiv2, "Type", (_a = blueprint.type) !== null && _a !== void 0 ? _a : "", "text", (value) => { blueprint.type = value; });
-            (0, utils_1.addDropdownInput)(this.contentDiv2, "Coalition", blueprint.coalition, ["", "blue", "red"]);
-            (0, utils_1.addDropdownInput)(this.contentDiv2, "Era", blueprint.era, ["WW2", "Early Cold War", "Mid Cold War", "Late Cold War", "Modern"]);
+            (0, utils_1.addDropdownInput)(this.contentDiv2, "Coalition", blueprint.coalition, ["", "blue", "red"], (value) => { blueprint.coalition = value; });
+            (0, utils_1.addDropdownInput)(this.contentDiv2, "Era", blueprint.era, ["WW2", "Early Cold War", "Mid Cold War", "Late Cold War", "Modern"], (value) => { blueprint.era = value; });
             //addStringInput(this.contentDiv2, "Filename", blueprint.filename?? "", "text", (value: string) => {blueprint.filename = value; });
             (0, utils_1.addStringInput)(this.contentDiv2, "Cost", (_b = String(blueprint.cost)) !== null && _b !== void 0 ? _b : "", "number", (value) => { blueprint.cost = parseFloat(value); });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Acquisition range [NM]", (_c = String(blueprint.acquisitionRange)) !== null && _c !== void 0 ? _c : "", "number", (value) => { blueprint.acquisitionRange = parseFloat(value); });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Engagement range [NM]", (_d = String(blueprint.engagementRange)) !== null && _d !== void 0 ? _d : "", "number", (value) => { blueprint.engagementRange = parseFloat(value); });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Acquisition range [m]", (_c = String(blueprint.acquisitionRange)) !== null && _c !== void 0 ? _c : "", "number", (value) => { blueprint.acquisitionRange = parseFloat(value); });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Engagement range [m]", (_d = String(blueprint.engagementRange)) !== null && _d !== void 0 ? _d : "", "number", (value) => { blueprint.engagementRange = parseFloat(value); });
             (0, utils_1.addStringInput)(this.contentDiv2, "Barrel height [m]", (_e = String(blueprint.barrelHeight)) !== null && _e !== void 0 ? _e : "", "number", (value) => { blueprint.barrelHeight = parseFloat(value); });
             (0, utils_1.addStringInput)(this.contentDiv2, "Muzzle velocity [m/s]", (_f = String(blueprint.muzzleVelocity)) !== null && _f !== void 0 ? _f : "", "number", (value) => { blueprint.muzzleVelocity = parseFloat(value); });
             (0, utils_1.addStringInput)(this.contentDiv2, "Aim time [s]", (_g = String(blueprint.aimTime)) !== null && _g !== void 0 ? _g : "", "number", (value) => { blueprint.aimTime = parseFloat(value); });
             (0, utils_1.addStringInput)(this.contentDiv2, "Burst quantity", (_h = String(blueprint.shotsToFire)) !== null && _h !== void 0 ? _h : "", "number", (value) => { blueprint.shotsToFire = Math.round(parseFloat(value)); });
+            (0, utils_1.addCheckboxInput)(this.contentDiv2, "Can target point", (_j = blueprint.canTargetPoint) !== null && _j !== void 0 ? _j : false, (value) => { blueprint.canTargetPoint = value; });
+            (0, utils_1.addCheckboxInput)(this.contentDiv2, "Can rearm", (_k = blueprint.canRearm) !== null && _k !== void 0 ? _k : false, (value) => { blueprint.canRearm = value; });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Description", (_l = blueprint.description) !== null && _l !== void 0 ? _l : "", "text", (value) => { blueprint.description = value; });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Abilities", (_m = blueprint.abilities) !== null && _m !== void 0 ? _m : "", "text", (value) => { blueprint.abilities = value; });
         }
     }
     /** Add a new empty blueprint
@@ -539,7 +546,8 @@ class GroundUnitEditor extends uniteditor_1.UnitEditor {
                 coalition: "",
                 label: "",
                 shortLabel: "",
-                era: ""
+                era: "",
+                enabled: true
             };
             this.show();
             this.setBlueprint(this.database.blueprints[key]);
@@ -608,6 +616,7 @@ class LoadoutEditor {
             var laodout = __classPrivateFieldGet(this, _LoadoutEditor_loadout, "f");
             (0, utils_1.addStringInput)(__classPrivateFieldGet(this, _LoadoutEditor_contentDiv, "f"), "Name", laodout.name, "text", (value) => { laodout.name = value; __classPrivateFieldGet(this, _LoadoutEditor_contentDiv, "f").dispatchEvent(new Event("refresh")); });
             (0, utils_1.addStringInput)(__classPrivateFieldGet(this, _LoadoutEditor_contentDiv, "f"), "Code", laodout.code, "text", (value) => { laodout.code = value; });
+            (0, utils_1.addStringInput)(__classPrivateFieldGet(this, _LoadoutEditor_contentDiv, "f"), "Roles", (0, utils_1.arrayToString)(laodout.roles), "text", (value) => { laodout.roles = (0, utils_1.stringToArray)(value); });
             (0, utils_1.addLoadoutItemsEditor)(__classPrivateFieldGet(this, _LoadoutEditor_contentDiv, "f"), __classPrivateFieldGet(this, _LoadoutEditor_loadout, "f"));
         }
     }
@@ -664,8 +673,8 @@ class NavyUnitEditor extends uniteditor_1.UnitEditor {
             (0, utils_1.addStringInput)(this.contentDiv2, "Label", blueprint.label, "text", (value) => { blueprint.label = value; });
             (0, utils_1.addStringInput)(this.contentDiv2, "Short label", blueprint.shortLabel, "text", (value) => { blueprint.shortLabel = value; });
             (0, utils_1.addStringInput)(this.contentDiv2, "Type", (_a = blueprint.type) !== null && _a !== void 0 ? _a : "", "text", (value) => { blueprint.type = value; });
-            (0, utils_1.addDropdownInput)(this.contentDiv2, "Coalition", blueprint.coalition, ["", "blue", "red"]);
-            (0, utils_1.addDropdownInput)(this.contentDiv2, "Era", blueprint.era, ["WW2", "Early Cold War", "Mid Cold War", "Late Cold War", "Modern"]);
+            (0, utils_1.addDropdownInput)(this.contentDiv2, "Coalition", blueprint.coalition, ["", "blue", "red"], (value) => { blueprint.coalition = value; });
+            (0, utils_1.addDropdownInput)(this.contentDiv2, "Era", blueprint.era, ["WW2", "Early Cold War", "Mid Cold War", "Late Cold War", "Modern"], (value) => { blueprint.era = value; });
             //addStringInput(this.contentDiv2, "Filename", blueprint.filename?? "", "text", (value: string) => {blueprint.filename = value; });
             (0, utils_1.addStringInput)(this.contentDiv2, "Cost", (_b = String(blueprint.cost)) !== null && _b !== void 0 ? _b : "", "number", (value) => { blueprint.cost = parseFloat(value); });
             (0, utils_1.addStringInput)(this.contentDiv2, "Barrel height [m]", (_c = String(blueprint.barrelHeight)) !== null && _c !== void 0 ? _c : "", "number", (value) => { blueprint.barrelHeight = parseFloat(value); });
@@ -683,7 +692,8 @@ class NavyUnitEditor extends uniteditor_1.UnitEditor {
                 coalition: "",
                 label: "",
                 shortLabel: "",
-                era: ""
+                era: "",
+                enabled: true
             };
             this.show();
             this.setBlueprint(this.database.blueprints[key]);
@@ -733,7 +743,7 @@ class UnitEditor {
      * @param database The database that the editor will operate on
      */
     setDatabase(database) {
-        this.database = JSON.parse(JSON.stringify(database));
+        this.database = JSON.parse(JSON.stringify({ blueprints: database.getBlueprints(true) }));
     }
     /** Show the editor
      *
@@ -780,7 +790,7 @@ exports.UnitEditor = UnitEditor;
 },{"./utils":8}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addLoadoutsScroll = exports.addBlueprintsScroll = exports.addNewElementInput = exports.addLoadoutItemsEditor = exports.addDropdownInput = exports.addStringInput = void 0;
+exports.stringToArray = exports.arrayToString = exports.addLoadoutsScroll = exports.addBlueprintsScroll = exports.addNewElementInput = exports.addLoadoutItemsEditor = exports.addCheckboxInput = exports.addDropdownInput = exports.addStringInput = void 0;
 /** This file contains a set of utility functions that are reused in the various editors and allows to declutter the classes
  *
  */
@@ -818,7 +828,7 @@ exports.addStringInput = addStringInput;
  * @param value The initial value of the input
  * @param options The dropdown options
  */
-function addDropdownInput(div, key, value, options) {
+function addDropdownInput(div, key, value, options, callback, disabled) {
     var row = document.createElement("div");
     var dt = document.createElement("dt");
     var dd = document.createElement("dd");
@@ -831,6 +841,8 @@ function addDropdownInput(div, key, value, options) {
         select.appendChild(el);
     });
     select.value = value;
+    select.disabled = disabled !== null && disabled !== void 0 ? disabled : false;
+    select.onchange = () => callback(select.value);
     dd.appendChild(select);
     row.appendChild(dt);
     row.appendChild(dd);
@@ -838,6 +850,31 @@ function addDropdownInput(div, key, value, options) {
     div.appendChild(row);
 }
 exports.addDropdownInput = addDropdownInput;
+/** Add a checkbox input in the form of String: [ value ]
+ *
+ * @param div The HTMLElement that will contain the input
+ * @param key The key of the input, which will be used as label
+ * @param value The initial value of the input
+ * @param callback Callback called when the user enters a new value
+ * @param disabled If true, the input will be disabled and read only
+ */
+function addCheckboxInput(div, key, value, callback, disabled) {
+    var row = document.createElement("div");
+    var dt = document.createElement("dt");
+    var dd = document.createElement("dd");
+    dt.innerText = key;
+    var input = document.createElement("input");
+    input.checked = value;
+    input.type = "checkbox";
+    input.disabled = disabled !== null && disabled !== void 0 ? disabled : false;
+    input.onchange = () => callback(input.checked);
+    dd.appendChild(input);
+    row.appendChild(dt);
+    row.appendChild(dd);
+    row.classList.add("input-row");
+    div.appendChild(row);
+}
+exports.addCheckboxInput = addCheckboxInput;
 /** Create a loadout items editor. This editor allows to add or remove loadout items, as well as changing their name and quantity
  *
  * @param div The HTMLElement that will contain the editor
@@ -847,6 +884,7 @@ function addLoadoutItemsEditor(div, loadout) {
     var itemsEl = document.createElement("div");
     itemsEl.classList.add("dm-scroll-container", "dm-items-container");
     /* Create a row for each loadout item to allow and change the name and quantity of the item itself */
+    loadout.items.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
     loadout.items.forEach((item, index) => {
         var rowDiv = document.createElement("div");
         var nameLabel = document.createElement("label");
@@ -922,13 +960,21 @@ function addBlueprintsScroll(div, database, callback) {
     scrollDiv.classList.add("dm-scroll-container");
     if (database !== null) {
         var blueprints = database.blueprints;
-        for (let key in Object.keys(blueprints).sort()) {
+        for (let key of Object.keys(blueprints).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))) {
             var rowDiv = document.createElement("div");
             scrollDiv.appendChild(rowDiv);
             var text = document.createElement("label");
             text.textContent = key;
             text.onclick = () => callback(key);
             rowDiv.appendChild(text);
+            let checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.checked = blueprints[key].enabled;
+            checkbox.onclick = () => {
+                console.log(checkbox.checked);
+                blueprints[key].enabled = checkbox.checked;
+            };
+            rowDiv.appendChild(checkbox);
             /* This button allows to remove an element from the list. It requires a refresh. */
             var button = document.createElement("button");
             button.innerText = "X";
@@ -951,6 +997,7 @@ exports.addBlueprintsScroll = addBlueprintsScroll;
 function addLoadoutsScroll(div, loadouts, callback) {
     var loadoutsEl = document.createElement("div");
     loadoutsEl.classList.add("dm-scroll-container", "dm-loadout-container");
+    loadouts.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
     loadouts.forEach((loadout, index) => {
         var rowDiv = document.createElement("div");
         loadoutsEl.appendChild(rowDiv);
@@ -960,6 +1007,14 @@ function addLoadoutsScroll(div, loadouts, callback) {
         rowDiv.appendChild(text);
         /* The "Empty loadout" can not be removed */
         if (loadout.name !== "Empty loadout") {
+            let checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.checked = loadout.enabled;
+            checkbox.onclick = () => {
+                console.log(checkbox.checked);
+                loadout.enabled = checkbox.checked;
+            };
+            rowDiv.appendChild(checkbox);
             /* This button allows to remove an element from the list. It requires a refresh. */
             var button = document.createElement("button");
             button.innerText = "X";
@@ -973,5 +1028,32 @@ function addLoadoutsScroll(div, loadouts, callback) {
     div.appendChild(loadoutsEl);
 }
 exports.addLoadoutsScroll = addLoadoutsScroll;
+/** Converts an array of string into a single string like [val1, val2, val3]
+ *
+ * @param array The input array of strings
+ * @returns The string
+ */
+function arrayToString(array) {
+    var value = "[";
+    var firstRole = true;
+    array.forEach((role) => {
+        value += firstRole ? "" : ", ";
+        firstRole = false;
+        value += role;
+    });
+    value += "]";
+    return value;
+}
+exports.arrayToString = arrayToString;
+function stringToArray(input) {
+    input = input.replace("[", "").replace("]", "");
+    var values = input.split(",");
+    var result = [];
+    values.forEach((value) => {
+        result.push(value.trim());
+    });
+    return result;
+}
+exports.stringToArray = stringToArray;
 
 },{}]},{},[4]);

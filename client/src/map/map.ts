@@ -94,7 +94,7 @@ export class Map extends L.Map {
         super(ID, { 
             zoomSnap: 0, 
             zoomDelta: 0.25, 
-            preferCanvas: false, 
+            preferCanvas: true, 
             doubleClickZoom: false, 
             zoomControl: false, 
             boxZoom: false, 
@@ -400,6 +400,7 @@ export class Map extends L.Map {
             this.options.scrollWheelZoom = undefined;
             this.#centerUnit = null;
         }
+        this.#updateCursor();
     }
 
     getCenterUnit() {
@@ -714,6 +715,8 @@ export class Map extends L.Map {
     #panToUnit(unit: Unit) {
         var unitPosition = new L.LatLng(unit.getPosition().lat, unit.getPosition().lng);
         this.setView(unitPosition, this.getZoom(), { animate: false });
+        this.#updateCursor();
+        this.#updateDestinationCursors();
     }
 
     #getMinimapBoundaries() {
