@@ -34,21 +34,26 @@ export class OlympusApp {
     #map: Map | null = null;
 
     /* Managers */
+    #dialogManager!: Manager;
+    #missionManager: MissionManager | null = null;
+    #panelsManager: Manager | null = null;
+    #pluginsManager: PluginsManager | null = null;
+    #popupsManager: Manager | null = null;
     #serverManager: ServerManager | null = null;
+    #shortcutManager: ShortcutManager | null = null;
+    #toolbarsManager: Manager | null = null;
     #unitsManager: UnitsManager | null = null;
     #weaponsManager: WeaponsManager | null = null;
-    #missionManager: MissionManager | null = null;
-    #pluginsManager: PluginsManager | null = null;
-    #panelsManager: Manager | null = null;
-    #popupsManager: Manager | null = null;
-    #toolbarsManager: Manager | null = null;
-    #shortcutManager: ShortcutManager | null = null;
 
     constructor() {
 
     }
 
     // TODO add checks on null
+    getDialogManager() {
+        return this.#dialogManager as Manager;
+    }
+
     getMap() {
         return this.#map as Map;
     }
@@ -163,16 +168,14 @@ export class OlympusApp {
         /* Initialize base functionalitites */
         this.#map = new Map('map-container');
 
-        this.#serverManager = new ServerManager();
-        this.#unitsManager = new UnitsManager();
-        this.#weaponsManager = new WeaponsManager();
         this.#missionManager = new MissionManager();
-
-        this.#shortcutManager = new ShortcutManager();
-
         this.#panelsManager = new Manager();
         this.#popupsManager = new Manager();
+        this.#serverManager = new ServerManager();
+        this.#shortcutManager = new ShortcutManager();
         this.#toolbarsManager = new Manager();
+        this.#unitsManager = new UnitsManager();
+        this.#weaponsManager = new WeaponsManager();
 
         // Panels
         this.getPanelsManager()
@@ -186,7 +189,8 @@ export class OlympusApp {
             .add("unitList", new UnitListPanel("unit-list-panel", "unit-list-panel-content"))
 
         // Popups
-        this.getPopupsManager().add("infoPopup", new Popup("info-popup"));
+        this.getPopupsManager()
+            .add("infoPopup", new Popup("info-popup"));
 
         // Toolbars
         this.getToolbarsManager().add("primaryToolbar", new PrimaryToolbar("primary-toolbar"))
