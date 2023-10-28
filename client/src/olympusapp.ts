@@ -343,13 +343,13 @@ export class OlympusApp {
                 "altKey": false,
                 "callback": (ev: KeyboardEvent) => {
                     if (ev.ctrlKey && ev.shiftKey)
-                        this.getUnitsManager().selectedUnitsAddToHotgroup(parseInt(ev.code.substring(5)));
+                        this.getUnitsManager().selectUnitsByHotgroup(parseInt(ev.code.substring(5)), false);    //  "Select hotgroup X in addition to any units already selected"
                     else if (ev.ctrlKey && !ev.shiftKey)
-                        this.getUnitsManager().selectedUnitsSetHotgroup(parseInt(ev.code.substring(5)));
+                        this.getUnitsManager().selectedUnitsSetHotgroup(parseInt(ev.code.substring(5)));        //  "These selected units are hotgroup X (forget any previous membership)"
                     else if (!ev.ctrlKey && ev.shiftKey)
-                        this.getUnitsManager().selectUnitsByHotgroup(parseInt(ev.code.substring(5)), false);
+                        this.getUnitsManager().selectedUnitsAddToHotgroup(parseInt(ev.code.substring(5)));      //  "Add (append) these units to hotgroup X (in addition to any existing members)"
                     else
-                        this.getUnitsManager().selectUnitsByHotgroup(parseInt(ev.code.substring(5)));
+                        this.getUnitsManager().selectUnitsByHotgroup(parseInt(ev.code.substring(5)));           //  "Select hotgroup X, deselect any units not in it."
                 },
                 "code": code
             });
