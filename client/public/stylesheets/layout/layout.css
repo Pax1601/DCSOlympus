@@ -140,6 +140,16 @@
 	align-items: center;
 }
 
+#slow-delete-popup {
+	align-self: center;
+	display:flex;
+	justify-self: center;
+    position: absolute;
+    width: fit-content;
+    height: fit-content;
+    z-index: 9999999999;
+}
+
 #log-panel {
 	position: absolute;
 	right: 0px;
