@@ -50,6 +50,7 @@ export class UnitSpawnMenu {
     /* Range circle previews */
     #engagementCircle: Circle;
     #acquisitionCircle: Circle;
+    protected showRangeCircles: boolean = false;
 
     constructor(ID: string, unitDatabase: UnitDatabase, orderByRole: boolean) {
         this.#container = document.getElementById(ID) as HTMLElement;
@@ -244,6 +245,10 @@ export class UnitSpawnMenu {
         return this.#container;
     }
 
+    getVisible() {
+        return !this.getContainer().classList.contains( "hide" );
+    }
+
     reset() {
         this.#deployUnitButtonEl.disabled = true;
         this.#unitRoleTypeDropdown.reset();
@@ -286,9 +291,17 @@ export class UnitSpawnMenu {
 
     showCirclesPreviews() {
         this.clearCirclesPreviews();
+
+        if ( !this.showRangeCircles || this.spawnOptions.name === "" || !this.getVisible() ) {
+            return;
+        }
         
-        var acquisitionRange = this.#unitDatabase.getByName(this.spawnOptions.name)?.acquisitionRange ?? 0;
-        var engagementRange = this.#unitDatabase.getByName(this.spawnOptions.name)?.engagementRange ?? 0;
+        let acquisitionRange = this.#unitDatabase.getByName(this.spawnOptions.name)?.acquisitionRange ?? 0;
+        let engagementRange = this.#unitDatabase.getByName(this.spawnOptions.name)?.engagementRange ?? 0;
+
+        if ( acquisitionRange === 0 && engagementRange === 0 ) {
+            return;
+        }
 
         this.#acquisitionCircle.setRadius(acquisitionRange);
         this.#engagementCircle.setRadius(engagementRange);
@@ -569,6 +582,9 @@ export class HelicopterSpawnMenu extends UnitSpawnMenu {
 }
 
 export class GroundUnitSpawnMenu extends UnitSpawnMenu {
+
+    protected showRangeCircles: boolean = true;
+
     /**
      * 
      * @param ID - the ID of the HTML element which will contain the context menu
