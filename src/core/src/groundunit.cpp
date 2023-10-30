@@ -202,7 +202,7 @@ void GroundUnit::AIloop()
 			
 			double lat = 0;
 			double lng = 0;
-			double randomBearing = bearing1 + (((double)(rand()) / (double)(RAND_MAX) - 0.5) * 2) * 15;
+			double randomBearing = bearing1 + (((double)(rand()) / (double)(RAND_MAX) - 0.5) * 2) * 0; // TODO put defined constant here
 			Geodesic::WGS84().Direct(position.lat, position.lng, randomBearing, r, lat, lng);
 
 			std::ostringstream taskSS;
@@ -214,7 +214,7 @@ void GroundUnit::AIloop()
 		}
 
 		if (internalCounter == 0)
-			internalCounter = 20 / 0.05;
+			internalCounter = 20 / 0.05; // TODO make defined constant
 		internalCounter--;
 
 		break;
@@ -285,7 +285,7 @@ void GroundUnit::AIloop()
 				if (muzzleVelocity != 0)
 					aimTime += distance / muzzleVelocity; 
 
-				internalCounter = (aimTime + 2) / 0.05;
+				internalCounter = (aimTime + 2) / 0.05; // TODO fix me you fucking monster
 
 				/* Compute where the target will be in aimTime seconds. We don't consider vertical velocity atm, since after all we are not really tring to hit */
 				double aimDistance = target->getSpeed() * aimTime;
@@ -293,7 +293,7 @@ void GroundUnit::AIloop()
 				double aimLng = 0;
 				Geodesic::WGS84().Direct(target->getPosition().lat, target->getPosition().lng, target->getHeading() * 57.29577, aimDistance, aimLat, aimLng); /* TODO make util function */
 
-				/* Compute distance to the aim point */
+				/* Compute distance to the aim point */ // TODO: why am I here?
 				double dist;
 				double bearing1;
 				double bearing2;

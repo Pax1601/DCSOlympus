@@ -13,11 +13,8 @@ import { navyUnitDatabase } from "../unit/databases/navyunitdatabase";
 import { UnitSpawnOptions, UnitSpawnTable } from "../interfaces";
 
 export class UnitSpawnMenu {
-    #container: HTMLElement;
-    #unitDatabase: UnitDatabase;
-    #countryCodes: any;
-    #orderByRole: boolean;
-    spawnOptions: UnitSpawnOptions = { 
+    protected showRangeCircles: boolean = false;
+    protected spawnOptions: UnitSpawnOptions = { 
         roleType: "", 
         name: "", 
         latlng: new LatLng(0, 0), 
@@ -29,6 +26,11 @@ export class UnitSpawnMenu {
         liveryID: undefined, 
         altitude: undefined
      };
+
+    #container: HTMLElement;
+    #unitDatabase: UnitDatabase;
+    #countryCodes: any;
+    #orderByRole: boolean;
 
     /* Controls */
     #unitRoleTypeDropdown: Dropdown;
@@ -50,7 +52,6 @@ export class UnitSpawnMenu {
     /* Range circle previews */
     #engagementCircle: Circle;
     #acquisitionCircle: Circle;
-    protected showRangeCircles: boolean = false;
 
     constructor(ID: string, unitDatabase: UnitDatabase, orderByRole: boolean) {
         this.#container = document.getElementById(ID) as HTMLElement;
