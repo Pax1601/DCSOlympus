@@ -44,6 +44,8 @@ namespace DataIndex {
 		activePath,
 		isLeader,
 		operateAs,
+		shotsScatter,
+		shotsIntensity,
 		lastIndex,
 		endOfData = 255
 	};

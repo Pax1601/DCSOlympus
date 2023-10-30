@@ -101,6 +101,8 @@ public:
 	virtual void setActivePath(list<Coords> newValue);
 	virtual void setIsLeader(bool newValue) { updateValue(isLeader, newValue, DataIndex::isLeader); }
 	virtual void setOperateAs(unsigned char newValue) { updateValue(operateAs, newValue, DataIndex::operateAs); }
+	virtual void setShotsScatter(unsigned char newValue) { updateValue(shotsScatter, newValue, DataIndex::shotsScatter); }
+	virtual void setShotsIntensity(unsigned char newValue) { updateValue(shotsIntensity, newValue, DataIndex::shotsIntensity); }
 
 	/********** Getters **********/
 	virtual string getCategory() { return category; };
@@ -142,6 +144,8 @@ public:
 	virtual list<Coords> getActivePath() { return activePath; }
 	virtual bool getIsLeader() { return isLeader; }
 	virtual unsigned char getOperateAs() { return operateAs;  }
+	virtual unsigned char getShotsScatter() { return shotsScatter; }
+	virtual unsigned char getShotsIntensity() { return shotsIntensity; }
 
 protected:
 	unsigned int ID;
@@ -186,6 +190,8 @@ protected:
 	bool isLeader = false;
 	unsigned char operateAs = 2;
 	Coords activeDestination = Coords(NULL);
+	unsigned char shotsScatter = 2;
+	unsigned char shotsIntensity = 2;
 
 	/********** Other **********/
 	unsigned int taskCheckCounter = 0;

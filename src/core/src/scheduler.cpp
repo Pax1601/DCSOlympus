@@ -616,6 +616,24 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		
 		log(username + " tasked unit " + unit->getName() + " to land at point", true);
 	}
+	else if (key.compare("setShotsScatter") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		Unit* unit = unitsManager->getGroupLeader(ID);
+		unsigned char shotsScatter = value[L"shotsScatter"].as_number().to_uint32();
+		unit->setShotsScatter(shotsScatter);
+		log(username + " set unit " + unit->getName() + " shots scatter to " + to_string(shotsScatter), true);
+	}
+	else if (key.compare("setShotsIntensity") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		Unit* unit = unitsManager->getGroupLeader(ID);
+		unsigned char shotsIntensity = value[L"shotsIntensity"].as_number().to_uint32();
+		unit->setShotsIntensity(shotsIntensity);
+		log(username + " set unit " + unit->getName() + " shots intensity to " + to_string(shotsIntensity), true);
+	}
 	else if (key.compare("setCommandModeOptions") == 0) 
 	{
 		setCommandModeOptions(value);

@@ -192,6 +192,8 @@ void Unit::refreshLeaderData(unsigned long long time) {
 					case DataIndex::generalSettings:			updateValue(generalSettings, leader->generalSettings, datumIndex); break;
 					case DataIndex::activePath:					updateValue(activePath, leader->activePath, datumIndex); break;
 					case DataIndex::operateAs:					updateValue(operateAs, leader->operateAs, datumIndex); break;
+					case DataIndex::shotsScatter:				updateValue(shotsScatter, leader->shotsScatter, datumIndex); break;
+					case DataIndex::shotsIntensity:				updateValue(shotsIntensity, leader->shotsIntensity, datumIndex); break;
 					}
 				}
 			}
@@ -272,6 +274,8 @@ void Unit::getData(stringstream& ss, unsigned long long time)
 				case DataIndex::activePath:					appendList(ss, datumIndex, activePath); break;
 				case DataIndex::isLeader:					appendNumeric(ss, datumIndex, isLeader); break;
 				case DataIndex::operateAs:					appendNumeric(ss, datumIndex, operateAs); break;
+				case DataIndex::shotsScatter:				appendNumeric(ss, datumIndex, shotsScatter); break;
+				case DataIndex::shotsIntensity:				appendNumeric(ss, datumIndex, shotsIntensity); break;
 				}
 			}
 		}
