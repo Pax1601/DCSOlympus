@@ -34,6 +34,8 @@ export class Unit extends CustomMarker {
     #hasTask: boolean = false;
     #position: LatLng = new LatLng(0, 0, 0);
     #speed: number = 0;
+    #horizontalVelocity: number = 0;
+    #verticalVelocity: number = 0;
     #heading: number = 0;
     #isActiveTanker: boolean = false;
     #isActiveAWACS: boolean = false;
@@ -111,6 +113,8 @@ export class Unit extends CustomMarker {
     getHasTask() { return this.#hasTask };
     getPosition() { return this.#position };
     getSpeed() { return this.#speed };
+    getHorizontalVelocity() { return this.#horizontalVelocity };
+    getVerticalVelocity() { return this.#verticalVelocity };
     getHeading() { return this.#heading };
     getIsActiveTanker() { return this.#isActiveTanker };
     getIsActiveAWACS() { return this.#isActiveAWACS };
@@ -224,6 +228,8 @@ export class Unit extends CustomMarker {
                 case DataIndexes.hasTask: this.#hasTask = dataExtractor.extractBool(); break;
                 case DataIndexes.position: this.#position = dataExtractor.extractLatLng(); updateMarker = true; break;
                 case DataIndexes.speed: this.#speed = dataExtractor.extractFloat64(); updateMarker = true; break;
+                case DataIndexes.horizontalVelocity: this.#horizontalVelocity = dataExtractor.extractFloat64(); break;
+                case DataIndexes.verticalVelocity: this.#verticalVelocity = dataExtractor.extractFloat64(); break;
                 case DataIndexes.heading: this.#heading = dataExtractor.extractFloat64(); updateMarker = true; break;
                 case DataIndexes.isActiveTanker: this.#isActiveTanker = dataExtractor.extractBool(); break;
                 case DataIndexes.isActiveAWACS: this.#isActiveAWACS = dataExtractor.extractBool(); break;
@@ -290,6 +296,8 @@ export class Unit extends CustomMarker {
             hasTask: this.#hasTask,
             position: this.#position,
             speed: this.#speed,
+            horizontalVelocity: this.#horizontalVelocity,
+            verticalVelocity: this.#verticalVelocity,
             heading: this.#heading,
             isActiveTanker: this.#isActiveTanker,
             isActiveAWACS: this.#isActiveAWACS,

@@ -80,15 +80,18 @@ void AirUnit::setState(unsigned char newState)
 	/************ Perform any action required when ENTERING a state ************/
 	switch (newState) {
 	case State::IDLE: {
+		setEnableTaskCheckFailed(false);
 		clearActivePath();
 		resetActiveDestination();
 		break;
 	}
 	case State::REACH_DESTINATION: {
+		setEnableTaskCheckFailed(true);
 		resetActiveDestination();
 		break;
 	}
 	case State::ATTACK: {
+		setEnableTaskCheckFailed(true);
 		if (isTargetAlive()) {
 			Unit* target = unitsManager->getUnit(targetID);
 			Coords targetPosition = Coords(target->getPosition().lat, target->getPosition().lng, 0);
@@ -99,36 +102,43 @@ void AirUnit::setState(unsigned char newState)
 		break;
 	}
 	case State::FOLLOW: {
+		setEnableTaskCheckFailed(true);
 		clearActivePath();
 		resetActiveDestination();
 		break;
 	}
 	case State::LAND: {
+		setEnableTaskCheckFailed(false);
 		resetActiveDestination();
 		break;
 	}
 	case State::REFUEL: {
+		setEnableTaskCheckFailed(true);
 		initialFuel = fuel;
 		clearActivePath();
 		resetActiveDestination();
 		break;
 	}
 	case State::BOMB_POINT: {
+		setEnableTaskCheckFailed(true);
 		clearActivePath();
 		resetActiveDestination();
 		break;
 	}
 	case State::CARPET_BOMB: {
+		setEnableTaskCheckFailed(true);
 		clearActivePath();
 		resetActiveDestination();
 		break;
 	}
 	case State::BOMB_BUILDING: {
+		setEnableTaskCheckFailed(true);
 		clearActivePath();
 		resetActiveDestination();
 		break;
 	}
 	case State::LAND_AT_POINT:  {
+		setEnableTaskCheckFailed(true);
 		resetActiveDestination();
 		break;
 	}

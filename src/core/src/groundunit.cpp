@@ -13,6 +13,9 @@ extern Scheduler* scheduler;
 extern UnitsManager* unitsManager;
 json::value GroundUnit::database = json::value();
 
+#define RANDOM_ZERO_TO_ONE (double)(rand()) / (double)(RAND_MAX)
+#define RANDOM_MINUS_ONE_TO_ONE (((double)(rand()) / (double)(RAND_MAX) - 0.5) * 2)
+
 void GroundUnit::loadDatabase(string path) {
 	char* buf = nullptr;
 	size_t sz = 0;
@@ -89,30 +92,36 @@ void GroundUnit::setState(unsigned char newState)
 	/************ Perform any action required when ENTERING a state ************/
 	switch (newState) {
 	case State::IDLE: {
+		setEnableTaskCheckFailed(false);
 		clearActivePath();
 		resetActiveDestination();
 		break;
 	}
 	case State::REACH_DESTINATION: {
+		setEnableTaskCheckFailed(true);
 		resetActiveDestination();
 		break;
 	}
 	case State::FIRE_AT_AREA: {
+		setEnableTaskCheckFailed(true);
 		clearActivePath();
 		resetActiveDestination();
 		break;
 	}
 	case State::SIMULATE_FIRE_FIGHT: {
+		setEnableTaskCheckFailed(true);
 		clearActivePath();
 		resetActiveDestination();
 		break;
 	}
 	case State::SCENIC_AAA: {
+		setEnableTaskCheckFailed(false);
 		clearActivePath();
 		resetActiveDestination();
 		break;
 	}
 	case State::MISS_ON_PURPOSE: {
+		setEnableTaskCheckFailed(false);
 		clearActivePath();
 		resetActiveDestination();
 		break;
@@ -214,7 +223,7 @@ void GroundUnit::AIloop()
 		}
 
 		if (internalCounter == 0)
-			internalCounter = 20 / 0.05; // TODO make defined constant
+			internalCounter = 20 / FRAMERATE_TIME_INTERVAL;
 		internalCounter--;
 
 		break;
@@ -247,7 +256,7 @@ void GroundUnit::AIloop()
 		}
 
 		if (internalCounter == 0)
-			internalCounter = 20 / 0.05;
+			internalCounter = 20 / FRAMERATE_TIME_INTERVAL;
 		internalCounter--;
 
 		break;
@@ -261,48 +270,58 @@ void GroundUnit::AIloop()
 			unsigned char targetCoalition = getOperateAs() == 2 ? 1 : 2;
 			Unit* target = unitsManager->getClosestUnit(this, targetCoalition, {"Aircraft", "Helicopter"}, distance);
 
+			/* Default gun values */
+			double barrelHeight = 1.0; /* m */
+			double muzzleVelocity = 860; /* m/s */
+			double aimTime = 10; /* s */
+			unsigned int shotsToFire = 10;
+			double shotsBaseInterval = 15; /* s */
+			double shotsBaseScatter = 5; /* degs */
+			double engagementRange = 10000; /* m */
+			
+			if (database.has_object_field(to_wstring(name))) {
+				json::value databaseEntry = database[to_wstring(name)];
+				if (databaseEntry.has_number_field(L"barrelHeight"))
+					barrelHeight = databaseEntry[L"barrelHeight"].as_number().to_double();
+				if (databaseEntry.has_number_field(L"muzzleVelocity"))
+					muzzleVelocity = databaseEntry[L"muzzleVelocity"].as_number().to_double();
+				if (databaseEntry.has_number_field(L"aimTime"))
+					aimTime = databaseEntry[L"aimTime"].as_number().to_double();
+				if (databaseEntry.has_number_field(L"shotsToFire"))
+					shotsToFire = databaseEntry[L"shotsToFire"].as_number().to_uint32();
+				if (databaseEntry.has_number_field(L"engagementRange"))
+					engagementRange = databaseEntry[L"engagementRange"].as_number().to_double();
+				if (databaseEntry.has_number_field(L"shotsBaseInterval"))
+					shotsBaseInterval = databaseEntry[L"shotsBaseInterval"].as_number().to_double();
+				if (databaseEntry.has_number_field(L"shotsBaseScatter"))
+					shotsBaseScatter = databaseEntry[L"shotsBaseScatter"].as_number().to_double();
+			}
+
 			/* Only do if we have a valid target close enough for AAA */
 			if (target != nullptr && distance < 10000 /* m */) {
-				/* Default gun values */
-				double barrelHeight = 1.0; /* m */
-				double muzzleVelocity = 860; /* m/s */
-				double aimTime = 10; /* s */
-				unsigned int shotsToFire = 10;
-
-				if (database.has_object_field(to_wstring(name))) {
-					json::value databaseEntry = database[to_wstring(name)];
-					if (databaseEntry.has_number_field(L"barrelHeight"))
-						barrelHeight = databaseEntry[L"barrelHeight"].as_number().to_double();
-					if (databaseEntry.has_number_field(L"muzzleVelocity"))
-						muzzleVelocity = databaseEntry[L"muzzleVelocity"].as_number().to_double();
-					if (databaseEntry.has_number_field(L"aimTime"))
-						aimTime = databaseEntry[L"aimTime"].as_number().to_double();
-					if (databaseEntry.has_number_field(L"shotsToFire"))
-						shotsToFire = databaseEntry[L"shotsToFire"].as_number().to_uint32();
-				}
-
 				/* Approximate the flight time */
 				if (muzzleVelocity != 0)
 					aimTime += distance / muzzleVelocity; 
 
-				internalCounter = (aimTime + 2) / 0.05; // TODO fix me you fucking monster
+				internalCounter = (aimTime + (3 - shotsIntensity) * shotsBaseInterval + 2) / FRAMERATE_TIME_INTERVAL;
 
-				/* Compute where the target will be in aimTime seconds. We don't consider vertical velocity atm, since after all we are not really tring to hit */
-				double aimDistance = target->getSpeed() * aimTime;
+				/* Compute where the target will be in aimTime seconds. */
+				double aimDistance = target->getHorizontalVelocity() * aimTime;
 				double aimLat = 0;
 				double aimLng = 0;
 				Geodesic::WGS84().Direct(target->getPosition().lat, target->getPosition().lng, target->getHeading() * 57.29577, aimDistance, aimLat, aimLng); /* TODO make util function */
+				double aimAlt = target->getPosition().alt + target->getVerticalVelocity() * aimTime;
 
-				/* Compute distance to the aim point */ // TODO: why am I here?
-				double dist;
-				double bearing1;
-				double bearing2;
-				Geodesic::WGS84().Inverse(position.lat, position.lng, aimLat, aimLng, dist, bearing1, bearing2);
+				/* Compute a random scattering depending on the distance and the selected shots scatter */
+				double scatterDistance = distance * tan(shotsBaseScatter * (3 - shotsScatter) / 57.29577) * RANDOM_MINUS_ONE_TO_ONE;
+				double scatterAngle = 180 * RANDOM_MINUS_ONE_TO_ONE;
+				Geodesic::WGS84().Direct(aimLat, aimLng, scatterAngle, scatterDistance, aimLat, aimLng); /* TODO make util function */
+				aimAlt = aimAlt + distance * tan(shotsBaseScatter * (3 - shotsScatter) / 57.29577) * RANDOM_MINUS_ONE_TO_ONE;
 
 				/* Send the command */
 				std::ostringstream taskSS;
 				taskSS.precision(10);
-				taskSS << "{id = 'FireAtPoint', lat = " << aimLat << ", lng = " << aimLng << ", alt = " << target->getPosition().alt << ", radius = 0.001, expendQty = " << shotsToFire << " }";
+				taskSS << "{id = 'FireAtPoint', lat = " << aimLat << ", lng = " << aimLng << ", alt = " << aimAlt << ", radius = 0.001, expendQty = " << shotsToFire << " }";
 				Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
 				scheduler->appendCommand(command);
 				setHasTask(true);
@@ -315,8 +334,16 @@ void GroundUnit::AIloop()
 			}
 		}
 
-		if (internalCounter == 0)
-			internalCounter = 5 / 0.05;
+		/* If no valid target was detected */
+		if (internalCounter == 0) {
+			double alertnessTimeConstant = 10; /* s */
+			if (database.has_object_field(to_wstring(name))) {
+				json::value databaseEntry = database[to_wstring(name)];
+				if (databaseEntry.has_number_field(L"alertnessTimeConstant"))
+					alertnessTimeConstant = databaseEntry[L"alertnessTimeConstant"].as_number().to_double();
+			}
+			internalCounter = (5 + RANDOM_ZERO_TO_ONE * alertnessTimeConstant) / FRAMERATE_TIME_INTERVAL;
+		}
 		internalCounter--;
 
 		break;

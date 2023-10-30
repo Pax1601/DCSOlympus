@@ -55,6 +55,8 @@ public:
 	bool checkTaskFailed();
 	void resetTaskFailedCounter();
 	void setHasTaskAssigned(bool newHasTaskAssigned);
+	void setEnableTaskCheckFailed(bool newEnableTaskCheckFailed) { enableTaskFailedCheck = newEnableTaskCheckFailed; }
+	bool getEnableTaskCheckFailed() { return enableTaskFailedCheck; }
 
 	void triggerUpdate(unsigned char datumIndex);
 
@@ -73,9 +75,11 @@ public:
 	virtual void setGroupName(string newValue) { updateValue(groupName, newValue, DataIndex::groupName); }
 	virtual void setState(unsigned char newValue) { updateValue(state, newValue, DataIndex::state); };
 	virtual void setTask(string newValue) { updateValue(task, newValue, DataIndex::task); }
-	virtual void setHasTask(bool newValue) { updateValue(hasTask, newValue, DataIndex::hasTask); }
+	virtual void setHasTask(bool newValue);
 	virtual void setPosition(Coords newValue) { updateValue(position, newValue, DataIndex::position); }
 	virtual void setSpeed(double newValue) { updateValue(speed, newValue, DataIndex::speed); }
+	virtual void setHorizontalVelocity(double newValue) { updateValue(horizontalVelocity, newValue, DataIndex::horizontalVelocity); }
+	virtual void setVerticalVelocity(double newValue) { updateValue(verticalVelocity, newValue, DataIndex::verticalVelocity); }
 	virtual void setHeading(double newValue) { updateValue(heading, newValue, DataIndex::heading); }
 	virtual void setIsActiveTanker(bool newValue);
 	virtual void setIsActiveAWACS(bool newValue);
@@ -119,6 +123,8 @@ public:
 	virtual bool getHasTask() { return hasTask; }
 	virtual Coords getPosition() { return position; }
 	virtual double getSpeed() { return speed; }
+	virtual double getHorizontalVelocity() { return horizontalVelocity; }
+	virtual double getVerticalVelocity() { return verticalVelocity; }
 	virtual double getHeading() { return heading; }
 	virtual bool getIsActiveTanker() { return isActiveTanker; }
 	virtual bool getIsActiveAWACS() { return isActiveAWACS; }
@@ -164,6 +170,8 @@ protected:
 	bool hasTask = false;
 	Coords position = Coords(NULL);
 	double speed = NULL;
+	double horizontalVelocity = NULL;
+	double verticalVelocity = NULL;
 	double heading = NULL;
 	bool isActiveTanker = false;
 	bool isActiveAWACS = false;
@@ -200,6 +208,7 @@ protected:
 	double initialFuel = 0;
 	map<unsigned char, unsigned long long> updateTimeMap;
 	unsigned long long lastLoopTime = 0;
+	bool enableTaskFailedCheck = false;
 
 	/********** Private methods **********/
 	virtual void AIloop() = 0;

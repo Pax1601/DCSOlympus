@@ -172,19 +172,20 @@ Unit* UnitsManager::getClosestUnit(Unit* unit, unsigned char coalition, vector<s
 			double bearing1;
 			double bearing2;
 			Geodesic::WGS84().Inverse(unit->getPosition().lat, unit->getPosition().lng, p.second->getPosition().lat, p.second->getPosition().lng, dist, bearing1, bearing2);
+			double altDelta = unit->getPosition().alt - p.second->getPosition().alt;
 
 			/* If the closest unit has not been assigned yet, assign it to this unit */
 			if (closestUnit == nullptr)
 			{
 				closestUnit = p.second;
-				distance = dist;
+				distance = sqrt(dist * dist + altDelta * altDelta);
 			
 			}
 			else {
 				/* Check if the unit is closer than the one already selected */
 				if (dist < distance) {
 					closestUnit = p.second;
-					distance = dist;
+					distance = sqrt(dist * dist + altDelta * altDelta);
 				}
 			}
 		}

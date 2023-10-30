@@ -189,6 +189,8 @@ export enum DataIndexes {
     hasTask,
     position,
     speed,
+    horizontalVelocity,
+    verticalVelocity,
     heading,
     isActiveTanker,
     isActiveAWACS,

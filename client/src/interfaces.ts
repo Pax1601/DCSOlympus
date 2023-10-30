@@ -152,6 +152,8 @@ export interface UnitData {
     hasTask: boolean;
     position: LatLng;
     speed: number;
+    horizontalVelocity: number;
+    verticalVelocity: number;
     heading: number;
     isActiveTanker: boolean;
     isActiveAWACS: boolean;
