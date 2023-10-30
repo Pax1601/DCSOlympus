@@ -47,6 +47,18 @@ export const emissionsCountermeasuresDescriptions: string[] = [
     "Always on (Radar and ECM always on)"
 ];
 
+export const shotsScatterDescriptions: string[] = [
+    "Large scatter",
+    "Medium scatter",
+    "Small scatter (Radar guided units will track shots when the enemy unit is close)"
+];
+
+export const shotsIntensityDescriptions: string[] = [
+    "Low intensity",
+    "Medium intensity",
+    "High intensity"
+];
+
 export const minSpeedValues: { [key: string]: number } = { Aircraft: 100, Helicopter: 0, NavyUnit: 0, GroundUnit: 0 };
 export const maxSpeedValues: { [key: string]: number } = { Aircraft: 800, Helicopter: 300, NavyUnit: 60, GroundUnit: 60 };
 export const speedIncrements: { [key: string]: number } = { Aircraft: 25, Helicopter: 10, NavyUnit: 5, GroundUnit: 5 };
@@ -202,6 +214,8 @@ export enum DataIndexes {
     activePath,
     isLeader,
     operateAs,
+    shotsScatter,
+    shotsIntensity,
     endOfData = 255
 };
 

@@ -78,6 +78,8 @@ export class Unit extends CustomMarker {
     #activePath: LatLng[] = [];
     #isLeader: boolean = false;
     #operateAs: string = "blue";
+    #shotsScatter: number = 2;
+    #shotsIntensity: number = 2;
 
     #selectable: boolean;
     #selected: boolean = false;
@@ -134,6 +136,8 @@ export class Unit extends CustomMarker {
     getActivePath() { return this.#activePath };
     getIsLeader() { return this.#isLeader };
     getOperateAs() { return this.#operateAs };
+    getShotsScatter() { return this.#shotsScatter};
+    getShotsIntensity() { return this.#shotsIntensity};
 
     static getConstructor(type: string) {
         if (type === "GroundUnit") return GroundUnit;
@@ -245,6 +249,8 @@ export class Unit extends CustomMarker {
                 case DataIndexes.activePath: this.#activePath = dataExtractor.extractActivePath(); break;
                 case DataIndexes.isLeader: this.#isLeader = dataExtractor.extractBool(); updateMarker = true; break;
                 case DataIndexes.operateAs: this.#operateAs = enumToCoalition(dataExtractor.extractUInt8()); break;
+                case DataIndexes.shotsScatter: this.#shotsScatter = dataExtractor.extractUInt8(); break;
+                case DataIndexes.shotsIntensity: this.#shotsIntensity = dataExtractor.extractUInt8(); break;
             }
         }
 
@@ -308,7 +314,9 @@ export class Unit extends CustomMarker {
             contacts: this.#contacts,
             activePath: this.#activePath,
             isLeader: this.#isLeader,
-            operateAs: this.#operateAs
+            operateAs: this.#operateAs,
+            shotsScatter: this.#shotsScatter,
+            shotsIntensity: this.#shotsIntensity
         }
     }
 
@@ -811,6 +819,16 @@ export class Unit extends CustomMarker {
 
     landAtPoint(latlng: LatLng) {
         getApp().getServerManager().landAtPoint(this.ID, latlng);
+    }
+
+    setShotsScatter(shotsScatter: number) {
+        if (!this.#human)
+            getApp().getServerManager().setShotsScatter(this.ID, shotsScatter);
+    }
+
+    setShotsIntensity(shotsIntensity: number) {
+        if (!this.#human)
+            getApp().getServerManager().setShotsIntensity(this.ID, shotsIntensity);
     }
 
     /***********************************************/

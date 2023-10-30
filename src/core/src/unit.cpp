@@ -250,8 +250,8 @@ void Unit::getData(stringstream& ss, unsigned long long time)
 				case DataIndex::position:					appendNumeric(ss, datumIndex, position); break;
 				case DataIndex::speed:						appendNumeric(ss, datumIndex, speed); break;
 				case DataIndex::heading:					appendNumeric(ss, datumIndex, heading); break;
-				case DataIndex::isActiveTanker:					appendNumeric(ss, datumIndex, isActiveTanker); break;
-				case DataIndex::isActiveAWACS:					appendNumeric(ss, datumIndex, isActiveAWACS); break;
+				case DataIndex::isActiveTanker:				appendNumeric(ss, datumIndex, isActiveTanker); break;
+				case DataIndex::isActiveAWACS:				appendNumeric(ss, datumIndex, isActiveAWACS); break;
 				case DataIndex::onOff:						appendNumeric(ss, datumIndex, onOff); break;
 				case DataIndex::followRoads:				appendNumeric(ss, datumIndex, followRoads); break;
 				case DataIndex::fuel:						appendNumeric(ss, datumIndex, fuel); break;

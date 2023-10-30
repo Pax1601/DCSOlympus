@@ -177,6 +177,8 @@ export interface UnitData {
     activePath: LatLng[];
     isLeader: boolean;
     operateAs: string;
+    shotsScatter: number;
+    shotsIntensity: number;
 }
 
 export interface LoadoutItemBlueprint {

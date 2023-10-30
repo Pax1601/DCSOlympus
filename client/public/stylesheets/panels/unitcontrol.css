@@ -239,6 +239,8 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 #unit-control-panel:not([data-show-roe]) #roe,
 #unit-control-panel:not([data-show-threat]) #threat,
 #unit-control-panel:not([data-show-emissions-countermeasures]) #emissions-countermeasures,
+#unit-control-panel:not([data-show-shots-scatter]) #shots-scatter,
+#unit-control-panel:not([data-show-shots-intensity]) #shots-intensity,
 #unit-control-panel:not([data-show-tanker-button]) #tanker-on,
 #unit-control-panel:not([data-show-AWACS-button]) #AWACS-on,
 #unit-control-panel:not([data-show-on-off]) #ai-on-off,

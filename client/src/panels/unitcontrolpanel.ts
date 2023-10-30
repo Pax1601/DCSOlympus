@@ -6,7 +6,7 @@ import { aircraftDatabase } from "../unit/databases/aircraftdatabase";
 import { Unit } from "../unit/unit";
 import { Panel } from "./panel";
 import { Switch } from "../controls/switch";
-import { ROEDescriptions, ROEs, altitudeIncrements, emissionsCountermeasures, emissionsCountermeasuresDescriptions, maxAltitudeValues, maxSpeedValues, minAltitudeValues, minSpeedValues, reactionsToThreat, reactionsToThreatDescriptions, speedIncrements } from "../constants/constants";
+import { ROEDescriptions, ROEs, altitudeIncrements, emissionsCountermeasures, emissionsCountermeasuresDescriptions, maxAltitudeValues, maxSpeedValues, minAltitudeValues, minSpeedValues, reactionsToThreat, reactionsToThreatDescriptions, shotsIntensityDescriptions, shotsScatterDescriptions, speedIncrements } from "../constants/constants";
 import { ftToM, knotsToMs, mToFt, msToKnots } from "../other/utils";
 import { GeneralSettings, Radio, TACAN } from "../interfaces";
 
@@ -56,9 +56,19 @@ export class UnitControlPanel extends Panel {
             return this.#createOptionButton(option, `emissions/${option.toLowerCase()}.svg`, emissionsCountermeasuresDescriptions[index],() => { getApp().getUnitsManager().selectedUnitsSetEmissionsCountermeasures(option); });
         });
 
+        this.#optionButtons["shotsScatter"] = [1, 2, 3].map((option: number, index: number) => {
+            return this.#createOptionButton(option.toString(), `scatter/${option.toString().toLowerCase()}.svg`, shotsScatterDescriptions[index],() => { getApp().getUnitsManager().selectedUnitsSetShotsScatter(option); });
+        });
+
+        this.#optionButtons["shotsIntensity"] = [1, 2, 3].map((option: number, index: number) => {
+            return this.#createOptionButton(option.toString(), `intensity/${option.toString().toLowerCase()}.svg`, shotsIntensityDescriptions[index],() => { getApp().getUnitsManager().selectedUnitsSetShotsIntensity(option); });
+        });
+
         this.getElement().querySelector("#roe-buttons-container")?.append(...this.#optionButtons["ROE"]);
         this.getElement().querySelector("#reaction-to-threat-buttons-container")?.append(...this.#optionButtons["reactionToThreat"]);
         this.getElement().querySelector("#emissions-countermeasures-buttons-container")?.append(...this.#optionButtons["emissionsCountermeasures"]);
+        this.getElement().querySelector("#shots-scatter-buttons-container")?.append(...this.#optionButtons["shotsScatter"]);
+        this.getElement().querySelector("#shots-intensity-buttons-container")?.append(...this.#optionButtons["shotsIntensity"]);
 
         /* Tanker */
         this.#tankerSwitch = new Switch("tanker-on-switch", (value: boolean) => {
@@ -195,6 +205,8 @@ export class UnitControlPanel extends Panel {
                 element.toggleAttribute("data-show-roe", !isTanker && !isAWACS);
                 element.toggleAttribute("data-show-threat", (this.#selectedUnitsTypes.includes("Aircraft") || this.#selectedUnitsTypes.includes("Helicopter")) && !(this.#selectedUnitsTypes.includes("GroundUnit") || this.#selectedUnitsTypes.includes("NavyUnit")));
                 element.toggleAttribute("data-show-emissions-countermeasures", (this.#selectedUnitsTypes.includes("Aircraft") || this.#selectedUnitsTypes.includes("Helicopter")) && !(this.#selectedUnitsTypes.includes("GroundUnit") || this.#selectedUnitsTypes.includes("NavyUnit")));
+                element.toggleAttribute("data-show-shots-scatter", this.#selectedUnitsTypes.includes("GroundUnit"));    //TODO: more refined
+                element.toggleAttribute("data-show-shots-intensity", this.#selectedUnitsTypes.includes("GroundUnit"));  //TODO: more refined
                 element.toggleAttribute("data-show-tanker-button", getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.isTanker();}) === true);
                 element.toggleAttribute("data-show-AWACS-button", getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.isAWACS();}) === true);
                 element.toggleAttribute("data-show-on-off", (this.#selectedUnitsTypes.includes("GroundUnit") || this.#selectedUnitsTypes.includes("NavyUnit")) && !(this.#selectedUnitsTypes.includes("Aircraft") || this.#selectedUnitsTypes.includes("Helicopter")));
@@ -254,6 +266,14 @@ export class UnitControlPanel extends Panel {
 
                 this.#optionButtons["emissionsCountermeasures"].forEach((button: HTMLButtonElement) => {
                     button.classList.toggle("selected", this.#units.every((unit: Unit) => unit.getEmissionsCountermeasures() === button.value))
+                });
+
+                this.#optionButtons["shotsScatter"].forEach((button: HTMLButtonElement) => {
+                    button.classList.toggle("selected", this.#units.every((unit: Unit) => unit.getShotsScatter().toString() === button.value))
+                });
+
+                this.#optionButtons["shotsIntensity"].forEach((button: HTMLButtonElement) => {
+                    button.classList.toggle("selected", this.#units.every((unit: Unit) => unit.getShotsIntensity().toString() === button.value))
                 });
 
                 this.#tankerSwitch.setValue(isActiveTanker, false);
