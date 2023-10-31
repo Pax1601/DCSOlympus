@@ -41,8 +41,7 @@
 				"code": "AGM-65D*2, AGM-65H*2, CBU-97*2, CBU-87*2, TGP, ECM, AIM-9*2",
 				"name": "AGM-65D*2, AGM-65H*2, CBU-97*2, CBU-87*2, TGP, ECM, AIM-9*2",
 				"roles": [
-					"CAS",
-					"test"
+					"CAS"
 				]
 			},
 			{
@@ -3543,16 +3542,16 @@
 						"quantity": 2
 					},
 					{
-						"name": "SUU-25 x 8 LUU-2 - Target Marker Flares",
-						"quantity": 2
+						"name": "GAU 12 Gunpod w/SAPHEI-T",
+						"quantity": 1
 					},
 					{
 						"name": "LAU-68 pod - 7 x 2.75\" Hydra, UnGd Rkts M156, Wht Phos",
 						"quantity": 2
 					},
 					{
-						"name": "GAU 12 Gunpod w/SAPHEI-T",
-						"quantity": 1
+						"name": "SUU-25 x 8 LUU-2 - Target Marker Flares",
+						"quantity": 2
 					}
 				],
 				"enabled": true,

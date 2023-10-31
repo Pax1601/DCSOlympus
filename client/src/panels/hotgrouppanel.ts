@@ -42,8 +42,8 @@ export class HotgroupPanel extends Panel {
         
         this.getElement().appendChild(el);
 
-        el.addEventListener("click", () => {
-            getApp().getUnitsManager().selectUnitsByHotgroup(hotgroup);
+        el.addEventListener("click", ( ev:MouseEvent ) => {
+            getApp().getUnitsManager().selectUnitsByHotgroup(hotgroup, (!ev.ctrlKey));
         });
 
         el.addEventListener("mouseover", () => {

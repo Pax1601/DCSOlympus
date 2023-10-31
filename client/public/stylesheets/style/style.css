@@ -699,7 +699,7 @@ nav.ol-panel> :last-child {
     overflow: hidden;
     width: 70%;
     max-width: 1200px;
-    z-index: 99999;
+    z-index: 999999;
 }
 
 @media (min-width: 1700px) {
@@ -796,7 +796,7 @@ nav.ol-panel> :last-child {
     position: fixed;
     top: 0px;
     width: 100%;
-    z-index: 9999;
+    z-index: 99999;
 }
 
 #authentication-form {
@@ -807,6 +807,7 @@ nav.ol-panel> :last-child {
     margin: 10px 0px;
     flex-wrap: wrap;
     width: 100%;
+    row-gap: 10px;
 }
 
 #authentication-form>div {
@@ -1147,7 +1148,7 @@ dl.ol-data-grid dd {
     background-color: var(--background-slate-blue);
     color: white;
     position: absolute;
-    z-index: 9999;
+    z-index: 999999;
 }
 
 .ol-panel.ol-dialog {
@@ -1177,8 +1178,10 @@ dl.ol-data-grid dd {
 }
 
 .ol-dialog-footer {
+    align-content: center;
     border-top: 1px solid var(--background-grey);
     display: flex;
+    justify-content: center;
     padding-top: 15px;
     row-gap: 10px;
 }

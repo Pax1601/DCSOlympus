@@ -4,7 +4,7 @@ import { Unit } from "./unit";
 import { bearingAndDistanceToLatLng, deg2rad, getGroundElevation, getUnitDatabaseByCategory, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots, polyContains, polygonArea, randomPointInPoly, randomUnitBlueprint } from "../other/utils";
 import { CoalitionArea } from "../map/coalitionarea/coalitionarea";
 import { groundUnitDatabase } from "./databases/groundunitdatabase";
-import { DataIndexes, GAME_MASTER, IADSDensities, IDLE, MOVE_UNIT } from "../constants/constants";
+import { DELETE_CYCLE_TIME, DELETE_SLOW_THRESHOLD, DataIndexes, GAME_MASTER, IADSDensities, IDLE, MOVE_UNIT } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
 import { citiesDatabase } from "./citiesDatabase";
 import { aircraftDatabase } from "./databases/aircraftdatabase";
@@ -14,35 +14,40 @@ import { TemporaryUnitMarker } from "../map/markers/temporaryunitmarker";
 import { Popup } from "../popups/popup";
 import { HotgroupPanel } from "../panels/hotgrouppanel";
 import { Contact, UnitData, UnitSpawnTable } from "../interfaces";
+import { Dialog } from "../dialog/dialog";
 
 /** The UnitsManager handles the creation, update, and control of units. Data is strictly updated by the server ONLY. This means that any interaction from the user will always and only
  * result in a command to the server, executed by means of a REST PUT request. Any subsequent change in data will be reflected only when the new data is sent back by the server. This strategy allows
  * to avoid client/server and client/client inconsistencies.
  */
 export class UnitsManager {
-    #units: { [ID: number]: Unit };
     #copiedUnits: UnitData[];
-    #selectionEventDisabled: boolean = false;
     #deselectionEventDisabled: boolean = false;
     #requestDetectionUpdate: boolean = false;
+    #selectionEventDisabled: boolean = false;
+    #slowDeleteDialog!:Dialog;
+    #units: { [ID: number]: Unit };
+
 
     constructor() {
-        this.#units = {};
         this.#copiedUnits = [];
+        this.#units = {};
 
+        document.addEventListener('commandModeOptionsChanged', () => { Object.values(this.#units).forEach((unit: Unit) => unit.updateVisibility()) });
+        document.addEventListener('contactsUpdated', (e: CustomEvent) => { this.#requestDetectionUpdate = true });
         document.addEventListener('copy', () => this.selectedUnitsCopy());
-        document.addEventListener('paste', () => this.pasteUnits());
-        document.addEventListener('unitSelection', (e: CustomEvent) => this.#onUnitSelection(e.detail));
-        document.addEventListener('unitDeselection', (e: CustomEvent) => this.#onUnitDeselection(e.detail));
         document.addEventListener('deleteSelectedUnits', () => this.selectedUnitsDelete());
         document.addEventListener('explodeSelectedUnits', () => this.selectedUnitsDelete(true));
-        document.addEventListener('keyup', (event) => this.#onKeyUp(event));
         document.addEventListener('exportToFile', () => this.exportToFile());
         document.addEventListener('importFromFile', () => this.importFromFile());
-        document.addEventListener('contactsUpdated', (e: CustomEvent) => { this.#requestDetectionUpdate = true });
-        document.addEventListener('commandModeOptionsChanged', () => { Object.values(this.#units).forEach((unit: Unit) => unit.updateVisibility()) });
-        document.addEventListener('selectedUnitsChangeSpeed', (e: any) => { this.selectedUnitsChangeSpeed(e.detail.type) });
+        document.addEventListener('keyup', (event) => this.#onKeyUp(event));
+        document.addEventListener('paste', () => this.pasteUnits());
         document.addEventListener('selectedUnitsChangeAltitude', (e: any) => { this.selectedUnitsChangeAltitude(e.detail.type) });
+        document.addEventListener('selectedUnitsChangeSpeed', (e: any) => { this.selectedUnitsChangeSpeed(e.detail.type) });
+        document.addEventListener('unitDeselection', (e: CustomEvent) => this.#onUnitDeselection(e.detail));
+        document.addEventListener('unitSelection', (e: CustomEvent) => this.#onUnitSelection(e.detail));
+
+        this.#slowDeleteDialog = new Dialog( "slow-delete-dialog" );
     }
 
     /**
@@ -328,7 +333,7 @@ export class UnitsManager {
             const unit = selectedUnits[idx];
 
             /* If a unit is following another unit, and that unit is also selected, send the command to the followed ("leader") unit */
-            if (unit.getState() === "Follow") {
+            if (unit.getState() === "follow") {
                 const leader = this.getUnitByID(unit.getLeaderID())
                 if (leader && leader.getSelected())
                     leader.addDestination(latlng);
@@ -351,7 +356,7 @@ export class UnitsManager {
         var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
         for (let idx in selectedUnits) {
             const unit = selectedUnits[idx];
-            if (unit.getState() === "Follow") {
+            if (unit.getState() === "follow") {
                 const leader = this.getUnitByID(unit.getLeaderID())
                 if (leader && leader.getSelected())
                     leader.clearDestinations();
@@ -561,29 +566,32 @@ export class UnitsManager {
         }
 
         var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+
         var count = 1;
         var xr = 0; var yr = 1; var zr = -1;
         var layer = 1;
         for (let idx in selectedUnits) {
             var unit = selectedUnits[idx];
-            if (offset != undefined)
-                /* Offset is set, apply it */
-                unit.followUnit(ID, { "x": offset.x * count, "y": offset.y * count, "z": offset.z * count });
-            else {
-                /* More complex formations with variable offsets */
-                if (formation === "diamond") {
-                    var xl = xr * Math.cos(Math.PI / 4) - yr * Math.sin(Math.PI / 4);
-                    var yl = xr * Math.sin(Math.PI / 4) + yr * Math.cos(Math.PI / 4);
-                    unit.followUnit(ID, { "x": -yl * 50, "y": zr * 10, "z": xl * 50 });
+            if (unit.ID !== ID) {
+                if (offset != undefined)
+                    /* Offset is set, apply it */
+                    unit.followUnit(ID, { "x": offset.x * count, "y": offset.y * count, "z": offset.z * count });
+                else {
+                    /* More complex formations with variable offsets */
+                    if (formation === "diamond") {
+                        var xl = xr * Math.cos(Math.PI / 4) - yr * Math.sin(Math.PI / 4);
+                        var yl = xr * Math.sin(Math.PI / 4) + yr * Math.cos(Math.PI / 4);
+                        unit.followUnit(ID, { "x": -yl * 50, "y": zr * 10, "z": xl * 50 });
 
-                    if (yr == 0) { layer++; xr = 0; yr = layer; zr = -layer; }
-                    else {
-                        if (xr < layer) { xr++; zr--; }
-                        else { yr--; zr++; }
+                        if (yr == 0) { layer++; xr = 0; yr = layer; zr = -layer; }
+                        else {
+                            if (xr < layer) { xr++; zr--; }
+                            else { yr--; zr++; }
+                        }
                     }
                 }
+                count++;
             }
-            count++;
         }
         this.#showActionMessage(selectedUnits, `following unit ${this.getUnitByID(ID)?.getUnitName()}`);
     }
@@ -635,7 +643,7 @@ export class UnitsManager {
             try {
                 groundElevation = parseFloat(response);
             } catch {
-                console.log("Simulate fire fight: could not retrieve ground elevation")
+                console.warn("Simulate fire fight: could not retrieve ground elevation")
             }
             for (let idx in selectedUnits) {
                 selectedUnits[idx].simulateFireFight(latlng, groundElevation);
@@ -751,14 +759,24 @@ export class UnitsManager {
             return;
         }
 
-        var immediate = false;
-        if (selectedUnits.length > 20)
-            immediate = confirm(`You are trying to delete ${selectedUnits.length} units, do you want to delete them immediately? This may cause lag for players.`)
-
-        for (let idx in selectedUnits) {
-            selectedUnits[idx].delete(explosion, immediate);
+        const doDelete = (explosion = false, immediate = false) => {
+            const selectedUnits = this.getSelectedUnits();
+            for (let idx in selectedUnits) {
+                selectedUnits[idx].delete(explosion, immediate);
+            }
+            this.#showActionMessage(selectedUnits, `deleted`);
         }
-        this.#showActionMessage(selectedUnits, `deleted`);
+
+        if (selectedUnits.length >= DELETE_SLOW_THRESHOLD)
+            this.#showSlowDeleteDialog(selectedUnits).then((action:any) => {
+                if (action === "delete-slow")
+                    doDelete(explosion, false);
+                else if (action === "delete-immediate")
+                    doDelete(explosion, true);
+            })
+        else
+            doDelete(explosion);
+
     }
 
     /** Compute the destinations of every unit in the selected units. This function preserves the relative positions of the units, and rotates the whole formation by rotation.
@@ -1079,5 +1097,33 @@ export class UnitsManager {
             (getApp().getPopupsManager().get("infoPopup") as Popup).setText(`${units[0].getUnitName()} ${message}`);
         else if (units.length > 1)
             (getApp().getPopupsManager().get("infoPopup") as Popup).setText(`${units[0].getUnitName()} and ${units.length - 1} other units ${message}`);
+    }
+   
+    #showSlowDeleteDialog(selectedUnits:Unit[]) {
+        let button:HTMLButtonElement | null = null;
+        const deletionTime = Math.round( selectedUnits.length * DELETE_CYCLE_TIME ).toString();
+        const dialog = this.#slowDeleteDialog;
+        const element = dialog.getElement();
+        const listener = (ev:MouseEvent) => {
+            if (ev.target instanceof HTMLButtonElement && ev.target.matches("[data-action]"))
+                button = ev.target;
+        }
+
+        element.querySelectorAll(".deletion-count").forEach( el => el.innerHTML = selectedUnits.length.toString() );
+        element.querySelectorAll(".deletion-time").forEach( el => el.innerHTML = deletionTime );
+        dialog.show();
+
+        return new Promise((resolve) => {
+            element.addEventListener("click", listener);
+
+            const interval = setInterval(() => {
+                if (button instanceof HTMLButtonElement ) {
+                    clearInterval(interval);
+                    dialog.hide();
+                    element.removeEventListener("click", listener);
+                    resolve( button.getAttribute("data-action") );
+                }
+            }, 250);
+        });
     }
 }

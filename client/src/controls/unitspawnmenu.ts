@@ -13,11 +13,8 @@ import { navyUnitDatabase } from "../unit/databases/navyunitdatabase";
 import { UnitSpawnOptions, UnitSpawnTable } from "../interfaces";
 
 export class UnitSpawnMenu {
-    #container: HTMLElement;
-    #unitDatabase: UnitDatabase;
-    #countryCodes: any;
-    #orderByRole: boolean;
-    spawnOptions: UnitSpawnOptions = { 
+    protected showRangeCircles: boolean = false;
+    protected spawnOptions: UnitSpawnOptions = { 
         roleType: "", 
         name: "", 
         latlng: new LatLng(0, 0), 
@@ -29,6 +26,11 @@ export class UnitSpawnMenu {
         liveryID: undefined, 
         altitude: undefined
      };
+
+    #container: HTMLElement;
+    #unitDatabase: UnitDatabase;
+    #countryCodes: any;
+    #orderByRole: boolean;
 
     /* Controls */
     #unitRoleTypeDropdown: Dropdown;
@@ -244,6 +246,10 @@ export class UnitSpawnMenu {
         return this.#container;
     }
 
+    getVisible() {
+        return !this.getContainer().classList.contains( "hide" );
+    }
+
     reset() {
         this.#deployUnitButtonEl.disabled = true;
         this.#unitRoleTypeDropdown.reset();
@@ -286,9 +292,17 @@ export class UnitSpawnMenu {
 
     showCirclesPreviews() {
         this.clearCirclesPreviews();
+
+        if ( !this.showRangeCircles || this.spawnOptions.name === "" || !this.getVisible() ) {
+            return;
+        }
         
-        var acquisitionRange = this.#unitDatabase.getByName(this.spawnOptions.name)?.acquisitionRange ?? 0;
-        var engagementRange = this.#unitDatabase.getByName(this.spawnOptions.name)?.engagementRange ?? 0;
+        let acquisitionRange = this.#unitDatabase.getByName(this.spawnOptions.name)?.acquisitionRange ?? 0;
+        let engagementRange = this.#unitDatabase.getByName(this.spawnOptions.name)?.engagementRange ?? 0;
+
+        if ( acquisitionRange === 0 && engagementRange === 0 ) {
+            return;
+        }
 
         this.#acquisitionCircle.setRadius(acquisitionRange);
         this.#engagementCircle.setRadius(engagementRange);
@@ -343,10 +357,7 @@ export class UnitSpawnMenu {
 
     setMaxUnitCount(maxUnitCount: number) {
         /* Create the unit count options */
-        var countOptions: string[] = [];
-        for (let i = 1; i <= maxUnitCount; i++)
-            countOptions.push(i.toString());
-        this.#unitCountDropdown.setOptions(countOptions);
+        this.#unitCountDropdown.setOptions( [...Array(maxUnitCount).keys()].map( n => (n+1).toString() ), "number");
         this.#unitCountDropdown.selectValue(0);
     }
 
@@ -572,6 +583,9 @@ export class HelicopterSpawnMenu extends UnitSpawnMenu {
 }
 
 export class GroundUnitSpawnMenu extends UnitSpawnMenu {
+
+    protected showRangeCircles: boolean = true;
+
     /**
      * 
      * @param ID - the ID of the HTML element which will contain the context menu

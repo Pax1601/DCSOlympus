@@ -37,6 +37,7 @@ export class OlympusApp {
 
     /* Managers */
     #contextManager!: ContextManager;
+    #dialogManager!: Manager;
     #missionManager: MissionManager | null = null;
     #panelsManager: Manager | null = null;
     #pluginsManager: PluginsManager | null = null;
@@ -52,6 +53,10 @@ export class OlympusApp {
     }
 
     // TODO add checks on null
+    getDialogManager() {
+        return this.#dialogManager as Manager;
+    }
+
     getMap() {
         return this.#map as Map;
     }
@@ -178,15 +183,14 @@ export class OlympusApp {
 
         this.#map = new Map('map-container');
 
-        this.#serverManager = new ServerManager();
-        this.#unitsManager = new UnitsManager();
-        this.#weaponsManager = new WeaponsManager();
         this.#missionManager = new MissionManager();
-
         this.#panelsManager = new Manager();
         this.#popupsManager = new Manager();
+        this.#serverManager = new ServerManager();
         this.#shortcutManager = new ShortcutManager();
         this.#toolbarsManager = new Manager();
+        this.#unitsManager = new UnitsManager();
+        this.#weaponsManager = new WeaponsManager();
 
         // Panels
         this.getPanelsManager()
@@ -200,7 +204,8 @@ export class OlympusApp {
             .add("unitList", new UnitListPanel("unit-list-panel", "unit-list-panel-content"))
 
         // Popups
-        this.getPopupsManager().add("infoPopup", new Popup("info-popup"));
+        this.getPopupsManager()
+            .add("infoPopup", new Popup("info-popup"));
 
         // Toolbars
         this.getToolbarsManager().add("primaryToolbar", new PrimaryToolbar("primary-toolbar"))
@@ -366,13 +371,13 @@ export class OlympusApp {
                 "altKey": false,
                 "callback": (ev: KeyboardEvent) => {
                     if (ev.ctrlKey && ev.shiftKey)
-                        this.getUnitsManager().selectedUnitsAddToHotgroup(parseInt(ev.code.substring(5)));
+                        this.getUnitsManager().selectUnitsByHotgroup(parseInt(ev.code.substring(5)), false);    //  "Select hotgroup X in addition to any units already selected"
                     else if (ev.ctrlKey && !ev.shiftKey)
-                        this.getUnitsManager().selectedUnitsSetHotgroup(parseInt(ev.code.substring(5)));
+                        this.getUnitsManager().selectedUnitsSetHotgroup(parseInt(ev.code.substring(5)));        //  "These selected units are hotgroup X (forget any previous membership)"
                     else if (!ev.ctrlKey && ev.shiftKey)
-                        this.getUnitsManager().selectUnitsByHotgroup(parseInt(ev.code.substring(5)), false);
+                        this.getUnitsManager().selectedUnitsAddToHotgroup(parseInt(ev.code.substring(5)));      //  "Add (append) these units to hotgroup X (in addition to any existing members)"
                     else
-                        this.getUnitsManager().selectUnitsByHotgroup(parseInt(ev.code.substring(5)));
+                        this.getUnitsManager().selectUnitsByHotgroup(parseInt(ev.code.substring(5)));           //  "Select hotgroup X, deselect any units not in it."
                 },
                 "code": code
             });

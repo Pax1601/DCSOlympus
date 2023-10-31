@@ -18,6 +18,7 @@ export class MapContextMenu extends ContextMenu {
     #groundUnitSpawnMenu: GroundUnitSpawnMenu;
     #navyUnitSpawnMenu: NavyUnitSpawnMenu;
     #coalitionArea: CoalitionArea | null = null;
+    #selectedUnitCategory: string = "";
 
     /**
      * 
@@ -39,9 +40,10 @@ export class MapContextMenu extends ContextMenu {
 
         /* Event listeners */
         document.addEventListener("mapContextMenuShow", (e: any) => {
-            if (this.getVisibleSubMenu() !== e.detail.type)
+            if (this.getVisibleSubMenu() !== e.detail.type) {
                 this.#showSubMenu(e.detail.type);
-            else
+                this.#selectedUnitCategory = e.detail.type;
+            } else
                 this.#hideSubMenus(e.detail.type);
         });
 
@@ -65,9 +67,9 @@ export class MapContextMenu extends ContextMenu {
             }
         });
 
-        document.addEventListener("commandModeOptionsChanged", (e: any) => {
-            //this.#refreshOptions();
-        });
+        // document.addEventListener("commandModeOptionsChanged", (e: any) => {
+        //     //this.#refreshOptions();
+        // });
 
         this.#aircraftSpawnMenu.getContainer().addEventListener("resize", () => this.clip());
         this.#helicopterSpawnMenu.getContainer().addEventListener("resize", () => this.clip());

@@ -541,14 +541,15 @@ export class ServerManager {
     }
 
     setConnected(newConnected: boolean) {
-        if (this.#connected != newConnected)
+        if (this.#connected != newConnected) {
             newConnected ? (getApp().getPopupsManager().get("infoPopup") as Popup).setText("Connected to DCS Olympus server") : (getApp().getPopupsManager().get("infoPopup") as Popup).setText("Disconnected from DCS Olympus server");
-        this.#connected = newConnected;
-
-        if (this.#connected) {
-            document.querySelector("#splash-screen")?.classList.add("hide");
-            document.querySelector("#gray-out")?.classList.add("hide");
+            if (newConnected) {
+                document.getElementById("splash-screen")?.classList.add("hide");
+                document.getElementById("gray-out")?.classList.add("hide");
+            }
         }
+
+        this.#connected = newConnected;
     }
 
     getConnected() {

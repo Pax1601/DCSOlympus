@@ -274,6 +274,11 @@ _ControlTipsPlugin_element = new WeakMap(), _ControlTipsPlugin_app = new WeakMap
                     "minSelectedUnits": 2
                 },
                 {
+                    "key": `[Num 1-9]`,
+                    "action": "Add to hotgroup",
+                    "showIfUnitSelected": true
+                },
+                {
                     "key": "CTRL",
                     "action": "<em>  ... more</em>",
                     "minSelectedUnits": 2,
@@ -292,6 +297,16 @@ _ControlTipsPlugin_element = new WeakMap(), _ControlTipsPlugin_app = new WeakMap
                     "showIfUnitSelected": true,
                     "minSelectedUnits": 2,
                     "unitsMustBeControlled": true
+                }, {
+                    "key": `[Num 1-9]`,
+                    "action": "Add hotgroup to selection",
+                    "callback": (tip) => {
+                        return (Object.values(__classPrivateFieldGet(this, _ControlTipsPlugin_app, "f").getUnitsManager().getUnits()).some((unit) => {
+                            return unit.getHotgroup();
+                        }));
+                    },
+                    "showIfUnitSelected": true,
+                    "minSelectedUnits": 1
                 }
             ]
         }
@@ -349,6 +364,9 @@ _ControlTipsPlugin_element = new WeakMap(), _ControlTipsPlugin_app = new WeakMap
             return false;
         }
         if (!tipsIncludesActiveMouseover && typeof tip.mouseoverSelector === "string") {
+            return false;
+        }
+        if (typeof tip.callback === "function" && !tip.callback(tip)) {
             return false;
         }
         element.innerHTML += `<div><span class="key">${tip.key}</span><span class="action">${tip.action}</span></div>`;
