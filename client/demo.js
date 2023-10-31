@@ -4,7 +4,7 @@ var enc = new TextEncoder();
 
 const DEMO_UNIT_DATA = {
     ["1"]:{ category: "Aircraft", alive: true, human: false, controlled: true, coalition: 2, country: 0, name: "KC-135", unitName: "Cool guy 1-1 who also has a very long name", groupName: "Cool group 1", state: 1, task: "Being cool!",
-        hasTask: true, position: { lat: 37, lng: -116, alt: 1000 }, speed: 200, heading: 45, isActiveTanker: true, isActiveAWACS: false, onOff: true, followRoads: false, fuel: 50, 
+        hasTask: true, position: { lat: 37, lng: -116, alt: 1000 }, speed: 200, horizontalVelocity: 200, verticalVelicity: 0, heading: 45, isActiveTanker: true, isActiveAWACS: false, onOff: true, followRoads: false, fuel: 50, 
         desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
         formationOffset: { x: 0, y: 0, z: 0 },
         targetID: 0,
@@ -20,7 +20,7 @@ const DEMO_UNIT_DATA = {
         activePath: [{lat: 38, lng: -115, alt: 0}, {lat: 38, lng: -114, alt: 0}]
     },
     ["2"]:{ category: "Aircraft", alive: true, human: false, controlled: true, coalition: 1, country: 0, name: "E-3A", unitName: "Cool guy 1-2", groupName: "Cool group 2", state: 1, task: "Being cool",
-        hasTask: true, position: { lat: 36.9, lng: -116, alt: 1000 }, speed: 200, heading: 315 * Math.PI / 180, isActiveTanker: false, isActiveAWACS: true, onOff: true, followRoads: false, fuel: 50, 
+        hasTask: true, position: { lat: 36.9, lng: -116, alt: 1000 }, speed: 200, horizontalVelocity: 200, verticalVelicity: 0, heading: 315 * Math.PI / 180, isActiveTanker: false, isActiveAWACS: true, onOff: true, followRoads: false, fuel: 50, 
         desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
         formationOffset: { x: 0, y: 0, z: 0 },
         targetID: 0,
@@ -35,7 +35,7 @@ const DEMO_UNIT_DATA = {
         contacts: [{ID: 4, detectionMethod: 1}],
         activePath: [ ]
     }, ["3"]:{ category: "Helicopter", alive: true, human: false, controlled: false, coalition: 1, country: 0, name: "AH-64D_BLK_II", unitName: "Cool guy 1-4", groupName: "Cool group 3", state: 1, task: "Being cool",
-        hasTask: false, position: { lat: 37.1, lng: -116.1, alt: 1000 }, speed: 200, heading: 315 * Math.PI / 180, isActiveTanker: false, isActiveAWACS: false, onOff: true, followRoads: false, fuel: 50, 
+        hasTask: false, position: { lat: 37.1, lng: -116.1, alt: 1000 }, speed: 200, horizontalVelocity: 200, verticalVelicity: 0, heading: 315 * Math.PI / 180, isActiveTanker: false, isActiveAWACS: false, onOff: true, followRoads: false, fuel: 50, 
         desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
         formationOffset: { x: 0, y: 0, z: 0 },
         targetID: 0,
@@ -50,7 +50,7 @@ const DEMO_UNIT_DATA = {
         contacts: [{ID: 1, detectionMethod: 16}],
         activePath: [ ]
     }, ["4"]:{ category: "GroundUnit", alive: true, human: false, controlled: true, coalition: 2, country: 0, name: "Tor 9A331", unitName: "Cool guy 2-1", groupName: "Cool group 4", state: 1, task: "Being cool",
-        hasTask: false, position: { lat: 37.2, lng: -116.1, alt: 1000 }, speed: 200, heading: 315 * Math.PI / 180, isActiveTanker: false, isActiveAWACS: false, onOff: false, followRoads: false, fuel: 50, 
+        hasTask: false, position: { lat: 37.2, lng: -116.1, alt: 1000 }, speed: 200, horizontalVelocity: 200, verticalVelicity: 0, heading: 315 * Math.PI / 180, isActiveTanker: false, isActiveAWACS: false, onOff: false, followRoads: false, fuel: 50, 
         desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
         formationOffset: { x: 0, y: 0, z: 0 },
         targetID: 0,
@@ -67,7 +67,7 @@ const DEMO_UNIT_DATA = {
         isLeader: true,
         operateAs: 2
     }, ["5"]:{ category: "GroundUnit", alive: true, human: false, controlled: true, coalition: 2, country: 0, name: "Gepard", unitName: "Cool guy 2-2", groupName: "Cool group 4", state: 1, task: "Being cool",
-        hasTask: false, position: { lat: 37.21, lng: -116.1, alt: 1000 }, speed: 200, heading: 315 * Math.PI / 180, isActiveTanker: false, isActiveAWACS: false, onOff: false, followRoads: false, fuel: 50, 
+        hasTask: false, position: { lat: 37.21, lng: -116.1, alt: 1000 }, speed: 200, horizontalVelocity: 200, verticalVelicity: 0, heading: 315 * Math.PI / 180, isActiveTanker: false, isActiveAWACS: false, onOff: false, followRoads: false, fuel: 50, 
         desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
         formationOffset: { x: 0, y: 0, z: 0 },
         targetID: 0,
@@ -85,7 +85,7 @@ const DEMO_UNIT_DATA = {
         operateAs: 2
     },
     ["6"]:{ category: "Aircraft", alive: true, human: false, controlled: false, coalition: 1, country: 0, name: "FA-18C_hornet", unitName: "Bad boi 1-2", groupName: "Bad group 1", state: 1, task: "Being bad",
-        hasTask: false, position: { lat: 36.8, lng: -116, alt: 1000 }, speed: 200, heading: 315 * Math.PI / 180, isActiveTanker: false, isActiveAWACS: false, onOff: true, followRoads: false, fuel: 50, 
+        hasTask: false, position: { lat: 36.8, lng: -116, alt: 1000 }, speed: 200, horizontalVelocity: 200, verticalVelicity: 0, heading: 315 * Math.PI / 180, isActiveTanker: false, isActiveAWACS: false, onOff: true, followRoads: false, fuel: 50, 
         desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
         formationOffset: { x: 0, y: 0, z: 0 },
         targetID: 0,
@@ -100,7 +100,7 @@ const DEMO_UNIT_DATA = {
         contacts: [{ID: 1, detectionMethod: 16}],
         activePath: [ ]
     }, ["7"]:{ category: "GroundUnit", alive: true, human: false, controlled: true, coalition: 1, country: 0, name: "Tor 9A331", unitName: "Cool guy 2-1", groupName: "Cool group 10", state: 1, task: "Being cool",
-        hasTask: false, position: { lat: 37.2, lng: -116.2, alt: 1000 }, speed: 200, heading: 315 * Math.PI / 180, isActiveTanker: false, isActiveAWACS: false, onOff: true, followRoads: false, fuel: 50, 
+        hasTask: false, position: { lat: 37.2, lng: -116.2, alt: 1000 }, speed: 200, horizontalVelocity: 200, verticalVelicity: 0, heading: 315 * Math.PI / 180, isActiveTanker: false, isActiveAWACS: false, onOff: true, followRoads: false, fuel: 50, 
         desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
         formationOffset: { x: 0, y: 0, z: 0 },
         targetID: 0,
@@ -142,26 +142,6 @@ class DemoDataGenerator {
             },
         }))
 
-        //for (let i = 8; i < 100; i++) {
-        //    var randomUnit = { category: "Aircraft", alive: true, human: false, controlled: true, coalition: 2, country: 0, name: "KC-135", unitName: "Cool guy 1-1 who also has a very long name", groupName: "Cool group 1", state: 1, task: "Being cool!",
-        //        hasTask: true, position: { lat: 37 + Math.random(), lng: -116 + Math.random(), alt: 1000 }, speed: 200, heading: 45, isActiveTanker: true, isActiveAWACS: false, onOff: true, followRoads: false, fuel: 50, 
-        //        desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
-        //        formationOffset: { x: 0, y: 0, z: 0 },
-        //        targetID: 0,
-        //        targetPosition: { lat: 0, lng: 0, alt: 0 },
-        //        ROE: 1,
-        //        reactionToThreat: 1,
-        //        emissionsCountermeasures: 1,
-        //        TACAN: { isOn: false, XY: 'Y', callsign: 'TKR', channel: 40 },
-        //        radio: { frequency: 124000000, callsign: 1, callsignNumber: 1 },
-        //        generalSettings: { prohibitAA: false, prohibitAfterburner: false, prohibitAG: false, prohibitAirWpn: false, prohibitJettison: false },
-        //        ammo: [{ quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 }, { quantity: 2, name: "A cool missile with a longer name\0Ciao", guidance: 0, category: 0, missileCategory: 0 }, { quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 } , { quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 } ,  { quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 } , { quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 } , { quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 } , { quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 } , { quantity: 2, name: "A cool missile\0Ciao", guidance: 0, category: 0, missileCategory: 0 }   ],
-        //        contacts: [{ID: 2, detectionMethod: 1}, {ID: 3, detectionMethod: 4}, {ID: 4, detectionMethod: 1}],
-        //        activePath: []
-        //    }
-        //    DEMO_UNIT_DATA[i.toString()] = randomUnit;
-        //}
-
 
         this.startTime = Date.now();
     }
@@ -187,31 +167,33 @@ class DemoDataGenerator {
             array = this.appendUint8(array, unit.hasTask, 12);
             array = this.appendCoordinates(array, unit.position, 13);
             array = this.appendDouble(array, unit.speed, 14);
-            array = this.appendDouble(array, unit.heading, 15);
-            array = this.appendUint8(array, unit.isActiveTanker, 16);
-            array = this.appendUint8(array, unit.isActiveAWACS, 17);
-            array = this.appendUint8(array, unit.onOff, 18);
-            array = this.appendUint8(array, unit.followRoads, 19);
-            array = this.appendUint16(array, unit.fuel, 20);
-            array = this.appendDouble(array, unit.desiredSpeed, 21);
-            array = this.appendUint8(array, unit.desiredSpeedType, 22);
-            array = this.appendDouble(array, unit.desiredAltitude, 23);
-            array = this.appendUint8(array, unit.desiredAltitudeType, 24);
-            array = this.appendUint32(array, unit.leaderID, 25);
-            array = this.appendOffset(array, unit.formationOffset, 26);
-            array = this.appendUint32(array, unit.targetID, 27);
-            array = this.appendCoordinates(array, unit.targetPosition, 28);
-            array = this.appendUint8(array, unit.ROE, 29);
-            array = this.appendUint8(array, unit.reactionToThreat, 30);
-            array = this.appendUint8(array, unit.emissionsCountermeasures, 31);
-            array = this.appendTACAN(array, unit.TACAN, 32);
-            array = this.appendRadio(array, unit.radio, 33);
-            array = this.appendRadio(array, unit.generalSettings, 34);
-            array = this.appendAmmo(array, unit.ammo, 35);
-            array = this.appendContacts(array, unit.contacts, 36);
-            array = this.appendActivePath(array, unit.activePath, 37);
-            array = this.appendUint8(array, unit.isLeader, 38);
-            array = this.appendUint8(array, unit.operateAs, 39);
+            array = this.appendDouble(array, unit.horizontalVelocity, 15);
+            array = this.appendDouble(array, unit.verticalVelicity, 16);
+            array = this.appendDouble(array, unit.heading, 17);
+            array = this.appendUint8(array, unit.isActiveTanker, 18);
+            array = this.appendUint8(array, unit.isActiveAWACS, 19);
+            array = this.appendUint8(array, unit.onOff, 20);
+            array = this.appendUint8(array, unit.followRoads, 21);
+            array = this.appendUint16(array, unit.fuel, 22);
+            array = this.appendDouble(array, unit.desiredSpeed, 23);
+            array = this.appendUint8(array, unit.desiredSpeedType, 24);
+            array = this.appendDouble(array, unit.desiredAltitude, 25);
+            array = this.appendUint8(array, unit.desiredAltitudeType, 26);
+            array = this.appendUint32(array, unit.leaderID, 27);
+            array = this.appendOffset(array, unit.formationOffset, 28);
+            array = this.appendUint32(array, unit.targetID, 29);
+            array = this.appendCoordinates(array, unit.targetPosition, 30);
+            array = this.appendUint8(array, unit.ROE, 31);
+            array = this.appendUint8(array, unit.reactionToThreat, 32);
+            array = this.appendUint8(array, unit.emissionsCountermeasures, 33);
+            array = this.appendTACAN(array, unit.TACAN, 34);
+            array = this.appendRadio(array, unit.radio, 35);
+            array = this.appendRadio(array, unit.generalSettings, 36);
+            array = this.appendAmmo(array, unit.ammo, 37);
+            array = this.appendContacts(array, unit.contacts, 38);
+            array = this.appendActivePath(array, unit.activePath, 39);
+            array = this.appendUint8(array, unit.isLeader, 40);
+            array = this.appendUint8(array, unit.operateAs, 41);
             array = this.concat(array, this.uint8ToByteArray(255));
         }
         res.end(Buffer.from(array, 'binary'));
