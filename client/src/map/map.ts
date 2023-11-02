@@ -12,7 +12,7 @@ import { DestinationPreviewMarker } from "./markers/destinationpreviewmarker";
 import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
 import { SVGInjector } from '@tanem/svg-injector'
-import { mapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, visibilityControls, visibilityControlsTooltips, MOVE_UNIT, SHOW_UNIT_CONTACTS, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, visibilityControlsTypes, SHOW_UNIT_LABELS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING } from "../constants/constants";
+import { mapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, visibilityControls, visibilityControlsTooltips, MOVE_UNIT, SHOW_UNIT_CONTACTS, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, visibilityControlsTypes, SHOW_UNIT_LABELS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, MAP_MARKER_CONTROLS } from "../constants/constants";
 import { TargetMarker } from "./markers/targetmarker";
 import { CoalitionArea } from "./coalitionarea/coalitionarea";
 import { CoalitionAreaContextMenu } from "../contextmenus/coalitionareacontextmenu";
@@ -37,6 +37,14 @@ L.Map.addInitHook("addHandler", "gestureHandling", GestureHandling);
 // TODO would be nice to convert to ts - yes
 require("../../public/javascripts/leaflet.nauticscale.js")
 require("../../public/javascripts/L.Path.Drag.js")
+
+export type MapMarkerControl = {
+    "image": string;
+    "initialState"?: "protected" | null,
+    "name":string,
+    "protectable"?: boolean,
+    "toggles": string[]
+}
 
 export class Map extends L.Map {
     #ID: string;
@@ -201,12 +209,16 @@ export class Map extends L.Map {
         }, 20);
 
         /* Option buttons */
+        this.#createOptionButtons();
+
+        /*
         this.#optionButtons["visibility"] = visibilityControls.map((option: string, index: number) => {
             var typesArrayString = `"${visibilityControlsTypes[index][0]}"`;
             visibilityControlsTypes[index].forEach((type: string, idx: number) => { if (idx > 0) typesArrayString = `${typesArrayString}, "${type}"` });
             return this.#createOptionButton(option, `visibility/${option.toLowerCase()}.svg`, visibilityControlsTooltips[index], "toggleMarkerVisibility", `{"types": [${typesArrayString}]}`);
         });
         document.querySelector("#unit-visibility-control")?.append(...this.#optionButtons["visibility"]);
+        //*/
 
         /* Create the checkboxes to select the advanced visibility options */
         this.addVisibilityOption(SHOW_UNIT_CONTACTS, false);
@@ -722,6 +734,21 @@ export class Map extends L.Map {
     #getMinimapBoundaries() {
         /* Draw the limits of the maps in the minimap*/
         return minimapBoundaries;
+    }
+
+    #createOptionButtons() {
+        const unitVisibilityControls = <HTMLElement>document.getElementById("unit-visibility-control");
+        const lockHTML = `<button class="lock"></button>`;
+        MAP_MARKER_CONTROLS.forEach( (control:MapMarkerControl) => {
+            console.log(`{"types":"${control.toggles.join('","')}"}`);
+            const html = `
+                <button class="map-marker-control" data-on-click="toggleMarkerVisibility" data-on-click-params='{"types":["${control.toggles.join('","')}"]}'>
+                    <img src="/resources/theme/images/buttons/${control.image}" />
+                </button>
+            `;
+            unitVisibilityControls.innerHTML += html;
+        });
+        unitVisibilityControls?.querySelectorAll(`img[src$=".svg"]`).forEach(img => SVGInjector(img));
     }
 
     #createOptionButton(value: string, url: string, title: string, callback: string, argument: string) {

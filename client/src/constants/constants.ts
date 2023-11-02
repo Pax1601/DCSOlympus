@@ -1,4 +1,5 @@
 import { LatLng, LatLngBounds } from "leaflet";
+import { MapMarkerControl } from "../map/map";
 
 export const UNITS_URI = "units";
 export const WEAPONS_URI = "weapons";
@@ -147,6 +148,41 @@ export const COALITIONAREA_DRAW_POLYGON = "Draw Coalition Area";
 export const visibilityControls: string[] = ["human", "dcs", "aircraft", "helicopter", "groundunit-sam", "groundunit-other", "navyunit", "airbase"];
 export const visibilityControlsTypes: string[][] = [["human"], ["dcs"], ["aircraft"], ["helicopter"], ["groundunit-sam", "groundunit-sam-radar", "groundunit-sam-launcher"], ["groundunit-other", "groundunit-ewr"], ["navyunit"], ["airbase"]];
 export const visibilityControlsTooltips: string[] = ["Toggle human players visibility", "Toggle DCS controlled units visibility", "Toggle aircrafts visibility", "Toggle helicopter visibility", "Toggle SAM units visibility", "Toggle ground units (not SAM) visibility", "Toggle navy units visibility", "Toggle airbases visibility"];
+export const MAP_MARKER_CONTROLS:MapMarkerControl[] = [{
+    "name":"human",
+    "image": "visibility/human.svg",
+    "toggles": [ "human" ]
+}, {
+    "image": "visibility/dcs.svg",
+    "initialState": "protected",
+    "name":"dcs",
+    "protectable": true,
+    "toggles": [ "dcs" ]
+}, {
+    "image": "visibility/aircraft.svg",
+    "name":"aircraft",
+    "toggles": [ "aircraft" ]
+}, {
+    "image": "visibility/helicopter.svg",
+    "name":"helicopter",
+    "toggles": [ "helicopter" ]
+}, {
+    "image": "visibility/groundunit-sam.svg",
+    "name":"groundunit-sam",
+    "toggles": [ "groundunit-sam" ]
+}, {
+    "image": "visibility/groundunit-other.svg",
+    "name":"groundunit-other",
+    "toggles": [ "groundunit-other" ]
+}, {
+    "image": "visibility/navyunit.svg",
+    "name":"navyunit",
+    "toggles": [ "navyunit" ]
+}, {
+    "image": "visibility/airbase.svg",
+    "name":"airbase",
+    "toggles": [ "airbase" ]
+}];
 
 export const IADSTypes = ["AAA", "MANPADS", "SAM Site", "Radar"];
 export const IADSDensities: {[key: string]: number}= {"AAA": 0.8, "MANPADS": 0.3, "SAM Site": 0.1, "Radar": 0.05};
