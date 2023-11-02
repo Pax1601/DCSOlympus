@@ -105,25 +105,25 @@ export const mapLayers = {
     "ArcGIS Satellite": {
         urlTemplate: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
         minZoom: 1,
-        maxZoom: 16,
+        maxZoom: 18,
         attribution: "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, GetApp().getMap()ping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
     },
     "USGS Topo": {
         urlTemplate: 'https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}',
         minZoom: 1,
-        maxZoom: 16,
+        maxZoom: 18,
         attribution: 'Tiles courtesy of the <a href="https://usgs.gov/">U.S. Geological Survey</a>'
     },
     "OpenStreetMap Mapnik": {
         urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
         minZoom: 1,
-        maxZoom: 16,
+        maxZoom: 18,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     },
     "OPENVKarte": {
         urlTemplate: 'https://tileserver.memomaps.de/tilegen/{z}/{x}/{y}.png',
         minZoom: 1,
-        maxZoom: 16,
+        maxZoom: 18,
         attribution: 'Map <a href="https://memomaps.de/">memomaps.de</a> <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     },
     "Esri.DeLorme": {
@@ -135,7 +135,7 @@ export const mapLayers = {
     "CyclOSM": {
         urlTemplate: 'https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png',
         minZoom: 1,
-        maxZoom: 16,
+        maxZoom: 18,
         attribution: '<a href="https://github.com/cyclosm/cyclosm-cartocss-style/releases" title="CyclOSM - Open Bicycle render">CyclOSM</a> | Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }
 }

@@ -753,37 +753,35 @@ export class Map extends L.Map {
     #showDestinationCursors() {
         const singleCursor = !this.#shiftKey;
         const selectedUnitsCount = getApp().getUnitsManager().getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true }).length;
-        if (selectedUnitsCount > 0) {
-            if (singleCursor) {
-                if ( this.#destinationPreviewCursors.length != 1) {
-                    this.#hideDestinationCursors();
-                    var marker = new DestinationPreviewMarker(this.getMouseCoordinates(), { interactive: false });
-                    marker.addTo(this);
-                    this.#destinationPreviewCursors = [marker];
-                }
-
-                this.#destinationPreviewHandleLine.removeFrom(this);
-                this.#destinationPreviewHandle.removeFrom(this);
+        if (singleCursor) {
+            if ( this.#destinationPreviewCursors.length != 1) {
+                this.#hideDestinationCursors();
+                var marker = new DestinationPreviewMarker(this.getMouseCoordinates(), { interactive: false });
+                marker.addTo(this);
+                this.#destinationPreviewCursors = [marker];
             }
-            else if (!singleCursor) {
-                while (this.#destinationPreviewCursors.length > selectedUnitsCount) {
-                    this.removeLayer(this.#destinationPreviewCursors[0]);
-                    this.#destinationPreviewCursors.splice(0, 1);
-                }
 
-                this.#destinationPreviewHandleLine.addTo(this);
-                this.#destinationPreviewHandle.addTo(this);
-
-                while (this.#destinationPreviewCursors.length < selectedUnitsCount) {
-                    var cursor = new DestinationPreviewMarker(this.getMouseCoordinates(), { interactive: false });
-                    cursor.addTo(this);
-                    this.#destinationPreviewCursors.push(cursor);
-                }
-
-                this.#updateDestinationCursors();
-            }
+            this.#destinationPreviewHandleLine.removeFrom(this);
+            this.#destinationPreviewHandle.removeFrom(this);
         }
-    }
+        else if (!singleCursor) {
+            while (this.#destinationPreviewCursors.length > selectedUnitsCount) {
+                this.removeLayer(this.#destinationPreviewCursors[0]);
+                this.#destinationPreviewCursors.splice(0, 1);
+            }
+
+            this.#destinationPreviewHandleLine.addTo(this);
+            this.#destinationPreviewHandle.addTo(this);
+
+            while (this.#destinationPreviewCursors.length < selectedUnitsCount) {
+                var cursor = new DestinationPreviewMarker(this.getMouseCoordinates(), { interactive: false });
+                cursor.addTo(this);
+                this.#destinationPreviewCursors.push(cursor);
+            }
+
+            this.#updateDestinationCursors();
+        }
+}
 
     #updateDestinationCursors() {
         const groupLatLng = this.#computeDestinationRotation && this.#destinationRotationCenter != null ? this.#destinationRotationCenter : this.getMouseCoordinates();

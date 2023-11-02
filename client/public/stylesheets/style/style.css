@@ -704,7 +704,6 @@ nav.ol-panel> :last-child {
 
 @media (min-width: 1700px) {
     #splash-screen {
-        background-image: url("/resources/theme/images/splash/1.png");
         background-position: 100% 50%;
         background-size: contain;
     }
@@ -736,7 +735,7 @@ nav.ol-panel> :last-child {
     top: 0;
     transform: rotate(-23deg);
     transform-origin: top right;
-    width: 200px;
+    width: 300px;
     z-index: -1;
 }
 

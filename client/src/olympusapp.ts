@@ -214,6 +214,13 @@ export class OlympusApp {
 
         /* Setup all global events */
         this.#setupEvents();
+
+        /* Set the splash background image to a random image */
+        var splashScreen = document.getElementById("splash-screen");
+        if (splashScreen) {
+            let i = Math.round(Math.random() * 7 + 1);
+            splashScreen.style.backgroundImage = `url('/resources/theme/images/splash/${i}.jpg')`;
+        }
     }
 
     #setupEvents() {
