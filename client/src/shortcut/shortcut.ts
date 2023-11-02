@@ -1,3 +1,4 @@
+import { getApp } from "..";
 import { ShortcutKeyboardOptions, ShortcutMouseOptions, ShortcutOptions } from "../interfaces";
 import { keyEventWasInInput } from "../other/utils";
 
@@ -19,6 +20,10 @@ export class ShortcutKeyboard extends Shortcut {
         super(config);
 
         document.addEventListener(config.event, (ev: any) => {
+            if ( typeof config.context === "string" && !getApp().getContextManager().currentContextIs( config.context ) ) {
+                return;
+            }
+
             if (ev instanceof KeyboardEvent === false || keyEventWasInInput(ev)) {
                 return;
             }
