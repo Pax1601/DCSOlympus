@@ -154,7 +154,7 @@ export const MAP_MARKER_CONTROLS:MapMarkerControl[] = [{
     "toggles": [ "human" ]
 }, {
     "image": "visibility/dcs.svg",
-    "initialState": "protected",
+    "isProtected": true,
     "name":"dcs",
     "protectable": true,
     "toggles": [ "dcs" ]

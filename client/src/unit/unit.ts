@@ -95,45 +95,47 @@ export class Unit extends CustomMarker {
     #doubleClickTimer: number = 0;
     #hotgroup: number | null = null;
     #detectionMethods: number[] = [];
+    #isProtected:boolean = false;
 
+    getActivePath() { return this.#activePath };
     getAlive() { return this.#alive };
-    getHuman() { return this.#human };
-    getControlled() { return this.#controlled };
+    getAmmo() { return this.#ammo };
     getCoalition() { return this.#coalition };
+    getContacts() { return this.#contacts };
+    getControlled() { return this.#controlled };
     getCountry() { return this.#country };
-    getName() { return this.#name };
-    getUnitName() { return this.#unitName };
-    getGroupName() { return this.#groupName };
-    getState() { return this.#state };
-    getTask() { return this.#task };
-    getHasTask() { return this.#hasTask };
-    getPosition() { return this.#position };
-    getSpeed() { return this.#speed };
-    getHeading() { return this.#heading };
-    getIsActiveTanker() { return this.#isActiveTanker };
-    getIsActiveAWACS() { return this.#isActiveAWACS };
-    getOnOff() { return this.#onOff };
-    getFollowRoads() { return this.#followRoads };
-    getFuel() { return this.#fuel };
-    getDesiredSpeed() { return this.#desiredSpeed };
-    getDesiredSpeedType() { return this.#desiredSpeedType };
     getDesiredAltitude() { return this.#desiredAltitude };
     getDesiredAltitudeType() { return this.#desiredAltitudeType };
-    getLeaderID() { return this.#leaderID };
+    getDesiredSpeed() { return this.#desiredSpeed };
+    getDesiredSpeedType() { return this.#desiredSpeedType };
+    getEmissionsCountermeasures() { return this.#emissionsCountermeasures };
+    getFollowRoads() { return this.#followRoads };
     getFormationOffset() { return this.#formationOffset };
+    getFuel() { return this.#fuel };
+    getGeneralSettings() { return this.#generalSettings };
+    getGroupName() { return this.#groupName };
+    getHasTask() { return this.#hasTask };
+    getHeading() { return this.#heading };
+    getHuman() { return this.#human };
+    getIsActiveAWACS() { return this.#isActiveAWACS };
+    getIsActiveTanker() { return this.#isActiveTanker };
+    getIsLeader() { return this.#isLeader };
+    getLeaderID() { return this.#leaderID };
+    getName() { return this.#name };
+    getOnOff() { return this.#onOff };
+    getOperateAs() { return this.#operateAs };
+    getPosition() { return this.#position };
+    getIsProtected() { return this.#isProtected };
+    getRadio() { return this.#radio };
+    getReactionToThreat() { return this.#reactionToThreat };
+    getROE() { return this.#ROE };
+    getSpeed() { return this.#speed };
+    getState() { return this.#state };
+    getTACAN() { return this.#TACAN };
     getTargetID() { return this.#targetID };
     getTargetPosition() { return this.#targetPosition };
-    getROE() { return this.#ROE };
-    getReactionToThreat() { return this.#reactionToThreat };
-    getEmissionsCountermeasures() { return this.#emissionsCountermeasures };
-    getTACAN() { return this.#TACAN };
-    getRadio() { return this.#radio };
-    getGeneralSettings() { return this.#generalSettings };
-    getAmmo() { return this.#ammo };
-    getContacts() { return this.#contacts };
-    getActivePath() { return this.#activePath };
-    getIsLeader() { return this.#isLeader };
-    getOperateAs() { return this.#operateAs };
+    getTask() { return this.#task };
+    getUnitName() { return this.#unitName };
 
     static getConstructor(type: string) {
         if (type === "GroundUnit") return GroundUnit;
@@ -334,6 +336,10 @@ export class Unit extends CustomMarker {
             showCallsign: true,
             rotateToHeading: false
         }
+    }
+
+    setIsProtected(isProtected:boolean) {
+        this.#isProtected = isProtected;
     }
 
     setAlive(newAlive: boolean) {

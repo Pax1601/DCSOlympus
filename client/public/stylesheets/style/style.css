@@ -605,6 +605,12 @@ nav.ol-panel> :last-child {
     align-items: center;
 }
 
+.ol-navbar-buttons-group > div {
+    align-items: center;
+    display:flex;
+    flex-direction: row;
+}
+
 .ol-navbar-buttons-group button {
     border: none;
     height: 32px;
@@ -636,6 +642,28 @@ nav.ol-panel> :last-child {
 .ol-navbar-buttons-group button svg * {
     fill: var(--background-steel) !important;
     stroke: var(--background-steel) !important;
+}
+
+.ol-navbar-buttons-group .protectable button:first-of-type {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+    width:28px;
+}
+
+.ol-navbar-buttons-group > div > button.lock  {
+    display:none;
+}
+
+.ol-navbar-buttons-group > div.protectable > button.lock {
+    background-color: #990000;
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    display:inline-block;
+    width:18px;
+}
+
+.ol-navbar-buttons-group > div.protectable > button[data-protected].lock {
+    background-color: #008800;
 }
 
 #roe-buttons-container button,

@@ -40,7 +40,7 @@ require("../../public/javascripts/L.Path.Drag.js")
 
 export type MapMarkerControl = {
     "image": string;
-    "initialState"?: "protected" | null,
+    "isProtected"?: boolean,
     "name":string,
     "protectable"?: boolean,
     "toggles": string[]
@@ -88,6 +88,7 @@ export class Map extends L.Map {
     #coalitionAreaContextMenu: CoalitionAreaContextMenu = new CoalitionAreaContextMenu("coalition-area-contextmenu");
 
     #mapSourceDropdown: Dropdown;
+    #mapMarkerControls:MapMarkerControl[] = MAP_MARKER_CONTROLS;
     #mapVisibilityOptionsDropdown: Dropdown;
     #optionButtons: { [key: string]: HTMLButtonElement[] } = {}
     #visibilityOptions: { [key: string]: boolean } = {}
@@ -209,16 +210,7 @@ export class Map extends L.Map {
         }, 20);
 
         /* Option buttons */
-        this.#createOptionButtons();
-
-        /*
-        this.#optionButtons["visibility"] = visibilityControls.map((option: string, index: number) => {
-            var typesArrayString = `"${visibilityControlsTypes[index][0]}"`;
-            visibilityControlsTypes[index].forEach((type: string, idx: number) => { if (idx > 0) typesArrayString = `${typesArrayString}, "${type}"` });
-            return this.#createOptionButton(option, `visibility/${option.toLowerCase()}.svg`, visibilityControlsTooltips[index], "toggleMarkerVisibility", `{"types": [${typesArrayString}]}`);
-        });
-        document.querySelector("#unit-visibility-control")?.append(...this.#optionButtons["visibility"]);
-        //*/
+        this.#createUnitMarkerControlButtons();
 
         /* Create the checkboxes to select the advanced visibility options */
         this.addVisibilityOption(SHOW_UNIT_CONTACTS, false);
@@ -736,32 +728,53 @@ export class Map extends L.Map {
         return minimapBoundaries;
     }
 
-    #createOptionButtons() {
+    #createUnitMarkerControlButtons() {
         const unitVisibilityControls = <HTMLElement>document.getElementById("unit-visibility-control");
-        const lockHTML = `<button class="lock"></button>`;
-        MAP_MARKER_CONTROLS.forEach( (control:MapMarkerControl) => {
-            console.log(`{"types":"${control.toggles.join('","')}"}`);
-            const html = `
-                <button class="map-marker-control" data-on-click="toggleMarkerVisibility" data-on-click-params='{"types":["${control.toggles.join('","')}"]}'>
+        this.#mapMarkerControls.forEach( (control:MapMarkerControl) => {
+            const toggles = `["${control.toggles.join('","')}"]`;
+            const div = document.createElement("div");
+            div.className = control.protectable === true ? "protectable" : "";
+            div.innerHTML = `
+                <button data-on-click="toggleMarkerVisibility" data-on-click-params='{"types":${toggles}}'>
                     <img src="/resources/theme/images/buttons/${control.image}" />
                 </button>
+                <button class="lock" ${control.isProtected ? "data-protected" : "" }>x</button>
             `;
-            unitVisibilityControls.innerHTML += html;
+            unitVisibilityControls.appendChild(div);
+
+            if ( control.protectable ) {
+                const btn = <HTMLButtonElement>div.querySelector("button.lock");
+                btn.addEventListener("click", (ev:MouseEventInit) => {
+                    control.isProtected = !control.isProtected;
+                    btn.toggleAttribute("data-protected", control.isProtected);
+                    document.dispatchEvent(new CustomEvent("toggleMarkerProtection", {
+                        detail: {
+                            "_element": btn,
+                            "control": control
+                        }
+                    }));
+                });
+            }
         });
-        unitVisibilityControls?.querySelectorAll(`img[src$=".svg"]`).forEach(img => SVGInjector(img));
+
+        unitVisibilityControls.querySelectorAll(`img[src$=".svg"]`).forEach(img => SVGInjector(img));
     }
 
-    #createOptionButton(value: string, url: string, title: string, callback: string, argument: string) {
-        var button = document.createElement("button");
-        const img = document.createElement("img");
-        img.src = `/resources/theme/images/buttons/${url}`;
-        img.onload = () => SVGInjector(img);
-        button.title = title;
-        button.value = value;
-        button.appendChild(img);
-        button.setAttribute("data-on-click", callback);
-        button.setAttribute("data-on-click-params", argument);
-        return button;
+    unitIsProtected(unit:Unit) {
+        const toggles = this.#mapMarkerControls.reduce((list, control:MapMarkerControl) => {
+            if (control.isProtected) {
+                list = list.concat(control.toggles);
+            }
+            return list;
+        }, [] as string[]);
+
+        if (toggles.length === 0)
+            return false;
+
+        return toggles.some((toggle:string) => {
+            //  Specific coding for robots - extend later if needed
+            return (toggle === "dcs" && !unit.getControlled() && !unit.getHuman());
+        });
     }
 
     #deselectCoalitionAreas() {
