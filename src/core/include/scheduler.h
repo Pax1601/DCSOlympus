@@ -37,8 +37,8 @@ public:
 private:
 	list<Command*> commands;
 	list<string> executedCommandsHashes;
-	unsigned int load;
-	double frameRate;
+	unsigned int load = 0;
+	double frameRate = 0;
 	
 	bool restrictSpawns = false;
 	bool restrictToCoalition = false;
