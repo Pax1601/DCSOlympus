@@ -636,6 +636,10 @@ export class Unit extends CustomMarker {
         return getApp().getMap().getBounds().contains(this.getPosition());
     }
 
+    canLandAtPoint() {
+        return this.getCategory() === "Helicopter";  //  Only choppers can do this currently
+    }
+
     canTargetPoint() {
         return this.getDatabase()?.getByName(this.#name)?.canTargetPoint === true;
     }

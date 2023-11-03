@@ -613,16 +613,16 @@ export class Map extends L.Map {
             const selectedUnitTypes = getApp().getUnitsManager().getSelectedUnitsCategories();
 
             if (selectedUnitTypes.length === 1 && ["Aircraft", "Helicopter"].includes(selectedUnitTypes[0])) {
-                if (selectedUnitTypes[0] === "Helicopter") {
+                if (selectedUnits.every((unit: Unit) => { return unit.canLandAtPoint()}))
                     options["land-at-point"] = { text: "Land here", tooltip: "Land at this precise location" };
-                }
 
                 if (selectedUnits.every((unit: Unit) => { return unit.canTargetPoint()})) {
                     options["bomb"] = { text: "Precision bombing", tooltip: "Precision bombing of a specific point" };
                     options["carpet-bomb"] = { text: "Carpet bombing", tooltip: "Carpet bombing close to a point" };
-                } else if (selectedUnitTypes[0] !== "Helicopter") {
+                } 
+                
+                if (Object.keys(options).length === 0)
                     (getApp().getPopupsManager().get("infoPopup") as Popup).setText(`Selected units can not perform point actions.`);
-                }
             }
             else if (selectedUnitTypes.length === 1 && ["GroundUnit", "NavyUnit"].includes(selectedUnitTypes[0])) {
                 if (selectedUnits.every((unit: Unit) => { return unit.canTargetPoint() })) {
