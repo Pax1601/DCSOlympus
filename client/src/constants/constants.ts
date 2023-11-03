@@ -149,39 +149,47 @@ export const visibilityControls: string[] = ["human", "dcs", "aircraft", "helico
 export const visibilityControlsTypes: string[][] = [["human"], ["dcs"], ["aircraft"], ["helicopter"], ["groundunit-sam", "groundunit-sam-radar", "groundunit-sam-launcher"], ["groundunit-other", "groundunit-ewr"], ["navyunit"], ["airbase"]];
 export const visibilityControlsTooltips: string[] = ["Toggle human players visibility", "Toggle DCS controlled units visibility", "Toggle aircrafts visibility", "Toggle helicopter visibility", "Toggle SAM units visibility", "Toggle ground units (not SAM) visibility", "Toggle navy units visibility", "Toggle airbases visibility"];
 export const MAP_MARKER_CONTROLS:MapMarkerControl[] = [{
-    "name":"human",
+    "name":"Human",
     "image": "visibility/human.svg",
-    "toggles": [ "human" ]
+    "toggles": [ "human" ],
+    "tooltip": "Toggle human players' visibility"
 }, {
     "image": "visibility/dcs.svg",
     "isProtected": true,
-    "name":"dcs",
+    "name":"DCS",
     "protectable": true,
-    "toggles": [ "dcs" ]
+    "toggles": [ "dcs" ],
+    "tooltip": "Toggle DCS-controlled units' visibility"
 }, {
     "image": "visibility/aircraft.svg",
-    "name":"aircraft",
-    "toggles": [ "aircraft" ]
+    "name":"Aircraft",
+    "toggles": [ "aircraft" ],
+    "tooltip": "Toggle aircraft's visibility"
 }, {
     "image": "visibility/helicopter.svg",
-    "name":"helicopter",
-    "toggles": [ "helicopter" ]
+    "name":"Helicopter",
+    "toggles": [ "helicopter" ],
+    "tooltip": "Toggle helicopters' visibility"
 }, {
     "image": "visibility/groundunit-sam.svg",
-    "name":"groundunit-sam",
-    "toggles": [ "groundunit-sam" ]
+    "name":"Air defence",
+    "toggles": [ "groundunit-sam" ],
+    "tooltip": "Toggle air defence units' visibility"
 }, {
     "image": "visibility/groundunit-other.svg",
-    "name":"groundunit-other",
-    "toggles": [ "groundunit-other" ]
+    "name":"Ground units",
+    "toggles": [ "groundunit-other" ],
+    "tooltip": "Toggle ground units' visibility"
 }, {
     "image": "visibility/navyunit.svg",
-    "name":"navyunit",
-    "toggles": [ "navyunit" ]
+    "name":"Naval",
+    "toggles": [ "navyunit" ],
+    "tooltip": "Toggle naval units' visibility"
 }, {
     "image": "visibility/airbase.svg",
-    "name":"airbase",
-    "toggles": [ "airbase" ]
+    "name":"Airbase",
+    "toggles": [ "airbase" ],
+    "tooltip": "Toggle airbase' visibility"
 }];
 
 export const IADSTypes = ["AAA", "MANPADS", "SAM Site", "Radar"];

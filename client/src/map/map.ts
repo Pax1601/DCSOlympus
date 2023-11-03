@@ -43,7 +43,8 @@ export type MapMarkerControl = {
     "isProtected"?: boolean,
     "name":string,
     "protectable"?: boolean,
-    "toggles": string[]
+    "toggles": string[],
+    "tooltip": string
 }
 
 export class Map extends L.Map {
@@ -730,23 +731,32 @@ export class Map extends L.Map {
 
     #createUnitMarkerControlButtons() {
         const unitVisibilityControls = <HTMLElement>document.getElementById("unit-visibility-control");
+        const makeTitle = (isProtected:boolean) => {
+            return ( isProtected ) ? "Unit type is protected and will ignore orders" : "Unit is NOT protected and will respond to orders";
+        }
         this.#mapMarkerControls.forEach( (control:MapMarkerControl) => {
             const toggles = `["${control.toggles.join('","')}"]`;
             const div = document.createElement("div");
             div.className = control.protectable === true ? "protectable" : "";
             div.innerHTML = `
-                <button data-on-click="toggleMarkerVisibility" data-on-click-params='{"types":${toggles}}'>
+                <button data-on-click="toggleMarkerVisibility" title="${control.tooltip}" data-on-click-params='{"types":${toggles}}'>
                     <img src="/resources/theme/images/buttons/${control.image}" />
                 </button>
-                <button class="lock" ${control.isProtected ? "data-protected" : "" }>x</button>
             `;
             unitVisibilityControls.appendChild(div);
 
             if ( control.protectable ) {
+                div.innerHTML += `
+                <button class="lock" ${control.isProtected ? "data-protected" : ""} title="${makeTitle(control.isProtected || false)}">
+                    <img src="/resources/theme/images/buttons/other/lock-solid.svg" class="locked" />
+                    <img src="/resources/theme/images/buttons/other/lock-open-solid.svg" class="unlocked" />
+                </button>`;
+
                 const btn = <HTMLButtonElement>div.querySelector("button.lock");
                 btn.addEventListener("click", (ev:MouseEventInit) => {
                     control.isProtected = !control.isProtected;
                     btn.toggleAttribute("data-protected", control.isProtected);
+                    btn.title = makeTitle( control.isProtected );
                     document.dispatchEvent(new CustomEvent("toggleMarkerProtection", {
                         detail: {
                             "_element": btn,
