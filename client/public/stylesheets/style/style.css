@@ -652,7 +652,7 @@ nav.ol-panel> :last-child {
 
 .ol-navbar-buttons-group > .protectable > button.lock {
     align-items: center;
-    background-color: #990000;
+    background-color: var(--primary-red);
     border-bottom-left-radius: 0;
     border-top-left-radius: 0;
     display:flex;
@@ -661,13 +661,16 @@ nav.ol-panel> :last-child {
 }
 
 .ol-navbar-buttons-group > .protectable > button[data-protected].lock {
-    background-color: #008800;
+    background-color: var(--background-grey);
 }
 
 .ol-navbar-buttons-group > .protectable > button.lock svg {
-    filter:invert(100);
     height:10px;
     width:10px;
+}
+
+.ol-navbar-buttons-group > .protectable > button.lock svg.locked {
+    filter:invert(100);
 }
 
 .ol-navbar-buttons-group > .protectable > button:not([data-protected]).lock svg.unlocked,
