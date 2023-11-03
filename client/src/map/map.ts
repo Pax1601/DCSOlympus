@@ -620,7 +620,7 @@ export class Map extends L.Map {
                 if (selectedUnits.every((unit: Unit) => { return unit.canTargetPoint()})) {
                     options["bomb"] = { text: "Precision bombing", tooltip: "Precision bombing of a specific point" };
                     options["carpet-bomb"] = { text: "Carpet bombing", tooltip: "Carpet bombing close to a point" };
-                } else {
+                } else if (selectedUnitTypes[0] !== "Helicopter") {
                     (getApp().getPopupsManager().get("infoPopup") as Popup).setText(`Selected units can not perform point actions.`);
                 }
             }
