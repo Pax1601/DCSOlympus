@@ -1,3 +1,4 @@
+import { getApp } from "..";
 import { Ammo } from "../interfaces";
 import { aircraftDatabase } from "../unit/databases/aircraftdatabase";
 import { Unit } from "../unit/unit";
@@ -91,5 +92,13 @@ export class UnitInfoPanel extends Panel {
         }
         else
             this.hide();
+    }
+
+    show() {
+        const context = getApp().getCurrentContext();
+        if ( !context.getUseUnitInfoPanel() )
+            return;
+
+        super.show();
     }
 }
