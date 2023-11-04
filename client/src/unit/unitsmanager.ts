@@ -47,6 +47,8 @@ export class UnitsManager {
         document.addEventListener('unitDeselection', (e: CustomEvent) => this.#onUnitDeselection(e.detail));
         document.addEventListener('unitSelection', (e: CustomEvent) => this.#onUnitSelection(e.detail));
 
+        document.addEventListener("toggleMarkerProtection", (ev:CustomEventInit) => { this.#showNumberOfSelectedProtectedUnits() });
+
         this.#slowDeleteDialog = new Dialog( "slow-delete-dialog" );
     }
 
@@ -221,16 +223,29 @@ export class UnitsManager {
      * @param options Selection options
      * @returns Array of selected units
      */
-    getSelectedUnits(options?: { excludeHumans?: boolean, onlyOnePerGroup?: boolean }) {
-        var selectedUnits = [];
-        for (let ID in this.#units) {
-            if (this.#units[ID].getSelected()) {
-                selectedUnits.push(this.#units[ID]);
+    getSelectedUnits(options?: { excludeHumans?: boolean, excludeProtected?:boolean, onlyOnePerGroup?: boolean, showProtectionReminder?:boolean }) {
+        let selectedUnits:Unit[] = [];
+        let numProtectedUnits = 0;
+        for (const [ID, unit] of Object.entries(this.#units)) {
+            if (unit.getSelected()) {
+                if (options) {
+                    if (options.excludeHumans && unit.getHuman())
+                        continue
+
+                    if (options.excludeProtected === true && this.#unitIsProtected(unit)) {
+                        numProtectedUnits++;
+                        continue;
+                    }
+                }
+                selectedUnits.push(unit);
             }
         }
         if (options) {
-            if (options.excludeHumans)
-                selectedUnits = selectedUnits.filter((unit: Unit) => { return !unit.getHuman() });
+            if (options.showProtectionReminder === true && numProtectedUnits > selectedUnits.length && selectedUnits.length === 0) {
+                const messageText = (numProtectedUnits === 1) ? `Unit is protected` : `All selected units are protected`;
+                (getApp().getPopupsManager().get("infoPopup") as Popup).setText(messageText);
+            }
+
             if (options.onlyOnePerGroup) {
                 var temp: Unit[] = [];
                 for (let unit of selectedUnits) {
@@ -320,7 +335,10 @@ export class UnitsManager {
      * @param rotation Rotation in radians by which the formation will be rigidly rotated. E.g. a ( V ) formation will look like this ( < ) if rotated pi/4 radians (90 degrees)
      */
     selectedUnitsAddDestination(latlng: L.LatLng, mantainRelativePosition: boolean, rotation: number) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
+
+        if (selectedUnits.length === 0)
+            return;
 
         /* Compute the destination for each unit. If mantainRelativePosition is true, compute the destination so to hold the relative positions */
         var unitDestinations: { [key: number]: LatLng } = {};
@@ -353,7 +371,7 @@ export class UnitsManager {
      * 
      */
     selectedUnitsClearDestinations() {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: false });
         for (let idx in selectedUnits) {
             const unit = selectedUnits[idx];
             if (unit.getState() === "follow") {
@@ -373,7 +391,7 @@ export class UnitsManager {
      * @param latlng Location where to land at
      */
     selectedUnitsLandAt(latlng: LatLng) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].landAt(latlng);
         }
@@ -385,7 +403,7 @@ export class UnitsManager {
      * @param speedChange Speed change, either "stop", "slow", or "fast". The specific value depends on the unit category
      */
     selectedUnitsChangeSpeed(speedChange: string) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].changeSpeed(speedChange);
         }
@@ -396,7 +414,7 @@ export class UnitsManager {
      * @param altitudeChange Altitude change, either "climb" or "descend". The specific value depends on the unit category
      */
     selectedUnitsChangeAltitude(altitudeChange: string) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].changeAltitude(altitudeChange);
         }
@@ -407,7 +425,7 @@ export class UnitsManager {
      * @param speed Value to set, in m/s
      */
     selectedUnitsSetSpeed(speed: number) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].setSpeed(speed);
         }
@@ -419,7 +437,7 @@ export class UnitsManager {
      * @param speedType Value to set, either "CAS" or "GS". If "CAS" is selected, the unit will try to maintain the selected Calibrated Air Speed, but DCS will still only maintain a Ground Speed value so errors may arise depending on wind.
      */
     selectedUnitsSetSpeedType(speedType: string) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].setSpeedType(speedType);
         }
@@ -431,7 +449,7 @@ export class UnitsManager {
      * @param altitude Value to set, in m
      */
     selectedUnitsSetAltitude(altitude: number) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].setAltitude(altitude);
         }
@@ -443,7 +461,7 @@ export class UnitsManager {
      * @param altitudeType Value to set, either "ASL" or "AGL". If "AGL" is selected, the unit will try to maintain the selected Above Ground Level altitude. Due to a DCS bug, this will only be true at the final position.
      */
     selectedUnitsSetAltitudeType(altitudeType: string) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].setAltitudeType(altitudeType);
         }
@@ -455,7 +473,7 @@ export class UnitsManager {
      * @param ROE Value to set, see constants for acceptable values
      */
     selectedUnitsSetROE(ROE: string) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].setROE(ROE);
         }
@@ -467,7 +485,7 @@ export class UnitsManager {
      * @param reactionToThreat Value to set, see constants for acceptable values
      */
     selectedUnitsSetReactionToThreat(reactionToThreat: string) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].setReactionToThreat(reactionToThreat);
         }
@@ -479,7 +497,7 @@ export class UnitsManager {
      * @param emissionCountermeasure Value to set, see constants for acceptable values
      */
     selectedUnitsSetEmissionsCountermeasures(emissionCountermeasure: string) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].setEmissionsCountermeasures(emissionCountermeasure);
         }
@@ -491,7 +509,7 @@ export class UnitsManager {
      * @param onOff If true, the unit will be turned on
      */
     selectedUnitsSetOnOff(onOff: boolean) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].setOnOff(onOff);
         }
@@ -503,7 +521,7 @@ export class UnitsManager {
      * @param followRoads If true, units will follow roads
      */
     selectedUnitsSetFollowRoads(followRoads: boolean) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].setFollowRoads(followRoads);
         }
@@ -516,7 +534,7 @@ export class UnitsManager {
      */
     selectedUnitsSetOperateAs(operateAsBool: boolean) {
         var operateAs = operateAsBool? "blue": "red";
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].setOperateAs(operateAs);
         }
@@ -528,7 +546,7 @@ export class UnitsManager {
      * @param ID ID of the unit to attack
      */
     selectedUnitsAttackUnit(ID: number) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].attackUnit(ID);
         }
@@ -539,7 +557,7 @@ export class UnitsManager {
      * 
      */
     selectedUnitsRefuel() {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].refuel();
         }
@@ -565,7 +583,10 @@ export class UnitsManager {
             else offset = undefined;
         }
 
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
+
+        if ( selectedUnits.length === 0)
+            return;
 
         var count = 1;
         var xr = 0; var yr = 1; var zr = -1;
@@ -601,7 +622,7 @@ export class UnitsManager {
      * @param latlng Location to bomb
      */
     selectedUnitsBombPoint(latlng: LatLng) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].bombPoint(latlng);
         }
@@ -613,7 +634,7 @@ export class UnitsManager {
      * @param latlng Location to bomb
      */
     selectedUnitsCarpetBomb(latlng: LatLng) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].carpetBomb(latlng);
         }
@@ -625,7 +646,7 @@ export class UnitsManager {
      * @param latlng Location to fire at
      */
     selectedUnitsFireAtArea(latlng: LatLng) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].fireAtArea(latlng);
         }
@@ -637,7 +658,7 @@ export class UnitsManager {
      * @param latlng Location to fire at
      */
     selectedUnitsSimulateFireFight(latlng: LatLng) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
         getGroundElevation(latlng, (response: string) => {
             var groundElevation: number | null = null;
             try {
@@ -656,7 +677,7 @@ export class UnitsManager {
      * 
      */
     selectedUnitsScenicAAA() {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].scenicAAA();
         }
@@ -667,11 +688,11 @@ export class UnitsManager {
      * 
      */
     selectedUnitsMissOnPurpose() {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
         for (let idx in selectedUnits) {
             selectedUnits[idx].missOnPurpose();
         }
-        this.#showActionMessage(selectedUnits, `unit set to perform miss on purpose AAA`);
+        this.#showActionMessage(selectedUnits, `unit set to perform miss-on-purpose AAA`);
     }
 
     /** Instruct units to land at specific point
@@ -679,12 +700,12 @@ export class UnitsManager {
      * @param latlng Point where to land
      */
     selectedUnitsLandAtPoint(latlng: LatLng) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
 
         for (let idx in selectedUnits) {
             selectedUnits[idx].landAtPoint(latlng);
         }
-        this.#showActionMessage(selectedUnits, `unit simulating fire fight`);
+        this.#showActionMessage(selectedUnits, `unit landing at point`);
     }
 
     /** Set a specific shots scatter to all the selected units
@@ -733,7 +754,7 @@ export class UnitsManager {
      * 
      */
     selectedUnitsCreateGroup() {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: false });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: false, showProtectionReminder: true });
         if (this.getUnitsCategories(selectedUnits).length == 1) {
             var units: { ID: number, location: LatLng }[] = [];
             for (let idx in selectedUnits) {
@@ -774,7 +795,7 @@ export class UnitsManager {
      * @returns 
      */
     selectedUnitsDelete(explosion: boolean = false) {
-        var selectedUnits = this.getSelectedUnits(); /* Can be applied to humans too */
+        var selectedUnits = this.getSelectedUnits({excludeProtected:true}); /* Can be applied to humans too */
         const selectionContainsAHuman = selectedUnits.some((unit: Unit) => {
             return unit.getHuman() === true;
         });
@@ -784,7 +805,6 @@ export class UnitsManager {
         }
 
         const doDelete = (explosion = false, immediate = false) => {
-            const selectedUnits = this.getSelectedUnits();
             for (let idx in selectedUnits) {
                 selectedUnits[idx].delete(explosion, immediate);
             }
@@ -810,7 +830,7 @@ export class UnitsManager {
      * @returns Array of positions for each unit, in order
      */
     selectedUnitsComputeGroupDestination(latlng: LatLng, rotation: number) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true });
         /* Compute the center of the group */
         var center = { x: 0, y: 0 };
         selectedUnits.forEach((unit: Unit) => {
@@ -1089,6 +1109,7 @@ export class UnitsManager {
                 window.setTimeout(() => {
                     document.dispatchEvent(new CustomEvent("unitsSelection", { detail: this.getSelectedUnits() }));
                     this.#selectionEventDisabled = false;
+                    this.#showNumberOfSelectedProtectedUnits();
                 }, 100);
                 this.#selectionEventDisabled = true;
             }
@@ -1149,5 +1170,22 @@ export class UnitsManager {
                 }
             }, 250);
         });
+    }
+
+    #showNumberOfSelectedProtectedUnits() {
+        const map = getApp().getMap();
+        const selectedUnits     = this.getSelectedUnits();
+        const numSelectedUnits  = selectedUnits.length;
+        const numProtectedUnits = selectedUnits.filter((unit:Unit) => map.unitIsProtected(unit) ).length;
+
+        if (numProtectedUnits === 1 && numSelectedUnits === numProtectedUnits)
+            (getApp().getPopupsManager().get("infoPopup") as Popup).setText(`Notice: unit is protected`);
+        
+        if (numProtectedUnits > 1)
+            (getApp().getPopupsManager().get("infoPopup") as Popup).setText(`Notice: selection contains ${numProtectedUnits} protected units.`);
+    }
+
+    #unitIsProtected(unit:Unit) {
+        return getApp().getMap().unitIsProtected(unit)
     }
 }

@@ -272,6 +272,7 @@ export interface Listener {
 export interface ShortcutOptions {
     altKey?: boolean;
     callback: CallableFunction;
+    context?: string;
     ctrlKey?: boolean;
     name?: string;
     shiftKey?: boolean;

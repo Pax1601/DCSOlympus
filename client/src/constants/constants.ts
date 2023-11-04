@@ -1,4 +1,5 @@
 import { LatLng, LatLngBounds } from "leaflet";
+import { MapMarkerControl } from "../map/map";
 
 export const UNITS_URI = "units";
 export const WEAPONS_URI = "weapons";
@@ -117,25 +118,25 @@ export const mapLayers = {
     "ArcGIS Satellite": {
         urlTemplate: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
         minZoom: 1,
-        maxZoom: 16,
+        maxZoom: 18,
         attribution: "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, GetApp().getMap()ping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
     },
     "USGS Topo": {
         urlTemplate: 'https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}',
         minZoom: 1,
-        maxZoom: 16,
+        maxZoom: 18,
         attribution: 'Tiles courtesy of the <a href="https://usgs.gov/">U.S. Geological Survey</a>'
     },
     "OpenStreetMap Mapnik": {
         urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
         minZoom: 1,
-        maxZoom: 16,
+        maxZoom: 18,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     },
     "OPENVKarte": {
         urlTemplate: 'https://tileserver.memomaps.de/tilegen/{z}/{x}/{y}.png',
         minZoom: 1,
-        maxZoom: 16,
+        maxZoom: 18,
         attribution: 'Map <a href="https://memomaps.de/">memomaps.de</a> <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     },
     "Esri.DeLorme": {
@@ -147,7 +148,7 @@ export const mapLayers = {
     "CyclOSM": {
         urlTemplate: 'https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png',
         minZoom: 1,
-        maxZoom: 16,
+        maxZoom: 18,
         attribution: '<a href="https://github.com/cyclosm/cyclosm-cartocss-style/releases" title="CyclOSM - Open Bicycle render">CyclOSM</a> | Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }
 }
@@ -159,6 +160,49 @@ export const COALITIONAREA_DRAW_POLYGON = "Draw Coalition Area";
 export const visibilityControls: string[] = ["human", "dcs", "aircraft", "helicopter", "groundunit-sam", "groundunit-other", "navyunit", "airbase"];
 export const visibilityControlsTypes: string[][] = [["human"], ["dcs"], ["aircraft"], ["helicopter"], ["groundunit-sam", "groundunit-sam-radar", "groundunit-sam-launcher"], ["groundunit-other", "groundunit-ewr"], ["navyunit"], ["airbase"]];
 export const visibilityControlsTooltips: string[] = ["Toggle human players visibility", "Toggle DCS controlled units visibility", "Toggle aircrafts visibility", "Toggle helicopter visibility", "Toggle SAM units visibility", "Toggle ground units (not SAM) visibility", "Toggle navy units visibility", "Toggle airbases visibility"];
+export const MAP_MARKER_CONTROLS:MapMarkerControl[] = [{
+    "name":"Human",
+    "image": "visibility/human.svg",
+    "toggles": [ "human" ],
+    "tooltip": "Toggle human players' visibility"
+}, {
+    "image": "visibility/dcs.svg",
+    "isProtected": true,
+    "name":"DCS",
+    "protectable": true,
+    "toggles": [ "dcs" ],
+    "tooltip": "Toggle DCS-controlled units' visibility"
+}, {
+    "image": "visibility/aircraft.svg",
+    "name":"Aircraft",
+    "toggles": [ "aircraft" ],
+    "tooltip": "Toggle aircraft's visibility"
+}, {
+    "image": "visibility/helicopter.svg",
+    "name":"Helicopter",
+    "toggles": [ "helicopter" ],
+    "tooltip": "Toggle helicopters' visibility"
+}, {
+    "image": "visibility/groundunit-sam.svg",
+    "name":"Air defence",
+    "toggles": [ "groundunit-sam" ],
+    "tooltip": "Toggle air defence units' visibility"
+}, {
+    "image": "visibility/groundunit-other.svg",
+    "name":"Ground units",
+    "toggles": [ "groundunit-other" ],
+    "tooltip": "Toggle ground units' visibility"
+}, {
+    "image": "visibility/navyunit.svg",
+    "name":"Naval",
+    "toggles": [ "navyunit" ],
+    "tooltip": "Toggle naval units' visibility"
+}, {
+    "image": "visibility/airbase.svg",
+    "name":"Airbase",
+    "toggles": [ "airbase" ],
+    "tooltip": "Toggle airbase' visibility"
+}];
 
 export const IADSTypes = ["AAA", "MANPADS", "SAM Site", "Radar"];
 export const IADSDensities: {[key: string]: number}= {"AAA": 0.8, "MANPADS": 0.3, "SAM Site": 0.1, "Radar": 0.05};

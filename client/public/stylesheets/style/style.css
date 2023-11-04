@@ -605,6 +605,12 @@ nav.ol-panel> :last-child {
     align-items: center;
 }
 
+.ol-navbar-buttons-group > div {
+    align-items: center;
+    display:flex;
+    flex-direction: row;
+}
+
 .ol-navbar-buttons-group button {
     border: none;
     height: 32px;
@@ -637,6 +643,47 @@ nav.ol-panel> :last-child {
     fill: var(--background-steel) !important;
     stroke: var(--background-steel) !important;
 }
+
+.ol-navbar-buttons-group .protectable button:first-of-type {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+    width:28px;
+}
+
+.ol-navbar-buttons-group > .protectable > button.lock {
+    align-items: center;
+    background-color: var(--primary-red);
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    display:flex;
+    justify-content: center;
+    width:18px;
+}
+
+.ol-navbar-buttons-group > .protectable > button[data-protected].lock {
+    background-color: var(--background-grey);
+}
+
+.ol-navbar-buttons-group > .protectable > button.lock svg {
+    height:10px;
+    width:10px;
+}
+
+.ol-navbar-buttons-group > .protectable > button.lock svg.locked {
+    filter:invert(100);
+}
+
+.ol-navbar-buttons-group > .protectable > button:not([data-protected]).lock svg.unlocked,
+.ol-navbar-buttons-group > .protectable > button[data-protected].lock svg.locked {
+    display:flex;
+}
+
+.ol-navbar-buttons-group > .protectable > button[data-protected].lock svg.unlocked,
+.ol-navbar-buttons-group > .protectable > button:not([data-protected]).lock svg.locked {
+    display:none;
+}
+
+
 
 #roe-buttons-container button,
 #reaction-to-threat-buttons-container button,
@@ -707,7 +754,6 @@ nav.ol-panel> :last-child {
 
 @media (min-width: 1700px) {
     #splash-screen {
-        background-image: url("/resources/theme/images/splash/1.png");
         background-position: 100% 50%;
         background-size: contain;
     }
@@ -739,7 +785,7 @@ nav.ol-panel> :last-child {
     top: 0;
     transform: rotate(-23deg);
     transform-origin: top right;
-    width: 200px;
+    width: 300px;
     z-index: -1;
 }
 

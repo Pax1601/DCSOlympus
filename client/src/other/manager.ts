@@ -1,7 +1,11 @@
+import { Context } from "../context/context";
+
 export class Manager {
+
     #items: { [key: string]: any } = {};
 
     constructor() {
+
     }
 
     add(name: string, item: any) {

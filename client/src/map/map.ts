@@ -12,7 +12,7 @@ import { DestinationPreviewMarker } from "./markers/destinationpreviewmarker";
 import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
 import { SVGInjector } from '@tanem/svg-injector'
-import { mapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, visibilityControls, visibilityControlsTooltips, MOVE_UNIT, SHOW_UNIT_CONTACTS, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, visibilityControlsTypes, SHOW_UNIT_LABELS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING } from "../constants/constants";
+import { mapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, visibilityControls, visibilityControlsTooltips, MOVE_UNIT, SHOW_UNIT_CONTACTS, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, visibilityControlsTypes, SHOW_UNIT_LABELS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, MAP_MARKER_CONTROLS } from "../constants/constants";
 import { TargetMarker } from "./markers/targetmarker";
 import { CoalitionArea } from "./coalitionarea/coalitionarea";
 import { CoalitionAreaContextMenu } from "../contextmenus/coalitionareacontextmenu";
@@ -37,6 +37,15 @@ L.Map.addInitHook("addHandler", "gestureHandling", GestureHandling);
 // TODO would be nice to convert to ts - yes
 require("../../public/javascripts/leaflet.nauticscale.js")
 require("../../public/javascripts/L.Path.Drag.js")
+
+export type MapMarkerControl = {
+    "image": string;
+    "isProtected"?: boolean,
+    "name":string,
+    "protectable"?: boolean,
+    "toggles": string[],
+    "tooltip": string
+}
 
 export class Map extends L.Map {
     #ID: string;
@@ -80,6 +89,7 @@ export class Map extends L.Map {
     #coalitionAreaContextMenu: CoalitionAreaContextMenu = new CoalitionAreaContextMenu("coalition-area-contextmenu");
 
     #mapSourceDropdown: Dropdown;
+    #mapMarkerControls:MapMarkerControl[] = MAP_MARKER_CONTROLS;
     #mapVisibilityOptionsDropdown: Dropdown;
     #optionButtons: { [key: string]: HTMLButtonElement[] } = {}
     #visibilityOptions: { [key: string]: boolean } = {}
@@ -201,12 +211,7 @@ export class Map extends L.Map {
         }, 20);
 
         /* Option buttons */
-        this.#optionButtons["visibility"] = visibilityControls.map((option: string, index: number) => {
-            var typesArrayString = `"${visibilityControlsTypes[index][0]}"`;
-            visibilityControlsTypes[index].forEach((type: string, idx: number) => { if (idx > 0) typesArrayString = `${typesArrayString}, "${type}"` });
-            return this.#createOptionButton(option, `visibility/${option.toLowerCase()}.svg`, visibilityControlsTooltips[index], "toggleMarkerVisibility", `{"types": [${typesArrayString}]}`);
-        });
-        document.querySelector("#unit-visibility-control")?.append(...this.#optionButtons["visibility"]);
+        this.#createUnitMarkerControlButtons();
 
         /* Create the checkboxes to select the advanced visibility options */
         this.addVisibilityOption(SHOW_UNIT_CONTACTS, false);
@@ -608,16 +613,16 @@ export class Map extends L.Map {
             const selectedUnitTypes = getApp().getUnitsManager().getSelectedUnitsCategories();
 
             if (selectedUnitTypes.length === 1 && ["Aircraft", "Helicopter"].includes(selectedUnitTypes[0])) {
-                if (selectedUnitTypes[0] === "Helicopter") {
+                if (selectedUnits.every((unit: Unit) => { return unit.canLandAtPoint()}))
                     options["land-at-point"] = { text: "Land here", tooltip: "Land at this precise location" };
-                }
 
                 if (selectedUnits.every((unit: Unit) => { return unit.canTargetPoint()})) {
                     options["bomb"] = { text: "Precision bombing", tooltip: "Precision bombing of a specific point" };
                     options["carpet-bomb"] = { text: "Carpet bombing", tooltip: "Carpet bombing close to a point" };
-                } else {
+                } 
+                
+                if (Object.keys(options).length === 0)
                     (getApp().getPopupsManager().get("infoPopup") as Popup).setText(`Selected units can not perform point actions.`);
-                }
             }
             else if (selectedUnitTypes.length === 1 && ["GroundUnit", "NavyUnit"].includes(selectedUnitTypes[0])) {
                 if (selectedUnits.every((unit: Unit) => { return unit.canTargetPoint() })) {
@@ -724,17 +729,62 @@ export class Map extends L.Map {
         return minimapBoundaries;
     }
 
-    #createOptionButton(value: string, url: string, title: string, callback: string, argument: string) {
-        var button = document.createElement("button");
-        const img = document.createElement("img");
-        img.src = `/resources/theme/images/buttons/${url}`;
-        img.onload = () => SVGInjector(img);
-        button.title = title;
-        button.value = value;
-        button.appendChild(img);
-        button.setAttribute("data-on-click", callback);
-        button.setAttribute("data-on-click-params", argument);
-        return button;
+    #createUnitMarkerControlButtons() {
+        const unitVisibilityControls = <HTMLElement>document.getElementById("unit-visibility-control");
+        const makeTitle = (isProtected:boolean) => {
+            return ( isProtected ) ? "Unit type is protected and will ignore orders" : "Unit is NOT protected and will respond to orders";
+        }
+        this.#mapMarkerControls.forEach( (control:MapMarkerControl) => {
+            const toggles = `["${control.toggles.join('","')}"]`;
+            const div = document.createElement("div");
+            div.className = control.protectable === true ? "protectable" : "";
+            div.innerHTML = `
+                <button data-on-click="toggleMarkerVisibility" title="${control.tooltip}" data-on-click-params='{"types":${toggles}}'>
+                    <img src="/resources/theme/images/buttons/${control.image}" />
+                </button>
+            `;
+            unitVisibilityControls.appendChild(div);
+
+            if ( control.protectable ) {
+                div.innerHTML += `
+                <button class="lock" ${control.isProtected ? "data-protected" : ""} title="${makeTitle(control.isProtected || false)}">
+                    <img src="/resources/theme/images/buttons/other/lock-solid.svg" class="locked" />
+                    <img src="/resources/theme/images/buttons/other/lock-open-solid.svg" class="unlocked" />
+                </button>`;
+
+                const btn = <HTMLButtonElement>div.querySelector("button.lock");
+                btn.addEventListener("click", (ev:MouseEventInit) => {
+                    control.isProtected = !control.isProtected;
+                    btn.toggleAttribute("data-protected", control.isProtected);
+                    btn.title = makeTitle( control.isProtected );
+                    document.dispatchEvent(new CustomEvent("toggleMarkerProtection", {
+                        detail: {
+                            "_element": btn,
+                            "control": control
+                        }
+                    }));
+                });
+            }
+        });
+
+        unitVisibilityControls.querySelectorAll(`img[src$=".svg"]`).forEach(img => SVGInjector(img));
+    }
+
+    unitIsProtected(unit:Unit) {
+        const toggles = this.#mapMarkerControls.reduce((list, control:MapMarkerControl) => {
+            if (control.isProtected) {
+                list = list.concat(control.toggles);
+            }
+            return list;
+        }, [] as string[]);
+
+        if (toggles.length === 0)
+            return false;
+
+        return toggles.some((toggle:string) => {
+            //  Specific coding for robots - extend later if needed
+            return (toggle === "dcs" && !unit.getControlled() && !unit.getHuman());
+        });
     }
 
     #deselectCoalitionAreas() {
@@ -753,37 +803,35 @@ export class Map extends L.Map {
     #showDestinationCursors() {
         const singleCursor = !this.#shiftKey;
         const selectedUnitsCount = getApp().getUnitsManager().getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true }).length;
-        if (selectedUnitsCount > 0) {
-            if (singleCursor) {
-                if ( this.#destinationPreviewCursors.length != 1) {
-                    this.#hideDestinationCursors();
-                    var marker = new DestinationPreviewMarker(this.getMouseCoordinates(), { interactive: false });
-                    marker.addTo(this);
-                    this.#destinationPreviewCursors = [marker];
-                }
-
-                this.#destinationPreviewHandleLine.removeFrom(this);
-                this.#destinationPreviewHandle.removeFrom(this);
+        if (singleCursor) {
+            if ( this.#destinationPreviewCursors.length != 1) {
+                this.#hideDestinationCursors();
+                var marker = new DestinationPreviewMarker(this.getMouseCoordinates(), { interactive: false });
+                marker.addTo(this);
+                this.#destinationPreviewCursors = [marker];
             }
-            else if (!singleCursor) {
-                while (this.#destinationPreviewCursors.length > selectedUnitsCount) {
-                    this.removeLayer(this.#destinationPreviewCursors[0]);
-                    this.#destinationPreviewCursors.splice(0, 1);
-                }
 
-                this.#destinationPreviewHandleLine.addTo(this);
-                this.#destinationPreviewHandle.addTo(this);
-
-                while (this.#destinationPreviewCursors.length < selectedUnitsCount) {
-                    var cursor = new DestinationPreviewMarker(this.getMouseCoordinates(), { interactive: false });
-                    cursor.addTo(this);
-                    this.#destinationPreviewCursors.push(cursor);
-                }
-
-                this.#updateDestinationCursors();
-            }
+            this.#destinationPreviewHandleLine.removeFrom(this);
+            this.#destinationPreviewHandle.removeFrom(this);
         }
-    }
+        else if (!singleCursor) {
+            while (this.#destinationPreviewCursors.length > selectedUnitsCount) {
+                this.removeLayer(this.#destinationPreviewCursors[0]);
+                this.#destinationPreviewCursors.splice(0, 1);
+            }
+
+            this.#destinationPreviewHandleLine.addTo(this);
+            this.#destinationPreviewHandle.addTo(this);
+
+            while (this.#destinationPreviewCursors.length < selectedUnitsCount) {
+                var cursor = new DestinationPreviewMarker(this.getMouseCoordinates(), { interactive: false });
+                cursor.addTo(this);
+                this.#destinationPreviewCursors.push(cursor);
+            }
+
+            this.#updateDestinationCursors();
+        }
+}
 
     #updateDestinationCursors() {
         const groupLatLng = this.#computeDestinationRotation && this.#destinationRotationCenter != null ? this.#destinationRotationCenter : this.getMouseCoordinates();

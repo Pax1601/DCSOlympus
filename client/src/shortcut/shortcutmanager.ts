@@ -1,5 +1,6 @@
 import { ShortcutKeyboardOptions, ShortcutMouseOptions } from "../interfaces";
 import { Manager } from "../other/manager";
+
 import { ShortcutKeyboard, ShortcutMouse } from "./shortcut";
 
 export class ShortcutManager extends Manager {
