@@ -91,9 +91,9 @@
 
 #loadout-silhouette {
 	filter: invert(100%);
-	height: 100px;
+	height: 75px;
 	margin-right: 25px;
-	width: 100px;
+	width: 75px;
 }
 
 #loadout-items {

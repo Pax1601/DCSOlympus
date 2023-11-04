@@ -269,6 +269,14 @@ function Olympus.buildTask(groupName, options)
 					point = {x = point.x, y = point.z},
 				}   
 			}
+		-- Attack unit
+		elseif options['id'] == 'AttackUnit' and options['unitID']  then
+			task = {
+				id = 'AttackUnit', 
+				params = {
+					unitId = options['unitID'],
+				}   
+			}
 		end
 	end
 	return task

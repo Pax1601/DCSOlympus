@@ -508,7 +508,7 @@ class GroundUnitEditor extends uniteditor_1.UnitEditor {
      * @param blueprint The blueprint to edit
      */
     setBlueprint(blueprint) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s;
         __classPrivateFieldSet(this, _GroundUnitEditor_blueprint, blueprint, "f");
         if (__classPrivateFieldGet(this, _GroundUnitEditor_blueprint, "f") !== null) {
             this.contentDiv2.replaceChildren();
@@ -525,14 +525,19 @@ class GroundUnitEditor extends uniteditor_1.UnitEditor {
             (0, utils_1.addStringInput)(this.contentDiv2, "Cost", (_b = String(blueprint.cost)) !== null && _b !== void 0 ? _b : "", "number", (value) => { blueprint.cost = parseFloat(value); });
             (0, utils_1.addStringInput)(this.contentDiv2, "Acquisition range [m]", (_c = String(blueprint.acquisitionRange)) !== null && _c !== void 0 ? _c : "", "number", (value) => { blueprint.acquisitionRange = parseFloat(value); });
             (0, utils_1.addStringInput)(this.contentDiv2, "Engagement range [m]", (_d = String(blueprint.engagementRange)) !== null && _d !== void 0 ? _d : "", "number", (value) => { blueprint.engagementRange = parseFloat(value); });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Barrel height [m]", (_e = String(blueprint.barrelHeight)) !== null && _e !== void 0 ? _e : "", "number", (value) => { blueprint.barrelHeight = parseFloat(value); });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Muzzle velocity [m/s]", (_f = String(blueprint.muzzleVelocity)) !== null && _f !== void 0 ? _f : "", "number", (value) => { blueprint.muzzleVelocity = parseFloat(value); });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Aim time [s]", (_g = String(blueprint.aimTime)) !== null && _g !== void 0 ? _g : "", "number", (value) => { blueprint.aimTime = parseFloat(value); });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Burst quantity", (_h = String(blueprint.shotsToFire)) !== null && _h !== void 0 ? _h : "", "number", (value) => { blueprint.shotsToFire = Math.round(parseFloat(value)); });
-            (0, utils_1.addCheckboxInput)(this.contentDiv2, "Can target point", (_j = blueprint.canTargetPoint) !== null && _j !== void 0 ? _j : false, (value) => { blueprint.canTargetPoint = value; });
-            (0, utils_1.addCheckboxInput)(this.contentDiv2, "Can rearm", (_k = blueprint.canRearm) !== null && _k !== void 0 ? _k : false, (value) => { blueprint.canRearm = value; });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Description", (_l = blueprint.description) !== null && _l !== void 0 ? _l : "", "text", (value) => { blueprint.description = value; });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Abilities", (_m = blueprint.abilities) !== null && _m !== void 0 ? _m : "", "text", (value) => { blueprint.abilities = value; });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Targeting range [m]", (_e = String(blueprint.targetingRange)) !== null && _e !== void 0 ? _e : "", "number", (value) => { blueprint.targetingRange = parseFloat(value); });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Barrel height [m]", (_f = String(blueprint.barrelHeight)) !== null && _f !== void 0 ? _f : "", "number", (value) => { blueprint.barrelHeight = parseFloat(value); });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Muzzle velocity [m/s]", (_g = String(blueprint.muzzleVelocity)) !== null && _g !== void 0 ? _g : "", "number", (value) => { blueprint.muzzleVelocity = parseFloat(value); });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Aim time [s]", (_h = String(blueprint.aimTime)) !== null && _h !== void 0 ? _h : "", "number", (value) => { blueprint.aimTime = parseFloat(value); });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Burst quantity", (_j = String(blueprint.shotsToFire)) !== null && _j !== void 0 ? _j : "", "number", (value) => { blueprint.shotsToFire = Math.round(parseFloat(value)); });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Burst base interval [s]", (_k = String(blueprint.shotsBaseInterval)) !== null && _k !== void 0 ? _k : "", "number", (value) => { blueprint.shotsBaseInterval = Math.round(parseFloat(value)); });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Base scatter [°]", (_l = String(blueprint.shotsBaseScatter)) !== null && _l !== void 0 ? _l : "", "number", (value) => { blueprint.shotsBaseScatter = Math.round(parseFloat(value)); });
+            (0, utils_1.addCheckboxInput)(this.contentDiv2, "Can target point", (_m = blueprint.canTargetPoint) !== null && _m !== void 0 ? _m : false, (value) => { blueprint.canTargetPoint = value; });
+            (0, utils_1.addCheckboxInput)(this.contentDiv2, "Can rearm", (_o = blueprint.canRearm) !== null && _o !== void 0 ? _o : false, (value) => { blueprint.canRearm = value; });
+            (0, utils_1.addCheckboxInput)(this.contentDiv2, "Can operate as AAA", (_p = blueprint.canAAA) !== null && _p !== void 0 ? _p : false, (value) => { blueprint.canAAA = value; });
+            (0, utils_1.addCheckboxInput)(this.contentDiv2, "Indirect fire (e.g. mortar)", (_q = blueprint.indirectFire) !== null && _q !== void 0 ? _q : false, (value) => { blueprint.indirectFire = value; });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Description", (_r = blueprint.description) !== null && _r !== void 0 ? _r : "", "text", (value) => { blueprint.description = value; });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Abilities", (_s = blueprint.abilities) !== null && _s !== void 0 ? _s : "", "text", (value) => { blueprint.abilities = value; });
         }
     }
     /** Add a new empty blueprint
@@ -613,10 +618,10 @@ class LoadoutEditor {
         title.innerText = "Loadout properties";
         __classPrivateFieldGet(this, _LoadoutEditor_contentDiv, "f").appendChild(title);
         if (__classPrivateFieldGet(this, _LoadoutEditor_loadout, "f")) {
-            var laodout = __classPrivateFieldGet(this, _LoadoutEditor_loadout, "f");
-            (0, utils_1.addStringInput)(__classPrivateFieldGet(this, _LoadoutEditor_contentDiv, "f"), "Name", laodout.name, "text", (value) => { laodout.name = value; __classPrivateFieldGet(this, _LoadoutEditor_contentDiv, "f").dispatchEvent(new Event("refresh")); });
-            (0, utils_1.addStringInput)(__classPrivateFieldGet(this, _LoadoutEditor_contentDiv, "f"), "Code", laodout.code, "text", (value) => { laodout.code = value; });
-            (0, utils_1.addStringInput)(__classPrivateFieldGet(this, _LoadoutEditor_contentDiv, "f"), "Roles", (0, utils_1.arrayToString)(laodout.roles), "text", (value) => { laodout.roles = (0, utils_1.stringToArray)(value); });
+            var loadout = __classPrivateFieldGet(this, _LoadoutEditor_loadout, "f");
+            (0, utils_1.addStringInput)(__classPrivateFieldGet(this, _LoadoutEditor_contentDiv, "f"), "Name", loadout.name, "text", (value) => { loadout.name = value; __classPrivateFieldGet(this, _LoadoutEditor_contentDiv, "f").dispatchEvent(new Event("refresh")); });
+            (0, utils_1.addStringInput)(__classPrivateFieldGet(this, _LoadoutEditor_contentDiv, "f"), "Code", loadout.code, "text", (value) => { loadout.code = value; });
+            (0, utils_1.addStringInput)(__classPrivateFieldGet(this, _LoadoutEditor_contentDiv, "f"), "Roles", (0, utils_1.arrayToString)(loadout.roles), "text", (value) => { loadout.roles = (0, utils_1.stringToArray)(value); });
             (0, utils_1.addLoadoutItemsEditor)(__classPrivateFieldGet(this, _LoadoutEditor_contentDiv, "f"), __classPrivateFieldGet(this, _LoadoutEditor_loadout, "f"));
         }
     }
@@ -1034,25 +1039,12 @@ exports.addLoadoutsScroll = addLoadoutsScroll;
  * @returns The string
  */
 function arrayToString(array) {
-    var value = "[";
-    var firstRole = true;
-    array.forEach((role) => {
-        value += firstRole ? "" : ", ";
-        firstRole = false;
-        value += role;
-    });
-    value += "]";
-    return value;
+    return "[" + array.join(", ") + "]";
 }
 exports.arrayToString = arrayToString;
 function stringToArray(input) {
-    input = input.replace("[", "").replace("]", "");
-    var values = input.split(",");
-    var result = [];
-    values.forEach((value) => {
-        result.push(value.trim());
-    });
-    return result;
+    var _a;
+    return (_a = input.match(/(\w)+/g)) !== null && _a !== void 0 ? _a : [];
 }
 exports.stringToArray = stringToArray;
 

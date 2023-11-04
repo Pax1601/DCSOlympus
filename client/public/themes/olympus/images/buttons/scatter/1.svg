@@ -40,7 +40,7 @@
      inkscape:showpageshadow="2"
      inkscape:deskcolor="#d1d1d1" />
   <path
-     style="opacity:1;fill:none;stroke:#5ca7ff;stroke-width:2.13035;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;stroke-dashoffset:0"
+     style="opacity:1;fill:none;stroke-width:2.13035;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;stroke-dashoffset:0"
      id="path940"
      sodipodi:type="arc"
      sodipodi:cx="7.614182"
@@ -50,5 +50,7 @@
      sodipodi:start="4.1887902"
      sodipodi:end="5.2359878"
      sodipodi:arc-type="slice"
-     d="m 1.880341,3.4754242 a 11.467682,10.686775 0 0 1 11.467682,2e-7 L 7.614182,12.730443 Z" />
+     d="m 1.880341,3.4754242 a 11.467682,10.686775 0 0 1 11.467682,2e-7 L 7.614182,12.730443 Z"
+	 fill="#5ca7ff"
+	 stroke="#5ca7ff"	 />
 </svg>

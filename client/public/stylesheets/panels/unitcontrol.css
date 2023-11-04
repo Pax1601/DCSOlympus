@@ -166,20 +166,23 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 
 #unit-control-panel .switch-control {
 	align-items: center;
-	display: grid;
-	grid-template-columns: 1.35fr 0.65fr;
-}
-
-#unit-control-panel .switch-control>*:nth-child(2) {
-	justify-self: end;
-}
-
-#unit-control-panel .switch-control>*:nth-child(3) {
-	color: var(--secondary-semitransparent-white);
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
 }
 
 #unit-control-panel .switch-control h4 {
 	margin: 0px;
+	display: flex;
+	align-items: center;
+}
+
+#unit-control-panel .switch-control h4 img {
+	height: 15px;
+	margin-left: 10px;
+	cursor: pointer;
+	filter: invert(100%);
+	opacity: 80%;
 }
 
 #unit-control-panel .switch-control .ol-switch {

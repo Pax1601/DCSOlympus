@@ -1029,13 +1029,19 @@
 			}
 		},
 		"barrelHeight": 2.35,
-		"muzzleVelocity": 1440,
+		"muzzleVelocity": 1000,
 		"acquisitionRange": 15000,
 		"engagementRange": 4000,
 		"description": "Tracked self-propelled anti-aircraft 35mm guns",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"canAAA": true,
+		"aimTime": 5,
+		"shotsToFire": 2,
+		"shotsBaseInterval": 5,
+		"shotsBaseScatter": 2,
+		"targetingRange": 800
 	},
 	"Grad-URAL": {
 		"name": "Grad-URAL",
@@ -2282,7 +2288,8 @@
 		"description": "Single infantry carrying AK-74",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"canAAA": true
 	},
 	"KAMAZ Truck": {
 		"name": "KAMAZ Truck",

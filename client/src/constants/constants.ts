@@ -48,15 +48,15 @@ export const emissionsCountermeasuresDescriptions: string[] = [
 ];
 
 export const shotsScatterDescriptions: string[] = [
-    "Large scatter",
-    "Medium scatter",
-    "Small scatter (Radar guided units will track shots when the enemy unit is close)"
+    "When performing scenic shooting tasks like simulated firefights, will shoot with a large scatter",
+    "When performing scenic shooting tasks like simulated firefights, will shoot with a medium scatter",
+    "When performing scenic shooting tasks like simulated firefights, will shoot with a small scatter (Radar guided units will track shots when the enemy unit is close)"
 ];
 
 export const shotsIntensityDescriptions: string[] = [
-    "Low intensity",
-    "Medium intensity",
-    "High intensity"
+    "When performing scenic shooting tasks like simulated firefights, will shoot with a low rate of fire",
+    "When performing scenic shooting tasks like simulated firefights, will shoot with a medium rate of fire",
+    "When performing scenic shooting tasks like simulated firefights, will shoot with a high rate of fire"
 ];
 
 export const minSpeedValues: { [key: string]: number } = { Aircraft: 100, Helicopter: 0, NavyUnit: 0, GroundUnit: 0 };

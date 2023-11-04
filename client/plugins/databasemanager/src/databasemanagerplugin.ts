@@ -86,7 +86,7 @@ export class DatabaseManagerPlugin implements OlympusPlugin {
         /* Create the container for the database editor elements  and the elements themselves */
         this.#mainContentContainer = document.createElement("div");
         this.#mainContentContainer.classList.add("dm-container");
-        this.#element.appendChild(this.#mainContentContainer)
+        this.#element.appendChild(this.#mainContentContainer);
 
         this.#contentDiv1 = document.createElement("div");
         this.#contentDiv1.classList.add("dm-content-container");

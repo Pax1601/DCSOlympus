@@ -664,6 +664,7 @@ nav.ol-panel> :last-child {
 
 #unit-control-panel .ol-option-button button.selected svg * {
     fill: var(--background-steel);
+    stroke: var(--background-steel);
 }
 
 #rapid-controls {

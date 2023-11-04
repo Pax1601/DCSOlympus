@@ -204,6 +204,7 @@ protected:
 	/********** Other **********/
 	unsigned int taskCheckCounter = 0;
 	unsigned int internalCounter = 0;
+	Unit* missOnPurposeTarget = nullptr;
 	bool hasTaskAssigned = false;
 	double initialFuel = 0;
 	map<unsigned char, unsigned long long> updateTimeMap;

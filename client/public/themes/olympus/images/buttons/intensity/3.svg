@@ -2,20 +2,20 @@
 <svg
    width="15"
    height="15"
-   viewBox="0 0 15 15"
    fill="none"
    version="1.1"
-   id="svg4"
+   viewBox="0 0 15 15"
+   id="svg8"
    sodipodi:docname="3.svg"
-   inkscape:version="1.2.2 (732a01da63, 2022-12-09)"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <defs
-     id="defs8" />
+     id="defs12" />
   <sodipodi:namedview
-     id="namedview6"
+     id="namedview10"
      pagecolor="#ffffff"
      bordercolor="#666666"
      borderopacity="1.0"
@@ -23,32 +23,40 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      showgrid="false"
-     width="30px"
-     fit-margin-top="0"
-     fit-margin-left="0"
-     fit-margin-right="0"
-     fit-margin-bottom="0"
-     inkscape:zoom="47.542857"
-     inkscape:cx="7.0147236"
-     inkscape:cy="7.9717549"
-     inkscape:window-width="2560"
-     inkscape:window-height="1377"
-     inkscape:window-x="1912"
+     inkscape:zoom="55.466667"
+     inkscape:cx="7.4909856"
+     inkscape:cy="7.4909856"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg4"
-     inkscape:showpageshadow="2"
-     inkscape:deskcolor="#d1d1d1" />
-  <path
-     style="fill:none;stroke:#5ca7ff;stroke-width:1px;stroke-linecap:round;stroke-linejoin:miter;stroke-opacity:1;stroke-dasharray:2,4;stroke-dashoffset:0"
-     d="M 2.0192308,13.040865 12.872596,1.7247596"
-     id="path4699" />
-  <path
-     style="fill:none;stroke:#5ca7ff;stroke-width:1px;stroke-linecap:round;stroke-linejoin:miter;stroke-dasharray:1,3;stroke-dashoffset:0;stroke-opacity:1"
-     d="M 2.2160966,13.062173 14.945401,3.9071416"
-     id="path4699-7" />
-  <path
-     style="fill:none;stroke:#5ca7ff;stroke-width:0.979244px;stroke-linecap:round;stroke-linejoin:miter;stroke-dasharray:2.93773, 2.93773;stroke-dashoffset:0;stroke-opacity:1"
-     d="M 1.9018442,12.855935 10.398694,0.22959776"
-     id="path4699-9" />
+     inkscape:current-layer="svg8" />
+  <rect
+     x="1.7057"
+     y="9.5718"
+     width="2.83"
+     height="3.9513"
+     style="paint-order:stroke fill markers;stroke-dashoffset:5.6;stroke-linecap:round;stroke-linejoin:bevel;stroke-width:.659;"
+     id="rect2"
+	 fill="#5ca7ff"
+	 stroke="#5ca7ff" />
+  <rect
+     x="6.0053"
+     y="5.8178"
+     width="2.83"
+     height="7.6993"
+     style="paint-order:stroke fill markers;stroke-dashoffset:5.6;stroke-linecap:round;stroke-linejoin:bevel;stroke-width:.659;"
+     id="rect4"
+	 fill="#5ca7ff"
+	 stroke="#5ca7ff"	 />
+  <rect
+     x="10.305"
+     y="1.7128"
+     width="2.83"
+     height="11.894"
+     style="paint-order:stroke fill markers;stroke-dashoffset:5.6;stroke-linecap:round;stroke-linejoin:bevel;stroke-width:.659;"
+     id="rect6"
+	 fill="#5ca7ff"
+	 stroke="#5ca7ff"	 />
 </svg>

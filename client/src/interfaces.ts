@@ -214,12 +214,17 @@ export interface UnitBlueprint {
     muzzleVelocity?: number;
     aimTime?: number;
     shotsToFire?: number;
+    shotsBaseInterval?: number;
+    shotsBaseScatter?: number;
     description?: string;
     abilities?: string;
     acquisitionRange?: number;
     engagementRange?: number;
+    targetingRange?: number;
     canTargetPoint?: boolean;
     canRearm?: boolean;
+    canAAA?: boolean;
+    indirectFire?: boolean;
 }
 
 export interface UnitSpawnOptions {

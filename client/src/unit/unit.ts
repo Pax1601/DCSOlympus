@@ -447,7 +447,6 @@ export class Unit extends CustomMarker {
         return this.getDatabase()?.getSpawnPointsByName(this.getName());
     }
 
-
     /********************** Icon *************************/
     createIcon(): void {
         /* Set the icon */
@@ -652,6 +651,14 @@ export class Unit extends CustomMarker {
 
     canRearm() {
         return this.getDatabase()?.getByName(this.#name)?.canRearm === true;
+    }
+
+    canAAA() {
+        return this.getDatabase()?.getByName(this.#name)?.canAAA === true;
+    }
+
+    indirectFire() {
+        return this.getDatabase()?.getByName(this.#name)?.indirectFire === true;
     }
 
     isTanker() {
@@ -1462,7 +1469,7 @@ export class GroundUnit extends Unit {
                 options["group-ground"] = { text: "Create group", tooltip: "Create a group from the selected units", type: "and" };
             }
 
-            if (["AAA", "flak"].includes(this.getType())) {
+            if (this.canAAA()) {
                 options["scenic-aaa"] = { text: "Scenic AAA", tooltip: "Shoot AAA in the air without aiming at any target, when a enemy unit gets close enough. WARNING: works correctly only on neutral units, blue or red units will aim", type: "and" };
                 options["miss-aaa"] = { text: "Miss on purpose AAA", tooltip: "Shoot AAA towards the closest enemy unit, but don't aim precisely. WARNING: works correctly only on neutral units, blue or red units will aim", type: "and" };
             }
