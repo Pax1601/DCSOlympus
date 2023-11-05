@@ -37,12 +37,14 @@ export class GroundUnitEditor extends UnitEditor {
             addStringInput(this.contentDiv2, "Acquisition range [m]", String(blueprint.acquisitionRange)?? "", "number", (value: string) => {blueprint.acquisitionRange = parseFloat(value); });
             addStringInput(this.contentDiv2, "Engagement range [m]", String(blueprint.engagementRange)?? "", "number", (value: string) => {blueprint.engagementRange = parseFloat(value); });
             addStringInput(this.contentDiv2, "Targeting range [m]", String(blueprint.targetingRange)?? "", "number", (value: string) => {blueprint.targetingRange = parseFloat(value); });
+            addStringInput(this.contentDiv2, "Aim method range [m]", String(blueprint.aimMethodRange)?? "", "number", (value: string) => {blueprint.aimMethodRange = parseFloat(value); });
             addStringInput(this.contentDiv2, "Barrel height [m]", String(blueprint.barrelHeight)?? "", "number", (value: string) => {blueprint.barrelHeight = parseFloat(value); });
             addStringInput(this.contentDiv2, "Muzzle velocity [m/s]", String(blueprint.muzzleVelocity)?? "", "number", (value: string) => {blueprint.muzzleVelocity = parseFloat(value); });
             addStringInput(this.contentDiv2, "Aim time [s]", String(blueprint.aimTime)?? "", "number", (value: string) => {blueprint.aimTime = parseFloat(value); });
-            addStringInput(this.contentDiv2, "Burst quantity", String(blueprint.shotsToFire)?? "", "number", (value: string) => {blueprint.shotsToFire = Math.round(parseFloat(value)); });
-            addStringInput(this.contentDiv2, "Burst base interval [s]", String(blueprint.shotsBaseInterval)?? "", "number", (value: string) => {blueprint.shotsBaseInterval = Math.round(parseFloat(value)); });
-            addStringInput(this.contentDiv2, "Base scatter [°]", String(blueprint.shotsBaseScatter)?? "", "number", (value: string) => {blueprint.shotsBaseScatter = Math.round(parseFloat(value)); });            
+            addStringInput(this.contentDiv2, "Shots to fire", String(blueprint.shotsToFire)?? "", "number", (value: string) => {blueprint.shotsToFire = Math.round(parseFloat(value)); });
+            addStringInput(this.contentDiv2, "Shots base interval [s]", String(blueprint.shotsBaseInterval)?? "", "number", (value: string) => {blueprint.shotsBaseInterval = Math.round(parseFloat(value)); });
+            addStringInput(this.contentDiv2, "Shots base scatter [°]", String(blueprint.shotsBaseScatter)?? "", "number", (value: string) => {blueprint.shotsBaseScatter = Math.round(parseFloat(value)); });            
+            addStringInput(this.contentDiv2, "Alertness time constant [s]", String(blueprint.alertnessTimeConstant)?? "", "number", (value: string) => {blueprint.alertnessTimeConstant = Math.round(parseFloat(value)); });            
             addCheckboxInput(this.contentDiv2, "Can target point", blueprint.canTargetPoint ?? false, (value: boolean) => {blueprint.canTargetPoint = value;})
             addCheckboxInput(this.contentDiv2, "Can rearm", blueprint.canRearm ?? false, (value: boolean) => {blueprint.canRearm = value;})
             addCheckboxInput(this.contentDiv2, "Can operate as AAA", blueprint.canAAA ?? false, (value: boolean) => {blueprint.canAAA = value;})

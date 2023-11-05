@@ -77,6 +77,28 @@ namespace State
 	};
 };
 
+namespace ShotsScatter
+{
+	enum ShotsScatters
+	{
+		NONE = 0,
+		HIGH,
+		MEDIUM,
+		LOW
+	};
+};
+
+namespace ShotsIntensity
+{
+	enum ShotsIntensities
+	{
+		NONE = 0,
+		LOW,
+		MEDIUM,
+		HIGH
+	};
+};
+
 #pragma pack(push, 1)
 namespace DataTypes {
 	struct TACAN

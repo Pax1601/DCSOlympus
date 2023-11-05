@@ -640,7 +640,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		if (unit != nullptr) {
 			unsigned char shotsScatter = value[L"shotsScatter"].as_number().to_uint32();
 			unit->setShotsScatter(shotsScatter);
-			log(username + " set unit " + + unit->getUnitName() + "(" + unit->getName() + ") shots scatter to " + to_string(shotsScatter), true);
+			log(username + " set unit " + unit->getUnitName() + "(" + unit->getName() + ") shots scatter to " + to_string(shotsScatter), true);
 		}
 	}
 	/************************/

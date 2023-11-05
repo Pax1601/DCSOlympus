@@ -83,6 +83,7 @@ declare module "controls/switch" {
 }
 declare module "constants/constants" {
     import { LatLng, LatLngBounds } from "leaflet";
+    import { MapMarkerControl } from "map/map";
     export const UNITS_URI = "units";
     export const WEAPONS_URI = "weapons";
     export const LOGS_URI = "logs";
@@ -194,6 +195,7 @@ declare module "constants/constants" {
     export const visibilityControls: string[];
     export const visibilityControlsTypes: string[][];
     export const visibilityControlsTooltips: string[];
+    export const MAP_MARKER_CONTROLS: MapMarkerControl[];
     export const IADSTypes: string[];
     export const IADSDensities: {
         [key: string]: number;
@@ -577,6 +579,8 @@ declare module "interfaces" {
         acquisitionRange?: number;
         engagementRange?: number;
         targetingRange?: number;
+        aimMethodRange?: number;
+        alertnessTimeConstant?: number;
         canTargetPoint?: boolean;
         canRearm?: boolean;
         canAAA?: boolean;
@@ -621,6 +625,7 @@ declare module "interfaces" {
     export interface ShortcutOptions {
         altKey?: boolean;
         callback: CallableFunction;
+        context?: string;
         ctrlKey?: boolean;
         name?: string;
         shiftKey?: boolean;
@@ -1121,6 +1126,7 @@ declare module "unit/unit" {
         isInViewport(): boolean;
         canTargetPoint(): boolean;
         canRearm(): boolean;
+        canLandAtPoint(): boolean;
         canAAA(): boolean;
         indirectFire(): boolean;
         isTanker(): boolean;
@@ -1359,6 +1365,13 @@ declare module "contextmenus/airbasespawnmenu" {
         setAirbase(airbase: Airbase): void;
     }
 }
+declare module "context/context" {
+    export interface ContextInterface {
+    }
+    export class Context {
+        constructor(config: ContextInterface);
+    }
+}
 declare module "other/manager" {
     export class Manager {
         #private;
@@ -1434,6 +1447,14 @@ declare module "map/map" {
     import { CoalitionArea } from "map/coalitionarea/coalitionarea";
     import { CoalitionAreaContextMenu } from "contextmenus/coalitionareacontextmenu";
     import { AirbaseSpawnContextMenu } from "contextmenus/airbasespawnmenu";
+    export type MapMarkerControl = {
+        "image": string;
+        "isProtected"?: boolean;
+        "name": string;
+        "protectable"?: boolean;
+        "toggles": string[];
+        "tooltip": string;
+    };
     export class Map extends L.Map {
         #private;
         /**
@@ -1481,6 +1502,7 @@ declare module "map/map" {
         getVisibilityOptions(): {
             [key: string]: boolean;
         };
+        unitIsProtected(unit: Unit): boolean;
     }
 }
 declare module "mission/bullseye" {
@@ -1749,7 +1771,9 @@ declare module "unit/unitsmanager" {
          */
         getSelectedUnits(options?: {
             excludeHumans?: boolean;
+            excludeProtected?: boolean;
             onlyOnePerGroup?: boolean;
+            showProtectionReminder?: boolean;
         }): Unit[];
         /** Deselects all currently selected units
          *
@@ -2142,6 +2166,18 @@ declare module "panels/unitlistpanel" {
         toggle(): void;
     }
 }
+declare module "context/contextmanager" {
+    import { Manager } from "other/manager";
+    import { ContextInterface } from "context/context";
+    export class ContextManager extends Manager {
+        #private;
+        constructor();
+        add(name: string, contextConfig: ContextInterface): this;
+        currentContextIs(contextName: string): boolean;
+        getCurrentContext(): any;
+        setContext(contextName: string): false | undefined;
+    }
+}
 declare module "olympusapp" {
     import { Map } from "map/map";
     import { MissionManager } from "mission/missionmanager";
@@ -2151,11 +2187,15 @@ declare module "olympusapp" {
     import { WeaponsManager } from "weapon/weaponsmanager";
     import { Manager } from "other/manager";
     import { ServerManager } from "server/servermanager";
+    import { ContextManager } from "context/contextmanager";
+    import { Context } from "context/context";
     export class OlympusApp {
         #private;
         constructor();
         getDialogManager(): Manager;
         getMap(): Map;
+        getCurrentContext(): Context;
+        getContextManager(): ContextManager;
         getServerManager(): ServerManager;
         getPanelsManager(): Manager;
         getPopupsManager(): Manager;
@@ -2206,4 +2246,12 @@ declare module "olympusapp" {
 declare module "index" {
     import { OlympusApp } from "olympusapp";
     export function getApp(): OlympusApp;
+}
+declare module "context/contextmenumanager" {
+    import { ContextMenu } from "contextmenus/contextmenu";
+    import { Manager } from "other/manager";
+    export class ContextMenuManager extends Manager {
+        constructor();
+        add(name: string, contextMenu: ContextMenu): this;
+    }
 }

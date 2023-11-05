@@ -653,6 +653,10 @@ export class Unit extends CustomMarker {
         return this.getDatabase()?.getByName(this.#name)?.canRearm === true;
     }
 
+    canLandAtPoint() {
+        return this.getCategory() === "Helicopter";
+    }
+
     canAAA() {
         return this.getDatabase()?.getByName(this.#name)?.canAAA === true;
     }

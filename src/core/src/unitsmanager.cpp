@@ -194,6 +194,35 @@ Unit* UnitsManager::getClosestUnit(Unit* unit, unsigned char coalition, vector<s
 	return closestUnit;
 }
 
+map<Unit*, double> UnitsManager::getUnitsInRange(Unit* unit, unsigned char coalition, vector<string> categories, double range) {
+	map<Unit*, double> unitsInRange;
+
+	for (auto const& p : units) {
+		/* Check if the units category is of the correct type */
+		bool requestedCategory = false;
+		for (auto const& category : categories) {
+			if (p.second->getCategory().compare(category) == 0) {
+				requestedCategory = true;
+				break;
+			}
+		}
+
+		/* Check if the unit belongs to the desired coalition, is alive, and is of the category requested */
+		if (requestedCategory && p.second->getCoalition() == coalition && p.second->getAlive()) {
+			/* Compute the distance from the unit to the tested unit */
+			double dist;
+			double bearing1;
+			double bearing2;
+			Geodesic::WGS84().Inverse(unit->getPosition().lat, unit->getPosition().lng, p.second->getPosition().lat, p.second->getPosition().lng, dist, bearing1, bearing2);
+
+			if (dist <= range) 
+				unitsInRange[p.second] = dist;
+		}
+	}
+
+	return unitsInRange;
+}
+
 void UnitsManager::acquireControl(unsigned int ID) {
 	Unit* leader = getGroupLeader(ID);
 	if (leader != nullptr) {

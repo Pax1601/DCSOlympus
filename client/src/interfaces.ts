@@ -221,6 +221,8 @@ export interface UnitBlueprint {
     acquisitionRange?: number;
     engagementRange?: number;
     targetingRange?: number;
+    aimMethodRange?: number;
+    alertnessTimeConstant?: number;
     canTargetPoint?: boolean;
     canRearm?: boolean;
     canAAA?: boolean;
