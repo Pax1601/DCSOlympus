@@ -1367,9 +1367,16 @@ declare module "contextmenus/airbasespawnmenu" {
 }
 declare module "context/context" {
     export interface ContextInterface {
+        useSpawnMenu?: boolean;
+        useUnitControlPanel?: boolean;
+        useUnitInfoPanel?: boolean;
     }
     export class Context {
+        #private;
         constructor(config: ContextInterface);
+        getUseSpawnMenu(): boolean;
+        getUseUnitControlPanel(): boolean;
+        getUseUnitInfoPanel(): boolean;
     }
 }
 declare module "other/manager" {
@@ -1619,6 +1626,7 @@ declare module "panels/unitinfopanel" {
     export class UnitInfoPanel extends Panel {
         #private;
         constructor(ID: string);
+        show(): void;
     }
 }
 declare module "plugin/pluginmanager" {

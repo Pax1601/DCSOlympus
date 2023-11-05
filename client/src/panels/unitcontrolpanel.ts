@@ -141,6 +141,10 @@ export class UnitControlPanel extends Panel {
     }
 
     show() {
+        const context = getApp().getCurrentContext();
+        if ( !context.getUseUnitControlPanel() )
+            return;
+        
         super.show();
         this.#speedTypeSwitch.resetExpectedValue();
         this.#altitudeTypeSwitch.resetExpectedValue();
