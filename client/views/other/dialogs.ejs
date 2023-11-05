@@ -6,11 +6,11 @@
             <div class="app-version">Version <span class="app-version-number">v0.4.5-alpha</span></div>
         </div>
 
-        <div id="authentication-form">
+        <form id="authentication-form">
             <div><h5>Username</h5> <input type="text" id="username" name="username" required autocomplete="username" placeholder="Enter username..."></div>
             <div><h5>Password</h5> <input type="password" id="password" name="password" minlength="8" required autocomplete="current-password" placeholder="Enter password..."></div>
-            <button id="connection-button" class="ol-button-apply" data-on-click="tryConnection">Connect</button>
-        </div>
+            <button type="submit" id="connection-button" class="ol-button-apply">Connect</button>
+        </form>
 
         <h5 id="login-status"><br></h5>
 

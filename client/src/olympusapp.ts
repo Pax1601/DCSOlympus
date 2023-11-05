@@ -403,19 +403,26 @@ export class OlympusApp {
         });
 
         /* Try and connect with the Olympus REST server */
-        document.addEventListener("tryConnection", () => {
-            const form = document.querySelector("#splash-content")?.querySelector("#authentication-form");
-            const username = (form?.querySelector("#username") as HTMLInputElement).value;
-            const password = (form?.querySelector("#password") as HTMLInputElement).value;
+        const loginForm = document.getElementById("authentication-form");
+        if (loginForm instanceof HTMLFormElement) {
+            loginForm.addEventListener("submit", (ev:SubmitEvent) => {
+                ev.preventDefault();
+                ev.stopPropagation();
+                const username = (loginForm.querySelector("#username") as HTMLInputElement).value;
+                const password = (loginForm.querySelector("#password") as HTMLInputElement).value;
 
-            /* Update the user credentials */
-            this.getServerManager().setCredentials(username, password);
+                // Update the user credentials
+                this.getServerManager().setCredentials(username, password);
 
-            /* Start periodically requesting updates */
-            this.getServerManager().startUpdate();
+                // Start periodically requesting updates
+                this.getServerManager().startUpdate();
 
-            this.setLoginStatus("connecting");
-        })
+                this.setLoginStatus("connecting");
+            });
+        } else {
+            console.error("Unable to find login form.");
+        }
+
 
         /* Reload the page, used to mimic a restart of the app */
         document.addEventListener("reloadPage", () => {
