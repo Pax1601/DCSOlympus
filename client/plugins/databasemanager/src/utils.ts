@@ -269,5 +269,5 @@ export function arrayToString(array: string[]) {
 
 
 export function stringToArray(input: string) {
-    return input.match( /(\w)+/g );
+    return input.match( /(\w)+/g ) || [];
 }

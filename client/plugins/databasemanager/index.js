@@ -613,10 +613,10 @@ class LoadoutEditor {
         title.innerText = "Loadout properties";
         __classPrivateFieldGet(this, _LoadoutEditor_contentDiv, "f").appendChild(title);
         if (__classPrivateFieldGet(this, _LoadoutEditor_loadout, "f")) {
-            var laodout = __classPrivateFieldGet(this, _LoadoutEditor_loadout, "f");
-            (0, utils_1.addStringInput)(__classPrivateFieldGet(this, _LoadoutEditor_contentDiv, "f"), "Name", laodout.name, "text", (value) => { laodout.name = value; __classPrivateFieldGet(this, _LoadoutEditor_contentDiv, "f").dispatchEvent(new Event("refresh")); });
-            (0, utils_1.addStringInput)(__classPrivateFieldGet(this, _LoadoutEditor_contentDiv, "f"), "Code", laodout.code, "text", (value) => { laodout.code = value; });
-            (0, utils_1.addStringInput)(__classPrivateFieldGet(this, _LoadoutEditor_contentDiv, "f"), "Roles", (0, utils_1.arrayToString)(laodout.roles), "text", (value) => { laodout.roles = (0, utils_1.stringToArray)(value); });
+            var loadout = __classPrivateFieldGet(this, _LoadoutEditor_loadout, "f");
+            (0, utils_1.addStringInput)(__classPrivateFieldGet(this, _LoadoutEditor_contentDiv, "f"), "Name", loadout.name, "text", (value) => { loadout.name = value; __classPrivateFieldGet(this, _LoadoutEditor_contentDiv, "f").dispatchEvent(new Event("refresh")); });
+            (0, utils_1.addStringInput)(__classPrivateFieldGet(this, _LoadoutEditor_contentDiv, "f"), "Code", loadout.code, "text", (value) => { loadout.code = value; });
+            (0, utils_1.addStringInput)(__classPrivateFieldGet(this, _LoadoutEditor_contentDiv, "f"), "Roles", (0, utils_1.arrayToString)(loadout.roles), "text", (value) => { loadout.roles = (0, utils_1.stringToArray)(value); });
             (0, utils_1.addLoadoutItemsEditor)(__classPrivateFieldGet(this, _LoadoutEditor_contentDiv, "f"), __classPrivateFieldGet(this, _LoadoutEditor_loadout, "f"));
         }
     }
@@ -1034,25 +1034,11 @@ exports.addLoadoutsScroll = addLoadoutsScroll;
  * @returns The string
  */
 function arrayToString(array) {
-    var value = "[";
-    var firstRole = true;
-    array.forEach((role) => {
-        value += firstRole ? "" : ", ";
-        firstRole = false;
-        value += role;
-    });
-    value += "]";
-    return value;
+    return "[" + array.join(", ") + "]";
 }
 exports.arrayToString = arrayToString;
 function stringToArray(input) {
-    input = input.replace("[", "").replace("]", "");
-    var values = input.split(",");
-    var result = [];
-    values.forEach((value) => {
-        result.push(value.trim());
-    });
-    return result;
+    return input.match(/(\w)+/g) || [];
 }
 exports.stringToArray = stringToArray;
 

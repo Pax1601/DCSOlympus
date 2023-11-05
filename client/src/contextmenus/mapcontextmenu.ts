@@ -4,7 +4,7 @@ import { ContextMenu } from "./contextmenu";
 import { Switch } from "../controls/switch";
 import { GAME_MASTER } from "../constants/constants";
 import { CoalitionArea } from "../map/coalitionarea/coalitionarea";
-import { AircraftSpawnMenu, GroundUnitSpawnMenu, HelicopterSpawnMenu, NavyUnitSpawnMenu } from "../controls/unitspawnmenu";
+import { AirDefenceUnitSpawnMenu, AircraftSpawnMenu, GroundUnitSpawnMenu, HelicopterSpawnMenu, NavyUnitSpawnMenu } from "../controls/unitspawnmenu";
 import { Airbase } from "../mission/airbase";
 import { SmokeMarker } from "../map/markers/smokemarker";
 
@@ -15,6 +15,7 @@ export class MapContextMenu extends ContextMenu {
     #coalitionSwitch: Switch;
     #aircraftSpawnMenu: AircraftSpawnMenu;
     #helicopterSpawnMenu: HelicopterSpawnMenu;
+    #airDefenceUnitSpawnMenu: AirDefenceUnitSpawnMenu;
     #groundUnitSpawnMenu: GroundUnitSpawnMenu;
     #navyUnitSpawnMenu: NavyUnitSpawnMenu;
     #coalitionArea: CoalitionArea | null = null;
@@ -35,6 +36,7 @@ export class MapContextMenu extends ContextMenu {
         /* Create the spawn menus for the different unit types */
         this.#aircraftSpawnMenu = new AircraftSpawnMenu("aircraft-spawn-menu");
         this.#helicopterSpawnMenu = new HelicopterSpawnMenu("helicopter-spawn-menu");
+        this.#airDefenceUnitSpawnMenu = new AirDefenceUnitSpawnMenu("air-defence-spawn-menu");
         this.#groundUnitSpawnMenu = new GroundUnitSpawnMenu("groundunit-spawn-menu");
         this.#navyUnitSpawnMenu = new NavyUnitSpawnMenu("navyunit-spawn-menu");
 
@@ -73,21 +75,25 @@ export class MapContextMenu extends ContextMenu {
 
         this.#aircraftSpawnMenu.getContainer().addEventListener("resize", () => this.clip());
         this.#helicopterSpawnMenu.getContainer().addEventListener("resize", () => this.clip());
+        this.#airDefenceUnitSpawnMenu.getContainer().addEventListener("resize", () => this.clip());
         this.#groundUnitSpawnMenu.getContainer().addEventListener("resize", () => this.clip());
         this.#navyUnitSpawnMenu.getContainer().addEventListener("resize", () => this.clip());
 
         this.#aircraftSpawnMenu.getContainer().addEventListener("hide", () => this.hide());
         this.#helicopterSpawnMenu.getContainer().addEventListener("hide", () => this.hide());
+        this.#airDefenceUnitSpawnMenu.getContainer().addEventListener("hide", () => this.hide());
         this.#groundUnitSpawnMenu.getContainer().addEventListener("hide", () => this.hide());
         this.#navyUnitSpawnMenu.getContainer().addEventListener("hide", () => this.hide());
 
         this.getContainer()?.addEventListener("show", () => this.#aircraftSpawnMenu.showCirclesPreviews());
         this.getContainer()?.addEventListener("show", () => this.#helicopterSpawnMenu.showCirclesPreviews());
+        this.getContainer()?.addEventListener("show", () => this.#airDefenceUnitSpawnMenu.showCirclesPreviews());
         this.getContainer()?.addEventListener("show", () => this.#groundUnitSpawnMenu.showCirclesPreviews());
         this.getContainer()?.addEventListener("show", () => this.#navyUnitSpawnMenu.showCirclesPreviews());
 
         this.getContainer()?.addEventListener("hide", () => this.#aircraftSpawnMenu.clearCirclesPreviews());
         this.getContainer()?.addEventListener("hide", () => this.#helicopterSpawnMenu.clearCirclesPreviews());
+        this.getContainer()?.addEventListener("hide", () => this.#airDefenceUnitSpawnMenu.clearCirclesPreviews());
         this.getContainer()?.addEventListener("hide", () => this.#groundUnitSpawnMenu.clearCirclesPreviews());
         this.getContainer()?.addEventListener("hide", () => this.#navyUnitSpawnMenu.clearCirclesPreviews());
     }
@@ -103,11 +109,13 @@ export class MapContextMenu extends ContextMenu {
 
         this.#aircraftSpawnMenu.setLatLng(latlng);
         this.#helicopterSpawnMenu.setLatLng(latlng);
+        this.#airDefenceUnitSpawnMenu.setLatLng(latlng);
         this.#groundUnitSpawnMenu.setLatLng(latlng);
         this.#navyUnitSpawnMenu.setLatLng(latlng);
 
         this.#aircraftSpawnMenu.setCountries();
         this.#helicopterSpawnMenu.setCountries();
+        this.#airDefenceUnitSpawnMenu.setCountries();
         this.#groundUnitSpawnMenu.setCountries();
         this.#navyUnitSpawnMenu.setCountries();
 
@@ -143,7 +151,7 @@ export class MapContextMenu extends ContextMenu {
     #showSubMenu(type: string) {
         if (type === "more")
             this.getContainer()?.querySelector("#more-options-button-bar")?.classList.toggle("hide");
-        else if (["aircraft", "helicopter", "groundunit"].includes(type))
+        else if (["aircraft", "helicopter", "air-defence", "groundunit"].includes(type))
             this.getContainer()?.querySelector("#more-options-button-bar")?.classList.toggle("hide", true);
 
         this.getContainer()?.querySelector("#aircraft-spawn-menu")?.classList.toggle("hide", type !== "aircraft");
@@ -152,6 +160,8 @@ export class MapContextMenu extends ContextMenu {
         this.getContainer()?.querySelector("#helicopter-spawn-button")?.classList.toggle("is-open", type === "helicopter");
         this.getContainer()?.querySelector("#groundunit-spawn-menu")?.classList.toggle("hide", type !== "groundunit");
         this.getContainer()?.querySelector("#groundunit-spawn-button")?.classList.toggle("is-open", type === "groundunit");
+        this.getContainer()?.querySelector("#air-defence-spawn-menu")?.classList.toggle("hide", type !== "air-defence");
+        this.getContainer()?.querySelector("#air-defence-spawn-button")?.classList.toggle("is-open", type === "air-defence");
         this.getContainer()?.querySelector("#navyunit-spawn-menu")?.classList.toggle("hide", type !== "navyunit");
         this.getContainer()?.querySelector("#navyunit-spawn-button")?.classList.toggle("is-open", type === "navyunit");
         this.getContainer()?.querySelector("#smoke-spawn-menu")?.classList.toggle("hide", type !== "smoke");
@@ -167,6 +177,9 @@ export class MapContextMenu extends ContextMenu {
         this.#helicopterSpawnMenu.reset();
         this.#helicopterSpawnMenu.setCountries();
         this.#helicopterSpawnMenu.clearCirclesPreviews();
+        this.#airDefenceUnitSpawnMenu.reset();
+        this.#airDefenceUnitSpawnMenu.setCountries();
+        this.#airDefenceUnitSpawnMenu.clearCirclesPreviews();
         this.#groundUnitSpawnMenu.reset();
         this.#groundUnitSpawnMenu.setCountries();
         this.#groundUnitSpawnMenu.clearCirclesPreviews();
@@ -200,11 +213,13 @@ export class MapContextMenu extends ContextMenu {
 
         this.#aircraftSpawnMenu.reset();
         this.#helicopterSpawnMenu.reset();
+        this.#airDefenceUnitSpawnMenu.reset();
         this.#groundUnitSpawnMenu.reset();
         this.#navyUnitSpawnMenu.reset();
 
         this.#aircraftSpawnMenu.clearCirclesPreviews();
         this.#helicopterSpawnMenu.clearCirclesPreviews();
+        this.#airDefenceUnitSpawnMenu.clearCirclesPreviews();
         this.#groundUnitSpawnMenu.clearCirclesPreviews();
         this.#navyUnitSpawnMenu.clearCirclesPreviews();
 
@@ -221,6 +236,7 @@ export class MapContextMenu extends ContextMenu {
         this.getContainer()?.querySelectorAll('[data-coalition]').forEach((element: any) => { element.setAttribute("data-coalition", getApp().getActiveCoalition()) });
         this.#aircraftSpawnMenu.setCountries();
         this.#helicopterSpawnMenu.setCountries();
+        this.#airDefenceUnitSpawnMenu.setCountries();
         this.#groundUnitSpawnMenu.setCountries();
         this.#navyUnitSpawnMenu.setCountries();
     }
@@ -234,6 +250,7 @@ export class MapContextMenu extends ContextMenu {
         this.getContainer()?.querySelectorAll('[data-coalition]').forEach((element: any) => { element.setAttribute("data-coalition", getApp().getActiveCoalition()) });
         this.#aircraftSpawnMenu.setCountries();
         this.#helicopterSpawnMenu.setCountries();
+        this.#airDefenceUnitSpawnMenu.setCountries();
         this.#groundUnitSpawnMenu.setCountries();
         this.#navyUnitSpawnMenu.setCountries();
     }

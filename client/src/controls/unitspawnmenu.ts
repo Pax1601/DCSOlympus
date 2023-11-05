@@ -31,6 +31,7 @@ export class UnitSpawnMenu {
     #unitDatabase: UnitDatabase;
     #countryCodes: any;
     #orderByRole: boolean;
+    protected unitTypeFilter = (unit:any) => { return true; };
 
     /* Controls */
     #unitRoleTypeDropdown: Dropdown;
@@ -258,7 +259,7 @@ export class UnitSpawnMenu {
         if (this.#orderByRole)
             this.#unitRoleTypeDropdown.setOptions(this.#unitDatabase.getRoles());
         else
-            this.#unitRoleTypeDropdown.setOptions(this.#unitDatabase.getTypes());
+            this.#unitRoleTypeDropdown.setOptions(this.#unitDatabase.getTypes(this.unitTypeFilter));
 
         this.#unitLoadoutListEl.replaceChildren();
         this.#unitLoadoutDropdown.reset();
@@ -582,9 +583,52 @@ export class HelicopterSpawnMenu extends UnitSpawnMenu {
     }
 }
 
+export class AirDefenceUnitSpawnMenu extends UnitSpawnMenu {
+
+    protected showRangeCircles: boolean = true;
+    protected unitTypeFilter = (unit:any) => {return /\bAAA|SAM\b/.test(unit.type) || /\bmanpad|stinger\b/i.test(unit.type)};
+
+    /**
+     * 
+     * @param ID - the ID of the HTML element which will contain the context menu
+     */
+    constructor(ID: string){
+        super(ID, groundUnitDatabase, false);
+        this.setMaxUnitCount(4);
+        this.getAltitudeSlider().hide();
+        this.getLoadoutDropdown().hide();
+        this.getLoadoutPreview().classList.add("hide");
+    }
+
+    deployUnits(spawnOptions: UnitSpawnOptions, unitsCount: number) {
+        spawnOptions.coalition = getApp().getActiveCoalition();
+        if (spawnOptions) {
+            var unitTable: UnitSpawnTable = {
+                unitType: spawnOptions.name,
+                location: spawnOptions.latlng,
+                liveryID: spawnOptions.liveryID? spawnOptions.liveryID: ""
+            };
+            
+            var units = [];
+            for (let i = 0; i < unitsCount; i++) {
+                units.push(JSON.parse(JSON.stringify(unitTable)));
+                unitTable.location.lat += i > 0? 0.0001: 0;
+            }
+
+            getApp().getUnitsManager().spawnUnits("GroundUnit", units, getApp().getActiveCoalition(), false, spawnOptions.airbase ? spawnOptions.airbase.getName() : "", spawnOptions.country, (res: any) => {
+                if (res.commandHash !== undefined)
+                    getApp().getMap().addTemporaryMarker(spawnOptions.latlng, spawnOptions.name, getApp().getActiveCoalition(), res.commandHash);
+            });
+                
+            this.getContainer().dispatchEvent(new Event("hide"));
+        }
+    }
+}
+
 export class GroundUnitSpawnMenu extends UnitSpawnMenu {
 
     protected showRangeCircles: boolean = true;
+    protected unitTypeFilter = (unit:any) => {return !(/\bAAA|SAM\b/.test(unit.type) || /\bmanpad|stinger\b/i.test(unit.type))};
 
     /**
      * 
