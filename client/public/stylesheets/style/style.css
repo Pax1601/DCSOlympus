@@ -740,6 +740,11 @@ nav.ol-panel> :last-child {
 }
 
 /****************************************************************************************/
+#import-from-file-dialog td {
+    text-align: center;
+}
+
+
 #splash-screen {
     border-radius: var(--border-radius-md);
     overflow: hidden;
@@ -1220,6 +1225,17 @@ dl.ol-data-grid dd {
 
 .ol-dialog-content {
     margin: 4px 0;
+}
+
+.ol-dialog-content table th {
+    background-color: var(--background-grey);
+    color:white;
+    font-size:14px;
+    font-weight: normal;
+}
+
+.ol-dialog-content table tbody th {
+    text-align: left;
 }
 
 .ol-dialog-footer {
