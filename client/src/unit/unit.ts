@@ -40,6 +40,7 @@ export class Unit extends CustomMarker {
     #onOff: boolean = true;
     #followRoads: boolean = false;
     #fuel: number = 0;
+    #health: number = Math.round(Math.random()*100);
     #desiredSpeed: number = 0;
     #desiredSpeedType: string = "CAS";
     #desiredAltitude: number = 0;
@@ -116,6 +117,7 @@ export class Unit extends CustomMarker {
     getGroupName() { return this.#groupName };
     getHasTask() { return this.#hasTask };
     getHeading() { return this.#heading };
+    getHealth() { return this.#health };
     getHuman() { return this.#human };
     getIsActiveAWACS() { return this.#isActiveAWACS };
     getIsActiveTanker() { return this.#isActiveTanker };
@@ -228,6 +230,7 @@ export class Unit extends CustomMarker {
                 case DataIndexes.onOff: this.#onOff = dataExtractor.extractBool(); break;
                 case DataIndexes.followRoads: this.#followRoads = dataExtractor.extractBool(); break;
                 case DataIndexes.fuel: this.#fuel = dataExtractor.extractUInt16(); break;
+                //  case DataIndexes.health: this.#health = dataExtractor.extractUInt16(); break;   //  To be dynamic
                 case DataIndexes.desiredSpeed: this.#desiredSpeed = dataExtractor.extractFloat64(); break;
                 case DataIndexes.desiredSpeedType: this.#desiredSpeedType = dataExtractor.extractBool() ? "GS" : "CAS"; break;
                 case DataIndexes.desiredAltitude: this.#desiredAltitude = dataExtractor.extractFloat64(); break;
@@ -327,6 +330,7 @@ export class Unit extends CustomMarker {
         return {
             showState: false,
             showVvi: false,
+            showHealth: true,
             showHotgroup: false,
             showUnitIcon: true,
             showShortLabel: false,
@@ -517,6 +521,16 @@ export class Unit extends CustomMarker {
             fuelLevel.classList.add("unit-fuel-level");
             fuelIndicator.appendChild(fuelLevel);
             el.append(fuelIndicator);
+        }
+
+        // Health indicator
+        if (iconOptions.showHealth) {
+            var healthIndicator = document.createElement("div");
+            healthIndicator.classList.add("unit-health");
+            var healthLevel = document.createElement("div");
+            healthLevel.classList.add("unit-health-level");
+            healthIndicator.appendChild(healthLevel);
+            el.append(healthIndicator);
         }
 
         // Ammo indicator
@@ -1038,6 +1052,10 @@ export class Unit extends CustomMarker {
                 element.querySelector(".unit-fuel-level")?.setAttribute("style", `width: ${this.#fuel}%`);
                 element.querySelector(".unit")?.toggleAttribute("data-has-low-fuel", this.#fuel < 20);
 
+                /* Set health data */
+                element.querySelector(".unit-health-level")?.setAttribute("style", `width: ${this.#health}%`);
+                element.querySelector(".unit")?.toggleAttribute("data-has-low-health", this.#health < 20);
+
                 /* Set dead/alive flag */
                 element.querySelector(".unit")?.toggleAttribute("data-is-dead", !this.#alive);
 
@@ -1341,6 +1359,7 @@ export class AirUnit extends Unit {
         return {
             showState: belongsToCommandedCoalition,
             showVvi: (belongsToCommandedCoalition || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
+            showHealth: false,
             showHotgroup: belongsToCommandedCoalition,
             showUnitIcon: (belongsToCommandedCoalition || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
             showShortLabel: (belongsToCommandedCoalition || this.getDetectionMethods().some(value => [VISUAL, OPTIC].includes(value))),
@@ -1414,6 +1433,7 @@ export class GroundUnit extends Unit {
         return {
             showState: belongsToCommandedCoalition,
             showVvi: false,
+            showHealth: true,
             showHotgroup: belongsToCommandedCoalition,
             showUnitIcon: (belongsToCommandedCoalition || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
             showShortLabel: false,
@@ -1478,6 +1498,7 @@ export class NavyUnit extends Unit {
         return {
             showState: belongsToCommandedCoalition,
             showVvi: false,
+            showHealth: false,
             showHotgroup: true,
             showUnitIcon: (belongsToCommandedCoalition || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
             showShortLabel: false,

@@ -66,6 +66,12 @@
     --unit-height: 50px;
     --unit-width: 50px;
 
+    --unit-health-border-width: 2px;
+    --unit-health-height: 6px;
+    --unit-health-width: 36px;
+    --unit-health-x: 0px;
+    --unit-health-y: 26px;
+
     /***  Air units  ***/
     --unit-ammo-gap: calc(2px + var(--unit-stroke-width));
     --unit-ammo-border-radius: 50%;
