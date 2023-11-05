@@ -48,6 +48,18 @@ export const emissionsCountermeasuresDescriptions: string[] = [
     "Always on (Radar and ECM always on)"
 ];
 
+export const shotsScatterDescriptions: string[] = [
+    "When performing scenic shooting tasks like simulated firefights, will shoot with a large scatter",
+    "When performing scenic shooting tasks like simulated firefights, will shoot with a medium scatter",
+    "When performing scenic shooting tasks like simulated firefights, will shoot with a small scatter (Radar guided units will track shots when the enemy unit is close)"
+];
+
+export const shotsIntensityDescriptions: string[] = [
+    "When performing scenic shooting tasks like simulated firefights, will shoot with a low rate of fire",
+    "When performing scenic shooting tasks like simulated firefights, will shoot with a medium rate of fire",
+    "When performing scenic shooting tasks like simulated firefights, will shoot with a high rate of fire"
+];
+
 export const minSpeedValues: { [key: string]: number } = { Aircraft: 100, Helicopter: 0, NavyUnit: 0, GroundUnit: 0 };
 export const maxSpeedValues: { [key: string]: number } = { Aircraft: 800, Helicopter: 300, NavyUnit: 60, GroundUnit: 60 };
 export const speedIncrements: { [key: string]: number } = { Aircraft: 25, Helicopter: 10, NavyUnit: 5, GroundUnit: 5 };
@@ -221,6 +233,8 @@ export enum DataIndexes {
     hasTask,
     position,
     speed,
+    horizontalVelocity,
+    verticalVelocity,
     heading,
     isActiveTanker,
     isActiveAWACS,
@@ -246,6 +260,8 @@ export enum DataIndexes {
     activePath,
     isLeader,
     operateAs,
+    shotsScatter,
+    shotsIntensity,
     endOfData = 255
 };
 

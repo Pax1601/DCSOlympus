@@ -24,6 +24,7 @@ public:
 	void acquireControl(unsigned int ID);
 	void loadDatabases();
 	Unit* getClosestUnit(Unit* unit, unsigned char coalition, vector<string> categories, double &distance);
+	map<Unit*, double> getUnitsInRange(Unit* unit, unsigned char coalition, vector<string> categories, double range);
 
 private:
 	map<unsigned int, Unit*> units;

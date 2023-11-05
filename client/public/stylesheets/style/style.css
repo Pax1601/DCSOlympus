@@ -683,7 +683,9 @@ nav.ol-panel> :last-child {
 
 #roe-buttons-container button,
 #reaction-to-threat-buttons-container button,
-#emissions-countermeasures-buttons-container button {
+#emissions-countermeasures-buttons-container button,
+#shots-scatter-buttons-container button
+#shots-intensity-buttons-container button {
     align-items: center;
     background-color: transparent;
     border: 1px solid var(--accent-light-blue);
@@ -705,6 +707,7 @@ nav.ol-panel> :last-child {
 
 #unit-control-panel .ol-option-button button.selected svg * {
     fill: var(--background-steel);
+    stroke: var(--background-steel);
 }
 
 #rapid-controls {

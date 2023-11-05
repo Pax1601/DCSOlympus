@@ -83,6 +83,7 @@ declare module "controls/switch" {
 }
 declare module "constants/constants" {
     import { LatLng, LatLngBounds } from "leaflet";
+    import { MapMarkerControl } from "map/map";
     export const UNITS_URI = "units";
     export const WEAPONS_URI = "weapons";
     export const LOGS_URI = "logs";
@@ -107,6 +108,8 @@ declare module "constants/constants" {
     export const ROEDescriptions: string[];
     export const reactionsToThreatDescriptions: string[];
     export const emissionsCountermeasuresDescriptions: string[];
+    export const shotsScatterDescriptions: string[];
+    export const shotsIntensityDescriptions: string[];
     export const minSpeedValues: {
         [key: string]: number;
     };
@@ -192,6 +195,7 @@ declare module "constants/constants" {
     export const visibilityControls: string[];
     export const visibilityControlsTypes: string[][];
     export const visibilityControlsTooltips: string[];
+    export const MAP_MARKER_CONTROLS: MapMarkerControl[];
     export const IADSTypes: string[];
     export const IADSDensities: {
         [key: string]: number;
@@ -221,31 +225,35 @@ declare module "constants/constants" {
         hasTask = 12,
         position = 13,
         speed = 14,
-        heading = 15,
-        isActiveTanker = 16,
-        isActiveAWACS = 17,
-        onOff = 18,
-        followRoads = 19,
-        fuel = 20,
-        desiredSpeed = 21,
-        desiredSpeedType = 22,
-        desiredAltitude = 23,
-        desiredAltitudeType = 24,
-        leaderID = 25,
-        formationOffset = 26,
-        targetID = 27,
-        targetPosition = 28,
-        ROE = 29,
-        reactionToThreat = 30,
-        emissionsCountermeasures = 31,
-        TACAN = 32,
-        radio = 33,
-        generalSettings = 34,
-        ammo = 35,
-        contacts = 36,
-        activePath = 37,
-        isLeader = 38,
-        operateAs = 39,
+        horizontalVelocity = 15,
+        verticalVelocity = 16,
+        heading = 17,
+        isActiveTanker = 18,
+        isActiveAWACS = 19,
+        onOff = 20,
+        followRoads = 21,
+        fuel = 22,
+        desiredSpeed = 23,
+        desiredSpeedType = 24,
+        desiredAltitude = 25,
+        desiredAltitudeType = 26,
+        leaderID = 27,
+        formationOffset = 28,
+        targetID = 29,
+        targetPosition = 30,
+        ROE = 31,
+        reactionToThreat = 32,
+        emissionsCountermeasures = 33,
+        TACAN = 34,
+        radio = 35,
+        generalSettings = 36,
+        ammo = 37,
+        contacts = 38,
+        activePath = 39,
+        isLeader = 40,
+        operateAs = 41,
+        shotsScatter = 42,
+        shotsIntensity = 43,
         endOfData = 255
     }
     export const MGRS_PRECISION_10KM = 2;
@@ -500,6 +508,8 @@ declare module "interfaces" {
         hasTask: boolean;
         position: LatLng;
         speed: number;
+        horizontalVelocity: number;
+        verticalVelocity: number;
         heading: number;
         isActiveTanker: boolean;
         isActiveAWACS: boolean;
@@ -525,6 +535,8 @@ declare module "interfaces" {
         activePath: LatLng[];
         isLeader: boolean;
         operateAs: string;
+        shotsScatter: number;
+        shotsIntensity: number;
     }
     export interface LoadoutItemBlueprint {
         name: string;
@@ -560,12 +572,19 @@ declare module "interfaces" {
         muzzleVelocity?: number;
         aimTime?: number;
         shotsToFire?: number;
+        shotsBaseInterval?: number;
+        shotsBaseScatter?: number;
         description?: string;
         abilities?: string;
         acquisitionRange?: number;
         engagementRange?: number;
+        targetingRange?: number;
+        aimMethodRange?: number;
+        alertnessTimeConstant?: number;
         canTargetPoint?: boolean;
         canRearm?: boolean;
+        canAAA?: boolean;
+        indirectFire?: boolean;
     }
     export interface UnitSpawnOptions {
         roleType: string;
@@ -1042,6 +1061,8 @@ declare module "unit/unit" {
         getHasTask(): boolean;
         getPosition(): LatLng;
         getSpeed(): number;
+        getHorizontalVelocity(): number;
+        getVerticalVelocity(): number;
         getHeading(): number;
         getIsActiveTanker(): boolean;
         getIsActiveAWACS(): boolean;
@@ -1067,6 +1088,8 @@ declare module "unit/unit" {
         getActivePath(): LatLng[];
         getIsLeader(): boolean;
         getOperateAs(): string;
+        getShotsScatter(): number;
+        getShotsIntensity(): number;
         static getConstructor(type: string): typeof GroundUnit | undefined;
         constructor(ID: number);
         getCategory(): string;
@@ -1103,6 +1126,9 @@ declare module "unit/unit" {
         isInViewport(): boolean;
         canTargetPoint(): boolean;
         canRearm(): boolean;
+        canLandAtPoint(): boolean;
+        canAAA(): boolean;
+        indirectFire(): boolean;
         isTanker(): boolean;
         isAWACS(): boolean;
         /********************** Unit commands *************************/
@@ -1138,6 +1164,8 @@ declare module "unit/unit" {
         scenicAAA(): void;
         missOnPurpose(): void;
         landAtPoint(latlng: LatLng): void;
+        setShotsScatter(shotsScatter: number): void;
+        setShotsIntensity(shotsIntensity: number): void;
         /***********************************************/
         getActions(): {
             [key: string]: {
@@ -1426,6 +1454,14 @@ declare module "map/map" {
     import { CoalitionArea } from "map/coalitionarea/coalitionarea";
     import { CoalitionAreaContextMenu } from "contextmenus/coalitionareacontextmenu";
     import { AirbaseSpawnContextMenu } from "contextmenus/airbasespawnmenu";
+    export type MapMarkerControl = {
+        "image": string;
+        "isProtected"?: boolean;
+        "name": string;
+        "protectable"?: boolean;
+        "toggles": string[];
+        "tooltip": string;
+    };
     export class Map extends L.Map {
         #private;
         /**
@@ -1473,6 +1509,7 @@ declare module "map/map" {
         getVisibilityOptions(): {
             [key: string]: boolean;
         };
+        unitIsProtected(unit: Unit): boolean;
     }
 }
 declare module "mission/bullseye" {
@@ -1742,7 +1779,9 @@ declare module "unit/unitsmanager" {
          */
         getSelectedUnits(options?: {
             excludeHumans?: boolean;
+            excludeProtected?: boolean;
             onlyOnePerGroup?: boolean;
+            showProtectionReminder?: boolean;
         }): Unit[];
         /** Deselects all currently selected units
          *
@@ -1905,6 +1944,16 @@ declare module "unit/unitsmanager" {
          * @param latlng Point where to land
          */
         selectedUnitsLandAtPoint(latlng: LatLng): void;
+        /** Set a specific shots scatter to all the selected units
+         *
+         * @param shotsScatter Value to set
+         */
+        selectedUnitsSetShotsScatter(shotsScatter: number): void;
+        /** Set a specific shots intensity to all the selected units
+         *
+         * @param shotsScatter Value to set
+         */
+        selectedUnitsSetShotsIntensity(shotsIntensity: number): void;
         /*********************** Control operations on selected units ************************/
         /**  See getUnitsCategories for more info
          *
@@ -2095,6 +2144,8 @@ declare module "server/servermanager" {
         scenicAAA(ID: number, coalition: string, callback?: CallableFunction): void;
         missOnPurpose(ID: number, coalition: string, callback?: CallableFunction): void;
         landAtPoint(ID: number, latlng: LatLng, callback?: CallableFunction): void;
+        setShotsScatter(ID: number, shotsScatter: number, callback?: CallableFunction): void;
+        setShotsIntensity(ID: number, shotsIntensity: number, callback?: CallableFunction): void;
         setAdvacedOptions(ID: number, isActiveTanker: boolean, isActiveAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings, callback?: CallableFunction): void;
         setCommandModeOptions(restrictSpawns: boolean, restrictToCoalition: boolean, spawnPoints: {
             blue: number;

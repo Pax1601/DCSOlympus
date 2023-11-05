@@ -49,9 +49,9 @@ export abstract class UnitEditor {
     }
 
     /** Show the editor
-     * 
+     * @param filter String filter
      */
-    show() {
+    show(filter: string = "") {
         this.visible = true;
         this.contentDiv1.replaceChildren();
         this.contentDiv2.replaceChildren();
@@ -62,20 +62,20 @@ export abstract class UnitEditor {
             var title = document.createElement("label");
             title.innerText = "Units list";
             this.contentDiv1.appendChild(title);
-            
-            addBlueprintsScroll(this.contentDiv1, this.database, (key: string) => {
-                if (this.database != null) 
-                    this.setBlueprint(this.database.blueprints[key])
-            })
 
-            addNewElementInput(this.contentDiv1, (ev: MouseEvent, input: HTMLInputElement) => {
-                if (input.value != "")
-                    this.addBlueprint((input).value);
-            });
+            var filterInput = document.createElement("input");
+            filterInput.value = filter;
+            this.contentDiv1.appendChild(filterInput);
+
+            filterInput.onchange = (e: Event) => {
+                this.show((e.target as HTMLInputElement).value);
+            }
+            
+            this.addBlueprints(filter);
         }
     }
 
-    /** Hid the editor
+    /** Hide the editor
      * 
      */
     hide() {
@@ -91,6 +91,24 @@ export abstract class UnitEditor {
      */
     getDatabase() {
         return this.database;
+    }
+
+    /**
+     * 
+     * @param filter String filter
+     */
+    addBlueprints(filter: string = "") {
+        if (this.database) {
+            addBlueprintsScroll(this.contentDiv1, this.database, filter, (key: string) => {
+                if (this.database != null) 
+                    this.setBlueprint(this.database.blueprints[key])
+            });
+
+            addNewElementInput(this.contentDiv1, (ev: MouseEvent, input: HTMLInputElement) => {
+                if (input.value != "")
+                    this.addBlueprint((input).value);
+            });
+        }
     }
 
     /* Abstract methods which will depend on the specific type of units */

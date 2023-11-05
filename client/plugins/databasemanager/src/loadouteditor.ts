@@ -37,10 +37,10 @@ export class LoadoutEditor {
         this.#contentDiv.appendChild(title);
 
         if (this.#loadout) {
-            var laodout = this.#loadout;
-            addStringInput(this.#contentDiv, "Name", laodout.name, "text", (value: string) => {laodout.name = value; this.#contentDiv.dispatchEvent(new Event("refresh"));});
-            addStringInput(this.#contentDiv, "Code", laodout.code, "text", (value: string) => {laodout.code = value; });
-            addStringInput(this.#contentDiv, "Roles", arrayToString(laodout.roles), "text", (value: string) => {laodout.roles = stringToArray(value);});
+            var loadout = this.#loadout;
+            addStringInput(this.#contentDiv, "Name", loadout.name, "text", (value: string) => {loadout.name = value; this.#contentDiv.dispatchEvent(new Event("refresh"));});
+            addStringInput(this.#contentDiv, "Code", loadout.code, "text", (value: string) => {loadout.code = value; });
+            addStringInput(this.#contentDiv, "Roles", arrayToString(loadout.roles), "text", (value: string) => {loadout.roles = stringToArray(value);});
             addLoadoutItemsEditor(this.#contentDiv, this.#loadout);
         }
     }

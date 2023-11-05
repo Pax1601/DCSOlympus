@@ -7,12 +7,19 @@
 		"shortLabel": "AH1",
 		"loadouts": [
 			{
-				"items": [],
+				"items": [
+					{
+						"name": "M260 pod - 7 x 2.75\" Hydra, UnGd Rkts Mk5, HEAT",
+						"quantity": 2
+					}
+				],
 				"enabled": true,
-				"code": "",
-				"name": "Empty loadout",
+				"code": "14xHYDRA-70",
+				"name": "14xHYDRA-70",
 				"roles": [
-					"CAS"
+					"CAP",
+					"CAS",
+					"Strike"
 				]
 			},
 			{
@@ -32,6 +39,38 @@
 			{
 				"items": [
 					{
+						"name": "M260 pod - 7 x 2.75\" Hydra, UnGd Rkts Mk5, HEAT",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "28xHYDRA-70",
+				"name": "28xHYDRA-70",
+				"roles": [
+					"CAP",
+					"CAS",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "LAU-61 pod - 19 x 2.75\" Hydra, UnGd Rkts M151, HE",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "38xHYDRA-70",
+				"name": "38xHYDRA-70",
+				"roles": [
+					"CAP",
+					"CAS",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
 						"name": "LAU-61 pod - 19 x 2.75\" Hydra, UnGd Rkts M156, Wht Phos",
 						"quantity": 2
 					}
@@ -41,6 +80,131 @@
 				"name": "38xHYDRA-70 WP",
 				"roles": [
 					"AFAC"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "LAU-61 pod - 19 x 2.75\" Hydra, UnGd Rkts M151, HE",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "76xHYDRA-70",
+				"name": "76xHYDRA-70",
+				"roles": [
+					"CAP",
+					"CAS",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "M299 - 4 x AGM-114K Hellfire",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "8xAGM-114",
+				"name": "8xAGM-114",
+				"roles": [
+					"CAP",
+					"CAS",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "M299 - 4 x AGM-114K Hellfire",
+						"quantity": 2
+					},
+					{
+						"name": "M260 pod - 7 x 2.75\" Hydra, UnGd Rkts Mk5, HEAT",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "8xAGM-114, 14xHYDRA-70",
+				"name": "8xAGM-114, 14xHYDRA-70",
+				"roles": [
+					"CAP",
+					"CAS",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "M299 - 4 x AGM-114K Hellfire",
+						"quantity": 2
+					},
+					{
+						"name": "M260 pod - 7 x 2.75\" Hydra, UnGd Rkts M156, Wht Phos",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "8xAGM-114, 14xHYDRA-70 WP",
+				"name": "8xAGM-114, 14xHYDRA-70 WP",
+				"roles": [
+					"AFAC"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "M299 - 4 x AGM-114K Hellfire",
+						"quantity": 2
+					},
+					{
+						"name": "LAU-61 pod - 19 x 2.75\" Hydra, UnGd Rkts M151, HE",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "8xAGM-114, 38xHYDRA-70",
+				"name": "8xAGM-114, 38xHYDRA-70",
+				"roles": [
+					"CAP",
+					"CAS",
+					"Strike",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "M299 - 4 x AGM-114K Hellfire",
+						"quantity": 2
+					},
+					{
+						"name": "LAU-61 pod - 19 x 2.75\" Hydra, UnGd Rkts M156, Wht Phos",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "8xAGM-114, 38xHYDRA-70 WP",
+				"name": "8xAGM-114, 38xHYDRA-70 WP",
+				"roles": [
+					"AFAC"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "4 x BGM-71D TOW ATGM",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "8xBGM-71",
+				"name": "8xBGM-71",
+				"roles": [
+					"CAP",
+					"CAS",
+					"Strike"
 				]
 			},
 			{
@@ -88,88 +252,6 @@
 						"quantity": 2
 					},
 					{
-						"name": "LAU-61 pod - 19 x 2.75\" Hydra, UnGd Rkts M156, Wht Phos",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "8xBGM-71, 38xHYDRA-70 WP",
-				"name": "8xBGM-71, 38xHYDRA-70 WP",
-				"roles": [
-					"AFAC"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "M260 pod - 7 x 2.75\" Hydra, UnGd Rkts Mk5, HEAT",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "14xHYDRA-70",
-				"name": "14xHYDRA-70",
-				"roles": [
-					"CAP",
-					"CAS",
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "LAU-61 pod - 19 x 2.75\" Hydra, UnGd Rkts M151, HE",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "38xHYDRA-70",
-				"name": "38xHYDRA-70",
-				"roles": [
-					"CAP",
-					"CAS",
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "M299 - 4 x AGM-114K Hellfire",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "8xAGM-114",
-				"name": "8xAGM-114",
-				"roles": [
-					"CAP",
-					"CAS",
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "M260 pod - 7 x 2.75\" Hydra, UnGd Rkts Mk5, HEAT",
-						"quantity": 4
-					}
-				],
-				"enabled": true,
-				"code": "28xHYDRA-70",
-				"name": "28xHYDRA-70",
-				"roles": [
-					"CAP",
-					"CAS",
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "4 x BGM-71D TOW ATGM",
-						"quantity": 2
-					},
-					{
 						"name": "LAU-61 pod - 19 x 2.75\" Hydra, UnGd Rkts M151, HE",
 						"quantity": 2
 					}
@@ -186,7 +268,7 @@
 			{
 				"items": [
 					{
-						"name": "M299 - 4 x AGM-114K Hellfire",
+						"name": "4 x BGM-71D TOW ATGM",
 						"quantity": 2
 					},
 					{
@@ -195,101 +277,19 @@
 					}
 				],
 				"enabled": true,
-				"code": "8xAGM-114, 38xHYDRA-70 WP",
-				"name": "8xAGM-114, 38xHYDRA-70 WP",
+				"code": "8xBGM-71, 38xHYDRA-70 WP",
+				"name": "8xBGM-71, 38xHYDRA-70 WP",
 				"roles": [
 					"AFAC"
 				]
 			},
 			{
-				"items": [
-					{
-						"name": "4 x BGM-71D TOW ATGM",
-						"quantity": 2
-					}
-				],
+				"items": [],
 				"enabled": true,
-				"code": "8xBGM-71",
-				"name": "8xBGM-71",
+				"code": "",
+				"name": "Empty loadout",
 				"roles": [
-					"CAP",
-					"CAS",
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "M299 - 4 x AGM-114K Hellfire",
-						"quantity": 2
-					},
-					{
-						"name": "M260 pod - 7 x 2.75\" Hydra, UnGd Rkts M156, Wht Phos",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "8xAGM-114, 14xHYDRA-70 WP",
-				"name": "8xAGM-114, 14xHYDRA-70 WP",
-				"roles": [
-					"AFAC"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "LAU-61 pod - 19 x 2.75\" Hydra, UnGd Rkts M151, HE",
-						"quantity": 4
-					}
-				],
-				"enabled": true,
-				"code": "76xHYDRA-70",
-				"name": "76xHYDRA-70",
-				"roles": [
-					"CAP",
-					"CAS",
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "M299 - 4 x AGM-114K Hellfire",
-						"quantity": 2
-					},
-					{
-						"name": "LAU-61 pod - 19 x 2.75\" Hydra, UnGd Rkts M151, HE",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "8xAGM-114, 38xHYDRA-70",
-				"name": "8xAGM-114, 38xHYDRA-70",
-				"roles": [
-					"CAP",
-					"CAS",
-					"Strike",
-					"Antiship Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "M299 - 4 x AGM-114K Hellfire",
-						"quantity": 2
-					},
-					{
-						"name": "M260 pod - 7 x 2.75\" Hydra, UnGd Rkts Mk5, HEAT",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "8xAGM-114, 14xHYDRA-70",
-				"name": "8xAGM-114, 14xHYDRA-70",
-				"roles": [
-					"CAP",
-					"CAS",
-					"Strike"
+					"CAS"
 				]
 			}
 		],
@@ -351,12 +351,21 @@
 		"shortLabel": "AH64",
 		"loadouts": [
 			{
-				"items": [],
+				"items": [
+					{
+						"name": null,
+						"quantity": 4
+					}
+				],
 				"enabled": true,
-				"code": "",
-				"name": "Empty loadout",
+				"code": "2 * Fuel Tank 230 gal, 2 * Hellfire station: 4*AGM-114K",
+				"name": "2 * Fuel Tank 230 gal, 2 * Hellfire station: 4*AGM-114K",
 				"roles": [
-					"CAS"
+					"AFAC",
+					"Antiship Strike",
+					"CAS",
+					"CAP",
+					"Strike"
 				]
 			},
 			{
@@ -367,8 +376,80 @@
 					}
 				],
 				"enabled": true,
-				"code": "4 * Fuel Tank 230 gal",
-				"name": "4 * Fuel Tank 230 gal",
+				"code": "2 * M261: A/B - M151 (6PD), E - M257 (6IL), 2 * Hellfire station: 4*AGM-114K",
+				"name": "2 * M261: A/B - M151 (6PD), E - M257 (6IL), 2 * Hellfire station: 4*AGM-114K",
+				"roles": [
+					"AFAC",
+					"Antiship Strike",
+					"CAS",
+					"CAP",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": null,
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "2 * M261: A/B - M151 (6PD), E - M274 (6SK), 2 * Hellfire station: 4*AGM-114K",
+				"name": "2 * M261: A/B - M151 (6PD), E - M274 (6SK), 2 * Hellfire station: 4*AGM-114K",
+				"roles": [
+					"AFAC",
+					"Antiship Strike",
+					"CAS",
+					"CAP",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": null,
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "2 * M261: C - M257 (6IL), D/E - M151 (6PD), 2 * Hellfire station: 4*AGM-114K",
+				"name": "2 * M261: C - M257 (6IL), D/E - M151 (6PD), 2 * Hellfire station: 4*AGM-114K",
+				"roles": [
+					"AFAC",
+					"Antiship Strike",
+					"CAS",
+					"CAP",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": null,
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "2 * M261: C - M274 (6SK), D/E - M151 (6PD), 2 * Hellfire station: 4*AGM-114K",
+				"name": "2 * M261: C - M274 (6SK), D/E - M151 (6PD), 2 * Hellfire station: 4*AGM-114K",
+				"roles": [
+					"AFAC",
+					"Antiship Strike",
+					"CAS",
+					"CAP",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": null,
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "2 * M261: M151 (6PD), 2 * Fuel Tank 230 gal",
+				"name": "2 * M261: M151 (6PD), 2 * Fuel Tank 230 gal",
 				"roles": [
 					"AFAC",
 					"Antiship Strike",
@@ -387,6 +468,24 @@
 				"enabled": true,
 				"code": "2 * M261: M151 (6PD), 2 * Hellfire station: 4*AGM-114K",
 				"name": "2 * M261: M151 (6PD), 2 * Hellfire station: 4*AGM-114K",
+				"roles": [
+					"AFAC",
+					"Antiship Strike",
+					"CAS",
+					"CAP",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": null,
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "4 * Fuel Tank 230 gal",
+				"name": "4 * Fuel Tank 230 gal",
 				"roles": [
 					"AFAC",
 					"Antiship Strike",
@@ -432,111 +531,12 @@
 				]
 			},
 			{
-				"items": [
-					{
-						"name": null,
-						"quantity": 4
-					}
-				],
+				"items": [],
 				"enabled": true,
-				"code": "2 * M261: M151 (6PD), 2 * Fuel Tank 230 gal",
-				"name": "2 * M261: M151 (6PD), 2 * Fuel Tank 230 gal",
+				"code": "",
+				"name": "Empty loadout",
 				"roles": [
-					"AFAC",
-					"Antiship Strike",
-					"CAS",
-					"CAP",
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": null,
-						"quantity": 4
-					}
-				],
-				"enabled": true,
-				"code": "2 * Fuel Tank 230 gal, 2 * Hellfire station: 4*AGM-114K",
-				"name": "2 * Fuel Tank 230 gal, 2 * Hellfire station: 4*AGM-114K",
-				"roles": [
-					"AFAC",
-					"Antiship Strike",
-					"CAS",
-					"CAP",
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": null,
-						"quantity": 4
-					}
-				],
-				"enabled": true,
-				"code": "2 * M261: A/B - M151 (6PD), E - M274 (6SK), 2 * Hellfire station: 4*AGM-114K",
-				"name": "2 * M261: A/B - M151 (6PD), E - M274 (6SK), 2 * Hellfire station: 4*AGM-114K",
-				"roles": [
-					"AFAC",
-					"Antiship Strike",
-					"CAS",
-					"CAP",
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": null,
-						"quantity": 4
-					}
-				],
-				"enabled": true,
-				"code": "2 * M261: A/B - M151 (6PD), E - M257 (6IL), 2 * Hellfire station: 4*AGM-114K",
-				"name": "2 * M261: A/B - M151 (6PD), E - M257 (6IL), 2 * Hellfire station: 4*AGM-114K",
-				"roles": [
-					"AFAC",
-					"Antiship Strike",
-					"CAS",
-					"CAP",
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": null,
-						"quantity": 4
-					}
-				],
-				"enabled": true,
-				"code": "2 * M261: C - M257 (6IL), D/E - M151 (6PD), 2 * Hellfire station: 4*AGM-114K",
-				"name": "2 * M261: C - M257 (6IL), D/E - M151 (6PD), 2 * Hellfire station: 4*AGM-114K",
-				"roles": [
-					"AFAC",
-					"Antiship Strike",
-					"CAS",
-					"CAP",
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": null,
-						"quantity": 4
-					}
-				],
-				"enabled": true,
-				"code": "2 * M261: C - M274 (6SK), D/E - M151 (6PD), 2 * Hellfire station: 4*AGM-114K",
-				"name": "2 * M261: C - M274 (6SK), D/E - M151 (6PD), 2 * Hellfire station: 4*AGM-114K",
-				"roles": [
-					"AFAC",
-					"Antiship Strike",
-					"CAS",
-					"CAP",
-					"Strike"
+					"CAS"
 				]
 			}
 		],
@@ -748,29 +748,28 @@
 		"coalition": "red",
 		"era": "Late Cold War",
 		"label": "Ka-50 Hokum A",
-		"shortLabel": "K50",
+		"shortLabel": "Ka50",
 		"loadouts": [
-			{
-				"items": [],
-				"enabled": true,
-				"code": "",
-				"name": "Empty loadout",
-				"roles": [
-					"CAS"
-				]
-			},
 			{
 				"items": [
 					{
 						"name": "9S846 Strelets - 2 x 9M39 Igla",
 						"quantity": 2
+					},
+					{
+						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
+						"quantity": 2
+					},
+					{
+						"name": "FAB-250 - 250kg GP Bomb LD",
+						"quantity": 2
 					}
 				],
 				"enabled": true,
-				"code": "4xIgla",
-				"name": "4xIgla",
+				"code": "10xS-13, 2xFAB-250, 4xIgla",
+				"name": "10xS-13, 2xFAB-250, 4xIgla",
 				"roles": [
-					"CAS"
+					"Strike"
 				]
 			},
 			{
@@ -780,7 +779,51 @@
 						"quantity": 2
 					},
 					{
-						"name": "Kh-25ML (AS-10 Karen) - 300kg, ASM, Semi-Act Laser",
+						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
+						"quantity": 2
+					},
+					{
+						"name": "FAB-500 M-62 - 500kg GP Bomb LD",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "10xS-13, 2xFAB-500, 4xIgla",
+				"name": "10xS-13, 2xFAB-500, 4xIgla",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "9S846 Strelets - 2 x 9M39 Igla",
+						"quantity": 2
+					},
+					{
+						"name": "APU-6 - 6 x 9M127-1 Vikhr-M ATGM, LOSBR, Tandem HEAT/Frag",
+						"quantity": 2
+					},
+					{
+						"name": "Fuel tank PTB-450",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "12x9A4172, 2xFuel, 4xIgla",
+				"name": "12x9A4172, 2xFuel, 4xIgla",
+				"roles": [
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "9S846 Strelets - 2 x 9M39 Igla",
+						"quantity": 2
+					},
+					{
+						"name": "APU-6 - 6 x 9M127-1 Vikhr-M ATGM, LOSBR, Tandem HEAT/Frag",
 						"quantity": 2
 					},
 					{
@@ -789,10 +832,11 @@
 					}
 				],
 				"enabled": true,
-				"code": "2xKh-25ML, 10xS-13, 4xIgla",
-				"name": "2xKh-25ML, 10xS-13, 4xIgla",
+				"code": "12x9A4172, 40xS-13, 4xIgla",
+				"name": "12x9A4172, 40xS-13, 4xIgla",
 				"roles": [
-					"Antiship Strike"
+					"CAS",
+					"Strike"
 				]
 			},
 			{
@@ -848,7 +892,26 @@
 						"quantity": 2
 					},
 					{
-						"name": "APU-6 - 6 x 9M127-1 Vikhr-M ATGM, LOSBR, Tandem HEAT/Frag",
+						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "20xS-20, 4xIgla",
+				"name": "20xS-20, 4xIgla",
+				"roles": [
+					"CAS",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "9S846 Strelets - 2 x 9M39 Igla",
+						"quantity": 2
+					},
+					{
+						"name": "Kh-25ML (AS-10 Karen) - 300kg, ASM, Semi-Act Laser",
 						"quantity": 2
 					},
 					{
@@ -857,11 +920,64 @@
 					}
 				],
 				"enabled": true,
-				"code": "12x9A4172, 40xS-13, 4xIgla",
-				"name": "12x9A4172, 40xS-13, 4xIgla",
+				"code": "2xKh-25ML, 10xS-13, 4xIgla",
+				"name": "2xKh-25ML, 10xS-13, 4xIgla",
 				"roles": [
-					"CAS",
-					"Strike"
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "9S846 Strelets - 2 x 9M39 Igla",
+						"quantity": 2
+					},
+					{
+						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8OFP2 MPP",
+						"quantity": 2
+					},
+					{
+						"name": "Fuel tank PTB-450",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "40xS-8OFP, 2xFuel, 4xIgla",
+				"name": "40xS-8OFP, 2xFuel, 4xIgla",
+				"roles": [
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "9S846 Strelets - 2 x 9M39 Igla",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "4xIgla",
+				"name": "4xIgla",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "9S846 Strelets - 2 x 9M39 Igla",
+						"quantity": 2
+					},
+					{
+						"name": "UPK-23-250 - 2 x 23mm  GSh-23L Autocannon Pod",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "4xUPK-23, 4xIgla",
+				"name": "4xUPK-23, 4xIgla",
+				"roles": [
+					"CAS"
 				]
 			},
 			{
@@ -911,87 +1027,6 @@
 						"quantity": 2
 					},
 					{
-						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
-						"quantity": 4
-					}
-				],
-				"enabled": true,
-				"code": "20xS-20, 4xIgla",
-				"name": "20xS-20, 4xIgla",
-				"roles": [
-					"CAS",
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "9S846 Strelets - 2 x 9M39 Igla",
-						"quantity": 2
-					},
-					{
-						"name": "UPK-23-250 - 2 x 23mm  GSh-23L Autocannon Pod",
-						"quantity": 4
-					}
-				],
-				"enabled": true,
-				"code": "4xUPK-23, 4xIgla",
-				"name": "4xUPK-23, 4xIgla",
-				"roles": [
-					"CAS"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "9S846 Strelets - 2 x 9M39 Igla",
-						"quantity": 2
-					},
-					{
-						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
-						"quantity": 2
-					},
-					{
-						"name": "FAB-500 M-62 - 500kg GP Bomb LD",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "10xS-13, 2xFAB-500, 4xIgla",
-				"name": "10xS-13, 2xFAB-500, 4xIgla",
-				"roles": [
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "9S846 Strelets - 2 x 9M39 Igla",
-						"quantity": 2
-					},
-					{
-						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
-						"quantity": 2
-					},
-					{
-						"name": "FAB-250 - 250kg GP Bomb LD",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "10xS-13, 2xFAB-250, 4xIgla",
-				"name": "10xS-13, 2xFAB-250, 4xIgla",
-				"roles": [
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "9S846 Strelets - 2 x 9M39 Igla",
-						"quantity": 2
-					},
-					{
 						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8OM IL",
 						"quantity": 4
 					}
@@ -1022,47 +1057,12 @@
 				]
 			},
 			{
-				"items": [
-					{
-						"name": "9S846 Strelets - 2 x 9M39 Igla",
-						"quantity": 2
-					},
-					{
-						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8OFP2 MPP",
-						"quantity": 2
-					},
-					{
-						"name": "Fuel tank PTB-450",
-						"quantity": 2
-					}
-				],
+				"items": [],
 				"enabled": true,
-				"code": "40xS-8OFP, 2xFuel, 4xIgla",
-				"name": "40xS-8OFP, 2xFuel, 4xIgla",
+				"code": "",
+				"name": "Empty loadout",
 				"roles": [
-					"CAP"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "9S846 Strelets - 2 x 9M39 Igla",
-						"quantity": 2
-					},
-					{
-						"name": "APU-6 - 6 x 9M127-1 Vikhr-M ATGM, LOSBR, Tandem HEAT/Frag",
-						"quantity": 2
-					},
-					{
-						"name": "Fuel tank PTB-450",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "12x9A4172, 2xFuel, 4xIgla",
-				"name": "12x9A4172, 2xFuel, 4xIgla",
-				"roles": [
-					"CAP"
+					"CAS"
 				]
 			}
 		],
@@ -1297,30 +1297,22 @@
 		"shortLabel": "Mi24",
 		"loadouts": [
 			{
-				"items": [],
-				"enabled": true,
-				"code": "",
-				"name": "Empty loadout",
-				"roles": [
-					"CAS"
-				]
-			},
-			{
 				"items": [
 					{
 						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
-						"quantity": 4
+						"quantity": 2
 					},
 					{
-						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
+						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
 						"quantity": 2
 					}
 				],
 				"enabled": true,
-				"code": "2xB8V20 (S-8KOM)+8xATGM 9M114",
-				"name": "2xB8V20 (S-8KOM)+8xATGM 9M114",
+				"code": "2xB-13L+4xATGM 9M114",
+				"name": "2xB-13L+4xATGM 9M114",
 				"roles": [
 					"CAS",
+					"Antiship Strike",
 					"Strike"
 				]
 			},
@@ -1341,24 +1333,6 @@
 				"roles": [
 					"CAS",
 					"CAP"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
-						"quantity": 4
-					},
-					{
-						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "4xB8V20 (S-8KOM)+4xATGM 9M114",
-				"name": "4xB8V20 (S-8KOM)+4xATGM 9M114",
-				"roles": [
-					"CAS"
 				]
 			},
 			{
@@ -1386,6 +1360,25 @@
 			{
 				"items": [
 					{
+						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 4
+					},
+					{
+						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2xB8V20 (S-8KOM)+8xATGM 9M114",
+				"name": "2xB8V20 (S-8KOM)+8xATGM 9M114",
+				"roles": [
+					"CAS",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
 						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8OFP2 MPP",
 						"quantity": 2
 					},
@@ -1404,53 +1397,17 @@
 			{
 				"items": [
 					{
-						"name": "UB-32A-24 pod - 32 x S-5KO",
-						"quantity": 4
-					},
-					{
-						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "4xUB-32A (S-5KO)+4xATGM 9M114",
-				"name": "4xUB-32A (S-5KO)+4xATGM 9M114",
-				"roles": [
-					"CAS"
-				]
-			},
-			{
-				"items": [
-					{
 						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
 						"quantity": 2
 					},
 					{
-						"name": "GUV-8700 w AP-30 - 30mm Grenade Launcher",
-						"quantity": 4
-					}
-				],
-				"enabled": true,
-				"code": "4xGUV-1 AP30+4xATGM 9M114",
-				"name": "4xGUV-1 AP30+4xATGM 9M114",
-				"roles": [
-					"CAS"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
-						"quantity": 2
-					},
-					{
-						"name": "GUV-8700 w AP-30 - 30mm Grenade Launcher",
+						"name": "FAB-500 M-62 - 500kg GP Bomb LD",
 						"quantity": 2
 					}
 				],
 				"enabled": true,
-				"code": "2xGUV-1 AP30+4xATGM 9M114",
-				"name": "2xGUV-1 AP30+4xATGM 9M114",
+				"code": "2xBombs-500+4xATGM 9M114",
+				"name": "2xBombs-500+4xATGM 9M114",
 				"roles": [
 					"CAS"
 				]
@@ -1478,6 +1435,24 @@
 				"items": [
 					{
 						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					},
+					{
+						"name": "GUV-8700 w AP-30 - 30mm Grenade Launcher",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2xGUV-1 AP30+4xATGM 9M114",
+				"name": "2xGUV-1 AP30+4xATGM 9M114",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
 						"quantity": 4
 					},
 					{
@@ -1491,102 +1466,6 @@
 				"roles": [
 					"CAS",
 					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
-						"quantity": 2
-					},
-					{
-						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "2xB-13L+4xATGM 9M114",
-				"name": "2xB-13L+4xATGM 9M114",
-				"roles": [
-					"CAS",
-					"Antiship Strike",
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
-						"quantity": 2
-					},
-					{
-						"name": "APU-68 - S-24B",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "2xS-24B+4xATGM 9M114",
-				"name": "2xS-24B+4xATGM 9M114",
-				"roles": [
-					"CAS",
-					"Antiship Strike",
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
-						"quantity": 2
-					},
-					{
-						"name": "APU-68 - S-24B",
-						"quantity": 4
-					}
-				],
-				"enabled": true,
-				"code": "4xS-24B+4xATGM 9M114",
-				"name": "4xS-24B+4xATGM 9M114",
-				"roles": [
-					"CAS",
-					"Antiship Strike",
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
-						"quantity": 2
-					},
-					{
-						"name": "FAB-500 M-62 - 500kg GP Bomb LD",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "2xBombs-500+4xATGM 9M114",
-				"name": "2xBombs-500+4xATGM 9M114",
-				"roles": [
-					"CAS"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
-						"quantity": 2
-					},
-					{
-						"name": "FAB-250 - 250kg GP Bomb LD",
-						"quantity": 4
-					}
-				],
-				"enabled": true,
-				"code": "4xBombs-250+4ATGM 9M114",
-				"name": "4xBombs-250+4ATGM 9M114",
-				"roles": [
-					"CAS"
 				]
 			},
 			{
@@ -1621,6 +1500,98 @@
 				"enabled": true,
 				"code": "2xRBK-500U (OAB 2.5RT)+4xATGM 9M114",
 				"name": "2xRBK-500U (OAB 2.5RT)+4xATGM 9M114",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					},
+					{
+						"name": "APU-68 - S-24B",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2xS-24B+4xATGM 9M114",
+				"name": "2xS-24B+4xATGM 9M114",
+				"roles": [
+					"CAS",
+					"Antiship Strike",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
+						"quantity": 4
+					},
+					{
+						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "4xB8V20 (S-8KOM)+4xATGM 9M114",
+				"name": "4xB8V20 (S-8KOM)+4xATGM 9M114",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					},
+					{
+						"name": "FAB-250 - 250kg GP Bomb LD",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "4xBombs-250+4ATGM 9M114",
+				"name": "4xBombs-250+4ATGM 9M114",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					},
+					{
+						"name": "GUV-8700 w AP-30 - 30mm Grenade Launcher",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "4xGUV-1 AP30+4xATGM 9M114",
+				"name": "4xGUV-1 AP30+4xATGM 9M114",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Fuel tank PTB-450",
+						"quantity": 4
+					},
+					{
+						"name": "Missile Launcher Rack (Empty)",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "4xPTB-450 Fuel tank",
+				"name": "4xPTB-450 Fuel tank",
 				"roles": [
 					"CAS"
 				]
@@ -1664,17 +1635,46 @@
 			{
 				"items": [
 					{
-						"name": "Fuel tank PTB-450",
+						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					},
+					{
+						"name": "APU-68 - S-24B",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "4xS-24B+4xATGM 9M114",
+				"name": "4xS-24B+4xATGM 9M114",
+				"roles": [
+					"CAS",
+					"Antiship Strike",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "UB-32A-24 pod - 32 x S-5KO",
 						"quantity": 4
 					},
 					{
-						"name": "Missile Launcher Rack (Empty)",
+						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
 						"quantity": 2
 					}
 				],
 				"enabled": true,
-				"code": "4xPTB-450 Fuel tank",
-				"name": "4xPTB-450 Fuel tank",
+				"code": "4xUB-32A (S-5KO)+4xATGM 9M114",
+				"name": "4xUB-32A (S-5KO)+4xATGM 9M114",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [],
+				"enabled": true,
+				"code": "",
+				"name": "Empty loadout",
 				"roles": [
 					"CAS"
 				]
@@ -1769,7 +1769,7 @@
 		},
 		"type": "Helicopter",
 		"description": "2 engine, 2 crew attack helicopter. Hind",
-		"abilities": "",
+		"abilities": "Transport",
 		"acquisitionRange": "",
 		"engagementRange": "",
 		"canTargetPoint": true,
@@ -1780,7 +1780,7 @@
 		"coalition": "red",
 		"era": "Late Cold War",
 		"label": "Mi-26 Halo",
-		"shortLabel": "M26",
+		"shortLabel": "Mi26",
 		"loadouts": [
 			{
 				"items": [],
@@ -1844,7 +1844,7 @@
 		"description": "2 engine, 5 crew transport helicopter. Halo",
 		"acquisitionRange": "",
 		"engagementRange": "",
-		"abilities": "",
+		"abilities": "Transport",
 		"canTargetPoint": false,
 		"canRearm": false
 	},
@@ -1856,38 +1856,15 @@
 		"shortLabel": "M28",
 		"loadouts": [
 			{
-				"items": [],
-				"enabled": true,
-				"code": "",
-				"name": "Empty loadout",
-				"roles": [
-					"CAS"
-				]
-			},
-			{
 				"items": [
 					{
-						"name": "FAB-250 - 250kg GP Bomb LD",
+						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
 						"quantity": 2
 					}
 				],
 				"enabled": true,
-				"code": "2xFAB-250",
-				"name": "2xFAB-250",
-				"roles": [
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
-						"quantity": 4
-					}
-				],
-				"enabled": true,
-				"code": "80xS-8",
-				"name": "80xS-8",
+				"code": "10xS-13",
+				"name": "10xS-13",
 				"roles": [
 					"CAS",
 					"Strike",
@@ -1897,27 +1874,13 @@
 			{
 				"items": [
 					{
-						"name": "KMGU-2 - 96 x AO-2.5RT Dispenser (CBU) HE/Frag",
-						"quantity": 4
+						"name": "8 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
 					}
 				],
 				"enabled": true,
-				"code": "4xKMGU AP",
-				"name": "4xKMGU AP",
-				"roles": [
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "UPK-23-250 - 2 x 23mm  GSh-23L Autocannon Pod",
-						"quantity": 4
-					}
-				],
-				"enabled": true,
-				"code": "4xUPK-23",
-				"name": "4xUPK-23",
+				"code": "16x9M114",
+				"name": "16x9M114",
 				"roles": [
 					"CAS",
 					"Strike",
@@ -1948,20 +1911,6 @@
 			{
 				"items": [
 					{
-						"name": "FAB-500 M-62 - 500kg GP Bomb LD",
-						"quantity": 4
-					}
-				],
-				"enabled": true,
-				"code": "4xFAB-500",
-				"name": "4xFAB-500",
-				"roles": [
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
 						"name": "8 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
 						"quantity": 2
 					},
@@ -1975,6 +1924,211 @@
 				"name": "16x9M114, 2xFAB-500",
 				"roles": [
 					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "8 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					},
+					{
+						"name": "KMGU-2 - 96 x AO-2.5RT Dispenser (CBU) HE/Frag",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "16x9M114, 2xKMGU AP",
+				"name": "16x9M114, 2xKMGU AP",
+				"roles": [
+					"CAS",
+					"Strike",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "8 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					},
+					{
+						"name": "KMGU-2 - 96 x PTAB-2.5KO Dispenser (CBU) HEAT/AP",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "16x9M114, 2xKMGU AT",
+				"name": "16x9M114, 2xKMGU AT",
+				"roles": [
+					"CAS",
+					"Strike",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "8 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					},
+					{
+						"name": "UPK-23-250 - 2 x 23mm  GSh-23L Autocannon Pod",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "16x9M114, 2xUPK-23",
+				"name": "16x9M114, 2xUPK-23",
+				"roles": [
+					"CAS",
+					"Strike",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "8 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					},
+					{
+						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "16x9M114, 40xS-8",
+				"name": "16x9M114, 40xS-8",
+				"roles": [
+					"CAS",
+					"Strike",
+					"CAP",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "8 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					},
+					{
+						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8TsM SM Orange",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "16x9M114, 40xS-8 TsM",
+				"name": "16x9M114, 40xS-8 TsM",
+				"roles": [
+					"AFAC"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "20xS-13",
+				"name": "20xS-13",
+				"roles": [
+					"CAS",
+					"Strike",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "FAB-250 - 250kg GP Bomb LD",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2xFAB-250",
+				"name": "2xFAB-250",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "8 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					},
+					{
+						"name": "FAB-250 - 250kg GP Bomb LD",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2xFAB-250, 16x9M114",
+				"name": "2xFAB-250, 16x9M114",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "FAB-500 M-62 - 500kg GP Bomb LD",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2xFAB-500",
+				"name": "2xFAB-500",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "KMGU-2 - 96 x AO-2.5RT Dispenser (CBU) HE/Frag",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2xKMGU AP",
+				"name": "2xKMGU AP",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "KMGU-2 - 96 x PTAB-2.5KO Dispenser (CBU) HEAT/AP",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2xKMGU AT",
+				"name": "2xKMGU AT",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "UPK-23-250 - 2 x 23mm  GSh-23L Autocannon Pod",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2xUPK-23",
+				"name": "2xUPK-23",
+				"roles": [
+					"CAS",
+					"Strike",
+					"CAP"
 				]
 			},
 			{
@@ -2010,143 +2164,6 @@
 			{
 				"items": [
 					{
-						"name": "KMGU-2 - 96 x AO-2.5RT Dispenser (CBU) HE/Frag",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "2xKMGU AP",
-				"name": "2xKMGU AP",
-				"roles": [
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "UPK-23-250 - 2 x 23mm  GSh-23L Autocannon Pod",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "2xUPK-23",
-				"name": "2xUPK-23",
-				"roles": [
-					"CAS",
-					"Strike",
-					"CAP"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "8 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
-						"quantity": 2
-					},
-					{
-						"name": "UPK-23-250 - 2 x 23mm  GSh-23L Autocannon Pod",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "16x9M114, 2xUPK-23",
-				"name": "16x9M114, 2xUPK-23",
-				"roles": [
-					"CAS",
-					"Strike",
-					"CAP"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "FAB-500 M-62 - 500kg GP Bomb LD",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "2xFAB-500",
-				"name": "2xFAB-500",
-				"roles": [
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "8 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
-						"quantity": 2
-					},
-					{
-						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "16x9M114, 40xS-8",
-				"name": "16x9M114, 40xS-8",
-				"roles": [
-					"CAS",
-					"Strike",
-					"CAP",
-					"Antiship Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "8 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "16x9M114",
-				"name": "16x9M114",
-				"roles": [
-					"CAS",
-					"Strike",
-					"CAP"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
-						"quantity": 4
-					}
-				],
-				"enabled": true,
-				"code": "20xS-13",
-				"name": "20xS-13",
-				"roles": [
-					"CAS",
-					"Strike",
-					"CAP"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "8 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
-						"quantity": 2
-					},
-					{
-						"name": "KMGU-2 - 96 x AO-2.5RT Dispenser (CBU) HE/Frag",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "16x9M114, 2xKMGU AP",
-				"name": "16x9M114, 2xKMGU AP",
-				"roles": [
-					"CAS",
-					"Strike",
-					"CAP"
-				]
-			},
-			{
-				"items": [
-					{
 						"name": "FAB-250 - 250kg GP Bomb LD",
 						"quantity": 4
 					}
@@ -2154,6 +2171,34 @@
 				"enabled": true,
 				"code": "4xFAB-250",
 				"name": "4xFAB-250",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "FAB-500 M-62 - 500kg GP Bomb LD",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "4xFAB-500",
+				"name": "4xFAB-500",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "KMGU-2 - 96 x AO-2.5RT Dispenser (CBU) HE/Frag",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "4xKMGU AP",
+				"name": "4xKMGU AP",
 				"roles": [
 					"Strike"
 				]
@@ -2175,19 +2220,33 @@
 			{
 				"items": [
 					{
-						"name": "8 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
-						"quantity": 2
-					},
-					{
-						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8TsM SM Orange",
-						"quantity": 2
+						"name": "UPK-23-250 - 2 x 23mm  GSh-23L Autocannon Pod",
+						"quantity": 4
 					}
 				],
 				"enabled": true,
-				"code": "16x9M114, 40xS-8 TsM",
-				"name": "16x9M114, 40xS-8 TsM",
+				"code": "4xUPK-23",
+				"name": "4xUPK-23",
 				"roles": [
-					"AFAC"
+					"CAS",
+					"Strike",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "80xS-8",
+				"name": "80xS-8",
+				"roles": [
+					"CAS",
+					"Strike",
+					"CAP"
 				]
 			},
 			{
@@ -2207,20 +2266,6 @@
 			{
 				"items": [
 					{
-						"name": "KMGU-2 - 96 x PTAB-2.5KO Dispenser (CBU) HEAT/AP",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "2xKMGU AT",
-				"name": "2xKMGU AT",
-				"roles": [
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
 						"name": "8 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
 						"quantity": 1
 					}
@@ -2235,57 +2280,12 @@
 				]
 			},
 			{
-				"items": [
-					{
-						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
-						"quantity": 2
-					}
-				],
+				"items": [],
 				"enabled": true,
-				"code": "10xS-13",
-				"name": "10xS-13",
+				"code": "",
+				"name": "Empty loadout",
 				"roles": [
-					"CAS",
-					"Strike",
-					"CAP"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "8 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
-						"quantity": 2
-					},
-					{
-						"name": "FAB-250 - 250kg GP Bomb LD",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "2xFAB-250, 16x9M114",
-				"name": "2xFAB-250, 16x9M114",
-				"roles": [
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "8 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
-						"quantity": 2
-					},
-					{
-						"name": "KMGU-2 - 96 x PTAB-2.5KO Dispenser (CBU) HEAT/AP",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "16x9M114, 2xKMGU AT",
-				"name": "16x9M114, 2xKMGU AT",
-				"roles": [
-					"CAS",
-					"Strike",
-					"CAP"
+					"CAS"
 				]
 			}
 		],
@@ -2340,12 +2340,75 @@
 		"shortLabel": "Mi8",
 		"loadouts": [
 			{
-				"items": [],
+				"items": [
+					{
+						"name": "UPK-23-250 - 2 x 23mm  GSh-23L Autocannon Pod",
+						"quantity": 2
+					},
+					{
+						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
+						"quantity": 2
+					}
+				],
 				"enabled": true,
-				"code": "",
-				"name": "Empty loadout",
+				"code": "2 x B8 + 2 x UPK-23-250",
+				"name": "2 x B8 + 2 x UPK-23-250",
 				"roles": [
-					"Transport"
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "GUV-8700 w 1x12.7 mm & 2x7.62 mm Rotary HMG",
+						"quantity": 2
+					},
+					{
+						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2 x UPK +2 x B8",
+				"name": "2 x UPK +2 x B8",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "UPK-23-250 - 2 x 23mm  GSh-23L Autocannon Pod",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2 x UPK--23-250",
+				"name": "2 x UPK--23-250",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "GUV-8700 w AP-30 - 30mm Grenade Launcher",
+						"quantity": 2
+					},
+					{
+						"name": "GUV-8700 w 1x12.7 mm & 2x7.62 mm Rotary HMG",
+						"quantity": 2
+					},
+					{
+						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2 xB8 + 2GUV_YaKB (MG-12.7+7.62)+ 2GUV_AP-30 (GrL 30mm)",
+				"name": "2 xB8 + 2GUV_YaKB (MG-12.7+7.62)+ 2GUV_AP-30 (GrL 30mm)",
+				"roles": [
+					"Strike"
 				]
 			},
 			{
@@ -2383,46 +2446,6 @@
 			{
 				"items": [
 					{
-						"name": "GUV-8700 w 1x12.7 mm & 2x7.62 mm Rotary HMG",
-						"quantity": 2
-					},
-					{
-						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "2 x UPK +2 x B8",
-				"name": "2 x UPK +2 x B8",
-				"roles": [
-					"CAS"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "GUV-8700 w AP-30 - 30mm Grenade Launcher",
-						"quantity": 2
-					},
-					{
-						"name": "GUV-8700 w 1x12.7 mm & 2x7.62 mm Rotary HMG",
-						"quantity": 2
-					},
-					{
-						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "2 xB8 + 2GUV_YaKB (MG-12.7+7.62)+ 2GUV_AP-30 (GrL 30mm)",
-				"name": "2 xB8 + 2GUV_YaKB (MG-12.7+7.62)+ 2GUV_AP-30 (GrL 30mm)",
-				"roles": [
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
 						"name": "FAB-100 - 100kg GP Bomb LD",
 						"quantity": 6
 					}
@@ -2435,35 +2458,12 @@
 				]
 			},
 			{
-				"items": [
-					{
-						"name": "UPK-23-250 - 2 x 23mm  GSh-23L Autocannon Pod",
-						"quantity": 2
-					},
-					{
-						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
-						"quantity": 2
-					}
-				],
+				"items": [],
 				"enabled": true,
-				"code": "2 x B8 + 2 x UPK-23-250",
-				"name": "2 x B8 + 2 x UPK-23-250",
+				"code": "",
+				"name": "Empty loadout",
 				"roles": [
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "UPK-23-250 - 2 x 23mm  GSh-23L Autocannon Pod",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "2 x UPK--23-250",
-				"name": "2 x UPK--23-250",
-				"roles": [
-					"Strike"
+					"Transport"
 				]
 			}
 		],
@@ -2843,7 +2843,7 @@
 		},
 		"type": "Helicopter",
 		"description": "2 engine, 3 crew transport helicopter. Hip",
-		"abilities": "",
+		"abilities": "Transport",
 		"acquisitionRange": "",
 		"engagementRange": "",
 		"canTargetPoint": false,
@@ -3103,12 +3103,12 @@
 				"items": [
 					{
 						"name": null,
-						"quantity": 4
+						"quantity": 2
 					}
 				],
 				"enabled": true,
-				"code": "HOT3x4",
-				"name": "HOT3x4",
+				"code": "HOT3x2",
+				"name": "HOT3x2",
 				"roles": [
 					"CAS"
 				]
@@ -3116,13 +3116,31 @@
 			{
 				"items": [
 					{
+						"name": null,
+						"quantity": 2
+					},
+					{
 						"name": "IR Deflector",
 						"quantity": 1
 					}
 				],
 				"enabled": true,
-				"code": "IR Deflector",
-				"name": "IR Deflector",
+				"code": "Hot3x2, IR Deflector",
+				"name": "Hot3x2, IR Deflector",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": null,
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "HOT3x4",
+				"name": "HOT3x4",
 				"roles": [
 					"CAS"
 				]
@@ -3153,20 +3171,6 @@
 				"items": [
 					{
 						"name": null,
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "HOT3x2",
-				"name": "HOT3x2",
-				"roles": [
-					"CAS"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": null,
 						"quantity": 4
 					},
 					{
@@ -3184,17 +3188,13 @@
 			{
 				"items": [
 					{
-						"name": null,
-						"quantity": 2
-					},
-					{
 						"name": "IR Deflector",
 						"quantity": 1
 					}
 				],
 				"enabled": true,
-				"code": "Hot3x2, IR Deflector",
-				"name": "Hot3x2, IR Deflector",
+				"code": "IR Deflector",
+				"name": "IR Deflector",
 				"roles": [
 					"CAS"
 				]
@@ -3550,36 +3550,10 @@
 	"SH-60B": {
 		"name": "SH-60B",
 		"coalition": "blue",
-		"era": "Mid Cold War",
+		"era": "Late Cold War",
 		"label": "SH-60B Seahawk",
 		"shortLabel": "S60",
 		"loadouts": [
-			{
-				"items": [
-					{
-						"name": "",
-						"quantity": 1
-					},
-					{
-						"name": "",
-						"quantity": 1
-					},
-					{
-						"name": "",
-						"quantity": 1
-					},
-					{
-						"name": "",
-						"quantity": 1
-					}
-				],
-				"enabled": true,
-				"code": "",
-				"name": "Empty loadout",
-				"roles": [
-					"Transport"
-				]
-			},
 			{
 				"items": [
 					{
@@ -3631,6 +3605,32 @@
 				"fuel": 1,
 				"items": [],
 				"roles": []
+			},
+			{
+				"items": [
+					{
+						"name": "",
+						"quantity": 1
+					},
+					{
+						"name": "",
+						"quantity": 1
+					},
+					{
+						"name": "",
+						"quantity": 1
+					},
+					{
+						"name": "",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "",
+				"name": "Empty loadout",
+				"roles": [
+					"Transport"
+				]
 			}
 		],
 		"filename": "uh-60.png",
@@ -3657,14 +3657,14 @@
 		"description": "2 engine, 3 crew transport helicopter. Seahawk",
 		"acquisitionRange": "",
 		"engagementRange": "",
-		"abilities": "",
+		"abilities": "Transport",
 		"canTargetPoint": false,
 		"canRearm": false
 	},
 	"UH-1H": {
 		"name": "UH-1H",
 		"coalition": "blue",
-		"era": "Early Cold War",
+		"era": "Mid Cold War",
 		"label": "UH-1H Huey",
 		"shortLabel": "UH1",
 		"loadouts": [
@@ -3946,7 +3946,7 @@
 		},
 		"type": "Helicopter",
 		"description": "2 engine, 2 crew transport helicopter. Huey",
-		"abilities": "",
+		"abilities": "Transport",
 		"acquisitionRange": "",
 		"engagementRange": "",
 		"canTargetPoint": false,
@@ -4010,7 +4010,7 @@
 		"description": "2 engine, 3 crew transport helicopter. Blackhawk",
 		"acquisitionRange": "",
 		"engagementRange": "",
-		"abilities": "",
+		"abilities": "Transport",
 		"canTargetPoint": false,
 		"canRearm": false
 	}
