@@ -72,10 +72,6 @@ form {
     padding: 0;
 }
 
-form>div {
-    margin: 20px 0;
-}
-
 .pill {
     background-color: var(--background-steel);
     border-radius: 999px;
@@ -669,8 +665,8 @@ nav.ol-panel> :last-child {
     width:10px;
 }
 
-.ol-navbar-buttons-group > .protectable > button.lock svg.locked {
-    filter:invert(100);
+.ol-navbar-buttons-group > .protectable > button.lock svg.locked * {
+    fill:white !important;
 }
 
 .ol-navbar-buttons-group > .protectable > button:not([data-protected]).lock svg.unlocked,
@@ -850,7 +846,7 @@ nav.ol-panel> :last-child {
     column-gap: 10px;
     display: flex;
     flex-direction: row;
-    margin: 10px 0px;
+    margin: 20px 0px;
     flex-wrap: wrap;
     width: 100%;
     row-gap: 10px;

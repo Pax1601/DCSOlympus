@@ -253,6 +253,8 @@ declare module "constants/constants" {
     export const MGRS_PRECISION_100M = 4;
     export const MGRS_PRECISION_10M = 5;
     export const MGRS_PRECISION_1M = 6;
+    export const DELETE_CYCLE_TIME = 0.05;
+    export const DELETE_SLOW_THRESHOLD = 50;
 }
 declare module "map/markers/custommarker" {
     import { Map, Marker } from "leaflet";
@@ -303,7 +305,7 @@ declare module "controls/dropdown" {
         #private;
         constructor(ID: string | null, callback: CallableFunction, options?: string[] | null, defaultText?: string);
         getContainer(): HTMLElement;
-        setOptions(optionsList: string[], sortAlphabetically?: boolean): void;
+        setOptions(optionsList: string[], sort?: "" | "string" | "number"): void;
         setOptionsElements(optionsElements: HTMLElement[]): void;
         getOptionElements(): HTMLCollection;
         addOptionElement(optionElement: HTMLElement): void;
@@ -604,6 +606,7 @@ declare module "interfaces" {
     export interface ShortcutOptions {
         altKey?: boolean;
         callback: CallableFunction;
+        context?: string;
         ctrlKey?: boolean;
         name?: string;
         shiftKey?: boolean;
@@ -786,9 +789,11 @@ declare module "controls/unitspawnmenu" {
     import { UnitSpawnOptions } from "interfaces";
     export class UnitSpawnMenu {
         #private;
-        spawnOptions: UnitSpawnOptions;
+        protected showRangeCircles: boolean;
+        protected spawnOptions: UnitSpawnOptions;
         constructor(ID: string, unitDatabase: UnitDatabase, orderByRole: boolean);
         getContainer(): HTMLElement;
+        getVisible(): boolean;
         reset(): void;
         setCountries(): void;
         refreshOptions(): void;
@@ -824,6 +829,7 @@ declare module "controls/unitspawnmenu" {
         deployUnits(spawnOptions: UnitSpawnOptions, unitsCount: number): void;
     }
     export class GroundUnitSpawnMenu extends UnitSpawnMenu {
+        protected showRangeCircles: boolean;
         /**
          *
          * @param ID - the ID of the HTML element which will contain the context menu
@@ -1331,6 +1337,20 @@ declare module "contextmenus/airbasespawnmenu" {
         setAirbase(airbase: Airbase): void;
     }
 }
+declare module "context/context" {
+    export interface ContextInterface {
+        useSpawnMenu?: boolean;
+        useUnitControlPanel?: boolean;
+        useUnitInfoPanel?: boolean;
+    }
+    export class Context {
+        #private;
+        constructor(config: ContextInterface);
+        getUseSpawnMenu(): boolean;
+        getUseUnitControlPanel(): boolean;
+        getUseUnitInfoPanel(): boolean;
+    }
+}
 declare module "other/manager" {
     export class Manager {
         #private;
@@ -1569,6 +1589,7 @@ declare module "panels/unitinfopanel" {
     export class UnitInfoPanel extends Panel {
         #private;
         constructor(ID: string);
+        show(): void;
     }
 }
 declare module "plugin/pluginmanager" {
@@ -1646,6 +1667,14 @@ declare module "unit/citiesDatabase" {
         lng: number;
         pop: number;
     }[];
+}
+declare module "dialog/dialog" {
+    import { Panel } from "panels/panel";
+    export class Dialog extends Panel {
+        constructor(element: string);
+        hide(): void;
+        show(): void;
+    }
 }
 declare module "unit/unitsmanager" {
     import { LatLng, LatLngBounds } from "leaflet";
@@ -2094,6 +2123,18 @@ declare module "panels/unitlistpanel" {
         toggle(): void;
     }
 }
+declare module "context/contextmanager" {
+    import { Manager } from "other/manager";
+    import { ContextInterface } from "context/context";
+    export class ContextManager extends Manager {
+        #private;
+        constructor();
+        add(name: string, contextConfig: ContextInterface): this;
+        currentContextIs(contextName: string): boolean;
+        getCurrentContext(): any;
+        setContext(contextName: string): false | undefined;
+    }
+}
 declare module "olympusapp" {
     import { Map } from "map/map";
     import { MissionManager } from "mission/missionmanager";
@@ -2103,10 +2144,15 @@ declare module "olympusapp" {
     import { WeaponsManager } from "weapon/weaponsmanager";
     import { Manager } from "other/manager";
     import { ServerManager } from "server/servermanager";
+    import { ContextManager } from "context/contextmanager";
+    import { Context } from "context/context";
     export class OlympusApp {
         #private;
         constructor();
+        getDialogManager(): Manager;
         getMap(): Map;
+        getCurrentContext(): Context;
+        getContextManager(): ContextManager;
         getServerManager(): ServerManager;
         getPanelsManager(): Manager;
         getPopupsManager(): Manager;
@@ -2157,4 +2203,12 @@ declare module "olympusapp" {
 declare module "index" {
     import { OlympusApp } from "olympusapp";
     export function getApp(): OlympusApp;
+}
+declare module "context/contextmenumanager" {
+    import { ContextMenu } from "contextmenus/contextmenu";
+    import { Manager } from "other/manager";
+    export class ContextMenuManager extends Manager {
+        constructor();
+        add(name: string, contextMenu: ContextMenu): this;
+    }
 }

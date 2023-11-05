@@ -99,6 +99,9 @@ export class MapContextMenu extends ContextMenu {
      * @param latlng Leaflet latlng object of the mouse click
      */
     show(x: number, y: number, latlng: LatLng) {
+        if (!getApp().getCurrentContext().getUseSpawnMenu())
+            return false;
+
         super.show(x, y, latlng);
 
         this.#aircraftSpawnMenu.setLatLng(latlng);
