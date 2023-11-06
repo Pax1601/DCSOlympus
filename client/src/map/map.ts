@@ -734,7 +734,7 @@ export class Map extends L.Map {
         const makeTitle = (isProtected:boolean) => {
             return ( isProtected ) ? "Unit type is protected and will ignore orders" : "Unit is NOT protected and will respond to orders";
         }
-        this.#mapMarkerControls.forEach( (control:MapMarkerControl) => {
+        this.getMapMarkerControls().forEach( (control:MapMarkerControl) => {
             const toggles = `["${control.toggles.join('","')}"]`;
             const div = document.createElement("div");
             div.className = control.protectable === true ? "protectable" : "";
@@ -900,6 +900,10 @@ export class Map extends L.Map {
     #setVisibilityOption(option: string, ev: any) {
         this.#visibilityOptions[option] = ev.currentTarget.checked;
         document.dispatchEvent(new CustomEvent("mapVisibilityOptionsChanged"));
+    }
+
+    getMapMarkerControls() {
+        return this.#mapMarkerControls;
     }
 }
 

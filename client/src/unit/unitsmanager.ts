@@ -708,6 +708,30 @@ export class UnitsManager {
         this.#showActionMessage(selectedUnits, `unit landing at point`);
     }
 
+    /** Set a specific shots scatter to all the selected units
+     * 
+     * @param shotsScatter Value to set
+     */
+    selectedUnitsSetShotsScatter(shotsScatter: number) {
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        for (let idx in selectedUnits) {
+            selectedUnits[idx].setShotsScatter(shotsScatter);
+        }
+        this.#showActionMessage(selectedUnits, `shots scatter set to ${shotsScatter}`);
+    }
+
+    /** Set a specific shots intensity to all the selected units
+     * 
+     * @param shotsScatter Value to set
+     */
+    selectedUnitsSetShotsIntensity(shotsIntensity: number) {
+        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+        for (let idx in selectedUnits) {
+            selectedUnits[idx].setShotsIntensity(shotsIntensity);
+        }
+        this.#showActionMessage(selectedUnits, `shots intensity set to ${shotsIntensity}`);
+    }
+
     /*********************** Control operations on selected units ************************/
     /**  See getUnitsCategories for more info
      * 

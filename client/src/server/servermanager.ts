@@ -357,6 +357,18 @@ export class ServerManager {
         this.PUT(data, callback);
     }
 
+    setShotsScatter(ID: number, shotsScatter: number, callback: CallableFunction = () => {}) {
+        var command = { "ID": ID, "shotsScatter": shotsScatter }
+        var data = { "setShotsScatter": command }
+        this.PUT(data, callback);
+    }
+
+    setShotsIntensity(ID: number, shotsIntensity: number, callback: CallableFunction = () => {}) {
+        var command = { "ID": ID, "shotsIntensity": shotsIntensity }
+        var data = { "setShotsIntensity": command }
+        this.PUT(data, callback);
+    }
+
     setAdvacedOptions(ID: number, isActiveTanker: boolean, isActiveAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings, callback: CallableFunction = () => {}) {
         var command = {
             "ID": ID,

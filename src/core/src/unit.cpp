@@ -69,6 +69,12 @@ void Unit::update(json::value json, double dt)
 	if (json.has_number_field(L"speed"))
 		setSpeed(json[L"speed"].as_number().to_double());
 
+	if (json.has_number_field(L"horizontalVelocity"))
+		setHorizontalVelocity(json[L"horizontalVelocity"].as_number().to_double());
+
+	if (json.has_number_field(L"verticalVelocity"))
+		setVerticalVelocity(json[L"verticalVelocity"].as_number().to_double());
+
 	if (json.has_boolean_field(L"isAlive"))
 		setAlive(json[L"isAlive"].as_bool());
 
@@ -146,7 +152,7 @@ void Unit::runAILoop() {
 
 	/* If the unit is alive, controlled, is the leader of the group and it is not a human, run the AI Loop that performs the requested commands and instructions (moving, attacking, etc) */
 	if (getAlive() && getControlled() && !getHuman() && getIsLeader()) {
-		if (checkTaskFailed() && state != State::IDLE && state != State::LAND) {
+		if (getEnableTaskCheckFailed() && checkTaskFailed()) {
 			log(unitName + " has no task, switching to IDLE state");
 			setState(State::IDLE);
 		}
@@ -192,6 +198,8 @@ void Unit::refreshLeaderData(unsigned long long time) {
 					case DataIndex::generalSettings:			updateValue(generalSettings, leader->generalSettings, datumIndex); break;
 					case DataIndex::activePath:					updateValue(activePath, leader->activePath, datumIndex); break;
 					case DataIndex::operateAs:					updateValue(operateAs, leader->operateAs, datumIndex); break;
+					case DataIndex::shotsScatter:				updateValue(shotsScatter, leader->shotsScatter, datumIndex); break;
+					case DataIndex::shotsIntensity:				updateValue(shotsIntensity, leader->shotsIntensity, datumIndex); break;
 					}
 				}
 			}
@@ -247,9 +255,11 @@ void Unit::getData(stringstream& ss, unsigned long long time)
 				case DataIndex::hasTask:					appendNumeric(ss, datumIndex, hasTask); break;
 				case DataIndex::position:					appendNumeric(ss, datumIndex, position); break;
 				case DataIndex::speed:						appendNumeric(ss, datumIndex, speed); break;
+				case DataIndex::horizontalVelocity:			appendNumeric(ss, datumIndex, horizontalVelocity); break;
+				case DataIndex::verticalVelocity:			appendNumeric(ss, datumIndex, verticalVelocity); break;
 				case DataIndex::heading:					appendNumeric(ss, datumIndex, heading); break;
-				case DataIndex::isActiveTanker:					appendNumeric(ss, datumIndex, isActiveTanker); break;
-				case DataIndex::isActiveAWACS:					appendNumeric(ss, datumIndex, isActiveAWACS); break;
+				case DataIndex::isActiveTanker:				appendNumeric(ss, datumIndex, isActiveTanker); break;
+				case DataIndex::isActiveAWACS:				appendNumeric(ss, datumIndex, isActiveAWACS); break;
 				case DataIndex::onOff:						appendNumeric(ss, datumIndex, onOff); break;
 				case DataIndex::followRoads:				appendNumeric(ss, datumIndex, followRoads); break;
 				case DataIndex::fuel:						appendNumeric(ss, datumIndex, fuel); break;
@@ -272,6 +282,8 @@ void Unit::getData(stringstream& ss, unsigned long long time)
 				case DataIndex::activePath:					appendList(ss, datumIndex, activePath); break;
 				case DataIndex::isLeader:					appendNumeric(ss, datumIndex, isLeader); break;
 				case DataIndex::operateAs:					appendNumeric(ss, datumIndex, operateAs); break;
+				case DataIndex::shotsScatter:				appendNumeric(ss, datumIndex, shotsScatter); break;
+				case DataIndex::shotsIntensity:				appendNumeric(ss, datumIndex, shotsIntensity); break;
 				}
 			}
 		}
@@ -728,6 +740,10 @@ bool Unit::updateActivePath(bool looping)
 	else {
 		return false;
 	}
+}
+
+void Unit::setHasTask(bool newValue) {
+	updateValue(hasTask, newValue, DataIndex::hasTask); 
 }
 
 bool Unit::checkTaskFailed()

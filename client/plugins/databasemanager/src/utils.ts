@@ -174,40 +174,60 @@ export function addNewElementInput(div: HTMLElement, callback: CallableFunction)
  * 
  * @param div The HTMLElement that will contain the list
  * @param database The database that will be used to fill the list of blueprints
+ * @param filter A string filter that will be executed to filter the blueprints to add
  * @param callback Callback called when the user clicks on one of the elements
  */
-export function addBlueprintsScroll(div: HTMLElement, database: {blueprints: {[key: string]: UnitBlueprint}}, callback: CallableFunction) {
+export function addBlueprintsScroll(div: HTMLElement, database: {blueprints: {[key: string]: UnitBlueprint}}, filter: string, callback: CallableFunction) {
     var scrollDiv = document.createElement("div");
     scrollDiv.classList.add("dm-scroll-container");
     if (database !== null) {
         var blueprints: {[key: string]: UnitBlueprint} = database.blueprints;
 
         for (let key of Object.keys(blueprints).sort((a, b) => a.localeCompare(b, undefined, {sensitivity: 'base'}))) {
-            var rowDiv = document.createElement("div");
-            scrollDiv.appendChild(rowDiv);
-
-            var text = document.createElement("label");
-            text.textContent = key;
-            text.onclick = () => callback(key);
-            rowDiv.appendChild(text);
-
-            let checkbox = document.createElement("input");
-            checkbox.type = "checkbox";
-            checkbox.checked = blueprints[key].enabled;
-            checkbox.onclick = () => {
-                console.log(checkbox.checked);
-                blueprints[key].enabled = checkbox.checked;
+            var addKey = true;
+            if (filter !== "") {
+                try {
+                    var blueprint = blueprints[key];
+                    addKey = eval(filter);
+                } catch {
+                    console.error("An error has occurred evaluating the blueprint filter")
+                }
             }
-            rowDiv.appendChild(checkbox);
 
-            /* This button allows to remove an element from the list. It requires a refresh. */
-            var button = document.createElement("button");
-            button.innerText = "X";
-            button.onclick = () => {
-                delete blueprints[key];
-                div.dispatchEvent(new Event("refresh"));
+            if (addKey) {
+                var rowDiv = document.createElement("div");
+                scrollDiv.appendChild(rowDiv);
+
+                let text = document.createElement("label");
+                text.textContent = key;
+                text.onclick = () => { 
+                    callback(key);
+                    const collection = document.getElementsByClassName("blueprint-selected");
+                    for (let i = 0; i < collection.length; i++) {
+                        collection[i].classList.remove("blueprint-selected");
+                    }
+                    text.classList.add("blueprint-selected");
+                }
+                rowDiv.appendChild(text);
+
+                let checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.checked = blueprints[key].enabled;
+                checkbox.onclick = () => {
+                    console.log(checkbox.checked);
+                    blueprints[key].enabled = checkbox.checked;
+                }
+                rowDiv.appendChild(checkbox);
+
+                /* This button allows to remove an element from the list. It requires a refresh. */
+                var button = document.createElement("button");
+                button.innerText = "X";
+                button.onclick = () => {
+                    delete blueprints[key];
+                    div.dispatchEvent(new Event("refresh"));
+                }
+                rowDiv.appendChild(button);
             }
-            rowDiv.appendChild(button);
         }      
     }
     div.appendChild(scrollDiv);
@@ -269,5 +289,5 @@ export function arrayToString(array: string[]) {
 
 
 export function stringToArray(input: string) {
-    return input.match( /(\w)+/g ) || [];
+    return input.match( /(\w)+/g ) ?? [];
 }

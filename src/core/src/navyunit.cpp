@@ -81,21 +81,25 @@ void NavyUnit::setState(unsigned char newState)
 	/************ Perform any action required when ENTERING a state ************/
 	switch (newState) {
 	case State::IDLE: {
+		setEnableTaskCheckFailed(false);
 		clearActivePath();
 		resetActiveDestination();
 		break;
 	}
 	case State::REACH_DESTINATION: {
+		setEnableTaskCheckFailed(true);
 		resetActiveDestination();
 		break;
 	}
 	case State::FIRE_AT_AREA: {
+		setEnableTaskCheckFailed(true);
 		clearActivePath();
 		resetActiveDestination();
 		resetTask();
 		break;
 	}
 	case State::SIMULATE_FIRE_FIGHT: {
+		setEnableTaskCheckFailed(true);
 		clearActivePath();
 		resetActiveDestination();
 		resetTask();

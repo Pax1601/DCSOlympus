@@ -17,6 +17,8 @@ public:
 	virtual void setOnOff(bool newOnOff, bool force = false);
 	virtual void setFollowRoads(bool newFollowRoads, bool force = false);
 
+	void aimAtPoint(Coords aimTarget, double horizontalScatterMultiplier = 1, double verticalScatterMultiplier = 1);
+
 protected:
 	virtual void AIloop();
 	static json::value database;
