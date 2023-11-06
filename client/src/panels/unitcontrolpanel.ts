@@ -9,6 +9,7 @@ import { Switch } from "../controls/switch";
 import { ROEDescriptions, ROEs, altitudeIncrements, emissionsCountermeasures, emissionsCountermeasuresDescriptions, maxAltitudeValues, maxSpeedValues, minAltitudeValues, minSpeedValues, reactionsToThreat, reactionsToThreatDescriptions, shotsIntensityDescriptions, shotsScatterDescriptions, speedIncrements } from "../constants/constants";
 import { ftToM, knotsToMs, mToFt, msToKnots } from "../other/utils";
 import { GeneralSettings, Radio, TACAN } from "../interfaces";
+import { PrimaryToolbar } from "../toolbars/primarytoolbar";
 
 export class UnitControlPanel extends Panel {
     #altitudeSlider: Slider;
@@ -136,6 +137,9 @@ export class UnitControlPanel extends Panel {
             this.#updateRapidControls();  
         });
 
+        const element = document.getElementById("toolbar-container");
+        if (element)
+            new ResizeObserver(() => this.#calculateTop()).observe(element);
         
         this.hide();
     }
@@ -469,5 +473,11 @@ export class UnitControlPanel extends Panel {
         button.appendChild(img);
         button.addEventListener("click", callback);
         return button;
+    }
+
+    #calculateTop() {
+        const element = document.getElementById("toolbar-container");
+        if (element)
+            this.getElement().style.top = `${element.offsetTop + element.offsetHeight + 10}px`;
     }
 }
