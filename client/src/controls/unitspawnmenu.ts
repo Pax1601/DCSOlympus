@@ -31,6 +31,7 @@ export class UnitSpawnMenu {
     #unitDatabase: UnitDatabase;
     #countryCodes: any;
     #orderByRole: boolean;
+    protected unitTypeFilter = (unit:any) => { return true; };
 
     /* Controls */
     #unitRoleTypeDropdown: Dropdown;
@@ -258,7 +259,7 @@ export class UnitSpawnMenu {
         if (this.#orderByRole)
             this.#unitRoleTypeDropdown.setOptions(this.#unitDatabase.getRoles());
         else
-            this.#unitRoleTypeDropdown.setOptions(this.#unitDatabase.getTypes());
+            this.#unitRoleTypeDropdown.setOptions(this.#unitDatabase.getTypes(this.unitTypeFilter));
 
         this.#unitLoadoutListEl.replaceChildren();
         this.#unitLoadoutDropdown.reset();
@@ -585,6 +586,7 @@ export class HelicopterSpawnMenu extends UnitSpawnMenu {
 export class GroundUnitSpawnMenu extends UnitSpawnMenu {
 
     protected showRangeCircles: boolean = true;
+    protected unitTypeFilter = (unit:any) => {return !(/\bAAA|SAM\b/.test(unit.type) || /\bmanpad|stinger\b/i.test(unit.type))};
 
     /**
      * 
@@ -620,6 +622,20 @@ export class GroundUnitSpawnMenu extends UnitSpawnMenu {
                 
             this.getContainer().dispatchEvent(new Event("hide"));
         }
+    }
+}
+
+export class AirDefenceUnitSpawnMenu extends GroundUnitSpawnMenu {
+
+    protected unitTypeFilter = (unit:any) => {return /\bAAA|SAM\b/.test(unit.type) || /\bmanpad|stinger\b/i.test(unit.type)};
+
+    /**
+     * 
+     * @param ID - the ID of the HTML element which will contain the context menu
+     */
+    constructor(ID: string){
+        super(ID);
+        this.setMaxUnitCount(4);
     }
 }
 

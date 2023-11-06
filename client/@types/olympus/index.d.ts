@@ -894,7 +894,7 @@ declare module "contextmenus/mapcontextmenu" {
          * @param y Y screen coordinate of the top left corner of the context menu
          * @param latlng Leaflet latlng object of the mouse click
          */
-        show(x: number, y: number, latlng: LatLng): void;
+        show(x: number, y: number, latlng: LatLng): false | undefined;
         /** If the user rightclicked on a CoalitionArea, it will be given the ability to edit it.
          *
          * @param coalitionArea The CoalitionArea the user can edit

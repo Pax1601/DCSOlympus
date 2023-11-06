@@ -94,10 +94,12 @@ export class UnitDatabase {
     }
 
     /* Returns a list of all possible types in a database */
-    getTypes() {
+    getTypes(unitFilter?:CallableFunction) {
         var filteredBlueprints = this.getBlueprints();
         var types: string[] = [];
         for (let unit in filteredBlueprints) {
+            if ( typeof unitFilter === "function" && !unitFilter(filteredBlueprints[unit]))
+                continue;
             var type = filteredBlueprints[unit].type;
             if (type && type !== "" && !types.includes(type))
                 types.push(type);
