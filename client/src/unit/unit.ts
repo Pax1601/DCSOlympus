@@ -34,6 +34,8 @@ export class Unit extends CustomMarker {
     #hasTask: boolean = false;
     #position: LatLng = new LatLng(0, 0, 0);
     #speed: number = 0;
+    #horizontalVelocity: number = 0;
+    #verticalVelocity: number = 0;
     #heading: number = 0;
     #isActiveTanker: boolean = false;
     #isActiveAWACS: boolean = false;
@@ -79,6 +81,8 @@ export class Unit extends CustomMarker {
     #activePath: LatLng[] = [];
     #isLeader: boolean = false;
     #operateAs: string = "blue";
+    #shotsScatter: number = 2;
+    #shotsIntensity: number = 2;
 
     #selectable: boolean;
     #selected: boolean = false;
@@ -96,48 +100,50 @@ export class Unit extends CustomMarker {
     #doubleClickTimer: number = 0;
     #hotgroup: number | null = null;
     #detectionMethods: number[] = [];
-    #isProtected:boolean = false;
 
-    getActivePath() { return this.#activePath };
     getAlive() { return this.#alive };
-    getAmmo() { return this.#ammo };
-    getCoalition() { return this.#coalition };
-    getContacts() { return this.#contacts };
+    getHuman() { return this.#human };
     getControlled() { return this.#controlled };
+    getCoalition() { return this.#coalition };
     getCountry() { return this.#country };
-    getDesiredAltitude() { return this.#desiredAltitude };
-    getDesiredAltitudeType() { return this.#desiredAltitudeType };
-    getDesiredSpeed() { return this.#desiredSpeed };
-    getDesiredSpeedType() { return this.#desiredSpeedType };
-    getEmissionsCountermeasures() { return this.#emissionsCountermeasures };
-    getFollowRoads() { return this.#followRoads };
-    getFormationOffset() { return this.#formationOffset };
-    getFuel() { return this.#fuel };
-    getGeneralSettings() { return this.#generalSettings };
+    getName() { return this.#name };
+    getUnitName() { return this.#unitName };
     getGroupName() { return this.#groupName };
+    getState() { return this.#state };
+    getTask() { return this.#task };
     getHasTask() { return this.#hasTask };
+    getPosition() { return this.#position };
+    getSpeed() { return this.#speed };
+    getHorizontalVelocity() { return this.#horizontalVelocity };
+    getVerticalVelocity() { return this.#verticalVelocity };
     getHeading() { return this.#heading };
     getHealth() { return this.#health };
-    getHuman() { return this.#human };
     getIsActiveAWACS() { return this.#isActiveAWACS };
     getIsActiveTanker() { return this.#isActiveTanker };
-    getIsLeader() { return this.#isLeader };
-    getLeaderID() { return this.#leaderID };
-    getName() { return this.#name };
     getOnOff() { return this.#onOff };
-    getOperateAs() { return this.#operateAs };
-    getPosition() { return this.#position };
-    getIsProtected() { return this.#isProtected };
-    getRadio() { return this.#radio };
-    getReactionToThreat() { return this.#reactionToThreat };
-    getROE() { return this.#ROE };
-    getSpeed() { return this.#speed };
-    getState() { return this.#state };
-    getTACAN() { return this.#TACAN };
+    getFollowRoads() { return this.#followRoads };
+    getFuel() { return this.#fuel };
+    getDesiredSpeed() { return this.#desiredSpeed };
+    getDesiredSpeedType() { return this.#desiredSpeedType };
+    getDesiredAltitude() { return this.#desiredAltitude };
+    getDesiredAltitudeType() { return this.#desiredAltitudeType };
+    getLeaderID() { return this.#leaderID };
+    getFormationOffset() { return this.#formationOffset };
     getTargetID() { return this.#targetID };
     getTargetPosition() { return this.#targetPosition };
-    getTask() { return this.#task };
-    getUnitName() { return this.#unitName };
+    getROE() { return this.#ROE };
+    getReactionToThreat() { return this.#reactionToThreat };
+    getEmissionsCountermeasures() { return this.#emissionsCountermeasures };
+    getTACAN() { return this.#TACAN };
+    getRadio() { return this.#radio };
+    getGeneralSettings() { return this.#generalSettings };
+    getAmmo() { return this.#ammo };
+    getContacts() { return this.#contacts };
+    getActivePath() { return this.#activePath };
+    getIsLeader() { return this.#isLeader };
+    getOperateAs() { return this.#operateAs };
+    getShotsScatter() { return this.#shotsScatter};
+    getShotsIntensity() { return this.#shotsIntensity};
 
     static getConstructor(type: string) {
         if (type === "GroundUnit") return GroundUnit;
@@ -224,6 +230,8 @@ export class Unit extends CustomMarker {
                 case DataIndexes.hasTask: this.#hasTask = dataExtractor.extractBool(); break;
                 case DataIndexes.position: this.#position = dataExtractor.extractLatLng(); updateMarker = true; break;
                 case DataIndexes.speed: this.#speed = dataExtractor.extractFloat64(); updateMarker = true; break;
+                case DataIndexes.horizontalVelocity: this.#horizontalVelocity = dataExtractor.extractFloat64(); break;
+                case DataIndexes.verticalVelocity: this.#verticalVelocity = dataExtractor.extractFloat64(); break;
                 case DataIndexes.heading: this.#heading = dataExtractor.extractFloat64(); updateMarker = true; break;
                 case DataIndexes.isActiveTanker: this.#isActiveTanker = dataExtractor.extractBool(); break;
                 case DataIndexes.isActiveAWACS: this.#isActiveAWACS = dataExtractor.extractBool(); break;
@@ -250,6 +258,8 @@ export class Unit extends CustomMarker {
                 case DataIndexes.activePath: this.#activePath = dataExtractor.extractActivePath(); break;
                 case DataIndexes.isLeader: this.#isLeader = dataExtractor.extractBool(); updateMarker = true; break;
                 case DataIndexes.operateAs: this.#operateAs = enumToCoalition(dataExtractor.extractUInt8()); break;
+                case DataIndexes.shotsScatter: this.#shotsScatter = dataExtractor.extractUInt8(); break;
+                case DataIndexes.shotsIntensity: this.#shotsIntensity = dataExtractor.extractUInt8(); break;
             }
         }
 
@@ -289,6 +299,8 @@ export class Unit extends CustomMarker {
             hasTask: this.#hasTask,
             position: this.#position,
             speed: this.#speed,
+            horizontalVelocity: this.#horizontalVelocity,
+            verticalVelocity: this.#verticalVelocity,
             heading: this.#heading,
             isActiveTanker: this.#isActiveTanker,
             isActiveAWACS: this.#isActiveAWACS,
@@ -313,7 +325,9 @@ export class Unit extends CustomMarker {
             contacts: this.#contacts,
             activePath: this.#activePath,
             isLeader: this.#isLeader,
-            operateAs: this.#operateAs
+            operateAs: this.#operateAs,
+            shotsScatter: this.#shotsScatter,
+            shotsIntensity: this.#shotsIntensity
         }
     }
 
@@ -340,10 +354,6 @@ export class Unit extends CustomMarker {
             showCallsign: true,
             rotateToHeading: false
         }
-    }
-
-    setIsProtected(isProtected:boolean) {
-        this.#isProtected = isProtected;
     }
 
     setAlive(newAlive: boolean) {
@@ -440,7 +450,6 @@ export class Unit extends CustomMarker {
     getSpawnPoints() {
         return this.getDatabase()?.getSpawnPointsByName(this.getName());
     }
-
 
     /********************** Icon *************************/
     createIcon(): void {
@@ -650,16 +659,24 @@ export class Unit extends CustomMarker {
         return getApp().getMap().getBounds().contains(this.getPosition());
     }
 
-    canLandAtPoint() {
-        return this.getCategory() === "Helicopter";  //  Only choppers can do this currently
-    }
-
     canTargetPoint() {
         return this.getDatabase()?.getByName(this.#name)?.canTargetPoint === true;
     }
 
     canRearm() {
         return this.getDatabase()?.getByName(this.#name)?.canRearm === true;
+    }
+
+    canLandAtPoint() {
+        return this.getCategory() === "Helicopter";
+    }
+
+    canAAA() {
+        return this.getDatabase()?.getByName(this.#name)?.canAAA === true;
+    }
+
+    indirectFire() {
+        return this.getDatabase()?.getByName(this.#name)?.indirectFire === true;
     }
 
     isTanker() {
@@ -835,6 +852,16 @@ export class Unit extends CustomMarker {
 
     landAtPoint(latlng: LatLng) {
         getApp().getServerManager().landAtPoint(this.ID, latlng);
+    }
+
+    setShotsScatter(shotsScatter: number) {
+        if (!this.#human)
+            getApp().getServerManager().setShotsScatter(this.ID, shotsScatter);
+    }
+
+    setShotsIntensity(shotsIntensity: number) {
+        if (!this.#human)
+            getApp().getServerManager().setShotsIntensity(this.ID, shotsIntensity);
     }
 
     /***********************************************/
@@ -1466,7 +1493,7 @@ export class GroundUnit extends Unit {
                 options["group-ground"] = { text: "Create group", tooltip: "Create a group from the selected units", type: "and" };
             }
 
-            if (["AAA", "flak"].includes(this.getType())) {
+            if (this.canAAA()) {
                 options["scenic-aaa"] = { text: "Scenic AAA", tooltip: "Shoot AAA in the air without aiming at any target, when a enemy unit gets close enough. WARNING: works correctly only on neutral units, blue or red units will aim", type: "and" };
                 options["miss-aaa"] = { text: "Miss on purpose AAA", tooltip: "Shoot AAA towards the closest enemy unit, but don't aim precisely. WARNING: works correctly only on neutral units, blue or red units will aim", type: "and" };
             }

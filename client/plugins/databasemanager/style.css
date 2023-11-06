@@ -115,6 +115,10 @@
     font-weight: bold;
 }
 
+#database-manager-panel input {
+    font-weight: bold;
+}
+
 .dm-scroll-container>div:nth-child(even) {
     background-color: gainsboro;
 }
@@ -131,9 +135,14 @@
 }
 
 .dm-scroll-container>div *:nth-child(1):hover {
-    background-color: var(--secondary-blue-text);
+    background-color: var(--accent-dark-blue);
     color: white;
     cursor: pointer;
+}
+
+.blueprint-selected {
+    background-color: var(--accent-light-blue) !important;
+    color: white;
 }
 
 .dm-scroll-container>div {

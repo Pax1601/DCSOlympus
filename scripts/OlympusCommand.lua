@@ -269,6 +269,14 @@ function Olympus.buildTask(groupName, options)
 					point = {x = point.x, y = point.z},
 				}   
 			}
+		-- Attack unit
+		elseif options['id'] == 'AttackUnit' and options['unitID']  then
+			task = {
+				id = 'AttackUnit', 
+				params = {
+					unitId = options['unitID'],
+				}   
+			}
 		end
 	end
 	return task
@@ -888,6 +896,7 @@ function Olympus.setUnitsData(arg, time)
 					local lat, lng, alt = coord.LOtoLL(unit:getPoint())
 					local position = unit:getPosition()
 					local heading = math.atan2( position.x.z, position.x.x )
+					local velocity = unit:getVelocity();
 
 					-- Fill the data table
 					table["name"] = unit:getTypeName()
@@ -896,7 +905,9 @@ function Olympus.setUnitsData(arg, time)
 					table["position"]["lat"] = lat 
 					table["position"]["lng"] = lng 
 					table["position"]["alt"] = alt
-					table["speed"] = mist.vec.mag(unit:getVelocity())
+					table["speed"] = mist.vec.mag(velocity)
+					table["horizontalVelocity"] =  math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z)
+					table["verticalVelocity"] = velocity.y
 					table["heading"] = heading 
 					table["isAlive"] = unit:isExist() and unit:isActive() and unit:getLife() >= 1
 					

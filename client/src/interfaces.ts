@@ -153,6 +153,8 @@ export interface UnitData {
     hasTask: boolean;
     position: LatLng;
     speed: number;
+    horizontalVelocity: number;
+    verticalVelocity: number;
     heading: number;
     isActiveTanker: boolean;
     isActiveAWACS: boolean;
@@ -178,6 +180,8 @@ export interface UnitData {
     activePath: LatLng[];
     isLeader: boolean;
     operateAs: string;
+    shotsScatter: number;
+    shotsIntensity: number;
 }
 
 export interface LoadoutItemBlueprint {
@@ -211,12 +215,19 @@ export interface UnitBlueprint {
     muzzleVelocity?: number;
     aimTime?: number;
     shotsToFire?: number;
+    shotsBaseInterval?: number;
+    shotsBaseScatter?: number;
     description?: string;
     abilities?: string;
     acquisitionRange?: number;
     engagementRange?: number;
+    targetingRange?: number;
+    aimMethodRange?: number;
+    alertnessTimeConstant?: number;
     canTargetPoint?: boolean;
     canRearm?: boolean;
+    canAAA?: boolean;
+    indirectFire?: boolean;
 }
 
 export interface UnitSpawnOptions {

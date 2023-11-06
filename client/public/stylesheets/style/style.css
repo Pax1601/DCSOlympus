@@ -72,10 +72,6 @@ form {
     padding: 0;
 }
 
-form>div {
-    margin: 20px 0;
-}
-
 .pill {
     background-color: var(--background-steel);
     border-radius: 999px;
@@ -669,8 +665,8 @@ nav.ol-panel> :last-child {
     width:10px;
 }
 
-.ol-navbar-buttons-group > .protectable > button.lock svg.locked {
-    filter:invert(100);
+.ol-navbar-buttons-group > .protectable > button.lock svg.locked * {
+    fill:white !important;
 }
 
 .ol-navbar-buttons-group > .protectable > button:not([data-protected]).lock svg.unlocked,
@@ -687,7 +683,9 @@ nav.ol-panel> :last-child {
 
 #roe-buttons-container button,
 #reaction-to-threat-buttons-container button,
-#emissions-countermeasures-buttons-container button {
+#emissions-countermeasures-buttons-container button,
+#shots-scatter-buttons-container button
+#shots-intensity-buttons-container button {
     align-items: center;
     background-color: transparent;
     border: 1px solid var(--accent-light-blue);
@@ -709,6 +707,7 @@ nav.ol-panel> :last-child {
 
 #unit-control-panel .ol-option-button button.selected svg * {
     fill: var(--background-steel);
+    stroke: var(--background-steel);
 }
 
 #rapid-controls {
@@ -850,7 +849,7 @@ nav.ol-panel> :last-child {
     column-gap: 10px;
     display: flex;
     flex-direction: row;
-    margin: 10px 0px;
+    margin: 20px 0px;
     flex-wrap: wrap;
     width: 100%;
     row-gap: 10px;

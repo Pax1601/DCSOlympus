@@ -19,6 +19,8 @@ namespace DataIndex {
 		hasTask,
 		position,
 		speed,
+		horizontalVelocity,
+		verticalVelocity,
 		heading,
 		isActiveTanker,
 		isActiveAWACS,
@@ -44,6 +46,8 @@ namespace DataIndex {
 		activePath,
 		isLeader,
 		operateAs,
+		shotsScatter,
+		shotsIntensity,
 		lastIndex,
 		endOfData = 255
 	};
@@ -70,6 +74,28 @@ namespace State
 		SCENIC_AAA,
 		MISS_ON_PURPOSE,
 		LAND_AT_POINT
+	};
+};
+
+namespace ShotsScatter
+{
+	enum ShotsScatters
+	{
+		NONE = 0,
+		HIGH,
+		MEDIUM,
+		LOW
+	};
+};
+
+namespace ShotsIntensity
+{
+	enum ShotsIntensities
+	{
+		NONE = 0,
+		LOW,
+		MEDIUM,
+		HIGH
 	};
 };
 
