@@ -1498,7 +1498,7 @@ export class NavyUnit extends Unit {
         return {
             showState: belongsToCommandedCoalition,
             showVvi: false,
-            showHealth: false,
+            showHealth: true,
             showHotgroup: true,
             showUnitIcon: (belongsToCommandedCoalition || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
             showShortLabel: false,
