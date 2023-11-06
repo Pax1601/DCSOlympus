@@ -498,11 +498,12 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 	else if (key.compare("explosion") == 0)
 	{
 		unsigned int intensity = value[L"intensity"].as_integer();
+		string explosionType = to_string(value[L"explosionType"]);
 		double lat = value[L"location"][L"lat"].as_double();
 		double lng = value[L"location"][L"lng"].as_double();
-		log("Adding " + to_string(intensity) + " explosion at (" + to_string(lat) + ", " + to_string(lng) + ")");
+		log("Adding explosion of type " + explosionType + " at (" + to_string(lat) + ", " + to_string(lng) + ")");
 		Coords loc; loc.lat = lat; loc.lng = lng;
-		command = dynamic_cast<Command*>(new Explosion(intensity, loc));
+		command = dynamic_cast<Command*>(new Explosion(intensity, explosionType, loc));
 	}
 	/************************/
 	else if (key.compare("bombPoint") == 0)

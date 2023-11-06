@@ -56,7 +56,7 @@ export class MapContextMenu extends ContextMenu {
 
         document.addEventListener("contextMenuExplosion", (e: any) => {
             this.hide();
-            getApp().getServerManager().spawnExplosion(e.detail.strength, this.getLatLng());
+            getApp().getServerManager().spawnExplosion(e.detail.strength ?? 0, e.detail.explosionType, this.getLatLng());
         });
 
         document.addEventListener("editCoalitionArea", (e: any) => {

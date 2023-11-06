@@ -410,10 +410,11 @@ private:
 class Explosion : public Command
 {
 public:
-	Explosion(unsigned int intensity, Coords location, function<void(void)> callback = [](){}) :
+	Explosion(unsigned int intensity, string explosionType, Coords location, function<void(void)> callback = [](){}) :
 		Command(callback),
 		location(location),
-		intensity(intensity)
+		intensity(intensity),
+		explosionType(explosionType)
 	{
 		priority = CommandPriority::MEDIUM;
 	};
@@ -423,4 +424,5 @@ public:
 private:
 	const Coords location;
 	const unsigned int intensity;
+	const string explosionType;
 };

@@ -1076,7 +1076,9 @@
 		"aimTime": 5,
 		"shotsToFire": 100,
 		"cost": 15000000,
-		"canAAA": true
+		"canAAA": true,
+		"targetingRange": 500,
+		"aimMethodRange": 9000
 	},
 	"Grad-URAL": {
 		"name": "Grad-URAL",

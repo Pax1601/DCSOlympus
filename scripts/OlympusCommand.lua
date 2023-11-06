@@ -28,7 +28,8 @@ Olympus.weapons = {}			-- Table holding references to all the currently existing
 
 -- Miscellaneous initializations
 Olympus.missionStartTime = DCS.getRealTime()
-
+Olympus.napalmCounter = 1
+Olympus.fireCounter = 1
 ------------------------------------------------------------------------------------------------------
 -- Olympus functions
 ------------------------------------------------------------------------------------------------------
@@ -434,10 +435,89 @@ function Olympus.smoke(color, lat, lng)
 end  
 
 -- Creates an explosion on the ground
-function Olympus.explosion(intensity, lat, lng)
-    Olympus.debug("Olympus.explosion " .. intensity .. " (" .. lat .. ", " .. lng ..")", 2)
-	trigger.action.explosion(mist.utils.makeVec3GL(coord.LLtoLO(lat, lng, 0)), intensity)
+function Olympus.explosion(intensity, explosionType, lat, lng)
+    Olympus.debug("Olympus.explosion " .. explosionType .. " " .. intensity .. " (" .. lat .. ", " .. lng ..")", 2)
+	local pos = coord.LLtoLO(lat, lng, 0)
+	local vec3 = mist.utils.makeVec3GL(pos)
+
+	if explosionType == "normal" then
+		trigger.action.explosion(vec3, intensity)
+	elseif explosionType == "phosphorous" then
+		Olympus.phosphorous(vec3)
+	elseif explosionType == "napalm" then
+		Olympus.napalm(vec3)
+	elseif explosionType == "secondary" then
+		Olympus.secondaries(vec3)
+	elseif explosionType == "fire" then
+		Olympus.createFire(vec3)
+	elseif explosionType == "depthCharge" then
+
+	end
 end  
+
+function Olympus.phosphorous(vec3) 
+	trigger.action.explosion(vec3, 1)
+	for i =	1,math.random(3, 10) do 
+		angle = mist.utils.toRadian((math.random(1, 360)))
+		local randVec = mist.utils.makeVec3GL((mist.getRandPointInCircle(vec3, 5, 1, 0, 360)))
+		trigger.action.signalFlare(randVec, 2, angle)
+	end
+end
+
+function Olympus.napalm(vec3)
+	local napeName = "napalmStrike" .. Olympus.napalmCounter
+		Olympus.napalmCounter = Olympus.napalmCounter + 1
+		mist.dynAddStatic(
+							{
+								country = 20,
+								category = 'Fortifications',
+								hidden = true,
+								name = napeName,
+								type ="Fuel tank",
+								x = vec3.x,
+								y = vec3.z,
+								heading = 0,
+							} -- end of function
+						)
+		timer.scheduleFunction(Olympus.explodeNapalm, vec3, timer.getTime() + 0.1)
+		timer.scheduleFunction(Olympus.removeNapalm, napeName, timer.getTime() + 0.12)
+end
+
+function Olympus.explodeNapalm(vec3)
+	trigger.action.explosion(vec3, 10)
+end
+
+function Olympus.removeNapalm(staticName) 
+	StaticObject.getByName(staticName):destroy()
+end
+
+function Olympus.createFire(vec3)
+	local smokeName = "smokeName" .. Olympus.fireCounter
+	Olympus.fireCounter = Olympus.fireCounter + 1
+	trigger.action.effectSmokeBig(vec3, 2 , 1, smokeName)
+	trigger.action.explosion(vec3, 1) -- looks wierd to spawn in on flat land without this
+	timer.scheduleFunction(Olympus.removeFire, smokeName, timer.getTime() + 20)
+end
+
+function Olympus.removeFire (smokeName)
+	trigger.action.effectSmokeStop(smokeName)
+end
+
+function Olympus.secondaries(vec3) 
+	trigger.action.explosion(vec3, 1)
+	for i =	1, 10 do 
+		timer.scheduleFunction(Olympus.randomDebries, vec3, timer.getTime() + math.random(0, 180))
+	end
+end
+
+function Olympus.randomDebries(vec3) 
+	trigger.action.explosion(vec3, 1)
+	for i =	1,math.random(3, 10) do
+		angle = mist.utils.toRadian((math.random(1, 360)))
+		local randVec = mist.utils.makeVec3GL((mist.getRandPointInCircle(vec3, 5, 1, 0, 360)))
+		trigger.action.signalFlare(randVec, 3, angle)
+	end
+end
 
 -- Spawns a new unit or group
 -- Spawn table contains the following parameters

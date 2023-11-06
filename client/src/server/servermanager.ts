@@ -160,8 +160,8 @@ export class ServerManager {
         this.PUT(data, callback);
     }
 
-    spawnExplosion(intensity: number, latlng: LatLng, callback: CallableFunction = () => {}) {
-        var command = { "intensity": intensity, "location": latlng };
+    spawnExplosion(intensity: number, explosionType: string, latlng: LatLng, callback: CallableFunction = () => {}) {
+        var command = { "explosionType": explosionType, "intensity": intensity, "location": latlng };
         var data = { "explosion": command }
         this.PUT(data, callback);
     }

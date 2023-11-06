@@ -244,6 +244,7 @@ string Explosion::getString()
     commandSS.precision(10);
     commandSS << "Olympus.explosion, "
         << intensity << ", "
+        << "\"" << explosionType << "\"" << ", "
         << location.lat << ", "
         << location.lng;
     return commandSS.str();
