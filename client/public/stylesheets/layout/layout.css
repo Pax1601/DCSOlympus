@@ -1,7 +1,3 @@
-:root {
-	--right-panel-width:190px;
-}
-
 /* Page style */
 #map-container {
 	height: 100%;
@@ -17,54 +13,10 @@
 	top: 10px;
 	z-index: 99999;
 	column-gap: 10px;
+	row-gap: 10px;
 	margin-right: 320px;
 	height: fit-content;
-}
-
-@media (max-width: 1820px) {
-    #toolbar-container {
-        flex-direction: column;
-		align-items: start;
-		row-gap: 10px;
-    }
-}
-
-#primary-toolbar {
-	align-items: center;
-	display: flex;
-	height: fit-content;
-	min-width: 650px;
-}
-
-@media (max-width: 1820px) {
-    #primary-toolbar {
-        row-gap: 10px;
-		flex-wrap: wrap;
-    }
-}
-
-#command-mode-toolbar {
-	align-items: center;
-	display: flex;
-}
-
-#app-icon>.ol-select-options {
-	width: fit-content;
-}
-
-#toolbar-summary {
-	background-image: url("/images/icon-round.png");
-	background-position: 20px 22px;
-	background-repeat: no-repeat;
-	background-size: 45px 45px;
-	display: flex;
-	flex-direction: column;
-	padding: 20px;
-	text-indent: 60px;
-}
-
-#toolbar-summary {
-	white-space: nowrap;
+	flex-wrap: wrap;
 }
 
 #connection-status-panel {
@@ -72,7 +24,7 @@
 	font-size: 12px;
 	position: absolute;
 	right: 10px;
-	width: var( --right-panel-width );
+	width: 190px;
 	z-index: 9999;
 }
 
@@ -84,35 +36,21 @@
 	position: absolute;
 	right: 10px;
 	row-gap: 10px;
-	width: var( --right-panel-width );
+	width: 190px;
 	z-index: 9999;
 }
 
 #unit-control-panel {
 	height: fit-content;
+	width: fit-content;
 	left: 10px;
 	position: absolute;
-	top: 80px;
-	width: 320px;
 	z-index: 9999;
-}
-
-@media (max-width: 1820px) {
-    #unit-control-panel {
-        top: 150px;
-    }
-}
-
-@media (max-width: 1350px) {
-    #unit-control-panel {
-        top: 190px;
-    }
 }
 
 #unit-info-panel {
 	bottom: 20px;
 	font-size: 12px;
-	left: 10px;
 	position: absolute;
 	width: fit-content;
 	z-index: 9999;
@@ -120,12 +58,8 @@
 	display: flex;
     flex-direction: row;
     justify-content: space-evenly;
-}
-
-@media (max-width: 1525px) {
-    #unit-info-panel {
-		flex-direction: column;
-    }
+	right: 210px;
+	height: 180px;
 }
 
 #info-popup {

@@ -192,6 +192,10 @@ export class OlympusApp {
         this.#unitsManager = new UnitsManager();
         this.#weaponsManager = new WeaponsManager();
 
+        // Toolbars
+        this.getToolbarsManager().add("primaryToolbar", new PrimaryToolbar("primary-toolbar"))
+            .add("commandModeToolbar", new CommandModeToolbar("command-mode-toolbar"));
+
         // Panels
         this.getPanelsManager()
             .add("connectionStatus", new ConnectionStatusPanel("connection-status-panel"))
@@ -206,11 +210,7 @@ export class OlympusApp {
         // Popups
         this.getPopupsManager()
             .add("infoPopup", new Popup("info-popup"));
-
-        // Toolbars
-        this.getToolbarsManager().add("primaryToolbar", new PrimaryToolbar("primary-toolbar"))
-            .add("commandModeToolbar", new CommandModeToolbar("command-mode-toolbar"));
-
+        
         this.#pluginsManager = new PluginsManager();
 
         /* Load the config file from the app server*/

@@ -1,47 +1,47 @@
 #unit-info-panel>* {
 	position: relative;
-	min-height: 100px;
 	bottom: 0px;
 }
 
-@media (min-width: 1525px) {  
-	#unit-info-panel>.panel-section {
-		border-right: 1px solid #555;
-		padding: 0 30px;
-	}
-
-	#unit-info-panel>.panel-section:first-child {
-		padding-left: 0px;
-	}
-
-	#unit-info-panel>.panel-section:last-child {
-		padding-right: 0px;
-	}
-
-	#unit-info-panel>.panel-section:last-of-type {
-		border-right-width: 0;
-	}
+#unit-info-panel>*:nth-child(1) {
+	display: flex;
+	width: 24px;
+	height: 24px;
+	margin: 6px;
+	filter: invert(100%);
 }
 
-@media (max-width: 1525px) {
-	#unit-info-panel>.panel-section {
-		border-bottom: 1px solid #555;
-		padding: 30px 0px;
-	}
-
-	#unit-info-panel>.panel-section:first-child {
-		padding-top: 0px;
-	}
-
-	#unit-info-panel>.panel-section:last-child {
-		padding-bottom: 0px;
-	}
-
-	#unit-info-panel>.panel-section:last-of-type {
-		border-bottom-width: 0;
-	}
+#unit-info-panel:hover>*:nth-child(1) {
+	display: none;
 }
 
+#unit-info-panel:not(:hover) {
+	width: fit-content;
+	height: fit-content;
+	padding: 10px;
+	margin: 0px;
+}
+
+#unit-info-panel:not(:hover)>*:not(:first-child) {
+	display: none;
+}
+ 
+#unit-info-panel>.panel-section {
+	border-right: 1px solid #555;
+	padding: 0 30px;
+}
+
+#unit-info-panel>.panel-section:first-of-type {
+	padding-left: 0px;
+}
+
+#unit-info-panel>.panel-section:last-of-type{
+	padding-right: 0px;
+}
+
+#unit-info-panel>.panel-section:last-of-type {
+	border-right-width: 0;
+}
 
 #general {
 	display: flex;
@@ -49,6 +49,7 @@
 	justify-content: space-between;
 	row-gap: 4px;
 	position: relative;
+	width: 300px;
 }
 
 #unit-label {
@@ -63,6 +64,10 @@
 #unit-name {
 	margin-bottom: 4px;
 	padding: 0px 0;
+	width: 100%;
+	text-overflow: ellipsis;
+	text-wrap: nowrap;
+	overflow: hidden;
 }
 
 #current-task {
@@ -87,6 +92,7 @@
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
+	width: 300px;
 }
 
 #loadout-silhouette {
@@ -101,9 +107,9 @@
 	column-gap: 8px;
 	display: flex;
 	flex-flow: column nowrap;
-	max-height: 108px;
-	padding-right:40px;
+	height: 100px;
 	row-gap: 6px;
+	padding-right: 10px;
 }
 
 #loadout-items>* {
