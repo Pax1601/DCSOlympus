@@ -740,7 +740,16 @@ nav.ol-panel> :last-child {
 }
 
 /****************************************************************************************/
-#import-from-file-dialog td {
+#unit-import-export-dialog th {
+    padding:4px 8px;
+}
+
+#unit-import-export-dialog tr :first-child {
+    text-align: left;
+}
+
+#unit-import-export-dialog td {
+    color:white;
     text-align: center;
 }
 
