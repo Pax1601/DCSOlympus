@@ -55,6 +55,7 @@
 	}
 
     #toolbar-container>*:not(:first-child):not(:hover) {
+		height: 52px;
         align-items: center;
         justify-content: center;
         aspect-ratio: 1/1;
@@ -62,8 +63,8 @@
 
 	#toolbar-container>*:not(:first-child):not(:hover)>svg {
         display: block;
-		width: 30px;
-		height: 30px;
+		width: 24px;
+		height: 24px;
         filter: invert();
 	}
 

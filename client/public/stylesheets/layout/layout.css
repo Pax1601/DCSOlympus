@@ -42,6 +42,7 @@
 
 #unit-control-panel {
 	height: fit-content;
+	width: fit-content;
 	left: 10px;
 	position: absolute;
 	z-index: 9999;
@@ -51,7 +52,7 @@
 	bottom: 20px;
 	font-size: 12px;
 	position: absolute;
-	width: 600px;
+	width: fit-content;
 	z-index: 9999;
 	padding: 24px 30px;
 	display: flex;
