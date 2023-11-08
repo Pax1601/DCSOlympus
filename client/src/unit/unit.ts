@@ -47,7 +47,6 @@ export class Unit extends CustomMarker {
     #onOff: boolean = true;
     #followRoads: boolean = false;
     #fuel: number = 0;
-    #health: number = Math.round(Math.random()*100);
     #desiredSpeed: number = 0;
     #desiredSpeedType: string = "CAS";
     #desiredAltitude: number = 0;
@@ -88,6 +87,7 @@ export class Unit extends CustomMarker {
     #operateAs: string = "blue";
     #shotsScatter: number = 2;
     #shotsIntensity: number = 2;
+    #health: number = 100;
 
     #selectable: boolean;
     #selected: boolean = false;
@@ -122,7 +122,6 @@ export class Unit extends CustomMarker {
     getHorizontalVelocity() { return this.#horizontalVelocity };
     getVerticalVelocity() { return this.#verticalVelocity };
     getHeading() { return this.#heading };
-    getHealth() { return this.#health };
     getIsActiveAWACS() { return this.#isActiveAWACS };
     getIsActiveTanker() { return this.#isActiveTanker };
     getOnOff() { return this.#onOff };
@@ -147,8 +146,9 @@ export class Unit extends CustomMarker {
     getActivePath() { return this.#activePath };
     getIsLeader() { return this.#isLeader };
     getOperateAs() { return this.#operateAs };
-    getShotsScatter() { return this.#shotsScatter};
-    getShotsIntensity() { return this.#shotsIntensity};
+    getShotsScatter() { return this.#shotsScatter };
+    getShotsIntensity() { return this.#shotsIntensity };
+    getHealth() { return this.#health };
 
     static getConstructor(type: string) {
         if (type === "GroundUnit") return GroundUnit;
@@ -198,9 +198,9 @@ export class Unit extends CustomMarker {
             this.#updateMarker();
 
             /* Circles don't like to be updated when the map is zooming */
-            if (!getApp().getMap().isZooming()) 
+            if (!getApp().getMap().isZooming())
                 this.#drawRanges();
-            else 
+            else
                 this.once("zoomend", () => { this.#drawRanges(); })
 
             if (this.getSelected())
@@ -243,7 +243,6 @@ export class Unit extends CustomMarker {
                 case DataIndexes.onOff: this.#onOff = dataExtractor.extractBool(); break;
                 case DataIndexes.followRoads: this.#followRoads = dataExtractor.extractBool(); break;
                 case DataIndexes.fuel: this.#fuel = dataExtractor.extractUInt16(); break;
-                //  case DataIndexes.health: this.#health = dataExtractor.extractUInt16(); break;   //  To be dynamic
                 case DataIndexes.desiredSpeed: this.#desiredSpeed = dataExtractor.extractFloat64(); break;
                 case DataIndexes.desiredSpeedType: this.#desiredSpeedType = dataExtractor.extractBool() ? "GS" : "CAS"; break;
                 case DataIndexes.desiredAltitude: this.#desiredAltitude = dataExtractor.extractFloat64(); break;
@@ -265,6 +264,7 @@ export class Unit extends CustomMarker {
                 case DataIndexes.operateAs: this.#operateAs = enumToCoalition(dataExtractor.extractUInt8()); break;
                 case DataIndexes.shotsScatter: this.#shotsScatter = dataExtractor.extractUInt8(); break;
                 case DataIndexes.shotsIntensity: this.#shotsIntensity = dataExtractor.extractUInt8(); break;
+                case DataIndexes.health: this.#health = dataExtractor.extractUInt8(); updateMarker = true; break;
             }
         }
 
@@ -336,7 +336,8 @@ export class Unit extends CustomMarker {
             isLeader: this.#isLeader,
             operateAs: this.#operateAs,
             shotsScatter: this.#shotsScatter,
-            shotsIntensity: this.#shotsIntensity
+            shotsIntensity: this.#shotsIntensity,
+            health: this.#health
         }
     }
 
@@ -398,9 +399,9 @@ export class Unit extends CustomMarker {
             this.#selected = selected;
 
             /* Circles don't like to be updated when the map is zooming */
-            if (!getApp().getMap().isZooming()) 
+            if (!getApp().getMap().isZooming())
                 this.#drawRanges();
-            else 
+            else
                 this.once("zoomend", () => { this.#drawRanges(); })
 
             if (selected) {
@@ -635,9 +636,9 @@ export class Unit extends CustomMarker {
         this.getElement()?.appendChild(el);
 
         /* Circles don't like to be updated when the map is zooming */
-        if (!getApp().getMap().isZooming()) 
+        if (!getApp().getMap().isZooming())
             this.#drawRanges();
-        else 
+        else
             this.once("zoomend", () => { this.#drawRanges(); })
     }
 
@@ -673,9 +674,9 @@ export class Unit extends CustomMarker {
 
         if (!this.getHidden()) {
             /* Circles don't like to be updated when the map is zooming */
-            if (!getApp().getMap().isZooming()) 
+            if (!getApp().getMap().isZooming())
                 this.#drawRanges();
-            else 
+            else
                 this.once("zoomend", () => { this.#drawRanges(); })
         } else {
             this.#clearRanges();
@@ -929,7 +930,7 @@ export class Unit extends CustomMarker {
     }
 
     /***********************************************/
-    getActions():  { [key: string]: { text: string, tooltip: string, type: string } } {
+    getActions(): { [key: string]: { text: string, tooltip: string, type: string } } {
         /* To be implemented by child classes */ // TODO make Unit an abstract class
         return {};
     }
@@ -1045,14 +1046,14 @@ export class Unit extends CustomMarker {
         var options: { [key: string]: { text: string, tooltip: string } } = {};
 
         options = {
-            'trail':            { text: "Trail",                tooltip: "Follow unit in trail formation" },
-            'echelon-lh':       { text: "Echelon (LH)",         tooltip: "Follow unit in echelon left formation" },
-            'echelon-rh':       { text: "Echelon (RH)",         tooltip: "Follow unit in echelon right formation" },
-            'line-abreast-lh':  { text: "Line abreast (LH)",    tooltip: "Follow unit in line abreast left formation" },
-            'line-abreast-rh':  { text: "Line abreast (RH)",    tooltip: "Follow unit in line abreast right formation" },
-            'front':            { text: "Front",                tooltip: "Fly in front of unit" },
-            'diamond':          { text: "Diamond",              tooltip: "Follow unit in diamond formation" },
-            'custom':           { text: "Custom",               tooltip: "Set a custom formation position" },
+            'trail': { text: "Trail", tooltip: "Follow unit in trail formation" },
+            'echelon-lh': { text: "Echelon (LH)", tooltip: "Follow unit in echelon left formation" },
+            'echelon-rh': { text: "Echelon (RH)", tooltip: "Follow unit in echelon right formation" },
+            'line-abreast-lh': { text: "Line abreast (LH)", tooltip: "Follow unit in line abreast left formation" },
+            'line-abreast-rh': { text: "Line abreast (RH)", tooltip: "Follow unit in line abreast right formation" },
+            'front': { text: "Front", tooltip: "Fly in front of unit" },
+            'diamond': { text: "Diamond", tooltip: "Follow unit in diamond formation" },
+            'custom': { text: "Custom", tooltip: "Set a custom formation position" },
         }
 
         getApp().getMap().getUnitContextMenu().setOptions(options, (option: string) => {
@@ -1157,7 +1158,7 @@ export class Unit extends CustomMarker {
                 else if (!this.#controlled) {                     // Unit is under DCS control (not Olympus)
                     element.querySelector(".unit")?.setAttribute("data-state", "dcs");
                 }
-                else if ((this.getCategory() == "Aircraft" || this.getCategory() == "Helicopter") && !this.#hasTask){
+                else if ((this.getCategory() == "Aircraft" || this.getCategory() == "Helicopter") && !this.#hasTask) {
                     element.querySelector(".unit")?.setAttribute("data-state", "no-task");
                 }
                 else {                                           // Unit is under Olympus control
@@ -1325,13 +1326,13 @@ export class Unit extends CustomMarker {
 
         /* Get the acquisition and engagement ranges of the entire group, not for each unit */
         if (this.getIsLeader()) {
-            var engagementRange = this.getDatabase()?.getByName(this.getName())?.engagementRange?? 0;
-            var acquisitionRange = this.getDatabase()?.getByName(this.getName())?.acquisitionRange?? 0;
+            var engagementRange = this.getDatabase()?.getByName(this.getName())?.engagementRange ?? 0;
+            var acquisitionRange = this.getDatabase()?.getByName(this.getName())?.acquisitionRange ?? 0;
 
             this.getGroupMembers().forEach((unit: Unit) => {
                 if (unit.getAlive()) {
-                    let unitEngagementRange = unit.getDatabase()?.getByName(unit.getName())?.engagementRange?? 0;
-                    let unitAcquisitionRange = unit.getDatabase()?.getByName(unit.getName())?.acquisitionRange?? 0;
+                    let unitEngagementRange = unit.getDatabase()?.getByName(unit.getName())?.engagementRange ?? 0;
+                    let unitAcquisitionRange = unit.getDatabase()?.getByName(unit.getName())?.acquisitionRange ?? 0;
 
                     if (unitEngagementRange > engagementRange)
                         engagementRange = unitEngagementRange;
@@ -1342,12 +1343,12 @@ export class Unit extends CustomMarker {
             })
 
             if (acquisitionRange !== this.#acquisitionCircle.getRadius())
-                this.#acquisitionCircle.setRadius(acquisitionRange); 
+                this.#acquisitionCircle.setRadius(acquisitionRange);
 
             if (engagementRange !== this.#engagementCircle.getRadius())
                 this.#engagementCircle.setRadius(engagementRange);
 
-            this.#engagementCircle.options.fillOpacity = this.getSelected() && getApp().getMap().getVisibilityOptions()[FILL_SELECTED_RING]? 0.3: 0;
+            this.#engagementCircle.options.fillOpacity = this.getSelected() && getApp().getMap().getVisibilityOptions()[FILL_SELECTED_RING] ? 0.3 : 0;
 
             /* Acquisition circles */
             var shortAcquisitionRangeCheck = (acquisitionRange > nmToM(3) || !getApp().getMap().getVisibilityOptions()[HIDE_UNITS_SHORT_RANGE_RINGS]);
@@ -1373,7 +1374,7 @@ export class Unit extends CustomMarker {
                 if (getApp().getMap().hasLayer(this.#acquisitionCircle))
                     this.#acquisitionCircle.removeFrom(getApp().getMap());
             }
-            
+
             /* Engagement circles */
             var shortEngagementRangeCheck = (engagementRange > nmToM(3) || !getApp().getMap().getVisibilityOptions()[HIDE_UNITS_SHORT_RANGE_RINGS]);
             if (getApp().getMap().getVisibilityOptions()[SHOW_UNITS_ENGAGEMENT_RINGS] && shortEngagementRangeCheck && (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, IRST, RWR].includes(value)))) {

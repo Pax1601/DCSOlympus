@@ -182,6 +182,7 @@ export interface UnitData {
     operateAs: string;
     shotsScatter: number;
     shotsIntensity: number;
+    health: number;
 }
 
 export interface LoadoutItemBlueprint {

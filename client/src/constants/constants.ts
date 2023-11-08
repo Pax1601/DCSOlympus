@@ -262,6 +262,7 @@ export enum DataIndexes {
     operateAs,
     shotsScatter,
     shotsIntensity,
+    health,
     endOfData = 255
 };
 
