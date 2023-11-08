@@ -9,6 +9,13 @@ DefaultGroupName=DCSOlympus
 OutputBaseFilename=DCSOlympus_{#version}
 UninstallFilesDir={app}\Mods\Services\Olympus
 SetupIconFile="..\img\olympus.ico"
+DirExistsWarning=no
+AppendDefaultDirName=no
+
+[Messages]
+WizardSelectDir=Select the location of DCS's Saved Games folder
+SelectDirDesc=Where is DCS's Saved Games folder?
+SelectDirLabel3=Setup will install [name] into DCS's Saved Games folder located here.
   
 [Tasks] 
 ; NOTE: The following entry contains English phrases ("Create a desktop icon" and "Additional icons"). You are free to translate them into another language if required. 
