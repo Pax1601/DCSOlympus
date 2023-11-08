@@ -48,6 +48,7 @@ namespace DataIndex {
 		operateAs,
 		shotsScatter,
 		shotsIntensity,
+		health,
 		lastIndex,
 		endOfData = 255
 	};

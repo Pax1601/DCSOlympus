@@ -937,11 +937,15 @@ function Olympus.setUnitsData(arg, time)
 							table["hasTask"] = controller:hasTask()
 							table["ammo"] = unit:getAmmo() --TODO remove a lot of stuff we don't really need
 							table["fuel"] = unit:getFuel()
-							table["life"] = unit:getLife() / unit:getLife0()
+							table["health"] = unit:getLife() / unit:getLife0() * 100
 							table["contacts"] = contacts
 
 							units[ID] = table
 						end
+					else
+						-- If the unit reference is nil it means the unit no longer exits
+						units[ID] = {isAlive = false}
+						Olympus.units[ID] = nil
 					end
 				end
 			else

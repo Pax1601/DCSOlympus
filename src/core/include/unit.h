@@ -3,7 +3,6 @@
 #include "utils.h"
 #include "dcstools.h"
 #include "luatools.h"
-#include "measure.h"
 #include "logger.h"
 #include "commands.h"
 #include "datatypes.h"
@@ -107,6 +106,7 @@ public:
 	virtual void setOperateAs(unsigned char newValue) { updateValue(operateAs, newValue, DataIndex::operateAs); }
 	virtual void setShotsScatter(unsigned char newValue) { updateValue(shotsScatter, newValue, DataIndex::shotsScatter); }
 	virtual void setShotsIntensity(unsigned char newValue) { updateValue(shotsIntensity, newValue, DataIndex::shotsIntensity); }
+	virtual void setHealth(unsigned char newValue) { updateValue(health, newValue, DataIndex::health); }
 
 	/********** Getters **********/
 	virtual string getCategory() { return category; };
@@ -152,6 +152,7 @@ public:
 	virtual unsigned char getOperateAs() { return operateAs;  }
 	virtual unsigned char getShotsScatter() { return shotsScatter; }
 	virtual unsigned char getShotsIntensity() { return shotsIntensity; }
+	virtual unsigned char getHealth() { return health; }
 
 protected:
 	unsigned int ID;
@@ -200,6 +201,7 @@ protected:
 	Coords activeDestination = Coords(NULL);
 	unsigned char shotsScatter = 2;
 	unsigned char shotsIntensity = 2;
+	unsigned char health = 100;
 
 	/********** Other **********/
 	unsigned int taskCheckCounter = 0;

@@ -86,6 +86,7 @@ export interface UnitSpawnTable {
 export interface ObjectIconOptions {
     showState: boolean,
     showVvi: boolean,
+    showHealth: boolean,
     showHotgroup: boolean,
     showUnitIcon: boolean,
     showShortLabel: boolean,
@@ -181,6 +182,7 @@ export interface UnitData {
     operateAs: string;
     shotsScatter: number;
     shotsIntensity: number;
+    health: number;
 }
 
 export interface LoadoutItemBlueprint {
