@@ -6,6 +6,8 @@
             data-on-click-params='{ "type": "aircraft" }' class="ol-contexmenu-button"><img src="/resources/theme/images/buttons/spawn/aircraft.svg" inject-svg></button>
         <button data-coalition="blue" id="helicopter-spawn-button" title="Spawn helicopter" data-on-click="mapContextMenuShow"
             data-on-click-params='{ "type": "helicopter" }' class="ol-contexmenu-button"><img src="/resources/theme/images/buttons/spawn/helicopter.svg" inject-svg></button>
+        <button data-coalition="blue" id="air-defence-spawn-button" title="Spawn air defence unit" data-on-click="mapContextMenuShow"
+            data-on-click-params='{ "type": "air-defence" }' class="ol-contexmenu-button"><img src="/resources/theme/images/buttons/spawn/sam.svg" inject-svg></button>
         <button data-coalition="blue" id="groundunit-spawn-button" title="Spawn ground unit" data-on-click="mapContextMenuShow"
             data-on-click-params='{ "type": "groundunit" }' class="ol-contexmenu-button"><img src="/resources/theme/images/buttons/spawn/groundunit.svg" inject-svg></button>
         <button data-coalition="blue" id="coalition-area-button" title="Edit coalition area" data-on-click="editCoalitionArea"
@@ -30,11 +32,14 @@
     <div id="helicopter-spawn-menu" class="ol-contexmenu-panel ol-panel hide">
         <!-- Here the helicopter spawn menu will be shown -->
     </div>
+    <div id="air-defence-spawn-menu" class="ol-panel ol-contexmenu-panel hide">
+        <!-- Here the air defence units' spawn menu will be shown -->
+    </div>
     <div id="groundunit-spawn-menu" class="ol-panel ol-contexmenu-panel hide">
-        <!-- Here the ground units spawn menu will be shown -->
+        <!-- Here the ground units' spawn menu will be shown -->
     </div>
     <div id="navyunit-spawn-menu" class="ol-panel ol-contexmenu-panel hide">
-        <!-- Here the navy units spawn menu will be shown -->
+        <!-- Here the navy units' spawn menu will be shown -->
     </div>
     <div id="smoke-spawn-menu" class="ol-panel ol-contexmenu-panel hide">
         <button class="smoke-button" title="" data-smoke-color="white" data-on-click="contextMenuDeploySmoke" data-on-click-params='{ "color": "white" }'>White smoke</button>

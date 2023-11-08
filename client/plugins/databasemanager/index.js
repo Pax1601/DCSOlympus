@@ -1043,8 +1043,7 @@ function arrayToString(array) {
 }
 exports.arrayToString = arrayToString;
 function stringToArray(input) {
-    var _a;
-    return (_a = input.match(/(\w)+/g)) !== null && _a !== void 0 ? _a : [];
+    return input.match(/(\w)+/g) || [];
 }
 exports.stringToArray = stringToArray;
 

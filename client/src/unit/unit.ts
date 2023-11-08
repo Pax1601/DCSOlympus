@@ -18,6 +18,11 @@ var pathIcon = new Icon({
     iconAnchor: [13, 41]
 });
 
+/**
+ * Unit class which controls unit behaviour
+ * 
+ * Just about everything is a unit - even missiles!
+ */
 export class Unit extends CustomMarker {
     ID: number;
 
@@ -279,6 +284,10 @@ export class Unit extends CustomMarker {
         }
     }
 
+    /** Get unit data collated into an object
+     * 
+     * @returns object populated by unit information which can also be retrieved using getters
+     */
     getData(): UnitData {
         return {
             category: this.getCategory(),
@@ -328,14 +337,27 @@ export class Unit extends CustomMarker {
         }
     }
 
+    /**
+     * 
+     * @returns string containing the marker category
+     */
     getMarkerCategory(): string {
         return getMarkerCategoryByName(this.getName());
     }
 
+    /** Get a database of information also in this unit's category
+     * 
+     * @returns UnitDatabase
+     */
     getDatabase(): UnitDatabase | null {
         return getUnitDatabaseByCategory(this.getMarkerCategory());
     }
 
+    /** Get the icon options
+     * Used to configure how the marker appears on the map
+     * 
+     * @returns ObjectIconOptions
+     */
     getIconOptions(): ObjectIconOptions {
         // Default values, overloaded by child classes if needed
         return {
@@ -352,12 +374,20 @@ export class Unit extends CustomMarker {
         }
     }
 
+    /** Set the unit as alive or dead
+     * 
+     * @param newAlive (boolean) true = alive, false = dead
+     */
     setAlive(newAlive: boolean) {
         if (newAlive != this.#alive)
             document.dispatchEvent(new CustomEvent("unitDeath", { detail: this }));
         this.#alive = newAlive;
     }
 
+    /** Set the unit as user-selected
+     * 
+     * @param selected (boolean)
+     */
     setSelected(selected: boolean) {
         /* Only alive units can be selected. Some units are not selectable (weapons) */
         if ((this.#alive || !selected) && this.getSelectable() && this.getSelected() != selected && this.belongsToCommandedCoalition()) {
@@ -396,27 +426,51 @@ export class Unit extends CustomMarker {
         }
     }
 
+    /** Is this unit selected?
+     * 
+     * @returns boolean
+     */
     getSelected() {
         return this.#selected;
     }
 
+    /** Set whether this unit is selectable
+     * 
+     * @param selectable (boolean)
+     */
     setSelectable(selectable: boolean) {
         this.#selectable = selectable;
     }
 
+    /** Get whether this unit is selectable
+     * 
+     * @returns boolean
+     */
     getSelectable() {
         return this.#selectable;
     }
 
+    /** Set the number of the hotgroup to which the unit belongs
+     *  
+     * @param hotgroup (number)
+     */
     setHotgroup(hotgroup: number | null) {
         this.#hotgroup = hotgroup;
         this.#updateMarker();
     }
 
+    /** Get the unit's hotgroup number
+     * 
+     * @returns number
+     */
     getHotgroup() {
         return this.#hotgroup;
     }
 
+    /** Set the unit as highlighted
+     * 
+     * @param highlighted (boolean)
+     */
     setHighlighted(highlighted: boolean) {
         if (this.getSelectable() && this.#highlighted != highlighted) {
             this.getElement()?.querySelector(`[data-object|="unit"]`)?.toggleAttribute("data-is-highlighted", highlighted);
@@ -425,18 +479,28 @@ export class Unit extends CustomMarker {
         }
     }
 
+    /** Get whether the unit is highlighted or not
+     * 
+     * @returns boolean
+     */
     getHighlighted() {
         return this.#highlighted;
     }
 
+    /** Get the other members of the group which this unit is in
+     * 
+     * @returns Unit[]
+     */
     getGroupMembers() {
         return Object.values(getApp().getUnitsManager().getUnits()).filter((unit: Unit) => { return unit != this && unit.getGroupName() === this.getGroupName(); });
     }
 
+    /** Returns whether the user is allowed to command this unit, based on coalition
+     * 
+     * @returns boolean
+     */
     belongsToCommandedCoalition() {
-        if (getApp().getMissionManager().getCommandModeOptions().commandMode !== GAME_MASTER && getApp().getMissionManager().getCommandedCoalition() !== this.#coalition)
-            return false;
-        return true;
+        return (getApp().getMissionManager().getCommandModeOptions().commandMode !== GAME_MASTER && getApp().getMissionManager().getCommandedCoalition() !== this.#coalition) ? false : true;
     }
 
     getType() {
