@@ -111,7 +111,7 @@ export const mapBounds = {
     "Nevada": { bounds: new LatLngBounds([34.4037128, -119.7806729], [39.7372411, -112.1130805]), zoom: 5 },
     "PersianGulf": { bounds: new LatLngBounds([21.729393, 47.572675], [33.131584, 64.7313594]), zoom: 5 },
     "Caucasus": { bounds: new LatLngBounds([39.6170191, 27.634935], [47.3907982, 49.3101946]), zoom: 4 },
-    // TODO "Falklands"
+    // TODO "Falklands", "Sinai", "Normandy 2"
 }
 
 export const mapLayers = {
@@ -157,9 +157,6 @@ export const mapLayers = {
 export const IDLE = "Idle";
 export const MOVE_UNIT = "Move unit";
 export const COALITIONAREA_DRAW_POLYGON = "Draw Coalition Area";
-export const visibilityControls: string[] = ["human", "dcs", "aircraft", "helicopter", "groundunit-sam", "groundunit-other", "navyunit", "airbase"];
-export const visibilityControlsTypes: string[][] = [["human"], ["dcs"], ["aircraft"], ["helicopter"], ["groundunit-sam", "groundunit-sam-radar", "groundunit-sam-launcher"], ["groundunit-other", "groundunit-ewr"], ["navyunit"], ["airbase"]];
-export const visibilityControlsTooltips: string[] = ["Toggle human players visibility", "Toggle DCS controlled units visibility", "Toggle aircrafts visibility", "Toggle helicopter visibility", "Toggle SAM units visibility", "Toggle ground units (not SAM) visibility", "Toggle navy units visibility", "Toggle airbases visibility"];
 export const MAP_MARKER_CONTROLS:MapMarkerControl[] = [{
     "name":"Human",
     "image": "visibility/human.svg",
@@ -206,6 +203,7 @@ export const MAP_MARKER_CONTROLS:MapMarkerControl[] = [{
 
 export const IADSTypes = ["AAA", "MANPADS", "SAM Site", "Radar"];
 export const IADSDensities: {[key: string]: number}= {"AAA": 0.8, "MANPADS": 0.3, "SAM Site": 0.1, "Radar": 0.05};
+export const GROUND_UNIT_AIR_DEFENCE_REGEX:RegExp = /(\b(AAA|SAM|MANPADS?|[mM]anpads?)|[sS]tinger\b)/;
 
 export const HIDE_GROUP_MEMBERS             = "Hide group members when zoomed out";
 export const SHOW_UNIT_LABELS               = "Show unit labels (L)";

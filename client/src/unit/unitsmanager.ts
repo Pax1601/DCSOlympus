@@ -988,25 +988,8 @@ export class UnitsManager {
     exportToFile() {
         const fileExport = new UnitDataFileExport("unit-import-export-dialog");
         fileExport.showForm(Object.values(this.#units));
-        return;
-        var unitsToExport: { [key: string]: any } = {};
-        for (let ID in this.#units) {
-            var unit = this.#units[ID];
-            if (!["Aircraft", "Helicopter"].includes(unit.getCategory())) {
-                var data: any = unit.getData();
-                if (unit.getGroupName() in unitsToExport)
-                    unitsToExport[unit.getGroupName()].push(data);
-                else
-                    unitsToExport[unit.getGroupName()] = [data];
-            }
-        }
-        var a = document.createElement("a");
-        var file = new Blob([JSON.stringify(unitsToExport)], { type: 'text/plain' });
-        a.href = URL.createObjectURL(file);
-        a.download = 'export.json';
-        a.click();
     }
-
+    
     /** Import ground and navy units from file
      * TODO: extend to support aircraft and helicopters
      */

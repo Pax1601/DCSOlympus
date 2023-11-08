@@ -400,6 +400,7 @@ export class OlympusApp {
         // TODO: move from here in dedicated class
         document.addEventListener("closeDialog", (ev: CustomEventInit) => {
             ev.detail._element.closest(".ol-dialog").classList.add("hide");
+            document.getElementById("gray-out")?.classList.toggle("hide", true);
         });
 
         /* Try and connect with the Olympus REST server */

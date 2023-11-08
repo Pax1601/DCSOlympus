@@ -1,9 +1,12 @@
+import { GROUND_UNIT_AIR_DEFENCE_REGEX } from "../constants/constants";
 import { Dialog } from "../dialog/dialog";
+import { zeroAppend } from "../other/utils";
 import { Unit } from "./unit";
 import { unitDataFile } from "./unitdatafile";
 
 export class UnitDataFileExport extends unitDataFile {
 
+    #data!:any;
     #dialog:Dialog;
     #element!:HTMLElement;
     #categoryCoalitionHeaders!: HTMLElement;
@@ -15,6 +18,10 @@ export class UnitDataFileExport extends unitDataFile {
         this.#element = this.#dialog.getElement();
         this.#categoryCoalitionMatrix  = <HTMLElement>this.#element.querySelector("tbody");
         this.#categoryCoalitionHeaders = <HTMLElement>this.#element.querySelector("thead");
+
+        this.#element.querySelector(".start-transfer")?.addEventListener("click", (ev:MouseEventInit) => {
+            this.#doExport();
+        });
     }
 
     /**
@@ -28,8 +35,8 @@ export class UnitDataFileExport extends unitDataFile {
         const categories:string[] = [];
         const coalitions:string[] = [];
 
-        units.filter((unit:Unit) => unit.getControlled() && unit.getAlive()).forEach((unit:Unit) => {
-            const category = unit.getCategory();
+        units.filter((unit:Unit) => unit.getAlive()).forEach((unit:Unit) => {
+            const category = ((GROUND_UNIT_AIR_DEFENCE_REGEX.test(unit.getType())) ? "Air Defence" : unit.getCategory()).replace( /(\w)([A-Z])/g, "$1 $2");
             const coalition = unit.getCoalition();
 
             if (!coalitions.includes(coalition))
@@ -47,11 +54,13 @@ export class UnitDataFileExport extends unitDataFile {
             data[category][coalition].push(unit);
         });
 
+        this.#data = data;
+
         categories.sort();
         coalitions.sort();
 
         let headersHTML:string = ``;
-        let matrixHTML:string = ``;
+        let matrixHTML:string  = ``;
 
         categories.forEach((category:string, index) => {
             matrixHTML += `<tr><td>${category}</td>`;
@@ -59,7 +68,7 @@ export class UnitDataFileExport extends unitDataFile {
             coalitions.forEach((coalition:string) => {
                 if (index === 0)
                     headersHTML += `<th data-coalition="${coalition}">${coalition}</th>`;
-                matrixHTML += `<td data-coalition="${coalition}">${(data[category].hasOwnProperty(coalition)) ? `<input type="checkbox" value="${category}:${coalition}" checked />`: "-"}</td>`;
+                matrixHTML += `<td data-coalition="${coalition}">${(data[category].hasOwnProperty(coalition)) ? `<input type="checkbox" name="category-coalition-selection" value="${category}:${coalition}" checked />`: "-"}</td>`;
             });
 
             matrixHTML += "</tr>";
@@ -68,6 +77,41 @@ export class UnitDataFileExport extends unitDataFile {
         this.#categoryCoalitionHeaders.innerHTML = `<tr><td>&nbsp;</td>${headersHTML}</tr>`;
         this.#categoryCoalitionMatrix.innerHTML = matrixHTML;
         this.#dialog.show();
+    }
+
+    
+    #doExport() {
+
+        let selectedUnits:Unit[] = [];
+        
+        this.#element.querySelectorAll(`input[type="checkbox"][name="category-coalition-selection"]:checked`).forEach(<HTMLInputElement>(checkbox:HTMLInputElement) => {
+            if (checkbox instanceof HTMLInputElement) {
+                const [category, coalition] = checkbox.value.split(":");    // e.g. "category:coalition"
+                selectedUnits = selectedUnits.concat(this.#data[category][coalition]);
+            }
+        });
+
+        if (selectedUnits.length === 0) {
+            alert("Please select at least one option for export.");
+            return;
+        }
+
+        var unitsToExport: { [key: string]: any } = {};
+        selectedUnits.forEach((unit:Unit) => {
+            var data: any = unit.getData();
+            if (unit.getGroupName() in unitsToExport)
+                unitsToExport[unit.getGroupName()].push(data);
+            else
+                unitsToExport[unit.getGroupName()] = [data];
+        });
+
+        const date = new Date();
+        const a    = document.createElement("a");
+        const file = new Blob([JSON.stringify(unitsToExport)], { type: 'text/plain' });
+        a.href     = URL.createObjectURL(file);
+        a.download = `olympus_export_${date.getFullYear()}-${zeroAppend(date.getMonth()+1, 2)}-${zeroAppend(date.getDate(), 2)}_${zeroAppend(date.getHours(), 2)}${zeroAppend(date.getMinutes(), 2)}${zeroAppend(date.getSeconds(), 2)}.json`;
+        a.click();
+        this.#dialog.hide();
     }
 
 }
