@@ -659,7 +659,7 @@ declare module "unit/databases/unitdatabase" {
             [key: string]: UnitBlueprint;
         };
         getRoles(): string[];
-        getTypes(): string[];
+        getTypes(unitFilter?: CallableFunction): string[];
         getEras(): string[];
         getByRange(range: string): UnitBlueprint[];
         getByType(type: string): UnitBlueprint[];
@@ -810,6 +810,7 @@ declare module "controls/unitspawnmenu" {
         #private;
         protected showRangeCircles: boolean;
         protected spawnOptions: UnitSpawnOptions;
+        protected unitTypeFilter: (unit: any) => boolean;
         constructor(ID: string, unitDatabase: UnitDatabase, orderByRole: boolean);
         getContainer(): HTMLElement;
         getVisible(): boolean;
@@ -849,12 +850,21 @@ declare module "controls/unitspawnmenu" {
     }
     export class GroundUnitSpawnMenu extends UnitSpawnMenu {
         protected showRangeCircles: boolean;
+        protected unitTypeFilter: (unit: any) => boolean;
         /**
          *
          * @param ID - the ID of the HTML element which will contain the context menu
          */
         constructor(ID: string);
         deployUnits(spawnOptions: UnitSpawnOptions, unitsCount: number): void;
+    }
+    export class AirDefenceUnitSpawnMenu extends GroundUnitSpawnMenu {
+        protected unitTypeFilter: (unit: any) => boolean;
+        /**
+         *
+         * @param ID - the ID of the HTML element which will contain the context menu
+         */
+        constructor(ID: string);
     }
     export class NavyUnitSpawnMenu extends UnitSpawnMenu {
         /**
@@ -894,7 +904,7 @@ declare module "contextmenus/mapcontextmenu" {
          * @param y Y screen coordinate of the top left corner of the context menu
          * @param latlng Leaflet latlng object of the mouse click
          */
-        show(x: number, y: number, latlng: LatLng): void;
+        show(x: number, y: number, latlng: LatLng): false | undefined;
         /** If the user rightclicked on a CoalitionArea, it will be given the ability to edit it.
          *
          * @param coalitionArea The CoalitionArea the user can edit
@@ -1510,6 +1520,7 @@ declare module "map/map" {
             [key: string]: boolean;
         };
         unitIsProtected(unit: Unit): boolean;
+        getMapMarkerControls(): MapMarkerControl[];
     }
 }
 declare module "mission/bullseye" {

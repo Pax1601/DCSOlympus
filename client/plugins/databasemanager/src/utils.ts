@@ -287,7 +287,11 @@ export function arrayToString(array: string[]) {
     return "[" + array.join( ", " ) + "]";
 }
 
-
+/** Converts an a single string like [val1, val2, val3] into an array
+ *
+ * @param input The input string
+ * @returns The array
+ */
 export function stringToArray(input: string) {
     return input.match( /(\w)+/g ) ?? [];
 }

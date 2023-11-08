@@ -1,5 +1,9 @@
 #!/usr/bin/env node
 
+var fs = require('fs');
+let rawdata = fs.readFileSync('../olympus.json');
+let config = JSON.parse(rawdata);
+
 /**
  * Module dependencies.
  */
@@ -12,8 +16,14 @@ var http = require('http');
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+var configPort = null;
+if (config["client"] != undefined && config["client"]["port"] != undefined) {
+	configPort = config["client"]["port"];
+}
+
+var port = normalizePort(configPort || '3000');
 app.set('port', port);
+console.log("Express server listening on port: " + port)
 
 /**
  * Create HTTP server.

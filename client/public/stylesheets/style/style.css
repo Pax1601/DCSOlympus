@@ -714,11 +714,8 @@ nav.ol-panel> :last-child {
     display: flex;
     flex-direction: column;
     row-gap: 5px;
-    position: absolute;
     height: fit-content;
     width: fit-content;
-    left: calc(100% + 10px);
-    top: 0px;
 }
 
 #rapid-controls button {
