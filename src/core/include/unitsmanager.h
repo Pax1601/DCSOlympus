@@ -20,7 +20,7 @@ public:
 	void update(json::value& missionData, double dt);
 	void runAILoop();
 	void getUnitData(stringstream &ss, unsigned long long time);
-	void deleteUnit(unsigned int ID, bool explosion, bool immediate);
+	void deleteUnit(unsigned int ID, bool explosion, string explosionType, bool immediate);
 	void acquireControl(unsigned int ID);
 	void loadDatabases();
 	Unit* getClosestUnit(Unit* unit, unsigned char coalition, vector<string> categories, double &distance);

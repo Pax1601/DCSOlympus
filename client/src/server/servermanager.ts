@@ -212,8 +212,8 @@ export class ServerManager {
         this.PUT(data, callback);
     }
 
-    deleteUnit(ID: number, explosion: boolean, immediate: boolean, callback: CallableFunction = () => {}) {
-        var command = { "ID": ID, "explosion": explosion, "immediate": immediate };
+    deleteUnit(ID: number, explosion: boolean, explosionType: string, immediate: boolean, callback: CallableFunction = () => {}) {
+        var command = { "ID": ID, "explosion": explosion, "explosionType": explosionType, "immediate": immediate };
         var data = { "deleteUnit": command }
         this.PUT(data, callback);
     }

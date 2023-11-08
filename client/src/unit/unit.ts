@@ -851,8 +851,8 @@ export class Unit extends CustomMarker {
             getApp().getServerManager().setOperateAs(this.ID, coalitionToEnum(operateAs));
     }
 
-    delete(explosion: boolean, immediate: boolean) {
-        getApp().getServerManager().deleteUnit(this.ID, explosion, immediate);
+    delete(explosion: boolean, explosionType: string, immediate: boolean) {
+        getApp().getServerManager().deleteUnit(this.ID, explosion, explosionType, immediate);
     }
 
     refuel() {

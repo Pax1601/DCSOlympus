@@ -278,10 +278,11 @@ private:
 class Delete : public Command
 {
 public:
-	Delete(unsigned int ID, bool explosion, bool immediate, function<void(void)> callback = [](){}) :
+	Delete(unsigned int ID, bool explosion, string explosionType, bool immediate, function<void(void)> callback = [](){}) :
 		Command(callback),
 		ID(ID), 
 		explosion(explosion),
+		explosionType(explosionType),
 		immediate(immediate)
 	{
 		priority = CommandPriority::HIGH;
@@ -293,6 +294,7 @@ public:
 private:
 	const unsigned int ID;
 	const bool explosion;
+	const string explosionType;
 	const bool immediate;
 };
 

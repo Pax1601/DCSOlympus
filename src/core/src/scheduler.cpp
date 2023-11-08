@@ -408,10 +408,11 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 	{
 		unsigned int ID = value[L"ID"].as_integer();
 		bool explosion = value[L"explosion"].as_bool();
+		string explosionType = to_string(value[L"explosionType"]);
 		bool immediate = value[L"immediate"].as_bool();
 		Unit* unit = unitsManager->getUnit(ID);
 		if (unit != nullptr) {
-			unitsManager->deleteUnit(ID, explosion, immediate);
+			unitsManager->deleteUnit(ID, explosion, explosionType, immediate);
 			log(username + " deleted unit " + unit->getUnitName() + "(" + unit->getName() + ")", true);
 		}
 	}

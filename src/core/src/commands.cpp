@@ -165,7 +165,8 @@ string Delete::getString()
     commandSS.precision(10);
     commandSS << "Olympus.delete, "
         << ID << ", "
-        << (explosion ? "true" : "false");
+        << (explosion ? "true" : "false") << ", "
+        << "\"" << explosionType << "\"";
     return commandSS.str();
 }
 

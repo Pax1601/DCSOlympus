@@ -37,7 +37,7 @@ export class UnitsManager {
         document.addEventListener('contactsUpdated', (e: CustomEvent) => { this.#requestDetectionUpdate = true });
         document.addEventListener('copy', () => this.selectedUnitsCopy());
         document.addEventListener('deleteSelectedUnits', () => this.selectedUnitsDelete());
-        document.addEventListener('explodeSelectedUnits', () => this.selectedUnitsDelete(true));
+        document.addEventListener('explodeSelectedUnits', (e: any) => this.selectedUnitsDelete(true, e.detail.type));
         document.addEventListener('exportToFile', () => this.exportToFile());
         document.addEventListener('importFromFile', () => this.importFromFile());
         document.addEventListener('keyup', (event) => this.#onKeyUp(event));
@@ -794,7 +794,7 @@ export class UnitsManager {
      * @param explosion If true, the unit will be deleted using an explosion
      * @returns 
      */
-    selectedUnitsDelete(explosion: boolean = false) {
+    selectedUnitsDelete(explosion: boolean = false, explosionType: string = "") {
         var selectedUnits = this.getSelectedUnits({excludeProtected:true}); /* Can be applied to humans too */
         const selectionContainsAHuman = selectedUnits.some((unit: Unit) => {
             return unit.getHuman() === true;
@@ -804,9 +804,9 @@ export class UnitsManager {
             return;
         }
 
-        const doDelete = (explosion = false, immediate = false) => {
+        const doDelete = (explosion = false, explosionType = "", immediate = false) => {
             for (let idx in selectedUnits) {
-                selectedUnits[idx].delete(explosion, immediate);
+                selectedUnits[idx].delete(explosion, explosionType, immediate);
             }
             this.#showActionMessage(selectedUnits, `deleted`);
         }
@@ -814,12 +814,12 @@ export class UnitsManager {
         if (selectedUnits.length >= DELETE_SLOW_THRESHOLD)
             this.#showSlowDeleteDialog(selectedUnits).then((action:any) => {
                 if (action === "delete-slow")
-                    doDelete(explosion, false);
+                    doDelete(explosion, explosionType, false);
                 else if (action === "delete-immediate")
-                    doDelete(explosion, true);
+                    doDelete(explosion, explosionType, true);
             })
         else
-            doDelete(explosion);
+            doDelete(explosion, explosionType);
 
     }
 

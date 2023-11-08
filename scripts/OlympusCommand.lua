@@ -870,12 +870,16 @@ function Olympus.clone(cloneTable, deleteOriginal)
 end
 
 -- Delete a unit by ID, optionally use an explosion
-function Olympus.delete(ID, explosion)
+function Olympus.delete(ID, explosion, explosionType)
 	Olympus.debug("Olympus.delete " .. ID .. " " .. tostring(explosion), 2)
 	local unit = Olympus.getUnitByID(ID)
 	if unit then
 		if unit:getPlayerName() or explosion then
-			trigger.action.explosion(unit:getPoint() , 250 ) --consider replacing with forcibly deslotting the player, however this will work for now
+			if explosionType == nil then
+				explosionType = "normal"
+			end
+			local lat, lng, alt = coord.LOtoLL(unit:getPoint())
+			Olympus.explosion(250, explosionType, lat, lng)
 			Olympus.debug("Olympus.delete completed successfully", 2)
 		else
 			unit:destroy(); --works for AI units not players
