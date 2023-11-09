@@ -161,6 +161,7 @@ export class UnitControlPanel extends Panel {
         this.#followRoadsSwitch.resetExpectedValue();
         this.#altitudeSlider.resetExpectedValue();
         this.#speedSlider.resetExpectedValue();
+        this.#calculateMaxHeight();
     }
 
     addButtons() {
@@ -486,6 +487,7 @@ export class UnitControlPanel extends Panel {
 
     #calculateMaxHeight() {
         const element = document.getElementById("unit-control-panel-content");
+        this.#calculateTop();
         if (element)
             element.style.maxHeight = `${window.innerHeight - this.getElement().offsetTop - 10}px`;
     }

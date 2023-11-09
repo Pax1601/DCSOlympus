@@ -16,6 +16,10 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	row-gap: 10px;
 }
 
+#unit-controls {
+	padding-right: 10px;
+}
+
 #unit-control-panel>div:nth-child(2) {
 	width: 330px;
 }
