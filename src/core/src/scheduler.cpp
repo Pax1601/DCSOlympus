@@ -408,10 +408,11 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 	{
 		unsigned int ID = value[L"ID"].as_integer();
 		bool explosion = value[L"explosion"].as_bool();
+		string explosionType = to_string(value[L"explosionType"]);
 		bool immediate = value[L"immediate"].as_bool();
 		Unit* unit = unitsManager->getUnit(ID);
 		if (unit != nullptr) {
-			unitsManager->deleteUnit(ID, explosion, immediate);
+			unitsManager->deleteUnit(ID, explosion, explosionType, immediate);
 			log(username + " deleted unit " + unit->getUnitName() + "(" + unit->getName() + ")", true);
 		}
 	}
@@ -498,11 +499,12 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 	else if (key.compare("explosion") == 0)
 	{
 		unsigned int intensity = value[L"intensity"].as_integer();
+		string explosionType = to_string(value[L"explosionType"]);
 		double lat = value[L"location"][L"lat"].as_double();
 		double lng = value[L"location"][L"lng"].as_double();
-		log("Adding " + to_string(intensity) + " explosion at (" + to_string(lat) + ", " + to_string(lng) + ")");
+		log("Adding explosion of type " + explosionType + " at (" + to_string(lat) + ", " + to_string(lng) + ")");
 		Coords loc; loc.lat = lat; loc.lng = lng;
-		command = dynamic_cast<Command*>(new Explosion(intensity, loc));
+		command = dynamic_cast<Command*>(new Explosion(intensity, explosionType, loc));
 	}
 	/************************/
 	else if (key.compare("bombPoint") == 0)

@@ -9,11 +9,19 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	row-gap: 10px;
 }
 
-#unit-control-panel>div:nth-child(2) {
+#unit-control-panel>div:nth-child(2),
+#unit-controls {
 	display: flex;
 	flex-direction: column;
 	row-gap: 10px;
-	width: 300px;
+}
+
+#unit-controls {
+	padding-right: 10px;
+}
+
+#unit-control-panel>div:nth-child(2) {
+	width: 330px;
 }
 
 #unit-control-panel>*:nth-child(1) {
@@ -262,16 +270,45 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 }
 
 #advanced-settings-div {
+	position: relative;
 	column-gap: 5px;
 	display: flex;
+	height: fit-content;
 }
 
 #advanced-settings-div>*:nth-child(2) {
 	margin-left: auto;
+	margin-right: 58px;
 }
 
 #advanced-settings-div button {
 	height: 40px;
+}
+
+#explosion-types-selector {
+	padding-right: 5px;
+	border-radius: var(--border-radius-sm);
+	display: flex;
+	flex-direction: column;
+	row-gap: 5px;
+	background-color: var(--background-steel);
+	position: absolute;
+	right: 0px;
+	bottom: 0px;
+	height: fit-content;
+	overflow: hidden;
+}
+
+#explosion-types-selector>*:not(:last-child) {
+	display: none;
+}
+
+#explosion-types-selector:hover {
+	padding: 5px 5px 0px 5px;
+}
+
+#explosion-types-selector:hover>*:not(:last-child) {
+	display: block;
 }
 
 /* Element visibility control */

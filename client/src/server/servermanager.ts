@@ -160,8 +160,8 @@ export class ServerManager {
         this.PUT(data, callback);
     }
 
-    spawnExplosion(intensity: number, latlng: LatLng, callback: CallableFunction = () => {}) {
-        var command = { "intensity": intensity, "location": latlng };
+    spawnExplosion(intensity: number, explosionType: string, latlng: LatLng, callback: CallableFunction = () => {}) {
+        var command = { "explosionType": explosionType, "intensity": intensity, "location": latlng };
         var data = { "explosion": command }
         this.PUT(data, callback);
     }
@@ -212,8 +212,8 @@ export class ServerManager {
         this.PUT(data, callback);
     }
 
-    deleteUnit(ID: number, explosion: boolean, immediate: boolean, callback: CallableFunction = () => {}) {
-        var command = { "ID": ID, "explosion": explosion, "immediate": immediate };
+    deleteUnit(ID: number, explosion: boolean, explosionType: string, immediate: boolean, callback: CallableFunction = () => {}) {
+        var command = { "ID": ID, "explosion": explosion, "explosionType": explosionType, "immediate": immediate };
         var data = { "deleteUnit": command }
         this.PUT(data, callback);
     }
