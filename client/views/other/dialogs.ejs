@@ -102,30 +102,6 @@
             </div>
         </div>
 
-        <!-- Tasking -->
-        <!--
-        <div id="tasking">
-            <div class="ol-group">
-                <h4>Tasking</h4>
-                <hr>
-            </div>
-            
-            <div id="tanker-checkbox" class="ol-checkbox">
-                <label title="The unit will operate as Air to Air Refuelling tanker for airplanes that have a compatible refuelling system">
-                    <input type="checkbox" />
-                    Operate as AAR tanker
-                </label>
-            </div>
-
-            <div id="AWACS-checkbox" class="ol-checkbox">
-                <label title="The unit will operate as AWACS on datalink">
-                    <input type="checkbox" />
-                    Operate as AWACS
-                </label>
-            </div>
-        </div>
-    -->
-
         <!-- TACAN options -->
         <div id="TACAN-options">
             <div class="ol-group">
@@ -144,7 +120,7 @@
         
                 <div class="ol-group">
                     <div id="TACAN-channel" class="ol-text-input">
-                        <input type="number" min="1" max="126" step="1" value="40">
+                        <input type="number" onkeypress='return event.charCode >= 48 && event.charCode <= 57' onkeyup="if (value > 126) value = 126;">
                     </div>
                 
                     <div id="TACAN-XY" class="ol-select">
@@ -172,7 +148,7 @@
             
                 <div class="ol-group">
                     <div id="radio-mhz" class="ol-text-input">
-                        <input type="number" min="1" max="999" step="1" value="260">
+                        <input type="number" onkeypress='return event.charCode >= 48 && event.charCode <= 57' onkeyup="if (value > 999) value = 999;">
                     </div>
                                     
                     <div id="radio-decimals" class="ol-select">

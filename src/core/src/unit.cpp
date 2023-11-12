@@ -538,6 +538,12 @@ void Unit::setTACAN(DataTypes::TACAN newTACAN, bool force)
 		TACAN = newTACAN;
 		if (TACAN.isOn) {
 			std::ostringstream commandSS;
+
+			if (TACAN.channel < 0)
+				TACAN.channel = 0;
+			if (TACAN.channel > 126)
+				TACAN.channel = 126;
+
 			commandSS << "{"
 				<< "id = 'ActivateBeacon',"
 				<< "params = {"
@@ -574,6 +580,12 @@ void Unit::setRadio(DataTypes::Radio newRadio, bool force)
 
 		std::ostringstream commandSS;
 		Command* command;
+
+		if (radio.frequency < 0)
+			radio.frequency = 0;
+		
+		if (radio.frequency > 999000000)
+			radio.frequency = 999000000;
 
 		commandSS << "{"
 			<< "id = 'SetFrequency',"
