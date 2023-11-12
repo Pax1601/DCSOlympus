@@ -35,6 +35,10 @@ export class MissionManager {
         this.#commandModeErasDropdown = new Dropdown("command-mode-era-options", () => {});
     }
 
+    /** Update location of bullseyes
+     * 
+     * @param object <BulleyesData>
+     */
     updateBullseyes(data: BullseyesData) {
         const commandMode = getApp().getMissionManager().getCommandModeOptions().commandMode;
         for (let idx in data.bullseyes) {
@@ -56,6 +60,10 @@ export class MissionManager {
         }
     }
 
+    /** Update airbase information
+     * 
+     * @param object <AirbasesData>
+     */
     updateAirbases(data: AirbasesData) {
         for (let idx in data.airbases) {
             var airbase = data.airbases[idx]
@@ -75,6 +83,10 @@ export class MissionManager {
         }
     }
 
+    /** Update mission information
+     * 
+     * @param object <MissionData>
+     */
     updateMission(data: MissionData) {
         if (data.mission) {
 
@@ -109,29 +121,62 @@ export class MissionManager {
         }
     }
 
+    /** Get the bullseyes set in this theatre
+     * 
+     * @returns object
+     */
     getBullseyes() {
         return this.#bullseyes;
     }
 
+    /** Get the airbases in this theatre
+     * 
+     * @returns object
+     */
     getAirbases() {
         return this.#airbases;
     }
 
+    /** Get the options/settings as set in the command mode
+     * 
+     * @returns object
+     */
     getCommandModeOptions() {
         return this.#commandModeOptions;
     }
 
+    /** Get the current date and time of the mission (based on local time)
+     * 
+     * @returns object
+     */
     getDateAndTime() {
         return this.#dateAndTime;
     }
 
+    /**
+     * Get the number of seconds left of setup time
+     * @returns number
+     */
     getRemainingSetupTime() {
         return this.#remainingSetupTime;
     }
 
+    /** Get an object with the coalitions in it
+     * 
+     * @returns object
+     */
     getCoalitions() {
         return this.#coalitions;
     }
+
+    /** Get the current theatre (map) name
+     * 
+     * @returns string
+     */
+    getTheatre() {
+        return this.#theatre;
+    }
+
 
     getAvailableSpawnPoints() {
         if (this.getCommandModeOptions().commandMode === GAME_MASTER)

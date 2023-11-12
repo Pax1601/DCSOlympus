@@ -1,3 +1,3 @@
-export abstract class unitDataFile {
+export abstract class UnitDataFile {
     constructor() {}
 }
