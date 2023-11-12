@@ -102,8 +102,6 @@ export class Map extends L.Map {
     constructor(ID: string){
         /* Init the leaflet map */
         super(ID, { 
-            zoomSnap: 0, 
-            zoomDelta: 0.25, 
             preferCanvas: true, 
             doubleClickZoom: false, 
             zoomControl: false, 

@@ -11,6 +11,7 @@ import { groundUnitDatabase } from './databases/groundunitdatabase';
 import { navyUnitDatabase } from './databases/navyunitdatabase';
 import { Weapon } from '../weapon/weapon';
 import { Ammo, Contact, GeneralSettings, LoadoutBlueprint, ObjectIconOptions, Offset, Radio, TACAN, UnitData } from '../interfaces';
+import { RangeCircle } from "../map/rangecircle";
 
 var pathIcon = new Icon({
     iconUrl: '/resources/theme/images/markers/marker-icon.png',
@@ -97,8 +98,8 @@ export class Unit extends CustomMarker {
     #pathMarkers: Marker[] = [];
     #pathPolyline: Polyline;
     #contactsPolylines: Polyline[] = [];
-    #engagementCircle: Circle;
-    #acquisitionCircle: Circle;
+    #engagementCircle: RangeCircle;
+    #acquisitionCircle: RangeCircle;
     #miniMapMarker: CircleMarker | null = null;
     #targetPositionMarker: TargetMarker;
     #targetPositionPolyline: Polyline;
@@ -167,8 +168,8 @@ export class Unit extends CustomMarker {
         this.#pathPolyline.addTo(getApp().getMap());
         this.#targetPositionMarker = new TargetMarker(new LatLng(0, 0));
         this.#targetPositionPolyline = new Polyline([], { color: '#FF0000', weight: 3, opacity: 0.5, smoothFactor: 1 });
-        this.#engagementCircle = new Circle(this.getPosition(), { radius: 0, weight: 4, opacity: 1, fillOpacity: 0, dashArray: "4 8", interactive: false, bubblingMouseEvents: false });
-        this.#acquisitionCircle = new Circle(this.getPosition(), { radius: 0, weight: 2, opacity: 1, fillOpacity: 0, dashArray: "8 12", interactive: false, bubblingMouseEvents: false });
+        this.#engagementCircle = new RangeCircle(this.getPosition(), { radius: 0, weight: 4, opacity: 1, fillOpacity: 0, dashArray: "4 8", interactive: false, bubblingMouseEvents: false });
+        this.#acquisitionCircle = new RangeCircle(this.getPosition(), { radius: 0, weight: 2, opacity: 1, fillOpacity: 0, dashArray: "8 12", interactive: false, bubblingMouseEvents: false });
 
         this.on('click', (e) => this.#onClick(e));
         this.on('dblclick', (e) => this.#onDoubleClick(e));
@@ -225,7 +226,7 @@ export class Unit extends CustomMarker {
                 case DataIndexes.alive: this.setAlive(dataExtractor.extractBool()); updateMarker = true; break;
                 case DataIndexes.human: this.#human = dataExtractor.extractBool(); break;
                 case DataIndexes.controlled: this.#controlled = dataExtractor.extractBool(); updateMarker = true; break;
-                case DataIndexes.coalition: this.#coalition = enumToCoalition(dataExtractor.extractUInt8()); updateMarker = true; this.#clearRanges(); break;
+                case DataIndexes.coalition: let newCoalition = enumToCoalition(dataExtractor.extractUInt8()); updateMarker = true; if (newCoalition != this.#coalition) this.#clearRanges(); this.#coalition = newCoalition; break;
                 case DataIndexes.country: this.#country = dataExtractor.extractUInt8(); break;
                 case DataIndexes.name: this.#name = dataExtractor.extractString(); break;
                 case DataIndexes.unitName: this.#unitName = dataExtractor.extractString(); break;
@@ -1342,8 +1343,9 @@ export class Unit extends CustomMarker {
                 }
             })
 
-            if (acquisitionRange !== this.#acquisitionCircle.getRadius())
+            if (acquisitionRange !== this.#acquisitionCircle.getRadius()) {
                 this.#acquisitionCircle.setRadius(acquisitionRange);
+            }
 
             if (engagementRange !== this.#engagementCircle.getRadius())
                 this.#engagementCircle.setRadius(engagementRange);
@@ -1368,7 +1370,8 @@ export class Unit extends CustomMarker {
                             break;
                     }
                 }
-                this.#acquisitionCircle.setLatLng(this.getPosition());
+                if (this.getPosition() != this.#acquisitionCircle.getLatLng())
+                    this.#acquisitionCircle.setLatLng(this.getPosition());
             }
             else {
                 if (getApp().getMap().hasLayer(this.#acquisitionCircle))
@@ -1392,7 +1395,8 @@ export class Unit extends CustomMarker {
                             break;
                     }
                 }
-                this.#engagementCircle.setLatLng(this.getPosition());
+                if (this.getPosition() != this.#engagementCircle.getLatLng())
+                    this.#engagementCircle.setLatLng(this.getPosition());
             }
             else {
                 if (getApp().getMap().hasLayer(this.#engagementCircle))
