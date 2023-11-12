@@ -17,7 +17,7 @@ Olympus.weaponsData = {}
 
 -- Units data structures
 Olympus.unitCounter = 1			-- Counter to generate unique names
-Olympus.spawnDatabase = {}		-- Database of spawn options, used for units cloning
+Olympus.cloneDatabase = {}		-- Database of spawn options, used for units cloning
 Olympus.unitIndex = 0			-- Counter used to spread the computational load of data retrievial from DCS
 Olympus.unitStep = 50			-- Max number of units that get updated each cycle
 Olympus.units = {}				-- Table holding references to all the currently existing units
@@ -754,7 +754,17 @@ end
 
 -- Add the unit data to the database, used for unit cloning
 function Olympus.addToDatabase(unitTable)
-	Olympus.spawnDatabase[unitTable.name] = unitTable
+	Olympus.cloneDatabase[unitTable.name] = unitTable
+end
+
+-- Find a database entry by ID
+function Olympus.findInDatabase(ID)
+	for idx, unit in pairs(Olympus.cloneDatabase) do
+		if unit ~= nil and unit["ID"] == ID then
+			return unit
+		end
+	end
+	return nil
 end
 
 -- Clones a unit by ID. Will clone the unit with the same original payload as the source unit. TODO: only works on Olympus unit not ME units (TO BE VERIFIED).
@@ -773,27 +783,22 @@ function Olympus.clone(cloneTable, deleteOriginal)
 	-- All the units in the table will be cloned in a single group
 	for idx, cloneData in pairs(cloneTable) do
 		local ID = cloneData.ID
-		local unit = Olympus.getUnitByID(ID)
+		local unit = Olympus.findInDatabase(ID)
 
-		if unit then
-			local position = unit:getPosition()
-			local heading = math.atan2( position.x.z, position.x.x )
-			
+		if unit ~= nil then
 			-- Update the data of the cloned unit
-			local unitTable = mist.utils.deepCopy(Olympus.spawnDatabase[unit:getName()])
+			local unitTable = mist.utils.deepCopy(unit)
 
 			local point = coord.LLtoLO(cloneData['lat'], cloneData['lng'], 0)
 			if unitTable then
 				unitTable["x"] = point.x
 				unitTable["y"] = point.z
-				unitTable["alt"] = unit:getPoint().y
-				unitTable["heading"] = heading
 				unitTable["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitsTable + 1
 			end
 
 			if countryID == nil and category == nil then
-				countryID = unit:getCountry()
-				if unit:getDesc().category == Unit.Category.AIRPLANE then
+				countryID = unit["country"]
+				if unit["category"] == Unit.Category.AIRPLANE then
 					category = 'plane'
 					route = {
 						["points"] = 
@@ -812,7 +817,7 @@ function Olympus.clone(cloneTable, deleteOriginal)
 							},
 						}, 
 					}
-				elseif unit:getDesc().category == Unit.Category.HELICOPTER then
+				elseif unit["category"] == Unit.Category.HELICOPTER then
 					category = 'helicopter'
 					route = {
 						["points"] = 
@@ -831,13 +836,12 @@ function Olympus.clone(cloneTable, deleteOriginal)
 							},
 						}, 
 					}
-				elseif unit:getDesc().category == Unit.Category.GROUND_UNIT then
+				elseif unit["category"] == Unit.Category.GROUND_UNIT then
 					category = 'vehicle'
-				elseif unit:getDesc().category == Unit.Category.SHIP then
+				elseif unit["category"] == Unit.Category.SHIP then
 					category = 'ship'
 				end
 			end
-
 			unitsTable[#unitsTable + 1] = mist.utils.deepCopy(unitTable)
 		end
 
@@ -1023,6 +1027,16 @@ function Olympus.setUnitsData(arg, time)
 							table["fuel"] = unit:getFuel()
 							table["health"] = unit:getLife() / unit:getLife0() * 100
 							table["contacts"] = contacts
+
+							-- Update the database used for unit cloning
+							local name = unit:getName()
+							if Olympus.cloneDatabase[name] ~= nil then
+								Olympus.cloneDatabase[name]["ID"] = ID
+								Olympus.cloneDatabase[name]["category"] = unit:getDesc().category
+								Olympus.cloneDatabase[name]["heading"] = table["heading"]
+								Olympus.cloneDatabase[name]["alt"] = alt
+								Olympus.cloneDatabase[name]["country"] = unit:getCountry()
+							end
 
 							units[ID] = table
 						end
