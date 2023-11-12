@@ -62,10 +62,30 @@ for filename in filenames:
             for payload in src:
                 names[tmp['unitType']].append(payload['name'])
                 roles[tmp['unitType']][payload['name']] = payload['tasks']
-                if type(payload['pylons']) == dict:
-                    payloads[tmp['unitType']][payload['name']] = {payload['pylons'][key]['num']: {"CLSID" : payload['pylons'][key]['CLSID']} for key in payload['pylons']}
+
+                # The Tomcats are a bit special
+                if (tmp['unitType'] in ["F-14A-95-GR", "F-14A-135-GR", "F-14B"]):
+                    pylonConversion = {
+                        "pylon_1A": 1,
+                        "pylon_1B": 2,
+                        "pylon_2": 3, 
+                        "pylon_3": 4, 
+                        "pylon_4": 5, 
+                        "pylon_5": 6, 
+                        "pylon_6": 7, 
+                        "pylon_7": 8, 
+                        "pylon_8B": 9,
+                        "pylon_8A": 10
+                    }
+                    if type(payload['pylons']) == dict:
+                        payloads[tmp['unitType']][payload['name']] = {pylonConversion[payload['pylons'][key]['num']]: {"CLSID" : payload['pylons'][key]['CLSID']} for key in payload['pylons']}
+                    else:
+                        payloads[tmp['unitType']][payload['name']] = {pylonConversion[payload['pylons'][key]['num']]: {"CLSID" : payload['pylons'][key]['CLSID']} for key in range(len(payload['pylons']))}
                 else:
-                    payloads[tmp['unitType']][payload['name']] = {payload['pylons'][key]['num']: {"CLSID" : payload['pylons'][key]['CLSID']} for key in range(len(payload['pylons']))}
+                    if type(payload['pylons']) == dict:
+                        payloads[tmp['unitType']][payload['name']] = {payload['pylons'][key]['num']: {"CLSID" : payload['pylons'][key]['CLSID']} for key in payload['pylons']}
+                    else:
+                        payloads[tmp['unitType']][payload['name']] = {payload['pylons'][key]['num']: {"CLSID" : payload['pylons'][key]['CLSID']} for key in range(len(payload['pylons']))}
         except:
             pass
             
