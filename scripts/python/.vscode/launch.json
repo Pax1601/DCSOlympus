@@ -11,7 +11,7 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "justMyCode": true,
-            "args": ["groundunit"]
+            "args": ["aircraft"]
         }
     ]
 }

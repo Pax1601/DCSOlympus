@@ -1,6 +1,6 @@
 local version = "v0.4.5-alpha"
 
-local debug = false				-- True enables debug printing using DCS messages
+local debug = true				-- True enables debug printing using DCS messages
 
 -- .dll related variables
 Olympus.OlympusDLL = nil
@@ -580,6 +580,7 @@ function Olympus.spawnUnits(spawnTable)
 		name = "Olympus-" .. Olympus.unitCounter,
 		task = 'CAP'
 	}
+	Olympus.debug(Olympus.serializeTable(vars), 2)
 	mist.dynAdd(vars)
 
 	Olympus.unitCounter = Olympus.unitCounter + 1
@@ -867,6 +868,7 @@ function Olympus.clone(cloneTable, deleteOriginal)
 		Olympus.addToDatabase(unitTable)
 	end
 
+	Olympus.debug(Olympus.serializeTable(vars), 2)
 	mist.dynAdd(vars)
 	Olympus.unitCounter = Olympus.unitCounter + 1
 
