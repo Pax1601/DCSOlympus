@@ -278,37 +278,22 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 
 #advanced-settings-div>*:nth-child(2) {
 	margin-left: auto;
-	margin-right: 58px;
 }
 
-#advanced-settings-div button {
+#advanced-settings-div>button {
 	height: 40px;
 }
 
-#explosion-types-selector {
-	padding-right: 5px;
-	border-radius: var(--border-radius-sm);
+#delete-options button {
 	display: flex;
-	flex-direction: column;
-	row-gap: 5px;
-	background-color: var(--background-steel);
-	position: absolute;
-	right: 0px;
-	bottom: 0px;
-	height: fit-content;
-	overflow: hidden;
+	flex-direction: row;
+	align-content: center;
 }
 
-#explosion-types-selector>*:not(:last-child) {
-	display: none;
-}
-
-#explosion-types-selector:hover {
-	padding: 5px 5px 0px 5px;
-}
-
-#explosion-types-selector:hover>*:not(:last-child) {
-	display: block;
+#delete-options button svg {
+	margin-right: 10px;
+	width: 18px;
+	max-height: 18px;
 }
 
 /* Element visibility control */

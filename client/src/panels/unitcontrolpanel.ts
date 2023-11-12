@@ -28,6 +28,7 @@ export class UnitControlPanel extends Panel {
     #advancedSettingsDialog: HTMLElement;
     #units: Unit[] = [];
     #selectedUnitsTypes: string[] = [];
+    #deleteDropdown: Dropdown;
 
     /**
      * 
@@ -113,6 +114,7 @@ export class UnitControlPanel extends Panel {
         this.#radioDecimalsDropdown = new Dropdown("radio-decimals", () => {});
         this.#radioDecimalsDropdown.setOptions([".000", ".250", ".500", ".750"]);
         this.#radioCallsignDropdown = new Dropdown("radio-callsign", () => {});
+        this.#deleteDropdown = new Dropdown("delete-options", () => { });
 
         /* Events and timer */
         window.setInterval(() => {this.update();}, 25);

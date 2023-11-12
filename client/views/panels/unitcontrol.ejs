@@ -108,14 +108,19 @@
 
         <div id="advanced-settings-div">
             <button id="advanced-settings-button" class="ol-button-settings" data-on-click="showAdvancedSettings">Settings</button>
-            <button class="ol-button-warning" data-on-click="deleteSelectedUnits" title="Immediately remove the unit from the simulation"><img src="/resources/theme/images/icons/trash-can-regular.svg" inject-svg>Delete</button>
-            <div id="explosion-types-selector">
-                <button class="ol-button-warning" data-on-click="explodeSelectedUnits" data-on-click-params='{ "type": "secondary" }' title="Explode the unit (secondary explosions, the unit will keep exploding at interval simulating ammunition cooking)"><img src="/resources/theme/images/icons/secondaries.svg" inject-svg></button>
-                <button class="ol-button-warning" data-on-click="explodeSelectedUnits" data-on-click-params='{ "type": "phosphorous" }' title="Explode the unit (white phosphorous)"><img src="/resources/theme/images/icons/white-phosphorous.svg" inject-svg></button>
-                <button class="ol-button-warning" data-on-click="explodeSelectedUnits" data-on-click-params='{ "type": "napalm" }' title="Explode the unit (napalm)"><img src="/resources/theme/images/icons/napalm.svg" inject-svg></button>
-                <button class="ol-button-warning" data-on-click="explodeSelectedUnits" data-on-click-params='{ "type": "normal" }' title="Explode the unit (normal explosion)"><img src="/resources/theme/images/icons/explosion-solid.svg" inject-svg></button>
-            </div>
-            
+            <div id="delete-options" class="ol-select">
+                <div class="ol-select-value ol-select-warning">
+                    Delete unit
+                </div>
+                <div class="ol-select-options">
+                    <div><button class="ol-button-white" data-on-click="deleteSelectedUnits" title="Immediately remove the unit from the simulation"><img src="/resources/theme/images/icons/trash-can-regular.svg" inject-svg>Delete</button></div>
+                    <div><hr></div>
+                    <div><button class="ol-button-warning" data-on-click="explodeSelectedUnits" data-on-click-params='{ "type": "normal" }' title="Normal explosion"><img src="/resources/theme/images/icons/explosion-solid.svg" inject-svg>Blow up</button></div>
+                    <div><button class="ol-button-warning" data-on-click="explodeSelectedUnits" data-on-click-params='{ "type": "secondary" }' title="The unit will keep exploding at random intervals, simulating ammunition cooking"><img src="/resources/theme/images/icons/burst-solid.svg" inject-svg>Cook off</button></div>
+                    <div><button class="ol-button-warning" data-on-click="explodeSelectedUnits" data-on-click-params='{ "type": "phosphorous" }' title="White phosphorous explosion"><img src="/resources/theme/images/icons/smog-solid.svg" inject-svg>Phosp.</button></div>
+                    <div><button class="ol-button-warning" data-on-click="explodeSelectedUnits" data-on-click-params='{ "type": "napalm" }' title="Napalm"><img src="/resources/theme/images/icons/fire-solid.svg" inject-svg>Napalm</button></div>
+                </div>
+            </div>               
         </div>
     </div>
     <div id="rapid-controls" class="ol-panel">

@@ -339,10 +339,32 @@ h4 {
     font-weight: normal;
 }
 
+button.ol-button-white {
+    border: 1px solid white;
+    color: white;
+    font-weight: bold;
+}
+
+button.ol-button-white>svg:first-child {
+    stroke: white;
+    fill: white;
+}
+
+.ol-select-warning {
+    border: 1px solid var(--primary-red);
+    color: var(--primary-red) !important;
+    font-weight: bold !important;
+}
+
+.ol-select-warning::after {
+    stroke: var(--primary-red);
+    fill: var(--primary-red);
+}
+
 button.ol-button-warning {
     border: 1px solid var(--primary-red);
-    color: var(--primary-red);
-    font-weight: bold;
+    color: var(--primary-red) !important;
+    font-weight: bold !important;
 }
 
 button.ol-button-warning>svg:first-child {
