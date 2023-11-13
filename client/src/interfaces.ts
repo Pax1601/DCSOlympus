@@ -220,6 +220,7 @@ export interface UnitBlueprint {
     shotsBaseScatter?: number;
     description?: string;
     abilities?: string;
+    tags?: string;
     acquisitionRange?: number;
     engagementRange?: number;
     targetingRange?: number;

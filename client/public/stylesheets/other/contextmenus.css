@@ -124,6 +124,28 @@
     max-height: 300px;
 }
 
+.ol-tag {
+    background-color: #FFFFFF11;
+    color: #FFFFFFDD;
+    border: 1px solid #FFFFFF55;
+    font-weight: normal;
+    padding: 2px 5px;
+}
+
+/*
+.ol-tag-CA {
+    background-color: #FF000022;
+}
+
+.ol-tag-Radar {
+    background-color: #00FF0022;
+}
+
+.ol-tag-IR {
+    background-color: #0000FF22;
+} 
+*/
+
 .unit-loadout-list {
     min-width: 0;
 }
@@ -225,13 +247,14 @@
     column-gap: 5px;
 }
 
-.unit-label-count-container>div:nth-child(1) {
-    width: 100%;
-    min-width: 0;
+.unit-label-count-container button {
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
 }
 
-.unit-label-count-container>div:nth-child(2) {
-    font-size: large;
+.unit-label-count-container button>*:nth-child(1) {
+    margin-left: auto;
 }
 
 .unit-loadout-preview {
