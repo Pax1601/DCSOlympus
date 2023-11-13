@@ -89,15 +89,15 @@ export class DatabaseManagerPlugin implements OlympusPlugin {
         this.#element.appendChild(this.#mainContentContainer);
 
         this.#contentDiv1 = document.createElement("div");
-        this.#contentDiv1.classList.add("dm-content-container");
+        this.#contentDiv1.classList.add("dm-content-container", "ol-scrollable");
         this.#mainContentContainer.appendChild(this.#contentDiv1);
 
         this.#contentDiv2 = document.createElement("div");
-        this.#contentDiv2.classList.add("dm-content-container");
+        this.#contentDiv2.classList.add("dm-content-container", "ol-scrollable");
         this.#mainContentContainer.appendChild(this.#contentDiv2);
 
         this.#contentDiv3 = document.createElement("div");
-        this.#contentDiv3.classList.add("dm-content-container");
+        this.#contentDiv3.classList.add("dm-content-container", "ol-scrollable");
         this.#mainContentContainer.appendChild(this.#contentDiv3);
 
         /* Create the database editors, which use the three divs created before */

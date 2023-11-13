@@ -206,13 +206,13 @@ class DatabaseManagerPlugin {
         __classPrivateFieldGet(this, _DatabaseManagerPlugin_mainContentContainer, "f").classList.add("dm-container");
         __classPrivateFieldGet(this, _DatabaseManagerPlugin_element, "f").appendChild(__classPrivateFieldGet(this, _DatabaseManagerPlugin_mainContentContainer, "f"));
         __classPrivateFieldSet(this, _DatabaseManagerPlugin_contentDiv1, document.createElement("div"), "f");
-        __classPrivateFieldGet(this, _DatabaseManagerPlugin_contentDiv1, "f").classList.add("dm-content-container");
+        __classPrivateFieldGet(this, _DatabaseManagerPlugin_contentDiv1, "f").classList.add("dm-content-container", "ol-scrollable");
         __classPrivateFieldGet(this, _DatabaseManagerPlugin_mainContentContainer, "f").appendChild(__classPrivateFieldGet(this, _DatabaseManagerPlugin_contentDiv1, "f"));
         __classPrivateFieldSet(this, _DatabaseManagerPlugin_contentDiv2, document.createElement("div"), "f");
-        __classPrivateFieldGet(this, _DatabaseManagerPlugin_contentDiv2, "f").classList.add("dm-content-container");
+        __classPrivateFieldGet(this, _DatabaseManagerPlugin_contentDiv2, "f").classList.add("dm-content-container", "ol-scrollable");
         __classPrivateFieldGet(this, _DatabaseManagerPlugin_mainContentContainer, "f").appendChild(__classPrivateFieldGet(this, _DatabaseManagerPlugin_contentDiv2, "f"));
         __classPrivateFieldSet(this, _DatabaseManagerPlugin_contentDiv3, document.createElement("div"), "f");
-        __classPrivateFieldGet(this, _DatabaseManagerPlugin_contentDiv3, "f").classList.add("dm-content-container");
+        __classPrivateFieldGet(this, _DatabaseManagerPlugin_contentDiv3, "f").classList.add("dm-content-container", "ol-scrollable");
         __classPrivateFieldGet(this, _DatabaseManagerPlugin_mainContentContainer, "f").appendChild(__classPrivateFieldGet(this, _DatabaseManagerPlugin_contentDiv3, "f"));
         /* Create the database editors, which use the three divs created before */
         __classPrivateFieldSet(this, _DatabaseManagerPlugin_aircraftEditor, new airuniteditor_1.AirUnitEditor(__classPrivateFieldGet(this, _DatabaseManagerPlugin_contentDiv1, "f"), __classPrivateFieldGet(this, _DatabaseManagerPlugin_contentDiv2, "f"), __classPrivateFieldGet(this, _DatabaseManagerPlugin_contentDiv3, "f")), "f");
@@ -1079,6 +1079,11 @@ function arrayToString(array) {
     return "[" + array.join(", ") + "]";
 }
 exports.arrayToString = arrayToString;
+/** Converts an a single string like [val1, val2, val3] into an array
+ *
+ * @param input The input string
+ * @returns The array
+ */
 function stringToArray(input) {
     var _a;
     return (_a = input.match(/(\w)+/g)) !== null && _a !== void 0 ? _a : [];
