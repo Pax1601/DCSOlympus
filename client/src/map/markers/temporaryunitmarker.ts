@@ -36,6 +36,7 @@ export class TemporaryUnitMarker extends CustomMarker {
 
     createIcon() {
         const category = getMarkerCategoryByName(this.#name);
+        const databaseEntry = getUnitDatabaseByCategory(category)?.getByName(this.#name);
 
         /* Set the icon */
         var icon = new DivIcon({
@@ -54,7 +55,8 @@ export class TemporaryUnitMarker extends CustomMarker {
         var unitIcon = document.createElement("div");
         unitIcon.classList.add("unit-icon");
         var img = document.createElement("img");
-        img.src = `/resources/theme/images/units/${category}.svg`;
+
+        img.src = `/resources/theme/images/units/${databaseEntry?.markerFile ?? category}.svg`;
         img.onload = () => SVGInjector(img);
         unitIcon.appendChild(img);
         unitIcon.toggleAttribute("data-rotate-to-heading", false);
@@ -64,7 +66,7 @@ export class TemporaryUnitMarker extends CustomMarker {
         if (category == "aircraft" || category == "helicopter") {
             var shortLabel = document.createElement("div");
             shortLabel.classList.add("unit-short-label");
-            shortLabel.innerText = getUnitDatabaseByCategory(category)?.getByName(this.#name)?.shortLabel || ""; 
+            shortLabel.innerText = databaseEntry?.shortLabel || ""; 
             el.append(shortLabel);
         }
 

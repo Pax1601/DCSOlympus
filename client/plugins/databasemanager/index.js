@@ -54,7 +54,7 @@ class AirUnitEditor extends uniteditor_1.UnitEditor {
             (0, utils_1.addStringInput)(this.contentDiv2, "Cost", (_b = String(blueprint.cost)) !== null && _b !== void 0 ? _b : "", "number", (value) => { blueprint.cost = parseFloat(value); });
             (0, utils_1.addCheckboxInput)(this.contentDiv2, "Can target point", (_c = blueprint.canTargetPoint) !== null && _c !== void 0 ? _c : false, (value) => { blueprint.canTargetPoint = value; });
             (0, utils_1.addStringInput)(this.contentDiv2, "Description", (_d = blueprint.description) !== null && _d !== void 0 ? _d : "", "text", (value) => { blueprint.description = value; });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Abilities", (_e = blueprint.abilities) !== null && _e !== void 0 ? _e : "", "text", (value) => { blueprint.abilities = value; });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Tags", (_e = blueprint.tags) !== null && _e !== void 0 ? _e : "", "text", (value) => { blueprint.tags = value; });
             /* Add a scrollable list of loadouts that the user can edit */
             var title = document.createElement("label");
             title.innerText = "Loadouts";
@@ -508,7 +508,7 @@ class GroundUnitEditor extends uniteditor_1.UnitEditor {
      * @param blueprint The blueprint to edit
      */
     setBlueprint(blueprint) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v;
         __classPrivateFieldSet(this, _GroundUnitEditor_blueprint, blueprint, "f");
         if (__classPrivateFieldGet(this, _GroundUnitEditor_blueprint, "f") !== null) {
             this.contentDiv2.replaceChildren();
@@ -539,7 +539,8 @@ class GroundUnitEditor extends uniteditor_1.UnitEditor {
             (0, utils_1.addCheckboxInput)(this.contentDiv2, "Can operate as AAA", (_r = blueprint.canAAA) !== null && _r !== void 0 ? _r : false, (value) => { blueprint.canAAA = value; });
             (0, utils_1.addCheckboxInput)(this.contentDiv2, "Indirect fire (e.g. mortar)", (_s = blueprint.indirectFire) !== null && _s !== void 0 ? _s : false, (value) => { blueprint.indirectFire = value; });
             (0, utils_1.addStringInput)(this.contentDiv2, "Description", (_t = blueprint.description) !== null && _t !== void 0 ? _t : "", "text", (value) => { blueprint.description = value; });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Abilities", (_u = blueprint.abilities) !== null && _u !== void 0 ? _u : "", "text", (value) => { blueprint.abilities = value; });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Tags", (_u = blueprint.tags) !== null && _u !== void 0 ? _u : "", "text", (value) => { blueprint.tags = value; });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Marker file", (_v = blueprint.markerFile) !== null && _v !== void 0 ? _v : "", "text", (value) => { blueprint.markerFile = value; });
         }
     }
     /** Add a new empty blueprint
@@ -1079,6 +1080,11 @@ function arrayToString(array) {
     return "[" + array.join(", ") + "]";
 }
 exports.arrayToString = arrayToString;
+/** Converts an a single string like [val1, val2, val3] into an array
+ *
+ * @param input The input string
+ * @returns The array
+ */
 function stringToArray(input) {
     var _a;
     return (_a = input.match(/(\w)+/g)) !== null && _a !== void 0 ? _a : [];

@@ -519,6 +519,8 @@ export class Unit extends CustomMarker {
 
     /********************** Icon *************************/
     createIcon(): void {
+        const databaseEntry = this.getDatabase()?.getByName(this.#name);
+        
         /* Set the icon */
         var icon = new DivIcon({
             className: 'leaflet-unit-icon',
@@ -558,15 +560,15 @@ export class Unit extends CustomMarker {
             var unitIcon = document.createElement("div");
             unitIcon.classList.add("unit-icon");
             var img = document.createElement("img");
-            var imgSrc;
 
+            var marker;
             /* If a unit does not belong to the commanded coalition or it is not visually detected, show it with the generic aircraft square */
-            if (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC].includes(value)))
-                imgSrc = this.getMarkerCategory();
+            if (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC].includes(value))) 
+                marker = databaseEntry?.markerFile ?? this.getMarkerCategory();
             else
-                imgSrc = "aircraft";
+                marker = "aircraft";
 
-            img.src = `/resources/theme/images/units/${imgSrc}.svg`;
+            img.src = `/resources/theme/images/units/${marker}.svg`;
             img.onload = () => SVGInjector(img);
             unitIcon.appendChild(img);
             unitIcon.toggleAttribute("data-rotate-to-heading", iconOptions.rotateToHeading);
@@ -584,7 +586,7 @@ export class Unit extends CustomMarker {
         if (iconOptions.showShortLabel) {
             var shortLabel = document.createElement("div");
             shortLabel.classList.add("unit-short-label");
-            shortLabel.innerText = getUnitDatabaseByCategory(this.getMarkerCategory())?.getByName(this.#name)?.shortLabel || "";
+            shortLabel.innerText = databaseEntry?.shortLabel || "";
             el.append(shortLabel);
         }
 

@@ -50,7 +50,8 @@ export class GroundUnitEditor extends UnitEditor {
             addCheckboxInput(this.contentDiv2, "Can operate as AAA", blueprint.canAAA ?? false, (value: boolean) => {blueprint.canAAA = value;})
             addCheckboxInput(this.contentDiv2, "Indirect fire (e.g. mortar)", blueprint.indirectFire ?? false, (value: boolean) => {blueprint.indirectFire = value;})
             addStringInput(this.contentDiv2, "Description", blueprint.description ?? "", "text", (value: string) => {blueprint.description = value; });
-            addStringInput(this.contentDiv2, "Abilities", blueprint.abilities ?? "", "text", (value: string) => {blueprint.abilities = value; });
+            addStringInput(this.contentDiv2, "Tags", blueprint.tags ?? "", "text", (value: string) => {blueprint.tags = value; });
+            addStringInput(this.contentDiv2, "Marker file", blueprint.markerFile ?? "", "text", (value: string) => {blueprint.markerFile = value; });
         }
     }
 
