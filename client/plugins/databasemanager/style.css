@@ -63,6 +63,8 @@
     display: flex;
     flex-direction: column;
     row-gap: 5px;
+    max-height: 100%;
+    padding: 10px;
 }
 
 @media (min-width: 1200px) {
