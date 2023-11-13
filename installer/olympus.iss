@@ -15,7 +15,8 @@ AppendDefaultDirName=no
 [Messages]
 WizardSelectDir=Select the location of DCS's Saved Games folder
 SelectDirDesc=Where is DCS's Saved Games folder?
-SelectDirLabel3=Setup will install [name] into DCS's Saved Games folder located here.
+SelectDirLabel3=DCS Olympus must be installed within DCS's Saved Games folder.
+SelectDirBrowseLabel=This is the detected path. If this is incorrect, click Browse to set the correct folder. 
   
 [Tasks] 
 ; NOTE: The following entry contains English phrases ("Create a desktop icon" and "Additional icons"). You are free to translate them into another language if required. 
