@@ -10,7 +10,7 @@ const navyUnitDatabase = require('./public/databases/units/navyUnitDatabase.json
 const DEMO_UNIT_DATA = {}
 
 const DEMO_WEAPONS_DATA = {
-    ["1001"]:{ category: "Missile", alive: true, coalition: 2, name: "", position: { lat: 37.1, lng: -116, alt: 1000 }, speed: 200, heading: 45 * Math.PI / 180 },
+    /*["1001"]:{ category: "Missile", alive: true, coalition: 2, name: "", position: { lat: 37.1, lng: -116, alt: 1000 }, speed: 200, heading: 45 * Math.PI / 180 }, */
 }
 
 class DemoDataGenerator {
@@ -52,6 +52,10 @@ class DemoDataGenerator {
             isLeader: true
         }
 
+        /*
+
+        UNCOMMENT TO TEST ALL UNITS
+
         var databases = Object.assign({}, aircraftDatabase, helicopterDatabase, groundUnitDatabase, navyUnitDatabase);
         var t = Object.keys(databases).length;
         var l = Math.floor(Math.sqrt(t));
@@ -60,28 +64,57 @@ class DemoDataGenerator {
         let idx = 1;
         console.log(l)
         for (let name in databases) {
-            DEMO_UNIT_DATA[idx] = JSON.parse(JSON.stringify(baseData));
-            DEMO_UNIT_DATA[idx].name = name;
-            DEMO_UNIT_DATA[idx].groupName = `Group-${idx}`;
-            DEMO_UNIT_DATA[idx].position.lat += latIdx / 5;
-            DEMO_UNIT_DATA[idx].position.lng += lngIdx / 5;
-            
-            latIdx += 1;
-            if (latIdx === l) {
-                latIdx = 0;
-                lngIdx += 1;
-            }
+            if (databases[name].enabled) {
+                DEMO_UNIT_DATA[idx] = JSON.parse(JSON.stringify(baseData));
+                DEMO_UNIT_DATA[idx].name = name;
+                DEMO_UNIT_DATA[idx].groupName = `Group-${idx}`;
+                DEMO_UNIT_DATA[idx].position.lat += latIdx / 5;
+                DEMO_UNIT_DATA[idx].position.lng += lngIdx / 5;
+                
+                latIdx += 1;
+                if (latIdx === l) {
+                    latIdx = 0;
+                    lngIdx += 1;
+                }
 
-            if (name in aircraftDatabase)
-                DEMO_UNIT_DATA[idx].category = "Aircraft";
-            else if (name in helicopterDatabase)
-                DEMO_UNIT_DATA[idx].category = "Helicopter";
-            else if (name in groundUnitDatabase)
-                DEMO_UNIT_DATA[idx].category = "GroundUnit";
-            else if (name in navyUnitDatabase)
-                DEMO_UNIT_DATA[idx].category = "NavyUnit";
-            idx += 1;
+                if (name in aircraftDatabase)
+                    DEMO_UNIT_DATA[idx].category = "Aircraft";
+                else if (name in helicopterDatabase)
+                    DEMO_UNIT_DATA[idx].category = "Helicopter";
+                else if (name in groundUnitDatabase)
+                    DEMO_UNIT_DATA[idx].category = "GroundUnit";
+                else if (name in navyUnitDatabase)
+                    DEMO_UNIT_DATA[idx].category = "NavyUnit";
+
+                idx += 1;
+            }
         }
+        */
+
+        let idx = 1;
+        DEMO_UNIT_DATA[idx] = JSON.parse(JSON.stringify(baseData));
+        DEMO_UNIT_DATA[idx].name = "S_75M_Volhov";
+        DEMO_UNIT_DATA[idx].groupName = `Group`;
+        DEMO_UNIT_DATA[idx].position.lat += idx / 100;
+        DEMO_UNIT_DATA[idx].category = "GroundUnit";
+        DEMO_UNIT_DATA[idx].isLeader = true;
+
+        idx += 1;
+        DEMO_UNIT_DATA[idx] = JSON.parse(JSON.stringify(baseData));
+        DEMO_UNIT_DATA[idx].name = "SNR_75V";
+        DEMO_UNIT_DATA[idx].groupName = `Group`;
+        DEMO_UNIT_DATA[idx].position.lat += idx / 100;
+        DEMO_UNIT_DATA[idx].category = "GroundUnit";
+        DEMO_UNIT_DATA[idx].isLeader = false;
+
+        idx += 1;
+        DEMO_UNIT_DATA[idx] = JSON.parse(JSON.stringify(baseData));
+        DEMO_UNIT_DATA[idx].name = "Ural-4320 APA-5D";
+        DEMO_UNIT_DATA[idx].groupName = `Group`;
+        DEMO_UNIT_DATA[idx].position.lat += idx / 100;
+        DEMO_UNIT_DATA[idx].category = "GroundUnit";
+        DEMO_UNIT_DATA[idx].isLeader = false;
+
         this.startTime = Date.now();
     }
     

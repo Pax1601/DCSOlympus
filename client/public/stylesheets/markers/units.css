@@ -97,6 +97,10 @@
     position: absolute;
 }
 
+[data-object|="unit-groundunit"] .unit-short-label {
+    transform: translateY(7px);
+}
+
 /*** Health indicator ***/
 [data-object|="unit"] .unit-health {
     background: white;
@@ -277,7 +281,8 @@
     background-image: url("/resources/theme/images/states/idle.svg");
 }
 
-[data-object*="groundunit"][data-state="idle"] .unit-state {
+[data-object*="groundunit"][data-state="idle"] .unit-state,
+[data-object*="navyunit"][data-state="idle"] .unit-state {
     background-image: url("");  /* To avoid clutter, dont show the idle state for non flying units */
 }
 

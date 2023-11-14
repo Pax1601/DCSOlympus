@@ -590,6 +590,7 @@ declare module "interfaces" {
         canAAA?: boolean;
         indirectFire?: boolean;
         markerFile?: string;
+        unitWhenGrouped?: string;
     }
     export interface UnitSpawnOptions {
         roleType: string;
@@ -773,7 +774,7 @@ declare module "other/utils" {
         ranges?: string[];
         eras?: string[];
     }): UnitBlueprint | null;
-    export function getMarkerCategoryByName(name: string): "aircraft" | "helicopter" | "groundunit-sam" | "groundunit-other" | "groundunit-sam-radar" | "groundunit-sam-launcher" | "groundunit-ewr";
+    export function getMarkerCategoryByName(name: string): "aircraft" | "helicopter" | "groundunit-other" | "navyunit" | "groundunit";
     export function getUnitDatabaseByCategory(category: string): import("unit/databases/aircraftdatabase").AircraftDatabase | import("unit/databases/helicopterdatabase").HelicopterDatabase | import("unit/databases/groundunitdatabase").GroundUnitDatabase | import("unit/databases/navyunitdatabase").NavyUnitDatabase | null;
     export function base64ToBytes(base64: string): ArrayBufferLike;
     export function enumToState(state: number): string;

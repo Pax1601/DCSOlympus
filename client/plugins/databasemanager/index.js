@@ -508,7 +508,7 @@ class GroundUnitEditor extends uniteditor_1.UnitEditor {
      * @param blueprint The blueprint to edit
      */
     setBlueprint(blueprint) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w;
         __classPrivateFieldSet(this, _GroundUnitEditor_blueprint, blueprint, "f");
         if (__classPrivateFieldGet(this, _GroundUnitEditor_blueprint, "f") !== null) {
             this.contentDiv2.replaceChildren();
@@ -519,28 +519,29 @@ class GroundUnitEditor extends uniteditor_1.UnitEditor {
             (0, utils_1.addStringInput)(this.contentDiv2, "Label", blueprint.label, "text", (value) => { blueprint.label = value; });
             (0, utils_1.addStringInput)(this.contentDiv2, "Short label", blueprint.shortLabel, "text", (value) => { blueprint.shortLabel = value; });
             (0, utils_1.addStringInput)(this.contentDiv2, "Type", (_a = blueprint.type) !== null && _a !== void 0 ? _a : "", "text", (value) => { blueprint.type = value; });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Unit when grouped", (_b = blueprint.unitWhenGrouped) !== null && _b !== void 0 ? _b : "", "text", (value) => { blueprint.unitWhenGrouped = value; });
             (0, utils_1.addDropdownInput)(this.contentDiv2, "Coalition", blueprint.coalition, ["", "blue", "red"], (value) => { blueprint.coalition = value; });
             (0, utils_1.addDropdownInput)(this.contentDiv2, "Era", blueprint.era, ["WW2", "Early Cold War", "Mid Cold War", "Late Cold War", "Modern"], (value) => { blueprint.era = value; });
             //addStringInput(this.contentDiv2, "Filename", blueprint.filename?? "", "text", (value: string) => {blueprint.filename = value; });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Cost", (_b = String(blueprint.cost)) !== null && _b !== void 0 ? _b : "", "number", (value) => { blueprint.cost = parseFloat(value); });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Acquisition range [m]", (_c = String(blueprint.acquisitionRange)) !== null && _c !== void 0 ? _c : "", "number", (value) => { blueprint.acquisitionRange = parseFloat(value); });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Engagement range [m]", (_d = String(blueprint.engagementRange)) !== null && _d !== void 0 ? _d : "", "number", (value) => { blueprint.engagementRange = parseFloat(value); });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Targeting range [m]", (_e = String(blueprint.targetingRange)) !== null && _e !== void 0 ? _e : "", "number", (value) => { blueprint.targetingRange = parseFloat(value); });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Aim method range [m]", (_f = String(blueprint.aimMethodRange)) !== null && _f !== void 0 ? _f : "", "number", (value) => { blueprint.aimMethodRange = parseFloat(value); });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Barrel height [m]", (_g = String(blueprint.barrelHeight)) !== null && _g !== void 0 ? _g : "", "number", (value) => { blueprint.barrelHeight = parseFloat(value); });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Muzzle velocity [m/s]", (_h = String(blueprint.muzzleVelocity)) !== null && _h !== void 0 ? _h : "", "number", (value) => { blueprint.muzzleVelocity = parseFloat(value); });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Aim time [s]", (_j = String(blueprint.aimTime)) !== null && _j !== void 0 ? _j : "", "number", (value) => { blueprint.aimTime = parseFloat(value); });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Shots to fire", (_k = String(blueprint.shotsToFire)) !== null && _k !== void 0 ? _k : "", "number", (value) => { blueprint.shotsToFire = Math.round(parseFloat(value)); });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Shots base interval [s]", (_l = String(blueprint.shotsBaseInterval)) !== null && _l !== void 0 ? _l : "", "number", (value) => { blueprint.shotsBaseInterval = Math.round(parseFloat(value)); });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Shots base scatter [°]", (_m = String(blueprint.shotsBaseScatter)) !== null && _m !== void 0 ? _m : "", "number", (value) => { blueprint.shotsBaseScatter = Math.round(parseFloat(value)); });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Alertness time constant [s]", (_o = String(blueprint.alertnessTimeConstant)) !== null && _o !== void 0 ? _o : "", "number", (value) => { blueprint.alertnessTimeConstant = Math.round(parseFloat(value)); });
-            (0, utils_1.addCheckboxInput)(this.contentDiv2, "Can target point", (_p = blueprint.canTargetPoint) !== null && _p !== void 0 ? _p : false, (value) => { blueprint.canTargetPoint = value; });
-            (0, utils_1.addCheckboxInput)(this.contentDiv2, "Can rearm", (_q = blueprint.canRearm) !== null && _q !== void 0 ? _q : false, (value) => { blueprint.canRearm = value; });
-            (0, utils_1.addCheckboxInput)(this.contentDiv2, "Can operate as AAA", (_r = blueprint.canAAA) !== null && _r !== void 0 ? _r : false, (value) => { blueprint.canAAA = value; });
-            (0, utils_1.addCheckboxInput)(this.contentDiv2, "Indirect fire (e.g. mortar)", (_s = blueprint.indirectFire) !== null && _s !== void 0 ? _s : false, (value) => { blueprint.indirectFire = value; });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Description", (_t = blueprint.description) !== null && _t !== void 0 ? _t : "", "text", (value) => { blueprint.description = value; });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Tags", (_u = blueprint.tags) !== null && _u !== void 0 ? _u : "", "text", (value) => { blueprint.tags = value; });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Marker file", (_v = blueprint.markerFile) !== null && _v !== void 0 ? _v : "", "text", (value) => { blueprint.markerFile = value; });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Cost", (_c = String(blueprint.cost)) !== null && _c !== void 0 ? _c : "", "number", (value) => { blueprint.cost = parseFloat(value); });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Acquisition range [m]", (_d = String(blueprint.acquisitionRange)) !== null && _d !== void 0 ? _d : "", "number", (value) => { blueprint.acquisitionRange = parseFloat(value); });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Engagement range [m]", (_e = String(blueprint.engagementRange)) !== null && _e !== void 0 ? _e : "", "number", (value) => { blueprint.engagementRange = parseFloat(value); });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Targeting range [m]", (_f = String(blueprint.targetingRange)) !== null && _f !== void 0 ? _f : "", "number", (value) => { blueprint.targetingRange = parseFloat(value); });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Aim method range [m]", (_g = String(blueprint.aimMethodRange)) !== null && _g !== void 0 ? _g : "", "number", (value) => { blueprint.aimMethodRange = parseFloat(value); });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Barrel height [m]", (_h = String(blueprint.barrelHeight)) !== null && _h !== void 0 ? _h : "", "number", (value) => { blueprint.barrelHeight = parseFloat(value); });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Muzzle velocity [m/s]", (_j = String(blueprint.muzzleVelocity)) !== null && _j !== void 0 ? _j : "", "number", (value) => { blueprint.muzzleVelocity = parseFloat(value); });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Aim time [s]", (_k = String(blueprint.aimTime)) !== null && _k !== void 0 ? _k : "", "number", (value) => { blueprint.aimTime = parseFloat(value); });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Shots to fire", (_l = String(blueprint.shotsToFire)) !== null && _l !== void 0 ? _l : "", "number", (value) => { blueprint.shotsToFire = Math.round(parseFloat(value)); });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Shots base interval [s]", (_m = String(blueprint.shotsBaseInterval)) !== null && _m !== void 0 ? _m : "", "number", (value) => { blueprint.shotsBaseInterval = Math.round(parseFloat(value)); });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Shots base scatter [°]", (_o = String(blueprint.shotsBaseScatter)) !== null && _o !== void 0 ? _o : "", "number", (value) => { blueprint.shotsBaseScatter = Math.round(parseFloat(value)); });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Alertness time constant [s]", (_p = String(blueprint.alertnessTimeConstant)) !== null && _p !== void 0 ? _p : "", "number", (value) => { blueprint.alertnessTimeConstant = Math.round(parseFloat(value)); });
+            (0, utils_1.addCheckboxInput)(this.contentDiv2, "Can target point", (_q = blueprint.canTargetPoint) !== null && _q !== void 0 ? _q : false, (value) => { blueprint.canTargetPoint = value; });
+            (0, utils_1.addCheckboxInput)(this.contentDiv2, "Can rearm", (_r = blueprint.canRearm) !== null && _r !== void 0 ? _r : false, (value) => { blueprint.canRearm = value; });
+            (0, utils_1.addCheckboxInput)(this.contentDiv2, "Can operate as AAA", (_s = blueprint.canAAA) !== null && _s !== void 0 ? _s : false, (value) => { blueprint.canAAA = value; });
+            (0, utils_1.addCheckboxInput)(this.contentDiv2, "Indirect fire (e.g. mortar)", (_t = blueprint.indirectFire) !== null && _t !== void 0 ? _t : false, (value) => { blueprint.indirectFire = value; });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Description", (_u = blueprint.description) !== null && _u !== void 0 ? _u : "", "text", (value) => { blueprint.description = value; });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Tags", (_v = blueprint.tags) !== null && _v !== void 0 ? _v : "", "text", (value) => { blueprint.tags = value; });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Marker file", (_w = blueprint.markerFile) !== null && _w !== void 0 ? _w : "", "text", (value) => { blueprint.markerFile = value; });
         }
     }
     /** Add a new empty blueprint
@@ -998,8 +999,8 @@ function addBlueprintsScroll(div, database, filter, callback) {
             if (addKey) {
                 var rowDiv = document.createElement("div");
                 scrollDiv.appendChild(rowDiv);
-                let text = document.createElement("label");
-                text.textContent = key;
+                let text = document.createElement("div");
+                text.innerHTML = `<div>${key}</div> <div>${blueprints[key].label}</div>`;
                 text.onclick = () => {
                     callback(key);
                     const collection = document.getElementsByClassName("blueprint-selected");

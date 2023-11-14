@@ -26,7 +26,7 @@
 		"name": "2B11 mortar",
 		"coalition": "red",
 		"era": "Late Cold War",
-		"label": "2B11 mortar (120mm)",
+		"label": "2B11 mortar",
 		"shortLabel": "2B11 mortar",
 		"filename": "",
 		"type": "Artillery",
@@ -62,14 +62,16 @@
 		"barrelHeight": 1,
 		"muzzleVelocity": 325,
 		"aimTime": 5,
-		"shotsToFire": 100
+		"shotsToFire": 100,
+		"markerFile": "groundunit-artillery",
+		"tags": "120mm"
 	},
 	"2S6 Tunguska": {
 		"name": "2S6 Tunguska",
 		"coalition": "red",
 		"era": "Late Cold War",
 		"label": "SA-19 Tunguska",
-		"shortLabel": "SA-19",
+		"shortLabel": "19",
 		"range": "Short",
 		"filename": "",
 		"type": "SAM Site",
@@ -123,7 +125,8 @@
 		"aimTime": 5,
 		"shotsToFire": 10,
 		"cost": null,
-		"tags": "Optical, Radar, CA"
+		"tags": "Optical, Radar, CA",
+		"markerFile": "groundunit-sam"
 	},
 	"55G6 EWR": {
 		"name": "55G6 EWR",
@@ -152,7 +155,7 @@
 		"name": "5p73 s-125 ln",
 		"coalition": "red",
 		"era": "Mid Cold War",
-		"label": "SA-3",
+		"label": "SA-3 Launcher",
 		"shortLabel": "5p73 s-125 ln",
 		"range": "Medium",
 		"filename": "",
@@ -202,7 +205,8 @@
 		"abilities": "",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"tags": "Launcher"
+		"tags": "",
+		"markerFile": "groundunit-sam-launcher"
 	},
 	"AAV7": {
 		"name": "AAV7",
@@ -245,7 +249,8 @@
 		"muzzleVelocity": 900,
 		"aimTime": 10,
 		"shotsToFire": 100,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-apc"
 	},
 	"ATMZ-5": {
 		"name": "ATMZ-5",
@@ -268,7 +273,8 @@
 		"abilities": "Refuel",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"tags": "Fuel Truck"
+		"tags": "Fuel Truck",
+		"markerFile": "groundunit-truck"
 	},
 	"ATZ-10": {
 		"name": "ATZ-10",
@@ -291,7 +297,8 @@
 		"abilities": "Refuel",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"tags": "Fuel Truck"
+		"tags": "Fuel Truck",
+		"markerFile": "groundunit-truck"
 	},
 	"BMD-1": {
 		"name": "BMD-1",
@@ -354,7 +361,8 @@
 		"canRearm": false,
 		"shotsToFire": 100,
 		"aimTime": 5,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-apc"
 	},
 	"BMP-1": {
 		"name": "BMP-1",
@@ -461,7 +469,8 @@
 		"muzzleVelocity": 665,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-apc"
 	},
 	"BMP-2": {
 		"name": "BMP-2",
@@ -552,7 +561,8 @@
 		"canRearm": false,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-apc"
 	},
 	"BMP-3": {
 		"name": "BMP-3",
@@ -611,7 +621,8 @@
 		"muzzleVelocity": 1080,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-apc"
 	},
 	"BRDM-2": {
 		"name": "BRDM-2",
@@ -670,7 +681,8 @@
 		"barrelHeight": 2.25,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-tactical"
 	},
 	"BTR-80": {
 		"name": "BTR-80",
@@ -761,7 +773,8 @@
 		"muzzleVelocity": 900,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-apc"
 	},
 	"BTR_D": {
 		"name": "BTR_D",
@@ -816,7 +829,8 @@
 		"abilities": "Combined arms, Amphibious, Transport",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-apc"
 	},
 	"Bunker": {
 		"name": "Bunker",
@@ -863,7 +877,8 @@
 		"muzzleVelocity": 800,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-tank"
 	},
 	"Cobra": {
 		"name": "Cobra",
@@ -884,7 +899,8 @@
 		"muzzleVelocity": 900,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-tactical"
 	},
 	"Dog Ear radar": {
 		"name": "Dog Ear radar",
@@ -955,7 +971,8 @@
 		"abilities": "",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"tags": "Search Radar"
+		"tags": "Search Radar",
+		"markerFile": "groundunit-sam-radar"
 	},
 	"GAZ-3307": {
 		"name": "GAZ-3307",
@@ -977,7 +994,8 @@
 		"description": "Civilian truck, single axle, wheeled",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"GAZ-3308": {
 		"name": "GAZ-3308",
@@ -999,7 +1017,8 @@
 		"description": "Military truck, single axle, canvas covered cargo bay. wheeled",
 		"abilities": "Rearm",
 		"canTargetPoint": false,
-		"canRearm": true
+		"canRearm": true,
+		"markerFile": "groundunit-truck"
 	},
 	"GAZ-66": {
 		"name": "GAZ-66",
@@ -1053,7 +1072,8 @@
 		"description": "Military truck, single axle, open cargo bay. wheeled",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": true
+		"canRearm": true,
+		"markerFile": "groundunit-truck"
 	},
 	"Gepard": {
 		"name": "Gepard",
@@ -1097,7 +1117,8 @@
 		"aimTime": 5,
 		"shotsToFire": 100,
 		"cost": 15000000,
-		"tags": "Radar, CA"
+		"tags": "Radar, CA",
+		"markerFile": "groundunit-aaa"
 	},
 	"Grad-URAL": {
 		"name": "Grad-URAL",
@@ -1113,7 +1134,8 @@
 		"description": "Military truck, single axle, open cargo bay. wheeled",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"HEMTT TFFT": {
 		"name": "HEMTT TFFT",
@@ -1135,14 +1157,15 @@
 		"description": "Military truck, 2 axle, firefigther. wheeled",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"Hawk SAM Battery": {
 		"name": "Hawk SAM Battery",
 		"coalition": "blue",
 		"era": "Early Cold War",
 		"label": "Hawk SAM Battery",
-		"shortLabel": "Hawk SAM Battery",
+		"shortLabel": "HA",
 		"range": "Medium",
 		"filename": "",
 		"type": "SAM Site",
@@ -1153,7 +1176,8 @@
 		"abilities": "",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"tags": "Radar"
+		"tags": "Radar",
+		"markerFile": "groundunit-sam"
 	},
 	"Hawk cwar": {
 		"name": "Hawk cwar",
@@ -1184,7 +1208,8 @@
 		"description": "Hawk site Aquisition Radar",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-sam-radar"
 	},
 	"Hawk ln": {
 		"name": "Hawk ln",
@@ -1888,7 +1913,8 @@
 		"abilities": "",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"tags": "Radar"
+		"tags": "Radar",
+		"markerFile": "groundunit-sam-radar"
 	},
 	"Hawk tr": {
 		"name": "Hawk tr",
@@ -2224,7 +2250,8 @@
 		"description": "Hawk site track Radar. Medium sized trailer",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-sam-radar"
 	},
 	"Hummer": {
 		"name": "Hummer",
@@ -2279,7 +2306,8 @@
 		"abilities": "Combined arms, Transport",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-tactical"
 	},
 	"IKARUS Bus": {
 		"name": "IKARUS Bus",
@@ -2295,14 +2323,15 @@
 		"description": "Civilian Bus. Yellow. Bendy bus",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"Igla manpad INS": {
 		"name": "Igla manpad INS",
 		"coalition": "red",
 		"era": "Late Cold War",
 		"label": "SA-18",
-		"shortLabel": "SA-18 Igla",
+		"shortLabel": "18",
 		"range": "Short",
 		"filename": "",
 		"type": "SAM Site",
@@ -2331,7 +2360,8 @@
 		"abilities": "",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"tags": "IR, CA, MANPADS"
+		"tags": "IR, CA, MANPADS",
+		"markerFile": "groundunit-sam"
 	},
 	"Infantry AK": {
 		"name": "Infantry AK",
@@ -2352,7 +2382,8 @@
 		"canRearm": false,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "Russian type 1"
+		"tags": "Russian type 1",
+		"markerFile": "groundunit-infantry"
 	},
 	"KAMAZ Truck": {
 		"name": "KAMAZ Truck",
@@ -2406,7 +2437,8 @@
 		"description": "Military truck, 2 axle, wheeled",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": true
+		"canRearm": true,
+		"markerFile": "groundunit-truck"
 	},
 	"Kub 1S91 str": {
 		"name": "Kub 1S91 str",
@@ -2445,7 +2477,8 @@
 		"description": "SA-6/Kub search and track Radar, tracked.",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-sam-radar"
 	},
 	"Kub 2P25 ln": {
 		"name": "Kub 2P25 ln",
@@ -2544,7 +2577,8 @@
 		"muzzleVelocity": 1100,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-apc"
 	},
 	"LAZ Bus": {
 		"name": "LAZ Bus",
@@ -2560,7 +2594,8 @@
 		"description": "Civilian bus. Single Axle. Wheeled",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"Leclerc": {
 		"name": "Leclerc",
@@ -2582,7 +2617,8 @@
 		"description": "Main battle tank. Tracked. Modern and heavily armoured.",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-tank"
 	},
 	"Leopard-2": {
 		"name": "Leopard-2",
@@ -2748,7 +2784,8 @@
 		"description": "Main battle tank. Tracked. Modern and heavily armoured.",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-tank"
 	},
 	"Leopard1A3": {
 		"name": "Leopard1A3",
@@ -2802,7 +2839,8 @@
 		"description": "Main battle tank. Tracked. Heavily armoured.",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-tank"
 	},
 	"M 818": {
 		"name": "M 818",
@@ -2836,7 +2874,8 @@
 		"description": "???",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": true
+		"canRearm": true,
+		"markerFile": "groundunit-truck"
 	},
 	"M-1 Abrams": {
 		"name": "M-1 Abrams",
@@ -2875,7 +2914,8 @@
 		"abilities": "Combined arms,",
 		"canTargetPoint": true,
 		"canRearm": false,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-tank"
 	},
 	"M-109": {
 		"name": "M-109",
@@ -2930,7 +2970,8 @@
 		"abilities": "Combined arms, Indirect fire",
 		"canTargetPoint": true,
 		"canRearm": false,
-		"tags": "155mm, CA"
+		"tags": "155mm, CA",
+		"markerFile": "groundunit-artillery"
 	},
 	"M-113": {
 		"name": "M-113",
@@ -3033,7 +3074,8 @@
 		"muzzleVelocity": 950,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-apc"
 	},
 	"M-2 Bradley": {
 		"name": "M-2 Bradley",
@@ -3076,7 +3118,8 @@
 		"muzzleVelocity": 1000,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-apc"
 	},
 	"M-60": {
 		"name": "M-60",
@@ -3114,7 +3157,8 @@
 		"description": "Main battle tank. Tracked. Heavily armoured.",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-tank"
 	},
 	"M1043 HMMWV Armament": {
 		"name": "M1043 HMMWV Armament",
@@ -3169,7 +3213,8 @@
 		"abilities": "Combined arms, Transport",
 		"canTargetPoint": true,
 		"canRearm": false,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-tactical"
 	},
 	"M1045 HMMWV TOW": {
 		"name": "M1045 HMMWV TOW",
@@ -3224,14 +3269,15 @@
 		"abilities": "Combined arms, Transport",
 		"canTargetPoint": true,
 		"canRearm": false,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-tactical"
 	},
 	"M1097 Avenger": {
 		"name": "M1097 Avenger",
 		"coalition": "blue",
 		"era": "Modern",
 		"label": "M1097 Avenger",
-		"shortLabel": "M1097 Avenger",
+		"shortLabel": "97",
 		"filename": "",
 		"type": "SAM Site",
 		"enabled": true,
@@ -3241,7 +3287,8 @@
 		"abilities": "Combined arms,",
 		"canTargetPoint": true,
 		"canRearm": false,
-		"tags": "IR, CA"
+		"tags": "IR, CA",
+		"markerFile": "groundunit-sam"
 	},
 	"M1126 Stryker ICV": {
 		"name": "M1126 Stryker ICV",
@@ -3262,7 +3309,8 @@
 		"muzzleVelocity": 900,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-apc"
 	},
 	"M1128 Stryker MGS": {
 		"name": "M1128 Stryker MGS",
@@ -3283,7 +3331,8 @@
 		"muzzleVelocity": 900,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-tactical"
 	},
 	"M1134 Stryker ATGM": {
 		"name": "M1134 Stryker ATGM",
@@ -3304,14 +3353,15 @@
 		"muzzleVelocity": 900,
 		"barrelHeight": 2.8,
 		"shotsToFire": 100,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-apc"
 	},
 	"M48 Chaparral": {
 		"name": "M48 Chaparral",
 		"coalition": "blue",
 		"era": "Mid Cold War",
 		"label": "M48 Chaparral",
-		"shortLabel": "M48 Chaparral",
+		"shortLabel": "48",
 		"filename": "",
 		"type": "SAM Site",
 		"enabled": true,
@@ -3375,14 +3425,15 @@
 		"abilities": "Combined arms,",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"tags": "IR, CA"
+		"tags": "IR, CA",
+		"markerFile": "groundunit-sam"
 	},
 	"M6 Linebacker": {
 		"name": "M6 Linebacker",
 		"coalition": "blue",
 		"era": "Late Cold War",
 		"label": "M6 Linebacker",
-		"shortLabel": "M6 Linebacker",
+		"shortLabel": "M6",
 		"filename": "",
 		"type": "SAM Site",
 		"enabled": true,
@@ -3414,7 +3465,8 @@
 		"abilities": "Combined arms,",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"tags": "IR, CA"
+		"tags": "IR, CA",
+		"markerFile": "groundunit-sam"
 	},
 	"M978 HEMTT Tanker": {
 		"name": "M978 HEMTT Tanker",
@@ -3452,7 +3504,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"MAZ-6303": {
 		"name": "MAZ-6303",
@@ -3490,7 +3543,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"MCV-80": {
 		"name": "MCV-80",
@@ -3533,7 +3587,8 @@
 		"muzzleVelocity": 1100,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-apc"
 	},
 	"MLRS": {
 		"name": "MLRS",
@@ -3588,7 +3643,8 @@
 		"abilities": "Combined arms, Indirect Fire",
 		"canTargetPoint": true,
 		"canRearm": false,
-		"tags": "270mm, MLRS, CA"
+		"tags": "270mm, MLRS, CA",
+		"markerFile": "groundunit-artillery"
 	},
 	"MTLB": {
 		"name": "MTLB",
@@ -3647,7 +3703,8 @@
 		"muzzleVelocity": 800,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-apc"
 	},
 	"Marder": {
 		"name": "Marder",
@@ -3690,7 +3747,8 @@
 		"muzzleVelocity": 900,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-apc"
 	},
 	"Osa 9A33 ln": {
 		"name": "Osa 9A33 ln",
@@ -3751,7 +3809,8 @@
 		"muzzleVelocity": 900,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "Russian Para"
+		"tags": "Russian Para",
+		"markerFile": "groundunit-infantry"
 	},
 	"Paratrooper RPG-16": {
 		"name": "Paratrooper RPG-16",
@@ -3772,7 +3831,8 @@
 		"muzzleVelocity": 295,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "Russian Para"
+		"tags": "Russian Para",
+		"markerFile": "groundunit-infantry"
 	},
 	"Patriot AMG": {
 		"name": "Patriot AMG",
@@ -4046,7 +4106,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-sam-radar"
 	},
 	"Predator GCS": {
 		"name": "Predator GCS",
@@ -4070,7 +4131,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"Predator TrojanSpirit": {
 		"name": "Predator TrojanSpirit",
@@ -4086,7 +4148,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"RLS_19J6": {
 		"name": "RLS_19J6",
@@ -4121,7 +4184,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-sam-radar"
 	},
 	"RPC_5N62V": {
 		"name": "RPC_5N62V",
@@ -4211,7 +4275,7 @@
 		"coalition": "blue",
 		"era": "Late Cold War",
 		"label": "Roland ADS",
-		"shortLabel": "Roland ADS",
+		"shortLabel": "RO",
 		"filename": "",
 		"type": "SAM Site",
 		"enabled": true,
@@ -4227,7 +4291,8 @@
 		"abilities": "Combined arms,",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"tags": "Radar, Optical, CA"
+		"tags": "Radar, Optical, CA",
+		"markerFile": "groundunit-sam"
 	},
 	"Roland Radar": {
 		"name": "Roland Radar",
@@ -4249,7 +4314,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-sam-radar"
 	},
 	"S-200_Launcher": {
 		"name": "S-200_Launcher",
@@ -4372,7 +4438,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-sam-radar"
 	},
 	"S-300PS 40B6MD sr": {
 		"name": "S-300PS 40B6MD sr",
@@ -4411,7 +4478,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-sam-radar"
 	},
 	"S-300PS 54K6 cp": {
 		"name": "S-300PS 54K6 cp",
@@ -4571,14 +4639,15 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-sam-radar"
 	},
 	"SA-10 SAM Battery": {
 		"name": "SA-10 SAM Battery",
 		"coalition": "red",
 		"era": "Late Cold War",
 		"label": "SA-10 SAM Battery",
-		"shortLabel": "SA-10",
+		"shortLabel": "10",
 		"range": "Long",
 		"filename": "",
 		"type": "SAM Site",
@@ -4589,7 +4658,8 @@
 		"abilities": "",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"tags": "Radar"
+		"tags": "Radar",
+		"markerFile": "groundunit-sam"
 	},
 	"SA-11 Buk CC 9S470M1": {
 		"name": "SA-11 Buk CC 9S470M1",
@@ -4762,7 +4832,7 @@
 		"coalition": "red",
 		"era": "Late Cold War",
 		"label": "SA-11 SAM Battery",
-		"shortLabel": "SA-11 SAM Battery",
+		"shortLabel": "11",
 		"range": "Medium",
 		"filename": "",
 		"type": "SAM Site",
@@ -4773,14 +4843,15 @@
 		"abilities": "",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"tags": "Radar"
+		"tags": "Radar",
+		"markerFile": "groundunit-sam"
 	},
 	"SA-18 Igla manpad": {
 		"name": "SA-18 Igla manpad",
 		"coalition": "red",
 		"era": "Late Cold War",
 		"label": "SA-18 Igla \"Grouse\" C2",
-		"shortLabel": "SA-18 Igla manpad",
+		"shortLabel": "18",
 		"range": "Short",
 		"filename": "",
 		"type": "SAM Site",
@@ -4798,7 +4869,7 @@
 		"coalition": "red",
 		"era": "Late Cold War",
 		"label": "SA-18 Igla \"Grouse\" C2",
-		"shortLabel": "SA-18 Igla \"Grouse\"",
+		"shortLabel": "18",
 		"range": "Short",
 		"filename": "",
 		"type": "SAM Site",
@@ -4816,7 +4887,7 @@
 		"coalition": "red",
 		"era": "Early Cold War",
 		"label": "SA-2 SAM Battery",
-		"shortLabel": "SA-2",
+		"shortLabel": "2",
 		"range": "Long",
 		"filename": "",
 		"type": "SAM Site",
@@ -4827,14 +4898,15 @@
 		"abilities": "",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"tags": "Radar"
+		"tags": "Radar",
+		"markerFile": "groundunit-sam"
 	},
 	"SA-3 SAM Battery": {
 		"name": "SA-3 SAM Battery",
 		"coalition": "red",
 		"era": "Early Cold War",
 		"label": "SA-3 SAM Battery",
-		"shortLabel": "SA-3",
+		"shortLabel": "3",
 		"range": "Medium",
 		"filename": "",
 		"type": "SAM Site",
@@ -4845,14 +4917,15 @@
 		"abilities": "",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"tags": "Radar"
+		"tags": "Radar",
+		"markerFile": "groundunit-sam"
 	},
 	"SA-5 SAM Battery": {
 		"name": "SA-5 SAM Battery",
 		"coalition": "red",
 		"era": "Mid Cold War",
 		"label": "SA-5 SAM Battery",
-		"shortLabel": "SA-5",
+		"shortLabel": "5",
 		"range": "Long",
 		"filename": "",
 		"type": "SAM Site",
@@ -4863,14 +4936,15 @@
 		"abilities": "",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"tags": "Radar"
+		"tags": "Radar",
+		"markerFile": "groundunit-sam"
 	},
 	"SA-6 SAM Battery": {
 		"name": "SA-6 SAM Battery",
 		"coalition": "red",
 		"era": "Mid Cold War",
 		"label": "SA-6 SAM Battery",
-		"shortLabel": "SA-6",
+		"shortLabel": "6",
 		"range": "Medium",
 		"filename": "",
 		"type": "SAM Site",
@@ -4881,7 +4955,8 @@
 		"engagementRange": "",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"tags": "Radar"
+		"tags": "Radar",
+		"markerFile": "groundunit-sam"
 	},
 	"SAU 2-C9": {
 		"name": "SAU 2-C9",
@@ -4936,7 +5011,8 @@
 		"abilities": "Combined arms, Indirect fire",
 		"canTargetPoint": true,
 		"canRearm": false,
-		"tags": "120mm, CA"
+		"tags": "120mm, CA",
+		"markerFile": "groundunit-artillery"
 	},
 	"SAU Akatsia": {
 		"name": "SAU Akatsia",
@@ -4991,7 +5067,8 @@
 		"abilities": "Combined arms, Indirect fire",
 		"canTargetPoint": true,
 		"canRearm": false,
-		"tags": "152mm, CA"
+		"tags": "152mm, CA",
+		"markerFile": "groundunit-artillery"
 	},
 	"SAU Gvozdika": {
 		"name": "SAU Gvozdika",
@@ -5046,7 +5123,8 @@
 		"abilities": "Combined arms, Indirect fire",
 		"canTargetPoint": true,
 		"canRearm": false,
-		"tags": "122mm, CA"
+		"tags": "122mm, CA",
+		"markerFile": "groundunit-artillery"
 	},
 	"SAU Msta": {
 		"name": "SAU Msta",
@@ -5101,7 +5179,8 @@
 		"abilities": "Combined arms, Indirect fire",
 		"canTargetPoint": true,
 		"canRearm": false,
-		"tags": "152mm, CA"
+		"tags": "152mm, CA",
+		"markerFile": "groundunit-artillery"
 	},
 	"SKP-11": {
 		"name": "SKP-11",
@@ -5123,7 +5202,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"SNR_75V": {
 		"name": "SNR_75V",
@@ -5161,7 +5241,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-sam-radar"
 	},
 	"S_75M_Volhov": {
 		"name": "S_75M_Volhov",
@@ -5200,7 +5281,8 @@
 		"abilities": "",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"markerFile": "groundunit-sam-launcher"
+		"markerFile": "groundunit-sam-launcher",
+		"unitWhenGrouped": "SA-2 SAM Battery"
 	},
 	"Sandbox": {
 		"name": "Sandbox",
@@ -5255,7 +5337,8 @@
 		"abilities": "Combined arms,",
 		"canTargetPoint": true,
 		"canRearm": false,
-		"tags": "Rocket, CA"
+		"tags": "Rocket, CA",
+		"markerFile": "groundunit-artillery"
 	},
 	"Soldier AK": {
 		"name": "Soldier AK",
@@ -5310,7 +5393,8 @@
 		"canRearm": false,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "Russian type 4"
+		"tags": "Russian type 4",
+		"markerFile": "groundunit-infantry"
 	},
 	"Soldier M249": {
 		"name": "Soldier M249",
@@ -5365,7 +5449,8 @@
 		"aimTime": 5,
 		"shotsToFire": 100,
 		"barrelHeight": 0.2,
-		"tags": "US"
+		"tags": "US",
+		"markerFile": "groundunit-infantry"
 	},
 	"Soldier M4 GRG": {
 		"name": "Soldier M4 GRG",
@@ -5420,7 +5505,8 @@
 		"muzzleVelocity": 910,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "Georgia"
+		"tags": "Georgia",
+		"markerFile": "groundunit-infantry"
 	},
 	"Soldier M4": {
 		"name": "Soldier M4",
@@ -5475,7 +5561,8 @@
 		"muzzleVelocity": 910,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "US"
+		"tags": "US",
+		"markerFile": "groundunit-infantry"
 	},
 	"Soldier RPG": {
 		"name": "Soldier RPG",
@@ -5530,7 +5617,8 @@
 		"muzzleVelocity": 295,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "Russian"
+		"tags": "Russian",
+		"markerFile": "groundunit-infantry"
 	},
 	"Stinger comm dsr": {
 		"name": "Stinger comm dsr",
@@ -5570,7 +5658,8 @@
 		"abilities": "",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"tags": "MANPADS, IR"
+		"tags": "MANPADS, IR",
+		"markerFile": "groundunit-sam"
 	},
 	"Stinger comm": {
 		"name": "Stinger comm",
@@ -5610,14 +5699,15 @@
 		"abilities": "",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"tags": "MANPADS, IR"
+		"tags": "MANPADS, IR",
+		"markerFile": "groundunit-sam"
 	},
 	"Strela-1 9P31": {
 		"name": "Strela-1 9P31",
 		"coalition": "red",
 		"era": "Mid Cold War",
 		"label": "SA-9 SAM Battery",
-		"shortLabel": "SA-9 Strela 1",
+		"shortLabel": "9",
 		"range": "Short",
 		"filename": "",
 		"type": "SAM Site",
@@ -5666,14 +5756,15 @@
 		"abilities": "Combined arms, Amphibious",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"tags": "IR, CA"
+		"tags": "IR, CA",
+		"markerFile": "groundunit-sam"
 	},
 	"Strela-10M3": {
 		"name": "Strela-10M3",
 		"coalition": "red",
 		"era": "Late Cold War",
 		"label": "SA-13  SAM Battery",
-		"shortLabel": "SA-13 Strela 10",
+		"shortLabel": "13",
 		"range": "Short",
 		"filename": "",
 		"type": "SAM Site",
@@ -5722,7 +5813,8 @@
 		"abilities": "Combined arms, Amphibious",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"tags": "Optical, Radar, CA"
+		"tags": "Optical, Radar, CA",
+		"markerFile": "groundunit-sam"
 	},
 	"Suidae": {
 		"name": "Suidae",
@@ -5738,7 +5830,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"T-55": {
 		"name": "T-55",
@@ -5792,7 +5885,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-tank"
 	},
 	"T-72B": {
 		"name": "T-72B",
@@ -5814,7 +5908,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-tank"
 	},
 	"T-80UD": {
 		"name": "T-80UD",
@@ -5876,7 +5971,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-tank"
 	},
 	"T-90": {
 		"name": "T-90",
@@ -5930,7 +6026,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-tank"
 	},
 	"TPZ": {
 		"name": "TPZ",
@@ -5951,7 +6048,8 @@
 		"muzzleVelocity": 900,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-apc"
 	},
 	"Tigr_233036": {
 		"name": "Tigr_233036",
@@ -5973,14 +6071,15 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"Tor 9A331": {
 		"name": "Tor 9A331",
 		"coalition": "red",
 		"era": "Late Cold War",
 		"label": "SA-15 SAM Battery",
-		"shortLabel": "SA-15 Tor",
+		"shortLabel": "15",
 		"range": "Medium",
 		"filename": "",
 		"type": "SAM Site",
@@ -6045,7 +6144,8 @@
 		"abilities": "Combined arms,",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"tags": "Radar, CA"
+		"tags": "Radar, CA",
+		"markerFile": "groundunit-sam"
 	},
 	"Trolley bus": {
 		"name": "Trolley bus",
@@ -6061,7 +6161,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"UAZ-469": {
 		"name": "UAZ-469",
@@ -6127,7 +6228,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"Uragan_BM-27": {
 		"name": "Uragan_BM-27",
@@ -6198,7 +6300,8 @@
 		"abilities": "Combined arms, Indirect fire",
 		"canTargetPoint": true,
 		"canRearm": false,
-		"tags": "Rocket, CA"
+		"tags": "Rocket, CA",
+		"markerFile": "groundunit-artillery"
 	},
 	"Ural ATsP-6": {
 		"name": "Ural ATsP-6",
@@ -6214,7 +6317,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"Ural-375 PBU": {
 		"name": "Ural-375 PBU",
@@ -6236,7 +6340,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"Ural-375 ZU-23 Insurgent": {
 		"name": "Ural-375 ZU-23 Insurgent",
@@ -6264,7 +6369,8 @@
 		"muzzleVelocity": 1000,
 		"barrelHeight": 3,
 		"cost": 90000,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-aaa"
 	},
 	"Ural-375 ZU-23": {
 		"name": "Ural-375 ZU-23",
@@ -6292,7 +6398,8 @@
 		"muzzleVelocity": 1000,
 		"aimTime": 8,
 		"shotsToFire": 1000,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-aaa"
 	},
 	"Ural-375": {
 		"name": "Ural-375",
@@ -6314,7 +6421,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": true
+		"canRearm": true,
+		"markerFile": "groundunit-truck"
 	},
 	"Ural-4320 APA-5D": {
 		"name": "Ural-4320 APA-5D",
@@ -6336,7 +6444,8 @@
 		"description": "Lightly armoured",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": true
+		"canRearm": true,
+		"markerFile": "groundunit-truck"
 	},
 	"Ural-4320-31": {
 		"name": "Ural-4320-31",
@@ -6358,7 +6467,8 @@
 		"abilities": "",
 		"description": "",
 		"canTargetPoint": false,
-		"canRearm": true
+		"canRearm": true,
+		"markerFile": "groundunit-truck"
 	},
 	"Ural-4320T": {
 		"name": "Ural-4320T",
@@ -6380,7 +6490,8 @@
 		"abilities": "",
 		"description": "",
 		"canTargetPoint": false,
-		"canRearm": true
+		"canRearm": true,
+		"markerFile": "groundunit-truck"
 	},
 	"VAZ Car": {
 		"name": "VAZ Car",
@@ -6396,7 +6507,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"Vulcan": {
 		"name": "Vulcan",
@@ -6472,7 +6584,8 @@
 		"muzzleVelocity": 900,
 		"aimTime": 10,
 		"shotsToFire": 100,
-		"tags": "Radar, CA"
+		"tags": "Radar, CA",
+		"markerFile": "groundunit-aaa"
 	},
 	"ZIL-131 KUNG": {
 		"name": "ZIL-131 KUNG",
@@ -6526,7 +6639,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"ZIL-4331": {
 		"name": "ZIL-4331",
@@ -6580,7 +6694,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"ZSU-23-4 Shilka": {
 		"name": "ZSU-23-4 Shilka",
@@ -6672,7 +6787,8 @@
 		"aimTime": 9,
 		"shotsToFire": 100,
 		"cost": 2500000,
-		"tags": "Radar, CA"
+		"tags": "Radar, CA",
+		"markerFile": "groundunit-aaa"
 	},
 	"ZU-23 Closed Insurgent": {
 		"name": "ZU-23 Closed Insurgent",
@@ -6700,7 +6816,8 @@
 		"aimTime": 9,
 		"shotsToFire": 100,
 		"cost": 50000,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-aaa"
 	},
 	"ZU-23 Emplacement Closed": {
 		"name": "ZU-23 Emplacement Closed",
@@ -6744,7 +6861,8 @@
 		"muzzleVelocity": 1000,
 		"barrelHeight": 1.5,
 		"cost": 50000,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-aaa"
 	},
 	"ZU-23 Emplacement": {
 		"name": "ZU-23 Emplacement",
@@ -6788,7 +6906,8 @@
 		"muzzleVelocity": 1000,
 		"barrelHeight": 1.5,
 		"cost": 50000,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-aaa"
 	},
 	"ZU-23 Insurgent": {
 		"name": "ZU-23 Insurgent",
@@ -6816,7 +6935,8 @@
 		"muzzleVelocity": 1000,
 		"barrelHeight": 1.5,
 		"cost": 50000,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-aaa"
 	},
 	"ZiL-131 APA-80": {
 		"name": "ZiL-131 APA-80",
@@ -6838,7 +6958,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"house1arm": {
 		"name": "house1arm",
@@ -6972,7 +7093,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-sam-radar"
 	},
 	"snr s-125 tr": {
 		"name": "snr s-125 tr",
@@ -7027,7 +7149,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-sam-radar"
 	},
 	"SpGH_Dana": {
 		"name": "SpGH_Dana",
@@ -7043,7 +7166,8 @@
 		"description": "SpGH Dana  77. Wheeled. Self propelled 152mm howitzer. 1km min range, 18km max.",
 		"abilities": "Combined arms, Indirect fire",
 		"canTargetPoint": true,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-artillery"
 	},
 	"Grad_FDDM": {
 		"name": "Grad_FDDM",
@@ -7064,7 +7188,8 @@
 		"muzzleVelocity": 900,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "Arty Command/Recon, CA"
+		"tags": "Arty Command/Recon, CA",
+		"markerFile": "groundunit-artillery"
 	},
 	"Infantry AK Ins": {
 		"name": "Infantry AK Ins",
@@ -7085,7 +7210,8 @@
 		"muzzleVelocity": 900,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "Insurgent"
+		"tags": "Insurgent",
+		"markerFile": "groundunit-infantry"
 	},
 	"MLRS FDDM": {
 		"name": "MLRS FDDM",
@@ -7106,7 +7232,8 @@
 		"aimTime": 5,
 		"shotsToFire": 100,
 		"barrelHeight": 2.49,
-		"tags": "Arty Command/Recon, CA"
+		"tags": "Arty Command/Recon, CA",
+		"markerFile": "groundunit-artillery"
 	},
 	"Infantry AK ver2": {
 		"name": "Infantry AK ver2",
@@ -7127,7 +7254,8 @@
 		"muzzleVelocity": 900,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "Russian type 2"
+		"tags": "Russian type 2",
+		"markerFile": "groundunit-infantry"
 	},
 	"Infantry AK ver3": {
 		"name": "Infantry AK ver3",
@@ -7148,7 +7276,8 @@
 		"muzzleVelocity": 900,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "Russian type 3"
+		"tags": "Russian type 3",
+		"markerFile": "groundunit-infantry"
 	},
 	"Smerch_HE": {
 		"name": "Smerch_HE",
@@ -7165,14 +7294,15 @@
 		"abilities": "Combined Arms, Indirect Fire",
 		"canTargetPoint": true,
 		"canRearm": false,
-		"tags": "300mm, MLRS, CA"
+		"tags": "300mm, MLRS, CA",
+		"markerFile": "groundunit-artillery"
 	},
 	"Soldier stinger": {
 		"name": "Soldier stinger",
 		"coalition": "",
 		"era": "",
 		"label": "Stinger",
-		"shortLabel": "Stinger",
+		"shortLabel": "ST",
 		"type": "SAM Site",
 		"enabled": true,
 		"liveries": {},
@@ -7182,14 +7312,15 @@
 		"abilities": "Combined arms,",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"tags": "IR, CA, MANPADS"
+		"tags": "IR, CA, MANPADS",
+		"markerFile": "groundunit-sam"
 	},
 	"SA-18 Igla comm": {
 		"name": "SA-18 Igla comm",
 		"coalition": "",
 		"era": "",
 		"label": "SA-18 Igla \"Grouse\" C2",
-		"shortLabel": "SA-18 Igla \"Grouse\" C2",
+		"shortLabel": "18",
 		"type": "SAM Site",
 		"enabled": false,
 		"liveries": {},
@@ -7206,7 +7337,7 @@
 		"coalition": "",
 		"era": "",
 		"label": "SA-18 Igla \"Grouse\" C2",
-		"shortLabel": "SA-18 Igla \"Grouse\"",
+		"shortLabel": "18",
 		"type": "SAM Site",
 		"enabled": false,
 		"liveries": {},
@@ -7248,7 +7379,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-tank"
 	},
 	"LiAZ Bus": {
 		"name": "LiAZ Bus",
@@ -7264,7 +7396,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"KrAZ6322": {
 		"name": "KrAZ6322",
@@ -7280,7 +7413,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": true
+		"canRearm": true,
+		"markerFile": "groundunit-truck"
 	},
 	"JTAC": {
 		"name": "JTAC",
@@ -7296,7 +7430,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-infantry"
 	},
 	"Electric locomotive": {
 		"name": "Electric locomotive",
@@ -7448,7 +7583,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"LARC-V": {
 		"name": "LARC-V",
@@ -7464,7 +7600,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"KS-19": {
 		"name": "KS-19",
@@ -7485,7 +7622,8 @@
 		"aimTime": 25,
 		"shotsToFire": 100,
 		"barrelHeight": 5,
-		"cost": 8000
+		"cost": 8000,
+		"markerFile": "groundunit-aaa"
 	},
 	"SON_9": {
 		"name": "SON_9",
@@ -7503,7 +7641,8 @@
 		"canTargetPoint": false,
 		"canRearm": false,
 		"cost": 750000,
-		"tags": "Radar"
+		"tags": "Radar",
+		"markerFile": "groundunit-aaa"
 	},
 	"Scud_B": {
 		"name": "Scud_B",
@@ -7520,7 +7659,8 @@
 		"abilities": "",
 		"canTargetPoint": true,
 		"canRearm": false,
-		"tags": "Missile"
+		"tags": "Missile",
+		"markerFile": "groundunit-artillery"
 	},
 	"HL_DSHK": {
 		"name": "HL_DSHK",
@@ -7537,7 +7677,8 @@
 		"abilities": "Combined arms,",
 		"canTargetPoint": true,
 		"canRearm": false,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-tactical"
 	},
 	"HL_KORD": {
 		"name": "HL_KORD",
@@ -7554,7 +7695,8 @@
 		"abilities": "Combined arms,",
 		"canTargetPoint": true,
 		"canRearm": false,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-tactical"
 	},
 	"tt_DSHK": {
 		"name": "tt_DSHK",
@@ -7571,7 +7713,8 @@
 		"abilities": "Combined arms,",
 		"canTargetPoint": true,
 		"canRearm": false,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-tactical"
 	},
 	"tt_KORD": {
 		"name": "tt_KORD",
@@ -7588,7 +7731,8 @@
 		"abilities": "Combined arms,",
 		"canTargetPoint": true,
 		"canRearm": false,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-tactical"
 	},
 	"HL_ZU-23": {
 		"name": "HL_ZU-23",
@@ -7610,7 +7754,8 @@
 		"muzzleVelocity": 1000,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-aaa"
 	},
 	"tt_ZU-23": {
 		"name": "tt_ZU-23",
@@ -7632,7 +7777,8 @@
 		"muzzleVelocity": 1000,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-aaa"
 	},
 	"HL_B8M1": {
 		"name": "HL_B8M1",
@@ -7649,7 +7795,8 @@
 		"abilities": "Combined Arms, Indirect Fire.",
 		"canTargetPoint": true,
 		"canRearm": false,
-		"tags": "Rocket, CA"
+		"tags": "Rocket, CA",
+		"markerFile": "groundunit-artillery"
 	},
 	"tt_B8M1": {
 		"name": "tt_B8M1",
@@ -7666,7 +7813,8 @@
 		"abilities": "Combined arms, Indirect fire",
 		"canTargetPoint": true,
 		"canRearm": false,
-		"tags": "80mm, CA"
+		"tags": "80mm, CA",
+		"markerFile": "groundunit-artillery"
 	},
 	"NASAMS_Radar_MPQ64F1": {
 		"name": "NASAMS_Radar_MPQ64F1",
@@ -7682,7 +7830,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": "no",
-		"canRearm": "no"
+		"canRearm": "no",
+		"markerFile": "groundunit-sam-radar"
 	},
 	"NASAMS_Command_Post": {
 		"name": "NASAMS_Command_Post",
@@ -7746,7 +7895,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-tank"
 	},
 	"M2A1_halftrack": {
 		"name": "M2A1_halftrack",
@@ -7767,7 +7917,8 @@
 		"muzzleVelocity": 900,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-apc"
 	},
 	"FPS-117 Dome": {
 		"name": "FPS-117 Dome",
@@ -7826,7 +7977,7 @@
 		"name": "RD_75",
 		"coalition": "",
 		"era": "",
-		"label": "SAM SA-2 S-75 RD-75 Amazonka RF",
+		"label": "SA-2 S-75 RD-75 Amazonka RF",
 		"shortLabel": "SAM SA-2 S-75 RD-75 Amazonka RF",
 		"type": "SAM Site Parts",
 		"enabled": true,
@@ -7858,7 +8009,8 @@
 		"aimTime": 11,
 		"shotsToFire": 100,
 		"cost": 750000,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-aaa"
 	},
 	"S-60_Type59_Artillery": {
 		"name": "S-60_Type59_Artillery",
@@ -7880,7 +8032,8 @@
 		"shotsToFire": 100,
 		"barrelHeight": 2,
 		"cost": 500000,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-aaa"
 	},
 	"generator_5i57": {
 		"name": "generator_5i57",
@@ -7896,7 +8049,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"T-72B3": {
 		"name": "T-72B3",
@@ -7912,7 +8066,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-tank"
 	},
 	"PT_76": {
 		"name": "PT_76",
@@ -7928,7 +8083,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-tank"
 	},
 	"BTR-82A": {
 		"name": "BTR-82A",
@@ -7949,7 +8105,8 @@
 		"muzzleVelocity": 900,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-apc"
 	},
 	"ATZ-5": {
 		"name": "ATZ-5",
@@ -7966,7 +8123,8 @@
 		"abilities": "Combined arms, Refuel",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"tags": "Fuel Truck, CA"
+		"tags": "Fuel Truck, CA",
+		"markerFile": "groundunit-truck"
 	},
 	"AA8": {
 		"name": "AA8",
@@ -7983,7 +8141,8 @@
 		"abilities": "Combined Arms",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-truck"
 	},
 	"TZ-22_KrAZ": {
 		"name": "TZ-22_KrAZ",
@@ -8000,7 +8159,8 @@
 		"abilities": "",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"tags": "KrAZ-258B1"
+		"tags": "KrAZ-258B1",
+		"markerFile": "groundunit-truck"
 	},
 	"ATZ-60_Maz": {
 		"name": "ATZ-60_Maz",
@@ -8017,7 +8177,8 @@
 		"abilities": "Combined arms",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"tags": "Cab only, CA"
+		"tags": "Cab only, CA",
+		"markerFile": "groundunit-truck"
 	},
 	"ZIL-135": {
 		"name": "ZIL-135",
@@ -8026,14 +8187,15 @@
 		"label": "Truck ZIL-135",
 		"shortLabel": "Truck ZIL-135",
 		"type": "Unarmed",
-		"enabled": true,
+		"enabled": false,
 		"liveries": {},
 		"acquisitionRange": 0,
 		"engagementRange": 0,
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"S_75_ZIL": {
 		"name": "S_75_ZIL",
@@ -8050,7 +8212,8 @@
 		"abilities": "",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"tags": "ZIL-131"
+		"tags": "ZIL-131",
+		"markerFile": "groundunit-truck"
 	},
 	"rapier_fsa_launcher": {
 		"name": "rapier_fsa_launcher",
@@ -8098,7 +8261,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-sam-radar"
 	},
 	"bofors40": {
 		"name": "bofors40",
@@ -8120,7 +8284,8 @@
 		"aimTime": 8,
 		"shotsToFire": 100,
 		"cost": null,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-aaa"
 	},
 	"Chieftain_mk3": {
 		"name": "Chieftain_mk3",
@@ -8141,7 +8306,8 @@
 		"muzzleVelocity": 800,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-tank"
 	},
 	"Bedford_MWD": {
 		"name": "Bedford_MWD",
@@ -8158,7 +8324,8 @@
 		"abilities": "Combined arms, Rearm",
 		"canTargetPoint": false,
 		"canRearm": true,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-truck"
 	},
 	"Land_Rover_101_FC": {
 		"name": "Land_Rover_101_FC",
@@ -8174,7 +8341,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"Land_Rover_109_S3": {
 		"name": "Land_Rover_109_S3",
@@ -8190,7 +8358,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"hy_launcher": {
 		"name": "hy_launcher",
@@ -8207,7 +8376,8 @@
 		"abilities": "",
 		"canTargetPoint": true,
 		"canRearm": false,
-		"tags": "Missile Launcher"
+		"tags": "Missile Launcher",
+		"markerFile": "groundunit-artillery"
 	},
 	"Silkworm_SR": {
 		"name": "Silkworm_SR",
@@ -8224,7 +8394,8 @@
 		"abilities": "",
 		"canTargetPoint": true,
 		"canRearm": false,
-		"tags": "Missile Search Radar"
+		"tags": "Missile Search Radar",
+		"markerFile": "groundunit-artillery"
 	},
 	"ES44AH": {
 		"name": "ES44AH",
@@ -8313,7 +8484,8 @@
 		"canRearm": false,
 		"muzzleVelocity": 1000,
 		"barrelHeight": 2.1,
-		"cost": 40000
+		"cost": 40000,
+		"markerFile": "groundunit-aaa"
 	},
 	"Pz_IV_H": {
 		"name": "Pz_IV_H",
@@ -8329,7 +8501,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-tank"
 	},
 	"Leopard-2A5": {
 		"name": "Leopard-2A5",
@@ -8345,7 +8518,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-tank"
 	},
 	"leopard-2A4": {
 		"name": "leopard-2A4",
@@ -8361,7 +8535,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-tank"
 	},
 	"leopard-2A4_trs": {
 		"name": "leopard-2A4_trs",
@@ -8377,7 +8552,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-tank"
 	},
 	"Sd_Kfz_251": {
 		"name": "Sd_Kfz_251",
@@ -8398,7 +8574,8 @@
 		"muzzleVelocity": 765,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-apc"
 	},
 	"Blitz_36-6700A": {
 		"name": "Blitz_36-6700A",
@@ -8415,7 +8592,8 @@
 		"abilities": "Combined arms, Rearm",
 		"canTargetPoint": false,
 		"canRearm": true,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-truck"
 	},
 	"T155_Firtina": {
 		"name": "T155_Firtina",
@@ -8432,7 +8610,8 @@
 		"abilities": "Combined arms, Indirect fire",
 		"canTargetPoint": true,
 		"canRearm": false,
-		"tags": "155mm, CA"
+		"tags": "155mm, CA",
+		"markerFile": "groundunit-artillery"
 	},
 	"VAB_Mephisto": {
 		"name": "VAB_Mephisto",
@@ -8449,7 +8628,8 @@
 		"abilities": "",
 		"canTargetPoint": true,
 		"canRearm": false,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-tactical"
 	},
 	"ZTZ96B": {
 		"name": "ZTZ96B",
@@ -8469,7 +8649,8 @@
 		"barrelHeight": 2.2,
 		"muzzleVelocity": 1100,
 		"aimTime": 5,
-		"shotsToFire": 100
+		"shotsToFire": 100,
+		"markerFile": "groundunit-tank"
 	},
 	"ZBD04A": {
 		"name": "ZBD04A",
@@ -8490,7 +8671,8 @@
 		"muzzleVelocity": 1000,
 		"aimTime": 5,
 		"shotsToFire": 100,
-		"tags": "CA"
+		"tags": "CA",
+		"markerFile": "groundunit-apc"
 	},
 	"HQ-7_LN_SP": {
 		"name": "HQ-7_LN_SP",
@@ -8538,7 +8720,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-sam-radar"
 	},
 	"PLZ05": {
 		"name": "PLZ05",
@@ -8555,7 +8738,8 @@
 		"abilities": "Combined arms, indirect fire",
 		"canTargetPoint": true,
 		"canRearm": false,
-		"tags": "155mm, CA"
+		"tags": "155mm, CA",
+		"markerFile": "groundunit-artillery"
 	},
 	"TYPE-59": {
 		"name": "TYPE-59",
@@ -8571,7 +8755,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-tank"
 	},
 	"Kubelwagen_82": {
 		"name": "Kubelwagen_82",
@@ -8587,7 +8772,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"Sd_Kfz_2": {
 		"name": "Sd_Kfz_2",
@@ -8603,7 +8789,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"Sd_Kfz_7": {
 		"name": "Sd_Kfz_7",
@@ -8619,7 +8806,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"Horch_901_typ_40_kfz_21": {
 		"name": "Horch_901_typ_40_kfz_21",
@@ -8635,7 +8823,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"Tiger_I": {
 		"name": "Tiger_I",
@@ -8651,7 +8840,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-tank"
 	},
 	"Tiger_II_H": {
 		"name": "Tiger_II_H",
@@ -8667,7 +8857,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-tank"
 	},
 	"Pz_V_Panther_G": {
 		"name": "Pz_V_Panther_G",
@@ -8684,7 +8875,8 @@
 		"abilities": "",
 		"canTargetPoint": true,
 		"canRearm": false,
-		"tags": "Pz V"
+		"tags": "Pz V",
+		"markerFile": "groundunit-tank"
 	},
 	"Jagdpanther_G1": {
 		"name": "Jagdpanther_G1",
@@ -8700,7 +8892,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-tank"
 	},
 	"JagdPz_IV": {
 		"name": "JagdPz_IV",
@@ -8716,7 +8909,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-tank"
 	},
 	"Stug_IV": {
 		"name": "Stug_IV",
@@ -8732,7 +8926,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-tank"
 	},
 	"SturmPzIV": {
 		"name": "SturmPzIV",
@@ -8748,7 +8943,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-tank"
 	},
 	"Wespe124": {
 		"name": "Wespe124",
@@ -8764,7 +8960,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-artillery"
 	},
 	"Sd_Kfz_234_2_Puma": {
 		"name": "Sd_Kfz_234_2_Puma",
@@ -8796,7 +8993,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-aaa"
 	},
 	"Flakscheinwerfer_37": {
 		"name": "Flakscheinwerfer_37",
@@ -8812,7 +9010,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-aaa"
 	},
 	"Maschinensatz_33": {
 		"name": "Maschinensatz_33",
@@ -8828,7 +9027,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-aaa"
 	},
 	"soldier_mauser98": {
 		"name": "soldier_mauser98",
@@ -8844,7 +9044,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-infantry"
 	},
 	"SK_C_28_naval_gun": {
 		"name": "SK_C_28_naval_gun",
@@ -8860,7 +9061,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-artillery"
 	},
 	"fire_control": {
 		"name": "fire_control",
@@ -8892,7 +9094,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-tank"
 	},
 	"Elefant_SdKfz_184": {
 		"name": "Elefant_SdKfz_184",
@@ -8908,7 +9111,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-tank"
 	},
 	"v1_launcher": {
 		"name": "v1_launcher",
@@ -8972,7 +9176,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-artillery"
 	},
 	"LeFH_18-40-105": {
 		"name": "LeFH_18-40-105",
@@ -8988,7 +9193,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-artillery"
 	},
 	"Cromwell_IV": {
 		"name": "Cromwell_IV",
@@ -9004,7 +9210,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-tank"
 	},
 	"M4A4_Sherman_FF": {
 		"name": "M4A4_Sherman_FF",
@@ -9020,7 +9227,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-tank"
 	},
 	"soldier_wwii_br_01": {
 		"name": "soldier_wwii_br_01",
@@ -9036,7 +9244,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-infantry"
 	},
 	"Centaur_IV": {
 		"name": "Centaur_IV",
@@ -9052,7 +9261,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-tank"
 	},
 	"Churchill_VII": {
 		"name": "Churchill_VII",
@@ -9072,7 +9282,8 @@
 		"barrelHeight": 2,
 		"muzzleVelocity": 800,
 		"aimTime": 5,
-		"shotsToFire": 100
+		"shotsToFire": 100,
+		"markerFile": "groundunit-tank"
 	},
 	"Daimler_AC": {
 		"name": "Daimler_AC",
@@ -9120,7 +9331,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-aaa"
 	},
 	"Allies_Director": {
 		"name": "Allies_Director",
@@ -9137,7 +9349,8 @@
 		"abilities": "",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"tags": "DRT"
+		"tags": "DRT",
+		"markerFile": "groundunit-truck"
 	},
 	"CCKW_353": {
 		"name": "CCKW_353",
@@ -9154,7 +9367,8 @@
 		"abilities": "Rearm,",
 		"canTargetPoint": false,
 		"canRearm": true,
-		"tags": "Rearm"
+		"tags": "Rearm",
+		"markerFile": "groundunit-truck"
 	},
 	"Willys_MB": {
 		"name": "Willys_MB",
@@ -9170,7 +9384,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"M12_GMC": {
 		"name": "M12_GMC",
@@ -9186,7 +9401,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-artillery"
 	},
 	"M30_CC": {
 		"name": "M30_CC",
@@ -9202,7 +9418,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"soldier_wwii_us": {
 		"name": "soldier_wwii_us",
@@ -9218,7 +9435,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-infantry"
 	},
 	"M10_GMC": {
 		"name": "M10_GMC",
@@ -9234,7 +9452,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-tank"
 	},
 	"M8_Greyhound": {
 		"name": "M8_Greyhound",
@@ -9266,7 +9485,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-artillery"
 	},
 	"M4_Tractor": {
 		"name": "M4_Tractor",
@@ -9282,7 +9502,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-truck"
 	},
 	"M45_Quadmount": {
 		"name": "M45_Quadmount",
@@ -9298,7 +9519,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-aaa"
 	},
 	"M1_37mm": {
 		"name": "M1_37mm",
@@ -9314,7 +9536,8 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
-		"canRearm": false
+		"canRearm": false,
+		"markerFile": "groundunit-aaa"
 	},
 	"DR_50Ton_Flat_Wagon": {
 		"name": "DR_50Ton_Flat_Wagon",

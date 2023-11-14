@@ -198,8 +198,8 @@ export function addBlueprintsScroll(div: HTMLElement, database: {blueprints: {[k
                 var rowDiv = document.createElement("div");
                 scrollDiv.appendChild(rowDiv);
 
-                let text = document.createElement("label");
-                text.textContent = key;
+                let text = document.createElement("div");
+                text.innerHTML = `<div>${key}</div> <div>${blueprints[key].label}</div>`;
                 text.onclick = () => { 
                     callback(key);
                     const collection = document.getElementsByClassName("blueprint-selected");

@@ -231,6 +231,7 @@ export interface UnitBlueprint {
     canAAA?: boolean;
     indirectFire?: boolean;
     markerFile?: string;
+    unitWhenGrouped?: string;
 }
 
 export interface UnitSpawnOptions {
