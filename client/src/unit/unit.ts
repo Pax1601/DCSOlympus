@@ -12,6 +12,7 @@ import { navyUnitDatabase } from './databases/navyunitdatabase';
 import { Weapon } from '../weapon/weapon';
 import { Ammo, Contact, GeneralSettings, LoadoutBlueprint, ObjectIconOptions, Offset, Radio, TACAN, UnitData } from '../interfaces';
 import { RangeCircle } from "../map/rangecircle";
+import { Group } from './group';
 
 var pathIcon = new Icon({
     iconUrl: '/resources/theme/images/markers/marker-icon.png',
@@ -90,7 +91,7 @@ export abstract class Unit extends CustomMarker {
     #health: number = 100;
 
     /* Other members used to draw the unit, mostly ancillary stuff like targets, ranges and so on */
-    #selectable: boolean;
+    #group: Group | null = null;
     #selected: boolean = false;
     #hidden: boolean = false;
     #highlighted: boolean = false;
@@ -163,7 +164,6 @@ export abstract class Unit extends CustomMarker {
         super(new LatLng(0, 0), { riseOnHover: true, keyboard: false });
 
         this.ID = ID;
-        this.#selectable = true;
 
         this.#pathPolyline = new Polyline([], { color: '#2d3e50', weight: 3, opacity: 0.5, smoothFactor: 1 });
         this.#pathPolyline.addTo(getApp().getMap());
@@ -238,9 +238,10 @@ export abstract class Unit extends CustomMarker {
      * @param dataExtractor The DataExtractor object pointing to the binary buffer which contains the raw data coming from the backend
      */
     setData(dataExtractor: DataExtractor) {
-        /* This variable controls if the marker must be updated. This is not always true since not all variables have an effect on the marker*/
+        /* This variable controls if the marker must be updated. This is not always true since not all variables have an effect on the marker */
         var updateMarker = !getApp().getMap().hasLayer(this);
-
+        
+        var oldIsLeader = this.#isLeader;
         var datumIndex = 0;
         while (datumIndex != DataIndexes.endOfData) {
             datumIndex = dataExtractor.extractUInt8();
@@ -284,7 +285,7 @@ export abstract class Unit extends CustomMarker {
                 case DataIndexes.ammo: this.#ammo = dataExtractor.extractAmmo(); break;
                 case DataIndexes.contacts: this.#contacts = dataExtractor.extractContacts(); document.dispatchEvent(new CustomEvent("contactsUpdated", { detail: this })); break;
                 case DataIndexes.activePath: this.#activePath = dataExtractor.extractActivePath(); break;
-                case DataIndexes.isLeader: this.#isLeader = dataExtractor.extractBool(); updateMarker = true; break;
+                case DataIndexes.isLeader: this.#isLeader = dataExtractor.extractBool(); break;
                 case DataIndexes.operateAs: this.#operateAs = enumToCoalition(dataExtractor.extractUInt8()); break;
                 case DataIndexes.shotsScatter: this.#shotsScatter = dataExtractor.extractUInt8(); break;
                 case DataIndexes.shotsIntensity: this.#shotsIntensity = dataExtractor.extractUInt8(); break;
@@ -298,6 +299,17 @@ export abstract class Unit extends CustomMarker {
         /* Update the marker if required */
         if (updateMarker)
             this.#updateMarker();
+
+        /* Redraw the marker if isLeader has changed. TODO I don't love this approach, observables may be more elegant */
+        if (oldIsLeader !== this.#isLeader) {
+            this.#redrawMarker();
+
+            /* Reapply selection */
+            if (this.getSelected()) {
+                this.setSelected(false);
+                this.setSelected(true);
+            }
+        }
 
         /* If the unit is selected or if the view is centered on this unit, sent the update signal so that other elements like the UnitControlPanel can be updated. */
         if (this.getSelected() || getApp().getMap().getCenterUnit() === this)
@@ -477,7 +489,19 @@ export abstract class Unit extends CustomMarker {
      * @returns Unit[]
      */
     getGroupMembers() {
-        return Object.values(getApp().getUnitsManager().getUnits()).filter((unit: Unit) => { return unit != this && unit.getGroupName() === this.getGroupName(); });
+        if (this.#group !== null) 
+            return this.#group.getMembers().filter((unit: Unit) => { return unit != this; })
+        return [];
+    }
+
+    /** Return the leader of the group
+     * 
+     * @returns Unit The leader of the group
+     */
+    getGroupLeader() {
+        if (this.#group !== null) 
+            return this.#group.getLeader();
+        return null;
     }
 
     /** Returns whether the user is allowed to command this unit, based on coalition
@@ -500,6 +524,14 @@ export abstract class Unit extends CustomMarker {
         return this.getDatabase()?.getByName(this.#name);
     }
 
+    getGroup() {
+        return this.#group;
+    }
+
+    setGroup(group: Group | null) {
+        this.#group = group;
+    }
+
     drawLines() {
         /* Leaflet does not like it when you change coordinates when the map is zooming */
         if (!getApp().getMap().isZooming()) {
@@ -509,7 +541,7 @@ export abstract class Unit extends CustomMarker {
         }
     }
 
-    checkRedraw() {
+    checkZoomRedraw() {
         return false;
     }
 
@@ -956,6 +988,10 @@ export abstract class Unit extends CustomMarker {
         return this;
     }
 
+    onGroupChanged(member: Unit) {
+        this.#redrawMarker();
+    }
+
     /***********************************************/
     #onClick(e: any) {
         /*  Exit if we were waiting for a doubleclick */
@@ -1218,11 +1254,6 @@ export abstract class Unit extends CustomMarker {
                     if (hotgroupEl)
                         hotgroupEl.innerText = String(this.#hotgroup);
                 }
-
-                /* If the unit is a leader of a SAM Site, show the group as a SAM with the appropriate short label */
-                if (this.#isLeader) {
-
-                }
             }
 
             /* Set vertical offset for altitude stacking */
@@ -1234,6 +1265,9 @@ export abstract class Unit extends CustomMarker {
     #redrawMarker() {
         this.removeFrom(getApp().getMap());
         this.#updateMarker();
+
+        /* Activate the selection effects on the marker */
+        this.getElement()?.querySelector(`.unit`)?.toggleAttribute("data-is-selected", this.getSelected());
     }
 
     #drawPath() {
@@ -1449,15 +1483,8 @@ export abstract class Unit extends CustomMarker {
     }
 
     #onZoom(e: any) {
-        if (this.checkRedraw()) {
+        if (this.checkZoomRedraw()) 
             this.#redrawMarker();
-
-            /* If the marker has been redrawn, reapply selection */
-            if (this.getSelected()) {
-                this.setSelected(false);
-                this.setSelected(true);
-            }
-        }
         this.#updateMarker();
     }
 }
@@ -1606,16 +1633,16 @@ export class GroundUnit extends Unit {
                     return unit
                 return prev;
             }, null);
-            unitWhenGrouped == member !== null ? member?.getDatabaseEntry()?.unitWhenGrouped : unitWhenGrouped;
+            unitWhenGrouped = (member !== null ? member?.getDatabaseEntry()?.unitWhenGrouped : unitWhenGrouped);
         }
-        if (unitWhenGrouped !== null)
+        if (unitWhenGrouped)
             return this.getDatabase()?.getByName(unitWhenGrouped);
         else
             return this.getDatabase()?.getByName(this.getName());
     }
 
     /* When we zoom past the grouping limit, grouping is enabled and the unit is a leader, we redraw the unit to apply any possible grouped marker */
-    checkRedraw(): boolean {
+    checkZoomRedraw(): boolean {
         return (this.getIsLeader() && getApp().getMap().getVisibilityOptions()[HIDE_GROUP_MEMBERS] &&
             (getApp().getMap().getZoom() >= GROUPING_ZOOM_TRANSITION && getApp().getMap().getPreviousZoom() < GROUPING_ZOOM_TRANSITION ||
                 getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION && getApp().getMap().getPreviousZoom() >= GROUPING_ZOOM_TRANSITION))

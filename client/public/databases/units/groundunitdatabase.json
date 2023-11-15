@@ -206,7 +206,8 @@
 		"canTargetPoint": false,
 		"canRearm": false,
 		"tags": "",
-		"markerFile": "groundunit-sam-launcher"
+		"markerFile": "groundunit-sam-launcher",
+		"unitWhenGrouped": "SA-3 SAM Battery"
 	},
 	"AAV7": {
 		"name": "AAV7",
@@ -1545,7 +1546,8 @@
 		"abilities": "",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"markerFile": "groundunit-sam-launcher"
+		"markerFile": "groundunit-sam-launcher",
+		"unitWhenGrouped": "Hawk SAM Battery"
 	},
 	"Hawk pcp": {
 		"name": "Hawk pcp",
@@ -2518,7 +2520,8 @@
 		"abilities": "",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"markerFile": "groundunit-sam-launcher"
+		"markerFile": "groundunit-sam-launcher",
+		"unitWhenGrouped": "SA-6 SAM Battery"
 	},
 	"LAV-25": {
 		"name": "LAV-25",
@@ -3788,7 +3791,8 @@
 		"abilities": "",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"markerFile": "groundunit-sam-launcher"
+		"markerFile": "groundunit-sam-launcher",
+		"unitWhenGrouped": "SA-8 SAM Battery"
 	},
 	"Paratrooper AKS-74": {
 		"name": "Paratrooper AKS-74",
@@ -4028,17 +4032,18 @@
 		"abilities": "",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"markerFile": "groundunit-sam-launcher"
+		"markerFile": "groundunit-sam-launcher",
+		"unitWhenGrouped": "Patriot site"
 	},
 	"Patriot site": {
 		"name": "Patriot site",
 		"coalition": "blue",
 		"era": "Late Cold War",
-		"label": "Patriot site",
-		"shortLabel": "Patriot site",
+		"label": "Patriot SAM Battery",
+		"shortLabel": "PA",
 		"range": "Long",
 		"filename": "",
-		"type": "SAM Site Parts",
+		"type": "SAM Site",
 		"enabled": true,
 		"liveries": {
 			"grc_summer": {
@@ -4399,7 +4404,8 @@
 		"abilities": "",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"markerFile": "groundunit-sam-launcher"
+		"markerFile": "groundunit-sam-launcher",
+		"unitWhenGrouped": "SA-5 SAM Battery"
 	},
 	"S-300PS 40B6M tr": {
 		"name": "S-300PS 40B6M tr",
@@ -4559,7 +4565,8 @@
 		"canTargetPoint": false,
 		"canRearm": false,
 		"tags": "5P85C",
-		"markerFile": "groundunit-sam-launcher"
+		"markerFile": "groundunit-sam-launcher",
+		"unitWhenGrouped": "SA-10 SAM Battery"
 	},
 	"S-300PS 5P85D ln": {
 		"name": "S-300PS 5P85D ln",
@@ -4600,7 +4607,8 @@
 		"canTargetPoint": false,
 		"canRearm": false,
 		"tags": "5P85D",
-		"markerFile": "groundunit-sam-launcher"
+		"markerFile": "groundunit-sam-launcher",
+		"unitWhenGrouped": "SA-10 SAM Battery"
 	},
 	"S-300PS 64H6E sr": {
 		"name": "S-300PS 64H6E sr",
@@ -4754,7 +4762,8 @@
 		"abilities": "",
 		"canTargetPoint": false,
 		"canRearm": false,
-		"markerFile": "groundunit-sam-launcher"
+		"markerFile": "groundunit-sam-launcher",
+		"unitWhenGrouped": "SA-11 SAM Battery"
 	},
 	"SA-11 Buk SR 9S18M1": {
 		"name": "SA-11 Buk SR 9S18M1",
