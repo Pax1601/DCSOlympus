@@ -1119,7 +1119,8 @@
 		"shotsToFire": 100,
 		"cost": 15000000,
 		"tags": "Radar, CA",
-		"markerFile": "groundunit-aaa"
+		"markerFile": "groundunit-aaa",
+		"canAAA": true
 	},
 	"Grad-URAL": {
 		"name": "Grad-URAL",
@@ -2385,7 +2386,8 @@
 		"aimTime": 5,
 		"shotsToFire": 100,
 		"tags": "Russian type 1",
-		"markerFile": "groundunit-infantry"
+		"markerFile": "groundunit-infantry",
+		"canAAA": true
 	},
 	"KAMAZ Truck": {
 		"name": "KAMAZ Truck",
@@ -3814,7 +3816,8 @@
 		"aimTime": 5,
 		"shotsToFire": 100,
 		"tags": "Russian Para",
-		"markerFile": "groundunit-infantry"
+		"markerFile": "groundunit-infantry",
+		"canAAA": true
 	},
 	"Paratrooper RPG-16": {
 		"name": "Paratrooper RPG-16",
@@ -3836,7 +3839,8 @@
 		"aimTime": 5,
 		"shotsToFire": 100,
 		"tags": "Russian Para",
-		"markerFile": "groundunit-infantry"
+		"markerFile": "groundunit-infantry",
+		"canAAA": true
 	},
 	"Patriot AMG": {
 		"name": "Patriot AMG",
@@ -5403,7 +5407,8 @@
 		"aimTime": 5,
 		"shotsToFire": 100,
 		"tags": "Russian type 4",
-		"markerFile": "groundunit-infantry"
+		"markerFile": "groundunit-infantry",
+		"canAAA": true
 	},
 	"Soldier M249": {
 		"name": "Soldier M249",
@@ -5459,7 +5464,8 @@
 		"shotsToFire": 100,
 		"barrelHeight": 0.2,
 		"tags": "US",
-		"markerFile": "groundunit-infantry"
+		"markerFile": "groundunit-infantry",
+		"canAAA": true
 	},
 	"Soldier M4 GRG": {
 		"name": "Soldier M4 GRG",
@@ -5515,7 +5521,8 @@
 		"aimTime": 5,
 		"shotsToFire": 100,
 		"tags": "Georgia",
-		"markerFile": "groundunit-infantry"
+		"markerFile": "groundunit-infantry",
+		"canAAA": true
 	},
 	"Soldier M4": {
 		"name": "Soldier M4",
@@ -5571,7 +5578,8 @@
 		"aimTime": 5,
 		"shotsToFire": 100,
 		"tags": "US",
-		"markerFile": "groundunit-infantry"
+		"markerFile": "groundunit-infantry",
+		"canAAA": true
 	},
 	"Soldier RPG": {
 		"name": "Soldier RPG",
@@ -5627,7 +5635,8 @@
 		"aimTime": 5,
 		"shotsToFire": 100,
 		"tags": "Russian",
-		"markerFile": "groundunit-infantry"
+		"markerFile": "groundunit-infantry",
+		"canAAA": true
 	},
 	"Stinger comm dsr": {
 		"name": "Stinger comm dsr",
@@ -6379,7 +6388,8 @@
 		"barrelHeight": 3,
 		"cost": 90000,
 		"tags": "CA",
-		"markerFile": "groundunit-aaa"
+		"markerFile": "groundunit-aaa",
+		"canAAA": true
 	},
 	"Ural-375 ZU-23": {
 		"name": "Ural-375 ZU-23",
@@ -6408,7 +6418,8 @@
 		"aimTime": 8,
 		"shotsToFire": 1000,
 		"tags": "CA",
-		"markerFile": "groundunit-aaa"
+		"markerFile": "groundunit-aaa",
+		"canAAA": true
 	},
 	"Ural-375": {
 		"name": "Ural-375",
@@ -6594,7 +6605,8 @@
 		"aimTime": 10,
 		"shotsToFire": 100,
 		"tags": "Radar, CA",
-		"markerFile": "groundunit-aaa"
+		"markerFile": "groundunit-aaa",
+		"canAAA": true
 	},
 	"ZIL-131 KUNG": {
 		"name": "ZIL-131 KUNG",
@@ -6797,7 +6809,8 @@
 		"shotsToFire": 100,
 		"cost": 2500000,
 		"tags": "Radar, CA",
-		"markerFile": "groundunit-aaa"
+		"markerFile": "groundunit-aaa",
+		"canAAA": true
 	},
 	"ZU-23 Closed Insurgent": {
 		"name": "ZU-23 Closed Insurgent",
@@ -6826,7 +6839,8 @@
 		"shotsToFire": 100,
 		"cost": 50000,
 		"tags": "CA",
-		"markerFile": "groundunit-aaa"
+		"markerFile": "groundunit-aaa",
+		"canAAA": true
 	},
 	"ZU-23 Emplacement Closed": {
 		"name": "ZU-23 Emplacement Closed",
@@ -6871,7 +6885,8 @@
 		"barrelHeight": 1.5,
 		"cost": 50000,
 		"tags": "CA",
-		"markerFile": "groundunit-aaa"
+		"markerFile": "groundunit-aaa",
+		"canAAA": true
 	},
 	"ZU-23 Emplacement": {
 		"name": "ZU-23 Emplacement",
@@ -6916,7 +6931,8 @@
 		"barrelHeight": 1.5,
 		"cost": 50000,
 		"tags": "CA",
-		"markerFile": "groundunit-aaa"
+		"markerFile": "groundunit-aaa",
+		"canAAA": true
 	},
 	"ZU-23 Insurgent": {
 		"name": "ZU-23 Insurgent",
@@ -6945,7 +6961,8 @@
 		"barrelHeight": 1.5,
 		"cost": 50000,
 		"tags": "CA",
-		"markerFile": "groundunit-aaa"
+		"markerFile": "groundunit-aaa",
+		"canAAA": true
 	},
 	"ZiL-131 APA-80": {
 		"name": "ZiL-131 APA-80",
@@ -7220,7 +7237,8 @@
 		"aimTime": 5,
 		"shotsToFire": 100,
 		"tags": "Insurgent",
-		"markerFile": "groundunit-infantry"
+		"markerFile": "groundunit-infantry",
+		"canAAA": true
 	},
 	"MLRS FDDM": {
 		"name": "MLRS FDDM",
@@ -7264,7 +7282,8 @@
 		"aimTime": 5,
 		"shotsToFire": 100,
 		"tags": "Russian type 2",
-		"markerFile": "groundunit-infantry"
+		"markerFile": "groundunit-infantry",
+		"canAAA": true
 	},
 	"Infantry AK ver3": {
 		"name": "Infantry AK ver3",
@@ -7286,7 +7305,8 @@
 		"aimTime": 5,
 		"shotsToFire": 100,
 		"tags": "Russian type 3",
-		"markerFile": "groundunit-infantry"
+		"markerFile": "groundunit-infantry",
+		"canAAA": true
 	},
 	"Smerch_HE": {
 		"name": "Smerch_HE",
@@ -7632,7 +7652,8 @@
 		"shotsToFire": 100,
 		"barrelHeight": 5,
 		"cost": 8000,
-		"markerFile": "groundunit-aaa"
+		"markerFile": "groundunit-aaa",
+		"canAAA": true
 	},
 	"SON_9": {
 		"name": "SON_9",
@@ -7651,7 +7672,8 @@
 		"canRearm": false,
 		"cost": 750000,
 		"tags": "Radar",
-		"markerFile": "groundunit-aaa"
+		"markerFile": "groundunit-aaa",
+		"canAAA": true
 	},
 	"Scud_B": {
 		"name": "Scud_B",
@@ -7764,7 +7786,8 @@
 		"aimTime": 5,
 		"shotsToFire": 100,
 		"tags": "CA",
-		"markerFile": "groundunit-aaa"
+		"markerFile": "groundunit-aaa",
+		"canAAA": true
 	},
 	"tt_ZU-23": {
 		"name": "tt_ZU-23",
@@ -7787,7 +7810,8 @@
 		"aimTime": 5,
 		"shotsToFire": 100,
 		"tags": "CA",
-		"markerFile": "groundunit-aaa"
+		"markerFile": "groundunit-aaa",
+		"canAAA": true
 	},
 	"HL_B8M1": {
 		"name": "HL_B8M1",
@@ -8019,7 +8043,8 @@
 		"shotsToFire": 100,
 		"cost": 750000,
 		"tags": "CA",
-		"markerFile": "groundunit-aaa"
+		"markerFile": "groundunit-aaa",
+		"canAAA": true
 	},
 	"S-60_Type59_Artillery": {
 		"name": "S-60_Type59_Artillery",
@@ -8042,7 +8067,8 @@
 		"barrelHeight": 2,
 		"cost": 500000,
 		"tags": "CA",
-		"markerFile": "groundunit-aaa"
+		"markerFile": "groundunit-aaa",
+		"canAAA": true
 	},
 	"generator_5i57": {
 		"name": "generator_5i57",
@@ -8294,7 +8320,8 @@
 		"shotsToFire": 100,
 		"cost": null,
 		"tags": "CA",
-		"markerFile": "groundunit-aaa"
+		"markerFile": "groundunit-aaa",
+		"canAAA": true
 	},
 	"Chieftain_mk3": {
 		"name": "Chieftain_mk3",
@@ -8494,7 +8521,8 @@
 		"muzzleVelocity": 1000,
 		"barrelHeight": 2.1,
 		"cost": 40000,
-		"markerFile": "groundunit-aaa"
+		"markerFile": "groundunit-aaa",
+		"canAAA": true
 	},
 	"Pz_IV_H": {
 		"name": "Pz_IV_H",
@@ -9003,7 +9031,8 @@
 		"abilities": "",
 		"canTargetPoint": true,
 		"canRearm": false,
-		"markerFile": "groundunit-aaa"
+		"markerFile": "groundunit-aaa",
+		"canAAA": true
 	},
 	"Flakscheinwerfer_37": {
 		"name": "Flakscheinwerfer_37",
@@ -9020,7 +9049,8 @@
 		"abilities": "",
 		"canTargetPoint": true,
 		"canRearm": false,
-		"markerFile": "groundunit-aaa"
+		"markerFile": "groundunit-aaa",
+		"canAAA": true
 	},
 	"Maschinensatz_33": {
 		"name": "Maschinensatz_33",
@@ -9037,7 +9067,8 @@
 		"abilities": "",
 		"canTargetPoint": true,
 		"canRearm": false,
-		"markerFile": "groundunit-aaa"
+		"markerFile": "groundunit-aaa",
+		"canAAA": true
 	},
 	"soldier_mauser98": {
 		"name": "soldier_mauser98",
@@ -9341,7 +9372,8 @@
 		"abilities": "",
 		"canTargetPoint": true,
 		"canRearm": false,
-		"markerFile": "groundunit-aaa"
+		"markerFile": "groundunit-aaa",
+		"canAAA": true
 	},
 	"Allies_Director": {
 		"name": "Allies_Director",
@@ -9529,7 +9561,8 @@
 		"abilities": "",
 		"canTargetPoint": true,
 		"canRearm": false,
-		"markerFile": "groundunit-aaa"
+		"markerFile": "groundunit-aaa",
+		"canAAA": true
 	},
 	"M1_37mm": {
 		"name": "M1_37mm",
@@ -9546,7 +9579,8 @@
 		"abilities": "",
 		"canTargetPoint": true,
 		"canRearm": false,
-		"markerFile": "groundunit-aaa"
+		"markerFile": "groundunit-aaa",
+		"canAAA": true
 	},
 	"DR_50Ton_Flat_Wagon": {
 		"name": "DR_50Ton_Flat_Wagon",
