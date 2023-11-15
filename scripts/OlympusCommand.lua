@@ -1,6 +1,6 @@
-local version = "v0.4.5-alpha"
+local version = "v0.4.6-alpha"
 
-local debug = true				-- True enables debug printing using DCS messages
+local debug = false				-- True enables debug printing using DCS messages
 
 -- .dll related variables
 Olympus.OlympusDLL = nil
@@ -435,10 +435,15 @@ function Olympus.smoke(color, lat, lng)
 end  
 
 -- Creates an explosion on the ground
-function Olympus.explosion(intensity, explosionType, lat, lng)
-    Olympus.debug("Olympus.explosion " .. explosionType .. " " .. intensity .. " (" .. lat .. ", " .. lng ..")", 2)
-	local pos = coord.LLtoLO(lat, lng, 0)
-	local vec3 = mist.utils.makeVec3GL(pos)
+function Olympus.explosion(intensity, explosionType, lat, lng, alt)
+    Olympus.debug("Olympus.explosion " .. explosionType .. " " .. intensity .. " (" .. lat .. ", " .. lng .. ")", 2)
+
+	local vec3 = nil
+	if alt ~= nil then
+		vec3 = coord.LLtoLO(lat, lng, alt)
+	else
+		vec3 = mist.utils.makeVec3GL(coord.LLtoLO(lat, lng))
+	end
 
 	if explosionType == "normal" then
 		trigger.action.explosion(vec3, intensity)
@@ -885,7 +890,7 @@ function Olympus.delete(ID, explosion, explosionType)
 				explosionType = "normal"
 			end
 			local lat, lng, alt = coord.LOtoLL(unit:getPoint())
-			Olympus.explosion(250, explosionType, lat, lng)
+			Olympus.explosion(250, explosionType, lat, lng, alt)
 			Olympus.debug("Olympus.delete completed successfully", 2)
 		else
 			unit:destroy(); --works for AI units not players
