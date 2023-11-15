@@ -274,3 +274,5 @@ export const MGRS_PRECISION_1M   = 6;
 
 export const DELETE_CYCLE_TIME     = 0.05;
 export const DELETE_SLOW_THRESHOLD = 50;
+
+export const GROUPING_ZOOM_TRANSITION = 13;

@@ -46,7 +46,7 @@ export class AirUnitEditor extends UnitEditor {
             addStringInput(this.contentDiv2, "Cost", String(blueprint.cost) ?? "", "number", (value: string) => { blueprint.cost = parseFloat(value); });
             addCheckboxInput(this.contentDiv2, "Can target point", blueprint.canTargetPoint ?? false, (value: boolean) => {blueprint.canTargetPoint = value;})
             addStringInput(this.contentDiv2, "Description", blueprint.description ?? "", "text", (value: string) => {blueprint.description = value; });
-            addStringInput(this.contentDiv2, "Abilities", blueprint.abilities ?? "", "text", (value: string) => {blueprint.abilities = value; });
+            addStringInput(this.contentDiv2, "Tags", blueprint.tags ?? "", "text", (value: string) => {blueprint.tags = value; });
 
             /* Add a scrollable list of loadouts that the user can edit */
             var title = document.createElement("label");

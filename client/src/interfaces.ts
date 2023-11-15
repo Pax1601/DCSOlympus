@@ -230,6 +230,8 @@ export interface UnitBlueprint {
     canRearm?: boolean;
     canAAA?: boolean;
     indirectFire?: boolean;
+    markerFile?: string;
+    unitWhenGrouped?: string;
 }
 
 export interface UnitSpawnOptions {

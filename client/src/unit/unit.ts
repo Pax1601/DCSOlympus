@@ -5,13 +5,14 @@ import { CustomMarker } from '../map/markers/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
 import { UnitDatabase } from './databases/unitdatabase';
 import { TargetMarker } from '../map/markers/targetmarker';
-import { DLINK, DataIndexes, GAME_MASTER, HIDE_GROUP_MEMBERS, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, ROEs, RWR, SHOW_UNIT_CONTACTS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, VISUAL, emissionsCountermeasures, reactionsToThreat, states, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING } from '../constants/constants';
+import { DLINK, DataIndexes, GAME_MASTER, HIDE_GROUP_MEMBERS, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, ROEs, RWR, SHOW_UNIT_CONTACTS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, VISUAL, emissionsCountermeasures, reactionsToThreat, states, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, GROUPING_ZOOM_TRANSITION } from '../constants/constants';
 import { DataExtractor } from '../server/dataextractor';
 import { groundUnitDatabase } from './databases/groundunitdatabase';
 import { navyUnitDatabase } from './databases/navyunitdatabase';
 import { Weapon } from '../weapon/weapon';
 import { Ammo, Contact, GeneralSettings, LoadoutBlueprint, ObjectIconOptions, Offset, Radio, TACAN, UnitData } from '../interfaces';
 import { RangeCircle } from "../map/rangecircle";
+import { Group } from './group';
 
 var pathIcon = new Icon({
     iconUrl: '/resources/theme/images/markers/marker-icon.png',
@@ -21,12 +22,11 @@ var pathIcon = new Icon({
 
 /**
  * Unit class which controls unit behaviour
- * 
- * Just about everything is a unit - even missiles!
  */
-export class Unit extends CustomMarker {
+export abstract class Unit extends CustomMarker {
     ID: number;
 
+    /* Data controlled directly by the backend. No setters are provided to avoid misalignments */
     #alive: boolean = false;
     #human: boolean = false;
     #controlled: boolean = false;
@@ -90,7 +90,8 @@ export class Unit extends CustomMarker {
     #shotsIntensity: number = 2;
     #health: number = 100;
 
-    #selectable: boolean;
+    /* Other members used to draw the unit, mostly ancillary stuff like targets, ranges and so on */
+    #group: Group | null = null;
     #selected: boolean = false;
     #hidden: boolean = false;
     #highlighted: boolean = false;
@@ -107,6 +108,7 @@ export class Unit extends CustomMarker {
     #hotgroup: number | null = null;
     #detectionMethods: number[] = [];
 
+    /* Getters for backend driven data */
     getAlive() { return this.#alive };
     getHuman() { return this.#human };
     getControlled() { return this.#controlled };
@@ -162,7 +164,6 @@ export class Unit extends CustomMarker {
         super(new LatLng(0, 0), { riseOnHover: true, keyboard: false });
 
         this.ID = ID;
-        this.#selectable = true;
 
         this.#pathPolyline = new Polyline([], { color: '#2d3e50', weight: 3, opacity: 0.5, smoothFactor: 1 });
         this.#pathPolyline.addTo(getApp().getMap());
@@ -171,6 +172,7 @@ export class Unit extends CustomMarker {
         this.#engagementCircle = new RangeCircle(this.getPosition(), { radius: 0, weight: 4, opacity: 1, fillOpacity: 0, dashArray: "4 8", interactive: false, bubblingMouseEvents: false });
         this.#acquisitionCircle = new RangeCircle(this.getPosition(), { radius: 0, weight: 2, opacity: 1, fillOpacity: 0, dashArray: "8 12", interactive: false, bubblingMouseEvents: false });
 
+        /* Leaflet events listeners */
         this.on('click', (e) => this.#onClick(e));
         this.on('dblclick', (e) => this.#onDoubleClick(e));
         this.on('contextmenu', (e) => this.#onContextMenu(e));
@@ -184,7 +186,7 @@ export class Unit extends CustomMarker {
             this.setHighlighted(false);
             document.dispatchEvent(new CustomEvent("unitMouseout", { detail: this }));
         });
-        getApp().getMap().on("zoomend", () => { this.#onZoom(); })
+        getApp().getMap().on("zoomend", (e: any) => { this.#onZoom(e); })
 
         /* Deselect units if they are hidden */
         document.addEventListener("toggleCoalitionVisibility", (ev: CustomEventInit) => {
@@ -195,6 +197,7 @@ export class Unit extends CustomMarker {
             window.setTimeout(() => { this.setSelected(this.getSelected() && !this.getHidden()) }, 300);
         });
 
+        /* Update the marker when the visibility options change */
         document.addEventListener("mapVisibilityOptionsChanged", (ev: CustomEventInit) => {
             this.#updateMarker();
 
@@ -209,15 +212,36 @@ export class Unit extends CustomMarker {
         });
     }
 
-    getCategory() {
-        // Overloaded by child classes
-        return "";
-    }
+     /********************** Abstract methods  *************************/
+    /** Get the unit category string
+     * 
+     * @returns string The unit category
+     */
+    abstract getCategory(): string;
+
+    /** Get the icon options
+     * Used to configure how the marker appears on the map
+     * 
+     * @returns ObjectIconOptions
+     */
+    abstract getIconOptions(): ObjectIconOptions;
+
+    /** Get the actions that this unit can perform
+     * 
+     * @returns Object containing the available actions
+     */
+    abstract getActions(): {[key: string]: { text: string, tooltip: string, type: string}};
 
     /********************** Unit data *************************/
+    /** This function is called by the units manager to update all the data coming from the backend. It reads the binary raw data using a DataExtractor
+     * 
+     * @param dataExtractor The DataExtractor object pointing to the binary buffer which contains the raw data coming from the backend
+     */
     setData(dataExtractor: DataExtractor) {
+        /* This variable controls if the marker must be updated. This is not always true since not all variables have an effect on the marker */
         var updateMarker = !getApp().getMap().hasLayer(this);
-
+        
+        var oldIsLeader = this.#isLeader;
         var datumIndex = 0;
         while (datumIndex != DataIndexes.endOfData) {
             datumIndex = dataExtractor.extractUInt8();
@@ -226,7 +250,7 @@ export class Unit extends CustomMarker {
                 case DataIndexes.alive: this.setAlive(dataExtractor.extractBool()); updateMarker = true; break;
                 case DataIndexes.human: this.#human = dataExtractor.extractBool(); break;
                 case DataIndexes.controlled: this.#controlled = dataExtractor.extractBool(); updateMarker = true; break;
-                case DataIndexes.coalition: let newCoalition = enumToCoalition(dataExtractor.extractUInt8()); updateMarker = true; if (newCoalition != this.#coalition) this.#clearRanges(); this.#coalition = newCoalition; break;
+                case DataIndexes.coalition: let newCoalition = enumToCoalition(dataExtractor.extractUInt8()); updateMarker = true; if (newCoalition != this.#coalition) this.#clearRanges(); this.#coalition = newCoalition; break; // If the coalition has changed, redraw the range circles to update the colour
                 case DataIndexes.country: this.#country = dataExtractor.extractUInt8(); break;
                 case DataIndexes.name: this.#name = dataExtractor.extractString(); break;
                 case DataIndexes.unitName: this.#unitName = dataExtractor.extractString(); break;
@@ -261,7 +285,7 @@ export class Unit extends CustomMarker {
                 case DataIndexes.ammo: this.#ammo = dataExtractor.extractAmmo(); break;
                 case DataIndexes.contacts: this.#contacts = dataExtractor.extractContacts(); document.dispatchEvent(new CustomEvent("contactsUpdated", { detail: this })); break;
                 case DataIndexes.activePath: this.#activePath = dataExtractor.extractActivePath(); break;
-                case DataIndexes.isLeader: this.#isLeader = dataExtractor.extractBool(); updateMarker = true; break;
+                case DataIndexes.isLeader: this.#isLeader = dataExtractor.extractBool(); break;
                 case DataIndexes.operateAs: this.#operateAs = enumToCoalition(dataExtractor.extractUInt8()); break;
                 case DataIndexes.shotsScatter: this.#shotsScatter = dataExtractor.extractUInt8(); break;
                 case DataIndexes.shotsIntensity: this.#shotsIntensity = dataExtractor.extractUInt8(); break;
@@ -269,23 +293,27 @@ export class Unit extends CustomMarker {
             }
         }
 
-        /* Dead units can't be selected */
+        /* Dead and hidden units can't be selected */
         this.setSelected(this.getSelected() && this.#alive && !this.getHidden())
 
+        /* Update the marker if required */
         if (updateMarker)
             this.#updateMarker();
 
+        /* Redraw the marker if isLeader has changed. TODO I don't love this approach, observables may be more elegant */
+        if (oldIsLeader !== this.#isLeader) {
+            this.#redrawMarker();
+
+            /* Reapply selection */
+            if (this.getSelected()) {
+                this.setSelected(false);
+                this.setSelected(true);
+            }
+        }
+
+        /* If the unit is selected or if the view is centered on this unit, sent the update signal so that other elements like the UnitControlPanel can be updated. */
         if (this.getSelected() || getApp().getMap().getCenterUnit() === this)
             document.dispatchEvent(new CustomEvent("unitUpdated", { detail: this }));
-    }
-
-    drawLines() {
-        /* Leaflet does not like it when you change coordinates when the map is zooming */
-        if (!getApp().getMap().isZooming()) {
-            this.#drawPath();
-            this.#drawContacts();
-            this.#drawTarget();
-        }
     }
 
     /** Get unit data collated into an object
@@ -358,28 +386,6 @@ export class Unit extends CustomMarker {
         return getUnitDatabaseByCategory(this.getMarkerCategory());
     }
 
-    /** Get the icon options
-     * Used to configure how the marker appears on the map
-     * 
-     * @returns ObjectIconOptions
-     */
-    getIconOptions(): ObjectIconOptions {
-        // Default values, overloaded by child classes if needed
-        return {
-            showState: false,
-            showVvi: false,
-            showHealth: true,
-            showHotgroup: false,
-            showUnitIcon: true,
-            showShortLabel: false,
-            showFuel: false,
-            showAmmo: false,
-            showSummary: true,
-            showCallsign: true,
-            rotateToHeading: false
-        }
-    }
-
     /** Set the unit as alive or dead
      * 
      * @param newAlive (boolean) true = alive, false = dead
@@ -395,16 +401,11 @@ export class Unit extends CustomMarker {
      * @param selected (boolean)
      */
     setSelected(selected: boolean) {
-        /* Only alive units can be selected. Some units are not selectable (weapons) */
-        if ((this.#alive || !selected) && this.getSelectable() && this.getSelected() != selected && this.belongsToCommandedCoalition()) {
+        /* Only alive units can be selected that belong to the commanded coalition can be selected */
+        if ((this.#alive || !selected) && this.belongsToCommandedCoalition() && this.getSelected() != selected) {
             this.#selected = selected;
 
-            /* Circles don't like to be updated when the map is zooming */
-            if (!getApp().getMap().isZooming())
-                this.#drawRanges();
-            else
-                this.once("zoomend", () => { this.#drawRanges(); })
-
+            /* If selected, update the marker to show the selected effects, else clear all the drawings that are only shown for selected units. */
             if (selected) {
                 this.#updateMarker();
             }
@@ -414,21 +415,27 @@ export class Unit extends CustomMarker {
                 this.#clearTarget();
             }
 
-            this.getElement()?.querySelector(`.unit`)?.toggleAttribute("data-is-selected", selected);
-            if (this.getCategory() === "GroundUnit" && getApp().getMap().getZoom() < 13) {
-                if (this.#isLeader)
+            /* When the group leader is selected, if grouping is active, all the other group members are also selected */
+            if (this.getCategory() === "GroundUnit" && getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION) {
+                if (this.#isLeader) {
+                    /* Redraw the marker in case the leader unit was replaced by a group marker, like for SAM Sites */
+                    this.#redrawMarker();
                     this.getGroupMembers().forEach((unit: Unit) => unit.setSelected(selected));
-                else
+                }
+                else {
                     this.#updateMarker();
+                }
             }
 
-            //  Trigger events after all (de-)selecting has been done
+            /* Activate the selection effects on the marker */
+            this.getElement()?.querySelector(`.unit`)?.toggleAttribute("data-is-selected", selected);
+
+            /* Trigger events after all (de-)selecting has been done */
             if (selected) {
                 document.dispatchEvent(new CustomEvent("unitSelection", { detail: this }));
             } else {
                 document.dispatchEvent(new CustomEvent("unitDeselection", { detail: this }));
             }
-
         }
     }
 
@@ -438,22 +445,6 @@ export class Unit extends CustomMarker {
      */
     getSelected() {
         return this.#selected;
-    }
-
-    /** Set whether this unit is selectable
-     * 
-     * @param selectable (boolean)
-     */
-    setSelectable(selectable: boolean) {
-        this.#selectable = selectable;
-    }
-
-    /** Get whether this unit is selectable
-     * 
-     * @returns boolean
-     */
-    getSelectable() {
-        return this.#selectable;
     }
 
     /** Set the number of the hotgroup to which the unit belongs
@@ -478,9 +469,9 @@ export class Unit extends CustomMarker {
      * @param highlighted (boolean)
      */
     setHighlighted(highlighted: boolean) {
-        if (this.getSelectable() && this.#highlighted != highlighted) {
-            this.getElement()?.querySelector(`[data-object|="unit"]`)?.toggleAttribute("data-is-highlighted", highlighted);
+        if (this.#highlighted != highlighted) {
             this.#highlighted = highlighted;
+            this.getElement()?.querySelector(`[data-object|="unit"]`)?.toggleAttribute("data-is-highlighted", highlighted);
             this.getGroupMembers().forEach((unit: Unit) => unit.setHighlighted(highlighted));
         }
     }
@@ -498,7 +489,19 @@ export class Unit extends CustomMarker {
      * @returns Unit[]
      */
     getGroupMembers() {
-        return Object.values(getApp().getUnitsManager().getUnits()).filter((unit: Unit) => { return unit != this && unit.getGroupName() === this.getGroupName(); });
+        if (this.#group !== null) 
+            return this.#group.getMembers().filter((unit: Unit) => { return unit != this; })
+        return [];
+    }
+
+    /** Return the leader of the group
+     * 
+     * @returns Unit The leader of the group
+     */
+    getGroupLeader() {
+        if (this.#group !== null) 
+            return this.#group.getLeader();
+        return null;
     }
 
     /** Returns whether the user is allowed to command this unit, based on coalition
@@ -517,6 +520,31 @@ export class Unit extends CustomMarker {
         return this.getDatabase()?.getSpawnPointsByName(this.getName());
     }
 
+    getDatabaseEntry() {
+        return this.getDatabase()?.getByName(this.#name);
+    }
+
+    getGroup() {
+        return this.#group;
+    }
+
+    setGroup(group: Group | null) {
+        this.#group = group;
+    }
+
+    drawLines() {
+        /* Leaflet does not like it when you change coordinates when the map is zooming */
+        if (!getApp().getMap().isZooming()) {
+            this.#drawPath();
+            this.#drawContacts();
+            this.#drawTarget();
+        }
+    }
+
+    checkZoomRedraw() {
+        return false;
+    }
+
     /********************** Icon *************************/
     createIcon(): void {
         /* Set the icon */
@@ -527,6 +555,7 @@ export class Unit extends CustomMarker {
         });
         this.setIcon(icon);
 
+        /* Create the base element */
         var el = document.createElement("div");
         el.classList.add("unit");
         el.setAttribute("data-object", `unit-${this.getMarkerCategory()}`);
@@ -534,8 +563,8 @@ export class Unit extends CustomMarker {
 
         var iconOptions = this.getIconOptions();
 
-        // Generate and append elements depending on active options          
-        // Velocity vector
+        /* Generate and append elements depending on active options */    
+        /* Velocity vector */
         if (iconOptions.showVvi) {
             var vvi = document.createElement("div");
             vvi.classList.add("unit-vvi");
@@ -543,7 +572,7 @@ export class Unit extends CustomMarker {
             el.append(vvi);
         }
 
-        // Hotgroup indicator
+        /* Hotgroup indicator */
         if (iconOptions.showHotgroup) {
             var hotgroup = document.createElement("div");
             hotgroup.classList.add("unit-hotgroup");
@@ -553,42 +582,42 @@ export class Unit extends CustomMarker {
             el.append(hotgroup);
         }
 
-        // Main icon
+        /* Main icon */
         if (iconOptions.showUnitIcon) {
             var unitIcon = document.createElement("div");
             unitIcon.classList.add("unit-icon");
             var img = document.createElement("img");
-            var imgSrc;
 
             /* If a unit does not belong to the commanded coalition or it is not visually detected, show it with the generic aircraft square */
+            var marker;
             if (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC].includes(value)))
-                imgSrc = this.getMarkerCategory();
+                marker = this.getDatabaseEntry()?.markerFile ?? this.getMarkerCategory();
             else
-                imgSrc = "aircraft";
-
-            img.src = `/resources/theme/images/units/${imgSrc}.svg`;
+                marker = "aircraft";
+            img.src = `/resources/theme/images/units/${marker}.svg`;
             img.onload = () => SVGInjector(img);
             unitIcon.appendChild(img);
+
             unitIcon.toggleAttribute("data-rotate-to-heading", iconOptions.rotateToHeading);
             el.append(unitIcon);
         }
 
-        // State icon
+        /* State icon */
         if (iconOptions.showState) {
             var state = document.createElement("div");
             state.classList.add("unit-state");
             el.appendChild(state);
         }
 
-        // Short label
+        /* Short label */
         if (iconOptions.showShortLabel) {
             var shortLabel = document.createElement("div");
             shortLabel.classList.add("unit-short-label");
-            shortLabel.innerText = getUnitDatabaseByCategory(this.getMarkerCategory())?.getByName(this.#name)?.shortLabel || "";
+            shortLabel.innerText = this.getDatabaseEntry()?.shortLabel || "";
             el.append(shortLabel);
         }
 
-        // Fuel indicator
+        /* Fuel indicator */
         if (iconOptions.showFuel) {
             var fuelIndicator = document.createElement("div");
             fuelIndicator.classList.add("unit-fuel");
@@ -598,7 +627,7 @@ export class Unit extends CustomMarker {
             el.append(fuelIndicator);
         }
 
-        // Health indicator
+        /* Health indicator */
         if (iconOptions.showHealth) {
             var healthIndicator = document.createElement("div");
             healthIndicator.classList.add("unit-health");
@@ -608,7 +637,7 @@ export class Unit extends CustomMarker {
             el.append(healthIndicator);
         }
 
-        // Ammo indicator
+        /* Ammo indicator */
         if (iconOptions.showAmmo) {
             var ammoIndicator = document.createElement("div");
             ammoIndicator.classList.add("unit-ammo");
@@ -617,7 +646,7 @@ export class Unit extends CustomMarker {
             el.append(ammoIndicator);
         }
 
-        // Unit summary
+        /* Unit summary */
         if (iconOptions.showSummary) {
             var summary = document.createElement("div");
             summary.classList.add("unit-summary");
@@ -635,25 +664,29 @@ export class Unit extends CustomMarker {
         }
 
         this.getElement()?.appendChild(el);
-
-        /* Circles don't like to be updated when the map is zooming */
-        if (!getApp().getMap().isZooming())
-            this.#drawRanges();
-        else
-            this.once("zoomend", () => { this.#drawRanges(); })
     }
 
     /********************** Visibility *************************/
     updateVisibility() {
-        const hiddenUnits = getApp().getMap().getHiddenTypes();
-        var hidden = ((this.#human && hiddenUnits.includes("human")) ||
-            (this.#controlled == false && hiddenUnits.includes("dcs")) ||
-            (hiddenUnits.includes(this.getMarkerCategory())) ||
-            (hiddenUnits.includes(this.#coalition)) ||
+        const hiddenTypes = getApp().getMap().getHiddenTypes();
+        var hidden = (
+            /* Hide the unit if it is a human and humans are hidden */
+            (this.#human && hiddenTypes.includes("human")) ||
+            /* Hide the unit if it is DCS controlled and DCS controlled units are hidden */
+            (this.#controlled == false && hiddenTypes.includes("dcs")) ||
+            /* Hide the unit if this specific category is hidden */
+            (hiddenTypes.includes(this.getMarkerCategory())) ||
+            /* Hide the unit if this coalition is hidden */
+            (hiddenTypes.includes(this.#coalition)) ||
+            /* Hide the unit if it does not belong to the commanded coalition and it is not detected by a method that can pinpoint its location (RWR does not count) */
             (!this.belongsToCommandedCoalition() && (this.#detectionMethods.length == 0 || (this.#detectionMethods.length == 1 && this.#detectionMethods[0] === RWR))) ||
-            (getApp().getMap().getVisibilityOptions()[HIDE_GROUP_MEMBERS] && !this.#isLeader && this.getCategory() == "GroundUnit" && getApp().getMap().getZoom() < 13 && (this.belongsToCommandedCoalition() || (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0)))) &&
-            !(this.getSelected());
+            /* Hide the unit if grouping is activated, the unit is not the group leader, it is not selected, and the zoom is higher than the grouping threshold */
+            (getApp().getMap().getVisibilityOptions()[HIDE_GROUP_MEMBERS] && !this.#isLeader && this.getCategory() == "GroundUnit" && getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION && 
+            (this.belongsToCommandedCoalition() || (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0)))) &&
+            !(this.getSelected()
+            );
 
+        /* Force dead units to be hidden */
         this.setHidden(hidden || !this.#alive);
     }
 
@@ -673,6 +706,7 @@ export class Unit extends CustomMarker {
             getApp().getMap().removeLayer(this);
         }
 
+        /* Draw the range circles if the unit is not hidden */
         if (!this.getHidden()) {
             /* Circles don't like to be updated when the map is zooming */
             if (!getApp().getMap().isZooming())
@@ -712,7 +746,7 @@ export class Unit extends CustomMarker {
         if (typeof (roles) === "string")
             roles = [roles];
 
-        var loadouts = this.getDatabase()?.getByName(this.#name)?.loadouts;
+        var loadouts = this.getDatabaseEntry()?.loadouts;
         if (loadouts) {
             return loadouts.some((loadout: LoadoutBlueprint) => {
                 return (roles as string[]).some((role: string) => { return loadout.roles.includes(role) });
@@ -726,11 +760,11 @@ export class Unit extends CustomMarker {
     }
 
     canTargetPoint() {
-        return this.getDatabase()?.getByName(this.#name)?.canTargetPoint === true;
+        return this.getDatabaseEntry()?.canTargetPoint === true;
     }
 
     canRearm() {
-        return this.getDatabase()?.getByName(this.#name)?.canRearm === true;
+        return this.getDatabaseEntry()?.canRearm === true;
     }
 
     canLandAtPoint() {
@@ -738,11 +772,11 @@ export class Unit extends CustomMarker {
     }
 
     canAAA() {
-        return this.getDatabase()?.getByName(this.#name)?.canAAA === true;
+        return this.getDatabaseEntry()?.canAAA === true;
     }
 
     indirectFire() {
-        return this.getDatabase()?.getByName(this.#name)?.indirectFire === true;
+        return this.getDatabaseEntry()?.indirectFire === true;
     }
 
     isTanker() {
@@ -931,11 +965,6 @@ export class Unit extends CustomMarker {
     }
 
     /***********************************************/
-    getActions(): { [key: string]: { text: string, tooltip: string, type: string } } {
-        /* To be implemented by child classes */ // TODO make Unit an abstract class
-        return {};
-    }
-
     executeAction(e: any, action: string) {
         if (action === "center-map")
             getApp().getMap().centerOnUnit(this.ID);
@@ -959,20 +988,21 @@ export class Unit extends CustomMarker {
         return this;
     }
 
+    onGroupChanged(member: Unit) {
+        this.#redrawMarker();
+    }
+
     /***********************************************/
     #onClick(e: any) {
-
-        //  Exit if we were waiting for a doubleclick
+        /*  Exit if we were waiting for a doubleclick */
         if (this.#waitingForDoubleClick) {
             return;
         }
 
-        //  We'll wait for a doubleclick
+        /* We'll wait for a doubleclick */
         this.#waitingForDoubleClick = true;
-
         this.#doubleClickTimer = window.setTimeout(() => {
-
-            //  Still waiting so no doubleclick; do the click action
+            /* Still waiting so no doubleclick; do the click action */
             if (this.#waitingForDoubleClick) {
                 if (getApp().getMap().getState() === IDLE || getApp().getMap().getState() === MOVE_UNIT || e.originalEvent.ctrlKey) {
                     if (!e.originalEvent.ctrlKey)
@@ -982,17 +1012,17 @@ export class Unit extends CustomMarker {
                 }
             }
 
-            //  No longer waiting for a doubleclick
+            /* No longer waiting for a doubleclick */
             this.#waitingForDoubleClick = false;
         }, 200);
     }
 
     #onDoubleClick(e: any) {
-        //  Let single clicks work again
+        /* Let single clicks work again */
         this.#waitingForDoubleClick = false;
         clearTimeout(this.#doubleClickTimer);
 
-        //  Select all matching units in the viewport
+        /* Select all matching units in the viewport */
         const unitsManager = getApp().getUnitsManager();
         Object.values(unitsManager.getUnits()).forEach((unit: Unit) => {
             if (unit.getAlive() === true && unit.getName() === this.getName() && unit.isInViewport())
@@ -1232,6 +1262,14 @@ export class Unit extends CustomMarker {
         }
     }
 
+    #redrawMarker() {
+        this.removeFrom(getApp().getMap());
+        this.#updateMarker();
+
+        /* Activate the selection effects on the marker */
+        this.getElement()?.querySelector(`.unit`)?.toggleAttribute("data-is-selected", this.getSelected());
+    }
+
     #drawPath() {
         if (this.#activePath != undefined && getApp().getMap().getVisibilityOptions()[SHOW_UNIT_PATHS]) {
             var points = [];
@@ -1444,12 +1482,14 @@ export class Unit extends CustomMarker {
             this.#targetPositionPolyline.removeFrom(getApp().getMap());
     }
 
-    #onZoom() {
+    #onZoom(e: any) {
+        if (this.checkZoomRedraw()) 
+            this.#redrawMarker();
         this.#updateMarker();
     }
 }
 
-export class AirUnit extends Unit {
+export abstract class AirUnit extends Unit {
     getIconOptions() {
         var belongsToCommandedCoalition = this.belongsToCommandedCoalition();
         return {
@@ -1532,7 +1572,7 @@ export class GroundUnit extends Unit {
             showHealth: true,
             showHotgroup: belongsToCommandedCoalition,
             showUnitIcon: (belongsToCommandedCoalition || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
-            showShortLabel: false,
+            showShortLabel: this.getDatabaseEntry()?.type === "SAM Site",
             showFuel: false,
             showAmmo: false,
             showSummary: false,
@@ -1581,6 +1621,31 @@ export class GroundUnit extends Unit {
     getType() {
         var blueprint = groundUnitDatabase.getByName(this.getName());
         return blueprint?.type ? blueprint.type : "";
+    }
+
+    /* When a unit is a leader of a group, the map is zoomed out and grouping when zoomed out is enabled, check if the unit should be shown as a specific group. This is used to show a SAM battery instead of the group leader */
+    getDatabaseEntry() {
+        let unitWhenGrouped = null;
+        if (!this.getSelected() && this.getIsLeader() && getApp().getMap().getVisibilityOptions()[HIDE_GROUP_MEMBERS] && getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION) {
+            unitWhenGrouped = this.getDatabase()?.getByName(this.getName())?.unitWhenGrouped ?? null;
+            let member = this.getGroupMembers().reduce((prev: Unit | null, unit: Unit, index: number) => {
+                if (unit.getDatabaseEntry()?.unitWhenGrouped != undefined)
+                    return unit
+                return prev;
+            }, null);
+            unitWhenGrouped = (member !== null ? member?.getDatabaseEntry()?.unitWhenGrouped : unitWhenGrouped);
+        }
+        if (unitWhenGrouped)
+            return this.getDatabase()?.getByName(unitWhenGrouped);
+        else
+            return this.getDatabase()?.getByName(this.getName());
+    }
+
+    /* When we zoom past the grouping limit, grouping is enabled and the unit is a leader, we redraw the unit to apply any possible grouped marker */
+    checkZoomRedraw(): boolean {
+        return (this.getIsLeader() && getApp().getMap().getVisibilityOptions()[HIDE_GROUP_MEMBERS] &&
+            (getApp().getMap().getZoom() >= GROUPING_ZOOM_TRANSITION && getApp().getMap().getPreviousZoom() < GROUPING_ZOOM_TRANSITION ||
+                getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION && getApp().getMap().getPreviousZoom() >= GROUPING_ZOOM_TRANSITION))
     }
 }
 

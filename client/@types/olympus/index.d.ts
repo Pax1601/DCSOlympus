@@ -254,6 +254,7 @@ declare module "constants/constants" {
         operateAs = 41,
         shotsScatter = 42,
         shotsIntensity = 43,
+        health = 44,
         endOfData = 255
     }
     export const MGRS_PRECISION_10KM = 2;
@@ -313,7 +314,7 @@ declare module "controls/dropdown" {
         #private;
         constructor(ID: string | null, callback: CallableFunction, options?: string[] | null, defaultText?: string);
         getContainer(): HTMLElement;
-        setOptions(optionsList: string[], sort?: "" | "string" | "number"): void;
+        setOptions(optionsList: string[], sort?: "" | "string" | "number" | "string+number"): void;
         setOptionsElements(optionsElements: HTMLElement[]): void;
         getOptionElements(): HTMLCollection;
         addOptionElement(optionElement: HTMLElement): void;
@@ -449,6 +450,7 @@ declare module "interfaces" {
     export interface ObjectIconOptions {
         showState: boolean;
         showVvi: boolean;
+        showHealth: boolean;
         showHotgroup: boolean;
         showUnitIcon: boolean;
         showShortLabel: boolean;
@@ -537,6 +539,7 @@ declare module "interfaces" {
         operateAs: string;
         shotsScatter: number;
         shotsIntensity: number;
+        health: number;
     }
     export interface LoadoutItemBlueprint {
         name: string;
@@ -576,6 +579,7 @@ declare module "interfaces" {
         shotsBaseScatter?: number;
         description?: string;
         abilities?: string;
+        tags?: string;
         acquisitionRange?: number;
         engagementRange?: number;
         targetingRange?: number;
@@ -585,6 +589,8 @@ declare module "interfaces" {
         canRearm?: boolean;
         canAAA?: boolean;
         indirectFire?: boolean;
+        markerFile?: string;
+        unitWhenGrouped?: string;
     }
     export interface UnitSpawnOptions {
         roleType: string;
@@ -768,7 +774,7 @@ declare module "other/utils" {
         ranges?: string[];
         eras?: string[];
     }): UnitBlueprint | null;
-    export function getMarkerCategoryByName(name: string): "aircraft" | "helicopter" | "groundunit-sam" | "groundunit-other" | "groundunit-sam-radar" | "groundunit-sam-launcher" | "groundunit-ewr";
+    export function getMarkerCategoryByName(name: string): "aircraft" | "helicopter" | "groundunit-other" | "navyunit" | "groundunit";
     export function getUnitDatabaseByCategory(category: string): import("unit/databases/aircraftdatabase").AircraftDatabase | import("unit/databases/helicopterdatabase").HelicopterDatabase | import("unit/databases/groundunitdatabase").GroundUnitDatabase | import("unit/databases/navyunitdatabase").NavyUnitDatabase | null;
     export function base64ToBytes(base64: string): ArrayBufferLike;
     export function enumToState(state: number): string;
@@ -1021,6 +1027,7 @@ declare module "weapon/weapon" {
         getIconOptions(): {
             showState: boolean;
             showVvi: boolean;
+            showHealth: boolean;
             showHotgroup: boolean;
             showUnitIcon: boolean;
             showShortLabel: boolean;
@@ -1038,6 +1045,7 @@ declare module "weapon/weapon" {
         getIconOptions(): {
             showState: boolean;
             showVvi: boolean;
+            showHealth: boolean;
             showHotgroup: boolean;
             showUnitIcon: boolean;
             showShortLabel: boolean;
@@ -1049,12 +1057,29 @@ declare module "weapon/weapon" {
         };
     }
 }
+declare module "map/rangecircle" {
+    import { Circle } from 'leaflet';
+    /**
+     *  This custom Circle object implements a faster render method for very big circles. When zoomed in, the default ctx.arc method
+     * is very slow since the circle is huge. Also, when zoomed in most of the circle points will be outside the screen and not needed. This
+     * simpler, faster renderer approximates the circle with line segements and only draws those currently visibile.
+     * A more refined version using arcs could be implemented but this works good enough.
+     */
+    export class RangeCircle extends Circle {
+        _updatePath(): void;
+    }
+}
 declare module "unit/unit" {
     import { LatLng, Map } from 'leaflet';
     import { CustomMarker } from "map/markers/custommarker";
     import { UnitDatabase } from "unit/databases/unitdatabase";
     import { DataExtractor } from "server/dataextractor";
     import { Ammo, Contact, GeneralSettings, ObjectIconOptions, Offset, Radio, TACAN, UnitData } from "interfaces";
+    /**
+     * Unit class which controls unit behaviour
+     *
+     * Just about everything is a unit - even missiles!
+     */
     export class Unit extends CustomMarker {
         #private;
         ID: number;
@@ -1074,8 +1099,8 @@ declare module "unit/unit" {
         getHorizontalVelocity(): number;
         getVerticalVelocity(): number;
         getHeading(): number;
-        getIsActiveTanker(): boolean;
         getIsActiveAWACS(): boolean;
+        getIsActiveTanker(): boolean;
         getOnOff(): boolean;
         getFollowRoads(): boolean;
         getFuel(): number;
@@ -1100,26 +1125,88 @@ declare module "unit/unit" {
         getOperateAs(): string;
         getShotsScatter(): number;
         getShotsIntensity(): number;
+        getHealth(): number;
         static getConstructor(type: string): typeof GroundUnit | undefined;
         constructor(ID: number);
         getCategory(): string;
         /********************** Unit data *************************/
         setData(dataExtractor: DataExtractor): void;
         drawLines(): void;
+        /** Get unit data collated into an object
+         *
+         * @returns object populated by unit information which can also be retrieved using getters
+         */
         getData(): UnitData;
+        /**
+         *
+         * @returns string containing the marker category
+         */
         getMarkerCategory(): string;
+        /** Get a database of information also in this unit's category
+         *
+         * @returns UnitDatabase
+         */
         getDatabase(): UnitDatabase | null;
+        /** Get the icon options
+         * Used to configure how the marker appears on the map
+         *
+         * @returns ObjectIconOptions
+         */
         getIconOptions(): ObjectIconOptions;
+        /** Set the unit as alive or dead
+         *
+         * @param newAlive (boolean) true = alive, false = dead
+         */
         setAlive(newAlive: boolean): void;
+        /** Set the unit as user-selected
+         *
+         * @param selected (boolean)
+         */
         setSelected(selected: boolean): void;
+        /** Is this unit selected?
+         *
+         * @returns boolean
+         */
         getSelected(): boolean;
+        /** Set whether this unit is selectable
+         *
+         * @param selectable (boolean)
+         */
         setSelectable(selectable: boolean): void;
+        /** Get whether this unit is selectable
+         *
+         * @returns boolean
+         */
         getSelectable(): boolean;
+        /** Set the number of the hotgroup to which the unit belongs
+         *
+         * @param hotgroup (number)
+         */
         setHotgroup(hotgroup: number | null): void;
+        /** Get the unit's hotgroup number
+         *
+         * @returns number
+         */
         getHotgroup(): number | null;
+        /** Set the unit as highlighted
+         *
+         * @param highlighted (boolean)
+         */
         setHighlighted(highlighted: boolean): void;
+        /** Get whether the unit is highlighted or not
+         *
+         * @returns boolean
+         */
         getHighlighted(): boolean;
+        /** Get the other members of the group which this unit is in
+         *
+         * @returns Unit[]
+         */
         getGroupMembers(): Unit[];
+        /** Returns whether the user is allowed to command this unit, based on coalition
+         *
+         * @returns boolean
+         */
         belongsToCommandedCoalition(): boolean;
         getType(): string;
         getSpawnPoints(): number | undefined;
@@ -1163,7 +1250,7 @@ declare module "unit/unit" {
         setOnOff(onOff: boolean): void;
         setFollowRoads(followRoads: boolean): void;
         setOperateAs(operateAs: string): void;
-        delete(explosion: boolean, immediate: boolean): void;
+        delete(explosion: boolean, explosionType: string, immediate: boolean): void;
         refuel(): void;
         setAdvancedOptions(isActiveTanker: boolean, isActiveAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings): void;
         bombPoint(latlng: LatLng): void;
@@ -1193,6 +1280,7 @@ declare module "unit/unit" {
         getIconOptions(): {
             showState: boolean;
             showVvi: boolean;
+            showHealth: boolean;
             showHotgroup: boolean;
             showUnitIcon: boolean;
             showShortLabel: boolean;
@@ -1223,6 +1311,7 @@ declare module "unit/unit" {
         getIconOptions(): {
             showState: boolean;
             showVvi: boolean;
+            showHealth: boolean;
             showHotgroup: boolean;
             showUnitIcon: boolean;
             showShortLabel: boolean;
@@ -1247,6 +1336,7 @@ declare module "unit/unit" {
         getIconOptions(): {
             showState: boolean;
             showVvi: boolean;
+            showHealth: boolean;
             showHotgroup: boolean;
             showUnitIcon: boolean;
             showShortLabel: boolean;
@@ -1618,6 +1708,30 @@ declare module "panels/serverstatuspanel" {
         update(frameRate: number, load: number): void;
     }
 }
+declare module "toolbars/toolbar" {
+    export class Toolbar {
+        #private;
+        /**
+         *
+         * @param ID - the ID of the HTML element which will contain the context menu
+         */
+        constructor(ID: string);
+        show(): void;
+        hide(): void;
+        toggle(): void;
+        getElement(): HTMLElement;
+        getVisible(): boolean;
+    }
+}
+declare module "toolbars/primarytoolbar" {
+    import { Dropdown } from "controls/dropdown";
+    import { Toolbar } from "toolbars/toolbar";
+    export class PrimaryToolbar extends Toolbar {
+        #private;
+        constructor(ID: string);
+        getMainDropdown(): Dropdown;
+    }
+}
 declare module "panels/unitcontrolpanel" {
     import { Panel } from "panels/panel";
     export class UnitControlPanel extends Panel {
@@ -1680,33 +1794,9 @@ declare module "shortcut/shortcutmanager" {
         onKeyUp(callback: CallableFunction): void;
     }
 }
-declare module "toolbars/toolbar" {
-    export class Toolbar {
-        #private;
-        /**
-         *
-         * @param ID - the ID of the HTML element which will contain the context menu
-         */
-        constructor(ID: string);
-        show(): void;
-        hide(): void;
-        toggle(): void;
-        getElement(): HTMLElement;
-        getVisible(): boolean;
-    }
-}
 declare module "toolbars/commandmodetoolbar" {
     import { Toolbar } from "toolbars/toolbar";
     export class CommandModeToolbar extends Toolbar {
-    }
-}
-declare module "toolbars/primarytoolbar" {
-    import { Dropdown } from "controls/dropdown";
-    import { Toolbar } from "toolbars/toolbar";
-    export class PrimaryToolbar extends Toolbar {
-        #private;
-        constructor(ID: string);
-        getMainDropdown(): Dropdown;
     }
 }
 declare module "unit/citiesDatabase" {
@@ -1996,7 +2086,7 @@ declare module "unit/unitsmanager" {
          * @param explosion If true, the unit will be deleted using an explosion
          * @returns
          */
-        selectedUnitsDelete(explosion?: boolean): void;
+        selectedUnitsDelete(explosion?: boolean, explosionType?: string): void;
         /** Compute the destinations of every unit in the selected units. This function preserves the relative positions of the units, and rotates the whole formation by rotation.
          *
          * @param latlng Center of the group after the translation
@@ -2116,7 +2206,7 @@ declare module "server/servermanager" {
         isCommandExecuted(callback: CallableFunction, commandHash: string): void;
         addDestination(ID: number, path: any, callback?: CallableFunction): void;
         spawnSmoke(color: string, latlng: LatLng, callback?: CallableFunction): void;
-        spawnExplosion(intensity: number, latlng: LatLng, callback?: CallableFunction): void;
+        spawnExplosion(intensity: number, explosionType: string, latlng: LatLng, callback?: CallableFunction): void;
         spawnAircrafts(units: any, coalition: string, airbaseName: string, country: string, immediate: boolean, spawnPoints: number, callback?: CallableFunction): void;
         spawnHelicopters(units: any, coalition: string, airbaseName: string, country: string, immediate: boolean, spawnPoints: number, callback?: CallableFunction): void;
         spawnGroundUnits(units: any, coalition: string, country: string, immediate: boolean, spawnPoints: number, callback?: CallableFunction): void;
@@ -2131,7 +2221,7 @@ declare module "server/servermanager" {
             ID: number;
             location: LatLng;
         }[], deleteOriginal: boolean, spawnPoints: number, callback?: CallableFunction): void;
-        deleteUnit(ID: number, explosion: boolean, immediate: boolean, callback?: CallableFunction): void;
+        deleteUnit(ID: number, explosion: boolean, explosionType: string, immediate: boolean, callback?: CallableFunction): void;
         landAt(ID: number, latlng: LatLng, callback?: CallableFunction): void;
         changeSpeed(ID: number, speedChange: string, callback?: CallableFunction): void;
         setSpeed(ID: number, speed: number, callback?: CallableFunction): void;
