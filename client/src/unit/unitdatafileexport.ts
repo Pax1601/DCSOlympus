@@ -34,7 +34,7 @@ export class UnitDataFileExport extends UnitDataFile {
         const data:any            = {};
         const categories:string[] = [];
         const coalitions:string[] = [];
-        const unitCanBeExported   = (unit:Unit) => ["GroundUnit", "NavyUnit"].includes(unit.getCategory());
+        const unitCanBeExported   = (unit:Unit) => !["Aircraft", "Helicopter"].includes(unit.getCategory());
 
         units.filter((unit:Unit) => unit.getAlive() && unitCanBeExported(unit)).forEach((unit:Unit) => {
             const category  = unit.getCategoryLabel();
