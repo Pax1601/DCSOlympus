@@ -36,15 +36,15 @@ export class UnitsManager {
 
         document.addEventListener('commandModeOptionsChanged', () => { Object.values(this.#units).forEach((unit: Unit) => unit.updateVisibility()) });
         document.addEventListener('contactsUpdated', (e: CustomEvent) => { this.#requestDetectionUpdate = true });
-        document.addEventListener('copy', () => this.selectedUnitsCopy());
-        document.addEventListener('deleteSelectedUnits', () => this.selectedUnitsDelete());
-        document.addEventListener('explodeSelectedUnits', (e: any) => this.selectedUnitsDelete(true, e.detail.type));
+        document.addEventListener('copy', () => this.copy());
+        document.addEventListener('deleteSelectedUnits', () => this.delete());
+        document.addEventListener('explodeSelectedUnits', (e: any) => this.delete(true, e.detail.type));
         document.addEventListener('exportToFile', () => this.exportToFile());
         document.addEventListener('importFromFile', () => this.importFromFile());
         document.addEventListener('keyup', (event) => this.#onKeyUp(event));
-        document.addEventListener('paste', () => this.pasteUnits());
-        document.addEventListener('selectedUnitsChangeAltitude', (e: any) => { this.selectedUnitsChangeAltitude(e.detail.type) });
-        document.addEventListener('selectedUnitsChangeSpeed', (e: any) => { this.selectedUnitsChangeSpeed(e.detail.type) });
+        document.addEventListener('paste', () => this.paste());
+        document.addEventListener('selectedUnitsChangeAltitude', (e: any) => { this.changeAltitude(e.detail.type) });
+        document.addEventListener('selectedUnitsChangeSpeed', (e: any) => { this.changeSpeed(e.detail.type) });
         document.addEventListener('unitDeselection', (e: CustomEvent) => this.#onUnitDeselection(e.detail));
         document.addEventListener('unitSelection', (e: CustomEvent) => this.#onUnitSelection(e.detail));
         document.addEventListener("toggleMarkerProtection", (ev: CustomEventInit) => { this.#showNumberOfSelectedProtectedUnits() });
@@ -130,8 +130,8 @@ export class UnitsManager {
             this.#units[ID]?.setData(dataExtractor);
         }
 
-         /* Update the unit groups */
-         for (let ID in this.#units) {
+        /* Update the unit groups */
+        for (let ID in this.#units) {
             const unit = this.#units[ID];
             const groupName = unit.getGroupName();
 
@@ -141,7 +141,7 @@ export class UnitsManager {
                     this.#groups[groupName] = new Group(groupName);
 
                 /* If the unit was not assigned to a group yet, assign it */
-                if (unit.getGroup() === null) 
+                if (unit.getGroup() === null)
                     this.#groups[groupName].addMember(unit);
             }
         }
@@ -350,22 +350,21 @@ export class UnitsManager {
      * @param mantainRelativePosition If true, the selected units will mantain their relative positions when reaching the target. This is useful to maintain a formation for groun/navy units
      * @param rotation Rotation in radians by which the formation will be rigidly rotated. E.g. a ( V ) formation will look like this ( < ) if rotated pi/4 radians (90 degrees)
      */
-    selectedUnitsAddDestination(latlng: L.LatLng, mantainRelativePosition: boolean, rotation: number) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
+    addDestination(latlng: L.LatLng, mantainRelativePosition: boolean, rotation: number, units: Unit[] | null = null) {
+        if (units === null)
+            units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
 
-        if (selectedUnits.length === 0)
+        if (units.length === 0)
             return;
 
         /* Compute the destination for each unit. If mantainRelativePosition is true, compute the destination so to hold the relative positions */
         var unitDestinations: { [key: number]: LatLng } = {};
         if (mantainRelativePosition)
-            unitDestinations = this.selectedUnitsComputeGroupDestination(latlng, rotation);
+            unitDestinations = this.computeGroupDestination(latlng, rotation);
         else
-            selectedUnits.forEach((unit: Unit) => { unitDestinations[unit.ID] = latlng; });
+            units.forEach((unit: Unit) => { unitDestinations[unit.ID] = latlng; });
 
-        for (let idx in selectedUnits) {
-            const unit = selectedUnits[idx];
-
+        units.forEach((unit: Unit) => {
             /* If a unit is following another unit, and that unit is also selected, send the command to the followed ("leader") unit */
             if (unit.getState() === "follow") {
                 const leader = this.getUnitByID(unit.getLeaderID())
@@ -378,18 +377,22 @@ export class UnitsManager {
                 if (unit.ID in unitDestinations)
                     unit.addDestination(unitDestinations[unit.ID]);
             }
-
-        }
-        this.#showActionMessage(selectedUnits, " new destination added");
+        });
+        this.#showActionMessage(units, " new destination added");
     }
 
     /** Clear the destinations of all the selected units
      * 
      */
-    selectedUnitsClearDestinations() {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: false });
-        for (let idx in selectedUnits) {
-            const unit = selectedUnits[idx];
+    clearDestinations(units: Unit[] | null = null) {
+        if (units === null)
+            units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: false });
+
+        if (units.length === 0)
+            return;
+
+        for (let idx in units) {
+            const unit = units[idx];
             if (unit.getState() === "follow") {
                 const leader = this.getUnitByID(unit.getLeaderID())
                 if (leader && leader.getSelected())
@@ -406,178 +409,224 @@ export class UnitsManager {
      * 
      * @param latlng Location where to land at
      */
-    selectedUnitsLandAt(latlng: LatLng) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
-        for (let idx in selectedUnits) {
-            selectedUnits[idx].landAt(latlng);
-        }
-        this.#showActionMessage(selectedUnits, " landing");
+    landAt(latlng: LatLng, units: Unit[] | null = null) {
+        if (units === null)
+            units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
+
+        if (units.length === 0)
+            return;
+
+        units.forEach((unit: Unit) => unit.landAt(latlng));
+
+        this.#showActionMessage(units, " landing");
     }
 
     /** Instruct all the selected units to change their speed
      * 
      * @param speedChange Speed change, either "stop", "slow", or "fast". The specific value depends on the unit category
      */
-    selectedUnitsChangeSpeed(speedChange: string) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
-        for (let idx in selectedUnits) {
-            selectedUnits[idx].changeSpeed(speedChange);
-        }
+    changeSpeed(speedChange: string, units: Unit[] | null = null) {
+        if (units === null)
+            units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
+
+        if (units.length === 0)
+            return;
+
+        units.forEach((unit: Unit) => unit.changeSpeed(speedChange));
     }
 
     /** Instruct all the selected units to change their altitude
      * 
      * @param altitudeChange Altitude change, either "climb" or "descend". The specific value depends on the unit category
      */
-    selectedUnitsChangeAltitude(altitudeChange: string) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
-        for (let idx in selectedUnits) {
-            selectedUnits[idx].changeAltitude(altitudeChange);
-        }
+    changeAltitude(altitudeChange: string, units: Unit[] | null = null) {
+        if (units === null)
+            units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
+
+        if (units.length === 0)
+            return;
+
+        units.forEach((unit: Unit) => unit.changeAltitude(altitudeChange));
     }
 
     /** Set a specific speed to all the selected units
      * 
      * @param speed Value to set, in m/s
      */
-    selectedUnitsSetSpeed(speed: number) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
-        for (let idx in selectedUnits) {
-            selectedUnits[idx].setSpeed(speed);
-        }
-        this.#showActionMessage(selectedUnits, `setting speed to ${msToKnots(speed)} kts`);
+    setSpeed(speed: number, units: Unit[] | null = null) {
+        if (units === null)
+            units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
+
+        if (units.length === 0)
+            return;
+
+        units.forEach((unit: Unit) => unit.setSpeed(speed));
+        this.#showActionMessage(units, `setting speed to ${msToKnots(speed)} kts`);
     }
 
     /** Set a specific speed type to all the selected units
      * 
      * @param speedType Value to set, either "CAS" or "GS". If "CAS" is selected, the unit will try to maintain the selected Calibrated Air Speed, but DCS will still only maintain a Ground Speed value so errors may arise depending on wind.
      */
-    selectedUnitsSetSpeedType(speedType: string) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
-        for (let idx in selectedUnits) {
-            selectedUnits[idx].setSpeedType(speedType);
-        }
-        this.#showActionMessage(selectedUnits, `setting speed type to ${speedType}`);
+    setSpeedType(speedType: string, units: Unit[] | null = null) {
+        if (units === null)
+            units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
+
+        if (units.length === 0)
+            return;
+
+        units.forEach((unit: Unit) => unit.setSpeedType(speedType));
+        this.#showActionMessage(units, `setting speed type to ${speedType}`);
     }
 
     /** Set a specific altitude to all the selected units
      * 
      * @param altitude Value to set, in m
      */
-    selectedUnitsSetAltitude(altitude: number) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
-        for (let idx in selectedUnits) {
-            selectedUnits[idx].setAltitude(altitude);
-        }
-        this.#showActionMessage(selectedUnits, `setting altitude to ${mToFt(altitude)} ft`);
+    setAltitude(altitude: number, units: Unit[] | null = null) {
+        if (units === null)
+            units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
+
+        if (units.length === 0)
+            return;
+
+        units.forEach((unit: Unit) => unit.setAltitude(altitude));
+        this.#showActionMessage(units, `setting altitude to ${mToFt(altitude)} ft`);
     }
 
     /** Set a specific altitude type to all the selected units
      * 
      * @param altitudeType Value to set, either "ASL" or "AGL". If "AGL" is selected, the unit will try to maintain the selected Above Ground Level altitude. Due to a DCS bug, this will only be true at the final position.
      */
-    selectedUnitsSetAltitudeType(altitudeType: string) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
-        for (let idx in selectedUnits) {
-            selectedUnits[idx].setAltitudeType(altitudeType);
-        }
-        this.#showActionMessage(selectedUnits, `setting altitude type to ${altitudeType}`);
+    setAltitudeType(altitudeType: string, units: Unit[] | null = null) {
+        if (units === null)
+            units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
+
+        if (units.length === 0)
+            return;
+
+        units.forEach((unit: Unit) => unit.setAltitudeType(altitudeType));
+        this.#showActionMessage(units, `setting altitude type to ${altitudeType}`);
     }
 
     /** Set a specific ROE to all the selected units
      * 
      * @param ROE Value to set, see constants for acceptable values
      */
-    selectedUnitsSetROE(ROE: string) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
-        for (let idx in selectedUnits) {
-            selectedUnits[idx].setROE(ROE);
-        }
-        this.#showActionMessage(selectedUnits, `ROE set to ${ROE}`);
+    setROE(ROE: string, units: Unit[] | null = null) {
+        if (units === null)
+            units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
+
+        if (units.length === 0)
+            return;
+
+        units.forEach((unit: Unit) => unit.setROE(ROE));
+        this.#showActionMessage(units, `ROE set to ${ROE}`);
     }
 
     /** Set a specific reaction to threat to all the selected units
      * 
      * @param reactionToThreat Value to set, see constants for acceptable values
      */
-    selectedUnitsSetReactionToThreat(reactionToThreat: string) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
-        for (let idx in selectedUnits) {
-            selectedUnits[idx].setReactionToThreat(reactionToThreat);
-        }
-        this.#showActionMessage(selectedUnits, `reaction to threat set to ${reactionToThreat}`);
+    setReactionToThreat(reactionToThreat: string, units: Unit[] | null = null) {
+        if (units === null)
+            units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
+
+        if (units.length === 0)
+            return;
+
+        units.forEach((unit: Unit) => unit.setReactionToThreat(reactionToThreat));
+        this.#showActionMessage(units, `reaction to threat set to ${reactionToThreat}`);
     }
 
     /** Set a specific emissions & countermeasures to all the selected units
      * 
      * @param emissionCountermeasure Value to set, see constants for acceptable values
      */
-    selectedUnitsSetEmissionsCountermeasures(emissionCountermeasure: string) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
-        for (let idx in selectedUnits) {
-            selectedUnits[idx].setEmissionsCountermeasures(emissionCountermeasure);
-        }
-        this.#showActionMessage(selectedUnits, `emissions & countermeasures set to ${emissionCountermeasure}`);
+    setEmissionsCountermeasures(emissionCountermeasure: string, units: Unit[] | null = null) {
+        if (units === null)
+            units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
+
+        if (units.length === 0)
+            return;
+
+        units.forEach((unit: Unit) => unit.setEmissionsCountermeasures(emissionCountermeasure));
+        this.#showActionMessage(units, `emissions & countermeasures set to ${emissionCountermeasure}`);
     }
 
     /** Turn selected units on or off, only works on ground and navy units
      * 
      * @param onOff If true, the unit will be turned on
      */
-    selectedUnitsSetOnOff(onOff: boolean) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
-        for (let idx in selectedUnits) {
-            selectedUnits[idx].setOnOff(onOff);
-        }
-        this.#showActionMessage(selectedUnits, `unit active set to ${onOff}`);
+    setOnOff(onOff: boolean, units: Unit[] | null = null) {
+        if (units === null)
+            units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
+
+        if (units.length === 0)
+            return;
+
+        units.forEach((unit: Unit) => unit.setOnOff(onOff));
+        this.#showActionMessage(units, `unit active set to ${onOff}`);
     }
 
     /** Instruct the selected units to follow roads, only works on ground units
      * 
      * @param followRoads If true, units will follow roads
      */
-    selectedUnitsSetFollowRoads(followRoads: boolean) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
-        for (let idx in selectedUnits) {
-            selectedUnits[idx].setFollowRoads(followRoads);
-        }
-        this.#showActionMessage(selectedUnits, `follow roads set to ${followRoads}`);
+    setFollowRoads(followRoads: boolean, units: Unit[] | null = null) {
+        if (units === null)
+            units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
+
+        if (units.length === 0)
+            return;
+
+        units.forEach((unit: Unit) => unit.setFollowRoads(followRoads));
+        this.#showActionMessage(units, `follow roads set to ${followRoads}`);
     }
 
     /** Instruct selected units to operate as a certain coalition
      * 
      * @param operateAsBool If true, units will operate as blue
      */
-    selectedUnitsSetOperateAs(operateAsBool: boolean) {
+    setOperateAs(operateAsBool: boolean, units: Unit[] | null = null) {
         var operateAs = operateAsBool ? "blue" : "red";
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
-        for (let idx in selectedUnits) {
-            selectedUnits[idx].setOperateAs(operateAs);
-        }
-        this.#showActionMessage(selectedUnits, `operate as set to ${operateAs}`);
+        if (units === null)
+            units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
+
+        if (units.length === 0)
+            return;
+
+        units.forEach((unit: Unit) => unit.setOperateAs(operateAs));
+        this.#showActionMessage(units, `operate as set to ${operateAs}`);
     }
 
     /** Instruct units to attack a specific unit
      * 
      * @param ID ID of the unit to attack
      */
-    selectedUnitsAttackUnit(ID: number) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
-        for (let idx in selectedUnits) {
-            selectedUnits[idx].attackUnit(ID);
-        }
-        this.#showActionMessage(selectedUnits, `attacking unit ${this.getUnitByID(ID)?.getUnitName()}`);
+    attackUnit(ID: number, units: Unit[] | null = null) {
+        if (units === null)
+            units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
+
+        if (units.length === 0)
+            return;
+
+        units.forEach((unit: Unit) => unit.attackUnit(ID));
+        this.#showActionMessage(units, `attacking unit ${this.getUnitByID(ID)?.getUnitName()}`);
     }
 
     /** Instruct units to refuel at the nearest tanker, if possible. Else units will RTB
      * 
      */
-    selectedUnitsRefuel() {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
-        for (let idx in selectedUnits) {
-            selectedUnits[idx].refuel();
-        }
-        this.#showActionMessage(selectedUnits, `sent to nearest tanker`);
+    refuel(units: Unit[] | null = null) {
+        if (units === null)
+            units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
+
+        if (units.length === 0)
+            return;
+
+        units.forEach((unit: Unit) => unit.refuel());
+        this.#showActionMessage(units, `sent to nearest tanker`);
     }
 
     /** Instruct the selected units to follow another unit in a formation. Only works for aircrafts and helicopters.
@@ -586,7 +635,13 @@ export class UnitsManager {
      * @param offset Optional parameter, defines a static offset. X: front-rear, positive front, Y: top-bottom, positive top, Z: left-right, positive right
      * @param formation Optional parameter, defines a predefined formation type. Values are: "trail", "echelon-lh", "echelon-rh", "line-abreast-lh", "line-abreast-rh", "front", "diamond"
      */
-    selectedUnitsFollowUnit(ID: number, offset?: { "x": number, "y": number, "z": number }, formation?: string) {
+    followUnit(ID: number, offset?: { "x": number, "y": number, "z": number }, formation?: string, units: Unit[] | null = null) {
+        if (units === null)
+            units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
+
+        if (units.length === 0)
+            return;
+
         if (offset == undefined) {
             /* Simple formations with fixed offsets */
             offset = { "x": 0, "y": 0, "z": 0 };
@@ -599,16 +654,11 @@ export class UnitsManager {
             else offset = undefined;
         }
 
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
-
-        if (selectedUnits.length === 0)
-            return;
-
         var count = 1;
         var xr = 0; var yr = 1; var zr = -1;
         var layer = 1;
-        for (let idx in selectedUnits) {
-            var unit = selectedUnits[idx];
+        for (let idx in units) {
+            var unit = units[idx];
             if (unit.ID !== ID) {
                 if (offset != undefined)
                     /* Offset is set, apply it */
@@ -630,51 +680,65 @@ export class UnitsManager {
                 count++;
             }
         }
-        this.#showActionMessage(selectedUnits, `following unit ${this.getUnitByID(ID)?.getUnitName()}`);
+        this.#showActionMessage(units, `following unit ${this.getUnitByID(ID)?.getUnitName()}`);
     }
 
     /** Instruct the selected units to perform precision bombing of specific coordinates
      * 
      * @param latlng Location to bomb
      */
-    selectedUnitsBombPoint(latlng: LatLng) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
-        for (let idx in selectedUnits) {
-            selectedUnits[idx].bombPoint(latlng);
-        }
-        this.#showActionMessage(selectedUnits, `unit bombing point`);
+    bombPoint(latlng: LatLng, units: Unit[] | null = null) {
+        if (units === null)
+            units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
+
+        if (units.length === 0)
+            return;
+
+        units.forEach((unit: Unit) => unit.bombPoint(latlng));
+        this.#showActionMessage(units, `unit bombing point`);
     }
 
     /** Instruct the selected units to perform carpet bombing of specific coordinates
      * 
      * @param latlng Location to bomb
      */
-    selectedUnitsCarpetBomb(latlng: LatLng) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
-        for (let idx in selectedUnits) {
-            selectedUnits[idx].carpetBomb(latlng);
-        }
-        this.#showActionMessage(selectedUnits, `unit carpet bombing point`);
+    carpetBomb(latlng: LatLng, units: Unit[] | null = null) {
+        if (units === null)
+            units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
+
+        if (units.length === 0)
+            return;
+
+        units.forEach((unit: Unit) => unit.carpetBomb(latlng));
+        this.#showActionMessage(units, `unit carpet bombing point`);
     }
 
     /** Instruct the selected units to fire at specific coordinates
      * 
      * @param latlng Location to fire at
      */
-    selectedUnitsFireAtArea(latlng: LatLng) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
-        for (let idx in selectedUnits) {
-            selectedUnits[idx].fireAtArea(latlng);
-        }
-        this.#showActionMessage(selectedUnits, `unit firing at area`);
+    fireAtArea(latlng: LatLng, units: Unit[] | null = null) {
+        if (units === null)
+            units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
+
+        if (units.length === 0)
+            return;
+
+        units.forEach((unit: Unit) => unit.fireAtArea(latlng));
+        this.#showActionMessage(units, `unit firing at area`);
     }
 
     /** Instruct the selected units to simulate a fire fight at specific coordinates
      * 
      * @param latlng Location to fire at
      */
-    selectedUnitsSimulateFireFight(latlng: LatLng) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
+    simulateFireFight(latlng: LatLng, units: Unit[] | null = null) {
+        if (units === null)
+            units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
+
+        if (units.length === 0)
+            return;
+
         getGroundElevation(latlng, (response: string) => {
             var groundElevation: number | null = null;
             try {
@@ -682,70 +746,83 @@ export class UnitsManager {
             } catch {
                 console.warn("Simulate fire fight: could not retrieve ground elevation")
             }
-            for (let idx in selectedUnits) {
-                selectedUnits[idx].simulateFireFight(latlng, groundElevation);
-            }
+            units?.forEach((unit: Unit) => unit.simulateFireFight(latlng, groundElevation));
         });
-        this.#showActionMessage(selectedUnits, `unit simulating fire fight`);
+        this.#showActionMessage(units, `unit simulating fire fight`);
     }
 
     /** Instruct units to enter into scenic AAA mode. Units will shoot in the air without aiming
      * 
      */
-    selectedUnitsScenicAAA() {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
-        for (let idx in selectedUnits) {
-            selectedUnits[idx].scenicAAA();
-        }
-        this.#showActionMessage(selectedUnits, `unit set to perform scenic AAA`);
+    scenicAAA(units: Unit[] | null = null) {
+        if (units === null)
+            units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
+
+        if (units.length === 0)
+            return;
+
+        units.forEach((unit: Unit) => unit.scenicAAA());
+        this.#showActionMessage(units, `unit set to perform scenic AAA`);
     }
 
     /** Instruct units to enter into miss on purpose mode. Units will aim to the nearest enemy unit but not precisely.
      * 
      */
-    selectedUnitsMissOnPurpose() {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
-        for (let idx in selectedUnits) {
-            selectedUnits[idx].missOnPurpose();
-        }
-        this.#showActionMessage(selectedUnits, `unit set to perform miss-on-purpose AAA`);
+    missOnPurpose(units: Unit[] | null = null) {
+        if (units === null)
+            units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
+
+        if (units.length === 0)
+            return;
+
+        units.forEach((unit: Unit) => unit.missOnPurpose());
+        this.#showActionMessage(units, `unit set to perform miss-on-purpose AAA`);
     }
 
     /** Instruct units to land at specific point
      * 
      * @param latlng Point where to land
      */
-    selectedUnitsLandAtPoint(latlng: LatLng) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
+    landAtPoint(latlng: LatLng, units: Unit[] | null = null) {
+        if (units === null)
+            units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
 
-        for (let idx in selectedUnits) {
-            selectedUnits[idx].landAtPoint(latlng);
-        }
-        this.#showActionMessage(selectedUnits, `unit landing at point`);
+
+        if (units.length === 0)
+            return;
+
+        units.forEach((unit: Unit) => unit.landAtPoint(latlng));
+        this.#showActionMessage(units, `unit landing at point`);
     }
 
     /** Set a specific shots scatter to all the selected units
      * 
      * @param shotsScatter Value to set
      */
-    selectedUnitsSetShotsScatter(shotsScatter: number) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
-        for (let idx in selectedUnits) {
-            selectedUnits[idx].setShotsScatter(shotsScatter);
-        }
-        this.#showActionMessage(selectedUnits, `shots scatter set to ${shotsScatter}`);
+    setShotsScatter(shotsScatter: number, units: Unit[] | null = null) {
+        if (units === null)
+            units = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+
+        if (units.length === 0)
+            return;
+
+        units.forEach((unit: Unit) => unit.setShotsScatter(shotsScatter));
+        this.#showActionMessage(units, `shots scatter set to ${shotsScatter}`);
     }
 
     /** Set a specific shots intensity to all the selected units
      * 
      * @param shotsScatter Value to set
      */
-    selectedUnitsSetShotsIntensity(shotsIntensity: number) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
-        for (let idx in selectedUnits) {
-            selectedUnits[idx].setShotsIntensity(shotsIntensity);
-        }
-        this.#showActionMessage(selectedUnits, `shots intensity set to ${shotsIntensity}`);
+    setShotsIntensity(shotsIntensity: number, units: Unit[] | null = null) {
+        if (units === null)
+            units = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
+
+        if (units.length === 0)
+            return;
+
+        units.forEach((unit: Unit) => unit.setShotsIntensity(shotsIntensity));
+        this.#showActionMessage(units, `shots intensity set to ${shotsIntensity}`);
     }
 
     /*********************** Control operations on selected units ************************/
@@ -769,15 +846,18 @@ export class UnitsManager {
     /** Groups the selected units in a single (DCS) group, if all the units have the same category 
      * 
      */
-    selectedUnitsCreateGroup() {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: false, showProtectionReminder: true });
-        if (this.getUnitsCategories(selectedUnits).length == 1) {
-            var units: { ID: number, location: LatLng }[] = [];
-            for (let idx in selectedUnits) {
-                var unit = selectedUnits[idx];
-                units.push({ ID: unit.ID, location: unit.getPosition() });
-            }
-            getApp().getServerManager().cloneUnits(units, true, 0 /* No spawn points, we delete the original units */);
+    createGroup(units: Unit[] | null = null) {
+        if (units === null)
+            units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: false, showProtectionReminder: true });
+
+        if (units.length === 0)
+            return;
+
+        if (this.getUnitsCategories(units).length == 1) {
+            var unitsData: { ID: number, location: LatLng }[] = [];
+            units.forEach((unit: Unit) => unitsData.push({ ID: unit.ID, location: unit.getPosition() }));
+            getApp().getServerManager().cloneUnits(unitsData, true, 0 /* No spawn points, we delete the original units */);
+            this.#showActionMessage(units, `created a group`);
         } else {
             (getApp().getPopupsManager().get("infoPopup") as Popup).setText(`Groups can only be created from units of the same category`);
         }
@@ -787,21 +867,20 @@ export class UnitsManager {
      * 
      * @param hotgroup Hotgroup number
      */
-    selectedUnitsSetHotgroup(hotgroup: number) {
+    setHotgroup(hotgroup: number, units: Unit[] | null = null) {
         this.getUnitsByHotgroup(hotgroup).forEach((unit: Unit) => unit.setHotgroup(null));
-        this.selectedUnitsAddToHotgroup(hotgroup);
+        this.addToHotgroup(hotgroup);
     }
 
     /** Add the selected units to a hotgroup. Units can be in multiple hotgroups at the same type
      * 
      * @param hotgroup Hotgroup number
      */
-    selectedUnitsAddToHotgroup(hotgroup: number) {
-        var selectedUnits = this.getSelectedUnits();
-        for (let idx in selectedUnits) {
-            selectedUnits[idx].setHotgroup(hotgroup);
-        }
-        this.#showActionMessage(selectedUnits, `added to hotgroup ${hotgroup}`);
+    addToHotgroup(hotgroup: number, units: Unit[] | null = null) {
+        if (units === null)
+            units = this.getSelectedUnits();
+        units.forEach((unit: Unit) => unit.setHotgroup(hotgroup));
+        this.#showActionMessage(units, `added to hotgroup ${hotgroup}`);
         (getApp().getPanelsManager().get("hotgroup") as HotgroupPanel).refreshHotgroups();
     }
 
@@ -810,9 +889,14 @@ export class UnitsManager {
      * @param explosion If true, the unit will be deleted using an explosion
      * @returns 
      */
-    selectedUnitsDelete(explosion: boolean = false, explosionType: string = "") {
-        var selectedUnits = this.getSelectedUnits({ excludeProtected: true }); /* Can be applied to humans too */
-        const selectionContainsAHuman = selectedUnits.some((unit: Unit) => {
+    delete(explosion: boolean = false, explosionType: string = "", units: Unit[] | null = null) {
+        if (units === null)
+            units = this.getSelectedUnits({ excludeProtected: true }); /* Can be applied to humans too */
+
+        if (units.length === 0)
+            return;
+
+        const selectionContainsAHuman = units.some((unit: Unit) => {
             return unit.getHuman() === true;
         });
 
@@ -821,14 +905,12 @@ export class UnitsManager {
         }
 
         const doDelete = (explosion = false, explosionType = "", immediate = false) => {
-            for (let idx in selectedUnits) {
-                selectedUnits[idx].delete(explosion, explosionType, immediate);
-            }
-            this.#showActionMessage(selectedUnits, `deleted`);
+            units?.forEach((unit: Unit) => unit.delete(explosion, explosionType, immediate));
+            this.#showActionMessage(units as Unit[], `deleted`);
         }
 
-        if (selectedUnits.length >= DELETE_SLOW_THRESHOLD)
-            this.#showSlowDeleteDialog(selectedUnits).then((action: any) => {
+        if (units.length >= DELETE_SLOW_THRESHOLD)
+            this.#showSlowDeleteDialog(units).then((action: any) => {
                 if (action === "delete-slow")
                     doDelete(explosion, explosionType, false);
                 else if (action === "delete-immediate")
@@ -845,19 +927,25 @@ export class UnitsManager {
      * @param rotation Rotation of the group, in radians
      * @returns Array of positions for each unit, in order
      */
-    selectedUnitsComputeGroupDestination(latlng: LatLng, rotation: number) {
-        var selectedUnits = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true });
+    computeGroupDestination(latlng: LatLng, rotation: number, units: Unit[] | null = null) {
+        if (units === null)
+            units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true });
+
+        if (units.length === 0)
+            return {};
+
         /* Compute the center of the group */
+        var len = units.length;
         var center = { x: 0, y: 0 };
-        selectedUnits.forEach((unit: Unit) => {
+        units.forEach((unit: Unit) => {
             var mercator = latLngToMercator(unit.getPosition().lat, unit.getPosition().lng);
-            center.x += mercator.x / selectedUnits.length;
-            center.y += mercator.y / selectedUnits.length;
+            center.x += mercator.x / len;
+            center.y += mercator.y / len;
         });
 
         /* Compute the distances from the center of the group */
         var unitDestinations: { [key: number]: LatLng } = {};
-        selectedUnits.forEach((unit: Unit) => {
+        units.forEach((unit: Unit) => {
             var mercator = latLngToMercator(unit.getPosition().lat, unit.getPosition().lng);
             var distancesFromCenter = { dx: mercator.x - center.x, dy: mercator.y - center.y };
 
@@ -879,9 +967,15 @@ export class UnitsManager {
     /** Copy the selected units and store their properties in memory
      * 
      */
-    selectedUnitsCopy() {
+    copy(units: Unit[] | null = null) {
+        if (units === null)
+            units = this.getSelectedUnits({ excludeHumans: true });
+
+        if (units.length === 0)
+            return;
+
         /* A JSON is used to deepcopy the units, creating a "snapshot" of their properties at the time of the copy */
-        this.#copiedUnits = JSON.parse(JSON.stringify(this.getSelectedUnits().map((unit: Unit) => { return unit.getData() }))); /* Can be applied to humans too */
+        this.#copiedUnits = JSON.parse(JSON.stringify(units.map((unit: Unit) => { return unit.getData() }))); /* Can be applied to humans too */
         (getApp().getPopupsManager().get("infoPopup") as Popup).setText(`${this.#copiedUnits.length} units copied`);
     }
 
@@ -890,7 +984,7 @@ export class UnitsManager {
      * 
      * @returns True if units were pasted successfully
      */
-    pasteUnits() {
+    paste() {
         let spawnPoints = 0;
 
         /* If spawns are restricted, check that the user has the necessary spawn points */
@@ -1111,7 +1205,7 @@ export class UnitsManager {
     #onKeyUp(event: KeyboardEvent) {
         if (!keyEventWasInInput(event)) {
             if (event.key === "Delete")
-                this.selectedUnitsDelete();
+                this.delete();
             else if (event.key === "a" && event.ctrlKey)
                 Object.values(this.getUnits()).filter((unit: Unit) => { return !unit.getHidden() }).forEach((unit: Unit) => unit.setSelected(true));
         }
@@ -1160,9 +1254,9 @@ export class UnitsManager {
             (getApp().getPopupsManager().get("infoPopup") as Popup).setText(`${units[0].getUnitName()} and ${units.length - 1} other units ${message}`);
     }
 
-    #showSlowDeleteDialog(selectedUnits: Unit[]) {
+    #showSlowDeleteDialog(units: Unit[]) {
         let button: HTMLButtonElement | null = null;
-        const deletionTime = Math.round(selectedUnits.length * DELETE_CYCLE_TIME).toString();
+        const deletionTime = Math.round(units.length * DELETE_CYCLE_TIME).toString();
         const dialog = this.#slowDeleteDialog;
         const element = dialog.getElement();
         const listener = (ev: MouseEvent) => {
@@ -1170,7 +1264,7 @@ export class UnitsManager {
                 button = ev.target;
         }
 
-        element.querySelectorAll(".deletion-count").forEach(el => el.innerHTML = selectedUnits.length.toString());
+        element.querySelectorAll(".deletion-count").forEach(el => el.innerHTML = units.length.toString());
         element.querySelectorAll(".deletion-time").forEach(el => el.innerHTML = deletionTime);
         dialog.show();
 
@@ -1190,9 +1284,9 @@ export class UnitsManager {
 
     #showNumberOfSelectedProtectedUnits() {
         const map = getApp().getMap();
-        const selectedUnits = this.getSelectedUnits();
-        const numSelectedUnits = selectedUnits.length;
-        const numProtectedUnits = selectedUnits.filter((unit: Unit) => map.unitIsProtected(unit)).length;
+        const units = this.getSelectedUnits();
+        const numSelectedUnits = units.length;
+        const numProtectedUnits = units.filter((unit: Unit) => map.unitIsProtected(unit)).length;
 
         if (numProtectedUnits === 1 && numSelectedUnits === numProtectedUnits)
             (getApp().getPopupsManager().get("infoPopup") as Popup).setText(`Notice: unit is protected`);

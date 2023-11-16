@@ -12,16 +12,16 @@ import { DestinationPreviewMarker } from "./markers/destinationpreviewmarker";
 import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
 import { SVGInjector } from '@tanem/svg-injector'
-import { mapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, visibilityControls, visibilityControlsTooltips, MOVE_UNIT, SHOW_UNIT_CONTACTS, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, visibilityControlsTypes, SHOW_UNIT_LABELS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, MAP_MARKER_CONTROLS } from "../constants/constants";
+import { mapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, MOVE_UNIT, SHOW_UNIT_CONTACTS, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, SHOW_UNIT_LABELS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, MAP_MARKER_CONTROLS } from "../constants/constants";
 import { TargetMarker } from "./markers/targetmarker";
 import { CoalitionArea } from "./coalitionarea/coalitionarea";
 import { CoalitionAreaContextMenu } from "../contextmenus/coalitionareacontextmenu";
 import { DrawingCursor } from "./coalitionarea/drawingcursor";
 import { AirbaseSpawnContextMenu } from "../contextmenus/airbasespawnmenu";
-import { Popup } from "../popups/popup";
 import { GestureHandling } from "leaflet-gesture-handling";
 import { TouchBoxSelect } from "./touchboxselect";
 import { DestinationPreviewHandle } from "./markers/destinationpreviewHandle";
+import { ContextActionSet } from "../unit/contextactionset";
 
 var hasTouchScreen = false;
 //if ("maxTouchPoints" in navigator) 
@@ -322,7 +322,7 @@ export class Map extends L.Map {
         return this.#mapContextMenu;
     }
 
-    showUnitContextMenu(x: number, y: number, latlng: L.LatLng) {
+    showUnitContextMenu(x: number | undefined = undefined, y: number | undefined = undefined, latlng: L.LatLng | undefined = undefined) {
         this.hideAllContextMenus();
         this.#unitContextMenu.show(x, y, latlng);
     }
@@ -335,7 +335,7 @@ export class Map extends L.Map {
         this.#unitContextMenu.hide();
     }
 
-    showAirbaseContextMenu(x: number, y: number, latlng: L.LatLng, airbase: Airbase) {
+    showAirbaseContextMenu(airbase: Airbase, x: number | undefined = undefined, y: number | undefined = undefined, latlng: L.LatLng | undefined = undefined) {
         this.hideAllContextMenus();
         this.#airbaseContextMenu.show(x, y, latlng);
         this.#airbaseContextMenu.setAirbase(airbase);
@@ -349,7 +349,7 @@ export class Map extends L.Map {
         this.#airbaseContextMenu.hide();
     }
 
-    showAirbaseSpawnMenu(x: number, y: number, latlng: L.LatLng, airbase: Airbase) {
+    showAirbaseSpawnMenu(airbase: Airbase, x: number | undefined = undefined, y: number | undefined = undefined, latlng: L.LatLng | undefined = undefined) {
         this.hideAllContextMenus();
         this.#airbaseSpawnMenu.show(x, y);
         this.#airbaseSpawnMenu.setAirbase(airbase);
@@ -561,9 +561,9 @@ export class Map extends L.Map {
         }
         else if (this.#state === MOVE_UNIT) {
             if (!e.originalEvent.ctrlKey) {
-                getApp().getUnitsManager().selectedUnitsClearDestinations();
+                getApp().getUnitsManager().clearDestinations();
             }
-            getApp().getUnitsManager().selectedUnitsAddDestination(this.#computeDestinationRotation && this.#destinationRotationCenter != null ? this.#destinationRotationCenter : e.latlng, this.#shiftKey, this.#destinationGroupRotation)
+            getApp().getUnitsManager().addDestination(this.#computeDestinationRotation && this.#destinationRotationCenter != null ? this.#destinationRotationCenter : e.latlng, this.#shiftKey, this.#destinationGroupRotation)
             
             this.#destinationGroupRotation = 0;
             this.#destinationRotationCenter = null;
@@ -611,59 +611,15 @@ export class Map extends L.Map {
             if (e.originalEvent.button != 2 || e.originalEvent.ctrlKey || e.originalEvent.shiftKey)
                 return;
 
-            var options: { [key: string]: { text: string, tooltip: string } } = {};
-            const selectedUnits = getApp().getUnitsManager().getSelectedUnits();
-            const selectedUnitTypes = getApp().getUnitsManager().getSelectedUnitsCategories();
-
-            if (selectedUnitTypes.length === 1 && ["Aircraft", "Helicopter"].includes(selectedUnitTypes[0])) {
-                if (selectedUnits.every((unit: Unit) => { return unit.canLandAtPoint()}))
-                    options["land-at-point"] = { text: "Land here", tooltip: "Land at this precise location" };
-
-                if (selectedUnits.every((unit: Unit) => { return unit.canTargetPoint()})) {
-                    options["bomb"] = { text: "Precision bombing", tooltip: "Precision bombing of a specific point" };
-                    options["carpet-bomb"] = { text: "Carpet bombing", tooltip: "Carpet bombing close to a point" };
-                } 
-                
-                if (Object.keys(options).length === 0)
-                    (getApp().getPopupsManager().get("infoPopup") as Popup).setText(`Selected units can not perform point actions.`);
-            }
-            else if (selectedUnitTypes.length === 1 && ["GroundUnit", "NavyUnit"].includes(selectedUnitTypes[0])) {
-                if (selectedUnits.every((unit: Unit) => { return unit.canTargetPoint() })) {
-                    options["fire-at-area"] = { text: "Fire at area", tooltip: "Fire at a large area" };
-                    options["simulate-fire-fight"] = { text: "Simulate fire fight", tooltip: "Simulate a fire fight by shooting randomly in a certain large area" };
-                }
-                else 
-                    (getApp().getPopupsManager().get("infoPopup") as Popup).setText(`Selected units can not perform point actions.`);
-            }
-            else if(selectedUnitTypes.length > 1) {
-                (getApp().getPopupsManager().get("infoPopup") as Popup).setText(`Multiple unit types selected, no common actions available.`);
-            }
-
-            if (Object.keys(options).length > 0) {
-                this.showUnitContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng);
-                this.getUnitContextMenu().setOptions(options, (option: string) => {
-                    this.hideUnitContextMenu();
-                    if (option === "bomb") {
-                        getApp().getUnitsManager().getSelectedUnits().length > 0 ? this.setState(MOVE_UNIT) : this.setState(IDLE);
-                        getApp().getUnitsManager().selectedUnitsBombPoint(this.getMouseCoordinates());
-                    }
-                    else if (option === "carpet-bomb") {
-                        getApp().getUnitsManager().getSelectedUnits().length > 0 ? this.setState(MOVE_UNIT) : this.setState(IDLE);
-                        getApp().getUnitsManager().selectedUnitsCarpetBomb(this.getMouseCoordinates());
-                    }
-                    else if (option === "fire-at-area") {
-                        getApp().getUnitsManager().getSelectedUnits().length > 0 ? this.setState(MOVE_UNIT) : this.setState(IDLE);
-                        getApp().getUnitsManager().selectedUnitsFireAtArea(this.getMouseCoordinates());
-                    }
-                    else if (option === "simulate-fire-fight") {
-                        getApp().getUnitsManager().getSelectedUnits().length > 0 ? this.setState(MOVE_UNIT) : this.setState(IDLE);
-                        getApp().getUnitsManager().selectedUnitsSimulateFireFight(this.getMouseCoordinates());
-                    }
-                    else if (option === "land-at-point") {
-                        getApp().getUnitsManager().getSelectedUnits().length > 0 ? this.setState(MOVE_UNIT) : this.setState(IDLE);
-                        getApp().getUnitsManager().selectedUnitsLandAtPoint(this.getMouseCoordinates());
-                    }
-                });
+            var contextActionSet = new ContextActionSet();
+            var units = getApp().getUnitsManager().getSelectedUnits();
+            units.forEach((unit: Unit) => {
+                unit.appendContextActions(contextActionSet, null, e.latlng);
+            })
+    
+            if (Object.keys(contextActionSet.getContextActions()).length > 0) {
+                getApp().getMap().showUnitContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng);
+                getApp().getMap().getUnitContextMenu().setContextActions(contextActionSet);
             }
         }, 150);
         this.#longPressHandled = false;
@@ -742,6 +698,8 @@ export class Map extends L.Map {
             const toggles = `["${control.toggles.join('","')}"]`;
             const div = document.createElement("div");
             div.className = control.protectable === true ? "protectable" : "";
+
+            // TODO: for consistency let's avoid using innerHTML. Let's create elements.
             div.innerHTML = `
                 <button data-on-click="toggleMarkerVisibility" title="${control.tooltip}" data-on-click-params='{"types":${toggles}}'>
                     <img src="/resources/theme/images/buttons/${control.image}" />
@@ -842,7 +800,7 @@ export class Map extends L.Map {
         if (this.#destinationPreviewCursors.length == 1)
             this.#destinationPreviewCursors[0].setLatLng(this.getMouseCoordinates());
         else {
-            Object.values(getApp().getUnitsManager().selectedUnitsComputeGroupDestination(groupLatLng, this.#destinationGroupRotation)).forEach((latlng: L.LatLng, idx: number) => {
+            Object.values(getApp().getUnitsManager().computeGroupDestination(groupLatLng, this.#destinationGroupRotation)).forEach((latlng: L.LatLng, idx: number) => {
                 if (idx < this.#destinationPreviewCursors.length)
                     this.#destinationPreviewCursors[idx].setLatLng(this.#shiftKey ? latlng : this.getMouseCoordinates());
             })

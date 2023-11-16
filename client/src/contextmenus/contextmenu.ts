@@ -19,15 +19,15 @@ export class ContextMenu {
 
     /** Show the contextmenu on top of the map, usually at the location where the user has clicked on it.
      * 
-     * @param x X screen coordinate of the top left corner of the context menu
-     * @param y Y screen coordinate of the top left corner of the context menu
-     * @param latlng Leaflet latlng object of the mouse click
+     * @param x X screen coordinate of the top left corner of the context menu. If undefined, use the old value
+     * @param y Y screen coordinate of the top left corner of the context menu. If undefined, use the old value
+     * @param latlng Leaflet latlng object of the mouse click. If undefined, use the old value
      */
-    show(x: number, y: number, latlng: LatLng) {
-        this.#latlng = latlng;
+    show(x: number | undefined = undefined, y: number | undefined = undefined, latlng: LatLng | undefined = undefined) {
+        this.#latlng = latlng ?? this.#latlng;
         this.#container?.classList.toggle("hide", false);
-        this.#x = x;
-        this.#y = y;
+        this.#x = x ?? this.#x;
+        this.#y = y ?? this.#y;
         this.clip();
         this.getContainer()?.dispatchEvent(new Event("show"));
     }
