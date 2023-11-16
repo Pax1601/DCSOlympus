@@ -1006,7 +1006,7 @@ export class UnitsManager {
      */
     exportToFile() {
         if (!this.#unitDataExport)
-            this.#unitDataExport = new UnitDataFileExport("unit-import-export-dialog");
+            this.#unitDataExport = new UnitDataFileExport("unit-export-dialog");
         this.#unitDataExport.showForm(Object.values(this.#units));
     }
     
@@ -1015,7 +1015,7 @@ export class UnitsManager {
      */
     importFromFile() {
         if (!this.#unitDataImport)
-            this.#unitDataImport = new UnitDataFileImport("unit-import-export-dialog");
+            this.#unitDataImport = new UnitDataFileImport("unit-import-dialog");
         this.#unitDataImport.selectFile();
     }
 

@@ -1,6 +1,17 @@
 <%- include('dialogs/advancedsettings.ejs') %>
 <%- include('dialogs/commandmodesettings.ejs') %>
 <%- include('dialogs/customformation.ejs') %>
-<%- include('dialogs/importexport.ejs') %>
+<%- include('dialogs/importexport.ejs', {
+    "dialogId": "unit-export-dialog",
+    "submitButtonText": "Export units to file",
+    "textContent": "Select the unit categories you would like to export.  Note: only ground and naval units can be exported at this time.",
+    "title": "Export"
+}) %>
+<%- include('dialogs/importexport.ejs', {
+    "dialogId": "unit-import-dialog",
+    "submitButtonText": "Import units into mission",
+    "textContent": "Select the unit categories you would like to import.",
+    "title": "Import"
+}) %>
 <%- include('dialogs/slowdelete.ejs') %>
 <%- include('dialogs/splash.ejs') %>

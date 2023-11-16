@@ -1,11 +1,11 @@
-<div id="unit-import-export-dialog" class="ol-panel ol-dialog hide" oncontextmenu="return false;">
+<div id="<%= dialogId %>" class="ol-panel ol-dialog file-import-export hide" oncontextmenu="return false;">
     <div class="ol-dialog-header">
-        <h3 class="export">Export unit data to file</h3>
+        <h3><%= title %></h3>
     </div>
 
     <div class="ol-dialog-content">
-        <p>Note: only ground and naval units can be exported at this time.  (Air units will be possible <em>soon</em>.)</p>
-        <table>
+        <p><%= textContent %></p>
+        <table class="categories-coalitions">
             <thead>
             </thead>
             <tbody>
@@ -14,8 +14,7 @@
     </div>
 
     <div class="ol-dialog-footer ol-group">
-        <button class="start-transfer import">Import units into mission</button>
-        <button class="start-transfer export">Export units to file</button>
-        <button data-on-click="closeDialog">Cancel</button>
+        <button class="start-transfer"><%= submitButtonText %></button>
+        <button data-on-click="closeDialog">Close</button>
     </div>
 </div>
