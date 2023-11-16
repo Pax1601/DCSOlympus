@@ -142,11 +142,11 @@ void UnitsManager::getUnitData(stringstream &ss, unsigned long long time)
 		p.second->getData(ss, time);
 }
 
-void UnitsManager::deleteUnit(unsigned int ID, bool explosion, bool immediate)
+void UnitsManager::deleteUnit(unsigned int ID, bool explosion, string explosionType, bool immediate)
 {
 	if (getUnit(ID) != nullptr)
 	{
-		Command* command = dynamic_cast<Command*>(new Delete(ID, explosion, immediate));
+		Command* command = dynamic_cast<Command*>(new Delete(ID, explosion, explosionType, immediate));
 		scheduler->appendCommand(command);
 	}
 }

@@ -137,6 +137,9 @@ void Unit::update(json::value json, double dt)
 	if (json.has_boolean_field(L"hasTask"))
 		setHasTask(json[L"hasTask"].as_bool());
 
+	if (json.has_number_field(L"health"))
+		setHealth(static_cast<unsigned char>(json[L"health"].as_number().to_uint32()));
+
 	runAILoop();
 }
 
@@ -241,49 +244,50 @@ void Unit::getData(stringstream& ss, unsigned long long time)
 		{
 			if (checkFreshness(datumIndex, time)) {
 				switch (datumIndex) {
-				case DataIndex::category:					appendString(ss, datumIndex, category); break;
-				case DataIndex::alive:						appendNumeric(ss, datumIndex, alive); break;
-				case DataIndex::human:						appendNumeric(ss, datumIndex, human); break;
-				case DataIndex::controlled:					appendNumeric(ss, datumIndex, controlled); break;
-				case DataIndex::coalition:					appendNumeric(ss, datumIndex, coalition); break;
-				case DataIndex::country:					appendNumeric(ss, datumIndex, country); break;
-				case DataIndex::name:						appendString(ss, datumIndex, name); break;
-				case DataIndex::unitName:					appendString(ss, datumIndex, unitName); break;
-				case DataIndex::groupName:					appendString(ss, datumIndex, groupName); break;
-				case DataIndex::state:						appendNumeric(ss, datumIndex, state); break;
-				case DataIndex::task:						appendString(ss, datumIndex, task); break;
-				case DataIndex::hasTask:					appendNumeric(ss, datumIndex, hasTask); break;
-				case DataIndex::position:					appendNumeric(ss, datumIndex, position); break;
-				case DataIndex::speed:						appendNumeric(ss, datumIndex, speed); break;
-				case DataIndex::horizontalVelocity:			appendNumeric(ss, datumIndex, horizontalVelocity); break;
-				case DataIndex::verticalVelocity:			appendNumeric(ss, datumIndex, verticalVelocity); break;
-				case DataIndex::heading:					appendNumeric(ss, datumIndex, heading); break;
-				case DataIndex::isActiveTanker:				appendNumeric(ss, datumIndex, isActiveTanker); break;
-				case DataIndex::isActiveAWACS:				appendNumeric(ss, datumIndex, isActiveAWACS); break;
-				case DataIndex::onOff:						appendNumeric(ss, datumIndex, onOff); break;
-				case DataIndex::followRoads:				appendNumeric(ss, datumIndex, followRoads); break;
-				case DataIndex::fuel:						appendNumeric(ss, datumIndex, fuel); break;
-				case DataIndex::desiredSpeed:				appendNumeric(ss, datumIndex, desiredSpeed); break;
-				case DataIndex::desiredSpeedType:			appendNumeric(ss, datumIndex, desiredSpeedType); break;
-				case DataIndex::desiredAltitude:			appendNumeric(ss, datumIndex, desiredAltitude); break;
-				case DataIndex::desiredAltitudeType:		appendNumeric(ss, datumIndex, desiredAltitudeType); break;
-				case DataIndex::leaderID:					appendNumeric(ss, datumIndex, leaderID); break;
-				case DataIndex::formationOffset:			appendNumeric(ss, datumIndex, formationOffset); break;
-				case DataIndex::targetID:					appendNumeric(ss, datumIndex, targetID); break;
-				case DataIndex::targetPosition:				appendNumeric(ss, datumIndex, targetPosition); break;
-				case DataIndex::ROE:						appendNumeric(ss, datumIndex, ROE); break;
-				case DataIndex::reactionToThreat:			appendNumeric(ss, datumIndex, reactionToThreat); break;
-				case DataIndex::emissionsCountermeasures:	appendNumeric(ss, datumIndex, emissionsCountermeasures); break;
-				case DataIndex::TACAN:						appendNumeric(ss, datumIndex, TACAN); break;
-				case DataIndex::radio:						appendNumeric(ss, datumIndex, radio); break;
-				case DataIndex::generalSettings:			appendNumeric(ss, datumIndex, generalSettings); break;
-				case DataIndex::ammo:						appendVector(ss, datumIndex, ammo); break;
-				case DataIndex::contacts:					appendVector(ss, datumIndex, contacts); break;
-				case DataIndex::activePath:					appendList(ss, datumIndex, activePath); break;
-				case DataIndex::isLeader:					appendNumeric(ss, datumIndex, isLeader); break;
-				case DataIndex::operateAs:					appendNumeric(ss, datumIndex, operateAs); break;
-				case DataIndex::shotsScatter:				appendNumeric(ss, datumIndex, shotsScatter); break;
-				case DataIndex::shotsIntensity:				appendNumeric(ss, datumIndex, shotsIntensity); break;
+					case DataIndex::category:					appendString(ss, datumIndex, category); break;
+					case DataIndex::alive:						appendNumeric(ss, datumIndex, alive); break;
+					case DataIndex::human:						appendNumeric(ss, datumIndex, human); break;
+					case DataIndex::controlled:					appendNumeric(ss, datumIndex, controlled); break;
+					case DataIndex::coalition:					appendNumeric(ss, datumIndex, coalition); break;
+					case DataIndex::country:					appendNumeric(ss, datumIndex, country); break;
+					case DataIndex::name:						appendString(ss, datumIndex, name); break;
+					case DataIndex::unitName:					appendString(ss, datumIndex, unitName); break;
+					case DataIndex::groupName:					appendString(ss, datumIndex, groupName); break;
+					case DataIndex::state:						appendNumeric(ss, datumIndex, state); break;
+					case DataIndex::task:						appendString(ss, datumIndex, task); break;
+					case DataIndex::hasTask:					appendNumeric(ss, datumIndex, hasTask); break;
+					case DataIndex::position:					appendNumeric(ss, datumIndex, position); break;
+					case DataIndex::speed:						appendNumeric(ss, datumIndex, speed); break;
+					case DataIndex::horizontalVelocity:			appendNumeric(ss, datumIndex, horizontalVelocity); break;
+					case DataIndex::verticalVelocity:			appendNumeric(ss, datumIndex, verticalVelocity); break;
+					case DataIndex::heading:					appendNumeric(ss, datumIndex, heading); break;
+					case DataIndex::isActiveTanker:				appendNumeric(ss, datumIndex, isActiveTanker); break;
+					case DataIndex::isActiveAWACS:				appendNumeric(ss, datumIndex, isActiveAWACS); break;
+					case DataIndex::onOff:						appendNumeric(ss, datumIndex, onOff); break;
+					case DataIndex::followRoads:				appendNumeric(ss, datumIndex, followRoads); break;
+					case DataIndex::fuel:						appendNumeric(ss, datumIndex, fuel); break;
+					case DataIndex::desiredSpeed:				appendNumeric(ss, datumIndex, desiredSpeed); break;
+					case DataIndex::desiredSpeedType:			appendNumeric(ss, datumIndex, desiredSpeedType); break;
+					case DataIndex::desiredAltitude:			appendNumeric(ss, datumIndex, desiredAltitude); break;
+					case DataIndex::desiredAltitudeType:		appendNumeric(ss, datumIndex, desiredAltitudeType); break;
+					case DataIndex::leaderID:					appendNumeric(ss, datumIndex, leaderID); break;
+					case DataIndex::formationOffset:			appendNumeric(ss, datumIndex, formationOffset); break;
+					case DataIndex::targetID:					appendNumeric(ss, datumIndex, targetID); break;
+					case DataIndex::targetPosition:				appendNumeric(ss, datumIndex, targetPosition); break;
+					case DataIndex::ROE:						appendNumeric(ss, datumIndex, ROE); break;
+					case DataIndex::reactionToThreat:			appendNumeric(ss, datumIndex, reactionToThreat); break;
+					case DataIndex::emissionsCountermeasures:	appendNumeric(ss, datumIndex, emissionsCountermeasures); break;
+					case DataIndex::TACAN:						appendNumeric(ss, datumIndex, TACAN); break;
+					case DataIndex::radio:						appendNumeric(ss, datumIndex, radio); break;
+					case DataIndex::generalSettings:			appendNumeric(ss, datumIndex, generalSettings); break;
+					case DataIndex::ammo:						appendVector(ss, datumIndex, ammo); break;
+					case DataIndex::contacts:					appendVector(ss, datumIndex, contacts); break;
+					case DataIndex::activePath:					appendList(ss, datumIndex, activePath); break;
+					case DataIndex::isLeader:					appendNumeric(ss, datumIndex, isLeader); break;
+					case DataIndex::operateAs:					appendNumeric(ss, datumIndex, operateAs); break;
+					case DataIndex::shotsScatter:				appendNumeric(ss, datumIndex, shotsScatter); break;
+					case DataIndex::shotsIntensity:				appendNumeric(ss, datumIndex, shotsIntensity); break;
+					case DataIndex::health:						appendNumeric(ss, datumIndex, health); break;
 				}
 			}
 		}
@@ -534,6 +538,12 @@ void Unit::setTACAN(DataTypes::TACAN newTACAN, bool force)
 		TACAN = newTACAN;
 		if (TACAN.isOn) {
 			std::ostringstream commandSS;
+
+			if (TACAN.channel < 0)
+				TACAN.channel = 0;
+			if (TACAN.channel > 126)
+				TACAN.channel = 126;
+
 			commandSS << "{"
 				<< "id = 'ActivateBeacon',"
 				<< "params = {"
@@ -570,6 +580,12 @@ void Unit::setRadio(DataTypes::Radio newRadio, bool force)
 
 		std::ostringstream commandSS;
 		Command* command;
+
+		if (radio.frequency < 0)
+			radio.frequency = 0;
+		
+		if (radio.frequency > 999000000)
+			radio.frequency = 999000000;
 
 		commandSS << "{"
 			<< "id = 'SetFrequency',"

@@ -36,18 +36,37 @@ export class Dropdown {
         return this.#container;
     }
 
-    setOptions(optionsList: string[], sort:""|"string"|"number" = "string") {
-        
-        if ( sort === "number" ) {
-            this.#optionsList = optionsList.sort( (optionA:string, optionB:string) => {
-                const a = parseInt( optionA );
-                const b = parseInt( optionB );
-                if ( a > b )
+    setOptions(optionsList: string[], sort: "" | "string" | "number" | "string+number" = "string") {
+        if (sort === "number") {
+            this.#optionsList = optionsList.sort((optionA: string, optionB: string) => {
+                const a = parseInt(optionA);
+                const b = parseInt(optionB);
+                if (a > b)
                     return 1;
                 else
-                    return ( b > a ) ? -1 : 0;
+                    return (b > a) ? -1 : 0;
             });
-        } else if ( sort === "string" ) {
+        } else if (sort === "string+number") {
+            this.#optionsList = optionsList.sort((optionA: string, optionB: string) => {
+                var regex = /\d+/g;
+                var matchesA = optionA.match(regex);
+                var matchesB = optionB.match(regex);
+                if ((matchesA != null && matchesA?.length > 0) && (matchesB != null && matchesB?.length > 0) && optionA[0] == optionB[0]) {
+                    const a = parseInt(matchesA[0] ?? 0);
+                    const b = parseInt(matchesB[0] ?? 0);
+                    if (a > b)
+                        return 1;
+                    else
+                        return (b > a) ? -1 : 0;
+                } else {
+                    if (optionA > optionB)
+                        return 1;
+                    else
+                        return (optionB > optionA) ? -1 : 0;
+                }
+
+            });
+        } else if (sort === "string") {
             this.#optionsList = optionsList.sort();
         }
 
@@ -169,17 +188,17 @@ export class Dropdown {
     }
 
     #toggle() {
-        this.#container.classList.contains("is-open")? this.close(): this.open();
+        this.#container.classList.contains("is-open") ? this.close() : this.open();
     }
 
     #createElement(defaultText: string | undefined) {
         var div = document.createElement("div");
         div.classList.add("ol-select");
-        
+
         var value = document.createElement("div");
         value.classList.add("ol-select-value");
-        value.innerText = defaultText? defaultText: "";
-        
+        value.innerText = defaultText ? defaultText : "";
+
         var options = document.createElement("div");
         options.classList.add("ol-select-options");
 

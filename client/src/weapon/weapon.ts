@@ -100,6 +100,7 @@ export class Weapon extends CustomMarker {
         return {
             showState: false,
             showVvi: false,
+            showHealth: false,
             showHotgroup: false,
             showUnitIcon: true,
             showShortLabel: false,
@@ -276,6 +277,7 @@ export class Missile extends Weapon {
         return {
             showState: false,
             showVvi: (!this.belongsToCommandedCoalition() && !this.getDetectionMethods().some(value => [VISUAL, OPTIC].includes(value)) && this.getDetectionMethods().some(value => [RADAR, IRST, DLINK].includes(value))),
+            showHealth: false,
             showHotgroup: false,
             showUnitIcon: (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
             showShortLabel: false,
@@ -308,6 +310,7 @@ export class Bomb extends Weapon {
         return {
             showState: false,
             showVvi: (!this.belongsToCommandedCoalition() && !this.getDetectionMethods().some(value => [VISUAL, OPTIC].includes(value)) && this.getDetectionMethods().some(value => [RADAR, IRST, DLINK].includes(value))),
+            showHealth: false,
             showHotgroup: false,
             showUnitIcon: (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
             showShortLabel: false,

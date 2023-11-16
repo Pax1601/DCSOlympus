@@ -30,6 +30,7 @@ export class GroundUnitEditor extends UnitEditor {
             addStringInput(this.contentDiv2, "Label", blueprint.label, "text", (value: string) => {blueprint.label = value; });
             addStringInput(this.contentDiv2, "Short label", blueprint.shortLabel, "text", (value: string) => {blueprint.shortLabel = value; });
             addStringInput(this.contentDiv2, "Type", blueprint.type?? "", "text", (value: string) => {blueprint.type = value; });
+            addStringInput(this.contentDiv2, "Unit when grouped", blueprint.unitWhenGrouped?? "", "text", (value: string) => {blueprint.unitWhenGrouped = value; });
             addDropdownInput(this.contentDiv2, "Coalition", blueprint.coalition, ["", "blue", "red"], (value: string) => {blueprint.coalition = value; });
             addDropdownInput(this.contentDiv2, "Era", blueprint.era, ["WW2", "Early Cold War", "Mid Cold War", "Late Cold War", "Modern"], (value: string) => {blueprint.era = value; });
             //addStringInput(this.contentDiv2, "Filename", blueprint.filename?? "", "text", (value: string) => {blueprint.filename = value; });
@@ -50,7 +51,8 @@ export class GroundUnitEditor extends UnitEditor {
             addCheckboxInput(this.contentDiv2, "Can operate as AAA", blueprint.canAAA ?? false, (value: boolean) => {blueprint.canAAA = value;})
             addCheckboxInput(this.contentDiv2, "Indirect fire (e.g. mortar)", blueprint.indirectFire ?? false, (value: boolean) => {blueprint.indirectFire = value;})
             addStringInput(this.contentDiv2, "Description", blueprint.description ?? "", "text", (value: string) => {blueprint.description = value; });
-            addStringInput(this.contentDiv2, "Abilities", blueprint.abilities ?? "", "text", (value: string) => {blueprint.abilities = value; });
+            addStringInput(this.contentDiv2, "Tags", blueprint.tags ?? "", "text", (value: string) => {blueprint.tags = value; });
+            addStringInput(this.contentDiv2, "Marker file", blueprint.markerFile ?? "", "text", (value: string) => {blueprint.markerFile = value; });
         }
     }
 

@@ -1,5 +1,5 @@
 #define nwjsFolder "C:\Users\dpass\Documents\nwjs\"
-#define version "v0.4.5-alpha"
+#define version "v0.4.6-alpha"
 
 [Setup] 
 AppName=DCS Olympus 
@@ -9,6 +9,14 @@ DefaultGroupName=DCSOlympus
 OutputBaseFilename=DCSOlympus_{#version}
 UninstallFilesDir={app}\Mods\Services\Olympus
 SetupIconFile="..\img\olympus.ico"
+DirExistsWarning=no
+AppendDefaultDirName=no
+
+[Messages]
+WizardSelectDir=Select the location of DCS's Saved Games folder
+SelectDirDesc=Where is DCS's Saved Games folder?
+SelectDirLabel3=DCS Olympus must be installed within DCS's Saved Games folder.
+SelectDirBrowseLabel=This is the detected path. If this is incorrect, click Browse to set the correct folder. 
   
 [Tasks] 
 ; NOTE: The following entry contains English phrases ("Create a desktop icon" and "Additional icons"). You are free to translate them into another language if required. 

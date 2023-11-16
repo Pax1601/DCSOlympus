@@ -97,6 +97,22 @@
     position: absolute;
 }
 
+[data-object|="unit-groundunit"] .unit-short-label {
+    transform: translateY(7px);
+}
+
+/*** Health indicator ***/
+[data-object|="unit"] .unit-health {
+    background: white;
+    border: var(--unit-health-border-width) solid var(--secondary-dark-steel);
+    border-radius: var(--border-radius-sm);
+    display: none;
+    height: var(--unit-health-height);
+    position: absolute;
+    translate: var(--unit-health-x) var(--unit-health-y);
+    width: var(--unit-health-width);
+}
+
 /*** Fuel indicator ***/
 [data-object|="unit"] .unit-fuel {
     background: white;
@@ -109,7 +125,8 @@
     width: var(--unit-fuel-width);
 }
 
-[data-object|="unit"] .unit-fuel-level {
+[data-object|="unit"] .unit-fuel-level,
+[data-object|="unit"] .unit-health-level {
     background-color: var(--secondary-light-grey);
     height: 100%;
     width: 100%;
@@ -178,6 +195,7 @@
 
 /*** Common ***/
 [data-object|="unit"]:hover .unit-ammo,
+[data-object|="unit"]:hover .unit-health ,
 [data-object|="unit"]:hover .unit-fuel {
     display: flex;
 }
@@ -188,13 +206,14 @@
     }
 }
 
-[data-object|="unit"][data-has-low-fuel] .unit-fuel {
+[data-object|="unit"][data-has-low-fuel] .unit-fuel, [data-object|="unit"][data-has-low-health] .unit-health {
     animation: pulse 1.5s linear infinite;
 }
 
 [data-object|="unit"][data-is-in-hotgroup] .unit-hotgroup,
 [data-object|="unit"][data-is-selected] .unit-ammo,
 [data-object|="unit"][data-is-selected] .unit-fuel,
+[data-object|="unit"][data-is-selected] .unit-health,
 [data-object|="unit"][data-is-selected] .unit-selected-spotlight {
     display: flex;
 }
@@ -211,6 +230,7 @@
 }
 
 [data-object|="unit"][data-coalition="blue"] .unit-fuel-level,
+[data-object|="unit"][data-coalition="blue"] .unit-health-level,
 [data-object|="unit"][data-coalition="blue"][data-has-fox-1] .unit-ammo>div:nth-child(1),
 [data-object|="unit"][data-coalition="blue"][data-has-fox-2] .unit-ammo>div:nth-child(2),
 [data-object|="unit"][data-coalition="blue"][data-has-fox-3] .unit-ammo>div:nth-child(3),
@@ -227,6 +247,7 @@
 }
 
 [data-object|="unit"][data-coalition="red"] .unit-fuel-level,
+[data-object|="unit"][data-coalition="red"] .unit-health-level,
 [data-object|="unit"][data-coalition="red"][data-has-fox-1] .unit-ammo>div:nth-child(1),
 [data-object|="unit"][data-coalition="red"][data-has-fox-2] .unit-ammo>div:nth-child(2),
 [data-object|="unit"][data-coalition="red"][data-has-fox-3] .unit-ammo>div:nth-child(3),
@@ -260,7 +281,8 @@
     background-image: url("/resources/theme/images/states/idle.svg");
 }
 
-[data-object*="groundunit"][data-state="idle"] .unit-state {
+[data-object*="groundunit"][data-state="idle"] .unit-state,
+[data-object*="navyunit"][data-state="idle"] .unit-state {
     background-image: url("");  /* To avoid clutter, dont show the idle state for non flying units */
 }
 
@@ -307,6 +329,19 @@
     background-image: url("/resources/theme/images/states/awacs.svg");
 }
 
+[data-object|="unit"] .unit-health::before {
+    background-image: url("/resources/theme/images/icons/health.svg");
+    background-repeat: no-repeat;
+    background-size: contain;
+    content: " ";
+    height: 6px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    translate: -10px -2px;
+    width: 6px;
+}
+
 
 /*** Dead unit ***/
 [data-object|="unit"][data-is-dead] .unit-selected-spotlight,
@@ -316,6 +351,7 @@
 [data-object|="unit"][data-is-dead] .unit-hotgroup-id,
 [data-object|="unit"][data-is-dead] .unit-state,
 [data-object|="unit"][data-is-dead] .unit-fuel,
+[data-object|="unit"][data-is-dead] .unit-health,
 [data-object|="unit"][data-is-dead] .unit-ammo,
 [data-object|="unit"][data-is-dead]:hover .unit-fuel,
 [data-object|="unit"][data-is-dead]:hover .unit-ammo {

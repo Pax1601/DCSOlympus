@@ -198,8 +198,8 @@ export function addBlueprintsScroll(div: HTMLElement, database: {blueprints: {[k
                 var rowDiv = document.createElement("div");
                 scrollDiv.appendChild(rowDiv);
 
-                let text = document.createElement("label");
-                text.textContent = key;
+                let text = document.createElement("div");
+                text.innerHTML = `<div>${key}</div> <div>${blueprints[key].label}</div>`;
                 text.onclick = () => { 
                     callback(key);
                     const collection = document.getElementsByClassName("blueprint-selected");
@@ -287,7 +287,11 @@ export function arrayToString(array: string[]) {
     return "[" + array.join( ", " ) + "]";
 }
 
-
+/** Converts an a single string like [val1, val2, val3] into an array
+ *
+ * @param input The input string
+ * @returns The array
+ */
 export function stringToArray(input: string) {
     return input.match( /(\w)+/g ) ?? [];
 }

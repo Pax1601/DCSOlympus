@@ -278,10 +278,11 @@ private:
 class Delete : public Command
 {
 public:
-	Delete(unsigned int ID, bool explosion, bool immediate, function<void(void)> callback = [](){}) :
+	Delete(unsigned int ID, bool explosion, string explosionType, bool immediate, function<void(void)> callback = [](){}) :
 		Command(callback),
 		ID(ID), 
 		explosion(explosion),
+		explosionType(explosionType),
 		immediate(immediate)
 	{
 		priority = CommandPriority::HIGH;
@@ -293,6 +294,7 @@ public:
 private:
 	const unsigned int ID;
 	const bool explosion;
+	const string explosionType;
 	const bool immediate;
 };
 
@@ -410,10 +412,11 @@ private:
 class Explosion : public Command
 {
 public:
-	Explosion(unsigned int intensity, Coords location, function<void(void)> callback = [](){}) :
+	Explosion(unsigned int intensity, string explosionType, Coords location, function<void(void)> callback = [](){}) :
 		Command(callback),
 		location(location),
-		intensity(intensity)
+		intensity(intensity),
+		explosionType(explosionType)
 	{
 		priority = CommandPriority::MEDIUM;
 	};
@@ -423,4 +426,5 @@ public:
 private:
 	const Coords location;
 	const unsigned int intensity;
+	const string explosionType;
 };

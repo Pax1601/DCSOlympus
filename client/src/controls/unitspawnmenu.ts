@@ -154,9 +154,28 @@ export class UnitSpawnMenu {
             this.#unitLiveryDropdown.reset();
 
             if (this.#orderByRole)
-                this.#unitLabelDropdown.setOptions(this.#unitDatabase.getByRole(this.spawnOptions.roleType).map((blueprint) => { return blueprint.label }));
+                this.#unitLabelDropdown.setOptions(this.#unitDatabase.getByRole(this.spawnOptions.roleType).map((blueprint) => { return blueprint.label }), "string+number");
             else
-                this.#unitLabelDropdown.setOptions(this.#unitDatabase.getByType(this.spawnOptions.roleType).map((blueprint) => { return blueprint.label }));
+                this.#unitLabelDropdown.setOptions(this.#unitDatabase.getByType(this.spawnOptions.roleType).map((blueprint) => { return blueprint.label }), "string+number");
+
+            /* Add the tags to the options */
+            var elements: HTMLElement[] = [];
+            for (let idx = 0; idx < this.#unitLabelDropdown.getOptionElements().length; idx++) {
+                let element = this.#unitLabelDropdown.getOptionElements()[idx] as HTMLElement;
+                let entry = this.#unitDatabase.getByLabel(element.textContent ?? "");
+                if (entry) {
+                    element.querySelectorAll("button")[0]?.append(...(entry.tags?.split(",").map((tag: string) => {
+                        tag = tag.trim();
+                        let el = document.createElement("div");
+                        el.classList.add("pill", `ol-tag`, `ol-tag-${tag.replace(/[\W_]+/g,"-")}`);
+                        el.textContent = tag;
+                        element.appendChild(el);
+                        return el;
+                    }) ?? []));
+                    elements.push(element);
+                }
+            }
+
             this.#container.dispatchEvent(new Event("resize"));
 
             this.spawnOptions.name = "";

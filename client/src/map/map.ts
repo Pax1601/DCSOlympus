@@ -68,6 +68,7 @@ export class Map extends L.Map {
     #temporaryMarkers: TemporaryUnitMarker[] = [];
     #selecting: boolean = false;
     #isZooming: boolean = false;
+    #previousZoom: number = 0;
 
     #destinationGroupRotation: number = 0;
     #computeDestinationRotation: boolean = false;
@@ -102,8 +103,6 @@ export class Map extends L.Map {
     constructor(ID: string){
         /* Init the leaflet map */
         super(ID, { 
-            zoomSnap: 0, 
-            zoomDelta: 0.25, 
             preferCanvas: true, 
             doubleClickZoom: false, 
             zoomControl: false, 
@@ -503,6 +502,10 @@ export class Map extends L.Map {
         return this.#visibilityOptions;
     }
 
+    getPreviousZoom() {
+        return this.#previousZoom;
+    }
+
     /* Event handlers */
     #onClick(e: any) {
         if (!this.#preventLeftClick) {
@@ -703,6 +706,7 @@ export class Map extends L.Map {
     }
 
     #onZoomStart(e: any) {
+        this.#previousZoom = this.getZoom();
         if (this.#centerUnit != null)
             this.#panToUnit(this.#centerUnit);
         this.#isZooming = true;

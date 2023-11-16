@@ -1,4 +1,4 @@
-local version = "v0.4.5-alpha"
+local version = "v0.4.6-alpha"
 
 local debug = false				-- True enables debug printing using DCS messages
 
@@ -17,7 +17,7 @@ Olympus.weaponsData = {}
 
 -- Units data structures
 Olympus.unitCounter = 1			-- Counter to generate unique names
-Olympus.spawnDatabase = {}		-- Database of spawn options, used for units cloning
+Olympus.cloneDatabase = {}		-- Database of spawn options, used for units cloning
 Olympus.unitIndex = 0			-- Counter used to spread the computational load of data retrievial from DCS
 Olympus.unitStep = 50			-- Max number of units that get updated each cycle
 Olympus.units = {}				-- Table holding references to all the currently existing units
@@ -28,7 +28,8 @@ Olympus.weapons = {}			-- Table holding references to all the currently existing
 
 -- Miscellaneous initializations
 Olympus.missionStartTime = DCS.getRealTime()
-
+Olympus.napalmCounter = 1
+Olympus.fireCounter = 1
 ------------------------------------------------------------------------------------------------------
 -- Olympus functions
 ------------------------------------------------------------------------------------------------------
@@ -434,10 +435,94 @@ function Olympus.smoke(color, lat, lng)
 end  
 
 -- Creates an explosion on the ground
-function Olympus.explosion(intensity, lat, lng)
-    Olympus.debug("Olympus.explosion " .. intensity .. " (" .. lat .. ", " .. lng ..")", 2)
-	trigger.action.explosion(mist.utils.makeVec3GL(coord.LLtoLO(lat, lng, 0)), intensity)
+function Olympus.explosion(intensity, explosionType, lat, lng, alt)
+    Olympus.debug("Olympus.explosion " .. explosionType .. " " .. intensity .. " (" .. lat .. ", " .. lng .. ")", 2)
+
+	local vec3 = nil
+	if alt ~= nil then
+		vec3 = coord.LLtoLO(lat, lng, alt)
+	else
+		vec3 = mist.utils.makeVec3GL(coord.LLtoLO(lat, lng))
+	end
+
+	if explosionType == "normal" then
+		trigger.action.explosion(vec3, intensity)
+	elseif explosionType == "phosphorous" then
+		Olympus.phosphorous(vec3)
+	elseif explosionType == "napalm" then
+		Olympus.napalm(vec3)
+	elseif explosionType == "secondary" then
+		Olympus.secondaries(vec3)
+	elseif explosionType == "fire" then
+		Olympus.createFire(vec3)
+	elseif explosionType == "depthCharge" then
+
+	end
 end  
+
+function Olympus.phosphorous(vec3) 
+	trigger.action.explosion(vec3, 1)
+	for i =	1,math.random(3, 10) do 
+		angle = mist.utils.toRadian((math.random(1, 360)))
+		local randVec = mist.utils.makeVec3GL((mist.getRandPointInCircle(vec3, 5, 1, 0, 360)))
+		trigger.action.signalFlare(randVec, 2, angle)
+	end
+end
+
+function Olympus.napalm(vec3)
+	local napeName = "napalmStrike" .. Olympus.napalmCounter
+		Olympus.napalmCounter = Olympus.napalmCounter + 1
+		mist.dynAddStatic(
+							{
+								country = 20,
+								category = 'Fortifications',
+								hidden = true,
+								name = napeName,
+								type ="Fuel tank",
+								x = vec3.x,
+								y = vec3.z,
+								heading = 0,
+							} -- end of function
+						)
+		timer.scheduleFunction(Olympus.explodeNapalm, vec3, timer.getTime() + 0.1)
+		timer.scheduleFunction(Olympus.removeNapalm, napeName, timer.getTime() + 0.12)
+end
+
+function Olympus.explodeNapalm(vec3)
+	trigger.action.explosion(vec3, 10)
+end
+
+function Olympus.removeNapalm(staticName) 
+	StaticObject.getByName(staticName):destroy()
+end
+
+function Olympus.createFire(vec3)
+	local smokeName = "smokeName" .. Olympus.fireCounter
+	Olympus.fireCounter = Olympus.fireCounter + 1
+	trigger.action.effectSmokeBig(vec3, 2 , 1, smokeName)
+	trigger.action.explosion(vec3, 1) -- looks wierd to spawn in on flat land without this
+	timer.scheduleFunction(Olympus.removeFire, smokeName, timer.getTime() + 20)
+end
+
+function Olympus.removeFire (smokeName)
+	trigger.action.effectSmokeStop(smokeName)
+end
+
+function Olympus.secondaries(vec3) 
+	trigger.action.explosion(vec3, 1)
+	for i =	1, 10 do 
+		timer.scheduleFunction(Olympus.randomDebries, vec3, timer.getTime() + math.random(0, 180))
+	end
+end
+
+function Olympus.randomDebries(vec3) 
+	trigger.action.explosion(vec3, 1)
+	for i =	1,math.random(3, 10) do
+		angle = mist.utils.toRadian((math.random(1, 360)))
+		local randVec = mist.utils.makeVec3GL((mist.getRandPointInCircle(vec3, 5, 1, 0, 360)))
+		trigger.action.signalFlare(randVec, 3, angle)
+	end
+end
 
 -- Spawns a new unit or group
 -- Spawn table contains the following parameters
@@ -500,6 +585,7 @@ function Olympus.spawnUnits(spawnTable)
 		name = "Olympus-" .. Olympus.unitCounter,
 		task = 'CAP'
 	}
+	Olympus.debug(Olympus.serializeTable(vars), 2)
 	mist.dynAdd(vars)
 
 	Olympus.unitCounter = Olympus.unitCounter + 1
@@ -674,7 +760,17 @@ end
 
 -- Add the unit data to the database, used for unit cloning
 function Olympus.addToDatabase(unitTable)
-	Olympus.spawnDatabase[unitTable.name] = unitTable
+	Olympus.cloneDatabase[unitTable.name] = unitTable
+end
+
+-- Find a database entry by ID
+function Olympus.findInDatabase(ID)
+	for idx, unit in pairs(Olympus.cloneDatabase) do
+		if unit ~= nil and unit["ID"] == ID then
+			return unit
+		end
+	end
+	return nil
 end
 
 -- Clones a unit by ID. Will clone the unit with the same original payload as the source unit. TODO: only works on Olympus unit not ME units (TO BE VERIFIED).
@@ -693,27 +789,22 @@ function Olympus.clone(cloneTable, deleteOriginal)
 	-- All the units in the table will be cloned in a single group
 	for idx, cloneData in pairs(cloneTable) do
 		local ID = cloneData.ID
-		local unit = Olympus.getUnitByID(ID)
+		local unit = Olympus.findInDatabase(ID)
 
-		if unit then
-			local position = unit:getPosition()
-			local heading = math.atan2( position.x.z, position.x.x )
-			
+		if unit ~= nil then
 			-- Update the data of the cloned unit
-			local unitTable = mist.utils.deepCopy(Olympus.spawnDatabase[unit:getName()])
+			local unitTable = mist.utils.deepCopy(unit)
 
 			local point = coord.LLtoLO(cloneData['lat'], cloneData['lng'], 0)
 			if unitTable then
 				unitTable["x"] = point.x
 				unitTable["y"] = point.z
-				unitTable["alt"] = unit:getPoint().y
-				unitTable["heading"] = heading
 				unitTable["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitsTable + 1
 			end
 
 			if countryID == nil and category == nil then
-				countryID = unit:getCountry()
-				if unit:getDesc().category == Unit.Category.AIRPLANE then
+				countryID = unit["country"]
+				if unit["category"] == Unit.Category.AIRPLANE then
 					category = 'plane'
 					route = {
 						["points"] = 
@@ -732,7 +823,7 @@ function Olympus.clone(cloneTable, deleteOriginal)
 							},
 						}, 
 					}
-				elseif unit:getDesc().category == Unit.Category.HELICOPTER then
+				elseif unit["category"] == Unit.Category.HELICOPTER then
 					category = 'helicopter'
 					route = {
 						["points"] = 
@@ -751,13 +842,12 @@ function Olympus.clone(cloneTable, deleteOriginal)
 							},
 						}, 
 					}
-				elseif unit:getDesc().category == Unit.Category.GROUND_UNIT then
+				elseif unit["category"] == Unit.Category.GROUND_UNIT then
 					category = 'vehicle'
-				elseif unit:getDesc().category == Unit.Category.SHIP then
+				elseif unit["category"] == Unit.Category.SHIP then
 					category = 'ship'
 				end
 			end
-
 			unitsTable[#unitsTable + 1] = mist.utils.deepCopy(unitTable)
 		end
 
@@ -783,6 +873,7 @@ function Olympus.clone(cloneTable, deleteOriginal)
 		Olympus.addToDatabase(unitTable)
 	end
 
+	Olympus.debug(Olympus.serializeTable(vars), 2)
 	mist.dynAdd(vars)
 	Olympus.unitCounter = Olympus.unitCounter + 1
 
@@ -790,12 +881,16 @@ function Olympus.clone(cloneTable, deleteOriginal)
 end
 
 -- Delete a unit by ID, optionally use an explosion
-function Olympus.delete(ID, explosion)
+function Olympus.delete(ID, explosion, explosionType)
 	Olympus.debug("Olympus.delete " .. ID .. " " .. tostring(explosion), 2)
 	local unit = Olympus.getUnitByID(ID)
 	if unit then
 		if unit:getPlayerName() or explosion then
-			trigger.action.explosion(unit:getPoint() , 250 ) --consider replacing with forcibly deslotting the player, however this will work for now
+			if explosionType == nil then
+				explosionType = "normal"
+			end
+			local lat, lng, alt = coord.LOtoLL(unit:getPoint())
+			Olympus.explosion(250, explosionType, lat, lng, alt)
 			Olympus.debug("Olympus.delete completed successfully", 2)
 		else
 			unit:destroy(); --works for AI units not players
@@ -937,11 +1032,25 @@ function Olympus.setUnitsData(arg, time)
 							table["hasTask"] = controller:hasTask()
 							table["ammo"] = unit:getAmmo() --TODO remove a lot of stuff we don't really need
 							table["fuel"] = unit:getFuel()
-							table["life"] = unit:getLife() / unit:getLife0()
+							table["health"] = unit:getLife() / unit:getLife0() * 100
 							table["contacts"] = contacts
+
+							-- Update the database used for unit cloning
+							local name = unit:getName()
+							if Olympus.cloneDatabase[name] ~= nil then
+								Olympus.cloneDatabase[name]["ID"] = ID
+								Olympus.cloneDatabase[name]["category"] = unit:getDesc().category
+								Olympus.cloneDatabase[name]["heading"] = table["heading"]
+								Olympus.cloneDatabase[name]["alt"] = alt
+								Olympus.cloneDatabase[name]["country"] = unit:getCountry()
+							end
 
 							units[ID] = table
 						end
+					else
+						-- If the unit reference is nil it means the unit no longer exits
+						units[ID] = {isAlive = false}
+						Olympus.units[ID] = nil
 					end
 				end
 			else

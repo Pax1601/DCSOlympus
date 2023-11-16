@@ -86,6 +86,7 @@ export interface UnitSpawnTable {
 export interface ObjectIconOptions {
     showState: boolean,
     showVvi: boolean,
+    showHealth: boolean,
     showHotgroup: boolean,
     showUnitIcon: boolean,
     showShortLabel: boolean,
@@ -182,6 +183,7 @@ export interface UnitData {
     operateAs: string;
     shotsScatter: number;
     shotsIntensity: number;
+    health: number;
 }
 
 export interface LoadoutItemBlueprint {
@@ -219,6 +221,7 @@ export interface UnitBlueprint {
     shotsBaseScatter?: number;
     description?: string;
     abilities?: string;
+    tags?: string;
     acquisitionRange?: number;
     engagementRange?: number;
     targetingRange?: number;
@@ -228,6 +231,8 @@ export interface UnitBlueprint {
     canRearm?: boolean;
     canAAA?: boolean;
     indirectFire?: boolean;
+    markerFile?: string;
+    unitWhenGrouped?: string;
 }
 
 export interface UnitSpawnOptions {

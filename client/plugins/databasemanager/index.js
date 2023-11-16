@@ -54,7 +54,7 @@ class AirUnitEditor extends uniteditor_1.UnitEditor {
             (0, utils_1.addStringInput)(this.contentDiv2, "Cost", (_b = String(blueprint.cost)) !== null && _b !== void 0 ? _b : "", "number", (value) => { blueprint.cost = parseFloat(value); });
             (0, utils_1.addCheckboxInput)(this.contentDiv2, "Can target point", (_c = blueprint.canTargetPoint) !== null && _c !== void 0 ? _c : false, (value) => { blueprint.canTargetPoint = value; });
             (0, utils_1.addStringInput)(this.contentDiv2, "Description", (_d = blueprint.description) !== null && _d !== void 0 ? _d : "", "text", (value) => { blueprint.description = value; });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Abilities", (_e = blueprint.abilities) !== null && _e !== void 0 ? _e : "", "text", (value) => { blueprint.abilities = value; });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Tags", (_e = blueprint.tags) !== null && _e !== void 0 ? _e : "", "text", (value) => { blueprint.tags = value; });
             /* Add a scrollable list of loadouts that the user can edit */
             var title = document.createElement("label");
             title.innerText = "Loadouts";
@@ -206,13 +206,13 @@ class DatabaseManagerPlugin {
         __classPrivateFieldGet(this, _DatabaseManagerPlugin_mainContentContainer, "f").classList.add("dm-container");
         __classPrivateFieldGet(this, _DatabaseManagerPlugin_element, "f").appendChild(__classPrivateFieldGet(this, _DatabaseManagerPlugin_mainContentContainer, "f"));
         __classPrivateFieldSet(this, _DatabaseManagerPlugin_contentDiv1, document.createElement("div"), "f");
-        __classPrivateFieldGet(this, _DatabaseManagerPlugin_contentDiv1, "f").classList.add("dm-content-container");
+        __classPrivateFieldGet(this, _DatabaseManagerPlugin_contentDiv1, "f").classList.add("dm-content-container", "ol-scrollable");
         __classPrivateFieldGet(this, _DatabaseManagerPlugin_mainContentContainer, "f").appendChild(__classPrivateFieldGet(this, _DatabaseManagerPlugin_contentDiv1, "f"));
         __classPrivateFieldSet(this, _DatabaseManagerPlugin_contentDiv2, document.createElement("div"), "f");
-        __classPrivateFieldGet(this, _DatabaseManagerPlugin_contentDiv2, "f").classList.add("dm-content-container");
+        __classPrivateFieldGet(this, _DatabaseManagerPlugin_contentDiv2, "f").classList.add("dm-content-container", "ol-scrollable");
         __classPrivateFieldGet(this, _DatabaseManagerPlugin_mainContentContainer, "f").appendChild(__classPrivateFieldGet(this, _DatabaseManagerPlugin_contentDiv2, "f"));
         __classPrivateFieldSet(this, _DatabaseManagerPlugin_contentDiv3, document.createElement("div"), "f");
-        __classPrivateFieldGet(this, _DatabaseManagerPlugin_contentDiv3, "f").classList.add("dm-content-container");
+        __classPrivateFieldGet(this, _DatabaseManagerPlugin_contentDiv3, "f").classList.add("dm-content-container", "ol-scrollable");
         __classPrivateFieldGet(this, _DatabaseManagerPlugin_mainContentContainer, "f").appendChild(__classPrivateFieldGet(this, _DatabaseManagerPlugin_contentDiv3, "f"));
         /* Create the database editors, which use the three divs created before */
         __classPrivateFieldSet(this, _DatabaseManagerPlugin_aircraftEditor, new airuniteditor_1.AirUnitEditor(__classPrivateFieldGet(this, _DatabaseManagerPlugin_contentDiv1, "f"), __classPrivateFieldGet(this, _DatabaseManagerPlugin_contentDiv2, "f"), __classPrivateFieldGet(this, _DatabaseManagerPlugin_contentDiv3, "f")), "f");
@@ -508,7 +508,7 @@ class GroundUnitEditor extends uniteditor_1.UnitEditor {
      * @param blueprint The blueprint to edit
      */
     setBlueprint(blueprint) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w;
         __classPrivateFieldSet(this, _GroundUnitEditor_blueprint, blueprint, "f");
         if (__classPrivateFieldGet(this, _GroundUnitEditor_blueprint, "f") !== null) {
             this.contentDiv2.replaceChildren();
@@ -519,25 +519,29 @@ class GroundUnitEditor extends uniteditor_1.UnitEditor {
             (0, utils_1.addStringInput)(this.contentDiv2, "Label", blueprint.label, "text", (value) => { blueprint.label = value; });
             (0, utils_1.addStringInput)(this.contentDiv2, "Short label", blueprint.shortLabel, "text", (value) => { blueprint.shortLabel = value; });
             (0, utils_1.addStringInput)(this.contentDiv2, "Type", (_a = blueprint.type) !== null && _a !== void 0 ? _a : "", "text", (value) => { blueprint.type = value; });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Unit when grouped", (_b = blueprint.unitWhenGrouped) !== null && _b !== void 0 ? _b : "", "text", (value) => { blueprint.unitWhenGrouped = value; });
             (0, utils_1.addDropdownInput)(this.contentDiv2, "Coalition", blueprint.coalition, ["", "blue", "red"], (value) => { blueprint.coalition = value; });
             (0, utils_1.addDropdownInput)(this.contentDiv2, "Era", blueprint.era, ["WW2", "Early Cold War", "Mid Cold War", "Late Cold War", "Modern"], (value) => { blueprint.era = value; });
             //addStringInput(this.contentDiv2, "Filename", blueprint.filename?? "", "text", (value: string) => {blueprint.filename = value; });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Cost", (_b = String(blueprint.cost)) !== null && _b !== void 0 ? _b : "", "number", (value) => { blueprint.cost = parseFloat(value); });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Acquisition range [m]", (_c = String(blueprint.acquisitionRange)) !== null && _c !== void 0 ? _c : "", "number", (value) => { blueprint.acquisitionRange = parseFloat(value); });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Engagement range [m]", (_d = String(blueprint.engagementRange)) !== null && _d !== void 0 ? _d : "", "number", (value) => { blueprint.engagementRange = parseFloat(value); });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Targeting range [m]", (_e = String(blueprint.targetingRange)) !== null && _e !== void 0 ? _e : "", "number", (value) => { blueprint.targetingRange = parseFloat(value); });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Barrel height [m]", (_f = String(blueprint.barrelHeight)) !== null && _f !== void 0 ? _f : "", "number", (value) => { blueprint.barrelHeight = parseFloat(value); });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Muzzle velocity [m/s]", (_g = String(blueprint.muzzleVelocity)) !== null && _g !== void 0 ? _g : "", "number", (value) => { blueprint.muzzleVelocity = parseFloat(value); });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Aim time [s]", (_h = String(blueprint.aimTime)) !== null && _h !== void 0 ? _h : "", "number", (value) => { blueprint.aimTime = parseFloat(value); });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Burst quantity", (_j = String(blueprint.shotsToFire)) !== null && _j !== void 0 ? _j : "", "number", (value) => { blueprint.shotsToFire = Math.round(parseFloat(value)); });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Burst base interval [s]", (_k = String(blueprint.shotsBaseInterval)) !== null && _k !== void 0 ? _k : "", "number", (value) => { blueprint.shotsBaseInterval = Math.round(parseFloat(value)); });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Base scatter [°]", (_l = String(blueprint.shotsBaseScatter)) !== null && _l !== void 0 ? _l : "", "number", (value) => { blueprint.shotsBaseScatter = Math.round(parseFloat(value)); });
-            (0, utils_1.addCheckboxInput)(this.contentDiv2, "Can target point", (_m = blueprint.canTargetPoint) !== null && _m !== void 0 ? _m : false, (value) => { blueprint.canTargetPoint = value; });
-            (0, utils_1.addCheckboxInput)(this.contentDiv2, "Can rearm", (_o = blueprint.canRearm) !== null && _o !== void 0 ? _o : false, (value) => { blueprint.canRearm = value; });
-            (0, utils_1.addCheckboxInput)(this.contentDiv2, "Can operate as AAA", (_p = blueprint.canAAA) !== null && _p !== void 0 ? _p : false, (value) => { blueprint.canAAA = value; });
-            (0, utils_1.addCheckboxInput)(this.contentDiv2, "Indirect fire (e.g. mortar)", (_q = blueprint.indirectFire) !== null && _q !== void 0 ? _q : false, (value) => { blueprint.indirectFire = value; });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Description", (_r = blueprint.description) !== null && _r !== void 0 ? _r : "", "text", (value) => { blueprint.description = value; });
-            (0, utils_1.addStringInput)(this.contentDiv2, "Abilities", (_s = blueprint.abilities) !== null && _s !== void 0 ? _s : "", "text", (value) => { blueprint.abilities = value; });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Cost", (_c = String(blueprint.cost)) !== null && _c !== void 0 ? _c : "", "number", (value) => { blueprint.cost = parseFloat(value); });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Acquisition range [m]", (_d = String(blueprint.acquisitionRange)) !== null && _d !== void 0 ? _d : "", "number", (value) => { blueprint.acquisitionRange = parseFloat(value); });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Engagement range [m]", (_e = String(blueprint.engagementRange)) !== null && _e !== void 0 ? _e : "", "number", (value) => { blueprint.engagementRange = parseFloat(value); });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Targeting range [m]", (_f = String(blueprint.targetingRange)) !== null && _f !== void 0 ? _f : "", "number", (value) => { blueprint.targetingRange = parseFloat(value); });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Aim method range [m]", (_g = String(blueprint.aimMethodRange)) !== null && _g !== void 0 ? _g : "", "number", (value) => { blueprint.aimMethodRange = parseFloat(value); });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Barrel height [m]", (_h = String(blueprint.barrelHeight)) !== null && _h !== void 0 ? _h : "", "number", (value) => { blueprint.barrelHeight = parseFloat(value); });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Muzzle velocity [m/s]", (_j = String(blueprint.muzzleVelocity)) !== null && _j !== void 0 ? _j : "", "number", (value) => { blueprint.muzzleVelocity = parseFloat(value); });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Aim time [s]", (_k = String(blueprint.aimTime)) !== null && _k !== void 0 ? _k : "", "number", (value) => { blueprint.aimTime = parseFloat(value); });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Shots to fire", (_l = String(blueprint.shotsToFire)) !== null && _l !== void 0 ? _l : "", "number", (value) => { blueprint.shotsToFire = Math.round(parseFloat(value)); });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Shots base interval [s]", (_m = String(blueprint.shotsBaseInterval)) !== null && _m !== void 0 ? _m : "", "number", (value) => { blueprint.shotsBaseInterval = Math.round(parseFloat(value)); });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Shots base scatter [°]", (_o = String(blueprint.shotsBaseScatter)) !== null && _o !== void 0 ? _o : "", "number", (value) => { blueprint.shotsBaseScatter = Math.round(parseFloat(value)); });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Alertness time constant [s]", (_p = String(blueprint.alertnessTimeConstant)) !== null && _p !== void 0 ? _p : "", "number", (value) => { blueprint.alertnessTimeConstant = Math.round(parseFloat(value)); });
+            (0, utils_1.addCheckboxInput)(this.contentDiv2, "Can target point", (_q = blueprint.canTargetPoint) !== null && _q !== void 0 ? _q : false, (value) => { blueprint.canTargetPoint = value; });
+            (0, utils_1.addCheckboxInput)(this.contentDiv2, "Can rearm", (_r = blueprint.canRearm) !== null && _r !== void 0 ? _r : false, (value) => { blueprint.canRearm = value; });
+            (0, utils_1.addCheckboxInput)(this.contentDiv2, "Can operate as AAA", (_s = blueprint.canAAA) !== null && _s !== void 0 ? _s : false, (value) => { blueprint.canAAA = value; });
+            (0, utils_1.addCheckboxInput)(this.contentDiv2, "Indirect fire (e.g. mortar)", (_t = blueprint.indirectFire) !== null && _t !== void 0 ? _t : false, (value) => { blueprint.indirectFire = value; });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Description", (_u = blueprint.description) !== null && _u !== void 0 ? _u : "", "text", (value) => { blueprint.description = value; });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Tags", (_v = blueprint.tags) !== null && _v !== void 0 ? _v : "", "text", (value) => { blueprint.tags = value; });
+            (0, utils_1.addStringInput)(this.contentDiv2, "Marker file", (_w = blueprint.markerFile) !== null && _w !== void 0 ? _w : "", "text", (value) => { blueprint.markerFile = value; });
         }
     }
     /** Add a new empty blueprint
@@ -751,9 +755,9 @@ class UnitEditor {
         this.database = JSON.parse(JSON.stringify({ blueprints: database.getBlueprints(true) }));
     }
     /** Show the editor
-     *
+     * @param filter String filter
      */
-    show() {
+    show(filter = "") {
         this.visible = true;
         this.contentDiv1.replaceChildren();
         this.contentDiv2.replaceChildren();
@@ -763,17 +767,16 @@ class UnitEditor {
             var title = document.createElement("label");
             title.innerText = "Units list";
             this.contentDiv1.appendChild(title);
-            (0, utils_1.addBlueprintsScroll)(this.contentDiv1, this.database, (key) => {
-                if (this.database != null)
-                    this.setBlueprint(this.database.blueprints[key]);
-            });
-            (0, utils_1.addNewElementInput)(this.contentDiv1, (ev, input) => {
-                if (input.value != "")
-                    this.addBlueprint((input).value);
-            });
+            var filterInput = document.createElement("input");
+            filterInput.value = filter;
+            this.contentDiv1.appendChild(filterInput);
+            filterInput.onchange = (e) => {
+                this.show(e.target.value);
+            };
+            this.addBlueprints(filter);
         }
     }
-    /** Hid the editor
+    /** Hide the editor
      *
      */
     hide() {
@@ -788,6 +791,22 @@ class UnitEditor {
      */
     getDatabase() {
         return this.database;
+    }
+    /**
+     *
+     * @param filter String filter
+     */
+    addBlueprints(filter = "") {
+        if (this.database) {
+            (0, utils_1.addBlueprintsScroll)(this.contentDiv1, this.database, filter, (key) => {
+                if (this.database != null)
+                    this.setBlueprint(this.database.blueprints[key]);
+            });
+            (0, utils_1.addNewElementInput)(this.contentDiv1, (ev, input) => {
+                if (input.value != "")
+                    this.addBlueprint((input).value);
+            });
+        }
     }
 }
 exports.UnitEditor = UnitEditor;
@@ -958,36 +977,56 @@ exports.addNewElementInput = addNewElementInput;
  *
  * @param div The HTMLElement that will contain the list
  * @param database The database that will be used to fill the list of blueprints
+ * @param filter A string filter that will be executed to filter the blueprints to add
  * @param callback Callback called when the user clicks on one of the elements
  */
-function addBlueprintsScroll(div, database, callback) {
+function addBlueprintsScroll(div, database, filter, callback) {
     var scrollDiv = document.createElement("div");
     scrollDiv.classList.add("dm-scroll-container");
     if (database !== null) {
         var blueprints = database.blueprints;
         for (let key of Object.keys(blueprints).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))) {
-            var rowDiv = document.createElement("div");
-            scrollDiv.appendChild(rowDiv);
-            var text = document.createElement("label");
-            text.textContent = key;
-            text.onclick = () => callback(key);
-            rowDiv.appendChild(text);
-            let checkbox = document.createElement("input");
-            checkbox.type = "checkbox";
-            checkbox.checked = blueprints[key].enabled;
-            checkbox.onclick = () => {
-                console.log(checkbox.checked);
-                blueprints[key].enabled = checkbox.checked;
-            };
-            rowDiv.appendChild(checkbox);
-            /* This button allows to remove an element from the list. It requires a refresh. */
-            var button = document.createElement("button");
-            button.innerText = "X";
-            button.onclick = () => {
-                delete blueprints[key];
-                div.dispatchEvent(new Event("refresh"));
-            };
-            rowDiv.appendChild(button);
+            var addKey = true;
+            if (filter !== "") {
+                try {
+                    var blueprint = blueprints[key];
+                    addKey = eval(filter);
+                }
+                catch (_a) {
+                    console.error("An error has occurred evaluating the blueprint filter");
+                }
+            }
+            if (addKey) {
+                var rowDiv = document.createElement("div");
+                scrollDiv.appendChild(rowDiv);
+                let text = document.createElement("div");
+                text.innerHTML = `<div>${key}</div> <div>${blueprints[key].label}</div>`;
+                text.onclick = () => {
+                    callback(key);
+                    const collection = document.getElementsByClassName("blueprint-selected");
+                    for (let i = 0; i < collection.length; i++) {
+                        collection[i].classList.remove("blueprint-selected");
+                    }
+                    text.classList.add("blueprint-selected");
+                };
+                rowDiv.appendChild(text);
+                let checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.checked = blueprints[key].enabled;
+                checkbox.onclick = () => {
+                    console.log(checkbox.checked);
+                    blueprints[key].enabled = checkbox.checked;
+                };
+                rowDiv.appendChild(checkbox);
+                /* This button allows to remove an element from the list. It requires a refresh. */
+                var button = document.createElement("button");
+                button.innerText = "X";
+                button.onclick = () => {
+                    delete blueprints[key];
+                    div.dispatchEvent(new Event("refresh"));
+                };
+                rowDiv.appendChild(button);
+            }
         }
     }
     div.appendChild(scrollDiv);
@@ -1042,8 +1081,14 @@ function arrayToString(array) {
     return "[" + array.join(", ") + "]";
 }
 exports.arrayToString = arrayToString;
+/** Converts an a single string like [val1, val2, val3] into an array
+ *
+ * @param input The input string
+ * @returns The array
+ */
 function stringToArray(input) {
-    return input.match(/(\w)+/g) || [];
+    var _a;
+    return (_a = input.match(/(\w)+/g)) !== null && _a !== void 0 ? _a : [];
 }
 exports.stringToArray = stringToArray;
 

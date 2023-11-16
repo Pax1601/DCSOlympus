@@ -4,8 +4,55 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 
 #unit-control-panel {
 	display: flex;
+	flex-direction: row;
+	column-gap: 10px;
+	row-gap: 10px;
+}
+
+#unit-control-panel>div:nth-child(2),
+#unit-controls {
+	display: flex;
 	flex-direction: column;
 	row-gap: 10px;
+}
+
+#unit-controls {
+	padding-right: 10px;
+}
+
+#unit-control-panel>div:nth-child(2) {
+	width: 330px;
+}
+
+#unit-control-panel>*:nth-child(1) {
+	display: none;
+	padding: 14px;
+}
+
+@media (max-width: 1145px) {
+	#unit-control-panel>*:nth-child(1) {
+		display: flex;
+	}
+
+	#unit-control-panel>*:nth-child(1) svg {
+		display: flex;
+		width: 24px;
+		height: 24px;
+		filter: invert(100%);
+	}
+
+	#unit-control-panel:hover>*:nth-child(1) {
+		display: none;
+	}
+
+	#unit-control-panel:not(:hover) {
+		width: fit-content;
+	}
+
+    #unit-control-panel:not(:hover)>*:nth-child(2),
+	#unit-control-panel:not(:hover)>*:nth-child(3) {
+		display: none;
+	}
 }
 
 #unit-control-panel h3 {
@@ -223,16 +270,30 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 }
 
 #advanced-settings-div {
+	position: relative;
 	column-gap: 5px;
 	display: flex;
+	height: fit-content;
 }
 
 #advanced-settings-div>*:nth-child(2) {
 	margin-left: auto;
 }
 
-#advanced-settings-div button {
+#advanced-settings-div>button {
 	height: 40px;
+}
+
+#delete-options button {
+	display: flex;
+	flex-direction: row;
+	align-content: center;
+}
+
+#delete-options button svg {
+	margin-right: 10px;
+	width: 18px;
+	max-height: 18px;
 }
 
 /* Element visibility control */

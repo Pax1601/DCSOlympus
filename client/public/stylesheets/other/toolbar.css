@@ -1,0 +1,74 @@
+
+#primary-toolbar {
+	align-items: center;
+	display: flex;
+	height: fit-content;
+}
+
+#command-mode-toolbar {
+	align-items: center;
+	display: flex;
+}
+
+#app-icon>.ol-select-options {
+	width: fit-content;
+}
+
+#toolbar-summary {
+	background-image: url("/images/icon-round.png");
+	background-position: 20px 22px;
+	background-repeat: no-repeat;
+	background-size: 45px 45px;
+	display: flex;
+	flex-direction: column;
+	padding: 20px;
+	text-indent: 60px;
+}
+
+#toolbar-summary {
+	white-space: nowrap;
+}
+
+#toolbar-container>*:nth-child(2)>svg {
+    display: none;
+    width: 0px;
+    height: 0px;
+}
+
+#toolbar-container>*:nth-child(3)>svg {
+    display: none;
+}
+
+@media (max-width: 1145px) {
+	#toolbar-container {
+		flex-direction: column;
+		align-items: start;
+	}
+
+	#toolbar-container>*:nth-child(1):not(:hover) {
+		width: fit-content;
+		height: fit-content;
+	}
+
+	#toolbar-container>*:nth-child(1):not(:hover)>*:not(:first-child) {
+		display: none;
+	}
+
+    #toolbar-container>*:not(:first-child):not(:hover) {
+		height: 52px;
+        align-items: center;
+        justify-content: center;
+        aspect-ratio: 1/1;
+    }
+
+	#toolbar-container>*:not(:first-child):not(:hover)>svg {
+        display: block;
+		width: 24px;
+		height: 24px;
+        filter: invert();
+	}
+
+	#toolbar-container>*:not(:first-child):not(:hover)>*:not(:first-child) {
+		display: none;
+	}
+}
