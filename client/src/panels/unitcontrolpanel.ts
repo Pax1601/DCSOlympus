@@ -10,6 +10,8 @@ import { ROEDescriptions, ROEs, altitudeIncrements, emissionsCountermeasures, em
 import { ftToM, knotsToMs, mToFt, msToKnots } from "../other/utils";
 import { GeneralSettings, Radio, TACAN } from "../interfaces";
 import { PrimaryToolbar } from "../toolbars/primarytoolbar";
+import { ContextActionSet } from "../unit/contextactionset";
+import { ContextAction } from "../unit/contextaction";
 
 export class UnitControlPanel extends Panel {
     #altitudeSlider: Slider;
@@ -38,32 +40,32 @@ export class UnitControlPanel extends Panel {
         super(ID);
 
         /* Unit control sliders */
-        this.#altitudeSlider = new Slider("altitude-slider", 0, 100, "ft", (value: number) => { getApp().getUnitsManager().selectedUnitsSetAltitude(ftToM(value)); });
-        this.#altitudeTypeSwitch = new Switch("altitude-type-switch", (value: boolean) => { getApp().getUnitsManager().selectedUnitsSetAltitudeType(value? "ASL": "AGL"); });
+        this.#altitudeSlider = new Slider("altitude-slider", 0, 100, "ft", (value: number) => { getApp().getUnitsManager().setAltitude(ftToM(value)); });
+        this.#altitudeTypeSwitch = new Switch("altitude-type-switch", (value: boolean) => { getApp().getUnitsManager().setAltitudeType(value? "ASL": "AGL"); });
 
-        this.#speedSlider = new Slider("speed-slider", 0, 100, "kts", (value: number) => { getApp().getUnitsManager().selectedUnitsSetSpeed(knotsToMs(value)); });
-        this.#speedTypeSwitch = new Switch("speed-type-switch", (value: boolean) => { getApp().getUnitsManager().selectedUnitsSetSpeedType(value? "CAS": "GS"); });
+        this.#speedSlider = new Slider("speed-slider", 0, 100, "kts", (value: number) => { getApp().getUnitsManager().setSpeed(knotsToMs(value)); });
+        this.#speedTypeSwitch = new Switch("speed-type-switch", (value: boolean) => { getApp().getUnitsManager().setSpeedType(value? "CAS": "GS"); });
 
         /* Option buttons */
         // Reversing the ROEs so that the least "aggressive" option is always on the left
         this.#optionButtons["ROE"] = ROEs.slice(0).reverse().map((option: string, index: number) => {
-            return this.#createOptionButton(option, `roe/${option.toLowerCase()}.svg`, ROEDescriptions.slice(0).reverse()[index], () => { getApp().getUnitsManager().selectedUnitsSetROE(option); });
+            return this.#createOptionButton(option, `roe/${option.toLowerCase()}.svg`, ROEDescriptions.slice(0).reverse()[index], () => { getApp().getUnitsManager().setROE(option); });
         }).filter((button: HTMLButtonElement, index: number) => {return ROEs[index] !== "";});
 
         this.#optionButtons["reactionToThreat"] = reactionsToThreat.map((option: string, index: number) => {
-            return this.#createOptionButton(option, `threat/${option.toLowerCase()}.svg`, reactionsToThreatDescriptions[index],() => { getApp().getUnitsManager().selectedUnitsSetReactionToThreat(option); });
+            return this.#createOptionButton(option, `threat/${option.toLowerCase()}.svg`, reactionsToThreatDescriptions[index],() => { getApp().getUnitsManager().setReactionToThreat(option); });
         });
 
         this.#optionButtons["emissionsCountermeasures"] = emissionsCountermeasures.map((option: string, index: number) => {
-            return this.#createOptionButton(option, `emissions/${option.toLowerCase()}.svg`, emissionsCountermeasuresDescriptions[index],() => { getApp().getUnitsManager().selectedUnitsSetEmissionsCountermeasures(option); });
+            return this.#createOptionButton(option, `emissions/${option.toLowerCase()}.svg`, emissionsCountermeasuresDescriptions[index],() => { getApp().getUnitsManager().setEmissionsCountermeasures(option); });
         });
 
         this.#optionButtons["shotsScatter"] = [1, 2, 3].map((option: number, index: number) => {
-            return this.#createOptionButton(option.toString(), `scatter/${option.toString().toLowerCase()}.svg`, shotsScatterDescriptions[index],() => { getApp().getUnitsManager().selectedUnitsSetShotsScatter(option); });
+            return this.#createOptionButton(option.toString(), `scatter/${option.toString().toLowerCase()}.svg`, shotsScatterDescriptions[index],() => { getApp().getUnitsManager().setShotsScatter(option); });
         });
 
         this.#optionButtons["shotsIntensity"] = [1, 2, 3].map((option: number, index: number) => {
-            return this.#createOptionButton(option.toString(), `intensity/${option.toString().toLowerCase()}.svg`, shotsIntensityDescriptions[index],() => { getApp().getUnitsManager().selectedUnitsSetShotsIntensity(option); });
+            return this.#createOptionButton(option.toString(), `intensity/${option.toString().toLowerCase()}.svg`, shotsIntensityDescriptions[index],() => { getApp().getUnitsManager().setShotsIntensity(option); });
         });
 
         this.getElement().querySelector("#roe-buttons-container")?.append(...this.#optionButtons["ROE"]);
@@ -92,17 +94,17 @@ export class UnitControlPanel extends Panel {
 
         /* On off switch */
         this.#onOffSwitch = new Switch("on-off-switch", (value: boolean) => {
-            getApp().getUnitsManager().selectedUnitsSetOnOff(value);
+            getApp().getUnitsManager().setOnOff(value);
         });
 
         /* Follow roads switch */
         this.#followRoadsSwitch = new Switch("follow-roads-switch", (value: boolean) => {
-            getApp().getUnitsManager().selectedUnitsSetFollowRoads(value);
+            getApp().getUnitsManager().setFollowRoads(value);
         });
 
         /* Operate as */
         this.#operateAsSwitch = new Switch("operate-as-switch", (value: boolean) => {
-            getApp().getUnitsManager().selectedUnitsSetOperateAs(value);
+            getApp().getUnitsManager().setOperateAs(value);
         });
 
         /* Advanced settings dialog */
@@ -300,54 +302,32 @@ export class UnitControlPanel extends Panel {
     }
 
     #updateRapidControls() {
-        var options: { [key: string]: { text: string, tooltip: string, type: string } } | null = null;
+        var contextActionSet = new ContextActionSet();
+        var units = getApp().getUnitsManager().getSelectedUnits();
 
-        var selectedUnits = getApp().getUnitsManager().getSelectedUnits();
-
-        var showAltitudeChange = selectedUnits.some((unit: Unit) => {return ["Aircraft", "Helicopter"].includes(unit.getCategory());});
+        var showAltitudeChange = units.some((unit: Unit) => {return ["Aircraft", "Helicopter"].includes(unit.getCategory());});
         this.getElement().querySelector("#climb")?.classList.toggle("hide", !showAltitudeChange); 
         this.getElement().querySelector("#descend")?.classList.toggle("hide", !showAltitudeChange);
 
-        /* Keep only the common "and" options, unless a single unit is selected */
-        selectedUnits.forEach((unit: Unit) => {
-            var unitOptions = unit.getActions();
-            if (options === null) {
-                options = unitOptions;
-            } else {
-                /* Delete all the "or" type options */
-                for (let optionKey in options) {
-                    if (options[optionKey].type == "or") {
-                        delete options[optionKey];
-                    }
-                }
-            
-                /* Options of "and" type get shown if ALL units have it */
-                for (let optionKey in options) {
-                    if (!(optionKey in unitOptions)) {
-                        delete options[optionKey];
-                    }
-                }
-            }
-        });
-
-        options = options ?? {};
+        units.forEach((unit: Unit) => {
+            unit.appendContextActions(contextActionSet, null, null);
+        })
 
         const rapidControlsContainer = this.getElement().querySelector("#rapid-controls") as HTMLElement;
         const unitActionButtons = rapidControlsContainer.querySelectorAll(".unit-action-button");
         for (let button of unitActionButtons) {
             rapidControlsContainer.removeChild(button);
         }
-    
-        for (let option in options) {
+
+        for (let key in contextActionSet.getContextActions()) {
+            const contextAction = contextActionSet.getContextActions()[key];
             let button = document.createElement("button");
-            button.title = options[option].tooltip;
+            button.title = contextAction.getDescription();
             button.classList.add("ol-button", "unit-action-button");
-            button.id = option;
+            button.id = key;
             rapidControlsContainer.appendChild(button);
             button.onclick = () => {
-                /* Since only common actions are shown in the rapid controls, we execute it only on the first unit */
-                if (selectedUnits.length > 0)
-                    selectedUnits[0].executeAction(null, option);
+                contextAction.executeCallback();
             }
         }
     }

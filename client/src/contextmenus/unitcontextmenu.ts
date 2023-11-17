@@ -1,4 +1,4 @@
-import { deg2rad, ftToM } from "../other/utils";
+import { ContextActionSet } from "../unit/contextactionset";
 import { ContextMenu } from "./contextmenu";
 
 /** The UnitContextMenu is shown when the user rightclicks on a unit. It dynamically presents the user with possible actions to perform on the unit. */
@@ -16,15 +16,19 @@ export class UnitContextMenu extends ContextMenu {
      * @param options Dictionary element containing the text and tooltip of the options shown in the menu
      * @param callback Callback that will be called when the user clicks on one of the options
      */
-    setOptions(options: { [key: string]: {text: string, tooltip: string }}, callback: CallableFunction) {
-        this.getContainer()?.replaceChildren(...Object.keys(options).map((key: string, idx: number) => {
-            const option = options[key];
+    setContextActions(contextActionSet: ContextActionSet) {
+        this.getContainer()?.replaceChildren(...Object.keys(contextActionSet.getContextActions()).map((key: string, idx: number) => {
+            const contextAction = contextActionSet.getContextActions()[key];
             var button = document.createElement("button");
             var el = document.createElement("div");
-            el.title = option.tooltip;
-            el.innerText = option.text;
+            el.title = contextAction.getDescription();
+            el.innerText = contextAction.getLabel();
             el.id = key;
-            button.addEventListener("click", () => callback(key));
+            button.addEventListener("click", () => {
+                contextAction.executeCallback();
+                if (contextAction.getHideContextAfterExecution())
+                    this.hide();
+            });
             button.appendChild(el);
             return (button);
         }));

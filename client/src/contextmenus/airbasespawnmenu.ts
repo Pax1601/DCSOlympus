@@ -46,7 +46,7 @@ export class AirbaseSpawnContextMenu extends ContextMenu {
      * @param x X screen coordinate of the top left corner of the context menu
      * @param y Y screen coordinate of the top left corner of the context menu
      */
-    show(x: number, y: number) {
+    show(x: number | undefined, y: number | undefined) {
         super.show(x, y, new LatLng(0, 0));
 
         this.#aircraftSpawnMenu.setAirbase(undefined);

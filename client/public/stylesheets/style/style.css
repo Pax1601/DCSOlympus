@@ -687,6 +687,19 @@ nav.ol-panel> :last-child {
     width:10px;
 }
 
+@keyframes lock-prompt {
+    100% {
+        opacity: 1;
+    }
+    0% {
+        opacity: 0;
+    }
+}
+
+.ol-navbar-buttons-group > .protectable > button[data-protected].lock.prompt svg {
+    animation: lock-prompt .25s alternate infinite;
+}
+
 .ol-navbar-buttons-group > .protectable > button.lock svg.locked * {
     fill:white !important;
 }

@@ -54,7 +54,7 @@ class DemoDataGenerator {
 
         /*
 
-        UNCOMMENT TO TEST ALL UNITS
+        ***************** UNCOMMENT TO TEST ALL UNITS ****************
 
         var databases = Object.assign({}, aircraftDatabase, helicopterDatabase, groundUnitDatabase, navyUnitDatabase);
         var t = Object.keys(databases).length;
@@ -114,6 +114,39 @@ class DemoDataGenerator {
         DEMO_UNIT_DATA[idx].position.lat += idx / 100;
         DEMO_UNIT_DATA[idx].category = "GroundUnit";
         DEMO_UNIT_DATA[idx].isLeader = false;
+        
+        idx += 1;
+        DEMO_UNIT_DATA[idx] = JSON.parse(JSON.stringify(baseData));
+        DEMO_UNIT_DATA[idx].name = "F-14B";
+        DEMO_UNIT_DATA[idx].groupName = `Group-1`;
+        DEMO_UNIT_DATA[idx].position.lat += idx / 100;
+        DEMO_UNIT_DATA[idx].category = "Aircraft";
+        DEMO_UNIT_DATA[idx].isLeader = false;
+
+        idx += 1;
+        DEMO_UNIT_DATA[idx] = JSON.parse(JSON.stringify(baseData));
+        DEMO_UNIT_DATA[idx].name = "Infantry AK";
+        DEMO_UNIT_DATA[idx].groupName = `Group-2`;
+        DEMO_UNIT_DATA[idx].position.lat += idx / 100;
+        DEMO_UNIT_DATA[idx].category = "GroundUnit";
+        DEMO_UNIT_DATA[idx].isLeader = true;
+
+        idx += 1;
+        DEMO_UNIT_DATA[idx] = JSON.parse(JSON.stringify(baseData));
+        DEMO_UNIT_DATA[idx].name = "Infantry AK";
+        DEMO_UNIT_DATA[idx].groupName = `Group-3`;
+        DEMO_UNIT_DATA[idx].position.lat += idx / 100;
+        DEMO_UNIT_DATA[idx].category = "GroundUnit";
+        DEMO_UNIT_DATA[idx].isLeader = true;
+
+        idx += 1;
+        DEMO_UNIT_DATA[idx] = JSON.parse(JSON.stringify(baseData));
+        DEMO_UNIT_DATA[idx].name = "KC-135";
+        DEMO_UNIT_DATA[idx].groupName = `Group-4`;
+        DEMO_UNIT_DATA[idx].position.lat += idx / 100;
+        DEMO_UNIT_DATA[idx].category = "Aircraft";
+        DEMO_UNIT_DATA[idx].isLeader = true;
+        
 
         this.startTime = Date.now();
     }

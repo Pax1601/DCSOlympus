@@ -24,7 +24,7 @@ export class AirbaseContextMenu extends ContextMenu {
 
         document.addEventListener("contextMenuLandAirbase", (e: any) => {
             if (this.#airbase)
-                getApp().getUnitsManager().selectedUnitsLandAt(this.#airbase.getLatLng());
+                getApp().getUnitsManager().landAt(this.#airbase.getLatLng());
             this.hide();
         })
     }
@@ -111,7 +111,7 @@ export class AirbaseContextMenu extends ContextMenu {
     #showSpawnMenu() {
         if (this.#airbase != null) {
             getApp().setActiveCoalition(this.#airbase.getCoalition());
-            getApp().getMap().showAirbaseSpawnMenu(this.getX(), this.getY(), this.getLatLng(), this.#airbase);
+            getApp().getMap().showAirbaseSpawnMenu(this.#airbase, this.getX(), this.getY(), this.getLatLng());
         }
     }
 

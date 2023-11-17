@@ -13,6 +13,8 @@ import { Weapon } from '../weapon/weapon';
 import { Ammo, Contact, GeneralSettings, LoadoutBlueprint, ObjectIconOptions, Offset, Radio, TACAN, UnitData } from '../interfaces';
 import { RangeCircle } from "../map/rangecircle";
 import { Group } from './group';
+import { ContextActionSet } from './contextactionset';
+import { ContextAction } from './contextaction';
 
 var pathIcon = new Icon({
     iconUrl: '/resources/theme/images/markers/marker-icon.png',
@@ -212,7 +214,7 @@ export abstract class Unit extends CustomMarker {
         });
     }
 
-     /********************** Abstract methods  *************************/
+    /********************** Abstract methods  *************************/
     /** Get the unit category string
      * 
      * @returns string The unit category
@@ -228,9 +230,8 @@ export abstract class Unit extends CustomMarker {
 
     /** Get the actions that this unit can perform
      * 
-     * @returns Object containing the available actions
      */
-    abstract getActions(): {[key: string]: { text: string, tooltip: string, type: string}};
+    abstract appendContextActions(contextActionSet: ContextActionSet, targetUnit: Unit | null, targetPosition: LatLng | null): void;
 
     /********************** Unit data *************************/
     /** This function is called by the units manager to update all the data coming from the backend. It reads the binary raw data using a DataExtractor
@@ -240,7 +241,7 @@ export abstract class Unit extends CustomMarker {
     setData(dataExtractor: DataExtractor) {
         /* This variable controls if the marker must be updated. This is not always true since not all variables have an effect on the marker */
         var updateMarker = !getApp().getMap().hasLayer(this);
-        
+
         var oldIsLeader = this.#isLeader;
         var datumIndex = 0;
         while (datumIndex != DataIndexes.endOfData) {
@@ -489,7 +490,7 @@ export abstract class Unit extends CustomMarker {
      * @returns Unit[]
      */
     getGroupMembers() {
-        if (this.#group !== null) 
+        if (this.#group !== null)
             return this.#group.getMembers().filter((unit: Unit) => { return unit != this; })
         return [];
     }
@@ -499,7 +500,7 @@ export abstract class Unit extends CustomMarker {
      * @returns Unit The leader of the group
      */
     getGroupLeader() {
-        if (this.#group !== null) 
+        if (this.#group !== null)
             return this.#group.getLeader();
         return null;
     }
@@ -563,7 +564,7 @@ export abstract class Unit extends CustomMarker {
 
         var iconOptions = this.getIconOptions();
 
-        /* Generate and append elements depending on active options */    
+        /* Generate and append elements depending on active options */
         /* Velocity vector */
         if (iconOptions.showVvi) {
             var vvi = document.createElement("div");
@@ -682,12 +683,13 @@ export abstract class Unit extends CustomMarker {
             (!this.belongsToCommandedCoalition() && (this.#detectionMethods.length == 0 || (this.#detectionMethods.length == 1 && this.#detectionMethods[0] === RWR))) ||
             /* Hide the unit if grouping is activated, the unit is not the group leader, it is not selected, and the zoom is higher than the grouping threshold */
             (getApp().getMap().getVisibilityOptions()[HIDE_GROUP_MEMBERS] && !this.#isLeader && this.getCategory() == "GroundUnit" && getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION && 
-            (this.belongsToCommandedCoalition() || (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0)))) &&
-            !(this.getSelected()
-            );
+            (this.belongsToCommandedCoalition() || (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0))));
 
         /* Force dead units to be hidden */
-        this.setHidden(hidden || !this.#alive);
+        this.setHidden(hidden || !this.getAlive());
+
+        /* Force hidden units to be unselected */
+        this.setSelected(this.getSelected() && !this.getHidden());
     }
 
     setHidden(hidden: boolean) {
@@ -765,10 +767,6 @@ export abstract class Unit extends CustomMarker {
 
     canRearm() {
         return this.getDatabaseEntry()?.canRearm === true;
-    }
-
-    canLandAtPoint() {
-        return this.getCategory() === "Helicopter";
     }
 
     canAAA() {
@@ -965,24 +963,6 @@ export abstract class Unit extends CustomMarker {
     }
 
     /***********************************************/
-    executeAction(e: any, action: string) {
-        if (action === "center-map")
-            getApp().getMap().centerOnUnit(this.ID);
-        if (action === "attack")
-            getApp().getUnitsManager().selectedUnitsAttackUnit(this.ID);
-        else if (action === "refuel")
-            getApp().getUnitsManager().selectedUnitsRefuel();
-        else if (action === "group-ground" || action === "group-navy")
-            getApp().getUnitsManager().selectedUnitsCreateGroup();
-        else if (action === "scenic-aaa")
-            getApp().getUnitsManager().selectedUnitsScenicAAA();
-        else if (action === "miss-aaa")
-            getApp().getUnitsManager().selectedUnitsMissOnPurpose();
-        else if (action === "follow")
-            this.#showFollowOptions(e);
-    }
-
-    /***********************************************/
     onAdd(map: Map): this {
         super.onAdd(map);
         return this;
@@ -990,6 +970,56 @@ export abstract class Unit extends CustomMarker {
 
     onGroupChanged(member: Unit) {
         this.#redrawMarker();
+    }
+
+    showFollowOptions(units: Unit[]) {
+        var contextActionSet = new ContextActionSet();
+       
+        contextActionSet.addContextAction(this, 'trail', "Trail", "Follow unit in trail formation", () => this.applyFollowOptions('trail', units));
+        contextActionSet.addContextAction(this, 'echelon-lh', "Echelon (LH)", "Follow unit in echelon left formation", () => this.applyFollowOptions('echelon-lh', units));
+        contextActionSet.addContextAction(this, 'echelon-rh', "Echelon (RH)", "Follow unit in echelon right formation", () => this.applyFollowOptions('echelon-rh', units));
+        contextActionSet.addContextAction(this, 'line-abreast-lh', "Line abreast (LH)", "Follow unit in line abreast left formation", () => this.applyFollowOptions('line-abreast-lh', units));
+        contextActionSet.addContextAction(this, 'line-abreast-rh', "Line abreast (RH)", "Follow unit in line abreast right formation", () => this.applyFollowOptions('line-abreast-rh', units));
+        contextActionSet.addContextAction(this, 'front', "Front", "Fly in front of unit", () => this.applyFollowOptions('front', units));
+        contextActionSet.addContextAction(this, 'diamond', "Diamond", "Follow unit in diamond formation", () => this.applyFollowOptions('diamond', units));
+        contextActionSet.addContextAction(this, 'custom', "Custom", "Set a custom formation position", () => this.applyFollowOptions('custom', units));
+        
+        getApp().getMap().getUnitContextMenu().setContextActions(contextActionSet);
+        getApp().getMap().showUnitContextMenu();
+    }
+
+    applyFollowOptions(formation: string, units: Unit[]) {
+        if (formation === "custom") {
+            document.getElementById("custom-formation-dialog")?.classList.remove("hide");
+            document.addEventListener("applyCustomFormation", () => {
+                var dialog = document.getElementById("custom-formation-dialog");
+                if (dialog) {
+                    dialog.classList.add("hide");
+                    var clock = 1;
+                    while (clock < 8) {
+                        if ((<HTMLInputElement>dialog.querySelector(`#formation-${clock}`)).checked)
+                            break
+                        clock++;
+                    }
+                    var angleDeg = 360 - (clock - 1) * 45;
+                    var angleRad = deg2rad(angleDeg);
+                    var distance = ftToM(parseInt((<HTMLInputElement>dialog.querySelector(`#distance`)?.querySelector("input")).value));
+                    var upDown = ftToM(parseInt((<HTMLInputElement>dialog.querySelector(`#up-down`)?.querySelector("input")).value));
+
+                    // X: front-rear, positive front
+                    // Y: top-bottom, positive top
+                    // Z: left-right, positive right
+                    var x = distance * Math.cos(angleRad);
+                    var y = upDown;
+                    var z = distance * Math.sin(angleRad);
+
+                    getApp().getUnitsManager().followUnit(this.ID, { "x": x, "y": y, "z": z }, undefined, units);
+                }
+            });
+        }
+        else {
+            getApp().getUnitsManager().followUnit(this.ID, undefined, formation, units);
+        }
     }
 
     /***********************************************/
@@ -1030,102 +1060,20 @@ export abstract class Unit extends CustomMarker {
         });
     }
 
-    getActionOptions() {
-        var options: { [key: string]: { text: string, tooltip: string, type: string } } | null = null;
+    #onContextMenu(e: any) {
+        var contextActionSet = new ContextActionSet();
 
         var units = getApp().getUnitsManager().getSelectedUnits();
-        units.push(this);
+        if (!units.includes(this))
+            units.push(this);
 
-        /* Keep only the common "or" options or any "and" option */
         units.forEach((unit: Unit) => {
-            var unitOptions = unit.getActions();
-            if (options === null) {
-                options = unitOptions;
-            } else {
-                /* Options of "or" type get shown if any one unit has it*/
-                for (let optionKey in unitOptions) {
-                    if (unitOptions[optionKey].type == "or") {
-                        options[optionKey] = unitOptions[optionKey];
-                    }
-                }
+            unit.appendContextActions(contextActionSet, this, null);
+        })
 
-                /* Options of "and" type get shown if ALL units have it */
-                for (let optionKey in options) {
-                    if (!(optionKey in unitOptions)) {
-                        delete options[optionKey];
-                    }
-                }
-            }
-        });
-
-        return options ?? {};
-    }
-
-    #onContextMenu(e: any) {
-        var options = this.getActionOptions();
-
-        if (Object.keys(options).length > 0) {
+        if (Object.keys(contextActionSet.getContextActions()).length > 0) {
             getApp().getMap().showUnitContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng);
-            getApp().getMap().getUnitContextMenu().setOptions(options, (option: string) => {
-                getApp().getMap().hideUnitContextMenu();
-                this.executeAction(e, option);
-            });
-        }
-    }
-
-    #showFollowOptions(e: any) {
-        var options: { [key: string]: { text: string, tooltip: string } } = {};
-
-        options = {
-            'trail': { text: "Trail", tooltip: "Follow unit in trail formation" },
-            'echelon-lh': { text: "Echelon (LH)", tooltip: "Follow unit in echelon left formation" },
-            'echelon-rh': { text: "Echelon (RH)", tooltip: "Follow unit in echelon right formation" },
-            'line-abreast-lh': { text: "Line abreast (LH)", tooltip: "Follow unit in line abreast left formation" },
-            'line-abreast-rh': { text: "Line abreast (RH)", tooltip: "Follow unit in line abreast right formation" },
-            'front': { text: "Front", tooltip: "Fly in front of unit" },
-            'diamond': { text: "Diamond", tooltip: "Follow unit in diamond formation" },
-            'custom': { text: "Custom", tooltip: "Set a custom formation position" },
-        }
-
-        getApp().getMap().getUnitContextMenu().setOptions(options, (option: string) => {
-            getApp().getMap().hideUnitContextMenu();
-            this.#applyFollowOptions(option);
-        });
-
-        getApp().getMap().showUnitContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng);
-    }
-
-    #applyFollowOptions(action: string) {
-        if (action === "custom") {
-            document.getElementById("custom-formation-dialog")?.classList.remove("hide");
-            document.addEventListener("applyCustomFormation", () => {
-                var dialog = document.getElementById("custom-formation-dialog");
-                if (dialog) {
-                    dialog.classList.add("hide");
-                    var clock = 1;
-                    while (clock < 8) {
-                        if ((<HTMLInputElement>dialog.querySelector(`#formation-${clock}`)).checked)
-                            break
-                        clock++;
-                    }
-                    var angleDeg = 360 - (clock - 1) * 45;
-                    var angleRad = deg2rad(angleDeg);
-                    var distance = ftToM(parseInt((<HTMLInputElement>dialog.querySelector(`#distance`)?.querySelector("input")).value));
-                    var upDown = ftToM(parseInt((<HTMLInputElement>dialog.querySelector(`#up-down`)?.querySelector("input")).value));
-
-                    // X: front-rear, positive front
-                    // Y: top-bottom, positive top
-                    // Z: left-right, positive right
-                    var x = distance * Math.cos(angleRad);
-                    var y = upDown;
-                    var z = distance * Math.sin(angleRad);
-
-                    getApp().getUnitsManager().selectedUnitsFollowUnit(this.ID, { "x": x, "y": y, "z": z });
-                }
-            });
-        }
-        else {
-            getApp().getUnitsManager().selectedUnitsFollowUnit(this.ID, undefined, action);
+            getApp().getMap().getUnitContextMenu().setContextActions(contextActionSet);
         }
     }
 
@@ -1483,7 +1431,7 @@ export abstract class Unit extends CustomMarker {
     }
 
     #onZoom(e: any) {
-        if (this.checkZoomRedraw()) 
+        if (this.checkZoomRedraw())
             this.#redrawMarker();
         this.#updateMarker();
     }
@@ -1507,35 +1455,24 @@ export abstract class AirUnit extends Unit {
         };
     }
 
-    getActions() {
-        var options: { [key: string]: { text: string, tooltip: string, type: string } } = {};
-
-        /* Options if this unit is not selected */
-        if (!this.getSelected()) {
-            /* Someone else is selected */
-            if (getApp().getUnitsManager().getSelectedUnits().length > 0) {
-                options["attack"] = { text: "Attack", tooltip: "Attack the unit using A/A or A/G weapons", type: "or" };
-                options["follow"] = { text: "Follow", tooltip: "Follow the unit at a user defined distance and position", type: "or" };
-            } else {
-                options["center-map"] = { text: "Center map", tooltip: "Center the map on the unit and follow it", type: "and" };
+    appendContextActions(contextActionSet: ContextActionSet, targetUnit: Unit | null, targetPosition: LatLng | null) {
+        if (targetUnit !== null) {
+            if (targetUnit != this) {
+                contextActionSet.addContextAction(this, "attack", "Attack unit", "Attack the unit using A/A or A/G weapons", (units: Unit[]) => { getApp().getUnitsManager().attackUnit(targetUnit.ID, units) });
+                contextActionSet.addContextAction(this, "follow", "Follow unit", "Follow this unit in formation", (units: Unit[]) => { targetUnit.showFollowOptions(units); }, false); // Don't hide the context menu after the execution (to show the follow options)
+            }
+            if (targetUnit.getSelected()) {
+                contextActionSet.addContextAction(this, "refuel", "Refuel", "Refuel units at the nearest AAR Tanker. If no tanker is available the unit will RTB", (units: Unit[]) => { getApp().getUnitsManager().refuel(units) });
+            }
+            if (getApp().getUnitsManager().getSelectedUnits().length == 1 && targetUnit === this) {
+                contextActionSet.addContextAction(this, "center-map", "Center map", "Center the map on the unit and follow it", () => { getApp().getMap().centerOnUnit(this.ID); });
             }
         }
-        /* Options if this unit is selected*/
-        else if (this.getSelected()) {
-            /* This is the only selected unit */
-            if (getApp().getUnitsManager().getSelectedUnits().length == 1) {
-                options["center-map"] = { text: "Center map", tooltip: "Center the map on the unit and follow it", type: "and" };
-            } else {
-                options["follow"] = { text: "Follow", tooltip: "Follow the unit at a user defined distance and position", type: "or" };
-            }
 
-            options["refuel"] = { text: "Air to air refuel", tooltip: "Refuel units at the nearest AAR Tanker. If no tanker is available the unit will RTB.", type: "and" }; // TODO Add some way of knowing which aircraft can AAR
+        if (targetPosition !== null) {
+            contextActionSet.addContextAction(this, "bomb", "Precision bombing", "Precision bombing of a specific point", (units: Unit[]) => { getApp().getUnitsManager().bombPoint(targetPosition, units) });
+            contextActionSet.addContextAction(this, "carpet-bomb", "Carpet bombing", "Carpet bombing close to a point", (units: Unit[]) => { getApp().getUnitsManager().carpetBomb(targetPosition, units) });
         }
-        /* All other options */
-        else {
-            /* Provision */
-        }
-        return options;
     }
 }
 
@@ -1547,6 +1484,14 @@ export class Aircraft extends AirUnit {
     getCategory() {
         return "Aircraft";
     }
+
+    appendContextActions(contextActionSet: ContextActionSet, targetUnit: Unit | null, targetPosition: LatLng | null) {
+        super.appendContextActions(contextActionSet, targetUnit, targetPosition);
+
+        if (targetPosition === null && this.getSelected()) {
+            contextActionSet.addContextAction(this, "refuel", "Refuel", "Refuel units at the nearest AAR Tanker. If no tanker is available the unit will RTB", (units: Unit[]) => { getApp().getUnitsManager().refuel(units) });
+        }
+    }
 }
 
 export class Helicopter extends AirUnit {
@@ -1556,6 +1501,13 @@ export class Helicopter extends AirUnit {
 
     getCategory() {
         return "Helicopter";
+    }
+
+    appendContextActions(contextActionSet: ContextActionSet, targetUnit: Unit | null, targetPosition: LatLng | null) {
+        super.appendContextActions(contextActionSet, targetUnit, targetPosition);
+
+        if (targetPosition !== null) 
+            contextActionSet.addContextAction(this, "land-at-point", "Land here", "land at this precise location", (units: Unit[]) => { getApp().getUnitsManager().landAtPoint(targetPosition, units) });
     }
 }
 
@@ -1581,37 +1533,31 @@ export class GroundUnit extends Unit {
         };
     }
 
-    getActions() {
-        var options: { [key: string]: { text: string, tooltip: string, type: string } } = {};
+    appendContextActions(contextActionSet: ContextActionSet, targetUnit: Unit | null, targetPosition: LatLng | null) {
+        contextActionSet.addContextAction(this, "group-ground", "Group ground units", "Create a group of ground units", (units: Unit[]) => { getApp().getUnitsManager().createGroup(units) });
 
-        /* Options if this unit is not selected */
-        if (!this.getSelected()) {
-            /* Someone else is selected */
-            if (getApp().getUnitsManager().getSelectedUnits().length > 0) {
-                options["attack"] = { text: "Attack", tooltip: "Attack the unit using A/A or A/G weapons", type: "or" };
-            } else {
-                options["center-map"] = { text: "Center map", tooltip: "Center the map on the unit and follow it", type: "and" };
-            }
-        }
-        /* Options if this unit is selected*/
-        else if (this.getSelected()) {
-            /* This is the only selected unit */
-            if (getApp().getUnitsManager().getSelectedUnits().length == 1) {
-                options["center-map"] = { text: "Center map", tooltip: "Center the map on the unit and follow it", type: "and" };
-            } else {
-                options["group-ground"] = { text: "Create group", tooltip: "Create a group from the selected units", type: "and" };
+        if (targetUnit !== null) {
+            if (targetUnit != this) {
+                contextActionSet.addContextAction(this, "attack", "Attack unit", "Attack the unit using A/A or A/G weapons", (units: Unit[]) => { getApp().getUnitsManager().attackUnit(targetUnit.ID, units) });
             }
 
-            if (this.canAAA()) {
-                options["scenic-aaa"] = { text: "Scenic AAA", tooltip: "Shoot AAA in the air without aiming at any target, when a enemy unit gets close enough. WARNING: works correctly only on neutral units, blue or red units will aim", type: "and" };
-                options["miss-aaa"] = { text: "Miss on purpose AAA", tooltip: "Shoot AAA towards the closest enemy unit, but don't aim precisely. WARNING: works correctly only on neutral units, blue or red units will aim", type: "and" };
+            if (getApp().getUnitsManager().getSelectedUnits().length == 1 && targetUnit === this) {
+                contextActionSet.addContextAction(this, "center-map", "Center map", "Center the map on the unit and follow it", () => { getApp().getMap().centerOnUnit(this.ID); });
             }
         }
-        /* All other options */
+
+        if (targetPosition !== null) {
+            if (this.canTargetPoint()) {
+                contextActionSet.addContextAction(this, "fire-at-area", "Fire at area", "Fire at a specific area on the ground", (units: Unit[]) => { getApp().getUnitsManager().fireAtArea(targetPosition, units) });
+                contextActionSet.addContextAction(this, "simulate-fire-fight", "Simulate fire fight", "Simulate a fire fight by shooting randomly in a certain large area. WARNING: works correctly only on neutral units, blue or red units will aim", (units: Unit[]) => { getApp().getUnitsManager().fireAtArea(targetPosition, units) });
+            }
+        }
         else {
-            /* Provision */
+            if (this.canAAA()) {
+                contextActionSet.addContextAction(this, "scenic-aaa", "Scenic AAA", "Shoot AAA in the air without aiming at any target, when a enemy unit gets close enough. WARNING: works correctly only on neutral units, blue or red units will aim", (units: Unit[]) => { getApp().getUnitsManager().scenicAAA(units) });
+                contextActionSet.addContextAction(this, "miss-aaa", "Misson on purpose", "Shoot AAA towards the closest enemy unit, but don't aim precisely. WARNING: works correctly only on neutral units, blue or red units will aim", (units: Unit[]) => { getApp().getUnitsManager().missOnPurpose(units) });
+            }
         }
-        return options;
     }
 
     getCategory() {
@@ -1671,32 +1617,21 @@ export class NavyUnit extends Unit {
         };
     }
 
-    getActions() {
-        var options: { [key: string]: { text: string, tooltip: string, type: string } } = {};
+    appendContextActions(contextActionSet: ContextActionSet, targetUnit: Unit | null, targetPosition: LatLng | null) {
+        contextActionSet.addContextAction(this, "group-navy", "Group navy units", "Create a group of navy units", (units: Unit[]) => { getApp().getUnitsManager().createGroup(units) });
 
-        /* Options if this unit is not selected */
-        if (!this.getSelected()) {
-            /* Someone else is selected */
-            if (getApp().getUnitsManager().getSelectedUnits().length > 0) {
-                options["attack"] = { text: "Attack", tooltip: "Attack the unit using A/A or A/G weapons", type: "or" };
-            } else {
-                options["center-map"] = { text: "Center map", tooltip: "Center the map on the unit and follow it", type: "and" };
+        if (targetUnit !== null) {
+            if (targetUnit != this) {
+                contextActionSet.addContextAction(this, "attack", "Attack unit", "Attack the unit using A/A or A/G weapons", (units: Unit[]) => { getApp().getUnitsManager().attackUnit(targetUnit.ID, units) });
+            }
+            if (getApp().getUnitsManager().getSelectedUnits().length == 1 && targetUnit === this) {
+                contextActionSet.addContextAction(this, "center-map", "Center map", "Center the map on the unit and follow it", () => { getApp().getMap().centerOnUnit(this.ID); });
             }
         }
-        /* Options if this unit is selected */
-        else if (this.getSelected()) {
-            /* This is the only selected unit */
-            if (getApp().getUnitsManager().getSelectedUnits().length == 1) {
-                options["center-map"] = { text: "Center map", tooltip: "Center the map on the unit and follow it", type: "and" };
-            } else {
-                options["group-navy"] = { text: "Create group", tooltip: "Create a group from the selected units", type: "and" };
-            }
+
+        if (targetPosition !== null) {
+            contextActionSet.addContextAction(this, "fire-at-area", "Fire at area", "Fire at a specific area on the ground", (units: Unit[]) => { getApp().getUnitsManager().fireAtArea(targetPosition, units) });
         }
-        /* All other options */
-        else {
-            /* Provision */
-        }
-        return options;
     }
 
     getMarkerCategory() {
