@@ -141,7 +141,7 @@ class DemoDataGenerator {
 
         idx += 1;
         DEMO_UNIT_DATA[idx] = JSON.parse(JSON.stringify(baseData));
-        DEMO_UNIT_DATA[idx].name = "F-14B";
+        DEMO_UNIT_DATA[idx].name = "KC-135";
         DEMO_UNIT_DATA[idx].groupName = `Group-4`;
         DEMO_UNIT_DATA[idx].position.lat += idx / 100;
         DEMO_UNIT_DATA[idx].category = "Aircraft";
