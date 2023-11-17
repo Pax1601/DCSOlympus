@@ -268,17 +268,22 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 
 #advanced-settings-div {
 	position: relative;
-	column-gap: 5px;
+	column-gap: 8px;
 	display: flex;
 	height: fit-content;
 }
 
-#advanced-settings-div>*:nth-child(2) {
-	margin-left: auto;
+#advanced-settings-div button {
+	font-size:13px;
+	height: 40px;
 }
 
-#advanced-settings-div>button {
-	height: 40px;
+#delete-options {
+	font-size:13px;
+}
+
+#delete-options * {
+	background-color: var(--background-steel);
 }
 
 #delete-options button {
@@ -291,6 +296,10 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	margin-right: 10px;
 	width: 18px;
 	max-height: 18px;
+}
+
+#delete-options button svg * {
+	stroke: red;
 }
 
 /* Element visibility control */
