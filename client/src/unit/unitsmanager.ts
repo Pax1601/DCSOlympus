@@ -260,6 +260,10 @@ export class UnitsManager {
             if (options.showProtectionReminder === true && numProtectedUnits > selectedUnits.length && selectedUnits.length === 0) {
                 const messageText = (numProtectedUnits === 1) ? `Unit is protected` : `All selected units are protected`;
                 (getApp().getPopupsManager().get("infoPopup") as Popup).setText(messageText);
+                //  Cheap way for now until we use more locks
+                let lock = <HTMLElement>document.querySelector("#unit-visibility-control button.lock");
+                lock.classList.add("prompt");
+                setTimeout(() => lock.classList.remove("prompt"), 4000);
             }
 
             if (options.onlyOnePerGroup) {
@@ -891,7 +895,7 @@ export class UnitsManager {
      */
     delete(explosion: boolean = false, explosionType: string = "", units: Unit[] | null = null) {
         if (units === null)
-            units = this.getSelectedUnits({ excludeProtected: true }); /* Can be applied to humans too */
+            units = this.getSelectedUnits({ excludeProtected: true, showProtectionReminder: true }); /* Can be applied to humans too */
 
         if (units.length === 0)
             return;
