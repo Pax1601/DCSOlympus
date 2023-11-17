@@ -971,13 +971,13 @@ function Olympus.setUnitsData(arg, time)
 				-- Get the object category in Olympus name
 				local objectCategory = Object.getCategory(unit)
 				if objectCategory == Object.Category.UNIT then
-					if unit:getCategory() == Unit.Category.AIRPLANE then
+					if unit:getDesc().category == Unit.Category.AIRPLANE then
 						table["category"] = "Aircraft"
-					elseif unit:getCategory() == Unit.Category.HELICOPTER then
+					elseif unit:getDesc().category == Unit.Category.HELICOPTER then
 						table["category"] = "Helicopter"
-					elseif unit:getCategory() == Unit.Category.GROUND_UNIT then
+					elseif unit:getDesc().category == Unit.Category.GROUND_UNIT then
 						table["category"] = "GroundUnit"
-					elseif unit:getCategory() == Unit.Category.SHIP then
+					elseif unit:getDesc().category == Unit.Category.SHIP then
 						table["category"] = "NavyUnit"
 					end
 				else
@@ -1039,7 +1039,7 @@ function Olympus.setUnitsData(arg, time)
 							local name = unit:getName()
 							if Olympus.cloneDatabase[name] ~= nil then
 								Olympus.cloneDatabase[name]["ID"] = ID
-								Olympus.cloneDatabase[name]["category"] = unit:getCategory()
+								Olympus.cloneDatabase[name]["category"] = unit:getDesc().category
 								Olympus.cloneDatabase[name]["heading"] = table["heading"]
 								Olympus.cloneDatabase[name]["alt"] = alt
 								Olympus.cloneDatabase[name]["country"] = unit:getCountry()
@@ -1097,11 +1097,11 @@ function Olympus.setWeaponsData(arg, time)
 				-- Get the object category in Olympus name
 				local objectCategory = Object.getCategory(weapon)
 				if objectCategory == Object.Category.WEAPON then
-					if weapon:getCategory() == Weapon.Category.MISSILE then
+					if weapon:getDesc().category == Weapon.Category.MISSILE then
 						table["category"] = "Missile"
-					elseif weapon:getCategory() == Weapon.Category.ROCKET then
+					elseif weapon:getDesc().category == Weapon.Category.ROCKET then
 						table["category"] = "Missile"
-					elseif weapon:getCategory() == Weapon.Category.BOMB then
+					elseif weapon:getDesc().category == Weapon.Category.BOMB then
 						table["category"] = "Bomb"
 					end
 				else
