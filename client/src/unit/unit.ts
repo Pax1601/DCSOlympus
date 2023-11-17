@@ -686,7 +686,10 @@ export abstract class Unit extends CustomMarker {
             (this.belongsToCommandedCoalition() || (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0))));
 
         /* Force dead units to be hidden */
-        this.setHidden(hidden || !this.#alive);
+        this.setHidden(hidden || !this.getAlive());
+
+        /* Force hidden units to be unselected */
+        this.setSelected(this.getSelected() && !this.getHidden());
     }
 
     setHidden(hidden: boolean) {
