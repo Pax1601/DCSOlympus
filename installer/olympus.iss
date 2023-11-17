@@ -1,5 +1,5 @@
 #define nwjsFolder "C:\Users\dpass\Documents\nwjs\"
-#define version "v0.4.6-alpha"
+#define version "v0.4.7-alpha"
 
 [Setup] 
 AppName=DCS Olympus 
