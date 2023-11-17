@@ -1457,11 +1457,8 @@ export abstract class AirUnit extends Unit {
     appendContextActions(contextActionSet: ContextActionSet, targetUnit: Unit | null, targetPosition: LatLng | null) {
         if (targetUnit !== null) {
             if (targetUnit != this) {
-                if (this.canFulfillRole(["CAP", "CAS", "Strike"]))
-                    contextActionSet.addContextAction(this, "attack", "Attack unit", "Attack the unit using A/A or A/G weapons", (units: Unit[]) => { getApp().getUnitsManager().attackUnit(targetUnit.ID, units) });
-            }
-            else {
-                contextActionSet.addContextAction(this, "follow", "Follow unit", "Follow this unit in formation", (units: Unit[]) => { this.showFollowOptions(units); }, false); // Don't hide the context menu after the execution (to show the follow options)
+                contextActionSet.addContextAction(this, "attack", "Attack unit", "Attack the unit using A/A or A/G weapons", (units: Unit[]) => { getApp().getUnitsManager().attackUnit(targetUnit.ID, units) });
+                contextActionSet.addContextAction(this, "follow", "Follow unit", "Follow this unit in formation", (units: Unit[]) => { targetUnit.showFollowOptions(units); }, false); // Don't hide the context menu after the execution (to show the follow options)
             }
             if (targetUnit.getSelected()) {
                 contextActionSet.addContextAction(this, "refuel", "Refuel", "Refuel units at the nearest AAR Tanker. If no tanker is available the unit will RTB", (units: Unit[]) => { getApp().getUnitsManager().refuel(units) });
@@ -1490,7 +1487,7 @@ export class Aircraft extends AirUnit {
     appendContextActions(contextActionSet: ContextActionSet, targetUnit: Unit | null, targetPosition: LatLng | null) {
         super.appendContextActions(contextActionSet, targetUnit, targetPosition);
 
-        if (targetUnit !== null && targetUnit.getSelected()) {
+        if (targetPosition === null && this.getSelected()) {
             contextActionSet.addContextAction(this, "refuel", "Refuel", "Refuel units at the nearest AAR Tanker. If no tanker is available the unit will RTB", (units: Unit[]) => { getApp().getUnitsManager().refuel(units) });
         }
     }
