@@ -1312,7 +1312,6 @@ input[type=number]::-webkit-outer-spin-button {
     align-items: center;
     background-repeat: no-repeat;
     display: flex;
-    font-weight: normal;
     padding: 8px 10px;
     white-space: nowrap;
 }

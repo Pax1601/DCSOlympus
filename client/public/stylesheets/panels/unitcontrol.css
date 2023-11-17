@@ -55,10 +55,6 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	}
 }
 
-#unit-control-panel h3 {
-	margin-bottom: 8px;
-}
-
 #unit-control-panel #selected-units-container {
 	align-items: left;
 	border-radius: var(--border-radius-md);
@@ -72,9 +68,9 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 
 #unit-control-panel #selected-units-container button {
 	align-items: center;
-	border-radius: var(--border-radius-md);
+	border-radius: 20px;
 	display: flex;
-	font-size: 11px;
+	font-size: 13px;
 	height: 32px;
 	justify-content: space-between;
 	margin-right: 5px;
@@ -88,6 +84,7 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	content: attr(data-label);
 	font-size: 10px;
 	padding: 4px 6px;
+	padding-right: 7px;
 	white-space: nowrap;
 	width: fit-content;
 }
@@ -103,7 +100,7 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	display: block;
 	overflow: hidden;
 	padding: 4px;
-	padding-left: 0;
+	padding-left: 7px;
 	text-align: left;
 	text-overflow: ellipsis;
 	white-space: nowrap;
