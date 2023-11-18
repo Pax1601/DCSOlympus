@@ -1,6 +1,6 @@
-import { Marker, LatLng, Polyline, Icon, DivIcon, CircleMarker, Map, Point, Circle } from 'leaflet';
+import { Marker, LatLng, Polyline, Icon, DivIcon, CircleMarker, Map, Point } from 'leaflet';
 import { getApp } from '..';
-import { enumToCoalition, enumToEmissioNCountermeasure, getMarkerCategoryByName, enumToROE, enumToReactionToThreat, enumToState, getUnitDatabaseByCategory, mToFt, msToKnots, rad2deg, bearing, deg2rad, ftToM, getGroundElevation, coalitionToEnum, nmToFt, nmToM } from '../other/utils';
+import { enumToCoalition, enumToEmissioNCountermeasure, enumToROE, enumToReactionToThreat, enumToState, getUnitDatabaseByCategory, mToFt, msToKnots, rad2deg, bearing, deg2rad, ftToM, getGroundElevation, coalitionToEnum, nmToFt, nmToM } from '../other/utils';
 import { CustomMarker } from '../map/markers/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
 import { UnitDatabase } from './databases/unitdatabase';
@@ -14,8 +14,6 @@ import { Ammo, Contact, GeneralSettings, LoadoutBlueprint, ObjectIconOptions, Of
 import { RangeCircle } from "../map/rangecircle";
 import { Group } from './group';
 import { ContextActionSet } from './contextactionset';
-import { ContextAction } from './contextaction';
-
 var pathIcon = new Icon({
     iconUrl: '/resources/theme/images/markers/marker-icon.png',
     shadowUrl: '/resources/theme/images/markers/marker-shadow.png',
@@ -233,6 +231,18 @@ export abstract class Unit extends CustomMarker {
      */
     abstract appendContextActions(contextActionSet: ContextActionSet, targetUnit: Unit | null, targetPosition: LatLng | null): void;
 
+    /**
+     * 
+     * @returns string containing the marker category
+     */
+    abstract getMarkerCategory(): string;
+
+    /**
+     * 
+     * @returns string containing the default marker
+     */
+    abstract getDefaultMarker(): string;
+
     /********************** Unit data *************************/
     /** This function is called by the units manager to update all the data coming from the backend. It reads the binary raw data using a DataExtractor
      * 
@@ -371,14 +381,6 @@ export abstract class Unit extends CustomMarker {
         }
     }
 
-    /**
-     * 
-     * @returns string containing the marker category
-     */
-    getMarkerCategory(): string {
-        return getMarkerCategoryByName(this.getName());
-    }
-
     /** Get a database of information also in this unit's category
      * 
      * @returns UnitDatabase
@@ -448,7 +450,7 @@ export abstract class Unit extends CustomMarker {
         return this.#selected;
     }
 
-    /** Set the number of the hotgroup to which the unit belongs
+    /** Set the number of the hotgroup to which the unit belongss
      *  
      * @param hotgroup (number)
      */
@@ -522,7 +524,7 @@ export abstract class Unit extends CustomMarker {
     }
 
     getDatabaseEntry() {
-        return this.getDatabase()?.getByName(this.#name);
+        return this.getDatabase()?.getByName(this.#name) ?? this.getDatabase()?.getUnkownUnit(this.getName());
     }
 
     getGroup() {
@@ -592,7 +594,7 @@ export abstract class Unit extends CustomMarker {
             /* If a unit does not belong to the commanded coalition or it is not visually detected, show it with the generic aircraft square */
             var marker;
             if (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC].includes(value)))
-                marker = this.getDatabaseEntry()?.markerFile ?? this.getMarkerCategory();
+                marker = this.getDatabaseEntry()?.markerFile ?? this.getDefaultMarker();
             else
                 marker = "aircraft";
             img.src = `/resources/theme/images/units/${marker}.svg`;
@@ -1492,6 +1494,14 @@ export class Aircraft extends AirUnit {
             contextActionSet.addContextAction(this, "refuel", "Refuel", "Refuel units at the nearest AAR Tanker. If no tanker is available the unit will RTB", (units: Unit[]) => { getApp().getUnitsManager().refuel(units) });
         }
     }
+
+    getMarkerCategory() {
+        return "aircraft";
+    }
+
+    getDefaultMarker() {
+        return "aircraft";
+    }
 }
 
 export class Helicopter extends AirUnit {
@@ -1508,6 +1518,14 @@ export class Helicopter extends AirUnit {
 
         if (targetPosition !== null) 
             contextActionSet.addContextAction(this, "land-at-point", "Land here", "land at this precise location", (units: Unit[]) => { getApp().getUnitsManager().landAtPoint(targetPosition, units) });
+    }
+
+    getMarkerCategory() {
+        return "helicopter";
+    }
+
+    getDefaultMarker() {
+        return "helicopter";
     }
 }
 
@@ -1582,9 +1600,9 @@ export class GroundUnit extends Unit {
             unitWhenGrouped = (member !== null ? member?.getDatabaseEntry()?.unitWhenGrouped : unitWhenGrouped);
         }
         if (unitWhenGrouped)
-            return this.getDatabase()?.getByName(unitWhenGrouped);
+            return this.getDatabase()?.getByName(unitWhenGrouped) ?? this.getDatabase()?.getUnkownUnit(this.getName());
         else
-            return this.getDatabase()?.getByName(this.getName());
+            return this.getDatabase()?.getByName(this.getName()) ?? this.getDatabase()?.getUnkownUnit(this.getName());
     }
 
     /* When we zoom past the grouping limit, grouping is enabled and the unit is a leader, we redraw the unit to apply any possible grouped marker */
@@ -1592,6 +1610,17 @@ export class GroundUnit extends Unit {
         return (this.getIsLeader() && getApp().getMap().getVisibilityOptions()[HIDE_GROUP_MEMBERS] &&
             (getApp().getMap().getZoom() >= GROUPING_ZOOM_TRANSITION && getApp().getMap().getPreviousZoom() < GROUPING_ZOOM_TRANSITION ||
                 getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION && getApp().getMap().getPreviousZoom() >= GROUPING_ZOOM_TRANSITION))
+    }
+
+    getMarkerCategory() {
+        if (/\bAAA|SAM\b/.test(this.getType()) || /\bmanpad|stinger\b/i.test(this.getType()))
+            return "groundunit-sam";
+        else
+            return "groundunit";
+    }
+
+    getDefaultMarker() {
+        return "groundunit";
     }
 }
 
@@ -1634,10 +1663,6 @@ export class NavyUnit extends Unit {
         }
     }
 
-    getMarkerCategory() {
-        return "navyunit";
-    }
-
     getCategory() {
         return "NavyUnit";
     }
@@ -1645,5 +1670,13 @@ export class NavyUnit extends Unit {
     getType() {
         var blueprint = navyUnitDatabase.getByName(this.getName());
         return blueprint?.type ? blueprint.type : "";
+    }
+
+    getMarkerCategory() {
+        return "navyunit";
+    }
+
+    getDefaultMarker() {
+        return "navyunit";
     }
 }

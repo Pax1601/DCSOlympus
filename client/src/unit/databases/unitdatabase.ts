@@ -3,7 +3,7 @@ import { getApp } from "../..";
 import { GAME_MASTER } from "../../constants/constants";
 import { UnitBlueprint } from "../../interfaces";
 
-export class UnitDatabase {
+export abstract class UnitDatabase {
     blueprints: { [key: string]: UnitBlueprint } = {};
     #url: string;
 
@@ -31,9 +31,7 @@ export class UnitDatabase {
         }
     }
 
-    getCategory() {
-        return "";
-    }
+    abstract getCategory(): string;
 
     /* Gets a specific blueprint by name */
     getByName(name: string) {
@@ -239,5 +237,16 @@ export class UnitDatabase {
 
     getSpawnPointsByName(name: string) {
         return Infinity;
+    }
+
+    getUnkownUnit(name: string): UnitBlueprint {
+        return {
+            name: name,
+            enabled: true,
+            coalition: 'neutral',
+            era: 'N/A',
+            label: name,
+            shortLabel: ''
+        }
     }
 }
