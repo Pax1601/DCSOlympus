@@ -230,13 +230,13 @@ form {
 }
 
 .ol-select.is-open[data-position="top"]>.ol-select-options {
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     top: 0;
     translate: 0 -100%;
 }
 
 .ol-select>.ol-select-options>div {
     background-color: var(--background-grey);
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     display: flex;
     justify-content: left;
     padding: 2px 15px;
@@ -266,7 +266,6 @@ form {
     color: white;
     display: block;
     font-size: 13px;
-    font-weight: normal;
     height: 32px;
     padding: 6px 2px;
     padding: 5px;
@@ -1334,7 +1333,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 [class|="ol-button"]::before {
-    margin-right: 8px;
+    margin-right: 4px;
 }
 
 .ol-button-close {
@@ -1371,10 +1370,12 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .ol-switch {
+    align-items: center;
     cursor: pointer;
     display: flex;
-    align-items: center;
+    height: 25px;
     justify-content: center;
+    width: 60px;
 }
 
 .ol-switch-input {
@@ -1426,6 +1427,32 @@ input[type=number]::-webkit-outer-spin-button {
 .ol-switch[data-value="undefined"]>.ol-switch-fill::after {
     transform: translateX(calc((var(--width) - var(--height)) * 0.5));
 }
+
+.switch-control.yes-no .ol-switch {
+	width:45px;
+}
+
+.switch-control.yes-no .ol-switch[data-value="true"] .ol-switch-fill {
+    background-color: var(--accent-light-blue);
+}
+
+.switch-control.yes-no .ol-switch[data-value="false"] .ol-switch-fill {
+	background-color: var(--ol-switch-off);
+}
+
+.switch-control.yes-no .ol-switch>.ol-switch-fill::before {
+    translate:-100% 0;
+    transform: none;
+}
+
+.switch-control.yes-no .ol-switch[data-value="true"]>.ol-switch-fill::before {
+	content: "YES";
+}
+
+.switch-control.yes-no .ol-switch[data-value="false"]>.ol-switch-fill::before {
+	content: "NO";
+}
+
 
 .ol-contexmenu-panel {
     padding: 20px;
