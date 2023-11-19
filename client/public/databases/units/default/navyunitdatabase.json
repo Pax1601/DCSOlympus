@@ -1294,7 +1294,7 @@
 	"ALBATROS": {
 		"name": "albatros",
 		"coalition": "red",
-		"type": "Frigade",
+		"type": "Frigate",
 		"era": "Early Cold War",
 		"label": "Albatros (Grisha-5)",
 		"shortLabel": "Albatros",
@@ -1610,7 +1610,7 @@
 		"era": "",
 		"label": "LS Samuel Chase",
 		"shortLabel": "LS Samuel Chase",
-		"type": "Landing SHip",
+		"type": "Landing Ship",
 		"enabled": true,
 		"liveries": {},
 		"acquisitionRange": 0,
