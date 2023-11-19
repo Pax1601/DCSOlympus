@@ -1,4 +1,4 @@
-import { ContextAction } from "./contextaction";
+import { ContextAction, ContextActionOptionsInterface } from "./contextaction";
 import { Unit } from "./unit";
 
 export class ContextActionSet {
@@ -8,9 +8,11 @@ export class ContextActionSet {
         
     }
 
-    addContextAction(unit: Unit, id: string, label: string, description: string, callback: CallableFunction, hideContextAfterExecution: boolean = true) {
+    addContextAction(unit: Unit, id: string, label: string, description: string, callback: CallableFunction, hideContextAfterExecution: boolean = true, options?:ContextActionOptionsInterface) {
+        options = options || {};
+
         if (!(id in this.#contextActions)) {
-            this.#contextActions[id] = new ContextAction(id, label, description, callback, hideContextAfterExecution);
+            this.#contextActions[id] = new ContextAction(id, label, description, callback, hideContextAfterExecution, options);
         }
         this.#contextActions[id].addUnit(unit);
     }

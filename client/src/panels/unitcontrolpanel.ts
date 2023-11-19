@@ -107,6 +107,19 @@ export class UnitControlPanel extends Panel {
             getApp().getUnitsManager().setOperateAs(value);
         });
 
+        /* Mouseover of (?) highlights activation buttons */
+        const operateAsQuestionMark = <HTMLElement>this.getElement().querySelector("#operate-as h4 img");
+        operateAsQuestionMark.addEventListener("mouseover", () => {
+            document.querySelectorAll(`#rapid-controls button.scenic-action`).forEach((btn:Element) => {
+                btn.classList.add(`pulse`);
+            });
+        });
+        operateAsQuestionMark.addEventListener("mouseout", () => {
+            document.querySelectorAll(`#rapid-controls button.scenic-action.pulse`).forEach((btn:Element) => {
+                btn.classList.remove(`pulse`);
+            });
+        });
+
         /* Advanced settings dialog */
         this.#advancedSettingsDialog = <HTMLElement> document.querySelector("#advanced-settings-dialog");
 
@@ -324,6 +337,8 @@ export class UnitControlPanel extends Panel {
             let button = document.createElement("button");
             button.title = contextAction.getDescription();
             button.classList.add("ol-button", "unit-action-button");
+            if (contextAction.getOptions().isScenic)
+                button.classList.add("scenic-action");
             button.id = key;
             rapidControlsContainer.appendChild(button);
             button.onclick = () => {

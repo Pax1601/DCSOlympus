@@ -718,62 +718,6 @@ nav.ol-panel> :last-child {
 }
 
 
-
-#roe-buttons-container button,
-#reaction-to-threat-buttons-container button,
-#emissions-countermeasures-buttons-container button,
-#shots-scatter-buttons-container button
-#shots-intensity-buttons-container button {
-    align-items: center;
-    background-color: transparent;
-    border: 1px solid var(--accent-light-blue);
-    display: flex;
-    height: 30px;
-    justify-content: center;
-    width: 30px;
-}
-
-#reaction-to-threat-buttons-container button:not(:first-child) svg {
-    width: 150%;
-    margin: -5px;
-}
-
-#unit-control-panel .ol-option-button button.selected {
-    background-color: white;
-    border-color: white;
-}
-
-#unit-control-panel .ol-option-button button.selected svg * {
-    fill: var(--background-steel);
-    stroke: var(--background-steel);
-}
-
-#rapid-controls {
-    display: flex;
-    flex-direction: column;
-    row-gap: 5px;
-    height: fit-content;
-    width: fit-content;
-}
-
-#rapid-controls button {
-    padding: 4px;
-}
-
-#rapid-controls svg {
-    height: 20px;
-    width: 20px;
-    fill: white;
-    stroke: white;
-}
-
-#rapid-controls button:before {
-    display: inline-block;
-    filter: invert(100%);
-    height: 20px;
-    width: 20px;
-}
-
 /****************************************************************************************/
 #splash-screen {
     border-radius: var(--border-radius-md);
@@ -1375,7 +1319,7 @@ input[type=number]::-webkit-outer-spin-button {
     display: flex;
     height: 25px;
     justify-content: center;
-    width: 60px;
+    width: 40px;
 }
 
 .ol-switch-input {
@@ -1411,7 +1355,7 @@ input[type=number]::-webkit-outer-spin-button {
     display: flex;
     font-size: 11px;
     height: 100%;
-    padding: 0px 7px;
+    padding: 0px 6px;
     position: absolute;
     transition: transform 0.2s;
 }
@@ -1428,10 +1372,6 @@ input[type=number]::-webkit-outer-spin-button {
     transform: translateX(calc((var(--width) - var(--height)) * 0.5));
 }
 
-.switch-control.yes-no .ol-switch {
-	width:45px;
-}
-
 .switch-control.yes-no .ol-switch[data-value="true"] .ol-switch-fill {
     background-color: var(--accent-light-blue);
 }
@@ -1440,6 +1380,7 @@ input[type=number]::-webkit-outer-spin-button {
 	background-color: var(--ol-switch-off);
 }
 
+.switch-control.coalition .ol-switch>.ol-switch-fill::before,
 .switch-control.yes-no .ol-switch>.ol-switch-fill::before {
     translate:-100% 0;
     transform: none;
@@ -1468,6 +1409,26 @@ input[type=number]::-webkit-outer-spin-button {
 
 .ol-coalition-switch[data-value="undefined"]>.ol-switch-fill {
     background-color: var(--primary-neutral);
+}
+/*
+#unit-control-panel .switch-control .ol-switch-fill::after {
+	background-color: white;
+}
+*/
+.switch-control.coalition [data-value="true"] .ol-switch-fill {
+	background-color: var(--accent-light-blue);
+}
+
+.switch-control.coalition [data-value="false"] .ol-switch-fill {
+	background-color: var(--primary-red);
+}
+
+.switch-control.coalition [data-value="true"]>.ol-switch-fill::before {
+	content: "BLUE" !important;
+}
+
+.switch-control.coalition [data-value="false"]>.ol-switch-fill::before {
+	content: "RED" !important;
 }
 
 .ol-context-menu>ul {
