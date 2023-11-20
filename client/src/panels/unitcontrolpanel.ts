@@ -2,16 +2,13 @@ import { SVGInjector } from "@tanem/svg-injector";
 import { getApp } from "..";
 import { Dropdown } from "../controls/dropdown";
 import { Slider } from "../controls/slider";
-import { aircraftDatabase } from "../unit/databases/aircraftdatabase";
 import { Unit } from "../unit/unit";
 import { Panel } from "./panel";
 import { Switch } from "../controls/switch";
 import { ROEDescriptions, ROEs, altitudeIncrements, emissionsCountermeasures, emissionsCountermeasuresDescriptions, maxAltitudeValues, maxSpeedValues, minAltitudeValues, minSpeedValues, reactionsToThreat, reactionsToThreatDescriptions, shotsIntensityDescriptions, shotsScatterDescriptions, speedIncrements } from "../constants/constants";
 import { ftToM, knotsToMs, mToFt, msToKnots } from "../other/utils";
 import { GeneralSettings, Radio, TACAN } from "../interfaces";
-import { PrimaryToolbar } from "../toolbars/primarytoolbar";
 import { ContextActionSet } from "../unit/contextactionset";
-import { ContextAction } from "../unit/contextaction";
 
 export class UnitControlPanel extends Panel {
     #altitudeSlider: Slider;
@@ -176,6 +173,7 @@ export class UnitControlPanel extends Panel {
         this.#AWACSSwitch.resetExpectedValue();
         this.#onOffSwitch.resetExpectedValue();
         this.#followRoadsSwitch.resetExpectedValue();
+        this.#operateAsSwitch.resetExpectedValue();
         this.#altitudeSlider.resetExpectedValue();
         this.#speedSlider.resetExpectedValue();
         this.#calculateMaxHeight();

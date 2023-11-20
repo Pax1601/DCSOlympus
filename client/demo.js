@@ -130,6 +130,8 @@ class DemoDataGenerator {
         DEMO_UNIT_DATA[idx].position.lat += idx / 100;
         DEMO_UNIT_DATA[idx].category = "GroundUnit";
         DEMO_UNIT_DATA[idx].isLeader = true;
+        DEMO_UNIT_DATA[idx].coalition = 0;
+        DEMO_UNIT_DATA[idx].operateAs = 2;
 
         idx += 1;
         DEMO_UNIT_DATA[idx] = JSON.parse(JSON.stringify(baseData));
@@ -139,6 +141,7 @@ class DemoDataGenerator {
         DEMO_UNIT_DATA[idx].category = "GroundUnit";
         DEMO_UNIT_DATA[idx].isLeader = true;
         DEMO_UNIT_DATA[idx].coalition = 0;
+        DEMO_UNIT_DATA[idx].operateAs = 1;
 
         idx += 1;
         DEMO_UNIT_DATA[idx] = JSON.parse(JSON.stringify(baseData));
