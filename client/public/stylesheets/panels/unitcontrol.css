@@ -2,6 +2,69 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	display: block !important;
 }
 
+
+#roe-buttons-container button,
+#reaction-to-threat-buttons-container button,
+#emissions-countermeasures-buttons-container button,
+#shots-scatter-buttons-container button
+#shots-intensity-buttons-container button {
+    align-items: center;
+    background-color: transparent;
+    border: 1px solid var(--accent-light-blue);
+    display: flex;
+    height: 30px;
+    justify-content: center;
+    width: 30px;
+}
+
+#reaction-to-threat-buttons-container button:not(:first-child) svg {
+    width: 150%;
+    margin: -5px;
+}
+
+#unit-control-panel .ol-option-button button.selected {
+    background-color: white;
+    border-color: white;
+}
+
+#unit-control-panel .ol-option-button button.selected svg * {
+    fill: var(--background-steel);
+    stroke: var(--background-steel);
+}
+
+#rapid-controls {
+    display: flex;
+    flex-direction: column;
+    row-gap: 5px;
+    height: fit-content;
+    width: fit-content;
+}
+
+#rapid-controls button {
+    padding: 4px;
+}
+
+#rapid-controls button.pulse {
+    animation: pulse 1.5s linear infinite;
+}
+
+#rapid-controls svg {
+    height: 20px;
+    width: 20px;
+    fill: white;
+    stroke: white;
+}
+
+#rapid-controls button:before {
+    display: inline-block;
+    filter: invert(100%);
+    height: 20px;
+    width: 20px;
+}
+
+
+
+
 #unit-control-panel {
 	display: flex;
 	flex-direction: row;
@@ -55,10 +118,6 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	}
 }
 
-#unit-control-panel h3 {
-	margin-bottom: 8px;
-}
-
 #unit-control-panel #selected-units-container {
 	align-items: left;
 	border-radius: var(--border-radius-md);
@@ -72,9 +131,9 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 
 #unit-control-panel #selected-units-container button {
 	align-items: center;
-	border-radius: var(--border-radius-md);
+	border-radius: 20px;
 	display: flex;
-	font-size: 11px;
+	font-size: 13px;
 	height: 32px;
 	justify-content: space-between;
 	margin-right: 5px;
@@ -88,6 +147,7 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	content: attr(data-label);
 	font-size: 10px;
 	padding: 4px 6px;
+	padding-right: 7px;
 	white-space: nowrap;
 	width: fit-content;
 }
@@ -103,7 +163,7 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	display: block;
 	overflow: hidden;
 	padding: 4px;
-	padding-left: 0;
+	padding-left: 7px;
 	text-align: left;
 	text-overflow: ellipsis;
 	white-space: nowrap;
@@ -232,56 +292,59 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	opacity: 80%;
 }
 
-#unit-control-panel .switch-control .ol-switch {
-	height: 25px;
-	width: 60px;
-}
-
-#unit-control-panel .switch-control .ol-switch-fill {
-	background-color: var(--accent-light-blue);
-}
-
-#unit-control-panel .switch-control .ol-switch-fill::after {
-	background-color: white;
-}
-
-#unit-control-panel .switch-control .ol-switch[data-value="true"]>.ol-switch-fill::before {
-	content: "YES";
-}
-
-#unit-control-panel .switch-control .ol-switch[data-value="false"]>.ol-switch-fill::before {
-	content: "NO";
-}
-
-#operate-as-switch[data-value="true"] .ol-switch-fill {
-	background-color: var(--accent-light-blue);
-}
-
-#operate-as-switch[data-value="false"] .ol-switch-fill {
-	background-color: var(--primary-red);
-}
-
-#operate-as-switch[data-value="true"]>.ol-switch-fill::before {
-	content: "BLUE" !important;
-}
-
-#operate-as-switch[data-value="false"]>.ol-switch-fill::before {
-	content: "RED" !important;
-}
-
 #advanced-settings-div {
-	position: relative;
-	column-gap: 5px;
+	align-items: center;
+	column-gap: 8px;
 	display: flex;
 	height: fit-content;
+	position: relative;
 }
 
-#advanced-settings-div>*:nth-child(2) {
-	margin-left: auto;
-}
-
-#advanced-settings-div>button {
+#advanced-settings-div > button {
+	background-color: var(--background-grey);
+	font-size:13px;
 	height: 40px;
+	padding:0 20px;
+}
+
+#delete-options {
+	font-size:13px;
+}
+
+#delete-options.ol-select > .ol-select-value:after {
+	content: "";
+}
+
+#delete-options.ol-select > .ol-select-value svg {
+	background-color: transparent;
+	position: absolute;
+	right:2px;
+	translate:0 1px;
+}
+
+#delete-options.ol-select > .ol-select-value svg * {
+	fill: var(--primary-red);
+}
+
+#delete-options * {
+	background-color: var(--background-steel);
+}
+
+#delete-options.ol-select > .ol-select-value:hover,
+#delete-options .ol-select-options > div:not(.hr):hover,
+#delete-options .ol-select-options > div:not(.hr):hover button,
+#delete-options .ol-select-options > div hr {
+	background-color: var(--background-grey);
+}
+
+#delete-options .ol-select-options > div:first-of-type {
+	margin-top:12px;
+	padding-top:0;
+}
+
+#delete-options .ol-select-options > div:last-of-type {
+	margin-bottom:12px;
+	padding-bottom:0;
 }
 
 #delete-options button {
@@ -291,9 +354,14 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 }
 
 #delete-options button svg {
+	background-color: transparent;
 	margin-right: 10px;
 	width: 18px;
 	max-height: 18px;
+}
+
+#delete-options button svg * {
+	stroke: red;
 }
 
 /* Element visibility control */

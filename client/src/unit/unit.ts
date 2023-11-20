@@ -1549,13 +1549,17 @@ export class GroundUnit extends Unit {
         if (targetPosition !== null) {
             if (this.canTargetPoint()) {
                 contextActionSet.addContextAction(this, "fire-at-area", "Fire at area", "Fire at a specific area on the ground", (units: Unit[]) => { getApp().getUnitsManager().fireAtArea(targetPosition, units) });
-                contextActionSet.addContextAction(this, "simulate-fire-fight", "Simulate fire fight", "Simulate a fire fight by shooting randomly in a certain large area. WARNING: works correctly only on neutral units, blue or red units will aim", (units: Unit[]) => { getApp().getUnitsManager().fireAtArea(targetPosition, units) });
+                contextActionSet.addContextAction(this, "simulate-fire-fight", "Simulate fire fight", "Simulate a fire fight by shooting randomly in a certain large area.\nWARNING: works correctly only on neutral units, blue or red units will aim", (units: Unit[]) => { getApp().getUnitsManager().fireAtArea(targetPosition, units) });
             }
         }
         else {
             if (this.canAAA()) {
-                contextActionSet.addContextAction(this, "scenic-aaa", "Scenic AAA", "Shoot AAA in the air without aiming at any target, when a enemy unit gets close enough. WARNING: works correctly only on neutral units, blue or red units will aim", (units: Unit[]) => { getApp().getUnitsManager().scenicAAA(units) });
-                contextActionSet.addContextAction(this, "miss-aaa", "Misson on purpose", "Shoot AAA towards the closest enemy unit, but don't aim precisely. WARNING: works correctly only on neutral units, blue or red units will aim", (units: Unit[]) => { getApp().getUnitsManager().missOnPurpose(units) });
+                contextActionSet.addContextAction(this, "scenic-aaa", "Scenic AAA", "Shoot AAA in the air without aiming at any target, when a enemy unit gets close enough.\nWARNING: works correctly only on neutral units, blue or red units will aim", (units: Unit[]) => { getApp().getUnitsManager().scenicAAA(units) }, undefined, {
+                    "isScenic": true
+                });
+                contextActionSet.addContextAction(this, "miss-aaa", "Miss on purpose", "Shoot AAA towards the closest enemy unit, but don't aim precisely.\nWARNING: works correctly only on neutral units, blue or red units will aim", (units: Unit[]) => { getApp().getUnitsManager().missOnPurpose(units) }, undefined, {
+                    "isScenic": true
+                });
             }
         }
     }
