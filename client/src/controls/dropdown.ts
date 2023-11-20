@@ -7,6 +7,7 @@ export class Dropdown {
     #optionsList: string[] = [];
     #index: number = 0;
     #hidden: boolean = false;
+    #text!:HTMLElement;
 
     constructor(ID: string | null, callback: CallableFunction, options: string[] | null = null, defaultText?: string) {
         if (ID === null)
@@ -15,7 +16,10 @@ export class Dropdown {
             this.#container = document.getElementById(ID) as HTMLElement;
 
         this.#options = this.#container.querySelector(".ol-select-options") as HTMLElement;
-        this.#value = this.#container.querySelector(".ol-select-value") as HTMLElement;
+
+        const text = this.#container.querySelector(".ol-select-value-text");
+        this.#value = ( text instanceof HTMLElement ) ? text : this.#container.querySelector(".ol-select-value") as HTMLElement;
+
         this.#defaultValue = this.#value.innerText;
         this.#callback = callback;
 
