@@ -6,9 +6,10 @@ Copyright (C) 2023 Veltro & Gang
 
 DCS Olympus (the "MATERIAL" or "Software") is provided completely free 
 to users subject to the it under both the terms of version 3 of the GNU 
-General Public License as published by the Free Software Foundation, and 
-the additional terms set out below; except where such terms conflict with this 
-disclaimer, in which case, the terms of this disclaimer shall prevail. 
+General Public License ("GPLv3") as published by the Free Software Foundation, 
+and the additional terms set out below (the "Additional Terms"). In the event
+that the terms of GPLv3 conflict with the Additional Terms, the 
+Additional Terms shall prevail. 
 
 The authors and/or copyright holders of the Software have not received any 
 financial benefit in connection with the Software. In any event, the 
@@ -17,14 +18,13 @@ implied, including but not limited to the warranties of merchantability,
 fitness for a particular purpose and non-infringement. In no event shall 
 the authors and/or copyright holders be liable for any claim, damages or 
 other liability, whether in an action of contract, tort or otherwise, 
-arising from, out of or in connection with the Software or the use or o
-ther dealings in the Software. 
-
-Any party making use of the Software in any manner agrees to be 
-bound by the terms set out in this disclaimer, version 3 of the GNU 
-General Public Licence, and the Additional Terms below. 
+arising from, out of or in connection with the Software or the use or 
+other dealings in the Software. 
 
 THIS MATERIAL IS NOT MADE OR SUPPORTED BY EAGLE DYNAMICS SA.
+
+Any party making use of the Software in any manner agrees to be bound by 
+the entirety of this document. 
 
 
                      GNU GENERAL PUBLIC LICENSE
@@ -657,4 +657,12 @@ copy of the Program in return for a fee.
 GNU General Public Licence Version 3 above shall be governed by and 
 interpreted in accordance with English Law and the parties submit to the 
 exclusive jurisdiction of the English Courts.
+
+2. Entire Agreement
+
+  The text of this document contains the entire understanding between
+you, the licensee, and the authors and/or copyright holders of the
+Software with respect to the subject matter to which it pertains. 
+It supersedes all prior agreements and understandings (if applicable), 
+oral or written, with respect to such matters.
            
