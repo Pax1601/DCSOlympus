@@ -1,7 +1,7 @@
 import { Unit } from "./unit";
 
-export interface ContextActionOptionsInterface {
-    isScenic?:boolean
+export interface ContextActionOptions {
+    isScenic?: boolean
 }
 
 export class ContextAction {
@@ -11,10 +11,10 @@ export class ContextAction {
     #callback: CallableFunction | null = null;
     #units: Unit[] = [];
     #hideContextAfterExecution: boolean = true
-    #options: ContextActionOptionsInterface;
+    #options: ContextActionOptions;
 
-    constructor(id: string, label: string, description: string, callback: CallableFunction, hideContextAfterExecution: boolean = true, options:ContextActionOptionsInterface) {
-        this.#id = id; 
+    constructor(id: string, label: string, description: string, callback: CallableFunction, hideContextAfterExecution: boolean = true, options: ContextActionOptions) {
+        this.#id = id;
         this.#label = label;
         this.#description = description;
         this.#callback = callback;

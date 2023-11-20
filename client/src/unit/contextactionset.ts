@@ -1,4 +1,4 @@
-import { ContextAction, ContextActionOptionsInterface } from "./contextaction";
+import { ContextAction, ContextActionOptions } from "./contextaction";
 import { Unit } from "./unit";
 
 export class ContextActionSet {
@@ -8,7 +8,7 @@ export class ContextActionSet {
         
     }
 
-    addContextAction(unit: Unit, id: string, label: string, description: string, callback: CallableFunction, hideContextAfterExecution: boolean = true, options?:ContextActionOptionsInterface) {
+    addContextAction(unit: Unit, id: string, label: string, description: string, callback: CallableFunction, hideContextAfterExecution: boolean = true, options?:ContextActionOptions) {
         options = options || {};
 
         if (!(id in this.#contextActions)) {
