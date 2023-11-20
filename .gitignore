@@ -1,5 +1,8 @@
 bin
 /scripts/old
+/scripts/python/dist
+/scripts/python/build
+/scripts/python/venv
 .vs
 x64
 core.user
@@ -15,3 +18,4 @@ node_modules
 hgt
 /client/public/databases/units/old
 /client/plugins/databasemanager/index.js
+
