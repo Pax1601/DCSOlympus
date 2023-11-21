@@ -5,7 +5,8 @@
   "version": "v0.4.7-alpha",
   "private": true,
   "scripts": {
-	  "build": "browserify .\\src\\index.ts --debug -o .\\public\\javascripts\\bundle.js -t [ babelify --global true --presets [ @babel/preset-env ] --extensions '.js'] -p [ tsify --noImplicitAny ] && copy.bat",
+    "build": "browserify .\\src\\index.ts --debug -o .\\public\\javascripts\\bundle.js -t [ babelify --global true --presets [ @babel/preset-env ] --extensions '.js'] -p [ tsify --noImplicitAny ] && copy.bat",
+    "build-release": "browserify .\\src\\index.ts -o .\\public\\javascripts\\bundle.js -t [ babelify --global true --presets [ @babel/preset-env ] --extensions '.js'] -p [ tsify --noImplicitAny ] -p [ tinyify ] && copy.bat",
     "emit-declarations": "tsc --project tsconfig.json --declaration --emitDeclarationOnly --outfile ./@types/olympus/index.d.ts",
     "copy": "copy.bat",
     "start": "node ./bin/www",
@@ -48,6 +49,7 @@
     "nodemon": "^2.0.20",
     "requirejs": "^2.3.6",
     "sortablejs": "^1.15.0",
+    "tinyify": "^4.0.0",
     "tsify": "^5.0.4",
     "tslib": "latest",
     "typedoc": "^0.24.8",

@@ -1,19 +1,19 @@
 {
-	"server": {
-		"address": "localhost",
-		"port": 30000
-	},
-	"authentication": {
-		"gameMasterPassword": "password",
-		"blueCommanderPassword": "bluepassword",
-		"redCommanderPassword": "redpassword"
-	}, 
-	"client": {
-		"port": 3000,
-		"elevationProvider": {
-			"provider": "https://srtm.fasma.org/{lat}{lng}.SRTMGL3S.hgt.zip",
-			"username": null,
-			"password": null
-		}
-	}
+    "server": {
+        "address": "localhost",
+        "port": 3001
+    },
+    "authentication": {
+        "gameMasterPassword": "4b8823ed9e5c2392ab4a791913bb8ce41956ea32e308b760eefb97536746dd33",
+        "blueCommanderPassword": "b0ea4230c1558c5313165eda1bdb7fced008ca7f2ca6b823fb4d26292f309098",
+        "redCommanderPassword": "b0ea4230c1558c5313165eda1bdb7fced008ca7f2ca6b823fb4d26292f309098"
+    },
+    "client": {
+        "port": 3000,
+        "elevationProvider": {
+            "provider": "https://srtm.fasma.org/{lat}{lng}.SRTMGL3S.hgt.zip",
+            "username": null,
+            "password": null
+        }
+    }
 }

@@ -4,10 +4,29 @@
   "private": true,
   "scripts": {
     "build": "browserify ./src/index.ts -p [ tsify --noImplicitAny] > index.js && copy.bat",
+	"build-release": "browserify ./src/index.ts -p [ tsify --noImplicitAny] -p [ tinyify ] > index.js && copy.bat"
     "start": "npm run copy & concurrently --kill-others \"npm run watch\"",
     "copy": "copy.bat",
     "watch": "watchify ./src/index.ts --debug -o ../../public/plugins/databasemanager/index.js -t [ babelify --global true --presets [ @babel/preset-env ] --extensions '.js'] -p [ tsify --noImplicitAny ]"
   },
   "dependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+	"@babel/preset-env": "^7.21.4",
+    "@types/node": "^18.16.1",
+    "@types/sortablejs": "^1.15.0",
+    "babelify": "^10.0.0",
+    "browserify": "^17.0.0",
+    "concurrently": "^7.6.0",
+    "cp": "^0.2.0",
+    "esmify": "^2.1.1",
+    "nodemon": "^2.0.20",
+    "requirejs": "^2.3.6",
+    "sortablejs": "^1.15.0",
+    "tinyify": "^4.0.0",
+    "tsify": "^5.0.4",
+    "tslib": "latest",
+    "typescript": "^4.9.4",
+    "usng.js": "^0.4.5",
+    "watchify": "^4.0.0"
+  }
 }

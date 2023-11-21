@@ -1,8 +1,8 @@
 bin
 /scripts/old
-/scripts/python/dist
-/scripts/python/build
-/scripts/python/venv
+/scripts/python/configurator/dist
+/scripts/python/configurator/build
+/scripts/python/configurator/venv
 .vs
 x64
 core.user

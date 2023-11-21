@@ -1,4 +1,5 @@
 #define nwjsFolder "C:\Users\dpass\Documents\nwjs\"
+#define nodejsFolder "D:\Documents\node\"
 #define version "v0.4.7-alpha"
 
 [Setup] 
@@ -25,26 +26,43 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files] 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files 
-; Source: "..\scripts\OlympusHook.lua"; DestDir: "{app}\Scripts\Hooks"; Flags: ignoreversion 
+Source: "..\scripts\OlympusHook.lua"; DestDir: "{app}\Scripts\Hooks"; Flags: ignoreversion 
 Source: "..\olympus.json"; DestDir: "{app}\Mods\Services\Olympus"; Flags: onlyifdoesntexist 
-; Source: "..\scripts\OlympusCommand.lua"; DestDir: "{app}\Mods\Services\Olympus\Scripts"; Flags: ignoreversion 
-; Source: "..\scripts\unitPayloads.lua"; DestDir: "{app}\Mods\Services\Olympus\Scripts"; Flags: ignoreversion
-; Source: "..\scripts\templates.lua"; DestDir: "{app}\Mods\Services\Olympus\Scripts"; Flags: ignoreversion 
-; Source: "..\scripts\mist.lua"; DestDir: "{app}\Mods\Services\Olympus\Scripts"; Flags: ignoreversion 
-; Source: "..\mod\*"; DestDir: "{app}\Mods\Services\Olympus"; Flags: ignoreversion recursesubdirs;
-; Source: "..\bin\*.dll"; DestDir: "{app}\Mods\Services\Olympus\bin"; Flags: ignoreversion;
-; Source: "..\client\bin\*"; DestDir: "{app}\Mods\Services\Olympus\client\bin"; Flags: ignoreversion;
-; Source: "..\client\node_modules\*"; DestDir: "{app}\Mods\Services\Olympus\client\node_modules"; Flags: ignoreversion recursesubdirs;
-; Source: "..\client\public\*"; DestDir: "{app}\Mods\Services\Olympus\client\public"; Flags: ignoreversion recursesubdirs;
-; Source: "..\client\routes\*"; DestDir: "{app}\Mods\Services\Olympus\client\routes"; Flags: ignoreversion recursesubdirs;
-; Source: "..\client\views\*"; DestDir: "{app}\Mods\Services\Olympus\client\views"; Flags: ignoreversion recursesubdirs;
-; Source: "..\client\*.*"; DestDir: "{app}\Mods\Services\Olympus\client"; Flags: ignoreversion;
-; Source: "..\img\olympus.ico"; DestDir: "{app}\Mods\Services\Olympus\img"; Flags: ignoreversion;
-; Source: "{#nwjsFolder}\*.*"; DestDir: "{app}\Mods\Services\Olympus\client"; Flags: ignoreversion recursesubdirs;
-Source: "..\scripts\python\dist\configurator.exe"; DestDir: "{app}\Mods\Services\Olympus"; Flags: ignoreversion 
+Source: "..\scripts\OlympusCommand.lua"; DestDir: "{app}\Mods\Services\Olympus\Scripts"; Flags: ignoreversion 
+Source: "..\scripts\unitPayloads.lua"; DestDir: "{app}\Mods\Services\Olympus\Scripts"; Flags: ignoreversion
+Source: "..\scripts\templates.lua"; DestDir: "{app}\Mods\Services\Olympus\Scripts"; Flags: ignoreversion 
+Source: "..\scripts\mist.lua"; DestDir: "{app}\Mods\Services\Olympus\Scripts"; Flags: ignoreversion 
+Source: "..\mod\*"; DestDir: "{app}\Mods\Services\Olympus"; Flags: ignoreversion recursesubdirs;
+Source: "..\bin\*.dll"; DestDir: "{app}\Mods\Services\Olympus\bin"; Flags: ignoreversion;
+Source: "..\client\bin\*"; DestDir: "{app}\Mods\Services\Olympus\client\bin"; Flags: ignoreversion;
+Source: "..\client\node_modules\*"; DestDir: "{app}\Mods\Services\Olympus\client\node_modules"; Flags: ignoreversion recursesubdirs;
+Source: "..\client\public\*"; DestDir: "{app}\Mods\Services\Olympus\client\public"; Flags: ignoreversion recursesubdirs;
+Source: "..\client\routes\*"; DestDir: "{app}\Mods\Services\Olympus\client\routes"; Flags: ignoreversion recursesubdirs;
+Source: "..\client\views\*"; DestDir: "{app}\Mods\Services\Olympus\client\views"; Flags: ignoreversion recursesubdirs;
+Source: "..\client\*.*"; DestDir: "{app}\Mods\Services\Olympus\client"; Flags: ignoreversion;
+Source: "..\img\olympus.ico"; DestDir: "{app}\Mods\Services\Olympus\img"; Flags: ignoreversion;
+Source: "..\img\olympus_server.ico"; DestDir: "{app}\Mods\Services\Olympus\img"; Flags: ignoreversion;
+Source: "..\img\olympus_configurator.ico"; DestDir: "{app}\Mods\Services\Olympus\img"; Flags: ignoreversion;
+Source: "..\img\configurator_logo.png"; DestDir: "{app}\Mods\Services\Olympus\img"; Flags: ignoreversion;
+; Source: "{#nwjsFolder}\*.*"; DestDir: "{app}\Mods\Services\Olympus\client\bin\nw"; Flags: ignoreversion recursesubdirs; Check: CheckLocalInstall
+Source: "{#nodejsFolder}\*.*"; DestDir: "{app}\Mods\Services\Olympus\client\bin\node"; Flags: ignoreversion recursesubdirs; Check: CheckServerInstall
+Source: "..\scripts\python\configurator\dist\configurator.exe"; DestDir: "{app}\Mods\Services\Olympus"; Flags: ignoreversion; Check: CheckServerInstall 
 
 [Run]
 Filename: "{app}\Mods\Services\Olympus\configurator.exe"; Parameters: -a {code:GetAddress} -c {code:GetClientPort} -b {code:GetBackendPort} -p {code:GetPassword} -bp {code:GetBluePassword} -rp {code:GetRedPassword}
+
+[Registry]
+Root: HKCU; Subkey: "Environment"; ValueType: string; ValueName: "DCSOLYMPUS_PATH"; ValueData: "{app}\Mods\Services\Olympus"; Flags: preservestringtype
+Root: HKCU; Subkey: "Environment"; ValueType: expandsz; ValueName: "Path"; ValueData: "{olddata};%DCSOLYMPUS_PATH%\bin"; Check: NeedsAddPath('%DCSOLYMPUS_PATH%\bin');
+	
+[Setup]
+; Tell Windows Explorer to reload the environment
+ChangesEnvironment=yes
+
+[Icons]
+Name: "{userdesktop}\DCS Olympus Client"; Filename: "{app}\Mods\Services\Olympus\client\bin\nw\nw.exe"; Tasks: desktopicon; IconFilename: "{app}\Mods\Services\Olympus\img\olympus.ico"; Check: CheckLocalInstall
+Name: "{userdesktop}\DCS Olympus Server"; Filename: "{app}\Mods\Services\Olympus\client\bin\node\node.exe"; Tasks: desktopicon; IconFilename: "{app}\Mods\Services\Olympus\img\olympus_server.ico"; WorkingDir: "{app}\Mods\Services\Olympus\client"; Parameters: ".\bin\www"; Check: CheckServerInstall
+Name: "{userdesktop}\DCS Olympus Configurator"; Filename: "{app}\Mods\Services\Olympus\configurator.exe"; Tasks: desktopicon; IconFilename: "{app}\Mods\Services\Olympus\img\olympus_configurator.ico"; Check: CheckServerInstall
 
 [Code]
 function NeedsAddPath(Param: string): boolean;
@@ -62,17 +80,6 @@ begin
   { Pos() returns 0 if not found }
   Result := Pos(';' + Param + ';', ';' + OrigPath + ';') = 0;
 end;
-
-[Registry]
-Root: HKCU; Subkey: "Environment"; ValueType: string; ValueName: "DCSOLYMPUS_PATH"; ValueData: "{app}\Mods\Services\Olympus"; Flags: preservestringtype
-Root: HKCU; Subkey: "Environment"; ValueType: expandsz; ValueName: "Path"; ValueData: "{olddata};%DCSOLYMPUS_PATH%\bin"; Check: NeedsAddPath('%DCSOLYMPUS_PATH%\bin');
-	
-[Setup]
-; Tell Windows Explorer to reload the environment
-ChangesEnvironment=yes
-
-[Icons]
-Name: "{userdesktop}\DCS Olympus Client"; Filename: "{app}\Mods\Services\Olympus\client\nw.exe"; Tasks: desktopicon; IconFilename: "{app}\Mods\Services\Olympus\img\olympus.ico"
 
 [Code]
 var
@@ -201,7 +208,7 @@ begin
     Width := ScaleX(340);
     Height := ScaleY(13);
     WordWrap := True;
-    Caption := 'Select this to install DCS Olympus on a dedicated server. DCS Olympus will be reachable by external clients. NOTE: to enable external connections, port forwarding must be enabled. By default, ports 3000 and 30000 must be forwarded on TCP and UDP.';
+    Caption := 'Select this to install DCS Olympus on a dedicated server. DCS Olympus will be reachable by external clients. NOTE: to enable external connections, TCP port forwarding must be enabled on the selected ports.';
   end;
 
     { txtServerInstall }
@@ -422,6 +429,26 @@ begin
   {this page will come after welcome page}
   AddressPage := frmAddress_CreatePage(wpSelectDir);
   PasswordPage:= frmPassword_CreatePage(AddressPage);
+end;
+
+function CheckLocalInstall(): boolean;
+begin
+  if txtLocalInstall.Checked then begin 
+    Result := True
+  end else
+  begin
+    Result := False
+  end
+end;
+
+function CheckServerInstall(): boolean;
+begin
+  if txtLocalInstall.Checked then begin 
+    Result := False
+  end else
+  begin
+    Result := True
+  end
 end;
 
 function GetAddress(Value: string): string;
