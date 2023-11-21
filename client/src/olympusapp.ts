@@ -17,6 +17,7 @@ import { WeaponsManager } from "./weapon/weaponsmanager";
 import { Manager } from "./other/manager";
 import { SVGInjector } from "@tanem/svg-injector";
 import { ServerManager } from "./server/servermanager";
+import { sha256 } from 'js-sha256';
 
 import { BLUE_COMMANDER, FILL_SELECTED_RING, GAME_MASTER, HIDE_UNITS_SHORT_RANGE_RINGS, RED_COMMANDER, SHOW_UNITS_ACQUISITION_RINGS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNIT_LABELS } from "./constants/constants";
 import { aircraftDatabase } from "./unit/databases/aircraftdatabase";
@@ -408,8 +409,9 @@ export class OlympusApp {
             loginForm.addEventListener("submit", (ev:SubmitEvent) => {
                 ev.preventDefault();
                 ev.stopPropagation();
+                var hash = sha256.create();
                 const username = (loginForm.querySelector("#username") as HTMLInputElement).value;
-                const password = (loginForm.querySelector("#password") as HTMLInputElement).value;
+                const password = hash.update((loginForm.querySelector("#password") as HTMLInputElement).value).hex();
 
                 // Update the user credentials
                 this.getServerManager().setCredentials(username, password);

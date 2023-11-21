@@ -40,7 +40,7 @@ def apply_values(args):
         print("No Game Master password provided, skipping...")
 
     if args.bluePassword is not None and args.bluePassword != "":
-        config["authentication"]["blueCommanderPassword"] = hashlib.sha256(args.redPassword.encode()).hexdigest()
+        config["authentication"]["blueCommanderPassword"] = hashlib.sha256(args.bluePassword.encode()).hexdigest()
         print(f"Blue Commander password set to {args.bluePassword}")
     else:
         print("No Blue Commander password provided, skipping...")
@@ -87,8 +87,8 @@ def main():
         [[sg.T("DCS Olympus configurator", font=("Helvetica", 14, "bold")), sg.Push(), sg.Image(".\\img\\configurator_logo.png", size = (50, 50))],
          [sg.T("")],
          [sg.T("Address"), sg.Push(), sg.In(size=(30, 10), default_text=config["server"]["address"], key="address")],
-         [sg.T("Backend port"), sg.Push(), sg.In(size=(30, 10), default_text=config["server"]["port"], key="backendPort", enable_events=True)],
          [sg.T("Webserver port"), sg.Push(), sg.In(size=(30, 10), default_text=config["client"]["port"], key="clientPort", enable_events=True)],
+         [sg.T("Backend port"), sg.Push(), sg.In(size=(30, 10), default_text=config["server"]["port"], key="backendPort", enable_events=True)],
          [sg.T("Game Master password"), sg.Push(), sg.In(size=(30, 10), password_char="*", key="password")],
          [sg.T("Blue Commander password"), sg.Push(), sg.In(size=(30, 10), password_char="*", key="bluePassword")],
          [sg.T("Red Commander password"), sg.Push(), sg.In(size=(30, 10), password_char="*", key="redPassword")],

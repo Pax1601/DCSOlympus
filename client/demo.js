@@ -14,7 +14,7 @@ const DEMO_WEAPONS_DATA = {
 }
 
 class DemoDataGenerator {
-    constructor(app)
+    constructor(app, config)
     { 
         app.get('/demo/units', (req, res) => this.units(req, res));
         app.get('/demo/weapons', (req, res) => this.weapons(req, res));
@@ -25,11 +25,13 @@ class DemoDataGenerator {
         app.get('/demo/commands', (req, res) => this.command(req, res));
         app.put('/demo', (req, res) => this.put(req, res));
 
+        console.log(config["authentication"]["gameMasterPassword"])
+
         app.use('/demo', basicAuth({
             users: { 
-                'admin': 'password',
-                'blue': 'bluepassword',
-                'red': 'redpassword'
+                'admin': config["authentication"]["gameMasterPassword"],
+                'blue': config["authentication"]["blueCommanderPassword"],
+                'red': config["authentication"]["redCommanderPassword"]
             },
         }))
 

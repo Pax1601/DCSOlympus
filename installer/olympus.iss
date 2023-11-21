@@ -258,7 +258,7 @@ begin
     Top := ScaleY(198);
     Width := ScaleX(46);
     Height := ScaleY(13);
-    Caption := 'DCS Olympus port';
+    Caption := 'Backend port';
   end;
 
   { txtBackendPort }
