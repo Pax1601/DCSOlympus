@@ -1319,7 +1319,7 @@ export class UnitsManager {
         const map = getApp().getMap();
         const units = this.getSelectedUnits();
         const numSelectedUnits = units.length;
-        const numProtectedUnits = units.filter((unit: Unit) => map.unitIsProtected(unit)).length;
+        const numProtectedUnits = units.filter((unit: Unit) => map.getIsUnitProtected(unit)).length;
 
         if (numProtectedUnits === 1 && numSelectedUnits === numProtectedUnits)
             (getApp().getPopupsManager().get("infoPopup") as Popup).setText(`Notice: unit is protected`);
@@ -1329,6 +1329,6 @@ export class UnitsManager {
     }
 
     #unitIsProtected(unit: Unit) {
-        return getApp().getMap().unitIsProtected(unit)
+        return getApp().getMap().getIsUnitProtected(unit)
     }
 }

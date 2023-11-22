@@ -325,7 +325,7 @@ export abstract class Unit extends CustomMarker {
         }
 
         /* If the unit is selected or if the view is centered on this unit, sent the update signal so that other elements like the UnitControlPanel can be updated. */
-        if (this.getSelected() || getApp().getMap().getCenterUnit() === this)
+        if (this.getSelected() || getApp().getMap().getCenteredOnUnit() === this)
             document.dispatchEvent(new CustomEvent("unitUpdated", { detail: this }));
     }
 

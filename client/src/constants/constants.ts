@@ -1,5 +1,5 @@
 import { LatLng, LatLngBounds } from "leaflet";
-import { MapMarkerControl } from "../map/map";
+import { MapMarkerVisibilityControl } from "../map/map";
 
 export const UNITS_URI = "units";
 export const WEAPONS_URI = "weapons";
@@ -160,7 +160,7 @@ export const COALITIONAREA_DRAW_POLYGON = "Draw Coalition Area";
 export const visibilityControls: string[] = ["human", "dcs", "aircraft", "helicopter", "groundunit-sam", "groundunit", "navyunit", "airbase"];
 export const visibilityControlsTypes: string[][] = [["human"], ["dcs"], ["aircraft"], ["helicopter"], ["groundunit-sam"], ["groundunit"], ["navyunit"], ["airbase"]];
 export const visibilityControlsTooltips: string[] = ["Toggle human players visibility", "Toggle DCS controlled units visibility", "Toggle aircrafts visibility", "Toggle helicopter visibility", "Toggle SAM units visibility", "Toggle ground units (not SAM) visibility", "Toggle navy units visibility", "Toggle airbases visibility"];
-export const MAP_MARKER_CONTROLS: MapMarkerControl[] = [{
+export const MAP_MARKER_CONTROLS: MapMarkerVisibilityControl[] = [{
     "name": "Human",
     "image": "visibility/human.svg",
     "toggles": ["human"],
