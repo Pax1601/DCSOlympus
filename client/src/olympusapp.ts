@@ -232,11 +232,21 @@ export class OlympusApp {
         this.#setupEvents();
 
         /* Set the splash background image to a random image */
-        var splashScreen = document.getElementById("splash-screen");
-        if (splashScreen) {
-            let i = Math.round(Math.random() * 7 + 1);
+        let splashScreen = document.getElementById("splash-screen") as HTMLElement;
+        let i = Math.round(Math.random() * 7 + 1);
+
+        new Promise((resolve, reject) => {
+            const image = new Image();
+            image.addEventListener('load', resolve);
+            image.addEventListener('error', resolve);
+            image.src = `/resources/theme/images/splash/${i}.jpg`;
+        }).then(() => {
             splashScreen.style.backgroundImage = `url('/resources/theme/images/splash/${i}.jpg')`;
-        }
+            let loadingScreen = document.getElementById("loading-screen") as HTMLElement;
+            loadingScreen.classList.add("fade-out");
+            window.setInterval(() => { loadingScreen.classList.add("hide"); }, 1000);
+            
+        })            
     }
 
     #setupEvents() {
