@@ -1,5 +1,5 @@
-#define nwjsFolder "C:\Users\dpass\Documents\nwjs\"
-#define nodejsFolder "D:\Documents\node\"
+#define nwjsFolder "..\..\nwjs\"
+#define nodejsFolder "..\..\node\"
 #define version "v0.4.7-alpha"
 
 [Setup] 
@@ -44,7 +44,7 @@ Source: "..\img\olympus.ico"; DestDir: "{app}\Mods\Services\Olympus\img"; Flags:
 Source: "..\img\olympus_server.ico"; DestDir: "{app}\Mods\Services\Olympus\img"; Flags: ignoreversion;
 Source: "..\img\olympus_configurator.ico"; DestDir: "{app}\Mods\Services\Olympus\img"; Flags: ignoreversion;
 Source: "..\img\configurator_logo.png"; DestDir: "{app}\Mods\Services\Olympus\img"; Flags: ignoreversion;
-; Source: "{#nwjsFolder}\*.*"; DestDir: "{app}\Mods\Services\Olympus\client\bin\nw"; Flags: ignoreversion recursesubdirs; Check: CheckLocalInstall
+Source: "{#nwjsFolder}\*.*"; DestDir: "{app}\Mods\Services\Olympus\client\bin\nw"; Flags: ignoreversion recursesubdirs; Check: CheckLocalInstall
 Source: "{#nodejsFolder}\*.*"; DestDir: "{app}\Mods\Services\Olympus\client\bin\node"; Flags: ignoreversion recursesubdirs; Check: CheckServerInstall
 Source: "..\scripts\python\configurator\dist\configurator.exe"; DestDir: "{app}\Mods\Services\Olympus"; Flags: ignoreversion; Check: CheckServerInstall 
 
