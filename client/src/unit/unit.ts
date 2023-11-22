@@ -417,7 +417,7 @@ export abstract class Unit extends CustomMarker {
             else {
                 this.#clearContacts();
                 this.#clearPath();
-                this.#clearTarget();
+                this.#clearTargetPosition();
             }
 
             /* When the group leader is selected, if grouping is active, all the other group members are also selected */
@@ -774,7 +774,7 @@ export abstract class Unit extends CustomMarker {
         return this.getDatabaseEntry()?.canAAA === true;
     }
 
-    indirectFire() {
+    isIndirectFire() {
         return this.getDatabaseEntry()?.indirectFire === true;
     }
 
@@ -931,6 +931,7 @@ export abstract class Unit extends CustomMarker {
         });
     }
 
+    // TODO: Remove coalition
     scenicAAA() {
         var coalition = "neutral";
         if (this.getCoalition() === "red")
@@ -940,6 +941,7 @@ export abstract class Unit extends CustomMarker {
         getApp().getServerManager().scenicAAA(this.ID, coalition);
     }
 
+    // TODO: Remove coalition
     missOnPurpose() {
         var coalition = "neutral";
         if (this.getCoalition() === "red")
@@ -1413,7 +1415,7 @@ export abstract class Unit extends CustomMarker {
             }
         }
         else
-            this.#clearTarget();
+            this.#clearTargetPosition();
     }
 
     #drawTargetPosition(targetPosition: LatLng) {
@@ -1425,7 +1427,7 @@ export abstract class Unit extends CustomMarker {
         this.#targetPositionPolyline.setLatLngs([new LatLng(this.#position.lat, this.#position.lng), new LatLng(targetPosition.lat, targetPosition.lng)])
     }
 
-    #clearTarget() {
+    #clearTargetPosition() {
         if (getApp().getMap().hasLayer(this.#targetPositionMarker))
             this.#targetPositionMarker.removeFrom(getApp().getMap());
 

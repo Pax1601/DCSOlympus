@@ -339,12 +339,14 @@ export class ServerManager {
         this.PUT(data, callback);
     }
 
+    // TODO: Remove coalition
     scenicAAA(ID: number, coalition: string, callback: CallableFunction = () => {}) {
         var command = { "ID": ID, "coalition": coalition }
         var data = { "scenicAAA": command }
         this.PUT(data, callback);
     }
 
+    // TODO: Remove coalition
     missOnPurpose(ID: number, coalition: string, callback: CallableFunction = () => {}) {
         var command = { "ID": ID, "coalition": coalition }
         var data = { "missOnPurpose": command }
