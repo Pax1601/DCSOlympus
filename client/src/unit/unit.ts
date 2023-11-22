@@ -190,15 +190,17 @@ export abstract class Unit extends CustomMarker {
 
         /* Deselect units if they are hidden */
         document.addEventListener("toggleCoalitionVisibility", (ev: CustomEventInit) => {
-            window.setTimeout(() => { this.setSelected(this.getSelected() && !this.getHidden()) }, 300);
+            this.#updateMarker();
+            this.setSelected(this.getSelected() && !this.getHidden());
         });
 
-        document.addEventListener("toggleUnitVisibility", (ev: CustomEventInit) => {
-            window.setTimeout(() => { this.setSelected(this.getSelected() && !this.getHidden()) }, 300);
+        document.addEventListener("toggleMarkerVisibility", (ev: CustomEventInit) => {
+            this.#updateMarker();
+            this.setSelected(this.getSelected() && !this.getHidden());
         });
 
-        /* Update the marker when the visibility options change */
-        document.addEventListener("mapVisibilityOptionsChanged", (ev: CustomEventInit) => {
+        /* Update the marker when the options change */
+        document.addEventListener("mapOptionsChanged", (ev: CustomEventInit) => {
             this.#updateMarker();
 
             /* Circles don't like to be updated when the map is zooming */
@@ -684,14 +686,11 @@ export abstract class Unit extends CustomMarker {
             /* Hide the unit if it does not belong to the commanded coalition and it is not detected by a method that can pinpoint its location (RWR does not count) */
             (!this.belongsToCommandedCoalition() && (this.#detectionMethods.length == 0 || (this.#detectionMethods.length == 1 && this.#detectionMethods[0] === RWR))) ||
             /* Hide the unit if grouping is activated, the unit is not the group leader, it is not selected, and the zoom is higher than the grouping threshold */
-            (getApp().getMap().getVisibilityOptions()[HIDE_GROUP_MEMBERS] && !this.#isLeader && this.getCategory() == "GroundUnit" && getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION && 
+            (getApp().getMap().getVisibilityOptions()[HIDE_GROUP_MEMBERS] && !this.#isLeader && !this.getSelected() && this.getCategory() == "GroundUnit" && getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION && 
             (this.belongsToCommandedCoalition() || (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0))));
 
         /* Force dead units to be hidden */
         this.setHidden(hidden || !this.getAlive());
-
-        /* Force hidden units to be unselected */
-        this.setSelected(this.getSelected() && !this.getHidden());
     }
 
     setHidden(hidden: boolean) {
@@ -1254,11 +1253,13 @@ export abstract class Unit extends CustomMarker {
     }
 
     #clearPath() {
-        for (let WP in this.#pathMarkers) {
-            getApp().getMap().removeLayer(this.#pathMarkers[WP]);
+        if (this.#pathPolyline.getLatLngs().length != 0) {
+            for (let WP in this.#pathMarkers) {
+                getApp().getMap().removeLayer(this.#pathMarkers[WP]);
+            }
+            this.#pathMarkers = [];
+            this.#pathPolyline.setLatLngs([]);
         }
-        this.#pathMarkers = [];
-        this.#pathPolyline.setLatLngs([]);
     }
 
     #drawContacts() {

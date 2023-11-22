@@ -23,7 +23,7 @@ body {
 }
 
 .hidden-cursor {
-    cursor: none !important;
+    /*cursor: none !important;*/
 }
 
 .hidden-cursor * {

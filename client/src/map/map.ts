@@ -198,7 +198,7 @@ export class Map extends L.Map {
                 this.#panToUnit(this.#centerUnit);
         });
 
-        document.addEventListener("mapVisibilityOptionsChanged", () => {
+        document.addEventListener("mapOptionsChanged", () => {
             this.getContainer().toggleAttribute("data-hide-labels", !this.getVisibilityOptions()[SHOW_UNIT_LABELS]);
         });
 
@@ -572,7 +572,6 @@ export class Map extends L.Map {
         else {
             this.setState(IDLE);
         }
-       
     }
 
     #onSelectionStart(e: any) {
@@ -766,48 +765,45 @@ export class Map extends L.Map {
         const singleCursor = !this.#shiftKey;
         const selectedUnitsCount = getApp().getUnitsManager().getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true }).length;
         if (singleCursor) {
-            if ( this.#destinationPreviewCursors.length != 1) {
-                this.#hideDestinationCursors();
-                var marker = new DestinationPreviewMarker(this.getMouseCoordinates(), { interactive: false });
-                marker.addTo(this);
-                this.#destinationPreviewCursors = [marker];
-            }
-
-            this.#destinationPreviewHandleLine.removeFrom(this);
-            this.#destinationPreviewHandle.removeFrom(this);
+            this.#hideDestinationCursors();
         }
         else if (!singleCursor) {
-            while (this.#destinationPreviewCursors.length > selectedUnitsCount) {
-                this.removeLayer(this.#destinationPreviewCursors[0]);
-                this.#destinationPreviewCursors.splice(0, 1);
+            if (selectedUnitsCount > 1) {
+                while (this.#destinationPreviewCursors.length > selectedUnitsCount) {
+                    this.removeLayer(this.#destinationPreviewCursors[0]);
+                    this.#destinationPreviewCursors.splice(0, 1);
+                }
+
+                this.#destinationPreviewHandleLine.addTo(this);
+                this.#destinationPreviewHandle.addTo(this);
+
+                while (this.#destinationPreviewCursors.length < selectedUnitsCount) {
+                    var cursor = new DestinationPreviewMarker(this.getMouseCoordinates(), { interactive: false });
+                    cursor.addTo(this);
+                    this.#destinationPreviewCursors.push(cursor);
+                }
+
+                this.#updateDestinationCursors();
             }
-
-            this.#destinationPreviewHandleLine.addTo(this);
-            this.#destinationPreviewHandle.addTo(this);
-
-            while (this.#destinationPreviewCursors.length < selectedUnitsCount) {
-                var cursor = new DestinationPreviewMarker(this.getMouseCoordinates(), { interactive: false });
-                cursor.addTo(this);
-                this.#destinationPreviewCursors.push(cursor);
-            }
-
-            this.#updateDestinationCursors();
         }
 }
 
     #updateDestinationCursors() {
-        const groupLatLng = this.#computeDestinationRotation && this.#destinationRotationCenter != null ? this.#destinationRotationCenter : this.getMouseCoordinates();
-        if (this.#destinationPreviewCursors.length == 1)
-            this.#destinationPreviewCursors[0].setLatLng(this.getMouseCoordinates());
-        else {
-            Object.values(getApp().getUnitsManager().computeGroupDestination(groupLatLng, this.#destinationGroupRotation)).forEach((latlng: L.LatLng, idx: number) => {
-                if (idx < this.#destinationPreviewCursors.length)
-                    this.#destinationPreviewCursors[idx].setLatLng(this.#shiftKey ? latlng : this.getMouseCoordinates());
-            })
-        };
+        const selectedUnitsCount = getApp().getUnitsManager().getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true }).length;
+        if (selectedUnitsCount > 1) {
+            const groupLatLng = this.#computeDestinationRotation && this.#destinationRotationCenter != null ? this.#destinationRotationCenter : this.getMouseCoordinates();
+            if (this.#destinationPreviewCursors.length == 1)
+                this.#destinationPreviewCursors[0].setLatLng(this.getMouseCoordinates());
+            else {
+                Object.values(getApp().getUnitsManager().computeGroupDestination(groupLatLng, this.#destinationGroupRotation)).forEach((latlng: L.LatLng, idx: number) => {
+                    if (idx < this.#destinationPreviewCursors.length)
+                        this.#destinationPreviewCursors[idx].setLatLng(this.#shiftKey ? latlng : this.getMouseCoordinates());
+                })
+            };
 
-        this.#destinationPreviewHandleLine.setLatLngs([groupLatLng, this.getMouseCoordinates()]);
-        this.#destinationPreviewHandle.setLatLng(this.getMouseCoordinates());
+            this.#destinationPreviewHandleLine.setLatLngs([groupLatLng, this.getMouseCoordinates()]);
+            this.#destinationPreviewHandle.setLatLng(this.getMouseCoordinates());
+        }
     }
 
     #hideDestinationCursors() {
@@ -861,7 +857,7 @@ export class Map extends L.Map {
 
     #setVisibilityOption(option: string, ev: any) {
         this.#visibilityOptions[option] = ev.currentTarget.checked;
-        document.dispatchEvent(new CustomEvent("mapVisibilityOptionsChanged"));
+        document.dispatchEvent(new CustomEvent("mapOptionsChanged"));
     }
 
     getMapMarkerControls() {

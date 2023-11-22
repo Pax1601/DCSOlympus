@@ -157,8 +157,8 @@ export const mapLayers = {
 export const IDLE = "Idle";
 export const MOVE_UNIT = "Move unit";
 export const COALITIONAREA_DRAW_POLYGON = "Draw Coalition Area";
-export const visibilityControls: string[] = ["human", "dcs", "aircraft", "helicopter", "groundunit-sam", "groundunit-other", "navyunit", "airbase"];
-export const visibilityControlsTypes: string[][] = [["human"], ["dcs"], ["aircraft"], ["helicopter"], ["groundunit-sam", "groundunit-sam-radar", "groundunit-sam-launcher"], ["groundunit-other", "groundunit-ewr"], ["navyunit"], ["airbase"]];
+export const visibilityControls: string[] = ["human", "dcs", "aircraft", "helicopter", "groundunit-sam", "groundunit", "navyunit", "airbase"];
+export const visibilityControlsTypes: string[][] = [["human"], ["dcs"], ["aircraft"], ["helicopter"], ["groundunit-sam"], ["groundunit"], ["navyunit"], ["airbase"]];
 export const visibilityControlsTooltips: string[] = ["Toggle human players visibility", "Toggle DCS controlled units visibility", "Toggle aircrafts visibility", "Toggle helicopter visibility", "Toggle SAM units visibility", "Toggle ground units (not SAM) visibility", "Toggle navy units visibility", "Toggle airbases visibility"];
 export const MAP_MARKER_CONTROLS: MapMarkerControl[] = [{
     "name": "Human",
@@ -188,9 +188,9 @@ export const MAP_MARKER_CONTROLS: MapMarkerControl[] = [{
     "toggles": ["groundunit-sam"],
     "tooltip": "Toggle air defence units' visibility"
 }, {
-    "image": "visibility/groundunit-other.svg",
+    "image": "visibility/groundunit.svg",
     "name": "Ground units",
-    "toggles": ["groundunit-other"],
+    "toggles": ["groundunit"],
     "tooltip": "Toggle ground units' visibility"
 }, {
     "image": "visibility/navyunit.svg",
