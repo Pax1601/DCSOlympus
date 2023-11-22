@@ -178,7 +178,7 @@ export class DatabaseManagerPlugin implements OlympusPlugin {
         var toolbar: PrimaryToolbar = this.#app?.getToolbarsManager().get("primaryToolbar") as PrimaryToolbar;
         var elements = toolbar.getMainDropdown().getOptionElements();
         var arr = Array.prototype.slice.call(elements);
-        arr.splice(arr.length - 1, 0, mainButtonDiv);
+        arr.splice(arr.length - 3, 0, mainButtonDiv);
         toolbar.getMainDropdown().setOptionsElements(arr);
         mainButton.onclick = () => {
             toolbar.getMainDropdown().close();

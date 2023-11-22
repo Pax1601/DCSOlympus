@@ -281,7 +281,7 @@ class DatabaseManagerPlugin {
         var toolbar = (_a = __classPrivateFieldGet(this, _DatabaseManagerPlugin_app, "f")) === null || _a === void 0 ? void 0 : _a.getToolbarsManager().get("primaryToolbar");
         var elements = toolbar.getMainDropdown().getOptionElements();
         var arr = Array.prototype.slice.call(elements);
-        arr.splice(arr.length - 1, 0, mainButtonDiv);
+        arr.splice(arr.length - 3, 0, mainButtonDiv);
         toolbar.getMainDropdown().setOptionsElements(arr);
         mainButton.onclick = () => {
             var _a;
