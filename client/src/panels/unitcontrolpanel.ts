@@ -2,16 +2,13 @@ import { SVGInjector } from "@tanem/svg-injector";
 import { getApp } from "..";
 import { Dropdown } from "../controls/dropdown";
 import { Slider } from "../controls/slider";
-import { aircraftDatabase } from "../unit/databases/aircraftdatabase";
 import { Unit } from "../unit/unit";
 import { Panel } from "./panel";
 import { Switch } from "../controls/switch";
 import { ROEDescriptions, ROEs, altitudeIncrements, emissionsCountermeasures, emissionsCountermeasuresDescriptions, maxAltitudeValues, maxSpeedValues, minAltitudeValues, minSpeedValues, reactionsToThreat, reactionsToThreatDescriptions, shotsIntensityDescriptions, shotsScatterDescriptions, speedIncrements } from "../constants/constants";
 import { ftToM, knotsToMs, mToFt, msToKnots } from "../other/utils";
 import { GeneralSettings, Radio, TACAN } from "../interfaces";
-import { PrimaryToolbar } from "../toolbars/primarytoolbar";
 import { ContextActionSet } from "../unit/contextactionset";
-import { ContextAction } from "../unit/contextaction";
 
 export class UnitControlPanel extends Panel {
     #altitudeSlider: Slider;
@@ -36,36 +33,36 @@ export class UnitControlPanel extends Panel {
      * 
      * @param ID - the ID of the HTML element which will contain the context menu
      */
-    constructor(ID: string){
+    constructor(ID: string) {
         super(ID);
 
         /* Unit control sliders */
         this.#altitudeSlider = new Slider("altitude-slider", 0, 100, "ft", (value: number) => { getApp().getUnitsManager().setAltitude(ftToM(value)); });
-        this.#altitudeTypeSwitch = new Switch("altitude-type-switch", (value: boolean) => { getApp().getUnitsManager().setAltitudeType(value? "ASL": "AGL"); });
+        this.#altitudeTypeSwitch = new Switch("altitude-type-switch", (value: boolean) => { getApp().getUnitsManager().setAltitudeType(value ? "ASL" : "AGL"); });
 
         this.#speedSlider = new Slider("speed-slider", 0, 100, "kts", (value: number) => { getApp().getUnitsManager().setSpeed(knotsToMs(value)); });
-        this.#speedTypeSwitch = new Switch("speed-type-switch", (value: boolean) => { getApp().getUnitsManager().setSpeedType(value? "CAS": "GS"); });
+        this.#speedTypeSwitch = new Switch("speed-type-switch", (value: boolean) => { getApp().getUnitsManager().setSpeedType(value ? "CAS" : "GS"); });
 
         /* Option buttons */
         // Reversing the ROEs so that the least "aggressive" option is always on the left
         this.#optionButtons["ROE"] = ROEs.slice(0).reverse().map((option: string, index: number) => {
             return this.#createOptionButton(option, `roe/${option.toLowerCase()}.svg`, ROEDescriptions.slice(0).reverse()[index], () => { getApp().getUnitsManager().setROE(option); });
-        }).filter((button: HTMLButtonElement, index: number) => {return ROEs[index] !== "";});
+        }).filter((button: HTMLButtonElement, index: number) => { return ROEs[index] !== ""; });
 
         this.#optionButtons["reactionToThreat"] = reactionsToThreat.map((option: string, index: number) => {
-            return this.#createOptionButton(option, `threat/${option.toLowerCase()}.svg`, reactionsToThreatDescriptions[index],() => { getApp().getUnitsManager().setReactionToThreat(option); });
+            return this.#createOptionButton(option, `threat/${option.toLowerCase()}.svg`, reactionsToThreatDescriptions[index], () => { getApp().getUnitsManager().setReactionToThreat(option); });
         });
 
         this.#optionButtons["emissionsCountermeasures"] = emissionsCountermeasures.map((option: string, index: number) => {
-            return this.#createOptionButton(option, `emissions/${option.toLowerCase()}.svg`, emissionsCountermeasuresDescriptions[index],() => { getApp().getUnitsManager().setEmissionsCountermeasures(option); });
+            return this.#createOptionButton(option, `emissions/${option.toLowerCase()}.svg`, emissionsCountermeasuresDescriptions[index], () => { getApp().getUnitsManager().setEmissionsCountermeasures(option); });
         });
 
         this.#optionButtons["shotsScatter"] = [1, 2, 3].map((option: number, index: number) => {
-            return this.#createOptionButton(option.toString(), `scatter/${option.toString().toLowerCase()}.svg`, shotsScatterDescriptions[index],() => { getApp().getUnitsManager().setShotsScatter(option); });
+            return this.#createOptionButton(option.toString(), `scatter/${option.toString().toLowerCase()}.svg`, shotsScatterDescriptions[index], () => { getApp().getUnitsManager().setShotsScatter(option); });
         });
 
         this.#optionButtons["shotsIntensity"] = [1, 2, 3].map((option: number, index: number) => {
-            return this.#createOptionButton(option.toString(), `intensity/${option.toString().toLowerCase()}.svg`, shotsIntensityDescriptions[index],() => { getApp().getUnitsManager().setShotsIntensity(option); });
+            return this.#createOptionButton(option.toString(), `intensity/${option.toString().toLowerCase()}.svg`, shotsIntensityDescriptions[index], () => { getApp().getUnitsManager().setShotsIntensity(option); });
         });
 
         this.getElement().querySelector("#roe-buttons-container")?.append(...this.#optionButtons["ROE"]);
@@ -110,48 +107,50 @@ export class UnitControlPanel extends Panel {
         /* Mouseover of (?) highlights activation buttons */
         const operateAsQuestionMark = <HTMLElement>this.getElement().querySelector("#operate-as h4 img");
         operateAsQuestionMark.addEventListener("mouseover", () => {
-            document.querySelectorAll(`#rapid-controls button.scenic-action`).forEach((btn:Element) => {
+            document.querySelectorAll(`#rapid-controls button.scenic-action`).forEach((btn: Element) => {
                 btn.classList.add(`pulse`);
             });
         });
         operateAsQuestionMark.addEventListener("mouseout", () => {
-            document.querySelectorAll(`#rapid-controls button.scenic-action.pulse`).forEach((btn:Element) => {
+            document.querySelectorAll(`#rapid-controls button.scenic-action.pulse`).forEach((btn: Element) => {
                 btn.classList.remove(`pulse`);
             });
         });
 
         /* Advanced settings dialog */
-        this.#advancedSettingsDialog = <HTMLElement> document.querySelector("#advanced-settings-dialog");
+        this.#advancedSettingsDialog = <HTMLElement>document.querySelector("#advanced-settings-dialog");
 
         /* Advanced settings dropdowns */
-        this.#TACANXYDropdown = new Dropdown("TACAN-XY", () => {});
+        this.#TACANXYDropdown = new Dropdown("TACAN-XY", () => { });
         this.#TACANXYDropdown.setOptions(["X", "Y"]);
-        this.#radioDecimalsDropdown = new Dropdown("radio-decimals", () => {});
+        this.#radioDecimalsDropdown = new Dropdown("radio-decimals", () => { });
         this.#radioDecimalsDropdown.setOptions([".000", ".250", ".500", ".750"]);
-        this.#radioCallsignDropdown = new Dropdown("radio-callsign", () => {});
+        this.#radioCallsignDropdown = new Dropdown("radio-callsign", () => { });
         this.#deleteDropdown = new Dropdown("delete-options", () => { });
 
         /* Events and timer */
-        window.setInterval(() => {this.update();}, 25);
+        window.setInterval(() => { this.update(); }, 25);
 
-        document.addEventListener("unitsSelection", (e: CustomEvent<Unit[]>) => { 
-            this.show(); 
+        document.addEventListener("unitsSelection", (e: CustomEvent<Unit[]>) => {
+            this.show();
             this.addButtons();
-            this.#updateRapidControls();            
+            this.#updateRapidControls();
         });
-        document.addEventListener("clearSelection", () => { 
+        document.addEventListener("clearSelection", () => {
             this.hide();
-            this.#updateRapidControls();  
+            this.#updateRapidControls();
         });
-        document.addEventListener("applyAdvancedSettings", () => {this.#applyAdvancedSettings();})
+        document.addEventListener("applyAdvancedSettings", () => { this.#applyAdvancedSettings(); })
         document.addEventListener("showAdvancedSettings", () => {
             this.#updateAdvancedSettingsDialog(getApp().getUnitsManager().getSelectedUnits());
             this.#advancedSettingsDialog.classList.remove("hide");
         });
+
         /*  This is for when a ctrl-click happens on the map for deselection and we need to remove the selected unit from the panel */
-        document.addEventListener( "unitsDeselection", ( ev:CustomEventInit ) => {
-            this.getElement().querySelector( `button[data-unit-id="${ev.detail.ID}"]` )?.remove();
-            this.#updateRapidControls();  
+        document.addEventListener("unitsDeselection", (ev: CustomEventInit) => {
+            this.show();
+            this.addButtons();
+            this.#updateRapidControls();
         });
 
         window.addEventListener("resize", (e: any) => this.#calculateMaxHeight());
@@ -159,16 +158,16 @@ export class UnitControlPanel extends Panel {
         const element = document.getElementById("toolbar-container");
         if (element)
             new ResizeObserver(() => this.#calculateTop()).observe(element);
-        
+
         this.#calculateMaxHeight()
         this.hide();
     }
 
     show() {
         const context = getApp().getCurrentContext();
-        if ( !context.getUseUnitControlPanel() )
+        if (!context.getUseUnitControlPanel())
             return;
-        
+
         super.show();
         this.#speedTypeSwitch.resetExpectedValue();
         this.#altitudeTypeSwitch.resetExpectedValue();
@@ -184,26 +183,26 @@ export class UnitControlPanel extends Panel {
     addButtons() {
         this.#units = getApp().getUnitsManager().getSelectedUnits();
         this.#selectedUnitsTypes = getApp().getUnitsManager().getSelectedUnitsCategories();
-        
+
         if (this.#units.length < 20) {
             this.getElement().querySelector("#selected-units-container")?.replaceChildren(...this.#units.map((unit: Unit, index: number) => {
                 var button = document.createElement("button");
                 var callsign = unit.getUnitName() || "";
                 var label = unit.getDatabase()?.getByName(unit.getName())?.label || unit.getName();
 
-                button.setAttribute("data-unit-id", "" + unit.ID );
+                button.setAttribute("data-unit-id", "" + unit.ID);
                 button.setAttribute("data-label", label);
                 button.setAttribute("data-callsign", callsign);
 
                 button.setAttribute("data-coalition", unit.getCoalition());
                 button.classList.add("pill", "highlight-coalition")
 
-                button.addEventListener("click", ( ev:MouseEventInit ) => {
+                button.addEventListener("click", (ev: MouseEventInit) => {
                     //  Ctrl-click deselection
-                    if ( ev.ctrlKey === true && ev.shiftKey === false && ev.altKey === false ) {
-                        getApp().getUnitsManager().deselectUnit( unit.ID );
+                    if (ev.ctrlKey === true && ev.shiftKey === false && ev.altKey === false) {
+                        getApp().getUnitsManager().deselectUnit(unit.ID);
                         button.remove();
-                    //  Deselect all
+                        //  Deselect all
                     } else {
                         getApp().getUnitsManager().deselectAllUnits();
                         getApp().getUnitsManager().selectUnit(unit.ID, true);
@@ -219,14 +218,14 @@ export class UnitControlPanel extends Panel {
     }
 
     update() {
-        if (this.getVisible()){
+        if (this.getVisible()) {
             const element = this.getElement();
             if (element != null && this.#units.length > 0) {
                 /* Toggle visibility of control elements */
-                var isTanker = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.isTanker();});
-                var isAWACS = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.isAWACS();});
-                var isActiveTanker = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getIsActiveTanker()});
-                var isActiveAWACAS = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getIsActiveAWACS()});
+                var isTanker = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => { return unit.isTanker(); });
+                var isAWACS = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => { return unit.isAWACS(); });
+                var isActiveTanker = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => { return unit.getIsActiveTanker() });
+                var isActiveAWACAS = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => { return unit.getIsActiveAWACS() });
 
                 element.toggleAttribute("data-show-categories-tooltip", this.#selectedUnitsTypes.length > 1);
                 element.toggleAttribute("data-show-speed-slider", this.#selectedUnitsTypes.length == 1);
@@ -236,35 +235,35 @@ export class UnitControlPanel extends Panel {
                 element.toggleAttribute("data-show-emissions-countermeasures", (this.#selectedUnitsTypes.includes("Aircraft") || this.#selectedUnitsTypes.includes("Helicopter")) && !(this.#selectedUnitsTypes.includes("GroundUnit") || this.#selectedUnitsTypes.includes("NavyUnit")));
                 element.toggleAttribute("data-show-shots-scatter", this.#selectedUnitsTypes.includes("GroundUnit"));    //TODO: more refined
                 element.toggleAttribute("data-show-shots-intensity", this.#selectedUnitsTypes.includes("GroundUnit"));  //TODO: more refined
-                element.toggleAttribute("data-show-tanker-button", getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.isTanker();}) === true);
-                element.toggleAttribute("data-show-AWACS-button", getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.isAWACS();}) === true);
+                element.toggleAttribute("data-show-tanker-button", getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => { return unit.isTanker(); }) === true);
+                element.toggleAttribute("data-show-AWACS-button", getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => { return unit.isAWACS(); }) === true);
                 element.toggleAttribute("data-show-on-off", (this.#selectedUnitsTypes.includes("GroundUnit") || this.#selectedUnitsTypes.includes("NavyUnit")) && !(this.#selectedUnitsTypes.includes("Aircraft") || this.#selectedUnitsTypes.includes("Helicopter")));
                 element.toggleAttribute("data-show-follow-roads", (this.#selectedUnitsTypes.length == 1 && this.#selectedUnitsTypes.includes("GroundUnit")));
-                element.toggleAttribute("data-show-operate-as", getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getCoalition()}) === "neutral");
+                element.toggleAttribute("data-show-operate-as", getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => { return unit.getCoalition() }) === "neutral");
 
                 if (this.#units.length == 1) {
-                    if (isAWACS) 
+                    if (isAWACS)
                         element.toggleAttribute("data-show-advanced-settings-button", isActiveAWACAS);
-                    else if (isTanker) 
+                    else if (isTanker)
                         element.toggleAttribute("data-show-advanced-settings-button", isActiveTanker);
-                    else 
+                    else
                         element.toggleAttribute("data-show-advanced-settings-button", true);
                 }
-                
+
                 if (this.#selectedUnitsTypes.length == 1) {
                     /* Flight controls */
-                    var desiredAltitude = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredAltitude()});
-                    var desiredAltitudeType = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredAltitudeType()});
-                    var desiredSpeed = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredSpeed()});
-                    var desiredSpeedType = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getDesiredSpeedType()});
-                    var isActiveTanker = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getIsActiveTanker()});
-                    var isActiveAWACAS = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getIsActiveAWACS()});
-                    var onOff = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getOnOff()});
-                    var followRoads = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getFollowRoads()});
-                    var operateAs = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getOperateAs()});
-                    
-                    this.#altitudeTypeSwitch.setValue(desiredAltitudeType != undefined? desiredAltitudeType == "ASL": undefined, false);
-                    this.#speedTypeSwitch.setValue(desiredSpeedType != undefined? desiredSpeedType == "CAS": undefined, false);
+                    var desiredAltitude = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => { return unit.getDesiredAltitude() });
+                    var desiredAltitudeType = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => { return unit.getDesiredAltitudeType() });
+                    var desiredSpeed = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => { return unit.getDesiredSpeed() });
+                    var desiredSpeedType = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => { return unit.getDesiredSpeedType() });
+                    var isActiveTanker = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => { return unit.getIsActiveTanker() });
+                    var isActiveAWACAS = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => { return unit.getIsActiveAWACS() });
+                    var onOff = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => { return unit.getOnOff() });
+                    var followRoads = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => { return unit.getFollowRoads() });
+                    var operateAs = getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => { return unit.getOperateAs() });
+
+                    this.#altitudeTypeSwitch.setValue(desiredAltitudeType != undefined ? desiredAltitudeType == "ASL" : undefined, false);
+                    this.#speedTypeSwitch.setValue(desiredSpeedType != undefined ? desiredSpeedType == "CAS" : undefined, false);
 
                     this.#speedSlider.setMinMax(minSpeedValues[this.#selectedUnitsTypes[0]], maxSpeedValues[this.#selectedUnitsTypes[0]]);
                     this.#altitudeSlider.setMinMax(minAltitudeValues[this.#selectedUnitsTypes[0]], maxAltitudeValues[this.#selectedUnitsTypes[0]]);
@@ -309,7 +308,7 @@ export class UnitControlPanel extends Panel {
                 this.#AWACSSwitch.setValue(isActiveAWACAS, false);
                 this.#onOffSwitch.setValue(onOff, false);
                 this.#followRoadsSwitch.setValue(followRoads, false);
-                this.#operateAsSwitch.setValue(operateAs? operateAs === "blue": undefined, false);
+                this.#operateAsSwitch.setValue(operateAs ? operateAs === "blue" : undefined, false);
             }
         }
     }
@@ -318,8 +317,8 @@ export class UnitControlPanel extends Panel {
         var contextActionSet = new ContextActionSet();
         var units = getApp().getUnitsManager().getSelectedUnits();
 
-        var showAltitudeChange = units.some((unit: Unit) => {return ["Aircraft", "Helicopter"].includes(unit.getCategory());});
-        this.getElement().querySelector("#climb")?.classList.toggle("hide", !showAltitudeChange); 
+        var showAltitudeChange = units.some((unit: Unit) => { return ["Aircraft", "Helicopter"].includes(unit.getCategory()); });
+        this.getElement().querySelector("#climb")?.classList.toggle("hide", !showAltitudeChange);
         this.getElement().querySelector("#descend")?.classList.toggle("hide", !showAltitudeChange);
 
         units.forEach((unit: Unit) => {
@@ -347,10 +346,8 @@ export class UnitControlPanel extends Panel {
         }
     }
 
-    #updateAdvancedSettingsDialog(units: Unit[])
-    {
-        if (units.length == 1)
-        {
+    #updateAdvancedSettingsDialog(units: Unit[]) {
+        if (units.length == 1) {
             /* HTML Elements */
             const unitNameEl = this.#advancedSettingsDialog.querySelector("#unit-name") as HTMLElement;
             const prohibitJettisonCheckbox = this.#advancedSettingsDialog.querySelector("#prohibit-jettison-checkbox")?.querySelector("input") as HTMLInputElement;
@@ -363,7 +360,7 @@ export class UnitControlPanel extends Panel {
             const TACANCallsignInput = this.#advancedSettingsDialog.querySelector("#tacan-callsign")?.querySelector("input") as HTMLInputElement;
             const radioMhzInput = this.#advancedSettingsDialog.querySelector("#radio-mhz")?.querySelector("input") as HTMLInputElement;
             const radioCallsignNumberInput = this.#advancedSettingsDialog.querySelector("#radio-callsign-number")?.querySelector("input") as HTMLInputElement;
-           
+
             const unit = units[0];
             const isTanker = unit.isTanker();
             const isAWACS = unit.isAWACS();
@@ -400,7 +397,7 @@ export class UnitControlPanel extends Panel {
             radioMhzInput.value = String(radioMHz);
             radioCallsignNumberInput.value = String(unit.getRadio().callsignNumber);
             this.#radioDecimalsDropdown.setValue("." + radioDecimals);
-                    
+
             if (isTanker) /* Set tanker specific options */
                 this.#radioCallsignDropdown.setOptions(["Texaco", "Arco", "Shell"]);
             else if (isAWACS) /* Set AWACS specific options */
@@ -414,8 +411,7 @@ export class UnitControlPanel extends Panel {
         }
     }
 
-    #applyAdvancedSettings()
-    {
+    #applyAdvancedSettings() {
         /* HTML Elements */
         const prohibitJettisonCheckbox = this.#advancedSettingsDialog.querySelector("#prohibit-jettison-checkbox")?.querySelector("input") as HTMLInputElement;
         const prohibitAfterburnerCheckbox = this.#advancedSettingsDialog.querySelector("#prohibit-afterburner-checkbox")?.querySelector("input") as HTMLInputElement;
@@ -431,7 +427,7 @@ export class UnitControlPanel extends Panel {
 
         /* TACAN */
         const TACAN: TACAN = {
-            isOn: TACANCheckbox.checked? true: false,
+            isOn: TACANCheckbox.checked ? true : false,
             channel: Number(TACANChannelInput.value),
             XY: this.#TACANXYDropdown.getValue(),
             callsign: TACANCallsignInput.value as string
@@ -443,18 +439,18 @@ export class UnitControlPanel extends Panel {
         const radio: Radio = {
             frequency: (radioMHz * 1000 + Number(radioDecimals.substring(1))) * 1000,
             callsign: this.#radioCallsignDropdown.getIndex() + 1,
-            callsignNumber:  Number(radioCallsignNumberInput.value)
+            callsignNumber: Number(radioCallsignNumberInput.value)
         }
 
         /* General settings */
         const generalSettings: GeneralSettings = {
-            prohibitJettison: prohibitJettisonCheckbox.checked? true: false,
-            prohibitAfterburner: prohibitAfterburnerCheckbox.checked? true: false,
-            prohibitAA: prohibitAACheckbox.checked? true: false,
-            prohibitAG: prohibitAGCheckbox.checked? true: false,
-            prohibitAirWpn: prohibitAirWpnCheckbox.checked? true: false
+            prohibitJettison: prohibitJettisonCheckbox.checked ? true : false,
+            prohibitAfterburner: prohibitAfterburnerCheckbox.checked ? true : false,
+            prohibitAA: prohibitAACheckbox.checked ? true : false,
+            prohibitAG: prohibitAGCheckbox.checked ? true : false,
+            prohibitAirWpn: prohibitAirWpnCheckbox.checked ? true : false
         }
-        
+
         /* Send command and close */
         var units = getApp().getUnitsManager().getSelectedUnits();
         // TODO: split setAdvancedOptions into setIsTanker, setIsAWACS, setAdvancedOptions

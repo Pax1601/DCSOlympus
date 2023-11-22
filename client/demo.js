@@ -25,8 +25,6 @@ class DemoDataGenerator {
         app.get('/demo/commands', (req, res) => this.command(req, res));
         app.put('/demo', (req, res) => this.put(req, res));
 
-        console.log(config["authentication"]["gameMasterPassword"])
-
         app.use('/demo', basicAuth({
             users: { 
                 'admin': config["authentication"]["gameMasterPassword"],
@@ -54,9 +52,9 @@ class DemoDataGenerator {
             isLeader: true
         }
 
+        
         /*
-
-        ***************** UNCOMMENT TO TEST ALL UNITS ****************
+        // UNCOMMENT TO TEST ALL UNITS ****************
 
         var databases = Object.assign({}, aircraftDatabase, helicopterDatabase, groundUnitDatabase, navyUnitDatabase);
         var t = Object.keys(databases).length;
@@ -93,6 +91,7 @@ class DemoDataGenerator {
         }
         */
 
+        
         let idx = 1;
         DEMO_UNIT_DATA[idx] = JSON.parse(JSON.stringify(baseData));
         DEMO_UNIT_DATA[idx].name = "S_75M_Volhov";
@@ -116,6 +115,7 @@ class DemoDataGenerator {
         DEMO_UNIT_DATA[idx].position.lat += idx / 100;
         DEMO_UNIT_DATA[idx].category = "GroundUnit";
         DEMO_UNIT_DATA[idx].isLeader = false;
+    
         
         idx += 1;
         DEMO_UNIT_DATA[idx] = JSON.parse(JSON.stringify(baseData));

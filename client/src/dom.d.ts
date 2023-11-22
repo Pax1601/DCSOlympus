@@ -18,7 +18,7 @@ interface CustomEventMap {
     "groupDeletion":                    CustomEvent<Unit[]>,
     "mapStateChanged":                  CustomEvent<string>,
     "mapContextMenu":                   CustomEvent<>,
-    "mapVisibilityOptionsChanged":      CustomEvent<>,
+    "mapOptionsChanged":                CustomEvent<>,
     "commandModeOptionsChanged":        CustomEvent<>,  
     "contactsUpdated":                  CustomEvent<Unit>,
     "activeCoalitionChanged":           CustomEvent<>
