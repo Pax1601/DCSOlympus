@@ -876,6 +876,43 @@ nav.ol-panel> :last-child {
     z-index: 99999;
 }
 
+#loading-screen {
+    display: flex;
+    background-image: linear-gradient(var(--background-steel), var(--background-grey));
+    height: 100%;
+    left: 0px;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    z-index: 999999;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    row-gap: 20px;
+}
+
+#loading-screen img {
+    height: 300px;
+    width: 300px;
+}
+
+#loading-screen div {
+    color: white;
+    font-size: 18px;
+    animation: blinker 3s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
+
+.fade-out {
+    opacity: 0%;
+    transition: opacity 1s;
+}
+
 #authentication-form {
     align-items: end;
     column-gap: 10px;
