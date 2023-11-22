@@ -13,11 +13,11 @@ declare module "contextmenus/contextmenu" {
         constructor(ID: string);
         /** Show the contextmenu on top of the map, usually at the location where the user has clicked on it.
          *
-         * @param x X screen coordinate of the top left corner of the context menu
-         * @param y Y screen coordinate of the top left corner of the context menu
-         * @param latlng Leaflet latlng object of the mouse click
+         * @param x X screen coordinate of the top left corner of the context menu. If undefined, use the old value
+         * @param y Y screen coordinate of the top left corner of the context menu. If undefined, use the old value
+         * @param latlng Leaflet latlng object of the mouse click. If undefined, use the old value
          */
-        show(x: number, y: number, latlng: LatLng): void;
+        show(x?: number | undefined, y?: number | undefined, latlng?: LatLng | undefined): void;
         /** Hide the contextmenu
          *
          */
@@ -264,6 +264,7 @@ declare module "constants/constants" {
     export const MGRS_PRECISION_1M = 6;
     export const DELETE_CYCLE_TIME = 0.05;
     export const DELETE_SLOW_THRESHOLD = 50;
+    export const GROUPING_ZOOM_TRANSITION = 13;
 }
 declare module "map/markers/custommarker" {
     import { Map, Marker } from "leaflet";
@@ -651,14 +652,14 @@ declare module "interfaces" {
 declare module "unit/databases/unitdatabase" {
     import { LatLng } from "leaflet";
     import { UnitBlueprint } from "interfaces";
-    export class UnitDatabase {
+    export abstract class UnitDatabase {
         #private;
         blueprints: {
             [key: string]: UnitBlueprint;
         };
         constructor(url?: string);
         load(callback: CallableFunction): void;
-        getCategory(): string;
+        abstract getCategory(): string;
         getByName(name: string): UnitBlueprint | null;
         getByLabel(label: string): UnitBlueprint | null;
         getBlueprints(includeDisabled?: boolean): {
@@ -679,6 +680,7 @@ declare module "unit/databases/unitdatabase" {
         generateTestGrid(initialPosition: LatLng): void;
         getSpawnPointsByLabel(label: string): number;
         getSpawnPointsByName(name: string): number;
+        getUnkownUnit(name: string): UnitBlueprint;
     }
 }
 declare module "unit/databases/aircraftdatabase" {
@@ -774,7 +776,7 @@ declare module "other/utils" {
         ranges?: string[];
         eras?: string[];
     }): UnitBlueprint | null;
-    export function getMarkerCategoryByName(name: string): "aircraft" | "helicopter" | "groundunit-other" | "navyunit" | "groundunit";
+    export function getMarkerCategoryByName(name: string): "aircraft" | "helicopter" | "groundunit-sam" | "groundunit-other" | "navyunit";
     export function getUnitDatabaseByCategory(category: string): import("unit/databases/aircraftdatabase").AircraftDatabase | import("unit/databases/helicopterdatabase").HelicopterDatabase | import("unit/databases/groundunitdatabase").GroundUnitDatabase | import("unit/databases/navyunitdatabase").NavyUnitDatabase | null;
     export function base64ToBytes(base64: string): ArrayBufferLike;
     export function enumToState(state: number): string;
@@ -918,28 +920,6 @@ declare module "contextmenus/mapcontextmenu" {
         setCoalitionArea(coalitionArea: CoalitionArea): void;
     }
 }
-declare module "contextmenus/unitcontextmenu" {
-    import { ContextMenu } from "contextmenus/contextmenu";
-    /** The UnitContextMenu is shown when the user rightclicks on a unit. It dynamically presents the user with possible actions to perform on the unit. */
-    export class UnitContextMenu extends ContextMenu {
-        /**
-         *
-         * @param ID - the ID of the HTML element which will contain the context menu
-         */
-        constructor(ID: string);
-        /** Set the options that will be presented to the user in the contextmenu
-         *
-         * @param options Dictionary element containing the text and tooltip of the options shown in the menu
-         * @param callback Callback that will be called when the user clicks on one of the options
-         */
-        setOptions(options: {
-            [key: string]: {
-                text: string;
-                tooltip: string;
-            };
-        }, callback: CallableFunction): void;
-    }
-}
 declare module "map/markers/targetmarker" {
     import { LatLngExpression, MarkerOptions } from "leaflet";
     import { CustomMarker } from "map/markers/custommarker";
@@ -1069,18 +1049,30 @@ declare module "map/rangecircle" {
         _updatePath(): void;
     }
 }
+declare module "unit/group" {
+    import { Unit } from "unit/unit";
+    export class Group {
+        #private;
+        constructor(name: string);
+        getName(): string;
+        addMember(member: Unit): void;
+        removeMember(member: Unit): void;
+        getMembers(): Unit[];
+        getLeader(): Unit | undefined;
+    }
+}
 declare module "unit/unit" {
     import { LatLng, Map } from 'leaflet';
     import { CustomMarker } from "map/markers/custommarker";
     import { UnitDatabase } from "unit/databases/unitdatabase";
     import { DataExtractor } from "server/dataextractor";
     import { Ammo, Contact, GeneralSettings, ObjectIconOptions, Offset, Radio, TACAN, UnitData } from "interfaces";
+    import { Group } from "unit/group";
+    import { ContextActionSet } from "unit/contextactionset";
     /**
      * Unit class which controls unit behaviour
-     *
-     * Just about everything is a unit - even missiles!
      */
-    export class Unit extends CustomMarker {
+    export abstract class Unit extends CustomMarker {
         #private;
         ID: number;
         getAlive(): boolean;
@@ -1126,33 +1118,50 @@ declare module "unit/unit" {
         getShotsScatter(): number;
         getShotsIntensity(): number;
         getHealth(): number;
-        static getConstructor(type: string): typeof GroundUnit | undefined;
+        static getConstructor(type: string): typeof Aircraft | undefined;
         constructor(ID: number);
-        getCategory(): string;
-        /********************** Unit data *************************/
-        setData(dataExtractor: DataExtractor): void;
-        drawLines(): void;
-        /** Get unit data collated into an object
+        /********************** Abstract methods  *************************/
+        /** Get the unit category string
          *
-         * @returns object populated by unit information which can also be retrieved using getters
+         * @returns string The unit category
          */
-        getData(): UnitData;
-        /**
-         *
-         * @returns string containing the marker category
-         */
-        getMarkerCategory(): string;
-        /** Get a database of information also in this unit's category
-         *
-         * @returns UnitDatabase
-         */
-        getDatabase(): UnitDatabase | null;
+        abstract getCategory(): string;
         /** Get the icon options
          * Used to configure how the marker appears on the map
          *
          * @returns ObjectIconOptions
          */
-        getIconOptions(): ObjectIconOptions;
+        abstract getIconOptions(): ObjectIconOptions;
+        /** Get the actions that this unit can perform
+         *
+         */
+        abstract appendContextActions(contextActionSet: ContextActionSet, targetUnit: Unit | null, targetPosition: LatLng | null): void;
+        /**
+         *
+         * @returns string containing the marker category
+         */
+        abstract getMarkerCategory(): string;
+        /**
+         *
+         * @returns string containing the default marker
+         */
+        abstract getDefaultMarker(): string;
+        /********************** Unit data *************************/
+        /** This function is called by the units manager to update all the data coming from the backend. It reads the binary raw data using a DataExtractor
+         *
+         * @param dataExtractor The DataExtractor object pointing to the binary buffer which contains the raw data coming from the backend
+         */
+        setData(dataExtractor: DataExtractor): void;
+        /** Get unit data collated into an object
+         *
+         * @returns object populated by unit information which can also be retrieved using getters
+         */
+        getData(): UnitData;
+        /** Get a database of information also in this unit's category
+         *
+         * @returns UnitDatabase
+         */
+        getDatabase(): UnitDatabase | null;
         /** Set the unit as alive or dead
          *
          * @param newAlive (boolean) true = alive, false = dead
@@ -1168,17 +1177,7 @@ declare module "unit/unit" {
          * @returns boolean
          */
         getSelected(): boolean;
-        /** Set whether this unit is selectable
-         *
-         * @param selectable (boolean)
-         */
-        setSelectable(selectable: boolean): void;
-        /** Get whether this unit is selectable
-         *
-         * @returns boolean
-         */
-        getSelectable(): boolean;
-        /** Set the number of the hotgroup to which the unit belongs
+        /** Set the number of the hotgroup to which the unit belongss
          *
          * @param hotgroup (number)
          */
@@ -1203,6 +1202,11 @@ declare module "unit/unit" {
          * @returns Unit[]
          */
         getGroupMembers(): Unit[];
+        /** Return the leader of the group
+         *
+         * @returns Unit The leader of the group
+         */
+        getGroupLeader(): Unit | null | undefined;
         /** Returns whether the user is allowed to command this unit, based on coalition
          *
          * @returns boolean
@@ -1210,6 +1214,11 @@ declare module "unit/unit" {
         belongsToCommandedCoalition(): boolean;
         getType(): string;
         getSpawnPoints(): number | undefined;
+        getDatabaseEntry(): import("interfaces").UnitBlueprint | undefined;
+        getGroup(): Group | null;
+        setGroup(group: Group | null): void;
+        drawLines(): void;
+        checkZoomRedraw(): boolean;
         /********************** Icon *************************/
         createIcon(): void;
         /********************** Visibility *************************/
@@ -1223,7 +1232,6 @@ declare module "unit/unit" {
         isInViewport(): boolean;
         canTargetPoint(): boolean;
         canRearm(): boolean;
-        canLandAtPoint(): boolean;
         canAAA(): boolean;
         indirectFire(): boolean;
         isTanker(): boolean;
@@ -1264,19 +1272,12 @@ declare module "unit/unit" {
         setShotsScatter(shotsScatter: number): void;
         setShotsIntensity(shotsIntensity: number): void;
         /***********************************************/
-        getActions(): {
-            [key: string]: {
-                text: string;
-                tooltip: string;
-                type: string;
-            };
-        };
-        executeAction(e: any, action: string): void;
-        /***********************************************/
         onAdd(map: Map): this;
-        getActionOptions(): {};
+        onGroupChanged(member: Unit): void;
+        showFollowOptions(units: Unit[]): void;
+        applyFollowOptions(formation: string, units: Unit[]): void;
     }
-    export class AirUnit extends Unit {
+    export abstract class AirUnit extends Unit {
         getIconOptions(): {
             showState: boolean;
             showVvi: boolean;
@@ -1290,21 +1291,21 @@ declare module "unit/unit" {
             showCallsign: boolean;
             rotateToHeading: boolean;
         };
-        getActions(): {
-            [key: string]: {
-                text: string;
-                tooltip: string;
-                type: string;
-            };
-        };
+        appendContextActions(contextActionSet: ContextActionSet, targetUnit: Unit | null, targetPosition: LatLng | null): void;
     }
     export class Aircraft extends AirUnit {
         constructor(ID: number);
         getCategory(): string;
+        appendContextActions(contextActionSet: ContextActionSet, targetUnit: Unit | null, targetPosition: LatLng | null): void;
+        getMarkerCategory(): string;
+        getDefaultMarker(): string;
     }
     export class Helicopter extends AirUnit {
         constructor(ID: number);
         getCategory(): string;
+        appendContextActions(contextActionSet: ContextActionSet, targetUnit: Unit | null, targetPosition: LatLng | null): void;
+        getMarkerCategory(): string;
+        getDefaultMarker(): string;
     }
     export class GroundUnit extends Unit {
         constructor(ID: number);
@@ -1321,15 +1322,13 @@ declare module "unit/unit" {
             showCallsign: boolean;
             rotateToHeading: boolean;
         };
-        getActions(): {
-            [key: string]: {
-                text: string;
-                tooltip: string;
-                type: string;
-            };
-        };
+        appendContextActions(contextActionSet: ContextActionSet, targetUnit: Unit | null, targetPosition: LatLng | null): void;
         getCategory(): string;
         getType(): string;
+        getDatabaseEntry(): import("interfaces").UnitBlueprint | undefined;
+        checkZoomRedraw(): boolean;
+        getMarkerCategory(): "groundunit-sam" | "groundunit";
+        getDefaultMarker(): string;
     }
     export class NavyUnit extends Unit {
         constructor(ID: number);
@@ -1346,16 +1345,59 @@ declare module "unit/unit" {
             showCallsign: boolean;
             rotateToHeading: boolean;
         };
-        getActions(): {
-            [key: string]: {
-                text: string;
-                tooltip: string;
-                type: string;
-            };
-        };
-        getMarkerCategory(): string;
+        appendContextActions(contextActionSet: ContextActionSet, targetUnit: Unit | null, targetPosition: LatLng | null): void;
         getCategory(): string;
         getType(): string;
+        getMarkerCategory(): string;
+        getDefaultMarker(): string;
+    }
+}
+declare module "unit/contextaction" {
+    import { Unit } from "unit/unit";
+    export interface ContextActionOptions {
+        isScenic?: boolean;
+    }
+    export class ContextAction {
+        #private;
+        constructor(id: string, label: string, description: string, callback: CallableFunction, hideContextAfterExecution: boolean | undefined, options: ContextActionOptions);
+        addUnit(unit: Unit): void;
+        getId(): string;
+        getLabel(): string;
+        getOptions(): ContextActionOptions;
+        getDescription(): string;
+        getCallback(): CallableFunction | null;
+        executeCallback(): void;
+        getHideContextAfterExecution(): boolean;
+    }
+}
+declare module "unit/contextactionset" {
+    import { ContextAction, ContextActionOptions } from "unit/contextaction";
+    import { Unit } from "unit/unit";
+    export class ContextActionSet {
+        #private;
+        constructor();
+        addContextAction(unit: Unit, id: string, label: string, description: string, callback: CallableFunction, hideContextAfterExecution?: boolean, options?: ContextActionOptions): void;
+        getContextActions(): {
+            [key: string]: ContextAction;
+        };
+    }
+}
+declare module "contextmenus/unitcontextmenu" {
+    import { ContextActionSet } from "unit/contextactionset";
+    import { ContextMenu } from "contextmenus/contextmenu";
+    /** The UnitContextMenu is shown when the user rightclicks on a unit. It dynamically presents the user with possible actions to perform on the unit. */
+    export class UnitContextMenu extends ContextMenu {
+        /**
+         *
+         * @param ID - the ID of the HTML element which will contain the context menu
+         */
+        constructor(ID: string);
+        /** Set the options that will be presented to the user in the contextmenu
+         *
+         * @param options Dictionary element containing the text and tooltip of the options shown in the menu
+         * @param callback Callback that will be called when the user clicks on one of the options
+         */
+        setContextActions(contextActionSet: ContextActionSet): void;
     }
 }
 declare module "contextmenus/airbasecontextmenu" {
@@ -1457,12 +1499,103 @@ declare module "contextmenus/airbasespawnmenu" {
          * @param x X screen coordinate of the top left corner of the context menu
          * @param y Y screen coordinate of the top left corner of the context menu
          */
-        show(x: number, y: number): void;
+        show(x: number | undefined, y: number | undefined): void;
         /** Sets the airbase at which the new unit will be spawned
          *
          * @param airbase The airbase at which the new unit will be spawned. Note: if the airbase has no suitable parking spots, the airplane may be spawned on the runway, or spawning may fail.
          */
         setAirbase(airbase: Airbase): void;
+    }
+}
+declare module "map/touchboxselect" {
+    export var TouchBoxSelect: (new (...args: any[]) => any) & typeof import("leaflet").Class;
+}
+declare module "map/markers/destinationpreviewHandle" {
+    import { LatLng } from "leaflet";
+    import { CustomMarker } from "map/markers/custommarker";
+    export class DestinationPreviewHandle extends CustomMarker {
+        constructor(latlng: LatLng);
+        createIcon(): void;
+    }
+}
+declare module "map/map" {
+    import * as L from "leaflet";
+    import { MapContextMenu } from "contextmenus/mapcontextmenu";
+    import { UnitContextMenu } from "contextmenus/unitcontextmenu";
+    import { AirbaseContextMenu } from "contextmenus/airbasecontextmenu";
+    import { Airbase } from "mission/airbase";
+    import { Unit } from "unit/unit";
+    import { TemporaryUnitMarker } from "map/markers/temporaryunitmarker";
+    import { CoalitionArea } from "map/coalitionarea/coalitionarea";
+    import { CoalitionAreaContextMenu } from "contextmenus/coalitionareacontextmenu";
+    import { AirbaseSpawnContextMenu } from "contextmenus/airbasespawnmenu";
+    export type MapMarkerControl = {
+        "image": string;
+        "isProtected"?: boolean;
+        "name": string;
+        "protectable"?: boolean;
+        "toggles": string[];
+        "tooltip": string;
+    };
+    export class Map extends L.Map {
+        #private;
+        /**
+         *
+         * @param ID - the ID of the HTML element which will contain the context menu
+         */
+        constructor(ID: string);
+        addVisibilityOption(option: string, defaultValue: boolean): void;
+        setLayer(layerName: string): void;
+        getLayers(): string[];
+        setState(state: string): void;
+        getState(): string;
+        deselectAllCoalitionAreas(): void;
+        deleteCoalitionArea(coalitionArea: CoalitionArea): void;
+        setHiddenType(key: string, value: boolean): void;
+        getHiddenTypes(): string[];
+        hideAllContextMenus(): void;
+        showMapContextMenu(x: number, y: number, latlng: L.LatLng): void;
+        hideMapContextMenu(): void;
+        getMapContextMenu(): MapContextMenu;
+        showUnitContextMenu(x?: number | undefined, y?: number | undefined, latlng?: L.LatLng | undefined): void;
+        getUnitContextMenu(): UnitContextMenu;
+        hideUnitContextMenu(): void;
+        showAirbaseContextMenu(airbase: Airbase, x?: number | undefined, y?: number | undefined, latlng?: L.LatLng | undefined): void;
+        getAirbaseContextMenu(): AirbaseContextMenu;
+        hideAirbaseContextMenu(): void;
+        showAirbaseSpawnMenu(airbase: Airbase, x?: number | undefined, y?: number | undefined, latlng?: L.LatLng | undefined): void;
+        getAirbaseSpawnMenu(): AirbaseSpawnContextMenu;
+        hideAirbaseSpawnMenu(): void;
+        showCoalitionAreaContextMenu(x: number, y: number, latlng: L.LatLng, coalitionArea: CoalitionArea): void;
+        getCoalitionAreaContextMenu(): CoalitionAreaContextMenu;
+        hideCoalitionAreaContextMenu(): void;
+        isZooming(): boolean;
+        getMousePosition(): L.Point;
+        getMouseCoordinates(): L.LatLng;
+        spawnFromAirbase(e: any): void;
+        centerOnUnit(ID: number | null): void;
+        getCenterUnit(): Unit | null;
+        setTheatre(theatre: string): void;
+        getMiniMapLayerGroup(): L.LayerGroup<any>;
+        handleMapPanning(e: any): void;
+        addTemporaryMarker(latlng: L.LatLng, name: string, coalition: string, commandHash?: string): TemporaryUnitMarker;
+        getSelectedCoalitionArea(): CoalitionArea | undefined;
+        bringCoalitionAreaToBack(coalitionArea: CoalitionArea): void;
+        getVisibilityOptions(): {
+            [key: string]: boolean;
+        };
+        getPreviousZoom(): number;
+        unitIsProtected(unit: Unit): boolean;
+        getMapMarkerControls(): MapMarkerControl[];
+    }
+}
+declare module "mission/bullseye" {
+    import { CustomMarker } from "map/markers/custommarker";
+    export class Bullseye extends CustomMarker {
+        #private;
+        createIcon(): void;
+        setCoalition(coalition: string): void;
+        getCoalition(): string;
     }
 }
 declare module "context/context" {
@@ -1530,96 +1663,6 @@ declare module "popups/popup" {
         constructor(ID: string, stackAfter?: number);
         setFadeTime(fadeTime: number): void;
         setText(text: string): void;
-    }
-}
-declare module "map/touchboxselect" {
-    export var TouchBoxSelect: (new (...args: any[]) => any) & typeof import("leaflet").Class;
-}
-declare module "map/markers/destinationpreviewHandle" {
-    import { LatLng } from "leaflet";
-    import { CustomMarker } from "map/markers/custommarker";
-    export class DestinationPreviewHandle extends CustomMarker {
-        constructor(latlng: LatLng);
-        createIcon(): void;
-    }
-}
-declare module "map/map" {
-    import * as L from "leaflet";
-    import { MapContextMenu } from "contextmenus/mapcontextmenu";
-    import { UnitContextMenu } from "contextmenus/unitcontextmenu";
-    import { AirbaseContextMenu } from "contextmenus/airbasecontextmenu";
-    import { Airbase } from "mission/airbase";
-    import { Unit } from "unit/unit";
-    import { TemporaryUnitMarker } from "map/markers/temporaryunitmarker";
-    import { CoalitionArea } from "map/coalitionarea/coalitionarea";
-    import { CoalitionAreaContextMenu } from "contextmenus/coalitionareacontextmenu";
-    import { AirbaseSpawnContextMenu } from "contextmenus/airbasespawnmenu";
-    export type MapMarkerControl = {
-        "image": string;
-        "isProtected"?: boolean;
-        "name": string;
-        "protectable"?: boolean;
-        "toggles": string[];
-        "tooltip": string;
-    };
-    export class Map extends L.Map {
-        #private;
-        /**
-         *
-         * @param ID - the ID of the HTML element which will contain the context menu
-         */
-        constructor(ID: string);
-        addVisibilityOption(option: string, defaultValue: boolean): void;
-        setLayer(layerName: string): void;
-        getLayers(): string[];
-        setState(state: string): void;
-        getState(): string;
-        deselectAllCoalitionAreas(): void;
-        deleteCoalitionArea(coalitionArea: CoalitionArea): void;
-        setHiddenType(key: string, value: boolean): void;
-        getHiddenTypes(): string[];
-        hideAllContextMenus(): void;
-        showMapContextMenu(x: number, y: number, latlng: L.LatLng): void;
-        hideMapContextMenu(): void;
-        getMapContextMenu(): MapContextMenu;
-        showUnitContextMenu(x: number, y: number, latlng: L.LatLng): void;
-        getUnitContextMenu(): UnitContextMenu;
-        hideUnitContextMenu(): void;
-        showAirbaseContextMenu(x: number, y: number, latlng: L.LatLng, airbase: Airbase): void;
-        getAirbaseContextMenu(): AirbaseContextMenu;
-        hideAirbaseContextMenu(): void;
-        showAirbaseSpawnMenu(x: number, y: number, latlng: L.LatLng, airbase: Airbase): void;
-        getAirbaseSpawnMenu(): AirbaseSpawnContextMenu;
-        hideAirbaseSpawnMenu(): void;
-        showCoalitionAreaContextMenu(x: number, y: number, latlng: L.LatLng, coalitionArea: CoalitionArea): void;
-        getCoalitionAreaContextMenu(): CoalitionAreaContextMenu;
-        hideCoalitionAreaContextMenu(): void;
-        isZooming(): boolean;
-        getMousePosition(): L.Point;
-        getMouseCoordinates(): L.LatLng;
-        spawnFromAirbase(e: any): void;
-        centerOnUnit(ID: number | null): void;
-        getCenterUnit(): Unit | null;
-        setTheatre(theatre: string): void;
-        getMiniMapLayerGroup(): L.LayerGroup<any>;
-        handleMapPanning(e: any): void;
-        addTemporaryMarker(latlng: L.LatLng, name: string, coalition: string, commandHash?: string): TemporaryUnitMarker;
-        getSelectedCoalitionArea(): CoalitionArea | undefined;
-        bringCoalitionAreaToBack(coalitionArea: CoalitionArea): void;
-        getVisibilityOptions(): {
-            [key: string]: boolean;
-        };
-        unitIsProtected(unit: Unit): boolean;
-        getMapMarkerControls(): MapMarkerControl[];
-    }
-}
-declare module "mission/bullseye" {
-    import { CustomMarker } from "map/markers/custommarker";
-    export class Bullseye extends CustomMarker {
-        #private;
-        createIcon(): void;
-        setCoalition(coalition: string): void;
-        getCoalition(): string;
     }
 }
 declare module "mission/missionmanager" {
@@ -1922,139 +1965,139 @@ declare module "unit/unitsmanager" {
          * @param mantainRelativePosition If true, the selected units will mantain their relative positions when reaching the target. This is useful to maintain a formation for groun/navy units
          * @param rotation Rotation in radians by which the formation will be rigidly rotated. E.g. a ( V ) formation will look like this ( < ) if rotated pi/4 radians (90 degrees)
          */
-        selectedUnitsAddDestination(latlng: L.LatLng, mantainRelativePosition: boolean, rotation: number): void;
+        addDestination(latlng: L.LatLng, mantainRelativePosition: boolean, rotation: number, units?: Unit[] | null): void;
         /** Clear the destinations of all the selected units
          *
          */
-        selectedUnitsClearDestinations(): void;
+        clearDestinations(units?: Unit[] | null): void;
         /** Instruct all the selected units to land at a specific location
          *
          * @param latlng Location where to land at
          */
-        selectedUnitsLandAt(latlng: LatLng): void;
+        landAt(latlng: LatLng, units?: Unit[] | null): void;
         /** Instruct all the selected units to change their speed
          *
          * @param speedChange Speed change, either "stop", "slow", or "fast". The specific value depends on the unit category
          */
-        selectedUnitsChangeSpeed(speedChange: string): void;
+        changeSpeed(speedChange: string, units?: Unit[] | null): void;
         /** Instruct all the selected units to change their altitude
          *
          * @param altitudeChange Altitude change, either "climb" or "descend". The specific value depends on the unit category
          */
-        selectedUnitsChangeAltitude(altitudeChange: string): void;
+        changeAltitude(altitudeChange: string, units?: Unit[] | null): void;
         /** Set a specific speed to all the selected units
          *
          * @param speed Value to set, in m/s
          */
-        selectedUnitsSetSpeed(speed: number): void;
+        setSpeed(speed: number, units?: Unit[] | null): void;
         /** Set a specific speed type to all the selected units
          *
          * @param speedType Value to set, either "CAS" or "GS". If "CAS" is selected, the unit will try to maintain the selected Calibrated Air Speed, but DCS will still only maintain a Ground Speed value so errors may arise depending on wind.
          */
-        selectedUnitsSetSpeedType(speedType: string): void;
+        setSpeedType(speedType: string, units?: Unit[] | null): void;
         /** Set a specific altitude to all the selected units
          *
          * @param altitude Value to set, in m
          */
-        selectedUnitsSetAltitude(altitude: number): void;
+        setAltitude(altitude: number, units?: Unit[] | null): void;
         /** Set a specific altitude type to all the selected units
          *
          * @param altitudeType Value to set, either "ASL" or "AGL". If "AGL" is selected, the unit will try to maintain the selected Above Ground Level altitude. Due to a DCS bug, this will only be true at the final position.
          */
-        selectedUnitsSetAltitudeType(altitudeType: string): void;
+        setAltitudeType(altitudeType: string, units?: Unit[] | null): void;
         /** Set a specific ROE to all the selected units
          *
          * @param ROE Value to set, see constants for acceptable values
          */
-        selectedUnitsSetROE(ROE: string): void;
+        setROE(ROE: string, units?: Unit[] | null): void;
         /** Set a specific reaction to threat to all the selected units
          *
          * @param reactionToThreat Value to set, see constants for acceptable values
          */
-        selectedUnitsSetReactionToThreat(reactionToThreat: string): void;
+        setReactionToThreat(reactionToThreat: string, units?: Unit[] | null): void;
         /** Set a specific emissions & countermeasures to all the selected units
          *
          * @param emissionCountermeasure Value to set, see constants for acceptable values
          */
-        selectedUnitsSetEmissionsCountermeasures(emissionCountermeasure: string): void;
+        setEmissionsCountermeasures(emissionCountermeasure: string, units?: Unit[] | null): void;
         /** Turn selected units on or off, only works on ground and navy units
          *
          * @param onOff If true, the unit will be turned on
          */
-        selectedUnitsSetOnOff(onOff: boolean): void;
+        setOnOff(onOff: boolean, units?: Unit[] | null): void;
         /** Instruct the selected units to follow roads, only works on ground units
          *
          * @param followRoads If true, units will follow roads
          */
-        selectedUnitsSetFollowRoads(followRoads: boolean): void;
+        setFollowRoads(followRoads: boolean, units?: Unit[] | null): void;
         /** Instruct selected units to operate as a certain coalition
          *
          * @param operateAsBool If true, units will operate as blue
          */
-        selectedUnitsSetOperateAs(operateAsBool: boolean): void;
+        setOperateAs(operateAsBool: boolean, units?: Unit[] | null): void;
         /** Instruct units to attack a specific unit
          *
          * @param ID ID of the unit to attack
          */
-        selectedUnitsAttackUnit(ID: number): void;
+        attackUnit(ID: number, units?: Unit[] | null): void;
         /** Instruct units to refuel at the nearest tanker, if possible. Else units will RTB
          *
          */
-        selectedUnitsRefuel(): void;
+        refuel(units?: Unit[] | null): void;
         /** Instruct the selected units to follow another unit in a formation. Only works for aircrafts and helicopters.
          *
          * @param ID ID of the unit to follow
          * @param offset Optional parameter, defines a static offset. X: front-rear, positive front, Y: top-bottom, positive top, Z: left-right, positive right
          * @param formation Optional parameter, defines a predefined formation type. Values are: "trail", "echelon-lh", "echelon-rh", "line-abreast-lh", "line-abreast-rh", "front", "diamond"
          */
-        selectedUnitsFollowUnit(ID: number, offset?: {
+        followUnit(ID: number, offset?: {
             "x": number;
             "y": number;
             "z": number;
-        }, formation?: string): void;
+        }, formation?: string, units?: Unit[] | null): void;
         /** Instruct the selected units to perform precision bombing of specific coordinates
          *
          * @param latlng Location to bomb
          */
-        selectedUnitsBombPoint(latlng: LatLng): void;
+        bombPoint(latlng: LatLng, units?: Unit[] | null): void;
         /** Instruct the selected units to perform carpet bombing of specific coordinates
          *
          * @param latlng Location to bomb
          */
-        selectedUnitsCarpetBomb(latlng: LatLng): void;
+        carpetBomb(latlng: LatLng, units?: Unit[] | null): void;
         /** Instruct the selected units to fire at specific coordinates
          *
          * @param latlng Location to fire at
          */
-        selectedUnitsFireAtArea(latlng: LatLng): void;
+        fireAtArea(latlng: LatLng, units?: Unit[] | null): void;
         /** Instruct the selected units to simulate a fire fight at specific coordinates
          *
          * @param latlng Location to fire at
          */
-        selectedUnitsSimulateFireFight(latlng: LatLng): void;
+        simulateFireFight(latlng: LatLng, units?: Unit[] | null): void;
         /** Instruct units to enter into scenic AAA mode. Units will shoot in the air without aiming
          *
          */
-        selectedUnitsScenicAAA(): void;
+        scenicAAA(units?: Unit[] | null): void;
         /** Instruct units to enter into miss on purpose mode. Units will aim to the nearest enemy unit but not precisely.
          *
          */
-        selectedUnitsMissOnPurpose(): void;
+        missOnPurpose(units?: Unit[] | null): void;
         /** Instruct units to land at specific point
          *
          * @param latlng Point where to land
          */
-        selectedUnitsLandAtPoint(latlng: LatLng): void;
+        landAtPoint(latlng: LatLng, units?: Unit[] | null): void;
         /** Set a specific shots scatter to all the selected units
          *
          * @param shotsScatter Value to set
          */
-        selectedUnitsSetShotsScatter(shotsScatter: number): void;
+        setShotsScatter(shotsScatter: number, units?: Unit[] | null): void;
         /** Set a specific shots intensity to all the selected units
          *
          * @param shotsScatter Value to set
          */
-        selectedUnitsSetShotsIntensity(shotsIntensity: number): void;
+        setShotsIntensity(shotsIntensity: number, units?: Unit[] | null): void;
         /*********************** Control operations on selected units ************************/
         /**  See getUnitsCategories for more info
          *
@@ -2070,42 +2113,42 @@ declare module "unit/unitsmanager" {
         /** Groups the selected units in a single (DCS) group, if all the units have the same category
          *
          */
-        selectedUnitsCreateGroup(): void;
+        createGroup(units?: Unit[] | null): void;
         /** Set the hotgroup for the selected units. It will be the only hotgroup of the unit
          *
          * @param hotgroup Hotgroup number
          */
-        selectedUnitsSetHotgroup(hotgroup: number): void;
+        setHotgroup(hotgroup: number, units?: Unit[] | null): void;
         /** Add the selected units to a hotgroup. Units can be in multiple hotgroups at the same type
          *
          * @param hotgroup Hotgroup number
          */
-        selectedUnitsAddToHotgroup(hotgroup: number): void;
+        addToHotgroup(hotgroup: number, units?: Unit[] | null): void;
         /** Delete the selected units
          *
          * @param explosion If true, the unit will be deleted using an explosion
          * @returns
          */
-        selectedUnitsDelete(explosion?: boolean, explosionType?: string): void;
+        delete(explosion?: boolean, explosionType?: string, units?: Unit[] | null): void;
         /** Compute the destinations of every unit in the selected units. This function preserves the relative positions of the units, and rotates the whole formation by rotation.
          *
          * @param latlng Center of the group after the translation
          * @param rotation Rotation of the group, in radians
          * @returns Array of positions for each unit, in order
          */
-        selectedUnitsComputeGroupDestination(latlng: LatLng, rotation: number): {
+        computeGroupDestination(latlng: LatLng, rotation: number, units?: Unit[] | null): {
             [key: number]: LatLng;
         };
         /** Copy the selected units and store their properties in memory
          *
          */
-        selectedUnitsCopy(): void;
+        copy(units?: Unit[] | null): void;
         /*********************** Unit manipulation functions  ************************/
         /** Paste the copied units
          *
          * @returns True if units were pasted successfully
          */
-        pasteUnits(): false | undefined;
+        paste(): false | undefined;
         /** Automatically create an Integrated Air Defence System from a CoalitionArea object. The units will be mostly focused around big cities. The bigger the city, the larger the amount of units created next to it.
          * If the CoalitionArea does not contain any city, no units will be created
          *
