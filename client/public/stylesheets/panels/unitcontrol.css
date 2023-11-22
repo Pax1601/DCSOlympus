@@ -264,6 +264,20 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	content: "GS";
 }
 
+#unit-control-panel .switch-control .ol-switch {
+	height: 23px;
+	width: 40px;
+}
+
+#unit-control-panel .switch-control .ol-switch[data-value="true"]>.ol-switch-fill::before {
+	content: "YES";
+}
+
+#unit-control-panel .switch-control .ol-switch[data-value="false"]>.ol-switch-fill::before {
+	content: "NO";
+}
+
+
 #unit-control-panel .ol-slider-value {
 	color: var(--accent-light-blue);
 	cursor: pointer;

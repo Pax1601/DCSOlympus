@@ -83,7 +83,7 @@ declare module "controls/switch" {
 }
 declare module "constants/constants" {
     import { LatLng, LatLngBounds } from "leaflet";
-    import { MapMarkerControl } from "map/map";
+    import { MapMarkerVisibilityControl } from "map/map";
     export const UNITS_URI = "units";
     export const WEAPONS_URI = "weapons";
     export const LOGS_URI = "logs";
@@ -195,7 +195,7 @@ declare module "constants/constants" {
     export const visibilityControls: string[];
     export const visibilityControlsTypes: string[][];
     export const visibilityControlsTooltips: string[];
-    export const MAP_MARKER_CONTROLS: MapMarkerControl[];
+    export const MAP_MARKER_CONTROLS: MapMarkerVisibilityControl[];
     export const IADSTypes: string[];
     export const IADSDensities: {
         [key: string]: number;
@@ -776,7 +776,7 @@ declare module "other/utils" {
         ranges?: string[];
         eras?: string[];
     }): UnitBlueprint | null;
-    export function getMarkerCategoryByName(name: string): "aircraft" | "helicopter" | "groundunit-sam" | "groundunit-other" | "navyunit";
+    export function getMarkerCategoryByName(name: string): "aircraft" | "helicopter" | "groundunit-sam" | "navyunit" | "groundunit-other";
     export function getUnitDatabaseByCategory(category: string): import("unit/databases/aircraftdatabase").AircraftDatabase | import("unit/databases/helicopterdatabase").HelicopterDatabase | import("unit/databases/groundunitdatabase").GroundUnitDatabase | import("unit/databases/navyunitdatabase").NavyUnitDatabase | null;
     export function base64ToBytes(base64: string): ArrayBufferLike;
     export function enumToState(state: number): string;
@@ -1233,7 +1233,7 @@ declare module "unit/unit" {
         canTargetPoint(): boolean;
         canRearm(): boolean;
         canAAA(): boolean;
-        indirectFire(): boolean;
+        isIndirectFire(): boolean;
         isTanker(): boolean;
         isAWACS(): boolean;
         /********************** Unit commands *************************/
@@ -1529,7 +1529,7 @@ declare module "map/map" {
     import { CoalitionArea } from "map/coalitionarea/coalitionarea";
     import { CoalitionAreaContextMenu } from "contextmenus/coalitionareacontextmenu";
     import { AirbaseSpawnContextMenu } from "contextmenus/airbasespawnmenu";
-    export type MapMarkerControl = {
+    export type MapMarkerVisibilityControl = {
         "image": string;
         "isProtected"?: boolean;
         "name": string;
@@ -1569,12 +1569,10 @@ declare module "map/map" {
         showCoalitionAreaContextMenu(x: number, y: number, latlng: L.LatLng, coalitionArea: CoalitionArea): void;
         getCoalitionAreaContextMenu(): CoalitionAreaContextMenu;
         hideCoalitionAreaContextMenu(): void;
-        isZooming(): boolean;
         getMousePosition(): L.Point;
         getMouseCoordinates(): L.LatLng;
-        spawnFromAirbase(e: any): void;
         centerOnUnit(ID: number | null): void;
-        getCenterUnit(): Unit | null;
+        getCenteredOnUnit(): Unit | null;
         setTheatre(theatre: string): void;
         getMiniMapLayerGroup(): L.LayerGroup<any>;
         handleMapPanning(e: any): void;
@@ -1584,9 +1582,10 @@ declare module "map/map" {
         getVisibilityOptions(): {
             [key: string]: boolean;
         };
+        isZooming(): boolean;
         getPreviousZoom(): number;
-        unitIsProtected(unit: Unit): boolean;
-        getMapMarkerControls(): MapMarkerControl[];
+        getIsUnitProtected(unit: Unit): boolean;
+        getMapMarkerVisibilityControls(): MapMarkerVisibilityControl[];
     }
 }
 declare module "mission/bullseye" {
@@ -1600,6 +1599,8 @@ declare module "mission/bullseye" {
 }
 declare module "context/context" {
     export interface ContextInterface {
+        allowUnitCopying?: boolean;
+        allowUnitPasting?: boolean;
         useSpawnMenu?: boolean;
         useUnitControlPanel?: boolean;
         useUnitInfoPanel?: boolean;
@@ -1607,6 +1608,8 @@ declare module "context/context" {
     export class Context {
         #private;
         constructor(config: ContextInterface);
+        getAllowUnitCopying(): boolean;
+        getAllowUnitPasting(): boolean;
         getUseSpawnMenu(): boolean;
         getUseUnitControlPanel(): boolean;
         getUseUnitInfoPanel(): boolean;
@@ -1751,30 +1754,6 @@ declare module "panels/serverstatuspanel" {
         update(frameRate: number, load: number): void;
     }
 }
-declare module "toolbars/toolbar" {
-    export class Toolbar {
-        #private;
-        /**
-         *
-         * @param ID - the ID of the HTML element which will contain the context menu
-         */
-        constructor(ID: string);
-        show(): void;
-        hide(): void;
-        toggle(): void;
-        getElement(): HTMLElement;
-        getVisible(): boolean;
-    }
-}
-declare module "toolbars/primarytoolbar" {
-    import { Dropdown } from "controls/dropdown";
-    import { Toolbar } from "toolbars/toolbar";
-    export class PrimaryToolbar extends Toolbar {
-        #private;
-        constructor(ID: string);
-        getMainDropdown(): Dropdown;
-    }
-}
 declare module "panels/unitcontrolpanel" {
     import { Panel } from "panels/panel";
     export class UnitControlPanel extends Panel {
@@ -1837,12 +1816,36 @@ declare module "shortcut/shortcutmanager" {
         onKeyUp(callback: CallableFunction): void;
     }
 }
+declare module "toolbars/toolbar" {
+    export class Toolbar {
+        #private;
+        /**
+         *
+         * @param ID - the ID of the HTML element which will contain the context menu
+         */
+        constructor(ID: string);
+        show(): void;
+        hide(): void;
+        toggle(): void;
+        getElement(): HTMLElement;
+        getVisible(): boolean;
+    }
+}
 declare module "toolbars/commandmodetoolbar" {
     import { Toolbar } from "toolbars/toolbar";
     export class CommandModeToolbar extends Toolbar {
     }
 }
-declare module "unit/citiesDatabase" {
+declare module "toolbars/primarytoolbar" {
+    import { Dropdown } from "controls/dropdown";
+    import { Toolbar } from "toolbars/toolbar";
+    export class PrimaryToolbar extends Toolbar {
+        #private;
+        constructor(ID: string);
+        getMainDropdown(): Dropdown;
+    }
+}
+declare module "unit/databases/citiesdatabase" {
     export var citiesDatabase: {
         lat: number;
         lng: number;
@@ -1964,6 +1967,7 @@ declare module "unit/unitsmanager" {
          * @param latlng Position of the new destination
          * @param mantainRelativePosition If true, the selected units will mantain their relative positions when reaching the target. This is useful to maintain a formation for groun/navy units
          * @param rotation Rotation in radians by which the formation will be rigidly rotated. E.g. a ( V ) formation will look like this ( < ) if rotated pi/4 radians (90 degrees)
+         * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
          */
         addDestination(latlng: L.LatLng, mantainRelativePosition: boolean, rotation: number, units?: Unit[] | null): void;
         /** Clear the destinations of all the selected units
@@ -1973,75 +1977,89 @@ declare module "unit/unitsmanager" {
         /** Instruct all the selected units to land at a specific location
          *
          * @param latlng Location where to land at
+         * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
          */
         landAt(latlng: LatLng, units?: Unit[] | null): void;
         /** Instruct all the selected units to change their speed
          *
          * @param speedChange Speed change, either "stop", "slow", or "fast". The specific value depends on the unit category
+         * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
          */
         changeSpeed(speedChange: string, units?: Unit[] | null): void;
         /** Instruct all the selected units to change their altitude
          *
          * @param altitudeChange Altitude change, either "climb" or "descend". The specific value depends on the unit category
+         * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
          */
         changeAltitude(altitudeChange: string, units?: Unit[] | null): void;
         /** Set a specific speed to all the selected units
          *
          * @param speed Value to set, in m/s
+         * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
          */
         setSpeed(speed: number, units?: Unit[] | null): void;
         /** Set a specific speed type to all the selected units
          *
          * @param speedType Value to set, either "CAS" or "GS". If "CAS" is selected, the unit will try to maintain the selected Calibrated Air Speed, but DCS will still only maintain a Ground Speed value so errors may arise depending on wind.
+         * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
          */
         setSpeedType(speedType: string, units?: Unit[] | null): void;
         /** Set a specific altitude to all the selected units
          *
          * @param altitude Value to set, in m
+         * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
          */
         setAltitude(altitude: number, units?: Unit[] | null): void;
         /** Set a specific altitude type to all the selected units
          *
          * @param altitudeType Value to set, either "ASL" or "AGL". If "AGL" is selected, the unit will try to maintain the selected Above Ground Level altitude. Due to a DCS bug, this will only be true at the final position.
+         * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
          */
         setAltitudeType(altitudeType: string, units?: Unit[] | null): void;
         /** Set a specific ROE to all the selected units
          *
          * @param ROE Value to set, see constants for acceptable values
+         * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
          */
         setROE(ROE: string, units?: Unit[] | null): void;
         /** Set a specific reaction to threat to all the selected units
          *
          * @param reactionToThreat Value to set, see constants for acceptable values
+         * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
          */
         setReactionToThreat(reactionToThreat: string, units?: Unit[] | null): void;
         /** Set a specific emissions & countermeasures to all the selected units
          *
          * @param emissionCountermeasure Value to set, see constants for acceptable values
+         * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
          */
         setEmissionsCountermeasures(emissionCountermeasure: string, units?: Unit[] | null): void;
         /** Turn selected units on or off, only works on ground and navy units
          *
          * @param onOff If true, the unit will be turned on
+         * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
          */
         setOnOff(onOff: boolean, units?: Unit[] | null): void;
         /** Instruct the selected units to follow roads, only works on ground units
          *
          * @param followRoads If true, units will follow roads
+         * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
          */
         setFollowRoads(followRoads: boolean, units?: Unit[] | null): void;
         /** Instruct selected units to operate as a certain coalition
          *
          * @param operateAsBool If true, units will operate as blue
+         * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
          */
         setOperateAs(operateAsBool: boolean, units?: Unit[] | null): void;
         /** Instruct units to attack a specific unit
          *
          * @param ID ID of the unit to attack
+         * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
          */
         attackUnit(ID: number, units?: Unit[] | null): void;
         /** Instruct units to refuel at the nearest tanker, if possible. Else units will RTB
-         *
+         * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
          */
         refuel(units?: Unit[] | null): void;
         /** Instruct the selected units to follow another unit in a formation. Only works for aircrafts and helicopters.
@@ -2049,6 +2067,7 @@ declare module "unit/unitsmanager" {
          * @param ID ID of the unit to follow
          * @param offset Optional parameter, defines a static offset. X: front-rear, positive front, Y: top-bottom, positive top, Z: left-right, positive right
          * @param formation Optional parameter, defines a predefined formation type. Values are: "trail", "echelon-lh", "echelon-rh", "line-abreast-lh", "line-abreast-rh", "front", "diamond"
+         * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
          */
         followUnit(ID: number, offset?: {
             "x": number;
@@ -2058,44 +2077,51 @@ declare module "unit/unitsmanager" {
         /** Instruct the selected units to perform precision bombing of specific coordinates
          *
          * @param latlng Location to bomb
+         * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
          */
         bombPoint(latlng: LatLng, units?: Unit[] | null): void;
         /** Instruct the selected units to perform carpet bombing of specific coordinates
          *
          * @param latlng Location to bomb
+         * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
          */
         carpetBomb(latlng: LatLng, units?: Unit[] | null): void;
         /** Instruct the selected units to fire at specific coordinates
          *
          * @param latlng Location to fire at
+         * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
          */
         fireAtArea(latlng: LatLng, units?: Unit[] | null): void;
         /** Instruct the selected units to simulate a fire fight at specific coordinates
          *
          * @param latlng Location to fire at
+         * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
          */
         simulateFireFight(latlng: LatLng, units?: Unit[] | null): void;
         /** Instruct units to enter into scenic AAA mode. Units will shoot in the air without aiming
-         *
+         * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
          */
         scenicAAA(units?: Unit[] | null): void;
         /** Instruct units to enter into miss on purpose mode. Units will aim to the nearest enemy unit but not precisely.
-         *
+         * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
          */
         missOnPurpose(units?: Unit[] | null): void;
         /** Instruct units to land at specific point
          *
          * @param latlng Point where to land
+         * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
          */
         landAtPoint(latlng: LatLng, units?: Unit[] | null): void;
         /** Set a specific shots scatter to all the selected units
          *
          * @param shotsScatter Value to set
+         * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
          */
         setShotsScatter(shotsScatter: number, units?: Unit[] | null): void;
         /** Set a specific shots intensity to all the selected units
          *
          * @param shotsScatter Value to set
+         * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
          */
         setShotsIntensity(shotsIntensity: number, units?: Unit[] | null): void;
         /*********************** Control operations on selected units ************************/
@@ -2117,16 +2143,19 @@ declare module "unit/unitsmanager" {
         /** Set the hotgroup for the selected units. It will be the only hotgroup of the unit
          *
          * @param hotgroup Hotgroup number
+         * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
          */
         setHotgroup(hotgroup: number, units?: Unit[] | null): void;
         /** Add the selected units to a hotgroup. Units can be in multiple hotgroups at the same type
          *
          * @param hotgroup Hotgroup number
+         * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
          */
         addToHotgroup(hotgroup: number, units?: Unit[] | null): void;
         /** Delete the selected units
          *
          * @param explosion If true, the unit will be deleted using an explosion
+         * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
          * @returns
          */
         delete(explosion?: boolean, explosionType?: string, units?: Unit[] | null): void;
@@ -2134,6 +2163,7 @@ declare module "unit/unitsmanager" {
          *
          * @param latlng Center of the group after the translation
          * @param rotation Rotation of the group, in radians
+         * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
          * @returns Array of positions for each unit, in order
          */
         computeGroupDestination(latlng: LatLng, rotation: number, units?: Unit[] | null): {

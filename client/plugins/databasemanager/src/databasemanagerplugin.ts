@@ -16,7 +16,7 @@ import { NavyUnitEditor } from "./navyuniteditor";
  */
  
 export class DatabaseManagerPlugin implements OlympusPlugin {
-    #app: OlympusApp | null = null;
+    #app!: OlympusApp;
 
     #element: HTMLElement;
     #mainContentContainer: HTMLElement;
@@ -157,6 +157,15 @@ export class DatabaseManagerPlugin implements OlympusPlugin {
      */
     initialize(app: any) {
         this.#app = app;
+
+        const contextManager = this.#app.getContextManager();
+        contextManager.add( "databaseManager", {
+            "allowUnitCopying": false,
+            "allowUnitPasting": false,
+            "useSpawnMenu": false,
+            "useUnitControlPanel": false,
+            "useUnitInfoPanel": false
+        });
     
         /* Load the databases and initialize the editors */
         this.#loadDatabases();
@@ -197,6 +206,9 @@ export class DatabaseManagerPlugin implements OlympusPlugin {
             this.getElement().classList.toggle("hide", !bool);
         else
             this.getElement().classList.toggle("hide");
+
+        if ( this.#app )
+            this.#app.getContextManager().setContext( this.getElement().classList.contains("hide") ? "olympus" : "databaseManager" );
     }
 
     /** Hide all the editors
