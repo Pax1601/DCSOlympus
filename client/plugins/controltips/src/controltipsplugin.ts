@@ -64,7 +64,7 @@ export class ControlTipsPlugin implements OlympusPlugin {
             this.#updateTips();
         });
 
-        document.addEventListener("mapVisibilityOptionsChanged", () => {
+        document.addEventListener("mapOptionsChanged", () => {
             this.toggle( !this.#app.getMap().getVisibilityOptions()[SHOW_CONTROL_TIPS] );
         });
 

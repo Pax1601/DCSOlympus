@@ -14,7 +14,7 @@ const DEMO_WEAPONS_DATA = {
 }
 
 class DemoDataGenerator {
-    constructor(app)
+    constructor(app, config)
     { 
         app.get('/demo/units', (req, res) => this.units(req, res));
         app.get('/demo/weapons', (req, res) => this.weapons(req, res));
@@ -27,9 +27,9 @@ class DemoDataGenerator {
 
         app.use('/demo', basicAuth({
             users: { 
-                'admin': 'password',
-                'blue': 'bluepassword',
-                'red': 'redpassword'
+                'admin': config["authentication"]["gameMasterPassword"],
+                'blue': config["authentication"]["blueCommanderPassword"],
+                'red': config["authentication"]["redCommanderPassword"]
             },
         }))
 
@@ -52,9 +52,9 @@ class DemoDataGenerator {
             isLeader: true
         }
 
+        
         /*
-
-        ***************** UNCOMMENT TO TEST ALL UNITS ****************
+        // UNCOMMENT TO TEST ALL UNITS ****************
 
         var databases = Object.assign({}, aircraftDatabase, helicopterDatabase, groundUnitDatabase, navyUnitDatabase);
         var t = Object.keys(databases).length;
@@ -91,6 +91,7 @@ class DemoDataGenerator {
         }
         */
 
+        
         let idx = 1;
         DEMO_UNIT_DATA[idx] = JSON.parse(JSON.stringify(baseData));
         DEMO_UNIT_DATA[idx].name = "S_75M_Volhov";
@@ -114,6 +115,7 @@ class DemoDataGenerator {
         DEMO_UNIT_DATA[idx].position.lat += idx / 100;
         DEMO_UNIT_DATA[idx].category = "GroundUnit";
         DEMO_UNIT_DATA[idx].isLeader = false;
+    
         
         idx += 1;
         DEMO_UNIT_DATA[idx] = JSON.parse(JSON.stringify(baseData));

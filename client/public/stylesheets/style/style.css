@@ -23,7 +23,7 @@ body {
 }
 
 .hidden-cursor {
-    cursor: none !important;
+    /*cursor: none !important;*/
 }
 
 .hidden-cursor * {
@@ -65,10 +65,6 @@ button>img:first-child {
     aspect-ratio: initial;
     height: 100%;
     pointer-events: none;
-}
-
-.ol-box-shadow {
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
 form {
@@ -230,13 +226,13 @@ form {
 }
 
 .ol-select.is-open[data-position="top"]>.ol-select-options {
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     top: 0;
     translate: 0 -100%;
 }
 
 .ol-select>.ol-select-options>div {
     background-color: var(--background-grey);
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     display: flex;
     justify-content: left;
     padding: 2px 15px;
@@ -266,6 +262,7 @@ form {
     color: white;
     display: block;
     font-size: 13px;
+    font-weight: normal;
     height: 32px;
     padding: 6px 2px;
     padding: 5px;
@@ -718,6 +715,62 @@ nav.ol-panel> :last-child {
 }
 
 
+
+#roe-buttons-container button,
+#reaction-to-threat-buttons-container button,
+#emissions-countermeasures-buttons-container button,
+#shots-scatter-buttons-container button
+#shots-intensity-buttons-container button {
+    align-items: center;
+    background-color: transparent;
+    border: 1px solid var(--accent-light-blue);
+    display: flex;
+    height: 30px;
+    justify-content: center;
+    width: 30px;
+}
+
+#reaction-to-threat-buttons-container button:not(:first-child) svg {
+    width: 150%;
+    margin: -5px;
+}
+
+#unit-control-panel .ol-option-button button.selected {
+    background-color: white;
+    border-color: white;
+}
+
+#unit-control-panel .ol-option-button button.selected svg * {
+    fill: var(--background-steel);
+    stroke: var(--background-steel);
+}
+
+#rapid-controls {
+    display: flex;
+    flex-direction: column;
+    row-gap: 5px;
+    height: fit-content;
+    width: fit-content;
+}
+
+#rapid-controls button {
+    padding: 4px;
+}
+
+#rapid-controls svg {
+    height: 20px;
+    width: 20px;
+    fill: white;
+    stroke: white;
+}
+
+#rapid-controls button:before {
+    display: inline-block;
+    filter: invert(100%);
+    height: 20px;
+    width: 20px;
+}
+
 /****************************************************************************************/
 #splash-screen {
     border-radius: var(--border-radius-md);
@@ -821,6 +874,43 @@ nav.ol-panel> :last-child {
     top: 0px;
     width: 100%;
     z-index: 99999;
+}
+
+#loading-screen {
+    display: flex;
+    background-image: linear-gradient(var(--background-steel), var(--background-grey));
+    height: 100%;
+    left: 0px;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    z-index: 999999;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    row-gap: 20px;
+}
+
+#loading-screen img {
+    height: 300px;
+    width: 300px;
+}
+
+#loading-screen div {
+    color: white;
+    font-size: 18px;
+    animation: blinker 3s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
+
+.fade-out {
+    opacity: 0%;
+    transition: opacity 1s;
 }
 
 #authentication-form {
@@ -1272,12 +1362,13 @@ input[type=number]::-webkit-outer-spin-button {
     align-items: center;
     background-repeat: no-repeat;
     display: flex;
+    font-weight: normal;
     padding: 8px 10px;
     white-space: nowrap;
 }
 
 [class|="ol-button"]::before {
-    margin-right: 4px;
+    margin-right: 8px;
 }
 
 .ol-button-close {
@@ -1314,12 +1405,10 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .ol-switch {
-    align-items: center;
     cursor: pointer;
     display: flex;
-    height: 25px;
+    align-items: center;
     justify-content: center;
-    width: 40px;
 }
 
 .ol-switch-input {
@@ -1355,7 +1444,7 @@ input[type=number]::-webkit-outer-spin-button {
     display: flex;
     font-size: 11px;
     height: 100%;
-    padding: 0px 6px;
+    padding: 0px 7px;
     position: absolute;
     transition: transform 0.2s;
 }
@@ -1394,27 +1483,6 @@ input[type=number]::-webkit-outer-spin-button {
 	content: "NO";
 }
 
-
-.ol-contexmenu-panel {
-    padding: 20px;
-}
-
-.ol-coalition-switch[data-value="false"]>.ol-switch-fill {
-    background-color: var(--primary-blue);
-}
-
-.ol-coalition-switch[data-value="true"]>.ol-switch-fill {
-    background-color: var(--primary-red);
-}
-
-.ol-coalition-switch[data-value="undefined"]>.ol-switch-fill {
-    background-color: var(--primary-neutral);
-}
-/*
-#unit-control-panel .switch-control .ol-switch-fill::after {
-	background-color: white;
-}
-*/
 .switch-control.coalition [data-value="true"] .ol-switch-fill {
 	background-color: var(--accent-light-blue);
 }

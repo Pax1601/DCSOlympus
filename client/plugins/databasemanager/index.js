@@ -148,7 +148,7 @@ const navyuniteditor_1 = require("./navyuniteditor");
 class DatabaseManagerPlugin {
     constructor() {
         _DatabaseManagerPlugin_instances.add(this);
-        _DatabaseManagerPlugin_app.set(this, null);
+        _DatabaseManagerPlugin_app.set(this, void 0);
         _DatabaseManagerPlugin_element.set(this, void 0);
         _DatabaseManagerPlugin_mainContentContainer.set(this, void 0);
         _DatabaseManagerPlugin_contentDiv1.set(this, void 0);
@@ -263,6 +263,14 @@ class DatabaseManagerPlugin {
     initialize(app) {
         var _a;
         __classPrivateFieldSet(this, _DatabaseManagerPlugin_app, app, "f");
+        const contextManager = __classPrivateFieldGet(this, _DatabaseManagerPlugin_app, "f").getContextManager();
+        contextManager.add("databaseManager", {
+            "allowUnitCopying": false,
+            "allowUnitPasting": false,
+            "useSpawnMenu": false,
+            "useUnitControlPanel": false,
+            "useUnitInfoPanel": false
+        });
         /* Load the databases and initialize the editors */
         __classPrivateFieldGet(this, _DatabaseManagerPlugin_instances, "m", _DatabaseManagerPlugin_loadDatabases).call(this);
         /* Add a button to the main Olympus App to allow the users to open the dialog */
@@ -273,7 +281,7 @@ class DatabaseManagerPlugin {
         var toolbar = (_a = __classPrivateFieldGet(this, _DatabaseManagerPlugin_app, "f")) === null || _a === void 0 ? void 0 : _a.getToolbarsManager().get("primaryToolbar");
         var elements = toolbar.getMainDropdown().getOptionElements();
         var arr = Array.prototype.slice.call(elements);
-        arr.splice(arr.length - 1, 0, mainButtonDiv);
+        arr.splice(arr.length - 3, 0, mainButtonDiv);
         toolbar.getMainDropdown().setOptionsElements(arr);
         mainButton.onclick = () => {
             var _a;
@@ -299,6 +307,8 @@ class DatabaseManagerPlugin {
             this.getElement().classList.toggle("hide", !bool);
         else
             this.getElement().classList.toggle("hide");
+        if (__classPrivateFieldGet(this, _DatabaseManagerPlugin_app, "f"))
+            __classPrivateFieldGet(this, _DatabaseManagerPlugin_app, "f").getContextManager().setContext(this.getElement().classList.contains("hide") ? "olympus" : "databaseManager");
     }
 }
 exports.DatabaseManagerPlugin = DatabaseManagerPlugin;
