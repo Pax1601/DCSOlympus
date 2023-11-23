@@ -148,9 +148,14 @@ export class UnitControlPanel extends Panel {
 
         /*  This is for when a ctrl-click happens on the map for deselection and we need to remove the selected unit from the panel */
         document.addEventListener("unitsDeselection", (ev: CustomEventInit) => {
-            this.show();
-            this.addButtons();
-            this.#updateRapidControls();
+            if (ev.detail.length > 0)  {
+                this.show();
+                this.addButtons();
+                this.#updateRapidControls();
+            } else {
+                this.hide(); 
+                this.#updateRapidControls();
+            }
         });
 
         window.addEventListener("resize", (e: any) => this.#calculateMaxHeight());
@@ -234,13 +239,13 @@ export class UnitControlPanel extends Panel {
                 element.toggleAttribute("data-show-roe", !isTanker && !isAWACS);
                 element.toggleAttribute("data-show-threat", (this.#selectedUnitsTypes.includes("Aircraft") || this.#selectedUnitsTypes.includes("Helicopter")) && !(this.#selectedUnitsTypes.includes("GroundUnit") || this.#selectedUnitsTypes.includes("NavyUnit")));
                 element.toggleAttribute("data-show-emissions-countermeasures", (this.#selectedUnitsTypes.includes("Aircraft") || this.#selectedUnitsTypes.includes("Helicopter")) && !(this.#selectedUnitsTypes.includes("GroundUnit") || this.#selectedUnitsTypes.includes("NavyUnit")));
-                element.toggleAttribute("data-show-shots-scatter", this.#selectedUnitsTypes.includes("GroundUnit"));    //TODO: more refined
-                element.toggleAttribute("data-show-shots-intensity", this.#selectedUnitsTypes.includes("GroundUnit"));  //TODO: more refined
+                element.toggleAttribute("data-show-shots-scatter", this.#selectedUnitsTypes.length == 1 && this.#selectedUnitsTypes.includes("GroundUnit"));    //TODO: more refined
+                element.toggleAttribute("data-show-shots-intensity", this.#selectedUnitsTypes.length == 1 && this.#selectedUnitsTypes.includes("GroundUnit"));  //TODO: more refined
                 element.toggleAttribute("data-show-tanker-button", getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => { return unit.isTanker(); }) === true);
                 element.toggleAttribute("data-show-AWACS-button", getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => { return unit.isAWACS(); }) === true);
                 element.toggleAttribute("data-show-on-off", (this.#selectedUnitsTypes.includes("GroundUnit") || this.#selectedUnitsTypes.includes("NavyUnit")) && !(this.#selectedUnitsTypes.includes("Aircraft") || this.#selectedUnitsTypes.includes("Helicopter")));
                 element.toggleAttribute("data-show-follow-roads", (this.#selectedUnitsTypes.length == 1 && this.#selectedUnitsTypes.includes("GroundUnit")));
-                element.toggleAttribute("data-show-operate-as", getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => { return unit.getCoalition() }) === "neutral");
+                element.toggleAttribute("data-show-operate-as",  this.#selectedUnitsTypes.length == 1 && this.#selectedUnitsTypes.includes("GroundUnit") && getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => { return unit.getCoalition() }) === "neutral");
 
                 if (this.#units.length == 1) {
                     if (isAWACS)

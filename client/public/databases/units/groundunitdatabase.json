@@ -1120,7 +1120,8 @@
 		"cost": 15000000,
 		"tags": "Radar, CA",
 		"markerFile": "groundunit-aaa",
-		"canAAA": true
+		"canAAA": true,
+		"shotsBaseScatter": null
 	},
 	"Grad-URAL": {
 		"name": "Grad-URAL",
@@ -2387,7 +2388,8 @@
 		"shotsToFire": 100,
 		"tags": "Russian type 1",
 		"markerFile": "groundunit-infantry",
-		"canAAA": true
+		"canAAA": true,
+		"aimMethodRange": 3600
 	},
 	"KAMAZ Truck": {
 		"name": "KAMAZ Truck",
@@ -7238,7 +7240,8 @@
 		"shotsToFire": 100,
 		"tags": "Insurgent",
 		"markerFile": "groundunit-infantry",
-		"canAAA": true
+		"canAAA": true,
+		"aimMethodRange": 3600
 	},
 	"MLRS FDDM": {
 		"name": "MLRS FDDM",
@@ -7283,7 +7286,8 @@
 		"shotsToFire": 100,
 		"tags": "Russian type 2",
 		"markerFile": "groundunit-infantry",
-		"canAAA": true
+		"canAAA": true,
+		"aimMethodRange": 3600
 	},
 	"Infantry AK ver3": {
 		"name": "Infantry AK ver3",
@@ -7306,7 +7310,8 @@
 		"shotsToFire": 100,
 		"tags": "Russian type 3",
 		"markerFile": "groundunit-infantry",
-		"canAAA": true
+		"canAAA": true,
+		"aimMethodRange": 3600
 	},
 	"Smerch_HE": {
 		"name": "Smerch_HE",
@@ -8039,7 +8044,7 @@
 		"canRearm": false,
 		"muzzleVelocity": 1200,
 		"barrelHeight": 3,
-		"aimTime": 11,
+		"aimTime": 20,
 		"shotsToFire": 100,
 		"cost": 750000,
 		"tags": "CA",
