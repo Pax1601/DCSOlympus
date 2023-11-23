@@ -16,7 +16,7 @@ import { NavyUnitEditor } from "./navyuniteditor";
  */
  
 export class DatabaseManagerPlugin implements OlympusPlugin {
-    #app: OlympusApp | null = null;
+    #app!: OlympusApp;
 
     #element: HTMLElement;
     #mainContentContainer: HTMLElement;
@@ -157,6 +157,15 @@ export class DatabaseManagerPlugin implements OlympusPlugin {
      */
     initialize(app: any) {
         this.#app = app;
+
+        const contextManager = this.#app.getContextManager();
+        contextManager.add( "databaseManager", {
+            "allowUnitCopying": false,
+            "allowUnitPasting": false,
+            "useSpawnMenu": false,
+            "useUnitControlPanel": false,
+            "useUnitInfoPanel": false
+        });
     
         /* Load the databases and initialize the editors */
         this.#loadDatabases();
@@ -169,7 +178,7 @@ export class DatabaseManagerPlugin implements OlympusPlugin {
         var toolbar: PrimaryToolbar = this.#app?.getToolbarsManager().get("primaryToolbar") as PrimaryToolbar;
         var elements = toolbar.getMainDropdown().getOptionElements();
         var arr = Array.prototype.slice.call(elements);
-        arr.splice(arr.length - 1, 0, mainButtonDiv);
+        arr.splice(arr.length - 3, 0, mainButtonDiv);
         toolbar.getMainDropdown().setOptionsElements(arr);
         mainButton.onclick = () => {
             toolbar.getMainDropdown().close();
@@ -197,6 +206,9 @@ export class DatabaseManagerPlugin implements OlympusPlugin {
             this.getElement().classList.toggle("hide", !bool);
         else
             this.getElement().classList.toggle("hide");
+
+        if ( this.#app )
+            this.#app.getContextManager().setContext( this.getElement().classList.contains("hide") ? "olympus" : "databaseManager" );
     }
 
     /** Hide all the editors
