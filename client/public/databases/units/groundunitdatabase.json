@@ -64,7 +64,9 @@
 		"aimTime": 5,
 		"shotsToFire": 100,
 		"markerFile": "groundunit-artillery",
-		"tags": "120mm"
+		"tags": "120mm",
+		"indirectFire": true,
+		"shotsBaseInterval": 300
 	},
 	"2S6 Tunguska": {
 		"name": "2S6 Tunguska",

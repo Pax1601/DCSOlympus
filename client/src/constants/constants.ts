@@ -276,3 +276,7 @@ export const DELETE_CYCLE_TIME = 0.05;
 export const DELETE_SLOW_THRESHOLD = 50;
 
 export const GROUPING_ZOOM_TRANSITION = 13;
+
+export const MAX_SHOTS_SCATTER = 3;
+export const MAX_SHOTS_INTENSITY = 3;
+export const SHOTS_SCATTER_DEGREES = 10;

@@ -5,7 +5,7 @@ import { CustomMarker } from '../map/markers/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
 import { UnitDatabase } from './databases/unitdatabase';
 import { TargetMarker } from '../map/markers/targetmarker';
-import { DLINK, DataIndexes, GAME_MASTER, HIDE_GROUP_MEMBERS, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, ROEs, RWR, SHOW_UNIT_CONTACTS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, VISUAL, emissionsCountermeasures, reactionsToThreat, states, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, GROUPING_ZOOM_TRANSITION } from '../constants/constants';
+import { DLINK, DataIndexes, GAME_MASTER, HIDE_GROUP_MEMBERS, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, ROEs, RWR, SHOW_UNIT_CONTACTS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, VISUAL, emissionsCountermeasures, reactionsToThreat, states, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, GROUPING_ZOOM_TRANSITION, MAX_SHOTS_SCATTER, SHOTS_SCATTER_DEGREES } from '../constants/constants';
 import { DataExtractor } from '../server/dataextractor';
 import { groundUnitDatabase } from './databases/groundunitdatabase';
 import { navyUnitDatabase } from './databases/navyunitdatabase';
@@ -14,6 +14,8 @@ import { Ammo, Contact, GeneralSettings, LoadoutBlueprint, ObjectIconOptions, Of
 import { RangeCircle } from "../map/rangecircle";
 import { Group } from './group';
 import { ContextActionSet } from './contextactionset';
+import * as turf from "@turf/turf";
+
 var pathIcon = new Icon({
     iconUrl: '/resources/theme/images/markers/marker-icon.png',
     shadowUrl: '/resources/theme/images/markers/marker-shadow.png',
@@ -1424,7 +1426,22 @@ export abstract class Unit extends CustomMarker {
         if (!getApp().getMap().hasLayer(this.#targetPositionPolyline))
             this.#targetPositionPolyline.addTo(getApp().getMap());
         this.#targetPositionMarker.setLatLng(new LatLng(targetPosition.lat, targetPosition.lng));
-        this.#targetPositionPolyline.setLatLngs([new LatLng(this.#position.lat, this.#position.lng), new LatLng(targetPosition.lat, targetPosition.lng)])
+
+        if (this.getState() === 'simulate-fire-fight' && this.getShotsScatter() != MAX_SHOTS_SCATTER) {
+            let turfUnitPosition = turf.point([this.getPosition().lng, this.getPosition().lat]);
+            let turfTargetPosition = turf.point([targetPosition.lng, targetPosition.lat]);
+            
+            let bearing = turf.bearing(turfUnitPosition, turfTargetPosition);
+            let scatterDistance = turf.distance(turfUnitPosition, turfTargetPosition) * Math.tan((MAX_SHOTS_SCATTER - this.getShotsScatter()) * deg2rad(SHOTS_SCATTER_DEGREES));
+            let destination1 = turf.destination(turfTargetPosition, scatterDistance, bearing + 90);
+            let destination2 = turf.destination(turfTargetPosition, scatterDistance, bearing - 90);
+            
+            this.#targetPositionPolyline.setStyle({dashArray: "4, 8"});
+            this.#targetPositionPolyline.setLatLngs([new LatLng(destination1.geometry.coordinates[1], destination1.geometry.coordinates[0]), new LatLng(this.#position.lat, this.#position.lng), new LatLng(destination2.geometry.coordinates[1], destination2.geometry.coordinates[0])])
+        } else {
+            this.#targetPositionPolyline.setStyle({dashArray: ""});
+            this.#targetPositionPolyline.setLatLngs([new LatLng(this.#position.lat, this.#position.lng), new LatLng(targetPosition.lat, targetPosition.lng)])
+        }
     }
 
     #clearTargetPosition() {
@@ -1570,7 +1587,7 @@ export class GroundUnit extends Unit {
         if (targetPosition !== null) {
             if (this.canTargetPoint()) {
                 contextActionSet.addContextAction(this, "fire-at-area", "Fire at area", "Fire at a specific area on the ground", (units: Unit[]) => { getApp().getUnitsManager().fireAtArea(targetPosition, units) });
-                contextActionSet.addContextAction(this, "simulate-fire-fight", "Simulate fire fight", "Simulate a fire fight by shooting randomly in a certain large area.\nWARNING: works correctly only on neutral units, blue or red units will aim", (units: Unit[]) => { getApp().getUnitsManager().fireAtArea(targetPosition, units) });
+                contextActionSet.addContextAction(this, "simulate-fire-fight", "Simulate fire fight", "Simulate a fire fight by shooting randomly in a certain large area.\nWARNING: works correctly only on neutral units, blue or red units will aim", (units: Unit[]) => { getApp().getUnitsManager().simulateFireFight(targetPosition, units) });
             }
         }
         else {
