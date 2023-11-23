@@ -46,6 +46,7 @@
 
     --ol-select-secondary: #545F6C;
     --ol-switch-off:#686868;
+    --ol-switch-undefined:#383838;
 
     /*** General border radii  **/
     --border-radius-xs: 2px;

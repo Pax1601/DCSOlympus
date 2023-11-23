@@ -175,6 +175,7 @@ export class UnitControlPanel extends Panel {
         this.#AWACSSwitch.resetExpectedValue();
         this.#onOffSwitch.resetExpectedValue();
         this.#followRoadsSwitch.resetExpectedValue();
+        this.#operateAsSwitch.resetExpectedValue();
         this.#altitudeSlider.resetExpectedValue();
         this.#speedSlider.resetExpectedValue();
         this.#calculateMaxHeight();
