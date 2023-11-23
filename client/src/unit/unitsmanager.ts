@@ -325,7 +325,7 @@ export class UnitsManager {
         var value: any = variableGetter(units[0]);
         units.forEach((unit: Unit) => {
             if (variableGetter(unit) !== value)
-                return undefined;
+                value = undefined;
         });
         return value;
     };

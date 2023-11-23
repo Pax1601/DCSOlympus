@@ -1469,6 +1469,10 @@ input[type=number]::-webkit-outer-spin-button {
 	background-color: var(--ol-switch-off);
 }
 
+.switch-control.yes-no .ol-switch[data-value="undefined"] .ol-switch-fill {
+	background-color: var(--ol-switch-undefined);
+}
+
 .switch-control.coalition .ol-switch>.ol-switch-fill::before,
 .switch-control.yes-no .ol-switch>.ol-switch-fill::before {
     translate:-100% 0;
@@ -1484,11 +1488,15 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .switch-control.coalition [data-value="true"] .ol-switch-fill {
-	background-color: var(--accent-light-blue);
+	background-color: var(--primary-blue);
 }
 
 .switch-control.coalition [data-value="false"] .ol-switch-fill {
 	background-color: var(--primary-red);
+}
+
+.switch-control.coalition [data-value="undefined"] .ol-switch-fill {
+	background-color: var(--ol-switch-undefined);
 }
 
 .switch-control.coalition [data-value="true"]>.ol-switch-fill::before {
