@@ -102,6 +102,13 @@ export const minimapBoundaries = [
         new LatLng(10.7725, 149.3918333),
         new LatLng(22.5127778, 149.5427778),
         new LatLng(22.09, 135.0572222)
+    ],
+    [   // South Atlantic
+        new LatLng(-49.097217, -79.418267),
+        new LatLng(-56.874517,-79.418267),
+        new LatLng(-56.874517, -43.316433),
+        new LatLng(-49.097217, -43.316433),
+        new LatLng(-49.097217, -79.418267)
     ]
 ];
 
@@ -111,7 +118,7 @@ export const mapBounds = {
     "Nevada": { bounds: new LatLngBounds([34.4037128, -119.7806729], [39.7372411, -112.1130805]), zoom: 5 },
     "PersianGulf": { bounds: new LatLngBounds([21.729393, 47.572675], [33.131584, 64.7313594]), zoom: 5 },
     "Caucasus": { bounds: new LatLngBounds([39.6170191, 27.634935], [47.3907982, 49.3101946]), zoom: 4 },
-    // TODO "Falklands"
+    "Falklands": { bounds: new LatLngBounds([-49.097217, -79.418267], [-56.874517, -43.316433]), zoom: 3 },
 }
 
 export const mapLayers = {
