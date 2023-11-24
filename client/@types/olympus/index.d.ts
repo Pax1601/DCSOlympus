@@ -150,6 +150,10 @@ declare module "constants/constants" {
             bounds: LatLngBounds;
             zoom: number;
         };
+        Falklands: {
+            bounds: LatLngBounds;
+            zoom: number;
+        };
     };
     export const mapLayers: {
         "ArcGIS Satellite": {
@@ -265,6 +269,9 @@ declare module "constants/constants" {
     export const DELETE_CYCLE_TIME = 0.05;
     export const DELETE_SLOW_THRESHOLD = 50;
     export const GROUPING_ZOOM_TRANSITION = 13;
+    export const MAX_SHOTS_SCATTER = 3;
+    export const MAX_SHOTS_INTENSITY = 3;
+    export const SHOTS_SCATTER_DEGREES = 10;
 }
 declare module "map/markers/custommarker" {
     import { Map, Marker } from "leaflet";
@@ -315,15 +322,40 @@ declare module "controls/dropdown" {
         #private;
         constructor(ID: string | null, callback: CallableFunction, options?: string[] | null, defaultText?: string);
         getContainer(): HTMLElement;
-        setOptions(optionsList: string[], sort?: "" | "string" | "number" | "string+number"): void;
+        /** Set the dropdown options strings
+         *
+         * @param optionsList List of options. These are the keys that will always be returned on selection
+         * @param sort Sort method. "string" performs js default sort. "number" sorts purely by numeric value.
+         * "string+number" sorts by string, unless two elements are lexicographically identical up to a numeric value (e.g. "SA-2" and "SA-3"), in which case it sorts by number.
+         * @param labelsList (Optional) List of labels to be shown instead of the keys directly. If provided, the options will be sorted by label.
+         */
+        setOptions(optionsList: string[], sort?: "" | "string" | "number" | "string+number", labelsList?: string[] | undefined): void;
+        getOptionsList(): string[];
+        getLabelsList(): string[] | undefined;
+        /** Manually set the HTMLElements of the dropdown values. Handling of the selection must be performed externally.
+         *
+         * @param optionsElements List of elements to be added to the dropdown
+         */
         setOptionsElements(optionsElements: HTMLElement[]): void;
         getOptionElements(): HTMLCollection;
         addOptionElement(optionElement: HTMLElement): void;
-        selectText(text: string): void;
+        /** Select the active value of the dropdown
+         *
+         * @param idx The index of the element to select
+         * @returns True if the index is valid, false otherwise
+         */
         selectValue(idx: number): boolean;
         reset(): void;
-        getValue(): string;
+        /** Manually set the selected value of the dropdown
+         *
+         * @param value The value to select. Must be one of the valid options
+         */
         setValue(value: string): void;
+        getValue(): string;
+        /** Force the selected value of the dropdown.
+         *
+         * @param value Any string. Will be shown as selected value even if not one of the options.
+         */
         forceValue(value: string): void;
         getIndex(): number;
         clip(): void;

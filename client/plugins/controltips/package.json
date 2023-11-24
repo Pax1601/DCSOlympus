@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "browserify ./src/index.ts -p [ tsify --noImplicitAny] > index.js && copy.bat",
-    "build-release": "browserify ./src/index.ts -p [ tsify --noImplicitAny] -p [ tinyify ] > index.js && copy.bat"
+    "build-release": "browserify ./src/index.ts -p [ tsify --noImplicitAny] > index.js && copy.bat"
   },
   "dependencies": {},
   "devDependencies": {

@@ -44,9 +44,9 @@ Source: "..\img\olympus.ico"; DestDir: "{app}\Mods\Services\Olympus\img"; Flags:
 Source: "..\img\olympus_server.ico"; DestDir: "{app}\Mods\Services\Olympus\img"; Flags: ignoreversion;
 Source: "..\img\olympus_configurator.ico"; DestDir: "{app}\Mods\Services\Olympus\img"; Flags: ignoreversion;
 Source: "..\img\configurator_logo.png"; DestDir: "{app}\Mods\Services\Olympus\img"; Flags: ignoreversion;
-Source: "{#nwjsFolder}\*.*"; DestDir: "{app}\Mods\Services\Olympus\client\bin\nw"; Flags: ignoreversion recursesubdirs; Check: CheckLocalInstall
-Source: "{#nodejsFolder}\*.*"; DestDir: "{app}\Mods\Services\Olympus\client\bin\node"; Flags: ignoreversion recursesubdirs; Check: CheckServerInstall
-Source: "..\scripts\python\configurator\dist\configurator.exe"; DestDir: "{app}\Mods\Services\Olympus"; Flags: ignoreversion; Check: CheckServerInstall 
+Source: "{#nwjsFolder}\*.*"; DestDir: "{app}\Mods\Services\Olympus\client"; Flags: ignoreversion recursesubdirs; Check: CheckLocalInstall
+Source: "{#nodejsFolder}\*.*"; DestDir: "{app}\Mods\Services\Olympus\client"; Flags: ignoreversion recursesubdirs; Check: CheckServerInstall
+Source: "..\scripts\python\configurator\dist\configurator.exe"; DestDir: "{app}\Mods\Services\Olympus"; Flags: ignoreversion;
 
 [Run]
 Filename: "{app}\Mods\Services\Olympus\configurator.exe"; Parameters: -a {code:GetAddress} -c {code:GetClientPort} -b {code:GetBackendPort} -p {code:GetPassword} -bp {code:GetBluePassword} -rp {code:GetRedPassword}
@@ -60,8 +60,8 @@ Root: HKCU; Subkey: "Environment"; ValueType: expandsz; ValueName: "Path"; Value
 ChangesEnvironment=yes
 
 [Icons]
-Name: "{userdesktop}\DCS Olympus Client"; Filename: "{app}\Mods\Services\Olympus\client\bin\nw\nw.exe"; Tasks: desktopicon; IconFilename: "{app}\Mods\Services\Olympus\img\olympus.ico"; Check: CheckLocalInstall
-Name: "{userdesktop}\DCS Olympus Server"; Filename: "{app}\Mods\Services\Olympus\client\bin\node\node.exe"; Tasks: desktopicon; IconFilename: "{app}\Mods\Services\Olympus\img\olympus_server.ico"; WorkingDir: "{app}\Mods\Services\Olympus\client"; Parameters: ".\bin\www"; Check: CheckServerInstall
+Name: "{userdesktop}\DCS Olympus Client"; Filename: "{app}\Mods\Services\Olympus\client\nw.exe"; Tasks: desktopicon; IconFilename: "{app}\Mods\Services\Olympus\img\olympus.ico"; Check: CheckLocalInstall
+Name: "{userdesktop}\DCS Olympus Server"; Filename: "{app}\Mods\Services\Olympus\client\node.exe"; Tasks: desktopicon; IconFilename: "{app}\Mods\Services\Olympus\img\olympus_server.ico"; Parameters: ".\bin\www"; Check: CheckServerInstall
 Name: "{userdesktop}\DCS Olympus Configurator"; Filename: "{app}\Mods\Services\Olympus\configurator.exe"; Tasks: desktopicon; IconFilename: "{app}\Mods\Services\Olympus\img\olympus_configurator.ico"; Check: CheckServerInstall
 
 [Code]
