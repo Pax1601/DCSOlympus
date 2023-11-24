@@ -7225,7 +7225,7 @@
 		"name": "Infantry AK Ins",
 		"coalition": "red",
 		"era": "Early Cold War",
-		"label": "AK-74",
+		"label": "Insurgent AK-74",
 		"shortLabel": "AK-74 (Ins)",
 		"type": "Infantry",
 		"enabled": true,

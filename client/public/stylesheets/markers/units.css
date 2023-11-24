@@ -329,6 +329,19 @@
     background-image: url("/resources/theme/images/states/awacs.svg");
 }
 
+[data-object|="unit"][data-state="miss-on-purpose"] .unit-state {
+    background-image: url("/resources/theme/images/states/miss-on-purpose.svg");
+}
+
+[data-object|="unit"][data-state="scenic-aaa"] .unit-state {
+    background-image: url("/resources/theme/images/states/scenic-aaa.svg");
+}
+
+[data-object|="unit"][data-state="simulate-fire-fight"] .unit-state {
+    background-image: url("/resources/theme/images/states/simulate-fire-fight.svg");
+}
+
+
 [data-object|="unit"] .unit-health::before {
     background-image: url("/resources/theme/images/icons/health.svg");
     background-repeat: no-repeat;

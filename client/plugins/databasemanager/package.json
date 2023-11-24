@@ -4,14 +4,14 @@
   "private": true,
   "scripts": {
     "build": "browserify ./src/index.ts -p [ tsify --noImplicitAny] > index.js && copy.bat",
-	  "build-release": "browserify ./src/index.ts -p [ tsify --noImplicitAny] -p [ tinyify ] > index.js && copy.bat",
+    "build-release": "browserify ./src/index.ts -p [ tsify --noImplicitAny] -p [ tinyify ] > index.js && copy.bat",
     "start": "npm run copy & concurrently --kill-others \"npm run watch\"",
     "copy": "copy.bat",
     "watch": "watchify ./src/index.ts --debug -o ../../public/plugins/databasemanager/index.js -t [ babelify --global true --presets [ @babel/preset-env ] --extensions '.js'] -p [ tsify --noImplicitAny ]"
   },
   "dependencies": {},
   "devDependencies": {
-	"@babel/preset-env": "^7.21.4",
+    "@babel/preset-env": "^7.21.4",
     "@types/node": "^18.16.1",
     "@types/sortablejs": "^1.15.0",
     "babelify": "^10.0.0",

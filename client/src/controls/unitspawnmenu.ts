@@ -10,7 +10,7 @@ import { aircraftDatabase } from "../unit/databases/aircraftdatabase";
 import { helicopterDatabase } from "../unit/databases/helicopterdatabase";
 import { groundUnitDatabase } from "../unit/databases/groundunitdatabase";
 import { navyUnitDatabase } from "../unit/databases/navyunitdatabase";
-import { UnitSpawnOptions, UnitSpawnTable } from "../interfaces";
+import { UnitBlueprint, UnitSpawnOptions, UnitSpawnTable } from "../interfaces";
 
 export class UnitSpawnMenu {
     protected showRangeCircles: boolean = false;
@@ -61,7 +61,7 @@ export class UnitSpawnMenu {
 
         /* Create the dropdowns and the altitude slider */
         this.#unitRoleTypeDropdown = new Dropdown(null, (roleType: string) => this.#setUnitRoleType(roleType), undefined, "Unit type");
-        this.#unitLabelDropdown = new Dropdown(null, (label: string) => this.#setUnitLabel(label), undefined, "Unit label");
+        this.#unitLabelDropdown = new Dropdown(null, (name: string) => this.#setUnitName(name), undefined, "Unit label");
         this.#unitLoadoutDropdown = new Dropdown(null, (loadout: string) => this.#setUnitLoadout(loadout), undefined, "Unit loadout");
         this.#unitCountDropdown = new Dropdown(null, (count: string) => this.#setUnitCount(count), undefined, "Unit count");
         this.#unitCountryDropdown = new Dropdown(null, () => { /* Custom button implementation */ }, undefined, "Unit country");
@@ -153,16 +153,28 @@ export class UnitSpawnMenu {
             this.#unitImageEl.classList.toggle("hide", true);
             this.#unitLiveryDropdown.reset();
 
+            var blueprints: UnitBlueprint[] = [];
             if (this.#orderByRole)
-                this.#unitLabelDropdown.setOptions(this.#unitDatabase.getByRole(this.spawnOptions.roleType).map((blueprint) => { return blueprint.label }), "string+number");
+                blueprints = this.#unitDatabase.getByRole(this.spawnOptions.roleType);
             else
-                this.#unitLabelDropdown.setOptions(this.#unitDatabase.getByType(this.spawnOptions.roleType).map((blueprint) => { return blueprint.label }), "string+number");
+                blueprints = this.#unitDatabase.getByType(this.spawnOptions.roleType);
+
+            /* Presort the elements by name in case any have equal labels */
+            blueprints = blueprints.sort((blueprintA: UnitBlueprint, blueprintB: UnitBlueprint) => { 
+                if (blueprintA.name > blueprintA.name)
+                    return 1;
+                else
+                    return (blueprintB.name > blueprintA.name) ? -1 : 0;
+            });
+
+            this.#unitLabelDropdown.setOptions(blueprints.map((blueprint) => { return blueprint.name }), "string+number", blueprints.map((blueprint) => { return blueprint.label }));
 
             /* Add the tags to the options */
             var elements: HTMLElement[] = [];
             for (let idx = 0; idx < this.#unitLabelDropdown.getOptionElements().length; idx++) {
+                let name = this.#unitLabelDropdown.getOptionsList()[idx];
                 let element = this.#unitLabelDropdown.getOptionElements()[idx] as HTMLElement;
-                let entry = this.#unitDatabase.getByLabel(element.textContent ?? "");
+                let entry = this.#unitDatabase.getByName(name);
                 if (entry) {
                     element.querySelectorAll("button")[0]?.append(...(entry.tags?.split(",").map((tag: string) => {
                         tag = tag.trim();
@@ -418,8 +430,7 @@ export class UnitSpawnMenu {
         this.#container.dispatchEvent(new Event("unitRoleTypeChanged"));
     }
 
-    #setUnitLabel(label: string) {
-        var name = this.#unitDatabase.getByLabel(label)?.name || null;
+    #setUnitName(name: string) {
         if (name != null)
             this.spawnOptions.name = name;
         this.#container.dispatchEvent(new Event("unitLabelChanged"));

@@ -34,7 +34,7 @@ class DemoDataGenerator {
         }))
 
         
-        let baseData = { alive: true, human: false, controlled: true, coalition: 2, country: 0, unitName: "Cool guy", groupName: "Cool group 1", state: 1, task: "Being cool!",
+        let baseData = { alive: true, human: false, controlled: true, coalition: 2, country: 0, unitName: "Cool guy", groupName: "Cool group 1", state: 13, task: "Being cool!",
             hasTask: true, position: { lat: 37, lng: -116, alt: 1000 }, speed: 200, horizontalVelocity: 200, verticalVelicity: 0, heading: 45, isActiveTanker: false, isActiveAWACS: false, onOff: true, followRoads: false, fuel: 50, 
             desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
             formationOffset: { x: 0, y: 0, z: 0 },
