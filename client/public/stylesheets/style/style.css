@@ -232,7 +232,6 @@ form {
 
 .ol-select>.ol-select-options>div {
     background-color: var(--background-grey);
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     display: flex;
     justify-content: left;
     padding: 2px 15px;
@@ -1496,15 +1495,19 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .switch-control.coalition [data-value="undefined"] .ol-switch-fill {
-	background-color: var(--ol-switch-undefined);
+	background-color: var(--primary-neutral);
 }
 
-.switch-control.coalition [data-value="true"]>.ol-switch-fill::before {
-	content: "BLUE" !important;
+.switch-control.coalition [data-value="true"] .ol-switch-fill::before {
+	content: "BLUE";
 }
 
-.switch-control.coalition [data-value="false"]>.ol-switch-fill::before {
-	content: "RED" !important;
+.switch-control.coalition [data-value="false"] .ol-switch-fill::before {
+	content: "RED";
+}
+
+.switch-control.no-label [data-value] .ol-switch-fill::before {
+    content:"";
 }
 
 .ol-context-menu>ul {

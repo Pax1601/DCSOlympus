@@ -30,7 +30,7 @@ export class MapContextMenu extends ContextMenu {
 
         /* Create the coalition switch */
         this.#coalitionSwitch = new Switch("coalition-switch", (value: boolean) => this.#onSwitchClick(value));
-        this.#coalitionSwitch.setValue(false);
+        this.#coalitionSwitch.setValue(true);
         this.#coalitionSwitch.getContainer()?.addEventListener("contextmenu", (e) => this.#onSwitchRightClick());
 
         /* Create the spawn menus for the different unit types */
@@ -128,9 +128,9 @@ export class MapContextMenu extends ContextMenu {
 
         this.getContainer()?.querySelectorAll('[data-coalition]').forEach((element: any) => { element.setAttribute("data-coalition", getApp().getActiveCoalition()) });
         if (getApp().getActiveCoalition() == "blue")
-            this.#coalitionSwitch.setValue(false);
-        else if (getApp().getActiveCoalition() == "red")
             this.#coalitionSwitch.setValue(true);
+        else if (getApp().getActiveCoalition() == "red")
+            this.#coalitionSwitch.setValue(false);
         else
             this.#coalitionSwitch.setValue(undefined);
         
@@ -232,10 +232,10 @@ export class MapContextMenu extends ContextMenu {
 
     /** Callback called when the user left clicks on the coalition switch
      * 
-     * @param value Switch position (false: "blue", true: "red")
+     * @param value Switch position (true: "blue", false: "red")
      */
     #onSwitchClick(value: boolean) {
-        value ? getApp().setActiveCoalition("red") : getApp().setActiveCoalition("blue");
+        value ? getApp().setActiveCoalition("blue") : getApp().setActiveCoalition("red");
         this.getContainer()?.querySelectorAll('[data-coalition]').forEach((element: any) => { element.setAttribute("data-coalition", getApp().getActiveCoalition()) });
         this.#aircraftSpawnMenu.setCountries();
         this.#helicopterSpawnMenu.setCountries();
