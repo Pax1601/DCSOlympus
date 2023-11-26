@@ -1,5 +1,18 @@
 #!/usr/bin/env node
 
+console.log('\x1b[36m%s\x1b[0m', "*********************************************************************");
+console.log('\x1b[36m%s\x1b[0m', "*  _____   _____  _____    ____  _                                  *");
+console.log('\x1b[36m%s\x1b[0m', "* |  __ \\ / ____|/ ____|  / __ \\| |                                 *");
+console.log('\x1b[36m%s\x1b[0m', "* | |  | | |    | (___   | |  | | |_   _ _ __ ___  _ __  _   _ ___  *");
+console.log('\x1b[36m%s\x1b[0m', "* | |  | | |     \\___ \\  | |  | | | | | | '_ ` _ \\| '_ \\| | | / __| *");
+console.log('\x1b[36m%s\x1b[0m', "* | |__| | |____ ____) | | |__| | | |_| | | | | | | |_) | |_| \\__ \\ *");
+console.log('\x1b[36m%s\x1b[0m', "* |_____/ \\_____|_____/   \\____/|_|\\__, |_| |_| |_| .__/ \\__,_|___/ *");
+console.log('\x1b[36m%s\x1b[0m', "*                                   __/ |         | |               *");
+console.log('\x1b[36m%s\x1b[0m', "*                                  |___/          |_|               *");
+console.log('\x1b[36m%s\x1b[0m', "*********************************************************************");
+console.log('\x1b[36m%s\x1b[0m', "");
+console.log("Please wait while DCS Olympus Server starts up...");
+
 var fs = require('fs');
 let rawdata = fs.readFileSync('../olympus.json');
 let config = JSON.parse(rawdata);
@@ -98,3 +111,6 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+console.log("DCS Olympus server v0.4.8 started correctly!")
+console.log("Waiting for connections...")

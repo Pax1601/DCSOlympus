@@ -1,4 +1,4 @@
-local version = "v0.4.6-alpha"
+local version = "v0.4.8-alpha"
 
 local debug = false				-- True enables debug printing using DCS messages
 
@@ -180,7 +180,7 @@ function Olympus.buildTask(groupName, options)
 				if options ['altitudeType'] then
 					if options ['altitudeType'] == "AGL" then
 						local groundHeight = 0
-						if group then
+						if group ~= nil then
 							local groupPos = mist.getLeadPos(group)
 							groundHeight = land.getHeight({x = groupPos.x, y = groupPos.z})
 						end
@@ -287,7 +287,7 @@ end
 function Olympus.move(groupName, lat, lng, altitude, altitudeType, speed, speedType, category, taskOptions)
     Olympus.debug("Olympus.move " .. groupName .. " (" .. lat .. ", " .. lng ..") " .. altitude .. "m " .. altitudeType .. " ".. speed .. "m/s " .. category .. " " .. Olympus.serializeTable(taskOptions), 2)
     local group = Group.getByName(groupName)
-	if group then
+	if group ~= nil then
 		if category == "Aircraft" then
 			local startPoint = mist.getLeadPos(group)
 			local endPoint = coord.LLtoLO(lat, lng, 0) 
@@ -765,9 +765,9 @@ end
 
 -- Find a database entry by ID
 function Olympus.findInDatabase(ID)
-	for idx, unit in pairs(Olympus.cloneDatabase) do
-		if unit ~= nil and unit["ID"] == ID then
-			return unit
+	for idx, unitRecord in pairs(Olympus.cloneDatabase) do
+		if unitRecord ~= nil and unitRecord["ID"] == ID then
+			return unitRecord
 		end
 	end
 	return nil
@@ -789,11 +789,11 @@ function Olympus.clone(cloneTable, deleteOriginal)
 	-- All the units in the table will be cloned in a single group
 	for idx, cloneData in pairs(cloneTable) do
 		local ID = cloneData.ID
-		local unit = Olympus.findInDatabase(ID)
+		local unitRecord = Olympus.findInDatabase(ID)
 
-		if unit ~= nil then
+		if unitRecord ~= nil then
 			-- Update the data of the cloned unit
-			local unitTable = mist.utils.deepCopy(unit)
+			local unitTable = mist.utils.deepCopy(unitRecord)
 
 			local point = coord.LLtoLO(cloneData['lat'], cloneData['lng'], 0)
 			if unitTable then
@@ -803,8 +803,8 @@ function Olympus.clone(cloneTable, deleteOriginal)
 			end
 
 			if countryID == nil and category == nil then
-				countryID = unit["country"]
-				if unit["category"] == Unit.Category.AIRPLANE then
+				countryID = unitRecord["country"]
+				if unitRecord["category"] == Unit.Category.AIRPLANE then
 					category = 'plane'
 					route = {
 						["points"] = 
@@ -823,7 +823,7 @@ function Olympus.clone(cloneTable, deleteOriginal)
 							},
 						}, 
 					}
-				elseif unit["category"] == Unit.Category.HELICOPTER then
+				elseif unitRecord["category"] == Unit.Category.HELICOPTER then
 					category = 'helicopter'
 					route = {
 						["points"] = 
@@ -842,9 +842,9 @@ function Olympus.clone(cloneTable, deleteOriginal)
 							},
 						}, 
 					}
-				elseif unit["category"] == Unit.Category.GROUND_UNIT then
+				elseif unitRecord["category"] == Unit.Category.GROUND_UNIT then
 					category = 'vehicle'
-				elseif unit["category"] == Unit.Category.SHIP then
+				elseif unitRecord["category"] == Unit.Category.SHIP then
 					category = 'ship'
 				end
 			end
@@ -884,7 +884,7 @@ end
 function Olympus.delete(ID, explosion, explosionType)
 	Olympus.debug("Olympus.delete " .. ID .. " " .. tostring(explosion), 2)
 	local unit = Olympus.getUnitByID(ID)
-	if unit then
+	if unit ~= nil and unit:isExist() then
 		if unit:getPlayerName() or explosion then
 			if explosionType == nil then
 				explosionType = "normal"
@@ -903,7 +903,7 @@ end
 function Olympus.setTask(groupName, taskOptions)
 	Olympus.debug("Olympus.setTask " .. groupName .. " " .. Olympus.serializeTable(taskOptions), 2)
 	local group = Group.getByName(groupName)
-	if group then
+	if group ~= nil then
 		local task = Olympus.buildTask(groupName, taskOptions);
 		Olympus.debug("Olympus.setTask " .. Olympus.serializeTable(task), 20)
 		if task then
@@ -917,7 +917,7 @@ end
 function Olympus.resetTask(groupName)
 	Olympus.debug("Olympus.resetTask " .. groupName, 2)
 	local group = Group.getByName(groupName)
-	if group then
+	if group ~= nil then
 		group:getController():resetTask()
 		Olympus.debug("Olympus.resetTask completed successfully", 2)
 	end
@@ -927,7 +927,7 @@ end
 function Olympus.setCommand(groupName, command)
 	Olympus.debug("Olympus.setCommand " .. groupName .. " " .. Olympus.serializeTable(command), 2)
 	local group = Group.getByName(groupName)
-	if group then
+	if group ~= nil then
 		group:getController():setCommand(command)
 		Olympus.debug("Olympus.setCommand completed successfully", 2)
 	end
@@ -937,7 +937,7 @@ end
 function Olympus.setOption(groupName, optionID, optionValue)
 	Olympus.debug("Olympus.setOption " .. groupName .. " " .. optionID .. " " .. tostring(optionValue), 2)
 	local group = Group.getByName(groupName)
-	if group then
+	if group ~= nil then
 		group:getController():setOption(optionID, optionValue)
 		Olympus.debug("Olympus.setOption completed successfully", 2)
 	end
@@ -947,7 +947,7 @@ end
 function Olympus.setOnOff(groupName, onOff)
 	Olympus.debug("Olympus.setOnOff " .. groupName .. " " .. tostring(onOff), 2)
 	local group = Group.getByName(groupName)
-	if group then
+	if group ~= nil then
 		group:getController():setOnOff(onOff)
 		Olympus.debug("Olympus.setOnOff completed successfully", 2)
 	end
@@ -965,11 +965,11 @@ function Olympus.setUnitsData(arg, time)
 		index = index + 1
 		-- Only the indexes between startIndex and endIndex are handled. This is a simple way to spread the update load over many cycles
 		if index > startIndex then
-			if unit ~= nil then
+			if unit ~= nil and unit:isExist() then
 				local table = {}	
 
 				-- Get the object category in Olympus name
-				local objectCategory = unit:getCategory()
+				local objectCategory = Object.getCategory(unit)
 				if objectCategory == Object.Category.UNIT then
 					if unit:getDesc().category == Unit.Category.AIRPLANE then
 						table["category"] = "Aircraft"
@@ -1091,11 +1091,11 @@ function Olympus.setWeaponsData(arg, time)
 
 		-- Only the indexes between startIndex and endIndex are handled. This is a simple way to spread the update load over many cycles
 		if index > startIndex then
-			if weapon ~= nil then
+			if weapon ~= nil and weapon:isExist() then
 				local table = {}
 
 				-- Get the object category in Olympus name
-				local objectCategory = weapon:getCategory()
+				local objectCategory = Object.getCategory(weapon)
 				if objectCategory == Object.Category.WEAPON then
 					if weapon:getDesc().category == Weapon.Category.MISSILE then
 						table["category"] = "Missile"
@@ -1216,7 +1216,7 @@ function Olympus.initializeUnits()
 	if mist and mist.DBs and mist.DBs.MEunitsById then
 		for id, unitsTable in pairs(mist.DBs.MEunitsById) do
 			local unit = Unit.getByName(unitsTable["unitName"])
-			if unit then
+			if unit ~= nil and unit:isExist() then
 				Olympus.units[unit["id_"]] = unit
 			end
 		end

@@ -348,7 +348,7 @@ export function getMarkerCategoryByName(name: string) {
     else if (navyUnitDatabase.getByName(name) != null)
         return "navyunit";
     else 
-        return "groundunit-other"; // TODO add other unit types  
+        return "aircraft"; // TODO add other unit types  
 }
 
 export function getUnitDatabaseByCategory(category: string) {

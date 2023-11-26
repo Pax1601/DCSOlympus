@@ -3,14 +3,18 @@
 <head>
   <title>Olympus client</title>
   <link rel="stylesheet" type="text/css" href="stylesheets/olympus.css" />
-  <link rel="stylesheet" type="text/css" href="stylesheets/leaflet/leaflet.css">
-  <link rel="stylesheet" type="text/css" href="stylesheets/leaflet/leaflet-gesture-handling.css">
+  <link rel="stylesheet" type="text/css" href="stylesheets/leaflet/leaflet.css" />
+  <link rel="stylesheet" type="text/css" href="stylesheets/leaflet/leaflet-gesture-handling.css" />
 
   <link rel="stylesheet" type="text/css" href="/resources/theme/theme.css" /> <!-- Theme specifc css, autorouted to point to active theme -->
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;600;700;800&display=swap"> 
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;600;700;800&display=swap" />
+
+  <link rel="icon" href="/images/favicons/favicon.ico" />
+  <link rel="apple-touch-icon" href="images/favicons/apple-touch-icon.png"/>
+  <link rel="manifest" href="/images/favicons/site.webmanifest" />
 </head>
 
 <body>
@@ -46,6 +50,12 @@
 
   <!-- Grayout effect of the background when login prompt is visible -->
   <div id="gray-out"></div> 
+
+  <!-- Loading screen -->
+  <div id="loading-screen">
+    <img src="images/olympus-500x500.png">
+    <div>Loading DCS Olympus...</div>
+  </div>
   
   <script src="javascripts/bundle.js"></script>
 </body>

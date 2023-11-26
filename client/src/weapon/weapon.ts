@@ -36,17 +36,9 @@ export class Weapon extends CustomMarker {
         super(new LatLng(0, 0), { riseOnHover: true, keyboard: false });
 
         this.ID = ID;
-
-        /* Deselect units if they are hidden */
-        document.addEventListener("toggleCoalitionVisibility", (ev: CustomEventInit) => {
-            window.setTimeout(() => { !this.getHidden() }, 300);
-        });
-
-        document.addEventListener("toggleUnitVisibility", (ev: CustomEventInit) => {
-            window.setTimeout(() => { !this.getHidden() }, 300);
-        });  
         
-        document.addEventListener("mapVisibilityOptionsChanged", (ev: CustomEventInit) => {
+        /* Update the marker when the options change */
+        document.addEventListener("mapOptionsChanged", (ev: CustomEventInit) => {
             this.#updateMarker();
         }); 
     }

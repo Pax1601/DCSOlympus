@@ -287,7 +287,7 @@ export class MissionManager {
     }
 
     #onAirbaseClick(e: any) {
-        getApp().getMap().showAirbaseContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng, e.sourceTarget);
+        getApp().getMap().showAirbaseContextMenu(e.sourceTarget, e.originalEvent.x, e.originalEvent.y, e.latlng);
     }
 
     #loadAirbaseChartData(callsign: string) {

@@ -14,7 +14,7 @@ const DEMO_WEAPONS_DATA = {
 }
 
 class DemoDataGenerator {
-    constructor(app)
+    constructor(app, config)
     { 
         app.get('/demo/units', (req, res) => this.units(req, res));
         app.get('/demo/weapons', (req, res) => this.weapons(req, res));
@@ -27,14 +27,14 @@ class DemoDataGenerator {
 
         app.use('/demo', basicAuth({
             users: { 
-                'admin': 'password',
-                'blue': 'bluepassword',
-                'red': 'redpassword'
+                'admin': config["authentication"]["gameMasterPassword"],
+                'blue': config["authentication"]["blueCommanderPassword"],
+                'red': config["authentication"]["redCommanderPassword"]
             },
         }))
 
         
-        let baseData = { alive: true, human: false, controlled: true, coalition: 2, country: 0, unitName: "Cool guy", groupName: "Cool group 1", state: 1, task: "Being cool!",
+        let baseData = { alive: true, human: false, controlled: true, coalition: 2, country: 0, unitName: "Cool guy", groupName: "Cool group 1", state: 13, task: "Being cool!",
             hasTask: true, position: { lat: 37, lng: -116, alt: 1000 }, speed: 200, horizontalVelocity: 200, verticalVelicity: 0, heading: 45, isActiveTanker: false, isActiveAWACS: false, onOff: true, followRoads: false, fuel: 50, 
             desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
             formationOffset: { x: 0, y: 0, z: 0 },
@@ -52,9 +52,9 @@ class DemoDataGenerator {
             isLeader: true
         }
 
+        
         /*
-
-        UNCOMMENT TO TEST ALL UNITS
+        // UNCOMMENT TO TEST ALL UNITS ****************
 
         var databases = Object.assign({}, aircraftDatabase, helicopterDatabase, groundUnitDatabase, navyUnitDatabase);
         var t = Object.keys(databases).length;
@@ -91,6 +91,7 @@ class DemoDataGenerator {
         }
         */
 
+        
         let idx = 1;
         DEMO_UNIT_DATA[idx] = JSON.parse(JSON.stringify(baseData));
         DEMO_UNIT_DATA[idx].name = "S_75M_Volhov";
@@ -114,6 +115,44 @@ class DemoDataGenerator {
         DEMO_UNIT_DATA[idx].position.lat += idx / 100;
         DEMO_UNIT_DATA[idx].category = "GroundUnit";
         DEMO_UNIT_DATA[idx].isLeader = false;
+    
+        
+        idx += 1;
+        DEMO_UNIT_DATA[idx] = JSON.parse(JSON.stringify(baseData));
+        DEMO_UNIT_DATA[idx].name = "F-14B";
+        DEMO_UNIT_DATA[idx].groupName = `Group-1`;
+        DEMO_UNIT_DATA[idx].position.lat += idx / 100;
+        DEMO_UNIT_DATA[idx].category = "Aircraft";
+        DEMO_UNIT_DATA[idx].isLeader = false;
+
+        idx += 1;
+        DEMO_UNIT_DATA[idx] = JSON.parse(JSON.stringify(baseData));
+        DEMO_UNIT_DATA[idx].name = "Infantry AK";
+        DEMO_UNIT_DATA[idx].groupName = `Group-2`;
+        DEMO_UNIT_DATA[idx].position.lat += idx / 100;
+        DEMO_UNIT_DATA[idx].category = "GroundUnit";
+        DEMO_UNIT_DATA[idx].isLeader = true;
+        DEMO_UNIT_DATA[idx].coalition = 0;
+        DEMO_UNIT_DATA[idx].operateAs = 2;
+
+        idx += 1;
+        DEMO_UNIT_DATA[idx] = JSON.parse(JSON.stringify(baseData));
+        DEMO_UNIT_DATA[idx].name = "Infantry AK";
+        DEMO_UNIT_DATA[idx].groupName = `Group-3`;
+        DEMO_UNIT_DATA[idx].position.lat += idx / 100;
+        DEMO_UNIT_DATA[idx].category = "GroundUnit";
+        DEMO_UNIT_DATA[idx].isLeader = true;
+        DEMO_UNIT_DATA[idx].coalition = 0;
+        DEMO_UNIT_DATA[idx].operateAs = 1;
+
+        idx += 1;
+        DEMO_UNIT_DATA[idx] = JSON.parse(JSON.stringify(baseData));
+        DEMO_UNIT_DATA[idx].name = "KC-135";
+        DEMO_UNIT_DATA[idx].groupName = `Group-4`;
+        DEMO_UNIT_DATA[idx].position.lat += idx / 100;
+        DEMO_UNIT_DATA[idx].category = "Aircraft";
+        DEMO_UNIT_DATA[idx].isLeader = true;
+        
 
         this.startTime = Date.now();
     }

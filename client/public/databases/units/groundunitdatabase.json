@@ -64,7 +64,9 @@
 		"aimTime": 5,
 		"shotsToFire": 100,
 		"markerFile": "groundunit-artillery",
-		"tags": "120mm"
+		"tags": "120mm",
+		"indirectFire": true,
+		"shotsBaseInterval": 300
 	},
 	"2S6 Tunguska": {
 		"name": "2S6 Tunguska",
@@ -1120,7 +1122,8 @@
 		"cost": 15000000,
 		"tags": "Radar, CA",
 		"markerFile": "groundunit-aaa",
-		"canAAA": true
+		"canAAA": true,
+		"shotsBaseScatter": null
 	},
 	"Grad-URAL": {
 		"name": "Grad-URAL",
@@ -2387,7 +2390,8 @@
 		"shotsToFire": 100,
 		"tags": "Russian type 1",
 		"markerFile": "groundunit-infantry",
-		"canAAA": true
+		"canAAA": true,
+		"aimMethodRange": 3600
 	},
 	"KAMAZ Truck": {
 		"name": "KAMAZ Truck",
@@ -7221,7 +7225,7 @@
 		"name": "Infantry AK Ins",
 		"coalition": "red",
 		"era": "Early Cold War",
-		"label": "AK-74",
+		"label": "Insurgent AK-74",
 		"shortLabel": "AK-74 (Ins)",
 		"type": "Infantry",
 		"enabled": true,
@@ -7238,7 +7242,8 @@
 		"shotsToFire": 100,
 		"tags": "Insurgent",
 		"markerFile": "groundunit-infantry",
-		"canAAA": true
+		"canAAA": true,
+		"aimMethodRange": 3600
 	},
 	"MLRS FDDM": {
 		"name": "MLRS FDDM",
@@ -7283,7 +7288,8 @@
 		"shotsToFire": 100,
 		"tags": "Russian type 2",
 		"markerFile": "groundunit-infantry",
-		"canAAA": true
+		"canAAA": true,
+		"aimMethodRange": 3600
 	},
 	"Infantry AK ver3": {
 		"name": "Infantry AK ver3",
@@ -7306,7 +7312,8 @@
 		"shotsToFire": 100,
 		"tags": "Russian type 3",
 		"markerFile": "groundunit-infantry",
-		"canAAA": true
+		"canAAA": true,
+		"aimMethodRange": 3600
 	},
 	"Smerch_HE": {
 		"name": "Smerch_HE",
@@ -8039,7 +8046,7 @@
 		"canRearm": false,
 		"muzzleVelocity": 1200,
 		"barrelHeight": 3,
-		"aimTime": 11,
+		"aimTime": 20,
 		"shotsToFire": 100,
 		"cost": 750000,
 		"tags": "CA",

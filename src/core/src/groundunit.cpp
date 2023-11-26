@@ -180,7 +180,7 @@ void GroundUnit::AIloop()
 		if (!getHasTask()) {
 			std::ostringstream taskSS;
 			taskSS.precision(10);
-			taskSS << "{id = 'FireAtPoint', lat = " << targetPosition.lat << ", lng = " << targetPosition.lng << ", radius = 1000}";
+			taskSS << "{id = 'FireAtPoint', lat = " << targetPosition.lat << ", lng = " << targetPosition.lng << ", radius = 100}";
 			Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
 			scheduler->appendCommand(command);
 			setHasTask(true);
@@ -191,10 +191,53 @@ void GroundUnit::AIloop()
 	case State::SIMULATE_FIRE_FIGHT: {
 		setTask("Simulating fire fight");
 
-		if (internalCounter == 0) {
-			aimAtPoint(targetPosition, 3.0, 0.0);
+		if (internalCounter == 0 && targetPosition != Coords(NULL)) {
+			/* Get the distance and bearing to the target */
+			Coords scatteredTargetPosition = targetPosition;
+			double distance;
+			double bearing1;
+			double bearing2;
+			Geodesic::WGS84().Inverse(getPosition().lat, getPosition().lng, scatteredTargetPosition.lat, scatteredTargetPosition.lng, distance, bearing1, bearing2);
+
+			/* Compute the scattered position applying a random scatter to the shot */
+			double scatterDistance = distance * tan(10 /* degs */ * (ShotsScatter::LOW - shotsScatter) / 57.29577) * RANDOM_MINUS_ONE_TO_ONE;
+			Geodesic::WGS84().Direct(scatteredTargetPosition.lat, scatteredTargetPosition.lng, bearing1 + 90, scatterDistance, scatteredTargetPosition.lat, scatteredTargetPosition.lng);
+			
+			/* Recover the data from the database */
+			bool indirectFire = false;
+			double shotsBaseInterval = 15; /* s */
+			if (database.has_object_field(to_wstring(name))) {
+				json::value databaseEntry = database[to_wstring(name)];
+				if (databaseEntry.has_boolean_field(L"indirectFire"))
+					indirectFire = databaseEntry[L"indirectFire"].as_bool();
+				if (databaseEntry.has_number_field(L"shotsBaseInterval"))
+					shotsBaseInterval = databaseEntry[L"shotsBaseInterval"].as_number().to_double();
+			}
+
+			/* If the unit is of the indirect fire type, like a mortar, simply shoot at the target */
+			if (indirectFire) {
+				log(unitName + "(" + name + ")" + " simulating fire fight with indirect fire");
+				std::ostringstream taskSS;
+				taskSS.precision(10);
+				taskSS << "{id = 'FireAtPoint', lat = " << scatteredTargetPosition.lat << ", lng = " << scatteredTargetPosition.lng << ", radius = 100}";
+				Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
+				scheduler->appendCommand(command);
+				setHasTask(true);
+			}
+			/* Otherwise use the aim method */
+			else {
+				log(unitName + "(" + name + ")" + " simulating fire fight with aim at point method");
+				aimAtPoint(scatteredTargetPosition);
+			}
+
+			/* Wait an amout of time depending on the shots intensity */
+			internalCounter = ((ShotsIntensity::HIGH - shotsIntensity) * shotsBaseInterval + 2) / FRAMERATE_TIME_INTERVAL;
 		}
 
+		if (targetPosition == Coords(NULL))
+			setState(State::IDLE);
+
+		/* Fallback if something went wrong */
 		if (internalCounter == 0)
 			internalCounter = 20 / FRAMERATE_TIME_INTERVAL;
 		internalCounter--;
@@ -204,13 +247,14 @@ void GroundUnit::AIloop()
 	case State::SCENIC_AAA: {
 		setTask("Scenic AAA");
 
-		if ((!getHasTask() || internalCounter == 0) && getOperateAs() > 0) {
+		if ((!getHasTask() || internalCounter == 0)) {
 			double distance = 0;
-			unsigned char targetCoalition = getOperateAs() == 2 ? 1 : 2;
+			unsigned char unitCoalition = coalition == 0 ? getOperateAs() : coalition;
+			unsigned char targetCoalition = unitCoalition == 2 ? 1 : 2;
 			Unit* target = unitsManager->getClosestUnit(this, targetCoalition, { "Aircraft", "Helicopter" }, distance);
 
 			/* Only run if an enemy air unit is closer than 20km to avoid useless load */
-			if (distance < 20000 /* m */) {
+			if (target != nullptr && distance < 20000 /* m */) {
 				double r = 15; /* m */
 				double barrelElevation = r * tan(acos(((double)(rand()) / (double)(RAND_MAX))));
 
@@ -247,9 +291,10 @@ void GroundUnit::AIloop()
 
 		if (canAAA) {
 			/* Only run this when the internal counter reaches 0 to avoid excessive computations when no nearby target */
-			if (internalCounter == 0 && getOperateAs() > 0) {
+			if (internalCounter == 0) {
 				double distance = 0;
-				unsigned char targetCoalition = getOperateAs() == 2 ? 1 : 2;
+				unsigned char unitCoalition = coalition == 0 ? getOperateAs() : coalition;
+				unsigned char targetCoalition = unitCoalition == 2 ? 1 : 2;
 				
 				/* Default gun values */
 				double barrelHeight = 1.0; /* m */
@@ -261,6 +306,7 @@ void GroundUnit::AIloop()
 				double engagementRange = 10000; /* m */
 				double targetingRange = 0; /* m */
 				double aimMethodRange = 0; /* m */
+				double acquisitionRange = 0; /* m */
 
 				/* Load gun values from database */
 				if (database.has_object_field(to_wstring(name))) {
@@ -283,11 +329,14 @@ void GroundUnit::AIloop()
 						targetingRange = databaseEntry[L"targetingRange"].as_number().to_double();
 					if (databaseEntry.has_number_field(L"aimMethodRange"))
 						aimMethodRange = databaseEntry[L"aimMethodRange"].as_number().to_double();
+					if (databaseEntry.has_number_field(L"acquisitionRange"))
+						acquisitionRange = databaseEntry[L"acquisitionRange"].as_number().to_double();
 				}
 
 				/* Get all the units in range and select one at random */
-				double range = aimMethodRange > engagementRange ? aimMethodRange : engagementRange;
+				double range = max(max(engagementRange, aimMethodRange), acquisitionRange);
 				map<Unit*, double> targets = unitsManager->getUnitsInRange(this, targetCoalition, { "Aircraft", "Helicopter" }, range);
+
 				Unit* target = nullptr;
 				unsigned int index = static_cast<unsigned int>((RANDOM_ZERO_TO_ONE * (targets.size() - 1)));
 				for (auto const& p : targets) {
@@ -303,8 +352,6 @@ void GroundUnit::AIloop()
 					if (muzzleVelocity != 0)
 						aimTime += distance / muzzleVelocity;
 
-					internalCounter = (aimTime + (ShotsIntensity::HIGH - shotsIntensity) * shotsBaseInterval + 2) / FRAMERATE_TIME_INTERVAL;
-
 					/* If the target is in targeting range and we are in highest precision mode, target it */
 					if (distance < targetingRange && shotsScatter == ShotsScatter::LOW) {
 						/* Send the command */
@@ -314,38 +361,51 @@ void GroundUnit::AIloop()
 						Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
 						scheduler->appendCommand(command);
 						setHasTask(true);
+
+						internalCounter = (aimTime + (ShotsIntensity::HIGH - shotsIntensity) * shotsBaseInterval + 2) / FRAMERATE_TIME_INTERVAL;
 					}
 					/* Else, do miss on purpose */
 					else {
-						/* Compute where the target will be in aimTime seconds. */
-						double aimDistance = target->getHorizontalVelocity() * aimTime;
+						/* Compute where the target will be in aimTime seconds, plus the effect of scatter. */
+						double scatterDistance = distance * tan(shotsBaseScatter * (ShotsScatter::LOW - shotsScatter) / 57.29577) * (RANDOM_ZERO_TO_ONE - 0.1);
+						double aimDistance = target->getHorizontalVelocity() * aimTime + scatterDistance;
 						double aimLat = 0;
 						double aimLng = 0;
 						Geodesic::WGS84().Direct(target->getPosition().lat, target->getPosition().lng, target->getHeading() * 57.29577, aimDistance, aimLat, aimLng); /* TODO make util to convert degrees and radians function */
-						double aimAlt = target->getPosition().alt + target->getVerticalVelocity() * aimTime;
+						double aimAlt = target->getPosition().alt + target->getVerticalVelocity() * aimTime + distance * tan(shotsBaseScatter * (ShotsScatter::LOW - shotsScatter) / 57.29577) * RANDOM_ZERO_TO_ONE; // Force to always miss high never low
 
 						/* Send the command */
-						if (distance > engagementRange) {
-							aimAtPoint(Coords(aimLat, aimLng, aimAlt));
-						}
-						else {
-							/* Compute a random scattering depending on the distance and the selected shots scatter */
-							double scatterDistance = distance * tan(shotsBaseScatter * (ShotsScatter::LOW - shotsScatter) / 57.29577) * RANDOM_MINUS_ONE_TO_ONE;
-							double scatterAngle = 180 * RANDOM_MINUS_ONE_TO_ONE;
-							Geodesic::WGS84().Direct(aimLat, aimLng, scatterAngle, scatterDistance, aimLat, aimLng); /* TODO make util function */
-							aimAlt = aimAlt + distance * tan(shotsBaseScatter * (ShotsScatter::LOW - shotsScatter) / 57.29577) * RANDOM_MINUS_ONE_TO_ONE;
-
+						if (distance < engagementRange) {
+							/* If the unit is closer than the engagement range, use the fire at point method */
 							std::ostringstream taskSS;
 							taskSS.precision(10);
 							taskSS << "{id = 'FireAtPoint', lat = " << aimLat << ", lng = " << aimLng << ", alt = " << aimAlt << ", radius = 0.001, expendQty = " << shotsToFire << " }";
 							Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
 							scheduler->appendCommand(command);
 							setHasTask(true);
+							setTargetPosition(Coords(aimLat, aimLng, target->getPosition().alt));
+							internalCounter = (aimTime + (ShotsIntensity::HIGH - shotsIntensity) * shotsBaseInterval + 2) / FRAMERATE_TIME_INTERVAL;
 						}
+						else if (distance < aimMethodRange) {
+							/* If the unit is closer than the aim method range, use the aim method range */
+							aimAtPoint(Coords(aimLat, aimLng, aimAlt));
+							setTargetPosition(Coords(aimLat, aimLng, target->getPosition().alt));
+							internalCounter = (aimTime + (ShotsIntensity::HIGH - shotsIntensity) * shotsBaseInterval + 2) / FRAMERATE_TIME_INTERVAL;
+						}
+						else {
+							/* Else just wake the unit up with an impossible command */
+							std::ostringstream taskSS;
+							taskSS.precision(10);
+							taskSS << "{id = 'FireAtPoint', lat = " << 0 << ", lng = " << 0 << ", alt = " << 0 << ", radius = 0.001, expendQty = " << 0 << " }";
+							Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
+							scheduler->appendCommand(command);
+							setHasTask(true);
+							setTargetPosition(Coords(NULL));
 
-						setTargetPosition(Coords(aimLat, aimLng, target->getPosition().alt));
+							/* Don't wait too long before checking again */
+							internalCounter = 5 / FRAMERATE_TIME_INTERVAL;
+						}
 					}
-
 					missOnPurposeTarget = target;
 				}
 				else {
@@ -362,7 +422,7 @@ void GroundUnit::AIloop()
 					if (databaseEntry.has_number_field(L"alertnessTimeConstant"))
 						alertnessTimeConstant = databaseEntry[L"alertnessTimeConstant"].as_number().to_double();
 				}
-				internalCounter = (5 + RANDOM_ZERO_TO_ONE * alertnessTimeConstant) / FRAMERATE_TIME_INTERVAL;
+				internalCounter = (5 + RANDOM_ZERO_TO_ONE * alertnessTimeConstant * 0 /* TODO: remove to enable alertness again */) / FRAMERATE_TIME_INTERVAL;
 				missOnPurposeTarget = nullptr;
 				setTargetPosition(Coords(NULL));
 			}
@@ -380,7 +440,7 @@ void GroundUnit::AIloop()
 }
 
 
-void GroundUnit::aimAtPoint(Coords aimTarget, double horizontalScatterMultiplier, double verticalScatterMultiplier) {
+void GroundUnit::aimAtPoint(Coords aimTarget) {
 	double dist;
 	double bearing1;
 	double bearing2;
@@ -411,12 +471,13 @@ void GroundUnit::aimAtPoint(Coords aimTarget, double horizontalScatterMultiplier
 	/* Check we can reach the target*/
 	if (inner > 0) {
 		/* Compute elevation and bearing */
-		double barrelElevation = r * tan(atan((dist - sqrt(inner)) / (2 * alpha)) + RANDOM_MINUS_ONE_TO_ONE * (ShotsScatter::LOW - shotsScatter) * verticalScatterMultiplier);
+		double barrelElevation = r * (dist - sqrt(inner)) / (2 * alpha);
 
 		double lat = 0;
 		double lng = 0;
-		double randomBearing = bearing1 + RANDOM_MINUS_ONE_TO_ONE * (ShotsScatter::LOW - shotsScatter) * horizontalScatterMultiplier;
-		Geodesic::WGS84().Direct(position.lat, position.lng, randomBearing, r, lat, lng);
+		Geodesic::WGS84().Direct(position.lat, position.lng, bearing1, r, lat, lng);
+
+		log(unitName + "(" + name + ")" + " shooting with aim at point method. Barrel elevation: " + to_string(barrelElevation * 57.29577) + "°, bearing: " + to_string(bearing1) + "°");
 
 		std::ostringstream taskSS;
 		taskSS.precision(10);

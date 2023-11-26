@@ -247,6 +247,10 @@
     column-gap: 5px;
 }
 
+.unit-label-count-container>*:first-child {
+    width: 100%;
+}
+
 .unit-label-count-container button {
     display: flex !important;
     flex-direction: row;

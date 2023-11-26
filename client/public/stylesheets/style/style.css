@@ -23,7 +23,7 @@ body {
 }
 
 .hidden-cursor {
-    cursor: none !important;
+    /*cursor: none !important;*/
 }
 
 .hidden-cursor * {
@@ -232,7 +232,6 @@ form {
 
 .ol-select>.ol-select-options>div {
     background-color: var(--background-grey);
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     display: flex;
     justify-content: left;
     padding: 2px 15px;
@@ -687,6 +686,19 @@ nav.ol-panel> :last-child {
     width:10px;
 }
 
+@keyframes lock-prompt {
+    100% {
+        opacity: 1;
+    }
+    0% {
+        opacity: 0;
+    }
+}
+
+.ol-navbar-buttons-group > .protectable > button[data-protected].lock.prompt svg {
+    animation: lock-prompt .25s alternate infinite;
+}
+
 .ol-navbar-buttons-group > .protectable > button.lock svg.locked * {
     fill:white !important;
 }
@@ -861,6 +873,43 @@ nav.ol-panel> :last-child {
     top: 0px;
     width: 100%;
     z-index: 99999;
+}
+
+#loading-screen {
+    display: flex;
+    background-image: linear-gradient(var(--background-steel), var(--background-grey));
+    height: 100%;
+    left: 0px;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    z-index: 999999;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    row-gap: 20px;
+}
+
+#loading-screen img {
+    height: 300px;
+    width: 300px;
+}
+
+#loading-screen div {
+    color: white;
+    font-size: 18px;
+    animation: blinker 3s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
+
+.fade-out {
+    opacity: 0%;
+    transition: opacity 1s;
 }
 
 #authentication-form {
@@ -1426,20 +1475,54 @@ input[type=number]::-webkit-outer-spin-button {
     transform: translateX(calc((var(--width) - var(--height)) * 0.5));
 }
 
-.ol-contexmenu-panel {
-    padding: 20px;
+.switch-control.yes-no .ol-switch[data-value="true"] .ol-switch-fill {
+    background-color: var(--accent-light-blue);
 }
 
-.ol-coalition-switch[data-value="false"]>.ol-switch-fill {
-    background-color: var(--primary-blue);
+.switch-control.yes-no .ol-switch[data-value="false"] .ol-switch-fill {
+	background-color: var(--ol-switch-off);
 }
 
-.ol-coalition-switch[data-value="true"]>.ol-switch-fill {
-    background-color: var(--primary-red);
+.switch-control.yes-no .ol-switch[data-value="undefined"] .ol-switch-fill {
+	background-color: var(--ol-switch-undefined);
 }
 
-.ol-coalition-switch[data-value="undefined"]>.ol-switch-fill {
-    background-color: var(--primary-neutral);
+.switch-control.coalition .ol-switch>.ol-switch-fill::before,
+.switch-control.yes-no .ol-switch>.ol-switch-fill::before {
+    translate:-100% 0;
+    transform: none;
+}
+
+.switch-control.yes-no .ol-switch[data-value="true"]>.ol-switch-fill::before {
+	content: "YES";
+}
+
+.switch-control.yes-no .ol-switch[data-value="false"]>.ol-switch-fill::before {
+	content: "NO";
+}
+
+.switch-control.coalition [data-value="true"] .ol-switch-fill {
+	background-color: var(--primary-blue);
+}
+
+.switch-control.coalition [data-value="false"] .ol-switch-fill {
+	background-color: var(--primary-red);
+}
+
+.switch-control.coalition [data-value="undefined"] .ol-switch-fill {
+	background-color: var(--primary-neutral);
+}
+
+.switch-control.coalition [data-value="true"] .ol-switch-fill::before {
+	content: "BLUE";
+}
+
+.switch-control.coalition [data-value="false"] .ol-switch-fill::before {
+	content: "RED";
+}
+
+.switch-control.no-label [data-value] .ol-switch-fill::before {
+    content:"";
 }
 
 .ol-context-menu>ul {

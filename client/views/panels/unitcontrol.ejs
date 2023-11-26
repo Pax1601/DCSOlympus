@@ -16,7 +16,6 @@
 
         <div id="unit-controls" class="ol-scrollable">
             <div id="flight-data">
-                <h4>Controls</h4>
                 <div id="speed-slider" class="ol-slider-container flight-control-ol-slider">
                     <dl class="ol-data-grid">
                         <dt>Speed</dt>
@@ -42,6 +41,8 @@
                 </div>
                 <h5 id="categories-tooltip">Multiple categories selected</h5>
             </div>
+
+            <hr />
 
             <div id="roe">
                 <h4>Rules of engagement</h4>
@@ -78,27 +79,27 @@
                 </div>
             </div>
 
-            <div id="tanker-on" class="switch-control">
+            <div id="tanker-on" class="switch-control yes-no">
                 <h4>Enable tanker <img src="/resources/theme/images/icons/circle-question-regular.svg" title="Instructs the unit to operate as AAR tanker. A/A TACAN, radio frequency and callsign set in Settings dialog."></h4>
                 <div id="tanker-on-switch" class="ol-switch"></div>
             </div>
 
-            <div id="AWACS-on" class="switch-control">
+            <div id="AWACS-on" class="switch-control yes-no">
                 <h4>Airborne Early Warning <img src="/resources/theme/images/icons/circle-question-regular.svg" title="Enables datalink and AI radio calls. Radio frequency and callsign set in Settings dialog."></h4>
                 <div id="AWACS-on-switch" class="ol-switch"></div>
             </div>
 
-            <div id="operate-as" class="switch-control">
+            <div id="operate-as" class="switch-control coalition">
                 <h4>Operate as <img src="/resources/theme/images/icons/circle-question-regular.svg" title="Determines if the unit will target red or blue units when performing scenic tasks."></h4>
                 <div id="operate-as-switch" class="ol-switch"></div>
             </div>
 
-            <div id="ai-on-off" class="switch-control">
+            <div id="ai-on-off" class="switch-control yes-no">
                 <h4>Unit active <img src="/resources/theme/images/icons/circle-question-regular.svg" title="Toggling this disables unit AI completely. It will no longer move, react or emit radio waves."></h4>
                 <div id="on-off-switch" class="ol-switch" title=""></div>
             </div>
 
-            <div id="follow-roads" class="switch-control">
+            <div id="follow-roads" class="switch-control yes-no">
                 <h4>Follow roads <img src="/resources/theme/images/icons/circle-question-regular.svg" title=""></h4>
                 <div id="follow-roads-switch" class="ol-switch"></div>
             </div>
@@ -107,14 +108,15 @@
         <hr />
 
         <div id="advanced-settings-div">
-            <button id="advanced-settings-button" class="ol-button-settings" data-on-click="showAdvancedSettings">Settings</button>
+            <button id="advanced-settings-button" class="ol-button-settings ol-box-shadow" data-on-click="showAdvancedSettings">Settings</button>
             <div id="delete-options" class="ol-select">
                 <div class="ol-select-value ol-select-warning">
                     Delete unit
+                    <img src="/resources/theme/images/icons/chevron-down.svg" inject-svg />
                 </div>
                 <div class="ol-select-options">
                     <div><button class="ol-button-white" data-on-click="deleteSelectedUnits" title="Immediately remove the unit from the simulation"><img src="/resources/theme/images/icons/trash-can-regular.svg" inject-svg>Delete</button></div>
-                    <div><hr></div>
+                    <div class="hr"><hr></div>
                     <div><button class="ol-button-warning" data-on-click="explodeSelectedUnits" data-on-click-params='{ "type": "normal" }' title="Normal explosion"><img src="/resources/theme/images/icons/explosion-solid.svg" inject-svg>Blow up</button></div>
                     <div><button class="ol-button-warning" data-on-click="explodeSelectedUnits" data-on-click-params='{ "type": "secondary" }' title="The unit will keep exploding at random intervals, simulating ammunition cooking"><img src="/resources/theme/images/icons/burst-solid.svg" inject-svg>Cook off</button></div>
                     <div><button class="ol-button-warning" data-on-click="explodeSelectedUnits" data-on-click-params='{ "type": "phosphorous" }' title="White phosphorous explosion"><img src="/resources/theme/images/icons/smog-solid.svg" inject-svg>Phosp.</button></div>

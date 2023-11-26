@@ -43,7 +43,7 @@ if (config["server"] != undefined)
 module.exports = app;
 
 const DemoDataGenerator = require('./demo.js');
-var demoDataGenerator = new DemoDataGenerator(app);
+var demoDataGenerator = new DemoDataGenerator(app, config);
 
 
 

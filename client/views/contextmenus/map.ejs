@@ -1,7 +1,7 @@
 <div id="map-contextmenu" class="ol-context-menu" oncontextmenu="return false;">
     <div id="active-coalition-label" data-coalition="blue"></div>
     <div class="upper-bar ol-panel">
-        <div id="coalition-switch" class="ol-switch ol-coalition-switch"></div> 
+        <div class="switch-control coalition no-label"><div id="coalition-switch" class="ol-switch"></div></div>
         <button data-coalition="blue" id="aircraft-spawn-button" title="Spawn aircraft" data-on-click="mapContextMenuShow"
             data-on-click-params='{ "type": "aircraft" }' class="ol-contexmenu-button"><img src="/resources/theme/images/buttons/spawn/aircraft.svg" inject-svg></button>
         <button data-coalition="blue" id="helicopter-spawn-button" title="Spawn helicopter" data-on-click="mapContextMenuShow"
@@ -16,7 +16,6 @@
             data-on-click-params='{ "type": "more" }' class="ol-contexmenu-button"><img src="/resources/theme/images/buttons/spawn/more.svg" inject-svg></button>
     </div>
     <div id="more-options-button-bar" class="upper-bar ol-panel hide">
-        <div id="coalition-switch" class="ol-switch ol-coalition-switch"></div>
         <button data-coalition="blue" id="navyunit-spawn-button" title="Spawn navy unit" data-on-click="mapContextMenuShow"
             data-on-click-params='{ "type": "navyunit" }' class="ol-contexmenu-button"><img src="/resources/theme/images/buttons/spawn/navyunit.svg" inject-svg></button> 
         <button data-coalition="blue" id="smoke-spawn-button" title="Spawn smoke" data-on-click="mapContextMenuShow"

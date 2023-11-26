@@ -20,6 +20,7 @@ export class ServerManager {
     #demoEnabled = false;
     #previousMissionElapsedTime:number = 0;  //  Track if mission elapsed time is increasing (i.e. is the server paused)
     #serverIsPaused: boolean = false;
+    #intervals: number[] = [];
 
     constructor() {
         this.#lastUpdateTimes[UNITS_URI] = Date.now();
@@ -339,12 +340,14 @@ export class ServerManager {
         this.PUT(data, callback);
     }
 
+    // TODO: Remove coalition
     scenicAAA(ID: number, coalition: string, callback: CallableFunction = () => {}) {
         var command = { "ID": ID, "coalition": coalition }
         var data = { "scenicAAA": command }
         this.PUT(data, callback);
     }
 
+    // TODO: Remove coalition
     missOnPurpose(ID: number, coalition: string, callback: CallableFunction = () => {}) {
         var command = { "ID": ID, "coalition": coalition }
         var data = { "missOnPurpose": command }
@@ -402,7 +405,11 @@ export class ServerManager {
     }
 
     startUpdate() {
-        window.setInterval(() => {
+        /* Clear any existing interval */
+        this.#intervals.forEach((interval: number) => { window.clearInterval(interval); });
+        this.#intervals = [];
+
+        this.#intervals.push(window.setInterval(() => {
             if (!this.getPaused()) {
                 this.getMission((data: MissionData) => {
                     this.checkSessionHash(data.sessionHash);
@@ -410,9 +417,9 @@ export class ServerManager {
                     return data.time;
                 });
             }
-        }, 1000);
+        }, 1000));
 
-        window.setInterval(() => {
+        this.#intervals.push(window.setInterval(() => {
             if (!this.getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
                 this.getAirbases((data: AirbasesData) => {
                     this.checkSessionHash(data.sessionHash);
@@ -420,9 +427,9 @@ export class ServerManager {
                     return data.time;
                 });
             }
-        }, 10000);
+        }, 10000));
 
-        window.setInterval(() => {
+        this.#intervals.push(window.setInterval(() => {
             if (!this.getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE){
                 this.getBullseye((data: BullseyesData) => {
                     this.checkSessionHash(data.sessionHash);
@@ -430,9 +437,9 @@ export class ServerManager {
                     return data.time;
                 });
             }
-        }, 10000);
+        }, 10000));
 
-        window.setInterval(() => {
+        this.#intervals.push(window.setInterval(() => {
             if (!this.getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
                 this.getLogs((data: any) => {
                     this.checkSessionHash(data.sessionHash);
@@ -440,27 +447,27 @@ export class ServerManager {
                     return data.time;
                 });
             }
-        }, 1000);
+        }, 1000));
 
-        window.setInterval(() => {
+        this.#intervals.push(window.setInterval(() => {
             if (!this.getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
                 this.getUnits((buffer: ArrayBuffer) => {
                     var time = getApp().getUnitsManager()?.update(buffer); 
                     return time;
                 }, false);
             }
-        }, 250);
+        }, 250));
 
-        window.setInterval(() => {
+        this.#intervals.push(window.setInterval(() => {
             if (!this.getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
                 this.getWeapons((buffer: ArrayBuffer) => {
                     var time = getApp().getWeaponsManager()?.update(buffer); 
                     return time;
                 }, false);
             }
-        }, 250);
+        }, 250));
 
-        window.setInterval(() => {
+        this.#intervals.push(window.setInterval(() => {
             if (!this.getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
                 this.getUnits((buffer: ArrayBuffer) => {
                     var time = getApp().getUnitsManager()?.update(buffer); 
@@ -484,10 +491,10 @@ export class ServerManager {
                 }
 
             }
-        }, ( this.getServerIsPaused() ? 500 : 5000 ));
+        }, ( this.getServerIsPaused() ? 500 : 5000 )));
 
         //  Mission clock and elapsed time
-        window.setInterval( () => {
+        this.#intervals.push(window.setInterval( () => {
             
             if ( !this.getConnected() || this.#serverIsPaused ) {
                 return;
@@ -501,16 +508,16 @@ export class ServerManager {
             csp.setMissionTime( [ mt.h, mt.m, mt.s ].map( n => zeroAppend( n, 2 )).join( ":" ) );
             csp.setElapsedTime( new Date( elapsedMissionTime * 1000 ).toISOString().substring( 11, 19 ) );
 
-        }, 1000 );
+        }, 1000));
 
-        window.setInterval(() => {
+        this.#intervals.push(window.setInterval(() => {
             if (!this.getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
                 this.getWeapons((buffer: ArrayBuffer) => {
                     var time = getApp().getWeaponsManager()?.update(buffer); 
                     return time;
                 }, true);
             }
-        }, 5000);
+        }, 5000));
     }
 
     refreshAll() {
