@@ -16,6 +16,8 @@ import { HotgroupPanel } from "../panels/hotgrouppanel";
 import { Contact, UnitData, UnitSpawnTable } from "../interfaces";
 import { Dialog } from "../dialog/dialog";
 import { Group } from "./group";
+import { UnitDataFileExport } from "./importexport/unitdatafileexport";
+import { UnitDataFileImport } from "./importexport/unitdatafileimport";
 
 /** The UnitsManager handles the creation, update, and control of units. Data is strictly updated by the server ONLY. This means that any interaction from the user will always and only
  * result in a command to the server, executed by means of a REST PUT request. Any subsequent change in data will be reflected only when the new data is sent back by the server. This strategy allows
@@ -29,6 +31,8 @@ export class UnitsManager {
     #slowDeleteDialog!: Dialog;
     #units: { [ID: number]: Unit };
     #groups: { [groupName: string]: Group } = {};
+    #unitDataExport!:UnitDataFileExport;
+    #unitDataImport!:UnitDataFileImport;
 
     constructor() {
         this.#copiedUnits = [];
@@ -1134,52 +1138,18 @@ export class UnitsManager {
      *  TODO: Extend to aircraft and helicopters
      */
     exportToFile() {
-        var unitsToExport: { [key: string]: any } = {};
-        for (let ID in this.#units) {
-            var unit = this.#units[ID];
-            if (!["Aircraft", "Helicopter"].includes(unit.getCategory())) {
-                var data: any = unit.getData();
-                if (unit.getGroupName() in unitsToExport)
-                    unitsToExport[unit.getGroupName()].push(data);
-                else
-                    unitsToExport[unit.getGroupName()] = [data];
-            }
-        }
-        var a = document.createElement("a");
-        var file = new Blob([JSON.stringify(unitsToExport)], { type: 'text/plain' });
-        a.href = URL.createObjectURL(file);
-        a.download = 'export.json';
-        a.click();
+        if (!this.#unitDataExport)
+            this.#unitDataExport = new UnitDataFileExport("unit-export-dialog");
+        this.#unitDataExport.showForm(Object.values(this.#units));
     }
-
+    
     /** Import ground and navy units from file
      * TODO: extend to support aircraft and helicopters
      */
     importFromFile() {
-        var input = document.createElement("input");
-        input.type = "file";
-        input.addEventListener("change", (e: any) => {
-            var file = e.target.files[0];
-            if (!file) {
-                return;
-            }
-            var reader = new FileReader();
-            reader.onload = function (e: any) {
-                var contents = e.target.result;
-                var groups = JSON.parse(contents);
-                for (let groupName in groups) {
-                    if (groupName !== "" && groups[groupName].length > 0 && (groups[groupName].every((unit: UnitData) => { return unit.category == "GroundUnit"; }) || groups[groupName].every((unit: any) => { return unit.category == "NavyUnit"; }))) {
-                        var aliveUnits = groups[groupName].filter((unit: UnitData) => { return unit.alive });
-                        var units = aliveUnits.map((unit: UnitData) => {
-                            return { unitType: unit.name, location: unit.position, liveryID: "" }
-                        });
-                        getApp().getUnitsManager().spawnUnits(groups[groupName][0].category, units, groups[groupName][0].coalition, true);
-                    }
-                }
-            };
-            reader.readAsText(file);
-        })
-        input.click();
+        if (!this.#unitDataImport)
+            this.#unitDataImport = new UnitDataFileImport("unit-import-dialog");
+        this.#unitDataImport.selectFile();
     }
 
     /** Spawn a new group of units

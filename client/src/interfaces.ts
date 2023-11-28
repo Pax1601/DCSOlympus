@@ -139,6 +139,7 @@ export interface Offset {
 
 export interface UnitData {
     category: string,
+    categoryDisplayName: string,
     ID: number;
     alive: boolean;
     human: boolean;

@@ -1,0 +1,29 @@
+<div id="<%= dialogId %>" class="ol-panel ol-dialog file-import-export hide" oncontextmenu="return false;">
+    <div class="ol-dialog-header">
+        <h3><%= title %></h3>
+    </div>
+
+    <div class="ol-dialog-content">
+        <p><%= textContent %></p>
+
+        <% if (showFilenameInput) { %>
+            <div class="export-filename-container">
+                <label>Filename:</label>
+                <input id="export-filename">
+                <img src="resources/theme/images/icons/keyboard-solid.svg">
+            </div>
+        <% } %>
+
+        <table class="categories-coalitions">
+            <thead>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="ol-dialog-footer ol-group">
+        <button class="start-transfer"><%= submitButtonText %></button>
+        <button data-on-click="closeDialog">Close</button>
+    </div>
+</div>

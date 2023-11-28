@@ -3,7 +3,7 @@ import { Dropdown } from "./dropdown";
 import { Slider } from "./slider";
 import { UnitDatabase } from "../unit/databases/unitdatabase";
 import { getApp } from "..";
-import { GAME_MASTER } from "../constants/constants";
+import { GAME_MASTER, GROUND_UNIT_AIR_DEFENCE_REGEX } from "../constants/constants";
 import { Airbase } from "../mission/airbase";
 import { ftToM } from "../other/utils";
 import { aircraftDatabase } from "../unit/databases/aircraftdatabase";
@@ -616,7 +616,7 @@ export class HelicopterSpawnMenu extends UnitSpawnMenu {
 export class GroundUnitSpawnMenu extends UnitSpawnMenu {
 
     protected showRangeCircles: boolean = true;
-    protected unitTypeFilter = (unit:any) => {return !(/\bAAA|SAM\b/.test(unit.type) || /\bmanpad|stinger\b/i.test(unit.type))};
+    protected unitTypeFilter = (unit:any) => {return !(GROUND_UNIT_AIR_DEFENCE_REGEX.test(unit.type))};
 
     /**
      * 
@@ -657,7 +657,7 @@ export class GroundUnitSpawnMenu extends UnitSpawnMenu {
 
 export class AirDefenceUnitSpawnMenu extends GroundUnitSpawnMenu {
 
-    protected unitTypeFilter = (unit:any) => {return /\bAAA|SAM\b/.test(unit.type) || /\bmanpad|stinger\b/i.test(unit.type)};
+    protected unitTypeFilter = (unit:any) => {return GROUND_UNIT_AIR_DEFENCE_REGEX.test(unit.type)};
 
     /**
      * 

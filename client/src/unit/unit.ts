@@ -5,7 +5,7 @@ import { CustomMarker } from '../map/markers/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
 import { UnitDatabase } from './databases/unitdatabase';
 import { TargetMarker } from '../map/markers/targetmarker';
-import { DLINK, DataIndexes, GAME_MASTER, HIDE_GROUP_MEMBERS, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, ROEs, RWR, SHOW_UNIT_CONTACTS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, VISUAL, emissionsCountermeasures, reactionsToThreat, states, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, GROUPING_ZOOM_TRANSITION, MAX_SHOTS_SCATTER, SHOTS_SCATTER_DEGREES } from '../constants/constants';
+import { DLINK, DataIndexes, GAME_MASTER, HIDE_GROUP_MEMBERS, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, ROEs, RWR, SHOW_UNIT_CONTACTS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, VISUAL, emissionsCountermeasures, reactionsToThreat, states, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, GROUPING_ZOOM_TRANSITION, MAX_SHOTS_SCATTER, SHOTS_SCATTER_DEGREES, GROUND_UNIT_AIR_DEFENCE_REGEX } from '../constants/constants';
 import { DataExtractor } from '../server/dataextractor';
 import { groundUnitDatabase } from './databases/groundunitdatabase';
 import { navyUnitDatabase } from './databases/navyunitdatabase';
@@ -249,6 +249,14 @@ export abstract class Unit extends CustomMarker {
      */
     abstract getDefaultMarker(): string;
 
+    /** Get the category but for display use - for the user.  (i.e. has spaces in it)
+     * 
+     * @returns string
+     */
+    getCategoryLabel() {
+        return ((GROUND_UNIT_AIR_DEFENCE_REGEX.test(this.getType())) ? "Air Defence" : this.getCategory()).replace(/([a-z])([A-Z])/g, "$1 $2");
+    }
+
     /********************** Unit data *************************/
     /** This function is called by the units manager to update all the data coming from the backend. It reads the binary raw data using a DataExtractor
      * 
@@ -341,6 +349,7 @@ export abstract class Unit extends CustomMarker {
     getData(): UnitData {
         return {
             category: this.getCategory(),
+            categoryDisplayName: this.getCategoryLabel(),
             ID: this.ID,
             alive: this.#alive,
             human: this.#human,

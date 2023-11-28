@@ -1290,6 +1290,17 @@ dl.ol-data-grid dd {
     margin: 4px 0;
 }
 
+.ol-dialog-content table th {
+    background-color: var(--background-grey);
+    color:white;
+    font-size:14px;
+    font-weight: normal;
+}
+
+.ol-dialog-content table tbody th {
+    text-align: left;
+}
+
 .ol-dialog-footer {
     align-content: center;
     border-top: 1px solid var(--background-grey);
@@ -1328,6 +1339,10 @@ dl.ol-data-grid dd {
     height: 16px;
     margin-right: 10px;
     width: 16px;
+}
+
+.ol-checkbox input[type="checkbox"]:disabled:before {
+    opacity: 10%;
 }
 
 .ol-checkbox input[type="checkbox"]:checked::before {
@@ -1573,4 +1588,87 @@ input[type=number]::-webkit-outer-spin-button {
 
 .ol-log-entry {
     border-bottom: 1px solid #FFFFFF44;
+}
+
+.file-import-export {
+    max-width: 500px;
+}
+
+.file-import-export .ol-dialog-content {
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.file-import-export p {
+    background-color: var(--background-grey);
+    border-left:6px solid var(--secondary-blue-text);
+    padding:12px;
+}
+
+.file-import-export th {
+    padding:4px 6px;
+}
+
+.file-import-export tr td:first-child {
+    text-align: left;
+}
+
+.file-import-export td {
+    color:white;
+    text-align: center;
+}
+
+.file-import-export .ol-checkbox {
+    display:flex;
+    justify-content: center;
+}
+
+.file-import-export .ol-checkbox input::before {
+    margin-right: 0;
+}
+
+.file-import-export .ol-checkbox span {
+    display:none;
+}
+
+.file-import-export button.start-transfer {
+    background-color: var(--secondary-blue-text);
+    border-color: var(--secondary-blue-text);
+}
+
+.file-import-export .export-filename-container {
+    display: flex;
+    column-gap: 15px;
+    width: 100%;
+    align-items: center;
+    padding: 10px 0px;
+    color: white;
+    font-size: 14px;
+}
+
+.file-import-export .export-filename-container input {
+    width: 100%;
+    background-color: var(--background-grey);
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    border-style: solid;
+    border: 1px solid var(--background-steel);
+    color: white;
+    font-size: 14px;
+    padding: 4px;
+}
+
+.file-import-export .export-filename-container img {
+    height: 16px;
+    width: 16px;
+    filter: invert(100%);
+    margin-left: -31px;
+    transform: translateX(-15px);
+    pointer-events: none;
+}
+
+.file-import-export .ol-dialog-footer button:first-of-type{
+    margin-left: auto;
 }
