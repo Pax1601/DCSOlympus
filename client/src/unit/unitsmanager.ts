@@ -16,8 +16,8 @@ import { HotgroupPanel } from "../panels/hotgrouppanel";
 import { Contact, UnitData, UnitSpawnTable } from "../interfaces";
 import { Dialog } from "../dialog/dialog";
 import { Group } from "./group";
-import { UnitDataFileExport } from "./unitdatafileexport";
-import { UnitDataFileImport } from "./unitdatafileimport";
+import { UnitDataFileExport } from "./importexport/unitdatafileexport";
+import { UnitDataFileImport } from "./importexport/unitdatafileimport";
 
 /** The UnitsManager handles the creation, update, and control of units. Data is strictly updated by the server ONLY. This means that any interaction from the user will always and only
  * result in a command to the server, executed by means of a REST PUT request. Any subsequent change in data will be reflected only when the new data is sent back by the server. This strategy allows

@@ -1,7 +1,7 @@
-import { getApp } from "..";
-import { Dialog } from "../dialog/dialog";
-import { zeroAppend } from "../other/utils";
-import { Unit } from "./unit";
+import { getApp } from "../..";
+import { Dialog } from "../../dialog/dialog";
+import { zeroAppend } from "../../other/utils";
+import { Unit } from "../unit";
 import { UnitDataFile } from "./unitdatafile";
 
 export class UnitDataFileExport extends UnitDataFile {

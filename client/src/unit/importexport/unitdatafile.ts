@@ -1,5 +1,12 @@
-import { Dialog } from "../dialog/dialog";
-import { createCheckboxOption } from "../other/utils";
+import { Dialog } from "../../dialog/dialog";
+import { createCheckboxOption } from "../../other/utils";
+
+var categoryMap = {
+    "Aircraft": "Aircraft",
+    "Helicopter": "Helicopter",
+    "GroundUnit": "Ground units",
+    "NavyUnit": "Naval units"
+}
 
 export abstract class UnitDataFile {
 
@@ -17,7 +24,7 @@ export abstract class UnitDataFile {
         let matrixHTML: string = ``;
 
         categories.forEach((category: string, index) => {
-            matrixHTML += `<tr><td>${category}</td>`;
+            matrixHTML += `<tr><td>${categoryMap[category as keyof typeof categoryMap]}</td>`;
 
             coalitions.forEach((coalition: string) => {
                 if (index === 0)

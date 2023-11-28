@@ -1,6 +1,6 @@
-import { getApp } from "..";
-import { Dialog } from "../dialog/dialog";
-import { UnitData } from "../interfaces";
+import { getApp } from "../..";
+import { Dialog } from "../../dialog/dialog";
+import { UnitData } from "../../interfaces";
 import { UnitDataFile } from "./unitdatafile";
 
 export class UnitDataFileImport extends UnitDataFile {
