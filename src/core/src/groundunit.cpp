@@ -371,7 +371,7 @@ void GroundUnit::AIloop()
 						double aimDistance = target->getHorizontalVelocity() * aimTime + scatterDistance;
 						double aimLat = 0;
 						double aimLng = 0;
-						Geodesic::WGS84().Direct(target->getPosition().lat, target->getPosition().lng, target->getHeading() * 57.29577, aimDistance, aimLat, aimLng); /* TODO make util to convert degrees and radians function */
+						Geodesic::WGS84().Direct(target->getPosition().lat, target->getPosition().lng, target->getTrack() * 57.29577, aimDistance, aimLat, aimLng); /* TODO make util to convert degrees and radians function */
 						double aimAlt = target->getPosition().alt + target->getVerticalVelocity() * aimTime + distance * tan(shotsBaseScatter * (ShotsScatter::LOW - shotsScatter) / 57.29577) * RANDOM_ZERO_TO_ONE; // Force to always miss high never low
 
 						/* Send the command */
