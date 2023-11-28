@@ -45,6 +45,7 @@ export abstract class Unit extends CustomMarker {
     #horizontalVelocity: number = 0;
     #verticalVelocity: number = 0;
     #heading: number = 0;
+    #track: number = 0;
     #isActiveTanker: boolean = false;
     #isActiveAWACS: boolean = false;
     #onOff: boolean = true;
@@ -127,6 +128,7 @@ export abstract class Unit extends CustomMarker {
     getHorizontalVelocity() { return this.#horizontalVelocity };
     getVerticalVelocity() { return this.#verticalVelocity };
     getHeading() { return this.#heading };
+    getTrack() { return this.#track };
     getIsActiveAWACS() { return this.#isActiveAWACS };
     getIsActiveTanker() { return this.#isActiveTanker };
     getOnOff() { return this.#onOff };
@@ -278,6 +280,7 @@ export abstract class Unit extends CustomMarker {
                 case DataIndexes.horizontalVelocity: this.#horizontalVelocity = dataExtractor.extractFloat64(); break;
                 case DataIndexes.verticalVelocity: this.#verticalVelocity = dataExtractor.extractFloat64(); break;
                 case DataIndexes.heading: this.#heading = dataExtractor.extractFloat64(); updateMarker = true; break;
+                case DataIndexes.track: this.#track = dataExtractor.extractFloat64(); updateMarker = true; break;
                 case DataIndexes.isActiveTanker: this.#isActiveTanker = dataExtractor.extractBool(); break;
                 case DataIndexes.isActiveAWACS: this.#isActiveAWACS = dataExtractor.extractBool(); break;
                 case DataIndexes.onOff: this.#onOff = dataExtractor.extractBool(); break;
@@ -355,6 +358,7 @@ export abstract class Unit extends CustomMarker {
             horizontalVelocity: this.#horizontalVelocity,
             verticalVelocity: this.#verticalVelocity,
             heading: this.#heading,
+            track: this.#track,
             isActiveTanker: this.#isActiveTanker,
             isActiveAWACS: this.#isActiveAWACS,
             onOff: this.#onOff,
@@ -1167,7 +1171,7 @@ export abstract class Unit extends CustomMarker {
 
                 /* Rotate elements according to heading */
                 element.querySelectorAll("[data-rotate-to-heading]").forEach(el => {
-                    const headingDeg = rad2deg(this.#heading);
+                    const headingDeg = rad2deg(this.#track);
                     let currentStyle = el.getAttribute("style") || "";
                     el.setAttribute("style", currentStyle + `transform:rotate(${headingDeg}deg);`);
                 });

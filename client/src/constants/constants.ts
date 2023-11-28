@@ -243,6 +243,7 @@ export enum DataIndexes {
     horizontalVelocity,
     verticalVelocity,
     heading,
+    track,
     isActiveTanker,
     isActiveAWACS,
     onOff,

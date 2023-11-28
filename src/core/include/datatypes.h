@@ -22,6 +22,7 @@ namespace DataIndex {
 		horizontalVelocity,
 		verticalVelocity,
 		heading,
+		track,
 		isActiveTanker,
 		isActiveAWACS,
 		onOff,
