@@ -5,13 +5,15 @@
     "dialogId": "unit-export-dialog",
     "submitButtonText": "Export units to file",
     "textContent": "Select the unit categories you would like to export.  Note: only ground and naval units can be exported at this time.",
-    "title": "Export"
+    "title": "Export",
+    "showFilenameInput": true
 }) %>
 <%- include('dialogs/importexport.ejs', {
     "dialogId": "unit-import-dialog",
     "submitButtonText": "Import units into mission",
     "textContent": "Select the unit categories you would like to import.",
-    "title": "Import"
+    "title": "Import",
+    "showFilenameInput": false
 }) %>
 <%- include('dialogs/slowdelete.ejs') %>
 <%- include('dialogs/splash.ejs') %>

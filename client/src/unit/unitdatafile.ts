@@ -3,38 +3,38 @@ import { createCheckboxOption } from "../other/utils";
 
 export abstract class UnitDataFile {
 
-    protected data:any;
-    protected dialog!:Dialog;
+    protected data: any;
+    protected dialog!: Dialog;
 
-    constructor() {}
+    constructor() { }
 
     buildCategoryCoalitionTable() {
-        
+
         const categories = this.#getCategoriesFromData();
         const coalitions = ["blue", "neutral", "red"];
 
-        let headersHTML:string = ``;
-        let matrixHTML:string  = ``;
+        let headersHTML: string = ``;
+        let matrixHTML: string = ``;
 
-        categories.forEach((category:string, index) => {
+        categories.forEach((category: string, index) => {
             matrixHTML += `<tr><td>${category}</td>`;
 
-            coalitions.forEach((coalition:string) => {
+            coalitions.forEach((coalition: string) => {
                 if (index === 0)
-                    headersHTML += `<th data-coalition="${coalition}">${coalition[0].toUpperCase()+coalition.substring(1)}</th>`;
+                    headersHTML += `<th data-coalition="${coalition}">${coalition[0].toUpperCase() + coalition.substring(1)}</th>`;
 
                 const optionIsValid = this.data[category].hasOwnProperty(coalition);
-                let checkboxHTML = createCheckboxOption(`${category}:${coalition}`, category, optionIsValid, () => {}, {
+                let checkboxHTML = createCheckboxOption(`${category}:${coalition}`, category, optionIsValid, () => { }, {
                     "disabled": !optionIsValid,
                     "name": "category-coalition-selection",
                     "readOnly": !optionIsValid
                 }).outerHTML;
 
                 if (optionIsValid)
-                    checkboxHTML = checkboxHTML.replace( `"checkbox"`, `"checkbox" checked`);       //  inner and outerHTML screw default checked up
+                    checkboxHTML = checkboxHTML.replace(`"checkbox"`, `"checkbox" checked`);       //  inner and outerHTML screw default checked up
 
                 matrixHTML += `<td data-coalition="${coalition}">${checkboxHTML}</td>`;
-                
+
             });
             matrixHTML += "</tr>";
         });
@@ -43,7 +43,7 @@ export abstract class UnitDataFile {
 
         (<HTMLElement>table.tHead).innerHTML = `<tr><td>&nbsp;</td>${headersHTML}</tr>`;
         (<HTMLElement>table.querySelector(`tbody`)).innerHTML = matrixHTML;
-    
+
     }
 
     #getCategoriesFromData() {

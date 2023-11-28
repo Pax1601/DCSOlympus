@@ -1636,3 +1636,39 @@ input[type=number]::-webkit-outer-spin-button {
     background-color: var(--secondary-blue-text);
     border-color: var(--secondary-blue-text);
 }
+
+.file-import-export .export-filename-container {
+    display: flex;
+    column-gap: 15px;
+    width: 100%;
+    align-items: center;
+    padding: 10px 0px;
+    color: white;
+    font-size: 14px;
+}
+
+.file-import-export .export-filename-container input {
+    width: 100%;
+    background-color: var(--background-grey);
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    border-style: solid;
+    border: 1px solid var(--background-steel);
+    color: white;
+    font-size: 14px;
+    padding: 4px;
+}
+
+.file-import-export .export-filename-container img {
+    height: 16px;
+    width: 16px;
+    filter: invert(100%);
+    margin-left: -31px;
+    transform: translateX(-15px);
+    pointer-events: none;
+}
+
+.file-import-export .ol-dialog-footer button:first-of-type{
+    margin-left: auto;
+}

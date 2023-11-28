@@ -53,7 +53,7 @@ class DemoDataGenerator {
         }
 
         
-        /*
+        
         // UNCOMMENT TO TEST ALL UNITS ****************
 
         var databases = Object.assign({}, aircraftDatabase, helicopterDatabase, groundUnitDatabase, navyUnitDatabase);
@@ -70,6 +70,7 @@ class DemoDataGenerator {
                 DEMO_UNIT_DATA[idx].groupName = `Group-${idx}`;
                 DEMO_UNIT_DATA[idx].position.lat += latIdx / 5;
                 DEMO_UNIT_DATA[idx].position.lng += lngIdx / 5;
+                DEMO_UNIT_DATA[idx].coalition = Math.floor(Math.random() * 3)
                 
                 latIdx += 1;
                 if (latIdx === l) {
@@ -89,9 +90,9 @@ class DemoDataGenerator {
                 idx += 1;
             }
         }
-        */
-
         
+
+        /*
         let idx = 1;
         DEMO_UNIT_DATA[idx] = JSON.parse(JSON.stringify(baseData));
         DEMO_UNIT_DATA[idx].name = "S_75M_Volhov";
@@ -152,7 +153,7 @@ class DemoDataGenerator {
         DEMO_UNIT_DATA[idx].position.lat += idx / 100;
         DEMO_UNIT_DATA[idx].category = "Aircraft";
         DEMO_UNIT_DATA[idx].isLeader = true;
-        
+        */
 
         this.startTime = Date.now();
     }

@@ -5,6 +5,15 @@
 
     <div class="ol-dialog-content">
         <p><%= textContent %></p>
+
+        <% if (showFilenameInput) { %>
+            <div class="export-filename-container">
+                <label>Filename:</label>
+                <input id="export-filename">
+                <img src="resources/theme/images/icons/keyboard-solid.svg">
+            </div>
+        <% } %>
+
         <table class="categories-coalitions">
             <thead>
             </thead>

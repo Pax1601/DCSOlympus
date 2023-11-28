@@ -214,7 +214,7 @@ export const MAP_MARKER_CONTROLS: MapMarkerVisibilityControl[] = [{
 
 export const IADSTypes = ["AAA", "MANPADS", "SAM Site", "Radar"];
 export const IADSDensities: { [key: string]: number } = { "AAA": 0.8, "MANPADS": 0.3, "SAM Site": 0.1, "Radar": 0.05 };
-
+export const GROUND_UNIT_AIR_DEFENCE_REGEX:RegExp = /(\b(AAA|SAM|MANPADS?|[mM]anpads?)|[sS]tinger\b)/;
 export const HIDE_GROUP_MEMBERS = "Hide group members when zoomed out";
 export const SHOW_UNIT_LABELS = "Show unit labels (L)";
 export const SHOW_UNITS_ENGAGEMENT_RINGS = "Show units threat range rings (Q)";
