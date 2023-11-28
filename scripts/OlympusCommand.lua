@@ -992,7 +992,7 @@ function Olympus.setUnitsData(arg, time)
 					local position = unit:getPosition()
 					local heading = math.atan2( position.x.z, position.x.x )
 					local velocity = unit:getVelocity();
-
+					
 					-- Fill the data table
 					table["name"] = unit:getTypeName()
 					table["coalitionID"] = unit:getCoalition()
@@ -1004,6 +1004,16 @@ function Olympus.setUnitsData(arg, time)
 					table["horizontalVelocity"] =  math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z)
 					table["verticalVelocity"] = velocity.y
 					table["heading"] = heading 
+
+					-- Track angles are wrong because of weird reference systems, approximate it using latitude and longitude differences
+					if Olympus.unitsData["units"][ID] ~= nil and Olympus.unitsData["units"][ID]["position"] ~= nil and Olympus.unitsData["units"][ID]["position"]["lat"] ~= nil and Olympus.unitsData["units"][ID]["position"]["lng"] ~= nil then
+						local latDifference = lat - Olympus.unitsData["units"][ID]["position"]["lat"]
+						local lngDifference = lng - Olympus.unitsData["units"][ID]["position"]["lng"]
+						table["track"] = math.atan2(lngDifference * math.cos(lat / 57.29577), latDifference)
+					else
+						table["track"] = math.atan2(velocity.z, velocity.x)
+					end
+
 					table["isAlive"] = unit:isExist() and unit:isActive() and unit:getLife() >= 1
 					
 					local group = unit:getGroup()

@@ -66,6 +66,9 @@ void Unit::update(json::value json, double dt)
 	if (json.has_number_field(L"heading"))
 		setHeading(json[L"heading"].as_number().to_double());
 
+	if (json.has_number_field(L"track"))
+		setTrack(json[L"track"].as_number().to_double());
+
 	if (json.has_number_field(L"speed"))
 		setSpeed(json[L"speed"].as_number().to_double());
 
@@ -261,6 +264,7 @@ void Unit::getData(stringstream& ss, unsigned long long time)
 					case DataIndex::horizontalVelocity:			appendNumeric(ss, datumIndex, horizontalVelocity); break;
 					case DataIndex::verticalVelocity:			appendNumeric(ss, datumIndex, verticalVelocity); break;
 					case DataIndex::heading:					appendNumeric(ss, datumIndex, heading); break;
+					case DataIndex::track:						appendNumeric(ss, datumIndex, track); break;
 					case DataIndex::isActiveTanker:				appendNumeric(ss, datumIndex, isActiveTanker); break;
 					case DataIndex::isActiveAWACS:				appendNumeric(ss, datumIndex, isActiveAWACS); break;
 					case DataIndex::onOff:						appendNumeric(ss, datumIndex, onOff); break;

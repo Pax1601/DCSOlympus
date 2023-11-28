@@ -157,6 +157,7 @@ export interface UnitData {
     horizontalVelocity: number;
     verticalVelocity: number;
     heading: number;
+    track: number;
     isActiveTanker: boolean;
     isActiveAWACS: boolean;
     onOff: boolean;

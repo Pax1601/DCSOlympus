@@ -80,6 +80,7 @@ public:
 	virtual void setHorizontalVelocity(double newValue) { updateValue(horizontalVelocity, newValue, DataIndex::horizontalVelocity); }
 	virtual void setVerticalVelocity(double newValue) { updateValue(verticalVelocity, newValue, DataIndex::verticalVelocity); }
 	virtual void setHeading(double newValue) { updateValue(heading, newValue, DataIndex::heading); }
+	virtual void setTrack(double newValue) { updateValue(track, newValue, DataIndex::track); }
 	virtual void setIsActiveTanker(bool newValue);
 	virtual void setIsActiveAWACS(bool newValue);
 	virtual void setOnOff(bool newValue, bool force = false) { updateValue(onOff, newValue, DataIndex::onOff); };
@@ -126,6 +127,7 @@ public:
 	virtual double getHorizontalVelocity() { return horizontalVelocity; }
 	virtual double getVerticalVelocity() { return verticalVelocity; }
 	virtual double getHeading() { return heading; }
+	virtual double getTrack() { return track; }
 	virtual bool getIsActiveTanker() { return isActiveTanker; }
 	virtual bool getIsActiveAWACS() { return isActiveAWACS; }
 	virtual bool getOnOff() { return onOff; };
@@ -174,6 +176,7 @@ protected:
 	double horizontalVelocity = NULL;
 	double verticalVelocity = NULL;
 	double heading = NULL;
+	double track = NULL;
 	bool isActiveTanker = false;
 	bool isActiveAWACS = false;
 	bool onOff = true;
