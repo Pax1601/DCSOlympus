@@ -777,6 +777,7 @@ nav.ol-panel> :last-child {
     width: 70%;
     max-width: 1200px;
     z-index: 999999;
+    min-width: 500px;
 }
 
 @media (min-width: 1700px) {
@@ -842,7 +843,11 @@ nav.ol-panel> :last-child {
 }
 
 #splash-content #legal-stuff {
-    width: 100%;
+    width: 120%;
+    text-wrap: wrap;
+    max-height: 250px;
+    overflow-x: hidden;
+    padding-right: 10px;
 }
 
 #splash-content #legal-stuff h5 {
@@ -852,11 +857,11 @@ nav.ol-panel> :last-child {
 #splash-content #legal-stuff p {
     color: #FFF7;
     font-size: 10px;
-    width: 120%;
+    width: 100%;
 }
 
 @media (max-width: 1700px) {
-    #splash-content #legal-stuff p {
+    #splash-content #legal-stuff {
         width: 100%;
     }
 }
