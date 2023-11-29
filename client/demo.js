@@ -35,7 +35,7 @@ class DemoDataGenerator {
 
         
         let baseData = { alive: true, human: false, controlled: true, coalition: 2, country: 0, unitName: "Cool guy", groupName: "Cool group 1", state: 13, task: "Being cool!",
-            hasTask: true, position: { lat: 37, lng: -116, alt: 1000 }, speed: 200, horizontalVelocity: 200, verticalVelicity: 0, heading: 45, isActiveTanker: false, isActiveAWACS: false, onOff: true, followRoads: false, fuel: 50, 
+            hasTask: true, position: { lat: 37, lng: -116, alt: 1000 }, speed: 200, horizontalVelocity: 200, verticalVelicity: 0, heading: 45, track: 45, isActiveTanker: false, isActiveAWACS: false, onOff: true, followRoads: false, fuel: 50, 
             desiredSpeed: 300, desiredSpeedType: 1, desiredAltitude: 1000, desiredAltitudeType: 1, leaderID: 0,
             formationOffset: { x: 0, y: 0, z: 0 },
             targetID: 0,
@@ -165,48 +165,50 @@ class DemoDataGenerator {
         if (req.query["time"] == 0){
             for (let idx in DEMO_UNIT_DATA) {
                 const unit = DEMO_UNIT_DATA[idx];
+                var dataIndex = 1;
                 array = this.concat(array, this.uint32ToByteArray(idx));
-                array = this.appendString(array, unit.category, 1);
-                array = this.appendUint8(array, unit.alive, 2);
-                array = this.appendUint8(array, unit.human, 3);
-                array = this.appendUint8(array, unit.controlled, 4);
-                array = this.appendUint16(array, unit.coalition, 5);
-                array = this.appendUint8(array, unit.country, 6);
-                array = this.appendString(array, unit.name, 7);
-                array = this.appendString(array, unit.unitName, 8);
-                array = this.appendString(array, unit.groupName, 9);
-                array = this.appendUint8(array, unit.state, 10);
-                array = this.appendString(array, unit.task, 11);
-                array = this.appendUint8(array, unit.hasTask, 12);
-                array = this.appendCoordinates(array, unit.position, 13);
-                array = this.appendDouble(array, unit.speed, 14);
-                array = this.appendDouble(array, unit.horizontalVelocity, 15);
-                array = this.appendDouble(array, unit.verticalVelicity, 16);
-                array = this.appendDouble(array, unit.heading, 17);
-                array = this.appendUint8(array, unit.isActiveTanker, 18);
-                array = this.appendUint8(array, unit.isActiveAWACS, 19);
-                array = this.appendUint8(array, unit.onOff, 20);
-                array = this.appendUint8(array, unit.followRoads, 21);
-                array = this.appendUint16(array, unit.fuel, 22);
-                array = this.appendDouble(array, unit.desiredSpeed, 23);
-                array = this.appendUint8(array, unit.desiredSpeedType, 24);
-                array = this.appendDouble(array, unit.desiredAltitude, 25);
-                array = this.appendUint8(array, unit.desiredAltitudeType, 26);
-                array = this.appendUint32(array, unit.leaderID, 27);
-                array = this.appendOffset(array, unit.formationOffset, 28);
-                array = this.appendUint32(array, unit.targetID, 29);
-                array = this.appendCoordinates(array, unit.targetPosition, 30);
-                array = this.appendUint8(array, unit.ROE, 31);
-                array = this.appendUint8(array, unit.reactionToThreat, 32);
-                array = this.appendUint8(array, unit.emissionsCountermeasures, 33);
-                array = this.appendTACAN(array, unit.TACAN, 34);
-                array = this.appendRadio(array, unit.radio, 35);
-                array = this.appendRadio(array, unit.generalSettings, 36);
-                array = this.appendAmmo(array, unit.ammo, 37);
-                array = this.appendContacts(array, unit.contacts, 38);
-                array = this.appendActivePath(array, unit.activePath, 39);
-                array = this.appendUint8(array, unit.isLeader, 40);
-                array = this.appendUint8(array, unit.operateAs, 41);
+                array = this.appendString(array, unit.category, dataIndex); dataIndex++;
+                array = this.appendUint8(array, unit.alive, dataIndex); dataIndex++;
+                array = this.appendUint8(array, unit.human, dataIndex); dataIndex++;
+                array = this.appendUint8(array, unit.controlled, dataIndex); dataIndex++;
+                array = this.appendUint16(array, unit.coalition, dataIndex); dataIndex++;
+                array = this.appendUint8(array, unit.country, dataIndex); dataIndex++;
+                array = this.appendString(array, unit.name, dataIndex); dataIndex++;
+                array = this.appendString(array, unit.unitName, dataIndex); dataIndex++;
+                array = this.appendString(array, unit.groupName, dataIndex); dataIndex++;
+                array = this.appendUint8(array, unit.state, dataIndex); dataIndex++;
+                array = this.appendString(array, unit.task, dataIndex); dataIndex++;
+                array = this.appendUint8(array, unit.hasTask, dataIndex); dataIndex++;
+                array = this.appendCoordinates(array, unit.position, dataIndex); dataIndex++;
+                array = this.appendDouble(array, unit.speed, dataIndex); dataIndex++;
+                array = this.appendDouble(array, unit.horizontalVelocity, dataIndex); dataIndex++;
+                array = this.appendDouble(array, unit.verticalVelicity, dataIndex); dataIndex++;
+                array = this.appendDouble(array, unit.heading, dataIndex); dataIndex++;
+                array = this.appendDouble(array, unit.track, dataIndex); dataIndex++;
+                array = this.appendUint8(array, unit.isActiveTanker, dataIndex); dataIndex++;
+                array = this.appendUint8(array, unit.isActiveAWACS, dataIndex); dataIndex++;
+                array = this.appendUint8(array, unit.onOff, dataIndex); dataIndex++;
+                array = this.appendUint8(array, unit.followRoads, dataIndex); dataIndex++;
+                array = this.appendUint16(array, unit.fuel, dataIndex); dataIndex++;
+                array = this.appendDouble(array, unit.desiredSpeed, dataIndex); dataIndex++;
+                array = this.appendUint8(array, unit.desiredSpeedType, dataIndex); dataIndex++;
+                array = this.appendDouble(array, unit.desiredAltitude, dataIndex); dataIndex++;
+                array = this.appendUint8(array, unit.desiredAltitudeType, dataIndex); dataIndex++;
+                array = this.appendUint32(array, unit.leaderID, dataIndex); dataIndex++;
+                array = this.appendOffset(array, unit.formationOffset, dataIndex); dataIndex++;
+                array = this.appendUint32(array, unit.targetID, dataIndex); dataIndex++;
+                array = this.appendCoordinates(array, unit.targetPosition, dataIndex); dataIndex++;
+                array = this.appendUint8(array, unit.ROE, dataIndex); dataIndex++;
+                array = this.appendUint8(array, unit.reactionToThreat, dataIndex); dataIndex++;
+                array = this.appendUint8(array, unit.emissionsCountermeasures, dataIndex); dataIndex++;
+                array = this.appendTACAN(array, unit.TACAN, dataIndex); dataIndex++;
+                array = this.appendRadio(array, unit.radio, dataIndex); dataIndex++;
+                array = this.appendRadio(array, unit.generalSettings, dataIndex); dataIndex++;
+                array = this.appendAmmo(array, unit.ammo, dataIndex); dataIndex++;
+                array = this.appendContacts(array, unit.contacts, dataIndex); dataIndex++;
+                array = this.appendActivePath(array, unit.activePath, dataIndex); dataIndex++;
+                array = this.appendUint8(array, unit.isLeader, dataIndex); dataIndex++;
+                array = this.appendUint8(array, unit.operateAs, dataIndex); dataIndex++;
                 array = this.concat(array, this.uint8ToByteArray(255));
             }
         }

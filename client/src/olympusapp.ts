@@ -29,9 +29,12 @@ import { UnitListPanel } from "./panels/unitlistpanel";
 import { ContextManager } from "./context/contextmanager";
 import { Context } from "./context/context";
 
+var VERSION = "v0.4.8-alpha";
+
 export class OlympusApp {
     /* Global data */
     #activeCoalition: string = "blue";
+    #latestVersion: string|undefined = undefined;
 
     /* Main leaflet map, extended by custom methods */
     #map: Map | null = null;
@@ -178,7 +181,6 @@ export class OlympusApp {
 
     start() {
         /* Initialize base functionalitites */
-
         this.#contextManager = new ContextManager();
         this.#contextManager.add( "olympus", {} );
 
@@ -245,8 +247,26 @@ export class OlympusApp {
             let loadingScreen = document.getElementById("loading-screen") as HTMLElement;
             loadingScreen.classList.add("fade-out");
             window.setInterval(() => { loadingScreen.classList.add("hide"); }, 1000);
-            
-        })            
+        })         
+        
+        /* Check if we are running the latest version */
+        const request = new Request("https://raw.githubusercontent.com/Pax1601/DCSOlympus/main/version.json");
+        fetch(request).then((response) => {
+            if (response.status === 200) {
+                return response.json();
+            } else {
+                throw new Error("Error connecting to Github to retrieve latest version");
+            }
+        }).then((res) => {
+            this.#latestVersion = res["version"];
+            const latestVersionSpan = document.getElementById("latest-version") as HTMLElement;
+            if (latestVersionSpan) {
+                latestVersionSpan.innerHTML = this.#latestVersion ?? "Unknown";
+                if (this.#latestVersion !== VERSION) {
+                    latestVersionSpan.classList.add("new-version");
+                }
+            }
+        })
     }
 
     #setupEvents() {
@@ -435,7 +455,6 @@ export class OlympusApp {
         } else {
             console.error("Unable to find login form.");
         }
-
 
         /* Reload the page, used to mimic a restart of the app */
         document.addEventListener("reloadPage", () => {

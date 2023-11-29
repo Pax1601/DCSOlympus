@@ -828,11 +828,11 @@ nav.ol-panel> :last-child {
     justify-content: space-between;
     min-height: 75px;
     text-indent: 85px;
+    row-gap: 5px;
 }
 
 #splash-content #app-summary>* {
     height: fit-content;
-    line-height: 25px;
     padding: 2px;
     white-space: nowrap;
     width: fit-content;
@@ -840,6 +840,15 @@ nav.ol-panel> :last-child {
 
 #splash-content .app-version {
     font-size: 11px;
+    padding: 0px;
+}
+
+#splash-content .new-version {
+    animation: pulse 1.5s linear infinite;
+}
+
+#splash-content .app-version:first-of-type {
+    margin-top: auto;
 }
 
 #splash-content #legal-stuff {
@@ -903,13 +912,7 @@ nav.ol-panel> :last-child {
 #loading-screen div {
     color: white;
     font-size: 18px;
-    animation: blinker 3s linear infinite;
-}
-
-@keyframes blinker {
-  50% {
-    opacity: 0;
-  }
+    animation: pulse 3s linear infinite;
 }
 
 .fade-out {
@@ -1676,4 +1679,10 @@ input[type=number]::-webkit-outer-spin-button {
 
 .file-import-export .ol-dialog-footer button:first-of-type{
     margin-left: auto;
+}
+
+@keyframes pulse {
+    50% {
+        opacity: 0;
+    }
 }

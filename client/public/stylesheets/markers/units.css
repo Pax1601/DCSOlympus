@@ -200,12 +200,6 @@
     display: flex;
 }
 
-@keyframes pulse {
-    50% {
-        opacity: 0;
-    }
-}
-
 [data-object|="unit"][data-has-low-fuel] .unit-fuel, [data-object|="unit"][data-has-low-health] .unit-health {
     animation: pulse 1.5s linear infinite;
 }
