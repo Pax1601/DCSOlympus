@@ -62,9 +62,6 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
     width: 20px;
 }
 
-
-
-
 #unit-control-panel {
 	display: flex;
 	flex-direction: row;
