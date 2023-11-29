@@ -28,9 +28,9 @@ export const emissionsCountermeasures: string[] = ["silent", "attack", "defend",
 
 export const ROEDescriptions: string[] = [
     "Free (Attack anyone)",
-    "Designated (Attack the designated target only)",
+    "Designated (Attack the designated target only) \nWARNING: Ground and Navy units don't respect this ROE, it will be equivalent to weapons FREE.",
     "",
-    "Return (Only fire if fired upon)",
+    "Return (Only fire if fired upon) \nWARNING: Ground and Navy units don't respect this ROE, it will be equivalent to weapons FREE.",
     "Hold (Never fire)"
 ];
 

@@ -1605,7 +1605,7 @@ export class GroundUnit extends Unit {
         }
         else {
             if (this.canAAA()) {
-                contextActionSet.addContextAction(this, "scenic-aaa", "Scenic AAA", "Shoot AAA in the air without aiming at any target, when a enemy unit gets close enough.\nWARNING: works correctly only on neutral units, blue or red units will aim", (units: Unit[]) => { getApp().getUnitsManager().scenicAAA(units) }, undefined, {
+                contextActionSet.addContextAction(this, "scenic-aaa", "Scenic AAA", "Shoot AAA in the air without aiming at any target, when an enemy unit gets close enough.\nWARNING: works correctly only on neutral units, blue or red units will aim", (units: Unit[]) => { getApp().getUnitsManager().scenicAAA(units) }, undefined, {
                     "isScenic": true
                 });
                 contextActionSet.addContextAction(this, "miss-aaa", "Miss on purpose", "Shoot AAA towards the closest enemy unit, but don't aim precisely.\nWARNING: works correctly only on neutral units, blue or red units will aim", (units: Unit[]) => { getApp().getUnitsManager().missOnPurpose(units) }, undefined, {
