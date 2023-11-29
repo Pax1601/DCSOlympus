@@ -446,7 +446,7 @@ class DemoDataGenerator {
     };
 
     mission(req, res){
-        var ret = {mission: {theatre: "Nevada"}};
+        var ret = {mission: {theatre: "Normandy"}};
         ret.time = Date.now();
 
         ret.mission.dateAndTime = {

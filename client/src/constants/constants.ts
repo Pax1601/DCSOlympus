@@ -109,6 +109,13 @@ export const minimapBoundaries = [
         new LatLng(-56.874517, -43.316433),
         new LatLng(-49.097217, -43.316433),
         new LatLng(-49.097217, -79.418267)
+    ], 
+    [   // Normandy
+        new LatLng(50.44, -3.29),
+        new LatLng(48.12,-3.29),
+        new LatLng(48.12, 3.70),
+        new LatLng(50.44, 3.70),
+        new LatLng(50.44, -3.29)
     ]
 ];
 
@@ -119,6 +126,7 @@ export const mapBounds = {
     "PersianGulf": { bounds: new LatLngBounds([21.729393, 47.572675], [33.131584, 64.7313594]), zoom: 5 },
     "Caucasus": { bounds: new LatLngBounds([39.6170191, 27.634935], [47.3907982, 49.3101946]), zoom: 4 },
     "Falklands": { bounds: new LatLngBounds([-49.097217, -79.418267], [-56.874517, -43.316433]), zoom: 3 },
+    "Normandy": { bounds: new LatLngBounds([50.44, -3.29], [48.12, 3.70]), zoom: 5 },
 }
 
 export const mapLayers = {
