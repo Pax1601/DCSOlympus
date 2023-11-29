@@ -50,15 +50,6 @@
 	animation: pulse 1s infinite;
 }
 
-@keyframes pulse {
-	0% {
-		opacity: 0;
-	}
-	100% {
-		opacity: 1;
-	}
-}
-
 #connection-status-panel[data-is-paused] #connection-status-light {
 	background: var(--accent-amber);
 }
