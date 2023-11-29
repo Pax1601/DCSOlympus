@@ -52,7 +52,7 @@ void GroundUnit::setDefaults(bool force)
 	setState(State::IDLE);
 
 	/* Set the default options */
-	setROE(ROE::OPEN_FIRE_WEAPON_FREE, force);
+	setROE(ROE::WEAPON_FREE, force);
 	setOnOff(onOff, force);
 	setFollowRoads(followRoads, force);
 }
