@@ -45,6 +45,7 @@
     justify-content: space-between;
     row-gap: 5px;
     width: 100%;
+    padding: 5px;
 }
 
 .contextmenu-advanced-options-toggle,
@@ -61,7 +62,13 @@
 .contextmenu-advanced-options-toggle:after,
 .contextmenu-metadata-toggle:after {
     content: url(/resources/theme/images/icons/chevron-down.svg);
-    margin: auto;
+    margin-left: auto;
+    margin-top: auto;
+}
+
+.contextmenu-advanced-options-toggle.is-open:after,
+.contextmenu-metadata-toggle.is-open:after {
+    transform: rotate(180deg);
 }
 
 .contextmenu-advanced-options-toggle div:first-child,

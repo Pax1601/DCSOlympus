@@ -199,6 +199,10 @@ form {
     right: 10px;
 }
 
+.ol-select.is-open:not(.ol-select-image)>.ol-select-value:after {
+    transform: rotate(180deg);
+}
+
 .ol-select>.ol-select-options {
     border-radius: var(--border-radius-md);
     max-height: 0;
