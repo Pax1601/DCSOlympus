@@ -49,7 +49,7 @@ Source: "{#nodejsFolder}\*.*"; DestDir: "{app}\Mods\Services\Olympus\client"; Fl
 Source: "..\scripts\python\configurator\dist\configurator.exe"; DestDir: "{app}\Mods\Services\Olympus"; Flags: ignoreversion;
 
 [Run]
-Filename: "{app}\Mods\Services\Olympus\configurator.exe"; Parameters: -a {code:GetAddress} -c {code:GetClientPort} -b {code:GetBackendPort} -p {code:GetPassword} -bp {code:GetBluePassword} -rp {code:GetRedPassword}
+Filename: "{app}\Mods\Services\Olympus\configurator.exe"; Parameters: -a {code:GetAddress} -c {code:GetClientPort} -b {code:GetBackendPort} -p {code:GetPassword} -bp {code:GetBluePassword} -rp {code:GetRedPassword}; Check: CheckCallConfigurator
 
 [Registry]
 Root: HKCU; Subkey: "Environment"; ValueType: string; ValueName: "DCSOLYMPUS_PATH"; ValueData: "{app}\Mods\Services\Olympus"; Flags: preservestringtype
@@ -87,19 +87,21 @@ var
   lblLocalInstallInstructions: TNewStaticText;
   lblServerInstall: TLabel;
   lblServerInstallInstructions: TNewStaticText;
+  lblKeepOld: TLabel;
   lblClientPort: TLabel;
   lblBackendPort: TLabel;
   lblPassword: TLabel;
   lblBluePassword: TLabel;
   lblRedPassword: TLabel;
-  txtLocalInstall: TNewRadioButton;
-  txtServerInstall: TNewRadioButton;
+  radioLocalInstall: TNewRadioButton;
+  radioServerInstall: TNewRadioButton;
+  checkKeepOld: TNewCheckBox;
   txtClientPort: TEdit;
   txtBackendPort: TEdit;
   txtPassword: TPasswordEdit;
   txtBluePassword: TPasswordEdit;
   txtRedPassword: TPasswordEdit;
-  AddressPage: Integer;
+  InstallationTypePage: Integer;
   PasswordPage: Integer;
   lblPasswordInstructions: TNewStaticText;
 
@@ -136,14 +138,14 @@ procedure frmAddress_CancelButtonClick(Page: TWizardPage; var Cancel, Confirm: B
 begin
 end;
 
-function frmAddress_CreatePage(PreviousPageId: Integer): Integer;
+function frmInstallationType_CreatePage(PreviousPageId: Integer): Integer;
 var
   Page: TWizardPage;
 begin
   Page := CreateCustomPage(
     PreviousPageId,
     'DCS Olympus configuration',
-    'Setup DCS Olympus connectivity'
+    'Select installation type'
   );
 
   { lblLocalInstall }
@@ -172,9 +174,9 @@ begin
     Caption := 'Select this to install DCS Olympus locally. DCS Olympus will not be reachable by external clients (i.e. browsers running on different PCs)';
   end;
 
-   { txtLocalInstall }
-  txtLocalInstall := TNewRadioButton.Create(Page);
-  with txtLocalInstall do
+   { radioLocalInstall }
+  radioLocalInstall := TNewRadioButton.Create(Page);
+  with radioLocalInstall do
   begin
     Parent := Page.Surface;
     Left := ScaleX(10);
@@ -211,9 +213,9 @@ begin
     Caption := 'Select this to install DCS Olympus on a dedicated server. DCS Olympus will be reachable by external clients. NOTE: to enable external connections, TCP port forwarding must be enabled on the selected ports.';
   end;
 
-    { txtServerInstall }
-  txtServerInstall := TNewRadioButton.Create(Page);
-  with txtServerInstall do
+    { radioServerInstall }
+  radioServerInstall := TNewRadioButton.Create(Page);
+  with radioServerInstall do
   begin
     Parent := Page.Surface;
     Left := ScaleX(10);
@@ -221,58 +223,6 @@ begin
     Width := ScaleX(185);
     Height := ScaleY(21);
     TabOrder := 1;
-  end;
-
-  { lblClientPort }
-  lblClientPort := TLabel.Create(Page);
-  with lblClientPort do
-  begin
-    Parent := Page.Surface;
-    Left := ScaleX(24);
-    Top := ScaleY(168);
-    Width := ScaleX(46);
-    Height := ScaleY(13);
-    Caption := 'Webserver port';
-  end;
-
-  { txtClientPort }
-  txtClientPort := TEdit.Create(Page);
-  with txtClientPort do
-  begin
-    Parent := Page.Surface;
-    Left := ScaleX(180);
-    Top := ScaleY(165);
-    Width := ScaleX(185);
-    Height := ScaleY(21);
-    Text := '3000';
-    OnKeyPress := @AcceptNumbersOnlyKeyPress;
-    TabOrder := 3;
-  end;
-
-  { lblBackendPort }
-  lblBackendPort := TLabel.Create(Page);
-  with lblBackendPort do
-  begin
-    Parent := Page.Surface;
-    Left := ScaleX(24);
-    Top := ScaleY(198);
-    Width := ScaleX(46);
-    Height := ScaleY(13);
-    Caption := 'Backend port';
-  end;
-
-  { txtBackendPort }
-  txtBackendPort := TEdit.Create(Page);
-  with txtBackendPort do
-  begin
-    Parent := Page.Surface;
-    Left := ScaleX(180);
-    Top := ScaleY(195);
-    Width := ScaleX(185);
-    Height := ScaleY(21);
-    Text := '3001';
-    OnKeyPress := @AcceptNumbersOnlyKeyPress;
-    TabOrder := 4;
   end;
 
   with Page do
@@ -289,6 +239,8 @@ end;
 
 procedure frmPassword_Activate(Page: TWizardPage);
 begin
+  checkKeepOld.Enabled := FileExists(ExpandConstant('{app}\Mods\Services\Olympus\olympus.json'));
+  checkKeepOld.Checked := FileExists(ExpandConstant('{app}\Mods\Services\Olympus\olympus.json'));
 end;
 
 function frmPassword_ShouldSkipPage(Page: TWizardPage): Boolean;
@@ -303,17 +255,26 @@ end;
 
 function frmPassword_NextButtonClick(Page: TWizardPage): Boolean;
 begin
-  if (Trim(txtPassword.Text) <> '') and (Trim(txtBluePassword.Text) <> '') and (Trim(txtRedPassword.Text) <> '') then begin
+  if checkKeepOld.Checked or ((Trim(txtClientPort.Text) <> '') and (Trim(txtBackendPort.Text) <> '') and (Trim(txtPassword.Text) <> '') and (Trim(txtBluePassword.Text) <> '') and (Trim(txtRedPassword.Text) <> '')) then begin
     Result := True;
   end else 
   begin
-    MsgBox('All password fields must be filled to proceed.', mbInformation, MB_OK);
+    MsgBox('Either keep the configuration from the previous installation (if present) or fill all the fields to continue.', mbInformation, MB_OK);
     Result := False;
   end;
 end;
 
 procedure frmPassword_CancelButtonClick(Page: TWizardPage; var Cancel, Confirm: Boolean);
 begin
+end;
+
+procedure checkKeepOldOnChange(Sender: TObject);
+begin
+  txtPassword.Enabled := not checkKeepOld.Checked;  
+  txtBluePassword.Enabled := not checkKeepOld.Checked;  
+  txtRedPassword.Enabled := not checkKeepOld.Checked;  
+  txtBackendPort.Enabled := not checkKeepOld.Checked;  
+  txtClientPort.Enabled := not checkKeepOld.Checked;  
 end;
 
 function frmPassword_CreatePage(PreviousPageId: Integer): Integer;
@@ -323,8 +284,32 @@ begin
   Page := CreateCustomPage(
     PreviousPageId,
     'DCS Olympus passwords',
-    'Set DCS Olympus Admin and Commander passwords'
+    'Set DCS Olympus ports and passwords'
   );
+
+  { lblKeepOld }
+  lblKeepOld := TLabel.Create(Page);
+  with lblKeepOld do
+  begin
+    Parent := Page.Surface;
+    Left := ScaleX(54);
+    Top := ScaleY(0);
+    Width := ScaleX(46);
+    Height := ScaleY(13);
+    Caption := 'Keep configuration from previous installation';
+  end;
+
+  { checkKeepOld }
+  checkKeepOld := TNewCheckBox.Create(Page);
+  with checkKeepOld do
+  begin
+    Parent := Page.Surface;
+    Left := ScaleX(24);
+    Top := ScaleY(0);
+    Width := ScaleX(46);
+    Height := ScaleY(13);
+    OnClick := @checkKeepOldOnChange;
+  end;
 
   { lblPassword }
   lblPassword := TLabel.Create(Page);
@@ -332,7 +317,7 @@ begin
   begin
     Parent := Page.Surface;
     Left := ScaleX(24);
-    Top := ScaleY(28);
+    Top := ScaleY(38);
     Width := ScaleX(46);
     Height := ScaleY(13);
     Caption := 'Game Master password';
@@ -344,7 +329,7 @@ begin
   begin
     Parent := Page.Surface;
     Left := ScaleX(180);
-    Top := ScaleY(25);
+    Top := ScaleY(35);
     Width := ScaleX(185);
     Height := ScaleY(21);
     TabOrder := 2;
@@ -356,7 +341,7 @@ begin
   begin
     Parent := Page.Surface;
     Left := ScaleX(24);
-    Top := ScaleY(58);
+    Top := ScaleY(66);
     Width := ScaleX(46);
     Height := ScaleY(13);
     Caption := 'Blue Commander password';
@@ -368,7 +353,7 @@ begin
   begin
     Parent := Page.Surface;
     Left := ScaleX(180);
-    Top := ScaleY(55);
+    Top := ScaleY(63);
     Width := ScaleX(185);
     Height := ScaleY(21);
     TabOrder := 2;
@@ -380,7 +365,7 @@ begin
   begin
     Parent := Page.Surface;
     Left := ScaleX(24);
-    Top := ScaleY(88);
+    Top := ScaleY(94);
     Width := ScaleX(46);
     Height := ScaleY(13);
     Caption := 'Red Commander password';
@@ -392,12 +377,64 @@ begin
   begin
     Parent := Page.Surface;
     Left := ScaleX(180);
-    Top := ScaleY(85);
+    Top := ScaleY(91);
     Width := ScaleX(185);
     Height := ScaleY(21);
     TabOrder := 2;
   end;
 
+  
+  { lblClientPort }
+  lblClientPort := TLabel.Create(Page);
+  with lblClientPort do
+  begin
+    Parent := Page.Surface;
+    Left := ScaleX(24);
+    Top := ScaleY(122);
+    Width := ScaleX(46);
+    Height := ScaleY(13);
+    Caption := 'Webserver port';
+  end;
+
+  { txtClientPort }
+  txtClientPort := TEdit.Create(Page);
+  with txtClientPort do
+  begin
+    Parent := Page.Surface;
+    Left := ScaleX(180);
+    Top := ScaleY(119);
+    Width := ScaleX(185);
+    Height := ScaleY(21);
+    Text := '3000';
+    OnKeyPress := @AcceptNumbersOnlyKeyPress;
+    TabOrder := 3;
+  end;
+
+  { lblBackendPort }
+  lblBackendPort := TLabel.Create(Page);
+  with lblBackendPort do
+  begin
+    Parent := Page.Surface;
+    Left := ScaleX(24);
+    Top := ScaleY(149);
+    Width := ScaleX(46);
+    Height := ScaleY(13);
+    Caption := 'Backend port';
+  end;
+
+  { txtBackendPort }
+  txtBackendPort := TEdit.Create(Page);
+  with txtBackendPort do
+  begin
+    Parent := Page.Surface;
+    Left := ScaleX(180);
+    Top := ScaleY(147);
+    Width := ScaleX(185);
+    Height := ScaleY(21);
+    Text := '3001';
+    OnKeyPress := @AcceptNumbersOnlyKeyPress;
+    TabOrder := 4;
+  end;
   
   { lblPasswordInstructions }
   lblPasswordInstructions := TNewStaticText.Create(Page);
@@ -405,11 +442,11 @@ begin
   begin
     Parent := Page.Surface;
     Left := ScaleX(24);
-    Top := ScaleY(120);
+    Top := ScaleY(180);
     Width := ScaleX(340);
     Height := ScaleY(13);
     WordWrap := True;
-    Caption := 'Passwords can be changed in the future by using the DCS Olympus configurator. For more information, see the DCS Olympus Wiki';
+    Caption := 'Passwords and ports can be changed in the future by using the DCS Olympus configurator. For more information, see the DCS Olympus Wiki';
   end;
 
   with Page do
@@ -427,13 +464,13 @@ end;
 procedure InitializeWizard();
 begin
   {this page will come after welcome page}
-  AddressPage := frmAddress_CreatePage(wpSelectDir);
-  PasswordPage:= frmPassword_CreatePage(AddressPage);
+  InstallationTypePage := frmInstallationType_CreatePage(wpSelectDir);
+  PasswordPage := frmPassword_CreatePage(InstallationTypePage);
 end;
 
 function CheckLocalInstall(): boolean;
 begin
-  if txtLocalInstall.Checked then begin 
+  if radioLocalInstall.Checked then begin 
     Result := True
   end else
   begin
@@ -443,7 +480,17 @@ end;
 
 function CheckServerInstall(): boolean;
 begin
-  if txtLocalInstall.Checked then begin 
+  if radioLocalInstall.Checked then begin 
+    Result := False
+  end else
+  begin
+    Result := True
+  end
+end;
+
+function CheckCallConfigurator(): boolean;
+begin
+  if checkKeepOld.Checked then begin 
     Result := False
   end else
   begin
@@ -453,7 +500,7 @@ end;
 
 function GetAddress(Value: string): string;
 begin
-  if txtLocalInstall.Checked then begin 
+  if radioLocalInstall.Checked then begin 
     Result := 'localhost'
   end else
   begin
