@@ -1108,6 +1108,36 @@ export class UnitsManager {
         const activeEras = Object.keys(eras).filter((key: string) => { return eras[key]; });
         const activeRanges = Object.keys(ranges).filter((key: string) => { return ranges[key]; });
 
+        var airbases = getApp().getMissionManager().getAirbases();
+        Object.keys(airbases).forEach((airbaseName: string) => {
+            var airbase = airbases[airbaseName];
+            /* Check if the city is inside the coalition area */
+            if (polyContains(new LatLng(airbase.getLatLng().lat, airbase.getLatLng().lng), coalitionArea)) {
+                /* Arbitrary formula to obtain a number of units depending on the city population */
+                var pointsNumber = 2 + 40 * density / 100;
+                for (let i = 0; i < pointsNumber; i++) {
+                    /* Place the unit nearby the city, depending on the distribution parameter */
+                    var bearing = Math.random() * 360;
+                    var distance = Math.random() * distribution * 100;
+                    const latlng = bearingAndDistanceToLatLng(airbase.getLatLng().lat, airbase.getLatLng().lng, bearing, distance);
+
+                    /* Make sure the unit is still inside the coalition area */
+                    if (polyContains(latlng, coalitionArea)) {
+                        const type = activeTypes[Math.floor(Math.random() * activeTypes.length)];
+                        if (Math.random() < IADSDensities[type]) {
+                            /* Get a random blueprint depending on the selected parameters and spawn the unit */
+                            const unitBlueprint = randomUnitBlueprint(groundUnitDatabase, { type: type, eras: activeEras, ranges: activeRanges });
+                            if (unitBlueprint) {
+                                this.spawnUnits("GroundUnit", [{ unitType: unitBlueprint.name, location: latlng, liveryID: "" }], coalitionArea.getCoalition(), true, "", "", (res: any) =>{
+                                    getApp().getMap().addTemporaryMarker(latlng, unitBlueprint.name, getApp().getActiveCoalition(), res.commandHash);
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
         citiesDatabase.forEach((city: { lat: number, lng: number, pop: number }) => {
             /* Check if the city is inside the coalition area */
             if (polyContains(new LatLng(city.lat, city.lng), coalitionArea)) {
@@ -1125,8 +1155,11 @@ export class UnitsManager {
                         if (Math.random() < IADSDensities[type]) {
                             /* Get a random blueprint depending on the selected parameters and spawn the unit */
                             const unitBlueprint = randomUnitBlueprint(groundUnitDatabase, { type: type, eras: activeEras, ranges: activeRanges });
-                            if (unitBlueprint)
-                                this.spawnUnits("GroundUnit", [{ unitType: unitBlueprint.name, location: latlng, liveryID: "" }], coalitionArea.getCoalition(), true);
+                            if (unitBlueprint) {
+                                this.spawnUnits("GroundUnit", [{ unitType: unitBlueprint.name, location: latlng, liveryID: "" }], coalitionArea.getCoalition(), true, "", "", (res: any) =>{
+                                    getApp().getMap().addTemporaryMarker(latlng, unitBlueprint.name, getApp().getActiveCoalition(), res.commandHash);
+                                });
+                            }
                         }
                     }
                 }

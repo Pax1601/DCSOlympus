@@ -580,6 +580,7 @@
 
 #iads-menu {
     row-gap: 10px;
+    padding: 10px;
 }
 
 #coalition-area-contextmenu>div:nth-child(2) {
@@ -596,6 +597,7 @@
     flex-direction: column;
     justify-content: space-between;
     row-gap: 5px;
+    padding: 20px;
 }
 
 .create-iads-button {
