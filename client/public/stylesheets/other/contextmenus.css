@@ -241,8 +241,8 @@
 }
 
 .unit-label-count-container {
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: 187px 1fr 1fr;
     align-items: center;
     column-gap: 5px;
 }

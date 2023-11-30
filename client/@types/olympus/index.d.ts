@@ -154,6 +154,10 @@ declare module "constants/constants" {
             bounds: LatLngBounds;
             zoom: number;
         };
+        Normandy: {
+            bounds: LatLngBounds;
+            zoom: number;
+        };
     };
     export const mapLayers: {
         "ArcGIS Satellite": {
@@ -204,6 +208,7 @@ declare module "constants/constants" {
     export const IADSDensities: {
         [key: string]: number;
     };
+    export const GROUND_UNIT_AIR_DEFENCE_REGEX: RegExp;
     export const HIDE_GROUP_MEMBERS = "Hide group members when zoomed out";
     export const SHOW_UNIT_LABELS = "Show unit labels (L)";
     export const SHOW_UNITS_ENGAGEMENT_RINGS = "Show units threat range rings (Q)";
@@ -232,33 +237,34 @@ declare module "constants/constants" {
         horizontalVelocity = 15,
         verticalVelocity = 16,
         heading = 17,
-        isActiveTanker = 18,
-        isActiveAWACS = 19,
-        onOff = 20,
-        followRoads = 21,
-        fuel = 22,
-        desiredSpeed = 23,
-        desiredSpeedType = 24,
-        desiredAltitude = 25,
-        desiredAltitudeType = 26,
-        leaderID = 27,
-        formationOffset = 28,
-        targetID = 29,
-        targetPosition = 30,
-        ROE = 31,
-        reactionToThreat = 32,
-        emissionsCountermeasures = 33,
-        TACAN = 34,
-        radio = 35,
-        generalSettings = 36,
-        ammo = 37,
-        contacts = 38,
-        activePath = 39,
-        isLeader = 40,
-        operateAs = 41,
-        shotsScatter = 42,
-        shotsIntensity = 43,
-        health = 44,
+        track = 18,
+        isActiveTanker = 19,
+        isActiveAWACS = 20,
+        onOff = 21,
+        followRoads = 22,
+        fuel = 23,
+        desiredSpeed = 24,
+        desiredSpeedType = 25,
+        desiredAltitude = 26,
+        desiredAltitudeType = 27,
+        leaderID = 28,
+        formationOffset = 29,
+        targetID = 30,
+        targetPosition = 31,
+        ROE = 32,
+        reactionToThreat = 33,
+        emissionsCountermeasures = 34,
+        TACAN = 35,
+        radio = 36,
+        generalSettings = 37,
+        ammo = 38,
+        contacts = 39,
+        activePath = 40,
+        isLeader = 41,
+        operateAs = 42,
+        shotsScatter = 43,
+        shotsIntensity = 44,
+        health = 45,
         endOfData = 255
     }
     export const MGRS_PRECISION_10KM = 2;
@@ -529,6 +535,7 @@ declare module "interfaces" {
     }
     export interface UnitData {
         category: string;
+        categoryDisplayName: string;
         ID: number;
         alive: boolean;
         human: boolean;
@@ -546,6 +553,7 @@ declare module "interfaces" {
         horizontalVelocity: number;
         verticalVelocity: number;
         heading: number;
+        track: number;
         isActiveTanker: boolean;
         isActiveAWACS: boolean;
         onOff: boolean;
@@ -818,7 +826,7 @@ declare module "other/utils" {
     export function enumToCoalition(coalitionID: number): "" | "blue" | "red" | "neutral";
     export function coalitionToEnum(coalition: string): 0 | 1 | 2;
     export function convertDateAndTimeToDate(dateAndTime: DateAndTime): Date;
-    export function createCheckboxOption(value: string, text: string, checked?: boolean, callback?: CallableFunction): HTMLElement;
+    export function createCheckboxOption(value: string, text: string, checked?: boolean, callback?: CallableFunction, options?: any): HTMLElement;
     export function getCheckboxOptions(dropdown: Dropdown): {
         [key: string]: boolean;
     };
@@ -1123,6 +1131,7 @@ declare module "unit/unit" {
         getHorizontalVelocity(): number;
         getVerticalVelocity(): number;
         getHeading(): number;
+        getTrack(): number;
         getIsActiveAWACS(): boolean;
         getIsActiveTanker(): boolean;
         getOnOff(): boolean;
@@ -1178,6 +1187,11 @@ declare module "unit/unit" {
          * @returns string containing the default marker
          */
         abstract getDefaultMarker(): string;
+        /** Get the category but for display use - for the user.  (i.e. has spaces in it)
+         *
+         * @returns string
+         */
+        getCategoryLabel(): string;
         /********************** Unit data *************************/
         /** This function is called by the units manager to update all the data coming from the backend. It reads the binary raw data using a DataExtractor
          *
@@ -1708,22 +1722,63 @@ declare module "mission/missionmanager" {
     export class MissionManager {
         #private;
         constructor();
+        /** Update location of bullseyes
+         *
+         * @param object <BulleyesData>
+         */
         updateBullseyes(data: BullseyesData): void;
+        /** Update airbase information
+         *
+         * @param object <AirbasesData>
+         */
         updateAirbases(data: AirbasesData): void;
+        /** Update mission information
+         *
+         * @param object <MissionData>
+         */
         updateMission(data: MissionData): void;
+        /** Get the bullseyes set in this theatre
+         *
+         * @returns object
+         */
         getBullseyes(): {
             [name: string]: Bullseye;
         };
+        /** Get the airbases in this theatre
+         *
+         * @returns object
+         */
         getAirbases(): {
             [name: string]: Airbase;
         };
+        /** Get the options/settings as set in the command mode
+         *
+         * @returns object
+         */
         getCommandModeOptions(): CommandModeOptions;
+        /** Get the current date and time of the mission (based on local time)
+         *
+         * @returns object
+         */
         getDateAndTime(): DateAndTime;
+        /**
+         * Get the number of seconds left of setup time
+         * @returns number
+         */
         getRemainingSetupTime(): number;
+        /** Get an object with the coalitions in it
+         *
+         * @returns object
+         */
         getCoalitions(): {
             red: string[];
             blue: string[];
         };
+        /** Get the current theatre (map) name
+         *
+         * @returns string
+         */
+        getTheatre(): string;
         getAvailableSpawnPoints(): number;
         getCommandedCoalition(): "blue" | "red" | "all";
         refreshSpawnPoints(): void;
@@ -1890,6 +1945,43 @@ declare module "dialog/dialog" {
         constructor(element: string);
         hide(): void;
         show(): void;
+    }
+}
+declare module "unit/importexport/unitdatafile" {
+    import { Dialog } from "dialog/dialog";
+    export abstract class UnitDataFile {
+        #private;
+        protected data: any;
+        protected dialog: Dialog;
+        constructor();
+        buildCategoryCoalitionTable(): void;
+        getData(): any;
+    }
+}
+declare module "unit/importexport/unitdatafileexport" {
+    import { Dialog } from "dialog/dialog";
+    import { Unit } from "unit/unit";
+    import { UnitDataFile } from "unit/importexport/unitdatafile";
+    export class UnitDataFileExport extends UnitDataFile {
+        #private;
+        protected data: any;
+        protected dialog: Dialog;
+        constructor(elementId: string);
+        /**
+         * Show the form to start the export journey
+         */
+        showForm(units: Unit[]): void;
+    }
+}
+declare module "unit/importexport/unitdatafileimport" {
+    import { Dialog } from "dialog/dialog";
+    import { UnitDataFile } from "unit/importexport/unitdatafile";
+    export class UnitDataFileImport extends UnitDataFile {
+        #private;
+        protected data: any;
+        protected dialog: Dialog;
+        constructor(elementId: string);
+        selectFile(): void;
     }
 }
 declare module "unit/unitsmanager" {

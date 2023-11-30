@@ -1554,7 +1554,7 @@ input[type=number]::-webkit-outer-spin-button {
     width: 100%;
 }
 
-.ol-contexmenu-button {
+.ol-context-menu-button {
     border: none;
     border-radius: 0px;
     height: 48px;
@@ -1563,23 +1563,23 @@ input[type=number]::-webkit-outer-spin-button {
     width: 48px;
 }
 
-.ol-contexmenu-button:last-of-type {
+.ol-context-menu-button:last-of-type {
     border-bottom-right-radius: var(--border-radius-sm);
     border-top-right-radius: var(--border-radius-sm);
 }
 
-[data-coalition="blue"].ol-contexmenu-button:hover,
-[data-coalition="blue"].ol-contexmenu-button.is-open {
+[data-coalition="blue"].ol-context-menu-button:hover,
+[data-coalition="blue"].ol-context-menu-button.is-open {
     background-color: var(--primary-blue)
 }
 
-[data-coalition="red"].ol-contexmenu-button:hover,
-[data-coalition="red"].ol-contexmenu-button.is-open {
+[data-coalition="red"].ol-context-menu-button:hover,
+[data-coalition="red"].ol-context-menu-button.is-open {
     background-color: var(--primary-red)
 }
 
-[data-coalition="neutral"].ol-contexmenu-button:hover,
-[data-coalition="neutral"].ol-contexmenu-button.is-open {
+[data-coalition="neutral"].ol-context-menu-button:hover,
+[data-coalition="neutral"].ol-context-menu-button.is-open {
     background-color: var(--primary-neutral)
 }
 
