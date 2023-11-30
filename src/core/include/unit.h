@@ -148,7 +148,7 @@ public:
 	virtual DataTypes::Radio getRadio() { return radio; }
 	virtual DataTypes::GeneralSettings getGeneralSettings() { return generalSettings; }
 	virtual vector<DataTypes::Ammo> getAmmo() { return ammo; }
-	virtual vector<DataTypes::Contact> getTargets() { return contacts; }
+	virtual vector<DataTypes::Contact> getContacts() { return contacts; }
 	virtual list<Coords> getActivePath() { return activePath; }
 	virtual bool getIsLeader() { return isLeader; }
 	virtual unsigned char getOperateAs() { return operateAs;  }
