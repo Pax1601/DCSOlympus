@@ -7,7 +7,7 @@ import { AirbaseContextMenu } from "../contextmenus/airbasecontextmenu";
 import { Dropdown } from "../controls/dropdown";
 import { Airbase } from "../mission/airbase";
 import { Unit } from "../unit/unit";
-import { bearing, createCheckboxOption } from "../other/utils";
+import { bearing, createCheckboxOption, polyContains } from "../other/utils";
 import { DestinationPreviewMarker } from "./markers/destinationpreviewmarker";
 import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
@@ -559,7 +559,7 @@ export class Map extends L.Map {
 
                 /* Coalition areas are ordered in the #coalitionAreas array according to their zindex. Select the upper one */
                 for (let coalitionArea of this.#coalitionAreas) {
-                    if (coalitionArea.getBounds().contains(e.latlng)) {
+                    if (polyContains(e.latlng, coalitionArea)) {
                         if (coalitionArea.getSelected())
                             clickedCoalitionArea = coalitionArea;
                         else
@@ -662,7 +662,7 @@ export class Map extends L.Map {
                 this.#destinationGroupRotation = -bearing(this.#destinationRotationCenter.lat, this.#destinationRotationCenter.lng, this.getMouseCoordinates().lat, this.getMouseCoordinates().lng);
             this.#updateDestinationCursors();
         }
-        else if (this.#state === COALITIONAREA_DRAW_POLYGON) {
+        else if (this.#state === COALITIONAREA_DRAW_POLYGON && e.latlng !== undefined) {
             this.#drawingCursor.setLatLng(e.latlng);
             /* Update the polygon being drawn with the current position of the mouse cursor */
             this.getSelectedCoalitionArea()?.moveActiveVertex(e.latlng);
