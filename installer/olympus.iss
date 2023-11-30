@@ -446,7 +446,7 @@ begin
     Width := ScaleX(340);
     Height := ScaleY(13);
     WordWrap := True;
-    Caption := 'Passwords and ports can be changed in the future by using the DCS Olympus configurator. For more information, see the DCS Olympus Wiki';
+    Caption := 'Passwords and ports can be changed in the future by using the DCS Olympus configurator. For more information, see the DCS Olympus Wiki.';
   end;
 
   with Page do
