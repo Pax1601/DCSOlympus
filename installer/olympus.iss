@@ -51,35 +51,10 @@ Source: "..\scripts\python\configurator\dist\configurator.exe"; DestDir: "{app}\
 [Run]
 Filename: "{app}\Mods\Services\Olympus\configurator.exe"; Parameters: -a {code:GetAddress} -c {code:GetClientPort} -b {code:GetBackendPort} -p {code:GetPassword} -bp {code:GetBluePassword} -rp {code:GetRedPassword}
 
-[Registry]
-Root: HKCU; Subkey: "Environment"; ValueType: string; ValueName: "DCSOLYMPUS_PATH"; ValueData: "{app}\Mods\Services\Olympus"; Flags: preservestringtype
-Root: HKCU; Subkey: "Environment"; ValueType: expandsz; ValueName: "Path"; ValueData: "{olddata};%DCSOLYMPUS_PATH%\bin"; Check: NeedsAddPath('%DCSOLYMPUS_PATH%\bin');
-	
-[Setup]
-; Tell Windows Explorer to reload the environment
-ChangesEnvironment=yes
-
 [Icons]
 Name: "{userdesktop}\DCS Olympus Client"; Filename: "{app}\Mods\Services\Olympus\client\nw.exe"; Tasks: desktopicon; IconFilename: "{app}\Mods\Services\Olympus\img\olympus.ico"; Check: CheckLocalInstall
 Name: "{userdesktop}\DCS Olympus Server"; Filename: "{app}\Mods\Services\Olympus\client\node.exe"; Tasks: desktopicon; IconFilename: "{app}\Mods\Services\Olympus\img\olympus_server.ico"; Parameters: ".\bin\www"; Check: CheckServerInstall
 Name: "{userdesktop}\DCS Olympus Configurator"; Filename: "{app}\Mods\Services\Olympus\configurator.exe"; Tasks: desktopicon; IconFilename: "{app}\Mods\Services\Olympus\img\olympus_configurator.ico"; Check: CheckServerInstall
-
-[Code]
-function NeedsAddPath(Param: string): boolean;
-var
-  OrigPath: string;
-begin
-  if not RegQueryStringValue(HKCU,
-    'Environment',
-    'Path', OrigPath)
-  then begin
-    Result := True;
-    exit;
-  end;
-  { look for the path with leading and trailing semicolon }
-  { Pos() returns 0 if not found }
-  Result := Pos(';' + Param + ';', ';' + OrigPath + ';') = 0;
-end;
 
 [Code]
 var

@@ -19,6 +19,7 @@ extern Scheduler* scheduler;
 extern json::value missionData;
 extern mutex mutexLock;
 extern string sessionHash;
+extern string modLocation;
 
 void handle_eptr(std::exception_ptr eptr)
 {
@@ -286,39 +287,30 @@ string Server::extractPassword(http_request& request) {
 void Server::task()
 {
     string address = REST_ADDRESS;
-    string modLocation;
-    char* buf = nullptr;
-    size_t sz = 0;
-    if (_dupenv_s(&buf, &sz, "DCSOLYMPUS_PATH") == 0 && buf != nullptr)
-    {
-        std::ifstream ifstream(string(buf) + OLYMPUS_JSON_PATH);
-        std::stringstream ss;
-        ss << ifstream.rdbuf();
-        std::error_code errorCode;
-        json::value config = json::value::parse(ss.str(), errorCode);
-        if (config.is_object() && config.has_object_field(L"server") &&
-            config[L"server"].has_string_field(L"address") && config[L"server"].has_number_field(L"port"))
-        {
-            address = "http://" + to_string(config[L"server"][L"address"]) + ":" + to_string(config[L"server"][L"port"].as_number().to_int32());
-            log("Starting server on " + address);
-        }
-        else
-            log("Error reading configuration file. Starting server on " + address);
 
-        if (config.is_object() && config.has_object_field(L"authentication"))
-        {
-            if (config[L"authentication"].has_string_field(L"gameMasterPassword")) gameMasterPassword = to_string(config[L"authentication"][L"gameMasterPassword"]);
-            if (config[L"authentication"].has_string_field(L"blueCommanderPassword")) blueCommanderPassword = to_string(config[L"authentication"][L"blueCommanderPassword"]);
-            if (config[L"authentication"].has_string_field(L"redCommanderPassword")) redCommanderPassword = to_string(config[L"authentication"][L"redCommanderPassword"]);
-        }
-        else
-            log("Error reading configuration file. No password set.");
-        free(buf);
+    std::ifstream ifstream(modLocation + OLYMPUS_JSON_PATH);
+    std::stringstream ss;
+    ss << ifstream.rdbuf();
+    std::error_code errorCode;
+    json::value config = json::value::parse(ss.str(), errorCode);
+    if (config.is_object() && config.has_object_field(L"server") &&
+        config[L"server"].has_string_field(L"address") && config[L"server"].has_number_field(L"port"))
+    {
+        address = "http://" + to_string(config[L"server"][L"address"]) + ":" + to_string(config[L"server"][L"port"].as_number().to_int32());
+        log("Starting server on " + address);
     }
     else
+        log("Error reading configuration file. Starting server on " + address);
+
+    if (config.is_object() && config.has_object_field(L"authentication"))
     {
-        log("DCSOLYMPUS_PATH environment variable is missing, starting server on " + address);
+        if (config[L"authentication"].has_string_field(L"gameMasterPassword")) gameMasterPassword = to_string(config[L"authentication"][L"gameMasterPassword"]);
+        if (config[L"authentication"].has_string_field(L"blueCommanderPassword")) blueCommanderPassword = to_string(config[L"authentication"][L"blueCommanderPassword"]);
+        if (config[L"authentication"].has_string_field(L"redCommanderPassword")) redCommanderPassword = to_string(config[L"authentication"][L"redCommanderPassword"]);
     }
+    else
+        log("Error reading configuration file. No password set.");
+
 
     http_listener listener(to_wstring(address + "/" + REST_URI));
 

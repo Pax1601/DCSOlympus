@@ -18,22 +18,21 @@ f_coreUnitsData coreUnitsData = nullptr;
 f_coreWeaponsData coreWeaponsData = nullptr;
 f_coreMissionData coreMissionData = nullptr;
 
+string modLocation = "";
+
 static int onSimulationStart(lua_State* L)
 {
     log("onSimulationStart callback called successfully");
 
-    string modLocation;
+    /* Retrieve mod location from lua stack */
+    lua_getglobal(L, "Olympus");
+    lua_getfield(L, -1, "OlympusModPath");
+    modLocation = lua_tostring(L, -1);
+
     string dllLocation;
-    char* buf = nullptr;
-    size_t sz = 0;
-    if (_dupenv_s(&buf, &sz, "DCSOLYMPUS_PATH") == 0 && buf != nullptr)
+    if (modLocation == "")
     {
-        modLocation = buf;
-        free(buf);
-    }
-    else
-    {
-        log("DCSOLYMPUS_PATH environment variable is missing");
+        log("Error reading mod location");
         goto error;
     }
     dllLocation = modLocation + "\\bin\\core.dll";

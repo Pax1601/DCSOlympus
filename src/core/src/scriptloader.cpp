@@ -5,6 +5,8 @@
 
 #include <algorithm>
 
+extern string modLocation;
+
 bool executeLuaScript(lua_State* L, string path)
 {
     replace(path.begin(), path.end(), '\\', '/');
@@ -25,8 +27,6 @@ bool executeLuaScript(lua_State* L, string path)
 /* Executes the "OlympusCommand.lua" file to load in the "Server" Lua space all the Lua functions necessary to perform DCS commands (like moving units) */
 void registerLuaFunctions(lua_State* L)
 {
-    string modLocation;
-
     if (dostring_in(L, "server", PROTECTED_CALL))
     {
         log("Error registering protectedCall");
@@ -34,19 +34,6 @@ void registerLuaFunctions(lua_State* L)
     else
     {
         log("protectedCall registered successfully");
-    }
-
-    char* buf = nullptr;
-    size_t sz = 0;
-    if (_dupenv_s(&buf, &sz, "DCSOLYMPUS_PATH") == 0 && buf != nullptr)
-    {
-        modLocation = buf;
-        free(buf);
-    }
-    else
-    {
-        log("DCSOLYMPUS_PATH environment variable is missing");
-        return;
     }
 
     executeLuaScript(L, modLocation + "\\Scripts\\mist.lua");

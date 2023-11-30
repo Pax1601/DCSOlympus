@@ -25,6 +25,7 @@ json::value missionData = json::value::object();
 
 mutex mutexLock;
 string sessionHash;
+string modLocation = "";
 
 bool initialized = false;
 
@@ -53,6 +54,11 @@ extern "C" DllExport int coreDeinit(lua_State* L)
 /* Called when DCS simulation starts. All singletons are instantiated, and the custom Lua functions are registered in the Lua state. */
 extern "C" DllExport int coreInit(lua_State* L)
 {
+    /* Retrieve mod location from lua stack */
+    lua_getglobal(L, "Olympus");
+    lua_getfield(L, -1, "OlympusModPath");
+    modLocation = lua_tostring(L, -1);
+
     sessionHash = random_string(16);
     unitsManager = new UnitsManager(L);
     weaponsManager = new WeaponsManager(L);

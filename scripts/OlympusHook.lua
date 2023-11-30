@@ -1,19 +1,26 @@
 local version = 'v0.4.8-alpha'
 
+local lfs = require("lfs")
+
 Olympus = {}
 Olympus.OlympusDLL = nil
 Olympus.cppRESTDLL = nil
 Olympus.DLLsloaded = false
-Olympus.OlympusModPath = os.getenv('DCSOLYMPUS_PATH')..'\\bin\\' 
 
+if os.getenv('DCSOLYMPUS_PATH') ~= nil then
+	Olympus.OlympusModPath = os.getenv('DCSOLYMPUS_PATH')
+else
+	Olympus.OlympusModPath = lfs.writedir().."\\Mods\\Services\\Olympus"
+end
+	
 log.write('Olympus.HOOKS.LUA', log.INFO,'Executing OlympusHook.lua')
 
 function Olympus.loadDLLs()
 	-- Add the .dll paths
-	package.cpath = package.cpath..';'..Olympus.OlympusModPath..'?.dll;'
+	package.cpath = package.cpath..';'..Olympus.OlympusModPath....'\\bin\\'..'?.dll;'
 	
 	local status
-	log.write('Olympus.HOOKS.LUA', log.INFO, 'Loading olympus.dll from ['..Olympus.OlympusModPath..']')
+	log.write('Olympus.HOOKS.LUA', log.INFO, 'Loading olympus.dll from ['..Olympus.OlympusModPath..'\\bin\\'..']')
 	status, Olympus.OlympusDLL = pcall(require, 'olympus')
 		if status then
 		log.write('Olympus.HOOKS.LUA', log.INFO, 'olympus.dll loaded successfully')
@@ -25,7 +32,7 @@ function Olympus.loadDLLs()
 end
 
 do
-	if isOlympusModuleInitialized~=true then
+	if isOlympusModuleInitialized ~= true then
 		local OlympusName = 'Olympus ' .. version .. ' C++ module';
 		Olympus.loadDLLs();
 	
@@ -58,6 +65,6 @@ do
 		DCS.setUserCallbacks(OlympusCallbacks)	
 		log.write('Olympus.HOOKS.LUA', log.INFO, OlympusName..' callbacks registered correctly.')
 		
-		isOlympusModuleInitialized=true;
+		isOlympusModuleInitialized = true;
 	end
 end
