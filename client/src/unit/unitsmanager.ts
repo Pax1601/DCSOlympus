@@ -1113,10 +1113,10 @@ export class UnitsManager {
             var airbase = airbases[airbaseName];
             /* Check if the city is inside the coalition area */
             if (polyContains(new LatLng(airbase.getLatLng().lat, airbase.getLatLng().lng), coalitionArea)) {
-                /* Arbitrary formula to obtain a number of units depending on the city population */
+                /* Arbitrary formula to obtain a number of units */
                 var pointsNumber = 2 + 40 * density / 100;
                 for (let i = 0; i < pointsNumber; i++) {
-                    /* Place the unit nearby the city, depending on the distribution parameter */
+                    /* Place the unit nearby the airbase, depending on the distribution parameter */
                     var bearing = Math.random() * 360;
                     var distance = Math.random() * distribution * 100;
                     const latlng = bearingAndDistanceToLatLng(airbase.getLatLng().lat, airbase.getLatLng().lng, bearing, distance);
