@@ -72,6 +72,18 @@ form {
     padding: 0;
 }
 
+button svg.fill-coalition * {
+    fill: var(--primary-neutral) !important;
+}
+
+button svg.fill-coalition[data-coalition="blue"] * {
+    fill: var(--primary-blue) !important;
+}
+
+button svg.fill-coalition[data-coalition="red"] * {
+    fill: var(--primary-red) !important;
+}
+
 .pill {
     background-color: var(--background-steel);
     border-radius: 999px;
@@ -372,7 +384,7 @@ button.ol-button-warning>svg:first-child {
 }
 
 nav.ol-panel {
-    column-gap: 20px;
+    column-gap: 10px;
     display: flex;
     flex-direction: row;
     height: 58px;
@@ -384,8 +396,7 @@ nav.ol-panel> :last-child {
 
 .ol-panel .ol-group {
     align-items: center;
-    border-radius: var(--border-radius-sm);
-    column-gap: 10px;
+    column-gap: 12px;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -652,13 +663,13 @@ nav.ol-panel> :last-child {
 }
 
 .ol-navbar-buttons-group button.off svg * {
-    fill: white !important;
-    stroke: white !important;
+    fill: white;
+    stroke: white;
 }
 
 .ol-navbar-buttons-group button svg * {
-    fill: var(--background-steel) !important;
-    stroke: var(--background-steel) !important;
+    fill: var(--background-steel);
+    stroke: var(--background-steel);
 }
 
 .ol-navbar-buttons-group .protectable button:first-of-type {
@@ -1590,6 +1601,24 @@ input[type=number]::-webkit-outer-spin-button {
     fill: lightgray;
 }
 
+#map-visibility-options .ol-select-options .ol-checkbox {
+    font-size:13px;
+    font-weight:400;
+    padding:6px 15px;
+}
+
+#map-visibility-options .ol-select-options .ol-checkbox:first-of-type {
+    padding-top:12px;
+}
+
+#map-visibility-options .ol-select-options .ol-checkbox:last-of-type {
+    padding-bottom:12px;
+}
+
+#map-visibility-options .ol-select-options .ol-checkbox label:hover span {
+    text-decoration: underline;
+}
+
 .ol-log-entry:first-of-type {
     border-top: 1px solid #FFFFFF44;
 }
@@ -1686,3 +1715,4 @@ input[type=number]::-webkit-outer-spin-button {
         opacity: 0;
     }
 }
+

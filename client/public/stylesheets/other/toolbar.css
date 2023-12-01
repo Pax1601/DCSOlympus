@@ -14,6 +14,10 @@
 	width: fit-content;
 }
 
+#app-icon>.ol-select-value {
+	box-shadow: none;
+}
+
 #toolbar-summary {
 	background-image: url("/images/icon-round.png");
 	background-position: 20px 22px;
@@ -29,20 +33,54 @@
 	white-space: nowrap;
 }
 
-#toolbar-container>*:nth-child(2)>svg {
-    display: none;
-    width: 0px;
-    height: 0px;
+.ol-panel-tab {
+	align-items: center;
+    display:flex;
+	flex-direction: row;
+	margin-right:6px;
+}
+
+.ol-panel-tab svg {
+	height:24;
+	width:24px;
+}
+
+.ol-panel-tab svg * {
+	fill:white;
+}
+
+.ol-panel-tab span {
+	font-size:13px;
+	font-weight:400;
+	padding:0 6px;
 }
 
 #toolbar-container>*:nth-child(3)>svg {
     display: none;
 }
 
+#unit-visibility-control > div:nth-child(3),
+#coalition-visibility-control {
+	border-left: 4px solid white;
+	padding-left: 12px;
+}
+
 @media (max-width: 1145px) {
 	#toolbar-container {
 		flex-direction: column;
 		align-items: start;
+	}
+
+	#toolbar-container .ol-panel .ol-panel-tab {
+		margin-right:0;
+	}
+
+	#toolbar-container .ol-panel:hover .ol-panel-tab {
+		display:none;
+	}
+
+	#toolbar-container .ol-panel-tab span {
+		display:none;
 	}
 
 	#toolbar-container>*:nth-child(1):not(:hover) {
@@ -62,10 +100,10 @@
     }
 
 	#toolbar-container>*:not(:first-child):not(:hover)>svg {
-        display: block;
-		width: 24px;
-		height: 24px;
+		display: block;
         filter: invert();
+		height: 24px;
+		width: 24px;
 	}
 
 	#toolbar-container>*:not(:first-child):not(:hover)>*:not(:first-child) {
