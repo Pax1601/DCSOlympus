@@ -601,7 +601,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr) {
 			unit->setState(State::MISS_ON_PURPOSE);
-			log(username + " tasked unit " + unit->getUnitName() + "(" + unit->getName() + ") to enter Miss On Purpose state", true);
+			log(username + " tasked unit " + unit->getUnitName() + "(" + unit->getName() + ") to enter Dynamic accuracy AAA state", true);
 		}
 	}
 	/************************/

@@ -364,7 +364,7 @@ void GroundUnit::AIloop()
 
 						internalCounter = (aimTime + (ShotsIntensity::HIGH - shotsIntensity) * shotsBaseInterval + 2) / FRAMERATE_TIME_INTERVAL;
 					}
-					/* Else, do miss on purpose */
+					/* Else, do miss on purpose/Dynamic accuracy mode */
 					else {
 						/* Compute where the target will be in aimTime seconds, plus the effect of scatter. */
 						double scatterDistance = distance * tan(shotsBaseScatter * (ShotsScatter::LOW - shotsScatter) / 57.29577) * (RANDOM_ZERO_TO_ONE - 0.1);
@@ -477,7 +477,7 @@ void GroundUnit::aimAtPoint(Coords aimTarget) {
 		double lng = 0;
 		Geodesic::WGS84().Direct(position.lat, position.lng, bearing1, r, lat, lng);
 
-		log(unitName + "(" + name + ")" + " shooting with aim at point method. Barrel elevation: " + to_string(barrelElevation * 57.29577) + "°, bearing: " + to_string(bearing1) + "°");
+		log(unitName + "(" + name + ")" + " shooting with aim at point method. Barrel elevation: " + to_string(barrelElevation * 57.29577) + "ï¿½, bearing: " + to_string(bearing1) + "ï¿½");
 
 		std::ostringstream taskSS;
 		taskSS.precision(10);
