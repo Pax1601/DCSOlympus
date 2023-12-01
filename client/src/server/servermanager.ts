@@ -12,7 +12,7 @@ export class ServerManager {
     #connected: boolean = false;
     #paused: boolean = false;
     #REST_ADDRESS = "http://localhost:30000/olympus";
-    #DEMO_ADDRESS = window.location.href + "demo";
+    #DEMO_ADDRESS = window.location.href.split('?')[0] + "demo"; /* Remove query parameters */
     #username = "";
     #password = "";
     #sessionHash: string | null = null;

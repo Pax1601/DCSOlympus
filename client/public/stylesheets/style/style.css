@@ -194,9 +194,17 @@ form {
 }
 
 .ol-select:not(.ol-select-image)>.ol-select-value:after {
-    content: url("/resources/theme/images/icons/chevron-down.svg");
+    background-image: url("/resources/theme/images/icons/chevron-down.svg");
+    content: "";
     position: absolute;
     right: 10px;
+    width: 15px;
+    height: 15px;
+    background-size: 100% 100%;
+}
+
+.ol-select:not(.ol-select-image)>.ol-select-value.ol-select-warning:after {
+    background-image: url("/resources/theme/images/icons/chevron-down-warning.svg") !important;
 }
 
 .ol-select.is-open:not(.ol-select-image)>.ol-select-value:after {
@@ -430,6 +438,7 @@ nav.ol-panel> :last-child {
     -webkit-filter: invert(100%);
     height: 16px;
     width: 16px;
+    background-size: 100% 100%;
 }
 
 .ol-panel .ol-group-button-toggle button.off::before {
@@ -1317,7 +1326,7 @@ dl.ol-data-grid dd {
     align-content: center;
     border-top: 1px solid var(--background-grey);
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     padding-top: 15px;
     row-gap: 10px;
 }
@@ -1351,6 +1360,7 @@ dl.ol-data-grid dd {
     height: 16px;
     margin-right: 10px;
     width: 16px;
+    background-size: 100% 100%;
 }
 
 .ol-checkbox input[type="checkbox"]:disabled:before {

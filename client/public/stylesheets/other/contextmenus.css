@@ -61,9 +61,13 @@
 
 .contextmenu-advanced-options-toggle:after,
 .contextmenu-metadata-toggle:after {
-    content: url(/resources/theme/images/icons/chevron-down.svg);
+    content: "";
     margin-left: auto;
     margin-top: auto;
+    background-image: url(/resources/theme/images/icons/chevron-down.svg);
+    background-size: 100% 100%;
+    width: 15px;
+    height: 15px;
 }
 
 .contextmenu-advanced-options-toggle.is-open:after,
@@ -407,84 +411,124 @@
 
 /*  Buttons  */
 #center-map::before {
-    content: url("/resources/theme/images/icons/arrows-to-eye-solid.svg");
+    background-image: url("/resources/theme/images/icons/arrows-to-eye-solid.svg");
+    content: "";
+	background-size: 20px 20px;
 }
 
 #refuel::before {
-    content: url("/resources/theme/images/icons/fuel.svg");
+    background-image: url("/resources/theme/images/icons/fuel.svg");
+    content: "";
+	background-size: 20px 20px;
 }
 
 #attack::before {
-    content: url("/resources/theme/images/icons/sword.svg");
+    background-image: url("/resources/theme/images/icons/sword.svg");
+    content: "";
+	background-size: 20px 20px;
 }
 
 #bomb::before {
-    content: url("/resources/theme/images/icons/crosshairs-solid.svg");
+    background-image: url("/resources/theme/images/icons/crosshairs-solid.svg");
+    content: "";
+	background-size: 20px 20px;
 }
 
 #carpet-bomb::before {
-    content: url("/resources/theme/images/icons/explosion-solid.svg");
+    background-image: url("/resources/theme/images/icons/explosion-solid.svg");
+    content: "";
+	background-size: 20px 20px;
 }
 
 #fire-at-area::before {
-    content: url("/resources/theme/images/icons/crosshairs-solid.svg");
+    background-image: url("/resources/theme/images/icons/crosshairs-solid.svg");
+    content: "";
+	background-size: 20px 20px;
 }
 
 #simulate-fire-fight::before {
-    content: url("/resources/theme/images/icons/crosshairs-solid.svg");
+    background-image: url("/resources/theme/images/icons/crosshairs-solid.svg");
+    content: "";
+	background-size: 20px 20px;
 }
 
 #follow::before {
-    content: url("/resources/theme/images/icons/follow.svg");
+    background-image: url("/resources/theme/images/icons/follow.svg");
+    content: "";
+	background-size: 20px 20px;
 }
 
 #scenic-aaa::before {
-    content: url("/resources/theme/images/icons/scenic.svg");
+    background-image: url("/resources/theme/images/icons/scenic.svg");
+    content: "";
+	background-size: 20px 20px;
 }
 
 #miss-aaa::before {
-    content: url("/resources/theme/images/icons/miss.svg");
+    background-image: url("/resources/theme/images/icons/miss.svg");
+    content: "";
+	background-size: 20px 20px;
 }
 
 #group-ground::before {
-    content: url("/resources/theme/images/icons/group-ground.svg");
+    background-image: url("/resources/theme/images/icons/group-ground.svg");
+    content: "";
+	background-size: 20px 20px;
 }
 
 #group-navy::before {
-    content: url("/resources/theme/images/icons/group-navy.svg");
+    background-image: url("/resources/theme/images/icons/group-navy.svg");
+    content: "";
+	background-size: 20px 20px;
 }
 
 #land-at-point::before {
-    content: url("/resources/theme/images/icons/land-at-point.svg");
+    background-image: url("/resources/theme/images/icons/land-at-point.svg");
+    content: "";
+	background-size: 20px 20px;
 }
 
 #trail::before {
-    content: url("/resources/theme/images/icons/trail.svg");
+    background-image: url("/resources/theme/images/icons/trail.svg");
+    content: "";
+	background-size: 20px 20px;
 }
 
 #echelon-lh::before {
-    content: url("/resources/theme/images/icons/echelon-lh.svg");
+    background-image: url("/resources/theme/images/icons/echelon-lh.svg");
+    content: "";
+	background-size: 20px 20px;
 }
 
 #echelon-rh::before {
-    content: url("/resources/theme/images/icons/echelon-rh.svg");
+    background-image: url("/resources/theme/images/icons/echelon-rh.svg");
+    content: "";
+	background-size: 20px 20px;
 }
 
 #line-abreast-rh::before,
 #line-abreast-lh::before {
-    content: url("/resources/theme/images/icons/line-abreast.svg");
+    background-image: url("/resources/theme/images/icons/line-abreast.svg");
+    content: "";
+	background-size: 20px 20px;
 }
 
 #front::before {
-    content: url("/resources/theme/images/icons/front.svg");
+    background-image: url("/resources/theme/images/icons/front.svg");
+    content: "";
+	background-size: 20px 20px;
 }
 
 #diamond::before {
-    content: url("/resources/theme/images/icons/diamond.svg");
+    background-image: url("/resources/theme/images/icons/diamond.svg");
+    content: "";
+	background-size: 20px 20px;
 }
 
 #custom::before {
-    content: url("/resources/theme/images/icons/custom.svg");
+    background-image: url("/resources/theme/images/icons/custom.svg");
+    content: "";
+	background-size: 20px 20px;
 }
 
 #custom-formation-dialog {
