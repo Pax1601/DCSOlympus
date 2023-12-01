@@ -25,6 +25,7 @@ json::value missionData = json::value::object();
 
 mutex mutexLock;
 string sessionHash;
+string instancePath;
 
 bool initialized = false;
 
@@ -150,6 +151,23 @@ extern "C" DllExport int coreMissionData(lua_State * L)
     lua_getglobal(L, "Olympus");
     lua_getfield(L, -1, "missionData");
     luaTableToJSON(L, -1, missionData);
+
+    return(0);
+}
+
+extern "C" DllExport int coreInstancePath(lua_State * L)
+{
+    if (!initialized)
+        return (0);
+
+    /* Lock for thread safety */
+    lock_guard<mutex> guard(mutexLock);
+
+    lua_getglobal(L, "Olympus");
+    lua_getfield(L, -1, "instancePath");
+    instancePath = lua_tostring(L, -1);
+
+    log("Setting instance path to " + instancePath);
 
     return(0);
 }

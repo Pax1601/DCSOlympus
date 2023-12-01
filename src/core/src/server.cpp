@@ -19,6 +19,7 @@ extern Scheduler* scheduler;
 extern json::value missionData;
 extern mutex mutexLock;
 extern string sessionHash;
+extern string instancePath;
 
 void handle_eptr(std::exception_ptr eptr)
 {
@@ -291,7 +292,11 @@ void Server::task()
     size_t sz = 0;
     if (_dupenv_s(&buf, &sz, "DCSOLYMPUS_PATH") == 0 && buf != nullptr)
     {
-        std::ifstream ifstream(string(buf) + OLYMPUS_JSON_PATH);
+        string jsonLocation = string(buf) + OLYMPUS_JSON_PATH;
+        if (instancePath != "")
+            jsonLocation = instancePath + OLYMPUS_JSON_PATH;
+
+        std::ifstream ifstream(jsonLocation);
         std::stringstream ss;
         ss << ifstream.rdbuf();
         std::error_code errorCode;
