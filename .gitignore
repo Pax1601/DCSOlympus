@@ -18,4 +18,5 @@ node_modules
 hgt
 /client/public/databases/units/old
 /client/plugins/databasemanager/index.js
+vcpkg_installed
 
