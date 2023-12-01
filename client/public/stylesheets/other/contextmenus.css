@@ -45,6 +45,7 @@
     justify-content: space-between;
     row-gap: 5px;
     width: 100%;
+    padding: 5px;
 }
 
 .contextmenu-advanced-options-toggle,
@@ -61,7 +62,13 @@
 .contextmenu-advanced-options-toggle:after,
 .contextmenu-metadata-toggle:after {
     content: url(/resources/theme/images/icons/chevron-down.svg);
-    margin: auto;
+    margin-left: auto;
+    margin-top: auto;
+}
+
+.contextmenu-advanced-options-toggle.is-open:after,
+.contextmenu-metadata-toggle.is-open:after {
+    transform: rotate(180deg);
 }
 
 .contextmenu-advanced-options-toggle div:first-child,
@@ -241,8 +248,8 @@
 }
 
 .unit-label-count-container {
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: 187px 1fr 1fr;
     align-items: center;
     column-gap: 5px;
 }
@@ -580,6 +587,7 @@
 
 #iads-menu {
     row-gap: 10px;
+    padding: 10px;
 }
 
 #coalition-area-contextmenu>div:nth-child(2) {
@@ -596,6 +604,7 @@
     flex-direction: column;
     justify-content: space-between;
     row-gap: 5px;
+    padding: 20px;
 }
 
 .create-iads-button {
