@@ -25,7 +25,8 @@
     "leaflet-gesture-handling": "^1.2.2",
     "morgan": "~1.9.1",
     "save": "^2.9.0",
-    "srtm-elevation": "^2.1.2"
+    "srtm-elevation": "^2.1.2",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.21.4",

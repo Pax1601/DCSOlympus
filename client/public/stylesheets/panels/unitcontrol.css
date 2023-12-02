@@ -6,60 +6,69 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 #roe-buttons-container button,
 #reaction-to-threat-buttons-container button,
 #emissions-countermeasures-buttons-container button,
-#shots-scatter-buttons-container button
-#shots-intensity-buttons-container button {
-    align-items: center;
-    background-color: transparent;
-    border: 1px solid var(--accent-light-blue);
-    display: flex;
-    height: 30px;
-    justify-content: center;
-    width: 30px;
+#shots-scatter-buttons-container button #shots-intensity-buttons-container button {
+	align-items: center;
+	background-color: transparent;
+	border: 1px solid var(--accent-light-blue);
+	display: flex;
+	height: 30px;
+	justify-content: center;
+	width: 30px;
 }
 
 #reaction-to-threat-buttons-container button:not(:first-child) svg {
-    width: 150%;
-    margin: -5px;
+	width: 150%;
+	margin: -5px;
+}
+
+#unit-control-panel .ol-option-button button {
+	width: 30px;
+	height: 30px;
+}
+
+#unit-control-panel .ol-option-button svg {
+	width: 100%;
+	height: 100%;
 }
 
 #unit-control-panel .ol-option-button button.selected {
-    background-color: white;
-    border-color: white;
+	background-color: white;
+	border-color: white;
 }
 
 #unit-control-panel .ol-option-button button.selected svg * {
-    fill: var(--background-steel);
-    stroke: var(--background-steel);
+	fill: var(--background-steel);
+	stroke: var(--background-steel);
 }
 
 #rapid-controls {
-    display: flex;
-    flex-direction: column;
-    row-gap: 5px;
-    height: fit-content;
-    width: fit-content;
+	display: flex;
+	flex-direction: column;
+	row-gap: 5px;
+	height: fit-content;
+	width: fit-content;
 }
 
 #rapid-controls button {
-    padding: 4px;
+	padding: 4px;
 }
 
 #rapid-controls button.pulse {
-    animation: pulse 1.5s linear infinite;
+	animation: pulse 1.5s linear infinite;
 }
 
 #rapid-controls svg {
-    height: 20px;
-    width: 20px;
-    fill: white;
-    stroke: white;
+	height: 20px;
+	width: 20px;
+	fill: white;
+	stroke: white;
 }
 
 #rapid-controls button:before {
-    display: inline-block;
-    filter: invert(100%);
-    height: 20px;
-    width: 20px;
+	display: inline-block;
+	filter: invert(100%);
+	height: 20px;
+	width: 20px;
 }
 
 #unit-control-panel {
@@ -109,7 +118,7 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 		width: fit-content;
 	}
 
-    #unit-control-panel:not(:hover)>*:nth-child(2),
+	#unit-control-panel:not(:hover)>*:nth-child(2),
 	#unit-control-panel:not(:hover)>*:nth-child(3) {
 		display: none;
 	}
@@ -196,7 +205,7 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 }
 
 #advanced-settings-dialog>.ol-dialog-content>div input[type="number"] {
-    width: 60px;
+	width: 60px;
 }
 
 #advanced-settings-dialog hr {
@@ -266,7 +275,6 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	width: 40px;
 }
 
-
 .ol-slider-value {
 	color: var(--accent-light-blue);
 	cursor: pointer;
@@ -276,13 +284,15 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 
 .switch-control {
 	align-items: center;
+	align-content: center;
 	display: flex;
 	width: 100%;
 	justify-content: space-between;
 }
 
 .switch-control h4 {
-	margin: 0px;
+	margin: 0px !important;
+	padding: 0px;
 	display: flex;
 	align-items: center;
 }
@@ -303,30 +313,30 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	position: relative;
 }
 
-#advanced-settings-div > button {
+#advanced-settings-div>button {
 	background-color: var(--background-grey);
-    box-shadow: 0px 2px 5px #000A;
-	font-size:13px;
+	box-shadow: 0px 2px 5px #000A;
+	font-size: 13px;
 	height: 40px;
-	padding:0 20px;
+	padding: 0 20px;
 }
 
 #delete-options {
-	font-size:13px;
+	font-size: 13px;
 }
 
-#delete-options.ol-select > .ol-select-value:after {
+#delete-options.ol-select>.ol-select-value:after {
 	content: "";
 }
 
-#delete-options.ol-select > .ol-select-value svg {
+#delete-options.ol-select>.ol-select-value svg {
 	background-color: transparent;
 	position: absolute;
-	right:2px;
-	translate:0 1px;
+	right: 2px;
+	translate: 0 1px;
 }
 
-#delete-options.ol-select > .ol-select-value svg * {
+#delete-options.ol-select>.ol-select-value svg * {
 	fill: var(--primary-red);
 }
 
@@ -334,21 +344,21 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	background-color: var(--background-steel);
 }
 
-#delete-options.ol-select > .ol-select-value:hover,
-#delete-options .ol-select-options > div:not(.hr):hover,
-#delete-options .ol-select-options > div:not(.hr):hover button,
-#delete-options .ol-select-options > div hr {
+#delete-options.ol-select>.ol-select-value:hover,
+#delete-options .ol-select-options>div:not(.hr):hover,
+#delete-options .ol-select-options>div:not(.hr):hover button,
+#delete-options .ol-select-options>div hr {
 	background-color: var(--background-grey);
 }
 
-#delete-options .ol-select-options > div:first-of-type {
-	margin-top:12px;
-	padding-top:0;
+#delete-options .ol-select-options>div:first-of-type {
+	margin-top: 12px;
+	padding-top: 0;
 }
 
-#delete-options .ol-select-options > div:last-of-type {
-	margin-bottom:12px;
-	padding-bottom:0;
+#delete-options .ol-select-options>div:last-of-type {
+	margin-bottom: 12px;
+	padding-bottom: 0;
 }
 
 #delete-options button {
