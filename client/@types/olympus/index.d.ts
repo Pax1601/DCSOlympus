@@ -854,17 +854,20 @@ declare module "controls/unitspawnmenu" {
     import { UnitDatabase } from "unit/databases/unitdatabase";
     import { Airbase } from "mission/airbase";
     import { UnitSpawnOptions } from "interfaces";
-    export class UnitSpawnMenu {
+    /** This is the common code for all the unit spawn menus. It is shown both when right clicking on the map and when spawning from airbase.
+     *
+     */
+    export abstract class UnitSpawnMenu {
         #private;
         protected showRangeCircles: boolean;
-        protected spawnOptions: UnitSpawnOptions;
         protected unitTypeFilter: (unit: any) => boolean;
+        protected spawnOptions: UnitSpawnOptions;
         constructor(ID: string, unitDatabase: UnitDatabase, orderByRole: boolean);
+        abstract deployUnits(spawnOptions: UnitSpawnOptions, unitsCount: number): void;
         getContainer(): HTMLElement;
         getVisible(): boolean;
         reset(): void;
         setCountries(): void;
-        refreshOptions(): void;
         showCirclesPreviews(): void;
         clearCirclesPreviews(): void;
         setAirbase(airbase: Airbase | undefined): void;
@@ -878,7 +881,8 @@ declare module "controls/unitspawnmenu" {
         getLiveryDropdown(): Dropdown;
         getLoadoutPreview(): HTMLDivElement;
         getAltitudeSlider(): Slider;
-        deployUnits(spawnOptions: UnitSpawnOptions, unitsCount: number): void;
+        setShowLoadout(showLoadout: boolean): void;
+        setShowAltitudeSlider(showAltitudeSlider: boolean): void;
     }
     export class AircraftSpawnMenu extends UnitSpawnMenu {
         /**
@@ -1265,6 +1269,8 @@ declare module "unit/unit" {
         setGroup(group: Group | null): void;
         drawLines(): void;
         checkZoomRedraw(): boolean;
+        isControlledByDCS(): boolean;
+        isControlledByOlympus(): boolean;
         /********************** Icon *************************/
         createIcon(): void;
         /********************** Visibility *************************/
