@@ -11,14 +11,14 @@ typedef int(__stdcall* f_coreFrame)(lua_State* L);
 typedef int(__stdcall* f_coreUnitsData)(lua_State* L);
 typedef int(__stdcall* f_coreWeaponsData)(lua_State* L);
 typedef int(__stdcall* f_coreMissionData)(lua_State* L);
-typedef int(__stdcall* f_coreSetInstancePath)(lua_State* L);
+typedef int(__stdcall* f_coreInstancePath)(lua_State* L);
 f_coreInit coreInit = nullptr;
 f_coreDeinit coreDeinit = nullptr;
 f_coreFrame coreFrame = nullptr;
 f_coreUnitsData coreUnitsData = nullptr;
 f_coreWeaponsData coreWeaponsData = nullptr;
 f_coreMissionData coreMissionData = nullptr;
-f_coreSetInstancePath coreInstancePath = nullptr;
+f_coreInstancePath coreInstancePath = nullptr;
 
 static int onSimulationStart(lua_State* L)
 {
@@ -92,7 +92,7 @@ static int onSimulationStart(lua_State* L)
         goto error;
     }
 
-    coreInstancePath = (f_coreSetInstancePath)GetProcAddress(hGetProcIDDLL, "coreSetInstancePath");
+    coreInstancePath = (f_coreInstancePath)GetProcAddress(hGetProcIDDLL, "coreInstancePath");
     if (!coreInstancePath)
     {
         LogError(L, "Error getting coreSetInstancePath ProcAddress from DLL");
