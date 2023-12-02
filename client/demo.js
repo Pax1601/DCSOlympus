@@ -55,7 +55,7 @@ class DemoDataGenerator {
         
         
         // UNCOMMENT TO TEST ALL UNITS ****************
-
+        /*
         var databases = Object.assign({}, aircraftDatabase, helicopterDatabase, groundUnitDatabase, navyUnitDatabase);
         var t = Object.keys(databases).length;
         var l = Math.floor(Math.sqrt(t));

@@ -12,8 +12,14 @@ import { groundUnitDatabase } from "../unit/databases/groundunitdatabase";
 import { navyUnitDatabase } from "../unit/databases/navyunitdatabase";
 import { UnitBlueprint, UnitSpawnOptions, UnitSpawnTable } from "../interfaces";
 
-export class UnitSpawnMenu {
+/** This is the common code for all the unit spawn menus. It is shown both when right clicking on the map and when spawning from airbase.
+ * 
+ */
+
+export abstract class UnitSpawnMenu {
     protected showRangeCircles: boolean = false;
+    protected unitTypeFilter = (unit:any) => { return true; };
+    /* Default options */
     protected spawnOptions: UnitSpawnOptions = { 
         roleType: "", 
         name: "", 
@@ -31,8 +37,9 @@ export class UnitSpawnMenu {
     #unitDatabase: UnitDatabase;
     #countryCodes: any;
     #orderByRole: boolean;
-    protected unitTypeFilter = (unit:any) => { return true; };
-
+    #showLoadout: boolean = true;
+    #showAltitudeSlider: boolean = true;
+    
     /* Controls */
     #unitRoleTypeDropdown: Dropdown;
     #unitLabelDropdown: Dropdown;
@@ -44,11 +51,18 @@ export class UnitSpawnMenu {
 
     /* HTML Elements */
     #deployUnitButtonEl: HTMLButtonElement;
+    #unitCountDivider: HTMLDivElement;
     #unitLoadoutPreviewEl: HTMLDivElement;
     #unitImageEl: HTMLImageElement;
     #unitLoadoutListEl: HTMLDivElement;
     #descriptionDiv: HTMLDivElement;
     #abilitiesDiv: HTMLDivElement;
+    #advancedOptionsDiv: HTMLDivElement;
+    #unitInfoDiv: HTMLDivElement;
+    #advancedOptionsToggle: HTMLDivElement;
+    #advancedOptionsText: HTMLDivElement;
+    #unitInfoToggle: HTMLDivElement;
+    #unitInfoText: HTMLDivElement;
 
     /* Range circle previews */
     #engagementCircle: Circle;
@@ -60,20 +74,20 @@ export class UnitSpawnMenu {
         this.#orderByRole = orderByRole;
 
         /* Create the dropdowns and the altitude slider */
-        this.#unitRoleTypeDropdown = new Dropdown(null, (roleType: string) => this.#setUnitRoleType(roleType), undefined, "Unit type");
-        this.#unitLabelDropdown = new Dropdown(null, (name: string) => this.#setUnitName(name), undefined, "Unit label");
-        this.#unitLoadoutDropdown = new Dropdown(null, (loadout: string) => this.#setUnitLoadout(loadout), undefined, "Unit loadout");
-        this.#unitCountDropdown = new Dropdown(null, (count: string) => this.#setUnitCount(count), undefined, "Unit count");
-        this.#unitCountryDropdown = new Dropdown(null, () => { /* Custom button implementation */ }, undefined, "Unit country");
-        this.#unitLiveryDropdown = new Dropdown(null, (livery: string) => this.#setUnitLivery(livery), undefined, "Unit livery");
+        this.#unitRoleTypeDropdown = new Dropdown(null, (roleType: string) => this.#setUnitRoleType(roleType), undefined, "Role");
+        this.#unitLabelDropdown = new Dropdown(null, (name: string) => this.#setUnitName(name), undefined, "Type");
+        this.#unitLoadoutDropdown = new Dropdown(null, (loadout: string) => this.#setUnitLoadout(loadout), undefined, "Loadout");
+        this.#unitCountDropdown = new Dropdown(null, (count: string) => this.#setUnitCount(count), undefined, "Count");
+        this.#unitCountryDropdown = new Dropdown(null, () => { /* Custom button implementation */ }, undefined, "Country");
+        this.#unitLiveryDropdown = new Dropdown(null, (livery: string) => this.#setUnitLivery(livery), undefined, "Livery");
         this.#unitSpawnAltitudeSlider = new Slider(null, 0, 1000, "ft", (value: number) => { this.spawnOptions.altitude = ftToM(value); }, { title: "Spawn altitude" });
 
         /* The unit label and unit count are in the same "row" for clarity and compactness */
         var unitLabelCountContainerEl = document.createElement("div");
         unitLabelCountContainerEl.classList.add("unit-label-count-container");
-        var divider = document.createElement("div");
-        divider.innerText = "x";
-        unitLabelCountContainerEl.append(this.#unitLabelDropdown.getContainer(), divider, this.#unitCountDropdown.getContainer());
+        this.#unitCountDivider = document.createElement("div");
+        this.#unitCountDivider.innerText = "x";
+        unitLabelCountContainerEl.append(this.#unitLabelDropdown.getContainer(), this.#unitCountDivider, this.#unitCountDropdown.getContainer());
         
         /* Create the unit image and loadout elements */
         this.#unitImageEl = document.createElement("img");
@@ -84,38 +98,37 @@ export class UnitSpawnMenu {
         this.#unitLoadoutListEl.classList.add("unit-loadout-list");
         this.#unitLoadoutPreviewEl.append(this.#unitImageEl, this.#unitLoadoutListEl);
 
-        /* Create the divider and the advanced options collapsible div */
-        var advancedOptionsDiv = document.createElement("div");
-        advancedOptionsDiv.classList.add("contextmenu-advanced-options", "hide");
-        var advancedOptionsToggle = document.createElement("div");
-        advancedOptionsToggle.classList.add("contextmenu-advanced-options-toggle");
-        var advancedOptionsText = document.createElement("div");
-        advancedOptionsText.innerText = "Advanced options";
-        var advancedOptionsHr = document.createElement("hr");
-        advancedOptionsToggle.append(advancedOptionsText, advancedOptionsHr);
-        advancedOptionsToggle.addEventListener("click", () => { 
-            advancedOptionsDiv.classList.toggle("hide");
+        /* Create the advanced options collapsible div */
+        this.#advancedOptionsDiv = document.createElement("div");
+        this.#advancedOptionsDiv.classList.add("contextmenu-advanced-options", "hide");
+        this.#advancedOptionsToggle = document.createElement("div");
+        this.#advancedOptionsToggle.classList.add("contextmenu-advanced-options-toggle");
+        this.#advancedOptionsText = document.createElement("div");
+        this.#advancedOptionsText.innerText = "Faction / Liveries";
+        this.#advancedOptionsToggle.append(this.#advancedOptionsText);
+        this.#advancedOptionsToggle.addEventListener("click", () => { 
+            this.#advancedOptionsToggle.classList.toggle("is-open");
+            this.#advancedOptionsDiv.classList.toggle("hide");
             this.#container.dispatchEvent(new Event("resize"));
         });
-        advancedOptionsDiv.append(this.#unitCountryDropdown.getContainer(), this.#unitLiveryDropdown.getContainer(),
-            this.#unitSpawnAltitudeSlider.getContainer() as HTMLElement);
+        this.#advancedOptionsDiv.append(this.#unitCountryDropdown.getContainer(), this.#unitLiveryDropdown.getContainer());
 
-        /* Create the divider and the metadata collapsible div */
-        var metadataDiv = document.createElement("div");
-        metadataDiv.classList.add("contextmenu-metadata", "hide");
-        var metadataToggle = document.createElement("div");
-        metadataToggle.classList.add("contextmenu-metadata-toggle");
-        var metadataText = document.createElement("div");
-        metadataText.innerText = "Info";
-        var metadataHr = document.createElement("hr");
-        metadataToggle.append(metadataText, metadataHr);
-        metadataToggle.addEventListener("click", () => { 
-            metadataDiv.classList.toggle("hide");
+        /* Create the unit info collapsible div */
+        this.#unitInfoDiv = document.createElement("div");
+        this.#unitInfoDiv.classList.add("contextmenu-metadata", "hide");
+        this.#unitInfoToggle = document.createElement("div");
+        this.#unitInfoToggle.classList.add("contextmenu-metadata-toggle");
+        this.#unitInfoText = document.createElement("div");
+        this.#unitInfoText.innerText = "Unit information";
+        this.#unitInfoToggle.append(this.#unitInfoText);
+        this.#unitInfoToggle.addEventListener("click", () => { 
+            this.#unitInfoToggle.classList.toggle("is-open");
+            this.#unitInfoDiv.classList.toggle("hide");
             this.#container.dispatchEvent(new Event("resize"));
         });
         this.#descriptionDiv = document.createElement("div"); 
         this.#abilitiesDiv = document.createElement("div");
-        metadataDiv.append(this.#descriptionDiv, this.#abilitiesDiv);
+        this.#unitInfoDiv.append(this.#descriptionDiv, this.#abilitiesDiv);
 
         /* Create the unit deploy button */
         this.#deployUnitButtonEl = document.createElement("button");
@@ -128,8 +141,8 @@ export class UnitSpawnMenu {
          });
 
         /* Assemble all components */
-        this.#container.append(this.#unitRoleTypeDropdown.getContainer(), unitLabelCountContainerEl, this.#unitLoadoutDropdown.getContainer(),
-        this.#unitLoadoutPreviewEl, advancedOptionsToggle, advancedOptionsDiv, metadataToggle, metadataDiv, this.#deployUnitButtonEl);
+        this.#container.append(this.#unitRoleTypeDropdown.getContainer(), unitLabelCountContainerEl, this.#unitLoadoutDropdown.getContainer(), this.#unitSpawnAltitudeSlider.getContainer() as HTMLElement,
+        this.#unitLoadoutPreviewEl, this.#advancedOptionsToggle, this.#advancedOptionsDiv, this.#unitInfoToggle, this.#unitInfoDiv, this.#deployUnitButtonEl);
 
         /* Load the country codes from the public folder */
         var xhr = new XMLHttpRequest();
@@ -144,8 +157,29 @@ export class UnitSpawnMenu {
         };
         xhr.send();
 
+        /* Create the range circle previews */
+        this.#engagementCircle = new Circle(this.spawnOptions.latlng, { radius: 0, weight: 4, opacity: 0.8, fillOpacity: 0, dashArray: "4 8", interactive: false, bubblingMouseEvents: false });
+        this.#acquisitionCircle = new Circle(this.spawnOptions.latlng, { radius: 0, weight: 2, opacity: 0.8, fillOpacity: 0, dashArray: "8 12", interactive: false, bubblingMouseEvents: false });
+
         /* Event listeners */
         this.#container.addEventListener("unitRoleTypeChanged", () => {
+            /* Shown the unit label and the unit count dropdowns */
+            this.#unitLabelDropdown.show();
+            this.#unitCountDivider.classList.remove("hide");
+            this.#unitCountDropdown.show();
+
+            /* Hide all the other components */
+            this.#unitLoadoutDropdown.hide();
+            this.#unitSpawnAltitudeSlider.hide();
+            this.#unitLoadoutPreviewEl.classList.add("hide");
+            this.#advancedOptionsDiv.classList.add("hide");
+            this.#unitInfoDiv.classList.add("hide");
+            this.#advancedOptionsText.classList.add("hide");
+            this.#advancedOptionsToggle.classList.add("hide");
+            this.#unitInfoText.classList.add("hide");
+            this.#unitInfoToggle.classList.add("hide");
+
+            /* Disable the spawn button */
             this.#deployUnitButtonEl.disabled = true;
             this.#unitLabelDropdown.reset();
             this.#unitLoadoutListEl.replaceChildren();
@@ -153,6 +187,7 @@ export class UnitSpawnMenu {
             this.#unitImageEl.classList.toggle("hide", true);
             this.#unitLiveryDropdown.reset();
 
+            /* Populate the labels dropdown from the database */
             var blueprints: UnitBlueprint[] = [];
             if (this.#orderByRole)
                 blueprints = this.#unitDatabase.getByRole(this.spawnOptions.roleType);
@@ -188,8 +223,10 @@ export class UnitSpawnMenu {
                 }
             }
 
+            /* Request resizing */
             this.#container.dispatchEvent(new Event("resize"));
 
+            /* Reset the spawn options */
             this.spawnOptions.name = "";
             this.spawnOptions.loadout = undefined;
             this.spawnOptions.liveryID = undefined;
@@ -198,23 +235,43 @@ export class UnitSpawnMenu {
         })
 
         this.#container.addEventListener("unitLabelChanged", () => {
+            /* If enabled, show the altitude slideer and loadouts section */
+            if (this.#showAltitudeSlider)
+                this.#unitSpawnAltitudeSlider.show();
+
+            if (this.#showLoadout) {
+                this.#unitLoadoutDropdown.show();
+                this.#unitLoadoutPreviewEl.classList.remove("hide");
+            }
+
+            /* Show the advanced options and unit info sections */
+            this.#advancedOptionsText.classList.remove("hide");
+            this.#advancedOptionsToggle.classList.remove("hide");
+            this.#advancedOptionsToggle.classList.remove("is-open");
+            this.#unitInfoText.classList.remove("hide");
+            this.#unitInfoToggle.classList.remove("hide");
+            this.#unitInfoToggle.classList.remove("is-open");
+
+            /* Enable the spawn button */
             this.#deployUnitButtonEl.disabled = false;
+
+            /* If enabled, populate the loadout dropdown */
             if (!this.#unitLoadoutDropdown.isHidden()) {
                 this.#unitLoadoutDropdown.setOptions(this.#unitDatabase.getLoadoutNamesByRole(this.spawnOptions.name, this.spawnOptions.roleType));
                 this.#unitLoadoutDropdown.selectValue(0);
             }
 
+            /* Get the unit data from the db */
             var blueprint = this.#unitDatabase.getByName(this.spawnOptions.name);
 
-
+            /* Shown the unit silhouette */
             this.#unitImageEl.src = `images/units/${blueprint?.filename}`;
-            this.#unitImageEl.classList.toggle("hide", !(blueprint?.filename !== undefined));
+            this.#unitImageEl.classList.toggle("hide", !(blueprint?.filename !== undefined && blueprint?.filename !== ''));
             
+            /* Set the livery options */
             this.#setUnitLiveryOptions();
 
-            this.#container.dispatchEvent(new Event("resize"));
-            this.#computeSpawnPoints();
-
+            /* Populate the description and abilities sections */
             this.#descriptionDiv.replaceChildren();
             this.#abilitiesDiv.replaceChildren();
 
@@ -235,10 +292,16 @@ export class UnitSpawnMenu {
                 }
             }
 
+            /* Show the range circles */
             this.showCirclesPreviews();
+
+            /* Request resizing */
+            this.#container.dispatchEvent(new Event("resize"));
+            this.#computeSpawnPoints();
         })
 
         this.#container.addEventListener("unitLoadoutChanged", () => {
+            /* Update the loadout information */
             var items = this.spawnOptions.loadout?.items.map((item: any) => { return `${item.quantity}x ${item.name}`; });
             if (items != undefined) {
                 items.length == 0 ? items.push("Empty loadout") : "";
@@ -255,10 +318,12 @@ export class UnitSpawnMenu {
         })
 
         this.#container.addEventListener("unitCountChanged", () => {
+            /* Recompute the spawn points */
             this.#computeSpawnPoints();
         })
 
         this.#container.addEventListener("unitCountryChanged", () => {
+            /* Get the unit liveries by country */
             this.#setUnitLiveryOptions();
         })
 
@@ -267,12 +332,12 @@ export class UnitSpawnMenu {
         })
 
         document.addEventListener('activeCoalitionChanged', () => {
+            /* If the coalition changed, update the circle previews to set the colours */
             this.showCirclesPreviews();
         });
-
-        this.#engagementCircle = new Circle(this.spawnOptions.latlng, { radius: 0, weight: 4, opacity: 0.8, fillOpacity: 0, dashArray: "4 8", interactive: false, bubblingMouseEvents: false });
-        this.#acquisitionCircle = new Circle(this.spawnOptions.latlng, { radius: 0, weight: 2, opacity: 0.8, fillOpacity: 0, dashArray: "8 12", interactive: false, bubblingMouseEvents: false });
     }
+
+    abstract deployUnits(spawnOptions: UnitSpawnOptions, unitsCount: number): void;
 
     getContainer() {
         return this.#container;
@@ -283,7 +348,10 @@ export class UnitSpawnMenu {
     }
 
     reset() {
+        /* Disable the spawn button */
         this.#deployUnitButtonEl.disabled = true;
+
+        /* Reset all the dropdowns */
         this.#unitRoleTypeDropdown.reset();
         this.#unitLabelDropdown.reset();
         this.#unitLiveryDropdown.reset();
@@ -292,19 +360,37 @@ export class UnitSpawnMenu {
         else
             this.#unitRoleTypeDropdown.setOptions(this.#unitDatabase.getTypes(this.unitTypeFilter));
 
+        /* Reset the contents of the div elements */
         this.#unitLoadoutListEl.replaceChildren();
         this.#unitLoadoutDropdown.reset();
         this.#unitImageEl.classList.toggle("hide", true);
         this.#descriptionDiv.replaceChildren();
         this.#abilitiesDiv.replaceChildren();
 
-        this.setCountries();
-        this.#container.dispatchEvent(new Event("resize"));
+        /* Hide everything but the unit type dropdown */
+        this.#unitLabelDropdown.hide();
+        this.#unitCountDivider.classList.add("hide");
+        this.#unitCountDropdown.hide();
+        this.#unitLoadoutDropdown.hide();
+        this.#unitSpawnAltitudeSlider.hide();
+        this.#unitLoadoutPreviewEl.classList.add("hide");
+        this.#advancedOptionsDiv.classList.add("hide");
+        this.#unitInfoDiv.classList.add("hide");
+        this.#advancedOptionsText.classList.add("hide");
+        this.#advancedOptionsToggle.classList.add("hide");
+        this.#unitInfoText.classList.add("hide");
+        this.#unitInfoToggle.classList.add("hide");
 
+        /* Get the countries and clear the circle previews */
+        this.setCountries();
         this.clearCirclesPreviews();
+
+        /* Request resizing */
+        this.#container.dispatchEvent(new Event("resize"));
     }
 
     setCountries() {
+        /* Create the countries dropdown elements (with the little flags) */
         var coalitions = getApp().getMissionManager().getCoalitions();
         var countries = Object.values(coalitions[getApp().getActiveCoalition() as keyof typeof coalitions]);
         this.#unitCountryDropdown.setOptionsElements(this.#createCountryButtons(this.#unitCountryDropdown, countries, (country: string) => { this.#setUnitCountry(country) }));
@@ -313,13 +399,6 @@ export class UnitSpawnMenu {
             this.#unitCountryDropdown.forceValue(this.#getFormattedCountry(countries[0]));
             this.#setUnitCountry(countries[0]);
         }
-    }
-
-    refreshOptions() {
-        //if (!this.#unitDatabase.getTypes().includes(this.#unitTypeDropdown.getValue())) 
-        //    this.reset();
-        //if (!this.#unitDatabase.getByType(this.#unitTypeDropdown.getValue()).map((blueprint) => { return blueprint.label }).includes(this.#unitLabelDropdown.getValue())) 
-        //    this.resetUnitLabel();
     }
 
     showCirclesPreviews() {
@@ -425,6 +504,14 @@ export class UnitSpawnMenu {
         return this.#unitSpawnAltitudeSlider;
     }
 
+    setShowLoadout(showLoadout: boolean) {
+        this.#showLoadout = showLoadout;
+    }
+
+    setShowAltitudeSlider(showAltitudeSlider: boolean) {
+        this.#showAltitudeSlider = showAltitudeSlider;
+    }
+
     #setUnitRoleType(roleType: string) {
         this.spawnOptions.roleType = roleType;
         this.#container.dispatchEvent(new Event("unitRoleTypeChanged"));
@@ -480,10 +567,6 @@ export class UnitSpawnMenu {
             this.#unitLiveryDropdown.setOptions(countryLiveries);
             this.#unitLiveryDropdown.selectValue(0);
         }
-    }
-
-    deployUnits(spawnOptions: UnitSpawnOptions, unitsCount: number) {
-        /* Virtual function must be overloaded by inheriting classes */
     }
 
     #createCountryButtons(parent: Dropdown, countries: string[], callback: CallableFunction) {
@@ -614,7 +697,6 @@ export class HelicopterSpawnMenu extends UnitSpawnMenu {
 }
 
 export class GroundUnitSpawnMenu extends UnitSpawnMenu {
-
     protected showRangeCircles: boolean = true;
     protected unitTypeFilter = (unit:any) => {return !(GROUND_UNIT_AIR_DEFENCE_REGEX.test(unit.type))};
 
@@ -625,8 +707,8 @@ export class GroundUnitSpawnMenu extends UnitSpawnMenu {
     constructor(ID: string){
         super(ID, groundUnitDatabase, false);
         this.setMaxUnitCount(20);
-        this.getAltitudeSlider().hide();
-        this.getLoadoutDropdown().hide();
+        this.setShowAltitudeSlider(false);
+        this.setShowLoadout(false);
         this.getLoadoutPreview().classList.add("hide");
     }
 
@@ -656,7 +738,6 @@ export class GroundUnitSpawnMenu extends UnitSpawnMenu {
 }
 
 export class AirDefenceUnitSpawnMenu extends GroundUnitSpawnMenu {
-
     protected unitTypeFilter = (unit:any) => {return GROUND_UNIT_AIR_DEFENCE_REGEX.test(unit.type)};
 
     /**
@@ -677,9 +758,8 @@ export class NavyUnitSpawnMenu extends UnitSpawnMenu {
     constructor(ID: string){
         super(ID, navyUnitDatabase, false);
         this.setMaxUnitCount(4);
-        this.getAltitudeSlider().hide();
-        this.getLoadoutDropdown().hide();
-        this.getLoadoutPreview().classList.add("hide");
+        this.setShowAltitudeSlider(false);
+        this.setShowLoadout(false);
     }
 
     deployUnits(spawnOptions: UnitSpawnOptions, unitsCount: number) {
