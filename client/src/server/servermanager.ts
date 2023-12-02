@@ -12,7 +12,7 @@ export class ServerManager {
     #connected: boolean = false;
     #paused: boolean = false;
     #REST_ADDRESS = "http://localhost:30000/olympus";
-    #DEMO_ADDRESS = window.location.href + "demo";
+    #DEMO_ADDRESS = window.location.href.split('?')[0] + "demo"; /* Remove query parameters */
     #username = "";
     #password = "";
     #sessionHash: string | null = null;
@@ -105,7 +105,7 @@ export class ServerManager {
 
     getConfig(callback: CallableFunction) {
         var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open("GET", window.location.href + "config", true);
+        xmlHttp.open("GET", window.location.href.split('?')[0] + "config", true);
         xmlHttp.onload = function (e) {
             var data = JSON.parse(xmlHttp.responseText);
             callback(data);
