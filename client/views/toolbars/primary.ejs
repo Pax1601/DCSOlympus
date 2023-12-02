@@ -31,14 +31,14 @@
 
     <div class="ol-group">
         <div id="map-type" class="ol-select">
-            <div class="ol-select-value"><img src="resources/theme/images/icons/map-source.svg" inject-svg><span class="ol-select-value-text">ArcGIS Satellite</span></div>
+            <div class="ol-select-value"><img src="resources/theme/images/icons/map-source.svg" inject-svg /><span class="ol-select-value-text">ArcGIS Satellite</span></div>
             <div class="ol-select-options">
                 <!-- Here the available map sources will be listed-->
             </div>
         </div>
 
         <div id="map-visibility-options" class="ol-select">
-            <div class="ol-select-value"><img src="/resources/theme/images/icons/gears-solid.svg" inject-svg>Options</div>
+            <div class="ol-select-value"><img src="/resources/theme/images/icons/gears-solid.svg" inject-svg />Options</div>
             <div class="ol-select-options">
                 <!-- This is where the advanced visibility options will be listed -->
             </div>
@@ -46,25 +46,28 @@
     </div>
 </nav>
 <nav class="ol-panel" oncontextmenu="return false;">
-    <img src="resources/theme/images/icons/eye-solid.svg" inject-svg>
+    <div class="ol-panel-tab">
+        <img src="resources/theme/images/icons/eye-solid.svg" inject-svg />
+        <span>View</span>
+    </div>
     <div id="unit-visibility-control" class="ol-group ol-navbar-buttons-group">
         <!-- Here the available visibility controls will be listed -->
     </div>
 
-    <div id="coalition-visibility-control" class="ol-group ol-group-button-toggle">
+    <div id="coalition-visibility-control" class="ol-group ol-navbar-buttons-group">
         <div>
             <button id="coalition-visibility-control-blue" data-on-click="toggleCoalitionVisibility"
-                data-on-click-params='{ "coalition": "blue" }'><span class="accent-bluefor">BLUEFOR</span></button>
+                data-on-click-params='{ "coalition": "blue" }'><img src="/resources/theme/images/buttons/visibility/shield.svg" class="fill-coalition" data-coalition="blue" inject-svg /></button>
         </div>
 
         <div>
             <button id="coalition-visibility-control-red" data-on-click="toggleCoalitionVisibility"
-                data-on-click-params='{ "coalition": "red" }'><span class="accent-redfor">REDFOR</span></button>
+                data-on-click-params='{ "coalition": "red" }'><img src="/resources/theme/images/buttons/visibility/shield.svg" class="fill-coalition" data-coalition="red" inject-svg /></button>
         </div>
 
         <div>
             <button id="coalition-visibility-control-neutral" data-on-click="toggleCoalitionVisibility"
-                data-on-click-params='{ "coalition": "neutral" }'><span class="accent-neutral">NEUTRAL</span></button>
+                data-on-click-params='{ "coalition": "neutral" }'><img src="/resources/theme/images/buttons/visibility/shield.svg" class="fill-coalition" data-coalition="neutral" inject-svg /></button>
         </div>
     </div>
 </nav>
