@@ -565,6 +565,14 @@ export abstract class Unit extends CustomMarker {
         return false;
     }
 
+    isControlledByDCS() {
+        return this.getControlled() === false && this.getHuman() === false;
+    }
+
+    isControlledByOlympus() {
+        return this.getControlled() === true;
+    }
+
     /********************** Icon *************************/
     createIcon(): void {
         /* Set the icon */
@@ -691,9 +699,11 @@ export abstract class Unit extends CustomMarker {
         const hiddenTypes = getApp().getMap().getHiddenTypes();
         var hidden = (
             /* Hide the unit if it is a human and humans are hidden */
-            (this.#human && hiddenTypes.includes("human")) ||
-            /* Hide the unit if it is DCS controlled and DCS controlled units are hidden */
-            (this.#controlled == false && hiddenTypes.includes("dcs")) ||
+            (this.getHuman() && hiddenTypes.includes("human")) ||
+            /* Hide the unit if it is DCS-controlled and DCS controlled units are hidden */
+            (this.isControlledByDCS() && hiddenTypes.includes("dcs")) ||
+            /* Hide the unit if it is Olympus-controlled and Olympus-controlled units are hidden */
+            (this.isControlledByOlympus() && hiddenTypes.includes("olympus")) ||
             /* Hide the unit if this specific category is hidden */
             (hiddenTypes.includes(this.getMarkerCategory())) ||
             /* Hide the unit if this coalition is hidden */

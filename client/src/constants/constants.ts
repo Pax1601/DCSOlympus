@@ -189,6 +189,13 @@ export const MAP_MARKER_CONTROLS: MapMarkerVisibilityControl[] = [{
     "toggles": ["dcs"],
     "tooltip": "Toggle DCS-controlled units' visibility"
 }, {
+    "image": "visibility/head-side-virus-solid.svg",
+    "isProtected": false,
+    "name": "Olympus",
+    "protectable": false,
+    "toggles": ["olympus"],
+    "tooltip": "Toggle Olympus-controlled units' visibility"
+}, {
     "image": "visibility/aircraft.svg",
     "name": "Aircraft",
     "toggles": ["aircraft"],

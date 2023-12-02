@@ -68,7 +68,7 @@
     display: none;
 }
 
-#unit-visibility-control > div:nth-child(3),
+#unit-visibility-control > div:nth-child(4),
 #coalition-visibility-control {
 	border-left: 2px solid white;
 	padding-left: 12px;
