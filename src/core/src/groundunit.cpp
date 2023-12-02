@@ -12,27 +12,21 @@ using namespace GeographicLib;
 extern Scheduler* scheduler;
 extern UnitsManager* unitsManager;
 json::value GroundUnit::database = json::value();
+extern string instancePath;
 
 #define RANDOM_ZERO_TO_ONE (double)(rand()) / (double)(RAND_MAX)
 #define RANDOM_MINUS_ONE_TO_ONE (((double)(rand()) / (double)(RAND_MAX) - 0.5) * 2)
 
 void GroundUnit::loadDatabase(string path) {
-	char* buf = nullptr;
-	size_t sz = 0;
-	if (_dupenv_s(&buf, &sz, "DCSOLYMPUS_PATH") == 0 && buf != nullptr)
-	{
-		std::ifstream ifstream(string(buf) + path);
-		std::stringstream ss;
-		ss << ifstream.rdbuf();
-		std::error_code errorCode;
-		database = json::value::parse(ss.str(), errorCode);
-		if (database.is_object())
-			log("Ground Units database loaded correctly");
-		else
-			log("Error reading Ground Units database file");
-
-		free(buf);
-	}
+	std::ifstream ifstream(instancePath + path);
+	std::stringstream ss;
+	ss << ifstream.rdbuf();
+	std::error_code errorCode;
+	database = json::value::parse(ss.str(), errorCode);
+	if (database.is_object())
+		log("GroundUnits database loaded correctly from " + instancePath + path);
+	else
+		log("Error reading GroundUnits database file");
 }
 
 /* Ground unit */

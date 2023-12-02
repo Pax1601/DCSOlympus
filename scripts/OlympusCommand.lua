@@ -1345,3 +1345,11 @@ Olympus.initializeUnits()
 
 Olympus.notify("OlympusCommand script " .. version .. " loaded successfully", 2, true)
 
+-- Load the current instance folder
+local lfs = require('lfs')
+
+Olympus.instancePath = lfs.writedir().."Mods\\Services\\Olympus"
+
+Olympus.notify("Starting DCS Olympus backend session in "..Olympus.instancePath, 2)
+Olympus.OlympusDLL.setInstancePath()
+
