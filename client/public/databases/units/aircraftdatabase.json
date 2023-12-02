@@ -4862,7 +4862,7 @@
 	"Bf-109K-4": {
 		"name": "Bf-109K-4",
 		"coalition": "red",
-		"label": "Bf-109K-4 Fritz",
+		"label": "Bf-109K-4",
 		"era": "WW2",
 		"shortLabel": "109",
 		"loadouts": [

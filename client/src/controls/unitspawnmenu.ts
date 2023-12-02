@@ -210,7 +210,7 @@ export abstract class UnitSpawnMenu {
                 let name = this.#unitLabelDropdown.getOptionsList()[idx];
                 let element = this.#unitLabelDropdown.getOptionElements()[idx] as HTMLElement;
                 let entry = this.#unitDatabase.getByName(name);
-                if (entry) {
+                if (entry && entry.tags?.trim() !== "") {
                     element.querySelectorAll("button")[0]?.append(...(entry.tags?.split(",").map((tag: string) => {
                         tag = tag.trim();
                         let el = document.createElement("div");
