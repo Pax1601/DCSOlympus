@@ -59,6 +59,10 @@ void NavyUnit::setState(unsigned char newState)
 		case State::REACH_DESTINATION: {
 			break;
 		}
+		case State::ATTACK: {
+			setTargetID(NULL);
+			break;
+		}
 		case State::FIRE_AT_AREA: {
 			setTargetPosition(Coords(NULL));
 			break;
@@ -83,6 +87,13 @@ void NavyUnit::setState(unsigned char newState)
 	case State::REACH_DESTINATION: {
 		setEnableTaskCheckFailed(true);
 		resetActiveDestination();
+		break;
+	}
+	case State::ATTACK: {
+		setEnableTaskCheckFailed(true);
+		clearActivePath();
+		resetActiveDestination();
+		resetTask();
 		break;
 	}
 	case State::FIRE_AT_AREA: {
@@ -141,6 +152,25 @@ void NavyUnit::AIloop()
 			}
 		}
 		break;
+	}
+	case State::ATTACK: {
+		Unit* target = unitsManager->getUnit(getTargetID());
+		if (target != nullptr) {
+			setTask("Attacking " + target->getUnitName());
+
+			if (!getHasTask()) {
+				/* Send the command */
+				std::ostringstream taskSS;
+				taskSS.precision(10);
+				taskSS << "{id = 'AttackUnit', unitID = " << target->getID() << " }";
+				Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
+				scheduler->appendCommand(command);
+				setHasTask(true);
+			}
+		}
+		else {
+			setState(State::IDLE);
+		}
 	}
 	case State::FIRE_AT_AREA: {
 		setTask("Firing at area");

@@ -55,13 +55,22 @@
 	padding:0 6px;
 }
 
+#view-label {
+	margin-left: 5px;
+}
+
+#view-label svg {
+	height: 20px;
+	width: 20px;
+}
+
 #toolbar-container>*:nth-child(3)>svg {
     display: none;
 }
 
 #unit-visibility-control > div:nth-child(3),
 #coalition-visibility-control {
-	border-left: 4px solid white;
+	border-left: 2px solid white;
 	padding-left: 12px;
 }
 
