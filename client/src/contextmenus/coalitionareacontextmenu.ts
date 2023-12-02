@@ -27,8 +27,8 @@ export class CoalitionAreaContextMenu extends ContextMenu {
         super(ID);
 
         /* Create the coalition switch */
-        this.#coalitionSwitch = new Switch("coalition-area-switch", (value: boolean) => this.#onSwitchClick(value));
-        this.#coalitionSwitch.setValue(false);
+        this.#coalitionSwitch = new Switch("coalition-area-switch", (value: boolean) => this.#onSwitchClick(value), true);
+        this.#coalitionSwitch.setValue(true);
 
         /* Create the controls of the IADS creation submenu */
         this.#iadsTypesDropdown = new Dropdown("iads-units-type-options", () => { });
@@ -146,11 +146,11 @@ export class CoalitionAreaContextMenu extends ContextMenu {
 
     /** Callback event called when the coalition switch is clicked to change the coalition of the CoalitionArea
      * 
-     * @param value Switch position (false: blue, true: red)
+     * @param value Switch position (false: red, true: blue)
      */
     #onSwitchClick(value: boolean) {
         if (getApp().getMissionManager().getCommandModeOptions().commandMode == GAME_MASTER) {
-            this.getCoalitionArea()?.setCoalition(value ? "red" : "blue");
+            this.getCoalitionArea()?.setCoalition(value ? "blue" : "red");
             this.getContainer()?.querySelectorAll('[data-coalition]').forEach((element: any) => {
                 element.setAttribute("data-coalition", this.getCoalitionArea()?.getCoalition())
             });

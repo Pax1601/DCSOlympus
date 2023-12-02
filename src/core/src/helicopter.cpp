@@ -12,24 +12,18 @@ using namespace GeographicLib;
 extern Scheduler* scheduler;
 extern UnitsManager* unitsManager;
 json::value Helicopter::database = json::value();
+extern string instancePath;
 
 void Helicopter::loadDatabase(string path) {
-	char* buf = nullptr;
-	size_t sz = 0;
-	if (_dupenv_s(&buf, &sz, "DCSOLYMPUS_PATH") == 0 && buf != nullptr)
-	{
-		std::ifstream ifstream(string(buf) + path);
-		std::stringstream ss;
-		ss << ifstream.rdbuf();
-		std::error_code errorCode;
-		database = json::value::parse(ss.str(), errorCode);
-		if (database.is_object())
-			log("Helicopters database loaded correctly");
-		else
-			log("Error reading Helicopters database file");
-
-		free(buf);
-	}
+	std::ifstream ifstream(instancePath + path);
+	std::stringstream ss;
+	ss << ifstream.rdbuf();
+	std::error_code errorCode;
+	database = json::value::parse(ss.str(), errorCode);
+	if (database.is_object())
+		log("Helicopters database loaded correctly from " + instancePath + path);
+	else
+		log("Error reading Helicopters database file");
 }
 
 /* Helicopter */
