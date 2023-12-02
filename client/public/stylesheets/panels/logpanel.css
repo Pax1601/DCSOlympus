@@ -27,12 +27,16 @@
 	display: block;
 }
 
-
 #log-panel-header-right {
     align-items: center;
     column-gap: 16px;
     display:flex;
     flex-flow: row nowrap;
+}
+
+#log-panel-header-right svg {
+    width: 15px;
+    height: 15px;
 }
 
 #server-status-panel abbr {

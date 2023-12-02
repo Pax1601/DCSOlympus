@@ -53,7 +53,6 @@ export class OlympusApp {
     #weaponsManager: WeaponsManager | null = null;
 
     constructor() {
-
     }
 
     // TODO add checks on null

@@ -68,10 +68,14 @@
     display: none;
 }
 
-#unit-visibility-control > div:nth-child(4),
-#coalition-visibility-control {
+#unit-visibility-control > div:nth-child(4) {
 	border-left: 2px solid white;
 	padding-left: 12px;
+}
+
+#unit-visibility-control > div:last-child {
+	border-right: 2px solid white;
+	padding-right: 12px;
 }
 
 @media (max-width: 1145px) {

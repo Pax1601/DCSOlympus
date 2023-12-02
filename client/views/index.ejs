@@ -1,5 +1,17 @@
 <html>
 
+<script>
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const theme = urlParams.get('theme');
+  if (theme != undefined) {
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.open("PUT", "/resources/theme/" + theme);
+      xmlHttp.send("");
+      console.log("Setting theme to " + theme)
+  } 
+</script> 
+
 <head>
   <title>Olympus client</title>
   <link rel="stylesheet" type="text/css" href="stylesheets/olympus.css" />

@@ -146,12 +146,12 @@
 }
 
 #fuel-percentage::before {
-	content: url("/resources/theme/images/icons/fuel.svg");
+	content: "";
+	background-image: url("/resources/theme/images/icons/fuel.svg");
+	background-size: 16px 16px;
 	display: inline-block;
 	filter: invert(100%);
-	height: 16px;
 	margin-right: 6px;
-	width: 16px;
 }
 
 #fuel-percentage::after {

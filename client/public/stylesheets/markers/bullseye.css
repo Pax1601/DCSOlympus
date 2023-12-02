@@ -4,6 +4,8 @@
     display: flex;
     justify-content: center;
     position: relative;
+    width: 100%;
+    height: 100%;
 }
 
 .bullseye-icon[data-coalition="red"] svg * {
