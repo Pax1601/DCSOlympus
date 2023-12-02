@@ -95,7 +95,7 @@ static int onSimulationStart(lua_State* L)
     coreInstancePath = (f_coreInstancePath)GetProcAddress(hGetProcIDDLL, "coreInstancePath");
     if (!coreInstancePath)
     {
-        LogError(L, "Error getting coreSetInstancePath ProcAddress from DLL");
+        LogError(L, "Error getting coreInstancePath ProcAddress from DLL");
         goto error;
     }
 
