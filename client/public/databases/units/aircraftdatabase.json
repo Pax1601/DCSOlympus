@@ -4750,6 +4750,38 @@
 		"shortLabel": "B52",
 		"loadouts": [
 			{
+				"items": [
+					{
+						"name": "8 x AGM-84A Harpoon ASM",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "AGM-84A*8",
+				"name": "AGM-84A*8",
+				"roles": [
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "6 x AGM-86D on MER",
+						"quantity": 2
+					},
+					{
+						"name": "8 x AGM-86D",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "AGM-86C*20",
+				"name": "AGM-86C*20",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
 				"items": [],
 				"enabled": true,
 				"code": "",
@@ -4757,21 +4789,6 @@
 				"roles": [
 					"No task",
 					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "HSAB with 9 x Mk-83 - 1000lb GP Bombs LD",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "Mk-84*18",
-				"name": "Mk-84*18",
-				"roles": [
-					"Strike",
-					"Runway Attack"
 				]
 			},
 			{
@@ -4796,6 +4813,21 @@
 			{
 				"items": [
 					{
+						"name": "18 x Mk-84 2000lb GP Bombs",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "Mk-84*18",
+				"name": "Mk-84*18",
+				"roles": [
+					"Strike",
+					"Runway Attack"
+				]
+			},
+			{
+				"items": [
+					{
 						"name": "HSAB with 9 x Mk-20 Rockeye - 490lbs CBUs, 247 x HEAT Bomblets",
 						"quantity": 2
 					}
@@ -4806,38 +4838,6 @@
 				"roles": [
 					"Strike",
 					"Runway Attack"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "6 x AGM-86D on MER",
-						"quantity": 2
-					},
-					{
-						"name": "8 x AGM-86D",
-						"quantity": 1
-					}
-				],
-				"enabled": true,
-				"code": "AGM-86C*20",
-				"name": "AGM-86C*20",
-				"roles": [
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "8 x AGM-84A Harpoon ASM",
-						"quantity": 1
-					}
-				],
-				"enabled": true,
-				"code": "AGM-84A*8",
-				"name": "AGM-84A*8",
-				"roles": [
-					"Antiship Strike"
 				]
 			}
 		],
@@ -12316,16 +12316,6 @@
 		"shortLabel": "86",
 		"loadouts": [
 			{
-				"items": [],
-				"enabled": true,
-				"code": "",
-				"name": "Empty loadout",
-				"roles": [
-					"No task",
-					"CAP"
-				]
-			},
-			{
 				"items": [
 					{
 						"name": "Fuel Tank 120 gallons",
@@ -12335,20 +12325,6 @@
 				"enabled": true,
 				"code": "120gal Fuel*2",
 				"name": "120gal Fuel*2",
-				"roles": [
-					"CAP"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "Fuel Tank 200 gallons",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "200gal Fuel*2",
-				"name": "200gal Fuel*2",
 				"roles": [
 					"CAP"
 				]
@@ -12368,23 +12344,6 @@
 				"code": "120gal Fuel*2, 200gal Fuel*2",
 				"name": "120gal Fuel*2, 200gal Fuel*2",
 				"roles": [
-					"CAP"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "LAU-7 with AIM-9B Sidewinder IR AAM",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "GAR-8*2",
-				"name": "GAR-8*2",
-				"roles": [
-					"CAP",
-					"CAP",
-					"Escort",
 					"CAP"
 				]
 			},
@@ -12412,17 +12371,34 @@
 			{
 				"items": [
 					{
-						"name": "2 x HVAR, UnGd Rkts",
-						"quantity": 8
+						"name": "Fuel Tank 200 gallons",
+						"quantity": 2
 					}
 				],
 				"enabled": true,
-				"code": "HVAR*16",
-				"name": "HVAR*16",
+				"code": "200gal Fuel*2",
+				"name": "200gal Fuel*2",
 				"roles": [
-					"Strike",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Fuel Tank 200 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "AN-M64 - 500lb GP Bomb LD",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "200gal Fuel*2, AN-M64*2",
+				"name": "200gal Fuel*2, AN-M64*2",
+				"roles": [
 					"CAS",
-					"Antiship Strike"
+					"Strike"
 				]
 			},
 			{
@@ -12461,22 +12437,46 @@
 				]
 			},
 			{
+				"items": [],
+				"enabled": true,
+				"code": "",
+				"name": "Empty loadout",
+				"roles": [
+					"No task",
+					"CAP"
+				]
+			},
+			{
 				"items": [
 					{
-						"name": "Fuel Tank 200 gallons",
-						"quantity": 2
-					},
-					{
-						"name": "AN-M64 - 500lb GP Bomb LD",
+						"name": "LAU-7 with AIM-9B Sidewinder IR AAM",
 						"quantity": 2
 					}
 				],
 				"enabled": true,
-				"code": "200gal Fuel*2, AN-M64*2",
-				"name": "200gal Fuel*2, AN-M64*2",
+				"code": "GAR-8*2",
+				"name": "GAR-8*2",
 				"roles": [
+					"CAP",
+					"CAP",
+					"Escort",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "2 x HVAR, UnGd Rkts",
+						"quantity": 8
+					}
+				],
+				"enabled": true,
+				"code": "HVAR*16",
+				"name": "HVAR*16",
+				"roles": [
+					"Strike",
 					"CAS",
-					"Strike"
+					"Antiship Strike"
 				]
 			},
 			{
@@ -12496,7 +12496,7 @@
 				]
 			}
 		],
-		"filename": "f-5.png",
+		"filename": "f-86.png",
 		"enabled": true,
 		"liveries": {
 			"us air force (skyblazers)": {
@@ -19182,6 +19182,44 @@
 		"shortLabel": "MQ9",
 		"loadouts": [
 			{
+				"items": [
+					{
+						"name": "M299 - 4 x AGM-114K Hellfire",
+						"quantity": 2
+					},
+					{
+						"name": "AGM-114K * 2",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "AGM-114K*12",
+				"name": "AGM-114K*12",
+				"roles": [
+					"CAS",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "M299 - 4 x AGM-114K Hellfire",
+						"quantity": 2
+					},
+					{
+						"name": "GBU-38(V)1/B - JDAM, 500lb GPS Guided Bomb",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "AGM-114K*8,GBU-38*2",
+				"name": "AGM-114K*8,GBU-38*2",
+				"roles": [
+					"CAS",
+					"Strike"
+				]
+			},
+			{
 				"items": [],
 				"enabled": true,
 				"code": "",
@@ -19220,47 +19258,9 @@
 					"CAS",
 					"Strike"
 				]
-			},
-			{
-				"items": [
-					{
-						"name": "M299 - 4 x AGM-114K Hellfire",
-						"quantity": 2
-					},
-					{
-						"name": "GBU-38(V)1/B - JDAM, 500lb GPS Guided Bomb",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "AGM-114K*8,GBU-38*2",
-				"name": "AGM-114K*8,GBU-38*2",
-				"roles": [
-					"CAS",
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "M299 - 4 x AGM-114K Hellfire",
-						"quantity": 2
-					},
-					{
-						"name": "AGM-114K * 2",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "AGM-114K*12",
-				"name": "AGM-114K*12",
-				"roles": [
-					"CAS",
-					"Strike"
-				]
 			}
 		],
-		"filename": "i-16.png",
+		"filename": "rq-1.png",
 		"enabled": true,
 		"liveries": {
 			"standard": {

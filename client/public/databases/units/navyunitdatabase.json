@@ -4,7 +4,7 @@
 		"coalition": "blue",
 		"type": "Aircraft Carrier",
 		"era": "Late Cold War",
-		"label": "CVN-71 Theodore Roosevelt (SC)",
+		"label": "CVN-71 Theodore Roosevelt",
 		"shortLabel": "CVN-71",
 		"range": "Short",
 		"filename": "",
@@ -12,7 +12,7 @@
 		"acquisitionRange": 50000,
 		"engagementRange": 25000,
 		"tags": "",
-		"description": "Ship",
+		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
 		"canRearm": false
@@ -22,7 +22,7 @@
 		"coalition": "blue",
 		"type": "Aircraft Carrier",
 		"era": "Late Cold War",
-		"label": "CVN-72 Abraham Lincoln (SC)",
+		"label": "CVN-72 Abraham Lincoln",
 		"shortLabel": "CVN-72",
 		"range": "Short",
 		"filename": "",
@@ -30,7 +30,7 @@
 		"acquisitionRange": 50000,
 		"engagementRange": 25000,
 		"tags": "",
-		"description": "Ship",
+		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
 		"canRearm": false
@@ -40,7 +40,7 @@
 		"coalition": "blue",
 		"type": "Aircraft Carrier",
 		"era": "Late Cold War",
-		"label": "CVN-73 George Washington (SC)",
+		"label": "CVN-73 George Washington",
 		"shortLabel": "CVN-73",
 		"range": "Medium",
 		"filename": "",
@@ -48,7 +48,7 @@
 		"acquisitionRange": 50000,
 		"engagementRange": 25000,
 		"tags": "",
-		"description": "Ship",
+		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
 		"canRearm": false
@@ -58,7 +58,7 @@
 		"coalition": "blue",
 		"type": "Aircraft Carrier",
 		"era": "Late Cold War",
-		"label": "CVN-75 Harry S. Truman (SC)",
+		"label": "CVN-75 Harry S. Truman",
 		"shortLabel": "CVN-75",
 		"range": "Medium",
 		"filename": "",
@@ -88,7 +88,7 @@
 		"acquisitionRange": 50000,
 		"engagementRange": 25000,
 		"tags": "",
-		"description": "Ship",
+		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
 		"canRearm": false
@@ -130,7 +130,7 @@
 		"acquisitionRange": 25000,
 		"engagementRange": 3000,
 		"tags": "",
-		"description": "HMS Leeds Castle. Smaller. Patrol craft",
+		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
 		"canRearm": false
@@ -220,7 +220,7 @@
 		"acquisitionRange": 150000,
 		"engagementRange": 20000,
 		"tags": "",
-		"description": "Ship",
+		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
 		"canRearm": false
@@ -608,7 +608,7 @@
 		"acquisitionRange": 150000,
 		"engagementRange": 100000,
 		"tags": "",
-		"description": "Ship",
+		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
 		"canRearm": false
@@ -644,7 +644,7 @@
 		"acquisitionRange": 100000,
 		"engagementRange": 30000,
 		"tags": "",
-		"description": "Ship",
+		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
 		"canRearm": false
@@ -704,13 +704,13 @@
 		"acquisitionRange": 260000,
 		"engagementRange": 100000,
 		"tags": "",
-		"description": "Ship",
+		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
 		"canRearm": false
 	},
 	"Type_054A": {
-		"name": "",
+		"name": "Type_054A",
 		"coalition": "red",
 		"type": "Combatants",
 		"era": "Modern",
@@ -872,7 +872,7 @@
 		"acquisitionRange": 160000,
 		"engagementRange": 45000,
 		"tags": "",
-		"description": "Ship",
+		"description": "",
 		"abilities": "35nm >50,000ft range"
 	},
 	"Type_071": {
@@ -926,7 +926,7 @@
 		"acquisitionRange": 300000,
 		"engagementRange": 150000,
 		"tags": "",
-		"description": "Ship",
+		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
 		"canRearm": false
@@ -1084,7 +1084,7 @@
 		"acquisitionRange": 18000,
 		"engagementRange": 5000,
 		"tags": "",
-		"description": "ARA Vienticinco de Mayo. Conventional CATOBAR carrier",
+		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
 		"canRearm": false
@@ -1102,7 +1102,7 @@
 		"acquisitionRange": 100000,
 		"engagementRange": 74000,
 		"tags": "",
-		"description": "Ship",
+		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
 		"canRearm": false
@@ -1120,7 +1120,7 @@
 		"acquisitionRange": 180000,
 		"engagementRange": 8000,
 		"tags": "",
-		"description": "Ship",
+		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
 		"canRearm": false
@@ -1138,7 +1138,7 @@
 		"acquisitionRange": 180000,
 		"engagementRange": 140000,
 		"tags": "",
-		"description": "Ship",
+		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
 		"canRearm": false
@@ -1156,7 +1156,7 @@
 		"acquisitionRange": 150000,
 		"engagementRange": 100000,
 		"tags": "",
-		"description": "Ship",
+		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
 		"canRearm": false
@@ -1174,7 +1174,7 @@
 		"acquisitionRange": 150000,
 		"engagementRange": 100000,
 		"tags": "",
-		"description": "Ship",
+		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
 		"canRearm": false
@@ -1192,7 +1192,7 @@
 		"acquisitionRange": 180000,
 		"engagementRange": 140000,
 		"tags": "",
-		"description": "Ship",
+		"description": "",
 		"abilities": "",
 		"canTargetPoint": true,
 		"canRearm": false
@@ -1233,7 +1233,7 @@
 		"canRearm": false
 	},
 	"PERRY": {
-		"name": "perry",
+		"name": "PERRY",
 		"coalition": "blue",
 		"type": "Combatants",
 		"era": "Mid Cold War",
@@ -1293,7 +1293,7 @@
 		"canRearm": false
 	},
 	"ALBATROS": {
-		"name": "albatros",
+		"name": "ALBATROS",
 		"coalition": "red",
 		"type": "Combatants",
 		"era": "Modern",
@@ -1349,7 +1349,7 @@
 		"canRearm": false
 	},
 	"KUZNECOW": {
-		"name": "kuznecow",
+		"name": "KUZNECOW",
 		"coalition": "red",
 		"type": "Aircraft Carrier",
 		"era": "Late Cold War",
@@ -1367,7 +1367,7 @@
 		"canRearm": false
 	},
 	"MOLNIYA": {
-		"name": "molniya",
+		"name": "MOLNIYA",
 		"coalition": "",
 		"type": "Combatants",
 		"era": "Late Cold War",
@@ -1399,7 +1399,7 @@
 		"canRearm": false
 	},
 	"MOSCOW": {
-		"name": "moscow",
+		"name": "MOSCOW",
 		"coalition": "red",
 		"type": "Combatants",
 		"era": "Late Cold War",
@@ -1435,13 +1435,13 @@
 		"canRearm": false
 	},
 	"NEUSTRASH": {
-		"name": "neustrash",
+		"name": "NEUSTRASH",
 		"coalition": "red",
 		"type": "Combatants",
 		"era": "Late Cold War",
 		"label": "Neustrashimy",
 		"shortLabel": "Neustrashimy",
-		"range": "Short",
+		"range": "",
 		"filename": "",
 		"enabled": true,
 		"acquisitionRange": 27000,
@@ -1470,13 +1470,13 @@
 		"canRearm": false
 	},
 	"REZKY": {
-		"name": "Rezky (Krivak-2)",
+		"name": "REZKY",
 		"coalition": "red",
 		"type": "Combatants",
 		"era": "WW2",
 		"label": "Rezky (Krivak-2)",
 		"shortLabel": "Rezky",
-		"range": "Short",
+		"range": "",
 		"filename": "",
 		"enabled": true,
 		"acquisitionRange": 30000,
@@ -1488,7 +1488,7 @@
 		"canRearm": false
 	},
 	"ELNYA": {
-		"name": "elnya",
+		"name": "ELNYA",
 		"coalition": "red",
 		"type": "Cargo/Transport",
 		"era": "Late Cold War",
@@ -1554,7 +1554,7 @@
 		"canRearm": false
 	},
 	"ZWEZDNY": {
-		"name": "zwezdny",
+		"name": "ZWEZDNY",
 		"coalition": "",
 		"type": "Cargo/Transport",
 		"era": "Modern",
@@ -1572,7 +1572,7 @@
 		"canRearm": false
 	},
 	"KILO": {
-		"name": "kilo",
+		"name": "KILO",
 		"coalition": "red",
 		"type": "Submarine",
 		"era": "Mid Cold War",

@@ -316,10 +316,10 @@ void GroundUnit::AIloop()
 				canAAA = databaseEntry[L"canAAA"].as_bool();
 		}
 
-		/* Only perform scenic functions when the scheduler is "free" */
-		if (scheduler->getLoad() == 0 && canAAA) {
+		if (canAAA) {
+			/* Only perform scenic functions when the scheduler is "free" */
 			/* Only run this when the internal counter reaches 0 to avoid excessive computations when no nearby target */
-			if (internalCounter == 0) {
+			if (scheduler->getLoad() == 0 && internalCounter == 0) {
 				double distance = 0;
 				unsigned char unitCoalition = coalition == 0 ? getOperateAs() : coalition;
 				unsigned char targetCoalition = unitCoalition == 2 ? 1 : 2;
