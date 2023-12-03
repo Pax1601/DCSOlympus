@@ -332,7 +332,7 @@ begin
     Top := ScaleY(35);
     Width := ScaleX(185);
     Height := ScaleY(21);
-    TabOrder := 2;
+    TabOrder := 1;
   end;
 
   { lblBluePassword }
@@ -380,7 +380,7 @@ begin
     Top := ScaleY(91);
     Width := ScaleX(185);
     Height := ScaleY(21);
-    TabOrder := 2;
+    TabOrder := 3;
   end;
 
   
@@ -407,7 +407,7 @@ begin
     Height := ScaleY(21);
     Text := '3000';
     OnKeyPress := @AcceptNumbersOnlyKeyPress;
-    TabOrder := 3;
+    TabOrder := 4;
   end;
 
   { lblBackendPort }
@@ -433,7 +433,7 @@ begin
     Height := ScaleY(21);
     Text := '3001';
     OnKeyPress := @AcceptNumbersOnlyKeyPress;
-    TabOrder := 4;
+    TabOrder := 5;
   end;
   
   { lblPasswordInstructions }
