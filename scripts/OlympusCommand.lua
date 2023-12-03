@@ -1053,9 +1053,7 @@ function Olympus.setUnitsData(arg, time)
 							table["isHuman"] = (unit:getPlayerName() ~= nil)
 							table["hasTask"] = controller:hasTask()
 							table["ammo"] = unit:getAmmo() --TODO remove a lot of stuff we don't really need
-							table["ammo"] = unit:getAmmo() --TODO: remove a lot of stuff we don't really need
 							table["fuel"] = unit:getFuel()
-							table["health"] = unit:getLife() / unit:getLife0() * 100
 							table["health"] = unit:getLife() / initialLife * 100
 							table["contacts"] = contacts
 

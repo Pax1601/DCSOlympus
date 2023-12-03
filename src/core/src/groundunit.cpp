@@ -273,7 +273,8 @@ void GroundUnit::AIloop()
 	case State::SCENIC_AAA: {
 		setTask("Scenic AAA");
 
-		if ((!getHasTask() || internalCounter == 0)) {
+		/* Only perform scenic functions when the scheduler is "free" */
+		if (((!getHasTask() && scheduler->getLoad() == 0) || internalCounter == 0)) {
 			double distance = 0;
 			unsigned char unitCoalition = coalition == 0 ? getOperateAs() : coalition;
 			unsigned char targetCoalition = unitCoalition == 2 ? 1 : 2;
@@ -315,7 +316,8 @@ void GroundUnit::AIloop()
 				canAAA = databaseEntry[L"canAAA"].as_bool();
 		}
 
-		if (canAAA) {
+		/* Only perform scenic functions when the scheduler is "free" */
+		if (scheduler->getLoad() == 0 && canAAA) {
 			/* Only run this when the internal counter reaches 0 to avoid excessive computations when no nearby target */
 			if (internalCounter == 0) {
 				double distance = 0;
