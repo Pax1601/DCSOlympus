@@ -21,6 +21,7 @@ Olympus.cloneDatabase = {}		-- Database of spawn options, used for units cloning
 Olympus.unitIndex = 0			-- Counter used to spread the computational load of data retrievial from DCS
 Olympus.unitStep = 50			-- Max number of units that get updated each cycle
 Olympus.units = {}				-- Table holding references to all the currently existing units
+Olympus.unitsInitialLife = {}	-- getLife0 returns 0 for ships, so we need to store the initial life of units
 
 Olympus.weaponIndex = 0			-- Counter used to spread the computational load of data retrievial from DCS			
 Olympus.weaponStep = 50			-- Max number of weapons that get updated each cycle
@@ -1035,14 +1036,27 @@ function Olympus.setUnitsData(arg, time)
 								end
 							end
 							
+							-- getLife0 does not seem to work for ships, so we need to keep a reference to the initial life of the unit
+							if Olympus.unitsInitialLife[ID] == nil then
+								Olympus.unitsInitialLife[ID] = unit:getLife()
+							end
+
+							-- Get the initial life of the unit to compute the current health
+							local initialLife = 1
+							if Olympus.unitsInitialLife[ID] ~= nil then
+								initialLife = Olympus.unitsInitialLife[ID]
+							end
+							
 							table["country"] = unit:getCountry()
 							table["unitName"] = unit:getName()
 							table["groupName"] = group:getName()
 							table["isHuman"] = (unit:getPlayerName() ~= nil)
 							table["hasTask"] = controller:hasTask()
 							table["ammo"] = unit:getAmmo() --TODO remove a lot of stuff we don't really need
+							table["ammo"] = unit:getAmmo() --TODO: remove a lot of stuff we don't really need
 							table["fuel"] = unit:getFuel()
 							table["health"] = unit:getLife() / unit:getLife0() * 100
+							table["health"] = unit:getLife() / initialLife * 100
 							table["contacts"] = contacts
 
 							local name = unit:getName()
