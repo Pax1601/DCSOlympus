@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@babel/preset-env": "^7.21.4",
-    "@tanem/svg-injector": "^10.1.55",
+    "@tanem/svg-injector": "^10.1.68",
     "@types/formatcoords": "^1.1.0",
     "@types/geojson": "^7946.0.10",
     "@types/leaflet": "^1.9.0",
