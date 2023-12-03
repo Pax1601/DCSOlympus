@@ -545,7 +545,7 @@ function Olympus.spawnUnits(spawnTable)
 	local route = nil
 	local category = nil
 
-	-- Generate the units table and rout as per DCS requirements
+	-- Generate the units table and route as per DCS requirements
 	if spawnTable.category == 'Aircraft' then
 		unitsTable = Olympus.generateAirUnitsTable(spawnTable.units)
 		route = Olympus.generateAirUnitsRoute(spawnTable)
@@ -605,10 +605,10 @@ function Olympus.generateAirUnitsTable(units)
 
 		-- Define the loadout
 		if payload == nil then
-			if loadout and loadout ~= "" and Olympus.unitPayloads[unit.unitType] and Olympus.unitPayloads[unit.unitType][loadout] then
-				payload = Olympus.unitPayloads[unit.unitType][loadout]
+			if loadout ~= nil and loadout ~= "" and Olympus.unitPayloads[unit.unitType] and Olympus.unitPayloads[unit.unitType][loadout] then
+				payload = { ["pylons"] = Olympus.unitPayloads[unit.unitType][loadout], ["fuel"] = 999999, ["flare"] = 60, ["ammo_type"] = 1, ["chaff"] = 60, ["gun"] = 100 } 
 			else
-				payload = {}
+				payload = { ["pylons"] = {}, ["fuel"] = 999999, ["flare"] = 60, ["ammo_type"] = 1, ["chaff"] = 60, ["gun"] = 100 } 
 			end
 		end
 		
@@ -622,7 +622,7 @@ function Olympus.generateAirUnitsTable(units)
 			["alt"] = unit.alt,
 			["alt_type"] = "BARO",
 			["skill"] = "Excellent",
-			["payload"] = { ["pylons"] = payload, ["fuel"] = 999999, ["flare"] = 60, ["ammo_type"] = 1, ["chaff"] = 60, ["gun"] = 100, }, 
+			["payload"] = payload, 
 			["heading"] = unit.heading,
 			["callsign"] = { [1] = 1, [2] = 1, [3] = 1, ["name"] = "Olympus" .. Olympus.unitCounter.. "-" .. #unitsTable + 1 },
 			["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitsTable + 1,
@@ -1006,7 +1006,7 @@ function Olympus.setUnitsData(arg, time)
 					table["heading"] = heading 
 
 					-- Track angles are wrong because of weird reference systems, approximate it using latitude and longitude differences
-					if Olympus.unitsData["units"][ID] ~= nil and Olympus.unitsData["units"][ID]["position"] ~= nil and Olympus.unitsData["units"][ID]["position"]["lat"] ~= nil and Olympus.unitsData["units"][ID]["position"]["lng"] ~= nil then
+					if Olympus.unitsData["units"] ~= nil and Olympus.unitsData["units"][ID] ~= nil and Olympus.unitsData["units"][ID]["position"] ~= nil and Olympus.unitsData["units"][ID]["position"]["lat"] ~= nil and Olympus.unitsData["units"][ID]["position"]["lng"] ~= nil then
 						local latDifference = lat - Olympus.unitsData["units"][ID]["position"]["lat"]
 						local lngDifference = lng - Olympus.unitsData["units"][ID]["position"]["lng"]
 						table["track"] = math.atan2(lngDifference * math.cos(lat / 57.29577), latDifference)
@@ -1045,8 +1045,52 @@ function Olympus.setUnitsData(arg, time)
 							table["health"] = unit:getLife() / unit:getLife0() * 100
 							table["contacts"] = contacts
 
-							-- Update the database used for unit cloning
 							local name = unit:getName()
+
+							-- If the unit is not in the clone database it means it was not spawned by Olympus. Let's try and recover it using mist
+							if Olympus.cloneDatabase[name] == nil then
+								if mist.DBs ~= nil and mist.DBs.unitsByName ~= nil and mist.DBs.unitsByName[name] ~= nil then
+									-- Payloads can be copied from ME units only TODO: can we fix this?
+									local payload = {}
+									if mist.DBs.MEunitsByName[name] then
+										payload = mist.getPayload(name)
+									end
+
+									-- Create a mock spawn table to generate the database
+									local unitsTable = nil
+									local spawnTable = {}
+									spawnTable.units = {
+										[1] = {
+											["unitType"] = table["name"],
+											["lat"] = table["position"]["lat"],
+											["lng"] = table["position"]["lng"],
+											["alt"] = table["position"]["alt"],
+											["payload"] = payload,
+											["liveryID"] = mist.DBs.unitsByName[name]["livery_id"]
+										}
+									}
+
+									-- Generate the units table as per DCS requirements
+									if table["category"] == 'Aircraft' then
+										unitsTable = Olympus.generateAirUnitsTable(spawnTable.units)
+									elseif table["category"] == 'Helicopter' then
+										unitsTable = Olympus.generateAirUnitsTable(spawnTable.units)
+									elseif table["category"] == 'GroundUnit' then
+										unitsTable = Olympus.generateGroundUnitsTable(spawnTable.units)
+									elseif table["category"] == 'NavyUnit' then
+										unitsTable = Olympus.generateNavyUnitsTable(spawnTable.units)
+									end
+
+									-- Save the units in the database, for cloning
+									for idx, unitTable in pairs(unitsTable) do
+										-- Force the name of the unit to be equal to the original name
+										unitTable["name"] = name
+										Olympus.addToDatabase(mist.utils.deepCopy(unitTable))
+									end
+								end
+							end
+
+							-- Update the database used for unit cloning
 							if Olympus.cloneDatabase[name] ~= nil then
 								Olympus.cloneDatabase[name]["ID"] = ID
 								Olympus.cloneDatabase[name]["category"] = unit:getDesc().category
