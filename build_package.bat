@@ -1,4 +1,4 @@
-call git clean -f
+call git clean -fx
 
 cd src
 msbuild olympus.sln /t:Rebuild /p:Configuration=Release
