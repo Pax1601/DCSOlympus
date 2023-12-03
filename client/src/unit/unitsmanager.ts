@@ -795,7 +795,7 @@ export class UnitsManager {
         this.#showActionMessage(units, `unit set to perform scenic AAA`);
     }
 
-    /** Instruct units to enter into miss on purpose mode. Units will aim to the nearest enemy unit but not precisely.
+    /** Instruct units to enter into dynamic accuracy/miss on purpose mode. Units will aim to the nearest enemy unit but not precisely.
      * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
      */
     missOnPurpose(units: Unit[] | null = null) {

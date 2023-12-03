@@ -18624,12 +18624,102 @@
 		"shortLabel": "339",
 		"loadouts": [
 			{
-				"items": [],
+				"items": [
+					{
+						"name": "Elliptic Tip Tank 320lt",
+						"quantity": 2
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 6
+					}
+				],
 				"enabled": true,
-				"code": "",
-				"name": "Empty loadout",
+				"code": "A - 2*320L TipTanks [Clean]",
+				"name": "A - 2*320L TipTanks [Clean]",
 				"roles": [
-					"No task",
+					"Transport"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Elliptic Tip Tank 320lt",
+						"quantity": 2
+					},
+					{
+						"name": "Fuel Tank 330lt",
+						"quantity": 2
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 3
+					}
+				],
+				"enabled": true,
+				"code": "A - 2*320L TipTanks + 2*330L Tanks [Ferry Medium Range]",
+				"name": "A - 2*320L TipTanks + 2*330L Tanks [Ferry Medium Range]",
+				"roles": [
+					"Transport"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Elliptic Tip Tank 320lt",
+						"quantity": 2
+					},
+					{
+						"name": "LR-25 - 25 x UnGd Rkts, 50 mm ARF-8/M3 HEI Heavy",
+						"quantity": 2
+					},
+					{
+						"name": "Mk-82 - 500lb GP Bomb LD",
+						"quantity": 2
+					},
+					{
+						"name": "DEFA553 Gunpod Left",
+						"quantity": 1
+					},
+					{
+						"name": "DEFA553 Gunpod Right",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "A - 2*320L TipTanks + 2*DEFA-553 GunPods + 2*Mk.82LD + 2*LR-25 (HEI Rockets)",
+				"name": "A - 2*320L TipTanks + 2*DEFA-553 GunPods + 2*Mk.82LD + 2*LR-25 (HEI Rockets)",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Elliptic Tip Tank 320lt",
+						"quantity": 2
+					},
+					{
+						"name": "LR-25 - 25 x UnGd Rkts, 50 mm ARF-8/M3 API",
+						"quantity": 2
+					},
+					{
+						"name": "Mk-82 - 500lb GP Bomb LD",
+						"quantity": 2
+					},
+					{
+						"name": "DEFA553 Gunpod Left",
+						"quantity": 1
+					},
+					{
+						"name": "DEFA553 Gunpod Right",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "A - 2*320L TipTanks + 2*DEFA-553 GunPods + 2*Mk.82LD Bombs + 2*LR-25(API Rockets)",
+				"name": "A - 2*320L TipTanks + 2*DEFA-553 GunPods + 2*Mk.82LD Bombs + 2*LR-25(API Rockets)",
+				"roles": [
 					"CAS"
 				]
 			},
@@ -18670,45 +18760,43 @@
 						"quantity": 2
 					},
 					{
-						"name": "<CLEAN>",
+						"name": "Mk-82 - 500lb GP Bomb LD",
 						"quantity": 6
 					}
 				],
 				"enabled": true,
-				"code": "A - 2*320L TipTanks [Clean]",
-				"name": "A - 2*320L TipTanks [Clean]",
+				"code": "A - 2*320L TipTanks + 6*Mk.82LD",
+				"name": "A - 2*320L TipTanks + 6*Mk.82LD",
 				"roles": [
-					"Transport"
+					"No task",
+					"Strike"
 				]
 			},
 			{
 				"items": [
-					{
-						"name": "Elliptic Tip Tank 320lt",
-						"quantity": 2
-					},
-					{
-						"name": "AN/M3 Gunpod Right",
-						"quantity": 1
-					},
-					{
-						"name": "Photo-Recon Pod (4*70mm Vinten Cameras)",
-						"quantity": 1
-					},
 					{
 						"name": "Fuel Tank 330lt",
 						"quantity": 2
 					},
 					{
 						"name": "<CLEAN>",
+						"quantity": 3
+					},
+					{
+						"name": "Cylindrical Tip Tank 500lt",
 						"quantity": 2
+					},
+					{
+						"name": "Luggage Container",
+						"quantity": 1
 					}
 				],
 				"enabled": true,
-				"code": "Recon",
-				"name": "Recon",
+				"code": "A - 2*500L TipTanks + 2*330L Tanks + Luggage Container  [Ferry Long Range]",
+				"name": "A - 2*500L TipTanks + 2*330L Tanks + Luggage Container  [Ferry Long Range]",
 				"roles": [
-					"Reconnaissance"
+					"No task",
+					"Transport"
 				]
 			},
 			{
@@ -18718,13 +18806,31 @@
 						"quantity": 2
 					},
 					{
-						"name": "BRD-4-250 - 4 x Mk 76 - 25lb Practice Bomb LD",
+						"name": "Matra Type 155 Rocket Pod",
+						"quantity": 2
+					},
+					{
+						"name": "BLG-66-AC Belouga",
+						"quantity": 2
+					},
+					{
+						"name": "AN/M3 Gunpod Right",
 						"quantity": 1
 					},
 					{
-						"name": "<CLEAN>",
-						"quantity": 2
-					},
+						"name": "AN/M3 Gunpod Left",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "A - 2*500L TipTanks + 2*AN/M3 GunPods + 2*Matra 155 + 2* Belouga",
+				"name": "A - 2*500L TipTanks + 2*AN/M3 GunPods + 2*Matra 155 + 2* Belouga",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
 					{
 						"name": "DEFA553 Gunpod Right",
 						"quantity": 1
@@ -18732,12 +18838,46 @@
 					{
 						"name": "DEFA553 Gunpod Left",
 						"quantity": 1
+					},
+					{
+						"name": "LR-25 - 25 x UnGd Rkts, 50 mm ARF-8/M3 API",
+						"quantity": 2
+					},
+					{
+						"name": "Mk-82 - 500lb GP Bomb LD",
+						"quantity": 2
+					},
+					{
+						"name": "Cylindrical Tip Tank 500lt",
+						"quantity": 2
 					}
 				],
 				"enabled": true,
-				"code": "Training",
-				"name": "Training",
+				"code": "A - 2*500L TipTanks + 2*DEFA-553 GunPods + 2*Mk.82LD + 2*LR-25 (API Rockets)",
+				"name": "A - 2*500L TipTanks + 2*DEFA-553 GunPods + 2*Mk.82LD + 2*LR-25 (API Rockets)",
 				"roles": []
+			},
+			{
+				"items": [
+					{
+						"name": "Cylindrical Tip Tank 500lt",
+						"quantity": 2
+					},
+					{
+						"name": "LR-25 - 25 x UnGd Rkts, 50 mm ARF-8/M3 API",
+						"quantity": 2
+					},
+					{
+						"name": "Mk-82 Snakeye - 500lb GP Bomb HD",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "A - 2*500L TipTanks + 4*Mk.82HD + 2*LR-25 (API Rockets)",
+				"name": "A - 2*500L TipTanks + 4*Mk.82HD + 2*LR-25 (API Rockets)",
+				"roles": [
+					"Strike"
+				]
 			},
 			{
 				"items": [
@@ -18798,254 +18938,6 @@
 			{
 				"items": [
 					{
-						"name": "Fuel Tank 330lt",
-						"quantity": 2
-					},
-					{
-						"name": "<CLEAN>",
-						"quantity": 3
-					},
-					{
-						"name": "Cylindrical Tip Tank 500lt",
-						"quantity": 2
-					},
-					{
-						"name": "Luggage Container",
-						"quantity": 1
-					}
-				],
-				"enabled": true,
-				"code": "A - 2*500L TipTanks + 2*330L Tanks + Luggage Container  [Ferry Long Range]",
-				"name": "A - 2*500L TipTanks + 2*330L Tanks + Luggage Container  [Ferry Long Range]",
-				"roles": [
-					"No task",
-					"Transport"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "Cylindrical Tip Tank 500lt",
-						"quantity": 2
-					},
-					{
-						"name": "LR-25 - 25 x UnGd Rkts, 50 mm ARF-8/M3 API",
-						"quantity": 2
-					},
-					{
-						"name": "Mk-82 Snakeye - 500lb GP Bomb HD",
-						"quantity": 4
-					}
-				],
-				"enabled": true,
-				"code": "A - 2*500L TipTanks + 4*Mk.82HD + 2*LR-25 (API Rockets)",
-				"name": "A - 2*500L TipTanks + 4*Mk.82HD + 2*LR-25 (API Rockets)",
-				"roles": [
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "Elliptic Tip Tank 320lt",
-						"quantity": 2
-					},
-					{
-						"name": "Fuel Tank 330lt",
-						"quantity": 2
-					},
-					{
-						"name": "<CLEAN>",
-						"quantity": 3
-					}
-				],
-				"enabled": true,
-				"code": "A - 2*320L TipTanks + 2*330L Tanks [Ferry Medium Range]",
-				"name": "A - 2*320L TipTanks + 2*330L Tanks [Ferry Medium Range]",
-				"roles": [
-					"Transport"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "Cylindrical Tip Tank 500lt",
-						"quantity": 2
-					},
-					{
-						"name": "Matra Type 155 Rocket Pod",
-						"quantity": 2
-					},
-					{
-						"name": "BLG-66-AC Belouga",
-						"quantity": 2
-					},
-					{
-						"name": "AN/M3 Gunpod Right",
-						"quantity": 1
-					},
-					{
-						"name": "AN/M3 Gunpod Left",
-						"quantity": 1
-					}
-				],
-				"enabled": true,
-				"code": "A - 2*500L TipTanks + 2*AN/M3 GunPods + 2*Matra 155 + 2* Belouga",
-				"name": "A - 2*500L TipTanks + 2*AN/M3 GunPods + 2*Matra 155 + 2* Belouga",
-				"roles": [
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "Elliptic Tip Tank 320lt",
-						"quantity": 2
-					},
-					{
-						"name": "BLU-107/B Durandal - 219kg Concrete Piercing Chute Retarded Bomb w/Booster",
-						"quantity": 4
-					},
-					{
-						"name": "Matra Type 155 Rocket Pod",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "Runway Interdiction",
-				"name": "Runway Interdiction",
-				"roles": [
-					"Runway Attack"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "DEFA553 Gunpod Right",
-						"quantity": 1
-					},
-					{
-						"name": "DEFA553 Gunpod Left",
-						"quantity": 1
-					},
-					{
-						"name": "LR-25 - 25 x UnGd Rkts, 50 mm ARF-8/M3 API",
-						"quantity": 2
-					},
-					{
-						"name": "Mk-82 - 500lb GP Bomb LD",
-						"quantity": 2
-					},
-					{
-						"name": "Cylindrical Tip Tank 500lt",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "A - 2*500L TipTanks + 2*DEFA-553 GunPods + 2*Mk.82LD + 2*LR-25 (API Rockets)",
-				"name": "A - 2*500L TipTanks + 2*DEFA-553 GunPods + 2*Mk.82LD + 2*LR-25 (API Rockets)",
-				"roles": []
-			},
-			{
-				"items": [
-					{
-						"name": "Elliptic Tip Tank 320lt",
-						"quantity": 2
-					},
-					{
-						"name": "LR-25 - 25 x UnGd Rkts, 50 mm ARF-8/M3 API",
-						"quantity": 2
-					},
-					{
-						"name": "Mk-82 - 500lb GP Bomb LD",
-						"quantity": 2
-					},
-					{
-						"name": "DEFA553 Gunpod Left",
-						"quantity": 1
-					},
-					{
-						"name": "DEFA553 Gunpod Right",
-						"quantity": 1
-					}
-				],
-				"enabled": true,
-				"code": "A - 2*320L TipTanks + 2*DEFA-553 GunPods + 2*Mk.82LD Bombs + 2*LR-25(API Rockets)",
-				"name": "A - 2*320L TipTanks + 2*DEFA-553 GunPods + 2*Mk.82LD Bombs + 2*LR-25(API Rockets)",
-				"roles": [
-					"CAS"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "Elliptic Tip Tank 320lt",
-						"quantity": 2
-					},
-					{
-						"name": "LR-25 - 25 x UnGd Rkts, 50 mm ARF-8/M3 HEI Heavy",
-						"quantity": 2
-					},
-					{
-						"name": "Mk-82 - 500lb GP Bomb LD",
-						"quantity": 2
-					},
-					{
-						"name": "DEFA553 Gunpod Left",
-						"quantity": 1
-					},
-					{
-						"name": "DEFA553 Gunpod Right",
-						"quantity": 1
-					}
-				],
-				"enabled": true,
-				"code": "A - 2*320L TipTanks + 2*DEFA-553 GunPods + 2*Mk.82LD + 2*LR-25 (HEI Rockets)",
-				"name": "A - 2*320L TipTanks + 2*DEFA-553 GunPods + 2*Mk.82LD + 2*LR-25 (HEI Rockets)",
-				"roles": [
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "Elliptic Tip Tank 320lt",
-						"quantity": 2
-					},
-					{
-						"name": "Mk-82 - 500lb GP Bomb LD",
-						"quantity": 6
-					}
-				],
-				"enabled": true,
-				"code": "A - 2*320L TipTanks + 6*Mk.82LD",
-				"name": "A - 2*320L TipTanks + 6*Mk.82LD",
-				"roles": [
-					"No task",
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "Elliptic Tip Tank 320lt",
-						"quantity": 2
-					},
-					{
-						"name": "14-3-M2 - 6 x BAP-100 - 32kg Concrete Piercing Chute Retarded Bomb w/Booster",
-						"quantity": 6
-					}
-				],
-				"enabled": true,
-				"code": "Runway Interdiction (36*BAP-100)",
-				"name": "Runway Interdiction (36*BAP-100)",
-				"roles": [
-					"Runway Attack"
-				]
-			},
-			{
-				"items": [
-					{
 						"name": "Elliptic Tip Tank 320lt",
 						"quantity": 2
 					},
@@ -19090,9 +18982,117 @@
 				"roles": [
 					"CAS"
 				]
+			},
+			{
+				"items": [],
+				"enabled": true,
+				"code": "",
+				"name": "Empty loadout",
+				"roles": [
+					"No task",
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Elliptic Tip Tank 320lt",
+						"quantity": 2
+					},
+					{
+						"name": "AN/M3 Gunpod Right",
+						"quantity": 1
+					},
+					{
+						"name": "Photo-Recon Pod (4*70mm Vinten Cameras)",
+						"quantity": 1
+					},
+					{
+						"name": "Fuel Tank 330lt",
+						"quantity": 2
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "Recon",
+				"name": "Recon",
+				"roles": [
+					"Reconnaissance"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Elliptic Tip Tank 320lt",
+						"quantity": 2
+					},
+					{
+						"name": "BLU-107/B Durandal - 219kg Concrete Piercing Chute Retarded Bomb w/Booster",
+						"quantity": 4
+					},
+					{
+						"name": "Matra Type 155 Rocket Pod",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "Runway Interdiction",
+				"name": "Runway Interdiction",
+				"roles": [
+					"Runway Attack"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Elliptic Tip Tank 320lt",
+						"quantity": 2
+					},
+					{
+						"name": "14-3-M2 - 6 x BAP-100 - 32kg Concrete Piercing Chute Retarded Bomb w/Booster",
+						"quantity": 6
+					}
+				],
+				"enabled": true,
+				"code": "Runway Interdiction (36*BAP-100)",
+				"name": "Runway Interdiction (36*BAP-100)",
+				"roles": [
+					"Runway Attack"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Cylindrical Tip Tank 500lt",
+						"quantity": 2
+					},
+					{
+						"name": "BRD-4-250 - 4 x Mk 76 - 25lb Practice Bomb LD",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 2
+					},
+					{
+						"name": "DEFA553 Gunpod Right",
+						"quantity": 1
+					},
+					{
+						"name": "DEFA553 Gunpod Left",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "Training",
+				"name": "Training",
+				"roles": []
 			}
 		],
-		"filename": "c-101.png",
+		"filename": "mb-339.png",
 		"enabled": true,
 		"liveries": {
 			"mb339an 'nigeria'": {
@@ -23015,194 +23015,25 @@
 		"shortLabel": "MF1",
 		"loadouts": [
 			{
-				"items": [],
-				"enabled": true,
-				"code": "",
-				"name": "Empty loadout",
-				"roles": [
-					"No task",
-					"CAP"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "AIM-9JULI Sidewinder IR AAM",
-						"quantity": 2
-					},
-					{
-						"name": "R530F IR",
-						"quantity": 2
-					},
-					{
-						"name": "RP35 Pylon Fuel Tank (1137 l usable)",
-						"quantity": 1
-					}
-				],
-				"enabled": true,
-				"code": "2*AIM9-JULI, 2*R530IR, 1*Fuel Tank",
-				"name": "2*AIM9-JULI, 2*R530IR, 1*Fuel Tank",
-				"roles": [
-					"CAP",
-					"CAP",
-					"Escort",
-					"CAP"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "AIM-9JULI Sidewinder IR AAM",
-						"quantity": 2
-					},
-					{
-						"name": "R530F EM",
-						"quantity": 2
-					},
-					{
-						"name": "RP35 Pylon Fuel Tank (1137 l usable)",
-						"quantity": 1
-					}
-				],
-				"enabled": true,
-				"code": "2*AIM9-JULI, 2*R530EM, 1*Fuel Tank",
-				"name": "2*AIM9-JULI, 2*R530EM, 1*Fuel Tank",
-				"roles": [
-					"CAP",
-					"CAP",
-					"Escort",
-					"CAP"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R550 Magic 1 IR AAM",
-						"quantity": 2
-					},
-					{
-						"name": "R530F IR",
-						"quantity": 2
-					},
-					{
-						"name": "RP35 Pylon Fuel Tank (1137 l usable)",
-						"quantity": 1
-					}
-				],
-				"enabled": true,
-				"code": "2*R550 Magic I, 2*R530IR, 1*Fuel Tank",
-				"name": "2*R550 Magic I, 2*R530IR, 1*Fuel Tank",
-				"roles": [
-					"CAP",
-					"CAP",
-					"Escort",
-					"CAP"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "AIM-9JULI Sidewinder IR AAM",
-						"quantity": 2
-					},
-					{
-						"name": "R530F EM",
-						"quantity": 1
-					}
-				],
-				"enabled": true,
-				"code": "2*AIM9-JULI, 1*R530EM",
-				"name": "2*AIM9-JULI, 1*R530EM",
-				"roles": [
-					"CAP"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R550 Magic 1 IR AAM",
-						"quantity": 2
-					},
-					{
-						"name": "R530F IR",
-						"quantity": 1
-					}
-				],
-				"enabled": true,
-				"code": "2*R550 Magic I, 1*R530IR",
-				"name": "2*R550 Magic I, 1*R530IR",
-				"roles": [
-					"CAP"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "AIM-9JULI Sidewinder IR AAM",
-						"quantity": 2
-					},
-					{
-						"name": "RP35 Pylon Fuel Tank (1137 l usable)",
-						"quantity": 2
-					},
-					{
-						"name": "R530F IR",
-						"quantity": 1
-					}
-				],
-				"enabled": true,
-				"code": "2*AIM9-JULI, 1*R530IR, 2*Fuel Tank",
-				"name": "2*AIM9-JULI, 1*R530IR, 2*Fuel Tank",
-				"roles": [
-					"CAP"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R550 Magic 1 IR AAM",
-						"quantity": 2
-					},
-					{
-						"name": "RP35 Pylon Fuel Tank (1137 l usable)",
-						"quantity": 2
-					},
-					{
-						"name": "R530F IR",
-						"quantity": 1
-					}
-				],
-				"enabled": true,
-				"code": "2*R550 Magic I, 1*R530IR, 2*Fuel Tank",
-				"name": "2*R550 Magic I, 1*R530IR, 2*Fuel Tank",
-				"roles": [
-					"CAP"
-				]
-			},
-			{
 				"items": [
 					{
 						"name": "AIM-9J Sidewinder IR AAM",
 						"quantity": 2
 					},
 					{
-						"name": "MATRA F4 - 18 x UnGd Rkts, 68 mm SNEB Type 251 F1B HE",
-						"quantity": 2
-					},
-					{
-						"name": "R530F IR",
-						"quantity": 2
-					},
-					{
 						"name": "RP35 Pylon Fuel Tank (1137 l usable)",
+						"quantity": 2
+					},
+					{
+						"name": "CLB 4 - 4 x SAMP-400 - 400 kg GP Chute Retarded Bomb HD",
 						"quantity": 1
 					}
 				],
 				"enabled": true,
-				"code": "2*AIM9-J, 2*MATRA F4 SNEB251 (HE), 2*R530IR, 1*Fuel Tank",
-				"name": "2*AIM9-J, 2*MATRA F4 SNEB251 (HE), 2*R530IR, 1*Fuel Tank",
+				"code": "2*AIM-9J, 2*Fuel Tank, 4*SAMP 400 HD",
+				"name": "2*AIM-9J, 2*Fuel Tank, 4*SAMP 400 HD",
 				"roles": [
-					"CAP"
+					"CAS"
 				]
 			},
 			{
@@ -23230,137 +23061,24 @@
 			{
 				"items": [
 					{
-						"name": "AIM-9J Sidewinder IR AAM",
+						"name": "AIM-9JULI Sidewinder IR AAM",
 						"quantity": 2
 					},
 					{
-						"name": "RP35 Pylon Fuel Tank (1137 l usable)",
-						"quantity": 2
-					},
-					{
-						"name": "CLB 4 - 4 x SAMP-400 - 400 kg GP Chute Retarded Bomb HD",
-						"quantity": 1
-					}
-				],
-				"enabled": true,
-				"code": "2*AIM-9J, 2*Fuel Tank, 4*SAMP 400 HD",
-				"name": "2*AIM-9J, 2*Fuel Tank, 4*SAMP 400 HD",
-				"roles": [
-					"CAS"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R550 Magic 1 IR AAM",
-						"quantity": 2
-					},
-					{
-						"name": "MATRA F1 - 36 x UnGd Rkts, 68 mm SNEB Type 253 F1B HEAT",
+						"name": "BLU-107/B Durandal - 219kg Concrete Piercing Chute Retarded Bomb w/Booster",
 						"quantity": 4
 					},
 					{
-						"name": "RP35 Pylon Fuel Tank (1137 l usable)",
+						"name": "CLB 4 - 4 x BLU-107/B Durandal - 219kg Concrete Piercing Chute Retarded Bomb w/Booster",
 						"quantity": 1
 					}
 				],
 				"enabled": true,
-				"code": "2*R550 Magic I, 4*MATRA F1 SNEB253 (Shaped Charge), 1*Fuel Tank",
-				"name": "2*R550 Magic I, 4*MATRA F1 SNEB253 (Shaped Charge), 1*Fuel Tank",
+				"code": "2*AIM-9JULI, 8*BLU107 Durandal",
+				"name": "2*AIM-9JULI, 8*BLU107 Durandal",
 				"roles": [
-					"CAS"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R550 Magic 1 IR AAM",
-						"quantity": 2
-					},
-					{
-						"name": "MATRA F4 - 18 x UnGd Rkts, 68 mm SNEB Type 253 F1B HEAT",
-						"quantity": 4
-					},
-					{
-						"name": "RP35 Pylon Fuel Tank (1137 l usable)",
-						"quantity": 1
-					}
-				],
-				"enabled": true,
-				"code": "2*R550 Magic I, 4*MATRA F4 SNEB253 (Shaped Charge), 1*Fuel Tank",
-				"name": "2*R550 Magic I, 4*MATRA F4 SNEB253 (Shaped Charge), 1*Fuel Tank",
-				"roles": [
-					"CAS"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R550 Magic 1 IR AAM",
-						"quantity": 2
-					},
-					{
-						"name": "MATRA F1 - 36 x UnGd Rkts, 68 mm SNEB Type 256 F1B HE/Frag",
-						"quantity": 4
-					},
-					{
-						"name": "RP35 Pylon Fuel Tank (1137 l usable)",
-						"quantity": 1
-					}
-				],
-				"enabled": true,
-				"code": "2*R550 Magic I, 4*MATRA F1 SNEB256 (AP), 1*Fuel Tank",
-				"name": "2*R550 Magic I, 4*MATRA F1 SNEB256 (AP), 1*Fuel Tank",
-				"roles": [
-					"CAS"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R550 Magic 1 IR AAM",
-						"quantity": 2
-					},
-					{
-						"name": "MATRA F4 - 18 x UnGd Rkts, 68 mm SNEB Type 256 F1B HE/Frag",
-						"quantity": 4
-					},
-					{
-						"name": "RP35 Pylon Fuel Tank (1137 l usable)",
-						"quantity": 1
-					}
-				],
-				"enabled": true,
-				"code": "2*R550 Magic I, 4*MATRA F4 SNEB256 (AP), 1*Fuel Tank",
-				"name": "2*R550 Magic I, 4*MATRA F4 SNEB256 (AP), 1*Fuel Tank",
-				"roles": [
-					"CAS"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R550 Magic 1 IR AAM",
-						"quantity": 2
-					},
-					{
-						"name": "SAMP-250 - 250 kg GP Chute Retarded Bomb HD",
-						"quantity": 2
-					},
-					{
-						"name": "MATRA F1 - 36 x UnGd Rkts, 68 mm SNEB Type 256 F1B HE/Frag",
-						"quantity": 2
-					},
-					{
-						"name": "RP35 Pylon Fuel Tank (1137 l usable)",
-						"quantity": 1
-					}
-				],
-				"enabled": true,
-				"code": "2*R550 Magic I, 2*SAMP 250 HD, 2 MATRA F1 SNEB256 (AP), 1*Fuel Tank",
-				"name": "2*R550 Magic I, 2*SAMP 250 HD, 2 MATRA F1 SNEB256 (AP), 1*Fuel Tank",
-				"roles": [
-					"CAS"
+					"Strike",
+					"Runway Attack"
 				]
 			},
 			{
@@ -23411,24 +23129,117 @@
 			{
 				"items": [
 					{
-						"name": "AIM-9JULI Sidewinder IR AAM",
+						"name": "AIM-9J Sidewinder IR AAM",
 						"quantity": 2
 					},
 					{
-						"name": "BLU-107/B Durandal - 219kg Concrete Piercing Chute Retarded Bomb w/Booster",
-						"quantity": 4
+						"name": "MATRA F4 - 18 x UnGd Rkts, 68 mm SNEB Type 251 F1B HE",
+						"quantity": 2
 					},
 					{
-						"name": "CLB 4 - 4 x BLU-107/B Durandal - 219kg Concrete Piercing Chute Retarded Bomb w/Booster",
+						"name": "R530F IR",
+						"quantity": 2
+					},
+					{
+						"name": "RP35 Pylon Fuel Tank (1137 l usable)",
 						"quantity": 1
 					}
 				],
 				"enabled": true,
-				"code": "2*AIM-9JULI, 8*BLU107 Durandal",
-				"name": "2*AIM-9JULI, 8*BLU107 Durandal",
+				"code": "2*AIM9-J, 2*MATRA F4 SNEB251 (HE), 2*R530IR, 1*Fuel Tank",
+				"name": "2*AIM9-J, 2*MATRA F4 SNEB251 (HE), 2*R530IR, 1*Fuel Tank",
 				"roles": [
-					"Strike",
-					"Runway Attack"
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "AIM-9JULI Sidewinder IR AAM",
+						"quantity": 2
+					},
+					{
+						"name": "R530F EM",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "2*AIM9-JULI, 1*R530EM",
+				"name": "2*AIM9-JULI, 1*R530EM",
+				"roles": [
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "AIM-9JULI Sidewinder IR AAM",
+						"quantity": 2
+					},
+					{
+						"name": "RP35 Pylon Fuel Tank (1137 l usable)",
+						"quantity": 2
+					},
+					{
+						"name": "R530F IR",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "2*AIM9-JULI, 1*R530IR, 2*Fuel Tank",
+				"name": "2*AIM9-JULI, 1*R530IR, 2*Fuel Tank",
+				"roles": [
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "AIM-9JULI Sidewinder IR AAM",
+						"quantity": 2
+					},
+					{
+						"name": "R530F EM",
+						"quantity": 2
+					},
+					{
+						"name": "RP35 Pylon Fuel Tank (1137 l usable)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "2*AIM9-JULI, 2*R530EM, 1*Fuel Tank",
+				"name": "2*AIM9-JULI, 2*R530EM, 1*Fuel Tank",
+				"roles": [
+					"CAP",
+					"CAP",
+					"Escort",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "AIM-9JULI Sidewinder IR AAM",
+						"quantity": 2
+					},
+					{
+						"name": "R530F IR",
+						"quantity": 2
+					},
+					{
+						"name": "RP35 Pylon Fuel Tank (1137 l usable)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "2*AIM9-JULI, 2*R530IR, 1*Fuel Tank",
+				"name": "2*AIM9-JULI, 2*R530IR, 1*Fuel Tank",
+				"roles": [
+					"CAP",
+					"CAP",
+					"Escort",
+					"CAP"
 				]
 			},
 			{
@@ -23449,6 +23260,71 @@
 				"enabled": true,
 				"code": "2*AIM9-JULI, 2*S530F, 1*Fuel Tank",
 				"name": "2*AIM9-JULI, 2*S530F, 1*Fuel Tank",
+				"roles": [
+					"CAP",
+					"CAP",
+					"Escort",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R550 Magic 1 IR AAM",
+						"quantity": 2
+					},
+					{
+						"name": "R530F IR",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "2*R550 Magic I, 1*R530IR",
+				"name": "2*R550 Magic I, 1*R530IR",
+				"roles": [
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R550 Magic 1 IR AAM",
+						"quantity": 2
+					},
+					{
+						"name": "RP35 Pylon Fuel Tank (1137 l usable)",
+						"quantity": 2
+					},
+					{
+						"name": "R530F IR",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "2*R550 Magic I, 1*R530IR, 2*Fuel Tank",
+				"name": "2*R550 Magic I, 1*R530IR, 2*Fuel Tank",
+				"roles": [
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R550 Magic 1 IR AAM",
+						"quantity": 2
+					},
+					{
+						"name": "R530F IR",
+						"quantity": 2
+					},
+					{
+						"name": "RP35 Pylon Fuel Tank (1137 l usable)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "2*R550 Magic I, 2*R530IR, 1*Fuel Tank",
+				"name": "2*R550 Magic I, 2*R530IR, 1*Fuel Tank",
 				"roles": [
 					"CAP",
 					"CAP",
@@ -23509,9 +23385,133 @@
 					"Escort",
 					"CAP"
 				]
+			},
+			{
+				"items": [
+					{
+						"name": "R550 Magic 1 IR AAM",
+						"quantity": 2
+					},
+					{
+						"name": "SAMP-250 - 250 kg GP Chute Retarded Bomb HD",
+						"quantity": 2
+					},
+					{
+						"name": "MATRA F1 - 36 x UnGd Rkts, 68 mm SNEB Type 256 F1B HE/Frag",
+						"quantity": 2
+					},
+					{
+						"name": "RP35 Pylon Fuel Tank (1137 l usable)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "2*R550 Magic I, 2*SAMP 250 HD, 2 MATRA F1 SNEB256 (AP), 1*Fuel Tank",
+				"name": "2*R550 Magic I, 2*SAMP 250 HD, 2 MATRA F1 SNEB256 (AP), 1*Fuel Tank",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R550 Magic 1 IR AAM",
+						"quantity": 2
+					},
+					{
+						"name": "MATRA F1 - 36 x UnGd Rkts, 68 mm SNEB Type 253 F1B HEAT",
+						"quantity": 4
+					},
+					{
+						"name": "RP35 Pylon Fuel Tank (1137 l usable)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "2*R550 Magic I, 4*MATRA F1 SNEB253 (Shaped Charge), 1*Fuel Tank",
+				"name": "2*R550 Magic I, 4*MATRA F1 SNEB253 (Shaped Charge), 1*Fuel Tank",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R550 Magic 1 IR AAM",
+						"quantity": 2
+					},
+					{
+						"name": "MATRA F1 - 36 x UnGd Rkts, 68 mm SNEB Type 256 F1B HE/Frag",
+						"quantity": 4
+					},
+					{
+						"name": "RP35 Pylon Fuel Tank (1137 l usable)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "2*R550 Magic I, 4*MATRA F1 SNEB256 (AP), 1*Fuel Tank",
+				"name": "2*R550 Magic I, 4*MATRA F1 SNEB256 (AP), 1*Fuel Tank",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R550 Magic 1 IR AAM",
+						"quantity": 2
+					},
+					{
+						"name": "MATRA F4 - 18 x UnGd Rkts, 68 mm SNEB Type 253 F1B HEAT",
+						"quantity": 4
+					},
+					{
+						"name": "RP35 Pylon Fuel Tank (1137 l usable)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "2*R550 Magic I, 4*MATRA F4 SNEB253 (Shaped Charge), 1*Fuel Tank",
+				"name": "2*R550 Magic I, 4*MATRA F4 SNEB253 (Shaped Charge), 1*Fuel Tank",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R550 Magic 1 IR AAM",
+						"quantity": 2
+					},
+					{
+						"name": "MATRA F4 - 18 x UnGd Rkts, 68 mm SNEB Type 256 F1B HE/Frag",
+						"quantity": 4
+					},
+					{
+						"name": "RP35 Pylon Fuel Tank (1137 l usable)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "2*R550 Magic I, 4*MATRA F4 SNEB256 (AP), 1*Fuel Tank",
+				"name": "2*R550 Magic I, 4*MATRA F4 SNEB256 (AP), 1*Fuel Tank",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [],
+				"enabled": true,
+				"code": "",
+				"name": "Empty loadout",
+				"roles": [
+					"No task",
+					"CAP"
+				]
 			}
 		],
-		"filename": "f-5.png",
+		"filename": "f-1.png",
 		"enabled": true,
 		"liveries": {
 			"ec 330 lorraine": {
@@ -25877,114 +25877,6 @@
 		"shortLabel": "S25",
 		"loadouts": [
 			{
-				"items": [],
-				"enabled": true,
-				"code": "",
-				"name": "Empty loadout",
-				"roles": [
-					"No task",
-					"CAS"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R-60M (AA-8 Aphid) - Infra Red",
-						"quantity": 2
-					},
-					{
-						"name": "B-8M1 - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
-						"quantity": 4
-					},
-					{
-						"name": "RBK-250 - 42 x PTAB-2.5M, 250kg CBU Medium HEAT/AP",
-						"quantity": 2
-					},
-					{
-						"name": "Fuel tank 800L Wing",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "RBK-250*2,S-8KOM*80,R-60M*2,Fuel*2",
-				"name": "RBK-250*2,S-8KOM*80,R-60M*2,Fuel*2",
-				"roles": [
-					"CAS"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R-60M (AA-8 Aphid) - Infra Red",
-						"quantity": 2
-					},
-					{
-						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
-						"quantity": 2
-					},
-					{
-						"name": "FAB-250 - 250kg GP Bomb LD",
-						"quantity": 4
-					},
-					{
-						"name": "SPPU-22-1 - 2 x 23mm  GSh-23L Autocannon Pod",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "FAB-250*4,UB-13*2,R-60M*2,SPPU-22*2",
-				"name": "FAB-250*4,UB-13*2,R-60M*2,SPPU-22*2",
-				"roles": [
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R-60M (AA-8 Aphid) - Infra Red",
-						"quantity": 2
-					},
-					{
-						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
-						"quantity": 2
-					},
-					{
-						"name": "S-25L - 320Kg, 340mm Laser Guided Rkt",
-						"quantity": 6
-					}
-				],
-				"enabled": true,
-				"code": "S-25L*6,UB-13*2,R-60M*2",
-				"name": "S-25L*6,UB-13*2,R-60M*2",
-				"roles": [
-					"CAS",
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R-60M (AA-8 Aphid) - Infra Red",
-						"quantity": 2
-					},
-					{
-						"name": "S-25-OFM - 340mm UnGd Rkt, 480kg Penetrator",
-						"quantity": 6
-					},
-					{
-						"name": "SPPU-22-1 - 2 x 23mm  GSh-23L Autocannon Pod",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "S-25*6,SPPU-22*2,R-60M*2",
-				"name": "S-25*6,SPPU-22*2,R-60M*2",
-				"roles": [
-					"CAS",
-					"Strike"
-				]
-			},
-			{
 				"items": [
 					{
 						"name": "R-60M (AA-8 Aphid) - Infra Red",
@@ -26021,7 +25913,7 @@
 						"quantity": 2
 					},
 					{
-						"name": "B-8M1 - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
+						"name": "BetAB-500 - 500kg Concrete Piercing Bomb LD",
 						"quantity": 6
 					},
 					{
@@ -26030,8 +25922,102 @@
 					}
 				],
 				"enabled": true,
-				"code": "S-8KOM*120,R-60M*2,Fuel*2",
-				"name": "S-8KOM*120,R-60M*2,Fuel*2",
+				"code": "BetAB-500*6,R-60M*2,Fuel*2",
+				"name": "BetAB-500*6,R-60M*2,Fuel*2",
+				"roles": [
+					"Runway Attack"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "BetAB-500ShP - 500kg Concrete Piercing HD w booster Bomb",
+						"quantity": 8
+					}
+				],
+				"enabled": true,
+				"code": "BetAB-500ShP*8,R-60M*2",
+				"name": "BetAB-500ShP*8,R-60M*2",
+				"roles": [
+					"Runway Attack"
+				]
+			},
+			{
+				"items": [],
+				"enabled": true,
+				"code": "",
+				"name": "Empty loadout",
+				"roles": [
+					"No task",
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "MBD2-67U with 4 x FAB-100 - 100kg GP Bombs LD",
+						"quantity": 4
+					},
+					{
+						"name": "Fuel tank 800L Wing",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "FAB-100*16,R-60M*2,Fuel*2",
+				"name": "FAB-100*16,R-60M*2,Fuel*2",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "MBD2-67U with 4 x FAB-100 - 100kg GP Bombs LD",
+						"quantity": 8
+					}
+				],
+				"enabled": true,
+				"code": "FAB-100*32,R-60M*2",
+				"name": "FAB-100*32,R-60M*2",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "SAB-100MN - 100 kg Illumination Bomb",
+						"quantity": 4
+					},
+					{
+						"name": "FAB-250 - 250kg GP Bomb LD",
+						"quantity": 2
+					},
+					{
+						"name": "SPPU-22-1 - 2 x 23mm  GSh-23L Autocannon Pod",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "FAB-250*2,SPPU-22*2,SAB-100*4,R-60M*2",
+				"name": "FAB-250*2,SPPU-22*2,SAB-100*4,R-60M*2",
 				"roles": [
 					"Strike"
 				]
@@ -26069,142 +26055,6 @@
 						"quantity": 2
 					},
 					{
-						"name": "B-8M1 - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
-						"quantity": 2
-					},
-					{
-						"name": "RBK-500-255 - 30 x PTAB-10-5, 500kg CBU Heavy HEAT/AP",
-						"quantity": 4
-					},
-					{
-						"name": "Fuel tank 800L Wing",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "RBK-500AO*4,S-8KOM*40,R-60M*2,Fuel*2",
-				"name": "RBK-500AO*4,S-8KOM*40,R-60M*2,Fuel*2",
-				"roles": [
-					"CAS"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R-60M (AA-8 Aphid) - Infra Red",
-						"quantity": 2
-					},
-					{
-						"name": "SAB-100MN - 100 kg Illumination Bomb",
-						"quantity": 4
-					},
-					{
-						"name": "FAB-250 - 250kg GP Bomb LD",
-						"quantity": 2
-					},
-					{
-						"name": "SPPU-22-1 - 2 x 23mm  GSh-23L Autocannon Pod",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "FAB-250*2,SPPU-22*2,SAB-100*4,R-60M*2",
-				"name": "FAB-250*2,SPPU-22*2,SAB-100*4,R-60M*2",
-				"roles": [
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R-60M (AA-8 Aphid) - Infra Red",
-						"quantity": 2
-					},
-					{
-						"name": "RBK-500-255 - 30 x PTAB-10-5, 500kg CBU Heavy HEAT/AP",
-						"quantity": 6
-					},
-					{
-						"name": "Fuel tank 800L Wing",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "RBK-500AO*6,R-60M*2,Fuel*2",
-				"name": "RBK-500AO*6,R-60M*2,Fuel*2",
-				"roles": [
-					"CAS"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R-60M (AA-8 Aphid) - Infra Red",
-						"quantity": 2
-					},
-					{
-						"name": "RBK-250 - 42 x PTAB-2.5M, 250kg CBU Medium HEAT/AP",
-						"quantity": 8
-					}
-				],
-				"enabled": true,
-				"code": "RBK-250*8,R-60M*2",
-				"name": "RBK-250*8,R-60M*2",
-				"roles": [
-					"CAS"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R-60M (AA-8 Aphid) - Infra Red",
-						"quantity": 2
-					},
-					{
-						"name": "Kh-25ML (AS-10 Karen) - 300kg, ASM, Semi-Act Laser",
-						"quantity": 4
-					},
-					{
-						"name": "Kh-29L (AS-14 Kedge) - 657kg, ASM, Semi-Act Laser",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "Kh-29L*2,Kh-25ML*4,R-60M*2",
-				"name": "Kh-29L*2,Kh-25ML*4,R-60M*2",
-				"roles": [
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R-60M (AA-8 Aphid) - Infra Red",
-						"quantity": 2
-					},
-					{
-						"name": "B-8M1 - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
-						"quantity": 4
-					},
-					{
-						"name": "RBK-250 - 42 x PTAB-2.5M, 250kg CBU Medium HEAT/AP",
-						"quantity": 4
-					}
-				],
-				"enabled": true,
-				"code": "RBK-250*4,S-8KOM*80,R-60M*2",
-				"name": "RBK-250*4,S-8KOM*80,R-60M*2",
-				"roles": [
-					"CAS"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R-60M (AA-8 Aphid) - Infra Red",
-						"quantity": 2
-					},
-					{
 						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
 						"quantity": 2
 					},
@@ -26231,35 +26081,21 @@
 						"quantity": 2
 					},
 					{
-						"name": "B-8M1 - 20 x UnGd Rkts, 80 mm S-8TsM SM Orange",
-						"quantity": 8
-					}
-				],
-				"enabled": true,
-				"code": "S-8TsM*160,R-60*2",
-				"name": "S-8TsM*160,R-60*2",
-				"roles": [
-					"FAC-A"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
 						"quantity": 2
 					},
 					{
-						"name": "Kh-25ML (AS-10 Karen) - 300kg, ASM, Semi-Act Laser",
+						"name": "FAB-250 - 250kg GP Bomb LD",
 						"quantity": 4
 					},
 					{
-						"name": "Fuel tank 800L Wing",
+						"name": "SPPU-22-1 - 2 x 23mm  GSh-23L Autocannon Pod",
 						"quantity": 2
 					}
 				],
 				"enabled": true,
-				"code": "Kh-25ML*4,R-60M*2,Fuel*2",
-				"name": "Kh-25ML*4,R-60M*2,Fuel*2",
+				"code": "FAB-250*4,UB-13*2,R-60M*2,SPPU-22*2",
+				"name": "FAB-250*4,UB-13*2,R-60M*2,SPPU-22*2",
 				"roles": [
 					"Strike"
 				]
@@ -26271,59 +26107,19 @@
 						"quantity": 2
 					},
 					{
-						"name": "BetAB-500ShP - 500kg Concrete Piercing HD w booster Bomb",
-						"quantity": 8
-					}
-				],
-				"enabled": true,
-				"code": "BetAB-500ShP*8,R-60M*2",
-				"name": "BetAB-500ShP*8,R-60M*2",
-				"roles": [
-					"Runway Attack"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R-60M (AA-8 Aphid) - Infra Red",
-						"quantity": 2
+						"name": "FAB-250 - 250kg GP Bomb LD",
+						"quantity": 6
 					},
 					{
-						"name": "SAB-100MN - 100 kg Illumination Bomb",
-						"quantity": 8
-					}
-				],
-				"enabled": true,
-				"code": "SAB-100*8,R-60*2",
-				"name": "SAB-100*8,R-60*2",
-				"roles": [
-					"FAC-A"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R-60M (AA-8 Aphid) - Infra Red",
-						"quantity": 2
-					},
-					{
-						"name": "S-25L - 320Kg, 340mm Laser Guided Rkt",
-						"quantity": 2
-					},
-					{
-						"name": "Kh-25ML (AS-10 Karen) - 300kg, ASM, Semi-Act Laser",
-						"quantity": 4
-					},
-					{
-						"name": "Kh-29L (AS-14 Kedge) - 657kg, ASM, Semi-Act Laser",
+						"name": "Fuel tank 800L Wing",
 						"quantity": 2
 					}
 				],
 				"enabled": true,
-				"code": "Kh-29L*2,Kh-25ML*4,S-25L*2,R-60M*2",
-				"name": "Kh-29L*2,Kh-25ML*4,S-25L*2,R-60M*2",
+				"code": "FAB-250*6,R-60M*2,Fuel*2",
+				"name": "FAB-250*6,R-60M*2,Fuel*2",
 				"roles": [
-					"CAS"
+					"Strike"
 				]
 			},
 			{
@@ -26344,6 +26140,50 @@
 				"enabled": true,
 				"code": "FAB-500*6,R-60M*2,Fuel*2",
 				"name": "FAB-500*6,R-60M*2,Fuel*2",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "Kh-25ML (AS-10 Karen) - 300kg, ASM, Semi-Act Laser",
+						"quantity": 4
+					},
+					{
+						"name": "Kh-29L (AS-14 Kedge) - 657kg, ASM, Semi-Act Laser",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "Kh-25*4,Kh-29T*2,R-60*2",
+				"name": "Kh-25*4,Kh-29T*2,R-60*2",
+				"roles": [
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "Kh-25ML (AS-10 Karen) - 300kg, ASM, Semi-Act Laser",
+						"quantity": 4
+					},
+					{
+						"name": "Fuel tank 800L Wing",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "Kh-25ML*4,R-60M*2,Fuel*2",
+				"name": "Kh-25ML*4,R-60M*2,Fuel*2",
 				"roles": [
 					"Strike"
 				]
@@ -26381,6 +26221,54 @@
 						"quantity": 2
 					},
 					{
+						"name": "Kh-25ML (AS-10 Karen) - 300kg, ASM, Semi-Act Laser",
+						"quantity": 4
+					},
+					{
+						"name": "Kh-29L (AS-14 Kedge) - 657kg, ASM, Semi-Act Laser",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "Kh-29L*2,Kh-25ML*4,R-60M*2",
+				"name": "Kh-29L*2,Kh-25ML*4,R-60M*2",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "S-25L - 320Kg, 340mm Laser Guided Rkt",
+						"quantity": 2
+					},
+					{
+						"name": "Kh-25ML (AS-10 Karen) - 300kg, ASM, Semi-Act Laser",
+						"quantity": 4
+					},
+					{
+						"name": "Kh-29L (AS-14 Kedge) - 657kg, ASM, Semi-Act Laser",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "Kh-29L*2,Kh-25ML*4,S-25L*2,R-60M*2",
+				"name": "Kh-29L*2,Kh-25ML*4,S-25L*2,R-60M*2",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"quantity": 2
+					},
+					{
 						"name": "Fuel tank 800L Wing",
 						"quantity": 2
 					},
@@ -26403,15 +26291,23 @@
 						"quantity": 2
 					},
 					{
-						"name": "MBD2-67U with 4 x FAB-100 - 100kg GP Bombs LD",
-						"quantity": 8
+						"name": "B-8M1 - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
+						"quantity": 4
+					},
+					{
+						"name": "RBK-250 - 42 x PTAB-2.5M, 250kg CBU Medium HEAT/AP",
+						"quantity": 2
+					},
+					{
+						"name": "Fuel tank 800L Wing",
+						"quantity": 2
 					}
 				],
 				"enabled": true,
-				"code": "FAB-100*32,R-60M*2",
-				"name": "FAB-100*32,R-60M*2",
+				"code": "RBK-250*2,S-8KOM*80,R-60M*2,Fuel*2",
+				"name": "RBK-250*2,S-8KOM*80,R-60M*2,Fuel*2",
 				"roles": [
-					"Strike"
+					"CAS"
 				]
 			},
 			{
@@ -26421,7 +26317,51 @@
 						"quantity": 2
 					},
 					{
-						"name": "MBD2-67U with 4 x FAB-100 - 100kg GP Bombs LD",
+						"name": "B-8M1 - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
+						"quantity": 4
+					},
+					{
+						"name": "RBK-250 - 42 x PTAB-2.5M, 250kg CBU Medium HEAT/AP",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "RBK-250*4,S-8KOM*80,R-60M*2",
+				"name": "RBK-250*4,S-8KOM*80,R-60M*2",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "RBK-250 - 42 x PTAB-2.5M, 250kg CBU Medium HEAT/AP",
+						"quantity": 8
+					}
+				],
+				"enabled": true,
+				"code": "RBK-250*8,R-60M*2",
+				"name": "RBK-250*8,R-60M*2",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "B-8M1 - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
+						"quantity": 2
+					},
+					{
+						"name": "RBK-500-255 - 30 x PTAB-10-5, 500kg CBU Heavy HEAT/AP",
 						"quantity": 4
 					},
 					{
@@ -26430,10 +26370,10 @@
 					}
 				],
 				"enabled": true,
-				"code": "FAB-100*16,R-60M*2,Fuel*2",
-				"name": "FAB-100*16,R-60M*2,Fuel*2",
+				"code": "RBK-500AO*4,S-8KOM*40,R-60M*2,Fuel*2",
+				"name": "RBK-500AO*4,S-8KOM*40,R-60M*2,Fuel*2",
 				"roles": [
-					"Strike"
+					"CAS"
 				]
 			},
 			{
@@ -26443,7 +26383,7 @@
 						"quantity": 2
 					},
 					{
-						"name": "FAB-250 - 250kg GP Bomb LD",
+						"name": "RBK-500-255 - 30 x PTAB-10-5, 500kg CBU Heavy HEAT/AP",
 						"quantity": 6
 					},
 					{
@@ -26452,32 +26392,10 @@
 					}
 				],
 				"enabled": true,
-				"code": "FAB-250*6,R-60M*2,Fuel*2",
-				"name": "FAB-250*6,R-60M*2,Fuel*2",
+				"code": "RBK-500AO*6,R-60M*2,Fuel*2",
+				"name": "RBK-500AO*6,R-60M*2,Fuel*2",
 				"roles": [
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R-60M (AA-8 Aphid) - Infra Red",
-						"quantity": 2
-					},
-					{
-						"name": "BetAB-500 - 500kg Concrete Piercing Bomb LD",
-						"quantity": 6
-					},
-					{
-						"name": "Fuel tank 800L Wing",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "BetAB-500*6,R-60M*2,Fuel*2",
-				"name": "BetAB-500*6,R-60M*2,Fuel*2",
-				"roles": [
-					"Runway Attack"
+					"CAS"
 				]
 			},
 			{
@@ -26509,41 +26427,20 @@
 						"quantity": 2
 					},
 					{
-						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
+						"name": "S-25-OFM - 340mm UnGd Rkt, 480kg Penetrator",
 						"quantity": 6
 					},
 					{
-						"name": "Fuel tank 800L Wing",
+						"name": "SPPU-22-1 - 2 x 23mm  GSh-23L Autocannon Pod",
 						"quantity": 2
 					}
 				],
 				"enabled": true,
-				"code": "UB-13*6,R-60M*2,Fuel*2",
-				"name": "UB-13*6,R-60M*2,Fuel*2",
+				"code": "S-25*6,SPPU-22*2,R-60M*2",
+				"name": "S-25*6,SPPU-22*2,R-60M*2",
 				"roles": [
+					"CAS",
 					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R-60M (AA-8 Aphid) - Infra Red",
-						"quantity": 2
-					},
-					{
-						"name": "Kh-25ML (AS-10 Karen) - 300kg, ASM, Semi-Act Laser",
-						"quantity": 4
-					},
-					{
-						"name": "Kh-29L (AS-14 Kedge) - 657kg, ASM, Semi-Act Laser",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "Kh-25*4,Kh-29T*2,R-60*2",
-				"name": "Kh-25*4,Kh-29T*2,R-60*2",
-				"roles": [
-					"Antiship Strike"
 				]
 			},
 			{
@@ -26566,6 +26463,109 @@
 				"name": "S-25L*6,R-60*2,Fuel*2",
 				"roles": [
 					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
+						"quantity": 2
+					},
+					{
+						"name": "S-25L - 320Kg, 340mm Laser Guided Rkt",
+						"quantity": 6
+					}
+				],
+				"enabled": true,
+				"code": "S-25L*6,UB-13*2,R-60M*2",
+				"name": "S-25L*6,UB-13*2,R-60M*2",
+				"roles": [
+					"CAS",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "B-8M1 - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
+						"quantity": 6
+					},
+					{
+						"name": "Fuel tank 800L Wing",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "S-8KOM*120,R-60M*2,Fuel*2",
+				"name": "S-8KOM*120,R-60M*2,Fuel*2",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "B-8M1 - 20 x UnGd Rkts, 80 mm S-8TsM SM Orange",
+						"quantity": 8
+					}
+				],
+				"enabled": true,
+				"code": "S-8TsM*160,R-60*2",
+				"name": "S-8TsM*160,R-60*2",
+				"roles": [
+					"FAC-A"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "SAB-100MN - 100 kg Illumination Bomb",
+						"quantity": 8
+					}
+				],
+				"enabled": true,
+				"code": "SAB-100*8,R-60*2",
+				"name": "SAB-100*8,R-60*2",
+				"roles": [
+					"FAC-A"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
+						"quantity": 6
+					},
+					{
+						"name": "Fuel tank 800L Wing",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "UB-13*6,R-60M*2,Fuel*2",
+				"name": "UB-13*6,R-60M*2,Fuel*2",
+				"roles": [
+					"Strike"
 				]
 			}
 		],
@@ -26673,12 +26673,120 @@
 		"canRearm": false
 	},
 	"Su-25T": {
-		"name": "Su-25",
+		"name": "Su-25T",
 		"coalition": "red",
 		"label": "Su-25T Frogfoot",
 		"era": "Late Cold War",
 		"shortLabel": "S25",
 		"loadouts": [
+			{
+				"items": [
+					{
+						"name": "MPS-410",
+						"quantity": 2
+					},
+					{
+						"name": "R-73 (AA-11 Archer) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "Kh-25ML (AS-10 Karen) - 300kg, ASM, Semi-Act Laser",
+						"quantity": 2
+					},
+					{
+						"name": "APU-8 - 8 x 9M127-1 Vikhr-M ATGM, LOSBR, Tandem HEAT/Frag",
+						"quantity": 2
+					},
+					{
+						"name": "SPPU-22-1 - 2 x 23mm  GSh-23L Autocannon Pod",
+						"quantity": 2
+					},
+					{
+						"name": "Mercury LLTV Pod",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "APU-8 Vikhr-M*2,Kh-25ML,R-73*2,SPPU-22*2,Mercury LLTV Pod,MPS-410",
+				"name": "APU-8 Vikhr-M*2,Kh-25ML,R-73*2,SPPU-22*2,Mercury LLTV Pod,MPS-410",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "MPS-410",
+						"quantity": 2
+					},
+					{
+						"name": "R-73 (AA-11 Archer) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "S-25L - 320Kg, 340mm Laser Guided Rkt",
+						"quantity": 2
+					},
+					{
+						"name": "APU-8 - 8 x 9M127-1 Vikhr-M ATGM, LOSBR, Tandem HEAT/Frag",
+						"quantity": 2
+					},
+					{
+						"name": "SPPU-22-1 - 2 x 23mm  GSh-23L Autocannon Pod",
+						"quantity": 2
+					},
+					{
+						"name": "Mercury LLTV Pod",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "APU-8 Vikhr-M*2,S-25L*2,R-73*2,SPPU-22*2,Mercury LLTV Pod,MPS-410",
+				"name": "APU-8 Vikhr-M*2,S-25L*2,R-73*2,SPPU-22*2,Mercury LLTV Pod,MPS-410",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "BetAB-500 - 500kg Concrete Piercing Bomb LD",
+						"quantity": 6
+					},
+					{
+						"name": "Fuel tank 800L Wing",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "BetAB-500*6,R-60M*2,Fuel*2",
+				"name": "BetAB-500*6,R-60M*2,Fuel*2",
+				"roles": [
+					"Runway Attack"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "BetAB-500ShP - 500kg Concrete Piercing HD w booster Bomb",
+						"quantity": 8
+					}
+				],
+				"enabled": true,
+				"code": "BetAB-500ShP*8,R-60M*2",
+				"name": "BetAB-500ShP*8,R-60M*2",
+				"roles": [
+					"Runway Attack"
+				]
+			},
 			{
 				"items": [],
 				"enabled": true,
@@ -26687,6 +26795,72 @@
 				"roles": [
 					"No task",
 					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "MBD2-67U with 4 x FAB-100 - 100kg GP Bombs LD",
+						"quantity": 4
+					},
+					{
+						"name": "Fuel tank 800L Wing",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "FAB-100*16,R-60M*2,Fuel*2",
+				"name": "FAB-100*16,R-60M*2,Fuel*2",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "MBD2-67U with 4 x FAB-100 - 100kg GP Bombs LD",
+						"quantity": 8
+					}
+				],
+				"enabled": true,
+				"code": "FAB-100*32,R-60M*2",
+				"name": "FAB-100*32,R-60M*2",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "S-25-OFM - 340mm UnGd Rkt, 480kg Penetrator",
+						"quantity": 2
+					},
+					{
+						"name": "FAB-250 - 250kg GP Bomb LD",
+						"quantity": 4
+					},
+					{
+						"name": "Fuel tank 800L Wing",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "FAB-250*4,S-25*2,R-60M*2,Fuel*2",
+				"name": "FAB-250*4,S-25*2,R-60M*2,Fuel*2",
+				"roles": [
+					"Strike"
 				]
 			},
 			{
@@ -26713,6 +26887,172 @@
 				"name": "FAB-250*4,SPPU-22*2,SAB-100*2,R-60M*2",
 				"roles": [
 					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
+						"quantity": 2
+					},
+					{
+						"name": "FAB-250 - 250kg GP Bomb LD",
+						"quantity": 4
+					},
+					{
+						"name": "Fuel tank 800L Wing",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "FAB-250*4,UB-13*2,R-60M*2,Fuel*2",
+				"name": "FAB-250*4,UB-13*2,R-60M*2,Fuel*2",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
+						"quantity": 2
+					},
+					{
+						"name": "FAB-250 - 250kg GP Bomb LD",
+						"quantity": 4
+					},
+					{
+						"name": "SPPU-22-1 - 2 x 23mm  GSh-23L Autocannon Pod",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "FAB-250*4,UB-13*2,R-60M*2,SPPU-22*2",
+				"name": "FAB-250*4,UB-13*2,R-60M*2,SPPU-22*2",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "FAB-250 - 250kg GP Bomb LD",
+						"quantity": 6
+					},
+					{
+						"name": "Fuel tank 800L Wing",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "FAB-250*6,R-60M*2,Fuel*2",
+				"name": "FAB-250*6,R-60M*2,Fuel*2",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "FAB-500 M-62 - 500kg GP Bomb LD",
+						"quantity": 6
+					},
+					{
+						"name": "Fuel tank 800L Wing",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "FAB-500*6,R-60M*2,Fuel*2",
+				"name": "FAB-500*6,R-60M*2,Fuel*2",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Fuel tank 800L Wing",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "Fuel*4",
+				"name": "Fuel*4",
+				"roles": [
+					"FAC-A"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "MPS-410",
+						"quantity": 2
+					},
+					{
+						"name": "R-73 (AA-11 Archer) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "Fuel tank 800L Wing",
+						"quantity": 2
+					},
+					{
+						"name": "Kh-25ML (AS-10 Karen) - 300kg, ASM, Semi-Act Laser",
+						"quantity": 2
+					},
+					{
+						"name": "KAB-500Kr - 500kg TV Guided Bomb",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "KAB-500Kr*2,Kh-25ML*2,R-73*2,MPS-410,Fuel*2",
+				"name": "KAB-500Kr*2,Kh-25ML*2,R-73*2,MPS-410,Fuel*2",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "MPS-410",
+						"quantity": 2
+					},
+					{
+						"name": "Kh-25ML (AS-10 Karen) - 300kg, ASM, Semi-Act Laser",
+						"quantity": 4
+					},
+					{
+						"name": "Kh-29L (AS-14 Kedge) - 657kg, ASM, Semi-Act Laser",
+						"quantity": 2
+					},
+					{
+						"name": "R-73 (AA-11 Archer) - Infra Red",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "Kh-29L*2,Kh-25ML*4,R-73*2,ECM",
+				"name": "Kh-29L*2,Kh-25ML*4,R-73*2,ECM",
+				"roles": [
+					"Antiship Strike"
 				]
 			},
 			{
@@ -26760,165 +27100,17 @@
 						"quantity": 2
 					},
 					{
-						"name": "Kh-25ML (AS-10 Karen) - 300kg, ASM, Semi-Act Laser",
+						"name": "Kh-29L (AS-14 Kedge) - 657kg, ASM, Semi-Act Laser",
 						"quantity": 2
 					},
 					{
-						"name": "KAB-500Kr - 500kg TV Guided Bomb",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "KAB-500Kr*2,Kh-25ML*2,R-73*2,MPS-410,Fuel*2",
-				"name": "KAB-500Kr*2,Kh-25ML*2,R-73*2,MPS-410,Fuel*2",
-				"roles": [
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R-60M (AA-8 Aphid) - Infra Red",
-						"quantity": 2
-					},
-					{
-						"name": "UB-32A pod - 32 x S-5KO, 57mm UnGd Rkts, HEAT/Frag",
-						"quantity": 2
-					},
-					{
-						"name": "RBK-500-255 - 30 x PTAB-10-5, 500kg CBU Heavy HEAT/AP",
-						"quantity": 4
-					},
-					{
-						"name": "Fuel tank 800L Wing",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "RBK-500AO*4,UB-32*2,R-60M*2,Fuel*2",
-				"name": "RBK-500AO*4,UB-32*2,R-60M*2,Fuel*2",
-				"roles": [
-					"CAS"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R-60M (AA-8 Aphid) - Infra Red",
-						"quantity": 2
-					},
-					{
-						"name": "BetAB-500ShP - 500kg Concrete Piercing HD w booster Bomb",
-						"quantity": 8
-					}
-				],
-				"enabled": true,
-				"code": "BetAB-500ShP*8,R-60M*2",
-				"name": "BetAB-500ShP*8,R-60M*2",
-				"roles": [
-					"Runway Attack"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R-60M (AA-8 Aphid) - Infra Red",
-						"quantity": 2
-					},
-					{
-						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
-						"quantity": 6
-					},
-					{
-						"name": "Fuel tank 800L Wing",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "UB-13*6,R-60M*2,Fuel*2",
-				"name": "UB-13*6,R-60M*2,Fuel*2",
-				"roles": [
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "MPS-410",
-						"quantity": 2
-					},
-					{
-						"name": "R-73 (AA-11 Archer) - Infra Red",
-						"quantity": 2
-					},
-					{
-						"name": "Fuel tank 800L Wing",
-						"quantity": 2
-					},
-					{
-						"name": "Kh-29T (AS-14 Kedge) - 670kg, ASM, TV Guided",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "Kh-29T*2,R-73*2,Fuel*2,MPS-410",
-				"name": "Kh-29T*2,R-73*2,Fuel*2,MPS-410",
-				"roles": [
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "MPS-410",
-						"quantity": 2
-					},
-					{
-						"name": "R-73 (AA-11 Archer) - Infra Red",
-						"quantity": 2
-					},
-					{
-						"name": "Kh-25ML (AS-10 Karen) - 300kg, ASM, Semi-Act Laser",
-						"quantity": 4
-					},
-					{
-						"name": "Kh-58U (AS-11 Kilter) - 640kg, ARM, IN & Pas Rdr",
-						"quantity": 2
-					},
-					{
-						"name": "L-081 Fantasmagoria ELINT pod",
+						"name": "Mercury LLTV Pod",
 						"quantity": 1
 					}
 				],
 				"enabled": true,
-				"code": "Kh58*2_Kh25ML*4_R73*2_L-081_MPS-410",
-				"name": "Kh58*2_Kh25ML*4_R73*2_L-081_MPS-410",
-				"roles": [
-					"SEAD"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R-60M (AA-8 Aphid) - Infra Red",
-						"quantity": 2
-					},
-					{
-						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
-						"quantity": 2
-					},
-					{
-						"name": "FAB-250 - 250kg GP Bomb LD",
-						"quantity": 4
-					},
-					{
-						"name": "Fuel tank 800L Wing",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "FAB-250*4,UB-13*2,R-60M*2,Fuel*2",
-				"name": "FAB-250*4,UB-13*2,R-60M*2,Fuel*2",
+				"code": "Kh-29L*2,R-73*2,Fuel*2,Mercury LLTV Pod,MPS-410",
+				"name": "Kh-29L*2,R-73*2,Fuel*2,Mercury LLTV Pod,MPS-410",
 				"roles": [
 					"Strike"
 				]
@@ -26974,25 +27166,25 @@
 			{
 				"items": [
 					{
-						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"name": "MPS-410",
 						"quantity": 2
 					},
 					{
-						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
+						"name": "R-73 (AA-11 Archer) - Infra Red",
 						"quantity": 2
 					},
 					{
-						"name": "FAB-250 - 250kg GP Bomb LD",
-						"quantity": 4
+						"name": "Fuel tank 800L Wing",
+						"quantity": 2
 					},
 					{
-						"name": "SPPU-22-1 - 2 x 23mm  GSh-23L Autocannon Pod",
+						"name": "Kh-29T (AS-14 Kedge) - 670kg, ASM, TV Guided",
 						"quantity": 2
 					}
 				],
 				"enabled": true,
-				"code": "FAB-250*4,UB-13*2,R-60M*2,SPPU-22*2",
-				"name": "FAB-250*4,UB-13*2,R-60M*2,SPPU-22*2",
+				"code": "Kh-29T*2,R-73*2,Fuel*2,MPS-410",
+				"name": "Kh-29T*2,R-73*2,Fuel*2,MPS-410",
 				"roles": [
 					"Strike"
 				]
@@ -27000,37 +27192,31 @@
 			{
 				"items": [
 					{
-						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"name": "MPS-410",
 						"quantity": 2
 					},
 					{
-						"name": "FAB-500 M-62 - 500kg GP Bomb LD",
-						"quantity": 6
+						"name": "R-73 (AA-11 Archer) - Infra Red",
+						"quantity": 2
 					},
 					{
-						"name": "Fuel tank 800L Wing",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "FAB-500*6,R-60M*2,Fuel*2",
-				"name": "FAB-500*6,R-60M*2,Fuel*2",
-				"roles": [
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "Fuel tank 800L Wing",
+						"name": "Kh-25MPU (Updated AS-12 Kegler) - 320kg, ARM, IN & Pas Rdr",
 						"quantity": 4
+					},
+					{
+						"name": "Fuel tank 800L Wing",
+						"quantity": 2
+					},
+					{
+						"name": "L-081 Fantasmagoria ELINT pod",
+						"quantity": 1
 					}
 				],
 				"enabled": true,
-				"code": "Fuel*4",
-				"name": "Fuel*4",
+				"code": "Kh25MPU*4_R73*2_Fuel*2_L-081_MPS-410",
+				"name": "Kh25MPU*4_R73*2_Fuel*2_L-081_MPS-410",
 				"roles": [
-					"FAC-A"
+					"SEAD"
 				]
 			},
 			{
@@ -27045,328 +27231,22 @@
 					},
 					{
 						"name": "Kh-25ML (AS-10 Karen) - 300kg, ASM, Semi-Act Laser",
-						"quantity": 2
-					},
-					{
-						"name": "APU-8 - 8 x 9M127-1 Vikhr-M ATGM, LOSBR, Tandem HEAT/Frag",
-						"quantity": 2
-					},
-					{
-						"name": "SPPU-22-1 - 2 x 23mm  GSh-23L Autocannon Pod",
-						"quantity": 2
-					},
-					{
-						"name": "Mercury LLTV Pod",
-						"quantity": 1
-					}
-				],
-				"enabled": true,
-				"code": "APU-8 Vikhr-M*2,Kh-25ML,R-73*2,SPPU-22*2,Mercury LLTV Pod,MPS-410",
-				"name": "APU-8 Vikhr-M*2,Kh-25ML,R-73*2,SPPU-22*2,Mercury LLTV Pod,MPS-410",
-				"roles": [
-					"CAS"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R-60M (AA-8 Aphid) - Infra Red",
-						"quantity": 2
-					},
-					{
-						"name": "B-8M1 - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
-						"quantity": 6
-					},
-					{
-						"name": "Fuel tank 800L Wing",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "S-8KOM*120,R-60M*2,Fuel*2",
-				"name": "S-8KOM*120,R-60M*2,Fuel*2",
-				"roles": [
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R-60M (AA-8 Aphid) - Infra Red",
-						"quantity": 2
-					},
-					{
-						"name": "KMGU-2 - 96 x PTAB-2.5KO Dispenser (CBU) HEAT/AP",
-						"quantity": 8
-					}
-				],
-				"enabled": true,
-				"code": "KMGU-2 (PTAB-2.5KO)*8,R-60M*2",
-				"name": "KMGU-2 (PTAB-2.5KO)*8,R-60M*2",
-				"roles": [
-					"CAS",
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R-60M (AA-8 Aphid) - Infra Red",
-						"quantity": 2
-					},
-					{
-						"name": "FAB-250 - 250kg GP Bomb LD",
-						"quantity": 6
-					},
-					{
-						"name": "Fuel tank 800L Wing",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "FAB-250*6,R-60M*2,Fuel*2",
-				"name": "FAB-250*6,R-60M*2,Fuel*2",
-				"roles": [
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "MPS-410",
-						"quantity": 2
-					},
-					{
-						"name": "R-73 (AA-11 Archer) - Infra Red",
-						"quantity": 2
-					},
-					{
-						"name": "Fuel tank 800L Wing",
-						"quantity": 2
-					},
-					{
-						"name": "Kh-29L (AS-14 Kedge) - 657kg, ASM, Semi-Act Laser",
-						"quantity": 2
-					},
-					{
-						"name": "Mercury LLTV Pod",
-						"quantity": 1
-					}
-				],
-				"enabled": true,
-				"code": "Kh-29L*2,R-73*2,Fuel*2,Mercury LLTV Pod,MPS-410",
-				"name": "Kh-29L*2,R-73*2,Fuel*2,Mercury LLTV Pod,MPS-410",
-				"roles": [
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R-60M (AA-8 Aphid) - Infra Red",
-						"quantity": 2
-					},
-					{
-						"name": "MBD2-67U with 4 x FAB-100 - 100kg GP Bombs LD",
-						"quantity": 8
-					}
-				],
-				"enabled": true,
-				"code": "FAB-100*32,R-60M*2",
-				"name": "FAB-100*32,R-60M*2",
-				"roles": [
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R-60M (AA-8 Aphid) - Infra Red",
-						"quantity": 2
-					},
-					{
-						"name": "RBK-250 - 42 x PTAB-2.5M, 250kg CBU Medium HEAT/AP",
-						"quantity": 8
-					}
-				],
-				"enabled": true,
-				"code": "RBK-250*8,R-60M*2",
-				"name": "RBK-250*8,R-60M*2",
-				"roles": [
-					"CAS"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R-60M (AA-8 Aphid) - Infra Red",
-						"quantity": 2
-					},
-					{
-						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
-						"quantity": 2
-					},
-					{
-						"name": "S-25L - 320Kg, 340mm Laser Guided Rkt",
-						"quantity": 6
-					}
-				],
-				"enabled": true,
-				"code": "S-25L*6,UB-13*2,R-60M*2",
-				"name": "S-25L*6,UB-13*2,R-60M*2",
-				"roles": [
-					"CAS",
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R-60M (AA-8 Aphid) - Infra Red",
-						"quantity": 2
-					},
-					{
-						"name": "S-25-OFM - 340mm UnGd Rkt, 480kg Penetrator",
-						"quantity": 2
-					},
-					{
-						"name": "FAB-250 - 250kg GP Bomb LD",
 						"quantity": 4
 					},
 					{
-						"name": "Fuel tank 800L Wing",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "FAB-250*4,S-25*2,R-60M*2,Fuel*2",
-				"name": "FAB-250*4,S-25*2,R-60M*2,Fuel*2",
-				"roles": [
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"name": "Kh-58U (AS-11 Kilter) - 640kg, ARM, IN & Pas Rdr",
 						"quantity": 2
 					},
 					{
-						"name": "R-73 (AA-11 Archer) - Infra Red",
-						"quantity": 2
-					},
-					{
-						"name": "S-25-OFM - 340mm UnGd Rkt, 480kg Penetrator",
-						"quantity": 2
-					},
-					{
-						"name": "SPPU-22-1 - 2 x 23mm  GSh-23L Autocannon Pod",
-						"quantity": 4
-					}
-				],
-				"enabled": true,
-				"code": "S-25*2,SPPU-22*4,R-60M*2,R-73*2",
-				"name": "S-25*2,SPPU-22*4,R-60M*2,R-73*2",
-				"roles": [
-					"CAS",
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R-60M (AA-8 Aphid) - Infra Red",
-						"quantity": 2
-					},
-					{
-						"name": "KMGU-2 - 96 x AO-2.5RT Dispenser (CBU) HE/Frag",
-						"quantity": 8
-					}
-				],
-				"enabled": true,
-				"code": "KMGU-2 (AO-2.5RT)*8,R-60M*2",
-				"name": "KMGU-2 (AO-2.5RT)*8,R-60M*2",
-				"roles": [
-					"CAS",
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "MPS-410",
-						"quantity": 2
-					},
-					{
-						"name": "R-73 (AA-11 Archer) - Infra Red",
-						"quantity": 2
-					},
-					{
-						"name": "S-25L - 320Kg, 340mm Laser Guided Rkt",
-						"quantity": 2
-					},
-					{
-						"name": "APU-8 - 8 x 9M127-1 Vikhr-M ATGM, LOSBR, Tandem HEAT/Frag",
-						"quantity": 2
-					},
-					{
-						"name": "SPPU-22-1 - 2 x 23mm  GSh-23L Autocannon Pod",
-						"quantity": 2
-					},
-					{
-						"name": "Mercury LLTV Pod",
+						"name": "L-081 Fantasmagoria ELINT pod",
 						"quantity": 1
 					}
 				],
 				"enabled": true,
-				"code": "APU-8 Vikhr-M*2,S-25L*2,R-73*2,SPPU-22*2,Mercury LLTV Pod,MPS-410",
-				"name": "APU-8 Vikhr-M*2,S-25L*2,R-73*2,SPPU-22*2,Mercury LLTV Pod,MPS-410",
+				"code": "Kh58*2_Kh25ML*4_R73*2_L-081_MPS-410",
+				"name": "Kh58*2_Kh25ML*4_R73*2_L-081_MPS-410",
 				"roles": [
-					"CAS"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R-60M (AA-8 Aphid) - Infra Red",
-						"quantity": 2
-					},
-					{
-						"name": "S-25-OFM - 340mm UnGd Rkt, 480kg Penetrator",
-						"quantity": 6
-					},
-					{
-						"name": "Fuel tank 800L Wing",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "S-25*6,R-60M*2,Fuel*2",
-				"name": "S-25*6,R-60M*2,Fuel*2",
-				"roles": [
-					"Strike"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "R-60M (AA-8 Aphid) - Infra Red",
-						"quantity": 2
-					},
-					{
-						"name": "RBK-500-255 - 30 x PTAB-10-5, 500kg CBU Heavy HEAT/AP",
-						"quantity": 6
-					},
-					{
-						"name": "Fuel tank 800L Wing",
-						"quantity": 2
-					}
-				],
-				"enabled": true,
-				"code": "RBK-500AO*6,R-60M*2,Fuel*2",
-				"name": "RBK-500AO*6,R-60M*2,Fuel*2",
-				"roles": [
-					"CAS"
+					"SEAD"
 				]
 			},
 			{
@@ -27410,49 +27290,16 @@
 						"quantity": 2
 					},
 					{
-						"name": "UB-32A pod - 32 x S-5KO, 57mm UnGd Rkts, HEAT/Frag",
-						"quantity": 4
-					},
-					{
-						"name": "RBK-250 - 42 x PTAB-2.5M, 250kg CBU Medium HEAT/AP",
-						"quantity": 4
+						"name": "KMGU-2 - 96 x AO-2.5RT Dispenser (CBU) HE/Frag",
+						"quantity": 8
 					}
 				],
 				"enabled": true,
-				"code": "RBK-250*4,UB-32*4,R-60M*2",
-				"name": "RBK-250*4,UB-32*4,R-60M*2",
+				"code": "KMGU-2 (AO-2.5RT)*8,R-60M*2",
+				"name": "KMGU-2 (AO-2.5RT)*8,R-60M*2",
 				"roles": [
-					"CAS"
-				]
-			},
-			{
-				"items": [
-					{
-						"name": "MPS-410",
-						"quantity": 2
-					},
-					{
-						"name": "R-73 (AA-11 Archer) - Infra Red",
-						"quantity": 2
-					},
-					{
-						"name": "Kh-25MPU (Updated AS-12 Kegler) - 320kg, ARM, IN & Pas Rdr",
-						"quantity": 4
-					},
-					{
-						"name": "Fuel tank 800L Wing",
-						"quantity": 2
-					},
-					{
-						"name": "L-081 Fantasmagoria ELINT pod",
-						"quantity": 1
-					}
-				],
-				"enabled": true,
-				"code": "Kh25MPU*4_R73*2_Fuel*2_L-081_MPS-410",
-				"name": "Kh25MPU*4_R73*2_Fuel*2_L-081_MPS-410",
-				"roles": [
-					"SEAD"
+					"CAS",
+					"Strike"
 				]
 			},
 			{
@@ -27462,19 +27309,16 @@
 						"quantity": 2
 					},
 					{
-						"name": "BetAB-500 - 500kg Concrete Piercing Bomb LD",
-						"quantity": 6
-					},
-					{
-						"name": "Fuel tank 800L Wing",
-						"quantity": 2
+						"name": "KMGU-2 - 96 x PTAB-2.5KO Dispenser (CBU) HEAT/AP",
+						"quantity": 8
 					}
 				],
 				"enabled": true,
-				"code": "BetAB-500*6,R-60M*2,Fuel*2",
-				"name": "BetAB-500*6,R-60M*2,Fuel*2",
+				"code": "KMGU-2 (PTAB-2.5KO)*8,R-60M*2",
+				"name": "KMGU-2 (PTAB-2.5KO)*8,R-60M*2",
 				"roles": [
-					"Runway Attack"
+					"CAS",
+					"Strike"
 				]
 			},
 			{
@@ -27510,7 +27354,51 @@
 						"quantity": 2
 					},
 					{
-						"name": "MBD2-67U with 4 x FAB-100 - 100kg GP Bombs LD",
+						"name": "UB-32A pod - 32 x S-5KO, 57mm UnGd Rkts, HEAT/Frag",
+						"quantity": 4
+					},
+					{
+						"name": "RBK-250 - 42 x PTAB-2.5M, 250kg CBU Medium HEAT/AP",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "RBK-250*4,UB-32*4,R-60M*2",
+				"name": "RBK-250*4,UB-32*4,R-60M*2",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "RBK-250 - 42 x PTAB-2.5M, 250kg CBU Medium HEAT/AP",
+						"quantity": 8
+					}
+				],
+				"enabled": true,
+				"code": "RBK-250*8,R-60M*2",
+				"name": "RBK-250*8,R-60M*2",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "UB-32A pod - 32 x S-5KO, 57mm UnGd Rkts, HEAT/Frag",
+						"quantity": 2
+					},
+					{
+						"name": "RBK-500-255 - 30 x PTAB-10-5, 500kg CBU Heavy HEAT/AP",
 						"quantity": 4
 					},
 					{
@@ -27519,8 +27407,79 @@
 					}
 				],
 				"enabled": true,
-				"code": "FAB-100*16,R-60M*2,Fuel*2",
-				"name": "FAB-100*16,R-60M*2,Fuel*2",
+				"code": "RBK-500AO*4,UB-32*2,R-60M*2,Fuel*2",
+				"name": "RBK-500AO*4,UB-32*2,R-60M*2,Fuel*2",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "RBK-500-255 - 30 x PTAB-10-5, 500kg CBU Heavy HEAT/AP",
+						"quantity": 6
+					},
+					{
+						"name": "Fuel tank 800L Wing",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "RBK-500AO*6,R-60M*2,Fuel*2",
+				"name": "RBK-500AO*6,R-60M*2,Fuel*2",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "R-73 (AA-11 Archer) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "S-25-OFM - 340mm UnGd Rkt, 480kg Penetrator",
+						"quantity": 2
+					},
+					{
+						"name": "SPPU-22-1 - 2 x 23mm  GSh-23L Autocannon Pod",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "S-25*2,SPPU-22*4,R-60M*2,R-73*2",
+				"name": "S-25*2,SPPU-22*4,R-60M*2,R-73*2",
+				"roles": [
+					"CAS",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "S-25-OFM - 340mm UnGd Rkt, 480kg Penetrator",
+						"quantity": 6
+					},
+					{
+						"name": "Fuel tank 800L Wing",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "S-25*6,R-60M*2,Fuel*2",
+				"name": "S-25*6,R-60M*2,Fuel*2",
 				"roles": [
 					"Strike"
 				]
@@ -27528,27 +27487,68 @@
 			{
 				"items": [
 					{
-						"name": "MPS-410",
+						"name": "R-60M (AA-8 Aphid) - Infra Red",
 						"quantity": 2
 					},
 					{
-						"name": "Kh-25ML (AS-10 Karen) - 300kg, ASM, Semi-Act Laser",
-						"quantity": 4
-					},
-					{
-						"name": "Kh-29L (AS-14 Kedge) - 657kg, ASM, Semi-Act Laser",
+						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
 						"quantity": 2
 					},
 					{
-						"name": "R-73 (AA-11 Archer) - Infra Red",
+						"name": "S-25L - 320Kg, 340mm Laser Guided Rkt",
+						"quantity": 6
+					}
+				],
+				"enabled": true,
+				"code": "S-25L*6,UB-13*2,R-60M*2",
+				"name": "S-25L*6,UB-13*2,R-60M*2",
+				"roles": [
+					"CAS",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "B-8M1 - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
+						"quantity": 6
+					},
+					{
+						"name": "Fuel tank 800L Wing",
 						"quantity": 2
 					}
 				],
 				"enabled": true,
-				"code": "Kh-29L*2,Kh-25ML*4,R-73*2,ECM",
-				"name": "Kh-29L*2,Kh-25ML*4,R-73*2,ECM",
+				"code": "S-8KOM*120,R-60M*2,Fuel*2",
+				"name": "S-8KOM*120,R-60M*2,Fuel*2",
 				"roles": [
-					"Antiship Strike"
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "R-60M (AA-8 Aphid) - Infra Red",
+						"quantity": 2
+					},
+					{
+						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
+						"quantity": 6
+					},
+					{
+						"name": "Fuel tank 800L Wing",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "UB-13*6,R-60M*2,Fuel*2",
+				"name": "UB-13*6,R-60M*2,Fuel*2",
+				"roles": [
+					"Strike"
 				]
 			}
 		],
@@ -27620,7 +27620,8 @@
 		},
 		"type": "Attack",
 		"description": "2 jet engine, swept wing, 1 crew. Frogfoot",
-		"abilities": "Fox 2 and gun, Dumb bombs, rockets, SEAD and ATGMs, Subsonic"
+		"abilities": "Fox 2 and gun, Dumb bombs, rockets, SEAD and ATGMs, Subsonic",
+		"canTargetPoint": true
 	},
 	"Su-27": {
 		"name": "Su-27",
