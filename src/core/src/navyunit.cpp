@@ -93,34 +93,33 @@ void NavyUnit::setState(unsigned char newState)
 		setEnableTaskCheckFailed(true);
 		clearActivePath();
 		resetActiveDestination();
-		resetTask();
 		break;
 	}
 	case State::FIRE_AT_AREA: {
 		setEnableTaskCheckFailed(true);
 		clearActivePath();
 		resetActiveDestination();
-		resetTask();
 		break;
 	}
 	case State::SIMULATE_FIRE_FIGHT: {
 		setEnableTaskCheckFailed(true);
 		clearActivePath();
 		resetActiveDestination();
-		resetTask();
 		break;
 	}
 	default:
 		break;
 	}
 
-	if (newState != state)
-		resetTask();
+	setHasTask(false);
+	resetTaskFailedCounter();
 
 	log(unitName + " setting state from " + to_string(state) + " to " + to_string(newState));
 	state = newState;
 
 	triggerUpdate(DataIndex::state);
+
+	AIloop();
 }
 
 void NavyUnit::AIloop()
@@ -188,15 +187,9 @@ void NavyUnit::AIloop()
 	case State::SIMULATE_FIRE_FIGHT: {
 		setTask("Simulating fire fight");
 
-		if (!getHasTask()) {
-			std::ostringstream taskSS;
-			taskSS.precision(10);
+		// TODO 
 
-			taskSS << "{id = 'FireAtPoint', lat = " << targetPosition.lat << ", lng = " << targetPosition.lng << ", radius = 1}";
-			Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
-			scheduler->appendCommand(command);
-			setHasTask(true);
-		}
+		setState(State::IDLE);
 	}
 	default:
 		break;

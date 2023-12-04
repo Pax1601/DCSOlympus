@@ -34,7 +34,6 @@ Aircraft::Aircraft(json::value json, unsigned int ID) : AirUnit(json, ID)
 	setCategory("Aircraft");
 	setDesiredSpeed(knotsToMs(300));
 	setDesiredAltitude(ftToM(20000));
-	
 };
 
 void Aircraft::changeSpeed(string change)
@@ -48,11 +47,6 @@ void Aircraft::changeSpeed(string change)
 
 	if (getDesiredSpeed() < knotsToMs(50))
 		setDesiredSpeed(knotsToMs(50));
-
-	if (state == State::IDLE)
-		resetTask();
-	else
-		goToDestination();		/* Send the command to reach the destination */
 }
 
 void Aircraft::changeAltitude(string change)
@@ -69,14 +63,9 @@ void Aircraft::changeAltitude(string change)
 		if (getDesiredAltitude() > 5000)
 			setDesiredAltitude(getDesiredAltitude() + ftToM(2500));
 		else if (getDesiredAltitude() >= 0)
-				setDesiredAltitude(getDesiredAltitude() + ftToM(500));
+			setDesiredAltitude(getDesiredAltitude() + ftToM(500));
 	}
 
 	if (getDesiredAltitude() < 0)
 		setDesiredAltitude(0);
-
-	if (state == State::IDLE)
-		resetTask();
-	else 
-		goToDestination();		/* Send the command to reach the destination */
 }

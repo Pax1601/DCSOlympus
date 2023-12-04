@@ -56,7 +56,13 @@ void Scheduler::execute(lua_State* L)
 					log("Error executing command " + commandString);
 				else
 					log("Command '" + commandString + "' executed correctly, current load " + to_string(getLoad()));
-				load = command->getLoad();
+			
+				/* Adjust the load depending on the fps */
+				double fpsMultiplier = 1;
+				if (getFrameRate() + 5 > 0)
+					fpsMultiplier = static_cast<unsigned int>(max(1, 60 / (getFrameRate() + 5)));
+
+				load = command->getLoad() * fpsMultiplier;
 				commands.remove(command);
 				executedCommandsHashes.push_back(command->getHash());
 				command->executeCallback(); /* Execute the command callback (this is a lambda function that can be used to execute a function when the command is run) */

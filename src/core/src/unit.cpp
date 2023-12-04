@@ -430,7 +430,11 @@ void Unit::resetTask()
 void Unit::setFormationOffset(Offset newFormationOffset)
 {
 	formationOffset = newFormationOffset;
-	resetTask();
+	
+	/* Apply the change */
+	setHasTask(false);
+	resetTaskFailedCounter();
+	AIloop();
 
 	triggerUpdate(DataIndex::formationOffset);
 }
@@ -519,7 +523,11 @@ void Unit::setIsActiveTanker(bool newIsActiveTanker)
 {
 	if (isActiveTanker != newIsActiveTanker) {
 		isActiveTanker = newIsActiveTanker;
-		resetTask();
+		
+		/* Apply the change */
+		setHasTask(false);
+		resetTaskFailedCounter();
+		AIloop();
 
 		triggerUpdate(DataIndex::isActiveTanker);
 	}
@@ -529,7 +537,11 @@ void Unit::setIsActiveAWACS(bool newIsActiveAWACS)
 {
 	if (isActiveAWACS != newIsActiveAWACS) {
 		isActiveAWACS = newIsActiveAWACS;
-		resetTask();
+		
+		/* Apply the change */
+		setHasTask(false);
+		resetTaskFailedCounter();
+		AIloop();
 
 		triggerUpdate(DataIndex::isActiveAWACS);
 	}
@@ -644,10 +656,11 @@ void Unit::setDesiredSpeed(double newDesiredSpeed)
 {
 	if (desiredSpeed != newDesiredSpeed) {
 		desiredSpeed = newDesiredSpeed;
-		if (state == State::IDLE)
-			resetTask();
-		else
-			goToDestination();		/* Send the command to reach the destination */
+		
+		/* Apply the change */
+		setHasTask(false);
+		resetTaskFailedCounter();
+		AIloop();
 
 		triggerUpdate(DataIndex::desiredSpeed);
 	}
@@ -657,10 +670,11 @@ void Unit::setDesiredAltitude(double newDesiredAltitude)
 {
 	if (desiredAltitude != newDesiredAltitude) {
 		desiredAltitude = newDesiredAltitude;
-		if (state == State::IDLE)
-			resetTask();
-		else
-			goToDestination();		/* Send the command to reach the destination */
+
+		/* Apply the change */
+		setHasTask(false);
+		resetTaskFailedCounter();
+		AIloop();
 
 		triggerUpdate(DataIndex::desiredAltitude);
 	}
@@ -670,10 +684,11 @@ void Unit::setDesiredSpeedType(string newDesiredSpeedType)
 {
 	if (desiredSpeedType != (newDesiredSpeedType.compare("GS") == 0)) {
 		desiredSpeedType = newDesiredSpeedType.compare("GS") == 0;
-		if (state == State::IDLE)
-			resetTask();
-		else
-			goToDestination();		/* Send the command to reach the destination */
+
+		/* Apply the change */
+		setHasTask(false);
+		resetTaskFailedCounter();
+		AIloop();
 
 		triggerUpdate(DataIndex::desiredSpeedType);
 	}
@@ -683,10 +698,11 @@ void Unit::setDesiredAltitudeType(string newDesiredAltitudeType)
 {
 	if (desiredAltitudeType != (newDesiredAltitudeType.compare("AGL") == 0)) {
 		desiredAltitudeType = newDesiredAltitudeType.compare("AGL") == 0;
-		if (state == State::IDLE)
-			resetTask();
-		else
-			goToDestination();		/* Send the command to reach the destination */
+		
+		/* Apply the change */
+		setHasTask(false);
+		resetTaskFailedCounter();
+		AIloop();
 
 		triggerUpdate(DataIndex::desiredAltitudeType);
 	}

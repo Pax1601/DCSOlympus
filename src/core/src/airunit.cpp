@@ -146,12 +146,15 @@ void AirUnit::setState(unsigned char newState)
 		break;
 	}
 
-	resetTask();
+	setHasTask(false);
+	resetTaskFailedCounter();
 
 	log(unitName + " setting state from " + to_string(state) + " to " + to_string(newState));
 	state = newState;
 
 	triggerUpdate(DataIndex::state);
+
+	AIloop();
 }
 
 void AirUnit::AIloop()

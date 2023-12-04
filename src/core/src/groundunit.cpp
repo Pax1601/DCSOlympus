@@ -104,7 +104,6 @@ void GroundUnit::setState(unsigned char newState)
 		setEnableTaskCheckFailed(true);
 		clearActivePath();
 		resetActiveDestination();
-		resetTask();
 		break;
 	}
 	case State::FIRE_AT_AREA: {
@@ -135,12 +134,15 @@ void GroundUnit::setState(unsigned char newState)
 		break;
 	}
 
-	resetTask();
+	setHasTask(false);
+	resetTaskFailedCounter();
 
 	log(unitName + " setting state from " + to_string(state) + " to " + to_string(newState));
 	state = newState;
 
 	triggerUpdate(DataIndex::state);
+
+	AIloop();
 }
 
 void GroundUnit::AIloop()
@@ -217,7 +219,7 @@ void GroundUnit::AIloop()
 	case State::SIMULATE_FIRE_FIGHT: {
 		setTask("Simulating fire fight");
 
-		if (internalCounter == 0 && targetPosition != Coords(NULL)) {
+		if (internalCounter == 0 && targetPosition != Coords(NULL) && scheduler->getLoad() == 0) {
 			/* Get the distance and bearing to the target */
 			Coords scatteredTargetPosition = targetPosition;
 			double distance;
