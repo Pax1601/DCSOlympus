@@ -221,7 +221,7 @@ void AirUnit::AIloop()
 					goToDestination(enrouteTask);
 			}
 			else {
-				if (isDestinationReached(AIR_DEST_DIST_THR)) {
+				if (isDestinationReached(getDestinationReachedThreshold())) {
 					if (updateActivePath(looping) && setActiveDestination())
 						goToDestination(enrouteTask);
 					else 
