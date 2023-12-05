@@ -1114,7 +1114,7 @@ export class UnitsManager {
             /* Check if the city is inside the coalition area */
             if (polyContains(new LatLng(airbase.getLatLng().lat, airbase.getLatLng().lng), coalitionArea)) {
                 /* Arbitrary formula to obtain a number of units */
-                var pointsNumber = 2 + 40 * density / 100;
+                var pointsNumber = 2 + 10 * density / 100;
                 for (let i = 0; i < pointsNumber; i++) {
                     /* Place the unit nearby the airbase, depending on the distribution parameter */
                     var bearing = Math.random() * 360;
@@ -1127,11 +1127,8 @@ export class UnitsManager {
                         if (Math.random() < IADSDensities[type]) {
                             /* Get a random blueprint depending on the selected parameters and spawn the unit */
                             const unitBlueprint = randomUnitBlueprint(groundUnitDatabase, { type: type, eras: activeEras, ranges: activeRanges });
-                            if (unitBlueprint) {
-                                this.spawnUnits("GroundUnit", [{ unitType: unitBlueprint.name, location: latlng, liveryID: "" }], coalitionArea.getCoalition(), true, "", "", (res: any) =>{
-                                    getApp().getMap().addTemporaryMarker(latlng, unitBlueprint.name, getApp().getActiveCoalition(), res.commandHash);
-                                });
-                            }
+                            if (unitBlueprint) 
+                                this.spawnUnits("GroundUnit", [{ unitType: unitBlueprint.name, location: latlng, liveryID: "" }], coalitionArea.getCoalition(), false, "", "");
                         }
                     }
                 }
@@ -1142,7 +1139,7 @@ export class UnitsManager {
             /* Check if the city is inside the coalition area */
             if (polyContains(new LatLng(city.lat, city.lng), coalitionArea)) {
                 /* Arbitrary formula to obtain a number of units depending on the city population */
-                var pointsNumber = 2 + Math.pow(city.pop, 0.2) * density / 100;
+                var pointsNumber = 2 + Math.pow(city.pop, 0.15) * density / 100;
                 for (let i = 0; i < pointsNumber; i++) {
                     /* Place the unit nearby the city, depending on the distribution parameter */
                     var bearing = Math.random() * 360;
@@ -1155,11 +1152,8 @@ export class UnitsManager {
                         if (Math.random() < IADSDensities[type]) {
                             /* Get a random blueprint depending on the selected parameters and spawn the unit */
                             const unitBlueprint = randomUnitBlueprint(groundUnitDatabase, { type: type, eras: activeEras, ranges: activeRanges });
-                            if (unitBlueprint) {
-                                this.spawnUnits("GroundUnit", [{ unitType: unitBlueprint.name, location: latlng, liveryID: "" }], coalitionArea.getCoalition(), true, "", "", (res: any) =>{
-                                    getApp().getMap().addTemporaryMarker(latlng, unitBlueprint.name, getApp().getActiveCoalition(), res.commandHash);
-                                });
-                            }
+                            if (unitBlueprint) 
+                                this.spawnUnits("GroundUnit", [{ unitType: unitBlueprint.name, location: latlng, liveryID: "" }], coalitionArea.getCoalition(), false, "", "");
                         }
                     }
                 }

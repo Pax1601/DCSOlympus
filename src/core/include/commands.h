@@ -173,7 +173,7 @@ public:
 		priority = immediate? CommandPriority::IMMEDIATE: CommandPriority::LOW;
 	};
 	virtual string getString();
-	virtual unsigned int getLoad() { return immediate? 1: 30; }
+	virtual unsigned int getLoad() { return immediate? 5: 30; }
 
 private:
 	const string coalition;
@@ -196,7 +196,7 @@ public:
 		priority = immediate ? CommandPriority::IMMEDIATE : CommandPriority::LOW;
 	};
 	virtual string getString();
-	virtual unsigned int getLoad() { return immediate ? 1 : 60; }
+	virtual unsigned int getLoad() { return immediate ? 5 : 60; }
 
 private:
 	const string coalition;
@@ -220,7 +220,7 @@ public:
 		priority = immediate ? CommandPriority::IMMEDIATE : CommandPriority::LOW;
 	};
 	virtual string getString();
-	virtual unsigned int getLoad() { return immediate ? 1 : 45; }
+	virtual unsigned int getLoad() { return immediate ? 5 : 45; }
 
 private:
 	const string coalition;
@@ -245,7 +245,7 @@ public:
 		priority = immediate ? CommandPriority::IMMEDIATE : CommandPriority::LOW;
 	};
 	virtual string getString();
-	virtual unsigned int getLoad() { return immediate ? 1 : 45; }
+	virtual unsigned int getLoad() { return immediate ? 5 : 45; }
 
 private:
 	const string coalition;
