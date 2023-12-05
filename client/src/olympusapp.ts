@@ -30,7 +30,7 @@ import { ContextManager } from "./context/contextmanager";
 import { Context } from "./context/context";
 
 var VERSION = "v0.4.9-alpha-rc1";
-var DEBUG = true;
+var DEBUG = false;
 
 export class OlympusApp {
     /* Global data */
