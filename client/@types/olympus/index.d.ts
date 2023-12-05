@@ -158,6 +158,10 @@ declare module "constants/constants" {
             bounds: LatLngBounds;
             zoom: number;
         };
+        SinaiMap: {
+            bounds: LatLngBounds;
+            zoom: number;
+        };
     };
     export const mapLayers: {
         "ArcGIS Satellite": {
@@ -2396,7 +2400,7 @@ declare module "server/servermanager" {
         constructor();
         toggleDemoEnabled(): void;
         setCredentials(newUsername: string, newPassword: string): void;
-        GET(callback: CallableFunction, uri: string, options?: ServerRequestOptions, responseType?: string): void;
+        GET(callback: CallableFunction, uri: string, options?: ServerRequestOptions, responseType?: string, force?: boolean): void;
         PUT(request: object, callback: CallableFunction): void;
         getConfig(callback: CallableFunction): void;
         setAddress(address: string, port: number): void;
@@ -2464,6 +2468,9 @@ declare module "server/servermanager" {
         setPaused(newPaused: boolean): void;
         getPaused(): boolean;
         getServerIsPaused(): boolean;
+        getRequests(): {
+            [key: string]: XMLHttpRequest;
+        };
     }
 }
 declare module "panels/unitlistpanel" {
