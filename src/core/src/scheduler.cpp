@@ -59,8 +59,8 @@ void Scheduler::execute(lua_State* L)
 			
 				/* Adjust the load depending on the fps */
 				double fpsMultiplier = 1;
-				if (getFrameRate() + 5 > 0)
-					fpsMultiplier = static_cast<unsigned int>(max(1, 60 / (getFrameRate() + 5)));
+				if (getFrameRate() + 3 > 0)
+					fpsMultiplier = static_cast<unsigned int>(max(1, 60 / (getFrameRate() + 3))); /* Multiplier between 1 and 20 */
 
 				load = command->getLoad() * fpsMultiplier;
 				commands.remove(command);
