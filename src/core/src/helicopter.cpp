@@ -41,33 +41,31 @@ void Helicopter::changeSpeed(string change)
 	if (change.compare("stop") == 0)
 		setState(State::IDLE);
 	else if (change.compare("slow") == 0)
-		desiredSpeed -= knotsToMs(10);
+		setDesiredSpeed(getDesiredSpeed() - knotsToMs(10));
 	else if (change.compare("fast") == 0)
-		desiredSpeed += knotsToMs(10);
-	if (desiredSpeed < 0)
-		desiredSpeed = 0;
+		setDesiredSpeed(getDesiredSpeed() + knotsToMs(10));
 
-	goToDestination();		/* Send the command to reach the destination */
+	if (getDesiredSpeed() < knotsToMs(0))
+		setDesiredSpeed(knotsToMs(0));
 }
 
 void Helicopter::changeAltitude(string change)
 {
 	if (change.compare("descend") == 0)
 	{
-		if (desiredAltitude > 100)
-			desiredAltitude -= ftToM(100);
-		else if (desiredAltitude > 0)
-			desiredAltitude -= ftToM(10);
+		if (getDesiredAltitude() > 100)
+			setDesiredAltitude(getDesiredAltitude() - ftToM(100));
+		else if (getDesiredAltitude() > 0)
+			setDesiredAltitude(getDesiredAltitude() - ftToM(10));
 	}
 	else if (change.compare("climb") == 0)
 	{
-		if (desiredAltitude > 100)
-			desiredAltitude += ftToM(100);
-		else if (desiredAltitude >= 0)
-			desiredAltitude += ftToM(10);
+		if (getDesiredAltitude() > 100)
+			setDesiredAltitude(getDesiredAltitude() + ftToM(100));
+		else if (getDesiredAltitude() >= 0)
+			setDesiredAltitude(getDesiredAltitude() + ftToM(10));
 	}
-	if (desiredAltitude < 0)
-		desiredAltitude = 0;
 
-	goToDestination();		/* Send the command to reach the destination */
+	if (getDesiredAltitude() < 0)
+		setDesiredAltitude(0);
 }

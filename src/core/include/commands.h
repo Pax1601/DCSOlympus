@@ -124,10 +124,10 @@ public:
 		taskOptions(taskOptions),
 		category(category)
 	{ 
-		priority = CommandPriority::HIGH; 
+		priority = CommandPriority::MEDIUM; 
 	};
 	virtual string getString();
-	virtual unsigned int getLoad() { return 2; }
+	virtual unsigned int getLoad() { return 5; }
 
 private:
 	const string groupName;
@@ -196,7 +196,7 @@ public:
 		priority = immediate ? CommandPriority::IMMEDIATE : CommandPriority::LOW;
 	};
 	virtual string getString();
-	virtual unsigned int getLoad() { return immediate ? 1 : 30; }
+	virtual unsigned int getLoad() { return immediate ? 1 : 60; }
 
 private:
 	const string coalition;
@@ -220,7 +220,7 @@ public:
 		priority = immediate ? CommandPriority::IMMEDIATE : CommandPriority::LOW;
 	};
 	virtual string getString();
-	virtual unsigned int getLoad() { return immediate ? 1 : 30; }
+	virtual unsigned int getLoad() { return immediate ? 1 : 45; }
 
 private:
 	const string coalition;
@@ -245,7 +245,7 @@ public:
 		priority = immediate ? CommandPriority::IMMEDIATE : CommandPriority::LOW;
 	};
 	virtual string getString();
-	virtual unsigned int getLoad() { return immediate ? 1 : 30; }
+	virtual unsigned int getLoad() { return immediate ? 1 : 45; }
 
 private:
 	const string coalition;
@@ -289,7 +289,7 @@ public:
 		immediate = immediate;
 	};
 	virtual string getString();
-	virtual unsigned int getLoad() { return immediate? 1: 5; }
+	virtual unsigned int getLoad() { return immediate? 1: 30; }
 
 private:
 	const unsigned int ID;
@@ -310,7 +310,7 @@ public:
 		priority = CommandPriority::MEDIUM;
 	};
 	virtual string getString();
-	virtual unsigned int getLoad() { return 1; }
+	virtual unsigned int getLoad() { return 5; }
 
 private:
 	const string groupName;
@@ -328,7 +328,7 @@ public:
 		priority = CommandPriority::HIGH;
 	};
 	virtual string getString();
-	virtual unsigned int getLoad() { return 1; }
+	virtual unsigned int getLoad() { return 5; }
 
 private:
 	const string groupName;
@@ -346,7 +346,7 @@ public:
 		priority = CommandPriority::HIGH;
 	};
 	virtual string getString();
-	virtual unsigned int getLoad() { return 1; }
+	virtual unsigned int getLoad() { return 5; }
 
 private:
 	const string groupName;
@@ -379,7 +379,7 @@ public:
 		priority = CommandPriority::HIGH;
 	};
 	virtual string getString();
-	virtual unsigned int getLoad() { return 1; }
+	virtual unsigned int getLoad() { return 5; }
 
 private:
 	const string groupName;
@@ -401,7 +401,7 @@ public:
 		priority = CommandPriority::HIGH;
 	};
 	virtual string getString();
-	virtual unsigned int getLoad() { return 1; }
+	virtual unsigned int getLoad() { return 5; }
 
 private:
 	const string groupName;
@@ -421,7 +421,7 @@ public:
 		priority = CommandPriority::MEDIUM;
 	};
 	virtual string getString();
-	virtual unsigned int getLoad() { return 4; }
+	virtual unsigned int getLoad() { return 5; }
 
 private:
 	const Coords location;

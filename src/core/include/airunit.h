@@ -17,6 +17,7 @@ public:
 
 	virtual void changeSpeed(string change) = 0;
 	virtual void changeAltitude(string change) = 0;
+	virtual double getDestinationReachedThreshold() { return AIR_DEST_DIST_THR;  }
 	
 protected:
 	virtual void AIloop();

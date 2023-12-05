@@ -56,7 +56,13 @@ void Scheduler::execute(lua_State* L)
 					log("Error executing command " + commandString);
 				else
 					log("Command '" + commandString + "' executed correctly, current load " + to_string(getLoad()));
-				load = command->getLoad();
+			
+				/* Adjust the load depending on the fps */
+				double fpsMultiplier = 20;
+				if (getFrameRate() + 3 > 0)
+					fpsMultiplier = static_cast<unsigned int>(max(1, 60 / (getFrameRate() + 3))); /* Multiplier between 1 and 20 */
+
+				load = static_cast<unsigned int>(command->getLoad() * fpsMultiplier);
 				commands.remove(command);
 				executedCommandsHashes.push_back(command->getHash());
 				command->executeCallback(); /* Execute the command callback (this is a lambda function that can be used to execute a function when the command is run) */
@@ -82,7 +88,7 @@ void Scheduler::setCommandModeOptions(json::value value) {
 			setRedSpawnPoints(value[L"spawnPoints"][L"red"].as_number().to_int32());
 	}
 	if (value.has_array_field(L"eras")) {
-		int length = value[L"eras"].as_array().size();
+		int length = static_cast<int>(value[L"eras"].as_array().size());
 		vector<string> newEras;
 		for (int idx = 0; idx < length; idx++)
 			newEras.push_back(to_string(value[L"eras"].as_array().at(idx)));
@@ -132,6 +138,8 @@ bool Scheduler::checkSpawnPoints(int spawnPoints, string coalition)
 			return false;
 		}
 	}
+
+	return false;
 }
 
 void Scheduler::handleRequest(string key, json::value value, string username, json::value& answer)
@@ -254,7 +262,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 	{
 		unsigned int ID = value[L"ID"].as_integer();
 		unitsManager->acquireControl(ID);
-		unsigned int leaderID = value[L"targetID"].as_double();
+		unsigned int leaderID = value[L"targetID"].as_integer();
 		double offsetX = value[L"offsetX"].as_double();
 		double offsetY = value[L"offsetY"].as_double();
 		double offsetZ = value[L"offsetZ"].as_double();

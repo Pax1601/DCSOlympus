@@ -146,12 +146,15 @@ void AirUnit::setState(unsigned char newState)
 		break;
 	}
 
-	resetTask();
+	setHasTask(false);
+	resetTaskFailedCounter();
 
 	log(unitName + " setting state from " + to_string(state) + " to " + to_string(newState));
 	state = newState;
 
 	triggerUpdate(DataIndex::state);
+
+	AIloop();
 }
 
 void AirUnit::AIloop()
@@ -218,7 +221,7 @@ void AirUnit::AIloop()
 					goToDestination(enrouteTask);
 			}
 			else {
-				if (isDestinationReached(AIR_DEST_DIST_THR)) {
+				if (isDestinationReached(getDestinationReachedThreshold())) {
 					if (updateActivePath(looping) && setActiveDestination())
 						goToDestination(enrouteTask);
 					else 

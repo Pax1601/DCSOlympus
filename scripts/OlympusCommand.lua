@@ -914,7 +914,7 @@ function Olympus.setTask(groupName, taskOptions)
 	end
 end
 
--- Reset the dask of a group
+-- Reset the task of a group
 function Olympus.resetTask(groupName)
 	Olympus.debug("Olympus.resetTask " .. groupName, 2)
 	local group = Group.getByName(groupName)
