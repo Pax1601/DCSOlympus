@@ -64,7 +64,6 @@ export class ServerManager {
 
         /* On the connection */
         xmlHttp.open("GET", `${this.#demoEnabled ? this.#DEMO_ADDRESS : this.#REST_ADDRESS}/${uri}${optionsString ? `?${optionsString}` : ''}`, true);
-        xmlHttp.timeout = 2000;
 
         /* If provided, set the credentials */
         if (this.#username && this.#password)
@@ -96,9 +95,11 @@ export class ServerManager {
                 this.setConnected(false);
             }
         };
-        xmlHttp.onerror = (res) => {
-            console.error("An error occurred during the XMLHttpRequest");
-            this.setConnected(false);
+        xmlHttp.onreadystatechange = (res) => {
+            if (xmlHttp.readyState == 4 && xmlHttp.status === 0) {
+                console.error("An error occurred during the XMLHttpRequest");
+                this.setConnected(false);
+            }
         };
         xmlHttp.send(null);
     }
@@ -599,5 +600,9 @@ export class ServerManager {
 
     getServerIsPaused() {
         return this.#serverIsPaused;
+    }
+
+    getRequests() {
+        return this.#requests;
     }
 }

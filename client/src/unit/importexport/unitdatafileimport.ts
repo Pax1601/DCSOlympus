@@ -46,7 +46,7 @@ export class UnitDataFileImport extends UnitDataFile {
                 return { unitType: unitData.name, location: unitData.position, liveryID: "" }
             });
 
-            unitsManager.spawnUnits(category, unitsToSpawn, coalition, true);
+            unitsManager.spawnUnits(category, unitsToSpawn, coalition, false);
         }
 
         /*
