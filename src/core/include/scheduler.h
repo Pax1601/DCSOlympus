@@ -24,7 +24,7 @@ public:
 	void setEras(vector<string> newEras) { eras = newEras; }
 	void setCommandModeOptions(json::value newOptions);
 
-	int getFrameRate() { return frameRate; };
+	int getFrameRate() { return static_cast<int>(round(frameRate)); };
 	int getLoad();
 	bool getRestrictSpawns() { return restrictSpawns; }
 	bool getRestrictToCoalition() { return restrictToCoalition; }

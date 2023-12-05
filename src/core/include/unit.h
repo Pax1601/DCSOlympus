@@ -220,7 +220,7 @@ protected:
 	virtual void AIloop() = 0;
 
 	void appendString(stringstream& ss, const unsigned char& datumIndex, const string& datumValue) {
-		const unsigned short size = datumValue.size();
+		const unsigned short size = static_cast<unsigned short>(datumValue.size());
 		ss.write((const char*)&datumIndex, sizeof(unsigned char));
 		ss.write((const char*)&size, sizeof(unsigned short));
 		ss << datumValue;
@@ -245,7 +245,7 @@ protected:
 
 	template <typename T>
 	void appendVector(stringstream& ss, const unsigned char& datumIndex, vector<T>& datumValue) {
-		const unsigned short size = datumValue.size();
+		const unsigned short size = static_cast<unsigned short>(datumValue.size());
 		ss.write((const char*)&datumIndex, sizeof(unsigned char));
 		ss.write((const char*)&size, sizeof(unsigned short));
 
@@ -255,7 +255,7 @@ protected:
 
 	template <typename T>
 	void appendList(stringstream& ss, const unsigned char& datumIndex, list<T>& datumValue) {
-		const unsigned short size = datumValue.size();
+		const unsigned short size = static_cast<unsigned short>(datumValue.size());;
 		ss.write((const char*)&datumIndex, sizeof(unsigned char));
 		ss.write((const char*)&size, sizeof(unsigned short));
 

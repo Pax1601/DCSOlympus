@@ -82,7 +82,7 @@ void getAllUnits(lua_State* L, map<unsigned int, json::value>& unitJSONs)
         lua_pushnil(L);
         while (lua_next(L, 2) != 0)
         {
-            unsigned int ID = lua_tonumber(L, -2);
+            unsigned int ID = static_cast<unsigned int>(lua_tonumber(L, -2));
             if (unitJSONs.find(ID) == unitJSONs.end())
                 unitJSONs[ID] = json::value::object();
             luaTableToJSON(L, -1, unitJSONs[ID]);

@@ -59,7 +59,7 @@ protected:
 
 	/********** Private methods **********/
 	void appendString(stringstream& ss, const unsigned char& datumIndex, const string& datumValue) {
-		const unsigned short size = datumValue.size();
+		const unsigned short size = static_cast<unsigned short>(datumValue.size());
 		ss.write((const char*)&datumIndex, sizeof(unsigned char));
 		ss.write((const char*)&size, sizeof(unsigned short));
 		ss << datumValue;

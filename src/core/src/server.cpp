@@ -89,7 +89,7 @@ void Server::handle_get(http_request request)
                 try {
                     time = stoull((*(query.find(L"time"))).second);
                 }
-                catch (const std::exception& e) {
+                catch (...) {
                     time = 0;
                 }
             }

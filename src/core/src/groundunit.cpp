@@ -259,7 +259,7 @@ void GroundUnit::AIloop()
 			}
 
 			/* Wait an amout of time depending on the shots intensity */
-			internalCounter = ((ShotsIntensity::HIGH - shotsIntensity) * shotsBaseInterval + 2) / FRAMERATE_TIME_INTERVAL;
+			internalCounter = static_cast<unsigned int>(((ShotsIntensity::HIGH - shotsIntensity) * shotsBaseInterval + 2) / FRAMERATE_TIME_INTERVAL);
 		}
 
 		if (targetPosition == Coords(NULL))
@@ -267,7 +267,7 @@ void GroundUnit::AIloop()
 
 		/* Fallback if something went wrong */
 		if (internalCounter == 0)
-			internalCounter = 20 / FRAMERATE_TIME_INTERVAL;
+			internalCounter = static_cast<unsigned int>(20 / FRAMERATE_TIME_INTERVAL);
 		internalCounter--;
 
 		break;
@@ -302,7 +302,7 @@ void GroundUnit::AIloop()
 		}
 
 		if (internalCounter == 0)
-			internalCounter = 20 / FRAMERATE_TIME_INTERVAL;
+			internalCounter = static_cast<unsigned int>(20 / FRAMERATE_TIME_INTERVAL);
 		internalCounter--;
 
 		break;
@@ -392,7 +392,7 @@ void GroundUnit::AIloop()
 						scheduler->appendCommand(command);
 						setHasTask(true);
 
-						internalCounter = (aimTime + (ShotsIntensity::HIGH - shotsIntensity) * shotsBaseInterval + 2) / FRAMERATE_TIME_INTERVAL;
+						internalCounter = static_cast<unsigned int>((aimTime + (ShotsIntensity::HIGH - shotsIntensity) * shotsBaseInterval + 2) / FRAMERATE_TIME_INTERVAL);
 					}
 					/* Else, do miss on purpose */
 					else {
@@ -414,13 +414,13 @@ void GroundUnit::AIloop()
 							scheduler->appendCommand(command);
 							setHasTask(true);
 							setTargetPosition(Coords(aimLat, aimLng, target->getPosition().alt));
-							internalCounter = (aimTime + (ShotsIntensity::HIGH - shotsIntensity) * shotsBaseInterval + 2) / FRAMERATE_TIME_INTERVAL;
+							internalCounter = static_cast<unsigned int>((aimTime + (ShotsIntensity::HIGH - shotsIntensity) * shotsBaseInterval + 2) / FRAMERATE_TIME_INTERVAL);
 						}
 						else if (distance < aimMethodRange) {
 							/* If the unit is closer than the aim method range, use the aim method range */
 							aimAtPoint(Coords(aimLat, aimLng, aimAlt));
 							setTargetPosition(Coords(aimLat, aimLng, target->getPosition().alt));
-							internalCounter = (aimTime + (ShotsIntensity::HIGH - shotsIntensity) * shotsBaseInterval + 2) / FRAMERATE_TIME_INTERVAL;
+							internalCounter = static_cast<unsigned int>((aimTime + (ShotsIntensity::HIGH - shotsIntensity) * shotsBaseInterval + 2) / FRAMERATE_TIME_INTERVAL);
 						}
 						else {
 							/* Else just wake the unit up with an impossible command */
@@ -433,7 +433,7 @@ void GroundUnit::AIloop()
 							setTargetPosition(Coords(NULL));
 
 							/* Don't wait too long before checking again */
-							internalCounter = 5 / FRAMERATE_TIME_INTERVAL;
+							internalCounter = static_cast<unsigned int>(5 / FRAMERATE_TIME_INTERVAL);
 						}
 					}
 					missOnPurposeTarget = target;
@@ -452,7 +452,7 @@ void GroundUnit::AIloop()
 					if (databaseEntry.has_number_field(L"alertnessTimeConstant"))
 						alertnessTimeConstant = databaseEntry[L"alertnessTimeConstant"].as_number().to_double();
 				}
-				internalCounter = (5 + RANDOM_ZERO_TO_ONE * alertnessTimeConstant * 0 /* TODO: remove to enable alertness again */) / FRAMERATE_TIME_INTERVAL;
+				internalCounter = static_cast<unsigned int>((5 + RANDOM_ZERO_TO_ONE * alertnessTimeConstant * 0 /* TODO: remove to enable alertness again */) / FRAMERATE_TIME_INTERVAL);
 				missOnPurposeTarget = nullptr;
 				setTargetPosition(Coords(NULL));
 			}
