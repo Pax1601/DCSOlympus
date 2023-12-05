@@ -29,7 +29,7 @@ import { UnitListPanel } from "./panels/unitlistpanel";
 import { ContextManager } from "./context/contextmanager";
 import { Context } from "./context/context";
 
-var VERSION = "v0.4.9-alpha-rc1";
+var VERSION = "v0.4.10-alpha-rc2";
 var DEBUG = false;
 
 export class OlympusApp {
