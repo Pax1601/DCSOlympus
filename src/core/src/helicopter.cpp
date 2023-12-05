@@ -44,6 +44,9 @@ void Helicopter::changeSpeed(string change)
 		setDesiredSpeed(getDesiredSpeed() - knotsToMs(10));
 	else if (change.compare("fast") == 0)
 		setDesiredSpeed(getDesiredSpeed() + knotsToMs(10));
+
+	if (getDesiredSpeed() < knotsToMs(0))
+		setDesiredSpeed(knotsToMs(0));
 }
 
 void Helicopter::changeAltitude(string change)
