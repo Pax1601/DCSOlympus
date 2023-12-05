@@ -58,7 +58,7 @@ void Scheduler::execute(lua_State* L)
 					log("Command '" + commandString + "' executed correctly, current load " + to_string(getLoad()));
 			
 				/* Adjust the load depending on the fps */
-				double fpsMultiplier = 1;
+				double fpsMultiplier = 20;
 				if (getFrameRate() + 3 > 0)
 					fpsMultiplier = static_cast<unsigned int>(max(1, 60 / (getFrameRate() + 3))); /* Multiplier between 1 and 20 */
 
