@@ -62,6 +62,16 @@
 	height: 180px;
 }
 
+#hotgroup-panel {
+    bottom: 40px;
+    column-gap: 10px;
+    display: flex;
+    left: 50%;
+    position: absolute;
+    translate: -50%;
+    z-index: 9998;
+}
+
 #info-popup {
     position: absolute;
     width: fit-content;

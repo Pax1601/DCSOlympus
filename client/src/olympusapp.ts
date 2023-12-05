@@ -30,6 +30,7 @@ import { ContextManager } from "./context/contextmanager";
 import { Context } from "./context/context";
 
 var VERSION = "v0.4.9-alpha-rc1";
+var DEBUG = true;
 
 export class OlympusApp {
     /* Global data */
@@ -298,7 +299,7 @@ export class OlympusApp {
         shortcutManager.addKeyboardShortcut("toggleDemo", {
             "altKey": false,
             "callback": () => {
-                this.getServerManager().toggleDemoEnabled();
+                if (DEBUG === true) this.getServerManager().toggleDemoEnabled();
             },
             "code": "KeyT",
             "context": "olympus",

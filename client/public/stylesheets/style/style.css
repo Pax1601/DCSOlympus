@@ -994,16 +994,6 @@ nav.ol-panel> :last-child {
     }
 }
 
-#hotgroup-panel {
-    bottom: 40px;
-    column-gap: 10px;
-    display: flex;
-    left: 50%;
-    position: absolute;
-    translate: -50%;
-    z-index: 9999;
-}
-
 #hotgroup-panel>div {
     align-items: center;
     background-color: var(--background-steel);

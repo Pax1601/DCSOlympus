@@ -510,10 +510,11 @@ function Olympus.removeFire (smokeName)
 end
 
 function Olympus.secondaries(vec3) 
-	trigger.action.explosion(vec3, 1)
-	for i =	1, 10 do 
-		timer.scheduleFunction(Olympus.randomDebries, vec3, timer.getTime() + math.random(0, 180))
-	end
+	Olympus.randomDebrie(vec3)
+	--trigger.action.explosion(vec3, 1)
+	--for i =	1, 10 do 
+	--	timer.scheduleFunction(Olympus.randomDebries, vec3, timer.getTime() + math.random(0, 180))
+	--end
 end
 
 function Olympus.randomDebries(vec3) 
