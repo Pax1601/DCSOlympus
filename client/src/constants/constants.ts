@@ -116,6 +116,13 @@ export const minimapBoundaries = [
         new LatLng(48.12, 3.70),
         new LatLng(50.44, 3.70),
         new LatLng(50.44, -3.29)
+    ], 
+    [   // Sinai
+        new LatLng(34.312222, 28.523333),
+        new LatLng(25.946944, 28.523333),
+        new LatLng(25.946944, 36.897778),
+        new LatLng(34.312222, 36.897778),
+        new LatLng(34.312222, 28.523333)
     ]
 ];
 
@@ -127,6 +134,7 @@ export const mapBounds = {
     "Caucasus": { bounds: new LatLngBounds([39.6170191, 27.634935], [47.3907982, 49.3101946]), zoom: 4 },
     "Falklands": { bounds: new LatLngBounds([-49.097217, -79.418267], [-56.874517, -43.316433]), zoom: 3 },
     "Normandy": { bounds: new LatLngBounds([50.44, -3.29], [48.12, 3.70]), zoom: 5 },
+    "SinaiMap": { bounds: new LatLngBounds([34.312222, 28.523333], [25.946944, 36.897778]), zoom: 4 },
 }
 
 export const mapLayers = {
