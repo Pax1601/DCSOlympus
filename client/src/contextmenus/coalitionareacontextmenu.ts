@@ -68,7 +68,8 @@ export class CoalitionAreaContextMenu extends ContextMenu {
             const area = this.getCoalitionArea();
             if (area)
                 getApp().getUnitsManager().createIADS(area, getCheckboxOptions(this.#iadsTypesDropdown), getCheckboxOptions(this.#iadsErasDropdown), getCheckboxOptions(this.#iadsRangesDropdown), this.#iadsDensitySlider.getValue(), this.#iadsDistributionSlider.getValue());
-        })
+            this.hide();
+        });
         this.hide();
     }
 
@@ -110,7 +111,7 @@ export class CoalitionAreaContextMenu extends ContextMenu {
         this.getContainer()?.querySelectorAll('[data-coalition]').forEach((element: any) => {
             element.setAttribute("data-coalition", this.getCoalitionArea()?.getCoalition())
         });
-        this.#coalitionSwitch.setValue(this.getCoalitionArea()?.getCoalition() === "red");
+        this.#coalitionSwitch.setValue(this.getCoalitionArea()?.getCoalition() === "blue");
     }
 
     /** Get the CoalitionArea object the contextmenu is editing
