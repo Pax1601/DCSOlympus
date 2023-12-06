@@ -14,8 +14,8 @@ function Olympus.loadDLLs()
 	
 	local status
 	log.write('Olympus.HOOKS.LUA', log.INFO, 'Loading olympus.dll from ['..Olympus.OlympusModPath..']')
-	status, Olympus.OlympusDLL = require("olympus")
-		if status then
+	status, Olympus.OlympusDLL = pcall(require, 'olympus')
+	if status then
 		log.write('Olympus.HOOKS.LUA', log.INFO, 'olympus.dll loaded successfully')
 		return true
 	else

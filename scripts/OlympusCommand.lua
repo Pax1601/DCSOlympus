@@ -31,7 +31,7 @@ Olympus.missionStartTime = DCS.getRealTime()
 Olympus.napalmCounter = 1
 Olympus.fireCounter = 1
 
--- Load the current instance folder
+-- Load the lua file system
 local lfs = require('lfs')
 
 ------------------------------------------------------------------------------------------------------
@@ -1366,7 +1366,6 @@ end
 ------------------------------------------------------------------------------------------------------
 Olympus.instancePath = lfs.writedir().."Mods\\Services\\Olympus\\bin\\"
 Olympus.notify("Starting DCS Olympus backend session in "..Olympus.instancePath, 2)
-
 
 local OlympusName = 'Olympus ' .. version .. ' C++ module';
 Olympus.DLLsloaded = Olympus.loadDLLs()
