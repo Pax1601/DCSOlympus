@@ -1,10 +1,10 @@
 local version = 'v0.4.11-alpha-rc3'
+local lfs = require("lfs")
 
 Olympus = {}
 Olympus.OlympusDLL = nil
-Olympus.cppRESTDLL = nil
 Olympus.DLLsloaded = false
-Olympus.OlympusModPath = os.getenv('DCSOLYMPUS_PATH')..'\\bin\\' 
+Olympus.OlympusModPath = lfs.writedir().."Mods\\Services\\Olympus\\bin\\"
 
 log.write('Olympus.HOOKS.LUA', log.INFO,'Executing OlympusHook.lua')
 
@@ -14,7 +14,7 @@ function Olympus.loadDLLs()
 	
 	local status
 	log.write('Olympus.HOOKS.LUA', log.INFO, 'Loading olympus.dll from ['..Olympus.OlympusModPath..']')
-	status, Olympus.OlympusDLL = pcall(require, 'olympus')
+	status, Olympus.OlympusDLL = require("olympus")
 		if status then
 		log.write('Olympus.HOOKS.LUA', log.INFO, 'olympus.dll loaded successfully')
 		return true

@@ -5,6 +5,8 @@
 
 #include <algorithm>
 
+extern string instancePath;
+
 bool executeLuaScript(lua_State* L, string path)
 {
     replace(path.begin(), path.end(), '\\', '/');
@@ -36,21 +38,8 @@ void registerLuaFunctions(lua_State* L)
         log("protectedCall registered successfully");
     }
 
-    char* buf = nullptr;
-    size_t sz = 0;
-    if (_dupenv_s(&buf, &sz, "DCSOLYMPUS_PATH") == 0 && buf != nullptr)
-    {
-        modLocation = buf;
-        free(buf);
-    }
-    else
-    {
-        log("DCSOLYMPUS_PATH environment variable is missing");
-        return;
-    }
-
-    executeLuaScript(L, modLocation + "\\Scripts\\mist.lua");
-    executeLuaScript(L, modLocation + "\\Scripts\\OlympusCommand.lua");
-    executeLuaScript(L, modLocation + "\\Scripts\\unitPayloads.lua");
-    executeLuaScript(L, modLocation + "\\Scripts\\templates.lua");
+    executeLuaScript(L, instancePath + "..\\Scripts\\mist.lua");
+    executeLuaScript(L, instancePath + "..\\Scripts\\OlympusCommand.lua");
+    executeLuaScript(L, instancePath + "..\\Scripts\\unitPayloads.lua");
+    executeLuaScript(L, instancePath + "..\\Scripts\\templates.lua");
 }

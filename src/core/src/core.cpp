@@ -52,8 +52,12 @@ extern "C" DllExport int coreDeinit(lua_State* L)
 }
 
 /* Called when DCS simulation starts. All singletons are instantiated, and the custom Lua functions are registered in the Lua state. */
-extern "C" DllExport int coreInit(lua_State* L)
+extern "C" DllExport int coreInit(lua_State* L, const char* path)
 {
+    instancePath = path;
+
+    log("Initializing core.dll with instance path " + instancePath);
+
     sessionHash = random_string(16);
     unitsManager = new UnitsManager(L);
     weaponsManager = new WeaponsManager(L);
@@ -67,20 +71,6 @@ extern "C" DllExport int coreInit(lua_State* L)
     unitsManager->loadDatabases();
 
     initialized = true;
-    return(0);
-}
-
-extern "C" DllExport int coreInstancePath(lua_State * L)
-{
-    /* Lock for thread safety */
-    lock_guard<mutex> guard(mutexLock);
-
-    lua_getglobal(L, "Olympus");
-    lua_getfield(L, -1, "instancePath");
-    instancePath = lua_tostring(L, -1);
-
-    log("Setting instance path to " + instancePath);
-
     return(0);
 }
 

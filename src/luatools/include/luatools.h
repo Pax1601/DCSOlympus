@@ -5,6 +5,7 @@ void DllExport stackUpdate(lua_State* L, int& stackDepth, int initialStack = 0);
 void DllExport stackPop(lua_State* L, int popDepth = 1);
 void DllExport stackClean(lua_State* L, int stackDepth);
 void DllExport luaTableToJSON(lua_State* L, int index, json::value& json, bool logKeys = false);
+void DllExport luaLogTableKeys(lua_State* L, int index);
 
 #define STACK_UPDATE stackUpdate(L, stackDepth, initialStack);
 #define STACK_INIT int stackDepth = 0; int initialStack = 0; stackUpdate(L, initialStack);

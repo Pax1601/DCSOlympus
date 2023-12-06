@@ -5,7 +5,6 @@ local debug = false				-- True enables debug printing using DCS messages
 -- .dll related variables
 Olympus.OlympusDLL = nil
 Olympus.DLLsloaded = false
-Olympus.OlympusModPath = os.getenv('DCSOLYMPUS_PATH')..'\\bin\\' 
 
 -- Logger reference
 Olympus.log = mist.Logger:new("Olympus", 'info')
@@ -31,6 +30,10 @@ Olympus.weapons = {}			-- Table holding references to all the currently existing
 Olympus.missionStartTime = DCS.getRealTime()
 Olympus.napalmCounter = 1
 Olympus.fireCounter = 1
+
+-- Load the current instance folder
+local lfs = require('lfs')
+
 ------------------------------------------------------------------------------------------------------
 -- Olympus functions
 ------------------------------------------------------------------------------------------------------
@@ -49,7 +52,7 @@ end
 -- Loads the olympus .dll
 function Olympus.loadDLLs()
 	-- Add the .dll paths
-	package.cpath = package.cpath..';'..Olympus.OlympusModPath..'?.dll;'
+	package.cpath = package.cpath..';'..Olympus.instancePath..'?.dll;'
 	
 	local status
 	status, Olympus.OlympusDLL = pcall(require, 'olympus')
@@ -1361,6 +1364,10 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Olympus startup script
 ------------------------------------------------------------------------------------------------------
+Olympus.instancePath = lfs.writedir().."Mods\\Services\\Olympus\\bin\\"
+Olympus.notify("Starting DCS Olympus backend session in "..Olympus.instancePath, 2)
+
+
 local OlympusName = 'Olympus ' .. version .. ' C++ module';
 Olympus.DLLsloaded = Olympus.loadDLLs()
 if Olympus.DLLsloaded then
@@ -1401,12 +1408,4 @@ timer.scheduleFunction(Olympus.setMissionData, {}, timer.getTime() + 1)
 Olympus.initializeUnits()
 
 Olympus.notify("OlympusCommand script " .. version .. " loaded successfully", 2, true)
-
--- Load the current instance folder
-local lfs = require('lfs')
-
-Olympus.instancePath = lfs.writedir().."Mods\\Services\\Olympus"
-
-Olympus.notify("Starting DCS Olympus backend session in "..Olympus.instancePath, 2)
-Olympus.OlympusDLL.setInstancePath()
 

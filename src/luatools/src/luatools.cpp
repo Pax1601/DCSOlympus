@@ -18,6 +18,29 @@ void stackClean(lua_State* L, int stackDepth)
     lua_pop(L, stackDepth);
 }
 
+
+void luaLogTableKeys(lua_State* L, int index)
+{
+    if (lua_istable(L, index))
+    {
+        STACK_INIT;
+
+        lua_pushvalue(L, index);
+        lua_pushnil(L);
+        while (lua_next(L, -2))
+        {
+            lua_pushvalue(L, -2);
+            const char* key = lua_tostring(L, -1);
+            log(key);
+            lua_pop(L, 2);
+        }
+        lua_pop(L, 1);
+
+        STACK_CLEAN;
+    }
+}
+
+
 void luaTableToJSON(lua_State* L, int index, json::value& json, bool logKeys)
 {
     if (lua_istable(L, index))

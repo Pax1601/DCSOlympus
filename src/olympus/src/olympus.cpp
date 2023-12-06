@@ -5,40 +5,26 @@
 
 /* Run-time linking to core dll allows for "hot swap". This is useful for development but could be removed when stable.*/
 HINSTANCE hGetProcIDDLL = NULL;
-typedef int(__stdcall* f_coreInit)(lua_State* L);
+typedef int(__stdcall* f_coreInit)(lua_State* L, const char* path);
 typedef int(__stdcall* f_coreDeinit)(lua_State* L);
 typedef int(__stdcall* f_coreFrame)(lua_State* L);
 typedef int(__stdcall* f_coreUnitsData)(lua_State* L);
 typedef int(__stdcall* f_coreWeaponsData)(lua_State* L);
 typedef int(__stdcall* f_coreMissionData)(lua_State* L);
-typedef int(__stdcall* f_coreInstancePath)(lua_State* L);
 f_coreInit coreInit = nullptr;
 f_coreDeinit coreDeinit = nullptr;
 f_coreFrame coreFrame = nullptr;
 f_coreUnitsData coreUnitsData = nullptr;
 f_coreWeaponsData coreWeaponsData = nullptr;
 f_coreMissionData coreMissionData = nullptr;
-f_coreInstancePath coreInstancePath = nullptr;
+
+string modPath;
 
 static int onSimulationStart(lua_State* L)
 {
     log("onSimulationStart callback called successfully");
 
-    string modLocation;
-    string dllLocation;
-    char* buf = nullptr;
-    size_t sz = 0;
-    if (_dupenv_s(&buf, &sz, "DCSOLYMPUS_PATH") == 0 && buf != nullptr)
-    {
-        modLocation = buf;
-        free(buf);
-    }
-    else
-    {
-        log("DCSOLYMPUS_PATH environment variable is missing");
-        goto error;
-    }
-    dllLocation = modLocation + "\\bin\\core.dll";
+    string dllLocation = modPath + "\\core.dll";
     
     log("Loading core.dll");
     hGetProcIDDLL = LoadLibrary(to_wstring(dllLocation).c_str());
@@ -92,14 +78,7 @@ static int onSimulationStart(lua_State* L)
         goto error;
     }
 
-    coreInstancePath = (f_coreInstancePath)GetProcAddress(hGetProcIDDLL, "coreInstancePath");
-    if (!coreInstancePath)
-    {
-        LogError(L, "Error getting coreInstancePath ProcAddress from DLL");
-        goto error;
-    }
-
-    coreInit(L);
+    coreInit(L, modPath.c_str());
 
     LogInfo(L, "Module loaded and started successfully.");
 
@@ -146,7 +125,6 @@ static int onSimulationStop(lua_State* L)
         coreUnitsData = nullptr;
         coreWeaponsData = nullptr;
         coreMissionData = nullptr;
-        coreInstancePath = nullptr;
     }
 
     hGetProcIDDLL = NULL;
@@ -185,15 +163,6 @@ static int setMissionData(lua_State* L)
     return 0;
 }
 
-static int setInstancePath(lua_State* L)
-{
-    if (coreInstancePath)
-    {
-        coreInstancePath(L);
-    }
-    return 0;
-}
-
 static const luaL_Reg Map[] = {
 	{"onSimulationStart", onSimulationStart},
     {"onSimulationFrame", onSimulationFrame},
@@ -201,12 +170,39 @@ static const luaL_Reg Map[] = {
     {"setUnitsData", setUnitsData },
     {"setWeaponsData", setWeaponsData },
     {"setMissionData", setMissionData },
-    {"setInstancePath", setInstancePath },
 	{NULL, NULL}
 };
 
 extern "C" DllExport int luaopen_olympus(lua_State * L)
 {
+    lua_getglobal(L, "require");
+    lua_pushstring(L, "lfs");
+    lua_pcall(L, 1, 1, 0);
+    lua_getfield(L, -1, "writedir");
+    lua_pcall(L, 0, 1, 0);
+    if (lua_isstring(L, -1)) {
+        modPath = string(lua_tostring(L, -1)) + "Mods\\Services\\Olympus\\bin\\";
+        SetDllDirectoryA(modPath.c_str());
+        LogInfo(L, "Instance location retrieved successfully");
+    }
+    else {
+        /* Log without using the helper dlls because we have not loaded them yet here */
+        lua_getglobal(L, "log");
+        lua_getfield(L, -1, "ERROR");
+        int errorLevel = (int)lua_tointeger(L, -1);
+
+        lua_getglobal(L, "log");
+        lua_getfield(L, -1, "write");
+        lua_pushstring(L, "Olympus.dll");
+        lua_pushnumber(L, errorLevel);
+        lua_pushstring(L, "An error has occurred while trying to retrieve Olympus's instance location");
+        lua_pcall(L, 3, 0, 0);
+
+        return 0;
+    }
+
+    LogInfo(L, "Loading .dlls from " + modPath);
+
 	luaL_register(L, "olympus", Map);
 	return 1;
 }
