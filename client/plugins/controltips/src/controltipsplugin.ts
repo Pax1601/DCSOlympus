@@ -127,13 +127,6 @@ export class ControlTipsPlugin implements OlympusPlugin {
                     },
                     {
                         "key": `Mouse2`,
-                        "action": `Quick options`,
-                        "showIfUnitSelected": false,
-                        "showIfHoveringOverAirbase": false,
-                        "showIfHoveringOverUnit": true
-                    },
-                    {
-                        "key": `Mouse2`,
                         "action": `Airbase menu`,
                         "showIfUnitSelected": false,
                         "showIfHoveringOverAirbase": true,
