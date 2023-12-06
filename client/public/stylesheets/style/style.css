@@ -676,8 +676,8 @@ nav.ol-panel> :last-child {
 }
 
 .ol-navbar-buttons-group button.off svg * {
-    fill: white;
-    stroke: white;
+    fill: white !important;     /*  Higher price than the Soul Stone but inline styling is causing issues.  */
+    stroke: white !important;   /*  I'm sorry, daughter.  */
 }
 
 .ol-navbar-buttons-group button svg * {
