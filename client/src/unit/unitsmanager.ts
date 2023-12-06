@@ -138,6 +138,10 @@ export class UnitsManager {
             return;
         const messageText = (numOfProtectedUnits === 1) ? `Unit is protected` : `All selected units are protected`;
         (getApp().getPopupsManager().get("infoPopup") as Popup).setText(messageText);
+        //  Cheap way for now until we use more locks
+        let lock = <HTMLElement>document.querySelector("#unit-visibility-control button.lock");
+        lock.classList.add("prompt");
+        setTimeout(() => lock.classList.remove("prompt"), 4000);
     }
 
     /** Update the data of all the units. The data is directly decoded from the binary buffer received from the REST Server. This is necessary for performance and bandwidth reasons.
@@ -301,13 +305,8 @@ export class UnitsManager {
             }
         }
         if (options) {
-            if (options.showProtectionReminder === true && numProtectedUnits > selectedUnits.length && selectedUnits.length === 0) {
+            if (options.showProtectionReminder === true && numProtectedUnits > selectedUnits.length && selectedUnits.length === 0)
                 this.showProtectedUnitsPopup(numProtectedUnits);
-                //  Cheap way for now until we use more locks
-                let lock = <HTMLElement>document.querySelector("#unit-visibility-control button.lock");
-                lock.classList.add("prompt");
-                setTimeout(() => lock.classList.remove("prompt"), 4000);
-            }
 
             if (options.onlyOnePerGroup) {
                 var temp: Unit[] = [];
@@ -1147,6 +1146,14 @@ export class UnitsManager {
     computeGroupDestination(latlng: LatLng, rotation: number, units: Unit[] | null = null) {
         if (units === null)
             units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true });
+
+        const segregatedUnits = this.segregateUnits(units);
+        if (segregatedUnits.controllable.length === 0) {
+            this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
+            return {};
+        }
+
+        units = segregatedUnits.controllable;
 
         if (units.length === 0)
             return {};
