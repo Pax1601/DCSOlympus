@@ -31,8 +31,8 @@ export class UnitsManager {
     #slowDeleteDialog!: Dialog;
     #units: { [ID: number]: Unit };
     #groups: { [groupName: string]: Group } = {};
-    #unitDataExport!:UnitDataFileExport;
-    #unitDataImport!:UnitDataFileImport;
+    #unitDataExport!: UnitDataFileExport;
+    #unitDataImport!: UnitDataFileImport;
 
     constructor() {
         this.#copiedUnits = [];
@@ -105,11 +105,11 @@ export class UnitsManager {
      * @param units <Unit[]>
      * @returns Object
      */
-    segregateUnits(units:Unit[]): {[key:string]:[]} {
-        const data:any = {
-            controllable:[],
-            dcsProtected:[],
-            dcsUnprotected:[],
+    segregateUnits(units: Unit[]): { [key: string]: [] } {
+        const data: any = {
+            controllable: [],
+            dcsProtected: [],
+            dcsUnprotected: [],
             human: [],
             olympus: []
         };
@@ -125,7 +125,7 @@ export class UnitsManager {
             else
                 data.dcsUnprotected.push(unit);
         });
-        data.controllable = [].concat(data.dcsUnprotected, data.human, data.olympus); 
+        data.controllable = [].concat(data.dcsUnprotected, data.human, data.olympus);
         return data;
     }
 
@@ -133,7 +133,7 @@ export class UnitsManager {
      * 
      * @param numOfProtectedUnits number
      */
-    showProtectedUnitsPopup(numOfProtectedUnits:number) {
+    showProtectedUnitsPopup(numOfProtectedUnits: number) {
         if (numOfProtectedUnits < 1)
             return;
         const messageText = (numOfProtectedUnits === 1) ? `Unit is protected` : `All selected units are protected`;
@@ -810,7 +810,7 @@ export class UnitsManager {
         var count = 1;
         var xr = 0; var yr = 1; var zr = -1;
         var layer = 1;
-        units.forEach((unit:Unit) => {
+        units.forEach((unit: Unit) => {
             if (unit.ID !== ID) {
                 if (offset != undefined)
                     /* Offset is set, apply it */
@@ -885,7 +885,7 @@ export class UnitsManager {
     fireAtArea(latlng: LatLng, units: Unit[] | null = null) {
         if (units === null)
             units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
-        
+
         const segregatedUnits = this.segregateUnits(units);
         if (segregatedUnits.controllable.length === 0) {
             this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
@@ -1185,7 +1185,7 @@ export class UnitsManager {
      * 
      */
     copy(units: Unit[] | null = null) {
-        if ( !getApp().getContextManager().getCurrentContext().getAllowUnitCopying() )
+        if (!getApp().getContextManager().getCurrentContext().getAllowUnitCopying())
             return;
 
         if (units === null)
@@ -1205,7 +1205,7 @@ export class UnitsManager {
      * @returns True if units were pasted successfully
      */
     paste() {
-        if ( !getApp().getContextManager().getCurrentContext().getAllowUnitPasting() )
+        if (!getApp().getContextManager().getCurrentContext().getAllowUnitPasting())
             return;
 
         let spawnPoints = 0;
@@ -1307,7 +1307,7 @@ export class UnitsManager {
                         if (Math.random() < IADSDensities[type]) {
                             /* Get a random blueprint depending on the selected parameters and spawn the unit */
                             const unitBlueprint = randomUnitBlueprint(groundUnitDatabase, { type: type, eras: activeEras, ranges: activeRanges });
-                            if (unitBlueprint) 
+                            if (unitBlueprint)
                                 this.spawnUnits("GroundUnit", [{ unitType: unitBlueprint.name, location: latlng, liveryID: "" }], coalitionArea.getCoalition(), false, "", "");
                         }
                     }
@@ -1332,7 +1332,7 @@ export class UnitsManager {
                         if (Math.random() < IADSDensities[type]) {
                             /* Get a random blueprint depending on the selected parameters and spawn the unit */
                             const unitBlueprint = randomUnitBlueprint(groundUnitDatabase, { type: type, eras: activeEras, ranges: activeRanges });
-                            if (unitBlueprint) 
+                            if (unitBlueprint)
                                 this.spawnUnits("GroundUnit", [{ unitType: unitBlueprint.name, location: latlng, liveryID: "" }], coalitionArea.getCoalition(), false, "", "");
                         }
                     }
@@ -1349,7 +1349,7 @@ export class UnitsManager {
             this.#unitDataExport = new UnitDataFileExport("unit-export-dialog");
         this.#unitDataExport.showForm(Object.values(this.#units));
     }
-    
+
     /** Import ground and navy units from file
      * TODO: extend to support aircraft and helicopters
      */
