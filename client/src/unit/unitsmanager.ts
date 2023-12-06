@@ -31,8 +31,8 @@ export class UnitsManager {
     #slowDeleteDialog!: Dialog;
     #units: { [ID: number]: Unit };
     #groups: { [groupName: string]: Group } = {};
-    #unitDataExport!:UnitDataFileExport;
-    #unitDataImport!:UnitDataFileImport;
+    #unitDataExport!: UnitDataFileExport;
+    #unitDataImport!: UnitDataFileImport;
 
     constructor() {
         this.#copiedUnits = [];
@@ -98,6 +98,46 @@ export class UnitsManager {
                 this.#units[ID] = new constructor(ID);
             }
         }
+    }
+
+    /** Sort units segregated groups based on controlling type and protection, if DCS-controlled
+     * 
+     * @param units <Unit[]>
+     * @returns Object
+     */
+    segregateUnits(units: Unit[]): { [key: string]: [] } {
+        const data: any = {
+            controllable: [],
+            dcsProtected: [],
+            dcsUnprotected: [],
+            human: [],
+            olympus: []
+        };
+        const map = getApp().getMap();
+
+        units.forEach(unit => {
+            if (unit.getHuman())
+                data.human.push(unit);
+            else if (unit.isControlledByOlympus())
+                data.olympus.push(unit);
+            else if (map.getIsUnitProtected(unit))
+                data.dcsProtected.push(unit);
+            else
+                data.dcsUnprotected.push(unit);
+        });
+        data.controllable = [].concat(data.dcsUnprotected, data.human, data.olympus);
+        return data;
+    }
+
+    /**
+     * 
+     * @param numOfProtectedUnits number
+     */
+    showProtectedUnitsPopup(numOfProtectedUnits: number) {
+        if (numOfProtectedUnits < 1)
+            return;
+        const messageText = (numOfProtectedUnits === 1) ? `Unit is protected` : `All selected units are protected`;
+        (getApp().getPopupsManager().get("infoPopup") as Popup).setText(messageText);
     }
 
     /** Update the data of all the units. The data is directly decoded from the binary buffer received from the REST Server. This is necessary for performance and bandwidth reasons.
@@ -262,8 +302,7 @@ export class UnitsManager {
         }
         if (options) {
             if (options.showProtectionReminder === true && numProtectedUnits > selectedUnits.length && selectedUnits.length === 0) {
-                const messageText = (numProtectedUnits === 1) ? `Unit is protected` : `All selected units are protected`;
-                (getApp().getPopupsManager().get("infoPopup") as Popup).setText(messageText);
+                this.showProtectedUnitsPopup(numProtectedUnits);
                 //  Cheap way for now until we use more locks
                 let lock = <HTMLElement>document.querySelector("#unit-visibility-control button.lock");
                 lock.classList.add("prompt");
@@ -365,8 +404,13 @@ export class UnitsManager {
         if (units === null)
             units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
 
-        if (units.length === 0)
+        const segregatedUnits = this.segregateUnits(units);
+        if (segregatedUnits.controllable.length === 0) {
+            this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
             return;
+        }
+
+        units = segregatedUnits.controllable;
 
         /* Compute the destination for each unit. If mantainRelativePosition is true, compute the destination so to hold the relative positions */
         var unitDestinations: { [key: number]: LatLng } = {};
@@ -399,8 +443,13 @@ export class UnitsManager {
         if (units === null)
             units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: false });
 
-        if (units.length === 0)
+        const segregatedUnits = this.segregateUnits(units);
+        if (segregatedUnits.controllable.length === 0) {
+            this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
             return;
+        }
+
+        units = segregatedUnits.controllable;
 
         for (let idx in units) {
             const unit = units[idx];
@@ -425,8 +474,13 @@ export class UnitsManager {
         if (units === null)
             units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
 
-        if (units.length === 0)
+        const segregatedUnits = this.segregateUnits(units);
+        if (segregatedUnits.controllable.length === 0) {
+            this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
             return;
+        }
+
+        units = segregatedUnits.controllable;
 
         units.forEach((unit: Unit) => unit.landAt(latlng));
 
@@ -442,8 +496,13 @@ export class UnitsManager {
         if (units === null)
             units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
 
-        if (units.length === 0)
+        const segregatedUnits = this.segregateUnits(units);
+        if (segregatedUnits.controllable.length === 0) {
+            this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
             return;
+        }
+
+        units = segregatedUnits.controllable;
 
         units.forEach((unit: Unit) => unit.changeSpeed(speedChange));
     }
@@ -457,8 +516,13 @@ export class UnitsManager {
         if (units === null)
             units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
 
-        if (units.length === 0)
+        const segregatedUnits = this.segregateUnits(units);
+        if (segregatedUnits.controllable.length === 0) {
+            this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
             return;
+        }
+
+        units = segregatedUnits.controllable;
 
         units.forEach((unit: Unit) => unit.changeAltitude(altitudeChange));
     }
@@ -472,8 +536,13 @@ export class UnitsManager {
         if (units === null)
             units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
 
-        if (units.length === 0)
+        const segregatedUnits = this.segregateUnits(units);
+        if (segregatedUnits.controllable.length === 0) {
+            this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
             return;
+        }
+
+        units = segregatedUnits.controllable;
 
         units.forEach((unit: Unit) => unit.setSpeed(speed));
         this.#showActionMessage(units, `setting speed to ${msToKnots(speed)} kts`);
@@ -488,8 +557,13 @@ export class UnitsManager {
         if (units === null)
             units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
 
-        if (units.length === 0)
+        const segregatedUnits = this.segregateUnits(units);
+        if (segregatedUnits.controllable.length === 0) {
+            this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
             return;
+        }
+
+        units = segregatedUnits.controllable;
 
         units.forEach((unit: Unit) => unit.setSpeedType(speedType));
         this.#showActionMessage(units, `setting speed type to ${speedType}`);
@@ -504,8 +578,13 @@ export class UnitsManager {
         if (units === null)
             units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
 
-        if (units.length === 0)
+        const segregatedUnits = this.segregateUnits(units);
+        if (segregatedUnits.controllable.length === 0) {
+            this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
             return;
+        }
+
+        units = segregatedUnits.controllable;
 
         units.forEach((unit: Unit) => unit.setAltitude(altitude));
         this.#showActionMessage(units, `setting altitude to ${mToFt(altitude)} ft`);
@@ -520,8 +599,13 @@ export class UnitsManager {
         if (units === null)
             units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
 
-        if (units.length === 0)
+        const segregatedUnits = this.segregateUnits(units);
+        if (segregatedUnits.controllable.length === 0) {
+            this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
             return;
+        }
+
+        units = segregatedUnits.controllable;
 
         units.forEach((unit: Unit) => unit.setAltitudeType(altitudeType));
         this.#showActionMessage(units, `setting altitude type to ${altitudeType}`);
@@ -536,8 +620,13 @@ export class UnitsManager {
         if (units === null)
             units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
 
-        if (units.length === 0)
+        const segregatedUnits = this.segregateUnits(units);
+        if (segregatedUnits.controllable.length === 0) {
+            this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
             return;
+        }
+
+        units = segregatedUnits.controllable;
 
         units.forEach((unit: Unit) => unit.setROE(ROE));
         this.#showActionMessage(units, `ROE set to ${ROE}`);
@@ -552,8 +641,13 @@ export class UnitsManager {
         if (units === null)
             units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
 
-        if (units.length === 0)
+        const segregatedUnits = this.segregateUnits(units);
+        if (segregatedUnits.controllable.length === 0) {
+            this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
             return;
+        }
+
+        units = segregatedUnits.controllable;
 
         units.forEach((unit: Unit) => unit.setReactionToThreat(reactionToThreat));
         this.#showActionMessage(units, `reaction to threat set to ${reactionToThreat}`);
@@ -568,8 +662,13 @@ export class UnitsManager {
         if (units === null)
             units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
 
-        if (units.length === 0)
+        const segregatedUnits = this.segregateUnits(units);
+        if (segregatedUnits.controllable.length === 0) {
+            this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
             return;
+        }
+
+        units = segregatedUnits.controllable;
 
         units.forEach((unit: Unit) => unit.setEmissionsCountermeasures(emissionCountermeasure));
         this.#showActionMessage(units, `emissions & countermeasures set to ${emissionCountermeasure}`);
@@ -584,8 +683,13 @@ export class UnitsManager {
         if (units === null)
             units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
 
-        if (units.length === 0)
+        const segregatedUnits = this.segregateUnits(units);
+        if (segregatedUnits.controllable.length === 0) {
+            this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
             return;
+        }
+
+        units = segregatedUnits.controllable;
 
         units.forEach((unit: Unit) => unit.setOnOff(onOff));
         this.#showActionMessage(units, `unit active set to ${onOff}`);
@@ -600,8 +704,13 @@ export class UnitsManager {
         if (units === null)
             units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
 
-        if (units.length === 0)
+        const segregatedUnits = this.segregateUnits(units);
+        if (segregatedUnits.controllable.length === 0) {
+            this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
             return;
+        }
+
+        units = segregatedUnits.controllable;
 
         units.forEach((unit: Unit) => unit.setFollowRoads(followRoads));
         this.#showActionMessage(units, `follow roads set to ${followRoads}`);
@@ -617,8 +726,13 @@ export class UnitsManager {
         if (units === null)
             units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
 
-        if (units.length === 0)
+        const segregatedUnits = this.segregateUnits(units);
+        if (segregatedUnits.controllable.length === 0) {
+            this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
             return;
+        }
+
+        units = segregatedUnits.controllable;
 
         units.forEach((unit: Unit) => unit.setOperateAs(operateAs));
         this.#showActionMessage(units, `operate as set to ${operateAs}`);
@@ -633,8 +747,13 @@ export class UnitsManager {
         if (units === null)
             units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
 
-        if (units.length === 0)
+        const segregatedUnits = this.segregateUnits(units);
+        if (segregatedUnits.controllable.length === 0) {
+            this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
             return;
+        }
+
+        units = segregatedUnits.controllable;
 
         units.forEach((unit: Unit) => unit.attackUnit(ID));
         this.#showActionMessage(units, `attacking unit ${this.getUnitByID(ID)?.getUnitName()}`);
@@ -647,11 +766,14 @@ export class UnitsManager {
         if (units === null)
             units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
 
-        if (units.length === 0)
+        const segregatedUnits = this.segregateUnits(units);
+        if (segregatedUnits.controllable.length === 0) {
+            this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
             return;
+        }
 
-        units.forEach((unit: Unit) => unit.refuel());
-        this.#showActionMessage(units, `sent to nearest tanker`);
+        segregatedUnits.controllable.forEach((unit: Unit) => unit.refuel());
+        this.#showActionMessage(segregatedUnits.controllable, `sent to nearest tanker`);
     }
 
     /** Instruct the selected units to follow another unit in a formation. Only works for aircrafts and helicopters.
@@ -665,8 +787,13 @@ export class UnitsManager {
         if (units === null)
             units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
 
-        if (units.length === 0)
+        const segregatedUnits = this.segregateUnits(units);
+        if (segregatedUnits.controllable.length === 0) {
+            this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
             return;
+        }
+
+        units = segregatedUnits.controllable;
 
         if (offset == undefined) {
             /* Simple formations with fixed offsets */
@@ -683,8 +810,7 @@ export class UnitsManager {
         var count = 1;
         var xr = 0; var yr = 1; var zr = -1;
         var layer = 1;
-        for (let idx in units) {
-            var unit = units[idx];
+        units.forEach((unit: Unit) => {
             if (unit.ID !== ID) {
                 if (offset != undefined)
                     /* Offset is set, apply it */
@@ -705,7 +831,7 @@ export class UnitsManager {
                 }
                 count++;
             }
-        }
+        })
         this.#showActionMessage(units, `following unit ${this.getUnitByID(ID)?.getUnitName()}`);
     }
 
@@ -718,8 +844,13 @@ export class UnitsManager {
         if (units === null)
             units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
 
-        if (units.length === 0)
+        const segregatedUnits = this.segregateUnits(units);
+        if (segregatedUnits.controllable.length === 0) {
+            this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
             return;
+        }
+
+        units = segregatedUnits.controllable;
 
         units.forEach((unit: Unit) => unit.bombPoint(latlng));
         this.#showActionMessage(units, `unit bombing point`);
@@ -734,8 +865,13 @@ export class UnitsManager {
         if (units === null)
             units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
 
-        if (units.length === 0)
+        const segregatedUnits = this.segregateUnits(units);
+        if (segregatedUnits.controllable.length === 0) {
+            this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
             return;
+        }
+
+        units = segregatedUnits.controllable;
 
         units.forEach((unit: Unit) => unit.carpetBomb(latlng));
         this.#showActionMessage(units, `unit carpet bombing point`);
@@ -750,8 +886,13 @@ export class UnitsManager {
         if (units === null)
             units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
 
-        if (units.length === 0)
+        const segregatedUnits = this.segregateUnits(units);
+        if (segregatedUnits.controllable.length === 0) {
+            this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
             return;
+        }
+
+        units = segregatedUnits.controllable;
 
         units.forEach((unit: Unit) => unit.fireAtArea(latlng));
         this.#showActionMessage(units, `unit firing at area`);
@@ -766,8 +907,13 @@ export class UnitsManager {
         if (units === null)
             units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
 
-        if (units.length === 0)
+        const segregatedUnits = this.segregateUnits(units);
+        if (segregatedUnits.controllable.length === 0) {
+            this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
             return;
+        }
+
+        units = segregatedUnits.controllable;
 
         getGroundElevation(latlng, (response: string) => {
             var groundElevation: number | null = null;
@@ -788,8 +934,13 @@ export class UnitsManager {
         if (units === null)
             units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
 
-        if (units.length === 0)
+        const segregatedUnits = this.segregateUnits(units);
+        if (segregatedUnits.controllable.length === 0) {
+            this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
             return;
+        }
+
+        units = segregatedUnits.controllable;
 
         units.forEach((unit: Unit) => unit.scenicAAA());
         this.#showActionMessage(units, `unit set to perform scenic AAA`);
@@ -802,8 +953,13 @@ export class UnitsManager {
         if (units === null)
             units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
 
-        if (units.length === 0)
+        const segregatedUnits = this.segregateUnits(units);
+        if (segregatedUnits.controllable.length === 0) {
+            this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
             return;
+        }
+
+        units = segregatedUnits.controllable;
 
         units.forEach((unit: Unit) => unit.missOnPurpose());
         this.#showActionMessage(units, `unit set to perform miss-on-purpose AAA`);
@@ -818,9 +974,13 @@ export class UnitsManager {
         if (units === null)
             units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true, showProtectionReminder: true });
 
-
-        if (units.length === 0)
+        const segregatedUnits = this.segregateUnits(units);
+        if (segregatedUnits.controllable.length === 0) {
+            this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
             return;
+        }
+
+        units = segregatedUnits.controllable;
 
         units.forEach((unit: Unit) => unit.landAtPoint(latlng));
         this.#showActionMessage(units, `unit landing at point`);
@@ -835,8 +995,13 @@ export class UnitsManager {
         if (units === null)
             units = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
 
-        if (units.length === 0)
+        const segregatedUnits = this.segregateUnits(units);
+        if (segregatedUnits.controllable.length === 0) {
+            this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
             return;
+        }
+
+        units = segregatedUnits.controllable;
 
         units.forEach((unit: Unit) => unit.setShotsScatter(shotsScatter));
         this.#showActionMessage(units, `shots scatter set to ${shotsScatter}`);
@@ -851,8 +1016,13 @@ export class UnitsManager {
         if (units === null)
             units = this.getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true });
 
-        if (units.length === 0)
+        const segregatedUnits = this.segregateUnits(units);
+        if (segregatedUnits.controllable.length === 0) {
+            this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
             return;
+        }
+
+        units = segregatedUnits.controllable;
 
         units.forEach((unit: Unit) => unit.setShotsIntensity(shotsIntensity));
         this.#showActionMessage(units, `shots intensity set to ${shotsIntensity}`);
@@ -883,8 +1053,13 @@ export class UnitsManager {
         if (units === null)
             units = this.getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: false, showProtectionReminder: true });
 
-        if (units.length === 0)
+        const segregatedUnits = this.segregateUnits(units);
+        if (segregatedUnits.controllable.length === 0) {
+            this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
             return;
+        }
+
+        units = segregatedUnits.controllable;
 
         if (this.getUnitsCategories(units).length == 1) {
             var unitsData: { ID: number, location: LatLng }[] = [];
@@ -929,8 +1104,13 @@ export class UnitsManager {
         if (units === null)
             units = this.getSelectedUnits({ excludeProtected: true, showProtectionReminder: true }); /* Can be applied to humans too */
 
-        if (units.length === 0)
+        const segregatedUnits = this.segregateUnits(units);
+        if (segregatedUnits.controllable.length === 0) {
+            this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
             return;
+        }
+
+        units = segregatedUnits.controllable;
 
         const selectionContainsAHuman = units.some((unit: Unit) => {
             return unit.getHuman() === true;
@@ -1005,7 +1185,7 @@ export class UnitsManager {
      * 
      */
     copy(units: Unit[] | null = null) {
-        if ( !getApp().getContextManager().getCurrentContext().getAllowUnitCopying() )
+        if (!getApp().getContextManager().getCurrentContext().getAllowUnitCopying())
             return;
 
         if (units === null)
@@ -1025,7 +1205,7 @@ export class UnitsManager {
      * @returns True if units were pasted successfully
      */
     paste() {
-        if ( !getApp().getContextManager().getCurrentContext().getAllowUnitPasting() )
+        if (!getApp().getContextManager().getCurrentContext().getAllowUnitPasting())
             return;
 
         let spawnPoints = 0;
@@ -1127,7 +1307,7 @@ export class UnitsManager {
                         if (Math.random() < IADSDensities[type]) {
                             /* Get a random blueprint depending on the selected parameters and spawn the unit */
                             const unitBlueprint = randomUnitBlueprint(groundUnitDatabase, { type: type, eras: activeEras, ranges: activeRanges });
-                            if (unitBlueprint) 
+                            if (unitBlueprint)
                                 this.spawnUnits("GroundUnit", [{ unitType: unitBlueprint.name, location: latlng, liveryID: "" }], coalitionArea.getCoalition(), false, "", "");
                         }
                     }
@@ -1152,7 +1332,7 @@ export class UnitsManager {
                         if (Math.random() < IADSDensities[type]) {
                             /* Get a random blueprint depending on the selected parameters and spawn the unit */
                             const unitBlueprint = randomUnitBlueprint(groundUnitDatabase, { type: type, eras: activeEras, ranges: activeRanges });
-                            if (unitBlueprint) 
+                            if (unitBlueprint)
                                 this.spawnUnits("GroundUnit", [{ unitType: unitBlueprint.name, location: latlng, liveryID: "" }], coalitionArea.getCoalition(), false, "", "");
                         }
                     }
@@ -1169,7 +1349,7 @@ export class UnitsManager {
             this.#unitDataExport = new UnitDataFileExport("unit-export-dialog");
         this.#unitDataExport.showForm(Object.values(this.#units));
     }
-    
+
     /** Import ground and navy units from file
      * TODO: extend to support aircraft and helicopters
      */
