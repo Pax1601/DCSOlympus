@@ -2031,6 +2031,19 @@ declare module "unit/unitsmanager" {
          * @param category Either "Aircraft", "Helicopter", "GroundUnit", or "NavyUnit". Determines what class will be used to create the new unit accordingly.
          */
         addUnit(ID: number, category: string): void;
+        /** Sort units segregated groups based on controlling type and protection, if DCS-controlled
+         *
+         * @param units <Unit[]>
+         * @returns Object
+         */
+        segregateUnits(units: Unit[]): {
+            [key: string]: [];
+        };
+        /**
+         *
+         * @param numOfProtectedUnits number
+         */
+        showProtectedUnitsPopup(numOfProtectedUnits: number): void;
         /** Update the data of all the units. The data is directly decoded from the binary buffer received from the REST Server. This is necessary for performance and bandwidth reasons.
          *
          * @param buffer The arraybuffer, encoded according to the ICD defined in: TODO Add reference to ICD

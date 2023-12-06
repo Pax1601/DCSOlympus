@@ -1,4 +1,4 @@
-local version = "v0.4.10-alpha-rc2"
+local version = "v0.4.11-alpha-rc3"
 
 local debug = false				-- True enables debug printing using DCS messages
 

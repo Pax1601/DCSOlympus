@@ -29,7 +29,7 @@ import { UnitListPanel } from "./panels/unitlistpanel";
 import { ContextManager } from "./context/contextmanager";
 import { Context } from "./context/context";
 
-var VERSION = "v0.4.10-alpha-rc2";
+var VERSION = "v0.4.11-alpha-rc3";
 var DEBUG = false;
 
 export class OlympusApp {
@@ -262,9 +262,7 @@ export class OlympusApp {
             const latestVersionSpan = document.getElementById("latest-version") as HTMLElement;
             if (latestVersionSpan) {
                 latestVersionSpan.innerHTML = this.#latestVersion ?? "Unknown";
-                if (this.#latestVersion !== VERSION) {
-                    latestVersionSpan.classList.add("new-version");
-                }
+                latestVersionSpan.classList.toggle("new-version", this.#latestVersion !== VERSION);
             }
         })
     }
