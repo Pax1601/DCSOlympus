@@ -113,7 +113,7 @@ class Move : public Command
 {
 public:
 	Move(string groupName, Coords destination, double speed, string speedType, double altitude, 
-		string altitudeType, string taskOptions, string category, function<void(void)> callback = []() {}) :
+		string altitudeType, string taskOptions, string category, bool onRoad, function<void(void)> callback = []() {}) :
 		Command(callback),
 		groupName(groupName),
 		destination(destination),
@@ -122,12 +122,13 @@ public:
 		altitude(altitude),
 		altitudeType(altitudeType),
 		taskOptions(taskOptions),
-		category(category)
+		category(category),
+		onRoad(onRoad)
 	{ 
 		priority = CommandPriority::MEDIUM; 
 	};
 	virtual string getString();
-	virtual unsigned int getLoad() { return 5; }
+	virtual unsigned int getLoad() { return onRoad? 45: 5; }
 
 private:
 	const string groupName;
@@ -138,6 +139,7 @@ private:
 	const string altitudeType;
 	const string taskOptions;
 	const string category;
+	const bool onRoad;
 };
 
 /* Smoke command */

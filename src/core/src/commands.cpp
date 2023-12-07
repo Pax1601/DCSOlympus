@@ -9,7 +9,6 @@ extern UnitsManager* unitsManager;
 /* Move command */
 string Move::getString()
 {
-
     std::ostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.move, "

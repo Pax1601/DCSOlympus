@@ -712,7 +712,7 @@ void Unit::goToDestination(string enrouteTask)
 {
 	if (activeDestination != NULL)
 	{
-		Command* command = dynamic_cast<Command*>(new Move(groupName, activeDestination, getDesiredSpeed(), getDesiredSpeedType() ? "GS" : "CAS", getDesiredAltitude(), getDesiredAltitudeType() ? "AGL" : "ASL", enrouteTask, getCategory(), [this]() { this->setHasTaskAssigned(true); }));
+		Command* command = dynamic_cast<Command*>(new Move(groupName, activeDestination, getDesiredSpeed(), getDesiredSpeedType() ? "GS" : "CAS", getDesiredAltitude(), getDesiredAltitudeType() ? "AGL" : "ASL", enrouteTask, getCategory(), getFollowRoads(), [this]() { this->setHasTaskAssigned(true); }));
 		scheduler->appendCommand(command);
 		setHasTask(true);
 	}
