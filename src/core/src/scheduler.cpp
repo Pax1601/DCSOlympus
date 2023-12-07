@@ -524,8 +524,8 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		Coords loc; loc.lat = lat; loc.lng = lng;
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr) {
-			unit->setState(State::BOMB_POINT);
 			unit->setTargetPosition(loc);
+			unit->setState(State::BOMB_POINT);
 			log(username + " tasked unit " + unit->getUnitName() + "(" + unit->getName() + ") to bomb a point", true);
 		}
 	}
@@ -539,8 +539,8 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		Coords loc; loc.lat = lat; loc.lng = lng;
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr) {
-			unit->setState(State::CARPET_BOMB);
 			unit->setTargetPosition(loc);
+			unit->setState(State::CARPET_BOMB);
 			log(username + " tasked unit " + unit->getUnitName() + "(" + unit->getName() + ") to perform carpet bombing", true);
 		}
 	}
@@ -555,8 +555,8 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		Coords loc; loc.lat = lat; loc.lng = lng;
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr) {
-			unit->setState(State::BOMB_BUILDING);
 			unit->setTargetPosition(loc);
+			unit->setState(State::BOMB_BUILDING);
 		}
 	}
 	/************************/
@@ -569,8 +569,8 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		Coords loc; loc.lat = lat; loc.lng = lng;
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr) {
-			unit->setState(State::FIRE_AT_AREA);
 			unit->setTargetPosition(loc);
+			unit->setState(State::FIRE_AT_AREA);
 			log(username + " tasked unit " + unit->getUnitName() + "(" + unit->getName() + ") to fire at area", true);
 		}
 	}
@@ -585,8 +585,8 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		Coords loc; loc.lat = lat; loc.lng = lng; loc.alt = alt;
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr) {
-			unit->setState(State::SIMULATE_FIRE_FIGHT);
 			unit->setTargetPosition(loc);
+			unit->setState(State::SIMULATE_FIRE_FIGHT);
 			log(username + " tasked unit " + unit->getUnitName() + "(" + unit->getName() + ") to simulate a fire fight", true);
 		}
 	}

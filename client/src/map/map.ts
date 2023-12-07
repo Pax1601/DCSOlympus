@@ -64,6 +64,7 @@ export class Map extends L.Map {
     #centerUnit: Unit | null = null;
     #miniMap: ClickableMiniMap | null = null;
     #miniMapLayerGroup: L.LayerGroup;
+    #miniMapPolyline: L.Polyline;
     #temporaryMarkers: TemporaryUnitMarker[] = [];
     #selecting: boolean = false;
     #isZooming: boolean = false;
@@ -123,8 +124,8 @@ export class Map extends L.Map {
         /* Minimap */
         var minimapLayer = new L.TileLayer(mapLayers[Object.keys(mapLayers)[0] as keyof typeof mapLayers].urlTemplate, { minZoom: 0, maxZoom: 13 });
         this.#miniMapLayerGroup = new L.LayerGroup([minimapLayer]);
-        var miniMapPolyline = new L.Polyline(this.#getMinimapBoundaries(), { color: '#202831' });
-        miniMapPolyline.addTo(this.#miniMapLayerGroup);
+        this.#miniMapPolyline = new L.Polyline([], { color: '#202831' });
+        this.#miniMapPolyline.addTo(this.#miniMapLayerGroup);
 
         /* Scale */
         //@ts-ignore TODO more hacking because the module is provided as a pure javascript module only
@@ -418,6 +419,9 @@ export class Map extends L.Map {
             if (this.#miniMap)
                 this.setView(e.latlng);
         })
+
+        const boundaries = this.#getMinimapBoundaries();
+        this.#miniMapPolyline.setLatLngs(boundaries[theatre as keyof typeof boundaries]);
     }
 
     getMiniMapLayerGroup() {

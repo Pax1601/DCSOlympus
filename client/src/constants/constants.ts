@@ -67,70 +67,70 @@ export const minAltitudeValues: { [key: string]: number } = { Aircraft: 0, Helic
 export const maxAltitudeValues: { [key: string]: number } = { Aircraft: 50000, Helicopter: 10000 };
 export const altitudeIncrements: { [key: string]: number } = { Aircraft: 500, Helicopter: 100 };
 
-export const minimapBoundaries = [
-    [    // NTTR
+export const minimapBoundaries = {
+    "Nevada": [    // NTTR
         new LatLng(39.7982463, -119.985425),
         new LatLng(34.4037128, -119.7806729),
         new LatLng(34.3483316, -112.4529351),
         new LatLng(39.7372411, -112.1130805),
         new LatLng(39.7982463, -119.985425)
     ],
-    [   // Syria
+    "Syria": [   // Syria
         new LatLng(37.3630556, 29.2686111),
         new LatLng(31.8472222, 29.8975),
         new LatLng(32.1358333, 42.1502778),
         new LatLng(37.7177778, 42.3716667),
         new LatLng(37.3630556, 29.2686111)
     ],
-    [   // Caucasus
+    "Caucasus": [   // Caucasus
         new LatLng(39.6170191, 27.634935),
         new LatLng(38.8735863, 47.1423108),
         new LatLng(47.3907982, 49.3101946),
         new LatLng(48.3955879, 26.7753625),
         new LatLng(39.6170191, 27.634935)
     ],
-    [   // Persian Gulf
+    "PersianGulf": [   // Persian Gulf
         new LatLng(32.9355285, 46.5623682),
         new LatLng(21.729393, 47.572675),
         new LatLng(21.8501348, 63.9734737),
         new LatLng(33.131584, 64.7313594),
         new LatLng(32.9355285, 46.5623682)
     ],
-    [   // Marianas
+    "MarianaIslands": [   // Marianas
         new LatLng(22.09, 135.0572222),
         new LatLng(10.5777778, 135.7477778),
         new LatLng(10.7725, 149.3918333),
         new LatLng(22.5127778, 149.5427778),
         new LatLng(22.09, 135.0572222)
     ],
-    [   // South Atlantic
+    "Falklands": [   // South Atlantic
         new LatLng(-49.097217, -79.418267),
         new LatLng(-56.874517,-79.418267),
         new LatLng(-56.874517, -43.316433),
         new LatLng(-49.097217, -43.316433),
         new LatLng(-49.097217, -79.418267)
     ], 
-    [   // Normandy
+    "Normandy": [   // Normandy
         new LatLng(50.44, -3.29),
         new LatLng(48.12,-3.29),
         new LatLng(48.12, 3.70),
         new LatLng(50.44, 3.70),
         new LatLng(50.44, -3.29)
     ], 
-    [   // Sinai
+    "SinaiMap": [   // Sinai
         new LatLng(34.312222, 28.523333),
         new LatLng(25.946944, 28.523333),
         new LatLng(25.946944, 36.897778),
         new LatLng(34.312222, 36.897778),
         new LatLng(34.312222, 28.523333)
     ]
-];
+};
 
 export const mapBounds = {
     "Syria": { bounds: new LatLngBounds([31.8472222, 29.8975], [37.7177778, 42.3716667]), zoom: 5 },
     "MarianaIslands": { bounds: new LatLngBounds([10.5777778, 135.7477778], [22.5127778, 149.5427778]), zoom: 5 },
     "Nevada": { bounds: new LatLngBounds([34.4037128, -119.7806729], [39.7372411, -112.1130805]), zoom: 5 },
-    "PersianGulf": { bounds: new LatLngBounds([21.729393, 47.572675], [33.131584, 64.7313594]), zoom: 5 },
+    "PersianGulf": { bounds: new LatLngBounds([21.729393, 47.572675], [33.131584, 64.7313594]), zoom: 4 },
     "Caucasus": { bounds: new LatLngBounds([39.6170191, 27.634935], [47.3907982, 49.3101946]), zoom: 4 },
     "Falklands": { bounds: new LatLngBounds([-49.097217, -79.418267], [-56.874517, -43.316433]), zoom: 3 },
     "Normandy": { bounds: new LatLngBounds([50.44, -3.29], [48.12, 3.70]), zoom: 5 },

@@ -228,7 +228,7 @@ void GroundUnit::AIloop()
 			Geodesic::WGS84().Inverse(getPosition().lat, getPosition().lng, scatteredTargetPosition.lat, scatteredTargetPosition.lng, distance, bearing1, bearing2);
 
 			/* Compute the scattered position applying a random scatter to the shot */
-			double scatterDistance = distance * tan(10 /* degs */ * (ShotsScatter::LOW - shotsScatter) / 57.29577 + 2 /* degs */) * RANDOM_MINUS_ONE_TO_ONE;
+			double scatterDistance = distance * tan(10 /* degs */ * (ShotsScatter::LOW - shotsScatter) / 57.29577 + 2 / 57.29577 /* degs */) * RANDOM_MINUS_ONE_TO_ONE;
 			Geodesic::WGS84().Direct(scatteredTargetPosition.lat, scatteredTargetPosition.lng, bearing1 + 90, scatterDistance, scatteredTargetPosition.lat, scatteredTargetPosition.lng);
 			
 			/* Recover the data from the database */

@@ -1,7 +1,7 @@
 #pragma once
 #include "unit.h"
 
-#define GROUND_DEST_DIST_THR 100
+#define GROUND_DEST_DIST_THR 10
 
 class GroundUnit : public Unit
 {
