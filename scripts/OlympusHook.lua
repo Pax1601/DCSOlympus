@@ -1,4 +1,4 @@
-local version = 'v0.4.11-alpha-rc3'
+local version = 'v0.4.12-alpha-rc4'
 local lfs = require("lfs")
 
 Olympus = {}

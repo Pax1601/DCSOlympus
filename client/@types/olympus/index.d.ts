@@ -128,7 +128,16 @@ declare module "constants/constants" {
     export const altitudeIncrements: {
         [key: string]: number;
     };
-    export const minimapBoundaries: LatLng[][];
+    export const minimapBoundaries: {
+        Nevada: LatLng[];
+        Syria: LatLng[];
+        Caucasus: LatLng[];
+        PersianGulf: LatLng[];
+        MarianaIslands: LatLng[];
+        Falklands: LatLng[];
+        Normandy: LatLng[];
+        SinaiMap: LatLng[];
+    };
     export const mapBounds: {
         Syria: {
             bounds: LatLngBounds;
