@@ -795,7 +795,7 @@ export class Map extends L.Map {
 
     #showDestinationCursors() {
         const singleCursor = !this.#shiftKey;
-        const selectedUnitsCount = getApp().getUnitsManager().getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true }).length;
+        const selectedUnitsCount = getApp().getUnitsManager().getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true }).length;
         if (singleCursor) {
             this.#hideDestinationCursors();
         }
@@ -821,7 +821,7 @@ export class Map extends L.Map {
     }
 
     #updateDestinationCursors() {
-        const selectedUnitsCount = getApp().getUnitsManager().getSelectedUnits({ excludeHumans: true, onlyOnePerGroup: true }).length;
+        const selectedUnitsCount = getApp().getUnitsManager().getSelectedUnits({ excludeHumans: true, excludeProtected: true, onlyOnePerGroup: true }).length;
         if (selectedUnitsCount > 1) {
             const groupLatLng = this.#computeDestinationRotation && this.#destinationRotationCenter != null ? this.#destinationRotationCenter : this.getMouseCoordinates();
             if (this.#destinationPreviewCursors.length == 1)
