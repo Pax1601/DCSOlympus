@@ -1,6 +1,6 @@
 #define nwjsFolder "..\..\nwjs\"
 #define nodejsFolder "..\..\node\"
-#define version "v0.4.12-alpha-rc4"
+#define version "v0.4.13-alpha-rc5"
 
 [Setup] 
 AppName=DCS Olympus 
@@ -47,6 +47,7 @@ Source: "..\img\configurator_logo.png"; DestDir: "{app}\Mods\Services\Olympus\im
 Source: "{#nwjsFolder}\*.*"; DestDir: "{app}\Mods\Services\Olympus\client"; Flags: ignoreversion recursesubdirs; Check: CheckLocalInstall
 Source: "{#nodejsFolder}\*.*"; DestDir: "{app}\Mods\Services\Olympus\client"; Flags: ignoreversion recursesubdirs; Check: CheckServerInstall
 Source: "..\scripts\python\configurator\dist\configurator.exe"; DestDir: "{app}\Mods\Services\Olympus"; Flags: ignoreversion;
+Source: "..\LEGAL"; DestDir: "{app}\Mods\Services\Olympus"; Flags: ignoreversion;
 
 [Run]
 Filename: "{app}\Mods\Services\Olympus\configurator.exe"; Parameters: -a {code:GetAddress} -c {code:GetClientPort} -b {code:GetBackendPort} -p {code:GetPassword} -bp {code:GetBluePassword} -rp {code:GetRedPassword}; Check: CheckCallConfigurator

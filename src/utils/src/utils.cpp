@@ -44,7 +44,7 @@ std::string to_string(const std::wstring& wstr)
 
 std::string random_string(size_t length)
 {
-    srand(time(NULL));
+    srand(static_cast<unsigned int>(time(NULL)));
     auto randchar = []() -> char
     {
         const char charset[] =

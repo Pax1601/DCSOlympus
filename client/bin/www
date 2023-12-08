@@ -112,5 +112,5 @@ function onListening() {
   debug('Listening on ' + bind);
 }
 
-console.log("DCS Olympus server v0.4.12-alpha-rc4 started correctly!")
+console.log("DCS Olympus server v0.4.13-alpha-rc5 started correctly!")
 console.log("Waiting for connections...")
