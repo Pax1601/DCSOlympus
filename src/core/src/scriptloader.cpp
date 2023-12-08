@@ -42,4 +42,5 @@ void registerLuaFunctions(lua_State* L)
     executeLuaScript(L, instancePath + "..\\Scripts\\OlympusCommand.lua");
     executeLuaScript(L, instancePath + "..\\Scripts\\unitPayloads.lua");
     executeLuaScript(L, instancePath + "..\\Scripts\\templates.lua");
+    executeLuaScript(L, instancePath + "..\\Scripts\\mods.lua");
 }

@@ -984,10 +984,16 @@ function Olympus.setUnitsData(arg, time)
 						table["category"] = "GroundUnit"
 					elseif unit:getDesc().category == Unit.Category.SHIP then
 						table["category"] = "NavyUnit"
+					elseif Olympus.modsList ~= nil and Olympus.modsList[unit:getDesc().typeName] ~= nil then
+						table["category"] = Olympus.modsList[unit:getDesc().typeName]
 					end
 				else
-					units[ID] = {isAlive = false}
-					Olympus.units[ID] = nil
+					if Olympus.modsList ~= nil and Olympus.modsList[unit:getDesc().typeName] ~= nil then
+						table["category"] = Olympus.modsList[unit:getDesc().typeName]
+					else
+						units[ID] = {isAlive = false}
+						Olympus.units[ID] = nil
+					end
 				end
 
 				-- If the category is handled by Olympus, get the data

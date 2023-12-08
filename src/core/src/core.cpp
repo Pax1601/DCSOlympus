@@ -59,6 +59,9 @@ extern "C" DllExport int coreInit(lua_State* L, const char* path)
     log("Initializing core.dll with instance path " + instancePath);
 
     sessionHash = random_string(16);
+
+    log("Random session hash " + sessionHash);
+
     unitsManager = new UnitsManager(L);
     weaponsManager = new WeaponsManager(L);
     server = new Server(L);
