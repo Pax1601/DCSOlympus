@@ -40,12 +40,14 @@ local lfs = require('lfs')
 -- Print a debug message if the debug option is true
 function Olympus.debug(message, displayFor)
 	if debug == true then
+		Olympus.log:info(message)
     	trigger.action.outText(message, displayFor)
 	end
 end
 
 -- Print a notify message
 function Olympus.notify(message, displayFor)
+	Olympus.log:info(message)
     trigger.action.outText(message, displayFor)
 end
 

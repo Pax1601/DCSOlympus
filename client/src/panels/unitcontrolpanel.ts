@@ -9,6 +9,7 @@ import { ROEDescriptions, ROEs, altitudeIncrements, emissionsCountermeasures, em
 import { ftToM, knotsToMs, mToFt, msToKnots } from "../other/utils";
 import { GeneralSettings, Radio, TACAN } from "../interfaces";
 import { ContextActionSet } from "../unit/contextactionset";
+import { Popup } from "../popups/popup";
 
 export class UnitControlPanel extends Panel {
     #altitudeSlider: Slider;
@@ -97,6 +98,8 @@ export class UnitControlPanel extends Panel {
         /* Follow roads switch */
         this.#followRoadsSwitch = new Switch("follow-roads-switch", (value: boolean) => {
             getApp().getUnitsManager().setFollowRoads(value);
+            if (value) 
+                (getApp().getPopupsManager().get("infoPopup") as Popup).setText("Warning: follow roads movements can cause lag");
         });
 
         /* Operate as */
