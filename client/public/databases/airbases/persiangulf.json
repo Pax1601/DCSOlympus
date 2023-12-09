@@ -1,20 +1,19 @@
 {
   "airfields": {
-    "Abu_Dhabi_International_Airport": {
-      "ICAO": "OMAA",
+    "Abu Dhabi Intl": {
       "elevation": "92",
-      "TACAN": "",
+      "ICAO": "OMAA",
       "runways": [
         {
           "headings": [
             {
               "13L": {
-                "magHeading": "127",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "127"
               },
               "31R": {
-                "magHeading": "307",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "307"
               }
             }
           ],
@@ -24,78 +23,78 @@
           "headings": [
             {
               "13R": {
-                "magHeading": "127",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "127"
               },
               "31L": {
-                "magHeading": "307",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "307"
               }
             }
           ],
           "length": "13200"
         }
-      ]
+      ],
+      "TACAN": ""
     },
-    "Ai_Ain_International_Airport": {
-      "ICAO": "OMAL",
-      "elevation": "814",
-      "TACAN": "",
-      "runways": [
-        {
-          "headings": [
-            {
-              "19": {
-                "magHeading": "186",
-                "ILS": ""
-              },
-              "01": {
-                "magHeading": "006",
-                "ILS": ""
-              }
-            }
-          ],
-          "length": "12800"
-        }
-      ]
-    },
-    "abu_musa_airport": {
-      "ICAO": "OIBA",
+    "Abu Musa Island": {
       "elevation": "16",
-      "TACAN": "",
+      "ICAO": "OIBA",
       "runways": [
         {
           "headings": [
             {
               "26": {
-                "magHeading": "262",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "262"
               },
               "08": {
-                "magHeading": "082",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "082"
               }
             }
           ],
           "length": "7800"
         }
-      ]
+      ],
+      "TACAN": ""
     },
-    "Dhafra_AFB": {
-      "ICAO": "OMAM",
+    "Al Ain Intl": {
+      "elevation": "814",
+      "ICAO": "OMAL",
+      "runways": [
+        {
+          "headings": [
+            {
+              "19": {
+                "ILS": "",
+                "magHeading": "186"
+              },
+              "01": {
+                "ILS": "",
+                "magHeading": "006"
+              }
+            }
+          ],
+          "length": "12800"
+        }
+      ],
+      "TACAN": ""
+    },
+    "Al Dhafra AFB": {
       "elevation": "52",
-      "TACAN": "96X",
+      "ICAO": "OMAM",
       "runways": [
         {
           "headings": [
             {
               "13L": {
-                "magHeading": "126",
-                "ILS": "111.10"
+                "ILS": "111.10",
+                "magHeading": "126"
               },
               "31R": {
-                "magHeading": "306",
-                "ILS": "109.10"
+                "ILS": "109.10",
+                "magHeading": "306"
               }
             }
           ],
@@ -105,100 +104,100 @@
           "headings": [
             {
               "13R": {
-                "magHeading": "16",
-                "ILS": "108.70"
+                "ILS": "108.70",
+                "magHeading": "16"
               },
               "31L": {
-                "magHeading": "306",
-                "ILS": "108.70"
+                "ILS": "108.70",
+                "magHeading": "306"
               }
             }
           ],
           "length": "11700"
         }
-      ]
+      ],
+      "TACAN": "96X"
     },
-    "Al_Maktoum_International_Airport": {
-      "ICAO": "OMDW",
+    "Al Maktoum Intl": {
       "elevation": "125",
-      "TACAN": "",
+      "ICAO": "OMDW",
       "runways": [
         {
           "headings": [
             {
               "12": {
-                "magHeading": "120",
-                "ILS": "111.75"
+                "ILS": "111.75",
+                "magHeading": "120"
               },
               "30": {
-                "magHeading": "300",
-                "ILS": "109.75"
+                "ILS": "109.75",
+                "magHeading": "300"
               }
             }
           ],
           "length": "14400"
         }
-      ]
+      ],
+      "TACAN": ""
     },
-    "Minhad_AFB": {
-      "ICAO": "OMDM",
+    "Al Minhad AFB": {
       "elevation": "190",
-      "TACAN": "99X",
+      "ICAO": "OMDM",
       "runways": [
         {
           "headings": [
             {
               "27": {
-                "magHeading": "268",
-                "ILS": "110.75"
+                "ILS": "110.75",
+                "magHeading": "268"
               },
               "09": {
-                "magHeading": "088",
-                "ILS": "110.70"
+                "ILS": "110.70",
+                "magHeading": "088"
               }
             }
           ],
           "length": "12600"
         }
-      ]
+      ],
+      "TACAN": "99X"
     },
-    "Al_Bateen_Airport": {
-      "ICAO": "OMAD",
+    "Al-Bateen": {
       "elevation": "12",
-      "TACAN": "",
+      "ICAO": "OMAD",
       "runways": [
         {
           "headings": [
             {
               "13": {
-                "magHeading": "127",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "127"
               },
               "31": {
-                "magHeading": "307",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "307"
               }
             }
           ],
           "length": "7000"
         }
-      ]
+      ],
+      "TACAN": ""
     },
-    "Bandar_Abbas_airfield": {
-      "ICAO": "OIKB",
+    "Bandar Abbas Intl": {
       "elevation": "29",
-      "TACAN": "78X",
+      "ICAO": "OIKB",
       "runways": [
         {
           "headings": [
             {
               "03L": {
-                "magHeading": "25",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "25"
               },
               "21R": {
-                "magHeading": "205",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "205"
               }
             }
           ],
@@ -208,78 +207,78 @@
           "headings": [
             {
               "03R": {
-                "magHeading": "25",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "25"
               },
               "21L": {
-                "magHeading": "205",
-                "ILS": "109.90"
+                "ILS": "109.90",
+                "magHeading": "205"
               }
             }
           ],
           "length": "11700"
         }
-      ]
+      ],
+      "TACAN": "78X"
     },
-    "Bandar_Lengeh_Airport": {
-      "ICAO": "OIBL",
+    "Bandar Lengeh": {
       "elevation": "82",
-      "TACAN": "",
+      "ICAO": "OIBL",
       "runways": [
         {
           "headings": [
             {
               "26": {
-                "magHeading": "259",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "259"
               },
               "08": {
-                "magHeading": "079",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "079"
               }
             }
           ],
           "length": "7900"
         }
-      ]
+      ],
+      "TACAN": ""
     },
-    "Bandar_e_Jask_airfield": {
-      "ICAO": "OIZJ",
+    "Bandar-e-Jask": {
       "elevation": "26",
-      "TACAN": "110X",
+      "ICAO": "OIZJ",
       "runways": [
         {
           "headings": [
             {
               "24": {
-                "magHeading": "239",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "239"
               },
               "06": {
-                "magHeading": "059",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "059"
               }
             }
           ],
           "length": "7300"
         }
-      ]
+      ],
+      "TACAN": "110X"
     },
-    "Dubai_International_Airport": {
-      "ICAO": "OMDB",
+    "Dubai Intl": {
       "elevation": "16",
-      "TACAN": "",
+      "ICAO": "OMDB",
       "runways": [
         {
           "headings": [
             {
               "12L": {
-                "magHeading": "120",
-                "ILS": "110.10"
+                "ILS": "110.10",
+                "magHeading": "120"
               },
               "30R": {
-                "magHeading": "300",
-                "ILS": "110.90"
+                "ILS": "110.90",
+                "magHeading": "300"
               }
             }
           ],
@@ -289,144 +288,144 @@
           "headings": [
             {
               "12R": {
-                "magHeading": "120",
-                "ILS": "109.50"
+                "ILS": "109.50",
+                "magHeading": "120"
               },
               "30L": {
-                "magHeading": "300",
-                "ILS": "111.30"
+                "ILS": "111.30",
+                "magHeading": "300"
               }
             }
           ],
           "length": "11400"
         }
-      ]
+      ],
+      "TACAN": ""
     },
-    "Fujarirah_AFB": {
-      "ICAO": "OMFJ",
+    "Fujairah Intl": {
       "elevation": "121",
-      "TACAN": "",
+      "ICAO": "OMFJ",
       "runways": [
         {
           "headings": [
             {
               "11": {
-                "magHeading": "111",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "111"
               },
               "29": {
-                "magHeading": "291",
-                "ILS": "111.50"
+                "ILS": "111.50",
+                "magHeading": "291"
               }
             }
           ],
           "length": "9700"
         }
-      ]
+      ],
+      "TACAN": ""
     },
-    "Havadarya_AFB": {
-      "ICAO": "OIKP",
+    "Havadarya": {
       "elevation": "52",
-      "TACAN": "47X",
+      "ICAO": "OIKP",
       "runways": [
         {
           "headings": [
             {
               "26": {
-                "magHeading": "257",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "257"
               },
               "08": {
-                "magHeading": "077",
-                "ILS": "108.90"
+                "ILS": "108.90",
+                "magHeading": "077"
               }
             }
           ],
           "length": "7200"
         }
-      ]
+      ],
+      "TACAN": "47X"
     },
-    "Jiroft_airfield": {
-      "ICAO": "OIKJ",
+    "Jiroft": {
       "elevation": "2664",
-      "TACAN": "",
+      "ICAO": "OIKJ",
       "runways": [
         {
           "headings": [
             {
               "13": {
-                "magHeading": "125",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "125"
               },
               "31": {
-                "magHeading": "305",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "305"
               }
             }
           ],
           "length": "9600"
         }
-      ]
+      ],
+      "TACAN": ""
     },
-    "Kerman_AFB": {
-      "ICAO": "OIKK",
+    "Kerman": {
       "elevation": "5745",
-      "TACAN": "97X",
+      "ICAO": "OIKK",
       "runways": [
         {
           "headings": [
             {
               "16": {
-                "magHeading": "155",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "155"
               },
               "34": {
-                "magHeading": "335",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "335"
               }
             }
           ],
           "length": "12400"
         }
-      ]
+      ],
+      "TACAN": "97X"
     },
-    "Khasab_AFB": {
-      "ICAO": "OOKB",
+    "Khasab": {
       "elevation": "102",
-      "TACAN": "",
+      "ICAO": "OOKB",
       "runways": [
         {
           "headings": [
             {
               "19": {
-                "magHeading": "192",
-                "ILS": "110.30"
+                "ILS": "110.30",
+                "magHeading": "192"
               },
               "01": {
-                "magHeading": "012",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "012"
               }
             }
           ],
           "length": "8000"
         }
-      ]
+      ],
+      "TACAN": ""
     },
-    "Kish_International_Airport": {
-      "ICAO": "OIBK",
+    "Kish Intl": {
       "elevation": "115",
-      "TACAN": "112X",
+      "ICAO": "OIBK",
       "runways": [
         {
           "headings": [
             {
               "10": {
-                "magHeading": "094",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "094"
               },
               "28": {
-                "magHeading": "274",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "274"
               }
             }
           ],
@@ -436,166 +435,188 @@
           "headings": [
             {
               "09R": {
-                "magHeading": "094",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "094"
               },
               "27L": {
-                "magHeading": "274",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "274"
               }
             }
           ],
           "length": "11700"
         }
-      ]
+      ],
+      "TACAN": "112X"
     },
-    "Lar_airbase": {
-      "ICAO": "OISL",
+    "Lar": {
       "elevation": "2635",
-      "TACAN": "",
+      "ICAO": "OISL",
       "runways": [
         {
           "headings": [
             {
               "27": {
-                "magHeading": "268",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "268"
               },
               "09": {
-                "magHeading": "088",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "088"
               }
             }
           ],
           "length": "10100"
         }
-      ]
+      ],
+      "TACAN": ""
     },
-    "Lavan_Island_Airport": {
-      "ICAO": "OIBV",
+    "Lavan Island": {
       "elevation": "75",
-      "TACAN": "",
+      "ICAO": "OIBV",
       "runways": [
         {
           "headings": [
             {
               "11": {
-                "magHeading": "110",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "110"
               },
               "29": {
-                "magHeading": "290",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "290"
               }
             }
           ],
           "length": "8600"
         }
-      ]
+      ],
+      "TACAN": ""
     },
-    "Liwa_Airbase": {
-      "ICAO": "OMLW",
+    "Liwa AFB": {
       "elevation": "400",
-      "TACAN": "121X",
+      "ICAO": "OMLW",
       "runways": [
         {
           "headings": [
             {
               "13": {
-                "magHeading": "130",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "130"
               },
               "31": {
-                "magHeading": "310",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "310"
               }
             }
           ],
           "length": "11600"
         }
-      ]
+      ],
+      "TACAN": "121X"
     },
-    "Qeshm_Airport": {
-      "ICAO": "OIKQ",
+    "Qeshm Island": {
       "elevation": "26",
-      "TACAN": "",
+      "ICAO": "OIKQ",
       "runways": [
         {
           "headings": [
             {
               "23": {
-                "magHeading": "227",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "227"
               },
               "05": {
-                "magHeading": "047",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "047"
               }
             }
           ],
           "length": "13600"
         }
-      ]
+      ],
+      "TACAN": ""
     },
-    "Ras_Ai_Khaimah_International_Airport": {
-      "ICAO": "OMRK",
+    "Quasoura_airport": {
+      "elevation": "26",
+      "ICAO": "OIKQ",
+      "runways": [
+        {
+          "headings": [
+            {
+              "23": {
+                "ILS": "",
+                "magHeading": "227"
+              },
+              "05": {
+                "ILS": "",
+                "magHeading": "047"
+              }
+            }
+          ],
+          "length": "13600"
+        }
+      ],
+      "TACAN": ""
+    },
+    "Ras Al Khaimah Intl": {
       "elevation": "330",
-      "TACAN": "",
+      "ICAO": "OMRK",
       "runways": [
         {
           "headings": [
             {
               "17": {
-                "magHeading": "163",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "163"
               },
               "35": {
-                "magHeading": "343",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "343"
               }
             }
           ],
           "length": "12000"
         }
-      ]
+      ],
+      "TACAN": ""
     },
-    "Sas_Ai_Nakheel_Airport": {
-      "ICAO": "OMNK",
+    "Sas Al Nakheel": {
       "elevation": "10",
-      "TACAN": "",
+      "ICAO": "OMNK",
       "runways": [
         {
           "headings": [
             {
               "16": {
-                "magHeading": "160",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "160"
               },
               "34": {
-                "magHeading": "340",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "340"
               }
             }
           ],
           "length": "6000"
         }
-      ]
+      ],
+      "TACAN": ""
     },
-    "Sharjah_International_Airport": {
-      "ICAO": "OMSJ",
+    "Sharjah Intl": {
       "elevation": "26",
-      "TACAN": "",
+      "ICAO": "OMSJ",
       "runways": [
         {
           "headings": [
             {
               "12L": {
-                "magHeading": "121",
-                "ILS": "108.55"
+                "ILS": "108.55",
+                "magHeading": "121"
               },
               "30R": {
-                "magHeading": "301",
-                "ILS": "111.95"
+                "ILS": "111.95",
+                "magHeading": "301"
               }
             }
           ],
@@ -605,34 +626,34 @@
           "headings": [
             {
               "12R": {
-                "magHeading": "121",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "121"
               },
               "30L": {
-                "magHeading": "301",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "301"
               }
             }
           ],
           "length": "10500"
         }
-      ]
+      ],
+      "TACAN": ""
     },
-    "Shiraz_AFB": {
-      "ICAO": "OISS",
+    "Shiraz Intl": {
       "elevation": "4879",
-      "TACAN": "94X",
+      "ICAO": "OISS",
       "runways": [
         {
           "headings": [
             {
               "11L": {
-                "magHeading": "113",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "113"
               },
               "29R": {
-                "magHeading": "293",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "293"
               }
             }
           ],
@@ -642,106 +663,107 @@
           "headings": [
             {
               "11R": {
-                "magHeading": "113",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "113"
               },
               "29L": {
-                "magHeading": "293",
-                "ILS": "108.50"
+                "ILS": "108.50",
+                "magHeading": "293"
               }
             }
           ],
           "length": "13800"
         }
-      ]
+      ],
+      "TACAN": "94X"
     },
-    "Sir_Abu_Nuayr": {
-      "ICAO": "OMSN",
+    "Sir Abu Nuayr": {
       "elevation": "26",
-      "TACAN": "",
+      "ICAO": "OMSN",
       "runways": [
         {
           "headings": [
             {
               "10": {
-                "magHeading": "097",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "097"
               },
               "28": {
-                "magHeading": "277",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "277"
               }
             }
           ],
           "length": "2300"
         }
-      ]
+      ],
+      "TACAN": ""
     },
-    "Sirri_Island_AFB": {
-      "ICAO": "OIBS",
+    "Sirri Island": {
       "elevation": "20",
-      "TACAN": "",
+      "ICAO": "OIBS",
       "runways": [
         {
           "headings": [
             {
               "12": {
-                "magHeading": "125",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "125"
               },
               "30": {
-                "magHeading": "305",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "305"
               }
             }
           ],
           "length": "7900"
         }
-      ]
+      ],
+      "TACAN": ""
     },
-    "Tunb_Islab_AFB": {
-      "ICAO": "OIGI",
+    "Tunb Island AFB": {
       "elevation": "43",
-      "TACAN": "",
+      "ICAO": "OIGI",
       "runways": [
         {
           "headings": [
             {
               "21": {
-                "magHeading": "205",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "205"
               },
               "03": {
-                "magHeading": "025",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "025"
               }
             }
           ],
           "length": "6200"
         }
-      ]
+      ],
+      "TACAN": ""
     },
-    "Tonb_e_Kochak_Airport": {
-      "ICAO": "OITK",
+    "Tunb Kochak": {
       "elevation": "16",
-      "TACAN": "89X",
+      "ICAO": "OITK",
       "runways": [
         {
           "headings": [
             {
               "26": {
-                "magHeading": "259",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "259"
               },
               "08": {
-                "magHeading": "079",
-                "ILS": ""
+                "ILS": "",
+                "magHeading": "079"
               }
             }
           ],
           "length": "2500"
         }
-      ]
+      ],
+      "TACAN": "89X"
     }
   }
 }
