@@ -1724,5 +1724,25 @@
 		"abilities": "",
 		"canTargetPoint": true,
 		"canRearm": false
+	},
+	"BDK-775": {
+		"name": "BDK-775",
+		"coalition": "",
+		"era": "Late Cold War",
+		"label": "LS Ropucha",
+		"shortLabel": "LS Ropucha",
+		"type": "Cargo/Transport",
+		"enabled": true,
+		"liveries": {}
+	},
+	"VINSON": {
+		"name": "VINSON",
+		"coalition": "",
+		"era": "",
+		"label": "Do not enable - CVN-70 Carl Vinson - Very legacy, invisible unit ",
+		"shortLabel": "CVN-70 Carl Vinson",
+		"type": "Bugged",
+		"enabled": false,
+		"liveries": {}
 	}
 }
