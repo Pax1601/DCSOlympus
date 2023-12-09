@@ -4944,14 +4944,6 @@
 					"NZG"
 				]
 			},
-			"bf-109 k4 dogfight red": {
-				"name": "RED",
-				"countries": "All"
-			},
-			"bf-109 k4 dogfight blue": {
-				"name": "BLUE",
-				"countries": "All"
-			},
 			"bf-109 k4 red7 eads": {
 				"name": "BF109G4 -red7- EADS -fondation messerschmitt V2",
 				"countries": [
