@@ -6,7 +6,7 @@ from slpp import slpp as lua
 
 SEARCH_FOLDER = "D:\\Eagle Dynamics\\DCS World OpenBeta"
 
-sys.path.append("D:\\Documents\\dcs")
+sys.path.append("..\\..\\..\\dcs-master\\dcs-master")
 
 from dcs.vehicles import *
 from dcs.ships import *
@@ -29,7 +29,7 @@ if len(sys.argv) > 1:
         units_map = ship_map 
 
     # Loads the database 
-    with open(filename) as f:
+    with open(filename, encoding="utf-8") as f:
         database = json.load(f)
 
     for unit in units_map.values():
@@ -41,7 +41,7 @@ if len(sys.argv) > 1:
                 "label": unit.name,
                 "shortLabel": unit.name,
                 "type": unit.__qualname__.split(".")[0],
-                "enabled": True,
+                "enabled": False,
                 "liveries": {}
             }
             print("Added missing unit " + unit.id)

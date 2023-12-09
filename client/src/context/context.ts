@@ -7,19 +7,18 @@ export interface ContextInterface {
 }
 
 export class Context {
+    #allowUnitCopying: boolean;
+    #allowUnitPasting: boolean;
+    #useSpawnMenu: boolean;
+    #useUnitControlPanel: boolean;
+    #useUnitInfoPanel: boolean;
 
-    #allowUnitCopying:boolean;
-    #allowUnitPasting:boolean;
-    #useSpawnMenu:boolean;
-    #useUnitControlPanel:boolean;
-    #useUnitInfoPanel:boolean;
-
-    constructor( config:ContextInterface ) {
-        this.#allowUnitCopying    = ( config.allowUnitCopying !== false );
-        this.#allowUnitPasting    = ( config.allowUnitPasting !== false );
-        this.#useSpawnMenu        = ( config.useSpawnMenu !== false );
-        this.#useUnitControlPanel = ( config.useUnitControlPanel !== false );
-        this.#useUnitInfoPanel    = ( config.useUnitInfoPanel !== false );
+    constructor(config: ContextInterface) {
+        this.#allowUnitCopying = (config.allowUnitCopying !== false);
+        this.#allowUnitPasting = (config.allowUnitPasting !== false);
+        this.#useSpawnMenu = (config.useSpawnMenu !== false);
+        this.#useUnitControlPanel = (config.useUnitControlPanel !== false);
+        this.#useUnitInfoPanel = (config.useUnitInfoPanel !== false);
     }
 
     getAllowUnitCopying() {

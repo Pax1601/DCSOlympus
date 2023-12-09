@@ -1196,7 +1196,7 @@ export class UnitsManager {
             return;
 
         if (units === null)
-            units = this.getSelectedUnits({ excludeHumans: true });
+            units = this.getSelectedUnits();
 
         if (units.length === 0)
             return;
