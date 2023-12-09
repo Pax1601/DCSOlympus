@@ -56,6 +56,18 @@
 	font-weight: bold;
 }
 
+#unit-group {
+	border-radius: var(--border-radius-md);
+	margin-top: auto;
+	padding: 6px 16px;
+	background-color: var(--secondary-light-grey);
+}
+
+#unit-group::after {
+	content: attr(data-group-name);
+	display: block;
+}
+
 #unit-control {
 	color: var(--secondary-lighter-grey);
 	font-weight: bold;

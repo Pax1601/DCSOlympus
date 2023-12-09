@@ -960,6 +960,10 @@ function Olympus.setOnOff(groupName, onOff)
 	end
 end
 
+function getUnitDescription(unit) 
+	return unit:getDescr()
+end
+
 -- This function is periodically called to collect the data of all the existing units in the mission to be transmitted to the olympus.dll
 function Olympus.setUnitsData(arg, time)
 	-- Units data
@@ -990,8 +994,9 @@ function Olympus.setUnitsData(arg, time)
 						table["category"] = Olympus.modsList[unit:getDesc().typeName]
 					end
 				else
-					if Olympus.modsList ~= nil and Olympus.modsList[unit:getDesc().typeName] ~= nil then
-						table["category"] = Olympus.modsList[unit:getDesc().typeName]
+					local status, description = pcall(getUnitDescription, unit)
+					if status and Olympus.modsList ~= nil and Olympus.modsList[description.typeName] ~= nil then
+						table["category"] = Olympus.modsList[description.typeName]
 					else
 						units[ID] = {isAlive = false}
 						Olympus.units[ID] = nil
@@ -1019,12 +1024,16 @@ function Olympus.setUnitsData(arg, time)
 					table["heading"] = heading 
 
 					-- Track angles are wrong because of weird reference systems, approximate it using latitude and longitude differences
-					if Olympus.unitsData["units"] ~= nil and Olympus.unitsData["units"][ID] ~= nil and Olympus.unitsData["units"][ID]["position"] ~= nil and Olympus.unitsData["units"][ID]["position"]["lat"] ~= nil and Olympus.unitsData["units"][ID]["position"]["lng"] ~= nil then
-						local latDifference = lat - Olympus.unitsData["units"][ID]["position"]["lat"]
-						local lngDifference = lng - Olympus.unitsData["units"][ID]["position"]["lng"]
-						table["track"] = math.atan2(lngDifference * math.cos(lat / 57.29577), latDifference)
+					if (table["horizontalVelocity"] > 1) then
+						if Olympus.unitsData["units"] ~= nil and Olympus.unitsData["units"][ID] ~= nil and Olympus.unitsData["units"][ID]["position"] ~= nil and Olympus.unitsData["units"][ID]["position"]["lat"] ~= nil and Olympus.unitsData["units"][ID]["position"]["lng"] ~= nil then
+							local latDifference = lat - Olympus.unitsData["units"][ID]["position"]["lat"]
+							local lngDifference = lng - Olympus.unitsData["units"][ID]["position"]["lng"]
+							table["track"] = math.atan2(lngDifference * math.cos(lat / 57.29577), latDifference)
+						else
+							table["track"] = math.atan2(velocity.z, velocity.x)
+						end
 					else
-						table["track"] = math.atan2(velocity.z, velocity.x)
+						table["track"] = table["heading"]
 					end
 
 					table["isAlive"] = unit:isExist() and unit:isActive() and unit:getLife() >= 1
@@ -1060,7 +1069,11 @@ function Olympus.setUnitsData(arg, time)
 							end
 							
 							table["country"] = unit:getCountry()
-							table["unitName"] = unit:getName()
+							if unit:getPlayerName() ~= nil then
+								table["unitName"] = unit:getPlayerName()
+							else
+								table["unitName"] = unit:getName()
+							end
 							table["groupName"] = group:getName()
 							table["isHuman"] = (unit:getPlayerName() ~= nil)
 							table["hasTask"] = controller:hasTask()

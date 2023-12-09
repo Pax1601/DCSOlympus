@@ -12,6 +12,7 @@ export class UnitInfoPanel extends Panel {
     #silhouette: HTMLImageElement;
     #unitControl: HTMLElement;
     #unitLabel: HTMLElement;
+    #unitGroup: HTMLElement;
     #unitName: HTMLElement;
 
     constructor(ID: string) {
@@ -24,6 +25,7 @@ export class UnitInfoPanel extends Panel {
         this.#silhouette = (this.getElement().querySelector("#loadout-silhouette")) as HTMLImageElement;
         this.#unitControl = (this.getElement().querySelector("#unit-control")) as HTMLElement;
         this.#unitLabel = (this.getElement().querySelector("#unit-label")) as HTMLElement;
+        this.#unitGroup = (this.getElement().querySelector("#unit-group")) as HTMLElement;
         this.#unitName = (this.getElement().querySelector("#unit-name")) as HTMLElement;
 
         document.addEventListener("unitsSelection", (e: CustomEvent<Unit[]>) => this.#onUnitsSelection(e.detail));
@@ -39,6 +41,7 @@ export class UnitInfoPanel extends Panel {
 
             /* Set the unit info */
             this.#unitLabel.innerText = aircraftDatabase.getByName(unit.getName())?.label || unit.getName();
+            this.#unitGroup.dataset.groupName = unit.getGroup()?.getName() ?? "No group";
             this.#unitName.innerText = unit.getUnitName();
             if (unit.getHuman())
                 this.#unitControl.innerText = "Human";
@@ -51,8 +54,10 @@ export class UnitInfoPanel extends Panel {
             this.#currentTask.dataset.currentTask = unit.getTask() !== "" ? unit.getTask() : "No task";
             this.#currentTask.dataset.coalition = unit.getCoalition();
 
-            this.#silhouette.src = `/images/units/${unit.getDatabase()?.getByName(unit.getName())?.filename}`;
-            this.#silhouette.classList.toggle("hide", unit.getDatabase()?.getByName(unit.getName())?.filename == undefined || unit.getDatabase()?.getByName(unit.getName())?.filename == '');
+            const filename = unit.getDatabase()?.getByName(unit.getName())?.filename;
+            if (filename)
+                this.#silhouette.src = `/images/units/${filename}`;
+            this.#silhouette.classList.toggle("hide", filename == undefined || filename == '');
 
             /* Add the loadout elements */
             const items = this.#loadoutContainer.querySelector("#loadout-items") as HTMLElement;
