@@ -32600,90 +32600,90 @@
 		"enabled": true,
 		"liveries": {
 			"441 9g-q": {
-			  "name": "441 RCAF 9G-Q",
-			  "countries": [
-				"CAN",
-				"UK"
-			  ]
+				"name": "441 RCAF 9G-Q",
+				"countries": [
+					"CAN",
+					"UK"
+				]
 			},
 			"ussr 26th gviap, pvo": {
-			  "name": "USSR 26th GvIAP, PVO",
-			  "countries": [
-				"RUS",
-				"SUN"
-			  ]
+				"name": "USSR 26th GvIAP, PVO",
+				"countries": [
+					"RUS",
+					"SUN"
+				]
 			},
 			"raf standard": {
-			  "name": "RAF standard",
-			  "countries": [
-				"UK"
-			  ]
+				"name": "RAF standard",
+				"countries": [
+					"UK"
+				]
 			},
 			"ussr_3rd_ae_57th_gviap": {
-			  "name": "USSR 3rd AE, 57th GvIAP",
-			  "countries": [
-				"RUS",
-				"SUN"
-			  ]
+				"name": "USSR 3rd AE, 57th GvIAP",
+				"countries": [
+					"RUS",
+					"SUN"
+				]
 			},
 			"raf 2 taf, sept 1944": {
-			  "name": "RAF, 2nd Tactical Air Force, September 1944",
-			  "countries": [
-				"UK"
-			  ]
+				"name": "RAF, 2nd Tactical Air Force, September 1944",
+				"countries": [
+					"UK"
+				]
 			},
 			"ussr spitfire 57th gviap": {
-			  "name": "USSR 57th GvIAP",
-			  "countries": [
-				"RUS",
-				"SUN"
-			  ]
+				"name": "USSR 57th GvIAP",
+				"countries": [
+					"RUS",
+					"SUN"
+				]
 			},
 			"raf 2 taf, july 1944": {
-			  "name": "RAF, 2nd Tactical Air Force, July 1944",
-			  "countries": [
-				"UK"
-			  ]
+				"name": "RAF, 2nd Tactical Air Force, July 1944",
+				"countries": [
+					"UK"
+				]
 			},
 			"raf, no. 16 squadron": {
-			  "name": "RAF, No.16 Squadron",
-			  "countries": [
-				"UK"
-			  ]
+				"name": "RAF, No.16 Squadron",
+				"countries": [
+					"UK"
+				]
 			},
 			"ussr pilot lt. col. v. a. matsiyevitch, 26th gviap": {
-			  "name": "USSR Lt.Col. V.A. Matsiyevitch, 26th GvIAP",
-			  "countries": [
-				"RUS",
-				"SUN"
-			  ]
+				"name": "USSR Lt.Col. V.A. Matsiyevitch, 26th GvIAP",
+				"countries": [
+					"RUS",
+					"SUN"
+				]
 			},
 			"raf, no. 126 squadron, harrowbeer": {
-			  "name": "RAF, No.126 Squadron",
-			  "countries": [
-				"UK"
-			  ]
+				"name": "RAF, No.126 Squadron",
+				"countries": [
+					"UK"
+				]
 			},
 			"raf 2 taf, june 1944": {
-			  "name": "RAF, 2nd Tactical Air Force, June 1944",
-			  "countries": [
-				"UK"
-			  ]
+				"name": "RAF, 2nd Tactical Air Force, June 1944",
+				"countries": [
+					"UK"
+				]
 			},
 			"403 rcaf beurling": {
-			  "name": "403 RCAF Beurling",
-			  "countries": [
-				"CAN",
-				"UK"
-			  ]
+				"name": "403 RCAF Beurling",
+				"countries": [
+					"CAN",
+					"UK"
+				]
 			},
 			"raf, no. 145 squadron": {
-			  "name": "RAF, No.145 Squadron",
-			  "countries": [
-				"UK"
-			  ]
+				"name": "RAF, No.145 Squadron",
+				"countries": [
+					"UK"
+				]
 			}
-		  },
+		},
 		"filename": "spitfire.png",
 		"description": "Single propellor, straight wing, 1 crew. Spitfire."
 	},
@@ -32769,95 +32769,96 @@
 					"Antiship Strike",
 					"Strike"
 				]
-			}],
+			}
+		],
 		"type": "SpitfireLFMkIXCW",
 		"enabled": true,
 		"liveries": {
 			"441 9g-q": {
-			  "name": "441 RCAF 9G-Q",
-			  "countries": [
-				"CAN",
-				"UK"
-			  ]
+				"name": "441 RCAF 9G-Q",
+				"countries": [
+					"CAN",
+					"UK"
+				]
 			},
 			"ussr 26th gviap, pvo": {
-			  "name": "USSR 26th GvIAP, PVO",
-			  "countries": [
-				"RUS",
-				"SUN"
-			  ]
+				"name": "USSR 26th GvIAP, PVO",
+				"countries": [
+					"RUS",
+					"SUN"
+				]
 			},
 			"raf standard": {
-			  "name": "RAF standard",
-			  "countries": [
-				"UK"
-			  ]
+				"name": "RAF standard",
+				"countries": [
+					"UK"
+				]
 			},
 			"ussr_3rd_ae_57th_gviap": {
-			  "name": "USSR 3rd AE, 57th GvIAP",
-			  "countries": [
-				"RUS",
-				"SUN"
-			  ]
+				"name": "USSR 3rd AE, 57th GvIAP",
+				"countries": [
+					"RUS",
+					"SUN"
+				]
 			},
 			"raf 2 taf, sept 1944": {
-			  "name": "RAF, 2nd Tactical Air Force, September 1944",
-			  "countries": [
-				"UK"
-			  ]
+				"name": "RAF, 2nd Tactical Air Force, September 1944",
+				"countries": [
+					"UK"
+				]
 			},
 			"ussr spitfire 57th gviap": {
-			  "name": "USSR 57th GvIAP",
-			  "countries": [
-				"RUS",
-				"SUN"
-			  ]
+				"name": "USSR 57th GvIAP",
+				"countries": [
+					"RUS",
+					"SUN"
+				]
 			},
 			"raf 2 taf, july 1944": {
-			  "name": "RAF, 2nd Tactical Air Force, July 1944",
-			  "countries": [
-				"UK"
-			  ]
+				"name": "RAF, 2nd Tactical Air Force, July 1944",
+				"countries": [
+					"UK"
+				]
 			},
 			"raf, no. 16 squadron": {
-			  "name": "RAF, No.16 Squadron",
-			  "countries": [
-				"UK"
-			  ]
+				"name": "RAF, No.16 Squadron",
+				"countries": [
+					"UK"
+				]
 			},
 			"ussr pilot lt. col. v. a. matsiyevitch, 26th gviap": {
-			  "name": "USSR Lt.Col. V.A. Matsiyevitch, 26th GvIAP",
-			  "countries": [
-				"RUS",
-				"SUN"
-			  ]
+				"name": "USSR Lt.Col. V.A. Matsiyevitch, 26th GvIAP",
+				"countries": [
+					"RUS",
+					"SUN"
+				]
 			},
 			"raf, no. 126 squadron, harrowbeer": {
-			  "name": "RAF, No.126 Squadron",
-			  "countries": [
-				"UK"
-			  ]
+				"name": "RAF, No.126 Squadron",
+				"countries": [
+					"UK"
+				]
 			},
 			"raf 2 taf, june 1944": {
-			  "name": "RAF, 2nd Tactical Air Force, June 1944",
-			  "countries": [
-				"UK"
-			  ]
+				"name": "RAF, 2nd Tactical Air Force, June 1944",
+				"countries": [
+					"UK"
+				]
 			},
 			"403 rcaf beurling": {
-			  "name": "403 RCAF Beurling",
-			  "countries": [
-				"CAN",
-				"UK"
-			  ]
+				"name": "403 RCAF Beurling",
+				"countries": [
+					"CAN",
+					"UK"
+				]
 			},
 			"raf, no. 145 squadron": {
-			  "name": "RAF, No.145 Squadron",
-			  "countries": [
-				"UK"
-			  ]
+				"name": "RAF, No.145 Squadron",
+				"countries": [
+					"UK"
+				]
 			}
-		  },
+		},
 		"filename": "spitfire.png",
 		"description": "Single propellor, straight wing, 1 crew. Spitfire with clipped wingtips.."
 	},
