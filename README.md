@@ -1,7 +1,14 @@
-# Important note: DCS Olympus is in alpha state. No official release has been produced yet. The first public version is planned for mid december 2023.
+## Important note: DCS Olympus is in alpha state. No official release has been produced yet. The first public version is planned for mid december 2023.
+<img align="left" width="30" src="https://github.com/Pax1601/DCSOlympus/assets/103559271/0ecff279-a87c-4e2d-a4c7-da98c74adf38">
+
+[**Join our Discord**](https://discord.gg/kNAQkhUHnQ)
+
+<img align="left" width="30" src="https://github.com/Pax1601/DCSOlympus/assets/103559271/1c0dd3fd-339c-4b03-94da-3e5215b0358a">
+
+[**YouTube**](https://www.youtube.com/@DCSOlympus)
+
 
 # DCS Olympus
-*A real-time web interface to spawn and control units in DCS World*
 
 ![alt text](https://github.com/Pax1601/DCSOlympus/blob/main/client/sample.png?raw=true)
 
