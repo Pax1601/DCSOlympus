@@ -50,6 +50,8 @@ void NavyUnit::setDefaults(bool force)
 
 void NavyUnit::setState(unsigned char newState)
 {
+	Coords currentTargetPosition = getTargetPosition();
+
 	/************ Perform any action required when LEAVING a state ************/
 	if (newState != state) {
 		switch (state) {
@@ -63,11 +65,10 @@ void NavyUnit::setState(unsigned char newState)
 			setTargetID(NULL);
 			break;
 		}
-		case State::FIRE_AT_AREA: {
-			setTargetPosition(Coords(NULL));
-			break;
-		}
-		case State::SIMULATE_FIRE_FIGHT: {
+		case State::FIRE_AT_AREA:
+		case State::SIMULATE_FIRE_FIGHT:
+		case State::SCENIC_AAA:
+		case State::MISS_ON_PURPOSE: {
 			setTargetPosition(Coords(NULL));
 			break;
 		}
@@ -96,13 +97,27 @@ void NavyUnit::setState(unsigned char newState)
 		break;
 	}
 	case State::FIRE_AT_AREA: {
+		setTargetPosition(currentTargetPosition);
 		setEnableTaskCheckFailed(true);
 		clearActivePath();
 		resetActiveDestination();
 		break;
 	}
 	case State::SIMULATE_FIRE_FIGHT: {
-		setEnableTaskCheckFailed(true);
+		setTargetPosition(currentTargetPosition);
+		setEnableTaskCheckFailed(false);
+		clearActivePath();
+		resetActiveDestination();
+		break;
+	}
+	case State::SCENIC_AAA: {
+		setEnableTaskCheckFailed(false);
+		clearActivePath();
+		resetActiveDestination();
+		break;
+	}
+	case State::MISS_ON_PURPOSE: {
+		setEnableTaskCheckFailed(false);
 		clearActivePath();
 		resetActiveDestination();
 		break;
@@ -124,6 +139,8 @@ void NavyUnit::setState(unsigned char newState)
 
 void NavyUnit::AIloop()
 {
+	srand(static_cast<unsigned int>(time(NULL)) + ID);
+
 	switch (state) {
 	case State::IDLE: {
 		setTask("Idle");

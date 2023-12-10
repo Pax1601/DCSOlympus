@@ -40,6 +40,8 @@ void AirUnit::setDefaults(bool force)
 
 void AirUnit::setState(unsigned char newState)
 {
+	Coords currentTargetPosition = getTargetPosition();
+
 	/************ Perform any action required when LEAVING a state ************/
 	if (newState != state) {
 		switch (state) {
@@ -119,19 +121,10 @@ void AirUnit::setState(unsigned char newState)
 		resetActiveDestination();
 		break;
 	}
-	case State::BOMB_POINT: {
-		setEnableTaskCheckFailed(true);
-		clearActivePath();
-		resetActiveDestination();
-		break;
-	}
-	case State::CARPET_BOMB: {
-		setEnableTaskCheckFailed(true);
-		clearActivePath();
-		resetActiveDestination();
-		break;
-	}
+	case State::BOMB_POINT:
+	case State::CARPET_BOMB:
 	case State::BOMB_BUILDING: {
+		setTargetPosition(currentTargetPosition);
 		setEnableTaskCheckFailed(true);
 		clearActivePath();
 		resetActiveDestination();
@@ -159,6 +152,8 @@ void AirUnit::setState(unsigned char newState)
 
 void AirUnit::AIloop()
 {
+	srand(static_cast<unsigned int>(time(NULL)) + ID);
+
 	/* State machine */
 	switch (state) {
 		case State::IDLE: {

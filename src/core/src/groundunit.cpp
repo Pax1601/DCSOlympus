@@ -53,6 +53,8 @@ void GroundUnit::setDefaults(bool force)
 
 void GroundUnit::setState(unsigned char newState)
 {
+	Coords currentTargetPosition = getTargetPosition();
+
 	/************ Perform any action required when LEAVING a state ************/
 	if (newState != state) {
 		switch (state) {
@@ -66,18 +68,9 @@ void GroundUnit::setState(unsigned char newState)
 			setTargetID(NULL);
 			break;
 		}
-		case State::FIRE_AT_AREA: {
-			setTargetPosition(Coords(NULL));
-			break;
-		}
-		case State::SIMULATE_FIRE_FIGHT: {
-			setTargetPosition(Coords(NULL));
-			break;
-		}
-		case State::SCENIC_AAA: {
-			setTargetPosition(Coords(NULL));
-			break;
-		}
+		case State::FIRE_AT_AREA: 
+		case State::SIMULATE_FIRE_FIGHT: 
+		case State::SCENIC_AAA:
 		case State::MISS_ON_PURPOSE: {
 			setTargetPosition(Coords(NULL));
 			break;
@@ -107,13 +100,15 @@ void GroundUnit::setState(unsigned char newState)
 		break;
 	}
 	case State::FIRE_AT_AREA: {
+		setTargetPosition(currentTargetPosition);
 		setEnableTaskCheckFailed(true);
 		clearActivePath();
 		resetActiveDestination();
 		break;
 	}
 	case State::SIMULATE_FIRE_FIGHT: {
-		setEnableTaskCheckFailed(true);
+		setTargetPosition(currentTargetPosition);
+		setEnableTaskCheckFailed(false);
 		clearActivePath();
 		resetActiveDestination();
 		break;
@@ -147,6 +142,8 @@ void GroundUnit::setState(unsigned char newState)
 
 void GroundUnit::AIloop()
 {
+	srand(static_cast<unsigned int>(time(NULL)) + ID);
+
 	switch (state) {
 	case State::IDLE: {
 		setTask("Idle");
@@ -219,7 +216,7 @@ void GroundUnit::AIloop()
 	case State::SIMULATE_FIRE_FIGHT: {
 		setTask("Simulating fire fight");
 
-		if (internalCounter == 0 && targetPosition != Coords(NULL) && scheduler->getLoad() == 0) {
+		if (internalCounter == 0 && targetPosition != Coords(NULL) && scheduler->getLoad() < 30) {
 			/* Get the distance and bearing to the target */
 			Coords scatteredTargetPosition = targetPosition;
 			double distance;
@@ -232,10 +229,13 @@ void GroundUnit::AIloop()
 			Geodesic::WGS84().Direct(scatteredTargetPosition.lat, scatteredTargetPosition.lng, bearing1 + 90, scatterDistance, scatteredTargetPosition.lat, scatteredTargetPosition.lng);
 			
 			/* Recover the data from the database */
+			double aimTime = 2; /* s */
 			bool indirectFire = false;
 			double shotsBaseInterval = 15; /* s */
 			if (database.has_object_field(to_wstring(name))) {
 				json::value databaseEntry = database[to_wstring(name)];
+				if (databaseEntry.has_number_field(L"aimTime"))
+					aimTime = databaseEntry[L"aimTime"].as_number().to_double();
 				if (databaseEntry.has_boolean_field(L"indirectFire"))
 					indirectFire = databaseEntry[L"indirectFire"].as_bool();
 				if (databaseEntry.has_number_field(L"shotsBaseInterval"))
@@ -259,7 +259,7 @@ void GroundUnit::AIloop()
 			}
 
 			/* Wait an amout of time depending on the shots intensity */
-			internalCounter = static_cast<unsigned int>(((ShotsIntensity::HIGH - shotsIntensity) * shotsBaseInterval + 2) / FRAMERATE_TIME_INTERVAL);
+			internalCounter = static_cast<unsigned int>(((ShotsIntensity::HIGH - shotsIntensity) * shotsBaseInterval + aimTime) / FRAMERATE_TIME_INTERVAL);
 		}
 
 		if (targetPosition == Coords(NULL))
@@ -267,7 +267,7 @@ void GroundUnit::AIloop()
 
 		/* Fallback if something went wrong */
 		if (internalCounter == 0)
-			internalCounter = static_cast<unsigned int>(20 / FRAMERATE_TIME_INTERVAL);
+			internalCounter = static_cast<unsigned int>(3 / FRAMERATE_TIME_INTERVAL);
 		internalCounter--;
 
 		break;
@@ -276,11 +276,22 @@ void GroundUnit::AIloop()
 		setTask("Scenic AAA");
 
 		/* Only perform scenic functions when the scheduler is "free" */
-		if (((!getHasTask() && scheduler->getLoad() == 0) || internalCounter == 0)) {
+		if (((!getHasTask() && scheduler->getLoad() < 30) || internalCounter == 0)) {
 			double distance = 0;
 			unsigned char unitCoalition = coalition == 0 ? getOperateAs() : coalition;
 			unsigned char targetCoalition = unitCoalition == 2 ? 1 : 2;
 			Unit* target = unitsManager->getClosestUnit(this, targetCoalition, { "Aircraft", "Helicopter" }, distance);
+
+			/* Recover the data from the database */
+			double aimTime = 2; /* s */
+			double shotsBaseInterval = 15; /* s */
+			if (database.has_object_field(to_wstring(name))) {
+				json::value databaseEntry = database[to_wstring(name)];
+				if (databaseEntry.has_number_field(L"aimTime"))
+					aimTime = databaseEntry[L"aimTime"].as_number().to_double();
+				if (databaseEntry.has_number_field(L"shotsBaseInterval"))
+					shotsBaseInterval = databaseEntry[L"shotsBaseInterval"].as_number().to_double();
+			}
 
 			/* Only run if an enemy air unit is closer than 20km to avoid useless load */
 			if (target != nullptr && distance < 20000 /* m */) {
@@ -298,11 +309,14 @@ void GroundUnit::AIloop()
 				Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
 				scheduler->appendCommand(command);
 				setHasTask(true);
+
+				/* Wait an amout of time depending on the shots intensity */
+				internalCounter = static_cast<unsigned int>(((ShotsIntensity::HIGH - shotsIntensity) * shotsBaseInterval + aimTime) / FRAMERATE_TIME_INTERVAL);
 			}
 		}
 
 		if (internalCounter == 0)
-			internalCounter = static_cast<unsigned int>(20 / FRAMERATE_TIME_INTERVAL);
+			internalCounter = static_cast<unsigned int>(3 / FRAMERATE_TIME_INTERVAL);
 		internalCounter--;
 
 		break;
@@ -321,7 +335,7 @@ void GroundUnit::AIloop()
 		if (canAAA) {
 			/* Only perform scenic functions when the scheduler is "free" */
 			/* Only run this when the internal counter reaches 0 to avoid excessive computations when no nearby target */
-			if (scheduler->getLoad() == 0 && internalCounter == 0) {
+			if (scheduler->getLoad() < 30 && internalCounter == 0) {
 				double distance = 0;
 				unsigned char unitCoalition = coalition == 0 ? getOperateAs() : coalition;
 				unsigned char targetCoalition = unitCoalition == 2 ? 1 : 2;
