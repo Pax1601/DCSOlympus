@@ -220,7 +220,7 @@ export class Map extends L.Map {
         this.addVisibilityOption(SHOW_UNITS_ENGAGEMENT_RINGS, true);
         this.addVisibilityOption(SHOW_UNITS_ACQUISITION_RINGS, true);
         this.addVisibilityOption(HIDE_UNITS_SHORT_RANGE_RINGS, true);
-        this.addVisibilityOption(FILL_SELECTED_RING, false);
+        /* this.addVisibilityOption(FILL_SELECTED_RING, false); Removed since currently broken: TODO fix!*/
     }
 
     addVisibilityOption(option: string, defaultValue: boolean) {

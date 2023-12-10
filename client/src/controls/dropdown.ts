@@ -44,16 +44,20 @@ export class Dropdown {
     /** Set the dropdown options strings
      * 
      * @param optionsList List of options. These are the keys that will always be returned on selection
-     * @param sort Sort method. "string" performs js default sort. "number" sorts purely by numeric value. 
+     * @param sort Sort method. null means no sorting. "string" performs js default sort. "number" sorts purely by numeric value. 
      * "string+number" sorts by string, unless two elements are lexicographically identical up to a numeric value (e.g. "SA-2" and "SA-3"), in which case it sorts by number.
      * @param labelsList (Optional) List of labels to be shown instead of the keys directly. If provided, the options will be sorted by label.
      */
-    setOptions(optionsList: string[], sort: "" | "string" | "number" | "string+number" = "string", labelsList: string[] | undefined = undefined) {
-        /* If labels are provided, sort by labels, else by options */
-        if (labelsList && labelsList.length == optionsList.length) 
-            this.#sortByLabels(optionsList, sort, labelsList);
-        else 
-            this.#sortByOptions(optionsList, sort);
+    setOptions(optionsList: string[], sort: null | "string" | "number" | "string+number" = "string", labelsList: string[] | undefined = undefined) {
+        if (sort != null) {
+            /* If labels are provided, sort by labels, else by options */
+            if (labelsList && labelsList.length == optionsList.length) 
+                this.#sortByLabels(optionsList, sort, labelsList);
+            else 
+                this.#sortByOptions(optionsList, sort);
+        } else {
+            this.#optionsList = optionsList;
+        }
 
         /* If no options are provided, return */
         if (this.#optionsList.length == 0) {

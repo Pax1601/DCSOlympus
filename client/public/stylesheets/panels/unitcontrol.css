@@ -315,7 +315,7 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 
 #advanced-settings-div>button {
 	background-color: var(--background-grey);
-	box-shadow: 0px 2px 5px #000A;
+	box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.25);
 	font-size: 13px;
 	height: 40px;
 	padding: 0 20px;

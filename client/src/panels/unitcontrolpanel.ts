@@ -383,7 +383,7 @@ export class UnitControlPanel extends Panel {
             this.#advancedSettingsDialog.toggleAttribute("data-show-tanker", isTanker);
             this.#advancedSettingsDialog.toggleAttribute("data-show-AWACS", isAWACS);
             this.#advancedSettingsDialog.toggleAttribute("data-show-TACAN", isTanker || ["Aircraft Carrier", "Super Aircraft Carrier"].includes(units[0].getType()));
-            this.#advancedSettingsDialog.toggleAttribute("data-show-radio", isTanker || isAWACS || ["Aircraft Carrier", "Super Aircraft Carrier"].includes(units[0].getType()));
+            this.#advancedSettingsDialog.toggleAttribute("data-show-radio", isTanker || isAWACS);
 
             /* Set common properties */
             // Name
@@ -408,11 +408,11 @@ export class UnitControlPanel extends Panel {
             this.#radioDecimalsDropdown.setValue("." + radioDecimals);
 
             if (isTanker) /* Set tanker specific options */
-                this.#radioCallsignDropdown.setOptions(["Texaco", "Arco", "Shell"]);
+                this.#radioCallsignDropdown.setOptions(["Texaco", "Arco", "Shell"], null);
             else if (isAWACS) /* Set AWACS specific options */
-                this.#radioCallsignDropdown.setOptions(["Overlord", "Magic", "Wizard", "Focus", "Darkstar"]);
+                this.#radioCallsignDropdown.setOptions(["Overlord", "Magic", "Wizard", "Focus", "Darkstar"], null);
             else
-                this.#radioCallsignDropdown.setOptions(["Enfield", "Springfield", "Uzi", "Colt", "Dodge", "Ford", "Chevy", "Pontiac"]);
+                this.#radioCallsignDropdown.setOptions(["Enfield", "Springfield", "Uzi", "Colt", "Dodge", "Ford", "Chevy", "Pontiac"], null);
 
             // This must be done after setting the options
             if (!this.#radioCallsignDropdown.selectValue(unit.getRadio().callsign - 1)) // Ensure the selected value is in the acceptable range

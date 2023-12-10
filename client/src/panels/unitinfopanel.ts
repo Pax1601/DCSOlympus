@@ -40,7 +40,7 @@ export class UnitInfoPanel extends Panel {
         if (this.getElement() != null && this.getVisible() && unit.getSelected()) {
 
             /* Set the unit info */
-            this.#unitLabel.innerText = aircraftDatabase.getByName(unit.getName())?.label || unit.getName();
+            this.#unitLabel.innerText = unit.getDatabaseEntry()?.label || unit.getName();
             this.#unitGroup.dataset.groupName = unit.getGroup()?.getName() ?? "No group";
             this.#unitName.innerText = unit.getUnitName();
             if (unit.getHuman())
