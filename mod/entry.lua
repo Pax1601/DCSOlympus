@@ -15,7 +15,7 @@ declare_plugin(self_ID,
 	shortName	 = "Olympus",
 	fileMenuName = "Olympus",
 
-	version		 = "v0.4.13-alpha-rc5",
+	version		 = "v1.0.0",
 	state		 = "installed",
 	developerName= "DCS Refugees 767 squadron",
 	info		 = _("DCS Olympus is a mod for DCS World. It allows users to spawn, control, task, group, and remove units from a DCS World server using a real-time map interface, similarly to Real Time Strategy games. The user interface also provides useful informations units, like loadouts, fuel, tasking, and so on. In the future, more features for DCS World GCI and JTAC will be available."),

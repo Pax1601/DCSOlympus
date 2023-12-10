@@ -1,6 +1,6 @@
 #define nwjsFolder "..\..\nwjs\"
 #define nodejsFolder "..\..\node\"
-#define version "v0.4.13-alpha-rc5"
+#define version "v1.0.0"
 
 [Setup] 
 AppName=DCS Olympus 
