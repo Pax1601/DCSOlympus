@@ -344,11 +344,11 @@ declare module "controls/dropdown" {
         /** Set the dropdown options strings
          *
          * @param optionsList List of options. These are the keys that will always be returned on selection
-         * @param sort Sort method. "string" performs js default sort. "number" sorts purely by numeric value.
+         * @param sort Sort method. null means no sorting. "string" performs js default sort. "number" sorts purely by numeric value.
          * "string+number" sorts by string, unless two elements are lexicographically identical up to a numeric value (e.g. "SA-2" and "SA-3"), in which case it sorts by number.
          * @param labelsList (Optional) List of labels to be shown instead of the keys directly. If provided, the options will be sorted by label.
          */
-        setOptions(optionsList: string[], sort?: "" | "string" | "number" | "string+number", labelsList?: string[] | undefined): void;
+        setOptions(optionsList: string[], sort?: null | "string" | "number" | "string+number", labelsList?: string[] | undefined): void;
         getOptionsList(): string[];
         getLabelsList(): string[] | undefined;
         /** Manually set the HTMLElements of the dropdown values. Handling of the selection must be performed externally.
@@ -828,6 +828,7 @@ declare module "other/utils" {
         role?: string;
         ranges?: string[];
         eras?: string[];
+        coalition?: string;
     }): UnitBlueprint | null;
     export function getMarkerCategoryByName(name: string): "aircraft" | "helicopter" | "groundunit-sam" | "navyunit" | "groundunit-other";
     export function getUnitDatabaseByCategory(category: string): import("unit/databases/aircraftdatabase").AircraftDatabase | import("unit/databases/helicopterdatabase").HelicopterDatabase | import("unit/databases/groundunitdatabase").GroundUnitDatabase | import("unit/databases/navyunitdatabase").NavyUnitDatabase | null;
@@ -2351,7 +2352,7 @@ declare module "unit/unitsmanager" {
             [key: string]: boolean;
         }, ranges: {
             [key: string]: boolean;
-        }, density: number, distribution: number): void;
+        }, density: number, distribution: number, forceCoalition: boolean): void;
         /** Export all the ground and navy units to file. Does not work on Aircraft and Helicopter units.
          *  TODO: Extend to aircraft and helicopters
          */

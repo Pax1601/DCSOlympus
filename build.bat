@@ -17,11 +17,13 @@ call npm run build-release
 cd "plugins\controltips"
 call npm install
 call npm run build-release
+call npm prune --production
 cd "..\.."
 
 cd "plugins\databasemanager"
 call npm install
 call npm run build-release
+call npm prune --production
 cd "..\.."
 
 call npm prune --production
