@@ -5,7 +5,7 @@
         {
           "headings": [
             {
-              "2L": {
+              "02L": {
                 "magHeading": "13",
                 "Heading": "18",
                 "ILS": "110.70"
@@ -31,7 +31,7 @@
               }
             },
             {
-              "2R": {
+              "02R": {
                 "magHeading": "193",
                 "Heading": "198",
                 "ILS": ""
@@ -50,7 +50,7 @@
         {
           "headings": [
             {
-              "8": {
+              "08": {
                 "magHeading": "70",
                 "Heading": "75",
                 "ILS": ""
@@ -147,7 +147,7 @@
         {
           "headings": [
             {
-              "5": {
+              "05": {
                 "magHeading": "49",
                 "Heading": "53",
                 "ILS": "108.50"
@@ -256,14 +256,14 @@
         {
           "headings": [
             {
-              "8": {
+              "07": {
                 "magHeading": "71",
                 "Heading": "76",
                 "ILS": ""
               }
             },
             {
-              "26": {
+              "25": {
                 "magHeading": "251",
                 "Heading": "256",
                 "ILS": ""
@@ -282,7 +282,7 @@
               }
             },
             {
-              "8R": {
+              "08R": {
                 "magHeading": "251",
                 "Heading": "256",
                 "ILS": ""
@@ -372,7 +372,7 @@
         {
           "headings": [
             {
-              "3L": {
+              "03L": {
                 "magHeading": "19",
                 "Heading": "24",
                 "ILS": ""
@@ -388,10 +388,10 @@
           ],
           "length": "3906"
         },
-		        {
+		{
           "headings": [
             {
-              "3R": {
+              "03R": {
                 "magHeading": "19",
                 "Heading": "24",
                 "ILS": ""
@@ -424,7 +424,7 @@
               }
             },
             {
-              "9": {
+              "09": {
                 "magHeading": "86",
                 "Heading": "91",
                 "ILS": ""
@@ -488,7 +488,7 @@
         {
           "headings": [
             {
-              "7R": {
+              "07R": {
                 "magHeading": "61",
                 "Heading": "66",
                 "ILS": ""
@@ -514,7 +514,7 @@
               }
             },
             {
-              "7L": {
+              "07L": {
                 "magHeading": "241",
                 "Heading": "246",
                 "ILS": ""
@@ -623,7 +623,7 @@
         {
           "headings": [
             {
-              "3R": {
+              "03R": {
                 "magHeading": "16",
                 "Heading": "21",
                 "ILS": ""
@@ -649,7 +649,7 @@
               }
             },
             {
-              "3L": {
+              "03L": {
                 "magHeading": "196",
                 "Heading": "201",
                 "ILS": ""
@@ -733,7 +733,7 @@
         {
           "headings": [
             {
-              "3": {
+              "03": {
                 "magHeading": "23",
                 "Heading": "28",
                 "ILS": ""
@@ -970,7 +970,7 @@
               }
             },
             {
-              "7": {
+              "07": {
                 "magHeading": "71",
                 "Heading": "76",
                 "ILS": ""
@@ -1034,7 +1034,7 @@
         {
           "headings": [
             {
-              "1R": {
+              "01R": {
                 "magHeading": "11",
                 "Heading": "16",
                 "ILS": "109.7"
@@ -1060,7 +1060,7 @@
               }
             },
             {
-              "1L": {
+              "01L": {
                 "magHeading": "191",
                 "Heading": "196",
                 "ILS": ""
@@ -1176,7 +1176,7 @@
         {
           "headings": [
             {
-              "9R": {
+              "09R": {
                 "magHeading": "87",
                 "Heading": "92",
                 "ILS": ""
@@ -1202,7 +1202,7 @@
               }
             },
             {
-              "9L": {
+              "09L": {
                 "magHeading": "223",
                 "Heading": "228",
                 "ILS": ""
@@ -1221,7 +1221,7 @@
         {
           "headings": [
             {
-              "5L": {
+              "05L": {
                 "magHeading": "45",
                 "Heading": "50",
                 "ILS": ""
@@ -1247,7 +1247,7 @@
               }
             },
             {
-              "5C": {
+              "05C": {
                 "magHeading": "225",
                 "Heading": "230",
                 "ILS": "108.90"
@@ -1259,7 +1259,7 @@
         {
           "headings": [
             {
-              "5R": {
+              "05R": {
                 "magHeading": "45",
                 "Heading": "50",
                 "ILS": ""
