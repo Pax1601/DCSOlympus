@@ -9,9 +9,12 @@ app.use(bodyParser.json());
 
 const allowedTheatres = [
     "caucasus",
+    "falklands",
     "marianas",
     "nevada",
+    "normandy",
     "persiangulf",
+    "sinaimap",
     "syria"
 ];
 
