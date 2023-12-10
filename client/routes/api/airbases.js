@@ -9,10 +9,14 @@ app.use(bodyParser.json());
 
 const allowedTheatres = [
     "caucasus",
+    "falklands",
     "marianas",
     "nevada",
+    "normandy",
     "persiangulf",
-    "syria"
+    "sinaimap",
+    "syria",
+    "thechannel"
 ];
 
 function getAirbasesData( theatreName ) {
