@@ -10295,5 +10295,65 @@
 		"canTargetPoint": false,
 		"canRearm": false,
 		"tags": "Germany"
+	},
+	"SA-18 Igla comm": {
+		"name": "SA-18 Igla comm",
+		"coalition": "",
+		"era": "",
+		"label": "MANPADS SA-18 Igla \"Grouse\" C2",
+		"shortLabel": "MANPADS SA-18 Igla \"Grouse\" C2",
+		"type": "AirDefence",
+		"enabled": false,
+		"liveries": {}
+	},
+	"flak30": {
+		"name": "flak30",
+		"coalition": "",
+		"era": "",
+		"label": "AAA Flak 38 20mm",
+		"shortLabel": "AAA Flak 38 20mm",
+		"type": "AAA",
+		"enabled": false,
+		"liveries": {}
+	},
+	"flak36": {
+		"name": "flak36",
+		"coalition": "",
+		"era": "",
+		"label": "AAA 8,8cm Flak 36",
+		"shortLabel": "AAA 8,8cm Flak 36",
+		"type": "AAA",
+		"enabled": false,
+		"liveries": {}
+	},
+	"flak37": {
+		"name": "flak37",
+		"coalition": "",
+		"era": "",
+		"label": "AAA 8,8cm Flak 37",
+		"shortLabel": "AAA 8,8cm Flak 37",
+		"type": "AAA",
+		"enabled": false,
+		"liveries": {}
+	},
+	"flak38": {
+		"name": "flak38",
+		"coalition": "",
+		"era": "",
+		"label": "AAA Flak-Vierling 38 Quad 20mm",
+		"shortLabel": "AAA Flak-Vierling 38 Quad 20mm",
+		"type": "AAA",
+		"enabled": false,
+		"liveries": {}
+	},
+	"flak41": {
+		"name": "flak41",
+		"coalition": "",
+		"era": "",
+		"label": "AAA 8,8cm Flak 41",
+		"shortLabel": "AAA 8,8cm Flak 41",
+		"type": "AAA",
+		"enabled": false,
+		"liveries": {}
 	}
 }
