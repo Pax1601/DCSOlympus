@@ -66,8 +66,9 @@ export class CoalitionAreaContextMenu extends ContextMenu {
 
         document.addEventListener("contextMenuCreateIads", (e: any) => {
             const area = this.getCoalitionArea();
+            const forceCoalition = (this.getContainer()?.querySelector("#force-coalition")?.querySelector("input") as HTMLInputElement).checked;
             if (area)
-                getApp().getUnitsManager().createIADS(area, getCheckboxOptions(this.#iadsTypesDropdown), getCheckboxOptions(this.#iadsErasDropdown), getCheckboxOptions(this.#iadsRangesDropdown), this.#iadsDensitySlider.getValue(), this.#iadsDistributionSlider.getValue());
+                getApp().getUnitsManager().createIADS(area, getCheckboxOptions(this.#iadsTypesDropdown), getCheckboxOptions(this.#iadsErasDropdown), getCheckboxOptions(this.#iadsRangesDropdown), this.#iadsDensitySlider.getValue(), this.#iadsDistributionSlider.getValue(), forceCoalition);
             this.hide();
         });
         this.hide();

@@ -13,7 +13,7 @@ import { navyUnitDatabase } from "./databases/navyunitdatabase";
 import { TemporaryUnitMarker } from "../map/markers/temporaryunitmarker";
 import { Popup } from "../popups/popup";
 import { HotgroupPanel } from "../panels/hotgrouppanel";
-import { Contact, UnitData, UnitSpawnTable } from "../interfaces";
+import { Contact, UnitBlueprint, UnitData, UnitSpawnTable } from "../interfaces";
 import { Dialog } from "../dialog/dialog";
 import { Group } from "./group";
 import { UnitDataFileExport } from "./importexport/unitdatafileexport";
@@ -1290,7 +1290,7 @@ export class UnitsManager {
      * @param density Value between 0 and 100, controls the amout of units created
      * @param distribution Value between 0 and 100, controls how "scattered" the units will be
      */
-    createIADS(coalitionArea: CoalitionArea, types: { [key: string]: boolean }, eras: { [key: string]: boolean }, ranges: { [key: string]: boolean }, density: number, distribution: number) {
+    createIADS(coalitionArea: CoalitionArea, types: { [key: string]: boolean }, eras: { [key: string]: boolean }, ranges: { [key: string]: boolean }, density: number, distribution: number, forceCoalition: boolean) {
         const activeTypes = Object.keys(types).filter((key: string) => { return types[key]; });
         const activeEras = Object.keys(eras).filter((key: string) => { return eras[key]; });
         const activeRanges = Object.keys(ranges).filter((key: string) => { return ranges[key]; });
@@ -1313,7 +1313,12 @@ export class UnitsManager {
                         const type = activeTypes[Math.floor(Math.random() * activeTypes.length)];
                         if (Math.random() < IADSDensities[type]) {
                             /* Get a random blueprint depending on the selected parameters and spawn the unit */
-                            const unitBlueprint = randomUnitBlueprint(groundUnitDatabase, { type: type, eras: activeEras, ranges: activeRanges });
+                            let unitBlueprint: UnitBlueprint | null;
+                            if (forceCoalition)
+                                unitBlueprint = randomUnitBlueprint(groundUnitDatabase, { type: type, eras: activeEras, ranges: activeRanges, coalition: coalitionArea.getCoalition()});
+                            else 
+                                unitBlueprint = randomUnitBlueprint(groundUnitDatabase, { type: type, eras: activeEras, ranges: activeRanges });
+
                             if (unitBlueprint)
                                 this.spawnUnits("GroundUnit", [{ unitType: unitBlueprint.name, location: latlng, liveryID: "" }], coalitionArea.getCoalition(), false, "", "");
                         }
@@ -1338,7 +1343,12 @@ export class UnitsManager {
                         const type = activeTypes[Math.floor(Math.random() * activeTypes.length)];
                         if (Math.random() < IADSDensities[type]) {
                             /* Get a random blueprint depending on the selected parameters and spawn the unit */
-                            const unitBlueprint = randomUnitBlueprint(groundUnitDatabase, { type: type, eras: activeEras, ranges: activeRanges });
+                            let unitBlueprint: UnitBlueprint | null;
+                            if (forceCoalition)
+                                unitBlueprint = randomUnitBlueprint(groundUnitDatabase, { type: type, eras: activeEras, ranges: activeRanges, coalition: coalitionArea.getCoalition()});
+                            else 
+                                unitBlueprint = randomUnitBlueprint(groundUnitDatabase, { type: type, eras: activeEras, ranges: activeRanges });
+
                             if (unitBlueprint)
                                 this.spawnUnits("GroundUnit", [{ unitType: unitBlueprint.name, location: latlng, liveryID: "" }], coalitionArea.getCoalition(), false, "", "");
                         }

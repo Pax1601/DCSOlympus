@@ -288,7 +288,7 @@ export function polygonArea(polygon: Polygon) {
     return turf.area(poly);
 }
 
-export function randomUnitBlueprint(unitDatabase: UnitDatabase, options: {type?: string, role?: string, ranges?: string[], eras?: string[]} ) {
+export function randomUnitBlueprint(unitDatabase: UnitDatabase, options: {type?: string, role?: string, ranges?: string[], eras?: string[], coalition?: string} ) {
     /* Start from all the unit blueprints in the database */
     var unitBlueprints = Object.values(unitDatabase.getBlueprints());
 
@@ -326,6 +326,13 @@ export function randomUnitBlueprint(unitDatabase: UnitDatabase, options: {type?:
     if (options.eras) {
         unitBlueprints = unitBlueprints.filter((unitBlueprint: UnitBlueprint) => { 
             return unitBlueprint.era? options.eras?.includes(unitBlueprint.era): true;
+        });
+    }
+
+    /* Keep only the units that have the correct coalition, if selected */
+    if (options.coalition) {
+        unitBlueprints = unitBlueprints.filter((unitBlueprint: UnitBlueprint) => { 
+            return (unitBlueprint.coalition && unitBlueprint.coalition !== "")? options.coalition === unitBlueprint.coalition: true;
         });
     }
 

@@ -728,3 +728,7 @@
 #airbase-spawn-contextmenu>div:nth-child(n+3)>div {
     width: 100%;
 }
+
+#force-coalition {
+    padding: 10px;
+}
