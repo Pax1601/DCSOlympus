@@ -46,11 +46,11 @@ Source: "..\img\olympus_configurator.ico"; DestDir: "{app}\Mods\Services\Olympus
 Source: "..\img\configurator_logo.png"; DestDir: "{app}\Mods\Services\Olympus\img"; Flags: ignoreversion;
 Source: "{#nwjsFolder}\*.*"; DestDir: "{app}\Mods\Services\Olympus\client"; Flags: ignoreversion recursesubdirs; Check: CheckLocalInstall
 Source: "{#nodejsFolder}\*.*"; DestDir: "{app}\Mods\Services\Olympus\client"; Flags: ignoreversion recursesubdirs; Check: CheckServerInstall
-Source: "..\scripts\python\configurator\dist\configurator.exe"; DestDir: "{app}\Mods\Services\Olympus"; Flags: ignoreversion;
+Source: "..\configurator\x64\Release\configurator.exe"; DestDir: "{app}\Mods\Services\Olympus"; Flags: ignoreversion;
 Source: "..\LEGAL"; DestDir: "{app}\Mods\Services\Olympus"; Flags: ignoreversion;
 
 [Run]
-Filename: "{app}\Mods\Services\Olympus\configurator.exe"; Parameters: -a {code:GetAddress} -c {code:GetClientPort} -b {code:GetBackendPort} -p {code:GetPassword} -bp {code:GetBluePassword} -rp {code:GetRedPassword}; Check: CheckCallConfigurator
+Filename: "{app}\Mods\Services\Olympus\configurator.exe"; Parameters: -a {code:GetAddress} -c {code:GetClientPort} -b {code:GetBackendPort} -p {code:GetPassword} --bp {code:GetBluePassword} --rp {code:GetRedPassword}; Check: CheckCallConfigurator
 
 [Icons]
 Name: "{userdesktop}\DCS Olympus Client"; Filename: "{app}\Mods\Services\Olympus\client\nw.exe"; Tasks: desktopicon; IconFilename: "{app}\Mods\Services\Olympus\img\olympus.ico"; Check: CheckLocalInstall
