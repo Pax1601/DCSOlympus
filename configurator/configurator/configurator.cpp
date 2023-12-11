@@ -39,7 +39,7 @@ void SetStdinEcho(bool enable = true)
 
 int main(int argc, char* argv[]) 
 {
-    cout << "DCS Olympus configurator v1.0.0" << endl << endl << endl;
+    cout << "DCS Olympus configurator v1.0.1" << endl << endl << endl;
 
     SHA256 sha256;
 
