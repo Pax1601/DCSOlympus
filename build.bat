@@ -4,9 +4,9 @@ cd src
 msbuild olympus.sln /t:Rebuild /p:Configuration=Release
 cd ..
 
-cd scripts/python/configurator
-call build_configurator.bat
-cd ../../..
+cd configurator
+msbuild configurator.sln /t:Rebuild /p:Configuration=Release
+cd ..
 
 cd client
 rmdir /s /q "hgt"
