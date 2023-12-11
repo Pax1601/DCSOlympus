@@ -1,4 +1,4 @@
-## Important note: DCS Olympus is in alpha state. No official release has been produced yet. The first public version is planned for mid december 2023.
+## Important note: DCS Olympus is in beta state. No official release has been produced yet. The first public version is planned for mid december 2023.
 <img align="left" width="30" src="https://github.com/Pax1601/DCSOlympus/assets/103559271/0ecff279-a87c-4e2d-a4c7-da98c74adf38">
 
 [**Join our Discord**](https://discord.gg/kNAQkhUHnQ)
@@ -51,8 +51,7 @@ However we cannot commit to specific features, feature release order, or timelin
 
 ### Does Olympus support mods? ###
 Generally OIympus will not have any issues with other mods, however you may need to tell olympus about modded units in order to be able to dynamically spawn them etc
-
-Keep in mind that any mods you do choose to spawn your players will need to have, some mod unit just appear as a su27 or leo2 etc. when a player is missing them, others can cause client crashes. So be smart about how you use them
+Keep in mind that any mods you do choose to spawn your players will need to have, some mod unit just appear as a su27 or leo2 etc. When a player is missing them, others can cause client crashes. So be smart about how you use them.
 
 ### Is Olympus compatible with mission scripts? ###
 We have tried hard to keep Olympus from interfering with other scripts, we have tested with a variety of new and old mission scripts and generally expect it will not be an issue.
@@ -61,9 +60,7 @@ However we cannot foresee everything people come up with so we suggest testing w
 
 ### How does it work? ###
 The quick answer is magic. 
-
 The long answer is well all the code is there for you to read. 
-
 The middle answer is a bit like SRS does. Olympus consists of two parts. 
 
 (A) Olympus back end: A dll, run by DCS, that sends data out and gets commands in via a REST API;
