@@ -70,9 +70,9 @@ Source: "..\prerequisites\node-v20.10.0-x64.msi"; DestDir: "{app}\Mods\Services\
 Filename: "msiexec.exe"; Parameters: "/i ""{app}\Mods\Services\Olympus\temp\node-v20.10.0-x64.msi"" /qb"; WorkingDir: {tmp};
 #endif
 
-Filename: "node.exe"; WorkingDir:"{app}\Mods\Services\Olympus\node"; Parameters: configurator.js -a {code:GetAddress} -c {code:GetClientPort} -b {code:GetBackendPort} -p {code:GetPassword} --bp {code:GetBluePassword} --rp {code:GetRedPassword}; Check: CheckCallConfigurator; Flags: runhidden;
-Filename: "{app}\Mods\Services\Olympus\node\install_modules.bat"; WorkingDir:"{app}\Mods\Services\Olympus\node";
-Filename: "{app}\Mods\Services\Olympus\client\install_modules.bat"; WorkingDir:"{app}\Mods\Services\Olympus\client";
+Filename: "node.exe"; WorkingDir:"{app}\Mods\Services\Olympus\node"; Parameters: configurator.js -a {code:GetAddress} -c {code:GetClientPort} -b {code:GetBackendPort} -p {code:GetPassword} --bp {code:GetBluePassword} --rp {code:GetRedPassword}; Check: CheckCallConfigurator; Description: Apply configuration; Flags: postinstall runhidden;
+Filename: "{app}\Mods\Services\Olympus\node\install_modules.bat"; WorkingDir:"{app}\Mods\Services\Olympus\node"; Description: Install node dependencies; Flags: postinstall;
+Filename: "{app}\Mods\Services\Olympus\client\install_modules.bat"; WorkingDir:"{app}\Mods\Services\Olympus\client"; Description: Install main dependencies; Flags: postinstall;
 
 [Icons]
 Name: "{userdesktop}\DCS Olympus Client"; Filename: "node.exe"; WorkingDir:"{app}\Mods\Services\Olympus\client"; Tasks: desktopicon; IconFilename: "{app}\Mods\Services\Olympus\img\olympus.ico"; Check: CheckLocalInstall; Parameters: "run_client.js"; Flags: runminimized;
