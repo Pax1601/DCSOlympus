@@ -46,8 +46,8 @@ Source: "..\client\demo.js"; DestDir: "{app}\Mods\Services\Olympus\client"; Flag
 Source: "..\client\package.json"; DestDir: "{app}\Mods\Services\Olympus\client"; Flags: ignoreversion;
 Source: "..\client\run_client.js"; DestDir: "{app}\Mods\Services\Olympus\client"; Flags: ignoreversion;
 
-Source: "..\node\configurator.js"; DestDir: "{app}\Mods\Services\Olympus\node"; Flags: ignoreversion;
-Source: "..\node\install.bat"; DestDir: "{app}\Mods\Services\Olympus\node"; Flags: ignoreversion;
+Source: "..\client\configurator.js"; DestDir: "{app}\Mods\Services\Olympus\client"; Flags: ignoreversion;
+Source: "..\client\install.bat"; DestDir: "{app}\Mods\Services\Olympus\client"; Flags: ignoreversion;
 
 Source: "..\img\olympus.ico"; DestDir: "{app}\Mods\Services\Olympus\img"; Flags: ignoreversion;
 Source: "..\img\olympus_server.ico"; DestDir: "{app}\Mods\Services\Olympus\img"; Flags: ignoreversion;
@@ -57,15 +57,16 @@ Source: "..\img\configurator_logo.png"; DestDir: "{app}\Mods\Services\Olympus\im
 Source: "..\LEGAL"; DestDir: "{app}\Mods\Services\Olympus"; Flags: ignoreversion;
 
 [Run]
-Filename: "{app}\Mods\Services\Olympus\node\install.bat"; WorkingDir:"{app}\Mods\Services\Olympus\client"; Flags: runhidden; StatusMsg: "Installing node.js modules, this may take some time...";
-Filename: "node.exe"; WorkingDir:"{app}\Mods\Services\Olympus\node"; Parameters: configurator.js -a {code:GetAddress} -c {code:GetClientPort} -b {code:GetBackendPort} -p {code:GetPassword} --bp {code:GetBluePassword} --rp {code:GetRedPassword}; Check: CheckCallConfigurator; Flags: runhidden; StatusMsg: "Applying configuration...";
+Filename: "{app}\Mods\Services\Olympus\client\install.bat"; WorkingDir:"{app}\Mods\Services\Olympus\client"; Flags: runhidden; StatusMsg: "Installing node.js modules, this may take some time...";
+Filename: "node.exe"; WorkingDir:"{app}\Mods\Services\Olympus\client"; Parameters: configurator.js -a {code:GetAddress} -c {code:GetClientPort} -b {code:GetBackendPort} -p {code:GetPassword} --bp {code:GetBluePassword} --rp {code:GetRedPassword}; Check: CheckCallConfigurator; Flags: runhidden; StatusMsg: "Applying configuration...";
 
 [Icons]
 Name: "{userdesktop}\DCS Olympus Client"; Filename: "node.exe"; WorkingDir:"{app}\Mods\Services\Olympus\client"; Tasks: desktopicon; IconFilename: "{app}\Mods\Services\Olympus\img\olympus.ico"; Check: CheckLocalInstall; Parameters: "run_client.js"; Flags: runminimized;
 Name: "{userdesktop}\DCS Olympus Server"; Filename: "node.exe"; WorkingDir:"{app}\Mods\Services\Olympus\client"; Tasks: desktopicon; IconFilename: "{app}\Mods\Services\Olympus\img\olympus_server.ico"; Parameters: ".\bin\www";
-Name: "{userdesktop}\DCS Olympus Configurator"; Filename: "node.exe";  WorkingDir:"{app}\Mods\Services\Olympus\node"; Tasks: desktopicon; IconFilename: "{app}\Mods\Services\Olympus\img\olympus_configurator.ico"; Check: CheckServerInstall; Parameters: "configurator.js"; 
+Name: "{userdesktop}\DCS Olympus Configurator"; Filename: "node.exe";  WorkingDir:"{app}\Mods\Services\Olympus\client"; Tasks: desktopicon; IconFilename: "{app}\Mods\Services\Olympus\img\olympus_configurator.ico"; Check: CheckServerInstall; Parameters: "configurator.js"; 
 Name: "{app}\Mods\Services\Olympus\DCS Olympus Client"; Filename: "node.exe"; WorkingDir:"{app}\Mods\Services\Olympus\client"; IconFilename: "{app}\Mods\Services\Olympus\img\olympus.ico"; Check: CheckLocalInstall; Parameters: "run_client.js"; Flags: runminimized;
 Name: "{app}\Mods\Services\Olympus\DCS Olympus Server"; Filename: "node.exe"; WorkingDir:"{app}\Mods\Services\Olympus\client"; IconFilename: "{app}\Mods\Services\Olympus\img\olympus_server.ico"; Parameters: ".\bin\www";
+Name: "{app}\Mods\Services\Olympus\DCS Olympus Configurator"; Filename: "node.exe";  WorkingDir:"{app}\Mods\Services\Olympus\client"; IconFilename: "{app}\Mods\Services\Olympus\img\olympus_configurator.ico"; Check: CheckServerInstall; Parameters: "configurator.js"; 
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}\Mods\Services\Olympus"
