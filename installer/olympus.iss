@@ -5,11 +5,7 @@ AppName=DCS Olympus
 AppVerName=DCS Olympus {#version}
 DefaultDirName={usersavedgames}\DCS.openbeta
 DefaultGroupName=DCSOlympus  
-#ifdef Node
-OutputBaseFilename=DCSOlympus_{#version}_node
-#else
 OutputBaseFilename=DCSOlympus_{#version}
-#endif
 UninstallFilesDir={app}\Mods\Services\Olympus
 SetupIconFile="..\img\olympus.ico"
 DirExistsWarning=no
@@ -49,10 +45,9 @@ Source: "..\client\app.js"; DestDir: "{app}\Mods\Services\Olympus\client"; Flags
 Source: "..\client\demo.js"; DestDir: "{app}\Mods\Services\Olympus\client"; Flags: ignoreversion;
 Source: "..\client\package.json"; DestDir: "{app}\Mods\Services\Olympus\client"; Flags: ignoreversion;
 Source: "..\client\run_client.js"; DestDir: "{app}\Mods\Services\Olympus\client"; Flags: ignoreversion;
-Source: "..\client\install_modules.bat"; DestDir: "{app}\Mods\Services\Olympus\client"; Flags: ignoreversion;
 
 Source: "..\node\configurator.js"; DestDir: "{app}\Mods\Services\Olympus\node"; Flags: ignoreversion;
-Source: "..\node\install_modules.bat"; DestDir: "{app}\Mods\Services\Olympus\node"; Flags: ignoreversion;
+Source: "..\node\install.bat"; DestDir: "{app}\Mods\Services\Olympus\node"; Flags: ignoreversion;
 
 Source: "..\img\olympus.ico"; DestDir: "{app}\Mods\Services\Olympus\img"; Flags: ignoreversion;
 Source: "..\img\olympus_server.ico"; DestDir: "{app}\Mods\Services\Olympus\img"; Flags: ignoreversion;
@@ -61,18 +56,9 @@ Source: "..\img\configurator_logo.png"; DestDir: "{app}\Mods\Services\Olympus\im
 
 Source: "..\LEGAL"; DestDir: "{app}\Mods\Services\Olympus"; Flags: ignoreversion;
 
-#ifdef Node
-Source: "..\prerequisites\node-v20.10.0-x64.msi"; DestDir: "{app}\Mods\Services\Olympus\temp"; Flags: ignoreversion deleteafterinstall;
-#endif
-
 [Run]
-#ifdef Node
-Filename: "msiexec.exe"; Parameters: "/i ""{app}\Mods\Services\Olympus\temp\node-v20.10.0-x64.msi"" /qb"; WorkingDir: {tmp};
-#endif
-
-Filename: "node.exe"; WorkingDir:"{app}\Mods\Services\Olympus\node"; Parameters: configurator.js -a {code:GetAddress} -c {code:GetClientPort} -b {code:GetBackendPort} -p {code:GetPassword} --bp {code:GetBluePassword} --rp {code:GetRedPassword}; Check: CheckCallConfigurator; Description: Apply configuration; Flags: postinstall runhidden;
-Filename: "{app}\Mods\Services\Olympus\node\install_modules.bat"; WorkingDir:"{app}\Mods\Services\Olympus\node"; Description: Install node dependencies; Flags: postinstall;
-Filename: "{app}\Mods\Services\Olympus\client\install_modules.bat"; WorkingDir:"{app}\Mods\Services\Olympus\client"; Description: Install main dependencies; Flags: postinstall;
+Filename: "{app}\Mods\Services\Olympus\node\install.bat"; WorkingDir:"{app}\Mods\Services\Olympus\client"; Flags: runhidden; StatusMsg: "Installing node.js modules, this may take some time...";
+Filename: "node.exe"; WorkingDir:"{app}\Mods\Services\Olympus\node"; Parameters: configurator.js -a {code:GetAddress} -c {code:GetClientPort} -b {code:GetBackendPort} -p {code:GetPassword} --bp {code:GetBluePassword} --rp {code:GetRedPassword}; Check: CheckCallConfigurator; Flags: runhidden; StatusMsg: "Applying configuration...";
 
 [Icons]
 Name: "{userdesktop}\DCS Olympus Client"; Filename: "node.exe"; WorkingDir:"{app}\Mods\Services\Olympus\client"; Tasks: desktopicon; IconFilename: "{app}\Mods\Services\Olympus\img\olympus.ico"; Check: CheckLocalInstall; Parameters: "run_client.js"; Flags: runminimized;
