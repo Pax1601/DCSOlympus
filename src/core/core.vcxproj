@@ -174,6 +174,7 @@
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>lua.lib; GeographicLib-i.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\third-party\lua</AdditionalLibraryDirectories>
+      <Version>v1.0.2</Version>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

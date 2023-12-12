@@ -4,10 +4,6 @@ cd src
 msbuild olympus.sln /t:Rebuild /p:Configuration=Release
 cd ..
 
-cd configurator
-msbuild configurator.sln /t:Rebuild /p:Configuration=Release
-cd ..
-
 cd client
 rmdir /s /q "hgt"
 call npm install

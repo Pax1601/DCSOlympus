@@ -90,6 +90,7 @@
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>lua.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\third-party\lua</AdditionalLibraryDirectories>
+      <Version>1.0</Version>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

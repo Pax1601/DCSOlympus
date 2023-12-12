@@ -4,9 +4,9 @@
         "port": 3001
     },
     "authentication": {
-        "gameMasterPassword": "4b8823ed9e5c2392ab4a791913bb8ce41956ea32e308b760eefb97536746dd33",
-        "blueCommanderPassword": "302bcbaf2a3fdcf175b689bf102d6cdf9328f68a13d4096101bba806482bfed9",
-        "redCommanderPassword": "b0ea4230c1558c5313165eda1bdb7fced008ca7f2ca6b823fb4d26292f309098"
+        "gameMasterPassword": "688787d8ff144c502c7f5cffaafe2cc588d86079f9de88304c26b0cb99ce91c6",
+        "blueCommanderPassword": "688787d8ff144c502c7f5cffaafe2cc588d86079f9de88304c26b0cb99ce91c6",
+        "redCommanderPassword": "688787d8ff144c502c7f5cffaafe2cc588d86079f9de88304c26b0cb99ce91c6"
     },
     "client": {
         "port": 3000,
