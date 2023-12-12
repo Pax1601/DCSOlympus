@@ -27,6 +27,12 @@
       <Project>{b85009ce-4a5c-4a5a-b85d-001b3a2651b2}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="olympus.rc" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -90,7 +96,7 @@
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>lua.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\third-party\lua</AdditionalLibraryDirectories>
-      <Version>1.0</Version>
+      <Version>v1.0.2</Version>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

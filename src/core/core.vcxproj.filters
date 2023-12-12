@@ -51,6 +51,7 @@
     <ClInclude Include="include\weaponsmanager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\aircraft.cpp">
@@ -98,5 +99,8 @@
     <ClCompile Include="src\weaponsmanager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="core.rc" />
   </ItemGroup>
 </Project>

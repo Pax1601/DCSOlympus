@@ -25,11 +25,15 @@
   <ItemGroup>
     <ClInclude Include="include\interface.h" />
     <ClInclude Include="include\logger.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\utils\utils.vcxproj">
       <Project>{b85009ce-4a5c-4a5a-b85d-001b3a2651b2}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="logger.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
