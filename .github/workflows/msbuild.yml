@@ -43,6 +43,7 @@ jobs:
       uses: johnwason/vcpkg-action@v5
       with:
         pkgs: geographiclib cpprestsdk
+        token: ${{ github.token }}
                 
     - name: Build
       working-directory: ${{env.GITHUB_WORKSPACE}}
