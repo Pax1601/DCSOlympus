@@ -1,12 +1,7 @@
 bin
-/scripts/old
-/scripts/python/configurator/dist
-/scripts/python/configurator/build
-/scripts/python/configurator/venv
 .vs
 x64
-core.user
-core.vcxproj.user
+/src/vcpkg_installed
 *.user
 Output
 node_modules
