@@ -10,7 +10,7 @@ UninstallFilesDir={app}\Mods\Services\Olympus
 SetupIconFile="..\img\olympus.ico"
 DirExistsWarning=no
 AppendDefaultDirName=no
-LicenseFile="..\LEGAL"
+LicenseFile="..\LEGAL.txt"
 ChangesEnvironment=yes
 
 [Messages]
@@ -54,7 +54,7 @@ Source: "..\img\olympus_server.ico"; DestDir: "{app}\Mods\Services\Olympus\img";
 Source: "..\img\olympus_configurator.ico"; DestDir: "{app}\Mods\Services\Olympus\img"; Flags: ignoreversion;
 Source: "..\img\configurator_logo.png"; DestDir: "{app}\Mods\Services\Olympus\img"; Flags: ignoreversion;
 
-Source: "..\LEGAL"; DestDir: "{app}\Mods\Services\Olympus"; Flags: ignoreversion;
+Source: "..\LEGAL.txt"; DestDir: "{app}\Mods\Services\Olympus"; Flags: ignoreversion;
 
 [Run]
 Filename: "{app}\Mods\Services\Olympus\client\install.bat"; WorkingDir:"{app}\Mods\Services\Olympus\client"; Flags: runhidden; StatusMsg: "Installing node.js modules, this may take some time...";
