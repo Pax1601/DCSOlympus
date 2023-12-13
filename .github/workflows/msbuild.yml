@@ -38,7 +38,8 @@ jobs:
       # uses: johnwason/vcpkg-action@3839b028ca2400865ef5e83a899f336b1b8fd711
       uses: johnwason/vcpkg-action@v5
       with:
-        pkgs: geographiclib:x64-windows cpprestsdk:x64-windows
+        pkgs: geographiclib cpprestsdk
+        triplet: x64-windows-release
         token: ${{ github.token }}
                 
     - name: Build
