@@ -18,7 +18,7 @@ jobs:
         
       - name: Setup Node.js
         uses: actions/setup-node@v2
-
+        
       - name: Install dependencies
         run: npm ci
         working-directory: ./client
@@ -26,6 +26,15 @@ jobs:
       - name: Create the docs directory locally in CI
         run: npx typedoc --out ../docs/client @types/*.d.ts src/**/*.ts
         working-directory: ./client
+
+      - name: Install Doxygen
+        run: sudo apt-get install doxygen -y
+        shell: bash
+
+      - name: Generate Doxygen Documentation
+        run: doxygen docs
+        shell: bash
+        working-directory: ./src
         
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
