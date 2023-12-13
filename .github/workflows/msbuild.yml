@@ -33,16 +33,12 @@ jobs:
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
 
-    - name: Restore NuGet packages
-      working-directory: ${{env.GITHUB_WORKSPACE}}
-      run: nuget restore ${{env.SOLUTION_FILE_PATH}}
-      
     - name: vcpkg-action
       # You may pin to the exact commit or the version.
       # uses: johnwason/vcpkg-action@3839b028ca2400865ef5e83a899f336b1b8fd711
       uses: johnwason/vcpkg-action@v5
       with:
-        pkgs: geographiclib cpprestsdk
+        pkgs: geographiclib:x64-windows cpprestsdk:x64-windows
         token: ${{ github.token }}
                 
     - name: Build
