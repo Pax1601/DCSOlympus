@@ -19,3 +19,4 @@ hgt
 /client/public/databases/units/old
 /client/plugins/databasemanager/index.js
 
+*.aps

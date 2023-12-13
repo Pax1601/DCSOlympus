@@ -36,6 +36,7 @@ Source: "..\scripts\OlympusCommand.lua"; DestDir: "{app}\Mods\Services\Olympus\S
 Source: "..\scripts\unitPayloads.lua"; DestDir: "{app}\Mods\Services\Olympus\Scripts"; Flags: ignoreversion
 Source: "..\scripts\templates.lua"; DestDir: "{app}\Mods\Services\Olympus\Scripts"; Flags: ignoreversion 
 Source: "..\scripts\mist.lua"; DestDir: "{app}\Mods\Services\Olympus\Scripts"; Flags: ignoreversion 
+Source: "..\scripts\mods.lua"; DestDir: "{app}\Mods\Services\Olympus\Scripts"; Flags: ignoreversion 
 
 Source: "..\mod\*"; DestDir: "{app}\Mods\Services\Olympus"; Flags: ignoreversion recursesubdirs;
 

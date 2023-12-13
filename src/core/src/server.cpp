@@ -330,7 +330,7 @@ void Server::task()
                 .then([&listener]() {log("RESTServer starting to listen"); })
                 .wait();
             
-        while (runListener);
+        while (runListener) { Sleep(1000); };
 
         listener.close()
                 .then([&listener]() {log("RESTServer stopping connections"); })
