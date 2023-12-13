@@ -19,3 +19,5 @@ hgt
 /client/public/databases/units/old
 /client/plugins/databasemanager/index.js
 
+/src/html
+/src/latex
