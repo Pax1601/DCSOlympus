@@ -35,6 +35,8 @@ jobs:
 
     - name: run-vcpkg
       uses: lukka/run-vcpkg@v11
+      with:
+        vcpkgGitCommitId: ff6867374598312866fecfc64736a334591ceace
         
     - name: Build
       working-directory: ${{env.GITHUB_WORKSPACE}}
