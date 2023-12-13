@@ -27,7 +27,7 @@ jobs:
         
     - name: Build
       working-directory: .
-      run: build_package.bat
+      run: call build_package.bat
 
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.1.3
