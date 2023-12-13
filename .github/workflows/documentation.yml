@@ -1,5 +1,5 @@
 # ci.yml file for GitHub Actions
-name: CI
+name: Documentation
 
 on: [push]
 

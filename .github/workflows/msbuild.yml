@@ -3,7 +3,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: MSBuild
+name: Backend build
 
 on:
   push:
@@ -33,15 +33,6 @@ jobs:
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
 
-    - name: vcpkg-action
-      # You may pin to the exact commit or the version.
-      # uses: johnwason/vcpkg-action@3839b028ca2400865ef5e83a899f336b1b8fd711
-      uses: johnwason/vcpkg-action@v5
-      with:
-        pkgs: geographiclib cpprestsdk
-        triplet: x64-windows-release
-        token: ${{ github.token }}
-                
     - name: Build
       working-directory: ${{env.GITHUB_WORKSPACE}}
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
