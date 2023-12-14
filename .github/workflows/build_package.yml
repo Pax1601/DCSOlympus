@@ -1,4 +1,4 @@
-name: Backend build
+name: Build & package
 
 on:
   push:
@@ -33,6 +33,6 @@ jobs:
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.1.3
       with:
-        name: Installer
+        name: latest
         path: installer/Output/*.exe
       

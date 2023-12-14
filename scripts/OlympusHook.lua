@@ -1,4 +1,4 @@
-local version = 'v1.0.2'
+local version = '{{OLYMPUS_VERSION_NUMBER}}_{{OLYMPUS_COMMIT_HASH}}'
 local lfs = require("lfs")
 
 Olympus = {}

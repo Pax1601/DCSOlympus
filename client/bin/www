@@ -112,7 +112,7 @@ function onListening() {
   debug('Listening on ' + bind);
 }
 
-console.log("DCS Olympus server v1.0.2 started correctly!")
+console.log("DCS Olympus server {{OLYMPUS_VERSION_NUMBER}}_{{OLYMPUS_COMMIT_HASH}} started correctly!")
 console.log("Waiting for connections...")
 
-process.title = `DCS Olympus server v1.0.2 (${port})`;
+process.title = `DCS Olympus server {{OLYMPUS_VERSION_NUMBER}} (${port})`;

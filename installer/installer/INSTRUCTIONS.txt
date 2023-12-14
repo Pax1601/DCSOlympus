@@ -7,7 +7,7 @@
                                    __/ |         | |              
                                   |___/          |_|              
 
-v1.0.2
+{{OLYMPUS_VERSION_NUMBER}}_{{OLYMPUS_COMMIT_HASH}}
 
 INSTALLATION INSTRUCTIONS
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#define VERSION "v1.0.2"
+#define VERSION "{{OLYMPUS_VERSION_NUMBER}}_{{OLYMPUS_COMMIT_HASH}}"
 #define LOG_NAME "Olympus_log.txt"
 #define REST_ADDRESS "http://localhost:30000"
 #define REST_URI "olympus"

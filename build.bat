@@ -1,4 +1,4 @@
-call git clean -fx
+call node increase_version.js
 
 cd src
 msbuild olympus.sln /t:Build /p:Configuration=Release

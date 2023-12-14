@@ -17,3 +17,6 @@ hgt
 
 /src/html
 /src/latex
+client/public/stylesheets/leaflet/leaflet-gesture-handling.css
+client/public/javascripts/leaflet.nauticscale.js
+client/public/javascripts/L.Path.Drag.js

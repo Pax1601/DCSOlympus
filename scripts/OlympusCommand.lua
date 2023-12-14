@@ -1,4 +1,4 @@
-local version = "v1.0.2"
+local version = "{{OLYMPUS_VERSION_NUMBER}}_{{OLYMPUS_COMMIT_HASH}}"
 
 local debug = false				-- True enables debug printing using DCS messages
 

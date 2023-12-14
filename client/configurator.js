@@ -42,7 +42,7 @@ async function run() {
             console.log('\x1b[36m%s\x1b[0m', "*********************************************************************");
             console.log('\x1b[36m%s\x1b[0m', "");
 
-            console.log("DCS Olympus configurator v1.0.2");
+            console.log("DCS Olympus configurator {{OLYMPUS_VERSION_NUMBER}}_{{OLYMPUS_COMMIT_HASH}}");
             console.log("");
 
             var newValue;
