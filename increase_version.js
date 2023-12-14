@@ -7,7 +7,7 @@ const revision = require('child_process').execSync('git rev-parse --short HEAD')
 function throughDirectory(directory) {
     fs.readdirSync(directory).forEach(file => {
         const absolute = path.join(directory, file);
-        if (!file.includes("increase_version.js")) {
+        if (!file.includes("increase_version.js") && !file.includes("node_modules")) {
             if (fs.statSync(absolute).isDirectory()) 
             {
                 return throughDirectory(absolute);
@@ -37,36 +37,32 @@ fs.readFile("./version.json", "utf8", (error, data) => {
 
     files.forEach((file) => {
         fs.readFile(file, 'utf8', function (err,data) {
+            var fileChanged = false;
             if (err) {
-            return console.log(err);
+                return console.log(err);
             }
             if (data.search(/{{OLYMPUS_VERSION_NUMBER}}/g) >= 0) {
                 console.log(`Replacing version in ${file}`);
 
-                var result = data.replace(/{{OLYMPUS_VERSION_NUMBER}}/g, `v${major}.${minor}.${minorminor}`);
-                result = result.replace(/{{OLYMPUS_COMMIT_HASH}}/g, revision);
-
-                fs.writeFile(file, result, 'utf8', (err) => {
-                    if (err) return console.log(err);
-                });
+                data = data.replace(/{{OLYMPUS_VERSION_NUMBER}}/g, `v${major}.${minor}.${minorminor}`);
+                data = data.replace(/{{OLYMPUS_COMMIT_HASH}}/g, revision);
+                fileChanged = true;
             }
 
             if (data.search(/{{OLYMPUS_VS_VERSION_NUMBER_1}}/g) >= 0) {
                 console.log(`Replacing version in ${file}`);
-
-                var result = data.replace(/{{OLYMPUS_VS_VERSION_NUMBER_1}}/g, `${major},${minor},${minorminor}`);
-
-                fs.writeFile(file, result, 'utf8', (err) => {
-                    if (err) return console.log(err);
-                });
+                var data = data.replace(/{{OLYMPUS_VS_VERSION_NUMBER_1}}/g, `${major},${minor},${minorminor}`);
+                fileChanged = true;
             }
 
             if (data.search(/{{OLYMPUS_VS_VERSION_NUMBER_2}}/g) >= 0) {
                 console.log(`Replacing version in ${file}`);
+                data = data.replace(/{{OLYMPUS_VS_VERSION_NUMBER_2}}/g, `${major}.${minor}.${minorminor}`);
+                fileChanged = true;
+            }
 
-                var result = data.replace(/{{OLYMPUS_VS_VERSION_NUMBER_2}}/g, `${major}.${minor}.${minorminor}`);
-
-                fs.writeFile(file, result, 'utf8', (err) => {
+            if (fileChanged) {
+                fs.writeFile(file, data, 'utf8', (err) => {
                     if (err) return console.log(err);
                 });
             }
