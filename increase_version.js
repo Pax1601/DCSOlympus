@@ -51,10 +51,10 @@ fs.readFile("./version.json", "utf8", (error, data) => {
                 });
             }
 
-            if (data.search(/1,0,2/g) >= 0) {
+            if (data.search(/{{OLYMPUS_VS_VERSION_NUMBER_1}}/g) >= 0) {
                 console.log(`Replacing version in ${file}`);
 
-                var result = data.replace(/1,0,2/g, `${major},${minor},${minorminor}`);
+                var result = data.replace(/{{OLYMPUS_VS_VERSION_NUMBER_1}}/g, `${major},${minor},${minorminor}`);
 
                 fs.writeFile(file, result, 'utf8', (err) => {
                     if (err) return console.log(err);
