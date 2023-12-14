@@ -142,7 +142,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <Version>{{OLYMPUS_VERSION_NUMBER}}_{{OLYMPUS_COMMIT_HASH}}</Version>
+      <Version>{{OLYMPUS_VERSION_NUMBER}}.{{OLYMPUS_COMMIT_HASH}}</Version>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

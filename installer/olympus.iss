@@ -1,4 +1,4 @@
-#define version "{{OLYMPUS_VERSION_NUMBER}}_{{OLYMPUS_COMMIT_HASH}}"
+#define version "{{OLYMPUS_VERSION_NUMBER}}.{{OLYMPUS_COMMIT_HASH}}"
 
 [Setup] 
 AppName=DCS Olympus 
