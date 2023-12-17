@@ -417,6 +417,7 @@ declare module "interfaces" {
         function getOlympusPlugin(): OlympusPlugin;
     }
     export interface ConfigurationOptions {
+        protocol: string | undefined;
         port: number;
         address: string;
     }
@@ -2426,7 +2427,7 @@ declare module "server/servermanager" {
         GET(callback: CallableFunction, uri: string, options?: ServerRequestOptions, responseType?: string, force?: boolean): void;
         PUT(request: object, callback: CallableFunction): void;
         getConfig(callback: CallableFunction): void;
-        setAddress(address: string, port: number): void;
+        setAddress(protocol: string, address: string, port: number): void;
         getAirbases(callback: CallableFunction): void;
         getBullseye(callback: CallableFunction): void;
         getLogs(callback: CallableFunction, refresh?: boolean): void;

@@ -130,8 +130,8 @@ export class ServerManager {
         xmlHttp.send(null);
     }
 
-    setAddress(address: string, port: number) {
-        this.#REST_ADDRESS = `http://${address}:${port}/olympus`
+    setAddress(protocol: string, address: string, port: number) {
+        this.#REST_ADDRESS = `${protocol}://${address}:${port}/olympus`
         console.log(`Setting REST address to ${this.#REST_ADDRESS}`)
     }
 

@@ -1,5 +1,6 @@
 {
     "server": {
+        "protocol": "https",
         "address": "localhost",
         "port": 3001
     },

@@ -219,10 +219,11 @@ export class OlympusApp {
         /* Load the config file from the app server*/
         this.getServerManager().getConfig((config: ConfigurationOptions) => {
             if (config && config.address != undefined && config.port != undefined) {
+                const protocol = config.protocol || 'http';
                 const address = config.address;
                 const port = config.port;
-                if (typeof address === 'string' && typeof port == 'number') {
-                    this.getServerManager().setAddress(address == "*" ? window.location.hostname : address, port);
+                if (typeof protocol === 'string' && typeof address === 'string' && typeof port == 'number') {
+                    this.getServerManager().setAddress(protocol, address == "*" ? window.location.hostname : address, port);
                 }
             }
             else {

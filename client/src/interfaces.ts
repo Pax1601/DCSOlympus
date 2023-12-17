@@ -12,6 +12,7 @@ declare global {
 }
 
 export interface ConfigurationOptions {
+    protocol: string | undefined;
     port: number;
     address: string;
 }
