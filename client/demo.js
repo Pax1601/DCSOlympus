@@ -2,10 +2,10 @@ const { random } = require('@turf/turf');
 var basicAuth = require('express-basic-auth')
 var enc = new TextEncoder();
 
-const aircraftDatabase = require('./public/databases/units/aircraftDatabase.json');
-const helicopterDatabase = require('./public/databases/units/helicopterDatabase.json');
-const groundUnitDatabase = require('./public/databases/units/groundUnitDatabase.json');
-const navyUnitDatabase = require('./public/databases/units/navyUnitDatabase.json');
+const aircraftDatabase = require('./public/databases/units/aircraftdatabase.json');
+const helicopterDatabase = require('./public/databases/units/helicopterdatabase.json');
+const groundUnitDatabase = require('./public/databases/units/groundunitdatabase.json');
+const navyUnitDatabase = require('./public/databases/units/navyunitdatabase.json');
 
 const DEMO_UNIT_DATA = {}
 
