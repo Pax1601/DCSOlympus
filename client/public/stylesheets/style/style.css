@@ -985,7 +985,7 @@ nav.ol-panel> :last-child {
 
 #login-status[data-status="failed"]::before {
     color: var(--primary-red);
-    content: "Incorrect username/password!";
+    content: "Incorrect password!";
 }
 
 @keyframes blinker {
