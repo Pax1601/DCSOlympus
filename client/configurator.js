@@ -79,17 +79,26 @@ async function run() {
             }
             backendPort = newValue? result: backendPort;
 
+            while (true) {
             /* Get the new Game Master password */
-            newValue = prompt(`Insert a new Game Master password or press Enter to keep current value: `, {echo: "*"});
-            gameMasterPassword = newValue !== ""? sha256(newValue): gameMasterPassword;
+            gmRawPass = prompt(`Insert a new Game Master password or press Enter to keep current value: `, {echo: "*"});
 
             /* Get the new Blue Commander password */
-            newValue = prompt(`Insert a new Blue Commander password or press Enter to keep current value: `, {echo: "*"});
-            blueCommanderPassword = newValue !== ""? sha256(newValue): blueCommanderPassword;
+            blueRawPass = prompt(`Insert a new Blue Commander password or press Enter to keep current value: `, {echo: "*"});
             
             /* Get the new Red Commander password */
-            newValue = prompt(`Insert a new Red Commander password or press Enter to keep current value: `, {echo: "*"});
-            redCommanderPassword = newValue !== ""? sha256(newValue): redCommanderPassword;
+            redRawPass = prompt(`Insert a new Red Commander password or press Enter to keep current value: `, {echo: "*"});
+
+            if (gmRawPass === blueRawPass || blueRawPass === redRawPass || gmRawPass === redRawPass)
+                console.log("All three passwords must be different");
+
+            else;
+                break;
+            }
+            gameMasterPassword = gmRawPass !== ""? sha256(gmRawPass): gameMasterPassword;
+            blueCommanderPassword = blueRawPass !== ""? sha256(blueRawPass): blueCommanderPassword;
+            redCommanderPassword = redRawPass !== ""? sha256(redRawPass): redCommanderPassword;
+        
         }
 
         /* Apply the inputs */
