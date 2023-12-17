@@ -92,7 +92,7 @@ async function run() {
             if (gmRawPass === blueRawPass || blueRawPass === redRawPass || gmRawPass === redRawPass)
                 console.log("All three passwords must be different");
 
-            else;
+            else
                 break;
             }
             gameMasterPassword = gmRawPass !== ""? sha256(gmRawPass): gameMasterPassword;
