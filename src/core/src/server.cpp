@@ -74,7 +74,8 @@ void Server::handle_get(http_request request)
     http_response response(status_codes::OK);
     
     string password = extractPassword(request);
-    if (password.compare(gameMasterPassword) == 0 || password.compare(blueCommanderPassword) == 0 || password.compare(redCommanderPassword) == 0)
+    string commander = getCommander(password, gameMasterPassword, blueCommanderPassword, redCommanderPassword);
+    if (commander.compare("") != 0)
     {
         std::exception_ptr eptr;
         try {
@@ -119,7 +120,7 @@ void Server::handle_get(http_request request)
                     if (URI.compare(LOGS_URI) == 0)
                     {
                         auto logs = json::value::object();
-                        getLogsJSON(logs, time);   
+                        getLogsJSON(logs, time, commander);   
                         answer[L"logs"] = logs;
                     }
                     /* Airbases data */
@@ -179,7 +180,8 @@ void Server::handle_request(http_request request, function<void(json::value cons
 
     //TODO: limit what a user can do depending on the password
     string password = extractPassword(request);
-    if (password.compare(gameMasterPassword) == 0 || password.compare(blueCommanderPassword) == 0 || password.compare(redCommanderPassword) == 0)
+    string commander = getCommander(password, gameMasterPassword, blueCommanderPassword, redCommanderPassword);
+    if (commander.compare("") != 0)
     {
         auto answer = json::value::object();
         request.extract_json().then([&answer, &action](pplx::task<json::value> task)
@@ -212,28 +214,30 @@ void Server::handle_request(http_request request, function<void(json::value cons
 void Server::handle_put(http_request request)
 {
     string username = extractUsername(request);
+    string password = extractPassword(request);
+    string commander = getCommander(password, gameMasterPassword, blueCommanderPassword, redCommanderPassword);
     handle_request(
-    request,
-    [username](json::value const& jvalue, json::value& answer)
-    {
-        /* Lock for thread safety */
-        lock_guard<mutex> guard(mutexLock);
-
-        for (auto const& e : jvalue.as_object())
+        request,
+        [username, commander](json::value const& jvalue, json::value& answer)
         {
-            auto key = e.first;
-            auto value = e.second;
-            
-            std::exception_ptr eptr;
-            try {
-                scheduler->handleRequest(to_string(key), value, username, answer);
+            /* Lock for thread safety */
+            lock_guard<mutex> guard(mutexLock);
+
+            for (auto const& e : jvalue.as_object())
+            {
+                auto key = e.first;
+                auto value = e.second;
+
+                std::exception_ptr eptr;
+                try {
+                    scheduler->handleRequest(to_string(key), value, username, commander, answer);
+                }
+                catch (...) {
+                    eptr = std::current_exception(); // capture
+                }
+                handle_eptr(eptr);
             }
-            catch (...) {
-                eptr = std::current_exception(); // capture
-            }
-            handle_eptr(eptr);
-        }
-    });    
+        });
 }
 
 string Server::extractUsername(http_request& request) {
@@ -273,8 +277,8 @@ string Server::extractPassword(http_request& request) {
 
         string decoded = from_base64(authorization);
         i = decoded.find(":");
-        if (i != string::npos && i+1 < decoded.length())
-            decoded.erase(0, i+1);
+        if (i != string::npos && i + 1 < decoded.length())
+            decoded.erase(0, i + 1);
         else
             return "";
 
@@ -282,6 +286,25 @@ string Server::extractPassword(http_request& request) {
     }
     else
         return "";
+}
+
+string Server::getCommander(string& password, string& gameMasterPassword, string& blueCommanderPassword, string& redCommanderPassword) {
+    if (password.compare(gameMasterPassword) == 0)
+    {
+        return "GM";
+    }
+    else if (password.compare(blueCommanderPassword) == 0)
+    {
+        return "BLUE";
+    }
+    else if (password.compare(redCommanderPassword) == 0)
+    {
+        return "RED";
+    }
+    else
+    {
+        return "";
+    }
 }
 
 void Server::task()

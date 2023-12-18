@@ -142,7 +142,7 @@ bool Scheduler::checkSpawnPoints(int spawnPoints, string coalition)
 	return false;
 }
 
-void Scheduler::handleRequest(string key, json::value value, string username, json::value& answer)
+void Scheduler::handleRequest(string key, json::value value, string username, string commander, json::value& answer)
 {
 	Command* command = nullptr;
 
@@ -170,7 +170,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 
 			unit->setActivePath(newPath);
 			unit->setState(State::REACH_DESTINATION);
-			log(username + " updated destination path for unit " + unit->getUnitName() + "(" + unit->getName() + ")", true);
+			log(username + " updated destination path for unit " + unit->getUnitName() + "(" + unit->getName() + ")", commander, true);
 		}
 	}
 	/************************/
@@ -182,7 +182,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		
 		Coords loc; loc.lat = lat; loc.lng = lng;
 		command = dynamic_cast<Command*>(new Smoke(color, loc));
-		log(username + " added a " + color + " smoke at (" + to_string(lat) + ", " + to_string(lng) + ")", true);
+		log(username + " added a " + color + " smoke at (" + to_string(lat) + ", " + to_string(lng) + ")", commander, true);
 	}
 	/************************/
 	else if (key.compare("spawnAircrafts") == 0 || key.compare("spawnHelicopters") == 0)
@@ -206,7 +206,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			string liveryID = to_string(unit[L"liveryID"]);
 
 			spawnOptions.push_back({unitType, location, loadout, liveryID});
-			log(username + " spawned a " + coalition + " " + unitType, true);
+			log(username + " spawned a " + coalition + " " + unitType, commander, true);
 		}
 
 		if (key.compare("spawnAircrafts") == 0)
@@ -233,7 +233,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			string liveryID = to_string(unit[L"liveryID"]);
 			
 			spawnOptions.push_back({ unitType, location, "", liveryID });
-			log(username + " spawned a " + coalition + " " + unitType, true);
+			log(username + " spawned a " + coalition + " " + unitType, commander, true);
 		}
 
 		if (key.compare("spawnGroundUnits") == 0)
@@ -252,7 +252,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		Unit* target = unitsManager->getUnit(targetID);
 
 		if (unit != nullptr && target != nullptr) {
-			log(username + " tasked unit " + unit->getUnitName() + "(" + unit->getName() + ") to attack unit " + target->getUnitName() + "(" + target->getName() + ")", true);
+			log(username + " tasked unit " + unit->getUnitName() + "(" + unit->getName() + ") to attack unit " + target->getUnitName() + "(" + target->getName() + ")", commander, true);
 			unit->setTargetID(targetID);
 			unit->setState(State::ATTACK);
 		}
@@ -271,7 +271,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		Unit* leader = unitsManager->getUnit(leaderID);
 
 		if (unit != nullptr && leader != nullptr) {
-			log(username + " tasked unit " + unit->getUnitName() + "(" + unit->getName() + ") to follow unit " + leader->getUnitName() + "(" + leader->getName() + ")", true);
+			log(username + " tasked unit " + unit->getUnitName() + "(" + unit->getName() + ") to follow unit " + leader->getUnitName() + "(" + leader->getName() + ")", commander, true);
 			unit->setFormationOffset(Offset(offsetX, offsetY, offsetZ));
 			unit->setLeaderID(leaderID);
 			unit->setState(State::FOLLOW);
@@ -285,7 +285,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr) {
 			unit->changeSpeed(to_string(value[L"change"]));
-			log(username + " changed " + unit->getUnitName() + "(" + unit->getName() + ") speed: " + to_string(value[L"change"]), true);
+			log(username + " changed " + unit->getUnitName() + "(" + unit->getName() + ") speed: " + to_string(value[L"change"]), commander, true);
 		}
 	}
 	/************************/
@@ -296,7 +296,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr) {
 			unit->changeAltitude(to_string(value[L"change"]));
-			log(username + " changed " + unit->getUnitName() + "(" + unit->getName() + ") altitude: " + to_string(value[L"change"]), true);
+			log(username + " changed " + unit->getUnitName() + "(" + unit->getName() + ") altitude: " + to_string(value[L"change"]), commander, true);
 		}
 	}
 	/************************/
@@ -307,7 +307,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr) {
 			unit->setDesiredSpeed(value[L"speed"].as_double());
-			log(username + " set " + unit->getUnitName() + "(" + unit->getName() + ") speed: " + to_string(value[L"speed"].as_double()), true);
+			log(username + " set " + unit->getUnitName() + "(" + unit->getName() + ") speed: " + to_string(value[L"speed"].as_double()), commander, true);
 		}
 	}
 	/************************/
@@ -318,7 +318,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr) {
 			unit->setDesiredSpeedType(to_string(value[L"speedType"]));
-			log(username + " set " + unit->getUnitName() + "(" + unit->getName() + ") speed type: " + to_string(value[L"speedType"]), true);
+			log(username + " set " + unit->getUnitName() + "(" + unit->getName() + ") speed type: " + to_string(value[L"speedType"]), commander, true);
 		}
 	}
 	/************************/
@@ -329,7 +329,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr) {
 			unit->setDesiredAltitude(value[L"altitude"].as_double());
-			log(username + " set " + unit->getUnitName() + "(" + unit->getName() + ")  altitude: " + to_string(value[L"altitude"].as_double()), true);
+			log(username + " set " + unit->getUnitName() + "(" + unit->getName() + ")  altitude: " + to_string(value[L"altitude"].as_double()), commander, true);
 		}
 	}
 	/************************/
@@ -340,7 +340,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr) {
 			unit->setDesiredAltitudeType(to_string(value[L"altitudeType"]));
-			log(username + " set " + unit->getUnitName() + "(" + unit->getName() + ") altitude type: " + to_string(value[L"altitudeType"]), true);
+			log(username + " set " + unit->getUnitName() + "(" + unit->getName() + ") altitude type: " + to_string(value[L"altitudeType"]), commander, true);
 		}
 	}
 	/************************/
@@ -370,7 +370,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		if (unit != nullptr) {
 			unsigned char ROE = value[L"ROE"].as_number().to_uint32();
 			unit->setROE(ROE);
-			log(username + " set unit " + unit->getUnitName() + "(" + unit->getName() + ") ROE to " + to_string(ROE), true);
+			log(username + " set unit " + unit->getUnitName() + "(" + unit->getName() + ") ROE to " + to_string(ROE), commander, true);
 		}
 	}
 	/************************/
@@ -382,7 +382,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		if (unit != nullptr) {
 			unsigned char reactionToThreat = value[L"reactionToThreat"].as_number().to_uint32();
 			unit->setReactionToThreat(reactionToThreat);
-			log(username + " set unit " + unit->getUnitName() + "(" + unit->getName() + ") reaction to threat to " + to_string(reactionToThreat), true);
+			log(username + " set unit " + unit->getUnitName() + "(" + unit->getName() + ") reaction to threat to " + to_string(reactionToThreat), commander, true);
 		}
 	}
 	/************************/
@@ -394,7 +394,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		if (unit != nullptr) {
 			unsigned char emissionsCountermeasures = value[L"emissionsCountermeasures"].as_number().to_uint32();
 			unit->setEmissionsCountermeasures(emissionsCountermeasures);
-			log(username + " set unit " + unit->getUnitName() + "(" + unit->getName() + ") emissions and countermeasures to " + to_string(emissionsCountermeasures), true);
+			log(username + " set unit " + unit->getUnitName() + "(" + unit->getName() + ") emissions and countermeasures to " + to_string(emissionsCountermeasures), commander, true);
 		}
 	}
 	/************************/
@@ -408,7 +408,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			double lng = value[L"location"][L"lng"].as_double();
 			Coords loc; loc.lat = lat; loc.lng = lng;
 			unit->landAt(loc);
-			log(username + " tasked unit " + unit->getUnitName() + "(" + unit->getName() + ") to land", true);
+			log(username + " tasked unit " + unit->getUnitName() + "(" + unit->getName() + ") to land", commander, true);
 		}
 	}
 	/************************/
@@ -421,7 +421,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		Unit* unit = unitsManager->getUnit(ID);
 		if (unit != nullptr) {
 			unitsManager->deleteUnit(ID, explosion, explosionType, immediate);
-			log(username + " deleted unit " + unit->getUnitName() + "(" + unit->getName() + ")", true);
+			log(username + " deleted unit " + unit->getUnitName() + "(" + unit->getName() + ")", commander, true);
 		}
 	}
 	/************************/
@@ -432,7 +432,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr) {
 			unit->setState(State::REFUEL);
-			log(username + " tasked unit " + unit->getUnitName() + "(" + unit->getName() + ")  to refuel", true);
+			log(username + " tasked unit " + unit->getUnitName() + "(" + unit->getName() + ")  to refuel", commander, true);
 		}
 	}
 	/************************/
@@ -476,7 +476,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 
 			unit->resetActiveDestination();
 
-			log(username + " updated unit " + unit->getUnitName() + "(" + unit->getName() + ") advancedOptions", true);
+			log(username + " updated unit " + unit->getUnitName() + "(" + unit->getName() + ") advancedOptions", commander, true);
 		}
 	}
 	/************************/
@@ -488,7 +488,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr) {
 			unit->setFollowRoads(followRoads);
-			log(username + " set unit " + unit->getUnitName() + "(" + unit->getName() + ") followRoads to: " + (followRoads ? "true" : "false"), true);
+			log(username + " set unit " + unit->getUnitName() + "(" + unit->getName() + ") followRoads to: " + (followRoads ? "true" : "false"), commander, true);
 		}
 	}
 	/************************/
@@ -500,7 +500,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr) {
 			unit->setOnOff(onOff);
-			log(username + " set unit " + unit->getUnitName() + "(" + unit->getName() + ") onOff to: " + (onOff? "true": "false"), true);
+			log(username + " set unit " + unit->getUnitName() + "(" + unit->getName() + ") onOff to: " + (onOff? "true": "false"), commander, true);
 		}
 	}
 	/************************/
@@ -510,7 +510,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		string explosionType = to_string(value[L"explosionType"]);
 		double lat = value[L"location"][L"lat"].as_double();
 		double lng = value[L"location"][L"lng"].as_double();
-		log("Adding explosion of type " + explosionType + " at (" + to_string(lat) + ", " + to_string(lng) + ")");
+		log("Adding explosion of type " + explosionType + " at (" + to_string(lat) + ", " + to_string(lng) + ")", commander);
 		Coords loc; loc.lat = lat; loc.lng = lng;
 		command = dynamic_cast<Command*>(new Explosion(intensity, explosionType, loc));
 	}
@@ -526,7 +526,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		if (unit != nullptr) {
 			unit->setTargetPosition(loc);
 			unit->setState(State::BOMB_POINT);
-			log(username + " tasked unit " + unit->getUnitName() + "(" + unit->getName() + ") to bomb a point", true);
+			log(username + " tasked unit " + unit->getUnitName() + "(" + unit->getName() + ") to bomb a point", commander, true);
 		}
 	}
 	/************************/
@@ -541,7 +541,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		if (unit != nullptr) {
 			unit->setTargetPosition(loc);
 			unit->setState(State::CARPET_BOMB);
-			log(username + " tasked unit " + unit->getUnitName() + "(" + unit->getName() + ") to perform carpet bombing", true);
+			log(username + " tasked unit " + unit->getUnitName() + "(" + unit->getName() + ") to perform carpet bombing", commander, true);
 		}
 	}
 	/************************/
@@ -571,7 +571,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		if (unit != nullptr) {
 			unit->setTargetPosition(loc);
 			unit->setState(State::FIRE_AT_AREA);
-			log(username + " tasked unit " + unit->getUnitName() + "(" + unit->getName() + ") to fire at area", true);
+			log(username + " tasked unit " + unit->getUnitName() + "(" + unit->getName() + ") to fire at area", commander, true);
 		}
 	}
 	/************************/
@@ -587,7 +587,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		if (unit != nullptr) {
 			unit->setTargetPosition(loc);
 			unit->setState(State::SIMULATE_FIRE_FIGHT);
-			log(username + " tasked unit " + unit->getUnitName() + "(" + unit->getName() + ") to simulate a fire fight", true);
+			log(username + " tasked unit " + unit->getUnitName() + "(" + unit->getName() + ") to simulate a fire fight", commander, true);
 		}
 	}
 	/************************/
@@ -598,7 +598,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr) {
 			unit->setState(State::SCENIC_AAA);
-			log(username + " tasked unit " + unit->getUnitName() + "(" + unit->getName() + ") to enter scenic AAA state", true);
+			log(username + " tasked unit " + unit->getUnitName() + "(" + unit->getName() + ") to enter scenic AAA state", commander, true);
 		}
 	}
 	/************************/
@@ -609,7 +609,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr) {
 			unit->setState(State::MISS_ON_PURPOSE);
-			log(username + " tasked unit " + unit->getUnitName() + "(" + unit->getName() + ") to enter Miss On Purpose state", true);
+			log(username + " tasked unit " + unit->getUnitName() + "(" + unit->getName() + ") to enter Miss On Purpose state", commander, true);
 		}
 	}
 	/************************/
@@ -638,7 +638,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			unit->setActivePath(newPath);
 			unit->setState(State::LAND_AT_POINT);
 
-			log(username + " tasked unit " + unit->getUnitName() + "(" + unit->getName() + ") to land at point", true);
+			log(username + " tasked unit " + unit->getUnitName() + "(" + unit->getName() + ") to land at point", commander, true);
 		}
 	}
 	/************************/
@@ -650,7 +650,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		if (unit != nullptr) {
 			unsigned char shotsScatter = value[L"shotsScatter"].as_number().to_uint32();
 			unit->setShotsScatter(shotsScatter);
-			log(username + " set unit " + unit->getUnitName() + "(" + unit->getName() + ") shots scatter to " + to_string(shotsScatter), true);
+			log(username + " set unit " + unit->getUnitName() + "(" + unit->getName() + ") shots scatter to " + to_string(shotsScatter), commander, true);
 		}
 	}
 	/************************/
@@ -662,14 +662,14 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		if (unit != nullptr) {
 			unsigned char shotsIntensity = value[L"shotsIntensity"].as_number().to_uint32();
 			unit->setShotsIntensity(shotsIntensity);
-			log(username + " set unit " + unit->getUnitName() + "(" + unit->getName() + ") shots intensity to " + to_string(shotsIntensity), true);
+			log(username + " set unit " + unit->getUnitName() + "(" + unit->getName() + ") shots intensity to " + to_string(shotsIntensity), commander, true);
 		}
 	}
 	/************************/
 	else if (key.compare("setCommandModeOptions") == 0) 
 	{
 		setCommandModeOptions(value);
-		log(username + " updated the Command Mode Options", true);
+		log(username + " updated the Command Mode Options", commander, true);
 	}
 	/************************/
 	else if (key.compare("reloadDatabases") == 0) {
@@ -678,13 +678,13 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 	/************************/
 	else
 	{
-		log("Unknown command: " + key);
+		log("Unknown command: " + key, commander);
 	}
 
 	if (command != nullptr)
 	{
 		appendCommand(command);
-		log("New command appended correctly to stack. Current server load: " + to_string(getLoad()));
+		log("New command appended correctly to stack. Current server load: " + to_string(getLoad()), commander);
 		answer[L"commandHash"] = json::value(to_wstring(command->getHash()));
 	}
 }

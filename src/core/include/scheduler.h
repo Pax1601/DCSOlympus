@@ -11,7 +11,7 @@ public:
 
 	void appendCommand(Command* command);
 	void execute(lua_State* L);
-	void handleRequest(string key, json::value value, string username, json::value& answer);
+	void handleRequest(string key, json::value value, string username, string commander, json::value& answer);
 	bool checkSpawnPoints(int spawnPoints, string coalition);
 	bool isCommandExecuted(string commandHash) { return (find(executedCommandsHashes.begin(), executedCommandsHashes.end(), commandHash) != executedCommandsHashes.end()); }
 	

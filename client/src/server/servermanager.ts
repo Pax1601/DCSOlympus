@@ -457,7 +457,7 @@ export class ServerManager {
             if (!this.getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
                 this.getLogs((data: any) => {
                     this.checkSessionHash(data.sessionHash);
-                    (getApp().getPanelsManager().get("log") as LogPanel).appendLogs(data.logs)
+                    (getApp().getPanelsManager().get("log") as LogPanel).appendLogs(data.logs);
                     return data.time;
                 });
             }
@@ -549,7 +549,7 @@ export class ServerManager {
 
         this.getLogs((data: any) => {
             this.checkSessionHash(data.sessionHash);
-            (getApp().getPanelsManager().get("log") as LogPanel).appendLogs(data.logs)
+            (getApp().getPanelsManager().get("log") as LogPanel).appendLogs(data.logs);
             return data.time;
         });
 
