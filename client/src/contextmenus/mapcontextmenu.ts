@@ -7,6 +7,7 @@ import { CoalitionArea } from "../map/coalitionarea/coalitionarea";
 import { AirDefenceUnitSpawnMenu, AircraftSpawnMenu, GroundUnitSpawnMenu, HelicopterSpawnMenu, NavyUnitSpawnMenu } from "../controls/unitspawnmenu";
 import { Airbase } from "../mission/airbase";
 import { SmokeMarker } from "../map/markers/smokemarker";
+import { UnitSpawnTable } from "../interfaces";
 
 /** The MapContextMenu is the main contextmenu shown to the user whenever it rightclicks on the map. It is the primary interaction method for the user.
  * It allows to spawn units, create explosions and smoke, and edit CoalitionAreas.
@@ -96,6 +97,8 @@ export class MapContextMenu extends ContextMenu {
         this.getContainer()?.addEventListener("hide", () => this.#airDefenceUnitSpawnMenu.clearCirclesPreviews());
         this.getContainer()?.addEventListener("hide", () => this.#groundUnitSpawnMenu.clearCirclesPreviews());
         this.getContainer()?.addEventListener("hide", () => this.#navyUnitSpawnMenu.clearCirclesPreviews());
+
+        this.#setupHistory();
     }
 
     /** Show the contextmenu on top of the map, usually at the location where the user has clicked on it.
@@ -256,5 +259,63 @@ export class MapContextMenu extends ContextMenu {
         this.#airDefenceUnitSpawnMenu.setCountries();
         this.#groundUnitSpawnMenu.setCountries();
         this.#navyUnitSpawnMenu.setCountries();
+    }
+
+
+    /** Handles all of the logic for historal logging.
+     * 
+     */
+    #setupHistory() {
+        const spawnModes           = this.getContainer()?.querySelectorAll(".spawn-mode");
+        const activeCoalitionLabel = document.getElementById("active-coalition-label");
+        this.getContainer()?.querySelectorAll(".spawn-mode-tab").forEach((btn:Element) => {
+            btn.addEventListener("click", (ev:MouseEventInit) => {
+                spawnModes?.forEach(div => div.classList.add("hide"));
+
+                const prevSiblings = [];
+                let prev = btn.previousElementSibling;
+
+                while ( prev ) {
+                    prevSiblings.push(prev);
+                    prev = prev.previousElementSibling;
+                }
+
+                if (spawnModes && spawnModes[prevSiblings.length]) {
+                    spawnModes[prevSiblings.length].classList.remove("hide");
+                }
+
+                if (activeCoalitionLabel) activeCoalitionLabel.classList.toggle("hide", !btn.hasAttribute("data-show-label"));
+            });
+        });
+
+        const history = <HTMLDivElement>document.getElementById("spawn-history-menu");
+        document.addEventListener( "unitSpawned", (ev:CustomEventInit) => {
+            const buttons = history.querySelectorAll("button");
+            const detail:any = ev.detail;
+            if (buttons.length === 0) history.innerHTML = "";  //  Take out any "no data" messages
+            const button = document.createElement("button");
+            button.setAttribute("data-spawned-coalition", detail.coalition);
+            button.setAttribute("data-unit-type", detail.unitSpawnTable[0].unitType);
+            button.setAttribute("data-unit-qty", detail.unitSpawnTable.length);
+            button.innerHTML = `${detail.unitSpawnTable[0].unitType} (${detail.unitSpawnTable.length})`;
+
+            //  Remove a previous instance to save clogging up the list
+            const previous:any = [].slice.call(buttons).find( (button:Element) => (
+                detail.coalition === button.getAttribute("data-spawned-coalition") &&
+                detail.unitSpawnTable[0].unitType === button.getAttribute("data-unit-type") &&
+                detail.unitSpawnTable.length === parseInt(button.getAttribute("data-unit-qty") || "-1")));
+
+            if (previous instanceof HTMLElement) previous.remove();
+
+            button.addEventListener("click", (ev:MouseEventInit) => {
+                detail.unitSpawnTable.forEach((table:UnitSpawnTable, i:number) => {
+                    table.location = this.getLatLng();  //  Set to new menu location
+                    table.location.lat += 0.00015 * i;
+                });
+                getApp().getUnitsManager().spawnUnits(detail.category, detail.unitSpawnTable, detail.coalition, detail.immediate, detail.airbase, detail.country);
+            });
+
+            history.prepend(button);
+        });
     }
 }
