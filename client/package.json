@@ -2,7 +2,7 @@
   "name": "DCSOlympus",
   "node-main": "./bin/www",
   "main": "http://localhost:3000",
-  "version": "{{OLYMPUS_VERSION_NUMBER}}",
+  "version": "v1.0.4",
   "private": true,
   "scripts": {
     "build": "browserify .\\src\\index.ts --debug -o .\\public\\javascripts\\bundle.js -t [ babelify --global true --presets [ @babel/preset-env ] --extensions '.js'] -p [ tsify --noImplicitAny ] && copy.bat",
@@ -14,21 +14,25 @@
     "watch": "watchify .\\src\\index.ts --debug -o .\\public\\javascripts\\bundle.js -t [ babelify --global true --presets [ @babel/preset-env ] --extensions '.js'] -p [ tsify --noImplicitAny ]"
   },
   "dependencies": {
-    "@turf/turf": "^6.5.0",
     "body-parser": "^1.20.2",
-    "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "ejs": "^3.1.8",
     "express": "~4.16.1",
     "express-basic-auth": "^1.2.1",
+    "http-proxy-middleware": "^2.0.6",
     "js-sha256": "^0.10.1",
-    "leaflet-gesture-handling": "^1.2.2",
     "morgan": "~1.9.1",
+    "prompt-sync": "^4.2.0",
     "save": "^2.9.0",
+    "sha256": "^0.2.0",
     "srtm-elevation": "^2.1.2",
-    "uuid": "^9.0.1"
+    "tcp-ping-port": "^1.0.1",
+    "uuid": "^9.0.1",
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
+    "leaflet-gesture-handling": "^1.2.2",
+    "@turf/turf": "^6.5.0",
     "@babel/preset-env": "^7.21.4",
     "@tanem/svg-injector": "^10.1.68",
     "@types/formatcoords": "^1.1.0",
@@ -57,11 +61,5 @@
     "typescript": "^4.9.4",
     "usng.js": "^0.4.5",
     "watchify": "^4.0.0"
-  },
-  "window": {
-    "width": 1000,
-    "height": 800,
-    "position": "center",
-    "icon": "public/images/icon.png"
   }
 }

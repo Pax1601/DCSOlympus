@@ -23,3 +23,5 @@ client/public/javascripts/L.Path.Drag.js
 /installer/archive/Scripts
 /installer/archive/Mods
 /installer/installer/DCSOlympus*.exe
+client/public/javascripts/L.Path.Drag.js
+client/public/stylesheets/leaflet/leaflet-gesture-handling.css

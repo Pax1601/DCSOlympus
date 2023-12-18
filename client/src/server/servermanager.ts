@@ -11,13 +11,11 @@ import { zeroAppend } from '../other/utils';
 export class ServerManager {
     #connected: boolean = false;
     #paused: boolean = false;
-    #REST_ADDRESS = "http://localhost:30000/olympus";
-    #DEMO_ADDRESS = window.location.href.split('?')[0] + "demo"; /* Remove query parameters */
+    #REST_ADDRESS = "http://localhost:3001/olympus";
     #username = "";
     #password = "";
     #sessionHash: string | null = null;
     #lastUpdateTimes: { [key: string]: number } = {}
-    #demoEnabled = false;
     #previousMissionElapsedTime: number = 0;  // Track if mission elapsed time is increasing (i.e. is the server paused)
     #serverIsPaused: boolean = false;
     #intervals: number[] = [];
@@ -30,10 +28,6 @@ export class ServerManager {
         this.#lastUpdateTimes[AIRBASES_URI] = Date.now();
         this.#lastUpdateTimes[BULLSEYE_URI] = Date.now();
         this.#lastUpdateTimes[MISSION_URI] = Date.now();
-    }
-
-    toggleDemoEnabled() {
-        this.#demoEnabled = !this.#demoEnabled;
     }
 
     setCredentials(newUsername: string, newPassword: string) {
@@ -63,7 +57,7 @@ export class ServerManager {
             optionsString = `commandHash=${options.commandHash}`;
 
         /* On the connection */
-        xmlHttp.open("GET", `${this.#demoEnabled ? this.#DEMO_ADDRESS : this.#REST_ADDRESS}/${uri}${optionsString ? `?${optionsString}` : ''}`, true);
+        xmlHttp.open("GET", `${this.#REST_ADDRESS}/${uri}${optionsString ? `?${optionsString}` : ''}`, true);
 
         /* If provided, set the credentials */
         if (this.#username && this.#password)
@@ -106,7 +100,7 @@ export class ServerManager {
 
     PUT(request: object, callback: CallableFunction) {
         var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open("PUT", this.#demoEnabled ? this.#DEMO_ADDRESS : this.#REST_ADDRESS);
+        xmlHttp.open("PUT", this.#REST_ADDRESS);
         xmlHttp.setRequestHeader("Content-Type", "application/json");
         if (this.#username && this.#password)
             xmlHttp.setRequestHeader("Authorization", "Basic " + btoa(`${this.#username}:${this.#password}`));
@@ -130,8 +124,8 @@ export class ServerManager {
         xmlHttp.send(null);
     }
 
-    setAddress(address: string, port: number) {
-        this.#REST_ADDRESS = `http://${address}:${port}/olympus`
+    setAddress(address: string) {
+        this.#REST_ADDRESS = `${address}olympus`
         console.log(`Setting REST address to ${this.#REST_ADDRESS}`)
     }
 

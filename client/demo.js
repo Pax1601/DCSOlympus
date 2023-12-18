@@ -1,6 +1,16 @@
-const { random } = require('@turf/turf');
 var basicAuth = require('express-basic-auth')
+var logger = require('morgan');
 var enc = new TextEncoder();
+
+var express = require('express');
+var fs = require('fs');
+
+let rawdata = fs.readFileSync('../olympus.json');
+let config = JSON.parse(rawdata);
+
+var app = express();
+
+app.use(logger('dev'));
 
 const aircraftDatabase = require('./public/databases/units/aircraftDatabase.json');
 const helicopterDatabase = require('./public/databases/units/helicopterDatabase.json');
@@ -16,16 +26,16 @@ const DEMO_WEAPONS_DATA = {
 class DemoDataGenerator {
     constructor(app, config)
     { 
-        app.get('/demo/units', (req, res) => this.units(req, res));
-        app.get('/demo/weapons', (req, res) => this.weapons(req, res));
-        app.get('/demo/logs', (req, res) => this.logs(req, res));
-        app.get('/demo/bullseyes', (req, res) => this.bullseyes(req, res));
-        app.get('/demo/airbases', (req, res) => this.airbases(req, res));
-        app.get('/demo/mission', (req, res) => this.mission(req, res));
-        app.get('/demo/commands', (req, res) => this.command(req, res));
-        app.put('/demo', (req, res) => this.put(req, res));
+        app.get('/olympus/units', (req, res) => this.units(req, res));
+        app.get('/olympus/weapons', (req, res) => this.weapons(req, res));
+        app.get('/olympus/logs', (req, res) => this.logs(req, res));
+        app.get('/olympus/bullseyes', (req, res) => this.bullseyes(req, res));
+        app.get('/olympus/airbases', (req, res) => this.airbases(req, res));
+        app.get('/olympus/mission', (req, res) => this.mission(req, res));
+        app.get('/olympus/commands', (req, res) => this.command(req, res));
+        app.put('/olympus', (req, res) => this.put(req, res));
 
-        app.use('/demo', basicAuth({
+        app.use('/olympus', basicAuth({
             users: { 
                 'admin': config["authentication"]["gameMasterPassword"],
                 'blue': config["authentication"]["blueCommanderPassword"],
@@ -511,4 +521,6 @@ class DemoDataGenerator {
 
 }
 
-module.exports = DemoDataGenerator;
+var demoDataGenerator = new DemoDataGenerator(app, config);
+
+module.exports = app;
