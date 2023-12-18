@@ -47,19 +47,19 @@ export class LogPanel extends Panel {
         this.#calculateHeight();
     }
 
-    appendLogs(logs: {[key: string]: string}) {
+    appendLogs(logs: {[key: string]: any}) {
         Object.keys(logs).forEach((key: string) => {
             if (!(key in this.#logs)) {
                 this.#logs[key] = logs[key];
-                this.appendLog(logs[key]);
+                this.appendLog(logs[key].commander, logs[key].message);
             }
         });
     }
 
-    appendLog(log: string) {
+    appendLog(commander: string, log: string) {
         var el = document.createElement("div");
         el.classList.add("ol-log-entry");
-        el.textContent = log;
+        el.textContent = commander + " - " + log;
         this.getElement().querySelector(".ol-scrollable")?.appendChild(el);
         console.log(log);
 

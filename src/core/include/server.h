@@ -26,6 +26,7 @@ private:
 
     string extractUsername(http_request& request);
     string extractPassword(http_request& request);
+    string getCommander(string& password, string& gameMasterPassword, string& blueCommanderPassword, string& redCommanderPassword);
 
     void task();
 

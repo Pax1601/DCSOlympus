@@ -7,7 +7,7 @@ using namespace std::chrono;
 const string Logger::m_sFileName = LOG_NAME;
 Logger* Logger::m_pThis = NULL;
 ofstream Logger::m_Logfile;
-std::map<unsigned long long, std::string> Logger::m_logs;
+std::map<unsigned long long, class Log> Logger::m_logs;
 
 Logger::Logger()
 {
@@ -34,7 +34,7 @@ void Logger::Close()
     m_Logfile.close();
 }
 
-void Logger::toJSON(json::value& json, unsigned long long time)
+void Logger::toJSON(json::value& json, unsigned long long time, const std::string& commander)
 {
     lock_guard<mutex> guard(mutexLock);
     /* Loop on the logs in reverse since we are usually only interested in the very last added logs */
@@ -43,30 +43,29 @@ void Logger::toJSON(json::value& json, unsigned long long time)
     {
         --itr;
         if (itr->first < time) return;
-        json[to_wstring(itr->first)] = json::value::string(to_wstring(itr->second));
+        auto logCommander = itr->second.getCommander();
+        if (commander == "GM" || logCommander == "SYSTEM" || commander == logCommander) {
+            json[to_wstring(itr->first)][L"message"] = json::value::string(to_wstring(itr->second.getMessage()));
+            json[to_wstring(itr->first)][L"commander"] = json::value::string(to_wstring(logCommander));
+        }
     }
 }
 
-void Logger::log(const string& message, bool addToJSON)
+void Logger::log(const string& message, const string& commander, bool addToJSON)
 {
     lock_guard<mutex> guard(mutexLock);
     Open();
     milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
     m_Logfile << CurrentDateTime() << ":\t";
     m_Logfile << message << "\n";
-    if (addToJSON)
-        m_logs[static_cast<unsigned long long>(ms.count())] = message;
+    if (addToJSON) {
+        Log newLog(commander, message);
+        m_logs[static_cast<unsigned long long>(ms.count())] = newLog;
+    }
     Close();
 }
 
-void Logger::log(const wstring& message, bool addToJSON)
+void Logger::log(const wstring& message, const string& commander, bool addToJSON)
 {
-    lock_guard<mutex> guard(mutexLock);
-    Open();
-    milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
-    m_Logfile << CurrentDateTime() << ":\t";
-    m_Logfile << to_string(message) << "\n";
-    if (addToJSON)
-        m_logs[static_cast<unsigned long long>(ms.count())] = to_string(message);
-    Close();
+    this->log(to_string(message), commander, addToJSON);
 }
