@@ -61,8 +61,8 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_UK
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION {{OLYMPUS_VS_VERSION_NUMBER_1}},0
- PRODUCTVERSION {{OLYMPUS_VS_VERSION_NUMBER_1}},0
+ FILEVERSION 1,0,3,0
+ PRODUCTVERSION 1,0,3,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -79,12 +79,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "DCS Olympus"
             VALUE "FileDescription", "DCS Olympus"
-            VALUE "FileVersion", "{{OLYMPUS_VS_VERSION_NUMBER_2}}.0"
+            VALUE "FileVersion", "1.0.3.0"
             VALUE "InternalName", "olympus.dll"
             VALUE "LegalCopyright", "Copyright (C) 2023"
             VALUE "OriginalFilename", "olympus.dll"
             VALUE "ProductName", "DCS Olympus"
-            VALUE "ProductVersion", "{{OLYMPUS_VS_VERSION_NUMBER_2}}.0"
+            VALUE "ProductVersion", "1.0.3.0"
         END
     END
     BLOCK "VarFileInfo"

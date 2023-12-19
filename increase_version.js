@@ -41,23 +41,23 @@ fs.readFile("./version.json", "utf8", (error, data) => {
             if (err) {
                 return console.log(err);
             }
-            if (data.search(/{{OLYMPUS_VERSION_NUMBER}}/g) >= 0) {
-                console.log(`Replacing version in ${file}`);
+            //if (data.search(/{{OLYMPUS_VERSION_NUMBER}}/g) >= 0) {
+            //    console.log(`Replacing version in ${file}`);
+			//
+            //    data = data.replace(/{{OLYMPUS_VERSION_NUMBER}}/g, `v${major}.${minor}.${minorminor}`);
+            //    data = data.replace(/{{OLYMPUS_COMMIT_HASH}}/g, revision);
+            //    fileChanged = true;
+            //}
 
-                data = data.replace(/{{OLYMPUS_VERSION_NUMBER}}/g, `v${major}.${minor}.${minorminor}`);
-                data = data.replace(/{{OLYMPUS_COMMIT_HASH}}/g, revision);
+            if (data.search(/FILEVERSION \d,\d,\d/g) >= 0) {
+                console.log(`Replacing version in ${file}`);
+                var data = data.replace(/FILEVERSION \d,\d,\d/g, `FILEVERSION ${major},${minor},${minorminor}`);
                 fileChanged = true;
             }
 
-            if (data.search(/{{OLYMPUS_VS_VERSION_NUMBER_1}}/g) >= 0) {
+            if (data.search(/VALUE "FileVersion", "\d.\d.\d.0"/g) >= 0) {
                 console.log(`Replacing version in ${file}`);
-                var data = data.replace(/{{OLYMPUS_VS_VERSION_NUMBER_1}}/g, `${major},${minor},${minorminor}`);
-                fileChanged = true;
-            }
-
-            if (data.search(/{{OLYMPUS_VS_VERSION_NUMBER_2}}/g) >= 0) {
-                console.log(`Replacing version in ${file}`);
-                data = data.replace(/{{OLYMPUS_VS_VERSION_NUMBER_2}}/g, `${major}.${minor}.${minorminor}`);
+                data = data.replace(/VALUE "FileVersion", "\d.\d.\d.0"/g, `VALUE "FileVersion", "${major}.${minor}.${minorminor}.0" `);
                 fileChanged = true;
             }
 
