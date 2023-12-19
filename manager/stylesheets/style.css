@@ -100,7 +100,7 @@ body {
 .folder {
     width: 20px;
     height: 20px;
-    background-image: url("./icons/folder-open-solid.svg");
+    background-image: url("../icons/folder-open-solid.svg");
     margin-right: 15px;
 }
 
@@ -162,7 +162,7 @@ body {
 }
 
 .apply {
-    background-image: url("./icons/check-solid.svg");
+    background-image: url("../icons/check-solid.svg");
     background-color: #017DC1;
     border: 1px solid transparent;
 }
@@ -176,7 +176,7 @@ body {
 }
 
 .remove {
-    background-image: url("./icons/trash-can-regular.svg");
+    background-image: url("../icons/trash-can-regular.svg");
 }
 
 .disabled {
@@ -221,6 +221,6 @@ input.error {
 .info {
     width: 12px;
     height: 12px;
-    background-image: url("./icons/circle-info-solid.svg");
+    background-image: url("../icons/circle-info-solid.svg");
     background-position: 50% 50%;
 }

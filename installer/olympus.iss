@@ -3,7 +3,7 @@
 [Setup] 
 AppName=DCS Olympus 
 AppVerName=DCS Olympus {#version}
-DefaultDirName={usersavedgames}\DCS.openbeta
+DefaultDirName={usersavedgames}\DCS Olympus
 DefaultGroupName=DCSOlympus  
 OutputBaseFilename=DCSOlympus_{#version}
 UninstallFilesDir={app}
@@ -11,6 +11,7 @@ SetupIconFile="..\img\olympus.ico"
 DirExistsWarning=no
 AppendDefaultDirName=no
 LicenseFile="..\LEGAL.txt"
+PrivilegesRequired=lowest
 
 [Messages]
 WizardSelectDir=Select the location of DCS's Saved Games folder
@@ -19,12 +20,11 @@ SelectDirLabel3=DCS Olympus must be installed within DCS's Saved Games folder.
 SelectDirBrowseLabel=This is the detected path. If this is incorrect, click Browse to set the correct folder. 
   
 [Tasks] 
-; NOTE: The following entry contains English phrases ("Create a desktop icon" and "Additional icons"). You are free to translate them into another language if required. 
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+Name: "desktopicon"; Description: "Create desktop shortcut"; GroupDescription: "Additional icons"; Flags: unchecked
+Name: "installmodules"; Description: "Install node.js modules"; GroupDescription: "Dependencies";
 
 [Files] 
-; NOTE: Don't use "Flags: ignoreversion" on any shared system files 
-Source: "..\olympus.json"; DestDir: "{app}"; Flags: onlyifdoesntexist 
+Source: "..\olympus.json"; DestDir: "{app}";
 
 Source: "..\scripts\OlympusHook.lua"; DestDir: "{app}\Scripts"; Flags: ignoreversion 
 Source: "..\scripts\OlympusCommand.lua"; DestDir: "{app}\Scripts"; Flags: ignoreversion 
@@ -33,7 +33,7 @@ Source: "..\scripts\templates.lua"; DestDir: "{app}\Scripts"; Flags: ignoreversi
 Source: "..\scripts\mist.lua"; DestDir: "{app}\Scripts"; Flags: ignoreversion 
 Source: "..\scripts\mods.lua"; DestDir: "{app}\Scripts"; Flags: ignoreversion 
 
-Source: "..\mod\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs;
+Source: "..\mod\*"; DestDir: "{app}\mod"; Flags: ignoreversion recursesubdirs;
 
 Source: "..\bin\*.dll"; DestDir: "{app}\bin"; Flags: ignoreversion;
 
@@ -44,25 +44,30 @@ Source: "..\client\views\*"; DestDir: "{app}\client\views"; Flags: ignoreversion
 Source: "..\client\app.js"; DestDir: "{app}\client"; Flags: ignoreversion;
 Source: "..\client\demo.js"; DestDir: "{app}\client"; Flags: ignoreversion;
 Source: "..\client\package.json"; DestDir: "{app}\client"; Flags: ignoreversion;
-Source: "..\client\run_client.js"; DestDir: "{app}\client"; Flags: ignoreversion;
-
 Source: "..\client\configurator.js"; DestDir: "{app}\client"; Flags: ignoreversion;
 Source: "..\client\install.bat"; DestDir: "{app}\client"; Flags: ignoreversion;
+
+Source: "..\manager\icons\*"; DestDir: "{app}\manager\icons"; Flags: ignoreversion;
+Source: "..\manager\*"; DestDir: "{app}\manager"; Flags: ignoreversion;
 
 Source: "..\img\olympus.ico"; DestDir: "{app}\img"; Flags: ignoreversion;
 Source: "..\img\olympus_server.ico"; DestDir: "{app}\img"; Flags: ignoreversion;
 Source: "..\img\olympus_configurator.ico"; DestDir: "{app}\img"; Flags: ignoreversion;
 Source: "..\img\configurator_logo.png"; DestDir: "{app}\img"; Flags: ignoreversion;
+Source: "..\img\OlympusLogoFinal_4k.png"; DestDir: "{app}\img"; Flags: ignoreversion;
 
-Source: "..\LEGAL.txt"; DestDir: "{app}"; Flags: ignoreversion;
+Source: "..\LEGAL.txt"; DestDir: "{app}"; Flags: ignoreversion;                  
 
 [Run]
-Filename: "{app}\client\install.bat"; WorkingDir:"{app}\client"; Flags: runhidden; StatusMsg: "Installing node.js modules, this may take some time...";
-Filename: "node.exe"; WorkingDir:"{app}\client"; Parameters: configurator.js -a {code:GetAddress} -c {code:GetClientPort} -b {code:GetBackendPort} -p {code:GetPassword} --bp {code:GetBluePassword} --rp {code:GetRedPassword}; Check: CheckCallConfigurator; Flags: runhidden; StatusMsg: "Applying configuration...";
+Filename: "{app}\client\install.bat"; Description: "Installing node.js modules, this may take some time..."; Tasks: installmodules;
+Filename: "{app}\manager\install.bat"; Description: "Installing node.js modules, this may take some time..."; Tasks: installmodules;
+Filename: "{app}\manager\run.vbs"; WorkingDir: "{app}\manager"; Description: "Launch the Olympus manager"; Flags: postinstall shellexec;
 
 [Icons]
-Name: "{userdesktop}\DCS Olympus Client"; Filename: "node.exe"; WorkingDir:"{app}\client"; Tasks: desktopicon; IconFilename: "{app}\img\olympus.ico"; Check: CheckLocalInstall; Parameters: "run_client.js"; Flags: runminimized;
-Name: "{app}\DCS Olympus Client"; Filename: "node.exe"; WorkingDir:"{app}\client"; IconFilename: "{app}\img\olympus.ico"; Check: CheckLocalInstall; Parameters: "run_client.js"; Flags: runminimized;
+Name: "{userdesktop}\DCS Olympus Manager"; Filename: "{app}\manager\run.vbs"; Tasks: desktopicon; IconFilename: "{app}\img\olympus.ico";
+Name: "{app}\DCS Olympus Manager"; Filename: "{app}\manager\run.vbs"; IconFilename: "{app}\img\olympus_configurator.ico"; 
+Name: "{app}\DCS Olympus Server"; Filename: "{app}\manager\server.bat"; IconFilename: "{app}\img\olympus_server.ico"; 
+Name: "{app}\DCS Olympus"; Filename: "{app}\manager\local.bat"; IconFilename: "{app}\img\olympus.ico"; 
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}"

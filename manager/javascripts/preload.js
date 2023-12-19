@@ -83,7 +83,7 @@ class InstanceDiv {
             data["installed"] = true;
         }
 
-        ejs.renderFile("./instanceDiv.ejs", data, {}, (err, str) => {
+        ejs.renderFile("./ejs/instanceDiv.ejs", data, {}, (err, str) => {
             this.element.innerHTML = str;
             this.element.querySelector(".add").addEventListener("click", (e) => {
                 if (!e.srcElement.classList.contains("disabled"))

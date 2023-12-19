@@ -1,12 +1,12 @@
 const { app, BrowserWindow } = require('electron/main')
-const path = require('node:path')
+const path = require('path')
 
 function createWindow() {
 	const win = new BrowserWindow({
 		width: 1310,
 		height: 800,
 		webPreferences: {
-			preload: path.join(__dirname, 'preload.js'),
+			preload: path.join(__dirname, "javascripts", 'preload.js'),
 			nodeIntegration: true, // like here
 		},
 		icon: "./../img/olympus.ico"

@@ -2,13 +2,14 @@
   "name": "dcsolympus_manager",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "manager.js",
   "scripts": {
     "start": "electron ."
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "create-windowless-app": "^11.0.0",
     "ejs": "^3.1.9",
     "electron": "^28.0.0",
     "portfinder": "^1.0.32",
