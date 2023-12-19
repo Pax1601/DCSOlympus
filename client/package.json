@@ -14,15 +14,18 @@
     "watch": "watchify .\\src\\index.ts --debug -o .\\public\\javascripts\\bundle.js -t [ babelify --global true --presets [ @babel/preset-env ] --extensions '.js'] -p [ tsify --noImplicitAny ]"
   },
   "dependencies": {
+    "appjs": "^0.0.20",
     "body-parser": "^1.20.2",
     "debug": "~2.6.9",
     "ejs": "^3.1.8",
+    "electron": "^28.0.0",
     "express": "~4.16.1",
     "express-basic-auth": "^1.2.1",
     "http-proxy-middleware": "^2.0.6",
     "js-sha256": "^0.10.1",
     "morgan": "~1.9.1",
     "prompt-sync": "^4.2.0",
+    "regedit": "^5.1.2",
     "save": "^2.9.0",
     "sha256": "^0.2.0",
     "srtm-elevation": "^2.1.2",
@@ -31,10 +34,9 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "leaflet-gesture-handling": "^1.2.2",
-    "@turf/turf": "^6.5.0",
     "@babel/preset-env": "^7.21.4",
     "@tanem/svg-injector": "^10.1.68",
+    "@turf/turf": "^6.5.0",
     "@types/formatcoords": "^1.1.0",
     "@types/geojson": "^7946.0.10",
     "@types/leaflet": "^1.9.0",
@@ -50,6 +52,7 @@
     "geodesy": "^1.1.2",
     "leaflet": "^1.9.3",
     "leaflet-control-mini-map": "^0.4.0",
+    "leaflet-gesture-handling": "^1.2.2",
     "leaflet-path-drag": "*",
     "leaflet.nauticscale": "^1.1.0",
     "nodemon": "^2.0.20",

@@ -3,7 +3,11 @@ const path = require('path')
 const yargs = require('yargs');
 const prompt = require('prompt-sync')({sigint: true});
 const sha256 = require('sha256');
-const jsonPath = path.join('..', 'olympus.json');
+var jsonPath = path.join('..', 'olympus.json');
+var regedit = require('regedit')
+
+const shellFoldersKey = 'HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders'
+const saveGamesKey = '{4C5C32FF-BB9D-43B0-B5B4-2D72E54EAAA4}'
 
 /* Set the acceptable values */
 yargs.alias('a', 'address').describe('a', 'Backend address').string('a');
@@ -12,6 +16,7 @@ yargs.alias('c', 'clientPort').describe('c', 'Client port').number('c');
 yargs.alias('p', 'gameMasterPassword').describe('p', 'Game Master password').string('p');
 yargs.alias('bp', 'blueCommanderPassword').describe('bp', 'Blue Commander password').string('bp');
 yargs.alias('rp', 'redCommanderPassword').describe('rp', 'Red Commander password').string('rp');
+yargs.alias('d', 'directory').describe('d', 'Directory where the DCS Olympus configurator is located').string('rp');
 args = yargs.argv;
 
 async function run() {
@@ -29,21 +34,6 @@ async function run() {
         /* Run in interactive mode */
         if (args.address === undefined && args.clientPort === undefined && args.backendPort === undefined &&
             args.gameMasterPassword === undefined && args.blueCommanderPassword === undefined && args.redCommanderPassword === undefined) {
-
-            console.log('\x1b[36m%s\x1b[0m', "*********************************************************************");
-            console.log('\x1b[36m%s\x1b[0m', "*  _____   _____  _____    ____  _                                  *");
-            console.log('\x1b[36m%s\x1b[0m', "* |  __ \\ / ____|/ ____|  / __ \\| |                                 *");
-            console.log('\x1b[36m%s\x1b[0m', "* | |  | | |    | (___   | |  | | |_   _ _ __ ___  _ __  _   _ ___  *");
-            console.log('\x1b[36m%s\x1b[0m', "* | |  | | |     \\___ \\  | |  | | | | | | '_ ` _ \\| '_ \\| | | / __| *");
-            console.log('\x1b[36m%s\x1b[0m', "* | |__| | |____ ____) | | |__| | | |_| | | | | | | |_) | |_| \\__ \\ *");
-            console.log('\x1b[36m%s\x1b[0m', "* |_____/ \\_____|_____/   \\____/|_|\\__, |_| |_| |_| .__/ \\__,_|___/ *");
-            console.log('\x1b[36m%s\x1b[0m', "*                                   __/ |         | |               *");
-            console.log('\x1b[36m%s\x1b[0m', "*                                  |___/          |_|               *");
-            console.log('\x1b[36m%s\x1b[0m', "*********************************************************************");
-            console.log('\x1b[36m%s\x1b[0m', "");
-
-            console.log("DCS Olympus configurator {{OLYMPUS_VERSION_NUMBER}}.{{OLYMPUS_COMMIT_HASH}}");
-            console.log("");
 
             var newValue;
             var result;
@@ -113,5 +103,65 @@ async function run() {
     await new Promise(resolve => setTimeout(resolve, 3000));
 }
 
+console.log('\x1b[36m%s\x1b[0m', "*********************************************************************");
+console.log('\x1b[36m%s\x1b[0m', "*  _____   _____  _____    ____  _                                  *");
+console.log('\x1b[36m%s\x1b[0m', "* |  __ \\ / ____|/ ____|  / __ \\| |                                 *");
+console.log('\x1b[36m%s\x1b[0m', "* | |  | | |    | (___   | |  | | |_   _ _ __ ___  _ __  _   _ ___  *");
+console.log('\x1b[36m%s\x1b[0m', "* | |  | | |     \\___ \\  | |  | | | | | | '_ ` _ \\| '_ \\| | | / __| *");
+console.log('\x1b[36m%s\x1b[0m', "* | |__| | |____ ____) | | |__| | | |_| | | | | | | |_) | |_| \\__ \\ *");
+console.log('\x1b[36m%s\x1b[0m', "* |_____/ \\_____|_____/   \\____/|_|\\__, |_| |_| |_| .__/ \\__,_|___/ *");
+console.log('\x1b[36m%s\x1b[0m', "*                                   __/ |         | |               *");
+console.log('\x1b[36m%s\x1b[0m', "*                                  |___/          |_|               *");
+console.log('\x1b[36m%s\x1b[0m', "*********************************************************************");
+console.log('\x1b[36m%s\x1b[0m', "");
+
+console.log("DCS Olympus configurator {{OLYMPUS_VERSION_NUMBER}}.{{OLYMPUS_COMMIT_HASH}}");
+console.log("");
+
 /* Run the configurator */
-run();
+if (args.directory) {
+    jsonPath = path.join(args.directory, "olympus.json");
+}
+else {
+    /* Automatically detect possible DCS installation folders */
+    regedit.list(shellFoldersKey, function(err, result) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            if (result[shellFoldersKey] !== undefined && result[shellFoldersKey]["exists"] && result[shellFoldersKey]['values'][saveGamesKey] !== undefined && result[shellFoldersKey]['values'][saveGamesKey]['value'] !== undefined)
+            {
+                const searchpath = result[shellFoldersKey]['values'][saveGamesKey]['value'];
+                const folders = fs.readdirSync(searchpath);
+                var options = [];
+                folders.forEach((folder) => {
+                    if (fs.existsSync(path.join(searchpath, folder, "Logs", "dcs.log"))) {
+                        options.push(folder);
+                    }
+                })
+                console.log("The following DCS Saved Games folders have been automatically detected.")
+                options.forEach((folder, index) => {
+                    console.log(`(${index + 1}) ${folder}`)
+                });
+                while (true) {
+                    var newValue = prompt(`Please choose a folder onto which the configurator shall operate by typing the associated number: `)
+                    result = Number(newValue);
+                    
+                    if (!isNaN(result) && Number.isInteger(result) && result > 0 && result <= options.length) {
+                        jsonPath = path.join(searchpath, options[result - 1], "Config", "olympus.json");
+                        break;
+                    }
+                    else {
+                        console.log(`Please type a number between 1 and ${options.length}`);
+                    }
+                }
+                
+            } else {
+                console.error("An error occured while trying to fetch the location of the DCS folder. Please type the folder location manually.")
+                jsonPath = path.join(prompt(`DCS Saved Games folder location: `), "olympus.json");
+            }
+            console.log(`Configurator will run on ${jsonPath}, if this is incorrect please restart the configurator`)
+            run();
+        }
+    })
+}
