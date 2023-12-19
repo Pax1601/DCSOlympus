@@ -1,6 +1,6 @@
 import os
 
-# save DCS.openbeta\\mods\\aircraft path as variable (you will need to put in the path to your own directory)
+# save DCS.openbeta\\mods\\aircraft path as variable
 path = f"{os.environ['UserProfile']}\\Saved Games\\DCS.openbeta\\Mods\\aircraft"
 
 # write everything to a working file - to be deleted after getting rid of unnecessary trailing commas
