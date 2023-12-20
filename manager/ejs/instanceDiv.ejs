@@ -3,6 +3,10 @@
         <div class="icon folder"></div>
         <span><%= folder %></span>
     </div>
+    <div class="version">
+        Detected .dll version: <span class="<%= version === "n/a"? '' : (version === newVersion? 'accent-green': 'accent-red blink')%>"><%= version %></span> <br>
+        Available .dll version: <span class="accent-green"><%= newVersion %></span>
+    </div>
     <div class="instance-content">
         <table class="input-table">
             <tr>
@@ -58,6 +62,7 @@
             <button class="button add <%= installed? "hide": "" %>" tabindex="<%= index + 6 %>" title="Clicking on this will install all the necessary files in your DCS instance. Remember to close DCS before doing this!">Install Olympus to instance</button>
             <button class="button apply <%= !installed? "hide": "" %>" tabindex="<%= index + 7 %>" title="Clicking on this will apply your changes to the configuration. Remember to restart any running mission!">Apply changes</button>
             <button class="button remove <%= !installed? "hide": "" %>" tabindex="<%= index + 8 %>" title="Clicking on this will remove Olympus from your DCS folder.">Remove Olympus</button>
+            <button class="button update <%= !(version !== "n/a" && version !== newVersion)? "hide": "" %>" tabindex="<%= index + 9 %>" title="Clicking on this will update Olympus in your DCS folder.">Update</button>
         </div>
     </div>
 </div>

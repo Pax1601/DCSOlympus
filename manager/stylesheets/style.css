@@ -69,8 +69,8 @@ body {
     column-gap: 10px;
 }
 
-#header>div:first-child>div:last-child {
-    width: 100px;
+#header>div:first-of-type{
+    width: 300px;
 }
 
 #header>div:last-child {
@@ -165,6 +165,11 @@ body {
     margin-right: 15px;
 }
 
+.version {
+    font-size: 13px;
+    color: #F2F2F2;
+}
+
 .input-table {
     padding: 0px;
     margin: 0px;
@@ -235,7 +240,7 @@ body {
 }
 
 .update {
-    padding: 5px 15px 5px 15px;
+    background-image: url("../icons/rotate-right-solid.svg");
 }
 
 .other {
@@ -281,6 +286,10 @@ input.error {
     color: #FF5858;
 }
 
+.accent-red {
+    color: #FF5858;
+}
+
 .accent-green {
     color: #8bff63;
 }
@@ -293,12 +302,12 @@ input.error {
 }
 
 .blink {
-    animation: blinker 1s linear 3;
+    animation: blinker 1s linear infinite;
 }
 
 @keyframes blinker {
     50% {
-      background-color: transparent;
+        color: transparent;
     }
 }
 

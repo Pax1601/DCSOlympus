@@ -6,7 +6,8 @@ const portfinder = require('portfinder')
 const sha256 = require('sha256')
 const contextBridge = require('electron').contextBridge;
 const ipcRenderer = require('electron').ipcRenderer;
-const createDesktopShortcut = require('create-desktop-shortcuts');
+const createShortcut = require('create-desktop-shortcuts');
+const vi = require('win-version-info');
 
 const shellFoldersKey = 'HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders'
 const saveGamesKey = '{4C5C32FF-BB9D-43B0-B5B4-2D72E54EAAA4}'
@@ -37,29 +38,29 @@ const ipc = {
 contextBridge.exposeInMainWorld(
     // Allowed 'ipcRenderer' methods.
     'ipcRender', {
-        // From render to main.
-        send: (channel, args) => {
-            let validChannels = ipc.render.send;
-            if (validChannels.includes(channel)) {
-                ipcRenderer.send(channel, args);
-            }
-        },
-        // From main to render.
-        receive: (channel, listener) => {
-            let validChannels = ipc.render.receive;
-            if (validChannels.includes(channel)) {
-                // Deliberately strip event as it includes `sender`.
-                ipcRenderer.on(channel, (event, ...args) => listener(...args));
-            }
-        },
-        // From render to main and back again.
-        invoke: (channel, args) => {
-            let validChannels = ipc.render.sendReceive;
-            if (validChannels.includes(channel)) {
-                return ipcRenderer.invoke(channel, args);
-            }
+    // From render to main.
+    send: (channel, args) => {
+        let validChannels = ipc.render.send;
+        if (validChannels.includes(channel)) {
+            ipcRenderer.send(channel, args);
+        }
+    },
+    // From main to render.
+    receive: (channel, listener) => {
+        let validChannels = ipc.render.receive;
+        if (validChannels.includes(channel)) {
+            // Deliberately strip event as it includes `sender`.
+            ipcRenderer.on(channel, (event, ...args) => listener(...args));
+        }
+    },
+    // From render to main and back again.
+    invoke: (channel, args) => {
+        let validChannels = ipc.render.sendReceive;
+        if (validChannels.includes(channel)) {
+            return ipcRenderer.invoke(channel, args);
         }
     }
+}
 );
 
 function showPopup(message, otherButton, otherButtonCallback) {
@@ -69,7 +70,7 @@ function showPopup(message, otherButton, otherButtonCallback) {
     };
 
     var popups = document.querySelectorAll(".popup");
-    
+
     for (let i = 0; i < popups.length; i++) {
         document.body.removeChild(popups[i])
     }
@@ -78,8 +79,8 @@ function showPopup(message, otherButton, otherButtonCallback) {
         var div = document.createElement("div");
         div.classList.add("popup");
         div.innerHTML = str;
-        document.body.appendChild(div);       
-        
+        document.body.appendChild(div);
+
         div.querySelector(".apply").addEventListener("click", () => {
             document.body.removeChild(div);
         })
@@ -91,7 +92,7 @@ function showPopup(message, otherButton, otherButtonCallback) {
 }
 
 function checkPort(port, callback) {
-    portfinder.getPort({port: port, stopPort: port}, (err, res) => {
+    portfinder.getPort({ port: port, stopPort: port }, (err, res) => {
         if (err !== null) {
             console.error(`Port ${port} already in use`);
             callback(false);
@@ -101,66 +102,116 @@ function checkPort(port, callback) {
     });
 }
 
-function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
-async function installOlympus(folder) {
+function installOlympus(folder) {
     console.log(`Installing Olympus in ${folder}`);
-    fs.cpSync(path.join("..", "mod"), path.join(folder, "Mods", "Services", "Olympus"), {recursive: true});
-    fs.cpSync(path.join("..", "scripts", "OlympusHook.lua"), path.join(folder, "Scripts", "Hook", "OlympusHook.lua"));
-    fs.cpSync(path.join("..", "olympus.json"), path.join(folder, "Config", "olympus.json"));
-    if (createDesktopShortcut({
-        windows: {
-            filePath: path.resolve(__dirname, '..', '..', 'client', 'client.vbs'),
-            outputPath: folder,
-            name: "DCS Olympus Client",
-            arguments: `"${path.join(folder, "Config", "olympus.json")}"`,
-            icon: path.resolve(__dirname, '..', '..', 'img', 'olympus.ico'),
-            workingDirectory: path.resolve(__dirname, '..', '..', 'client')
+    try {
+        fs.cpSync(path.join("..", "mod"), path.join(folder, "Mods", "Services", "Olympus"), { recursive: true });
+        fs.cpSync(path.join("..", "scripts", "OlympusHook.lua"), path.join(folder, "Scripts", "Hook", "OlympusHook.lua"));
+        fs.cpSync(path.join("..", "olympus.json"), path.join(folder, "Config", "olympus.json"));
+        if (createShortcut({
+            windows: {
+                filePath: path.resolve(__dirname, '..', '..', 'client', 'client.vbs'),
+                outputPath: folder,
+                name: "DCS Olympus Client",
+                arguments: `"${path.join(folder, "Config", "olympus.json")}"`,
+                icon: path.resolve(__dirname, '..', '..', 'img', 'olympus.ico'),
+                workingDirectory: path.resolve(__dirname, '..', '..', 'client')
+            }
+        }) &&
+            createShortcut({
+                windows: {
+                    filePath: path.resolve(__dirname, '..', '..', 'client', 'server.vbs'),
+                    outputPath: folder,
+                    name: "DCS Olympus Server",
+                    arguments: `"${path.join(folder, "Config", "olympus.json")}"`,
+                    icon: path.resolve(__dirname, '..', '..', 'img', 'olympus_server.ico'),
+                    workingDirectory: path.resolve(__dirname, '..', '..', 'client')
+                }
+            })) {
+            console.log("Shorcuts created succesfully")
+        } else {
+            return false;
         }
-    }) && 
-    createDesktopShortcut({
-        windows: {
-            filePath: path.resolve(__dirname, '..', '..', 'client', 'server.vbs'),
-            outputPath: folder,
-            name: "DCS Olympus Server",
-            arguments: `"${path.join(folder, "Config", "olympus.json")}"`,
-            icon: path.resolve(__dirname, '..', '..', 'img', 'olympus_server.ico'),
-            workingDirectory: path.resolve(__dirname, '..', '..', 'client')
-        }
-    })) {
-        console.log("Shorcuts created succesfully")
-    } else {
-        throw new Error("Error creating shortcuts");
+    } catch (e) {
+        console.error(e);
+        return false;
     }
     loadDivs();
+    return true;
 }
 
-async function uninstallOlympus(folder) {
+function uninstallOlympus(folder) {
     console.log(`Uninstalling Olympus from ${folder}`);
-    fs.rmSync(path.join(folder, "Mods", "Services", "Olympus"), {recursive: true});
-    fs.rmSync(path.join(folder, "Config", "olympus.json"));
-    loadDivs();
+    try {
+        fs.rmSync(path.join(folder, "Mods", "Services", "Olympus"), { recursive: true });
+        fs.rmSync(path.join(folder, "Config", "olympus.json"));
+        loadDivs();
+    } catch (e) {
+        console.error(e);
+        return false;
+    }
+    return true;
 }
 
-async function applyConfiguration(folder, data) {
+function applyConfiguration(folder, data) {
     console.log(`Applying configuration to Olympus from ${folder}`);
 
     if (fs.existsSync(path.join(folder, "Config", "olympus.json"))) {
         var config = JSON.parse(fs.readFileSync(path.join(folder, "Config", "olympus.json")));
-        
+
         config["client"]["port"] = data["clientPort"];
         config["server"]["port"] = data["backendPort"];
         config["server"]["address"] = data["backendAddress"];
         config["authentication"]["gameMasterPassword"] = sha256(data["gameMasterPassword"]);
         config["authentication"]["blueCommanderPassword"] = sha256(data["blueCommanderPassword"]);
         config["authentication"]["redCommanderPassword"] = sha256(data["redCommanderPassword"]);
-        
-        fs.writeFileSync(path.join(folder, "Config", "olympus.json"), JSON.stringify(config, null, 4));   
-        return true;
-    }    
-    return false;
+
+        try {
+            fs.writeFileSync(path.join(folder, "Config", "olympus.json"), JSON.stringify(config, null, 4));
+        } catch (e) {
+            console.error(e);
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+
+function updateOlympus(folder) {
+    console.log(`Updating Olympus in ${folder}`);
+    try {
+        fs.cpSync(path.join("..", "mod"), path.join(folder, "Mods", "Services", "Olympus"), { recursive: true });
+        fs.cpSync(path.join("..", "scripts", "OlympusHook.lua"), path.join(folder, "Scripts", "Hook", "OlympusHook.lua"));
+        loadDivs();
+    } catch (e) {
+        console.error(e);
+        return false;
+    }
+    return true;
+}
+
+function createDesktopShortcuts(folder) {
+    if (createShortcut({
+        windows: {
+            filePath: path.resolve(__dirname, '..', '..', 'client', 'client.vbs'),
+            name: "DCS Olympus Client",
+            arguments: `"${path.join(folder, "Config", "olympus.json")}"`,
+            icon: path.resolve(__dirname, '..', '..', 'img', 'olympus.ico'),
+            workingDirectory: path.resolve(__dirname, '..', '..', 'client')
+        }
+    }) && createShortcut({
+        windows: {
+            filePath: path.resolve(__dirname, '..', '..', 'client', 'server.vbs'),
+            name: "DCS Olympus Server",
+            arguments: `"${path.join(folder, "Config", "olympus.json")}"`,
+            icon: path.resolve(__dirname, '..', '..', 'img', 'olympus_server.ico'),
+            workingDirectory: path.resolve(__dirname, '..', '..', 'client')
+        }
+    })) {
+        showPopup("Shortcuts created successfully!")
+    } else {
+        showPopup("And error occurred while creating the shortcuts.")
+    }
 }
 
 class InstanceDiv {
@@ -180,10 +231,13 @@ class InstanceDiv {
         var data = {
             folder: this.folder,
             installed: false,
-            index: instanceDivs.length * 9
+            index: instanceDivs.length * 10
         };
 
-        
+        var newVersionInfo = vi(path.join("..", "mod", "bin", "olympus.dll"));
+        data["newVersion"] = newVersionInfo.ProductVersion;
+        data["version"] = "n/a";
+
         if (fs.existsSync(path.join(this.folder, "Config", "olympus.json"))) {
             var config = JSON.parse(fs.readFileSync(path.join(this.folder, "Config", "olympus.json")));
             data = {
@@ -191,6 +245,12 @@ class InstanceDiv {
                 ...config
             }
             data["installed"] = true;
+
+            try {
+                data["version"] = vi(path.join(this.folder, "Mods", "Services", "Olympus", "bin", "olympus.dll")).ProductVersion;
+            } catch (e) {
+                data["version"] = "n/a";
+            }
         }
 
         ejs.renderFile("./ejs/instanceDiv.ejs", data, {}, (err, str) => {
@@ -198,52 +258,28 @@ class InstanceDiv {
             this.element.querySelector(".add").addEventListener("click", (e) => {
                 if (!e.srcElement.classList.contains("disabled")) {
                     showPopup("Please wait while Olympus is being installed");
-                    delay(100)
-                    .then(() => {
-                        installOlympus(this.folder)
-                    })
-                    .then(() => {
-                        showPopup("Olympus installed successfully. Use the provided form to set Olympus properties. All fields are mandatory. Click on \"Create desktop shortcuts\" to generate Olympus shortcuts on your desktop.", "Create desktop shortcuts", () => {
-                            if (createDesktopShortcut({
-                                windows: {
-                                    filePath: path.resolve(__dirname, '..', '..', 'client', 'client.vbs'),
-                                    name: "DCS Olympus Client",
-                                    arguments: `"${path.join(this.folder, "Config", "olympus.json")}"`,
-                                    icon: path.resolve(__dirname, '..', '..', 'img', 'olympus.ico'),
-                                    workingDirectory: path.resolve(__dirname, '..', '..', 'client')
-                                }
-                            }) && createDesktopShortcut({
-                                windows: {
-                                    filePath: path.resolve(__dirname, '..', '..', 'client', 'server.vbs'),
-                                    name: "DCS Olympus Server",
-                                    arguments: `"${path.join(this.folder, "Config", "olympus.json")}"`,
-                                    icon: path.resolve(__dirname, '..', '..', 'img', 'olympus_server.ico'),
-                                    workingDirectory: path.resolve(__dirname, '..', '..', 'client')
-                                }
-                            })) {
-                                showPopup("Shortcuts created successfully!")
-                            } else {
-                                showPopup("And error occurred while creating the shortcuts.")
-                            }
-                        });
-                    }).catch(() => {
-                        showPopup("An error has occurred during installation");
-                    })
+                    window.setTimeout(() => {
+                        if (installOlympus(this.folder)) {
+                            showPopup("Olympus installed successfully. Use the provided form to set Olympus properties. All fields are mandatory. Click on \"Create desktop shortcuts\" to generate Olympus shortcuts on your desktop.", "Create desktop shortcuts", () => {
+                                createDesktopShortcuts(this.folder);
+                            });
+                        } else {
+                            showPopup("An error has occurred during installation");
+                        }
+                    }, 100);
                 }
             });
 
             this.element.querySelector(".remove").addEventListener("click", (e) => {
-                if (!e.srcElement.classList.contains("disabled")){
+                if (!e.srcElement.classList.contains("disabled")) {
                     showPopup("Please wait while Olympus is being uninstalled from DCS instance");
-                    delay(100)
-                    .then(() => {
-                        uninstallOlympus(this.folder)
-                    })
-                    .then(() => {
-                        showPopup("Olympus uninstalled successfully from DCS instance!");
-                    }).catch(() => {
-                        showPopup("An error has occurred during uninstallation");
-                    })
+                    window.setTimeout(() => {
+                        if (uninstallOlympus(this.folder)) {
+                            showPopup("Olympus uninstalled successfully from DCS instance!");
+                        } else {
+                            showPopup("An error has occurred during uninstallation");
+                        }
+                    }, 100);
                 }
             });
 
@@ -251,15 +287,26 @@ class InstanceDiv {
                 e.srcElement.classList.remove("blink");
                 if (!e.srcElement.classList.contains("disabled")) {
                     showPopup("Please wait while the configuration is being applied");
-                    delay(100)
-                    .then(() => {
-                        applyConfiguration(this.folder, this.getFields())
-                    })
-                    .then(() => {
-                        showPopup("Olympus configuration applied successfully!");
-                    }).catch(() => {
-                        showPopup("An error has occurred while applying the configuration");
-                    })
+                    window.setTimeout(() => {
+                        if (applyConfiguration(this.folder, this.getFields())) {
+                            showPopup("Olympus configuration applied successfully!");
+                        } else {
+                            showPopup("An error has occurred while applying the configuration");
+                        }
+                    }, 100)
+                }
+            });
+
+            this.element.querySelector(".update").addEventListener("click", (e) => {
+                if (!e.srcElement.classList.contains("disabled")) {
+                    showPopup("Please wait while Olympus is being updated in the DCS instance");
+                    window.setTimeout(() => {
+                        if (updateOlympus(this.folder)) {
+                            showPopup("Olympus updated successfully from DCS instance!");
+                        } else {
+                            showPopup("An error has occurred during the update");
+                        }
+                    }, 100);
                 }
             });
 
@@ -276,7 +323,7 @@ class InstanceDiv {
     getDiv() {
         return this.element;
     }
-    
+
     getFields() {
         return {
             clientPort: Number(this.element.querySelector("#client-port").value),
@@ -291,7 +338,7 @@ class InstanceDiv {
     checkFields() {
         var data = this.getFields();
 
-        /* Clear existing errors */        
+        /* Clear existing errors */
         var inputs = this.element.querySelectorAll("input");
         for (let i = 0; i < inputs.length; i++) {
             inputs[i].classList.remove("error");
@@ -300,10 +347,10 @@ class InstanceDiv {
         for (let i = 0; i < messages.length; i++) {
             messages[i].innerText = "";
         }
-        
+
         /* Enable the button */
         this.element.querySelector(".apply").classList.remove("disabled");
-        
+
         if (data["clientPort"] !== 0 && data["backendPort"] !== 0) {
             if (data["clientPort"] === data["backendPort"]) {
                 this.element.querySelector("#client-port").classList.add("error");
@@ -380,20 +427,20 @@ class InstanceDiv {
 }
 
 function loadDivs() {
-    regedit.list(shellFoldersKey, function(err, result) {
+    regedit.list(shellFoldersKey, function (err, result) {
         if (err) {
             console.log(err);
         }
         else {
-            if (result[shellFoldersKey] !== undefined && result[shellFoldersKey]["exists"] && result[shellFoldersKey]['values'][saveGamesKey] !== undefined && result[shellFoldersKey]['values'][saveGamesKey]['value'] !== undefined)
-            {
+            if (result[shellFoldersKey] !== undefined && result[shellFoldersKey]["exists"] && result[shellFoldersKey]['values'][saveGamesKey] !== undefined && result[shellFoldersKey]['values'][saveGamesKey]['value'] !== undefined) {
                 const searchpath = result[shellFoldersKey]['values'][saveGamesKey]['value'];
                 const folders = fs.readdirSync(searchpath);
                 instanceDivs = [];
                 const mainDiv = document.getElementById("main-div");
 
                 folders.forEach((folder) => {
-                    if (fs.existsSync(path.join(searchpath, folder, "Logs", "dcs.log"))) {
+                    if (fs.existsSync(path.join(searchpath, folder, "Config", "appsettings.lua")) ||
+                        fs.existsSync(path.join(searchpath, folder, "Config", "serversettings.lua"))) {
                         instanceDivs.push(new InstanceDiv(mainDiv, path.join(searchpath, folder)));
                     }
                 });
