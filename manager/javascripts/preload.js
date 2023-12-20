@@ -107,8 +107,8 @@ function delay(ms) {
 
 async function installOlympus(folder) {
     console.log(`Installing Olympus in ${folder}`);
-    fs.cpSync(path.join("..", "Mod"), path.join(folder, "Mods", "Services", "Olympus"), {recursive: true});
-    fs.cpSync(path.join("..", "Scripts", "OlympusHook.lua"), path.join(folder, "Scripts", "OlympusHook.lua"));
+    fs.cpSync(path.join("..", "mod"), path.join(folder, "Mods", "Services", "Olympus"), {recursive: true});
+    fs.cpSync(path.join("..", "scripts", "OlympusHook.lua"), path.join(folder, "Scripts", "OlympusHook.lua"));
     fs.cpSync(path.join("..", "olympus.json"), path.join(folder, "Config", "olympus.json"));
     if (createDesktopShortcut({
         windows: {

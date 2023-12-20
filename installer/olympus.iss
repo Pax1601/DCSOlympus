@@ -27,11 +27,11 @@ Name: "installmodules"; Description: "Install node.js modules"; GroupDescription
 Source: "..\olympus.json"; DestDir: "{app}";
 
 Source: "..\scripts\OlympusHook.lua"; DestDir: "{app}\Scripts"; Flags: ignoreversion 
-Source: "..\scripts\OlympusCommand.lua"; DestDir: "{app}\Scripts"; Flags: ignoreversion 
-Source: "..\scripts\unitPayloads.lua"; DestDir: "{app}\Scripts"; Flags: ignoreversion
-Source: "..\scripts\templates.lua"; DestDir: "{app}\Scripts"; Flags: ignoreversion 
-Source: "..\scripts\mist.lua"; DestDir: "{app}\Scripts"; Flags: ignoreversion 
-Source: "..\scripts\mods.lua"; DestDir: "{app}\Scripts"; Flags: ignoreversion 
+Source: "..\scripts\OlympusCommand.lua"; DestDir: "{app}\mod\scripts"; Flags: ignoreversion 
+Source: "..\scripts\unitPayloads.lua"; DestDir: "{app}\mod\scripts"; Flags: ignoreversion
+Source: "..\scripts\templates.lua"; DestDir: "{app}\mod\scripts"; Flags: ignoreversion 
+Source: "..\scripts\mist.lua"; DestDir: "{app}\mod\scripts"; Flags: ignoreversion 
+Source: "..\scripts\mods.lua"; DestDir: "{app}\mod\scripts"; Flags: ignoreversion 
 
 Source: "..\mod\*"; DestDir: "{app}\mod"; Flags: ignoreversion recursesubdirs;
 Source: "..\bin\*.dll"; DestDir: "{app}\mod\bin"; Flags: ignoreversion;
