@@ -4,11 +4,91 @@ var path = require('path')
 const ejs = require('ejs')
 const portfinder = require('portfinder')
 const sha256 = require('sha256')
+const contextBridge = require('electron').contextBridge;
+const ipcRenderer = require('electron').ipcRenderer;
+const createDesktopShortcut = require('create-desktop-shortcuts');
 
 const shellFoldersKey = 'HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders'
 const saveGamesKey = '{4C5C32FF-BB9D-43B0-B5B4-2D72E54EAAA4}'
 
 var instanceDivs = [];
+
+// White-listed channels.
+const ipc = {
+    'render': {
+        // From render to main.
+        'send': [
+            'window:minimize', // Channel names
+            'window:maximize',
+            'window:restore',
+            'window:close'
+        ],
+        // From main to render.
+        'receive': [
+            'event:maximized',
+            'event:unmaximized'
+        ],
+        // From render to main and back again.
+        'sendReceive': []
+    }
+};
+
+// Exposed protected methods in the render process.
+contextBridge.exposeInMainWorld(
+    // Allowed 'ipcRenderer' methods.
+    'ipcRender', {
+        // From render to main.
+        send: (channel, args) => {
+            let validChannels = ipc.render.send;
+            if (validChannels.includes(channel)) {
+                ipcRenderer.send(channel, args);
+            }
+        },
+        // From main to render.
+        receive: (channel, listener) => {
+            let validChannels = ipc.render.receive;
+            if (validChannels.includes(channel)) {
+                // Deliberately strip event as it includes `sender`.
+                ipcRenderer.on(channel, (event, ...args) => listener(...args));
+            }
+        },
+        // From render to main and back again.
+        invoke: (channel, args) => {
+            let validChannels = ipc.render.sendReceive;
+            if (validChannels.includes(channel)) {
+                return ipcRenderer.invoke(channel, args);
+            }
+        }
+    }
+);
+
+function showPopup(message, otherButton, otherButtonCallback) {
+    var data = {
+        message: message,
+        otherButton: otherButton
+    };
+
+    var popups = document.querySelectorAll(".popup");
+    
+    for (let i = 0; i < popups.length; i++) {
+        document.body.removeChild(popups[i])
+    }
+
+    ejs.renderFile("./ejs/popup.ejs", data, {}, (err, str) => {
+        var div = document.createElement("div");
+        div.classList.add("popup");
+        div.innerHTML = str;
+        document.body.appendChild(div);       
+        
+        div.querySelector(".apply").addEventListener("click", () => {
+            document.body.removeChild(div);
+        })
+
+        div.querySelector(".other").addEventListener("click", () => {
+            otherButtonCallback();
+        })
+    });
+}
 
 function checkPort(port, callback) {
     portfinder.getPort({port: port, stopPort: port}, (err, res) => {
@@ -21,22 +101,50 @@ function checkPort(port, callback) {
     });
 }
 
-function installOlympus(folder) {
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+async function installOlympus(folder) {
     console.log(`Installing Olympus in ${folder}`);
     fs.cpSync(path.join("..", "Mod"), path.join(folder, "Mods", "Services", "Olympus"), {recursive: true});
-    fs.cpSync(path.join("..", "Scripts", "OlympusHook.lua"), path.join(folder, "Scripts", "OlympusHook.lua"), {recursive: true});
-    fs.cpSync(path.join("..", "olympus.json"), path.join(folder, "Config", "olympus.json"), {recursive: true});
+    fs.cpSync(path.join("..", "Scripts", "OlympusHook.lua"), path.join(folder, "Scripts", "OlympusHook.lua"));
+    fs.cpSync(path.join("..", "olympus.json"), path.join(folder, "Config", "olympus.json"));
+    if (createDesktopShortcut({
+        windows: {
+            filePath: path.resolve(__dirname, '..', '..', 'client', 'client.vbs'),
+            outputPath: folder,
+            name: "DCS Olympus client",
+            arguments: `"${path.join(folder, "Config", "olympus.json")}"`,
+            icon: path.resolve(__dirname, '..', '..', 'img', 'olympus.ico'),
+            workingDirectory: path.resolve(__dirname, '..', '..', 'client')
+        }
+    }) && 
+    createDesktopShortcut({
+        windows: {
+            filePath: path.resolve(__dirname, '..', '..', 'client', 'server.vbs'),
+            outputPath: folder,
+            name: "DCS Olympus server",
+            arguments: `"${path.join(folder, "Config", "olympus.json")}"`,
+            icon: path.resolve(__dirname, '..', '..', 'img', 'olympus_server.ico'),
+            workingDirectory: path.resolve(__dirname, '..', '..', 'client')
+        }
+    })) {
+        console.log("Shorcuts created succesfully")
+    } else {
+        throw new Error("Error creating shortcuts");
+    }
     loadDivs();
 }
 
-function uninstallOlympus(folder) {
+async function uninstallOlympus(folder) {
     console.log(`Uninstalling Olympus from ${folder}`);
     fs.rmSync(path.join(folder, "Mods", "Services", "Olympus"), {recursive: true});
-    fs.rmSync(path.join(folder, "Config", "olympus.json"), {recursive: true});
+    fs.rmSync(path.join(folder, "Config", "olympus.json"));
     loadDivs();
 }
 
-function applyConfiguration(folder, data) {
+async function applyConfiguration(folder, data) {
     console.log(`Applying configuration to Olympus from ${folder}`);
 
     if (fs.existsSync(path.join(folder, "Config", "olympus.json"))) {
@@ -50,7 +158,9 @@ function applyConfiguration(folder, data) {
         config["authentication"]["redCommanderPassword"] = sha256(data["redCommanderPassword"]);
         
         fs.writeFileSync(path.join(folder, "Config", "olympus.json"), JSON.stringify(config, null, 4));   
+        return true;
     }    
+    return false;
 }
 
 class InstanceDiv {
@@ -86,18 +196,71 @@ class InstanceDiv {
         ejs.renderFile("./ejs/instanceDiv.ejs", data, {}, (err, str) => {
             this.element.innerHTML = str;
             this.element.querySelector(".add").addEventListener("click", (e) => {
-                if (!e.srcElement.classList.contains("disabled"))
-                    installOlympus(this.folder);
+                if (!e.srcElement.classList.contains("disabled")) {
+                    showPopup("Please wait while Olympus is being installed");
+                    delay(100)
+                    .then(() => {
+                        installOlympus(this.folder)
+                    })
+                    .then(() => {
+                        showPopup("Olympus installed successfully. Use the provided form to set Olympus properties. All fields are mandatory. Click on \"Create desktop shortcuts\" to generate Olympus shortcuts on your desktop.", "Create desktop shortcuts", () => {
+                            if (createDesktopShortcut({
+                                windows: {
+                                    filePath: path.resolve(__dirname, '..', '..', 'client', 'client.vbs'),
+                                    name: "DCS Olympus client",
+                                    arguments: `"${path.join(this.folder, "Config", "olympus.json")}"`,
+                                    icon: path.resolve(__dirname, '..', '..', 'img', 'olympus.ico'),
+                                    workingDirectory: path.resolve(__dirname, '..', '..', 'client')
+                                }
+                            }) && createDesktopShortcut({
+                                windows: {
+                                    filePath: path.resolve(__dirname, '..', '..', 'client', 'server.vbs'),
+                                    name: "DCS Olympus server",
+                                    arguments: `"${path.join(this.folder, "Config", "olympus.json")}"`,
+                                    icon: path.resolve(__dirname, '..', '..', 'img', 'olympus_server.ico'),
+                                    workingDirectory: path.resolve(__dirname, '..', '..', 'client')
+                                }
+                            })) {
+                                showPopup("Shortcuts created successfully!")
+                            } else {
+                                showPopup("And error occurred while creating the shortcuts.")
+                            }
+                        });
+                    }).catch(() => {
+                        showPopup("An error has occurred during installation");
+                    })
+                }
             });
 
             this.element.querySelector(".remove").addEventListener("click", (e) => {
-                if (!e.srcElement.classList.contains("disabled"))
-                    uninstallOlympus(this.folder);
+                if (!e.srcElement.classList.contains("disabled")){
+                    showPopup("Please wait while Olympus is being uninstalled from DCS instance");
+                    delay(100)
+                    .then(() => {
+                        uninstallOlympus(this.folder)
+                    })
+                    .then(() => {
+                        showPopup("Olympus uninstalled successfully from DCS instance!");
+                    }).catch(() => {
+                        showPopup("An error has occurred during uninstallation");
+                    })
+                }
             });
 
             this.element.querySelector(".apply").addEventListener("click", (e) => {
-                if (!e.srcElement.classList.contains("disabled"))
-                    applyConfiguration(this.folder, this.getFields());
+                e.srcElement.classList.remove("blink");
+                if (!e.srcElement.classList.contains("disabled")) {
+                    showPopup("Please wait while the configuration is being applied");
+                    delay(100)
+                    .then(() => {
+                        applyConfiguration(this.folder, this.getFields())
+                    })
+                    .then(() => {
+                        showPopup("Olympus configuration applied successfully!");
+                    }).catch(() => {
+                        showPopup("An error has occurred while applying the configuration");
+                    })
+                }
             });
 
             var inputs = this.element.querySelectorAll("input");

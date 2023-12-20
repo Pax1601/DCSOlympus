@@ -5,26 +5,85 @@
 
 body {
     background-color: #181e25;
+    padding: 0px;
+    margin: 0px;
+}
+
+#title-bar {
+    content: " ";
+    display: block;
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
+    height: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    column-gap: 15px;
+    padding: 5px;
+}
+
+#title-bar>*:first-child {
+    margin-right: auto;
+    color: #F2F2F2AA;
+    font-size: 12px;
+}
+
+.title-bar-button {
+    background-color: transparent;
+    border: 0px solid transparent;
+    height: 20px;
+    width: 20px;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    cursor: pointer;
+}
+
+.minimize {
+    background-image: url("../icons/window-minimize-regular.svg");
+}
+
+.restore {
+    background-image: url("../icons/window-restore-regular.svg");
+}
+
+.maximize {
+    background-image: url("../icons/window-maximize-regular.svg");
+}
+
+.close {
+    background-image: url("../icons/xmark-solid.svg");
+}
+
+.title-bar-button {
+    -webkit-app-region: no-drag;
 }
 
 #header {
     display: flex;
     justify-content: start;
-    align-items: center;
+    align-items: start;
     color: #F2F2F2;
     font-weight: bold;
     font-size: 16px;
-    padding: 10px;
+    padding: 20px;
+    column-gap: 10px;
 }
 
 #header>div:first-child>div:last-child {
     color: green;
 }
 
+#header>div:last-child {
+    font-size: 13px;
+    margin-left: 30px;
+    font-weight: 400;
+    text-align: right;
+    width: 100%;
+}
+
 .main-icon {
     width: 60px;
     height: 60px;
-    margin: 10px;
 }
 
 #main-div {
@@ -34,17 +93,18 @@ body {
     row-gap: 30px;
     column-gap: 30px;
     flex-wrap: wrap;
-    padding: 15px;
+    padding: 25px;
 }
 
 body {
-    overflow-y: auto;
+    overflow: auto;
     scrollbar-color: white transparent;
     scrollbar-width: thin;
 }
 
 ::-webkit-scrollbar {
     width: 10px;
+    height: 10px;
 }
 
 ::-webkit-scrollbar-track {
@@ -71,6 +131,7 @@ body {
     border-radius: 5px;
     border-left: 5px solid #017DC1;
     width: 600px;
+    box-shadow: 0px 0px 5px #000A;
 }
 
 .instance-content {
@@ -118,8 +179,10 @@ body {
     vertical-align: top;
 }
 
-.input-table td>* {
-    margin: 2px 0px;
+.input-table td>div {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
 }
 
 .action-buttons {
@@ -175,6 +238,10 @@ body {
     padding: 5px 15px 5px 15px;
 }
 
+.other {
+    padding: 5px 15px 5px 15px;
+}
+
 .remove {
     background-image: url("../icons/trash-can-regular.svg");
 }
@@ -223,4 +290,55 @@ input.error {
     height: 12px;
     background-image: url("../icons/circle-info-solid.svg");
     background-position: 50% 50%;
+}
+
+.blink {
+    animation: blinker 1s linear 3;
+}
+
+@keyframes blinker {
+    50% {
+      background-color: transparent;
+    }
+}
+
+.popup {
+    display: flex;
+    flex-direction: column;
+    row-gap: 15px;
+    height: 300px;
+    width: 500px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background-color: #181e25;
+    border-radius: 5px;
+    transform: translate(-250px, -150px);
+    padding: 30px;
+    box-shadow: 0px 0px 5px #000A;
+}
+
+.popup-header {
+    height: 20px;
+    color: #F2F2F2;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.popup-content {
+    height: calc(100% - 50px);
+    color: #F2F2F2;
+    font-size: 13px;
+}
+
+.popup-footer {
+    height: 30px;
+    display: flex;
+    justify-content: end;
+    column-gap: 15px;
+}
+
+.popup-footer .apply {
+    background-image: none;
+    padding: 5px 15px 5px 15px;
 }

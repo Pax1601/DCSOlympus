@@ -29,7 +29,6 @@ import { ContextManager } from "./context/contextmanager";
 import { Context } from "./context/context";
 
 var VERSION = "{{OLYMPUS_VERSION_NUMBER}}";
-var DEBUG = false;
 
 export class OlympusApp {
     /* Global data */

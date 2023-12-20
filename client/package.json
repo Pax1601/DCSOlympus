@@ -2,7 +2,7 @@
   "name": "DCSOlympus",
   "node-main": "./bin/www",
   "main": "client.js",
-  "version": "v1.0.4",
+  "version": "v{{OLYMPUS_VERSION_NUMBER}}",
   "private": true,
   "scripts": {
     "build": "browserify .\\src\\index.ts --debug -o .\\public\\javascripts\\bundle.js -t [ babelify --global true --presets [ @babel/preset-env ] --extensions '.js'] -p [ tsify --noImplicitAny ] && copy.bat",
@@ -10,7 +10,7 @@
     "emit-declarations": "tsc --project tsconfig.json --declaration --emitDeclarationOnly --outfile ./@types/olympus/index.d.ts",
     "copy": "copy.bat",
     "start": "node ./bin/www",
-    "debug": "npm run copy & concurrently --kill-others \"npm run watch\" \"nodemon --ignore ./public/databases/ ./bin/www\"",
+    "debug": "npm run copy & concurrently --kill-others \"npm run watch\" \"nodemon --ignore ./public/databases/ ./bin/www -- --config ../moc_dcs/Config/olympus.json\"",
     "watch": "watchify .\\src\\index.ts --debug -o .\\public\\javascripts\\bundle.js -t [ babelify --global true --presets [ @babel/preset-env ] --extensions '.js'] -p [ tsify --noImplicitAny ]",
     "client": "electron ."
   },

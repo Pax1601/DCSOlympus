@@ -1,33 +1,66 @@
-const { app, BrowserWindow } = require('electron/main')
-const path = require('path')
+const electronApp = require('electron').app;
+const electronBrowserWindow = require('electron').BrowserWindow;
+const electronIpcMain = require('electron').ipcMain;
+const path = require('path');
+
+let window;
 
 function createWindow() {
-	const win = new BrowserWindow({
+    const window = new electronBrowserWindow({
 		width: 1310,
 		height: 800,
+		frame: false,
 		webPreferences: {
+			contextIsolation: true,
 			preload: path.join(__dirname, "javascripts", 'preload.js'),
 			nodeIntegration: true, // like here
 		},
 		icon: "./../img/olympus.ico"
+    });
+
+    window.loadFile('index.html').then(() => { window.show(); });
+
+	window.on("maximize", () => {
+		window.webContents.send('event:maximized')
 	})
 
-	win.loadFile('index.html');
-	win.setMenuBarVisibility(false);
+	window.on("unmaximize", () => {
+		window.webContents.send('event:unmaximized')
+	})
+
+    return window;
 }
 
-app.whenReady().then(() => {
-	createWindow()
+electronApp.on('ready', () => {
+    window = createWindow();
+});
 
-	app.on('activate', () => {
-		if (BrowserWindow.getAllWindows().length === 0) {
-			createWindow()
-		}
-	})
+electronApp.on('window-all-closed', () => {
+    if (process.platform !== 'darwin') {
+        electronApp.quit();
+    }
+});
+
+electronApp.on('activate', () => {
+    if (electronBrowserWindow.getAllWindows().length === 0) {
+        createWindow();
+    }
+});
+
+// ---
+
+electronIpcMain.on('window:minimize', () => {
+    window.minimize();
 })
 
-app.on('window-all-closed', () => {
-	if (process.platform !== 'darwin') {
-		app.quit()
-	}
+electronIpcMain.on('window:maximize', () => {
+    window.maximize();
+})
+
+electronIpcMain.on('window:restore', () => {
+    window.restore();
+})
+
+electronIpcMain.on('window:close', () => {
+    window.close();
 })

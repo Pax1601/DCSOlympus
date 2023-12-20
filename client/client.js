@@ -27,10 +27,10 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
-	const server = spawn('node', [path.join('.', 'bin', 'www')]);
+	const server = spawn('node', [path.join('.', 'bin', 'www'), "--config", args["config"]]);
 
 	server.stdout.on('data', (data) => {
-		console.log(`stdout: ${data}`);
+		console.log(`${data}`);
 	});
 
 	server.stderr.on('data', (data) => {
@@ -38,7 +38,7 @@ app.whenReady().then(() => {
 	});
 
 	server.on('close', (code) => {
-		console.log(`child process exited with code ${code}`);
+		console.log(`Child process exited with code ${code}`);
 	}); 
 
 	createWindow()

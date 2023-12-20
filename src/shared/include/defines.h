@@ -14,8 +14,8 @@
 
 #define FRAMERATE_TIME_INTERVAL 0.05
 
-#define OLYMPUS_JSON_PATH "..\\olympus.json"
-#define AIRCRAFT_DATABASE_PATH "..\\client\\public\\databases\\units\\aircraftdatabase.json"
-#define HELICOPTER_DATABASE_PATH "..\\client\\public\\databases\\units\\helicopterdatabase.json"
-#define GROUNDUNIT_DATABASE_PATH "..\\client\\public\\databases\\units\\groundunitdatabase.json"
-#define NAVYUNIT_DATABASE_PATH "..\\client\\public\\databases\\units\\navyunitdatabase.json"
+#define OLYMPUS_JSON_PATH "..\\..\\..\\..\\Config\\olympus.json"
+#define AIRCRAFT_DATABASE_PATH "..\\databases\\aircraftdatabase.json"
+#define HELICOPTER_DATABASE_PATH "..\\databases\\helicopterdatabase.json"
+#define GROUNDUNIT_DATABASE_PATH "..\\databases\\groundunitdatabase.json"
+#define NAVYUNIT_DATABASE_PATH "..\\databases\\navyunitdatabase.json"

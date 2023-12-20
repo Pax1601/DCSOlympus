@@ -34,8 +34,8 @@ Source: "..\scripts\mist.lua"; DestDir: "{app}\Scripts"; Flags: ignoreversion
 Source: "..\scripts\mods.lua"; DestDir: "{app}\Scripts"; Flags: ignoreversion 
 
 Source: "..\mod\*"; DestDir: "{app}\mod"; Flags: ignoreversion recursesubdirs;
-
-Source: "..\bin\*.dll"; DestDir: "{app}\bin"; Flags: ignoreversion;
+Source: "..\bin\*.dll"; DestDir: "{app}\mod\bin"; Flags: ignoreversion;
+Source: "..\client\public\databases\*"; DestDir: "{app}\mod\databases"; Flags: ignoreversion recursesubdirs;
 
 Source: "..\client\bin\*"; DestDir: "{app}\client\bin"; Flags: ignoreversion;
 Source: "..\client\public\*"; DestDir: "{app}\client\public"; Flags: ignoreversion recursesubdirs;
@@ -43,11 +43,16 @@ Source: "..\client\routes\*"; DestDir: "{app}\client\routes"; Flags: ignoreversi
 Source: "..\client\views\*"; DestDir: "{app}\client\views"; Flags: ignoreversion recursesubdirs;
 Source: "..\client\app.js"; DestDir: "{app}\client"; Flags: ignoreversion;
 Source: "..\client\demo.js"; DestDir: "{app}\client"; Flags: ignoreversion;
+Source: "..\client\client.js"; DestDir: "{app}\client"; Flags: ignoreversion;
 Source: "..\client\package.json"; DestDir: "{app}\client"; Flags: ignoreversion;
 Source: "..\client\configurator.js"; DestDir: "{app}\client"; Flags: ignoreversion;
 Source: "..\client\install.bat"; DestDir: "{app}\client"; Flags: ignoreversion;
+Source: "..\client\*.vbs"; DestDir: "{app}\client"; Flags: ignoreversion;
 
 Source: "..\manager\icons\*"; DestDir: "{app}\manager\icons"; Flags: ignoreversion;
+Source: "..\manager\ejs\*"; DestDir: "{app}\manager\ejs"; Flags: ignoreversion;
+Source: "..\manager\javascripts\*"; DestDir: "{app}\manager\javascripts"; Flags: ignoreversion;
+Source: "..\manager\stylesheets\*"; DestDir: "{app}\manager\stylesheets"; Flags: ignoreversion;
 Source: "..\manager\*"; DestDir: "{app}\manager"; Flags: ignoreversion;
 
 Source: "..\img\olympus.ico"; DestDir: "{app}\img"; Flags: ignoreversion;
@@ -61,13 +66,11 @@ Source: "..\LEGAL.txt"; DestDir: "{app}"; Flags: ignoreversion;
 [Run]
 Filename: "{app}\client\install.bat"; Description: "Installing node.js modules, this may take some time..."; Tasks: installmodules;
 Filename: "{app}\manager\install.bat"; Description: "Installing node.js modules, this may take some time..."; Tasks: installmodules;
-Filename: "{app}\manager\run.vbs"; WorkingDir: "{app}\manager"; Description: "Launch the Olympus manager"; Flags: postinstall shellexec;
+Filename: "{app}\manager\manager.vbs"; WorkingDir: "{app}\manager"; Description: "Launch the Olympus manager"; Flags: postinstall shellexec;
 
 [Icons]
-Name: "{userdesktop}\DCS Olympus Manager"; Filename: "{app}\manager\run.vbs"; Tasks: desktopicon; IconFilename: "{app}\img\olympus.ico";
-Name: "{app}\DCS Olympus Manager"; Filename: "{app}\manager\run.vbs"; IconFilename: "{app}\img\olympus_configurator.ico"; 
-Name: "{app}\DCS Olympus Server"; Filename: "{app}\manager\server.bat"; IconFilename: "{app}\img\olympus_server.ico"; 
-Name: "{app}\DCS Olympus"; Filename: "{app}\manager\local.bat"; IconFilename: "{app}\img\olympus.ico"; 
+Name: "{userdesktop}\DCS Olympus Manager"; Filename: "{app}\manager\manager.vbs"; Tasks: desktopicon; IconFilename: "{app}\img\olympus_configurator.ico";
+Name: "{app}\DCS Olympus Manager"; Filename: "{app}\manager\manager.vbs"; IconFilename: "{app}\img\olympus_configurator.ico"; 
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}"

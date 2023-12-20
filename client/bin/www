@@ -1,5 +1,10 @@
 #!/usr/bin/env node
 
+const yargs = require('yargs');
+
+yargs.alias('c', 'config').describe('c', 'olympus.json config location').string('rp');
+args = yargs.argv;
+
 console.log('\x1b[36m%s\x1b[0m', "*********************************************************************");
 console.log('\x1b[36m%s\x1b[0m', "*  _____   _____  _____    ____  _                                  *");
 console.log('\x1b[36m%s\x1b[0m', "* |  __ \\ / ____|/ ____|  / __ \\| |                                 *");
@@ -12,16 +17,23 @@ console.log('\x1b[36m%s\x1b[0m', "*                                  |___/      
 console.log('\x1b[36m%s\x1b[0m', "*********************************************************************");
 console.log('\x1b[36m%s\x1b[0m', "");
 console.log("Please wait while DCS Olympus Server starts up...");
+console.log(`Config location: ${args["config"]}`)
 
 var fs = require('fs');
-let rawdata = fs.readFileSync('../olympus.json');
-let config = JSON.parse(rawdata);
+
+var clientPort = 3000;
+if (fs.existsSync(args["config"])) {
+	var json = JSON.parse(fs.readFileSync(args["config"], 'utf-8'));
+	clientPort = json["client"]["port"];
+} else {
+	console.log("Failed to read config, trying default port");
+}
 
 /**
  * Module dependencies.
  */
 
-var app = require('../app');
+var app = require('../app')(args["config"]);
 var debug = require('debug')('client:server');
 var http = require('http');
 
@@ -29,12 +41,8 @@ var http = require('http');
  * Get port from environment and store in Express.
  */
 
-var configPort = null;
-if (config["client"] != undefined && config["client"]["port"] != undefined) {
-	configPort = config["client"]["port"];
-}
 
-var port = normalizePort(configPort || '3000');
+var port = normalizePort(clientPort || '3000');
 app.set('port', port);
 console.log("Express server listening on port: " + port)
 
