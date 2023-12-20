@@ -41,13 +41,13 @@ fs.readFile("./version.json", "utf8", (error, data) => {
             if (err) {
                 return console.log(err);
             }
-            //if (data.search(/{{OLYMPUS_VERSION_NUMBER}}/g) >= 0) {
-            //    console.log(`Replacing version in ${file}`);
-			//
-            //    data = data.replace(/{{OLYMPUS_VERSION_NUMBER}}/g, `v${major}.${minor}.${minorminor}`);
-            //    data = data.replace(/{{OLYMPUS_COMMIT_HASH}}/g, revision);
-            //    fileChanged = true;
-            //}
+            if (data.search(/{{OLYMPUS_VERSION_NUMBER}}/g) >= 0) {
+                console.log(`Replacing version in ${file}`);
+			
+                data = data.replace(/{{OLYMPUS_VERSION_NUMBER}}/g, `v${major}.${minor}.${minorminor}`);
+                data = data.replace(/{{OLYMPUS_COMMIT_HASH}}/g, revision);
+                fileChanged = true;
+            }
 
             if (data.search(/FILEVERSION \d,\d,\d/g) >= 0) {
                 console.log(`Replacing version in ${file}`);
@@ -57,7 +57,7 @@ fs.readFile("./version.json", "utf8", (error, data) => {
 
             if (data.search(/VALUE "FileVersion", "\d.\d.\d.0"/g) >= 0) {
                 console.log(`Replacing version in ${file}`);
-                data = data.replace(/VALUE "FileVersion", "\d.\d.\d.0"/g, `VALUE "FileVersion", "${major}.${minor}.${minorminor}.0" `);
+                data = data.replace(/VALUE "FileVersion", "\d.\d.\d.0"/g, `VALUE "FileVersion", "${major}.${minor}.${minorminor}.0"`);
                 fileChanged = true;
             }
 
