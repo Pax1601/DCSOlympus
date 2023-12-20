@@ -8,6 +8,7 @@ cd client
 rmdir /s /q "hgt"
 call npm install
 call npm run emit-declarations
+call npm run copy
 call npm run build-release
 
 cd "plugins\controltips"
