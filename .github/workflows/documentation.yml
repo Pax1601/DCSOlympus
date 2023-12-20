@@ -1,7 +1,10 @@
 # ci.yml file for GitHub Actions
 name: Documentation
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
