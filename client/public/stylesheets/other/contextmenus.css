@@ -266,7 +266,7 @@
 [data-coalition="blue"].deploy-unit-button,
 [data-coalition="blue"]#spawn-airbase-aircraft-button,
 [data-coalition="blue"].create-iads-button,
-[data-coalition="blue"] + .upper-bar .spawn-mode-tabs button.active {
+[data-coalition="blue"] + #spawn-mode-tabs button.selected {
     background-color: var(--primary-blue)
 }
 
@@ -274,7 +274,7 @@
 [data-coalition="red"].deploy-unit-button,
 [data-coalition="red"]#spawn-airbase-aircraft-button,
 [data-coalition="red"].create-iads-button,
-[data-coalition="red"] + .upper-bar .spawn-mode-tabs button.active {
+[data-coalition="red"] + #spawn-mode-tabs button.selected {
     background-color: var(--primary-red)
 }
 
@@ -282,7 +282,7 @@
 [data-coalition="neutral"].deploy-unit-button,
 [data-coalition="neutral"]#spawn-airbase-aircraft-button,
 [data-coalition="neutral"].create-iads-button,
-[data-coalition="neutral"] + .upper-bar .spawn-mode-tabs button.active {
+[data-coalition="neutral"] + #spawn-mode-tabs button.selected {
     background-color: var(--primary-neutral)
 }
 

@@ -262,33 +262,43 @@ export class MapContextMenu extends ContextMenu {
         this.#navyUnitSpawnMenu.setCountries();
     }
 
-
     /** Handles all of the logic for historal logging.
      * 
      */
     #setupHistory() {
-
         /* Set up the tab clicks */
         const spawnModes           = this.getContainer()?.querySelectorAll(".spawn-mode");
         const activeCoalitionLabel = document.getElementById("active-coalition-label");
-        this.getContainer()?.querySelectorAll(".spawn-mode-tab").forEach((btn:Element) => {
+        const tabs = this.getContainer()?.querySelectorAll(".spawn-mode-tab");
+
+        //  Default selected tab to the "spawn now" option
+        if (tabs) tabs[tabs.length-1].classList.add("selected");
+
+        tabs?.forEach((btn:Element) => {
             btn.addEventListener("click", (ev:MouseEventInit) => {
+                //  Highlight tab
+                tabs.forEach(tab => tab.classList.remove("selected"));
+                btn.classList.add("selected");
+
+                //  Hide/reset
                 spawnModes?.forEach(div => div.classList.add("hide"));
 
                 const prevSiblings = [];
                 let prev = btn.previousElementSibling;
 
-                /* Count previous */
+                /* Tabs and content windows are assumed to be in the same order */
+                //  Count previous
                 while ( prev ) {
                     prevSiblings.push(prev);
                     prev = prev.previousElementSibling;
                 }
 
-                /* Tabs and content windows are assumed to be in the same order */
+                //  Show content
                 if (spawnModes && spawnModes[prevSiblings.length]) {
                     spawnModes[prevSiblings.length].classList.remove("hide");
                 }
 
+                //  We don't want to see the "Spawn [coalition] unit" label
                 if (activeCoalitionLabel) activeCoalitionLabel.classList.toggle("hide", !btn.hasAttribute("data-show-label"));
             });
         });
@@ -324,6 +334,7 @@ export class MapContextMenu extends ContextMenu {
                     table.location.lat += 0.00015 * i;
                 });
                 getApp().getUnitsManager().spawnUnits(detail.category, detail.unitSpawnTable, detail.coalition, detail.immediate, detail.airbase, detail.country);
+                this.hide();
             });
 
             /*  Insert into DOM */
