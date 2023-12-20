@@ -175,6 +175,7 @@ function applyConfiguration(folder, data) {
     } else {
         return false;
     }
+    return true;
 }
 
 function updateOlympus(folder) {
