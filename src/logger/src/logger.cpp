@@ -8,7 +8,7 @@ const string Logger::m_sFileName = LOG_NAME;
 Logger* Logger::m_pThis = NULL;
 ofstream Logger::m_Logfile;
 std::map<unsigned long long, std::string> Logger::m_logs;
-std::string m_dirPath;
+std::string Logger::m_dirPath;
 
 Logger::Logger()
 {
