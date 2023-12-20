@@ -2,7 +2,7 @@
   "name": "DCSOlympus",
   "node-main": "./bin/www",
   "main": "client.js",
-  "version": "v{{OLYMPUS_VERSION_NUMBER}}",
+  "version": "{{OLYMPUS_VERSION_NUMBER}}",
   "private": true,
   "scripts": {
     "build": "browserify .\\src\\index.ts --debug -o .\\public\\javascripts\\bundle.js -t [ babelify --global true --presets [ @babel/preset-env ] --extensions '.js'] -p [ tsify --noImplicitAny ] && copy.bat",
