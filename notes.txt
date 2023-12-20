@@ -1,0 +1,19 @@
+v1.0.4 ====================
+Changes:
+1) Added Olympus Manager for unified configuration management;
+2) Added proxy middleware to reroute requests to backend from frontend port (netsh command no longer required);
+3) Moved installation folder outside of DCS Saved Games folder. Only necessary and unique files are installed in DCS Saved Games folder by Manager;
+4) olympus.json configuration file moved to <DCS Saved Games>/Config folder;
+5) olympus_log.txt log file moved to <DCS Saved Games>/Logs folder;
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!	  CRITICAL NOTICE PLEASE READ!!!	 !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+THIS VERSION INTRODUCES MAJOR CHANGES IN THE INSTALLATION AND MANAGEMENT OF OLYMPUS. PLEASE MAKE SURE TO READ THE UPDATE INSTRUCTIONS BEFORE INSTALLING. 
+ALSO, PLEASE MAKE SURE TO UNINSTALL ANY PREVIOUSLY INSTALLED VERSION OF OLYMPUS BEFORE PROCEEDING!
+
+v1.0.3 ====================
+
+First public release.
+

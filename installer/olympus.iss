@@ -12,6 +12,7 @@ DirExistsWarning=no
 AppendDefaultDirName=no
 LicenseFile="..\LEGAL.txt"
 PrivilegesRequired=lowest
+InfoBeforeFile="..\notes.txt"
 
 [Messages]
 WizardSelectDir=Select the location of DCS's Saved Games folder
