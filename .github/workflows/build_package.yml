@@ -2,7 +2,7 @@ name: Build & package
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "release-candidate" ]
 
 permissions:
   contents: read
