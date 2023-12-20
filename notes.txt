@@ -7,7 +7,7 @@ Changes:
 5) olympus_log.txt log file moved to <DCS Saved Games>/Logs folder;
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!!!!	  CRITICAL NOTICE PLEASE READ!!!	 !!!
+CRITICAL NOTICE PLEASE READ!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 THIS VERSION INTRODUCES MAJOR CHANGES IN THE INSTALLATION AND MANAGEMENT OF OLYMPUS. PLEASE MAKE SURE TO READ THE UPDATE INSTRUCTIONS BEFORE INSTALLING. 
