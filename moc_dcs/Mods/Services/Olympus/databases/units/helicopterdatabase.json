@@ -1,0 +1,4482 @@
+{
+	"AH-1W": {
+		"name": "AH-1W",
+		"coalition": "blue",
+		"era": "Mid Cold War",
+		"label": "AH-1W Cobra",
+		"shortLabel": "AH1",
+		"loadouts": [
+			{
+				"items": [],
+				"enabled": true,
+				"code": "",
+				"name": "Empty loadout",
+				"roles": [
+					"No task",
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "M260 pod - 7 x 2.75\" Hydra, UnGd Rkts M156, Wht Phos",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "14xHYDRA-70 WP",
+				"name": "14xHYDRA-70 WP",
+				"roles": [
+					"FAC-A"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "LAU-61 pod - 19 x 2.75\" Hydra, UnGd Rkts M156, Wht Phos",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "38xHYDRA-70 WP",
+				"name": "38xHYDRA-70 WP",
+				"roles": [
+					"FAC-A"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "4 x BGM-71D TOW ATGM",
+						"quantity": 2
+					},
+					{
+						"name": "M260 pod - 7 x 2.75\" Hydra, UnGd Rkts Mk5, HEAT",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "8xBGM-71, 14xHYDRA-70",
+				"name": "8xBGM-71, 14xHYDRA-70",
+				"roles": [
+					"Escort",
+					"CAS",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "4 x BGM-71D TOW ATGM",
+						"quantity": 2
+					},
+					{
+						"name": "M260 pod - 7 x 2.75\" Hydra, UnGd Rkts M156, Wht Phos",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "8xBGM-71, 14xHYDRA-70 WP",
+				"name": "8xBGM-71, 14xHYDRA-70 WP",
+				"roles": [
+					"FAC-A"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "4 x BGM-71D TOW ATGM",
+						"quantity": 2
+					},
+					{
+						"name": "LAU-61 pod - 19 x 2.75\" Hydra, UnGd Rkts M156, Wht Phos",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "8xBGM-71, 38xHYDRA-70 WP",
+				"name": "8xBGM-71, 38xHYDRA-70 WP",
+				"roles": [
+					"FAC-A"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "M260 pod - 7 x 2.75\" Hydra, UnGd Rkts Mk5, HEAT",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "14xHYDRA-70",
+				"name": "14xHYDRA-70",
+				"roles": [
+					"Escort",
+					"CAS",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "LAU-61 pod - 19 x 2.75\" Hydra, UnGd Rkts M151, HE",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "38xHYDRA-70",
+				"name": "38xHYDRA-70",
+				"roles": [
+					"Escort",
+					"CAS",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "M299 - 4 x AGM-114K Hellfire",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "8xAGM-114",
+				"name": "8xAGM-114",
+				"roles": [
+					"Escort",
+					"CAS",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "M260 pod - 7 x 2.75\" Hydra, UnGd Rkts Mk5, HEAT",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "28xHYDRA-70",
+				"name": "28xHYDRA-70",
+				"roles": [
+					"Escort",
+					"CAS",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "M299 - 4 x AGM-114K Hellfire",
+						"quantity": 2
+					},
+					{
+						"name": "M260 pod - 7 x 2.75\" Hydra, UnGd Rkts Mk5, HEAT",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "8xAGM-114, 14xHYDRA-70",
+				"name": "8xAGM-114, 14xHYDRA-70",
+				"roles": [
+					"Escort",
+					"CAS",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "M299 - 4 x AGM-114K Hellfire",
+						"quantity": 2
+					},
+					{
+						"name": "LAU-61 pod - 19 x 2.75\" Hydra, UnGd Rkts M156, Wht Phos",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "8xAGM-114, 38xHYDRA-70 WP",
+				"name": "8xAGM-114, 38xHYDRA-70 WP",
+				"roles": [
+					"FAC-A"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "4 x BGM-71D TOW ATGM",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "8xBGM-71",
+				"name": "8xBGM-71",
+				"roles": [
+					"Escort",
+					"CAS",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "M299 - 4 x AGM-114K Hellfire",
+						"quantity": 2
+					},
+					{
+						"name": "M260 pod - 7 x 2.75\" Hydra, UnGd Rkts M156, Wht Phos",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "8xAGM-114, 14xHYDRA-70 WP",
+				"name": "8xAGM-114, 14xHYDRA-70 WP",
+				"roles": [
+					"FAC-A"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "LAU-61 pod - 19 x 2.75\" Hydra, UnGd Rkts M151, HE",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "76xHYDRA-70",
+				"name": "76xHYDRA-70",
+				"roles": [
+					"Escort",
+					"CAS",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "M299 - 4 x AGM-114K Hellfire",
+						"quantity": 2
+					},
+					{
+						"name": "LAU-61 pod - 19 x 2.75\" Hydra, UnGd Rkts M151, HE",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "8xAGM-114, 38xHYDRA-70",
+				"name": "8xAGM-114, 38xHYDRA-70",
+				"roles": [
+					"Escort",
+					"CAS",
+					"Strike",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "4 x BGM-71D TOW ATGM",
+						"quantity": 2
+					},
+					{
+						"name": "LAU-61 pod - 19 x 2.75\" Hydra, UnGd Rkts M151, HE",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "8xBGM-71, 38xHYDRA-70",
+				"name": "8xBGM-71, 38xHYDRA-70",
+				"roles": [
+					"Escort",
+					"CAS",
+					"Strike"
+				]
+			}
+		],
+		"filename": "ah-1.png",
+		"enabled": true,
+		"roles": [
+			"CAS",
+			"Strike",
+			"CAP",
+			"AFAC",
+			"Antiship Strike"
+		],
+		"liveries": {
+			"usa marines": {
+				"name": "Marines",
+				"countries": [
+					"USA"
+				]
+			},
+			"turkey 1": {
+				"name": "Turkey",
+				"countries": [
+					"TUR"
+				]
+			},
+			"standard": {
+				"name": "Standard",
+				"countries": [
+					"ISR",
+					"USA"
+				]
+			},
+			"usa x black": {
+				"name": "Black",
+				"countries": [
+					"USA"
+				]
+			},
+			"turkey 2": {
+				"name": "Turkey 2",
+				"countries": [
+					"TUR"
+				]
+			}
+		},
+		"type": "Helicopter",
+		"description": "2 engine, 2 crew attack helicopter. Cobra",
+		"abilities": "",
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"AH-64D_BLK_II": {
+		"name": "AH-64D_BLK_II",
+		"coalition": "blue",
+		"era": "Modern",
+		"label": "AH-64D Apache",
+		"shortLabel": "AH64",
+		"loadouts": [
+			{
+				"items": [
+					{
+						"name": "Fuel tank 230 gal",
+						"quantity": 2
+					},
+					{
+						"name": "Internal Auxiliary Fuel tank 100 gal Combo Pak",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "2 * Fuel Tank 230 gal",
+				"name": "2 * Fuel Tank 230 gal",
+				"roles": [
+					"FAC-A",
+					"Antiship Strike",
+					"CAS",
+					"Escort",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "M299 - 4 x AGM-114K Hellfire",
+						"quantity": 2
+					},
+					{
+						"name": "Fuel tank 230 gal",
+						"quantity": 2
+					},
+					{
+						"name": "Internal Auxiliary Fuel tank 100 gal Combo Pak",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "2 * Fuel Tank 230 gal, 2 * Hellfire station: 4*AGM-114K",
+				"name": "2 * Fuel Tank 230 gal, 2 * Hellfire station: 4*AGM-114K",
+				"roles": [
+					"FAC-A",
+					"Antiship Strike",
+					"CAS",
+					"Escort",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "M299 - 4 x AGM-114L Hellfire",
+						"quantity": 2
+					},
+					{
+						"name": "Fuel tank 230 gal",
+						"quantity": 2
+					},
+					{
+						"name": "Internal Auxiliary Fuel tank 100 gal Combo Pak",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "2 * Fuel Tank 230 gal, 2 * Hellfire station: 4*AGM-114L",
+				"name": "2 * Fuel Tank 230 gal, 2 * Hellfire station: 4*AGM-114L",
+				"roles": [
+					"FAC-A",
+					"Antiship Strike",
+					"CAS",
+					"Escort",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "M261 - 19 x UnGd Rkts, 70 mm Hydra 70, Pod Zones: A/B - M151; E - M257",
+						"quantity": 2
+					},
+					{
+						"name": "M299 - 4 x AGM-114K Hellfire",
+						"quantity": 2
+					},
+					{
+						"name": "Internal Auxiliary Fuel tank 100 gal Combo Pak",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "2 * M261: A/B - M151 (6PD), E - M257 (6IL), 2 * Hellfire station: 4*AGM-114K",
+				"name": "2 * M261: A/B - M151 (6PD), E - M257 (6IL), 2 * Hellfire station: 4*AGM-114K",
+				"roles": [
+					"FAC-A",
+					"Antiship Strike",
+					"CAS",
+					"Escort",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "M261 - 19 x UnGd Rkts, 70 mm Hydra 70, Pod Zones: A/B - M151; E - M257",
+						"quantity": 2
+					},
+					{
+						"name": "M299 - 4 x AGM-114L Hellfire",
+						"quantity": 2
+					},
+					{
+						"name": "Internal Auxiliary Fuel tank 100 gal Combo Pak",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "2 * M261: A/B - M151 (6PD), E - M257 (6IL), 2 * Hellfire station: 4*AGM-114L",
+				"name": "2 * M261: A/B - M151 (6PD), E - M257 (6IL), 2 * Hellfire station: 4*AGM-114L",
+				"roles": [
+					"FAC-A",
+					"Antiship Strike",
+					"CAS",
+					"Escort",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "M261 - 19 x UnGd Rkts, 70 mm Hydra 70, Pod Zones: A/B - M151; E - M274",
+						"quantity": 2
+					},
+					{
+						"name": "M299 - 4 x AGM-114K Hellfire",
+						"quantity": 2
+					},
+					{
+						"name": "Internal Auxiliary Fuel tank 100 gal Combo Pak",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "2 * M261: A/B - M151 (6PD), E - M274 (6SK), 2 * Hellfire station: 4*AGM-114K",
+				"name": "2 * M261: A/B - M151 (6PD), E - M274 (6SK), 2 * Hellfire station: 4*AGM-114K",
+				"roles": [
+					"FAC-A",
+					"Antiship Strike",
+					"CAS",
+					"Escort",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "M261 - 19 x UnGd Rkts, 70 mm Hydra 70, Pod Zones: A/B - M151; E - M274",
+						"quantity": 2
+					},
+					{
+						"name": "M299 - 4 x AGM-114L Hellfire",
+						"quantity": 2
+					},
+					{
+						"name": "Internal Auxiliary Fuel tank 100 gal Combo Pak",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "2 * M261: A/B - M151 (6PD), E - M274 (6SK), 2 * Hellfire station: 4*AGM-114L",
+				"name": "2 * M261: A/B - M151 (6PD), E - M274 (6SK), 2 * Hellfire station: 4*AGM-114L",
+				"roles": [
+					"FAC-A",
+					"Antiship Strike",
+					"CAS",
+					"Escort",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "M299 - 4 x AGM-114K Hellfire",
+						"quantity": 2
+					},
+					{
+						"name": "M261 - 19 x UnGd Rkts, 70 mm Hydra 70, Pod Zones: C - M257; D/E - M151",
+						"quantity": 2
+					},
+					{
+						"name": "Internal Auxiliary Fuel tank 100 gal Combo Pak",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "2 * M261: C - M257 (6IL), D/E - M151 (6PD), 2 * Hellfire station: 4*AGM-114K",
+				"name": "2 * M261: C - M257 (6IL), D/E - M151 (6PD), 2 * Hellfire station: 4*AGM-114K",
+				"roles": [
+					"FAC-A",
+					"Antiship Strike",
+					"CAS",
+					"Escort",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "M299 - 4 x AGM-114L Hellfire",
+						"quantity": 2
+					},
+					{
+						"name": "M261 - 19 x UnGd Rkts, 70 mm Hydra 70, Pod Zones: C - M257; D/E - M151",
+						"quantity": 2
+					},
+					{
+						"name": "Internal Auxiliary Fuel tank 100 gal Combo Pak",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "2 * M261: C - M257 (6IL), D/E - M151 (6PD), 2 * Hellfire station: 4*AGM-114L",
+				"name": "2 * M261: C - M257 (6IL), D/E - M151 (6PD), 2 * Hellfire station: 4*AGM-114L",
+				"roles": [
+					"FAC-A",
+					"Antiship Strike",
+					"CAS",
+					"Escort",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "M299 - 4 x AGM-114K Hellfire",
+						"quantity": 2
+					},
+					{
+						"name": "M261 - 19 x UnGd Rkts, 70 mm Hydra 70, Pod Zones: C - M274; D/E - M151",
+						"quantity": 2
+					},
+					{
+						"name": "Internal Auxiliary Fuel tank 100 gal Combo Pak",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "2 * M261: C - M274 (6SK), D/E - M151 (6PD), 2 * Hellfire station: 4*AGM-114K",
+				"name": "2 * M261: C - M274 (6SK), D/E - M151 (6PD), 2 * Hellfire station: 4*AGM-114K",
+				"roles": [
+					"FAC-A",
+					"Antiship Strike",
+					"CAS",
+					"Escort",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "M299 - 4 x AGM-114L Hellfire",
+						"quantity": 2
+					},
+					{
+						"name": "M261 - 19 x UnGd Rkts, 70 mm Hydra 70, Pod Zones: C - M274; D/E - M151",
+						"quantity": 2
+					},
+					{
+						"name": "Internal Auxiliary Fuel tank 100 gal Combo Pak",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "2 * M261: C - M274 (6SK), D/E - M151 (6PD), 2 * Hellfire station: 4*AGM-114L",
+				"name": "2 * M261: C - M274 (6SK), D/E - M151 (6PD), 2 * Hellfire station: 4*AGM-114L",
+				"roles": [
+					"FAC-A",
+					"Antiship Strike",
+					"CAS",
+					"Escort",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "M261 - 19 x UnGd Rkts, 70 mm Hydra 70 M151 HE",
+						"quantity": 2
+					},
+					{
+						"name": "Fuel tank 230 gal",
+						"quantity": 2
+					},
+					{
+						"name": "Internal Auxiliary Fuel tank 100 gal Combo Pak",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "2 * M261: M151 (6PD), 2 * Fuel Tank 230 gal",
+				"name": "2 * M261: M151 (6PD), 2 * Fuel Tank 230 gal",
+				"roles": [
+					"FAC-A",
+					"Antiship Strike",
+					"CAS",
+					"Escort",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "M261 - 19 x UnGd Rkts, 70 mm Hydra 70 M151 HE",
+						"quantity": 2
+					},
+					{
+						"name": "M299 - 4 x AGM-114K Hellfire",
+						"quantity": 2
+					},
+					{
+						"name": "Internal Auxiliary Fuel tank 100 gal Combo Pak",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "2 * M261: M151 (6PD), 2 * Hellfire station: 4*AGM-114K",
+				"name": "2 * M261: M151 (6PD), 2 * Hellfire station: 4*AGM-114K",
+				"roles": [
+					"FAC-A",
+					"Antiship Strike",
+					"CAS",
+					"Escort",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "M261 - 19 x UnGd Rkts, 70 mm Hydra 70 M151 HE",
+						"quantity": 2
+					},
+					{
+						"name": "M299 - 4 x AGM-114L Hellfire",
+						"quantity": 2
+					},
+					{
+						"name": "Internal Auxiliary Fuel tank 100 gal Combo Pak",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "2 * M261: M151 (6PD), 2 * Hellfire station: 4*AGM-114L",
+				"name": "2 * M261: M151 (6PD), 2 * Hellfire station: 4*AGM-114L",
+				"roles": [
+					"FAC-A",
+					"Antiship Strike",
+					"CAS",
+					"Escort",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "M299 - 4 x AGM-114K Hellfire",
+						"quantity": 4
+					},
+					{
+						"name": "Internal Auxiliary Fuel tank 100 gal Combo Pak",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "4 * Hellfire station: 4*AGM-114K",
+				"name": "4 * Hellfire station: 4*AGM-114K",
+				"roles": [
+					"FAC-A",
+					"Antiship Strike",
+					"CAS",
+					"Escort",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "M299 - 4 x AGM-114L Hellfire",
+						"quantity": 4
+					},
+					{
+						"name": "Internal Auxiliary Fuel tank 100 gal Combo Pak",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "4 * Hellfire station: 4*AGM-114L",
+				"name": "4 * Hellfire station: 4*AGM-114L",
+				"roles": [
+					"FAC-A",
+					"Antiship Strike",
+					"CAS",
+					"Escort",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "M261 - 19 x UnGd Rkts, 70 mm Hydra 70 M151 HE",
+						"quantity": 4
+					},
+					{
+						"name": "Internal Auxiliary Fuel tank 100 gal Combo Pak",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "4 * M261: M151 (6PD)",
+				"name": "4 * M261: M151 (6PD)",
+				"roles": [
+					"FAC-A",
+					"Antiship Strike",
+					"CAS",
+					"Escort",
+					"Strike"
+				]
+			},
+			{
+				"items": [],
+				"enabled": true,
+				"code": "",
+				"name": "Empty loadout",
+				"roles": [
+					"No task",
+					"CAS"
+				]
+			}
+		],
+		"filename": "ah-64.png",
+		"enabled": true,
+		"roles": [
+			"CAS",
+			"Strike",
+			"CAP",
+			"AFAC",
+			"Antiship Strike"
+		],
+		"liveries": {
+			"avengers 1-227th arb": {
+				"name": "A Company, Avengers, 1-227th ARB",
+				"countries": [
+					"USA"
+				]
+			},
+			"devils 1-1 arb": {
+				"name": "A Company, Devils, 1-1 ARB",
+				"countries": [
+					"USA"
+				]
+			},
+			"egypt air force": {
+				"name": "Egyptian Air Force",
+				"countries": [
+					"EGY"
+				]
+			},
+			"indonesian army - 11th squadron by dendi wirson": {
+				"name": "Indonesian Army - 11th Squadron/Serbu by Dendi Wirson",
+				"countries": "All"
+			},
+			"south carolina national guard - 40332": {
+				"name": "Ghostriders, 1-151st ATKHB SCNG - 40332",
+				"countries": [
+					"USA"
+				]
+			},
+			"301 squadron redskins netherlands": {
+				"name": "301 Squadron Redskins, Royal Netherlands Air Force",
+				"countries": [
+					"NETH"
+				]
+			},
+			"korea air force": {
+				"name": "Republic of Korea Army",
+				"countries": [
+					"KOR"
+				]
+			},
+			"south carolina national guard - 40331": {
+				"name": "Ghostriders, 1-151st ATKHB SCNG - 40331",
+				"countries": [
+					"USA"
+				]
+			},
+			"saudi arabian national guard": {
+				"name": "Saudi Arabian National Guard",
+				"countries": [
+					"SAU"
+				]
+			},
+			"south carolina national guard": {
+				"name": "Ghostriders, 1-151st ATKHB SCNG - Gray TADS",
+				"countries": [
+					"USA"
+				]
+			},
+			"664 squadron 9 regiment uk": {
+				"name": "664 Squadron 9 Regiment AAC UK",
+				"countries": [
+					"UK"
+				]
+			},
+			"uae armed forces - od": {
+				"name": "UAE Armed Forces - Olive Drab",
+				"countries": [
+					"ARE"
+				]
+			},
+			"grim reapers 4-2 arb": {
+				"name": "B Company, Grim Reapers, 4-2 ARB",
+				"countries": [
+					"USA"
+				]
+			},
+			"default": {
+				"name": "default livery",
+				"countries": [
+					"USA"
+				]
+			},
+			"662 squadron 3 regiment zj171 uk": {
+				"name": "662 Squadron 3 Regiment AAC UK - ZJ171",
+				"countries": [
+					"UK"
+				]
+			},
+			"12th combat aviation brigade griffins": {
+				"name": "12th Combat Aviation Brigade Griffins",
+				"countries": [
+					"USA"
+				]
+			},
+			"silver spurs 3-17 cav": {
+				"name": "A Troop, Silver Spurs, 3-17 CAV",
+				"countries": [
+					"USA"
+				]
+			},
+			"qatar qeaf": {
+				"name": "Qatar Emiri Air Force",
+				"countries": [
+					"QAT"
+				]
+			},
+			"south carolina national guard - drab tads": {
+				"name": "Ghostriders, 1-151st ATKHB SCNG - Drab TADS",
+				"countries": [
+					"USA"
+				]
+			},
+			"archangel 4-2 arb": {
+				"name": "A Company, Archangel, 4-2 ARB",
+				"countries": [
+					"USA"
+				]
+			},
+			"killer bees 1-130th arb ncng": {
+				"name": "B Company, Killer Bees, 1-130th ARB NCNG",
+				"countries": [
+					"USA"
+				]
+			},
+			"wolfpack 1-82 arb": {
+				"name": "Wolfpack, 1-82 ARB",
+				"countries": [
+					"USA"
+				]
+			},
+			"gunslingers 2-159th arb": {
+				"name": "C Company, Gunslingers, 2-159th ARB",
+				"countries": [
+					"USA"
+				]
+			},
+			"the air pirates 1-211th arb": {
+				"name": "A Company, The Air Pirates, 1-211th ARB UTNG",
+				"countries": [
+					"USA"
+				]
+			},
+			"25th_combat_aviation_brigade_by_lee1hy": {
+				"name": "2-6 CAV, 25th Combat Aviation Brigade",
+				"countries": [
+					"USA"
+				]
+			},
+			"apache iaf grey": {
+				"name": "Indian Air Force - Gray",
+				"countries": [
+					"IND"
+				]
+			},
+			"jgsdf——1st_combat_helicopter_unit": {
+				"name": "1st Combat Helicopter Unit, Japanese Ground SDF",
+				"countries": [
+					"JPN"
+				]
+			},
+			"slayers 4-2 arb": {
+				"name": "C Company, Slayers, 4-2 ARB",
+				"countries": [
+					"USA"
+				]
+			},
+			"iaf 113th hornet squadron": {
+				"name": "IAF 113th Hornet Squadron",
+				"countries": [
+					"ISR"
+				]
+			},
+			"1st attack helicopter battalion greece": {
+				"name": "1st Attack Helicopter Battalion, Hellenic Army Aviation",
+				"countries": [
+					"GRC"
+				]
+			},
+			"1st_bat_greek_pegasus_es1008": {
+				"name": "Pegasus Display Team - ES1008, Hellenic Army Aviation",
+				"countries": [
+					"GRC"
+				]
+			}
+		},
+		"type": "Helicopter",
+		"description": "2 engine, 2 crew attack helicopter. Apache",
+		"abilities": "",
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Ka-50_3": {
+		"name": "Ka-50_3",
+		"coalition": "red",
+		"era": "Late Cold War",
+		"label": "Ka-50 Hokum A",
+		"shortLabel": "Ka50",
+		"loadouts": [
+			{
+				"items": [
+					{
+						"name": "9S846 Strelets - 2 x 9M39 Igla",
+						"quantity": 2
+					},
+					{
+						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
+						"quantity": 2
+					},
+					{
+						"name": "FAB-250 - 250kg GP Bomb LD",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "10xS-13, 2xFAB-250, 4xIgla",
+				"name": "10xS-13, 2xFAB-250, 4xIgla",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "9S846 Strelets - 2 x 9M39 Igla",
+						"quantity": 2
+					},
+					{
+						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
+						"quantity": 2
+					},
+					{
+						"name": "FAB-500 M-62 - 500kg GP Bomb LD",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "10xS-13, 2xFAB-500, 4xIgla",
+				"name": "10xS-13, 2xFAB-500, 4xIgla",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "9S846 Strelets - 2 x 9M39 Igla",
+						"quantity": 2
+					},
+					{
+						"name": "APU-6 - 6 x 9M127-1 Vikhr-M ATGM, LOSBR, Tandem HEAT/Frag",
+						"quantity": 2
+					},
+					{
+						"name": "Fuel tank PTB-450",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "12x9A4172, 2xFuel, 4xIgla",
+				"name": "12x9A4172, 2xFuel, 4xIgla",
+				"roles": [
+					"Escort"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "9S846 Strelets - 2 x 9M39 Igla",
+						"quantity": 2
+					},
+					{
+						"name": "APU-6 - 6 x 9M127-1 Vikhr-M ATGM, LOSBR, Tandem HEAT/Frag",
+						"quantity": 2
+					},
+					{
+						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "12x9A4172, 40xS-13, 4xIgla",
+				"name": "12x9A4172, 40xS-13, 4xIgla",
+				"roles": [
+					"CAS",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "9S846 Strelets - 2 x 9M39 Igla",
+						"quantity": 2
+					},
+					{
+						"name": "APU-6 - 6 x 9M127-1 Vikhr-M ATGM, LOSBR, Tandem HEAT/Frag",
+						"quantity": 2
+					},
+					{
+						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "12x9A4172, 40xS-8KOM, 4xIgla",
+				"name": "12x9A4172, 40xS-8KOM, 4xIgla",
+				"roles": [
+					"CAS",
+					"Escort"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "9S846 Strelets - 2 x 9M39 Igla",
+						"quantity": 2
+					},
+					{
+						"name": "APU-6 - 6 x 9M127-1 Vikhr-M ATGM, LOSBR, Tandem HEAT/Frag",
+						"quantity": 2
+					},
+					{
+						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8OFP2 MPP",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "12x9A4172, 40xS-8OFP, 4xIgla",
+				"name": "12x9A4172, 40xS-8OFP, 4xIgla",
+				"roles": [
+					"CAS",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "9S846 Strelets - 2 x 9M39 Igla",
+						"quantity": 2
+					},
+					{
+						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "20xS-20, 4xIgla",
+				"name": "20xS-20, 4xIgla",
+				"roles": [
+					"CAS",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "9S846 Strelets - 2 x 9M39 Igla",
+						"quantity": 2
+					},
+					{
+						"name": "Kh-25ML (AS-10 Karen) - 300kg, ASM, Semi-Act Laser",
+						"quantity": 2
+					},
+					{
+						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2xKh-25ML, 10xS-13, 4xIgla",
+				"name": "2xKh-25ML, 10xS-13, 4xIgla",
+				"roles": [
+					"Antiship Strike",
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "9S846 Strelets - 2 x 9M39 Igla",
+						"quantity": 2
+					},
+					{
+						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8OFP2 MPP",
+						"quantity": 2
+					},
+					{
+						"name": "Fuel tank PTB-450",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "40xS-8OFP, 2xFuel, 4xIgla",
+				"name": "40xS-8OFP, 2xFuel, 4xIgla",
+				"roles": [
+					"Escort"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "9S846 Strelets - 2 x 9M39 Igla",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "4xIgla",
+				"name": "4xIgla",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "9S846 Strelets - 2 x 9M39 Igla",
+						"quantity": 2
+					},
+					{
+						"name": "UPK-23-250 - 2 x 23mm  GSh-23L Autocannon Pod",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "4xUPK-23, 4xIgla",
+				"name": "4xUPK-23, 4xIgla",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "9S846 Strelets - 2 x 9M39 Igla",
+						"quantity": 2
+					},
+					{
+						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "80xS-8KOM, 4xIgla",
+				"name": "80xS-8KOM, 4xIgla",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Escort"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "9S846 Strelets - 2 x 9M39 Igla",
+						"quantity": 2
+					},
+					{
+						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8OFP2 MPP",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "80xS-8OFP, 4xIgla",
+				"name": "80xS-8OFP, 4xIgla",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Escort"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "9S846 Strelets - 2 x 9M39 Igla",
+						"quantity": 2
+					},
+					{
+						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8OM IL",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "80xS-8OM, 4xIgla",
+				"name": "80xS-8OM, 4xIgla",
+				"roles": [
+					"FAC-A"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "9S846 Strelets - 2 x 9M39 Igla",
+						"quantity": 2
+					},
+					{
+						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8TsM SM Orange",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "80xS-8TsM, 4xIgla",
+				"name": "80xS-8TsM, 4xIgla",
+				"roles": [
+					"FAC-A"
+				]
+			},
+			{
+				"items": [],
+				"enabled": true,
+				"code": "",
+				"name": "Empty loadout",
+				"roles": [
+					"No task",
+					"CAS"
+				]
+			}
+		],
+		"filename": "ka-50.png",
+		"enabled": true,
+		"roles": [
+			"CAS",
+			"Strike",
+			"CAP",
+			"AFAC",
+			"Antiship Strike"
+		],
+		"liveries": {
+			"ka-50_camo_chechnya_ussr": {
+				"name": "Standart camo n/a 2000-2001 Chechnya",
+				"countries": [
+					"RSI",
+					"GRC",
+					"EGY",
+					"ITA",
+					"CHN",
+					"INS",
+					"SUI",
+					"AUT",
+					"SVK",
+					"AUSAF",
+					"MAR",
+					"CUB",
+					"NZG",
+					"UKR",
+					"RUS",
+					"DZA",
+					"ARE",
+					"BGR",
+					"POL",
+					"HUN",
+					"MYS",
+					"PHL",
+					"QAT",
+					"SYR",
+					"CAN",
+					"BEL",
+					"ABH",
+					"OMN",
+					"ROU",
+					"ETH",
+					"UK",
+					"BHR",
+					"USA",
+					"DEN",
+					"TUR",
+					"VEN",
+					"JOR",
+					"YUG",
+					"THA",
+					"SWE",
+					"JPN",
+					"BLR",
+					"HND",
+					"CHL",
+					"BRA",
+					"SRB",
+					"FRA",
+					"GRG",
+					"NETH",
+					"KAZ",
+					"MEX",
+					"PAK",
+					"ISR",
+					"KOR",
+					"SDN",
+					"FIN",
+					"SPN",
+					"RSO",
+					"CZE",
+					"SUN",
+					"YEM",
+					"PRK",
+					"LBY",
+					"NOR",
+					"VNM",
+					"IDN",
+					"GER",
+					"IND",
+					"IRN",
+					"HRV",
+					"KWT",
+					"TUN",
+					"IRQ",
+					"SAU",
+					"RSA",
+					"AUS"
+				]
+			},
+			"default": {
+				"name": "Standart camo Russian Air Force",
+				"countries": [
+					"RUS"
+				]
+			},
+			"ka-50_desert_blackshark": {
+				"name": "Desert camo #018 Zhukovsky 1997 Black Shark",
+				"countries": [
+					"RUS"
+				]
+			},
+			"ka-50_standart_black_russianairforce": {
+				"name": "Standart black Russian Air Force",
+				"countries": [
+					"RUS"
+				]
+			},
+			"ka-50_black_neutral": {
+				"name": "Black neutral n/a",
+				"countries": [
+					"RSI",
+					"GRC",
+					"EGY",
+					"ITA",
+					"CHN",
+					"INS",
+					"SUI",
+					"AUT",
+					"SVK",
+					"AUSAF",
+					"MAR",
+					"CUB",
+					"NZG",
+					"UKR",
+					"RUS",
+					"DZA",
+					"ARE",
+					"BGR",
+					"POL",
+					"HUN",
+					"MYS",
+					"PHL",
+					"QAT",
+					"SYR",
+					"CAN",
+					"BEL",
+					"ABH",
+					"OMN",
+					"ROU",
+					"ETH",
+					"UK",
+					"BHR",
+					"USA",
+					"DEN",
+					"TUR",
+					"VEN",
+					"JOR",
+					"YUG",
+					"THA",
+					"SWE",
+					"JPN",
+					"BLR",
+					"HND",
+					"CHL",
+					"BRA",
+					"SRB",
+					"FRA",
+					"GRG",
+					"NETH",
+					"KAZ",
+					"MEX",
+					"PAK",
+					"ISR",
+					"KOR",
+					"SDN",
+					"FIN",
+					"SPN",
+					"RSO",
+					"CZE",
+					"SUN",
+					"YEM",
+					"PRK",
+					"LBY",
+					"NOR",
+					"VNM",
+					"IDN",
+					"GER",
+					"IND",
+					"IRN",
+					"HRV",
+					"KWT",
+					"TUN",
+					"IRQ",
+					"SAU",
+					"RSA",
+					"AUS"
+				]
+			},
+			"ka-50_desert_werewolf": {
+				"name": "Desert camo #018 Zhukovsky 1995 Werewolf",
+				"countries": [
+					"RUS"
+				]
+			},
+			"ka-50_blackshark_torzhok": {
+				"name": "344th Center for Combat Employment Torzhok city Shark 1997",
+				"countries": [
+					"RUS"
+				]
+			},
+			"ka-50_black_werewolf": {
+				"name": "Black #020 Farnborough 1992 Werewolf",
+				"countries": [
+					"RUS"
+				]
+			},
+			"ka-50_black_h347_blackshark": {
+				"name": "Black H347 Le Bourget 1997 Black Shark",
+				"countries": [
+					"RUS"
+				]
+			}
+		},
+		"type": "Helicopter",
+		"description": "2 engine, 1 crew attack helicopter. Blackshark",
+		"abilities": "",
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Mi-24P": {
+		"name": "Mi-24P",
+		"coalition": "red",
+		"era": "Mid Cold War",
+		"label": "Mi-24P Hind",
+		"shortLabel": "Mi24",
+		"loadouts": [
+			{
+				"items": [
+					{
+						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					},
+					{
+						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2xB-13L+4xATGM 9M114",
+				"name": "2xB-13L+4xATGM 9M114",
+				"roles": [
+					"CAS",
+					"Antiship Strike",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					},
+					{
+						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2xB8V20 ( S-8KOM)+4xATGM 9M114",
+				"name": "2xB8V20 ( S-8KOM)+4xATGM 9M114",
+				"roles": [
+					"CAS",
+					"Escort"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
+						"quantity": 2
+					},
+					{
+						"name": "FAB-250 - 250kg GP Bomb LD",
+						"quantity": 2
+					},
+					{
+						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2xB8V20 (S-8KOM)+2xBombs-250+4xATGM 9M114",
+				"name": "2xB8V20 (S-8KOM)+2xBombs-250+4xATGM 9M114",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 4
+					},
+					{
+						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2xB8V20 (S-8KOM)+8xATGM 9M114",
+				"name": "2xB8V20 (S-8KOM)+8xATGM 9M114",
+				"roles": [
+					"CAS",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8OFP2 MPP",
+						"quantity": 2
+					},
+					{
+						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2xB8V20 (S-8OFP2)+4xATGM 9M114",
+				"name": "2xB8V20 (S-8OFP2)+4xATGM 9M114",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					},
+					{
+						"name": "FAB-500 M-62 - 500kg GP Bomb LD",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2xBombs-500+4xATGM 9M114",
+				"name": "2xBombs-500+4xATGM 9M114",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "GUV-8700 w 1x12.7 mm & 2x7.62 mm Rotary HMG",
+						"quantity": 2
+					},
+					{
+						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2xGUV-1 (GUN 12.7+2x7.62) +4xATGM 9M114",
+				"name": "2xGUV-1 (GUN 12.7+2x7.62) +4xATGM 9M114",
+				"roles": [
+					"CAS",
+					"Escort"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					},
+					{
+						"name": "GUV-8700 w AP-30 - 30mm Grenade Launcher",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2xGUV-1 AP30+4xATGM 9M114",
+				"name": "2xGUV-1 AP30+4xATGM 9M114",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 4
+					},
+					{
+						"name": "KMGU-2 - 96 x AO-2.5RT Dispenser (CBU) HE/Frag",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2xKMGU (96 AO 2.5RT)+8xATGM 9M114",
+				"name": "2xKMGU (96 AO 2.5RT)+8xATGM 9M114",
+				"roles": [
+					"CAS",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "RBK-500 - 268 x PTAB-1M, 500kg CBU Light HEAT/AP",
+						"quantity": 2
+					},
+					{
+						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2xRBK-500 (PTAB-1M)+4xATGM 9M114",
+				"name": "2xRBK-500 (PTAB-1M)+4xATGM 9M114",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					},
+					{
+						"name": "RBK-500U - 126 x OAB-2.5RT, 500kg CBU HE/Frag",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2xRBK-500U (OAB 2.5RT)+4xATGM 9M114",
+				"name": "2xRBK-500U (OAB 2.5RT)+4xATGM 9M114",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					},
+					{
+						"name": "APU-68 - S-24B",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2xS-24B+4xATGM 9M114",
+				"name": "2xS-24B+4xATGM 9M114",
+				"roles": [
+					"CAS",
+					"Antiship Strike",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
+						"quantity": 4
+					},
+					{
+						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "4xB8V20 (S-8KOM)+4xATGM 9M114",
+				"name": "4xB8V20 (S-8KOM)+4xATGM 9M114",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					},
+					{
+						"name": "FAB-250 - 250kg GP Bomb LD",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "4xBombs-250+4ATGM 9M114",
+				"name": "4xBombs-250+4ATGM 9M114",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					},
+					{
+						"name": "GUV-8700 w AP-30 - 30mm Grenade Launcher",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "4xGUV-1 AP30+4xATGM 9M114",
+				"name": "4xGUV-1 AP30+4xATGM 9M114",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Fuel tank PTB-450",
+						"quantity": 4
+					},
+					{
+						"name": "Missile Launcher Rack (Empty)",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "4xPTB-450 Fuel tank",
+				"name": "4xPTB-450 Fuel tank",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "RBK-250 - 42 x PTAB-2.5M, 250kg CBU Medium HEAT/AP",
+						"quantity": 4
+					},
+					{
+						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "4xRBK-250 (42 PTAB 2.5M) +4ATGM 9M114",
+				"name": "4xRBK-250 (42 PTAB 2.5M) +4ATGM 9M114",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "RBK-250-275 - 150 x AO-1SCh, 250kg CBU HE/Frag",
+						"quantity": 4
+					},
+					{
+						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "4xRBK-250-275 (150 AO-1SCh)+4ATGM 9M114",
+				"name": "4xRBK-250-275 (150 AO-1SCh)+4ATGM 9M114",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					},
+					{
+						"name": "APU-68 - S-24B",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "4xS-24B+4xATGM 9M114",
+				"name": "4xS-24B+4xATGM 9M114",
+				"roles": [
+					"CAS",
+					"Antiship Strike",
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "UB-32A-24 pod - 32 x S-5KO",
+						"quantity": 4
+					},
+					{
+						"name": "2 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "4xUB-32A (S-5KO)+4xATGM 9M114",
+				"name": "4xUB-32A (S-5KO)+4xATGM 9M114",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [],
+				"enabled": true,
+				"code": "",
+				"name": "Empty loadout",
+				"roles": [
+					"No task",
+					"CAS"
+				]
+			}
+		],
+		"filename": "mi-24.png",
+		"enabled": true,
+		"roles": [
+			"CAS",
+			"Strike",
+			"CAP",
+			"Transport",
+			"AFAC",
+			"Antiship Strike"
+		],
+		"liveries": {
+			"af torzhok afb": {
+				"name": "RF Air Force, aerobatics team 'Berkuts'",
+				"countries": [
+					"SUN",
+					"RUS"
+				]
+			},
+			"georgian air force": {
+				"name": "Georgian Air Force",
+				"countries": [
+					"GRG"
+				]
+			},
+			"united nations": {
+				"name": "United Nations ",
+				"countries": [
+					"UN",
+					"GRG",
+					"UKR",
+					"RUS"
+				]
+			},
+			"iqaf": {
+				"name": "Iraqi Army Air Corps",
+				"countries": [
+					"IRQ"
+				]
+			},
+			"russian air force": {
+				"name": "RF Air Force Standard",
+				"countries": [
+					"SUN",
+					"RUS"
+				]
+			},
+			"af 440 ovp": {
+				"name": "RF Air Force, 440th Helicopter Regiment",
+				"countries": [
+					"SUN",
+					"RUS"
+				]
+			},
+			"syaaf": {
+				"name": "Syrian Air Force",
+				"countries": [
+					"SYR"
+				]
+			},
+			"af syzran afb": {
+				"name": "RF Air Force, Syzran AFB",
+				"countries": [
+					"SUN",
+					"RUS"
+				]
+			},
+			"af ussr": {
+				"name": "USSR Air Force",
+				"countries": [
+					"SUN",
+					"RUS"
+				]
+			},
+			"ukrainian army aviation": {
+				"name": "Ukrainian Army Aviation",
+				"countries": [
+					"UKR"
+				]
+			},
+			"af standard3 old": {
+				"name": "RF Air Force (weathered) type3",
+				"countries": [
+					"SUN",
+					"RUS"
+				]
+			}
+		},
+		"type": "Helicopter",
+		"description": "2 engine, 2 crew attack helicopter. Hind",
+		"abilities": "Transport",
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Mi-26": {
+		"name": "Mi-26",
+		"coalition": "red",
+		"era": "Late Cold War",
+		"label": "Mi-26 Halo",
+		"shortLabel": "Mi26",
+		"loadouts": [
+			{
+				"items": [],
+				"enabled": true,
+				"code": "",
+				"name": "Empty loadout",
+				"roles": [
+					"No task",
+					"Transport"
+				]
+			}
+		],
+		"filename": "mi-26.png",
+		"enabled": true,
+		"roles": [
+			"Transport"
+		],
+		"liveries": {
+			"united nations": {
+				"name": "United Nations",
+				"countries": "All"
+			},
+			"rf air force": {
+				"name": "RF Air Force",
+				"countries": [
+					"SUN",
+					"RUS"
+				]
+			},
+			"7th separate brigade of aa (kalinov)": {
+				"name": "7th Separate Brigade of AA (Kalinov)",
+				"countries": [
+					"UKR"
+				]
+			},
+			"china flying dragon aviation": {
+				"name": "China Flying Dragon Aviation",
+				"countries": [
+					"CHN"
+				]
+			},
+			"russia_fsb": {
+				"name": "Russia_FSB",
+				"countries": [
+					"RUS"
+				]
+			},
+			"russia_mvd": {
+				"name": "Russia_MVD",
+				"countries": [
+					"RUS"
+				]
+			},
+			"algerian air force sl-22": {
+				"name": "Algerian AF SL-22 ",
+				"countries": [
+					"DZA"
+				]
+			}
+		},
+		"type": "Helicopter",
+		"description": "2 engine, 5 crew transport helicopter. Halo",
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"abilities": "Transport",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"Mi-28N": {
+		"name": "Mi-28N",
+		"coalition": "red",
+		"era": "Modern",
+		"label": "Mi-28N Havoc",
+		"shortLabel": "M28",
+		"loadouts": [
+			{
+				"items": [],
+				"enabled": true,
+				"code": "",
+				"name": "Empty loadout",
+				"roles": [
+					"No task",
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "FAB-250 - 250kg GP Bomb LD",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2xFAB-250",
+				"name": "2xFAB-250",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Fuel tank PTB-450",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "4xFuel tank",
+				"name": "4xFuel tank",
+				"roles": [
+					"No task"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "80xS-8",
+				"name": "80xS-8",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Escort"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "KMGU-2 - 96 x AO-2.5RT Dispenser (CBU) HE/Frag",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "4xKMGU AP",
+				"name": "4xKMGU AP",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "UPK-23-250 - 2 x 23mm  GSh-23L Autocannon Pod",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "4xUPK-23",
+				"name": "4xUPK-23",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Escort"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "8 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					},
+					{
+						"name": "KMGU-2 - 96 x PTAB-2.5KO Dispenser (CBU) HEAT/AP",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "16x9M114, 2xKMGU AT",
+				"name": "16x9M114, 2xKMGU AT",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Escort"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "FAB-500 M-62 - 500kg GP Bomb LD",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "4xFAB-500",
+				"name": "4xFAB-500",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "8 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					},
+					{
+						"name": "FAB-500 M-62 - 500kg GP Bomb LD",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "16x9M114, 2xFAB-500",
+				"name": "16x9M114, 2xFAB-500",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "40xS-8",
+				"name": "40xS-8",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Escort"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8TsM SM Orange",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "40xS-8 TsM",
+				"name": "40xS-8 TsM",
+				"roles": [
+					"FAC-A"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "KMGU-2 - 96 x AO-2.5RT Dispenser (CBU) HE/Frag",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2xKMGU AP",
+				"name": "2xKMGU AP",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "UPK-23-250 - 2 x 23mm  GSh-23L Autocannon Pod",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2xUPK-23",
+				"name": "2xUPK-23",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Escort"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "8 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					},
+					{
+						"name": "UPK-23-250 - 2 x 23mm  GSh-23L Autocannon Pod",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "16x9M114, 2xUPK-23",
+				"name": "16x9M114, 2xUPK-23",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Escort"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "FAB-500 M-62 - 500kg GP Bomb LD",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2xFAB-500",
+				"name": "2xFAB-500",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "8 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					},
+					{
+						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "16x9M114, 40xS-8",
+				"name": "16x9M114, 40xS-8",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Escort",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "8 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "16x9M114",
+				"name": "16x9M114",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Escort"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "20xS-13",
+				"name": "20xS-13",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Escort"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "8 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					},
+					{
+						"name": "KMGU-2 - 96 x AO-2.5RT Dispenser (CBU) HE/Frag",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "16x9M114, 2xKMGU AP",
+				"name": "16x9M114, 2xKMGU AP",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Escort"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "FAB-250 - 250kg GP Bomb LD",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "4xFAB-250",
+				"name": "4xFAB-250",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "KMGU-2 - 96 x PTAB-2.5KO Dispenser (CBU) HEAT/AP",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "4xKMGU AT",
+				"name": "4xKMGU AT",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "8 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					},
+					{
+						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8TsM SM Orange",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "16x9M114, 40xS-8 TsM",
+				"name": "16x9M114, 40xS-8 TsM",
+				"roles": [
+					"FAC-A"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8TsM SM Orange",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "80xS-8 TsM",
+				"name": "80xS-8 TsM",
+				"roles": [
+					"FAC-A"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "KMGU-2 - 96 x PTAB-2.5KO Dispenser (CBU) HEAT/AP",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2xKMGU AT",
+				"name": "2xKMGU AT",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "8 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "9x9M114",
+				"name": "9x9M114",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Escort"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Fuel tank PTB-450",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2xFuel tank",
+				"name": "2xFuel tank",
+				"roles": [
+					"No task"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "10xS-13",
+				"name": "10xS-13",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Escort"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "8 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					},
+					{
+						"name": "FAB-250 - 250kg GP Bomb LD",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2xFAB-250, 16x9M114",
+				"name": "2xFAB-250, 16x9M114",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "8 x 9M114 Shturm-V (AT-6 Spiral) - ATGM, SACLOS, HEAT",
+						"quantity": 2
+					},
+					{
+						"name": "B-13L pod - 5 x S-13-OF, 122mm UnGd Rkts, Blast/Frag",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "16x9M114, 10xS-13",
+				"name": "16x9M114, 10xS-13",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Escort",
+					"Antiship Strike"
+				]
+			}
+		],
+		"filename": "mi-28.png",
+		"enabled": true,
+		"roles": [
+			"CAS",
+			"Strike",
+			"CAP",
+			"AFAC",
+			"Antiship Strike"
+		],
+		"liveries": {
+			"aaf sc-12": {
+				"name": "Algerian AF Desert SC-12",
+				"countries": [
+					"DZA"
+				]
+			},
+			"night": {
+				"name": "Night",
+				"countries": [
+					"RUS"
+				]
+			},
+			"aaf sc-11": {
+				"name": "Algerian AF Desert SC-11",
+				"countries": [
+					"DZA"
+				]
+			},
+			"standard": {
+				"name": "Standard",
+				"countries": [
+					"RUS"
+				]
+			}
+		},
+		"type": "Helicopter",
+		"description": "2 engine, 2 crew attack helicopter. Havoc",
+		"abilities": "",
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"canTargetPoint": true,
+		"canRearm": false
+	},
+	"Mi-8MT": {
+		"name": "Mi-8MT",
+		"coalition": "red",
+		"era": "Mid Cold War",
+		"label": "Mi-8MT Hip",
+		"shortLabel": "Mi8",
+		"loadouts": [
+			{
+				"items": [],
+				"enabled": true,
+				"code": "",
+				"name": "Empty loadout",
+				"roles": [
+					"No task",
+					"Transport"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "4 x B8",
+				"name": "4 x B8",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
+						"quantity": 4
+					},
+					{
+						"name": "GUV-8700 w AP-30 - 30mm Grenade Launcher",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "4 x B8 + 2GUV_AP-30 (GrL 30mm)",
+				"name": "4 x B8 + 2GUV_AP-30 (GrL 30mm)",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "GUV-8700 w 1x12.7 mm & 2x7.62 mm Rotary HMG",
+						"quantity": 2
+					},
+					{
+						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2 x UPK +2 x B8",
+				"name": "2 x UPK +2 x B8",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "GUV-8700 w AP-30 - 30mm Grenade Launcher",
+						"quantity": 2
+					},
+					{
+						"name": "GUV-8700 w 1x12.7 mm & 2x7.62 mm Rotary HMG",
+						"quantity": 2
+					},
+					{
+						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2 xB8 + 2GUV_YaKB (MG-12.7+7.62)+ 2GUV_AP-30 (GrL 30mm)",
+				"name": "2 xB8 + 2GUV_YaKB (MG-12.7+7.62)+ 2GUV_AP-30 (GrL 30mm)",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "FAB-100 - 100kg GP Bomb LD",
+						"quantity": 6
+					}
+				],
+				"enabled": true,
+				"code": "6 x FAB-100",
+				"name": "6 x FAB-100",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "UPK-23-250 - 2 x 23mm  GSh-23L Autocannon Pod",
+						"quantity": 2
+					},
+					{
+						"name": "B-8V20A - 20 x UnGd Rkts, 80 mm S-8KOM HEAT/Frag",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2 x B8 + 2 x UPK-23-250",
+				"name": "2 x B8 + 2 x UPK-23-250",
+				"roles": [
+					"Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "UPK-23-250 - 2 x 23mm  GSh-23L Autocannon Pod",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "2 x UPK--23-250",
+				"name": "2 x UPK--23-250",
+				"roles": [
+					"Strike"
+				]
+			}
+		],
+		"filename": "mi-8.png",
+		"enabled": true,
+		"roles": [
+			"CAS",
+			"Strike",
+			"Transport",
+			"AFAC",
+			"Antiship Strike"
+		],
+		"liveries": {
+			"algerian af green": {
+				"name": "Algerian AF Green",
+				"countries": [
+					"DZA"
+				]
+			},
+			"russia_mvd_mozdok": {
+				"name": "RF MVD Mozdok",
+				"countries": [
+					"RUS"
+				]
+			},
+			"south ossetia": {
+				"name": "Fictional RSO",
+				"countries": [
+					"RSO"
+				]
+			},
+			"united kingdom": {
+				"name": "Project curium",
+				"countries": [
+					"UK"
+				]
+			},
+			"russia_kazanvz": {
+				"name": "Civil KazanVZ",
+				"countries": [
+					"RUS"
+				]
+			},
+			"germany": {
+				"name": "Germany ARMY",
+				"countries": [
+					"GER"
+				]
+			},
+			"china plaaa camo": {
+				"name": "PLA Army Aviation Camo",
+				"countries": [
+					"CHN"
+				]
+			},
+			"russia_vvs_grey_2": {
+				"name": "RF Army Gray",
+				"countries": [
+					"RUS"
+				]
+			},
+			"algerian af new desert": {
+				"name": "Algerian AF New Desert",
+				"countries": [
+					"DZA"
+				]
+			},
+			"denmark": {
+				"name": "Fictional Olive",
+				"countries": [
+					"DEN"
+				]
+			},
+			"russia_vvs_grey": {
+				"name": "RF Army Gray",
+				"countries": [
+					"RUS"
+				]
+			},
+			"russia_aeroflot": {
+				"name": "Civil AEROFLOT",
+				"countries": [
+					"SUN",
+					"RUS"
+				]
+			},
+			"russia_fsb": {
+				"name": "RF FSB Standard",
+				"countries": [
+					"RUS"
+				]
+			},
+			"china plaaa white": {
+				"name": "PLA Army Aviation White",
+				"countries": [
+					"CHN"
+				]
+			},
+			"ir afagir blue": {
+				"name": "AFAGIR Blue",
+				"countries": [
+					"IRN"
+				]
+			},
+			"usa_afg": {
+				"name": "438th Air Expeditionary Wing",
+				"countries": [
+					"USA"
+				]
+			},
+			"spain": {
+				"name": "Fictional Spain AF",
+				"countries": [
+					"SPN"
+				]
+			},
+			"italy navy": {
+				"name": "Fictional NAVY",
+				"countries": [
+					"ITA"
+				]
+			},
+			"russia_pf_ambulance": {
+				"name": "Russia Ambulance (PF)",
+				"countries": [
+					"RUS"
+				]
+			},
+			"georgia": {
+				"name": "Georgian Standard",
+				"countries": [
+					"GRG"
+				]
+			},
+			"russia_vertolety_russia_2": {
+				"name": "Civil Vertolety RUSSIA 22880",
+				"countries": [
+					"RUS"
+				]
+			},
+			"ukraine": {
+				"name": "Standard",
+				"countries": [
+					"UKR"
+				]
+			},
+			"russia_gazprom": {
+				"name": "Civil Gazprom Avia",
+				"countries": [
+					"RUS"
+				]
+			},
+			"russia_utair": {
+				"name": "Civil Russia UTair",
+				"countries": [
+					"RUS"
+				]
+			},
+			"russia_vvs_ma": {
+				"name": "RF Navy",
+				"countries": [
+					"RUS"
+				]
+			},
+			"russia_vvs_standard_2": {
+				"name": "RF Army Standart",
+				"countries": [
+					"RUS"
+				]
+			},
+			"hellenic army aviation": {
+				"name": "Hellenic Army Aviation (Fictional)",
+				"countries": [
+					"GRC"
+				]
+			},
+			"belgium": {
+				"name": "Fictional Olive",
+				"countries": [
+					"BEL"
+				]
+			},
+			"insurgents": {
+				"name": "Standard",
+				"countries": [
+					"INS"
+				]
+			},
+			"ir afagir sand": {
+				"name": "AFAGIR Sand",
+				"countries": [
+					"IRN"
+				]
+			},
+			"ir iranian special police forces": {
+				"name": "NAJA",
+				"countries": [
+					"IRN"
+				]
+			},
+			"russia_lii_gromov ra-25546": {
+				"name": "Civil Lii Gromov RA-25546",
+				"countries": [
+					"RUS"
+				]
+			},
+			"russia_naryan-mar": {
+				"name": "Civil_Russia Naryan-Mar",
+				"countries": [
+					"RUS"
+				]
+			},
+			"algerian af vip": {
+				"name": "Algerian AF VIP",
+				"countries": [
+					"DZA"
+				]
+			},
+			"russia_vvs_standard": {
+				"name": " RF Army Standard",
+				"countries": [
+					"RUS"
+				]
+			},
+			"russia_mvd_standard": {
+				"name": "RF MVD Standard",
+				"countries": [
+					"RUS"
+				]
+			},
+			"israel": {
+				"name": "Fictional ARMY",
+				"countries": [
+					"ISR"
+				]
+			},
+			"china un": {
+				"name": "PLA Army Aviation United Nations",
+				"countries": [
+					"CHN"
+				]
+			},
+			"algerian af green evsan": {
+				"name": "Algerian AF Green EVSAN",
+				"countries": [
+					"DZA"
+				]
+			},
+			"algerian af old desert": {
+				"name": "Algerian AF Old Desert",
+				"countries": [
+					"DZA"
+				]
+			},
+			"italy army": {
+				"name": "Fictional ARMY",
+				"countries": [
+					"ITA"
+				]
+			},
+			"france army": {
+				"name": "Fictional ARMY",
+				"countries": [
+					"FRA"
+				]
+			},
+			"abkhazia": {
+				"name": "Abkhazia",
+				"countries": [
+					"ABH"
+				]
+			},
+			"czech air force dark camo": {
+				"name": "Czech Air Force ID-9XXX",
+				"countries": [
+					"CZE"
+				]
+			},
+			"norway": {
+				"name": "Fictional NAVY",
+				"countries": [
+					"NOR"
+				]
+			},
+			"netherlands navy": {
+				"name": "Fictional NAVY",
+				"countries": [
+					"NETH"
+				]
+			},
+			"russia_un": {
+				"name": "RF UN",
+				"countries": [
+					"UN",
+					"RUS"
+				]
+			},
+			"hellenic airforce sar": {
+				"name": "Hellenic Airforce - Search and Rescue (Fictional)",
+				"countries": [
+					"GRC"
+				]
+			},
+			"canada": {
+				"name": "Canada_Afghanistan",
+				"countries": [
+					"CAN"
+				]
+			},
+			"russia_army_weather": {
+				"name": "Russia Army Weather",
+				"countries": [
+					"SUN",
+					"RUS"
+				]
+			},
+			"russia_vertolety_russia": {
+				"name": "Civil Vertolety RUSSIA",
+				"countries": [
+					"RUS"
+				]
+			},
+			"turkey": {
+				"name": "JANDARMA",
+				"countries": [
+					"TUR"
+				]
+			},
+			"france navy": {
+				"name": "Fictional NAVY",
+				"countries": [
+					"FRA"
+				]
+			},
+			"netherlands army": {
+				"name": "Fictional ARMY",
+				"countries": [
+					"NETH"
+				]
+			},
+			"standard": {
+				"name": "Standard",
+				"countries": [
+					"SPN",
+					"ITA",
+					"INS",
+					"CAN",
+					"FRA",
+					"NETH",
+					"NOR",
+					"GER",
+					"UK",
+					"USA",
+					"ISR",
+					"TUR",
+					"AUS"
+				]
+			},
+			"australia": {
+				"name": "Fictional ARMY",
+				"countries": [
+					"AUS"
+				]
+			},
+			"bulgarian af": {
+				"name": "Bulgarian Air Force",
+				"countries": [
+					"BGR"
+				]
+			},
+			"russia_police": {
+				"name": "Civil Russia Police",
+				"countries": [
+					"RUS"
+				]
+			}
+		},
+		"type": "Helicopter",
+		"description": "2 engine, 3 crew transport helicopter. Hip",
+		"abilities": "Transport",
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"SA342L": {
+		"name": "SA342L",
+		"coalition": "blue",
+		"era": "Mid Cold War",
+		"label": "SA342L Gazelle",
+		"shortLabel": "342",
+		"loadouts": [
+			{
+				"items": [
+					{
+						"name": "FN HMP400 (400rnds)",
+						"quantity": 2
+					},
+					{
+						"name": "Sand Filter",
+						"quantity": 1
+					},
+					{
+						"name": "IR Deflector",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "2x HMP400, IR Deflector, Sand Filter",
+				"name": "2x HMP400, IR Deflector, Sand Filter",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "1xMistral ATAM",
+						"quantity": 2
+					},
+					{
+						"name": "Sand Filter",
+						"quantity": 1
+					},
+					{
+						"name": "IR Deflector",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "2x Mistral, IR Deflector, Sand Filter",
+				"name": "2x Mistral, IR Deflector, Sand Filter",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "HOT3 x2",
+						"quantity": 2
+					},
+					{
+						"name": "Sand Filter",
+						"quantity": 1
+					},
+					{
+						"name": "IR Deflector",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "4x HOT3, IR Deflector, Sand Filter",
+				"name": "4x HOT3, IR Deflector, Sand Filter",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "2xMistral ATAM",
+						"quantity": 2
+					},
+					{
+						"name": "Sand Filter",
+						"quantity": 1
+					},
+					{
+						"name": "IR Deflector",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "4x Mistral, IR Deflector, Sand Filter",
+				"name": "4x Mistral, IR Deflector, Sand Filter",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Smoke Generator - red",
+						"quantity": 1
+					},
+					{
+						"name": "Smoke Generator - blue",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "Display Team Smoke, Red & Blue",
+				"name": "Display Team Smoke, Red & Blue",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [],
+				"enabled": true,
+				"code": "",
+				"name": "Empty loadout",
+				"roles": [
+					"No task",
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "GIAT M621 (240x Combat mix 4x AP 1x HE)",
+						"quantity": 1
+					},
+					{
+						"name": "Telson 8 - 8 x UnGd Rkts, 68 mm SNEB Type 251 H1 HE",
+						"quantity": 1
+					},
+					{
+						"name": "Sand Filter",
+						"quantity": 1
+					},
+					{
+						"name": "IR Deflector",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "M621, 8x SNEB68 EAP, IR Deflector, Sand Filter",
+				"name": "M621, 8x SNEB68 EAP, IR Deflector, Sand Filter",
+				"roles": [
+					"CAS"
+				]
+			}
+		],
+		"filename": "sa-342.png",
+		"enabled": true,
+		"roles": [
+			"CAS",
+			"Strike",
+			"AFAC",
+			"CAP",
+			"Reconnaissance"
+		],
+		"liveries": {
+			"portuguese modern fictional": {
+				"name": "Portuguese modern Fictional",
+				"countries": [
+					"",
+					"FRA",
+					"PRT"
+				]
+			},
+			"uk fictional": {
+				"name": "UK Fictional",
+				"countries": [
+					"UK"
+				]
+			},
+			"fr green armee hri daguet": {
+				"name": "Armee HRI Daguet",
+				"countries": [
+					"FRA"
+				]
+			},
+			"israel fictional": {
+				"name": "Israel Fictional",
+				"countries": [
+					"ISR"
+				]
+			},
+			"training ealat": {
+				"name": "Training EALAT",
+				"countries": [
+					"FRA"
+				]
+			},
+			"lebanon": {
+				"name": "Lebanon",
+				"countries": "All"
+			},
+			"nato_drab_us": {
+				"name": "US Army Olive Drab",
+				"countries": "All"
+			},
+			"nato_drab_nl": {
+				"name": "RNLAF Olive Drab",
+				"countries": "All"
+			},
+			"training": {
+				"name": "Training",
+				"countries": [
+					"FRA"
+				]
+			},
+			"combat": {
+				"name": "Combat",
+				"countries": [
+					"FRA"
+				]
+			},
+			"combat sable": {
+				"name": "Combat desert",
+				"countries": [
+					"FRA"
+				]
+			},
+			"dutch fictional": {
+				"name": "RNLAF fictional",
+				"countries": [
+					"",
+					"NETH"
+				]
+			},
+			"yugoslav fictional": {
+				"name": "Yugoslav Fictional",
+				"countries": [
+					"SRB"
+				]
+			},
+			"us marines fictional": {
+				"name": "US Marines Fictional",
+				"countries": [
+					"USA"
+				]
+			},
+			"nato_drab_hel": {
+				"name": "Hellenic Airforce Olive Drab",
+				"countries": "All"
+			},
+			"nato_drab_uk": {
+				"name": "Army Air Corps Olive Drab",
+				"countries": "All"
+			},
+			"tiger meet": {
+				"name": "Tiger Meet",
+				"countries": [
+					"FRA"
+				]
+			},
+			"cyprus air force": {
+				"name": "Cyprus air force",
+				"countries": [
+					"",
+					"CYP"
+				]
+			},
+			"russia fictional": {
+				"name": "Russia Fictional",
+				"countries": [
+					"RUS"
+				]
+			},
+			"greece cyprus fictional desert": {
+				"name": "Greece Cyprus Fictional Desert",
+				"countries": [
+					"GRC"
+				]
+			},
+			"fr green armee hri": {
+				"name": "Armee HRI",
+				"countries": [
+					"FRA"
+				]
+			},
+			"tiger meet 2": {
+				"name": "Tiger Meet 2",
+				"countries": [
+					"FRA"
+				]
+			},
+			"germany fictional": {
+				"name": "Germany Fictional",
+				"countries": [
+					"GER"
+				]
+			},
+			"syria fictional": {
+				"name": "Syria Fictional",
+				"countries": [
+					"SYR"
+				]
+			},
+			"serbia fictional": {
+				"name": "Serbia Fictional",
+				"countries": [
+					"SRB"
+				]
+			}
+		},
+		"type": "Helicopter",
+		"description": "1 engine, 2 crew scout helicopter. Gazelle",
+		"abilities": "",
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"SA342M": {
+		"name": "SA342M",
+		"coalition": "blue",
+		"era": "Mid Cold War",
+		"label": "SA342M Gazelle",
+		"shortLabel": "342",
+		"loadouts": [
+			{
+				"items": [
+					{
+						"name": "HOT3 x1",
+						"quantity": 2
+					},
+					{
+						"name": "FAS}",
+						"quantity": 1
+					},
+					{
+						"name": "IR Deflector",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "2x HOT3, IR Deflector, Sand Filter",
+				"name": "2x HOT3, IR Deflector, Sand Filter",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "HOT3 x2",
+						"quantity": 2
+					},
+					{
+						"name": "FAS}",
+						"quantity": 1
+					},
+					{
+						"name": "IR Deflector",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "4x HOT3, IR Deflector, Sand Filter",
+				"name": "4x HOT3, IR Deflector, Sand Filter",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Smoke Generator - red",
+						"quantity": 1
+					},
+					{
+						"name": "Smoke Generator - blue",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "Display Team Smoke, Red & Blue",
+				"name": "Display Team Smoke, Red & Blue",
+				"roles": [
+					"CAS"
+				]
+			},
+			{
+				"items": [],
+				"enabled": true,
+				"code": "",
+				"name": "Empty loadout",
+				"roles": [
+					"No task",
+					"CAS"
+				]
+			}
+		],
+		"filename": "sa-342.png",
+		"enabled": true,
+		"roles": [
+			"CAS",
+			"Strike",
+			"AFAC",
+			"CAP",
+			"Reconnaissance"
+		],
+		"liveries": {
+			"portuguese modern fictional": {
+				"name": "Portuguese modern Fictional",
+				"countries": [
+					"",
+					"FRA",
+					"PRT"
+				]
+			},
+			"uk fictional": {
+				"name": "UK Fictional",
+				"countries": [
+					"UK"
+				]
+			},
+			"training ealat": {
+				"name": "Training EALAT",
+				"countries": [
+					"FRA"
+				]
+			},
+			"israel fictional": {
+				"name": "Israel Fictional",
+				"countries": [
+					"ISR"
+				]
+			},
+			"nato_drab_us": {
+				"name": "US Army Olive Drab",
+				"countries": "All"
+			},
+			"nato_drab_nl": {
+				"name": "RNLAF Olive Drab",
+				"countries": "All"
+			},
+			"training": {
+				"name": "Training",
+				"countries": [
+					"FRA"
+				]
+			},
+			"combat": {
+				"name": "Combat",
+				"countries": [
+					"FRA"
+				]
+			},
+			"combat sable": {
+				"name": "Combat desert",
+				"countries": [
+					"FRA"
+				]
+			},
+			"dutch fictional": {
+				"name": "RNLAF fictional",
+				"countries": [
+					"",
+					"NETH"
+				]
+			},
+			"yugoslav fictional": {
+				"name": "Yugoslav Fictional",
+				"countries": [
+					"SRB"
+				]
+			},
+			"us marines fictional": {
+				"name": "US Marines Fictional",
+				"countries": [
+					"USA"
+				]
+			},
+			"nato_drab_hel": {
+				"name": "Hellenic Airforce Olive Drab",
+				"countries": "All"
+			},
+			"nato_drab_uk": {
+				"name": "Army Air Corps Olive Drab",
+				"countries": "All"
+			},
+			"tiger meet": {
+				"name": "Tiger Meet",
+				"countries": [
+					"FRA"
+				]
+			},
+			"cyprus air force": {
+				"name": "Cyprus air force",
+				"countries": [
+					"",
+					"CYP"
+				]
+			},
+			"russia fictional": {
+				"name": "Russia Fictional",
+				"countries": [
+					"RUS"
+				]
+			},
+			"greece cyprus fictional desert": {
+				"name": "Greece Cyprus Fictional Desert",
+				"countries": [
+					"GRC"
+				]
+			},
+			"tiger meet 2": {
+				"name": "Tiger Meet 2",
+				"countries": [
+					"FRA"
+				]
+			},
+			"germany fictional": {
+				"name": "Germany Fictional",
+				"countries": [
+					"GER"
+				]
+			},
+			"syria fictional": {
+				"name": "Syria Fictional",
+				"countries": [
+					"SYR"
+				]
+			},
+			"serbia fictional": {
+				"name": "Serbia Fictional",
+				"countries": [
+					"SRB"
+				]
+			}
+		},
+		"type": "Helicopter",
+		"description": "1 engine, 2 crew scout helicopter. Gazelle",
+		"abilities": "",
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"SA342Mistral": {
+		"name": "SA342Mistral",
+		"coalition": "blue",
+		"era": "Mid Cold War",
+		"label": "SA342 Mistral Gazelle",
+		"shortLabel": "342",
+		"loadouts": [
+			{
+				"items": [],
+				"enabled": true,
+				"code": "",
+				"name": "Empty loadout",
+				"roles": [
+					"No task",
+					"Escort"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "{MBDA_MistralD}",
+						"quantity": 2
+					},
+					{
+						"name": "{MBDA_MistralG}",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "Mistral x 4",
+				"name": "Mistral x 4",
+				"roles": [
+					"Escort"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "{MBDA_MistralD}",
+						"quantity": 2
+					},
+					{
+						"name": "{MBDA_MistralG}",
+						"quantity": 2
+					},
+					{
+						"name": "IR Deflector",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "Mistral x 4, IR Deflector",
+				"name": "Mistral x 4, IR Deflector",
+				"roles": [
+					"Escort"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "{MBDA_MistralD}",
+						"quantity": 2
+					},
+					{
+						"name": "{MBDA_MistralG}",
+						"quantity": 2
+					},
+					{
+						"name": "Sand Filter",
+						"quantity": 1
+					},
+					{
+						"name": "IR Deflector",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "Mistral x 4, IR Deflector, Sand Filter",
+				"name": "Mistral x 4, IR Deflector, Sand Filter",
+				"roles": [
+					"Escort"
+				]
+			}
+		],
+		"filename": "sa-342.png",
+		"enabled": true,
+		"roles": [
+			"AFAC",
+			"CAP",
+			"Reconnaissance"
+		],
+		"liveries": {
+			"portuguese modern fictional": {
+				"name": "Portuguese modern Fictional",
+				"countries": [
+					"",
+					"FRA",
+					"PRT"
+				]
+			},
+			"greece cyprus fictional desert": {
+				"name": "Greece Cyprus Fictional Desert",
+				"countries": [
+					"GRC"
+				]
+			},
+			"russia fictional": {
+				"name": "Russia Fictional",
+				"countries": [
+					"RUS"
+				]
+			},
+			"training ealat": {
+				"name": "Training EALAT",
+				"countries": [
+					"FRA"
+				]
+			},
+			"tiger meet 2": {
+				"name": "Tiger Meet 2",
+				"countries": [
+					"FRA"
+				]
+			},
+			"combat sable": {
+				"name": "Combat desert",
+				"countries": [
+					"FRA"
+				]
+			},
+			"germany fictional": {
+				"name": "Germany Fictional",
+				"countries": [
+					"GER"
+				]
+			},
+			"tiger meet": {
+				"name": "Tiger Meet",
+				"countries": [
+					"FRA"
+				]
+			},
+			"uk fictional": {
+				"name": "UK Fictional",
+				"countries": [
+					"UK"
+				]
+			},
+			"syria fictional": {
+				"name": "Syria Fictional",
+				"countries": [
+					"SYR"
+				]
+			},
+			"dutch fictional": {
+				"name": "RNLAF fictional",
+				"countries": [
+					"",
+					"NETH"
+				]
+			},
+			"yugoslav fictional": {
+				"name": "Yugoslav Fictional",
+				"countries": [
+					"SRB"
+				]
+			},
+			"us marines fictional": {
+				"name": "US Marines Fictional",
+				"countries": [
+					"USA"
+				]
+			},
+			"israel fictional": {
+				"name": "Israel Fictional",
+				"countries": [
+					"ISR"
+				]
+			},
+			"training": {
+				"name": "Training",
+				"countries": [
+					"FRA"
+				]
+			},
+			"combat": {
+				"name": "Combat",
+				"countries": [
+					"FRA"
+				]
+			},
+			"serbia fictional": {
+				"name": "Serbia Fictional",
+				"countries": [
+					"SRB"
+				]
+			},
+			"cyprus air force": {
+				"name": "Cyprus air force",
+				"countries": [
+					"",
+					"CYP"
+				]
+			}
+		},
+		"type": "Helicopter",
+		"description": "1 engine, 2 crew scout helicopter. Gazelle",
+		"abilities": "",
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"SH-60B": {
+		"name": "SH-60B",
+		"coalition": "blue",
+		"era": "Late Cold War",
+		"label": "SH-60B Seahawk",
+		"shortLabel": "S60",
+		"loadouts": [
+			{
+				"items": [
+					{
+						"name": "AGM-119B Penguin ASM",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "AGM-119",
+				"name": "AGM-119",
+				"roles": [
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [],
+				"enabled": true,
+				"code": "",
+				"name": "Empty loadout",
+				"roles": [
+					"No task",
+					"Transport"
+				]
+			}
+		],
+		"filename": "uh-60.png",
+		"enabled": true,
+		"roles": [
+			"Antiship Strike",
+			"Transport"
+		],
+		"liveries": {
+			"standard": {
+				"name": "standard",
+				"countries": [
+					"USA"
+				]
+			},
+			"hellenic navy": {
+				"name": "Hellenic Navy",
+				"countries": [
+					"GRC"
+				]
+			}
+		},
+		"type": "Helicopter",
+		"description": "2 engine, 3 crew transport helicopter. Seahawk",
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"abilities": "Transport",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"UH-1H": {
+		"name": "UH-1H",
+		"coalition": "blue",
+		"era": "Mid Cold War",
+		"label": "UH-1H Huey",
+		"shortLabel": "UH1",
+		"loadouts": [
+			{
+				"items": [],
+				"enabled": true,
+				"code": "",
+				"name": "Empty loadout",
+				"roles": [
+					"No task",
+					"Transport"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "M134 - 6 x 7.62mm MiniGun left",
+						"quantity": 1
+					},
+					{
+						"name": "XM158 pod - 7 x 2.75\" Hydra, UnGd Rkts Mk5, HEAT",
+						"quantity": 2
+					},
+					{
+						"name": "M134 - 6 x 7.62mm MiniGun right",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "M134 Minigun*2, XM158*2",
+				"name": "M134 Minigun*2, XM158*2",
+				"roles": [
+					"Strike",
+					"CAS",
+					"Transport",
+					"FAC-A"
+				]
+			}
+		],
+		"filename": "uh-1.png",
+		"enabled": true,
+		"roles": [
+			"CAS",
+			"Strike",
+			"Transport"
+		],
+		"liveries": {
+			"[civilian] nasa": {
+				"name": "[Civilian] NASA",
+				"countries": [
+					"USA"
+				]
+			},
+			"norwegian coast guard (235)": {
+				"name": "Norwegian Coast Guard (235)",
+				"countries": [
+					"NOR"
+				]
+			},
+			"australia royal navy": {
+				"name": "Royal Australian Navy",
+				"countries": [
+					"AUS"
+				]
+			},
+			"australia raaf 171 sqn": {
+				"name": "RAAF 171 Sqn",
+				"countries": [
+					"AUS"
+				]
+			},
+			"spanish un": {
+				"name": "Spanish UN",
+				"countries": [
+					"UN",
+					"SPN"
+				]
+			},
+			"xw-pfj air america": {
+				"name": "XW-PFJ Air America",
+				"countries": [
+					"USA"
+				]
+			},
+			"rf air force broken": {
+				"name": "RF Air Force Broken",
+				"countries": [
+					"RUS"
+				]
+			},
+			"[civilian] standard": {
+				"name": "Olive drab",
+				"countries": [
+					"RSO",
+					"INS",
+					"BEL",
+					"ABH",
+					"NOR",
+					"UK",
+					"DEN",
+					"USA"
+				]
+			},
+			"greek army aviation": {
+				"name": "Greek Army Aviation",
+				"countries": [
+					"GRC"
+				]
+			},
+			"greek army aviation medic": {
+				"name": "Greek Army Aviation Medic",
+				"countries": [
+					"GRC"
+				]
+			},
+			"italy marina militare s.n. 80951 7-20": {
+				"name": "Marina Militare s.n. 80951 7-20",
+				"countries": [
+					"ITA"
+				]
+			},
+			"us navy": {
+				"name": "US NAVY",
+				"countries": [
+					"USA"
+				]
+			},
+			"australia raaf 1968": {
+				"name": "RAAF 1968",
+				"countries": [
+					"AUS"
+				]
+			},
+			"ukrainian army": {
+				"name": "Ukrainian Army",
+				"countries": [
+					"UKR"
+				]
+			},
+			"[civilian] vip": {
+				"name": "[Civilian] VIP",
+				"countries": [
+					"USA"
+				]
+			},
+			"usa un": {
+				"name": "USA UN",
+				"countries": [
+					"USA",
+					"UN"
+				]
+			},
+			"royal netherlands af": {
+				"name": "Royal Netherlands AF",
+				"countries": [
+					"NETH"
+				]
+			},
+			"turkish air force": {
+				"name": "Turkish Air Force",
+				"countries": [
+					"TUR"
+				]
+			},
+			"israel army": {
+				"name": "Israel Army",
+				"countries": [
+					"ISR"
+				]
+			},
+			"[civilian] medical": {
+				"name": "[Civilian] Medical",
+				"countries": [
+					"USA"
+				]
+			},
+			"luftwaffe": {
+				"name": "Luftwaffe",
+				"countries": [
+					"GER"
+				]
+			},
+			"usa red flag": {
+				"name": "USA Red Flag",
+				"countries": [
+					"USA"
+				]
+			},
+			"canadian force": {
+				"name": "Canadian Force",
+				"countries": [
+					"CAN"
+				]
+			},
+			"italy e.i. 4b regg. altair": {
+				"name": "E.I. 4В° Regg. ALTAIR",
+				"countries": [
+					"ITA"
+				]
+			},
+			"georgian af camo": {
+				"name": "Georgian AF Camo",
+				"countries": [
+					"GRG"
+				]
+			},
+			"us army 1972": {
+				"name": "US ARMY 1972",
+				"countries": [
+					"USA"
+				]
+			},
+			"georgian air force": {
+				"name": "Georgian Air Force",
+				"countries": [
+					"GRG"
+				]
+			},
+			"french army": {
+				"name": "French Army",
+				"countries": [
+					"FRA"
+				]
+			},
+			"algerian af bv-32": {
+				"name": "Algerian AF BV-32",
+				"countries": [
+					"DZA"
+				]
+			},
+			"hellenic airforce sar": {
+				"name": "Hellenic Airforce - S.A.R.",
+				"countries": [
+					"GRC"
+				]
+			},
+			"italy 15b stormo s.a.r -soccorso": {
+				"name": "15В° Stormo S.A.R -Soccorso",
+				"countries": [
+					"ITA"
+				]
+			},
+			"rf air force grey": {
+				"name": "RF Air Force Grey",
+				"countries": [
+					"RUS"
+				]
+			},
+			"spanish army": {
+				"name": "Spanish Army",
+				"countries": [
+					"SPN"
+				]
+			},
+			"norwegian un": {
+				"name": "Norwegian UN",
+				"countries": [
+					"UN",
+					"NOR"
+				]
+			},
+			"us dos": {
+				"name": "US DOS",
+				"countries": [
+					"USA"
+				]
+			},
+			"army standard": {
+				"name": "Army Standard",
+				"countries": [
+					"USA"
+				]
+			},
+			"us ft. rucker": {
+				"name": "US Ft. Rucker",
+				"countries": [
+					"USA"
+				]
+			}
+		},
+		"type": "Helicopter",
+		"description": "2 engine, 2 crew transport helicopter. Huey",
+		"abilities": "Transport",
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"UH-60A": {
+		"name": "UH-60A",
+		"coalition": "blue",
+		"era": "Mid Cold War",
+		"label": "UH-60A Blackhawk",
+		"shortLabel": "U60",
+		"loadouts": [
+			{
+				"items": [],
+				"enabled": true,
+				"code": "",
+				"name": "Empty loadout",
+				"roles": [
+					"No task",
+					"Transport"
+				]
+			}
+		],
+		"filename": "uh-60.png",
+		"enabled": true,
+		"roles": [
+			"Transport"
+		],
+		"liveries": {
+			"israil_un": {
+				"name": "ISRAIL_UN",
+				"countries": [
+					"ISR",
+					"UN"
+				]
+			},
+			"standard": {
+				"name": "standard",
+				"countries": [
+					"SPN",
+					"RSO",
+					"ITA",
+					"BEL",
+					"CAN",
+					"FRA",
+					"GRG",
+					"NETH",
+					"NOR",
+					"ABH",
+					"GER",
+					"UK",
+					"USA",
+					"UKR",
+					"DEN",
+					"RUS",
+					"ISR",
+					"TUR"
+				]
+			}
+		},
+		"type": "Helicopter",
+		"description": "2 engine, 3 crew transport helicopter. Blackhawk",
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"abilities": "Transport",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
+	"Mi-24V": {
+		"name": "Mi-24V",
+		"coalition": "",
+		"era": "",
+		"label": "MI-24V",
+		"shortLabel": "Mi24",
+		"type": "Mi_24V",
+		"enabled": false,
+		"liveries": {}
+	},
+	"Ka-27": {
+		"name": "Ka-27",
+		"coalition": "",
+		"era": "",
+		"label": "KA-27",
+		"shortLabel": "Ka27",
+		"type": "Ka_27",
+		"enabled": false,
+		"liveries": {}
+	},
+	"CH-53E": {
+		"name": "CH-53E",
+		"coalition": "",
+		"era": "",
+		"label": "CH-53E",
+		"shortLabel": "CH53",
+		"loadouts": [
+			{
+				"items": [],
+				"enabled": true,
+				"code": "",
+				"name": "Empty loadout",
+				"roles": [
+					"No task",
+					"Transport"
+				]
+			}
+		],
+		"type": "CH_53E",
+		"enabled": true,
+		"liveries": {}
+	},
+	"CH-47D": {
+		"name": "CH-47D",
+		"coalition": "",
+		"era": "",
+		"label": "CH-47D Chinook",
+		"shortLabel": "CH47",
+		"loadouts": [
+			{
+				"items": [],
+				"enabled": true,
+				"code": "",
+				"name": "Empty loadout",
+				"roles": [
+					"No task",
+					"Transport"
+				]
+			}
+		],
+		"type": "CH_47D",
+		"enabled": true,
+		"liveries": {
+			"Australia RAAF": {
+				"name": "RAAF CH-47D",
+				"countries": [
+					"AUS"
+				]
+			},
+			"Greek Army": {
+				"name": "Greek Army",
+				"countries": [
+					"GRC"
+				]
+			},
+			"ch-47_green uk": {
+				"name": "UK",
+				"countries": [
+					"UK"
+				]
+			},
+			"ch-47_green spain": {
+				"name": "Spain",
+				"countries": [
+					"SPN"
+				]
+			},
+			"ch-47_green neth": {
+				"name": "Royal Netherlands AF",
+				"countries": [
+					"NETH"
+				]
+			}
+		}
+	},
+	"SH-3W": {
+		"name": "SH-3W",
+		"coalition": "blue",
+		"era": "Mid Cold War",
+		"label": "SH-3W Sea King",
+		"shortLabel": "SH3",
+		"loadouts": [
+			{
+				"items": [],
+				"enabled": true,
+				"code": "",
+				"name": "Empty loadout",
+				"roles": [
+					"No task",
+					"Transport"
+				]
+			}
+		],
+		"type": "SH_3W",
+		"enabled": true,
+		"liveries": {},
+		"description": "2 engine, 2 crew scout helicopter. SH-3 Sea King."
+	},
+	"AH-64A": {
+		"name": "AH-64A",
+		"coalition": "",
+		"era": "",
+		"label": "AH-64A",
+		"shortLabel": "AH64",
+		"type": "AH_64A",
+		"enabled": false,
+		"liveries": {}
+	},
+	"AH-64D": {
+		"name": "AH-64D",
+		"coalition": "",
+		"era": "",
+		"label": "AH-64D",
+		"shortLabel": "AH64",
+		"type": "AH_64D",
+		"enabled": false,
+		"liveries": {}
+	},
+	"OH-58D": {
+		"name": "OH-58D",
+		"coalition": "",
+		"era": "",
+		"label": "OH-58D",
+		"shortLabel": "OH58",
+		"loadouts": [
+			{
+				"items": [],
+				"enabled": true,
+				"code": "",
+				"name": "Empty loadout",
+				"roles": [
+					"No task",
+					"Transport"
+				]
+			}
+		],
+		"type": "OH_58D",
+		"enabled": true,
+		"liveries": {}
+	},
+	"Ka-50": {
+		"name": "Ka-50",
+		"coalition": "",
+		"era": "",
+		"label": "KA-50",
+		"shortLabel": "Ka50",
+		"type": "Ka_50",
+		"enabled": false,
+		"liveries": {}
+	},
+	"SA342Minigun": {
+		"name": "SA342Minigun",
+		"coalition": "",
+		"era": "",
+		"label": "SA342 Minigun Gazelle",
+		"shortLabel": "342",
+		"type": "SA342Minigun",
+		"enabled": false,
+		"liveries": {}
+	}
+}

@@ -8,6 +8,7 @@ public:
     void log(const string& sMessage, bool addToJSON);
     void log(const wstring& sMessage, bool addToJSON);
     void toJSON(json::value& json, unsigned long long time);
+    void setDirectory(string newDirPath);
 
     static Logger* GetLogger();
 
@@ -20,6 +21,7 @@ private:
     static Logger* m_pThis;
     static ofstream m_Logfile;
     static std::map<unsigned long long, std::string> m_logs;
+    static string m_dirPath;
 
     mutex mutexLock;
 

@@ -11,11 +11,6 @@ declare global {
     function getOlympusPlugin(): OlympusPlugin;
 }
 
-export interface ConfigurationOptions {
-    port: number;
-    address: string;
-}
-
 export interface ContextMenuOption {
     tooltip: string;
     src: string;

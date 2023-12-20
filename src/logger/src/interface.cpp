@@ -4,6 +4,11 @@
 
 #define LOGGER Logger::GetLogger()
 
+void setLogDirectory(string m_dirPath) 
+{
+	LOGGER->setDirectory(m_dirPath);
+}
+
 void log(const string& message, bool addToJSON)
 {
 	LOGGER->log(message, addToJSON);

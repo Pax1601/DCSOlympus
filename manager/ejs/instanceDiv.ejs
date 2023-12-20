@@ -1,0 +1,68 @@
+<div class="instance-div">
+    <div class="folder-name">
+        <div class="icon folder"></div>
+        <span><%= folder %></span>
+    </div>
+    <div class="version">
+        Detected .dll version: <span class="<%= version === "n/a"? '' : (version === newVersion? 'accent-green': 'accent-red blink')%>"><%= version %></span> <br>
+        Available .dll version: <span class="accent-green"><%= newVersion %></span>
+    </div>
+    <div class="instance-content">
+        <table class="input-table">
+            <tr>
+                <td> 
+                    <div>
+                        <div class="label">Client port <div class="icon info" title="This is the port that will allow users to connect to Olympus and must be forwarded in your firewall."></div></div>
+                        <input id="client-port" type='number' value="<%= typeof client !== 'undefined' ? client["port"]: "" %>" min="1023" max="65535" <%= !installed? "disabled": "" %> tabindex="<%= index %>">  
+                        <span id="client-port-error" class="error"></span>
+                    </div>
+                </td>
+                <td> 
+                    <div>
+                        <div class="label">Game Master password <div class="icon info" title="This is the password you need to input to connect with the Game Master role."></div></div>
+                        <input id="game-master-password" type="password" <%= !installed? "disabled": "" %> tabindex="<%= index + 3 %>">
+                        <span id="game-master-password-error" class="error"></span> 
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td> 
+                    <div>
+                        <div class="label">Backend port  <div class="icon info" title="This is the backend port used by Olympus to connect to DCS. You don't need to forward it in your firewall anymore."></div></div>
+                        <input id="backend-port" type='number' value="<%= typeof server !== 'undefined' ? server["port"]: "" %>" min="1023" max="65535" <%= !installed? "disabled": "" %> tabindex="<%= index + 1 %>">
+                        <span id="backend-port-error" class="error"></span> 
+                    </div>
+                </td>
+                <td> 
+                    <div>
+                        <div class="label">Blue Commander password <div class="icon info" title="This is the password you need to input to connect with the Blue Commander role."></div></div>
+                        <input id="blue-commander-password" type="password" <%= !installed? "disabled": "" %> tabindex="<%= index + 4 %>"> 
+                        <span id="blue-commander-password-error" class="error"></span> 
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td> 
+                    <div>
+                        <div class="label">Backend address <div class="icon info" title="This is the address that DCS will listen on. Unless you want to send direct API commands, leave this to localhost even for dedicated server installations."></div></div>
+                        <input id="backend-address" type='text' value="<%= typeof server !== 'undefined' ? server["address"]: "" %>" min="1023" max="65535" <%= !installed? "disabled": "" %> tabindex="<%= index + 2 %>">
+                        <span id="backend-address-error" class="error"></span> 
+                    </div>
+                </td>
+                <td> 
+                    <div>
+                        <div class="label">Red Commander password <div class="icon info" title="This is the password you need to input to connect with the Red Commander role."></div></div>
+                        <input id="red-commander-password" type="password" <%= !installed? "disabled": "" %> tabindex="<%= index + 5 %>"> 
+                        <span id="red-commander-password-error" class="error"></span> 
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div class="action-buttons">
+            <button class="button add <%= installed? "hide": "" %>" tabindex="<%= index + 6 %>" title="Clicking on this will install all the necessary files in your DCS instance. Remember to close DCS before doing this!">Install Olympus to instance</button>
+            <button class="button apply <%= !installed? "hide": "" %>" tabindex="<%= index + 7 %>" title="Clicking on this will apply your changes to the configuration. Remember to restart any running mission!">Apply changes</button>
+            <button class="button remove <%= !installed? "hide": "" %>" tabindex="<%= index + 8 %>" title="Clicking on this will remove Olympus from your DCS folder.">Remove Olympus</button>
+            <button class="button update <%= !(version !== "n/a" && version !== newVersion)? "hide": "" %>" tabindex="<%= index + 9 %>" title="Clicking on this will update Olympus in your DCS folder.">Update</button>
+        </div>
+    </div>
+</div>

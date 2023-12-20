@@ -1,4 +1,9 @@
-#!/usr/bin/env node
+const yargs = require('yargs');
+var fs = require('fs');
+
+/* Define configuration parameter */
+yargs.alias('c', 'config').describe('c', 'olympus.json config location').string('rp');
+args = yargs.argv;
 
 console.log('\x1b[36m%s\x1b[0m', "*********************************************************************");
 console.log('\x1b[36m%s\x1b[0m', "*  _____   _____  _____    ____  _                                  *");
@@ -12,107 +17,89 @@ console.log('\x1b[36m%s\x1b[0m', "*                                  |___/      
 console.log('\x1b[36m%s\x1b[0m', "*********************************************************************");
 console.log('\x1b[36m%s\x1b[0m', "");
 console.log("Please wait while DCS Olympus Server starts up...");
+console.log(`Config location: ${args["config"]}`)
 
-var fs = require('fs');
-let rawdata = fs.readFileSync('../olympus.json');
-let config = JSON.parse(rawdata);
+/* Load the configuration file */
+var clientPort = 0;
+if (fs.existsSync(args["config"])) {
+	var json = JSON.parse(fs.readFileSync(args["config"], 'utf-8'));
+	clientPort = json["client"]["port"];
+} else {
+	console.log("Failed to read config, aborting!");
 
-/**
- * Module dependencies.
- */
+	/* Wait a bit before closing the window */
+	await new Promise(resolve => setTimeout(resolve, 3000));
+	return;
+}
 
-var app = require('../app');
+/* Load the dependencies. The app is loaded providing the configuration file location */
+var app = require('../app')(args["config"]);
 var debug = require('debug')('client:server');
 var http = require('http');
 
-/**
- * Get port from environment and store in Express.
- */
-
-var configPort = null;
-if (config["client"] != undefined && config["client"]["port"] != undefined) {
-	configPort = config["client"]["port"];
-}
-
-var port = normalizePort(configPort || '3000');
+/* Normalize port */
+var port = normalizePort(clientPort);
 app.set('port', port);
 console.log("Express server listening on port: " + port)
 
-/**
- * Create HTTP server.
- */
-
+/* Create HTTP server */
 var server = http.createServer(app);
 
-/**
- * Listen on provided port, on all network interfaces.
- */
-
+/* Listen on provided port, on all network interfaces. */
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
-/**
- * Normalize a port into a number, string, or false.
- */
-
+/* Normalize a port into a number, string, or false. */
 function normalizePort(val) {
-  var port = parseInt(val, 10);
+	var port = parseInt(val, 10);
 
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
+	if (isNaN(port)) {
+		return val;
+	}
 
-  if (port >= 0) {
-    // port number
-    return port;
-  }
+	if (port >= 0) {
+		return port;
+	}
 
-  return false;
+	return false;
 }
 
-/**
- * Event listener for HTTP server "error" event.
- */
-
+/* Event listener for HTTP server "error" event. */
 function onError(error) {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
+	if (error.syscall !== 'listen') {
+		throw error;
+	}
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+	var bind = typeof port === 'string'
+		? 'Pipe ' + port
+		: 'Port ' + port;
 
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
-    case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
-      process.exit(1);
-      break;
-    case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
-      process.exit(1);
-      break;
-    default:
-      throw error;
-  }
+	/* Handle specific listen errors with friendly messages */
+	switch (error.code) {
+		case 'EACCES':
+			console.error(bind + ' requires elevated privileges');
+			process.exit(1);
+			break;
+		case 'EADDRINUSE':
+			console.error(bind + ' is already in use');
+			process.exit(1);
+			break;
+		default:
+			throw error;
+	}
 }
 
-/**
- * Event listener for HTTP server "listening" event.
- */
-
+/* Event listener for HTTP server "listening" event. */
 function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+	var addr = server.address();
+	var bind = typeof addr === 'string'
+		? 'pipe ' + addr
+		: 'port ' + addr.port;
+	debug('Listening on ' + bind);
 }
 
+/* Final user friendly printing */
 console.log("DCS Olympus server {{OLYMPUS_VERSION_NUMBER}}.{{OLYMPUS_COMMIT_HASH}} started correctly!")
 console.log("Waiting for connections...")
-
 process.title = `DCS Olympus server {{OLYMPUS_VERSION_NUMBER}} (${port})`;

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="./stylesheets/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;600;700;800&display=swap" />
+
+    <meta charset="UTF-8">
+    <title>DCS Olympus Manager {{OLYMPUS_VERSION_NUMBER}}</title>
+</head>
+
+<body>
+    <div id="title-bar">
+        <div>DCS Olympus manager</div>
+        <button class="title-bar-button minimize"></button>
+        <button class="title-bar-button restore hide"></button>
+        <button class="title-bar-button maximize"></button>
+        <button class="title-bar-button close"></button>
+    </div>
+    <div id="header">
+        <img class="main-icon" src="../img/OlympusLogoFinal_4k.png" \>
+        <div>
+            <div> DCS Olympus Manager</div>
+            <div class="accent-green">{{OLYMPUS_VERSION_NUMBER}}</div>
+        </div>
+        <div>
+            These are the DCS instances that the Olympus Manager has automatically detected in your system. <br> 
+            You can install Olympus and manage your instances from here. <br>
+            Click on "Install Olympus to instance" to install Olympus.
+        </div>
+    </div>
+    <div id="main-div">
+
+    </div>
+    <div id="footer">
+
+    </div>
+</body>
+
+<script>
+    document.querySelector('.minimize').addEventListener('click', () => {
+        window.ipcRender.send('window:minimize');
+    });
+
+    document.querySelector('.restore').addEventListener('click', () => {
+        window.ipcRender.send('window:restore');
+    });
+
+    document.querySelector('.maximize').addEventListener('click', () => {
+        window.ipcRender.send('window:maximize');
+    });
+
+    document.querySelector('.close').addEventListener('click', () => {
+        window.ipcRender.send('window:close');
+    });
+
+    window.ipcRender.receive('event:maximized', () => {
+        document.querySelector('.restore').classList.remove("hide");
+        document.querySelector('.maximize').classList.add("hide");
+    })
+
+    window.ipcRender.receive('event:unmaximized', () => {
+        document.querySelector('.restore').classList.add("hide");
+        document.querySelector('.maximize').classList.remove("hide");
+    })
+
+</script>
+
+</html>

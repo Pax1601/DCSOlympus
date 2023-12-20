@@ -24,13 +24,11 @@ import { aircraftDatabase } from "./unit/databases/aircraftdatabase";
 import { helicopterDatabase } from "./unit/databases/helicopterdatabase";
 import { groundUnitDatabase } from "./unit/databases/groundunitdatabase";
 import { navyUnitDatabase } from "./unit/databases/navyunitdatabase";
-import { ConfigurationOptions } from "./interfaces";
 import { UnitListPanel } from "./panels/unitlistpanel";
 import { ContextManager } from "./context/contextmanager";
 import { Context } from "./context/context";
 
 var VERSION = "{{OLYMPUS_VERSION_NUMBER}}";
-var DEBUG = false;
 
 export class OlympusApp {
     /* Global data */
@@ -216,19 +214,8 @@ export class OlympusApp {
         
         this.#pluginsManager = new PluginsManager();
 
-        /* Load the config file from the app server*/
-        this.getServerManager().getConfig((config: ConfigurationOptions) => {
-            if (config && config.address != undefined && config.port != undefined) {
-                const address = config.address;
-                const port = config.port;
-                if (typeof address === 'string' && typeof port == 'number') {
-                    this.getServerManager().setAddress(address == "*" ? window.location.hostname : address, port);
-                }
-            }
-            else {
-                throw new Error('Could not read configuration file');
-            }
-        });
+        /* Set the address of the server */
+        this.getServerManager().setAddress(window.location.href.split('?')[0]);
 
         /* Setup all global events */
         this.#setupEvents();
@@ -294,16 +281,7 @@ export class OlympusApp {
         });
 
         const shortcutManager = this.getShortcutManager();
-        shortcutManager.addKeyboardShortcut("toggleDemo", {
-            "altKey": false,
-            "callback": () => {
-                if (DEBUG === true) this.getServerManager().toggleDemoEnabled();
-            },
-            "code": "KeyT",
-            "context": "olympus",
-            "ctrlKey": false,
-            "shiftKey": false
-        }).addKeyboardShortcut("togglePause", {
+        shortcutManager.addKeyboardShortcut("togglePause", {
             "altKey": false,
             "callback": () => {
                 this.getServerManager().setPaused(!this.getServerManager().getPaused());
