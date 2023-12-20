@@ -104,6 +104,14 @@ export function reciprocalHeading(heading: number): number {
     return heading > 180? heading - 180: heading + 180;
 }
 
+/**
+ * Prepend numbers to the start of a string
+ *
+ * @param num <number> subject number
+ * @param places <number> places to pad
+ * @param decimal <boolean> whether this is a decimal number or not
+ * 
+ * */
 export const zeroAppend = function (num: number, places: number, decimal: boolean = false) {
     var string = decimal? num.toFixed(2): String(num);
     while (string.length < places) {
