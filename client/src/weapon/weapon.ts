@@ -1,6 +1,6 @@
 import { LatLng, DivIcon, Map } from 'leaflet';
 import { getApp } from '..';
-import { enumToCoalition, mToFt, msToKnots, rad2deg } from '../other/utils';
+import { enumToCoalition, mToFt, msToKnots, rad2deg, zeroAppend } from '../other/utils';
 import { CustomMarker } from '../map/markers/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
 import { DLINK, DataIndexes, GAME_MASTER, IRST, OPTIC, RADAR, VISUAL } from '../constants/constants';
@@ -230,7 +230,7 @@ export class Weapon extends CustomMarker {
 
                 /* Set altitude and speed */
                 if (element.querySelector(".unit-altitude"))
-                    (<HTMLElement>element.querySelector(".unit-altitude")).innerText = "FL" + String(Math.floor(mToFt(this.#position.alt as number) / 100));
+                    (<HTMLElement>element.querySelector(".unit-altitude")).innerText = "FL" + zeroAppend(Math.floor(mToFt(this.#position.alt as number) / 100), 3);
                 if (element.querySelector(".unit-speed"))
                     (<HTMLElement>element.querySelector(".unit-speed")).innerText = String(Math.floor(msToKnots(this.#speed))) + "GS";
 
