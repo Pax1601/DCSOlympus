@@ -60,6 +60,12 @@ fs.readFile("./version.json", "utf8", (error, data) => {
                 data = data.replace(/VALUE "FileVersion", "\d.\d.\d.0"/g, `VALUE "FileVersion", "${major}.${minor}.${minorminor}.0"`);
                 fileChanged = true;
             }
+			
+			if (data.search(/VALUE "ProductVersion", "\d.\d.\d.0"/g) >= 0) {
+                console.log(`Replacing version in ${file}`);
+                data = data.replace(/VALUE "ProductVersion", "\d.\d.\d.0"/g, `VALUE "ProductVersion", "${major}.${minor}.${minorminor}.0"`);
+                fileChanged = true;
+            }
 
             if (fileChanged) {
                 fs.writeFile(file, data, 'utf8', (err) => {
