@@ -19,8 +19,16 @@ module.exports = function (configLocation) {
     var pluginsRouter = require('./routes/plugins');
 
     /* Load the config and create the express app */
-    let rawdata = fs.readFileSync(configLocation);
-    let config = JSON.parse(rawdata);
+    let config = {}
+    console.log(`Loading configuration file from ${configLocation}`)
+    if (fs.existsSync(configLocation)){
+        let rawdata = fs.readFileSync(configLocation);
+        config = JSON.parse(rawdata);
+    }
+    else {
+        console.error("Error loading configuration file.")
+        return undefined;
+    }
     var app = express();
 
     /* Define middleware */
