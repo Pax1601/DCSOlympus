@@ -108,13 +108,13 @@ function delay(ms) {
 async function installOlympus(folder) {
     console.log(`Installing Olympus in ${folder}`);
     fs.cpSync(path.join("..", "mod"), path.join(folder, "Mods", "Services", "Olympus"), {recursive: true});
-    fs.cpSync(path.join("..", "scripts", "OlympusHook.lua"), path.join(folder, "Scripts", "OlympusHook.lua"));
+    fs.cpSync(path.join("..", "scripts", "OlympusHook.lua"), path.join(folder, "Scripts", "Hook", "OlympusHook.lua"));
     fs.cpSync(path.join("..", "olympus.json"), path.join(folder, "Config", "olympus.json"));
     if (createDesktopShortcut({
         windows: {
             filePath: path.resolve(__dirname, '..', '..', 'client', 'client.vbs'),
             outputPath: folder,
-            name: "DCS Olympus client",
+            name: "DCS Olympus Client",
             arguments: `"${path.join(folder, "Config", "olympus.json")}"`,
             icon: path.resolve(__dirname, '..', '..', 'img', 'olympus.ico'),
             workingDirectory: path.resolve(__dirname, '..', '..', 'client')
@@ -124,7 +124,7 @@ async function installOlympus(folder) {
         windows: {
             filePath: path.resolve(__dirname, '..', '..', 'client', 'server.vbs'),
             outputPath: folder,
-            name: "DCS Olympus server",
+            name: "DCS Olympus Server",
             arguments: `"${path.join(folder, "Config", "olympus.json")}"`,
             icon: path.resolve(__dirname, '..', '..', 'img', 'olympus_server.ico'),
             workingDirectory: path.resolve(__dirname, '..', '..', 'client')
@@ -207,7 +207,7 @@ class InstanceDiv {
                             if (createDesktopShortcut({
                                 windows: {
                                     filePath: path.resolve(__dirname, '..', '..', 'client', 'client.vbs'),
-                                    name: "DCS Olympus client",
+                                    name: "DCS Olympus Client",
                                     arguments: `"${path.join(this.folder, "Config", "olympus.json")}"`,
                                     icon: path.resolve(__dirname, '..', '..', 'img', 'olympus.ico'),
                                     workingDirectory: path.resolve(__dirname, '..', '..', 'client')
@@ -215,7 +215,7 @@ class InstanceDiv {
                             }) && createDesktopShortcut({
                                 windows: {
                                     filePath: path.resolve(__dirname, '..', '..', 'client', 'server.vbs'),
-                                    name: "DCS Olympus server",
+                                    name: "DCS Olympus Server",
                                     arguments: `"${path.join(this.folder, "Config", "olympus.json")}"`,
                                     icon: path.resolve(__dirname, '..', '..', 'img', 'olympus_server.ico'),
                                     workingDirectory: path.resolve(__dirname, '..', '..', 'client')

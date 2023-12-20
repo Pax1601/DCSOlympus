@@ -15,7 +15,7 @@ function createWindow() {
 			preload: path.join(__dirname, "javascripts", 'preload.js'),
 			nodeIntegration: true, // like here
 		},
-		icon: "./../img/olympus.ico"
+		icon: "./../img/olympus_configurator.ico"
     });
 
     window.loadFile('index.html').then(() => { window.show(); });

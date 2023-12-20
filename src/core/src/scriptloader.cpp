@@ -2,6 +2,7 @@
 #include "logger.h"
 #include "luatools.h"
 #include "dcstools.h"
+#include "defines.h"
 
 #include <algorithm>
 
@@ -38,9 +39,9 @@ void registerLuaFunctions(lua_State* L)
         log("protectedCall registered successfully");
     }
 
-    executeLuaScript(L, instancePath + "..\\Scripts\\mist.lua");
-    executeLuaScript(L, instancePath + "..\\Scripts\\OlympusCommand.lua");
-    executeLuaScript(L, instancePath + "..\\Scripts\\unitPayloads.lua");
-    executeLuaScript(L, instancePath + "..\\Scripts\\templates.lua");
-    executeLuaScript(L, instancePath + "..\\Scripts\\mods.lua");
+    executeLuaScript(L, instancePath + MIST_SCRIPT);
+    executeLuaScript(L, instancePath + OLYMPUS_COMMAND_SCRIPT);
+    executeLuaScript(L, instancePath + UNIT_PAYLOADS_SCRIPT);
+    executeLuaScript(L, instancePath + TEMPLATES_SCRIPT);
+    executeLuaScript(L, instancePath + MODS_SCRIPT);
 }

@@ -70,7 +70,7 @@ body {
 }
 
 #header>div:first-child>div:last-child {
-    color: green;
+    width: 100px;
 }
 
 #header>div:last-child {

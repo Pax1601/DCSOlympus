@@ -49,6 +49,9 @@ static int onSimulationStart(lua_State* L)
 {
     LogInfo(L, "Trying to load core.dll from " + modPath);
     SetDllDirectoryA(modPath.c_str());
+
+    setLogDirectory(modPath);
+
     log("onSimulationStart callback called successfully");
 
     string dllLocation = modPath + "\\core.dll";

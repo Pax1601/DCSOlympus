@@ -8,25 +8,35 @@ const string Logger::m_sFileName = LOG_NAME;
 Logger* Logger::m_pThis = NULL;
 ofstream Logger::m_Logfile;
 std::map<unsigned long long, std::string> Logger::m_logs;
+std::string m_dirPath;
 
 Logger::Logger()
 {
 
 }
+
 Logger* Logger::GetLogger()
 {
     if (m_pThis == NULL) {
         m_pThis = new Logger();
-        std::filesystem::path dirPath = std::filesystem::temp_directory_path();
-        m_Logfile.open((dirPath.string() + m_sFileName).c_str(), ios::out);
     }
     return m_pThis;
 }
 
+void Logger::setDirectory(string newDirPath)
+{
+    m_dirPath = newDirPath;
+}
+
 void Logger::Open()
 {
-    std::filesystem::path dirPath = std::filesystem::temp_directory_path();
-    m_Logfile.open((dirPath.string() + m_sFileName).c_str(), ios::out | ios::app);
+    try {
+        m_Logfile.open((m_dirPath + m_sFileName).c_str(), ios::out | ios::app);
+    }
+    catch (...) {
+        std::filesystem::path m_dirPath = std::filesystem::temp_directory_path();
+        m_Logfile.open((m_dirPath.string() + m_sFileName).c_str(), ios::out | ios::app);
+    }
 }
 
 void Logger::Close()
