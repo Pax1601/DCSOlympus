@@ -13083,6 +13083,50 @@
 						"quantity": 2
 					},
 					{
+						"name": "AIM-120C-5 AMRAAM Active Rdr AAM",
+						"quantity": 6
+					},
+					{
+						"name": "FPU-8A Fuel Tank 330 gallons",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "AIM-9X*2, AIM-120C-5*6, FUEL*2",
+				"name": "AIM-9X*2, AIM-120C-5*6, FUEL*2",
+				"roles": [
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "AIM-9X Sidewinder IR AAM",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-120C-5 AMRAAM Active Rdr AAM",
+						"quantity": 2
+					},
+					{
+						"name": "FPU-8A Fuel Tank 330 gallons",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "AIM-9X*2, AIM-120C-5*2, FUEL*1",
+				"name": "AIM-9X*2, AIM-120C-5*2, FUEL*1",
+				"roles": [
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "AIM-9X Sidewinder IR AAM",
+						"quantity": 2
+					},
+					{
 						"name": "LAU-117 with AGM-65F - Maverick F (IIR ASM)",
 						"quantity": 4
 					},

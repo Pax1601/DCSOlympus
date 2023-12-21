@@ -61,7 +61,7 @@
 		"canRearm": false,
 		"barrelHeight": 1,
 		"muzzleVelocity": 325,
-		"aimTime": 45,
+		"aimTime": 300,
 		"shotsToFire": 2,
 		"markerFile": "groundunit-artillery",
 		"tags": "120mm",
@@ -8246,7 +8246,7 @@
 		"canAAA": true,
 		"aimMethodRange": 4000,
 		"targetingRange": 200,
-		"shotsBaseInterval": 5,
+		"shotsBaseInterval": 15,
 		"shotsBaseScatter": 5,
 		"alertnessTimeConstant": 5
 	},
@@ -8275,7 +8275,7 @@
 		"canAAA": true,
 		"alertnessTimeConstant": 5,
 		"shotsBaseScatter": 5,
-		"shotsBaseInterval": 5,
+		"shotsBaseInterval": 15,
 		"aimMethodRange": 4500,
 		"targetingRange": 100
 	},

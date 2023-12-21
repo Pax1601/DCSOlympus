@@ -1,0 +1,18 @@
+  _____   _____  _____    ____  _                                 
+ |  __ \ / ____|/ ____|  / __ \| |                                
+ | |  | | |    | (___   | |  | | |_   _ _ __ ___  _ __  _   _ ___ 
+ | |  | | |     \___ \  | |  | | | | | | '_ ` _ \| '_ \| | | / __|
+ | |__| | |____ ____) | | |__| | | |_| | | | | | | |_) | |_| \__ \
+ |_____/ \_____|_____/   \____/|_|\__, |_| |_| |_| .__/ \__,_|___/
+                                   __/ |         | |              
+                                  |___/          |_|              
+
+v{{OLYMPUS_VERSION_NUMBER}}
+
+INSTALLATION INSTRUCTIONS
+
+1) Close any applications which may interfere with installation, including Digital Combat Simulator (DCS) and previous versions of Olympus.
+
+2) Execute the "install.bat" script by double-clicking on it. NOTE: depending on your Windows configuration, the script may be called "install" (without .bat at the end);
+
+3) For more information visit the wiki located at https://github.com/Pax1601/DCSOlympus/wiki
