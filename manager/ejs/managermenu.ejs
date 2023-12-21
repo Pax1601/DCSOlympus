@@ -1,0 +1,40 @@
+<style>
+    #manager-menu {
+        display: flex;
+        flex-direction: column;
+        row-gap: 8px;
+    }
+
+    #manager-menu>.option {
+        background-color: var(--blue);
+        width: 100%;
+        height: 50px;
+        color: white;
+        display: flex;
+        font-size: 13px;
+        font-weight: 600;
+        padding-left: 15px;
+        align-items: center;
+        border-radius: 5px;
+    }
+
+    .inverted {
+        background-color: var(--gray) !important;
+        color: var(--background) !important;
+    }
+
+</style>
+<div id="manager-menu">
+    <div class="page-header">
+        What do you want to do?
+    </div>
+    <div class="option">
+        Install Olympus
+    </div>
+    <div class="option">
+        Update/remove Olympus
+    </div>
+    <div class="inverted">
+        View and manage instances
+    </div>
+</div>

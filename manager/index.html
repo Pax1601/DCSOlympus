@@ -16,8 +16,8 @@
     <div id="title-bar">
         <div>DCS Olympus manager</div>
         <button class="title-bar-button minimize"></button>
-        <button class="title-bar-button restore hide"></button>
-        <button class="title-bar-button maximize"></button>
+        <!--<button class="title-bar-button restore hide"></button>-->
+        <!--<button class="title-bar-button maximize"></button>-->
         <button class="title-bar-button close"></button>
     </div>
     <div id="header">
@@ -25,11 +25,6 @@
         <div>
             <div> DCS Olympus Manager</div>
             <div class="accent-green">v1.0.4</div>
-        </div>
-        <div>
-            These are the DCS instances that the Olympus Manager has automatically detected in your system. <br> 
-            You can install Olympus and manage your instances from here. <br>
-            Click on "Install Olympus to instance" to install Olympus.
         </div>
     </div>
     <div id="main-div">
@@ -45,13 +40,13 @@
         window.ipcRender.send('window:minimize');
     });
 
-    document.querySelector('.restore').addEventListener('click', () => {
+    /*document.querySelector('.restore').addEventListener('click', () => {
         window.ipcRender.send('window:restore');
     });
 
     document.querySelector('.maximize').addEventListener('click', () => {
         window.ipcRender.send('window:maximize');
-    });
+    });*/
 
     document.querySelector('.close').addEventListener('click', () => {
         window.ipcRender.send('window:close');
@@ -66,7 +61,6 @@
         document.querySelector('.restore').classList.add("hide");
         document.querySelector('.maximize').classList.remove("hide");
     })
-
 </script>
 
 </html>

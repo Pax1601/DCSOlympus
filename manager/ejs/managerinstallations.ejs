@@ -1,0 +1,49 @@
+<style>
+    #manager-installations {
+        display: flex;
+        flex-direction: column;
+        row-gap: 8px;
+    }
+
+    #manager-installations>.option {
+        cursor: pointer;
+        background-color: var(--darkgray);
+        width: 100%;
+        height: 80px;
+        color: white;
+        display: flex;
+        font-size: 13px;
+        font-weight: 600;
+        padding-left: 15px;
+        align-items: center;
+        border-radius: 5px;
+        border-left: 5px solid var(--blue);
+    }
+
+    #manager-installations>.selected {
+        background-color: var(--blue);
+    }
+
+</style>
+<div id="manager-installations">
+    <div class="page-header">
+        Step 1: Select DCS Installations
+    </div>
+    <div class="instruction">
+        <span>
+            Select the copies of DCS you want to install Olympus to.
+        </span>
+        <span>
+            For most people, this is your main DCS installation. 
+        </span>
+        <span>
+            If you are running a dedicated server, you would also install Olympus to this DCS version.
+        </span>
+    </div>
+    <%= instances[0] %>
+    <% for (let i = 0; i < instances.length; i++) {%>
+        <div class="option">
+            <%= instances[i] %>
+        </div>
+    <% } %>
+</div>
