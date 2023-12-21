@@ -13,14 +13,21 @@ INSTALLATION INSTRUCTIONS
 
 1) Close any applications which may interfere with installation, including Digital Combat Simulator (DCS) and previous versions of Olympus.
 
-2) If this is your first installation of Olympus, skip this step. If you already installed Olympus, do the following:
-	a) If you installed DCS Olympus v1.0.3 using the installer, simply remove it using Windows's "Add or remove programs" application. 
-    b) If you installed DCS Olympus v1.0.3 using the archived version, remove it by deleting the <DCS Saved Games folder>\Mods\Services\Olympus folder. Do this for every DCS instance you installed Olympus in. 
-       Remember to delete any shortcuts you created. Don't worry, they will be created automatically again by the installation script provided in this package :)
+2) If you DO NOT have Olympus already installed, SKIP THIS STEP. If you have already installed Olympus, do the following:
+    a) If you installed DCS Olympus v1.0.3 using the installer, simply remove it using Windows's "Add or remove programs" application. 
+    b) If you installed DCS Olympus v1.0.3 using the archived version, remove it by deleting the "...<DCS Saved Games folder>\Mods\Services\Olympus" folder. Do this for every DCS instance you installed Olympus in. 
+       Remember to delete any shortcuts you created. Don't worry, they will be created automatically again by the installation script provided in this package
 
-3) Execute the "install.bat" script by double-clicking on it. NOTE: depending on your Windows configuration, the script may be called "install" (without .bat at the end);
+3) Execute the "install.bat" script by double-clicking on it. Wait for the installation script to complete.
+	NOTE: depending on your Windows configuration, the script may be called "install" (without .bat at the end).
 
-4) Wait for the installation script to complete. At the end, the new Olympus Manager will be started, that will allow you to add/remove Olympus to your DCS installation. 
-   !!!!IMPORTANT NOTICE!!!!: executing step 3) will install Olympus on your system, but it will not install it in DCS. YOU NEED TO USE THE OLYMPUS MANAGER TO DO THAT! You will find more instructions in the Manager itself.
+4) The new Olympus Manager will open. This will allow you to add/remove Olympus to individual DCS installations.
+	Use the Olympus Manager and follow the instructions to install and setup Olympus.
 
-4) For more information visit the wiki located at https://github.com/Pax1601/DCSOlympus/wiki
+5) Start DCS and run a mission. Make sure it is UNPAUSED.
+
+6) Open Olympus via the shortcut and login using any username and the Gamemaster password set using the configurator. 
+	Local installation: run the client from the provided shortcut, or visit "http://localhost:3000/" in a web browser (Google Chrome recommended). 
+	Dedicated server: users must first start the Olympus server, then log in using any browser and visiting "http:\\<server IP>:<backend port>" (backend port is 3001 by default)
+
+7) You can use the manager at any time to change the ports and/or passwords. If you do, REMEMBER TO RESTART OLYMPUS AND DCS.

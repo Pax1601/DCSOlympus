@@ -50,6 +50,19 @@ echo oLink.Save >> %SCRIPT%
 cscript /nologo %SCRIPT%
 del %SCRIPT%
 
+set SCRIPT="%TEMP%\%RANDOM%-%RANDOM%-%RANDOM%-%RANDOM%.vbs"
+echo Set oWS = WScript.CreateObject("WScript.Shell") >> %SCRIPT%
+echo sLinkFile = "%CD%\DCS Olympus Manager.lnk" >> %SCRIPT%
+echo Set oLink = oWS.CreateShortcut(sLinkFile) >> %SCRIPT%
+echo oLink.TargetPath = "%CD%\manager\manager.vbs" >> %SCRIPT%
+echo oLink.WorkingDirectory = "%CD%\manager" >> %SCRIPT%
+echo oLink.IconLocation = "%CD%\img\olympus_configurator.ico" >> %SCRIPT%
+
+echo oLink.Save >> %SCRIPT%
+
+cscript /nologo %SCRIPT%
+del %SCRIPT%
+
 echo [32mAll done! This window will close in 5 seconds. It may take a couple of seconds for the Olympus Manager to start, please wait... [0m
 
 timeout /t 5

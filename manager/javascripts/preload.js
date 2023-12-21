@@ -106,7 +106,7 @@ function installOlympus(folder) {
     console.log(`Installing Olympus in ${folder}`);
     try {
         fs.cpSync(path.join("..", "mod"), path.join(folder, "Mods", "Services", "Olympus"), { recursive: true });
-        fs.cpSync(path.join("..", "scripts", "OlympusHook.lua"), path.join(folder, "Scripts", "Hook", "OlympusHook.lua"));
+        fs.cpSync(path.join("..", "scripts", "OlympusHook.lua"), path.join(folder, "Scripts", "Hooks", "OlympusHook.lua"));
         fs.cpSync(path.join("..", "olympus.json"), path.join(folder, "Config", "olympus.json"));
         if (createShortcut({
             windows: {
@@ -143,8 +143,8 @@ function installOlympus(folder) {
 function uninstallOlympus(folder) {
     console.log(`Uninstalling Olympus from ${folder}`);
     try {
-        fs.rmSync(path.join(folder, "Mods", "Services", "Olympus"), { recursive: true });
-        fs.rmSync(path.join(folder, "Config", "olympus.json"));
+        fs.rmSync(path.join(folder, "Mods", "Services", "Olympus"), { recursive: true, force: true });
+        fs.rmSync(path.join(folder, "Config", "olympus.json"), {force: true});
         loadDivs();
     } catch (e) {
         console.error(e);
