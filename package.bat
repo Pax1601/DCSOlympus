@@ -45,6 +45,7 @@ echo F|xcopy /Y .\img\OlympusLogoFinal_4k.png .\package\img\OlympusLogoFinal_4k.
 
 echo F|xcopy /Y .\LEGAL.txt .\package\LEGAL.txt  
 echo F|xcopy /Y .\INSTRUCTIONS.txt .\package\INSTRUCTIONS.txt 
+echo F|xcopy /Y .\notes.txt .\package\notes.txt 
 
 echo D|xcopy /Y /S /E .\dependencies .\package\dependencies
 
