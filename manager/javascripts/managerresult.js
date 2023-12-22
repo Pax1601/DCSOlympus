@@ -16,7 +16,7 @@ class ManagerResult extends ManagerPage {
         element.innerHTML = str;
 
         this.element.querySelector(".back").addEventListener("click", (e) => this.onBackClicked(e));
-        this.element.querySelector(".cancel").addEventListener("click", (e) => this.onCancelClicked(e));
+        //this.element.querySelector(".cancel").addEventListener("click", (e) => this.onCancelClicked(e));
     }    
 
     show(instance) {

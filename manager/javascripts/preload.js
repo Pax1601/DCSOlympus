@@ -110,7 +110,7 @@ async function setup() {
     }
 
     /* Instances */
-    var managerInstances = new ManagerInstances({ instances: instances });
+    var managerInstances = new ManagerInstances({ instances: instances.filter((instance) => {return instance.installed; }) });
     managerInstances.onBackClicked = (e) => {
         managerInstances.hide();
         managerMenu.show();
@@ -189,11 +189,11 @@ async function setup() {
     var managerResult = new ManagerResult();
     managerResult.onBackClicked = (e) => {
         managerResult.hide();
-        managerMenu.show();
+        location.reload();
     }
     managerResult.onCancelClicked = (e) => {
         managerResult.hide();
-        managerMenu.show();
+        location.reload();
     }
 
     document.body.appendChild(managerMenu.getElement());

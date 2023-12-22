@@ -6,6 +6,7 @@ var path = require('path')
 const vi = require('win-version-info');
 const checkPort = require('./net')
 const dircompare = require('dir-compare');
+const { installJSON } = require('./filesystem')
 
 class DCSInstance {
     static instances = null;
@@ -64,6 +65,15 @@ class DCSInstance {
         this.name = path.basename(folder);
 
         if (fs.existsSync(path.join(folder, "Config", "olympus.json"))){
+            try {
+                var config = JSON.parse(fs.readFileSync(path.join(folder, "Config", "olympus.json")));
+                this.clientPort = config["client"]["port"];
+                this.backendPort = config["server"]["port"];
+                this.backendAddress = config["server"]["address"];
+            } catch (err) {
+                console.error(err)
+            }
+
             this.installed = true;
             const options = { compareContent: true };
             var err1 = true;

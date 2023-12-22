@@ -9,9 +9,17 @@ echo [36m"* |_____/ \_____|_____/   \____/|_|\__, |_| |_| |_| .__/ \__,_|___/ *
 echo [36m"*                                   __/ |         | |               *"[0m
 echo [36m"*                                  |___/          |_|               *"[0m
 echo [36m"*********************************************************************"[0m
-echo [36mWelcome to the DCS Olympus v{{OLYMPUS_VERSION_NUMBER}} installation script. Please wait while the necessary dependencies are installed![0m
+echo [36mWelcome to the DCS Olympus {{OLYMPUS_VERSION_NUMBER}} installation script. Please wait while the necessary dependencies are installed![0m
 echo:
-echo [30m[106mThe output of this script is also available in the file %CD%\output.log. If you encounter any error, make sure to attach that file to your help request![0m
+
+
+WHERE /q powershell
+if %ERRORLEVEL% NEQ 0  (
+	echo [30m[106mPowershell not installed in the system, no output log available.[0m
+) else (
+	echo [30m[106mThe output of this script is also available in the file "%CD%\output.log". If you encounter any error, make sure to attach that file to your help request![0m
+)
+
 timeout /t 5
 
 echo Checking if node.js framework is installed...
