@@ -7,9 +7,10 @@ let window;
 
 function createWindow() {
     const window = new electronBrowserWindow({
-		width: 1310,
+		width: 500,
 		height: 800,
 		frame: false,
+        resizable: false,
 		webPreferences: {
 			contextIsolation: true,
 			preload: path.join(__dirname, "javascripts", 'preload.js'),
