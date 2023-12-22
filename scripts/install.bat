@@ -36,12 +36,12 @@ if "%errorlevel%" == "9009" (
 
 echo Installing node modules for client application...
 cd .\client
-call npm install --omit=dev --silent
+call npm install --omit=dev
 cd..
 
 echo Installing node modules for manager application...
 cd .\manager
-call npm install --omit=dev --silent
+call npm install --omit=dev
 cd..
 
 echo Generating shortcuts...
