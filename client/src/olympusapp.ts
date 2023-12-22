@@ -18,6 +18,7 @@ import { Manager } from "./other/manager";
 import { SVGInjector } from "@tanem/svg-injector";
 import { ServerManager } from "./server/servermanager";
 import { sha256 } from 'js-sha256';
+import Ajv from "ajv"
 
 import { BLUE_COMMANDER, FILL_SELECTED_RING, GAME_MASTER, HIDE_UNITS_SHORT_RANGE_RINGS, RED_COMMANDER, SHOW_UNITS_ACQUISITION_RINGS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNIT_LABELS } from "./constants/constants";
 import { aircraftDatabase } from "./unit/databases/aircraftdatabase";
@@ -27,6 +28,8 @@ import { navyUnitDatabase } from "./unit/databases/navyunitdatabase";
 import { UnitListPanel } from "./panels/unitlistpanel";
 import { ContextManager } from "./context/contextmanager";
 import { Context } from "./context/context";
+import { AirDefenceUnitSpawnMenu } from "./controls/unitspawnmenu";
+import { AirbasesJSONSchemaValidator } from "./schemas/schema";
 
 var VERSION = "{{OLYMPUS_VERSION_NUMBER}}";
 
@@ -192,6 +195,9 @@ export class OlympusApp {
         this.#toolbarsManager = new Manager();
         this.#unitsManager = new UnitsManager();
         this.#weaponsManager = new WeaponsManager();
+
+        /*  Validate data  */
+        this.#validateData();
 
         // Toolbars
         this.getToolbarsManager().add("primaryToolbar", new PrimaryToolbar("primary-toolbar"))
@@ -446,5 +452,29 @@ export class OlympusApp {
             else
                 img.addEventListener("load", () => { SVGInjector(img); });
         })
+    }
+
+    #validateData() {
+
+        const airbasesValidator = new AirbasesJSONSchemaValidator();
+
+        /*
+        const validator = new Ajv();
+        const schema = {
+            type: "object",
+            properties: {
+              foo: {type: "integer"},
+              bar: {type: "string"},
+            },
+            required: ["foo"],
+            additionalProperties: false,
+          }
+          
+          const data = this.#getRunwayData();
+
+          const validate = validator.compile(schema);
+          const valid = validate(data);
+          if (!valid) console.log(validate.errors);
+          //*/
     }
 }

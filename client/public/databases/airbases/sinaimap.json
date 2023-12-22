@@ -1037,7 +1037,7 @@
               "01R": {
                 "magHeading": "11",
                 "Heading": "16",
-                "ILS": "109.7"
+                "ILS": "109.70"
               }
             },
             {
@@ -1366,7 +1366,7 @@
           "length": "9536"
         }
       ],
-      "TACAN": "0X",
+      "TACAN": "",
       "ICAO": "HECW",
       "elevation": "439"
     }
