@@ -1,6 +1,6 @@
 const portfinder = require('portfinder')
 
-export function checkPort(port, callback) {
+function checkPort(port, callback) {
     portfinder.getPort({ port: port, stopPort: port }, (err, res) => {
         if (err !== null) {
             console.error(`Port ${port} already in use`);
@@ -10,3 +10,5 @@ export function checkPort(port, callback) {
         }
     });
 }
+
+module.exports = checkPort;

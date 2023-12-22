@@ -123,7 +123,7 @@ body {
 }
 
 .page-header {
-    font-size: 14px;
+    font-size: 18px;
     font-weight: 600;
     color: var(--offwhite);
     border-bottom: 1px solid var(--offwhite);
@@ -131,18 +131,109 @@ body {
     margin-bottom: 10px;
 }
 
-.instruction {
+.instructions {
     color: var(--offwhite);
     display: flex;
     flex-direction: column;
     row-gap: 4px;
 }
 
-.instruction>span:first-child {
+.instructions>span:first-child {
     font-size: 14px;
     font-weight: 600;
 }
 
-.instruction>span:not(:first-child) {
+.instructions>span:not(:first-child) {
     font-size: 13px;
+}
+
+.buttons-footer {
+    display: flex;
+    column-gap: 10px;
+}
+
+.button {
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.back {
+    color: var(--background);
+    background-color: var(--offwhite);
+}
+
+.next {
+    color: var(--offwhite);
+    background-color: var(--blue);
+}
+
+.cancel {
+    padding: 10px 5px;
+    color: var(--offwhite);
+}
+
+.close-popup {
+    color: var(--offwhite);
+    background-color: var(--blue);
+}
+
+input {
+    outline: none;
+    font-weight: 600;
+    color: var(--background);
+    font-size: 13px;
+    padding: 3px 10px;
+    border-radius: 5px;
+}
+
+.hide {
+    display: none !important;
+}
+
+#grayout {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    opacity: 30%;
+}
+
+#popup {
+    width: 300px;
+    height: 200px;
+    position: absolute;
+    background-color: var(--background);
+    border-radius: 5px;
+    left: calc(50% - 150px);
+    top: calc(50% - 100px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    align-items: center;
+}
+
+#popup img {
+    width: 50px;
+    height: 50px;
+}
+
+#popup .content {
+    color: var(--offwhite);
+    font-size: 13px;
+    font-weight: 600;
+    width: 100%;
+    text-align: left;
+}
+
+#popup .footer {
+    height: fit-content;
+    display: flex;
+    justify-content: end;
+    width: 100%;
 }

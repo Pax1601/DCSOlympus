@@ -1,7 +1,7 @@
 const ManagerPage = require("./managerpage");
 const ejs = require('ejs')
 
-class ManagerInstallations extends ManagerPage {
+class ManagerInstances extends ManagerPage {
     onBackClicked;
     onNextClicked;
     onCancelClicked;
@@ -40,7 +40,7 @@ class ManagerInstallations extends ManagerPage {
     }
 
     show() {
-        ejs.renderFile("./ejs/managerinstallations.ejs", this.options, {}, (err, str) => {
+        ejs.renderFile("./ejs/managerinstances.ejs", this.options, {}, (err, str) => {
             if (!err) {
                 this.render(str);
             } else {
@@ -52,4 +52,4 @@ class ManagerInstallations extends ManagerPage {
     }
 } 
 
-module.exports = ManagerInstallations;
+module.exports = ManagerInstances;

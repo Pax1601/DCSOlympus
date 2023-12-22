@@ -16,6 +16,11 @@
         padding-left: 15px;
         align-items: center;
         border-radius: 5px;
+        cursor: pointer;
+    }
+
+    #manager-menu>.option * {
+        pointer-events: none;
     }
 
     .inverted {
@@ -28,13 +33,13 @@
     <div class="page-header">
         What do you want to do?
     </div>
-    <div class="option">
+    <div class="option install">
         Install Olympus
     </div>
-    <div class="option">
+    <div class="option update">
         Update/remove Olympus
     </div>
-    <div class="inverted">
+    <div class="option inverted manage">
         View and manage instances
     </div>
 </div>
