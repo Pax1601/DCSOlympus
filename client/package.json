@@ -26,7 +26,6 @@
     "http-proxy-middleware": "^2.0.6",
     "js-sha256": "^0.10.1",
     "morgan": "~1.9.1",
-    "node-hide-console-window": "^2.2.0",
     "open": "^10.0.0",
     "prompt-sync": "^4.2.0",
     "regedit": "^5.1.2",
