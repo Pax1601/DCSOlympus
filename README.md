@@ -23,7 +23,7 @@ Even better it requires no client mods be installed if used on a server
 The full feature list is simply too long to enumerate in a short summary but needless to say Olympus offers up a lot of unique gameplay that has previously not existed, and enhances many other elements of DCS in exciting ways 
 
 ### Installing DCS Olympus
-Check the Wiki (https://github.com/Pax1601/DCSOlympus/wiki) for installation instructions
+Check the [Wiki](https://github.com/Pax1601/DCSOlympus/wiki) for installation instructions
 
 # Frequently Asked Questions
 ### Can I join up and help out with the project? ###
