@@ -4,26 +4,40 @@
     </div>
 
     <div class="ol-dialog-content">
-        <p><%= textContent %></p>
 
-        <% if (showFilenameInput) { %>
-            <div class="export-filename-container">
-                <label>Filename:</label>
-                <input id="export-filename">
-                <img src="resources/theme/images/icons/keyboard-solid.svg">
-            </div>
-        <% } %>
+        <div class="import-form" data-on-error="hide">
+            <p><%= textContent %></p>
+    
+            <% if (showFilenameInput) { %>
+                <div class="export-filename-container">
+                    <label>Filename:</label>
+                    <input id="export-filename">
+                    <img src="resources/theme/images/icons/keyboard-solid.svg">
+                </div>
+            <% } %>
+    
+            <table class="categories-coalitions">
+                <thead>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
 
-        <table class="categories-coalitions">
-            <thead>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
+        <div class="import-errors" data-on-error="show">
 
-    <div class="ol-dialog-footer ol-group">
-        <button class="start-transfer"><%= submitButtonText %></button>
-        <button data-on-click="closeDialog">Close</button>
+            <p>Data could not be imported because:</p>
+
+            <ul class="import-error-reasons"></ul>
+
+            <div>Please correct the error(s) and run the import again.</div>
+            
+        </div>
+    
+        <div class="ol-dialog-footer ol-group">
+            <button class="start-transfer" data-on-error="hide"><%= submitButtonText %></button>
+            <button data-on-click="closeDialog">Close</button>
+        </div>
+    
     </div>
 </div>
