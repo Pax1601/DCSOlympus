@@ -26,6 +26,23 @@ export const ROEs: string[] = ["free", "designated", "", "return", "hold"];
 export const reactionsToThreat: string[] = ["none", "manoeuvre", "passive", "evade"];
 export const emissionsCountermeasures: string[] = ["silent", "attack", "defend", "free"];
 
+export const ERAS = [{
+    "name": "Early Cold War",
+    "chronologicalOrder": 2
+}, {
+    "name": "Late Cold War",
+    "chronologicalOrder": 4
+}, {
+    "name": "Mid Cold War",
+    "chronologicalOrder": 3
+}, {
+    "name": "Modern",
+    "chronologicalOrder": 5
+}, {
+    "name": "WW2",
+    "chronologicalOrder": 1
+}];
+
 export const ROEDescriptions: string[] = [
     "Free (Attack anyone)",
     "Designated (Attack the designated target only) \nWARNING: Ground and Navy units don't respect this ROE, it will be equivalent to weapons FREE.",

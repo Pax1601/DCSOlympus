@@ -2,7 +2,7 @@ import { LatLng } from "leaflet";
 import { getApp } from "..";
 import { Airbase } from "./airbase";
 import { Bullseye } from "./bullseye";
-import { BLUE_COMMANDER, GAME_MASTER, NONE, RED_COMMANDER } from "../constants/constants";
+import { BLUE_COMMANDER, ERAS, GAME_MASTER, NONE, RED_COMMANDER } from "../constants/constants";
 import { Dropdown } from "../controls/dropdown";
 import { groundUnitDatabase } from "../unit/databases/groundunitdatabase";
 import { createCheckboxOption, getCheckboxOptions } from "../other/utils";
@@ -212,11 +212,13 @@ export class MissionManager {
 
     showCommandModeDialog() {
         /* Create the checkboxes to select the unit eras */
-        var eras = aircraftDatabase.getEras().concat(helicopterDatabase.getEras()).concat(groundUnitDatabase.getEras()).concat(navyUnitDatabase.getEras());
-        eras = eras.filter((item: string, index: number) => eras.indexOf(item) === index).sort();
-        this.#commandModeErasDropdown.setOptionsElements(eras.map((era: string) => {
-            return createCheckboxOption(era, `Enable ${era} units spawns`, this.getCommandModeOptions().eras.includes(era));
-        }));
+        this.#commandModeErasDropdown.setOptionsElements(
+            ERAS.sort((eraA, eraB) => {
+                return ( eraA.chronologicalOrder > eraB.chronologicalOrder ) ? 1 : -1;
+            }).map((era) => {
+                return createCheckboxOption(era.name, `Enable ${era} units spawns`, this.getCommandModeOptions().eras.includes(era.name));
+            })
+        );
 
         this.#commandModeDialog.classList.remove("hide");
 
