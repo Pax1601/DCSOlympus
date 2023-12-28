@@ -5,10 +5,10 @@ import { Switch } from "../controls/switch";
 import { GAME_MASTER } from "../constants/constants";
 import { CoalitionArea } from "../map/coalitionarea/coalitionarea";
 import { AirDefenceUnitSpawnMenu, AircraftSpawnMenu, GroundUnitSpawnMenu, HelicopterSpawnMenu, NavyUnitSpawnMenu } from "../controls/unitspawnmenu";
-import { Airbase } from "../mission/airbase";
 import { SmokeMarker } from "../map/markers/smokemarker";
 import { UnitSpawnTable } from "../interfaces";
-import { getUnitDatabaseByCategory } from "../other/utils";
+import { getCategoryBlueprintIconSVG, getUnitDatabaseByCategory } from "../other/utils";
+import { SVGInjector } from "@tanem/svg-injector";
 
 /** The MapContextMenu is the main contextmenu shown to the user whenever it rightclicks on the map. It is the primary interaction method for the user.
  * It allows to spawn units, create explosions and smoke, and edit CoalitionAreas.
@@ -312,12 +312,13 @@ export class MapContextMenu extends ContextMenu {
             const detail:any = ev.detail;
             if (buttons.length === 0) history.innerHTML = "";  //  Take out any "no data" messages
             const button = document.createElement("button");
+            button.title = "Click to spawn";
             button.setAttribute("data-spawned-coalition", detail.coalition);
             button.setAttribute("data-unit-type", detail.unitSpawnTable[0].unitType);
             button.setAttribute("data-unit-qty", detail.unitSpawnTable.length);
 
             const db = getUnitDatabaseByCategory(detail.category);
-            button.innerHTML = `${db?.getByName(detail.unitSpawnTable[0].unitType)?.label} (${detail.unitSpawnTable.length})`;
+            button.innerHTML = `<img src="${getCategoryBlueprintIconSVG(detail.category, detail.unitSpawnTable[0].unitType)}" /><span>${db?.getByName(detail.unitSpawnTable[0].unitType)?.label} (${detail.unitSpawnTable.length})</span>`;
 
             //  Remove a previous instance to save clogging up the list
             const previous:any = [].slice.call(buttons).find( (button:Element) => (
@@ -339,6 +340,7 @@ export class MapContextMenu extends ContextMenu {
 
             /*  Insert into DOM */
             history.prepend(button);
+            SVGInjector(button.querySelectorAll("img"));
 
             /* Trim down to max number of entries */
             while (history.querySelectorAll("button").length > maxEntries) {

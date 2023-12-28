@@ -5,7 +5,7 @@ import { aircraftDatabase } from "../unit/databases/aircraftdatabase";
 import { helicopterDatabase } from "../unit/databases/helicopterdatabase";
 import { groundUnitDatabase } from "../unit/databases/groundunitdatabase";
 import { Buffer } from "buffer";
-import { ROEs, emissionsCountermeasures, reactionsToThreat, states } from "../constants/constants";
+import { GROUND_UNIT_AIR_DEFENCE_REGEX, ROEs, emissionsCountermeasures, reactionsToThreat, states } from "../constants/constants";
 import { Dropdown } from "../controls/dropdown";
 import { navyUnitDatabase } from "../unit/databases/navyunitdatabase";
 import { DateAndTime, UnitBlueprint } from "../interfaces";
@@ -369,6 +369,20 @@ export function getUnitDatabaseByCategory(category: string) {
         return navyUnitDatabase;
     else
         return null;
+}
+
+export function getCategoryBlueprintIconSVG(category:string, unitName:string) {
+
+    const path = "/resources/theme/images/buttons/visibility/";
+
+    //  We can just send these back okay
+    if (["Aircraft", "Helicopter", "NavyUnit"].includes(category)) return `${path}${category.toLowerCase()}.svg`;
+
+    //  Return if not a ground units as it's therefore something we don't recognise
+    if (category !== "GroundUnit") return false;
+
+    /** We need to get the unit detail for ground units so we can work out if it's an air defence unit or not **/
+    return GROUND_UNIT_AIR_DEFENCE_REGEX.test(unitName) ? `${path}groundunit-sam.svg` : `${path}groundunit.svg`;
 }
 
 export function base64ToBytes(base64: string) {

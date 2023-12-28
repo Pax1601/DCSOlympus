@@ -204,16 +204,19 @@ export const MAP_MARKER_CONTROLS: MapMarkerVisibilityControl[] = [{
     "toggles": ["dcs"],
     "tooltip": "Toggle DCS-controlled units' visibility"
 }, {
+    "category": "Aircraft",
     "image": "visibility/aircraft.svg",
     "name": "Aircraft",
     "toggles": ["aircraft"],
     "tooltip": "Toggle aircraft's visibility"
 }, {
+    "category": "Helicopter",
     "image": "visibility/helicopter.svg",
     "name": "Helicopter",
     "toggles": ["helicopter"],
     "tooltip": "Toggle helicopters' visibility"
 }, {
+    "category": "AirDefence",
     "image": "visibility/groundunit-sam.svg",
     "name": "Air defence",
     "toggles": ["groundunit-sam"],
@@ -224,6 +227,7 @@ export const MAP_MARKER_CONTROLS: MapMarkerVisibilityControl[] = [{
     "toggles": ["groundunit"],
     "tooltip": "Toggle ground units' visibility"
 }, {
+    "category": "GroundUnit",
     "image": "visibility/navyunit.svg",
     "name": "Naval",
     "toggles": ["navyunit"],

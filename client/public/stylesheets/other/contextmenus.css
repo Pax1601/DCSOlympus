@@ -237,29 +237,48 @@
 }
 
 #spawn-history-menu {
-    display:flex;
+    align-items: center;
     flex-direction: column;
     max-height: 300px;
     row-gap: 6px;
 }
 
 #spawn-history-menu button {
-    border-radius: 0;
+    align-items: center;
+    column-gap: 4px;
+    display:flex;
     height:32px;
     text-align: left;
     width:100%;
 }
 
-#spawn-history-menu button[data-spawned-coalition="blue"] {
-    border-left:4px solid var(--primary-blue);
+#spawn-history-menu button span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-#spawn-history-menu button[data-spawned-coalition="red"] {
-    border-left:4px solid var(--primary-red);
+#spawn-history-menu button svg {
+    border-radius: var(--border-radius-sm);
+    height:24px;
+    padding:5px;
+    width:24px;
 }
 
-#spawn-history-menu button[data-spawned-coalition="neutral"] {
-    border-left:4px solid var(--primary-neutral);
+#spawn-history-menu button svg * {
+    fill:white;
+}
+
+#spawn-history-menu button[data-spawned-coalition="blue"] svg {
+    background-color: var(--primary-blue);
+}
+
+#spawn-history-menu button[data-spawned-coalition="red"] svg {
+    background-color: var(--primary-red);
+}
+
+#spawn-history-menu button[data-spawned-coalition="neutral"] svg {
+    background-color: var(--primary-neutral);
 }
 
 [data-coalition="blue"]#active-coalition-label,
