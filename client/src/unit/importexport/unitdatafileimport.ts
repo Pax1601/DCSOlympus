@@ -68,7 +68,13 @@ export class UnitDataFileImport extends UnitDataFile {
                     const validator = new ImportFileJSONSchemaValidator();
                     if (!validator.validate(this.#fileData)) {
                         const errors = validator.getErrors().reduce((acc:any, error:any) => {
-                            acc.push(error.instancePath + ": " + error.message)
+                            let errorString = error.instancePath.substring(1) + ": " + error.message;
+                            if (error.params) {
+                                const {allowedValues} = error.params;
+                                if (allowedValues)
+                                    errorString += ": " + allowedValues.join(', ');
+                            }
+                            acc.push(errorString);
                             return acc;
                         }, [] as string[]);
                         this.#showFileDataErrors(errors);
