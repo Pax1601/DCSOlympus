@@ -1,10 +1,12 @@
 :root {
     --background: #181e25;
+    --background-dark: #13181f;
     --offwhite: #F2F2F2;
     --blue: #247be2;
     --red: #FF5858;
     --green: #8bff63;
-    --gray: #cfd9e8;
+    --lightgray: #cfd9e8;
+    --gray: #989898;
     --darkgray: #3d4651;
 }
 
@@ -13,10 +15,17 @@
     box-sizing: border-box;
 }
 
+html {
+    height: 100%;
+    overflow: hidden;
+}
+
 body {
     background-color: var(--background);
     padding: 0px;
     margin: 0px;
+    height: 100%;
+    overflow-x: auto;
 }
 
 #title-bar {
@@ -30,6 +39,7 @@ body {
     justify-content: end;
     column-gap: 15px;
     padding: 5px;
+    background-color: var(--background-dark);
 }
 
 #title-bar>*:first-child {
@@ -75,8 +85,42 @@ body {
     color: #F2F2F2;
     font-weight: bold;
     font-size: 16px;
-    padding: 20px 20px 0px 20px;
+    padding: 20px 20px 20px 20px;
     column-gap: 10px;
+    background-color: var(--background-dark);
+    width: 100%;
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
+}
+
+#header .link{
+    -webkit-user-select: text;
+    -webkit-app-region: no-drag;
+}
+
+#header>div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 60px;
+}
+
+.link {
+    font-weight: normal;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.link.first {
+    margin-left: auto;
+}
+
+.link>a:link {
+    color: var(--offwhite);
+}
+
+.link>a:visited {
+    color: var(--offwhite);
 }
 
 .main-icon {
@@ -84,10 +128,15 @@ body {
     height: 60px;
 }
 
-body {
-    overflow: auto;
-    scrollbar-color: white transparent;
-    scrollbar-width: thin;
+#loader {
+    color: var(--offwhite);
+    font-size: 20px;
+    font-weight: normal;
+    position: absolute;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
 }
 
 ::-webkit-scrollbar {
@@ -117,11 +166,6 @@ body {
     color: var(--green);
 }
 
-.manager-page {
-    height: 100%;
-    padding: 35px;
-}
-
 .page-header {
     font-size: 18px;
     font-weight: 600;
@@ -135,21 +179,27 @@ body {
     color: var(--offwhite);
     display: flex;
     flex-direction: column;
-    row-gap: 4px;
+    row-gap: 10px;
+}
+
+.instructions>span {
+    text-align: center;
 }
 
 .instructions>span:first-child {
-    font-size: 14px;
+    font-size: 22px;
     font-weight: 600;
 }
 
 .instructions>span:not(:first-child) {
-    font-size: 13px;
+    font-size: 15px;
+    color: var(--gray);
 }
 
 .buttons-footer {
     display: flex;
     column-gap: 10px;
+    justify-content: center;
 }
 
 .button {
@@ -160,24 +210,42 @@ body {
     cursor: pointer;
 }
 
-.back {
+.next {
     color: var(--background);
     background-color: var(--offwhite);
 }
 
-.next {
+.uninstall {
+    color: var(--offwhite);
+    background-color: transparent;
+    border: 1px solid var(--offwhite);
+}
+
+.edit, .start-stop-server, .start-client {
     color: var(--offwhite);
     background-color: var(--blue);
+}
+
+.back {
+    color: var(--offwhite);
+    background-color: var(--background);
+    border: 1px solid var(--offwhite);
 }
 
 .cancel {
     padding: 10px 5px;
     color: var(--offwhite);
+    text-decoration: underline;
 }
 
 .close-popup {
     color: var(--offwhite);
     background-color: var(--blue);
+}
+
+.accept-popup {
+    color: var(--background);
+    background-color: var(--offwhite);
 }
 
 input {
@@ -187,6 +255,8 @@ input {
     font-size: 13px;
     padding: 3px 10px;
     border-radius: 5px;
+    text-align: center;
+    width: 300px;
 }
 
 .hide {
@@ -201,11 +271,13 @@ input {
     height: 100%;
     background-color: black;
     opacity: 30%;
+    z-index: 999;
 }
 
 #popup {
     width: 300px;
-    height: 200px;
+    height: fit-content;
+    min-height: 200px;
     position: absolute;
     background-color: var(--background);
     border-radius: 5px;
@@ -215,12 +287,17 @@ input {
     flex-direction: column;
     justify-content: space-between;
     padding: 20px;
-    align-items: center;
+    align-items: start;
+    z-index: 999;
 }
 
 #popup img {
-    width: 50px;
-    height: 50px;
+    width: 20px;
+    height: 20px;
+}
+
+#popup img.wait {
+    animation: rotate 2s linear infinite;
 }
 
 #popup .content {
@@ -229,6 +306,7 @@ input {
     font-weight: 600;
     width: 100%;
     text-align: left;
+    padding: 0px !important;
 }
 
 #popup .footer {
@@ -236,4 +314,214 @@ input {
     display: flex;
     justify-content: end;
     width: 100%;
+    column-gap: 10px;
+}
+
+.manager-page {
+    min-width: 1200px;
+    overflow-y: auto;
+}
+
+.manager-page>div {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    min-height: 100%;
+    align-items: center;
+}
+
+.step-summary {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 30%;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--offwhite);
+    border-left: 1px dashed var(--offwhite);
+    height: 200px;
+    row-gap: 100px;
+    margin-left: 80px;
+}
+
+.step-summary div {
+    display: flex;
+    width: 280px;
+    height: 80px;
+    align-items: center;
+    column-gap: 15px;
+    margin-left: -15px;
+    margin-top: -40px;
+    margin-bottom: -40px;
+    font-size: 14px;
+    color: var(--gray);
+}
+
+.step-summary div:before {
+    display: inline-block;
+    content: "";
+    width: 30px;
+    height: 30px;
+    border: 1px solid var(--offwhite);
+    border-radius: 999px;
+}
+
+.step-summary div.white {
+    color: var(--offwhite);
+}
+
+.step-summary div.blue {
+    text-decoration: underline;
+}
+
+.step-summary div.white:before {
+    background-color: var(--offwhite);
+}
+
+.step-summary div.empty:before {
+    background-color: var(--background);
+}
+
+.step-summary div.blue:before {
+    border: 1px solid var(--blue);
+    background-color: var(--blue);
+}
+
+.content {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.content>div {
+    max-width: 60%;
+}
+
+.input-group {
+    color: var(--offwhite);
+    display: flex;
+    flex-direction: column;
+    row-gap: 5px;
+    align-items: center;
+    position: relative;
+    width: 500px;
+}
+
+.input-group>span:nth-child(1) {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.input-group>span:nth-child(2) {
+    font-size: 13px;
+    font-weight: normal;
+}
+
+.input-group div {
+    display: flex;
+    align-items: center;
+    column-gap: 5px;
+    flex-wrap: wrap;
+}
+
+.input-group span {
+    display: flex;
+    align-items: center;
+    column-gap: 5px;
+    flex-wrap: wrap;
+}
+
+.instructions {
+    margin-bottom: 10px;
+}
+
+.buttons-footer {
+    margin-top: 10px;
+}
+
+.instance-info {
+    display: flex;
+    flex-direction: column;
+    row-gap: 5px;
+    width: 100%;
+}
+
+.instance-info>span:nth-child(1) {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.instance-info>span:nth-child(2) {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--lightgray);
+}
+
+.instance-info>span:nth-child(2).installed {
+    font-weight: 600;
+    color: var(--green);
+}
+
+.instance-info>span:nth-child(2).error {
+    font-weight: 600;
+    color: orange;
+}
+
+.instance-info>span:nth-child(3) {
+    display: flex;
+    column-gap: 10px;
+    font-size: 13px;
+    font-weight: normal;
+}
+
+.instance-buttons {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.instance-info .info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.instance-info .info>div:nth-child(1) {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.instance-info .info>div:nth-child(2) {
+    font-weight: normal;
+    font-size: 14px;
+}
+
+.divider {
+    border-top: 0px solid transparent !important;
+    border-bottom: 1px solid var(--offwhite) !important;
+    opacity: 80%;
+    height: 0px !important;
+    cursor: default;
+}
+
+.instance-info .divider {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg)
+    }
+
+    100% {
+        transform: rotate(360deg)
+    }
 }

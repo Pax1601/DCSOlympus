@@ -1,0 +1,174 @@
+<style>
+    #manager-instances {
+        padding-left: 80px;
+        padding-right: 80px;
+    }
+
+    #manager-instances .scroll-container {
+        height: 100%;
+        overflow-y: auto;
+        max-width: 100% !important;
+        width: 100%;
+    }  
+
+    #manager-instances .scrollable {
+        display: flex;
+        row-gap: 15px;
+        column-gap: 15px;
+        height: fit-content;
+        width: 100%;
+        flex-wrap: wrap;
+        padding: 15px;
+    }
+
+    #manager-instances .option {
+        background-color: var(--darkgray);
+        width: 48%;
+        color: white;
+        display: flex;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 15px;
+        align-items: center;
+        border-radius: 5px;
+        border-left: 5px solid var(--blue);
+        flex-direction: column;
+        row-gap: 25px;
+    }
+
+    #manager-instances>.instructions {
+        margin-bottom: 10px;
+    }
+   
+    #manager-instances .button.cancel {
+        position: absolute;
+        left: 110px;
+        top: 180px;
+    }
+
+    #manager-instances .server-data {
+        display: flex;
+        column-gap: 15px;
+        row-gap: 5px;
+        flex-wrap: wrap;
+    }
+
+    #manager-instances .server-status {
+        font-weight: 600;
+        font-size: 15;
+        display: flex;
+        column-gap: 5px;
+        align-items: center;
+    }
+
+    #manager-instances .server-status::before {
+        display: block;
+        content: "";
+        width: 15px;
+        height: 15px;
+        border-radius: 999px;
+        background-color: var(--gray);
+    }
+
+    #manager-instances .server-status.offline {
+        color: var(--gray)
+    }
+
+    #manager-instances .server-status.offline::before {
+        background-color: var(--gray);
+    }
+
+    #manager-instances .server-status.online {
+        color: var(--green)
+    }
+
+    #manager-instances .server-status.online::before {
+        background-color: var(--green);
+    }
+    
+    #manager-instances .server-status.backend {
+        margin-left: auto;
+    }
+
+    #manager-instances .server-data-entry {
+        display: flex;
+        column-gap: 5px;
+        align-items: center;
+    }
+
+    #manager-instances .server-data-entry span:nth-child(2) {
+        font-weight: 600;
+    }
+
+    #manager-instances .server-data-entry span:nth-child(3) {
+        font-weight: normal;
+    }
+
+</style>
+    <div id="manager-instances">
+        <div class="content">
+            <div class="button cancel">
+               Return to menu
+            </div>
+            <div class="instructions">
+                <span>
+                    <%= manage? "View and manage instances": "Update Olympus settings" %>
+                </span>
+                <span>
+                    The following versions of Olympus have been detected. 
+                </span>
+                <span>
+                    <%= manage? "You can inspect and manage you Olympus instances by selecting the options below.": "You can edit your settings or remove Olympus by selecting the options below." %>
+                </span>
+            </div>
+        <div class="scroll-container">
+            <div class="scrollable">
+                <% for (let i = 0; i < instances.length; i++) {%>
+                    <div class="option" data-folder="<%= instances[i].folder %>">
+                        <div class="instance-info">
+                            <span><%= instances[i].name %></span>
+                            <span class="<%= instances[i].installed? (instances[i].error? 'error': ''): '' %>"> 
+                                <%= instances[i].installed? (instances[i].error? 'Corrupted/outdated Olympus installation': ''): '' %>
+                            </span>
+                            <% if (!manage) { %>
+                                <span><img src="./icons/folder-open-solid.svg"> <%= instances[i].folder %></span>
+                            <% } else { %> 
+                                <div class="server-data">
+                                    <div class="server-status webserver online hide">ACTIVE</div>
+                                    <div class="server-status webserver offline">OFFLINE</div>
+                                    <div class="server-status backend online hide">CONNECTED</div>
+                                    <div class="server-status backend offline">DISCONNECTED</div>
+                                    <div class="server-data-entry fps"><img src="./icons/display-solid.svg"><span>FPS: </span><span class="data">0</span></div>
+                                    <div class="server-data-entry load"><img src="./icons/server-solid.svg"><span>Load: </span><span class="data">0</span></div>
+                                    <div class="server-data-entry uptime"></div>
+                                </div>
+                            <% } %> 
+                            <div class="divider"></div>
+                            <div class="info">
+                                <div>Client port</div>
+                                <div> <%= instances[i].clientPort %> </div>
+                            </div>
+                            <div class="info">
+                                <div>Backend port</div>
+                                <div> <%= instances[i].backendPort %> </div>
+                            </div>
+                            <div class="info">
+                                <div>Backend address</div>
+                                <div> <%= instances[i].backendAddress %> </div>
+                            </div>
+                        </div>
+                        <div class="instance-buttons">
+                            <% if (!manage) { %>
+                                <div class="button edit">Edit settings</div>
+                                <div class="button uninstall">Uninstall</div>
+                            <% } else { %> 
+                                <div class="button start-stop-server">Start server</div>
+                                <!--<div class="button start-client">Start client</div>-->
+                            <% } %> 
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>

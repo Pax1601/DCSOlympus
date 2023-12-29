@@ -2,38 +2,35 @@ const sha256 = require('sha256')
 const createShortcut = require('create-desktop-shortcuts');
 const fs = require('fs');
 const path = require('path');
+const { showErrorPopup, showWaitPopup } = require('./popup');
 
 async function fixInstances(instances) {
     var promise = new Promise((res, rej) => {
         var instancePromises = instances.map((instance) => {
             var instancePromise = new Promise((instanceRes, instanceErr) => {
-                installMod(instance.folder)
-                    .then(() => installHooks(instance.folder))
-                    .then(() => installShortCuts(instance.folder, instance.name))
+                console.log(`Fixing Olympus in ${instance.folder}`)
+                deleteMod(instance.folder)
+                    .then(() => deleteHooks(instance.folder), (err) => { return Promise.reject(err); })
+                    .then(() => installMod(instance.folder), (err) => { return Promise.reject(err); })
+                    .then(() => installHooks(instance.folder), (err) => { return Promise.reject(err); })
+                    .then(() => installShortCuts(instance.folder, instance.name), (err) => { return Promise.reject(err); })
                     .then(() => instanceRes(true), (err) => { instanceErr(err) })
             })
             return instancePromise;
         });
-        console.log(instancePromises);
         Promise.all(instancePromises).then(() => res(true), (err) => { rej(err) });
     })
-    console.log(promise);
     return promise;
 }
 
-async function installMod(folder) {
-    console.log(`Installing mod in ${folder}`)
+async function uninstallInstance(folder) {
+    console.log(`Uninstalling Olympus from ${folder}`)
+    showWaitPopup("Please wait while the Olympus installation is being uninstalled.")
     var promise = new Promise((res, rej) => {
-        fs.cp(path.join("..", "mod"), path.join(folder, "Mods", "Services", "Olympus"), { recursive: true }, (err) => {
-            if (err) {
-                console.log(`Error installing mod in ${folder}: ${err}`)
-                rej(err);
-            }
-            else {
-                console.log(`Mod succesfully installed in ${folder}`)
-                res(true);
-            }
-        });
+        deleteMod(folder)
+            .then(() => deleteHooks(folder), (err) => { return Promise.reject(err); })
+            .then(() => deleteJSON(folder), (err) => { return Promise.reject(err); })
+            .then(() => res(true), (err) => { rej(err) });
     })
     return promise;
 }
@@ -48,6 +45,23 @@ async function installHooks(folder) {
             }
             else {
                 console.log(`Hooks succesfully installed in ${folder}`)
+                res(true);
+            }
+        });
+    })
+    return promise;
+}
+
+async function installMod(folder) {
+    console.log(`Installing mod in ${folder}`)
+    var promise = new Promise((res, rej) => {
+        fs.cp(path.join("..", "mod"), path.join(folder, "Mods", "Services", "Olympus"), { recursive: true }, (err) => {
+            if (err) {
+                console.log(`Error installing mod in ${folder}: ${err}`)
+                rej(err);
+            }
+            else {
+                console.log(`Mod succesfully installed in ${folder}`)
                 res(true);
             }
         });
@@ -138,11 +152,83 @@ async function installShortCuts(folder, name) {
     return promise;
 }
 
+async function deleteHooks(folder) {
+    console.log(`Deleting hooks from ${folder}`);
+    var promise = new Promise((res, rej) => {
+        if (fs.existsSync(path.join(folder, "Scripts", "Hooks", "OlympusHook.lua"))) {
+            fs.rm(path.join(folder, "Scripts", "Hooks", "OlympusHook.lua"), (err) => {
+                if (err) {
+                    console.log(`Error removing hooks from ${folder}: ${err}`)
+                    rej(err);
+                }
+                else {
+                    console.log(`Hooks succesfully removed from ${folder}`)
+                    res(true);
+                }
+            });
+        } else {
+            res(true);
+        }
+    })
+    return promise;
+}
+
+async function deleteMod(folder) {
+    console.log(`Deleting mod from ${folder}`);
+    var promise = new Promise((res, rej) => {
+        if (fs.existsSync(path.join(folder, "Mods", "Services", "Olympus"))) {
+            fs.rmdir(path.join(folder, "Mods", "Services", "Olympus"), { recursive: true, force: true }, (err) => {
+                if (err) {
+                    console.log(`Error removing mod from ${folder}: ${err}`)
+                    rej(err);
+                }
+                else {
+                    console.log(`Mod succesfully removed from ${folder}`)
+                    res(true);
+                }
+            })
+        } else {
+            res(true);
+        };
+    })
+    return promise;
+}
+
+async function deleteJSON(folder) {
+    console.log(`Deleting JSON from ${folder}`);
+    var promise = new Promise((res, rej) => {
+        if (fs.existsSync(path.join(folder, "Config", "olympus.json"))) {
+            fs.rm(path.join(folder, "Config", "olympus.json"), (err) => {
+                if (err) {
+                    console.log(`Error removing JSON from ${folder}: ${err}`)
+                    rej(err);
+                }
+                else {
+                    console.log(`JSON succesfully removed from ${folder}`)
+                    res(true);
+                }
+            });
+        }
+        else {
+            res(true);
+        }
+    })
+    return promise;
+}
+
+async function deleteShortCuts() {
+
+}
+
 module.exports = {
     applyConfiguration: applyConfiguration,
     installJSON: installJSON,
     installHooks: installHooks,
     installMod: installMod,
     installShortCuts, installShortCuts,
-    fixInstances: fixInstances
+    fixInstances: fixInstances,
+    deleteHooks: deleteHooks,
+    deleteJSON: deleteJSON,
+    deleteMod: deleteMod,
+    uninstallInstance: uninstallInstance
 }
