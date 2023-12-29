@@ -1,0 +1,89 @@
+<style>
+    #manager-connections .success,
+    #manager-connections .error {
+        position: absolute;
+        left: 420px;
+        display: flex;
+        width: 150px;
+        column-gap: 8px;
+    }
+
+    #manager-connections .success {
+        content: url("./icons/check-solid-green.svg");
+        height: 20px;
+        width: 20px;
+    }
+
+    #manager-connections .error img {
+        content: url("./icons/triangle-exclamation-solid.svg");
+        height: 20px;
+        width: 20px;
+    }
+
+    #manager-connections .error span {
+        font-weight: 600;
+        font-size: 12px;
+        color: var(--red);
+        height: fit-content;
+    }
+</style>
+<div id="manager-connections">
+    <div class="step-summary">
+        <div class="blue <%= !install? 'hide': '' %>">User path</div>
+        <div class="white">Ports and address</div>
+        <div class="empty">Passwords</div>
+        <div class="empty"> <%= install? 'Install': 'Update' %></div>
+    </div>
+    <div class="content">
+        <div class="instructions">
+            <span>
+                Accept or modify port settings (optional)
+            </span>
+            <span>
+                If you are installing Olympus locally for Single player use, it's recommended you leave these as default and continue.
+                If you are installing a dedicated server, then follow the instructions available on the DCS Olympus Wiki.
+            </span>
+        </div>
+        <div class="input-group client-port">
+            <span>Client port
+                <img src="./icons/circle-info-solid.svg" title="This port is used to allow access to Olympus. Be sure to allow this port through your firewall if you want people to connect remotely">
+            </span>
+            <div>
+                <input type="number" min="1024" max="65535" value="<%= instance["clientPort"] %>">
+                <img class="success hide">
+                <div class="error hide">
+                    <img> <span>Port already in use</span>
+                </div>
+            </div>
+        </div>
+        <div class="input-group backend-port">
+            <span>Backend port
+                <img src="./icons/circle-info-solid.svg" title="This port is used to allow access to Olympus. Be sure to allow this port through your firewall if you want people to connect remotely.">
+            </span>
+            <div>
+                <input type="number" min="1024" max="65535" value="<%= instance["backendPort"] %>">
+                <img class="success hide">
+                <div class="error hide">
+                    <img> <span>Port already in use</span>
+                </div>
+            </div>
+        </div>
+        <div class="input-group backend-address">
+            <span>Backend address
+                <img src="./icons/circle-info-solid.svg" title="This is the backend address Olympus will listen on. Unless you know what you are doing, leave it as localhost, even for dedicated server installations.">
+            </span>
+            <input type="text" value="<%= instance["backendAddress"] %>">
+        </div>
+        <div class="buttons-footer">
+            <div class="button back">
+                Back
+            </div>
+            <div class="button next">
+                Next
+            </div>
+        </div>
+        <div class="button cancel">
+            Cancel installation
+        </div>
+    </div>
+</div>

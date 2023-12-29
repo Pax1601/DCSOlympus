@@ -1,15 +1,8 @@
+const Manager = require('./manager');
+
 const contextBridge = require('electron').contextBridge;
 const ipcRenderer = require('electron').ipcRenderer;
-
-const ManagerMenu = require("./managermenu");
-const ManagerInstallations = require('./managerinstallations');
-const DCSInstance = require('./dcsinstance');
-const ManagerConnections = require('./managerconnections');
-const ManagerPasswords = require('./managerpasswords');
-const { showPopup } = require('./popup');
-const ManagerResult = require('./managerresult');
-const { fixInstances } = require('./filesystem');
-const ManagerInstances = require('./managerinstances');
+const { exec } = require("child_process");
 
 /* White-listed channels. */
 const ipc = {
@@ -57,156 +50,35 @@ contextBridge.exposeInMainWorld(
             return ipcRenderer.invoke(channel, args);
         }
     }
-}
-);
+});
 
-var activeInstance;
-
-async function setup() {
-    var instances = await DCSInstance.getInstances();
-
-    if (instances.some((instance) => {
-        return instance.installed && instance.error;
-    })) {
-        showPopup("One or more Olympus instances are corrupted or need updating. Press Close to fix this.", async () => {
-            fixInstances(instances.filter((instance) => {
-                return instance.installed && instance.error;
-            })).then(
-                () => { location.reload() },
-                () => { showPopup("An error occurred while trying to fix you installations. Please reinstall Olympus manually") }
-            )
-        })
-    }
-
-    /* Menu */
-    var managerMenu = new ManagerMenu();
-    managerMenu.onInstallClicked = (e) => {
-        managerMenu.hide();
-        managerInstallations.show();
-    }
-    managerMenu.onUpdateClicked = (e) => {
-        managerMenu.hide();
-        managerInstances.show();
-    }
-
-    /* Installations */
-    var managerInstallations = new ManagerInstallations({ instances: instances });
-    managerInstallations.onBackClicked = (e) => {
-        managerInstallations.hide();
-        managerMenu.show();
-    }
-    managerInstallations.onNextClicked = (e) => {
-         activeInstance = managerInstallations.getSelectedInstance();
-        if (activeInstance) {
-            managerInstallations.hide();
-            managerConnections.show(activeInstance);
-        } else {
-            showPopup("Please select the instance you want to install Olympus into.")
-        }
-    }
-    managerInstallations.onCancelClicked = (e) => {
-        managerInstallations.hide();
-        managerMenu.show();
-    }
-
-    /* Instances */
-    var managerInstances = new ManagerInstances({ instances: instances.filter((instance) => {return instance.installed; }) });
-    managerInstances.onBackClicked = (e) => {
-        managerInstances.hide();
-        managerMenu.show();
-    }
-    managerInstances.onNextClicked = (e) => {
-        activeInstance = managerInstances.getSelectedInstance();
-        if (activeInstance) {
-            managerInstances.hide();
-            managerConnections.show(activeInstance);
-        } else {
-            showPopup("Please select the instance you want to manage.")
-        }
-    }
-    managerInstances.onCancelClicked = (e) => {
-        managerInstances.hide();
-        managerMenu.show();
-    }
-
-    /* Connections */
-    var managerConnections = new ManagerConnections();
-    managerConnections.onBackClicked = (e) => {
-        managerConnections.hide();
-        managerInstallations.show();
-    }
-    managerConnections.onNextClicked = async (e) => {
-        if (activeInstance) {
-            if (await activeInstance.checkClientPort(activeInstance.clientPort) && await activeInstance.checkBackendPort(activeInstance.backendPort)) {
-                managerConnections.hide();
-                managerPasswords.show(activeInstance);
-            } else {
-                showPopup("Please make sure the selected ports are not already in use.")
-            }
-        } else {
-            showPopup("An error has occurred, please restart the Olympus Manager.")
-        }
-    }
-
-    managerConnections.onCancelClicked = (e) => {
-        managerConnections.hide();
-        managerMenu.show();
-    }
-
-    /* Passwords */
-    var managerPasswords = new ManagerPasswords();
-    managerPasswords.onBackClicked = (e) => {
-        if (activeInstance) {
-            managerPasswords.hide();
-            managerConnections.show(activeInstance);
-        } else {
-            showPopup("An error has occurred, please restart the Olympus Manager.")
-        }
-    }
-    managerPasswords.onNextClicked = (e) => {
-        if (activeInstance) {
-            if (activeInstance.gameMasterPassword === "" || activeInstance.blueCommanderPassword === "" || activeInstance.redCommanderPassword === "") {
-                showPopup("Please fill all the password inputs.")
-            }
-            else if (activeInstance.gameMasterPassword === activeInstance.blueCommanderPassword || activeInstance.blueCommanderPassword === activeInstance.redCommanderPassword || activeInstance.gameMasterPassword === activeInstance.redCommanderPassword) {
-                showPopup("All the passwords must be different from each other.")
-            } else {
-                managerPasswords.hide();
-                managerResult.show(activeInstance);
-                managerResult.startInstallation();
-            }
-        } else {
-            showPopup("An error has occurred, please restart the Olympus Manager.")
-        }
-
-    }
-    managerPasswords.onCancelClicked = (e) => {
-        managerPasswords.hide();
-        managerMenu.show();
-    }
-
-    /* Result */
-    var managerResult = new ManagerResult();
-    managerResult.onBackClicked = (e) => {
-        managerResult.hide();
-        location.reload();
-    }
-    managerResult.onCancelClicked = (e) => {
-        managerResult.hide();
-        location.reload();
-    }
-
-    document.body.appendChild(managerMenu.getElement());
-    document.body.appendChild(managerInstallations.getElement());
-    document.body.appendChild(managerInstances.getElement());
-    document.body.appendChild(managerConnections.getElement());
-    document.body.appendChild(managerPasswords.getElement());
-    document.body.appendChild(managerResult.getElement());
-
-    managerMenu.show();
-}
+const manager = new Manager();
 
 /* On content loaded */
-window.addEventListener('DOMContentLoaded', () => {
-    setup();
+window.addEventListener('DOMContentLoaded', async () => {
+    computePagesHeight();
+    document.getElementById("loader").classList.remove("hide");
+    await manager.start();
+    computePagesHeight();
+
+    var links = document.querySelectorAll(".link");
+    for (let i = 0; i < links.length; i++) {
+        links[i].addEventListener("click", (e) => {
+            exec("start " + e.target.dataset.link);
+        })
+    }
 })
+
+window.addEventListener('resize', () => {
+    computePagesHeight();
+})
+
+function computePagesHeight() {
+    var pages = document.querySelectorAll(".manager-page");
+    var titleBar = document.querySelector("#title-bar");
+    var header = document.querySelector("#header");
+
+    for (let i = 0; i < pages.length; i++) {
+        pages[i].style.height = (window.innerHeight - (titleBar.clientHeight + header.clientHeight)) + "px";
+    }
+}

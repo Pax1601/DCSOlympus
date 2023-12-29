@@ -1,0 +1,119 @@
+^CTerminare il processo batch (S/N)? 
+[36m*********************************************************************[0m
+[36m*  _____   _____  _____    ____  _                                  *[0m
+[36m* |  __ \ / ____|/ ____|  / __ \| |                                 *[0m
+[36m* | |  | | |    | (___   | |  | | |_   _ _ __ ___  _ __  _   _ ___  *[0m
+[36m* | |  | | |     \___ \  | |  | | | | | | '_ ` _ \| '_ \| | | / __| *[0m
+[36m* | |__| | |____ ____) | | |__| | | |_| | | | | | | |_) | |_| \__ \ *[0m
+[36m* |_____/ \_____|_____/   \____/|_|\__, |_| |_| |_| .__/ \__,_|___/ *[0m
+[36m*                                   __/ |         | |               *[0m
+[36m*                                  |___/          |_|               *[0m
+[36m*********************************************************************[0m
+[36m[0m
+Please wait while DCS Olympus Server starts up...
+Config location: C:\Users\Davide Passoni\Saved Games\DCS\Config\olympus.json
+node:internal/modules/cjs/loader:1078
+  throw err;
+  ^
+
+Error: Cannot find module 'http-proxy-middleware'
+Require stack:
+- C:\Users\Davide Passoni\Documents\DCSOlympus\client\app.js
+- C:\Users\Davide Passoni\Documents\DCSOlympus\client\bin\www
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1075:15)
+    at Module._load (node:internal/modules/cjs/loader:920:27)
+    at Module.require (node:internal/modules/cjs/loader:1141:19)
+    at require (node:internal/modules/cjs/helpers:110:18)
+    at module.exports (C:\Users\Davide Passoni\Documents\DCSOlympus\client\app.js:8:39)
+    at Object.<anonymous> (C:\Users\Davide Passoni\Documents\DCSOlympus\client\bin\www:33:28)
+    at Module._compile (node:internal/modules/cjs/loader:1254:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1308:10)
+    at Module.load (node:internal/modules/cjs/loader:1117:32)
+    at Module._load (node:internal/modules/cjs/loader:958:12) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\Davide Passoni\\Documents\\DCSOlympus\\client\\app.js',
+    'C:\\Users\\Davide Passoni\\Documents\\DCSOlympus\\client\\bin\\www'
+  ]
+}
+
+Node.js v18.15.0
+[36m*********************************************************************[0m
+[36m*  _____   _____  _____    ____  _                                  *[0m
+[36m* |  __ \ / ____|/ ____|  / __ \| |                                 *[0m
+[36m* | |  | | |    | (___   | |  | | |_   _ _ __ ___  _ __  _   _ ___  *[0m
+[36m* | |  | | |     \___ \  | |  | | | | | | '_ ` _ \| '_ \| | | / __| *[0m
+[36m* | |__| | |____ ____) | | |__| | | |_| | | | | | | |_) | |_| \__ \ *[0m
+[36m* |_____/ \_____|_____/   \____/|_|\__, |_| |_| |_| .__/ \__,_|___/ *[0m
+[36m*                                   __/ |         | |               *[0m
+[36m*                                  |___/          |_|               *[0m
+[36m*********************************************************************[0m
+[36m[0m
+Please wait while DCS Olympus Server starts up...
+Config location: C:\Users\Davide Passoni\Saved Games\DCS\Config\olympus.json
+node:internal/modules/cjs/loader:1078
+  throw err;
+  ^
+
+Error: Cannot find module 'http-proxy-middleware'
+Require stack:
+- C:\Users\Davide Passoni\Documents\DCSOlympus\client\app.js
+- C:\Users\Davide Passoni\Documents\DCSOlympus\client\bin\www
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1075:15)
+    at Module._load (node:internal/modules/cjs/loader:920:27)
+    at Module.require (node:internal/modules/cjs/loader:1141:19)
+    at require (node:internal/modules/cjs/helpers:110:18)
+    at module.exports (C:\Users\Davide Passoni\Documents\DCSOlympus\client\app.js:8:39)
+    at Object.<anonymous> (C:\Users\Davide Passoni\Documents\DCSOlympus\client\bin\www:33:28)
+    at Module._compile (node:internal/modules/cjs/loader:1254:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1308:10)
+    at Module.load (node:internal/modules/cjs/loader:1117:32)
+    at Module._load (node:internal/modules/cjs/loader:958:12) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\Davide Passoni\\Documents\\DCSOlympus\\client\\app.js',
+    'C:\\Users\\Davide Passoni\\Documents\\DCSOlympus\\client\\bin\\www'
+  ]
+}
+
+Node.js v18.15.0
+[36m*********************************************************************[0m
+[36m*  _____   _____  _____    ____  _                                  *[0m
+[36m* |  __ \ / ____|/ ____|  / __ \| |                                 *[0m
+[36m* | |  | | |    | (___   | |  | | |_   _ _ __ ___  _ __  _   _ ___  *[0m
+[36m* | |  | | |     \___ \  | |  | | | | | | '_ ` _ \| '_ \| | | / __| *[0m
+[36m* | |__| | |____ ____) | | |__| | | |_| | | | | | | |_) | |_| \__ \ *[0m
+[36m* |_____/ \_____|_____/   \____/|_|\__, |_| |_| |_| .__/ \__,_|___/ *[0m
+[36m*                                   __/ |         | |               *[0m
+[36m*                                  |___/          |_|               *[0m
+[36m*********************************************************************[0m
+[36m[0m
+Please wait while DCS Olympus Server starts up...
+Config location: C:\Users\Davide Passoni\Saved Games\DCS\Config\olympus.json
+node:internal/modules/cjs/loader:1078
+  throw err;
+  ^
+
+Error: Cannot find module 'http-proxy-middleware'
+Require stack:
+- C:\Users\Davide Passoni\Documents\DCSOlympus\client\app.js
+- C:\Users\Davide Passoni\Documents\DCSOlympus\client\bin\www
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1075:15)
+    at Module._load (node:internal/modules/cjs/loader:920:27)
+    at Module.require (node:internal/modules/cjs/loader:1141:19)
+    at require (node:internal/modules/cjs/helpers:110:18)
+    at module.exports (C:\Users\Davide Passoni\Documents\DCSOlympus\client\app.js:8:39)
+    at Object.<anonymous> (C:\Users\Davide Passoni\Documents\DCSOlympus\client\bin\www:33:28)
+    at Module._compile (node:internal/modules/cjs/loader:1254:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1308:10)
+    at Module.load (node:internal/modules/cjs/loader:1117:32)
+    at Module._load (node:internal/modules/cjs/loader:958:12) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\Davide Passoni\\Documents\\DCSOlympus\\client\\app.js',
+    'C:\\Users\\Davide Passoni\\Documents\\DCSOlympus\\client\\bin\\www'
+  ]
+}
+
+Node.js v18.15.0
+^CTerminare il processo batch (S/N)? 

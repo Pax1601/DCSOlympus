@@ -2,7 +2,7 @@
   "name": "dcsolympus_manager",
   "version": "1.0.0",
   "description": "",
-  "main": "manager.js",
+  "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
@@ -14,6 +14,7 @@
     "dir-compare": "^4.2.0",
     "ejs": "^3.1.9",
     "electron": "^28.0.0",
+    "find-process": "^1.4.7",
     "portfinder": "^1.0.32",
     "regedit": "^5.1.2",
     "sha256": "^0.2.0",
