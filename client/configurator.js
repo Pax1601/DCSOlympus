@@ -70,16 +70,43 @@ async function run() {
             backendPort = newValue? result: backendPort;
 
             /* Get the new Game Master password */
-            newValue = prompt(`Insert a new Game Master password or press Enter to keep current value: `, {echo: "*"});
-            gameMasterPassword = newValue !== ""? sha256(newValue): gameMasterPassword;
+            while (true) {
+              newValue = prompt(`Insert a new Game Master password or press Enter to keep current value: `, {echo: "*"});
+              gameMasterPassword = newValue !== ""? sha256(newValue): gameMasterPassword;
+
+              // Check if Game Master password is unique
+              if (gameMasterPassword === blueCommanderPassword || gameMasterPassword === redCommanderPassword) {
+                  console.log("Game Master password must be different from other passwords. Please try again.");
+                  continue;
+              }
+              break;
+            }
 
             /* Get the new Blue Commander password */
-            newValue = prompt(`Insert a new Blue Commander password or press Enter to keep current value: `, {echo: "*"});
-            blueCommanderPassword = newValue !== ""? sha256(newValue): blueCommanderPassword;
-            
+            while (true) {
+              newValue = prompt(`Insert a new Blue Commander password or press Enter to keep current value: `, {echo: "*"});
+              blueCommanderPassword = newValue !== ""? sha256(newValue): blueCommanderPassword;
+
+              // Check if Blue Commander password is unique
+              if (blueCommanderPassword === gameMasterPassword || blueCommanderPassword === redCommanderPassword) {
+                  console.log("Blue Commander password must be different from other passwords. Please try again.");
+                  continue;
+              }
+              break;
+            }
+
             /* Get the new Red Commander password */
-            newValue = prompt(`Insert a new Red Commander password or press Enter to keep current value: `, {echo: "*"});
-            redCommanderPassword = newValue !== ""? sha256(newValue): redCommanderPassword;
+            while (true) {
+              newValue = prompt(`Insert a new Red Commander password or press Enter to keep current value: `, {echo: "*"});
+              redCommanderPassword = newValue !== ""? sha256(newValue): redCommanderPassword;
+
+              // Check if Red Commander password is unique
+              if (redCommanderPassword === gameMasterPassword || redCommanderPassword === blueCommanderPassword) {
+                  console.log("Red Commander password must be different from other passwords. Please try again.");
+                  continue;
+              }
+              break;
+            }
         }
 
         /* Apply the inputs */
