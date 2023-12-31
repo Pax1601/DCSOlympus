@@ -8,10 +8,12 @@
     <div class="ol-dialog-content">
         <div id="restrict-spawns" class="ol-checkbox">
             <label title="If false, no spawn restrictions will be applied">
-                <input type="checkbox"/>
-                Restrict spawns 
+                <input type="checkbox" data-on-click="toggleSpawnRestrictions"/>
+                Enable spawn restrictions
             </label>
         </div>
+
+        <hr />
 
         <div id="restrict-to-coalition" class="ol-checkbox">
             <label title="If true, commanders will be allowed to only spawn units that belong to their coalition. E.g. blue commanders will be able to spawn F/A-18 Hornets, but not MiG-29s.">
@@ -25,7 +27,7 @@
             
             <div class="ol-group">
                 <div id="setup-time" class="ol-text-input">
-                    <input type="number" min="-99999" max="99999" step="1" value="10">
+                    <input type="number" min="-99999" max="99999" step="1" value="10" />
                 </div>
                 <label>minutes</label>
             </div>
