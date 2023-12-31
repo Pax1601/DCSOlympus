@@ -124,12 +124,12 @@ class DCSInstance {
                                 instanceDiv.querySelector(".load .data").innerTexr = this.load;
                             }
 
-                            instanceDiv.querySelector(".start-stop-server").innerText = this.webserverOnline ? "Stop server" : "Start server";
+                            instanceDiv.querySelector(".start-stop-server").innerText = this.webserverOnline ? "Stop" : "Start server";
+                            instanceDiv.querySelector(".start-stop-client").innerText = this.webserverOnline ? "Open in browser" : "Start client";
                         }
                     }
                 }
             }
-
         }, 1000);
     }
 
@@ -262,7 +262,7 @@ class DCSInstance {
         console.log(`Starting server for instance at ${this.folder}`)
         const out = fs.openSync(`./${this.name}.log`, 'a');
         const err = fs.openSync(`./${this.name}.log`, 'a');
-        const sub = spawn('npm.cmd', ['run', 'start', '--', '--config', path.join(this.folder, "Config", "olympus.json")], {
+        const sub = spawn('cscript.exe', ['server.vbs', path.join(this.folder, "Config", "olympus.json")], {
             detached: true,
             cwd: "../client",
             stdio: ['ignore', out, err]
@@ -271,7 +271,20 @@ class DCSInstance {
         sub.unref();
     }
 
-    stopServer() {
+    startClient() {
+        console.log(`Starting client for instance at ${this.folder}`)
+        const out = fs.openSync(`./${this.name}.log`, 'a');
+        const err = fs.openSync(`./${this.name}.log`, 'a');
+        const sub = spawn('cscript.exe', ['client.vbs', path.join(this.folder, "Config", "olympus.json")], {
+            detached: true,
+            cwd: "../client",
+            stdio: ['ignore', out, err]
+        });
+
+        sub.unref();
+    }
+
+    stop() {
         find('port', this.clientPort)
             .then((list) => {
                 if (list.length !== 1) {
@@ -279,13 +292,17 @@ class DCSInstance {
                 } else {
                     if (list[0].name.includes("node.exe")) {
                         console.log(`Killing process ${list[0].name}`)
-                        process.kill(list[0].pid);
+                        try {
+                            process.kill(list[0].pid);
+                            process.kill(list[0].ppid);
+                        } catch (e) {
+                            process.kill(list[0].pid);
+                        }
                     }
                     else {
                         console.log(list[0])
                         console.error(`The process listening on the specified port has an incorrect name: ${list[0].name}`)
                     }
-
                 }
             }, () => {
                 console.error("Error retrieving list of processes")

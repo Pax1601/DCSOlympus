@@ -5,6 +5,8 @@ const path = require('path');
 
 let window;
 
+process.env['PATH'] = process.env['PATH'] + "%WINDIR%\\System32;"
+
 function createWindow() {
     const window = new electronBrowserWindow({
 		width: 1500,

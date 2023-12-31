@@ -6,7 +6,7 @@ const ResultPage = require('./result');
 const InstancesPage = require('./instances');
 
 const DCSInstance = require('./dcsinstance');
-const { showErrorPopup } = require('./popup');
+const { showErrorPopup, showWaitPopup } = require('./popup');
 const { fixInstances } = require('./filesystem');
 
 class Manager {
@@ -23,6 +23,7 @@ class Manager {
             return instance.installed && instance.error;
         })) {
             showErrorPopup("One or more Olympus instances are corrupted or need updating. Press Close to fix this.", async () => {
+                showWaitPopup("Please wait while your instances are being fixed.")
                 fixInstances(instances.filter((instance) => {
                     return instance.installed && instance.error;
                 })).then(
