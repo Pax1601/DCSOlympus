@@ -33,8 +33,12 @@ export class ContextManager extends Manager {
             console.error(`setContext(): context name "${contextName}" does not exist.`);
             return false;
         }
-        this.#currentContext = contextName;
 
-        console.log(`Setting context to "${this.#currentContext}".`);
+        if (contextName !== this.#currentContext) {
+            this.getCurrentContext().onUnset();
+            this.#currentContext = contextName;
+            this.getCurrentContext().onSet();
+            console.log(`Setting context to "${this.#currentContext}".`);
+        }
     }
 }
