@@ -55,11 +55,19 @@
         align-items: center;
         border-radius: 5px;
         cursor: pointer;
+        background-color: transparent;
+        color: var(--offwhite);
     }
 
     #manager-menu .option:hover {
         color: var(--background);
         background-color: var(--offwhite);
+    }
+
+    #manager-menu .option.disabled {
+        pointer-events: none;
+        color: var(--darkgray);
+        border-color: var(--darkgray);
     }
 
     #manager-menu .option * {
@@ -74,14 +82,14 @@
         <div>Using this manager, you can install Olympus, update settings, and view and manage instances</div>
     </div>
     <div id="menu"> 
-        <div class="option install">
+        <div class="option install <%= installEnabled? '': 'disabled' %>">
             Install Olympus
         </div>
-        <div class="option update">
+        <div class="option update <%= updateEnabled? '': 'disabled' %>">
             Update/remove Olympus
         </div>
         <div class="option divider"></div>
-        <div class="option manage">
+        <div class="option manage <%= manageEnabled? '': 'disabled' %>">
             View and manage instances
         </div>
     </div>

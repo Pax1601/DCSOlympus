@@ -29,7 +29,7 @@
 </style>
 <div id="manager-connections">
     <div class="step-summary">
-        <div class="blue <%= !install? 'hide': '' %>">User path</div>
+        <div class="blue <%= !install || simplified? 'hide': '' %>">User path</div>
         <div class="white">Ports and address</div>
         <div class="empty">Passwords</div>
         <div class="empty"> <%= install? 'Install': 'Update' %></div>
@@ -75,15 +75,19 @@
             <input type="text" value="<%= instance["backendAddress"] %>">
         </div>
         <div class="buttons-footer">
+            <% if (!simplified) { %>
             <div class="button back">
                 Back
             </div>
+            <% } %>
             <div class="button next">
                 Next
             </div>
         </div>
+        <% if (!simplified) { %>
         <div class="button cancel">
             Cancel installation
         </div>
+        <% } %>
     </div>
 </div>
