@@ -85,7 +85,10 @@ class DCSInstance {
             }
 
             this.installed = true;
-            const options = { compareContent: true };
+            const options = { 
+                compareContent: true,
+                excludeFilter: "databases"
+             };
             var err1 = true;
             var err2 = true;
             var res1;
@@ -311,7 +314,7 @@ class DCSInstance {
 
     uninstall() {
         showConfirmPopup("Are you sure you want to completely remove this Olympus installation?", () =>
-            uninstallInstance(this.folder).then(
+            uninstallInstance(this.folder, this.name).then(
                 () => {
                     location.reload();
                 },

@@ -74,6 +74,10 @@ body {
     background-image: url("../icons/xmark-solid.svg");
 }
 
+.close:hover {
+    background-color: darkred;
+}
+
 .title-bar-button {
     -webkit-app-region: no-drag;
 }
