@@ -2,7 +2,30 @@ const sha256 = require('sha256')
 const createShortcut = require('create-desktop-shortcuts');
 const fs = require('fs');
 const path = require('path');
-const { showErrorPopup, showWaitPopup } = require('./popup');
+const { showWaitPopup } = require('./popup');
+const homeDir = require('os').homedir();
+
+async function deleteFile(filePath) {
+    console.log(`Deleting ${filePath}`);
+    var promise = new Promise((res, rej) => {
+        if (fs.existsSync(filePath)) {
+            fs.rm(filePath, (err) => {
+                if (err) {
+                    console.error(`Error removing ${filePath}: ${err}`)
+                    rej(err);
+                }
+                else {
+                    console.log(`Removed ${filePath}`)
+                    res(true);
+                }
+            });
+        }
+        else {
+            res(true);
+        }
+    })
+    return promise;
+}
 
 async function fixInstances(instances) {
     var promise = new Promise((res, rej) => {
@@ -23,13 +46,14 @@ async function fixInstances(instances) {
     return promise;
 }
 
-async function uninstallInstance(folder) {
+async function uninstallInstance(folder, name) {
     console.log(`Uninstalling Olympus from ${folder}`)
     showWaitPopup("Please wait while the Olympus installation is being uninstalled.")
     var promise = new Promise((res, rej) => {
         deleteMod(folder)
             .then(() => deleteHooks(folder), (err) => { return Promise.reject(err); })
             .then(() => deleteJSON(folder), (err) => { return Promise.reject(err); })
+            .then(() => deleteShortCuts(folder, name), (err) => { return Promise.reject(err); })
             .then(() => res(true), (err) => { rej(err) });
     })
     return promise;
@@ -143,7 +167,27 @@ async function installShortCuts(folder, name) {
             }
         });
 
-        if (res1 && res2) {
+        var res3 = createShortcut({
+            windows: {
+                filePath: path.resolve(__dirname, '..', '..', 'client', 'client.vbs'),
+                name: `DCS Olympus Client (${name})`,
+                arguments: `"${path.join(folder, "Config", "olympus.json")}"`,
+                icon: path.resolve(__dirname, '..', '..', 'img', 'olympus.ico'),
+                workingDirectory: path.resolve(__dirname, '..', '..', 'client')
+            }
+        });
+
+        var res4 = createShortcut({
+            windows: {
+                filePath: path.resolve(__dirname, '..', '..', 'client', 'server.vbs'),
+                name: `DCS Olympus Server (${name})`,
+                arguments: `"${path.join(folder, "Config", "olympus.json")}"`,
+                icon: path.resolve(__dirname, '..', '..', 'img', 'olympus_server.ico'),
+                workingDirectory: path.resolve(__dirname, '..', '..', 'client')
+            }
+        });
+
+        if (res1 && res2 && res3 && res4) {
             res(true);
         } else {
             rej("An error occurred while creating the shortcuts")
@@ -154,23 +198,7 @@ async function installShortCuts(folder, name) {
 
 async function deleteHooks(folder) {
     console.log(`Deleting hooks from ${folder}`);
-    var promise = new Promise((res, rej) => {
-        if (fs.existsSync(path.join(folder, "Scripts", "Hooks", "OlympusHook.lua"))) {
-            fs.rm(path.join(folder, "Scripts", "Hooks", "OlympusHook.lua"), (err) => {
-                if (err) {
-                    console.log(`Error removing hooks from ${folder}: ${err}`)
-                    rej(err);
-                }
-                else {
-                    console.log(`Hooks succesfully removed from ${folder}`)
-                    res(true);
-                }
-            });
-        } else {
-            res(true);
-        }
-    })
-    return promise;
+    return deleteFile(path.join(folder, "Scripts", "Hooks", "OlympusHook.lua"));
 }
 
 async function deleteMod(folder) {
@@ -196,28 +224,19 @@ async function deleteMod(folder) {
 
 async function deleteJSON(folder) {
     console.log(`Deleting JSON from ${folder}`);
-    var promise = new Promise((res, rej) => {
-        if (fs.existsSync(path.join(folder, "Config", "olympus.json"))) {
-            fs.rm(path.join(folder, "Config", "olympus.json"), (err) => {
-                if (err) {
-                    console.log(`Error removing JSON from ${folder}: ${err}`)
-                    rej(err);
-                }
-                else {
-                    console.log(`JSON succesfully removed from ${folder}`)
-                    res(true);
-                }
-            });
-        }
-        else {
-            res(true);
-        }
-    })
-    return promise;
+    return deleteFile(path.join(folder, "Config", "olympus.json"));
 }
 
-async function deleteShortCuts() {
-
+async function deleteShortCuts(folder, name) {
+    console.log(`Deleting ShortCuts from ${folder}`);
+    var promise = new Promise((res, rej) => {
+        deleteFile(path.join(folder, `DCS Olympus Server (${name}).lnk`))
+        .then(deleteFile(path.join(folder, `DCS Olympus Client (${name}).lnk`)), (err) => { return Promise.reject(err); })
+        .then(deleteFile(path.join(homeDir, "Desktop", `DCS Olympus Server (${name}).lnk`)), (err) => { return Promise.reject(err); })
+        .then(deleteFile(path.join(homeDir, "Desktop", `DCS Olympus Client (${name}).lnk`)), (err) => { return Promise.reject(err); })
+        .then(() => {res(true)}, (err) => { rej(err) })
+    });
+    return promise;
 }
 
 module.exports = {
@@ -230,5 +249,6 @@ module.exports = {
     deleteHooks: deleteHooks,
     deleteJSON: deleteJSON,
     deleteMod: deleteMod,
+    deleteShortCuts: deleteShortCuts,
     uninstallInstance: uninstallInstance
 }

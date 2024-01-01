@@ -8,14 +8,6 @@ class MenuPage extends ManagerPage {
 
     constructor(options) {
         super(options);
-
-        ejs.renderFile("./ejs/menu.ejs", options, {}, (err, str) => {
-            if (!err) {
-                this.render(str);
-            } else {
-                console.error(err);
-            }
-        });
     }
 
     render(str) {
@@ -26,6 +18,20 @@ class MenuPage extends ManagerPage {
         element.querySelector(".update").addEventListener("click", (e) => this.onUpdateClicked(e))
         element.querySelector(".manage").addEventListener("click", (e) => this.onManageClicked(e))
     }    
+
+    show() {
+        this.instance = this.options.instance;
+
+        ejs.renderFile("./ejs/menu.ejs", this.options, {}, (err, str) => {
+            if (!err) {
+                this.render(str);
+            } else {
+                console.error(err);
+            }
+        });
+
+        super.show();
+    }
 } 
 
 module.exports = MenuPage;

@@ -15,9 +15,14 @@ class ConnectionsPage extends ManagerPage {
         const element = this.getElement();
         element.innerHTML = str;
 
-        this.element.querySelector(".back").addEventListener("click", (e) => this.onBackClicked(e));
-        this.element.querySelector(".next").addEventListener("click", (e) => this.onNextClicked(e));
-        this.element.querySelector(".cancel").addEventListener("click", (e) => this.onCancelClicked(e));
+        if (this.element.querySelector(".back"))
+            this.element.querySelector(".back").addEventListener("click", (e) => this.onBackClicked(e));
+
+        if (this.element.querySelector(".next"))
+            this.element.querySelector(".next").addEventListener("click", (e) => this.onNextClicked(e));
+
+        if (this.element.querySelector(".cancel"))
+            this.element.querySelector(".cancel").addEventListener("click", (e) => this.onCancelClicked(e));
 
         this.element.querySelector(".client-port").querySelector("input").addEventListener("change", async (e) => { this.setClientPort(Number(e.target.value)); })
         this.element.querySelector(".backend-port").querySelector("input").addEventListener("change", async (e) => { this.setBackendPort(Number(e.target.value)); })

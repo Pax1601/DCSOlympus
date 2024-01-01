@@ -6,16 +6,20 @@ const ResultPage = require('./result');
 const InstancesPage = require('./instances');
 
 const DCSInstance = require('./dcsinstance');
-const { showErrorPopup } = require('./popup');
+const { showErrorPopup, showWaitPopup } = require('./popup');
 const { fixInstances } = require('./filesystem');
 
 class Manager {
+    simplified = true;
+
     constructor() {
-        
+
     }
 
     async start() {
         var instances = await DCSInstance.getInstances();
+
+        this.simplified = instances.length === 1 && !instances[0].installed;
 
         document.getElementById("loader").classList.add("hide");
 
@@ -23,6 +27,7 @@ class Manager {
             return instance.installed && instance.error;
         })) {
             showErrorPopup("One or more Olympus instances are corrupted or need updating. Press Close to fix this.", async () => {
+                showWaitPopup("Please wait while your instances are being fixed.")
                 fixInstances(instances.filter((instance) => {
                     return instance.installed && instance.error;
                 })).then(
@@ -32,8 +37,18 @@ class Manager {
             })
         }
 
+        const installEnabled = instances.some((instance) => { return !instance.installed; });
+        const updateEnabled = instances.some((instance) => { return instance.installed; });
+        const manageEnabled = instances.some((instance) => { return instance.installed; });
+
         /* Menu */
         var menuPage = new MenuPage();
+        menuPage.options = {
+            ...menuPage.options,
+            installEnabled: installEnabled,
+            updateEnabled: updateEnabled,
+            manageEnabled: manageEnabled
+        }
         menuPage.onInstallClicked = (e) => {
             menuPage.hide();
             installationsPage.show();
@@ -65,16 +80,19 @@ class Manager {
             connectionsPage.options = {
                 ...connectionsPage.options,
                 instance: activeInstance,
+                simplified: this.simplified,
                 install: true
             }
             passwordsPage.options = {
                 ...passwordsPage.options,
                 instance: activeInstance,
+                simplified: this.simplified,
                 install: true
             }
             resultPage.options = {
                 ...resultPage.options,
                 instance: activeInstance,
+                simplified: this.simplified,
                 install: true
             }
             installationsPage.hide();
@@ -100,16 +118,19 @@ class Manager {
             connectionsPage.options = {
                 ...connectionsPage.options,
                 instance: activeInstance,
+                simplified: this.simplified,
                 install: false
             }
             passwordsPage.options = {
                 ...passwordsPage.options,
                 instance: activeInstance,
+                simplified: this.simplified,
                 install: false
             }
             resultPage.options = {
                 ...resultPage.options,
                 instance: activeInstance,
+                simplified: this.simplified,
                 install: false
             }
             instancesPage.hide();
@@ -198,7 +219,30 @@ class Manager {
         document.body.appendChild(passwordsPage.getElement());
         document.body.appendChild(resultPage.getElement());
 
-        menuPage.show();
+        if (this.simplified) {
+            connectionsPage.options = {
+                ...connectionsPage.options,
+                instance: instances[0],
+                simplified: this.simplified,
+                install: true
+            }
+            passwordsPage.options = {
+                ...passwordsPage.options,
+                instance: instances[0],
+                simplified: this.simplified,
+                install: true
+            }
+            resultPage.options = {
+                ...resultPage.options,
+                instance: instances[0],
+                simplified: this.simplified,
+                install: true
+            }
+            instancesPage.hide();
+            connectionsPage.show();
+        } else {
+            menuPage.show();
+        }
     }
 }
 

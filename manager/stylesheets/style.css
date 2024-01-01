@@ -74,6 +74,10 @@ body {
     background-image: url("../icons/xmark-solid.svg");
 }
 
+.close:hover {
+    background-color: darkred;
+}
+
 .title-bar-button {
     -webkit-app-region: no-drag;
 }
@@ -180,6 +184,7 @@ body {
     display: flex;
     flex-direction: column;
     row-gap: 10px;
+    width: 50%;
 }
 
 .instructions>span {
@@ -221,7 +226,7 @@ body {
     border: 1px solid var(--offwhite);
 }
 
-.edit, .start-stop-server, .start-client {
+.edit, .start-stop-server, .start-stop-client {
     color: var(--offwhite);
     background-color: var(--blue);
 }
@@ -485,6 +490,7 @@ input {
     flex-direction: row;
     width: 100%;
     justify-content: space-between;
+    column-gap: 10px;
 }
 
 .instance-info .info {
