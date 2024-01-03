@@ -33,7 +33,8 @@ fs.readFile("./version.json", "utf8", (error, data) => {
     const minor = arr[1];
     const minorminor = arr[2];
 
-    throughDirectory(".");
+	throughDirectory("./backend");
+    throughDirectory("./build");
 
     files.forEach((file) => {
         fs.readFile(file, 'utf8', function (err,data) {
