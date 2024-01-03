@@ -311,7 +311,7 @@ input {
     font-weight: 600;
     width: 100%;
     text-align: left;
-    padding: 0px !important;
+    padding: 15px 0px !important;
 }
 
 #popup .footer {

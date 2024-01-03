@@ -2,7 +2,148 @@ const Manager = require('./manager');
 
 const contextBridge = require('electron').contextBridge;
 const ipcRenderer = require('electron').ipcRenderer;
-const { exec } = require("child_process");
+const { exec, spawn } = require("child_process");
+const { showConfirmPopup, showWaitPopup, showErrorPopup } = require('./popup');
+const path = require('path');
+const os = require('os');
+const https = require('follow-redirects').https;
+const fs = require('fs');
+const AdmZip = require("adm-zip");
+const { Octokit } = require('octokit');
+
+const VERSION = "v2.0.0";
+function checkVersion() {
+    /* Check if we are running the latest version */
+    const request = new Request("https://raw.githubusercontent.com/Pax1601/DCSOlympus/release-candidate/version.json");
+    fetch(request).then((response) => {
+        if (response.status === 200) {
+            return response.json();
+        } else {
+            throw new Error("Error connecting to Github to retrieve latest version");
+        }
+    }).then((res) => {
+        if (VERSION.includes("OLYMPUS_VERSION_NUMBER")) {
+            console.log("Development build detected, skipping version checks...")
+        } else {
+            var reg1 = res["version"].match(/\d+/g).map((str) => { return Number(str) });
+            var reg2 = VERSION.match(/\d+/g).map((str) => { return Number(str) });
+
+            if (reg1[0] > reg2[0] || (reg1[0] == reg2[0] && reg1[1] > reg2[1]) || (reg1[0] == reg2[0] && reg1[1] == reg2[1] && reg1[2] > reg2[2])) {
+                console.log(`New version available: ${res["version"]}`);
+                showConfirmPopup(`You are currently running DCS Olympus ${VERSION}, but ${res["version"]} is available. Do you want to update DCS Olympus automatically? <div style="max-width: 100%; color: orange">Note: DCS and Olympus MUST be stopped before proceeding.</div>`,
+                    () => {
+                        updateOlympus(res["package"]);
+                    }, () => {
+                        console.log("Update canceled");
+                    })
+            }
+            else if (reg2[0] > reg1[0] || (reg2[0] == reg1[0] && reg2[1] > reg1[1]) || (reg2[0] == reg1[0] && reg2[1] == reg1[1] && reg2[2] > reg1[2])) {
+                console.log(`Beta version detected: ${res["version"]}`);
+                showConfirmPopup(`You are currently running DCS Olympus ${VERSION}, which is newer than the latest release version. Do you want to download the latest beta version? <div style="max-width: 100%; color: orange">Note: DCS and Olympus MUST be stopped before proceeding.</div>`,
+                    () => {
+                        betaUpdateOlympus();
+                    }, () => {
+                        console.log("Update canceled");
+                    })
+            }
+        }
+    })
+}
+
+async function betaUpdateOlympus() {
+    const octokit = new Octokit({});
+
+    const res = await octokit.request('GET /repos/{owner}/{repo}/actions/artifacts', {
+        owner: 'Pax1601',
+        repo: 'DCSOlympus',
+        headers: {
+            'X-GitHub-Api-Version': '2022-11-28'
+        }
+    });
+
+    const artifacts = res.data.artifacts;
+    var artifact = artifacts.find((artifact) => { return artifact.name = "development_build_not_a_release" });
+
+    showConfirmPopup(`Latest beta artifact has a timestamp of ${artifact.updated_at}. Do you want to continue?`, () => {
+        exec(`start https://github.com/Pax1601/DCSOlympus/actions/runs/${artifact.workflow_run.id}/artifacts/${artifact.id}`)
+        showConfirmPopup('A browser window was opened to download the beta artifact. Please wait for the download to complete, then press "Accept" and select the downloaded beta artifact.',
+            () => {
+                var input = document.createElement('input');
+                input.type = 'file';
+                input.click();
+                input.onchange = e => {
+                    console.log(e.target.files[0]);
+                    updateOlympus(e.target.files[0])
+                }
+            },
+            () => {
+                console.log("Update canceled");
+            });
+    },
+        () => {
+            console.log("Update canceled");
+        })
+}
+
+function updateOlympus(location) {
+    showWaitPopup("Please wait while Olympus is being updated. The Manager will be closed and reopened automatically when updating is completed.")
+    if (typeof location === "string") {
+        console.log(`Updating Olympus with package from ${location}`)
+    } else {
+        console.log(`Updating Olympus with package from ${location.path}`)
+    }
+
+    let tmpDir;
+    const appPrefix = 'dcs-olympus-';
+    try {
+        const folder = path.join(os.tmpdir(), appPrefix);
+        tmpDir = fs.mkdtempSync(folder);
+
+        if (typeof location === "string") {
+            const file = fs.createWriteStream(path.join(tmpDir, "temp.zip"));
+            console.log(`Downloading update package in ${path.join(tmpDir, "temp.zip")}`)
+            const request = https.get(location, (response) => {
+                response.pipe(file);
+
+                // after download completed close filestream
+                file.on("finish", () => {
+                    file.close();
+                    console.log("Download completed");
+                    extractAndCopy(tmpDir);
+
+                });
+                file.on("error", (err) => {
+                    file.close();
+                    console.error(err);
+                })
+            });
+        } else {
+            fs.copyFileSync(location.path, path.join(tmpDir, "temsp.zip"));
+            extractAndCopy(tmpDir);
+        }
+    }
+    catch (err) {
+        showErrorPopup("An error has occurred while updating Olympus. Please delete Olympus and update it manually. A browser window will open automatically on the download page.", () => {
+            exec(`start https://github.com/Pax1601/DCSOlympus/releases`, () => {
+                ipcRenderer.send('window:close');
+            })
+        })
+        console.error(err)
+    }
+}
+
+function extractAndCopy(folder) {
+    const zip = new AdmZip(path.join(folder, "temp.zip"));
+    zip.extractAllTo(path.join(folder, "temp"));
+
+    fs.writeFileSync(path.join(folder, 'update.bat'),
+        `timeout /t 5 \nrmdir "${path.join(__dirname, "..", "..")}" /s /q \necho D|xcopy /Y /S /E "${path.join(folder, "temp")}" "${path.join(__dirname, "..", "..")}" \ncd "${path.join(__dirname, "..", "..")}" \ninstall.bat`
+    )
+
+    var proc = spawn('cmd.exe', ["/c", path.join(folder, 'update.bat')], { cwd: folder, shell: true, detached: true });
+    proc.unref();
+    ipcRenderer.send('window:close');
+}
 
 /* White-listed channels. */
 const ipc = {
@@ -69,6 +210,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 })
 
+checkVersion();
 window.addEventListener('resize', () => {
     computePagesHeight();
 })
