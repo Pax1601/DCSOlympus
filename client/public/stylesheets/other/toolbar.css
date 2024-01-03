@@ -10,6 +10,10 @@
 	display: flex;
 }
 
+#command-mode-toolbar > svg {
+    display: none;
+}
+
 #app-icon>.ol-select-options {
 	width: fit-content;
 }
@@ -64,10 +68,6 @@
 	width: 20px;
 }
 
-#toolbar-container>*:nth-child(3)>svg {
-    display: none;
-}
-
 #unit-visibility-control > div:nth-child(4) {
 	border-left: 2px solid white;
 	padding-left: 12px;
@@ -76,6 +76,21 @@
 #unit-visibility-control > div:last-child {
 	border-right: 2px solid white;
 	padding-right: 12px;
+}
+
+#plugin-toolbar {
+	align-items: center;
+	display:flex;
+	column-gap: 4px;
+}
+
+#plugin-toolbar button {
+	background-color: white;
+}
+
+#plugin-toolbar svg * {
+	fill: var(--background-steel);
+	stroke: var(--background-steel);
 }
 
 @media (max-width: 1145px) {

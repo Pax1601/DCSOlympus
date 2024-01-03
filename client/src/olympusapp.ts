@@ -30,6 +30,8 @@ import { ContextManager } from "./context/contextmanager";
 import { Context } from "./context/context";
 import { AirDefenceUnitSpawnMenu } from "./controls/unitspawnmenu";
 import { AirbasesJSONSchemaValidator } from "./schemas/schema";
+import { PanelsManager } from "./panels/panelsmanager";
+import { Creator } from "./creator/creator";
 
 var VERSION = "{{OLYMPUS_VERSION_NUMBER}}";
 
@@ -41,11 +43,14 @@ export class OlympusApp {
     /* Main leaflet map, extended by custom methods */
     #map: Map | null = null;
 
+    //  Used by plugins to create stuff (factory-style)
+    #creator = new Creator();
+
     /* Managers */
     #contextManager!: ContextManager;
     #dialogManager!: Manager;
     #missionManager: MissionManager | null = null;
-    #panelsManager: Manager | null = null;
+    #panelsManager: PanelsManager | null = null;
     #pluginsManager: PluginsManager | null = null;
     #popupsManager: Manager | null = null;
     #serverManager: ServerManager | null = null;
@@ -66,6 +71,10 @@ export class OlympusApp {
         return this.#map as Map;
     }
 
+    getCreator() {
+        return this.#creator as Creator;
+    }
+
     getCurrentContext() {
         return this.getContextManager().getCurrentContext() as Context;
     }
@@ -79,7 +88,7 @@ export class OlympusApp {
     }
 
     getPanelsManager() {
-        return this.#panelsManager as Manager;
+        return this.#panelsManager as PanelsManager;
     }
 
     getPopupsManager() {
@@ -183,12 +192,16 @@ export class OlympusApp {
     start() {
         /* Initialize base functionalitites */
         this.#contextManager = new ContextManager();
-        this.#contextManager.add( "olympus", {} );
+        this.#contextManager.add( "olympus", {
+            "onUnset": () => {
+                this.getPanelsManager().hideAll();
+            }
+        });
 
         this.#map = new Map('map-container');
 
         this.#missionManager = new MissionManager();
-        this.#panelsManager = new Manager();
+        this.#panelsManager = new PanelsManager();
         this.#popupsManager = new Manager();
         this.#serverManager = new ServerManager();
         this.#shortcutManager = new ShortcutManager();

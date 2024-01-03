@@ -124,12 +124,24 @@ export class UnitControlPanel extends Panel {
         this.#advancedSettingsDialog = <HTMLElement>document.querySelector("#advanced-settings-dialog");
 
         /* Advanced settings dropdowns */
-        this.#TACANXYDropdown = new Dropdown("TACAN-XY", () => { });
+        this.#TACANXYDropdown = new Dropdown({
+            "ID": "TACAN-XY",
+            "callback": () => { }
+        });
         this.#TACANXYDropdown.setOptions(["X", "Y"]);
-        this.#radioDecimalsDropdown = new Dropdown("radio-decimals", () => { });
+        this.#radioDecimalsDropdown = new Dropdown({
+            "ID": "radio-decimals",
+            "callback": () => { }
+        });
         this.#radioDecimalsDropdown.setOptions([".000", ".250", ".500", ".750"]);
-        this.#radioCallsignDropdown = new Dropdown("radio-callsign", () => { });
-        this.#deleteDropdown = new Dropdown("delete-options", () => { });
+        this.#radioCallsignDropdown = new Dropdown({
+            "ID": "radio-callsign",
+            "callback": () => { }
+        });
+        this.#deleteDropdown = new Dropdown({
+            "ID": "delete-options",
+            "callback": () => { }
+        });
 
         /* Events and timer */
         window.setInterval(() => { this.update(); }, 25);

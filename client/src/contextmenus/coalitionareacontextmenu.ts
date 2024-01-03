@@ -31,9 +31,18 @@ export class CoalitionAreaContextMenu extends ContextMenu {
         this.#coalitionSwitch.setValue(true);
 
         /* Create the controls of the IADS creation submenu */
-        this.#iadsTypesDropdown = new Dropdown("iads-units-type-options", () => { });
-        this.#iadsErasDropdown = new Dropdown("iads-era-options", () => {});
-        this.#iadsRangesDropdown = new Dropdown("iads-range-options", () => {});
+        this.#iadsTypesDropdown = new Dropdown({
+            "ID": "iads-units-type-options",
+            "callback": () => {}
+        });
+        this.#iadsErasDropdown = new Dropdown({
+            "ID": "iads-era-options",
+            "callback": () => {}
+        });
+        this.#iadsRangesDropdown = new Dropdown({
+            "ID": "iads-range-options",
+            "callback": () => {}
+        });
         this.#iadsDensitySlider = new Slider("iads-density-slider", 5, 100, "%", (value: number) => { });
         this.#iadsDistributionSlider = new Slider("iads-distribution-slider", 5, 100, "%", (value: number) => { });
 

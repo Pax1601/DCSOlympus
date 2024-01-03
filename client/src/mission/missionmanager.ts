@@ -34,7 +34,10 @@ export class MissionManager {
 
         /* command-mode settings dialog */
         this.#commandModeDialog = document.querySelector("#command-mode-settings-dialog") as HTMLElement;
-        this.#commandModeErasDropdown = new Dropdown("command-mode-era-options", () => {});
+        this.#commandModeErasDropdown = new Dropdown({
+            "ID": "command-mode-era-options",
+            "callback": () => {}
+        });
 
     }
 

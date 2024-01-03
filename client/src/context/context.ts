@@ -1,6 +1,8 @@
 export interface ContextInterface {
     allowUnitCopying?: boolean;
     allowUnitPasting?: boolean;
+    onSet?:CallableFunction;
+    onUnset?:CallableFunction;
     useSpawnMenu?: boolean;
     useUnitControlPanel?: boolean;
     useUnitInfoPanel?: boolean;
@@ -9,6 +11,8 @@ export interface ContextInterface {
 export class Context {
     #allowUnitCopying: boolean;
     #allowUnitPasting: boolean;
+    #onSet:CallableFunction;
+    #onUnset:CallableFunction;
     #useSpawnMenu: boolean;
     #useUnitControlPanel: boolean;
     #useUnitInfoPanel: boolean;
@@ -16,6 +20,8 @@ export class Context {
     constructor(config: ContextInterface) {
         this.#allowUnitCopying = (config.allowUnitCopying !== false);
         this.#allowUnitPasting = (config.allowUnitPasting !== false);
+        this.#onSet = config.onSet || function() {};
+        this.#onUnset = config.onUnset || function() {};
         this.#useSpawnMenu = (config.useSpawnMenu !== false);
         this.#useUnitControlPanel = (config.useUnitControlPanel !== false);
         this.#useUnitInfoPanel = (config.useUnitInfoPanel !== false);
@@ -39,6 +45,14 @@ export class Context {
 
     getUseUnitInfoPanel() {
         return this.#useUnitInfoPanel;
+    }
+
+    onSet() {
+        this.#onSet();
+    }
+
+    onUnset() {
+        this.#onUnset();
     }
 
 }

@@ -105,6 +105,10 @@ declare module "constants/constants" {
     export const ROEs: string[];
     export const reactionsToThreat: string[];
     export const emissionsCountermeasures: string[];
+    export const ERAS: {
+        name: string;
+        chronologicalOrder: number;
+    }[];
     export const ROEDescriptions: string[];
     export const reactionsToThreatDescriptions: string[];
     export const emissionsCountermeasuresDescriptions: string[];
@@ -337,9 +341,15 @@ declare module "map/coalitionarea/coalitionarea" {
     }
 }
 declare module "controls/dropdown" {
+    export type TDropdownConfig = {
+        "ID": HTMLElement | string | null;
+        "callback": CallableFunction;
+        "options"?: string[] | null;
+        "defaultText"?: string;
+    };
     export class Dropdown {
         #private;
-        constructor(ID: string | null, callback: CallableFunction, options?: string[] | null, defaultText?: string);
+        constructor(config: TDropdownConfig);
         getContainer(): HTMLElement;
         /** Set the dropdown options strings
          *
@@ -415,10 +425,6 @@ declare module "interfaces" {
     }
     global {
         function getOlympusPlugin(): OlympusPlugin;
-    }
-    export interface ConfigurationOptions {
-        port: number;
-        address: string;
     }
     export interface ContextMenuOption {
         tooltip: string;
@@ -787,6 +793,14 @@ declare module "other/utils" {
     export function generateUUIDv4(): string;
     export function keyEventWasInInput(event: KeyboardEvent): boolean;
     export function reciprocalHeading(heading: number): number;
+    /**
+     * Prepend numbers to the start of a string
+     *
+     * @param num <number> subject number
+     * @param places <number> places to pad
+     * @param decimal <boolean> whether this is a decimal number or not
+     *
+     * */
     export const zeroAppend: (num: number, places: number, decimal?: boolean) => string;
     export const zeroPad: (num: number, places: number) => string;
     export function similarity(s1: string, s2: string): number;
@@ -832,6 +846,7 @@ declare module "other/utils" {
     }): UnitBlueprint | null;
     export function getMarkerCategoryByName(name: string): "aircraft" | "helicopter" | "groundunit-sam" | "navyunit" | "groundunit-other";
     export function getUnitDatabaseByCategory(category: string): import("unit/databases/aircraftdatabase").AircraftDatabase | import("unit/databases/helicopterdatabase").HelicopterDatabase | import("unit/databases/groundunitdatabase").GroundUnitDatabase | import("unit/databases/navyunitdatabase").NavyUnitDatabase | null;
+    export function getCategoryBlueprintIconSVG(category: string, unitName: string): string | false;
     export function base64ToBytes(base64: string): ArrayBufferLike;
     export function enumToState(state: number): string;
     export function enumToROE(ROE: number): string;
@@ -1596,6 +1611,7 @@ declare module "map/map" {
     import { CoalitionAreaContextMenu } from "contextmenus/coalitionareacontextmenu";
     import { AirbaseSpawnContextMenu } from "contextmenus/airbasespawnmenu";
     export type MapMarkerVisibilityControl = {
+        "category"?: string;
         "image": string;
         "isProtected"?: boolean;
         "name": string;
@@ -1667,6 +1683,8 @@ declare module "context/context" {
     export interface ContextInterface {
         allowUnitCopying?: boolean;
         allowUnitPasting?: boolean;
+        onSet?: CallableFunction;
+        onUnset?: CallableFunction;
         useSpawnMenu?: boolean;
         useUnitControlPanel?: boolean;
         useUnitInfoPanel?: boolean;
@@ -1679,6 +1697,8 @@ declare module "context/context" {
         getUseSpawnMenu(): boolean;
         getUseUnitControlPanel(): boolean;
         getUseUnitInfoPanel(): boolean;
+        onSet(): void;
+        onUnset(): void;
     }
 }
 declare module "other/manager" {
@@ -1885,6 +1905,17 @@ declare module "panels/unitinfopanel" {
 }
 declare module "plugin/pluginmanager" {
     import { Manager } from "other/manager";
+    import { OlympusPlugin } from "interfaces";
+    type PluginToolbarItemConfig = {
+        "innerHTML": string;
+    };
+    class PluginToolbarItem {
+        #private;
+        constructor(plugin: OlympusPlugin, config: PluginToolbarItemConfig);
+        getElement(): HTMLElement;
+        getPlugin(): OlympusPlugin;
+        insert(): HTMLElement;
+    }
     /** The plugins manager is responsible for loading and initializing all the plugins. Plugins are located in the public/plugins folder.
      * Each plugin must be comprised of a single folder containing a index.js file. Each plugin must set the globalThis.getOlympusPlugin variable to
      * return a valid class implementing the OlympusPlugin interface.
@@ -1892,6 +1923,7 @@ declare module "plugin/pluginmanager" {
     export class PluginsManager extends Manager {
         #private;
         constructor();
+        createPluginToolbarItem(plugin: OlympusPlugin, itemConfig: PluginToolbarItemConfig): PluginToolbarItem;
     }
 }
 declare module "shortcut/shortcut" {
@@ -1991,6 +2023,25 @@ declare module "unit/importexport/unitdatafileexport" {
          * Show the form to start the export journey
          */
         showForm(units: Unit[]): void;
+    }
+}
+declare module "schemas/schema" {
+    import Ajv from "ajv";
+    import { AnySchemaObject } from "ajv/dist/core";
+    abstract class JSONSchemaValidator {
+        #private;
+        constructor(schema: AnySchemaObject);
+        getAjv(): Ajv;
+        getCompiledValidator(): any;
+        getErrors(): any;
+        getSchema(): AnySchemaObject;
+        validate(data: any): any;
+    }
+    export class AirbasesJSONSchemaValidator extends JSONSchemaValidator {
+        constructor();
+    }
+    export class ImportFileJSONSchemaValidator extends JSONSchemaValidator {
+        constructor();
     }
 }
 declare module "unit/importexport/unitdatafileimport" {
@@ -2421,12 +2472,11 @@ declare module "server/servermanager" {
     export class ServerManager {
         #private;
         constructor();
-        toggleDemoEnabled(): void;
         setCredentials(newUsername: string, newPassword: string): void;
         GET(callback: CallableFunction, uri: string, options?: ServerRequestOptions, responseType?: string, force?: boolean): void;
         PUT(request: object, callback: CallableFunction): void;
         getConfig(callback: CallableFunction): void;
-        setAddress(address: string, port: number): void;
+        setAddress(address: string): void;
         getAirbases(callback: CallableFunction): void;
         getBullseye(callback: CallableFunction): void;
         getLogs(callback: CallableFunction, refresh?: boolean): void;
@@ -2520,6 +2570,19 @@ declare module "context/contextmanager" {
         setContext(contextName: string): false | undefined;
     }
 }
+declare module "panels/panelsmanager" {
+    import { Manager } from "other/manager";
+    export class PanelsManager extends Manager {
+        constructor();
+        hideAll(): void;
+    }
+}
+declare module "creator/creator" {
+    import { Dropdown, TDropdownConfig } from "controls/dropdown";
+    export class Creator {
+        createDropdown(config: TDropdownConfig): Dropdown;
+    }
+}
 declare module "olympusapp" {
     import { Map } from "map/map";
     import { MissionManager } from "mission/missionmanager";
@@ -2531,15 +2594,18 @@ declare module "olympusapp" {
     import { ServerManager } from "server/servermanager";
     import { ContextManager } from "context/contextmanager";
     import { Context } from "context/context";
+    import { PanelsManager } from "panels/panelsmanager";
+    import { Creator } from "creator/creator";
     export class OlympusApp {
         #private;
         constructor();
         getDialogManager(): Manager;
         getMap(): Map;
+        getCreator(): Creator;
         getCurrentContext(): Context;
         getContextManager(): ContextManager;
         getServerManager(): ServerManager;
-        getPanelsManager(): Manager;
+        getPanelsManager(): PanelsManager;
         getPopupsManager(): Manager;
         getToolbarsManager(): Manager;
         getShortcutManager(): ShortcutManager;

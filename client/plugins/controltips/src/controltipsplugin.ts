@@ -23,7 +23,7 @@ export class ControlTipsPlugin implements OlympusPlugin {
         return "Control Tips Plugin"
     }
 
-    initialize(app: any) {
+    initialize(app: OlympusApp) {
         this.#app = app;
 
         this.#shortcutManager = this.#app.getShortcutManager();

@@ -74,12 +74,42 @@ export abstract class UnitSpawnMenu {
         this.#orderByRole = orderByRole;
 
         /* Create the dropdowns and the altitude slider */
-        this.#unitRoleTypeDropdown = new Dropdown(null, (roleType: string) => this.#setUnitRoleType(roleType), undefined, "Role");
-        this.#unitLabelDropdown = new Dropdown(null, (name: string) => this.#setUnitName(name), undefined, "Type");
-        this.#unitLoadoutDropdown = new Dropdown(null, (loadout: string) => this.#setUnitLoadout(loadout), undefined, "Loadout");
-        this.#unitCountDropdown = new Dropdown(null, (count: string) => this.#setUnitCount(count), undefined, "Count");
-        this.#unitCountryDropdown = new Dropdown(null, () => { /* Custom button implementation */ }, undefined, "Country");
-        this.#unitLiveryDropdown = new Dropdown(null, (livery: string) => this.#setUnitLivery(livery), undefined, "Livery");
+        this.#unitRoleTypeDropdown = new Dropdown({
+            "ID": null,
+            "callback": (roleType: string) => this.#setUnitRoleType(roleType),
+            "options": undefined,
+            "defaultText": "Role"
+        });
+        this.#unitLabelDropdown = new Dropdown({
+            "ID": null,
+            "callback": (name: string) => this.#setUnitName(name),
+            "options": undefined,
+            "defaultText": "Type"
+        });
+        this.#unitLoadoutDropdown = new Dropdown({
+            "ID": null,
+            "callback": (loadout: string) => this.#setUnitLoadout(loadout),
+            "options": undefined,
+            "defaultText": "Loadout"
+        });
+        this.#unitCountDropdown = new Dropdown({
+            "ID": null,
+            "callback": (count: string) => this.#setUnitCount(count),
+            "options": undefined,
+            "defaultText": "Count"
+        });
+        this.#unitCountryDropdown = new Dropdown({
+            "ID": null,
+            "callback": () => { /* Custom button implementation */ },
+            "options": undefined,
+            "defaultText": "Country"
+        });
+        this.#unitLiveryDropdown = new Dropdown({
+            "ID": null,
+            "callback": (livery: string) => this.#setUnitLivery(livery),
+            "options": undefined,
+            "defaultText": "Livery"
+        });
         this.#unitSpawnAltitudeSlider = new Slider(null, 0, 1000, "ft", (value: number) => { this.spawnOptions.altitude = ftToM(value); }, { title: "Spawn altitude" });
 
         /* The unit label and unit count are in the same "row" for clarity and compactness */
