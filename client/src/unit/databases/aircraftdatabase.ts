@@ -5,7 +5,7 @@ import { UnitDatabase } from "./unitdatabase"
 
 export class AircraftDatabase extends UnitDatabase {
     constructor() {
-        super('databases/units/aircraftdatabase.json');
+        super('databases/units/aircraftdatabase');
     }
 
 	getCategory() {
