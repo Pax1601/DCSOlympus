@@ -1,0 +1,525 @@
+{
+  "airfields": {
+    "High Halden": {
+      "runways": [
+        {
+          "headings": [
+            {
+              "11": {
+                "magHeading": "102",
+                "Heading": "102",
+                "ILS": ""
+              }
+            },
+            {
+              "29": {
+                "magHeading": "282",
+                "Heading": "282",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "3027"
+        },
+        {
+          "headings": [
+            {
+              "21": {
+                "magHeading": "211",
+                "Heading": "211",
+                "ILS": ""
+              }
+            },
+            {
+              "03": {
+                "magHeading": "31",
+                "Heading": "31",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "3027"
+        }
+      ],
+      "TACAN": "",
+      "ICAO": "",
+      "elevation": "104"
+    },
+    "Manston": {
+      "runways": [
+        {
+          "headings": [
+            {
+              "10": {
+                "magHeading": "102",
+                "Heading": "102",
+                "ILS": ""
+              }
+            },
+            {
+              "28": {
+                "magHeading": "282",
+                "Heading": "282",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "9114"
+        },
+        {
+          "headings": [
+            {
+              "FIELD N": {
+                "magHeading": "57",
+                "Heading": "57",
+                "ILS": ""
+              }
+            },
+            {
+              "FIELD S": {
+                "magHeading": "237",
+                "Heading": "237",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "5261"
+        }
+      ],
+      "TACAN": "",
+      "ICAO": "",
+      "elevation": "160"
+    },
+    "Biggin Hill": {
+      "runways": [
+        {
+          "headings": [
+            {
+              "23": {
+                "magHeading": "227",
+                "Heading": "228",
+                "ILS": ""
+              }
+            },
+            {
+              "05": {
+                "magHeading": "47",
+                "Heading": "48",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "2430"
+        },
+        {
+          "headings": [
+            {
+              "28": {
+                "magHeading": "287",
+                "Heading": "288",
+                "ILS": ""
+              }
+            },
+            {
+              "10": {
+                "magHeading": "107",
+                "Heading": "108",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "2594"
+        },
+        {
+          "headings": [
+            {
+              "21": {
+                "magHeading": "208",
+                "Heading": "208",
+                "ILS": ""
+              }
+            },
+            {
+              "03": {
+                "magHeading": "28",
+                "Heading": "28",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "4939"
+        }
+      ],
+      "TACAN": "",
+      "ICAO": "",
+      "elevation": "552"
+    },
+    "Headcorn": {
+      "runways": [
+        {
+          "headings": [
+            {
+              "10": {
+                "magHeading": "92",
+                "Heading": "93",
+                "ILS": ""
+              }
+            },
+            {
+              "28": {
+                "magHeading": "272",
+                "Heading": "273",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "3680"
+        },
+        {
+          "headings": [
+            {
+              "01": {
+                "magHeading": "12",
+                "Heading": "12",
+                "ILS": ""
+              }
+            },
+            {
+              "19": {
+                "magHeading": "192",
+                "Heading": "192",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "3680"
+        }
+      ],
+      "TACAN": "",
+      "ICAO": "",
+      "elevation": "114"
+    },
+    "Detling": {
+      "runways": [
+        {
+          "headings": [
+            {
+              "FIELD S": {
+                "magHeading": "227",
+                "Heading": "227",
+                "ILS": ""
+              }
+            },
+            {
+              "FIELD N": {
+                "magHeading": "47",
+                "Heading": "47",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "3482"
+        }
+      ],
+      "TACAN": "",
+      "ICAO": "",
+      "elevation": "623"
+    },
+    "Eastchurch": {
+      "runways": [
+        {
+          "headings": [
+            {
+              "10": {
+                "magHeading": "97",
+                "Heading": "97",
+                "ILS": ""
+              }
+            },
+            {
+              "28": {
+                "magHeading": "277",
+                "Heading": "277",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "2983"
+        },
+        {
+          "headings": [
+            {
+              "20": {
+                "magHeading": "203",
+                "Heading": "203",
+                "ILS": ""
+              }
+            },
+            {
+              "02": {
+                "magHeading": "23",
+                "Heading": "23",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "2983"
+        }
+      ],
+      "TACAN": "",
+      "ICAO": "",
+      "elevation": "40"
+    },
+    "Abbeville Drucat": {
+      "runways": [
+        {
+          "headings": [
+            {
+              "20": {
+                "magHeading": "203",
+                "Heading": "203",
+                "ILS": ""
+              }
+            },
+            {
+              "2": {
+                "magHeading": "23",
+                "Heading": "23",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "4877"
+        },
+        {
+          "headings": [
+            {
+              "27": {
+                "magHeading": "270",
+                "Heading": "270",
+                "ILS": ""
+              }
+            },
+            {
+              "09": {
+                "magHeading": "90",
+                "Heading": "90",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "4877"
+        }
+      ],
+      "TACAN": "",
+      "ICAO": "",
+      "elevation": "183"
+    },
+    "Hawkinge": {
+      "runways": [
+        {
+          "headings": [
+            {
+              "FIELD S": {
+                "magHeading": "180",
+                "Heading": "180",
+                "ILS": ""
+              }
+            },
+            {
+              "FIELD N": {
+                "magHeading": "0",
+                "Heading": "0",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "2336"
+        },
+        {
+          "headings": [
+            {
+              "FIELD W ": {
+                "magHeading": "218",
+                "Heading": "219",
+                "ILS": ""
+              }
+            },
+            {
+              "FIELD E": {
+                "magHeading": "38",
+                "Heading": "39",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "2336"
+        }
+      ],
+      "TACAN": "",
+      "ICAO": "",
+      "elevation": "524"
+    },
+    "Lympne": {
+      "runways": [
+        {
+          "headings": [
+            {
+              "FIELD E": {
+                "magHeading": "134",
+                "Heading": "134",
+                "ILS": ""
+              }
+            },
+            {
+              "FIELD W": {
+                "magHeading": "314",
+                "Heading": "314",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "3054"
+        },
+        {
+          "headings": [
+            {
+              "FIELD N": {
+                "magHeading": "19",
+                "Heading": "19",
+                "ILS": ""
+              }
+            },
+            {
+              "FIELD S": {
+                "magHeading": "199",
+                "Heading": "199",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "2706"
+        }
+      ],
+      "TACAN": "",
+      "ICAO": "",
+      "elevation": "351"
+    },
+    "Merville Calonne": {
+      "runways": [
+        {
+          "headings": [
+            {
+              "32": {
+                "magHeading": "318",
+                "Heading": "319",
+                "ILS": ""
+              }
+            },
+            {
+              "14": {
+                "magHeading": "138",
+                "Heading": "139",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "3899"
+        },
+        {
+          "headings": [
+            {
+              "26": {
+                "magHeading": "258",
+                "Heading": "258",
+                "ILS": ""
+              }
+            },
+            {
+              "08": {
+                "magHeading": "78",
+                "Heading": "78",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "3899"
+        }
+      ],
+      "TACAN": "",
+      "ICAO": "",
+      "elevation": "52"
+    },
+    "Dunkirk Mardyck": {
+      "runways": [
+        {
+          "headings": [
+            {
+              "08": {
+                "magHeading": "80",
+                "Heading": "81",
+                "ILS": ""
+              }
+            },
+            {
+              "26": {
+                "magHeading": "260",
+                "Heading": "261",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "1839"
+        }
+      ],
+      "TACAN": "",
+      "ICAO": "",
+      "elevation": "16"
+    },
+    "Saint Omer Longuenesse": {
+      "runways": [
+        {
+          "headings": [
+            {
+              "08": {
+                "magHeading": "86",
+                "Heading": "87",
+                "ILS": ""
+              }
+            },
+            {
+              "26": {
+                "magHeading": "266",
+                "Heading": "267",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "2001"
+        },
+        {
+          "headings": [
+            {
+              "FIELD S": {
+                "magHeading": "208",
+                "Heading": "208",
+                "ILS": ""
+              }
+            },
+            {
+              "FIELD N": {
+                "magHeading": "28",
+                "Heading": "28",
+                "ILS": ""
+              }
+            }
+          ],
+          "length": "1762"
+        }
+      ],
+      "TACAN": "",
+      "ICAO": "",
+      "elevation": "219"
+    }
+  }
+}
