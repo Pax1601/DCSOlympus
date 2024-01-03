@@ -1,0 +1,1 @@
+concurrently --kill-others "npm run watch" "nodemon --ignore ./public/databases/ ./bin/www -- --config ../moc_dcs/Config/olympus.json"

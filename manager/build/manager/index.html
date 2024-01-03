@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="./stylesheets/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;600;700;800&display=swap" />
+
+    <meta charset="UTF-8">
+    <title>DCS Olympus Manager {{OLYMPUS_VERSION_NUMBER}}</title>
+</head>
+
+<body>
+    <div id="title-bar">
+        <div>DCS Olympus manager</div>
+        <button class="title-bar-button minimize"></button>
+        <button class="title-bar-button restore hide"></button>
+        <button class="title-bar-button maximize"></button>
+        <button class="title-bar-button close"></button>
+    </div>
+    <div id="header">
+        <img class="main-icon" src="../img/OlympusLogoFinal_4k.png" \>
+        <div class="version">
+            <div> DCS Olympus Manager</div>
+            <div class="accent-green">{{OLYMPUS_VERSION_NUMBER}}</div>
+        </div>
+        <div class="link first" data-link="https://github.com/Pax1601/DCSOlympus">GitHub</div>
+        <div class="link" data-link="https://discord.gg/pCfCykAdrw">Discord</div>
+    </div>
+    <div id="loader" class="manager-page hide">
+        Loading, please wait...
+    </div>
+    <div id="grayout" class="hide"></div>
+    <div id="popup" class="hide">
+        <img src="./icons/triangle-exclamation-solid.svg" class="error">
+        <img src="./icons/circle-question-regular.svg" class="confirm">
+        <img src="./icons/spinner-solid.svg" class="wait">
+        <div class="content">
+            
+        </div>
+        <div class="footer">
+            <div class="button accept-popup"> Accept </div>
+            <div class="button close-popup"> Close </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    document.querySelector('.minimize').addEventListener('click', () => {
+        window.ipcRender.send('window:minimize');
+    });
+
+    document.querySelector('.restore').addEventListener('click', () => {
+        window.ipcRender.send('window:restore');
+    });
+
+    document.querySelector('.maximize').addEventListener('click', () => {
+        window.ipcRender.send('window:maximize');
+    });
+
+    document.querySelector('.close').addEventListener('click', () => {
+        window.ipcRender.send('window:close');
+    });
+
+    window.ipcRender.receive('event:maximized', () => {
+        document.querySelector('.restore').classList.remove("hide");
+        document.querySelector('.maximize').classList.add("hide");
+    })
+
+    window.ipcRender.receive('event:unmaximized', () => {
+        document.querySelector('.restore').classList.add("hide");
+        document.querySelector('.maximize').classList.remove("hide");
+    })
+</script>
+
+</html>

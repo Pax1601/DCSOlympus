@@ -8,6 +8,12 @@
             "type": "shell",
             "command": "npm run debug",
             "isBackground": true
+        }, 
+        {
+            "label": "server-nodcs",
+            "type": "shell",
+            "command": "npm run debug-nodcs",
+            "isBackground": true
         }
     ]
 }

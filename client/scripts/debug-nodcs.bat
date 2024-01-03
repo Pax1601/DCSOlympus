@@ -1,0 +1,1 @@
+concurrently --kill-others "call ./scripts/demo.bat" "npm run watch" "nodemon --ignore ./public/databases/ ./bin/www -- --config ../moc_dcs/Config/olympus.json"

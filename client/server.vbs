@@ -1,1 +1,1 @@
-CreateObject("Wscript.Shell").Run "npm run start -- --config """&WScript.Arguments(0)&"""", 1
+CreateObject("Wscript.Shell").Run "npm run server -- --config """&WScript.Arguments(0)&"""", 1

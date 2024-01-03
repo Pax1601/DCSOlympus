@@ -1,7 +1,7 @@
 bin
 .vs
 x64
-/src/vcpkg_installed
+/backend/vcpkg_installed
 *.user
 Output
 *.aps
@@ -29,3 +29,4 @@ leaflet-gesture-handling.css
 package-lock.json
 
 /package
+/build
