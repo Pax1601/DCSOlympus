@@ -8,12 +8,15 @@ const { checkPort, fetchWithTimeout } = require('./net')
 const dircompare = require('dir-compare');
 const { spawn } = require('child_process');
 const find = require('find-process');
-const { deleteMod, uninstallInstance } = require('./filesystem')
+const { uninstallInstance } = require('./filesystem')
 const { showErrorPopup, showConfirmPopup } = require('./popup')
 
 class DCSInstance {
     static instances = null;
 
+    /** Static asynchronous method to retrieve all DCS instances. Only runs at startup 
+     * 
+     */
     static async getInstances() {
         if (this.instances === null) {
             this.instances = await this.findInstances();
@@ -21,18 +24,25 @@ class DCSInstance {
         return this.instances;
     }
 
+    /** Static asynchronous method to find all existing DCS instances
+     * 
+     */
     static async findInstances() {
         let promise = new Promise((res, rej) => {
+            /* Get the Saved Games folder from the registry */
             regedit.list(shellFoldersKey, function (err, result) {
                 if (err) {
                     rej(err);
                 }
                 else {
+                    /* Check that the registry read was successfull */
                     if (result[shellFoldersKey] !== undefined && result[shellFoldersKey]["exists"] && result[shellFoldersKey]['values'][saveGamesKey] !== undefined && result[shellFoldersKey]['values'][saveGamesKey]['value'] !== undefined) {
+                        /* Read all the folders in Saved Games */
                         const searchpath = result[shellFoldersKey]['values'][saveGamesKey]['value'];
                         const folders = fs.readdirSync(searchpath);
                         var instances = [];
 
+                        /* A DCS Instance is created if either the appsettings.lua or serversettings.lua file is detected */
                         folders.forEach((folder) => {
                             if (fs.existsSync(path.join(searchpath, folder, "Config", "appsettings.lua")) ||
                                 fs.existsSync(path.join(searchpath, folder, "Config", "serversettings.lua"))) {
@@ -73,8 +83,10 @@ class DCSInstance {
         this.folder = folder;
         this.name = path.basename(folder);
 
+        /* Check if the olympus.json file is detected. If true, Olympus is considered to be installed */
         if (fs.existsSync(path.join(folder, "Config", "olympus.json"))) {
             try {
+                /* Read the olympus.json */
                 var config = JSON.parse(fs.readFileSync(path.join(folder, "Config", "olympus.json")));
                 this.clientPort = config["client"]["port"];
                 this.backendPort = config["server"]["port"];
@@ -84,6 +96,8 @@ class DCSInstance {
                 console.error(err)
             }
 
+            /* Compare the contents of the installed Olympus instance and the one in the root folder. Exclude the databases folder, which users can edit.
+               If there is any difference, the instance is flagged as either corrupted or outdated */
             this.installed = true;
             const options = { 
                 compareContent: true,
@@ -107,6 +121,7 @@ class DCSInstance {
             }
         }
 
+        /* Periodically "ping" Olympus to check if either the client or the backend are active */
         window.setInterval(async () => {
             await this.getData();
 
@@ -136,6 +151,9 @@ class DCSInstance {
         }, 1000);
     }
 
+    /** Asynchronously check if the client port is free and if it is, set the new value
+     * 
+     */
     async setClientPort(newPort) {
         if (await this.checkClientPort(newPort)) {
             console.log(`Instance ${this.folder} client port set to ${newPort}`)
@@ -145,6 +163,9 @@ class DCSInstance {
         return false;
     }
 
+    /** Asynchronously check if the client port is free and if it is, set the new value
+     * 
+     */
     async setBackendPort(newPort) {
         if (await this.checkBackendPort(newPort)) {
             console.log(`Instance ${this.folder} client port set to ${newPort}`)
@@ -154,22 +175,37 @@ class DCSInstance {
         return false;
     }
 
+    /** Set backend address
+     * 
+     */
     setBackendAddress(newAddress) {
         this.backendAddress = newAddress;
     }
 
+    /** Set Game Master password
+     * 
+     */
     setGameMasterPassword(newPassword) {
         this.gameMasterPassword = newPassword;
     }
 
+    /** Set Blue Commander password
+     * 
+     */
     setBlueCommanderPassword(newPassword) {
         this.blueCommanderPassword = newPassword;
     }
 
+    /** Set Red Commander password
+     * 
+     */
     setRedCommanderPassword(newPassword) {
         this.redCommanderPassword = newPassword;
     }
 
+    /** Check if the client port is free
+     * 
+     */
     async checkClientPort(port) {
         var promise = new Promise((res, rej) => {
             checkPort(port, async (portFree) => {
@@ -198,6 +234,9 @@ class DCSInstance {
         return promise;
     }
 
+    /** Check if the backend port is free
+     * 
+     */
     async checkBackendPort(port) {
         var promise = new Promise((res, rej) => {
             checkPort(port, async (portFree) => {
@@ -225,6 +264,9 @@ class DCSInstance {
         return promise;
     }
 
+    /** Asynchronously interrogate the webserver and the backend to check if they are active and to retrieve data.
+     * 
+     */
     async getData() {
         if (this.installed && !this.error) {
             fetchWithTimeout(`http://localhost:${this.clientPort}`, { timeout: 250 })
@@ -261,6 +303,9 @@ class DCSInstance {
         }
     }
 
+    /** Start the Olympus server associated with this instance
+     * 
+     */
     startServer() {
         console.log(`Starting server for instance at ${this.folder}`)
         const out = fs.openSync(`./${this.name}.log`, 'a');
@@ -274,6 +319,9 @@ class DCSInstance {
         sub.unref();
     }
 
+    /** Start the Olympus client associated with this instance
+     * 
+     */
     startClient() {
         console.log(`Starting client for instance at ${this.folder}`)
         const out = fs.openSync(`./${this.name}.log`, 'a');
@@ -287,6 +335,7 @@ class DCSInstance {
         sub.unref();
     }
 
+    /* Stop any node process running on the server port. This will stop either the server or the client depending on what is running */
     stop() {
         find('port', this.clientPort)
             .then((list) => {
@@ -312,6 +361,7 @@ class DCSInstance {
             })
     }
 
+    /* Uninstall this instance */
     uninstall() {
         showConfirmPopup("Are you sure you want to completely remove this Olympus installation?", () =>
             uninstallInstance(this.folder, this.name).then(

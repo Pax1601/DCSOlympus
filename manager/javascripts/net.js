@@ -1,5 +1,8 @@
 const portfinder = require('portfinder')
 
+/** Checks if a port is already in use
+ * 
+ */
 function checkPort(port, callback) {
     portfinder.getPort({ port: port, stopPort: port }, (err, res) => {
         if (err !== null) {
@@ -11,6 +14,9 @@ function checkPort(port, callback) {
     });
 }
 
+/** Performs a fetch request, with a configurable timeout 
+ * 
+ */
 async function fetchWithTimeout(resource, options = {}) {
     const { timeout = 8000 } = options;
     

@@ -32,6 +32,9 @@ class ResultPage extends ManagerPage {
         super.show();
     }
 
+    /** Installation is performed by using an then chain of async functions. Installation is aborted on any error along the chain 
+     * 
+     */
     startInstallation() {
         installHooks(this.instance.folder).then(
             () => {

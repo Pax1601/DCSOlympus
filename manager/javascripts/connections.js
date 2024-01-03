@@ -1,6 +1,9 @@
 const ManagerPage = require("./managerpage");
 const ejs = require('ejs')
 
+/** Connections page, allows the user to set the ports and address for each Olympus instance
+ * 
+ */
 class ConnectionsPage extends ManagerPage {
     onBackClicked;
     onNextClicked;
@@ -35,6 +38,8 @@ class ConnectionsPage extends ManagerPage {
         ejs.renderFile("./ejs/connections.ejs", this.options, {}, (err, str) => {
             if (!err) {
                 this.render(str);
+
+                /* Call the port setters to check if the ports are free */
                 this.setClientPort(this.instance.clientPort);
                 this.setBackendPort(this.instance.backendPort);
             } else {
@@ -45,6 +50,9 @@ class ConnectionsPage extends ManagerPage {
         super.show();
     }
 
+    /** Asynchronously check if the client port is free and if it is, set the new value
+     * 
+     */
     async setClientPort(newPort) {
         const success = await this.instance.setClientPort(newPort);
         var successEls = this.element.querySelector(".client-port").querySelectorAll(".success");
@@ -57,6 +65,9 @@ class ConnectionsPage extends ManagerPage {
         }
     }
 
+    /** Asynchronously check if the backend port is free and if it is, set the new value
+     * 
+     */
     async setBackendPort(newPort) {
         const success = await this.instance.setBackendPort(newPort);
         var successEls = this.element.querySelector(".backend-port").querySelectorAll(".success");

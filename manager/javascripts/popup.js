@@ -1,3 +1,5 @@
+// TODO: we can probably refactor this to be a bit cleaner
+
 function showErrorPopup(message, onCloseCallback) {
     document.getElementById("grayout").classList.remove("hide");
     document.getElementById("popup").classList.remove("hide");
