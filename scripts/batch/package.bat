@@ -12,7 +12,7 @@ REM copy the hooks script
 echo F|xcopy /Y .\scripts\lua\hooks\OlympusHook.lua .\package\Scripts\OlympusHook.lua
 
 REM copy the lua scripts
-echo F|xcopy /Y .\scripts\lua\backend .\package\mod\scripts
+echo D|xcopy /Y /S /E .\scripts\lua\backend .\package\mod\scripts
 
 REM copy the mod folder
 echo D|xcopy /Y /S /E .\mod .\package\mod

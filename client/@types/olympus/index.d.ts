@@ -416,10 +416,6 @@ declare module "interfaces" {
     global {
         function getOlympusPlugin(): OlympusPlugin;
     }
-    export interface ConfigurationOptions {
-        port: number;
-        address: string;
-    }
     export interface ContextMenuOption {
         tooltip: string;
         src: string;
@@ -787,6 +783,14 @@ declare module "other/utils" {
     export function generateUUIDv4(): string;
     export function keyEventWasInInput(event: KeyboardEvent): boolean;
     export function reciprocalHeading(heading: number): number;
+    /**
+     * Prepend numbers to the start of a string
+     *
+     * @param num <number> subject number
+     * @param places <number> places to pad
+     * @param decimal <boolean> whether this is a decimal number or not
+     *
+     * */
     export const zeroAppend: (num: number, places: number, decimal?: boolean) => string;
     export const zeroPad: (num: number, places: number) => string;
     export function similarity(s1: string, s2: string): number;
@@ -2421,12 +2425,11 @@ declare module "server/servermanager" {
     export class ServerManager {
         #private;
         constructor();
-        toggleDemoEnabled(): void;
         setCredentials(newUsername: string, newPassword: string): void;
         GET(callback: CallableFunction, uri: string, options?: ServerRequestOptions, responseType?: string, force?: boolean): void;
         PUT(request: object, callback: CallableFunction): void;
         getConfig(callback: CallableFunction): void;
-        setAddress(address: string, port: number): void;
+        setAddress(address: string): void;
         getAirbases(callback: CallableFunction): void;
         getBullseye(callback: CallableFunction): void;
         getLogs(callback: CallableFunction, refresh?: boolean): void;
