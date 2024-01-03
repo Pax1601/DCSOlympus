@@ -11,7 +11,7 @@ const fs = require('fs');
 const AdmZip = require("adm-zip");
 const { Octokit } = require('octokit');
 
-const VERSION = "v2.0.0";
+const VERSION = "{{OLYMPUS_VERSION_NUMBER}}";
 function checkVersion() {
     /* Check if we are running the latest version */
     const request = new Request("https://raw.githubusercontent.com/Pax1601/DCSOlympus/release-candidate/version.json");
@@ -32,7 +32,7 @@ function checkVersion() {
                 console.log(`New version available: ${res["version"]}`);
                 showConfirmPopup(`You are currently running DCS Olympus ${VERSION}, but ${res["version"]} is available. Do you want to update DCS Olympus automatically? <div style="max-width: 100%; color: orange">Note: DCS and Olympus MUST be stopped before proceeding.</div>`,
                     () => {
-                        updateOlympus(res["package"]);
+                        updateOlympusRelease();
                     }, () => {
                         console.log("Update canceled");
                     })
@@ -41,7 +41,7 @@ function checkVersion() {
                 console.log(`Beta version detected: ${res["version"]}`);
                 showConfirmPopup(`You are currently running DCS Olympus ${VERSION}, which is newer than the latest release version. Do you want to download the latest beta version? <div style="max-width: 100%; color: orange">Note: DCS and Olympus MUST be stopped before proceeding.</div>`,
                     () => {
-                        betaUpdateOlympus();
+                        updateOlympusBeta();
                     }, () => {
                         console.log("Update canceled");
                     })
@@ -50,7 +50,7 @@ function checkVersion() {
     })
 }
 
-async function betaUpdateOlympus() {
+async function updateOlympusBeta() {
     const octokit = new Octokit({});
 
     const res = await octokit.request('GET /repos/{owner}/{repo}/actions/artifacts', {
@@ -85,6 +85,20 @@ async function betaUpdateOlympus() {
         })
 }
 
+async function updateOlympusRelease() {
+    const octokit = new Octokit({})
+
+    const res = await octokit.request('GET /repos/{owner}/{repo}/releases/latest', {
+        owner: 'Pax1601',
+        repo: 'DCSOlympus',
+        headers: {
+            'X-GitHub-Api-Version': '2022-11-28'
+        }
+    })
+
+    updateOlympus(res.data.assets[0].browser_download_url)
+}
+
 function updateOlympus(location) {
     showWaitPopup("Please wait while Olympus is being updated. The Manager will be closed and reopened automatically when updating is completed.")
     if (typeof location === "string") {
@@ -103,33 +117,42 @@ function updateOlympus(location) {
             const file = fs.createWriteStream(path.join(tmpDir, "temp.zip"));
             console.log(`Downloading update package in ${path.join(tmpDir, "temp.zip")}`)
             const request = https.get(location, (response) => {
-                response.pipe(file);
+                if (response.statusCode === 200) {
+                    response.pipe(file);
 
-                // after download completed close filestream
-                file.on("finish", () => {
-                    file.close();
-                    console.log("Download completed");
-                    extractAndCopy(tmpDir);
-
-                });
-                file.on("error", (err) => {
-                    file.close();
-                    console.error(err);
-                })
+                    // after download completed close filestream
+                    file.on("finish", () => {
+                        file.close();
+                        console.log("Download completed");
+                        extractAndCopy(tmpDir);
+                    });
+                    file.on("error", (err) => {
+                        file.close();
+                        console.error(err);
+                        throw Error(err);
+                    })
+                } else {
+                    failUpdate();
+                    throw Error("Failed to download resource.")
+                }
             });
         } else {
-            fs.copyFileSync(location.path, path.join(tmpDir, "temsp.zip"));
+            fs.copyFileSync(location.path, path.join(tmpDir, "temp.zip"));
             extractAndCopy(tmpDir);
         }
     }
     catch (err) {
-        showErrorPopup("An error has occurred while updating Olympus. Please delete Olympus and update it manually. A browser window will open automatically on the download page.", () => {
-            exec(`start https://github.com/Pax1601/DCSOlympus/releases`, () => {
-                ipcRenderer.send('window:close');
-            })
-        })
+        failUpdate();
         console.error(err)
     }
+}
+
+function failUpdate() {
+    showErrorPopup("An error has occurred while updating Olympus. Please delete Olympus and update it manually. A browser window will open automatically on the download page.", () => {
+        exec(`start https://github.com/Pax1601/DCSOlympus/releases`, () => {
+            ipcRenderer.send('window:close');
+        })
+    })
 }
 
 function extractAndCopy(folder) {
