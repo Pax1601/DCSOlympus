@@ -14,7 +14,7 @@ const { Octokit } = require('octokit');
 const VERSION = "{{OLYMPUS_VERSION_NUMBER}}";
 function checkVersion() {
     /* Check if we are running the latest version */
-    const request = new Request("https://raw.githubusercontent.com/Pax1601/DCSOlympus/release-candidate/version.json");
+    const request = new Request("https://raw.githubusercontent.com/Pax1601/DCSOlympus/main/version.json");
     fetch(request).then((response) => {
         if (response.status === 200) {
             return response.json();
