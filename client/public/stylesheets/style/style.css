@@ -171,6 +171,10 @@ button svg.fill-coalition[data-coalition="red"] * {
     position: relative;
 }
 
+.ol-select[disabled] {
+    color: var(--ol-dialog-disabled-text-color);
+}
+
 .ol-select>.ol-select-value {
     align-content: center;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -213,6 +217,10 @@ button svg.fill-coalition[data-coalition="red"] * {
     width: 15px;
     height: 15px;
     background-size: 100% 100%;
+}
+
+.ol-select[disabled]:not(.ol-select-image)>.ol-select-value:after {
+    opacity: 15%;
 }
 
 .ol-select:not(.ol-select-image)>.ol-select-value.ol-select-warning:after {
@@ -1312,6 +1320,11 @@ dl.ol-data-grid dd {
     margin: 4px 0;
 }
 
+
+.ol-dialog label[disabled] {
+    color: var(--ol-dialog-disabled-text-color)
+}
+
 .ol-dialog-content table th {
     background-color: var(--background-grey);
     color:white;
@@ -1383,6 +1396,10 @@ dl.ol-data-grid dd {
     text-align: center;
 }
 
+.ol-text-input input[disabled] {
+    color:var(--ol-dialog-disabled-text-color);
+}
+
 input[type=number] {
     -moz-appearance: textfield;
     appearance: textfield;
@@ -1420,6 +1437,11 @@ input[type=number]::-webkit-outer-spin-button {
 .ol-button-apply {
     background: transparent;
     border: 1px solid white;
+}
+
+.ol-button-apply[disabled] {
+    border-color: var(--ol-dialog-disabled-text-color);
+    color:var(--ol-dialog-disabled-text-color);
 }
 
 .ol-button-apply::before {

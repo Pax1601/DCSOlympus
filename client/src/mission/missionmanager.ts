@@ -26,13 +26,16 @@ export class MissionManager {
     #coalitions: {red: string[], blue: string[]} = {red: [], blue: []};
 
     constructor() {
-        document.addEventListener("showCommandModeDialog", () => this.showCommandModeDialog());
         document.addEventListener("applycommandModeOptions", () => this.#applycommandModeOptions());
+        document.addEventListener("showCommandModeDialog", () => this.showCommandModeDialog());
+        document.addEventListener("toggleSpawnRestrictions", (ev:CustomEventInit) => {
+            this.#toggleSpawnRestrictions(ev.detail._element.checked)
+        });
 
         /* command-mode settings dialog */
         this.#commandModeDialog = document.querySelector("#command-mode-settings-dialog") as HTMLElement;
-
         this.#commandModeErasDropdown = new Dropdown("command-mode-era-options", () => {});
+
     }
 
     /** Update location of bullseyes
@@ -211,6 +214,10 @@ export class MissionManager {
     }
 
     showCommandModeDialog() {
+        const options = this.getCommandModeOptions()
+        const { restrictSpawns, restrictToCoalition, setupTime } = options;
+        this.#toggleSpawnRestrictions(restrictSpawns);
+
         /* Create the checkboxes to select the unit eras */
         var eras = aircraftDatabase.getEras().concat(helicopterDatabase.getEras()).concat(groundUnitDatabase.getEras()).concat(navyUnitDatabase.getEras());
         eras = eras.filter((item: string, index: number) => eras.indexOf(item) === index).sort();
@@ -226,11 +233,11 @@ export class MissionManager {
         const redSpawnPointsInput = this.#commandModeDialog.querySelector("#red-spawn-points")?.querySelector("input") as HTMLInputElement;
         const setupTimeInput = this.#commandModeDialog.querySelector("#setup-time")?.querySelector("input") as HTMLInputElement;
 
-        restrictSpawnsCheckbox.checked = this.getCommandModeOptions().restrictSpawns;
-        restrictToCoalitionCheckbox.checked = this.getCommandModeOptions().restrictToCoalition;
-        blueSpawnPointsInput.value = String(this.getCommandModeOptions().spawnPoints.blue);
-        redSpawnPointsInput.value = String(this.getCommandModeOptions().spawnPoints.red);
-        setupTimeInput.value = String(Math.floor(this.getCommandModeOptions().setupTime / 60.0));
+        restrictSpawnsCheckbox.checked = restrictSpawns;
+        restrictToCoalitionCheckbox.checked = restrictToCoalition;
+        blueSpawnPointsInput.value = String(options.spawnPoints.blue);
+        redSpawnPointsInput.value = String(options.spawnPoints.red);
+        setupTimeInput.value = String(Math.floor(setupTime / 60.0));
     }
 
     #applycommandModeOptions() {
@@ -308,5 +315,11 @@ export class MissionManager {
             }
         };
         xhr.send();
+    }
+
+    #toggleSpawnRestrictions(restrictionsEnabled:boolean) {
+        this.#commandModeDialog.querySelectorAll("input, label, .ol-select").forEach( el => {
+            if (!el.closest("#restrict-spawns")) el.toggleAttribute("disabled", !restrictionsEnabled);
+        });
     }
 }
