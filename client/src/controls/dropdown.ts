@@ -10,9 +10,11 @@ export class Dropdown {
     #hidden: boolean = false;
     #text!: HTMLElement;
 
-    constructor(ID: string | null, callback: CallableFunction, options: string[] | null = null, defaultText?: string) {
+    constructor(ID: HTMLElement | string | null, callback: CallableFunction, options: string[] | null = null, defaultText?: string) {
         if (ID === null)
             this.#container = this.#createElement(defaultText);
+        else if (ID instanceof HTMLElement)
+            this.#container = ID;
         else
             this.#container = document.getElementById(ID) as HTMLElement;
 
