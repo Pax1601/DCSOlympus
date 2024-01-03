@@ -7,6 +7,7 @@
   "scripts": {
     "build": "browserify .\\src\\index.ts --debug -o .\\public\\javascripts\\bundle.js -t [ babelify --global true --presets [ @babel/preset-env ] --extensions '.js'] -p [ tsify --noImplicitAny ] && copy.bat",
     "build-release": "browserify .\\src\\index.ts -o .\\public\\javascripts\\bundle.js -t [ babelify --global true --presets [ @babel/preset-env ] --extensions '.js'] -p [ tsify --noImplicitAny ] && copy.bat",
+    "build-release-linux": "browserify ./src/index.ts -o ./public/javascripts/bundle.js -t [ babelify --global true --presets [ @babel/preset-env ] --extensions '.js'] -p [ tsify --noImplicitAny ] && ./copy.sh",
     "emit-declarations": "tsc --project tsconfig.json --declaration --emitDeclarationOnly --outfile ./@types/olympus/index.d.ts",
     "copy": "copy.bat",
     "start": "node ./bin/www",
