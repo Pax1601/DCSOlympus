@@ -1,3 +1,10 @@
+export type TDropdownConfig = {
+    "ID": HTMLElement | string | null,
+    "callback": CallableFunction,
+    "options"?: string[] | null,
+    "defaultText"?: string
+};
+
 export class Dropdown {
     #container: HTMLElement;
     #options: HTMLElement;
@@ -10,7 +17,9 @@ export class Dropdown {
     #hidden: boolean = false;
     #text!: HTMLElement;
 
-    constructor(ID: HTMLElement | string | null, callback: CallableFunction, options: string[] | null = null, defaultText?: string) {
+    constructor(config:TDropdownConfig) {
+        const {ID, callback, options, defaultText} = config;
+
         if (ID === null)
             this.#container = this.#createElement(defaultText);
         else if (ID instanceof HTMLElement)

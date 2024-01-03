@@ -133,10 +133,17 @@ export class Map extends L.Map {
         //L.control.scalenautic({ position: "topright", maxWidth: 300, nautic: true, metric: true, imperial: false }).addTo(this);
 
         /* Map source dropdown */
-        this.#mapSourceDropdown = new Dropdown("map-type", (layerName: string) => this.setLayer(layerName), this.getLayers());
+        this.#mapSourceDropdown = new Dropdown({
+            "ID": "map-type",
+            "callback": (layerName: string) => this.setLayer(layerName),
+            "options": this.getLayers()
+        });
 
         /* Visibility options dropdown */
-        this.#mapVisibilityOptionsDropdown = new Dropdown("map-visibility-options", (value: string) => { });
+        this.#mapVisibilityOptionsDropdown = new Dropdown({
+            "ID": "map-visibility-options",
+            "callback": (value: string) => {}
+        });
 
         /* Init the state machine */
         this.#state = IDLE;
