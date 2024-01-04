@@ -48,6 +48,8 @@
     --ol-switch-off:#686868;
     --ol-switch-undefined:#383838;
 
+    --ol-dialog-disabled-text-color: #ffffff20;
+
     /*** General border radii  **/
     --border-radius-xs: 2px;
     --border-radius-sm: 5px;

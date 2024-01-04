@@ -1,6 +1,7 @@
 import { getApp } from "../..";
 import { Dialog } from "../../dialog/dialog";
 import { UnitData } from "../../interfaces";
+import { ImportFileJSONSchemaValidator } from "../../schemas/schema";
 import { UnitDataFile } from "./unitdatafile";
 
 export class UnitDataFileImport extends UnitDataFile {
@@ -48,21 +49,65 @@ export class UnitDataFileImport extends UnitDataFile {
 
             unitsManager.spawnUnits(category, unitsToSpawn, coalition, false);
         }
+    }
 
-        /*
-        for (let groupName in groups) {
-            if (groupName !== "" && groups[groupName].length > 0 && (groups[groupName].every((unit: UnitData) => { return unit.category == "GroundUnit"; }) || groups[groupName].every((unit: any) => { return unit.category == "NavyUnit"; }))) {
-                var aliveUnits = groups[groupName].filter((unit: UnitData) => { return unit.alive });
-                var units = aliveUnits.map((unit: UnitData) => {
-                    return { unitType: unit.name, location: unit.position, liveryID: "" }
-                });
-                getApp().getUnitsManager().spawnUnits(groups[groupName][0].category, units, groups[groupName][0].coalition, true);
+    selectFile() {
+        var input = document.createElement("input");
+        input.type = "file";
+        input.addEventListener("change", (e: any) => {
+            var file = e.target.files[0];
+            if (!file) {
+                return;
             }
-        }
-        //*/
+            var reader = new FileReader();
+            reader.onload = (e: any) => {
+                
+                try {
+                    this.#fileData = JSON.parse(e.target.result);
+
+                    const validator = new ImportFileJSONSchemaValidator();
+                    if (!validator.validate(this.#fileData)) {
+                        const errors = validator.getErrors().reduce((acc:any, error:any) => {
+                            let errorString = error.instancePath.substring(1) + ": " + error.message;
+                            if (error.params) {
+                                const {allowedValues} = error.params;
+                                if (allowedValues)
+                                    errorString += ": " + allowedValues.join(', ');
+                            }
+                            acc.push(errorString);
+                            return acc;
+                        }, [] as string[]);
+                        this.#showFileDataErrors(errors);
+                    } else {
+                        this.#showForm();
+                    }                   
+                } catch(e:any) {
+                    this.#showFileDataErrors([e]);
+                }
+            };
+            reader.readAsText(file);
+        })
+        input.click();
+    }
+
+    #showFileDataErrors( reasons:string[]) {
+        
+        this.dialog.getElement().querySelectorAll("[data-on-error]").forEach((el:Element) => {
+            el.classList.toggle("hide", el.getAttribute("data-on-error") === "hide");
+        });
+
+        const reasonsList = this.dialog.getElement().querySelector(".import-error-reasons");
+        if (reasonsList instanceof HTMLElement)
+            reasonsList.innerHTML = `<li>${reasons.join("</li><li>")}</li>`;
+
+        this.dialog.show();
     }
 
     #showForm() {
+        this.dialog.getElement().querySelectorAll("[data-on-error]").forEach((el:Element) => {
+            el.classList.toggle("hide", el.getAttribute("data-on-error") === "show");
+        });
+
         const data: any = {};
 
         for (const [group, units] of Object.entries(this.#fileData)) {
@@ -87,42 +132,9 @@ export class UnitDataFileImport extends UnitDataFile {
 
         }
 
-        /*
-        groups.filter((unit:Unit) => unitCanBeImported(unit)).forEach((unit:Unit) => {
-            const category  = unit.getCategoryLabel();
-            const coalition = unit.getCoalition();
-
-            if (!data.hasOwnProperty(category)) {
-                data[category] = {};
-            }
-
-            if (!data[category].hasOwnProperty(coalition))
-                data[category][coalition] = [];
-
-            data[category][coalition].push(unit);
-        });
-        //*/
         this.data = data;
         this.buildCategoryCoalitionTable();
         this.dialog.show();
-    }
-
-    selectFile() {
-        var input = document.createElement("input");
-        input.type = "file";
-        input.addEventListener("change", (e: any) => {
-            var file = e.target.files[0];
-            if (!file) {
-                return;
-            }
-            var reader = new FileReader();
-            reader.onload = (e: any) => {
-                this.#fileData = JSON.parse(e.target.result);
-                this.#showForm();
-            };
-            reader.readAsText(file);
-        })
-        input.click();
     }
 
     #unitDataCanBeImported(unitData: UnitData) {
