@@ -7,7 +7,7 @@
                                    __/ |         | |              
                                   |___/          |_|              
 
-v{{OLYMPUS_VERSION_NUMBER}}
+{{OLYMPUS_VERSION_NUMBER}}
 
 ==========================================
 INSTALLATION INSTRUCTIONS
@@ -20,7 +20,7 @@ INSTALLATION INSTRUCTIONS
     b) If you installed DCS Olympus v1.0.3 using the archived version, remove it by deleting the "...<DCS Saved Games folder>\Mods\Services\Olympus" folder. Do this for every DCS instance you installed Olympus in. 
        Remember to delete any shortcuts you created. Don't worry, they will be created automatically again by the installation script provided in this package.
 
-3) Extract all the contents of the DCS Olympus v{{OLYMPUS_VERSION_NUMBER}} archive in your "Saved Games" folder (NOTE: not your DCS Saved Games folder). 
+3) Extract all the contents of the DCS Olympus {{OLYMPUS_VERSION_NUMBER}} archive in your "Saved Games" folder (NOTE: not your DCS Saved Games folder). 
     NOTE: Unlike previous version of Olympus, it is no longer necessary to copy the archived files into each DCS instance folder.
 
 3) Execute the "installer.bat" script by double-clicking on it. Wait for the installation script to complete. Installation may take a couple of minutes, after which the Manager will start automatically.

@@ -26,6 +26,3 @@ cd ..
 cd manager
 call npm run build-release
 cd ..
-
-REM other version tags are changed after compilation only in the build folder and should not be committed
-call node .\scripts\node\set_version_text.js

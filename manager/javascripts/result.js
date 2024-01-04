@@ -44,7 +44,7 @@ class ResultPage extends ManagerPage {
                 this.applyStepFailure(".hook");
                 return Promise.reject(err);
             }
-        ).then(() => installMod(this.instance.folder)).then(
+        ).then(() => installMod(this.instance.folder, this.instance.name)).then(
             () => {
                 this.applyStepSuccess(".mod");
             },

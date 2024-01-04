@@ -17,6 +17,9 @@ echo D|xcopy /Y /S /E .\scripts\lua\backend .\package\mod\scripts
 REM copy the mod folder
 echo D|xcopy /Y /S /E .\mod .\package\mod
 
+REM copy the databases folder
+echo D|xcopy /Y /S /E .\databases .\package\mod\databases
+
 REM copy the backend dll
 echo F|xcopy /Y /I .\build\backend\bin\*.dll .\package\mod\bin
 
@@ -37,3 +40,5 @@ echo F|xcopy /Y .\notes.txt .\package\notes.txt
 REM copy the dependencies
 echo D|xcopy /Y /S /E .\dependencies .\package\dependencies
 
+REM other version tags are changed after compilation only in the package folder and should not be committed
+call node .\scripts\node\set_version_text.js

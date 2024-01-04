@@ -104,14 +104,16 @@ async function installMod(folder, name) {
 
                 /* Check if backup user-editable files exist. If true copy them over */
                 try {
-                    if (fs.existsSync(path.join(__dirname, "..", "..", "DCS Olympus backups", name, "databases"))) {
+                    console.log(__dirname)
+                    console.log(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "databases"));
+                    if (fs.existsSync(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "databases"))) {
                         console.log("Backup databases found, copying over");
-                        fs.cpSync(path.join(__dirname, "..", "..", "DCS Olympus backups", name, "databases"), path.join(folder, "Mods", "Services", "Olympus", "databases"));
+                        fs.cpSync(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "databases"), path.join(folder, "Mods", "Services", "Olympus", "databases"));
                     }
 
-                    if (fs.existsSync(path.join(__dirname, "..", "..", "DCS Olympus backups", name, "scripts", "mods.lua"))) {
+                    if (fs.existsSync(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "scripts", "mods.lua"))) {
                         console.log("Backup mods.lua found, copying over");
-                        fs.cpSync(path.join(__dirname, "..", "..", "DCS Olympus backups", name, "scripts", "mods.lua"), path.join(folder, "Mods", "Services", "Olympus", "scripts", "mods.lua"));
+                        fs.cpSync(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "scripts", "mods.lua"), path.join(folder, "Mods", "Services", "Olympus", "scripts", "mods.lua"));
                     }
                 } catch (err) {
                     console.log(`Error installing mod in ${folder}: ${err}`)
@@ -253,8 +255,8 @@ async function deleteMod(folder, name) {
     var promise = new Promise((res, rej) => {
         if (fs.existsSync(path.join(folder, "Mods", "Services", "Olympus"))) {
             /* Make a copy of the user-editable files */
-            fs.cpSync(path.join(folder, "Mods", "Services", "Olympus", "databases"), path.join(__dirname, "..", "..", "DCS Olympus backups", name, "databases"));
-            fs.cpSync(path.join(folder, "Mods", "Services", "Olympus", "scripts", "mods.lua"), path.join(__dirname, "..", "..", "DCS Olympus backups", name, "scripts", "mods.lua"));
+            fs.cpSync(path.join(folder, "Mods", "Services", "Olympus", "databases"), path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "databases"));
+            fs.cpSync(path.join(folder, "Mods", "Services", "Olympus", "scripts", "mods.lua"), path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "scripts", "mods.lua"));
 
             /* Remove the mod folder */
             fs.rmdir(path.join(folder, "Mods", "Services", "Olympus"), { recursive: true, force: true }, (err) => {

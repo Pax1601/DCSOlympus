@@ -12,6 +12,7 @@ const AdmZip = require("adm-zip");
 const { Octokit } = require('octokit');
 
 const VERSION = "v2.0.0";
+console.log(`Running in ${__dirname}`);
 function checkVersion() {
 
     /* Check if we are running the latest version */

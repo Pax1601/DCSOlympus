@@ -367,7 +367,8 @@ class DCSInstance {
                 () => {
                     location.reload();
                 },
-                () => {
+                (err) => {
+                    console.error(err)
                     showErrorPopup("An error has occurred while uninstalling the Olympus instance. Make sure Olympus and DCS are not running.", () => {
                         location.reload();
                     });
