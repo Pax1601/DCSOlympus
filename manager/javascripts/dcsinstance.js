@@ -354,7 +354,6 @@ class DCSInstance {
                         }
                     }
                     else {
-                        logger.log(list[0])
                         logger.error(`The process listening on the specified port has an incorrect name: ${list[0].name}`)
                     }
                 }
