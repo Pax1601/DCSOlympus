@@ -3,7 +3,6 @@ const shellFoldersKey = 'HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Exp
 const saveGamesKey = '{4C5C32FF-BB9D-43B0-B5B4-2D72E54EAAA4}'
 var fs = require('fs')
 var path = require('path')
-const vi = require('win-version-info');
 const { checkPort, fetchWithTimeout } = require('./net')
 const dircompare = require('dir-compare');
 const { spawn } = require('child_process');
@@ -101,7 +100,7 @@ class DCSInstance {
             this.installed = true;
             const options = { 
                 compareContent: true,
-                excludeFilter: "databases"
+                excludeFilter: "databases, mods.lua"
              };
             var err1 = true;
             var err2 = true;

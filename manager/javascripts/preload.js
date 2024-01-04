@@ -11,7 +11,7 @@ const fs = require('fs');
 const AdmZip = require("adm-zip");
 const { Octokit } = require('octokit');
 
-const VERSION = "{{OLYMPUS_VERSION_NUMBER}}";
+const VERSION = "v2.0.0";
 function checkVersion() {
 
     /* Check if we are running the latest version */

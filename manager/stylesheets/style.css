@@ -280,13 +280,13 @@ input {
 }
 
 #popup {
-    width: 300px;
+    width: 400px;
     height: fit-content;
     min-height: 200px;
     position: absolute;
     background-color: var(--background);
     border-radius: 5px;
-    left: calc(50% - 150px);
+    left: calc(50% - 200px);
     top: calc(50% - 100px);
     display: flex;
     flex-direction: column;
