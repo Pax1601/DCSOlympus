@@ -9,7 +9,7 @@
     "emit-declarations": "call ./scripts/emit-declarations.bat",
     "server": "node ./bin/www",
     "debug": "call ./scripts/debug.bat",
-	  "debug-nodcs": "call ./scripts/debug-nodcs.bat",
+    "debug-nodcs": "call ./scripts/debug-nodcs.bat",
     "watch": "call ./scripts/watch.bat",
     "client": "electron ."
   },
