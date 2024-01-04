@@ -10,11 +10,11 @@ const https = require('follow-redirects').https;
 const fs = require('fs');
 const AdmZip = require("adm-zip");
 const { Octokit } = require('octokit');
+const { logger } = require("./filesystem")
 
 const VERSION = "v2.0.0";
-console.log(`Running in ${__dirname}`);
+logger.log(`Running in ${__dirname}`);
 function checkVersion() {
-
     /* Check if we are running the latest version */
     const request = new Request("https://raw.githubusercontent.com/Pax1601/DCSOlympus/main/version.json");
     fetch(request).then((response) => {
@@ -26,7 +26,7 @@ function checkVersion() {
     }).then((res) => {
         /* If we are running a development version of the script (not from a compiled package), skip version checking */
         if (VERSION.includes("OLYMPUS_VERSION_NUMBER")) {
-            console.log("Development build detected, skipping version checks...")
+            logger.log("Development build detected, skipping version checks...")
         } else {
             /* Check if there is a newer version available */
             var reg1 = res["version"].match(/\d+/g).map((str) => { return Number(str) });
@@ -34,22 +34,22 @@ function checkVersion() {
 
             /* If a newer version is available update Olympus in Release mode */
             if (reg1[0] > reg2[0] || (reg1[0] == reg2[0] && reg1[1] > reg2[1]) || (reg1[0] == reg2[0] && reg1[1] == reg2[1] && reg1[2] > reg2[2])) {
-                console.log(`New version available: ${res["version"]}`);
+                logger.log(`New version available: ${res["version"]}`);
                 showConfirmPopup(`You are currently running DCS Olympus ${VERSION}, but ${res["version"]} is available. Do you want to update DCS Olympus automatically? <div style="max-width: 100%; color: orange">Note: DCS and Olympus MUST be stopped before proceeding.</div>`,
                     () => {
                         updateOlympusRelease();
                     }, () => {
-                        console.log("Update canceled");
+                        logger.log("Update canceled");
                     })
             }
             /* If the current version is newer than the latest release, the user is probably a developer. Ask for a beta update */
             else if (reg2[0] > reg1[0] || (reg2[0] == reg1[0] && reg2[1] > reg1[1]) || (reg2[0] == reg1[0] && reg2[1] == reg1[1] && reg2[2] > reg1[2])) {
-                console.log(`Beta version detected: ${res["version"]}`);
+                logger.log(`Beta version detected: ${res["version"]} vs ${VERSION}`);
                 showConfirmPopup(`You are currently running DCS Olympus ${VERSION}, which is newer than the latest release version. Do you want to download the latest beta version? <div style="max-width: 100%; color: orange">Note: DCS and Olympus MUST be stopped before proceeding.</div>`,
                     () => {
                         updateOlympusBeta();
                     }, () => {
-                        console.log("Update canceled");
+                        logger.log("Update canceled");
                     })
             }
         }
@@ -89,11 +89,11 @@ async function updateOlympusBeta() {
                 }
             },
             () => {
-                console.log("Update canceled");
+                logger.log("Update canceled");
             });
     },
         () => {
-            console.log("Update canceled");
+            logger.log("Update canceled");
         })
 }
 
@@ -120,9 +120,9 @@ function updateOlympus(location) {
 
     /* If the location is a string, it is interpreted as a download url. Else, it is interpreted as a File (on disk)*/
     if (typeof location === "string") {
-        console.log(`Updating Olympus with package from ${location}`)
+        logger.log(`Updating Olympus with package from ${location}`)
     } else {
-        console.log(`Updating Olympus with package from ${location.path}`)
+        logger.log(`Updating Olympus with package from ${location.path}`)
     }
 
     let tmpDir;
@@ -135,7 +135,7 @@ function updateOlympus(location) {
         if (typeof location === "string") {
             /* Download the file */
             const file = fs.createWriteStream(path.join(tmpDir, "temp.zip"));
-            console.log(`Downloading update package in ${path.join(tmpDir, "temp.zip")}`)
+            logger.log(`Downloading update package in ${path.join(tmpDir, "temp.zip")}`)
             const request = https.get(location, (response) => {
                 if (response.statusCode === 200) {
                     response.pipe(file);
@@ -143,14 +143,14 @@ function updateOlympus(location) {
                     /* Either on success or on error close the file stream */
                     file.on("finish", () => {
                         file.close();
-                        console.log("Download completed");
+                        logger.log("Download completed");
 
                         /* Extract and copy the files */
                         extractAndCopy(tmpDir);
                     });
                     file.on("error", (err) => {
                         file.close();
-                        console.error(err);
+                        logger.error(err);
                         throw Error(err);
                     })
                 } else {
@@ -169,7 +169,7 @@ function updateOlympus(location) {
     catch (err) {
         /* Show the failed update message */
         failUpdate();
-        console.error(err)
+        logger.error(err)
     }
 }
 
@@ -186,9 +186,9 @@ function extractAndCopy(folder) {
     2) deletes the existing installation;
     3) copies the new installation;
     4) cds into the new installation;
-    5) runs the install.bat script */
+    5) runs the installer.bat script */
     fs.writeFileSync(path.join(folder, 'update.bat'),
-        `timeout /t 5 \nrmdir "${path.join(__dirname, "..", "..")}" /s /q \necho D|xcopy /Y /S /E "${path.join(folder, "temp")}" "${path.join(__dirname, "..", "..")}" \ncd "${path.join(__dirname, "..", "..")}" \ninstall.bat`
+        `timeout /t 5 \nrmdir "${path.join(__dirname, "..", "..")}" /s /q \necho D|xcopy /Y /S /E "${path.join(folder, "temp")}" "${path.join(__dirname, "..", "..")}" \ncd "${path.join(__dirname, "..", "..")}" \ncall installer.bat`
     )
 
     /* Launch the update script then close gracefully */
@@ -201,7 +201,7 @@ function extractAndCopy(folder) {
  * 
  */
 function failUpdate() {
-    showErrorPopup("An error has occurred while updating Olympus. Please delete Olympus and update it manually. A browser window will open automatically on the download page.", () => {
+    showErrorPopup(`An error has occurred while updating Olympus. Please delete Olympus and update it manually. A browser window will open automatically on the download page. <br><br> You can find more info in ${path.join(__dirname, "..", "manager.log")}`, () => {
         exec(`start https://github.com/Pax1601/DCSOlympus/releases`, () => {
             ipcRenderer.send('window:close');
         })

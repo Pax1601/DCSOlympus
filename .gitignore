@@ -1,32 +1,32 @@
 bin
 .vs
 x64
-/backend/vcpkg_installed
-*.user
 Output
-*.aps
 node_modules
+
+/backend/vcpkg_installed
+
 /client/TODO.txt
 /client/public/javascripts/bundle.js
-!client/bin
 /client/public/plugins
 /client/plugins/controltips/index.js
-hgt
 /client/public/databases/units/old
 /client/plugins/databasemanager/index.js
 
 /src/html
 /src/latex
-client/public/stylesheets/leaflet/leaflet-gesture-handling.css
-client/public/javascripts/leaflet.nauticscale.js
-client/public/javascripts/L.Path.Drag.js
-/installer/archive/Scripts
-/installer/archive/Mods
-/installer/installer/DCSOlympus*.exe
+
+/hgt
+/package
+/build
+/DCS Olympus backups
+
+*.user
+*.aps
 
 L.Path.Drag.js
 leaflet-gesture-handling.css
+leaflet.nauticscale.js
 package-lock.json
 
-/package
-/build
+!client/bin

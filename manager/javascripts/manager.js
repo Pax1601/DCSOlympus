@@ -8,6 +8,8 @@ const InstancesPage = require('./instances');
 const DCSInstance = require('./dcsinstance');
 const { showErrorPopup, showWaitPopup } = require('./popup');
 const { fixInstances } = require('./filesystem');
+const { logger } = require("./filesystem")
+const path = require("path")
 
 class Manager {
     simplified = true;
@@ -36,7 +38,10 @@ class Manager {
                     return instance.installed && instance.error;
                 })).then(
                     () => { location.reload() },
-                    () => { showErrorPopup("An error occurred while trying to fix your installations. Please reinstall Olympus manually."); }
+                    (err) => { 
+                        logger.error(err);
+                        showErrorPopup(`An error occurred while trying to fix your installations. Please reinstall Olympus manually. <br><br> You can find more info in ${path.join(__dirname, "..", "manager.log")}`); 
+                    }
                 )
             })
         }
@@ -175,7 +180,7 @@ class Manager {
                     showErrorPopup("Please make sure the selected ports are not already in use.")
                 }
             } else {
-                showErrorPopup("An error has occurred, please restart the Olympus Manager.")
+                showErrorPopup(`An error has occurred, please restart the Olympus Manager. <br><br> You can find more info in ${path.join(__dirname, "..", "manager.log")}`)
             }
         }
         connectionsPage.onCancelClicked = (e) => {
@@ -193,7 +198,7 @@ class Manager {
                 passwordsPage.hide();
                 connectionsPage.show();
             } else {
-                showErrorPopup("An error has occurred, please restart the Olympus Manager.")
+                showErrorPopup(`An error has occurred, please restart the Olympus Manager. <br><br> You can find more info in ${path.join(__dirname, "..", "manager.log")}`)
             }
         }
         passwordsPage.onNextClicked = (e) => {
@@ -211,7 +216,7 @@ class Manager {
                     resultPage.startInstallation();
                 }
             } else {
-                showErrorPopup("An error has occurred, please restart the Olympus Manager.")
+                showErrorPopup(`An error has occurred, please restart the Olympus Manager. <br><br> You can find more info in ${path.join(__dirname, "..", "manager.log")}`)
             }
 
         }
@@ -222,7 +227,7 @@ class Manager {
         }
 
         /* Result */
-        var resultPage = new ResultPage();
+        var resultPage = new ResultPage({logLocation: path.join(__dirname, "..", "manager.log")});
         resultPage.onBackClicked = (e) => {
             /* Reload the page to apply changes */
             resultPage.hide();

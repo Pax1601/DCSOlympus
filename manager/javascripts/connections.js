@@ -1,5 +1,6 @@
 const ManagerPage = require("./managerpage");
 const ejs = require('ejs')
+const { logger } = require("./filesystem")
 
 /** Connections page, allows the user to set the ports and address for each Olympus instance
  * 
@@ -43,7 +44,7 @@ class ConnectionsPage extends ManagerPage {
                 this.setClientPort(this.instance.clientPort);
                 this.setBackendPort(this.instance.backendPort);
             } else {
-                console.error(err);
+                logger.error(err);
             }
         });
 

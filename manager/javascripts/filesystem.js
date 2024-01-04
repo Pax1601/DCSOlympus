@@ -3,22 +3,28 @@ const createShortcut = require('create-desktop-shortcuts');
 const fs = require('fs');
 const path = require('path');
 const { showWaitPopup } = require('./popup');
+const { Console } = require('console');
 const homeDir = require('os').homedir();
+
+var output = fs.createWriteStream('./manager.log', {flags: 'a'});
+var logger = new Console(output, output);
+const date = new Date();
+output.write(` ======================= New log starting at ${date.toString()} =======================\n`);
 
 /** Conveniency function to asynchronously delete a single file, with error catching
  * 
  */
 async function deleteFile(filePath) {
-    console.log(`Deleting ${filePath}`);
+    logger.log(`Deleting ${filePath}`);
     var promise = new Promise((res, rej) => {
         if (fs.existsSync(filePath)) {
             fs.rm(filePath, (err) => {
                 if (err) {
-                    console.error(`Error removing ${filePath}: ${err}`)
+                    logger.error(`Error removing ${filePath}: ${err}`)
                     rej(err);
                 }
                 else {
-                    console.log(`Removed ${filePath}`)
+                    logger.log(`Removed ${filePath}`)
                     res(true);
                 }
             });
@@ -37,7 +43,7 @@ async function fixInstances(instances) {
     var promise = new Promise((res, rej) => {
         var instancePromises = instances.map((instance) => {
             var instancePromise = new Promise((instanceRes, instanceErr) => {
-                console.log(`Fixing Olympus in ${instance.folder}`)
+                logger.log(`Fixing Olympus in ${instance.folder}`)
                 deleteMod(instance.folder, instance.name)
                     .then(() => deleteHooks(instance.folder), (err) => { return Promise.reject(err); })
                     .then(() => installMod(instance.folder, instance.name), (err) => { return Promise.reject(err); })
@@ -56,7 +62,7 @@ async function fixInstances(instances) {
  * 
  */
 async function uninstallInstance(folder, name) {
-    console.log(`Uninstalling Olympus from ${folder}`)
+    logger.log(`Uninstalling Olympus from ${folder}`)
     showWaitPopup("Please wait while the Olympus installation is being uninstalled.")
     var promise = new Promise((res, rej) => {
         deleteMod(folder, name)
@@ -72,15 +78,15 @@ async function uninstallInstance(folder, name) {
  * 
  */
 async function installHooks(folder) {
-    console.log(`Installing hooks in ${folder}`)
+    logger.log(`Installing hooks in ${folder}`)
     var promise = new Promise((res, rej) => {
         fs.cp(path.join("..", "scripts", "OlympusHook.lua"), path.join(folder, "Scripts", "Hooks", "OlympusHook.lua"), (err) => {
             if (err) {
-                console.log(`Error installing hooks in ${folder}: ${err}`)
+                logger.log(`Error installing hooks in ${folder}: ${err}`)
                 rej(err);
             }
             else {
-                console.log(`Hooks succesfully installed in ${folder}`)
+                logger.log(`Hooks succesfully installed in ${folder}`)
                 res(true);
             }
         });
@@ -92,31 +98,31 @@ async function installHooks(folder) {
  * 
  */
 async function installMod(folder, name) {
-    console.log(`Installing mod in ${folder}`)
+    logger.log(`Installing mod in ${folder}`)
     var promise = new Promise((res, rej) => {
         fs.cp(path.join("..", "mod"), path.join(folder, "Mods", "Services", "Olympus"), { recursive: true }, (err) => {
             if (err) {
-                console.log(`Error installing mod in ${folder}: ${err}`)
+                logger.log(`Error installing mod in ${folder}: ${err}`)
                 rej(err);
             }
             else {
-                console.log(`Mod succesfully installed in ${folder}`)
+                logger.log(`Mod succesfully installed in ${folder}`)
 
                 /* Check if backup user-editable files exist. If true copy them over */
                 try {
-                    console.log(__dirname)
-                    console.log(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "databases"));
+                    logger.log(__dirname)
+                    logger.log(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "databases"));
                     if (fs.existsSync(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "databases"))) {
-                        console.log("Backup databases found, copying over");
-                        fs.cpSync(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "databases"), path.join(folder, "Mods", "Services", "Olympus", "databases"));
+                        logger.log("Backup databases found, copying over");
+                        fs.cpSync(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "databases"), path.join(folder, "Mods", "Services", "Olympus", "databases"), {recursive: true});
                     }
 
                     if (fs.existsSync(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "scripts", "mods.lua"))) {
-                        console.log("Backup mods.lua found, copying over");
+                        logger.log("Backup mods.lua found, copying over");
                         fs.cpSync(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "scripts", "mods.lua"), path.join(folder, "Mods", "Services", "Olympus", "scripts", "mods.lua"));
                     }
                 } catch (err) {
-                    console.log(`Error installing mod in ${folder}: ${err}`)
+                    logger.log(`Error installing mod in ${folder}: ${err}`)
                     rej(err);
                 }
 
@@ -131,15 +137,15 @@ async function installMod(folder, name) {
  * 
  */
 async function installJSON(folder) {
-    console.log(`Installing config in ${folder}`)
+    logger.log(`Installing config in ${folder}`)
     var promise = new Promise((res, rej) => {
         fs.cp(path.join("..", "olympus.json"), path.join(folder, "Config", "olympus.json"), (err) => {
             if (err) {
-                console.log(`Error installing config in ${folder}: ${err}`)
+                logger.log(`Error installing config in ${folder}: ${err}`)
                 rej(err);
             }
             else {
-                console.log(`Config succesfully installed in ${folder}`)
+                logger.log(`Config succesfully installed in ${folder}`)
                 res(true);
             }
         });
@@ -151,7 +157,7 @@ async function installJSON(folder) {
  * 
  */
 async function installShortCuts(folder, name) {
-    console.log(`Installing shortcuts for Olympus in ${folder}`);
+    logger.log(`Installing shortcuts for Olympus in ${folder}`);
     var promise = new Promise((res, rej) => {
         var res1 = createShortcut({
             windows: {
@@ -208,7 +214,7 @@ async function installShortCuts(folder, name) {
  * 
  */
 async function applyConfiguration(folder, instance) {
-    console.log(`Applying configuration to Olympus in ${folder}`);
+    logger.log(`Applying configuration to Olympus in ${folder}`);
     var promise = new Promise((res, rej) => {
         if (fs.existsSync(path.join(folder, "Config", "olympus.json"))) {
             var config = JSON.parse(fs.readFileSync(path.join(folder, "Config", "olympus.json")));
@@ -222,11 +228,11 @@ async function applyConfiguration(folder, instance) {
 
             fs.writeFile(path.join(folder, "Config", "olympus.json"), JSON.stringify(config, null, 4), (err) => {
                 if (err) {
-                    console.log(`Error applying config in ${folder}: ${err}`)
+                    logger.log(`Error applying config in ${folder}: ${err}`)
                     rej(err);
                 }
                 else {
-                    console.log(`Config succesfully applied in ${folder}`)
+                    logger.log(`Config succesfully applied in ${folder}`)
                     res(true);
                 }
             });
@@ -243,7 +249,7 @@ async function applyConfiguration(folder, instance) {
  * 
  */
 async function deleteHooks(folder) {
-    console.log(`Deleting hooks from ${folder}`);
+    logger.log(`Deleting hooks from ${folder}`);
     return deleteFile(path.join(folder, "Scripts", "Hooks", "OlympusHook.lua"));
 }
 
@@ -251,21 +257,28 @@ async function deleteHooks(folder) {
  * 
  */
 async function deleteMod(folder, name) {
-    console.log(`Deleting mod from ${folder}`);
+    logger.log(`Deleting mod from ${folder}`);
     var promise = new Promise((res, rej) => {
         if (fs.existsSync(path.join(folder, "Mods", "Services", "Olympus"))) {
             /* Make a copy of the user-editable files */
-            fs.cpSync(path.join(folder, "Mods", "Services", "Olympus", "databases"), path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "databases"));
-            fs.cpSync(path.join(folder, "Mods", "Services", "Olympus", "scripts", "mods.lua"), path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "scripts", "mods.lua"));
+            if (fs.existsSync(path.join(folder, "Mods", "Services", "Olympus", "databases"))) 
+                fs.cpSync(path.join(folder, "Mods", "Services", "Olympus", "databases"), path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "databases"), {recursive: true});
+            else
+                logger.warn(`No database folder found in ${folder}, skipping backup...`)
+
+            if (fs.existsSync(path.join(folder, "Mods", "Services", "Olympus", "scripts", "mods.lua")))
+                fs.cpSync(path.join(folder, "Mods", "Services", "Olympus", "scripts", "mods.lua"), path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "scripts", "mods.lua"));
+            else
+                logger.warn(`No mods.lua found in ${folder}, skipping backup...`)
 
             /* Remove the mod folder */
             fs.rmdir(path.join(folder, "Mods", "Services", "Olympus"), { recursive: true, force: true }, (err) => {
                 if (err) {
-                    console.log(`Error removing mod from ${folder}: ${err}`)
+                    logger.log(`Error removing mod from ${folder}: ${err}`)
                     rej(err);
                 }
                 else {
-                    console.log(`Mod succesfully removed from ${folder}`)
+                    logger.log(`Mod succesfully removed from ${folder}`)
                     res(true);
                 }
             })
@@ -280,7 +293,7 @@ async function deleteMod(folder, name) {
  * 
  */
 async function deleteJSON(folder) {
-    console.log(`Deleting JSON from ${folder}`);
+    logger.log(`Deleting JSON from ${folder}`);
     return deleteFile(path.join(folder, "Config", "olympus.json"));
 }
 
@@ -288,7 +301,7 @@ async function deleteJSON(folder) {
  * 
  */
 async function deleteShortCuts(folder, name) {
-    console.log(`Deleting ShortCuts from ${folder}`);
+    logger.log(`Deleting ShortCuts from ${folder}`);
     var promise = new Promise((res, rej) => {
         deleteFile(path.join(folder, `DCS Olympus Server (${name}).lnk`))
             .then(deleteFile(path.join(folder, `DCS Olympus Client (${name}).lnk`)), (err) => { return Promise.reject(err); })
@@ -310,5 +323,6 @@ module.exports = {
     deleteJSON: deleteJSON,
     deleteMod: deleteMod,
     deleteShortCuts: deleteShortCuts,
-    uninstallInstance: uninstallInstance
+    uninstallInstance: uninstallInstance,
+    logger: logger
 }

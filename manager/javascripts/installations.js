@@ -1,6 +1,7 @@
 const DCSInstance = require("./dcsinstance");
 const ManagerPage = require("./managerpage");
 const ejs = require('ejs')
+const { logger } = require("./filesystem")
 
 class InstallationsPage extends ManagerPage {
     onCancelClicked;
@@ -30,7 +31,7 @@ class InstallationsPage extends ManagerPage {
             if (!err) {
                 this.render(str);
             } else {
-                console.error(err);
+                logger.error(err);
             }
         });
 

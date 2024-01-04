@@ -1,5 +1,6 @@
 const ManagerPage = require("./managerpage");
 const ejs = require('ejs')
+const { logger } = require("./filesystem")
 
 class MenuPage extends ManagerPage {
     onInstallClicked;
@@ -26,7 +27,7 @@ class MenuPage extends ManagerPage {
             if (!err) {
                 this.render(str);
             } else {
-                console.error(err);
+                logger.error(err);
             }
         });
 
