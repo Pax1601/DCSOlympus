@@ -12,7 +12,7 @@ const AdmZip = require("adm-zip");
 const { Octokit } = require('octokit');
 const { logger } = require("./filesystem")
 
-const VERSION = "v2.0.0";
+const VERSION = "{{OLYMPUS_VERSION_NUMBER}}";
 logger.log(`Running in ${__dirname}`);
 function checkVersion() {
     /* Check if we are running the latest version */
@@ -221,7 +221,8 @@ const ipc = {
         /* From main to render. */
         'receive': [
             'event:maximized',
-            'event:unmaximized'
+            'event:unmaximized',
+            'check-version'
         ],
         /* From render to main and back again. */
         'sendReceive': []
@@ -261,9 +262,6 @@ const manager = new Manager();
 
 /* On content loaded */
 window.addEventListener('DOMContentLoaded', async () => {
-    /* Check if a new version is available */
-    checkVersion();
-
     /* Compute the height of the content page */
     computePagesHeight();
     document.getElementById("loader").classList.remove("hide");
@@ -296,3 +294,8 @@ function computePagesHeight() {
         pages[i].style.height = (window.innerHeight - (titleBar.clientHeight + header.clientHeight)) + "px";
     }
 }
+
+ipcRenderer.on("check-version", () => {
+    /* Check if a new version is available */
+    checkVersion();
+})

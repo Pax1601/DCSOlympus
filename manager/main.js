@@ -38,6 +38,7 @@ function createWindow() {
 
 electronApp.on('ready', () => {
     window = createWindow();
+    window.webContents.send('check-version')
 });
 
 electronApp.on('window-all-closed', () => {
