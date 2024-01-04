@@ -33,7 +33,6 @@ fs.readFile("./version.json", "utf8", (error, data) => {
     const minor = arr[1];
     const minorminor = arr[2];
 
-	throughDirectory("./backend");
     throughDirectory("./build");
 
     files.forEach((file) => {
@@ -47,24 +46,6 @@ fs.readFile("./version.json", "utf8", (error, data) => {
 			
                 data = data.replace(/{{OLYMPUS_VERSION_NUMBER}}/g, `v${major}.${minor}.${minorminor}`);
                 data = data.replace(/{{OLYMPUS_COMMIT_HASH}}/g, revision);
-                fileChanged = true;
-            }
-
-            if (data.search(/FILEVERSION \d,\d,\d/g) >= 0) {
-                console.log(`Replacing version in ${file}`);
-                var data = data.replace(/FILEVERSION \d,\d,\d/g, `FILEVERSION ${major},${minor},${minorminor}`);
-                fileChanged = true;
-            }
-
-            if (data.search(/VALUE "FileVersion", "\d.\d.\d.0"/g) >= 0) {
-                console.log(`Replacing version in ${file}`);
-                data = data.replace(/VALUE "FileVersion", "\d.\d.\d.0"/g, `VALUE "FileVersion", "${major}.${minor}.${minorminor}.0"`);
-                fileChanged = true;
-            }
-			
-			if (data.search(/VALUE "ProductVersion", "\d.\d.\d.0"/g) >= 0) {
-                console.log(`Replacing version in ${file}`);
-                data = data.replace(/VALUE "ProductVersion", "\d.\d.\d.0"/g, `VALUE "ProductVersion", "${major}.${minor}.${minorminor}.0"`);
                 fileChanged = true;
             }
 
