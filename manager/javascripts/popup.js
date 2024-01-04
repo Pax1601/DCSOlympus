@@ -1,3 +1,5 @@
+// TODO: we can probably refactor this to be a bit cleaner
+
 function showErrorPopup(message, onCloseCallback) {
     document.getElementById("grayout").classList.remove("hide");
     document.getElementById("popup").classList.remove("hide");
@@ -13,7 +15,7 @@ function showErrorPopup(message, onCloseCallback) {
         if (onCloseCallback)
             onCloseCallback();
     }
-    document.getElementById("popup").querySelector(".content").innerText = message;
+    document.getElementById("popup").querySelector(".content").innerHTML = message;
 }
 
 function showWaitPopup(message) {
@@ -24,7 +26,7 @@ function showWaitPopup(message) {
     document.getElementById("popup").querySelector(".confirm").classList.add("hide");
     document.getElementById("popup").querySelector(".close-popup").classList.add("hide");
     document.getElementById("popup").querySelector(".accept-popup").classList.add("hide");
-    document.getElementById("popup").querySelector(".content").innerText = message;
+    document.getElementById("popup").querySelector(".content").innerHTML = message;
 }
 
 function showConfirmPopup(message, onAcceptCallback, onCloseCallback) {
@@ -50,7 +52,7 @@ function showConfirmPopup(message, onAcceptCallback, onCloseCallback) {
             onAcceptCallback();
     }
 
-    document.getElementById("popup").querySelector(".content").innerText = message;
+    document.getElementById("popup").querySelector(".content").innerHTML = message;
 }
 
 function hidePopup() {

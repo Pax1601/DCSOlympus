@@ -7,13 +7,25 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Launch Chrome against localhost",
+            "name": "Launch Chrome",
             "url": "http://localhost:3000",
             "webRoot": "${workspaceFolder}/public/",
             "sourceMapPathOverrides": {
                 "src/*": "${workspaceFolder}/src/*"
             },
             "preLaunchTask": "server",
+            "port": 9222
+        }, 
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Chrome (No DCS)",
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}/public/",
+            "sourceMapPathOverrides": {
+                "src/*": "${workspaceFolder}/src/*"
+            },
+            "preLaunchTask": "server-nodcs",
             "port": 9222
         }
     ]

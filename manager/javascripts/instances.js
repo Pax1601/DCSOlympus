@@ -3,6 +3,7 @@ const ManagerPage = require("./managerpage");
 const ejs = require('ejs');
 const { showErrorPopup } = require("./popup");
 const { exec } = require("child_process");
+const { logger } = require("./filesystem")
 
 class InstancesPage extends ManagerPage {
     onCancelClicked;
@@ -40,7 +41,7 @@ class InstancesPage extends ManagerPage {
     }    
 
     async onEditClicked(e) {
-        console.log(e.target.dataset.folder)
+        logger.log(e.target.dataset.folder)
         this.setSelectedInstance((await DCSInstance.getInstances()).find((instance) => {return instance.folder === e.target.closest('.option').dataset.folder}));
     }
 
@@ -64,7 +65,7 @@ class InstancesPage extends ManagerPage {
             if (!err) {
                 this.render(str);
             } else {
-                console.error(err);
+                logger.error(err);
             }
         });
 

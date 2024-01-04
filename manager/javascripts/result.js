@@ -1,6 +1,7 @@
 const { installMod, installHooks, installJSON, applyConfiguration, installShortCuts } = require("./filesystem");
 const ManagerPage = require("./managerpage");
 const ejs = require('ejs')
+const { logger } = require("./filesystem")
 
 class ResultPage extends ManagerPage {
     onBackClicked;
@@ -25,13 +26,16 @@ class ResultPage extends ManagerPage {
             if (!err) {
                 this.render(str);
             } else {
-                console.error(err);
+                logger.error(err);
             }
         });
 
         super.show();
     }
 
+    /** Installation is performed by using an then chain of async functions. Installation is aborted on any error along the chain 
+     * 
+     */
     startInstallation() {
         installHooks(this.instance.folder).then(
             () => {
@@ -41,7 +45,7 @@ class ResultPage extends ManagerPage {
                 this.applyStepFailure(".hook");
                 return Promise.reject(err);
             }
-        ).then(() => installMod(this.instance.folder)).then(
+        ).then(() => installMod(this.instance.folder, this.instance.name)).then(
             () => {
                 this.applyStepSuccess(".mod");
             },
@@ -82,15 +86,15 @@ class ResultPage extends ManagerPage {
                 this.element.querySelector(".result .success").classList.remove("hide");
                 this.element.querySelector(".result .error").classList.add("hide");
                 this.element.querySelector(".result .wait").classList.add("hide");
-                this.element.querySelector(".page-header").innerText = "Install successfull!";
             },
             () => {
                 this.element.querySelector(".summary.success").classList.add("hide");
                 this.element.querySelector(".summary.error").classList.remove("hide");
+                this.element.querySelector(".info.success").classList.add("hide");
+                this.element.querySelector(".info.error").classList.remove("hide");
                 this.element.querySelector(".result .success").classList.add("hide");
                 this.element.querySelector(".result .error").classList.remove("hide");
                 this.element.querySelector(".result .wait").classList.add("hide");
-                this.element.querySelector(".page-header").innerText = "Install error!";
             }
         );
     }

@@ -5,7 +5,8 @@ module.exports = function (databasesLocation) {
     const path = require("path");
 
     router.get('/:type/:name', function (req, res) {
-        console.log(req.params.database)
+		var contents = fs.readFileSync(path.join(databasesLocation, req.params.type, req.params.name + ".json"));
+        res.status(200).send(contents);
     });
 
     router.put('/save/:type/:name', function (req, res) {

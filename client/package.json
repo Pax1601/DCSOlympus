@@ -1,18 +1,16 @@
 {
   "name": "DCSOlympus",
-  "node-main": "./bin/www",
   "main": "client.js",
   "version": "{{OLYMPUS_VERSION_NUMBER}}",
   "private": true,
   "scripts": {
-    "build": "browserify .\\src\\index.ts --debug -o .\\public\\javascripts\\bundle.js -t [ babelify --global true --presets [ @babel/preset-env ] --extensions '.js'] -p [ tsify --noImplicitAny ] && copy.bat",
-    "build-release": "browserify .\\src\\index.ts -o .\\public\\javascripts\\bundle.js -t [ babelify --global true --presets [ @babel/preset-env ] --extensions '.js'] -p [ tsify --noImplicitAny ] && copy.bat",
-    "build-release-linux": "browserify ./src/index.ts -o ./public/javascripts/bundle.js -t [ babelify --global true --presets [ @babel/preset-env ] --extensions '.js'] -p [ tsify --noImplicitAny ] && ./copy.sh",
-    "emit-declarations": "tsc --project tsconfig.json --declaration --emitDeclarationOnly --outfile ./@types/olympus/index.d.ts",
-    "copy": "copy.bat",
-    "start": "node ./bin/www",
-    "debug": "npm run copy & concurrently --kill-others \"npm run watch\" \"nodemon --ignore ./public/databases/ ./bin/www -- --config ../moc_dcs/Config/olympus.json\"",
-    "watch": "watchify .\\src\\index.ts --debug -o .\\public\\javascripts\\bundle.js -t [ babelify --global true --presets [ @babel/preset-env ] --extensions '.js'] -p [ tsify --noImplicitAny ]",
+    "build-debug": "call ./scripts/build-debug.bat",
+    "build-release": "call ./scripts/build-release.bat",
+    "emit-declarations": "call ./scripts/emit-declarations.bat",
+    "server": "node ./bin/www",
+    "debug": "call ./scripts/debug.bat",
+    "debug-nodcs": "call ./scripts/debug-nodcs.bat",
+    "watch": "call ./scripts/watch.bat",
     "client": "electron ."
   },
   "dependencies": {
@@ -28,7 +26,6 @@
     "js-sha256": "^0.10.1",
     "morgan": "~1.9.1",
     "open": "^10.0.0",
-    "prompt-sync": "^4.2.0",
     "regedit": "^5.1.2",
     "save": "^2.9.0",
     "sha256": "^0.2.0",

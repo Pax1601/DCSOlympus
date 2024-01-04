@@ -1,5 +1,6 @@
 const ManagerPage = require("./managerpage");
 const ejs = require('ejs')
+const { logger } = require("./filesystem")
 
 class PasswordsPage extends ManagerPage {
     onBackClicked;
@@ -35,7 +36,7 @@ class PasswordsPage extends ManagerPage {
             if (!err) {
                 this.render(str);
             } else {
-                console.error(err);
+                logger.error(err);
             }
         });
 

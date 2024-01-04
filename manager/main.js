@@ -5,6 +5,7 @@ const path = require('path');
 
 let window;
 
+/* Add the System32 folder to the environment for the shortcuts creation to work properly */
 process.env['PATH'] = process.env['PATH'] + "%WINDIR%\\System32;"
 
 function createWindow() {
@@ -17,7 +18,7 @@ function createWindow() {
 		webPreferences: {
 			contextIsolation: true,
 			preload: path.join(__dirname, "javascripts", 'preload.js'),
-			nodeIntegration: true, // like here
+			nodeIntegration: true, 
 		},
 		icon: "./../img/olympus_configurator.ico"
     });
@@ -50,8 +51,6 @@ electronApp.on('activate', () => {
         createWindow();
     }
 });
-
-// ---
 
 electronIpcMain.on('window:minimize', () => {
     window.minimize();

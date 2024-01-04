@@ -8,6 +8,8 @@ const InstancesPage = require('./instances');
 const DCSInstance = require('./dcsinstance');
 const { showErrorPopup, showWaitPopup } = require('./popup');
 const { fixInstances } = require('./filesystem');
+const { logger } = require("./filesystem")
+const path = require("path")
 
 class Manager {
     simplified = true;
@@ -17,26 +19,34 @@ class Manager {
     }
 
     async start() {
+        /* Get the list of DCS instances */
         var instances = await DCSInstance.getInstances();
 
+        /* If there is only 1 DCS Instance and Olympus is not installed in it, go straight to the installation page (since there is nothing else to do) */
         this.simplified = instances.length === 1 && !instances[0].installed;
 
         document.getElementById("loader").classList.add("hide");
 
+        /* Check if there are corrupted or outdate instances */
         if (instances.some((instance) => {
             return instance.installed && instance.error;
         })) {
+            /* Ask the user for confirmation */
             showErrorPopup("One or more Olympus instances are corrupted or need updating. Press Close to fix this.", async () => {
                 showWaitPopup("Please wait while your instances are being fixed.")
                 fixInstances(instances.filter((instance) => {
                     return instance.installed && instance.error;
                 })).then(
                     () => { location.reload() },
-                    () => { showErrorPopup("An error occurred while trying to fix you installations. Please reinstall Olympus manually"); }
+                    (err) => { 
+                        logger.error(err);
+                        showErrorPopup(`An error occurred while trying to fix your installations. Please reinstall Olympus manually. <br><br> You can find more info in ${path.join(__dirname, "..", "manager.log")}`); 
+                    }
                 )
             })
         }
 
+        /* Check which buttons should be enabled */
         const installEnabled = instances.some((instance) => { return !instance.installed; });
         const updateEnabled = instances.some((instance) => { return instance.installed; });
         const manageEnabled = instances.some((instance) => { return instance.installed; });
@@ -49,10 +59,12 @@ class Manager {
             updateEnabled: updateEnabled,
             manageEnabled: manageEnabled
         }
+        /* When the install button is clicked go the installation page */
         menuPage.onInstallClicked = (e) => {
             menuPage.hide();
             installationsPage.show();
         }
+        /* When the update button is clicked go to the instances page in "update mode" (i.e. manage = false) */
         menuPage.onUpdateClicked = (e) => {
             menuPage.hide();
             instancesPage.options = {
@@ -61,6 +73,7 @@ class Manager {
             }
             instancesPage.show();
         }
+        /* When the manage button is clicked go to the instances page in "manage mode" (i.e. manage = true) */
         menuPage.onManageClicked = (e) => {
             menuPage.hide();
             instancesPage.options = {
@@ -77,33 +90,37 @@ class Manager {
             instances: instances
         }
         installationsPage.setSelectedInstance = (activeInstance) => {
-            connectionsPage.options = {
-                ...connectionsPage.options,
+            /* Set the active options for the pages */
+            const options = {
                 instance: activeInstance,
                 simplified: this.simplified,
                 install: true
+            }
+            connectionsPage.options = {
+                ...connectionsPage.options,
+                ...options
             }
             passwordsPage.options = {
                 ...passwordsPage.options,
-                instance: activeInstance,
-                simplified: this.simplified,
-                install: true
+                ...options
             }
             resultPage.options = {
                 ...resultPage.options,
-                instance: activeInstance,
-                simplified: this.simplified,
-                install: true
+                ...options
             }
+
+            /* Show the connections page */
             installationsPage.hide();
             connectionsPage.show();
 
             connectionsPage.onBackClicked = (e) => {
+                /* Show the installation page */
                 connectionsPage.hide();
                 installationsPage.show();
             }
         }
         installationsPage.onCancelClicked = (e) => {
+            /* Go back to the main menu */
             installationsPage.hide();
             menuPage.show();
         }
@@ -115,33 +132,37 @@ class Manager {
             instances: instances.filter((instance) => { return instance.installed; })
         }
         instancesPage.setSelectedInstance = (activeInstance) => {
-            connectionsPage.options = {
-                ...connectionsPage.options,
+            /* Set the active options for the pages */
+            const options = {
                 instance: activeInstance,
                 simplified: this.simplified,
                 install: false
+            }
+            connectionsPage.options = {
+                ...connectionsPage.options,
+                ...options
             }
             passwordsPage.options = {
                 ...passwordsPage.options,
-                instance: activeInstance,
-                simplified: this.simplified,
-                install: false
+                ...options
             }
             resultPage.options = {
                 ...resultPage.options,
-                instance: activeInstance,
-                simplified: this.simplified,
-                install: false
+                ...options
             }
+
+            /* Show the connections page */
             instancesPage.hide();
             connectionsPage.show();
 
             connectionsPage.onBackClicked = (e) => {
+                /* Show the instances page */
                 connectionsPage.hide();
                 instancesPage.show();
             }
         }
         instancesPage.onCancelClicked = (e) => {
+            /* Go back to the main menu */
             instancesPage.hide();
             menuPage.show();
         }
@@ -151,6 +172,7 @@ class Manager {
         connectionsPage.onNextClicked = async (e) => {
             let activeInstance = connectionsPage.options.instance;
             if (activeInstance) {
+                /* Check that the selected ports are free before proceeding */
                 if (await activeInstance.checkClientPort(activeInstance.clientPort) && await activeInstance.checkBackendPort(activeInstance.backendPort)) {
                     connectionsPage.hide();
                     passwordsPage.show();
@@ -158,11 +180,11 @@ class Manager {
                     showErrorPopup("Please make sure the selected ports are not already in use.")
                 }
             } else {
-                showErrorPopup("An error has occurred, please restart the Olympus Manager.")
+                showErrorPopup(`An error has occurred, please restart the Olympus Manager. <br><br> You can find more info in ${path.join(__dirname, "..", "manager.log")}`)
             }
         }
-
         connectionsPage.onCancelClicked = (e) => {
+            /* Go back to the main menu */
             connectionsPage.hide();
             menuPage.show();
         }
@@ -170,17 +192,19 @@ class Manager {
         /* Passwords */
         var passwordsPage = new PasswordsPage();
         passwordsPage.onBackClicked = (e) => {
+            /* Go back to the connections page */
             let activeInstance = connectionsPage.options.instance;
             if (activeInstance) {
                 passwordsPage.hide();
                 connectionsPage.show();
             } else {
-                showErrorPopup("An error has occurred, please restart the Olympus Manager.")
+                showErrorPopup(`An error has occurred, please restart the Olympus Manager. <br><br> You can find more info in ${path.join(__dirname, "..", "manager.log")}`)
             }
         }
         passwordsPage.onNextClicked = (e) => {
             let activeInstance = connectionsPage.options.instance;
             if (activeInstance) {
+                /* Check that all the passwords have been set */
                 if (activeInstance.gameMasterPassword === "" || activeInstance.blueCommanderPassword === "" || activeInstance.redCommanderPassword === "") {
                     showErrorPopup("Please fill all the password inputs.")
                 }
@@ -192,26 +216,30 @@ class Manager {
                     resultPage.startInstallation();
                 }
             } else {
-                showErrorPopup("An error has occurred, please restart the Olympus Manager.")
+                showErrorPopup(`An error has occurred, please restart the Olympus Manager. <br><br> You can find more info in ${path.join(__dirname, "..", "manager.log")}`)
             }
 
         }
         passwordsPage.onCancelClicked = (e) => {
+            /* Go back to the main menu */
             passwordsPage.hide();
             menuPage.show();
         }
 
         /* Result */
-        var resultPage = new ResultPage();
+        var resultPage = new ResultPage({logLocation: path.join(__dirname, "..", "manager.log")});
         resultPage.onBackClicked = (e) => {
+            /* Reload the page to apply changes */
             resultPage.hide();
             location.reload();
         }
         resultPage.onCancelClicked = (e) => {
+            /* Reload the page to apply changes */
             resultPage.hide();
             location.reload();
         }
 
+        /* Create all the HTML pages */
         document.body.appendChild(menuPage.getElement());
         document.body.appendChild(installationsPage.getElement());
         document.body.appendChild(instancesPage.getElement());
@@ -219,28 +247,30 @@ class Manager {
         document.body.appendChild(passwordsPage.getElement());
         document.body.appendChild(resultPage.getElement());
 
+        /* In simplified mode we directly show the connections page */
         if (this.simplified) {
-            connectionsPage.options = {
-                ...connectionsPage.options,
+            const options = {
                 instance: instances[0],
                 simplified: this.simplified,
                 install: true
+            }
+            connectionsPage.options = {
+                ...connectionsPage.options,
+                ...options
             }
             passwordsPage.options = {
                 ...passwordsPage.options,
-                instance: instances[0],
-                simplified: this.simplified,
-                install: true
+                ...options
             }
             resultPage.options = {
                 ...resultPage.options,
-                instance: instances[0],
-                simplified: this.simplified,
-                install: true
+                ...options
             }
+            /* Show the connections page directly */
             instancesPage.hide();
             connectionsPage.show();
         } else {
+            /* Show the main menu */
             menuPage.show();
         }
     }

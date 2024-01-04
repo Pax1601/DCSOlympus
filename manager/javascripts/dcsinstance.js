@@ -3,17 +3,20 @@ const shellFoldersKey = 'HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Exp
 const saveGamesKey = '{4C5C32FF-BB9D-43B0-B5B4-2D72E54EAAA4}'
 var fs = require('fs')
 var path = require('path')
-const vi = require('win-version-info');
 const { checkPort, fetchWithTimeout } = require('./net')
 const dircompare = require('dir-compare');
 const { spawn } = require('child_process');
 const find = require('find-process');
-const { deleteMod, uninstallInstance } = require('./filesystem')
+const { uninstallInstance } = require('./filesystem')
 const { showErrorPopup, showConfirmPopup } = require('./popup')
+const { logger } = require("./filesystem")
 
 class DCSInstance {
     static instances = null;
 
+    /** Static asynchronous method to retrieve all DCS instances. Only runs at startup 
+     * 
+     */
     static async getInstances() {
         if (this.instances === null) {
             this.instances = await this.findInstances();
@@ -21,18 +24,25 @@ class DCSInstance {
         return this.instances;
     }
 
+    /** Static asynchronous method to find all existing DCS instances
+     * 
+     */
     static async findInstances() {
         let promise = new Promise((res, rej) => {
+            /* Get the Saved Games folder from the registry */
             regedit.list(shellFoldersKey, function (err, result) {
                 if (err) {
                     rej(err);
                 }
                 else {
+                    /* Check that the registry read was successfull */
                     if (result[shellFoldersKey] !== undefined && result[shellFoldersKey]["exists"] && result[shellFoldersKey]['values'][saveGamesKey] !== undefined && result[shellFoldersKey]['values'][saveGamesKey]['value'] !== undefined) {
+                        /* Read all the folders in Saved Games */
                         const searchpath = result[shellFoldersKey]['values'][saveGamesKey]['value'];
                         const folders = fs.readdirSync(searchpath);
                         var instances = [];
 
+                        /* A DCS Instance is created if either the appsettings.lua or serversettings.lua file is detected */
                         folders.forEach((folder) => {
                             if (fs.existsSync(path.join(searchpath, folder, "Config", "appsettings.lua")) ||
                                 fs.existsSync(path.join(searchpath, folder, "Config", "serversettings.lua"))) {
@@ -42,7 +52,7 @@ class DCSInstance {
 
                         res(instances);
                     } else {
-                        console.error("An error occured while trying to fetch the location of the DCS instances.")
+                        logger.error("An error occured while trying to fetch the location of the DCS instances.")
                         rej("An error occured while trying to fetch the location of the DCS instances.");
                     }
                 }
@@ -73,21 +83,25 @@ class DCSInstance {
         this.folder = folder;
         this.name = path.basename(folder);
 
+        /* Check if the olympus.json file is detected. If true, Olympus is considered to be installed */
         if (fs.existsSync(path.join(folder, "Config", "olympus.json"))) {
             try {
+                /* Read the olympus.json */
                 var config = JSON.parse(fs.readFileSync(path.join(folder, "Config", "olympus.json")));
                 this.clientPort = config["client"]["port"];
                 this.backendPort = config["server"]["port"];
                 this.backendAddress = config["server"]["address"];
                 this.gameMasterPasswordHash = config["authentication"]["gameMasterPassword"];
             } catch (err) {
-                console.error(err)
+                logger.error(err)
             }
 
+            /* Compare the contents of the installed Olympus instance and the one in the root folder. Exclude the databases folder, which users can edit.
+               If there is any difference, the instance is flagged as either corrupted or outdated */
             this.installed = true;
             const options = { 
                 compareContent: true,
-                excludeFilter: "databases"
+                excludeFilter: "databases, mods.lua"
              };
             var err1 = true;
             var err2 = true;
@@ -99,7 +113,7 @@ class DCSInstance {
                 err1 = res1.differences !== 0;
                 err2 = res2.differences !== 0;
             } catch (e) {
-                console.log(e);
+                logger.log(e);
             }
 
             if (err1 || err2) {
@@ -107,6 +121,7 @@ class DCSInstance {
             }
         }
 
+        /* Periodically "ping" Olympus to check if either the client or the backend are active */
         window.setInterval(async () => {
             await this.getData();
 
@@ -136,40 +151,61 @@ class DCSInstance {
         }, 1000);
     }
 
+    /** Asynchronously check if the client port is free and if it is, set the new value
+     * 
+     */
     async setClientPort(newPort) {
         if (await this.checkClientPort(newPort)) {
-            console.log(`Instance ${this.folder} client port set to ${newPort}`)
+            logger.log(`Instance ${this.folder} client port set to ${newPort}`)
             this.clientPort = newPort;
             return true;
         }
         return false;
     }
 
+    /** Asynchronously check if the client port is free and if it is, set the new value
+     * 
+     */
     async setBackendPort(newPort) {
         if (await this.checkBackendPort(newPort)) {
-            console.log(`Instance ${this.folder} client port set to ${newPort}`)
+            logger.log(`Instance ${this.folder} client port set to ${newPort}`)
             this.backendPort = newPort;
             return true;
         }
         return false;
     }
 
+    /** Set backend address
+     * 
+     */
     setBackendAddress(newAddress) {
         this.backendAddress = newAddress;
     }
 
+    /** Set Game Master password
+     * 
+     */
     setGameMasterPassword(newPassword) {
         this.gameMasterPassword = newPassword;
     }
 
+    /** Set Blue Commander password
+     * 
+     */
     setBlueCommanderPassword(newPassword) {
         this.blueCommanderPassword = newPassword;
     }
 
+    /** Set Red Commander password
+     * 
+     */
     setRedCommanderPassword(newPassword) {
         this.redCommanderPassword = newPassword;
     }
 
+    /** Check if the client port is free
+     * 
+     */
     async checkClientPort(port) {
         var promise = new Promise((res, rej) => {
             checkPort(port, async (portFree) => {
@@ -177,12 +213,12 @@ class DCSInstance {
                     portFree = !(await DCSInstance.getInstances()).some((instance) => {
                         if (instance !== this && instance.installed) {
                             if (instance.clientPort === port || instance.backendPort === port) {
-                                console.log(`Port ${port} already selected by other instance`);
+                                logger.log(`Port ${port} already selected by other instance`);
                                 return true;
                             }
                         } else {
                             if (instance.backendPort === port) {
-                                console.log(`Port ${port} equal to backend port`);
+                                logger.log(`Port ${port} equal to backend port`);
                                 return true;
                             }
                         }
@@ -190,7 +226,7 @@ class DCSInstance {
                     })
                 }
                 else {
-                    console.log(`Port ${port} currently in use`);
+                    logger.log(`Port ${port} currently in use`);
                 }
                 res(portFree);
             })
@@ -198,6 +234,9 @@ class DCSInstance {
         return promise;
     }
 
+    /** Check if the backend port is free
+     * 
+     */
     async checkBackendPort(port) {
         var promise = new Promise((res, rej) => {
             checkPort(port, async (portFree) => {
@@ -205,19 +244,19 @@ class DCSInstance {
                     portFree = !(await DCSInstance.getInstances()).some((instance) => {
                         if (instance !== this && instance.installed) {
                             if (instance.clientPort === port || instance.backendPort === port) {
-                                console.log(`Port ${port} already selected by other instance`);
+                                logger.log(`Port ${port} already selected by other instance`);
                                 return true;
                             }
                         } else {
                             if (instance.clientPort === port) {
-                                console.log(`Port ${port} equal to client port`);
+                                logger.log(`Port ${port} equal to client port`);
                                 return true;
                             }
                         }
                         return false;
                     })
                 } else {
-                    console.log(`Port ${port} currently in use`);
+                    logger.log(`Port ${port} currently in use`);
                 }
                 res(portFree);
             })
@@ -225,6 +264,9 @@ class DCSInstance {
         return promise;
     }
 
+    /** Asynchronously interrogate the webserver and the backend to check if they are active and to retrieve data.
+     * 
+     */
     async getData() {
         if (this.installed && !this.error) {
             fetchWithTimeout(`http://localhost:${this.clientPort}`, { timeout: 250 })
@@ -250,19 +292,24 @@ class DCSInstance {
             }, () => {
                 this.backendOnline = false;
             }).then((text) => {
-                var data = JSON.parse(text);
-                this.fps = data.frameRate;
-                this.load = data.load;
+                if (text !== undefined) {
+                    var data = JSON.parse(text);
+                    this.fps = data.frameRate;
+                    this.load = data.load;
+                }
             }, (err) => {
-                console.warn(err);
+                logger.warn(err);
             }).catch((err) => {
-                console.warn(err);
+                logger.warn(err);
             });
         }
     }
 
+    /** Start the Olympus server associated with this instance
+     * 
+     */
     startServer() {
-        console.log(`Starting server for instance at ${this.folder}`)
+        logger.log(`Starting server for instance at ${this.folder}`)
         const out = fs.openSync(`./${this.name}.log`, 'a');
         const err = fs.openSync(`./${this.name}.log`, 'a');
         const sub = spawn('cscript.exe', ['server.vbs', path.join(this.folder, "Config", "olympus.json")], {
@@ -274,8 +321,11 @@ class DCSInstance {
         sub.unref();
     }
 
+    /** Start the Olympus client associated with this instance
+     * 
+     */
     startClient() {
-        console.log(`Starting client for instance at ${this.folder}`)
+        logger.log(`Starting client for instance at ${this.folder}`)
         const out = fs.openSync(`./${this.name}.log`, 'a');
         const err = fs.openSync(`./${this.name}.log`, 'a');
         const sub = spawn('cscript.exe', ['client.vbs', path.join(this.folder, "Config", "olympus.json")], {
@@ -287,14 +337,15 @@ class DCSInstance {
         sub.unref();
     }
 
+    /* Stop any node process running on the server port. This will stop either the server or the client depending on what is running */
     stop() {
         find('port', this.clientPort)
             .then((list) => {
                 if (list.length !== 1) {
-                    list.length === 0 ? console.error("No processes found on the specified port") : console.error("Too many processes found on the specified port");
+                    list.length === 0 ? logger.error("No processes found on the specified port") : logger.error("Too many processes found on the specified port");
                 } else {
                     if (list[0].name.includes("node.exe")) {
-                        console.log(`Killing process ${list[0].name}`)
+                        logger.log(`Killing process ${list[0].name}`)
                         try {
                             process.kill(list[0].pid);
                             process.kill(list[0].ppid);
@@ -303,23 +354,25 @@ class DCSInstance {
                         }
                     }
                     else {
-                        console.log(list[0])
-                        console.error(`The process listening on the specified port has an incorrect name: ${list[0].name}`)
+                        logger.log(list[0])
+                        logger.error(`The process listening on the specified port has an incorrect name: ${list[0].name}`)
                     }
                 }
             }, () => {
-                console.error("Error retrieving list of processes")
+                logger.error("Error retrieving list of processes")
             })
     }
 
+    /* Uninstall this instance */
     uninstall() {
         showConfirmPopup("Are you sure you want to completely remove this Olympus installation?", () =>
             uninstallInstance(this.folder, this.name).then(
                 () => {
                     location.reload();
                 },
-                () => {
-                    showErrorPopup("An error has occurred while uninstalling the Olympus instance. Make sure Olympus and DCS are not running.", () => {
+                (err) => {
+                    logger.error(err)
+                    showErrorPopup(`An error has occurred while uninstalling the Olympus instance. Make sure Olympus and DCS are not running. <br><br> You can find more info in ${path.join(__dirname, "..", "manager.log")}`, () => {
                         location.reload();
                     });
                 }

@@ -1,11 +1,10 @@
 import { getApp } from "../..";
 import { GAME_MASTER } from "../../constants/constants";
-import { UnitBlueprint } from "../../interfaces";
 import { UnitDatabase } from "./unitdatabase"
 
 export class AircraftDatabase extends UnitDatabase {
     constructor() {
-        super('databases/units/aircraftdatabase.json');
+        super('api/databases/units/aircraftdatabase');
     }
 
 	getCategory() {

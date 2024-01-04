@@ -3,19 +3,28 @@ const createShortcut = require('create-desktop-shortcuts');
 const fs = require('fs');
 const path = require('path');
 const { showWaitPopup } = require('./popup');
+const { Console } = require('console');
 const homeDir = require('os').homedir();
 
+var output = fs.createWriteStream('./manager.log', {flags: 'a'});
+var logger = new Console(output, output);
+const date = new Date();
+output.write(` ======================= New log starting at ${date.toString()} =======================\n`);
+
+/** Conveniency function to asynchronously delete a single file, with error catching
+ * 
+ */
 async function deleteFile(filePath) {
-    console.log(`Deleting ${filePath}`);
+    logger.log(`Deleting ${filePath}`);
     var promise = new Promise((res, rej) => {
         if (fs.existsSync(filePath)) {
             fs.rm(filePath, (err) => {
                 if (err) {
-                    console.error(`Error removing ${filePath}: ${err}`)
+                    logger.error(`Error removing ${filePath}: ${err}`)
                     rej(err);
                 }
                 else {
-                    console.log(`Removed ${filePath}`)
+                    logger.log(`Removed ${filePath}`)
                     res(true);
                 }
             });
@@ -27,14 +36,17 @@ async function deleteFile(filePath) {
     return promise;
 }
 
+/** Given a list of Olympus instances, it fixes/updates them by deleting the existing installation and the copying over the clean files 
+ * 
+ */
 async function fixInstances(instances) {
     var promise = new Promise((res, rej) => {
         var instancePromises = instances.map((instance) => {
             var instancePromise = new Promise((instanceRes, instanceErr) => {
-                console.log(`Fixing Olympus in ${instance.folder}`)
-                deleteMod(instance.folder)
+                logger.log(`Fixing Olympus in ${instance.folder}`)
+                deleteMod(instance.folder, instance.name)
                     .then(() => deleteHooks(instance.folder), (err) => { return Promise.reject(err); })
-                    .then(() => installMod(instance.folder), (err) => { return Promise.reject(err); })
+                    .then(() => installMod(instance.folder, instance.name), (err) => { return Promise.reject(err); })
                     .then(() => installHooks(instance.folder), (err) => { return Promise.reject(err); })
                     .then(() => installShortCuts(instance.folder, instance.name), (err) => { return Promise.reject(err); })
                     .then(() => instanceRes(true), (err) => { instanceErr(err) })
@@ -46,11 +58,14 @@ async function fixInstances(instances) {
     return promise;
 }
 
+/** Uninstalls a specific instance given its folder
+ * 
+ */
 async function uninstallInstance(folder, name) {
-    console.log(`Uninstalling Olympus from ${folder}`)
+    logger.log(`Uninstalling Olympus from ${folder}`)
     showWaitPopup("Please wait while the Olympus installation is being uninstalled.")
     var promise = new Promise((res, rej) => {
-        deleteMod(folder)
+        deleteMod(folder, name)
             .then(() => deleteHooks(folder), (err) => { return Promise.reject(err); })
             .then(() => deleteJSON(folder), (err) => { return Promise.reject(err); })
             .then(() => deleteShortCuts(folder, name), (err) => { return Promise.reject(err); })
@@ -59,16 +74,19 @@ async function uninstallInstance(folder, name) {
     return promise;
 }
 
+/** Installs the Hooks script
+ * 
+ */
 async function installHooks(folder) {
-    console.log(`Installing hooks in ${folder}`)
+    logger.log(`Installing hooks in ${folder}`)
     var promise = new Promise((res, rej) => {
         fs.cp(path.join("..", "scripts", "OlympusHook.lua"), path.join(folder, "Scripts", "Hooks", "OlympusHook.lua"), (err) => {
             if (err) {
-                console.log(`Error installing hooks in ${folder}: ${err}`)
+                logger.log(`Error installing hooks in ${folder}: ${err}`)
                 rej(err);
             }
             else {
-                console.log(`Hooks succesfully installed in ${folder}`)
+                logger.log(`Hooks succesfully installed in ${folder}`)
                 res(true);
             }
         });
@@ -76,16 +94,38 @@ async function installHooks(folder) {
     return promise;
 }
 
-async function installMod(folder) {
-    console.log(`Installing mod in ${folder}`)
+/** Installs the Mod folder
+ * 
+ */
+async function installMod(folder, name) {
+    logger.log(`Installing mod in ${folder}`)
     var promise = new Promise((res, rej) => {
         fs.cp(path.join("..", "mod"), path.join(folder, "Mods", "Services", "Olympus"), { recursive: true }, (err) => {
             if (err) {
-                console.log(`Error installing mod in ${folder}: ${err}`)
+                logger.log(`Error installing mod in ${folder}: ${err}`)
                 rej(err);
             }
             else {
-                console.log(`Mod succesfully installed in ${folder}`)
+                logger.log(`Mod succesfully installed in ${folder}`)
+
+                /* Check if backup user-editable files exist. If true copy them over */
+                try {
+                    logger.log(__dirname)
+                    logger.log(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "databases"));
+                    if (fs.existsSync(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "databases"))) {
+                        logger.log("Backup databases found, copying over");
+                        fs.cpSync(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "databases"), path.join(folder, "Mods", "Services", "Olympus", "databases"), {recursive: true});
+                    }
+
+                    if (fs.existsSync(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "scripts", "mods.lua"))) {
+                        logger.log("Backup mods.lua found, copying over");
+                        fs.cpSync(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "scripts", "mods.lua"), path.join(folder, "Mods", "Services", "Olympus", "scripts", "mods.lua"));
+                    }
+                } catch (err) {
+                    logger.log(`Error installing mod in ${folder}: ${err}`)
+                    rej(err);
+                }
+
                 res(true);
             }
         });
@@ -93,16 +133,19 @@ async function installMod(folder) {
     return promise;
 }
 
+/** Installs the olympus.json file
+ * 
+ */
 async function installJSON(folder) {
-    console.log(`Installing config in ${folder}`)
+    logger.log(`Installing config in ${folder}`)
     var promise = new Promise((res, rej) => {
         fs.cp(path.join("..", "olympus.json"), path.join(folder, "Config", "olympus.json"), (err) => {
             if (err) {
-                console.log(`Error installing config in ${folder}: ${err}`)
+                logger.log(`Error installing config in ${folder}: ${err}`)
                 rej(err);
             }
             else {
-                console.log(`Config succesfully installed in ${folder}`)
+                logger.log(`Config succesfully installed in ${folder}`)
                 res(true);
             }
         });
@@ -110,40 +153,11 @@ async function installJSON(folder) {
     return promise;
 }
 
-async function applyConfiguration(folder, instance) {
-    console.log(`Applying configuration to Olympus in ${folder}`);
-    var promise = new Promise((res, rej) => {
-        if (fs.existsSync(path.join(folder, "Config", "olympus.json"))) {
-            var config = JSON.parse(fs.readFileSync(path.join(folder, "Config", "olympus.json")));
-
-            config["client"]["port"] = instance.clientPort;
-            config["server"]["port"] = instance.backendPort;
-            config["server"]["address"] = instance.backendAddress;
-            config["authentication"]["gameMasterPassword"] = sha256(instance.gameMasterPassword);
-            config["authentication"]["blueCommanderPassword"] = sha256(instance.blueCommanderPassword);
-            config["authentication"]["redCommanderPassword"] = sha256(instance.redCommanderPassword);
-
-            fs.writeFile(path.join(folder, "Config", "olympus.json"), JSON.stringify(config, null, 4), (err) => {
-                if (err) {
-                    console.log(`Error applying config in ${folder}: ${err}`)
-                    rej(err);
-                }
-                else {
-                    console.log(`Config succesfully applied in ${folder}`)
-                    res(true);
-                }
-            });
-
-        } else {
-            rej("File does not exist")
-        }
-        res(true);
-    });
-    return promise;
-}
-
+/** Creates shortcuts both in the DCS Saved Games folder and on the desktop
+ * 
+ */
 async function installShortCuts(folder, name) {
-    console.log(`Installing shortcuts for Olympus in ${folder}`);
+    logger.log(`Installing shortcuts for Olympus in ${folder}`);
     var promise = new Promise((res, rej) => {
         var res1 = createShortcut({
             windows: {
@@ -196,22 +210,75 @@ async function installShortCuts(folder, name) {
     return promise;
 }
 
-async function deleteHooks(folder) {
-    console.log(`Deleting hooks from ${folder}`);
-    return deleteFile(path.join(folder, "Scripts", "Hooks", "OlympusHook.lua"));
-}
-
-async function deleteMod(folder) {
-    console.log(`Deleting mod from ${folder}`);
+/** Writes the configuration of an instance to the olympus.json file
+ * 
+ */
+async function applyConfiguration(folder, instance) {
+    logger.log(`Applying configuration to Olympus in ${folder}`);
     var promise = new Promise((res, rej) => {
-        if (fs.existsSync(path.join(folder, "Mods", "Services", "Olympus"))) {
-            fs.rmdir(path.join(folder, "Mods", "Services", "Olympus"), { recursive: true, force: true }, (err) => {
+        if (fs.existsSync(path.join(folder, "Config", "olympus.json"))) {
+            var config = JSON.parse(fs.readFileSync(path.join(folder, "Config", "olympus.json")));
+
+            config["client"]["port"] = instance.clientPort;
+            config["server"]["port"] = instance.backendPort;
+            config["server"]["address"] = instance.backendAddress;
+            config["authentication"]["gameMasterPassword"] = sha256(instance.gameMasterPassword);
+            config["authentication"]["blueCommanderPassword"] = sha256(instance.blueCommanderPassword);
+            config["authentication"]["redCommanderPassword"] = sha256(instance.redCommanderPassword);
+
+            fs.writeFile(path.join(folder, "Config", "olympus.json"), JSON.stringify(config, null, 4), (err) => {
                 if (err) {
-                    console.log(`Error removing mod from ${folder}: ${err}`)
+                    logger.log(`Error applying config in ${folder}: ${err}`)
                     rej(err);
                 }
                 else {
-                    console.log(`Mod succesfully removed from ${folder}`)
+                    logger.log(`Config succesfully applied in ${folder}`)
+                    res(true);
+                }
+            });
+
+        } else {
+            rej("File does not exist")
+        }
+        res(true);
+    });
+    return promise;
+}
+
+/** Deletes the Hooks script 
+ * 
+ */
+async function deleteHooks(folder) {
+    logger.log(`Deleting hooks from ${folder}`);
+    return deleteFile(path.join(folder, "Scripts", "Hooks", "OlympusHook.lua"));
+}
+
+/** Deletes the Mod folder
+ * 
+ */
+async function deleteMod(folder, name) {
+    logger.log(`Deleting mod from ${folder}`);
+    var promise = new Promise((res, rej) => {
+        if (fs.existsSync(path.join(folder, "Mods", "Services", "Olympus"))) {
+            /* Make a copy of the user-editable files */
+            if (fs.existsSync(path.join(folder, "Mods", "Services", "Olympus", "databases"))) 
+                fs.cpSync(path.join(folder, "Mods", "Services", "Olympus", "databases"), path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "databases"), {recursive: true});
+            else
+                logger.warn(`No database folder found in ${folder}, skipping backup...`)
+
+            if (fs.existsSync(path.join(folder, "Mods", "Services", "Olympus", "scripts", "mods.lua")))
+                fs.cpSync(path.join(folder, "Mods", "Services", "Olympus", "scripts", "mods.lua"), path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "scripts", "mods.lua"));
+            else
+                logger.warn(`No mods.lua found in ${folder}, skipping backup...`)
+
+            /* Remove the mod folder */
+            fs.rmdir(path.join(folder, "Mods", "Services", "Olympus"), { recursive: true, force: true }, (err) => {
+                if (err) {
+                    logger.log(`Error removing mod from ${folder}: ${err}`)
+                    rej(err);
+                }
+                else {
+                    logger.log(`Mod succesfully removed from ${folder}`)
                     res(true);
                 }
             })
@@ -222,19 +289,25 @@ async function deleteMod(folder) {
     return promise;
 }
 
+/** Deletes the olympus.json configuration file
+ * 
+ */
 async function deleteJSON(folder) {
-    console.log(`Deleting JSON from ${folder}`);
+    logger.log(`Deleting JSON from ${folder}`);
     return deleteFile(path.join(folder, "Config", "olympus.json"));
 }
 
+/** Deletes the shortcuts
+ * 
+ */
 async function deleteShortCuts(folder, name) {
-    console.log(`Deleting ShortCuts from ${folder}`);
+    logger.log(`Deleting ShortCuts from ${folder}`);
     var promise = new Promise((res, rej) => {
         deleteFile(path.join(folder, `DCS Olympus Server (${name}).lnk`))
-        .then(deleteFile(path.join(folder, `DCS Olympus Client (${name}).lnk`)), (err) => { return Promise.reject(err); })
-        .then(deleteFile(path.join(homeDir, "Desktop", `DCS Olympus Server (${name}).lnk`)), (err) => { return Promise.reject(err); })
-        .then(deleteFile(path.join(homeDir, "Desktop", `DCS Olympus Client (${name}).lnk`)), (err) => { return Promise.reject(err); })
-        .then(() => {res(true)}, (err) => { rej(err) })
+            .then(deleteFile(path.join(folder, `DCS Olympus Client (${name}).lnk`)), (err) => { return Promise.reject(err); })
+            .then(deleteFile(path.join(homeDir, "Desktop", `DCS Olympus Server (${name}).lnk`)), (err) => { return Promise.reject(err); })
+            .then(deleteFile(path.join(homeDir, "Desktop", `DCS Olympus Client (${name}).lnk`)), (err) => { return Promise.reject(err); })
+            .then(() => { res(true) }, (err) => { rej(err) })
     });
     return promise;
 }
@@ -250,5 +323,6 @@ module.exports = {
     deleteJSON: deleteJSON,
     deleteMod: deleteMod,
     deleteShortCuts: deleteShortCuts,
-    uninstallInstance: uninstallInstance
+    uninstallInstance: uninstallInstance,
+    logger: logger
 }
