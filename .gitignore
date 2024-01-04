@@ -3,6 +3,7 @@ bin
 x64
 Output
 node_modules
+hgt
 
 /backend/vcpkg_installed
 
@@ -16,7 +17,6 @@ node_modules
 /src/html
 /src/latex
 
-/hgt
 /package
 /build
 /DCS Olympus backups
