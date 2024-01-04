@@ -188,7 +188,7 @@ function extractAndCopy(folder) {
     4) cds into the new installation;
     5) runs the installer.bat script */
     fs.writeFileSync(path.join(folder, 'update.bat'),
-        `timeout /t 5 \nrmdir "${path.join(__dirname, "..", "..")}" /s /q \necho D|xcopy /Y /S /E "${path.join(folder, "temp")}" "${path.join(__dirname, "..", "..")}" \ncd "${path.join(__dirname, "..", "..")}" \ncall installer.bat`
+        `timeout /t 5 \necho D|xcopy /Y /S /E "${path.join(folder, "temp")}" "${path.join(__dirname, "..", "..")}" \ncd "${path.join(__dirname, "..", "..")}" \ncall installer.bat`
     )
 
     /* Launch the update script then close gracefully */
