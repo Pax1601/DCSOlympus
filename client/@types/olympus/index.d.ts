@@ -2583,6 +2583,12 @@ declare module "creator/creator" {
         createDropdown(config: TDropdownConfig): Dropdown;
     }
 }
+declare module "convertor/convertor" {
+    export class Convertor {
+        metresToFeet(distance: number): number;
+        metresPerSecondToKnots(speed: number): number;
+    }
+}
 declare module "olympusapp" {
     import { Map } from "map/map";
     import { MissionManager } from "mission/missionmanager";
@@ -2596,11 +2602,13 @@ declare module "olympusapp" {
     import { Context } from "context/context";
     import { PanelsManager } from "panels/panelsmanager";
     import { Creator } from "creator/creator";
+    import { Convertor } from "convertor/convertor";
     export class OlympusApp {
         #private;
         constructor();
         getDialogManager(): Manager;
         getMap(): Map;
+        getConvertor(): Convertor;
         getCreator(): Creator;
         getCurrentContext(): Context;
         getContextManager(): ContextManager;

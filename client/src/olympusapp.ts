@@ -18,7 +18,6 @@ import { Manager } from "./other/manager";
 import { SVGInjector } from "@tanem/svg-injector";
 import { ServerManager } from "./server/servermanager";
 import { sha256 } from 'js-sha256';
-import Ajv from "ajv"
 
 import { BLUE_COMMANDER, FILL_SELECTED_RING, GAME_MASTER, HIDE_UNITS_SHORT_RANGE_RINGS, RED_COMMANDER, SHOW_UNITS_ACQUISITION_RINGS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNIT_LABELS } from "./constants/constants";
 import { aircraftDatabase } from "./unit/databases/aircraftdatabase";
@@ -32,6 +31,7 @@ import { AirDefenceUnitSpawnMenu } from "./controls/unitspawnmenu";
 import { AirbasesJSONSchemaValidator } from "./schemas/schema";
 import { PanelsManager } from "./panels/panelsmanager";
 import { Creator } from "./creator/creator";
+import { Convertor } from "./convertor/convertor";
 
 var VERSION = "{{OLYMPUS_VERSION_NUMBER}}";
 
@@ -44,6 +44,7 @@ export class OlympusApp {
     #map: Map | null = null;
 
     //  Used by plugins to create stuff (factory-style)
+    #convertor = new Convertor();
     #creator = new Creator();
 
     /* Managers */
@@ -69,6 +70,10 @@ export class OlympusApp {
 
     getMap() {
         return this.#map as Map;
+    }
+
+    getConvertor() {
+        return this.#convertor as Convertor;
     }
 
     getCreator() {
