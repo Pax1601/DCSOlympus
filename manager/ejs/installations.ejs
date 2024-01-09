@@ -32,6 +32,7 @@
     }
 
     #manager-installations .option {
+        position: relative;
         display: flex;
         flex-direction: column;
         row-gap: 5px;
@@ -70,6 +71,19 @@
 
     #manager-installations .option.installed {
         pointer-events: none;
+        background-color: var(--background-disabled);
+    }
+
+    #manager-installations .option:not(.installed)::after {
+        display: block;
+        content: " ";
+        width: 20px;
+        height: 20px;
+        background-image: url("./icons/chevron-right-solid.svg");
+        background-repeat: no-repeat;
+        background-position: 50% 50%;
+        position: absolute;
+        right: 20px;
     }
 </style>
 <div id="manager-installations">
@@ -98,7 +112,7 @@
                         <span><%= instances[i].name %></span>
                         <span><img src="./icons/folder-open-solid.svg"> <%= instances[i].folder %></span>
                         <span class="<%= instances[i].installed? (instances[i].error? 'error': 'installed'): '' %>"> 
-                            <%= instances[i].installed? (instances[i].error? 'Corrupted/outdated Olympus installation': 'Olympus already installed'): 'Olympus not installed yet' %>
+                            <%= instances[i].installed? (instances[i].error? 'Corrupted/outdated Olympus installation': 'Olympus installed'): 'Olympus not installed' %>
                         </span>
                     </div>
                 <% } %>

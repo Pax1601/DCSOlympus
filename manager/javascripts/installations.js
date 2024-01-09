@@ -20,6 +20,8 @@ class InstallationsPage extends ManagerPage {
         }
 
         this.element.querySelector(".cancel").addEventListener("click", (e) => this.onCancelClicked(e));
+
+        super.render();
     }    
 
     async onOptionClicked(e) {

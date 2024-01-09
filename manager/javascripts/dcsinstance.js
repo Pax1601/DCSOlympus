@@ -139,11 +139,14 @@ class DCSInstance {
 
                             if (this.backendOnline) {
                                 instanceDiv.querySelector(".fps .data").innerText = this.fps;
-                                instanceDiv.querySelector(".load .data").innerTexr = this.load;
+                                instanceDiv.querySelector(".load .data").innerText = this.load;
                             }
 
-                            instanceDiv.querySelector(".start-stop-server").innerText = this.webserverOnline ? "Stop" : "Start server";
-                            instanceDiv.querySelector(".start-stop-client").innerText = this.webserverOnline ? "Open in browser" : "Start client";
+                            instanceDiv.querySelector(".button.start").classList.toggle("hide", this.webserverOnline)
+                            instanceDiv.querySelector(".button.uninstall").classList.toggle("hide", this.webserverOnline)
+                            instanceDiv.querySelector(".button.edit").classList.toggle("hide", this.webserverOnline)
+                            instanceDiv.querySelector(".button.open-browser").classList.toggle("hide", !this.webserverOnline)
+                            instanceDiv.querySelector(".button.stop").classList.toggle("hide", !this.webserverOnline)
                         }
                     }
                 }

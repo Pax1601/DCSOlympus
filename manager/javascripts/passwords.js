@@ -27,6 +27,8 @@ class PasswordsPage extends ManagerPage {
         this.element.querySelector(".game-master").querySelector("input").addEventListener("change", async (e) => { this.instance.setGameMasterPassword(e.target.value); })
         this.element.querySelector(".blue-commander").querySelector("input").addEventListener("change", async (e) => { this.instance.setBlueCommanderPassword(e.target.value); })
         this.element.querySelector(".red-commander").querySelector("input").addEventListener("change", async (e) => { this.instance.setRedCommanderPassword(e.target.value); })
+
+        super.render();
     }    
 
     show() {

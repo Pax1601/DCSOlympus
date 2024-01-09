@@ -47,8 +47,7 @@ class Manager {
         }
 
         /* Check which buttons should be enabled */
-        const installEnabled = instances.some((instance) => { return !instance.installed; });
-        const updateEnabled = instances.some((instance) => { return instance.installed; });
+        const installEnabled = true;
         const manageEnabled = instances.some((instance) => { return instance.installed; });
 
         /* Menu */
@@ -56,7 +55,6 @@ class Manager {
         menuPage.options = {
             ...menuPage.options,
             installEnabled: installEnabled,
-            updateEnabled: updateEnabled,
             manageEnabled: manageEnabled
         }
         /* When the install button is clicked go the installation page */
@@ -64,22 +62,9 @@ class Manager {
             menuPage.hide();
             installationsPage.show();
         }
-        /* When the update button is clicked go to the instances page in "update mode" (i.e. manage = false) */
-        menuPage.onUpdateClicked = (e) => {
-            menuPage.hide();
-            instancesPage.options = {
-                ...instancesPage.options,
-                manage: false
-            }
-            instancesPage.show();
-        }
         /* When the manage button is clicked go to the instances page in "manage mode" (i.e. manage = true) */
         menuPage.onManageClicked = (e) => {
             menuPage.hide();
-            instancesPage.options = {
-                ...instancesPage.options,
-                manage: true
-            }
             instancesPage.show();
         }
 

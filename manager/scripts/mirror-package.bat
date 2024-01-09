@@ -1,1 +1,1 @@
-nodemon --watch . --exec "./scripts/copy-package"
+nodemon --watch ./**/*.* --exec "./scripts/copy-package"
