@@ -16,8 +16,9 @@ class MenuPage extends ManagerPage {
         element.innerHTML = str;
 
         element.querySelector(".install").addEventListener("click", (e) => this.onInstallClicked(e));
-        element.querySelector(".update").addEventListener("click", (e) => this.onUpdateClicked(e))
-        element.querySelector(".manage").addEventListener("click", (e) => this.onManageClicked(e))
+        element.querySelector(".manage").addEventListener("click", (e) => this.onManageClicked(e));
+
+        super.render();
     }    
 
     show() {

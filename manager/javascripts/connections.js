@@ -31,6 +31,8 @@ class ConnectionsPage extends ManagerPage {
         this.element.querySelector(".client-port").querySelector("input").addEventListener("change", async (e) => { this.setClientPort(Number(e.target.value)); })
         this.element.querySelector(".backend-port").querySelector("input").addEventListener("change", async (e) => { this.setBackendPort(Number(e.target.value)); })
         this.element.querySelector(".backend-address").querySelector("input").addEventListener("change", async (e) => { this.instance.setBackendAddress(e.target.value); })
+
+        super.render();
     }
 
     show() {

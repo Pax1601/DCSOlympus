@@ -1,7 +1,10 @@
 :root {
     --background: #181e25;
     --background-dark: #13181f;
+    --background-light: #202831;
+    --background-disabled: #212A34;
     --offwhite: #F2F2F2;
+    --offwhite-transparent: #F2F2F255;
     --blue: #247be2;
     --red: #FF5858;
     --green: #8bff63;
@@ -85,7 +88,7 @@ body {
 #header {
     display: flex;
     justify-content: start;
-    align-items: start;
+    align-items: center;
     color: #F2F2F2;
     font-weight: bold;
     font-size: 16px;
@@ -107,6 +110,10 @@ body {
     flex-direction: column;
     justify-content: center;
     height: 60px;
+}
+
+#header img.link {
+    height: 20px;
 }
 
 .link {
@@ -213,22 +220,14 @@ body {
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
 }
 
 .next {
     color: var(--background);
     background-color: var(--offwhite);
-}
-
-.uninstall {
-    color: var(--offwhite);
-    background-color: transparent;
-    border: 1px solid var(--offwhite);
-}
-
-.edit, .start-stop-server, .start-stop-client {
-    color: var(--offwhite);
-    background-color: var(--blue);
 }
 
 .back {
@@ -312,6 +311,8 @@ input {
     width: 100%;
     text-align: left;
     padding: 15px 0px !important;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
 }
 
 #popup .footer {
@@ -450,76 +451,12 @@ input {
     margin-top: 10px;
 }
 
-.instance-info {
-    display: flex;
-    flex-direction: column;
-    row-gap: 5px;
-    width: 100%;
-}
-
-.instance-info>span:nth-child(1) {
-    font-size: 18px;
-    font-weight: 600;
-}
-
-.instance-info>span:nth-child(2) {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--lightgray);
-}
-
-.instance-info>span:nth-child(2).installed {
-    font-weight: 600;
-    color: var(--green);
-}
-
-.instance-info>span:nth-child(2).error {
-    font-weight: 600;
-    color: orange;
-}
-
-.instance-info>span:nth-child(3) {
-    display: flex;
-    column-gap: 10px;
-    font-size: 13px;
-    font-weight: normal;
-}
-
-.instance-buttons {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    justify-content: space-between;
-    column-gap: 10px;
-}
-
-.instance-info .info {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-
-.instance-info .info>div:nth-child(1) {
-    font-weight: 600;
-    font-size: 14px;
-}
-
-.instance-info .info>div:nth-child(2) {
-    font-weight: normal;
-    font-size: 14px;
-}
-
 .divider {
     border-top: 0px solid transparent !important;
     border-bottom: 1px solid var(--offwhite) !important;
     opacity: 80%;
     height: 0px !important;
     cursor: default;
-}
-
-.instance-info .divider {
-    margin-top: 15px;
-    margin-bottom: 15px;
 }
 
 @keyframes rotate {
@@ -530,4 +467,58 @@ input {
     100% {
         transform: rotate(360deg)
     }
+}
+
+.button.collapse {
+    display: flex;
+    justify-content: space-between;
+}
+
+.button.collapse::after {
+    display: block;
+    content: " ";
+    width: 20px;
+    height: 20px;
+    background-image: url("../icons/chevron-down-solid.svg");
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+}
+
+.button.collapse.loading::after {
+    background-image: url("../icons/spinner-solid.svg");
+    animation: rotate 2s linear infinite;
+}
+
+.button.collapse>div {
+    display: none;
+    position: absolute;
+    transform: translate(-15px, calc(50% + 20px));
+}
+
+.button.collapse.open>div {
+    display: block;
+}
+
+.button.collapse .button {
+    color: var(--offwhite);
+    background-color: var(--background-light);
+}
+
+.button.collapse .button:hover {
+    color: var(--background);
+    background-color: var(--offwhite);
+}
+
+.button.collapse .button:first-child {
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
+.button.collapse .button:not(:first-child):not(:last-child) {
+    border-radius: 0px;
+}
+
+.button.collapse .button:last-child {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
 }

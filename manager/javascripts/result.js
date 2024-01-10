@@ -17,6 +17,8 @@ class ResultPage extends ManagerPage {
         element.innerHTML = str;
 
         this.element.querySelector(".back").addEventListener("click", (e) => this.onBackClicked(e));
+
+        super.render();
     }    
 
     show() {

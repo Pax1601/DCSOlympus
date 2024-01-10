@@ -17,47 +17,79 @@ class InstancesPage extends ManagerPage {
     render(str) {
         this.element.innerHTML = str;
 
-        var editButtons = this.element.querySelectorAll(".edit");
+        var editButtons = this.element.querySelectorAll(".button.edit");
         for (let i = 0; i < editButtons.length; i++) {
             editButtons[i].onclick = (e) => {this.onEditClicked(e);}
         }
 
-        var uninstallButtons = this.element.querySelectorAll(".uninstall");
+        var uninstallButtons = this.element.querySelectorAll(".button.uninstall");
         for (let i = 0; i < uninstallButtons.length; i++) {
             uninstallButtons[i].onclick = (e) => {this.onUninstallClicked(e);}
         }
 
-        var startStopServerButtons = this.element.querySelectorAll(".start-stop-server");
-        for (let i = 0; i < startStopServerButtons.length; i++) {
-            startStopServerButtons[i].onclick = (e) => {this.onStartStopServerClicked(e);}
+        var startServerButtons = this.element.querySelectorAll(".button.start-server");
+        for (let i = 0; i < startServerButtons.length; i++) {
+            startServerButtons[i].onclick = (e) => {this.onStartServerClicked(e);}
         }
 
-        var startStopClientButtons = this.element.querySelectorAll(".start-stop-client");
-        for (let i = 0; i < startStopClientButtons.length; i++) {
-            startStopClientButtons[i].onclick = (e) => {this.onStartStopClientClicked(e);}
+        var startClientButtons = this.element.querySelectorAll(".button.start-client");
+        for (let i = 0; i < startClientButtons.length; i++) {
+            startClientButtons[i].onclick = (e) => {this.onStartClientClicked(e);}
+        }
+
+        var openBrowserButtons = this.element.querySelectorAll(".button.open-browser");
+        for (let i = 0; i < openBrowserButtons.length; i++) {
+            openBrowserButtons[i].onclick = (e) => {this.onOpenBrowserClicked(e);}
+        }
+
+        var stopButtons = this.element.querySelectorAll(".button.stop");
+        for (let i = 0; i < stopButtons.length; i++) {
+            stopButtons[i].onclick = (e) => {this.onStopClicked(e);}
         }
 
         this.element.querySelector(".cancel").addEventListener("click", (e) => this.onCancelClicked(e));
+
+        super.render();
     }    
 
     async onEditClicked(e) {
-        logger.log(e.target.dataset.folder)
-        this.setSelectedInstance((await DCSInstance.getInstances()).find((instance) => {return instance.folder === e.target.closest('.option').dataset.folder}));
+        this.getClickedInstance(e).then((instance) => {
+            instance.webserverOnline || instance.backendOnline? showErrorPopup("Error, the selected Olympus instance is currently active, please stop Olympus before editing it!") : 
+            this.setSelectedInstance(instance);
+            }
+        );
     }
 
-    async onStartStopServerClicked(e) {
-        var instance = (await DCSInstance.getInstances()).find((instance) => {return instance.folder === e.target.closest('.option').dataset.folder});
-        instance.webserverOnline? instance.stop(): instance.startServer();
+    async onStartServerClicked(e) {
+        e.target.closest(".collapse").classList.add("loading");
+        this.getClickedInstance(e).then((instance) => instance.startServer());
     }
 
-    async onStartStopClientClicked(e) {
-        var instance = (await DCSInstance.getInstances()).find((instance) => {return instance.folder === e.target.closest('.option').dataset.folder});
-        instance.webserverOnline? exec(`start http://localhost:${instance.clientPort}`): instance.startClient();
+    async onStartClientClicked(e) {
+        e.target.closest(".collapse").classList.add("loading");
+        this.getClickedInstance(e).then(instance => instance.startClient());
+    }
+
+    async onOpenBrowserClicked(e) {
+        this.getClickedInstance(e).then((instance) => exec(`start http://localhost:${instance.clientPort}`));
+    }
+
+    async onStopClicked(e) {
+        this.getClickedInstance(e).then((instance) => instance.stop());
     }
 
     async onUninstallClicked(e) {
-        var instance = (await DCSInstance.getInstances()).find((instance) => {return instance.folder === e.target.closest('.option').dataset.folder});
-        instance.webserverOnline || instance.backendOnline? showErrorPopup("Error, the selected Olympus instance is currently active, please stop Olympus before uninstalling it!") : instance.uninstall();
+        this.getClickedInstance(e).then((instance) => { 
+            instance.webserverOnline || instance.backendOnline? showErrorPopup("Error, the selected Olympus instance is currently active, please stop Olympus before uninstalling it!") : instance.uninstall();
+        });
+    }
+
+    async getClickedInstance(e) {
+        return DCSInstance.getInstances().then((instances) => {
+            return instances.find((instance) => {
+                return instance.folder === e.target.closest('.option').dataset.folder
+            })
+        });
     }
 
     show() {

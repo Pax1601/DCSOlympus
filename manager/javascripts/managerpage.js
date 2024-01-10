@@ -19,6 +19,16 @@ class ManagerPage {
     hide() {
         this.element.classList.add("hide");
     }
+
+    render() {
+        /* Connect all the collapsable buttons */
+        let buttons = document.querySelectorAll(".button.collapse");
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].addEventListener("click", () => {
+                buttons[i].classList.toggle("open");
+            })
+        }
+    }
 } 
 
 module.exports = ManagerPage;
