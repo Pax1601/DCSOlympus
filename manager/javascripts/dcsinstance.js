@@ -147,6 +147,9 @@ class DCSInstance {
                             instanceDiv.querySelector(".button.edit").classList.toggle("hide", this.webserverOnline)
                             instanceDiv.querySelector(".button.open-browser").classList.toggle("hide", !this.webserverOnline)
                             instanceDiv.querySelector(".button.stop").classList.toggle("hide", !this.webserverOnline)
+
+                            if (this.webserverOnline) 
+                                instanceDiv.querySelector(".button.start").classList.remove("loading")
                         }
                     }
                 }

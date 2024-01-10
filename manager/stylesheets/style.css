@@ -311,6 +311,8 @@ input {
     width: 100%;
     text-align: left;
     padding: 15px 0px !important;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
 }
 
 #popup .footer {
@@ -480,6 +482,11 @@ input {
     background-image: url("../icons/chevron-down-solid.svg");
     background-repeat: no-repeat;
     background-position: 50% 50%;
+}
+
+.button.collapse.loading::after {
+    background-image: url("../icons/spinner-solid.svg");
+    animation: rotate 2s linear infinite;
 }
 
 .button.collapse>div {

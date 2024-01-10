@@ -61,10 +61,12 @@ class InstancesPage extends ManagerPage {
     }
 
     async onStartServerClicked(e) {
+        e.target.closest(".collapse").classList.add("loading");
         this.getClickedInstance(e).then((instance) => instance.startServer());
     }
 
     async onStartClientClicked(e) {
+        e.target.closest(".collapse").classList.add("loading");
         this.getClickedInstance(e).then(instance => instance.startClient());
     }
 
