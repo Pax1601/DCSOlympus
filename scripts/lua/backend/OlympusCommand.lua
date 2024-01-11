@@ -545,7 +545,7 @@ end
 	-- loadout: (string, optional) only for air units, must be one of the loadouts defined in unitPayloads.lua
 	-- payload: (table, optional) overrides loadout, specifies directly the loadout of the unit
 	-- liveryID: (string, optional)
-function Olympus.spawnUnits(spawnTable) 
+function Olympus.spawnUnits(spawnTable, skill) 
 	Olympus.debug("Olympus.spawnUnits " .. Olympus.serializeTable(spawnTable), 2)
 
 	local unitsTable = nil
@@ -554,11 +554,11 @@ function Olympus.spawnUnits(spawnTable)
 
 	-- Generate the units table and route as per DCS requirements
 	if spawnTable.category == 'Aircraft' then
-		unitsTable = Olympus.generateAirUnitsTable(spawnTable.units)
+		unitsTable = Olympus.generateAirUnitsTable(spawnTable.units, skill)
 		route = Olympus.generateAirUnitsRoute(spawnTable)
 		category = 'plane'
 	elseif spawnTable.category == 'Helicopter' then
-		unitsTable = Olympus.generateAirUnitsTable(spawnTable.units)
+		unitsTable = Olympus.generateAirUnitsTable(spawnTable.units, skill)
 		route = Olympus.generateAirUnitsRoute(spawnTable)
 		category = 'helicopter'
 	elseif spawnTable.category == 'GroundUnit' then
@@ -1109,9 +1109,9 @@ function Olympus.setUnitsData(arg, time)
 
 									-- Generate the units table as per DCS requirements
 									if table["category"] == 'Aircraft' then
-										unitsTable = Olympus.generateAirUnitsTable(spawnTable.units)
+										unitsTable = Olympus.generateAirUnitsTable(spawnTable.units, skill)
 									elseif table["category"] == 'Helicopter' then
-										unitsTable = Olympus.generateAirUnitsTable(spawnTable.units)
+										unitsTable = Olympus.generateAirUnitsTable(spawnTable.units, skill)
 									elseif table["category"] == 'GroundUnit' then
 										unitsTable = Olympus.generateGroundUnitsTable(spawnTable.units)
 									elseif table["category"] == 'NavyUnit' then
