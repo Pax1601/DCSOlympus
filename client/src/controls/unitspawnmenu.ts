@@ -27,6 +27,7 @@ export abstract class UnitSpawnMenu {
         coalition: "blue", 
         count: 1, 
         country: "", 
+        skill: "Excellent",
         loadout: undefined, 
         airbase: undefined, 
         liveryID: undefined, 
@@ -45,6 +46,7 @@ export abstract class UnitSpawnMenu {
     #unitLabelDropdown: Dropdown;
     #unitCountDropdown: Dropdown;
     #unitLoadoutDropdown: Dropdown;
+    #unitSkillDropdown: Dropdown;
     #unitCountryDropdown: Dropdown;
     #unitLiveryDropdown: Dropdown;
     #unitSpawnAltitudeSlider: Slider;
@@ -77,6 +79,7 @@ export abstract class UnitSpawnMenu {
         this.#unitRoleTypeDropdown = new Dropdown(null, (roleType: string) => this.#setUnitRoleType(roleType), undefined, "Role");
         this.#unitLabelDropdown = new Dropdown(null, (name: string) => this.#setUnitName(name), undefined, "Type");
         this.#unitLoadoutDropdown = new Dropdown(null, (loadout: string) => this.#setUnitLoadout(loadout), undefined, "Loadout");
+        this.#unitSkillDropdown = new Dropdown(null, (skill: string) => this.#setUnitSkill(skill), undefined, "Skill");
         this.#unitCountDropdown = new Dropdown(null, (count: string) => this.#setUnitCount(count), undefined, "Count");
         this.#unitCountryDropdown = new Dropdown(null, () => { /* Custom button implementation */ }, undefined, "Country");
         this.#unitLiveryDropdown = new Dropdown(null, (livery: string) => this.#setUnitLivery(livery), undefined, "Livery");
@@ -141,7 +144,7 @@ export abstract class UnitSpawnMenu {
          });
 
         /* Assemble all components */
-        this.#container.append(this.#unitRoleTypeDropdown.getContainer(), unitLabelCountContainerEl, this.#unitLoadoutDropdown.getContainer(), this.#unitSpawnAltitudeSlider.getContainer() as HTMLElement,
+        this.#container.append(this.#unitRoleTypeDropdown.getContainer(), unitLabelCountContainerEl, this.#unitLoadoutDropdown.getContainer(), this.#unitSkillDropdown.getContainer(), this.#unitSpawnAltitudeSlider.getContainer() as HTMLElement,
         this.#unitLoadoutPreviewEl, this.#advancedOptionsToggle, this.#advancedOptionsDiv, this.#unitInfoToggle, this.#unitInfoDiv, this.#deployUnitButtonEl);
 
         /* Load the country codes from the public folder */
@@ -170,6 +173,7 @@ export abstract class UnitSpawnMenu {
 
             /* Hide all the other components */
             this.#unitLoadoutDropdown.hide();
+            this.#unitSkillDropdown.hide();
             this.#unitSpawnAltitudeSlider.hide();
             this.#unitLoadoutPreviewEl.classList.add("hide");
             this.#advancedOptionsDiv.classList.add("hide");
@@ -244,6 +248,10 @@ export abstract class UnitSpawnMenu {
                 this.#unitLoadoutPreviewEl.classList.remove("hide");
             }
 
+            if (this.#showSkill) {
+                this.#unitSkillDropdown.show();
+            }
+
             /* Show the advanced options and unit info sections */
             this.#advancedOptionsText.classList.remove("hide");
             this.#advancedOptionsToggle.classList.remove("hide");
@@ -260,6 +268,11 @@ export abstract class UnitSpawnMenu {
                 this.#unitLoadoutDropdown.setOptions(this.#unitDatabase.getLoadoutNamesByRole(this.spawnOptions.name, this.spawnOptions.roleType));
                 this.#unitLoadoutDropdown.selectValue(0);
             }
+
+            if (!this.#unitSkillDropdown.isHidden()) {
+                this.#unitSkillDropdown.setOptions(["Average", "Good", "High", "Excellent"])
+                this.#unitSkillDropdown.selectValue(3);
+            }            
 
             /* Get the unit data from the db */
             var blueprint = this.#unitDatabase.getByName(this.spawnOptions.name);
@@ -317,6 +330,10 @@ export abstract class UnitSpawnMenu {
             this.#container.dispatchEvent(new Event("resize"));
         })
 
+        this.#container.addEventListener("unitSkillChanged", () => {
+
+        })
+
         this.#container.addEventListener("unitCountChanged", () => {
             /* Recompute the spawn points */
             this.#computeSpawnPoints();
@@ -372,6 +389,7 @@ export abstract class UnitSpawnMenu {
         this.#unitCountDivider.classList.add("hide");
         this.#unitCountDropdown.hide();
         this.#unitLoadoutDropdown.hide();
+        this.#unitSkillDropdown.hide();
         this.#unitSpawnAltitudeSlider.hide();
         this.#unitLoadoutPreviewEl.classList.add("hide");
         this.#advancedOptionsDiv.classList.add("hide");
@@ -488,6 +506,10 @@ export abstract class UnitSpawnMenu {
         return this.#unitLoadoutDropdown;
     }
 
+    getSkillDropdown() {
+        return this.#unitSkillDropdown;
+    }
+
     getCountryDropdown() {
         return this.#unitCountDropdown;
     }
@@ -529,6 +551,11 @@ export abstract class UnitSpawnMenu {
             this.spawnOptions.loadout = loadout;
         this.#container.dispatchEvent(new Event("unitLoadoutChanged"));
     }
+
+    #setUnitSkill(skill: string) {
+        this.spawnOptions.skill = skill;
+        this.#container.dispatchEvent(new Event("unitSkillChanged"));
+    }    
 
     #setUnitCount(count: string) {
         this.spawnOptions.count = parseInt(count);
@@ -638,15 +665,16 @@ export class AircraftSpawnMenu extends UnitSpawnMenu {
             var unitTable: UnitSpawnTable = {
                 unitType: spawnOptions.name,
                 location: spawnOptions.latlng,
-                altitude: spawnOptions.altitude? spawnOptions.altitude: 0,
-                loadout: spawnOptions.loadout? spawnOptions.loadout.name: "",
-                liveryID: spawnOptions.liveryID? spawnOptions.liveryID: ""
+                altitude: spawnOptions.altitude ? spawnOptions.altitude : 0,
+                loadout: spawnOptions.loadout ? spawnOptions.loadout.name : "",
+                liveryID: spawnOptions.liveryID ? spawnOptions.liveryID : "",
+                skill: spawnOptions.skill ? spawnOptions.skill : "Excellent" // Default to "Excellent" if skill is not set
             };
             var units = [];
-            for (let i = 1; i < unitsCount + 1; i++) {
+            for (let i = 1; i <= unitsCount; i++) {
                 units.push(unitTable);
             }
-
+    
             getApp().getUnitsManager().spawnUnits("Aircraft", units, getApp().getActiveCoalition(), false, spawnOptions.airbase ? spawnOptions.airbase.getName() : "", spawnOptions.country, (res: any) => {
                 if (res.commandHash !== undefined)
                     getApp().getMap().addTemporaryMarker(spawnOptions.latlng, spawnOptions.name, getApp().getActiveCoalition(), res.commandHash);
@@ -655,6 +683,7 @@ export class AircraftSpawnMenu extends UnitSpawnMenu {
             this.getContainer().dispatchEvent(new Event("hide"));
         }
     }
+    
 }
 
 export class HelicopterSpawnMenu extends UnitSpawnMenu {
@@ -679,7 +708,8 @@ export class HelicopterSpawnMenu extends UnitSpawnMenu {
                 location: spawnOptions.latlng,
                 altitude: spawnOptions.altitude? spawnOptions.altitude: 0,
                 loadout: spawnOptions.loadout? spawnOptions.loadout.name: "",
-                liveryID: spawnOptions.liveryID? spawnOptions.liveryID: ""
+                liveryID: spawnOptions.liveryID? spawnOptions.liveryID: "",
+                skill: spawnOptions.skill ? spawnOptions.skill : "Excellent" // Default to "Excellent" if skill is not set
             };
             var units = [];
             for (let i = 1; i < unitsCount + 1; i++) {

@@ -75,6 +75,7 @@ export interface UnitSpawnTable {
     location: LatLng,
     altitude?: number,
     loadout?: string,
+    skill?: string,
     liveryID: string
 }
 
@@ -238,6 +239,7 @@ export interface UnitSpawnOptions {
     coalition: string;
     count: number;
     country: string;
+    skill: string;
     loadout: LoadoutBlueprint | undefined;
     airbase: Airbase | undefined;
     liveryID: string | undefined;
