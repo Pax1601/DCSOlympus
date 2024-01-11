@@ -39,6 +39,7 @@ export abstract class UnitSpawnMenu {
     #countryCodes: any;
     #orderByRole: boolean;
     #showLoadout: boolean = true;
+    #showSkill: boolean = true;
     #showAltitudeSlider: boolean = true;
     
     /* Controls */
@@ -233,6 +234,7 @@ export abstract class UnitSpawnMenu {
             /* Reset the spawn options */
             this.spawnOptions.name = "";
             this.spawnOptions.loadout = undefined;
+            this.spawnOptions.skill = "Excellent";
             this.spawnOptions.liveryID = undefined;
 
             this.#computeSpawnPoints();
@@ -528,6 +530,10 @@ export abstract class UnitSpawnMenu {
 
     setShowLoadout(showLoadout: boolean) {
         this.#showLoadout = showLoadout;
+    }
+
+    setShowSkill(showSkill: boolean) {
+        this.#showSkill = showSkill
     }
 
     setShowAltitudeSlider(showAltitudeSlider: boolean) {
