@@ -600,7 +600,7 @@ function Olympus.spawnUnits(spawnTable)
 end
 
 -- Generates unit table for air units 
-function Olympus.generateAirUnitsTable(units)
+function Olympus.generateAirUnitsTable(units, skill)
 	local unitsTable = {}
 	for idx, unit in pairs(units) do
 		local loadout = unit.loadout			-- loadout: a string, one of the names defined in unitPayloads.lua. Must be compatible with the unitType
@@ -628,7 +628,7 @@ function Olympus.generateAirUnitsTable(units)
 			["y"] = spawnLocation.z,
 			["alt"] = unit.alt,
 			["alt_type"] = "BARO",
-			["skill"] = "Excellent",
+			["skill"] = skill,
 			["payload"] = payload, 
 			["heading"] = unit.heading,
 			["callsign"] = { [1] = 1, [2] = 1, [3] = 1, ["name"] = "Olympus" .. Olympus.unitCounter.. "-" .. #unitsTable + 1 },

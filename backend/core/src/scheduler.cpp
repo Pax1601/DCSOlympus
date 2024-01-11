@@ -203,9 +203,10 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			double alt = unit[L"altitude"].as_double();
 			Coords location; location.lat = lat; location.lng = lng; location.alt = alt;
 			string loadout = to_string(unit[L"loadout"]);
+			string skill = to_string(unit[L"skill"]);
 			string liveryID = to_string(unit[L"liveryID"]);
 
-			spawnOptions.push_back({unitType, location, loadout, liveryID});
+			spawnOptions.push_back({unitType, location, loadout, skill, liveryID});
 			log(username + " spawned a " + coalition + " " + unitType, true);
 		}
 
