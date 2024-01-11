@@ -27,6 +27,7 @@ hgt
 L.Path.Drag.js
 leaflet-gesture-handling.css
 leaflet.nauticscale.js
+leaflet.css
 package-lock.json
 
 !client/bin

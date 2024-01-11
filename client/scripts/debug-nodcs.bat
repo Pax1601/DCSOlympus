@@ -1,3 +1,7 @@
+cd scripts
+call ./copy.bat
+cd ..
+
 REM create a "fake" dcs Saved Games folder
 mkdir "%temp%\DCS Olympus\dcs"
 echo F|xcopy /Y "..\olympus.json" "%temp%\DCS Olympus\dcs\Config\olympus.json"
