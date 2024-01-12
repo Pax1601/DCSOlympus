@@ -562,10 +562,10 @@ function Olympus.spawnUnits(spawnTable, skill)
 		route = Olympus.generateAirUnitsRoute(spawnTable)
 		category = 'helicopter'
 	elseif spawnTable.category == 'GroundUnit' then
-		unitsTable = Olympus.generateGroundUnitsTable(spawnTable.units)
+		unitsTable = Olympus.generateGroundUnitsTable(spawnTable.units, skill)
 		category = 'vehicle'
 	elseif spawnTable.category == 'NavyUnit' then
-		unitsTable = Olympus.generateNavyUnitsTable(spawnTable.units)
+		unitsTable = Olympus.generateNavyUnitsTable(spawnTable.units, skill)
 		category = 'ship'
 	end
 
@@ -696,7 +696,7 @@ function Olympus.generateAirUnitsRoute(spawnTable)
 end
 
 -- Generates ground units table, either single or from template
-function Olympus.generateGroundUnitsTable(units)
+function Olympus.generateGroundUnitsTable(units, skill)
 	local unitsTable = {}
 	for idx, unit in pairs(units) do
 		local spawnLocation = mist.utils.makeVec3GL(coord.LLtoLO(unit.lat, unit.lng, 0))
@@ -708,7 +708,7 @@ function Olympus.generateGroundUnitsTable(units)
 					["x"] = spawnLocation.x + value.dx,
 					["y"] = spawnLocation.z + value.dy,
 					["heading"] = 0,
-					["skill"] = "High",
+					["skill"] = skill,
 					["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitsTable + 1
 				}
 			end 
@@ -719,7 +719,7 @@ function Olympus.generateGroundUnitsTable(units)
 				["x"] = spawnLocation.x,
 				["y"] = spawnLocation.z,
 				["heading"] = unit.heading,
-				["skill"] = "High",
+				["skill"] = skill,
 				["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitsTable + 1,
 				["livery_id"] = unit.liveryID
 			}
@@ -730,7 +730,7 @@ function Olympus.generateGroundUnitsTable(units)
 end  
 
 -- Generates navy units table, either single or from template
-function Olympus.generateNavyUnitsTable(units)
+function Olympus.generateNavyUnitsTable(units, skill)
 	local unitsTable = {}
 	for idx, unit in pairs(units) do
 		local spawnLocation = mist.utils.makeVec3GL(coord.LLtoLO(unit.lat, unit.lng, 0))
@@ -742,7 +742,7 @@ function Olympus.generateNavyUnitsTable(units)
 					["x"] = spawnLocation.x + value.dx,
 					["y"] = spawnLocation.z + value.dy,
 					["heading"] = 0,
-					["skill"] = "High",
+					["skill"] = skill,
 					["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitsTable + 1,
 					["transportable"] = { ["randomTransportable"] = false }
 				}
@@ -754,7 +754,7 @@ function Olympus.generateNavyUnitsTable(units)
 				["x"] = spawnLocation.x,
 				["y"] = spawnLocation.z,
 				["heading"] = unit.heading,
-				["skill"] = "High",
+				["skill"] = skill,
 				["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitsTable + 1,
 				["transportable"] = { ["randomTransportable"] = false },
 				["livery_id"] = unit.liveryID
@@ -1113,9 +1113,9 @@ function Olympus.setUnitsData(arg, time)
 									elseif table["category"] == 'Helicopter' then
 										unitsTable = Olympus.generateAirUnitsTable(spawnTable.units, skill)
 									elseif table["category"] == 'GroundUnit' then
-										unitsTable = Olympus.generateGroundUnitsTable(spawnTable.units)
+										unitsTable = Olympus.generateGroundUnitsTable(spawnTable.units, skill)
 									elseif table["category"] == 'NavyUnit' then
-										unitsTable = Olympus.generateNavyUnitsTable(spawnTable.units)
+										unitsTable = Olympus.generateNavyUnitsTable(spawnTable.units, skill)
 									end
 
 									-- Save the units in the database, for cloning

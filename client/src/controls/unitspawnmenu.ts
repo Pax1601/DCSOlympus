@@ -754,7 +754,8 @@ export class GroundUnitSpawnMenu extends UnitSpawnMenu {
             var unitTable: UnitSpawnTable = {
                 unitType: spawnOptions.name,
                 location: spawnOptions.latlng,
-                liveryID: spawnOptions.liveryID? spawnOptions.liveryID: ""
+                liveryID: spawnOptions.liveryID? spawnOptions.liveryID: "",
+                skill: spawnOptions.skill ? spawnOptions.skill : "High"
             };
             
             var units = [];
@@ -804,7 +805,8 @@ export class NavyUnitSpawnMenu extends UnitSpawnMenu {
             var unitTable: UnitSpawnTable = {
                 unitType: spawnOptions.name,
                 location: spawnOptions.latlng,
-                liveryID: spawnOptions.liveryID? spawnOptions.liveryID: ""
+                liveryID: spawnOptions.liveryID? spawnOptions.liveryID: "",
+                skill: spawnOptions.skill ? spawnOptions.skill : "High"
             };
             
             var units = [];

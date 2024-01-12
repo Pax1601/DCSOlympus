@@ -223,6 +223,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		bool immediate = value[L"immediate"].as_bool();
 		string coalition = to_string(value[L"coalition"]);
 		string country = to_string(value[L"country"]);
+		string skill = "";
 
 		int spawnPoints = value[L"spawnPoints"].as_number().to_int32();
 		if (!checkSpawnPoints(spawnPoints, coalition)) return;
@@ -234,15 +235,16 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			double lng = unit[L"location"][L"lng"].as_double();
 			Coords location; location.lat = lat; location.lng = lng;
 			string liveryID = to_string(unit[L"liveryID"]);
+			skill = to_string(unit[L"skill"]);
 			
 			spawnOptions.push_back({ unitType, location, "", liveryID });
 			log(username + " spawned a " + coalition + " " + unitType, true);
 		}
 
 		if (key.compare("spawnGroundUnits") == 0)
-			command = dynamic_cast<Command*>(new SpawnGroundUnits(coalition, spawnOptions, country, immediate));
+			command = dynamic_cast<Command*>(new SpawnGroundUnits(coalition, spawnOptions, country, skill, immediate));
 		else
-			command = dynamic_cast<Command*>(new SpawnNavyUnits(coalition, spawnOptions, country, immediate));
+			command = dynamic_cast<Command*>(new SpawnNavyUnits(coalition, spawnOptions, country, skill, immediate));
 	}
 	/************************/
 	else if (key.compare("attackUnit") == 0)
