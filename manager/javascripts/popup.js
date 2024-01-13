@@ -1,5 +1,24 @@
 // TODO: we can probably refactor this to be a bit cleaner
 
+function showInfoPopup(message, onCloseCallback) {
+    document.getElementById("grayout").classList.remove("hide");
+    document.getElementById("popup").classList.remove("hide");
+    document.getElementById("popup").querySelector(".error").classList.add("hide");
+    document.getElementById("popup").querySelector(".wait").classList.add("hide");
+    document.getElementById("popup").querySelector(".confirm").classList.remove("hide");
+    document.getElementById("popup").querySelector(".close-popup").classList.remove("hide");
+    document.getElementById("popup").querySelector(".accept-popup").classList.add("hide");
+
+    /* Not using event listeners to make sure we only have one callback */
+    document.getElementById("popup").querySelector(".close-popup").onclick = (e) => {
+        hidePopup();
+        if (onCloseCallback)
+            onCloseCallback();
+    }
+    document.getElementById("popup").querySelector(".content").innerHTML = message;
+}
+
+
 function showErrorPopup(message, onCloseCallback) {
     document.getElementById("grayout").classList.remove("hide");
     document.getElementById("popup").classList.remove("hide");
@@ -61,6 +80,7 @@ function hidePopup() {
 }
 
 module.exports = {
+    showInfoPopup: showInfoPopup,
     showErrorPopup: showErrorPopup,
     showConfirmPopup: showConfirmPopup,
     showWaitPopup: showWaitPopup,

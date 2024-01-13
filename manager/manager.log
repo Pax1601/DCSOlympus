@@ -1,0 +1,317 @@
+ ======================= New log starting at Thu Jan 11 2024 16:07:31 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+Development build detected, skipping version checks...
+ ======================= New log starting at Thu Jan 11 2024 16:11:52 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+ ======================= New log starting at Thu Jan 11 2024 16:11:54 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+ ======================= New log starting at Thu Jan 11 2024 16:11:56 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+ ======================= New log starting at Thu Jan 11 2024 16:13:03 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+ ======================= New log starting at Thu Jan 11 2024 16:13:31 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+ ======================= New log starting at Thu Jan 11 2024 16:13:41 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+ ======================= New log starting at Thu Jan 11 2024 16:13:48 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+ ======================= New log starting at Thu Jan 11 2024 16:23:11 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+ReferenceError: ./ejs/connections.ejs:32
+    30| <div id="manager-connections">
+    31|     <div class="step-summary">
+ >> 32|         <div class="blue <%= !install || basic? 'hide': '' %>">User path</div>
+    33|         <div class="white">Ports and address</div>
+    34|         <div class="empty">Passwords</div>
+    35|         <div class="empty"> <%= install? 'Install': 'Update' %></div>
+
+basic is not defined
+    at eval ("./ejs/connections.ejs":12:38)
+    at connections (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:491:10)
+    at ConnectionsPage.show (D:\Documents\DCSOlympus\manager\javascripts\connections.js:41:13)
+    at Manager.start (D:\Documents\DCSOlympus\manager\javascripts\manager.js:70:42)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async D:\Documents\DCSOlympus\manager\javascripts\preload.js:268:5 {
+  path: './ejs/connections.ejs'
+}
+ ======================= New log starting at Thu Jan 11 2024 16:24:03 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+ReferenceError: ./ejs/connections.ejs:32
+    30| <div id="manager-connections">
+    31|     <div class="step-summary">
+ >> 32|         <div class="blue <%= !install || basic? 'hide': '' %>">User path</div>
+    33|         <div class="white">Ports and address</div>
+    34|         <div class="empty">Passwords</div>
+    35|         <div class="empty"> <%= install? 'Install': 'Update' %></div>
+
+basic is not defined
+    at eval ("./ejs/connections.ejs":12:38)
+    at connections (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:491:10)
+    at ConnectionsPage.show (D:\Documents\DCSOlympus\manager\javascripts\connections.js:41:13)
+    at Manager.start (D:\Documents\DCSOlympus\manager\javascripts\manager.js:70:42)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async D:\Documents\DCSOlympus\manager\javascripts\preload.js:268:5 {
+  path: './ejs/connections.ejs'
+}
+ ======================= New log starting at Thu Jan 11 2024 16:24:25 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+ReferenceError: ./ejs/connections.ejs:32
+    30| <div id="manager-connections">
+    31|     <div class="step-summary">
+ >> 32|         <div class="blue <%= !install || basic? 'hide': '' %>">User path</div>
+    33|         <div class="white">Ports and address</div>
+    34|         <div class="empty">Passwords</div>
+    35|         <div class="empty"> <%= install? 'Install': 'Update' %></div>
+
+basic is not defined
+    at eval ("./ejs/connections.ejs":12:38)
+    at connections (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:491:10)
+    at ConnectionsPage.show (D:\Documents\DCSOlympus\manager\javascripts\connections.js:41:13)
+    at Manager.start (D:\Documents\DCSOlympus\manager\javascripts\manager.js:71:42)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async D:\Documents\DCSOlympus\manager\javascripts\preload.js:268:5 {
+  path: './ejs/connections.ejs'
+}
+ ======================= New log starting at Thu Jan 11 2024 16:24:45 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+ReferenceError: ./ejs/connections.ejs:32
+    30| <div id="manager-connections">
+    31|     <div class="step-summary">
+ >> 32|         <div class="blue <%= !install || basic? 'hide': '' %>">User path</div>
+    33|         <div class="white">Ports and address</div>
+    34|         <div class="empty">Passwords</div>
+    35|         <div class="empty"> <%= install? 'Install': 'Update' %></div>
+
+basic is not defined
+    at eval ("./ejs/connections.ejs":12:38)
+    at connections (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:491:10)
+    at ConnectionsPage.show (D:\Documents\DCSOlympus\manager\javascripts\connections.js:41:13)
+    at Manager.start (D:\Documents\DCSOlympus\manager\javascripts\manager.js:71:42)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async D:\Documents\DCSOlympus\manager\javascripts\preload.js:268:5 {
+  path: './ejs/connections.ejs'
+}
+ ======================= New log starting at Thu Jan 11 2024 16:25:20 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+ReferenceError: ./ejs/connections.ejs:32
+    30| <div id="manager-connections">
+    31|     <div class="step-summary">
+ >> 32|         <div class="blue <%= !install || basic? 'hide': '' %>">User path</div>
+    33|         <div class="white">Ports and address</div>
+    34|         <div class="empty">Passwords</div>
+    35|         <div class="empty"> <%= install? 'Install': 'Update' %></div>
+
+basic is not defined
+    at eval ("./ejs/connections.ejs":12:38)
+    at connections (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:491:10)
+    at ConnectionsPage.show (D:\Documents\DCSOlympus\manager\javascripts\connections.js:41:13)
+    at Manager.start (D:\Documents\DCSOlympus\manager\javascripts\manager.js:78:42)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async D:\Documents\DCSOlympus\manager\javascripts\preload.js:268:5 {
+  path: './ejs/connections.ejs'
+}
+ ======================= New log starting at Thu Jan 11 2024 16:28:55 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+ReferenceError: ./ejs/connections.ejs:52
+    50|             </span>
+    51|             <div>
+ >> 52|                 <input type="number" min="1024" max="65535" value="<%= instance["clientPort"] %>">
+    53|                 <img class="success hide">
+    54|                 <div class="error hide">
+    55|                     <img> <span>Port already in use</span>
+
+instance is not defined
+    at eval ("./ejs/connections.ejs":18:26)
+    at connections (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:491:10)
+    at ConnectionsPage.show (D:\Documents\DCSOlympus\manager\javascripts\connections.js:41:13)
+    at Manager.start (D:\Documents\DCSOlympus\manager\javascripts\manager.js:78:42)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async D:\Documents\DCSOlympus\manager\javascripts\preload.js:268:5 {
+  path: './ejs/connections.ejs'
+}
+ ======================= New log starting at Thu Jan 11 2024 16:29:02 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+ReferenceError: ./ejs/connections.ejs:52
+    50|             </span>
+    51|             <div>
+ >> 52|                 <input type="number" min="1024" max="65535" value="<%= instance["clientPort"] %>">
+    53|                 <img class="success hide">
+    54|                 <div class="error hide">
+    55|                     <img> <span>Port already in use</span>
+
+instance is not defined
+    at eval ("./ejs/connections.ejs":18:26)
+    at connections (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:491:10)
+    at ConnectionsPage.show (D:\Documents\DCSOlympus\manager\javascripts\connections.js:41:13)
+    at Manager.start (D:\Documents\DCSOlympus\manager\javascripts\manager.js:78:42)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async D:\Documents\DCSOlympus\manager\javascripts\preload.js:268:5 {
+  path: './ejs/connections.ejs'
+}
+ ======================= New log starting at Thu Jan 11 2024 16:31:06 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+ReferenceError: ./ejs/connections.ejs:52
+    50|             </span>
+    51|             <div>
+ >> 52|                 <input type="number" min="1024" max="65535" value="<%= instance["clientPort"] %>">
+    53|                 <img class="success hide">
+    54|                 <div class="error hide">
+    55|                     <img> <span>Port already in use</span>
+
+instance is not defined
+    at eval ("./ejs/connections.ejs":18:26)
+    at connections (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:491:10)
+    at ConnectionsPage.show (D:\Documents\DCSOlympus\manager\javascripts\connections.js:41:13)
+    at Manager.start (D:\Documents\DCSOlympus\manager\javascripts\manager.js:77:42)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async D:\Documents\DCSOlympus\manager\javascripts\preload.js:268:5 {
+  path: './ejs/connections.ejs'
+}
+ ======================= New log starting at Thu Jan 11 2024 16:37:31 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+ReferenceError: ./ejs/connections.ejs:52
+    50|             </span>
+    51|             <div>
+ >> 52|                 <input type="number" min="1024" max="65535" value="<%= instance["clientPort"] %>">
+    53|                 <img class="success hide">
+    54|                 <div class="error hide">
+    55|                     <img> <span>Port already in use</span>
+
+instance is not defined
+    at eval ("./ejs/connections.ejs":18:26)
+    at connections (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:491:10)
+    at ConnectionsPage.show (D:\Documents\DCSOlympus\manager\javascripts\connections.js:38:13)
+    at Manager.start (D:\Documents\DCSOlympus\manager\javascripts\manager.js:77:42)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async D:\Documents\DCSOlympus\manager\javascripts\preload.js:268:5 {
+  path: './ejs/connections.ejs'
+}
+ ======================= New log starting at Thu Jan 11 2024 16:38:57 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+ ======================= New log starting at Thu Jan 11 2024 16:39:52 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+ ======================= New log starting at Thu Jan 11 2024 16:41:14 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+ ======================= New log starting at Thu Jan 11 2024 16:41:25 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+ ======================= New log starting at Thu Jan 11 2024 16:41:48 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+ ======================= New log starting at Thu Jan 11 2024 16:42:27 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+ ======================= New log starting at Thu Jan 11 2024 16:42:52 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+ ======================= New log starting at Thu Jan 11 2024 16:43:06 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+ ======================= New log starting at Thu Jan 11 2024 16:43:24 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+Instance C:\Users\dpassoni\Saved Games\dcs.openbeta client port set to 3000
+Instance C:\Users\dpassoni\Saved Games\dcs.openbeta client port set to 3001
+ ======================= New log starting at Thu Jan 11 2024 16:54:16 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+ ======================= New log starting at Thu Jan 11 2024 16:54:21 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+Instance C:\Users\dpassoni\Saved Games\dcs.openbeta client port set to 3000
+Instance C:\Users\dpassoni\Saved Games\dcs.openbeta client port set to 3001
+ReferenceError: ./ejs/passwords.ejs:6
+    4| <div id="manager-passwords">
+    5|     <div class="step-summary">
+ >> 6|         <div class="blue <%= !install || singleInstance? 'hide': '' %>">User path</div>
+    7|         <div class="blue">Ports and address</div>
+    8|         <div class="white">Passwords</div>
+    9|         <div class="empty"> <%= install? 'Install': 'Update' %></div>
+
+install is not defined
+    at eval ("./ejs/passwords.ejs":12:27)
+    at passwords (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:491:10)
+    at PasswordsPage.show (D:\Documents\DCSOlympus\manager\javascripts\passwords.js:35:13)
+    at ConnectionsPage.onNextClicked (D:\Documents\DCSOlympus\manager\javascripts\connections.js:58:36)
+    at HTMLDivElement.<anonymous> (D:\Documents\DCSOlympus\manager\javascripts\connections.js:21:87) {
+  path: './ejs/passwords.ejs'
+}
+ ======================= New log starting at Thu Jan 11 2024 16:54:49 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+Instance C:\Users\dpassoni\Saved Games\dcs.openbeta client port set to 3000
+Instance C:\Users\dpassoni\Saved Games\dcs.openbeta client port set to 3001
+ReferenceError: ./ejs/passwords.ejs:44
+    42|             </div>
+    43|         </div>
+ >> 44|         <% if (!basic) { %>
+    45|         <div class="button cancel">
+    46|             <%= install? "Cancel installation": "Cancel editing" %>
+    47|         </div>
+
+basic is not defined
+    at eval ("./ejs/passwords.ejs":18:8)
+    at passwords (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:491:10)
+    at PasswordsPage.show (D:\Documents\DCSOlympus\manager\javascripts\passwords.js:35:13)
+    at ConnectionsPage.onNextClicked (D:\Documents\DCSOlympus\manager\javascripts\connections.js:58:36)
+    at HTMLDivElement.<anonymous> (D:\Documents\DCSOlympus\manager\javascripts\connections.js:21:87) {
+  path: './ejs/passwords.ejs'
+}
+ ======================= New log starting at Thu Jan 11 2024 16:55:57 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+Instance C:\Users\dpassoni\Saved Games\dcs.openbeta client port set to 3000
+Instance C:\Users\dpassoni\Saved Games\dcs.openbeta client port set to 3001
+ ======================= New log starting at Fri Jan 12 2024 08:51:22 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+Development build detected, skipping version checks...
+Instance C:\Users\dpassoni\Saved Games\dcs.openbeta client port set to 3000
+Instance C:\Users\dpassoni\Saved Games\dcs.openbeta client port set to 3001
+ ======================= New log starting at Fri Jan 12 2024 08:53:17 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+Instance C:\Users\dpassoni\Saved Games\dcs.openbeta client port set to 3000
+Instance C:\Users\dpassoni\Saved Games\dcs.openbeta client port set to 3001
+ ======================= New log starting at Fri Jan 12 2024 08:53:42 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+Instance C:\Users\dpassoni\Saved Games\dcs.openbeta client port set to 3000
+Instance C:\Users\dpassoni\Saved Games\dcs.openbeta client port set to 3001
+ReferenceError: ./ejs/result.ejs:132
+    130|             <div>
+    131|                 <span>
+ >> 132|                     <%= instance.name %>
+    133|                 </span>
+    134|                 <span><img src="./icons/folder-open-solid.svg">
+    135|                     <%= instance.folder %>
+
+instance is not defined
+    at eval ("./ejs/result.ejs":27:26)
+    at result (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile (D:\Documents\DCSOlympus\manager\node_modules\ejs\lib\ejs.js:491:10)
+    at ResultPage.show (D:\Documents\DCSOlympus\manager\javascripts\result.js:25:13)
+    at PasswordsPage.onNextClicked (D:\Documents\DCSOlympus\manager\javascripts\passwords.js:40:33)
+    at HTMLDivElement.<anonymous> (D:\Documents\DCSOlympus\manager\javascripts\managerpage.js:39:87) {
+  path: './ejs/result.ejs'
+}
+ ======================= New log starting at Fri Jan 12 2024 08:54:41 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+Instance C:\Users\dpassoni\Saved Games\dcs.openbeta client port set to 3000
+Instance C:\Users\dpassoni\Saved Games\dcs.openbeta client port set to 3001
+ ======================= New log starting at Fri Jan 12 2024 08:56:11 GMT+0100 (Central European Standard Time) =======================
+Running in D:\Documents\DCSOlympus\manager\javascripts
+Instance C:\Users\dpassoni\Saved Games\dcs.openbeta client port set to 3000
+Instance C:\Users\dpassoni\Saved Games\dcs.openbeta client port set to 3001
+Installing hooks in C:\Users\dpassoni\Saved Games\dcs.openbeta
+Error installing hooks in C:\Users\dpassoni\Saved Games\dcs.openbeta: Error: ENOENT: no such file or directory, lstat 'D:\Documents\DCSOlympus\scripts\OlympusHook.lua'

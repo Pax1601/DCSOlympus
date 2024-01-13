@@ -6,258 +6,131 @@ const ResultPage = require('./result');
 const InstancesPage = require('./instances');
 
 const DCSInstance = require('./dcsinstance');
-const { showErrorPopup, showWaitPopup } = require('./popup');
+const { showErrorPopup, showWaitPopup, showConfirmPopup } = require('./popup');
 const { fixInstances } = require('./filesystem');
 const { logger } = require("./filesystem")
 const path = require("path")
+const fs = require("fs");
+const WelcomePage = require("./welcome");
+const TypePage = require("./type");
 
 class Manager {
-    simplified = true;
+    options = {
+        logLocation: path.join(__dirname, "..", "manager.log"),
+        configLoaded: false
+    };
+
+    welcomePage = null;
+    installationsPage = null;
+    typePage = null;
+    connectionsPage = null;
+    passwordsPage = null;
+    resultPage = null;
+    instancesPage = null;
 
     constructor() {
 
     }
 
     async start() {
-        /* Get the list of DCS instances */
-        var instances = await DCSInstance.getInstances();
-
-        /* If there is only 1 DCS Instance and Olympus is not installed in it, go straight to the installation page (since there is nothing else to do) */
-        this.simplified = instances.length === 1 && !instances[0].installed;
-
-        document.getElementById("loader").classList.add("hide");
-
-        /* Check if there are corrupted or outdate instances */
-        if (instances.some((instance) => {
-            return instance.installed && instance.error;
-        })) {
-            /* Ask the user for confirmation */
-            showErrorPopup("One or more Olympus instances are corrupted or need updating. Press Close to fix this.", async () => {
-                showWaitPopup("Please wait while your instances are being fixed.")
-                fixInstances(instances.filter((instance) => {
-                    return instance.installed && instance.error;
-                })).then(
-                    () => { location.reload() },
-                    (err) => { 
-                        logger.error(err);
-                        showErrorPopup(`An error occurred while trying to fix your installations. Please reinstall Olympus manually. <br><br> You can find more info in ${path.join(__dirname, "..", "manager.log")}`); 
-                    }
-                )
-            })
-        }
-
-        /* Check which buttons should be enabled */
-        const installEnabled = true;
-        const manageEnabled = instances.some((instance) => { return instance.installed; });
-
-        /* Menu */
-        var menuPage = new MenuPage();
-        menuPage.options = {
-            ...menuPage.options,
-            installEnabled: installEnabled,
-            manageEnabled: manageEnabled
-        }
-        /* When the install button is clicked go the installation page */
-        menuPage.onInstallClicked = (e) => {
-            menuPage.hide();
-            installationsPage.show();
-        }
-        /* When the manage button is clicked go to the instances page in "manage mode" (i.e. manage = true) */
-        menuPage.onManageClicked = (e) => {
-            menuPage.hide();
-            instancesPage.show();
-        }
-
-        /* Installations */
-        var installationsPage = new InstallationsPage();
-        installationsPage.options = {
-            ...installationsPage.options,
-            instances: instances
-        }
-        installationsPage.setSelectedInstance = (activeInstance) => {
-            /* Set the active options for the pages */
-            const options = {
-                instance: activeInstance,
-                simplified: this.simplified,
-                install: true
+        if (fs.existsSync("options.json")) {
+            /* Load the options from the json file */
+            try {
+                this.options = {...this.options, ...JSON.parse(fs.readFileSync("options.json"))};
+                this.options.configLoaded = true;
+            } catch (e) {
+                logger.error(`An error occurred while reading the options.json file: ${e}`);
             }
-            connectionsPage.options = {
-                ...connectionsPage.options,
-                ...options
+        } 
+
+        if (!this.options.configLoaded) {
+            /* Hide the loading page */
+            document.getElementById("loader").classList.add("hide");
+
+            /* Show page to select basic vs advanced mode */
+            this.welcomePage = new WelcomePage(this);
+            document.body.appendChild(this.welcomePage.getElement());
+            this.welcomePage.show();
+        }
+        else {
+            document.getElementById("header").classList.remove("hide");
+
+            if (this.options.mode === "basic") {
+                document.getElementById("switch-mode").innerText = "Advanced mode";
+                document.getElementById("switch-mode").onclick = () => { this.switchMode("advanced"); }
             }
-            passwordsPage.options = {
-                ...passwordsPage.options,
-                ...options
-            }
-            resultPage.options = {
-                ...resultPage.options,
-                ...options
+            else {
+                document.getElementById("switch-mode").innerText = "Basic mode";
+                document.getElementById("switch-mode").onclick = () => { this.switchMode("basic"); }
             }
 
-            /* Show the connections page */
-            installationsPage.hide();
-            connectionsPage.show();
+            /* Get the list of DCS instances */
+            this.options.instances = await DCSInstance.getInstances();
 
-            connectionsPage.onBackClicked = (e) => {
-                /* Show the installation page */
-                connectionsPage.hide();
-                installationsPage.show();
-            }
-        }
-        installationsPage.onCancelClicked = (e) => {
-            /* Go back to the main menu */
-            installationsPage.hide();
-            menuPage.show();
-        }
-
-        /* Instances */
-        var instancesPage = new InstancesPage();
-        instancesPage.options = {
-            ...instancesPage.options,
-            instances: instances.filter((instance) => { return instance.installed; })
-        }
-        instancesPage.setSelectedInstance = (activeInstance) => {
-            /* Set the active options for the pages */
-            const options = {
-                instance: activeInstance,
-                simplified: this.simplified,
-                install: false
-            }
-            connectionsPage.options = {
-                ...connectionsPage.options,
-                ...options
-            }
-            passwordsPage.options = {
-                ...passwordsPage.options,
-                ...options
-            }
-            resultPage.options = {
-                ...resultPage.options,
-                ...options
+            /* Check if there are corrupted or outdate instances */
+            if (this.options.instances.some((instance) => {
+                return instance.installed && instance.error;
+            })) {
+                /* Ask the user for confirmation */
+                showConfirmPopup("<div style='font-size: 18px; max-width: 100%;'>One or more of your Olympus instances are not up to date! </div> <br> <br> If you have just updated Olympus this is normal. <br> <br>  Press Accept and the Manager will fix your instances for you. <br> Press Close to update your instances manually using the Installation Wizard", async () => {
+                    showWaitPopup("Please wait while your instances are being fixed.")
+                    fixInstances(this.options.instances.filter((instance) => {
+                        return instance.installed && instance.error;
+                    })).then(
+                        () => { location.reload() },
+                        (err) => { 
+                            logger.error(err);
+                            showErrorPopup(`An error occurred while trying to fix your installations. Please reinstall Olympus manually. <br><br> You can find more info in ${path.join(__dirname, "..", "manager.log")}`); 
+                        }
+                    )
+                })
             }
 
-            /* Show the connections page */
-            instancesPage.hide();
-            connectionsPage.show();
+            this.options.installEnabled = true;
+            this.options.editEnabled = this.options.instances.find(instance => instance.installed);
+            this.options.uninstallEnabled = this.options.instances.find(instance => instance.installed);
 
-            connectionsPage.onBackClicked = (e) => {
-                /* Show the instances page */
-                connectionsPage.hide();
-                instancesPage.show();
-            }
-        }
-        instancesPage.onCancelClicked = (e) => {
-            /* Go back to the main menu */
-            instancesPage.hide();
-            menuPage.show();
-        }
+            /* Hide the loading page */
+            document.getElementById("loader").classList.add("hide");
 
-        /* Connections */
-        var connectionsPage = new ConnectionsPage();
-        connectionsPage.onNextClicked = async (e) => {
-            let activeInstance = connectionsPage.options.instance;
-            if (activeInstance) {
-                /* Check that the selected ports are free before proceeding */
-                if (await activeInstance.checkClientPort(activeInstance.clientPort) && await activeInstance.checkBackendPort(activeInstance.backendPort)) {
-                    connectionsPage.hide();
-                    passwordsPage.show();
-                } else {
-                    showErrorPopup("Please make sure the selected ports are not already in use.")
-                }
+            this.options.singleInstance = this.options.instances.length === 1;
+
+            /* Create all the HTML pages */
+            this.menuPage = new MenuPage(this);
+            this.installationsPage = new InstallationsPage(this); 
+            this.typePage = new TypePage(this); 
+            this.connectionsPage = new ConnectionsPage(this);
+            this.passwordsPage = new PasswordsPage(this);
+            this.resultPage = new ResultPage(this);
+            this.instancesPage = new InstancesPage(this);
+
+            document.body.appendChild(this.menuPage.getElement());
+            document.body.appendChild(this.installationsPage.getElement());
+            document.body.appendChild(this.typePage.getElement());
+            document.body.appendChild(this.connectionsPage.getElement());
+            document.body.appendChild(this.passwordsPage.getElement());
+            document.body.appendChild(this.resultPage.getElement());
+            document.body.appendChild(this.instancesPage.getElement());
+
+            if (this.options.mode === "basic") {
+                /* In basic mode no dashboard is shown */
+                this.menuPage.show();
             } else {
-                showErrorPopup(`An error has occurred, please restart the Olympus Manager. <br><br> You can find more info in ${path.join(__dirname, "..", "manager.log")}`)
+                /* In advanced mode we go directly to the dashboard */
+                this.instancesPage.show();
             }
         }
-        connectionsPage.onCancelClicked = (e) => {
-            /* Go back to the main menu */
-            connectionsPage.hide();
-            menuPage.show();
-        }
+    }
 
-        /* Passwords */
-        var passwordsPage = new PasswordsPage();
-        passwordsPage.onBackClicked = (e) => {
-            /* Go back to the connections page */
-            let activeInstance = connectionsPage.options.instance;
-            if (activeInstance) {
-                passwordsPage.hide();
-                connectionsPage.show();
-            } else {
-                showErrorPopup(`An error has occurred, please restart the Olympus Manager. <br><br> You can find more info in ${path.join(__dirname, "..", "manager.log")}`)
-            }
-        }
-        passwordsPage.onNextClicked = (e) => {
-            let activeInstance = connectionsPage.options.instance;
-            if (activeInstance) {
-                /* Check that all the passwords have been set */
-                if (activeInstance.gameMasterPassword === "" || activeInstance.blueCommanderPassword === "" || activeInstance.redCommanderPassword === "") {
-                    showErrorPopup("Please fill all the password inputs.")
-                }
-                else if (activeInstance.gameMasterPassword === activeInstance.blueCommanderPassword || activeInstance.blueCommanderPassword === activeInstance.redCommanderPassword || activeInstance.gameMasterPassword === activeInstance.redCommanderPassword) {
-                    showErrorPopup("All the passwords must be different from each other.")
-                } else {
-                    passwordsPage.hide();
-                    resultPage.show();
-                    resultPage.startInstallation();
-                }
-            } else {
-                showErrorPopup(`An error has occurred, please restart the Olympus Manager. <br><br> You can find more info in ${path.join(__dirname, "..", "manager.log")}`)
-            }
+    getActiveInstance() {
+        return this.options.activeInstance;
+    }
 
-        }
-        passwordsPage.onCancelClicked = (e) => {
-            /* Go back to the main menu */
-            passwordsPage.hide();
-            menuPage.show();
-        }
-
-        /* Result */
-        var resultPage = new ResultPage({logLocation: path.join(__dirname, "..", "manager.log")});
-        resultPage.onBackClicked = (e) => {
-            /* Reload the page to apply changes */
-            resultPage.hide();
-            location.reload();
-        }
-        resultPage.onCancelClicked = (e) => {
-            /* Reload the page to apply changes */
-            resultPage.hide();
-            location.reload();
-        }
-
-        /* Create all the HTML pages */
-        document.body.appendChild(menuPage.getElement());
-        document.body.appendChild(installationsPage.getElement());
-        document.body.appendChild(instancesPage.getElement());
-        document.body.appendChild(connectionsPage.getElement());
-        document.body.appendChild(passwordsPage.getElement());
-        document.body.appendChild(resultPage.getElement());
-
-        /* In simplified mode we directly show the connections page */
-        if (this.simplified) {
-            const options = {
-                instance: instances[0],
-                simplified: this.simplified,
-                install: true
-            }
-            connectionsPage.options = {
-                ...connectionsPage.options,
-                ...options
-            }
-            passwordsPage.options = {
-                ...passwordsPage.options,
-                ...options
-            }
-            resultPage.options = {
-                ...resultPage.options,
-                ...options
-            }
-            /* Show the connections page directly */
-            instancesPage.hide();
-            connectionsPage.show();
-        } else {
-            /* Show the main menu */
-            menuPage.show();
-        }
+    switchMode(newMode) {
+        var options = JSON.parse(fs.readFileSync("options.json"));
+        options.mode = newMode;
+        fs.writeFileSync("options.json", JSON.stringify(options));
+        location.reload();
     }
 }
 

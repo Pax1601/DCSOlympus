@@ -36,6 +36,18 @@
         row-gap: 25px;
     }
 
+    #manager-instances .option:not(.installed) {
+        background-color: var(--background-disabled);
+    }
+
+    #manager-instances .option:not(.installed) .info {
+        opacity: 50%;
+    }
+
+    #manager-instances .option:not(.installed) .server-data {
+        opacity: 50%;
+    }
+
     #manager-instances>.instructions {
         margin-bottom: 10px;
     }
@@ -192,6 +204,7 @@
     }
 
     #manager-instances .edit, 
+    #manager-instances .install,
     #manager-instances .uninstall,
     #manager-instances .stop  {
         color: var(--offwhite);
@@ -200,34 +213,36 @@
     }
 
     #manager-instances .edit:hover, 
+    #manager-instances .install:hover,
     #manager-instances .uninstall:hover,
     #manager-instances .stop:hover {
         color: var(--background);
         background-color: var(--offwhite);
     }
+
+    #manager-instances .install {
+        margin-left: auto;
+    }
     
 </style>
     <div id="manager-instances">
         <div class="content">
-            <div class="button cancel">
-               <img src="./icons/chevron-left-solid.svg"/> Return to menu
-            </div>
             <div class="instructions">
                 <span>
                     View and manage installs
                 </span>
                 <span>
-                    The following Oympus installs have been identified. <br>You can start an Olympus server, modify settings and uninstall below.
+                    The following DCS installations have been identified. <br>You can start an Olympus server, modify settings and uninstall below.
                 </span>
             </div>
         <div class="scroll-container">
             <div class="scrollable">
                 <% for (let i = 0; i < instances.length; i++) {%>
-                    <div class="option" data-folder="<%= instances[i].folder %>">
+                    <div class="option <%= instances[i].installed? 'installed': '' %>" data-folder="<%= instances[i].folder %>">
                         <div class="instance-info">
                             <span><%= instances[i].name %></span>
-                            <span class="<%= instances[i].installed? (instances[i].error? 'error': ''): '' %>"> 
-                                <%= instances[i].installed? (instances[i].error? 'Corrupted/outdated Olympus installation': ''): '' %>
+                            <span class="<%= instances[i].installed? (instances[i].error? 'error': 'installed'): '' %>"> 
+                                <%= instances[i].installed? (instances[i].error? 'Corrupted/outdated Olympus installation': 'Olympus installed'): 'Olympus not installed' %>
                             </span>
                             <span><img src="./icons/folder-open-solid.svg"> <%= instances[i].folder %></span>
                             <div class="server-data">
@@ -242,15 +257,15 @@
                             <div class="divider"></div>
                             <div class="info">
                                 <div>Client port</div>
-                                <div> <%= instances[i].clientPort %> </div>
+                                <div> <%= instances[i].installed? instances[i].clientPort: "N/A" %> </div>
                             </div>
                             <div class="info">
                                 <div>Backend port</div>
-                                <div> <%= instances[i].backendPort %> </div>
+                                <div> <%= instances[i].installed? instances[i].backendPort: "N/A" %> </div>
                             </div>
                             <div class="info">
                                 <div>Backend address</div>
-                                <div> <%= instances[i].backendAddress %> </div>
+                                <div> <%= instances[i].installed? instances[i].backendAddress: "N/A" %> </div>
                             </div>
                         </div>
                         <div class="instance-buttons">
@@ -263,6 +278,7 @@
                             </div>
 
                             <div class="button edit">Edit settings</div>
+                            <div class="button install">Install Olympus</div>
                             <div class="button uninstall">Uninstall Olympus</div>
                             <div class="button open-browser hide">Open in browser</div>
                             <div class="button stop hide">Stop Olympus</div>

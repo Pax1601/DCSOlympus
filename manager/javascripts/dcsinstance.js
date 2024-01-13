@@ -1,3 +1,4 @@
+const { getManager } = require('./managerfactory')
 var regedit = require('regedit')
 const shellFoldersKey = 'HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders'
 const saveGamesKey = '{4C5C32FF-BB9D-43B0-B5B4-2D72E54EAAA4}'
@@ -124,36 +125,7 @@ class DCSInstance {
         /* Periodically "ping" Olympus to check if either the client or the backend are active */
         window.setInterval(async () => {
             await this.getData();
-
-            var page = document.getElementById("manager-instances");
-            if (page) {
-                var instanceDivs = page.querySelectorAll(`.option`);
-                for (let i = 0; i < instanceDivs.length; i++) {
-                    if (instanceDivs[i].dataset.folder == this.folder) {
-                        var instanceDiv = instanceDivs[i];
-                        if (instanceDiv.querySelector(".webserver.online") !== null) {
-                            instanceDiv.querySelector(".webserver.online").classList.toggle("hide", !this.webserverOnline)
-                            instanceDiv.querySelector(".webserver.offline").classList.toggle("hide", this.webserverOnline)
-                            instanceDiv.querySelector(".backend.online").classList.toggle("hide", !this.backendOnline)
-                            instanceDiv.querySelector(".backend.offline").classList.toggle("hide", this.backendOnline)
-
-                            if (this.backendOnline) {
-                                instanceDiv.querySelector(".fps .data").innerText = this.fps;
-                                instanceDiv.querySelector(".load .data").innerText = this.load;
-                            }
-
-                            instanceDiv.querySelector(".button.start").classList.toggle("hide", this.webserverOnline)
-                            instanceDiv.querySelector(".button.uninstall").classList.toggle("hide", this.webserverOnline)
-                            instanceDiv.querySelector(".button.edit").classList.toggle("hide", this.webserverOnline)
-                            instanceDiv.querySelector(".button.open-browser").classList.toggle("hide", !this.webserverOnline)
-                            instanceDiv.querySelector(".button.stop").classList.toggle("hide", !this.webserverOnline)
-
-                            if (this.webserverOnline) 
-                                instanceDiv.querySelector(".button.start").classList.remove("loading")
-                        }
-                    }
-                }
-            }
+            getManager().instancesPage.update();            
         }, 1000);
     }
 
@@ -370,7 +342,7 @@ class DCSInstance {
 
     /* Uninstall this instance */
     uninstall() {
-        showConfirmPopup("Are you sure you want to completely remove this Olympus installation?", () =>
+        showConfirmPopup("<div style='font-size: 18px; max-width: 100%'> Are you sure you want to remove Olympus? </div> If you click Accept, the Olympus mod will be removed from your DCS installation.", () =>
             uninstallInstance(this.folder, this.name).then(
                 () => {
                     location.reload();

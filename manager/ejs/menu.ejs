@@ -74,6 +74,11 @@
         pointer-events: none;
     }
 
+    #manager-menu .divider {
+        width: 460px;
+        border-color: var(--darkgray) !important;
+    }
+
 </style>
 <div id="manager-menu">
     <div id="summary">
@@ -83,10 +88,14 @@
     </div>
     <div id="menu"> 
         <div class="option install <%= installEnabled? '': 'disabled' %>">
-            Install Olympus
+            Run Install wizard
         </div>
-        <div class="option manage <%= manageEnabled? '': 'disabled' %>">
-            View / Manage installs
+        <div class="option edit <%= editEnabled? '': 'disabled' %>">
+            Update settings
+        </div>
+        <div class="divider"></div>
+        <div class="option uninstall <%= uninstallEnabled? '': 'disabled' %>">
+            Remove Olympus
         </div>
     </div>
 </div>
