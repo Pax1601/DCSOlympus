@@ -21,6 +21,7 @@ import { GestureHandling } from "leaflet-gesture-handling";
 import { TouchBoxSelect } from "./touchboxselect";
 import { DestinationPreviewHandle } from "./markers/destinationpreviewHandle";
 import { ContextActionSet } from "../unit/contextactionset";
+import { ContextMenu } from "../contextmenus/contextmenu";
 
 var hasTouchScreen = false;
 //if ("maxTouchPoints" in navigator) 
@@ -155,7 +156,21 @@ export class Map extends L.Map {
         this.on("zoom", (e: any) => this.#onZoom(e));
         this.on("zoomend", (e: any) => this.#onZoomEnd(e));
         this.on("drag", (e: any) => this.centerOnUnit(null));
-        this.on("contextmenu", (e: any) => this.#onContextMenu(e));
+        this.on("contextmenu", (e: any) => {
+            const contextManager = getApp().getContextManager();
+            
+            if (contextManager.currentContextIs("olympus")) {
+                this.#onContextMenu(e);
+                return;
+            }
+
+            const context = contextManager.getCurrentContext(); 
+            const menu = context.getContextMenuManager().get("map");
+
+            if (menu instanceof ContextMenu === false) return;
+
+            menu.toggle(e.originalEvent.x, e.originalEvent.y, e.latlng);
+        });
         this.on('selectionstart', (e: any) => this.#onSelectionStart(e));
         this.on('selectionend', (e: any) => this.#onSelectionEnd(e));
         this.on('mousedown', (e: any) => this.#onMouseDown(e));
@@ -311,6 +326,7 @@ export class Map extends L.Map {
         this.hideAirbaseContextMenu();
         this.hideAirbaseSpawnMenu();
         this.hideCoalitionAreaContextMenu();
+        getApp().getCurrentContext().getContextMenuManager().hideAll();
     }
 
     showMapContextMenu(x: number, y: number, latlng: L.LatLng) {
@@ -330,7 +346,14 @@ export class Map extends L.Map {
 
     showUnitContextMenu(x: number | undefined = undefined, y: number | undefined = undefined, latlng: L.LatLng | undefined = undefined) {
         this.hideAllContextMenus();
-        this.#unitContextMenu.show(x, y, latlng);
+
+        if (getApp().getContextManager().currentContextIs("olympus")) {
+            this.#unitContextMenu.show(x, y, latlng);
+            return;
+        }
+        
+        const menu = getApp().getCurrentContext().getContextMenuManager().get("unit");
+        if (menu instanceof ContextMenu) menu.show(x, y, latlng);
     }
 
     getUnitContextMenu() {

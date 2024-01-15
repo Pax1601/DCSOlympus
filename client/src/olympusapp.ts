@@ -31,7 +31,10 @@ import { AirDefenceUnitSpawnMenu } from "./controls/unitspawnmenu";
 import { AirbasesJSONSchemaValidator } from "./schemas/schema";
 import { PanelsManager } from "./panels/panelsmanager";
 import { Creator } from "./creator/creator";
-import { Convertor } from "./convertor/convertor";
+import { Converter } from "./converter/converter";
+import { MapContextMenu } from "./contextmenus/mapcontextmenu";
+import { ContextMenuManager } from "./context/contextmenumanager";
+import { ContextMenu } from "./contextmenus/contextmenu";
 
 var VERSION = "{{OLYMPUS_VERSION_NUMBER}}";
 
@@ -44,7 +47,7 @@ export class OlympusApp {
     #map: Map | null = null;
 
     //  Used by plugins to create stuff (factory-style)
-    #convertor = new Convertor();
+    #converter = new Converter();
     #creator = new Creator();
 
     /* Managers */
@@ -72,8 +75,8 @@ export class OlympusApp {
         return this.#map as Map;
     }
 
-    getConvertor() {
-        return this.#convertor as Convertor;
+    getConverter() {
+        return this.#converter as Converter;
     }
 
     getCreator() {
@@ -198,6 +201,9 @@ export class OlympusApp {
         /* Initialize base functionalitites */
         this.#contextManager = new ContextManager();
         this.#contextManager.add( "olympus", {
+            "contextMenuManager": new ContextMenuManager({
+                "map": new ContextMenu("map-contextmenu")
+            }),
             "onUnset": () => {
                 this.getPanelsManager().hideAll();
             }

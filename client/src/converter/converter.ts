@@ -1,6 +1,6 @@
 import { mToFt, msToKnots } from "../other/utils";
 
-export class Convertor {
+export class Converter {
 
     metresToFeet(distance:number) {
         return mToFt(distance);

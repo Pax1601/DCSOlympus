@@ -104,4 +104,14 @@ export class ContextMenu {
     getVisibleSubMenu() {
         return this.#visibleSubMenu;
     }
+
+    /** Toggles show/hide
+     * 
+     * @param x - see show()
+     * @param y - see show()
+     * @param latlng - see show()
+     */
+    toggle(x: number | undefined = undefined, y: number | undefined = undefined, latlng: LatLng | undefined = undefined) {
+        (this.#container?.classList.contains("hide")) ? this.show(x, y, latlng) : this.hide();
+    }
 }

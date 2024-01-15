@@ -56,6 +56,13 @@ declare module "contextmenus/contextmenu" {
          * @returns The name of the currently visible submenu
          */
         getVisibleSubMenu(): string | null;
+        /** Toggles show/hide
+         *
+         * @param x - see show()
+         * @param y - see show()
+         * @param latlng - see show()
+         */
+        toggle(x?: number | undefined, y?: number | undefined, latlng?: LatLng | undefined): void;
     }
 }
 declare module "controls/control" {
@@ -985,7 +992,7 @@ declare module "contextmenus/mapcontextmenu" {
          * @param y Y screen coordinate of the top left corner of the context menu
          * @param latlng Leaflet latlng object of the mouse click
          */
-        show(x: number, y: number, latlng: LatLng): false | undefined;
+        show(x: number, y: number, latlng: LatLng): void;
         /** If the user rightclicked on a CoalitionArea, it will be given the ability to edit it.
          *
          * @param coalitionArea The CoalitionArea the user can edit
@@ -1677,28 +1684,6 @@ declare module "mission/bullseye" {
         createIcon(): void;
         setCoalition(coalition: string): void;
         getCoalition(): string;
-    }
-}
-declare module "context/context" {
-    export interface ContextInterface {
-        allowUnitCopying?: boolean;
-        allowUnitPasting?: boolean;
-        onSet?: CallableFunction;
-        onUnset?: CallableFunction;
-        useSpawnMenu?: boolean;
-        useUnitControlPanel?: boolean;
-        useUnitInfoPanel?: boolean;
-    }
-    export class Context {
-        #private;
-        constructor(config: ContextInterface);
-        getAllowUnitCopying(): boolean;
-        getAllowUnitPasting(): boolean;
-        getUseSpawnMenu(): boolean;
-        getUseUnitControlPanel(): boolean;
-        getUseUnitInfoPanel(): boolean;
-        onSet(): void;
-        onUnset(): void;
     }
 }
 declare module "other/manager" {
@@ -2558,13 +2543,52 @@ declare module "panels/unitlistpanel" {
         toggle(): void;
     }
 }
+declare module "context/contextmenumanager" {
+    import { ContextMenu } from "contextmenus/contextmenu";
+    import { Manager } from "other/manager";
+    export type TContextMenuTypes = {
+        "map"?: ContextMenu | false;
+        "unit"?: ContextMenu | false;
+    };
+    export type TContextMenuManagerAdd = {
+        menuTypes: ContextMenu;
+    };
+    export class ContextMenuManager extends Manager {
+        constructor(items?: TContextMenuTypes);
+        add(name: string, contextMenu: ContextMenu): this;
+        hideAll(): void;
+    }
+}
+declare module "context/context" {
+    import { ContextMenuManager } from "context/contextmenumanager";
+    export type TContextConfig = {
+        allowUnitCopying?: boolean;
+        allowUnitPasting?: boolean;
+        contextMenuManager?: ContextMenuManager;
+        onSet?: CallableFunction;
+        onUnset?: CallableFunction;
+        useUnitControlPanel?: boolean;
+        useUnitInfoPanel?: boolean;
+    };
+    export class Context {
+        #private;
+        constructor(config: TContextConfig);
+        getAllowUnitCopying(): boolean;
+        getAllowUnitPasting(): boolean;
+        getContextMenuManager(): ContextMenuManager;
+        getUseUnitControlPanel(): boolean;
+        getUseUnitInfoPanel(): boolean;
+        onSet(): void;
+        onUnset(): void;
+    }
+}
 declare module "context/contextmanager" {
     import { Manager } from "other/manager";
-    import { ContextInterface } from "context/context";
+    import { TContextConfig } from "context/context";
     export class ContextManager extends Manager {
         #private;
         constructor();
-        add(name: string, contextConfig: ContextInterface): this;
+        add(name: string, contextConfig: TContextConfig): this;
         currentContextIs(contextName: string): boolean;
         getCurrentContext(): any;
         setContext(contextName: string): false | undefined;
@@ -2578,13 +2602,17 @@ declare module "panels/panelsmanager" {
     }
 }
 declare module "creator/creator" {
+    import { ContextMenuManager, TContextMenuTypes } from "context/contextmenumanager";
+    import { ContextMenu } from "contextmenus/contextmenu";
     import { Dropdown, TDropdownConfig } from "controls/dropdown";
     export class Creator {
         createDropdown(config: TDropdownConfig): Dropdown;
+        createContextMenu(ID: string): ContextMenu;
+        createContextMenuManager(config?: TContextMenuTypes): ContextMenuManager;
     }
 }
-declare module "convertor/convertor" {
-    export class Convertor {
+declare module "converter/converter" {
+    export class Converter {
         metresToFeet(distance: number): number;
         metresPerSecondToKnots(speed: number): number;
     }
@@ -2602,13 +2630,13 @@ declare module "olympusapp" {
     import { Context } from "context/context";
     import { PanelsManager } from "panels/panelsmanager";
     import { Creator } from "creator/creator";
-    import { Convertor } from "convertor/convertor";
+    import { Converter } from "converter/converter";
     export class OlympusApp {
         #private;
         constructor();
         getDialogManager(): Manager;
         getMap(): Map;
-        getConvertor(): Convertor;
+        getConverter(): Converter;
         getCreator(): Creator;
         getCurrentContext(): Context;
         getContextManager(): ContextManager;
@@ -2662,12 +2690,4 @@ declare module "olympusapp" {
 declare module "index" {
     import { OlympusApp } from "olympusapp";
     export function getApp(): OlympusApp;
-}
-declare module "context/contextmenumanager" {
-    import { ContextMenu } from "contextmenus/contextmenu";
-    import { Manager } from "other/manager";
-    export class ContextMenuManager extends Manager {
-        constructor();
-        add(name: string, contextMenu: ContextMenu): this;
-    }
 }

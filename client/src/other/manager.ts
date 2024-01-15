@@ -1,5 +1,3 @@
-import { Context } from "../context/context";
-
 export class Manager {
 
     #items: { [key: string]: any } = {};

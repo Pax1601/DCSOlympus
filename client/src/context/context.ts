@@ -1,9 +1,11 @@
-export interface ContextInterface {
+import { ContextMenuManager } from "./contextmenumanager";
+
+export type TContextConfig = {
     allowUnitCopying?: boolean;
     allowUnitPasting?: boolean;
+    contextMenuManager?: ContextMenuManager;
     onSet?:CallableFunction;
     onUnset?:CallableFunction;
-    useSpawnMenu?: boolean;
     useUnitControlPanel?: boolean;
     useUnitInfoPanel?: boolean;
 }
@@ -13,16 +15,16 @@ export class Context {
     #allowUnitPasting: boolean;
     #onSet:CallableFunction;
     #onUnset:CallableFunction;
-    #useSpawnMenu: boolean;
+    #contextMenuManager: ContextMenuManager;
     #useUnitControlPanel: boolean;
     #useUnitInfoPanel: boolean;
 
-    constructor(config: ContextInterface) {
+    constructor(config: TContextConfig) {
         this.#allowUnitCopying = (config.allowUnitCopying !== false);
         this.#allowUnitPasting = (config.allowUnitPasting !== false);
         this.#onSet = config.onSet || function() {};
         this.#onUnset = config.onUnset || function() {};
-        this.#useSpawnMenu = (config.useSpawnMenu !== false);
+        this.#contextMenuManager = config.contextMenuManager || new ContextMenuManager();
         this.#useUnitControlPanel = (config.useUnitControlPanel !== false);
         this.#useUnitInfoPanel = (config.useUnitInfoPanel !== false);
     }
@@ -35,8 +37,8 @@ export class Context {
         return this.#allowUnitPasting;
     }
 
-    getUseSpawnMenu() {
-        return this.#useSpawnMenu;
+    getContextMenuManager() {
+        return this.#contextMenuManager;
     }
 
     getUseUnitControlPanel() {

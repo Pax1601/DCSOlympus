@@ -1566,6 +1566,16 @@ input[type=number].no-spin::-webkit-outer-spin-button {
     content:"";
 }
 
+.ol-context-menu {
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    position: absolute;
+    row-gap: 5px;
+    width: 180px;
+    z-index: 9999;
+}
+
 .ol-context-menu>ul {
     max-height: 200px;
     overflow-x: hidden;
