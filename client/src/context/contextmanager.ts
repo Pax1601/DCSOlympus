@@ -38,7 +38,6 @@ export class ContextManager extends Manager {
             this.getCurrentContext().onUnset();
             this.#currentContext = contextName;
             this.getCurrentContext().onSet();
-            console.log(`Setting context to "${this.#currentContext}".`);
         }
     }
 }

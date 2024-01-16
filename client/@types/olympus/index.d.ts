@@ -2614,7 +2614,17 @@ declare module "creator/creator" {
 declare module "converter/converter" {
     export class Converter {
         metresToFeet(distance: number): number;
+        metresToNauticalMiles(distance: number): number;
         metresPerSecondToKnots(speed: number): number;
+    }
+}
+declare module "other/utilities" {
+    import { LatLng } from "leaflet";
+    export class Utilities {
+        bearing(latLng1: LatLng, latLng2: LatLng): number;
+        distance(latLng1: LatLng, latLng2: LatLng): number;
+        zeroAppend(num: number, places: number): string;
+        zeroPrepend(num: number, places: number): string;
     }
 }
 declare module "olympusapp" {
@@ -2631,6 +2641,7 @@ declare module "olympusapp" {
     import { PanelsManager } from "panels/panelsmanager";
     import { Creator } from "creator/creator";
     import { Converter } from "converter/converter";
+    import { Utilities } from "other/utilities";
     export class OlympusApp {
         #private;
         constructor();
@@ -2679,6 +2690,11 @@ declare module "olympusapp" {
          * @returns The navy unit database
          */
         getNavyUnitDatabase(): import("unit/databases/navyunitdatabase").NavyUnitDatabase;
+        /**
+         *
+         * @returns Utilities class
+         */
+        getUtilities(): Utilities;
         /** Set a message in the login splash screen
          *
          * @param status The message to show in the login splash screen

@@ -35,6 +35,7 @@ import { Converter } from "./converter/converter";
 import { MapContextMenu } from "./contextmenus/mapcontextmenu";
 import { ContextMenuManager } from "./context/contextmenumanager";
 import { ContextMenu } from "./contextmenus/contextmenu";
+import { Utilities } from "./other/utilities";
 
 var VERSION = "{{OLYMPUS_VERSION_NUMBER}}";
 
@@ -185,6 +186,14 @@ export class OlympusApp {
      */
     getNavyUnitDatabase() {
         return navyUnitDatabase;
+    }
+
+    /**
+     * 
+     * @returns Utilities class
+     */
+    getUtilities() {
+        return new Utilities();
     }
 
     /** Set a message in the login splash screen
