@@ -1,61 +1,23 @@
 <style>
-    #manager-type .option {
-        background-color: var(--background);
-        border: 1px solid var(--offwhite);
-        width: 220px;
-        height: 60px;
-        color: var(--offwhite);
-        display: flex;
-        font-size: 18px;
-        font-weight: 600;
-        padding-left: 15px;
-        align-items: center;
-        border-radius: 5px;
-        cursor: pointer;
-        background-color: transparent;
-        color: var(--offwhite);
-        justify-content: center;
-    }
-
-    #manager-type .option:hover {
-        color: var(--background);
-        background-color: var(--offwhite);
-    }
-
-    #manager-type .buttons {
-        display: flex;
-        flex-direction: column;
-        row-gap: 15px;
-    }
+    
 </style>
-<div id="manager-type">
-    <div class="step-summary">
-        <div class="blue <%= singleInstance? 'hide': '' %>"><%= install? 'User path': 'Instance selection' %></div>
-        <div class="white">Type of install</div>
-        <div class="empty">Ports and address</div>
-        <div class="empty">Passwords</div>
-        <div class="empty"> <%= install? 'Install': 'Update' %></div>
+<div class="instructions">
+    <div class="step">
+        Step 1 of 4
     </div>
-    <div class="content">
-        <div class="instructions">
-            <span>
-                Do you want to install Olympus for singleplayer or multiplayer?
-            </span>
-            <span>
-                Select Single player if you only want to play locally on your own computer. <br>
-                If you want Olympus to be used on a different computer or over the internet for a dedicated server, select the multiplayer option.
-            </span>
-        </div>
-        <div class="buttons">
-            <div class="option button singleplayer">
-                Singleplayer
-            </div>
-            <div class="option button multiplayer">
-                Multiplayer
-            </div>
-        </div>
-        <div class="button cancel">
-            <%= install? "Cancel installation": "Cancel editing" %>
-        </div>
+    <div class="title">
+        Do you want to add Olympus for singleplayer or multiplayer?
+    </div>
+    <div class="description">
+        Select singleplayer if you only want to play locally on your own computer. <br>
+        Select multiplayer if you want Olympus to be useable over the internet from a different computer, or this instance is a dedicated server.
+    </div>
+</div>
+<div class="buttons">
+    <div class="button">
+        Singleplayer
+    </div>
+    <div class="button">
+        Multiplayer
     </div>
 </div>

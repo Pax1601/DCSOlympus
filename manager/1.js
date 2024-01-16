@@ -37,7 +37,7 @@
         });
         
         /* Installations */
-        this.installationsPage = new InstallationsPage(this, {
+        this.installationPage = new installationPage(this, {
             instances: instances
         });
         
@@ -61,7 +61,7 @@
 
         /* Create all the HTML pages */
         document.body.appendChild(this.menuPage.getElement());
-        document.body.appendChild(this.installationsPage.getElement());
+        document.body.appendChild(this.installationPage.getElement());
         document.body.appendChild(this.instancesPage.getElement());
         document.body.appendChild(this.connectionsPage.getElement());
         document.body.appendChild(this.passwordsPage.getElement());

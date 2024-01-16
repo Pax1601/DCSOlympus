@@ -1,0 +1,53 @@
+<style> 
+    .wizard-page {
+        display: flex;
+        flex-direction: column;
+        row-gap: 30px;
+        padding: 60px 120px;
+    }
+
+    .buttons-footer {
+        display: flex;
+        column-gap: 10px;
+        justify-content: start;
+    }
+
+    .instructions {
+        color: var(--offwhite);
+    }
+
+    .instructions .step {
+
+    }
+
+    .instructions .title {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .content {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        row-gap: 20px;
+        align-items: start;
+        justify-content: center;
+    }
+</style>
+<div class="wizard-page">
+    <div class="cancel" style="font-size: 14px; font-weight: 600; color: var(--offwhite); display: flex; align-items: center; column-gap: 10px;">
+        <img src="./icons/chevron-left-solid.svg" style="height: 14px;">Cancel install
+    </div>
+    <div class="content">
+
+    </div>
+    <div class="buttons-footer">
+        <div class="button back" style="color: var(--offwhite); background-color: var(--background); border: 1px solid var(--offwhite);">
+            Back
+        </div>
+        <div class="button next" style="color: var(--background); background-color: var(--offwhite);">
+            Next
+        </div>
+    </div>
+</div>

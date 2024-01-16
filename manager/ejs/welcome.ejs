@@ -1,5 +1,5 @@
 <style>
-      #manager-welcome {
+    #manager-welcome {
         display: flex;
         flex-direction: column;
         row-gap: 20px;
@@ -8,7 +8,7 @@
         align-items: center;
     }
 
-    #manager-welcome span {
+    #manager-welcome .instructions {
         width: 40%;
         text-align: center;
         color: var(--offwhite);
@@ -48,20 +48,20 @@
 
 </style>
 <div id="manager-welcome">
-    <span style="font-size: 28px; font-weight: bold;">
-        Do you want to use the Olympus Manager in basic or advanced mode?
-    </span>
-    <span style="color: var(--gray);">
+    <div class="instructions" style="font-size: 28px; font-weight: bold;">
+        Do you want to use the Olympus Manager in basic or Expert mode?
+    </div>
+    <div class="instructions" style="color: var(--gray);">
         Basic mode is recommended for most users. <br>
-        Advanced mode is for those who know how Olympus works or for server owners.
-    </span>
-    <span style="color: var(--gray); font-weight: bold;">
+        Expert mode is for those who know how Olympus works or for server owners.
+    </div>
+    <div class="instructions" style="color: var(--gray); font-weight: bold;">
         You can change this setting at any time.
-    </span>
-    <div class="option basic">
+    </div>
+    <div class="option basic" onclick="signal('onBasicClicked')">
         Basic mode
     </div>
-    <div class="option advanced">
-        Advanced mode
+    <div class="option expert" onclick="signal('onExpertClicked')">
+        Expert mode
     </div>
 </div>

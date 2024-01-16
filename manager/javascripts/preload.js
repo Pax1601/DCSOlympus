@@ -256,7 +256,6 @@ contextBridge.exposeInMainWorld(
     }
 });
 
-
 /* On content loaded */
 window.addEventListener('DOMContentLoaded', async () => {
     /* Compute the height of the content page */
@@ -297,4 +296,3 @@ ipcRenderer.on("check-version", () => {
     /* Check if a new version is available */
     checkVersion();
 })
-

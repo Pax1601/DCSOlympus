@@ -4,7 +4,7 @@ const ejs = require('ejs')
 const { logger } = require("./filesystem");
 const { showConfirmPopup } = require("./popup");
 
-class InstallationsPage extends ManagerPage {
+class installationPage extends ManagerPage {
     constructor(manager, options) {
         super(manager, options);
     }
@@ -64,4 +64,4 @@ class InstallationsPage extends ManagerPage {
     }
 } 
 
-module.exports = InstallationsPage;
+module.exports = installationPage;
