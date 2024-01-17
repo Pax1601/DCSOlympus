@@ -344,43 +344,42 @@ class DCSInstance {
     }
 
     /* Install this instance */
-    install() {
+    install() {        
         installHooks(getManager().getActiveInstance().folder).then(
-            () => {
-            },
+            () => {},
             (err) => {
                 return Promise.reject(err);
             }
         ).then(() => installMod(getManager().getActiveInstance().folder, getManager().getActiveInstance().name)).then(
-            () => {
-            },
+            () => {},
             (err) => {
                 return Promise.reject(err);
             }
         ).then(() => installJSON(getManager().getActiveInstance().folder)).then(
-            () => {
-            },
+            () => {},
             (err) => {
                 return Promise.reject(err);
             }
         ).then(() => applyConfiguration(getManager().getActiveInstance().folder, getManager().getActiveInstance())).then(
-            () => {
-            },
+            () => {},
             (err) => {
                 return Promise.reject(err);
             }
         ).then(() => installShortCuts(getManager().getActiveInstance().folder, getManager().getActiveInstance().name)).then(
-            () => {
-            },
+            () => {},
             (err) => {
                 return Promise.reject(err);
             }
         ).then(
             () => {
-                //getManager().resultPage.getElement()
+                getManager().resultPage.getElement().querySelector(".result-summary.wait").classList.add("hide");
+                getManager().resultPage.getElement().querySelector(".result-summary.success").classList.remove("hide");
+                getManager().resultPage.getElement().querySelector(".result-summary.error").classList.add("hide");
             },
             () => {
-                //getManager().resultPage.getElement()
+                getManager().resultPage.getElement().querySelector(".result-summary.wait").classList.add("hide");
+                getManager().resultPage.getElement().querySelector(".result-summary.success").classList.add("hide");
+                getManager().resultPage.getElement().querySelector(".result-summary.error").classList.remove("hide");
             }
         );
     }

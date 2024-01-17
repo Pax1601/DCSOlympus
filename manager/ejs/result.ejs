@@ -4,6 +4,7 @@
         flex-direction: column;
         row-gap: 30px;
         padding: 60px 120px;
+        color: var(--offwhite);
     }
 
     #result-page .result-summary {
@@ -75,20 +76,20 @@
 </style>
 <div id="result-page">
     <div class="result-summary wait">
-        <div class="title"><img src="./icons/spinner-solid.svg">Please wait while Olympus is being added to <i><%= activeInstance["name"] %></i></div>
+        <div class="title"><img src="./icons/spinner-solid.svg" style="animation: rotate 2s linear infinite;">Please wait while Olympus is being added to <i><%= activeInstance["name"] %></i></div>
     </div>
-    <div class="result-summary success">
+    <div class="result-summary success hide">
         <div class="title"><img src="./icons/check-solid-background.svg">Olympus successfully added to <i><%= activeInstance["name"] %></i></div>
         <div class="description">See the <b>DCS Olympus Wiki</b> for more information on how to use Olympus and for troubleshooting issues. You may now close the installer.</div>
     </div>
-    <div class="result-summary error">
+    <div class="result-summary error hide">
         <div class="title"><img src="./icons/triangle-exclamation-solid-background.svg">An error occurred while adding Olympus to <i><%= activeInstance["name"] %></i></div>
         <div class="description">See the manager log located in TODO for more information.</div>
     </div>
-    <div>
+    <div style="font-size: 18px; font-weight: bold;">
         How to launch Olympus
     </div>
-    <div>
+    <div style="font-size: 13px;">
         To launch Olympus, there are shortcuts available in the DCS Olympus folder under Saved Games.
     </div>
     <div class="usage-instructions">
@@ -113,15 +114,15 @@
             </div>
         </div>
     </div>
-    <div>
+    <div style="font-size: 13px;">
         Alternatively, you can run the Olympus Client instead to replace the first two steps above.
     </div>
 
     <div class="buttons-footer">
-        <div class="button return">
+        <div class="button back" style="color: var(--offwhite); background-color: var(--background); border: 1px solid var(--offwhite);" onclick="signal('onReturnClicked')">
             Return to main menu
         </div>
-        <div class="button close">
+        <div class="button next" style="color: var(--background); background-color: var(--offwhite);" onclick="signal('onCloseManagerClicked')">
             Close manager
         </div>
     </div>
