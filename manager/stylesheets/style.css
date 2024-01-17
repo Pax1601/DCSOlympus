@@ -186,34 +186,6 @@ body {
     margin-bottom: 10px;
 }
 
-.instructions {
-    color: var(--offwhite);
-    display: flex;
-    flex-direction: column;
-    row-gap: 10px;
-    width: 50%;
-}
-
-.instructions>span {
-    text-align: center;
-}
-
-.instructions>span:first-child {
-    font-size: 22px;
-    font-weight: 600;
-}
-
-.instructions>span:not(:first-child) {
-    font-size: 15px;
-    color: var(--gray);
-}
-
-.buttons-footer {
-    display: flex;
-    column-gap: 10px;
-    justify-content: center;
-}
-
 .button {
     padding: 10px 15px;
     border-radius: 5px;
@@ -223,23 +195,6 @@ body {
     display: flex;
     align-items: center;
     column-gap: 10px;
-}
-
-.next {
-    color: var(--background);
-    background-color: var(--offwhite);
-}
-
-.back {
-    color: var(--offwhite);
-    background-color: var(--background);
-    border: 1px solid var(--offwhite);
-}
-
-.cancel {
-    padding: 10px 5px;
-    color: var(--offwhite);
-    text-decoration: underline;
 }
 
 .close-popup {
@@ -273,13 +228,13 @@ input {
     left: 0px;
     width: 100%;
     height: 100%;
-    background-color: black;
-    opacity: 30%;
+    background-color: white;
+    opacity: 15%;
     z-index: 999;
 }
 
 #popup {
-    width: 400px;
+    width: 450px;
     height: fit-content;
     min-height: 200px;
     position: absolute;
@@ -290,7 +245,7 @@ input {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 20px;
+    padding: 20px 40px;
     align-items: start;
     z-index: 999;
 }
@@ -311,6 +266,8 @@ input {
     width: 100%;
     text-align: left;
     padding: 15px 0px !important;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
 }
 
 #popup .footer {
@@ -324,87 +281,6 @@ input {
 .manager-page {
     min-width: 1200px;
     overflow-y: auto;
-}
-
-.manager-page>div {
-    display: flex;
-    flex-direction: row;
-    height: 100%;
-    min-height: 100%;
-    align-items: center;
-}
-
-.step-summary {
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 30%;
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--offwhite);
-    border-left: 1px dashed var(--offwhite);
-    height: 200px;
-    row-gap: 100px;
-    margin-left: 80px;
-}
-
-.step-summary div {
-    display: flex;
-    width: 280px;
-    height: 80px;
-    align-items: center;
-    column-gap: 15px;
-    margin-left: -15px;
-    margin-top: -40px;
-    margin-bottom: -40px;
-    font-size: 14px;
-    color: var(--gray);
-}
-
-.step-summary div:before {
-    display: inline-block;
-    content: "";
-    width: 30px;
-    height: 30px;
-    border: 1px solid var(--offwhite);
-    border-radius: 999px;
-}
-
-.step-summary div.white {
-    color: var(--offwhite);
-}
-
-.step-summary div.blue {
-    text-decoration: underline;
-}
-
-.step-summary div.white:before {
-    background-color: var(--offwhite);
-}
-
-.step-summary div.empty:before {
-    background-color: var(--background);
-}
-
-.step-summary div.blue:before {
-    border: 1px solid var(--blue);
-    background-color: var(--blue);
-}
-
-.content {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    row-gap: 20px;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-}
-
-.content>div {
-    max-width: 60%;
 }
 
 .input-group {
@@ -445,10 +321,6 @@ input {
     margin-bottom: 10px;
 }
 
-.buttons-footer {
-    margin-top: 10px;
-}
-
 .divider {
     border-top: 0px solid transparent !important;
     border-bottom: 1px solid var(--offwhite) !important;
@@ -480,6 +352,11 @@ input {
     background-image: url("../icons/chevron-down-solid.svg");
     background-repeat: no-repeat;
     background-position: 50% 50%;
+}
+
+.button.collapse.loading::after {
+    background-image: url("../icons/spinner-solid.svg");
+    animation: rotate 2s linear infinite;
 }
 
 .button.collapse>div {

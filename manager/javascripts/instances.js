@@ -6,12 +6,10 @@ const { exec } = require("child_process");
 const { logger } = require("./filesystem")
 
 class InstancesPage extends ManagerPage {
-    onCancelClicked;
-    setSelectedInstance;
     startInstance;
 
-    constructor(options) {
-        super(options);
+    constructor(manager, options) {
+        super(manager, options);
     }
 
     render(str) {
@@ -20,6 +18,11 @@ class InstancesPage extends ManagerPage {
         var editButtons = this.element.querySelectorAll(".button.edit");
         for (let i = 0; i < editButtons.length; i++) {
             editButtons[i].onclick = (e) => {this.onEditClicked(e);}
+        }
+
+        var installButtons = this.element.querySelectorAll(".button.install");
+        for (let i = 0; i < installButtons.length; i++) {
+            installButtons[i].onclick = (e) => {this.onInstallClicked(e);}
         }
 
         var uninstallButtons = this.element.querySelectorAll(".button.uninstall");
@@ -47,24 +50,16 @@ class InstancesPage extends ManagerPage {
             stopButtons[i].onclick = (e) => {this.onStopClicked(e);}
         }
 
-        this.element.querySelector(".cancel").addEventListener("click", (e) => this.onCancelClicked(e));
-
         super.render();
     }    
 
-    async onEditClicked(e) {
-        this.getClickedInstance(e).then((instance) => {
-            instance.webserverOnline || instance.backendOnline? showErrorPopup("Error, the selected Olympus instance is currently active, please stop Olympus before editing it!") : 
-            this.setSelectedInstance(instance);
-            }
-        );
-    }
-
     async onStartServerClicked(e) {
+        e.target.closest(".collapse").classList.add("loading");
         this.getClickedInstance(e).then((instance) => instance.startServer());
     }
 
     async onStartClientClicked(e) {
+        e.target.closest(".collapse").classList.add("loading");
         this.getClickedInstance(e).then(instance => instance.startClient());
     }
 
@@ -74,6 +69,30 @@ class InstancesPage extends ManagerPage {
 
     async onStopClicked(e) {
         this.getClickedInstance(e).then((instance) => instance.stop());
+    }
+
+    async onEditClicked(e) {
+        this.getClickedInstance(e).then((instance) => { 
+            if (instance.webserverOnline || instance.backendOnline) {
+                showErrorPopup("Error, the selected Olympus instance is currently active, please stop Olympus before editing it!")
+            } else {
+                this.manager.options.activeInstance = instance;
+                this.manager.options.install = false;
+                this.manager.options.singleInstance = false;
+                this.hide();
+                this.manager.typePage.show(this);
+            }
+        });
+    }
+
+    async onInstallClicked(e) {
+        this.getClickedInstance(e).then((instance) => { 
+            this.manager.options.activeInstance = instance;
+            this.manager.options.install = true;
+            this.manager.options.singleInstance = false;
+            this.hide();
+            this.manager.typePage.show(this);
+        });
     }
 
     async onUninstallClicked(e) {
@@ -90,8 +109,8 @@ class InstancesPage extends ManagerPage {
         });
     }
 
-    show() {
-        ejs.renderFile("./ejs/instances.ejs", this.options, {}, (err, str) => {
+    show(previousPage) {
+        ejs.renderFile("./ejs/instances.ejs", {...this.options, ...this.manager.options}, {}, (err, str) => {
             if (!err) {
                 this.render(str);
             } else {
@@ -99,7 +118,51 @@ class InstancesPage extends ManagerPage {
             }
         });
 
-        super.show();
+        var instanceDivs = this.element.querySelectorAll(`.option`);
+        for (let i = 0; i < instanceDivs.length; i++) {
+            var instanceDiv = instanceDivs[i];
+            var instance = this.manager.options.instances.find((instance) => { return instance.folder === instanceDivs[i].dataset.folder;})
+            if (instance) {
+                instanceDiv.querySelector(".button.install").classList.toggle("hide", instance.installed);
+                instanceDiv.querySelector(".button.start").classList.toggle("hide", !instance.installed)
+                instanceDiv.querySelector(".button.uninstall").classList.toggle("hide", !instance.installed)
+                instanceDiv.querySelector(".button.edit").classList.toggle("hide", !instance.installed)
+            }
+        }
+
+        super.show(previousPage);
+    }
+
+    update() {
+
+        var instanceDivs = this.element.querySelectorAll(`.option`);
+        for (let i = 0; i < instanceDivs.length; i++) {
+            var instance = this.manager.options.instances.find((instance) => { return instance.folder === instanceDivs[i].dataset.folder;})
+            if (instance && instance.installed) {
+                var instanceDiv = instanceDivs[i];
+                if (instanceDiv.querySelector(".webserver.online") !== null) {
+                    instanceDiv.querySelector(".webserver.online").classList.toggle("hide", !instance.webserverOnline)
+                    instanceDiv.querySelector(".webserver.offline").classList.toggle("hide", instance.webserverOnline)
+                    instanceDiv.querySelector(".backend.online").classList.toggle("hide", !instance.backendOnline)
+                    instanceDiv.querySelector(".backend.offline").classList.toggle("hide", instance.backendOnline)
+
+                    if (this.backendOnline) {
+                        instanceDiv.querySelector(".fps .data").innerText = instance.fps;
+                        instanceDiv.querySelector(".load .data").innerText = instance.load;
+                    }
+
+                    instanceDiv.querySelector(".button.start").classList.toggle("hide", instance.webserverOnline)
+                    instanceDiv.querySelector(".button.uninstall").classList.toggle("hide", instance.webserverOnline)
+                    instanceDiv.querySelector(".button.edit").classList.toggle("hide", instance.webserverOnline)
+                    instanceDiv.querySelector(".button.open-browser").classList.toggle("hide", !instance.webserverOnline)
+                    instanceDiv.querySelector(".button.stop").classList.toggle("hide", !instance.webserverOnline)
+
+                    if (this.webserverOnline) 
+                        instanceDiv.querySelector(".button.start").classList.remove("loading")
+                }
+            }
+        }
+    
     }
 } 
 

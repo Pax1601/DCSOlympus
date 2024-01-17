@@ -1,5 +1,3 @@
-const Manager = require('./manager');
-
 const contextBridge = require('electron').contextBridge;
 const ipcRenderer = require('electron').ipcRenderer;
 const { exec, spawn } = require("child_process");
@@ -10,7 +8,8 @@ const https = require('follow-redirects').https;
 const fs = require('fs');
 const AdmZip = require("adm-zip");
 const { Octokit } = require('octokit');
-const { logger } = require("./filesystem")
+const { logger } = require("./filesystem");
+const { getManager } = require('./managerFactory');
 
 const VERSION = "{{OLYMPUS_VERSION_NUMBER}}";
 logger.log(`Running in ${__dirname}`);
@@ -257,15 +256,12 @@ contextBridge.exposeInMainWorld(
     }
 });
 
-/* New instance of the manager app */
-const manager = new Manager();
-
 /* On content loaded */
 window.addEventListener('DOMContentLoaded', async () => {
     /* Compute the height of the content page */
     computePagesHeight();
     document.getElementById("loader").classList.remove("hide");
-    await manager.start();
+    await getManager().start();
     /* Compute the height of the content page to account for the pages created by the manager*/
     computePagesHeight();
 
@@ -273,7 +269,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     var links = document.querySelectorAll(".link");
     for (let i = 0; i < links.length; i++) {
         links[i].addEventListener("click", (e) => {
-            exec("start " + e.target.dataset.link);
+            if (e.target.dataset.link)
+                exec("start " + e.target.dataset.link);
         })
     }
 })

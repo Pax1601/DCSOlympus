@@ -4,27 +4,19 @@ const ejs = require('ejs')
 const { logger } = require("./filesystem")
 
 class ResultPage extends ManagerPage {
-    onBackClicked;
-    onNextClicked;
-    onCancelClicked;
-
-    constructor(options) {
-        super(options);
+    constructor(manager, options) {
+        super(manager, options);
     }
 
     render(str) {
         const element = this.getElement();
         element.innerHTML = str;
 
-        this.element.querySelector(".back").addEventListener("click", (e) => this.onBackClicked(e));
-
         super.render();
     }    
 
-    show() {
-        this.instance = this.options.instance;
-
-        ejs.renderFile("./ejs/result.ejs", this.options, {}, (err, str) => {
+    show(previousPage) {
+        ejs.renderFile("./ejs/result.ejs", {...this.options, ...this.manager.options}, {}, (err, str) => {
             if (!err) {
                 this.render(str);
             } else {
@@ -32,14 +24,18 @@ class ResultPage extends ManagerPage {
             }
         });
 
-        super.show();
+        super.show(previousPage);
+    }
+
+    onBackClicked() {
+        location.reload();
     }
 
     /** Installation is performed by using an then chain of async functions. Installation is aborted on any error along the chain 
      * 
      */
     startInstallation() {
-        installHooks(this.instance.folder).then(
+        installHooks(this.manager.getActiveInstance().folder).then(
             () => {
                 this.applyStepSuccess(".hook");
             },
@@ -47,7 +43,7 @@ class ResultPage extends ManagerPage {
                 this.applyStepFailure(".hook");
                 return Promise.reject(err);
             }
-        ).then(() => installMod(this.instance.folder, this.instance.name)).then(
+        ).then(() => installMod(this.manager.getActiveInstance().folder, this.manager.getActiveInstance().name)).then(
             () => {
                 this.applyStepSuccess(".mod");
             },
@@ -55,7 +51,7 @@ class ResultPage extends ManagerPage {
                 this.applyStepFailure(".mod");
                 return Promise.reject(err);
             }
-        ).then(() => installJSON(this.instance.folder)).then(
+        ).then(() => installJSON(this.manager.getActiveInstance().folder)).then(
             () => {
                 this.applyStepSuccess(".json");
             },
@@ -63,7 +59,7 @@ class ResultPage extends ManagerPage {
                 this.applyStepFailure(".json");
                 return Promise.reject(err);
             }
-        ).then(() => applyConfiguration(this.instance.folder, this.instance)).then(
+        ).then(() => applyConfiguration(this.manager.getActiveInstance().folder, this.manager.getActiveInstance())).then(
             () => {
                 this.applyStepSuccess(".config");
             },
@@ -71,7 +67,7 @@ class ResultPage extends ManagerPage {
                 this.applyStepFailure(".config");
                 return Promise.reject(err);
             }
-        ).then(() => installShortCuts(this.instance.folder, this.instance.name)).then(
+        ).then(() => installShortCuts(this.manager.getActiveInstance().folder, this.manager.getActiveInstance().name)).then(
             () => {
                 this.applyStepSuccess(".shortcuts");
             },

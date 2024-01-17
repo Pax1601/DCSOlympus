@@ -105,6 +105,10 @@ declare module "constants/constants" {
     export const ROEs: string[];
     export const reactionsToThreat: string[];
     export const emissionsCountermeasures: string[];
+    export const ERAS: {
+        name: string;
+        chronologicalOrder: number;
+    }[];
     export const ROEDescriptions: string[];
     export const reactionsToThreatDescriptions: string[];
     export const emissionsCountermeasuresDescriptions: string[];
@@ -836,6 +840,7 @@ declare module "other/utils" {
     }): UnitBlueprint | null;
     export function getMarkerCategoryByName(name: string): "aircraft" | "helicopter" | "groundunit-sam" | "navyunit" | "groundunit-other";
     export function getUnitDatabaseByCategory(category: string): import("unit/databases/aircraftdatabase").AircraftDatabase | import("unit/databases/helicopterdatabase").HelicopterDatabase | import("unit/databases/groundunitdatabase").GroundUnitDatabase | import("unit/databases/navyunitdatabase").NavyUnitDatabase | null;
+    export function getCategoryBlueprintIconSVG(category: string, unitName: string): string | false;
     export function base64ToBytes(base64: string): ArrayBufferLike;
     export function enumToState(state: number): string;
     export function enumToROE(ROE: number): string;
@@ -1600,6 +1605,7 @@ declare module "map/map" {
     import { CoalitionAreaContextMenu } from "contextmenus/coalitionareacontextmenu";
     import { AirbaseSpawnContextMenu } from "contextmenus/airbasespawnmenu";
     export type MapMarkerVisibilityControl = {
+        "category"?: string;
         "image": string;
         "isProtected"?: boolean;
         "name": string;
@@ -1995,6 +2001,25 @@ declare module "unit/importexport/unitdatafileexport" {
          * Show the form to start the export journey
          */
         showForm(units: Unit[]): void;
+    }
+}
+declare module "schemas/schema" {
+    import Ajv from "ajv";
+    import { AnySchemaObject } from "ajv/dist/core";
+    abstract class JSONSchemaValidator {
+        #private;
+        constructor(schema: AnySchemaObject);
+        getAjv(): Ajv;
+        getCompiledValidator(): any;
+        getErrors(): any;
+        getSchema(): AnySchemaObject;
+        validate(data: any): any;
+    }
+    export class AirbasesJSONSchemaValidator extends JSONSchemaValidator {
+        constructor();
+    }
+    export class ImportFileJSONSchemaValidator extends JSONSchemaValidator {
+        constructor();
     }
 }
 declare module "unit/importexport/unitdatafileimport" {
