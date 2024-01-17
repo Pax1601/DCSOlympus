@@ -1,12 +1,12 @@
-var manager = null;
+/* TODO: find a better solution without using the window object to persist the manager singleton */
 
 function getManager() {
-    if (manager) {
-        return manager;
+    if (window.manager) {
+        return window.manager;
     } else {
         const Manager = require("./manager");
-        manager = new Manager();
-        return manager;
+        window.manager = new Manager();
+        return window.manager;
     }
 }
 

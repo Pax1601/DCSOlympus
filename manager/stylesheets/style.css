@@ -3,14 +3,18 @@
     --background-dark: #13181f;
     --background-light: #202831;
     --background-disabled: #212A34;
+    --background-note: #2C3540;
+    --background-warning: #3D3322;
+    --background-usage: #28313A;
     --offwhite: #F2F2F2;
     --offwhite-transparent: #F2F2F255;
     --blue: #247be2;
     --red: #FF5858;
-    --green: #8bff63;
+    --green: #8BFF63;
     --lightgray: #cfd9e8;
     --gray: #989898;
     --darkgray: #3d4651;
+    --orange: #FF7B42;
 }
 
 *  {
@@ -36,7 +40,7 @@ body {
     display: block;
     -webkit-user-select: none;
     -webkit-app-region: drag;
-    height: 20px;
+    height: 30px;
     width: 100%;
     display: flex;
     justify-content: end;
@@ -197,6 +201,24 @@ body {
     column-gap: 10px;
 }
 
+.button.radio {
+    border: 1px solid var(--offwhite);
+    color: var(--offwhite);
+}
+
+.button.radio::before {
+    content: "";
+    display: block;
+    width: 10px;
+    height: 10px;
+    border: 1px solid var(--offwhite);
+    border-radius: 999px;
+}
+
+.button.radio.selected::before {
+    background-color: var(--offwhite);
+}
+
 .close-popup {
     color: var(--offwhite);
     background-color: var(--blue);
@@ -214,7 +236,7 @@ input {
     font-size: 13px;
     padding: 3px 10px;
     border-radius: 5px;
-    text-align: center;
+    text-align: left;
     width: 300px;
 }
 
@@ -288,7 +310,7 @@ input {
     display: flex;
     flex-direction: column;
     row-gap: 5px;
-    align-items: center;
+    align-items: start;
     position: relative;
     width: 500px;
 }
@@ -315,10 +337,6 @@ input {
     align-items: center;
     column-gap: 5px;
     flex-wrap: wrap;
-}
-
-.instructions {
-    margin-bottom: 10px;
 }
 
 .divider {
@@ -391,4 +409,23 @@ input {
 .button.collapse .button:last-child {
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;
+}
+
+.checkbox {
+    position: relative;
+    height: 15px;
+    width: 15px;
+    border: 1px solid var(--offwhite);
+    border-radius: 2px;
+}
+
+.checkbox.checked::after {
+    display: block;
+    position: absolute;
+    content: "";
+    height: 3px;
+    width: 8px;
+    transform: translate(1px, -1px) rotate(-45deg);
+    border-left: 2px solid var(--offwhite);
+    border-bottom: 2px solid var(--offwhite);
 }

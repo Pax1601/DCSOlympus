@@ -13,11 +13,20 @@
     }
 
     .instructions {
+        display: flex;
+        flex-direction: column;
+        row-gap: 15px;
         color: var(--offwhite);
     }
 
     .instructions .step {
+        font-size: 14px;
+        color: var(--lightgray);
+    }
 
+    .instructions .description {
+        font-size: 14px;
+        color: var(--lightgray);
     }
 
     .instructions .title {
@@ -25,7 +34,7 @@
         font-weight: bold;
     }
 
-    .content {
+    .content > div {
         height: 100%;
         width: 100%;
         display: flex;
@@ -34,6 +43,32 @@
         align-items: start;
         justify-content: center;
     }
+
+    .wizard-inputs {
+        display: flex;
+        flex-direction: column;
+        row-gap: 10px;
+    }
+
+    .wizard-page .button.radio {
+        width: 300px;
+    }
+
+    .note {
+        width: 100%;
+        background-color: var(--background-note);
+        color: var(--offwhite);
+        border-left: 5px solid var(--offwhite);
+        font-size: 14px;
+        padding: 15px;
+        font-weight: 600;
+    }
+
+    .warning {
+        background-color: var(--background-warning);
+        border-left: 5px solid var(--orange);
+    }
+
 </style>
 <div class="wizard-page">
     <div class="cancel" style="font-size: 14px; font-weight: 600; color: var(--offwhite); display: flex; align-items: center; column-gap: 10px;">
@@ -43,10 +78,10 @@
 
     </div>
     <div class="buttons-footer">
-        <div class="button back" style="color: var(--offwhite); background-color: var(--background); border: 1px solid var(--offwhite);">
+        <div class="button back" style="color: var(--offwhite); background-color: var(--background); border: 1px solid var(--offwhite);" onclick="signal('onBackClicked')">
             Back
         </div>
-        <div class="button next" style="color: var(--background); background-color: var(--offwhite);">
+        <div class="button next" style="color: var(--background); background-color: var(--offwhite);" onclick="signal('onNextClicked')">
             Next
         </div>
     </div>

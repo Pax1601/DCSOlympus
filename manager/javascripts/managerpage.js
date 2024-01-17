@@ -31,8 +31,8 @@ class ManagerPage {
 
         this.element.classList.remove("hide");
 
-        if (previousPage !== undefined) 
-            this.previousPage = previousPage;
+        this.previousPage = this.manager.activePage;
+        this.manager.activePage = this;
     }
 
     hide() {

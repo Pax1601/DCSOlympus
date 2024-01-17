@@ -1,23 +1,25 @@
 <style>
     
 </style>
-<div class="instructions">
-    <div class="step">
-        Step 1 of 4
+<div>
+    <div class="instructions">
+        <div class="step">
+            Step 1 of 4
+        </div>
+        <div class="title">
+            Do you want to add Olympus for singleplayer or multiplayer?
+        </div>
+        <div class="description">
+            Select singleplayer if you only want to play locally on your own computer. <br>
+            Select multiplayer if you want Olympus to be useable over the internet from a different computer, or this instance is a dedicated server.
+        </div>
     </div>
-    <div class="title">
-        Do you want to add Olympus for singleplayer or multiplayer?
-    </div>
-    <div class="description">
-        Select singleplayer if you only want to play locally on your own computer. <br>
-        Select multiplayer if you want Olympus to be useable over the internet from a different computer, or this instance is a dedicated server.
-    </div>
-</div>
-<div class="buttons">
-    <div class="button">
-        Singleplayer
-    </div>
-    <div class="button">
-        Multiplayer
+    <div class="wizard-inputs">
+        <div class="button radio singleplayer selected" onclick="signal('onInstallTypeClicked', 'singleplayer')">
+            Singleplayer
+        </div>
+        <div class="button radio multiplayer" onclick="signal('onInstallTypeClicked', 'multiplayer')">
+            Multiplayer
+        </div>
     </div>
 </div>

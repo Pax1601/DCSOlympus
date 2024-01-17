@@ -8,7 +8,7 @@ const { checkPort, fetchWithTimeout } = require('./net')
 const dircompare = require('dir-compare');
 const { spawn } = require('child_process');
 const find = require('find-process');
-const { uninstallInstance } = require('./filesystem')
+const { uninstallInstance, installHooks, installMod, installJSON, applyConfiguration, installShortCuts } = require('./filesystem')
 const { showErrorPopup, showConfirmPopup } = require('./popup')
 const { logger } = require("./filesystem")
 
@@ -79,6 +79,8 @@ class DCSInstance {
     missionTime = "";
     load = 0;
     fps = 0;
+    installationType = 'singleplayer';
+    connectionsType = 'auto';
 
     constructor(folder) {
         this.folder = folder;
@@ -146,7 +148,7 @@ class DCSInstance {
      */
     async setBackendPort(newPort) {
         if (await this.checkBackendPort(newPort)) {
-            logger.log(`Instance ${this.folder} client port set to ${newPort}`)
+            logger.log(`Instance ${this.folder} backend port set to ${newPort}`)
             this.backendPort = newPort;
             return true;
         }
@@ -236,6 +238,7 @@ class DCSInstance {
                 } else {
                     logger.log(`Port ${port} currently in use`);
                 }
+                logger.log(`Port ${port} is free`);
                 res(portFree);
             })
         })
@@ -340,6 +343,48 @@ class DCSInstance {
             })
     }
 
+    /* Install this instance */
+    install() {
+        installHooks(getManager().getActiveInstance().folder).then(
+            () => {
+            },
+            (err) => {
+                return Promise.reject(err);
+            }
+        ).then(() => installMod(getManager().getActiveInstance().folder, getManager().getActiveInstance().name)).then(
+            () => {
+            },
+            (err) => {
+                return Promise.reject(err);
+            }
+        ).then(() => installJSON(getManager().getActiveInstance().folder)).then(
+            () => {
+            },
+            (err) => {
+                return Promise.reject(err);
+            }
+        ).then(() => applyConfiguration(getManager().getActiveInstance().folder, getManager().getActiveInstance())).then(
+            () => {
+            },
+            (err) => {
+                return Promise.reject(err);
+            }
+        ).then(() => installShortCuts(getManager().getActiveInstance().folder, getManager().getActiveInstance().name)).then(
+            () => {
+            },
+            (err) => {
+                return Promise.reject(err);
+            }
+        ).then(
+            () => {
+                //getManager().resultPage.getElement()
+            },
+            () => {
+                //getManager().resultPage.getElement()
+            }
+        );
+    }
+
     /* Uninstall this instance */
     uninstall() {
         showConfirmPopup("<div style='font-size: 18px; max-width: 100%'> Are you sure you want to remove Olympus? </div> If you click Accept, the Olympus mod will be removed from your DCS installation.", () =>
@@ -353,7 +398,8 @@ class DCSInstance {
                         location.reload();
                     });
                 }
-            ));
+            )
+        );
     }
 }
 
