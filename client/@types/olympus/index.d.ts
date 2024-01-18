@@ -2645,6 +2645,7 @@ declare module "olympusapp" {
     export class OlympusApp {
         #private;
         constructor();
+        getTemplateEngine(): any;
         getDialogManager(): Manager;
         getMap(): Map;
         getConverter(): Converter;

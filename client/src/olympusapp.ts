@@ -27,12 +27,10 @@ import { navyUnitDatabase } from "./unit/databases/navyunitdatabase";
 import { UnitListPanel } from "./panels/unitlistpanel";
 import { ContextManager } from "./context/contextmanager";
 import { Context } from "./context/context";
-import { AirDefenceUnitSpawnMenu } from "./controls/unitspawnmenu";
 import { AirbasesJSONSchemaValidator } from "./schemas/schema";
 import { PanelsManager } from "./panels/panelsmanager";
 import { Creator } from "./creator/creator";
 import { Converter } from "./converter/converter";
-import { MapContextMenu } from "./contextmenus/mapcontextmenu";
 import { ContextMenuManager } from "./context/contextmenumanager";
 import { ContextMenu } from "./contextmenus/contextmenu";
 import { Utilities } from "./other/utilities";
@@ -47,9 +45,11 @@ export class OlympusApp {
     /* Main leaflet map, extended by custom methods */
     #map: Map | null = null;
 
-    //  Used by plugins to create stuff (factory-style)
+    //  Used by plugins
     #converter = new Converter();
     #creator = new Creator();
+
+    #templateEngine:any;
 
     /* Managers */
     #contextManager!: ContextManager;
@@ -65,6 +65,12 @@ export class OlympusApp {
     #weaponsManager: WeaponsManager | null = null;
 
     constructor() {
+        this.#templateEngine = require("ejs");
+        console.log(this.#templateEngine);
+    }
+
+    getTemplateEngine() {
+        return this.#templateEngine;
     }
 
     // TODO add checks on null
