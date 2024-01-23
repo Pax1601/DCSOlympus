@@ -34,6 +34,7 @@ import { Converter } from "./converter/converter";
 import { ContextMenuManager } from "./context/contextmenumanager";
 import { ContextMenu } from "./contextmenus/contextmenu";
 import { Utilities } from "./other/utilities";
+import { TemplateManager } from "./template/templatemanager";
 
 var VERSION = "{{OLYMPUS_VERSION_NUMBER}}";
 
@@ -47,7 +48,7 @@ export class OlympusApp {
 
     //  Used by plugins
     #converter = new Converter();
-    #creator = new Creator();
+    #creator   = new Creator();
 
     #templateEngine:any;
 
@@ -60,13 +61,12 @@ export class OlympusApp {
     #popupsManager: Manager | null = null;
     #serverManager: ServerManager | null = null;
     #shortcutManager!: ShortcutManager;
+    #templateManager!:TemplateManager;
     #toolbarsManager: Manager | null = null;
     #unitsManager: UnitsManager | null = null;
     #weaponsManager: WeaponsManager | null = null;
 
     constructor() {
-        this.#templateEngine = require("ejs");
-        console.log(this.#templateEngine);
     }
 
     getTemplateEngine() {
@@ -196,6 +196,14 @@ export class OlympusApp {
 
     /**
      * 
+     * @returns template manager
+     */
+    getTemplateManger() {
+        return this.#templateManager;
+    }
+
+    /**
+     * 
      * @returns Utilities class
      */
     getUtilities() {
@@ -214,7 +222,10 @@ export class OlympusApp {
 
     start() {
         /* Initialize base functionalitites */
-        this.#contextManager = new ContextManager();
+        this.#templateEngine  = require("ejs");
+        this.#templateManager = new TemplateManager();
+
+        this.#contextManager  = new ContextManager();
         this.#contextManager.add( "olympus", {
             "contextMenuManager": new ContextMenuManager({
                 "map": new ContextMenu("map-contextmenu")

@@ -18,15 +18,48 @@ export class AirbaseContextMenu extends ContextMenu {
     constructor(ID: string){
         super(ID);
 
-        document.addEventListener("contextMenuSpawnAirbase", (e: any) => {
+        document.addEventListener("contextMenuSpawnAirbase", (e:CustomEventInit) => {
             this.#showSpawnMenu();
-        })
+        });
 
-        document.addEventListener("contextMenuLandAirbase", (e: any) => {
+        document.addEventListener("contextMenuLandAirbase", (e:CustomEventInit) => {
             if (this.#airbase)
                 getApp().getUnitsManager().landAt(this.#airbase.getLatLng());
             this.hide();
-        })
+        });
+
+        getApp().getTemplateManger().add("airbaseContextMenu", `
+            <h3 id="airbase-name"><%= airbase.getName() %></h3>
+            <dl id="airbase-chart-data" class="ol-data-grid">
+                <dt>ICAO</dt>
+                <dd data-point="ICAO"><%= chartData.ICAO %></dd>
+                <dt>Coalition</dt>
+                <dd data-point="coalition"><%= airbase.getCoalition() %></dd>
+                <dt>Elevation</dt>
+                <dd><span data-point="elevation"><%= chartData.elevation %></span>ft</dd>
+                <dt>TACAN</dt>
+                <dd data-point="TACAN"><%= chartData.TACAN || "-" %></dd>
+            </dl>
+            <h4>Runways</h4>
+            <div id="airbase-runways">
+                <% chartData.runways.forEach( runway => { %>
+                    <div class="runway">
+                        <% runway.headings.forEach( heading => { %>
+                            <% for( const[ name, data ] of Object.entries(heading)) { %>
+                                <div class="heading"><% if (data.ILS) { %><abbr title="<%= data.ILS %>">ILS</abbr><% } %><abbr title="Mag heading: <%= data.magHeading %>"><%= name.replace("(CLOSED)", "(C)") %></abbr></div>
+                            <% } %>
+                        <% }) %>
+                    </div>
+                <% }) %>
+            </div>
+            <hr />
+            <% if (showSpawnButton) { %>
+                <button id="spawn-airbase-aircraft-button" data-coalition="neutral" title="Spawn aircraft" data-on-click="contextMenuSpawnAirbase" class="deploy-unit-button">Spawn</button>
+            <% } %>
+            <% if (showLandHere) { %>
+                <button id="land-here-button" title="Land here" data-on-click="contextMenuLandAirbase">Land here</button>
+            <% } %>
+        `);
     }
 
     /** Sets the airbase for which data will be shown in the context menu
@@ -36,74 +69,22 @@ export class AirbaseContextMenu extends ContextMenu {
     setAirbase(airbase: Airbase) {
         this.#airbase = airbase;
 
-        this.#setName(this.#airbase.getName());
-        this.#setProperties(this.#airbase.getProperties());
-        this.#setParkings(this.#airbase.getParkings());
-        this.#setCoalition(this.#airbase.getCoalition());
-        this.#showLandButton(getApp().getUnitsManager().getSelectedUnitsCategories().length == 1 && ["Aircraft", "Helicopter"].includes(getApp().getUnitsManager().getSelectedUnitsCategories()[0]) && (getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getCoalition()}) === this.#airbase.getCoalition() || this.#airbase.getCoalition() === "neutral"))
-        this.#showSpawnButton(getApp().getMissionManager().getCommandModeOptions().commandMode == GAME_MASTER || this.#airbase.getCoalition() == getApp().getMissionManager().getCommandedCoalition());
-        this.#setAirbaseData();
+        const container = this.getContainer();
+        if (container instanceof HTMLElement) {
+            container.innerHTML = getApp().getTemplateManger().renderTemplate("airbaseContextMenu", {
+                "airbase": airbase,
+                "chartData": airbase.getChartData(),
+                "showLandHere": ( getApp().getUnitsManager().getSelectedUnitsCategories().length == 1 && ["Aircraft", "Helicopter"].includes(getApp().getUnitsManager().getSelectedUnitsCategories()[0])
+                    && (getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getCoalition()}) === this.#airbase?.getCoalition() || this.#airbase?.getCoalition() === "neutral")),
+                "showSpawnButton": ( getApp().getMissionManager().getCommandModeOptions().commandMode == GAME_MASTER
+                    || this.#airbase.getCoalition() == getApp().getMissionManager().getCommandedCoalition() )
+            });
+            
+            this.clip();
+        }
         
-        this.clip();
     }
 
-    /**
-     * 
-     * @param airbaseName The name of the airbase
-     */
-    #setName(airbaseName: string) {
-        var nameDiv = <HTMLElement>this.getContainer()?.querySelector("#airbase-name");
-        if (nameDiv != null)
-            nameDiv.innerText = airbaseName;
-    }
-
-    /**
-     * 
-     * @param airbaseProperties The properties of the airbase
-     */
-    #setProperties(airbaseProperties: string[]) {
-        this.getContainer()?.querySelector("#airbase-properties")?.replaceChildren(...airbaseProperties.map((property: string) => {
-            var div = document.createElement("div");
-            div.innerText = property;
-            return div;
-        }),);
-    }
-
-    /**
-     * 
-     * @param airbaseParkings List of available parkings at the airbase
-     */
-    #setParkings(airbaseParkings: string[]) {
-        this.getContainer()?.querySelector("#airbase-parking")?.replaceChildren(...airbaseParkings.map((parking: string) => {
-            var div = document.createElement("div");
-            div.innerText = parking;
-            return div;
-        }));
-    }
-
-    /**
-     * 
-     * @param coalition Coalition to which the airbase belongs
-     */
-    #setCoalition(coalition: string) {
-        (this.getContainer()?.querySelector("#spawn-airbase-aircraft-button") as HTMLElement).dataset.coalition = coalition;
-    }
-
-    /**
-     * 
-     * @param showSpawnButton If true, the spawn button will be visibile
-     */
-    #showSpawnButton(showSpawnButton: boolean) {
-        this.getContainer()?.querySelector("#spawn-airbase-aircraft-button")?.classList.toggle("hide", !showSpawnButton);
-    }
-
-    /**
-     * 
-     * @param showLandButton If true, the land button will be visible
-     */
-    #showLandButton(showLandButton: boolean) {
-        this.getContainer()?.querySelector("#land-here-button")?.classList.toggle("hide", !showLandButton);
-    }
 
     /** Shows the spawn context menu which allows the user to select a unit to ground spawn at the airbase
      * 
@@ -115,62 +96,4 @@ export class AirbaseContextMenu extends ContextMenu {
         }
     }
 
-    /** @todo needs commenting
-     * 
-     */
-    #setAirbaseData() {
-        if (this.#airbase && this.getContainer()) {
-            dataPointMap(this.getContainer() as HTMLElement, {
-                "coalition": this.#airbase.getCoalition(),
-                "airbaseName": this.#airbase.getName()
-            });
-            
-            dataPointMap( this.getContainer() as HTMLElement, this.#airbase.getChartData() );
-            
-            const runwaysContainer     = this.getContainer()?.querySelector( "#airbase-runways" ) as HTMLElement;
-            runwaysContainer.innerHTML = "";
-
-            if ( runwaysContainer instanceof HTMLElement ) {
-                const runways = this.#airbase.getChartData().runways;
-                
-                if ( runways.length === 0 ) {
-                    runwaysContainer.innerText = "No data";
-                } else {
-                    runways.forEach( (runway: AirbaseChartRunwayData) => {
-                        let runwayDiv = document.createElement( "div" );
-                        runwayDiv.classList.add( "runway" );
-
-                        runway.headings.forEach( (headings: AirbaseChartRunwayHeadingData) => {
-                            for ( const [ heading, data ] of Object.entries( headings ) ) {
-                                
-                                let headingDiv = document.createElement( "div" );
-                                headingDiv.classList.add( "heading" );
-
-                                let abbr       = document.createElement( "abbr" );
-                                abbr.title     = `Mag heading: ${data.magHeading}`;
-                                abbr.innerText = heading;
-
-                                headingDiv.appendChild( abbr );
-                                runwayDiv.appendChild( headingDiv );
-
-                                if ( data.ILS ) {
-                                    let ilsDiv = document.createElement( "div" );
-                                    ilsDiv.classList.add( "ils" );
-
-                                    abbr           = document.createElement( "abbr" );
-                                    abbr.title     = data.ILS;
-                                    abbr.innerText = "ILS";
-
-                                    ilsDiv.appendChild( abbr );
-                                    headingDiv.appendChild( ilsDiv );
-                                }
-                            }
-                        });
-
-                        runwaysContainer.appendChild( runwayDiv );
-                    });
-                }
-            }
-        }
-    }
 }

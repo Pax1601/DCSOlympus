@@ -366,8 +366,8 @@ export class Map extends L.Map {
 
     showAirbaseContextMenu(airbase: Airbase, x: number | undefined = undefined, y: number | undefined = undefined, latlng: L.LatLng | undefined = undefined) {
         this.hideAllContextMenus();
-        this.#airbaseContextMenu.show(x, y, latlng);
         this.#airbaseContextMenu.setAirbase(airbase);
+        this.#airbaseContextMenu.show(x, y, latlng);
     }
 
     getAirbaseContextMenu() {
