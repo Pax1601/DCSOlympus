@@ -46,7 +46,7 @@ export class AirbaseContextMenu extends ContextMenu {
                     <div class="runway">
                         <% runway.headings.forEach( heading => { %>
                             <% for( const[ name, data ] of Object.entries(heading)) { %>
-                                <div class="heading"><% if (data.ILS) { %><abbr title="<%= data.ILS %>">ILS</abbr><% } %><abbr title="Mag heading: <%= data.magHeading %>"><%= name.replace("(CLOSED)", "(C)") %></abbr></div>
+                                <div class="heading"><abbr title="Mag heading: <%= data.magHeading %>"><%= name.replace("(CLOSED)", "(C)") %></abbr><% if (data.ILS) { %><abbr title="<%= data.ILS %>">ILS</abbr><% } %></div>
                             <% } %>
                         <% }) %>
                     </div>
