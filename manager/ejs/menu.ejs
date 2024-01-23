@@ -80,13 +80,13 @@
         </div>
     </div>
     <div id="menu" style="row-gap: 20px; width: 60%;">
-        <div class="option <%= installEnabled? '': 'disabled' %>" onclick="signal('onInstallClicked')">
+        <div class="option <%= installEnabled? '': 'disabled' %>" onclick="signal('onInstallMenuClicked')">
             Add Olympus
             <div>
                 Add or update Olympus to a new DCS instance
             </div>
         </div>
-        <div class="option <%= editEnabled? '': 'disabled' %>" onclick="signal('onEditClicked')">
+        <div class="option <%= editEnabled? '': 'disabled' %>" onclick="signal('onEditMenuClicked')">
             Change settings
             <div>
                 Adjust port, address and password settings

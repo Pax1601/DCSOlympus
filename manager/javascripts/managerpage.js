@@ -20,7 +20,7 @@ class ManagerPage {
         return this.element;
     }
 
-    show(previousPage) {
+    show(ignorePreviousPage) {
         ejs.renderFile(this.ejsFile, {...this.options, ...this.manager.options}, {}, (err, str) => {
             if (!err) {
                 this.render(str);
@@ -31,7 +31,7 @@ class ManagerPage {
 
         this.element.classList.remove("hide");
 
-        this.previousPage = this.manager.activePage;
+        this.previousPage = ignorePreviousPage ? this.previousPage : this.manager.activePage;
         this.manager.activePage = this;
     }
 

@@ -45,11 +45,10 @@
         <div class="input-group client-port">
             <span>Client port
                 <img src="./icons/circle-info-solid.svg"
-                    title="This port is used to allow access to Olympus. 
-                    Be sure to allow this port through your firewall if you want people to connect remotely">
+                    title="This port is used to allow access to Olympus. Be sure to allow this port through your firewall if you want people to connect remotely">
             </span>
             <div>
-                <input type="number" min="1024" max="65535" value="<%= activeInstance[" clientPort"] %>">
+                <input type="number" min="1024" max="65535" value="<%= activeInstance["clientPort"] %>">
                 <img class="success hide">
                 <div class="error hide">
                     <img> <span>Port already in use</span>
@@ -59,11 +58,10 @@
         <div class="input-group backend-port">
             <span>Backend port
                 <img src="./icons/circle-info-solid.svg"
-                    title="This port is used by Olympus to communicate with DCS. 
-                    You only need to allow it through your firewall if you enable direct API connection">
+                    title="This port is used by Olympus to communicate with DCS. You only need to allow it through your firewall if you enable direct API connection">
             </span>
             <div>
-                <input type="number" min="1024" max="65535" value="<%= activeInstance[" backendPort"] %>"
+                <input type="number" min="1024" max="65535" value="<%= activeInstance["backendPort"] %>"
                 onchange="signal('onBackendPortChanged', this.value)">
                 <img class="success hide">
                 <div class="error hide">
@@ -75,12 +73,10 @@
             <span onclick="signal('onEnableAPIClicked')">
                 <div class="checkbox"></div> Enable direct backend API connection
                 <img src="./icons/circle-info-solid.svg"
-                    title="Allows services to connect to Olympus directly. 
-                    This is NOT NEEDED for normal Olympus operation, even for dedicated servers. 
-                    Leave it unchecked if in doubt.">
+                    title="Allows services to connect to Olympus directly. This is NOT NEEDED for normal Olympus operation, even for dedicated servers. Leave it unchecked if in doubt.">
             </span>
         </div>
-        <div class="note warning">
+        <div class="note warning hide">
             Note: if you enable direct backend API connection, you will be required to run DCS as admin or run the netsh
             command for others to connect. Leave unchecked if you don't know what this is. <br>See the Olympus
             documentation for more details.

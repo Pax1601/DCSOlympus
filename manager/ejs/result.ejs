@@ -4,7 +4,6 @@
         flex-direction: column;
         row-gap: 30px;
         padding: 60px 120px;
-        color: var(--offwhite);
     }
 
     #result-page .result-summary {
@@ -29,11 +28,6 @@
         font-size: 13px;
     }
 
-    #result-page .result-summary.wait{
-        color: var(--offwhite);
-        border: 1px solid var(--offwhite);
-    }
-
     #result-page .result-summary.success{
         color: var(--background-color);
         background-color: var(--green);
@@ -42,6 +36,13 @@
     #result-page .result-summary.error{
         color: var(--background-color);
         background-color: var(--red);
+    }
+
+    #result-page .instructions-group {
+        display: flex;
+        color: var(--offwhite);
+        flex-direction: column;
+        row-gap: 15px;
     }
 
     #result-page .usage-instructions {
@@ -75,47 +76,67 @@
     }
 </style>
 <div id="result-page">
-    <div class="result-summary wait">
-        <div class="title"><img src="./icons/spinner-solid.svg" style="animation: rotate 2s linear infinite;">Please wait while Olympus is being added to <i><%= activeInstance["name"] %></i></div>
-    </div>
     <div class="result-summary success hide">
-        <div class="title"><img src="./icons/check-solid-background.svg">Olympus successfully added to <i><%= activeInstance["name"] %></i></div>
+        <div class="title"><img src="./icons/check-solid-background.svg">Olympus successfully added to <i style="margin-left: 3px"><%= activeInstance["name"] %></i></div>
         <div class="description">See the <b>DCS Olympus Wiki</b> for more information on how to use Olympus and for troubleshooting issues. You may now close the installer.</div>
     </div>
     <div class="result-summary error hide">
         <div class="title"><img src="./icons/triangle-exclamation-solid-background.svg">An error occurred while adding Olympus to <i><%= activeInstance["name"] %></i></div>
         <div class="description">See the manager log located in TODO for more information.</div>
     </div>
-    <div style="font-size: 18px; font-weight: bold;">
-        How to launch Olympus
-    </div>
-    <div style="font-size: 13px;">
-        To launch Olympus, there are shortcuts available in the DCS Olympus folder under Saved Games.
-    </div>
-    <div class="usage-instructions">
-        <div>
-            <img src="./icons/server-solid.svg">
-            <div>
-                Launch the Olympus Server via the shortcut in DCS Olympus / Saved Games.
-            </div>
+    <div class="instructions-group hide">
+        <div style="font-size: 18px; font-weight: bold; color: var(--offwhite);">
+            How to launch Olympus
         </div>
-        <img src="./icons/arrow-right-solid.svg">
-        <div>
-            <img src="./icons/chrome.svg">
-            <div>
-                Visit http://localhost:3000 in a web browser (Google Chrome recommended).
-            </div>
+        <div style="font-size: 13px; color: var(--offwhite);">
+            To launch Olympus, there are shortcuts available in the DCS Olympus folder under Saved Games.
         </div>
-        <img src="./icons/arrow-right-solid.svg">
-        <div>
-            <img src="./icons/gamepad-solid.svg">
-            <div>
-                Launch DCS, load a mission and unpause the game. Enjoy!
+        <% if (activeInstance["installationType"] === "singleplayer") { %>
+            <div class="usage-instructions" style="width: 600px;">
+                <div>
+                    <img src="./icons/olympus_white.png">
+                    <div>
+                        Launch the Olympus Client via the shortcut in DCS Olympus / Saved Games.
+                    </div>
+                </div>
+                <img src="./icons/arrow-right-solid.svg">
+                <div>
+                    <img src="./icons/gamepad-solid.svg">
+                    <div>
+                        Launch DCS, load a mission and unpause the game. Enjoy!
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    <div style="font-size: 13px;">
-        Alternatively, you can run the Olympus Client instead to replace the first two steps above.
+            <div style="font-size: 13px;">
+                Alternatively, you can run the Olympus Server instead and visit http://localhost:<%= activeInstance["clientPort"] %> in a web browser (Google Chrome recommended) to replace the first step above.
+            </div>
+        <% } else { %>
+            <div class="usage-instructions">
+                <div>
+                    <img src="./icons/server-solid.svg">
+                    <div>
+                        Launch the Olympus Server via the shortcut in DCS Olympus / Saved Games.
+                    </div>
+                </div>
+                <img src="./icons/arrow-right-solid.svg">
+                <div>
+                    <img src="./icons/chrome.svg">
+                    <div>
+                        Visit http://<%= ip %>:<%= activeInstance["clientPort"] %> in a web browser (Google Chrome recommended).
+                    </div>
+                </div>
+                <img src="./icons/arrow-right-solid.svg">
+                <div>
+                    <img src="./icons/gamepad-solid.svg">
+                    <div>
+                        Launch DCS, load a mission and unpause the game. Enjoy!
+                    </div>
+                </div>
+            </div>
+            <div style="font-size: 13px;">
+                Note, to access Olympus from this PC, you need to visit http://localhost:<%= activeInstance["clientPort"] %> in a web browser (Google Chrome recommended) instead.
+            </div>
+        <% } %>
     </div>
 
     <div class="buttons-footer">

@@ -1,9 +1,4 @@
 <style>
-    #manager-instances {
-        padding-left: 80px;
-        padding-right: 80px;
-    }
-
     #manager-instances .scroll-container {
         height: 100%;
         overflow-y: auto;
@@ -18,7 +13,7 @@
         height: fit-content;
         width: 100%;
         flex-wrap: wrap;
-        padding: 15px;
+        padding: 15px 40px;
     }
 
     #manager-instances .option {
@@ -46,10 +41,6 @@
 
     #manager-instances .option:not(.installed) .server-data {
         opacity: 50%;
-    }
-
-    #manager-instances>.instructions {
-        margin-bottom: 10px;
     }
    
     #manager-instances .button.cancel {
@@ -119,7 +110,7 @@
     #manager-instances .instance-info {
         display: flex;
         flex-direction: column;
-        row-gap: 5px;
+        row-gap: 10px;
         width: 100%;
     }
 
@@ -225,13 +216,13 @@
     }
     
 </style>
-    <div id="manager-instances">
+    <div id="manager-instances" style="margin-bottom: 10px;">
         <div class="content">
-            <div class="instructions">
-                <span>
+            <div class="instructions" style="display: flex; flex-direction: column; row-gap: 10px; align-items: center; padding: 20px;">
+                <span style="color: var(--offwhite); font-size: 18px; font-weight: 600;">
                     View and manage installs
                 </span>
-                <span>
+                <span  style="color: var(--offwhite); font-size: 14px; text-align: center;">
                     The following DCS installations have been identified. <br>You can start an Olympus server, modify settings and uninstall below.
                 </span>
             </div>
@@ -241,10 +232,6 @@
                     <div class="option <%= instances[i].installed? 'installed': '' %>" data-folder="<%= instances[i].folder %>">
                         <div class="instance-info">
                             <span><%= instances[i].name %></span>
-                            <span class="<%= instances[i].installed? (instances[i].error? 'error': 'installed'): '' %>"> 
-                                <%= instances[i].installed? (instances[i].error? 'Corrupted/outdated Olympus installation': 'Olympus installed'): 'Olympus not installed' %>
-                            </span>
-                            <span><img src="./icons/folder-open-solid.svg"> <%= instances[i].folder %></span>
                             <div class="server-data">
                                 <div class="server-status webserver online hide">ACTIVE</div>
                                 <div class="server-status webserver offline">OFFLINE</div>
@@ -254,34 +241,42 @@
                                 <div class="server-data-entry load"><img src="./icons/server-solid.svg"><span>Load: </span><span class="data">0</span></div>
                                 <div class="server-data-entry uptime"></div>
                             </div>
+
                             <div class="divider"></div>
-                            <div class="info">
-                                <div>Client port</div>
-                                <div> <%= instances[i].installed? instances[i].clientPort: "N/A" %> </div>
-                            </div>
-                            <div class="info">
-                                <div>Backend port</div>
-                                <div> <%= instances[i].installed? instances[i].backendPort: "N/A" %> </div>
-                            </div>
-                            <div class="info">
-                                <div>Backend address</div>
-                                <div> <%= instances[i].installed? instances[i].backendAddress: "N/A" %> </div>
+
+                            <span class="<%= instances[i].installed? (instances[i].error? 'error': 'installed'): '' %>"> 
+                                <%= instances[i].installed? (instances[i].error? 'Corrupted/outdated Olympus installation': 'Olympus installed'): 'Olympus not installed' %>
+                            </span>
+                            <span><img src="./icons/folder-open-solid.svg"> <%= instances[i].folder %></span>
+                            <div style="display: flex; flex-direction: column; row-gap: 5px;">
+                                <div class="info">
+                                    <div>Client port</div>
+                                    <div> <%= instances[i].installed? instances[i].clientPort: "N/A" %> </div>
+                                </div>
+                                <div class="info">
+                                    <div>Backend port</div>
+                                    <div> <%= instances[i].installed? instances[i].backendPort: "N/A" %> </div>
+                                </div>
+                                <div class="info">
+                                    <div>Backend address</div>
+                                    <div> <%= instances[i].installed? instances[i].backendAddress: "N/A" %> </div>
+                                </div>
                             </div>
                         </div>
                         <div class="instance-buttons">
                             <div class="button start collapse">
                                 Start Olympus
                                 <div>
-                                    <div class="button start-server">Start server</div>
-                                    <div class="button start-client">Start client</div>
+                                    <div class="button start-server" onclick="signal('onStartServerClicked', '<%= instances[i].name %>')">Start server</div>
+                                    <div class="button start-client" onclick="signal('onStartClientClicked', '<%= instances[i].name %>')">Start client</div>
                                 </div>
                             </div>
 
-                            <div class="button edit">Edit settings</div>
-                            <div class="button install">Install Olympus</div>
-                            <div class="button uninstall">Uninstall Olympus</div>
-                            <div class="button open-browser hide">Open in browser</div>
-                            <div class="button stop hide">Stop Olympus</div>
+                            <div class="button edit" onclick="signal('onEditClicked', '<%= instances[i].name %>')">Edit settings</div>
+                            <div class="button install" onclick="signal('onInstallClicked', '<%= instances[i].name %>')">Install Olympus</div>
+                            <div class="button uninstall" onclick="signal('onUninstallClicked', '<%= instances[i].name %>')">Uninstall Olympus</div>
+                            <div class="button open-browser hide" onclick="signal('onOpenBrowserClicked', '<%= instances[i].name %>')">Open in browser</div>
+                            <div class="button stop hide" onclick="signal('onStopClicked', '<%= instances[i].name %>')">Stop Olympus</div>
                         </div>
                     </div>
                 <% } %>

@@ -9,8 +9,9 @@ const dircompare = require('dir-compare');
 const { spawn } = require('child_process');
 const find = require('find-process');
 const { uninstallInstance, installHooks, installMod, installJSON, applyConfiguration, installShortCuts } = require('./filesystem')
-const { showErrorPopup, showConfirmPopup } = require('./popup')
+const { showErrorPopup, showConfirmPopup, showWaitPopup } = require('./popup')
 const { logger } = require("./filesystem")
+const { hidePopup } = require('./popup')
 
 class DCSInstance {
     static instances = null;
@@ -81,6 +82,9 @@ class DCSInstance {
     fps = 0;
     installationType = 'singleplayer';
     connectionsType = 'auto';
+    gameMasterPasswordEdited = false;
+    blueCommanderPasswordEdited = false;
+    redCommanderPasswordEdited = false;
 
     constructor(folder) {
         this.folder = folder;
@@ -127,7 +131,7 @@ class DCSInstance {
         /* Periodically "ping" Olympus to check if either the client or the backend are active */
         window.setInterval(async () => {
             await this.getData();
-            getManager().instancesPage.update();            
+            getManager().updateInstances();            
         }, 1000);
     }
 
@@ -167,6 +171,7 @@ class DCSInstance {
      */
     setGameMasterPassword(newPassword) {
         this.gameMasterPassword = newPassword;
+        this.gameMasterPasswordEdited = true;
     }
 
     /** Set Blue Commander password
@@ -174,6 +179,7 @@ class DCSInstance {
      */
     setBlueCommanderPassword(newPassword) {
         this.blueCommanderPassword = newPassword;
+        this.blueCommanderPasswordEdited = true;
     }
 
     /** Set Red Commander password
@@ -181,6 +187,19 @@ class DCSInstance {
      */
     setRedCommanderPassword(newPassword) {
         this.redCommanderPassword = newPassword;
+        this.redCommanderPasswordEdited = true;
+    }
+
+    arePasswordsEdited() {
+        return (getManager().getActiveInstance().gameMasterPasswordEdited || getManager().getActiveInstance().blueCommanderPasswordEdited  || getManager().getActiveInstance().redCommanderPasswordEdited );
+    }
+
+    arePasswordsSet() {
+        return !(getManager().getActiveInstance().gameMasterPassword === '' || getManager().getActiveInstance().blueCommanderPassword === '' || getManager().getActiveInstance().redCommanderPassword === '');
+    }
+
+    arePasswordsDifferent() {
+        return !(getManager().getActiveInstance().gameMasterPassword === getManager().getActiveInstance().blueCommanderPassword || getManager().getActiveInstance().gameMasterPassword === getManager().getActiveInstance().redCommanderPassword || getManager().getActiveInstance().blueCommanderPassword === getManager().getActiveInstance().redCommanderPassword);
     }
 
     /** Check if the client port is free
@@ -372,12 +391,15 @@ class DCSInstance {
             }
         ).then(
             () => {
-                getManager().resultPage.getElement().querySelector(".result-summary.wait").classList.add("hide");
+                hidePopup();
+                getManager().resultPage.show();
                 getManager().resultPage.getElement().querySelector(".result-summary.success").classList.remove("hide");
                 getManager().resultPage.getElement().querySelector(".result-summary.error").classList.add("hide");
+                getManager().resultPage.getElement().querySelector(".instructions-group").classList.remove("hide");
             },
             () => {
-                getManager().resultPage.getElement().querySelector(".result-summary.wait").classList.add("hide");
+                hidePopup();
+                getManager().resultPage.show();
                 getManager().resultPage.getElement().querySelector(".result-summary.success").classList.add("hide");
                 getManager().resultPage.getElement().querySelector(".result-summary.error").classList.remove("hide");
             }
@@ -386,7 +408,7 @@ class DCSInstance {
 
     /* Uninstall this instance */
     uninstall() {
-        showConfirmPopup("<div style='font-size: 18px; max-width: 100%'> Are you sure you want to remove Olympus? </div> If you click Accept, the Olympus mod will be removed from your DCS installation.", () =>
+        showConfirmPopup("<div style='font-size: 18px; max-width: 100%; margin-bottom: 15px;'> Are you sure you want to remove Olympus? </div> If you click Accept, the Olympus mod will be removed from your DCS installation.", () =>
             uninstallInstance(this.folder, this.name).then(
                 () => {
                     location.reload();

@@ -48,7 +48,7 @@ class installationPage extends ManagerPage {
             this.hide();
             this.manager.typePage.show(this);
         } else {
-            showConfirmPopup("<div style='font-size: 18px; max-width: 100%'> Olympus is already installed in this instance! </div> If you click Accept, it will be installed again and all changes, e.g. custom databases or mods support, will be lost. Are you sure you want to continue?",
+            showConfirmPopup("<div style='font-size: 18px; max-width: 100%; margin-bottom: 15px;'> Olympus is already installed in this instance! </div> If you click Accept, it will be installed again and all changes, e.g. custom databases or mods support, will be lost. Are you sure you want to continue?",
                 () => {
                     this.hide();
                     this.manager.typePage.show(this);

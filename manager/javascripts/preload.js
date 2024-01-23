@@ -9,7 +9,7 @@ const fs = require('fs');
 const AdmZip = require("adm-zip");
 const { Octokit } = require('octokit');
 const { logger } = require("./filesystem");
-const { getManager } = require('./managerFactory');
+const { getManager } = require('./managerfactory');
 
 const VERSION = "{{OLYMPUS_VERSION_NUMBER}}";
 logger.log(`Running in ${__dirname}`);

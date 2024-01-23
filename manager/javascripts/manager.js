@@ -8,6 +8,8 @@ const { logger } = require("./filesystem")
 
 const ManagerPage = require("./managerpage");
 const WizardPage = require("./wizardpage");
+const { fetchWithTimeout } = require("./net");
+const { exec } = require("child_process");
 
 class Manager {
     options = {
@@ -26,7 +28,6 @@ class Manager {
     instancesPage = null;
 
     constructor() {
-        console.log("constructor")
         document.addEventListener("signal", (ev) => {
             const callback = ev.detail.callback;
             const params = JSON.stringify(ev.detail.params);
@@ -74,6 +75,16 @@ class Manager {
             /* Get the list of DCS instances */
             this.options.instances = await DCSInstance.getInstances();
 
+            /* Get my public IP */
+            this.getPublicIP().then(
+                (ip) => {
+                    this.options.ip = ip;
+                },
+                () => {
+                    this.options.ip = undefined;
+                }
+            )
+
             /* Check if there are corrupted or outdate instances */
             if (this.options.instances.some((instance) => {
                 return instance.installed && instance.error;
@@ -110,7 +121,7 @@ class Manager {
             this.connectionsPage = new WizardPage(this, "./ejs/connections.ejs");
             this.passwordsPage = new WizardPage(this, "./ejs/passwords.ejs");
             this.resultPage = new ManagerPage(this, "./ejs/result.ejs");
-            //this.instancesPage = new InstancesPage(this);
+            this.instancesPage = new ManagerPage(this, "./ejs/instances.ejs");
 
             if (this.options.mode === "basic") {
                 /* In basic mode no dashboard is shown */
@@ -118,6 +129,7 @@ class Manager {
             } else {
                 /* In Expert mode we go directly to the dashboard */
                 this.instancesPage.show();
+                this.updateInstances();
             }
         }
     }
@@ -157,7 +169,7 @@ class Manager {
     }
 
     /* When the install button is clicked go the installation page */
-    onInstallClicked() {
+    onInstallMenuClicked() {
         this.options.install = true;
 
         if (this.options.singleInstance) {
@@ -168,7 +180,7 @@ class Manager {
                 this.menuPage.hide();
                 this.typePage.show();
             } else {
-                showConfirmPopup("<div style='font-size: 18px; max-width: 100%'> Olympus is already installed in this instance! </div> If you click Accept, it will be installed again and all changes, e.g. custom databases or mods support, will be lost. Are you sure you want to continue?",
+                showConfirmPopup("<div style='font-size: 18px; max-width: 100%; margin-bottom: 8px;'> Olympus is already installed in this instance! </div> If you click Accept, it will be installed again and all changes, e.g. custom databases or mods support, will be lost. Are you sure you want to continue?",
                     () => {
                         this.menuPage.hide();
                         this.typePage.show();
@@ -183,8 +195,8 @@ class Manager {
     }
 
     /* When the edit button is clicked go to the instances page */
-    onEditClicked() {
-        this.hide();
+    onEditMenuClicked() {
+        this.instancesPage.hide();
         this.options.install = false;
 
         if (this.options.singleInstance) {
@@ -215,25 +227,20 @@ class Manager {
             showErrorPopup("A critical error has occurred. Please restart the Manager.")
     }
 
-    /* When the back button of a wizard page is clicked */
-    onBackClicked() {
-        this.activePage.hide();
-        this.activePage.previousPage.show();
-    }
-
     /* When the next button of a wizard page is clicked */
     onNextClicked() {
-        this.activePage.hide();
-
         /* Choose which page to show depending on the active page */
         if (this.activePage == this.typePage) {
+            this.activePage.hide();
             this.connectionsTypePage.show();
         } else if (this.activePage == this.connectionsTypePage) {
             if (this.options.activeInstance) {
                 if (this.options.activeInstance.connectionsType === 'auto') {
+                    this.activePage.hide();
                     this.passwordsPage.show();
                 }
                 else {
+                    this.activePage.hide();
                     this.connectionsPage.show();
                     this.setPort('client', this.options.activeInstance.clientPort);
                     this.setPort('backend', this.options.activeInstance.backendPort);
@@ -243,15 +250,77 @@ class Manager {
                 showErrorPopup("A critical error has occurred. Please restart the Manager.")
             }
         } else if (this.activePage == this.connectionsPage) {
+            this.activePage.hide();
             this.passwordsPage.show();
         } else if (this.activePage == this.passwordsPage) {
             if (this.options.activeInstance) {
-                this.options.activeInstance.install();
-                this.resultPage.show();
+                if (this.options.activeInstance.installed && !this.options.activeInstance.arePasswordsEdited()) {
+                    this.activePage.hide();
+                    this.options.activeInstance.install();
+                    showWaitPopup(`<span>Please wait while Olympus is being installed in <i>${this.options.activeInstance.name}</i></span>`);
+                }
+                else {
+                    if (!this.options.activeInstance.arePasswordsSet()) {
+                        showErrorPopup('Please, make sure all passwords are set!');
+                    } else if (!this.options.activeInstance.arePasswordsDifferent()) {
+                        showErrorPopup('Please, set different passwords for the Game Master, Blue Commander, and Red Commander roles!');
+                    } else {
+                        this.activePage.hide();
+                        this.options.activeInstance.install();
+                        showWaitPopup(`<span>Please wait while Olympus is being installed in <i>${this.options.activeInstance.name}</i></span>`);
+                    }
+                }
             } else {
                 showErrorPopup("A critical error has occurred. Please restart the Manager.")
             }
         }
+    }
+
+    /* When the back button of a wizard page is clicked */
+    onBackClicked() {
+        this.activePage.hide();
+        this.activePage.previousPage.show(true); // Don't change the previous page
+        this.updateInstances();
+    }
+
+    onCancelClicked() {
+        location.reload();
+    }
+
+    onGameMasterPasswordChanged(value) {
+        if (this.options.activeInstance) {
+            this.options.activeInstance.setGameMasterPassword(value);
+            if (!this.options.activeInstance.blueCommanderPasswordEdited)
+                this.passwordsPage.getElement().querySelector(".blue-commander input").value = "";
+            if (!this.options.activeInstance.redCommanderPasswordEdited)
+                this.passwordsPage.getElement().querySelector(".red-commander input").value = "";
+        }
+        else
+            showErrorPopup("A critical error has occurred. Please restart the Manager.")
+    }
+
+    onBlueCommanderPasswordChanged(value) {
+        if (this.options.activeInstance) {
+            this.options.activeInstance.setBlueCommanderPassword(value);
+            if (!this.options.activeInstance.gameMasterPasswordEdited)
+                this.passwordsPage.getElement().querySelector(".game-master input").value = "";
+            if (!this.options.activeInstance.redCommanderPasswordEdited)
+                this.passwordsPage.getElement().querySelector(".red-commander input").value = "";
+        }
+        else
+            showErrorPopup("A critical error has occurred. Please restart the Manager.")
+    }
+
+    onRedCommanderPasswordChanged(value) {
+        if (this.options.activeInstance) {
+            this.options.activeInstance.setRedCommanderPassword(value);
+            if (!this.options.activeInstance.gameMasterPasswordEdited)
+                this.passwordsPage.getElement().querySelector(".game-master input").value = "";
+            if (!this.options.activeInstance.blueCommanderPasswordEdited)
+                this.passwordsPage.getElement().querySelector(".blue-commander input").value = "";
+        }
+        else
+            showErrorPopup("A critical error has occurred. Please restart the Manager.")
     }
 
     /* When the client port input value is changed */
@@ -272,9 +341,88 @@ class Manager {
             } else {
                 this.options.activeInstance.backendAddress = 'localhost';
             }
+            this.connectionsPage.getElement().querySelector(".note.warning").classList.toggle("hide", this.options.activeInstance.backendAddress !== '*')
             this.connectionsPage.getElement().querySelector(".backend-address .checkbox").classList.toggle("checked", this.options.activeInstance.backendAddress === '*')
         } else {
             showErrorPopup("A critical error has occurred. Please restart the Manager.")
+        }
+    }
+
+    /* When the "Return to manager" button is pressed */
+    onReturnClicked() {
+        location.reload();
+    }
+
+    /* When the "Close manager" button is pressed */
+    onCloseManagerClicked() {
+        document.querySelector('.close').click();
+    }
+
+    async onStartServerClicked(name) {
+        this.getClickedInstanceDiv(name).then((div) => div.querySelector(".collapse").classList.add("loading"));
+        this.getClickedInstance(name).then((instance) => instance.startServer());
+    }
+
+    async onStartClientClicked(name) {
+        this.getClickedInstanceDiv(name).then((div) => div.querySelector(".collapse").classList.add("loading"));
+        this.getClickedInstance(name).then(instance => instance.startClient());
+    }
+
+    async onOpenBrowserClicked(name) {
+        this.getClickedInstance(name).then((instance) => exec(`start http://localhost:${instance.clientPort}`));
+    }
+
+    async onStopClicked(name) {
+        this.getClickedInstance(name).then((instance) => instance.stop());
+    }
+
+    async onEditClicked(name) {
+        this.getClickedInstance(name).then((instance) => {
+            if (instance.webserverOnline || instance.backendOnline) {
+                showErrorPopup("Error, the selected Olympus instance is currently active, please stop Olympus before editing it!")
+            } else {
+                this.options.activeInstance = instance;
+                this.instancesPage.hide();
+                this.typePage.show();
+            }
+        });
+    }
+
+    async onInstallClicked(name) {
+        this.getClickedInstance(name).then((instance) => {
+            this.options.activeInstance = instance;
+            this.options.install = true;
+            this.options.singleInstance = false;
+            this.instancesPage.hide();
+            this.typePage.show();
+        });
+    }
+
+    async onUninstallClicked(name) {
+        this.getClickedInstance(name).then((instance) => {
+            instance.webserverOnline || instance.backendOnline ? showErrorPopup("Error, the selected Olympus instance is currently active, please stop Olympus before uninstalling it!") : instance.uninstall();
+        });
+    }
+
+    async getClickedInstance(name) {
+        return DCSInstance.getInstances().then((instances) => {
+            return instances.find((instance) => {
+                return instance.name === name
+            })
+        });
+    }
+
+    async getClickedInstanceDiv(name) {
+        var instance = await this.getClickedInstance(name);
+        console.log(instance)
+        var instanceDivs = this.instancesPage.getElement().querySelectorAll(`.option`);
+        for (let i = 0; i < instanceDivs.length; i++) {
+            var instanceDiv = instanceDivs[i];
+            console.log(instanceDiv.dataset.folder)
+            if (instanceDiv.dataset.folder === instance.folder) {
+                console.log(instanceDiv)
+                return instanceDiv;
+            }
         }
     }
 
@@ -293,6 +441,49 @@ class Manager {
         var errorEls = this.connectionsPage.getElement().querySelector(`.${port}-port`).querySelectorAll(".error");
         for (let i = 0; i < errorEls.length; i++) {
             errorEls[i].classList.toggle("hide", success);
+        }
+    }
+
+    async getPublicIP() {
+        const res = await fetchWithTimeout("https://ipecho.io/json", { timeout: 2500 });
+        const data = await res.json();
+        return data.ip;
+    }
+
+    updateInstances() {
+        var instanceDivs = this.instancesPage.getElement().querySelectorAll(`.option`);
+        for (let i = 0; i < instanceDivs.length; i++) {
+            var instanceDiv = instanceDivs[i];
+            var instance = this.options.instances.find((instance) => { return instance.folder === instanceDivs[i].dataset.folder; })
+            if (instance) {
+                instanceDiv.querySelector(".button.install").classList.toggle("hide", instance.installed);
+                instanceDiv.querySelector(".button.start").classList.toggle("hide", !instance.installed);
+                instanceDiv.querySelector(".button.uninstall").classList.toggle("hide", !instance.installed);
+                instanceDiv.querySelector(".button.edit").classList.toggle("hide", !instance.installed);
+
+                if (instance.installed) {
+                    if (instanceDiv.querySelector(".webserver.online") !== null) {
+                        instanceDiv.querySelector(".webserver.online").classList.toggle("hide", !instance.webserverOnline);
+                        instanceDiv.querySelector(".webserver.offline").classList.toggle("hide", instance.webserverOnline);
+                        instanceDiv.querySelector(".backend.online").classList.toggle("hide", !instance.backendOnline);
+                        instanceDiv.querySelector(".backend.offline").classList.toggle("hide", instance.backendOnline);
+
+                        if (this.backendOnline) {
+                            instanceDiv.querySelector(".fps .data").innerText = instance.fps;
+                            instanceDiv.querySelector(".load .data").innerText = instance.load;
+                        }
+
+                        instanceDiv.querySelector(".button.start").classList.toggle("hide", instance.webserverOnline);
+                        instanceDiv.querySelector(".button.uninstall").classList.toggle("hide", instance.webserverOnline);
+                        instanceDiv.querySelector(".button.edit").classList.toggle("hide", instance.webserverOnline);
+                        instanceDiv.querySelector(".button.open-browser").classList.toggle("hide", !instance.webserverOnline);
+                        instanceDiv.querySelector(".button.stop").classList.toggle("hide", !instance.webserverOnline);
+
+                        if (this.webserverOnline)
+                            instanceDiv.querySelector(".button.start").classList.remove("loading");
+                    }
+                }
+            }
         }
     }
 }

@@ -145,7 +145,7 @@ body {
 
 #loader {
     color: var(--offwhite);
-    font-size: 20px;
+    font-size: 16px;
     font-weight: normal;
     position: absolute;
     display: flex;
@@ -206,6 +206,11 @@ body {
     color: var(--offwhite);
 }
 
+.button.radio.selected {
+    background-color: var(--offwhite);
+    color: var(--background);
+}
+
 .button.radio::before {
     content: "";
     display: block;
@@ -217,6 +222,9 @@ body {
 
 .button.radio.selected::before {
     background-color: var(--offwhite);
+    border: 4px solid var(--background);
+    width: 4px;
+    height: 4px;
 }
 
 .close-popup {
