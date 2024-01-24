@@ -48,7 +48,8 @@
                     title="This port is used to allow access to Olympus. Be sure to allow this port through your firewall if you want people to connect remotely">
             </span>
             <div>
-                <input type="number" min="1024" max="65535" value="<%= activeInstance["clientPort"] %>">
+                <input type="number" min="1024" max="65535" value="<%= activeInstance["clientPort"] %>"
+                onchange="signal('onClientPortChanged', this.value)">
                 <img class="success hide">
                 <div class="error hide">
                     <img> <span>Port already in use</span>

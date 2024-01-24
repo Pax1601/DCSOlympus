@@ -115,7 +115,7 @@ class Manager {
 
             /* Create all the HTML pages */
             this.menuPage = new ManagerPage(this, "./ejs/menu.ejs");
-            this.folderPage = new WizardPage(this, "./ejs/installation.ejs");
+            this.folderPage = new WizardPage(this, "./ejs/folder.ejs");
             this.typePage = new WizardPage(this, "./ejs/type.ejs");
             this.connectionsTypePage = new WizardPage(this, "./ejs/connectionsType.ejs");
             this.connectionsPage = new WizardPage(this, "./ejs/connections.ejs");
@@ -207,6 +207,18 @@ class Manager {
         }
     }
 
+    onFolderClicked(name) {
+        this.getClickedInstance(name).then((instance) => {
+            var instanceDivs = this.folderPage.getElement().querySelectorAll(".button.radio");
+            console.log(instanceDivs);
+            for (let i = 0; i < instanceDivs.length; i++) {
+                instanceDivs[i].classList.toggle('selected', instanceDivs[i].dataset.folder === instance.folder);
+                if (instanceDivs[i].dataset.folder === instance.folder)
+                    this.options.activeInstance = instance;
+            }
+        });
+    }
+
     /* When the installation type is selected */
     onInstallTypeClicked(type) {
         this.typePage.getElement().querySelector(`.singleplayer`).classList.toggle("selected", type === 'singleplayer');
@@ -230,7 +242,10 @@ class Manager {
     /* When the next button of a wizard page is clicked */
     onNextClicked() {
         /* Choose which page to show depending on the active page */
-        if (this.activePage == this.typePage) {
+        if (this.activePage == this.folderPage) {
+            this.activePage.hide();
+            this.typePage.show();
+        } else if (this.activePage == this.typePage) {
             this.activePage.hide();
             this.connectionsTypePage.show();
         } else if (this.activePage == this.connectionsTypePage) {
@@ -250,8 +265,26 @@ class Manager {
                 showErrorPopup("A critical error has occurred. Please restart the Manager.")
             }
         } else if (this.activePage == this.connectionsPage) {
-            this.activePage.hide();
-            this.passwordsPage.show();
+            this.options.activeInstance.checkClientPort(this.options.activeInstance.clientPort).then(
+                (portFree) => {
+                    console.log(this.options.activeInstance.clientPort)
+                    console.log(portFree)
+                    if (portFree) {
+                        return this.options.activeInstance.checkBackendPort(this.options.activeInstance.backendPort);
+                    } else {
+                        return Promise.reject('Port not free');
+                    }
+                }).then((portFree) => {
+                    if (portFree) {
+                        this.activePage.hide();
+                        this.passwordsPage.show();
+                    } else {
+                        return Promise.reject('Port not free');
+                    }
+                }).catch(() => {
+                    showErrorPopup('Please, make sure both the client and backend ports are free!');
+                }
+            );
         } else if (this.activePage == this.passwordsPage) {
             if (this.options.activeInstance) {
                 if (this.options.activeInstance.installed && !this.options.activeInstance.arePasswordsEdited()) {
@@ -429,10 +462,14 @@ class Manager {
     /* Set the selected port to the dcs instance */
     async setPort(port, value) {
         var success;
-        if (port === 'client')
-            success = await this.options.activeInstance.setClientPort(value);
-        else
-            success = await this.options.activeInstance.setBackendPort(value);
+        if (port === 'client'){
+            success = await this.options.activeInstance.checkClientPort(value);
+            this.options.activeInstance.setClientPort(value);
+        }
+        else {
+            success = await this.options.activeInstance.checkBackendPort(value);
+            this.options.activeInstance.setBackendPort(value);
+        }
 
         var successEls = this.connectionsPage.getElement().querySelector(`.${port}-port`).querySelectorAll(".success");
         for (let i = 0; i < successEls.length; i++) {
@@ -485,6 +522,11 @@ class Manager {
                 }
             }
         }
+    }
+
+    reload() {
+        console.log("reload")
+        this.activePage.show();
     }
 }
 

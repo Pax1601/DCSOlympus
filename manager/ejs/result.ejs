@@ -74,10 +74,16 @@
         height: 30px;
         width: 30px;
     }
+
+    #result-page .link {
+        display: inline;
+        color: #5CA7FF;
+        font-weight: bold;
+    }
 </style>
 <div id="result-page">
     <div class="result-summary success hide">
-        <div class="title"><img src="./icons/check-solid-background.svg">Olympus successfully added to <i style="margin-left: 3px"><%= activeInstance["name"] %></i></div>
+        <div class="title"><img src="./icons/check-solid-background.svg">Olympus successfully added to <i style="margin-left: 3px"><%= activeInstance["name"] %></i>!</div>
         <div class="description">See the <b>DCS Olympus Wiki</b> for more information on how to use Olympus and for troubleshooting issues. You may now close the installer.</div>
     </div>
     <div class="result-summary error hide">
@@ -89,52 +95,52 @@
             How to launch Olympus
         </div>
         <div style="font-size: 13px; color: var(--offwhite);">
-            To launch Olympus, there are shortcuts available in the DCS Olympus folder under Saved Games.
+            To launch Olympus, there are shortcuts available in the <i><b><%= activeInstance["name"] %></b></i> folder under <i><b>Saved Games</b></i>.
         </div>
         <% if (activeInstance["installationType"] === "singleplayer") { %>
             <div class="usage-instructions" style="width: 600px;">
                 <div>
                     <img src="./icons/olympus_white.png">
                     <div>
-                        Launch the Olympus Client via the shortcut in DCS Olympus / Saved Games.
+                        Launch the <b>Olympus Client</b> via the shortcut on your desktop or in <i><b><%= activeInstance["name"] %></b></i>.
                     </div>
                 </div>
                 <img src="./icons/arrow-right-solid.svg">
                 <div>
                     <img src="./icons/gamepad-solid.svg">
                     <div>
-                        Launch DCS, load a mission and unpause the game. Enjoy!
+                        <b>Launch DCS</b>, load a mission and unpause the game. Enjoy!
                     </div>
                 </div>
             </div>
             <div style="font-size: 13px;">
-                Alternatively, you can run the Olympus Server instead and visit http://localhost:<%= activeInstance["clientPort"] %> in a web browser (Google Chrome recommended) to replace the first step above.
+                Alternatively, you can run the <b>Olympus Server</b> instead and visit <div class="link">http://localhost:<%= activeInstance["clientPort"] %></div> in a web browser (Google Chrome recommended) to replace the first step above.
             </div>
         <% } else { %>
             <div class="usage-instructions">
                 <div>
                     <img src="./icons/server-solid.svg">
                     <div>
-                        Launch the Olympus Server via the shortcut in DCS Olympus / Saved Games.
+                        Launch the <b>Olympus Server</b> via the shortcut on your desktop or in <b><%= activeInstance["name"] %></b>.
                     </div>
                 </div>
                 <img src="./icons/arrow-right-solid.svg">
                 <div>
                     <img src="./icons/chrome.svg">
                     <div>
-                        Visit http://<%= ip %>:<%= activeInstance["clientPort"] %> in a web browser (Google Chrome recommended).
+                        To access Olympus remotely visit <div class="link">http://<%= ip %>:<%= activeInstance["clientPort"] %></div> <b>in a web browser</b> (Google Chrome recommended).
                     </div>
                 </div>
                 <img src="./icons/arrow-right-solid.svg">
                 <div>
                     <img src="./icons/gamepad-solid.svg">
                     <div>
-                        Launch DCS, load a mission and unpause the game. Enjoy!
+                        <b>Launch DCS</b>, load a mission and unpause the game. Enjoy!
                     </div>
                 </div>
             </div>
             <div style="font-size: 13px;">
-                Note, to access Olympus from this PC, you need to visit http://localhost:<%= activeInstance["clientPort"] %> in a web browser (Google Chrome recommended) instead.
+                <b>To access Olympus from this PC</b>, you need to visit <div class="link">http://localhost:<%= activeInstance["clientPort"] %></div> in a web browser (Google Chrome recommended) instead.
             </div>
         <% } %>
     </div>

@@ -135,28 +135,20 @@ class DCSInstance {
         }, 1000);
     }
 
-    /** Asynchronously check if the client port is free and if it is, set the new value
+    /** Asynchronously set the client port
      * 
      */
     async setClientPort(newPort) {
-        if (await this.checkClientPort(newPort)) {
-            logger.log(`Instance ${this.folder} client port set to ${newPort}`)
-            this.clientPort = newPort;
-            return true;
-        }
-        return false;
+        logger.log(`Instance ${this.folder} client port set to ${newPort}`)
+        this.clientPort = newPort;
     }
 
-    /** Asynchronously check if the client port is free and if it is, set the new value
+    /** Asynchronously set the backend port
      * 
      */
     async setBackendPort(newPort) {
-        if (await this.checkBackendPort(newPort)) {
-            logger.log(`Instance ${this.folder} backend port set to ${newPort}`)
-            this.backendPort = newPort;
-            return true;
-        }
-        return false;
+        logger.log(`Instance ${this.folder} backend port set to ${newPort}`)
+        this.backendPort = newPort;
     }
 
     /** Set backend address
@@ -227,6 +219,7 @@ class DCSInstance {
                 else {
                     logger.log(`Port ${port} currently in use`);
                 }
+                logger.log(`Port ${port} is free`);
                 res(portFree);
             })
         })

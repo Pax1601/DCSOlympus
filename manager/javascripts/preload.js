@@ -268,10 +268,12 @@ window.addEventListener('DOMContentLoaded', async () => {
     /* Create event listeners for the hyperlinks */
     var links = document.querySelectorAll(".link");
     for (let i = 0; i < links.length; i++) {
-        links[i].addEventListener("click", (e) => {
-            if (e.target.dataset.link)
-                exec("start " + e.target.dataset.link);
-        })
+        if (links[i].dataset.link) {
+            links[i].addEventListener("click", (e) => {
+                if (e.target.dataset.link)
+                    exec("start " + e.target.dataset.link);
+            })
+        }
     }
 })
 
