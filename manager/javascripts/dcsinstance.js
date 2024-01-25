@@ -1,5 +1,5 @@
 const { getManager } = require('./managerfactory')
-var regedit = require('regedit')
+var regedit = require('regedit').promisified;
 const shellFoldersKey = 'HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders'
 const saveGamesKey = '{4C5C32FF-BB9D-43B0-B5B4-2D72E54EAAA4}'
 var fs = require('fs')
@@ -9,7 +9,7 @@ const dircompare = require('dir-compare');
 const { spawn } = require('child_process');
 const find = require('find-process');
 const { uninstallInstance, installHooks, installMod, installJSON, applyConfiguration, installShortCuts } = require('./filesystem')
-const { showErrorPopup, showConfirmPopup, showWaitPopup } = require('./popup')
+const { showErrorPopup, showConfirmPopup } = require('./popup')
 const { logger } = require("./filesystem")
 const { hidePopup } = require('./popup')
 
@@ -21,47 +21,50 @@ class DCSInstance {
      */
     static async getInstances() {
         if (this.instances === null) {
-            this.instances = await this.findInstances();
+            var ans = this.findInstances();
+            console.log(ans)
+            return this.findInstances();
         }
-        return this.instances;
+        else 
+            return DCSInstance.instances;
     }
 
     /** Static asynchronous method to find all existing DCS instances
      * 
      */
     static async findInstances() {
-        let promise = new Promise((res, rej) => {
-            /* Get the Saved Games folder from the registry */
-            regedit.list(shellFoldersKey, function (err, result) {
-                if (err) {
-                    rej(err);
+        /* Get the Saved Games folder from the registry */
+        getManager().setLoadingProgress("Finding DCS instances...");
+
+        var result = await regedit.list(shellFoldersKey);
+        /* Check that the registry read was successfull */
+        if (result[shellFoldersKey] !== undefined && result[shellFoldersKey]["exists"] && result[shellFoldersKey]['values'][saveGamesKey] !== undefined && result[shellFoldersKey]['values'][saveGamesKey]['value'] !== undefined) {
+            /* Read all the folders in Saved Games */
+            const searchpath = result[shellFoldersKey]['values'][saveGamesKey]['value'];
+            const folders = fs.readdirSync(searchpath);
+            var instances = [];
+
+            /* A DCS Instance is created if either the appsettings.lua or serversettings.lua file is detected */
+            for (let i = 0; i < folders.length; i++) {
+                const folder = folders[i];
+                if (fs.existsSync(path.join(searchpath, folder, "Config", "appsettings.lua")) ||
+                    fs.existsSync(path.join(searchpath, folder, "Config", "serversettings.lua"))) {
+                    logger.log(`Found instance in ${folder}, checking for Olympus`)
+                    getManager().setLoadingProgress(`Found instance in ${folder}, checking for Olympus...`, (i + 1) / folders.length * 100);
+                    var newInstance = new DCSInstance(path.join(searchpath, folder));
+                    await newInstance.checkInstallation();
+                    instances.push(newInstance);
                 }
-                else {
-                    /* Check that the registry read was successfull */
-                    if (result[shellFoldersKey] !== undefined && result[shellFoldersKey]["exists"] && result[shellFoldersKey]['values'][saveGamesKey] !== undefined && result[shellFoldersKey]['values'][saveGamesKey]['value'] !== undefined) {
-                        /* Read all the folders in Saved Games */
-                        const searchpath = result[shellFoldersKey]['values'][saveGamesKey]['value'];
-                        const folders = fs.readdirSync(searchpath);
-                        var instances = [];
+            }
 
-                        /* A DCS Instance is created if either the appsettings.lua or serversettings.lua file is detected */
-                        folders.forEach((folder) => {
-                            if (fs.existsSync(path.join(searchpath, folder, "Config", "appsettings.lua")) ||
-                                fs.existsSync(path.join(searchpath, folder, "Config", "serversettings.lua"))) {
-                                instances.push(new DCSInstance(path.join(searchpath, folder)));
-                            }
-                        })
+            DCSInstance.instances = instances;
+        } else {
+            logger.error("An error occured while trying to fetch the location of the DCS instances.")
+            Promise.reject("An error occured while trying to fetch the location of the DCS instances.");
+        }
+        getManager().setLoadingProgress(`All DCS instances found!`, 100);
 
-                        res(instances);
-                    } else {
-                        logger.error("An error occured while trying to fetch the location of the DCS instances.")
-                        rej("An error occured while trying to fetch the location of the DCS instances.");
-                    }
-                }
-            })
-        });
-
-        return promise;
+        return instances;
     }
 
     folder = "";
@@ -90,11 +93,20 @@ class DCSInstance {
         this.folder = folder;
         this.name = path.basename(folder);
 
+        /* Periodically "ping" Olympus to check if either the client or the backend are active */
+        window.setInterval(async () => {
+            await this.getData();
+            getManager().updateInstances();            
+        }, 1000);
+    }
+
+    async checkInstallation() {
         /* Check if the olympus.json file is detected. If true, Olympus is considered to be installed */
-        if (fs.existsSync(path.join(folder, "Config", "olympus.json"))) {
+        if (fs.existsSync(path.join(this.folder, "Config", "olympus.json"))) {
+            getManager().setLoadingProgress(`Olympus installed in ${this.folder}`);
             try {
                 /* Read the olympus.json */
-                var config = JSON.parse(fs.readFileSync(path.join(folder, "Config", "olympus.json")));
+                var config = JSON.parse(fs.readFileSync(path.join(this.folder, "Config", "olympus.json")));
                 this.clientPort = config["client"]["port"];
                 this.backendPort = config["server"]["port"];
                 this.backendAddress = config["server"]["address"];
@@ -115,8 +127,12 @@ class DCSInstance {
             var res1;
             var res2;
             try {
-                res1 = dircompare.compareSync(path.join("..", "mod"), path.join(folder, "Mods", "Services", "Olympus"), options);
-                res2 = dircompare.compareSync(path.join("..", "scripts", "OlympusHook.lua"), path.join(folder, "Scripts", "Hooks", "OlympusHook.lua"), options);
+                logger.log(`Comparing Mods content in ${this.folder}`)
+                getManager().setLoadingProgress(`Comparing Mods content in ${this.folder}`);
+                res1 = await dircompare.compare(path.join("..", "mod"), path.join(this.folder, "Mods", "Services", "Olympus"), options);
+                logger.log(`Comparing Scripts content in ${this.folder}`)
+                getManager().setLoadingProgress(`Comparing Scripts content in ${this.folder}`);
+                res2 = await dircompare.compareSync(path.join("..", "scripts", "OlympusHook.lua"), path.join(this.folder, "Scripts", "Hooks", "OlympusHook.lua"), options);
                 err1 = res1.differences !== 0;
                 err2 = res2.differences !== 0;
             } catch (e) {
@@ -125,14 +141,13 @@ class DCSInstance {
 
             if (err1 || err2) {
                 this.error = true;
+                getManager().setLoadingProgress(`Differences found in ${this.folder}`);
+                logger.log("Differences found!")
+            } else {
+                getManager().setLoadingProgress(`No differences found in ${this.folder}`);
             }
         }
-
-        /* Periodically "ping" Olympus to check if either the client or the backend are active */
-        window.setInterval(async () => {
-            await this.getData();
-            getManager().updateInstances();            
-        }, 1000);
+        return this.error;
     }
 
     /** Asynchronously set the client port
@@ -197,7 +212,7 @@ class DCSInstance {
     /** Check if the client port is free
      * 
      */
-    async checkClientPort(port) {
+    checkClientPort(port) {
         var promise = new Promise((res, rej) => {
             checkPort(port, async (portFree) => {
                 if (portFree) {
@@ -229,7 +244,7 @@ class DCSInstance {
     /** Check if the backend port is free
      * 
      */
-    async checkBackendPort(port) {
+    checkBackendPort(port) {
         var promise = new Promise((res, rej) => {
             checkPort(port, async (portFree) => {
                 if (portFree) {
@@ -356,29 +371,30 @@ class DCSInstance {
     }
 
     /* Install this instance */
-    install() {        
+    install() {    
+        getManager().setPopupLoadingProgress("Installing hook scripts...", 0)    
         installHooks(getManager().getActiveInstance().folder).then(
-            () => {},
+            () => {getManager().setPopupLoadingProgress("Installing mod folder...", 20)    },
             (err) => {
                 return Promise.reject(err);
             }
         ).then(() => installMod(getManager().getActiveInstance().folder, getManager().getActiveInstance().name)).then(
-            () => {},
+            () => {getManager().setPopupLoadingProgress("Installing JSON file...", 40)    },
             (err) => {
                 return Promise.reject(err);
             }
         ).then(() => installJSON(getManager().getActiveInstance().folder)).then(
-            () => {},
+            () => {getManager().setPopupLoadingProgress("Applying configuration...", 60)    },
             (err) => {
                 return Promise.reject(err);
             }
         ).then(() => applyConfiguration(getManager().getActiveInstance().folder, getManager().getActiveInstance())).then(
-            () => {},
+            () => {getManager().setPopupLoadingProgress("Creating shortcuts...", 80)    },
             (err) => {
                 return Promise.reject(err);
             }
         ).then(() => installShortCuts(getManager().getActiveInstance().folder, getManager().getActiveInstance().name)).then(
-            () => {},
+            () => {getManager().setPopupLoadingProgress("Installation completed!", 100)    },
             (err) => {
                 return Promise.reject(err);
             }

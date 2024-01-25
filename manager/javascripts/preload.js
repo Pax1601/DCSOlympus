@@ -258,12 +258,8 @@ contextBridge.exposeInMainWorld(
 
 /* On content loaded */
 window.addEventListener('DOMContentLoaded', async () => {
-    /* Compute the height of the content page */
-    computePagesHeight();
     document.getElementById("loader").classList.remove("hide");
     await getManager().start();
-    /* Compute the height of the content page to account for the pages created by the manager*/
-    computePagesHeight();
 
     /* Create event listeners for the hyperlinks */
     var links = document.querySelectorAll(".link");
@@ -278,6 +274,17 @@ window.addEventListener('DOMContentLoaded', async () => {
 })
 
 window.addEventListener('resize', () => {
+    /* Compute the height of the content page */
+    computePagesHeight();
+})
+
+window.addEventListener('DOMContentLoaded', () => {
+    /* Compute the height of the content page */
+    computePagesHeight();
+})
+
+document.addEventListener('managerStarted', () => {
+    /* Compute the height of the content page */
     computePagesHeight();
 })
 

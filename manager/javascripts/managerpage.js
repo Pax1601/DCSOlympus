@@ -33,6 +33,9 @@ class ManagerPage {
 
         this.previousPage = ignorePreviousPage ? this.previousPage : this.manager.activePage;
         this.manager.activePage = this;
+
+        if (this.options.onShow) 
+            this.options.onShow();
     }
 
     hide() {

@@ -19,6 +19,7 @@ class Manager {
 
     activePage = null;
     welcomePage = null;
+    settingsPage = null;
     folderPage = null;
     typePage = null;
     connectionsTypePage = null;
@@ -73,64 +74,81 @@ class Manager {
             }
 
             /* Get the list of DCS instances */
-            this.options.instances = await DCSInstance.getInstances();
+            this.setLoadingProgress("Retrieving DCS instances...", 0);
+            DCSInstance.getInstances().then((instances) => {
+                this.setLoadingProgress(`Analysis completed, starting manager!`, 100);
 
-            /* Get my public IP */
-            this.getPublicIP().then(
-                (ip) => {
-                    this.options.ip = ip;
-                },
-                () => {
-                    this.options.ip = undefined;
+                this.options.instances = instances;
+
+                /* Get my public IP */
+                this.getPublicIP().then(
+                    (ip) => {
+                        this.options.ip = ip;
+                    },
+                    () => {
+                        this.options.ip = undefined;
+                    }
+                )
+
+                /* Check if there are corrupted or outdate instances */
+                if (this.options.instances.some((instance) => {
+                    return instance.installed && instance.error;
+                })) {
+                    /* Ask the user for confirmation */
+                    showConfirmPopup("<div style='font-size: 18px; max-width: 100%;'>One or more of your Olympus instances are not up to date! </div> <br> <br> If you have just updated Olympus this is normal. <br> <br>  Press Accept and the Manager will fix your instances for you. <br> Press Close to update your instances manually using the Installation Wizard", async () => {
+                        showWaitPopup("Please wait while your instances are being fixed.")
+                        fixInstances(this.options.instances.filter((instance) => {
+                            return instance.installed && instance.error;
+                        })).then(
+                            () => { location.reload() },
+                            (err) => {
+                                logger.error(err);
+                                showErrorPopup(`An error occurred while trying to fix your installations. Please reinstall Olympus manually. <br><br> You can find more info in ${path.join(__dirname, "..", "manager.log")}`);
+                            }
+                        )
+                    })
                 }
-            )
 
-            /* Check if there are corrupted or outdate instances */
-            if (this.options.instances.some((instance) => {
-                return instance.installed && instance.error;
-            })) {
-                /* Ask the user for confirmation */
-                showConfirmPopup("<div style='font-size: 18px; max-width: 100%;'>One or more of your Olympus instances are not up to date! </div> <br> <br> If you have just updated Olympus this is normal. <br> <br>  Press Accept and the Manager will fix your instances for you. <br> Press Close to update your instances manually using the Installation Wizard", async () => {
-                    showWaitPopup("Please wait while your instances are being fixed.")
-                    fixInstances(this.options.instances.filter((instance) => {
-                        return instance.installed && instance.error;
-                    })).then(
-                        () => { location.reload() },
-                        (err) => {
-                            logger.error(err);
-                            showErrorPopup(`An error occurred while trying to fix your installations. Please reinstall Olympus manually. <br><br> You can find more info in ${path.join(__dirname, "..", "manager.log")}`);
-                        }
-                    )
-                })
-            }
+                this.options.installEnabled = true;
+                this.options.editEnabled = this.options.instances.find(instance => instance.installed);
+                this.options.uninstallEnabled = this.options.instances.find(instance => instance.installed);
 
-            this.options.installEnabled = true;
-            this.options.editEnabled = this.options.instances.find(instance => instance.installed);
-            this.options.uninstallEnabled = this.options.instances.find(instance => instance.installed);
+                /* Hide the loading page */
+                document.getElementById("loader").classList.add("hide");
 
-            /* Hide the loading page */
-            document.getElementById("loader").classList.add("hide");
+                this.options.singleInstance = this.options.instances.length === 1;
 
-            this.options.singleInstance = this.options.instances.length === 1;
+                /* Create all the HTML pages */
+                this.menuPage = new ManagerPage(this, "./ejs/menu.ejs");
+                this.folderPage = new WizardPage(this, "./ejs/folder.ejs");
+                this.settingsPage = new ManagerPage(this, "./ejs/settings.ejs");
+                this.typePage = new WizardPage(this, "./ejs/type.ejs");
+                this.connectionsTypePage = new WizardPage(this, "./ejs/connectionsType.ejs");
+                this.connectionsPage = new WizardPage(this, "./ejs/connections.ejs");
+                this.passwordsPage = new WizardPage(this, "./ejs/passwords.ejs");
+                this.resultPage = new ManagerPage(this, "./ejs/result.ejs");
+                this.instancesPage = new ManagerPage(this, "./ejs/instances.ejs");
 
-            /* Create all the HTML pages */
-            this.menuPage = new ManagerPage(this, "./ejs/menu.ejs");
-            this.folderPage = new WizardPage(this, "./ejs/folder.ejs");
-            this.typePage = new WizardPage(this, "./ejs/type.ejs");
-            this.connectionsTypePage = new WizardPage(this, "./ejs/connectionsType.ejs");
-            this.connectionsPage = new WizardPage(this, "./ejs/connections.ejs");
-            this.passwordsPage = new WizardPage(this, "./ejs/passwords.ejs");
-            this.resultPage = new ManagerPage(this, "./ejs/result.ejs");
-            this.instancesPage = new ManagerPage(this, "./ejs/instances.ejs");
+                /* Force the setting of the ports whenever the page is shown */
+                this.connectionsPage.options.onShow = () => {
+                    if (this.options.activeInstance) {
+                        this.setPort('client', this.options.activeInstance.clientPort);
+                        this.setPort('backend', this.options.activeInstance.backendPort);
+                    }
+                }
 
-            if (this.options.mode === "basic") {
-                /* In basic mode no dashboard is shown */
-                this.menuPage.show();
-            } else {
-                /* In Expert mode we go directly to the dashboard */
-                this.instancesPage.show();
-                this.updateInstances();
-            }
+                if (this.options.mode === "basic") {
+                    /* In basic mode no dashboard is shown */
+                    this.menuPage.show();
+                } else {
+                    /* In Expert mode we go directly to the dashboard */
+                    this.instancesPage.show();
+                    this.updateInstances();
+                }
+
+                /* Send an event on manager started */
+                document.dispatchEvent(new CustomEvent("managerStarted"));
+            });
         }
     }
 
@@ -177,40 +195,39 @@ class Manager {
 
             /* Show the type selection page */
             if (!this.options.activeInstance.installed) {
-                this.menuPage.hide();
+                this.activePage.hide()
                 this.typePage.show();
             } else {
                 showConfirmPopup("<div style='font-size: 18px; max-width: 100%; margin-bottom: 8px;'> Olympus is already installed in this instance! </div> If you click Accept, it will be installed again and all changes, e.g. custom databases or mods support, will be lost. Are you sure you want to continue?",
                     () => {
-                        this.menuPage.hide();
+                        this.activePage.hide()
                         this.typePage.show();
                     }
                 )
             }
         } else {
             /* Show the folder selection page */
-            this.menuPage.hide();
+            this.activePage.hide()
             this.folderPage.show();
         }
     }
 
     /* When the edit button is clicked go to the instances page */
     onEditMenuClicked() {
-        this.instancesPage.hide();
+        this.activePage.hide()
         this.options.install = false;
 
         if (this.options.singleInstance) {
             this.options.activeInstance = this.options.instances[0];
             this.typePage.show();
         } else {
-            this.folderPage.show();
+            this.settingsPage.show();
         }
     }
 
     onFolderClicked(name) {
         this.getClickedInstance(name).then((instance) => {
             var instanceDivs = this.folderPage.getElement().querySelectorAll(".button.radio");
-            console.log(instanceDivs);
             for (let i = 0; i < instanceDivs.length; i++) {
                 instanceDivs[i].classList.toggle('selected', instanceDivs[i].dataset.folder === instance.folder);
                 if (instanceDivs[i].dataset.folder === instance.folder)
@@ -257,8 +274,6 @@ class Manager {
                 else {
                     this.activePage.hide();
                     this.connectionsPage.show();
-                    this.setPort('client', this.options.activeInstance.clientPort);
-                    this.setPort('backend', this.options.activeInstance.backendPort);
                     this.connectionsPage.getElement().querySelector(".backend-address .checkbox").classList.toggle("checked", this.options.activeInstance.backendAddress === '*')
                 }
             } else {
@@ -267,8 +282,6 @@ class Manager {
         } else if (this.activePage == this.connectionsPage) {
             this.options.activeInstance.checkClientPort(this.options.activeInstance.clientPort).then(
                 (portFree) => {
-                    console.log(this.options.activeInstance.clientPort)
-                    console.log(portFree)
                     if (portFree) {
                         return this.options.activeInstance.checkBackendPort(this.options.activeInstance.backendPort);
                     } else {
@@ -289,8 +302,8 @@ class Manager {
             if (this.options.activeInstance) {
                 if (this.options.activeInstance.installed && !this.options.activeInstance.arePasswordsEdited()) {
                     this.activePage.hide();
+                    showWaitPopup(`<span>Please wait while Olympus is being installed in <i>${this.options.activeInstance.name}</i></span><div class="loading-bar" style="width: 100%; height: 10px;"></div><div class="loading-message" style="font-weight: normal; text-align: center;"></div>`);
                     this.options.activeInstance.install();
-                    showWaitPopup(`<span>Please wait while Olympus is being installed in <i>${this.options.activeInstance.name}</i></span>`);
                 }
                 else {
                     if (!this.options.activeInstance.arePasswordsSet()) {
@@ -299,8 +312,8 @@ class Manager {
                         showErrorPopup('Please, set different passwords for the Game Master, Blue Commander, and Red Commander roles!');
                     } else {
                         this.activePage.hide();
+                        showWaitPopup(`<span>Please wait while Olympus is being installed in <i>${this.options.activeInstance.name}</i></span><div class="loading-bar" style="width: 100%; height: 10px;"></div><div class="loading-message" style="font-weight: normal; text-align: center;"></div>`);
                         this.options.activeInstance.install();
-                        showWaitPopup(`<span>Please wait while Olympus is being installed in <i>${this.options.activeInstance.name}</i></span>`);
                     }
                 }
             } else {
@@ -415,7 +428,7 @@ class Manager {
                 showErrorPopup("Error, the selected Olympus instance is currently active, please stop Olympus before editing it!")
             } else {
                 this.options.activeInstance = instance;
-                this.instancesPage.hide();
+                this.activePage.hide();
                 this.typePage.show();
             }
         });
@@ -426,7 +439,7 @@ class Manager {
             this.options.activeInstance = instance;
             this.options.install = true;
             this.options.singleInstance = false;
-            this.instancesPage.hide();
+            this.activePage.hide();
             this.typePage.show();
         });
     }
@@ -447,13 +460,10 @@ class Manager {
 
     async getClickedInstanceDiv(name) {
         var instance = await this.getClickedInstance(name);
-        console.log(instance)
         var instanceDivs = this.instancesPage.getElement().querySelectorAll(`.option`);
         for (let i = 0; i < instanceDivs.length; i++) {
             var instanceDiv = instanceDivs[i];
-            console.log(instanceDiv.dataset.folder)
             if (instanceDiv.dataset.folder === instance.folder) {
-                console.log(instanceDiv)
                 return instanceDiv;
             }
         }
@@ -525,8 +535,23 @@ class Manager {
     }
 
     reload() {
-        console.log("reload")
         this.activePage.show();
+    }
+
+    setLoadingProgress(message, percent) {
+        document.querySelector("#loader .loading-message").innerHTML = message;
+        if (percent) {
+            var style = document.querySelector('#loader .loading-bar').style;
+            style.setProperty('--percent', `${percent}%`);
+        }
+    }
+
+    setPopupLoadingProgress(message, percent) {
+        document.querySelector("#popup .loading-message").innerHTML = message;
+        if (percent) {
+            var style = document.querySelector('#popup .loading-bar').style;
+            style.setProperty('--percent', `${percent}%`);
+        }
     }
 }
 

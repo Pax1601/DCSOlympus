@@ -4,7 +4,7 @@
 <div>
     <div class="instructions">
         <div class="step">
-            Step 1 of 4
+            Step <%= singleInstance? "1": "2" %> of <%= singleInstance? "4": "5" %>
         </div>
         <div class="title">
             Do you want to add Olympus for singleplayer or multiplayer?
@@ -15,10 +15,10 @@
         </div>
     </div>
     <div class="wizard-inputs">
-        <div class="button radio singleplayer selected" onclick="signal('onInstallTypeClicked', 'singleplayer')">
+        <div class="button radio singleplayer <%= activeInstance.installationType === 'singleplayer'? 'selected': '' %>" onclick="signal('onInstallTypeClicked', 'singleplayer')">
             Singleplayer
         </div>
-        <div class="button radio multiplayer" onclick="signal('onInstallTypeClicked', 'multiplayer')">
+        <div class="button radio multiplayer <%= activeInstance.installationType !== 'singleplayer'? 'selected': '' %>" onclick="signal('onInstallTypeClicked', 'multiplayer')">
             Multiplayer
         </div>
     </div>

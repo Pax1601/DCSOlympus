@@ -152,6 +152,22 @@ body {
     width: 100%;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
+    row-gap: 10px;
+}
+
+.loading-bar {
+    border: 1px solid var(--offwhite);
+    border-radius: 2px;
+    position: relative;
+}
+
+.loading-bar::before {
+    content: "";
+    position: absolute;
+    width: var(--percent);
+    background-color: var(--offwhite);
+    height: 100%;
 }
 
 ::-webkit-scrollbar {
@@ -298,6 +314,9 @@ input {
     padding: 15px 0px !important;
     word-wrap: break-word;
     overflow-wrap: anywhere;
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
 }
 
 #popup .footer {

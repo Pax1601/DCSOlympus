@@ -4,7 +4,7 @@
 <div>
     <div class="instructions">
         <div class="step">
-            Step 2 of 4
+            Step <%= singleInstance? "2": "3" %> of <%= singleInstance? "4": "5" %>
         </div>
         <div class="title">
             Do you want to set port and address settings?
@@ -15,10 +15,10 @@
         </div>
     </div>
     <div class="wizard-inputs">
-        <div class="button radio auto selected" onclick="signal('onConnectionsTypeClicked', 'auto')">
+        <div class="button radio auto <%= activeInstance.connectionsType === 'auto'? 'selected': '' %>" onclick="signal('onConnectionsTypeClicked', 'auto')">
             Auto apply settings
         </div>
-        <div class="button radio manual" onclick="signal('onConnectionsTypeClicked', 'manual')">
+        <div class="button radio manual <%= activeInstance.connectionsType !== 'auto'? 'selected': '' %>" onclick="signal('onConnectionsTypeClicked', 'manual')">
             Manually set
         </div>
     </div>

@@ -63,7 +63,7 @@ async function fixInstances(instances) {
  */
 async function uninstallInstance(folder, name) {
     logger.log(`Uninstalling Olympus from ${folder}`)
-    showWaitPopup("Please wait while the Olympus installation is being uninstalled.")
+    showWaitPopup("Please wait while the Olympus installation is being removed.")
     var promise = new Promise((res, rej) => {
         deleteMod(folder, name)
             .then(() => deleteHooks(folder), (err) => { return Promise.reject(err); })
