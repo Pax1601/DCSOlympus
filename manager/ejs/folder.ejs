@@ -16,7 +16,7 @@
     </div>
     <div class="wizard-inputs">
         <% for (var i = 0; i < instances.length; i++) { %>
-            <div class="button radio" onclick="signal('onFolderClicked', '<%= instances[i].name %>')" data-folder="<%= instances[i].folder %>">
+            <div class="button radio <%= (i === 0)? 'selected': '' %>" onclick="signal('onFolderClicked', '<%= instances[i].name %>')" data-folder="<%= instances[i].folder %>">
                 <%= instances[i].name %>
             </div>
         <% } %>

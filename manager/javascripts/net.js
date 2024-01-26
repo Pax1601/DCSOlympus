@@ -4,7 +4,7 @@ const { logger } = require("./filesystem")
 /** Checks if a port is already in use
  * 
  */
-function checkPort(port, callback) {
+function checkPortSync(port, callback) {
     portfinder.getPort({ port: port, stopPort: port }, (err, res) => {
         if (err !== null) {
             logger.error(`Port ${port} already in use`);
@@ -13,6 +13,14 @@ function checkPort(port, callback) {
             callback(true);
         }
     });
+}
+
+function checkPort(port) {
+    return portfinder.getPortPromise({ port: port, stopPort: port });
+}
+
+function getFreePort(startPort) {
+    return portfinder.getPortPromise({ port: startPort });
 }
 
 /** Performs a fetch request, with a configurable timeout 
@@ -34,6 +42,8 @@ async function fetchWithTimeout(resource, options = {}) {
 }
 
 module.exports = {
+    getFreePort: getFreePort,
     checkPort: checkPort,
+    checkPortSync: checkPortSync,
     fetchWithTimeout: fetchWithTimeout
 }

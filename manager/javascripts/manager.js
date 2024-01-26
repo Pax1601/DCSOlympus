@@ -3,13 +3,13 @@ const fs = require("fs");
 
 const DCSInstance = require('./dcsinstance');
 const { showErrorPopup, showWaitPopup, showConfirmPopup } = require('./popup');
-const { fixInstances } = require('./filesystem');
 const { logger } = require("./filesystem")
 
 const ManagerPage = require("./managerpage");
 const WizardPage = require("./wizardpage");
 const { fetchWithTimeout } = require("./net");
 const { exec } = require("child_process");
+const { sleep } = require("./utils");
 
 class Manager {
     options = {
@@ -29,6 +29,9 @@ class Manager {
     instancesPage = null;
 
     constructor() {
+        /* Simple framework to define callbacks to events directly in the .ejs files. When an event happens, e.g. a button is clicked, the signal function is called with the function
+        to call and an optional object to pass. An event will then be created, defined in index.html, and will be listened here. Using an eval call, the appropriate member function 
+        will then be called */
         document.addEventListener("signal", (ev) => {
             const callback = ev.detail.callback;
             const params = JSON.stringify(ev.detail.params);
@@ -40,7 +43,11 @@ class Manager {
         });
     }
 
+    /** Asynchronously start the manager
+     * 
+     */
     async start() {
+
         /* Check if the options file exists */
         if (fs.existsSync("options.json")) {
             /* Load the options from the json file */
@@ -49,6 +56,7 @@ class Manager {
                 this.options.configLoaded = true;
             } catch (e) {
                 logger.error(`An error occurred while reading the options.json file: ${e}`);
+                showErrorPopup(`A critical error occurred, check ${this.options.logLocation} for more info.`)
             }
         }
 
@@ -75,43 +83,36 @@ class Manager {
 
             /* Get the list of DCS instances */
             this.setLoadingProgress("Retrieving DCS instances...", 0);
-            DCSInstance.getInstances().then((instances) => {
-                this.setLoadingProgress(`Analysis completed, starting manager!`, 100);
+            DCSInstance.getInstances().then(async (instances) => {
+                this.setLoadingProgress(`Analysis completed, starting manager...`, 100);
+                await sleep(100);
 
                 this.options.instances = instances;
 
                 /* Get my public IP */
                 this.getPublicIP().then(
-                    (ip) => {
-                        this.options.ip = ip;
-                    },
-                    () => {
-                        this.options.ip = undefined;
-                    }
+                    (ip) => { this.options.ip = ip; },
+                    () => { this.options.ip = undefined; }
                 )
 
-                /* Check if there are corrupted or outdate instances */
+                /* Check if there are corrupted or outdated instances */
                 if (this.options.instances.some((instance) => {
                     return instance.installed && instance.error;
                 })) {
                     /* Ask the user for confirmation */
-                    showConfirmPopup("<div style='font-size: 18px; max-width: 100%;'>One or more of your Olympus instances are not up to date! </div> <br> <br> If you have just updated Olympus this is normal. <br> <br>  Press Accept and the Manager will fix your instances for you. <br> Press Close to update your instances manually using the Installation Wizard", async () => {
-                        showWaitPopup("Please wait while your instances are being fixed.")
-                        fixInstances(this.options.instances.filter((instance) => {
-                            return instance.installed && instance.error;
-                        })).then(
-                            () => { location.reload() },
-                            (err) => {
-                                logger.error(err);
-                                showErrorPopup(`An error occurred while trying to fix your installations. Please reinstall Olympus manually. <br><br> You can find more info in ${path.join(__dirname, "..", "manager.log")}`);
-                            }
-                        )
+                    showConfirmPopup("<div style='font-size: 18px; max-width: 100%;'>One or more of your Olympus instances are not up to date! </div> If you have just updated Olympus this is normal. Press Accept and the Manager will update your instances for you. <br> Press Close to update your instances manually using the Installation Wizard", async () => {
+                        try {
+                            await DCSInstance.fixInstances();
+                            location.reload();
+                        } catch (err) {
+                            logger.error(err);
+                            showErrorPopup(`An error occurred while trying to fix your installations. Please reinstall Olympus manually. <br><br> You can find more info in ${this.options.logLocation}`);
+                        }
                     })
                 }
 
                 this.options.installEnabled = true;
                 this.options.editEnabled = this.options.instances.find(instance => instance.installed);
-                this.options.uninstallEnabled = this.options.instances.find(instance => instance.installed);
 
                 /* Hide the loading page */
                 document.getElementById("loader").classList.add("hide");
@@ -152,10 +153,18 @@ class Manager {
         }
     }
 
+    /** Get the currently active instance, i.e. the instance that is being edited/installed/removed
+     * 
+     * @returns The active instance
+     */
     getActiveInstance() {
         return this.options.activeInstance;
     }
 
+    /** Creates the options file. This is done only the very first time you start Olympus.
+     * 
+     * @param {String} mode The mode, either Basic or Expert 
+     */
     createOptionsFile(mode) {
         try {
             fs.writeFileSync("options.json", JSON.stringify({ mode: mode }));
@@ -165,6 +174,10 @@ class Manager {
         }
     }
 
+    /** Switch to a different mode of operation
+     * 
+     * @param {String} newMode The mode to switch to 
+     */
     switchMode(newMode) {
         /* Change the mode in the options.json and reload the page */
         var options = JSON.parse(fs.readFileSync("options.json"));
@@ -176,23 +189,32 @@ class Manager {
     /************************************************/
     /* CALLBACKS                                    */
     /************************************************/
-    /* Switch to basic mode */
+    /** Switch to basic mode
+     *  
+     */
     onBasicClicked() {
         this.createOptionsFile("basic");
     }
 
-    /* Switch to expert mode */
+    /** Switch to expert mode
+     * 
+     */
     onExpertClicked() {
         this.createOptionsFile("expert");
     }
 
-    /* When the install button is clicked go the installation page */
+    /** When the install button is clicked go the installation page
+     * 
+     */
     onInstallMenuClicked() {
         this.options.install = true;
 
-        if (this.options.singleInstance) {
-            this.options.activeInstance = this.options.instances[0];
+        if (this.options.instances.length == 0) {
+            // TODO: show error
+        }
 
+        this.options.activeInstance = this.options.instances[0];
+        if (this.options.singleInstance) {
             /* Show the type selection page */
             if (!this.options.activeInstance.installed) {
                 this.activePage.hide()
@@ -212,28 +234,35 @@ class Manager {
         }
     }
 
-    /* When the edit button is clicked go to the instances page */
+    /** When the edit button is clicked go to the settings page
+     * 
+     */
     onEditMenuClicked() {
         this.activePage.hide()
         this.options.install = false;
 
         if (this.options.singleInstance) {
             this.options.activeInstance = this.options.instances[0];
-            this.typePage.show();
+            this.connectionsTypePage.show();
         } else {
             this.settingsPage.show();
         }
     }
 
-    onFolderClicked(name) {
-        this.getClickedInstance(name).then((instance) => {
-            var instanceDivs = this.folderPage.getElement().querySelectorAll(".button.radio");
-            for (let i = 0; i < instanceDivs.length; i++) {
-                instanceDivs[i].classList.toggle('selected', instanceDivs[i].dataset.folder === instance.folder);
-                if (instanceDivs[i].dataset.folder === instance.folder)
-                    this.options.activeInstance = instance;
-            }
-        });
+    /** When a folder is selected, find what instance was clicked to set as active
+     * 
+     * @param {String} name The name of the instance
+     */
+
+    async onFolderClicked(name) {
+        var instance = await this.getClickedInstance(name);
+
+        var instanceDivs = this.folderPage.getElement().querySelectorAll(".button.radio");
+        for (let i = 0; i < instanceDivs.length; i++) {
+            instanceDivs[i].classList.toggle('selected', instanceDivs[i].dataset.folder === instance.folder);
+            if (instanceDivs[i].dataset.folder === instance.folder)
+                this.options.activeInstance = instance;
+        }
     }
 
     /* When the installation type is selected */
@@ -243,7 +272,7 @@ class Manager {
         if (this.options.activeInstance)
             this.options.activeInstance.installationType = type;
         else
-            showErrorPopup("A critical error has occurred. Please restart the Manager.")
+            showErrorPopup(`A critical error occurred, check ${this.options.logLocation} for more info.`)
     }
 
     /* When the connections type is selected */
@@ -253,15 +282,24 @@ class Manager {
         if (this.options.activeInstance)
             this.options.activeInstance.connectionsType = type;
         else
-            showErrorPopup("A critical error has occurred. Please restart the Manager.")
+            showErrorPopup(`A critical error occurred, check ${this.options.logLocation} for more info.`)
     }
 
     /* When the next button of a wizard page is clicked */
     onNextClicked() {
         /* Choose which page to show depending on the active page */
         if (this.activePage == this.folderPage) {
-            this.activePage.hide();
-            this.typePage.show();
+            if (this.options.activeInstance.installed) {
+                showConfirmPopup("<div style='font-size: 18px; max-width: 100%; margin-bottom: 8px;'> Olympus is already installed in this instance! </div> If you click Accept, it will be installed again and all changes, e.g. custom databases or mods support, will be lost. Are you sure you want to continue?",
+                    () => {
+                        this.activePage.hide()
+                        this.typePage.show();
+                    }
+                )
+            } else {
+                this.activePage.hide();
+                this.typePage.show();
+            }
         } else if (this.activePage == this.typePage) {
             this.activePage.hide();
             this.connectionsTypePage.show();
@@ -277,13 +315,13 @@ class Manager {
                     this.connectionsPage.getElement().querySelector(".backend-address .checkbox").classList.toggle("checked", this.options.activeInstance.backendAddress === '*')
                 }
             } else {
-                showErrorPopup("A critical error has occurred. Please restart the Manager.")
+                showErrorPopup(`A critical error occurred, check ${this.options.logLocation} for more info.`)
             }
         } else if (this.activePage == this.connectionsPage) {
-            this.options.activeInstance.checkClientPort(this.options.activeInstance.clientPort).then(
+            this.options.activeInstance.checkClientPort().then(
                 (portFree) => {
                     if (portFree) {
-                        return this.options.activeInstance.checkBackendPort(this.options.activeInstance.backendPort);
+                        return this.options.activeInstance.checkBackendPort();
                     } else {
                         return Promise.reject('Port not free');
                     }
@@ -297,13 +335,12 @@ class Manager {
                 }).catch(() => {
                     showErrorPopup('Please, make sure both the client and backend ports are free!');
                 }
-            );
+                );
         } else if (this.activePage == this.passwordsPage) {
             if (this.options.activeInstance) {
                 if (this.options.activeInstance.installed && !this.options.activeInstance.arePasswordsEdited()) {
                     this.activePage.hide();
-                    showWaitPopup(`<span>Please wait while Olympus is being installed in <i>${this.options.activeInstance.name}</i></span><div class="loading-bar" style="width: 100%; height: 10px;"></div><div class="loading-message" style="font-weight: normal; text-align: center;"></div>`);
-                    this.options.activeInstance.install();
+                    this.options.install? this.options.activeInstance.install(): this.options.activeInstance.edit();
                 }
                 else {
                     if (!this.options.activeInstance.arePasswordsSet()) {
@@ -312,12 +349,11 @@ class Manager {
                         showErrorPopup('Please, set different passwords for the Game Master, Blue Commander, and Red Commander roles!');
                     } else {
                         this.activePage.hide();
-                        showWaitPopup(`<span>Please wait while Olympus is being installed in <i>${this.options.activeInstance.name}</i></span><div class="loading-bar" style="width: 100%; height: 10px;"></div><div class="loading-message" style="font-weight: normal; text-align: center;"></div>`);
-                        this.options.activeInstance.install();
+                        this.options.install? this.options.activeInstance.install(): this.options.activeInstance.edit();
                     }
                 }
             } else {
-                showErrorPopup("A critical error has occurred. Please restart the Manager.")
+                showErrorPopup(`A critical error occurred, check ${this.options.logLocation} for more info.`)
             }
         }
     }
@@ -342,7 +378,7 @@ class Manager {
                 this.passwordsPage.getElement().querySelector(".red-commander input").value = "";
         }
         else
-            showErrorPopup("A critical error has occurred. Please restart the Manager.")
+            showErrorPopup(`A critical error occurred, check ${this.options.logLocation} for more info.`)
     }
 
     onBlueCommanderPasswordChanged(value) {
@@ -354,7 +390,7 @@ class Manager {
                 this.passwordsPage.getElement().querySelector(".red-commander input").value = "";
         }
         else
-            showErrorPopup("A critical error has occurred. Please restart the Manager.")
+            showErrorPopup(`A critical error occurred, check ${this.options.logLocation} for more info.`)
     }
 
     onRedCommanderPasswordChanged(value) {
@@ -366,7 +402,7 @@ class Manager {
                 this.passwordsPage.getElement().querySelector(".blue-commander input").value = "";
         }
         else
-            showErrorPopup("A critical error has occurred. Please restart the Manager.")
+            showErrorPopup(`A critical error occurred, check ${this.options.logLocation} for more info.`)
     }
 
     /* When the client port input value is changed */
@@ -390,7 +426,7 @@ class Manager {
             this.connectionsPage.getElement().querySelector(".note.warning").classList.toggle("hide", this.options.activeInstance.backendAddress !== '*')
             this.connectionsPage.getElement().querySelector(".backend-address .checkbox").classList.toggle("checked", this.options.activeInstance.backendAddress === '*')
         } else {
-            showErrorPopup("A critical error has occurred. Please restart the Manager.")
+            showErrorPopup(`A critical error occurred, check ${this.options.logLocation} for more info.`)
         }
     }
 
@@ -405,57 +441,62 @@ class Manager {
     }
 
     async onStartServerClicked(name) {
-        this.getClickedInstanceDiv(name).then((div) => div.querySelector(".collapse").classList.add("loading"));
-        this.getClickedInstance(name).then((instance) => instance.startServer());
+        var div = await this.getClickedInstanceDiv(name);
+        div.querySelector(".collapse").classList.add("loading")
+        var instance = await this.getClickedInstance(name);
+        instance.startServer();
     }
 
     async onStartClientClicked(name) {
-        this.getClickedInstanceDiv(name).then((div) => div.querySelector(".collapse").classList.add("loading"));
-        this.getClickedInstance(name).then(instance => instance.startClient());
+        var div = await this.getClickedInstanceDiv(name);
+        div.querySelector(".collapse").classList.add("loading")
+        var instance = await this.getClickedInstance(name);
+        instance.startClient();
     }
 
     async onOpenBrowserClicked(name) {
-        this.getClickedInstance(name).then((instance) => exec(`start http://localhost:${instance.clientPort}`));
+        var instance = await this.getClickedInstance(name);
+        exec(`start http://localhost:${instance.clientPort}`)
     }
 
     async onStopClicked(name) {
-        this.getClickedInstance(name).then((instance) => instance.stop());
+        var instance = await this.getClickedInstance(name);
+        instance.stop();
     }
 
     async onEditClicked(name) {
-        this.getClickedInstance(name).then((instance) => {
-            if (instance.webserverOnline || instance.backendOnline) {
-                showErrorPopup("Error, the selected Olympus instance is currently active, please stop Olympus before editing it!")
-            } else {
-                this.options.activeInstance = instance;
-                this.activePage.hide();
-                this.typePage.show();
-            }
-        });
+        var instance = await this.getClickedInstance(name);
+        if (instance.webserverOnline || instance.backendOnline) {
+            showErrorPopup("Error, the selected Olympus instance is currently active, please stop Olympus before editing it!")
+        } else {
+            this.options.activeInstance = instance;
+            this.options.install = false;
+            this.activePage.hide();
+            this.connectionsTypePage.show();
+        }
     }
 
     async onInstallClicked(name) {
-        this.getClickedInstance(name).then((instance) => {
-            this.options.activeInstance = instance;
-            this.options.install = true;
-            this.options.singleInstance = false;
-            this.activePage.hide();
-            this.typePage.show();
-        });
+        var instance = await this.getClickedInstance(name);
+        this.options.activeInstance = instance;
+        this.options.install = true;
+        this.options.singleInstance = false;
+        this.activePage.hide();
+        this.typePage.show();
     }
 
     async onUninstallClicked(name) {
-        this.getClickedInstance(name).then((instance) => {
-            instance.webserverOnline || instance.backendOnline ? showErrorPopup("Error, the selected Olympus instance is currently active, please stop Olympus before uninstalling it!") : instance.uninstall();
-        });
+        var instance = await this.getClickedInstance(name);
+
+        if (instance.webserverOnline || instance.backendOnline)
+            showErrorPopup("Error, the selected Olympus instance is currently active, please stop Olympus before uninstalling it!")
+        else
+            await instance.uninstall();
     }
 
     async getClickedInstance(name) {
-        return DCSInstance.getInstances().then((instances) => {
-            return instances.find((instance) => {
-                return instance.name === name
-            })
-        });
+        var instances = await DCSInstance.getInstances()
+        return instances.find((instance) => { return instance.name === name; });
     }
 
     async getClickedInstanceDiv(name) {
@@ -472,7 +513,7 @@ class Manager {
     /* Set the selected port to the dcs instance */
     async setPort(port, value) {
         var success;
-        if (port === 'client'){
+        if (port === 'client') {
             success = await this.options.activeInstance.checkClientPort(value);
             this.options.activeInstance.setClientPort(value);
         }
@@ -542,14 +583,6 @@ class Manager {
         document.querySelector("#loader .loading-message").innerHTML = message;
         if (percent) {
             var style = document.querySelector('#loader .loading-bar').style;
-            style.setProperty('--percent', `${percent}%`);
-        }
-    }
-
-    setPopupLoadingProgress(message, percent) {
-        document.querySelector("#popup .loading-message").innerHTML = message;
-        if (percent) {
-            var style = document.querySelector('#popup .loading-bar').style;
             style.setProperty('--percent', `${percent}%`);
         }
     }

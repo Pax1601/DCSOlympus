@@ -1,36 +1,36 @@
 const { getManager } = require('./managerfactory')
 var regedit = require('regedit').promisified;
-const shellFoldersKey = 'HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders'
-const saveGamesKey = '{4C5C32FF-BB9D-43B0-B5B4-2D72E54EAAA4}'
 var fs = require('fs')
 var path = require('path')
-const { checkPort, fetchWithTimeout } = require('./net')
+const { checkPort, fetchWithTimeout, getFreePort } = require('./net')
 const dircompare = require('dir-compare');
 const { spawn } = require('child_process');
 const find = require('find-process');
-const { uninstallInstance, installHooks, installMod, installJSON, applyConfiguration, installShortCuts } = require('./filesystem')
-const { showErrorPopup, showConfirmPopup } = require('./popup')
+const { installHooks, installMod, installJSON, applyConfiguration, installShortCuts, deleteMod, deleteHooks, deleteJSON, deleteShortCuts } = require('./filesystem')
+const { showErrorPopup, showConfirmPopup, showWaitLoadingPopup, setPopupLoadingProgress } = require('./popup')
 const { logger } = require("./filesystem")
-const { hidePopup } = require('./popup')
+const { hidePopup } = require('./popup');
+const { sleep } = require('./utils');
+
+const shellFoldersKey = 'HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders'
+const saveGamesKey = '{4C5C32FF-BB9D-43B0-B5B4-2D72E54EAAA4}'
 
 class DCSInstance {
     static instances = null;
 
-    /** Static asynchronous method to retrieve all DCS instances. Only runs at startup 
+    /** Static asynchronous method to retrieve all DCS instances. Only runs at startup, later calls will serve the cached result
      * 
+     * @returns The list of DCS instances
      */
     static async getInstances() {
-        if (this.instances === null) {
-            var ans = this.findInstances();
-            console.log(ans)
-            return this.findInstances();
-        }
-        else 
-            return DCSInstance.instances;
+        if (this.instances === null) 
+            DCSInstance.instances =  this.findInstances();
+        return DCSInstance.instances;
     }
 
     /** Static asynchronous method to find all existing DCS instances
      * 
+     * @returns The list of found DCS instances
      */
     static async findInstances() {
         /* Get the Saved Games folder from the registry */
@@ -47,24 +47,56 @@ class DCSInstance {
             /* A DCS Instance is created if either the appsettings.lua or serversettings.lua file is detected */
             for (let i = 0; i < folders.length; i++) {
                 const folder = folders[i];
-                if (fs.existsSync(path.join(searchpath, folder, "Config", "appsettings.lua")) ||
-                    fs.existsSync(path.join(searchpath, folder, "Config", "serversettings.lua"))) {
+                if (fs.existsSync(path.join(searchpath, folder, "Config", "appsettings.lua")) ||fs.existsSync(path.join(searchpath, folder, "Config", "serversettings.lua"))) {
                     logger.log(`Found instance in ${folder}, checking for Olympus`)
-                    getManager().setLoadingProgress(`Found instance in ${folder}, checking for Olympus...`, (i + 1) / folders.length * 100);
                     var newInstance = new DCSInstance(path.join(searchpath, folder));
+
+                    /* Check if Olympus is already installed */
+                    getManager().setLoadingProgress(`Found instance in ${folder}, checking for Olympus...`, (i + 1) / folders.length * 100);
                     await newInstance.checkInstallation();
                     instances.push(newInstance);
                 }
             }
-
-            DCSInstance.instances = instances;
         } else {
             logger.error("An error occured while trying to fetch the location of the DCS instances.")
-            Promise.reject("An error occured while trying to fetch the location of the DCS instances.");
+            throw "An error occured while trying to fetch the location of the DCS instances.";
         }
         getManager().setLoadingProgress(`All DCS instances found!`, 100);
 
         return instances;
+    }
+
+    /** Asynchronously fixes/updates all the instances by deleting the existing installation and the copying over the clean files 
+     * 
+     */
+    static async fixInstances() {
+        showWaitLoadingPopup("Please wait while your instances are being fixed.")
+        const instancesToFix = (await DCSInstance.getInstances()).filter((instance) => { return instance.installed && instance.error; });
+        setPopupLoadingProgress(`Fixing Olympus instances`, 0);
+
+        for (let i = 0; i < instancesToFix.length; i++) {
+            const instance = instancesToFix[i];
+            logger.log(`Fixing Olympus in ${instance.folder}`)
+
+            setPopupLoadingProgress(`Deleting mod folder in ${instance.folder}...`, (i * 4 + 1) / (instancesToFix.length * 4) * 100);
+            await sleep(100);
+            await deleteMod(instance.folder, instance.name);
+
+            setPopupLoadingProgress(`Deleting hook scripts in ${instance.folder}...`, (i * 4 + 2) / (instancesToFix.length * 4) * 100);
+            await sleep(100);
+            await deleteHooks(instance.folder);
+
+            setPopupLoadingProgress(`Installing mod folder in ${instance.folder}...`, (i * 4 + 3) / (instancesToFix.length * 4) * 100);
+            await sleep(100);
+            await installMod(instance.folder, instance.name);
+
+            setPopupLoadingProgress(`Installing hook scripts in ${instance.folder}...`, (i * 4 + 4) / (instancesToFix.length * 4) * 100);
+            await sleep(100);
+            await installHooks(instance.folder);  
+        }
+
+        setPopupLoadingProgress(`All instances fixed!`, 100);
+        await sleep(100);
     }
 
     folder = "";
@@ -96,10 +128,14 @@ class DCSInstance {
         /* Periodically "ping" Olympus to check if either the client or the backend are active */
         window.setInterval(async () => {
             await this.getData();
-            getManager().updateInstances();            
+            getManager().updateInstances();
         }, 1000);
     }
 
+    /** Asynchronously checks if Olympus is installed in a DCS instance and compares the contents of package with the installation
+     * 
+     * @returns true if the instance has any error or is outdated
+     */
     async checkInstallation() {
         /* Check if the olympus.json file is detected. If true, Olympus is considered to be installed */
         if (fs.existsSync(path.join(this.folder, "Config", "olympus.json"))) {
@@ -112,16 +148,17 @@ class DCSInstance {
                 this.backendAddress = config["server"]["address"];
                 this.gameMasterPasswordHash = config["authentication"]["gameMasterPassword"];
             } catch (err) {
+                showErrorPopup(`A critical error has occurred while reading your Olympus configuration file. Please, manually reinstall olympus in ${this.folder}.`)
                 logger.error(err)
             }
 
             /* Compare the contents of the installed Olympus instance and the one in the root folder. Exclude the databases folder, which users can edit.
                If there is any difference, the instance is flagged as either corrupted or outdated */
             this.installed = true;
-            const options = { 
+            const options = {
                 compareContent: true,
                 excludeFilter: "databases, mods.lua"
-             };
+            };
             var err1 = true;
             var err2 = true;
             var res1;
@@ -150,24 +187,28 @@ class DCSInstance {
         return this.error;
     }
 
-    /** Asynchronously set the client port
+    /** Set the client port
      * 
+     * @param {Number} newPort The new client port to set
      */
-    async setClientPort(newPort) {
+
+    setClientPort(newPort) {
         logger.log(`Instance ${this.folder} client port set to ${newPort}`)
         this.clientPort = newPort;
     }
 
-    /** Asynchronously set the backend port
+    /** Set the backend port
      * 
+     * @param {Number} newPort The new backend port to set
      */
-    async setBackendPort(newPort) {
+    setBackendPort(newPort) {
         logger.log(`Instance ${this.folder} backend port set to ${newPort}`)
         this.backendPort = newPort;
     }
 
     /** Set backend address
      * 
+     * @param {String} newAddress The new backend address to set
      */
     setBackendAddress(newAddress) {
         this.backendAddress = newAddress;
@@ -175,6 +216,7 @@ class DCSInstance {
 
     /** Set Game Master password
      * 
+     * @param {String} newPassword The new Game Master password to set
      */
     setGameMasterPassword(newPassword) {
         this.gameMasterPassword = newPassword;
@@ -183,6 +225,7 @@ class DCSInstance {
 
     /** Set Blue Commander password
      * 
+     * @param {String} newAddress The new Blue Commander password to set
      */
     setBlueCommanderPassword(newPassword) {
         this.blueCommanderPassword = newPassword;
@@ -191,85 +234,126 @@ class DCSInstance {
 
     /** Set Red Commander password
      * 
+     *  @param {String} newAddress The new Red Commander password to set
      */
     setRedCommanderPassword(newPassword) {
         this.redCommanderPassword = newPassword;
         this.redCommanderPasswordEdited = true;
     }
 
+    /** Checks if any password has been edited by the user
+     * 
+     * @returns true if any password was edited
+     */
     arePasswordsEdited() {
-        return (getManager().getActiveInstance().gameMasterPasswordEdited || getManager().getActiveInstance().blueCommanderPasswordEdited  || getManager().getActiveInstance().redCommanderPasswordEdited );
+        return (getManager().getActiveInstance().gameMasterPasswordEdited || getManager().getActiveInstance().blueCommanderPasswordEdited || getManager().getActiveInstance().redCommanderPasswordEdited);
     }
 
+    /** Checks if all the passwords have been set by the user
+     * 
+     * @returns true if all the password have been set
+     */
     arePasswordsSet() {
         return !(getManager().getActiveInstance().gameMasterPassword === '' || getManager().getActiveInstance().blueCommanderPassword === '' || getManager().getActiveInstance().redCommanderPassword === '');
     }
 
+    /** Checks if all the passwords are different
+     * 
+     * @returns true if all the passwords are different
+     */
     arePasswordsDifferent() {
         return !(getManager().getActiveInstance().gameMasterPassword === getManager().getActiveInstance().blueCommanderPassword || getManager().getActiveInstance().gameMasterPassword === getManager().getActiveInstance().redCommanderPassword || getManager().getActiveInstance().blueCommanderPassword === getManager().getActiveInstance().redCommanderPassword);
     }
 
-    /** Check if the client port is free
+    /** Asynchronously check if the client port is free
      * 
+     * @param {Number | undefined} port The port to check. If not set, the current clientPort will be checked
+     * @returns true if the client port is free
      */
-    checkClientPort(port) {
-        var promise = new Promise((res, rej) => {
-            checkPort(port, async (portFree) => {
-                if (portFree) {
-                    portFree = !(await DCSInstance.getInstances()).some((instance) => {
-                        if (instance !== this && instance.installed) {
-                            if (instance.clientPort === port || instance.backendPort === port) {
-                                logger.log(`Port ${port} already selected by other instance`);
-                                return true;
-                            }
-                        } else {
-                            if (instance.backendPort === port) {
-                                logger.log(`Port ${port} equal to backend port`);
-                                return true;
-                            }
-                        }
-                        return false;
-                    })
+    async checkClientPort(port) {
+        port = port ?? this.clientPort;
+
+        logger.log(`Checking client port ${port}`);
+        var portFree = await checkPort(port);
+        if (portFree) {
+            portFree = !(await DCSInstance.getInstances()).some((instance) => {
+                if (instance !== this && instance.installed) {
+                    if (instance.clientPort === port || instance.backendPort === port) {
+                        logger.log(`Client port ${port} already selected by other instance`);
+                        return true;
+                    }
+                } else {
+                    if (instance.backendPort === port) {
+                        logger.log(`Client port ${port} equal to backend port`);
+                        return true;
+                    }
                 }
-                else {
-                    logger.log(`Port ${port} currently in use`);
-                }
-                logger.log(`Port ${port} is free`);
-                res(portFree);
+                return false;
             })
-        })
-        return promise;
+        }
+        else {
+            logger.log(`Client port ${port} currently in use`);
+        }
+        return portFree;
     }
 
-    /** Check if the backend port is free
+    /** Asynchronously check if the backend port is free
+     * 
+     * @param {Number | undefined} port The port to check. If not set, the current backendPort will be checked
+     * @returns true if the backend port is free
+     */
+    async checkBackendPort(port) {
+        port = port ?? this.backendPort;
+
+        logger.log(`Checking backend port ${port}`);
+        var portFree = await checkPort(port);
+        if (portFree) {
+            portFree = !(await DCSInstance.getInstances()).some((instance) => {
+                if (instance !== this && instance.installed) {
+                    if (instance.clientPort === port || instance.backendPort === port) {
+                        logger.log(`Backend port ${port} already selected by other instance`);
+                        return true;
+                    }
+                } else {
+                    if (instance.clientPort === port) {
+                        logger.log(`Backend port ${port} equal to client port`);
+                        return true;
+                    }
+                }
+                return false;
+            })
+        } else {
+            logger.log(`Backend port ${port} currently in use`);
+        }
+        return portFree;
+    }
+
+    /** Asynchronously find free client and backend ports. If the old ports are free, it will keep them.
      * 
      */
-    checkBackendPort(port) {
-        var promise = new Promise((res, rej) => {
-            checkPort(port, async (portFree) => {
-                if (portFree) {
-                    portFree = !(await DCSInstance.getInstances()).some((instance) => {
-                        if (instance !== this && instance.installed) {
-                            if (instance.clientPort === port || instance.backendPort === port) {
-                                logger.log(`Port ${port} already selected by other instance`);
-                                return true;
-                            }
-                        } else {
-                            if (instance.clientPort === port) {
-                                logger.log(`Port ${port} equal to client port`);
-                                return true;
-                            }
-                        }
-                        return false;
-                    })
-                } else {
-                    logger.log(`Port ${port} currently in use`);
-                }
-                logger.log(`Port ${port} is free`);
-                res(portFree);
-            })
-        })
-        return promise;
+    async findFreePorts() {
+        logger.log(`Looking for free ports`);
+        if (await this.checkClientPort() && await this.checkBackendPort()) {
+            logger.log("Old ports are free, keeping them")
+        } else {
+            logger.log(`Finding new free ports`);
+
+            const instances = await DCSInstance.getInstances();
+            const firstPort = instances.map((instance) => { return instance.clientPort; }).concat(instances.map((instance) => { return instance.backendPort; })).sort().at(-1) + 1;
+
+            var clientPort = await getFreePort(firstPort);
+            if (clientPort === false)
+                rej("Unable to find a free client port");
+            logger.log(`Found free client port ${clientPort}`);
+
+            var backendPort = await getFreePort(clientPort + 1);
+            if (backendPort === false)
+                rej("Unable to find a free backend port");
+            logger.log(`Found free backend port ${backendPort}`);
+
+            this.clientPort = clientPort;
+            this.backendPort = backendPort;
+        }
     }
 
     /** Asynchronously interrogate the webserver and the backend to check if they are active and to retrieve data.
@@ -345,7 +429,9 @@ class DCSInstance {
         sub.unref();
     }
 
-    /* Stop any node process running on the server port. This will stop either the server or the client depending on what is running */
+    /** Stop any node process running on the server port. This will stop either the server or the client depending on what is running 
+     *  
+     */ 
     stop() {
         find('port', this.clientPort)
             .then((list) => {
@@ -370,66 +456,109 @@ class DCSInstance {
             })
     }
 
-    /* Install this instance */
-    install() {    
-        getManager().setPopupLoadingProgress("Installing hook scripts...", 0)    
-        installHooks(getManager().getActiveInstance().folder).then(
-            () => {getManager().setPopupLoadingProgress("Installing mod folder...", 20)    },
-            (err) => {
-                return Promise.reject(err);
-            }
-        ).then(() => installMod(getManager().getActiveInstance().folder, getManager().getActiveInstance().name)).then(
-            () => {getManager().setPopupLoadingProgress("Installing JSON file...", 40)    },
-            (err) => {
-                return Promise.reject(err);
-            }
-        ).then(() => installJSON(getManager().getActiveInstance().folder)).then(
-            () => {getManager().setPopupLoadingProgress("Applying configuration...", 60)    },
-            (err) => {
-                return Promise.reject(err);
-            }
-        ).then(() => applyConfiguration(getManager().getActiveInstance().folder, getManager().getActiveInstance())).then(
-            () => {getManager().setPopupLoadingProgress("Creating shortcuts...", 80)    },
-            (err) => {
-                return Promise.reject(err);
-            }
-        ).then(() => installShortCuts(getManager().getActiveInstance().folder, getManager().getActiveInstance().name)).then(
-            () => {getManager().setPopupLoadingProgress("Installation completed!", 100)    },
-            (err) => {
-                return Promise.reject(err);
-            }
-        ).then(
-            () => {
-                hidePopup();
-                getManager().resultPage.show();
-                getManager().resultPage.getElement().querySelector(".result-summary.success").classList.remove("hide");
-                getManager().resultPage.getElement().querySelector(".result-summary.error").classList.add("hide");
-                getManager().resultPage.getElement().querySelector(".instructions-group").classList.remove("hide");
-            },
-            () => {
-                hidePopup();
-                getManager().resultPage.show();
-                getManager().resultPage.getElement().querySelector(".result-summary.success").classList.add("hide");
-                getManager().resultPage.getElement().querySelector(".result-summary.error").classList.remove("hide");
-            }
-        );
+    /** Edit this instance
+     * 
+     */
+    async edit() {
+        showWaitLoadingPopup(`<span>Please wait while Olympus is being edited in <i>${this.name}</i></span>`);
+        try {
+            setPopupLoadingProgress("Applying configuration...", 0);
+            await sleep(100);
+            await applyConfiguration(getManager().getActiveInstance().folder, getManager().getActiveInstance());
+
+            setPopupLoadingProgress("Editing completed!", 100);
+            await sleep(500);
+            logger.log(`Editing completed successfully`);
+            hidePopup();
+
+            this.options.mode === "basic"? getManager().menuPage.show(): getManager().instancesPage.show();
+        } catch (err) {
+            logger.log(`An error occurred during editing: ${err}`);
+            hidePopup();
+            showErrorPopup(`A critical error occurred, check ${this.options.logLocation} for more info.`)
+        }
     }
 
-    /* Uninstall this instance */
-    uninstall() {
-        showConfirmPopup("<div style='font-size: 18px; max-width: 100%; margin-bottom: 15px;'> Are you sure you want to remove Olympus? </div> If you click Accept, the Olympus mod will be removed from your DCS installation.", () =>
-            uninstallInstance(this.folder, this.name).then(
-                () => {
+    /** Install this instance
+     *  
+     */ 
+    async install() {
+        showWaitLoadingPopup(`<span>Please wait while Olympus is being installed in <i>${this.name}</i></span>`);
+        try {
+            setPopupLoadingProgress("Installing hook scripts...", 0);
+            await sleep(100);
+            await installHooks(getManager().getActiveInstance().folder);
+
+            setPopupLoadingProgress("Installing mod folder...", 20);
+            await sleep(100);
+            await installMod(getManager().getActiveInstance().folder, getManager().getActiveInstance().name);
+
+            setPopupLoadingProgress("Installing JSON file...", 40);
+            await sleep(100);
+            await installJSON(getManager().getActiveInstance().folder);
+
+            setPopupLoadingProgress("Applying configuration...", 60);
+            await sleep(100);
+            await applyConfiguration(getManager().getActiveInstance().folder, getManager().getActiveInstance());
+
+            setPopupLoadingProgress("Creating shortcuts...", 80);
+            await sleep(100);
+            await installShortCuts(getManager().getActiveInstance().folder, getManager().getActiveInstance().name);
+
+            setPopupLoadingProgress("Installation completed!", 100);
+            await sleep(500);
+            logger.log(`Installation completed successfully`);
+            hidePopup();
+            getManager().resultPage.show();
+            getManager().resultPage.getElement().querySelector(".result-summary.success").classList.remove("hide");
+            getManager().resultPage.getElement().querySelector(".result-summary.error").classList.add("hide");
+            getManager().resultPage.getElement().querySelector(".instructions-group").classList.remove("hide");
+        } catch (err) {
+            logger.log(`An error occurred during installation: ${err}`);
+            hidePopup();
+            getManager().resultPage.show();
+            getManager().resultPage.getElement().querySelector(".result-summary.success").classList.add("hide");
+            getManager().resultPage.getElement().querySelector(".result-summary.error").classList.remove("hide");
+        }
+
+    }
+
+    /** Uninstall this instance
+     * 
+     */
+    async uninstall() {
+        showConfirmPopup("<div style='font-size: 18px; max-width: 100%; margin-bottom: 15px;'> Are you sure you want to remove Olympus? </div> If you click Accept, the Olympus mod will be removed from your DCS installation.", async () => {
+            try {
+                logger.log(`Uninstalling Olympus from ${this.folder}`)
+                showWaitLoadingPopup(`<span>Please wait while Olympus is being removed from <i>${this.name}</i></span>`);
+                setPopupLoadingProgress("Deleting mod folder...", 0);
+                await sleep(100);
+                await deleteMod(this.folder, this.name);
+
+                setPopupLoadingProgress("Deleting hook scripts...", 25);
+                await sleep(100);
+                await deleteHooks(this.folder);
+
+                setPopupLoadingProgress("Deleting JSON...", 50);
+                await sleep(100);
+                await deleteJSON(this.folder);
+
+                setPopupLoadingProgress("Deleting shortcuts...", 75);
+                await sleep(100);
+                await deleteShortCuts(this.folder, this.name);
+
+                await sleep(500);
+                setPopupLoadingProgress("Instance removed!", 100);
+                logger.log(`Olympus removed from ${this.folder}`)
+                location.reload();
+                return true;
+            } catch (err) {
+                logger.error(err)
+                showErrorPopup(`An error has occurred while uninstalling the Olympus instance. Make sure Olympus and DCS are not running. <br><br> You can find more info in ${path.join(__dirname, "..", "manager.log")}`, () => {
                     location.reload();
-                },
-                (err) => {
-                    logger.error(err)
-                    showErrorPopup(`An error has occurred while uninstalling the Olympus instance. Make sure Olympus and DCS are not running. <br><br> You can find more info in ${path.join(__dirname, "..", "manager.log")}`, () => {
-                        location.reload();
-                    });
-                }
-            )
-        );
+                });
+            }
+        });
     }
 }
 

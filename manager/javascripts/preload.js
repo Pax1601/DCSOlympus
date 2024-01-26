@@ -44,12 +44,7 @@ function checkVersion() {
             /* If the current version is newer than the latest release, the user is probably a developer. Ask for a beta update */
             else if (reg2[0] > reg1[0] || (reg2[0] == reg1[0] && reg2[1] > reg1[1]) || (reg2[0] == reg1[0] && reg2[1] == reg1[1] && reg2[2] > reg1[2])) {
                 logger.log(`Beta version detected: ${res["version"]} vs ${VERSION}`);
-                showConfirmPopup(`You are currently running DCS Olympus ${VERSION}, which is newer than the latest release version. Do you want to download the latest beta version? <div style="max-width: 100%; color: orange">Note: DCS and Olympus MUST be stopped before proceeding.</div>`,
-                    () => {
-                        updateOlympusBeta();
-                    }, () => {
-                        logger.log("Update canceled");
-                    })
+                updateOlympusBeta();
             }
         }
     })
@@ -73,27 +68,34 @@ async function updateOlympusBeta() {
     /* Select the newest artifact */
     var artifact = artifacts.find((artifact) => { return artifact.name = "development_build_not_a_release" });
 
-    showConfirmPopup(`Latest beta artifact has a timestamp of ${artifact.updated_at}. Do you want to continue?`, () => {
-        /* Run the browser and download the artifact */ //TODO: try and directly download the file from code rather than using the browser 
-        exec(`start https://github.com/Pax1601/DCSOlympus/actions/runs/${artifact.workflow_run.id}/artifacts/${artifact.id}`)
-        showConfirmPopup('A browser window was opened to download the beta artifact. Please wait for the download to complete, then press "Accept" and select the downloaded beta artifact.',
-            () => {
-                /* Ask the user to select the downloaded file */
-                var input = document.createElement('input');
-                input.type = 'file';
-                input.click();
-                input.onchange = e => {
-                    /* Run the update process */
-                    updateOlympus(e.target.files[0])
-                }
+    const date1 = new Date(artifact.updated_at);
+    const date2 = fs.statSync(path.join("package.json")).birthtime;
+    if (date1 > date2) {
+        showConfirmPopup(`<span>Latest beta artifact has a timestamp of <i style="color: orange">${artifact.updated_at}</i>, while your installation was created on <i style="color: orange">${date2.toISOString()}</i>. Do you want to update to the newest beta version?</span>`, () => {
+            /* Run the browser and download the artifact */ //TODO: try and directly download the file from code rather than using the browser 
+            exec(`start https://github.com/Pax1601/DCSOlympus/actions/runs/${artifact.workflow_run.id}/artifacts/${artifact.id}`)
+            showConfirmPopup('A browser window was opened to download the beta artifact. Please wait for the download to complete, then press "Accept" and select the downloaded beta artifact.',
+                () => {
+                    /* Ask the user to select the downloaded file */
+                    var input = document.createElement('input');
+                    input.type = 'file';
+                    input.click();
+                    input.onchange = e => {
+                        /* Run the update process */
+                        updateOlympus(e.target.files[0])
+                    }
+                },
+                () => {
+                    logger.log("Update canceled");
+                });
             },
             () => {
                 logger.log("Update canceled");
-            });
-    },
-        () => {
-            logger.log("Update canceled");
-        })
+            }
+        )
+    } else {
+        logger.log("Build is latest")
+    }
 }
 
 /** Update Olympus to the lastest release

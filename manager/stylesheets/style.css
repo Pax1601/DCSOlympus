@@ -168,6 +168,7 @@ body {
     width: var(--percent);
     background-color: var(--offwhite);
     height: 100%;
+    transition: width 0.1s linear;
 }
 
 ::-webkit-scrollbar {
@@ -385,6 +386,7 @@ input {
 }
 
 .button.collapse {
+    position: relative;
     display: flex;
     justify-content: space-between;
 }
@@ -407,7 +409,7 @@ input {
 .button.collapse>div {
     display: none;
     position: absolute;
-    transform: translate(-15px, calc(50% + 20px));
+    transform: translate(-15px, calc(50% + 25px));
 }
 
 .button.collapse.open>div {
