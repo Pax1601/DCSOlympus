@@ -1,0 +1,266 @@
+<style>
+    #manager-settings .scroll-container {
+        height: 100%;
+        overflow-y: auto;
+        max-width: 100% !important;
+        width: 100%;
+    }  
+
+    #manager-settings .scrollable {
+        display: flex;
+        row-gap: 15px;
+        column-gap: 15px;
+        height: fit-content;
+        width: 100%;
+        flex-wrap: wrap;
+        padding: 15px 40px;
+    }
+
+    #manager-settings .option {
+        background-color: var(--darkgray);
+        width: 48%;
+        color: white;
+        display: flex;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 15px;
+        align-items: center;
+        border-radius: 5px;
+        border-left: 5px solid var(--blue);
+        flex-direction: column;
+        row-gap: 25px;
+    }
+
+    #manager-settings .option:not(.installed) {
+        background-color: var(--background-disabled);
+    }
+
+    #manager-settings .option:not(.installed) .info {
+        opacity: 50%;
+    }
+
+    #manager-settings .option:not(.installed) .server-data {
+        opacity: 50%;
+    }
+   
+    #manager-settings .button.cancel {
+        position: absolute;
+        left: 110px;
+        top: 130px;
+    }
+
+    #manager-settings .server-data {
+        display: flex;
+        column-gap: 15px;
+        row-gap: 5px;
+        flex-wrap: wrap;
+    }
+
+    #manager-settings .server-status {
+        font-weight: 600;
+        font-size: 15;
+        display: flex;
+        column-gap: 5px;
+        align-items: center;
+    }
+
+    #manager-settings .server-status::before {
+        display: block;
+        content: "";
+        width: 15px;
+        height: 15px;
+        border-radius: 999px;
+        background-color: var(--gray);
+    }
+
+    #manager-settings .server-status.offline {
+        color: var(--gray)
+    }
+
+    #manager-settings .server-status.offline::before {
+        background-color: var(--gray);
+    }
+
+    #manager-settings .server-status.online {
+        color: var(--green)
+    }
+
+    #manager-settings .server-status.online::before {
+        background-color: var(--green);
+    }
+    
+    #manager-settings .server-status.backend {
+        margin-left: auto;
+    }
+
+    #manager-settings .server-data-entry {
+        display: flex;
+        column-gap: 5px;
+        align-items: center;
+    }
+
+    #manager-settings .server-data-entry span:nth-child(2) {
+        font-weight: 600;
+    }
+
+    #manager-settings .server-data-entry span:nth-child(3) {
+        font-weight: normal;
+    }
+
+    #manager-settings .instance-info {
+        display: flex;
+        flex-direction: column;
+        row-gap: 10px;
+        width: 100%;
+    }
+
+    #manager-settings .instance-info>span:nth-child(1) {
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    #manager-settings .instance-info>span:nth-child(2) {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--lightgray);
+    }
+
+    #manager-settings .instance-info>span:nth-child(2).installed {
+        font-weight: 600;
+        color: var(--green);
+    }
+
+    #manager-settings .instance-info>span:nth-child(2).error {
+        font-weight: 600;
+        color: orange;
+    }
+
+    #manager-settings .instance-info>span:nth-child(3) {
+        font-size: 13px;
+        font-weight: normal;
+        color: var(--lightgray);
+        display: flex;
+        align-items: center;
+        column-gap: 8px;
+    }
+
+    #manager-settings .instance-info>span:nth-child(4) {
+        display: flex;
+        column-gap: 10px;
+        font-size: 13px;
+        font-weight: normal;
+    }
+
+    #manager-settings .instance-buttons {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-between;
+        column-gap: 10px;
+    }
+
+    #manager-settings .instance-info .info {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    #manager-settings .instance-info .info>div:nth-child(1) {
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    #manager-settings .instance-info .info>div:nth-child(2) {
+        font-weight: normal;
+        font-size: 14px;
+    }
+
+    #manager-settings .instance-info .divider {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+    #manager-settings .start, #manager-settings .open-browser {
+        margin-right: auto;
+        color: var(--offwhite);
+        background-color: var(--blue);
+    }
+
+    #manager-settings .start {
+        width: 160px;
+    }
+
+    #manager-settings .start>div {
+        width: 160px;
+    }
+
+    #manager-settings .edit, 
+    #manager-settings .install,
+    #manager-settings .uninstall,
+    #manager-settings .stop  {
+        color: var(--offwhite);
+        background-color: transparent;
+        border: 1px solid var(--offwhite);
+    }
+
+    #manager-settings .edit:hover, 
+    #manager-settings .install:hover,
+    #manager-settings .uninstall:hover,
+    #manager-settings .stop:hover {
+        color: var(--background);
+        background-color: var(--offwhite);
+    }
+
+    #manager-settings .install {
+        margin-left: auto;
+    }
+    
+</style>
+    <div id="manager-settings" style="padding: 40px;">
+        <div class="cancel" style="font-size: 14px; font-weight: 600; color: var(--offwhite); display: flex; align-items: center; column-gap: 10px; cursor: pointer; text-decoration: underline; " onclick="signal('onBackClicked')">
+            <img src="./icons/chevron-left-solid.svg" style=" height: 14px;">Back to menu
+        </div>
+        <div class="content">
+            <div class="instructions" style="display: flex; flex-direction: column; row-gap: 10px; align-items: center; padding: 20px;">
+                <span style="color: var(--offwhite); font-size: 18px; font-weight: 600;">
+                    View and manage installs
+                </span>
+                <span  style="color: var(--offwhite); font-size: 14px; text-align: center;">
+                    The following DCS installations have been identified. <br>You can modify settings and uninstall below.
+                </span>
+            </div>
+        <div class="scroll-container">
+            <div class="scrollable">
+                <% for (let i = 0; i < instances.length; i++) {%>
+                    <% if (instances[i].installed) { %>
+                        <div class="option <%= instances[i].installed? 'installed': '' %>" data-folder="<%= instances[i].folder %>">
+                            <div class="instance-info">
+                                <span><%= instances[i].name %></span>
+                                <span><img src="./icons/folder-open-solid.svg"> <%= instances[i].folder %></span>
+                                <div class="divider"></div>
+                                <div style="display: flex; flex-direction: column; row-gap: 5px;">
+                                    <div class="info">
+                                        <div>Client port</div>
+                                        <div> <%= instances[i].installed? instances[i].clientPort: "N/A" %> </div>
+                                    </div>
+                                    <div class="info">
+                                        <div>Backend port</div>
+                                        <div> <%= instances[i].installed? instances[i].backendPort: "N/A" %> </div>
+                                    </div>
+                                    <div class="info">
+                                        <div>Backend address</div>
+                                        <div> <%= instances[i].installed? instances[i].backendAddress: "N/A" %> </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="instance-buttons">
+                                <div class="button edit" onclick="signal('onEditClicked', '<%= instances[i].name %>')">Edit settings</div>
+                                <div class="button uninstall" onclick="signal('onUninstallClicked', '<%= instances[i].name %>')">Uninstall Olympus</div>
+                            </div>
+                        </div>
+                    <% } %>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
