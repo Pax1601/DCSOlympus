@@ -99,12 +99,14 @@ class Manager {
                     return instance.installed && instance.error;
                 })) {
                     /* Ask the user for confirmation */
-                    showConfirmPopup("<div style='font-size: 18px; max-width: 100%;'>One or more of your Olympus instances are not up to date! </div> If you have just updated Olympus this is normal. Press Accept and the Manager will update your instances for you. <br> Press Close to update your instances manually using the Installation Wizard", async () => {
+                    showConfirmPopup("<div style='font-size: var(--very-large); max-width: 100%;'>One or more of your Olympus instances are not up to date! </div> If you have just updated Olympus this is normal. Press Accept and the Manager will update your instances for you. <br> Press Close to update your instances manually using the Installation Wizard", async () => {
                         try {
+                            await sleep(300);
                             await DCSInstance.fixInstances();
                             location.reload();
                         } catch (err) {
                             logger.error(err);
+                            await sleep(300);
                             showErrorPopup(`An error occurred while trying to fix your installations. Please reinstall Olympus manually. <br><br> You can find more info in ${this.options.logLocation}`);
                         }
                     })
@@ -220,7 +222,7 @@ class Manager {
                 this.activePage.hide()
                 this.typePage.show();
             } else {
-                showConfirmPopup("<div style='font-size: 18px; max-width: 100%; margin-bottom: 8px;'> Olympus is already installed in this instance! </div> If you click Accept, it will be installed again and all changes, e.g. custom databases or mods support, will be lost. Are you sure you want to continue?",
+                showConfirmPopup("<div style='font-size: var(--large); max-width: 100%;'> Olympus is already installed in this instance! </div> <div style='font-weight: normal'>If you click Accept, it will be installed again and all changes, e.g. custom databases or mods support, will be lost. Are you sure you want to continue?</div>",
                     () => {
                         this.activePage.hide()
                         this.typePage.show();
@@ -286,7 +288,7 @@ class Manager {
         /* Choose which page to show depending on the active page */
         if (this.activePage == this.folderPage) {
             if (this.options.activeInstance.installed) {
-                showConfirmPopup("<div style='font-size: 18px; max-width: 100%; margin-bottom: 8px;'> Olympus is already installed in this instance! </div> If you click Accept, it will be installed again and all changes, e.g. custom databases or mods support, will be lost. Are you sure you want to continue?",
+                showConfirmPopup("<div style='font-size: var(--large); max-width: 100%;'> Olympus is already installed in this instance! </div> <div style='font-weight: normal'>If you click Accept, it will be installed again and all changes, e.g. custom databases or mods support, will be lost. Are you sure you want to continue?</div>",
                     () => {
                         this.activePage.hide()
                         this.typePage.show();

@@ -15,7 +15,7 @@
 
     #result-page .result-summary .title {
         font-weight: bold;
-        font-size: 15px;
+        font-size: var(--big);
         display: flex;
         align-items: center;
     }
@@ -25,7 +25,7 @@
     }
 
     #result-page .result-summary .description {
-        font-size: 13px;
+        font-size: var(--normal);
     }
 
     #result-page .result-summary.success{
@@ -62,7 +62,7 @@
         row-gap: 5px;
         justify-items: center;
         align-items: start;
-        font-size: 13px;
+        font-size: var(--normal);
     }
 
     #result-page .usage-instructions>div>img {
@@ -91,10 +91,10 @@
         <div class="description">See the manager log located in <i><%= logLocation %></i> for more information.</div>
     </div>
     <div class="instructions-group hide">
-        <div style="font-size: 18px; font-weight: bold; color: var(--offwhite);">
+        <div style="font-size: var(--very-large); font-weight: bold; color: var(--offwhite);">
             How to launch Olympus
         </div>
-        <div style="font-size: 13px; color: var(--offwhite);">
+        <div style="font-size: var(--normal); color: var(--offwhite);">
             To launch Olympus, there are shortcuts available on the desktop and in the <i><b><%= activeInstance["name"] %></b></i> folder under <i><b>Saved Games</b></i>.
         </div>
         <% if (activeInstance["installationType"] === "singleplayer") { %>
@@ -113,7 +113,7 @@
                     </div>
                 </div>
             </div>
-            <div style="font-size: 13px;">
+            <div style="font-size: var(--normal);">
                 Alternatively, you can run the <b>Olympus Server</b> instead and visit <div class="link" onclick="signal('onLinkClicked', 'http://localhost:<%= activeInstance["clientPort"] %>')" >http://localhost:<%= activeInstance["clientPort"] %></div> in a web browser (Google Chrome recommended) to replace the first step above.
             </div>
         <% } else { %>
@@ -139,7 +139,7 @@
                     </div>
                 </div>
             </div>
-            <div style="font-size: 13px;">
+            <div style="font-size: var(--normal);">
                 <b>To access Olympus from this PC</b>, you need to visit <div class="link" onclick="signal('onLinkClicked', 'http://localhost:<%= activeInstance["clientPort"] %>')">http://localhost:<%= activeInstance["clientPort"] %></div> in a web browser (Google Chrome recommended) instead.
             </div>
         <% } %>

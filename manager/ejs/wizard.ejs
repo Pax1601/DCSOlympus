@@ -7,40 +7,34 @@
         max-height: 100%;
     }
 
-    .buttons-footer {
-        display: flex;
-        column-gap: 10px;
-        justify-content: start;
-    }
-
-    .instructions {
+    .wizard-page .instructions {
         display: flex;
         flex-direction: column;
         row-gap: 15px;
         color: var(--offwhite);
     }
 
-    .instructions .step {
-        font-size: 14px;
+    .wizard-page .instructions .step {
+        font-size: var(--normal);
         color: var(--lightgray);
     }
 
-    .instructions .description {
-        font-size: 14px;
+    .wizard-page .instructions .description {
+        font-size: var(--normal);
         color: var(--lightgray);
     }
 
-    .instructions .title {
+    .wizard-page .instructions .title {
         font-size: 24px;
         font-weight: bold;
     }
 
-    .content {
+    .wizard-page .content {
         overflow-x: hidden;
         overflow-y: scroll;
     }
 
-    .content > div {
+    .wizard-page .content > div {
         height: 100%;
         width: 100%;
         display: flex;
@@ -50,7 +44,7 @@
         justify-content: center;
     }
 
-    .wizard-inputs {
+    .wizard-page .wizard-inputs {
         display: flex;
         flex-direction: column;
         row-gap: 10px;
@@ -60,23 +54,23 @@
         width: 300px;
     }
 
-    .note {
+    .wizard-page .note {
         width: 100%;
         background-color: var(--background-note);
         color: var(--offwhite);
         border-left: 5px solid var(--offwhite);
-        font-size: 14px;
+        font-size: var(--normal);
         padding: 15px;
         font-weight: 600;
     }
 
-    .warning {
+    .wizard-page .warning {
         background-color: var(--background-warning);
         border-left: 5px solid var(--orange);
     }
 </style>
 <div class="wizard-page">
-    <div class="cancel" style="font-size: 14px; font-weight: 600; color: var(--offwhite); display: flex; align-items: center; column-gap: 10px; cursor: pointer; text-decoration: underline;" onclick="signal('onCancelClicked')">
+    <div class="cancel" style="font-size: var(--normal); font-weight: 600; color: var(--offwhite); display: flex; align-items: center; column-gap: 10px; cursor: pointer; text-decoration: underline;" onclick="signal('onCancelClicked')">
         <img src="./icons/chevron-left-solid.svg" style=" height: 14px;">Cancel install
     </div>
     <div class="content">

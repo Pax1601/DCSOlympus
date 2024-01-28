@@ -466,11 +466,11 @@ class DCSInstance {
         showWaitLoadingPopup(`<span>Please wait while Olympus is being edited in <i>${this.name}</i></span>`);
         try {
             setPopupLoadingProgress("Applying configuration...", 0);
-            await sleep(100);
+            await sleep(500);
             await applyConfiguration(getManager().getActiveInstance().folder, getManager().getActiveInstance());
 
             setPopupLoadingProgress("Editing completed!", 100);
-            await sleep(500);
+            await sleep(1500);
             logger.log(`Editing completed successfully`);
             hidePopup();
 
@@ -530,9 +530,10 @@ class DCSInstance {
      * 
      */
     async uninstall() {
-        showConfirmPopup("<div style='font-size: 18px; max-width: 100%; margin-bottom: 15px;'> Are you sure you want to remove Olympus? </div> If you click Accept, the Olympus mod will be removed from your DCS installation.", async () => {
+        showConfirmPopup(`<div style='max-width: 100%; font-size: var(--big);'> Are you sure you want to remove Olympus from ${this.name}? </div> <div style="font-weight: normal;">This will only remove Olympus for this particular DCS instance.</div>`, async () => {
             try {
                 logger.log(`Uninstalling Olympus from ${this.folder}`)
+                await sleep(300);
                 showWaitLoadingPopup(`<span>Please wait while Olympus is being removed from <i>${this.name}</i></span>`);
                 setPopupLoadingProgress("Deleting mod folder...", 0);
                 await sleep(100);

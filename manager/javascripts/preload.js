@@ -71,7 +71,7 @@ async function updateOlympusBeta() {
     const date1 = new Date(artifact.updated_at);
     const date2 = fs.statSync(".").mtime;
     if (date1 > date2) {
-        showConfirmPopup(`<span style="font-size: 18px; max-width: 100%; margin-bottom: 15px;">Looks like you are running a beta version of Olympus!</span><span>Latest beta artifact timestamp of: <i style="color: orange">${date1.toLocaleString()}</i> <br> Your installation timestamp: <i style="color: orange">${date2.toLocaleString()}</i> <br><br> Do you want to update to the newest beta version?</span>`, () => {
+        showConfirmPopup(`<span style="font-size: var(--very-large); max-width: 100%; margin-bottom: 15px;">Looks like you are running a beta version of Olympus!</span><span>Latest beta artifact timestamp of: <i style="color: orange">${date1.toLocaleString()}</i> <br> Your installation timestamp: <i style="color: orange">${date2.toLocaleString()}</i> <br><br> Do you want to update to the newest beta version?</span>`, () => {
             /* Run the browser and download the artifact */ //TODO: try and directly download the file from code rather than using the browser 
             exec(`start https://github.com/Pax1601/DCSOlympus/actions/runs/${artifact.workflow_run.id}/artifacts/${artifact.id}`)
             showConfirmPopup('A browser window was opened to download the beta artifact. Please wait for the download to complete, then press "Accept" and select the downloaded beta artifact.',

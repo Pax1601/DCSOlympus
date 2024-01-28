@@ -1,243 +1,14 @@
 <style>
-    #manager-instances {
-        height: 100%;
-    }
     
-    #manager-instances .scroll-container {
-        overflow-y: auto;
-        max-width: 100% !important;
-        width: 100%;
-        height: calc(100% - 120px);
-    }  
-
-    #manager-instances .scrollable {
-        display: flex;
-        row-gap: 15px;
-        column-gap: 15px;
-        height: fit-content;
-        width: 100%;
-        flex-wrap: wrap;
-        padding: 15px 40px;
-    }
-
-    #manager-instances .option {
-        background-color: var(--darkgray);
-        width: 48%;
-        color: white;
-        display: flex;
-        font-size: 13px;
-        font-weight: 600;
-        padding: 15px;
-        align-items: center;
-        border-radius: 5px;
-        border-left: 5px solid var(--blue);
-        flex-direction: column;
-        row-gap: 25px;
-        position: relative;
-    }
-
-    #manager-instances .option:not(.installed) {
-        background-color: var(--background-disabled);
-    }
-
-    #manager-instances .option:not(.installed) .info {
-        opacity: 50%;
-    }
-
-    #manager-instances .option:not(.installed) .server-data {
-        opacity: 50%;
-    }
-   
-    #manager-instances .button.cancel {
-        position: absolute;
-        left: 110px;
-        top: 130px;
-    }
-
-    #manager-instances .server-data {
-        display: flex;
-        column-gap: 15px;
-        row-gap: 5px;
-        flex-wrap: wrap;
-    }
-
-    #manager-instances .server-status {
-        font-weight: 600;
-        font-size: 15;
-        display: flex;
-        column-gap: 5px;
-        align-items: center;
-    }
-
-    #manager-instances .server-status::before {
-        display: block;
-        content: "";
-        width: 15px;
-        height: 15px;
-        border-radius: 999px;
-        background-color: var(--gray);
-    }
-
-    #manager-instances .server-status.offline {
-        color: var(--gray)
-    }
-
-    #manager-instances .server-status.offline::before {
-        background-color: var(--gray);
-    }
-
-    #manager-instances .server-status.online {
-        color: var(--green)
-    }
-
-    #manager-instances .server-status.online::before {
-        background-color: var(--green);
-    }
-    
-    #manager-instances .server-status.backend {
-        margin-left: auto;
-    }
-
-    #manager-instances .server-data-entry {
-        display: flex;
-        column-gap: 5px;
-        align-items: center;
-    }
-
-    #manager-instances .server-data-entry span:nth-child(2) {
-        font-weight: 600;
-    }
-
-    #manager-instances .server-data-entry span:nth-child(3) {
-        font-weight: normal;
-    }
-
-    #manager-instances .instance-info {
-        display: flex;
-        flex-direction: column;
-        row-gap: 10px;
-        width: 100%;
-    }
-
-    #manager-instances .instance-info>span:nth-child(1) {
-        font-size: 18px;
-        font-weight: 600;
-    }
-
-    #manager-instances .instance-info>span:nth-child(2) {
-        font-size: 13px;
-        font-weight: 600;
-        color: var(--lightgray);
-    }
-
-    #manager-instances .instance-info>span:nth-child(2).installed {
-        font-weight: 600;
-        color: var(--green);
-    }
-
-    #manager-instances .instance-info>span:nth-child(2).error {
-        font-weight: 600;
-        color: orange;
-    }
-
-    #manager-instances .instance-info>span:nth-child(3) {
-        font-size: 13px;
-        font-weight: normal;
-        color: var(--lightgray);
-        display: flex;
-        align-items: center;
-        column-gap: 8px;
-    }
-
-    #manager-instances .instance-info>span:nth-child(4) {
-        display: flex;
-        column-gap: 10px;
-        font-size: 13px;
-        font-weight: normal;
-    }
-
-    #manager-instances .instance-buttons {
-        display: flex;
-        flex-direction: row;
-        width: 100%;
-        justify-content: space-between;
-        column-gap: 10px;
-    }
-
-    #manager-instances .instance-info .info {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-    }
-
-    #manager-instances .instance-info .info>div:nth-child(1) {
-        font-weight: 600;
-        font-size: 14px;
-    }
-
-    #manager-instances .instance-info .info>div:nth-child(2) {
-        font-weight: normal;
-        font-size: 14px;
-    }
-
-    #manager-instances .instance-info .divider {
-        margin-top: 5px;
-        margin-bottom: 5px;
-    }
-
-    #manager-instances .start, #manager-instances .open-browser {
-        margin-right: auto;
-        color: var(--offwhite);
-        background-color: var(--blue);
-    }
-
-    #manager-instances .start {
-        width: 160px;
-    }
-
-    #manager-instances .start>div {
-        width: 160px;
-    }
-
-    #manager-instances .edit, 
-    #manager-instances .install,
-    #manager-instances .uninstall,
-    #manager-instances .stop  {
-        color: var(--offwhite);
-        background-color: transparent;
-        border: 1px solid var(--offwhite);
-    }
-
-    #manager-instances .edit:hover, 
-    #manager-instances .install:hover,
-    #manager-instances .uninstall:hover,
-    #manager-instances .stop:hover {
-        color: var(--background);
-        background-color: var(--offwhite);
-    }
-
-    #manager-instances .install {
-        margin-left: auto;
-    }
-
-    #manager-instances .content {
-        height: 100%;
-        overflow-x: hidden;
-        overflow-y: scroll;
-    }
-
-    #manager-instances .content > div {
-        height: fit-content;
-    }
     
 </style>
-    <div id="manager-instances">
+    <div class="dashboard">
         <div class="content">
-            <div class="instructions" style="display: flex; flex-direction: column; row-gap: 10px; align-items: center; padding: 20px;">
-                <span style="color: var(--offwhite); font-size: 18px; font-weight: 600;">
+            <div class="instructions">
+                <span class="title">
                     View and manage installs
                 </span>
-                <span  style="color: var(--offwhite); font-size: 14px; text-align: center;">
+                <span class="subtitle">
                     The following DCS installations have been identified. <br>You can start an Olympus server, modify settings and uninstall below.
                 </span>
             </div>
@@ -246,7 +17,10 @@
                 <% for (let i = 0; i < instances.length; i++) {%>
                     <div class="option <%= instances[i].installed? 'installed': '' %>" data-folder="<%= instances[i].folder %>">
                         <div class="instance-info">
-                            <span><%= instances[i].name %></span>
+                            <span class="name"><%= instances[i].name %></span>
+
+                            <span class="folder"><img src="./icons/folder-open-solid.svg"> <%= instances[i].folder %></span>
+
                             <div class="server-data">
                                 <div class="server-status webserver online hide">ACTIVE</div>
                                 <div class="server-status webserver offline">OFFLINE</div>
@@ -259,11 +33,11 @@
 
                             <div class="divider"></div>
 
-                            <span class="<%= instances[i].installed? (instances[i].error? 'error': 'installed'): '' %>"> 
+                            <span class="status <%= instances[i].installed? (instances[i].error? 'error': 'installed'): '' %>"> 
                                 <%= instances[i].installed? (instances[i].error? 'Corrupted/outdated Olympus installation': 'Olympus installed'): 'Olympus not installed' %>
                             </span>
-                            <span><img src="./icons/folder-open-solid.svg"> <%= instances[i].folder %></span>
-                            <div style="display: flex; flex-direction: column; row-gap: 5px;">
+                            
+                            <div class="summary">
                                 <div class="info">
                                     <div>Client port</div>
                                     <div> <%= instances[i].installed? instances[i].clientPort: "N/A" %> </div>
@@ -293,7 +67,7 @@
                             <div class="button open-browser hide" onclick="signal('onOpenBrowserClicked', '<%= instances[i].name %>')">Open in browser</div>
                             <div class="button stop hide" onclick="signal('onStopClicked', '<%= instances[i].name %>')">Stop Olympus</div>
                         </div>
-                        <div style="position: absolute; top: 15px; right: 15px; text-decoration: underline; cursor: pointer;" onclick="
+                        <div class="logs-link" onclick="
                                     signal('onTextFileClicked', '<%= instances[i].folder.replaceAll('\\', '/')+'/Logs/dcs.log' %>');
                                     signal('onTextFileClicked', '<%= instances[i].folder.replaceAll('\\', '/')+'/Logs/Olympus_log.txt' %>');
                                     ">Open logs</div>
