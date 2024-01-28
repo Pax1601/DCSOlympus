@@ -41,15 +41,18 @@ class DCSInstance {
         if (result[shellFoldersKey] !== undefined && result[shellFoldersKey]["exists"] && result[shellFoldersKey]['values'][saveGamesKey] !== undefined && result[shellFoldersKey]['values'][saveGamesKey]['value'] !== undefined) {
             /* Read all the folders in Saved Games */
             const searchpath = result[shellFoldersKey]['values'][saveGamesKey]['value'];
-            const folders = fs.readdirSync(searchpath);
+            var folders = fs.readdirSync(searchpath).map((folder) => {return path.join(searchpath, folder);});
+            console.log(folders);
             var instances = [];
+            folders = folders.concat(getManager().options.additionalDCSInstances);
+            console.log(folders);
 
             /* A DCS Instance is created if either the appsettings.lua or serversettings.lua file is detected */
             for (let i = 0; i < folders.length; i++) {
                 const folder = folders[i];
-                if (fs.existsSync(path.join(searchpath, folder, "Config", "appsettings.lua")) ||fs.existsSync(path.join(searchpath, folder, "Config", "serversettings.lua"))) {
+                if (fs.existsSync(path.join(folder, "Config", "appsettings.lua")) || fs.existsSync(path.join(folder, "Config", "serversettings.lua")) || getManager().options.additionalDCSInstances.includes(folder)) {
                     logger.log(`Found instance in ${folder}, checking for Olympus`)
-                    var newInstance = new DCSInstance(path.join(searchpath, folder));
+                    var newInstance = new DCSInstance(path.join(folder));
 
                     /* Check if Olympus is already installed */
                     getManager().setLoadingProgress(`Found instance in ${folder}, checking for Olympus...`, (i + 1) / folders.length * 100);
@@ -471,11 +474,11 @@ class DCSInstance {
             logger.log(`Editing completed successfully`);
             hidePopup();
 
-            this.options.mode === "basic"? getManager().menuPage.show(): getManager().instancesPage.show();
+            getManager().options.mode === "basic"? getManager().menuPage.show(): getManager().instancesPage.show();
         } catch (err) {
             logger.log(`An error occurred during editing: ${err}`);
             hidePopup();
-            showErrorPopup(`A critical error occurred, check ${this.options.logLocation} for more info.`)
+            showErrorPopup(`A critical error occurred, check ${getManager().options.logLocation} for more info.`)
         }
     }
 
