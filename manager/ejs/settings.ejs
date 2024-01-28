@@ -29,6 +29,7 @@
         border-left: 5px solid var(--blue);
         flex-direction: column;
         row-gap: 25px;
+        position: relative;
     }
 
     #manager-settings .option:not(.installed) {
@@ -226,7 +227,7 @@
                     View and manage installs
                 </span>
                 <span  style="color: var(--offwhite); font-size: 14px; text-align: center;">
-                    The following DCS installations have been identified. <br>You can modify settings and uninstall below.
+                    The following Olympus installations have been identified. <br>You can modify settings and uninstall below.
                 </span>
             </div>
         <div class="scroll-container">
@@ -252,6 +253,10 @@
                                         <div> <%= instances[i].installed? instances[i].backendAddress: "N/A" %> </div>
                                     </div>
                                 </div>
+                                <div style="position: absolute; top: 15px; right: 15px; text-decoration: underline; cursor: pointer;" onclick="
+                                    signal('onTextFileClicked', '<%= instances[i].folder.replaceAll('\\', '/')+'/Logs/dcs.log' %>');
+                                    signal('onTextFileClicked', '<%= instances[i].folder.replaceAll('\\', '/')+'/Logs/Olympus_log.txt' %>');
+                                    ">Open logs</div>
                             </div>
                             <div class="instance-buttons">
                                 <div class="button edit" onclick="signal('onEditClicked', '<%= instances[i].name %>')">Edit settings</div>

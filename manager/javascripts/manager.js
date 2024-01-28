@@ -167,9 +167,10 @@ class Manager {
      */
     createOptionsFile(mode) {
         try {
-            fs.writeFileSync("options.json", JSON.stringify({ mode: mode }));
+            fs.writeFileSync("options.json", JSON.stringify({ mode: mode, additionalDCSInstances: [] }, null, 2));
             location.reload();
-        } catch (e) {
+        } catch (err) {
+            logger.log(err);
             showErrorPopup(`A critical error occurred, check ${this.options.logLocation} for more info.`)
         }
     }
@@ -182,7 +183,7 @@ class Manager {
         /* Change the mode in the options.json and reload the page */
         var options = JSON.parse(fs.readFileSync("options.json"));
         options.mode = newMode;
-        fs.writeFileSync("options.json", JSON.stringify(options));
+        fs.writeFileSync("options.json", JSON.stringify(options, null, 2));
         location.reload();
     }
 
@@ -240,13 +241,7 @@ class Manager {
     onEditMenuClicked() {
         this.activePage.hide()
         this.options.install = false;
-
-        if (this.options.singleInstance) {
-            this.options.activeInstance = this.options.instances[0];
-            this.connectionsTypePage.show();
-        } else {
-            this.settingsPage.show();
-        }
+        this.settingsPage.show();
     }
 
     /** When a folder is selected, find what instance was clicked to set as active
@@ -271,8 +266,9 @@ class Manager {
         this.typePage.getElement().querySelector(`.multiplayer`).classList.toggle("selected", type === 'multiplayer');
         if (this.options.activeInstance)
             this.options.activeInstance.installationType = type;
-        else
-            showErrorPopup(`A critical error occurred, check ${this.options.logLocation} for more info.`)
+        else {
+            showErrorPopup(`A critical error occurred, check ${this.options.logLocation} for more info.`);
+        }
     }
 
     /* When the connections type is selected */
@@ -281,8 +277,9 @@ class Manager {
         this.connectionsTypePage.getElement().querySelector(`.manual`).classList.toggle("selected", type === 'manual');
         if (this.options.activeInstance)
             this.options.activeInstance.connectionsType = type;
-        else
-            showErrorPopup(`A critical error occurred, check ${this.options.logLocation} for more info.`)
+        else {
+            showErrorPopup(`A critical error occurred, check ${this.options.logLocation} for more info.`);
+        }
     }
 
     /* When the next button of a wizard page is clicked */
@@ -340,7 +337,7 @@ class Manager {
             if (this.options.activeInstance) {
                 if (this.options.activeInstance.installed && !this.options.activeInstance.arePasswordsEdited()) {
                     this.activePage.hide();
-                    this.options.install? this.options.activeInstance.install(): this.options.activeInstance.edit();
+                    this.options.install ? this.options.activeInstance.install() : this.options.activeInstance.edit();
                 }
                 else {
                     if (!this.options.activeInstance.arePasswordsSet()) {
@@ -349,7 +346,7 @@ class Manager {
                         showErrorPopup('Please, set different passwords for the Game Master, Blue Commander, and Red Commander roles!');
                     } else {
                         this.activePage.hide();
-                        this.options.install? this.options.activeInstance.install(): this.options.activeInstance.edit();
+                        this.options.install ? this.options.activeInstance.install() : this.options.activeInstance.edit();
                     }
                 }
             } else {
@@ -377,8 +374,9 @@ class Manager {
             if (!this.options.activeInstance.redCommanderPasswordEdited)
                 this.passwordsPage.getElement().querySelector(".red-commander input").value = "";
         }
-        else
-            showErrorPopup(`A critical error occurred, check ${this.options.logLocation} for more info.`)
+        else {
+            showErrorPopup(`A critical error occurred, check ${this.options.logLocation} for more info.`);
+        }
     }
 
     onBlueCommanderPasswordChanged(value) {
@@ -389,8 +387,9 @@ class Manager {
             if (!this.options.activeInstance.redCommanderPasswordEdited)
                 this.passwordsPage.getElement().querySelector(".red-commander input").value = "";
         }
-        else
-            showErrorPopup(`A critical error occurred, check ${this.options.logLocation} for more info.`)
+        else {
+            showErrorPopup(`A critical error occurred, check ${this.options.logLocation} for more info.`);
+        }
     }
 
     onRedCommanderPasswordChanged(value) {
@@ -401,8 +400,9 @@ class Manager {
             if (!this.options.activeInstance.blueCommanderPasswordEdited)
                 this.passwordsPage.getElement().querySelector(".blue-commander input").value = "";
         }
-        else
-            showErrorPopup(`A critical error occurred, check ${this.options.logLocation} for more info.`)
+        else {
+            showErrorPopup(`A critical error occurred, check ${this.options.logLocation} for more info.`);
+        }
     }
 
     /* When the client port input value is changed */
@@ -472,7 +472,7 @@ class Manager {
             this.options.activeInstance = instance;
             this.options.install = false;
             this.activePage.hide();
-            this.connectionsTypePage.show();
+            this.typePage.show();
         }
     }
 
@@ -492,6 +492,14 @@ class Manager {
             showErrorPopup("Error, the selected Olympus instance is currently active, please stop Olympus before uninstalling it!")
         else
             await instance.uninstall();
+    }
+
+    onLinkClicked(url) {
+        exec(`start ${url}`);
+    }
+
+    onTextFileClicked(path) {
+        exec(`notepad "${path}"`);
     }
 
     async getClickedInstance(name) {
@@ -556,7 +564,7 @@ class Manager {
                         instanceDiv.querySelector(".backend.online").classList.toggle("hide", !instance.backendOnline);
                         instanceDiv.querySelector(".backend.offline").classList.toggle("hide", instance.backendOnline);
 
-                        if (this.backendOnline) {
+                        if (instance.backendOnline) {
                             instanceDiv.querySelector(".fps .data").innerText = instance.fps;
                             instanceDiv.querySelector(".load .data").innerText = instance.load;
                         }
@@ -567,7 +575,7 @@ class Manager {
                         instanceDiv.querySelector(".button.open-browser").classList.toggle("hide", !instance.webserverOnline);
                         instanceDiv.querySelector(".button.stop").classList.toggle("hide", !instance.webserverOnline);
 
-                        if (this.webserverOnline)
+                        if (instance.webserverOnline)
                             instanceDiv.querySelector(".button.start").classList.remove("loading");
                     }
                 }

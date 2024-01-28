@@ -69,9 +69,9 @@ async function updateOlympusBeta() {
     var artifact = artifacts.find((artifact) => { return artifact.name = "development_build_not_a_release" });
 
     const date1 = new Date(artifact.updated_at);
-    const date2 = fs.statSync(path.join("package.json")).birthtime;
+    const date2 = fs.statSync(".").mtime;
     if (date1 > date2) {
-        showConfirmPopup(`<span>Latest beta artifact has a timestamp of <i style="color: orange">${artifact.updated_at}</i>, while your installation was created on <i style="color: orange">${date2.toISOString()}</i>. Do you want to update to the newest beta version?</span>`, () => {
+        showConfirmPopup(`<span style="font-size: 18px; max-width: 100%; margin-bottom: 15px;">Looks like you are running a beta version of Olympus!</span><span>Latest beta artifact timestamp of: <i style="color: orange">${date1.toLocaleString()}</i> <br> Your installation timestamp: <i style="color: orange">${date2.toLocaleString()}</i> <br><br> Do you want to update to the newest beta version?</span>`, () => {
             /* Run the browser and download the artifact */ //TODO: try and directly download the file from code rather than using the browser 
             exec(`start https://github.com/Pax1601/DCSOlympus/actions/runs/${artifact.workflow_run.id}/artifacts/${artifact.id}`)
             showConfirmPopup('A browser window was opened to download the beta artifact. Please wait for the download to complete, then press "Accept" and select the downloaded beta artifact.',
@@ -262,17 +262,6 @@ contextBridge.exposeInMainWorld(
 window.addEventListener('DOMContentLoaded', async () => {
     document.getElementById("loader").classList.remove("hide");
     await getManager().start();
-
-    /* Create event listeners for the hyperlinks */
-    var links = document.querySelectorAll(".link");
-    for (let i = 0; i < links.length; i++) {
-        if (links[i].dataset.link) {
-            links[i].addEventListener("click", (e) => {
-                if (e.target.dataset.link)
-                    exec("start " + e.target.dataset.link);
-            })
-        }
-    }
 })
 
 window.addEventListener('resize', () => {
