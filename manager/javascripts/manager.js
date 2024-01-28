@@ -61,8 +61,7 @@ class Manager {
         }
 
         if (!this.options.configLoaded) {
-            /* Hide the loading page */
-            document.getElementById("loader").classList.add("hide");
+            this.hideLoadingPage();
 
             /* Show page to select basic vs expert mode */
             this.welcomePage = new ManagerPage(this, "./ejs/welcome.ejs");
@@ -115,7 +114,7 @@ class Manager {
                 this.options.editEnabled = this.options.instances.find(instance => instance.installed);
 
                 /* Hide the loading page */
-                document.getElementById("loader").classList.add("hide");
+                this.hideLoadingPage();
 
                 this.options.singleInstance = this.options.instances.length === 1;
 
@@ -363,7 +362,12 @@ class Manager {
     }
 
     onCancelClicked() {
-        location.reload();
+        this.activePage.hide();
+        if (this.options.mode === "basic") 
+            this.menuPage.show(true);
+        else
+            this.instancesPage.show(true);
+        this.updateInstances();
     }
 
     onGameMasterPasswordChanged(value) {
@@ -593,6 +597,14 @@ class Manager {
             var style = document.querySelector('#loader .loading-bar').style;
             style.setProperty('--percent', `${percent}%`);
         }
+    }
+
+    hideLoadingPage() {
+        /* Hide the loading page */
+        document.getElementById("loader").style.opacity = "0%";
+        window.setTimeout(() => {
+            document.getElementById("loader").classList.add("hide");
+        }, 200);        
     }
 }
 

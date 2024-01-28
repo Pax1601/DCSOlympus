@@ -275,9 +275,10 @@ input {
     left: 0px;
     width: 100%;
     height: 100%;
-    background-color: black;
-    opacity: 30%;
+    background-color: rgba(0, 0, 0, 0.30);
     z-index: 999;
+    transition: opacity 0.2s linear;
+    opacity: 0%; /* By default has 0% opacity to allow for fade transition */
 }
 
 #popup {
@@ -295,6 +296,8 @@ input {
     padding: 20px 40px;
     align-items: start;
     z-index: 999;
+    transition: opacity 0.2s linear;
+    opacity: 0%; /* By default has 0% opacity to allow for fade transition */
 }
 
 #popup img {
@@ -331,6 +334,8 @@ input {
 .manager-page {
     min-width: 1200px;
     overflow-y: auto;
+    transition: opacity 0.2s linear;
+    opacity: 0%; /* By default has 0% opacity to allow for fade transition */
 }
 
 .input-group {

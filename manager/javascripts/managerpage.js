@@ -29,8 +29,6 @@ class ManagerPage {
             }
         });
 
-        this.element.classList.remove("hide");
-
         this.previousPage = ignorePreviousPage ? this.previousPage : this.manager.activePage;
         this.manager.activePage = this;
 
@@ -39,11 +37,23 @@ class ManagerPage {
     }
 
     hide() {
-        this.element.classList.add("hide");
+        this.element.style.opacity = "0%";
+        window.setTimeout(() => {
+            this.element.classList.add("hide");
+        }, 200);        
     }
 
-    render(str) {
+    render(str) { 
         this.element.innerHTML = str;
+        this.element.style.opacity = "0%";
+
+        window.setTimeout(() => {
+            this.element.classList.remove("hide");
+        }, 200)
+
+        window.setTimeout(() => {
+            this.element.style.opacity = "100%";
+        }, 300)
 
         /* Connect all the collapsable buttons */
         let buttons = document.querySelectorAll(".button.collapse");
