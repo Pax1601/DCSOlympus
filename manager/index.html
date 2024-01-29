@@ -85,6 +85,14 @@
         const event = new CustomEvent("signal", { detail: { callback: callback, params: params } });
         document.dispatchEvent(event);
     }
+
+    window.addEventListener("click", (ev) => {
+        var buttons = document.querySelectorAll(".button.collapse");
+        for (let button of buttons) {
+            if (button != ev.srcElement)
+                button.classList.remove("open");
+        }
+    })
 </script>
 
 </html>

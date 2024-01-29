@@ -409,6 +409,7 @@ input {
     display: none;
     position: absolute;
     transform: translate(-15px, calc(50% + 25px));
+    z-index: 999;
 }
 
 .button.collapse.open>div {

@@ -42,10 +42,8 @@ class DCSInstance {
             /* Read all the folders in Saved Games */
             const searchpath = result[shellFoldersKey]['values'][saveGamesKey]['value'];
             var folders = fs.readdirSync(searchpath).map((folder) => {return path.join(searchpath, folder);});
-            console.log(folders);
             var instances = [];
             folders = folders.concat(getManager().options.additionalDCSInstances);
-            console.log(folders);
 
             /* A DCS Instance is created if either the appsettings.lua or serversettings.lua file is detected */
             for (let i = 0; i < folders.length; i++) {
