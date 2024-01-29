@@ -1,4 +1,8 @@
+import { getApp } from "..";
 import { PanelEventsManager } from "./paneleventsmanager";
+
+export interface PanelInterface {
+}
 
 export abstract class Panel {
 
@@ -27,6 +31,11 @@ export abstract class Panel {
             this.hide();
         else
             this.show();
+    }
+
+    toggleByContext() {
+        const context = getApp().getCurrentContext();
+        (context.getUseMouseInfoPanel()) ? this.show() : this.hide();
     }
 
     getElement() {

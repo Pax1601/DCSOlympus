@@ -283,4 +283,5 @@ export class MouseInfoPanel extends Panel {
         const z = this.#locationSystems[ this.#selectedLocationSystemIndex ];
         return this.#locationSystems[this.#selectedLocationSystemIndex];
     }
+
 }

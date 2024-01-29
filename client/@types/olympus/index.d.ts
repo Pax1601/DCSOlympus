@@ -1633,6 +1633,7 @@ declare module "map/map" {
          * @param ID - the ID of the HTML element which will contain the context menu
          */
         constructor(ID: string);
+        getLeaflet(): typeof L;
         addVisibilityOption(option: string, defaultValue: boolean): void;
         setLayer(layerName: string): void;
         getLayers(): string[];
@@ -2567,6 +2568,7 @@ declare module "context/context" {
         contextMenuManager?: ContextMenuManager;
         onSet?: CallableFunction;
         onUnset?: CallableFunction;
+        useMouseInfoPanel?: boolean;
         useUnitControlPanel?: boolean;
         useUnitInfoPanel?: boolean;
     };
@@ -2576,6 +2578,7 @@ declare module "context/context" {
         getAllowUnitCopying(): boolean;
         getAllowUnitPasting(): boolean;
         getContextMenuManager(): ContextMenuManager;
+        useMouseInfoPanel(): boolean;
         getUseUnitControlPanel(): boolean;
         getUseUnitInfoPanel(): boolean;
         onSet(): void;
@@ -2627,6 +2630,13 @@ declare module "other/utilities" {
         zeroPrepend(num: number, places: number): string;
     }
 }
+declare module "template/templatemanager" {
+    import { Manager } from "other/manager";
+    export class TemplateManager extends Manager {
+        constructor();
+        renderTemplate(name: string, data?: object): any;
+    }
+}
 declare module "olympusapp" {
     import { Map } from "map/map";
     import { MissionManager } from "mission/missionmanager";
@@ -2642,6 +2652,7 @@ declare module "olympusapp" {
     import { Creator } from "creator/creator";
     import { Converter } from "converter/converter";
     import { Utilities } from "other/utilities";
+    import { TemplateManager } from "template/templatemanager";
     export class OlympusApp {
         #private;
         constructor();
@@ -2691,6 +2702,11 @@ declare module "olympusapp" {
          * @returns The navy unit database
          */
         getNavyUnitDatabase(): import("unit/databases/navyunitdatabase").NavyUnitDatabase;
+        /**
+         *
+         * @returns template manager
+         */
+        getTemplateManger(): TemplateManager;
         /**
          *
          * @returns Utilities class

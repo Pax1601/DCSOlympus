@@ -246,6 +246,10 @@ export class Map extends L.Map {
         /* this.addVisibilityOption(FILL_SELECTED_RING, false); Removed since currently broken: TODO fix!*/
     }
 
+    getLeaflet() {
+        return L;
+    }
+
     addVisibilityOption(option: string, defaultValue: boolean) {
         this.#visibilityOptions[option] = defaultValue;
         this.#mapVisibilityOptionsDropdown.addOptionElement(createCheckboxOption(option, option, defaultValue, (ev: any) => { this.#setVisibilityOption(option, ev); }));

@@ -6,6 +6,7 @@ export type TContextConfig = {
     contextMenuManager?: ContextMenuManager;
     onSet?:CallableFunction;
     onUnset?:CallableFunction;
+    useMouseInfoPanel?: boolean;
     useUnitControlPanel?: boolean;
     useUnitInfoPanel?: boolean;
 }
@@ -13,20 +14,22 @@ export type TContextConfig = {
 export class Context {
     #allowUnitCopying: boolean;
     #allowUnitPasting: boolean;
+    #contextMenuManager: ContextMenuManager;
     #onSet:CallableFunction;
     #onUnset:CallableFunction;
-    #contextMenuManager: ContextMenuManager;
+    #useMouseInfoPanel: boolean;
     #useUnitControlPanel: boolean;
     #useUnitInfoPanel: boolean;
 
     constructor(config: TContextConfig) {
-        this.#allowUnitCopying = (config.allowUnitCopying !== false);
-        this.#allowUnitPasting = (config.allowUnitPasting !== false);
-        this.#onSet = config.onSet || function() {};
-        this.#onUnset = config.onUnset || function() {};
-        this.#contextMenuManager = config.contextMenuManager || new ContextMenuManager();
+        this.#allowUnitCopying    = (config.allowUnitCopying !== false);
+        this.#allowUnitPasting    = (config.allowUnitPasting !== false);
+        this.#onSet               = config.onSet || function() {};
+        this.#onUnset             = config.onUnset || function() {};
+        this.#contextMenuManager  = config.contextMenuManager || new ContextMenuManager();
+        this.#useMouseInfoPanel   = (config.useMouseInfoPanel !== false);
         this.#useUnitControlPanel = (config.useUnitControlPanel !== false);
-        this.#useUnitInfoPanel = (config.useUnitInfoPanel !== false);
+        this.#useUnitInfoPanel    = (config.useUnitInfoPanel !== false);
     }
 
     getAllowUnitCopying() {
@@ -39,6 +42,10 @@ export class Context {
 
     getContextMenuManager() {
         return this.#contextMenuManager;
+    }
+
+    getUseMouseInfoPanel() {
+        return this.#useMouseInfoPanel;
     }
 
     getUseUnitControlPanel() {
