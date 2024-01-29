@@ -40,20 +40,17 @@ class ManagerPage {
         this.element.style.opacity = "0%";
         window.setTimeout(() => {
             this.element.classList.add("hide");
-        }, 200);        
+        }, 250);        
     }
 
     render(str) { 
         this.element.innerHTML = str;
         this.element.style.opacity = "0%";
 
-        window.setTimeout(() => {
-            this.element.classList.remove("hide");
-        }, 200)
-
+        this.element.classList.remove("hide");
         window.setTimeout(() => {
             this.element.style.opacity = "100%";
-        }, 300)
+        }, 0)
 
         /* Connect all the collapsable buttons */
         let buttons = document.querySelectorAll(".button.collapse");

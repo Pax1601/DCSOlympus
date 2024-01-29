@@ -97,7 +97,7 @@ function hidePopup() {
     window.setTimeout(() => {
         document.getElementById("grayout").classList.add("hide");
         document.getElementById("popup").classList.add("hide");
-    }, 200);
+    }, 250);
 }
 
 function setPopupLoadingProgress(message, percent) {

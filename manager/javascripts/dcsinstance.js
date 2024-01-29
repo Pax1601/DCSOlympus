@@ -474,9 +474,10 @@ class DCSInstance {
             logger.log(`Editing completed successfully`);
             hidePopup();
 
-            getManager().options.mode === "basic"? getManager().menuPage.show(): getManager().instancesPage.show();
+            getManager().options.mode === "basic"? getManager().settingsPage.show(): getManager().instancesPage.show();
         } catch (err) {
             logger.log(`An error occurred during editing: ${err}`);
+            getManager().getActiveInstance().error = true;
             hidePopup();
             showErrorPopup(`A critical error occurred, check ${getManager().options.logLocation} for more info.`)
         }

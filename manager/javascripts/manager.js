@@ -359,12 +359,19 @@ class Manager {
     /* When the back button of a wizard page is clicked */
     onBackClicked() {
         this.activePage.hide();
+
+        /* If we have backed to the menu, instances or settings page, reset the active instance */
+        if ([this.instancesPage, this.settingsPage].includes(this.activePage.previousPage)) {
+            delete this.options.activeInstance;
+        }
+
         this.activePage.previousPage.show(true); // Don't change the previous page
         this.updateInstances();
     }
 
     onCancelClicked() {
         this.activePage.hide();
+        delete this.options.activeInstance;
         if (this.options.mode === "basic") 
             this.menuPage.show(true);
         else
@@ -606,7 +613,7 @@ class Manager {
         document.getElementById("loader").style.opacity = "0%";
         window.setTimeout(() => {
             document.getElementById("loader").classList.add("hide");
-        }, 200);        
+        }, 250);        
     }
 }
 

@@ -212,9 +212,10 @@ body {
 /* Manager page                                 */
 /************************************************/
 .manager-page {
+    position: absolute;
     min-width: 1200px;
     overflow-y: auto;
-    transition: opacity 0.2s linear;
+    transition: opacity 0.25s linear;
     opacity: 0%;
     /* By default has 0% opacity to allow for fade transition */
 }
@@ -230,7 +231,7 @@ body {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.30);
     z-index: 999;
-    transition: opacity 0.2s linear;
+    transition: opacity 0.25s linear;
     opacity: 0%;
     /* By default has 0% opacity to allow for fade transition */
 }
@@ -250,7 +251,7 @@ body {
     padding: 20px 40px;
     align-items: start;
     z-index: 999;
-    transition: opacity 0.2s linear;
+    transition: opacity 0.25s linear;
     opacity: 0%;
     /* By default has 0% opacity to allow for fade transition */
 }
@@ -472,7 +473,7 @@ input {
     flex-direction: column;
     row-gap: 15px;
     height: 100%;
-    padding: 80px;
+    padding: 40px 80px;
 }
 
 .dashboard .scroll-container {
@@ -625,6 +626,9 @@ input {
     font-size: var(--normal);
     font-weight: 600;
     color: var(--lightgray);
+    display: flex;
+    flex-direction: row;
+    column-gap: 8px;
 }
 
 .dashboard .instance-info>.status.installed {
@@ -632,9 +636,21 @@ input {
     color: var(--green);
 }
 
+.dashboard .instance-info>.status.installed::before {
+    content: url("../icons/check-solid-green.svg");
+    height: 14px;
+    width: 14px;
+}
+
 .dashboard .instance-info>.status.error {
     font-weight: 600;
     color: orange;
+}
+
+.dashboard .instance-info>.status.error::before {
+    content: url("../icons/triangle-exclamation-solid-orange.svg");
+    height: 14px;
+    width: 14px;
 }
 
 .dashboard .instance-buttons {
@@ -722,6 +738,41 @@ input {
     opacity: 80%;
     height: 0px !important;
     cursor: default;
+}
+
+/************************************************/
+/* Result summary                               */
+/************************************************/
+.result-summary {
+    padding: 25px 15px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+}
+
+.result-summary .title {
+    font-weight: bold;
+    font-size: var(--big);
+    display: flex;
+    align-items: center;
+}
+
+.result-summary .title img {
+    margin-right: 10px;
+}
+
+.result-summary .description {
+    font-size: var(--normal);
+}
+
+.result-summary.success{
+    color: var(--background-color);
+    background-color: var(--green);
+}
+
+.result-summary.error{
+    color: var(--background-color);
+    background-color: var(--red);
 }
 
 /************************************************/
