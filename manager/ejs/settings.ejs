@@ -34,44 +34,48 @@
                     You can edit settings and uninstall Olympus from this screen. 
                 </span>
             </div>
-        <div class="scroll-container">
-            <div class="scrollable">
-                <% for (let i = 0; i < instances.length; i++) {%>
-                    <% if (instances[i].installed) { %>
-                        <div class="option <%= instances[i].installed? 'installed': '' %>" data-folder="<%= instances[i].folder %>">
-                            <div class="instance-info">
-                                <span class="name"><%= instances[i].name %></span>
-                                <span class="folder"><img src="./icons/folder-open-solid.svg"> <%= instances[i].folder %></span>
-                                <div class="divider"></div>
-                                <span class="status <%= instances[i].installed? (instances[i].error? 'error': 'installed'): '' %>"> 
-                                    <%= instances[i].installed? (instances[i].error? 'Corrupted/outdated Olympus installation': 'Olympus installed'): 'Olympus not installed' %>
-                                </span>
-                                <div class="summary">
-                                    <div class="info">
-                                        <div>Client port</div>
-                                        <div> <%= instances[i].installed? instances[i].clientPort: "N/A" %> </div>
+            <div style="font-size: var(--very-large); color: var(--offwhite); font-weight: bold; margin-top: 150px; text-align: center;" class="<%= instances.some(instance => instance.installed)? "hide": "" %>">
+                No instances detected!
+            </div>
+            <div class="scroll-container">
+                <div class="scrollable">
+                    <% for (let i = 0; i < instances.length; i++) {%>
+                        <% if (instances[i].installed) { %>
+                            <div class="option <%= instances[i].installed? 'installed': '' %>" data-folder="<%= instances[i].folder %>">
+                                <div class="instance-info">
+                                    <span class="name"><%= instances[i].name %></span>
+                                    <span class="folder"><img src="./icons/folder-open-solid.svg"> <%= instances[i].folder %></span>
+                                    <div class="divider"></div>
+                                    <span class="status <%= instances[i].installed? (instances[i].error? 'error': 'installed'): '' %>"> 
+                                        <%= instances[i].installed? (instances[i].error? 'Corrupted/outdated Olympus installation': 'Olympus installed'): 'Olympus not installed' %>
+                                    </span>
+                                    <div class="summary">
+                                        <div class="info">
+                                            <div>Client port</div>
+                                            <div> <%= instances[i].installed? instances[i].clientPort: "N/A" %> </div>
+                                        </div>
+                                        <div class="info">
+                                            <div>Backend port</div>
+                                            <div> <%= instances[i].installed? instances[i].backendPort: "N/A" %> </div>
+                                        </div>
+                                        <div class="info">
+                                            <div>Backend address</div>
+                                            <div> <%= instances[i].installed? instances[i].backendAddress: "N/A" %> </div>
+                                        </div>
                                     </div>
-                                    <div class="info">
-                                        <div>Backend port</div>
-                                        <div> <%= instances[i].installed? instances[i].backendPort: "N/A" %> </div>
-                                    </div>
-                                    <div class="info">
-                                        <div>Backend address</div>
-                                        <div> <%= instances[i].installed? instances[i].backendAddress: "N/A" %> </div>
-                                    </div>
+                                    <div class="logs-link" onclick="
+                                        signal('onTextFileClicked', '<%= instances[i].folder.replaceAll('\\', '/')+'/Logs/dcs.log' %>');
+                                        signal('onTextFileClicked', '<%= instances[i].folder.replaceAll('\\', '/')+'/Logs/Olympus_log.txt' %>');
+                                        ">Open logs</div>
                                 </div>
-                                <div class="logs-link" onclick="
-                                    signal('onTextFileClicked', '<%= instances[i].folder.replaceAll('\\', '/')+'/Logs/dcs.log' %>');
-                                    signal('onTextFileClicked', '<%= instances[i].folder.replaceAll('\\', '/')+'/Logs/Olympus_log.txt' %>');
-                                    ">Open logs</div>
+                                <div class="instance-buttons">
+                                    <div class="button edit" onclick="signal('onEditClicked', '<%= instances[i].name %>')">Edit settings</div>
+                                    <div class="button uninstall" onclick="signal('onUninstallClicked', '<%= instances[i].name %>')">Uninstall Olympus</div>
+                                </div>
                             </div>
-                            <div class="instance-buttons">
-                                <div class="button edit" onclick="signal('onEditClicked', '<%= instances[i].name %>')">Edit settings</div>
-                                <div class="button uninstall" onclick="signal('onUninstallClicked', '<%= instances[i].name %>')">Uninstall Olympus</div>
-                            </div>
-                        </div>
+                        <% } %>
                     <% } %>
-                <% } %>
+                </div> 
             </div>
         </div>
     </div>
