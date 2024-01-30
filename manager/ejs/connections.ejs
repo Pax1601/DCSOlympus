@@ -1,31 +1,5 @@
 <style>
-    #connections-page .success,
-    #connections-page .error {
-        position: absolute;
-        left: 320px;
-        display: flex;
-        width: 150px;
-        column-gap: 8px;
-    }
-
-    #connections-page .success {
-        content: url("./icons/check-solid-green.svg");
-        height: 20px;
-        width: 20px;
-    }
-
-    #connections-page .error img {
-        content: url("./icons/triangle-exclamation-solid.svg");
-        height: 20px;
-        width: 20px;
-    }
-
-    #connections-page .error span {
-        font-weight: 600;
-        font-size: var(--small);
-        color: var(--red);
-        height: fit-content;
-    }
+    
 </style>
 <div id="connections-page">
     <div class="instructions">
@@ -42,7 +16,7 @@
         </div>
     </div>
     <div class="wizard-inputs">
-        <div class="input-group client-port">
+        <div class="input-group client-port port-input">
             <span>Client port
                 <img src="./icons/circle-info-solid.svg"
                     title="This port is used to allow access to Olympus. Be sure to allow this port through your firewall if you want people to connect remotely">
@@ -56,7 +30,7 @@
                 </div>
             </div>
         </div>
-        <div class="input-group backend-port">
+        <div class="input-group backend-port port-input">
             <span>Backend port
                 <img src="./icons/circle-info-solid.svg"
                     title="This port is used by Olympus to communicate with DCS. You only need to allow it through your firewall if you enable direct API connection">

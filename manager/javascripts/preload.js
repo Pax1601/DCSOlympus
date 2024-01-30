@@ -34,7 +34,7 @@ function checkVersion() {
             /* If a newer version is available update Olympus in Release mode */
             if (reg1[0] > reg2[0] || (reg1[0] == reg2[0] && reg1[1] > reg2[1]) || (reg1[0] == reg2[0] && reg1[1] == reg2[1] && reg1[2] > reg2[2])) {
                 logger.log(`New version available: ${res["version"]}`);
-                showConfirmPopup(`You are currently running DCS Olympus ${VERSION}, but ${res["version"]} is available. Do you want to update DCS Olympus automatically? <div style="max-width: 100%; color: orange">Note: DCS and Olympus MUST be stopped before proceeding.</div>`,
+                showConfirmPopup(`<div class='main-message'>You are currently running DCS Olympus ${VERSION}, but ${res["version"]} is available. </div><div class='sub-message'> Do you want to update DCS Olympus automatically? </div> <div style="max-width: 100%; color: orange">Note: DCS and Olympus MUST be stopped before proceeding.</div>`,
                     () => {
                         updateOlympusRelease();
                     }, () => {
@@ -71,10 +71,10 @@ async function updateOlympusBeta() {
     const date1 = new Date(artifact.updated_at);
     const date2 = fs.statSync(".").mtime;
     if (date1 > date2) {
-        showConfirmPopup(`<span style="font-size: var(--very-large); max-width: 100%; margin-bottom: 15px;">Looks like you are running a beta version of Olympus!</span><span>Latest beta artifact timestamp of: <i style="color: orange">${date1.toLocaleString()}</i> <br> Your installation timestamp: <i style="color: orange">${date2.toLocaleString()}</i> <br><br> Do you want to update to the newest beta version?</span>`, () => {
+        showConfirmPopup(`<div class='main-message'> Looks like you are running a beta version of Olympus!</div><div class='sub-message'> Latest beta artifact timestamp of: <b style="color: orange">${date1.toLocaleString()}</b> <br> Your installation timestamp: <b style="color: orange">${date2.toLocaleString()}</b> <br><br> Do you want to update to the newest beta version?</div>`, () => {
             /* Run the browser and download the artifact */ //TODO: try and directly download the file from code rather than using the browser 
             exec(`start https://github.com/Pax1601/DCSOlympus/actions/runs/${artifact.workflow_run.id}/artifacts/${artifact.id}`)
-            showConfirmPopup('A browser window was opened to download the beta artifact. Please wait for the download to complete, then press "Accept" and select the downloaded beta artifact.',
+            showConfirmPopup(`<div class='main-message'> A browser window was opened to download the beta artifact. </div><div class='sub-message'> Please wait for the download to complete, then press "Accept" and select the downloaded beta artifact.</div>`,
                 () => {
                     /* Ask the user to select the downloaded file */
                     var input = document.createElement('input');
@@ -117,7 +117,7 @@ async function updateOlympusRelease() {
 }
 
 function updateOlympus(location) {
-    showWaitPopup("Please wait while Olympus is being updated. The Manager will be closed and reopened automatically when updating is completed.")
+    showWaitPopup("<div class='main-message'>Please wait while Olympus is being updated. </div><div class='sub-message'> The Manager will be closed and reopened automatically when updating is completed.</div>")
 
     /* If the location is a string, it is interpreted as a download url. Else, it is interpreted as a File (on disk)*/
     if (typeof location === "string") {
@@ -202,7 +202,7 @@ function extractAndCopy(folder) {
  * 
  */
 function failUpdate() {
-    showErrorPopup(`An error has occurred while updating Olympus. Please delete Olympus and update it manually. A browser window will open automatically on the download page. <br><br> You can find more info in ${path.join(__dirname, "..", "manager.log")}`, () => {
+    showErrorPopup(`<div class='main-message'>An error has occurred while updating Olympus. </div><div class='sub-message'> Please delete Olympus and update it manually. A browser window will open automatically on the download page. <br><br> You can find more info in ${path.join(__dirname, "..", "manager.log")}</div>`, () => {
         exec(`start https://github.com/Pax1601/DCSOlympus/releases`, () => {
             ipcRenderer.send('window:close');
         })

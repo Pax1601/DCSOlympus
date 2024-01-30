@@ -106,7 +106,7 @@ body {
     align-items: center;
     color: #F2F2F2;
     font-weight: bold;
-    font-size: var(--normal);
+    font-size: var(--big);
     padding: 20px 20px 20px 20px;
     column-gap: 10px;
     background-color: var(--background-dark);
@@ -135,7 +135,7 @@ body {
     font-weight: normal;
     text-decoration: underline;
     cursor: pointer;
-    font-size: var(--normal);
+    font-size: var(--big);
 }
 
 .link.first {
@@ -296,6 +296,15 @@ body {
 .accept-popup {
     color: var(--background);
     background-color: var(--offwhite);
+}
+
+#popup .main-message {
+    font-size: var(--large); 
+    max-width: 100%;
+}
+
+#popup .sub-message {
+    font-weight: normal;
 }
 
 /************************************************/
@@ -463,6 +472,38 @@ input {
     transform: translate(1px, -1px) rotate(-45deg);
     border-left: 2px solid var(--offwhite);
     border-bottom: 2px solid var(--offwhite);
+}
+
+/************************************************/
+/* Port checks                                  */
+/************************************************/
+
+.port-input .success,
+.port-input .error {
+    position: absolute;
+    left: 320px;
+    display: flex;
+    width: 150px;
+    column-gap: 8px;
+}
+
+.port-input .success {
+    content: url("../icons/check-solid-green.svg");
+    height: 20px;
+    width: 20px;
+}
+
+.port-input .error img {
+    content: url("../icons/triangle-exclamation-solid.svg");
+    height: 20px;
+    width: 20px;
+}
+
+.port-input .error span {
+    font-weight: 600;
+    font-size: var(--small);
+    color: var(--red);
+    height: fit-content;
 }
 
 /************************************************/

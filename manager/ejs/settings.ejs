@@ -5,12 +5,25 @@
         <div class="cancel" style="font-size: var(--normal); font-weight: 600; color: var(--offwhite); display: flex; align-items: center; column-gap: 10px; cursor: pointer; text-decoration: underline; " onclick="signal('onCancelClicked')">
             <img src="./icons/chevron-left-solid.svg" style=" height: 14px;">Back to menu
         </div>
-        <div class="result-summary success <%= (typeof activeInstance !== 'undefined' && !activeInstance["error"])? "": "hide" %>">
-            <div class="title"><img src="./icons/check-solid-background.svg">Olympus settings updated for <i style="margin-left: 3px"><%= typeof activeInstance !== 'undefined'? activeInstance["name"]: "" %></i>!</div>
-        </div>
-        <div class="result-summary error <%= (typeof activeInstance !== 'undefined' && activeInstance["error"])? "": "hide" %>">
-            <div class="title"><img src="./icons/triangle-exclamation-solid-background.svg">An error occurred while updating Olympus settings for <i><%= typeof activeInstance !== 'undefined'? activeInstance["name"]: "" %></i></div>
-        </div>
+        <% if (operation === 'EDIT') {%>
+            <div class="result-summary success <%= (typeof activeInstance !== 'undefined' && !activeInstance["error"])? "": "hide" %>">
+                <div class="title"><img src="./icons/check-solid-background.svg">Olympus settings updated for
+                    <i style="margin-left: 3px"><%= typeof activeInstance !== 'undefined'? activeInstance["name"]: "" %></i>!</div>
+            </div>
+            <div class="result-summary error <%= (typeof activeInstance !== 'undefined' && activeInstance["error"])? "": "hide" %>">
+                <div class="title"><img src="./icons/triangle-exclamation-solid-background.svg">An error occurred while updating Olympus settings for
+                    <i style="margin-left: 3px"><%= typeof activeInstance !== 'undefined'? activeInstance["name"]: "" %></i></div>
+            </div>
+        <% } else {%>
+            <div class="result-summary success <%= (typeof activeInstance !== 'undefined' && !activeInstance["installed"])? "": "hide" %>">
+                <div class="title"><img src="./icons/check-solid-background.svg">Olympus removed successfully from
+                    <i style="margin-left: 3px"><%= typeof activeInstance !== 'undefined'? activeInstance["name"]: "" %></i>!</div>
+            </div>
+            <div class="result-summary error <%= (typeof activeInstance !== 'undefined' && activeInstance["installed"])? "": "hide" %>">
+                <div class="title"><img src="./icons/triangle-exclamation-solid-background.svg">An error occurred while removing Olympus settings from
+                    <i style="margin-left: 3px"><%= typeof activeInstance !== 'undefined'? activeInstance["name"]: "" %></i></div>
+            </div>
+        <% } %>
         <div class="content">
             <div class="instructions">
                 <span class="title">

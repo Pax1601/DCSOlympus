@@ -22,10 +22,20 @@ class DCSInstance {
      * 
      * @returns The list of DCS instances
      */
-    static async getInstances() {
-        if (this.instances === null) 
+    static async getInstances(force = false) {
+        if (this.instances === null || force) 
             DCSInstance.instances =  this.findInstances();
         return DCSInstance.instances;
+    }
+
+    static async reloadInstances() {
+        var instances = await this.getInstances();
+        console.log(instances);
+        for (let instance of instances) {
+            await instance.checkInstallation();
+            console.log(instance.installed);
+        }
+        return true;
     }
 
     /** Static asynchronous method to find all existing DCS instances
@@ -149,7 +159,7 @@ class DCSInstance {
                 this.backendAddress = config["server"]["address"];
                 this.gameMasterPasswordHash = config["authentication"]["gameMasterPassword"];
             } catch (err) {
-                showErrorPopup(`A critical error has occurred while reading your Olympus configuration file. Please, manually reinstall olympus in ${this.folder}.`)
+                showErrorPopup(`<div class='main-message'>A critical error has occurred while reading your Olympus configuration file. </div><div class='sub-message'> Please, manually reinstall olympus in ${this.folder}. </div>`)
                 logger.error(err)
             }
 
@@ -184,6 +194,9 @@ class DCSInstance {
             } else {
                 getManager().setLoadingProgress(`No differences found in ${this.folder}`);
             }
+        } else {
+            this.installed = false;
+            this.error = false;
         }
         return this.error;
     }
@@ -476,8 +489,9 @@ class DCSInstance {
         } catch (err) {
             logger.log(`An error occurred during editing: ${err}`);
             getManager().getActiveInstance().error = true;
-            hidePopup();
-            showErrorPopup(`A critical error occurred, check ${getManager().options.logLocation} for more info.`)
+
+            showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${getManager().options.logLocation} for more info. </div>`)
+            getManager().options.mode === "basic"? getManager().settingsPage.show(): getManager().instancesPage.show();
         }
     }
 
@@ -487,6 +501,7 @@ class DCSInstance {
     async install() {
         showWaitLoadingPopup(`<span>Please wait while Olympus is being installed in <i>${this.name}</i></span>`);
         try {
+            getManager().activePage.hide();
             setPopupLoadingProgress("Installing hook scripts...", 0);
             await sleep(100);
             await installHooks(getManager().getActiveInstance().folder);
@@ -511,26 +526,36 @@ class DCSInstance {
             await sleep(500);
             logger.log(`Installation completed successfully`);
             hidePopup();
-            getManager().resultPage.show();
-            getManager().resultPage.getElement().querySelector(".result-summary.success").classList.remove("hide");
-            getManager().resultPage.getElement().querySelector(".result-summary.error").classList.add("hide");
-            getManager().resultPage.getElement().querySelector(".instructions-group").classList.remove("hide");
+            if (getManager().options.mode === 'basic') {
+                getManager().resultPage.show();
+                getManager().resultPage.getElement().querySelector(".result-summary.success").classList.remove("hide");
+                getManager().resultPage.getElement().querySelector(".result-summary.error").classList.add("hide");
+                getManager().resultPage.getElement().querySelector(".instructions-group").classList.remove("hide");
+            } else {
+                await getManager().reload();
+                getManager().instancesPage.show();
+            }
         } catch (err) {
             logger.log(`An error occurred during installation: ${err}`);
             hidePopup();
-            getManager().resultPage.show();
-            getManager().resultPage.getElement().querySelector(".result-summary.success").classList.add("hide");
-            getManager().resultPage.getElement().querySelector(".result-summary.error").classList.remove("hide");
+            if (getManager().options.mode === 'basic') {
+                getManager().resultPage.show();
+                getManager().resultPage.getElement().querySelector(".result-summary.success").classList.add("hide");
+                getManager().resultPage.getElement().querySelector(".result-summary.error").classList.remove("hide");
+            } else {
+                await getManager().reload();
+                getManager().instancesPage.show();
+            }
         }
-
     }
 
     /** Uninstall this instance
      * 
      */
     async uninstall() {
-        showConfirmPopup(`<div style='max-width: 100%; font-size: var(--big);'> Are you sure you want to remove Olympus from ${this.name}? </div> <div style="font-weight: normal;">This will only remove Olympus for this particular DCS instance.</div>`, async () => {
+        showConfirmPopup(`<div class='main-message'> Are you sure you want to remove Olympus from ${this.name}? </div> <div class='sub-message'>This will only remove Olympus for this particular DCS instance.</div>`, async () => {
             try {
+                getManager().activePage.hide();
                 logger.log(`Uninstalling Olympus from ${this.folder}`)
                 await sleep(300);
                 showWaitLoadingPopup(`<span>Please wait while Olympus is being removed from <i>${this.name}</i></span>`);
@@ -553,12 +578,21 @@ class DCSInstance {
                 await sleep(500);
                 setPopupLoadingProgress("Instance removed!", 100);
                 logger.log(`Olympus removed from ${this.folder}`)
-                location.reload();
+
+                hidePopup();
+                await getManager().reload();
+                if (getManager().options.mode === 'basic') 
+                    getManager().settingsPage.show();
+                else 
+                    getManager().instancesPage.show();
                 return true;
             } catch (err) {
                 logger.error(err)
-                showErrorPopup(`An error has occurred while uninstalling the Olympus instance. Make sure Olympus and DCS are not running. <br><br> You can find more info in ${path.join(__dirname, "..", "manager.log")}`, () => {
-                    location.reload();
+                showErrorPopup(`<div class='main-message'>An error has occurred while uninstalling the Olympus instance. </div><div class='sub-message'> Make sure Olympus and DCS are not running. </div><div class='sub-message'>You can find more info in ${path.join(__dirname, "..", "manager.log")} </div>`, () => {
+                    if (getManager().options.mode === 'basic') 
+                        getManager().settingsPage.show();
+                    else 
+                        getManager().instancesPage.show();
                 });
             }
         });
