@@ -1,8 +1,7 @@
 // TODO: we can probably refactor this to be a bit cleaner
 
 function showInfoPopup(message, onCloseCallback) {
-    document.getElementById("grayout").classList.remove("hide");
-    document.getElementById("popup").classList.remove("hide");
+    showPopup();
     document.getElementById("popup").querySelector(".error").classList.add("hide");
     document.getElementById("popup").querySelector(".wait").classList.add("hide");
     document.getElementById("popup").querySelector(".confirm").classList.remove("hide");
@@ -20,8 +19,7 @@ function showInfoPopup(message, onCloseCallback) {
 
 
 function showErrorPopup(message, onCloseCallback) {
-    document.getElementById("grayout").classList.remove("hide");
-    document.getElementById("popup").classList.remove("hide");
+    showPopup();
     document.getElementById("popup").querySelector(".error").classList.remove("hide");
     document.getElementById("popup").querySelector(".wait").classList.add("hide");
     document.getElementById("popup").querySelector(".confirm").classList.add("hide");
@@ -38,8 +36,7 @@ function showErrorPopup(message, onCloseCallback) {
 }
 
 function showWaitPopup(message) {
-    document.getElementById("grayout").classList.remove("hide");
-    document.getElementById("popup").classList.remove("hide");
+    showPopup();
     document.getElementById("popup").querySelector(".error").classList.add("hide");
     document.getElementById("popup").querySelector(".wait").classList.remove("hide");
     document.getElementById("popup").querySelector(".confirm").classList.add("hide");
@@ -49,8 +46,7 @@ function showWaitPopup(message) {
 }
 
 function showWaitLoadingPopup(message) {
-    document.getElementById("grayout").classList.remove("hide");
-    document.getElementById("popup").classList.remove("hide");
+    showPopup();
     document.getElementById("popup").querySelector(".error").classList.add("hide");
     document.getElementById("popup").querySelector(".wait").classList.remove("hide");
     document.getElementById("popup").querySelector(".confirm").classList.add("hide");
@@ -60,8 +56,7 @@ function showWaitLoadingPopup(message) {
 }
 
 function showConfirmPopup(message, onAcceptCallback, onCloseCallback) {
-    document.getElementById("grayout").classList.remove("hide");
-    document.getElementById("popup").classList.remove("hide");
+    showPopup();
     document.getElementById("popup").querySelector(".error").classList.add("hide");
     document.getElementById("popup").querySelector(".wait").classList.add("hide");
     document.getElementById("popup").querySelector(".confirm").classList.remove("hide");
@@ -85,9 +80,24 @@ function showConfirmPopup(message, onAcceptCallback, onCloseCallback) {
     document.getElementById("popup").querySelector(".content").innerHTML = message;
 }
 
+function showPopup() {
+    document.getElementById("grayout").classList.remove("hide");
+    document.getElementById("popup").classList.remove("hide");
+
+    window.setTimeout(() => {
+        document.getElementById("grayout").style.opacity = "100%";
+        document.getElementById("popup").style.opacity = "100%";
+    }, 100);
+}
+
 function hidePopup() {
-    document.getElementById("grayout").classList.add("hide");
-    document.getElementById("popup").classList.add("hide");
+    document.getElementById("grayout").style.opacity = "0%";
+    document.getElementById("popup").style.opacity = "0%";
+
+    window.setTimeout(() => {
+        document.getElementById("grayout").classList.add("hide");
+        document.getElementById("popup").classList.add("hide");
+    }, 250);
 }
 
 function setPopupLoadingProgress(message, percent) {

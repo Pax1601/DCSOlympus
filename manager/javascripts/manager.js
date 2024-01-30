@@ -14,7 +14,8 @@ const { sleep } = require("./utils");
 class Manager {
     options = {
         logLocation: path.join(__dirname, "..", "manager.log"),
-        configLoaded: false
+        configLoaded: false,
+        operation: 'NONE'
     };
 
     activePage = null;
@@ -27,6 +28,7 @@ class Manager {
     passwordsPage = null;
     resultPage = null;
     instancesPage = null;
+    expertSettingsPage = null;
 
     constructor() {
         /* Simple framework to define callbacks to events directly in the .ejs files. When an event happens, e.g. a button is clicked, the signal function is called with the function
@@ -56,13 +58,12 @@ class Manager {
                 this.options.configLoaded = true;
             } catch (e) {
                 logger.error(`An error occurred while reading the options.json file: ${e}`);
-                showErrorPopup(`A critical error occurred, check ${this.options.logLocation} for more info.`)
+                showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${getManager().options.logLocation} for more info. </div>`)
             }
         }
 
         if (!this.options.configLoaded) {
-            /* Hide the loading page */
-            document.getElementById("loader").classList.add("hide");
+            this.hideLoadingPage();
 
             /* Show page to select basic vs expert mode */
             this.welcomePage = new ManagerPage(this, "./ejs/welcome.ejs");
@@ -100,13 +101,15 @@ class Manager {
                     return instance.installed && instance.error;
                 })) {
                     /* Ask the user for confirmation */
-                    showConfirmPopup("<div style='font-size: 18px; max-width: 100%;'>One or more of your Olympus instances are not up to date! </div> If you have just updated Olympus this is normal. Press Accept and the Manager will update your instances for you. <br> Press Close to update your instances manually using the Installation Wizard", async () => {
+                    showConfirmPopup("<div class='main-message'> One or more of your Olympus instances are not up to date! </div><div class='sub-message'> If you have just updated Olympus this is normal.<br><br> Press <b>Accept</b> and the Manager will update your instances for you. <br> Press <b>Close</b> to update your instances manually using the Installation Wizard</div>", async () => {
                         try {
+                            await sleep(300);
                             await DCSInstance.fixInstances();
                             location.reload();
                         } catch (err) {
                             logger.error(err);
-                            showErrorPopup(`An error occurred while trying to fix your installations. Please reinstall Olympus manually. <br><br> You can find more info in ${this.options.logLocation}`);
+                            await sleep(300);
+                            showErrorPopup(`<div class='main-message'>An error occurred while trying to fix your installations. Please reinstall Olympus manually. </div><div class='sub-message'> You can find more info in ${this.options.logLocation} </div>`);
                         }
                     })
                 }
@@ -115,7 +118,7 @@ class Manager {
                 this.options.editEnabled = this.options.instances.find(instance => instance.installed);
 
                 /* Hide the loading page */
-                document.getElementById("loader").classList.add("hide");
+                this.hideLoadingPage();
 
                 this.options.singleInstance = this.options.instances.length === 1;
 
@@ -129,6 +132,7 @@ class Manager {
                 this.passwordsPage = new WizardPage(this, "./ejs/passwords.ejs");
                 this.resultPage = new ManagerPage(this, "./ejs/result.ejs");
                 this.instancesPage = new ManagerPage(this, "./ejs/instances.ejs");
+                this.expertSettingsPage = new WizardPage(this, "./ejs/expertsettings.ejs");
 
                 /* Force the setting of the ports whenever the page is shown */
                 this.connectionsPage.options.onShow = () => {
@@ -136,6 +140,16 @@ class Manager {
                         this.setPort('client', this.options.activeInstance.clientPort);
                         this.setPort('backend', this.options.activeInstance.backendPort);
                     }
+                }
+                this.expertSettingsPage.options.onShow = () => {
+                    if (this.options.activeInstance) {
+                        this.setPort('client', this.options.activeInstance.clientPort);
+                        this.setPort('backend', this.options.activeInstance.backendPort);
+                    }
+                }
+
+                this.instancesPage.options.onShow = () => {
+                    this.updateInstances();
                 }
 
                 if (this.options.mode === "basic") {
@@ -171,7 +185,7 @@ class Manager {
             location.reload();
         } catch (err) {
             logger.log(err);
-            showErrorPopup(`A critical error occurred, check ${this.options.logLocation} for more info.`)
+            showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${getManager().options.logLocation} for more info. </div>`)
         }
     }
 
@@ -208,7 +222,7 @@ class Manager {
      * 
      */
     onInstallMenuClicked() {
-        this.options.install = true;
+        this.options.operation = 'INSTALL';
 
         if (this.options.instances.length == 0) {
             // TODO: show error
@@ -221,7 +235,7 @@ class Manager {
                 this.activePage.hide()
                 this.typePage.show();
             } else {
-                showConfirmPopup("<div style='font-size: 18px; max-width: 100%; margin-bottom: 8px;'> Olympus is already installed in this instance! </div> If you click Accept, it will be installed again and all changes, e.g. custom databases or mods support, will be lost. Are you sure you want to continue?",
+                showConfirmPopup("<div class='main-message'> Olympus is already installed in this instance! </div> <div class='sub-message'>If you click Accept, it will be installed again and all changes, e.g. custom databases or mods support, will be lost. Are you sure you want to continue?</div>",
                     () => {
                         this.activePage.hide()
                         this.typePage.show();
@@ -240,7 +254,8 @@ class Manager {
      */
     onEditMenuClicked() {
         this.activePage.hide()
-        this.options.install = false;
+        this.options.operation = 'EDIT';
+        delete this.options.activeInstance;
         this.settingsPage.show();
     }
 
@@ -267,7 +282,7 @@ class Manager {
         if (this.options.activeInstance)
             this.options.activeInstance.installationType = type;
         else {
-            showErrorPopup(`A critical error occurred, check ${this.options.logLocation} for more info.`);
+            showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${getManager().options.logLocation} for more info. </div>`);
         }
     }
 
@@ -278,16 +293,16 @@ class Manager {
         if (this.options.activeInstance)
             this.options.activeInstance.connectionsType = type;
         else {
-            showErrorPopup(`A critical error occurred, check ${this.options.logLocation} for more info.`);
+            showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${getManager().options.logLocation} for more info. </div>`);
         }
     }
 
     /* When the next button of a wizard page is clicked */
-    onNextClicked() {
+    async onNextClicked() {
         /* Choose which page to show depending on the active page */
         if (this.activePage == this.folderPage) {
             if (this.options.activeInstance.installed) {
-                showConfirmPopup("<div style='font-size: 18px; max-width: 100%; margin-bottom: 8px;'> Olympus is already installed in this instance! </div> If you click Accept, it will be installed again and all changes, e.g. custom databases or mods support, will be lost. Are you sure you want to continue?",
+                showConfirmPopup("<div class='main-message'> Olympus is already installed in this instance! </div> <div class='sub-message'>If you click Accept, it will be installed again and all changes, e.g. custom databases or mods support, will be lost. Are you sure you want to continue?</div>",
                     () => {
                         this.activePage.hide()
                         this.typePage.show();
@@ -309,48 +324,25 @@ class Manager {
                 else {
                     this.activePage.hide();
                     this.connectionsPage.show();
-                    this.connectionsPage.getElement().querySelector(".backend-address .checkbox").classList.toggle("checked", this.options.activeInstance.backendAddress === '*')
+                    (this.options.mode === 'basic'? this.connectionsPage: this.expertSettingsPage).getElement().querySelector(".backend-address .checkbox").classList.toggle("checked", this.options.activeInstance.backendAddress === '*')
                 }
             } else {
-                showErrorPopup(`A critical error occurred, check ${this.options.logLocation} for more info.`)
+                showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${getManager().options.logLocation} for more info. </div>`)
             }
         } else if (this.activePage == this.connectionsPage) {
-            this.options.activeInstance.checkClientPort().then(
-                (portFree) => {
-                    if (portFree) {
-                        return this.options.activeInstance.checkBackendPort();
-                    } else {
-                        return Promise.reject('Port not free');
-                    }
-                }).then((portFree) => {
-                    if (portFree) {
-                        this.activePage.hide();
-                        this.passwordsPage.show();
-                    } else {
-                        return Promise.reject('Port not free');
-                    }
-                }).catch(() => {
-                    showErrorPopup('Please, make sure both the client and backend ports are free!');
-                }
-                );
+            if (await this.checkPorts()) {
+                this.activePage.hide();
+                this.passwordsPage.show();
+            } 
         } else if (this.activePage == this.passwordsPage) {
-            if (this.options.activeInstance) {
-                if (this.options.activeInstance.installed && !this.options.activeInstance.arePasswordsEdited()) {
-                    this.activePage.hide();
-                    this.options.install ? this.options.activeInstance.install() : this.options.activeInstance.edit();
-                }
-                else {
-                    if (!this.options.activeInstance.arePasswordsSet()) {
-                        showErrorPopup('Please, make sure all passwords are set!');
-                    } else if (!this.options.activeInstance.arePasswordsDifferent()) {
-                        showErrorPopup('Please, set different passwords for the Game Master, Blue Commander, and Red Commander roles!');
-                    } else {
-                        this.activePage.hide();
-                        this.options.install ? this.options.activeInstance.install() : this.options.activeInstance.edit();
-                    }
-                }
-            } else {
-                showErrorPopup(`A critical error occurred, check ${this.options.logLocation} for more info.`)
+            if (await this.checkPasswords()) {
+                this.activePage.hide();
+                this.options.operation === 'INSTALL' ? this.options.activeInstance.install() : this.options.activeInstance.edit();
+            }
+        } else if (this.activePage == this.expertSettingsPage) {
+            if (await this.checkPorts() && await this.checkPasswords()) {
+                this.activePage.hide();
+                this.options.operation === 'INSTALL' ? this.options.activeInstance.install() : this.options.activeInstance.edit();
             }
         }
     }
@@ -358,51 +350,45 @@ class Manager {
     /* When the back button of a wizard page is clicked */
     onBackClicked() {
         this.activePage.hide();
+
+        /* If we have backed to the menu, instances or settings page, reset the active instance */
+        if ([this.instancesPage, this.settingsPage].includes(this.activePage.previousPage)) {
+            delete this.options.activeInstance;
+        }
+
         this.activePage.previousPage.show(true); // Don't change the previous page
         this.updateInstances();
     }
 
     onCancelClicked() {
-        location.reload();
+        this.activePage.hide();
+        delete this.options.activeInstance;
+        if (this.options.mode === "basic") 
+            this.menuPage.show(true);
+        else
+            this.instancesPage.show(true);
+        this.updateInstances();
     }
 
     onGameMasterPasswordChanged(value) {
-        if (this.options.activeInstance) {
+        if (this.options.activeInstance)
             this.options.activeInstance.setGameMasterPassword(value);
-            if (!this.options.activeInstance.blueCommanderPasswordEdited)
-                this.passwordsPage.getElement().querySelector(".blue-commander input").value = "";
-            if (!this.options.activeInstance.redCommanderPasswordEdited)
-                this.passwordsPage.getElement().querySelector(".red-commander input").value = "";
-        }
-        else {
-            showErrorPopup(`A critical error occurred, check ${this.options.logLocation} for more info.`);
-        }
+        else
+            showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${getManager().options.logLocation} for more info. </div>`);
     }
 
     onBlueCommanderPasswordChanged(value) {
-        if (this.options.activeInstance) {
+        if (this.options.activeInstance)
             this.options.activeInstance.setBlueCommanderPassword(value);
-            if (!this.options.activeInstance.gameMasterPasswordEdited)
-                this.passwordsPage.getElement().querySelector(".game-master input").value = "";
-            if (!this.options.activeInstance.redCommanderPasswordEdited)
-                this.passwordsPage.getElement().querySelector(".red-commander input").value = "";
-        }
-        else {
-            showErrorPopup(`A critical error occurred, check ${this.options.logLocation} for more info.`);
-        }
+        else 
+            showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${getManager().options.logLocation} for more info. </div>`);
     }
 
     onRedCommanderPasswordChanged(value) {
-        if (this.options.activeInstance) {
+        if (this.options.activeInstance) 
             this.options.activeInstance.setRedCommanderPassword(value);
-            if (!this.options.activeInstance.gameMasterPasswordEdited)
-                this.passwordsPage.getElement().querySelector(".game-master input").value = "";
-            if (!this.options.activeInstance.blueCommanderPasswordEdited)
-                this.passwordsPage.getElement().querySelector(".blue-commander input").value = "";
-        }
-        else {
-            showErrorPopup(`A critical error occurred, check ${this.options.logLocation} for more info.`);
-        }
+        else 
+            showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${getManager().options.logLocation} for more info. </div>`);
     }
 
     /* When the client port input value is changed */
@@ -423,21 +409,60 @@ class Manager {
             } else {
                 this.options.activeInstance.backendAddress = 'localhost';
             }
-            this.connectionsPage.getElement().querySelector(".note.warning").classList.toggle("hide", this.options.activeInstance.backendAddress !== '*')
-            this.connectionsPage.getElement().querySelector(".backend-address .checkbox").classList.toggle("checked", this.options.activeInstance.backendAddress === '*')
+            if (this.options.mode === 'basic') {
+                this.connectionsPage.getElement().querySelector(".note.warning").classList.toggle("hide", this.options.activeInstance.backendAddress !== '*')
+                this.connectionsPage.getElement().querySelector(".backend-address .checkbox").classList.toggle("checked", this.options.activeInstance.backendAddress === '*')
+            } else {
+                this.expertSettingsPage.getElement().querySelector(".backend-address .checkbox").classList.toggle("checked", this.options.activeInstance.backendAddress === '*')
+            }
         } else {
-            showErrorPopup(`A critical error occurred, check ${this.options.logLocation} for more info.`)
+            showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${getManager().options.logLocation} for more info. </div>`)
         }
     }
 
     /* When the "Return to manager" button is pressed */
-    onReturnClicked() {
-        location.reload();
+    async onReturnClicked() {
+        await this.reload();
+        this.activePage.hide();
+        this.menuPage.show();
     }
 
     /* When the "Close manager" button is pressed */
     onCloseManagerClicked() {
         document.querySelector('.close').click();
+    }
+
+    async checkPorts() {
+        var clientPortFree = await this.options.activeInstance.checkClientPort();
+        var backendPortFree = await this.options.activeInstance.checkBackendPort();
+        if (clientPortFree && backendPortFree) {
+            return true;
+        } else {
+            showErrorPopup(`<div class='main-message'> Please, make sure both the client and backend ports are free!</div><div class='sub-message'>If ports are already in use, Olympus will not be able to communicated correctly.</div>`);
+            return false;
+        }
+    }
+
+    async checkPasswords() {
+        if (this.options.activeInstance) {
+            if (this.options.activeInstance.installed && !this.options.activeInstance.arePasswordsEdited()) {
+                return true;
+            }
+            else {
+                if (!this.options.activeInstance.arePasswordsSet()) {
+                    showErrorPopup(`<div class='main-message'>Please, make sure all passwords are set!</div><div class='sub-message'>The role users will fulfill depends on the password they enter at login. </div>`);
+                    return false;
+                } else if (!this.options.activeInstance.arePasswordsDifferent()) {
+                    showErrorPopup(`<div class='main-message'>Please, set different passwords! </div><div class='sub-message'>The role users will fulfill depends on the password they enter at login. </div>`);
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        } else {
+            showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${getManager().options.logLocation} for more info. </div>`)
+            return false;
+        }
     }
 
     async onStartServerClicked(name) {
@@ -467,29 +492,31 @@ class Manager {
     async onEditClicked(name) {
         var instance = await this.getClickedInstance(name);
         if (instance.webserverOnline || instance.backendOnline) {
-            showErrorPopup("Error, the selected Olympus instance is currently active, please stop Olympus before editing it!")
+            showErrorPopup("<div class='main-message'>Error, the selected Olympus instance is currently active </div><div class='sub-message'> Please stop Olympus before editing it! </div>")
         } else {
+            
             this.options.activeInstance = instance;
-            this.options.install = false;
+            this.options.operation = 'EDIT';
             this.activePage.hide();
-            this.typePage.show();
+            (this.options.mode === 'basic'? this.typePage: this.expertSettingsPage).show();
         }
     }
 
     async onInstallClicked(name) {
         var instance = await this.getClickedInstance(name);
         this.options.activeInstance = instance;
-        this.options.install = true;
+        this.options.operation = 'INSTALL';
         this.options.singleInstance = false;
         this.activePage.hide();
-        this.typePage.show();
+        (this.options.mode === 'basic'? this.typePage: this.expertSettingsPage).show();
     }
 
     async onUninstallClicked(name) {
         var instance = await this.getClickedInstance(name);
-
+        this.options.activeInstance = instance;
+        this.options.operation = 'UNINSTALL';
         if (instance.webserverOnline || instance.backendOnline)
-            showErrorPopup("Error, the selected Olympus instance is currently active, please stop Olympus before uninstalling it!")
+            showErrorPopup("<div class='main-message'>Error, the selected Olympus instance is currently active </div><div class='sub-message'> Please stop Olympus before removing it! </div>")
         else
             await instance.uninstall();
     }
@@ -530,11 +557,11 @@ class Manager {
             this.options.activeInstance.setBackendPort(value);
         }
 
-        var successEls = this.connectionsPage.getElement().querySelector(`.${port}-port`).querySelectorAll(".success");
+        var successEls = (this.options.mode === 'basic'? this.connectionsPage: this.expertSettingsPage).getElement().querySelector(`.${port}-port`).querySelectorAll(".success");
         for (let i = 0; i < successEls.length; i++) {
             successEls[i].classList.toggle("hide", !success);
         }
-        var errorEls = this.connectionsPage.getElement().querySelector(`.${port}-port`).querySelectorAll(".error");
+        var errorEls = (this.options.mode === 'basic'? this.connectionsPage: this.expertSettingsPage).getElement().querySelector(`.${port}-port`).querySelectorAll(".error");
         for (let i = 0; i < errorEls.length; i++) {
             errorEls[i].classList.toggle("hide", success);
         }
@@ -583,8 +610,11 @@ class Manager {
         }
     }
 
-    reload() {
-        this.activePage.show();
+    async reload() {
+        await DCSInstance.reloadInstances();
+
+        this.options.installEnabled = true;
+        this.options.editEnabled = this.options.instances.find(instance => instance.installed);
     }
 
     setLoadingProgress(message, percent) {
@@ -593,6 +623,14 @@ class Manager {
             var style = document.querySelector('#loader .loading-bar').style;
             style.setProperty('--percent', `${percent}%`);
         }
+    }
+
+    hideLoadingPage() {
+        /* Hide the loading page */
+        document.getElementById("loader").style.opacity = "0%";
+        window.setTimeout(() => {
+            document.getElementById("loader").classList.add("hide");
+        }, 250);        
     }
 }
 

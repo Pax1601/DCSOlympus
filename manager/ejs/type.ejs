@@ -15,10 +15,10 @@
         </div>
     </div>
     <div class="wizard-inputs">
-        <div class="button radio singleplayer <%= activeInstance.installationType === 'singleplayer'? 'selected': '' %>" onclick="signal('onInstallTypeClicked', 'singleplayer')">
+        <div class="button radio singleplayer selected" onclick="signal('onInstallTypeClicked', 'singleplayer')">
             Singleplayer
         </div>
-        <div class="button radio multiplayer <%= activeInstance.installationType !== 'singleplayer'? 'selected': '' %>" onclick="signal('onInstallTypeClicked', 'multiplayer')">
+        <div class="button radio multiplayer" onclick="signal('onInstallTypeClicked', 'multiplayer')">
             Multiplayer
         </div>
     </div>
