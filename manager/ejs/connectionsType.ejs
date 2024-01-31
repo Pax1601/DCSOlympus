@@ -4,7 +4,7 @@
 <div>
     <div class="instructions">
         <div class="step">
-            Step <%= singleInstance? "2": "3" %> of <%= singleInstance? "4": "5" %>
+            Step <%= instances.length === 1? "2": "3" %> of <%= instances.length === 1? "4": "5" %>
         </div>
         <div class="title">
             Do you want to set port and address settings?
