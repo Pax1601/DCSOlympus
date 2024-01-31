@@ -28,14 +28,15 @@ class DCSInstance {
         return DCSInstance.instances;
     }
 
+    /** Static asynchronous method to reload all DCS instances. It will not detect any new instance, but it will determine the 
+     * installation status of the existing instances.
+     * 
+     */
     static async reloadInstances() {
         var instances = await this.getInstances();
-        console.log(instances);
         for (let instance of instances) {
             await instance.checkInstallation();
-            console.log(instance.installed);
         }
-        return true;
     }
 
     /** Static asynchronous method to find all existing DCS instances
@@ -53,12 +54,12 @@ class DCSInstance {
             const searchpath = result[shellFoldersKey]['values'][saveGamesKey]['value'];
             var folders = fs.readdirSync(searchpath).map((folder) => {return path.join(searchpath, folder);});
             var instances = [];
-            folders = folders.concat(getManager().options.additionalDCSInstances);
+            folders = folders.concat(getManager().getAdditionalDCSInstances());
 
             /* A DCS Instance is created if either the appsettings.lua or serversettings.lua file is detected */
             for (let i = 0; i < folders.length; i++) {
                 const folder = folders[i];
-                if (fs.existsSync(path.join(folder, "Config", "appsettings.lua")) || fs.existsSync(path.join(folder, "Config", "serversettings.lua")) || getManager().options.additionalDCSInstances.includes(folder)) {
+                if (fs.existsSync(path.join(folder, "Config", "appsettings.lua")) || fs.existsSync(path.join(folder, "Config", "serversettings.lua")) || getManager().getAdditionalDCSInstances().includes(folder)) {
                     logger.log(`Found instance in ${folder}, checking for Olympus`)
                     var newInstance = new DCSInstance(path.join(folder));
 
@@ -70,7 +71,7 @@ class DCSInstance {
             }
         } else {
             logger.error("An error occured while trying to fetch the location of the DCS instances.")
-            throw "An error occured while trying to fetch the location of the DCS instances.";
+            showErrorPopup(`<div class='main-message'>An error occured while trying to fetch the location of the DCS instances. </div><div class='sub-message'> You can find more info in ${getManager().getLogLocation()} </div>`);
         }
         getManager().setLoadingProgress(`All DCS instances found!`, 100);
 
@@ -148,8 +149,15 @@ class DCSInstance {
      * @returns true if the instance has any error or is outdated
      */
     async checkInstallation() {
+        /* Reset values */
+        this.installed = false;
+        this.error = false;
+        this.installationType = 'singleplayer';
+        this.connectionsType = 'auto';
+        
         /* Check if the olympus.json file is detected. If true, Olympus is considered to be installed */
         if (fs.existsSync(path.join(this.folder, "Config", "olympus.json"))) {
+            
             getManager().setLoadingProgress(`Olympus installed in ${this.folder}`);
             try {
                 /* Read the olympus.json */
@@ -158,6 +166,11 @@ class DCSInstance {
                 this.backendPort = config["server"]["port"];
                 this.backendAddress = config["server"]["address"];
                 this.gameMasterPasswordHash = config["authentication"]["gameMasterPassword"];
+
+                this.gameMasterPasswordEdited = false;
+                this.blueCommanderPasswordEdited = false;
+                this.redCommanderPasswordEdited = false;
+
             } catch (err) {
                 showErrorPopup(`<div class='main-message'>A critical error has occurred while reading your Olympus configuration file. </div><div class='sub-message'> Please, manually reinstall olympus in ${this.folder}. </div>`)
                 logger.error(err)
@@ -205,7 +218,6 @@ class DCSInstance {
      * 
      * @param {Number} newPort The new client port to set
      */
-
     setClientPort(newPort) {
         logger.log(`Instance ${this.folder} client port set to ${newPort}`)
         this.clientPort = newPort;
@@ -374,7 +386,7 @@ class DCSInstance {
      * 
      */
     async getData() {
-        if (this.installed && !this.error) {
+        if (this.installed) {
             fetchWithTimeout(`http://localhost:${this.clientPort}`, { timeout: 250 })
                 .then(async (response) => {
                     this.webserverOnline = (await response.text()).includes("Olympus");
@@ -485,13 +497,13 @@ class DCSInstance {
             logger.log(`Editing completed successfully`);
             hidePopup();
 
-            getManager().options.mode === "basic"? getManager().settingsPage.show(): getManager().instancesPage.show();
+            getManager().getMode() === "basic"? getManager().settingsPage.show(): getManager().instancesPage.show();
         } catch (err) {
             logger.log(`An error occurred during editing: ${err}`);
             getManager().getActiveInstance().error = true;
 
-            showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${getManager().options.logLocation} for more info. </div>`)
-            getManager().options.mode === "basic"? getManager().settingsPage.show(): getManager().instancesPage.show();
+            showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${getManager().getLogLocation()} for more info. </div>`)
+            getManager().getMode() === "basic"? getManager().settingsPage.show(): getManager().instancesPage.show();
         }
     }
 
@@ -526,7 +538,7 @@ class DCSInstance {
             await sleep(500);
             logger.log(`Installation completed successfully`);
             hidePopup();
-            if (getManager().options.mode === 'basic') {
+            if (getManager().getMode() === 'basic') {
                 getManager().resultPage.show();
                 getManager().resultPage.getElement().querySelector(".result-summary.success").classList.remove("hide");
                 getManager().resultPage.getElement().querySelector(".result-summary.error").classList.add("hide");
@@ -538,7 +550,7 @@ class DCSInstance {
         } catch (err) {
             logger.log(`An error occurred during installation: ${err}`);
             hidePopup();
-            if (getManager().options.mode === 'basic') {
+            if (getManager().getMode() === 'basic') {
                 getManager().resultPage.show();
                 getManager().resultPage.getElement().querySelector(".result-summary.success").classList.add("hide");
                 getManager().resultPage.getElement().querySelector(".result-summary.error").classList.remove("hide");
@@ -581,7 +593,7 @@ class DCSInstance {
 
                 hidePopup();
                 await getManager().reload();
-                if (getManager().options.mode === 'basic') 
+                if (getManager().getMode() === 'basic') 
                     getManager().settingsPage.show();
                 else 
                     getManager().instancesPage.show();
@@ -589,12 +601,14 @@ class DCSInstance {
             } catch (err) {
                 logger.error(err)
                 showErrorPopup(`<div class='main-message'>An error has occurred while uninstalling the Olympus instance. </div><div class='sub-message'> Make sure Olympus and DCS are not running. </div><div class='sub-message'>You can find more info in ${path.join(__dirname, "..", "manager.log")} </div>`, () => {
-                    if (getManager().options.mode === 'basic') 
+                    if (getManager().getMode() === 'basic') 
                         getManager().settingsPage.show();
                     else 
                         getManager().instancesPage.show();
                 });
-            }
+            } 
+        }, () => {
+            getManager().setState('IDLE');
         });
     }
 }
