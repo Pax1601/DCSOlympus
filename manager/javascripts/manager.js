@@ -116,11 +116,15 @@ class Manager {
                 /* Ask the user for confirmation */
                 showConfirmPopup("<div class='main-message'> One or more of your Olympus instances are not up to date! </div><div class='sub-message'> If you have just updated Olympus this is normal.<br><br> Press <b>Accept</b> and the Manager will update your instances for you. <br> Press <b>Close</b> to update your instances manually using the Installation Wizard</div>", async () => {
                     try {
+                        /* Nested popup calls need to wait for animation to complete */
                         await sleep(300);
+
                         await DCSInstance.fixInstances();
                         location.reload();
                     } catch (err) {
                         logger.error(err);
+
+                        /* Nested popup calls need to wait for animation to complete */
                         await sleep(300);
                         showErrorPopup(`<div class='main-message'>An error occurred while trying to fix your installations. Please reinstall Olympus manually. </div><div class='sub-message'> You can find more info in ${this.options.logLocation} </div>`);
                     }

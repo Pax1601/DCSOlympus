@@ -501,7 +501,7 @@ class DCSInstance {
         } catch (err) {
             logger.log(`An error occurred during editing: ${err}`);
             getManager().getActiveInstance().error = true;
-
+            
             showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${getManager().getLogLocation()} for more info. </div>`)
             getManager().getMode() === "basic"? getManager().settingsPage.show(): getManager().instancesPage.show();
         }
@@ -599,7 +599,10 @@ class DCSInstance {
                     getManager().instancesPage.show();
                 return true;
             } catch (err) {
-                logger.error(err)
+                logger.error(err);
+
+                /* Nested popup calls need to wait for animation to complete */
+                await sleep(300);
                 showErrorPopup(`<div class='main-message'>An error has occurred while uninstalling the Olympus instance. </div><div class='sub-message'> Make sure Olympus and DCS are not running. </div><div class='sub-message'>You can find more info in ${path.join(__dirname, "..", "manager.log")} </div>`, () => {
                     if (getManager().getMode() === 'basic') 
                         getManager().settingsPage.show();

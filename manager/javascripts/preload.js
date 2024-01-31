@@ -10,6 +10,7 @@ const AdmZip = require("adm-zip");
 const { Octokit } = require('octokit');
 const { logger } = require("./filesystem");
 const { getManager } = require('./managerfactory');
+const { sleep } = require('./utils');
 
 const VERSION = "{{OLYMPUS_VERSION_NUMBER}}";
 logger.log(`Running in ${__dirname}`);
@@ -71,7 +72,10 @@ async function updateOlympusBeta() {
     const date1 = new Date(artifact.updated_at);
     const date2 = fs.statSync(".").mtime;
     if (date1 > date2) {
-        showConfirmPopup(`<div class='main-message'> Looks like you are running a beta version of Olympus!</div><div class='sub-message'> Latest beta artifact timestamp of: <b style="color: orange">${date1.toLocaleString()}</b> <br> Your installation timestamp: <b style="color: orange">${date2.toLocaleString()}</b> <br><br> Do you want to update to the newest beta version?</div>`, () => {
+        showConfirmPopup(`<div class='main-message'> Looks like you are running a beta version of Olympus!</div><div class='sub-message'> Latest beta artifact timestamp of: <b style="color: orange">${date1.toLocaleString()}</b> <br> Your installation timestamp: <b style="color: orange">${date2.toLocaleString()}</b> <br><br> Do you want to update to the newest beta version?</div>`, async () => {
+            /* Nested popup calls need to wait for animation to complete */
+            await sleep(300);
+
             /* Run the browser and download the artifact */ //TODO: try and directly download the file from code rather than using the browser 
             exec(`start https://github.com/Pax1601/DCSOlympus/actions/runs/${artifact.workflow_run.id}/artifacts/${artifact.id}`)
             showConfirmPopup(`<div class='main-message'> A browser window was opened to download the beta artifact. </div><div class='sub-message'> Please wait for the download to complete, then press "Accept" and select the downloaded beta artifact.</div>`,
@@ -222,8 +226,7 @@ const ipc = {
         /* From main to render. */
         'receive': [
             'event:maximized',
-            'event:unmaximized',
-            'check-version'
+            'event:unmaximized'
         ],
         /* From render to main and back again. */
         'sendReceive': []
@@ -262,6 +265,7 @@ contextBridge.exposeInMainWorld(
 window.addEventListener('DOMContentLoaded', async () => {
     document.getElementById("loader").classList.remove("hide");
     await getManager().start();
+    await checkVersion();
 })
 
 window.addEventListener('resize', () => {
@@ -291,8 +295,3 @@ function computePagesHeight() {
         pages[i].style.height = (window.innerHeight - (titleBar.clientHeight + header.clientHeight)) + "px";
     }
 }
-
-ipcRenderer.on("check-version", () => {
-    /* Check if a new version is available */
-    checkVersion();
-})
