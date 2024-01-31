@@ -17,8 +17,11 @@ export class Dropdown {
     #hidden: boolean = false;
     #text!: HTMLElement;
 
-    constructor(config:dropdownConfig) {
-        const {ID, callback, options, defaultText} = config;
+    constructor(config: dropdownConfig) {
+        const callback = config.callback;
+        const defaultText = config.defaultText;
+        const ID = config.ID;
+        const options = config.options;
 
         if (ID === null)
             this.#container = this.#createElement(defaultText);
@@ -64,9 +67,9 @@ export class Dropdown {
     setOptions(optionsList: string[], sort: null | "string" | "number" | "string+number" = "string", labelsList: string[] | undefined = undefined) {
         if (sort != null) {
             /* If labels are provided, sort by labels, else by options */
-            if (labelsList && labelsList.length == optionsList.length) 
+            if (labelsList && labelsList.length == optionsList.length)
                 this.#sortByLabels(optionsList, sort, labelsList);
-            else 
+            else
                 this.#sortByOptions(optionsList, sort);
         } else {
             this.#optionsList = optionsList;
@@ -266,7 +269,7 @@ export class Dropdown {
         /* Create a temporary deepcopied list. This is necessary because unlike options, labels can be repeated. 
         Once matched, labels are removed from the temporary array to avoid repeating the same key multiple times */
         var tempLabelsList: (string | undefined)[] = JSON.parse(JSON.stringify(labelsList));
-        
+
         if (sort === "number") {
             this.#labelsList = JSON.parse(JSON.stringify(this.#numberSort(labelsList)));
         } else if (sort === "string+number") {
@@ -277,7 +280,7 @@ export class Dropdown {
 
         /* Remap the options list to match their labels */
         this.#optionsList = optionsList?.map((option: string, idx: number) => {
-            let originalIdx = tempLabelsList.indexOf(this.#labelsList? this.#labelsList[idx]: "");
+            let originalIdx = tempLabelsList.indexOf(this.#labelsList ? this.#labelsList[idx] : "");
             /* After a match has been completed, set the label to undefined so it won't be matched again. This allows to have repeated labels */
             tempLabelsList[originalIdx] = undefined;
             return optionsList[originalIdx];
@@ -320,7 +323,7 @@ export class Dropdown {
 
             if (matchesB != null && matchesB?.length > 0)
                 indexB = elementB.search(matchesB[0]);
-            
+
             /* If the two strings are the same up to the number, sort them using the number value, else sort them according to the string */
             if ((matchesA != null && matchesA?.length > 0) && (matchesB != null && matchesB?.length > 0) && elementA.substring(0, indexA) === elementB.substring(0, indexB)) {
                 const a = parseInt(matchesA[0] ?? 0);

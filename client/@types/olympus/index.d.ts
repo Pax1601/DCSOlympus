@@ -3,6 +3,9 @@ declare module "map/boxselect" {
 }
 declare module "contextmenus/contextmenu" {
     import { LatLng } from "leaflet";
+    export type contextMenuConfig = {
+        "id": string | HTMLElement;
+    };
     /** Base class for map contextmenus. By default it is empty and requires to be extended. */
     export class ContextMenu {
         #private;
@@ -10,7 +13,7 @@ declare module "contextmenus/contextmenu" {
          *
          * @param ID - the ID of the HTML element which will contain the context menu
          */
-        constructor(ID: string);
+        constructor(ID: string | HTMLElement);
         /** Show the contextmenu on top of the map, usually at the location where the user has clicked on it.
          *
          * @param x X screen coordinate of the top left corner of the context menu. If undefined, use the old value
@@ -1523,6 +1526,50 @@ declare module "map/markers/destinationpreviewHandle" {
         createIcon(): void;
     }
 }
+declare module "other/manager" {
+    export class Manager {
+        #private;
+        constructor();
+        add(name: string, item: any): this;
+        get(name: string): any;
+        getAll(): {
+            [key: string]: any;
+        };
+    }
+}
+declare module "other/eventsmanager" {
+    import { Manager } from "other/manager";
+    export abstract class EventsManager extends Manager {
+        constructor();
+    }
+}
+declare module "panels/paneleventsmanager" {
+    import { Listener } from "interfaces";
+    import { EventsManager } from "other/eventsmanager";
+    export class PanelEventsManager extends EventsManager {
+        constructor();
+        on(eventName: string, listener: Listener): void;
+        trigger(eventName: string, contextData: object): void;
+    }
+}
+declare module "panels/panel" {
+    import { Dropdown, dropdownConfig } from "controls/dropdown";
+    import { PanelEventsManager } from "panels/paneleventsmanager";
+    export interface PanelInterface {
+    }
+    export class Panel {
+        #private;
+        constructor(ID: string);
+        createDropdown(config: dropdownConfig): Dropdown;
+        show(): void;
+        hide(): void;
+        toggle(): void;
+        toggleByContext(): void;
+        getElement(): HTMLElement;
+        getVisible(): boolean;
+        getEventsManager(): PanelEventsManager;
+    }
+}
 declare module "map/map" {
     import * as L from "leaflet";
     import { MapContextMenu } from "contextmenus/mapcontextmenu";
@@ -1534,6 +1581,7 @@ declare module "map/map" {
     import { CoalitionArea } from "map/coalitionarea/coalitionarea";
     import { CoalitionAreaContextMenu } from "contextmenus/coalitionareacontextmenu";
     import { AirbaseSpawnContextMenu } from "contextmenus/airbasespawnmenu";
+    import { Panel } from "panels/panel";
     export type MapMarkerVisibilityControl = {
         "category"?: string;
         "image": string;
@@ -1550,6 +1598,7 @@ declare module "map/map" {
          * @param ID - the ID of the HTML element which will contain the context menu
          */
         constructor(ID: string);
+        createPanel(ID: string): Panel;
         getLeaflet(): typeof L;
         addVisibilityOption(option: string, defaultValue: boolean): void;
         setLayer(layerName: string): void;
@@ -1602,48 +1651,6 @@ declare module "mission/bullseye" {
         createIcon(): void;
         setCoalition(coalition: string): void;
         getCoalition(): string;
-    }
-}
-declare module "other/manager" {
-    export class Manager {
-        #private;
-        constructor();
-        add(name: string, item: any): this;
-        get(name: string): any;
-        getAll(): {
-            [key: string]: any;
-        };
-    }
-}
-declare module "other/eventsmanager" {
-    import { Manager } from "other/manager";
-    export abstract class EventsManager extends Manager {
-        constructor();
-    }
-}
-declare module "panels/paneleventsmanager" {
-    import { Listener } from "interfaces";
-    import { EventsManager } from "other/eventsmanager";
-    export class PanelEventsManager extends EventsManager {
-        constructor();
-        on(eventName: string, listener: Listener): void;
-        trigger(eventName: string, contextData: object): void;
-    }
-}
-declare module "panels/panel" {
-    import { PanelEventsManager } from "panels/paneleventsmanager";
-    export interface PanelInterface {
-    }
-    export abstract class Panel {
-        #private;
-        constructor(ID: string);
-        show(): void;
-        hide(): void;
-        toggle(): void;
-        toggleByContext(): void;
-        getElement(): HTMLElement;
-        getVisible(): boolean;
-        getEventsManager(): PanelEventsManager;
     }
 }
 declare module "popups/popup" {
@@ -2577,24 +2584,24 @@ declare module "panels/unitlistpanel" {
     }
 }
 declare module "context/contextmenumanager" {
-    import { ContextMenu } from "contextmenus/contextmenu";
+    import { ContextMenu, contextMenuConfig } from "contextmenus/contextmenu";
     import { Manager } from "other/manager";
-    export type contextMenuTypes = {
-        "map"?: ContextMenu | false;
-        "unit"?: ContextMenu | false;
+    export type contextMenuTypes = "map" | "unit";
+    export type contextMenuManagerConfig = {
+        [key in contextMenuTypes]?: contextMenuConfig | false;
     };
     export class ContextMenuManager extends Manager {
-        constructor(items?: contextMenuTypes);
-        add(name: string, contextMenu: ContextMenu): this;
+        constructor(items?: contextMenuManagerConfig);
+        add(name: string, contextMenu: ContextMenu | false): this;
         hideAll(): void;
     }
 }
 declare module "context/context" {
-    import { ContextMenuManager } from "context/contextmenumanager";
+    import { ContextMenuManager, contextMenuManagerConfig } from "context/contextmenumanager";
     export type contextConfig = {
         allowUnitCopying?: boolean;
         allowUnitPasting?: boolean;
-        contextMenuManager?: ContextMenuManager;
+        contextMenus?: contextMenuManagerConfig;
         onSet?: CallableFunction;
         onUnset?: CallableFunction;
         useMouseInfoPanel?: boolean;
@@ -2728,13 +2735,9 @@ declare module "converter/converter" {
     }
 }
 declare module "creator/creator" {
-    import { ContextMenuManager, contextMenuTypes } from "context/contextmenumanager";
-    import { ContextMenu } from "contextmenus/contextmenu";
     import { Dropdown, dropdownConfig } from "controls/dropdown";
     export class Creator {
         createDropdown(config: dropdownConfig): Dropdown;
-        createContextMenu(ID: string): ContextMenu;
-        createContextMenuManager(config?: contextMenuTypes): ContextMenuManager;
     }
 }
 declare module "other/utils" {

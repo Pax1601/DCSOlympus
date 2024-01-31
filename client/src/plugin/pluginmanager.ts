@@ -9,13 +9,13 @@ type PluginToolbarItemConfig = {
 }
 
 class PluginToolbarItem {
-    
-    #config:PluginToolbarItemConfig;
-    #container: HTMLElement = <HTMLElement>document.getElementById("plugin-toolbar");
-    #element!:HTMLElement;
-    #plugin:OlympusPlugin;
 
-    constructor(plugin:OlympusPlugin, config:PluginToolbarItemConfig) {
+    #config: PluginToolbarItemConfig;
+    #container: HTMLElement = <HTMLElement>document.getElementById("plugin-toolbar");
+    #element!: HTMLElement;
+    #plugin: OlympusPlugin;
+
+    constructor(plugin: OlympusPlugin, config: PluginToolbarItemConfig) {
         this.#config = config;
         this.#plugin = plugin;
     }
@@ -28,7 +28,7 @@ class PluginToolbarItem {
         return this.#plugin;
     }
 
-    insert() : HTMLElement {
+    insert(): HTMLElement {
         this.#element = document.createElement("div");
         const el = this.getElement();
         this.#container.appendChild(el);
@@ -40,10 +40,12 @@ class PluginToolbarItem {
             }
         }));
 
-        SVGInjector( el.querySelectorAll(`img[src$=".svg"]`) );
-        el.querySelectorAll("button").forEach((btn:HTMLElement) => {
+        SVGInjector(el.querySelectorAll(`img[src$=".svg"]`));
+        el.querySelectorAll("button").forEach((btn: HTMLElement) => {
             if (!btn.title) btn.title = this.getPlugin().getName();
         });
+
+        this.#container.classList.remove("hide");
 
         return el;
     }
@@ -71,12 +73,12 @@ export class PluginsManager extends Manager {
         };
         xhr.send();
 
-        document.addEventListener("pluginToolbarItemInserted", (ev:CustomEventInit) => {
+        document.addEventListener("pluginToolbarItemInserted", (ev: CustomEventInit) => {
             document.getElementById("plugin-toolbar")?.classList.remove("hide");
         });
     }
 
-    createPluginToolbarItem(plugin:OlympusPlugin, itemConfig:PluginToolbarItemConfig): PluginToolbarItem {
+    createPluginToolbarItem(plugin: OlympusPlugin, itemConfig: PluginToolbarItemConfig): PluginToolbarItem {
         return new PluginToolbarItem(plugin, itemConfig);
     }
 
@@ -105,7 +107,7 @@ export class PluginsManager extends Manager {
                         console.log("An error occured while loading a plugin from " + pluginName);
                         console.log(error);
                     }
-                     
+
                     /* If the plugin was loaded, try to initialize it */
                     if (plugin != null) {
                         try {

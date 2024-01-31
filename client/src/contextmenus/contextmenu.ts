@@ -1,5 +1,9 @@
 import { LatLng } from "leaflet";
 
+export type contextMenuConfig = {
+    "id": string | HTMLElement
+}
+
 /** Base class for map contextmenus. By default it is empty and requires to be extended. */
 export class ContextMenu {
     #container: HTMLElement | null;
@@ -12,8 +16,13 @@ export class ContextMenu {
      * 
      * @param ID - the ID of the HTML element which will contain the context menu
      */
-    constructor(ID: string){
-        this.#container = document.getElementById(ID);
+    constructor(ID: string | HTMLElement) {
+
+        if (ID instanceof HTMLElement)
+            this.#container = ID
+        else
+            this.#container = document.getElementById(ID);
+
         this.hide();
     }
 

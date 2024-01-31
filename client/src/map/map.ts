@@ -21,6 +21,7 @@ import { TouchBoxSelect } from "./touchboxselect";
 import { DestinationPreviewHandle } from "./markers/destinationpreviewHandle";
 import { ContextActionSet } from "../unit/contextactionset";
 import { ContextMenu } from "../contextmenus/contextmenu";
+import { Panel } from "../panels/panel";
 
 var hasTouchScreen = false;
 //if ("maxTouchPoints" in navigator) 
@@ -243,6 +244,10 @@ export class Map extends L.Map {
         this.addVisibilityOption(SHOW_UNITS_ACQUISITION_RINGS, true);
         this.addVisibilityOption(HIDE_UNITS_SHORT_RANGE_RINGS, true);
         /* this.addVisibilityOption(FILL_SELECTED_RING, false); Removed since currently broken: TODO fix!*/
+    }
+
+    createPanel(ID: string) {
+        return new Panel(ID);
     }
 
     getLeaflet() {

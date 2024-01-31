@@ -214,9 +214,11 @@ export class OlympusApp {
 
         this.#contextManager = new ContextManager();
         this.#contextManager.add("olympus", {
-            "contextMenuManager": new ContextMenuManager({
-                "map": new ContextMenu("map-contextmenu")
-            }),
+            "contextMenus": {
+                "map": {
+                    "id": "map-contextmenu"
+                }
+            },
             "onUnset": () => {
                 this.getPanelsManager().hideAll();
             }

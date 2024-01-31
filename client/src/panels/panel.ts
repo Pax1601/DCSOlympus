@@ -1,10 +1,11 @@
 import { getApp } from "..";
+import { Dropdown, dropdownConfig } from "../controls/dropdown";
 import { PanelEventsManager } from "./paneleventsmanager";
 
 export interface PanelInterface {
 }
 
-export abstract class Panel {
+export class Panel {
 
     #element: HTMLElement
     #eventsManager!: PanelEventsManager;
@@ -13,6 +14,10 @@ export abstract class Panel {
         this.#element = <HTMLElement>document.getElementById(ID);
 
         this.#eventsManager = new PanelEventsManager();
+    }
+
+    createDropdown(config: dropdownConfig) {
+        return new Dropdown(config);
     }
 
     show() {

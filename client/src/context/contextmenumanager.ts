@@ -1,25 +1,25 @@
-import { ContextMenu } from "../contextmenus/contextmenu";
+import { ContextMenu, contextMenuConfig } from "../contextmenus/contextmenu";
 import { Manager } from "../other/manager";
 
-export type contextMenuTypes = {
-    "map"?: ContextMenu | false,
-    "unit"?: ContextMenu | false
+export type contextMenuTypes = "map" | "unit"
+export type contextMenuManagerConfig = {
+    [key in contextMenuTypes]?: contextMenuConfig | false
 }
 
 export class ContextMenuManager extends Manager {
 
-    constructor(items?:contextMenuTypes) {
+    constructor(items?: contextMenuManagerConfig) {
         super();
-        
+
         if (!items) return;
 
-        for( const[ name, menu ] of Object.entries(items)) {
-            if(menu instanceof ContextMenu) this.add(name, menu);
+        for (const [name, menu] of Object.entries(items)) {
+            this.add(name, (menu) ? new ContextMenu(menu.id) : false);   //  TODO: make this pass the whole config
         }
     }
 
-    add( name:string, contextMenu:ContextMenu ) {
-        super.add( name, contextMenu );
+    add(name: string, contextMenu: ContextMenu | false) {
+        super.add(name, contextMenu);
         return this;
     }
 
