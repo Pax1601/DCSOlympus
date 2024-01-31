@@ -1,3 +1,10 @@
+const yargs = require('yargs');
+var fs = require('fs');
+
+/* Define configuration parameter */
+yargs.alias('c', 'config').describe('c', 'olympus.json config location').string('rp');
+args = yargs.argv;
+
 console.log('\x1b[36m%s\x1b[0m', "*********************************************************************");
 console.log('\x1b[36m%s\x1b[0m', "*  _____   _____  _____    ____  _                                  *");
 console.log('\x1b[36m%s\x1b[0m', "* |  __ \\ / ____|/ ____|  / __ \\| |                                 *");
@@ -10,16 +17,17 @@ console.log('\x1b[36m%s\x1b[0m', "*                                  |___/      
 console.log('\x1b[36m%s\x1b[0m', "*********************************************************************");
 console.log('\x1b[36m%s\x1b[0m', "");
 console.log("Please wait while DCS Olympus DEMO Backend Server starts up...");
+console.log(`Config location: ${args["config"]}`)
 
 var fs = require('fs');
-let rawdata = fs.readFileSync('../olympus.json');
+let rawdata = fs.readFileSync(args["config"]);
 let config = JSON.parse(rawdata);
 
 /**
  * Module dependencies.
  */
 
-var app = require('../demo');
+var app = require('../demo')(args["config"]);
 var debug = require('debug')('client:server');
 var http = require('http');
 

@@ -1,142 +1,68 @@
 <style>
-    #manager-instances {
-        padding-left: 80px;
-        padding-right: 80px;
-    }
-
-    #manager-instances .scroll-container {
-        height: 100%;
-        overflow-y: auto;
-        max-width: 100% !important;
-        width: 100%;
-    }  
-
-    #manager-instances .scrollable {
-        display: flex;
-        row-gap: 15px;
-        column-gap: 15px;
-        height: fit-content;
-        width: 100%;
-        flex-wrap: wrap;
-        padding: 15px;
-    }
-
-    #manager-instances .option {
-        background-color: var(--darkgray);
-        width: 48%;
-        color: white;
-        display: flex;
-        font-size: 13px;
-        font-weight: 600;
-        padding: 15px;
-        align-items: center;
-        border-radius: 5px;
-        border-left: 5px solid var(--blue);
-        flex-direction: column;
-        row-gap: 25px;
-    }
-
-    #manager-instances>.instructions {
-        margin-bottom: 10px;
-    }
-   
-    #manager-instances .button.cancel {
-        position: absolute;
-        left: 110px;
-        top: 180px;
-    }
-
-    #manager-instances .server-data {
-        display: flex;
-        column-gap: 15px;
-        row-gap: 5px;
-        flex-wrap: wrap;
-    }
-
-    #manager-instances .server-status {
-        font-weight: 600;
-        font-size: 15;
-        display: flex;
-        column-gap: 5px;
-        align-items: center;
-    }
-
-    #manager-instances .server-status::before {
-        display: block;
-        content: "";
-        width: 15px;
-        height: 15px;
-        border-radius: 999px;
-        background-color: var(--gray);
-    }
-
-    #manager-instances .server-status.offline {
-        color: var(--gray)
-    }
-
-    #manager-instances .server-status.offline::before {
-        background-color: var(--gray);
-    }
-
-    #manager-instances .server-status.online {
-        color: var(--green)
-    }
-
-    #manager-instances .server-status.online::before {
-        background-color: var(--green);
-    }
     
-    #manager-instances .server-status.backend {
-        margin-left: auto;
-    }
-
-    #manager-instances .server-data-entry {
-        display: flex;
-        column-gap: 5px;
-        align-items: center;
-    }
-
-    #manager-instances .server-data-entry span:nth-child(2) {
-        font-weight: 600;
-    }
-
-    #manager-instances .server-data-entry span:nth-child(3) {
-        font-weight: normal;
-    }
-
-    #manager-instances .start-stop-client {
-        margin-right: auto;
-    }
-
+    
 </style>
-    <div id="manager-instances">
+    <div class="dashboard">
+        <% if (state === 'INSTALL') { %>
+            <div class="result-summary success <%= (activeInstance !== undefined && !activeInstance["error"] && activeInstance["installed"])? "": "hide" %>">
+                <div class="title"><img src="./icons/check-solid-background.svg">Olympus installed successfully in
+                    <i style="margin-left: 3px"><%= activeInstance !== undefined? activeInstance["name"]: "" %></i>!</div>
+            </div>
+            <div class="result-summary error <%= (activeInstance !== undefined && (activeInstance["error"] || !activeInstance["installed"]))? "": "hide" %>">
+                <div class="title"><img src="./icons/triangle-exclamation-solid-background.svg">An error occurred while installing Olympus in
+                    <i style="margin-left: 3px"><%= activeInstance !== undefined? activeInstance["name"]: "" %></i></div>
+            </div>
+        <% } else if (state === 'EDIT') {%>
+            <div class="result-summary success <%= (activeInstance !== undefined && !activeInstance["error"])? "": "hide" %>">
+                <div class="title"><img src="./icons/check-solid-background.svg">Olympus settings updated for
+                    <i style="margin-left: 3px"><%= activeInstance !== undefined? activeInstance["name"]: "" %></i>!</div>
+            </div>
+            <div class="result-summary error <%= (activeInstance !== undefined && activeInstance["error"])? "": "hide" %>">
+                <div class="title"><img src="./icons/triangle-exclamation-solid-background.svg">An error occurred while updating Olympus settings for
+                    <i style="margin-left: 3px"><%= activeInstance !== undefined? activeInstance["name"]: "" %></i></div>
+            </div>
+        <% } else {%>
+            <div class="result-summary success <%= (activeInstance !== undefined && !activeInstance["installed"])? "": "hide" %>">
+                <div class="title"><img src="./icons/check-solid-background.svg">Olympus removed successfully from
+                    <i style="margin-left: 3px"><%= activeInstance !== undefined? activeInstance["name"]: "" %></i>!</div>
+            </div>
+            <div class="result-summary error <%= (activeInstance !== undefined && activeInstance["installed"])? "": "hide" %>">
+                <div class="title"><img src="./icons/triangle-exclamation-solid-background.svg">An error occurred while removing Olympus settings from
+                    <i style="margin-left: 3px"><%= activeInstance !== undefined? activeInstance["name"]: "" %></i></div>
+            </div>
+        <% } %>
+        
         <div class="content">
-            <div class="button cancel">
-               Return to menu
-            </div>
             <div class="instructions">
-                <span>
-                    <%= manage? "View and manage instances": "Update Olympus settings" %>
-                </span>
-                <span>
-                    The following versions of Olympus have been detected. 
-                </span>
-                <span>
-                    <%= manage? "You can inspect and manage you Olympus instances by selecting the options below.": "You can edit your settings or remove Olympus by selecting the options below." %>
-                </span>
+                <% if (instances.length > 0) { %>
+                    <span class="title">
+                        View and manage installs
+                    </span>
+                    <span class="subtitle">
+                        The following DCS installations have been identified. <br>You can start an Olympus server, modify settings and uninstall below.
+                    </span>
+                    <% } else { %>
+                    <span class="title" style="margin-top: 150px;">
+                        No DCS installs detected
+                    </span>
+                    <span class="subtitle">
+                        Please ensure you have DCS installed correctly. <br>
+                        Olympus cannot be added unless there is a DCS Saved Games folder on your computer. <br><br>
+                        If you are still having issues, try re-installing DCS and Olympus <br><br>
+                        <b>If DCS is installed but Olympus is failing to detect it, you can add it manually.<br> See the troubleshooting guide for more info.</b>
+                    </span>
+                <% } %>
             </div>
-        <div class="scroll-container">
-            <div class="scrollable">
-                <% for (let i = 0; i < instances.length; i++) {%>
-                    <div class="option" data-folder="<%= instances[i].folder %>">
-                        <div class="instance-info">
-                            <span><%= instances[i].name %></span>
-                            <span class="<%= instances[i].installed? (instances[i].error? 'error': ''): '' %>"> 
-                                <%= instances[i].installed? (instances[i].error? 'Corrupted/outdated Olympus installation': ''): '' %>
-                            </span>
-                            <% if (!manage) { %>
-                                <span><img src="./icons/folder-open-solid.svg"> <%= instances[i].folder %></span>
-                            <% } else { %> 
+            
+            <div class="scroll-container">
+                <div class="scrollable">
+                    <% for (let i = 0; i < instances.length; i++) {%>
+                        <div class="option <%= instances[i].installed? 'installed': '' %>" data-folder="<%= instances[i].folder %>">
+                            <div class="instance-info">
+                                <span class="name"><%= instances[i].name %></span>
+
+                                <span class="folder"><img src="./icons/folder-open-solid.svg"> <%= instances[i].folder %></span>
+
                                 <div class="server-data">
                                     <div class="server-status webserver online hide">ACTIVE</div>
                                     <div class="server-status webserver offline">OFFLINE</div>
@@ -146,32 +72,50 @@
                                     <div class="server-data-entry load"><img src="./icons/server-solid.svg"><span>Load: </span><span class="data">0</span></div>
                                     <div class="server-data-entry uptime"></div>
                                 </div>
-                            <% } %> 
-                            <div class="divider"></div>
-                            <div class="info">
-                                <div>Client port</div>
-                                <div> <%= instances[i].clientPort %> </div>
+
+                                <div class="divider"></div>
+
+                                <span class="status <%= instances[i].installed? (instances[i].error? 'error': 'installed'): '' %>"> 
+                                    <%= instances[i].installed? (instances[i].error? 'Corrupted/outdated Olympus installation': 'Olympus installed'): 'Olympus not installed' %>
+                                </span>
+                                
+                                <div class="summary">
+                                    <div class="info">
+                                        <div>Client port</div>
+                                        <div> <%= instances[i].installed? instances[i].clientPort: "N/A" %> </div>
+                                    </div>
+                                    <div class="info">
+                                        <div>Backend port</div>
+                                        <div> <%= instances[i].installed? instances[i].backendPort: "N/A" %> </div>
+                                    </div>
+                                    <div class="info">
+                                        <div>Backend address</div>
+                                        <div> <%= instances[i].installed? instances[i].backendAddress: "N/A" %> </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="info">
-                                <div>Backend port</div>
-                                <div> <%= instances[i].backendPort %> </div>
+                            <div class="instance-buttons">
+                                <div class="button start collapse">
+                                    Start Olympus
+                                    <div>
+                                        <div class="button start-server" onclick="signal('onStartServerClicked', '<%= instances[i].name %>')">Start server</div>
+                                        <div class="button start-client" onclick="signal('onStartClientClicked', '<%= instances[i].name %>')">Start client</div>
+                                    </div>
+                                </div>
+
+                                <div class="button edit" onclick="signal('onEditClicked', '<%= instances[i].name %>')">Edit settings</div>
+                                <div class="button install" onclick="signal('onInstallClicked', '<%= instances[i].name %>')">Install Olympus</div>
+                                <div class="button uninstall" onclick="signal('onUninstallClicked', '<%= instances[i].name %>')">Uninstall Olympus</div>
+                                <div class="button open-browser hide" onclick="signal('onOpenBrowserClicked', '<%= instances[i].name %>')">Open in browser</div>
+                                <div class="button stop hide" onclick="signal('onStopClicked', '<%= instances[i].name %>')">Stop Olympus</div>
                             </div>
-                            <div class="info">
-                                <div>Backend address</div>
-                                <div> <%= instances[i].backendAddress %> </div>
-                            </div>
+                            <div class="logs-link" onclick="
+                                        signal('onTextFileClicked', '<%= instances[i].folder.replaceAll('\\', '/')+'/Logs/dcs.log' %>');
+                                        signal('onTextFileClicked', '<%= instances[i].folder.replaceAll('\\', '/')+'/Logs/Olympus_log.txt' %>');
+                                        ">Open logs</div>
                         </div>
-                        <div class="instance-buttons">
-                            <% if (!manage) { %>
-                                <div class="button edit">Edit settings</div>
-                                <div class="button uninstall">Uninstall</div>
-                            <% } else { %> 
-                                <div class="button start-stop-server">Start server</div>
-                                <div class="button start-stop-client">Start client</div>
-                            <% } %> 
-                        </div>
-                    </div>
-                <% } %>
+                    <% } %>
+                </div>
             </div>
         </div>
     </div>
