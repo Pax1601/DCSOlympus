@@ -166,6 +166,23 @@ class Manager {
                 this.updateInstances();
             }
 
+            /* Reset default radio buttons */
+            this.typePage.options.onShow = () => {
+                if (this.getActiveInstance())
+                    this.getActiveInstance().installationType = 'singleplayer';
+                else {
+                    showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${this.getLogLocation()} for more info. </div>`);
+                }
+            }
+
+            this.connectionsTypePage.options.onShow = () => {
+                if (this.getActiveInstance())
+                    this.getActiveInstance().connectionsType = 'auto';
+                else {
+                    showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${this.getLogLocation()} for more info. </div>`);
+                }
+            }
+
             /* Reload the instances when we get to the folder page */
             this.folderPage.options.onShow = async () => {
                 if (this.getInstances().length > 0)
@@ -248,15 +265,19 @@ class Manager {
                 this.activePage.hide()
                 this.typePage.show();
             } else {
-                showConfirmPopup("<div class='main-message'> Olympus is already installed in this instance! </div> <div class='sub-message'>If you click Accept, it will be installed again and all changes, e.g. custom databases or mods support, will be lost. Are you sure you want to continue?</div>",
-                    () => {
-                        this.activePage.hide();
-                        this.typePage.show();
-                    },
-                    async () => {
-                        await this.setState('IDLE');
-                    }
-                )
+                if (this.getActiveInstance().webserverOnline || this.getActiveInstance().backendOnline) {
+                    showErrorPopup("<div class='main-message'>The selected Olympus instance is currently active </div><div class='sub-message'> Please stop DCS and Olympus Server/Client before editing it! </div>");
+                } else {
+                    showConfirmPopup("<div class='main-message'> Olympus is already installed in this instance! </div> <div class='sub-message'>If you click Accept, it will be installed again and all changes, e.g. custom databases or mods support, will be lost. Are you sure you want to continue?</div>",
+                        () => {
+                            this.activePage.hide();
+                            this.typePage.show();
+                        },
+                        async () => {
+                            await this.setState('IDLE');
+                        }
+                    )
+                }
             }
         } else {
             /* Show the folder selection page */
@@ -318,12 +339,19 @@ class Manager {
         /* Folder selection page */
         if (this.activePage == this.folderPage) {
             if (this.getActiveInstance().installed) {
-                showConfirmPopup("<div class='main-message'> Olympus is already installed in this instance! </div> <div class='sub-message'>If you click Accept, it will be installed again and all changes, e.g. custom databases or mods support, will be lost. Are you sure you want to continue?</div>",
-                    () => {
-                        this.activePage.hide()
-                        this.typePage.show();
-                    }
-                )
+                if (this.getActiveInstance().webserverOnline || this.getActiveInstance().backendOnline) {
+                    showErrorPopup("<div class='main-message'>The selected Olympus instance is currently active </div><div class='sub-message'> Please stop DCS and Olympus Server/Client before editing it! </div>");
+                } else {
+                    showConfirmPopup("<div class='main-message'> Olympus is already installed in this instance! </div> <div class='sub-message'>If you click Accept, it will be installed again and all changes, e.g. custom databases or mods support, will be lost. Are you sure you want to continue?</div>",
+                        () => {
+                            this.activePage.hide();
+                            this.typePage.show();
+                        },
+                        async () => {
+                            await this.setState('IDLE');
+                        }
+                    )
+                }
             } else {
                 this.activePage.hide();
                 this.typePage.show();
