@@ -1,10 +1,10 @@
-import { ContextMenuManager, TContextMenuTypes } from "../context/contextmenumanager";
+import { ContextMenuManager, contextMenuTypes } from "../context/contextmenumanager";
 import { ContextMenu } from "../contextmenus/contextmenu";
-import { Dropdown, TDropdownConfig } from "../controls/dropdown";
+import { Dropdown, dropdownConfig } from "../controls/dropdown";
 
 export class Creator {
 
-    createDropdown(config:TDropdownConfig) : Dropdown {
+    createDropdown(config:dropdownConfig) : Dropdown {
         return new Dropdown(config);
     }
 
@@ -12,7 +12,7 @@ export class Creator {
         return new ContextMenu(ID);
     }
 
-    createContextMenuManager(config?:TContextMenuTypes) : ContextMenuManager {
+    createContextMenuManager(config?:contextMenuTypes) : ContextMenuManager {
         return new ContextMenuManager(config);
     }
 

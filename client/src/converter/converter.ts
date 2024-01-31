@@ -1,17 +1,8 @@
-import { mToFt, mToNm, msToKnots } from "../other/utils";
+import { LatLng } from "leaflet";
+import { Utilities } from "../other/utilities";
 
 export class Converter {
-
-    metresToFeet(distance:number) {
-        return mToFt(distance);
-    }
-
-    metresToNauticalMiles(distance:number) {
-        return mToNm(distance);
-    }
-
-    metresPerSecondToKnots(speed:number) {
-        return msToKnots(speed);
-    }
+    
+    
 
 }

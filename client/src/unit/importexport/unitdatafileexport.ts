@@ -1,6 +1,5 @@
 import { getApp } from "../..";
 import { Dialog } from "../../dialog/dialog";
-import { zeroAppend } from "../../other/utils";
 import { Unit } from "../unit";
 import { UnitDataFile } from "./unitdatafile";
 
@@ -51,7 +50,8 @@ export class UnitDataFileExport extends UnitDataFile {
         this.dialog.show();
 
         const date = new Date();
-        this.#filename = `olympus_${getApp().getMissionManager().getTheatre().replace(/[^\w]/gi, "").toLowerCase()}_${date.getFullYear()}${zeroAppend(date.getMonth() + 1, 2)}${zeroAppend(date.getDate(), 2)}_${zeroAppend(date.getHours(), 2)}${zeroAppend(date.getMinutes(), 2)}${zeroAppend(date.getSeconds(), 2)}.json`;
+        const zeroPrepend = getApp().getUtilities().zeroPrepend;
+        this.#filename = `olympus_${getApp().getMissionManager().getTheatre().replace(/[^\w]/gi, "").toLowerCase()}_${date.getFullYear()}${zeroPrepend(date.getMonth() + 1, 2)}${zeroPrepend(date.getDate(), 2)}_${zeroPrepend(date.getHours(), 2)}${zeroPrepend(date.getMinutes(), 2)}${zeroPrepend(date.getSeconds(), 2)}.json`;
         var input = this.#element.querySelector("#export-filename") as HTMLInputElement;
         input.onchange = (ev: Event) => {
             this.#filename = (ev.currentTarget as HTMLInputElement).value;

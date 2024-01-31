@@ -1,6 +1,6 @@
 import { ContextMenuManager } from "./contextmenumanager";
 
-export type TContextConfig = {
+export type contextConfig = {
     allowUnitCopying?: boolean;
     allowUnitPasting?: boolean;
     contextMenuManager?: ContextMenuManager;
@@ -21,7 +21,7 @@ export class Context {
     #useUnitControlPanel: boolean;
     #useUnitInfoPanel: boolean;
 
-    constructor(config: TContextConfig) {
+    constructor(config: contextConfig) {
         this.#allowUnitCopying    = (config.allowUnitCopying !== false);
         this.#allowUnitPasting    = (config.allowUnitPasting !== false);
         this.#onSet               = config.onSet || function() {};

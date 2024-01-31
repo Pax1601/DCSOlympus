@@ -7,7 +7,6 @@ import { AirbaseContextMenu } from "../contextmenus/airbasecontextmenu";
 import { Dropdown } from "../controls/dropdown";
 import { Airbase } from "../mission/airbase";
 import { Unit } from "../unit/unit";
-import { bearing, createCheckboxOption, polyContains } from "../other/utils";
 import { DestinationPreviewMarker } from "./markers/destinationpreviewmarker";
 import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
@@ -143,7 +142,7 @@ export class Map extends L.Map {
         /* Visibility options dropdown */
         this.#mapVisibilityOptionsDropdown = new Dropdown({
             "ID": "map-visibility-options",
-            "callback": (value: string) => {}
+            "callback": (value: string) => { }
         });
 
         /* Init the state machine */
@@ -158,13 +157,13 @@ export class Map extends L.Map {
         this.on("drag", (e: any) => this.centerOnUnit(null));
         this.on("contextmenu", (e: any) => {
             const contextManager = getApp().getContextManager();
-            
+
             if (contextManager.currentContextIs("olympus")) {
                 this.#onContextMenu(e);
                 return;
             }
 
-            const context = contextManager.getCurrentContext(); 
+            const context = contextManager.getCurrentContext();
             const menu = context.getContextMenuManager().get("map");
 
             if (menu instanceof ContextMenu === false) return;
@@ -252,7 +251,7 @@ export class Map extends L.Map {
 
     addVisibilityOption(option: string, defaultValue: boolean) {
         this.#visibilityOptions[option] = defaultValue;
-        this.#mapVisibilityOptionsDropdown.addOptionElement(createCheckboxOption(option, option, defaultValue, (ev: any) => { this.#setVisibilityOption(option, ev); }));
+        this.#mapVisibilityOptionsDropdown.addOptionElement(getApp().getUtilities().createCheckboxOption(option, option, defaultValue, (ev: any) => { this.#setVisibilityOption(option, ev); }));
     }
 
     setLayer(layerName: string) {
@@ -355,7 +354,7 @@ export class Map extends L.Map {
             this.#unitContextMenu.show(x, y, latlng);
             return;
         }
-        
+
         const menu = getApp().getCurrentContext().getContextMenuManager().get("unit");
         if (menu instanceof ContextMenu) menu.show(x, y, latlng);
     }
@@ -598,7 +597,7 @@ export class Map extends L.Map {
 
                 /* Coalition areas are ordered in the #coalitionAreas array according to their zindex. Select the upper one */
                 for (let coalitionArea of this.#coalitionAreas) {
-                    if (polyContains(e.latlng, coalitionArea)) {
+                    if (getApp().getUtilities().latLngIsInPolygon(e.latlng, coalitionArea)) {
                         if (coalitionArea.getSelected())
                             clickedCoalitionArea = coalitionArea;
                         else
@@ -698,7 +697,7 @@ export class Map extends L.Map {
         if (this.#state === MOVE_UNIT) {
             /* Update the position of the destination cursors depeding on mouse rotation */
             if (this.#computeDestinationRotation && this.#destinationRotationCenter != null)
-                this.#destinationGroupRotation = -bearing(this.#destinationRotationCenter.lat, this.#destinationRotationCenter.lng, this.getMouseCoordinates().lat, this.getMouseCoordinates().lng);
+                this.#destinationGroupRotation = -getApp().getUtilities().bearing(this.#destinationRotationCenter, this.getMouseCoordinates());
             this.#updateDestinationCursors();
         }
         else if (this.#state === COALITIONAREA_DRAW_POLYGON && e.latlng !== undefined) {

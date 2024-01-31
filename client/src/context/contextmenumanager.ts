@@ -1,18 +1,14 @@
 import { ContextMenu } from "../contextmenus/contextmenu";
 import { Manager } from "../other/manager";
 
-export type TContextMenuTypes = {
+export type contextMenuTypes = {
     "map"?: ContextMenu | false,
     "unit"?: ContextMenu | false
 }
 
-export type TContextMenuManagerAdd = {
-    menuTypes: ContextMenu
-}
-
 export class ContextMenuManager extends Manager {
 
-    constructor(items?:TContextMenuTypes) {
+    constructor(items?:contextMenuTypes) {
         super();
         
         if (!items) return;

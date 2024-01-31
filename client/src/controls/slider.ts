@@ -1,4 +1,4 @@
-import { zeroPad } from "../other/utils";
+import { getApp } from "..";
 import { Control } from "./control";
 
 export class Slider extends Control {
@@ -16,7 +16,7 @@ export class Slider extends Control {
     constructor(ID: string | null, minValue: number, maxValue: number, unitOfMeasure: string, callback: CallableFunction, options?: any) {
         super(ID, options);
 
-        this.#callback = callback;     
+        this.#callback = callback;
         this.#unitOfMeasure = unitOfMeasure;
         this.#slider = this.getContainer()?.querySelector("input") as HTMLInputElement;
 
@@ -63,9 +63,9 @@ export class Slider extends Control {
 
     setValue(newValue: number, ignoreExpectedValue: boolean = true) {
         if (!this.getDragged() && (ignoreExpectedValue || this.checkExpectedValue(newValue))) {
-            if (this.#value !== newValue) 
+            if (this.#value !== newValue)
                 this.#value = newValue;
-            
+
             if (this.#slider != null)
                 this.#slider.value = String((newValue - this.#minValue) / (this.#maxValue - this.#minValue) * parseFloat(this.#slider.max));
 
@@ -79,7 +79,7 @@ export class Slider extends Control {
 
     setDragged(newDragged: boolean) {
         this.#dragged = newDragged;
-    } 
+    }
 
     getDragged() {
         return this.#dragged;
@@ -93,13 +93,12 @@ export class Slider extends Control {
     }
 
     #update() {
-        if (this.#valueText != null && this.#slider != null)
-        {
+        if (this.#valueText != null && this.#slider != null) {
             /* Update the text value */
             var value = this.#minValue + Math.round(parseFloat(this.#slider.value) / parseFloat(this.#slider.max) * (this.#maxValue - this.#minValue));
             var strValue = String(value);
             if (value > 1000)
-                strValue = String(Math.floor(value / 1000)) + "," + zeroPad(value - Math.floor(value / 1000) * 1000, 3);
+                strValue = String(Math.floor(value / 1000)) + "," + getApp().getUtilities().zeroAppend(value - Math.floor(value / 1000) * 1000, 3);
             this.#valueText.innerText = `${strValue} ${this.#unitOfMeasure.toUpperCase()}`;
 
             /* Update the position of the slider */
@@ -133,7 +132,7 @@ export class Slider extends Control {
         dl.classList.add("ol-data-grid");
 
         var dt = document.createElement("dt");
-        dt.innerText = (options !== undefined && options.title !== undefined)? options.title: "";
+        dt.innerText = (options !== undefined && options.title !== undefined) ? options.title : "";
 
         var dd = document.createElement("dd");
         var sliderEl = document.createElement("div");

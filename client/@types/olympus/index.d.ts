@@ -348,7 +348,7 @@ declare module "map/coalitionarea/coalitionarea" {
     }
 }
 declare module "controls/dropdown" {
-    export type TDropdownConfig = {
+    export type dropdownConfig = {
         "ID": HTMLElement | string | null;
         "callback": CallableFunction;
         "options"?: string[] | null;
@@ -356,7 +356,7 @@ declare module "controls/dropdown" {
     };
     export class Dropdown {
         #private;
-        constructor(config: TDropdownConfig);
+        constructor(config: dropdownConfig);
         getContainer(): HTMLElement;
         /** Set the dropdown options strings
          *
@@ -400,6 +400,21 @@ declare module "controls/dropdown" {
         show(): void;
         hide(): void;
         isHidden(): boolean;
+    }
+}
+declare module "controls/slider" {
+    import { Control } from "controls/control";
+    export class Slider extends Control {
+        #private;
+        constructor(ID: string | null, minValue: number, maxValue: number, unitOfMeasure: string, callback: CallableFunction, options?: any);
+        setActive(newActive: boolean): void;
+        setMinMax(newMinValue: number, newMaxValue: number): void;
+        setIncrement(newIncrement: number): void;
+        setValue(newValue: number, ignoreExpectedValue?: boolean): void;
+        getValue(): number;
+        setDragged(newDragged: boolean): void;
+        getDragged(): boolean;
+        createElement(options?: any): HTMLElement | null;
     }
 }
 declare module "mission/airbase" {
@@ -784,104 +799,6 @@ declare module "unit/databases/navyunitdatabase" {
         getCategory(): string;
     }
     export var navyUnitDatabase: NavyUnitDatabase;
-}
-declare module "other/utils" {
-    import { LatLng, Polygon } from "leaflet";
-    import { UnitDatabase } from "unit/databases/unitdatabase";
-    import { Dropdown } from "controls/dropdown";
-    import { DateAndTime, UnitBlueprint } from "interfaces";
-    export function bearing(lat1: number, lon1: number, lat2: number, lon2: number): number;
-    export function distance(lat1: number, lon1: number, lat2: number, lon2: number): number;
-    export function bearingAndDistanceToLatLng(lat: number, lon: number, brng: number, dist: number): LatLng;
-    export function ConvertDDToDMS(D: number, lng: boolean): string;
-    export function dataPointMap(container: HTMLElement, data: any): void;
-    export function deg2rad(deg: number): number;
-    export function rad2deg(rad: number): number;
-    export function generateUUIDv4(): string;
-    export function keyEventWasInInput(event: KeyboardEvent): boolean;
-    export function reciprocalHeading(heading: number): number;
-    /**
-     * Prepend numbers to the start of a string
-     *
-     * @param num <number> subject number
-     * @param places <number> places to pad
-     * @param decimal <boolean> whether this is a decimal number or not
-     *
-     * */
-    export const zeroAppend: (num: number, places: number, decimal?: boolean) => string;
-    export const zeroPad: (num: number, places: number) => string;
-    export function similarity(s1: string, s2: string): number;
-    export function editDistance(s1: string, s2: string): any;
-    export type MGRS = {
-        bandLetter: string;
-        columnLetter: string;
-        easting: string;
-        groups: string[];
-        northing: string;
-        precision: number;
-        rowLetter: string;
-        string: string;
-        zoneNumber: string;
-    };
-    export function latLngToMGRS(lat: number, lng: number, precision?: number): MGRS | false;
-    export function latLngToUTM(lat: number, lng: number): any;
-    export function latLngToMercator(lat: number, lng: number): {
-        x: number;
-        y: number;
-    };
-    export function mercatorToLatLng(x: number, y: number): {
-        lng: number;
-        lat: number;
-    };
-    export function createDivWithClass(className: string): HTMLDivElement;
-    export function knotsToMs(knots: number): number;
-    export function msToKnots(ms: number): number;
-    export function ftToM(ft: number): number;
-    export function mToFt(m: number): number;
-    export function mToNm(m: number): number;
-    export function nmToM(nm: number): number;
-    export function nmToFt(nm: number): number;
-    export function polyContains(latlng: LatLng, polygon: Polygon): boolean;
-    export function randomPointInPoly(polygon: Polygon): LatLng;
-    export function polygonArea(polygon: Polygon): number;
-    export function randomUnitBlueprint(unitDatabase: UnitDatabase, options: {
-        type?: string;
-        role?: string;
-        ranges?: string[];
-        eras?: string[];
-        coalition?: string;
-    }): UnitBlueprint | null;
-    export function getMarkerCategoryByName(name: string): "aircraft" | "helicopter" | "groundunit-sam" | "navyunit" | "groundunit-other";
-    export function getUnitDatabaseByCategory(category: string): import("unit/databases/aircraftdatabase").AircraftDatabase | import("unit/databases/helicopterdatabase").HelicopterDatabase | import("unit/databases/groundunitdatabase").GroundUnitDatabase | import("unit/databases/navyunitdatabase").NavyUnitDatabase | null;
-    export function getCategoryBlueprintIconSVG(category: string, unitName: string): string | false;
-    export function base64ToBytes(base64: string): ArrayBufferLike;
-    export function enumToState(state: number): string;
-    export function enumToROE(ROE: number): string;
-    export function enumToReactionToThreat(reactionToThreat: number): string;
-    export function enumToEmissioNCountermeasure(emissionCountermeasure: number): string;
-    export function enumToCoalition(coalitionID: number): "" | "blue" | "red" | "neutral";
-    export function coalitionToEnum(coalition: string): 0 | 1 | 2;
-    export function convertDateAndTimeToDate(dateAndTime: DateAndTime): Date;
-    export function createCheckboxOption(value: string, text: string, checked?: boolean, callback?: CallableFunction, options?: any): HTMLElement;
-    export function getCheckboxOptions(dropdown: Dropdown): {
-        [key: string]: boolean;
-    };
-    export function getGroundElevation(latlng: LatLng, callback: CallableFunction): void;
-}
-declare module "controls/slider" {
-    import { Control } from "controls/control";
-    export class Slider extends Control {
-        #private;
-        constructor(ID: string | null, minValue: number, maxValue: number, unitOfMeasure: string, callback: CallableFunction, options?: any);
-        setActive(newActive: boolean): void;
-        setMinMax(newMinValue: number, newMaxValue: number): void;
-        setIncrement(newIncrement: number): void;
-        setValue(newValue: number, ignoreExpectedValue?: boolean): void;
-        getValue(): number;
-        setDragged(newDragged: boolean): void;
-        getDragged(): boolean;
-        createElement(options?: any): HTMLElement | null;
-    }
 }
 declare module "controls/unitspawnmenu" {
     import { LatLng } from "leaflet";
@@ -1715,12 +1632,15 @@ declare module "panels/paneleventsmanager" {
 }
 declare module "panels/panel" {
     import { PanelEventsManager } from "panels/paneleventsmanager";
+    export interface PanelInterface {
+    }
     export abstract class Panel {
         #private;
         constructor(ID: string);
         show(): void;
         hide(): void;
         toggle(): void;
+        toggleByContext(): void;
         getElement(): HTMLElement;
         getVisible(): boolean;
         getEventsManager(): PanelEventsManager;
@@ -1835,6 +1755,118 @@ declare module "panels/hotgrouppanel" {
         refreshHotgroups(): void;
         addHotgroup(hotgroup: number): void;
         removeHotgroup(hotgroup: number): void;
+    }
+}
+declare module "other/utilities" {
+    import { LatLng, Polygon } from "leaflet";
+    import { UnitDatabase } from "unit/databases/unitdatabase";
+    import { DateAndTime, UnitBlueprint } from "interfaces";
+    import { Dropdown } from "controls/dropdown";
+    export type MGRS = {
+        bandLetter: string;
+        columnLetter: string;
+        easting: string;
+        groups: string[];
+        northing: string;
+        precision: number;
+        rowLetter: string;
+        string: string;
+        zoneNumber: string;
+    };
+    export class Utilities {
+        #private;
+        constructor();
+        base64ToBytes(base64: string): ArrayBufferLike;
+        /** Get the bearing from
+        *
+        * @param fromLatLng <LatLng>
+        * @param toLatLng <LatLng>
+        * @returns <number> degrees in bearing
+        */
+        bearing(fromLatLng: LatLng, toLatLng: LatLng): number;
+        /**
+         *
+         * @param fromLatLng
+         * @param brng
+         * @param dist
+         * @returns <LatLng>
+         */
+        bearingAndDistanceToLatLng(fromLatLng: LatLng, brng: number, dist: number): LatLng;
+        coalitionToEnum(coalition: string): 0 | 1 | 2;
+        convertDateAndTimeToDate(dateAndTime: DateAndTime): Date;
+        createCheckboxOption(value: string, text: string, checked?: boolean, callback?: CallableFunction, options?: any): HTMLElement;
+        createDivWithClass(className: string): HTMLDivElement;
+        DDToDMS(D: number, lng: boolean): string;
+        degToRad(deg: number): number;
+        /**
+        *
+        * @param fromLatLng <LatLng>
+        * @param toLatLng <LatLng>
+        * @returns <number> distance in meters
+        */
+        distance(fromLatLng: LatLng, toLatLng: LatLng): number;
+        editDistance(s1: string, s2: string): any;
+        enumToCoalition(coalitionID: number): "" | "blue" | "red" | "neutral";
+        enumToEmissionCountermeasure(emissionCountermeasure: number): string;
+        enumToReactionToThreat(reactionToThreat: number): string;
+        enumToROE(ROE: number): string;
+        enumToState(state: number): string;
+        ftToM(ft: number): number;
+        generateUUIDv4(): string;
+        getCategoryBlueprintIconSVG(category: string, unitName: string): string | false;
+        getCheckboxOptions(dropdown: Dropdown): {
+            [key: string]: boolean;
+        };
+        getGroundElevation(latlng: LatLng, callback: CallableFunction): void;
+        getMarkerCategoryByName(name: string): "aircraft" | "helicopter" | "groundunit-sam" | "navyunit" | "groundunit-other";
+        getUnitDatabaseByCategory(category: string): import("unit/databases/aircraftdatabase").AircraftDatabase | import("unit/databases/helicopterdatabase").HelicopterDatabase | import("unit/databases/groundunitdatabase").GroundUnitDatabase | import("unit/databases/navyunitdatabase").NavyUnitDatabase | null;
+        keyEventWasInInput(event: KeyboardEvent): boolean;
+        knotsToMs(knots: number): number;
+        latLngToMercator(latLng: LatLng): {
+            x: number;
+            y: number;
+        };
+        latLngToMGRS(latLng: LatLng, precision?: number): MGRS | false;
+        latLngToUTM(latLng: LatLng): any;
+        mercatorToLatLng(x: number, y: number): LatLng;
+        mToFt(m: number): number;
+        mToNm(m: number): number;
+        msToKts(ms: number): number;
+        nmToM(nm: number): number;
+        nmToFt(nm: number): number;
+        latLngIsInPolygon(latlng: LatLng, polygon: Polygon): boolean;
+        polygonArea(polygon: Polygon): number;
+        radToDeg(rad: number): number;
+        randomPointInPolygon(polygon: Polygon): LatLng;
+        randomUnitBlueprint(unitDatabase: UnitDatabase, options: {
+            type?: string;
+            role?: string;
+            ranges?: string[];
+            eras?: string[];
+            coalition?: string;
+        }): UnitBlueprint | null;
+        /** Return the reciprocal in degrees (e.g. 90 => 270)
+         *
+         * @param degrees <number>
+         * @returns <number>
+         */
+        reciprocal(degrees: number): number;
+        similarity(s1: string, s2: string): number;
+        /** Pad a number with trailing zeroes to a given size
+         *
+         * @param num <number> being formatted
+         * @param places <number> how many places being padded to
+         * @param decimal? <boolean> if number is a boolean
+         * @returns <string>
+         */
+        zeroAppend(num: number, places: number): string;
+        /** Pad a number with leading zeroes to a given size
+         *
+         * @param num <number> being formatted
+         * @param places <number> how many places being padded to
+         * @returns <string>
+         */
+        zeroPrepend(num: number, places: number, decimal?: boolean): string;
     }
 }
 declare module "panels/mouseinfopanel" {
@@ -2547,22 +2579,19 @@ declare module "panels/unitlistpanel" {
 declare module "context/contextmenumanager" {
     import { ContextMenu } from "contextmenus/contextmenu";
     import { Manager } from "other/manager";
-    export type TContextMenuTypes = {
+    export type contextMenuTypes = {
         "map"?: ContextMenu | false;
         "unit"?: ContextMenu | false;
     };
-    export type TContextMenuManagerAdd = {
-        menuTypes: ContextMenu;
-    };
     export class ContextMenuManager extends Manager {
-        constructor(items?: TContextMenuTypes);
+        constructor(items?: contextMenuTypes);
         add(name: string, contextMenu: ContextMenu): this;
         hideAll(): void;
     }
 }
 declare module "context/context" {
     import { ContextMenuManager } from "context/contextmenumanager";
-    export type TContextConfig = {
+    export type contextConfig = {
         allowUnitCopying?: boolean;
         allowUnitPasting?: boolean;
         contextMenuManager?: ContextMenuManager;
@@ -2574,11 +2603,11 @@ declare module "context/context" {
     };
     export class Context {
         #private;
-        constructor(config: TContextConfig);
+        constructor(config: contextConfig);
         getAllowUnitCopying(): boolean;
         getAllowUnitPasting(): boolean;
         getContextMenuManager(): ContextMenuManager;
-        useMouseInfoPanel(): boolean;
+        getUseMouseInfoPanel(): boolean;
         getUseUnitControlPanel(): boolean;
         getUseUnitInfoPanel(): boolean;
         onSet(): void;
@@ -2587,11 +2616,11 @@ declare module "context/context" {
 }
 declare module "context/contextmanager" {
     import { Manager } from "other/manager";
-    import { TContextConfig } from "context/context";
+    import { contextConfig } from "context/context";
     export class ContextManager extends Manager {
         #private;
         constructor();
-        add(name: string, contextConfig: TContextConfig): this;
+        add(name: string, contextConfig: contextConfig): this;
         currentContextIs(contextName: string): boolean;
         getCurrentContext(): any;
         setContext(contextName: string): false | undefined;
@@ -2602,32 +2631,6 @@ declare module "panels/panelsmanager" {
     export class PanelsManager extends Manager {
         constructor();
         hideAll(): void;
-    }
-}
-declare module "creator/creator" {
-    import { ContextMenuManager, TContextMenuTypes } from "context/contextmenumanager";
-    import { ContextMenu } from "contextmenus/contextmenu";
-    import { Dropdown, TDropdownConfig } from "controls/dropdown";
-    export class Creator {
-        createDropdown(config: TDropdownConfig): Dropdown;
-        createContextMenu(ID: string): ContextMenu;
-        createContextMenuManager(config?: TContextMenuTypes): ContextMenuManager;
-    }
-}
-declare module "converter/converter" {
-    export class Converter {
-        metresToFeet(distance: number): number;
-        metresToNauticalMiles(distance: number): number;
-        metresPerSecondToKnots(speed: number): number;
-    }
-}
-declare module "other/utilities" {
-    import { LatLng } from "leaflet";
-    export class Utilities {
-        bearing(latLng1: LatLng, latLng2: LatLng): number;
-        distance(latLng1: LatLng, latLng2: LatLng): number;
-        zeroAppend(num: number, places: number): string;
-        zeroPrepend(num: number, places: number): string;
     }
 }
 declare module "template/templatemanager" {
@@ -2649,8 +2652,6 @@ declare module "olympusapp" {
     import { ContextManager } from "context/contextmanager";
     import { Context } from "context/context";
     import { PanelsManager } from "panels/panelsmanager";
-    import { Creator } from "creator/creator";
-    import { Converter } from "converter/converter";
     import { Utilities } from "other/utilities";
     import { TemplateManager } from "template/templatemanager";
     export class OlympusApp {
@@ -2659,8 +2660,6 @@ declare module "olympusapp" {
         getTemplateEngine(): any;
         getDialogManager(): Manager;
         getMap(): Map;
-        getConverter(): Converter;
-        getCreator(): Creator;
         getCurrentContext(): Context;
         getContextManager(): ContextManager;
         getServerManager(): ServerManager;
@@ -2723,4 +2722,101 @@ declare module "olympusapp" {
 declare module "index" {
     import { OlympusApp } from "olympusapp";
     export function getApp(): OlympusApp;
+}
+declare module "converter/converter" {
+    export class Converter {
+    }
+}
+declare module "creator/creator" {
+    import { ContextMenuManager, contextMenuTypes } from "context/contextmenumanager";
+    import { ContextMenu } from "contextmenus/contextmenu";
+    import { Dropdown, dropdownConfig } from "controls/dropdown";
+    export class Creator {
+        createDropdown(config: dropdownConfig): Dropdown;
+        createContextMenu(ID: string): ContextMenu;
+        createContextMenuManager(config?: contextMenuTypes): ContextMenuManager;
+    }
+}
+declare module "other/utils" {
+    import { LatLng, Polygon } from "leaflet";
+    import { UnitDatabase } from "unit/databases/unitdatabase";
+    import { Dropdown } from "controls/dropdown";
+    import { DateAndTime, UnitBlueprint } from "interfaces";
+    export function bearing(lat1: number, lon1: number, lat2: number, lon2: number): number;
+    export function distance(lat1: number, lon1: number, lat2: number, lon2: number): number;
+    export function bearingAndDistanceToLatLng(lat: number, lon: number, brng: number, dist: number): LatLng;
+    export function ConvertDDToDMS(D: number, lng: boolean): string;
+    export function dataPointMap(container: HTMLElement, data: any): void;
+    export function deg2rad(deg: number): number;
+    export function rad2deg(rad: number): number;
+    export function generateUUIDv4(): string;
+    export function keyEventWasInInput(event: KeyboardEvent): boolean;
+    export function reciprocalHeading(heading: number): number;
+    /**
+     * Prepend numbers to the start of a string
+     *
+     * @param num <number> subject number
+     * @param places <number> places to pad
+     * @param decimal <boolean> whether this is a decimal number or not
+     *
+     * */
+    export const zeroAppend: (num: number, places: number, decimal?: boolean) => string;
+    export const zeroPad: (num: number, places: number) => string;
+    export function similarity(s1: string, s2: string): number;
+    export function editDistance(s1: string, s2: string): any;
+    export type MGRS = {
+        bandLetter: string;
+        columnLetter: string;
+        easting: string;
+        groups: string[];
+        northing: string;
+        precision: number;
+        rowLetter: string;
+        string: string;
+        zoneNumber: string;
+    };
+    export function latLngToMGRS(lat: number, lng: number, precision?: number): MGRS | false;
+    export function latLngToUTM(lat: number, lng: number): any;
+    export function latLngToMercator(lat: number, lng: number): {
+        x: number;
+        y: number;
+    };
+    export function mercatorToLatLng(x: number, y: number): {
+        lng: number;
+        lat: number;
+    };
+    export function createDivWithClass(className: string): HTMLDivElement;
+    export function knotsToMs(knots: number): number;
+    export function msToKnots(ms: number): number;
+    export function ftToM(ft: number): number;
+    export function mToFt(m: number): number;
+    export function mToNm(m: number): number;
+    export function nmToM(nm: number): number;
+    export function nmToFt(nm: number): number;
+    export function polyContains(latlng: LatLng, polygon: Polygon): boolean;
+    export function randomPointInPoly(polygon: Polygon): LatLng;
+    export function polygonArea(polygon: Polygon): number;
+    export function randomUnitBlueprint(unitDatabase: UnitDatabase, options: {
+        type?: string;
+        role?: string;
+        ranges?: string[];
+        eras?: string[];
+        coalition?: string;
+    }): UnitBlueprint | null;
+    export function getMarkerCategoryByName(name: string): "aircraft" | "helicopter" | "groundunit-sam" | "navyunit" | "groundunit-other";
+    export function getUnitDatabaseByCategory(category: string): import("unit/databases/aircraftdatabase").AircraftDatabase | import("unit/databases/helicopterdatabase").HelicopterDatabase | import("unit/databases/groundunitdatabase").GroundUnitDatabase | import("unit/databases/navyunitdatabase").NavyUnitDatabase | null;
+    export function getCategoryBlueprintIconSVG(category: string, unitName: string): string | false;
+    export function base64ToBytes(base64: string): ArrayBufferLike;
+    export function enumToState(state: number): string;
+    export function enumToROE(ROE: number): string;
+    export function enumToReactionToThreat(reactionToThreat: number): string;
+    export function enumToEmissioNCountermeasure(emissionCountermeasure: number): string;
+    export function enumToCoalition(coalitionID: number): "" | "blue" | "red" | "neutral";
+    export function coalitionToEnum(coalition: string): 0 | 1 | 2;
+    export function convertDateAndTimeToDate(dateAndTime: DateAndTime): Date;
+    export function createCheckboxOption(value: string, text: string, checked?: boolean, callback?: CallableFunction, options?: any): HTMLElement;
+    export function getCheckboxOptions(dropdown: Dropdown): {
+        [key: string]: boolean;
+    };
+    export function getGroundElevation(latlng: LatLng, callback: CallableFunction): void;
 }

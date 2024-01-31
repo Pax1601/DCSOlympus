@@ -29,8 +29,6 @@ import { ContextManager } from "./context/contextmanager";
 import { Context } from "./context/context";
 import { AirbasesJSONSchemaValidator } from "./schemas/schema";
 import { PanelsManager } from "./panels/panelsmanager";
-import { Creator } from "./creator/creator";
-import { Converter } from "./converter/converter";
 import { ContextMenuManager } from "./context/contextmenumanager";
 import { ContextMenu } from "./contextmenus/contextmenu";
 import { Utilities } from "./other/utilities";
@@ -41,16 +39,12 @@ var VERSION = "{{OLYMPUS_VERSION_NUMBER}}";
 export class OlympusApp {
     /* Global data */
     #activeCoalition: string = "blue";
-    #latestVersion: string|undefined = undefined;
+    #latestVersion: string | undefined = undefined;
 
     /* Main leaflet map, extended by custom methods */
     #map: Map | null = null;
 
-    //  Used by plugins
-    #converter = new Converter();
-    #creator   = new Creator();
-
-    #templateEngine:any;
+    #templateEngine: any;
 
     /* Managers */
     #contextManager!: ContextManager;
@@ -61,9 +55,10 @@ export class OlympusApp {
     #popupsManager: Manager | null = null;
     #serverManager: ServerManager | null = null;
     #shortcutManager!: ShortcutManager;
-    #templateManager!:TemplateManager;
+    #templateManager!: TemplateManager;
     #toolbarsManager: Manager | null = null;
     #unitsManager: UnitsManager | null = null;
+    #utilities: Utilities = new Utilities();
     #weaponsManager: WeaponsManager | null = null;
 
     constructor() {
@@ -80,14 +75,6 @@ export class OlympusApp {
 
     getMap() {
         return this.#map as Map;
-    }
-
-    getConverter() {
-        return this.#converter as Converter;
-    }
-
-    getCreator() {
-        return this.#creator as Creator;
     }
 
     getCurrentContext() {
@@ -207,7 +194,7 @@ export class OlympusApp {
      * @returns Utilities class
      */
     getUtilities() {
-        return new Utilities();
+        return this.#utilities;
     }
 
     /** Set a message in the login splash screen
@@ -222,11 +209,11 @@ export class OlympusApp {
 
     start() {
         /* Initialize base functionalitites */
-        this.#templateEngine  = require("ejs");
+        this.#templateEngine = require("ejs");
         this.#templateManager = new TemplateManager();
 
-        this.#contextManager  = new ContextManager();
-        this.#contextManager.add( "olympus", {
+        this.#contextManager = new ContextManager();
+        this.#contextManager.add("olympus", {
             "contextMenuManager": new ContextMenuManager({
                 "map": new ContextMenu("map-contextmenu")
             }),
@@ -267,7 +254,7 @@ export class OlympusApp {
         // Popups
         this.getPopupsManager()
             .add("infoPopup", new Popup("info-popup"));
-        
+
         this.#pluginsManager = new PluginsManager();
 
         /* Set the address of the server */
@@ -290,8 +277,8 @@ export class OlympusApp {
             let loadingScreen = document.getElementById("loading-screen") as HTMLElement;
             loadingScreen.classList.add("fade-out");
             window.setInterval(() => { loadingScreen.classList.add("hide"); }, 1000);
-        })         
-        
+        })
+
         /* Check if we are running the latest version */
         const request = new Request("https://raw.githubusercontent.com/Pax1601/DCSOlympus/main/version.json");
         fetch(request).then((response) => {
@@ -469,7 +456,7 @@ export class OlympusApp {
         /* Try and connect with the Olympus REST server */
         const loginForm = document.getElementById("authentication-form");
         if (loginForm instanceof HTMLFormElement) {
-            loginForm.addEventListener("submit", (ev:SubmitEvent) => {
+            loginForm.addEventListener("submit", (ev: SubmitEvent) => {
                 ev.preventDefault();
                 ev.stopPropagation();
                 var hash = sha256.create();

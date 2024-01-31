@@ -1,6 +1,5 @@
 import { getApp } from "..";
 import { ShortcutKeyboardOptions, ShortcutMouseOptions, ShortcutOptions } from "../interfaces";
-import { keyEventWasInInput } from "../other/utils";
 
 export abstract class Shortcut {
     #config: ShortcutOptions
@@ -24,7 +23,7 @@ export class ShortcutKeyboard extends Shortcut {
                 return;
             }
 
-            if (ev instanceof KeyboardEvent === false || keyEventWasInInput(ev)) {
+            if (ev instanceof KeyboardEvent === false || getApp().getUtilities().keyEventWasInInput(ev)) {
                 return;
             }
 

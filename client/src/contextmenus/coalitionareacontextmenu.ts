@@ -7,7 +7,6 @@ import { Dropdown } from "../controls/dropdown";
 import { Slider } from "../controls/slider";
 import { Switch } from "../controls/switch";
 import { groundUnitDatabase } from "../unit/databases/groundunitdatabase";
-import { createCheckboxOption, getCheckboxOptions } from "../other/utils";
 
 /** This context menu allows the user to edit or delete a CoalitionArea. Moreover, it allows the user to create a IADS automatically using the CoalitionArea as bounds. */
 export class CoalitionAreaContextMenu extends ContextMenu {
@@ -23,7 +22,7 @@ export class CoalitionAreaContextMenu extends ContextMenu {
      * 
      * @param ID - the ID of the HTML element which will contain the context menu
      */
-    constructor(ID: string){
+    constructor(ID: string) {
         super(ID);
 
         /* Create the coalition switch */
@@ -33,15 +32,15 @@ export class CoalitionAreaContextMenu extends ContextMenu {
         /* Create the controls of the IADS creation submenu */
         this.#iadsTypesDropdown = new Dropdown({
             "ID": "iads-units-type-options",
-            "callback": () => {}
+            "callback": () => { }
         });
         this.#iadsErasDropdown = new Dropdown({
             "ID": "iads-era-options",
-            "callback": () => {}
+            "callback": () => { }
         });
         this.#iadsRangesDropdown = new Dropdown({
             "ID": "iads-range-options",
-            "callback": () => {}
+            "callback": () => { }
         });
         this.#iadsDensitySlider = new Slider("iads-density-slider", 5, 100, "%", (value: number) => { });
         this.#iadsDistributionSlider = new Slider("iads-distribution-slider", 5, 100, "%", (value: number) => { });
@@ -73,6 +72,7 @@ export class CoalitionAreaContextMenu extends ContextMenu {
             getApp().getMap().hideCoalitionAreaContextMenu();
         });
 
+        const getCheckboxOptions = getApp().getUtilities().getCheckboxOptions;
         document.addEventListener("contextMenuCreateIads", (e: any) => {
             const area = this.getCoalitionArea();
             const forceCoalition = (this.getContainer()?.querySelector("#force-coalition")?.querySelector("input") as HTMLInputElement).checked;
@@ -92,12 +92,14 @@ export class CoalitionAreaContextMenu extends ContextMenu {
     show(x: number, y: number, latlng: LatLng) {
         super.show(x, y, latlng);
 
+        const createCheckboxOption = getApp().getUtilities().createCheckboxOption;
+
         /* Create the checkboxes to select the unit roles */
         this.#iadsTypesDropdown.setOptionsElements(IADSTypes.map((role: string) => {
-            return createCheckboxOption(role, `Add ${role}s to the IADS` );
+            return createCheckboxOption(role, `Add ${role}s to the IADS`);
         }));
 
-        
+
         /* Create the checkboxes to select the unit periods */
         this.#iadsErasDropdown.setOptionsElements(groundUnitDatabase.getEras().map((era: string) => {
             return createCheckboxOption(era, `Add ${era} era units to the IADS`);

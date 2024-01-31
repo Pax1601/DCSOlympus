@@ -1,7 +1,6 @@
 import { LatLng, LatLngBounds } from "leaflet";
 import { getApp } from "..";
 import { Unit } from "./unit";
-import { bearingAndDistanceToLatLng, deg2rad, getGroundElevation, getUnitDatabaseByCategory, keyEventWasInInput, latLngToMercator, mToFt, mercatorToLatLng, msToKnots, polyContains, polygonArea, randomPointInPoly, randomUnitBlueprint } from "../other/utils";
 import { CoalitionArea } from "../map/coalitionarea/coalitionarea";
 import { groundUnitDatabase } from "./databases/groundunitdatabase";
 import { DELETE_CYCLE_TIME, DELETE_SLOW_THRESHOLD, DataIndexes, GAME_MASTER, IADSDensities, IDLE, MOVE_UNIT } from "../constants/constants";
@@ -544,7 +543,7 @@ export class UnitsManager {
         units = segregatedUnits.controllable;
 
         units.forEach((unit: Unit) => unit.setSpeed(speed));
-        this.#showActionMessage(units, `setting speed to ${msToKnots(speed)} kts`);
+        this.#showActionMessage(units, `setting speed to ${getApp().getUtilities().msToKts(speed)} kts`);
     }
 
     /** Set a specific speed type to all the selected units
@@ -586,7 +585,7 @@ export class UnitsManager {
         units = segregatedUnits.controllable;
 
         units.forEach((unit: Unit) => unit.setAltitude(altitude));
-        this.#showActionMessage(units, `setting altitude to ${mToFt(altitude)} ft`);
+        this.#showActionMessage(units, `setting altitude to ${getApp().getUtilities().mToFt(altitude)} ft`);
     }
 
     /** Set a specific altitude type to all the selected units
@@ -914,7 +913,7 @@ export class UnitsManager {
 
         units = segregatedUnits.controllable;
 
-        getGroundElevation(latlng, (response: string) => {
+        getApp().getUtilities().getGroundElevation(latlng, (response: string) => {
             var groundElevation: number | null = null;
             try {
                 groundElevation = parseFloat(response);
@@ -1158,11 +1157,15 @@ export class UnitsManager {
         if (units.length === 0)
             return {};
 
+        const deg2rad = getApp().getUtilities().degToRad;
+        const latLngToMercator = getApp().getUtilities().latLngToMercator;
+        const mercatorToLatLng = getApp().getUtilities().mercatorToLatLng;
+
         /* Compute the center of the group */
         var len = units.length;
         var center = { x: 0, y: 0 };
         units.forEach((unit: Unit) => {
-            var mercator = latLngToMercator(unit.getPosition().lat, unit.getPosition().lng);
+            var mercator = latLngToMercator(unit.getPosition());
             center.x += mercator.x / len;
             center.y += mercator.y / len;
         });
@@ -1170,7 +1173,7 @@ export class UnitsManager {
         /* Compute the distances from the center of the group */
         var unitDestinations: { [key: number]: LatLng } = {};
         units.forEach((unit: Unit) => {
-            var mercator = latLngToMercator(unit.getPosition().lat, unit.getPosition().lng);
+            var mercator = latLngToMercator(unit.getPosition());
             var distancesFromCenter = { dx: mercator.x - center.x, dy: mercator.y - center.y };
 
             /* Rotate the distance according to the group rotation */
@@ -1179,10 +1182,9 @@ export class UnitsManager {
             rotatedDistancesFromCenter.dy = distancesFromCenter.dx * Math.sin(deg2rad(rotation)) + distancesFromCenter.dy * Math.cos(deg2rad(rotation));
 
             /* Compute the final position of the unit */
-            var destMercator = latLngToMercator(latlng.lat, latlng.lng);    // Convert destination point to mercator
+            var destMercator = latLngToMercator(latlng);    // Convert destination point to mercator
             var unitMercator = { x: destMercator.x + rotatedDistancesFromCenter.dx, y: destMercator.y + rotatedDistancesFromCenter.dy };  // Compute final position of this unit in mercator coordinates
-            var unitLatLng = mercatorToLatLng(unitMercator.x, unitMercator.y);
-            unitDestinations[unit.ID] = new LatLng(unitLatLng.lat, unitLatLng.lng);
+            unitDestinations[unit.ID] = mercatorToLatLng(unitMercator.x, unitMercator.y);
         });
 
         return unitDestinations;
@@ -1212,8 +1214,7 @@ export class UnitsManager {
      * @returns True if units were pasted successfully
      */
     paste() {
-        if (!getApp().getContextManager().getCurrentContext().getAllowUnitPasting())
-            return;
+        if (!getApp().getContextManager().getCurrentContext().getAllowUnitPasting()) return;
 
         let spawnPoints = 0;
 
@@ -1223,6 +1224,8 @@ export class UnitsManager {
                 (getApp().getPopupsManager().get("infoPopup") as Popup).setText(`Units can be pasted only during SETUP phase`);
                 return false;
             }
+
+            const getUnitDatabaseByCategory = getApp().getUtilities().getUnitDatabaseByCategory;
 
             this.#copiedUnits.forEach((unit: UnitData) => {
                 let unitSpawnPoints = getUnitDatabaseByCategory(unit.category)?.getSpawnPointsByName(unit.name);
@@ -1295,28 +1298,32 @@ export class UnitsManager {
         const activeEras = Object.keys(eras).filter((key: string) => { return eras[key]; });
         const activeRanges = Object.keys(ranges).filter((key: string) => { return ranges[key]; });
 
+        const utils = getApp().getUtilities();
+        const latLngIsInPolygon = utils.latLngIsInPolygon;
+        const randomUnitBlueprint = utils.randomUnitBlueprint;
+
         var airbases = getApp().getMissionManager().getAirbases();
         Object.keys(airbases).forEach((airbaseName: string) => {
             var airbase = airbases[airbaseName];
             /* Check if the city is inside the coalition area */
-            if (polyContains(new LatLng(airbase.getLatLng().lat, airbase.getLatLng().lng), coalitionArea)) {
+            if (latLngIsInPolygon(new LatLng(airbase.getLatLng().lat, airbase.getLatLng().lng), coalitionArea)) {
                 /* Arbitrary formula to obtain a number of units */
                 var pointsNumber = 2 + 10 * density / 100;
                 for (let i = 0; i < pointsNumber; i++) {
                     /* Place the unit nearby the airbase, depending on the distribution parameter */
                     var bearing = Math.random() * 360;
                     var distance = Math.random() * distribution * 100;
-                    const latlng = bearingAndDistanceToLatLng(airbase.getLatLng().lat, airbase.getLatLng().lng, bearing, distance);
+                    const latlng = getApp().getUtilities().bearingAndDistanceToLatLng(airbase.getLatLng(), bearing, distance);
 
                     /* Make sure the unit is still inside the coalition area */
-                    if (polyContains(latlng, coalitionArea)) {
+                    if (latLngIsInPolygon(latlng, coalitionArea)) {
                         const type = activeTypes[Math.floor(Math.random() * activeTypes.length)];
                         if (Math.random() < IADSDensities[type]) {
                             /* Get a random blueprint depending on the selected parameters and spawn the unit */
                             let unitBlueprint: UnitBlueprint | null;
                             if (forceCoalition)
-                                unitBlueprint = randomUnitBlueprint(groundUnitDatabase, { type: type, eras: activeEras, ranges: activeRanges, coalition: coalitionArea.getCoalition()});
-                            else 
+                                unitBlueprint = randomUnitBlueprint(groundUnitDatabase, { type: type, eras: activeEras, ranges: activeRanges, coalition: coalitionArea.getCoalition() });
+                            else
                                 unitBlueprint = randomUnitBlueprint(groundUnitDatabase, { type: type, eras: activeEras, ranges: activeRanges });
 
                             if (unitBlueprint)
@@ -1325,28 +1332,28 @@ export class UnitsManager {
                     }
                 }
             }
-        })
+        });
 
         citiesDatabase.forEach((city: { lat: number, lng: number, pop: number }) => {
             /* Check if the city is inside the coalition area */
-            if (polyContains(new LatLng(city.lat, city.lng), coalitionArea)) {
+            if (latLngIsInPolygon(new LatLng(city.lat, city.lng), coalitionArea)) {
                 /* Arbitrary formula to obtain a number of units depending on the city population */
                 var pointsNumber = 2 + Math.pow(city.pop, 0.15) * density / 100;
                 for (let i = 0; i < pointsNumber; i++) {
                     /* Place the unit nearby the city, depending on the distribution parameter */
                     var bearing = Math.random() * 360;
                     var distance = Math.random() * distribution * 100;
-                    const latlng = bearingAndDistanceToLatLng(city.lat, city.lng, bearing, distance);
+                    const latlng = getApp().getUtilities().bearingAndDistanceToLatLng(new LatLng(city.lat, city.lng), bearing, distance);
 
                     /* Make sure the unit is still inside the coalition area */
-                    if (polyContains(latlng, coalitionArea)) {
+                    if (latLngIsInPolygon(latlng, coalitionArea)) {
                         const type = activeTypes[Math.floor(Math.random() * activeTypes.length)];
                         if (Math.random() < IADSDensities[type]) {
                             /* Get a random blueprint depending on the selected parameters and spawn the unit */
                             let unitBlueprint: UnitBlueprint | null;
                             if (forceCoalition)
-                                unitBlueprint = randomUnitBlueprint(groundUnitDatabase, { type: type, eras: activeEras, ranges: activeRanges, coalition: coalitionArea.getCoalition()});
-                            else 
+                                unitBlueprint = randomUnitBlueprint(groundUnitDatabase, { type: type, eras: activeEras, ranges: activeRanges, coalition: coalitionArea.getCoalition() });
+                            else
                                 unitBlueprint = randomUnitBlueprint(groundUnitDatabase, { type: type, eras: activeEras, ranges: activeRanges });
 
                             if (unitBlueprint)
@@ -1427,7 +1434,7 @@ export class UnitsManager {
         if (spawnPoints <= getApp().getMissionManager().getAvailableSpawnPoints()) {
             getApp().getMissionManager().setSpentSpawnPoints(spawnPoints);
             spawnFunction();
-            document.dispatchEvent( new CustomEvent( "unitSpawned", {
+            document.dispatchEvent(new CustomEvent("unitSpawned", {
                 "detail": {
                     "airbase": airbase,
                     "category": category,
@@ -1446,7 +1453,7 @@ export class UnitsManager {
 
     /***********************************************/
     #onKeyUp(event: KeyboardEvent) {
-        if (!keyEventWasInInput(event)) {
+        if (!getApp().getUtilities().keyEventWasInInput(event)) {
             if (event.key === "Delete")
                 this.delete();
             else if (event.key === "a" && event.ctrlKey)

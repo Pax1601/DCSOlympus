@@ -1,10 +1,10 @@
 import { Icon, LatLng, Marker, Polyline } from "leaflet";
 import { getApp } from "..";
-import { distance, bearing, zeroAppend, mToNm, nmToFt, mToFt, latLngToMGRS, MGRS, latLngToUTM, latLngToMercator } from "../other/utils";
 import { Unit } from "../unit/unit";
 import { Panel } from "./panel";
 import formatcoords from "formatcoords";
 import { MGRS_PRECISION_100M, MGRS_PRECISION_10KM, MGRS_PRECISION_10M, MGRS_PRECISION_1KM, MGRS_PRECISION_1M } from "../constants/constants";
+import { MGRS } from "../other/utilities";
 
 export class MouseInfoPanel extends Panel {
     #coordinatesElement:HTMLElement;
@@ -99,10 +99,10 @@ export class MouseInfoPanel extends Panel {
         var coordString = coords.format('XDDMMss', {decimalPlaces: 4});
 
         if ( this.#getLocationSystem() === "MGRS" ) {
-            const mgrs = <MGRS>latLngToMGRS( mousePosition.lat, mousePosition.lng, this.#MGRSPrecisions[ this.#selectedMGRSPrecisionIndex ] );
+            const mgrs = <MGRS>getApp().getUtilities().latLngToMGRS( mousePosition, this.#MGRSPrecisions[ this.#selectedMGRSPrecisionIndex ] );
             this.#drawCoordinates("ref-mouse-position-mgrs", "mouse-position-mgrs", "M"+mgrs.groups.join(" ") );
         } else if ( this.#getLocationSystem() === "UTM" ) {
-            const utm = latLngToUTM( mousePosition.lat, mousePosition.lng );
+            const utm = getApp().getUtilities().latLngToUTM( mousePosition );
             this.#drawCoordinates("ref-mouse-position-utm-northing", "mouse-position-utm-northing", "N"+utm.northing);
             this.#drawCoordinates("ref-mouse-position-utm-easting", "mouse-position-utm-easting", "E"+utm.easting);
         } else {
@@ -121,7 +121,7 @@ export class MouseInfoPanel extends Panel {
                 if (status === 200) {
                     const el = this.getElement().querySelector(`#mouse-position-elevation`) as HTMLElement;
                     try {
-                        el.dataset.value = `${Math.floor(mToFt(parseFloat(this.#elevationRequest?.response)))} ft`;
+                        el.dataset.value = `${Math.floor(getApp().getUtilities().mToFt(parseFloat(this.#elevationRequest?.response)))} ft`;
                     } catch {
                         el.dataset.value = `N/A`;
                     }
@@ -166,8 +166,8 @@ export class MouseInfoPanel extends Panel {
         if (this.#measurePoint != null) {
             var points = [this.#measurePoint, mouseLatLng];
             this.#measureLine.setLatLngs(points);
-            var dist = distance(this.#measurePoint.lat, this.#measurePoint.lng, mouseLatLng.lat, mouseLatLng.lng);
-            var bear = bearing(this.#measurePoint.lat, this.#measurePoint.lng, mouseLatLng.lat, mouseLatLng.lng);
+            var dist = getApp().getUtilities().distance(this.#measurePoint, mouseLatLng);
+            var bear = getApp().getUtilities().bearing(this.#measurePoint, mouseLatLng);
             var startXY = getApp().getMap().latLngToContainerPoint(this.#measurePoint);
             var dx = mousePosition.x - startXY.x;
             var dy = mousePosition.y - startXY.y;
@@ -179,7 +179,7 @@ export class MouseInfoPanel extends Panel {
             if (angle < -Math.PI / 2)
                 angle = angle + Math.PI;
 
-            let bng = zeroAppend(Math.floor(bear), 3);
+            let bng = getApp().getUtilities().zeroPrepend(Math.floor(bear), 3);
 
             if (bng === "000")
                 bng = "360";
@@ -211,13 +211,11 @@ export class MouseInfoPanel extends Panel {
             if (el != null) {
                 el.classList.remove("hide");
 
-                var bear = bearing(value.lat, value.lng, mousePosition.lat, mousePosition.lng);
-                var dist = distance(value.lat, value.lng, mousePosition.lat, mousePosition.lng);
+                var bear = getApp().getUtilities().bearing(value, mousePosition);
+                var dist = getApp().getUtilities().distance(value, mousePosition);
+                let bng  = getApp().getUtilities().zeroPrepend(Math.floor(bear), 3);
 
-                let bng = zeroAppend(Math.floor(bear), 3);
-
-                if (bng === "000")
-                    bng = "360";
+                if (bng === "000") bng = "360";
 
                 var [str, unit] = this.#computeDistanceString(dist)
 
@@ -246,10 +244,11 @@ export class MouseInfoPanel extends Panel {
     }
 
     #computeDistanceString(dist: number) {
-        var val = mToNm(dist);
-        var strVal = 0;
+        const utils = getApp().getUtilities();
+        var val     = utils.mToNm(dist);
+        var strVal  = 0;
         var decimal = false;
-        var unit = "NM";
+        var unit    = "NM";
         if (val > 10)
             strVal = Math.floor(val);
         else if (val > 1 && val <= 10) {
@@ -257,11 +256,11 @@ export class MouseInfoPanel extends Panel {
             decimal = true;
         }
         else {
-            strVal = Math.floor(nmToFt(val));
+            strVal = Math.floor(utils.nmToFt(val));
             unit = "ft";
         }
 
-        return [zeroAppend(strVal, 3, decimal), unit];
+        return [utils.zeroPrepend(strVal, 3, decimal), unit];
     }
 
     #changeLocationSystem() {

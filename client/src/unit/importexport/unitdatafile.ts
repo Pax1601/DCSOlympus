@@ -1,5 +1,5 @@
+import { getApp } from "../..";
 import { Dialog } from "../../dialog/dialog";
-import { createCheckboxOption } from "../../other/utils";
 
 var categoryMap = {
     "Aircraft": "Aircraft",
@@ -19,6 +19,7 @@ export abstract class UnitDataFile {
 
         const categories = this.#getCategoriesFromData();
         const coalitions = ["blue", "neutral", "red"];
+        const createCheckboxOption = getApp().getUtilities().createCheckboxOption;
 
         let headersHTML: string = ``;
         let matrixHTML: string = ``;

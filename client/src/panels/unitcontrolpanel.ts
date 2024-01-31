@@ -6,7 +6,6 @@ import { Unit } from "../unit/unit";
 import { Panel } from "./panel";
 import { Switch } from "../controls/switch";
 import { ROEDescriptions, ROEs, altitudeIncrements, emissionsCountermeasures, emissionsCountermeasuresDescriptions, maxAltitudeValues, maxSpeedValues, minAltitudeValues, minSpeedValues, reactionsToThreat, reactionsToThreatDescriptions, shotsIntensityDescriptions, shotsScatterDescriptions, speedIncrements } from "../constants/constants";
-import { ftToM, knotsToMs, mToFt, msToKnots } from "../other/utils";
 import { GeneralSettings, Radio, TACAN } from "../interfaces";
 import { ContextActionSet } from "../unit/contextactionset";
 import { Popup } from "../popups/popup";
@@ -38,10 +37,10 @@ export class UnitControlPanel extends Panel {
         super(ID);
 
         /* Unit control sliders */
-        this.#altitudeSlider = new Slider("altitude-slider", 0, 100, "ft", (value: number) => { getApp().getUnitsManager().setAltitude(ftToM(value)); });
+        this.#altitudeSlider = new Slider("altitude-slider", 0, 100, "ft", (value: number) => { getApp().getUnitsManager().setAltitude(getApp().getUtilities().ftToM(value)); });
         this.#altitudeTypeSwitch = new Switch("altitude-type-switch", (value: boolean) => { getApp().getUnitsManager().setAltitudeType(value ? "ASL" : "AGL"); });
 
-        this.#speedSlider = new Slider("speed-slider", 0, 100, "kts", (value: number) => { getApp().getUnitsManager().setSpeed(knotsToMs(value)); });
+        this.#speedSlider = new Slider("speed-slider", 0, 100, "kts", (value: number) => { getApp().getUnitsManager().setSpeed(getApp().getUtilities().knotsToMs(value)); });
         this.#speedTypeSwitch = new Switch("speed-type-switch", (value: boolean) => { getApp().getUnitsManager().setSpeedType(value ? "CAS" : "GS"); });
 
         /* Option buttons */
@@ -293,11 +292,11 @@ export class UnitControlPanel extends Panel {
 
                     this.#speedSlider.setActive(desiredSpeed != undefined);
                     if (desiredSpeed != undefined)
-                        this.#speedSlider.setValue(msToKnots(desiredSpeed), false);
+                        this.#speedSlider.setValue(getApp().getUtilities().msToKts(desiredSpeed), false);
 
                     this.#altitudeSlider.setActive(desiredAltitude != undefined);
                     if (desiredAltitude != undefined)
-                        this.#altitudeSlider.setValue(mToFt(desiredAltitude), false);
+                        this.#altitudeSlider.setValue(getApp().getUtilities().mToFt(desiredAltitude), false);
                 }
                 else {
                     this.#speedSlider.setActive(false);

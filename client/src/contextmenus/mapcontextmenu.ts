@@ -7,7 +7,6 @@ import { CoalitionArea } from "../map/coalitionarea/coalitionarea";
 import { AirDefenceUnitSpawnMenu, AircraftSpawnMenu, GroundUnitSpawnMenu, HelicopterSpawnMenu, NavyUnitSpawnMenu } from "../controls/unitspawnmenu";
 import { SmokeMarker } from "../map/markers/smokemarker";
 import { UnitSpawnTable } from "../interfaces";
-import { getCategoryBlueprintIconSVG, getUnitDatabaseByCategory } from "../other/utils";
 import { SVGInjector } from "@tanem/svg-injector";
 
 /** The MapContextMenu is the main contextmenu shown to the user whenever it rightclicks on the map. It is the primary interaction method for the user.
@@ -27,7 +26,7 @@ export class MapContextMenu extends ContextMenu {
      * 
      * @param ID - the ID of the HTML element which will contain the context menu
      */
-    constructor(ID: string){
+    constructor(ID: string) {
         super(ID);
 
         /* Create the coalition switch */
@@ -124,7 +123,7 @@ export class MapContextMenu extends ContextMenu {
         this.#navyUnitSpawnMenu.setCountries();
 
         /* Only a Game Master can choose the coalition of a new unit */
-        if (getApp().getMissionManager().getCommandModeOptions().commandMode !== GAME_MASTER) 
+        if (getApp().getMissionManager().getCommandModeOptions().commandMode !== GAME_MASTER)
             this.#coalitionSwitch.hide()
 
         this.getContainer()?.querySelectorAll('[data-coalition]').forEach((element: any) => { element.setAttribute("data-coalition", getApp().getActiveCoalition()) });
@@ -134,7 +133,7 @@ export class MapContextMenu extends ContextMenu {
             this.#coalitionSwitch.setValue(false);
         else
             this.#coalitionSwitch.setValue(undefined);
-        
+
         /* Hide the coalition area button. It will be visible if a coalition area is set */
         this.getContainer()?.querySelector("#coalition-area-button")?.classList.toggle("hide", true);
     }
@@ -264,15 +263,15 @@ export class MapContextMenu extends ContextMenu {
      */
     #setupHistory() {
         /* Set up the tab clicks */
-        const spawnModes           = this.getContainer()?.querySelectorAll(".spawn-mode");
+        const spawnModes = this.getContainer()?.querySelectorAll(".spawn-mode");
         const activeCoalitionLabel = document.getElementById("active-coalition-label");
         const tabs = this.getContainer()?.querySelectorAll(".spawn-mode-tab");
 
         //  Default selected tab to the "spawn now" option
-        if (tabs) tabs[tabs.length-1].classList.add("selected");
+        if (tabs) tabs[tabs.length - 1].classList.add("selected");
 
-        tabs?.forEach((btn:Element) => {
-            btn.addEventListener("click", (ev:MouseEventInit) => {
+        tabs?.forEach((btn: Element) => {
+            btn.addEventListener("click", (ev: MouseEventInit) => {
                 //  Highlight tab
                 tabs.forEach(tab => tab.classList.remove("selected"));
                 btn.classList.add("selected");
@@ -285,7 +284,7 @@ export class MapContextMenu extends ContextMenu {
 
                 /* Tabs and content windows are assumed to be in the same order */
                 //  Count previous
-                while ( prev ) {
+                while (prev) {
                     prevSiblings.push(prev);
                     prev = prev.previousElementSibling;
                 }
@@ -300,13 +299,13 @@ export class MapContextMenu extends ContextMenu {
             });
         });
 
-        const history    = <HTMLDivElement>document.getElementById("spawn-history-menu");
+        const history = <HTMLDivElement>document.getElementById("spawn-history-menu");
         const maxEntries = 20;
 
         /** Listen for unit spawned **/
-        document.addEventListener( "unitSpawned", (ev:CustomEventInit) => {
+        document.addEventListener("unitSpawned", (ev: CustomEventInit) => {
             const buttons = history.querySelectorAll("button");
-            const detail:any = ev.detail;
+            const detail: any = ev.detail;
             if (buttons.length === 0) history.innerHTML = "";  //  Take out any "no data" messages
             const button = document.createElement("button");
             button.title = "Click to spawn";
@@ -314,11 +313,11 @@ export class MapContextMenu extends ContextMenu {
             button.setAttribute("data-unit-type", detail.unitSpawnTable[0].unitType);
             button.setAttribute("data-unit-qty", detail.unitSpawnTable.length);
 
-            const db = getUnitDatabaseByCategory(detail.category);
-            button.innerHTML = `<img src="${getCategoryBlueprintIconSVG(detail.category, detail.unitSpawnTable[0].unitType)}" /><span>${db?.getByName(detail.unitSpawnTable[0].unitType)?.label} (${detail.unitSpawnTable.length})</span>`;
+            const db = getApp().getUtilities().getUnitDatabaseByCategory(detail.category);
+            button.innerHTML = `<img src="${getApp().getUtilities().getCategoryBlueprintIconSVG(detail.category, detail.unitSpawnTable[0].unitType)}" /><span>${db?.getByName(detail.unitSpawnTable[0].unitType)?.label} (${detail.unitSpawnTable.length})</span>`;
 
             //  Remove a previous instance to save clogging up the list
-            const previous:any = [].slice.call(buttons).find( (button:Element) => (
+            const previous: any = [].slice.call(buttons).find((button: Element) => (
                 detail.coalition === button.getAttribute("data-spawned-coalition") &&
                 detail.unitSpawnTable[0].unitType === button.getAttribute("data-unit-type") &&
                 detail.unitSpawnTable.length === parseInt(button.getAttribute("data-unit-qty") || "-1")));
@@ -326,8 +325,8 @@ export class MapContextMenu extends ContextMenu {
             if (previous instanceof HTMLElement) previous.remove();
 
             /* Click to do the spawn */
-            button.addEventListener("click", (ev:MouseEventInit) => {
-                detail.unitSpawnTable.forEach((table:UnitSpawnTable, i:number) => {
+            button.addEventListener("click", (ev: MouseEventInit) => {
+                detail.unitSpawnTable.forEach((table: UnitSpawnTable, i: number) => {
                     table.location = this.getLatLng();  //  Set to new menu location
                     table.location.lat += 0.00015 * i;
                 });

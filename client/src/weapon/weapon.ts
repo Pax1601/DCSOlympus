@@ -1,6 +1,5 @@
 import { LatLng, DivIcon, Map } from 'leaflet';
 import { getApp } from '..';
-import { enumToCoalition, mToFt, msToKnots, rad2deg, zeroAppend } from '../other/utils';
 import { CustomMarker } from '../map/markers/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
 import { DLINK, DataIndexes, GAME_MASTER, IRST, OPTIC, RADAR, VISUAL } from '../constants/constants';
@@ -20,13 +19,13 @@ export class Weapon extends CustomMarker {
     #hidden: boolean = false;
     #detectionMethods: number[] = [];
 
-    getAlive() {return this.#alive};
-    getCoalition() {return this.#coalition};
-    getName() {return this.#name};
-    getPosition() {return this.#position};
-    getSpeed() {return this.#speed};
-    getHeading() {return this.#heading};
-   
+    getAlive() { return this.#alive };
+    getCoalition() { return this.#coalition };
+    getName() { return this.#name };
+    getPosition() { return this.#position };
+    getSpeed() { return this.#speed };
+    getHeading() { return this.#heading };
+
     static getConstructor(type: string) {
         if (type === "Missile") return Missile;
         if (type === "Bomb") return Bomb;
@@ -36,11 +35,11 @@ export class Weapon extends CustomMarker {
         super(new LatLng(0, 0), { riseOnHover: true, keyboard: false });
 
         this.ID = ID;
-        
+
         /* Update the marker when the options change */
         document.addEventListener("mapOptionsChanged", (ev: CustomEventInit) => {
             this.#updateMarker();
-        }); 
+        });
     }
 
     getCategory() {
@@ -58,14 +57,14 @@ export class Weapon extends CustomMarker {
             switch (datumIndex) {
                 case DataIndexes.category: dataExtractor.extractString(); break;
                 case DataIndexes.alive: this.setAlive(dataExtractor.extractBool()); updateMarker = true; break;
-                case DataIndexes.coalition: this.#coalition = enumToCoalition(dataExtractor.extractUInt8()); break;
+                case DataIndexes.coalition: this.#coalition = getApp().getUtilities().enumToCoalition(dataExtractor.extractUInt8()); break;
                 case DataIndexes.name: this.#name = dataExtractor.extractString(); break;
                 case DataIndexes.position: this.#position = dataExtractor.extractLatLng(); updateMarker = true; break;
                 case DataIndexes.speed: this.#speed = dataExtractor.extractFloat64(); updateMarker = true; break;
                 case DataIndexes.heading: this.#heading = dataExtractor.extractFloat64(); updateMarker = true; break;
             }
         }
-        
+
         if (updateMarker)
             this.#updateMarker();
     }
@@ -111,7 +110,7 @@ export class Weapon extends CustomMarker {
     belongsToCommandedCoalition() {
         if (getApp().getMissionManager().getCommandModeOptions().commandMode !== GAME_MASTER && getApp().getMissionManager().getCommandedCoalition() !== this.#coalition)
             return false;
-        return true;        
+        return true;
     }
 
     getType() {
@@ -161,8 +160,8 @@ export class Weapon extends CustomMarker {
     updateVisibility() {
         const hiddenUnits = getApp().getMap().getHiddenTypes();
         var hidden = (hiddenUnits.includes(this.getMarkerCategory())) ||
-                    (hiddenUnits.includes(this.#coalition)) ||
-                    (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0);
+            (hiddenUnits.includes(this.#coalition)) ||
+            (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0);
 
         this.setHidden(hidden || !this.#alive);
     }
@@ -172,9 +171,9 @@ export class Weapon extends CustomMarker {
 
         /* Add the marker if not present */
         if (!getApp().getMap().hasLayer(this) && !this.getHidden()) {
-            if (getApp().getMap().isZooming()) 
-                this.once("zoomend", () => {this.addTo(getApp().getMap())})
-            else 
+            if (getApp().getMap().isZooming())
+                this.once("zoomend", () => { this.addTo(getApp().getMap()) })
+            else
                 this.addTo(getApp().getMap());
         }
 
@@ -227,14 +226,16 @@ export class Weapon extends CustomMarker {
                 /* Set dead/alive flag */
                 element.querySelector(".unit")?.toggleAttribute("data-is-dead", !this.#alive);
 
+                const utils = getApp().getUtilities();
 
                 /* Set altitude and speed */
                 if (element.querySelector(".unit-altitude"))
-                    (<HTMLElement>element.querySelector(".unit-altitude")).innerText = "FL" + zeroAppend(Math.floor(mToFt(this.#position.alt as number) / 100), 3);
+                    (<HTMLElement>element.querySelector(".unit-altitude")).innerText = "FL" + utils.zeroPrepend(Math.floor(utils.mToFt(this.#position.alt as number) / 100), 3);
                 if (element.querySelector(".unit-speed"))
-                    (<HTMLElement>element.querySelector(".unit-speed")).innerText = String(Math.floor(msToKnots(this.#speed))) + "GS";
+                    (<HTMLElement>element.querySelector(".unit-speed")).innerText = String(Math.floor(utils.msToKts(this.#speed))) + "GS";
 
                 /* Rotate elements according to heading */
+                const rad2deg = utils.radToDeg;
                 element.querySelectorAll("[data-rotate-to-heading]").forEach(el => {
                     const headingDeg = rad2deg(this.#heading);
                     let currentStyle = el.getAttribute("style") || "";

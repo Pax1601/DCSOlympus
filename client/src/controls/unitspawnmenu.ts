@@ -5,7 +5,6 @@ import { UnitDatabase } from "../unit/databases/unitdatabase";
 import { getApp } from "..";
 import { GAME_MASTER, GROUND_UNIT_AIR_DEFENCE_REGEX } from "../constants/constants";
 import { Airbase } from "../mission/airbase";
-import { ftToM } from "../other/utils";
 import { aircraftDatabase } from "../unit/databases/aircraftdatabase";
 import { helicopterDatabase } from "../unit/databases/helicopterdatabase";
 import { groundUnitDatabase } from "../unit/databases/groundunitdatabase";
@@ -110,7 +109,9 @@ export abstract class UnitSpawnMenu {
             "options": undefined,
             "defaultText": "Livery"
         });
-        this.#unitSpawnAltitudeSlider = new Slider(null, 0, 1000, "ft", (value: number) => { this.spawnOptions.altitude = ftToM(value); }, { title: "Spawn altitude" });
+        this.#unitSpawnAltitudeSlider = new Slider(null, 0, 1000, "ft", (value: number) => {
+            this.spawnOptions.altitude = getApp().getUtilities().ftToM(value);
+        }, { title: "Spawn altitude" });
 
         /* The unit label and unit count are in the same "row" for clarity and compactness */
         var unitLabelCountContainerEl = document.createElement("div");
@@ -659,7 +660,7 @@ export class AircraftSpawnMenu extends UnitSpawnMenu {
         this.getAltitudeSlider().setMinMax(0, 50000);
         this.getAltitudeSlider().setIncrement(500);
         this.getAltitudeSlider().setValue(20000);
-        this.spawnOptions.altitude = ftToM(20000);
+        this.spawnOptions.altitude = getApp().getUtilities().ftToM(20000);
     }
 
     deployUnits(spawnOptions: UnitSpawnOptions, unitsCount: number) {
@@ -698,7 +699,7 @@ export class HelicopterSpawnMenu extends UnitSpawnMenu {
         this.getAltitudeSlider().setMinMax(0, 10000);
         this.getAltitudeSlider().setIncrement(100);
         this.getAltitudeSlider().setValue(5000);
-        this.spawnOptions.altitude = ftToM(5000);
+        this.spawnOptions.altitude = getApp().getUtilities().ftToM(5000);
     }
 
     deployUnits(spawnOptions: UnitSpawnOptions, unitsCount: number) {

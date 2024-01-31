@@ -1,5 +1,5 @@
 import { Manager } from "../other/manager";
-import { Context, TContextConfig } from "./context";
+import { Context, contextConfig } from "./context";
 
 export class ContextManager extends Manager {
     #currentContext!: string;
@@ -8,7 +8,7 @@ export class ContextManager extends Manager {
         super();
     }
 
-    add(name: string, contextConfig: TContextConfig) {
+    add(name: string, contextConfig: contextConfig) {
         super.add(name, new Context(contextConfig));
 
         if (Object.values(this.getAll()).length === 1) {

@@ -1,6 +1,5 @@
 import { Marker, LatLng, Polyline, Icon, DivIcon, CircleMarker, Map, Point } from 'leaflet';
 import { getApp } from '..';
-import { enumToCoalition, enumToEmissioNCountermeasure, enumToROE, enumToReactionToThreat, enumToState, getUnitDatabaseByCategory, mToFt, msToKnots, rad2deg, bearing, deg2rad, ftToM, getGroundElevation, coalitionToEnum, nmToFt, nmToM, zeroAppend } from '../other/utils';
 import { CustomMarker } from '../map/markers/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
 import { UnitDatabase } from './databases/unitdatabase';
@@ -270,17 +269,18 @@ export abstract class Unit extends CustomMarker {
         var datumIndex = 0;
         while (datumIndex != DataIndexes.endOfData) {
             datumIndex = dataExtractor.extractUInt8();
+            const utils = getApp().getUtilities();
             switch (datumIndex) {
                 case DataIndexes.category: dataExtractor.extractString(); break;
                 case DataIndexes.alive: this.setAlive(dataExtractor.extractBool()); updateMarker = true; break;
                 case DataIndexes.human: this.#human = dataExtractor.extractBool(); break;
                 case DataIndexes.controlled: this.#controlled = dataExtractor.extractBool(); updateMarker = true; break;
-                case DataIndexes.coalition: let newCoalition = enumToCoalition(dataExtractor.extractUInt8()); updateMarker = true; if (newCoalition != this.#coalition) this.#clearRanges(); this.#coalition = newCoalition; break; // If the coalition has changed, redraw the range circles to update the colour
+                case DataIndexes.coalition: let newCoalition = utils.enumToCoalition(dataExtractor.extractUInt8()); updateMarker = true; if (newCoalition != this.#coalition) this.#clearRanges(); this.#coalition = newCoalition; break; // If the coalition has changed, redraw the range circles to update the colour
                 case DataIndexes.country: this.#country = dataExtractor.extractUInt8(); break;
                 case DataIndexes.name: this.#name = dataExtractor.extractString(); break;
                 case DataIndexes.unitName: this.#unitName = dataExtractor.extractString(); break;
                 case DataIndexes.groupName: this.#groupName = dataExtractor.extractString(); updateMarker = true; break;
-                case DataIndexes.state: this.#state = enumToState(dataExtractor.extractUInt8()); updateMarker = true; break;
+                case DataIndexes.state: this.#state = utils.enumToState(dataExtractor.extractUInt8()); updateMarker = true; break;
                 case DataIndexes.task: this.#task = dataExtractor.extractString(); break;
                 case DataIndexes.hasTask: this.#hasTask = dataExtractor.extractBool(); break;
                 case DataIndexes.position: this.#position = dataExtractor.extractLatLng(); updateMarker = true; break;
@@ -302,9 +302,9 @@ export abstract class Unit extends CustomMarker {
                 case DataIndexes.formationOffset: this.#formationOffset = dataExtractor.extractOffset(); break;
                 case DataIndexes.targetID: this.#targetID = dataExtractor.extractUInt32(); break;
                 case DataIndexes.targetPosition: this.#targetPosition = dataExtractor.extractLatLng(); break;
-                case DataIndexes.ROE: this.#ROE = enumToROE(dataExtractor.extractUInt8()); break;
-                case DataIndexes.reactionToThreat: this.#reactionToThreat = enumToReactionToThreat(dataExtractor.extractUInt8()); break;
-                case DataIndexes.emissionsCountermeasures: this.#emissionsCountermeasures = enumToEmissioNCountermeasure(dataExtractor.extractUInt8()); break;
+                case DataIndexes.ROE: this.#ROE = utils.enumToROE(dataExtractor.extractUInt8()); break;
+                case DataIndexes.reactionToThreat: this.#reactionToThreat = utils.enumToReactionToThreat(dataExtractor.extractUInt8()); break;
+                case DataIndexes.emissionsCountermeasures: this.#emissionsCountermeasures = utils.enumToEmissionCountermeasure(dataExtractor.extractUInt8()); break;
                 case DataIndexes.TACAN: this.#TACAN = dataExtractor.extractTACAN(); break;
                 case DataIndexes.radio: this.#radio = dataExtractor.extractRadio(); break;
                 case DataIndexes.generalSettings: this.#generalSettings = dataExtractor.extractGeneralSettings(); break;
@@ -312,7 +312,7 @@ export abstract class Unit extends CustomMarker {
                 case DataIndexes.contacts: this.#contacts = dataExtractor.extractContacts(); document.dispatchEvent(new CustomEvent("contactsUpdated", { detail: this })); break;
                 case DataIndexes.activePath: this.#activePath = dataExtractor.extractActivePath(); break;
                 case DataIndexes.isLeader: this.#isLeader = dataExtractor.extractBool(); break;
-                case DataIndexes.operateAs: this.#operateAs = enumToCoalition(dataExtractor.extractUInt8()); break;
+                case DataIndexes.operateAs: this.#operateAs = utils.enumToCoalition(dataExtractor.extractUInt8()); break;
                 case DataIndexes.shotsScatter: this.#shotsScatter = dataExtractor.extractUInt8(); break;
                 case DataIndexes.shotsIntensity: this.#shotsIntensity = dataExtractor.extractUInt8(); break;
                 case DataIndexes.health: this.#health = dataExtractor.extractUInt8(); updateMarker = true; break;
@@ -403,7 +403,7 @@ export abstract class Unit extends CustomMarker {
      * @returns UnitDatabase
      */
     getDatabase(): UnitDatabase | null {
-        return getUnitDatabaseByCategory(this.getMarkerCategory());
+        return getApp().getUtilities().getUnitDatabaseByCategory(this.getMarkerCategory());
     }
 
     /** Set the unit as alive or dead
@@ -711,8 +711,8 @@ export abstract class Unit extends CustomMarker {
             /* Hide the unit if it does not belong to the commanded coalition and it is not detected by a method that can pinpoint its location (RWR does not count) */
             (!this.belongsToCommandedCoalition() && (this.#detectionMethods.length == 0 || (this.#detectionMethods.length == 1 && this.#detectionMethods[0] === RWR))) ||
             /* Hide the unit if grouping is activated, the unit is not the group leader, it is not selected, and the zoom is higher than the grouping threshold */
-            (getApp().getMap().getVisibilityOptions()[HIDE_GROUP_MEMBERS] && !this.#isLeader && !this.getSelected() && this.getCategory() == "GroundUnit" && getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION && 
-            (this.belongsToCommandedCoalition() || (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0))));
+            (getApp().getMap().getVisibilityOptions()[HIDE_GROUP_MEMBERS] && !this.#isLeader && !this.getSelected() && this.getCategory() == "GroundUnit" && getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION &&
+                (this.belongsToCommandedCoalition() || (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0))));
 
         /* Force dead units to be hidden */
         this.setHidden(hidden || !this.getAlive());
@@ -907,7 +907,7 @@ export abstract class Unit extends CustomMarker {
 
     setOperateAs(operateAs: string) {
         if (!this.#human)
-            getApp().getServerManager().setOperateAs(this.ID, coalitionToEnum(operateAs));
+            getApp().getServerManager().setOperateAs(this.ID, getApp().getUtilities().coalitionToEnum(operateAs));
     }
 
     delete(explosion: boolean, explosionType: string, immediate: boolean) {
@@ -941,7 +941,7 @@ export abstract class Unit extends CustomMarker {
     }
 
     simulateFireFight(latlng: LatLng, targetGroundElevation: number | null) {
-        getGroundElevation(this.getPosition(), (response: string) => {
+        getApp().getUtilities().getGroundElevation(this.getPosition(), (response: string) => {
             var unitGroundElevation: number | null = null;
             try {
                 unitGroundElevation = parseFloat(response);
@@ -1002,7 +1002,7 @@ export abstract class Unit extends CustomMarker {
 
     showFollowOptions(units: Unit[]) {
         var contextActionSet = new ContextActionSet();
-       
+
         contextActionSet.addContextAction(this, 'trail', "Trail", "Follow unit in trail formation", () => this.applyFollowOptions('trail', units));
         contextActionSet.addContextAction(this, 'echelon-lh', "Echelon (LH)", "Follow unit in echelon left formation", () => this.applyFollowOptions('echelon-lh', units));
         contextActionSet.addContextAction(this, 'echelon-rh', "Echelon (RH)", "Follow unit in echelon right formation", () => this.applyFollowOptions('echelon-rh', units));
@@ -1011,7 +1011,7 @@ export abstract class Unit extends CustomMarker {
         contextActionSet.addContextAction(this, 'front', "Front", "Fly in front of unit", () => this.applyFollowOptions('front', units));
         contextActionSet.addContextAction(this, 'diamond', "Diamond", "Follow unit in diamond formation", () => this.applyFollowOptions('diamond', units));
         contextActionSet.addContextAction(this, 'custom', "Custom", "Set a custom formation position", () => this.applyFollowOptions('custom', units));
-        
+
         getApp().getMap().getUnitContextMenu().setContextActions(contextActionSet);
         getApp().getMap().showUnitContextMenu();
     }
@@ -1030,9 +1030,9 @@ export abstract class Unit extends CustomMarker {
                         clock++;
                     }
                     var angleDeg = 360 - (clock - 1) * 45;
-                    var angleRad = deg2rad(angleDeg);
-                    var distance = ftToM(parseInt((<HTMLInputElement>dialog.querySelector(`#distance`)?.querySelector("input")).value));
-                    var upDown = ftToM(parseInt((<HTMLInputElement>dialog.querySelector(`#up-down`)?.querySelector("input")).value));
+                    var angleRad = getApp().getUtilities().degToRad(angleDeg);
+                    var distance = getApp().getUtilities().ftToM(parseInt((<HTMLInputElement>dialog.querySelector(`#distance`)?.querySelector("input")).value));
+                    var upDown = getApp().getUtilities().ftToM(parseInt((<HTMLInputElement>dialog.querySelector(`#up-down`)?.querySelector("input")).value));
 
                     // X: front-rear, positive front
                     // Y: top-bottom, positive top
@@ -1182,13 +1182,16 @@ export abstract class Unit extends CustomMarker {
                     }
                 }
 
+                const utils = getApp().getUtilities();
+
                 /* Set altitude and speed */
                 if (element.querySelector(".unit-altitude"))
-                    (<HTMLElement>element.querySelector(".unit-altitude")).innerText = "FL" + zeroAppend(Math.floor(mToFt(this.#position.alt as number) / 100), 3);
+                    (<HTMLElement>element.querySelector(".unit-altitude")).innerText = "FL" + utils.zeroPrepend(Math.floor(utils.mToFt(this.#position.alt as number) / 100), 3);
                 if (element.querySelector(".unit-speed"))
-                    (<HTMLElement>element.querySelector(".unit-speed")).innerText = String(Math.floor(msToKnots(this.#speed))) + "GS";
+                    (<HTMLElement>element.querySelector(".unit-speed")).innerText = String(Math.floor(getApp().getUtilities().msToKts(this.#speed))) + "GS";
 
                 /* Rotate elements according to heading */
+                const rad2deg = getApp().getUtilities().radToDeg;
                 element.querySelectorAll("[data-rotate-to-heading]").forEach(el => {
                     const headingDeg = rad2deg(this.#track);
                     let currentStyle = el.getAttribute("style") || "";
@@ -1292,6 +1295,7 @@ export abstract class Unit extends CustomMarker {
     #drawContacts() {
         this.#clearContacts();
         if (getApp().getMap().getVisibilityOptions()[SHOW_UNIT_CONTACTS]) {
+            const deg2rad = getApp().getUtilities().degToRad;
             for (let index in this.#contacts) {
                 var contactData = this.#contacts[index];
                 var contact: Unit | Weapon | null;
@@ -1305,7 +1309,7 @@ export abstract class Unit extends CustomMarker {
                     var startLatLng = new LatLng(this.#position.lat, this.#position.lng);
                     var endLatLng: LatLng;
                     if (contactData.detectionMethod === RWR) {
-                        var bearingToContact = bearing(this.#position.lat, this.#position.lng, contact.getPosition().lat, contact.getPosition().lng);
+                        var bearingToContact = getApp().getUtilities().bearing(this.#position, contact.getPosition());
                         var startXY = getApp().getMap().latLngToContainerPoint(startLatLng);
                         var endX = startXY.x + 80 * Math.sin(deg2rad(bearingToContact));
                         var endY = startXY.y - 80 * Math.cos(deg2rad(bearingToContact));
@@ -1369,7 +1373,7 @@ export abstract class Unit extends CustomMarker {
             this.#engagementCircle.options.fillOpacity = this.getSelected() && getApp().getMap().getVisibilityOptions()[FILL_SELECTED_RING] ? 0.3 : 0;
 
             /* Acquisition circles */
-            var shortAcquisitionRangeCheck = (acquisitionRange > nmToM(3) || !getApp().getMap().getVisibilityOptions()[HIDE_UNITS_SHORT_RANGE_RINGS]);
+            var shortAcquisitionRangeCheck = (acquisitionRange > getApp().getUtilities().nmToM(3) || !getApp().getMap().getVisibilityOptions()[HIDE_UNITS_SHORT_RANGE_RINGS]);
 
             if (getApp().getMap().getVisibilityOptions()[SHOW_UNITS_ACQUISITION_RINGS] && shortAcquisitionRangeCheck && (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, IRST, RWR].includes(value)))) {
                 if (!getApp().getMap().hasLayer(this.#acquisitionCircle)) {
@@ -1395,7 +1399,7 @@ export abstract class Unit extends CustomMarker {
             }
 
             /* Engagement circles */
-            var shortEngagementRangeCheck = (engagementRange > nmToM(3) || !getApp().getMap().getVisibilityOptions()[HIDE_UNITS_SHORT_RANGE_RINGS]);
+            var shortEngagementRangeCheck = (engagementRange > getApp().getUtilities().nmToM(3) || !getApp().getMap().getVisibilityOptions()[HIDE_UNITS_SHORT_RANGE_RINGS]);
             if (getApp().getMap().getVisibilityOptions()[SHOW_UNITS_ENGAGEMENT_RINGS] && shortEngagementRangeCheck && (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, IRST, RWR].includes(value)))) {
                 if (!getApp().getMap().hasLayer(this.#engagementCircle)) {
                     this.#engagementCircle.addTo(getApp().getMap());
@@ -1453,16 +1457,16 @@ export abstract class Unit extends CustomMarker {
         if (this.getState() === 'simulate-fire-fight' && this.getShotsScatter() != MAX_SHOTS_SCATTER) {
             let turfUnitPosition = turf.point([this.getPosition().lng, this.getPosition().lat]);
             let turfTargetPosition = turf.point([targetPosition.lng, targetPosition.lat]);
-            
+
             let bearing = turf.bearing(turfUnitPosition, turfTargetPosition);
-            let scatterDistance = turf.distance(turfUnitPosition, turfTargetPosition) * Math.tan((MAX_SHOTS_SCATTER - this.getShotsScatter()) * deg2rad(SHOTS_SCATTER_DEGREES));
+            let scatterDistance = turf.distance(turfUnitPosition, turfTargetPosition) * Math.tan((MAX_SHOTS_SCATTER - this.getShotsScatter()) * getApp().getUtilities().degToRad(SHOTS_SCATTER_DEGREES));
             let destination1 = turf.destination(turfTargetPosition, scatterDistance, bearing + 90);
             let destination2 = turf.destination(turfTargetPosition, scatterDistance, bearing - 90);
-            
-            this.#targetPositionPolyline.setStyle({dashArray: "4, 8"});
+
+            this.#targetPositionPolyline.setStyle({ dashArray: "4, 8" });
             this.#targetPositionPolyline.setLatLngs([new LatLng(destination1.geometry.coordinates[1], destination1.geometry.coordinates[0]), new LatLng(this.#position.lat, this.#position.lng), new LatLng(destination2.geometry.coordinates[1], destination2.geometry.coordinates[0])])
         } else {
-            this.#targetPositionPolyline.setStyle({dashArray: ""});
+            this.#targetPositionPolyline.setStyle({ dashArray: "" });
             this.#targetPositionPolyline.setLatLngs([new LatLng(this.#position.lat, this.#position.lng), new LatLng(targetPosition.lat, targetPosition.lng)])
         }
     }
@@ -1559,7 +1563,7 @@ export class Helicopter extends AirUnit {
     appendContextActions(contextActionSet: ContextActionSet, targetUnit: Unit | null, targetPosition: LatLng | null) {
         super.appendContextActions(contextActionSet, targetUnit, targetPosition);
 
-        if (targetPosition !== null) 
+        if (targetPosition !== null)
             contextActionSet.addContextAction(this, "land-at-point", "Land here", "land at this precise location", (units: Unit[]) => { getApp().getUnitsManager().landAtPoint(targetPosition, units) });
     }
 

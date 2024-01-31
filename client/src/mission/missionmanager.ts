@@ -4,11 +4,6 @@ import { Airbase } from "./airbase";
 import { Bullseye } from "./bullseye";
 import { BLUE_COMMANDER, ERAS, GAME_MASTER, NONE, RED_COMMANDER } from "../constants/constants";
 import { Dropdown } from "../controls/dropdown";
-import { groundUnitDatabase } from "../unit/databases/groundunitdatabase";
-import { createCheckboxOption, getCheckboxOptions } from "../other/utils";
-import { aircraftDatabase } from "../unit/databases/aircraftdatabase";
-import { helicopterDatabase } from "../unit/databases/helicopterdatabase";
-import { navyUnitDatabase } from "../unit/databases/navyunitdatabase";
 import { Popup } from "../popups/popup";
 import { AirbasesData, BullseyesData, CommandModeOptions, DateAndTime, MissionData } from "../interfaces";
 
@@ -17,18 +12,18 @@ export class MissionManager {
     #bullseyes: { [name: string]: Bullseye } = {};
     #airbases: { [name: string]: Airbase } = {};
     #theatre: string = "";
-    #dateAndTime: DateAndTime = {date: {Year: 0, Month: 0, Day: 0}, time: {h: 0, m: 0, s: 0}, startTime: 0, elapsedTime: 0};
-    #commandModeOptions: CommandModeOptions = {commandMode: NONE, restrictSpawns: false, restrictToCoalition: false, setupTime: Infinity, spawnPoints: {red: Infinity, blue: Infinity}, eras: []};
+    #dateAndTime: DateAndTime = { date: { Year: 0, Month: 0, Day: 0 }, time: { h: 0, m: 0, s: 0 }, startTime: 0, elapsedTime: 0 };
+    #commandModeOptions: CommandModeOptions = { commandMode: NONE, restrictSpawns: false, restrictToCoalition: false, setupTime: Infinity, spawnPoints: { red: Infinity, blue: Infinity }, eras: [] };
     #remainingSetupTime: number = 0;
     #spentSpawnPoint: number = 0;
     #commandModeDialog: HTMLElement;
     #commandModeErasDropdown: Dropdown;
-    #coalitions: {red: string[], blue: string[]} = {red: [], blue: []};
+    #coalitions: { red: string[], blue: string[] } = { red: [], blue: [] };
 
     constructor() {
         document.addEventListener("applycommandModeOptions", () => this.#applycommandModeOptions());
         document.addEventListener("showCommandModeDialog", () => this.showCommandModeDialog());
-        document.addEventListener("toggleSpawnRestrictions", (ev:CustomEventInit) => {
+        document.addEventListener("toggleSpawnRestrictions", (ev: CustomEventInit) => {
             this.#toggleSpawnRestrictions(ev.detail._element.checked)
         });
 
@@ -36,7 +31,7 @@ export class MissionManager {
         this.#commandModeDialog = document.querySelector("#command-mode-settings-dialog") as HTMLElement;
         this.#commandModeErasDropdown = new Dropdown({
             "ID": "command-mode-era-options",
-            "callback": () => {}
+            "callback": () => { }
         });
 
     }
@@ -118,8 +113,8 @@ export class MissionManager {
                 if (this.#remainingSetupTime > 0) {
                     var remainingTime = `-${new Date(this.#remainingSetupTime * 1000).toISOString().substring(14, 19)}`;
                     commandModePhaseEl.dataset.remainingTime = remainingTime;
-                } 
-                
+                }
+
                 commandModePhaseEl.classList.toggle("setup-phase", this.#remainingSetupTime > 0 && this.getCommandModeOptions().restrictSpawns);
                 commandModePhaseEl.classList.toggle("game-commenced", this.#remainingSetupTime <= 0 || !this.getCommandModeOptions().restrictSpawns);
                 commandModePhaseEl.classList.toggle("no-restrictions", !this.getCommandModeOptions().restrictSpawns);
@@ -204,7 +199,7 @@ export class MissionManager {
             return "all";
     }
 
-    refreshSpawnPoints() {            
+    refreshSpawnPoints() {
         var spawnPointsEl = document.querySelector("#spawn-points");
         if (spawnPointsEl) {
             spawnPointsEl.textContent = `${this.getAvailableSpawnPoints()}`;
@@ -224,9 +219,9 @@ export class MissionManager {
         /* Create the checkboxes to select the unit eras */
         this.#commandModeErasDropdown.setOptionsElements(
             ERAS.sort((eraA, eraB) => {
-                return ( eraA.chronologicalOrder > eraB.chronologicalOrder ) ? 1 : -1;
+                return (eraA.chronologicalOrder > eraB.chronologicalOrder) ? 1 : -1;
             }).map((era) => {
-                return createCheckboxOption(era.name, `Enable ${era} units spawns`, this.getCommandModeOptions().eras.includes(era.name));
+                return getApp().getUtilities().createCheckboxOption(era.name, `Enable ${era} units spawns`, this.getCommandModeOptions().eras.includes(era.name));
             })
         );
 
@@ -255,13 +250,13 @@ export class MissionManager {
         const setupTimeInput = this.#commandModeDialog.querySelector("#setup-time")?.querySelector("input") as HTMLInputElement;
 
         var eras: string[] = [];
-        const enabledEras = getCheckboxOptions(this.#commandModeErasDropdown);
-        Object.keys(enabledEras).forEach((key: string) => {if (enabledEras[key]) eras.push(key)});
-        getApp().getServerManager().setCommandModeOptions(restrictSpawnsCheckbox.checked, restrictToCoalitionCheckbox.checked, {blue: parseInt(blueSpawnPointsInput.value), red: parseInt(redSpawnPointsInput.value)}, eras, parseInt(setupTimeInput.value) * 60);
+        const enabledEras = getApp().getUtilities().getCheckboxOptions(this.#commandModeErasDropdown);
+        Object.keys(enabledEras).forEach((key: string) => { if (enabledEras[key]) eras.push(key) });
+        getApp().getServerManager().setCommandModeOptions(restrictSpawnsCheckbox.checked, restrictToCoalitionCheckbox.checked, { blue: parseInt(blueSpawnPointsInput.value), red: parseInt(redSpawnPointsInput.value) }, eras, parseInt(setupTimeInput.value) * 60);
     }
 
     #setcommandModeOptions(commandModeOptions: CommandModeOptions) {
-        /* Refresh all the data if we have exited the NONE state */ 
+        /* Refresh all the data if we have exited the NONE state */
         var requestRefresh = false;
         if (this.#commandModeOptions.commandMode === NONE && commandModeOptions.commandMode !== NONE)
             requestRefresh = true;
@@ -271,12 +266,12 @@ export class MissionManager {
             location.reload();
 
         /* Check if any option has changed */
-        var commandModeOptionsChanged = (!commandModeOptions.eras.every((value: string, idx: number) => {return value === this.getCommandModeOptions().eras[idx]}) || 
-                                commandModeOptions.spawnPoints.red !== this.getCommandModeOptions().spawnPoints.red || 
-                                commandModeOptions.spawnPoints.blue !== this.getCommandModeOptions().spawnPoints.blue ||
-                                commandModeOptions.restrictSpawns !== this.getCommandModeOptions().restrictSpawns ||
-                                commandModeOptions.restrictToCoalition !== this.getCommandModeOptions().restrictToCoalition);
-        
+        var commandModeOptionsChanged = (!commandModeOptions.eras.every((value: string, idx: number) => { return value === this.getCommandModeOptions().eras[idx] }) ||
+            commandModeOptions.spawnPoints.red !== this.getCommandModeOptions().spawnPoints.red ||
+            commandModeOptions.spawnPoints.blue !== this.getCommandModeOptions().spawnPoints.blue ||
+            commandModeOptions.restrictSpawns !== this.getCommandModeOptions().restrictSpawns ||
+            commandModeOptions.restrictToCoalition !== this.getCommandModeOptions().restrictToCoalition);
+
         this.#commandModeOptions = commandModeOptions;
         this.setSpentSpawnPoints(0);
         this.refreshSpawnPoints();
@@ -303,7 +298,7 @@ export class MissionManager {
     }
 
     #loadAirbaseChartData(callsign: string) {
-        if ( !this.#theatre ) {
+        if (!this.#theatre) {
             return;
         }
 
@@ -322,8 +317,8 @@ export class MissionManager {
         xhr.send();
     }
 
-    #toggleSpawnRestrictions(restrictionsEnabled:boolean) {
-        this.#commandModeDialog.querySelectorAll("input, label, .ol-select").forEach( el => {
+    #toggleSpawnRestrictions(restrictionsEnabled: boolean) {
+        this.#commandModeDialog.querySelectorAll("input, label, .ol-select").forEach(el => {
             if (!el.closest("#restrict-spawns")) el.toggleAttribute("disabled", !restrictionsEnabled);
         });
     }

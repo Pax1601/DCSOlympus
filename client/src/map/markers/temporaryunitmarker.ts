@@ -1,7 +1,6 @@
 import { CustomMarker } from "./custommarker";
 import { DivIcon, LatLng } from "leaflet";
 import { SVGInjector } from "@tanem/svg-injector";
-import { getMarkerCategoryByName, getUnitDatabaseByCategory } from "../../other/utils";
 import { getApp } from "../..";
 
 export class TemporaryUnitMarker extends CustomMarker {
@@ -35,8 +34,8 @@ export class TemporaryUnitMarker extends CustomMarker {
     }
 
     createIcon() {
-        const category = getMarkerCategoryByName(this.#name);
-        const databaseEntry = getUnitDatabaseByCategory(category)?.getByName(this.#name);
+        const category      = getApp().getUtilities().getMarkerCategoryByName(this.#name);
+        const databaseEntry = getApp().getUtilities().getUnitDatabaseByCategory(category)?.getByName(this.#name);
 
         /* Set the icon */
         var icon = new DivIcon({
