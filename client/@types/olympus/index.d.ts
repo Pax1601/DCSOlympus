@@ -2643,7 +2643,9 @@ declare module "panels/panelsmanager" {
 declare module "template/templatemanager" {
     import { Manager } from "other/manager";
     export class TemplateManager extends Manager {
+        #private;
         constructor();
+        getTemplateEngine(): any;
         renderTemplate(name: string, data?: object): any;
     }
 }
@@ -2664,7 +2666,6 @@ declare module "olympusapp" {
     export class OlympusApp {
         #private;
         constructor();
-        getTemplateEngine(): any;
         getDialogManager(): Manager;
         getMap(): Map;
         getCurrentContext(): Context;
@@ -2729,16 +2730,6 @@ declare module "olympusapp" {
 declare module "index" {
     import { OlympusApp } from "olympusapp";
     export function getApp(): OlympusApp;
-}
-declare module "converter/converter" {
-    export class Converter {
-    }
-}
-declare module "creator/creator" {
-    import { Dropdown, dropdownConfig } from "controls/dropdown";
-    export class Creator {
-        createDropdown(config: dropdownConfig): Dropdown;
-    }
 }
 declare module "other/utils" {
     import { LatLng, Polygon } from "leaflet";

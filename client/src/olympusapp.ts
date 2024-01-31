@@ -29,8 +29,6 @@ import { ContextManager } from "./context/contextmanager";
 import { Context } from "./context/context";
 import { AirbasesJSONSchemaValidator } from "./schemas/schema";
 import { PanelsManager } from "./panels/panelsmanager";
-import { ContextMenuManager } from "./context/contextmenumanager";
-import { ContextMenu } from "./contextmenus/contextmenu";
 import { Utilities } from "./other/utilities";
 import { TemplateManager } from "./template/templatemanager";
 
@@ -43,8 +41,6 @@ export class OlympusApp {
 
     /* Main leaflet map, extended by custom methods */
     #map: Map | null = null;
-
-    #templateEngine: any;
 
     /* Managers */
     #contextManager!: ContextManager;
@@ -62,10 +58,6 @@ export class OlympusApp {
     #weaponsManager: WeaponsManager | null = null;
 
     constructor() {
-    }
-
-    getTemplateEngine() {
-        return this.#templateEngine;
     }
 
     // TODO add checks on null
@@ -209,7 +201,6 @@ export class OlympusApp {
 
     start() {
         /* Initialize base functionalitites */
-        this.#templateEngine = require("ejs");
         this.#templateManager = new TemplateManager();
 
         this.#contextManager = new ContextManager();

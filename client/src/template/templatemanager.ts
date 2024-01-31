@@ -3,13 +3,19 @@ import { Manager } from "../other/manager";
 
 export class TemplateManager extends Manager {
 
+    #templateEngine = require("ejs");
+
     constructor() {
         super();
     }
 
-    renderTemplate(name:string, data?:object) {
+    getTemplateEngine() {
+        return this.#templateEngine;
+    }
+
+    renderTemplate(name: string, data?: object) {
         const tpl = this.get(name);
-        return tpl ? getApp().getTemplateEngine().render(tpl, data) : false;
+        return tpl ? this.getTemplateEngine().render(tpl, data) : false;
     }
 
 }
