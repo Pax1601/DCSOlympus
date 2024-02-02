@@ -1555,16 +1555,15 @@ declare module "panels/paneleventsmanager" {
 declare module "panels/panel" {
     import { Dropdown, dropdownConfig } from "controls/dropdown";
     import { PanelEventsManager } from "panels/paneleventsmanager";
-    export interface PanelInterface {
-    }
     export class Panel {
         #private;
+        protected showByDefault: boolean;
         constructor(ID: string);
         createDropdown(config: dropdownConfig): Dropdown;
+        getShowByDefault(): boolean;
         show(): void;
         hide(): void;
-        toggle(): void;
-        toggleByContext(): void;
+        toggle(bool?: boolean): void;
         getElement(): HTMLElement;
         getVisible(): boolean;
         getEventsManager(): PanelEventsManager;
@@ -1754,6 +1753,7 @@ declare module "panels/connectionstatuspanel" {
 declare module "panels/hotgrouppanel" {
     import { Panel } from "panels/panel";
     export class HotgroupPanel extends Panel {
+        protected showByDefault: boolean;
         /**
          *
          * @param ID - the ID of the HTML element which will contain the context menu
@@ -1910,6 +1910,7 @@ declare module "panels/unitcontrolpanel" {
     import { Panel } from "panels/panel";
     export class UnitControlPanel extends Panel {
         #private;
+        protected showByDefault: boolean;
         /**
          *
          * @param ID - the ID of the HTML element which will contain the context menu
@@ -1924,6 +1925,7 @@ declare module "panels/unitinfopanel" {
     import { Panel } from "panels/panel";
     export class UnitInfoPanel extends Panel {
         #private;
+        protected showByDefault: boolean;
         constructor(ID: string);
         show(): void;
     }
@@ -2575,12 +2577,13 @@ declare module "panels/unitlistpanel" {
     import { Panel } from "panels/panel";
     export class UnitListPanel extends Panel {
         #private;
+        protected showByDefault: boolean;
         constructor(panelElement: string, contentElement: string);
         doUpdate(): void;
         getContentElement(): HTMLElement;
         startUpdates(): void;
         stopUpdates(): void;
-        toggle(): void;
+        toggle(bool?: boolean): void;
     }
 }
 declare module "context/contextmenumanager" {
@@ -2604,6 +2607,9 @@ declare module "context/context" {
         contextMenus?: contextMenuManagerConfig;
         onSet?: CallableFunction;
         onUnset?: CallableFunction;
+        panels?: {
+            [key: string]: boolean;
+        };
         useMouseInfoPanel?: boolean;
         useUnitControlPanel?: boolean;
         useUnitInfoPanel?: boolean;

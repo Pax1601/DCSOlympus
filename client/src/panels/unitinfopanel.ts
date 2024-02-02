@@ -13,9 +13,10 @@ export class UnitInfoPanel extends Panel {
     #unitLabel: HTMLElement;
     #unitGroup: HTMLElement;
     #unitName: HTMLElement;
+    protected showByDefault: boolean = false;
 
     constructor(ID: string) {
-        super( ID );
+        super(ID);
 
         this.#currentTask = (this.getElement().querySelector("#current-task")) as HTMLElement;
         this.#fuelBar = (this.getElement().querySelector("#fuel-bar")) as HTMLElement;
@@ -100,7 +101,7 @@ export class UnitInfoPanel extends Panel {
 
     show() {
         const context = getApp().getCurrentContext();
-        if ( !context.getUseUnitInfoPanel() )
+        if (!context.getUseUnitInfoPanel())
             return;
 
         super.show();

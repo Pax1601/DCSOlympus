@@ -1,14 +1,11 @@
-import { getApp } from "..";
 import { Dropdown, dropdownConfig } from "../controls/dropdown";
 import { PanelEventsManager } from "./paneleventsmanager";
-
-export interface PanelInterface {
-}
 
 export class Panel {
 
     #element: HTMLElement
     #eventsManager!: PanelEventsManager;
+    protected showByDefault = true;
 
     constructor(ID: string) {
         this.#element = <HTMLElement>document.getElementById(ID);
@@ -18,6 +15,10 @@ export class Panel {
 
     createDropdown(config: dropdownConfig) {
         return new Dropdown(config);
+    }
+
+    getShowByDefault() {
+        return this.showByDefault;
     }
 
     show() {
@@ -30,17 +31,13 @@ export class Panel {
         this.getEventsManager()?.trigger("hide", {});
     }
 
-    toggle() {
+    toggle(bool?: boolean) {
+        bool = (typeof bool === typeof true) ? bool : !this.getVisible();
         // Simple way to track if currently visible
-        if (this.getVisible())
-            this.hide();
-        else
+        if (bool)
             this.show();
-    }
-
-    toggleByContext() {
-        const context = getApp().getCurrentContext();
-        (context.getUseMouseInfoPanel()) ? this.show() : this.hide();
+        else
+            this.hide();
     }
 
     getElement() {

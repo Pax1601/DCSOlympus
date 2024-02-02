@@ -1,4 +1,6 @@
-import { ContextMenuManager, contextMenuManagerConfig, contextMenuTypes } from "./contextmenumanager";
+import { getApp } from "..";
+import { Panel } from "../panels/panel";
+import { ContextMenuManager, contextMenuManagerConfig } from "./contextmenumanager";
 
 export type contextConfig = {
     allowUnitCopying?: boolean;
@@ -6,6 +8,7 @@ export type contextConfig = {
     contextMenus?: contextMenuManagerConfig;
     onSet?: CallableFunction;
     onUnset?: CallableFunction;
+    panels?: { [key: string]: boolean };
     useMouseInfoPanel?: boolean;
     useUnitControlPanel?: boolean;
     useUnitInfoPanel?: boolean;
@@ -17,6 +20,7 @@ export class Context {
     #contextMenuManager: ContextMenuManager;
     #onSet: CallableFunction;
     #onUnset: CallableFunction;
+    #panels: { [key: string]: boolean };
     #useMouseInfoPanel: boolean;
     #useUnitControlPanel: boolean;
     #useUnitInfoPanel: boolean;
@@ -26,6 +30,7 @@ export class Context {
         this.#allowUnitPasting = (config.allowUnitPasting !== false);
         this.#onSet = config.onSet || function () { };
         this.#onUnset = config.onUnset || function () { };
+        this.#panels = config.panels || {};
         this.#useMouseInfoPanel = (config.useMouseInfoPanel !== false);
         this.#useUnitControlPanel = (config.useUnitControlPanel !== false);
         this.#useUnitInfoPanel = (config.useUnitInfoPanel !== false);
@@ -58,6 +63,14 @@ export class Context {
     }
 
     onSet() {
+        const allPanels = getApp().getPanelsManager().getAll();
+        const panels = this.#panels;
+        for (let [panelName, panel] of Object.entries(allPanels)) {
+            panel = panel as Panel;
+            let bool = (typeof panels[panelName] !== "boolean") ? panel.getShowByDefault() : panels[panelName];
+            panel.toggle(bool);
+        }
+
         this.#onSet();
     }
 

@@ -3,21 +3,24 @@ import { Unit } from "../unit/unit";
 import { Panel } from "./panel";
 
 export class HotgroupPanel extends Panel {
+
+    protected showByDefault: boolean = true;
+
     /**
      * 
      * @param ID - the ID of the HTML element which will contain the context menu
      */
-    constructor(ID: string){
+    constructor(ID: string) {
         super(ID);
         document.addEventListener("unitDeath", () => this.refreshHotgroups());
     }
 
     refreshHotgroups() {
-        for (let hotgroup = 1; hotgroup <= 9; hotgroup++){
+        for (let hotgroup = 1; hotgroup <= 9; hotgroup++) {
             this.removeHotgroup(hotgroup);
-            if (getApp().getUnitsManager().getUnitsByHotgroup(hotgroup).length > 0) 
+            if (getApp().getUnitsManager().getUnitsByHotgroup(hotgroup).length > 0)
                 this.addHotgroup(hotgroup);
-            
+
         }
     }
 
@@ -39,10 +42,10 @@ export class HotgroupPanel extends Panel {
         el.appendChild(countDiv);
         el.classList.add("hotgroup-selector");
         el.toggleAttribute(`data-hotgroup-${hotgroup}`, true)
-        
+
         this.getElement().appendChild(el);
 
-        el.addEventListener("click", ( ev:MouseEvent ) => {
+        el.addEventListener("click", (ev: MouseEvent) => {
             getApp().getUnitsManager().selectUnitsByHotgroup(hotgroup, (!ev.ctrlKey));
         });
 
@@ -59,4 +62,5 @@ export class HotgroupPanel extends Panel {
         const el = this.getElement().querySelector(`[data-hotgroup-${hotgroup}]`) as HTMLElement;
         if (el) el.remove();
     }
+
 }

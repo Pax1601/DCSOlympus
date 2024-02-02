@@ -8,18 +8,19 @@ export class UnitListPanel extends Panel {
     #currentSortAlgorithm: string = "unitName";
     #currentSortDirection: string = "ASC";
     #units: Unit[] = [];
-    #unitNameCache: {[key:string]: string} = {};
+    #unitNameCache: { [key: string]: string } = {};
     #updatesInterval!: ReturnType<typeof setInterval>;
+    protected showByDefault: boolean = false;
 
     constructor(panelElement: string, contentElement: string) {
         super(panelElement);
         const getElement = document.getElementById(contentElement);
 
-        if (getElement instanceof HTMLElement) 
+        if (getElement instanceof HTMLElement)
             this.#contentElement = getElement;
-        else 
+        else
             throw new Error(`UnitList: unable to find element "${contentElement}".`);
-        
+
         //  Add the header click listener and sorting
         [].slice.call(this.getElement().querySelectorAll(".headers > *")).forEach((header: HTMLElement) => {
             header.addEventListener("click", (ev: MouseEvent) => {
@@ -27,11 +28,11 @@ export class UnitListPanel extends Panel {
                 if (el instanceof HTMLElement) {
                     const newSort = el.getAttribute("data-sort-field") || "unitName";
 
-                    if (this.#currentSortAlgorithm === newSort) 
+                    if (this.#currentSortAlgorithm === newSort)
                         this.#currentSortDirection = (this.#currentSortDirection === "ASC") ? "DESC" : "ASC";
-                    else 
+                    else
                         this.#currentSortDirection = "ASC";
-                    
+
                     this.#currentSortAlgorithm = newSort;
 
                     this.doUpdate();
@@ -45,7 +46,7 @@ export class UnitListPanel extends Panel {
             const t = ev.target;
 
             if (t instanceof HTMLElement) {
-                const el = t.closest( "[data-unit-id]");
+                const el = t.closest("[data-unit-id]");
 
                 if (el instanceof HTMLElement) {
                     let id: number = Number(el.getAttribute("data-unit-id") || 0);
@@ -63,20 +64,20 @@ export class UnitListPanel extends Panel {
     }
 
     doUpdate() {
-        if (!this.getVisible()) 
+        if (!this.getVisible())
             return;
-        
+
         this.#contentElement.innerHTML = "";
 
         this.#units = Object.values(getApp().getUnitsManager().getUnits());
 
-        if (this.#currentSortAlgorithm === "coalition") 
+        if (this.#currentSortAlgorithm === "coalition")
             this.#sortUnitsByCoalition();
 
-        if (this.#currentSortAlgorithm === "name") 
+        if (this.#currentSortAlgorithm === "name")
             this.#sortUnitsByName();
 
-        if (this.#currentSortAlgorithm === "unitName") 
+        if (this.#currentSortAlgorithm === "unitName")
             this.#sortUnitsByUnitName();
 
         Object.values(this.#units).forEach((unit: Unit) => {
@@ -87,7 +88,7 @@ export class UnitListPanel extends Panel {
 
             const name = unit.getName();
 
-            if ( this.#unitNameCache.hasOwnProperty( name ) === false ) {
+            if (this.#unitNameCache.hasOwnProperty(name) === false) {
                 this.#unitNameCache[name] = unit.getDatabase()?.getByName(unit.getName())?.label || unit.getName();
             }
 
@@ -133,9 +134,9 @@ export class UnitListPanel extends Panel {
 
             let cmp = this.#sortStringsCompare(str1, str2);
 
-            if (cmp !== 0) 
+            if (cmp !== 0)
                 return cmp;
-            
+
             str1 = unit1.getUnitName().toLowerCase();
             str2 = unit2.getUnitName().toLowerCase();
 
@@ -150,9 +151,9 @@ export class UnitListPanel extends Panel {
 
             let cmp = this.#sortStringsCompare(str1, str2);
 
-            if (cmp !== 0) 
+            if (cmp !== 0)
                 return cmp;
-            
+
             str1 = unit1.getUnitName().toLowerCase();
             str2 = unit2.getUnitName().toLowerCase();
 
@@ -180,12 +181,12 @@ export class UnitListPanel extends Panel {
         clearInterval(this.#updatesInterval);
     }
 
-    toggle() {
-        if (this.getVisible()) 
-            this.stopUpdates();
-        else 
+    toggle(bool?: boolean) {
+        super.toggle(bool);
+
+        if (this.getVisible())
             this.startUpdates();
-        
-        super.toggle();
+        else
+            this.stopUpdates();
     }
 }

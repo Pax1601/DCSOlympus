@@ -28,6 +28,7 @@ export class UnitControlPanel extends Panel {
     #units: Unit[] = [];
     #selectedUnitsTypes: string[] = [];
     #deleteDropdown: Dropdown;
+    protected showByDefault: boolean = false;
 
     /**
      * 
@@ -97,7 +98,7 @@ export class UnitControlPanel extends Panel {
         /* Follow roads switch */
         this.#followRoadsSwitch = new Switch("follow-roads-switch", (value: boolean) => {
             getApp().getUnitsManager().setFollowRoads(value);
-            if (value) 
+            if (value)
                 (getApp().getPopupsManager().get("infoPopup") as Popup).setText("Warning: follow roads movements can cause lag");
         });
 
@@ -162,12 +163,12 @@ export class UnitControlPanel extends Panel {
 
         /*  This is for when a ctrl-click happens on the map for deselection and we need to remove the selected unit from the panel */
         document.addEventListener("unitsDeselection", (ev: CustomEventInit) => {
-            if (ev.detail.length > 0)  {
+            if (ev.detail.length > 0) {
                 this.show();
                 this.addButtons();
                 this.#updateRapidControls();
             } else {
-                this.hide(); 
+                this.hide();
                 this.#updateRapidControls();
             }
         });
@@ -259,7 +260,7 @@ export class UnitControlPanel extends Panel {
                 element.toggleAttribute("data-show-AWACS-button", getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => { return unit.isAWACS(); }) === true);
                 element.toggleAttribute("data-show-on-off", (this.#selectedUnitsTypes.includes("GroundUnit") || this.#selectedUnitsTypes.includes("NavyUnit")) && !(this.#selectedUnitsTypes.includes("Aircraft") || this.#selectedUnitsTypes.includes("Helicopter")));
                 element.toggleAttribute("data-show-follow-roads", (this.#selectedUnitsTypes.length == 1 && this.#selectedUnitsTypes.includes("GroundUnit")));
-                element.toggleAttribute("data-show-operate-as",  this.#selectedUnitsTypes.length == 1 && this.#selectedUnitsTypes.includes("GroundUnit") && getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => { return unit.getCoalition() }) === "neutral");
+                element.toggleAttribute("data-show-operate-as", this.#selectedUnitsTypes.length == 1 && this.#selectedUnitsTypes.includes("GroundUnit") && getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => { return unit.getCoalition() }) === "neutral");
 
                 if (this.#units.length == 1) {
                     if (isAWACS)
