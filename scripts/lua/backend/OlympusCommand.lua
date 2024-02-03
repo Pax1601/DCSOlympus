@@ -545,7 +545,7 @@ end
 	-- loadout: (string, optional) only for air units, must be one of the loadouts defined in unitPayloads.lua
 	-- payload: (table, optional) overrides loadout, specifies directly the loadout of the unit
 	-- liveryID: (string, optional)
-function Olympus.spawnUnits(spawnTable, skill) 
+function Olympus.spawnUnits(spawnTable) 
 	Olympus.debug("Olympus.spawnUnits " .. Olympus.serializeTable(spawnTable), 2)
 
 	local unitsTable = nil
@@ -554,18 +554,18 @@ function Olympus.spawnUnits(spawnTable, skill)
 
 	-- Generate the units table and route as per DCS requirements
 	if spawnTable.category == 'Aircraft' then
-		unitsTable = Olympus.generateAirUnitsTable(spawnTable.units, skill)
+		unitsTable = Olympus.generateAirUnitsTable(spawnTable.units)
 		route = Olympus.generateAirUnitsRoute(spawnTable)
 		category = 'plane'
 	elseif spawnTable.category == 'Helicopter' then
-		unitsTable = Olympus.generateAirUnitsTable(spawnTable.units, skill)
+		unitsTable = Olympus.generateAirUnitsTable(spawnTable.units)
 		route = Olympus.generateAirUnitsRoute(spawnTable)
 		category = 'helicopter'
 	elseif spawnTable.category == 'GroundUnit' then
-		unitsTable = Olympus.generateGroundUnitsTable(spawnTable.units, skill)
+		unitsTable = Olympus.generateGroundUnitsTable(spawnTable.units)
 		category = 'vehicle'
 	elseif spawnTable.category == 'NavyUnit' then
-		unitsTable = Olympus.generateNavyUnitsTable(spawnTable.units, skill)
+		unitsTable = Olympus.generateNavyUnitsTable(spawnTable.units)
 		category = 'ship'
 	end
 
@@ -600,7 +600,7 @@ function Olympus.spawnUnits(spawnTable, skill)
 end
 
 -- Generates unit table for air units 
-function Olympus.generateAirUnitsTable(units, skill)
+function Olympus.generateAirUnitsTable(units)
 	local unitsTable = {}
 	for idx, unit in pairs(units) do
 		local loadout = unit.loadout			-- loadout: a string, one of the names defined in unitPayloads.lua. Must be compatible with the unitType
@@ -628,7 +628,7 @@ function Olympus.generateAirUnitsTable(units, skill)
 			["y"] = spawnLocation.z,
 			["alt"] = unit.alt,
 			["alt_type"] = "BARO",
-			["skill"] = skill,
+			["skill"] = unit.skill,
 			["payload"] = payload, 
 			["heading"] = unit.heading,
 			["callsign"] = { [1] = 1, [2] = 1, [3] = 1, ["name"] = "Olympus" .. Olympus.unitCounter.. "-" .. #unitsTable + 1 },
@@ -696,7 +696,7 @@ function Olympus.generateAirUnitsRoute(spawnTable)
 end
 
 -- Generates ground units table, either single or from template
-function Olympus.generateGroundUnitsTable(units, skill)
+function Olympus.generateGroundUnitsTable(units)
 	local unitsTable = {}
 	for idx, unit in pairs(units) do
 		local spawnLocation = mist.utils.makeVec3GL(coord.LLtoLO(unit.lat, unit.lng, 0))
@@ -730,7 +730,7 @@ function Olympus.generateGroundUnitsTable(units, skill)
 end  
 
 -- Generates navy units table, either single or from template
-function Olympus.generateNavyUnitsTable(units, skill)
+function Olympus.generateNavyUnitsTable(units)
 	local unitsTable = {}
 	for idx, unit in pairs(units) do
 		local spawnLocation = mist.utils.makeVec3GL(coord.LLtoLO(unit.lat, unit.lng, 0))
@@ -1109,13 +1109,13 @@ function Olympus.setUnitsData(arg, time)
 
 									-- Generate the units table as per DCS requirements
 									if table["category"] == 'Aircraft' then
-										unitsTable = Olympus.generateAirUnitsTable(spawnTable.units, skill)
+										unitsTable = Olympus.generateAirUnitsTable(spawnTable.units)
 									elseif table["category"] == 'Helicopter' then
-										unitsTable = Olympus.generateAirUnitsTable(spawnTable.units, skill)
+										unitsTable = Olympus.generateAirUnitsTable(spawnTable.units)
 									elseif table["category"] == 'GroundUnit' then
-										unitsTable = Olympus.generateGroundUnitsTable(spawnTable.units, skill)
+										unitsTable = Olympus.generateGroundUnitsTable(spawnTable.units)
 									elseif table["category"] == 'NavyUnit' then
-										unitsTable = Olympus.generateNavyUnitsTable(spawnTable.units, skill)
+										unitsTable = Olympus.generateNavyUnitsTable(spawnTable.units)
 									end
 
 									-- Save the units in the database, for cloning

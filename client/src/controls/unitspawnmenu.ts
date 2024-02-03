@@ -273,7 +273,7 @@ export abstract class UnitSpawnMenu {
 
             if (!this.#unitSkillDropdown.isHidden()) {
                 this.#unitSkillDropdown.setOptions(["Average", "Good", "High", "Excellent"])
-                this.#unitSkillDropdown.selectValue(3);
+                this.#unitSkillDropdown.selectValue(4);
             }            
 
             /* Get the unit data from the db */

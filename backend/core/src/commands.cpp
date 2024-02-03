@@ -46,8 +46,9 @@ string SpawnGroundUnits::getString()
             << "unitType = " << "\"" << spawnOptions[i].unitType << "\"" << ", "
             << "lat = " << spawnOptions[i].location.lat << ", "
             << "lng = " << spawnOptions[i].location.lng << ", "
-            << "skill =  \"" << spawnOptions[i].skill << "\"" << ", "
-            << "liveryID = " << "\"" << spawnOptions[i].liveryID << "\"" << " }, ";
+            << "liveryID = " << "\"" << spawnOptions[i].liveryID << "\"" << ", "
+            << "skill =  \"" << spawnOptions[i].skill << "\"" << "}, ";
+
     }
 
     std::ostringstream commandSS;
@@ -56,7 +57,6 @@ string SpawnGroundUnits::getString()
         << "category = " << "\"" << "GroundUnit" << "\"" << ", "
         << "coalition = " << "\"" << coalition << "\"" << ", "
         << "country = \"" << country << "\", "
-        << "skill = \"" << skill << "\", "
         << "units = " << "{" << unitsSS.str() << "}" << "}";
     return commandSS.str();
 }
@@ -72,8 +72,8 @@ string SpawnNavyUnits::getString()
             << "unitType = " << "\"" << spawnOptions[i].unitType << "\"" << ", "
             << "lat = " << spawnOptions[i].location.lat << ", "
             << "lng = " << spawnOptions[i].location.lng << ", "
-            << "skill =  \"" << spawnOptions[i].skill << "\"" << ", "
-            << "liveryID = " << "\"" << spawnOptions[i].liveryID << "\"" << " }, ";
+            << "liveryID = " << "\"" << spawnOptions[i].liveryID << "\"" << ", "
+            << "skill =  \"" << spawnOptions[i].skill << "\"" << "}, ";
     }
 
     std::ostringstream commandSS;
@@ -82,7 +82,6 @@ string SpawnNavyUnits::getString()
         << "category = " << "\"" << "NavyUnit" << "\"" << ", "
         << "coalition = " << "\"" << coalition << "\"" << ", "
         << "country = \"" << country << "\", "
-        << "skill = \"" << skill << "\", "
         << "units = " << "{" << unitsSS.str() << "}" << "}";
     return commandSS.str();
 }
@@ -99,8 +98,8 @@ string SpawnAircrafts::getString()
             << "lng = " << spawnOptions[i].location.lng << ", "
             << "alt = " << spawnOptions[i].location.alt << ", "
             << "loadout = \"" << spawnOptions[i].loadout << "\"" << ", "
-            << "skill =  \"" << spawnOptions[i].skill << "\"" << ", "
-            << "liveryID = " << "\"" << spawnOptions[i].liveryID << "\"" << " }, ";
+            << "liveryID = " << "\"" << spawnOptions[i].liveryID << "\"" << ", "
+            << "skill =  \"" << spawnOptions[i].skill << "\"" << "}, ";
     }
 
     std::ostringstream commandSS;
@@ -110,7 +109,6 @@ string SpawnAircrafts::getString()
         << "coalition = " << "\"" << coalition << "\"" << ", "
         << "airbaseName = \"" << airbaseName << "\", "
         << "country = \"" << country << "\", "
-        << "skill = \"" << skill << "\", "
         << "units = " << "{" << unitsSS.str() << "}" << "}";
     return commandSS.str();
 }
@@ -128,8 +126,8 @@ string SpawnHelicopters::getString()
             << "lng = " << spawnOptions[i].location.lng << ", "
             << "alt = " << spawnOptions[i].location.alt << ", "
             << "loadout = \"" << spawnOptions[i].loadout << "\"" << ", "
-            << "skill =  \"" << spawnOptions[i].skill << "\"" << ", "
-            << "liveryID = " << "\"" << spawnOptions[i].liveryID << "\"" << " }, ";
+            << "liveryID = " << "\"" << spawnOptions[i].liveryID << "\"" << ", "
+            << "skill =  \"" << spawnOptions[i].skill << "\"" << "}, ";
     }
 
     std::ostringstream commandSS;
@@ -139,7 +137,6 @@ string SpawnHelicopters::getString()
         << "coalition = " << "\"" << coalition << "\"" << ", "
         << "airbaseName = \"" << airbaseName << "\", "
         << "country = \"" << country << "\", "
-        << "skill = \"" << skill << "\", "
         << "units = " << "{" << unitsSS.str() << "}" << "}";
     return commandSS.str();
 }
