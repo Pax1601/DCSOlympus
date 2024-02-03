@@ -1,0 +1,78 @@
+<style>
+    #expert-settings .content {
+        display: flex;
+    }
+</style>
+<div id="expert-settings">
+    <div class="instructions">
+        <div class="title">
+            Edit Olympus instance
+        </div>
+        <div class="description">
+            Please note: you may be required to allow these ports through your firewall and modem/router via port forwarding. <br>
+            Otherwise, others may not be able to connect to Olympus. 
+        </div>
+    </div>
+    <div class="content">
+        <div class="wizard-inputs">
+            <div class="input-group game-master">
+                <span>Game Master Password<img src="./icons/circle-info-solid.svg"
+                        title="This password is used to access Olympus as Game Master with full privileges.">
+                </span>
+                <input type="password" minlength="8" onchange="signal('onGameMasterPasswordChanged', this.value)" placeholder="<%= !activeInstance["installed"] || activeInstance["gameMasterPasswordEdited"]? '': 'Keep old password'%>">
+            </div>
+            <div class="input-group blue-commander">
+                <span>Blue Commander Password<img src="./icons/circle-info-solid.svg"
+                        title="This password is used to access Olympus as blue coalition Commander.">
+                </span>
+                <input type="password" minlength="8" onchange="signal('onBlueCommanderPasswordChanged', this.value)" placeholder="<%= !activeInstance["installed"] || activeInstance["blueCommanderPasswordEdited"]? '': 'Keep old password'%>">
+            </div>
+            <div class="input-group red-commander">
+                <span>Red Commander Password<img src="./icons/circle-info-solid.svg"
+                        title="This password is used to access Olympus as red coalition Commander.">
+                </span>
+                <input type="password" minlength="8" onchange="signal('onRedCommanderPasswordChanged', this.value)" placeholder="<%= !activeInstance["installed"] || activeInstance["redCommanderPasswordEdited"]? '': 'Keep old password'%>">
+            </div>
+            <div class="<%= activeInstance["installed"]? '': 'hide' %>" style="color: var(--offwhite); font-size: var(--normal); color: var(--lightgray);">
+                Note: to keep the old passwords, click <b>Next</b> without editing any value. 
+            </div>
+        </div>
+        <div class="wizard-inputs">
+            <div class="input-group client-port port-input">
+                <span>Client port
+                    <img src="./icons/circle-info-solid.svg"
+                        title="This port is used to allow access to Olympus. Be sure to allow this port through your firewall if you want people to connect remotely">
+                </span>
+                <div>
+                    <input type="number" min="1024" max="65535" value="<%= activeInstance["clientPort"] %>"
+                    onchange="signal('onClientPortChanged', this.value)">
+                    <img class="success hide">
+                    <div class="error hide">
+                        <img> <span>Port already in use</span>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group backend-port port-input">
+                <span>Backend port
+                    <img src="./icons/circle-info-solid.svg"
+                        title="This port is used by Olympus to communicate with DCS. You only need to allow it through your firewall if you enable direct API connection">
+                </span>
+                <div>
+                    <input type="number" min="1024" max="65535" value="<%= activeInstance["backendPort"] %>"
+                    onchange="signal('onBackendPortChanged', this.value)">
+                    <img class="success hide">
+                    <div class="error hide">
+                        <img> <span>Port already in use</span>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group backend-address">
+                <span onclick="signal('onEnableAPIClicked')">
+                    <div class="checkbox"></div> Enable direct backend API connection
+                    <img src="./icons/circle-info-solid.svg"
+                        title="Allows services to connect to Olympus directly. This is NOT NEEDED for normal Olympus operation, even for dedicated servers. Leave it unchecked if in doubt.">
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -20,7 +20,7 @@
         <button class="title-bar-button maximize"></button>
         <button class="title-bar-button close"></button>
     </div>
-    <div id="header">
+    <div id="header" class="hide">
         <img class="main-icon" src="../img/OlympusLogoFinal_4k.png" \>
         <div class="version">
             <div> DCS Olympus Manager</div>
@@ -28,13 +28,16 @@
         </div>
         <div class="link first" data-link="https://github.com/Pax1601/DCSOlympus/wiki/2.-User-Guide">User Guide</div>
         <div class="link" data-link="https://github.com/Pax1601/DCSOlympus/wiki/Setup-Troubleshooting">Troubleshooting Guide</div>
+        <div id="switch-mode" class="link"> </div>
         <div style="width: 15px;"></div>
-        <img class="link" data-link="https://github.com/Pax1601/DCSOlympus" src="./icons/github.svg"/>
-        <img class="link" data-link="https://discord.gg/pCfCykAdrw" src="./icons/discord.svg"/>
-        <img class="link" data-link="https://www.youtube.com/@DCSOlympus" src="./icons/youtube.svg"/>
+        <img class="link" onClick="signal('onLinkClicked', 'https://github.com/Pax1601/DCSOlympus')" src="./icons/github.svg" />
+        <img class="link" onClick="signal('onLinkClicked', 'https://discord.gg/pCfCykAdrw')" src="./icons/discord.svg" />
+        <img class="link" onClick="signal('onLinkClicked', 'https://www.youtube.com/@DCSOlympus')" src="./icons/youtube.svg" />
     </div>
-    <div id="loader" class="manager-page hide">
-        Loading, please wait...
+    <div id="loader" class="manager-page hide" style="opacity: 100%;">
+        <div style="font-weight: bold;">Loading, please wait...</div>
+        <div class="loading-bar" style="width: 400px; height: 15px;"></div>
+        <div class="loading-message" style="font-size: var(--normal); color: var(--lightgray)"></div>
     </div>
     <div id="grayout" class="hide"></div>
     <div id="popup" class="hide">
@@ -42,7 +45,7 @@
         <img src="./icons/circle-question-regular.svg" class="confirm">
         <img src="./icons/spinner-solid.svg" class="wait">
         <div class="content">
-            
+
         </div>
         <div class="footer">
             <div class="button accept-popup"> Accept </div>
@@ -76,6 +79,19 @@
     window.ipcRender.receive('event:unmaximized', () => {
         document.querySelector('.restore').classList.add("hide");
         document.querySelector('.maximize').classList.remove("hide");
+    })
+
+    function signal(callback, params) {
+        const event = new CustomEvent("signal", { detail: { callback: callback, params: params } });
+        document.dispatchEvent(event);
+    }
+
+    window.addEventListener("click", (ev) => {
+        var buttons = document.querySelectorAll(".button.collapse");
+        for (let button of buttons) {
+            if (button != ev.srcElement)
+                button.classList.remove("open");
+        }
     })
 </script>
 

@@ -10,8 +10,8 @@ process.env['PATH'] = process.env['PATH'] + "%WINDIR%\\System32;"
 
 function createWindow() {
     const window = new electronBrowserWindow({
-		width: 1500,
-		height: 850,
+		width: 1200,
+		height: 750,
 		frame: false,
         resizable: true,
         maximizable: true,
@@ -38,7 +38,6 @@ function createWindow() {
 
 electronApp.on('ready', () => {
     window = createWindow();
-    window.webContents.send('check-version')
 });
 
 electronApp.on('window-all-closed', () => {

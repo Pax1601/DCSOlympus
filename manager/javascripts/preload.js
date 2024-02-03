@@ -1,5 +1,3 @@
-const Manager = require('./manager');
-
 const contextBridge = require('electron').contextBridge;
 const ipcRenderer = require('electron').ipcRenderer;
 const { exec, spawn } = require("child_process");
@@ -10,7 +8,9 @@ const https = require('follow-redirects').https;
 const fs = require('fs');
 const AdmZip = require("adm-zip");
 const { Octokit } = require('octokit');
-const { logger } = require("./filesystem")
+const { logger } = require("./filesystem");
+const { getManager } = require('./managerfactory');
+const { sleep } = require('./utils');
 
 const VERSION = "{{OLYMPUS_VERSION_NUMBER}}";
 logger.log(`Running in ${__dirname}`);
@@ -35,7 +35,7 @@ function checkVersion() {
             /* If a newer version is available update Olympus in Release mode */
             if (reg1[0] > reg2[0] || (reg1[0] == reg2[0] && reg1[1] > reg2[1]) || (reg1[0] == reg2[0] && reg1[1] == reg2[1] && reg1[2] > reg2[2])) {
                 logger.log(`New version available: ${res["version"]}`);
-                showConfirmPopup(`You are currently running DCS Olympus ${VERSION}, but ${res["version"]} is available. Do you want to update DCS Olympus automatically? <div style="max-width: 100%; color: orange">Note: DCS and Olympus MUST be stopped before proceeding.</div>`,
+                showConfirmPopup(`<div class='main-message'>You are currently running DCS Olympus ${VERSION}, but ${res["version"]} is available. </div><div class='sub-message'> Do you want to update DCS Olympus automatically? </div> <div style="max-width: 100%; color: orange">Note: DCS and Olympus MUST be stopped before proceeding.</div>`,
                     () => {
                         updateOlympusRelease();
                     }, () => {
@@ -45,12 +45,7 @@ function checkVersion() {
             /* If the current version is newer than the latest release, the user is probably a developer. Ask for a beta update */
             else if (reg2[0] > reg1[0] || (reg2[0] == reg1[0] && reg2[1] > reg1[1]) || (reg2[0] == reg1[0] && reg2[1] == reg1[1] && reg2[2] > reg1[2])) {
                 logger.log(`Beta version detected: ${res["version"]} vs ${VERSION}`);
-                showConfirmPopup(`You are currently running DCS Olympus ${VERSION}, which is newer than the latest release version. Do you want to download the latest beta version? <div style="max-width: 100%; color: orange">Note: DCS and Olympus MUST be stopped before proceeding.</div>`,
-                    () => {
-                        updateOlympusBeta();
-                    }, () => {
-                        logger.log("Update canceled");
-                    })
+                updateOlympusBeta();
             }
         }
     })
@@ -74,27 +69,37 @@ async function updateOlympusBeta() {
     /* Select the newest artifact */
     var artifact = artifacts.find((artifact) => { return artifact.name = "development_build_not_a_release" });
 
-    showConfirmPopup(`Latest beta artifact has a timestamp of ${artifact.updated_at}. Do you want to continue?`, () => {
-        /* Run the browser and download the artifact */ //TODO: try and directly download the file from code rather than using the browser 
-        exec(`start https://github.com/Pax1601/DCSOlympus/actions/runs/${artifact.workflow_run.id}/artifacts/${artifact.id}`)
-        showConfirmPopup('A browser window was opened to download the beta artifact. Please wait for the download to complete, then press "Accept" and select the downloaded beta artifact.',
-            () => {
-                /* Ask the user to select the downloaded file */
-                var input = document.createElement('input');
-                input.type = 'file';
-                input.click();
-                input.onchange = e => {
-                    /* Run the update process */
-                    updateOlympus(e.target.files[0])
-                }
+    const date1 = new Date(artifact.updated_at);
+    const date2 = fs.statSync(".").mtime;
+    if (date1 > date2) {
+        showConfirmPopup(`<div class='main-message'> Looks like you are running a beta version of Olympus!</div><div class='sub-message'> Latest beta artifact timestamp of: <b style="color: orange">${date1.toLocaleString()}</b> <br> Your installation timestamp: <b style="color: orange">${date2.toLocaleString()}</b> <br><br> Do you want to update to the newest beta version?</div>`, async () => {
+            /* Nested popup calls need to wait for animation to complete */
+            await sleep(300);
+
+            /* Run the browser and download the artifact */ //TODO: try and directly download the file from code rather than using the browser 
+            exec(`start https://github.com/Pax1601/DCSOlympus/actions/runs/${artifact.workflow_run.id}/artifacts/${artifact.id}`)
+            showConfirmPopup(`<div class='main-message'> A browser window was opened to download the beta artifact. </div><div class='sub-message'> Please wait for the download to complete, then press "Accept" and select the downloaded beta artifact.</div>`,
+                () => {
+                    /* Ask the user to select the downloaded file */
+                    var input = document.createElement('input');
+                    input.type = 'file';
+                    input.click();
+                    input.onchange = e => {
+                        /* Run the update process */
+                        updateOlympus(e.target.files[0])
+                    }
+                },
+                () => {
+                    logger.log("Update canceled");
+                });
             },
             () => {
                 logger.log("Update canceled");
-            });
-    },
-        () => {
-            logger.log("Update canceled");
-        })
+            }
+        )
+    } else {
+        logger.log("Build is latest")
+    }
 }
 
 /** Update Olympus to the lastest release
@@ -116,7 +121,7 @@ async function updateOlympusRelease() {
 }
 
 function updateOlympus(location) {
-    showWaitPopup("Please wait while Olympus is being updated. The Manager will be closed and reopened automatically when updating is completed.")
+    showWaitPopup("<div class='main-message'>Please wait while Olympus is being updated. </div><div class='sub-message'> The Manager will be closed and reopened automatically when updating is completed.</div>")
 
     /* If the location is a string, it is interpreted as a download url. Else, it is interpreted as a File (on disk)*/
     if (typeof location === "string") {
@@ -201,7 +206,7 @@ function extractAndCopy(folder) {
  * 
  */
 function failUpdate() {
-    showErrorPopup(`An error has occurred while updating Olympus. Please delete Olympus and update it manually. A browser window will open automatically on the download page. <br><br> You can find more info in ${path.join(__dirname, "..", "manager.log")}`, () => {
+    showErrorPopup(`<div class='main-message'>An error has occurred while updating Olympus. </div><div class='sub-message'> Please delete Olympus and update it manually. A browser window will open automatically on the download page. <br><br> You can find more info in ${path.join(__dirname, "..", "manager.log")}</div>`, () => {
         exec(`start https://github.com/Pax1601/DCSOlympus/releases`, () => {
             ipcRenderer.send('window:close');
         })
@@ -221,8 +226,7 @@ const ipc = {
         /* From main to render. */
         'receive': [
             'event:maximized',
-            'event:unmaximized',
-            'check-version'
+            'event:unmaximized'
         ],
         /* From render to main and back again. */
         'sendReceive': []
@@ -257,28 +261,25 @@ contextBridge.exposeInMainWorld(
     }
 });
 
-/* New instance of the manager app */
-const manager = new Manager();
-
 /* On content loaded */
 window.addEventListener('DOMContentLoaded', async () => {
-    /* Compute the height of the content page */
-    computePagesHeight();
     document.getElementById("loader").classList.remove("hide");
-    await manager.start();
-    /* Compute the height of the content page to account for the pages created by the manager*/
-    computePagesHeight();
-
-    /* Create event listeners for the hyperlinks */
-    var links = document.querySelectorAll(".link");
-    for (let i = 0; i < links.length; i++) {
-        links[i].addEventListener("click", (e) => {
-            exec("start " + e.target.dataset.link);
-        })
-    }
+    await getManager().start();
+    await checkVersion();
 })
 
 window.addEventListener('resize', () => {
+    /* Compute the height of the content page */
+    computePagesHeight();
+})
+
+window.addEventListener('DOMContentLoaded', () => {
+    /* Compute the height of the content page */
+    computePagesHeight();
+})
+
+document.addEventListener('managerStarted', () => {
+    /* Compute the height of the content page */
     computePagesHeight();
 })
 
@@ -294,8 +295,3 @@ function computePagesHeight() {
         pages[i].style.height = (window.innerHeight - (titleBar.clientHeight + header.clientHeight)) + "px";
     }
 }
-
-ipcRenderer.on("check-version", () => {
-    /* Check if a new version is available */
-    checkVersion();
-})

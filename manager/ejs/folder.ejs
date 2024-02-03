@@ -1,0 +1,36 @@
+<style>
+    
+</style>
+<div>
+    <div class="instructions">
+        <% if (instances.length > 0) { %>
+            <div class="step">
+                Step 1 of <%= instances.length === 1? "4": "5" %>
+            </div>
+            <div class="title">
+                Which DCS instance you want to add Olympus to?
+            </div>
+            <div class="description">
+                Olympus is added to DCS instances individually, and will only work for that specific instance. <br>
+                You can have Olympus installed across multiple DCS instances. Re-run in the install wizard to add Olympus to another DCS install.
+            </div>
+        <% } else { %>
+            <span class="title">
+                No DCS installs detected
+            </span>
+            <span class="description">
+                Please ensure you have DCS installed correctly. <br>
+                Olympus cannot be added unless there is a DCS Saved Games folder on your computer. <br><br>
+                If you are still having issues, try re-installing DCS and Olympus <br><br>
+                <b>If DCS is installed but Olympus is failing to detect it, you can add it manually.<br> See the troubleshooting guide for more info.</b>
+            </span>
+        <% } %>
+    </div>
+    <div class="wizard-inputs">
+        <% for (var i = 0; i < instances.length; i++) { %>
+            <div class="button radio <%= (i === 0)? 'selected': '' %>" onclick="signal('onFolderClicked', '<%= instances[i].name %>')" data-folder="<%= instances[i].folder %>">
+                <%= instances[i].name %>
+            </div>
+        <% } %>
+    </div>
+</div>

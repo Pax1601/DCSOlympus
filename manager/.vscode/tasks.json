@@ -6,7 +6,7 @@
         {
             "label": "mirror-package",
             "type": "shell",
-            "command": "call ./scripts/mirror-package.bat",
+            "command": "./scripts/mirror-package.bat",
             "isBackground": true
         }
     ]
