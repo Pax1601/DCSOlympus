@@ -577,7 +577,7 @@ export abstract class UnitSpawnMenu {
 
     #setUnitLivery(liveryName: string) {
         var liveries = this.#unitDatabase.getByName(this.spawnOptions.name)?.liveries;
-        if (liveryName === "Default") {
+        if (liveryName === "Default Livery") {
             this.spawnOptions.liveryID = "";
         }
         else {
@@ -593,7 +593,7 @@ export abstract class UnitSpawnMenu {
     #setUnitLiveryOptions() {
         if (this.spawnOptions.name !== "" && this.spawnOptions.country !== "") {
             var liveries = this.#unitDatabase.getLiveryNamesByName(this.spawnOptions.name);
-            var countryLiveries: string[] = ["Default"];
+            var countryLiveries: string[] = ["Default Livery"];
             liveries.forEach((livery: any) => {
                 var nationLiveryCodes = this.#countryCodes[this.spawnOptions.country].liveryCodes;
                 if (livery.countries === "All" || livery.countries.some((country: string) => { return nationLiveryCodes.includes(country) }))
