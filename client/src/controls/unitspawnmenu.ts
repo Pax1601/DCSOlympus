@@ -108,14 +108,14 @@ export abstract class UnitSpawnMenu {
         this.#advancedOptionsToggle = document.createElement("div");
         this.#advancedOptionsToggle.classList.add("contextmenu-advanced-options-toggle");
         this.#advancedOptionsText = document.createElement("div");
-        this.#advancedOptionsText.innerText = "Faction / Liveries";
+        this.#advancedOptionsText.innerText = "Faction / Liveries / Skill Level";
         this.#advancedOptionsToggle.append(this.#advancedOptionsText);
         this.#advancedOptionsToggle.addEventListener("click", () => { 
             this.#advancedOptionsToggle.classList.toggle("is-open");
             this.#advancedOptionsDiv.classList.toggle("hide");
             this.#container.dispatchEvent(new Event("resize"));
         });
-        this.#advancedOptionsDiv.append(this.#unitCountryDropdown.getContainer(), this.#unitLiveryDropdown.getContainer());
+        this.#advancedOptionsDiv.append(this.#unitCountryDropdown.getContainer(), this.#unitLiveryDropdown.getContainer(), this.#unitSkillDropdown.getContainer());
 
         /* Create the unit info collapsible div */
         this.#unitInfoDiv = document.createElement("div");
@@ -145,7 +145,7 @@ export abstract class UnitSpawnMenu {
          });
 
         /* Assemble all components */
-        this.#container.append(this.#unitRoleTypeDropdown.getContainer(), unitLabelCountContainerEl, this.#unitLoadoutDropdown.getContainer(), this.#unitSkillDropdown.getContainer(), this.#unitSpawnAltitudeSlider.getContainer() as HTMLElement,
+        this.#container.append(this.#unitRoleTypeDropdown.getContainer(), unitLabelCountContainerEl, this.#unitLoadoutDropdown.getContainer(), this.#unitSpawnAltitudeSlider.getContainer() as HTMLElement,
         this.#unitLoadoutPreviewEl, this.#advancedOptionsToggle, this.#advancedOptionsDiv, this.#unitInfoToggle, this.#unitInfoDiv, this.#deployUnitButtonEl);
 
         /* Load the country codes from the public folder */
