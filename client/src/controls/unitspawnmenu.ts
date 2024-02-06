@@ -272,9 +272,11 @@ export abstract class UnitSpawnMenu {
             }
 
             if (!this.#unitSkillDropdown.isHidden()) {
-                this.#unitSkillDropdown.setOptions(["Average", "Good", "High", "Excellent"])
+                const sortedOptions = ["Average", "Good", "High", "Excellent"];
+                this.#unitSkillDropdown.setOptions(sortedOptions, null);
                 this.#unitSkillDropdown.selectValue(4);
-            }            
+            }
+                       
 
             /* Get the unit data from the db */
             var blueprint = this.#unitDatabase.getByName(this.spawnOptions.name);
