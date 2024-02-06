@@ -5,6 +5,8 @@ declare module "contextmenus/contextmenu" {
     import { LatLng } from "leaflet";
     export type contextMenuConfig = {
         "id": string | HTMLElement;
+        "onBeforeShow"?: CallableFunction;
+        "onShow"?: CallableFunction;
     };
     /** Base class for map contextmenus. By default it is empty and requires to be extended. */
     export class ContextMenu {
@@ -13,7 +15,7 @@ declare module "contextmenus/contextmenu" {
          *
          * @param ID - the ID of the HTML element which will contain the context menu
          */
-        constructor(ID: string | HTMLElement);
+        constructor(config: contextMenuConfig);
         /** Show the contextmenu on top of the map, usually at the location where the user has clicked on it.
          *
          * @param x X screen coordinate of the top left corner of the context menu. If undefined, use the old value
@@ -894,7 +896,7 @@ declare module "map/markers/smokemarker" {
 }
 declare module "contextmenus/mapcontextmenu" {
     import { LatLng } from "leaflet";
-    import { ContextMenu } from "contextmenus/contextmenu";
+    import { ContextMenu, contextMenuConfig } from "contextmenus/contextmenu";
     import { CoalitionArea } from "map/coalitionarea/coalitionarea";
     /** The MapContextMenu is the main contextmenu shown to the user whenever it rightclicks on the map. It is the primary interaction method for the user.
      * It allows to spawn units, create explosions and smoke, and edit CoalitionAreas.
@@ -903,9 +905,9 @@ declare module "contextmenus/mapcontextmenu" {
         #private;
         /**
          *
-         * @param ID - the ID of the HTML element which will contain the context menu
+         * @param config <contextMenuConfig> the config object for the menu
          */
-        constructor(ID: string);
+        constructor(config: contextMenuConfig);
         /** Show the contextmenu on top of the map, usually at the location where the user has clicked on it.
          *
          * @param x X screen coordinate of the top left corner of the context menu
@@ -1392,14 +1394,14 @@ declare module "unit/contextactionset" {
 }
 declare module "contextmenus/unitcontextmenu" {
     import { ContextActionSet } from "unit/contextactionset";
-    import { ContextMenu } from "contextmenus/contextmenu";
+    import { ContextMenu, contextMenuConfig } from "contextmenus/contextmenu";
     /** The UnitContextMenu is shown when the user rightclicks on a unit. It dynamically presents the user with possible actions to perform on the unit. */
     export class UnitContextMenu extends ContextMenu {
         /**
          *
-         * @param ID - the ID of the HTML element which will contain the context menu
+         * @param config <contextMenuConfig> the config object for the menu
          */
-        constructor(ID: string);
+        constructor(config: contextMenuConfig);
         /** Set the options that will be presented to the user in the contextmenu
          *
          * @param options Dictionary element containing the text and tooltip of the options shown in the menu
@@ -1410,16 +1412,16 @@ declare module "contextmenus/unitcontextmenu" {
 }
 declare module "contextmenus/airbasecontextmenu" {
     import { Airbase } from "mission/airbase";
-    import { ContextMenu } from "contextmenus/contextmenu";
+    import { ContextMenu, contextMenuConfig } from "contextmenus/contextmenu";
     /** This context menu is shown to the user when the airbase marker is right clicked on the map.
      * It allows the user to inspect information about the airbase, as well as allowing to spawn units from the airbase itself and land units on it. */
     export class AirbaseContextMenu extends ContextMenu {
         #private;
         /**
          *
-         * @param ID - the ID of the HTML element which will contain the context menu
+         * @param config <contextMenuConfig> the config object for the menu
          */
-        constructor(ID: string);
+        constructor(config: contextMenuConfig);
         /** Sets the airbase for which data will be shown in the context menu
          *
          * @param airbase The airbase for which data will be shown in the context menu. Note: the airbase must be present in the public/databases/airbases/<theatre>.json database.
@@ -1455,15 +1457,15 @@ declare module "map/clickableminimap" {
 declare module "contextmenus/coalitionareacontextmenu" {
     import { LatLng } from "leaflet";
     import { CoalitionArea } from "map/coalitionarea/coalitionarea";
-    import { ContextMenu } from "contextmenus/contextmenu";
+    import { ContextMenu, contextMenuConfig } from "contextmenus/contextmenu";
     /** This context menu allows the user to edit or delete a CoalitionArea. Moreover, it allows the user to create a IADS automatically using the CoalitionArea as bounds. */
     export class CoalitionAreaContextMenu extends ContextMenu {
         #private;
         /**
          *
-         * @param ID - the ID of the HTML element which will contain the context menu
+         * @param config <contextMenuConfig> the config object for the menu
          */
-        constructor(ID: string);
+        constructor(config: contextMenuConfig);
         /**
          *
          * @param x X screen coordinate of the top left corner of the context menu
@@ -1491,7 +1493,7 @@ declare module "map/coalitionarea/drawingcursor" {
     }
 }
 declare module "contextmenus/airbasespawnmenu" {
-    import { ContextMenu } from "contextmenus/contextmenu";
+    import { ContextMenu, contextMenuConfig } from "contextmenus/contextmenu";
     import { Airbase } from "mission/airbase";
     /** This context menu is shown when the user wants to spawn a new aircraft or helicopter from the ground at an airbase.
      * It is shown by clicking on the "spawn" button of a AirbaseContextMenu. */
@@ -1499,9 +1501,9 @@ declare module "contextmenus/airbasespawnmenu" {
         #private;
         /**
          *
-         * @param ID - the ID of the HTML element which will contain the context menu
+         * @param config <contextMenuConfig> the config object for the menu
          */
-        constructor(ID: string);
+        constructor(config: contextMenuConfig);
         /** Show the context menu
          *
          * @param x X screen coordinate of the top left corner of the context menu
@@ -1573,13 +1575,11 @@ declare module "map/map" {
     import * as L from "leaflet";
     import { MapContextMenu } from "contextmenus/mapcontextmenu";
     import { UnitContextMenu } from "contextmenus/unitcontextmenu";
-    import { AirbaseContextMenu } from "contextmenus/airbasecontextmenu";
     import { Airbase } from "mission/airbase";
     import { Unit } from "unit/unit";
     import { TemporaryUnitMarker } from "map/markers/temporaryunitmarker";
     import { CoalitionArea } from "map/coalitionarea/coalitionarea";
     import { CoalitionAreaContextMenu } from "contextmenus/coalitionareacontextmenu";
-    import { AirbaseSpawnContextMenu } from "contextmenus/airbasespawnmenu";
     import { Panel } from "panels/panel";
     export type MapMarkerVisibilityControl = {
         "category"?: string;
@@ -1616,10 +1616,10 @@ declare module "map/map" {
         getUnitContextMenu(): UnitContextMenu;
         hideUnitContextMenu(): void;
         showAirbaseContextMenu(airbase: Airbase, x?: number | undefined, y?: number | undefined, latlng?: L.LatLng | undefined): void;
-        getAirbaseContextMenu(): AirbaseContextMenu;
+        getAirbaseContextMenu(): any;
         hideAirbaseContextMenu(): void;
         showAirbaseSpawnMenu(airbase: Airbase, x?: number | undefined, y?: number | undefined, latlng?: L.LatLng | undefined): void;
-        getAirbaseSpawnMenu(): AirbaseSpawnContextMenu;
+        getAirbaseSpawnMenu(): any;
         hideAirbaseSpawnMenu(): void;
         showCoalitionAreaContextMenu(x: number, y: number, latlng: L.LatLng, coalitionArea: CoalitionArea): void;
         getCoalitionAreaContextMenu(): CoalitionAreaContextMenu;
@@ -2589,9 +2589,9 @@ declare module "panels/unitlistpanel" {
 declare module "context/contextmenumanager" {
     import { ContextMenu, contextMenuConfig } from "contextmenus/contextmenu";
     import { Manager } from "other/manager";
-    export type contextMenuTypes = "map" | "unit";
+    export type contextMenuTypes = "airbase" | "airbaseSpawn" | "map" | "unit";
     export type contextMenuManagerConfig = {
-        [key in contextMenuTypes]?: contextMenuConfig | false;
+        [key in contextMenuTypes]?: ContextMenu | contextMenuConfig | false;
     };
     export class ContextMenuManager extends Manager {
         constructor(items?: contextMenuManagerConfig);
@@ -2636,6 +2636,7 @@ declare module "context/contextmanager" {
         add(name: string, contextConfig: contextConfig): this;
         currentContextIs(contextName: string): boolean;
         getCurrentContext(): any;
+        hideAllContextMenus(): void;
         setContext(contextName: string): false | undefined;
     }
 }
@@ -2652,8 +2653,14 @@ declare module "template/templatemanager" {
         #private;
         constructor();
         getTemplateEngine(): any;
-        renderTemplate(name: string, data?: object): any;
+        renderTemplateString(templateString: string, data?: object): any;
+        renderTemplate(templateName: string, data?: object): any;
     }
+}
+declare module "template/defaultTemplates" {
+    export const defaultTemplates: {
+        airbaseChartData: string;
+    };
 }
 declare module "olympusapp" {
     import { Map } from "map/map";

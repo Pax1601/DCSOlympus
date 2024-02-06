@@ -1,5 +1,5 @@
 import { LatLng } from "leaflet";
-import { ContextMenu } from "./contextmenu";
+import { ContextMenu, contextMenuConfig } from "./contextmenu";
 import { AircraftSpawnMenu, HelicopterSpawnMenu } from "../controls/unitspawnmenu";
 import { Airbase } from "../mission/airbase";
 import { getApp } from "..";
@@ -12,10 +12,10 @@ export class AirbaseSpawnContextMenu extends ContextMenu {
 
     /**
      * 
-     * @param ID - the ID of the HTML element which will contain the context menu
+     * @param config <contextMenuConfig> the config object for the menu
      */
-    constructor(ID: string){
-        super(ID);
+    constructor(config: contextMenuConfig) {
+        super(config);
 
         /* Create the spawn menus for the different unit types */
         this.#aircraftSpawnMenu = new AircraftSpawnMenu("airbase-aircraft-spawn-menu");
@@ -75,7 +75,7 @@ export class AirbaseSpawnContextMenu extends ContextMenu {
         this.getContainer()?.querySelector("#airbase-aircraft-spawn-button")?.classList.toggle("is-open", type === "aircraft");
         this.getContainer()?.querySelector("#airbase-helicopter-spawn-menu")?.classList.toggle("hide", type !== "helicopter");
         this.getContainer()?.querySelector("#airbase-helicopter-spawn-button")?.classList.toggle("is-open", type === "helicopter");
-       
+
         (this.getContainer()?.querySelectorAll(".deploy-unit-button"))?.forEach((element: Node) => { (element as HTMLButtonElement).disabled = true; })
 
         this.#aircraftSpawnMenu.reset();
@@ -95,7 +95,7 @@ export class AirbaseSpawnContextMenu extends ContextMenu {
         this.getContainer()?.querySelector("#airbase-aircraft-spawn-button")?.classList.toggle("is-open", false);
         this.getContainer()?.querySelector("#airbase-helicopter-spawn-menu")?.classList.toggle("hide", true);
         this.getContainer()?.querySelector("#airbase-helicopter-spawn-button")?.classList.toggle("is-open", false);
-      
+
         this.#aircraftSpawnMenu.reset();
         this.#helicopterSpawnMenu.reset();
 

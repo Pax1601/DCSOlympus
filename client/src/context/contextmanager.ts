@@ -28,6 +28,10 @@ export class ContextManager extends Manager {
         return (contexts.hasOwnProperty(this.#currentContext)) ? contexts[this.#currentContext] : false;
     }
 
+    hideAllContextMenus() {
+        Object.values(this.getAll()).forEach(context => context.getContextMenuManager().hideAll());
+    }
+
     setContext(contextName: string) {
         if (!this.get(contextName)) {
             console.error(`setContext(): context name "${contextName}" does not exist.`);

@@ -31,6 +31,9 @@ import { AirbasesJSONSchemaValidator } from "./schemas/schema";
 import { PanelsManager } from "./panels/panelsmanager";
 import { Utilities } from "./other/utilities";
 import { TemplateManager } from "./template/templatemanager";
+import { defaultTemplates } from "./template/defaultTemplates";
+import { AirbaseSpawnContextMenu } from "./contextmenus/airbasespawnmenu";
+import { AirbaseContextMenu } from "./contextmenus/airbasecontextmenu";
 
 var VERSION = "{{OLYMPUS_VERSION_NUMBER}}";
 
@@ -202,10 +205,16 @@ export class OlympusApp {
     start() {
         /* Initialize base functionalitites */
         this.#templateManager = new TemplateManager();
+        const templates = defaultTemplates;
+        for (const [name, tpl] of Object.entries(templates)) {
+            this.#templateManager.add(name, tpl)
+        }
 
         this.#contextManager = new ContextManager();
         this.#contextManager.add("olympus", {
             "contextMenus": {
+                "airbase": new AirbaseContextMenu({ "id": "airbase-contextmenu" }),
+                "airbaseSpawn": new AirbaseSpawnContextMenu({ "id": "airbase-spawn-contextmenu" }),
                 "map": {
                     "id": "map-contextmenu"
                 }

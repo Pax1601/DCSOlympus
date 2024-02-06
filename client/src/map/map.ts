@@ -84,11 +84,11 @@ export class Map extends L.Map {
     #longPressHandled: boolean = false;
     #longPressTimer: number = 0;
 
-    #mapContextMenu: MapContextMenu = new MapContextMenu("map-contextmenu");
-    #unitContextMenu: UnitContextMenu = new UnitContextMenu("unit-contextmenu");
-    #airbaseContextMenu: AirbaseContextMenu = new AirbaseContextMenu("airbase-contextmenu");
-    #airbaseSpawnMenu: AirbaseSpawnContextMenu = new AirbaseSpawnContextMenu("airbase-spawn-contextmenu");
-    #coalitionAreaContextMenu: CoalitionAreaContextMenu = new CoalitionAreaContextMenu("coalition-area-contextmenu");
+    #mapContextMenu: MapContextMenu = new MapContextMenu({ "id": "map-contextmenu" });
+    #unitContextMenu: UnitContextMenu = new UnitContextMenu({ "id": "unit-contextmenu" });
+    //#airbaseContextMenu: AirbaseContextMenu = new AirbaseContextMenu({ "id": "airbase-contextmenu" });
+    //#airbaseSpawnMenu: AirbaseSpawnContextMenu = new AirbaseSpawnContextMenu({ "id": "airbase-spawn-contextmenu" });
+    #coalitionAreaContextMenu: CoalitionAreaContextMenu = new CoalitionAreaContextMenu({ "id": "coalition-area-contextmenu" });
 
     #mapSourceDropdown: Dropdown;
     #mapMarkerVisibilityControls: MapMarkerVisibilityControl[] = MAP_MARKER_CONTROLS;
@@ -334,7 +334,7 @@ export class Map extends L.Map {
         this.hideAirbaseContextMenu();
         this.hideAirbaseSpawnMenu();
         this.hideCoalitionAreaContextMenu();
-        getApp().getCurrentContext().getContextMenuManager().hideAll();
+        getApp().getContextManager().hideAllContextMenus();
     }
 
     showMapContextMenu(x: number, y: number, latlng: L.LatLng) {
@@ -374,30 +374,35 @@ export class Map extends L.Map {
 
     showAirbaseContextMenu(airbase: Airbase, x: number | undefined = undefined, y: number | undefined = undefined, latlng: L.LatLng | undefined = undefined) {
         this.hideAllContextMenus();
-        this.#airbaseContextMenu.setAirbase(airbase);
-        this.#airbaseContextMenu.show(x, y, latlng);
+        const menu = this.getAirbaseContextMenu();
+
+        if (typeof menu.setAirbase === "function") menu.setAirbase(airbase);
+        if (menu instanceof ContextMenu) menu.show(x, y);
     }
 
     getAirbaseContextMenu() {
-        return this.#airbaseContextMenu;
+        return getApp().getCurrentContext().getContextMenuManager().get("airbase");
     }
 
     hideAirbaseContextMenu() {
-        this.#airbaseContextMenu.hide();
+        const menu = this.getAirbaseContextMenu();
+        if (menu instanceof ContextMenu) menu.hide();
     }
 
     showAirbaseSpawnMenu(airbase: Airbase, x: number | undefined = undefined, y: number | undefined = undefined, latlng: L.LatLng | undefined = undefined) {
         this.hideAllContextMenus();
-        this.#airbaseSpawnMenu.show(x, y);
-        this.#airbaseSpawnMenu.setAirbase(airbase);
+        const menu = this.getAirbaseSpawnMenu();
+        if (typeof menu.setAirbase === "function") menu.setAirbase(airbase);
+        if (menu instanceof ContextMenu) menu.show(x, y);
     }
 
     getAirbaseSpawnMenu() {
-        return this.#airbaseSpawnMenu;
+        return getApp().getCurrentContext().getContextMenuManager().get("airbaseSpawn");
     }
 
     hideAirbaseSpawnMenu() {
-        this.#airbaseSpawnMenu.hide();
+        const menu = this.getAirbaseSpawnMenu();
+        if (menu instanceof ContextMenu) menu.hide();
     }
 
     showCoalitionAreaContextMenu(x: number, y: number, latlng: L.LatLng, coalitionArea: CoalitionArea) {

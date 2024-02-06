@@ -2,7 +2,7 @@ import { getApp } from "..";
 import { GAME_MASTER } from "../constants/constants";
 import { Airbase } from "../mission/airbase";
 import { Unit } from "../unit/unit";
-import { ContextMenu } from "./contextmenu";
+import { ContextMenu, contextMenuConfig } from "./contextmenu";
 
 /** This context menu is shown to the user when the airbase marker is right clicked on the map. 
  * It allows the user to inspect information about the airbase, as well as allowing to spawn units from the airbase itself and land units on it. */
@@ -11,45 +11,25 @@ export class AirbaseContextMenu extends ContextMenu {
 
     /**
      * 
-     * @param ID - the ID of the HTML element which will contain the context menu
+     * @param config <contextMenuConfig> the config object for the menu
      */
-    constructor(ID: string){
-        super(ID);
+    constructor(config: contextMenuConfig) {
+        super(config);
 
-        document.addEventListener("contextMenuSpawnAirbase", (e:CustomEventInit) => {
+        document.addEventListener("contextMenuSpawnAirbase", (e: CustomEventInit) => {
             this.#showSpawnMenu();
         });
 
-        document.addEventListener("contextMenuLandAirbase", (e:CustomEventInit) => {
+        document.addEventListener("contextMenuLandAirbase", (e: CustomEventInit) => {
             if (this.#airbase)
                 getApp().getUnitsManager().landAt(this.#airbase.getLatLng());
             this.hide();
         });
 
-        getApp().getTemplateManger().add("airbaseContextMenu", `
-            <h3 id="airbase-name"><%= airbase.getName() %></h3>
-            <dl id="airbase-chart-data" class="ol-data-grid">
-                <dt>ICAO</dt>
-                <dd data-point="ICAO"><%= chartData.ICAO %></dd>
-                <dt>Coalition</dt>
-                <dd data-point="coalition"><%= airbase.getCoalition() %></dd>
-                <dt>Elevation</dt>
-                <dd><span data-point="elevation"><%= chartData.elevation %></span>ft</dd>
-                <dt>TACAN</dt>
-                <dd data-point="TACAN"><%= chartData.TACAN || "-" %></dd>
-            </dl>
-            <h4>Runways</h4>
-            <div id="airbase-runways">
-                <% chartData.runways.forEach( runway => { %>
-                    <div class="runway">
-                        <% runway.headings.forEach( heading => { %>
-                            <% for( const[ name, data ] of Object.entries(heading)) { %>
-                                <div class="heading"><abbr title="Mag heading: <%= data.magHeading %>"><%= name.replace("(CLOSED)", "(C)") %></abbr><% if (data.ILS) { %><abbr title="<%= data.ILS %>">ILS</abbr><% } %></div>
-                            <% } %>
-                        <% }) %>
-                    </div>
-                <% }) %>
-            </div>
+        const tm = getApp().getTemplateManger();
+
+        tm.add("airbaseContextMenu", `
+            ${tm.get("airbaseChartData")}
             <hr />
             <% if (showSpawnButton) { %>
                 <button id="spawn-airbase-aircraft-button" data-coalition="neutral" title="Spawn aircraft" data-on-click="contextMenuSpawnAirbase" class="deploy-unit-button">Spawn</button>
@@ -71,16 +51,15 @@ export class AirbaseContextMenu extends ContextMenu {
         if (container instanceof HTMLElement) {
             container.innerHTML = getApp().getTemplateManger().renderTemplate("airbaseContextMenu", {
                 "airbase": airbase,
-                "chartData": airbase.getChartData(),
-                "showLandHere": ( getApp().getUnitsManager().getSelectedUnitsCategories().length == 1 && ["Aircraft", "Helicopter"].includes(getApp().getUnitsManager().getSelectedUnitsCategories()[0])
-                    && (getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => {return unit.getCoalition()}) === this.#airbase?.getCoalition() || this.#airbase?.getCoalition() === "neutral")),
-                "showSpawnButton": ( getApp().getMissionManager().getCommandModeOptions().commandMode == GAME_MASTER
-                    || this.#airbase.getCoalition() == getApp().getMissionManager().getCommandedCoalition() )
+                "showLandHere": (getApp().getUnitsManager().getSelectedUnitsCategories().length == 1 && ["Aircraft", "Helicopter"].includes(getApp().getUnitsManager().getSelectedUnitsCategories()[0])
+                    && (getApp().getUnitsManager().getSelectedUnitsVariable((unit: Unit) => { return unit.getCoalition() }) === this.#airbase?.getCoalition() || this.#airbase?.getCoalition() === "neutral")),
+                "showSpawnButton": (getApp().getMissionManager().getCommandModeOptions().commandMode == GAME_MASTER
+                    || this.#airbase.getCoalition() == getApp().getMissionManager().getCommandedCoalition())
             });
-            
+
             this.clip();
         }
-        
+
     }
 
 

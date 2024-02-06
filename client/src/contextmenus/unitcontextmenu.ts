@@ -1,14 +1,14 @@
 import { ContextActionSet } from "../unit/contextactionset";
-import { ContextMenu } from "./contextmenu";
+import { ContextMenu, contextMenuConfig } from "./contextmenu";
 
 /** The UnitContextMenu is shown when the user rightclicks on a unit. It dynamically presents the user with possible actions to perform on the unit. */
 export class UnitContextMenu extends ContextMenu {
     /**
      * 
-     * @param ID - the ID of the HTML element which will contain the context menu
+     * @param config <contextMenuConfig> the config object for the menu
      */
-    constructor(ID: string){
-        super(ID);
+    constructor(config: contextMenuConfig) {
+        super(config);
     }
 
     /** Set the options that will be presented to the user in the contextmenu

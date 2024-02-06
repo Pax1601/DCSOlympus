@@ -1,13 +1,17 @@
 import { LatLng } from "leaflet";
 
 export type contextMenuConfig = {
-    "id": string | HTMLElement
+    "id": string | HTMLElement,
+    "onBeforeShow"?: CallableFunction,
+    "onShow"?: CallableFunction
 }
 
 /** Base class for map contextmenus. By default it is empty and requires to be extended. */
 export class ContextMenu {
     #container: HTMLElement | null;
     #latlng: LatLng = new LatLng(0, 0);
+    #onBeforeShow: CallableFunction;
+    #onShow: CallableFunction;
     #x: number = 0;
     #y: number = 0;
     #visibleSubMenu: string | null = null;
@@ -16,13 +20,10 @@ export class ContextMenu {
      * 
      * @param ID - the ID of the HTML element which will contain the context menu
      */
-    constructor(ID: string | HTMLElement) {
-
-        if (ID instanceof HTMLElement)
-            this.#container = ID
-        else
-            this.#container = document.getElementById(ID);
-
+    constructor(config: contextMenuConfig) {
+        this.#container = (config.id instanceof HTMLElement) ? config.id : document.getElementById(config.id);
+        this.#onBeforeShow = config.onBeforeShow || function () { };
+        this.#onShow = config.onShow || function () { };
         this.hide();
     }
 
@@ -33,12 +34,14 @@ export class ContextMenu {
      * @param latlng Leaflet latlng object of the mouse click. If undefined, use the old value
      */
     show(x: number | undefined = undefined, y: number | undefined = undefined, latlng: LatLng | undefined = undefined) {
+        this.#onBeforeShow(this);
         this.#latlng = latlng ?? this.#latlng;
         this.#container?.classList.toggle("hide", false);
         this.#x = x ?? this.#x;
         this.#y = y ?? this.#y;
         this.clip();
         this.getContainer()?.dispatchEvent(new Event("show"));
+        this.#onShow(this);
     }
 
     /** Hide the contextmenu

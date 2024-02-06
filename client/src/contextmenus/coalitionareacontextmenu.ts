@@ -2,7 +2,7 @@ import { LatLng } from "leaflet";
 import { getApp } from "..";
 import { GAME_MASTER, IADSTypes } from "../constants/constants";
 import { CoalitionArea } from "../map/coalitionarea/coalitionarea";
-import { ContextMenu } from "./contextmenu";
+import { ContextMenu, contextMenuConfig } from "./contextmenu";
 import { Dropdown } from "../controls/dropdown";
 import { Slider } from "../controls/slider";
 import { Switch } from "../controls/switch";
@@ -20,10 +20,10 @@ export class CoalitionAreaContextMenu extends ContextMenu {
 
     /**
      * 
-     * @param ID - the ID of the HTML element which will contain the context menu
+     * @param config <contextMenuConfig> the config object for the menu
      */
-    constructor(ID: string) {
-        super(ID);
+    constructor(config: contextMenuConfig) {
+        super(config);
 
         /* Create the coalition switch */
         this.#coalitionSwitch = new Switch("coalition-area-switch", (value: boolean) => this.#onSwitchClick(value), true);

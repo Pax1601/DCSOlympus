@@ -1,9 +1,9 @@
 import { ContextMenu, contextMenuConfig } from "../contextmenus/contextmenu";
 import { Manager } from "../other/manager";
 
-export type contextMenuTypes = "map" | "unit"
+export type contextMenuTypes = "airbase" | "airbaseSpawn" | "map" | "unit"
 export type contextMenuManagerConfig = {
-    [key in contextMenuTypes]?: contextMenuConfig | false
+    [key in contextMenuTypes]?: ContextMenu | contextMenuConfig | false
 }
 
 export class ContextMenuManager extends Manager {
@@ -14,7 +14,11 @@ export class ContextMenuManager extends Manager {
         if (!items) return;
 
         for (const [name, menu] of Object.entries(items)) {
-            this.add(name, (menu) ? new ContextMenu(menu.id) : false);   //  TODO: make this pass the whole config
+            if (typeof menu === "boolean" || menu instanceof ContextMenu) {
+                this.add(name, menu);
+            } else {
+                this.add(name, new ContextMenu(menu));
+            }
         }
     }
 
