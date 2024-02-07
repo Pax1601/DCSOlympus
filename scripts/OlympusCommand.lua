@@ -602,6 +602,7 @@ end
 -- Generates unit table for air units 
 function Olympus.generateAirUnitsTable(units)
 	local unitsTable = {}
+	Olympus.notify(Olympus.serializeTable(units), 5)
 	for idx, unit in pairs(units) do
 		local loadout = unit.loadout			-- loadout: a string, one of the names defined in unitPayloads.lua. Must be compatible with the unitType
 		local payload = unit.payload			-- payload: a table, if present the unit will receive this specific payload. Overrides loadout
