@@ -606,10 +606,6 @@ function Olympus.generateAirUnitsTable(units)
 		local loadout = unit.loadout			-- loadout: a string, one of the names defined in unitPayloads.lua. Must be compatible with the unitType
 		local payload = unit.payload			-- payload: a table, if present the unit will receive this specific payload. Overrides loadout
 
-		if unit.heading == nil then
-			unit.heading = 0
-		end
-
 		-- Define the loadout
 		if payload == nil then
 			if loadout ~= nil and loadout ~= "" and Olympus.unitPayloads[unit.unitType] and Olympus.unitPayloads[unit.unitType][loadout] then
@@ -707,7 +703,7 @@ function Olympus.generateGroundUnitsTable(units)
 					["type"] = value.name,
 					["x"] = spawnLocation.x + value.dx,
 					["y"] = spawnLocation.z + value.dy,
-					["heading"] = 0,
+					["heading"] = unit.heading,
 					["skill"] = unit.skill,
 					["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitsTable + 1
 				}
@@ -741,7 +737,7 @@ function Olympus.generateNavyUnitsTable(units)
 					["type"] = value.name,
 					["x"] = spawnLocation.x + value.dx,
 					["y"] = spawnLocation.z + value.dy,
-					["heading"] = 0,
+					["heading"] = unit.heading,
 					["skill"] = unit.skill,
 					["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitsTable + 1,
 					["transportable"] = { ["randomTransportable"] = false }

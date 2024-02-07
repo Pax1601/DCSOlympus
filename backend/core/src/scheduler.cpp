@@ -202,12 +202,13 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			double lat = unit[L"location"][L"lat"].as_double();
 			double lng = unit[L"location"][L"lng"].as_double();
 			double alt = unit[L"altitude"].as_double();
+			double heading = unit[L"heading"].as_double();
 			Coords location; location.lat = lat; location.lng = lng; location.alt = alt;
 			string loadout = to_string(unit[L"loadout"]);
 			string liveryID = to_string(unit[L"liveryID"]);
 			string skill = to_string(unit[L"skill"]);
 
-			spawnOptions.push_back({unitType, location, loadout, skill, liveryID});
+			spawnOptions.push_back({unitType, location, heading, loadout, skill, liveryID});
 			log(username + " spawned a " + coalition + " " + unitType , true);
 		}
 
@@ -231,11 +232,12 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			string unitType = to_string(unit[L"unitType"]);
 			double lat = unit[L"location"][L"lat"].as_double();
 			double lng = unit[L"location"][L"lng"].as_double();
+			double heading = unit[L"heading"].as_double();
 			Coords location; location.lat = lat; location.lng = lng;
 			string liveryID = to_string(unit[L"liveryID"]);
 			string skill = to_string(unit[L"skill"]);
 			
-			spawnOptions.push_back({ unitType, location, "", skill, liveryID});
+			spawnOptions.push_back({ unitType, location, heading, "", skill, liveryID});
 			log(username + " spawned a " + coalition + " " + unitType, true);
 		}
 
