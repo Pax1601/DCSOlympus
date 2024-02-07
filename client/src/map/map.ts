@@ -38,6 +38,7 @@ require("../../public/javascripts/leaflet.nauticscale.js")
 require("../../public/javascripts/L.Path.Drag.js")
 
 export type MapMarkerVisibilityControl = {
+    "category"?: string;
     "image": string;
     "isProtected"?: boolean,
     "name": string,

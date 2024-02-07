@@ -25,6 +25,10 @@ export class UnitDataFileExport extends UnitDataFile {
      * Show the form to start the export journey
      */
     showForm(units: Unit[]) {
+        this.dialog.getElement().querySelectorAll("[data-on-error]").forEach((el:Element) => {
+            el.classList.toggle("hide", el.getAttribute("data-on-error") === "show");
+        });
+        
         const data: any = {};
         const unitCanBeExported = (unit: Unit) => !["Aircraft", "Helicopter"].includes(unit.getCategory());
 

@@ -26,9 +26,6 @@ if (fs.existsSync(args["config"])) {
 	clientPort = json["client"]["port"];
 } else {
 	console.log("Failed to read config, aborting!");
-
-	/* Wait a bit before closing the window */
-	await new Promise(resolve => setTimeout(resolve, 3000));
 	return;
 }
 

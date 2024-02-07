@@ -5,8 +5,10 @@ import { Switch } from "../controls/switch";
 import { GAME_MASTER } from "../constants/constants";
 import { CoalitionArea } from "../map/coalitionarea/coalitionarea";
 import { AirDefenceUnitSpawnMenu, AircraftSpawnMenu, GroundUnitSpawnMenu, HelicopterSpawnMenu, NavyUnitSpawnMenu } from "../controls/unitspawnmenu";
-import { Airbase } from "../mission/airbase";
 import { SmokeMarker } from "../map/markers/smokemarker";
+import { UnitSpawnTable } from "../interfaces";
+import { getCategoryBlueprintIconSVG, getUnitDatabaseByCategory } from "../other/utils";
+import { SVGInjector } from "@tanem/svg-injector";
 
 /** The MapContextMenu is the main contextmenu shown to the user whenever it rightclicks on the map. It is the primary interaction method for the user.
  * It allows to spawn units, create explosions and smoke, and edit CoalitionAreas.
@@ -96,6 +98,8 @@ export class MapContextMenu extends ContextMenu {
         this.getContainer()?.addEventListener("hide", () => this.#airDefenceUnitSpawnMenu.clearCirclesPreviews());
         this.getContainer()?.addEventListener("hide", () => this.#groundUnitSpawnMenu.clearCirclesPreviews());
         this.getContainer()?.addEventListener("hide", () => this.#navyUnitSpawnMenu.clearCirclesPreviews());
+
+        this.#setupHistory();
     }
 
     /** Show the contextmenu on top of the map, usually at the location where the user has clicked on it.
@@ -256,5 +260,92 @@ export class MapContextMenu extends ContextMenu {
         this.#airDefenceUnitSpawnMenu.setCountries();
         this.#groundUnitSpawnMenu.setCountries();
         this.#navyUnitSpawnMenu.setCountries();
+    }
+
+    /** Handles all of the logic for historal logging.
+     * 
+     */
+    #setupHistory() {
+        /* Set up the tab clicks */
+        const spawnModes           = this.getContainer()?.querySelectorAll(".spawn-mode");
+        const activeCoalitionLabel = document.getElementById("active-coalition-label");
+        const tabs = this.getContainer()?.querySelectorAll(".spawn-mode-tab");
+
+        //  Default selected tab to the "spawn now" option
+        if (tabs) tabs[tabs.length-1].classList.add("selected");
+
+        tabs?.forEach((btn:Element) => {
+            btn.addEventListener("click", (ev:MouseEventInit) => {
+                //  Highlight tab
+                tabs.forEach(tab => tab.classList.remove("selected"));
+                btn.classList.add("selected");
+
+                //  Hide/reset
+                spawnModes?.forEach(div => div.classList.add("hide"));
+
+                const prevSiblings = [];
+                let prev = btn.previousElementSibling;
+
+                /* Tabs and content windows are assumed to be in the same order */
+                //  Count previous
+                while ( prev ) {
+                    prevSiblings.push(prev);
+                    prev = prev.previousElementSibling;
+                }
+
+                //  Show content
+                if (spawnModes && spawnModes[prevSiblings.length]) {
+                    spawnModes[prevSiblings.length].classList.remove("hide");
+                }
+
+                //  We don't want to see the "Spawn [coalition] unit" label
+                if (activeCoalitionLabel) activeCoalitionLabel.classList.toggle("hide", !btn.hasAttribute("data-show-label"));
+            });
+        });
+
+        const history    = <HTMLDivElement>document.getElementById("spawn-history-menu");
+        const maxEntries = 20;
+
+        /** Listen for unit spawned **/
+        document.addEventListener( "unitSpawned", (ev:CustomEventInit) => {
+            const buttons = history.querySelectorAll("button");
+            const detail:any = ev.detail;
+            if (buttons.length === 0) history.innerHTML = "";  //  Take out any "no data" messages
+            const button = document.createElement("button");
+            button.title = "Click to spawn";
+            button.setAttribute("data-spawned-coalition", detail.coalition);
+            button.setAttribute("data-unit-type", detail.unitSpawnTable[0].unitType);
+            button.setAttribute("data-unit-qty", detail.unitSpawnTable.length);
+
+            const db = getUnitDatabaseByCategory(detail.category);
+            button.innerHTML = `<img src="${getCategoryBlueprintIconSVG(detail.category, detail.unitSpawnTable[0].unitType)}" /><span>${db?.getByName(detail.unitSpawnTable[0].unitType)?.label} (${detail.unitSpawnTable.length})</span>`;
+
+            //  Remove a previous instance to save clogging up the list
+            const previous:any = [].slice.call(buttons).find( (button:Element) => (
+                detail.coalition === button.getAttribute("data-spawned-coalition") &&
+                detail.unitSpawnTable[0].unitType === button.getAttribute("data-unit-type") &&
+                detail.unitSpawnTable.length === parseInt(button.getAttribute("data-unit-qty") || "-1")));
+
+            if (previous instanceof HTMLElement) previous.remove();
+
+            /* Click to do the spawn */
+            button.addEventListener("click", (ev:MouseEventInit) => {
+                detail.unitSpawnTable.forEach((table:UnitSpawnTable, i:number) => {
+                    table.location = this.getLatLng();  //  Set to new menu location
+                    table.location.lat += 0.00015 * i;
+                });
+                getApp().getUnitsManager().spawnUnits(detail.category, detail.unitSpawnTable, detail.coalition, detail.immediate, detail.airbase, detail.country);
+                this.hide();
+            });
+
+            /*  Insert into DOM */
+            history.prepend(button);
+            SVGInjector(button.querySelectorAll("img"));
+
+            /* Trim down to max number of entries */
+            while (history.querySelectorAll("button").length > maxEntries) {
+                history.childNodes[maxEntries].remove();
+            }
+        });
     }
 }

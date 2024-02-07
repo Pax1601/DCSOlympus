@@ -1,0 +1,25 @@
+<style>
+    
+</style>
+<div>
+    <div class="instructions">
+        <div class="step">
+            Step <%= instances.length === 1? "2": "3" %> of <%= instances.length === 1? "4": "5" %>
+        </div>
+        <div class="title">
+            Do you want to set port and address settings?
+        </div>
+        <div class="description">
+            We can automatically set port and address settings for you, or you can set them manually. <br>
+            If you don't have a good understanding of how Olympus works, we recommend the <i>auto apply settings</i> option.
+        </div>
+    </div>
+    <div class="wizard-inputs">
+        <div class="button radio auto selected" onclick="signal('onConnectionsTypeClicked', 'auto')">
+            Auto apply settings
+        </div>
+        <div class="button radio manual" onclick="signal('onConnectionsTypeClicked', 'manual')">
+            Manually set
+        </div>
+    </div>
+</div>

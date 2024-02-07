@@ -1,58 +1,71 @@
 <div id="map-contextmenu" class="ol-context-menu" oncontextmenu="return false;">
     <div id="active-coalition-label" data-coalition="blue"></div>
-    <div class="upper-bar ol-panel">
-        <div class="switch-control coalition no-label"><div id="coalition-switch" class="ol-switch"></div></div>
-        <button data-coalition="blue" id="aircraft-spawn-button" title="Spawn aircraft" data-on-click="mapContextMenuShow"
-            data-on-click-params='{ "type": "aircraft" }' class="ol-context-menu-button"><img src="/resources/theme/images/buttons/spawn/aircraft.svg" inject-svg></button>
-        <button data-coalition="blue" id="helicopter-spawn-button" title="Spawn helicopter" data-on-click="mapContextMenuShow"
-            data-on-click-params='{ "type": "helicopter" }' class="ol-context-menu-button"><img src="/resources/theme/images/buttons/spawn/helicopter.svg" inject-svg></button>
-        <button data-coalition="blue" id="air-defence-spawn-button" title="Spawn air defence unit" data-on-click="mapContextMenuShow"
-            data-on-click-params='{ "type": "air-defence" }' class="ol-context-menu-button"><img src="/resources/theme/images/buttons/spawn/sam.svg" inject-svg></button>
-        <button data-coalition="blue" id="groundunit-spawn-button" title="Spawn ground unit" data-on-click="mapContextMenuShow"
-            data-on-click-params='{ "type": "groundunit" }' class="ol-context-menu-button"><img src="/resources/theme/images/buttons/spawn/groundunit.svg" inject-svg></button>
-        <button data-coalition="blue" id="coalition-area-button" title="Edit coalition area" data-on-click="editCoalitionArea"
-            class="ol-context-menu-button"><img src="/resources/theme/images/buttons/other/edit.svg" inject-svg></button>
-        <button data-coalition="blue" id="more-options-button" title="More options" data-on-click="mapContextMenuShow"
-            data-on-click-params='{ "type": "more" }' class="ol-context-menu-button"><img src="/resources/theme/images/buttons/spawn/more.svg" inject-svg></button>
+    <div id="spawn-mode-tabs">
+        <button id="spawn-tab-history" class="ol-context-menu-button spawn-mode-tab"><img src="resources/theme/images/buttons/other/clock-rotate-left-solid.svg" inject-svg></button>
+        <button id="spawn-tab-new" class="ol-context-menu-button spawn-mode-tab" data-show-label><img src="resources/theme/images/buttons/other/arrow-down-solid.svg" inject-svg></button>
     </div>
-    <div id="more-options-button-bar" class="upper-bar ol-panel hide">
-        <button data-coalition="blue" id="navyunit-spawn-button" title="Spawn navy unit" data-on-click="mapContextMenuShow"
-            data-on-click-params='{ "type": "navyunit" }' class="ol-context-menu-button"><img src="/resources/theme/images/buttons/spawn/navyunit.svg" inject-svg></button> 
-        <button data-coalition="blue" id="smoke-spawn-button" title="Spawn smoke" data-on-click="mapContextMenuShow"
-            data-on-click-params='{ "type": "smoke" }' class="ol-context-menu-button"><img src="/resources/theme/images/buttons/spawn/smoke.svg" inject-svg></button>
-        <button data-coalition="blue" id="explosion-spawn-button" title="Explosion" data-on-click="mapContextMenuShow"
-            data-on-click-params='{ "type": "explosion" }' class="ol-context-menu-button"><img src="/resources/theme/images/buttons/spawn/explosion.svg" inject-svg></button>
-        <button data-coalition="blue" id="polygon-draw-button" title="Enter polygon draw mode" data-on-click="toggleCoalitionAreaDraw" 
-            data-on-click-params='{"type": "polygon"}' class="ol-context-menu-button"><img src="resources/theme/images/buttons/tools/draw-polygon-solid.svg" inject-svg></button>
+    <div class="spawn-mode ol-panel ol-context-menu-panel hide">
+        <h4>Spawn history</h4>
+        <div id="spawn-history-menu" class="ol-scrollable">
+            <p>You do not have any units to show.</p>
         </div>
-    <div id="aircraft-spawn-menu" class="ol-context-menu-panel ol-panel hide">
-        <!-- Here the aircraft spawn menu will be shown -->
     </div>
-    <div id="helicopter-spawn-menu" class="ol-context-menu-panel ol-panel hide">
-        <!-- Here the helicopter spawn menu will be shown -->
-    </div>
-    <div id="air-defence-spawn-menu" class="ol-panel ol-context-menu-panel hide">
-        <!-- Here the air defence units' spawn menu will be shown -->
-    </div>
-    <div id="groundunit-spawn-menu" class="ol-panel ol-context-menu-panel hide">
-        <!-- Here the ground units' spawn menu will be shown -->
-    </div>
-    <div id="navyunit-spawn-menu" class="ol-panel ol-context-menu-panel hide">
-        <!-- Here the navy units' spawn menu will be shown -->
-    </div>
-    <div id="smoke-spawn-menu" class="ol-panel ol-context-menu-panel hide">
-        <button class="smoke-button" title="" data-smoke-color="white" data-on-click="contextMenuDeploySmoke" data-on-click-params='{ "color": "white" }'>White smoke</button>
-        <button class="smoke-button" title="" data-smoke-color="blue" data-on-click="contextMenuDeploySmoke" data-on-click-params='{ "color": "blue" }'>Blue smoke</button>
-        <button class="smoke-button" title="" data-smoke-color="red" data-on-click="contextMenuDeploySmoke" data-on-click-params='{ "color": "red" }'>Red smoke</button>
-        <button class="smoke-button" title="" data-smoke-color="green" data-on-click="contextMenuDeploySmoke" data-on-click-params='{ "color": "green" }'>Green smoke</button>
-        <button class="smoke-button" title="" data-smoke-color="orange" data-on-click="contextMenuDeploySmoke" data-on-click-params='{ "color": "orange" }'>Orange smoke</button>
-    </div>
-    <div id="explosion-menu" class="ol-panel ol-context-menu-panel hide">
-        <button class="explosion-button" title="" data-on-click="contextMenuExplosion" data-on-click-params='{ "explosionType": "normal", "strength": 1 }'>Small explosion</button>
-        <button class="explosion-button" title="" data-on-click="contextMenuExplosion" data-on-click-params='{ "explosionType": "normal", "strength": 10 }'>Big explosion</button>
-        <button class="explosion-button" title="" data-on-click="contextMenuExplosion" data-on-click-params='{ "explosionType": "phosphorous"}'>White phosphorous</button>
-        <button class="explosion-button" title="" data-on-click="contextMenuExplosion" data-on-click-params='{ "explosionType": "napalm"}'>Napalm</button>
-        <button class="explosion-button" title="" data-on-click="contextMenuExplosion" data-on-click-params='{ "explosionType": "secondary"}'>Explosion with debries</button>
-        <button class="explosion-button" title="" data-on-click="contextMenuExplosion" data-on-click-params='{ "explosionType": "fire"}'>Static fire</button>
+    <div class="spawn-mode">
+        <div class="upper-bar ol-panel">
+            <div class="switch-control coalition no-label"><div id="coalition-switch" class="ol-switch"></div></div>
+            <button data-coalition="blue" id="aircraft-spawn-button" title="Spawn aircraft" data-on-click="mapContextMenuShow"
+                data-on-click-params='{ "type": "aircraft" }' class="ol-context-menu-button"><img src="/resources/theme/images/buttons/spawn/aircraft.svg" inject-svg></button>
+            <button data-coalition="blue" id="helicopter-spawn-button" title="Spawn helicopter" data-on-click="mapContextMenuShow"
+                data-on-click-params='{ "type": "helicopter" }' class="ol-context-menu-button"><img src="/resources/theme/images/buttons/spawn/helicopter.svg" inject-svg></button>
+            <button data-coalition="blue" id="air-defence-spawn-button" title="Spawn air defence unit" data-on-click="mapContextMenuShow"
+                data-on-click-params='{ "type": "air-defence" }' class="ol-context-menu-button"><img src="/resources/theme/images/buttons/spawn/sam.svg" inject-svg></button>
+            <button data-coalition="blue" id="groundunit-spawn-button" title="Spawn ground unit" data-on-click="mapContextMenuShow"
+                data-on-click-params='{ "type": "groundunit" }' class="ol-context-menu-button"><img src="/resources/theme/images/buttons/spawn/groundunit.svg" inject-svg></button>
+            <button data-coalition="blue" id="coalition-area-button" title="Edit coalition area" data-on-click="editCoalitionArea"
+                class="ol-context-menu-button"><img src="/resources/theme/images/buttons/other/edit.svg" inject-svg></button>
+            <button data-coalition="blue" id="more-options-button" title="More options" data-on-click="mapContextMenuShow"
+                data-on-click-params='{ "type": "more" }' class="ol-context-menu-button"><img src="/resources/theme/images/buttons/spawn/more.svg" inject-svg></button>
+            
+        </div>
+        <div id="more-options-button-bar" class="upper-bar ol-panel hide">
+            <button data-coalition="blue" id="navyunit-spawn-button" title="Spawn navy unit" data-on-click="mapContextMenuShow"
+                data-on-click-params='{ "type": "navyunit" }' class="ol-context-menu-button"><img src="/resources/theme/images/buttons/spawn/navyunit.svg" inject-svg></button> 
+            <button data-coalition="blue" id="smoke-spawn-button" title="Spawn smoke" data-on-click="mapContextMenuShow"
+                data-on-click-params='{ "type": "smoke" }' class="ol-context-menu-button"><img src="/resources/theme/images/buttons/spawn/smoke.svg" inject-svg></button>
+            <button data-coalition="blue" id="explosion-spawn-button" title="Explosion" data-on-click="mapContextMenuShow"
+                data-on-click-params='{ "type": "explosion" }' class="ol-context-menu-button"><img src="/resources/theme/images/buttons/spawn/explosion.svg" inject-svg></button>
+            <button data-coalition="blue" id="polygon-draw-button" title="Enter polygon draw mode" data-on-click="toggleCoalitionAreaDraw" 
+                data-on-click-params='{"type": "polygon"}' class="ol-context-menu-button"><img src="resources/theme/images/buttons/tools/draw-polygon-solid.svg" inject-svg></button>
+            </div>
+        <div id="aircraft-spawn-menu" class="ol-context-menu-panel ol-panel hide">
+            <!-- Here the aircraft spawn menu will be shown -->
+        </div>
+        <div id="helicopter-spawn-menu" class="ol-context-menu-panel ol-panel hide">
+            <!-- Here the helicopter spawn menu will be shown -->
+        </div>
+        <div id="air-defence-spawn-menu" class="ol-panel ol-context-menu-panel hide">
+            <!-- Here the air defence units' spawn menu will be shown -->
+        </div>
+        <div id="groundunit-spawn-menu" class="ol-panel ol-context-menu-panel hide">
+            <!-- Here the ground units' spawn menu will be shown -->
+        </div>
+        <div id="navyunit-spawn-menu" class="ol-panel ol-context-menu-panel hide">
+            <!-- Here the navy units' spawn menu will be shown -->
+        </div>
+        <div id="smoke-spawn-menu" class="ol-panel ol-context-menu-panel hide">
+            <button class="smoke-button" title="" data-smoke-color="white" data-on-click="contextMenuDeploySmoke" data-on-click-params='{ "color": "white" }'>White smoke</button>
+            <button class="smoke-button" title="" data-smoke-color="blue" data-on-click="contextMenuDeploySmoke" data-on-click-params='{ "color": "blue" }'>Blue smoke</button>
+            <button class="smoke-button" title="" data-smoke-color="red" data-on-click="contextMenuDeploySmoke" data-on-click-params='{ "color": "red" }'>Red smoke</button>
+            <button class="smoke-button" title="" data-smoke-color="green" data-on-click="contextMenuDeploySmoke" data-on-click-params='{ "color": "green" }'>Green smoke</button>
+            <button class="smoke-button" title="" data-smoke-color="orange" data-on-click="contextMenuDeploySmoke" data-on-click-params='{ "color": "orange" }'>Orange smoke</button>
+        </div>
+        <div id="explosion-menu" class="ol-panel ol-context-menu-panel hide">
+            <button class="explosion-button" title="" data-on-click="contextMenuExplosion" data-on-click-params='{ "explosionType": "normal", "strength": 1 }'>Small explosion</button>
+            <button class="explosion-button" title="" data-on-click="contextMenuExplosion" data-on-click-params='{ "explosionType": "normal", "strength": 10 }'>Big explosion</button>
+            <button class="explosion-button" title="" data-on-click="contextMenuExplosion" data-on-click-params='{ "explosionType": "phosphorous"}'>White phosphorous</button>
+            <button class="explosion-button" title="" data-on-click="contextMenuExplosion" data-on-click-params='{ "explosionType": "napalm"}'>Napalm</button>
+            <button class="explosion-button" title="" data-on-click="contextMenuExplosion" data-on-click-params='{ "explosionType": "secondary"}'>Explosion with debries</button>
+            <button class="explosion-button" title="" data-on-click="contextMenuExplosion" data-on-click-params='{ "explosionType": "fire"}'>Static fire</button>
+        </div>
     </div>
 </div>

@@ -26,7 +26,9 @@ export class Dropdown {
 
         if (options != null) this.setOptions(options);
 
-        (this.#container.querySelector(".ol-select-value") as HTMLElement)?.addEventListener("click", (ev) => { this.#toggle(); });
+        (this.#container.querySelector(".ol-select-value") as HTMLElement)?.addEventListener("click", (ev) => {
+            if (!this.#container.hasAttribute("disabled") && !this.#container.closest("disabled")) this.#toggle();
+        });
 
         document.addEventListener("click", (ev) => {
             if (!(this.#value.contains(ev.target as Node) || this.#options.contains(ev.target as Node) || this.#container.contains(ev.target as Node))) {

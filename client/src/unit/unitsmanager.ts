@@ -1427,6 +1427,16 @@ export class UnitsManager {
         if (spawnPoints <= getApp().getMissionManager().getAvailableSpawnPoints()) {
             getApp().getMissionManager().setSpentSpawnPoints(spawnPoints);
             spawnFunction();
+            document.dispatchEvent( new CustomEvent( "unitSpawned", {
+                "detail": {
+                    "airbase": airbase,
+                    "category": category,
+                    "coalition": coalition,
+                    "country": country,
+                    "immediate": immediate,
+                    "unitSpawnTable": units
+                }
+            }));
             return true;
         } else {
             (getApp().getPopupsManager().get("infoPopup") as Popup).setText("Not enough spawn points available!");

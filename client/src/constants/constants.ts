@@ -26,6 +26,23 @@ export const ROEs: string[] = ["free", "designated", "", "return", "hold"];
 export const reactionsToThreat: string[] = ["none", "manoeuvre", "passive", "evade"];
 export const emissionsCountermeasures: string[] = ["silent", "attack", "defend", "free"];
 
+export const ERAS = [{
+    "name": "Early Cold War",
+    "chronologicalOrder": 2
+}, {
+    "name": "Late Cold War",
+    "chronologicalOrder": 4
+}, {
+    "name": "Mid Cold War",
+    "chronologicalOrder": 3
+}, {
+    "name": "Modern",
+    "chronologicalOrder": 5
+}, {
+    "name": "WW2",
+    "chronologicalOrder": 1
+}];
+
 export const ROEDescriptions: string[] = [
     "Free (Attack anyone)",
     "Designated (Attack the designated target only) \nWARNING: Ground and Navy units don't respect this ROE, it will be equivalent to weapons FREE.",
@@ -204,16 +221,19 @@ export const MAP_MARKER_CONTROLS: MapMarkerVisibilityControl[] = [{
     "toggles": ["dcs"],
     "tooltip": "Toggle DCS-controlled units' visibility"
 }, {
+    "category": "Aircraft",
     "image": "visibility/aircraft.svg",
     "name": "Aircraft",
     "toggles": ["aircraft"],
     "tooltip": "Toggle aircraft's visibility"
 }, {
+    "category": "Helicopter",
     "image": "visibility/helicopter.svg",
     "name": "Helicopter",
     "toggles": ["helicopter"],
     "tooltip": "Toggle helicopters' visibility"
 }, {
+    "category": "AirDefence",
     "image": "visibility/groundunit-sam.svg",
     "name": "Air defence",
     "toggles": ["groundunit-sam"],
@@ -224,6 +244,7 @@ export const MAP_MARKER_CONTROLS: MapMarkerVisibilityControl[] = [{
     "toggles": ["groundunit"],
     "tooltip": "Toggle ground units' visibility"
 }, {
+    "category": "GroundUnit",
     "image": "visibility/navyunit.svg",
     "name": "Naval",
     "toggles": ["navyunit"],
