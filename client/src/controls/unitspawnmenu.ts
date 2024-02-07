@@ -535,7 +535,7 @@ export abstract class UnitSpawnMenu {
     }
 
     setShowSkill(showSkill: boolean) {
-        this.#showSkill = showSkill
+        this.#showSkill = showSkill;
     }
 
     setShowAltitudeSlider(showAltitudeSlider: boolean) {
