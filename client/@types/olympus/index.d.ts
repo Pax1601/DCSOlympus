@@ -653,6 +653,7 @@ declare module "interfaces" {
         coalition: string;
         count: number;
         country: string;
+        skill: string;
         loadout: LoadoutBlueprint | undefined;
         airbase: Airbase | undefined;
         liveryID: string | undefined;
@@ -900,6 +901,7 @@ declare module "controls/unitspawnmenu" {
         getLabelDropdown(): Dropdown;
         getCountDropdown(): Dropdown;
         getLoadoutDropdown(): Dropdown;
+        getSkillDropdown(): Dropdown;
         getCountryDropdown(): Dropdown;
         getLiveryDropdown(): Dropdown;
         getLoadoutPreview(): HTMLDivElement;

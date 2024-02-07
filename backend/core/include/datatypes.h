@@ -152,6 +152,7 @@ struct SpawnOptions {
 	string unitType;
 	Coords location;
 	string loadout;
+	string skill;
 	string liveryID;
 };
 

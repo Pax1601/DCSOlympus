@@ -46,7 +46,9 @@ string SpawnGroundUnits::getString()
             << "unitType = " << "\"" << spawnOptions[i].unitType << "\"" << ", "
             << "lat = " << spawnOptions[i].location.lat << ", "
             << "lng = " << spawnOptions[i].location.lng << ", "
-            << "liveryID = " << "\"" << spawnOptions[i].liveryID << "\"" << " }, ";
+            << "liveryID = " << "\"" << spawnOptions[i].liveryID << "\"" << ", "
+            << "skill =  \"" << spawnOptions[i].skill << "\"" << "}, ";
+
     }
 
     std::ostringstream commandSS;
@@ -70,7 +72,8 @@ string SpawnNavyUnits::getString()
             << "unitType = " << "\"" << spawnOptions[i].unitType << "\"" << ", "
             << "lat = " << spawnOptions[i].location.lat << ", "
             << "lng = " << spawnOptions[i].location.lng << ", "
-            << "liveryID = " << "\"" << spawnOptions[i].liveryID << "\"" << " }, ";
+            << "liveryID = " << "\"" << spawnOptions[i].liveryID << "\"" << ", "
+            << "skill =  \"" << spawnOptions[i].skill << "\"" << "}, ";
     }
 
     std::ostringstream commandSS;
@@ -95,7 +98,8 @@ string SpawnAircrafts::getString()
             << "lng = " << spawnOptions[i].location.lng << ", "
             << "alt = " << spawnOptions[i].location.alt << ", "
             << "loadout = \"" << spawnOptions[i].loadout << "\"" << ", "
-            << "liveryID = " << "\"" << spawnOptions[i].liveryID << "\"" << " }, ";
+            << "liveryID = " << "\"" << spawnOptions[i].liveryID << "\"" << ", "
+            << "skill =  \"" << spawnOptions[i].skill << "\"" << "}, ";
     }
 
     std::ostringstream commandSS;
@@ -122,7 +126,8 @@ string SpawnHelicopters::getString()
             << "lng = " << spawnOptions[i].location.lng << ", "
             << "alt = " << spawnOptions[i].location.alt << ", "
             << "loadout = \"" << spawnOptions[i].loadout << "\"" << ", "
-            << "liveryID = " << "\"" << spawnOptions[i].liveryID << "\"" << " }, ";
+            << "liveryID = " << "\"" << spawnOptions[i].liveryID << "\"" << ", "
+            << "skill =  \"" << spawnOptions[i].skill << "\"" << "}, ";
     }
 
     std::ostringstream commandSS;

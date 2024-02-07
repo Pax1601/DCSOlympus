@@ -192,6 +192,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		string airbaseName = to_string(value[L"airbaseName"]);
 		string country = to_string(value[L"country"]);
 
+
 		int spawnPoints = value[L"spawnPoints"].as_number().to_int32();
 		if (!checkSpawnPoints(spawnPoints, coalition)) return;
 
@@ -204,9 +205,10 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			Coords location; location.lat = lat; location.lng = lng; location.alt = alt;
 			string loadout = to_string(unit[L"loadout"]);
 			string liveryID = to_string(unit[L"liveryID"]);
+			string skill = to_string(unit[L"skill"]);
 
-			spawnOptions.push_back({unitType, location, loadout, liveryID});
-			log(username + " spawned a " + coalition + " " + unitType, true);
+			spawnOptions.push_back({unitType, location, loadout, skill, liveryID});
+			log(username + " spawned a " + coalition + " " + unitType , true);
 		}
 
 		if (key.compare("spawnAircrafts") == 0)
@@ -231,8 +233,9 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			double lng = unit[L"location"][L"lng"].as_double();
 			Coords location; location.lat = lat; location.lng = lng;
 			string liveryID = to_string(unit[L"liveryID"]);
+			string skill = to_string(unit[L"skill"]);
 			
-			spawnOptions.push_back({ unitType, location, "", liveryID });
+			spawnOptions.push_back({ unitType, location, "", skill, liveryID});
 			log(username + " spawned a " + coalition + " " + unitType, true);
 		}
 
