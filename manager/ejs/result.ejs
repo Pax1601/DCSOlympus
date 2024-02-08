@@ -82,7 +82,7 @@
                 </div>
             </div>
             <div style="font-size: var(--normal);">
-                Alternatively, you can run the <b>Olympus Server</b> instead and visit <div class="link" onclick="signal('onLinkClicked', 'http://localhost:<%= activeInstance["clientPort"] %>')" >http://localhost:<%= activeInstance["clientPort"] %></div> in a web browser (Google Chrome recommended) to replace the first step above.
+                Alternatively, you can run the <b>Olympus Server</b> instead and visit <div class="link" onclick="signal('onLinkClicked', 'http://localhost:<%= activeInstance["frontendPort"] %>')" >http://localhost:<%= activeInstance["frontendPort"] %></div> in a web browser (Google Chrome recommended) to replace the first step above.
             </div>
         <% } else { %>
             <div class="usage-instructions">
@@ -96,7 +96,7 @@
                 <div>
                     <img src="./icons/chrome.svg">
                     <div>
-                        To access Olympus remotely visit <div class="link" onclick="signal('onLinkClicked', 'http://<%= IP %>:<%= activeInstance["clientPort"] %>')">http://<%= IP %>:<%= activeInstance["clientPort"] %></div> <b>in a web browser</b> (Google Chrome recommended).
+                        To access Olympus remotely visit <div class="link" onclick="signal('onLinkClicked', 'http://<%= IP %>:<%= activeInstance["frontendPort"] %>')">http://<%= IP %>:<%= activeInstance["frontendPort"] %></div> <b>in a web browser</b> (Google Chrome recommended).
                     </div>
                 </div>
                 <img src="./icons/arrow-right-solid.svg">
@@ -108,7 +108,7 @@
                 </div>
             </div>
             <div style="font-size: var(--normal);">
-                <b>To access Olympus from this PC</b>, you need to visit <div class="link" onclick="signal('onLinkClicked', 'http://localhost:<%= activeInstance["clientPort"] %>')">http://localhost:<%= activeInstance["clientPort"] %></div> in a web browser (Google Chrome recommended) instead.
+                <b>To access Olympus from this PC</b>, you need to visit <div class="link" onclick="signal('onLinkClicked', 'http://localhost:<%= activeInstance["frontendPort"] %>')">http://localhost:<%= activeInstance["frontendPort"] %></div> in a web browser (Google Chrome recommended) instead.
             </div>
         <% } %>
     </div>

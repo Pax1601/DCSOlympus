@@ -8,10 +8,10 @@ let rawdata = fs.readFileSync('../../olympus.json');
 let config = JSON.parse(rawdata);
 var tileset = null;
 
-if (config["client"] === undefined || config["client"]["elevationProvider"] === undefined)
+if (config["frontend"] === undefined || config["frontend"]["elevationProvider"] === undefined)
     tileset = new TileSet('./hgt');
 else
-    tileset = new TileSet('./hgt', {downloader: new SRTMElevationDownloader('./hgt', config["client"]["elevationProvider"])});
+    tileset = new TileSet('./hgt', {downloader: new SRTMElevationDownloader('./hgt', config["frontend"]["elevationProvider"])});
 
 router.get( "/:lat/:lng", ( req, res ) => {
     tileset.getElevation([req.params.lat, req.params.lng], function(err, elevation) {

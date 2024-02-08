@@ -8,10 +8,10 @@ yargs.alias('c', 'config').describe('c', 'olympus.json config location').string(
 args = yargs.argv;
 
 console.log(`Config location: ${args["config"]}`)
-var clientPort = 3000;
+var frontendPort = 3000;
 if (fs.existsSync(args["config"])) {
 	var json = JSON.parse(fs.readFileSync(args["config"], 'utf-8'));
-	clientPort = json["client"]["port"];
+	frontendPort = json["frontend"]["port"];
 } else {
 	console.log("Failed to read config, trying default port");
 }
@@ -21,7 +21,7 @@ function createWindow() {
 		icon: "./../img/olympus.ico"
 	})
 
-	win.loadURL(`http://localhost:${clientPort}`);
+	win.loadURL(`http://localhost:${frontendPort}`);
 	win.setMenuBarVisibility(false);
 	win.maximize();
 }

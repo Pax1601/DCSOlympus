@@ -8,7 +8,7 @@
         "blueCommanderPassword": "b0ea4230c1558c5313165eda1bdb7fced008ca7f2ca6b823fb4d26292f309098",
         "redCommanderPassword": "302bcbaf2a3fdcf175b689bf102d6cdf9328f68a13d4096101bba806482bfed9"
     },
-    "client": {
+    "frontend": {
         "port": 3000,
         "elevationProvider": {
             "provider": "https://srtm.fasma.org/{lat}{lng}.SRTMGL3S.hgt.zip",
