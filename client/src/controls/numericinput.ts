@@ -1,3 +1,5 @@
+import { deg2rad } from "../other/utils";
+
 export class NumericInput {
     #container: HTMLElement;
     #input: HTMLInputElement;
@@ -24,7 +26,8 @@ export class NumericInput {
         this.#input.addEventListener("change", () => {
             const value = parseInt(this.#input.value, 10);
             if (!isNaN(value) && value >= 0 && value <= 360) {
-                this.#callback(value);
+                const radians = deg2rad(value);
+                this.#callback(radians);
             }
         });
     }
@@ -35,7 +38,7 @@ export class NumericInput {
 
     getValue(): number {
         const value = parseInt(this.#input.value, 10);
-        return !isNaN(value) ? value : 0; // Returns 0 if the current value is not a number
+        return !isNaN(value) ? value : 0;
     }
 
     setValue(value: number): void {

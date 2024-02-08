@@ -33,7 +33,7 @@ export abstract class UnitSpawnMenu {
         airbase: undefined, 
         liveryID: undefined, 
         altitude: undefined,
-        spawnHeading: 0
+        heading: 0
      };
 
     #container: HTMLElement;
@@ -89,7 +89,7 @@ export abstract class UnitSpawnMenu {
         this.#unitCountryDropdown = new Dropdown(null, () => { /* Custom button implementation */ }, undefined, "Country");
         this.#unitLiveryDropdown = new Dropdown(null, (livery: string) => this.#setUnitLivery(livery), undefined, "Livery");
         this.#unitSpawnAltitudeSlider = new Slider(null, 0, 1000, "ft", (value: number) => { this.spawnOptions.altitude = ftToM(value); }, { title: "Spawn altitude" });
-        this.#unitSpawnHeadingNumericInput = new NumericInput(null, (spawnHeading: number) => this.#setUnitSpawnHeading(spawnHeading), undefined, "SpawnHeading");
+        this.#unitSpawnHeadingNumericInput = new NumericInput(null, (heading: number) => this.#setUnitSpawnHeading(heading), undefined, "Heading");
 
         /* The unit label and unit count are in the same "row" for clarity and compactness */
         var unitLabelCountContainerEl = document.createElement("div");
@@ -287,10 +287,10 @@ export abstract class UnitSpawnMenu {
                 this.#unitSkillDropdown.selectValue(4);
             }
 
-            if (!this.#unitSpawnHeadingNumericInput.isHidden()) {
-                // Assume getSpawnHeading returns a number between 0 and 360
-                const spawnHeading = this.#setUnitSpawnHeading(2); 
-                this.#unitSpawnHeadingNumericInput.setValue(spawnHeading);
+            const userInputSpawnHeading = this.#unitSpawnHeadingNumericInput.getValue();
+            
+            if (!isNaN(userInputSpawnHeading) && userInputSpawnHeading >= 0 && userInputSpawnHeading <= 360) {
+                this.#setUnitSpawnHeading(userInputSpawnHeading);
             }
             
             /* Get the unit data from the db */
