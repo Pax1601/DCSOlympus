@@ -163,8 +163,8 @@ class DCSInstance {
                 /* Read the olympus.json */
                 var config = JSON.parse(fs.readFileSync(path.join(this.folder, "Config", "olympus.json")));
                 this.frontendPort = config["frontend"]["port"];
-                this.backendPort = config["server"]["port"];
-                this.backendAddress = config["server"]["address"];
+                this.backendPort = config["backend"]["port"];
+                this.backendAddress = config["backend"]["address"];
                 this.gameMasterPasswordHash = config["authentication"]["gameMasterPassword"];
 
                 this.gameMasterPasswordEdited = false;

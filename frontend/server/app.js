@@ -33,7 +33,7 @@ module.exports = function (configLocation) {
 
     /* Define middleware */
     app.use(logger('dev'));
-    app.use('/olympus', createProxyMiddleware({ target: `http://${config["server"]["address"]}:${config["server"]["port"]}`, changeOrigin: true }));
+    app.use('/olympus', createProxyMiddleware({ target: `http://${config["backend"]["address"]}:${config["backend"]["port"]}`, changeOrigin: true }));
     app.use(bodyParser.json({ limit: '50mb' }));
     app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
     app.use(express.static(path.join(__dirname, 'public')));

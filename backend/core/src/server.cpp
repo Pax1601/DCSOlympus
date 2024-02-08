@@ -296,14 +296,14 @@ void Server::task()
     ss << ifstream.rdbuf();
     std::error_code errorCode;
     json::value config = json::value::parse(ss.str(), errorCode);
-    if (config.is_object() && config.has_object_field(L"server") &&
-        config[L"server"].has_string_field(L"address") && config[L"server"].has_number_field(L"port"))
+    if (config.is_object() && config.has_object_field(L"backend") &&
+        config[L"backend"].has_string_field(L"address") && config[L"backend"].has_number_field(L"port"))
     {
-        address = "http://" + to_string(config[L"server"][L"address"]) + ":" + to_string(config[L"server"][L"port"].as_number().to_int32());
-        log("Starting server on " + address);
+        address = "http://" + to_string(config[L"backend"][L"address"]) + ":" + to_string(config[L"backend"][L"port"].as_number().to_int32());
+        log("Starting backend on " + address);
     }
     else
-        log("Error reading configuration file. Starting server on " + address);
+        log("Error reading configuration file. Starting backend on " + address);
 
     if (config.is_object() && config.has_object_field(L"authentication"))
     {

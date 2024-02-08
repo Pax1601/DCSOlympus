@@ -159,8 +159,8 @@ async function applyConfiguration(folder, instance) {
 
         /* Apply the configuration */
         config["frontend"]["port"] = instance.frontendPort;
-        config["server"]["port"] = instance.backendPort;
-        config["server"]["address"] = instance.backendAddress;
+        config["backend"]["port"] = instance.backendPort;
+        config["backend"]["address"] = instance.backendAddress;
         config["authentication"]["gameMasterPassword"] = sha256(instance.gameMasterPassword);
         config["authentication"]["blueCommanderPassword"] = sha256(instance.blueCommanderPassword);
         config["authentication"]["redCommanderPassword"] = sha256(instance.redCommanderPassword);

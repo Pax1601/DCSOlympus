@@ -1,5 +1,5 @@
 {
-    "server": {
+    "backend": {
         "address": "localhost",
         "port": 3001
     },

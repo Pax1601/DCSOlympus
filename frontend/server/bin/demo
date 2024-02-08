@@ -36,11 +36,11 @@ var http = require('http');
  */
 
 var configPort = null;
-if (config["server"] != undefined && config["server"]["port"] != undefined) {
-	configPort = config["server"]["port"];
+if (config["backend"] != undefined && config["backend"]["port"] != undefined) {
+	configPort = config["backend"]["port"];
 }
 
-var port = normalizePort(configPort || '3000');
+var port = normalizePort(configPort || '3001');
 app.set('port', port);
 console.log("Express server listening on port: " + port)
 
