@@ -1,0 +1,55 @@
+#connection-status-panel {
+	align-items: center;
+	display:flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+#connection-status-panel #connection-status-message::before {
+	content: "No connection";
+}
+
+#connection-status-light {
+	border-radius: 50%;
+	background: red;
+	content: " ";
+	height: 12px;
+	width: 12px;
+}
+
+#connection-status-panel[data-is-connected] #connection-status-message::before {
+	content: "";
+}
+
+#connection-status-panel .time-display {
+	cursor:pointer;
+	display:none;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+#connection-status-panel[data-is-connected] .mission-elapsed-time,
+#connection-status-panel[data-is-connected]:not([data-mission-time]) .mission-time {
+	display:none;
+}
+
+#connection-status-panel[data-is-connected]:not([data-mission-time]) .mission-elapsed-time,
+#connection-status-panel[data-is-connected][data-mission-time] .mission-time {
+	display:block;
+}
+
+#connection-status-panel[data-is-connected] #connection-status-light {
+	background: var(--accent-green);
+}
+
+#connection-status-panel[data-is-paused] #connection-status-message::before {
+	content: "Server paused";
+}
+
+#connection-status-panel[data-is-paused] #connection-status-light {
+	animation: pulse 1s infinite;
+}
+
+#connection-status-panel[data-is-paused] #connection-status-light {
+	background: var(--accent-amber);
+}

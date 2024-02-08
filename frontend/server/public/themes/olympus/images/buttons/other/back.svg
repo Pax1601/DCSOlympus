@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 32 32"
+   version="1.1"
+   id="svg4"
+   sodipodi:docname="back.svg"
+   width="32"
+   height="32"
+   inkscape:version="1.2.2 (732a01da63, 2022-12-09)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs8" />
+  <sodipodi:namedview
+     id="namedview6"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="13.078125"
+     inkscape:cx="19.918757"
+     inkscape:cy="17.663082"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg4" />
+  <!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+  <path
+     d="M 29.911273,24.547406 H 2.1935652 c -0.9582092,0 -1.73235714,0.774146 -1.73235714,1.732357 0,0.958208 0.77414794,1.732356 1.73235714,1.732356 H 29.911273 c 0.958209,0 1.732357,-0.774148 1.732357,-1.732356 0,-0.958211 -0.774148,-1.732357 -1.732357,-1.732357 z m -7.215201,-9.890675 c -0.676702,-0.676702 -1.775666,-0.676702 -2.452368,0 l -2.235822,2.241238 V 5.4914811 c 0,-0.9582093 -0.774146,-1.7323555 -1.732357,-1.7323555 -0.958211,0 -1.732355,0.7741462 -1.732355,1.7323555 V 16.897969 l -2.241238,-2.241238 c -0.676702,-0.676702 -1.775666,-0.676702 -2.4523675,0 -0.6767003,0.676702 -0.6767003,1.775666 0,2.452368 l 5.1970695,5.197069 c 0.676701,0.676702 1.775668,0.676702 2.452368,0 l 5.19707,-5.197069 c 0.676703,-0.676702 0.676703,-1.775666 0,-2.452368 z"
+     id="path2"
+     style="fill:#ffffff;fill-opacity:1;stroke-width:0.0541362"
+     sodipodi:nodetypes="ssssssssccssscssccccs" />
+</svg>

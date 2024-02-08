@@ -1,0 +1,106 @@
+/* Page style */
+#map-container {
+	height: 100%;
+	min-width: 820px;
+	width: 100%;
+}
+
+#toolbar-container {
+	align-items: center;
+	display: flex;
+	left: 10px;
+	position: absolute;
+	top: 10px;
+	z-index: 99999;
+	column-gap: 10px;
+	row-gap: 10px;
+	margin-right: 320px;
+	height: fit-content;
+	flex-wrap: wrap;
+}
+
+#connection-status-panel {
+	bottom: 20px;
+	font-size: 12px;
+	position: absolute;
+	right: 10px;
+	width: 190px;
+	z-index: 9999;
+}
+
+#mouse-info-panel {
+	bottom: 60px;
+	display: flex;
+	flex-direction: column;
+	height: fit-content;
+	position: absolute;
+	right: 10px;
+	row-gap: 10px;
+	width: 190px;
+	z-index: 9999;
+}
+
+#unit-control-panel {
+	height: fit-content;
+	width: fit-content;
+	left: 10px;
+	position: absolute;
+	z-index: 9999;
+}
+
+#unit-info-panel {
+	bottom: 20px;
+	font-size: 12px;
+	position: absolute;
+	width: fit-content;
+	z-index: 9999;
+	padding: 24px 30px;
+	display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+	right: 210px;
+	height: 180px;
+}
+
+#hotgroup-panel {
+    bottom: 40px;
+    column-gap: 10px;
+    display: flex;
+    left: 50%;
+    position: absolute;
+    translate: -50%;
+    z-index: 9998;
+}
+
+#info-popup {
+    position: absolute;
+    width: fit-content;
+    height: fit-content;
+    top: 100px;
+    left: 50%;
+    translate: -50% 0%;
+    z-index: 9999999999;
+	display: flex;
+	align-items: center;
+}
+
+#slow-delete-popup {
+	align-self: center;
+	display:flex;
+	justify-self: center;
+    position: absolute;
+    width: fit-content;
+    height: fit-content;
+    z-index: 9999999999;
+}
+
+#log-panel {
+	position: absolute;
+	right: 0px;
+	top: 170px;
+	width: 310px;
+	height: fit-content;
+	z-index: 9990;
+	overflow: hidden;
+	padding: 10px;
+}
