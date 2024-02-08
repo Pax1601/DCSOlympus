@@ -1,5 +1,7 @@
-mkdir .\\..\\..\\public\\plugins\\databasemanager
+set plugin-name=databasemanager
 
-copy .\\index.js .\\..\\..\\public\\plugins\\databasemanager\\index.js
-copy .\\plugin.json .\\..\\..\\public\\plugins\\databasemanager\\plugin.json
-copy .\\style.css .\\..\\..\\public\\plugins\\databasemanager\\style.css
+mkdir .\\..\\..\\..\\server\\public\\plugins\\%plugin-name%
+
+copy .\\index.js .\\..\\..\\..\\server\\public\\plugins\\%plugin-name%\\index.js
+copy .\\plugin.json .\\..\\..\\..\\server\\public\\plugins\\%plugin-name%\\plugin.json
+copy .\\style.css .\\..\\..\\..\\server\\public\\plugins\\%plugin-name%\\style.css

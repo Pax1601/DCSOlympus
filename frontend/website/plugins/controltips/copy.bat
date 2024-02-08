@@ -1,5 +1,7 @@
-mkdir .\\..\\..\\public\\plugins\\controltipsplugin
+set plugin-name=controltipsplugin
 
-copy .\\index.js .\\..\\..\\public\\plugins\\controltipsplugin\\index.js
-copy .\\plugin.json .\\..\\..\\public\\plugins\\controltipsplugin\\plugin.json
-copy .\\style.css .\\..\\..\\public\\plugins\\controltipsplugin\\style.css
+mkdir .\\..\\..\\..\\server\\public\\plugins\\%plugin-name%
+
+copy .\\index.js .\\..\\..\\..\\server\\public\\plugins\\%plugin-name%\\index.js
+copy .\\plugin.json .\\..\\..\\..\\server\\public\\plugins\\%plugin-name%\\plugin.json
+copy .\\style.css .\\..\\..\\..\\server\\public\\plugins\\%plugin-name%\\style.css

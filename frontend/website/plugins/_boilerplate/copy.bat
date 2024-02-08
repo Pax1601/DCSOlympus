@@ -1,8 +1,11 @@
-mkdir .\\..\\DCSOlympus\\client\\public\\plugins\\boilerplateplugin
+set plugin-name=boilerplateplugin
 
-copy .\\index.js .\\..\\DCSOlympus\\client\\public\\plugins\\boilerplateplugin\\index.js
-copy .\\plugin.json .\\..\\DCSOlympus\\client\\public\\plugins\\boilerplateplugin\\plugin.json
-copy .\\style.css .\\..\\DCSOlympus\\client\\public\\plugins\\boilerplateplugin\\style.css
+mkdir .\\..\\..\\..\\server\\public\\plugins\\%plugin-name%
 
-mkdir .\\..\\DCSOlympus\\client\\public\\plugins\\boilerplateplugin\\images
-copy .\\images\\*.* .\\..\\DCSOlympus\\client\\public\\plugins\\boilerplateplugin\\images\\
+copy .\\index.js .\\..\\..\\..\\server\\public\\plugins\\%plugin-name%\\index.js
+copy .\\plugin.json .\\..\\..\\..\\server\\public\\plugins\\%plugin-name%\\plugin.json
+copy .\\style.css .\\..\\..\\..\\server\\public\\plugins\\%plugin-name%\\style.css
+
+
+mkdir .\\..\\..\\..\\server\\public\\plugins\\%plugin-name%\\images
+copy .\\images\\*.* .\\..\\..\\..\\server\\public\\plugins\\%plugin-name%\\images\\
