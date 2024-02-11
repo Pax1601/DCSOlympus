@@ -176,6 +176,7 @@ export class UnitControlPanel extends Panel {
         if (!context.getUseUnitControlPanel())
             return;
 
+        this.#updateNumberOfSelectedUnits();
         super.show();
         this.#speedTypeSwitch.resetExpectedValue();
         this.#altitudeTypeSwitch.resetExpectedValue();
@@ -418,6 +419,13 @@ export class UnitControlPanel extends Panel {
             if (!this.#radioCallsignDropdown.selectValue(unit.getRadio().callsign - 1)) // Ensure the selected value is in the acceptable range
                 this.#radioCallsignDropdown.selectValue(0);
         }
+    }
+
+    #updateNumberOfSelectedUnits() {
+        const num = getApp().getUnitsManager().getSelectedUnits().length;
+        this.getElement().querySelectorAll(".num-selected-units").forEach(el => {
+            if (el instanceof HTMLElement) el.innerText = num + "";
+        });
     }
 
     #applyAdvancedSettings() {

@@ -21,6 +21,17 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 	margin: -5px;
 }
 
+#unit-control-panel h3 .num-selected-units {
+	margin-left:6px;
+}
+
+#unit-control-panel h3 .num-selected-units::before {
+	content:"(";
+}
+#unit-control-panel h3 .num-selected-units::after {
+	content:")";
+}
+
 #unit-control-panel .ol-option-button button {
 	width: 30px;
 	height: 30px;
