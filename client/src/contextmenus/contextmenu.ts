@@ -1,8 +1,12 @@
 import { LatLng } from "leaflet";
 
+export type contextMenuTypes = "airbase" | "airbaseSpawn" | "coalitionArea" | "default" | "map" | "unit";
+
 export type contextMenuConfig = {
+    "baseClass": contextMenuTypes,
     "id": string | HTMLElement,
     "onBeforeShow"?: CallableFunction,
+    "onInit"?: CallableFunction,
     "onShow"?: CallableFunction
 }
 
@@ -25,6 +29,8 @@ export class ContextMenu {
         this.#onBeforeShow = config.onBeforeShow || function () { };
         this.#onShow = config.onShow || function () { };
         this.hide();
+
+        if (typeof config.onInit === "function") config.onInit(this);
     }
 
     /** Show the contextmenu on top of the map, usually at the location where the user has clicked on it.

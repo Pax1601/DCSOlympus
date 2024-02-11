@@ -3,9 +3,12 @@ declare module "map/boxselect" {
 }
 declare module "contextmenus/contextmenu" {
     import { LatLng } from "leaflet";
+    export type contextMenuTypes = "airbase" | "airbaseSpawn" | "coalitionArea" | "default" | "map" | "unit";
     export type contextMenuConfig = {
+        "baseClass": contextMenuTypes;
         "id": string | HTMLElement;
         "onBeforeShow"?: CallableFunction;
+        "onInit"?: CallableFunction;
         "onShow"?: CallableFunction;
     };
     /** Base class for map contextmenus. By default it is empty and requires to be extended. */
@@ -1573,13 +1576,10 @@ declare module "panels/panel" {
 }
 declare module "map/map" {
     import * as L from "leaflet";
-    import { MapContextMenu } from "contextmenus/mapcontextmenu";
-    import { UnitContextMenu } from "contextmenus/unitcontextmenu";
     import { Airbase } from "mission/airbase";
     import { Unit } from "unit/unit";
     import { TemporaryUnitMarker } from "map/markers/temporaryunitmarker";
     import { CoalitionArea } from "map/coalitionarea/coalitionarea";
-    import { CoalitionAreaContextMenu } from "contextmenus/coalitionareacontextmenu";
     import { Panel } from "panels/panel";
     export type MapMarkerVisibilityControl = {
         "category"?: string;
@@ -1611,9 +1611,9 @@ declare module "map/map" {
         hideAllContextMenus(): void;
         showMapContextMenu(x: number, y: number, latlng: L.LatLng): void;
         hideMapContextMenu(): void;
-        getMapContextMenu(): MapContextMenu;
+        getMapContextMenu(): any;
         showUnitContextMenu(x?: number | undefined, y?: number | undefined, latlng?: L.LatLng | undefined): void;
-        getUnitContextMenu(): UnitContextMenu;
+        getUnitContextMenu(): any;
         hideUnitContextMenu(): void;
         showAirbaseContextMenu(airbase: Airbase, x?: number | undefined, y?: number | undefined, latlng?: L.LatLng | undefined): void;
         getAirbaseContextMenu(): any;
@@ -1622,7 +1622,7 @@ declare module "map/map" {
         getAirbaseSpawnMenu(): any;
         hideAirbaseSpawnMenu(): void;
         showCoalitionAreaContextMenu(x: number, y: number, latlng: L.LatLng, coalitionArea: CoalitionArea): void;
-        getCoalitionAreaContextMenu(): CoalitionAreaContextMenu;
+        getCoalitionAreaContextMenu(): any;
         hideCoalitionAreaContextMenu(): void;
         getMousePosition(): L.Point;
         getMouseCoordinates(): L.LatLng;
@@ -2589,9 +2589,8 @@ declare module "panels/unitlistpanel" {
 declare module "context/contextmenumanager" {
     import { ContextMenu, contextMenuConfig } from "contextmenus/contextmenu";
     import { Manager } from "other/manager";
-    export type contextMenuTypes = "airbase" | "airbaseSpawn" | "map" | "unit";
     export type contextMenuManagerConfig = {
-        [key in contextMenuTypes]?: ContextMenu | contextMenuConfig | false;
+        [key: string]: contextMenuConfig | false;
     };
     export class ContextMenuManager extends Manager {
         constructor(items?: contextMenuManagerConfig);

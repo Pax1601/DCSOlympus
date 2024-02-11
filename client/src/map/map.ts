@@ -84,11 +84,11 @@ export class Map extends L.Map {
     #longPressHandled: boolean = false;
     #longPressTimer: number = 0;
 
-    #mapContextMenu: MapContextMenu = new MapContextMenu({ "id": "map-contextmenu" });
-    #unitContextMenu: UnitContextMenu = new UnitContextMenu({ "id": "unit-contextmenu" });
+    //#mapContextMenu: MapContextMenu = new MapContextMenu({ "id": "map-contextmenu" });
+    //#unitContextMenu: UnitContextMenu = new UnitContextMenu({ "id": "unit-contextmenu" });
     //#airbaseContextMenu: AirbaseContextMenu = new AirbaseContextMenu({ "id": "airbase-contextmenu" });
     //#airbaseSpawnMenu: AirbaseSpawnContextMenu = new AirbaseSpawnContextMenu({ "id": "airbase-spawn-contextmenu" });
-    #coalitionAreaContextMenu: CoalitionAreaContextMenu = new CoalitionAreaContextMenu({ "id": "coalition-area-contextmenu" });
+    //#coalitionAreaContextMenu: CoalitionAreaContextMenu = new CoalitionAreaContextMenu({ "id": "coalition-area-contextmenu" });
 
     #mapSourceDropdown: Dropdown;
     #mapMarkerVisibilityControls: MapMarkerVisibilityControl[] = MAP_MARKER_CONTROLS;
@@ -205,7 +205,7 @@ export class Map extends L.Map {
         });
 
         document.addEventListener("toggleCoalitionAreaDraw", (ev: CustomEventInit) => {
-            this.getMapContextMenu().hide();
+            this.getMapContextMenu()?.hide();
             this.deselectAllCoalitionAreas();
             if (ev.detail?.type == "polygon") {
                 if (this.getState() !== COALITIONAREA_DRAW_POLYGON)
@@ -339,37 +339,33 @@ export class Map extends L.Map {
 
     showMapContextMenu(x: number, y: number, latlng: L.LatLng) {
         this.hideAllContextMenus();
-        this.#mapContextMenu.show(x, y, latlng);
+        this.getMapContextMenu().show(x, y, latlng);
         document.dispatchEvent(new CustomEvent("mapContextMenu"));
     }
 
     hideMapContextMenu() {
-        this.#mapContextMenu.hide();
-        document.dispatchEvent(new CustomEvent("mapContextMenu"));
+        const menu = this.getMapContextMenu();
+        if (menu instanceof ContextMenu) {
+            menu.hide();
+            document.dispatchEvent(new CustomEvent("mapContextMenu"));
+        }
     }
 
     getMapContextMenu() {
-        return this.#mapContextMenu;
+        return getApp().getCurrentContext().getContextMenuManager().get("map");
     }
 
     showUnitContextMenu(x: number | undefined = undefined, y: number | undefined = undefined, latlng: L.LatLng | undefined = undefined) {
         this.hideAllContextMenus();
-
-        if (getApp().getContextManager().currentContextIs("olympus")) {
-            this.#unitContextMenu.show(x, y, latlng);
-            return;
-        }
-
-        const menu = getApp().getCurrentContext().getContextMenuManager().get("unit");
-        if (menu instanceof ContextMenu) menu.show(x, y, latlng);
+        this.getUnitContextMenu().show(x, y, latlng);
     }
 
     getUnitContextMenu() {
-        return this.#unitContextMenu;
+        return getApp().getCurrentContext().getContextMenuManager().get("unit");
     }
 
     hideUnitContextMenu() {
-        this.#unitContextMenu.hide();
+        this.getUnitContextMenu()?.hide();
     }
 
     showAirbaseContextMenu(airbase: Airbase, x: number | undefined = undefined, y: number | undefined = undefined, latlng: L.LatLng | undefined = undefined) {
@@ -407,16 +403,17 @@ export class Map extends L.Map {
 
     showCoalitionAreaContextMenu(x: number, y: number, latlng: L.LatLng, coalitionArea: CoalitionArea) {
         this.hideAllContextMenus();
-        this.#coalitionAreaContextMenu.show(x, y, latlng);
-        this.#coalitionAreaContextMenu.setCoalitionArea(coalitionArea);
+        this.getCoalitionAreaContextMenu().show(x, y, latlng);
+        this.getCoalitionAreaContextMenu().setCoalitionArea(coalitionArea);
     }
 
     getCoalitionAreaContextMenu() {
-        return this.#coalitionAreaContextMenu;
+        return getApp().getCurrentContext().getContextMenuManager().get("coalitionArea");
     }
 
     hideCoalitionAreaContextMenu() {
-        this.#coalitionAreaContextMenu.hide();
+        const menu = this.getCoalitionAreaContextMenu();
+        if (menu instanceof ContextMenu) menu.hide();
     }
 
     getMousePosition() {

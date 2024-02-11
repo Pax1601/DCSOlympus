@@ -1,10 +1,14 @@
+import { AirbaseContextMenu } from "../contextmenus/airbasecontextmenu";
+import { AirbaseSpawnContextMenu } from "../contextmenus/airbasespawnmenu";
+import { CoalitionAreaContextMenu } from "../contextmenus/coalitionareacontextmenu";
 import { ContextMenu, contextMenuConfig } from "../contextmenus/contextmenu";
+import { MapContextMenu } from "../contextmenus/mapcontextmenu";
+import { UnitContextMenu } from "../contextmenus/unitcontextmenu";
 import { Manager } from "../other/manager";
 
-export type contextMenuTypes = "airbase" | "airbaseSpawn" | "map" | "unit"
 export type contextMenuManagerConfig = {
-    [key in contextMenuTypes]?: ContextMenu | contextMenuConfig | false
-}
+    [key: string]: contextMenuConfig | false
+};
 
 export class ContextMenuManager extends Manager {
 
@@ -14,10 +18,33 @@ export class ContextMenuManager extends Manager {
         if (!items) return;
 
         for (const [name, menu] of Object.entries(items)) {
-            if (typeof menu === "boolean" || menu instanceof ContextMenu) {
+            if (typeof menu === "boolean") {
                 this.add(name, menu);
             } else {
-                this.add(name, new ContextMenu(menu));
+                let menuInstance: any = false;
+                switch (name) {
+                    case "airbase":
+                        menuInstance = new AirbaseContextMenu(menu);
+                        break;
+                    case "airbaseSpawn":
+                        menuInstance = new AirbaseSpawnContextMenu(menu);
+                        break;
+                    case "coalitionArea":
+                        menuInstance = new CoalitionAreaContextMenu(menu);
+                        break;
+                    case "map":
+                        menuInstance = new MapContextMenu(menu);
+                        break;
+                    case "unit":
+                        menuInstance = new UnitContextMenu(menu);
+                        break;
+                    default:
+                        menuInstance = new ContextMenu(menu);
+                }
+
+                if (menuInstance instanceof ContextMenu) {
+                    this.add(name, menuInstance);
+                }
             }
         }
     }

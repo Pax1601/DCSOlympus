@@ -26,7 +26,7 @@ export class MapContextMenu extends ContextMenu {
      * 
      * @param config <contextMenuConfig> the config object for the menu
      */
-    constructor(config:contextMenuConfig) {
+    constructor(config: contextMenuConfig) {
         super(config);
 
         /* Create the coalition switch */

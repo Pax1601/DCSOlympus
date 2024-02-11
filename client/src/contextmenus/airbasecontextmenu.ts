@@ -15,7 +15,6 @@ export class AirbaseContextMenu extends ContextMenu {
      */
     constructor(config: contextMenuConfig) {
         super(config);
-
         document.addEventListener("contextMenuSpawnAirbase", (e: CustomEventInit) => {
             this.#showSpawnMenu();
         });
@@ -25,19 +24,6 @@ export class AirbaseContextMenu extends ContextMenu {
                 getApp().getUnitsManager().landAt(this.#airbase.getLatLng());
             this.hide();
         });
-
-        const tm = getApp().getTemplateManger();
-
-        tm.add("airbaseContextMenu", `
-            ${tm.get("airbaseChartData")}
-            <hr />
-            <% if (showSpawnButton) { %>
-                <button id="spawn-airbase-aircraft-button" data-coalition="neutral" title="Spawn aircraft" data-on-click="contextMenuSpawnAirbase" class="deploy-unit-button">Spawn</button>
-            <% } %>
-            <% if (showLandHere) { %>
-                <button id="land-here-button" title="Land here" data-on-click="contextMenuLandAirbase">Land here</button>
-            <% } %>
-        `);
     }
 
     /** Sets the airbase for which data will be shown in the context menu

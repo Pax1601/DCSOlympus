@@ -213,10 +213,25 @@ export class OlympusApp {
         this.#contextManager = new ContextManager();
         this.#contextManager.add("olympus", {
             "contextMenus": {
-                "airbase": new AirbaseContextMenu({ "id": "airbase-contextmenu" }),
-                "airbaseSpawn": new AirbaseSpawnContextMenu({ "id": "airbase-spawn-contextmenu" }),
+                "airbase": {
+                    "baseClass": "airbase",
+                    "id": "airbase-contextmenu"
+                },
+                "airbaseSpawn": {
+                    "baseClass": "airbaseSpawn",
+                    "id": "airbase-spawn-contextmenu"
+                },
+                "coalitionArea": {
+                    "baseClass": "coalitionArea",
+                    "id": "coalition-area-contextmenu"
+                },
                 "map": {
+                    "baseClass": "map",
                     "id": "map-contextmenu"
+                },
+                "unit": {
+                    "baseClass": "unit",
+                    "id": "unit-contextmenu"
                 }
             },
             "onUnset": () => {
