@@ -4,11 +4,27 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "check-setup", 
+            "type": "shell",
+            "command": "cd .. ; ./check_setup.bat",
+            "isBackground": false
+        },
+        {
             "label": "demo-server", 
             "type": "shell",
             "command": "./scripts/demo-server.bat",
             "args": ["${input:enterDir}/Config/olympus.json"],
-            "isBackground": true
+            "isBackground": true,
+            "dependsOn": ["check-setup"],
+            "problemMatcher":{
+                "owner": "custom",
+                "base": "$tsc-watch",
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "Please wait",
+                    "endsPattern": "Waiting for connections..."
+                }
+            }
         }
     ], 
     "inputs": [
