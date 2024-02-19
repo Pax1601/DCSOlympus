@@ -34,8 +34,8 @@ if "%errorlevel%" == "9009" (
 	echo node.js is already installed, continuing installation!
 )
 
-echo Installing node modules for client application...
-cd .\client
+echo Installing node modules for frontend application...
+cd .\frontend
 call npm install --omit=dev
 cd..
 

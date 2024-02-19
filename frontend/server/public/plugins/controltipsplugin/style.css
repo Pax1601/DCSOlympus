@@ -1,0 +1,33 @@
+#control-tips-panel {
+    align-self: center;
+    display: flex;
+    flex-flow: column wrap;
+    font-size: 13px;
+    justify-self: flex-end;
+    position: absolute;
+    right: 10px;
+    row-gap: 20px;
+    text-align: right;
+    z-index: 999;
+}
+
+#control-tips-panel>* {
+    align-items: center;
+    align-self: end;
+    background-color: var(--background-steel);
+    border-radius: var(--border-radius-md);
+    color: white;
+    column-gap: 8px;
+    display: flex;
+    justify-items: right;
+    opacity: .9;
+    padding: 5px;
+    width: fit-content;
+}
+
+#control-tips-panel>*>.key {
+    background-color: var(--background-grey);
+    border-radius: var(--border-radius-sm);
+    color: white;
+    padding: 1px 4px;
+}

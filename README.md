@@ -9,7 +9,7 @@
 
 # DCS Olympus
 
-![alt text](https://github.com/Pax1601/DCSOlympus/blob/main/client/sample.png?raw=true)
+![alt text](https://github.com/Pax1601/DCSOlympus/blob/main/frontend/website/sample.png?raw=true)
 
 ### What is this?
 DCS: Olympus is a free and open-source mod for DCS that enables dynamic real-time control through a map interface. The user is able to spawn units/groups, deploy a variety of effects such as smoke, flares, or explosions, and waypoints/tasks can be given to AI units in real-time in a way similar to a classic RTS game. 

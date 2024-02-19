@@ -16,14 +16,14 @@
         </div>
     </div>
     <div class="wizard-inputs">
-        <div class="input-group client-port port-input">
-            <span>Client port
+        <div class="input-group frontend-port port-input">
+            <span>Frontend port
                 <img src="./icons/circle-info-solid.svg"
                     title="This port is used to allow access to Olympus. Be sure to allow this port through your firewall if you want people to connect remotely">
             </span>
             <div>
-                <input type="number" min="1024" max="65535" value="<%= activeInstance["clientPort"] %>"
-                onchange="signal('onClientPortChanged', this.value)">
+                <input type="number" min="1024" max="65535" value="<%= activeInstance["frontendPort"] %>"
+                onchange="signal('onFrontendPortChanged', this.value)">
                 <img class="success hide">
                 <div class="error hide">
                     <img> <span>Port already in use</span>

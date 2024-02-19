@@ -149,13 +149,13 @@ class Manager {
             /* Force the setting of the ports whenever the page is shown */
             this.connectionsPage.options.onShow = () => {
                 if (this.getActiveInstance()) {
-                    this.setPort('client', this.getActiveInstance().clientPort);
+                    this.setPort('frontend', this.getActiveInstance().frontendPort);
                     this.setPort('backend', this.getActiveInstance().backendPort);
                 }
             }
             this.expertSettingsPage.options.onShow = () => {
                 if (this.getActiveInstance()) {
-                    this.setPort('client', this.getActiveInstance().clientPort);
+                    this.setPort('frontend', this.getActiveInstance().frontendPort);
                     this.setPort('backend', this.getActiveInstance().backendPort);
                 }
             }
@@ -270,7 +270,7 @@ class Manager {
                 this.typePage.show();
             } else {
                 if (this.getActiveInstance().webserverOnline || this.getActiveInstance().backendOnline) {
-                    showErrorPopup("<div class='main-message'>The selected Olympus instance is currently active </div><div class='sub-message'> Please stop DCS and Olympus Server/Client before editing it! </div>");
+                    showErrorPopup("<div class='main-message'>The selected Olympus instance is currently active </div><div class='sub-message'> Please stop DCS and Olympus Server/Frontend before editing it! </div>");
                 } else {
                     showConfirmPopup("<div class='main-message'> Olympus is already installed in this instance! </div> <div class='sub-message'>If you click Accept, it will be installed again and all changes, e.g. custom databases or mods support, will be lost. Are you sure you want to continue?</div>",
                         () => {
@@ -456,9 +456,9 @@ class Manager {
             showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${this.getLogLocation()} for more info. </div>`);
     }
 
-    /* When the client port input value is changed */
-    async onClientPortChanged(value) {
-        this.setPort('client', Number(value));
+    /* When the frontend port input value is changed */
+    async onFrontendPortChanged(value) {
+        this.setPort('frontend', Number(value));
     }
 
     /* When the backend port input value is changed */
@@ -498,12 +498,12 @@ class Manager {
     }
 
     async checkPorts() {
-        var clientPortFree = await this.getActiveInstance().checkClientPort();
+        var frontendPortFree = await this.getActiveInstance().checkFrontendPort();
         var backendPortFree = await this.getActiveInstance().checkBackendPort();
-        if (clientPortFree && backendPortFree) {
+        if (frontendPortFree && backendPortFree) {
             return true;
         } else {
-            showErrorPopup(`<div class='main-message'> Please, make sure both the client and backend ports are free!</div><div class='sub-message'>If ports are already in use, Olympus will not be able to communicated correctly.</div>`);
+            showErrorPopup(`<div class='main-message'> Please, make sure both the frontend and backend ports are free!</div><div class='sub-message'>If ports are already in use, Olympus will not be able to communicated correctly.</div>`);
             return false;
         }
     }
@@ -546,7 +546,7 @@ class Manager {
 
     async onOpenBrowserClicked(name) {
         var instance = await this.getClickedInstance(name);
-        exec(`start http://localhost:${instance.clientPort}`)
+        exec(`start http://localhost:${instance.frontendPort}`)
     }
 
     async onStopClicked(name) {
@@ -611,9 +611,9 @@ class Manager {
     /* Set the selected port to the dcs instance */
     async setPort(port, value) {
         var success;
-        if (port === 'client') {
-            success = await this.getActiveInstance().checkClientPort(value);
-            this.getActiveInstance().setClientPort(value);
+        if (port === 'frontend') {
+            success = await this.getActiveInstance().checkFrontendPort(value);
+            this.getActiveInstance().setFrontendPort(value);
         }
         else {
             success = await this.getActiveInstance().checkBackendPort(value);
