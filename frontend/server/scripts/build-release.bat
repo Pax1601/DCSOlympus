@@ -1,4 +1,4 @@
-call ./scripts/copy.bat
+call .\scripts\copy.bat
 
 echo D|xcopy /Y /S /E .\bin ..\..\build\frontend\bin 
 echo D|xcopy /Y /S /E .\public ..\..\build\frontend\public 

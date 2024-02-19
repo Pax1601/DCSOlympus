@@ -35,7 +35,7 @@ L.Map.addInitHook("addHandler", "gestureHandling", GestureHandling);
 
 // TODO would be nice to convert to ts - yes
 require("../../node_modules/leaflet.nauticscale/dist/leaflet.nauticscale.js")
-require("../../node_modules/leaflet-path-drag/dist/L.Path.Drag.js")
+require("../../node_modules/leaflet-path-drag/dist/index.js")
 
 export type MapMarkerVisibilityControl = {
     "category"?: string;

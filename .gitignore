@@ -31,5 +31,5 @@ leaflet.css
 package-lock.json
 
 !frontend/server/bin
-/frontend/server/public/javascripts/bundle.js
 /mock-dcs
+/frontend/setup

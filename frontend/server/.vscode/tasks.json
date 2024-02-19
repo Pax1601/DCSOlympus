@@ -4,12 +4,6 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "copy-website",
-            "type": "shell",
-            "command": "./scripts/copy.bat",
-            "isBackground": false
-        },
-        {
             "label": "demo-server", 
             "type": "shell",
             "command": "./scripts/demo-server.bat",
