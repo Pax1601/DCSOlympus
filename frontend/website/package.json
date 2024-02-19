@@ -5,6 +5,7 @@
   "scripts": {
     "emit-declarations": "call ./scripts/emit-declarations.bat",
     "build-release": "call ./scripts/build-release.bat",
+    "build-debug": "call ./scripts/build-debug.bat",
     "watch": "call ./scripts/watch.bat"
   },
   "devDependencies": {
