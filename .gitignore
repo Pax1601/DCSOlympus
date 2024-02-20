@@ -33,3 +33,5 @@ package-lock.json
 !frontend/server/bin
 /mock-dcs
 /frontend/setup
+frontend/server/public/plugins/controltipsplugin/index.js
+frontend/website/plugins/controltips/index.js
