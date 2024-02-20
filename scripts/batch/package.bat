@@ -42,3 +42,23 @@ echo D|xcopy /Y /S /E .\dependencies .\package\dependencies
 
 REM other version tags are changed after compilation only in the package folder and should not be committed
 call node .\scripts\node\set_version_text.js
+
+REM create the package for the zip version 
+mkdir zip
+
+REM copy the main configuration file
+echo F|xcopy /Y .\package\olympus.json .\zip\config\olympus.json
+
+REM copy the hooks script
+echo F|xcopy /Y .\package\Scripts\OlympusHook.lua .\zip\Scripts\Hooks\OlympusHook.lua
+
+REM copy the mod folder
+echo D|xcopy /Y /S /E .\package\mod .\zip\Mods\Services\Olympus
+
+REM copy the frontend
+echo D|xcopy /Y /S /E .\package\frontend .\zip\Mods\Services\Olympus\frontend
+
+REM install the node_modules in the frontend
+cd .\zip\Mods\Services\Olympus\frontend
+call npm install
+cd ..\..\..\..\..
