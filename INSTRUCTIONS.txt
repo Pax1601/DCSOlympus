@@ -36,14 +36,14 @@ INSTALLATION INSTRUCTIONS
 7) Open Olympus via the shortcut and login using any username and the Game Master password set using the Manager. (NOTE: not your DCS server password).
 	Local installation: run the client from the provided desktop shortcut or start it using the "View and manage instances" page of the Manager. 
 	Dedicated server: users must first start the Olympus server from the provided desktop shortcut or using the "View and manage instances" page of the Manager. 
-			  Then log in using any browser and visiting "http:\\<server IP>:<client port>" (client port is 3000 by default, but can be edited using the Manager)
+			  Then log in using any browser and visiting "http:\\<server IP>:<frontend port>" (frontend port is 3000 by default, but can be edited using the Manager)
 
 8) You can use the manager at any time to change the ports and/or passwords. If you do, REMEMBER TO RESTART OLYMPUS AND DCS.
 
 
 NOTES:
 a) when launching the Manager you will be prompted to allow Electron to create a firewall rule. This is optional and can be denied without effect on the operation of the Manager;
-b) if you are using Olympus on a dedicated server with a router, you must enable port forwarding on the client port (3000 by default);
+b) if you are using Olympus on a dedicated server with a router, you must enable port forwarding on the frontend port (3000 by default);
 c) unlike Olympus v1.0.3, running the netsh command is no longer required. It is also no longer required to create firewall rules or port forwarding for the backend port. (Optional) If you already performed this steps in the past you can delete the firewall and netsh rules.
 
 

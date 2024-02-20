@@ -26,13 +26,13 @@ mismatched_ids = {
 # The database file on which to operate is the first standard argument of the call
 if len(sys.argv) > 1:
     if (sys.argv[1] == "aircraft"):
-        filename = '..\\..\\client\\public\\databases\\units\\aircraftdatabase.json' 
+        filename = '..\\..\\databases\\units\\aircraftdatabase.json' 
     elif (sys.argv[1] == "helicopter"):
-        filename = '..\\..\\client\\public\\databases\\units\\helicopterdatabase.json' 
+        filename = '..\\..\\databases\\units\\helicopterdatabase.json' 
     elif (sys.argv[1] == "groundunit"):
-        filename = '..\\..\\client\\public\\databases\\units\\groundunitdatabase.json' 
+        filename = '..\\..\\databases\\units\\groundunitdatabase.json' 
     elif (sys.argv[1] == "navyunit"):
-        filename = '..\\..\\client\\public\\databases\\units\\navyunitdatabase.json' 
+        filename = '..\\..\\databases\\units\\navyunitdatabase.json' 
 
     # Loads the database 
     with open(filename, encoding="utf-8") as f:
