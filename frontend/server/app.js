@@ -10,7 +10,7 @@ module.exports = function (configLocation) {
     /* Default routers */
     var atcRouter = require('./routes/api/atc');
     var airbasesRouter = require('./routes/api/airbases');
-    var elevationRouter = require('./routes/api/elevation');
+    var elevationRouter = require('./routes/api/elevation')(configLocation);
     var databasesRouter = require('./routes/api/databases')(path.join(path.dirname(configLocation), "..", "Mods", "Services", "Olympus", "databases"));
     var indexRouter = require('./routes/index');
     var uikitRouter = require('./routes/uikit');
