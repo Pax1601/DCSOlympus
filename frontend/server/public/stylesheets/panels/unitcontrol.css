@@ -44,8 +44,12 @@ body.feature-forceShowUnitControlPanel #unit-control-panel {
 #rapid-controls {
 	display: flex;
 	flex-direction: column;
-	row-gap: 5px;
 	height: fit-content;
+	position: absolute;
+	right:-10px;
+	row-gap: 5px;
+	top:0;
+	translate: 100% 0;
 	width: fit-content;
 }
 
