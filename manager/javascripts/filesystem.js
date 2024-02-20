@@ -96,43 +96,43 @@ async function installShortCuts(folder, name) {
 
     var res1 = createShortcut({
         windows: {
-            filePath: path.resolve(__dirname, '..', '..', 'client', 'client.vbs'),
+            filePath: path.resolve(__dirname, '..', '..', 'frontend', 'client.vbs'),
             outputPath: folder,
             name: `DCS Olympus Client (${name})`,
             arguments: `"${path.join(folder, "Config", "olympus.json")}"`,
             icon: path.resolve(__dirname, '..', '..', 'img', 'olympus.ico'),
-            workingDirectory: path.resolve(__dirname, '..', '..', 'client')
+            workingDirectory: path.resolve(__dirname, '..', '..', 'frontend')
         }
     });
 
     var res2 = createShortcut({
         windows: {
-            filePath: path.resolve(__dirname, '..', '..', 'client', 'server.vbs'),
+            filePath: path.resolve(__dirname, '..', '..', 'frontend', 'server.vbs'),
             outputPath: folder,
             name: `DCS Olympus Server (${name})`,
             arguments: `"${path.join(folder, "Config", "olympus.json")}"`,
             icon: path.resolve(__dirname, '..', '..', 'img', 'olympus_server.ico'),
-            workingDirectory: path.resolve(__dirname, '..', '..', 'client')
+            workingDirectory: path.resolve(__dirname, '..', '..', 'frontend')
         }
     });
 
     var res3 = createShortcut({
         windows: {
-            filePath: path.resolve(__dirname, '..', '..', 'client', 'client.vbs'),
+            filePath: path.resolve(__dirname, '..', '..', 'frontend', 'client.vbs'),
             name: `DCS Olympus Client (${name})`,
             arguments: `"${path.join(folder, "Config", "olympus.json")}"`,
             icon: path.resolve(__dirname, '..', '..', 'img', 'olympus.ico'),
-            workingDirectory: path.resolve(__dirname, '..', '..', 'client')
+            workingDirectory: path.resolve(__dirname, '..', '..', 'frontend')
         }
     });
 
     var res4 = createShortcut({
         windows: {
-            filePath: path.resolve(__dirname, '..', '..', 'client', 'server.vbs'),
+            filePath: path.resolve(__dirname, '..', '..', 'frontend', 'server.vbs'),
             name: `DCS Olympus Server (${name})`,
             arguments: `"${path.join(folder, "Config", "olympus.json")}"`,
             icon: path.resolve(__dirname, '..', '..', 'img', 'olympus_server.ico'),
-            workingDirectory: path.resolve(__dirname, '..', '..', 'client')
+            workingDirectory: path.resolve(__dirname, '..', '..', 'frontend')
         }
     });
 
@@ -158,9 +158,9 @@ async function applyConfiguration(folder, instance) {
         }
 
         /* Apply the configuration */
-        config["client"]["port"] = instance.clientPort;
-        config["server"]["port"] = instance.backendPort;
-        config["server"]["address"] = instance.backendAddress;
+        config["frontend"]["port"] = instance.frontendPort;
+        config["backend"]["port"] = instance.backendPort;
+        config["backend"]["address"] = instance.backendAddress;
         config["authentication"]["gameMasterPassword"] = sha256(instance.gameMasterPassword);
         config["authentication"]["blueCommanderPassword"] = sha256(instance.blueCommanderPassword);
         config["authentication"]["redCommanderPassword"] = sha256(instance.redCommanderPassword);

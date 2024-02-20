@@ -7,12 +7,12 @@ hgt
 
 /backend/vcpkg_installed
 
-/client/TODO.txt
-/client/public/javascripts/bundle.js
-/client/public/plugins
-/client/plugins/controltips/index.js
-/client/public/databases/units/old
-/client/plugins/databasemanager/index.js
+/frontend/server/TODO.txt
+/frontend/server/public/javascripts/bundle.js
+/frontend/server/public/plugins
+/frontend/server/plugins/controltips/index.js
+/frontend/server/public/databases/units/old
+/frontend/server/plugins/databasemanager/index.js
 
 /src/html
 /src/latex
@@ -30,4 +30,8 @@ leaflet.nauticscale.js
 leaflet.css
 package-lock.json
 
-!client/bin
+!frontend/server/bin
+/mock-dcs
+/frontend/setup
+frontend/server/public/plugins/controltipsplugin/index.js
+frontend/website/plugins/controltips/index.js

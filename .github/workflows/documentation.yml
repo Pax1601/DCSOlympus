@@ -24,11 +24,11 @@ jobs:
         
       - name: Install dependencies
         run: npm install
-        working-directory: ./client
+        working-directory: ./frontend/website
 
       - name: Create the docs directory locally in CI
-        run: npx typedoc --out ../docs/client @types/*.d.ts src/**/*.ts
-        working-directory: ./client
+        run: npx typedoc --out ../../docs/website @types/*.d.ts src/**/*.ts
+        working-directory: ./frontend/website
 
       - name: Install Doxygen
         uses: ssciwr/doxygen-install@v1

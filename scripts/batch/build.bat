@@ -5,8 +5,9 @@ cd backend
 msbuild olympus.sln /t:Build /p:Configuration=Release
 cd ..
 
-cd client
-rmdir /s /q hgt
+cd frontend
+
+cd website
 call npm install
 call npm run emit-declarations
 call npm run build-release
@@ -20,6 +21,14 @@ cd plugins\databasemanager
 call npm install
 call npm run build-release
 cd ..\..
+
+cd ..
+
+cd server
+rmdir /s /q hgt
+call npm install
+call npm run build-release
+cd ..
 
 cd ..
 

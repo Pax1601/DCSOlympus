@@ -1,0 +1,123 @@
+ ======================= New log starting at Thu Feb 08 2024 21:55:39 GMT+0100 (Central European Standard Time) =======================
+Running in C:\Users\dpass\Documents\DCSOlympus\manager\javascripts
+Development build detected, skipping version checks...
+ ======================= New log starting at Thu Feb 08 2024 21:55:43 GMT+0100 (Central European Standard Time) =======================
+Running in C:\Users\dpass\Documents\DCSOlympus\manager\javascripts
+Found instance in C:\Users\dpass\Saved Games\DCS.openbeta, checking for Olympus
+Comparing Mods content in C:\Users\dpass\Saved Games\DCS.openbeta
+Comparing Scripts content in C:\Users\dpass\Saved Games\DCS.openbeta
+Error: ENOENT: no such file or directory, lstat 'C:\Users\dpass\Documents\DCSOlympus\scripts\OlympusHook.lua'
+    at Object.realpathSync (node:fs:2655:7)
+    at Object.realpathSync (node:electron/js2c/asar_bundle:2:5358)
+    at Object.compareSync (C:\Users\dpass\Documents\DCSOlympus\manager\node_modules\dir-compare\build\src\index.js:44:88)
+    at DCSInstance.checkInstallation (C:\Users\dpass\Documents\DCSOlympus\manager\javascripts\dcsinstance.js:196:41)
+    at async DCSInstance.findInstances (C:\Users\dpass\Documents\DCSOlympus\manager\javascripts\dcsinstance.js:68:21)
+    at async Manager.start (C:\Users\dpass\Documents\DCSOlympus\manager\javascripts\manager.js:97:29)
+    at async C:\Users\dpass\Documents\DCSOlympus\manager\javascripts\preload.js:267:5 {
+  errno: -4058,
+  syscall: 'lstat',
+  code: 'ENOENT',
+  path: 'C:\\Users\\dpass\\Documents\\DCSOlympus\\scripts\\OlympusHook.lua'
+}
+Differences found!
+Comparing Mods content in C:\Users\dpass\Saved Games\DCS.openbeta
+Development build detected, skipping version checks...
+Comparing Scripts content in C:\Users\dpass\Saved Games\DCS.openbeta
+Error: ENOENT: no such file or directory, lstat 'C:\Users\dpass\Documents\DCSOlympus\scripts\OlympusHook.lua'
+    at Object.realpathSync (node:fs:2655:7)
+    at Object.realpathSync (node:electron/js2c/asar_bundle:2:5358)
+    at Object.compareSync (C:\Users\dpass\Documents\DCSOlympus\manager\node_modules\dir-compare\build\src\index.js:44:88)
+    at DCSInstance.checkInstallation (C:\Users\dpass\Documents\DCSOlympus\manager\javascripts\dcsinstance.js:196:41)
+    at async DCSInstance.reloadInstances (C:\Users\dpass\Documents\DCSOlympus\manager\javascripts\dcsinstance.js:38:13)
+    at async Manager.setState (C:\Users\dpass\Documents\DCSOlympus\manager\javascripts\manager.js:725:9)
+    at async menuPage.options.onShow (C:\Users\dpass\Documents\DCSOlympus\manager\javascripts\manager.js:165:17) {
+  errno: -4058,
+  syscall: 'lstat',
+  code: 'ENOENT',
+  path: 'C:\\Users\\dpass\\Documents\\DCSOlympus\\scripts\\OlympusHook.lua'
+}
+Differences found!
+Fixing Olympus in C:\Users\dpass\Saved Games\DCS.openbeta
+Deleting mod from C:\Users\dpass\Saved Games\DCS.openbeta
+Mod succesfully removed from C:\Users\dpass\Saved Games\DCS.openbeta
+Deleting hooks from C:\Users\dpass\Saved Games\DCS.openbeta
+Deleting C:\Users\dpass\Saved Games\DCS.openbeta\Scripts\Hooks\OlympusHook.lua
+C:\Users\dpass\Saved Games\DCS.openbeta\Scripts\Hooks\OlympusHook.lua does not exist, nothing to do
+Installing mod in C:\Users\dpass\Saved Games\DCS.openbeta
+Mod succesfully installed in C:\Users\dpass\Saved Games\DCS.openbeta
+C:\Users\dpass\Documents\DCS Olympus backups\DCS.openbeta\databases
+Backup databases found, copying over
+Backup mods.lua found, copying over
+Installing hooks in C:\Users\dpass\Saved Games\DCS.openbeta
+[Error: ENOENT: no such file or directory, lstat 'C:\Users\dpass\Documents\DCSOlympus\scripts\OlympusHook.lua'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'lstat',
+  path: 'C:\\Users\\dpass\\Documents\\DCSOlympus\\scripts\\OlympusHook.lua'
+}
+Comparing Mods content in C:\Users\dpass\Saved Games\DCS.openbeta
+Comparing Scripts content in C:\Users\dpass\Saved Games\DCS.openbeta
+Error: ENOENT: no such file or directory, lstat 'C:\Users\dpass\Documents\DCSOlympus\scripts\OlympusHook.lua'
+    at Object.realpathSync (node:fs:2655:7)
+    at Object.realpathSync (node:electron/js2c/asar_bundle:2:5358)
+    at Object.compareSync (C:\Users\dpass\Documents\DCSOlympus\manager\node_modules\dir-compare\build\src\index.js:44:88)
+    at DCSInstance.checkInstallation (C:\Users\dpass\Documents\DCSOlympus\manager\javascripts\dcsinstance.js:196:41)
+    at async DCSInstance.reloadInstances (C:\Users\dpass\Documents\DCSOlympus\manager\javascripts\dcsinstance.js:38:13)
+    at async Manager.setState (C:\Users\dpass\Documents\DCSOlympus\manager\javascripts\manager.js:725:9)
+    at async Manager.onEditMenuClicked (C:\Users\dpass\Documents\DCSOlympus\manager\javascripts\manager.js:298:9) {
+  errno: -4058,
+  syscall: 'lstat',
+  code: 'ENOENT',
+  path: 'C:\\Users\\dpass\\Documents\\DCSOlympus\\scripts\\OlympusHook.lua'
+}
+Differences found!
+Comparing Mods content in C:\Users\dpass\Saved Games\DCS.openbeta
+Comparing Scripts content in C:\Users\dpass\Saved Games\DCS.openbeta
+Error: ENOENT: no such file or directory, lstat 'C:\Users\dpass\Documents\DCSOlympus\scripts\OlympusHook.lua'
+    at Object.realpathSync (node:fs:2655:7)
+    at Object.realpathSync (node:electron/js2c/asar_bundle:2:5358)
+    at Object.compareSync (C:\Users\dpass\Documents\DCSOlympus\manager\node_modules\dir-compare\build\src\index.js:44:88)
+    at DCSInstance.checkInstallation (C:\Users\dpass\Documents\DCSOlympus\manager\javascripts\dcsinstance.js:196:41)
+    at async DCSInstance.reloadInstances (C:\Users\dpass\Documents\DCSOlympus\manager\javascripts\dcsinstance.js:38:13)
+    at async Manager.setState (C:\Users\dpass\Documents\DCSOlympus\manager\javascripts\manager.js:725:9)
+    at async Manager.onUninstallClicked (C:\Users\dpass\Documents\DCSOlympus\manager\javascripts\manager.js:580:9) {
+  errno: -4058,
+  syscall: 'lstat',
+  code: 'ENOENT',
+  path: 'C:\\Users\\dpass\\Documents\\DCSOlympus\\scripts\\OlympusHook.lua'
+}
+Differences found!
+Uninstalling Olympus from C:\Users\dpass\Saved Games\DCS.openbeta
+Deleting mod from C:\Users\dpass\Saved Games\DCS.openbeta
+Mod succesfully removed from C:\Users\dpass\Saved Games\DCS.openbeta
+Deleting hooks from C:\Users\dpass\Saved Games\DCS.openbeta
+Deleting C:\Users\dpass\Saved Games\DCS.openbeta\Scripts\Hooks\OlympusHook.lua
+C:\Users\dpass\Saved Games\DCS.openbeta\Scripts\Hooks\OlympusHook.lua does not exist, nothing to do
+Deleting JSON from C:\Users\dpass\Saved Games\DCS.openbeta
+Deleting C:\Users\dpass\Saved Games\DCS.openbeta\Config\olympus.json
+C:\Users\dpass\Saved Games\DCS.openbeta\Config\olympus.json does not exist, nothing to do
+Deleting ShortCuts from C:\Users\dpass\Saved Games\DCS.openbeta and desktop
+Deleting C:\Users\dpass\Saved Games\DCS.openbeta\DCS Olympus Server (DCS.openbeta).lnk
+C:\Users\dpass\Saved Games\DCS.openbeta\DCS Olympus Server (DCS.openbeta).lnk does not exist, nothing to do
+Deleting C:\Users\dpass\Saved Games\DCS.openbeta\DCS Olympus Client (DCS.openbeta).lnk
+C:\Users\dpass\Saved Games\DCS.openbeta\DCS Olympus Client (DCS.openbeta).lnk does not exist, nothing to do
+Deleting C:\Users\dpass\Desktop\DCS Olympus Server (DCS.openbeta).lnk
+C:\Users\dpass\Desktop\DCS Olympus Server (DCS.openbeta).lnk does not exist, nothing to do
+Deleting C:\Users\dpass\Desktop\DCS Olympus Client (DCS.openbeta).lnk
+C:\Users\dpass\Desktop\DCS Olympus Client (DCS.openbeta).lnk does not exist, nothing to do
+ShortCuts deleted from C:\Users\dpass\Saved Games\DCS.openbeta and desktop
+Olympus removed from C:\Users\dpass\Saved Games\DCS.openbeta
+Installing hooks in C:\Users\dpass\Saved Games\DCS.openbeta
+An error occurred during installation: Error: ENOENT: no such file or directory, lstat 'C:\Users\dpass\Documents\DCSOlympus\scripts\OlympusHook.lua'
+ ======================= New log starting at Thu Feb 08 2024 21:58:08 GMT+0100 (Central European Standard Time) =======================
+Running in C:\Users\dpass\Documents\DCSOlympus\manager\javascripts
+Found instance in C:\Users\dpass\Saved Games\DCS.openbeta, checking for Olympus
+Development build detected, skipping version checks...
+ ======================= New log starting at Thu Feb 08 2024 21:59:00 GMT+0100 (Central European Standard Time) =======================
+Running in C:\Users\dpass\Documents\DCSOlympus\manager\javascripts
+Found instance in C:\Users\dpass\Saved Games\DCS.openbeta, checking for Olympus
+Development build detected, skipping version checks...
+ ======================= New log starting at Thu Feb 08 2024 21:59:52 GMT+0100 (Central European Standard Time) =======================
+Running in C:\Users\dpass\Documents\DCSOlympus\manager\javascripts
+Found instance in C:\Users\dpass\Saved Games\DCS.openbeta, checking for Olympus
+Development build detected, skipping version checks...

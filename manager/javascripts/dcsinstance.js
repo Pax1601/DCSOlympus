@@ -113,7 +113,7 @@ class DCSInstance {
 
     folder = "";
     name = "";
-    clientPort = 3000;
+    frontendPort = 3000;
     backendPort = 3001;
     backendAddress = "localhost";
     gameMasterPassword = "";
@@ -137,7 +137,7 @@ class DCSInstance {
         this.folder = folder;
         this.name = path.basename(folder);
 
-        /* Periodically "ping" Olympus to check if either the client or the backend are active */
+        /* Periodically "ping" Olympus to check if either the frontend or the backend are active */
         window.setInterval(async () => {
             await this.getData();
             getManager().updateInstances();
@@ -162,9 +162,9 @@ class DCSInstance {
             try {
                 /* Read the olympus.json */
                 var config = JSON.parse(fs.readFileSync(path.join(this.folder, "Config", "olympus.json")));
-                this.clientPort = config["client"]["port"];
-                this.backendPort = config["server"]["port"];
-                this.backendAddress = config["server"]["address"];
+                this.frontendPort = config["frontend"]["port"];
+                this.backendPort = config["backend"]["port"];
+                this.backendAddress = config["backend"]["address"];
                 this.gameMasterPasswordHash = config["authentication"]["gameMasterPassword"];
 
                 this.gameMasterPasswordEdited = false;
@@ -214,13 +214,13 @@ class DCSInstance {
         return this.error;
     }
 
-    /** Set the client port
+    /** Set the frontend port
      * 
-     * @param {Number} newPort The new client port to set
+     * @param {Number} newPort The new frontend port to set
      */
-    setClientPort(newPort) {
-        logger.log(`Instance ${this.folder} client port set to ${newPort}`)
-        this.clientPort = newPort;
+    setFrontendPort(newPort) {
+        logger.log(`Instance ${this.folder} frontend port set to ${newPort}`)
+        this.frontendPort = newPort;
     }
 
     /** Set the backend port
@@ -291,26 +291,26 @@ class DCSInstance {
         return !(getManager().getActiveInstance().gameMasterPassword === getManager().getActiveInstance().blueCommanderPassword || getManager().getActiveInstance().gameMasterPassword === getManager().getActiveInstance().redCommanderPassword || getManager().getActiveInstance().blueCommanderPassword === getManager().getActiveInstance().redCommanderPassword);
     }
 
-    /** Asynchronously check if the client port is free
+    /** Asynchronously check if the frontend port is free
      * 
-     * @param {Number | undefined} port The port to check. If not set, the current clientPort will be checked
-     * @returns true if the client port is free
+     * @param {Number | undefined} port The port to check. If not set, the current frontendPort will be checked
+     * @returns true if the frontend port is free
      */
-    async checkClientPort(port) {
-        port = port ?? this.clientPort;
+    async checkFrontendPort(port) {
+        port = port ?? this.frontendPort;
 
-        logger.log(`Checking client port ${port}`);
+        logger.log(`Checking frontend port ${port}`);
         var portFree = await checkPort(port);
         if (portFree) {
             portFree = !(await DCSInstance.getInstances()).some((instance) => {
                 if (instance !== this && instance.installed) {
-                    if (instance.clientPort === port || instance.backendPort === port) {
-                        logger.log(`Client port ${port} already selected by other instance`);
+                    if (instance.frontendPort === port || instance.backendPort === port) {
+                        logger.log(`Frontend port ${port} already selected by other instance`);
                         return true;
                     }
                 } else {
                     if (instance.backendPort === port) {
-                        logger.log(`Client port ${port} equal to backend port`);
+                        logger.log(`Frontend port ${port} equal to backend port`);
                         return true;
                     }
                 }
@@ -318,7 +318,7 @@ class DCSInstance {
             })
         }
         else {
-            logger.log(`Client port ${port} currently in use`);
+            logger.log(`Frontend port ${port} currently in use`);
         }
         return portFree;
     }
@@ -336,13 +336,13 @@ class DCSInstance {
         if (portFree) {
             portFree = !(await DCSInstance.getInstances()).some((instance) => {
                 if (instance !== this && instance.installed) {
-                    if (instance.clientPort === port || instance.backendPort === port) {
+                    if (instance.frontendPort === port || instance.backendPort === port) {
                         logger.log(`Backend port ${port} already selected by other instance`);
                         return true;
                     }
                 } else {
-                    if (instance.clientPort === port) {
-                        logger.log(`Backend port ${port} equal to client port`);
+                    if (instance.frontendPort === port) {
+                        logger.log(`Backend port ${port} equal to frontend port`);
                         return true;
                     }
                 }
@@ -354,30 +354,30 @@ class DCSInstance {
         return portFree;
     }
 
-    /** Asynchronously find free client and backend ports. If the old ports are free, it will keep them.
+    /** Asynchronously find free frontend and backend ports. If the old ports are free, it will keep them.
      * 
      */
     async findFreePorts() {
         logger.log(`Looking for free ports`);
-        if (await this.checkClientPort() && await this.checkBackendPort()) {
+        if (await this.checkFrontendPort() && await this.checkBackendPort()) {
             logger.log("Old ports are free, keeping them")
         } else {
             logger.log(`Finding new free ports`);
 
             const instances = await DCSInstance.getInstances();
-            const firstPort = instances.map((instance) => { return instance.clientPort; }).concat(instances.map((instance) => { return instance.backendPort; })).sort().at(-1) + 1;
+            const firstPort = instances.map((instance) => { return instance.frontendPort; }).concat(instances.map((instance) => { return instance.backendPort; })).sort().at(-1) + 1;
 
-            var clientPort = await getFreePort(firstPort);
-            if (clientPort === false)
-                rej("Unable to find a free client port");
-            logger.log(`Found free client port ${clientPort}`);
+            var frontendPort = await getFreePort(firstPort);
+            if (frontendPort === false)
+                rej("Unable to find a free frontend port");
+            logger.log(`Found free frontend port ${frontendPort}`);
 
-            var backendPort = await getFreePort(clientPort + 1);
+            var backendPort = await getFreePort(frontendPort + 1);
             if (backendPort === false)
                 rej("Unable to find a free backend port");
             logger.log(`Found free backend port ${backendPort}`);
 
-            this.clientPort = clientPort;
+            this.frontendPort = frontendPort;
             this.backendPort = backendPort;
         }
     }
@@ -387,7 +387,7 @@ class DCSInstance {
      */
     async getData() {
         if (this.installed) {
-            fetchWithTimeout(`http://localhost:${this.clientPort}`, { timeout: 250 })
+            fetchWithTimeout(`http://localhost:${this.frontendPort}`, { timeout: 250 })
                 .then(async (response) => {
                     this.webserverOnline = (await response.text()).includes("Olympus");
                 }, () => {
@@ -432,7 +432,7 @@ class DCSInstance {
         const err = fs.openSync(`./${this.name}.log`, 'a');
         const sub = spawn('cscript.exe', ['server.vbs', path.join(this.folder, "Config", "olympus.json")], {
             detached: true,
-            cwd: "../client",
+            cwd: "../frontend",
             stdio: ['ignore', out, err]
         });
 
@@ -448,7 +448,7 @@ class DCSInstance {
         const err = fs.openSync(`./${this.name}.log`, 'a');
         const sub = spawn('cscript.exe', ['client.vbs', path.join(this.folder, "Config", "olympus.json")], {
             detached: true,
-            cwd: "../client",
+            cwd: "../frontend",
             stdio: ['ignore', out, err]
         });
 
@@ -459,7 +459,7 @@ class DCSInstance {
      *  
      */ 
     stop() {
-        find('port', this.clientPort)
+        find('port', this.frontendPort)
             .then((list) => {
                 if (list.length !== 1) {
                     list.length === 0 ? logger.error("No processes found on the specified port") : logger.error("Too many processes found on the specified port");
