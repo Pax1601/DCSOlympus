@@ -1,8 +1,8 @@
-<div id="unit-control-panel"  oncontextmenu="return false;">
+<div id="unit-control-panel" oncontextmenu="return false;">
     <div class="ol-panel"><img src="resources/theme/images/icons/gamepad-solid.svg" inject-svg></div>
-    
+
     <div class="ol-panel ol-panel-padding-lg" id="unit-control-panel-content">
-        <h3>Selected Units</h3>
+        <h3>Selected Units<span class="num-selected-units"></span></h3>
 
         <div id="unit-selection">
 
@@ -80,27 +80,35 @@
             </div>
 
             <div id="tanker-on" class="switch-control yes-no">
-                <h4>Enable tanker <img src="/resources/theme/images/icons/circle-question-regular.svg" title="Instructs the unit to operate as AAR tanker. A/A TACAN, radio frequency and callsign set in Settings dialog."></h4>
+                <h4>Enable tanker <img src="/resources/theme/images/icons/circle-question-regular.svg"
+                        title="Instructs the unit to operate as AAR tanker. A/A TACAN, radio frequency and callsign set in Settings dialog.">
+                </h4>
                 <div id="tanker-on-switch" class="ol-switch"></div>
             </div>
 
             <div id="AWACS-on" class="switch-control yes-no">
-                <h4>Airborne Early Warning <img src="/resources/theme/images/icons/circle-question-regular.svg" title="Enables datalink and AI radio calls. Radio frequency and callsign set in Settings dialog."></h4>
+                <h4>Airborne Early Warning <img src="/resources/theme/images/icons/circle-question-regular.svg"
+                        title="Enables datalink and AI radio calls. Radio frequency and callsign set in Settings dialog.">
+                </h4>
                 <div id="AWACS-on-switch" class="ol-switch"></div>
             </div>
 
             <div id="operate-as" class="switch-control coalition">
-                <h4>Operate as <img src="/resources/theme/images/icons/circle-question-regular.svg" title="Determines if the unit will target red or blue units when performing scenic tasks."></h4>
+                <h4>Operate as <img src="/resources/theme/images/icons/circle-question-regular.svg"
+                        title="Determines if the unit will target red or blue units when performing scenic tasks."></h4>
                 <div id="operate-as-switch" class="ol-switch"></div>
             </div>
 
             <div id="ai-on-off" class="switch-control yes-no">
-                <h4>Unit active <img src="/resources/theme/images/icons/circle-question-regular.svg" title="Toggling this disables unit AI completely. It will no longer move, react or emit radio waves."></h4>
+                <h4>Unit active <img src="/resources/theme/images/icons/circle-question-regular.svg"
+                        title="Toggling this disables unit AI completely. It will no longer move, react or emit radio waves.">
+                </h4>
                 <div id="on-off-switch" class="ol-switch" title=""></div>
             </div>
 
             <div id="follow-roads" class="switch-control yes-no">
-                <h4>Follow roads <img src="/resources/theme/images/icons/circle-question-regular.svg" title="WARNING: follow roads movements can cause lag"></h4>
+                <h4>Follow roads <img src="/resources/theme/images/icons/circle-question-regular.svg"
+                        title="WARNING: follow roads movements can cause lag"></h4>
                 <div id="follow-roads-switch" class="ol-switch"></div>
             </div>
         </div>
@@ -108,28 +116,53 @@
         <hr />
 
         <div id="advanced-settings-div">
-            <button id="advanced-settings-button" class="ol-button-settings ol-box-shadow" data-on-click="showAdvancedSettings">Settings</button>
+            <button id="advanced-settings-button" class="ol-button-settings ol-box-shadow"
+                data-on-click="showAdvancedSettings">Settings</button>
             <div id="delete-options" class="ol-select">
                 <div class="ol-select-value ol-select-warning">
                     Delete unit
                 </div>
                 <div class="ol-select-options">
-                    <div><button class="ol-button-white" data-on-click="deleteSelectedUnits" title="Immediately remove the unit from the simulation"><img src="/resources/theme/images/icons/trash-can-regular.svg" inject-svg>Delete</button></div>
-                    <div class="hr"><hr></div>
-                    <div><button class="ol-button-warning" data-on-click="explodeSelectedUnits" data-on-click-params='{ "type": "normal" }' title="Normal explosion"><img src="/resources/theme/images/icons/explosion-solid.svg" inject-svg>Blow up</button></div>
-                    <div><button class="ol-button-warning" data-on-click="explodeSelectedUnits" data-on-click-params='{ "type": "secondary" }' title="Small explosion with debries"><img src="/resources/theme/images/icons/burst-solid.svg" inject-svg>Cook off</button></div>
-                    <div><button class="ol-button-warning" data-on-click="explodeSelectedUnits" data-on-click-params='{ "type": "phosphorous" }' title="White phosphorous explosion"><img src="/resources/theme/images/icons/smog-solid.svg" inject-svg>Phosp.</button></div>
-                    <div><button class="ol-button-warning" data-on-click="explodeSelectedUnits" data-on-click-params='{ "type": "napalm" }' title="Napalm"><img src="/resources/theme/images/icons/fire-solid.svg" inject-svg>Napalm</button></div>
+                    <div><button class="ol-button-white" data-on-click="deleteSelectedUnits"
+                            title="Immediately remove the unit from the simulation"><img
+                                src="/resources/theme/images/icons/trash-can-regular.svg" inject-svg>Delete</button>
+                    </div>
+                    <div class="hr">
+                        <hr>
+                    </div>
+                    <div><button class="ol-button-warning" data-on-click="explodeSelectedUnits"
+                            data-on-click-params='{ "type": "normal" }' title="Normal explosion"><img
+                                src="/resources/theme/images/icons/explosion-solid.svg" inject-svg>Blow up</button>
+                    </div>
+                    <div><button class="ol-button-warning" data-on-click="explodeSelectedUnits"
+                            data-on-click-params='{ "type": "secondary" }' title="Small explosion with debries"><img
+                                src="/resources/theme/images/icons/burst-solid.svg" inject-svg>Cook off</button></div>
+                    <div><button class="ol-button-warning" data-on-click="explodeSelectedUnits"
+                            data-on-click-params='{ "type": "phosphorous" }' title="White phosphorous explosion"><img
+                                src="/resources/theme/images/icons/smog-solid.svg" inject-svg>Phosp.</button></div>
+                    <div><button class="ol-button-warning" data-on-click="explodeSelectedUnits"
+                            data-on-click-params='{ "type": "napalm" }' title="Napalm"><img
+                                src="/resources/theme/images/icons/fire-solid.svg" inject-svg>Napalm</button></div>
                 </div>
-            </div>               
+            </div>
         </div>
     </div>
     <div id="rapid-controls" class="ol-panel">
-        <button id="climb" title="Increase units altitude" class="ol-button" data-on-click="selectedUnitsChangeAltitude" data-on-click-params='{ "type": "climb" }'><img src="/resources/theme/images/icons/climb.svg" inject-svg></button>
-        <button id="descend" title="Descrease units altitude" class="ol-button" data-on-click="selectedUnitsChangeAltitude" data-on-click-params='{ "type": "descend" }'><img src="/resources/theme/images/icons/descent.svg" inject-svg></button>
-        <button id="fast" title="Increase units speed" class="ol-button" data-on-click="selectedUnitsChangeSpeed" data-on-click-params='{ "type": "fast" }'><img src="/resources/theme/images/icons/speed-increase.svg" inject-svg></button>
-        <button id="slow" title="Decrease units speed" class="ol-button" data-on-click="selectedUnitsChangeSpeed" data-on-click-params='{ "type": "slow" }'><img src="/resources/theme/images/icons/speed-decrease.svg" inject-svg></button>
-        <button id="stop" title="Stop unit and go back to idle state" class="ol-button" data-on-click="selectedUnitsChangeSpeed" data-on-click-params='{ "type": "stop" }'><img src="/resources/theme/images/icons/hand-solid.svg" inject-svg></button>
+        <button id="climb" title="Increase units altitude" class="ol-button" data-on-click="selectedUnitsChangeAltitude"
+            data-on-click-params='{ "type": "climb" }'><img src="/resources/theme/images/icons/climb.svg"
+                inject-svg></button>
+        <button id="descend" title="Descrease units altitude" class="ol-button"
+            data-on-click="selectedUnitsChangeAltitude" data-on-click-params='{ "type": "descend" }'><img
+                src="/resources/theme/images/icons/descent.svg" inject-svg></button>
+        <button id="fast" title="Increase units speed" class="ol-button" data-on-click="selectedUnitsChangeSpeed"
+            data-on-click-params='{ "type": "fast" }'><img src="/resources/theme/images/icons/speed-increase.svg"
+                inject-svg></button>
+        <button id="slow" title="Decrease units speed" class="ol-button" data-on-click="selectedUnitsChangeSpeed"
+            data-on-click-params='{ "type": "slow" }'><img src="/resources/theme/images/icons/speed-decrease.svg"
+                inject-svg></button>
+        <button id="stop" title="Stop unit and go back to idle state" class="ol-button"
+            data-on-click="selectedUnitsChangeSpeed" data-on-click-params='{ "type": "stop" }'><img
+                src="/resources/theme/images/icons/hand-solid.svg" inject-svg></button>
     </div>
-    
+
 </div>
