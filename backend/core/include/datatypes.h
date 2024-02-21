@@ -151,6 +151,7 @@ bool operator==(const DataTypes::Contact& lhs, const DataTypes::Contact& rhs);
 struct SpawnOptions {
 	string unitType;
 	Coords location;
+	double heading;
 	string loadout;
 	string skill;
 	string liveryID;
