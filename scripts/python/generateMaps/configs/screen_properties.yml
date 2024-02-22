@@ -1,0 +1,10 @@
+{
+  'width': 1920,            # The width of your screen, in pixels
+  'height': 1080,           # The height of your screen, in pixels
+  'geo_resolution': 1.0     # The resolution of the map on the screen, in meters per pixel.
+                            # To measure this value, first set the F10 map at the desired zoom level. 
+                            # Then, use F10's map measure tool, and measure the width of the screen in meters. 
+                            # Finally, divide that value by the width in pixels. 
+                            # A good value would be around 1 meter per pixel, meaning a 1920px wide map would measure about 1 nautical mile across on the F10 map
+                            # Lower values will produce higher resolution maps, but beware of space usage!
+}

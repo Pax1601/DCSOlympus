@@ -1,0 +1,4 @@
+{
+  'output_directory': './LasVegas',       # Where to save the output files
+  'boundary_file': './configs/LasVegas/LasVegas.kml'
+}

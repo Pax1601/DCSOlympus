@@ -1,12 +1,20 @@
 import os
 from PIL import Image
 import concurrent.futures
+import math
+
+# correction parameters
+
+# NTTR
+rotation = math.degrees(0.01895)
+scale = 0.973384
 
 zoom = 16
 path = "output"
 
 def crop_image(filename):
-    img = Image.open(os.path.join(path, filename))
+    img = Image.open(os.path.join(path, filename)).rotate(-rotation)
+    img = img.resize((math.floor(img.width * scale), math.floor(img.height * scale)))
     center_X, center_Y = filename.removesuffix(".png").split("_")
     center_X = int(center_X)
     center_Y = int(center_Y)

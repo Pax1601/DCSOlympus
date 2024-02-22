@@ -23,6 +23,7 @@
     "regedit": "^5.1.2",
     "save": "^2.9.0",
     "sha256": "^0.2.0",
+    "sharp": "^0.33.2",
     "srtm-elevation": "^2.1.2",
     "tcp-ping-port": "^1.0.1",
     "uuid": "^9.0.1",
