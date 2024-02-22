@@ -7,7 +7,7 @@ import { AirbaseContextMenu } from "../contextmenus/airbasecontextmenu";
 import { Dropdown } from "../controls/dropdown";
 import { Airbase } from "../mission/airbase";
 import { Unit } from "../unit/unit";
-import { bearing, createCheckboxOption, polyContains } from "../other/utils";
+import { bearing, createCheckboxOption, deg2rad, getGroundElevation, polyContains } from "../other/utils";
 import { DestinationPreviewMarker } from "./markers/destinationpreviewmarker";
 import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
@@ -157,6 +157,7 @@ export class Map extends L.Map {
         this.on('drag', (e: any) => this.#onMouseMove(e));
         this.on('keydown', (e: any) => this.#onKeyDown(e));
         this.on('keyup', (e: any) => this.#onKeyUp(e));
+        this.on('move', (e: any) => this.#broadcastPosition(e));
 
         /* Event listeners */
         document.addEventListener("toggleCoalitionVisibility", (ev: CustomEventInit) => {
@@ -702,6 +703,29 @@ export class Map extends L.Map {
 
     #onZoomEnd(e: any) {
         this.#isZooming = false;
+    }
+
+    #broadcastPosition(e: any) {
+        getGroundElevation(this.getCenter(), (response: string) => {
+            var groundElevation: number | null = null;
+            try {
+                groundElevation = parseFloat(response);
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.open("PUT", "http://localhost:8080");
+                xmlHttp.setRequestHeader("Content-Type", "application/json");
+
+                const C = 40075016.686; 
+                let mpp = C * Math.cos(deg2rad(this.getCenter().lat)) / Math.pow(2, this.getZoom() + 8);
+                let d = mpp * 1920;
+                let alt = d / 2 * 1 / Math.tan(deg2rad(40));
+                if (alt > 100000)
+                    alt = 100000;
+                xmlHttp.send(JSON.stringify({lat: this.getCenter().lat, lng: this.getCenter().lng, alt: alt + groundElevation}));
+            } catch {
+                console.warn("broadcastPosition: could not retrieve ground elevation")
+            }
+        });
+        
     }
 
     /* */

@@ -190,6 +190,12 @@ export const mapLayers = {
         minZoom: 1,
         maxZoom: 20,
         attribution: '<a href="https://github.com/cyclosm/cyclosm-cartocss-style/releases" title="CyclOSM - Open Bicycle render">CyclOSM</a> | Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    },
+    "DCS": {
+        urlTemplate: 'http://localhost:3000/maps/dcs/{z}/{x}/{y}.png',
+        minZoom: 16,
+        maxZoom: 16,
+        attribution: 'Eagle Dynamics'
     }
 }
 

@@ -36,3 +36,4 @@ package-lock.json
 /frontend/setup
 frontend/server/public/plugins/controltipsplugin/index.js
 frontend/website/plugins/controltips/index.js
+/frontend/server/public/maps
