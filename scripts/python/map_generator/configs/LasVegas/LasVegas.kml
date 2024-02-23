@@ -2,7 +2,7 @@
 <kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
 <Document>
 	<name>Senza titolo</name>
-	<gx:CascadingStyle kml:id="__managed_style_29D7120C702F06CED14C">
+	<gx:CascadingStyle kml:id="__managed_style_2F9039BE1B2F0ACE3361">
 		<Style>
 			<IconStyle>
 				<scale>1.2</scale>
@@ -25,7 +25,7 @@
 			</BalloonStyle>
 		</Style>
 	</gx:CascadingStyle>
-	<gx:CascadingStyle kml:id="__managed_style_1E6AF60F852F06CED14C">
+	<gx:CascadingStyle kml:id="__managed_style_1FB08D70372F0ACE3361">
 		<Style>
 			<IconStyle>
 				<Icon>
@@ -47,34 +47,57 @@
 			</BalloonStyle>
 		</Style>
 	</gx:CascadingStyle>
-	<StyleMap id="__managed_style_05AC9C65832F06CED14C">
+	<StyleMap id="__managed_style_0152B588AD2F0ACE3361">
 		<Pair>
 			<key>normal</key>
-			<styleUrl>#__managed_style_1E6AF60F852F06CED14C</styleUrl>
+			<styleUrl>#__managed_style_1FB08D70372F0ACE3361</styleUrl>
 		</Pair>
 		<Pair>
 			<key>highlight</key>
-			<styleUrl>#__managed_style_29D7120C702F06CED14C</styleUrl>
+			<styleUrl>#__managed_style_2F9039BE1B2F0ACE3361</styleUrl>
 		</Pair>
 	</StyleMap>
-	<Placemark id="04A23CB2A82F06CED14C">
+	<Placemark id="0389FD622C2F0ACE3361">
 		<name>Poligono senza titolo</name>
 		<LookAt>
-			<longitude>-115.7575513617584</longitude>
-			<latitude>36.45909683572987</latitude>
-			<altitude>1668.83938821393</altitude>
+			<longitude>-115.0437621195802</longitude>
+			<latitude>36.2404454323581</latitude>
+			<altitude>568.1069300877758</altitude>
 			<heading>0</heading>
 			<tilt>0</tilt>
 			<gx:fovy>35</gx:fovy>
-			<range>382627.9679017514</range>
+			<range>21582.08160380367</range>
 			<altitudeMode>absolute</altitudeMode>
 		</LookAt>
-		<styleUrl>#__managed_style_05AC9C65832F06CED14C</styleUrl>
+		<styleUrl>#__managed_style_0152B588AD2F0ACE3361</styleUrl>
 		<Polygon>
 			<outerBoundaryIs>
 				<LinearRing>
 					<coordinates>
-						-115.5765603362792,35.92113103850846,0 -114.7667743850415,35.914903046417,0 -114.7800419428627,36.39467581209903,0 -115.6198023719551,36.39886214564519,0 -115.5765603362792,35.92113103850846,0 
+						-115.0657741984423,36.20908708202413,0 -115.0064821223275,36.20969233542438,0 -115.0077003574054,36.25251471885595,0 -115.0604905801644,36.25236266770626,0 -115.0657741984423,36.20908708202413,0 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+	<Placemark id="077CD022A52F0ACE74D0">
+		<name>Poligono senza titolo</name>
+		<LookAt>
+			<longitude>-115.144039076036</longitude>
+			<latitude>36.07599823986274</latitude>
+			<altitude>636.6854074835677</altitude>
+			<heading>0</heading>
+			<tilt>0</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>14114.14487087633</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_0152B588AD2F0ACE3361</styleUrl>
+		<Polygon>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						-115.1866576903507,36.06787728722109,0 -115.1107872218999,36.06765965614163,0 -115.1145241760975,36.10294242539007,0 -115.1779590799479,36.10179027153036,0 -115.1866576903507,36.06787728722109,0 
 					</coordinates>
 				</LinearRing>
 			</outerBoundaryIs>

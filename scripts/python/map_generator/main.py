@@ -5,7 +5,7 @@ from fastkml import kml
 from shapely import wkt
 from datetime import timedelta
 
-import capture_screen
+import map_generator
 
 if len(sys.argv) == 1:
     print("Please provide a configuration file as first argument. You can also drop the configuration file on this script to run it.")
@@ -38,14 +38,15 @@ else:
                 k.from_string(doc)
 
                 geod = Geod(ellps="WGS84")
-                features = [f for f in list(k.features()) if not f.isopen]
-                print(f"Found {len(features)} closed features in the provided kml file")
-
+                features = []
                 area = 0
-                for feature in features:
+                for feature in k.features():
                     for sub_feature in list(feature.features()):
                         geo = sub_feature.geometry
                         area += abs(geod.geometry_area_perimeter(wkt.loads(geo.wkt))[0])
+                        features.append(sub_feature)
+
+                print(f"Found {len(features)} features in the provided kml file")
 
                 tile_size = 256 * screen_config["geo_resolution"] # meters
                 tiles_per_screenshot = int(screen_config["width"] / 256) * int(screen_config["height"] / 256)
@@ -57,10 +58,10 @@ else:
                 print(f"Estimated number of tiles: {tiles_num}")
                 print(f"Estimated number of screenshots: {screenshots_num}")
                 print(f"Estimated time to complete: {timedelta(seconds=total_time)} (hh:mm:ss)")
-                print("The script is ready to go. After you press any key, it will wait for 5 seconds, and then it will start.")
+                print("The script is ready to go. After you press enter, it will wait for 5 seconds, then it will start.")
 
-                input("Press any key to continue...")
-                capture_screen.run(map_config)
+                input("Press enter to continue...")
+                map_generator.run(map_config)
     
 
 
