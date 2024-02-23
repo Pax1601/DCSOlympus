@@ -12,7 +12,7 @@ import { DestinationPreviewMarker } from "./markers/destinationpreviewmarker";
 import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
 import { SVGInjector } from '@tanem/svg-injector'
-import { mapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, MOVE_UNIT, SHOW_UNIT_CONTACTS, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, SHOW_UNIT_LABELS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, MAP_MARKER_CONTROLS } from "../constants/constants";
+import { defaultMapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, MOVE_UNIT, SHOW_UNIT_CONTACTS, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, SHOW_UNIT_LABELS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, MAP_MARKER_CONTROLS } from "../constants/constants";
 import { CoalitionArea } from "./coalitionarea/coalitionarea";
 import { CoalitionAreaContextMenu } from "../contextmenus/coalitionareacontextmenu";
 import { DrawingCursor } from "./coalitionarea/drawingcursor";
@@ -90,6 +90,7 @@ export class Map extends L.Map {
     #coalitionAreaContextMenu: CoalitionAreaContextMenu = new CoalitionAreaContextMenu("coalition-area-contextmenu");
 
     #mapSourceDropdown: Dropdown;
+    #mapLayers: any = defaultMapLayers;
     #mapMarkerVisibilityControls: MapMarkerVisibilityControl[] = MAP_MARKER_CONTROLS;
     #mapVisibilityOptionsDropdown: Dropdown;
     #optionButtons: { [key: string]: HTMLButtonElement[] } = {}
@@ -120,10 +121,10 @@ export class Map extends L.Map {
 
         this.#ID = ID;
 
-        this.setLayer(Object.keys(mapLayers)[0]);
+        this.setLayer(Object.keys(this.#mapLayers)[0]);
 
         /* Minimap */
-        var minimapLayer = new L.TileLayer(mapLayers[Object.keys(mapLayers)[0] as keyof typeof mapLayers].urlTemplate, { minZoom: 0, maxZoom: 13 });
+        var minimapLayer = new L.TileLayer(this.#mapLayers[Object.keys(this.#mapLayers)[0]].urlTemplate, { minZoom: 0, maxZoom: 13 });
         this.#miniMapLayerGroup = new L.LayerGroup([minimapLayer]);
         this.#miniMapPolyline = new L.Polyline([], { color: '#202831' });
         this.#miniMapPolyline.addTo(this.#miniMapLayerGroup);
@@ -203,6 +204,18 @@ export class Map extends L.Map {
             this.getContainer().toggleAttribute("data-hide-labels", !this.getVisibilityOptions()[SHOW_UNIT_LABELS]);
         });
 
+        document.addEventListener("configLoaded", () => {
+            let config = getApp().getConfig();
+            if (config.additionalMaps) {
+                let additionalMaps = config.additionalMaps;
+                this.#mapLayers = {
+                    ...this.#mapLayers,
+                    ...additionalMaps
+                }
+                this.#mapSourceDropdown.setOptions(this.getLayers());
+            }
+        })
+
         /* Pan interval */
         this.#panInterval = window.setInterval(() => {
             if (this.#panUp || this.#panDown || this.#panRight || this.#panLeft)
@@ -234,8 +247,8 @@ export class Map extends L.Map {
         if (this.#layer != null)
             this.removeLayer(this.#layer)
 
-        if (layerName in mapLayers) {
-            const layerData = mapLayers[layerName as keyof typeof mapLayers];
+        if (layerName in this.#mapLayers) {
+            const layerData = this.#mapLayers[layerName];
             var options: L.TileLayerOptions = {
                 attribution: layerData.attribution,
                 minZoom: layerData.minZoom,
@@ -248,7 +261,7 @@ export class Map extends L.Map {
     }
 
     getLayers() {
-        return Object.keys(mapLayers);
+        return Object.keys(this.#mapLayers);
     }
 
     /* State machine */

@@ -154,7 +154,7 @@ export const mapBounds = {
     "SinaiMap": { bounds: new LatLngBounds([34.312222, 28.523333], [25.946944, 36.897778]), zoom: 4 },
 }
 
-export const mapLayers = {
+export const defaultMapLayers = {
     "ArcGIS Satellite": {
         urlTemplate: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
         minZoom: 1,
@@ -190,12 +190,6 @@ export const mapLayers = {
         minZoom: 1,
         maxZoom: 20,
         attribution: '<a href="https://github.com/cyclosm/cyclosm-cartocss-style/releases" title="CyclOSM - Open Bicycle render">CyclOSM</a> | Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    },
-    "DCS": {
-        urlTemplate: 'http://localhost:3000/resources/maps/dcs/{z}/{x}/{y}.png',
-        minZoom: 16,
-        maxZoom: 20,
-        attribution: 'Eagle Dynamics'
     }
 }
 

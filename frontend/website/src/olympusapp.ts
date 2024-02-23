@@ -33,6 +33,7 @@ export class OlympusApp {
     /* Global data */
     #activeCoalition: string = "blue";
     #latestVersion: string|undefined = undefined;
+    #config: any = {};
 
     /* Main leaflet map, extended by custom methods */
     #map: Map | null = null;
@@ -251,6 +252,19 @@ export class OlympusApp {
                 latestVersionSpan.classList.toggle("new-version", this.#latestVersion !== VERSION);
             }
         })
+
+        /* Load the config file from the server */
+        const configRequest = new Request(location.href + "resources/config");
+        fetch(configRequest).then((response) => {
+            if (response.status === 200) {
+                return response.json();
+            } else {
+                throw new Error("Error retrieving config file");
+            }
+        }).then((res) => {
+            this.#config = res;
+            document.dispatchEvent(new CustomEvent("configLoaded"));
+        })
     }
 
     #setupEvents() {
@@ -445,5 +459,9 @@ export class OlympusApp {
             else
                 img.addEventListener("load", () => { SVGInjector(img); });
         })
+    }
+
+    getConfig() {
+        return this.#config;
     }
 }
