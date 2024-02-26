@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "main.py",
             "console": "integratedTerminal",
-            "args": ["./configs/LasVegas/LasVegas.yml"]
+            "args": ["./configs/NTTR/config.yml"]
         }
     ]
 }

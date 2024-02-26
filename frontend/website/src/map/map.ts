@@ -252,7 +252,9 @@ export class Map extends L.Map {
             var options: L.TileLayerOptions = {
                 attribution: layerData.attribution,
                 minZoom: layerData.minZoom,
-                maxZoom: layerData.maxZoom
+                maxZoom: layerData.maxZoom,
+                minNativeZoom: layerData.minNativeZoom,
+                maxNativeZoom: layerData.maxNativeZoom
             };
             this.#layer = new L.TileLayer(layerData.urlTemplate, options);
         }

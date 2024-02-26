@@ -4,11 +4,14 @@ import pyautogui
 import time
 import os
 import yaml
+import json
 
 from fastkml import kml
 from shapely import wkt, Point
 from PIL import Image
 from concurrent import futures
+from os import listdir
+from os.path import isfile, isdir, join
 
 # global counters
 fut_counter = 0
@@ -16,6 +19,7 @@ tot_futs = 0
 
 # constants
 C = 40075016.686                # meters, Earth equatorial circumference
+R = C / (2 * math.pi)
                       
 def deg_to_num(lat_deg, lon_deg, zoom):
 	lat_rad = math.radians(lat_deg)
@@ -48,33 +52,24 @@ def done_callback(fut):
 	fut_counter += 1
 	printProgressBar(fut_counter, tot_futs)
 
-def extract_tiles(n, screenshots_coordinates, params):
-	f = params["f"]
-	zoom = params["zoom"]
-	output_directory = params["output_directory"]
-	n_width = params["n_width"]
-	n_height = params["n_height"]
-	screen_resolution = params["screen_resolution"]
-	mpps = params["mpps"]
+def extract_tiles(n, screenshots_XY, params):
+	f = params['f']
+	zoom = params['zoom']
+	output_directory = params['output_directory']
+	n_width = params['n_width']
+	n_height = params['n_height']
 
-	coords = screenshots_coordinates[n]
+	XY = screenshots_XY[n]
 	if (os.path.exists(os.path.join(output_directory, "screenshots", f"{f}_{n}.jpg"))):
 		# Open the source screenshot
 		img = Image.open(os.path.join(output_directory, "screenshots", f"{f}_{n}.jpg"))
 
-		# Scale the image so that tiles are 256x256
-		scale = screen_resolution / mpps
-		w, h = img.size
-		img = img.resize((int(w * scale), int(h * scale)))
-
 		# Compute the Web Mercator Projection position of the top left corner of the most centered tile
-		lat = coords[0]
-		lng = coords[1]
-		X_center, Y_center = deg_to_num(lat, lng, zoom)
+		X_center, Y_center = XY[0], XY[1]
 
 		# Compute the position of the top left corner of the top left tile
-		start_x = w / 2 - n_width / 2 * 256
-		start_y = h / 2 - n_height / 2 * 256
+		start_x = img.width / 2 - n_width / 2 * 256
+		start_y = img.height / 2 - n_height / 2 * 256
 
 		# Iterate on the grid
 		for column in range(0, n_width):
@@ -96,17 +91,44 @@ def extract_tiles(n, screenshots_coordinates, params):
 		n += 1
 
 	else:
-		raise Exception(f"{os.path.join(output_directory, "screenshots", f"{f}_{n}.jpg")} missing")
+		raise Exception(f"{os.path.join(output_directory, 'screenshots', f'{f}_{n}.jpg')} missing")
+	
+def merge_tiles(base_path, zoom, tile):
+	X = tile[0]
+	Y = tile[1]
 
+	positions = [(0, 0), (0, 1), (1, 0), (1, 1)]
+
+	dst = Image.new('RGB', (256, 256), (0, 0, 0, 0))
+	for i in range(0, 4):
+		if os.path.exists(os.path.join(base_path, str(zoom), str(2*X + positions[i][0]), f"{2*Y + positions[i][1]}.jpg")):
+			im = Image.open(os.path.join(base_path, str(zoom), str(2*X + positions[i][0]), f"{2*Y + positions[i][1]}.jpg")).resize((128, 128))
+		else:
+			im = Image.new('RGB', (128, 128), (0, 0, 0, 0))
+		dst.paste(im, (positions[i][0] * 128, positions[i][1] * 128))
+
+	if not os.path.exists(os.path.join(base_path, str(zoom - 1), str(X))):
+		try:
+			os.mkdir(os.path.join(base_path, str(zoom - 1), str(X)))
+		except FileExistsError:
+			pass
+		except Exception as e: 
+			raise e
+		
+	dst.save(os.path.join(base_path, str(zoom - 1), str(X), f"{Y}.jpg"), quality=95)
+	
 def run(map_config):
+	global tot_futs, fut_counter
+
 	with open('configs/screen_properties.yml', 'r') as sp:
 		screen_config = yaml.safe_load(sp)
 
 		# Create output folders
-		output_directory = map_config["output_directory"]
+		output_directory = map_config['output_directory']
 		if not os.path.exists(output_directory):
 			os.mkdir(output_directory)
 
+		skip_screenshots = False
 		if not os.path.exists(os.path.join(output_directory, "screenshots")):
 			os.mkdir(os.path.join(output_directory, "screenshots"))
 		else: 
@@ -116,10 +138,10 @@ def run(map_config):
 			os.mkdir(os.path.join(output_directory, "tiles"))
 
 		# Compute the optimal zoom level
-		usable_width = screen_config["width"] - 200 	# Keep a margin around the center
-		usable_height = screen_config["height"] - 200	# Keep a margin around the center
+		usable_width = screen_config['width'] - 400 	# Keep a margin around the center
+		usable_height = screen_config['height'] - 400	# Keep a margin around the center
 
-		with open(map_config["boundary_file"], 'rt', encoding="utf-8") as bp:
+		with open(map_config['boundary_file'], 'rt', encoding="utf-8") as bp:
 			# Read the config file
 			doc = bp.read()
 			k = kml.KML()
@@ -134,7 +156,8 @@ def run(map_config):
 			# Iterate over all the closed features in the kml file
 			f = 1
 			for feature in features:
-				geo = sub_feature.geometry
+				########### Take screenshots
+				geo = feature.geometry
 
 				# Define the boundary rect around the area
 				start_lat = geo.bounds[3]
@@ -143,15 +166,14 @@ def run(map_config):
 				end_lng = geo.bounds[2]
 
 				# Find the zoom level that better approximates the provided resolution
-				screen_resolution = screen_config['geo_resolution']
-				mpps_delta = [abs(compute_mpps((start_lat + end_lat) / 2, z) - screen_resolution) for z in range(0, 21)]
+				mpps_delta = [abs(compute_mpps((start_lat + end_lat) / 2, z) - map_config['mpps']) for z in range(0, 21)]
 				zoom = mpps_delta.index(min(mpps_delta))
 				
 				print(f"Feature {f} of {len(features)}, using zoom level {zoom}")
 				
 				# Find the maximum dimension of the tiles at the given resolution
 				mpps = compute_mpps(end_lat, zoom)
-				d = 256 * mpps / screen_resolution
+				d = 256 * mpps / map_config['mpps']
 
 				n_height = math.floor(usable_height / d)
 				n_width = math.floor(usable_width / d)
@@ -163,35 +185,60 @@ def run(map_config):
 				end_X, end_Y = deg_to_num(end_lat, end_lng, zoom)
 
 				# Find all the X, Y coordinates inside of the provided area
-				screenshots_coordinates = []
+				screenshots_XY = []
 				for X in range(start_X, end_X, n_width):
 					for Y in range(start_Y, end_Y, n_height):
 						lat, lng = num_to_deg(X, Y, zoom)
 						p = Point(lng, lat)
 						if p.within(wkt.loads(geo.wkt)):
-							screenshots_coordinates.append((lat, lng))
+							screenshots_XY.append((X, Y))
 
-				print(f"Feature {f} of {len(features)}, {len(screenshots_coordinates)} screenshots will be taken")
+				print(f"Feature {f} of {len(features)}, {len(screenshots_XY)} screenshots will be taken")
 
 				# Start looping
 				if not skip_screenshots:
 					print(f"Feature {f} of {len(features)}, taking screenshots...")
 					n = 0
-					for coords in screenshots_coordinates:
+					for XY in screenshots_XY:
 						# Making PUT request
-						#data = json.dumps({'lat': coords[0], 'lng': coords[1]})
-						#r = requests.put('http://localhost:8080', data = data)
+						# If the number of rows or columns is odd, we need to take the picture at the CENTER of the tile!
+						lat, lng = num_to_deg(XY[0] + (n_width % 2) / 2, XY[1] + (n_height % 2) / 2, zoom)
+						data = json.dumps({'lat': lat, 'lng': lng, 'alt': 1350 + map_config['zoom_factor'] * (25000 - 1350)})
+						r = requests.put('http://localhost:8080', data = data)
+
+						geo_data = json.loads(r.text)
 
 						time.sleep(0.1)
 
-						## Take and save screenshot
+						# Take and save screenshot. The response to the put request contains data, among which there is the north rotation at that point.
 						screenshot = pyautogui.screenshot()
-						screenshot.save(os.path.join(output_directory, "screenshots", f"{f}_{n}.jpg"))
 
-						printProgressBar(n + 1, len(screenshots_coordinates))
+						# Scale the screenshot to account for Mercator Map Deformation
+						lat1, lng1 = num_to_deg(XY[0], XY[1], zoom)
+						lat2, lng2 = num_to_deg(XY[0] + 1, XY[1] + 1, zoom)
+
+						deltaLat = abs(lat2 - lat1)
+						deltaLng = abs(lng2 - lng1)
+
+						# Compute the height and width the screenshot should have
+						m_height = math.radians(deltaLat) * R * n_height
+						m_width = math.radians(deltaLng) * R * math.cos(math.radians(lat1)) * n_width
+
+						# Compute the height and width the screenshot has
+						s_height = map_config['mpps'] * 256 * n_height
+						s_width = map_config['mpps'] * 256 * n_width
+						
+						# Compute the scaling required to achieve that
+						sx = s_width / m_width
+						sy = s_height / m_height
+
+						# Resize, rotate and save the screenshot
+						screenshot.resize((int(sx * screenshot.width), int(sy * screenshot.height))).rotate(math.degrees(geo_data['northRotation'])).save(os.path.join(output_directory, "screenshots", f"{f}_{n}.jpg"), quality=95)
+
+						printProgressBar(n + 1, len(screenshots_XY))
 						n += 1
 
-				# Extract the tiles
+				########### Extract the tiles
 				if not os.path.exists(os.path.join(output_directory, "tiles", str(zoom))):
 					os.mkdir(os.path.join(output_directory, "tiles", str(zoom)))
 
@@ -201,15 +248,12 @@ def run(map_config):
 					"output_directory": output_directory,
 					"n_width": n_width,
 					"n_height": n_height,
-					"screen_resolution": screen_resolution,
-					"mpps": mpps
 				}
 
 				# Extract the tiles with parallel thread execution
 				with futures.ThreadPoolExecutor() as executor:
 					print(f"Feature {f} of {len(features)}, extracting tiles...")
-					global tot_futs, fut_counter
-					futs = [executor.submit(extract_tiles, n, screenshots_coordinates, params) for n in range(0, len(screenshots_coordinates))]
+					futs = [executor.submit(extract_tiles, n, screenshots_XY, params) for n in range(0, len(screenshots_XY))]
 					tot_futs = len(futs)
 					fut_counter = 0
 					[fut.add_done_callback(done_callback) for fut in futs]
@@ -218,6 +262,36 @@ def run(map_config):
 				# Increase the feature counter
 				print(f"Feature {f} of {len(features)} completed!")	
 				f += 1
+
+		########### Assemble tiles to get lower zoom levels
+		for current_zoom in range(zoom, 8, -1):
+			Xs = [int(d) for d in listdir(os.path.join(output_directory, "tiles", str(current_zoom))) if isdir(join(output_directory, "tiles", str(current_zoom), d))]
+			existing_tiles = []
+			for X in Xs:
+				Ys = [int(f.removesuffix(".jpg")) for f in listdir(os.path.join(output_directory, "tiles", str(current_zoom), str(X))) if isfile(join(output_directory, "tiles", str(current_zoom), str(X), f))]
+				for Y in Ys:
+					existing_tiles.append((X, Y))
+
+			tiles_to_produce = []
+			for tile in existing_tiles:
+				if (int(tile[0] / 2), int(tile[1] / 2)) not in tiles_to_produce:
+					tiles_to_produce.append((int(tile[0] / 2), int(tile[1] / 2)))
+				
+			# Merge the tiles with parallel thread execution
+			with futures.ThreadPoolExecutor() as executor:
+				print(f"Merging tiles for zoom level {current_zoom - 1}...")
+
+				if not os.path.exists(os.path.join(output_directory, "tiles", str(current_zoom - 1))):
+					os.mkdir(os.path.join(output_directory, "tiles", str(current_zoom - 1)))
+
+				futs = [executor.submit(merge_tiles, os.path.join(output_directory, "tiles"), current_zoom, tile) for tile in tiles_to_produce]
+				tot_futs = len(futs)
+				fut_counter = 0
+				[fut.add_done_callback(done_callback) for fut in futs]
+				[fut.result() for fut in futures.as_completed(futs)]
+
+				
+
 
 
 
