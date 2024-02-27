@@ -463,7 +463,7 @@ export function convertDateAndTimeToDate(dateAndTime: DateAndTime) {
     return new Date(year, month, date.Day, time.h, time.m, time.s);
 }
 
-export function createCheckboxOption(value: string, text: string, checked: boolean = true, callback: CallableFunction = (ev: any) => {}, options?:any) {
+export function createCheckboxOption(text: string, description: string, checked: boolean = true, callback: CallableFunction = (ev: any) => {}, options?:any) {
     options = {
         "disabled": false,
         "name": "",
@@ -473,16 +473,15 @@ export function createCheckboxOption(value: string, text: string, checked: boole
     var div = document.createElement("div");
     div.classList.add("ol-checkbox");
     var label = document.createElement("label");
-    label.title = text;
+    label.title = description;
     var input = document.createElement("input");
     input.type = "checkbox";
     input.checked  = checked;
     input.name     = options.name;
     input.disabled = options.disabled;
     input.readOnly = options.readOnly;
-    input.value    = value;
     var span = document.createElement("span");
-    span.innerText = value;
+    span.innerText = text;
     label.appendChild(input);
     label.appendChild(span);
     div.appendChild(label);
@@ -501,6 +500,45 @@ export function getCheckboxOptions(dropdown: Dropdown) {
             values[key] = value;
     }
     return values;
+}
+
+export function createTextInputOption(text: string, description: string, initialValue: string, type: string, callback: CallableFunction = (ev: any) => {}, options?:any) {
+    options = {
+        "disabled": false,
+        "name": "",
+        "readOnly": false,
+        ...options
+    };
+    var div = document.createElement("div");
+    div.classList.add("ol-text-input", "border");
+    var label = document.createElement("label");
+    label.title = description;
+    var input = document.createElement("input");
+    input.type      = type;
+    input.name      = options.name;
+    input.disabled  = options.disabled;
+    input.readOnly  = options.readOnly;
+    if (options.min)
+        input.min = options.min;
+    if (options.max)
+        input.max = options.max;
+    input.value     = initialValue;
+    input.style.width = "80px";
+    var span = document.createElement("span");
+    span.innerText = text;
+    label.appendChild(span);
+    label.appendChild(input);
+    div.appendChild(label);
+    input.onchange = (ev: any) => {
+        if (type === 'number') {
+            if (Number(input.max) && Number(ev.srcElement.value) > Number(input.max))
+                input.value = input.max;
+            else if (Number(input.min) && Number(ev.srcElement.value) < Number(input.min))
+                input.value = input.min;
+        }
+        callback(ev);
+    }
+    return div as HTMLElement;
 }
 
 export function getGroundElevation(latlng: LatLng, callback: CallableFunction) {

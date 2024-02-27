@@ -177,7 +177,7 @@ button svg.fill-coalition[data-coalition="red"] * {
 
 .ol-select>.ol-select-value {
     align-content: center;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    /*box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);*/
     cursor: pointer;
     display: flex;
     justify-content: left;
@@ -279,7 +279,7 @@ button svg.fill-coalition[data-coalition="red"] * {
 }
 
 .ol-select>.ol-select-options div hr {
-    background-color: white;
+    background-color: var(--background-hover);
     height: 1px;
     width: 100%;
 }
@@ -408,10 +408,8 @@ nav.ol-panel {
     display: flex;
     flex-direction: row;
     height: 58px;
-}
-
-nav.ol-panel> :last-child {
-    margin-right: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 .ol-panel .ol-group {
@@ -654,9 +652,9 @@ nav.ol-panel> :last-child {
     align-items: center;
 }
 
-.ol-navbar-buttons-group > div {
+.ol-navbar-buttons-group>div {
     align-items: center;
-    display:flex;
+    display: flex;
     flex-direction: row;
 }
 
@@ -683,9 +681,16 @@ nav.ol-panel> :last-child {
     border: 1px solid white;
 }
 
-.ol-navbar-buttons-group button.off svg * {
-    fill: white !important;     /*  Higher price than the Soul Stone but inline styling is causing issues.  */
-    stroke: white !important;   /*  I'm sorry, daughter.  */
+.ol-navbar-buttons-group button.off svg *[fill="black"] {
+    fill: white !important;
+}
+
+.ol-navbar-buttons-group button.off svg *[stroke="black"] {
+    stroke: white !important;
+}
+
+.ol-navbar-buttons-group button.off.red svg *[fill="black"] {
+    fill: red !important;
 }
 
 .ol-navbar-buttons-group button svg * {
@@ -696,53 +701,54 @@ nav.ol-panel> :last-child {
 .ol-navbar-buttons-group .protectable button:first-of-type {
     border-bottom-right-radius: 0;
     border-top-right-radius: 0;
-    width:28px;
+    width: 28px;
 }
 
-.ol-navbar-buttons-group > .protectable > button.lock {
+.ol-navbar-buttons-group>.protectable>button.lock {
     align-items: center;
     background-color: var(--primary-red);
     border-bottom-left-radius: 0;
     border-top-left-radius: 0;
-    display:flex;
+    display: flex;
     justify-content: center;
-    width:18px;
+    width: 18px;
 }
 
-.ol-navbar-buttons-group > .protectable > button[data-protected].lock {
+.ol-navbar-buttons-group>.protectable>button[data-protected].lock {
     background-color: var(--background-grey);
 }
 
-.ol-navbar-buttons-group > .protectable > button.lock svg {
-    height:10px;
-    width:10px;
+.ol-navbar-buttons-group>.protectable>button.lock svg {
+    height: 10px;
+    width: 10px;
 }
 
 @keyframes lock-prompt {
     100% {
         opacity: 1;
     }
+
     0% {
         opacity: 0;
     }
 }
 
-.ol-navbar-buttons-group > .protectable > button[data-protected].lock.prompt svg {
+.ol-navbar-buttons-group>.protectable>button[data-protected].lock.prompt svg {
     animation: lock-prompt .25s alternate infinite;
 }
 
-.ol-navbar-buttons-group > .protectable > button.lock svg.locked * {
-    fill:white !important;
+.ol-navbar-buttons-group>.protectable>button.lock svg.locked * {
+    fill: white !important;
 }
 
-.ol-navbar-buttons-group > .protectable > button:not([data-protected]).lock svg.unlocked,
-.ol-navbar-buttons-group > .protectable > button[data-protected].lock svg.locked {
-    display:flex;
+.ol-navbar-buttons-group>.protectable>button:not([data-protected]).lock svg.unlocked,
+.ol-navbar-buttons-group>.protectable>button[data-protected].lock svg.locked {
+    display: flex;
 }
 
-.ol-navbar-buttons-group > .protectable > button[data-protected].lock svg.unlocked,
-.ol-navbar-buttons-group > .protectable > button:not([data-protected]).lock svg.locked {
-    display:none;
+.ol-navbar-buttons-group>.protectable>button[data-protected].lock svg.unlocked,
+.ol-navbar-buttons-group>.protectable>button:not([data-protected]).lock svg.locked {
+    display: none;
 }
 
 
@@ -750,8 +756,7 @@ nav.ol-panel> :last-child {
 #roe-buttons-container button,
 #reaction-to-threat-buttons-container button,
 #emissions-countermeasures-buttons-container button,
-#shots-scatter-buttons-container button
-#shots-intensity-buttons-container button {
+#shots-scatter-buttons-container button #shots-intensity-buttons-container button {
     align-items: center;
     background-color: transparent;
     border: 1px solid var(--accent-light-blue);
@@ -834,7 +839,7 @@ nav.ol-panel> :last-child {
         width: auto;
     }
 }
-  
+
 #splash-content::after {
     background-color: var(--background-steel);
     content: "";
@@ -1030,7 +1035,7 @@ nav.ol-panel> :last-child {
     font-size: 14px;
     font-weight: bolder;
     padding-left: 10px;
-    margin-left: -11px;
+    margin-left: -16px;
     margin-top: -0px;
     margin-bottom: -0px;
     height: 58px;
@@ -1068,15 +1073,8 @@ nav.ol-panel> :last-child {
 
 #spawn-points-container {
     height: 100%;
-    border-right: 1px solid gray;
     display: flex;
     align-items: center;
-    padding-right: 20px;
-}
-
-#command-mode-phase::before {
-    content: "Time to start";
-    font-size: 14px;
 }
 
 #command-mode-phase.setup-phase::after {
@@ -1085,7 +1083,6 @@ nav.ol-panel> :last-child {
     border-radius: 999px;
     padding: 5px 10px;
     background-color: var(--background-grey);
-    margin-left: 15px;
     content: attr(data-remaining-time);
     font-size: 14px;
 }
@@ -1099,20 +1096,17 @@ nav.ol-panel> :last-child {
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-#command-mode-phase.game-commenced::before {
-    content: "Game commenced";
-    font-weight: bold;
+    justify-content: center;
+    height: 100%;
 }
 
 #command-mode-phase.game-commenced::after {
-    content: "Spawn restrictions are being enforced";
-    font-size: 10px;
+    content: "Spawn restrictions on";
+    font-size: 12px;
 }
 
 #command-mode-phase.no-restrictions::after {
-    content: "No spawn restrictions";
+    content: "Spawn restrictions on";
     font-size: 10px;
 }
 
@@ -1327,8 +1321,8 @@ dl.ol-data-grid dd {
 
 .ol-dialog-content table th {
     background-color: var(--background-grey);
-    color:white;
-    font-size:14px;
+    color: white;
+    font-size: 14px;
     font-weight: normal;
 }
 
@@ -1349,12 +1343,18 @@ dl.ol-data-grid dd {
     overflow-y: auto;
 }
 
-.ol-checkbox label {
+.ol-checkbox label,
+.ol-text-input label {
     align-items: center;
     cursor: pointer;
     display: flex;
     flex-wrap: nowrap;
     white-space: nowrap;
+}
+
+.ol-text-input label {
+    justify-content: space-between;
+    width: 100%;
 }
 
 .ol-checkbox input[type="checkbox"] {
@@ -1388,16 +1388,19 @@ dl.ol-data-grid dd {
 .ol-text-input input {
     background-color: var(--background-grey);
     border: 1px solid var(--background-grey);
-    border-radius: 5px;
     border-radius: var(--border-radius-sm);
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    /*box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);*/
     color: var(--background-offwhite);
     height: 32px;
     text-align: center;
 }
 
+.ol-text-input.border input {
+    border: 1px solid var(--background-offwhite);
+}
+
 .ol-text-input input[disabled] {
-    color:var(--ol-dialog-disabled-text-color);
+    color: var(--ol-dialog-disabled-text-color);
 }
 
 input[type=number] {
@@ -1441,7 +1444,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 .ol-button-apply[disabled] {
     border-color: var(--ol-dialog-disabled-text-color);
-    color:var(--ol-dialog-disabled-text-color);
+    color: var(--ol-dialog-disabled-text-color);
 }
 
 .ol-button-apply::before {
@@ -1525,49 +1528,49 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .switch-control.yes-no .ol-switch[data-value="false"] .ol-switch-fill {
-	background-color: var(--ol-switch-off);
+    background-color: var(--ol-switch-off);
 }
 
 .switch-control.yes-no .ol-switch[data-value="undefined"] .ol-switch-fill {
-	background-color: var(--ol-switch-undefined);
+    background-color: var(--ol-switch-undefined);
 }
 
 .switch-control.coalition .ol-switch>.ol-switch-fill::before,
 .switch-control.yes-no .ol-switch>.ol-switch-fill::before {
-    translate:-100% 0;
+    translate: -100% 0;
     transform: none;
 }
 
 .switch-control.yes-no .ol-switch[data-value="true"]>.ol-switch-fill::before {
-	content: "YES";
+    content: "YES";
 }
 
 .switch-control.yes-no .ol-switch[data-value="false"]>.ol-switch-fill::before {
-	content: "NO";
+    content: "NO";
 }
 
 .switch-control.coalition [data-value="true"] .ol-switch-fill {
-	background-color: var(--primary-blue);
+    background-color: var(--primary-blue);
 }
 
 .switch-control.coalition [data-value="false"] .ol-switch-fill {
-	background-color: var(--primary-red);
+    background-color: var(--primary-red);
 }
 
 .switch-control.coalition [data-value="undefined"] .ol-switch-fill {
-	background-color: var(--primary-neutral);
+    background-color: var(--primary-neutral);
 }
 
 .switch-control.coalition [data-value="true"] .ol-switch-fill::before {
-	content: "BLUE";
+    content: "BLUE";
 }
 
 .switch-control.coalition [data-value="false"] .ol-switch-fill::before {
-	content: "RED";
+    content: "RED";
 }
 
 .switch-control.no-label [data-value] .ol-switch-fill::before {
-    content:"";
+    content: "";
 }
 
 .ol-context-menu>ul {
@@ -1628,17 +1631,17 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 #map-visibility-options .ol-select-options .ol-checkbox {
-    font-size:13px;
-    font-weight:400;
-    padding:6px 15px;
+    font-size: 13px;
+    font-weight: 400;
+    padding: 6px 15px;
 }
 
 #map-visibility-options .ol-select-options .ol-checkbox:first-of-type {
-    padding-top:12px;
+    padding-top: 12px;
 }
 
 #map-visibility-options .ol-select-options .ol-checkbox:last-of-type {
-    padding-bottom:12px;
+    padding-bottom: 18px;
 }
 
 #map-visibility-options .ol-select-options .ol-checkbox label:hover span {
@@ -1658,19 +1661,19 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .file-import-export .ol-dialog-content {
-    display:flex;
+    display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
 .file-import-export p {
     background-color: var(--background-grey);
-    border-left:6px solid var(--secondary-blue-text);
-    padding:12px;
+    border-left: 6px solid var(--secondary-blue-text);
+    padding: 12px;
 }
 
 .file-import-export th {
-    padding:4px 6px;
+    padding: 4px 6px;
 }
 
 .file-import-export tr td:first-child {
@@ -1678,12 +1681,12 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .file-import-export td {
-    color:white;
+    color: white;
     text-align: center;
 }
 
 .file-import-export .ol-checkbox {
-    display:flex;
+    display: flex;
     justify-content: center;
 }
 
@@ -1692,7 +1695,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .file-import-export .ol-checkbox span {
-    display:none;
+    display: none;
 }
 
 .file-import-export button.start-transfer {
@@ -1732,7 +1735,7 @@ input[type=number]::-webkit-outer-spin-button {
     pointer-events: none;
 }
 
-.file-import-export .ol-dialog-footer button:first-of-type{
+.file-import-export .ol-dialog-footer button:first-of-type {
     margin-left: auto;
 }
 
@@ -1742,3 +1745,31 @@ input[type=number]::-webkit-outer-spin-button {
     }
 }
 
+#camera-link-type-switch {
+    width: 60px;
+    height: 25px;
+}
+
+#camera-link-type-switch[data-value="true"]>.ol-switch-fill::before {
+	content: "MAP";
+}
+
+#camera-link-type-switch[data-value="false"]>.ol-switch-fill::before {
+	content: "LIVE";
+}
+
+#camera-link-type-switch[data-value="true"]>.ol-switch-fill {
+    background-color: var(--background-grey);
+}
+
+#camera-link-type-switch[data-value="false"]>.ol-switch-fill {
+    background-color: var(--background-offwhite);
+}
+
+#camera-link-type-switch[data-value="false"]>.ol-switch-fill::before {
+    color: var(--background-steel);
+}
+
+#camera-link-type-switch[data-value="false"]>.ol-switch-fill::after {
+    background-color: var(--background-steel);
+}

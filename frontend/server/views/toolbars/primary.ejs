@@ -6,7 +6,8 @@
         <div class="ol-select-options">
             <div id="toolbar-summary">
                 <h3>DCS Olympus</h3>
-                <div class="accent-green app-version-number">version {{OLYMPUS_VERSION_NUMBER}}.{{OLYMPUS_COMMIT_HASH}}</div>
+                <div class="accent-green app-version-number">version {{OLYMPUS_VERSION_NUMBER}}.{{OLYMPUS_COMMIT_HASH}}
+                </div>
             </div>
             <div>
                 <a href="https://discord.gg/wWXyVVBZT7" target="_blank">Discord</a>
@@ -31,14 +32,16 @@
 
     <div class="ol-group">
         <div id="map-type" class="ol-select">
-            <div class="ol-select-value"><img src="resources/theme/images/icons/map-source.svg" inject-svg /><span class="ol-select-value-text">ArcGIS Satellite</span></div>
+            <div class="ol-select-value"><img src="resources/theme/images/icons/map-source.svg" inject-svg /><span
+                    class="ol-select-value-text">ArcGIS Satellite</span></div>
             <div class="ol-select-options">
                 <!-- Here the available map sources will be listed-->
             </div>
         </div>
 
         <div id="map-visibility-options" class="ol-select">
-            <div class="ol-select-value"><img src="/resources/theme/images/icons/gears-solid.svg" inject-svg />Options</div>
+            <div class="ol-select-value"><img src="/resources/theme/images/icons/gears-solid.svg" inject-svg />Options
+            </div>
             <div class="ol-select-options">
                 <!-- This is where the advanced visibility options will be listed -->
             </div>
@@ -57,17 +60,51 @@
     <div id="coalition-visibility-control" class="ol-group ol-navbar-buttons-group">
         <div>
             <button id="coalition-visibility-control-blue" data-on-click="toggleCoalitionVisibility"
-                data-on-click-params='{ "coalition": "blue" }' title="Toggle Blue coalition visibility"><img src="/resources/theme/images/buttons/visibility/shield.svg" class="fill-coalition" data-coalition="blue" inject-svg /></button>
+                data-on-click-params='{ "coalition": "blue" }' title="Toggle Blue coalition visibility"><img
+                    src="/resources/theme/images/buttons/visibility/shield.svg" class="fill-coalition"
+                    data-coalition="blue" inject-svg /></button>
         </div>
 
         <div>
             <button id="coalition-visibility-control-red" data-on-click="toggleCoalitionVisibility"
-                data-on-click-params='{ "coalition": "red" }' title="Toggle Red coalition visibility"><img src="/resources/theme/images/buttons/visibility/shield.svg" class="fill-coalition" data-coalition="red" inject-svg /></button>
+                data-on-click-params='{ "coalition": "red" }' title="Toggle Red coalition visibility"><img
+                    src="/resources/theme/images/buttons/visibility/shield.svg" class="fill-coalition"
+                    data-coalition="red" inject-svg /></button>
         </div>
 
         <div>
             <button id="coalition-visibility-control-neutral" data-on-click="toggleCoalitionVisibility"
-                data-on-click-params='{ "coalition": "neutral" }' title="Toggle Neutral coalition visibility"><img src="/resources/theme/images/buttons/visibility/shield.svg" class="fill-coalition" data-coalition="neutral" inject-svg /></button>
+                data-on-click-params='{ "coalition": "neutral" }' title="Toggle Neutral coalition visibility"><img
+                    src="/resources/theme/images/buttons/visibility/shield.svg" class="fill-coalition"
+                    data-coalition="neutral" inject-svg /></button>
         </div>
+    </div>
+</nav>
+<nav class="ol-panel" oncontextmenu="return false;">
+    <div id="camera-label" class="ol-panel-tab">
+        <img src="resources/theme/images/icons/camera.svg" inject-svg />
+        <span>Camera</span>
+    </div>
+    <div id="camera-control" class="ol-group ol-navbar-buttons-group">
+        <div>
+            <button class="off red" id="camera-link-control" data-on-click="toggleCameraLinkStatus"
+                title="Camera link to DCS is not available"><img src="/resources/theme/images/buttons/camera/linked.svg"
+                    inject-svg /></button>
+        </div>
+
+        <div id="camera-link-type-switch" class="ol-switch"></div>
+
+        <!--
+        <div>
+            <button class="off" id="camera-slew-to-position" data-on-click="slewCameraToPosition" title="Camera link to DCS is not available"><img src="/resources/theme/images/buttons/camera/slew.svg" inject-svg /></button>
+        </div>
+
+        <div>
+            <button style="color: black" id="camera-link-control-map" data-on-click="toggleCameraLinkMapType"
+                title="Camera link to DCS is not available"><img src="/resources/theme/images/buttons/camera/F10.svg"
+                    inject-svg /></button>
+        </div>
+
+        -->
     </div>
 </nav>

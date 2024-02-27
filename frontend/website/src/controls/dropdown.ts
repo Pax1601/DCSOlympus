@@ -117,6 +117,13 @@ export class Dropdown {
         this.#options.appendChild(optionElement);
     }
 
+    addHorizontalDivider() {
+        let div = document.createElement("div");
+        let hr = document.createElement('hr');
+        div.appendChild(hr);
+        this.#options.appendChild(div);
+    }
+
     /** Select the active value of the dropdown
      * 
      * @param idx The index of the element to select

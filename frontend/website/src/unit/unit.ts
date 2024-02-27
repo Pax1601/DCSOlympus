@@ -1654,7 +1654,7 @@ export class GroundUnit extends Unit {
 
     /* When we zoom past the grouping limit, grouping is enabled and the unit is a leader, we redraw the unit to apply any possible grouped marker */
     checkZoomRedraw(): boolean {
-        return (this.getIsLeader() && getApp().getMap().getVisibilityOptions()[HIDE_GROUP_MEMBERS] &&
+        return (this.getIsLeader() && getApp().getMap().getVisibilityOptions()[HIDE_GROUP_MEMBERS] as boolean &&
             (getApp().getMap().getZoom() >= GROUPING_ZOOM_TRANSITION && getApp().getMap().getPreviousZoom() < GROUPING_ZOOM_TRANSITION ||
                 getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION && getApp().getMap().getPreviousZoom() >= GROUPING_ZOOM_TRANSITION))
     }
