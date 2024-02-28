@@ -5,6 +5,7 @@ import time
 import os
 import yaml
 import json
+import numpy
 
 from fastkml import kml
 from shapely import wkt, Point
@@ -19,7 +20,7 @@ tot_futs = 0
 
 # constants
 C = 40075016.686                # meters, Earth equatorial circumference
-R = C / (2 * math.pi)
+R = C / (2 * math.pi)			# meters, Earth equatorial radius
                       
 def deg_to_num(lat_deg, lon_deg, zoom):
 	lat_rad = math.radians(lat_deg)
@@ -60,9 +61,9 @@ def extract_tiles(n, screenshots_XY, params):
 	n_height = params['n_height']
 
 	XY = screenshots_XY[n]
-	if (os.path.exists(os.path.join(output_directory, "screenshots", f"{f}_{n}.jpg"))):
+	if (os.path.exists(os.path.join(output_directory, "screenshots", f"{f}_{n}_{zoom}.jpg"))):
 		# Open the source screenshot
-		img = Image.open(os.path.join(output_directory, "screenshots", f"{f}_{n}.jpg"))
+		img = Image.open(os.path.join(output_directory, "screenshots", f"{f}_{n}_{zoom}.jpg"))
 
 		# Compute the Web Mercator Projection position of the top left corner of the most centered tile
 		X_center, Y_center = XY[0], XY[1]
@@ -84,6 +85,7 @@ def extract_tiles(n, screenshots_XY, params):
 					try:
 						os.mkdir(os.path.join(output_directory, "tiles", str(zoom), str(X)))
 					except FileExistsError:
+						# Ignore this error, it means one other thread has already created the folder
 						continue
 					except Exception as e: 
 						raise e
@@ -91,33 +93,53 @@ def extract_tiles(n, screenshots_XY, params):
 		n += 1
 
 	else:
-		raise Exception(f"{os.path.join(output_directory, 'screenshots', f'{f}_{n}.jpg')} missing")
+		raise Exception(f"{os.path.join(output_directory, 'screenshots', f'{f}_{n}_{zoom}.jpg')} missing")
 	
 def merge_tiles(base_path, zoom, tile):
 	X = tile[0]
 	Y = tile[1]
 
-	positions = [(0, 0), (0, 1), (1, 0), (1, 1)]
+	# If the image already exists, open it so we can paste the higher quality data in it
+	if os.path.exists(os.path.join(base_path, str(zoom - 1), str(X), f"{Y}.jpg")):
+		dst = Image.open(os.path.join(base_path, str(zoom - 1), str(X), f"{Y}.jpg"))
+		dst = make_background_transparent(dst)
+	else:
+		dst = Image.new('RGB', (256, 256), (221, 221, 221))
 
-	dst = Image.new('RGB', (256, 256), (0, 0, 0, 0))
+	# Loop on all the 4 subtiles in the tile
+	positions = [(0, 0), (0, 1), (1, 0), (1, 1)]
 	for i in range(0, 4):
+		# Open the subtile, if it exists, and resize it down to 128x128
 		if os.path.exists(os.path.join(base_path, str(zoom), str(2*X + positions[i][0]), f"{2*Y + positions[i][1]}.jpg")):
 			im = Image.open(os.path.join(base_path, str(zoom), str(2*X + positions[i][0]), f"{2*Y + positions[i][1]}.jpg")).resize((128, 128))
-		else:
-			im = Image.new('RGB', (128, 128), (0, 0, 0, 0))
-		dst.paste(im, (positions[i][0] * 128, positions[i][1] * 128))
+			im = make_background_transparent(im)
+			dst.paste(im, (positions[i][0] * 128, positions[i][1] * 128))
 
+	# Create the output folder if it exists
 	if not os.path.exists(os.path.join(base_path, str(zoom - 1), str(X))):
 		try:
 			os.mkdir(os.path.join(base_path, str(zoom - 1), str(X)))
 		except FileExistsError:
+			# Ignore this error, it means one other thread has already created the folder
 			pass
 		except Exception as e: 
 			raise e
-		
-	dst.save(os.path.join(base_path, str(zoom - 1), str(X), f"{Y}.jpg"), quality=95)
 	
-def run(map_config):
+	# Save the image
+	dst.convert('RGB').save(os.path.join(base_path, str(zoom - 1), str(X), f"{Y}.jpg"), quality=95)
+	
+def make_background_transparent(im):
+	im.putalpha(255)
+	data = numpy.array(im)  
+	red, green, blue, alpha = data.T
+
+	# If present, remove any "background" areas
+	background_areas = (red == 221) & (blue == 221) & (green == 221)
+	data[..., :][background_areas.T] = (0, 0, 0, 0) # make transparent
+
+	return Image.fromarray(data)
+
+def run(map_config, port):
 	global tot_futs, fut_counter
 
 	with open('configs/screen_properties.yml', 'r') as sp:
@@ -203,8 +225,8 @@ def run(map_config):
 						# Making PUT request
 						# If the number of rows or columns is odd, we need to take the picture at the CENTER of the tile!
 						lat, lng = num_to_deg(XY[0] + (n_width % 2) / 2, XY[1] + (n_height % 2) / 2, zoom)
-						data = json.dumps({'lat': lat, 'lng': lng, 'alt': 1350 + map_config['zoom_factor'] * (25000 - 1350)})
-						r = requests.put('http://localhost:8080', data = data)
+						data = json.dumps({'lat': lat, 'lng': lng, 'alt': 1350 + map_config['zoom_factor'] * (25000 - 1350), 'mode': 'map'})
+						r = requests.put(f'http://127.0.0.1:{port}', data = data)
 
 						geo_data = json.loads(r.text)
 
@@ -233,7 +255,7 @@ def run(map_config):
 						sy = s_height / m_height
 
 						# Resize, rotate and save the screenshot
-						screenshot.resize((int(sx * screenshot.width), int(sy * screenshot.height))).rotate(math.degrees(geo_data['northRotation'])).save(os.path.join(output_directory, "screenshots", f"{f}_{n}.jpg"), quality=95)
+						screenshot.resize((int(sx * screenshot.width), int(sy * screenshot.height))).rotate(math.degrees(geo_data['northRotation'])).save(os.path.join(output_directory, "screenshots", f"{f}_{n}_{zoom}.jpg"), quality=95)
 
 						printProgressBar(n + 1, len(screenshots_XY))
 						n += 1

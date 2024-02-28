@@ -2,7 +2,6 @@ import sys
 import yaml
 import json
 import requests
-import time
 
 from pyproj import Geod
 from fastkml import kml
@@ -10,6 +9,9 @@ from shapely import wkt
 from datetime import timedelta
 
 import map_generator
+
+# Port on which the camera control module is listening
+port = 3003
 
 if len(sys.argv) == 1:
     print("Please provide a configuration file as first argument. You can also drop the configuration file on this script to run it.")
@@ -53,9 +55,12 @@ else:
 
                 if 'geo_width' not in map_config:
                     # Let the user input the size of the screen to compute resolution
-                    data = json.dumps({'lat': features[0].geometry.bounds[1], 'lng': features[0].geometry.bounds[0], 'alt': 1350 + map_config['zoom_factor'] * (25000 - 1350)})
-                    r = requests.put('http://localhost:8080', data = data)
-                    print("The F10 map in your DCS installation was setup. Please, use the measure tool and measure the width of the screen in Nautical Miles")
+                    data = json.dumps({'lat': features[0].geometry.bounds[1], 'lng': features[0].geometry.bounds[0], 'alt': 1350 + map_config['zoom_factor'] * (25000 - 1350), 'mode': 'map'})
+                    try:
+                        r = requests.put(f'http://127.0.0.1:{port}', data = data)
+                        print("The F10 map in your DCS installation was setup. Please, use the measure tool and measure the width of the screen in Nautical Miles")
+                    except:
+                        print("No running DCS instance detected. You can still run the algorithm if you already took the screenshots, otherwise you will not be able to produce a map.")
                     map_config['geo_width'] = input("Insert the width of the screen in Nautical Miles: ")
                 
                 map_config['mpps'] = float(map_config['geo_width']) * 1852 / screen_config['width']
@@ -72,7 +77,7 @@ else:
                 print(f"Estimated time to complete: {timedelta(seconds=total_time * 0.15)} (hh:mm:ss)")
                 input("Press enter to continue...")
                 
-                map_generator.run(map_config)
+                map_generator.run(map_config, port)
 
     
 

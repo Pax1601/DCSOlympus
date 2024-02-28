@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "main.py",
             "console": "integratedTerminal",
-            "args": ["./configs/NTTR/config.yml"]
+            "args": ["./configs/Caucasus/HighResolution.yml"]
         }
     ]
 }

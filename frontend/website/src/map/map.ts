@@ -582,7 +582,8 @@ export class Map extends L.Map {
 
     setCameraControlMode(newCameraControlMode: string) {
         this.#cameraControlMode = newCameraControlMode;
-        this.#broadcastPosition();
+        if (this.#slaveDCSCamera)
+            this.#broadcastPosition();
     }
 
     /* Event handlers */
@@ -773,7 +774,7 @@ export class Map extends L.Map {
             try {
                 groundElevation = parseFloat(response);
                 var xmlHttp = new XMLHttpRequest();
-                xmlHttp.open("PUT", `http://localhost:${this.#cameraControlPort}`);
+                xmlHttp.open("PUT", `http://127.0.0.1:${this.#cameraControlPort}`);
                 xmlHttp.setRequestHeader("Content-Type", "application/json");
 
                 const C = 40075016.686;
@@ -981,7 +982,7 @@ export class Map extends L.Map {
 
     #checkCameraPort(){
         var xmlHttp = new XMLHttpRequest();
-            xmlHttp.open("OPTIONS", `http://localhost:${this.#cameraControlPort}`);
+            xmlHttp.open("OPTIONS", `http://127.0.0.1:${this.#cameraControlPort}`);
             xmlHttp.onload = (res: any) => {
                 if (xmlHttp.status == 200)
                     this.#setSlaveDCSCameraAvailable(true);
