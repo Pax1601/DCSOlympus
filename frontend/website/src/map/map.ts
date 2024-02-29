@@ -223,15 +223,15 @@ export class Map extends L.Map {
         })
 
         document.addEventListener("toggleCameraLinkStatus", () => {
-            if (this.#slaveDCSCameraAvailable) {
+            // if (this.#slaveDCSCameraAvailable) { // Commented to experiment with usability
                 this.setSlaveDCSCamera(!this.#slaveDCSCamera);
-            }
+            // }
         })
 
         document.addEventListener("slewCameraToPosition", () => {
-            if (this.#slaveDCSCameraAvailable) {
+            // if (this.#slaveDCSCameraAvailable) { // Commented to experiment with usability
                 this.#broadcastPosition();
-            }
+            // }
         })
 
         /* Pan interval */
@@ -571,13 +571,13 @@ export class Map extends L.Map {
     }
 
     setSlaveDCSCamera(newSlaveDCSCamera: boolean) {
-        if (this.#slaveDCSCameraAvailable || !newSlaveDCSCamera) {
+        // if (this.#slaveDCSCameraAvailable || !newSlaveDCSCamera) { // Commented to experiment with usability
             this.#slaveDCSCamera = newSlaveDCSCamera;
             let button = document.getElementById("camera-link-control");
             button?.classList.toggle("off", !newSlaveDCSCamera);
             if (newSlaveDCSCamera)
                 this.#broadcastPosition();
-        }
+        // }
     }
 
     setCameraControlMode(newCameraControlMode: string) {
@@ -970,7 +970,7 @@ export class Map extends L.Map {
         let linkButton = document.getElementById("camera-link-control");
         if (linkButton) {
             if (!newSlaveDCSCameraAvailable) {
-                this.setSlaveDCSCamera(false);
+                //this.setSlaveDCSCamera(false); // Commented to experiment with usability
                 linkButton.classList.add("red");
                 linkButton.title = "Camera link to DCS is not available";
             } else {

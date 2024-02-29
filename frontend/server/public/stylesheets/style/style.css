@@ -689,7 +689,7 @@ nav.ol-panel {
     stroke: white !important;
 }
 
-.ol-navbar-buttons-group button.off.red svg *[fill="black"] {
+.ol-navbar-buttons-group button.red svg *[fill="black"] {
     fill: red !important;
 }
 
