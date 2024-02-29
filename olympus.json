@@ -16,13 +16,6 @@
             "password": null
         }, 
 		"additionalMaps": {
-			"DCS": {
-				"urlTemplate": "http://localhost:3000/maps/dcs/{z}/{x}/{y}.jpg",
-				"minZoom": 8,
-				"maxZoom": 20,
-				"maxNativeZoom": 17,
-				"attribution": "Eagle Dynamics"
-			}
 		}
     }
 }
