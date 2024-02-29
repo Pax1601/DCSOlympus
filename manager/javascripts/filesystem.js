@@ -11,6 +11,8 @@ var logger = new Console(output, output);
 const date = new Date();
 output.write(` ======================= New log starting at ${date.toString()} =======================\n`);
 
+var EXPORT_STRING = "pcall(function() local olympusLFS=require('lfs');dofile(olympusLFS.writedir()..[[Mods\\Services\\Olympus\\Scripts\\OlympusCameraControl.lua]]); end,nil) ";
+
 /** Conveniency function to asynchronously delete a single file, with error catching
  * 
  * @param {String} filePath The path to the file to delete
@@ -172,6 +174,29 @@ async function applyConfiguration(folder, instance) {
     }
 }
 
+/** Asynchronously install the camera control plugin 
+ * 
+ * @param {String} folder The base Saved Games folder where Olympus is installed
+ */
+async function installCameraPlugin(folder) {
+    logger.log(`Installing camera support plugin to  DCS in ${folder}`);
+    /* If the export file doesn't exist, create it */
+    if (!(await exists(path.join(folder, "Scripts", "export.lua")))) {
+        await fsp.writeFile(path.join(folder, "Scripts", "export.lua"), EXPORT_STRING);
+    } else {
+        let content = await fsp.readFile(path.join(folder, "Scripts", "export.lua"), { encoding: 'utf8' });
+        if (content.indexOf(EXPORT_STRING) != -1) {
+            /* Looks like the export string is already installed, nothing to do */
+        }
+        else {
+            /* Append the export string at the end of the file */
+            content += ("\n" + EXPORT_STRING);
+        }
+        /* Write the content of the file */
+        await fsp.writeFile(path.join(folder, "Scripts", "export.lua"), content)
+    }
+}
+
 /** Asynchronously deletes the Hooks script 
  * 
  * @param {String} folder The base Saved Games folder where Olympus is installed
@@ -231,15 +256,40 @@ async function deleteShortCuts(folder, name) {
     logger.log(`ShortCuts deleted from ${folder} and desktop`);
 }
 
+/** Asynchronously removes the camera plugin string from the export lua file
+ * 
+ * @param {String} folder The base Saved Games folder where Olympus is installed
+ */
+async function deleteCameraPlugin(folder) {
+    logger.log(`Deleting camera support plugin to  DCS in ${folder}`);
+    if (!(await exists(path.join(folder, "Scripts", "export.lua")))) {
+        /* If the export file doesn't exist, nothing to do */
+    } else {
+        let content = await fsp.readFile(path.join(folder, "Scripts", "export.lua"), { encoding: 'utf8' });
+        if (content.indexOf(EXPORT_STRING) ==+ -1) {
+            /* Looks like the export string is not installed, nothing to do */
+        }
+        else {
+            /* Remove the export string from the file */
+            content = content.replace(EXPORT_STRING, "")
+
+            /* Write the content of the file */
+            await fsp.writeFile(path.join(folder, "Scripts", "export.lua"), content)
+        }
+    }
+}
+
 module.exports = {
     applyConfiguration: applyConfiguration,
     installJSON: installJSON,
     installHooks: installHooks,
     installMod: installMod,
-    installShortCuts, installShortCuts,
+    installShortCuts: installShortCuts,
+    installCameraPlugin: installCameraPlugin,
     deleteHooks: deleteHooks,
     deleteJSON: deleteJSON,
     deleteMod: deleteMod,
     deleteShortCuts: deleteShortCuts,
+    deleteCameraPlugin: deleteCameraPlugin,
     logger: logger
 }

@@ -6,7 +6,7 @@ const { checkPort, fetchWithTimeout, getFreePort } = require('./net')
 const dircompare = require('dir-compare');
 const { spawn } = require('child_process');
 const find = require('find-process');
-const { installHooks, installMod, installJSON, applyConfiguration, installShortCuts, deleteMod, deleteHooks, deleteJSON, deleteShortCuts } = require('./filesystem')
+const { installHooks, installMod, installJSON, applyConfiguration, installShortCuts, deleteMod, deleteHooks, deleteJSON, deleteShortCuts, installCameraPlugin, deleteCameraPlugin } = require('./filesystem')
 const { showErrorPopup, showConfirmPopup, showWaitLoadingPopup, setPopupLoadingProgress } = require('./popup')
 const { logger } = require("./filesystem")
 const { hidePopup } = require('./popup');
@@ -129,6 +129,7 @@ class DCSInstance {
     fps = 0;
     installationType = 'singleplayer';
     connectionsType = 'auto';
+    installCameraPlugin = 'install';
     gameMasterPasswordEdited = false;
     blueCommanderPasswordEdited = false;
     redCommanderPasswordEdited = false;
@@ -154,6 +155,7 @@ class DCSInstance {
         this.error = false;
         this.installationType = 'singleplayer';
         this.connectionsType = 'auto';
+        this.installCameraPlugin = 'install';
         
         /* Check if the olympus.json file is detected. If true, Olympus is considered to be installed */
         if (fs.existsSync(path.join(this.folder, "Config", "olympus.json"))) {
@@ -518,21 +520,27 @@ class DCSInstance {
             await sleep(100);
             await installHooks(getManager().getActiveInstance().folder);
 
-            setPopupLoadingProgress("Installing mod folder...", 20);
+            setPopupLoadingProgress("Installing mod folder...", 16);
             await sleep(100);
             await installMod(getManager().getActiveInstance().folder, getManager().getActiveInstance().name);
 
-            setPopupLoadingProgress("Installing JSON file...", 40);
+            setPopupLoadingProgress("Installing JSON file...", 33);
             await sleep(100);
             await installJSON(getManager().getActiveInstance().folder);
 
-            setPopupLoadingProgress("Applying configuration...", 60);
+            setPopupLoadingProgress("Applying configuration...", 50);
             await sleep(100);
             await applyConfiguration(getManager().getActiveInstance().folder, getManager().getActiveInstance());
 
-            setPopupLoadingProgress("Creating shortcuts...", 80);
+            setPopupLoadingProgress("Creating shortcuts...", 67);
             await sleep(100);
             await installShortCuts(getManager().getActiveInstance().folder, getManager().getActiveInstance().name);
+
+            if (getManager().getActiveInstance().installCameraPlugin === 'install') {
+                setPopupLoadingProgress("Installing camera plugin...", 83);
+                await sleep(100);
+                await installCameraPlugin(getManager().getActiveInstance().folder);
+            }
 
             setPopupLoadingProgress("Installation completed!", 100);
             await sleep(500);
@@ -575,17 +583,21 @@ class DCSInstance {
                 await sleep(100);
                 await deleteMod(this.folder, this.name);
 
-                setPopupLoadingProgress("Deleting hook scripts...", 25);
+                setPopupLoadingProgress("Deleting hook scripts...", 20);
                 await sleep(100);
                 await deleteHooks(this.folder);
 
-                setPopupLoadingProgress("Deleting JSON...", 50);
+                setPopupLoadingProgress("Deleting JSON...", 40);
                 await sleep(100);
                 await deleteJSON(this.folder);
 
-                setPopupLoadingProgress("Deleting shortcuts...", 75);
+                setPopupLoadingProgress("Deleting shortcuts...", 60);
                 await sleep(100);
                 await deleteShortCuts(this.folder, this.name);
+
+                setPopupLoadingProgress("Deleting camera plugin...", 80);
+                await sleep(100);
+                await deleteCameraPlugin(this.folder);
 
                 await sleep(500);
                 setPopupLoadingProgress("Instance removed!", 100);
