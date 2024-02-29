@@ -74,6 +74,7 @@ export interface UnitSpawnTable {
     unitType: string,
     location: LatLng,
     altitude?: number,
+    heading?: number,
     loadout?: string,
     skill?: string,
     liveryID: string
@@ -236,6 +237,7 @@ export interface UnitSpawnOptions {
     roleType: string;
     name: string;
     latlng: LatLng;
+    heading: number;
     coalition: string;
     count: number;
     country: string;

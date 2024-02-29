@@ -498,6 +498,7 @@ declare module "interfaces" {
         unitType: string;
         location: LatLng;
         altitude?: number;
+        heading?: number;
         loadout?: string;
         skill?: string;
         liveryID: string;
