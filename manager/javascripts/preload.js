@@ -67,7 +67,7 @@ async function updateOlympusBeta() {
     const artifacts = res.data.artifacts;
     
     /* Select the newest artifact */
-    var artifact = artifacts.find((artifact) => { return artifact.name = "development_build_not_a_release" });
+    var artifact = artifacts.find((artifact) => { return artifact.name === "development_build_not_a_release" });
 
     const date1 = new Date(artifact.updated_at);
     const date2 = fs.statSync(".").mtime;
