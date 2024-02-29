@@ -118,8 +118,8 @@ export class MissionManager {
                 } 
                 
                 commandModePhaseEl.classList.toggle("setup-phase", this.#remainingSetupTime > 0 && this.getCommandModeOptions().restrictSpawns);
-                commandModePhaseEl.classList.toggle("game-commenced", this.#remainingSetupTime <= 0 || !this.getCommandModeOptions().restrictSpawns);
-                commandModePhaseEl.classList.toggle("no-restrictions", !this.getCommandModeOptions().restrictSpawns);
+                //commandModePhaseEl.classList.toggle("game-commenced", this.#remainingSetupTime <= 0 || !this.getCommandModeOptions().restrictSpawns);
+                //commandModePhaseEl.classList.toggle("no-restrictions", !this.getCommandModeOptions().restrictSpawns);
             }
         }
     }

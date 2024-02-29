@@ -50,27 +50,26 @@
   <path
      d="m 10.664,18.4362 c 4.2922,0 7.7717,-3.4796 7.7717,-7.7717 0,-4.2921 -3.4796,-7.7717 -7.7717,-7.7717 -4.2921,0 -7.7717,3.4796 -7.7717,7.7717 0,4.2921 3.4796,7.7717 7.7717,7.7717 z m 0,2.8918 c 5.8893,0 10.664,-4.7742 10.664,-10.664 C 21.328,4.7742 16.5538,0 10.664,0 4.7742,0 0,4.7742 0,10.664 0,16.5538 4.7742,21.328 10.664,21.328 Z"
      clip-rule="evenodd"
-     fill="#ffffff"
      fill-rule="evenodd"
      stroke-width="0"
-     style="fill:#000000"
+	 fill="black"
      id="path7220" />
   <line
      x1="7.796"
      x2="13.187"
      y1="6.8541994"
      y2="14.231199"
-     stroke="#247BE2"
+     stroke="black"
      stroke-linecap="square"
-     style="fill:none;stroke:#000000"
+     style="fill:none;"
      id="line7222" />
   <line
      x1="14.397999"
      x2="7.8680005"
      y1="11.885201"
      y2="11.450199"
-     stroke="#247BE2"
+     stroke="black"
      stroke-linecap="square"
-     style="fill:none;stroke:#000000"
+     style="fill:none;"
      id="line7224" />
 </svg>

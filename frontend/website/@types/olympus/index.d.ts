@@ -176,7 +176,7 @@ declare module "constants/constants" {
             zoom: number;
         };
     };
-    export const mapLayers: {
+    export const defaultMapLayers: {
         "ArcGIS Satellite": {
             urlTemplate: string;
             minZoom: number;
@@ -235,6 +235,7 @@ declare module "constants/constants" {
     export const SHOW_UNIT_CONTACTS = "Show selected units contact lines";
     export const SHOW_UNIT_PATHS = "Show selected unit paths";
     export const SHOW_UNIT_TARGETS = "Show selected unit targets";
+    export const DCS_LINK_PORT = "DCS Camera link port";
     export enum DataIndexes {
         startOfData = 0,
         category = 1,
@@ -362,6 +363,7 @@ declare module "controls/dropdown" {
         setOptionsElements(optionsElements: HTMLElement[]): void;
         getOptionElements(): HTMLCollection;
         addOptionElement(optionElement: HTMLElement): void;
+        addHorizontalDivider(): void;
         /** Select the active value of the dropdown
          *
          * @param idx The index of the element to select
@@ -851,10 +853,11 @@ declare module "other/utils" {
     export function enumToCoalition(coalitionID: number): "" | "blue" | "red" | "neutral";
     export function coalitionToEnum(coalition: string): 0 | 1 | 2;
     export function convertDateAndTimeToDate(dateAndTime: DateAndTime): Date;
-    export function createCheckboxOption(value: string, text: string, checked?: boolean, callback?: CallableFunction, options?: any): HTMLElement;
+    export function createCheckboxOption(text: string, description: string, checked?: boolean, callback?: CallableFunction, options?: any): HTMLElement;
     export function getCheckboxOptions(dropdown: Dropdown): {
         [key: string]: boolean;
     };
+    export function createTextInputOption(text: string, description: string, initialValue: string, type: string, callback?: CallableFunction, options?: any): HTMLElement;
     export function getGroundElevation(latlng: LatLng, callback: CallableFunction): void;
 }
 declare module "controls/slider" {
@@ -1624,7 +1627,9 @@ declare module "map/map" {
          * @param ID - the ID of the HTML element which will contain the context menu
          */
         constructor(ID: string);
-        addVisibilityOption(option: string, defaultValue: boolean): void;
+        addVisibilityOption(option: string, defaultValue: boolean | number | string, options?: {
+            [key: string]: any;
+        }): void;
         setLayer(layerName: string): void;
         getLayers(): string[];
         setState(state: string): void;
@@ -1660,12 +1665,14 @@ declare module "map/map" {
         getSelectedCoalitionArea(): CoalitionArea | undefined;
         bringCoalitionAreaToBack(coalitionArea: CoalitionArea): void;
         getVisibilityOptions(): {
-            [key: string]: boolean;
+            [key: string]: string | number | boolean;
         };
         isZooming(): boolean;
         getPreviousZoom(): number;
         getIsUnitProtected(unit: Unit): boolean;
         getMapMarkerVisibilityControls(): MapMarkerVisibilityControl[];
+        setSlaveDCSCamera(newSlaveDCSCamera: boolean): void;
+        setCameraControlMode(newCameraControlMode: string): void;
     }
 }
 declare module "mission/bullseye" {
@@ -2612,6 +2619,7 @@ declare module "olympusapp" {
          */
         setLoginStatus(status: string): void;
         start(): void;
+        getConfig(): any;
     }
 }
 declare module "index" {

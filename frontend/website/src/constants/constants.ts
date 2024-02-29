@@ -154,7 +154,7 @@ export const mapBounds = {
     "SinaiMap": { bounds: new LatLngBounds([34.312222, 28.523333], [25.946944, 36.897778]), zoom: 4 },
 }
 
-export const mapLayers = {
+export const defaultMapLayers = {
     "ArcGIS Satellite": {
         urlTemplate: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
         minZoom: 1,
@@ -207,7 +207,7 @@ export const MAP_MARKER_CONTROLS: MapMarkerVisibilityControl[] = [{
     "toggles": ["human"],
     "tooltip": "Toggle human players' visibility"
 }, {
-    "image": "visibility/head-side-virus-solid.svg",
+    "image": "visibility/olympus.svg",
     "isProtected": false,
     "name": "Olympus",
     "protectable": false,
@@ -268,6 +268,7 @@ export const FILL_SELECTED_RING = "Fill the threat range rings of selected units
 export const SHOW_UNIT_CONTACTS = "Show selected units contact lines";
 export const SHOW_UNIT_PATHS = "Show selected unit paths";
 export const SHOW_UNIT_TARGETS = "Show selected unit targets";
+export const DCS_LINK_PORT = "DCS Camera link port";
 
 export enum DataIndexes {
     startOfData = 0,

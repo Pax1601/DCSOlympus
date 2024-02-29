@@ -7,12 +7,12 @@ import { AirbaseContextMenu } from "../contextmenus/airbasecontextmenu";
 import { Dropdown } from "../controls/dropdown";
 import { Airbase } from "../mission/airbase";
 import { Unit } from "../unit/unit";
-import { bearing, createCheckboxOption, polyContains } from "../other/utils";
+import { bearing, createCheckboxOption, createTextInputOption, deg2rad, getGroundElevation, polyContains } from "../other/utils";
 import { DestinationPreviewMarker } from "./markers/destinationpreviewmarker";
 import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
 import { SVGInjector } from '@tanem/svg-injector'
-import { mapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, MOVE_UNIT, SHOW_UNIT_CONTACTS, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, SHOW_UNIT_LABELS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, MAP_MARKER_CONTROLS } from "../constants/constants";
+import { defaultMapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, MOVE_UNIT, SHOW_UNIT_CONTACTS, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, SHOW_UNIT_LABELS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, MAP_MARKER_CONTROLS, DCS_LINK_PORT } from "../constants/constants";
 import { CoalitionArea } from "./coalitionarea/coalitionarea";
 import { CoalitionAreaContextMenu } from "../contextmenus/coalitionareacontextmenu";
 import { DrawingCursor } from "./coalitionarea/drawingcursor";
@@ -70,6 +70,11 @@ export class Map extends L.Map {
     #selecting: boolean = false;
     #isZooming: boolean = false;
     #previousZoom: number = 0;
+    #slaveDCSCamera: boolean = false;
+    #slaveDCSCameraAvailable: boolean = false;
+    #cameraControlTimer: number = 0;
+    #cameraControlPort: number = 3003;
+    #cameraControlMode: string = 'map';
 
     #destinationGroupRotation: number = 0;
     #computeDestinationRotation: boolean = false;
@@ -90,10 +95,11 @@ export class Map extends L.Map {
     #coalitionAreaContextMenu: CoalitionAreaContextMenu = new CoalitionAreaContextMenu("coalition-area-contextmenu");
 
     #mapSourceDropdown: Dropdown;
+    #mapLayers: any = defaultMapLayers;
     #mapMarkerVisibilityControls: MapMarkerVisibilityControl[] = MAP_MARKER_CONTROLS;
     #mapVisibilityOptionsDropdown: Dropdown;
     #optionButtons: { [key: string]: HTMLButtonElement[] } = {}
-    #visibilityOptions: { [key: string]: boolean } = {}
+    #visibilityOptions: { [key: string]: boolean | string | number } = {}
     #hiddenTypes: string[] = [];
 
     /**
@@ -120,10 +126,10 @@ export class Map extends L.Map {
 
         this.#ID = ID;
 
-        this.setLayer(Object.keys(mapLayers)[0]);
+        this.setLayer(Object.keys(this.#mapLayers)[0]);
 
         /* Minimap */
-        var minimapLayer = new L.TileLayer(mapLayers[Object.keys(mapLayers)[0] as keyof typeof mapLayers].urlTemplate, { minZoom: 0, maxZoom: 13 });
+        var minimapLayer = new L.TileLayer(this.#mapLayers[Object.keys(this.#mapLayers)[0]].urlTemplate, { minZoom: 0, maxZoom: 13 });
         this.#miniMapLayerGroup = new L.LayerGroup([minimapLayer]);
         this.#miniMapPolyline = new L.Polyline([], { color: '#202831' });
         this.#miniMapPolyline.addTo(this.#miniMapLayerGroup);
@@ -157,6 +163,7 @@ export class Map extends L.Map {
         this.on('drag', (e: any) => this.#onMouseMove(e));
         this.on('keydown', (e: any) => this.#onKeyDown(e));
         this.on('keyup', (e: any) => this.#onKeyUp(e));
+        this.on('move', (e: any) => { if (this.#slaveDCSCamera) this.#broadcastPosition() });
 
         /* Event listeners */
         document.addEventListener("toggleCoalitionVisibility", (ev: CustomEventInit) => {
@@ -200,7 +207,32 @@ export class Map extends L.Map {
 
         document.addEventListener("mapOptionsChanged", () => {
             this.getContainer().toggleAttribute("data-hide-labels", !this.getVisibilityOptions()[SHOW_UNIT_LABELS]);
+            this.#cameraControlPort = this.getVisibilityOptions()[DCS_LINK_PORT] as number;
         });
+
+        document.addEventListener("configLoaded", () => {
+            let config = getApp().getConfig();
+            if (config.additionalMaps) {
+                let additionalMaps = config.additionalMaps;
+                this.#mapLayers = {
+                    ...this.#mapLayers,
+                    ...additionalMaps
+                }
+                this.#mapSourceDropdown.setOptions(this.getLayers());
+            }
+        })
+
+        document.addEventListener("toggleCameraLinkStatus", () => {
+            // if (this.#slaveDCSCameraAvailable) { // Commented to experiment with usability
+                this.setSlaveDCSCamera(!this.#slaveDCSCamera);
+            // }
+        })
+
+        document.addEventListener("slewCameraToPosition", () => {
+            // if (this.#slaveDCSCameraAvailable) { // Commented to experiment with usability
+                this.#broadcastPosition();
+            // }
+        })
 
         /* Pan interval */
         this.#panInterval = window.setInterval(() => {
@@ -209,10 +241,19 @@ export class Map extends L.Map {
                     ((this.#panUp ? -1 : 0) + (this.#panDown ? 1 : 0)) * this.#deafultPanDelta * (this.#shiftKey ? 3 : 1)));
         }, 20);
 
+        /* Periodically check if the camera control endpoint is available */
+        this.#cameraControlTimer = window.setInterval(() => {
+            this.#checkCameraPort();
+        }, 1000)
+
         /* Option buttons */
         this.#createUnitMarkerControlButtons();
 
         /* Create the checkboxes to select the advanced visibility options */
+        this.addVisibilityOption(DCS_LINK_PORT, 3003, { min: 1024, max: 65535 });
+
+        this.#mapVisibilityOptionsDropdown.addHorizontalDivider();
+
         this.addVisibilityOption(SHOW_UNIT_CONTACTS, false);
         this.addVisibilityOption(HIDE_GROUP_MEMBERS, true);
         this.addVisibilityOption(SHOW_UNIT_PATHS, true);
@@ -224,21 +265,28 @@ export class Map extends L.Map {
         /* this.addVisibilityOption(FILL_SELECTED_RING, false); Removed since currently broken: TODO fix!*/
     }
 
-    addVisibilityOption(option: string, defaultValue: boolean) {
+    addVisibilityOption(option: string, defaultValue: boolean | number | string, options?: { [key: string]: any }) {
         this.#visibilityOptions[option] = defaultValue;
-        this.#mapVisibilityOptionsDropdown.addOptionElement(createCheckboxOption(option, option, defaultValue, (ev: any) => { this.#setVisibilityOption(option, ev); }));
+        if (typeof defaultValue === 'boolean')
+            this.#mapVisibilityOptionsDropdown.addOptionElement(createCheckboxOption(option, option, defaultValue as boolean, (ev: any) => { this.#setVisibilityOption(option, ev); }, options));
+        else if (typeof defaultValue === 'number')
+            this.#mapVisibilityOptionsDropdown.addOptionElement(createTextInputOption(option, option, defaultValue.toString(), 'number', (ev: any) => { this.#setVisibilityOption(option, ev); }, options));
+        else
+            this.#mapVisibilityOptionsDropdown.addOptionElement(createTextInputOption(option, option, defaultValue, 'text', (ev: any) => { this.#setVisibilityOption(option, ev); }, options));
     }
 
     setLayer(layerName: string) {
         if (this.#layer != null)
             this.removeLayer(this.#layer)
 
-        if (layerName in mapLayers) {
-            const layerData = mapLayers[layerName as keyof typeof mapLayers];
+        if (layerName in this.#mapLayers) {
+            const layerData = this.#mapLayers[layerName];
             var options: L.TileLayerOptions = {
                 attribution: layerData.attribution,
                 minZoom: layerData.minZoom,
-                maxZoom: layerData.maxZoom
+                maxZoom: layerData.maxZoom,
+                minNativeZoom: layerData.minNativeZoom,
+                maxNativeZoom: layerData.maxNativeZoom
             };
             this.#layer = new L.TileLayer(layerData.urlTemplate, options);
         }
@@ -247,7 +295,7 @@ export class Map extends L.Map {
     }
 
     getLayers() {
-        return Object.keys(mapLayers);
+        return Object.keys(this.#mapLayers);
     }
 
     /* State machine */
@@ -522,6 +570,22 @@ export class Map extends L.Map {
         return this.#mapMarkerVisibilityControls;
     }
 
+    setSlaveDCSCamera(newSlaveDCSCamera: boolean) {
+        // if (this.#slaveDCSCameraAvailable || !newSlaveDCSCamera) { // Commented to experiment with usability
+            this.#slaveDCSCamera = newSlaveDCSCamera;
+            let button = document.getElementById("camera-link-control");
+            button?.classList.toggle("off", !newSlaveDCSCamera);
+            if (newSlaveDCSCamera)
+                this.#broadcastPosition();
+        // }
+    }
+
+    setCameraControlMode(newCameraControlMode: string) {
+        this.#cameraControlMode = newCameraControlMode;
+        if (this.#slaveDCSCamera)
+            this.#broadcastPosition();
+    }
+
     /* Event handlers */
     #onClick(e: any) {
         if (!this.#preventLeftClick) {
@@ -704,6 +768,28 @@ export class Map extends L.Map {
         this.#isZooming = false;
     }
 
+    #broadcastPosition() {
+        getGroundElevation(this.getCenter(), (response: string) => {
+            var groundElevation: number | null = null;
+            try {
+                groundElevation = parseFloat(response);
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.open("PUT", `http://127.0.0.1:${this.#cameraControlPort}`);
+                xmlHttp.setRequestHeader("Content-Type", "application/json");
+
+                const C = 40075016.686;
+                let mpp = C * Math.cos(deg2rad(this.getCenter().lat)) / Math.pow(2, this.getZoom() + 8);
+                let d = mpp * 1920;
+                let alt = d / 2 * 1 / Math.tan(deg2rad(40));
+                if (alt > 100000)
+                    alt = 100000;
+                xmlHttp.send(JSON.stringify({ lat: this.getCenter().lat, lng: this.getCenter().lng, alt: alt + groundElevation, mode: this.#cameraControlMode }));
+            } catch {
+                console.warn("broadcastPosition: could not retrieve ground elevation")
+            }
+        });
+    }
+
     /* */
     #panToUnit(unit: Unit) {
         var unitPosition = new L.LatLng(unit.getPosition().lat, unit.getPosition().lng);
@@ -870,8 +956,47 @@ export class Map extends L.Map {
     }
 
     #setVisibilityOption(option: string, ev: any) {
-        this.#visibilityOptions[option] = ev.currentTarget.checked;
+        if (typeof this.#visibilityOptions[option] === 'boolean')
+            this.#visibilityOptions[option] = ev.currentTarget.checked;
+        else if (typeof this.#visibilityOptions[option] === 'number')
+            this.#visibilityOptions[option] = Number(ev.currentTarget.value);
+        else
+            this.#visibilityOptions[option] = ev.currentTarget.value;
         document.dispatchEvent(new CustomEvent("mapOptionsChanged"));
+    }
+
+    #setSlaveDCSCameraAvailable(newSlaveDCSCameraAvailable: boolean) {
+        this.#slaveDCSCameraAvailable = newSlaveDCSCameraAvailable;
+        let linkButton = document.getElementById("camera-link-control");
+        if (linkButton) {
+            if (!newSlaveDCSCameraAvailable) {
+                //this.setSlaveDCSCamera(false); // Commented to experiment with usability
+                linkButton.classList.add("red");
+                linkButton.title = "Camera link to DCS is not available";
+            } else {
+                linkButton.classList.remove("red");
+                linkButton.title = "Link/Unlink DCS camera with Olympus position";
+            }
+        }
+    }
+
+    #checkCameraPort(){
+        var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open("OPTIONS", `http://127.0.0.1:${this.#cameraControlPort}`);
+            xmlHttp.onload = (res: any) => {
+                if (xmlHttp.status == 200)
+                    this.#setSlaveDCSCameraAvailable(true);
+                else
+                    this.#setSlaveDCSCameraAvailable(false);
+            };
+            xmlHttp.onerror = (res: any) => {
+                this.#setSlaveDCSCameraAvailable(false);
+            }
+            xmlHttp.ontimeout = (res: any) => {
+                this.#setSlaveDCSCameraAvailable(false);
+            }
+            xmlHttp.timeout = 500;
+            xmlHttp.send("");
     }
 }
 

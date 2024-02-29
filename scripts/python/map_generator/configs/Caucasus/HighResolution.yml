@@ -1,0 +1,5 @@
+{
+  'output_directory': '.\Caucasus',                             # Where to save the output files
+  'boundary_file': '.\configs\Caucasus\airbases.kml',           # Input kml file setting the boundary of the map to create
+  'zoom_factor': 0.1                                            # [0: maximum zoom in (things look very big), 1: maximum zoom out (things look very small)] 
+}

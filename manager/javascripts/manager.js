@@ -32,6 +32,7 @@ class Manager {
     connectionsTypePage = null;
     connectionsPage = null;
     passwordsPage = null;
+    cameraPage = null;
     resultPage = null;
     instancesPage = null;
     expertSettingsPage = null;
@@ -103,9 +104,9 @@ class Manager {
             /* Get my public IP */
             this.getPublicIP().then(
                 (IP) => { this.setIP(IP); },
-                (err) => { 
+                (err) => {
                     logger.log(err)
-                    this.setIP(undefined); 
+                    this.setIP(undefined);
                 }
             )
 
@@ -142,6 +143,7 @@ class Manager {
             this.connectionsTypePage = new WizardPage(this, "./ejs/connectionsType.ejs");
             this.connectionsPage = new WizardPage(this, "./ejs/connections.ejs");
             this.passwordsPage = new WizardPage(this, "./ejs/passwords.ejs");
+            this.cameraPage = new WizardPage(this, "./ejs/camera.ejs");
             this.resultPage = new ManagerPage(this, "./ejs/result.ejs");
             this.instancesPage = new ManagerPage(this, "./ejs/instances.ejs");
             this.expertSettingsPage = new WizardPage(this, "./ejs/expertsettings.ejs");
@@ -159,7 +161,7 @@ class Manager {
                     this.setPort('backend', this.getActiveInstance().backendPort);
                 }
             }
-            
+
             /* Always force the IDLE state when reaching the menu page */
             this.menuPage.options.onShow = async () => {
                 await this.setState('IDLE');
@@ -337,6 +339,17 @@ class Manager {
         }
     }
 
+    /* When the camera control installation is selected */
+    async onInstallCameraControlClicked(type) {
+        this.connectionsTypePage.getElement().querySelector(`.install`).classList.toggle("selected", type === 'install');
+        this.connectionsTypePage.getElement().querySelector(`.no-install`).classList.toggle("selected", type === 'no-install');
+        if (this.getActiveInstance())
+            this.getActiveInstance().installCameraPlugin = type;
+        else {
+            showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${this.getLogLocation()} for more info. </div>`);
+        }
+    }
+
     /* When the next button of a wizard page is clicked */
     async onNextClicked() {
         /* Choose which page to show depending on the active page */
@@ -360,11 +373,11 @@ class Manager {
                 this.activePage.hide();
                 this.typePage.show();
             }
-        /* Installation type page */
+            /* Installation type page */
         } else if (this.activePage == this.typePage) {
             this.activePage.hide();
             this.connectionsTypePage.show();
-        /* Connection type page */
+            /* Connection type page */
         } else if (this.activePage == this.connectionsTypePage) {
             if (this.getActiveInstance()) {
                 if (this.getActiveInstance().connectionsType === 'auto') {
@@ -374,24 +387,28 @@ class Manager {
                 else {
                     this.activePage.hide();
                     this.connectionsPage.show();
-                    (this.getMode() === 'basic'? this.connectionsPage: this.expertSettingsPage).getElement().querySelector(".backend-address .checkbox").classList.toggle("checked", this.getActiveInstance().backendAddress === '*')
+                    (this.getMode() === 'basic' ? this.connectionsPage : this.expertSettingsPage).getElement().querySelector(".backend-address .checkbox").classList.toggle("checked", this.getActiveInstance().backendAddress === '*')
                 }
             } else {
                 showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${this.getLogLocation()} for more info. </div>`)
             }
-        /* Connection page */
+            /* Connection page */
         } else if (this.activePage == this.connectionsPage) {
             if (await this.checkPorts()) {
                 this.activePage.hide();
                 this.passwordsPage.show();
-            } 
-        /* Passwords page */
+            }
+            /* Passwords page */
         } else if (this.activePage == this.passwordsPage) {
             if (await this.checkPasswords()) {
                 this.activePage.hide();
-                this.getState() === 'INSTALL' ? this.getActiveInstance().install() : this.getActiveInstance().edit();
+                this.cameraPage.show()
             }
-        /* Expert settings page */
+            /* Installation type page */
+        } else if (this.activePage == this.cameraPage) {
+            this.activePage.hide();
+            this.getState() === 'INSTALL' ? this.getActiveInstance().install() : this.getActiveInstance().edit(); 
+            /* Expert settings page */
         } else if (this.activePage == this.expertSettingsPage) {
             if (await this.checkPorts() && await this.checkPasswords()) {
                 this.activePage.hide();
@@ -416,7 +433,7 @@ class Manager {
     async onCancelClicked() {
         this.activePage.hide();
         await this.setState('IDLE');
-        if (this.getMode() === "basic") 
+        if (this.getMode() === "basic")
             this.menuPage.show(true);
         else
             this.instancesPage.show(true);
@@ -441,7 +458,7 @@ class Manager {
 
         if (this.getActiveInstance())
             this.getActiveInstance().setBlueCommanderPassword(value);
-        else 
+        else
             showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${this.getLogLocation()} for more info. </div>`);
     }
 
@@ -450,9 +467,9 @@ class Manager {
             input.placeholder = "";
         }
 
-        if (this.getActiveInstance()) 
+        if (this.getActiveInstance())
             this.getActiveInstance().setRedCommanderPassword(value);
-        else 
+        else
             showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${this.getLogLocation()} for more info. </div>`);
     }
 
@@ -480,6 +497,20 @@ class Manager {
             } else {
                 this.expertSettingsPage.getElement().querySelector(".backend-address .checkbox").classList.toggle("checked", this.getActiveInstance().backendAddress === '*')
             }
+        } else {
+            showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${this.getLogLocation()} for more info. </div>`)
+        }
+    }
+
+    /* When the "Enable camera control plugin" checkbox is clicked */
+    async onEnableCameraPluginClicked() {
+        if (this.getActiveInstance()) {
+            if (this.getActiveInstance().installCameraPlugin === 'install') {
+                this.getActiveInstance().installCameraPlugin = 'no-install';
+            } else {
+                this.getActiveInstance().installCameraPlugin = 'install';
+            }
+            this.expertSettingsPage.getElement().querySelector(".camera-plugin .checkbox").classList.toggle("checked", this.getActiveInstance().installCameraPlugin === 'install')
         } else {
             showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${this.getLogLocation()} for more info. </div>`)
         }
@@ -562,7 +593,7 @@ class Manager {
             this.setActiveInstance(instance);
             await this.setState('EDIT');
             this.activePage.hide();
-            (this.getMode() === 'basic'? this.typePage: this.expertSettingsPage).show();
+            (this.getMode() === 'basic' ? this.typePage : this.expertSettingsPage).show();
         }
     }
 
@@ -571,7 +602,7 @@ class Manager {
         this.setActiveInstance(instance);
         await this.setState('INSTALL');
         this.activePage.hide();
-        (this.getMode() === 'basic'? this.typePage: this.expertSettingsPage).show();
+        (this.getMode() === 'basic' ? this.typePage : this.expertSettingsPage).show();
     }
 
     async onUninstallClicked(name) {
@@ -579,7 +610,7 @@ class Manager {
         this.setActiveInstance(instance);
         await this.setState('UNINSTALL');
         if (instance.webserverOnline || instance.backendOnline)
-        showErrorPopup("<div class='main-message'>The selected Olympus instance is currently active </div><div class='sub-message'> Please stop DCS and Olympus Server/Client before removing it! </div>")
+            showErrorPopup("<div class='main-message'>The selected Olympus instance is currently active </div><div class='sub-message'> Please stop DCS and Olympus Server/Client before removing it! </div>")
         else
             await instance.uninstall();
     }
@@ -620,11 +651,11 @@ class Manager {
             this.getActiveInstance().setBackendPort(value);
         }
 
-        var successEls = (this.getMode() === 'basic'? this.connectionsPage: this.expertSettingsPage).getElement().querySelector(`.${port}-port`).querySelectorAll(".success");
+        var successEls = (this.getMode() === 'basic' ? this.connectionsPage : this.expertSettingsPage).getElement().querySelector(`.${port}-port`).querySelectorAll(".success");
         for (let i = 0; i < successEls.length; i++) {
             successEls[i].classList.toggle("hide", !success);
         }
-        var errorEls = (this.getMode() === 'basic'? this.connectionsPage: this.expertSettingsPage).getElement().querySelector(`.${port}-port`).querySelectorAll(".error");
+        var errorEls = (this.getMode() === 'basic' ? this.connectionsPage : this.expertSettingsPage).getElement().querySelector(`.${port}-port`).querySelectorAll(".error");
         for (let i = 0; i < errorEls.length; i++) {
             errorEls[i].classList.toggle("hide", success);
         }
@@ -693,7 +724,7 @@ class Manager {
         document.getElementById("loader").style.opacity = "0%";
         window.setTimeout(() => {
             document.getElementById("loader").classList.add("hide");
-        }, 250);        
+        }, 250);
     }
 
     async setActiveInstance(newActiveInstance) {
@@ -718,12 +749,12 @@ class Manager {
 
     async setLogLocation(newLogLocation) {
         this.options.logLocation = newLogLocation;
-    }  
-    
+    }
+
     async setState(newState) {
         this.options.state = newState;
         await DCSInstance.reloadInstances();
-        if (newState === 'IDLE') 
+        if (newState === 'IDLE')
             this.setActiveInstance(undefined);
     }
 

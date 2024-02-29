@@ -64,7 +64,7 @@
 	width: 20px;
 }
 
-#toolbar-container>*:nth-child(3)>svg {
+#command-mode-toolbar>svg {
     display: none;
 }
 

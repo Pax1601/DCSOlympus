@@ -15,7 +15,7 @@ module.exports = function (configLocation) {
     var indexRouter = require('./routes/index');
     var uikitRouter = require('./routes/uikit');
     var usersRouter = require('./routes/users');
-    var resourcesRouter = require('./routes/resources');
+    var resourcesRouter = require('./routes/resources')(configLocation);
     var pluginsRouter = require('./routes/plugins');
 
     /* Load the config and create the express app */
