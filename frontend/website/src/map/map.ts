@@ -283,21 +283,11 @@ export class Map extends L.Map {
             const layerData = this.#mapLayers[layerName];
             if (layerData instanceof Array) {
                 let layers = layerData.map((layer: any) => {
-                    var options: L.TileLayerOptions = {
-                        attribution: layer.attribution,
-                        minZoom: layer.minZoom,
-                        maxZoom: layer.maxZoom
-                    };
-                    return new L.TileLayer(layer.urlTemplate, options);
+                    return new L.TileLayer(layer.urlTemplate, layer);
                 })
                 this.#layer = new L.LayerGroup(layers);
             } else {
-                var options: L.TileLayerOptions = {
-                    attribution: layerData.attribution,
-                    minZoom: layerData.minZoom,
-                    maxZoom: layerData.maxZoom
-                };
-                this.#layer = new L.TileLayer(layerData.urlTemplate, options);
+                this.#layer = new L.TileLayer(layerData.urlTemplate, layerData);
             }
         }
 
