@@ -20,10 +20,10 @@ INSTALLATION INSTRUCTIONS
     	b) If you installed DCS Olympus v1.0.3 using the archived version, remove it by deleting the "...<DCS Saved Games folder>\Mods\Services\Olympus" folder. Do this for every DCS instance you installed Olympus in. 
        	   Remember to delete any shortcuts you created. Don't worry, they will be created automatically again by the installation script provided in this package.
 
-3) Create a folder named "DCS Olympus" in your "Saved Games" directory and extract all the contents of the downloaded archive into it.
+3) Create a folder named "DCS Olympus" in your "Saved Games" directory and extract all the contents of the downloaded package into it.
 	NOTE:
-    	a) Do not extract the contents of the archive directly in your Saved Games folder or in your DCS Saved Games folder. 
-        b) Unlike previous version of Olympus, it is no longer necessary to copy the archived files into each DCS instance folder.
+    	a) Do not extract the contents of the package directly in your Saved Games folder or in your DCS Saved Games folder. 
+        b) Unlike previous version of Olympus, it is no longer necessary to copy the packaged files into each DCS instance folder.
 
 4) Execute the "installer.bat" script by double-clicking on it. It is located in the folder you created in step 3. Wait for the installation script to complete. Installation may take a couple of minutes, after which the Manager will start automatically.
 	NOTE: depending on your Windows configuration, the script may be called "installer" (without .bat at the end).
@@ -53,7 +53,7 @@ UPDATING INSTRUCTIONS
 IF YOU ARE UPDATING FROM DCS OLYMPUS v1.0.3, FOLLOW THE "INSTALLATION INSTRUCTIONS".
 
 To update your Olympus installation you have two options:
-a) download the new archive from the GitHub releases page, delete the old unpacked archive folder, then follow the INSTALLATION INSTRUCTIONS;
+a) download the new package from the GitHub releases page, delete the old unpacked package folder, then follow the INSTALLATION INSTRUCTIONS;
 b) run the Olympus Manager. If an update is available you will be given the option to automatically update Olympus from there.
 
 For either options a) or b), remember to close any applications which may interfere with installation, including Digital Combat Simulator (DCS) and previous versions of Olympus.

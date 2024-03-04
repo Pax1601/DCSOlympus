@@ -45,26 +45,26 @@ The user interface is key to this experience, and we have done our best to make 
 
 # Basics
 
-## Olympus Requirements
-
-Olympus is built first and foremost for the open beta build of DCS, and does not support the stable version. While it may work for you periodically, you may experience bugs for which we will not be able to provide support. 
-
 ## Installing Olympus
 
-Download the latest release archive from the [Github releases page](https://github.com/Pax1601/DCSOlympus/releases). After downloading the archive, unpack it and follow these steps: 
+**NOTE: the installation process has been greatly modified in version v1.0.4. These instructions are NOT applicable to v1.0.3. Users are suggested to update to the latest version.**
 
-1) Close any applications which may interfere with installation, including Digital Combat Simulator (DCS) and previous versions of Olympus.
+**NOTE: Olympus is offered in two different packages: an autoinstaller package and an archive package. The autoinstaller package is marked with the prefix ```autoinstaller_```. THESE INSTRUCTION ARE ONLY APPLICABLE TO THE AUTOINSTALLER VERSION. The archived version is intended for automatic tools like [SpecialK's Server Bot](https://github.com/Special-K-s-Flightsim-Bots/DCSServerBot).**
+
+Download the latest release autoinstaller package from the [Github releases page](https://github.com/Pax1601/DCSOlympus/releases). After downloading the package, unpack it and follow these steps: 
+
+1) **Close any applications which may interfere with installation**, including Digital Combat Simulator (DCS) and previous versions of Olympus.
 <br>
-2) If you DO NOT have Olympus already installed, **SKIP THIS STEP**. If you have already installed Olympus, do the following:
+2) **If you DO NOT have Olympus v1.0.3 already installed, SKIP THIS STEP. If you have already installed Olympus v1.0.3, do the following**:
 NOTE: If you made any changes to your unit databases or mods.lua file (e.g. to support a third party mod) make a backup of the edited files before proceeding or changes will be lost;
-a) If you installed DCS Olympus v1.0.3 using the installer, simply remove it using Windows's "Add or remove programs" application. 
-b) If you installed DCS Olympus v1.0.3 using the archived version, remove it by deleting the "...<DCS Saved Games folder>\Mods\Services\Olympus" folder. Do this for every DCS instance you installed Olympus in. 
+a) **If you installed DCS Olympus v1.0.3 using the installer**, simply remove it using Windows's "Add or remove programs" application. 
+b) **If you installed DCS Olympus v1.0.3 using the archived version**, remove it by deleting the "...<DCS Saved Games folder>\Mods\Services\Olympus" folder. Do this for every DCS instance you installed Olympus in. 
     Remember to delete any shortcuts you created. Don't worry, they will be created automatically again by the installation script provided in this package.
 <br>
-3) **Create a folder named "DCS Olympus"** in your "Saved Games" directory and extract all the contents of the downloaded archive into it.
+3) **Create a folder named "DCS Olympus"** in your "Saved Games" directory and **extract all the contents of the downloaded package into it**.
 	NOTE:
-    	a) Do not extract the contents of the archive directly in your Saved Games folder or in your DCS Saved Games folder. 
-        b) Unlike previous version of Olympus, it is no longer necessary to copy the archived files into each DCS instance folder.
+    	a) Do not extract the contents of the package directly in your Saved Games folder or in your DCS Saved Games folder. 
+        b) Unlike previous version of Olympus, it is no longer necessary to copy the packaged files into each DCS instance folder.
 <br>
 4) **Execute the "installer.bat"** script by double-clicking on it. It is located in the folder you created in step 3. Wait for the installation script to complete. **Installation may take a couple of minutes, after which the Manager will start automatically**.
 	NOTE: depending on your Windows configuration, the script may be called "installer" (without .bat at the end).
@@ -111,6 +111,12 @@ Expert mode operates more as a dashboard rather than a Wizard. All DCS instances
 The meaning of all the options is also explained by moving your mouse cursor on the info icon. 
 
 In Expert mode, users are also capable of starting the Olympus client and server directly from the Manager. This is convenient if you have multiple installations. Once a client/server instance is running, the Manager allows you to monitor its state directly from the Expert view.
+
+## Updating Olympus
+
+The Manager allows you to update Olympus automatically. When the Manager is started, it checks if a new version is available. If that is the case, you will be given the option to automatically update Olympus. The new package will be downloaded and installed without requiring any inputs from the user.
+
+The Manager will be closed and reopened after the process is completed. Once this is done, you will presented with a warning: just like installing Olympus will not automatically add it to your DCS instance, updating it will not update it in your DCS instance. By clicking on "Accept", all your Olympus instances will be automatically updated.
 
 ## Logging into Olympus
 
