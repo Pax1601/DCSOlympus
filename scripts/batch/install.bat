@@ -9,7 +9,7 @@ echo [36m"* |_____/ \_____|_____/   \____/|_|\__, |_| |_| |_| .__/ \__,_|___/ *
 echo [36m"*                                   __/ |         | |               *"[0m
 echo [36m"*                                  |___/          |_|               *"[0m
 echo [36m"*********************************************************************"[0m
-echo [36mWelcome to the DCS Olympus {{OLYMPUS_VERSION_NUMBER}} installation script. Please wait while the necessary dependencies are installed![0m
+echo [36mWelcome to the DCS Olympus {{OLYMPUS_VERSION_NUMBER}} installation script. Please wait while the necessary dependencies are downloaded and installed! NOTE: Depending on your internet speed this may take a while, or it may look like the installation is hanged. Don't worry![0m
 echo:
 
 
