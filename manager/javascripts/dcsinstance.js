@@ -174,7 +174,7 @@ class DCSInstance {
                 this.redCommanderPasswordEdited = false;
 
             } catch (err) {
-                showErrorPopup(`<div class='main-message'>A critical error has occurred while reading your Olympus configuration file. </div><div class='sub-message'> Please, manually reinstall olympus in ${this.folder}. </div>`)
+                showErrorPopup(`<div class='main-message'>A critical error has occurred while reading your Olympus configuration file. </div><div class='sub-message'> Please manually reinstall Olympus in ${this.folder} using either the installation Wizard or the Expert view. </div>`)
                 logger.error(err)
             }
 

@@ -534,7 +534,7 @@ class Manager {
         if (frontendPortFree && backendPortFree) {
             return true;
         } else {
-            showErrorPopup(`<div class='main-message'> Please, make sure both the frontend and backend ports are free!</div><div class='sub-message'>If ports are already in use, Olympus will not be able to communicated correctly.</div>`);
+            showErrorPopup(`<div class='main-message'> Please make sure both the frontend and backend ports are free!</div><div class='sub-message'>If ports are already in use, Olympus will not be able to communicated correctly.</div>`);
             return false;
         }
     }
@@ -546,10 +546,10 @@ class Manager {
             }
             else {
                 if (!this.getActiveInstance().arePasswordsSet()) {
-                    showErrorPopup(`<div class='main-message'>Please, make sure all passwords are set!</div><div class='sub-message'>The role users will fulfill depends on the password they enter at login. </div>`);
+                    showErrorPopup(`<div class='main-message'>Please make sure all passwords are set!</div><div class='sub-message'>The role users will fulfill depends on the password they enter at login. </div>`);
                     return false;
                 } else if (!this.getActiveInstance().arePasswordsDifferent()) {
-                    showErrorPopup(`<div class='main-message'>Please, set different passwords! </div><div class='sub-message'>The role users will fulfill depends on the password they enter at login. </div>`);
+                    showErrorPopup(`<div class='main-message'>Please set different passwords! </div><div class='sub-message'>The role users will fulfill depends on the password they enter at login. </div>`);
                     return false;
                 } else {
                     return true;
