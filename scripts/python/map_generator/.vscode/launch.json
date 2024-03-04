@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "main.py",
             "console": "integratedTerminal",
-            "args": ["./configs/Caucasus/HighResolution.yml"]
+            "args": ["./configs/Test/MediumResolution.yml"]
         }
     ]
 }

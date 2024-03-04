@@ -102,9 +102,10 @@ def merge_tiles(base_path, zoom, tile):
 	# If the image already exists, open it so we can paste the higher quality data in it
 	if os.path.exists(os.path.join(base_path, str(zoom - 1), str(X), f"{Y}.jpg")):
 		dst = Image.open(os.path.join(base_path, str(zoom - 1), str(X), f"{Y}.jpg"))
+		dst.putalpha(255)
 		dst = make_background_transparent(dst)
 	else:
-		dst = Image.new('RGB', (256, 256), (221, 221, 221))
+		dst = Image.new('RGBA', (256, 256), (221, 221, 221, 255))
 
 	# Loop on all the 4 subtiles in the tile
 	positions = [(0, 0), (0, 1), (1, 0), (1, 1)]
@@ -112,8 +113,9 @@ def merge_tiles(base_path, zoom, tile):
 		# Open the subtile, if it exists, and resize it down to 128x128
 		if os.path.exists(os.path.join(base_path, str(zoom), str(2*X + positions[i][0]), f"{2*Y + positions[i][1]}.jpg")):
 			im = Image.open(os.path.join(base_path, str(zoom), str(2*X + positions[i][0]), f"{2*Y + positions[i][1]}.jpg")).resize((128, 128))
+			im.putalpha(255)
 			im = make_background_transparent(im)
-			dst.paste(im, (positions[i][0] * 128, positions[i][1] * 128))
+			dst.paste(im, (positions[i][0] * 128, positions[i][1] * 128), im)
 
 	# Create the output folder if it exists
 	if not os.path.exists(os.path.join(base_path, str(zoom - 1), str(X))):
@@ -126,16 +128,111 @@ def merge_tiles(base_path, zoom, tile):
 			raise e
 	
 	# Save the image
-	dst.convert('RGB').save(os.path.join(base_path, str(zoom - 1), str(X), f"{Y}.jpg"), quality=95)
+	remove_black_areas(dst.convert('RGB')).save(os.path.join(base_path, str(zoom - 1), str(X), f"{Y}.jpg"), quality=98)
+
+def computeCorrectionFactor(XY, n_width, n_height, map_config, zoom, output_directory, port):
+	# Take screenshots at the given position, then east and south of it
+	takeScreenshot(XY, 0, 0, map_config, zoom, output_directory, "calib", "ref", port)
+	takeScreenshot((XY[0] + n_width, XY[1]), 0, 0, map_config, zoom, output_directory, "calib", "lng", port)
+	takeScreenshot((XY[0], XY[1] + n_height), 0, 0, map_config, zoom, output_directory, "calib", "lat", port)
 	
+	calib_ref = Image.open(os.path.join(output_directory, "screenshots", f"calib_ref_{zoom}.jpg"))
+	calib_lat = Image.open(os.path.join(output_directory, "screenshots", f"calib_lat_{zoom}.jpg"))
+	calib_lng = Image.open(os.path.join(output_directory, "screenshots", f"calib_lng_{zoom}.jpg"))
+
+	# These calibration boxes are located at the edge of the interest region
+	box1 = (calib_ref.width / 2 + n_width / 2 * 256 - 50, calib_ref.height / 2 - n_height / 2 * 256 + 10,
+	    	calib_ref.width / 2 + n_width / 2 * 256 + 50, calib_ref.height / 2 + n_height / 2 * 256 - 10)
+	box2 = (calib_ref.width / 2 - n_width / 2 * 256 - 50, calib_ref.height / 2 - n_height / 2 * 256 + 10,
+	    	calib_ref.width / 2 - n_width / 2 * 256 + 50, calib_ref.height / 2 + n_height / 2 * 256 - 10)
+	
+	box3 = (calib_ref.width / 2 - n_width / 2 * 256 + 10, calib_ref.height / 2 + n_height / 2 * 256 - 50,
+	    	calib_ref.width / 2 + n_width / 2 * 256 - 10, calib_ref.height / 2 + n_height / 2 * 256 + 50)
+	box4 = (calib_ref.width / 2 - n_width / 2 * 256 + 10, calib_ref.height / 2 - n_height / 2 * 256 - 50,
+	    	calib_ref.width / 2 + n_width / 2 * 256 - 10, calib_ref.height / 2 - n_height / 2 * 256 + 50)
+
+	# Find the best correction factor to bring the two images to be equal on the longitude direction
+	best_err = None
+	best_delta_width = 0
+	for delta_width in range(-5, 6):
+		calib_box1 = calib_ref.resize((calib_ref.width + delta_width, calib_ref.height)).crop(box1).convert('L')
+		calib_box2 = calib_lng.resize((calib_ref.width + delta_width, calib_ref.height)).crop(box2).convert('L')
+		err = computeDifference(calib_box1, calib_box2)
+		if best_err is None or err < best_err:
+			best_delta_width = delta_width
+			best_err = err
+
+	# Find the best correction factor to bring the two images to be equal on the latitude direction
+	best_err = None
+	best_delta_height = 0
+	for delta_height in range(-5, 6):
+		calib_box3 = calib_ref.resize((calib_ref.width, calib_ref.height + delta_height)).crop(box3).convert('L')
+		calib_box4 = calib_lat.resize((calib_ref.width, calib_ref.height + delta_height)).crop(box4).convert('L')
+		err = computeDifference(calib_box3, calib_box4)
+		if best_err is None or err < best_err:
+			best_delta_height = delta_height
+			best_err = err
+
+	return (best_delta_width, best_delta_height)
+
+def computeDifference(imageA, imageB):
+	err = numpy.sum((numpy.array(imageA).astype('float') - numpy.array(imageB).astype('float')) ** 2)
+	err /= float(imageA.width * imageA.height)
+	return err
+
+def takeScreenshot(XY, n_width, n_height, map_config, zoom, output_directory, f, n, port, correction = (0, 0)):
+	# Making PUT request
+	# If the number of rows or columns is odd, we need to take the picture at the CENTER of the tile!
+	lat, lng = num_to_deg(XY[0] + (n_width % 2) / 2, XY[1] + (n_height % 2) / 2, zoom)
+	data = json.dumps({'lat': lat, 'lng': lng, 'alt': 1350 + map_config['zoom_factor'] * (25000 - 1350), 'mode': 'map'})
+	r = requests.put(f'http://127.0.0.1:{port}', data = data)
+
+	geo_data = json.loads(r.text)
+
+	time.sleep(0.2)
+
+	# Take and save screenshot. The response to the put request contains data, among which there is the north rotation at that point.
+	screenshot = pyautogui.screenshot()
+
+	# Scale the screenshot to account for Mercator Map Deformation
+	lat1, lng1 = num_to_deg(XY[0], XY[1], zoom)
+	lat2, lng2 = num_to_deg(XY[0] + 1, XY[1] + 1, zoom)
+
+	deltaLat = abs(lat2 - lat1)
+	deltaLng = abs(lng2 - lng1)
+
+	# Compute the height and width each tile should have
+	m_height = math.radians(deltaLat) * R 
+	m_width = math.radians(deltaLng) * R * math.cos(math.radians(lat1))
+
+	# Compute the height and width the tile has
+	s_height = map_config['mpps'] * 256
+	s_width = map_config['mpps'] * 256
+	
+	# Compute the scaling required to achieve that
+	sx = s_width / m_width
+	sy = s_height / m_height
+
+	# Rotate, resize and save the screenshot
+	screenshot.rotate(math.degrees(geo_data['northRotation'])).resize((int(sx * screenshot.width) + correction[0], int(sy * screenshot.height)+ correction[1] )).save(os.path.join(output_directory, "screenshots", f"{f}_{n}_{zoom}.jpg"), quality=98)
+
 def make_background_transparent(im):
-	im.putalpha(255)
 	data = numpy.array(im)  
 	red, green, blue, alpha = data.T
 
 	# If present, remove any "background" areas
-	background_areas = (red == 221) & (blue == 221) & (green == 221)
+	background_areas = (red > 211) & (red < 231) & (green > 211) & (green < 231) & (blue > 211) & (blue < 231) 
 	data[..., :][background_areas.T] = (0, 0, 0, 0) # make transparent
+
+	return Image.fromarray(data)
+
+def remove_black_areas(im):
+	data = numpy.array(im)  
+	red, green, blue = data.T
+
+	# If present, remove any "black" areas
+	background_areas = (red < 10) & (blue < 10) & (green < 10)
+	data[..., :][background_areas.T] = (221, 221, 221) 
 
 	return Image.fromarray(data)
 
@@ -151,10 +248,12 @@ def run(map_config, port):
 			os.mkdir(output_directory)
 
 		skip_screenshots = False
+		replace_screenshots = True
 		if not os.path.exists(os.path.join(output_directory, "screenshots")):
 			os.mkdir(os.path.join(output_directory, "screenshots"))
 		else: 
 			skip_screenshots = (input("Raw screenshots already found for this config, do you want to skip directly to tiles extraction? Enter y to skip: ") == "y")
+			replace_screenshots = (input("Do you want to replace the existing screenshots? Enter y to replace: ") == "y")
 
 		if not os.path.exists(os.path.join(output_directory, "tiles")):
 			os.mkdir(os.path.join(output_directory, "tiles"))
@@ -218,45 +317,16 @@ def run(map_config, port):
 				print(f"Feature {f} of {len(features)}, {len(screenshots_XY)} screenshots will be taken")
 
 				# Start looping
+				correction = None
 				if not skip_screenshots:
 					print(f"Feature {f} of {len(features)}, taking screenshots...")
 					n = 0
 					for XY in screenshots_XY:
-						# Making PUT request
-						# If the number of rows or columns is odd, we need to take the picture at the CENTER of the tile!
-						lat, lng = num_to_deg(XY[0] + (n_width % 2) / 2, XY[1] + (n_height % 2) / 2, zoom)
-						data = json.dumps({'lat': lat, 'lng': lng, 'alt': 1350 + map_config['zoom_factor'] * (25000 - 1350), 'mode': 'map'})
-						r = requests.put(f'http://127.0.0.1:{port}', data = data)
-
-						geo_data = json.loads(r.text)
-
-						time.sleep(0.1)
-
-						# Take and save screenshot. The response to the put request contains data, among which there is the north rotation at that point.
-						screenshot = pyautogui.screenshot()
-
-						# Scale the screenshot to account for Mercator Map Deformation
-						lat1, lng1 = num_to_deg(XY[0], XY[1], zoom)
-						lat2, lng2 = num_to_deg(XY[0] + 1, XY[1] + 1, zoom)
-
-						deltaLat = abs(lat2 - lat1)
-						deltaLng = abs(lng2 - lng1)
-
-						# Compute the height and width the screenshot should have
-						m_height = math.radians(deltaLat) * R * n_height
-						m_width = math.radians(deltaLng) * R * math.cos(math.radians(lat1)) * n_width
-
-						# Compute the height and width the screenshot has
-						s_height = map_config['mpps'] * 256 * n_height
-						s_width = map_config['mpps'] * 256 * n_width
+						if not os.path.exists(os.path.join(output_directory, "screenshots", f"{f}_{n}_{zoom}.jpg")) or replace_screenshots:
+							if n % 10 == 0 or correction is None:
+								correction = computeCorrectionFactor(XY, n_width, n_height, map_config, zoom, output_directory, port)
+							takeScreenshot(XY, n_width, n_height, map_config, zoom, output_directory, f, n, port, correction)
 						
-						# Compute the scaling required to achieve that
-						sx = s_width / m_width
-						sy = s_height / m_height
-
-						# Resize, rotate and save the screenshot
-						screenshot.resize((int(sx * screenshot.width), int(sy * screenshot.height))).rotate(math.degrees(geo_data['northRotation'])).save(os.path.join(output_directory, "screenshots", f"{f}_{n}_{zoom}.jpg"), quality=95)
-
 						printProgressBar(n + 1, len(screenshots_XY))
 						n += 1
 
