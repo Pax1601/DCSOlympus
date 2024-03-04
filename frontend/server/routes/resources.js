@@ -1,7 +1,5 @@
 const express = require('express');
-const sharp = require('sharp')
 const fs = require('fs');
-const pfs = require('fs/promises')
 const router = express.Router();
 
 module.exports = function (configLocation) {
