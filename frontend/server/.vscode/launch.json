@@ -12,7 +12,8 @@
                 "<node_internals>/**"
             ],
             "args": ["--config",  "${input:enterDir}/Config/olympus.json"],
-            "program": "./bin/www"
+            "program": "./bin/www",
+            "preLaunchTask": "copy"
         }, 
         {
             "type": "node",
