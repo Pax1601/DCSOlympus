@@ -822,3 +822,42 @@
 #force-coalition {
     padding: 10px;
 }
+
+
+.spawn-heading {
+    align-items: center;
+    border: 1px solid white;
+    border-radius: 50%;
+    display:flex;
+    height:100px;
+    justify-content: center;
+    margin:4px;
+    width:100px;
+}
+
+.spawn-heading input {
+    letter-spacing: 4px;
+    text-align: center;
+    text-indent: 4px;
+    width:60%;
+    z-index:10;
+}
+
+.spawn-heading .bug-container {
+    display:flex;
+    height:100px;
+    overflow: visible;
+    position:absolute;
+    width:8px;
+}
+
+.spawn-heading .bug-container .bug {
+    background-color: var(--primary-blue);
+    border-top-left-radius: 50%;
+    border-top-right-radius: 50%;
+    cursor: grab;
+    height:14px;
+    position: relative;
+    translate:0 -40%;
+    width:8px;
+}
