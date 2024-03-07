@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
 <Document>
-	<name>Senza titolo</name>
+	<name>Low resolution</name>
+	<open>1</open>
 	<gx:CascadingStyle kml:id="__managed_style_280E5494AE2F24E92C22">
 		<Style>
 			<IconStyle>
 				<scale>1.2</scale>
 				<Icon>
-					<href>https://earth.google.com/earth/rpc/cc/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+					<href>https://earth.google.com/earth/rpc/cc/icon?color=1976d2<![CDATA[&]]>id=2000<![CDATA[&]]>scale=4</href>
 				</Icon>
-				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"></hotSpot>
 			</IconStyle>
 			<LabelStyle>
 			</LabelStyle>
@@ -24,14 +25,13 @@
 				<displayMode>hide</displayMode>
 			</BalloonStyle>
 		</Style>
-	</gx:CascadingStyle>
-	<gx:CascadingStyle kml:id="__managed_style_1EB9027B622F24E92C22">
+	</gx:CascadingStyle><gx:CascadingStyle kml:id="__managed_style_1EB9027B622F24E92C22">
 		<Style>
 			<IconStyle>
 				<Icon>
-					<href>https://earth.google.com/earth/rpc/cc/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+					<href>https://earth.google.com/earth/rpc/cc/icon?color=1976d2<![CDATA[&]]>id=2000<![CDATA[&]]>scale=4</href>
 				</Icon>
-				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"></hotSpot>
 			</IconStyle>
 			<LabelStyle>
 			</LabelStyle>
@@ -50,31 +50,35 @@
 	<StyleMap id="__managed_style_0F57E9B9782F24E92C22">
 		<Pair>
 			<key>normal</key>
-			<styleUrl>#__managed_style_1EB9027B622F24E92C22</styleUrl>
+			<styleUrl>#failed0</styleUrl>
 		</Pair>
 		<Pair>
 			<key>highlight</key>
-			<styleUrl>#__managed_style_280E5494AE2F24E92C22</styleUrl>
+			<styleUrl>#failed</styleUrl>
 		</Pair>
 	</StyleMap>
+	<Style id="failed">
+	</Style>
+	<Style id="failed0">
+	</Style>
 	<Placemark id="0975D432582F24E92C1E">
-		<name>Poligono senza titolo</name>
+		<name>Low resolution</name>
 		<LookAt>
 			<longitude>37.25019544589698</longitude>
 			<latitude>44.41771380726969</latitude>
 			<altitude>-138.6844933247498</altitude>
 			<heading>0</heading>
 			<tilt>0</tilt>
-			<gx:fovy>35</gx:fovy>
 			<range>3831683.119853139</range>
 			<altitudeMode>absolute</altitudeMode>
+			<gx:fovy>35</gx:fovy>
 		</LookAt>
 		<styleUrl>#__managed_style_0F57E9B9782F24E92C22</styleUrl>
 		<Polygon>
 			<outerBoundaryIs>
 				<LinearRing>
 					<coordinates>
-						32.46459319237173,45.67416695848307,0 32.2740650283415,45.2221541106433,0 33.22174616520244,44.4837859435444,0 34.05427109764131,44.2149221586376,0 34.96485577272431,44.60230684639296,0 35.50552864748745,44.8069362633187,0 36.446105774871,44.84425518198143,0 36.76914203317659,44.70347050722764,0 38.22313992004164,44.3163345847565,0 39.43106567523965,43.72064977016311,0 40.23832274382622,43.06831352526857,0 41.01327578994438,42.67925159935859,0 41.34464189582403,42.34329512558789,0 41.16749495371268,41.74956946999534,0 40.80780496107725,41.39360013128164,0 39.98364177441992,41.27272565351572,0 39.42209428526464,41.27830763089842,0 38.82136897872954,41.2291415593637,0 38.78900701766597,39.59331113999448,0 46.4826445997655,39.11657164682355,0 46.83937081793388,45.04996086829865,0 46.88987497227086,47.59122144470205,0 32.29992865035658,47.73230965442627,0 32.46459319237173,45.67416695848307,0 
+						32.46459319237173,45.67416695848307,0 32.2740650283415,45.2221541106433,0 33.22174616520244,44.4837859435444,0 34.05427109764131,44.2149221586376,0 34.96485577272431,44.60230684639296,0 35.50552864748745,44.8069362633187,0 36.446105774871,44.84425518198143,0 36.76914203317659,44.70347050722764,0 38.22313992004164,44.3163345847565,0 39.43106567523965,43.72064977016311,0 40.23832274382622,43.06831352526857,0 41.01327578994438,42.67925159935859,0 41.34464189582403,42.34329512558789,0 41.16749495371268,41.74956946999534,0 40.80780496107725,41.39360013128164,0 39.98364177441992,41.27272565351572,0 39.42209428526464,41.27830763089842,0 38.82136897872954,41.2291415593637,0 38.82458556682658,39.86622166029085,0 45.8381687868953,39.59275112715873,0 45.98912922607954,43.86743059613963,0 46.10445698500042,45.31544913665732,0 34.15598911357598,46.421850808793,0 32.46459319237173,45.67416695848307,0 
 					</coordinates>
 				</LinearRing>
 			</outerBoundaryIs>
