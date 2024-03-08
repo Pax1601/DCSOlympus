@@ -31,10 +31,11 @@ export abstract class UnitDataFile {
                     headersHTML += `<th data-coalition="${coalition}">${coalition[0].toUpperCase() + coalition.substring(1)}</th>`;
 
                 const optionIsValid = this.data[category].hasOwnProperty(coalition);
-                let checkboxHTML = createCheckboxOption(`${category}:${coalition}`, category, optionIsValid, () => { }, {
+                let checkboxHTML = createCheckboxOption(``, category, optionIsValid, () => { }, {
                     "disabled": !optionIsValid,
                     "name": "category-coalition-selection",
-                    "readOnly": !optionIsValid
+                    "readOnly": !optionIsValid,
+                    "value" : `${category}:${coalition}`
                 }).outerHTML;
 
                 if (optionIsValid)
