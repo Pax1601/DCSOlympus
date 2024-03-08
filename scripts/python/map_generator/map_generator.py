@@ -158,7 +158,7 @@ def compute_correction_factor(XY, n_width, n_height, map_config, zoom, output_di
 	# Find the best correction factor to bring the two images to be equal on the longitude direction
 	best_err = None
 	best_delta_width = 0
-	for delta_width in range(-5, 6):
+	for delta_width in range(-15, 16):
 		calib_box1 = calib_ref.resize((calib_ref.width + delta_width, calib_ref.height)).crop(box1).convert('L')
 		calib_box2 = calib_lng.resize((calib_ref.width + delta_width, calib_ref.height)).crop(box2).convert('L')
 		err = compute_difference(calib_box1, calib_box2)
@@ -169,7 +169,7 @@ def compute_correction_factor(XY, n_width, n_height, map_config, zoom, output_di
 	# Find the best correction factor to bring the two images to be equal on the latitude direction
 	best_err = None
 	best_delta_height = 0
-	for delta_height in range(-5, 6):
+	for delta_height in range(-15, 16):
 		calib_box3 = calib_ref.resize((calib_ref.width, calib_ref.height + delta_height)).crop(box3).convert('L')
 		calib_box4 = calib_lat.resize((calib_ref.width, calib_ref.height + delta_height)).crop(box4).convert('L')
 		err = compute_difference(calib_box3, calib_box4)
