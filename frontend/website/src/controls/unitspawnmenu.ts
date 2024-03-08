@@ -12,6 +12,7 @@ import { groundUnitDatabase } from "../unit/databases/groundunitdatabase";
 import { navyUnitDatabase } from "../unit/databases/navyunitdatabase";
 import { UnitBlueprint, UnitSpawnOptions, UnitSpawnTable } from "../interfaces";
 import { NumericInput } from "./numericinput";
+import { SVGInjector } from "@tanem/svg-injector";
 
 /** This is the common code for all the unit spawn menus. It is shown both when right clicking on the map and when spawning from airbase.
  * 
@@ -33,6 +34,7 @@ export abstract class UnitSpawnMenu {
         airbase: undefined,
         liveryID: undefined,
         altitude: undefined,
+        velocity: undefined,
         heading: 0
     };
 
@@ -43,6 +45,8 @@ export abstract class UnitSpawnMenu {
     #showLoadout: boolean = true;
     #showSkill: boolean = true;
     #showAltitudeSlider: boolean = true;
+    #showVelocitySlider: boolean = true;
+    #showHeadingDial: boolean = true;
     #showSpawnHeading: boolean = true;
 
     /* Controls */
@@ -54,12 +58,13 @@ export abstract class UnitSpawnMenu {
     #unitCountryDropdown: Dropdown;
     #unitLiveryDropdown: Dropdown;
     #unitSpawnAltitudeSlider: Slider;
+    #unitSpawnVelocitySlider: Slider;
     #unitSpawnHeadingNumericInput: NumericInput;
 
     /* HTML Elements */
     #deployUnitButtonEl: HTMLButtonElement;
     #unitCountDivider: HTMLDivElement;
-    #unitLoadoutPreviewEl: HTMLDivElement;
+    #unitLoadoutWrapperEl: HTMLDivElement;
     #unitImageEl: HTMLImageElement;
     #unitLoadoutListEl: HTMLDivElement;
     #descriptionDiv: HTMLDivElement;
@@ -70,6 +75,8 @@ export abstract class UnitSpawnMenu {
     #advancedOptionsText: HTMLDivElement;
     #unitInfoToggle: HTMLDivElement;
     #unitInfoText: HTMLDivElement;
+    #spawnHeading: HTMLDivElement;
+    #altitudeVelocityHeadingEl: HTMLDivElement;
 
     /* Range circle previews */
     #engagementCircle: Circle;
@@ -88,8 +95,8 @@ export abstract class UnitSpawnMenu {
         this.#unitCountDropdown = new Dropdown(null, (count: string) => this.#setUnitCount(count), undefined, "Count");
         this.#unitCountryDropdown = new Dropdown(null, () => { /* Custom button implementation */ }, undefined, "Country");
         this.#unitLiveryDropdown = new Dropdown(null, (livery: string) => this.#setUnitLivery(livery), undefined, "Livery");
-        this.#unitSpawnAltitudeSlider = new Slider(null, 0, 1000, "ft", (value: number) => { this.spawnOptions.altitude = ftToM(value); }, { title: "Spawn altitude" });
-        this.#unitSpawnHeadingNumericInput = new NumericInput("unit-spawn-heading", (heading: number) => this.#setUnitSpawnHeading(heading), 360, "Heading");
+        this.#unitSpawnAltitudeSlider = new Slider(null, 0, 1000, "ft", (value: number) => { this.spawnOptions.altitude = ftToM(value); }, { title: "Altitude" });
+        this.#unitSpawnVelocitySlider = new Slider(null, 150, 650, "kts", (value: number) => { this.spawnOptions.velocity = value; }, { title: "Velocity" });
 
         /* The unit label and unit count are in the same "row" for clarity and compactness */
         var unitLabelCountContainerEl = document.createElement("div");
@@ -98,14 +105,46 @@ export abstract class UnitSpawnMenu {
         this.#unitCountDivider.innerText = "x";
         unitLabelCountContainerEl.append(this.#unitLabelDropdown.getContainer(), this.#unitCountDivider, this.#unitCountDropdown.getContainer());
 
-        /* Create the unit image and loadout elements */
+        /*  Loadout  */
+        this.#unitLoadoutWrapperEl = document.createElement("div");
+        this.#unitLoadoutWrapperEl.className = "unit-loadout-wrapper";
+
+        //  Loadout button
+        const loadoutButton = document.createElement("button");
+        loadoutButton.title = "View loadout munitions";
+        loadoutButton.addEventListener("click", () => { this.#unitLoadoutListEl.classList.toggle("hide") });
+        const loadoutButtonImg = document.createElement("img");
+        loadoutButtonImg.src = "/resources/theme/images/icons/list-solid.svg";
+        loadoutButton.append(loadoutButtonImg);
+
+        //  Loadout list
+        this.#unitLoadoutListEl = document.createElement("div");
+        this.#unitLoadoutListEl.className = "unit-loadout-list hide";
+        this.#unitLoadoutWrapperEl.append(this.#unitLoadoutDropdown.getContainer(), loadoutButton, this.#unitLoadoutListEl);
+
+        /* Altitude, velocity, heading */
+        this.#altitudeVelocityHeadingEl = document.createElement("div");
+        this.#altitudeVelocityHeadingEl.className = "alt-velocity-heading-wrapper hide";
+
+        const slidersEl = document.createElement("div");
+        slidersEl.append(this.#unitSpawnAltitudeSlider.getContainer()!, this.#unitSpawnVelocitySlider.getContainer()!);
+
+        /* Heading */
+        this.#spawnHeading = document.createElement("div");
+        this.#spawnHeading.className = "unit-spawn-heading";
         this.#unitImageEl = document.createElement("img");
         this.#unitImageEl.classList.add("unit-image", "hide");
-        this.#unitLoadoutPreviewEl = document.createElement("div");
-        this.#unitLoadoutPreviewEl.classList.add("unit-loadout-preview");
-        this.#unitLoadoutListEl = document.createElement("div");
-        this.#unitLoadoutListEl.classList.add("unit-loadout-list");
-        this.#unitLoadoutPreviewEl.append(this.#unitImageEl, this.#unitLoadoutListEl);
+        this.#unitImageEl.style.transform = `rotate(90deg)`;  //  Images point left so rotate by default
+
+        this.#unitSpawnHeadingNumericInput = new NumericInput(null, (heading: number) => {
+            this.#setUnitSpawnHeading(heading);
+            this.#unitImageEl.style.transform = `rotate(${heading + 90}deg)`;
+        }, 360, "Heading");
+
+        this.#spawnHeading.append(this.#unitImageEl, this.#unitSpawnHeadingNumericInput.getContainer());
+
+        //  Insert altitude, velocity and heading
+        this.#altitudeVelocityHeadingEl.append(slidersEl, this.#spawnHeading);
 
         /* Create the advanced options collapsible div */
         this.#advancedOptionsDiv = document.createElement("div");
@@ -150,8 +189,10 @@ export abstract class UnitSpawnMenu {
         });
 
         /* Assemble all components */
-        this.#container.append(this.#unitRoleTypeDropdown.getContainer(), this.#unitSpawnHeadingNumericInput.getContainer(), unitLabelCountContainerEl, this.#unitLoadoutDropdown.getContainer(), this.#unitSpawnAltitudeSlider.getContainer() as HTMLElement,
-            this.#unitLoadoutPreviewEl, this.#advancedOptionsToggle, this.#advancedOptionsDiv, this.#unitInfoToggle, this.#unitInfoDiv, this.#deployUnitButtonEl);
+        this.#container.append(this.#unitRoleTypeDropdown.getContainer(), unitLabelCountContainerEl, this.#unitLoadoutWrapperEl, this.#altitudeVelocityHeadingEl,
+            this.#advancedOptionsToggle, this.#advancedOptionsDiv, this.#unitInfoToggle, this.#unitInfoDiv, this.#deployUnitButtonEl);
+
+        SVGInjector(this.#container.querySelectorAll(`img[src$=".svg"]`));
 
         /* Load the country codes from the public folder */
         var xhr = new XMLHttpRequest();
@@ -180,8 +221,12 @@ export abstract class UnitSpawnMenu {
             /* Hide all the other components */
             this.#unitLoadoutDropdown.hide();
             this.#unitSkillDropdown.hide();
+            this.#altitudeVelocityHeadingEl.classList.add("hide");
+            this.#unitLoadoutListEl.classList.add("hide");
             this.#unitSpawnAltitudeSlider.hide();
-            this.#unitLoadoutPreviewEl.classList.add("hide");
+            this.#unitSpawnVelocitySlider.hide();
+            this.#spawnHeading.classList.add("hide");
+            this.#unitLoadoutWrapperEl.classList.add("hide");
             this.#advancedOptionsDiv.classList.add("hide");
             this.#unitInfoDiv.classList.add("hide");
             this.#advancedOptionsText.classList.add("hide");
@@ -247,13 +292,16 @@ export abstract class UnitSpawnMenu {
         })
 
         this.#container.addEventListener("unitLabelChanged", () => {
-            /* If enabled, show the altitude slideer and loadouts section */
-            if (this.#showAltitudeSlider)
-                this.#unitSpawnAltitudeSlider.show();
+            /* If enabled, show the altitude slider and loadouts section */
+            this.#altitudeVelocityHeadingEl.classList.toggle("hide", !(this.#showAltitudeSlider || this.#showVelocitySlider || this.#showHeadingDial));
+
+            if (this.#showAltitudeSlider) this.#unitSpawnAltitudeSlider.show();
+            if (this.#showVelocitySlider) this.#unitSpawnVelocitySlider.show();
+            if (this.#showHeadingDial) this.#spawnHeading.classList.remove("hide");
 
             if (this.#showLoadout) {
                 this.#unitLoadoutDropdown.show();
-                this.#unitLoadoutPreviewEl.classList.remove("hide");
+                this.#unitLoadoutWrapperEl.classList.remove("hide");
             }
 
             if (this.#showSkill) {
@@ -351,21 +399,21 @@ export abstract class UnitSpawnMenu {
 
         this.#container.addEventListener("unitSkillChanged", () => {
 
-        })
+        });
 
         this.#container.addEventListener("unitCountChanged", () => {
             /* Recompute the spawn points */
             this.#computeSpawnPoints();
-        })
+        });
 
         this.#container.addEventListener("unitCountryChanged", () => {
             /* Get the unit liveries by country */
             this.#setUnitLiveryOptions();
-        })
+        });
 
         this.#container.addEventListener("unitLiveryChanged", () => {
 
-        })
+        });
 
         document.addEventListener('activeCoalitionChanged', () => {
             /* If the coalition changed, update the circle previews to set the colours */
@@ -405,12 +453,14 @@ export abstract class UnitSpawnMenu {
 
         /* Hide everything but the unit type dropdown */
         this.#unitLabelDropdown.hide();
+        this.#altitudeVelocityHeadingEl.classList.add("hide");
+        this.#unitLoadoutListEl.classList.add("hide");
         this.#unitCountDivider.classList.add("hide");
         this.#unitCountDropdown.hide();
         this.#unitLoadoutDropdown.hide();
         this.#unitSkillDropdown.hide();
         this.#unitSpawnAltitudeSlider.hide();
-        this.#unitLoadoutPreviewEl.classList.add("hide");
+        this.#unitLoadoutWrapperEl.classList.add("hide");
         this.#advancedOptionsDiv.classList.add("hide");
         this.#unitInfoDiv.classList.add("hide");
         this.#advancedOptionsText.classList.add("hide");
@@ -542,11 +592,15 @@ export abstract class UnitSpawnMenu {
     }
 
     getLoadoutPreview() {
-        return this.#unitLoadoutPreviewEl;
+        return this.#unitLoadoutWrapperEl;
     }
 
     getAltitudeSlider() {
         return this.#unitSpawnAltitudeSlider;
+    }
+
+    getVelocitySlider() {
+        return this.#unitSpawnVelocitySlider;
     }
 
     setShowLoadout(showLoadout: boolean) {
@@ -559,6 +613,10 @@ export abstract class UnitSpawnMenu {
 
     setShowAltitudeSlider(showAltitudeSlider: boolean) {
         this.#showAltitudeSlider = showAltitudeSlider;
+    }
+
+    setShowVelocitySlider(showVelocitySlider: boolean) {
+        this.#showVelocitySlider = showVelocitySlider;
     }
 
     setShowSpawnHeading(showSpawnHeading: boolean) {

@@ -71,9 +71,8 @@ export class NumericInput {
         const value = parseInt(this.#input.value, 10);
         this.#input.value = zeroAppend(value, 3);
         if (!isNaN(value) && value >= 0 && value <= 360) {
-            const radians = deg2rad(value);
             this.#updateBugPosition(value)
-            this.#callback(radians);
+            this.#callback(value);
         }
     }
 

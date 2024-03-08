@@ -528,11 +528,6 @@ nav.ol-panel {
     width: 100%;
 }
 
-.ol-slider-container:not(:first-of-type) {
-    margin-top: 10px;
-    width: 100%;
-}
-
 .ol-slider {
     -webkit-appearance: none;
     appearance: none;

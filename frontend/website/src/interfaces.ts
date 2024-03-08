@@ -246,6 +246,7 @@ export interface UnitSpawnOptions {
     airbase: Airbase | undefined;
     liveryID: string | undefined;
     altitude: number | undefined;
+    velocity: number | undefined;
 }
 
 export interface AirbaseOptions {
