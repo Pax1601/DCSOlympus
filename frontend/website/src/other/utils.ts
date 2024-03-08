@@ -468,6 +468,7 @@ export function createCheckboxOption(text: string, description: string, checked:
         "disabled": false,
         "name": "",
         "readOnly": false,
+        "value": null,
         ...options
     };
     var div = document.createElement("div");
@@ -476,10 +477,11 @@ export function createCheckboxOption(text: string, description: string, checked:
     label.title = description;
     var input = document.createElement("input");
     input.type = "checkbox";
-    input.checked  = checked;
-    input.name     = options.name;
-    input.disabled = options.disabled;
-    input.readOnly = options.readOnly;
+    input.checked   = checked;
+    input.name      = options.name;
+    input.disabled  = options.disabled;
+    input.readOnly  = options.readOnly;
+    input.value     = options.value;
     var span = document.createElement("span");
     span.innerText = text;
     label.appendChild(input);
