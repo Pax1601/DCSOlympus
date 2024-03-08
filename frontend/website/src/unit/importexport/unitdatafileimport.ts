@@ -44,7 +44,7 @@ export class UnitDataFileImport extends UnitDataFile {
                 continue;
 
             let unitsToSpawn = groupData.filter((unitData: UnitData) => this.#unitDataCanBeImported(unitData)).map((unitData: UnitData) => {
-                return { unitType: unitData.name, location: unitData.position, liveryID: "" }
+                return { unitType: unitData.name, location: unitData.position, liveryID: "", velocity: 250 }
             });
 
             unitsManager.spawnUnits(category, unitsToSpawn, coalition, false);
@@ -61,16 +61,16 @@ export class UnitDataFileImport extends UnitDataFile {
             }
             var reader = new FileReader();
             reader.onload = (e: any) => {
-                
+
                 try {
                     this.#fileData = JSON.parse(e.target.result);
 
                     const validator = new ImportFileJSONSchemaValidator();
                     if (!validator.validate(this.#fileData)) {
-                        const errors = validator.getErrors().reduce((acc:any, error:any) => {
+                        const errors = validator.getErrors().reduce((acc: any, error: any) => {
                             let errorString = error.instancePath.substring(1) + ": " + error.message;
                             if (error.params) {
-                                const {allowedValues} = error.params;
+                                const { allowedValues } = error.params;
                                 if (allowedValues)
                                     errorString += ": " + allowedValues.join(', ');
                             }
@@ -80,8 +80,8 @@ export class UnitDataFileImport extends UnitDataFile {
                         this.#showFileDataErrors(errors);
                     } else {
                         this.#showForm();
-                    }                   
-                } catch(e:any) {
+                    }
+                } catch (e: any) {
                     this.#showFileDataErrors([e]);
                 }
             };
@@ -90,9 +90,9 @@ export class UnitDataFileImport extends UnitDataFile {
         input.click();
     }
 
-    #showFileDataErrors( reasons:string[]) {
-        
-        this.dialog.getElement().querySelectorAll("[data-on-error]").forEach((el:Element) => {
+    #showFileDataErrors(reasons: string[]) {
+
+        this.dialog.getElement().querySelectorAll("[data-on-error]").forEach((el: Element) => {
             el.classList.toggle("hide", el.getAttribute("data-on-error") === "hide");
         });
 
@@ -104,7 +104,7 @@ export class UnitDataFileImport extends UnitDataFile {
     }
 
     #showForm() {
-        this.dialog.getElement().querySelectorAll("[data-on-error]").forEach((el:Element) => {
+        this.dialog.getElement().querySelectorAll("[data-on-error]").forEach((el: Element) => {
             el.classList.toggle("hide", el.getAttribute("data-on-error") === "show");
         });
 

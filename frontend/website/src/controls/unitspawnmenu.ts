@@ -5,7 +5,7 @@ import { UnitDatabase } from "../unit/databases/unitdatabase";
 import { getApp } from "..";
 import { GAME_MASTER, GROUND_UNIT_AIR_DEFENCE_REGEX } from "../constants/constants";
 import { Airbase } from "../mission/airbase";
-import { ftToM } from "../other/utils";
+import { deg2rad, ftToM } from "../other/utils";
 import { aircraftDatabase } from "../unit/databases/aircraftdatabase";
 import { helicopterDatabase } from "../unit/databases/helicopterdatabase";
 import { groundUnitDatabase } from "../unit/databases/groundunitdatabase";
@@ -647,7 +647,7 @@ export abstract class UnitSpawnMenu {
     }
 
     #setUnitSpawnHeading(spawnHeading: number) {
-        this.spawnOptions.heading = spawnHeading;
+        this.spawnOptions.heading = deg2rad(spawnHeading);
         this.#container.dispatchEvent(new Event("unitSpawnHeadingChanged"));
     }
 
@@ -763,7 +763,8 @@ export class AircraftSpawnMenu extends UnitSpawnMenu {
                 heading: spawnOptions.heading ? spawnOptions.heading : 0,
                 loadout: spawnOptions.loadout ? spawnOptions.loadout.name : "",
                 liveryID: spawnOptions.liveryID ? spawnOptions.liveryID : "",
-                skill: spawnOptions.skill ? spawnOptions.skill : "Excellent" // Default to "Excellent" if skill is not set
+                skill: spawnOptions.skill ? spawnOptions.skill : "Excellent", // Default to "Excellent" if skill is not set
+                velocity: spawnOptions.velocity || 250
             };
             var units = [];
             for (let i = 1; i <= unitsCount; i++) {
@@ -805,7 +806,8 @@ export class HelicopterSpawnMenu extends UnitSpawnMenu {
                 heading: spawnOptions.heading ? spawnOptions.heading : 0,
                 loadout: spawnOptions.loadout ? spawnOptions.loadout.name : "",
                 liveryID: spawnOptions.liveryID ? spawnOptions.liveryID : "",
-                skill: spawnOptions.skill ? spawnOptions.skill : "Excellent" // Default to "Excellent" if skill is not set
+                skill: spawnOptions.skill ? spawnOptions.skill : "Excellent",
+                velocity: spawnOptions.velocity || 100 // Default to "Excellent" if skill is not set
             };
             var units = [];
             for (let i = 1; i < unitsCount + 1; i++) {
@@ -846,7 +848,8 @@ export class GroundUnitSpawnMenu extends UnitSpawnMenu {
                 location: spawnOptions.latlng,
                 heading: spawnOptions.heading ? spawnOptions.heading : 0,
                 liveryID: spawnOptions.liveryID ? spawnOptions.liveryID : "",
-                skill: spawnOptions.skill ? spawnOptions.skill : "High"
+                skill: spawnOptions.skill ? spawnOptions.skill : "High",
+                velocity: spawnOptions.velocity || 250
             };
 
             var units = [];
@@ -898,7 +901,8 @@ export class NavyUnitSpawnMenu extends UnitSpawnMenu {
                 location: spawnOptions.latlng,
                 heading: spawnOptions.heading ? spawnOptions.heading : 0,
                 liveryID: spawnOptions.liveryID ? spawnOptions.liveryID : "",
-                skill: spawnOptions.skill ? spawnOptions.skill : "High"
+                skill: spawnOptions.skill ? spawnOptions.skill : "High",
+                velocity: spawnOptions.velocity || 0
             };
 
             var units = [];

@@ -1315,12 +1315,12 @@ export class UnitsManager {
                             /* Get a random blueprint depending on the selected parameters and spawn the unit */
                             let unitBlueprint: UnitBlueprint | null;
                             if (forceCoalition)
-                                unitBlueprint = randomUnitBlueprint(groundUnitDatabase, { type: type, eras: activeEras, ranges: activeRanges, coalition: coalitionArea.getCoalition()});
-                            else 
+                                unitBlueprint = randomUnitBlueprint(groundUnitDatabase, { type: type, eras: activeEras, ranges: activeRanges, coalition: coalitionArea.getCoalition() });
+                            else
                                 unitBlueprint = randomUnitBlueprint(groundUnitDatabase, { type: type, eras: activeEras, ranges: activeRanges });
 
                             if (unitBlueprint)
-                                this.spawnUnits("GroundUnit", [{ unitType: unitBlueprint.name, location: latlng, liveryID: "" }], coalitionArea.getCoalition(), false, "", "");
+                                this.spawnUnits("GroundUnit", [{ unitType: unitBlueprint.name, location: latlng, liveryID: "", velocity: 250 }], coalitionArea.getCoalition(), false, "", "");
                         }
                     }
                 }
@@ -1345,12 +1345,12 @@ export class UnitsManager {
                             /* Get a random blueprint depending on the selected parameters and spawn the unit */
                             let unitBlueprint: UnitBlueprint | null;
                             if (forceCoalition)
-                                unitBlueprint = randomUnitBlueprint(groundUnitDatabase, { type: type, eras: activeEras, ranges: activeRanges, coalition: coalitionArea.getCoalition()});
-                            else 
+                                unitBlueprint = randomUnitBlueprint(groundUnitDatabase, { type: type, eras: activeEras, ranges: activeRanges, coalition: coalitionArea.getCoalition() });
+                            else
                                 unitBlueprint = randomUnitBlueprint(groundUnitDatabase, { type: type, eras: activeEras, ranges: activeRanges });
 
                             if (unitBlueprint)
-                                this.spawnUnits("GroundUnit", [{ unitType: unitBlueprint.name, location: latlng, liveryID: "" }], coalitionArea.getCoalition(), false, "", "");
+                                this.spawnUnits("GroundUnit", [{ unitType: unitBlueprint.name, location: latlng, liveryID: "", velocity: 250 }], coalitionArea.getCoalition(), false, "", "");
                         }
                     }
                 }
@@ -1427,7 +1427,7 @@ export class UnitsManager {
         if (spawnPoints <= getApp().getMissionManager().getAvailableSpawnPoints()) {
             getApp().getMissionManager().setSpentSpawnPoints(spawnPoints);
             spawnFunction();
-            document.dispatchEvent( new CustomEvent( "unitSpawned", {
+            document.dispatchEvent(new CustomEvent("unitSpawned", {
                 "detail": {
                     "airbase": airbase,
                     "category": category,

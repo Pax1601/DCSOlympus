@@ -77,7 +77,8 @@ export interface UnitSpawnTable {
     heading?: number,
     loadout?: string,
     skill?: string,
-    liveryID: string
+    liveryID: string,
+    velocity: number
 }
 
 export interface ObjectIconOptions {

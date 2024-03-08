@@ -9,7 +9,7 @@ export abstract class UnitDatabase {
 
     constructor(url: string = "") {
         this.#url = url;
-        this.load(() => {});
+        this.load(() => { });
     }
 
     load(callback: CallableFunction) {
@@ -19,7 +19,7 @@ export abstract class UnitDatabase {
             xhr.setRequestHeader("Cache-Control", "no-cache, no-store, max-age=0");
             xhr.responseType = 'json';
             xhr.onload = () => {
-            var status = xhr.status;
+                var status = xhr.status;
                 if (status === 200) {
                     this.blueprints = xhr.response;
                     callback();
@@ -54,7 +54,7 @@ export abstract class UnitDatabase {
             var filteredBlueprints: { [key: string]: UnitBlueprint } = {};
             for (let unit in this.blueprints) {
                 const blueprint = this.blueprints[unit];
-                if (blueprint.enabled || includeDisabled) 
+                if (blueprint.enabled || includeDisabled)
                     filteredBlueprints[unit] = blueprint;
             }
             return filteredBlueprints;
@@ -63,7 +63,7 @@ export abstract class UnitDatabase {
             var filteredBlueprints: { [key: string]: UnitBlueprint } = {};
             for (let unit in this.blueprints) {
                 const blueprint = this.blueprints[unit];
-                if ((blueprint.enabled || includeDisabled) && this.getSpawnPointsByName(blueprint.name) <= getApp().getMissionManager().getAvailableSpawnPoints() && 
+                if ((blueprint.enabled || includeDisabled) && this.getSpawnPointsByName(blueprint.name) <= getApp().getMissionManager().getAvailableSpawnPoints() &&
                     getApp().getMissionManager().getCommandModeOptions().eras.includes(blueprint.era) &&
                     (!getApp().getMissionManager().getCommandModeOptions().restrictToCoalition || blueprint.coalition === getApp().getMissionManager().getCommandedCoalition() || blueprint.coalition === undefined)) {
                     filteredBlueprints[unit] = blueprint;
@@ -92,11 +92,11 @@ export abstract class UnitDatabase {
     }
 
     /* Returns a list of all possible types in a database */
-    getTypes(unitFilter?:CallableFunction) {
+    getTypes(unitFilter?: CallableFunction) {
         var filteredBlueprints = this.getBlueprints();
         var types: string[] = [];
         for (let unit in filteredBlueprints) {
-            if ( typeof unitFilter === "function" && !unitFilter(filteredBlueprints[unit]))
+            if (typeof unitFilter === "function" && !unitFilter(filteredBlueprints[unit]))
                 continue;
             var type = filteredBlueprints[unit].type;
             if (type && type !== "" && !types.includes(type))
@@ -223,7 +223,7 @@ export abstract class UnitDatabase {
             var row = Math.floor(idx / gridSize);
             var col = idx - row * gridSize;
             var location = new LatLng(initialPosition.lat + col * step, initialPosition.lng + row * step)
-            getApp().getUnitsManager().spawnUnits(this.getCategory(), [{unitType: unitBlueprint.name, location: location, altitude: 1000, loadout: "", liveryID: ""}]);
+            getApp().getUnitsManager().spawnUnits(this.getCategory(), [{ unitType: unitBlueprint.name, location: location, altitude: 1000, loadout: "", liveryID: "", velocity: 250 }]);
         })
     }
 
