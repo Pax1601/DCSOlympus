@@ -74,7 +74,6 @@ else:
                 print(f"Total area: {int(area / 1e6)} square kilometers")
                 print(f"Estimated number of tiles: {tiles_num}")
                 print(f"Estimated number of screenshots: {screenshots_num}")
-                print(f"Estimated time to complete: {timedelta(seconds=total_time * 0.15)} (hh:mm:ss)")
                 input("Press enter to continue...")
                 
                 map_generator.run(map_config, port)

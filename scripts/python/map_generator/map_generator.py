@@ -6,6 +6,7 @@ import os
 import yaml
 import json
 import numpy
+import datetime
 
 from fastkml import kml
 from shapely import wkt, Point
@@ -21,6 +22,7 @@ tot_futs = 0
 # constants
 C = 40075016.686                # meters, Earth equatorial circumference
 R = C / (2 * math.pi)			# meters, Earth equatorial radius
+PUT_RETRIES = 10				# allowable number of retries for the PUT request
                       
 def deg_to_num(lat_deg, lon_deg, zoom):
 	lat_rad = math.radians(lat_deg)
@@ -181,7 +183,20 @@ def takeScreenshot(XY, n_width, n_height, map_config, zoom, output_directory, f,
 	# If the number of rows or columns is odd, we need to take the picture at the CENTER of the tile!
 	lat, lng = num_to_deg(XY[0] + (n_width % 2) / 2, XY[1] + (n_height % 2) / 2, zoom)
 	data = json.dumps({'lat': lat, 'lng': lng, 'alt': 1350 + map_config['zoom_factor'] * (25000 - 1350), 'mode': 'map'})
-	r = requests.put(f'http://127.0.0.1:{port}', data = data)
+
+	# Try to send the PUT request, up to PUT_RETRIES
+	retries = PUT_RETRIES
+	success = False
+	while not success and retries > 0:
+		try:
+			r = requests.put(f'http://127.0.0.1:{port}', data = data)
+			success = True
+		except:
+			retries -= 1
+			time.sleep(0.5) 		# Wait for any error to clear
+
+	if success == False:
+		raise Exception(f"Could not fulfill PUT request after {PUT_RETRIES} retries")
 
 	geo_data = json.loads(r.text)
 
@@ -215,6 +230,7 @@ def takeScreenshot(XY, n_width, n_height, map_config, zoom, output_directory, f,
 def run(map_config, port):
 	global tot_futs, fut_counter
 
+	print("Script start time: ", datetime.datetime.now())
 	with open('configs/screen_properties.yml', 'r') as sp:
 		screen_config = yaml.safe_load(sp)
 
@@ -313,6 +329,7 @@ def run(map_config, port):
 						n += 1
 
 				########### Extract the tiles
+				print("Tiles extraction starting at: ", datetime.datetime.now())
 				if not os.path.exists(os.path.join(output_directory, "tiles", str(zoom))):
 					os.mkdir(os.path.join(output_directory, "tiles", str(zoom)))
 
@@ -341,6 +358,7 @@ def run(map_config, port):
 			final_level = int(input(f"Zoom level already exists. Starting from level {zoom}, please enter desired final zoom level: "))
 		
 		########### Assemble tiles to get lower zoom levels
+		print("Tiles merging start time: ", datetime.datetime.now())
 		for current_zoom in range(zoom, final_level, -1):
 			Xs = [int(d) for d in listdir(os.path.join(output_directory, "tiles", str(current_zoom))) if isdir(join(output_directory, "tiles", str(current_zoom), d))]
 			existing_tiles = []
@@ -366,6 +384,8 @@ def run(map_config, port):
 				fut_counter = 0
 				[fut.add_done_callback(done_callback) for fut in futs]
 				[fut.result() for fut in futures.as_completed(futs)]
+
+		print("Script end time: ", datetime.datetime.now())
 
 				
 
