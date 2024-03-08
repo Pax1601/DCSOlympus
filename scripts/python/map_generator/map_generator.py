@@ -6,6 +6,7 @@ import os
 import yaml
 import json
 import numpy
+import datetime
 
 from fastkml import kml
 from shapely import wkt, Point
@@ -21,6 +22,7 @@ tot_futs = 0
 # constants
 C = 40075016.686                # meters, Earth equatorial circumference
 R = C / (2 * math.pi)			# meters, Earth equatorial radius
+PUT_RETRIES = 10				# allowable number of retries for the PUT request
                       
 def deg_to_num(lat_deg, lon_deg, zoom):
 	lat_rad = math.radians(lat_deg)
@@ -39,7 +41,7 @@ def num_to_deg(xtile, ytile, zoom):
 def compute_mpps(lat, z):
 	return C * math.cos(math.radians(lat)) / math.pow(2, z + 8)
 
-def printProgressBar(iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
+def print_progress_bar(iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
     percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
     filledLength = int(length * iteration // total)
     bar = fill * filledLength + '-' * (length - filledLength)
@@ -51,7 +53,7 @@ def printProgressBar(iteration, total, prefix = '', suffix = '', decimals = 1, l
 def done_callback(fut):
 	global fut_counter, tot_futs
 	fut_counter += 1
-	printProgressBar(fut_counter, tot_futs)
+	print_progress_bar(fut_counter, tot_futs)
 
 def extract_tiles(n, screenshots_XY, params):
 	f = params['f']
@@ -126,15 +128,10 @@ def merge_tiles(base_path, zoom, tile):
 	# Save the image
 	dst.save(os.path.join(base_path, str(zoom - 1), str(X), f"{Y}.png"), quality=98)
 
-def computeCorrectionFactor(XY, n_width, n_height, map_config, zoom, output_directory, port):
-	# Take screenshots at the given position, then east and south of it
-	takeScreenshot(XY, 0, 0, map_config, zoom, output_directory, "calib", "ref", port)
-	takeScreenshot((XY[0] + n_width, XY[1]), 0, 0, map_config, zoom, output_directory, "calib", "lng", port)
-	takeScreenshot((XY[0], XY[1] + n_height), 0, 0, map_config, zoom, output_directory, "calib", "lat", port)
-	
+def compute_correction_factor(XY, n_width, n_height, map_config, zoom, output_directory, port):
+	# Take screenshots at the given position
+	take_screenshot(XY, 0, 0, map_config, zoom, output_directory, "calib", "ref", port)
 	calib_ref = Image.open(os.path.join(output_directory, "screenshots", f"calib_ref_{zoom}.jpg"))
-	calib_lat = Image.open(os.path.join(output_directory, "screenshots", f"calib_lat_{zoom}.jpg"))
-	calib_lng = Image.open(os.path.join(output_directory, "screenshots", f"calib_lng_{zoom}.jpg"))
 
 	# These calibration boxes are located at the edge of the interest region
 	box1 = (calib_ref.width / 2 + n_width / 2 * 256 - 50, calib_ref.height / 2 - n_height / 2 * 256 + 10,
@@ -147,13 +144,24 @@ def computeCorrectionFactor(XY, n_width, n_height, map_config, zoom, output_dire
 	box4 = (calib_ref.width / 2 - n_width / 2 * 256 + 10, calib_ref.height / 2 - n_height / 2 * 256 - 50,
 	    	calib_ref.width / 2 + n_width / 2 * 256 - 10, calib_ref.height / 2 - n_height / 2 * 256 + 50)
 
+	# Check if there is enough variation at the calibration locations
+	if compute_variation(calib_ref.crop(box1).convert('L')) < 30 or \
+		compute_variation(calib_ref.crop(box3).convert('L')) < 30:
+		return None # Not enough variation
+
+	# Take screenshot east and south of it
+	take_screenshot((XY[0] + n_width, XY[1]), 0, 0, map_config, zoom, output_directory, "calib", "lng", port)
+	take_screenshot((XY[0], XY[1] + n_height), 0, 0, map_config, zoom, output_directory, "calib", "lat", port)
+	calib_lat = Image.open(os.path.join(output_directory, "screenshots", f"calib_lat_{zoom}.jpg"))
+	calib_lng = Image.open(os.path.join(output_directory, "screenshots", f"calib_lng_{zoom}.jpg"))
+
 	# Find the best correction factor to bring the two images to be equal on the longitude direction
 	best_err = None
 	best_delta_width = 0
-	for delta_width in range(-5, 6):
+	for delta_width in range(-15, 16):
 		calib_box1 = calib_ref.resize((calib_ref.width + delta_width, calib_ref.height)).crop(box1).convert('L')
 		calib_box2 = calib_lng.resize((calib_ref.width + delta_width, calib_ref.height)).crop(box2).convert('L')
-		err = computeDifference(calib_box1, calib_box2)
+		err = compute_difference(calib_box1, calib_box2)
 		if best_err is None or err < best_err:
 			best_delta_width = delta_width
 			best_err = err
@@ -161,27 +169,45 @@ def computeCorrectionFactor(XY, n_width, n_height, map_config, zoom, output_dire
 	# Find the best correction factor to bring the two images to be equal on the latitude direction
 	best_err = None
 	best_delta_height = 0
-	for delta_height in range(-5, 6):
+	for delta_height in range(-15, 16):
 		calib_box3 = calib_ref.resize((calib_ref.width, calib_ref.height + delta_height)).crop(box3).convert('L')
 		calib_box4 = calib_lat.resize((calib_ref.width, calib_ref.height + delta_height)).crop(box4).convert('L')
-		err = computeDifference(calib_box3, calib_box4)
+		err = compute_difference(calib_box3, calib_box4)
 		if best_err is None or err < best_err:
 			best_delta_height = delta_height
 			best_err = err
 
 	return (best_delta_width, best_delta_height)
 
-def computeDifference(imageA, imageB):
+def compute_difference(imageA, imageB):
 	err = numpy.sum((numpy.array(imageA).astype('float') - numpy.array(imageB).astype('float')) ** 2)
 	err /= float(imageA.width * imageA.height)
 	return err
 
-def takeScreenshot(XY, n_width, n_height, map_config, zoom, output_directory, f, n, port, correction = (0, 0)):
+def compute_variation(imageA):
+	min = numpy.min((numpy.array(imageA)))
+	max = numpy.max((numpy.array(imageA)))
+	return max - min
+
+def take_screenshot(XY, n_width, n_height, map_config, zoom, output_directory, f, n, port, correction = (0, 0)):
 	# Making PUT request
 	# If the number of rows or columns is odd, we need to take the picture at the CENTER of the tile!
 	lat, lng = num_to_deg(XY[0] + (n_width % 2) / 2, XY[1] + (n_height % 2) / 2, zoom)
 	data = json.dumps({'lat': lat, 'lng': lng, 'alt': 1350 + map_config['zoom_factor'] * (25000 - 1350), 'mode': 'map'})
-	r = requests.put(f'http://127.0.0.1:{port}', data = data)
+
+	# Try to send the PUT request, up to PUT_RETRIES
+	retries = PUT_RETRIES
+	success = False
+	while not success and retries > 0:
+		try:
+			r = requests.put(f'http://127.0.0.1:{port}', data = data)
+			success = True
+		except:
+			retries -= 1
+			time.sleep(0.5) 		# Wait for any error to clear
+
+	if success == False:
+		raise Exception(f"Could not fulfill PUT request after {PUT_RETRIES} retries")
 
 	geo_data = json.loads(r.text)
 
@@ -215,6 +241,7 @@ def takeScreenshot(XY, n_width, n_height, map_config, zoom, output_directory, f,
 def run(map_config, port):
 	global tot_futs, fut_counter
 
+	print("Script start time: ", datetime.datetime.now())
 	with open('configs/screen_properties.yml', 'r') as sp:
 		screen_config = yaml.safe_load(sp)
 
@@ -223,13 +250,13 @@ def run(map_config, port):
 		if not os.path.exists(output_directory):
 			os.mkdir(output_directory)
 
-		skip_screenshots = False
-		replace_screenshots = True
 		if not os.path.exists(os.path.join(output_directory, "screenshots")):
+			skip_screenshots = False
+			replace_screenshots = True
 			os.mkdir(os.path.join(output_directory, "screenshots"))
 		else: 
-			skip_screenshots = (input("Raw screenshots already found for this config, do you want to skip directly to tiles extraction? Enter y to skip: ") == "y")
-			replace_screenshots = (input("Do you want to replace the existing screenshots? Enter y to replace: ") == "y")
+			skip_screenshots = map_config['skip_screenshots']
+			replace_screenshots = map_config['replace_screenshots']
 
 		if not os.path.exists(os.path.join(output_directory, "tiles")):
 			os.mkdir(os.path.join(output_directory, "tiles"))
@@ -306,13 +333,16 @@ def run(map_config, port):
 					for XY in screenshots_XY:
 						if not os.path.exists(os.path.join(output_directory, "screenshots", f"{f}_{n}_{zoom}.jpg")) or replace_screenshots:
 							if n % 10 == 0 or correction is None:
-								correction = computeCorrectionFactor(XY, n_width, n_height, map_config, zoom, output_directory, port)
-							takeScreenshot(XY, n_width, n_height, map_config, zoom, output_directory, f, n, port, correction)
+								new_correction = compute_correction_factor(XY, n_width, n_height, map_config, zoom, output_directory, port)
+								if new_correction is not None:
+									correction = new_correction
+							take_screenshot(XY, n_width, n_height, map_config, zoom, output_directory, f, n, port, correction if correction is not None else (0, 0))
 						
-						printProgressBar(n + 1, len(screenshots_XY))
+						print_progress_bar(n + 1, len(screenshots_XY))
 						n += 1
 
 				########### Extract the tiles
+				print("Tiles extraction starting at: ", datetime.datetime.now())
 				if not os.path.exists(os.path.join(output_directory, "tiles", str(zoom))):
 					os.mkdir(os.path.join(output_directory, "tiles", str(zoom)))
 
@@ -338,9 +368,10 @@ def run(map_config, port):
 				f += 1
 
 		if zoom <= final_level:
-			final_level = int(input(f"Zoom level already exists. Starting from level {zoom}, please enter desired final zoom level: "))
+			final_level = map_config['final_level']
 		
 		########### Assemble tiles to get lower zoom levels
+		print("Tiles merging start time: ", datetime.datetime.now())
 		for current_zoom in range(zoom, final_level, -1):
 			Xs = [int(d) for d in listdir(os.path.join(output_directory, "tiles", str(current_zoom))) if isdir(join(output_directory, "tiles", str(current_zoom), d))]
 			existing_tiles = []
@@ -366,6 +397,8 @@ def run(map_config, port):
 				fut_counter = 0
 				[fut.add_done_callback(done_callback) for fut in futs]
 				[fut.result() for fut in futures.as_completed(futs)]
+
+		print("Script end time: ", datetime.datetime.now())
 
 				
 
