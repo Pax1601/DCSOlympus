@@ -39,3 +39,4 @@ frontend/website/plugins/controltips/index.js
 /frontend/server/public/maps
 *.pyc
 /scripts/**/*.jpg
+manager/manager.log
