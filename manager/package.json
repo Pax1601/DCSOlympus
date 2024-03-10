@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@electron/remote": "^2.1.2",
     "adm-zip": "^0.5.10",
     "create-desktop-shortcuts": "^1.10.1",
     "dir-compare": "^4.2.0",

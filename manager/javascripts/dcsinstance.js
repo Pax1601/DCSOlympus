@@ -1,4 +1,5 @@
 const { getManager } = require('./managerfactory')
+const { dialog } = require('@electron/remote');
 var regedit = require('regedit').promisified;
 var fs = require('fs')
 var path = require('path')
@@ -23,8 +24,8 @@ class DCSInstance {
      * @returns The list of DCS instances
      */
     static async getInstances(force = false) {
-        if (this.instances === null || force) 
-            DCSInstance.instances =  this.findInstances();
+        if (this.instances === null || force)
+            DCSInstance.instances = this.findInstances();
         return DCSInstance.instances;
     }
 
@@ -49,29 +50,45 @@ class DCSInstance {
 
         var result = await regedit.list(shellFoldersKey);
         /* Check that the registry read was successfull */
-        if (result[shellFoldersKey] !== undefined && result[shellFoldersKey]["exists"] && result[shellFoldersKey]['values'][saveGamesKey] !== undefined && result[shellFoldersKey]['values'][saveGamesKey]['value'] !== undefined) {
-            /* Read all the folders in Saved Games */
-            const searchpath = result[shellFoldersKey]['values'][saveGamesKey]['value'];
-            var folders = fs.readdirSync(searchpath).map((folder) => {return path.join(searchpath, folder);});
-            var instances = [];
-            folders = folders.concat(getManager().getAdditionalDCSInstances());
 
-            /* A DCS Instance is created if either the appsettings.lua or serversettings.lua file is detected */
-            for (let i = 0; i < folders.length; i++) {
-                const folder = folders[i];
-                if (fs.existsSync(path.join(folder, "Config", "appsettings.lua")) || fs.existsSync(path.join(folder, "Config", "serversettings.lua")) || getManager().getAdditionalDCSInstances().includes(folder)) {
-                    logger.log(`Found instance in ${folder}, checking for Olympus`)
-                    var newInstance = new DCSInstance(path.join(folder));
+        let customSavedGamesFolder = (await getManager().getOptions()).savedGamesFolder;
+        console.log((await getManager().getOptions()))
+        if (customSavedGamesFolder !== undefined || (result[shellFoldersKey] !== undefined && result[shellFoldersKey]["exists"] && result[shellFoldersKey]['values'][saveGamesKey] !== undefined && result[shellFoldersKey]['values'][saveGamesKey]['value'] !== undefined)) {
+            try {
+                /* Read all the folders in Saved Games */
+                const searchpath = customSavedGamesFolder !== undefined ? customSavedGamesFolder : result[shellFoldersKey]['values'][saveGamesKey]['value'];
+                var folders = fs.readdirSync(searchpath).map((folder) => { return path.join(searchpath, folder); });
+                var instances = [];
+                folders = folders.concat(getManager().getAdditionalDCSInstances());
 
-                    /* Check if Olympus is already installed */
-                    getManager().setLoadingProgress(`Found instance in ${folder}, checking for Olympus...`, (i + 1) / folders.length * 100);
-                    await newInstance.checkInstallation();
-                    instances.push(newInstance);
+                /* A DCS Instance is created if either the appsettings.lua or serversettings.lua file is detected */
+                for (let i = 0; i < folders.length; i++) {
+                    const folder = folders[i];
+                    if (fs.existsSync(path.join(folder, "Config", "appsettings.lua")) || fs.existsSync(path.join(folder, "Config", "serversettings.lua")) || getManager().getAdditionalDCSInstances().includes(folder)) {
+                        logger.log(`Found instance in ${folder}, checking for Olympus`)
+                        var newInstance = new DCSInstance(path.join(folder));
+
+                        /* Check if Olympus is already installed */
+                        getManager().setLoadingProgress(`Found instance in ${folder}, checking for Olympus...`, (i + 1) / folders.length * 100);
+                        await newInstance.checkInstallation();
+                        instances.push(newInstance);
+                    }
                 }
+            } catch (err) {
+                showErrorPopup(`<div class='main-message'>A critical error has occurred while detecting your DCS Instances locations. </div><div class='sub-message'>You can find more info in ${path.join(__dirname, "..", "manager.log")}</div>`)
+                logger.error(err)
             }
         } else {
             logger.error("An error occured while trying to fetch the location of the DCS instances.")
-            showErrorPopup(`<div class='main-message'>An error occured while trying to fetch the location of the DCS instances. </div><div class='sub-message'> You can find more info in ${getManager().getLogLocation()} </div>`);
+            showErrorPopup(`<div class='main-message'>An error occured while trying to fetch the location of the DCS instances. </div><div class='sub-message'> After clicking <b>Close</b>, please select the location of your Saved Games folder. </div>`, async () => {
+                let res = await dialog.showOpenDialog({ properties: ["openDirectory"] });
+                if (!res.canceled) {
+                    getManager().setSavedGamesFolder(res.filePaths[0]);
+                }
+                else {
+                    window.location.reload();
+                }
+            });
         }
         getManager().setLoadingProgress(`All DCS instances found!`, 100);
 
@@ -104,7 +121,7 @@ class DCSInstance {
 
             setPopupLoadingProgress(`Installing hook scripts in ${instance.folder}...`, (i * 4 + 4) / (instancesToFix.length * 4) * 100);
             await sleep(100);
-            await installHooks(instance.folder);  
+            await installHooks(instance.folder);
         }
 
         setPopupLoadingProgress(`All instances fixed!`, 100);
@@ -114,7 +131,7 @@ class DCSInstance {
     folder = "";
     name = "";
     frontendPort = 3000;
-    backendPort = 3001;
+    backendPort = 4512;
     backendAddress = "localhost";
     gameMasterPassword = "";
     blueCommanderPassword = "";
@@ -156,10 +173,10 @@ class DCSInstance {
         this.installationType = 'singleplayer';
         this.connectionsType = 'auto';
         this.installCameraPlugin = 'install';
-        
+
         /* Check if the olympus.json file is detected. If true, Olympus is considered to be installed */
         if (fs.existsSync(path.join(this.folder, "Config", "olympus.json"))) {
-            
+
             getManager().setLoadingProgress(`Olympus installed in ${this.folder}`);
             try {
                 /* Read the olympus.json */
@@ -459,7 +476,7 @@ class DCSInstance {
 
     /** Stop any node process running on the server port. This will stop either the server or the client depending on what is running 
      *  
-     */ 
+     */
     stop() {
         find('port', this.frontendPort)
             .then((list) => {
@@ -494,24 +511,34 @@ class DCSInstance {
             await sleep(500);
             await applyConfiguration(getManager().getActiveInstance().folder, getManager().getActiveInstance());
 
+            if (getManager().getActiveInstance().installCameraPlugin === 'install') {
+                setPopupLoadingProgress("Installing camera plugin...", 50);
+                await sleep(100);
+                await installCameraPlugin(getManager().getActiveInstance().folder);
+            } else {
+                setPopupLoadingProgress("Removing camera plugin (if installed)...", 50);
+                await sleep(100);
+                await deleteCameraPlugin(getManager().getActiveInstance().folder);
+            }
+
             setPopupLoadingProgress("Editing completed!", 100);
             await sleep(1500);
             logger.log(`Editing completed successfully`);
             hidePopup();
 
-            getManager().getMode() === "basic"? getManager().settingsPage.show(): getManager().instancesPage.show();
+            getManager().getMode() === "basic" ? getManager().settingsPage.show() : getManager().instancesPage.show();
         } catch (err) {
             logger.log(`An error occurred during editing: ${err}`);
             getManager().getActiveInstance().error = true;
-            
+
             showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${getManager().getLogLocation()} for more info. </div>`)
-            getManager().getMode() === "basic"? getManager().settingsPage.show(): getManager().instancesPage.show();
+            getManager().getMode() === "basic" ? getManager().settingsPage.show() : getManager().instancesPage.show();
         }
     }
 
     /** Install this instance
      *  
-     */ 
+     */
     async install() {
         showWaitLoadingPopup(`<span>Please wait while Olympus is being installed in <i>${this.name}</i></span>`);
         try {
@@ -540,6 +567,10 @@ class DCSInstance {
                 setPopupLoadingProgress("Installing camera plugin...", 83);
                 await sleep(100);
                 await installCameraPlugin(getManager().getActiveInstance().folder);
+            } else {
+                setPopupLoadingProgress("Removing camera plugin (if installed)...", 83);
+                await sleep(100);
+                await deleteCameraPlugin(getManager().getActiveInstance().folder);
             }
 
             setPopupLoadingProgress("Installation completed!", 100);
@@ -605,9 +636,9 @@ class DCSInstance {
 
                 hidePopup();
                 await getManager().reload();
-                if (getManager().getMode() === 'basic') 
+                if (getManager().getMode() === 'basic')
                     getManager().settingsPage.show();
-                else 
+                else
                     getManager().instancesPage.show();
                 return true;
             } catch (err) {
@@ -616,12 +647,12 @@ class DCSInstance {
                 /* Nested popup calls need to wait for animation to complete */
                 await sleep(300);
                 showErrorPopup(`<div class='main-message'>An error has occurred while uninstalling the Olympus instance. </div><div class='sub-message'> Make sure Olympus and DCS are not running. </div><div class='sub-message'>You can find more info in ${path.join(__dirname, "..", "manager.log")} </div>`, () => {
-                    if (getManager().getMode() === 'basic') 
+                    if (getManager().getMode() === 'basic')
                         getManager().settingsPage.show();
-                    else 
+                    else
                         getManager().instancesPage.show();
                 });
-            } 
+            }
         }, () => {
             getManager().setState('IDLE');
         });
