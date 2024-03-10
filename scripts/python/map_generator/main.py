@@ -1,4 +1,4 @@
-import sys
+import os
 import yaml
 import json
 import requests
@@ -16,9 +16,12 @@ parser = argparse.ArgumentParser(
             epilog='Hit the DCS Olympus Discord for more information')
 
 parser.add_argument('config', help='map configuration yaml file')
-parser.add_argument('-s', '--skip_screenshots', action='store_true', help='if screenshots are already present, this flag will cause the script to completely skip the screenshot loop')   
-parser.add_argument('-r', '--replace_screenshots', action='store_true', help='if screenshots are already present, this flag will cause the script to replace all screenshots, even those that already exist. Has no effect if -s or --skip_screenshots is present')   
+parser.add_argument('-s', '--skip_screenshots', action='store_true', help='if screenshots are already present, this flag will cause the script to completely skip the screenshot loop.')   
+parser.add_argument('-r', '--replace_screenshots', action='store_true', help='if screenshots are already present, this flag will cause the script to replace all screenshots, even those that already exist. Has no effect if -s or --skip_screenshots is present.')   
 parser.add_argument('-l', '--final_level', type=int, default=1, help='if tiles are already present for the zoom level that the script will output, this number will instruct up to which zoom level tile merging will be run. Defaults to 1.')   
+parser.add_argument('-f', '--screenshots_folder', help='if provided, will force the script to save the screenshots here. Defaults to output_directory/screenshots.')   
+parser.add_argument('-t', '--tiles_folder', help='if provided, will force the script to save the tiles here. Defaults to output_directory/tiles.')   
+parser.add_argument('-o', '--screenshots_only', action='store_true', help='if provided, the script will only run the screenshot acquisition algorithm.')   
 
 args = parser.parse_args()
 
@@ -36,6 +39,10 @@ with open('configs/screen_properties.yml', 'r') as sp:
         map_config = yaml.safe_load(cp)
 
         map_config.update(vars(args))
+        if map_config["screenshots_folder"] is None:
+            map_config["screenshots_folder"] = os.path.join(map_config['output_directory'], "screenshots")
+        if map_config["tiles_folder"] is None:
+            map_config["tiles_folder"] = os.path.join(map_config['output_directory'], "tiles")
 
         print("Screen parameters:")
         print(f"-> Screen width: {screen_config['width']}px")
@@ -43,6 +50,8 @@ with open('configs/screen_properties.yml', 'r') as sp:
         
         print("Map parameters:")
         print(f"-> Output directory: {map_config['output_directory']}")
+        print(f"-> Screenshots folder: {map_config['screenshots_folder']}")
+        print(f"-> Tiles folder: {map_config['tiles_folder']}")
         print(f"-> Boundary file: {map_config['boundary_file']}")
         print(f"-> Zoom factor: {map_config['zoom_factor']}")
 
@@ -89,7 +98,3 @@ with open('configs/screen_properties.yml', 'r') as sp:
             print(f"Estimated number of screenshots: {screenshots_num}")
             
             map_generator.run(map_config, port)
-
-    
-
-
