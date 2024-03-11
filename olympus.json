@@ -16,6 +16,22 @@
             "password": null
         }, 
 		"additionalMaps": {
+			"TestMap": [
+				{
+					"urlTemplate": "http://localhost:3000/maps/TestMap/{z}/{x}/{y}.png",
+					"minNativeZoom": 1,
+					"maxNativeZoom": 13,
+					"minZoom": 1,
+					"maxZoom": 20
+				},
+				{
+					"urlTemplate": "http://localhost:3000/maps/TestMap/{z}/{x}/{y}.png",
+					"minNativeZoom": 14,
+					"maxNativeZoom": 17,
+					"minZoom": 14,
+					"maxZoom": 20
+				}
+			]
 		}
     }
 }

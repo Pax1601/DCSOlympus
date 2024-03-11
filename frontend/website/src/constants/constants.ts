@@ -122,18 +122,18 @@ export const minimapBoundaries = {
     ],
     "Falklands": [   // South Atlantic
         new LatLng(-49.097217, -79.418267),
-        new LatLng(-56.874517,-79.418267),
+        new LatLng(-56.874517, -79.418267),
         new LatLng(-56.874517, -43.316433),
         new LatLng(-49.097217, -43.316433),
         new LatLng(-49.097217, -79.418267)
-    ], 
+    ],
     "Normandy": [   // Normandy
         new LatLng(50.44, -3.29),
-        new LatLng(48.12,-3.29),
+        new LatLng(48.12, -3.29),
         new LatLng(48.12, 3.70),
         new LatLng(50.44, 3.70),
         new LatLng(50.44, -3.29)
-    ], 
+    ],
     "SinaiMap": [   // Sinai
         new LatLng(34.312222, 28.523333),
         new LatLng(25.946944, 28.523333),
@@ -161,36 +161,34 @@ export const defaultMapLayers = {
         maxZoom: 19,
         attribution: "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Mapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
     },
-    "USGS Topo": {
-        urlTemplate: 'https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}',
-        minZoom: 1,
-        maxZoom: 14,
-        attribution: 'Tiles courtesy of the <a href="https://usgs.gov/">U.S. Geological Survey</a>'
-    },
     "OpenStreetMap Mapnik": {
         urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
         minZoom: 1,
         maxZoom: 20,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     },
-    "OPENVKarte": {
-        urlTemplate: 'https://tileserver.memomaps.de/tilegen/{z}/{x}/{y}.png',
-        minZoom: 1,
-        maxZoom: 20,
-        attribution: 'Map <a href="https://memomaps.de/">memomaps.de</a> <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    },
-    "Esri.DeLorme": {
-        urlTemplate: 'https://server.arcgisonline.com/ArcGIS/rest/services/Specialty/DeLorme_World_Base_Map/MapServer/tile/{z}/{y}/{x}',
-        minZoom: 1,
-        maxZoom: 11,
-        attribution: 'Tiles &copy; Esri &mdash; Copyright: &copy;2012 DeLorme',
-    },
-    "CyclOSM": {
-        urlTemplate: 'https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png',
-        minZoom: 1,
-        maxZoom: 20,
-        attribution: '<a href="https://github.com/cyclosm/cyclosm-cartocss-style/releases" title="CyclOSM - Open Bicycle render">CyclOSM</a> | Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }
+    "DCS Marianas Modern": [
+        {
+            urlTemplate: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+            minZoom: 1,
+            maxZoom: 19
+        },
+        {
+            urlTemplate: 'http://maps.dcsolympus.com/maps/marianas-modern/{z}/{x}/{y}.png',
+            minNativeZoom: 1,
+            maxNativeZoom: 13,
+            minZoom: 1,
+            maxZoom: 20
+        },
+        {
+            urlTemplate: 'http://maps.dcsolympus.com/maps/marianas-modern/{z}/{x}/{y}.png',
+            minNativeZoom: 14,
+            maxNativeZoom: 16,
+            minZoom: 14,
+            maxZoom: 20,
+            attribution: 'Map extracted by OzDeaDMeaT (DCS Olympus Team)'
+        }
+    ]
 }
 
 /* Map constants */
@@ -258,7 +256,7 @@ export const MAP_MARKER_CONTROLS: MapMarkerVisibilityControl[] = [{
 
 export const IADSTypes = ["AAA", "SAM Site", "Radar (EWR)"];
 export const IADSDensities: { [key: string]: number } = { "AAA": 0.8, "SAM Site": 0.1, "Radar (EWR)": 0.05 };
-export const GROUND_UNIT_AIR_DEFENCE_REGEX:RegExp = /(\b(AAA|SAM|MANPADS?|[mM]anpads?)|[sS]tinger\b)/;
+export const GROUND_UNIT_AIR_DEFENCE_REGEX: RegExp = /(\b(AAA|SAM|MANPADS?|[mM]anpads?)|[sS]tinger\b)/;
 export const HIDE_GROUP_MEMBERS = "Hide group members when zoomed out";
 export const SHOW_UNIT_LABELS = "Show unit labels (L)";
 export const SHOW_UNITS_ENGAGEMENT_RINGS = "Show units threat range rings (Q)";

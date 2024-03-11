@@ -50,7 +50,7 @@ export type MapMarkerVisibilityControl = {
 export class Map extends L.Map {
     #ID: string;
     #state: string;
-    #layer: L.TileLayer | null = null;
+    #layer: L.TileLayer | L.LayerGroup | null = null;
     #preventLeftClick: boolean = false;
     #leftClickTimer: number = 0;
     #deafultPanDelta: number = 100;
@@ -281,14 +281,14 @@ export class Map extends L.Map {
 
         if (layerName in this.#mapLayers) {
             const layerData = this.#mapLayers[layerName];
-            var options: L.TileLayerOptions = {
-                attribution: layerData.attribution,
-                minZoom: layerData.minZoom,
-                maxZoom: layerData.maxZoom,
-                minNativeZoom: layerData.minNativeZoom,
-                maxNativeZoom: layerData.maxNativeZoom
-            };
-            this.#layer = new L.TileLayer(layerData.urlTemplate, options);
+            if (layerData instanceof Array) {
+                let layers = layerData.map((layer: any) => {
+                    return new L.TileLayer(layer.urlTemplate, layer);
+                })
+                this.#layer = new L.LayerGroup(layers);
+            } else {
+                this.#layer = new L.TileLayer(layerData.urlTemplate, layerData);
+            }
         }
 
         this.#layer?.addTo(this);

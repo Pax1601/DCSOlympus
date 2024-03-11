@@ -1,5 +1,5 @@
 {
   'output_directory': '.\NTTR',                             # Where to save the output files
-  'boundary_file': '.\configs\NTTR\boundary.kml',           # Input kml file setting the boundary of the map to create
+  'boundary_file': '.\configs\NTTR\LowResolution.kml',      # Input kml file setting the boundary of the map to create
   'zoom_factor': 0.5                                        # [0: maximum zoom in (things look very big), 1: maximum zoom out (things look very small)] 
 }

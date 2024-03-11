@@ -5,12 +5,20 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Current File",
+            "name": "Main",
             "type": "python",
             "request": "launch",
             "program": "main.py",
             "console": "integratedTerminal",
-            "args": ["./configs/Caucasus/HighResolution.yml"]
+            "args": ["-s", "-l", "1", "./configs/Test/MediumResolution.yml"]
+        }, 
+        {
+            "name": "Convert",
+            "type": "python",
+            "request": "launch",
+            "program": "convert_to_jpg.py",
+            "console": "integratedTerminal",
+            "args": ["./Syria/tiles", "./Syria/jpg"]
         }
     ]
 }
