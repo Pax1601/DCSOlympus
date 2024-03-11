@@ -163,9 +163,15 @@ async function applyConfiguration(folder, instance) {
         config["frontend"]["port"] = instance.frontendPort;
         config["backend"]["port"] = instance.backendPort;
         config["backend"]["address"] = instance.backendAddress;
-        config["authentication"]["gameMasterPassword"] = sha256(instance.gameMasterPassword);
-        config["authentication"]["blueCommanderPassword"] = sha256(instance.blueCommanderPassword);
-        config["authentication"]["redCommanderPassword"] = sha256(instance.redCommanderPassword);
+
+        if (instance.gameMasterPassword !== "")
+            config["authentication"]["gameMasterPassword"] = sha256(instance.gameMasterPassword);
+
+        if (instance.blueCommanderPassword !== "")
+            config["authentication"]["blueCommanderPassword"] = sha256(instance.blueCommanderPassword);
+
+        if (instance.redCommanderPassword !== "")
+            config["authentication"]["redCommanderPassword"] = sha256(instance.redCommanderPassword);
 
         await fsp.writeFile(path.join(folder, "Config", "olympus.json"), JSON.stringify(config, null, 4));
         logger.log(`Config succesfully applied in ${folder}`)

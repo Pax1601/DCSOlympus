@@ -1,7 +1,7 @@
 {
     "backend": {
         "address": "localhost",
-        "port": 3001
+        "port": 4512
     },
     "authentication": {
         "gameMasterPassword": "4b8823ed9e5c2392ab4a791913bb8ce41956ea32e308b760eefb97536746dd33",

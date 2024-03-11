@@ -2,7 +2,7 @@ const path = require("path")
 const fs = require("fs");
 
 const DCSInstance = require('./dcsinstance');
-const { showErrorPopup, showWaitPopup, showConfirmPopup } = require('./popup');
+const { showErrorPopup, showConfirmPopup } = require('./popup');
 const { logger } = require("./filesystem")
 
 const ManagerPage = require("./managerpage");
@@ -236,6 +236,17 @@ class Manager {
         location.reload();
     }
 
+    async setSavedGamesFolder(folder) {
+        var options = JSON.parse(fs.readFileSync("options.json"));
+        options.savedGamesFolder = folder;
+        fs.writeFileSync("options.json", JSON.stringify(options, null, 2));
+        location.reload();
+    }
+
+    async getOptions() {
+        return JSON.parse(fs.readFileSync("options.json"));
+    }
+
     /************************************************/
     /* CALLBACKS                                    */
     /************************************************/
@@ -341,8 +352,8 @@ class Manager {
 
     /* When the camera control installation is selected */
     async onInstallCameraControlClicked(type) {
-        this.connectionsTypePage.getElement().querySelector(`.install`).classList.toggle("selected", type === 'install');
-        this.connectionsTypePage.getElement().querySelector(`.no-install`).classList.toggle("selected", type === 'no-install');
+        this.cameraPage.getElement().querySelector(`.install`).classList.toggle("selected", type === 'install');
+        this.cameraPage.getElement().querySelector(`.no-install`).classList.toggle("selected", type === 'no-install');
         if (this.getActiveInstance())
             this.getActiveInstance().installCameraPlugin = type;
         else {
@@ -406,13 +417,33 @@ class Manager {
             }
             /* Installation type page */
         } else if (this.activePage == this.cameraPage) {
-            this.activePage.hide();
-            this.getState() === 'INSTALL' ? this.getActiveInstance().install() : this.getActiveInstance().edit(); 
+            if (await this.checkDCSRunning()) {
+                showConfirmPopup(`<div class='main-message'>DCS is running!</div><div class='sub-message'> Please stop the DCS instance you are trying to add Olympus to, then select <b>Accept</b>. <br>You can click <b>Accept</b> immediately if the running DCS instance is not the one you are adding Olympus to.</div>`, async () => {
+                    /* Nested popup calls need to wait for animation to complete */
+                    await sleep(300);
+                    
+                    this.activePage.hide();
+                    this.getState() === 'INSTALL' ? this.getActiveInstance().install() : this.getActiveInstance().edit();
+                });
+            } else {
+                this.activePage.hide();
+                this.getState() === 'INSTALL' ? this.getActiveInstance().install() : this.getActiveInstance().edit(); 
+            }
             /* Expert settings page */
         } else if (this.activePage == this.expertSettingsPage) {
             if (await this.checkPorts() && await this.checkPasswords()) {
-                this.activePage.hide();
-                this.getState() === 'INSTALL' ? this.getActiveInstance().install() : this.getActiveInstance().edit();
+                if (await this.checkDCSRunning()) {
+                    showConfirmPopup(`<div class='main-message'>DCS is running!</div><div class='sub-message'> Please stop the DCS instance you are trying to add Olympus to, then select <b>Accept</b>. <br>You can click <b>Accept</b> immediately if the running DCS instance is not the one you are adding Olympus to.</div>`, async () => {
+                        /* Nested popup calls need to wait for animation to complete */
+                        await sleep(300);
+                        
+                        this.activePage.hide();
+                        this.getState() === 'INSTALL' ? this.getActiveInstance().install() : this.getActiveInstance().edit();
+                    });
+                } else {
+                    this.activePage.hide();
+                    this.getState() === 'INSTALL' ? this.getActiveInstance().install() : this.getActiveInstance().edit();
+                }
             }
         }
     }
@@ -541,7 +572,7 @@ class Manager {
 
     async checkPasswords() {
         if (this.getActiveInstance()) {
-            if (this.getActiveInstance().installed && !this.getActiveInstance().arePasswordsEdited()) {
+            if (this.getState() === 'EDIT' && !this.getActiveInstance().arePasswordsEdited()) {
                 return true;
             }
             else {
@@ -609,10 +640,20 @@ class Manager {
         var instance = await this.getClickedInstance(name);
         this.setActiveInstance(instance);
         await this.setState('UNINSTALL');
-        if (instance.webserverOnline || instance.backendOnline)
+        if (instance.webserverOnline || instance.backendOnline) {
             showErrorPopup("<div class='main-message'>The selected Olympus instance is currently active </div><div class='sub-message'> Please stop DCS and Olympus Server/Client before removing it! </div>")
-        else
-            await instance.uninstall();
+        } else {
+            if (await this.checkDCSRunning()) {
+                showConfirmPopup(`<div class='main-message'>DCS is running!</div><div class='sub-message'> Please stop the DCS instance you are trying to remove Olympus from, then select <b>Accept</b></div>. <br>You can click <b>Accept</b> immediately if the running DCS instance is not the one you are removing Olympus from.`, async () => {
+                    /* Nested popup calls need to wait for animation to complete */
+                    await sleep(300);
+
+                    await instance.uninstall();
+                });
+            } else {
+                await instance.uninstall();
+            }
+        } 
     }
 
     async onLinkClicked(url) {
@@ -756,6 +797,23 @@ class Manager {
         await DCSInstance.reloadInstances();
         if (newState === 'IDLE')
             this.setActiveInstance(undefined);
+    }
+
+    async checkDCSRunning() {
+        let ps = new Promise((res, rej) => {
+            exec('tasklist', function(err, stdout, stderr) {
+                if (stdout.toLowerCase().includes("dcs.exe") || stdout.includes("dcs_server.exe")) {
+                    res(true);
+                } else {
+                    res(false);
+                }
+            });
+        })
+        try {
+            return await ps;
+        } catch {
+            return false; // An error occurred, let's hope DCS is not running!
+        }
     }
 
     /** Get the currently active instance, i.e. the instance that is being edited/installed/removed

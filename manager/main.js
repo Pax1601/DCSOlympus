@@ -8,6 +8,8 @@ let window;
 /* Add the System32 folder to the environment for the shortcuts creation to work properly */
 process.env['PATH'] = process.env['PATH'] + "%WINDIR%\\System32;"
 
+require('@electron/remote/main').initialize()
+
 function createWindow() {
     const window = new electronBrowserWindow({
 		width: 1200,
@@ -18,10 +20,12 @@ function createWindow() {
 		webPreferences: {
 			contextIsolation: true,
 			preload: path.join(__dirname, "javascripts", 'preload.js'),
-			nodeIntegration: true, 
+			nodeIntegration: true
 		},
 		icon: "./../img/olympus_configurator.ico"
     });
+
+    require("@electron/remote/main").enable(window.webContents);
 
     window.loadFile('index.html').then(() => { window.show(); });
 
