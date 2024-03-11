@@ -262,12 +262,6 @@ def run(map_config, port):
 		usable_width = screen_config['width'] - 400 	# Keep a margin around the center
 		usable_height = screen_config['height'] - 400	# Keep a margin around the center
 
-		existing_zoom_levels = [int(f) for f in listdir(os.path.join(map_config["tiles_folder"])) if isdir(join(map_config["tiles_folder"], f))]
-		if len(existing_zoom_levels) == 0:
-			final_level = 1
-		else:
-			final_level = max(existing_zoom_levels)
-
 		with open(map_config['boundary_file'], 'rt', encoding="utf-8") as bp:
 			# Read the config file
 			doc = bp.read()
@@ -320,84 +314,82 @@ def run(map_config, port):
 						if p.within(wkt.loads(geo.wkt)):
 							screenshots_XY.append((X, Y))
 
-				print(f"Feature {f} of {len(features)}, {len(screenshots_XY)} screenshots will be taken")
-
-				# Start looping
-				correction = None
-				if not skip_screenshots:
-					print(f"Feature {f} of {len(features)}, taking screenshots...")
-					n = 0
-					for XY in screenshots_XY:
-						if not os.path.exists(os.path.join(map_config['screenshots_folder'], f"{f}_{n}_{zoom}.jpg")) or replace_screenshots:
-							if n % 10 == 0 or correction is None:
-								new_correction = compute_correction_factor(XY, n_width, n_height, map_config, zoom, map_config['screenshots_folder'], port)
-								if new_correction is not None:
-									correction = new_correction
-							take_screenshot(XY, n_width, n_height, map_config, zoom, map_config['screenshots_folder'], f, n, port, correction if correction is not None else (0, 0))
-						
-						print_progress_bar(n + 1, len(screenshots_XY))
-						n += 1
-
-				if map_config["screenshots_only"]: 
-					return
+				########### Take screenshots
+				if not map_config["extraction_only"] and not map_config["merging_only"]:
+					print("Screenshots taking starting at: ", datetime.datetime.now())
+					print(f"Feature {f} of {len(features)}, {len(screenshots_XY)} screenshots will be taken")
+					# Start looping
+					correction = None
+					if not skip_screenshots:
+						print(f"Feature {f} of {len(features)}, taking screenshots...")
+						n = 0
+						for XY in screenshots_XY:
+							if not os.path.exists(os.path.join(map_config['screenshots_folder'], f"{f}_{n}_{zoom}.jpg")) or replace_screenshots:
+								if n % 10 == 0 or correction is None:
+									new_correction = compute_correction_factor(XY, n_width, n_height, map_config, zoom, map_config['screenshots_folder'], port)
+									if new_correction is not None:
+										correction = new_correction
+								take_screenshot(XY, n_width, n_height, map_config, zoom, map_config['screenshots_folder'], f, n, port, correction if correction is not None else (0, 0))
+							
+							print_progress_bar(n + 1, len(screenshots_XY))
+							n += 1
 
 				########### Extract the tiles
-				print("Tiles extraction starting at: ", datetime.datetime.now())
-				if not os.path.exists(os.path.join(map_config["tiles_folder"], str(zoom))):
-					os.mkdir(os.path.join(map_config["tiles_folder"], str(zoom)))
+				if not map_config["screenshots_only"] and not map_config["merging_only"]:
+					print("Tiles extraction starting at: ", datetime.datetime.now())
+					if not os.path.exists(os.path.join(map_config["tiles_folder"], str(zoom))):
+						os.mkdir(os.path.join(map_config["tiles_folder"], str(zoom)))
 
-				params = {
-					"f": f,
-					"zoom": zoom,
-					"n_width": n_width,
-					"n_height": n_height,
-					"screenshots_folder": map_config['screenshots_folder'],
-					"tiles_folder": map_config['tiles_folder']
-				}
+					params = {
+						"f": f,
+						"zoom": zoom,
+						"n_width": n_width,
+						"n_height": n_height,
+						"screenshots_folder": map_config['screenshots_folder'],
+						"tiles_folder": map_config['tiles_folder']
+					}
 
-				# Extract the tiles with parallel thread execution
-				with futures.ThreadPoolExecutor() as executor:
-					print(f"Feature {f} of {len(features)}, extracting tiles...")
-					futs = [executor.submit(extract_tiles, n, screenshots_XY, params) for n in range(0, len(screenshots_XY))]
-					tot_futs = len(futs)
-					fut_counter = 0
-					[fut.add_done_callback(done_callback) for fut in futs]
-					[fut.result() for fut in futures.as_completed(futs)]
+					# Extract the tiles with parallel thread execution
+					with futures.ThreadPoolExecutor() as executor:
+						print(f"Feature {f} of {len(features)}, extracting tiles...")
+						futs = [executor.submit(extract_tiles, n, screenshots_XY, params) for n in range(0, len(screenshots_XY))]
+						tot_futs = len(futs)
+						fut_counter = 0
+						[fut.add_done_callback(done_callback) for fut in futs]
+						[fut.result() for fut in futures.as_completed(futs)]
 
 				# Increase the feature counter
 				print(f"Feature {f} of {len(features)} completed!")	
 				f += 1
 
-		if zoom <= final_level:
-			final_level = map_config['final_level']
-		
 		########### Assemble tiles to get lower zoom levels
-		print("Tiles merging start time: ", datetime.datetime.now())
-		for current_zoom in range(zoom, final_level, -1):
-			Xs = [int(d) for d in listdir(os.path.join(map_config["tiles_folder"], str(current_zoom))) if isdir(join(map_config["tiles_folder"], str(current_zoom), d))]
-			existing_tiles = []
-			for X in Xs:
-				Ys = [int(f.removesuffix(".png")) for f in listdir(os.path.join(map_config["tiles_folder"], str(current_zoom), str(X))) if isfile(join(map_config["tiles_folder"], str(current_zoom), str(X), f))]
-				for Y in Ys:
-					existing_tiles.append((X, Y))
+		if not map_config["screenshots_only"] and not map_config["extraction_only"]:
+			print("Tiles merging start time: ", datetime.datetime.now())
+			for current_zoom in range(zoom, map_config["final_level"], -1):
+				Xs = [int(d) for d in listdir(os.path.join(map_config["tiles_folder"], str(current_zoom))) if isdir(join(map_config["tiles_folder"], str(current_zoom), d))]
+				existing_tiles = []
+				for X in Xs:
+					Ys = [int(f.removesuffix(".png")) for f in listdir(os.path.join(map_config["tiles_folder"], str(current_zoom), str(X))) if isfile(join(map_config["tiles_folder"], str(current_zoom), str(X), f))]
+					for Y in Ys:
+						existing_tiles.append((X, Y))
 
-			tiles_to_produce = []
-			for tile in existing_tiles:
-				if (int(tile[0] / 2), int(tile[1] / 2)) not in tiles_to_produce:
-					tiles_to_produce.append((int(tile[0] / 2), int(tile[1] / 2)))
-			
-			# Merge the tiles with parallel thread execution
-			with futures.ThreadPoolExecutor() as executor:
-				print(f"Merging tiles for zoom level {current_zoom - 1}...")
+				tiles_to_produce = []
+				for tile in existing_tiles:
+					if (int(tile[0] / 2), int(tile[1] / 2)) not in tiles_to_produce:
+						tiles_to_produce.append((int(tile[0] / 2), int(tile[1] / 2)))
+				
+				# Merge the tiles with parallel thread execution
+				with futures.ThreadPoolExecutor() as executor:
+					print(f"Merging tiles for zoom level {current_zoom - 1}...")
 
-				if not os.path.exists(os.path.join(map_config["tiles_folder"], str(current_zoom - 1))):
-					os.mkdir(os.path.join(map_config["tiles_folder"], str(current_zoom - 1)))
+					if not os.path.exists(os.path.join(map_config["tiles_folder"], str(current_zoom - 1))):
+						os.mkdir(os.path.join(map_config["tiles_folder"], str(current_zoom - 1)))
 
-				futs = [executor.submit(merge_tiles, os.path.join(map_config["tiles_folder"]), current_zoom, tile) for tile in tiles_to_produce]
-				tot_futs = len(futs)
-				fut_counter = 0
-				[fut.add_done_callback(done_callback) for fut in futs]
-				[fut.result() for fut in futures.as_completed(futs)]
+					futs = [executor.submit(merge_tiles, os.path.join(map_config["tiles_folder"]), current_zoom, tile) for tile in tiles_to_produce]
+					tot_futs = len(futs)
+					fut_counter = 0
+					[fut.add_done_callback(done_callback) for fut in futs]
+					[fut.result() for fut in futures.as_completed(futs)]
 
 		print("Script end time: ", datetime.datetime.now())
 

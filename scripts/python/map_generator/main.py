@@ -22,6 +22,8 @@ parser.add_argument('-l', '--final_level', type=int, default=1, help='if tiles a
 parser.add_argument('-f', '--screenshots_folder', help='if provided, will force the script to save the screenshots here. Defaults to output_directory/screenshots.')   
 parser.add_argument('-t', '--tiles_folder', help='if provided, will force the script to save the tiles here. Defaults to output_directory/tiles.')   
 parser.add_argument('-o', '--screenshots_only', action='store_true', help='if provided, the script will only run the screenshot acquisition algorithm.')   
+parser.add_argument('-e', '--extraction_only', action='store_true', help='if provided, the script will only run the tiles extraction algorithm.')   
+parser.add_argument('-m', '--merging_only', action='store_true', help='if provided, the script will only run the tiles merging algorithm.')   
 
 args = parser.parse_args()
 
