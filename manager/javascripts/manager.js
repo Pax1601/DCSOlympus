@@ -418,7 +418,7 @@ class Manager {
             /* Installation type page */
         } else if (this.activePage == this.cameraPage) {
             if (await this.checkDCSRunning()) {
-                showConfirmPopup(`<div class='main-message'>DCS is running!</div><div class='sub-message'> Please stop the DCS instance you are trying to add Olympus to, then select <b>Accept</b></div>`, async () => {
+                showConfirmPopup(`<div class='main-message'>DCS is running!</div><div class='sub-message'> Please stop the DCS instance you are trying to add Olympus to, then select <b>Accept</b>. <br>You can click <b>Accept</b> immediately if the running DCS instance is not the one you are adding Olympus to.</div>`, async () => {
                     /* Nested popup calls need to wait for animation to complete */
                     await sleep(300);
                     
@@ -433,7 +433,7 @@ class Manager {
         } else if (this.activePage == this.expertSettingsPage) {
             if (await this.checkPorts() && await this.checkPasswords()) {
                 if (await this.checkDCSRunning()) {
-                    showConfirmPopup(`<div class='main-message'>DCS is running!</div><div class='sub-message'> Please stop the DCS instance you are trying to add Olympus to, then select <b>Accept</b></div>`, async () => {
+                    showConfirmPopup(`<div class='main-message'>DCS is running!</div><div class='sub-message'> Please stop the DCS instance you are trying to add Olympus to, then select <b>Accept</b>. <br>You can click <b>Accept</b> immediately if the running DCS instance is not the one you are adding Olympus to.</div>`, async () => {
                         /* Nested popup calls need to wait for animation to complete */
                         await sleep(300);
                         
@@ -644,7 +644,7 @@ class Manager {
             showErrorPopup("<div class='main-message'>The selected Olympus instance is currently active </div><div class='sub-message'> Please stop DCS and Olympus Server/Client before removing it! </div>")
         } else {
             if (await this.checkDCSRunning()) {
-                showConfirmPopup(`<div class='main-message'>DCS is running!</div><div class='sub-message'> Please stop the DCS instance you are trying to remove Olympus from, then select <b>Accept</b></div>`, async () => {
+                showConfirmPopup(`<div class='main-message'>DCS is running!</div><div class='sub-message'> Please stop the DCS instance you are trying to remove Olympus from, then select <b>Accept</b></div>. <br>You can click <b>Accept</b> immediately if the running DCS instance is not the one you are removing Olympus from.`, async () => {
                     /* Nested popup calls need to wait for animation to complete */
                     await sleep(300);
 
@@ -802,7 +802,6 @@ class Manager {
     async checkDCSRunning() {
         let ps = new Promise((res, rej) => {
             exec('tasklist', function(err, stdout, stderr) {
-                console.log(stdout)
                 if (stdout.toLowerCase().includes("dcs.exe") || stdout.includes("dcs_server.exe")) {
                     res(true);
                 } else {

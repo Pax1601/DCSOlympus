@@ -52,7 +52,6 @@ class DCSInstance {
         /* Check that the registry read was successfull */
 
         let customSavedGamesFolder = (await getManager().getOptions()).savedGamesFolder;
-        console.log((await getManager().getOptions()))
         if (customSavedGamesFolder !== undefined || (result[shellFoldersKey] !== undefined && result[shellFoldersKey]["exists"] && result[shellFoldersKey]['values'][saveGamesKey] !== undefined && result[shellFoldersKey]['values'][saveGamesKey]['value'] !== undefined)) {
             try {
                 /* Read all the folders in Saved Games */
