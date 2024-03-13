@@ -180,7 +180,6 @@ export class MissionManager {
         return this.#theatre;
     }
 
-
     getAvailableSpawnPoints() {
         if (this.getCommandModeOptions().commandMode === GAME_MASTER)
             return Infinity;

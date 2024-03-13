@@ -12,7 +12,7 @@ import { DestinationPreviewMarker } from "./markers/destinationpreviewmarker";
 import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
 import { SVGInjector } from '@tanem/svg-injector'
-import { defaultMapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, MOVE_UNIT, SHOW_UNIT_CONTACTS, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, SHOW_UNIT_LABELS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, MAP_MARKER_CONTROLS, DCS_LINK_PORT } from "../constants/constants";
+import { defaultMapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, MOVE_UNIT, SHOW_UNIT_CONTACTS, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, SHOW_UNIT_LABELS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, MAP_MARKER_CONTROLS, DCS_LINK_PORT, DCSMapsZoomLevelsByTheatre } from "../constants/constants";
 import { CoalitionArea } from "./coalitionarea/coalitionarea";
 import { CoalitionAreaContextMenu } from "../contextmenus/coalitionareacontextmenu";
 import { DrawingCursor } from "./coalitionarea/drawingcursor";
@@ -21,6 +21,7 @@ import { GestureHandling } from "leaflet-gesture-handling";
 import { TouchBoxSelect } from "./touchboxselect";
 import { DestinationPreviewHandle } from "./markers/destinationpreviewHandle";
 import { ContextActionSet } from "../unit/contextactionset";
+import { DCSLayer } from "./dcslayer";
 
 var hasTouchScreen = false;
 //if ("maxTouchPoints" in navigator) 
@@ -46,7 +47,7 @@ export type MapMarkerVisibilityControl = {
     "toggles": string[],
     "tooltip": string
 }
-
+ 
 export class Map extends L.Map {
     #ID: string;
     #state: string;
@@ -101,6 +102,7 @@ export class Map extends L.Map {
     #optionButtons: { [key: string]: HTMLButtonElement[] } = {}
     #visibilityOptions: { [key: string]: boolean | string | number } = {}
     #hiddenTypes: string[] = [];
+    #layerName: string = "";
 
     /**
      * 
@@ -126,7 +128,7 @@ export class Map extends L.Map {
 
         this.#ID = ID;
 
-        this.setLayer(Object.keys(this.#mapLayers)[0]);
+        this.setLayer("DCS Map");
 
         /* Minimap */
         var minimapLayer = new L.TileLayer(this.#mapLayers[Object.keys(this.#mapLayers)[0]].urlTemplate, { minZoom: 0, maxZoom: 13 });
@@ -139,7 +141,8 @@ export class Map extends L.Map {
         //L.control.scalenautic({ position: "topright", maxWidth: 300, nautic: true, metric: true, imperial: false }).addTo(this);
 
         /* Map source dropdown */
-        this.#mapSourceDropdown = new Dropdown("map-type", (layerName: string) => this.setLayer(layerName), this.getLayers());
+        this.#mapSourceDropdown = new Dropdown("map-type", (layerName: string) => this.setLayer(layerName));
+        this.#mapSourceDropdown.setOptions(this.getLayers(), null);
 
         /* Visibility options dropdown */
         this.#mapVisibilityOptionsDropdown = new Dropdown("map-visibility-options", (value: string) => { });
@@ -218,7 +221,7 @@ export class Map extends L.Map {
                     ...this.#mapLayers,
                     ...additionalMaps
                 }
-                this.#mapSourceDropdown.setOptions(this.getLayers());
+                this.#mapSourceDropdown.setOptions(this.getLayers(), null);
             }
         })
 
@@ -279,23 +282,40 @@ export class Map extends L.Map {
         if (this.#layer != null)
             this.removeLayer(this.#layer)
 
+        let theatre = getApp().getMissionManager()?.getTheatre() ?? "Nevada";
+
+        /* Normal or custom layers are handled here */
         if (layerName in this.#mapLayers) {
             const layerData = this.#mapLayers[layerName];
             if (layerData instanceof Array) {
                 let layers = layerData.map((layer: any) => {
-                    return new L.TileLayer(layer.urlTemplate, layer);
+                    return new L.TileLayer(layer.urlTemplate.replace("{theatre}", theatre.toLowerCase()), layer);
                 })
                 this.#layer = new L.LayerGroup(layers);
             } else {
                 this.#layer = new L.TileLayer(layerData.urlTemplate, layerData);
             }
+        /* DCS core layers are handled here */
+        } else if (["DCS Map", "DCS Satellite"].includes(layerName) ) {
+            let layerData = this.#mapLayers["ArcGIS Satellite"];
+            let layers = [new L.TileLayer(layerData.urlTemplate, layerData)];
+            
+            let template = `https://maps.dcsolympus.com/maps/${layerName === "DCS Map"? "alt": "sat"}-{theatre}-modern/{z}/{x}/{y}.png`;
+            layers.push(...DCSMapsZoomLevelsByTheatre[theatre].map((nativeZoomLevels: any) => {
+                return new L.TileLayer(template.replace("{theatre}", theatre.toLowerCase()), {...nativeZoomLevels, maxZoom: 20, crossOrigin: ""});
+            }));
+
+            this.#layer = new L.LayerGroup(layers);
         }
 
         this.#layer?.addTo(this);
+        this.#layerName = layerName;
     }
 
     getLayers() {
-        return Object.keys(this.#mapLayers);
+        let layers = ["DCS Map", "DCS Satellite"]
+        layers.push(...Object.keys(this.#mapLayers));
+        return layers;
     }
 
     /* State machine */
@@ -471,6 +491,8 @@ export class Map extends L.Map {
 
         const boundaries = this.#getMinimapBoundaries();
         this.#miniMapPolyline.setLatLngs(boundaries[theatre as keyof typeof boundaries]);
+        
+        this.setLayer(this.#layerName);
     }
 
     getMiniMapLayerGroup() {

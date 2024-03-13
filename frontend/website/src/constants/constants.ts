@@ -154,6 +154,17 @@ export const mapBounds = {
     "SinaiMap": { bounds: new LatLngBounds([34.312222, 28.523333], [25.946944, 36.897778]), zoom: 4 },
 }
 
+export const DCSMapsZoomLevelsByTheatre: { [key: string]: { minNativeZoom?: number, maxNativeZoom?: number, minZoom?: number }[] } = {
+    "Syria": [],
+    "MarianaIslands": [{ minNativeZoom: 1, maxNativeZoom: 13, }, { minNativeZoom: 14, maxNativeZoom: 18, minZoom: 14 }],
+    "Nevada": [],
+    "PersianGulf": [],
+    "Caucasus": [],
+    "Falklands": [],
+    "Normandy": [],
+    "SinaiMap": [],
+}
+
 export const defaultMapLayers = {
     "ArcGIS Satellite": {
         urlTemplate: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
@@ -166,29 +177,7 @@ export const defaultMapLayers = {
         minZoom: 1,
         maxZoom: 20,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    },
-    "DCS Marianas Modern": [
-        {
-            urlTemplate: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-            minZoom: 1,
-            maxZoom: 19
-        },
-        {
-            urlTemplate: 'http://maps.dcsolympus.com/maps/marianas-modern/{z}/{x}/{y}.png',
-            minNativeZoom: 1,
-            maxNativeZoom: 13,
-            minZoom: 1,
-            maxZoom: 20
-        },
-        {
-            urlTemplate: 'http://maps.dcsolympus.com/maps/marianas-modern/{z}/{x}/{y}.png',
-            minNativeZoom: 14,
-            maxNativeZoom: 16,
-            minZoom: 14,
-            maxZoom: 20,
-            attribution: 'Map extracted by OzDeaDMeaT (DCS Olympus Team)'
-        }
-    ]
+    }
 }
 
 /* Map constants */
