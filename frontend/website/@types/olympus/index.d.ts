@@ -183,36 +183,34 @@ declare module "constants/constants" {
             maxZoom: number;
             attribution: string;
         };
-        "USGS Topo": {
-            urlTemplate: string;
-            minZoom: number;
-            maxZoom: number;
-            attribution: string;
-        };
         "OpenStreetMap Mapnik": {
             urlTemplate: string;
             minZoom: number;
             maxZoom: number;
             attribution: string;
         };
-        OPENVKarte: {
+        "DCS Marianas Modern": ({
             urlTemplate: string;
             minZoom: number;
             maxZoom: number;
-            attribution: string;
-        };
-        "Esri.DeLorme": {
+            minNativeZoom?: undefined;
+            maxNativeZoom?: undefined;
+            attribution?: undefined;
+        } | {
             urlTemplate: string;
+            minNativeZoom: number;
+            maxNativeZoom: number;
+            minZoom: number;
+            maxZoom: number;
+            attribution?: undefined;
+        } | {
+            urlTemplate: string;
+            minNativeZoom: number;
+            maxNativeZoom: number;
             minZoom: number;
             maxZoom: number;
             attribution: string;
-        };
-        CyclOSM: {
-            urlTemplate: string;
-            minZoom: number;
-            maxZoom: number;
-            attribution: string;
-        };
+        })[];
     };
     export const IDLE = "Idle";
     export const MOVE_UNIT = "Move unit";
