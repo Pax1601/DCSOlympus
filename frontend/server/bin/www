@@ -20,10 +20,10 @@ console.log("Please wait while DCS Olympus Server starts up...");
 console.log(`Config location: ${args["config"]}`)
 
 /* Load the configuration file */
-var frontendPort = 0;
+var httpPort = 0;
 if (fs.existsSync(args["config"])) {
 	var json = JSON.parse(fs.readFileSync(args["config"], 'utf-8'));
-	frontendPort = json["frontend"]["port"];
+	httpPort = json["frontend"]["port"];
 } else {
 	console.log("Failed to read config, aborting!");
 	return;
@@ -35,7 +35,7 @@ var debug = require('debug')('client:server');
 var http = require('http');
 
 /* Normalize port */
-var port = normalizePort(frontendPort);
+var port = normalizePort(httpPort);
 app.set('port', port);
 console.log("Express server listening on port: " + port)
 
@@ -46,6 +46,21 @@ var server = http.createServer(app);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+
+/* Optional https support */
+var https = null;
+var credentials = null;
+var httpsServer = null;
+if (json["frontend"]["https"] === true){
+	https = require('https');
+	var privateKey  = fs.readFileSync(json["frontend"]["keyPath"] ?? "./cert/default.key", 'utf8');
+	var certificate = fs.readFileSync(json["frontend"]["certPath"] ?? "./cert/default.crt", 'utf8');
+	var httpsPort = json["frontend"]["httpsPort"] ?? 3433;
+	credentials = {key: privateKey, cert: certificate};
+	httpsServer = https.createServer(credentials, app);
+	httpsServer.listen(httpsPort);
+	console.log("Express server listening on SSL port: " + httpsPort)
+}
 
 /* Normalize a port into a number, string, or false. */
 function normalizePort(val) {
