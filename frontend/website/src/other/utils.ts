@@ -9,9 +9,10 @@ import { GROUND_UNIT_AIR_DEFENCE_REGEX, ROEs, emissionsCountermeasures, reaction
 import { Dropdown } from "../controls/dropdown";
 import { navyUnitDatabase } from "../unit/databases/navyunitdatabase";
 import { DateAndTime, UnitBlueprint } from "../interfaces";
+import { Slider } from "../controls/slider";
 
 // comment
-const usng = require( "usng.js" );
+const usng = require("usng.js");
 
 export function bearing(lat1: number, lon1: number, lat2: number, lon2: number) {
     const φ1 = deg2rad(lat1); // φ, λ in radians
@@ -45,8 +46,8 @@ export function bearingAndDistanceToLatLng(lat: number, lon: number, brng: numbe
     const R = 6371e3; // metres
     const φ1 = deg2rad(lat); // φ, λ in radians
     const λ1 = deg2rad(lon);
-    const φ2 = Math.asin( Math.sin(φ1)*Math.cos(dist/R) + Math.cos(φ1)*Math.sin(dist/R)*Math.cos(brng) );
-    const λ2 = λ1 + Math.atan2(Math.sin(brng)*Math.sin(dist/R)*Math.cos(φ1), Math.cos(dist/R)-Math.sin(φ1)*Math.sin(φ2));
+    const φ2 = Math.asin(Math.sin(φ1) * Math.cos(dist / R) + Math.cos(φ1) * Math.sin(dist / R) * Math.cos(brng));
+    const λ2 = λ1 + Math.atan2(Math.sin(brng) * Math.sin(dist / R) * Math.cos(φ1), Math.cos(dist / R) - Math.sin(φ1) * Math.sin(φ2));
 
     return new LatLng(rad2deg(φ2), rad2deg(λ2));
 }
@@ -64,14 +65,14 @@ export function ConvertDDToDMS(D: number, lng: boolean) {
         return dir + zeroPad(deg, 2) + "°" + zeroPad(min, 2) + "'" + zeroPad(sec, 2) + "." + zeroPad(dec, 2) + "\"";
 }
 
-export function dataPointMap( container:HTMLElement, data:any) {
-    Object.keys( data ).forEach( ( key ) => {
-        const val = "" + data[ key ];  //  Ensure a string
-        container.querySelectorAll( `[data-point="${key}"]`).forEach( el => {
+export function dataPointMap(container: HTMLElement, data: any) {
+    Object.keys(data).forEach((key) => {
+        const val = "" + data[key];  //  Ensure a string
+        container.querySelectorAll(`[data-point="${key}"]`).forEach(el => {
             //  We could probably have options here
-            if ( el instanceof HTMLInputElement ) {
+            if (el instanceof HTMLInputElement) {
                 el.value = val;
-            } else if ( el instanceof HTMLElement ) {
+            } else if (el instanceof HTMLElement) {
                 el.innerText = val;
             }
         });
@@ -89,19 +90,19 @@ export function rad2deg(rad: number) {
 }
 
 export function generateUUIDv4() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
         var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
     });
 }
 
-export function keyEventWasInInput( event:KeyboardEvent ) {
+export function keyEventWasInInput(event: KeyboardEvent) {
     const target = event.target;
-    return ( target instanceof HTMLElement && ( [ "INPUT", "TEXTAREA" ].includes( target.nodeName ) ) );
+    return (target instanceof HTMLElement && (["INPUT", "TEXTAREA"].includes(target.nodeName)));
 }
 
 export function reciprocalHeading(heading: number): number {
-    return heading > 180? heading - 180: heading + 180;
+    return heading > 180 ? heading - 180 : heading + 180;
 }
 
 /**
@@ -113,7 +114,7 @@ export function reciprocalHeading(heading: number): number {
  * 
  * */
 export const zeroAppend = function (num: number, places: number, decimal: boolean = false) {
-    var string = decimal? num.toFixed(2): String(num);
+    var string = decimal ? num.toFixed(2) : String(num);
     while (string.length < places) {
         string = "0" + string;
     }
@@ -181,22 +182,22 @@ export type MGRS = {
     zoneNumber: string
 }
 
-export function latLngToMGRS( lat:number, lng:number, precision:number = 4 ): MGRS | false {
+export function latLngToMGRS(lat: number, lng: number, precision: number = 4): MGRS | false {
 
-    if ( precision < 0 || precision > 6 ) {
-        console.error( "latLngToMGRS: precision must be a number >= 0 and <= 6.  Given precision: " + precision );
+    if (precision < 0 || precision > 6) {
+        console.error("latLngToMGRS: precision must be a number >= 0 and <= 6.  Given precision: " + precision);
         return false;
     }
-    
-    const mgrs     = new usng.Converter().LLtoMGRS( lat, lng, precision );
-    const match    = mgrs.match( new RegExp( `^(\\d{2})([A-Z])([A-Z])([A-Z])(\\d+)$` ) );
-    const easting  = match[5].substr(0,match[5].length/2);
-    const northing = match[5].substr(match[5].length/2);
 
-    let output:MGRS = {
+    const mgrs = new usng.Converter().LLtoMGRS(lat, lng, precision);
+    const match = mgrs.match(new RegExp(`^(\\d{2})([A-Z])([A-Z])([A-Z])(\\d+)$`));
+    const easting = match[5].substr(0, match[5].length / 2);
+    const northing = match[5].substr(match[5].length / 2);
+
+    let output: MGRS = {
         bandLetter: match[2],
         columnLetter: match[3],
-        groups: [ match[1] + match[2], match[3] + match[4], easting, northing ],
+        groups: [match[1] + match[2], match[3] + match[4], easting, northing],
         easting: easting,
         northing: northing,
         precision: precision,
@@ -204,32 +205,32 @@ export function latLngToMGRS( lat:number, lng:number, precision:number = 4 ): MG
         string: match[0],
         zoneNumber: match[1]
     }
-    
+
     return output;
 }
 
-export function latLngToUTM( lat:number, lng:number ) {
-    return new usng.Converter().LLtoUTM( lat, lng );
+export function latLngToUTM(lat: number, lng: number) {
+    return new usng.Converter().LLtoUTM(lat, lng);
 }
 
-export function latLngToMercator(lat: number, lng: number): {x: number, y: number} {
+export function latLngToMercator(lat: number, lng: number): { x: number, y: number } {
     var rMajor = 6378137; //Equatorial Radius, WGS84
-    var shift  = Math.PI * rMajor;
-    var x      = lng * shift / 180;
-    var y      = Math.log(Math.tan((90 + lat) * Math.PI / 360)) / (Math.PI / 180);
+    var shift = Math.PI * rMajor;
+    var x = lng * shift / 180;
+    var y = Math.log(Math.tan((90 + lat) * Math.PI / 360)) / (Math.PI / 180);
     y = y * shift / 180;
-    
-    return {x: x, y: y};
+
+    return { x: x, y: y };
 }
 
 export function mercatorToLatLng(x: number, y: number) {
     var rMajor = 6378137; //Equatorial Radius, WGS84
-    var shift  = Math.PI * rMajor;
-    var lng    = x / shift * 180.0;
-    var lat    = y / shift * 180.0;
+    var shift = Math.PI * rMajor;
+    var lng = x / shift * 180.0;
+    var lat = y / shift * 180.0;
     lat = 180 / Math.PI * (2 * Math.atan(Math.exp(lat * Math.PI / 180.0)) - Math.PI / 2.0);
 
-    return { lng: lng, lat: lat };            
+    return { lng: lng, lat: lat };
 }
 
 export function createDivWithClass(className: string) {
@@ -267,21 +268,21 @@ export function nmToFt(nm: number) {
 }
 
 export function polyContains(latlng: LatLng, polygon: Polygon) {
-    var poly   = polygon.toGeoJSON();
+    var poly = polygon.toGeoJSON();
     return turf.inside(turf.point([latlng.lng, latlng.lat]), poly);
 }
 
 export function randomPointInPoly(polygon: Polygon): LatLng {
-    var bounds = polygon.getBounds(); 
-    var x_min  = bounds.getEast();
-    var x_max  = bounds.getWest();
-    var y_min  = bounds.getSouth();
-    var y_max  = bounds.getNorth();
+    var bounds = polygon.getBounds();
+    var x_min = bounds.getEast();
+    var x_max = bounds.getWest();
+    var y_min = bounds.getSouth();
+    var y_max = bounds.getNorth();
 
     var lat = y_min + (Math.random() * (y_max - y_min));
     var lng = x_min + (Math.random() * (x_max - x_min));
 
-    var poly   = polygon.toGeoJSON();
+    var poly = polygon.toGeoJSON();
     var inside = turf.inside(turf.point([lng, lat]), poly);
 
     if (inside) {
@@ -296,7 +297,7 @@ export function polygonArea(polygon: Polygon) {
     return turf.area(poly);
 }
 
-export function randomUnitBlueprint(unitDatabase: UnitDatabase, options: {type?: string, role?: string, ranges?: string[], eras?: string[], coalition?: string} ) {
+export function randomUnitBlueprint(unitDatabase: UnitDatabase, options: { type?: string, role?: string, ranges?: string[], eras?: string[], coalition?: string }) {
     /* Start from all the unit blueprints in the database */
     var unitBlueprints = Object.values(unitDatabase.getBlueprints());
 
@@ -315,13 +316,13 @@ export function randomUnitBlueprint(unitDatabase: UnitDatabase, options: {type?:
 
     /* Keep only the units that have a range included in the requested values */
     if (options.ranges) {
-        unitBlueprints = unitBlueprints.filter((unitBlueprint: UnitBlueprint) => { 
+        unitBlueprints = unitBlueprints.filter((unitBlueprint: UnitBlueprint) => {
             var rangeType = "";
-            var range = unitBlueprint.acquisitionRange ;
+            var range = unitBlueprint.acquisitionRange;
             if (range !== undefined) {
-                if (range >= 0 && range < 10000) 
+                if (range >= 0 && range < 10000)
                     rangeType = "Short range";
-                else if (range >= 10000 && range < 100000) 
+                else if (range >= 10000 && range < 100000)
                     rangeType = "Medium range";
                 else if (range >= 100000 && range < 999999)
                     rangeType = "Long range";
@@ -332,15 +333,15 @@ export function randomUnitBlueprint(unitDatabase: UnitDatabase, options: {type?:
 
     /* Keep only the units that have an era included in the requested values */
     if (options.eras) {
-        unitBlueprints = unitBlueprints.filter((unitBlueprint: UnitBlueprint) => { 
-            return unitBlueprint.era? options.eras?.includes(unitBlueprint.era): true;
+        unitBlueprints = unitBlueprints.filter((unitBlueprint: UnitBlueprint) => {
+            return unitBlueprint.era ? options.eras?.includes(unitBlueprint.era) : true;
         });
     }
 
     /* Keep only the units that have the correct coalition, if selected */
     if (options.coalition) {
-        unitBlueprints = unitBlueprints.filter((unitBlueprint: UnitBlueprint) => { 
-            return (unitBlueprint.coalition && unitBlueprint.coalition !== "")? options.coalition === unitBlueprint.coalition: true;
+        unitBlueprints = unitBlueprints.filter((unitBlueprint: UnitBlueprint) => {
+            return (unitBlueprint.coalition && unitBlueprint.coalition !== "") ? options.coalition === unitBlueprint.coalition : true;
         });
     }
 
@@ -353,7 +354,7 @@ export function getMarkerCategoryByName(name: string) {
         return "aircraft";
     else if (helicopterDatabase.getByName(name) != null)
         return "helicopter";
-    else if (groundUnitDatabase.getByName(name) != null){
+    else if (groundUnitDatabase.getByName(name) != null) {
         var type = groundUnitDatabase.getByName(name)?.type ?? "";
         if (/\bAAA|SAM\b/.test(type) || /\bmanpad|stinger\b/i.test(type))
             return "groundunit-sam";
@@ -362,7 +363,7 @@ export function getMarkerCategoryByName(name: string) {
     }
     else if (navyUnitDatabase.getByName(name) != null)
         return "navyunit";
-    else 
+    else
         return "aircraft"; // TODO add other unit types  
 }
 
@@ -379,7 +380,7 @@ export function getUnitDatabaseByCategory(category: string) {
         return null;
 }
 
-export function getCategoryBlueprintIconSVG(category:string, unitName:string) {
+export function getCategoryBlueprintIconSVG(category: string, unitName: string) {
 
     const path = "/resources/theme/images/buttons/visibility/";
 
@@ -398,35 +399,35 @@ export function base64ToBytes(base64: string) {
 }
 
 export function enumToState(state: number) {
-    if (state < states.length) 
+    if (state < states.length)
         return states[state];
-    else 
+    else
         return states[0];
 }
 
 export function enumToROE(ROE: number) {
-    if (ROE < ROEs.length) 
+    if (ROE < ROEs.length)
         return ROEs[ROE];
-    else 
+    else
         return ROEs[0];
 }
 
 export function enumToReactionToThreat(reactionToThreat: number) {
-    if (reactionToThreat < reactionsToThreat.length) 
+    if (reactionToThreat < reactionsToThreat.length)
         return reactionsToThreat[reactionToThreat];
-    else 
+    else
         return reactionsToThreat[0];
 }
 
 export function enumToEmissioNCountermeasure(emissionCountermeasure: number) {
-    if (emissionCountermeasure < emissionsCountermeasures.length) 
+    if (emissionCountermeasure < emissionsCountermeasures.length)
         return emissionsCountermeasures[emissionCountermeasure];
-    else 
+    else
         return emissionsCountermeasures[0];
 }
 
 export function enumToCoalition(coalitionID: number) {
-    switch (coalitionID){
+    switch (coalitionID) {
         case 0: return "neutral";
         case 1: return "red";
         case 2: return "blue";
@@ -435,7 +436,7 @@ export function enumToCoalition(coalitionID: number) {
 }
 
 export function coalitionToEnum(coalition: string) {
-    switch (coalition){
+    switch (coalition) {
         case "neutral": return 0;
         case "red": return 1;
         case "blue": return 2;
@@ -463,7 +464,7 @@ export function convertDateAndTimeToDate(dateAndTime: DateAndTime) {
     return new Date(year, month, date.Day, time.h, time.m, time.s);
 }
 
-export function createCheckboxOption(text: string, description: string, checked: boolean = true, callback: CallableFunction = (ev: any) => {}, options?:any) {
+export function createCheckboxOption(text: string, description: string, checked: boolean = true, callback: CallableFunction = (ev: any) => { }, options?: any) {
     options = {
         "disabled": false,
         "name": "",
@@ -477,11 +478,11 @@ export function createCheckboxOption(text: string, description: string, checked:
     label.title = description;
     var input = document.createElement("input");
     input.type = "checkbox";
-    input.checked   = checked;
-    input.name      = options.name;
-    input.disabled  = options.disabled;
-    input.readOnly  = options.readOnly;
-    input.value     = options.value;
+    input.checked = checked;
+    input.name = options.name;
+    input.disabled = options.disabled;
+    input.readOnly = options.readOnly;
+    input.value = options.value;
     var span = document.createElement("span");
     span.innerText = text;
     label.appendChild(input);
@@ -504,7 +505,7 @@ export function getCheckboxOptions(dropdown: Dropdown) {
     return values;
 }
 
-export function createTextInputOption(text: string, description: string, initialValue: string, type: string, callback: CallableFunction = (ev: any) => {}, options?:any) {
+export function createTextInputOption(text: string, description: string, initialValue: string, type: string, callback: CallableFunction = (ev: any) => { }, options?: any) {
     options = {
         "disabled": false,
         "name": "",
@@ -516,15 +517,15 @@ export function createTextInputOption(text: string, description: string, initial
     var label = document.createElement("label");
     label.title = description;
     var input = document.createElement("input");
-    input.type      = type;
-    input.name      = options.name;
-    input.disabled  = options.disabled;
-    input.readOnly  = options.readOnly;
+    input.type = type;
+    input.name = options.name;
+    input.disabled = options.disabled;
+    input.readOnly = options.readOnly;
     if (options.min)
         input.min = options.min;
     if (options.max)
         input.max = options.max;
-    input.value     = initialValue;
+    input.value = initialValue;
     input.style.width = "80px";
     var span = document.createElement("span");
     span.innerText = text;
@@ -540,6 +541,28 @@ export function createTextInputOption(text: string, description: string, initial
         }
         callback(ev);
     }
+    return div as HTMLElement;
+}
+
+export function createSliderInputOption(text: string, description: string, initialValue: number, callback: CallableFunction = (ev: any) => { }, options?: any) {
+    var div = document.createElement("div");
+    var label = document.createElement("label");
+    label.title = description;
+    var input = new Slider(null, options.min ?? 0, options.max ?? 100, "", (val: number) => {
+        callback({currentTarget: {value: val}});
+    });
+    input.setValue(initialValue);
+    input.getContainer()?.querySelector(".ol-data-grid")?.classList.add("hide");
+    var span = document.createElement("span");
+    span.innerText = text;
+    span.style.width = "100%";
+    span.style.margin = "auto";
+    label.appendChild(span);
+    label.appendChild(input.getContainer() as HTMLElement);
+    label.style.display = "flex";
+    label.style.alignContent = "center";
+    label.style.width = "100%";
+    div.appendChild(label);
     return div as HTMLElement;
 }
 

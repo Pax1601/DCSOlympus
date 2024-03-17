@@ -4,7 +4,7 @@ local _prevLuaExportStop = LuaExportStop
 
 local server = nil
 local port = 3003
-local headers = "Access-Control-Allow-Origin: *\r\nAccess-Control-Allow-Methods: PUT, OPTIONS\r\nAccess-Control-Allow-Headers: *\r\nAccess-Control-Max-Age: 86400\r\nVary: Accept-Encoding, Origin\r\nKeep-Alive: timeout=2, max=100\r\nConnection: Keep-Alive\r\n\r\n"
+local headers = "Access-Control-Allow-Private-Network: true\r\nAccess-Control-Allow-Origin: *\r\nAccess-Control-Allow-Methods: *\r\nAccess-Control-Allow-Headers: *\r\nAccess-Control-Max-Age: 86400\r\nVary: Accept-Encoding, Origin\r\n\r\n"
 
 function startTCPServer()
     log.write('OLYMPUSCAMERACONTROL.EXPORT.LUA', log.INFO, 'Starting TCP Server')
@@ -30,11 +30,13 @@ function receiveTCP()
 
         if client then 
             -- Set the timeout of the connection to 5ms
-            client:settimeout(0)
+            client:settimeout(0.005)
             client:setoption("tcp-nodelay", true) 
 
             local acc = ""
             local data = ""
+
+            log.write('OLYMPUSCAMERACONTROL.EXPORT.LUA', log.INFO, 'CONNECTION')
             
             -- Start receiving data, accumulate it in acc
             while data ~= nil do
@@ -45,11 +47,11 @@ function receiveTCP()
                     if data == "" then
                         -- Is this an OPTIONS request?
                         if string.find(acc, "OPTIONS") ~= nil then
-                            client:send("HTTP/1.1 200 OK\r\n" .. headers)
+                            client:send("HTTP/1.1 204 OK\r\n" .. headers)
                             client:close()
 
                         -- Is this a PUT request?
-                        elseif string.find(acc, "PUT") ~= nil then
+                        elseif string.find(acc, "POST") ~= nil then
                             -- Extract the length of the body
                             local contentLength = string.match(acc, "Content%-Length: (%d+)")
                             if contentLength ~= nil then
@@ -62,7 +64,7 @@ function receiveTCP()
                                     local mode = string.match(body, '"mode":%s*"(%a+)"%s*[},]')
 
                                     if lat ~= nil and lng ~= nil then
-                                        client:send("HTTP/1.1 200 OK\r\n" .. headers)
+                                        client:send("HTTP/1.1 200 OK\r\n" .. "Content-Type: application/json\r\n" .. headers)
                                         
                                         local position = {}
                                         position["lat"] = tonumber(lat)

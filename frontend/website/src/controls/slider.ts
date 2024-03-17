@@ -104,7 +104,7 @@ export class Slider extends Control {
 
             /* Update the position of the slider */
             var percentValue = parseFloat(this.#slider.value) / parseFloat(this.#slider.max) * 90 + 5;
-            this.#slider.style.background = `linear-gradient(to right, var(--accent-light-blue) 5%, var(--accent-light-blue) ${percentValue}%, var(--background-grey) ${percentValue}%, var(--background-grey) 100%)`
+            this.#slider.style.background = `linear-gradient(to right, var(--accent-light-blue) 5%, var(--accent-light-blue) ${percentValue}%, var(--background-dark-grey) ${percentValue}%, var(--background-dark-grey) 100%)`
         }
         this.setActive(true);
     }
