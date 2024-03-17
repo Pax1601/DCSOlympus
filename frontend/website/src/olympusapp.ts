@@ -368,6 +368,24 @@ export class OlympusApp {
             "context": "olympus",
             "ctrlKey": false,
             "shiftKey": false
+        }).addKeyboardShortcut("increaseCameraZoom", {
+            "altKey": true,
+            "callback": () => {
+                this.getMap().increaseCameraZoom();
+            },
+            "code": "Equal",
+            "context": "olympus",
+            "ctrlKey": false,
+            "shiftKey": false
+        }).addKeyboardShortcut("decreaseCameraZoom", {
+            "altKey": true,
+            "callback": () => {
+                this.getMap().decreaseCameraZoom();
+            },
+            "code": "Minus",
+            "context": "olympus",
+            "ctrlKey": false,
+            "shiftKey": false
         });
 
         ["KeyW", "KeyA", "KeyS", "KeyD", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].forEach(code => {

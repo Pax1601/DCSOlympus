@@ -7,12 +7,12 @@ import { AirbaseContextMenu } from "../contextmenus/airbasecontextmenu";
 import { Dropdown } from "../controls/dropdown";
 import { Airbase } from "../mission/airbase";
 import { Unit } from "../unit/unit";
-import { bearing, createCheckboxOption, createTextInputOption, deg2rad, getGroundElevation, polyContains } from "../other/utils";
+import { bearing, createCheckboxOption, createSliderInputOption, createTextInputOption, deg2rad, getGroundElevation, polyContains } from "../other/utils";
 import { DestinationPreviewMarker } from "./markers/destinationpreviewmarker";
 import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
 import { SVGInjector } from '@tanem/svg-injector'
-import { defaultMapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, MOVE_UNIT, SHOW_UNIT_CONTACTS, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, SHOW_UNIT_LABELS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, MAP_MARKER_CONTROLS, DCS_LINK_PORT, DCSMapsZoomLevelsByTheatre } from "../constants/constants";
+import { defaultMapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, MOVE_UNIT, SHOW_UNIT_CONTACTS, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, SHOW_UNIT_LABELS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, MAP_MARKER_CONTROLS, DCS_LINK_PORT, DCSMapsZoomLevelsByTheatre, DCS_LINK_RATIO } from "../constants/constants";
 import { CoalitionArea } from "./coalitionarea/coalitionarea";
 import { CoalitionAreaContextMenu } from "../contextmenus/coalitionareacontextmenu";
 import { DrawingCursor } from "./coalitionarea/drawingcursor";
@@ -103,6 +103,9 @@ export class Map extends L.Map {
     #visibilityOptions: { [key: string]: boolean | string | number } = {}
     #hiddenTypes: string[] = [];
     #layerName: string = "";
+    #cameraOptionsXmlHttp: XMLHttpRequest | null = null;
+    #bradcastPositionXmlHttp: XMLHttpRequest | null = null;
+    #cameraZoomRatio: number = 1.0;
 
     /**
      * 
@@ -211,6 +214,14 @@ export class Map extends L.Map {
         document.addEventListener("mapOptionsChanged", () => {
             this.getContainer().toggleAttribute("data-hide-labels", !this.getVisibilityOptions()[SHOW_UNIT_LABELS]);
             this.#cameraControlPort = this.getVisibilityOptions()[DCS_LINK_PORT] as number;
+            this.#cameraZoomRatio = 50 / (20 + (this.getVisibilityOptions()[DCS_LINK_RATIO] as number));
+
+            if (this.#slaveDCSCamera) {
+                this.#broadcastPosition();
+                window.setTimeout(() => {
+                    this.#broadcastPosition();
+                }, 500); // DCS does not always apply the altitude correctly at the first set when changing map type
+            }
         });
 
         document.addEventListener("configLoaded", () => {
@@ -254,6 +265,7 @@ export class Map extends L.Map {
 
         /* Create the checkboxes to select the advanced visibility options */
         this.addVisibilityOption(DCS_LINK_PORT, 3003, { min: 1024, max: 65535 });
+        this.addVisibilityOption(DCS_LINK_RATIO, 50, { min: 0, max: 100, slider: true });
 
         this.#mapVisibilityOptionsDropdown.addHorizontalDivider();
 
@@ -270,12 +282,16 @@ export class Map extends L.Map {
 
     addVisibilityOption(option: string, defaultValue: boolean | number | string, options?: { [key: string]: any }) {
         this.#visibilityOptions[option] = defaultValue;
-        if (typeof defaultValue === 'boolean')
+        if (typeof defaultValue === 'boolean') {
             this.#mapVisibilityOptionsDropdown.addOptionElement(createCheckboxOption(option, option, defaultValue as boolean, (ev: any) => { this.#setVisibilityOption(option, ev); }, options));
-        else if (typeof defaultValue === 'number')
-            this.#mapVisibilityOptionsDropdown.addOptionElement(createTextInputOption(option, option, defaultValue.toString(), 'number', (ev: any) => { this.#setVisibilityOption(option, ev); }, options));
-        else
+        } else if (typeof defaultValue === 'number') {
+            if (options !== undefined && options?.slider === true)
+                this.#mapVisibilityOptionsDropdown.addOptionElement(createSliderInputOption(option, option, defaultValue, (ev: any) => { this.#setVisibilityOption(option, ev); }, options));
+            else
+                this.#mapVisibilityOptionsDropdown.addOptionElement(createTextInputOption(option, option, defaultValue.toString(), 'number', (ev: any) => { this.#setVisibilityOption(option, ev); }, options));
+        } else {
             this.#mapVisibilityOptionsDropdown.addOptionElement(createTextInputOption(option, option, defaultValue, 'text', (ev: any) => { this.#setVisibilityOption(option, ev); }, options));
+        }
     }
 
     setLayer(layerName: string) {
@@ -593,19 +609,43 @@ export class Map extends L.Map {
     }
 
     setSlaveDCSCamera(newSlaveDCSCamera: boolean) {
-        // if (this.#slaveDCSCameraAvailable || !newSlaveDCSCamera) { // Commented to experiment with usability
-            this.#slaveDCSCamera = newSlaveDCSCamera;
-            let button = document.getElementById("camera-link-control");
-            button?.classList.toggle("off", !newSlaveDCSCamera);
-            if (newSlaveDCSCamera)
+        this.#slaveDCSCamera = newSlaveDCSCamera;
+        let button = document.getElementById("camera-link-control");
+        button?.classList.toggle("off", !newSlaveDCSCamera);
+        if (this.#slaveDCSCamera) {
+            this.#broadcastPosition();
+            window.setTimeout(() => {
                 this.#broadcastPosition();
-        // }
+            }, 500); // DCS does not always apply the altitude correctly at the first set when changing map type
+        }
     }
 
     setCameraControlMode(newCameraControlMode: string) {
         this.#cameraControlMode = newCameraControlMode;
-        if (this.#slaveDCSCamera)
+        if (this.#slaveDCSCamera) {
             this.#broadcastPosition();
+            window.setTimeout(() => {
+                this.#broadcastPosition();
+            }, 500); // DCS does not always apply the altitude correctly at the first set when changing map type
+        }
+    }
+
+    increaseCameraZoom() {
+        const slider = document.querySelector(`label[title="${DCS_LINK_RATIO}"] input`);
+        if (slider instanceof HTMLInputElement) {
+            slider.value = String(Math.min(Number(slider.max), Number(slider.value) + 10));
+            slider.dispatchEvent(new Event('input'));
+            slider.dispatchEvent(new Event('mouseup'));
+        }
+    }
+
+    decreaseCameraZoom() {
+        const slider = document.querySelector(`label[title="${DCS_LINK_RATIO}"] input`);
+        if (slider instanceof HTMLInputElement) {
+            slider.value = String(Math.max(Number(slider.min), Number(slider.value) - 10));
+            slider.dispatchEvent(new Event('input'));
+            slider.dispatchEvent(new Event('mouseup'));
+        }
     }
 
     /* Event handlers */
@@ -791,21 +831,24 @@ export class Map extends L.Map {
     }
 
     #broadcastPosition() {
+        if (this.#bradcastPositionXmlHttp?.readyState !== 4 && this.#bradcastPositionXmlHttp !== null)
+            return
+
         getGroundElevation(this.getCenter(), (response: string) => {
             var groundElevation: number | null = null;
             try {
                 groundElevation = parseFloat(response);
-                var xmlHttp = new XMLHttpRequest();
-                xmlHttp.open("PUT", `http://127.0.0.1:${this.#cameraControlPort}`);
-                xmlHttp.setRequestHeader("Content-Type", "application/json");
+                this.#bradcastPositionXmlHttp = new XMLHttpRequest();
+                /* Using 127.0.0.1 instead of localhost because the LuaSocket version used in DCS only listens to IPv4. This avoids the lag caused by the
+                browser if it first tries to send the request on the IPv6 address for localhost */
+                this.#bradcastPositionXmlHttp.open("POST", `http://127.0.0.1:${this.#cameraControlPort}`);
 
                 const C = 40075016.686;
                 let mpp = C * Math.cos(deg2rad(this.getCenter().lat)) / Math.pow(2, this.getZoom() + 8);
                 let d = mpp * 1920;
-                let alt = d / 2 * 1 / Math.tan(deg2rad(40));
-                if (alt > 100000)
-                    alt = 100000;
-                xmlHttp.send(JSON.stringify({ lat: this.getCenter().lat, lng: this.getCenter().lng, alt: alt + groundElevation, mode: this.#cameraControlMode }));
+                let alt = d / 2 * 1 / Math.tan(deg2rad(40)) * this.#cameraZoomRatio;
+                alt = Math.min(alt, 50000);
+                this.#bradcastPositionXmlHttp.send(JSON.stringify({ lat: this.getCenter().lat, lng: this.getCenter().lng, alt: alt + groundElevation, mode: this.#cameraControlMode }));
             } catch {
                 console.warn("broadcastPosition: could not retrieve ground elevation")
             }
@@ -1002,23 +1045,30 @@ export class Map extends L.Map {
         }
     }
 
+    /* Check if the camera control plugin is available. Right now this will only change the color of the button, no changes in functionality */
     #checkCameraPort(){
-        var xmlHttp = new XMLHttpRequest();
-            xmlHttp.open("OPTIONS", `http://127.0.0.1:${this.#cameraControlPort}`);
-            xmlHttp.onload = (res: any) => {
-                if (xmlHttp.status == 200)
-                    this.#setSlaveDCSCameraAvailable(true);
-                else
-                    this.#setSlaveDCSCameraAvailable(false);
-            };
-            xmlHttp.onerror = (res: any) => {
+        if (this.#cameraOptionsXmlHttp?.readyState !== 4)
+            this.#cameraOptionsXmlHttp?.abort()
+
+        this.#cameraOptionsXmlHttp = new XMLHttpRequest();
+        
+        /* Using 127.0.0.1 instead of localhost because the LuaSocket version used in DCS only listens to IPv4. This avoids the lag caused by the
+        browser if it first tries to send the request on the IPv6 address for localhost */
+        this.#cameraOptionsXmlHttp.open("OPTIONS", `http://127.0.0.1:${this.#cameraControlPort}`);
+        this.#cameraOptionsXmlHttp.onload = (res: any) => {
+            if (this.#cameraOptionsXmlHttp !== null && this.#cameraOptionsXmlHttp.status == 204)
+                this.#setSlaveDCSCameraAvailable(true);
+            else
                 this.#setSlaveDCSCameraAvailable(false);
-            }
-            xmlHttp.ontimeout = (res: any) => {
-                this.#setSlaveDCSCameraAvailable(false);
-            }
-            xmlHttp.timeout = 500;
-            xmlHttp.send("");
+        };
+        this.#cameraOptionsXmlHttp.onerror = (res: any) => {
+            this.#setSlaveDCSCameraAvailable(false);
+        }
+        this.#cameraOptionsXmlHttp.ontimeout = (res: any) => {
+            this.#setSlaveDCSCameraAvailable(false);
+        }
+        this.#cameraOptionsXmlHttp.timeout = 500;
+        this.#cameraOptionsXmlHttp.send("");
     }
 }
 

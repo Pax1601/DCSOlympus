@@ -27,18 +27,18 @@ export class ShortcutManager extends Manager {
 
     }
 
-    add( name: string, shortcut:any ) {
-        console.error( "ShortcutManager:add() cannot be used.  Use addKeyboardShortcut or addMouseShortcut." );
+    add(name: string, shortcut: any) {
+        console.error("ShortcutManager:add() cannot be used.  Use addKeyboardShortcut or addMouseShortcut.");
         return this;
     }
 
-    addKeyboardShortcut( name:string, shortcutKeyboardOptions:ShortcutKeyboardOptions ) {
-        super.add( name, new ShortcutKeyboard( shortcutKeyboardOptions ) );
+    addKeyboardShortcut(name: string, shortcutKeyboardOptions: ShortcutKeyboardOptions) {
+        super.add(name, new ShortcutKeyboard(shortcutKeyboardOptions));
         return this;
     }
 
-    addMouseShortcut( name:string, shortcutMouseOptions:ShortcutMouseOptions ) {
-        super.add( name, new ShortcutMouse( shortcutMouseOptions ) );
+    addMouseShortcut(name: string, shortcutMouseOptions: ShortcutMouseOptions) {
+        super.add(name, new ShortcutMouse(shortcutMouseOptions));
         return this;
     }
 

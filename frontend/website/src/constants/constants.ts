@@ -256,6 +256,7 @@ export const SHOW_UNIT_CONTACTS = "Show selected units contact lines";
 export const SHOW_UNIT_PATHS = "Show selected unit paths";
 export const SHOW_UNIT_TARGETS = "Show selected unit targets";
 export const DCS_LINK_PORT = "DCS Camera link port";
+export const DCS_LINK_RATIO = "DCS Camera zoom";
 
 export enum DataIndexes {
     startOfData = 0,
