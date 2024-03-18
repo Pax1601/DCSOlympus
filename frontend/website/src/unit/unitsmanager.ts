@@ -1320,7 +1320,7 @@ export class UnitsManager {
                                 unitBlueprint = randomUnitBlueprint(groundUnitDatabase, { type: type, eras: activeEras, ranges: activeRanges });
 
                             if (unitBlueprint)
-                                this.spawnUnits("GroundUnit", [{ unitType: unitBlueprint.name, location: latlng, liveryID: "" }], coalitionArea.getCoalition(), false, "", "");
+                                this.spawnUnits("GroundUnit", [{ unitType: unitBlueprint.name, location: latlng, liveryID: "", skill: "High" }], coalitionArea.getCoalition(), false, "", "");
                         }
                     }
                 }
@@ -1350,7 +1350,7 @@ export class UnitsManager {
                                 unitBlueprint = randomUnitBlueprint(groundUnitDatabase, { type: type, eras: activeEras, ranges: activeRanges });
 
                             if (unitBlueprint)
-                                this.spawnUnits("GroundUnit", [{ unitType: unitBlueprint.name, location: latlng, liveryID: "" }], coalitionArea.getCoalition(), false, "", "");
+                                this.spawnUnits("GroundUnit", [{ unitType: unitBlueprint.name, location: latlng, liveryID: "", skill: "High" }], coalitionArea.getCoalition(), false, "", "");
                         }
                     }
                 }

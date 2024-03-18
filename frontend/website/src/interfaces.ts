@@ -75,7 +75,7 @@ export interface UnitSpawnTable {
     location: LatLng,
     altitude?: number,
     loadout?: string,
-    skill?: string,
+    skill: string,
     liveryID: string
 }
 

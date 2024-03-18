@@ -44,7 +44,7 @@ export class UnitDataFileImport extends UnitDataFile {
                 continue;
 
             let unitsToSpawn = groupData.filter((unitData: UnitData) => this.#unitDataCanBeImported(unitData)).map((unitData: UnitData) => {
-                return { unitType: unitData.name, location: unitData.position, liveryID: "" }
+                return { unitType: unitData.name, location: unitData.position, liveryID: "", skill: "High" }
             });
 
             unitsManager.spawnUnits(category, unitsToSpawn, coalition, false);
