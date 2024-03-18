@@ -214,19 +214,6 @@ export abstract class UnitDatabase {
         return null;
     }
 
-    generateTestGrid(initialPosition: LatLng) {
-        var filteredBlueprints = this.getBlueprints();
-        const step = 0.01;
-        var nUnits = Object.values(filteredBlueprints).length;
-        var gridSize = Math.ceil(Math.sqrt(nUnits));
-        Object.values(filteredBlueprints).forEach((unitBlueprint: UnitBlueprint, idx: number) => {
-            var row = Math.floor(idx / gridSize);
-            var col = idx - row * gridSize;
-            var location = new LatLng(initialPosition.lat + col * step, initialPosition.lng + row * step)
-            getApp().getUnitsManager().spawnUnits(this.getCategory(), [{unitType: unitBlueprint.name, location: location, altitude: 1000, loadout: "", liveryID: ""}]);
-        })
-    }
-
     getSpawnPointsByLabel(label: string) {
         var blueprint = this.getByLabel(label);
         if (blueprint)
