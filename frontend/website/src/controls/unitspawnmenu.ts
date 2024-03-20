@@ -820,8 +820,8 @@ export class NavyUnitSpawnMenu extends UnitSpawnMenu {
             let initialLng = unitTable.location.lng;
             let rows = Math.floor(Math.sqrt(unitsCount))
             for (let i = 0; i < unitsCount; i++) {
-                unitTable.location.lat = initialLat + i % rows * 0.0001;
-                unitTable.location.lng = initialLng + Math.floor(i / rows) * 0.0001;
+                unitTable.location.lat = initialLat + i % rows * 0.005;
+                unitTable.location.lng = initialLng + Math.floor(i / rows) * 0.005;
                 units.push(JSON.parse(JSON.stringify(unitTable)));
             }
             
