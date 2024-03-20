@@ -167,6 +167,7 @@ void NavyUnit::AIloop()
 					setState(State::IDLE);
 			}
 		}
+
 		break;
 	}
 	case State::ATTACK: {
@@ -187,6 +188,8 @@ void NavyUnit::AIloop()
 		else {
 			setState(State::IDLE);
 		}
+
+		break;
 	}
 	case State::FIRE_AT_AREA: {
 		setTask("Firing at area");
@@ -200,6 +203,8 @@ void NavyUnit::AIloop()
 			scheduler->appendCommand(command);
 			setHasTask(true);
 		}
+
+		break;
 	}
 	case State::SIMULATE_FIRE_FIGHT: {
 		setTask("Simulating fire fight");
@@ -207,6 +212,7 @@ void NavyUnit::AIloop()
 		// TODO 
 
 		setState(State::IDLE);
+		break;
 	}
 	default:
 		break;
