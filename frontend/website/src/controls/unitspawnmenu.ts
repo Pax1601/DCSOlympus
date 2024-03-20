@@ -761,9 +761,13 @@ export class GroundUnitSpawnMenu extends UnitSpawnMenu {
             };
             
             var units = [];
+            let initialLat = unitTable.location.lat;
+            let initialLng = unitTable.location.lng;
+            let rows = Math.floor(Math.sqrt(unitsCount))
             for (let i = 0; i < unitsCount; i++) {
+                unitTable.location.lat = initialLat + i % rows * 0.0001;
+                unitTable.location.lng = initialLng + Math.floor(i / rows) * 0.0001;
                 units.push(JSON.parse(JSON.stringify(unitTable)));
-                unitTable.location.lat += i > 0? 0.0001: 0;
             }
 
             getApp().getUnitsManager().spawnUnits("GroundUnit", units, getApp().getActiveCoalition(), false, spawnOptions.airbase ? spawnOptions.airbase.getName() : "", spawnOptions.country, (res: any) => {
@@ -812,9 +816,13 @@ export class NavyUnitSpawnMenu extends UnitSpawnMenu {
             };
             
             var units = [];
+            let initialLat = unitTable.location.lat;
+            let initialLng = unitTable.location.lng;
+            let rows = Math.floor(Math.sqrt(unitsCount))
             for (let i = 0; i < unitsCount; i++) {
+                unitTable.location.lat = initialLat + i % rows * 0.005;
+                unitTable.location.lng = initialLng + Math.floor(i / rows) * 0.005;
                 units.push(JSON.parse(JSON.stringify(unitTable)));
-                unitTable.location.lat += i > 0? 0.0001: 0;
             }
             
             getApp().getUnitsManager().spawnUnits("NavyUnit", units, getApp().getActiveCoalition(), false, spawnOptions.airbase ? spawnOptions.airbase.getName() : "", spawnOptions.country, (res: any) => {
