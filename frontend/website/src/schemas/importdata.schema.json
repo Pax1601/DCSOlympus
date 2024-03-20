@@ -147,7 +147,7 @@
                     },
                     "emissionsCountermeasures": {
                         "enum": [
-                            "attac",
+                            "attack",
                             "defend",
                             "free",
                             "silent"
@@ -350,7 +350,10 @@
                         "type": "number"
                     },
                     "targetPosition": {
-                        "$ref": "#/$defs/vec2"
+                        "anyOf": [
+                            {"$ref": "#/$defs/vec2"},
+                            {"$ref": "#/$defs/vec3"}
+                        ]
                     },
                     "task": {
                         "type": "string"
