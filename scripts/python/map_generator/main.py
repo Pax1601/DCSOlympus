@@ -24,6 +24,9 @@ parser.add_argument('-t', '--tiles_folder', help='if provided, will force the sc
 parser.add_argument('-o', '--screenshots_only', action='store_true', help='if provided, the script will only run the screenshot acquisition algorithm.')   
 parser.add_argument('-e', '--extraction_only', action='store_true', help='if provided, the script will only run the tiles extraction algorithm.')   
 parser.add_argument('-m', '--merging_only', action='store_true', help='if provided, the script will only run the tiles merging algorithm.')   
+parser.add_argument('-c', '--compression_only', action='store_true', help='if provided, the script will only run the compression algorithm.')  
+parser.add_argument('-n', '--colors_number',  type=int, default=256, help='number of colors used by the png quantization algorithm. By default, 256. Must be less than 256.')  
+  
 
 args = parser.parse_args()
 
@@ -81,7 +84,7 @@ with open('configs/screen_properties.yml', 'r') as sp:
                 # Let the user input the size of the screen to compute resolution
                 data = json.dumps({'lat': features[0].geometry.bounds[1], 'lng': features[0].geometry.bounds[0], 'alt': 1350 + map_config['zoom_factor'] * (25000 - 1350), 'mode': 'map'})
                 try:
-                    r = requests.put(f'http://127.0.0.1:{port}', data = data)
+                    r = requests.post(f'http://127.0.0.1:{port}', data = data)
                     print("The F10 map in your DCS installation was setup. Please, use the measure tool and measure the width of the screen in Nautical Miles")
                 except:
                     print("No running DCS instance detected. You can still run the algorithm if you already took the screenshots, otherwise you will not be able to produce a map.")

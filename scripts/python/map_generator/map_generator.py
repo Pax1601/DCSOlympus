@@ -8,6 +8,7 @@ import json
 import numpy
 import datetime
 
+from geopy import distance
 from fastkml import kml
 from shapely import wkt, Point
 from PIL import Image
@@ -18,11 +19,14 @@ from os.path import isfile, isdir, join
 # global counters
 fut_counter = 0
 tot_futs = 0
+start_time = None
+last_screenshot_position = None
 
 # constants
 C = 40075016.686                # meters, Earth equatorial circumference
 R = C / (2 * math.pi)			# meters, Earth equatorial radius
 PUT_RETRIES = 10				# allowable number of retries for the PUT request
+SLEEP_DISTANCE = 30				# distance in kms. If a screenshot is taken with a distance from the previous screenshot longer than this value, the algorithm waits 5s for DCS to load the textures
                       
 def deg_to_num(lat_deg, lon_deg, zoom):
 	lat_rad = math.radians(lat_deg)
@@ -41,19 +45,22 @@ def num_to_deg(xtile, ytile, zoom):
 def compute_mpps(lat, z):
 	return C * math.cos(math.radians(lat)) / math.pow(2, z + 8)
 
-def print_progress_bar(iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
+def print_progress_bar(iteration, total, start_time, prefix = '', suffix = '', decimals = 1, length = 80, fill = '█', printEnd = "\r"):
+    now = datetime.datetime.now()
+    diff = (now - start_time).total_seconds()
     percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
     filledLength = int(length * iteration // total)
     bar = fill * filledLength + '-' * (length - filledLength)
-    print(f'\r{prefix} |{bar}| {percent}% {suffix}', end = printEnd)
+    print(f'\r{prefix} |{bar}| {percent}% {suffix} {iteration / diff:.3f} ops/s', end = printEnd)
+    
     # Print New Line on Complete
     if iteration == total: 
         print()
 
 def done_callback(fut):
-	global fut_counter, tot_futs
+	global fut_counter, tot_futs, start_time
 	fut_counter += 1
-	print_progress_bar(fut_counter, tot_futs)
+	print_progress_bar(fut_counter, tot_futs, start_time)
 
 def extract_tiles(n, screenshots_XY, params):
 	f = params['f']
@@ -104,7 +111,7 @@ def merge_tiles(base_path, zoom, tile):
 
 	# If the image already exists, open it so we can paste the higher quality data in it
 	if os.path.exists(os.path.join(base_path, str(zoom - 1), str(X), f"{Y}.png")):
-		dst = Image.open(os.path.join(base_path, str(zoom - 1), str(X), f"{Y}.png"))
+		dst = Image.open(os.path.join(base_path, str(zoom - 1), str(X), f"{Y}.png")).convert('RGBA')
 	else:
 		dst = Image.new('RGBA', (256, 256), (0, 0, 0, 0))
 
@@ -113,7 +120,7 @@ def merge_tiles(base_path, zoom, tile):
 	for i in range(0, 4):
 		# Open the subtile, if it exists, and resize it down to 128x128
 		if os.path.exists(os.path.join(base_path, str(zoom), str(2*X + positions[i][0]), f"{2*Y + positions[i][1]}.png")):
-			im = Image.open(os.path.join(base_path, str(zoom), str(2*X + positions[i][0]), f"{2*Y + positions[i][1]}.png")).resize((128, 128))
+			im = Image.open(os.path.join(base_path, str(zoom), str(2*X + positions[i][0]), f"{2*Y + positions[i][1]}.png")).convert('RGBA').resize((128, 128))
 			dst.paste(im, (positions[i][0] * 128, positions[i][1] * 128), im)
 
 	# Create the output folder if it exists
@@ -127,7 +134,17 @@ def merge_tiles(base_path, zoom, tile):
 			raise e
 	
 	# Save the image
-	dst.save(os.path.join(base_path, str(zoom - 1), str(X), f"{Y}.png"), quality=98)
+	dst.save(os.path.join(base_path, str(zoom - 1), str(X), f"{Y}.png"))
+
+def compress_tiles(base_path, zoom, tile, colors_number):
+	X = tile[0]
+	Y = tile[1]
+	path = os.path.join(base_path, str(zoom), str(X), f"{Y}.png")
+	initial_size = os.path.getsize(path)
+	im = Image.open(path)
+	im = im.quantize(colors_number)
+	im.save(path)
+	return initial_size, os.path.getsize(path)
 
 def compute_correction_factor(XY, n_width, n_height, map_config, zoom, screenshots_folder, port):
 	# Take screenshots at the given position
@@ -191,7 +208,9 @@ def compute_variation(imageA):
 	return max - min
 
 def take_screenshot(XY, n_width, n_height, map_config, zoom, screenshots_folder, f, n, port, correction = (0, 0)):
-	# Making PUT request
+	global last_screenshot_position
+
+	# Making POST request
 	# If the number of rows or columns is odd, we need to take the picture at the CENTER of the tile!
 	lat, lng = num_to_deg(XY[0] + (n_width % 2) / 2, XY[1] + (n_height % 2) / 2, zoom)
 	data = json.dumps({'lat': lat, 'lng': lng, 'alt': 1350 + map_config['zoom_factor'] * (25000 - 1350), 'mode': 'map'})
@@ -201,7 +220,7 @@ def take_screenshot(XY, n_width, n_height, map_config, zoom, screenshots_folder,
 	success = False
 	while not success and retries > 0:
 		try:
-			r = requests.put(f'http://127.0.0.1:{port}', data = data)
+			r = requests.post(f'http://127.0.0.1:{port}', data = data)
 			success = True
 		except:
 			retries -= 1
@@ -212,7 +231,12 @@ def take_screenshot(XY, n_width, n_height, map_config, zoom, screenshots_folder,
 
 	geo_data = json.loads(r.text)
 
-	time.sleep(0.2)
+	if last_screenshot_position is None or distance.geodesic(last_screenshot_position, (lat, lng)).km > SLEEP_DISTANCE:
+		time.sleep(5.0)
+	else:
+		time.sleep(0.2)
+
+	last_screenshot_position = (lat, lng)
 
 	# Take and save screenshot. The response to the put request contains data, among which there is the north rotation at that point.
 	screenshot = pyautogui.screenshot()
@@ -240,7 +264,7 @@ def take_screenshot(XY, n_width, n_height, map_config, zoom, screenshots_folder,
 	screenshot.rotate(math.degrees(geo_data['northRotation'])).resize((int(sx * screenshot.width) + correction[0], int(sy * screenshot.height)+ correction[1] )).save(os.path.join(screenshots_folder, f"{f}_{n}_{zoom}.jpg"), quality=98)
 
 def run(map_config, port):
-	global tot_futs, fut_counter
+	global tot_futs, fut_counter, start_time
 
 	print("Script start time: ", datetime.datetime.now())
 	with open('configs/screen_properties.yml', 'r') as sp:
@@ -315,13 +339,13 @@ def run(map_config, port):
 							screenshots_XY.append((X, Y))
 
 				########### Take screenshots
-				if not map_config["extraction_only"] and not map_config["merging_only"]:
-					print("Screenshots taking starting at: ", datetime.datetime.now())
-					print(f"Feature {f} of {len(features)}, {len(screenshots_XY)} screenshots will be taken")
+				if not map_config["extraction_only"] and not map_config["merging_only"] and not map_config["compression_only"]:
 					# Start looping
 					correction = None
 					if not skip_screenshots:
-						print(f"Feature {f} of {len(features)}, taking screenshots...")
+						start_time = datetime.datetime.now()
+						print("Screenshots taking starting at: ", start_time)
+						print(f"Feature {f} of {len(features)}, {len(screenshots_XY)} screenshots will be taken")
 						n = 0
 						for XY in screenshots_XY:
 							if not os.path.exists(os.path.join(map_config['screenshots_folder'], f"{f}_{n}_{zoom}.jpg")) or replace_screenshots:
@@ -331,12 +355,15 @@ def run(map_config, port):
 										correction = new_correction
 								take_screenshot(XY, n_width, n_height, map_config, zoom, map_config['screenshots_folder'], f, n, port, correction if correction is not None else (0, 0))
 							
-							print_progress_bar(n + 1, len(screenshots_XY))
+							print_progress_bar(n + 1, len(screenshots_XY), start_time)
 							n += 1
+						print(f"Taken {n} screenshots in {datetime.datetime.now() - start_time}s")
 
 				########### Extract the tiles
-				if not map_config["screenshots_only"] and not map_config["merging_only"]:
-					print("Tiles extraction starting at: ", datetime.datetime.now())
+				if not map_config["screenshots_only"] and not map_config["merging_only"] and not map_config["compression_only"]:
+					start_time = datetime.datetime.now()
+					res = []
+					print("Tiles extraction starting at: ", start_time)
 					if not os.path.exists(os.path.join(map_config["tiles_folder"], str(zoom))):
 						os.mkdir(os.path.join(map_config["tiles_folder"], str(zoom)))
 
@@ -356,15 +383,18 @@ def run(map_config, port):
 						tot_futs = len(futs)
 						fut_counter = 0
 						[fut.add_done_callback(done_callback) for fut in futs]
-						[fut.result() for fut in futures.as_completed(futs)]
+						res.extend([fut.result() for fut in futures.as_completed(futs)])
+					print(f"Extracted {len(res) * n_width * n_height} images in {datetime.datetime.now() - start_time}s")
 
 				# Increase the feature counter
 				print(f"Feature {f} of {len(features)} completed!")	
 				f += 1
 
 		########### Assemble tiles to get lower zoom levels
-		if not map_config["screenshots_only"] and not map_config["extraction_only"]:
-			print("Tiles merging start time: ", datetime.datetime.now())
+		if not map_config["screenshots_only"] and not map_config["extraction_only"] and not map_config["compression_only"]:
+			start_time = datetime.datetime.now()
+			res = []
+			print("Tiles merging start time: ", start_time)
 			for current_zoom in range(zoom, map_config["final_level"], -1):
 				Xs = [int(d) for d in listdir(os.path.join(map_config["tiles_folder"], str(current_zoom))) if isdir(join(map_config["tiles_folder"], str(current_zoom), d))]
 				existing_tiles = []
@@ -389,7 +419,34 @@ def run(map_config, port):
 					tot_futs = len(futs)
 					fut_counter = 0
 					[fut.add_done_callback(done_callback) for fut in futs]
-					[fut.result() for fut in futures.as_completed(futs)]
+					res.extend([fut.result() for fut in futures.as_completed(futs)])
+			print(f"Merged {len(res)} images in {datetime.datetime.now() - start_time}s")
+
+		########### Assemble tiles to get lower zoom levels
+		if not map_config["screenshots_only"] and not map_config["extraction_only"] and not map_config["merging_only"]:
+			start_time = datetime.datetime.now()
+			res = []
+			print("Tiles compression start time: ", start_time)
+			for current_zoom in range(zoom, map_config["final_level"], -1):
+				Xs = [int(d) for d in listdir(os.path.join(map_config["tiles_folder"], str(current_zoom))) if isdir(join(map_config["tiles_folder"], str(current_zoom), d))]
+				existing_tiles = []
+				for X in Xs:
+					Ys = [int(f.removesuffix(".png")) for f in listdir(os.path.join(map_config["tiles_folder"], str(current_zoom), str(X))) if isfile(join(map_config["tiles_folder"], str(current_zoom), str(X), f))]
+					for Y in Ys:
+						existing_tiles.append((X, Y))
+				
+				# Compress the tiles with parallel thread execution
+				with futures.ThreadPoolExecutor() as executor:
+					print(f"Compressing tiles for zoom level {current_zoom }...")
+
+					futs = [executor.submit(compress_tiles, os.path.join(map_config["tiles_folder"]), current_zoom, tile, map_config['colors_number']) for tile in existing_tiles]
+					tot_futs = len(futs)
+					fut_counter = 0
+					[fut.add_done_callback(done_callback) for fut in futs]
+					res.extend([fut.result() for fut in futures.as_completed(futs)])
+			total_initial_size = numpy.sum([r[0] for r in res]) / 1024 / 1024
+			total_final_size = numpy.sum([r[1] for r in res]) / 1024 / 1024
+			print(f"Compressed {len(res)} images in {datetime.datetime.now() - start_time}, inizial size {total_initial_size:.3f}MB, final size {total_final_size:.3f}MB, compression ratio {(1 - total_final_size / total_initial_size )* 100:.3f}%")
 
 		print("Script end time: ", datetime.datetime.now())
 

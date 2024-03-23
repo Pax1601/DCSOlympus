@@ -10,7 +10,8 @@
             "request": "launch",
             "program": "main.py",
             "console": "integratedTerminal",
-            "args": ["-s", "-l", "1", "./configs/Test/MediumResolution.yml"]
+            "args": ["./configs/Test/MediumResolution.yml"],
+            "justMyCode": false
         }, 
         {
             "name": "Convert",
