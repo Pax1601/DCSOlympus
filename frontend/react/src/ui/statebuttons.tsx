@@ -1,16 +1,14 @@
-import React from 'react'
+import React, { MouseEventHandler } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { IconProp } from '@fortawesome/fontawesome-svg-core'
 
-type ButtonProperties = {
-    icon: string
-}
-
-type ButtonState = {
+type ButtonProps = {
+    icon: string,
+    onClick: CallableFunction,
     active: boolean
 }
 
-export class StateButton extends React.Component<ButtonProperties, ButtonState> {
+export class StateButton extends React.Component<ButtonProps, {}> {
     constructor(props) {
         super(props);
         this.state = {
@@ -20,10 +18,10 @@ export class StateButton extends React.Component<ButtonProperties, ButtonState> 
 
     render() {
         var computedClassName = "";
-        computedClassName += this.state.active? 'bg-white text-background-steel': 'bg-transparent text-white border-white';
+        computedClassName += this.props.active? 'bg-white text-background-steel': 'bg-transparent text-white border-white';
         
         return (
-          <FontAwesomeIcon icon={this.props.icon as IconProp} className={computedClassName + " rounded w-5 h-5 p-2 border-2"} onClick={() => this.setState({active: !this.state.active})}>
+          <FontAwesomeIcon icon={this.props.icon as IconProp} className={computedClassName + " rounded w-5 h-5 p-2 border-2"} onClick={this.props.onClick as MouseEventHandler}>
           </FontAwesomeIcon>
         );
     }

@@ -1,4 +1,4 @@
-@import "./leaflet/leaflet.css";
+@import "../node_modules/leaflet/dist/leaflet.css";
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
