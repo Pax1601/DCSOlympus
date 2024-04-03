@@ -8,7 +8,9 @@ export default {
     extend: {
       colors: {
         background: {
-          steel: "#202831"
+          darker: "#202831",
+          dark: "#2D3742",
+          neutral: "#394552"
         }
       }
     },

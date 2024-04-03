@@ -5,6 +5,7 @@ module.exports = function (configLocation) {
     var logger = require('morgan');
     var fs = require('fs');
     var bodyParser = require('body-parser');
+    var cors = require('cors');
     const { createProxyMiddleware } = require('http-proxy-middleware');
 
     /* Default routers */
@@ -39,6 +40,7 @@ module.exports = function (configLocation) {
     app.use(bodyParser.json({ limit: '50mb' }));
     app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
     app.use(express.static(path.join(__dirname, 'public')));
+    app.use(cors())
 
     /* Apply routers */
     app.use('/', indexRouter);

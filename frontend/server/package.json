@@ -27,5 +27,8 @@
     "tcp-ping-port": "^1.0.1",
     "uuid": "^9.0.1",
     "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "cors": "^2.8.5"
   }
 }

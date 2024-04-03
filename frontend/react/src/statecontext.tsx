@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { OlympusState } from "./App";
+import { OlympusState } from "./ui";
 
 export const StateContext = createContext({
     spawnMenuVisible: false,

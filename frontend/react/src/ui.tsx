@@ -1,12 +1,13 @@
 import React from 'react'
-import './app.css'
+import './ui.css'
 
 import { MapContainer, TileLayer } from 'react-leaflet'
 
 import { Map } from './map/map'
-import { Header } from './ui/header'
+import { Header } from './ui/panels/header'
 import { EventsProvider } from './eventscontext'
 import { StateProvider } from './statecontext'
+import { SpawnMenu } from './ui/panels/spawnmenu'
 
 const position = [51.505, -0.09]
 
@@ -17,7 +18,7 @@ export type OlympusState = {
 	drawingMenuVisible: boolean
 }
 
-export default class App extends React.Component<{}, OlympusState> {
+export default class UI extends React.Component<{}, OlympusState> {
 	constructor(props) {
 		super(props);
 
@@ -114,7 +115,7 @@ export default class App extends React.Component<{}, OlympusState> {
 
 	render() {
 		return (
-			<div style={{ width: "100%", height: "100%" }}>
+			<div className="h-full w-full font-sans">
 				<StateProvider value={this.state}>
 					<EventsProvider value={
 						{
@@ -128,12 +129,14 @@ export default class App extends React.Component<{}, OlympusState> {
 							toggleDrawingMenu: this.toggleDrawingMenu
 						}
 					}>
-						<MapContainer center={position} zoom={13} className='absolute w-full h-full top-0 left-0'>
-							<TileLayer
-								url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-							/>
-						</MapContainer>
-						<Header ></Header>
+						<div id='map-container' className='absolute top-0 left-0 w-full h-full'>
+
+						</div>
+						<div className='absolute top-0 left-0 z-ui w-full h-full flex flex-col'>
+							<Header ></Header>
+							<SpawnMenu ></SpawnMenu>
+						</div>
+						
 					</EventsProvider>
 				</StateProvider>
 			</div>

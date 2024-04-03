@@ -18,7 +18,7 @@ export class StateButton extends React.Component<ButtonProps, {}> {
 
     render() {
         var computedClassName = "";
-        computedClassName += this.props.active? 'bg-white text-background-steel': 'bg-transparent text-white border-white';
+        computedClassName += this.props.active? 'bg-white text-background-darker': 'bg-transparent text-white border-white';
         
         return (
           <FontAwesomeIcon icon={this.props.icon as IconProp} className={computedClassName + " rounded w-5 h-5 p-2 border-2"} onClick={this.props.onClick as MouseEventHandler}>

@@ -3,6 +3,7 @@ module.exports = function (configLocation) {
 	var logger = require('morgan');
 	var enc = new TextEncoder();
 	const path = require('path');
+	var cors = require('cors');
 
 	var express = require('express');
 	var fs = require('fs');
@@ -13,6 +14,7 @@ module.exports = function (configLocation) {
 	var app = express();
 
 	app.use(logger('dev'));
+	app.use(cors())
 
 	const aircraftDatabase = require(path.join(path.dirname(configLocation), '../Mods/Services/Olympus/databases/units/aircraftdatabase.json'));
 	const helicopterDatabase = require(path.join(path.dirname(configLocation),'../Mods/Services/Olympus/databases/units/helicopterdatabase.json'));
@@ -458,7 +460,7 @@ module.exports = function (configLocation) {
 		};
 
 		mission(req, res){
-			var ret = {mission: {theatre: "MarianaIslands"}};
+			var ret = {mission: {theatre: "Nevada"}};
 			ret.time = Date.now();
 
 			ret.mission.dateAndTime = {
