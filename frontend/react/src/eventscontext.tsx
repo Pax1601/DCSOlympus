@@ -1,14 +1,14 @@
 import { createContext } from "react";
 
 export const EventsContext = createContext({
-    showSpawnMenu: (e: boolean) => {},
-    toggleSpawnMenu: () => {},
-    showUnitControlMenu: (e: boolean) => {},
-    toggleUnitControlMenu: () => {},
-    showMeasureMenu: (e: boolean) => {},
-    toggleMeasureMenu: () => {},
-    showDrawingMenu: (e: boolean) => {},
-    toggleDrawingMenu: () => {}
+    setSpawnMenuVisible: (e: boolean) => {},
+    setUnitControlMenuVisible: (e: boolean) => {},
+    setMeasureMenuVisible: (e: boolean) => {},
+    setDrawingMenuVisible: (e: boolean) => {},
+    toggleSpawnMenuVisible: () => {},
+    toggleUnitControlMenuVisible: () => {},
+    toggleMeasureMenuVisible: () => {},
+    toggleDrawingMenuVisible: () => {},
 })
 
 export const EventsProvider = EventsContext.Provider;

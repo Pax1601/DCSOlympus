@@ -1,14 +1,13 @@
 import React from "react";
-import { MenuTitle } from "./components/menutitle";
+import { Menu } from "./components/menu";
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { library } from '@fortawesome/fontawesome-svg-core'
 
-export class SpawnMenu extends React.Component<{}, {}> {
-    constructor(props) {
-        super(props);
-    }
+library.add(faPlus);
 
-    render() {
-        return <div className="h-full w-96 bg-background-neutral z-ui">
-            <MenuTitle title="Spawn menu"></MenuTitle>
-        </div>
-    }
+export function SpawnMenu(props) {
+
+   return <Menu {...props} title="Spawn menu" titleIcon="fa-solid fa-plus">
+
+   </Menu>
 }

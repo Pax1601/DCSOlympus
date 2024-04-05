@@ -4,7 +4,8 @@ import { UnitDatabase } from "./unitdatabase"
 
 export class AircraftDatabase extends UnitDatabase {
     constructor() {
-        super('api/databases/units/aircraftdatabase');
+        //Temporary
+        super('http://localhost:3000/api/databases/units/aircraftdatabase');
     }
 
 	getCategory() {

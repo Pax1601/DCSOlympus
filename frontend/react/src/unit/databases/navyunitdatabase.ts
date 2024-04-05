@@ -4,7 +4,8 @@ import { UnitDatabase } from "./unitdatabase"
 
 export class NavyUnitDatabase extends UnitDatabase {
     constructor() {
-        super('api/databases/units/navyunitdatabase');
+        // Temporary
+        super('http://localhost:3000/api/databases/units/navyunitdatabase');
     }
 
     getSpawnPointsByName(name: string) {

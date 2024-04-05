@@ -23,6 +23,14 @@ import { DestinationPreviewHandle } from "./markers/destinationpreviewHandle";
 import { ContextActionSet } from "../unit/contextactionset";
 import { DCSLayer } from "./dcslayer";
 
+import './markers/stylesheets/airbase.css'
+import './markers/stylesheets/bullseye.css'
+import './markers/stylesheets/units.css'
+
+// Temporary
+import './theme.css'
+
+
 var hasTouchScreen = false;
 //if ("maxTouchPoints" in navigator) 
 //    hasTouchScreen = navigator.maxTouchPoints > 0;

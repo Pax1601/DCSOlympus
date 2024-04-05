@@ -1,10 +1,10 @@
 import { LatLng } from 'leaflet';
 import { getApp } from '../olympusapp';
 import { AIRBASES_URI, BULLSEYE_URI, COMMANDS_URI, LOGS_URI, MISSION_URI, NONE, ROEs, UNITS_URI, WEAPONS_URI, emissionsCountermeasures, reactionsToThreat } from '../constants/constants';
-import { ServerStatusPanel } from '../panels/serverstatuspanel';
-import { LogPanel } from '../panels/logpanel';
-import { Popup } from '../popups/popup';
-import { ConnectionStatusPanel } from '../panels/connectionstatuspanel';
+//import { ServerStatusPanel } from '../panels/serverstatuspanel';
+//import { LogPanel } from '../panels/logpanel';
+//import { Popup } from '../popups/popup';
+//import { ConnectionStatusPanel } from '../panels/connectionstatuspanel';
 import { AirbasesData, BullseyesData, GeneralSettings, MissionData, Radio, ServerRequestOptions, TACAN } from '../interfaces';
 import { zeroAppend } from '../other/utils';
 
@@ -453,7 +453,7 @@ export class ServerManager {
             if (!this.getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
                 this.getLogs((data: any) => {
                     this.checkSessionHash(data.sessionHash);
-                    (getApp().getPanelsManager().get("log") as LogPanel).appendLogs(data.logs)
+                    //(getApp().getPanelsManager().get("log") as LogPanel).appendLogs(data.logs)
                     return data.time;
                 });
             }
@@ -488,17 +488,17 @@ export class ServerManager {
                 this.#serverIsPaused = (elapsedMissionTime === this.#previousMissionElapsedTime);
                 this.#previousMissionElapsedTime = elapsedMissionTime;
 
-                const csp = (getApp().getPanelsManager().get("connectionStatus") as ConnectionStatusPanel);
+                //const csp = (getApp().getPanelsManager().get("connectionStatus") as ConnectionStatusPanel);
 
-                if (this.getConnected()) {
-                    if (this.getServerIsPaused()) {
-                        csp.showServerPaused();
-                    } else {
-                        csp.showConnected();
-                    }
-                } else {
-                    csp.showDisconnected();
-                }
+                //if (this.getConnected()) {
+                //    if (this.getServerIsPaused()) {
+                //        csp.showServerPaused();
+                //    } else {
+                //        csp.showConnected();
+                //    }
+                //} else {
+                //    csp.showDisconnected();
+                //}
 
             }
         }, (this.getServerIsPaused() ? 500 : 5000)));
@@ -512,11 +512,11 @@ export class ServerManager {
 
             const elapsedMissionTime = getApp().getMissionManager().getDateAndTime().elapsedTime;
 
-            const csp = (getApp().getPanelsManager().get("connectionStatus") as ConnectionStatusPanel);
-            const mt = getApp().getMissionManager().getDateAndTime().time;
+            //const csp = (getApp().getPanelsManager().get("connectionStatus") as ConnectionStatusPanel);
+            //const mt = getApp().getMissionManager().getDateAndTime().time;
 
-            csp.setMissionTime([mt.h, mt.m, mt.s].map(n => zeroAppend(n, 2)).join(":"));
-            csp.setElapsedTime(new Date(elapsedMissionTime * 1000).toISOString().substring(11, 19));
+            //csp.setMissionTime([mt.h, mt.m, mt.s].map(n => zeroAppend(n, 2)).join(":"));
+            //csp.setElapsedTime(new Date(elapsedMissionTime * 1000).toISOString().substring(11, 19));
 
         }, 1000));
 
@@ -545,7 +545,7 @@ export class ServerManager {
 
         this.getLogs((data: any) => {
             this.checkSessionHash(data.sessionHash);
-            (getApp().getPanelsManager().get("log") as LogPanel).appendLogs(data.logs)
+            //(getApp().getPanelsManager().get("log") as LogPanel).appendLogs(data.logs)
             return data.time;
         });
 
@@ -587,7 +587,7 @@ export class ServerManager {
 
     setPaused(newPaused: boolean) {
         this.#paused = newPaused;
-        this.#paused ? (getApp().getPopupsManager().get("infoPopup") as Popup).setText("View paused") : (getApp().getPopupsManager().get("infoPopup") as Popup).setText("View unpaused");
+        //this.#paused ? (getApp().getPopupsManager().get("infoPopup") as Popup).setText("View paused") : (getApp().getPopupsManager().get("infoPopup") as Popup).setText("View unpaused");
     }
 
     getPaused() {
