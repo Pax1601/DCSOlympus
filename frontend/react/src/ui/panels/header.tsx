@@ -13,9 +13,10 @@ export function Header(props) {
 		{(appState) =>
 			<EventsConsumer>
 				{(events) =>
-					<nav className="bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+					<nav className="bg-white border-gray-200 dark:bg-[#171C26] dark:border-gray-700">
 						<div className="max-w-screen flex flex-wrap items-center justify-between p-4">
 							<div className="flex flex-row items-center justify-center gap-1">
+								<img src="images/icon.png" className='h-12 border-2 p-0 bg-white rounded-md mr-2 cursor-pointer' onClick={events.toggleMainMenuVisible}></img>
 								<OlStateButton onClick={events.toggleSpawnMenuVisible} checked={appState.spawnMenuVisible} icon="fa-solid fa-plus"></OlStateButton>
 								<OlStateButton onClick={events.toggleUnitControlMenuVisible} checked={appState.unitControlMenuVisible} icon="fa-solid fa-gamepad"></OlStateButton>
 								<OlStateButton onClick={events.toggleMeasureMenuVisible} checked={appState.measureMenuVisible} icon="fa-solid fa-ruler"></OlStateButton>
