@@ -232,7 +232,7 @@ def take_screenshot(XY, n_width, n_height, map_config, zoom, screenshots_folder,
 	geo_data = json.loads(r.text)
 
 	if last_screenshot_position is None or distance.geodesic(last_screenshot_position, (lat, lng)).km > SLEEP_DISTANCE:
-		time.sleep(5.0)
+		time.sleep(map_config['wait_period'])
 	else:
 		time.sleep(0.2)
 
