@@ -35,6 +35,7 @@ import { aircraftDatabase } from "./unit/databases/aircraftdatabase";
 import { helicopterDatabase } from "./unit/databases/helicopterdatabase";
 import { groundUnitDatabase } from "./unit/databases/groundunitdatabase";
 import { navyUnitDatabase } from "./unit/databases/navyunitdatabase";
+import { initFlowbite } from "flowbite";
 //import { UnitListPanel } from "./panels/unitlistpanel";
 //import { ContextManager } from "./context/contextmanager";
 //import { Context } from "./context/context";

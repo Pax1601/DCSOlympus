@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './ui.css'
+import { initFlowbite } from "flowbite";
 
 import { Header } from './ui/panels/header'
 import { EventsProvider } from './eventscontext'
@@ -17,6 +18,7 @@ export type OlympusState = {
 }
 
 export function UI(props) {
+	var [flowbiteInited, setFlowbiteInited] = useState(false);
 	var [mainMenuVisible, setMainMenuVisible] = useState(false);
 	var [spawnMenuVisible, setSpawnMenuVisible] = useState(false);
 	var [unitControlMenuVisible, setUnitControlMenuVisible] = useState(false);

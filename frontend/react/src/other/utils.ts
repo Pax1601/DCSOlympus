@@ -474,3 +474,18 @@ export function getGroundElevation(latlng: LatLng, callback: CallableFunction) {
     };
     xhr.send();
 }
+
+export function getWikipediaEntry(search: string, callback: CallableFunction) {
+    /* Get the ground elevation from the server endpoint */
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', `https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts|pageimages&exintro&explaintext&generator=search&gsrsearch=intitle:${search}&gsrlimit=1&redirects=1&origin=*`, true);
+    xhr.timeout = 500; // ms
+    xhr.responseType = 'json';
+    xhr.onload = () => {
+        var status = xhr?.status;
+        if (status === 200) {
+            callback(xhr.response)
+        }
+    };
+    xhr.send();
+    }
