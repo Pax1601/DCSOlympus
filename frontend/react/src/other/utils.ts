@@ -9,6 +9,7 @@ import { GROUND_UNIT_AIR_DEFENCE_REGEX, ROEs, emissionsCountermeasures, reaction
 import { navyUnitDatabase } from "../unit/databases/navyunitdatabase";
 import { DateAndTime, UnitBlueprint } from "../interfaces";
 import { Converter } from "usng";
+import { MGRS } from "../types/types";
 
 
 export function bearing(lat1: number, lon1: number, lat2: number, lon2: number) {
@@ -165,18 +166,6 @@ export function editDistance(s1: string, s2: string) {
             costs[s2.length] = lastValue;
     }
     return costs[s2.length];
-}
-
-export type MGRS = {
-    bandLetter: string,
-    columnLetter: string,
-    easting: string,
-    groups: string[],
-    northing: string,
-    precision: number,
-    rowLetter: string,
-    string: string,
-    zoneNumber: string
 }
 
 export function latLngToMGRS(lat: number, lng: number, precision: number = 4): MGRS | false {

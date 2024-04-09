@@ -12,7 +12,7 @@ import { DestinationPreviewMarker } from "./markers/destinationpreviewmarker";
 import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
 import { SVGInjector } from '@tanem/svg-injector'
-import { defaultMapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, MOVE_UNIT, SHOW_UNIT_CONTACTS, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, SHOW_UNIT_LABELS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, /*MAP_MARKER_CONTROLS,*/ DCS_LINK_PORT, DCSMapsZoomLevelsByTheatre, DCS_LINK_RATIO } from "../constants/constants";
+import { defaultMapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, MOVE_UNIT, SHOW_UNIT_CONTACTS, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, SHOW_UNIT_LABELS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, /*MAP_MARKER_CONTROLS,*/ DCS_LINK_PORT, DCSMapsZoomLevelsByTheatre, DCS_LINK_RATIO, MAP_OPTIONS_DEFAULTS, MAP_HIDDEN_TYPES_DEFAULTS } from "../constants/constants";
 import { CoalitionArea } from "./coalitionarea/coalitionarea";
 //import { CoalitionAreaContextMenu } from "../contextmenus/coalitionareacontextmenu";
 import { DrawingCursor } from "./coalitionarea/drawingcursor";
@@ -29,7 +29,7 @@ import './markers/stylesheets/units.css'
 
 // Temporary
 import './theme.css'
-
+import { MapHiddenTypes, MapOptions } from "../types/types";
 
 var hasTouchScreen = false;
 //if ("maxTouchPoints" in navigator) 
@@ -45,18 +45,12 @@ else
 // TODO would be nice to convert to ts - yes
 //require("../../node_modules/leaflet.nauticscale/dist/leaflet.nauticscale.js")
 //require("../../node_modules/leaflet-path-drag/dist/index.js")
-
-export type MapMarkerVisibilityControl = {
-    "category"?: string;
-    "image": string;
-    "isProtected"?: boolean,
-    "name": string,
-    "protectable"?: boolean,
-    "toggles": string[],
-    "tooltip": string
-}
  
 export class Map extends L.Map {
+    /* Options */
+    #options: MapOptions = MAP_OPTIONS_DEFAULTS;
+    #hiddenTypes: MapHiddenTypes = MAP_HIDDEN_TYPES_DEFAULTS;
+
     #ID: string;
     #state: string;
     #layer: L.TileLayer | L.LayerGroup | null = null;
@@ -97,19 +91,7 @@ export class Map extends L.Map {
     #longPressHandled: boolean = false;
     #longPressTimer: number = 0;
 
-    //#mapContextMenu: MapContextMenu = new MapContextMenu("map-contextmenu");
-    //#unitContextMenu: UnitContextMenu = new UnitContextMenu("unit-contextmenu");
-    //#airbaseContextMenu: AirbaseContextMenu = new AirbaseContextMenu("airbase-contextmenu");
-    //#airbaseSpawnMenu: AirbaseSpawnContextMenu = new AirbaseSpawnContextMenu("airbase-spawn-contextmenu");
-    //#coalitionAreaContextMenu: CoalitionAreaContextMenu = new CoalitionAreaContextMenu("coalition-area-contextmenu");
-
-    //#mapSourceDropdown: Dropdown;
     #mapLayers: any = defaultMapLayers;
-    //#mapMarkerVisibilityControls: MapMarkerVisibilityControl[] = MAP_MARKER_CONTROLS;
-    //#mapVisibilityOptionsDropdown: Dropdown;
-    //#optionButtons: { [key: string]: HTMLButtonElement[] } = {}
-    #visibilityOptions: { [key: string]: boolean | string | number } = {}
-    #hiddenTypes: string[] = [];
     #layerName: string = "";
     #cameraOptionsXmlHttp: XMLHttpRequest | null = null;
     #bradcastPositionXmlHttp: XMLHttpRequest | null = null;
@@ -146,6 +128,7 @@ export class Map extends L.Map {
         this.#miniMapLayerGroup = new L.LayerGroup([minimapLayer]);
         this.#miniMapPolyline = new L.Polyline([], { color: '#202831' });
         this.#miniMapPolyline.addTo(this.#miniMapLayerGroup);
+        
 
         /* Scale */
         //@ts-ignore TODO more hacking because the module is provided as a pure javascript module only
@@ -180,27 +163,14 @@ export class Map extends L.Map {
         this.on('move', (e: any) => { if (this.#slaveDCSCamera) this.#broadcastPosition() });
 
         /* Event listeners */
-        document.addEventListener("toggleCoalitionVisibility", (ev: CustomEventInit) => {
-            const el = ev.detail._element;
-            el?.classList.toggle("off");
-            this.setHiddenType(ev.detail.coalition, !el?.classList.contains("off"));
+        document.addEventListener("hiddenTypesChanged", (ev: CustomEventInit) => {
             Object.values(getApp().getUnitsManager().getUnits()).forEach((unit: Unit) => unit.updateVisibility());
-        });
-
-        document.addEventListener("toggleMarkerVisibility", (ev: CustomEventInit) => {
-            const el = ev.detail._element;
-            el?.classList.toggle("off");
-            ev.detail.types.forEach((type: string) => this.setHiddenType(type, !el?.classList.contains("off")));
-            Object.values(getApp().getUnitsManager().getUnits()).forEach((unit: Unit) => unit.updateVisibility());
-
-            if (ev.detail.types.includes("airbase")) {
-                Object.values(getApp().getMissionManager().getAirbases()).forEach((airbase: Airbase) => {
-                    if (el?.classList.contains("off"))
-                        airbase.removeFrom(this);
-                    else
-                        airbase.addTo(this);
-                })
-            }
+            Object.values(getApp().getMissionManager().getAirbases()).forEach((airbase: Airbase) => {
+                if (this.getHiddenTypes().airbase)
+                    airbase.removeFrom(this);
+                else
+                    airbase.addTo(this);
+            })
         });
 
         document.addEventListener("toggleCoalitionAreaDraw", (ev: CustomEventInit) => {
@@ -220,9 +190,9 @@ export class Map extends L.Map {
         //});
 
         document.addEventListener("mapOptionsChanged", () => {
-            this.getContainer().toggleAttribute("data-hide-labels", !this.getVisibilityOptions()[SHOW_UNIT_LABELS]);
-            this.#cameraControlPort = this.getVisibilityOptions()[DCS_LINK_PORT] as number;
-            this.#cameraZoomRatio = 50 / (20 + (this.getVisibilityOptions()[DCS_LINK_RATIO] as number));
+            this.getContainer().toggleAttribute("data-hide-labels", !this.getOptions().showUnitLabels);
+            //this.#cameraControlPort = this.getOptions()[DCS_LINK_PORT] as number;
+            //this.#cameraZoomRatio = 50 / (20 + (this.getOptions()[DCS_LINK_RATIO] as number));
 
             if (this.#slaveDCSCamera) {
                 this.#broadcastPosition();
@@ -267,39 +237,6 @@ export class Map extends L.Map {
         this.#cameraControlTimer = window.setInterval(() => {
             this.#checkCameraPort();
         }, 1000)
-
-        /* Option buttons */
-        this.#createUnitMarkerControlButtons();
-
-        /* Create the checkboxes to select the advanced visibility options */
-        this.addVisibilityOption(DCS_LINK_PORT, 3003, { min: 1024, max: 65535 });
-        this.addVisibilityOption(DCS_LINK_RATIO, 50, { min: 0, max: 100, slider: true });
-
-        //this.#mapVisibilityOptionsDropdown.addHorizontalDivider();
-
-        this.addVisibilityOption(SHOW_UNIT_CONTACTS, false);
-        this.addVisibilityOption(HIDE_GROUP_MEMBERS, true);
-        this.addVisibilityOption(SHOW_UNIT_PATHS, true);
-        this.addVisibilityOption(SHOW_UNIT_TARGETS, true);
-        this.addVisibilityOption(SHOW_UNIT_LABELS, true);
-        this.addVisibilityOption(SHOW_UNITS_ENGAGEMENT_RINGS, true);
-        this.addVisibilityOption(SHOW_UNITS_ACQUISITION_RINGS, true);
-        this.addVisibilityOption(HIDE_UNITS_SHORT_RANGE_RINGS, true);
-        /* this.addVisibilityOption(FILL_SELECTED_RING, false); Removed since currently broken: TODO fix!*/
-    }
-
-    addVisibilityOption(option: string, defaultValue: boolean | number | string, options?: { [key: string]: any }) {
-        //this.#visibilityOptions[option] = defaultValue;
-        //if (typeof defaultValue === 'boolean') {
-        //    this.#mapVisibilityOptionsDropdown.addOptionElement(createCheckboxOption(option, option, defaultValue as boolean, (ev: any) => { this.#setVisibilityOption(option, ev); }, options));
-        //} else if (typeof defaultValue === 'number') {
-        //    if (options !== undefined && options?.slider === true)
-        //        this.#mapVisibilityOptionsDropdown.addOptionElement(createSliderInputOption(option, option, defaultValue, (ev: any) => { this.#setVisibilityOption(option, ev); }, options));
-        //    else
-        //        this.#mapVisibilityOptionsDropdown.addOptionElement(createTextInputOption(option, option, defaultValue.toString(), 'number', (ev: any) => { this.#setVisibilityOption(option, ev); }, options));
-        //} else {
-        //    this.#mapVisibilityOptionsDropdown.addOptionElement(createTextInputOption(option, option, defaultValue, 'text', (ev: any) => { this.#setVisibilityOption(option, ev); }, options));
-        //}
     }
 
     setLayer(layerName: string) {
@@ -376,13 +313,8 @@ export class Map extends L.Map {
     }
 
     setHiddenType(key: string, value: boolean) {
-        if (value) {
-            if (this.#hiddenTypes.includes(key))
-                delete this.#hiddenTypes[this.#hiddenTypes.indexOf(key)];
-        }
-        else {
-            this.#hiddenTypes.push(key);
-        }
+        this.#hiddenTypes[key] = value;
+        document.dispatchEvent(new CustomEvent("hiddenTypesChanged"));
     }
 
     getHiddenTypes() {
@@ -583,8 +515,13 @@ export class Map extends L.Map {
         this.#coalitionAreas.unshift(coalitionArea);
     }
 
-    getVisibilityOptions() {
-        return this.#visibilityOptions;
+    setOption(key, value) {
+        this.#options[key] = value;
+        document.dispatchEvent(new CustomEvent("mapOptionsChanged"));
+    }
+
+    getOptions() {
+        return this.#options;
     }
 
     isZooming() {
@@ -877,49 +814,6 @@ export class Map extends L.Map {
         return minimapBoundaries;
     }
 
-    #createUnitMarkerControlButtons() {
-        const unitVisibilityControls = <HTMLElement>document.getElementById("unit-visibility-control");
-        const makeTitle = (isProtected: boolean) => {
-            return (isProtected) ? "Unit type is protected and will ignore orders" : "Unit is NOT protected and will respond to orders";
-        }
-        //this.getMapMarkerVisibilityControls().forEach((control: MapMarkerVisibilityControl) => {
-        //    const toggles = `["${control.toggles.join('","')}"]`;
-        //    const div = document.createElement("div");
-        //    div.className = control.protectable === true ? "protectable" : "";
-//
-        //    // TODO: for consistency let's avoid using innerHTML. Let's create elements.
-        //    div.innerHTML = `
-        //        <button data-on-click="toggleMarkerVisibility" title="${control.tooltip}" data-on-click-params='{"types":${toggles}}'>
-        //            <img src="/resources/theme/images/buttons/${control.image}" />
-        //        </button>
-        //    `;
-        //    unitVisibilityControls.appendChild(div);
-//
-        //    if (control.protectable) {
-        //        div.innerHTML += `
-        //        <button class="lock" ${control.isProtected ? "data-protected" : ""} title="${makeTitle(control.isProtected || false)}">
-        //            <img src="/resources/theme/images/buttons/other/lock-solid.svg" class="locked" />
-        //            <img src="/resources/theme/images/buttons/other/lock-open-solid.svg" class="unlocked" />
-        //        </button>`;
-//
-        //        const btn = <HTMLButtonElement>div.querySelector("button.lock");
-        //        btn.addEventListener("click", (ev: MouseEventInit) => {
-        //            control.isProtected = !control.isProtected;
-        //            btn.toggleAttribute("data-protected", control.isProtected);
-        //            btn.title = makeTitle(control.isProtected);
-        //            document.dispatchEvent(new CustomEvent("toggleMarkerProtection", {
-        //                detail: {
-        //                    "_element": btn,
-        //                    "control": control
-        //                }
-        //            }));
-        //        });
-        //    }
-        //});
-
-        //unitVisibilityControls.querySelectorAll(`img[src$=".svg"]`).forEach(img => SVGInjector(img));
-    }
-
     #deselectSelectedCoalitionArea() {
         this.getSelectedCoalitionArea()?.setSelected(false);
     }
@@ -1027,16 +921,6 @@ export class Map extends L.Map {
         this.#drawingCursor.setLatLng(new L.LatLng(0, 0));
         if (this.hasLayer(this.#drawingCursor))
             this.#drawingCursor.removeFrom(this);
-    }
-
-    #setVisibilityOption(option: string, ev: any) {
-        if (typeof this.#visibilityOptions[option] === 'boolean')
-            this.#visibilityOptions[option] = ev.currentTarget.checked;
-        else if (typeof this.#visibilityOptions[option] === 'number')
-            this.#visibilityOptions[option] = Number(ev.currentTarget.value);
-        else
-            this.#visibilityOptions[option] = ev.currentTarget.value;
-        document.dispatchEvent(new CustomEvent("mapOptionsChanged"));
     }
 
     #setSlaveDCSCameraAvailable(newSlaveDCSCameraAvailable: boolean) {

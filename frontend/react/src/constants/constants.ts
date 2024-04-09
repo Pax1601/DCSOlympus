@@ -184,68 +184,11 @@ export const defaultMapLayers = {
 export const IDLE = "Idle";
 export const MOVE_UNIT = "Move unit";
 export const COALITIONAREA_DRAW_POLYGON = "Draw Coalition Area";
-export const visibilityControls: string[] = ["human", "dcs", "aircraft", "helicopter", "groundunit-sam", "groundunit", "navyunit", "airbase"];
-export const visibilityControlsTypes: string[][] = [["human"], ["dcs"], ["aircraft"], ["helicopter"], ["groundunit-sam"], ["groundunit"], ["navyunit"], ["airbase"]];
-export const visibilityControlsTooltips: string[] = ["Toggle human players visibility", "Toggle DCS controlled units visibility", "Toggle aircrafts visibility", "Toggle helicopter visibility", "Toggle SAM units visibility", "Toggle ground units (not SAM) visibility", "Toggle navy units visibility", "Toggle airbases visibility"];
-
-//export const MAP_MARKER_CONTROLS: MapMarkerVisibilityControl[] = [{
-//    "name": "Human",
-//    "image": "visibility/human.svg",
-//    "toggles": ["human"],
-//    "tooltip": "Toggle human players' visibility"
-//}, {
-//    "image": "visibility/olympus.svg",
-//    "isProtected": false,
-//    "name": "Olympus",
-//    "protectable": false,
-//    "toggles": ["olympus"],
-//    "tooltip": "Toggle Olympus-controlled units' visibility"
-//}, {
-//    "image": "visibility/dcs.svg",
-//    "isProtected": true,
-//    "name": "DCS",
-//    "protectable": true,
-//    "toggles": ["dcs"],
-//    "tooltip": "Toggle DCS-controlled units' visibility"
-//}, {
-//    "category": "Aircraft",
-//    "image": "visibility/aircraft.svg",
-//    "name": "Aircraft",
-//    "toggles": ["aircraft"],
-//    "tooltip": "Toggle aircraft's visibility"
-//}, {
-//    "category": "Helicopter",
-//    "image": "visibility/helicopter.svg",
-//    "name": "Helicopter",
-//    "toggles": ["helicopter"],
-//    "tooltip": "Toggle helicopters' visibility"
-//}, {
-//    "category": "AirDefence",
-//    "image": "visibility/groundunit-sam.svg",
-//    "name": "Air defence",
-//    "toggles": ["groundunit-sam"],
-//    "tooltip": "Toggle air defence units' visibility"
-//}, {
-//    "image": "visibility/groundunit.svg",
-//    "name": "Ground units",
-//    "toggles": ["groundunit"],
-//    "tooltip": "Toggle ground units' visibility"
-//}, {
-//    "category": "GroundUnit",
-//    "image": "visibility/navyunit.svg",
-//    "name": "Naval",
-//    "toggles": ["navyunit"],
-//    "tooltip": "Toggle naval units' visibility"
-//}, {
-//    "image": "visibility/airbase.svg",
-//    "name": "Airbase",
-//    "toggles": ["airbase"],
-//    "tooltip": "Toggle airbase' visibility"
-//}];
 
 export const IADSTypes = ["AAA", "SAM Site", "Radar (EWR)"];
 export const IADSDensities: { [key: string]: number } = { "AAA": 0.8, "SAM Site": 0.1, "Radar (EWR)": 0.05 };
 export const GROUND_UNIT_AIR_DEFENCE_REGEX: RegExp = /(\b(AAA|SAM|MANPADS?|[mM]anpads?)|[sS]tinger\b)/;
+
 export const HIDE_GROUP_MEMBERS = "Hide group members when zoomed out";
 export const SHOW_UNIT_LABELS = "Show unit labels (L)";
 export const SHOW_UNITS_ENGAGEMENT_RINGS = "Show units threat range rings (Q)";
@@ -257,6 +200,44 @@ export const SHOW_UNIT_PATHS = "Show selected unit paths";
 export const SHOW_UNIT_TARGETS = "Show selected unit targets";
 export const DCS_LINK_PORT = "DCS Camera link port";
 export const DCS_LINK_RATIO = "DCS Camera zoom";
+
+export const MAP_OPTIONS_TOOLTIPS = {
+    hideGroupMembers: 			"Hide group members when zoomed out",
+    hideUnitsShortRangeRings: 	"Hide short range units threat range rings (R)",
+    showUnitContacts: 			"Show selected units contact lines",
+    showUnitPaths: 				"Show selected unit paths",
+    showUnitTargets: 			"Show selected unit targets",
+    showUnitLabels: 			"Show unit labels (L)",
+    showUnitsEngagementRings: 	"Show units threat range rings (Q)",
+    showUnitsAcquisitionRings: 	"Show units detection range rings (E)"
+}
+
+export const MAP_OPTIONS_DEFAULTS = {
+    hideGroupMembers: 			true,
+    hideUnitsShortRangeRings: 	true,
+    showUnitContacts: 			true,
+    showUnitPaths: 				true,
+    showUnitTargets: 			false,
+    showUnitLabels: 			true,
+    showUnitsEngagementRings: 	true,
+    showUnitsAcquisitionRings: 	true
+}
+
+export const MAP_HIDDEN_TYPES_DEFAULTS = {
+    'human': false,
+    'olympus': false,
+    'dcs': false,
+    'aircraft': false,
+    'helicopter': false,
+    'groundunit-sam': false,
+    'groundunit': false,
+    'navyunit': false,
+    'airbase': false,
+    'dead': false,
+    'blue': false,
+    'red': false,
+    'neutral': false
+}
 
 export enum DataIndexes {
     startOfData = 0,

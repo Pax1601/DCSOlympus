@@ -20,6 +20,7 @@ interface CustomEventMap {
     "groupDeletion":                    CustomEvent<Unit[]>,
     "mapStateChanged":                  CustomEvent<string>,
     "mapContextMenu":                   CustomEvent<any>,
+    "mapOptionChanged":                 CustomEvent<any>,
     "mapOptionsChanged":                CustomEvent<any>,
     "commandModeOptionsChanged":        CustomEvent<any>,  
     "contactsUpdated":                  CustomEvent<Unit>,

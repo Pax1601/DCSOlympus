@@ -1,8 +1,5 @@
-import React, { useId, useState, useRef } from "react";
+import React  from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
-
-import 'flowbite';
 
 export function OlUnitEntryList(props) {
     return <div {...props} className="relative text-sm cursor-pointer select-none flex justify-between items-center dark:text-gray-300 dark:hover:bg-white dark:hover:bg-opacity-10 px-2 py-1 rounded-sm mr-2">

@@ -2,9 +2,7 @@
 export default {
   content: [
     "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-    "node_modules/flowbite-react/lib/esm/**/*.js",
-    "node_modules/flowbite/**/*.js"
+    "./src/**/*.{js,ts,jsx,tsx}"
   ],
   theme: {
     extend: {
@@ -21,7 +19,6 @@ export default {
     },
   },
   plugins: [
-    require("flowbite/plugin"),
   ],
   darkMode: 'class'
 }

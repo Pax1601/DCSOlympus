@@ -6,7 +6,6 @@ import { OlSearchBar } from "../components/olsearchbar";
 import { OlAccordion } from "../components/olaccordion";
 import { getApp } from "../../olympusapp";
 import { OlUnitEntryList } from "../components/olunitlistentry";
-import { UnitBlueprint } from "../../interfaces";
 import { UnitSpawnMenu } from "./unitspawnmenu";
 
 library.add(faPlus);

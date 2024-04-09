@@ -193,18 +193,13 @@ export abstract class Unit extends CustomMarker {
         getApp().getMap().on("zoomend", (e: any) => { this.#onZoom(e); })
 
         /* Deselect units if they are hidden */
-        document.addEventListener("toggleCoalitionVisibility", (ev: CustomEventInit) => {
-            this.#updateMarker();
-            this.setSelected(this.getSelected() && !this.getHidden());
-        });
-
-        document.addEventListener("toggleMarkerVisibility", (ev: CustomEventInit) => {
+        document.addEventListener("hiddenTypesChanged", (ev: CustomEventInit) => {
             this.#updateMarker();
             this.setSelected(this.getSelected() && !this.getHidden());
         });
 
         /* Update the marker when the options change */
-        document.addEventListener("mapOptionsChanged", (ev: CustomEventInit) => {
+        document.addEventListener("mapOptionChanged", (ev: CustomEventInit) => {
             this.#updateMarker();
 
             /* Circles don't like to be updated when the map is zooming */
@@ -699,19 +694,19 @@ export abstract class Unit extends CustomMarker {
         const hiddenTypes = getApp().getMap().getHiddenTypes();
         var hidden = (
             /* Hide the unit if it is a human and humans are hidden */
-            (this.getHuman() && hiddenTypes.includes("human")) ||
+            (this.getHuman() && hiddenTypes["human"]) ||
             /* Hide the unit if it is DCS-controlled and DCS controlled units are hidden */
-            (this.isControlledByDCS() && hiddenTypes.includes("dcs")) ||
+            (this.isControlledByDCS() && hiddenTypes["dcs"]) ||
             /* Hide the unit if it is Olympus-controlled and Olympus-controlled units are hidden */
-            (this.isControlledByOlympus() && hiddenTypes.includes("olympus")) ||
+            (this.isControlledByOlympus() && hiddenTypes["olympus"]) ||
             /* Hide the unit if this specific category is hidden */
-            (hiddenTypes.includes(this.getMarkerCategory())) ||
+            (hiddenTypes[this.getMarkerCategory()]) ||
             /* Hide the unit if this coalition is hidden */
-            (hiddenTypes.includes(this.#coalition)) ||
+            (hiddenTypes[this.#coalition]) ||
             /* Hide the unit if it does not belong to the commanded coalition and it is not detected by a method that can pinpoint its location (RWR does not count) */
             (!this.belongsToCommandedCoalition() && (this.#detectionMethods.length == 0 || (this.#detectionMethods.length == 1 && this.#detectionMethods[0] === RWR))) ||
             /* Hide the unit if grouping is activated, the unit is not the group leader, it is not selected, and the zoom is higher than the grouping threshold */
-            (getApp().getMap().getVisibilityOptions()[HIDE_GROUP_MEMBERS] && !this.#isLeader && !this.getSelected() && this.getCategory() == "GroundUnit" && getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION && 
+            (getApp().getMap().getOptions()[HIDE_GROUP_MEMBERS] && !this.#isLeader && !this.getSelected() && this.getCategory() == "GroundUnit" && getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION && 
             (this.belongsToCommandedCoalition() || (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0))));
 
         /* Force dead units to be hidden */
@@ -1247,7 +1242,7 @@ export abstract class Unit extends CustomMarker {
     }
 
     #drawPath() {
-        if (this.#activePath != undefined && getApp().getMap().getVisibilityOptions()[SHOW_UNIT_PATHS]) {
+        if (this.#activePath != undefined && getApp().getMap().getOptions()[SHOW_UNIT_PATHS]) {
             var points: LatLng[] = [];
             points.push(new LatLng(this.#position.lat, this.#position.lng));
 
@@ -1291,7 +1286,7 @@ export abstract class Unit extends CustomMarker {
 
     #drawContacts() {
         this.#clearContacts();
-        if (getApp().getMap().getVisibilityOptions()[SHOW_UNIT_CONTACTS]) {
+        if (getApp().getMap().getOptions()[SHOW_UNIT_CONTACTS]) {
             for (let index in this.#contacts) {
                 var contactData = this.#contacts[index];
                 var contact: Unit | Weapon | null;
@@ -1366,12 +1361,12 @@ export abstract class Unit extends CustomMarker {
             if (engagementRange !== this.#engagementCircle.getRadius())
                 this.#engagementCircle.setRadius(engagementRange);
 
-            this.#engagementCircle.options.fillOpacity = this.getSelected() && getApp().getMap().getVisibilityOptions()[FILL_SELECTED_RING] ? 0.3 : 0;
+            this.#engagementCircle.options.fillOpacity = this.getSelected() && getApp().getMap().getOptions()[FILL_SELECTED_RING] ? 0.3 : 0;
 
             /* Acquisition circles */
-            var shortAcquisitionRangeCheck = (acquisitionRange > nmToM(3) || !getApp().getMap().getVisibilityOptions()[HIDE_UNITS_SHORT_RANGE_RINGS]);
+            var shortAcquisitionRangeCheck = (acquisitionRange > nmToM(3) || !getApp().getMap().getOptions()[HIDE_UNITS_SHORT_RANGE_RINGS]);
 
-            if (getApp().getMap().getVisibilityOptions()[SHOW_UNITS_ACQUISITION_RINGS] && shortAcquisitionRangeCheck && (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, IRST, RWR].includes(value)))) {
+            if (getApp().getMap().getOptions()[SHOW_UNITS_ACQUISITION_RINGS] && shortAcquisitionRangeCheck && (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, IRST, RWR].includes(value)))) {
                 if (!getApp().getMap().hasLayer(this.#acquisitionCircle)) {
                     this.#acquisitionCircle.addTo(getApp().getMap());
                     switch (this.getCoalition()) {
@@ -1395,8 +1390,8 @@ export abstract class Unit extends CustomMarker {
             }
 
             /* Engagement circles */
-            var shortEngagementRangeCheck = (engagementRange > nmToM(3) || !getApp().getMap().getVisibilityOptions()[HIDE_UNITS_SHORT_RANGE_RINGS]);
-            if (getApp().getMap().getVisibilityOptions()[SHOW_UNITS_ENGAGEMENT_RINGS] && shortEngagementRangeCheck && (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, IRST, RWR].includes(value)))) {
+            var shortEngagementRangeCheck = (engagementRange > nmToM(3) || !getApp().getMap().getOptions()[HIDE_UNITS_SHORT_RANGE_RINGS]);
+            if (getApp().getMap().getOptions()[SHOW_UNITS_ENGAGEMENT_RINGS] && shortEngagementRangeCheck && (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, IRST, RWR].includes(value)))) {
                 if (!getApp().getMap().hasLayer(this.#engagementCircle)) {
                     this.#engagementCircle.addTo(getApp().getMap());
                     switch (this.getCoalition()) {
@@ -1430,10 +1425,10 @@ export abstract class Unit extends CustomMarker {
     }
 
     #drawTarget() {
-        if (this.#targetPosition.lat != 0 && this.#targetPosition.lng != 0 && getApp().getMap().getVisibilityOptions()[SHOW_UNIT_PATHS]) {
+        if (this.#targetPosition.lat != 0 && this.#targetPosition.lng != 0 && getApp().getMap().getOptions()[SHOW_UNIT_PATHS]) {
             this.#drawTargetPosition(this.#targetPosition);
         }
-        else if (this.#targetID != 0 && getApp().getMap().getVisibilityOptions()[SHOW_UNIT_TARGETS]) {
+        else if (this.#targetID != 0 && getApp().getMap().getOptions()[SHOW_UNIT_TARGETS]) {
             const target = getApp().getUnitsManager().getUnitByID(this.#targetID);
             if (target && (getApp().getMissionManager().getCommandModeOptions().commandMode == GAME_MASTER || (this.belongsToCommandedCoalition() && getApp().getUnitsManager().getUnitDetectedMethods(target).some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))))) {
                 this.#drawTargetPosition(target.getPosition());
@@ -1637,7 +1632,7 @@ export class GroundUnit extends Unit {
     /* When a unit is a leader of a group, the map is zoomed out and grouping when zoomed out is enabled, check if the unit should be shown as a specific group. This is used to show a SAM battery instead of the group leader */
     getDatabaseEntry() {
         let unitWhenGrouped: string | undefined | null = null;
-        if (!this.getSelected() && this.getIsLeader() && getApp().getMap().getVisibilityOptions()[HIDE_GROUP_MEMBERS] && getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION) {
+        if (!this.getSelected() && this.getIsLeader() && getApp().getMap().getOptions()[HIDE_GROUP_MEMBERS] && getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION) {
             unitWhenGrouped = this.getDatabase()?.getByName(this.getName())?.unitWhenGrouped ?? null;
             let member = this.getGroupMembers().reduce((prev: Unit | null, unit: Unit, index: number) => {
                 if (unit.getDatabaseEntry()?.unitWhenGrouped != undefined)
@@ -1654,7 +1649,7 @@ export class GroundUnit extends Unit {
 
     /* When we zoom past the grouping limit, grouping is enabled and the unit is a leader, we redraw the unit to apply any possible grouped marker */
     checkZoomRedraw(): boolean {
-        return (this.getIsLeader() && getApp().getMap().getVisibilityOptions()[HIDE_GROUP_MEMBERS] as boolean &&
+        return (this.getIsLeader() && getApp().getMap().getOptions()[HIDE_GROUP_MEMBERS] as boolean &&
             (getApp().getMap().getZoom() >= GROUPING_ZOOM_TRANSITION && getApp().getMap().getPreviousZoom() < GROUPING_ZOOM_TRANSITION ||
                 getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION && getApp().getMap().getPreviousZoom() >= GROUPING_ZOOM_TRANSITION))
     }
