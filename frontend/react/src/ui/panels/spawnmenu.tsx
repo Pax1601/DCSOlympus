@@ -29,8 +29,13 @@ export function SpawnMenu(props) {
 		}
 	});
 
-	return <Menu {...props} title="Spawn menu" titleIcon="fa-solid fa-plus">
-		{!blueprint && <div>
+	return <Menu {...props}
+		title="Spawn menu"
+		titleIcon="fa-solid fa-plus"
+		showBackButton={blueprint !== null}
+		onBackCallback={() => setBlueprint(null)}
+	>
+		{!blueprint && <div className="p-5">
 			<OlSearchBar className="mb-4" />
 			<OlAccordion title="Aircrafts">
 				<div className="flex flex-col gap-1 max-h-80 overflow-y-scroll">

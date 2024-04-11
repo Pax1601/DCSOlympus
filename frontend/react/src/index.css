@@ -4,6 +4,10 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  font-weight: 400;
+}
+
 .z-ui-0 {
   z-index: 2000;
 }

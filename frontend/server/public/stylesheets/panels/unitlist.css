@@ -26,7 +26,6 @@
     justify-content: space-between;
 }
 
-
 .unit-list-unit:nth-of-type(even) {
     background:#ffffff10;
     overflow:visible;

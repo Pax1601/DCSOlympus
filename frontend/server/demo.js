@@ -139,6 +139,7 @@ module.exports = function (configLocation) {
 			DEMO_UNIT_DATA[idx].position.lat += idx / 100;
 			DEMO_UNIT_DATA[idx].category = "Aircraft";
 			DEMO_UNIT_DATA[idx].isLeader = false;
+			DEMO_UNIT_DATA[idx].coalition = 1;
 
 			idx += 1;
 			DEMO_UNIT_DATA[idx] = JSON.parse(JSON.stringify(baseData));

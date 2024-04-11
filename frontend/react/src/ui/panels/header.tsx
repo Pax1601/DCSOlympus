@@ -1,30 +1,26 @@
-import React, { useEffect } from 'react'
-import { OlRoundStateButton } from '../components/olstatebutton';
-import { faPlus, faGamepad, faRuler, faPencil, faMap, faLock, faPerson, faBrain, faRobot, faJetFighter, faHelicopter, faShield, faTruck, faShip, faPlaneDeparture, faSkull, faShieldAlt, faGears } from '@fortawesome/free-solid-svg-icons';
-import { library } from '@fortawesome/fontawesome-svg-core'
+import React from 'react'
+import { OlRoundStateButton, OlStateButton } from '../components/olstatebutton';
+import { faLock, faPerson, faBrain, faRobot, faJetFighter, faHelicopter, faShield, faTruck, faShip, faPlaneDeparture, faSkull, faShieldAlt, faCamera } from '@fortawesome/free-solid-svg-icons';
 import { EventsConsumer } from '../../eventscontext';
 import { StateConsumer } from '../../statecontext';
-import { OlDropdownItem, OlElementDropdown, OlTextDropdown } from '../components/oldropdown';
-import { OlCheckbox } from '../components/olcheckbox';
-import { MAP_OPTIONS_DEFAULTS, MAP_OPTIONS_TOOLTIPS } from '../../constants/constants';
+import { OlDropdownItem, OlDropdown } from '../components/oldropdown';
+import { OlLabelToggle } from '../components/ollabeltoggle';
 import { getApp } from '../../olympusapp';
-
-library.add(faPlus, faGamepad, faRuler, faPencil, faMap);
 
 export function Header(props) {
 	return <StateConsumer>
 		{(appState) =>
 			<EventsConsumer>
 				{(events) =>
-					<nav className="bg-gray-300 border-gray-200 dark:bg-[#171C26] dark:border-gray-700">
-						<div className="max-w-screen flex flex-wrap items-center justify-between p-4 gap-3">
-							<div className="flex flex-row items-center justify-center gap-1">
-								<img src="images/icon.png" className='h-12 p-0 rounded-md mr-2 cursor-pointer' onClick={events.toggleMainMenuVisible}></img>
+					<nav className="flex w-screen h-[66px] bg-gray-300 border-gray-200 dark:bg-[#171C26] dark:border-gray-700 px-3">
+						<div className="w-full max-w-full flex flex-nowrap items-center justify-between gap-3 my-auto">
+							<div className="flex flex-row items-center justify-center gap-1 flex-none">
+								<img src="images/icon.png" className='h-10 w-10 p-0 rounded-md mr-2 cursor-pointer'></img>
 							</div>
 							<div className="ml-auto">
 								<OlRoundStateButton icon={faLock} />
 							</div>
-							<div className="flex flex-row h-fit items-center justify-start gap-1">
+							<div className="flex flex-row h-fit items-center justify-start gap-2">
 								{
 									Object.entries({
 										'human': faPerson,'olympus': faBrain, 'dcs': faRobot
@@ -38,7 +34,7 @@ export function Header(props) {
 									})
 								}
 							</div>
-							<div className='h-10 w-0 border-l-2 border-gray-500'></div>
+							<div className='h-11 w-0 border-l-[1px] border-gray-700'></div>
 							<div className="flex flex-row h-fit items-center justify-start gap-1">
 								{
 									Object.entries({
@@ -54,7 +50,7 @@ export function Header(props) {
 									})
 								}
 							</div>
-							<div className='h-10 w-0 border-l-2 border-gray-500'></div>
+							<div className='h-11 w-0 border-l-[1px] border-gray-700'></div>
 							<div className="flex flex-row h-fit items-center justify-start gap-1">
 								<OlRoundStateButton
 									onClick={() => getApp().getMap().setHiddenType( 'blue', !appState.mapHiddenTypes['blue'] )}
@@ -69,19 +65,12 @@ export function Header(props) {
 									checked={!appState.mapHiddenTypes['neutral']}
 									icon={faShield} className={"!text-gray-500"} />
 							</div>
-							<OlTextDropdown items={["DCS Sat", "DCS Alt"]} leftIcon='fa-solid fa-map' />
-							<OlElementDropdown leftIcon={faGears} label="Options" className="w-80">
-								{Object.keys(MAP_OPTIONS_TOOLTIPS).map((key) => {
-									return <OlDropdownItem>
-										<OlCheckbox
-											checked = {appState.mapOptions[key]} 
-											onChange = {(ev) => {
-												getApp().getMap()?.setOption(key, ev.target.checked);
-											}}/>
-										<span className="text-nowrap">{ MAP_OPTIONS_TOOLTIPS[key] }</span>
-									</OlDropdownItem>
-								})}
-							</OlElementDropdown>
+							<OlLabelToggle value={false} leftLabel={"Live"} rightLabel={"Map"}></OlLabelToggle>
+							<OlStateButton icon={faCamera} />
+							<OlDropdown label="DCS Sat" className="w-40">
+								<OlDropdownItem className="w-full">DCS Sat</OlDropdownItem>
+								<OlDropdownItem className="w-full">DCS Alt</OlDropdownItem>
+							</OlDropdown>
 						</div>
 					</nav>
 				}

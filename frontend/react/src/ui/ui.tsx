@@ -12,7 +12,6 @@ import { SideBar } from './panels/sidebar';
 import { MapHiddenTypes, MapOptions } from '../types/types'
 import { MAP_HIDDEN_TYPES_DEFAULTS, MAP_OPTIONS_DEFAULTS } from '../constants/constants'
 import { getApp } from '../olympusapp'
-import { Dropdown } from 'flowbite'
 
 export type OlympusState = {
 	mainMenuVisible: boolean,
