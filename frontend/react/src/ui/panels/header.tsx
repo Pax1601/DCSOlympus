@@ -7,7 +7,7 @@ import { OlDropdownItem, OlDropdown } from '../components/oldropdown';
 import { OlLabelToggle } from '../components/ollabeltoggle';
 import { getApp } from '../../olympusapp';
 
-export function Header(props) {
+export function Header() {
 	return <StateConsumer>
 		{(appState) =>
 			<EventsConsumer>
@@ -18,7 +18,7 @@ export function Header(props) {
 								<img src="images/icon.png" className='h-10 w-10 p-0 rounded-md mr-2 cursor-pointer'></img>
 							</div>
 							<div className="ml-auto">
-								<OlRoundStateButton icon={faLock} />
+								<OlRoundStateButton icon={faLock} checked={false} onClick={() => {}}/>
 							</div>
 							<div className="flex flex-row h-fit items-center justify-start gap-2">
 								{
@@ -65,8 +65,8 @@ export function Header(props) {
 									checked={!appState.mapHiddenTypes['neutral']}
 									icon={faShield} className={"!text-gray-500"} />
 							</div>
-							<OlLabelToggle value={false} leftLabel={"Live"} rightLabel={"Map"}></OlLabelToggle>
-							<OlStateButton icon={faCamera} />
+							<OlLabelToggle toggled={false} leftLabel={"Live"} rightLabel={"Map"} onClick={() => {}}></OlLabelToggle>
+							<OlStateButton checked={false} icon={faCamera} onClick={() => {}} />
 							<OlDropdown label="DCS Sat" className="w-40">
 								<OlDropdownItem className="w-full">DCS Sat</OlDropdownItem>
 								<OlDropdownItem className="w-full">DCS Alt</OlDropdownItem>

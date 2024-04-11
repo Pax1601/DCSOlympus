@@ -6,11 +6,25 @@ import { OlLabelToggle } from "../components/ollabeltoggle";
 import { OlRangeSlider } from "../components/olrangeslider";
 import { OlDropdownItem, OlDropdown } from '../components/oldropdown';
 import { LoadoutBlueprint, UnitBlueprint } from "../../interfaces";
+import { Coalition } from "../../types/types";
 
-export function UnitSpawnMenu(props) {
+export function UnitSpawnMenu(props: {
+    blueprint: UnitBlueprint
+}) {
+    /* Compute the min and max values depending on the unit type */
+    const minNumber = 1;
+    const maxNumber = 4;
+    const minAltitude = 0;
+    const maxAltitude = 30000;
+    const altitudeStep = 500;
+    
+    /* State initialization */
+    var [spawnCoalition, setSpawnCoalition] = useState("blue" as Coalition);
+    var [spawnNumber, setSpawnNumber] = useState(1);
     var [spawnRole, setSpawnRole] = useState("");
     var [spawnLoadoutName, setSpawnLoadout] = useState("");
-    var [spawnAltitude, setSpawnAltitude] = useState(1000);
+    var [spawnAltitude, setSpawnAltitude] = useState((maxAltitude - minAltitude) / 2);
+    var [spawnAltitudeType, setSpawnAltitudeType] = useState(false);
 
     /* Get a list of all the roles */
     const roles: string[] = [];
@@ -31,15 +45,28 @@ export function UnitSpawnMenu(props) {
 
     /* Initialize the loadout */
     spawnLoadoutName === "" && loadouts.length > 0 && setSpawnLoadout(loadouts[0].name)
-
-    const spawnLoadout = props.blueprint.loadouts.find((loadout) => { return loadout.name === spawnLoadoutName; })
+    const spawnLoadout = props.blueprint.loadouts?.find((loadout) => { return loadout.name === spawnLoadoutName; })
 
     return <div className="flex flex-col gap-3">
-        <OlUnitSummary blueprint={props.blueprint} />
+        <OlUnitSummary blueprint={props.blueprint} coalition={spawnCoalition} />
         <div className="p-5 h-fit flex flex-col gap-2">
             <div className="flex flex-row content-center justify-between w-full">
-                <OlCoalitionToggle />
-                <OlNumberInput placeHolder={1} minValue={1} maxValue={4} />
+                <OlCoalitionToggle
+                    coalition={spawnCoalition}
+                    onClick={() => {
+                        spawnCoalition === 'blue' && setSpawnCoalition('neutral');
+                        spawnCoalition === 'neutral' && setSpawnCoalition('red');
+                        spawnCoalition === 'red' && setSpawnCoalition('blue');
+                    }}
+                />
+                <OlNumberInput
+                    value={spawnNumber}
+                    min={minNumber}
+                    max={maxNumber}
+                    onDecrease={() => { setSpawnNumber(Math.max(minNumber, spawnNumber - 1)) }}
+                    onIncrease={() => { setSpawnNumber(Math.min(maxNumber, spawnNumber + 1)) }}
+                    onChange={(ev) => { !isNaN(Number(ev.target.value)) && setSpawnNumber(Math.max(minNumber, Math.min(maxNumber, Number(ev.target.value)))) }}
+                />
             </div>
             <div>
                 <div className="flex flex-row content-center justify-between">
@@ -47,9 +74,9 @@ export function UnitSpawnMenu(props) {
                         <span className="font-normal dark:text-white">Altitude</span>
                         <span className="dark:text-blue-500">{`${spawnAltitude} FT`}</span>
                     </div>
-                    <OlLabelToggle value={false} leftLabel={"AGL"} rightLabel={"ASL"} />
+                    <OlLabelToggle toggled={spawnAltitudeType} leftLabel={"AGL"} rightLabel={"ASL"} onClick={() => setSpawnAltitudeType(!spawnAltitudeType)} />
                 </div>
-                <OlRangeSlider onChange={setSpawnAltitude} value={spawnAltitude} minValue={0} maxValue={30000} step={500} />
+                <OlRangeSlider onChange={(ev) => setSpawnAltitude(Number(ev.target.value))} value={spawnAltitude} min={minAltitude} max={maxAltitude} step={altitudeStep} />
             </div>
             <div>
                 <div className="flex flex-row content-center justify-between">

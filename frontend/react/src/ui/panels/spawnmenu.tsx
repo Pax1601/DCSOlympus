@@ -7,16 +7,35 @@ import { OlAccordion } from "../components/olaccordion";
 import { getApp } from "../../olympusapp";
 import { OlUnitEntryList } from "../components/olunitlistentry";
 import { UnitSpawnMenu } from "./unitspawnmenu";
+import { UnitBlueprint } from "../../interfaces";
 
 library.add(faPlus);
 
-export function SpawnMenu(props) {
-	var [blueprint, setBlueprint] = useState(null);
+function filterUnits(blueprints: {[key: string]: UnitBlueprint}, filterString: string) {
+	var filteredUnits = {};
+		if (blueprints) {
+		Object.entries(blueprints).forEach(([key, value]) => {
+			if (value.enabled && (filterString === "" || value.label.includes(filterString)))
+				filteredUnits[key] = value;
+		});
+	}
+	return filteredUnits;
+}
 
-	const filteredAircraft = getApp()?.getAircraftDatabase()?.blueprints ?? {};
-	const filteredHelicopters = getApp()?.getHelicopterDatabase()?.blueprints ?? {};
-	const filteredNavyUnits = getApp()?.getNavyUnitDatabase()?.blueprints ?? {};
+export function SpawnMenu(props: {
+	open: boolean,
+	onClose: () => void,
+	children?: JSX.Element | JSX.Element[],
+}) {
+	var [blueprint, setBlueprint] = useState(null as (null | UnitBlueprint));
+	var [filterString, setFilterString] = useState("");
 
+	/* Filter aircrafts, helicopters, and navyunits */
+	const filteredAircraft = filterUnits(getApp()?.getAircraftDatabase()?.blueprints, filterString);
+	const filteredHelicopters = filterUnits(getApp()?.getHelicopterDatabase()?.blueprints, filterString);
+	const filteredNavyUnits = filterUnits(getApp()?.getNavyUnitDatabase()?.blueprints, filterString);
+
+	/* Split ground units between air defence and all others */
 	var filteredAirDefense = {};
 	var filteredGroundUnits = {};
 	Object.keys(getApp()?.getGroundUnitDatabase()?.blueprints ?? {}).forEach((key) => {
@@ -28,58 +47,64 @@ export function SpawnMenu(props) {
 			filteredGroundUnits[key] = blueprint;
 		}
 	});
+	filteredAirDefense = filterUnits(filteredAirDefense, filterString);
+	filteredGroundUnits = filterUnits(filteredGroundUnits, filterString);
 
 	return <Menu {...props}
 		title="Spawn menu"
-		titleIcon="fa-solid fa-plus"
 		showBackButton={blueprint !== null}
-		onBackCallback={() => setBlueprint(null)}
+		onBack={() => setBlueprint(null)}
 	>
-		{!blueprint && <div className="p-5">
-			<OlSearchBar className="mb-4" />
-			<OlAccordion title="Aircrafts">
-				<div className="flex flex-col gap-1 max-h-80 overflow-y-scroll">
-					{Object.keys(filteredAircraft).map((key) => {
-						const blueprint = getApp().getAircraftDatabase().blueprints[key];
-						return <OlUnitEntryList key={key} icon={faJetFighter} blueprint={blueprint} onClick={() => setBlueprint(blueprint)} />
-					})}
-				</div>
-			</OlAccordion>
-			<OlAccordion title="Helicopters">
-				<div className="flex flex-col gap-1 max-h-80 overflow-y-scroll">
-					{Object.keys(filteredHelicopters).map((key) => {
-						return <OlUnitEntryList key={key} icon={faHelicopter} blueprint={getApp().getHelicopterDatabase().blueprints[key]} />
-					})}
-				</div>
-			</OlAccordion>
-			<OlAccordion title="Air defence (SAM & AAA)">
-				<div className="flex flex-col gap-1 max-h-80 overflow-y-scroll">
-					{Object.keys(filteredAirDefense).map((key) => {
-						return <OlUnitEntryList key={key} icon={faShieldAlt} blueprint={getApp().getGroundUnitDatabase().blueprints[key]} />
-					})}
-				</div>
-			</OlAccordion>
-			<OlAccordion title="Ground units">
-				<div className="flex flex-col gap-1 max-h-80 overflow-y-scroll">
-					{Object.keys(filteredGroundUnits).map((key) => {
-						const blueprint = getApp().getGroundUnitDatabase().blueprints[key];
-						return <OlUnitEntryList key={key} icon={faTruck} blueprint={blueprint} onClick={() => setBlueprint(blueprint)} />
-					})}
-				</div>
-			</OlAccordion>
-			<OlAccordion title="Ships and submarines">
-				<div className="flex flex-col gap-1 max-h-80 overflow-y-scroll">
-					{Object.keys(filteredNavyUnits).map((key) => {
-						return <OlUnitEntryList key={key} icon={faShip} blueprint={getApp().getNavyUnitDatabase().blueprints[key]} />
-					})}
-				</div>
-			</OlAccordion>
-			<OlAccordion title="Effects (smokes, explosions etc)">
+		<>
+			{(blueprint === null) && <div className="p-5">
+				<OlSearchBar onChange={(ev) => setFilterString(ev.target.value)}/>
+				<OlAccordion title={`Aircrafts (${Object.keys(filteredAircraft).length})`}>
+					<div className="flex flex-col gap-1 max-h-80 overflow-y-scroll">
+						{Object.keys(filteredAircraft).map((key) => {
+							const blueprint = getApp().getAircraftDatabase().blueprints[key];
+							return <OlUnitEntryList key={key} icon={faJetFighter} blueprint={blueprint} onClick={() => setBlueprint(blueprint)} />
+						})}
+					</div>
+				</OlAccordion>
+				<OlAccordion title={`Helicopters (${Object.keys(filteredHelicopters).length})`}>
+					<div className="flex flex-col gap-1 max-h-80 overflow-y-scroll">
+						{Object.keys(filteredHelicopters).map((key) => {
+							const blueprint = getApp().getHelicopterDatabase().blueprints[key];
+							return <OlUnitEntryList key={key} icon={faHelicopter} blueprint={blueprint} onClick={() => setBlueprint(blueprint)} />
+						})}
+					</div>
+				</OlAccordion>
+				<OlAccordion title={`SAM & AAA (${Object.keys(filteredAirDefense).length})`}>
+					<div className="flex flex-col gap-1 max-h-80 overflow-y-scroll">
+						{Object.keys(filteredAirDefense).map((key) => {
+							const blueprint = getApp().getGroundUnitDatabase().blueprints[key];
+							return <OlUnitEntryList key={key} icon={faShieldAlt} blueprint={blueprint} onClick={() => setBlueprint(blueprint)} />
+						})}
+					</div>
+				</OlAccordion>
+				<OlAccordion title={`Ground Units (${Object.keys(filteredGroundUnits).length})`}>
+					<div className="flex flex-col gap-1 max-h-80 overflow-y-scroll">
+						{Object.keys(filteredGroundUnits).map((key) => {
+							const blueprint = getApp().getGroundUnitDatabase().blueprints[key];
+							return <OlUnitEntryList key={key} icon={faTruck} blueprint={blueprint} onClick={() => setBlueprint(blueprint)} />
+						})}
+					</div>
+				</OlAccordion>
+				<OlAccordion title={`Ships and submarines (${Object.keys(filteredNavyUnits).length})`}>
+					<div className="flex flex-col gap-1 max-h-80 overflow-y-scroll">
+						{Object.keys(filteredNavyUnits).map((key) => {
+							const blueprint = getApp().getNavyUnitDatabase().blueprints[key];
+							return <OlUnitEntryList key={key} icon={faShip} blueprint={blueprint} onClick={() => setBlueprint(blueprint)} />
+						})}
+					</div>
+				</OlAccordion>
+				<OlAccordion title="Effects (smokes, explosions etc)">
 
-			</OlAccordion>
-		</div>
-		}
+				</OlAccordion>
+			</div>
+			}
 
-		{blueprint && <UnitSpawnMenu blueprint={blueprint} />}
+			{!(blueprint === null) && <UnitSpawnMenu blueprint={blueprint} />}
+		</>
 	</Menu>
 }

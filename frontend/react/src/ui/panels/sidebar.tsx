@@ -4,7 +4,7 @@ import { faPlus, faGamepad, faRuler, faPencil, faListDots } from '@fortawesome/f
 import { EventsConsumer } from '../../eventscontext';
 import { StateConsumer } from '../../statecontext';
 
-export function SideBar(props) {
+export function SideBar() {
 	return <StateConsumer>
 		{(appState) =>
 			<EventsConsumer>
@@ -14,7 +14,7 @@ export function SideBar(props) {
 							<div className="flex flex-col items-center justify-center gap-2.5">
 								<OlStateButton onClick={events.toggleMainMenuVisible} checked={appState.mainMenuVisible} icon={faListDots}></OlStateButton>
 								<OlStateButton onClick={events.toggleSpawnMenuVisible} checked={appState.spawnMenuVisible} icon={faPlus}></OlStateButton>
-								<OlStateButton /* onClick={events.toggleUnitControlMenuVisible} checked={appState.unitControlMenuVisible} */ icon={faGamepad}></OlStateButton>
+								<OlStateButton onClick={events.toggleUnitControlMenuVisible} checked={appState.unitControlMenuVisible}  icon={faGamepad}></OlStateButton>
 								<OlStateButton onClick={events.toggleMeasureMenuVisible} checked={appState.measureMenuVisible} icon={faRuler}></OlStateButton>
 								<OlStateButton onClick={events.toggleDrawingMenuVisible} checked={appState.drawingMenuVisible} icon={faPencil}></OlStateButton>
 							</div>

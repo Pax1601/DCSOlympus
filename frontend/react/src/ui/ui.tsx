@@ -23,7 +23,7 @@ export type OlympusState = {
 	mapOptions: MapOptions;
 }
 
-export function UI(props) {
+export function UI() {
 	var [mainMenuVisible, setMainMenuVisible] = useState(false);
 	var [spawnMenuVisible, setSpawnMenuVisible] = useState(false);
 	var [unitControlMenuVisible, setUnitControlMenuVisible] = useState(false);
@@ -78,9 +78,9 @@ export function UI(props) {
 						<div className='flex h-full'>
 							<SideBar />
 							<div id='map-container' className='relative h-full w-screen top-0 left-0' />
-							<MainMenu open={mainMenuVisible} closeCallback={() => setMainMenuVisible(false)} />
-							<SpawnMenu open={spawnMenuVisible} closeCallback={() => setSpawnMenuVisible(false)} />
-							<UnitControlMenu open={unitControlMenuVisible} closeCallback={() => setUnitControlMenuVisible(false)} />
+							<MainMenu open={mainMenuVisible} onClose={() => setMainMenuVisible(false)} />
+							<SpawnMenu open={spawnMenuVisible} onClose={() => setSpawnMenuVisible(false)} />
+							<UnitControlMenu />
 						</div>
 					</div>
 				</EventsProvider>

@@ -1,8 +1,12 @@
-import React, { useId, useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowCircleDown } from "@fortawesome/free-solid-svg-icons";
 
-export function OlAccordion(props) {
+export function OlAccordion(props: {
+	title: string,
+	children?: JSX.Element | JSX.Element[],
+	showArrows?: boolean
+}) {
 	var [open, setOpen] = useState(false);
 	var [scrolledUp, setScrolledUp] = useState(true);
 	var [scrolledDown, setScrolledDown] = useState(false);

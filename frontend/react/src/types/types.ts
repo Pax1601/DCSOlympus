@@ -48,3 +48,5 @@ export type MGRS = {
     string: string,
     zoneNumber: string
 }
+
+export type Coalition = "blue" | "neutral" | "red";

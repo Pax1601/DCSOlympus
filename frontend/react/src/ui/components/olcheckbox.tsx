@@ -1,6 +1,9 @@
-import React from "react";
+import React, { ChangeEvent } from "react";
 
-export function OlCheckbox(props) {
+export function OlCheckbox(props: {
+    checked: boolean,
+    onChange: (e: ChangeEvent<HTMLInputElement>) => void
+}) {
     return <input onChange={props.onChange}
         type="checkbox"
         checked={props.checked}

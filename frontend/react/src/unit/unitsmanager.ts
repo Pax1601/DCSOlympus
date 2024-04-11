@@ -1041,7 +1041,7 @@ export class UnitsManager {
      * @param variableGetter CallableFunction that returns the requested variable. Example: getUnitsVariable((unit: Unit) => unit.getName(), foo) will return a string value if all the units have the same name, otherwise it will return undefined.
      * @returns The value of the variable if all units have the same value, else undefined
      */
-    getSelectedUnitsVariable(variableGetter: CallableFunction) {
+    getSelectedUnitsVariable(variableGetter: (unit: Unit) => any) {
         return this.getUnitsVariable(variableGetter, this.getSelectedUnits());
     };
 

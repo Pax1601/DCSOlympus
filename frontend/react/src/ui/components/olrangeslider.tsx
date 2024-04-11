@@ -1,6 +1,12 @@
-import React, { useEffect, useRef } from "react";
+import React, { ChangeEvent, useEffect, useRef } from "react";
 
-export function OlRangeSlider(props) {
+export function OlRangeSlider(props: {
+    value: number | undefined,
+    min?: number,
+    max?: number,
+    step?: number,
+    onChange: (e: ChangeEvent<HTMLInputElement>) => void
+}) {
     var elementRef = useRef(null);
 
     useEffect(() => {
@@ -14,10 +20,10 @@ export function OlRangeSlider(props) {
 
     return <input type="range"
         ref={elementRef}
-        onChange={(ev) => { props.onChange(Number(ev.target?.value ?? props.value)) }}
+        onChange={props.onChange}
         value={props.value}
-        min={props.minValue ?? 0}
-        max={props.maxValue ?? 100}
+        min={props.min ?? 0}
+        max={props.max ?? 100}
         step={props.step ?? 1}
         className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
 }

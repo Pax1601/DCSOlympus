@@ -1,8 +1,15 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
-export function OlDropdown(props) {
+export function OlDropdown(props: {
+    className: string,
+    leftIcon?: IconProp,
+    rightIcon?: IconProp,
+    label: string,
+    children?: JSX.Element | JSX.Element[]
+}) {
     var [open, setOpen] = useState(false);
     var contentRef = useRef(null);
     var buttonRef = useRef(null);
