@@ -8,6 +8,7 @@ import { getApp } from "../../olympusapp";
 import { OlUnitEntryList } from "../components/olunitlistentry";
 import { UnitSpawnMenu } from "./unitspawnmenu";
 import { UnitBlueprint } from "../../interfaces";
+import { olButtonsVisibilityAircraft, olButtonsVisibilityGroundunit, olButtonsVisibilityGroundunitSam, olButtonsVisibilityHelicopter, olButtonsVisibilityNavyunit } from "../components/olicons";
 
 library.add(faPlus);
 
@@ -62,7 +63,7 @@ export function SpawnMenu(props: {
 					<div className="flex flex-col gap-1 max-h-80 overflow-y-scroll">
 						{Object.keys(filteredAircraft).map((key) => {
 							const blueprint = getApp().getAircraftDatabase().blueprints[key];
-							return <OlUnitEntryList key={key} icon={faJetFighter} blueprint={blueprint} onClick={() => setBlueprint(blueprint)} />
+							return <OlUnitEntryList key={key} icon={olButtonsVisibilityAircraft} blueprint={blueprint} onClick={() => setBlueprint(blueprint)} />
 						})}
 					</div>
 				</OlAccordion>
@@ -70,7 +71,7 @@ export function SpawnMenu(props: {
 					<div className="flex flex-col gap-1 max-h-80 overflow-y-scroll">
 						{Object.keys(filteredHelicopters).map((key) => {
 							const blueprint = getApp().getHelicopterDatabase().blueprints[key];
-							return <OlUnitEntryList key={key} icon={faHelicopter} blueprint={blueprint} onClick={() => setBlueprint(blueprint)} />
+							return <OlUnitEntryList key={key} icon={olButtonsVisibilityHelicopter} blueprint={blueprint} onClick={() => setBlueprint(blueprint)} />
 						})}
 					</div>
 				</OlAccordion>
@@ -78,7 +79,7 @@ export function SpawnMenu(props: {
 					<div className="flex flex-col gap-1 max-h-80 overflow-y-scroll">
 						{Object.keys(filteredAirDefense).map((key) => {
 							const blueprint = getApp().getGroundUnitDatabase().blueprints[key];
-							return <OlUnitEntryList key={key} icon={faShieldAlt} blueprint={blueprint} onClick={() => setBlueprint(blueprint)} />
+							return <OlUnitEntryList key={key} icon={olButtonsVisibilityGroundunitSam} blueprint={blueprint} onClick={() => setBlueprint(blueprint)} />
 						})}
 					</div>
 				</OlAccordion>
@@ -86,7 +87,7 @@ export function SpawnMenu(props: {
 					<div className="flex flex-col gap-1 max-h-80 overflow-y-scroll">
 						{Object.keys(filteredGroundUnits).map((key) => {
 							const blueprint = getApp().getGroundUnitDatabase().blueprints[key];
-							return <OlUnitEntryList key={key} icon={faTruck} blueprint={blueprint} onClick={() => setBlueprint(blueprint)} />
+							return <OlUnitEntryList key={key} icon={olButtonsVisibilityGroundunit} blueprint={blueprint} onClick={() => setBlueprint(blueprint)} />
 						})}
 					</div>
 				</OlAccordion>
@@ -94,7 +95,7 @@ export function SpawnMenu(props: {
 					<div className="flex flex-col gap-1 max-h-80 overflow-y-scroll">
 						{Object.keys(filteredNavyUnits).map((key) => {
 							const blueprint = getApp().getNavyUnitDatabase().blueprints[key];
-							return <OlUnitEntryList key={key} icon={faShip} blueprint={blueprint} onClick={() => setBlueprint(blueprint)} />
+							return <OlUnitEntryList key={key} icon={olButtonsVisibilityNavyunit} blueprint={blueprint} onClick={() => setBlueprint(blueprint)} />
 						})}
 					</div>
 				</OlAccordion>

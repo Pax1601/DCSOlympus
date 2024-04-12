@@ -6,6 +6,7 @@ import { StateConsumer } from '../../statecontext';
 import { OlDropdownItem, OlDropdown } from '../components/oldropdown';
 import { OlLabelToggle } from '../components/ollabeltoggle';
 import { getApp } from '../../olympusapp';
+import { olButtonsVisibilityAirbase, olButtonsVisibilityAircraft, olButtonsVisibilityDcs, olButtonsVisibilityGroundunit, olButtonsVisibilityGroundunitSam, olButtonsVisibilityHelicopter, olButtonsVisibilityHuman, olButtonsVisibilityNavyunit, olButtonsVisibilityOlympus } from '../components/olicons';
 
 export function Header() {
 	return <StateConsumer>
@@ -23,7 +24,7 @@ export function Header() {
 							<div className="flex flex-row h-fit items-center justify-start gap-2">
 								{
 									Object.entries({
-										'human': faPerson,'olympus': faBrain, 'dcs': faRobot
+										'human': olButtonsVisibilityHuman,'olympus': olButtonsVisibilityOlympus, 'dcs': olButtonsVisibilityDcs
 									}).map((entry) => {
 										return <OlRoundStateButton
 										onClick={() => {
@@ -38,8 +39,8 @@ export function Header() {
 							<div className="flex flex-row h-fit items-center justify-start gap-1">
 								{
 									Object.entries({
-										'aircraft': faJetFighter,'helicopter': faHelicopter, 'groundunit-sam': faShieldAlt, 
-										'groundunit': faTruck, 'navyunit': faShip, 'airbase': faPlaneDeparture, 'dead': faSkull
+										'aircraft': olButtonsVisibilityAircraft,'helicopter': olButtonsVisibilityHelicopter, 'groundunit-sam': olButtonsVisibilityGroundunitSam, 
+										'groundunit': olButtonsVisibilityGroundunit, 'navyunit': olButtonsVisibilityNavyunit, 'airbase': olButtonsVisibilityAirbase, 'dead': faSkull
 									}).map((entry) => {
 										return <OlRoundStateButton
 										onClick={() => {

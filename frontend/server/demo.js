@@ -69,14 +69,14 @@ module.exports = function (configLocation) {
 			
 			
 			// UNCOMMENT TO TEST ALL UNITS ****************
-			/*
+			
 			var databases = Object.assign({}, aircraftDatabase, helicopterDatabase, groundUnitDatabase, navyUnitDatabase);
 			var t = Object.keys(databases).length;
 			var l = Math.floor(Math.sqrt(t));
 			let latIdx = 0;
 			let lngIdx = 0;
 			let idx = 1;
-			console.log(l)
+
 			for (let name in databases) {
 				if (databases[name].enabled) {
 					DEMO_UNIT_DATA[idx] = JSON.parse(JSON.stringify(baseData));
@@ -106,7 +106,7 @@ module.exports = function (configLocation) {
 			}
 			
 
-			*/
+			/*
 			let idx = 1;
 			DEMO_UNIT_DATA[idx] = JSON.parse(JSON.stringify(baseData));
 			DEMO_UNIT_DATA[idx].name = "S_75M_Volhov";
@@ -140,6 +140,9 @@ module.exports = function (configLocation) {
 			DEMO_UNIT_DATA[idx].category = "Aircraft";
 			DEMO_UNIT_DATA[idx].isLeader = false;
 			DEMO_UNIT_DATA[idx].coalition = 1;
+			DEMO_UNIT_DATA[idx].desiredAltitude = 10000;
+			DEMO_UNIT_DATA[idx].desiredAltitudeType = 0;
+			
 
 			idx += 1;
 			DEMO_UNIT_DATA[idx] = JSON.parse(JSON.stringify(baseData));
@@ -168,7 +171,7 @@ module.exports = function (configLocation) {
 			DEMO_UNIT_DATA[idx].position.lat += idx / 100;
 			DEMO_UNIT_DATA[idx].category = "Aircraft";
 			DEMO_UNIT_DATA[idx].isLeader = true;
-			
+			*/
 
 			this.startTime = Date.now();
 		}

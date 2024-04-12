@@ -21,7 +21,7 @@ export function OlRangeSlider(props: {
     return <input type="range"
         ref={elementRef}
         onChange={props.onChange}
-        value={props.value}
+        value={props.value ?? 0}
         min={props.min ?? 0}
         max={props.max ?? 100}
         step={props.step ?? 1}
