@@ -11,7 +11,7 @@ import { MainMenu } from './panels/mainmenu'
 import { SideBar } from './panels/sidebar';
 import { MapHiddenTypes, MapOptions } from '../types/types'
 import { MAP_HIDDEN_TYPES_DEFAULTS, MAP_OPTIONS_DEFAULTS } from '../constants/constants'
-import { getApp } from '../olympusapp'
+import { getApp, setupApp } from '../olympusapp'
 
 export type OlympusState = {
 	mainMenuVisible: boolean,
@@ -33,11 +33,11 @@ export function UI() {
 	var [mapOptions, setMapOptions] = useState(MAP_OPTIONS_DEFAULTS);
 
 	document.addEventListener("hiddenTypesChanged", (ev) => {
-		setMapHiddenTypes({...getApp().getMap().getHiddenTypes()});
+		setMapHiddenTypes({ ...getApp().getMap().getHiddenTypes() });
 	})
 
 	document.addEventListener("mapOptionsChanged", (ev) => {
-		setMapOptions({...getApp().getMap().getOptions()});
+		setMapOptions({ ...getApp().getMap().getOptions() });
 	})
 
 	function hideAllMenus() {
@@ -73,7 +73,7 @@ export function UI() {
 						toggleDrawingMenuVisible: () => { hideAllMenus(); setDrawingMenuVisible(!drawingMenuVisible) },
 					}
 				}>
-					<div className='absolute top-0 left-0 h-full w-full flex flex-col'>
+					<div className='absolute top-0 left-0 h-full w-full flex flex-col' onLoad={setupApp}>
 						<Header />
 						<div className='flex h-full'>
 							<SideBar />
