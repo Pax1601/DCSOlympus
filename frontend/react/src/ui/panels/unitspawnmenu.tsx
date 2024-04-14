@@ -47,9 +47,9 @@ export function UnitSpawnMenu(props: {
     spawnLoadoutName === "" && loadouts.length > 0 && setSpawnLoadout(loadouts[0].name)
     const spawnLoadout = props.blueprint.loadouts?.find((loadout) => { return loadout.name === spawnLoadoutName; })
 
-    return <div className="flex flex-col gap-3">
+    return <div className="flex flex-col">
         <OlUnitSummary blueprint={props.blueprint} coalition={spawnCoalition} />
-        <div className="p-5 h-fit flex flex-col gap-2">
+        <div className="px-5 pt-6 pb-8 h-fit flex flex-col gap-5">
             <div className="flex flex-row content-center justify-between w-full">
                 <OlCoalitionToggle
                     coalition={spawnCoalition}
@@ -72,7 +72,7 @@ export function UnitSpawnMenu(props: {
                 <div className="flex flex-row content-center justify-between">
                     <div className="flex flex-col">
                         <span className="font-normal dark:text-white">Altitude</span>
-                        <span className="dark:text-blue-500">{`${spawnAltitude} FT`}</span>
+                        <span className="font-bold dark:text-blue-500">{`${spawnAltitude} FT`}</span>
                     </div>
                     <OlLabelToggle toggled={spawnAltitudeType} leftLabel={"AGL"} rightLabel={"ASL"} onClick={() => setSpawnAltitudeType(!spawnAltitudeType)} />
                 </div>
