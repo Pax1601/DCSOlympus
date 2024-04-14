@@ -12,7 +12,7 @@ import { DestinationPreviewMarker } from "./markers/destinationpreviewmarker";
 import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
 import { SVGInjector } from '@tanem/svg-injector'
-import { defaultMapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, MOVE_UNIT, SHOW_UNIT_CONTACTS, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, SHOW_UNIT_LABELS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, /*MAP_MARKER_CONTROLS,*/ DCS_LINK_PORT, DCSMapsZoomLevelsByTheatre, DCS_LINK_RATIO, MAP_OPTIONS_DEFAULTS, MAP_HIDDEN_TYPES_DEFAULTS } from "../constants/constants";
+import { defaultMapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, MOVE_UNIT, SHOW_UNIT_CONTACTS, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, SHOW_UNIT_LABELS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, /*MAP_MARKER_CONTROLS,*/ DCS_LINK_PORT, DCSMapsZoomLevelsByTheatre, DCS_LINK_RATIO, MAP_OPTIONS_DEFAULTS, MAP_HIDDEN_TYPES_DEFAULTS, SPAWN_UNIT } from "../constants/constants";
 import { CoalitionArea } from "./coalitionarea/coalitionarea";
 //import { CoalitionAreaContextMenu } from "../contextmenus/coalitionareacontextmenu";
 import { DrawingCursor } from "./coalitionarea/drawingcursor";
@@ -29,7 +29,8 @@ import './markers/stylesheets/units.css'
 
 // Temporary
 import './theme.css'
-import { MapHiddenTypes, MapOptions } from "../types/types";
+import { Coalition, MapHiddenTypes, MapOptions } from "../types/types";
+import { UnitBlueprint } from "../interfaces";
 
 var hasTouchScreen = false;
 //if ("maxTouchPoints" in navigator) 
@@ -45,7 +46,7 @@ else
 // TODO would be nice to convert to ts - yes
 //require("../../node_modules/leaflet.nauticscale/dist/leaflet.nauticscale.js")
 //require("../../node_modules/leaflet-path-drag/dist/index.js")
- 
+
 export class Map extends L.Map {
     /* Options */
     #options: MapOptions = MAP_OPTIONS_DEFAULTS;
@@ -54,6 +55,9 @@ export class Map extends L.Map {
     #ID: string;
     #state: string;
     #layer: L.TileLayer | L.LayerGroup | null = null;
+
+    #spawningBlueprint: UnitBlueprint | null = null;
+
     #preventLeftClick: boolean = false;
     #leftClickTimer: number = 0;
     #deafultPanDelta: number = 100;
@@ -62,17 +66,23 @@ export class Map extends L.Map {
     #panRight: boolean = false;
     #panUp: boolean = false;
     #panDown: boolean = false;
+
     #lastMousePosition: L.Point = new L.Point(0, 0);
+
     #shiftKey: boolean = false;
     #ctrlKey: boolean = false;
     #centerUnit: Unit | null = null;
+
     #miniMap: ClickableMiniMap | null = null;
     #miniMapLayerGroup: L.LayerGroup;
     #miniMapPolyline: L.Polyline;
+
     #temporaryMarkers: TemporaryUnitMarker[] = [];
+
     #selecting: boolean = false;
     #isZooming: boolean = false;
     #previousZoom: number = 0;
+
     #slaveDCSCamera: boolean = false;
     #slaveDCSCameraAvailable: boolean = false;
     #cameraControlTimer: number = 0;
@@ -88,6 +98,8 @@ export class Map extends L.Map {
     #drawingCursor: DrawingCursor = new DrawingCursor();
     #destinationPreviewHandle: DestinationPreviewHandle = new DestinationPreviewHandle(new L.LatLng(0, 0));
     #destinationPreviewHandleLine: L.Polyline = new L.Polyline([], { color: "#000000", weight: 3, opacity: 0.5, smoothFactor: 1, dashArray: "4, 8" });
+    #spawnCursor: TemporaryUnitMarker | null = null;
+
     #longPressHandled: boolean = false;
     #longPressTimer: number = 0;
 
@@ -128,7 +140,7 @@ export class Map extends L.Map {
         this.#miniMapLayerGroup = new L.LayerGroup([minimapLayer]);
         this.#miniMapPolyline = new L.Polyline([], { color: '#202831' });
         this.#miniMapPolyline.addTo(this.#miniMapLayerGroup);
-        
+
 
         /* Scale */
         //@ts-ignore TODO more hacking because the module is provided as a pure javascript module only
@@ -137,7 +149,7 @@ export class Map extends L.Map {
         /* Map source dropdown */
         //this.#mapSourceDropdown = new Dropdown("map-type", (layerName: string) => this.setLayer(layerName));
         //this.#mapSourceDropdown.setOptions(this.getLayers(), null);
-//
+        //
         ///* Visibility options dropdown */
         //this.#mapVisibilityOptionsDropdown = new Dropdown("map-visibility-options", (value: string) => { });
 
@@ -216,13 +228,13 @@ export class Map extends L.Map {
 
         document.addEventListener("toggleCameraLinkStatus", () => {
             // if (this.#slaveDCSCameraAvailable) { // Commented to experiment with usability
-                this.setSlaveDCSCamera(!this.#slaveDCSCamera);
+            this.setSlaveDCSCamera(!this.#slaveDCSCamera);
             // }
         })
 
         document.addEventListener("slewCameraToPosition", () => {
             // if (this.#slaveDCSCameraAvailable) { // Commented to experiment with usability
-                this.#broadcastPosition();
+            this.#broadcastPosition();
             // }
         })
 
@@ -256,14 +268,14 @@ export class Map extends L.Map {
             } else {
                 this.#layer = new L.TileLayer(layerData.urlTemplate, layerData);
             }
-        /* DCS core layers are handled here */
-        } else if (["DCS Map", "DCS Satellite"].includes(layerName) ) {
+            /* DCS core layers are handled here */
+        } else if (["DCS Map", "DCS Satellite"].includes(layerName)) {
             let layerData = this.#mapLayers["ArcGIS Satellite"];
             let layers = [new L.TileLayer(layerData.urlTemplate, layerData)];
-            
-            let template = `https://maps.dcsolympus.com/maps/${layerName === "DCS Map"? "alt": "sat"}-{theatre}-modern/{z}/{x}/{y}.png`;
+
+            let template = `https://maps.dcsolympus.com/maps/${layerName === "DCS Map" ? "alt" : "sat"}-{theatre}-modern/{z}/{x}/{y}.png`;
             layers.push(...DCSMapsZoomLevelsByTheatre[theatre].map((nativeZoomLevels: any) => {
-                return new L.TileLayer(template.replace("{theatre}", theatre.toLowerCase()), {...nativeZoomLevels, maxZoom: 20, crossOrigin: ""});
+                return new L.TileLayer(template.replace("{theatre}", theatre.toLowerCase()), { ...nativeZoomLevels, maxZoom: 20, crossOrigin: "" });
             }));
 
             this.#layer = new L.LayerGroup(layers);
@@ -280,9 +292,8 @@ export class Map extends L.Map {
     }
 
     /* State machine */
-    setState(state: string) {
+    setState(state: string, options?: { blueprint: UnitBlueprint, coalition: Coalition }) {
         this.#state = state;
-        this.#updateCursor();
 
         /* Operations to perform if you are NOT in a state */
         if (this.#state !== COALITIONAREA_DRAW_POLYGON) {
@@ -290,10 +301,18 @@ export class Map extends L.Map {
         }
 
         /* Operations to perform if you ARE in a state */
-        if (this.#state === COALITIONAREA_DRAW_POLYGON) {
+        if (this.#state === SPAWN_UNIT) {
+            this.#spawningBlueprint = options?.blueprint ?? null;
+            this.#spawnCursor?.removeFrom(this);
+            this.#spawnCursor = new TemporaryUnitMarker(new L.LatLng(0, 0), this.#spawningBlueprint?.name ?? "unknown", options?.coalition ?? 'blue');
+        }
+        else if (this.#state === COALITIONAREA_DRAW_POLYGON) {
             this.#coalitionAreas.push(new CoalitionArea([]));
             this.#coalitionAreas[this.#coalitionAreas.length - 1].addTo(this);
         }
+
+        this.#updateCursor();
+
         document.dispatchEvent(new CustomEvent("mapStateChanged"));
     }
 
@@ -447,7 +466,7 @@ export class Map extends L.Map {
 
         const boundaries = this.#getMinimapBoundaries();
         this.#miniMapPolyline.setLatLngs(boundaries[theatre as keyof typeof boundaries]);
-        
+
         this.setLayer(this.#layerName);
     }
 
@@ -539,10 +558,10 @@ export class Map extends L.Map {
         //    }
         //    return list;
         //}, [] as string[]);
-//
+        //
         //if (toggles.length === 0)
         //    return false;
-//
+        //
         //return toggles.some((toggle: string) => {
         //    //  Specific coding for robots - extend later if needed
         //    return (toggle === "dcs" && !unit.getControlled() && !unit.getHuman());
@@ -600,6 +619,14 @@ export class Map extends L.Map {
             this.hideAllContextMenus();
             if (this.#state === IDLE) {
                 this.deselectAllCoalitionAreas();
+            }
+            else if (this.#state === SPAWN_UNIT) {
+                //getApp().getUnitsManager().spawnUnits(
+                //    "asd",
+                //    [
+                //        {}
+                //    ]
+                //)
             }
             else if (this.#state === COALITIONAREA_DRAW_POLYGON) {
                 if (this.getSelectedCoalitionArea()?.getEditing()) {
@@ -693,25 +720,25 @@ export class Map extends L.Map {
             }
         }
 
-        this.#longPressTimer = window.setTimeout(() => {
-            this.hideMapContextMenu();
-            this.#longPressHandled = true;
-
-            if (e.originalEvent.button != 2 || e.originalEvent.ctrlKey || e.originalEvent.shiftKey)
-                return;
-
-            var contextActionSet = new ContextActionSet();
-            var units = getApp().getUnitsManager().getSelectedUnits();
-            units.forEach((unit: Unit) => {
-                unit.appendContextActions(contextActionSet, null, e.latlng);
-            })
-
-            if (Object.keys(contextActionSet.getContextActions()).length > 0) {
-                getApp().getMap().showUnitContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng);
-                //getApp().getMap().getUnitContextMenu().setContextActions(contextActionSet);
-            }
-        }, 150);
-        this.#longPressHandled = false;
+        //this.#longPressTimer = window.setTimeout(() => {
+        //    this.hideMapContextMenu();
+        //    this.#longPressHandled = true;
+        //
+        //    if (e.originalEvent.button != 2 || e.originalEvent.ctrlKey || e.originalEvent.shiftKey)
+        //        return;
+        //
+        //    var contextActionSet = new ContextActionSet();
+        //    var units = getApp().getUnitsManager().getSelectedUnits();
+        //    units.forEach((unit: Unit) => {
+        //        unit.appendContextActions(contextActionSet, null, e.latlng);
+        //    })
+        //
+        //    if (Object.keys(contextActionSet.getContextActions()).length > 0) {
+        //        getApp().getMap().showUnitContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng);
+        //        //getApp().getMap().getUnitContextMenu().setContextActions(contextActionSet);
+        //    }
+        //}, 150);
+        //this.#longPressHandled = false;
     }
 
     #onMouseUp(e: any) {
@@ -738,6 +765,9 @@ export class Map extends L.Map {
             if (this.#computeDestinationRotation && this.#destinationRotationCenter != null)
                 this.#destinationGroupRotation = -bearing(this.#destinationRotationCenter.lat, this.#destinationRotationCenter.lng, this.getMouseCoordinates().lat, this.getMouseCoordinates().lng);
             this.#updateDestinationCursors();
+        }
+        else if (this.#state === SPAWN_UNIT) {
+            this.#updateSpawnCursor();
         }
         else if (this.#state === COALITIONAREA_DRAW_POLYGON && e.latlng !== undefined) {
             this.#drawingCursor.setLatLng(e.latlng);
@@ -825,17 +855,20 @@ export class Map extends L.Map {
             /* Hide all non default cursors */
             this.#hideDestinationCursors();
             this.#hideDrawingCursor();
+            this.#hideSpawnCursor();
 
             this.#showDefaultCursor();
         } else {
             /* Hide all the unnecessary cursors depending on the active state */
             if (this.#state !== IDLE) this.#hideDefaultCursor();
             if (this.#state !== MOVE_UNIT) this.#hideDestinationCursors();
+            if (this.#state !== SPAWN_UNIT) this.#hideSpawnCursor();
             if (this.#state !== COALITIONAREA_DRAW_POLYGON) this.#hideDrawingCursor();
 
             /* Show the active cursor depending on the active state */
             if (this.#state === IDLE) this.#showDefaultCursor();
             else if (this.#state === MOVE_UNIT) this.#showDestinationCursors();
+            else if (this.#state === SPAWN_UNIT) this.#showSpawnCursor();
             else if (this.#state === COALITIONAREA_DRAW_POLYGON) this.#showDrawingCursor();
         }
     }
@@ -923,6 +956,18 @@ export class Map extends L.Map {
             this.#drawingCursor.removeFrom(this);
     }
 
+    #showSpawnCursor() {
+        this.#spawnCursor?.addTo(this);
+    }
+
+    #updateSpawnCursor() {
+        this.#spawnCursor?.setLatLng(this.getMouseCoordinates());
+    }
+
+    #hideSpawnCursor() {
+        this.#spawnCursor?.removeFrom(this);
+    }
+
     #setSlaveDCSCameraAvailable(newSlaveDCSCameraAvailable: boolean) {
         this.#slaveDCSCameraAvailable = newSlaveDCSCameraAvailable;
         let linkButton = document.getElementById("camera-link-control");
@@ -939,12 +984,12 @@ export class Map extends L.Map {
     }
 
     /* Check if the camera control plugin is available. Right now this will only change the color of the button, no changes in functionality */
-    #checkCameraPort(){
+    #checkCameraPort() {
         if (this.#cameraOptionsXmlHttp?.readyState !== 4)
             this.#cameraOptionsXmlHttp?.abort()
 
         this.#cameraOptionsXmlHttp = new XMLHttpRequest();
-        
+
         /* Using 127.0.0.1 instead of localhost because the LuaSocket version used in DCS only listens to IPv4. This avoids the lag caused by the
         browser if it first tries to send the request on the IPv6 address for localhost */
         this.#cameraOptionsXmlHttp.open("OPTIONS", `http://127.0.0.1:${this.#cameraControlPort}`);

@@ -77,12 +77,12 @@ export function UI() {
 						<Header />
 						<div className='flex h-full'>
 							<SideBar />
-							<div id='map-container' className='relative h-full w-screen top-0 left-0' />
 							<MainMenu open={mainMenuVisible} onClose={() => setMainMenuVisible(false)} />
 							<SpawnMenu open={spawnMenuVisible} onClose={() => setSpawnMenuVisible(false)} />
 							<UnitControlMenu />
 						</div>
 					</div>
+					<div id='map-container' className='fixed h-full w-screen top-0 left-0' />
 				</EventsProvider>
 			</StateProvider>
 		</div>

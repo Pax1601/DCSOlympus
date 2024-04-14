@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Menu } from "./components/menu";
 import { faHelicopter, faJetFighter, faPlus, faShieldAlt, faShip, faTruck } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -9,6 +9,7 @@ import { OlUnitEntryList } from "../components/olunitlistentry";
 import { UnitSpawnMenu } from "./unitspawnmenu";
 import { UnitBlueprint } from "../../interfaces";
 import { olButtonsVisibilityAircraft, olButtonsVisibilityGroundunit, olButtonsVisibilityGroundunitSam, olButtonsVisibilityHelicopter, olButtonsVisibilityNavyunit } from "../components/olicons";
+import { SPAWN_UNIT } from "../../constants/constants";
 
 library.add(faPlus);
 
@@ -30,6 +31,12 @@ export function SpawnMenu(props: {
 }) {
 	var [blueprint, setBlueprint] = useState(null as (null | UnitBlueprint));
 	var [filterString, setFilterString] = useState("");
+
+	useEffect(() => {
+		if (!props.open || blueprint !== null) {
+			//getApp()?.getMap()?.setState(SPAWN_UNIT, {name: blueprint?.name ?? '', coalition: 'blue'});
+		}
+	} )
 
 	/* Filter aircrafts, helicopters, and navyunits */
 	const filteredAircraft = filterUnits(getApp()?.getAircraftDatabase()?.blueprints, filterString);
@@ -59,7 +66,7 @@ export function SpawnMenu(props: {
 		<>
 			{(blueprint === null) && <div className="p-5">
 				<OlSearchBar onChange={(ev) => setFilterString(ev.target.value)}/>
-				<OlAccordion title={`Aircrafts (${Object.keys(filteredAircraft).length})`}>
+				<OlAccordion title={`Aircrafts`}>
 					<div className="flex flex-col gap-1 max-h-80 overflow-y-scroll">
 						{Object.keys(filteredAircraft).map((key) => {
 							const blueprint = getApp().getAircraftDatabase().blueprints[key];
@@ -67,7 +74,7 @@ export function SpawnMenu(props: {
 						})}
 					</div>
 				</OlAccordion>
-				<OlAccordion title={`Helicopters (${Object.keys(filteredHelicopters).length})`}>
+				<OlAccordion title={`Helicopters`}>
 					<div className="flex flex-col gap-1 max-h-80 overflow-y-scroll">
 						{Object.keys(filteredHelicopters).map((key) => {
 							const blueprint = getApp().getHelicopterDatabase().blueprints[key];
@@ -75,7 +82,7 @@ export function SpawnMenu(props: {
 						})}
 					</div>
 				</OlAccordion>
-				<OlAccordion title={`SAM & AAA (${Object.keys(filteredAirDefense).length})`}>
+				<OlAccordion title={`SAM & AAA`}>
 					<div className="flex flex-col gap-1 max-h-80 overflow-y-scroll">
 						{Object.keys(filteredAirDefense).map((key) => {
 							const blueprint = getApp().getGroundUnitDatabase().blueprints[key];
@@ -83,7 +90,7 @@ export function SpawnMenu(props: {
 						})}
 					</div>
 				</OlAccordion>
-				<OlAccordion title={`Ground Units (${Object.keys(filteredGroundUnits).length})`}>
+				<OlAccordion title={`Ground Units`}>
 					<div className="flex flex-col gap-1 max-h-80 overflow-y-scroll">
 						{Object.keys(filteredGroundUnits).map((key) => {
 							const blueprint = getApp().getGroundUnitDatabase().blueprints[key];
@@ -91,7 +98,7 @@ export function SpawnMenu(props: {
 						})}
 					</div>
 				</OlAccordion>
-				<OlAccordion title={`Ships and submarines (${Object.keys(filteredNavyUnits).length})`}>
+				<OlAccordion title={`Ships and submarines`}>
 					<div className="flex flex-col gap-1 max-h-80 overflow-y-scroll">
 						{Object.keys(filteredNavyUnits).map((key) => {
 							const blueprint = getApp().getNavyUnitDatabase().blueprints[key];
