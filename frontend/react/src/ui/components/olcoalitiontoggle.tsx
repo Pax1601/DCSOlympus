@@ -15,7 +15,7 @@ export function OlCoalitionToggle(props: {
 		"data-[coalition='red']:after:translate-x-full rtl:data-[coalition='red']:after:-translate-x-full data-[coalition='red']:after:border-white " + 
 		" data-[coalition='blue']:bg-blue-600 data-[coalition='neutral']:bg-gray-400 data-[coalition='red']:bg-red-500"}>
 		</div>
-		<span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300 data-[flash='true']:after:animate-pulse">
+		<span className="ms-3 text-gray-900 dark:text-white data-[flash='true']:after:animate-pulse">
 			{props.coalition? `Coalition (${props.coalition[0].toLocaleUpperCase() + props.coalition.substring(1)})`: "Different values"}
 		</span>
 	</div>
