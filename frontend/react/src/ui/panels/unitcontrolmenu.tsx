@@ -116,11 +116,11 @@ export function UnitControlMenu() {
 						{
 							['blue', 'red', 'neutral'].map((coalition) => {
 								return Object.keys(unitOccurences[coalition]).map((name) => {
-									return <div data-coalition={coalition} className="flex justify-between content-center border-l-4 data-[coalition='blue']:border-blue-500 data-[coalition='neutral']:border-gray-500 data-[coalition='red']:border-red-500 p-2">
-										<span className="dark:text-gray-300 text-sm font-medium my-auto">
+									return <div data-coalition={coalition} className="flex justify-between content-center border-l-4 data-[coalition='blue']:border-blue-500 data-[coalition='neutral']:border-gray-500 data-[coalition='red']:border-red-500 p-4">
+										<span className="dark:text-gray-300 font-semibold my-auto">
 											{name}
 										</span>
-										<span className="dark:text-gray-500 text-sm  my-auto">
+										<span className="dark:text-gray-500 my-auto font-bold">
 											x{unitOccurences[coalition][name]}
 										</span>
 									</div>
@@ -139,7 +139,7 @@ export function UnitControlMenu() {
 							<span className="font-normal dark:text-white">Altitude</span>
 							<span
 								data-flash={selectedUnitsData.desiredAltitude === undefined}
-								className="data-[flash='true']:animate-pulse dark:text-blue-500">{selectedUnitsData.desiredAltitude !== undefined ? (selectedUnitsData.desiredAltitude + " FT") : "Different values"}
+								className="data-[flash='true']:animate-pulse dark:text-blue-500 font-bold">{selectedUnitsData.desiredAltitude !== undefined ? (selectedUnitsData.desiredAltitude + " FT") : "Different values"}
 							</span>
 						</div>
 						<OlLabelToggle
@@ -180,7 +180,7 @@ export function UnitControlMenu() {
 						<span className="font-normal dark:text-white">Speed</span>
 						<span
 							data-flash={selectedUnitsData.desiredSpeed === undefined}
-							className="data-[flash='true']:animate-pulse dark:text-blue-500">{selectedUnitsData.desiredSpeed !== undefined ? (selectedUnitsData.desiredSpeed + " KTS") : "Different values"}
+							className="data-[flash='true']:animate-pulse dark:text-blue-500 font-bold">{selectedUnitsData.desiredSpeed !== undefined ? (selectedUnitsData.desiredSpeed + " KTS") : "Different values"}
 						</span>
 					</div>
 					<OlLabelToggle
@@ -379,7 +379,7 @@ export function UnitControlMenu() {
 					</div>
 
 					<div className="flex content-center justify-between">
-						<span className="font-normal dark:text-white"> Enabled </span>
+						<span className="font-normal dark:text-white"> Unit active </span>
 						<OlToggle toggled={selectedUnitsData.onOff} onClick={() => {
 							selectedUnits.forEach((unit) => {
 								unit.setOnOff(!selectedUnitsData.onOff);
