@@ -35,7 +35,6 @@ import { aircraftDatabase } from "./unit/databases/aircraftdatabase";
 import { helicopterDatabase } from "./unit/databases/helicopterdatabase";
 import { groundUnitDatabase } from "./unit/databases/groundunitdatabase";
 import { navyUnitDatabase } from "./unit/databases/navyunitdatabase";
-import { initFlowbite } from "flowbite";
 //import { UnitListPanel } from "./panels/unitlistpanel";
 //import { ContextManager } from "./context/contextmanager";
 //import { Context } from "./context/context";
@@ -478,7 +477,7 @@ export class OlympusApp {
         }
 
         /* Temporary */
-        this.getServerManager().setCredentials("admin", "4b8823ed9e5c2392ab4a791913bb8ce41956ea32e308b760eefb97536746dd33");
+        this.getServerManager().setCredentials("admin", "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b");
         this.getServerManager().startUpdate();
 
         /* Reload the page, used to mimic a restart of the app */

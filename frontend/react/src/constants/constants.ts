@@ -183,6 +183,7 @@ export const defaultMapLayers = {
 /* Map constants */
 export const IDLE = "Idle";
 export const MOVE_UNIT = "Move unit";
+export const SPAWN_UNIT = "Spawn unit";
 export const COALITIONAREA_DRAW_POLYGON = "Draw Coalition Area";
 
 export const IADSTypes = ["AAA", "SAM Site", "Radar (EWR)"];

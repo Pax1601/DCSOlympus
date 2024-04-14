@@ -10,6 +10,7 @@ import { OlToggle } from "../components/oltoggle";
 import { OlCoalitionToggle } from "../components/olcoalitiontoggle";
 import { olButtonsEmissionsAttack, olButtonsEmissionsDefend, olButtonsEmissionsFree, olButtonsEmissionsSilent, olButtonsIntensity1, olButtonsIntensity2, olButtonsIntensity3, olButtonsRoeDesignated, olButtonsRoeFree, olButtonsRoeHold, olButtonsRoeReturn, olButtonsScatter1, olButtonsScatter2, olButtonsScatter3, olButtonsThreatEvade, olButtonsThreatManoeuvre, olButtonsThreatNone, olButtonsThreatPassive } from "../components/olicons";
 import { Coalition } from "../../types/types";
+import { ftToM, knotsToMs, mToFt, msToKnots } from "../../other/utils";
 
 export function UnitControlMenu() {
 	var [open, setOpen] = useState(false);
@@ -63,13 +64,13 @@ export function UnitControlMenu() {
 	/* Update the current values of the shown data */
 	function updateData() {
 		const getters = {
-			desiredAltitude: (unit: Unit) => { return unit.getDesiredAltitude(); },
+			desiredAltitude: (unit: Unit) => { return Math.round(mToFt(unit.getDesiredAltitude())); },
 			desiredAltitudeType: (unit: Unit) => { return unit.getDesiredAltitudeType(); },
-			desiredSpeed: (unit: Unit) => { return unit.getDesiredSpeed(); },
+			desiredSpeed: (unit: Unit) => { return Math.round(msToKnots(unit.getDesiredSpeed())); },
 			desiredSpeedType: (unit: Unit) => { return unit.getDesiredSpeedType(); },
 			ROE: (unit: Unit) => { return unit.getROE(); },
 			reactionToThreat: (unit: Unit) => { return unit.getReactionToThreat(); },
-			emissionsCountermeasures: (unit: Unit) => { return unit.getROE(); },
+			emissionsCountermeasures: (unit: Unit) => { return unit.getEmissionsCountermeasures(); },
 			shotsScatter: (unit: Unit) => { return unit.getShotsScatter(); },
 			shotsIntensity: (unit: Unit) => { return unit.getShotsIntensity(); },
 			operateAs: (unit: Unit) => { return unit.getOperateAs(); },
@@ -158,7 +159,7 @@ export function UnitControlMenu() {
 					<OlRangeSlider
 						onChange={(ev) => {
 							selectedUnits.forEach((unit) => {
-								unit.setAltitude(Number(ev.target.value));
+								unit.setAltitude(ftToM(Number(ev.target.value)));
 								setSelectedUnitsData({
 									...selectedUnitsData,
 									desiredAltitude: Number(ev.target.value)
@@ -200,7 +201,7 @@ export function UnitControlMenu() {
 				<OlRangeSlider
 					onChange={(ev) => {
 						selectedUnits.forEach((unit) => {
-							unit.setSpeed(Number(ev.target.value));
+							unit.setSpeed(knotsToMs(Number(ev.target.value)));
 							setSelectedUnitsData({
 								...selectedUnitsData,
 								desiredSpeed: Number(ev.target.value)
@@ -318,14 +319,14 @@ export function UnitControlMenu() {
 								return <OlButtonGroupItem
 									onClick={() => {
 										selectedUnits.forEach((unit) => {
-											unit.setShotsScatter(idx);
+											unit.setShotsScatter((idx + 1));
 											setSelectedUnitsData({
 												...selectedUnitsData,
-												shotsScatter: idx
+												shotsScatter: (idx + 1)
 											})
 										})
 									}}
-									active={selectedUnitsData.shotsScatter === idx}
+									active={selectedUnitsData.shotsScatter === (idx + 1)}
 									icon={icon} />
 							})
 						}
@@ -339,14 +340,14 @@ export function UnitControlMenu() {
 									return <OlButtonGroupItem
 										onClick={() => {
 											selectedUnits.forEach((unit) => {
-												unit.setShotsIntensity(idx);
+												unit.setShotsIntensity((idx + 1));
 												setSelectedUnitsData({
 													...selectedUnitsData,
-													shotsIntensity: idx
+													shotsIntensity: (idx + 1)
 												})
 											})
 										}}
-										active={selectedUnitsData.shotsIntensity === idx}
+										active={selectedUnitsData.shotsIntensity === (idx + 1)}
 										icon={icon} />
 								})
 							}

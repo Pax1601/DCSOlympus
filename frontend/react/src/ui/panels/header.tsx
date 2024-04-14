@@ -13,7 +13,7 @@ export function Header() {
 		{(appState) =>
 			<EventsConsumer>
 				{(events) =>
-					<nav className="flex w-screen h-[66px] bg-gray-300 border-gray-200 dark:bg-[#171C26] dark:border-gray-700 px-3">
+					<nav className="flex w-screen h-[66px] bg-gray-300 border-gray-200 dark:bg-[#171C26] dark:border-gray-700 px-3 z-ui-1">
 						<div className="w-full max-w-full flex flex-nowrap items-center justify-between gap-3 my-auto">
 							<div className="flex flex-row items-center justify-center gap-1 flex-none">
 								<img src="images/icon.png" className='h-10 w-10 p-0 rounded-md mr-2 cursor-pointer'></img>
