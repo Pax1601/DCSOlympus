@@ -19,7 +19,7 @@ export function Header() {
 								<img src="images/icon.png" className='h-10 w-10 p-0 rounded-md mr-2 cursor-pointer'></img>
 							</div>
 							<div className="ml-auto">
-								<OlLockStateButton checked={true} onClick={() => {}}/>
+								<OlLockStateButton checked={false} onClick={() => {}}/>
 							</div>
 							<div className="flex flex-row h-fit items-center justify-start gap-1">
 								{
