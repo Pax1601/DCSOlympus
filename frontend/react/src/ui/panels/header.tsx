@@ -21,7 +21,7 @@ export function Header() {
 							<div className="ml-auto">
 								<OlRoundStateButton icon={faLock} checked={false} onClick={() => {}}/>
 							</div>
-							<div className="flex flex-row h-fit items-center justify-start gap-2">
+							<div className="flex flex-row h-fit items-center justify-start gap-1">
 								{
 									Object.entries({
 										'human': olButtonsVisibilityHuman,'olympus': olButtonsVisibilityOlympus, 'dcs': olButtonsVisibilityDcs
@@ -35,7 +35,7 @@ export function Header() {
 									})
 								}
 							</div>
-							<div className='h-11 w-0 border-l-[1px] border-gray-700'></div>
+							<div className='h-8 w-0 border-l-[2px] border-gray-700'></div>
 							<div className="flex flex-row h-fit items-center justify-start gap-1">
 								{
 									Object.entries({
@@ -51,7 +51,7 @@ export function Header() {
 									})
 								}
 							</div>
-							<div className='h-11 w-0 border-l-[1px] border-gray-700'></div>
+							<div className='h-8 w-0 border-l-[2px] border-gray-700'></div>
 							<div className="flex flex-row h-fit items-center justify-start gap-1">
 								<OlRoundStateButton
 									onClick={() => getApp().getMap().setHiddenType( 'blue', !appState.mapHiddenTypes['blue'] )}

@@ -72,7 +72,7 @@ export function UnitSpawnMenu(props: {
                 <div className="flex flex-row content-center justify-between">
                     <div className="flex flex-col">
                         <span className="font-normal dark:text-white">Altitude</span>
-                        <span className="font-bold dark:text-blue-500">{`${spawnAltitude} FT`}</span>
+                        <span className="font-bold dark:text-blue-500">{`${Intl.NumberFormat("en-US").format(spawnAltitude)} FT`}</span>
                     </div>
                     <OlLabelToggle toggled={spawnAltitudeType} leftLabel={"AGL"} rightLabel={"ASL"} onClick={() => setSpawnAltitudeType(!spawnAltitudeType)} />
                 </div>

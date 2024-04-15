@@ -74,7 +74,7 @@ export function OlDropdown(props: {
     })
 
     return <div className={(props.className ?? "") + " relative"}>
-        <button ref={buttonRef} onClick={() => { setOpen(!open) }} className={"w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-between border dark:border-gray-600 dark:text-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-blue-800"} type="button">
+        <button ref={buttonRef} onClick={() => { setOpen(!open) }} className={"w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-between border dark:border-gray-700 dark:text-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-blue-800"} type="button">
             {props.leftIcon && <FontAwesomeIcon icon={props.leftIcon} className="mr-3" />}
             <span className="text-nowrap text-ellipsis overflow-hidden">
                 {props.label}

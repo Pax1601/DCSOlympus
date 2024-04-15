@@ -7,6 +7,7 @@ export const StateContext = createContext({
     unitControlMenuVisible: false,
     measureMenuVisible: false,
     drawingMenuVisible: false,
+    optionsMenuVisible: false,
 	mapHiddenTypes: MAP_HIDDEN_TYPES_DEFAULTS,
     mapOptions: MAP_OPTIONS_DEFAULTS
 })

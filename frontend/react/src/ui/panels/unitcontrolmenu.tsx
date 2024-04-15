@@ -139,7 +139,7 @@ export function UnitControlMenu() {
 							<span className="font-normal dark:text-white">Altitude</span>
 							<span
 								data-flash={selectedUnitsData.desiredAltitude === undefined}
-								className="data-[flash='true']:animate-pulse dark:text-blue-500 font-bold">{selectedUnitsData.desiredAltitude !== undefined ? (selectedUnitsData.desiredAltitude + " FT") : "Different values"}
+								className="data-[flash='true']:animate-pulse dark:text-blue-500 font-bold">{selectedUnitsData.desiredAltitude !== undefined ? (Intl.NumberFormat("en-US").format(selectedUnitsData.desiredAltitude) + " FT") : "Different values"}
 							</span>
 						</div>
 						<OlLabelToggle
