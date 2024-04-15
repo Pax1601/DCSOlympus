@@ -116,8 +116,8 @@ export function UnitControlMenu() {
 						{
 							['blue', 'red', 'neutral'].map((coalition) => {
 								return Object.keys(unitOccurences[coalition]).map((name) => {
-									return <div data-coalition={coalition} className="flex justify-between content-center border-l-4 data-[coalition='blue']:border-blue-500 data-[coalition='neutral']:border-gray-500 data-[coalition='red']:border-red-500 p-4">
-										<span className="dark:text-gray-300 font-semibold my-auto">
+									return <div data-coalition={coalition} className="flex justify-between content-center border-l-4 data-[coalition='blue']:border-blue-500 data-[coalition='neutral']:border-gray-500 data-[coalition='red']:border-red-500 pl-4 pr-5 py-3">
+										<span className="dark:text-white font-normal my-auto">
 											{name}
 										</span>
 										<span className="dark:text-gray-500 my-auto font-bold">
