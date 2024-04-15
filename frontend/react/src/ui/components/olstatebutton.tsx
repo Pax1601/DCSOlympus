@@ -1,4 +1,5 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { faLock, faLockOpen, faUnlock, faUnlockAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React from "react"
 
@@ -21,9 +22,21 @@ export function OlRoundStateButton(props: {
     icon: IconProp,
     onClick: () => void
 }) {
-    const className = (props.className ?? '') + ` h-8 w-8 flex-none m-auto border border-gray-900 font-medium rounded-full text-sm dark:bg-[transparent] dark:data-[checked='true']:bg-white dark:text-white dark:data-[checked='true']:text-gray-900 dark:border-gray-600 `;
+    const className = (props.className ?? '') + ` h-8 w-8 flex-none m-auto border-2 border-gray-900 font-medium rounded-full text-sm dark:bg-[transparent] dark:data-[checked='true']:bg-white dark:text-gray-400 dark:data-[checked='true']:text-gray-900 dark:data-[checked='true']:border-white dark:border-gray-400 `;
 
     return <button onClick={props.onClick} data-checked={props.checked} type="button" className={className}>
-        <FontAwesomeIcon icon={props.icon} />
+        <FontAwesomeIcon className="pt-[3px]" icon={props.icon} />
+    </button>
+}
+
+export function OlLockStateButton(props: {
+    className?: string,
+    checked: boolean,
+    onClick: () => void
+}) {
+    const className = (props.className ?? '') + ` h-8 w-8 flex-none m-auto border-gray-900 font-medium rounded-full text-sm dark:bg-red-500 dark:data-[checked='true']:bg-green-500 dark:text-olympus-900 dark:data-[checked='true']:text-green-900`;
+
+    return <button onClick={props.onClick} data-checked={props.checked} type="button" className={className}>
+        <FontAwesomeIcon className="pt-[3px]" icon={props.checked==true ? faUnlockAlt:faLock} />
     </button>
 }

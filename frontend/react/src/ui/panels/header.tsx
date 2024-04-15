@@ -1,6 +1,6 @@
 import React from 'react'
-import { OlRoundStateButton, OlStateButton } from '../components/olstatebutton';
-import { faLock, faPerson, faBrain, faRobot, faJetFighter, faHelicopter, faShield, faTruck, faShip, faPlaneDeparture, faSkull, faShieldAlt, faCamera } from '@fortawesome/free-solid-svg-icons';
+import { OlRoundStateButton, OlStateButton, OlLockStateButton } from '../components/olstatebutton';
+import { faLock, faSkull, faCamera, faFlag } from '@fortawesome/free-solid-svg-icons';
 import { EventsConsumer } from '../../eventscontext';
 import { StateConsumer } from '../../statecontext';
 import { OlDropdownItem, OlDropdown } from '../components/oldropdown';
@@ -19,7 +19,7 @@ export function Header() {
 								<img src="images/icon.png" className='h-10 w-10 p-0 rounded-md mr-2 cursor-pointer'></img>
 							</div>
 							<div className="ml-auto">
-								<OlRoundStateButton icon={faLock} checked={false} onClick={() => {}}/>
+								<OlLockStateButton checked={true} onClick={() => {}}/>
 							</div>
 							<div className="flex flex-row h-fit items-center justify-start gap-1">
 								{
@@ -56,15 +56,15 @@ export function Header() {
 								<OlRoundStateButton
 									onClick={() => getApp().getMap().setHiddenType( 'blue', !appState.mapHiddenTypes['blue'] )}
 									checked={!appState.mapHiddenTypes['blue']}
-									icon={faShield} className={"!text-blue-500"} />
+									icon={faFlag} className={"!text-blue-500"} />
 								<OlRoundStateButton
 									onClick={() => getApp().getMap().setHiddenType('red', !appState.mapHiddenTypes['red'] )}
 									checked={!appState.mapHiddenTypes['red']}
-									icon={faShield} className={"!text-red-500"} />
+									icon={faFlag} className={"!text-red-500"} />
 								<OlRoundStateButton
 									onClick={() => getApp().getMap().setHiddenType('neutral', !appState.mapHiddenTypes['neutral'] )}
 									checked={!appState.mapHiddenTypes['neutral']}
-									icon={faShield} className={"!text-gray-500"} />
+									icon={faFlag} className={"!text-gray-500"} />
 							</div>
 							<OlLabelToggle toggled={false} leftLabel={"Live"} rightLabel={"Map"} onClick={() => {}}></OlLabelToggle>
 							<OlStateButton checked={false} icon={faCamera} onClick={() => {}} />
