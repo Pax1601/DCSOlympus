@@ -134,7 +134,7 @@ export function UnitControlMenu() {
 		<div className="p-5 flex flex-col gap-5">
 			{/* Altitude selector */
 				selectedCategories.every((category) => { return ['Aircraft', 'Helicopter'].includes(category) }) && <div>
-					<div className="flex flex-row content-center justify-between">
+					<div className="flex flex-row content-center items-center justify-between">
 						<div className="flex flex-col">
 							<span className="font-normal dark:text-white">Altitude</span>
 							<span
@@ -175,7 +175,7 @@ export function UnitControlMenu() {
 			}
 			{/* Airspeed selector */}
 			<div>
-				<div className="flex flex-row content-center justify-between">
+				<div className="flex flex-row content-center items-center justify-between">
 					<div className="flex flex-col">
 						<span className="font-normal dark:text-white">Speed</span>
 						<span

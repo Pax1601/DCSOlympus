@@ -66,7 +66,7 @@ export function SpawnMenu(props: {
 		<>
 			{(blueprint === null) && <div className="p-5">
 				<OlSearchBar onChange={(ev) => setFilterString(ev.target.value)}/>
-				<OlAccordion title={`Aircrafts`}>
+				<OlAccordion title={`Aircraft`}>
 					<div className="flex flex-col gap-1 max-h-80 overflow-y-scroll">
 						{Object.keys(filteredAircraft).map((key) => {
 							const blueprint = getApp().getAircraftDatabase().blueprints[key];

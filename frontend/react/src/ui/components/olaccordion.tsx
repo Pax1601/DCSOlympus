@@ -24,9 +24,9 @@ export function OlAccordion(props: {
 
 	return <div className="bg-white dark:bg-transparent text-gray-900 dark:text-white">
 		<h3>
-			<button type="button" onClick={() => setOpen(!open)} className="flex items-center justify-between w-full py-2 font-medium rtl:text-right text-gray-700 border-gray-200 dark:border-gray-700 dark:text-gray-300 gap-3">
-				<span>{props.title}</span>
-				<svg data-open={open} className="w-3 h-3 -rotate-180 data-[open='false']:-rotate-90 shrink-0 transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+			<button type="button" onClick={() => setOpen(!open)} className="flex items-center justify-between w-full py-2 rtl:text-right text-gray-700 border-gray-200 dark:border-gray-700 dark:text-white gap-3 hover:dark:underline hover:dark:underline-offset-4 hover:dark:underline-gray-700">
+				<span className="font-normal">{props.title}</span>
+				<svg data-open={open} className="w-3 h-3 dark:text-olympus-50 -rotate-180 data-[open='false']:-rotate-90 shrink-0 transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
 					<path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5 5 1 1 5" />
 				</svg>
 			</button>

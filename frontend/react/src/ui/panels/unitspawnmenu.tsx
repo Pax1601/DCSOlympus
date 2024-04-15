@@ -69,7 +69,7 @@ export function UnitSpawnMenu(props: {
                 />
             </div>
             <div>
-                <div className="flex flex-row content-center justify-between">
+                <div className="flex flex-row content-center items-center justify-between">
                     <div className="flex flex-col">
                         <span className="font-normal dark:text-white">Altitude</span>
                         <span className="font-bold dark:text-blue-500">{`${Intl.NumberFormat("en-US").format(spawnAltitude)} FT`}</span>

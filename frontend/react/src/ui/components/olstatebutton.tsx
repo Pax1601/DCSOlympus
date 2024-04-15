@@ -22,7 +22,7 @@ export function OlRoundStateButton(props: {
     icon: IconProp,
     onClick: () => void
 }) {
-    const className = (props.className ?? '') + ` h-8 w-8 flex-none m-auto border-2 border-gray-900 font-medium rounded-full text-sm dark:bg-[transparent] dark:data-[checked='true']:bg-white dark:text-gray-400 dark:data-[checked='true']:text-gray-900 dark:data-[checked='true']:border-white dark:border-gray-400 `;
+    const className = (props.className ?? '') + ` h-8 w-8 flex-none m-auto border-2 border-gray-900 font-medium rounded-full text-sm dark:bg-[transparent] dark:data-[checked='true']:bg-white dark:text-gray-400 dark:data-[checked='true']:text-gray-900 dark:data-[checked='true']:border-white dark:border-gray-400 dark:data-[checked='true']:hover:bg-gray-200 dark:data-[checked='true']:hover:border-gray-200 dark:hover:bg-gray-800`;
 
     return <button onClick={props.onClick} data-checked={props.checked} type="button" className={className}>
         <FontAwesomeIcon className="pt-[3px]" icon={props.icon} />
@@ -34,7 +34,7 @@ export function OlLockStateButton(props: {
     checked: boolean,
     onClick: () => void
 }) {
-    const className = (props.className ?? '') + ` h-8 w-8 flex-none m-auto border-gray-900 font-medium rounded-full text-sm dark:bg-red-500 dark:data-[checked='true']:bg-green-500 dark:text-olympus-900 dark:data-[checked='true']:text-green-900`;
+    const className = (props.className ?? '') + ` h-8 w-8 flex-none m-auto border-gray-900 font-medium rounded-full text-sm dark:bg-red-500 dark:data-[checked='true']:bg-green-500 dark:text-olympus-900 dark:data-[checked='true']:text-green-900 dark:data-[checked='true']:hover:bg-green-400 dark:hover:bg-red-400`;
 
     return <button onClick={props.onClick} data-checked={props.checked} type="button" className={className}>
         <FontAwesomeIcon className="pt-[3px]" icon={props.checked==true ? faUnlockAlt:faLock} />
