@@ -105,7 +105,7 @@ export function UnitControlMenu() {
 
 	return <Menu
 		open={open}
-		title="Unit control menu"
+		title="Units selected (x)"
 		onClose={() => { }}
 	>
 		{/* Units list */}
