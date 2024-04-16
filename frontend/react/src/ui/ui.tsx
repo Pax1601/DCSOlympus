@@ -49,7 +49,7 @@ export function UI() {
 	}
 
 	return (
-		<div className="absolute top-0 left-0 h-screen w-screen font-sans overflow-hidden">
+		<div className="absolute top-0 left-0 h-screen w-screen font-sans overflow-hidden" onLoad={setupApp}>
 			<StateProvider value={{
 				mainMenuVisible: mainMenuVisible,
 				spawnMenuVisible: spawnMenuVisible,
@@ -73,7 +73,7 @@ export function UI() {
 						toggleDrawingMenuVisible: () => { hideAllMenus(); setDrawingMenuVisible(!drawingMenuVisible) },
 					}
 				}>
-					<div className='absolute top-0 left-0 h-full w-full flex flex-col' onLoad={setupApp}>
+					<div className='absolute top-0 left-0 h-full w-full flex flex-col'>
 						<Header />
 						<div className='flex h-full'>
 							<SideBar />

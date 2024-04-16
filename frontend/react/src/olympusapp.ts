@@ -2,8 +2,10 @@
 var app: OlympusApp;
 
 export function setupApp() {
-    app = new OlympusApp();
-    app.start();    
+    if (app === undefined) {
+        app = new OlympusApp();
+        app.start();    
+    }
 }
 
 export function getApp() {
@@ -477,7 +479,7 @@ export class OlympusApp {
         }
 
         /* Temporary */
-        this.getServerManager().setCredentials("admin", "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b");
+        this.getServerManager().setCredentials("admin", "4b8823ed9e5c2392ab4a791913bb8ce41956ea32e308b760eefb97536746dd33");
         this.getServerManager().startUpdate();
 
         /* Reload the page, used to mimic a restart of the app */
