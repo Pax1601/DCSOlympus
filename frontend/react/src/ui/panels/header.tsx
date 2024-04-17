@@ -14,7 +14,7 @@ export function Header() {
 		{(appState) =>
 			<EventsConsumer>
 				{(events) =>
-					<nav className="flex w-screen h-[66px] bg-gray-300 border-gray-200 dark:bg-olympus-900 dark:border-gray-700 px-3 z-ui-1">
+					<nav className="flex w-screen h-[66px] bg-gray-300 border-gray-200 dark:bg-olympus-900 dark:border-gray-800 px-3 z-ui-2 drop-shadow-md">
 						<div className="w-full max-w-full flex flex-nowrap items-center justify-between gap-3 my-auto">
 							<div className="flex flex-row items-center justify-center gap-6 flex-none">
 								<img src="images/icon.png" className='h-10 w-10 p-0 rounded-md'></img>

@@ -9,7 +9,7 @@ export function SideBar() {
 		{(appState) =>
 			<EventsConsumer>
 				{(events) =>
-					<nav className="z-ui-1 h-full bg-gray-300 dark:bg-olympus-800">
+					<nav className="z-ui-1 h-full bg-gray-300 dark:bg-olympus-900">
 						<div className="flex flex-wrap items-center justify-center p-4 w-16">
 							<div className="flex flex-col items-center justify-center gap-2.5">
 								<OlStateButton onClick={events.toggleMainMenuVisible} checked={appState.mainMenuVisible} icon={faEllipsisV}></OlStateButton>
