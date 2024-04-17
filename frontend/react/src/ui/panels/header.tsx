@@ -1,12 +1,12 @@
 import React from 'react'
 import { OlRoundStateButton, OlStateButton, OlLockStateButton } from '../components/olstatebutton';
-import { faLock, faSkull, faCamera, faFlag, faCircle, faLink } from '@fortawesome/free-solid-svg-icons';
+import { faLock, faSkull, faCamera, faFlag, faCircle, faLink, faUnlink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { EventsConsumer } from '../../eventscontext';
 import { StateConsumer } from '../../statecontext';
 import { OlDropdownItem, OlDropdown } from '../components/oldropdown';
 import { OlLabelToggle } from '../components/ollabeltoggle';
-import { getApp } from '../../olympusapp';
+import { getApp, IP, connectedToServer } from '../../olympusapp';
 import { olButtonsVisibilityAirbase, olButtonsVisibilityAircraft, olButtonsVisibilityDcs, olButtonsVisibilityGroundunit, olButtonsVisibilityGroundunitSam, olButtonsVisibilityHelicopter, olButtonsVisibilityHuman, olButtonsVisibilityNavyunit, olButtonsVisibilityOlympus } from '../components/olicons';
 
 export function Header() {
@@ -16,11 +16,11 @@ export function Header() {
 				{(events) =>
 					<nav className="flex w-screen h-[66px] bg-gray-300 border-gray-200 dark:bg-olympus-900 dark:border-gray-700 px-3 z-ui-1">
 						<div className="w-full max-w-full flex flex-nowrap items-center justify-between gap-3 my-auto">
-							<div className="flex flex-row items-center justify-center gap-1 flex-none">
-								<img src="images/icon.png" className='h-10 w-10 p-0 rounded-md mr-2'></img>
-								<div className="flex flex-col items-start pl-3">
+							<div className="flex flex-row items-center justify-center gap-6 flex-none">
+								<img src="images/icon.png" className='h-10 w-10 p-0 rounded-md'></img>
+								<div className="flex flex-col items-start">
 									<div className="pt-1 text-gray-800 dark:text-gray-200 font-light text-xs">Connected to</div>
-									<div className="flex text-gray-800 dark:text-gray-200 font-bold items-center justify-center">123.45.202.51:4001 <FontAwesomeIcon icon={faLink} className="py-auto px-2 text-green-400 dark:text-green-400" /></div>
+									<div className="flex text-gray-800 dark:text-gray-200 font-bold items-center justify-center gap-2">{IP} <FontAwesomeIcon icon={connectedToServer ? faLink : faUnlink} data-connected={connectedToServer} className="py-auto text-green-400 data-[connected='true']:dark:text-green-400 dark:text-red-500" /></div>
 								</div>
 							</div>
 							<div className="ml-auto">

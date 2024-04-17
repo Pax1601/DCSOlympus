@@ -41,6 +41,8 @@ import { navyUnitDatabase } from "./unit/databases/navyunitdatabase";
 //import { ContextManager } from "./context/contextmanager";
 //import { Context } from "./context/context";
 export var VERSION = "{{OLYMPUS_VERSION_NUMBER}}";
+export var IP = "{{IP ADDRESS OF SERVER}}";
+export var connectedToServer = true;
 
 export class OlympusApp {
     /* Global data */
